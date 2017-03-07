@@ -1,0 +1,198 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"/>
+<title>在线报名</title>
+<link href="%bind(:1)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.css">
+
+<script type="text/javascript" src="%bind(:1)/statics/js/website/m/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/website/m/rem.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/website/m/common.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/website/m/jeesite.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.js"></script>    
+<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/func/captcha.js"></script>
+
+<script type="text/javascript">
+	var TzUniversityContextPath = "%bind(:1)";
+	var itemsJson = %bind(:4);
+	function generateRegCode() {
+		$("#regCodeImg").attr("src",GenCaptchaUrl());
+	}
+	$(document).ready(function(){
+		generateRegCode();
+	});
+</script>
+<style type="text/css">
+	input[type="text"]{outline: none;}
+	img.tz_tip_display_none{display:none;} 
+</style> 
+</head>
+<body id="body">
+	<div class="viewport-adaptive">
+	   <div class="bg1">
+	     <!-- 头部 -->
+	   	 <div class="topbar">
+	   	    在线报名 <a  href="#"><i></i></a>
+	   	 </div>
+	   	 <div class="register">
+		   	 %bind(:2)	
+		   	 <p id="tz-reg-tip-display" class="reg_tips" style="margin-top:10px;"></p> 
+	   	 </div>
+	   	 <a href="#" class="register_btn" onclick="tz_apply_submit()">确 定</a>
+	   </div>
+	</div>
+	
+	<script type="text/javascript">
+		var applyURL = "%bind(:3)";
+		
+		/*用于拼装JSON字符串，然后用parseJSON转为JSON对象*/
+		function cmbcgbyyValueReplace(str){ 
+		    var s = "";
+			if(str == undefined) {
+				return str;
+			}
+		    if(str.length == 0) return "";
+			s = $.trim(str.toString());
+			
+			s = s.replace(/\\/g,"\\\\")
+			s = s.replace(/\"/g,"\\\"");
+			s = s.replace(/\'/g,"\\'");
+			s = s.replace(/\t/g,"\\t");
+			s = s.replace(/\f/g,"\\f");
+			s = s.replace(/\//g,"\\/");
+			s = s.replace(/\n/g,"\\n");
+
+		    return s;
+		}
+		
+		
+		//验证必填项及手机邮箱格式
+		function vaildRegData(){
+			var isValid = true;
+			var mobelReg=/^1[3-8]{1}\d{9}$/;
+			var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+			
+			for(var key in itemsJson){
+				var val = $("#" + key).val();
+				if(itemsJson[key] == "Y" && val.trim() == ""){
+					isValid = false;
+					$('#tz-reg-tip-display').html("请填写带*号必填项!");
+					break;
+				}
+			}
+			
+			if(isValid){
+				//验证码
+				var code = $("#tz_regCode").val();
+				if(code.trim() == ""){
+					isValid = false;
+					$('#tz-reg-tip-display').html("请填写验证码！！");
+				}
+			}
+			
+			if(isValid){
+				//验证邮箱格式
+				var phone = $("#TZ_ZY_SJ").val();
+				if(!mobelReg.test(phone)){
+					isValid = false;
+					$('#tz-reg-tip-display').html("手机号码不正确！");
+				}
+			}
+			
+			if(isValid){
+				//验证邮箱格式
+				var email = $("#TZ_ZY_EMAIL").val();
+				if(!emailReg.test(email)){
+					isValid = false;
+					$('#tz-reg-tip-display').html("邮箱地址不正确！");
+				}
+			}
+			//验证通过
+			if(isValid){
+				$('#tz-reg-tip-display').html("");
+			}
+			
+			return isValid;
+		}
+		
+		
+		/*提交事件*/
+		function tz_apply_submit(){
+			
+			if(!vaildRegData()) return;
+			
+			var allParam = $("input");
+			var selectParem = $("select");
+		     
+			var strParam = "{";
+			var checkboxName = "";
+			var checkedVal="";
+			var required="";
+	
+			for(i=0;i<allParam.length;i++){
+				if($(allParam[i]).attr("type") == "hidden" || $(allParam[i]).attr("type") == "text"){
+					var inputValue = $.trim($(allParam[i]).val());
+	
+					if($(allParam[i]).attr("required") == "required" && inputValue == ""){
+						
+					}else{
+						
+						strParam = strParam + "\"" + cmbcgbyyValueReplace($(allParam[i]).attr("id")) + "\":\"" + cmbcgbyyValueReplace(inputValue) + "\",";
+					}
+				}
+			}
+	
+			for(i=0;i<selectParem.length;i++){
+	
+				var inputValue = $.trim($(selectParem[i]).val());
+	
+				if($(selectParem[i]).attr("required") == "required" && inputValue == ""){
+					
+				}else{
+					strParam = strParam + "\"" + cmbcgbyyValueReplace($(selectParem[i]).attr("id")) + "\":\"" + cmbcgbyyValueReplace(inputValue) + "\",";
+				}
+			}
+		 
+			strParam = strParam.substr(0,strParam.length-1);
+			strParam = strParam + "}";
+			
+			var strComParams = "{\"ComID\":\"TZ_HD_MOBILE_COM\",\"PageID\":\"TZ_HD_APPFORM_STD\",\"OperateType\":\"EJSON\",\"comParams\":"+ strParam + "}";
+			strComParams = encodeURIComponent(strComParams);
+			$.ajax({
+				type : "POST",
+				url : applyURL + "?tzParams=" + strComParams,
+				dataType:"json",
+				async:false,
+				success: function(resp){
+					var data = resp.comContent;
+					var result = data.result;
+					var resultDesc = data.resultDesc;
+					if(result == "3" || result == "4"){ 
+						//history.back();报名成功
+						alert(resultDesc);
+						generateRegCode();
+						$("#tz_regCode").val("");
+			
+					}else{
+						alert(resultDesc);
+						generateRegCode();
+						$("#tz_regCode").val("");
+					}
+				},
+				error: function(XMLHttpRequest, textStatus, errorThrown){
+					if(textStatus == "timeout"){
+						alert("服务端请求超时。");
+						return;
+					}else{
+						alert("服务端请求发生错误。");
+						return;
+					}
+				}
+			});
+		} 
+	</script>
+</body>
+</html>

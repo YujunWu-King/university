@@ -1014,9 +1014,15 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 				sortable: false,
 				hidden: false
 			},{ 
+				text: '发布类型',
+				dataIndex: 'artPubType',
+				width: 70,
+				sortable: false,
+				hidden: false
+			},{ 
 				text: '发布状态',
 				dataIndex: 'publicState',
-				width: 120,
+				width: 90,
 				sortable: false,
 				hidden: false
 			},{ 

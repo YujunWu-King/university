@@ -130,7 +130,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
     clearAll:function(btn){
         var emlBkDetForm = btn.findParentByType('form');
         
-        emlBkDetForm.child('tagfield[reference=recever]').store.removeAll(true);
+        //emlBkDetForm.child('tagfield[reference=recever]').store.removeAll(true);
         emlBkDetForm.child('tagfield[reference=recever]').setValue("");
     },
     /**
@@ -450,8 +450,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         var emlbkdefForm = emlbkdefPanel.child('form');
 		/*表单验证*/
 		if(!emlbkdefForm.getForm().isValid()) return;
-        Ext.MessageBox.confirm(Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.ensure","确认"),
-            Ext.tzGetResourse("TZ_COMMON_EMAIL_COM.TZ_COM_EMAIL_STD.ensureSendDesc","确认要发送站内信?"), function(btnId) {
+        Ext.MessageBox.confirm(Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_DET_STD.ensure","确认"),
+            Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_DET_STD.ensureSendDesc","确认要发送站内信?"), function(btnId) {
                 if (btnId == 'yes') {
                     var formdata = Ext.JSON.encode(emlbkdefForm.getValues());
                     var formrec = emlbkdefForm.getForm().getFieldValues();

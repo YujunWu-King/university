@@ -36,7 +36,8 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 		String siteId = request.getParameter("siteId");
 		String columnId = request.getParameter("columnId");
 		String artId = request.getParameter("artId");
-
+		String from = request.getParameter("from");
+		
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 		// 校验 用户是否已经登录，如果未登录 则 跳到登录页面，用户登录完成以后在跳转回来 by caoy 2017-3-3
@@ -110,18 +111,22 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 						} else {
 							strRet = "<script type=\"text/javascript\">;location.href=\"" + outurl + "\"</script>";
 						}
-					} else {
-						String htmlSQL = "select TZ_ART_NEWS_DT,TZ_ART_CONENT_SCR from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=? and TZ_ART_NEWS_DT <= now()";
-						Map<String, Object> contentMap = jdbcTemplate.queryForMap(htmlSQL,
-								new Object[] { siteId, columnId, artId });
-						if (contentMap == null) {
+					}else{
+						String htmlSQL = "select TZ_ART_NEWS_DT,TZ_ART_CONENT_SCR,TZ_ART_CONENT_SCR,TZ_ART_SJ_CONT_SCR from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=? and TZ_ART_NEWS_DT <= now()";
+						Map< String, Object> contentMap = jdbcTemplate.queryForMap(htmlSQL,new Object[]{siteId,columnId,artId});
+						if(contentMap == null){
 							strRet = "当前时间不可查看该内容";
-						} else {
-							strRet = (String) contentMap.get("TZ_ART_CONENT_SCR");
+						}else{
+							if("m".equals(from)){
+								strRet = (String) contentMap.get("TZ_ART_SJ_CONT_SCR");
+							}else{
+								strRet = (String) contentMap.get("TZ_ART_CONENT_SCR");
+							}
+							
 						}
 					}
-
-				} else {
+					
+				}else{
 					strRet = "参数错误，请联系系统管理员";
 				}
 			}

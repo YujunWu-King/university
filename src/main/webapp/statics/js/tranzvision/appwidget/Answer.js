@@ -1065,6 +1065,7 @@ var SurveyBuild = {
         //if (confirm("是否删除该条信息？")) {
 		
         var index = $(el).closest(".main_inner_content_para").index();
+        console.log("index:"+index);
         var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
         if (index > 0) {
             $(el).closest(".main_inner_content_para").animate({height: 'hide',opacity: 'hide'},'slow',function() {
@@ -1073,7 +1074,7 @@ var SurveyBuild = {
             $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".main_inner_content_para").eq(index - 1).offset().top},1000);
 			//console.log($(el).closest(".dhcontainer"));
 			//console.log($(el).closest(".dhcontainer").find(".main_inner_content_info_add"));
-            $(el).closest(".dhcontainer").find(".input-addbtn").show();
+            $(el).closest(".main_inner_content").find(".addNext").find(".main_inner_content_info_add ").show();
 			this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
             SurveyBuild._items[instanceId]["children"].splice(index, 1);
 			
@@ -1097,7 +1098,7 @@ var SurveyBuild = {
         //}
 		var paraObject = $(el).closest(".main_inner_content_para").siblings(".main_inner_content_para");
 		$.each(paraObject,function(i,paraObj){
-			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["ENG_LEV"] + ' ' +(i+1)+ ' :' + SurveyBuild._items[instanceId].title);
+			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["ENG_LEV"] + ' ' +(i+1));
 		})
 		
 		

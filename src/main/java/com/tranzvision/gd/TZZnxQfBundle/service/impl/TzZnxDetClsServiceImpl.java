@@ -719,7 +719,7 @@ public class TzZnxDetClsServiceImpl extends FrameworkImpl {
 		if (audList != null && audList.size() > 0) {
 			for (int i = 0; i < audList.size(); i++) {
 				String audiendeId = (String) audList.get(i).get("TZ_AUDIENCE_ID");
-				String sql = "select a.OPRID,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_AQ_YHXX_TBL c where a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT='Y'";
+				String sql = "select a.OPRID,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_AQ_YHXX_TBL c where a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
 				List<Map<String, Object>> oprList = jdbcTemplate.queryForList(sql, new Object[] { audiendeId });
 
 				if (oprList != null && oprList.size() > 0) {

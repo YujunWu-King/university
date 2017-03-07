@@ -31,7 +31,7 @@ public class ImportInterviewEvaRstImpl implements UnifiedImportBase {
 			String updateRelatedSql = "UPDATE PS_TZ_MSPS_KSH_TBL SET TZ_LUQU_ZT=? WHERE TZ_APP_INS_ID=?";
 			
 			//插入SQL
-			String insertSql = "INSERT INTO TZ_IMP_MSPS_TBL(TZ_APP_INS_ID,TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE) VALUES(?,?,?,?,?,?)";
+			String insertSql = "INSERT INTO TZ_IMP_MSPS_TBL(TZ_APP_INS_ID,TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE) VALUES(?,?,?,?,?)";
 			
 			//开始保存数据
 			if (data != null && data.size()>0){
@@ -57,18 +57,21 @@ public class ImportInterviewEvaRstImpl implements UnifiedImportBase {
 						
 						//更新面试评审考生表
 						String interviewEvaResult = "";
-						if(strResultCode.equals("录取")){
-							interviewEvaResult = "LQ";
+						if(strResultCode!=null){
+							if("录取".equals(strResultCode)){
+								interviewEvaResult = "LQ";
+							}
+							if("递补".equals(strResultCode)){
+								interviewEvaResult = "DB";
+							}
+							if("待定".equals(strResultCode)){
+								interviewEvaResult = "DD";
+							}
+							if("拒绝".equals(strResultCode)){
+								interviewEvaResult = "JJ";
+							}
 						}
-						if(strResultCode.equals("递补")){
-							interviewEvaResult = "DB";
-						}
-						if(strResultCode.equals("待定")){
-							interviewEvaResult = "DD";
-						}
-						if(strResultCode.equals("拒绝")){
-							interviewEvaResult = "JJ";
-						}
+						
 						if(!interviewEvaResult.equals("")){
 							sqlQuery.update(updateRelatedSql, new Object[]{interviewEvaResult,strAppInsId});
 						}

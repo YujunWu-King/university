@@ -99,7 +99,7 @@ public class Class2HistoryServiceImpl extends FrameworkImpl {
 
 			// 历史纪录;
 			String historyDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "9",
-					language, "历史纪录", "历史纪录");
+					language, "历史报名", "历史报名");
 			// 查看流程信息;
 			String viewLcInfoDesc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "10",
 					language, "查看流程信息", "查看流程信息");

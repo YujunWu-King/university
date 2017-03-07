@@ -139,7 +139,7 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 			for (int num_aud = 0; num_aud < arr_str_choice_aud.length; num_aud++) {
 				String id = arr_str_choice_aud[num_aud];
 				if (id != null && !"".equals(id)) {
-					String strAudSQL = "select a.OPRID,b.TZ_ZY_EMAIL,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT='Y'";
+					String strAudSQL = "select a.OPRID,b.TZ_ZY_EMAIL,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
 					List<Map<String, Object>> audList = jdbcTemplate.queryForList(strAudSQL, new Object[] { id });
 					if (audList != null && audList.size() > 0) {
 						for (int j = 0; j < audList.size(); j++) {
@@ -345,7 +345,7 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 			for (int num_aud = 0; num_aud < arr_str_choice_aud.length; num_aud++) {
 				String id = arr_str_choice_aud[num_aud];
 				if (id != null && !"".equals(id)) {
-					String strAudSQL = "select b.TZ_ZY_EMAIL FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT='Y'";
+					String strAudSQL = "select b.TZ_ZY_EMAIL FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
 					List<Map<String, Object>> audList = jdbcTemplate.queryForList(strAudSQL, new Object[] { id });
 					if (audList != null && audList.size() > 0) {
 						for (int j = 0; j < audList.size(); j++) {
@@ -492,7 +492,7 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 						really_totalAudience = really_totalAudience + "," + audId;
 					}
 					
-					String sql = "select a.OPRID,b.TZ_ZY_EMAIL,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT='Y'";
+					String sql = "select a.OPRID,b.TZ_ZY_EMAIL,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
 					List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { audId });
 					if (list != null) {
 						for (int j = 0; j < list.size(); j++) {
