@@ -125,7 +125,7 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] { { "ROW_ADDED_DTTM", "DESC" } };
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_ZNX_MSGID", "TZ_ZNX_SENDNAME","TZ_MSG_SUBJECT","ROW_ADDED_DTTM"};
+			String[] resultFldArray = { "TZ_ZNX_MSGID","TZ_ZNX_STATUS", "TZ_ZNX_SENDNAME","TZ_MSG_SUBJECT","ROW_ADDED_DTTM"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -137,9 +137,10 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("stationMailId", rowList[0]);
-					mapList.put("sendName", rowList[1]);
-					mapList.put("stationMailTitle", rowList[2]);
-					mapList.put("stationMailReceived", rowList[3]);
+					mapList.put("znxStatus", rowList[1]);
+					mapList.put("sendName", rowList[2]);
+					mapList.put("stationMailTitle", rowList[3]);
+					mapList.put("stationMailReceived", rowList[4]);
 					
 					listData.add(mapList);
 				}
@@ -176,11 +177,10 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 				String strForm = znxData[num];
 				// 将字符串转换成json;
 				jacksonUtil.json2Map(strForm);
-				// 组件ID;
-				
 				String strStationMailId = jacksonUtil.getString("stationMailId");
-				String comPageSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_REC_DELSTATUS = 'Y' WHERE TZ_ZNX_MSGID = ?";
-				jdbcTemplate.update(comPageSql,new Object[]{strStationMailId});		
+				String strRecId = jacksonUtil.getString("znxRecId");
+				String comPageSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_REC_DELSTATUS = 'Y' WHERE TZ_ZNX_MSGID = ? AND TZ_ZNX_RECID = ?";
+				jdbcTemplate.update(comPageSql,new Object[]{strStationMailId,strRecId});		
 				
 			}
 		} catch (Exception e) {
