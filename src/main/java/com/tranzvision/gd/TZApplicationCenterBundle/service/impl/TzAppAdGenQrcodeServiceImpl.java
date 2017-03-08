@@ -1,25 +1,16 @@
 package com.tranzvision.gd.TZApplicationCenterBundle.service.impl;
 
-import java.util.Map;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
-import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
-import com.tranzvision.gd.util.base.TzSystemException;
-import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.qrcode.CreateQRCode;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 生成录取通知书分享二维码
@@ -39,15 +30,6 @@ public class TzAppAdGenQrcodeServiceImpl {
 	
 	@Autowired
 	private SqlQuery sqlQuery;	
-
-	@Autowired
-	private TzWebsiteServiceImpl tzWebsiteServiceImpl;
-	
-	@Autowired
-	private GetSysHardCodeVal getSysHardCodeVal;
-	
-	@Autowired
-	private TZGDObject tzGDObject;
 	
 	@Autowired
 	private CreateQRCode createQRCode;	
@@ -79,6 +61,11 @@ public class TzAppAdGenQrcodeServiceImpl {
 						+ "/" + tzAppInsID;
 	
 			qrcodeFilePath = createQRCode.encodeQRCode(jgId, qrcodeUrl, qrcodeFileName,200,200);
+			
+			String urlStr = request.getScheme() + "://" + request.getServerName() + ":"
+						+ String.valueOf(request.getServerPort()) + ctxPath + qrcodeFilePath ;
+			this.isImgExist(urlStr, 10);
+
 			qrcodeFilePath=ctxPath+qrcodeFilePath;
 		
 		}catch (Exception e) {			
@@ -86,6 +73,35 @@ public class TzAppAdGenQrcodeServiceImpl {
 			return "无法获取相关数据";
 		}
 		return qrcodeFilePath;
+	}
+	
+	
+	private boolean isImgExist(String urlStr, int num){
+		try{
+			if(num > 0){
+				URL url = new URL(urlStr);
+				HttpURLConnection conn = (HttpURLConnection)url.openConnection();  
+		        conn.setConnectTimeout(1000); 
+		        conn.getInputStream();
+		        return true;
+			}else{
+				return false;
+			}
+			
+		}catch(Exception e){
+			num = num -1;
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			isImgExist(urlStr, num);
+		}
+		
+		return false;
+		
 	}
 }
 

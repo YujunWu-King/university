@@ -413,7 +413,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 						// 解锁
 						mySqlLockService.unlockRow(sqlQuery);
 					}
-					errorCode = "1";
+					errorCode = "0";
 					errorMsg = cancelSuccess;
 				} else {
 					errorCode = "1";
