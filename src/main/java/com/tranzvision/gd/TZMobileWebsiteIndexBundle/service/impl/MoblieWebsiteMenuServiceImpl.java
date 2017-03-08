@@ -64,7 +64,7 @@ public class MoblieWebsiteMenuServiceImpl extends FrameworkImpl{
 		//联系我们;
 		String lxUrl = "";
 		//我的
-		String myUrl = "";
+		String myUrl = ctxPath + "/dispatcher?classid=phZhgl&siteId="+siteId;
 		
 		String[] url = {indexUrl,rlUrl,statusUrl,lxUrl,myUrl};
 		url[menuNum-1] = "javascript:void(0);";

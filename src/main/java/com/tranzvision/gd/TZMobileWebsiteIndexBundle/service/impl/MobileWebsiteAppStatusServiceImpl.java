@@ -64,7 +64,7 @@ public class MobileWebsiteAppStatusServiceImpl extends FrameworkImpl {
 			//title;
 			String title = "状态查询 ";
 			//css和js
-			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_JS_CSS",ctxPath);
+			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_JS_CSS",ctxPath);
 			
 			//获取语言和机构;
 			String siteSQL = "select TZ_SITE_LANG,TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
