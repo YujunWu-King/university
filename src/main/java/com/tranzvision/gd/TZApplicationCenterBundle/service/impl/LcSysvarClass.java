@@ -242,6 +242,7 @@ public class LcSysvarClass {
 				if (tzLuquSta=="A"){
 					QrcodeHtml = "<div class=\"overhidden\"><a onclick='openRqQrcode(\""+appIns+"\")' href=\"javascript:void(0);\"><img class=\"fl table_ck\" src=\"" + rootPath + "/statics/css/website/images/table_search.png\"></a><p>查看电子版条件录取通知书</p></div>";
 				}
+				QrcodeHtml = "<div class=\"overhidden\" onclick='openRqQrcode(\""+appIns+"\")'><i class=\"add_icon\"></i><span class=\"fl\" style=\"color:#666;\">查看电子版条件录取通知书</span></div>";
 				result[1] = QrcodeHtml + result[1];
 				//录取状态
 				/*
