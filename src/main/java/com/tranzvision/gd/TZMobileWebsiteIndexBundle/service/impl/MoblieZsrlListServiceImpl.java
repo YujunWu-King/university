@@ -17,13 +17,13 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 清华mba招生手机版招生活动和报考通知列表
- * classId:  mEventNotice
+ * 清华mba招生手机版招生活动列表
+ * classId:  mZsrl
  * @author tang
  *
  */
-@Service("com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl.MoblieHdTzListServiceImpl")
-public class MoblieHdTzListServiceImpl extends FrameworkImpl{
+@Service("com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl.MoblieZsrlListServiceImpl")
+public class MoblieZsrlListServiceImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery sqlQuery;
 	@Autowired
@@ -33,7 +33,7 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	
-	//清华mba招生手机版招生活动和报考通知列表
+	//清华mba招生手机版招生活动列表
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		String listHtml = "";
@@ -60,7 +60,7 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 			menuId = request.getParameter("menuId");
 		}
 		if(menuId == null || "".equals(menuId)){
-			menuId = "1";
+			menuId = "2";
 		}
 		
 		
@@ -68,72 +68,11 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 		String columnNameSQL = "SELECT TZ_COLU_NAME FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? and TZ_COLU_ID=?";
 		String columnName = sqlQuery.queryForObject(columnNameSQL, new Object[] { siteId,currentColumnId }, "String");
 		String jsCss = "";
-		
-		
-		//String artListSql;
+
 		try {
-			/*
-			artListSql = tzGDObject.getSQLText("SQL.TZMobileWebsiteIndexBundle.TZ_HD_TZ_ART_LIST");
-			String titleLi = "";
-			System.out.println(siteId + "====>" + currentColumnId + "====>" + m_curOPRID);
-			List<Map<String, Object>> artList = sqlQuery.queryForList(artListSql,new Object[] { siteId,currentColumnId,m_curOPRID,0,3});
-			if (artList != null && artList.size()>0){
-				for(int j=0;j<artList.size();j++){	
-					String artId = (String) artList.get(j).get("TZ_ART_ID");
-					String artTitle = (String) artList.get(j).get("TZ_ART_TITLE");
-					String artTitleStyle = (String) artList.get(j).get("TZ_ART_TITLE_STYLE");
-					String artDate = (String) artList.get(j).get("TZ_ART_NEWS_DT");
-					//活动通知链接;
-					String artUrl = (String) artList.get(j).get("TZ_ART_URL");
-					if(artUrl == null){
-						artUrl = "";
-					}
-					
-					System.out.println("===================>"+artTitleStyle);
-					String hotAndNewImg = "";
-					int showImgNum = 0;
-					if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
-						if(artTitleStyle.indexOf("HOT") > 0){
-							hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/hot.png");
-							showImgNum ++;
-						}
-						if(artTitleStyle.indexOf("NEW") > 0){
-							hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/new.png");
-							showImgNum ++;
-						}
-					}
-					
-					if(j==0){
-						hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/hot.png");
-						showImgNum ++;
-						hotAndNewImg = hotAndNewImg + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/new.png");
-						showImgNum ++;
-					}
-					
-					if(j==1){
-						hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/new.png");
-						showImgNum ++;
-					}
-					
-					String width = "";
-					if(showImgNum == 2){
-						width = "57%";
-						titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML",artUrl,artTitle,hotAndNewImg,artDate,width );
-					}else{
-						if(showImgNum == 1){
-							width = "65%";
-							titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML",artUrl,artTitle,hotAndNewImg,artDate,width );
-						}else{
-							width = "73%";
-							titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML", artUrl,artTitle,"",artDate,width);
-						}
-					}
-				}
-			}
-			*/
-			//css和js
-			jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LIST_JS_CSS",ctxPath,siteId,currentColumnId);
-			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LIST_HTML", columnName,"");
+			//css和js														
+			jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LIST_JS_CSS",ctxPath,siteId,currentColumnId);
+			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LIST_HTML", columnName,"");
 			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",columnName,ctxPath,jsCss,siteId,menuId,listHtml);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -189,6 +128,7 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 						artUrl = "";
 					}
 					
+					/*
 					String hotAndNewImg = "";
 					int showImgNum = 0;
 					if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
@@ -215,6 +155,10 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 							titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML", artUrl,artTitle,"",artDate,width);
 						}
 					}
+					*/
+					
+					titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LI","12" ,"01",artTitle,artUrl);
+					
 					resultNum = resultNum +1;
 				}
 			}

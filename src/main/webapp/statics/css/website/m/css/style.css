@@ -194,13 +194,10 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .login_bottom{width:100%;height:auto;overflow:hidden;position:relative;margin:2% auto;}
 .login_forget{float:left;overflow:hidden;}
 .login_forget i{float:left;width:1rem;height:1rem;background:url(../images/forget.png)no-repeat center center;background-size:90%;}
-.login_forget span{float:left;color:#fff;font-size:0.54rem;margin-left:3px;line-height:1rem;}
-.account_active{float:left;overflow:hidden;}
-.account_active i{float:left;width:1rem;height:1rem;background:url(../images/jh.png)no-repeat center center;background-size:90%;}
-.account_active span{float:left;color:#fff;font-size:0.54rem;margin-left:3px;line-height:1rem;}
+.login_forget span{float:left;color:#8f5dbf;font-size:0.54rem;margin-left:3px;line-height:1rem;}
 .login_help{float:right;overflow:hidden;}
 .login_help i{float:left;width:1rem;height:1rem;background:url(../images/help.png)no-repeat center center;background-size:90%;}
-.login_help span{float:left;color:#fff;font-size:0.54rem;margin-left:3px;line-height:1rem;}
+.login_help span{float:left;color:#8f5dbf;font-size:0.54rem;margin-left:3px;line-height:1rem;}
 .book_logo{position:absolute;top:8%;left:0;z-index:115;}
 #body_login{width:100%;height:100%;background:url(../images/login_bg.png)no-repeat center center;background-size:100%;}
 .add_tips{color:#fff;font-size:0.6rem;float:left;position:relative;margin-top:1%;}
@@ -318,7 +315,7 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 /*忘记密码*/
 
 .login_tit{width:80%;height:auto;margin:0 auto;overflow:hidden;padding:3% 0;}
-.login_tit li{padding-bottom:2%;width:40%;float:left;font-size:0.7rem;color:#fff;text-align:center;list-style:none;}
+.login_tit li{padding-bottom:2%;width:40%;float:left;font-size:0.7rem;color:#666;text-align:center;list-style:none;}
 .login_tit li:nth-child(2){float:right;}
 .add_f{color:#8f5dbf !important;border-bottom:2px solid #8f5dbf;}
 

@@ -41,12 +41,12 @@ function getMyAppActivity(siteid,pagenum){
 				},
 				url: TzUniversityContextPath+"/dispatcher",
 				dataType: 'json',
-				success: function(result) {	
+				success: function(resultJson) {	
 					pagenum=pagenum+1;
-					var resultNum = result.comContent.resultNum;
+					var resultNum = resultJson.comContent.resultNum;
 					if(resultNum > 0){
 						// 插入数据到页面，放到最后面
-	                	$('.bg').append(result.comContent.result);
+	                	$('.bg').append(resultJson.comContent.result);
 					}else{
 						 // 锁定
                         me.lock();

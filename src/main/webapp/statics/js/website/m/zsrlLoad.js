@@ -5,7 +5,7 @@ function getNotices(siteid,columnId,pagenum){
 			$.ajax({
 				type: 'GET',
 				data:{
-					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_HDTZ_LIST","OperateType":"LOADNOTICES","comParams":{"siteId": "'+ siteid +'","columnId": "' + columnId + '","pagenum": '+pagenum+'}}'
+					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_ZSRL_STD","OperateType":"LOADZSRL","comParams":{"siteId": "'+ siteid +'","columnId": "' + columnId + '","pagenum": '+pagenum+'}}'
 				},
 				url: TzUniversityContextPath+"/dispatcher",
 				dataType: 'json',
