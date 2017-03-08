@@ -167,7 +167,6 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			actCount = sqlQuery.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
 			String strActCount = String.valueOf(actCount);
 			//System.out.println("strActCount=" + strActCount);
-			System.out.println("znxListUrl"+znxListUrl);
 			String personHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_GRXX_INFO_HTML",strModifyLabel,strRegEmailLabel,strMshXhLabel,strCityLabel,strSiteMsgLabel,strMyActLabel,strPhoto,strName,strRegEmail,strApplicationNum,strCity,strMsgCount,strActCount,accountMngUrl,znxListUrl,myActivityYetUrl);
 			
 			
