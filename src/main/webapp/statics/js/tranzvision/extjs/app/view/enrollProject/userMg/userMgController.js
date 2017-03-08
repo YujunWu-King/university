@@ -646,11 +646,14 @@
 	        var arrAddSQLValue=[];
 	        
 	        var selList = this.getView().getSelectionModel().getSelection();
-	        
+	        if(selList.length==0){
+    			Ext.MessageBox.alert('提示', '请先选择用户');
+    			return;
+    		}
         		
 	        var arrAddAudiValue=[];
 	        Ext.tzShowPromptSearch({
-	            recname: 'TZ_AUDCX_VW',
+	            recname: 'PS_TZ_AUDCX_VW',
 	            searchDesc: '选择听众',
 	            maxRow:50,
 	            condition:{
@@ -661,7 +664,7 @@
 	                    }
 	                },
 	                srhConFields:{
-	                    TZ_AUD_NAME:{
+	                    TZ_AUD_NAM:{
 	                        desc:'听众名称',
 	                        operator:'07',
 	                        type:'01'
@@ -817,6 +820,11 @@
 		//获取选中人员；
 		var selList = this.getView().getSelectionModel().getSelection();
 		//拼接参数，新开听众页面；
+		
+	    if(selList.length==0){
+ 			Ext.MessageBox.alert('提示', '请先选择用户');
+ 			return;
+ 		}
 		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{"add":[{"audJG":"ADMIN","audID":"NEXT","audName":"","audStat":"1","audType":"2","audMS":"","audSQL":"","audLY":"ZCYH"}]}}';
 		
 		//后台执行插入表操作
