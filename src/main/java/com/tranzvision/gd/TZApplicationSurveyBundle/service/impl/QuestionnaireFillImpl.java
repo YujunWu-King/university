@@ -56,7 +56,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 @Service("com.tranzvision.gd.TZApplicationSurveyBundle.service.impl.QuestionnaireFillImpl")
 public class QuestionnaireFillImpl extends FrameworkImpl {
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientService.class);
-	
+
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 
@@ -121,7 +121,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 * Session存储的测试考生的Oprid
 	 */
 	public final String userSessionName = "TUser";
-	
+
 	/* 问卷保存 */
 
 	/*******************************************************************************************************************************
@@ -159,13 +159,11 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 			if (null != objOprid) {
 				strPersonId = String.valueOf(objOprid);
-			}else{
+			} else {
 				// 如果不存在登录人设置为访客
 				strPersonId = "TZ_GUEST";
 			}
 		}
-		
-
 
 		String strForm = null;
 		// 取JSON数据的MAP
@@ -354,7 +352,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String strParams) {
 		logger.info("问卷填写页面");
 
-		//客户端是否移动设备访问
+		// 客户端是否移动设备访问
 		boolean isMobile = CommonUtils.isMobile(request);
 
 		String successFlag = "0";
@@ -366,7 +364,6 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 		String fromIntro = "";
 
-
 		String strTitle = null, strModeDesc = null;
 		String strReturn = null;
 		JacksonUtil jsonUtil = new JacksonUtil();
@@ -375,25 +372,25 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 		// 如果不存在登录人设置为访客
 		if (strPersonId == null || strPersonId.equals("")) {
-			/*是不是测测上清华相关的功能*/
+			/* 是不是测测上清华相关的功能 */
 			TzSession tzSession = new TzSession(request);
 			Object objOprid = tzSession.getSession(userSessionName);
 
 			if (null != objOprid) {
 				strPersonId = String.valueOf(objOprid);
-			}else{
+			} else {
 				strPersonId = "TZ_GUEST";
 			}
 		}
 
 		jsonUtil.json2Map(strParams);
 
-		/* 问卷编号 、实例编号、控制逻辑*/
-		String surveyID = "",surveyInsId = "",surveyLogic = "";
-		
+		/* 问卷编号 、实例编号、控制逻辑 */
+		String surveyID = "", surveyInsId = "", surveyLogic = "";
+
 		/* 调查问卷应用编号 */
 		String classId = request.getParameter("classid");
-		
+
 		/* 从参数中获取问卷编号、实例编号 */
 		if (classId != null && !classId.equals("")) {
 			surveyID = request.getParameter("SURVEY_WJ_ID");
@@ -414,15 +411,15 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				uniqueNum = jsonUtil.getString("unique");
 			}
 		}
-		
-		/* 1.验证实例编号是否为null*/
+
+		/* 1.验证实例编号是否为null */
 		logger.info("--- 1.验证实例编号是否为null ---");
 		if (StringUtils.isBlank(surveyID)) {
 			successFlag = "1";
 			strMsg = "The Survey Id is empty!";
 		}
-		
-		/* 2.验证问卷编号是否合法*/
+
+		/* 2.验证问卷编号是否合法 */
 		logger.info("--- 2.验证问卷编号是否合法 ---");
 		PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = new PsTzDcWjDyTWithBLOBs();
 		if (successFlag.equals("0")) {
@@ -432,9 +429,9 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				strMsg = "The Survey Id is not valid!";
 			}
 		}
-		
-		/*卷头、卷尾、语言*/
-		String header = "",footer = "",language = "";
+
+		/* 卷头、卷尾、语言 */
+		String header = "", footer = "", language = "";
 		if (successFlag.equals("0")) {
 			header = psTzDcWjDyTWithBLOBs.getTzDcJtnr();
 			footer = psTzDcWjDyTWithBLOBs.getTzDcJwnr();
@@ -444,8 +441,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				language = "ZHS";
 			}
 		}
-		
-		/* 3.根据登录状态判断是否可以参与调查*/
+
+		/* 3.根据登录状态判断是否可以参与调查 */
 		logger.info("---2.根据登录状态判断是否可以参与调查 ---");
 		boolean boolRtn = false;
 		if (successFlag.equals("0")) {
@@ -455,31 +452,35 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				strMsg = surveryRulesImpl.msg;
 			}
 		}
-		
-		/* 4.实例编号、实例唯一随机数是否为null*/
+
+		/* 4.实例编号、实例唯一随机数是否为null */
 		logger.info("---4.实例编号、实例唯一随机数是否为null ---");
 		logger.info(" ----- 问卷实例编号:" + surveyInsId + "            --------------实例唯一随机数Befro2: " + uniqueNum);
-		if(successFlag.equals("0")){
-			if(StringUtils.isBlank(surveyInsId) && StringUtils.isBlank(uniqueNum)){
+		if (successFlag.equals("0")) {
+			if (StringUtils.isBlank(surveyInsId) && StringUtils.isBlank(uniqueNum)) {
 				String isTrue = "N";
-				isTrue = jdbcTemplate.queryForObject("SELECT 'Y' FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID = ? AND TZ_DC_WJ_DLZT = 'N' AND TZ_DC_WJ_IPGZ = '3'", new Object[] { surveyID },"String");
-				if(StringUtils.equals("Y", isTrue)){
-					Map<String, Object> map = jdbcTemplate.queryForMap("SELECT TZ_APP_INS_ID,TZ_UNIQUE_NUM FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1", new Object[] { surveyID,strPersonId });
-					if(map != null){
-						surveyInsId = map.get("TZ_APP_INS_ID") == null?"":String.valueOf(map.get("TZ_APP_INS_ID"));
-						uniqueNum = map.get("TZ_UNIQUE_NUM") == null?"":String.valueOf(map.get("TZ_UNIQUE_NUM"));
+				isTrue = jdbcTemplate.queryForObject(
+						"SELECT 'Y' FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID = ? AND TZ_DC_WJ_DLZT = 'N' AND TZ_DC_WJ_IPGZ = '3'",
+						new Object[] { surveyID }, "String");
+				if (StringUtils.equals("Y", isTrue)) {
+					Map<String, Object> map = jdbcTemplate.queryForMap(
+							"SELECT TZ_APP_INS_ID,TZ_UNIQUE_NUM FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1",
+							new Object[] { surveyID, strPersonId });
+					if (map != null) {
+						surveyInsId = map.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(map.get("TZ_APP_INS_ID"));
+						uniqueNum = map.get("TZ_UNIQUE_NUM") == null ? "" : String.valueOf(map.get("TZ_UNIQUE_NUM"));
 					}
 				}
-				if(StringUtils.isBlank(surveyInsId) || Integer.parseInt(surveyInsId) < 1){
+				if (StringUtils.isBlank(surveyInsId) || Integer.parseInt(surveyInsId) < 1) {
 					uniqueNum = String.valueOf(((int) (Math.random() * 100)) * 951)
 							+ String.valueOf(((int) (Math.random() * 100)) * 233)
 							+ String.valueOf(((int) (Math.random() * 100)) * 5713)
 							+ String.valueOf(((int) (Math.random() * 100)) * 35771) + "000000000000000";
 					uniqueNum = uniqueNum.substring(0, 15);
 				}
-				
+
 				String url = request.getRequestURL() + "?" + request.getQueryString();
-				if(StringUtils.isNotBlank(surveyInsId) && Integer.parseInt(surveyInsId) > 0){
+				if (StringUtils.isNotBlank(surveyInsId) && Integer.parseInt(surveyInsId) > 0) {
 					url = url + "&SURVEY_INS_ID=" + surveyInsId;
 				}
 				url = url + "&unique=" + uniqueNum;
@@ -493,7 +494,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				}
 			}
 		}
-		
+
 		/* 统一接口URL */
 		String tzGeneralURL = request.getContextPath() + "/dispatcher";
 		String path = request.getContextPath();
@@ -518,9 +519,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			}
 		}
 
-		
-		//TODO 不允许匿名调查,检查听众 JAVA版本没有听众这个 
-		/* 7.根据唯一序列号获取实例编号*/
+		// TODO 不允许匿名调查,检查听众 JAVA版本没有听众这个
+		/* 7.根据唯一序列号获取实例编号 */
 		if (successFlag.equals("0")) {
 			if (StringUtils.isBlank(surveyInsId)) {
 				surveyInsId = jdbcTemplate.queryForObject(
@@ -528,12 +528,12 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 						"String");
 			}
 		}
-		
+
 		/* 8.调查数据采集规则 */
 		logger.info("7.调查数据采集规则");
 		if (successFlag.equals("0")) {
-			if(StringUtils.isBlank(surveyInsId) || Integer.parseInt(surveyInsId) < 1){
-				
+			if (StringUtils.isBlank(surveyInsId) || Integer.parseInt(surveyInsId) < 1) {
+
 				boolRtn = surveryRulesImpl.checkSingleAnswerRules(psTzDcWjDyTWithBLOBs, language, request, strPersonId);
 				if (!boolRtn) {
 					successFlag = "1";
@@ -542,22 +542,29 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			}
 		}
 
-
 		/* 是否可以填写调查问卷 */
 		if (successFlag.equals("0")) {
 			/* 模式信息 */
-			String survey_mode = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET","SURVEY_MODE", language, "调查模式", "Survey");
-			String survey_mode_desc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET","SURVEY_MODE_DESC", language, "您提交的数据我们将会保存", "Save");
-			String begin = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "BEGIN", language,"开始", "GO");
-			String submit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SUBMIT",language, "提交问卷", "Submit");
-			String strPre = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_PRE",language, "上一页", "Pre");
-			String strNext = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_NEXT",language, "下一页", "Next");
+			String survey_mode = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET",
+					"SURVEY_MODE", language, "调查模式", "Survey");
+			String survey_mode_desc = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET",
+					"SURVEY_MODE_DESC", language, "您提交的数据我们将会保存", "Save");
+			String begin = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "BEGIN", language,
+					"开始", "GO");
+			String submit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SUBMIT",
+					language, "提交问卷", "Submit");
+			String strPre = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_PRE",
+					language, "上一页", "Pre");
+			String strNext = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_NEXT",
+					language, "下一页", "Next");
 
 			try {
-				if(isMobile){
-					strModeDesc = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_MODE_M_HTML", survey_mode, survey_mode_desc);
-				}else{
-					strModeDesc = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_MODE_HTML", survey_mode, survey_mode_desc, path);
+				if (isMobile) {
+					strModeDesc = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_MODE_M_HTML",
+							survey_mode, survey_mode_desc);
+				} else {
+					strModeDesc = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_MODE_HTML",
+							survey_mode, survey_mode_desc, path);
 				}
 			} catch (TzSystemException e) {
 				// TODO Auto-generated catch block
@@ -584,14 +591,14 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			try {
 				if (isEnable != null && isEnable.equals("Y") && (fromIntro == null || fromIntro.equals(""))) {
 					strHtml = "";
-					if(isMobile){
+					if (isMobile) {
 						strHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_INTRO_M_HTML",
-								header, strIntro, footer, tzGeneralURL, surveyID, surveyInsId, strTitle,
-								strModeDesc, begin, isPassAuth, surveyID, path);
-					}else{
+								header, strIntro, footer, tzGeneralURL, surveyID, surveyInsId, strTitle, strModeDesc,
+								begin, isPassAuth, surveyID, path);
+					} else {
 						strHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_INTRO_HTML", header,
-								strIntro, footer, tzGeneralURL, surveyID, surveyInsId, strTitle,
-								strModeDesc, begin, isPassAuth, surveyID, path);
+								strIntro, footer, tzGeneralURL, surveyID, surveyInsId, strTitle, strModeDesc, begin,
+								isPassAuth, surveyID, path);
 					}
 
 					logger.info("返回到TZ_SURVEY_INTRO_HTML 或TZ_SURVEY_INTRO_M_HTML");
@@ -608,6 +615,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			/* 文件报文数据、问卷实例报文数据 */
 			String surveyData = psTzDcWjDyTWithBLOBs.getTzApptplJsonStr();
 			logger.info("surveyData:" + surveyData);
+			surveyData = surveyData.replace("\\", "\\\\");
+			surveyData = surveyData.replaceAll("\\$", "~");
 			String surveyInsData = null;
 			try {
 				if (StringUtils.isNotBlank(surveyInsId) && Integer.parseInt(surveyInsId) > 0) {
@@ -624,6 +633,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				e.printStackTrace();
 			}
 			logger.info("surveyInsData:" + surveyInsData);
+			surveyInsData = surveyInsData.replace("\\", "\\\\");
+			surveyInsData = surveyInsData.replaceAll("\\$", "~");
 
 			int numMaxPage = jdbcTemplate.queryForObject(
 					"SELECT MAX(TZ_PAGE_NO) + 1 FROM PS_TZ_DCWJ_XXXPZ_T WHERE TZ_DC_WJ_ID = ?",
@@ -667,24 +678,27 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					"SELECT TZ_APP_SUB_STA FROM PS_TZ_DC_INS_T WHERE TZ_APP_INS_ID = ?", new Object[] { surveyInsId },
 					"String");
 			try {
-				/*是否为测试问卷*/
-				String isTestSurvey = jdbcTemplate.queryForObject("SELECT 'Y' FROM PS_TZ_CSWJ_TBL WHERE TZ_DC_WJ_ID = ? limit 0,1", new Object[] { surveyID },"String");
-				if(StringUtils.equals("Y", isTestSurvey)){
-					submit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "QUIT",
-							language, "退出/测试其他项目", "Quit");
+				/* 是否为测试问卷 */
+				String isTestSurvey = jdbcTemplate.queryForObject(
+						"SELECT 'Y' FROM PS_TZ_CSWJ_TBL WHERE TZ_DC_WJ_ID = ? limit 0,1", new Object[] { surveyID },
+						"String");
+				if (StringUtils.equals("Y", isTestSurvey)) {
+					submit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "QUIT", language,
+							"退出/测试其他项目", "Quit");
 				}
-				if(isMobile){
+				if (isMobile) {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_M_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
 							submit, language, strPre, strNext, strSubState, uniqueNum, path);
-				}else{
+				} else {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
 							submit, language, strPre, strNext, strSubState, uniqueNum, path);
 				}
 
+				strReturn = strReturn.replaceAll("\\~", "\\$");
 				logger.info("返回到TZ_SURVEY_PAGE_HTML 或TZ_SURVEY_PAGE_M_HTML");
 				logger.info("surveyID:" + surveyID);
 				logger.info("surveyInsId:" + surveyInsId);
@@ -695,10 +709,10 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		} else {
 			/* 不能填写问卷 */
 			try {
-				if(isMobile){
+				if (isMobile) {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ERROR_M_HTML", header,
 							strMsg, footer, path);
-				}else{
+				} else {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ERROR_HTML", header,
 							strMsg, footer, path);
 				}

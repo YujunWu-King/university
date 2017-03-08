@@ -19,12 +19,11 @@ import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsTBLMapper;
 import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT;
 import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL;
 import com.tranzvision.gd.util.base.TzSystemException;
-import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 @Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeApplyNumber")
-public class TzNegativeApplyNumber extends TzNegativeListBundle {
+public class TzNegativeApplyNumberServiceImpl extends TzNegativeListBundleServiceImpl {
 	@Autowired
 	private TZGDObject TzSQLObject;
 	@Autowired
@@ -35,8 +34,6 @@ public class TzNegativeApplyNumber extends TzNegativeListBundle {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
-	@Autowired
-	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsTzCsKsTBLMapper PsTzCsKsTBLMapper;
 
@@ -49,6 +46,8 @@ public class TzNegativeApplyNumber extends TzNegativeListBundle {
 		Date nowdate_time = new Date();
 
 		try {
+			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID'";
+			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
 
 			List<?> opridlist = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeApplyNumber"),
@@ -64,7 +63,9 @@ public class TzNegativeApplyNumber extends TzNegativeListBundle {
 						String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
 						Integer appinsId = SqlQuery.queryForObject(sql, new Object[] { classId, oprid }, "Integer");
 						PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
-						String fmqdId = "TZ_FMQ" + String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T", "TZ_FMQD_ID"));
+						// String fmqdId = "TZ_FMQ" +
+						// String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T",
+						// "TZ_FMQD_ID"));
 						PsTzCsKsFmT.setTzAppInsId(Long.valueOf(appinsId));
 						PsTzCsKsFmT.setTzClassId(classId);
 						PsTzCsKsFmT.setTzApplyPcId(batchId);
