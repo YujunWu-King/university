@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
@@ -17,6 +18,8 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl.MoblieWebsiteMenuServiceImpl")
 public class MoblieWebsiteMenuServiceImpl extends FrameworkImpl{
+	@Autowired
+	private SqlQuery sqlQuery;
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
@@ -58,7 +61,8 @@ public class MoblieWebsiteMenuServiceImpl extends FrameworkImpl{
 		//首页地址;
 		String indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId="+siteId;
 		//招生日历
-		String rlUrl = "";
+		String columnId = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",new Object[]{"TZ_M_WEB_ZSRL"},"String");
+		String rlUrl =  ctxPath + "/dispatcher?classid=mZsrl&siteId="+siteId+"&columnId="+columnId;
 		//状态查询;
 		String statusUrl = ctxPath + "/dispatcher?classid=mAppstatus&siteId="+siteId;
 		//联系我们;

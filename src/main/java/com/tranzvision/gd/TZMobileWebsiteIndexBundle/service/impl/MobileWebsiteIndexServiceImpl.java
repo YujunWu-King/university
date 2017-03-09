@@ -358,7 +358,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 							if(artUrl == null){
 								artUrl = "";
 							}
-							System.out.println("artId============================>"+artId);
+						
 							String hotAndNewImg = "";
 							int showImgNum = 0;
 							if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
