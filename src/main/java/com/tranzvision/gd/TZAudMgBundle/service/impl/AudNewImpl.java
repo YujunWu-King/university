@@ -495,7 +495,13 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						String SaudSQL = jacksonUtil.getString("audSQL");
 						String SaudID = jacksonUtil.getString("audID");
 						
-						
+						System.out.println(SaudID);
+						String DeleteSql = "DELETE FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? and TZ_DXZT='A'";
+						int ensure=jdbcTemplate.update(DeleteSql,new Object[]{SaudID});
+						System.out.println("ensure"+ensure);
+					
+							
+									
 						
 						//执行;
 						String deleteSQL = SaudSQL;

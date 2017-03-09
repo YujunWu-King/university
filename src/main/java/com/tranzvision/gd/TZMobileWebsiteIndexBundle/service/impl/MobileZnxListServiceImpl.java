@@ -33,17 +33,12 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 	private TZGDObject tzGDObject;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
-	private ValidateUtil validateUtil;
 	
 	//清华mba招生手机版系统消息列表
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		//rootPath;
 		String ctxPath = request.getContextPath();
-		
-		//当前登录人;
-		String m_curOPRID = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
@@ -112,13 +107,12 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 		String m_curOPRID = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				
 		String content = "";
-		String title = "站内信";
 		try {
 			int limit = 10;
 			int startNum = (pagenum - 1) * limit;
 			
-		    String znxSql = "SELECT A.TZ_ZNX_MSGID,A.TZ_ZNX_STATUS,DATE_FORMAT(B.ROW_ADDED_DTTM,'%Y/%m/%d')TZ_SEND_TIME,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = B.TZ_ZNX_SENDID)TZ_ZNX_SENDNAME,B.TZ_MSG_SUBJECT,A.TZ_MSG_TEXT FROM PS_TZ_ZNX_REC_T A,PS_TZ_ZNX_MSG_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND A.TZ_REC_DELSTATUS <> 'Y' ORDER BY B.ROW_ADDED_DTTM DESC LIMIT ?,?";
-			List<Map<String, Object>> list = sqlQuery.queryForList(znxSql,new Object[]{startNum,limit});
+		    String znxSql = "SELECT A.TZ_ZNX_MSGID,A.TZ_ZNX_STATUS,DATE_FORMAT(B.ROW_ADDED_DTTM,'%Y/%m/%d')TZ_SEND_TIME,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = B.TZ_ZNX_SENDID)TZ_ZNX_SENDNAME,B.TZ_MSG_SUBJECT,A.TZ_MSG_TEXT FROM PS_TZ_ZNX_REC_T A,PS_TZ_ZNX_MSG_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND A.TZ_REC_DELSTATUS <> 'Y' AND A.TZ_ZNX_RECID = ? ORDER BY B.ROW_ADDED_DTTM DESC LIMIT ?,?";
+			List<Map<String, Object>> list = sqlQuery.queryForList(znxSql,new Object[]{m_curOPRID,startNum,limit});
 			if(list!=null && list.size()>0){
 				for(int i=0; i < list.size(); i++){
 					//消息id;
