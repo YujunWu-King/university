@@ -249,35 +249,21 @@ body, button, input, select, textarea {
 
 	<script type="text/javascript">
 		/*用于拼装JSON字符串，然后用parseJSON转为JSON对象*/
-		function cmbcgbyyValueReplace(str) {
-
-			var s = "";
-
-			if (str == undefined) {
+		function cmbcgbyyValueReplace(str){ 
+		    var s = "";
+			if(str == undefined) {
 				return str;
 			}
-
-			if (str.length == 0)
-				return "";
-
+		    if(str.length == 0) return "";
 			s = $.trim(str.toString());
-
-			s = s.replace(/\\/g, "\\\\")
-
-			s = s.replace(/\"/g, "\\\"");
-
-			s = s.replace(/\'/g, "\\'");
-
-			s = s.replace(/\t/g, "\\t");
-
-			s = s.replace(/\f/g, "\\f");
-
-			s = s.replace(/\//g, "\\/");
-
-			s = s.replace(/\n/g, "\\n");
-
-			return s;
-
+			s = s.replace(/\\/g,"\\\\")
+			s = s.replace(/\"/g,"\\\"");
+			//s = s.replace(/\'/g,"\\'");
+			s = s.replace(/\t/g,"\\t");
+			s = s.replace(/\f/g,"\\f");
+			s = s.replace(/\//g,"\\/");
+			s = s.replace(/\n/g,"\\n");
+		    return s;
 		}
 
 		/*提交事件*/
@@ -294,16 +280,11 @@ body, button, input, select, textarea {
 						|| $(allParam[i]).attr("type") == "text") {
 					var inputValue = $.trim($(allParam[i]).val());
 
-					if ($(allParam[i]).attr("required") == "required"
-							&& inputValue == "") {
+					if ($(allParam[i]).attr("required") == "required" && inputValue == "") {
 						alert("%bind(:12)");
 						return;
 					} else {
-						strParam = strParam
-								+ "\""
-								+ cmbcgbyyValueReplace($(allParam[i])
-										.attr("id")) + "\":\""
-								+ cmbcgbyyValueReplace(inputValue) + "\",";
+						strParam = strParam + "\"" + cmbcgbyyValueReplace($(allParam[i]).attr("id")) + "\":\"" + cmbcgbyyValueReplace(inputValue) + "\",";
 					}
 				}
 			}
@@ -317,28 +298,24 @@ body, button, input, select, textarea {
 					alert("%bind(:12)");
 					return;
 				} else {
-					strParam = strParam
-							+ "\""
-							+ cmbcgbyyValueReplace($(selectParem[i]).attr("id"))
-							+ "\":\"" + cmbcgbyyValueReplace(inputValue)
-							+ "\",";
+					strParam = strParam + "\"" + cmbcgbyyValueReplace($(selectParem[i]).attr("id")) + "\":\"" + cmbcgbyyValueReplace(inputValue) + "\",";
 				}
 			}
 
 			strParam = strParam.substr(0, strParam.length - 1);
 			strParam = strParam + "}";
 
-			strComParams = "{\"ComID\":\"TZ_APPONL_COM\",\"PageID\":\"TZ_APPREG_STD\",\"OperateType\":\"EJSON\",\"comParams\":"
+			var strComParams = "{\"ComID\":\"TZ_APPONL_COM\",\"PageID\":\"TZ_APPREG_STD\",\"OperateType\":\"EJSON\",\"comParams\":"
 					+ strParam + "}";
 
 			// strComParams = $.parseJSON(strComParams);
-			// console.log(strComParams);
-			strComParams = encodeURIComponent(strComParams);
+			console.log(strComParams);
+			//strComParams = encodeURIComponent(strComParams);
 			$.ajax({
 				type : "POST",
-				url : applyURL + "?tzParams=" + strComParams,
-				//data: {"tzParams":strComParams},
+				url: applyURL,
 				dataType : "json",
+				data:{"tzParams":strComParams},
 				success : function(data) {
 					var result = data.comContent.result;
 					var resultDesc = data.comContent.resultDesc;

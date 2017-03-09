@@ -114,7 +114,7 @@ public class TzInterviewAppoStuAddImpl extends FrameworkImpl{
 					mapList.put("oprid", rowList[3]);
 					mapList.put("stuName", rowList[4]);
 					mapList.put("email", rowList[5]);
-					mapList.put("mobile", rowList[5]);
+					mapList.put("mobile", rowList[6]);
 
 					listData.add(mapList);
 				}

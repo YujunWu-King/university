@@ -64,7 +64,7 @@
 			
 			s = s.replace(/\\/g,"\\\\")
 			s = s.replace(/\"/g,"\\\"");
-			s = s.replace(/\'/g,"\\'");
+			//s = s.replace(/\'/g,"\\'");
 			s = s.replace(/\t/g,"\\t");
 			s = s.replace(/\f/g,"\\f");
 			s = s.replace(/\//g,"\\/");
@@ -165,12 +165,13 @@
 			strParam = strParam + "}";
 			
 			var strComParams = "{\"ComID\":\"TZ_HD_MOBILE_COM\",\"PageID\":\"TZ_HD_APPFORM_STD\",\"OperateType\":\"EJSON\",\"comParams\":"+ strParam + "}";
-			strComParams = encodeURIComponent(strComParams);
+			//strComParams = encodeURIComponent(strComParams);
 			$.ajax({
 				type : "POST",
-				url : applyURL + "?tzParams=" + strComParams,
+				url : applyURL,
 				dataType:"json",
 				async:false,
+				data:{"tzParams": strComParams},
 				success: function(resp){
 					var data = resp.comContent;
 					var result = data.result;

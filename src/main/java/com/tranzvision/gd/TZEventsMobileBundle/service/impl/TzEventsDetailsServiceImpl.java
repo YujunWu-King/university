@@ -349,6 +349,8 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 			String actAddr = "";
 			String startTime = "";
 			String endTime = "";
+			SimpleDateFormat simpleDatetimeFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
 			sql = "select TZ_NACT_ADDR,concat(TZ_START_DT,' ',TZ_START_TM) as TZ_START_DT,concat(TZ_END_DT,' ',TZ_END_TM) as TZ_END_DT from PS_TZ_ART_HD_TBL where TZ_ART_ID=?";
 			Map<String, Object> actMap = sqlQuery.queryForMap(sql, new Object[] { actId });
 			if(actMap != null){
@@ -356,7 +358,6 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 				startTime = actMap.get("TZ_START_DT") == null ? "" : actMap.get("TZ_START_DT").toString();
 				endTime = actMap.get("TZ_END_DT") == null ? "" : actMap.get("TZ_END_DT").toString();
 				
-				SimpleDateFormat simpleDatetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				SimpleDateFormat simpleDttmFormat = new SimpleDateFormat("MM/dd HH:mm");
 				if(!"".equals(startTime)){
 					startTime = simpleDttmFormat.format(simpleDatetimeFormat.parse(startTime)); 
@@ -364,11 +365,27 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 				if(!"".equals(endTime)){
 					endTime = simpleDttmFormat.format(simpleDatetimeFormat.parse(endTime)); 
 				}
+			}else{
+				//如果不是活动，地点取内容表中的TZ_LONG1字段，时间就取TZ_DATE1
+				sql = "select TZ_LONG1,TZ_DATE1 from PS_TZ_ART_REC_TBL where TZ_ART_ID=?";
+				actMap = sqlQuery.queryForMap(sql, new Object[] { actId });
+				if(actMap != null){
+					actAddr = actMap.get("TZ_LONG1") == null ? "" : actMap.get("TZ_LONG1").toString();
+					startTime = actMap.get("TZ_DATE1") == null ? "" : actMap.get("TZ_DATE1").toString();
+					
+					SimpleDateFormat simpleDttmFormat2 = new SimpleDateFormat("yyyy/MM/dd");
+					if(!"".equals(startTime)){
+						startTime = simpleDttmFormat2.format(simpleDatetimeFormat.parse(startTime)); 
+					}
+				}
+			}
+			
+			if(!"".equals(endTime)){
+				startTime = startTime+ " - " +endTime;
 			}
 			
 			rtnMap.put("location", actAddr);
-			rtnMap.put("startTime", startTime);
-			rtnMap.put("endTime", endTime);
+			rtnMap.put("dateTime", startTime);
 
 		}catch(Exception e){
 			e.printStackTrace();

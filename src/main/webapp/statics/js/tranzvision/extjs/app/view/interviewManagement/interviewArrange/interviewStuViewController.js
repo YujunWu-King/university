@@ -175,5 +175,48 @@
 	onWindowClose: function(btn){
 		var win = btn.findParentByType("interviewStuViewAddWin");
 		win.close();
+	},
+	
+	
+	//导出Excel
+	exportToExcel:function(btn){
+		var msArrGrid = btn.findParentByType("grid");
+		var selList = msArrGrid.getSelectionModel().getSelection();
+		if(selList.length<1) {
+			Ext.MessageBox.alert("提示", "您没有选中任何记录");
+			return;
+		};
+
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MS_ARR_EXP_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert("提示","您没有权限");
+			return;
+		}
+
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert("提示","未找到该功能页面对应的JS类，请检查配置。");
+			return;
+		}
+		
+		if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+		ViewClass = Ext.ClassManager.get(className);
+
+		var msArrFormRec = msArrGrid.up('form').getForm().getFieldValues();
+		var msArrFormclassID = msArrFormRec["classID"];
+		var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"getModalId","comParams":{"classID":"'+msArrFormclassID+'"}}';
+
+		Ext.tzLoadAsync(tzParams,function(responseData){
+			win = new ViewClass(responseData.modalId);
+
+			win.selList=selList;
+			var form = win.child("form").getForm();
+			form.reset();
+			win.show();
+		});
 	}
 })

@@ -105,6 +105,10 @@ public class TzInterviewPlanImpl extends FrameworkImpl{
 							break;
 						}
 						
+						if(!isSameDate(planSdate,planEdate)){//开始结束日期在不允许跨天
+							continue;
+						}
+						
 						PsTzMssjArrTbl psTzMssjArrTbl = new PsTzMssjArrTbl();
 						
 						psTzMssjArrTbl.setTzClassId(classID);
@@ -154,4 +158,28 @@ public class TzInterviewPlanImpl extends FrameworkImpl{
 		
 		return date;
 	}
+	
+	/**
+	 * 判断两个时间是否为同一天
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
+	private boolean isSameDate(Date date1, Date date2) {
+       Calendar cal1 = Calendar.getInstance();
+       cal1.setTime(date1);
+
+       Calendar cal2 = Calendar.getInstance();
+       cal2.setTime(date2);
+
+       boolean isSameYear = cal1.get(Calendar.YEAR) == cal2
+               .get(Calendar.YEAR);
+       boolean isSameMonth = isSameYear
+               && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+       boolean isSameDate = isSameMonth
+               && cal1.get(Calendar.DAY_OF_MONTH) == cal2
+                       .get(Calendar.DAY_OF_MONTH);
+
+       return isSameDate;
+   }
 }
