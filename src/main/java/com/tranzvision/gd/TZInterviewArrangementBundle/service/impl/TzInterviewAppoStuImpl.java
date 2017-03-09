@@ -75,12 +75,14 @@ public class TzInterviewAppoStuImpl extends FrameworkImpl{
 						String name = "";
 						String email = "";
 						String mobile = "";
-						sql = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+						String interviewAppID = "";
+						sql = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE,TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 						Map<String,Object> infoMap = jdbcTemplate.queryForMap(sql, new Object[]{ oprid });
 						if(infoMap != null){
-							name = String.valueOf(infoMap.get("TZ_REALNAME"));
-							email = String.valueOf(infoMap.get("TZ_EMAIL"));
-							mobile = String.valueOf(infoMap.get("TZ_MOBILE"));
+							name = infoMap.get("TZ_REALNAME").toString();
+							email = infoMap.get("TZ_EMAIL").toString();
+							mobile = infoMap.get("TZ_MOBILE").toString();
+							interviewAppID = infoMap.get("TZ_MSH_ID").toString();
 						}
 						
 						
@@ -107,6 +109,7 @@ public class TzInterviewAppoStuImpl extends FrameworkImpl{
 						
 						mapJson.put("email", email);
 						mapJson.put("mobile", mobile);
+						mapJson.put("interviewAppID", interviewAppID);
 						
 						mapJson.put("sort", sort);
 						mapJson.put("msDate", msDate);

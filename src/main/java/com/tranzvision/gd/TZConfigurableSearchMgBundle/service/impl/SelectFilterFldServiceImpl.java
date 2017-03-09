@@ -150,7 +150,8 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 					String fieldNameSQL = "select DATA_TYPE,COLUMN_COMMENT from TZ_SCHEMA_COLUMNS_VW where TABLE_NAME=? AND COLUMN_NAME=?";
 					Map<String, Object> map = jdbcTemplate.queryForMap(fieldNameSQL,new Object[]{tableName,str_field_name});
 					str_fieldgl_desc = (String) map.get("COLUMN_COMMENT");
-					String fieldType = (String) map.get("DATA_TYPE");
+					//String fieldType = (String) map.get("DATA_TYPE");
+					String fieldType =  map.get("DATA_TYPE").toString();
 					
 					psTzFilterFldT = new PsTzFilterFldT();
 					psTzFilterFldT.setTzComId(str_com_id);

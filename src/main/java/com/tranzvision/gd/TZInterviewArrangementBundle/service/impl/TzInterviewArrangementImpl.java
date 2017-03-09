@@ -214,6 +214,9 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 			case "queryAudIDsArr":
 				strRet = this.queryAudIDsArr(strParams, errorMsg);
 				break;
+			case "getModalId":
+				strRet = this.tzGetModalId(strParams, errorMsg);
+				break;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -242,6 +245,8 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 			
 			String classID = jacksonUtil.getString("classID");
 			String batchID = jacksonUtil.getString("batchID");
+			String clearAllTimeArr = jacksonUtil.getString("clearAllTimeArr");//清除所有时间安排
+			
 			
 			Map<String, Object> formData = null;
 			formData = jacksonUtil.getMap("formData");
@@ -343,19 +348,25 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 			}
 			
 			//删除的时间安排
-			List<Map<String, Object>> removeData = null;
-			removeData = (List<Map<String, Object>>) jacksonUtil.getList("removerecs");
-			for(Map<String, Object> removeMap: removeData){
-				String strClassID = removeMap.get("classID")==null? null : String.valueOf(removeMap.get("classID"));
-				String strBatchID = removeMap.get("batchID")==null? null : String.valueOf(removeMap.get("batchID"));
-				String msJxNo = removeMap.get("msJxNo")==null? null : String.valueOf(removeMap.get("msJxNo"));
-				
-				psTzMssjArrTblKey.setTzClassId(strClassID);
-				psTzMssjArrTblKey.setTzBatchId(strBatchID);
-				psTzMssjArrTblKey.setTzMsPlanSeq(msJxNo);
-				psTzMssjArrTblMapper.deleteByPrimaryKey(psTzMssjArrTblKey);
-			}	
-			
+			if("ALL".equals(clearAllTimeArr)){
+				//删除所有
+				String sql = "delete from PS_TZ_MSSJ_ARR_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
+				jdbcTemplate.update(sql, new Object[]{ classID, batchID });
+				jdbcTemplate.execute("commit");
+			}else{
+				List<Map<String, Object>> removeData = null;
+				removeData = (List<Map<String, Object>>) jacksonUtil.getList("removerecs");
+				for(Map<String, Object> removeMap: removeData){
+					String strClassID = removeMap.get("classID")==null? null : String.valueOf(removeMap.get("classID"));
+					String strBatchID = removeMap.get("batchID")==null? null : String.valueOf(removeMap.get("batchID"));
+					String msJxNo = removeMap.get("msJxNo")==null? null : String.valueOf(removeMap.get("msJxNo"));
+					
+					psTzMssjArrTblKey.setTzClassId(strClassID);
+					psTzMssjArrTblKey.setTzBatchId(strBatchID);
+					psTzMssjArrTblKey.setTzMsPlanSeq(msJxNo);
+					psTzMssjArrTblMapper.deleteByPrimaryKey(psTzMssjArrTblKey);
+				}	
+			}
 			rtnMap.replace("success", "success");
 		}catch(Exception e){
 			e.printStackTrace();
@@ -444,7 +455,7 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 					psTzMssjArrTblMapper.updateByPrimaryKey(psTzMssjArrTbl);
 				}
 			}
-			rtnMap.put("success", "success");
+			rtnMap.replace("success", "success");
 		}catch(Exception e){
 			e.printStackTrace();
 			errorMsg[0] = "1";
@@ -486,7 +497,7 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 					psTzMssjArrTblMapper.updateByPrimaryKey(psTzMssjArrTbl);
 				}
 			}
-			rtnMap.put("success", "success");
+			rtnMap.replace("success", "success");
 		}catch(Exception e){
 			e.printStackTrace();
 			errorMsg[0] = "1";
@@ -526,7 +537,7 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 				i++;
 			}
 			
-			rtnMap.put("result", "success");
+			rtnMap.replace("result", "success");
 			rtnMap.put("audIDs",audIDs);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -537,6 +548,41 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 		return strRet;
 	}
 	
+	
+	/**
+	 * 查询班级报名表
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String tzGetModalId(String strParams, String[] errorMsg){
+		String strRet = "";
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		rtnMap.put("result", "");
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			String modalId = "";
+			jacksonUtil.json2Map(strParams);
+			String classID = jacksonUtil.getString("classID");
+			
+			String sql = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
+			Map<String,Object> appMap = jdbcTemplate.queryForMap(sql, new Object[]{ classID });
+			
+			if(appMap != null){
+				modalId = appMap.get("TZ_APP_MODAL_ID").toString();
+			}
+			
+			rtnMap.replace("result", "success");
+			rtnMap.put("modalId",modalId);
+		}catch(Exception e){
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "操作异常。"+e.getMessage();
+		}
+		strRet = jacksonUtil.Map2json(rtnMap);
+		return strRet;
+	}
 }
 
 
