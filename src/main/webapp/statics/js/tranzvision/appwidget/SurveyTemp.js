@@ -219,6 +219,21 @@ var SurveyBuild = {
                     $("#is_checkstrlen").prop("checked", $(el).prop("checked"));
                 }
             } else {
+            	if (attrName == "isCheckRows") {
+           		 var RowLenValidatorObj = _rules["RowLenValidator"]
+                    if (!rules["RowLenValidator"] && RowLenValidatorObj) {
+                        rules["RowLenValidator"] = RowLenValidatorObj;
+                    }
+                    if (rules["RowLenValidator"]) {
+                        if (val == "Y") {
+                            rules["RowLenValidator"]["isEnable"] = "Y"
+                        } else {
+                            rules["RowLenValidator"]["isEnable"] = "N"
+                        }
+                        $("#is_CheckRows").prop("checked", $(el).prop("checked"));
+                    }
+           	 	} else {
+            	
                 if (attrName == "isNumSize") {
                     var NumSizeValidatorObj = _rules["NumSizeValidator"]
                     if (!rules["NumSizeValidator"] && NumSizeValidatorObj) {
@@ -275,6 +290,7 @@ var SurveyBuild = {
 
                     }
                 }
+            }
             }
         }
         this.is_edit = true;
@@ -529,6 +545,8 @@ var SurveyBuild = {
                 onchange = "SurveyBuild.saveCommonRulesBz(this,\'isRequire\')";
             } else if (ruleClsName == "CharLenValidator") {
                 onchange = "SurveyBuild.saveCommonRulesBz(this,\'isCheckStrLen\')";
+            } else if (ruleClsName == "RowLenValidator") {
+                onchange = "SurveyBuild.saveCommonRulesBz(this,\'isCheckRows\')";
             } else if (ruleClsName == "NumSizeValidator") {
                 onchange = "SurveyBuild.saveCommonRulesBz(this,\'isNumSize\')";
             } else if (ruleClsName == "RegularValidator") {
@@ -675,6 +693,8 @@ var SurveyBuild = {
                             component["isRequire"] = "Y";
                         } else if (classname == "CharLenValidator") {
                             component["isCheckStrLen"] = "Y";
+                        } else if (classname == "RowLenValidator") {
+                            component["isCheckRows"] = "Y";   
                         } else if (classname == "NumSizeValidator") {
                             component["isNumSize"] = "Y";
                         } else if (classname == "RegularValidator") {
@@ -2235,6 +2255,13 @@ var SurveyBuild = {
                         if (obj["maxLen"] > 0) _max = obj["maxLen"];
                         if (_max > 1 || obj["minLen"] > 0) {
                             if (obj["isCheckStrLen"] == "Y") _onError = obj["rules"]["CharLenValidator"]["messages"];
+                        }
+                    }
+                    if (obj["isCheckRows"] == "Y") {
+                        _min = Math.max(obj["minRow"], _min);
+                        if (obj["maxRow"] > 0) _max = obj["maxRow"];
+                        if (_max > 1 || obj["minRow"] > 0) {
+                            if (obj["isCheckRows"] == "Y") _onError = obj["rules"]["RowLenValidator"]["messages"];
                         }
                     }
                     if (obj["isNumSize"] == "Y") {

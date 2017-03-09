@@ -234,7 +234,9 @@ var SurveyBuild = {
                             component["isNumSize"] = "Y";
                         } else if (classname == "RegularValidator") {
                             component["preg"] = "Y";
-                        }
+                        } else if (classname == "RowLenValidator") {
+                        	 component["isCheckRows"] = "Y";
+                        }       
                     }
                 });
             //把校验规则Copy到实例对象中
@@ -616,6 +618,14 @@ var SurveyBuild = {
                             if (obj["isCheckStrLen"] == "Y") _onError = obj["rules"]["CharLenValidator"]["messages"];
                         }
                     }
+                    if (obj["isCheckRows"] == "Y") {
+                        _min = Math.max(obj["minRow"], _min);
+                        if (obj["maxRow"] > 0) _max = obj["maxRow"];
+                        if (_max > 1 || obj["minRow"] > 0) {
+                            if (obj["isCheckRows"] == "Y") _onError = obj["rules"]["RowLenValidator"]["messages"];
+                        }
+                    }
+                    
                     if (obj["isNumSize"] == "Y") {
                         _min = Math.max(obj["min"], _min);
                         if (obj["max"] > 0) _max = obj["max"];

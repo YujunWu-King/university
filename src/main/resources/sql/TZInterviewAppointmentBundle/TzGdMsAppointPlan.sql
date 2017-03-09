@@ -19,6 +19,7 @@ WHERE
         AND A.OPRID = ?
         AND A.TZ_CLASS_ID = C.TZ_CLASS_ID
         AND B.TZ_APPLY_PC_ID = C.TZ_BATCH_ID 
+        AND C.TZ_MS_PUB_STA='Y'
         AND EXISTS( SELECT 
             'Y'
         FROM

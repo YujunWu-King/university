@@ -192,47 +192,15 @@
 										text:"撤销选中记录",
 										iconCls:"revoke",
 										handler:'UndoSelList'
-									},{
+									}/*,{
 										text:"导出选中记录到Excel",
 										iconCls:"excel",
 										handler:'exportToExcel'
-									}]
+									}*/]
 							}
 						]
 					}],
-					plugins: [/*{
-						ptype:'rowexpander',
-						rowBodyTpl : new Ext.XTemplate(
-							'<div class="x-grid-group-title" style="margin-left:30px">',
-							'<table class="x-grid3-row-table" cellspacing="0" cellpadding="0" border="0" >',
-							'<tpl for="moreInfo">',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">所在城市 ：</td><td style="font-weight: normal;max-width:800px;">{city}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">所在国家 ：</td><td style="font-weight: normal;max-width:800px;">{country}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">所属时区 ：</td><td style="font-weight: normal;max-width:800px;">{timezone}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">时差（同北京） ：</td><td style="font-weight: normal;max-width:800px;">{timezoneDiff}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">当地开始日期 ：</td><td style="font-weight: normal;max-width:800px;">{localStartDate}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">当地结束日期 ：</td><td style="font-weight: normal;max-width:800px;">{localFinishDate}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">邮箱 ：</td><td style="font-weight: normal;max-width:800px;">{lxEmail}</td>',
-							'</tr>',
-							'</tpl>',
-							'</table>',
-							'</div>',{}),
-						lazyRender : true,
-						enableCaching : false
-					},*/{
+					plugins: [{
 						ptype: 'cellediting',
 						pluginId: 'msArrCellEditingPlugin',
 						clicksToEdit: 1
