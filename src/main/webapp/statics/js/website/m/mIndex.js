@@ -1,7 +1,7 @@
 //招生活动和报考通知更多链接点击事件
 function hdtzMore(siteId){
 	var columnId = $(".zhaos .list .list_on").attr("date-column");
-	location.href = TzUniversityContextPath + "/dispatcher?classid=mEventNotice&siteId=" + siteId + "&columnId=" + columnId ;
+	location.href = TzUniversityContextPath + "/dispatcher?classid=mZsrl&siteId=" + siteId + "&columnId=" + columnId ;
 }
 
 //查看电子版条件录取通知书;

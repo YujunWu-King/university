@@ -112,7 +112,8 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 							strRet = "<script type=\"text/javascript\">;location.href=\"" + outurl + "\"</script>";
 						}
 					}else{
-						String htmlSQL = "select TZ_ART_NEWS_DT,TZ_ART_CONENT_SCR,TZ_ART_CONENT_SCR,TZ_ART_SJ_CONT_SCR from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=? and TZ_ART_NEWS_DT <= now()";
+						/* 不需要根据发布时间顾虑*/
+						String htmlSQL = "select TZ_ART_NEWS_DT,TZ_ART_CONENT_SCR,TZ_ART_CONENT_SCR,TZ_ART_SJ_CONT_SCR from PS_TZ_LM_NR_GL_T where TZ_SITE_ID=? and TZ_COLU_ID=? and TZ_ART_ID=?";
 						Map< String, Object> contentMap = jdbcTemplate.queryForMap(htmlSQL,new Object[]{siteId,columnId,artId});
 						if(contentMap == null){
 							strRet = "当前时间不可查看该内容";

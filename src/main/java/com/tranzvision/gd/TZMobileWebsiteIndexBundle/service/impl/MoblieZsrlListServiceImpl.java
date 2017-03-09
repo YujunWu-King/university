@@ -17,7 +17,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 清华mba招生手机版招生活动列表
+ * 清华mba招生手机版招生日历,招生活动,报考通知;
  * classId:  mZsrl
  * @author tang
  *
@@ -121,27 +121,33 @@ public class MoblieZsrlListServiceImpl extends FrameworkImpl{
 					String artId = (String) artList.get(j).get("TZ_ART_ID");
 					String artTitle = (String) artList.get(j).get("TZ_ART_TITLE");
 					String artTitleStyle = (String) artList.get(j).get("TZ_ART_TITLE_STYLE");
-					String artDate = (String) artList.get(j).get("TZ_ART_NEWS_DT");
-					//活动通知链接;
+					String artDate = (String) artList.get(j).get("TZ_DATE1");
+					
+					//查看是不是活动，如果是则取活动开始时间;
+					String hdStartDate = sqlQuery.queryForObject("select DATE_FORMAT(TZ_START_DT,'%Y/%m/%d') TZ_START_DT from PS_TZ_ART_HD_TBL WHERE TZ_ART_ID=?",new Object[]{artId},"String");
+					if(hdStartDate != null && !"".equals(hdStartDate)){
+						artDate = hdStartDate;
+					}
+					//通知链接;
 					String artUrl = (String) artList.get(j).get("TZ_ART_URL");
 					if(artUrl == null){
 						artUrl = "";
 					}
 					
-					/*
+					
 					String hotAndNewImg = "";
-					int showImgNum = 0;
+					//int showImgNum = 0;
 					if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
 						if(artTitleStyle.indexOf("HOT") > 0){
 							hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/hot.png");
-							showImgNum ++;
+							//showImgNum ++;
 						}
 						if(artTitleStyle.indexOf("NEW") > 0){
 							hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/new.png");
-							showImgNum ++;
+							//showImgNum ++;
 						}
 					}
-					
+					/*
 					String width = "";
 					if(showImgNum == 2){
 						width = "57%";
@@ -156,8 +162,14 @@ public class MoblieZsrlListServiceImpl extends FrameworkImpl{
 						}
 					}
 					*/
-					
-					titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LI","12" ,"01",artTitle,artUrl);
+					String month = "";
+					String day = "";
+					if(artDate != null && !"".equals(artDate)){
+						String[] artDateList = artDate.split("/");
+						month = artDateList[1];
+						day = artDateList[2];
+					}
+					titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LI",month ,day,artTitle,artUrl,hotAndNewImg);
 					
 					resultNum = resultNum +1;
 				}

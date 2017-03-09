@@ -352,7 +352,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 							String artId = (String) artList.get(j).get("TZ_ART_ID");
 							String artTitle = (String) artList.get(j).get("TZ_ART_TITLE");
 							String artTitleStyle = (String) artList.get(j).get("TZ_ART_TITLE_STYLE");
-							String artDate = (String) artList.get(j).get("TZ_ART_NEWS_DT");
+				
 							//活动通知链接;
 							String artUrl = (String) artList.get(j).get("TZ_ART_URL");
 							if(artUrl == null){
@@ -417,7 +417,11 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			//快捷菜单;
 			//申请指导;
-			String sqzd = "";
+			//对应的栏目id;
+			String sqzdColumnId = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_SQZD_COLUMN_ID"},"String");
+			//对应的文章id;
+			String sqzdArtid = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_SQZD_ART_ID"},"String");
+			String sqzd = sqlQuery.queryForObject("SELECT case A.TZ_ART_TYPE1 when 'B' then A.TZ_OUT_ART_URL  else  B.TZ_ART_URL END TZ_ART_URL FROM PS_TZ_ART_REC_TBL A INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=? AND A.TZ_ART_ID=?)", new Object[]{siteId,sqzdColumnId,sqzdArtid}, "String");
 			//报考自测;
 			String bkzc = ctxPath + "/exam/"+orgId.toLowerCase()+"/"+siteId;
 			//在线预约;
@@ -427,7 +431,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			String zlzqColumnId = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_ZLZQ_COLUMN_ID"},"String");
 			String zlzq = ctxPath + "/dispatcher?classid=mEventNotice&siteId=" + siteId + "&columnId=" + zlzqColumnId;
 			//常见问题;
-			String cjwt = "";
+			String cjwt = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_CJWT_URL"},"String");
 			String kjcdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_KJCD_HTML",ctxPath,sqzd,bkzc,viewJdUrl,zxyy,zlzq,cjwt);
 			
 			//展示内容

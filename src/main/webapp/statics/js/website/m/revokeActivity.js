@@ -1,30 +1,45 @@
 function revokeActivity(artId, bmrId){
 	//隐藏该报名div;
 	var hideDivId = "hd_" + artId + "_" + bmrId;
-	
+	var index;
 	//var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_MYEVENT_STD","OperateType":"REVOKE","comParams":{"artId":"'+artId+'","bmrId":"'+bmrId+'"}}';
 	var tzParams = '{"ComID":"TZ_APPONL_COM","PageID":"TZ_APPBAR_VIEW_STD","OperateType":"EJSON","comParams":{"APPLYID":"'+ artId +'","BMRID":"'+ bmrId+'"}}';
 	$.ajax({
 		type:"POST",
 		url: TzUniversityContextPath+"/dispatcher",
+		beforeSend:function(){
+			index = layer.open({
+				type: 2,
+				content: '处理中...'
+			});
+		},
 		data:{
 			tzParams:tzParams
 		},
 		success:function(response){
+			layer.close(index);
 			var responseJson = eval("(" + response + ")");
 			//console.log(responseJson);
 			//console.log(responseJson.comContent.success);
 			var successValue = responseJson.comContent.result;
 			var resultDesc = responseJson.comContent.resultDesc;
+			//信息框
+			 layer.open({
+			    content: resultDesc,
+			    btn: '关闭'
+			 });
+			
 			if(successValue == "0"){
-				alert(resultDesc);
 				$("#"+hideDivId).hide();
-			}else{
-				alert(resultDesc);
 			}
 		},
 		failure: function () {
-		  	alert("撤销失败");
+			layer.close(index);
+		  	//alert("撤销失败");
+			layer.open({
+			    content: "撤销失败",
+			    btn: '关闭'
+			 });
 		} 
 		
 	});	

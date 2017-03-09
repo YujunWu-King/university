@@ -17,7 +17,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 清华mba招生手机版招生活动和报考通知列表
+ * 清华mba招生手机版招生资料专区
  * classId:  mEventNotice
  * @author tang
  *
@@ -33,7 +33,7 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	
-	//清华mba招生手机版招生活动和报考通知列表
+	//清华mba招生手机版招生资料专区
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		String listHtml = "";
@@ -82,7 +82,7 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 					String artId = (String) artList.get(j).get("TZ_ART_ID");
 					String artTitle = (String) artList.get(j).get("TZ_ART_TITLE");
 					String artTitleStyle = (String) artList.get(j).get("TZ_ART_TITLE_STYLE");
-					String artDate = (String) artList.get(j).get("TZ_ART_NEWS_DT");
+					String artDate = (String) artList.get(j).get("TZ_DATE1");
 					//活动通知链接;
 					String artUrl = (String) artList.get(j).get("TZ_ART_URL");
 					if(artUrl == null){
@@ -182,8 +182,9 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 					String artId = (String) artList.get(j).get("TZ_ART_ID");
 					String artTitle = (String) artList.get(j).get("TZ_ART_TITLE");
 					String artTitleStyle = (String) artList.get(j).get("TZ_ART_TITLE_STYLE");
-					String artDate = (String) artList.get(j).get("TZ_ART_NEWS_DT");
-					//活动通知链接;
+					String artDate = (String) artList.get(j).get("TZ_DATE1");
+
+					//链接;
 					String artUrl = (String) artList.get(j).get("TZ_ART_URL");
 					if(artUrl == null){
 						artUrl = "";
