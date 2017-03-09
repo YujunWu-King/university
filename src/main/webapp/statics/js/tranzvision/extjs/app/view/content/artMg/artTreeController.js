@@ -511,6 +511,17 @@
 					//活动基本信息
 					var formData = responseData.formData;
 					form.setValues(formData);
+					var titleStyle = form.findField("titleStyleView").getValue();
+					if (titleStyle == "HOT"){
+						var artTitle = form.findField("artTitle").getValue();
+						var styleTitle = artTitle+"<span><font color ='#6633CC'> HOT</font></span>";
+						panel.down('#titleView').getEl().setHtml(styleTitle);
+					}
+					if (titleStyle == "NEW"){
+						var artTitle = form.findField("artTitle").getValue();
+						var styleTitle = artTitle+"<span><font color ='#bb1914'> NEW</font></span>";
+						panel.down('#titleView').getEl().setHtml(styleTitle);
+					}
 					var publishStatus = form.findField("publishStatus").getValue();
 					var siteId = form.findField("siteId").getValue();
 					if (publishStatus == "Y"){
