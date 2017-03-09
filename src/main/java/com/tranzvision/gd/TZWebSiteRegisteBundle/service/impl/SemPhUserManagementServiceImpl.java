@@ -55,7 +55,8 @@ public class SemPhUserManagementServiceImpl extends FrameworkImpl {
 				}
 			}
 			String strHeadHtml = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_ZHGL_HEAD_HTML",contextPath,commonUrl,jgId,strSiteId,language);
-			String strMainHtml = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_ZHGL_HTML",contextPath);
+			String indexUrl = commonUrl + "?classid=mIndex&siteId=" + strSiteId;
+			String strMainHtml = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_ZHGL_HTML",contextPath,indexUrl);
 
 			String strOrgId = "";
 			String strLang = "";
