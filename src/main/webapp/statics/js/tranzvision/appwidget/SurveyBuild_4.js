@@ -415,82 +415,98 @@ var SurveyBuild = {
                     $("#is_checkstrlen").prop("checked", $(el).prop("checked"));
                 }
             } else {
-                if (attrName == "isNumSize") {
-                    var NumSizeValidatorObj = _rules["NumSizeValidator"]
-                    if (!rules["NumSizeValidator"] && NumSizeValidatorObj) {
-                        rules["NumSizeValidator"] = NumSizeValidatorObj;
-                    }
-                    if (rules["NumSizeValidator"]) {
-                        if (val == "Y") {
-                            rules["NumSizeValidator"]["isEnable"] = "Y"
-                        } else {
-                            rules["NumSizeValidator"]["isEnable"] = "N"
-                        }
-                        $("#is_checkNumSize").prop("checked", $(el).prop("checked"));
-                    }
-                } else {
-                    // 正则校验
-                    if (attrName == "preg") {
-                        var RegularValidatorObj = _rules["RegularValidator"]
-                        if (!rules["RegularValidator"] && RegularValidatorObj) {
-                            rules["RegularValidator"] = RegularValidatorObj;
-                        }
-                        if (rules["RegularValidator"]) {
-                            if (val == "N" || val == "") {
-                                rules["RegularValidator"]["isEnable"] = "N"
-                            } else {
-                                rules["RegularValidator"]["isEnable"] = "Y"
-                            }
-                        }
-                    } else {
-                        if (attrName == "toCheckTjx") {
-                            var RefSizeValidatorObj = _rules["RefLetterValidator"]
-                            if (!rules["RefLetterValidator"] && RefSizeValidatorObj) {
-                                rules["RefLetterValidator"] = RefSizeValidatorObj;
-                            }
-                            if (rules["RefLetterValidator"]) {
-                                if (val == "Y") {
-                                    rules["RefLetterValidator"]["isEnable"] = "Y"
-                                } else {
-                                    rules["RefLetterValidator"]["isEnable"] = "N"
-                                }
+            	 if (attrName == "isCheckRows") {
+            		 var RowLenValidatorObj = _rules["RowLenValidator"]
+                     if (!rules["RowLenValidator"] && RowLenValidatorObj) {
+                         rules["RowLenValidator"] = RowLenValidatorObj;
+                     }
+                     if (rules["RowLenValidator"]) {
+                         if (val == "Y") {
+                             rules["RowLenValidator"]["isEnable"] = "Y"
+                         } else {
+                             rules["RowLenValidator"]["isEnable"] = "N"
+                         }
+                         $("#is_CheckRows").prop("checked", $(el).prop("checked"));
+                     }
+            	 } else {
+            	
+            		if (attrName == "isNumSize") {
+            			var NumSizeValidatorObj = _rules["NumSizeValidator"]
+            			if (!rules["NumSizeValidator"] && NumSizeValidatorObj) {
+            				rules["NumSizeValidator"] = NumSizeValidatorObj;
+            			}
+            			if (rules["NumSizeValidator"]) {
+            				if (val == "Y") {
+            					rules["NumSizeValidator"]["isEnable"] = "Y"
+            				} else {
+            					rules["NumSizeValidator"]["isEnable"] = "N"
+            				}
+            				$("#is_checkNumSize").prop("checked", $(el).prop("checked"));
+            			}
+            		} else {
+            			// 正则校验
+            			if (attrName == "preg") {
+            				var RegularValidatorObj = _rules["RegularValidator"]
+            				if (!rules["RegularValidator"] && RegularValidatorObj) {
+            					rules["RegularValidator"] = RegularValidatorObj;
+            				}	
+            				if (rules["RegularValidator"]) {
+            					if (val == "N" || val == "") {
+            						rules["RegularValidator"]["isEnable"] = "N"
+            					} else {
+            						rules["RegularValidator"]["isEnable"] = "Y"
+            					}
+            				}
+            			} else {
+            				if (attrName == "toCheckTjx") {
+            					var RefSizeValidatorObj = _rules["RefLetterValidator"]
+            					if (!rules["RefLetterValidator"] && RefSizeValidatorObj) {
+            						rules["RefLetterValidator"] = RefSizeValidatorObj;
+            					}
+            					if (rules["RefLetterValidator"]) {
+            						if (val == "Y") {
+            							rules["RefLetterValidator"]["isEnable"] = "Y"
+            						} else {
+            							rules["RefLetterValidator"]["isEnable"] = "N"
+            						}
                                 // $("#is_toCheck").prop("checked",
 								// $(el).prop("checked"));
-                            }
-                        } else {
-                            if (attrName == "maxLines") {
-                                // 设置最多行数时，初始化linesNo属性
-                                var linesNo = [];
-                                for (var i = 1; i < val; i++) {
-                                    linesNo.push(i);
-                                }
-                                data["linesNo"] = linesNo;
-                            } else {
-                                if (attrName == "defaultval") {
-                                    // 修改默认值时，直接将默认值赋值于value
-                                    if (val.indexOf("%BIND") == -1) {
-                                        data["value"] = val;
-                                    } else {
-                                        data["value"] = "";
-                                    }
-                                } else {
-                                    if (attrName == "isAttachedTemplate") {
-                                        if (val == "Y") {
-                                            $("#mainTemplate").show();
-                                            $("#mainTemplateSpan").show();
-                                        } else {
-                                            $("#mainTemplate").hide();
-                                            $("#mainTemplateSpan").hide();
-                                        }
-                                    } else if (attrName == "fPageId"){
-                                    	// alert("GO");
-                                    	data["classname"] == "Page" && this._initTab();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            					}
+            				} else {
+            					if (attrName == "maxLines") {
+            						// 设置最多行数时，初始化linesNo属性
+            						var linesNo = [];
+            						for (var i = 1; i < val; i++) {
+            							linesNo.push(i);
+            						}
+            						data["linesNo"] = linesNo;
+            					} else {
+            						if (attrName == "defaultval") {
+            							// 修改默认值时，直接将默认值赋值于value
+            							if (val.indexOf("%BIND") == -1) {
+            								data["value"] = val;
+            							} else {
+            								data["value"] = "";
+            							}
+            						} else {
+            							if (attrName == "isAttachedTemplate") {
+            								if (val == "Y") {
+            									$("#mainTemplate").show();
+            									$("#mainTemplateSpan").show();
+            								} else {
+            									$("#mainTemplate").hide();
+            									$("#mainTemplateSpan").hide();
+            								}
+            							} else if (attrName == "fPageId"){
+            								// alert("GO");
+            								data["classname"] == "Page" && this._initTab();
+            							}
+            						}
+            					}
+            				}
+            			}
+            		}
+            	 }
             }
         }
         this.is_edit = true;
@@ -754,6 +770,8 @@ var SurveyBuild = {
                 onchange = "SurveyBuild.saveCommonRulesBz(this,\'isRequire\')";
             } else if (ruleClsName == "CharLenValidator") {
                 onchange = "SurveyBuild.saveCommonRulesBz(this,\'isCheckStrLen\')";
+            } else if (ruleClsName == "RowLenValidator") {
+                onchange = "SurveyBuild.saveCommonRulesBz(this,\'isCheckRows\')";
             } else if (ruleClsName == "NumSizeValidator") {
                 onchange = "SurveyBuild.saveCommonRulesBz(this,\'isNumSize\')";
             } else if (ruleClsName == "RegularValidator") {
@@ -1003,7 +1021,7 @@ var SurveyBuild = {
 		if(!SurveyBuild._DynamicBindHtml){
 			 /* 判断模版是否已选择项目,如果已选择项目，则直接弹出，否则先弹出站点选择的Html */
 			var tz_app_id=SurveyBuild._tid;
-			//console.log(tz_app_id);
+			// console.log(tz_app_id);
 			$.ajax({
 				type: "post",
 				url: SurveyBuild.tzGeneralURL +'?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tplId":"'+tz_app_id+'"}}',
@@ -1011,10 +1029,10 @@ var SurveyBuild = {
 				async: false,
 				success: function(result){
 					var siteArr = result.comContent.root;
-					//console.log(siteArr);
-					///console.log(result);
-					//console.dir(result);
-					//console.log(result.comContent.total);
+					// console.log(siteArr);
+					// /console.log(result);
+					// console.dir(result);
+					// console.log(result.comContent.total);
 					if(result.comContent.total == "1"){
 						var siteObj = siteArr[0];
 						var siteId = siteObj.siteId;
@@ -1381,6 +1399,8 @@ var SurveyBuild = {
                             component["isRequire"] = "Y";
                         } else if (classname == "CharLenValidator") {
                             component["isCheckStrLen"] = "Y";
+                        } else if (classname == "RowLenValidator") {
+                            component["isCheckRows"] = "Y";                                                          
                         } else if (classname == "NumSizeValidator") {
                             component["isNumSize"] = "Y";
                         } else if (classname == "RegularValidator") {
@@ -2714,7 +2734,7 @@ var SurveyBuild = {
 			var b = c.which;
 			return b == 8 || b == 127 || b == 0 || b == 95 || (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122)
 		});
-		$("#question-edit").on("keypress", ".maxYear,.minYear,.minLen,.maxLen,.numSizeMax,.numSizeMin,.numDecws,.minSelect,.maxSelect,.minLines,.maxLines",
+		$("#question-edit").on("keypress", ".maxYear,.minYear,.minLen,.maxLen,.minRow,.maxRow,.numSizeMax,.numSizeMin,.numDecws,.minSelect,.maxSelect,.minLines,.maxLines",
 		function(c) {
 			var b = c.which;
 			return b == 8 || b == 127 || b == 0 || b >= 48 && b <= 57
@@ -3032,6 +3052,13 @@ var SurveyBuild = {
                         if (obj["maxLen"] > 0) _max = obj["maxLen"];
                         if (_max > 1 || obj["minLen"] > 0) {
                             if (obj["isCheckStrLen"] == "Y") _onError = obj["rules"]["CharLenValidator"]["messages"];
+                        }
+                    }
+                    if (obj["isCheckRows"] == "Y") {
+                        _min = Math.max(obj["minRow"], _min);
+                        if (obj["maxRow"] > 0) _max = obj["maxRow"];
+                        if (_max > 1 || obj["minRow"] > 0) {
+                            if (obj["isCheckRows"] == "Y") _onError = obj["rules"]["RowLenValidator"]["messages"];
                         }
                     }
                     if (obj["isNumSize"] == "Y") {

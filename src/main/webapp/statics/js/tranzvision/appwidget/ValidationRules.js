@@ -20,7 +20,31 @@ var ValidationRules = {
 			var minLen = parseInt(item.minLen);
 			var maxLen = parseInt(item.maxLen);
 			var length = $.trim($("#" + id).val()).length;
+			//console.log(length);
 			if(length > maxLen || length < minLen){
+				return msg;
+			}
+			return true;
+		}
+	},
+	/*行数校验验证规则*/
+	"RowLenValidator":{
+		_eventList : {
+		},
+		_Validator : function(id, msg, item){
+			var minRow = parseInt(item.minRow);
+			var maxRow = parseInt(item.maxRow);
+			//console.log(minRow);
+			//console.log(maxRow);
+			//console.log(id);
+			//var row = $("#" + id).createTextRange().getClientRects();
+			//console.log("111");
+			var row = $.trim($("#" + id).val()).split(/\r?\n|\r/).length;
+			//console.log("222");
+			
+			console.log(row);
+			//console.log(rowaa);
+			if(row > maxRow || row < minRow){
 				return msg;
 			}
 			return true;

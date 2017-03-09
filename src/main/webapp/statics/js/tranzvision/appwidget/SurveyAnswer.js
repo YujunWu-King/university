@@ -376,6 +376,13 @@ var SurveyBuild = {
                             if (obj["isCheckStrLen"] == "Y") _onError = obj["rules"]["CharLenValidator"]["messages"];
                         }
                     }
+                    if (obj["isCheckRows"] == "Y") {
+                        _min = Math.max(obj["minRow"], _min);
+                        if (obj["maxRow"] > 0) _max = obj["maxRow"];
+                        if (_max > 1 || obj["minRow"] > 0) {
+                            if (obj["isCheckRows"] == "Y") _onError = obj["rules"]["RowLenValidator"]["messages"];
+                        }
+                    }
                     if (obj["isNumSize"] == "Y") {
                         _min = Math.max(obj["min"], _min);
                         if (obj["max"] > 0) _max = obj["max"];
