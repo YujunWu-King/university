@@ -42,7 +42,7 @@ var ValidationRules = {
 			var row = $.trim($("#" + id).val()).split(/\r?\n|\r/).length;
 			//console.log("222");
 			
-			console.log(row);
+			//console.log(row);
 			//console.log(rowaa);
 			if(row > maxRow || row < minRow){
 				return msg;
