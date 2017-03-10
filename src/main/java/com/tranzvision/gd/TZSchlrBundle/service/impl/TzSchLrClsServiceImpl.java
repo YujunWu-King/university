@@ -120,8 +120,7 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 		String TZ_JG_ID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String dataWjId = jacksonUtil.getString("id");
 		String shcolarName = jacksonUtil.getString("name");
-		
-	    //添加奖学金的视乎，对奖学金名称查重
+	    //添加奖学金的时候，对奖学金名称查重
 		int count=jdbcTemplate.queryForObject("select count(*) from PS_TZ_SCHLR_TBL where TZ_SCHLR_NAME=? AND TZ_JG_ID=?", new Object[]{shcolarName,TZ_JG_ID}, "Integer");
 		if(count>0){
 			errMsg[0]="1";
@@ -175,7 +174,7 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 			String TZ_DC_WJ_JSGZ = "1";
 			psTzDcWjDyTWithBLOBs.setTzDcWjJsgz(TZ_DC_WJ_JSGZ);
 			// 非登录用户也可以参与本次调查
-			String TZ_DC_WJ_DLZT = "Y";
+			String TZ_DC_WJ_DLZT = "N";
 			psTzDcWjDyTWithBLOBs.setTzDcWjDlzt(TZ_DC_WJ_DLZT);
 			// 添加时间
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -353,7 +352,6 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 					PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = psTzDcWjDyTMapper.selectByPrimaryKey(PsTzSchlrTbl.getTzDcWjId());
 					Map<String, Object> retMap = new HashMap<String, Object>();
 					retMap.put("TZ_SCHLR_ID", tzSchLrId);
-					retMap.put("TZ_SCHLR_NAME", PsTzSchlrTbl.getTzSchlrName());
 					retMap.put("TZ_JXJ_STATE", PsTzSchlrTbl.getTzState());
 					retMap.put("TZ_DC_WJ_ID", PsTzSchlrTbl.getTzDcWjId());
 					retMap.put("TZ_DC_WJ_ZT", psTzDcWjDyTWithBLOBs.getTzDcWjZt());
@@ -366,6 +364,13 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 						retMap.put("TZ_DC_WJ_JSRQ",dateFormat.format(psTzDcWjDyTWithBLOBs.getTzDcWjJsrq()));
 				    };
 					retMap.put("TZ_DC_WJ_JSSJ", timeFormat.format(psTzDcWjDyTWithBLOBs.getTzDcWjJssj()));
+					Map<String,Object> map=jdbcTemplate.queryForMap("select TZ_DC_WJBT,TZ_APP_TPL_ID from PS_TZ_DC_WJ_DY_T where TZ_DC_WJ_ID=?", new Object[]{PsTzSchlrTbl.getTzDcWjId()});
+					String strWjbt=map.get("TZ_DC_WJBT")==null?"":map.get("TZ_DC_WJBT").toString();
+					String strTplId=map.get("TZ_APP_TPL_ID")==null?"":map.get("TZ_APP_TPL_ID").toString();
+					String strTplName=jdbcTemplate.queryForObject("select TZ_APP_TPL_MC from PS_TZ_DC_DY_T where TZ_APP_TPL_ID=?", new Object[]{strTplId}, "String");
+					retMap.put("TZ_SCHLR_NAME", strWjbt);
+					retMap.put("TZ_APP_TPL_ID", strTplId);
+					retMap.put("TZ_APP_TPL_MC", strTplName);
 					returnJsonMap.replace("formData",retMap);
 				} else {
 					errMsg[0] = "1";
@@ -428,14 +433,24 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 	private String tzUpdateFattrInfo(String strForm, String orgId, String userID, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
-
+		DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
 		String TZ_SCHLR_ID = null;
 	    String TZ_STATE=null;
+	    
 		try {
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			jacksonUtil.json2Map(strForm);
 			TZ_SCHLR_ID = jacksonUtil.getString("TZ_SCHLR_ID");
 			TZ_STATE = jacksonUtil.getString("TZ_JXJ_STATE");
+			String TZ_DC_WJ_ID=jacksonUtil.getString("TZ_DC_WJ_ID");
+			
+			String TZ_DC_WJ_KSRQ=jacksonUtil.getString("TZ_DC_WJ_KSRQ");
+			String TZ_DC_WJ_KSSJ=jacksonUtil.getString("TZ_DC_WJ_KSSJ");
+			String TZ_DC_WJ_JSRQ=jacksonUtil.getString("TZ_DC_WJ_JSRQ");
+			String TZ_DC_WJ_JSSJ=jacksonUtil.getString("TZ_DC_WJ_JSSJ");
+			
 			String isTPL = "";
 			String isZcSQL = "SELECT 'Y' FROM PS_TZ_SCHLR_TBL WHERE TZ_JG_ID=?  and  TZ_SCHLR_ID=?";
 			isTPL = jdbcTemplate.queryForObject(isZcSQL, new Object[] { orgId, TZ_SCHLR_ID }, "String");
@@ -447,7 +462,15 @@ public class TzSchLrClsServiceImpl extends FrameworkImpl {
 				PsTzSchlrTbl.setRowLastmantDttm(new java.util.Date());
 				PsTzSchlrTbl.setRowLastmantOprid(userID);
 				int i = psTzSchlrTblMapper.updateByPrimaryKeySelective(PsTzSchlrTbl);
-				if (i > 0) {
+				//更新问卷调查时间表
+				PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = new PsTzDcWjDyTWithBLOBs();
+				psTzDcWjDyTWithBLOBs.setTzDcWjId(TZ_DC_WJ_ID);
+				psTzDcWjDyTWithBLOBs.setTzDcWjKsrq(dateFormat.parse(TZ_DC_WJ_KSRQ));
+				psTzDcWjDyTWithBLOBs.setTzDcWjKssj(timeFormat.parse(TZ_DC_WJ_KSSJ));
+				psTzDcWjDyTWithBLOBs.setTzDcWjJsrq(dateFormat.parse(TZ_DC_WJ_JSRQ));
+				psTzDcWjDyTWithBLOBs.setTzDcWjJssj(timeFormat.parse(TZ_DC_WJ_JSSJ));
+				int j=psTzDcWjDyTMapper.updateByPrimaryKeySelective(psTzDcWjDyTWithBLOBs);
+				if (i >0&&j>0) {
 					HashMap<String, Object> mapRet = new HashMap<String, Object>();
 					mapRet.put("TZ_SCHLR_ID", TZ_SCHLR_ID);
 					strRet = jacksonUtil.Map2json(mapRet);
