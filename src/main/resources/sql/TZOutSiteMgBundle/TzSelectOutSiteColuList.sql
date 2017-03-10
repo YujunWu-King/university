@@ -4,7 +4,6 @@ select
 	A.TZ_COLU_ID,
 	A.TZ_COLU_NAME,
 	A.TZ_COLU_STATE,
-	A.TZ_COLU_PATH,
 	ifnull(A.TZ_COLU_PATH,"") TZ_COLU_PATH,
 	ifnull(A.TZ_COLU_TYPE,"") TZ_COLU_TYPE,
 	ifnull(A.TZ_CONT_TEMP,"") TZ_CONT_TEMP,
