@@ -213,10 +213,21 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 			 * = saveAttachAccessUrl.equals("null") ? "" : saveAttachAccessUrl;
 			 * }
 			 */
+			
+			String getHardCodeSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ?";
+			String siteIdDefault = sqlQuery.queryForObject(getHardCodeSql, new Object[] { "TZ_ACT_DEF_SITE_ID" }, "String");
+			String coluIdDefault = sqlQuery.queryForObject(getHardCodeSql, new Object[] { "TZ_ACT_DEF_COLU_ID" }, "String");
+			
+			String defaultColums = coluIdDefault;
+			// 栏目;
+			ArrayList<String> defaultSites = new ArrayList<>();
+			
+			defaultSites.add(siteIdDefault);
+			
 			if (null == activityId || "".equals(activityId)) {
 
-				strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", enabledApply, "",
-						"", "", "", "0", "", "", "", "", "", "", "",null,null);
+				strRet = this.genEventJsonString("", "", "", "08:30", "", "17:30", "", "", "", "", "", "", "", enabledApply, "",
+						"08:30", "", "17:30", "0", "", "A", "", "", defaultSites, "", defaultColums,null,null);
 				return strRet;
 			}
 
@@ -228,7 +239,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 				errorMsg[0] = "1";
 				errorMsg[1] = "活动数据不存在。";
 				strRet = this.genEventJsonString("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-						"", "", "", "", "", "", "", "",null,null);
+						"", "", "", "", "", defaultSites, "", defaultColums,null,null);
 				return strRet;
 			}
 
