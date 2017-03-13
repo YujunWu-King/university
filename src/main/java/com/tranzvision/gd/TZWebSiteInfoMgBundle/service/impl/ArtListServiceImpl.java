@@ -134,9 +134,11 @@ public class ArtListServiceImpl extends FrameworkImpl {
 					mapList.put("releaseTime", rowList[4]);
 					mapList.put("lastUpdate", rowList[5]);
 					mapList.put("releaseOrUndo", rowList[6]);
+					mapList.put("artZdSeq", rowList[7]);
 					mapList.put("topOrUndo", rowList[7]);
 					mapList.put("classId", rowList[8]);
 					mapList.put("artseq", rowList[9]);
+
 
 					listData.add(mapList);
 				}
@@ -460,24 +462,41 @@ public class ArtListServiceImpl extends FrameworkImpl {
 
 				if (siteId != null && !"".equals(siteId) && columnId != null && !"".equals(columnId)
 						&& articleId != null && !"".equals(articleId)) {
+					int maxZdSeq = 0;
+					maxZdSeq = Integer.parseInt(String.valueOf(dataMap.get("artZdSeq")==null?"0":dataMap.get("artZdSeq")));
+					
+					if ("D".equals(clickTyp)) {
+						PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
+						psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
+						psTzLmNrGlTWithBLOBs.setTzColuId(columnId);
+						psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
+						psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(maxZdSeq);
+						psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
+						psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+						psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+					}
+					
 					if ("T".equals(clickTyp)) {
 						String topOrUndo = (String) dataMap.get("topOrUndo");
 						String maxSQL = "", updateSQL = "";
-						int maxZdSeq = 0;
 
 						if ("TOP".equals(topOrUndo)) {
-							maxSQL = "SELECT MAX(TZ_MAX_ZD_SEQ) FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID<>?";
-							try {
-								maxZdSeq = jdbcTemplate.queryForObject(maxSQL,
-										new Object[] { siteId, columnId, articleId }, "Integer");
-							} catch (Exception e) {
-								maxZdSeq = 0;
+							if(maxZdSeq==0)
+							{
+								maxSQL = "SELECT MAX(TZ_MAX_ZD_SEQ) FROM PS_TZ_LM_NR_GL_T WHERE TZ_SITE_ID=? AND TZ_COLU_ID=? AND TZ_ART_ID<>?";
+								try {
+									maxZdSeq = jdbcTemplate.queryForObject(maxSQL,
+											new Object[] { siteId, columnId, articleId }, "Integer");
+								} catch (Exception e) {
+									maxZdSeq = 0;
+								}
+								maxZdSeq = maxZdSeq + 1;
 							}
 							PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 							psTzLmNrGlTWithBLOBs.setTzSiteId(siteId);
 							psTzLmNrGlTWithBLOBs.setTzColuId(columnId);
 							psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
-							psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(maxZdSeq + 1);
+							psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(maxZdSeq);
 							psTzLmNrGlTWithBLOBs.setTzLastmantDttm(new Date());
 							psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 							psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
@@ -600,6 +619,12 @@ public class ArtListServiceImpl extends FrameworkImpl {
 									psTzLmNrGlTWithBLOBs.setTzColuId(coluId);
 									psTzLmNrGlTWithBLOBs.setTzArtId(articleId);
 									psTzLmNrGlTWithBLOBs.setTzArtPubState(releaseOrUndo);
+									
+									/*置顶序号*/
+									if(coluId.equals(columnId)){
+										psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(maxZdSeq);
+									}
+									
 									// 解析的模板内容;
 									String contentHtml = artContentHtml.getContentHtml(siteId, coluId, articleId,"PC",request.getContextPath());
 									// 解析的模板内容;
