@@ -1,11 +1,13 @@
 package com.tranzvision.gd.TZRecommendationBundle.service.impl;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 	/* 推荐信接口 */
 	@Override
 	public String tzOther(String operateType, String strParams, String[] errorMsg) {
+		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String mess = "";
 		try {
@@ -242,29 +245,75 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 					return "\"" + mess + "\"";
 				}
 			}
-
+			//System.out.println(operateType);
 			if ("SEND".equals(operateType)) {
-				// 保存并发送邮件;
-				str_refLetterType = "S";
-				mess = tzTjxClsServiceImpl.saveTJX(numAppinsId, strOprid, strTjrId, strEmail, strTjxType, strTitle,
-						strGname, strName, strCompany, strPosition, strPhone_area, strPhone_no, strGender, strAdd1,
-						strAdd2, strAdd3, strAdd4, strAdd5, strAdd6, strAdd7, strAdd8, strAdd9, strAdd10, strTjrgx,
-						str_sysfilename, str_filename, "S", "Y", accessPath, tzAttAUrl);
-				//System.out.println("mess:" + mess);
-				if ("SUCCESS".equals(mess)) {
+				// modity by caoy 推荐信点击重新发送，重新转发的时候，如果是同一个推荐人，
+				// 则需要判断一下发送间隔，如果是10分钟之内刚发送，则需要提示，您发送的邮件间隔太短了，在XXX点之前您不能在重复给XXX邮箱发送邮件。
+				// N:发送给自己 Y：发送给推荐人
+				String email = "";
+				if (jacksonUtil.containsKey("send_falg")) {
+					sendFlag = jacksonUtil.getString("send_falg");
+				} else {
+					sendFlag = "Y";
+				}
+				if (sendFlag.equals("N")) {
+					email = jdbcTemplate.queryForObject(
+							"SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?",
+							new Object[] { strOprid }, "String");
+				} else {
+					email = strEmail;
+				}
+				System.out.println("sendFlag:"+sendFlag);
+				System.out.println("email:"+email);
+				String sql = "SELECT TZ_FS_DT FROM PS_TZ_TJX_FSRZ_TBL WHERE TZ_APP_INS_ID=? AND OPRID=? AND TZ_FS_ZT=? AND TZ_JS_EMAIL=? order by TZ_FS_DT desc limit 0,1";
+				String sendTime = jdbcTemplate.queryForObject(sql, new Object[] { numAppinsId, strOprid, "SUC", email },
+						"String");
+				boolean flag = true;
+				System.out.println("sendTime:" + sendTime);
+				if (sendTime != null && !sendTime.equals("")) {
+					//2017-03-13 17:30:17.0
+					Calendar calendar = Calendar.getInstance();
+					calendar.setTime(com.tranzvision.gd.util.Calendar.DateUtil.parseTimeStamp(sendTime.substring(0, 19)));
+					calendar.add(Calendar.MINUTE, 10);
+					java.util.Date checkTime = calendar.getTime();
 
-					if (jacksonUtil.containsKey("send_falg")) {
-						sendFlag = jacksonUtil.getString("send_falg");
-					} else {
-						sendFlag = "Y";
+					java.util.Date now = new java.util.Date();
+
+					if (checkTime.after(now)) {
+						mess = "您发送的邮件间隔太短了，在" + com.tranzvision.gd.util.Calendar.DateUtil.formatLongDate(checkTime)
+								+ "之前您不能在重复给" + email + "邮箱发送邮件。";
+						flag = false;
 					}
-					//System.out.println("sendFlag:" + sendFlag);
-					mess = tzTjxClsServiceImpl.sendTJX(numAppinsId, strOprid, strTjrId, sendFlag);
-					//System.out.println("mess:" + mess);
-					if ("Y".equals(strTzsqrFlg)) {
-						// 发送邮件通知给申请人;
+
+				}
+
+				if (flag) {
+					// 保存并发送邮件;
+					str_refLetterType = "S";
+					mess = tzTjxClsServiceImpl.saveTJX(numAppinsId, strOprid, strTjrId, strEmail, strTjxType, strTitle,
+							strGname, strName, strCompany, strPosition, strPhone_area, strPhone_no, strGender, strAdd1,
+							strAdd2, strAdd3, strAdd4, strAdd5, strAdd6, strAdd7, strAdd8, strAdd9, strAdd10, strTjrgx,
+							str_sysfilename, str_filename, "S", "Y", accessPath, tzAttAUrl);
+					// System.out.println("mess:" + mess);
+					if ("SUCCESS".equals(mess)) {
+
+
+						// System.out.println("sendFlag:" + sendFlag);
+						mess = tzTjxClsServiceImpl.sendTJX(numAppinsId, strOprid, strTjrId, sendFlag);
+
+						// 写入推荐信发送日志表
 						if ("SUCCESS".equals(mess)) {
-							tzTjxClsServiceImpl.sendTZ(numAppinsId, strOprid, strTjrId);
+							tzTjxClsServiceImpl.sendTJXLog(numAppinsId, strOprid, strTjrId, email, "SUC");
+						} else {
+							tzTjxClsServiceImpl.sendTJXLog(numAppinsId, strOprid, strTjrId, email, "FAIL");
+						}
+
+						// System.out.println("mess:" + mess);
+						if ("Y".equals(strTzsqrFlg)) {
+							// 发送邮件通知给申请人;
+							if ("SUCCESS".equals(mess)) {
+								tzTjxClsServiceImpl.sendTZ(numAppinsId, strOprid, strTjrId);
+							}
 						}
 					}
 				}

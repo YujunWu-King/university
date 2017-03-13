@@ -196,8 +196,17 @@ public class TzTjxClsServiceImpl {
 
 	}
 
+	// 记录推荐信发送历史
+	public void sendTJXLog(long numAppinsId, String strOprid, String strTjrId, String strEmail, String TZ_FS_ZT) {
+		// N:发送给自己 Y：发送给推荐人
+		String TZ_TJX_SEND_ID = String.valueOf(getSeqNum.getSeqNum("TZ_TJX_FSRZ_TBL", "TZ_TJX_SEND_ID"));
+
+		String sql = "insert into PS_TZ_TJX_FSRZ_TBL values (?,?,?,now(),?,?)";
+		jdbcTemplate.update(sql, new Object[] { TZ_TJX_SEND_ID, numAppinsId, strOprid, TZ_FS_ZT, strEmail });
+	}
+
 	// 发送推荐信邮件;
-	public String sendTJX(long numAppinsId, String strOprid, String strTjrId,String sendFlag) {
+	public String sendTJX(long numAppinsId, String strOprid, String strTjrId, String sendFlag) {
 		String strRtn = "";
 		// String strMyName = "";
 		String str_opremail = "";
@@ -277,9 +286,9 @@ public class TzTjxClsServiceImpl {
 				"SELECT B.TZ_APP_TPL_LAN FROM PS_TZ_APP_INS_T A,PS_TZ_APPTPL_DY_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID limit 0,1",
 				new Object[] { numAppinsId }, "String");
 		String mess = "";
-		
-		//System.out.println("str_opremail:" + str_opremail);
-		//System.out.println("strEmail:" + strEmail);
+
+		// System.out.println("str_opremail:" + str_opremail);
+		// System.out.println("strEmail:" + strEmail);
 		if (str_opremail != null && str_opremail.equals(strEmail)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "SAME_EMAIL",
 					str_language, "", "");
@@ -308,7 +317,7 @@ public class TzTjxClsServiceImpl {
 		// 给邮箱发送邮件---开始;
 		// 创建邮件短信发送任务;
 		String taskId = createTaskServiceImpl.createTaskIns(strJgid, str_email_mb, "MAL", "A");
-		//System.out.println("taskId:" + taskId);
+		// System.out.println("taskId:" + taskId);
 		if (taskId == null || "".equals(taskId)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_E_FAIL",
 					str_language, "", "");
@@ -316,24 +325,24 @@ public class TzTjxClsServiceImpl {
 		}
 
 		// 创建短信、邮件发送的听众;
-		
+
 		String createAudience = createTaskServiceImpl.createAudience(taskId, strJgid, "推荐信", "TJX");
-		//System.out.println("createAudience:" + createAudience);
+		// System.out.println("createAudience:" + createAudience);
 		if (createAudience == null || "".equals(createAudience)) {
 			mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "CR_L_FAIL",
 					str_language, "", "");
 			return mess;
 		}
-		
-		//N:发送给自己  Y：发送给推荐人
+
+		// N:发送给自己 Y：发送给推荐人
 		if (sendFlag.equals("N")) {
 			strEmail = jdbcTemplate.queryForObject(
 					"SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?",
 					new Object[] { strOprid }, "String");
-		} 
-		
-		//System.out.println("strEmail:" + strEmail);
-		// 为听众添加听众成员  modity by caoy 应为需要 转发给自己，所以需要在听众表里面 填入  strTjrId
+		}
+
+		// System.out.println("strEmail:" + strEmail);
+		// 为听众添加听众成员 modity by caoy 应为需要 转发给自己，所以需要在听众表里面 填入 strTjrId
 		boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience, strName, strName, "", "", strEmail, "", "",
 				strOprid, "", strTjrId, String.valueOf(numAppinsId));
 		if (addAudCy == false) {
