@@ -181,11 +181,13 @@
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artShortTitle","简短标题"),
 			name: 'artShortTitle',
+			hidden:true,
 			maxLength : 254
         },{
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artSubHead","副标题"),
 			name: 'artSubHead',
+			hidden:true,
 			maxLength : 254
         },{
             xtype: 'textarea',

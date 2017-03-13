@@ -359,7 +359,7 @@
 		var refs = this.getReferences(),
 			dataGrid = refs.artListGrid;
 		var store = dataGrid.getStore();
-        if(store.getRemovedRecords().length>0){
+        if(store.getRemovedRecords().length>0 || store.getModifiedRecords().length>0){
             var tzParams = this.submitContentParams("D","保存成功");
         };
         if(btn.name=="ensure"){
