@@ -203,7 +203,7 @@
 		   Ext.Msg.alert("提示","只能选择一条要查看的记录");   
 		   return;
 	    }
-
+	   
 	    var OPRID = selList[0].get("OPRID");
 		
 		var contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
@@ -215,6 +215,7 @@
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
 			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]');
+			var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
 			//加载数据
@@ -223,6 +224,9 @@
 			var formData = responseData.formData;
 		
 			form.setValues(formData);
+			
+			//考生导入信息;
+			ksdrInfoForm.setValues(formData.ksdrInfo);
 
 			var userInfoItems = [];
 		

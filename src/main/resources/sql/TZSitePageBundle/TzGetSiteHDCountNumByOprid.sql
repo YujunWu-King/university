@@ -1,5 +1,5 @@
  select 
- 	count(1) 
+ 	count(distinct PT3.TZ_ART_ID) 
  from 
  	PS_TZ_LM_NR_GL_T PT2,  
  	PS_TZ_ART_REC_TBL PT3,  

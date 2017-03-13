@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZBaseBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -642,10 +643,12 @@ public class FliterForm extends FrameworkImpl {
 				orderby = orderby.substring(1);
 				orderby = " ORDER BY " + orderby;
 			}
-
+			
 			// 得到总条数;
 			String totalSQL = "SELECT COUNT(1) FROM " + tableName + sqlWhere;
 			numTotal = jdbcTemplate.queryForObject(totalSQL, "Integer");
+
+			
 
 			// 总数;
 			if (maxNum > 0 && numTotal > maxNum) {

@@ -23,15 +23,18 @@ function revokeActivity(artId, bmrId){
 			//console.log(responseJson.comContent.success);
 			var successValue = responseJson.comContent.result;
 			var resultDesc = responseJson.comContent.resultDesc;
+			
 			//信息框
-			 layer.open({
+			layer.open({
 			    content: resultDesc,
 			    btn: '关闭'
 			 });
 			
+			
 			if(successValue == "0"){
 				$("#"+hideDivId).hide();
 			}
+
 		},
 		failure: function () {
 			layer.close(index);
