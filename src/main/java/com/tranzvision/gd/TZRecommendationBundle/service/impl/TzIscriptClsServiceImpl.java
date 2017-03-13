@@ -263,13 +263,13 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 				} else {
 					email = strEmail;
 				}
-				System.out.println("sendFlag:"+sendFlag);
-				System.out.println("email:"+email);
+				//System.out.println("sendFlag:"+sendFlag);
+				//System.out.println("email:"+email);
 				String sql = "SELECT TZ_FS_DT FROM PS_TZ_TJX_FSRZ_TBL WHERE TZ_APP_INS_ID=? AND OPRID=? AND TZ_FS_ZT=? AND TZ_JS_EMAIL=? order by TZ_FS_DT desc limit 0,1";
 				String sendTime = jdbcTemplate.queryForObject(sql, new Object[] { numAppinsId, strOprid, "SUC", email },
 						"String");
 				boolean flag = true;
-				System.out.println("sendTime:" + sendTime);
+				//System.out.println("sendTime:" + sendTime);
 				if (sendTime != null && !sendTime.equals("")) {
 					//2017-03-13 17:30:17.0
 					Calendar calendar = Calendar.getInstance();
