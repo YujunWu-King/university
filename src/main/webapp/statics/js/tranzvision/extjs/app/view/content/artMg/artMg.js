@@ -118,6 +118,11 @@
 						viewConfig: {
 							enableTextSelection: true
 						},
+						plugins: {
+							ptype: 'cellediting',
+							pluginId: 'artListCellEditing'
+							//	clicksToEdit: 1
+						},
 						dockedItems:[{
 		                    xtype:"toolbar",
 		                    items:[
@@ -183,7 +188,7 @@
 						},{
 							text: "发布时间",
 							dataIndex: 'releaseTime',
-							width: 165,
+							width: 145,
 							//renderer: Ext.util.Format.dateRenderer('Y/n/j H:i:s'),
 							//sortable: true,
 							align: 'center',
@@ -193,7 +198,7 @@
 							//sortable: false,
 							align: 'center',
 							dataIndex: 'lastUpdate',
-							width: 160
+							width: 140
 						},{
 							text: '发布/撤销',
 							dataIndex: 'releaseOrUndo',
@@ -229,6 +234,14 @@
 							},
 							listeners:{
 								click:'topOrUndo'
+							}
+						},{
+							text: "置顶权重",
+							dataIndex: 'artZdSeq',
+							width: 70,
+							align: 'center',
+							editor: {
+								xtype: 'numberfield'
 							}
 						},{
 							text: '操作',

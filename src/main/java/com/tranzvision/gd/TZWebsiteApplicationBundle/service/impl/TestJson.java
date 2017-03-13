@@ -387,10 +387,15 @@ public class TestJson {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		TestJson tj = new TestJson();
-		String json = tj.readTxtFile("C:\\Users\\feifei\\Desktop\\NEW.json");
-		System.out.println(json);
-		tj.Detail(json, Long.parseLong("0"));
+		//TestJson tj = new TestJson();
+		//String json = tj.readTxtFile("C:\\Users\\feifei\\Desktop\\NEW.json");
+		//System.out.println(json);
+		//tj.Detail(json, Long.parseLong("0"));
+		//String strValue="!2";
+		//boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
+		String a = "2017-03-13 17:30:17.0";
+				System.out.println(a.substring(0, 19));	
+		//System.out.println(isMatch);
 
 	}
 

@@ -260,7 +260,7 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .over_btn{color:#999;border:1px solid #999;}
 .school_on img{display: block;}
 .school_t{display:none;max-width:100%;height: auto;width: 100%;position:absolute;bottom:0;left:0;}
-
+.sc_bz{color:#999;font-size:0.54rem;}
 /*账户管理*/
 .account{width:94%;margin: 0 auto;padding-bottom: 4%;}
 /*在线说明*/

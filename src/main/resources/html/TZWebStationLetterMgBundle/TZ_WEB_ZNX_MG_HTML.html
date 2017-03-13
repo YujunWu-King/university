@@ -59,7 +59,7 @@
    }
    
    	$(document).ready(function(){
-   		$(".table_style tbody tr ").click(function(){
+   		$(".check-box").click(function(){
             $(this).toggleClass('trSelected');
         });
    	 	//删除站内信
@@ -155,8 +155,8 @@
 				      		listHtmlContent=listHtmlContent+$.format(recordBase.join(""),record["znxStatus"]=="Y"?"read_on":"",record["stationMailId"],record["znxStatus"]=="Y"?"已读":"未读",record["sendName"],record["stationMailTitle"],record["stationMailReceived"])
 				      	});
 				      	$(".table_style tbody").html(listHtmlContent);
-				      	$(".table_style tbody tr ").click(function(){
-				            $(this).toggleClass('trSelected');
+				      	$(".table_style tbody tr td div").click(function(){
+				            $(this).parent().parent().toggleClass('trSelected');
 				        });
 				      	
 					}catch(exception){

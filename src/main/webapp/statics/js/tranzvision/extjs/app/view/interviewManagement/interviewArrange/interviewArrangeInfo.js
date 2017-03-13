@@ -168,7 +168,8 @@
 					dockedItems:[{
 						xtype:"toolbar",
 						items:[
-							{text:"自动生成面试安排计划",tooltip:"自动生成面试安排计划",iconCls:"",handler:'SetInterviewTime'},'-',
+							/*{text:"自动生成面试安排计划",tooltip:"自动生成面试安排计划",iconCls:"",handler:'SetInterviewTime'},'-',*/
+							{text:"新增面试安排",tooltip:"新增面试安排",iconCls:"add",handler:'addInterviewTime'},'-',
 							{text:"设置参与本批次面试的考生",tooltip:"设置参与本批次面试的考生",iconCls:"set",handler:'setInterviewApplicant'},'-',
 							{text:"查看预约考生",tooltip:"查看预约考生",iconCls:"view",handler:'viewArrangeStuList'},'->',
 							{
@@ -192,19 +193,21 @@
 										text:"撤销选中记录",
 										iconCls:"revoke",
 										handler:'UndoSelList'
-									}/*,{
+									},{
 										text:"导出选中记录到Excel",
 										iconCls:"excel",
 										handler:'exportToExcel'
-									}*/]
+									}]
 							}
 						]
 					}],
+					/*
 					plugins: [{
 						ptype: 'cellediting',
 						pluginId: 'msArrCellEditingPlugin',
 						clicksToEdit: 1
 					}],
+					*/
 					columnLines: true,    //显示纵向表格线
 					selModel:{
 						type: 'checkboxmodel'
@@ -215,20 +218,22 @@
 						format:'Y-m-d',
 						sortable: true,
 						dataIndex: 'msDate',
+						/*
 						editor:{
 							xtype:"datefield",
 							format:"Y-m-d"
-						},
+						},*/
 						width: 120
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.maxPerson", '最多预约人数'),
 						sortable: true,
 						dataIndex: 'maxPerson',
+						/*
 						editor:{
 							xtype:'numberfield',
 							allowBlank:false,
 							minValue: 1
-						},
+						},*/
 						width: 120
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsStartTime",'开始时间'),
@@ -236,13 +241,14 @@
 						format:'H:i',
 						sortable: true,
 						dataIndex: 'bjMsStartTime',
+						/*
 						editor:{
 							xtype: 'timefield',
 							increment:5,
 							editable:false,
 							allowBlank: false,
 							format:'H:i'
-						},
+						},*/
 						width: 100
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsEndTime", '结束时间'),
@@ -250,29 +256,32 @@
 						dataIndex: 'bjMsEndTime',
 						xtype:'datecolumn',
 						format:'H:i',
+						/*
 						editor:{
 							xtype: 'timefield',
 							increment:5,
 							editable:false,
 							allowBlank: false,
 							format:'H:i'
-						},
+						},*/
 						width: 100
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msLocation", '面试地点'),
 						dataIndex: 'msLocation',
+						/*
 						editor:{
 							xtype:'textfield'
-						},
+						},*/
 						minWidth: 120,
 						width: 120,
 						flex: 1
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msXxBz", '备注'),
 						dataIndex: 'msXxBz',
+						/*
 						editor:{
 							xtype:'textfield'
-						},
+						},*/
 						minWidth: 120,
 						width: 120,
 						flex: 1
@@ -304,7 +313,8 @@
 						width:60,
 						xtype: 'actioncolumn',
 						items:[
-							{	iconCls: 'add',tooltip: '添加',handler:'addMsCalRow'},
+							/*{	iconCls: 'add',tooltip: '添加',handler:'addMsCalRow'},*/
+							{	iconCls: 'edit',tooltip: '编辑',handler:'editMsCalRow'},
 							{	iconCls: 'remove',tooltip: '删除',handler:'deleteMsCalRow'}
 						]
 					}],
@@ -318,12 +328,6 @@
 							}
 						},
 						displayInfo: true,
-						/*
-						displayMsg: '显示{0}-{1}条，共{2}条',
-						beforePageText: '第',
-						afterPageText: '页/共{0}页',
-						emptyMsg: '没有数据显示',
-						*/
 						plugins: new Ext.ux.ProgressBarPager()
 					}
 				}]

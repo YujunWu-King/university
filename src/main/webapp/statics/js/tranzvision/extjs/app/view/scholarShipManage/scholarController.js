@@ -50,7 +50,11 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarController', {
                 // var newName = el.getElementsByClassName("tplname")[0].getAttribute("title")  + "_" + ( + new Date());
                 //问卷名称和模板名称保持一致，不加后面的数字
                 var newName = el.getElementsByClassName("tplname")[0].getAttribute("title");
-                win.child("form").getForm().setValues({"predefine":newName}); 
+                var oldtitle= win.child("form").getForm().findField("shcolarName").getValue();
+                //如果已经输入了奖学金名称，就不要在用模板名称去替换了
+                if(oldtitle==""){
+                	 win.child("form").getForm().setValues({"predefine":newName}); 
+                }
             }
         }
     },

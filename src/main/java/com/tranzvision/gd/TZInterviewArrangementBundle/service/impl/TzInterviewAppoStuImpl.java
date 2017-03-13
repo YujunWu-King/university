@@ -87,8 +87,13 @@ public class TzInterviewAppoStuImpl extends FrameworkImpl{
 						
 						
 						String sort = "";
-						sql = "SELECT TZ_COLOR_SORT_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?";
-						sort = jdbcTemplate.queryForObject(sql, new Object[]{ classID, oprid }, "String");
+						String appInsID = "";
+						sql = "SELECT TZ_COLOR_SORT_ID,TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?";
+						Map<String,Object> wrkMap = jdbcTemplate.queryForMap(sql, new Object[]{ classID, oprid });
+						if(wrkMap != null){
+							sort = wrkMap.get("TZ_COLOR_SORT_ID") == null ? "" : wrkMap.get("TZ_COLOR_SORT_ID").toString();
+							appInsID = wrkMap.get("TZ_APP_INS_ID").toString(); 
+						}
 						
 						String msDate = "",
 							   msStartTime = "",
@@ -106,6 +111,7 @@ public class TzInterviewAppoStuImpl extends FrameworkImpl{
 						mapJson.put("msPlanSeq", msPlanSeq);
 						mapJson.put("oprid", oprid);
 						mapJson.put("name", name);
+						mapJson.put("appInsID", appInsID);
 						
 						mapJson.put("email", email);
 						mapJson.put("mobile", mobile);

@@ -107,18 +107,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 						xtype:"toolbar",
 						items:[
 							{text:"新增",tooltip:"新增",iconCls:"add",handler:'addInterviewAppoStu'},'-',
-							{text:"删除",tooltip:"删除",iconCls:"remove",handler:'delInterviewAppoStubat'},'->',
-							{
-								xtype:'splitbutton',
-								text:'更多操作',
-								iconCls: 'list',
-								glyph: 61,
-								menu:[{
-										text:"导出选中记录到Excel",
-										iconCls:"excel",
-										handler:'exportToExcel'
-									}]
-							}
+							{text:"删除",tooltip:"删除",iconCls:"remove",handler:'delInterviewAppoStubat'},'->'
 						]
 					}],
 					plugins: [/*{
@@ -166,6 +155,10 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 						text: '面试时间',
 						dataIndex: 'msPlanSeq',
 						groupable: true
+					},{
+						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.appInsID", '报名表编号'),
+						dataIndex: 'appInsID',
+						width: 120
 					},{
 						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.interviewAppID", '面试申请号'),
 						dataIndex: 'interviewAppID',

@@ -97,9 +97,51 @@ public class TzInterviewExpExcelImpl extends FrameworkImpl{
 					mapList.put("oprName", rowList[2]);
 					mapList.put("processInstance", rowList[3]);
 					mapList.put("oprTime", rowList[4]);
-					mapList.put("fileUrl", rowList[5]);
+					mapList.put("fileUrl", request.getContextPath()+rowList[5]);
 					mapList.put("engineStatus", rowList[6]);
+					
+					String runStatus = rowList[6];
+					String runStatusDesc = "";
+					
+					switch(runStatus){
+						//排队中
+						case "QUENED":
+							runStatusDesc = "排队中";
+							break;
+						//已启动
+						case "STARTED":
+							runStatusDesc = "已启动";
+							break;
+						//正在运行中
+						case "RUNNING":
+							runStatusDesc = "正在运行中";
+							break;
+						//成功完成
+						case "SUCCEEDED":
+							runStatusDesc = "<font color='blue'>成功完成</font>";
+							break;
+						//发生错误
+						case "ERROR":
+							runStatusDesc = "<font color='red'>发生错误</font>";
+							break;
+						//发生严重错误
+						case "FATAL":
+							runStatusDesc = "<font color='red'>发生严重错误</font>";
+							break;
+						//正在停止
+						case "STOPPING":
+							runStatusDesc = "正在停止";
+							break;
+						//已强行终止
+						case "TERMINATED":
+							runStatusDesc = "已强行终止";
+							break;
+							//默认情况
+						default:
+							runStatusDesc = runStatus;
+					}
 
+					mapList.put("runStatusDesc", runStatusDesc);
 					listData.add(mapList);
 				}
 
@@ -114,6 +156,16 @@ public class TzInterviewExpExcelImpl extends FrameworkImpl{
 		return strRet;
 	}
 	
+	
+	public Date addToDate(Date date,int addMin){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		
+		calendar.add(Calendar.MINUTE, addMin);
+		date = calendar.getTime();
+		
+		return date;
+	}
 	
 	
 	@Override
@@ -161,6 +213,10 @@ public class TzInterviewExpExcelImpl extends FrameworkImpl{
 				schdProcessParameters.setCycleExpression("");
 				schdProcessParameters.setLoginUserAccount("Admin");
 				schdProcessParameters.setPlanExcuteDateTime(new Date());
+				/*
+				Date execDate = addToDate(new Date(),-30);
+				schdProcessParameters.setPlanExcuteDateTime(execDate);
+				*/
 				schdProcessParameters.setRunControlId(runCntlId);
 				
 				//调度作业

@@ -112,8 +112,8 @@
             ],
             allowBlank: false
         },{
-            xtype: 'displayfield',
-            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.titleStyleView","标题格式预览"),
+            xtype: 'textfield',
+            fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.titleStyleView","标题显示样式"),
 			name: 'titleStyleView',
 			maxLength : 254,
 			hidden:true
@@ -132,17 +132,24 @@
 				html:'<span style="font-weight:bold">'+ Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.addTitleStyle","标题格式") +':</span>'
 			},{
 				xtype:'button',
-                reference:'selectStuBtn',
+                reference:'selectHotBtn',
                 text:'<span style="color:#fff">Hot</span>',
                 tooltip:Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.selectHotStyle","Hot格式"),
                 handler:'addHotStyle',
                 baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
 			},{
                 xtype:'button',
-                reference:'clearAllBtn',
+                reference:'selectNewBtn',
                 text:'<span style="color:#fff">New</span>',
                 tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.selectNewStyle","New格式"),
                 handler:'addNewStyle',
+                baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
+            },{
+                xtype:'button',
+                reference:'clearAllBtn',
+                text:'<span style="color:#fff">清除样式</span>',
+                tooltip:Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.clearStyle","清除标题样式"),
+                handler:'clearStyle',
                 baseCls:'x-btn x-unselectable x-box-item x-toolbar-item x-btn-default-small x-btn-inner x-btn-inner-default-small'
             }]
         },{
@@ -174,11 +181,13 @@
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artShortTitle","简短标题"),
 			name: 'artShortTitle',
+			hidden:true,
 			maxLength : 254
         },{
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.artSubHead","副标题"),
 			name: 'artSubHead',
+			hidden:true,
 			maxLength : 254
         },{
             xtype: 'textarea',

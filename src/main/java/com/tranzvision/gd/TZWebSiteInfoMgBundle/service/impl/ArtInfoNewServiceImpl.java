@@ -115,6 +115,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		Map<String, Object> map = new HashMap<>();
 		map.put("artId", "");
 		map.put("artTitle", "");
+		map.put("titleStyleView", "");
 		map.put("artShortTitle", "");
 		map.put("artSubHead", "");
 		map.put("artAbout", "");
@@ -486,6 +487,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 */
 				map.replace("artId", strArtId);
 				map.replace("artTitle", psTzArtRecTbl.getTzArtTitle());
+				map.replace("titleStyleView", psTzArtRecTbl.getTzArtTitleStyle());
 				map.replace("artShortTitle", psTzArtRecTbl.getTzArtShorttitle());
 				map.replace("artSubHead", psTzArtRecTbl.getTzSubhead());
 				map.replace("artAbout", psTzArtRecTbl.getTzAbout());
@@ -682,7 +684,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						} else {
 							artContent = (String) dataMap.get("contentInfo1");
 						}
-
+						
+						//文章标题样式;
+						String artTtileStyle = (String) dataMap.get("titleStyleView");
 						//活动听众表
 						if(dataMap.containsKey("AudList")&& dataMap.get("AudList")!=null && !dataMap.get("AudList").toString().equals("")){
 							ArrayList<String> strListenersId=new ArrayList<String>();
@@ -791,7 +795,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzLong3(tzlong3);
 						PsTzArtRecTbl.setTzDate1(yldt1);
 						PsTzArtRecTbl.setTzDate2(yldt2);
-						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
+						PsTzArtRecTbl.setTzArtTitleStyle(artTtileStyle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
 
 						// 增加内容编辑类型
@@ -1038,6 +1042,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						} else {
 							artContent = (String) dataMap.get("contentInfo1");
 						}
+						//文章标题样式;
+						String artTtileStyle = (String) dataMap.get("titleStyleView");
 						
 						//活动听众表
 						if(dataMap.containsKey("AudList")&& dataMap.get("AudList")!=null && !dataMap.get("AudList").toString().equals("")){
@@ -1176,7 +1182,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzLong3(tzlong3);
 						PsTzArtRecTbl.setTzDate1(yldt1);
 						PsTzArtRecTbl.setTzDate2(yldt2);
-						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
+						PsTzArtRecTbl.setTzArtTitleStyle(artTtileStyle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
 
 						PsTzArtRecTbl.setTzArtEdittype(editType);

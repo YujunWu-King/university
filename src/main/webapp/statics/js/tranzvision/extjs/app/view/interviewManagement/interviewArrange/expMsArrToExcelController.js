@@ -22,10 +22,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.expMsArrToExce
             	
                 var selListArr = [];
                 for(var i=0;i<selList.length;i++){
-                	selListArr.push({
-                		msPlanSeq: selList[i].get("msPlanSeq"),
-                		oprid: selList[i].get("oprid")
-                	});
+                	selListArr.push(selList[i].get("msJxNo"));
                 }
 
             	var tzParamsObj = {

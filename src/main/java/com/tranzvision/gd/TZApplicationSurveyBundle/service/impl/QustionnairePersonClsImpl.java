@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,10 +54,10 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
-					String isApply="";
+					String isApply="",attrNote = "";
 					mapList.put("wjId", rowList[0]);
 					mapList.put("oprid", rowList[1]);
-					mapList.put("name", rowList[2]);
+					mapList.put("name", rowList[2]); 
 					mapList.put("phone", rowList[3]);
 					mapList.put("email", rowList[4]);
 					mapList.put("wjInsId", rowList[6]);
@@ -65,12 +66,22 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 					}else{
 				       mapList.put("dcState", "未完成");
 					}
-					isApply=jdbcTemplate.queryForObject("select TZ_IS_APPLY from PS_TZ_SCHLR_RSLT_TBL where TZ_SCHLR_ID=? and OPRID=?",new Object[]{TZ_SCHLR_ID,rowList[1]},"String");
+//					isApply=jdbcTemplate.queryForObject("select TZ_IS_APPLY,TZ_NOTE from PS_TZ_SCHLR_RSLT_TBL where TZ_SCHLR_ID=? and OPRID=?",new Object[]{TZ_SCHLR_ID,rowList[1]},"String");
+					Map<String, Object> restMap = 	jdbcTemplate.queryForMap("select TZ_IS_APPLY,TZ_NOTE from PS_TZ_SCHLR_RSLT_TBL where TZ_SCHLR_ID=? and OPRID=?", new Object[]{TZ_SCHLR_ID,rowList[1]});
+					if(restMap != null){
+						isApply = restMap.get("TZ_IS_APPLY") == null ? "W" : String.valueOf(restMap.get("TZ_IS_APPLY"));
+						attrNote = restMap.get("TZ_NOTE") == null ? "" : String.valueOf(restMap.get("TZ_NOTE"));
+					}else{
+						isApply = "W";
+						attrNote = "";
+					}
 					/*if("".equals(isApply)){
 						isApply="W";
-					}*/
+					}
 					isApply=(isApply==null?"W":isApply);
+					*/
 					mapList.put("isApply", isApply);
+					mapList.put("note", attrNote);
 					listData.add(mapList);
 				}
 

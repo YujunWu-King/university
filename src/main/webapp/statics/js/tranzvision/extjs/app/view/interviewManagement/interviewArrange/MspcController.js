@@ -34,6 +34,44 @@
 			Ext.Msg.alert("提示","请填写必填项");
 		}
 	},
+	
+	onMsPlanSaveEnsure: function(btn){
+		var win = btn.findParentByType('interviewArrPlanSet');
+		var form = win.child('form').getForm();
+		var actType = win.actType;
+		if (form.isValid()) {
+			var comParamsObj = {};
+			if(actType == "A"){
+				comParamsObj.add = [{dataType:"msPlan", data:form.getValues()}];
+			}else{
+				comParamsObj.update = [form.getValues()];
+			}
+			
+			var tzParamsObj = {
+				ComID: 	"TZ_MS_ARR_MG_COM",
+				PageID:	"TZ_MSJH_SET_STD",
+				OperateType: "U",
+				comParams: comParamsObj
+			};
+			
+			var tzParams = Ext.JSON.encode(tzParamsObj);
+			Ext.tzSubmit(tzParams,function(respData){
+				if(respData.result == "success"){
+					if(actType == "A"){
+						form.setValues(respData);
+						win.actType = "U";
+					}
+					
+					if(win.msArrGrid){
+						win.msArrGrid.getStore().reload();
+					}
+					
+					win.close();
+				}
+			},"保存成功",true,this);
+		}
+	},
+	
 	//关闭面试日程安排设置页面
 	onWindowClose: function(btn){
 		var win = btn.findParentByType("window");

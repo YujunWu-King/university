@@ -488,11 +488,13 @@ public class tzOnlineAppUtility {
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
 			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
 			String strJygzTsxx) {
+		//System.out.println("---------regularValidator");
 		String returnMessage = "";
 
 		String getChildrenSql = "";
 
 		String strXxxValue = "";
+		//System.out.println("strXxxGdgsjy:"+strXxxGdgsjy);
 
 		try {
 			switch (strComMc) {
@@ -509,7 +511,7 @@ public class tzOnlineAppUtility {
 					strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
 					if (!"".equals(strXxxValue) && strXxxValue != null) {
 						//
-
+						//System.out.println("strXxxValue:"+strXxxValue);
 						switch (strXxxGdgsjy) {
 						case "email":
 							boolean isEmail = this.isValidEmail(strXxxValue);
@@ -532,6 +534,12 @@ public class tzOnlineAppUtility {
 						case "url":
 							boolean isUrl = this.isValidUrl(strXxxValue);
 							if (isUrl == false) {
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							}
+							break;
+						case "certNo":
+							boolean isCcertificateNo = this.isCcertificateNo(strXxxValue);
+							if (isCcertificateNo == false) {
 								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 							}
 							break;
@@ -714,23 +722,32 @@ public class tzOnlineAppUtility {
 
 	}
 
-	// 是否是Url
-	private boolean isValidUrl(String strValue) {
+	// 是否是证书编号   证书编号限定只能填写数字、字母和中横线
+	private boolean isCcertificateNo(String strValue) {
 
-		String regex = "^((https|http|ftp|rtsp|mms)?://)" + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@
-				+ "(([0-9]{1,3}\\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
-				+ "|" // 允许IP和DOMAIN（域名）
-				+ "([0-9a-z_!~*'()-]+\\.)*" // 域名- www.
-				+ "[a-z]{2,6})" // first level domain- .com or .museum
-				+ "(:[0-9]{1,4})?" // 端口- :80
-				+ "((/?)|" // a slash isn't required if there is no file name
-				+ "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
-
-		boolean isMatch = strValue.matches(regex);
+		boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
 
 		return isMatch;
 
 	}
+	
+	// 是否是Url
+		private boolean isValidUrl(String strValue) {
+
+			String regex = "^((https|http|ftp|rtsp|mms)?://)" + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@
+					+ "(([0-9]{1,3}\\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
+					+ "|" // 允许IP和DOMAIN（域名）
+					+ "([0-9a-z_!~*'()-]+\\.)*" // 域名- www.
+					+ "[a-z]{2,6})" // first level domain- .com or .museum
+					+ "(:[0-9]{1,4})?" // 端口- :80
+					+ "((/?)|" // a slash isn't required if there is no file name
+					+ "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+
+			boolean isMatch = strValue.matches(regex);
+
+			return isMatch;
+
+		}
 
 	// 是否是IdCard
 	private boolean isValidIdcard(String strValue) {

@@ -127,18 +127,19 @@
 				var cmpForm = panel.child("form").getForm();
 				//新建时，隐藏听众列表
 				cmpForm.findField("AudList").hide(); 
-				//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":""}}';
+				var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":""}}';
 				//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"","siteId":"","coluId":""}}';
 				//加载数据
-				/*
+				/**/
 				Ext.tzLoad(tzParams,function(responseData){
 						var formData = responseData.formData;
-						cmpForm.findField("siteId").setValue(formData.siteId);
-						cmpForm.findField("coluId").setValue(formData.coluId);
-						cmpForm.findField("saveImageAccessUrl").setValue(formData.saveImageAccessUrl);
-						cmpForm.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
+						cmpForm.setValues(formData);
+						//cmpForm.findField("siteIds").setValue(formData.siteids);
+						//cmpForm.findField("columsHide").setValue(formData.columsHide);
+						//cmpForm.findField("saveImageAccessUrl").setValue(formData.saveImageAccessUrl);
+						//cmpForm.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
 				});
-				*/
+				
 				var applyItemGrid = this.lookupReference('applyItemGrid');
 				var r = Ext.create('KitchenSink.view.activity.applyItemModel', {
     			activityId: "",
@@ -815,5 +816,15 @@
 	onComRegClose: function(btn){
 		//关闭窗口
 		this.getView().close();
-	}
+	},
+	onComRegSave:function(btn){
+		var dataGrid = btn.findParentByType("grid");
+		var store = dataGrid.getStore();
+        if(store.getRemovedRecords().length>0 || store.getModifiedRecords().length>0){
+            var tzParams = this.submitContentParams("D","保存成功");
+        };
+        if(btn.name=="ensure"){
+            this.getView().close();
+        }
+    },
 });

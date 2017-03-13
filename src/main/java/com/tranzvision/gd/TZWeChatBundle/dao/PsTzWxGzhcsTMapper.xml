@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatBundle.dao.PsTzWxGzhcsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxGzhcsT" >
+    <id column="TZ_WX_APPID" property="tzWxAppid" jdbcType="VARCHAR" />
+    <id column="TZ_APPSECRET" property="tzAppsecret" jdbcType="VARCHAR" />
+    <result column="TZ_ACCESS_TOKEN" property="tzAccessToken" jdbcType="VARCHAR" />
+    <result column="TZ_UPDATE_DTTM" property="tzUpdateDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_TOKEN_YXQ" property="tzTokenYxq" jdbcType="INTEGER" />
+    <result column="TZ_JSAPI_TICKET" property="tzJsapiTicket" jdbcType="VARCHAR" />
+    <result column="TZ_UPDATE_DTTM2" property="tzUpdateDttm2" jdbcType="TIMESTAMP" />
+    <result column="TZ_TICKET_YXQ" property="tzTicketYxq" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_WX_APPID, TZ_APPSECRET, TZ_ACCESS_TOKEN, TZ_UPDATE_DTTM, TZ_TOKEN_YXQ, TZ_JSAPI_TICKET, 
+    TZ_UPDATE_DTTM2, TZ_TICKET_YXQ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxGzhcsTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_WX_GZHCS_T
+    where TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_APPSECRET = #{tzAppsecret,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxGzhcsTKey" >
+    delete from PS_TZ_WX_GZHCS_T
+    where TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_APPSECRET = #{tzAppsecret,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxGzhcsT" >
+    insert into PS_TZ_WX_GZHCS_T (TZ_WX_APPID, TZ_APPSECRET, TZ_ACCESS_TOKEN, 
+      TZ_UPDATE_DTTM, TZ_TOKEN_YXQ, TZ_JSAPI_TICKET, 
+      TZ_UPDATE_DTTM2, TZ_TICKET_YXQ)
+    values (#{tzWxAppid,jdbcType=VARCHAR}, #{tzAppsecret,jdbcType=VARCHAR}, #{tzAccessToken,jdbcType=VARCHAR}, 
+      #{tzUpdateDttm,jdbcType=TIMESTAMP}, #{tzTokenYxq,jdbcType=INTEGER}, #{tzJsapiTicket,jdbcType=VARCHAR}, 
+      #{tzUpdateDttm2,jdbcType=TIMESTAMP}, #{tzTicketYxq,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxGzhcsT" >
+    insert into PS_TZ_WX_GZHCS_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzWxAppid != null" >
+        TZ_WX_APPID,
+      </if>
+      <if test="tzAppsecret != null" >
+        TZ_APPSECRET,
+      </if>
+      <if test="tzAccessToken != null" >
+        TZ_ACCESS_TOKEN,
+      </if>
+      <if test="tzUpdateDttm != null" >
+        TZ_UPDATE_DTTM,
+      </if>
+      <if test="tzTokenYxq != null" >
+        TZ_TOKEN_YXQ,
+      </if>
+      <if test="tzJsapiTicket != null" >
+        TZ_JSAPI_TICKET,
+      </if>
+      <if test="tzUpdateDttm2 != null" >
+        TZ_UPDATE_DTTM2,
+      </if>
+      <if test="tzTicketYxq != null" >
+        TZ_TICKET_YXQ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzWxAppid != null" >
+        #{tzWxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppsecret != null" >
+        #{tzAppsecret,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAccessToken != null" >
+        #{tzAccessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUpdateDttm != null" >
+        #{tzUpdateDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzTokenYxq != null" >
+        #{tzTokenYxq,jdbcType=INTEGER},
+      </if>
+      <if test="tzJsapiTicket != null" >
+        #{tzJsapiTicket,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUpdateDttm2 != null" >
+        #{tzUpdateDttm2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzTicketYxq != null" >
+        #{tzTicketYxq,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxGzhcsT" >
+    update PS_TZ_WX_GZHCS_T
+    <set >
+      <if test="tzAccessToken != null" >
+        TZ_ACCESS_TOKEN = #{tzAccessToken,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUpdateDttm != null" >
+        TZ_UPDATE_DTTM = #{tzUpdateDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzTokenYxq != null" >
+        TZ_TOKEN_YXQ = #{tzTokenYxq,jdbcType=INTEGER},
+      </if>
+      <if test="tzJsapiTicket != null" >
+        TZ_JSAPI_TICKET = #{tzJsapiTicket,jdbcType=VARCHAR},
+      </if>
+      <if test="tzUpdateDttm2 != null" >
+        TZ_UPDATE_DTTM2 = #{tzUpdateDttm2,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzTicketYxq != null" >
+        TZ_TICKET_YXQ = #{tzTicketYxq,jdbcType=INTEGER},
+      </if>
+    </set>
+    where TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_APPSECRET = #{tzAppsecret,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxGzhcsT" >
+    update PS_TZ_WX_GZHCS_T
+    set TZ_ACCESS_TOKEN = #{tzAccessToken,jdbcType=VARCHAR},
+      TZ_UPDATE_DTTM = #{tzUpdateDttm,jdbcType=TIMESTAMP},
+      TZ_TOKEN_YXQ = #{tzTokenYxq,jdbcType=INTEGER},
+      TZ_JSAPI_TICKET = #{tzJsapiTicket,jdbcType=VARCHAR},
+      TZ_UPDATE_DTTM2 = #{tzUpdateDttm2,jdbcType=TIMESTAMP},
+      TZ_TICKET_YXQ = #{tzTicketYxq,jdbcType=INTEGER}
+    where TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_APPSECRET = #{tzAppsecret,jdbcType=VARCHAR}
+  </update>
+</mapper>

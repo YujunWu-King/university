@@ -228,22 +228,11 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.expMsArrToExce
                                     },
                                     {
                                         text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_EXP_STD.state", "导出状态"),
-                                        dataIndex: 'engineStatus',
+                                        //dataIndex: 'engineStatus',
+                                        dataIndex: 'runStatusDesc',
                                         width: 100,
                                         renderer:function(v){
                                         	return v;
-                                        	/*
-                                            if(v){
-                                                var rec = processingStatus.find('TValue',v,0,false,true,false);
-                                                if(rec>-1){
-                                                    return processingStatus.getAt(rec).get("TSDesc");
-                                                }else{
-                                                    return "";
-                                                }
-                                            }else{
-                                                return "";
-                                            }
-                                            */
                                         }
                                     },
                                     {
@@ -256,7 +245,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.expMsArrToExce
                                                 iconCls:'download',
                                                 handler: "downloadFile",
                                                 isDisabled:function(view ,rowIndex ,colIndex ,item ,record ){
-                                                    if(record .get("fileUrl").length>0){
+                                                    if(record.get("fileUrl").length>0 && record.get("engineStatus") == "SUCCEEDED"){
                                                         return false
                                                     }else{
                                                         return true;
@@ -269,7 +258,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.expMsArrToExce
                                 ],
                                 bbar: {
                                     xtype: 'pagingtoolbar',
-                                    pageSize: 5,
+                                    pageSize: 10,
                                     listeners: {
                                         afterrender: function (pbar) {
                                             var grid = pbar.findParentByType("grid");
