@@ -180,23 +180,39 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     filter: {
                         type: 'number'
                     },
-                    minWidth:125,
-                    flex:1
+                    width:120,
+                },{
+                	text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.interviewAppId","面试申请号") ,
+                    dataIndex: 'interviewAppId',
+                    filter: {
+                        type: 'string'
+                    },
+                    width:140
                 },{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.stuName","姓名") ,
                     dataIndex: 'stuName',
                     filter: {
                         type: 'string'
                     },
-                    minWidth: 100,
-                    flex:1
+                    width: 120
                 },{
+					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.emial", '邮箱'),
+					dataIndex: 'email',
+					width: 160,
+					flex:1
+				},{
+					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.mobile", '手机'),
+					dataIndex: 'mobile',
+					width: 140,
+					flex:1
+				},{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.msZGFlag","面试资格"),
                     dataIndex: 'msZGFlag',
                     filter: {
                         type: 'list',
                         options: mszgFlagSortFilterOptions
                     },
+                    width:120
                     //renderer : function(value, metadata, record) {
                     //    //alert("render"+value);
                     //    var index = mszgFlagStore.find('TValue',value);
@@ -205,9 +221,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     //    }
                     //    return record.get('msZGFlag');
                     //},
-                    minWidth:120,
-                    flex:1
-                },{
+                },/*{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.city","所在城市") ,
                     filter: {
                         type: 'string'
@@ -225,7 +239,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     dataIndex: 'country',
                     minWidth: 105,
                     flex:1
-                },{
+                },*/{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.label","标签") ,
                     filter: {
                         type: 'string'
@@ -233,7 +247,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     sortable: true,
                     dataIndex: 'label',
                     minWidth: 200,
-                    flex:2
+                    flex:1
                 }],
                 bbar: {
                     xtype: 'pagingtoolbar',
