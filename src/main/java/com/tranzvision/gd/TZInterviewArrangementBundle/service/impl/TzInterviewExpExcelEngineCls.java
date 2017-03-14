@@ -35,9 +35,7 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 			String expDirPath = paramsMap.get("TZ_REL_URL").toString();
 			String absexpDirPath = paramsMap.get("TZ_JD_URL").toString();
 			String expParams = paramsMap.get("TZ_EXP_PARAMS_STR").toString();
-			System.out.println("------->"+expDirPath);
-			System.out.println("------->"+absexpDirPath);
-			System.out.println("------->"+expParams);
+			//System.out.println("------->"+expParams);
 			
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			jacksonUtil.json2Map(expParams);
@@ -49,14 +47,19 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 			String batchID = jacksonUtil.getString("batchID");
 			List<String> msPlanList = (List<String>) jacksonUtil.getList("selList");
 			
-
+			//批次名称
+			String batchName = "";
+			String sql = "select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
+			batchName = sqlQuery.queryForObject(sql, new Object[]{ classID, batchID }, "String");
+			
 			// 表头
 			List<String[]> dataCellKeys = new ArrayList<String[]>();
+			dataCellKeys.add(new String[] { "interviewbatch", "批次" });
 			dataCellKeys.add(new String[] { "interviewDate", "面试日期" });
-			dataCellKeys.add(new String[] { "interviewTime", "面试时间" });
+			dataCellKeys.add(new String[] { "interviewTime", "报到时间" });
 			
 			//导出模板
-			String sql = "SELECT TZ_DC_FIELD_ID,TZ_DC_FIELD_NAME,TZ_DC_FIELD_FGF FROM PS_TZ_EXP_FRMFLD_T WHERE TZ_EXPORT_TMP_ID=? ORDER BY TZ_SORT_NUM ASC";
+			sql = "SELECT TZ_DC_FIELD_ID,TZ_DC_FIELD_NAME,TZ_DC_FIELD_FGF FROM PS_TZ_EXP_FRMFLD_T WHERE TZ_EXPORT_TMP_ID=? ORDER BY TZ_SORT_NUM ASC";
 			List<Map<String,Object>> itemsList = sqlQuery.queryForList(sql, new Object[]{ expTmpId });
 			
 			List<String[]> listDataFields = new ArrayList<String[]>();
@@ -78,11 +81,8 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 
 			// 数据
 			List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
-			
 			//循环面试计划并导出面试预约学生
 			for(String msPlanSeq : msPlanList){
-				Map<String, Object> mapData = new HashMap<String, Object>();
-				
 				sql = "SELECT TZ_MS_DATE,date_format(TZ_START_TM,'%H:%i') AS TZ_START_TM FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_MS_PLAN_SEQ=?";
 				Map<String,Object> msArrMap = sqlQuery.queryForMap(sql, new Object[]{ classID,batchID,msPlanSeq });
 				//面试日期
@@ -99,6 +99,10 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 				List<Map<String,Object>> opridList = sqlQuery.queryForList(sql, new Object[]{ classID,batchID,msPlanSeq });
 				for(Map<String,Object> opridMap: opridList){
 					String oprid = opridMap.get("OPRID").toString();
+					//System.out.println("----->考生OPRID："+oprid);
+					
+					Map<String, Object> mapData = new HashMap<String, Object>();
+					mapData.put("interviewbatch", batchName);
 					//面试日期、时间
 					mapData.put("interviewDate", strMsDate);
 					mapData.put("interviewTime", strMsTime);
@@ -109,14 +113,15 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 					try{
 						appInsId = sqlQuery.queryForObject(sql, new Object[]{ classID,oprid }, "String");
 					}catch(Exception e){
-						System.out.println("----->报名表ID："+appInsId);
 						e.printStackTrace();
 					}
+					//System.out.println("----->报名表ID："+appInsId);
+					
 					for(String [] itemArr : listDataFields){
+						//System.out.println("----->itemArr[0]："+itemArr+"-----itemArr[1]："+itemArr[1]);
 						sql="SELECT A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,B.TZ_XXX_CCLX,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A ,PS_TZ_FORM_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND B.TZ_XXX_BH =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
 						List<Map<String,Object>> appItemList = sqlQuery.queryForList(sql,new Object[]{ appFormModalID,expTmpId, itemArr[0] });
 						
-							
 						//不是报名表字段看看是不是工作表中的字段;
 						if(appItemList == null || appItemList.size() == 0){
 							sql = "select A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,'R' AS TZ_XXX_CCLX,'' AS TZ_COM_LMC,'' AS TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A,PS_TZ_FORM_DC_VW B  where B.FILED1 =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
@@ -127,7 +132,6 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 							}
 						
 						}
-						
 						/*
 						 * 报名表字段，码表，存储类型，控件类名称，
 						 * 下拉存储描述信息项编号
@@ -184,7 +188,6 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 								/* 可选框 */
 								if ("D".equals(strSaveType)) {
 									strSaveTypeBoolean = false;
-
 									isSingleValue = false;
 								}
 								/* 其他值 */
@@ -281,8 +284,7 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 								} else {
 									
 									if (itemArr[1] != null && !"".equals(itemArr[1])) {
-										strAppFormFieldValues = strAppFormFieldValues + itemArr[1]
-												+ strAppFormFieldValue;
+										strAppFormFieldValues = strAppFormFieldValues + itemArr[1] + strAppFormFieldValue;
 									} else {
 										strAppFormFieldValues = strAppFormFieldValues + "," + strAppFormFieldValue;
 									}
