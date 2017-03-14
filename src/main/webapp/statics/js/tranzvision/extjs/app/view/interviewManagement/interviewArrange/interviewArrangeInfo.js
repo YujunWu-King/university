@@ -196,7 +196,17 @@
 									},{
 										text:"导出选中记录到Excel",
 										iconCls:"excel",
-										handler:'exportToExcel'
+										menu:[{
+		                                    text: '导出选中记录到Excel',
+		                                    iconCls:"excel",
+		                                    name:'exportExcel',
+		                                    handler:'exportToExcel'
+			                            },{
+	                                        text: "查看导出结果并下载",
+	                                        iconCls:"download",
+	                                        name:'downloadExcel',
+	                                        handler:'exportToExcel'
+			                            }]
 									}]
 							}
 						]
@@ -223,7 +233,7 @@
 							xtype:"datefield",
 							format:"Y-m-d"
 						},*/
-						width: 120
+						width: 100
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.maxPerson", '最多预约人数'),
 						sortable: true,
@@ -234,7 +244,14 @@
 							allowBlank:false,
 							minValue: 1
 						},*/
-						width: 120
+						width: 110,
+						align:'center'
+					},{
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.appoPerson", '已预约人数'),
+						sortable: true,
+						dataIndex: 'appoPerson',
+						width: 100,
+						align:'center'
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsStartTime",'开始时间'),
 						xtype:'datecolumn',
@@ -249,7 +266,7 @@
 							allowBlank: false,
 							format:'H:i'
 						},*/
-						width: 100
+						width: 90
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsEndTime", '结束时间'),
 						sortable: true,
@@ -264,7 +281,7 @@
 							allowBlank: false,
 							format:'H:i'
 						},*/
-						width: 100
+						width: 90
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msLocation", '面试地点'),
 						dataIndex: 'msLocation',
@@ -288,7 +305,7 @@
 					},{
 						xtype: 'actioncolumn',
 						header:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.releaseOrUndo","发布/撤销") ,
-						minWidth:100,
+						minWidth:90,
 						width:100,
 						items:[
 							{
@@ -320,7 +337,7 @@
 					}],
 					bbar: {
 						xtype: 'pagingtoolbar',
-						pageSize: 10,
+						pageSize: 200,
 						listeners:{
 							afterrender: function(pbar){
 								var grid = pbar.findParentByType("grid");
