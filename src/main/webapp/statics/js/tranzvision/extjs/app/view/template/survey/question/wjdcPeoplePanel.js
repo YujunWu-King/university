@@ -25,7 +25,10 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
         type: 'checkboxmodel'
     },
     plugins:[
-        {ptype: 'gridexporter'}
+        {ptype: 'gridexporter'},
+        {ptype: 'cellediting',
+         pluginId: 'attrItemCellEditing',
+         clicksToEdit:1}
     ], 
     style:"margin:8px",
     multiSelect: true,
@@ -39,8 +42,8 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
         xtype:"toolbar",
         dock:"bottom",
         ui:"footer",
-        items:[ '->',/*{minWidth:80,text:"保存",iconCls:"save",handler:"wjdcPeopleSave"},'-',
-                {minWidth:80,text:"确定",iconCls:"ensure",handler:"wjdcPeopleSure"},'-',*/
+        items:[ '->',{minWidth:80,text:"保存",iconCls:"save",handler:"wjdcPeopleSave"},'-',
+                {minWidth:80,text:"确定",iconCls:"ensure",handler:"wjdcPeopleSure"},'-',
                 {minWidth:80,text:"关闭",iconCls:"close",handler:"wjdcInfoClose"},'-'
         ]
     },{
@@ -55,12 +58,15 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                 menu:[
                     {
                         text: '发送短信',
+                        iconCls:'sms',
                         handler: 'sendSmsToCyr'
                     }, {
                         text: '发送邮件',
+                        iconCls:'email',
                         handler: 'sendEmailToCyr'
                     },  {
                         text: '导出参与人',
+                        iconCls:'excel',
                         handler: 'downloadAllCyr' 
                     }]
             }
@@ -74,7 +80,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_FIRST_NAME","姓名"),
                     sortable: true, 
                     dataIndex: 'name',
-                    width: 200,
+                    width: 120,
                     renderer:function(v){
                         return '<a href="javascript:void(0)">'+v+'</a>';
                     },
@@ -86,43 +92,22 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                     text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_PHONE","手机"),
                     sortable: true,
                     dataIndex: 'phone',
-                    width: 200
+                    width: 120
                 },
                 {   text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_PERSON_STD.TZ_EMAIL","邮箱"),
                     sortable: true,
                     dataIndex: 'email',
-                    width: 220
+                    width: 150
                 },{
                     text: '完成状态',
                     sortable: false,
                     dataIndex: 'dcState', 
-                    width: 120
+                    width: 100
                 },
-               /* {   text: '审核状态',
-                    dataIndex: 'isApply',
-                    width: 200,
-                    align: 'center',
-                    groupable: false,
-                    renderer: function (v,metaData,record) {
-                        if (v == "Y") {
-                            return '<a href="javascript:void(0)">待审核</a>/<a href="javascript:void(0)">未通过</a>/<a href="javascript:void(0)"><font color="red">通过</font></a>';
-                        } else {
-                        	if(v == "N"){
-                        		return '<a href="javascript:void(0)">待审核</a>/<a href="javascript:void(0)"><font color="red">未通过</font></a>/<a href="javascript:void(0)">审批通过</a>';
-                        	}
-                        	if(v == "W"){
-                        		metaData.tdAttr = 'data-qtip="待审核"';
-                        		return '<a href="javascript:void(0)"><font color="red">待审核</font></a>/<a href="javascript:void(0)">未通过</a>/<a href="javascript:void(0)">审批通过</a>';
-                        	}
-                        }
-                    },
-                    listeners: {
-                        click: 'cyrScholarStatus'
-                    } 
-                },*/{
+               {
                     xtype:'linkcolumn',
                     sortable: false,
-                    width: 200,
+                    width: 150,
                     text: '审核状态',
                     items:[{
                         handler:'setScholarStatusW',
@@ -158,6 +143,14 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcPeoplePanel', {
                         	
                         }
                     }]
+                },{
+                    text: '备注',
+                    dataIndex: 'note',
+                    width:330,
+                    editor: {
+						xtype:'textfield',
+						maxLength:254
+					}
                 }],
                 store:store,
                 bbar: {

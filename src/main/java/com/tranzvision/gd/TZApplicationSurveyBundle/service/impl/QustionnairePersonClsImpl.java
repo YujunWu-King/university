@@ -66,7 +66,6 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 					}else{
 				       mapList.put("dcState", "未完成");
 					}
-//					isApply=jdbcTemplate.queryForObject("select TZ_IS_APPLY,TZ_NOTE from PS_TZ_SCHLR_RSLT_TBL where TZ_SCHLR_ID=? and OPRID=?",new Object[]{TZ_SCHLR_ID,rowList[1]},"String");
 					Map<String, Object> restMap = 	jdbcTemplate.queryForMap("select TZ_IS_APPLY,TZ_NOTE from PS_TZ_SCHLR_RSLT_TBL where TZ_SCHLR_ID=? and OPRID=?", new Object[]{TZ_SCHLR_ID,rowList[1]});
 					if(restMap != null){
 						isApply = restMap.get("TZ_IS_APPLY") == null ? "W" : String.valueOf(restMap.get("TZ_IS_APPLY"));
@@ -75,11 +74,7 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 						isApply = "W";
 						attrNote = "";
 					}
-					/*if("".equals(isApply)){
-						isApply="W";
-					}
-					isApply=(isApply==null?"W":isApply);
-					*/
+			
 					mapList.put("isApply", isApply);
 					mapList.put("note", attrNote);
 					listData.add(mapList);
@@ -110,6 +105,7 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 			String shcLrId=jacksonUtil.getString("schLrId");
 			String oprid=data.get("oprid")==null?"":data.get("oprid").toString();
 			String isApply=String.valueOf(data.get("isApply"));
+			String tzNote=data.get("note")==null?"":data.get("note").toString();
 			isApply=(isApply==null?"W":isApply);
 			String flag=jdbcTemplate.queryForObject("select 'Y' from PS_TZ_SCHLR_RSLT_TBL where TZ_SCHLR_ID=? and OPRID=?", new Object[]{shcLrId,oprid}, "String");
 			if("Y".equals(flag)){
@@ -117,12 +113,14 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 				PsTzSchlrRsltTbl.setTzSchlrId(shcLrId);
 				PsTzSchlrRsltTbl.setOprid(oprid);
 				PsTzSchlrRsltTbl.setTzIsApply(isApply);
+				PsTzSchlrRsltTbl.setTzNote(tzNote);
 				psTzSchlrRsltTblMapper.updateByPrimaryKeySelective(PsTzSchlrRsltTbl);
 			}else{
 				PsTzSchlrRsltTbl PsTzSchlrRsltTbl=new PsTzSchlrRsltTbl();
 				PsTzSchlrRsltTbl.setTzSchlrId(shcLrId);
 				PsTzSchlrRsltTbl.setOprid(oprid);
 				PsTzSchlrRsltTbl.setTzIsApply(isApply);
+				PsTzSchlrRsltTbl.setTzNote(tzNote);
 				psTzSchlrRsltTblMapper.insert(PsTzSchlrRsltTbl);
 			}
 			
@@ -134,7 +132,6 @@ public class QustionnairePersonClsImpl extends FrameworkImpl{
 		return strRet;
 	
 	}
-	
 
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
