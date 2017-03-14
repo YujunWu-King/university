@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZApplicationCenterBundle.service.impl;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ public class ViewRqTzsQrcodeServiceImpl extends FrameworkImpl {
 	private TzAppAdGenQrcodeServiceImpl tzAppAdGenQrcodeServiceImpl;
 	@Autowired
 	private TZGDObject tzGDObject;
+	@Autowired
+	private HttpServletRequest request;
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -27,7 +31,8 @@ public class ViewRqTzsQrcodeServiceImpl extends FrameworkImpl {
 
 		String QrcodeHtml = "";
 		try {
-			QrcodeHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_RQTZS_QRCODE_HTML",qrcodeUrl);
+			String ctxPath = request.getContextPath();
+			QrcodeHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_RQTZS_QRCODE_HTML",qrcodeUrl,ctxPath);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

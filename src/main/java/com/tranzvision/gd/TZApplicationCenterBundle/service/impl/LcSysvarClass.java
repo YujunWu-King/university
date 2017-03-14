@@ -311,7 +311,7 @@ public class LcSysvarClass {
 				}catch(Exception e){
 					tzLuquSta = "";
 				}
-				if (tzLuquSta=="LQ"){
+				if ("LQ".equals(tzLuquSta)){
 					if("Y".equals(isMobile)){
 						QrcodeHtml = "<div class=\"overhidden\" onclick='openRqQrcode(\""+appIns+"\")'><i class=\"add_icon\"></i><span class=\"fl\" style=\"color:#666;\">查看电子版条件录取通知书</span></div>";
 					}else{

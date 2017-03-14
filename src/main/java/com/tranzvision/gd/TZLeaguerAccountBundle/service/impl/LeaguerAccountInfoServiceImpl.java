@@ -230,7 +230,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				Long appIns = jdbcTemplate.queryForObject(" select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T WHERE OPRID=? ORDER BY ROW_LASTMANT_DTTM LIMIT 0,1", new Object[]{str_oprid},"Long");
 				Map<String, Object> ksdrMap = new HashMap<>();
 				
-				if(appIns > 0){
+				if(appIns != null && appIns > 0){
 					//材料评审
 					Map< String, Object> clmsMap = jdbcTemplate.queryForMap("SELECT TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
 					if(clmsMap != null){
