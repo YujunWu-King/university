@@ -27,6 +27,7 @@ import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 批次面试时间安排
@@ -40,6 +41,9 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 
 	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	private TZGDObject tzGDObject;
 	
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
@@ -155,7 +159,7 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 
 				ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
 				if (total > 0) {
-					sql = "SELECT TZ_MS_PLAN_SEQ,TZ_MSYY_COUNT,TZ_MS_DATE,date_format(TZ_START_TM,'%H:%i') as TZ_START_TM,date_format(TZ_END_TM,'%H:%i') as TZ_END_TM,TZ_MS_LOCATION,TZ_MS_ARR_DEMO,TZ_MS_PUB_STA,TZ_MS_OPEN_STA FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? ORDER BY TZ_MS_DATE ASC limit ?,?";
+					sql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsPlanAppoPersonCount");
 					List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql, new Object[]{classID, batchID, start, limit});
 
 					for(Map<String,Object> mapData : listData){
@@ -172,6 +176,7 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 						mapJson.put("msXxBz", mapData.get("TZ_MS_ARR_DEMO"));
 						mapJson.put("msOpenStatus", mapData.get("TZ_MS_OPEN_STA"));
 						mapJson.put("releaseOrUndo", mapData.get("TZ_MS_PUB_STA"));
+						mapJson.put("appoPerson", mapData.get("TZ_YY_COUNT"));
 						
 						listJson.add(mapJson);
 					}
@@ -231,7 +236,7 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 	private String saveMsArrInfo(String strParams, String[] errorMsg){
 		String strRet = "";
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
-		rtnMap.put("success", "");
+		rtnMap.put("result", "");
 		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -352,6 +357,9 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 				//删除所有
 				String sql = "delete from PS_TZ_MSSJ_ARR_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
 				jdbcTemplate.update(sql, new Object[]{ classID, batchID });
+				//删除预约考生
+				String delStuSql = "delete from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
+				jdbcTemplate.update(delStuSql, new Object[]{ classID, batchID });
 				jdbcTemplate.execute("commit");
 			}else{
 				List<Map<String, Object>> removeData = null;
@@ -364,20 +372,24 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 					psTzMssjArrTblKey.setTzClassId(strClassID);
 					psTzMssjArrTblKey.setTzBatchId(strBatchID);
 					psTzMssjArrTblKey.setTzMsPlanSeq(msJxNo);
-					psTzMssjArrTblMapper.deleteByPrimaryKey(psTzMssjArrTblKey);
+					int rtn = psTzMssjArrTblMapper.deleteByPrimaryKey(psTzMssjArrTblKey);
+					if(rtn != 0){
+						String delStuSql = "delete from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and TZ_MS_PLAN_SEQ=?";
+						jdbcTemplate.update(delStuSql, new Object[]{ classID, batchID, msJxNo });
+						jdbcTemplate.execute("commit");
+					}
 				}	
 			}
-			rtnMap.replace("success", "success");
+			rtnMap.replace("result", "success");
 		}catch(Exception e){
 			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = "操作异常。"+e.getMessage();
-			rtnMap.replace("success", "fail");
+			rtnMap.replace("result", "fail");
 		}
 		strRet = jacksonUtil.Map2json(rtnMap);
 		return strRet;
 	}
-	
 	
 	//发布、撤销
 	private String publish(String strParams, String[] errorMsg){

@@ -498,7 +498,7 @@
 	
 	//删除
 	deleteMsCalRow:function(grid, rowIndex, colIndex){
-		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+		Ext.MessageBox.confirm('确认', '删除面试安排将同时删除对应预约考生，您确定要删除所选记录吗?', function(btnId){
 			if(btnId == 'yes'){
 				grid.store.removeAt(rowIndex);
 			}
@@ -852,7 +852,7 @@
 		var formDataSet={classID:msArrFormclassID,batchID:msArrFormbatchId,clearAllTimeArr:""};
 		Ext.tzSubmit(tzParams,function(responseData){
 			//console.log(responseData)
-			if(responseData.success=='success'){
+			if(responseData.result=='success'){
 				msArrForm.getForm().setValues(formDataSet);
 				Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
 				msArrGrid.store.tzStoreParams = Params;
@@ -1013,9 +1013,11 @@
 	
 	//导出Excel
 	exportToExcel:function(btn){
+		var btnName = btn.name;
 		var msArrGrid = btn.findParentByType("grid");
 		var selList = msArrGrid.getSelectionModel().getSelection();
-		if(selList.length<1) {
+		
+		if(btnName=='exportExcel' && selList.length<1) {
 			Ext.MessageBox.alert("提示", "您没有选中任何记录");
 			return;
 		};
@@ -1045,8 +1047,14 @@
 
 		Ext.tzLoadAsync(tzParams,function(responseData){
 			win = new ViewClass(responseData.modalId);
-
 			win.selList=selList;
+			
+			if(btnName=='downloadExcel'){
+	            var tabPanel = win.lookupReference("exportExcelTabPanel");
+	            tabPanel.setActiveTab(1);
+	            tabPanel.tabBar.items.items[0].hide();
+	        }
+			
 			var form = win.child("form").getForm();
 			form.reset();
 			win.show();
