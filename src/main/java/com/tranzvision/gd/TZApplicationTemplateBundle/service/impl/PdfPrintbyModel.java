@@ -677,9 +677,11 @@ public class PdfPrintbyModel {
 
 	private String getTZ_XXX_BH(String str) {
 		// 表单1[0].#subform[4].TZ_1124[0]
-		str = str.substring(0, str.length() - 1);
-		str = str.substring(str.lastIndexOf(".") + 1, str.length());
-		str = str.substring(0, str.lastIndexOf("["));
+		if (str != null && str.length() > 0) {
+			str = str.substring(0, str.length() - 1);
+			str = str.substring(str.lastIndexOf(".") + 1, str.length());
+			str = str.substring(0, str.lastIndexOf("["));
+		}
 		return str;
 	}
 
