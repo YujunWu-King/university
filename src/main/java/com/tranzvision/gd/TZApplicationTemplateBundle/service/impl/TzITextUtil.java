@@ -160,6 +160,7 @@ public class TzITextUtil {
 	}
 
 	public boolean setFieldsValue(String file, String fieldsValue, ServletOutputStream out) {
+
 		boolean result = true;
 		PdfReader reader = null;
 		ByteArrayOutputStream bos = null;
@@ -168,6 +169,7 @@ public class TzITextUtil {
 		BaseFont bfChinese = null;
 		String[] fieldsValueArray = (String[]) null;
 		String[] fieldValueArray = (String[]) null;
+		String name="";
 		try {
 			reader = new PdfReader(file);
 			bos = new ByteArrayOutputStream();
@@ -181,17 +183,25 @@ public class TzITextUtil {
 				if (fieldValueArray.length != 2) {
 					continue;
 				}
-				fields.setField(fieldValueArray[0], fieldValueArray[1]);
+				if (fieldValueArray[0].startsWith("表单")) {
+					fields.setField(fieldValueArray[0], fieldValueArray[1]);
+				} else {
+					for (int x = 0; x < 5; x++) {
+						name = fieldValueArray[0] + "[" + x + "]";
+						// System.out.println(name);
+						fields.setField(name, fieldValueArray[1]);
+					}
+				}
 			}
 			ps.setFormFlattening(true);
 			try {
 				ps.close();
-			} catch(Exception ec) {
+			} catch (Exception ec) {
 				ec.printStackTrace();
 				ps.setFormFlattening(false);
 				ps.close();
 			}
-			
+
 			out.write(bos.toByteArray());
 			// out.close();
 			// out.flush();
@@ -230,6 +240,7 @@ public class TzITextUtil {
 		String[] fieldValueArray = (String[]) null;
 		try {
 			reader = new PdfReader(file);
+			String name = "";
 			bos = new ByteArrayOutputStream();
 			ps = new PdfStamper(reader, bos);
 			bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", false);
@@ -241,18 +252,26 @@ public class TzITextUtil {
 				if (fieldValueArray.length != 2) {
 					continue;
 				}
-				fields.setField(fieldValueArray[0], fieldValueArray[1]);
+				if (fieldValueArray[0].startsWith("表单")) {
+					fields.setField(fieldValueArray[0], fieldValueArray[1]);
+				} else {
+					for (int x = 0; x < 5; x++) {
+						name = fieldValueArray[0] + "[" + x + "]";
+						// System.out.println(name);
+						fields.setField(name, fieldValueArray[1]);
+					}
+				}
 			}
-			
+
 			ps.setFormFlattening(true);
 			try {
 				ps.close();
-			} catch(Exception ec) {
+			} catch (Exception ec) {
 				ec.printStackTrace();
 				ps.setFormFlattening(false);
 				ps.close();
 			}
-			
+
 			fos = new FileOutputStream(outputfile);
 			fos.write(bos.toByteArray());
 			fos.close();
@@ -381,12 +400,14 @@ public class TzITextUtil {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		TzITextUtil t = new TzITextUtil();
-		//System.out.println(t.addBreak("上海交通大学安泰2015年_MBA考生申请表", 3));
-		 String a =
-		 t.getPdfFileFields("d://清华MBA模板.pdf");
-		 System.out.println(a);
-		 t.setFieldsValue("d://清华MBA模板.pdf", "TZ_26TZ_TZ_26_1∨∨AA∧∧TZ_26TZ_TZ_26_4∨∨BB", "d://清华MBA_1.pdf");
-		 t.setFieldsValue("d://FMBA报名表-1026.pdf", "grcscszz∨∨AA∧∧grcscstd∨∨BB", "d://清华MBA_2.pdf");
+		// System.out.println(t.addBreak("上海交通大学安泰2015年_MBA考生申请表", 3));
+		// pinfoname
+		String a = "d://FMBA报名表-1026.pdf";
+		String b = t.getFieldValueAndType(a);
+		//System.out.println(b);
+		// t.setFieldsValue("d://清华MBA模板.pdf",
+		// "TZ_26TZ_TZ_26_1∨∨AA∧∧TZ_26TZ_TZ_26_4∨∨BB", "d://清华MBA_1.pdf");
+		 t.setFieldsValue(a, "pinfoname∨∨Test", "d://清华MBA_2.pdf");
 		// String[] b = a.split(";");
 		// for (int i = 0; i < b.length; i++) {
 		// System.out.println(b[i].length());
