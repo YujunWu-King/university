@@ -203,7 +203,7 @@
 		   Ext.Msg.alert("提示","只能选择一条要查看的记录");   
 		   return;
 	    }
-
+	   
 	    var OPRID = selList[0].get("OPRID");
 		
 		var contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
@@ -215,6 +215,7 @@
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
 			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]');
+			var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
 			//加载数据
@@ -223,6 +224,9 @@
 			var formData = responseData.formData;
 		
 			form.setValues(formData);
+			
+			//考生导入信息;
+			ksdrInfoForm.setValues(formData.ksdrInfo);
 
 			var userInfoItems = [];
 		
@@ -646,11 +650,14 @@
 	        var arrAddSQLValue=[];
 	        
 	        var selList = this.getView().getSelectionModel().getSelection();
-	        
+	        if(selList.length==0){
+    			Ext.MessageBox.alert('提示', '请先选择用户');
+    			return;
+    		}
         		
 	        var arrAddAudiValue=[];
 	        Ext.tzShowPromptSearch({
-	            recname: 'TZ_AUDCX_VW',
+	            recname: 'PS_TZ_AUDCX_VW',
 	            searchDesc: '选择听众',
 	            maxRow:50,
 	            condition:{
@@ -661,7 +668,7 @@
 	                    }
 	                },
 	                srhConFields:{
-	                    TZ_AUD_NAME:{
+	                    TZ_AUD_NAM:{
 	                        desc:'听众名称',
 	                        operator:'07',
 	                        type:'01'
@@ -817,6 +824,11 @@
 		//获取选中人员；
 		var selList = this.getView().getSelectionModel().getSelection();
 		//拼接参数，新开听众页面；
+		
+	    if(selList.length==0){
+ 			Ext.MessageBox.alert('提示', '请先选择用户');
+ 			return;
+ 		}
 		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{"add":[{"audJG":"ADMIN","audID":"NEXT","audName":"","audStat":"1","audType":"2","audMS":"","audSQL":"","audLY":"ZCYH"}]}}';
 		
 		//后台执行插入表操作

@@ -77,6 +77,12 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 
 		try {
 			jacksonUtil.json2Map(strParams);
+			String siteId = "";
+			if(jacksonUtil.containsKey("siteId")){
+				siteId = jacksonUtil.getString("siteId");
+			}else{
+				siteId = request.getParameter("siteId");
+			}
 			
 			String contextPath = request.getContextPath();
 			// 通用链接;
@@ -88,7 +94,7 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			//在线预约list
 			String appoHtml = appoMap.get("appoHtml").toString();
 			
-			interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_MAIN_HTML",contextPath,appoDesc,appoHtml,ZSGL_URL);
+			interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_MAIN_HTML",contextPath,appoDesc,appoHtml,ZSGL_URL,siteId,"1");
 			
 		} catch (Exception e) {
 			e.printStackTrace();

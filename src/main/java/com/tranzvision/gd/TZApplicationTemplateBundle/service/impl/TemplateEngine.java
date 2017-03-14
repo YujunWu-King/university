@@ -307,7 +307,7 @@ public class TemplateEngine {
 
 						/*------ 多行容器（通用多行容器、固定多行容器） Begin ------*/
 						/*---------------modity by caoy 关于多行容器里面组合控件的修改----------------*/
-						Map<String,String> check = new HashMap<String,String>();
+						Map<String, String> check = new HashMap<String, String>();
 						if (StringUtils.equals("Y", isDoubleLine)) {
 							if (item.containsKey("children")) {
 
@@ -330,9 +330,8 @@ public class TemplateEngine {
 										orderby = "0";
 									}
 									psTzRqXxxPzT.setTzOrder(Integer.parseInt(orderby));
-									
-									
-									check.put(psTzRqXxxPzT.getTzDXxxBh()+"_"+psTzRqXxxPzT.getTzXxxBh(), "N");
+
+									check.put(psTzRqXxxPzT.getTzDXxxBh() + "_" + psTzRqXxxPzT.getTzXxxBh(), "N");
 									int count = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT);
 									if (count > 0) {
 										children.put("pageno", pageno);
@@ -398,7 +397,8 @@ public class TemplateEngine {
 												order_ = "0";
 											}
 											psTzRqXxxPzT_.setTzOrder(Integer.parseInt(order_));
-											check.put(psTzRqXxxPzT.getTzDXxxBh()+"_"+psTzRqXxxPzT.getTzXxxBh(), "N");
+											check.put(psTzRqXxxPzT.getTzDXxxBh() + "_" + psTzRqXxxPzT.getTzXxxBh(),
+													"N");
 											int count_ = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT_);
 											if (count_ > 0) {
 												child.put("pageno", childPageno);
@@ -413,9 +413,10 @@ public class TemplateEngine {
 
 						/*------ 单行组合控件 Begin ------*/
 						if (StringUtils.equals("Y", isSingleLine)) {
-							//ArrayList<Map<String, Object>> childrens = (ArrayList<Map<String, Object>>) item
-							//		.get("children");
-							
+							// ArrayList<Map<String, Object>> childrens =
+							// (ArrayList<Map<String, Object>>) item
+							// .get("children");
+
 							ArrayList<Map<String, Object>> childrens = null;
 							try {
 								childrens = (ArrayList<Map<String, Object>>) item.get("children");
@@ -429,7 +430,7 @@ public class TemplateEngine {
 									childrens.add(ccmap);
 								}
 							}
-							
+
 							int i = 0;
 							for (Object obj : childrens) {
 								Map<String, Object> children = (Map<String, Object>) obj;
@@ -447,13 +448,13 @@ public class TemplateEngine {
 
 								// 排序
 								psTzRqXxxPzT.setTzOrder(i);
-								
-								if (check.get(psTzRqXxxPzT.getTzDXxxBh()+"_"+psTzRqXxxPzT.getTzXxxBh()) ==null) {
-								int count = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT);
-								if (count > 0) {
-									children.put("pageno", pageno);
-									this.savePerXXX(children);
-								}
+
+								if (check.get(psTzRqXxxPzT.getTzDXxxBh() + "_" + psTzRqXxxPzT.getTzXxxBh()) == null) {
+									int count = psTzRqXxxPzTMapper.insert(psTzRqXxxPzT);
+									if (count > 0) {
+										children.put("pageno", pageno);
+										this.savePerXXX(children);
+									}
 								}
 								i++;
 							}
@@ -536,10 +537,9 @@ public class TemplateEngine {
 		String maxLines = item.get("maxLines") == null ? "0" : String.valueOf(item.get("maxLines"));
 
 		// System.out.println(item.toString());
-		//有多行容器和单行容器都是Y的情况 所以需要改造
-		Map<String,String> check = new HashMap<String,String>();
-		
-		
+		// 有多行容器和单行容器都是Y的情况 所以需要改造
+		Map<String, String> check = new HashMap<String, String>();
+
 		// 是否多行容器
 		if (StringUtils.equals("Y", isDoubleLine)) {
 			Map<String, Object> childrens = (Map<String, Object>) item.get("children");
@@ -579,7 +579,7 @@ public class TemplateEngine {
 						// 排序序号
 						psTzTempFieldTFixed.setTzOrder(Integer.parseInt(parOrderby));
 						psTzTempFieldTMapper.insert(psTzTempFieldTFixed);
-						check.put(psTzTempFieldTFixed.getTzDXxxBh()+"_"+psTzTempFieldTFixed.getTzXxxBh(), "N");
+						check.put(psTzTempFieldTFixed.getTzDXxxBh() + "_" + psTzTempFieldTFixed.getTzXxxBh(), "N");
 					}
 				} else {
 					// 通用多行容器
@@ -610,8 +610,8 @@ public class TemplateEngine {
 						// 排序序号
 						psTzTempFieldTTY.setTzOrder(Integer.parseInt(parOrderby));
 						psTzTempFieldTMapper.insert(psTzTempFieldTTY);
-						
-						check.put(psTzTempFieldTTY.getTzDXxxBh()+"_"+psTzTempFieldTTY.getTzXxxBh(), "N");
+
+						check.put(psTzTempFieldTTY.getTzDXxxBh() + "_" + psTzTempFieldTTY.getTzXxxBh(), "N");
 
 						order++;
 						if (StringUtils.equals("Y", isSingle)) {
@@ -663,7 +663,8 @@ public class TemplateEngine {
 								psTzTempFieldTSingle.setTzOrder(Integer.parseInt(parOrderby));
 
 								psTzTempFieldTMapper.insert(psTzTempFieldTSingle);
-								check.put(psTzTempFieldTSingle.getTzDXxxBh()+"_"+psTzTempFieldTSingle.getTzXxxBh(), "N");
+								check.put(psTzTempFieldTSingle.getTzDXxxBh() + "_" + psTzTempFieldTSingle.getTzXxxBh(),
+										"N");
 								order++;
 							}
 						}
@@ -707,8 +708,8 @@ public class TemplateEngine {
 				psTzTempFieldTSingle.setTzLineOrder(i + 1);
 				// 排序序号
 				psTzTempFieldTSingle.setTzOrder(Integer.parseInt(parOrderby));
-				
-				if (check.get(psTzTempFieldTSingle.getTzDXxxBh()+"_"+psTzTempFieldTSingle.getTzXxxBh()) == null) {
+
+				if (check.get(psTzTempFieldTSingle.getTzDXxxBh() + "_" + psTzTempFieldTSingle.getTzXxxBh()) == null) {
 					psTzTempFieldTMapper.insert(psTzTempFieldTSingle);
 				}
 				i++;
@@ -953,6 +954,28 @@ public class TemplateEngine {
 			if (TZ_FPAGE_BH == null || TZ_FPAGE_BH.equals("")) {
 				psTzAppXxxPz.setTzPageNo(new Integer(0));
 			}
+		}
+
+		// 多行文本框 记录行数量限制
+		if (classname.equals("MultilineTextBox")) {
+			String isCheckRows = item.get("isCheckRows") == null ? "" : String.valueOf(item.get("isCheckRows"));
+
+			if (isCheckRows.equals("Y")) {
+				// 最小行
+				String minRow = item.get("minRow") == null ? "0" : String.valueOf(item.get("minRow"));
+				if ("".equals(minRow)) {
+					minRow = "0";
+				}
+				psTzAppXxxPz.setTzXxxMinLine(Integer.parseInt(minRow));
+
+				// 最大行
+				String maxRow = item.get("maxRow") == null ? "0" : String.valueOf(item.get("maxRow"));
+				if ("".equals(maxRow)) {
+					maxRow = "0";
+				}
+				psTzAppXxxPz.setTzXxxMaxLine(Integer.parseInt(maxRow));
+			}
+
 		}
 
 		// 是否只读

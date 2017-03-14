@@ -76,7 +76,7 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 			//获取栏目编号;
 			String columnSQL = "SELECT TZ_COLU_ID FROM PS_TZ_SITEI_AREA_T WHERE TZ_SITEI_ID=? AND TZ_AREA_ID=?";
 			String strColumnId = jdbcTemplate.queryForObject(columnSQL, new Object[] { strSiteId,strAreaId }, "String");
-			
+			/*首页显示报考日历排序规则：置顶顺序-文章顺序-发布时间*/
 			String artListSql = tzGDObject.getSQLText("SQL.TZWebSiteAreaInfoBundle.TZ_REG_CAL_ART_LIST");
 			List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,strAreaId,oprid });
 			if (artList != null && artList.size()>0){
@@ -86,8 +86,8 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 					String artId = (String) artList.get(i).get("TZ_ART_ID");
 					String artTitle = (String) artList.get(i).get("TZ_ART_TITLE");
 					String artAddr = (String) artList.get(i).get("TZ_ART_ADDR");
-					String artMonth = artList.get(i).get("TZ_ART_MONTH").toString();
-					String artDay = artList.get(i).get("TZ_ART_DAY").toString();
+					String artMonth = (artList.get(i).get("TZ_ART_MONTH") == null?"":artList.get(i).get("TZ_ART_MONTH")).toString();
+					String artDay = (artList.get(i).get("TZ_ART_DAY")== null?"":artList.get(i).get("TZ_ART_DAY")).toString();
 					//报考日历如果是活动发布则取活动开始日期、活动地点;
 					int actRel = 0;
 					String actRelCount = "SELECT COUNT(*) FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";

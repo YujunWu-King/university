@@ -16,7 +16,7 @@
     xtype: 'classManagement',
     controller: 'iterviewMgClass',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    title:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSGL_CLASS_STD.panelTitle",'班级管理'),
+    title:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSGL_CLASS_STD.interviewArrMgr",'面试日程管理'),
     listeners:{
         resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
             var buttonHeight = 44;/*button height plus panel body padding*/
@@ -59,8 +59,8 @@
                     minwidth:110,
                     flex:1
                 },{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSGL_CLASS_STD.projectType",'项目类别'),
-                    dataIndex: 'projectType',
+                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSGL_CLASS_STD.enrollmentYear",'入学年份'),
+                    dataIndex: 'enrollmentYear',
                     minwidth:110,
                     flex:1
                 },{

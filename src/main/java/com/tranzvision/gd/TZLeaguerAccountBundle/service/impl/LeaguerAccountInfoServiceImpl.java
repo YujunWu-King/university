@@ -225,6 +225,65 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					arraylist.add(jsonMap);
 				}
 				
+				//考生导入信息;
+				//查询当前人员的报名表id;
+				Long appIns = jdbcTemplate.queryForObject(" select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T WHERE OPRID=? ORDER BY ROW_LASTMANT_DTTM LIMIT 0,1", new Object[]{str_oprid},"Long");
+				Map<String, Object> ksdrMap = new HashMap<>();
+				
+				if(appIns > 0){
+					//材料评审
+					Map< String, Object> clmsMap = jdbcTemplate.queryForMap("SELECT TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+					if(clmsMap != null){
+						ksdrMap.put("clpsJg", clmsMap.get("TZ_RESULT"));
+						ksdrMap.put("sfmsZg", clmsMap.get("TZ_RESULT_CODE"));
+					}
+					
+					//面试
+					Map< String, Object> msMap = jdbcTemplate.queryForMap("select TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE from TZ_IMP_MSPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+					if(msMap != null){
+						ksdrMap.put("msbdSj", msMap.get("TZ_TIME"));
+						ksdrMap.put("msbdDd", msMap.get("TZ_ADDRESS"));
+						ksdrMap.put("msJg", msMap.get("TZ_RESULT"));
+						ksdrMap.put("msJgBz", msMap.get("TZ_RESULT_CODE"));
+					}
+					
+					//联考报名
+					Map< String, Object> lkMap = jdbcTemplate.queryForMap("select TZ_YEAR,TZ_SCORE,TZ_ENGLISH,TZ_COMPREHENSIVE,TZ_OVERLINE,TZ_POLITICS,TZ_ENG_LISTENING,TZ_POLLSN_OVERLINE,TZ_PRE_ADMISSION,TZ_STU_NUM,TZ_DEGREE_CHECK,TZ_STU_NUM_LAST4,TZ_POL_ENG_TIME,TZ_POL_ENG_ADDR,TZ_SCHOLARSHIP_STA,TZ_POLLSN_DESC from TZ_IMP_LKBM_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+					if(lkMap != null){
+						ksdrMap.put("lkNf", lkMap.get("TZ_YEAR"));
+						ksdrMap.put("lkZf", lkMap.get("TZ_SCORE"));
+						ksdrMap.put("lkYy", lkMap.get("TZ_ENGLISH"));
+						ksdrMap.put("lkZh", lkMap.get("TZ_COMPREHENSIVE"));
+						ksdrMap.put("lkSfgx", lkMap.get("TZ_OVERLINE"));
+						ksdrMap.put("Zz", lkMap.get("TZ_POLITICS"));
+						ksdrMap.put("yyTl", lkMap.get("TZ_ENG_LISTENING"));
+						ksdrMap.put("zzTlSfGx", lkMap.get("TZ_POLLSN_OVERLINE"));
+						ksdrMap.put("sfYlq", lkMap.get("TZ_PRE_ADMISSION"));
+						ksdrMap.put("lkksBh", lkMap.get("TZ_STU_NUM"));
+						ksdrMap.put("lkbmsXlJyZt", lkMap.get("TZ_DEGREE_CHECK"));
+						ksdrMap.put("ksbhHsw", lkMap.get("TZ_STU_NUM_LAST4"));
+						ksdrMap.put("zzYyTlKsSj", lkMap.get("TZ_POL_ENG_TIME"));
+						ksdrMap.put("zzYyTlKsDd", lkMap.get("TZ_POL_ENG_ADDR"));
+						ksdrMap.put("ssJxjSqZt", lkMap.get("TZ_SCHOLARSHIP_STA"));
+						ksdrMap.put("zzTlKsBz", lkMap.get("TZ_POLLSN_DESC"));
+					}
+					
+					//预录取
+					Map< String, Object> ylqMap = jdbcTemplate.queryForMap("select TZ_SCHOLARSHIP_RST,TZ_TUITION_REFERENCE,TZ_STU_ID,TZ_PYXY_ACCEPT,TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD from TZ_IMP_YLQ_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+					if(ylqMap != null){
+						ksdrMap.put("ssJxjZzJg", ylqMap.get("TZ_SCHOLARSHIP_RST"));
+						ksdrMap.put("xfZeCk", ylqMap.get("TZ_TUITION_REFERENCE"));
+						ksdrMap.put("xh", ylqMap.get("TZ_STU_ID"));
+						ksdrMap.put("pyXyJs", ylqMap.get("TZ_PYXY_ACCEPT"));
+						ksdrMap.put("zzZmJs", ylqMap.get("TZ_GZZM_ACCEPT"));
+						ksdrMap.put("fbJg", ylqMap.get("TZ_CLASS_RST"));
+						ksdrMap.put("jgYx", ylqMap.get("TZ_EMAIL"));
+						ksdrMap.put("yxCsMm", ylqMap.get("TZ_INITIAL_PSWD"));
+					}
+					
+				}
+				
+				
 				Map<String, Object> jsonMap2 = new HashMap<String, Object>();
 				jsonMap2.put("OPRID", str_oprid);
 				jsonMap2.put("msSqh", str_msSqh);
@@ -237,6 +296,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				jsonMap2.put("zcTime",str_zc_time);
 				jsonMap2.put("titleImageUrl",titleImageUrl );
 				jsonMap2.put("column",arraylist );
+				jsonMap2.put("ksdrInfo",ksdrMap);
 				if(!"Y".equals(str_blackName)){
 				    str_blackName = "N";
 				}

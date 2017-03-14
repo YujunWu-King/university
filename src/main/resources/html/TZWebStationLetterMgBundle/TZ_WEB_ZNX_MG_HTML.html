@@ -59,7 +59,7 @@
    }
    
    	$(document).ready(function(){
-   		$(".table_style tbody tr ").click(function(){
+   		$(".check-box").click(function(){
             $(this).toggleClass('trSelected');
         });
    	 	//删除站内信
@@ -70,6 +70,7 @@
 	            if ($(this).hasClass('trSelected')) {
 	                $(this).hide();
 	                //removedRecords.push({stationMailId:'10'})
+	                console.log(index);
 	            }
 	          });
 	            
@@ -144,17 +145,18 @@
 							'<tr class="erow {0}">',
 							'<td><div class="check-box"> <i class="ico-check" id="checkAll" mailid={1}></i></div></td>',
 							'<td>{2}</td>',
-							'<td class="ex_left"><a href="%bind(:1)/dispatcher?classid=webZnxInfo&siteId=%bind(:8)&mailId={1}">{3}</a></td>',
-							'<td>{4}</td>',
+							'<td style="display:none">{3}</td>',
+							'<td class="ex_left"><a href="%bind(:1)/dispatcher?classid=webZnxInfo&siteId=%bind(:8)&mailId={1}">{4}</a></td>',
+							'<td>{5}</td>',
 							'</tr>'
 						];
 				      
 				      	$.each(list,function(index,record){
-				      		listHtmlContent=listHtmlContent+$.format(recordBase.join(""),"",record["stationMailId"],record["sendName"],record["stationMailTitle"],record["stationMailReceived"])
+				      		listHtmlContent=listHtmlContent+$.format(recordBase.join(""),record["znxStatus"]=="Y"?"read_on":"",record["stationMailId"],record["znxStatus"]=="Y"?"已读":"未读",record["sendName"],record["stationMailTitle"],record["stationMailReceived"])
 				      	});
 				      	$(".table_style tbody").html(listHtmlContent);
-				      	$(".table_style tbody tr ").click(function(){
-				            $(this).toggleClass('trSelected');
+				      	$(".table_style tbody tr td div").click(function(){
+				            $(this).parent().parent().toggleClass('trSelected');
 				        });
 				      	
 					}catch(exception){
@@ -217,7 +219,8 @@
 			   <tr onclick="checkAll(this);" class="erow">
 			   	<td><div class="check-box"> <i class="ico-check" id="checkAll"></i></div>
 			   	</td>
-				<td>发件人</td>
+			   	<td>查看状态</td>
+				<td style="display:none">发件人</td>
 				<td>主题</td>
 				<td>时间</td>
 			   </tr>

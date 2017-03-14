@@ -38,6 +38,26 @@ Ext.define('KitchenSink.view.scholarShipManage.setScholarDetailPanel', {
                     readOnly:true
                 }, 
                 {
+                    layout: {
+                        type: 'column'
+                    },
+                    items: [
+                      {  columnWidth: .2,
+                          xtype: 'textfield',
+                          fieldLabel: "问卷模板",
+                          name: 'TZ_APP_TPL_ID',
+                          readOnly:true,
+                          cls:'lanage_1'
+                      },{
+                          columnWidth: .5,
+                          xtype: 'displayfield',
+                          hideLabel: true,
+                          name: 'TZ_APP_TPL_MC',
+                          style: 'margin-left:8px'
+                          }
+                    ]
+                },
+                {
                     xtype: 'textfield',
                     fieldLabel: '问卷编号',
                     name: 'TZ_DC_WJ_ID',
@@ -67,38 +87,29 @@ Ext.define('KitchenSink.view.scholarShipManage.setScholarDetailPanel', {
                     fieldLabel:  "开始日期",
                     format: 'Y-m-d',
                     editable:false,
-                    name: 'TZ_DC_WJ_KSRQ',
-                    readOnly:true,
-                    cls:'lanage_1'
+                    name: 'TZ_DC_WJ_KSRQ'
                 },
                 {
                     xtype: 'timefield',
                     fieldLabel:  "开始时间",
                     format: 'H:i:s',
                     editable:false,
-                    name: 'TZ_DC_WJ_KSSJ',
-                    readOnly:true,
-                    cls:'lanage_1'
-                    
+                    name: 'TZ_DC_WJ_KSSJ'
                 },
                 {
                     xtype: 'datefield',
                     fieldLabel: "结束日期",
                     format: 'Y-m-d',
                     editable:false,
-                    name: 'TZ_DC_WJ_JSRQ',
-                    readOnly:true,
-                    cls:'lanage_1'
+                    name: 'TZ_DC_WJ_JSRQ'
                 },
                 {
                     xtype: 'timefield',
                     fieldLabel: "结束时间",
                     format: 'H:i:s',
                     editable:false,
-                    name: 'TZ_DC_WJ_JSSJ',
-                    readOnly:true,
-                    cls:'lanage_1'
-                },{
+                    name: 'TZ_DC_WJ_JSSJ'
+                },/*{
                     xtype: 'combobox',
                     fieldLabel:  "有效状态",
                     forceSelection: true,
@@ -108,7 +119,7 @@ Ext.define('KitchenSink.view.scholarShipManage.setScholarDetailPanel', {
                     store: new KitchenSink.view.common.store.appTransStore("TZ_JXJ_STATE"),
                     queryMode: 'local',
                     editable:false
-                },{
+                }*/,{
                     layout: {
                         type: 'column'
                     },
@@ -116,21 +127,27 @@ Ext.define('KitchenSink.view.scholarShipManage.setScholarDetailPanel', {
                        {
                             columnWidth:0.2,
                             xtype:'button',
-                            text:'设置奖学金',
+                            text:'设置详情',
                             style:'margin-left:114px',
                             handler:'setWjdc'
                         }
                     ]
+                },
+                {
+                    xtype:'label',
+                    text:'请注意：如要进行问卷和听众设置，请点击‘设置详情’按钮。',
+                    cls: 'lable_1',
+                    style:'margin-top:2px;margin-left:115px'
                 }
             ]
         }],
         buttons: [{
             text: '保存', 
-            iconCls: "close",
+            iconCls: "save",
             handler:'onSchlrDetailSave'
         },{
             text: '确定',
-            iconCls: "close",
+            iconCls: "ensure",
             handler:'onSchlrDetailSure'
         },{
             text: '关闭',

@@ -75,18 +75,25 @@ public class TzInterviewAppoStuImpl extends FrameworkImpl{
 						String name = "";
 						String email = "";
 						String mobile = "";
-						sql = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+						String interviewAppID = "";
+						sql = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE,TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 						Map<String,Object> infoMap = jdbcTemplate.queryForMap(sql, new Object[]{ oprid });
 						if(infoMap != null){
-							name = String.valueOf(infoMap.get("TZ_REALNAME"));
-							email = String.valueOf(infoMap.get("TZ_EMAIL"));
-							mobile = String.valueOf(infoMap.get("TZ_MOBILE"));
+							name = infoMap.get("TZ_REALNAME").toString();
+							email = infoMap.get("TZ_EMAIL").toString();
+							mobile = infoMap.get("TZ_MOBILE").toString();
+							interviewAppID = infoMap.get("TZ_MSH_ID").toString();
 						}
 						
 						
 						String sort = "";
-						sql = "SELECT TZ_COLOR_SORT_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?";
-						sort = jdbcTemplate.queryForObject(sql, new Object[]{ classID, oprid }, "String");
+						String appInsID = "";
+						sql = "SELECT TZ_COLOR_SORT_ID,TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?";
+						Map<String,Object> wrkMap = jdbcTemplate.queryForMap(sql, new Object[]{ classID, oprid });
+						if(wrkMap != null){
+							sort = wrkMap.get("TZ_COLOR_SORT_ID") == null ? "" : wrkMap.get("TZ_COLOR_SORT_ID").toString();
+							appInsID = wrkMap.get("TZ_APP_INS_ID").toString(); 
+						}
 						
 						String msDate = "",
 							   msStartTime = "",
@@ -104,9 +111,11 @@ public class TzInterviewAppoStuImpl extends FrameworkImpl{
 						mapJson.put("msPlanSeq", msPlanSeq);
 						mapJson.put("oprid", oprid);
 						mapJson.put("name", name);
+						mapJson.put("appInsID", appInsID);
 						
 						mapJson.put("email", email);
 						mapJson.put("mobile", mobile);
+						mapJson.put("interviewAppID", interviewAppID);
 						
 						mapJson.put("sort", sort);
 						mapJson.put("msDate", msDate);

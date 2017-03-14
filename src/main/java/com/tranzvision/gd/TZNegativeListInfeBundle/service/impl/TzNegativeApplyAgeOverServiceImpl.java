@@ -13,7 +13,6 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
 import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT;
 import com.tranzvision.gd.util.base.TzSystemException;
-import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -24,13 +23,11 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  *
  */
 @Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeApplyAgeOver")
-public class TzNegativeApplyAgeOver extends TzNegativeListBundle {
+public class TzNegativeApplyAgeOverServiceImpl extends TzNegativeListBundleServiceImpl {
 	@Autowired
 	private SqlQuery SqlQuery;
 	@Autowired
 	private TZGDObject TzSQLObject;
-	@Autowired
-	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsTzCsKsFmTMapper PsTzCsKsFmTMapper;
 	@Autowired
@@ -43,6 +40,8 @@ public class TzNegativeApplyAgeOver extends TzNegativeListBundle {
 
 		try {
 			String OrgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID'";
+			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
 
 			List<?> opridlist = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeApplyNumber"),
@@ -56,7 +55,9 @@ public class TzNegativeApplyAgeOver extends TzNegativeListBundle {
 						Long appinsId = SqlQuery.queryForObject(sql,
 								new Object[] { classId, (String) opridlist.get(i) }, "Long");
 						PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
-						String fmqdId = "TZ_FMQ" + String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T", "TZ_FMQD_ID"));
+						// String fmqdId = "TZ_FMQ" +
+						// String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T",
+						// "TZ_FMQD_ID"));
 						PsTzCsKsFmT.setTzAppInsId(appinsId);
 						PsTzCsKsFmT.setTzClassId(classId);
 						PsTzCsKsFmT.setTzApplyPcId(batchId);

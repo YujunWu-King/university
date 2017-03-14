@@ -386,15 +386,20 @@
 		var form = this.getView().child("form").getForm();
 		var artTitle = form.findField("artTitle").getValue();
 		var styleTitle = artTitle+"<span><font color ='#6633CC'> HOT</font></span>";
-		form.findField("titleStyleView").setValue(styleTitle);
+		form.findField("titleStyleView").setValue("HOT");
 		btn.findParentByType('form').findParentByType('panel').down('#titleView').getEl().setHtml(styleTitle);
 	},
 	addNewStyle:function(btn){
 		var form = this.getView().child("form").getForm();
 		var artTitle = form.findField("artTitle").getValue();
 		var styleTitle = artTitle+"<span><font color ='#bb1914'> NEW</font></span>";
-		form.findField("titleStyleView").setValue(styleTitle);
+		form.findField("titleStyleView").setValue("NEW");
 		btn.findParentByType('form').findParentByType('panel').down('#titleView').getEl().setHtml(styleTitle);
+	},
+	clearStyle:function(btn){
+		var form = this.getView().child("form").getForm();
+		form.findField("titleStyleView").setValue("");
+		btn.findParentByType('form').findParentByType('panel').down('#titleView').getEl().setHtml("");
 	},
 	addAudience:function(btn){
         var arrAddAudience=[];

@@ -125,10 +125,11 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
-
+			
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_ZHZ_DMS", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT_DESC", "TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME"};
 			
@@ -163,7 +164,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 
 				mapRet.replace("total", obj[0]);
 				mapRet.replace("root", listData);
-
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

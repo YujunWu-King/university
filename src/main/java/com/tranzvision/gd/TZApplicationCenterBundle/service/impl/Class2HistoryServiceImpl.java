@@ -115,15 +115,21 @@ public class Class2HistoryServiceImpl extends FrameworkImpl {
 
 			String listBody = "";
 
-			String sql = "select a.TZ_APP_INS_ID, a.TZ_CLASS_ID,DATE_FORMAT(b.ROW_LASTMANT_DTTM,'%Y-%m-%d') ROW_LASTMANT_DTTM, c.TZ_CLASS_NAME from PS_TZ_FORM_WRK_T a,PS_TZ_APP_INS_T b,PS_TZ_CLASS_INF_T c where a.OPRID=? and a.TZ_APP_INS_ID=b.TZ_APP_INS_ID and a.TZ_CLASS_ID = c.TZ_CLASS_ID and c.TZ_PRJ_ID in (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) and c.TZ_JG_ID=? order by b.ROW_LASTMANT_DTTM desc";
+			String sql = "select a.TZ_APP_INS_ID, a.TZ_CLASS_ID,DATE_FORMAT(b.ROW_LASTMANT_DTTM,'%Y-%m-%d') ROW_LASTMANT_DTTM, c.TZ_CLASS_NAME,b.TZ_APP_FORM_STA from PS_TZ_FORM_WRK_T a,PS_TZ_APP_INS_T b,PS_TZ_CLASS_INF_T c where a.OPRID=? and a.TZ_APP_INS_ID=b.TZ_APP_INS_ID and a.TZ_CLASS_ID = c.TZ_CLASS_ID and c.TZ_PRJ_ID in (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) and c.TZ_JG_ID=? order by b.ROW_LASTMANT_DTTM desc";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,new Object[]{oprid,strSiteId,str_jg_id});
 			if(list != null && list.size() > 0){
 				for(int i = 0; i < list.size(); i++){
 					long TZ_APP_INS_ID = Long.parseLong(String.valueOf(list.get(i).get("TZ_APP_INS_ID")));
 					String classId = (String)list.get(i).get("TZ_CLASS_ID");
 					String className = (String)list.get(i).get("TZ_CLASS_NAME");
-					String submitDate = submitTimeDesc + (String)list.get(i).get("ROW_LASTMANT_DTTM");
-	
+					String appInsStatus = (String) list.get(i).get("TZ_APP_FORM_STA");
+					String submitDate = submitTimeDesc;
+					// 已经提交,显示提交时间;
+					if ("U".equals(appInsStatus)) {
+						submitDate = submitTimeDesc + (String)list.get(i).get("ROW_LASTMANT_DTTM");
+					} 
+					
+					
 					// 报名表链接;
 					String applyFromUrl = ZSGL_URL + "?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + strSiteId;
 					
@@ -176,7 +182,7 @@ public class Class2HistoryServiceImpl extends FrameworkImpl {
 								if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
 									String type = "A";
 									//解析邮件里的系统变量;
-									String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , rootPath, TZ_APPPRO_RST,"N");
+									String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , rootPath, TZ_APPPRO_RST,"N",strSiteId);
 
 									isFb = result[0];
 									TZ_APPPRO_RST = result[1];

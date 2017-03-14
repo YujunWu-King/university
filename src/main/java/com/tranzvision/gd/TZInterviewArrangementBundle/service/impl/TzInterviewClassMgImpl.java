@@ -38,10 +38,10 @@ public class TzInterviewClassMgImpl extends FrameworkImpl{
 
 		try {
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] {};
+			String[][] orderByArr = new String[][] {new String[]{"TZ_YEAR","DESC"}};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_PRJ_NAME", "TZ_PRJ_TYPE_NAME", "TZ_NUM_APPLICANTS", "TZ_NUM_NOAUDIT"};
+			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_PRJ_NAME", "TZ_PRJ_TYPE_NAME","TZ_YEAR", "TZ_NUM_APPLICANTS", "TZ_NUM_NOAUDIT"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -59,8 +59,9 @@ public class TzInterviewClassMgImpl extends FrameworkImpl{
 					mapList.put("className", rowList[1]);
 					mapList.put("projectName", rowList[2]);
 					mapList.put("projectType", rowList[3]);
-					mapList.put("applicantsNumber", rowList[4]);
-					mapList.put("noauditNumber", rowList[5]);
+					mapList.put("enrollmentYear", rowList[4]);
+					mapList.put("applicantsNumber", rowList[5]);
+					mapList.put("noauditNumber", rowList[6]);
 
 					listData.add(mapList);
 				}

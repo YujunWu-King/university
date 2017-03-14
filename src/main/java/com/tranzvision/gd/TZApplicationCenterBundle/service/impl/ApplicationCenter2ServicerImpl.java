@@ -105,24 +105,42 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 			//是否已经报名了;
 			long hasAppIns = 0;
 			String hasClassId = "";
-			Map<String, Object> hasAppInsMap = jdbcTemplate.queryForMap("select TZ_APP_INS_ID,TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN  (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?)  AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1",new Object[] { oprid,strSiteId,str_jg_id  });
+			String hasMsPcId = "";
+			String hasMsPcName = "";
+			Map<String, Object> hasAppInsMap = jdbcTemplate.queryForMap("select TZ_APP_INS_ID,TZ_CLASS_ID,TZ_BATCH_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN  (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?)  AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1",new Object[] { oprid,strSiteId,str_jg_id  });
 			if(hasAppInsMap !=null){
 				hasAppIns = Long.parseLong(String.valueOf(hasAppInsMap.get("TZ_APP_INS_ID")));
 				hasClassId = String.valueOf(hasAppInsMap.get("TZ_CLASS_ID"));
+				hasMsPcId = String.valueOf(hasAppInsMap.get("TZ_BATCH_ID"));
+				if(hasClassId != null && !"".equals(hasClassId) && hasMsPcId != null && !"".equals(hasMsPcId)){
+					hasMsPcName = jdbcTemplate.queryForObject("select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?", new Object[]{hasClassId,hasMsPcId},"String");
+					if(hasMsPcName == null){
+						hasMsPcName = "";
+					}
+				}
 			}
 			
 			//有开通的班级；
 			if(totalNum > 0){
 				//是否已经报名了当前开通的班级;
-				String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()) order by ROW_LASTMANT_DTTM desc limit 0,1";
+				String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID,TZ_BATCH_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()) order by ROW_LASTMANT_DTTM desc limit 0,1";
 				long TZ_APP_INS_ID = 0;
 				String classId = "";
+				String msPcId = "";
+				String msPcName = "";
 				Map<String, Object> classAndBmbMap = new HashMap<String, Object>();
 				try{
 					classAndBmbMap = jdbcTemplate.queryForMap(appinsSQL,new Object[] { oprid,strSiteId,str_jg_id  });
 					if(classAndBmbMap != null){
 						TZ_APP_INS_ID = Long.parseLong(String.valueOf(classAndBmbMap.get("TZ_APP_INS_ID")));
 						classId = String.valueOf(classAndBmbMap.get("TZ_CLASS_ID"));
+						msPcId = String.valueOf(hasAppInsMap.get("TZ_BATCH_ID"));
+						if(classId != null && !"".equals(classId) && msPcId != null && !"".equals(msPcId)){
+							msPcName = jdbcTemplate.queryForObject("select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?", new Object[]{classId,msPcId},"String");
+							if(msPcName == null){
+								msPcName = "";
+							}
+						}
 					}
 				}catch(NullPointerException nullException){
 					TZ_APP_INS_ID = 0;
@@ -133,7 +151,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 				//TZ_APP_INS_ID = 231;
 				//已经报名了开通的班级，显示报名流程;
 				if(TZ_APP_INS_ID > 0){
-					applicationCenterHtml = this.getBmlc(TZ_APP_INS_ID, classId, strSiteId, language);
+					applicationCenterHtml = this.getBmlc(TZ_APP_INS_ID, classId, strSiteId, language,msPcName);
 				}else{
 					//没报名当前班级,如果允许报名则显示报名按钮;
 					//1:是否允许报名,"N"表示不允许报名;
@@ -145,7 +163,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 					if("Y".equals(isBlack) || "N".equals(isAllowedApp)){
 						//不允许报名，是否有以前的报名表，有则显示报名;
 						if(hasAppIns > 0){
-							applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language);
+							applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language,hasMsPcName);
 						}else{
 							applicationCenterHtml = tzGDObject.getHTMLText(
 									"HTML.TZApplicationCenterBundle.TZ_APPCENTER_CANTNOT_APPLY", ApplicationCenter,
@@ -201,7 +219,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 			}else{
 				//没有开通的班级,有没有历史报名表；
 				if(hasAppIns > 0){
-					applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language);
+					applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language,hasMsPcName);
 				}else{
 					applicationCenterHtml = tzGDObject.getHTMLText(
 							"HTML.TZApplicationCenterBundle.TZ_APPCENTER_CANTNOT_APPLY", ApplicationCenter,
@@ -220,7 +238,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 	}
 	
 	
-	private String getBmlc(long TZ_APP_INS_ID,String classId,String strSiteId,String language){
+	private String getBmlc(long TZ_APP_INS_ID,String classId,String strSiteId,String language,String msPcName){
 		
 		String applicationCenterHtml = "";
 		AnalysisLcResult analysisLcResult = new AnalysisLcResult();
@@ -295,7 +313,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 						if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
 							String type = "A";
 							//解析系统变量;
-							String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , rootPath, TZ_APPPRO_RST,"N");
+							String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , rootPath, TZ_APPPRO_RST,"N",strSiteId);
 	
 							isFb = result[0];
 							TZ_APPPRO_RST = result[1];
@@ -365,7 +383,7 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 			if(showLcStepNum > 0){
 				showLcStepString = String.valueOf((showLcStepNum-1)*2);
 			}
-			applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_HTML", ApplicationCenter,viewHistoryDesc,viewBmbDesc,lcContentHtml,stepHtml,applyFromUrl,hisUrl,showLcStepString,className);
+			applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_HTML", ApplicationCenter,viewHistoryDesc,viewBmbDesc,lcContentHtml,stepHtml,applyFromUrl,hisUrl,showLcStepString,className+msPcName);
 		}catch(Exception e){
 			e.printStackTrace();
 			applicationCenterHtml = "";

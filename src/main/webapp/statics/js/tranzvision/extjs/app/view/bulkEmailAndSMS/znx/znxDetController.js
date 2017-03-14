@@ -130,7 +130,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
     clearAll:function(btn){
         var emlBkDetForm = btn.findParentByType('form');
         
-        emlBkDetForm.child('tagfield[reference=recever]').store.removeAll(true);
+        //emlBkDetForm.child('tagfield[reference=recever]').store.removeAll(true);
         emlBkDetForm.child('tagfield[reference=recever]').setValue("");
     },
     /**

@@ -119,8 +119,8 @@ public class QustionnairePreviewImpl extends FrameworkImpl {
 		String strView=messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_VIEW", language, "预览模式", "View");
 		String strViewDesc=messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_VIEW_DESC", language, "您无法提交任何数据", "View");
 		//文件报文数据
-		String surveyData=null;
-		String surveyInsData=null;
+		String surveyData="";
+		String surveyInsData="";
 		if(type.equals("TPL")){
 			final String SQL1="SELECT TZ_APPTPL_JSON_STR FROM PS_TZ_DC_DY_T WHERE TZ_APP_TPL_ID = ?";
 			surveyData=jdbcTemplate.queryForObject(SQL1, new Object[]{survyID},"String");
@@ -217,9 +217,14 @@ public class QustionnairePreviewImpl extends FrameworkImpl {
 		String URL=request.getContextPath();
 		String header=survyMap.get("TZ_DC_JTNR")==null?"":survyMap.get("TZ_DC_JTNR").toString();
 		String footer=survyMap.get("TZ_DC_JWNR")==null?"":survyMap.get("TZ_DC_JWNR").toString();
+		surveyData = surveyData.replace("\\", "\\\\");
+		surveyData = surveyData.replaceAll("\\$", "~");
+		surveyInsData = surveyInsData.replace("\\", "\\\\");
+		surveyInsData = surveyInsData.replaceAll("\\$", "~");
 		try {
 			tplHtml = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_VIEW_HTML", header,footer,
 					strComRegInfo,surveyData, surveyInsData,String.valueOf(numMaxPage), language, strTitle, strPre, strNext, strROnly, strROnlyDesc, strView, strViewDesc, String.valueOf(surveyInsId), surveyLogic, tzGeneralURL, strMsgSet,URL);
+			tplHtml = tplHtml.replaceAll("\\~", "\\$");
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 			tplHtml = "";

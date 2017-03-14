@@ -110,6 +110,7 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 					mapList.put("applyNum", rowList[7]);
 					mapList.put("releaseOrUndo", rowList[8]);
 					mapList.put("topOrUndo", rowList[9]);
+					mapList.put("artZdSeq", rowList[9]);
 
 					listData.add(mapList);
 				}
@@ -156,7 +157,8 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 					//String tzSiteId = String.valueOf(mapParams.getOrDefault("siteId", ""));
 					//String tzColuId = String.valueOf(mapParams.getOrDefault("columnId", ""));
 					String tzArtId = String.valueOf(mapParams.getOrDefault("activityId", ""));
-					
+					int maxZdSeq = 0;
+					maxZdSeq = Integer.parseInt(String.valueOf(mapParams.get("artZdSeq")==null?"0":mapParams.get("artZdSeq")));
 					
 					sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventViewClassId");
 					String classId = sqlQuery.queryForObject(sql, "String");
@@ -165,37 +167,43 @@ public class TzEventsMgServiceImpl extends FrameworkImpl {
 					
 					List<Map<String, Object>> list = sqlQuery.queryForList(sql,new Object[]{tzArtId});
 					if (list != null && list.size() > 0){ 
-						
-						sql = "select max(TZ_MAX_ZD_SEQ) from PS_TZ_LM_NR_GL_T where TZ_ART_ID<>?";
-						String maxSeq = sqlQuery.queryForObject(sql,
-								new Object[] { tzArtId }, "String");
+						if(maxZdSeq==0){
+							String getZdSeqSql = "select max(TZ_MAX_ZD_SEQ) from PS_TZ_LM_NR_GL_T where TZ_ART_ID<>?";
+							try {
+								maxZdSeq = sqlQuery.queryForObject(getZdSeqSql,
+									new Object[] { tzArtId }, "Integer");
+							} catch (Exception e) {
+								maxZdSeq = 0;
+							}
+							maxZdSeq = maxZdSeq + 1;
+						}
 						
 						int i = 0;
 						for(i =0; i < list.size();i++){
 							String tzSiteId = (String)list.get(i).get("TZ_SITE_ID");
 							String tzColuId = (String)list.get(i).get("TZ_COLU_ID");
 							if (!"".equals(tzSiteId) && !"".equals(tzColuId) && !"".equals(tzArtId)) {
-		
+								if ("D".equals(strClickTyp)) {
+									PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
+									psTzLmNrGlTWithBLOBs.setTzSiteId(tzSiteId);
+									psTzLmNrGlTWithBLOBs.setTzColuId(tzColuId);
+									psTzLmNrGlTWithBLOBs.setTzArtId(tzArtId);
+									psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(maxZdSeq);
+									psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
+									psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
+									psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);
+								}
 								if ("T".equals(strClickTyp)) {
 									// 置顶处理
 									String topFlag = String.valueOf(mapParams.getOrDefault("topOrUndo", ""));
 		
 									if ("TOP".equals(topFlag.toUpperCase())) {
 										
-										int tzMaxZdSeq = 0;
-										if(null!=maxSeq){
-											try{
-												tzMaxZdSeq = Integer.parseInt(maxSeq);
-											}catch(Exception e){
-												tzMaxZdSeq = 0;
-											}
-										}
-										
 										PsTzLmNrGlTWithBLOBs psTzLmNrGlTWithBLOBs = new PsTzLmNrGlTWithBLOBs();
 										psTzLmNrGlTWithBLOBs.setTzSiteId(tzSiteId);
 										psTzLmNrGlTWithBLOBs.setTzColuId(tzColuId);
 										psTzLmNrGlTWithBLOBs.setTzArtId(tzArtId);
-										psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(tzMaxZdSeq + 1);
+										psTzLmNrGlTWithBLOBs.setTzMaxZdSeq(maxZdSeq);
 										psTzLmNrGlTWithBLOBs.setTzLastmantDttm(dateNow);
 										psTzLmNrGlTWithBLOBs.setTzLastmantOprid(oprid);
 										psTzLmNrGlTMapper.updateByPrimaryKeySelective(psTzLmNrGlTWithBLOBs);

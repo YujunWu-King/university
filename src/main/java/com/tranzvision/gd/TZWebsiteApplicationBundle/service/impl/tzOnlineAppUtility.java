@@ -45,7 +45,8 @@ public class tzOnlineAppUtility {
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 
 		String returnMessage = "";
 
@@ -83,7 +84,7 @@ public class tzOnlineAppUtility {
 					strDxxxBh = strXxxBh;
 					strXxxBhLike = strXxxBh;
 				}
-				//System.out.println("11111");
+				// System.out.println("11111");
 				getChildrenSql = "SELECT DISTINCT TZ_LINE_NUM FROM PS_TZ_APP_CC_VW2 WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ?";
 
 				List<?> ListLineNum = sqlQuery.queryForList(getChildrenSql,
@@ -94,7 +95,7 @@ public class tzOnlineAppUtility {
 					numLineNum = mapObjLineNum.get("TZ_LINE_NUM") == null ? 0
 							: ((Long) mapObjLineNum.get("TZ_LINE_NUM")).intValue();
 
-					//System.out.println("numLineNum:" + numLineNum);
+					// System.out.println("numLineNum:" + numLineNum);
 
 					// sqlGetDate =
 					strToToday = sqlQuery.queryForObject(sqlGetDate, new Object[] { numAppInsId, strTplId, strDxxxBh,
@@ -223,7 +224,8 @@ public class tzOnlineAppUtility {
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 		String returnMessage = "";
 
 		String strXxxValue = "";
@@ -256,8 +258,8 @@ public class tzOnlineAppUtility {
 			String strComMc, int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax,
 			String strXxxZsxzgs, String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz,
 			String strXxxCharBz, int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax,
-			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub,
-			String strJygzTsxx) {
+			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine,
+			String strTjxSub, String strJygzTsxx) {
 		String returnMessage = "";
 
 		String strXxxValue = "";
@@ -291,7 +293,8 @@ public class tzOnlineAppUtility {
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 		String returnMessage = "";
 
 		String getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
@@ -324,12 +327,66 @@ public class tzOnlineAppUtility {
 		return returnMessage;
 	}
 
+	// 多行文本框 行数校验
+	public String rowLenValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
+			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
+			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
+			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
+		String returnMessage = "";
+
+		String getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+
+		String strXxxValue = "";
+
+		List<?> ListValues = sqlQuery.queryForList(getChildrenSql, new Object[] { numAppInsId, strTplId, strXxxBh });
+		for (Object ObjValue : ListValues) {
+			Map<String, Object> MapValue = (Map<String, Object>) ObjValue;
+			strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
+			if (!"".equals(strXxxValue) && strXxxValue != null) {
+				// 校验失败
+				int numXxxValueLen = this.getCount(strXxxValue, "\n") + 1;
+				System.out.println("strXxxValue:" + numXxxValueLen);
+				System.out.println("numXxxMinLine:" + numXxxMinLine);
+				System.out.println("numXxxMaxLine:" + numXxxMaxLine);
+				if (numXxxMinLine > 0) {
+					if (numXxxValueLen < numXxxMinLine) {
+						returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+					}
+				}
+				if ("".equals(returnMessage)) {
+					if (numXxxMaxLine > 0) {
+						if (numXxxValueLen > numXxxMaxLine) {
+							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							break;
+						}
+					}
+				}
+			}
+		}
+		System.out.println(returnMessage);
+		return returnMessage;
+	}
+
+	private int getCount(String str, String sub) {
+		int index = 0;
+		int count = 0;
+		while ((index = str.indexOf(sub, index)) != -1) {
+
+			index = index + sub.length();
+			count++;
+		}
+		return count;
+	}
+
 	// 值校验
 	public String valueValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 		String returnMessage = "";
 
 		String getChildrenSql = "";
@@ -429,12 +486,15 @@ public class tzOnlineAppUtility {
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
+		//System.out.println("---------regularValidator");
 		String returnMessage = "";
 
 		String getChildrenSql = "";
 
 		String strXxxValue = "";
+		//System.out.println("strXxxGdgsjy:"+strXxxGdgsjy);
 
 		try {
 			switch (strComMc) {
@@ -451,7 +511,7 @@ public class tzOnlineAppUtility {
 					strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
 					if (!"".equals(strXxxValue) && strXxxValue != null) {
 						//
-
+						//System.out.println("strXxxValue:"+strXxxValue);
 						switch (strXxxGdgsjy) {
 						case "email":
 							boolean isEmail = this.isValidEmail(strXxxValue);
@@ -474,6 +534,12 @@ public class tzOnlineAppUtility {
 						case "url":
 							boolean isUrl = this.isValidUrl(strXxxValue);
 							if (isUrl == false) {
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							}
+							break;
+						case "certNo":
+							boolean isCcertificateNo = this.isCcertificateNo(strXxxValue);
+							if (isCcertificateNo == false) {
 								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 							}
 							break;
@@ -529,7 +595,8 @@ public class tzOnlineAppUtility {
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 		String returnMessage = "";
 
 		try {
@@ -556,8 +623,8 @@ public class tzOnlineAppUtility {
 			String strComMc, int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax,
 			String strXxxZsxzgs, String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz,
 			String strXxxCharBz, int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax,
-			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub,
-			String strJygzTsxx) {
+			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine,
+			String strTjxSub, String strJygzTsxx) {
 		String returnMessage = "";
 
 		// 是否需要校验推荐信
@@ -655,23 +722,32 @@ public class tzOnlineAppUtility {
 
 	}
 
-	// 是否是Url
-	private boolean isValidUrl(String strValue) {
+	// 是否是证书编号   证书编号限定只能填写数字、字母和中横线
+	private boolean isCcertificateNo(String strValue) {
 
-		String regex = "^((https|http|ftp|rtsp|mms)?://)" + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@
-				+ "(([0-9]{1,3}\\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
-				+ "|" // 允许IP和DOMAIN（域名）
-				+ "([0-9a-z_!~*'()-]+\\.)*" // 域名- www.
-				+ "[a-z]{2,6})" // first level domain- .com or .museum
-				+ "(:[0-9]{1,4})?" // 端口- :80
-				+ "((/?)|" // a slash isn't required if there is no file name
-				+ "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
-
-		boolean isMatch = strValue.matches(regex);
+		boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
 
 		return isMatch;
 
 	}
+	
+	// 是否是Url
+		private boolean isValidUrl(String strValue) {
+
+			String regex = "^((https|http|ftp|rtsp|mms)?://)" + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@
+					+ "(([0-9]{1,3}\\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
+					+ "|" // 允许IP和DOMAIN（域名）
+					+ "([0-9a-z_!~*'()-]+\\.)*" // 域名- www.
+					+ "[a-z]{2,6})" // first level domain- .com or .museum
+					+ "(:[0-9]{1,4})?" // 端口- :80
+					+ "((/?)|" // a slash isn't required if there is no file name
+					+ "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+
+			boolean isMatch = strValue.matches(regex);
+
+			return isMatch;
+
+		}
 
 	// 是否是IdCard
 	private boolean isValidIdcard(String strValue) {

@@ -64,7 +64,7 @@ public class MobileWebsiteAppStatusServiceImpl extends FrameworkImpl {
 			//title;
 			String title = "状态查询 ";
 			//css和js
-			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_JS_CSS",ctxPath);
+			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_JS_CSS",ctxPath);
 			
 			//获取语言和机构;
 			String siteSQL = "select TZ_SITE_LANG,TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
@@ -159,7 +159,7 @@ public class MobileWebsiteAppStatusServiceImpl extends FrameworkImpl {
 							if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
 								String type = "A";
 								//解析系统变量;
-								String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , ctxPath, TZ_APPPRO_RST,"Y");
+								String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , ctxPath, TZ_APPPRO_RST,"Y",siteId);
 
 								isFb = result[0];
 								TZ_APPPRO_RST = result[1];

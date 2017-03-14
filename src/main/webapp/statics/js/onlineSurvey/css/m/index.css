@@ -357,3 +357,8 @@
 .input-checkbox-btn.checked{
 	background-image: url(../../images/checkbox_on.png);
 }
+.ui-autocomplete{
+	max-height:280px;
+	overflow-y:auto;
+	overflow-x:hidden;
+}

@@ -16,12 +16,17 @@
     selModel: {
         type: 'checkboxmodel'
     },
-	  style:"margin:8px",
+	style:"margin:8px",
     multiSelect: true,
     title: '活动管理',
     viewConfig: {
         enableTextSelection: true
     },
+	plugins: {
+		ptype: 'cellediting',
+		pluginId: 'artHdListCellEditing'
+		//	clicksToEdit: 1
+	},
 		header:false,
 		frame: true,
   //  dockedItems:[{xtype:"toolbar",dock:"bottom",ui:"footer",items:['->',{minWidth:80,text:"保存",iconCls:"save"}]},{
@@ -29,7 +34,10 @@
 		xtype:"toolbar",
 		dock:"bottom",
 		ui:"footer",
-		items:['->',{minWidth:80,text:"关闭",iconCls:"close",handler:"onComRegClose"}
+		items:[
+				'->',{minWidth:80,text:"保存",iconCls:"save",name:"save",handler:"onComRegSave"},
+				{minWidth:80,text:"确认",iconCls:"ensure",name:"ensure",handler:"onComRegSave"},
+				{minWidth:80,text:"关闭",iconCls:"close",handler:"onComRegClose"}
 			]
 		},{
 		xtype:"toolbar",
@@ -179,15 +187,23 @@
 	            	click:'topOrUndo'
 	            }
 	        },{
+				text: "置顶权重",
+				dataIndex: 'artZdSeq',
+				width: 70,
+				align: 'center',
+				editor: {
+					xtype: 'numberfield'
+				}
+			},{
 				text: '操作', 
-               menuDisabled: true,
-               sortable: false,
-               align:'center',
-               xtype: 'actioncolumn',
-			  			 items:[
-					  		{iconCls: 'edit',tooltip: '编辑',handler: 'editSelActivityInfo'},
-					  	/*	{iconCls: 'edit',tooltip: '报名人管理',handler: 'actApplicantsMg'}  */
-			   			]
+                menuDisabled: true,
+                sortable: false,
+                align:'center',
+                xtype: 'actioncolumn',
+				items:[{
+					iconCls: 'edit',tooltip: '编辑',handler: 'editSelActivityInfo'},
+				/*	{iconCls: 'edit',tooltip: '报名人管理',handler: 'actApplicantsMg'}  */
+				]
             }],
             store: store,
             bbar: {

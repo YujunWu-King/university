@@ -62,6 +62,11 @@
                 minWidth: 150,
                 flex: 1
             },{
+            	text:Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.rx_time","入学日期"),
+                sortable:true,
+                dataIndex:'rx_time',
+                width:110
+            },{
                 text: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.begin_time","开始时间"),
                 sortable: true,
                 dataIndex: 'begin_time',

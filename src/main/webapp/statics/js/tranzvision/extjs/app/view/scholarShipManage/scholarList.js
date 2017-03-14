@@ -64,11 +64,18 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarList', {
                     dataIndex: 'TZ_JXJ_STATE',
                     width:100,
                     renderer:function(v) {
-                    if (v == 'Y') { 
-                        return "有效";
-                    } else if (v == 'N') {
-                        return "无效";
-                    }
+	                    if (v == '0') { 
+	                        return "未开始";
+	                    } 
+	                    if (v == '1') { 
+	                        return "进行中";
+	                    } 
+	                    if (v == '2') { 
+	                        return "暂停";
+	                    } 
+	                    if (v == '3') { 
+	                        return "结束";
+	                    } 
                    }
                 }, {
                     menuDisabled: true,

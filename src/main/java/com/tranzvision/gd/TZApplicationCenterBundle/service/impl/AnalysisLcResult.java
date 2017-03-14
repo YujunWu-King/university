@@ -10,9 +10,10 @@ public class AnalysisLcResult {
 	 * @param rootPath  项目根目录
 	 * @param TZ_APPPRO_RST 解析的内容
 	 * @param isMobile 是否是手机
+	 * @param siteId 站点id
 	 * @return
 	 */
-	public String[] analysisLc(String type,String TZ_APP_INS_ID,String rootPath, String TZ_APPPRO_RST,String isMobile){
+	public String[] analysisLc(String type,String TZ_APP_INS_ID,String rootPath, String TZ_APPPRO_RST,String isMobile,String siteId){
 		String[] result = {"",""};
 		String isFb = "";
 		//查看有没有占位符系统变量;
@@ -33,7 +34,7 @@ public class AnalysisLcResult {
 		
 			//解析的系统变量值；
 			String sysvalue = "";
-			String[] sysVarParam = {type,TZ_APP_INS_ID,rootPath,isMobile};
+			String[] sysVarParam = {type,TZ_APP_INS_ID,rootPath,isMobile,siteId};
 			AnalysisSysVar analysisSysVar = new AnalysisSysVar();
 			analysisSysVar.setM_SysVarID(sysvarId);
 			analysisSysVar.setM_SysVarParam(sysVarParam);

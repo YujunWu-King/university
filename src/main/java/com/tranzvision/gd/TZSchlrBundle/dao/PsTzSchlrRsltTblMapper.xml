@@ -5,9 +5,10 @@
     <id column="TZ_SCHLR_ID" property="tzSchlrId" jdbcType="VARCHAR" />
     <id column="OPRID" property="oprid" jdbcType="VARCHAR" />
     <result column="TZ_IS_APPLY" property="tzIsApply" jdbcType="VARCHAR" />
+    <result column="TZ_NOTE" property="tzNote" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_SCHLR_ID, OPRID, TZ_IS_APPLY
+    TZ_SCHLR_ID, OPRID, TZ_IS_APPLY, TZ_NOTE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTblKey" >
     select 
@@ -22,10 +23,10 @@
       and OPRID = #{oprid,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl" >
-    insert into PS_TZ_SCHLR_RSLT_TBL (TZ_SCHLR_ID, OPRID, TZ_IS_APPLY
-      )
-    values (#{tzSchlrId,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, #{tzIsApply,jdbcType=VARCHAR}
-      )
+    insert into PS_TZ_SCHLR_RSLT_TBL (TZ_SCHLR_ID, OPRID, TZ_IS_APPLY, 
+      TZ_NOTE)
+    values (#{tzSchlrId,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, #{tzIsApply,jdbcType=VARCHAR}, 
+      #{tzNote,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl" >
     insert into PS_TZ_SCHLR_RSLT_TBL
@@ -39,6 +40,9 @@
       <if test="tzIsApply != null" >
         TZ_IS_APPLY,
       </if>
+      <if test="tzNote != null" >
+        TZ_NOTE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzSchlrId != null" >
@@ -50,6 +54,9 @@
       <if test="tzIsApply != null" >
         #{tzIsApply,jdbcType=VARCHAR},
       </if>
+      <if test="tzNote != null" >
+        #{tzNote,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl" >
@@ -58,13 +65,17 @@
       <if test="tzIsApply != null" >
         TZ_IS_APPLY = #{tzIsApply,jdbcType=VARCHAR},
       </if>
+      <if test="tzNote != null" >
+        TZ_NOTE = #{tzNote,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_SCHLR_ID = #{tzSchlrId,jdbcType=VARCHAR}
       and OPRID = #{oprid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZSchlrBundle.model.PsTzSchlrRsltTbl" >
     update PS_TZ_SCHLR_RSLT_TBL
-    set TZ_IS_APPLY = #{tzIsApply,jdbcType=VARCHAR}
+    set TZ_IS_APPLY = #{tzIsApply,jdbcType=VARCHAR},
+      TZ_NOTE = #{tzNote,jdbcType=VARCHAR}
     where TZ_SCHLR_ID = #{tzSchlrId,jdbcType=VARCHAR}
       and OPRID = #{oprid,jdbcType=VARCHAR}
   </update>
