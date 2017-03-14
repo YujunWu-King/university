@@ -332,7 +332,7 @@ public class PdfPrintbyModel {
 	private String getEnrollmentYear(String TZ_APP_INS_ID, Connection conn) {
 		Statement stmt = null;
 		ResultSet rt = null;
-		String year = null;
+		String year = "";
 		try {
 			stmt = conn.createStatement();
 			String sql = "select DATE_FORMAT(a.TZ_RX_DT,'%Y') AS RX_DT from PS_TZ_CLASS_INF_T a,PS_TZ_FORM_WRK_T b where a.TZ_CLASS_ID=b.TZ_CLASS_ID and b.TZ_APP_INS_ID='"
@@ -346,6 +346,9 @@ public class PdfPrintbyModel {
 		} catch (SQLException e) {
 
 			e.printStackTrace();
+		}
+		if (year == null || year.equals("null")) {
+			year = "";
 		}
 		return year;
 	}
@@ -521,6 +524,8 @@ public class PdfPrintbyModel {
 					tempTZ_XXX_BH.append(",");
 				}
 			}
+			rt.close();
+
 			String strTZ_XXX_BH = tempTZ_XXX_BH.toString();
 			strTZ_XXX_BH = strTZ_XXX_BH.substring(0, strTZ_XXX_BH.length() - 1);
 
@@ -552,8 +557,6 @@ public class PdfPrintbyModel {
 
 					pdfname = fieldValueArray[0];
 					type = fieldValueArray[2];
-					// System.out.println("pdfName=" + pdfname + ",type=" +
-					// type);
 
 					// 2 复选框
 					// 4 文本
@@ -575,7 +578,6 @@ public class PdfPrintbyModel {
 					}
 					if (type.equals("4")) {
 						str = this.getTZ_XXX_BH(pdfname);
-						// str = str + "_QTZ";
 						// System.out.println(str);
 						if (str.endsWith("_QTZ")) {
 							if (ht.get(str) != null && !ht.get(str).trim().equals("")) {
