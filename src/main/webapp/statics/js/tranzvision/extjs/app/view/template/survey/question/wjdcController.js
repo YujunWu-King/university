@@ -1234,6 +1234,8 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             return false;
         }
         var formParams = form.getValues();
+        
+        console.log("formParams:"+formParams);
         var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
         Ext.tzSubmit(tzParams,function(response){
             /*修改页面ID值*/
@@ -1535,62 +1537,22 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             });
         });
     },
-    /*参与人管理保存
+    /*参与人管理保存*/
     wjdcPeopleSave:function(btn){
         var grid = btn.findParentByType("grid");
         var store = grid.getStore();
-        //修改记录
-        var mfRecs = store.getModifiedRecords();
-        var editJson="";
-        var comParams="";
-        for(var i=0;i<mfRecs.length;i++){
-            if(editJson == ""){
-                editJson = '{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
-            }else{
-                editJson = editJson + ',{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
-            }
-        }
-        if(editJson != ""){
-            if(comParams == ""){
-                comParams = '"update":[' + editJson + "]";
-            }else{
-                comParams = comParams + ',"update":[' + editJson + "]";
-            }
-        }
-        //提交参数
-        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_PERSON_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        Ext.tzSubmit(tzParams, function (responseData) {
-        }, "", true, this);
+        var schLrId=grid.schLrId;
+        var tzParams = this.submitContentParams(schLrId,"保存成功");
 
-    },*/
-    /*参与人管理-确定
+    },
+    /*参与人管理-确定*/
     wjdcPeopleSure:function(btn){
-        var grid = btn.findParentByType("grid");
+    	var grid = btn.findParentByType("grid");
         var store = grid.getStore();
-        //修改记录
-        var mfRecs = store.getModifiedRecords();
-        var editJson="";
-        var comParams="";
-        for(var i=0;i<mfRecs.length;i++){
-            if(editJson == ""){
-                editJson = '{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
-            }else{
-                editJson = editJson + ',{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
-            }
-        }
-        if(editJson != ""){
-            if(comParams == ""){
-                comParams = '"update":[' + editJson + "]";
-            }else{
-                comParams = comParams + ',"update":[' + editJson + "]";
-            }
-        }
-        //提交参数
-        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_PERSON_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        Ext.tzSubmit(tzParams, function (responseData) { 
-            grid.close();
-        }, "", true, this);
-    },*/
+        var schLrId=grid.schLrId;
+        var tzParams = this.submitContentParams(schLrId,"保存成功");
+        grid.close();
+    },
     //导出参与人 ldd 20170207
     downloadAllCyr:function(btn){
         var grid=btn.findParentByType('grid');

@@ -323,6 +323,37 @@ public class PdfPrintbyModel {
 	}
 
 	/**
+	 * 获取班级入学日期
+	 * 
+	 * @param TZ_APP_INS_ID
+	 * @param conn
+	 * @return 班级名称
+	 */
+	private String getEnrollmentYear(String TZ_APP_INS_ID, Connection conn) {
+		Statement stmt = null;
+		ResultSet rt = null;
+		String year = "";
+		try {
+			stmt = conn.createStatement();
+			String sql = "select DATE_FORMAT(a.TZ_RX_DT,'%Y') AS RX_DT from PS_TZ_CLASS_INF_T a,PS_TZ_FORM_WRK_T b where a.TZ_CLASS_ID=b.TZ_CLASS_ID and b.TZ_APP_INS_ID='"
+					+ TZ_APP_INS_ID + "'";
+			rt = stmt.executeQuery(sql);
+			if ((rt != null) && rt.next()) {
+				year = rt.getString("RX_DT");
+			}
+			rt.close();
+			stmt.close();
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+		if (year == null || year.equals("null")) {
+			year = "";
+		}
+		return year;
+	}
+
+	/**
 	 * 获取模板里面的内容
 	 * 
 	 * @param TZ_APP_INS_ID
@@ -337,7 +368,7 @@ public class PdfPrintbyModel {
 		try {
 			stmt = conn.createStatement();
 			String TZ_APP_S_TEXT = "";
-			String TZ_APP_L_TEXT="";
+			String TZ_APP_L_TEXT = "";
 			String sql = "select TZ_XXX_BH,TZ_APP_S_TEXT,TZ_APP_L_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID='"
 					+ TZ_APP_INS_ID + "'";
 
@@ -347,13 +378,13 @@ public class PdfPrintbyModel {
 			// 增加修改，如果控件为Select类型，那么读取TZ_APP_L_TEXT
 			while ((rt != null) && rt.next()) {
 				TZ_XXX_BH = rt.getString("TZ_XXX_BH");
-				/*TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT");
-				if (TZ_APP_S_TEXT != null && !TZ_APP_S_TEXT.trim().equals("")) {
-					ht.put(TZ_XXX_BH, TZ_APP_S_TEXT);
-				} else {
-					ht.put(TZ_XXX_BH, rt.getString("TZ_APP_L_TEXT"));
-				} */
-				
+				/*
+				 * TZ_APP_S_TEXT = rt.getString("TZ_APP_S_TEXT"); if
+				 * (TZ_APP_S_TEXT != null && !TZ_APP_S_TEXT.trim().equals("")) {
+				 * ht.put(TZ_XXX_BH, TZ_APP_S_TEXT); } else { ht.put(TZ_XXX_BH,
+				 * rt.getString("TZ_APP_L_TEXT")); }
+				 */
+
 				TZ_APP_L_TEXT = rt.getString("TZ_APP_L_TEXT");
 				if (TZ_APP_L_TEXT != null && !TZ_APP_L_TEXT.trim().equals("")) {
 					ht.put(TZ_XXX_BH, TZ_APP_L_TEXT);
@@ -462,8 +493,8 @@ public class PdfPrintbyModel {
 	 * @param ht
 	 * @return 机构ID
 	 */
-	private String getPdfFieldsValue(String templateID, Connection conn, Hashtable<String, String> ht,
-			String fileName) {
+	private String getPdfFieldsValue(String templateID, Connection conn, Hashtable<String, String> ht, String fileName,
+			String bmbInsId) {
 		Statement stmt = null;
 		ResultSet rt = null;
 		String fieldsV = null;
@@ -493,6 +524,8 @@ public class PdfPrintbyModel {
 					tempTZ_XXX_BH.append(",");
 				}
 			}
+			rt.close();
+
 			String strTZ_XXX_BH = tempTZ_XXX_BH.toString();
 			strTZ_XXX_BH = strTZ_XXX_BH.substring(0, strTZ_XXX_BH.length() - 1);
 
@@ -524,7 +557,6 @@ public class PdfPrintbyModel {
 
 					pdfname = fieldValueArray[0];
 					type = fieldValueArray[2];
-					//System.out.println("pdfName=" + pdfname + ",type=" + type);
 
 					// 2 复选框
 					// 4 文本
@@ -538,7 +570,7 @@ public class PdfPrintbyModel {
 
 						if (flag) {
 							str = str + "_" + num;
-							//System.out.println(str);
+							// System.out.println(str);
 							if (ht.get(str) != null && !ht.get(str).trim().equals("")) {
 								fieldsValue.put(pdfname, ht.get(str));
 							}
@@ -546,8 +578,7 @@ public class PdfPrintbyModel {
 					}
 					if (type.equals("4")) {
 						str = this.getTZ_XXX_BH(pdfname);
-						// str = str + "_QTZ";
-						//System.out.println(str);
+						// System.out.println(str);
 						if (str.endsWith("_QTZ")) {
 							if (ht.get(str) != null && !ht.get(str).trim().equals("")) {
 								fieldsValue.put(pdfname, ht.get(str));
@@ -565,6 +596,29 @@ public class PdfPrintbyModel {
 				tempfieldsV.append("∨∨");
 				tempfieldsV.append(fieldsValue.get(ttt));
 				tempfieldsV.append("∧∧");
+			}
+
+			// 新加入功能，PDF文件里面 强制有 入学年份
+			String TZ_PDF_ENYEAR = null;
+			sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_PDF_ENYEAR'";
+			rt = stmt.executeQuery(sql);
+
+			if ((rt != null) && rt.next()) {
+				TZ_PDF_ENYEAR = rt.getString("TZ_HARDCODE_VAL");
+			}
+			rt.close();
+
+			// String year = "";
+
+			String[] fields = this.split(ttu.getPdfFileFields(fileName), ";");
+			for (int i = 0; i < fields.length; i++) {
+				if (TZ_PDF_ENYEAR != null && !TZ_PDF_ENYEAR.equals("")
+						&& this.getTZ_XXX_BH(fields[i]).equals(TZ_PDF_ENYEAR)) {
+					tempfieldsV.append(TZ_PDF_ENYEAR);
+					tempfieldsV.append("∨∨");
+					tempfieldsV.append(this.getEnrollmentYear(bmbInsId, conn));
+					tempfieldsV.append("∧∧");
+				}
 			}
 
 			fieldsV = tempfieldsV.toString();
@@ -625,9 +679,11 @@ public class PdfPrintbyModel {
 
 	private String getTZ_XXX_BH(String str) {
 		// 表单1[0].#subform[4].TZ_1124[0]
-		str = str.substring(0, str.length() - 1);
-		str = str.substring(str.lastIndexOf(".") + 1, str.length());
-		str = str.substring(0, str.lastIndexOf("["));
+		if (str != null && str.length() > 0) {
+			str = str.substring(0, str.length() - 1);
+			str = str.substring(str.lastIndexOf(".") + 1, str.length());
+			str = str.substring(0, str.lastIndexOf("["));
+		}
 		return str;
 	}
 
@@ -768,7 +824,7 @@ public class PdfPrintbyModel {
 				bean.setRs(-9);
 				return bean;
 			}
-			fieldsV = this.getPdfFieldsValue(templateID, conn, ht, fieldName);
+			fieldsV = this.getPdfFieldsValue(templateID, conn, ht, fieldName, bmbInsId);
 			if (fieldsV == null || fieldsV.equals("")) {
 				bean.setRs(-5);
 				return bean;
@@ -816,7 +872,7 @@ public class PdfPrintbyModel {
 	}
 
 	/**
-	 * 打印PDF文件  修改 by caoy
+	 * 打印PDF文件 修改 by caoy
 	 * 
 	 * @param path
 	 *            PDF文件存放路径

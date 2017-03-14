@@ -110,7 +110,20 @@ public class LcSysvarClass {
 					List<Map<String, Object>> list = jdbcTemplate.queryForList(
 							"SELECT TZ_XXX_BH,TZ_XXX_MC FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? and TZ_PAGE_NO > 0 ORDER BY TZ_ORDER ASC",
 							new Object[] { appTplId });
+					
 					if (list != null && list.size() > 0) {
+						
+						//每列的宽度;
+						double width = 100L;
+						if(list.size() >= TABLE_COLUM_NUM){
+							width = Math.floor(width/TABLE_COLUM_NUM*10);
+							
+						}else{
+							width = Math.floor(width/list.size()*10);
+						}
+						width = width/10;
+						 
+						 
 						int count = 0;
 						// 行数;
 						int rows = 0;
@@ -128,9 +141,19 @@ public class LcSysvarClass {
 								isComplete = "";
 							}
 							if ("".equals(th)) {
-								th = "<td>" + TZ_XXX_MC + "</td>";
+								if(i < TABLE_COLUM_NUM){
+									th = "<td width=\"" + width + "%\">" + TZ_XXX_MC + "</td>";
+								}else{
+									th = "<td>" + TZ_XXX_MC + "</td>";
+								}
+								
 							} else {
-								th = th + "<td>" + TZ_XXX_MC + "</td>";
+								if(i < TABLE_COLUM_NUM){
+									th = th + "<td width=\"" + width + "%\">" + TZ_XXX_MC + "</td>";
+								}else{
+									th = th + "<td>" + TZ_XXX_MC + "</td>";
+								}
+								
 							}
 
 							String td1 = "";
@@ -288,7 +311,7 @@ public class LcSysvarClass {
 				}catch(Exception e){
 					tzLuquSta = "";
 				}
-				if (tzLuquSta=="LQ"){
+				if ("LQ".equals(tzLuquSta)){
 					if("Y".equals(isMobile)){
 						QrcodeHtml = "<div class=\"overhidden\" onclick='openRqQrcode(\""+appIns+"\")'><i class=\"add_icon\"></i><span class=\"fl\" style=\"color:#666;\">查看电子版条件录取通知书</span></div>";
 					}else{
@@ -466,6 +489,39 @@ public class LcSysvarClass {
 					String sql = "select TZ_FIELD,TZ_FIELD_NAME from TZ_IMP_TPL_FLD_T where TZ_TPL_ID=? and TZ_DISPLAY='Y' order by TZ_SEQ ASC";
 					List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { lcName });
 					if (list != null && list.size() > 0) {
+						int listSize = list.size();
+						//每列的宽度;
+						double width = 100L;
+						if(listSize >= TABLE_COLUM_NUM){
+							width = Math.floor(width/TABLE_COLUM_NUM*10);
+							
+						}else{
+							width = Math.floor(width/list.size()*10);
+						}
+						width = width/10;
+						
+						//最后一行要不要合并;
+						//是否每列合并；
+						boolean colspanBl = false;
+						int colspanNum = 1;
+						//大于多少列考虑合并;
+						int colspanStartNum = TABLE_COLUM_NUM;
+						
+						if(listSize > TABLE_COLUM_NUM && (listSize%TABLE_COLUM_NUM) != 0){
+							//最后一行有多少列;
+							int lastColumnNum = listSize % TABLE_COLUM_NUM;
+							colspanBl = true;
+							//能除尽则每列合并,不能最后一列合并;
+							if(TABLE_COLUM_NUM % lastColumnNum == 0){
+								colspanNum = TABLE_COLUM_NUM / lastColumnNum;
+								colspanStartNum = listSize - (listSize%TABLE_COLUM_NUM);
+							}else{
+								colspanNum = TABLE_COLUM_NUM - (listSize%TABLE_COLUM_NUM) + 1;
+								colspanStartNum = listSize -1;
+							}
+						}
+						
+						
 						for (int i = 0; i < list.size(); i++) {
 							String fieldId = (String) list.get(i).get("TZ_FIELD");
 							String fieldName = (String) list.get(i).get("TZ_FIELD_NAME");
@@ -512,9 +568,28 @@ public class LcSysvarClass {
 							}
 
 							if ("".equals(th)) {
-								th = "<td>" + xxxmc + "</td>";
+								if(i < TABLE_COLUM_NUM){
+									th = "<td width=\"" + width + "%\">" + xxxmc + "</td>";
+								}else{
+									if(colspanBl == true && i >= colspanStartNum){
+										th = "<td colspan=\"" + colspanNum + "\">" + xxxmc + "</td>";
+									}else{
+										th = "<td >" + xxxmc + "</td>";
+									}
+									
+								}
 							} else {
-								th = th + "<td>" + xxxmc + "</td>";
+								if(i < TABLE_COLUM_NUM){
+									th = th + "<td width=\"" + width + "%\">" + xxxmc + "</td>";
+								}else{
+									if(colspanBl == true && i >= colspanStartNum){
+										th =  th + "<td colspan=\"" + colspanNum + "\">" + xxxmc + "</td>";
+									}else{
+										th = th + "<td>" + xxxmc + "</td>";
+									}
+									
+								}
+								
 							}
 							
 							//如果是材料评审且面试的资格为："有"则显示
@@ -527,19 +602,31 @@ public class LcSysvarClass {
 							}
 							
 							if ("".equals(td)) {
-								td = "<td>" + xxxValue + "</td>";
+								if(colspanBl == true && i >= colspanStartNum){
+									td = "<td style=\"word-break:break-all;\" colspan=\"" + colspanNum + "\">" + xxxValue + "</td>";
+								}else{
+									td = "<td style=\"word-break:break-all;\">" + xxxValue + "</td>";
+								}
+								
 							} else {
-								td = td + "<td>" + xxxValue + "</td>";
+								if(colspanBl == true && i >= colspanStartNum){
+									td = td + "<td style=\"word-break:break-all;\" colspan=\"" + colspanNum + "\">" + xxxValue + "</td>";
+								}else{
+									td = td + "<td style=\"word-break:break-all;\">" + xxxValue + "</td>";
+								}
+								
 							}
 
 							int yuShu = count % TABLE_COLUM_NUM;
 							if (count == totalnum || yuShu == 0) {
 								rows = rows + 1;
 								// 如果大于等于2行，则把第一行开始小于总列数的补全;
+								/*
 								if (rows > 1 && yuShu != 0) {
 									th = th + "<td colspan=\"" + (TABLE_COLUM_NUM - yuShu) + "\"></td>";
 									td = td + "<td colspan=\"" + (TABLE_COLUM_NUM - yuShu) + "\"></td>";
 								}
+								*/
 								thead = "<thead><tr>" + th + "</tr></thead>";
 								tbody = "<tbody><tr>" + td + "</tr></tbody>";
 								if ("".equals(tableHtml)) {
