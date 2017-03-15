@@ -15,22 +15,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			"orderby": 1,
 			"value": "",
 			"StorageType": "S",
-			"classname": "Select",
-			"option":{
-				"ENG_LEV_T1":"GRE",
-				"ENG_LEV_T2":"GMAT",
-				"ENG_LEV_T3":"TOFEL",
-				"ENG_LEV_T4":"IELTS",
-				"ENG_LEV_T5":"英语六级（710分制）",
-				"ENG_LEV_T6":"英语四级（710分制）",
-				"ENG_LEV_T7":"英语六级（100分制）",
-				"ENG_LEV_T8":"英语四级（100分制）",
-				"ENG_LEV_T9":"专业英语",
-				"ENG_LEV_T10":"高级口译",
-				"ENG_LEV_T11":"中级口译",
-				"ENG_LEV_T12":"BEC",
-				"ENG_LEV_T13":"TOEIC（990）"		
-			}
+			"classname": "Select"
 		},
 		//通用成绩存储结构
 		"EngLevelGrade":{
