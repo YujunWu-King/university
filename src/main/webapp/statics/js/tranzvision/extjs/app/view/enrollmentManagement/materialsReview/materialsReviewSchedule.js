@@ -723,7 +723,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                                 "-", {
                                     text: "打印评分总表",
                                     tooltip: "打印评分总表",
-                                    handler: "printChart"
+                                    handler: "printPFZB"
                                 }
 
                                 ]

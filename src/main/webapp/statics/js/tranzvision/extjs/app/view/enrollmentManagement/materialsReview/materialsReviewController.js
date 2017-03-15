@@ -3090,5 +3090,58 @@ console.log("callBack")
         }else{
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
         }
+    },
+    printPFZB: function(btn){
+        //Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+
+        var judgeGrid=btn.findParentByType('grid'),
+            selList = judgeGrid.getSelectionModel().getSelection();
+        var form=judgeGrid.findParentByType('form').findParentByType('form').getForm();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","请选择要打印总分表的记录");
+            return;
+        }
+        else {
+            //拼装评委信息
+            var JudgeJson="";
+            var classID=selList[0].data.classID,
+                batchID=selList[0].data.batchID,
+                DQLC=form.findField("delibCount").getValue();
+            if (selList.length==1){
+                var JudgeJson= '"' + selList[0].data.judgeID + '"';
+            }
+            else{
+                for (var i=0;i<selList.length-1;i++)
+                {
+                    if(JudgeJson=="")
+                    {
+                        JudgeJson= '"' + selList[i].data.judgeID;}
+                    else{JudgeJson=JudgeJson+'='+selList[i].data.judgeID}
+                }
+                JudgeJson=JudgeJson+'='+selList[selList.length-1].data.judgeID+'"';
+            }
+            
+            //var comParams = '"PWARRAY":' + JudgeJson ;
+            //console.log(JudgeJson);
+            //var tzParams = '{"ComID":"TZ_CLMSPS_PF","PageID":"TZ_PF_STD","OperateType":"HTML","comParams":{"PF_TYPE":"CL","classID":"' + classID + '","batchID":"' + batchID + '","DQLC":"' + DQLC + '",' + comParams + '}}';
+            //var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
+            //window.open(viewUrl, "下载","status=no,menubar=yes,toolbar=no,location=no");
+            
+            var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_CLPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"' + classID + '","TZ_APPLY_PC_ID":"' + batchID + '","TZ_PWEI_OPRIDS":' + JudgeJson + '}}';
+            //加载数据
+            Ext.tzLoad(tzParams,function(responseData){
+            	if( responseData.url == "" || responseData.url == undefined){
+                     Ext.MessageBox.alert('提示', '下载失败，请与管理员联系。');
+                     return;
+                }else{
+                	//var url = "/university/statics/download/pydata/clpydata/2017-02-14/dc_pysj_2017-02-14 01-40-34.doc";
+                	//window.open(responseData.url, "download","status=no,menubar=yes,toolbar=no,location=no");	
+                	  window.open(responseData.url, '_blank');
+                }
+            });
+        }
+        
     }
 });
