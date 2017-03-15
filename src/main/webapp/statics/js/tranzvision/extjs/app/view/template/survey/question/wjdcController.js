@@ -1235,7 +1235,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         }
         var formParams = form.getValues();
         
-        console.log("formParams:"+formParams);
+        console.log("formParams:"+Ext.JSON.encode(formParams));
         var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
         Ext.tzSubmit(tzParams,function(response){
             /*修改页面ID值*/
