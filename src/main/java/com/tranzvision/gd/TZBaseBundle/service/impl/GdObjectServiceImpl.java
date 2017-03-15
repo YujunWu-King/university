@@ -528,43 +528,63 @@ public class GdObjectServiceImpl implements GdObjectService {
 		String tmpLanguageCd = "";
 		tmpLoginURL = tzCookie.getStringCookieVal(request, cookieLoginUrl); 
 		if(tmpLoginURL == null || "".equals(tmpLoginURL)){
-			if("askMenu".equals(classid) && !"".equals(siteId) && !"".equals(menuId)){
-				tmpOrgID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
-				tmpLanguageCd = jdbcTemplate.queryForObject("select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
-				if(tmpOrgID != null && !"".equals(tmpOrgID)){
-					tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
-				}else{
-					tmpOrgID = "";
-					tmpLoginURL = request.getContextPath() + "/login";
+			//是否是手机登录;
+			String userAgent = request.getHeader("User-Agent");
+			if(userAgent != null && !"".equals(userAgent)){
+				userAgent = userAgent.toUpperCase();
+			}
+			if(userAgent.contains("WINDOWS CE")
+					|| userAgent.contains("IPOD")
+					|| userAgent.contains("SYMBIAN")
+					|| userAgent.contains("IPHONE")
+					|| userAgent.contains("BLACKBERRY")
+					|| userAgent.contains("ANDROID")
+					|| userAgent.contains("WINDOWS PHONE")){
+				tmpLoginURL = jdbcTemplate.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_MOBILE_LOGIN_URL"},"String");
+				if(tmpLoginURL != null && !"".equals(tmpLoginURL)){
+					tmpLoginURL = request.getContextPath() + tmpLoginURL;
 				}
-			}else{
-				// 得到机构的cookie;
-				tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
-				// 得到语言;
-				tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
-				//判断是前台登录还是后台登录;
-				String tmpLoginType = tzCookie.getStringCookieVal(request,cookieContextLoginType);
-				//得到访问的siteId;
-				siteId = tzCookie.getStringCookieVal(request,cookieWebSiteId);
-				
-				//查看cookie登录时前台还是后天；
-				if(tmpLoginType != null && !"".equals(tmpLoginType) && tmpOrgID != null && !"".equals(tmpOrgID)){
-					// 查询机构是不是存在;
-					String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
-					int count = jdbcTemplate.queryForObject(sql, new Object[] { tmpOrgID }, "Integer");
-					if("SQR".equals(tmpLoginType)){
+			}
+			
+			if(tmpLoginURL == null || "".equals(tmpLoginURL)){
+				if("askMenu".equals(classid) && !"".equals(siteId) && !"".equals(menuId)){
+					tmpOrgID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
+					tmpLanguageCd = jdbcTemplate.queryForObject("select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
+					if(tmpOrgID != null && !"".equals(tmpOrgID)){
 						tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
 					}else{
-						if (count > 0) {
-							tmpLoginURL = request.getContextPath() + "/login/" + tmpOrgID.toLowerCase();
-						} else {
-							tmpLoginURL = request.getContextPath() + "/login";
-						}
+						tmpOrgID = "";
+						tmpLoginURL = request.getContextPath() + "/login";
 					}
 				}else{
-					tmpOrgID = "";
-					tmpLoginURL = request.getContextPath() + "/login";
-				}	
+					// 得到机构的cookie;
+					tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
+					// 得到语言;
+					tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
+					//判断是前台登录还是后台登录;
+					String tmpLoginType = tzCookie.getStringCookieVal(request,cookieContextLoginType);
+					//得到访问的siteId;
+					siteId = tzCookie.getStringCookieVal(request,cookieWebSiteId);
+					
+					//查看cookie登录时前台还是后天；
+					if(tmpLoginType != null && !"".equals(tmpLoginType) && tmpOrgID != null && !"".equals(tmpOrgID)){
+						// 查询机构是不是存在;
+						String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
+						int count = jdbcTemplate.queryForObject(sql, new Object[] { tmpOrgID }, "Integer");
+						if("SQR".equals(tmpLoginType)){
+							tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
+						}else{
+							if (count > 0) {
+								tmpLoginURL = request.getContextPath() + "/login/" + tmpOrgID.toLowerCase();
+							} else {
+								tmpLoginURL = request.getContextPath() + "/login";
+							}
+						}
+					}else{
+						tmpOrgID = "";
+						tmpLoginURL = request.getContextPath() + "/login";
+					}	
+				}
 			}
 		}
 
