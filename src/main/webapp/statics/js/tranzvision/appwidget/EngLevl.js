@@ -261,36 +261,19 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T5"||EXAM_TYPE_DEF=="ENG_LEV_T6"){
 			label=MsgSet["EXAM_SCORE"];
+			
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T7"||EXAM_TYPE_DEF=="ENG_LEV_T8"){
 			label=MsgSet["EXAM_PASS"];
-			if(val=="Y"){
-				val="通过";
-			}else if(val=="N"){
-				val="未通过";
-			}
+			
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T9"){
 			label=MsgSet["EXAM_GSCORE"];
-			if(val=="TEM4"){
-				val="专业四级";
-			}else if(val=="TEM8"){
-				val="专业八级";
-			}
+			
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T10"||EXAM_TYPE_DEF=="ENG_LEV_T11"){
 			label=MsgSet["EXAM_GSCORE"];
-			if(val=="Y"){
-				val="拿到笔试证书";
-			}else if(val=="N"){
-				val="拿到资格证书";
-			}
+			
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T12"){
 			label=MsgSet["EXAM_GSCORE"];
-			if(val="A"){
-				val="高级";
-			}else if(val=="B"){
-				val="中级";
-			}else if(val="C"){
-				val="初级";
-			}
+			
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T13"){
 			dateHtml=this.getDateRead(data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
 			label=MsgSet["EXAM_SCORE"];
@@ -321,21 +304,21 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T5"||EXAM_TYPE_DEF=="ENG_LEV_T6"){
 			RELATED_DIV=this.getNumGradeDiv(data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],"");
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T7"||EXAM_TYPE_DEF=="ENG_LEV_T8"){
-			var optList='<option value="Y">'+MsgSet["PASS_Y"]+'</option>';
-				optList+=('<option value="N">'+MsgSet["PASS_N"]+'</option>');
+			var optList='<option value="'+MsgSet["PASS_Y"]+'">'+MsgSet["PASS_Y"]+'</option>';
+				optList+=('<option value="'+MsgSet["PASS_N"]+'">'+MsgSet["PASS_N"]+'</option>');
 			RELATED_DIV=this.getChoseGradeDiv(data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_PASS"],optList);//,child.EngLevelGrade.value
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T9"){
-			var optList='<option value="TEM4">'+MsgSet["EXAM_TEM4"]+'</option>';
-			optList+=('<option value="TEM8">'+MsgSet["EXAM_TEM8"]+'</option>');
+			var optList='<option value="'+MsgSet["EXAM_TEM4"]+'">'+MsgSet["EXAM_TEM4"]+'</option>';
+			optList+=('<option value="'+MsgSet["EXAM_TEM8"]+'">'+MsgSet["EXAM_TEM8"]+'</option>');
 			RELATED_DIV=this.getChoseGradeDiv(data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//,child.EngLevelGrade.value EXAM_GSCORE
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T10"||EXAM_TYPE_DEF=="ENG_LEV_T11"){
-			var optList='<option value="Y">'+MsgSet["INTER_A"]+'</option>';
-			optList+=('<option value="N">'+MsgSet["INTER_B"]+'</option>');
+			var optList='<option value="'+MsgSet["INTER_A"]+'">'+MsgSet["INTER_A"]+'</option>';
+			optList+=('<option value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
 			RELATED_DIV=this.getChoseGradeDiv(data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//,child.EngLevelGrade.value EXAM_GSCORE
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T12"){//LEV_C
-			var optList='<option value="A">'+MsgSet["LEV_A"]+'</option>';
-			optList+=('<option value="B">'+MsgSet["LEV_B"]+'</option>');
-			optList+=('<option value="C">'+MsgSet["LEV_C"]+'</option>');
+			var optList='<option value="'+MsgSet["LEV_A"]+'">'+MsgSet["LEV_A"]+'</option>';
+			optList+=('<option value="'+MsgSet["LEV_B"]+'">'+MsgSet["LEV_B"]+'</option>');
+			optList+=('<option value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
 			RELATED_DIV=this.getChoseGradeDiv(data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//EXAM_SCORE
 		}else if(EXAM_TYPE_DEF=="ENG_LEV_T13"){
 			RELATED_DIV=this.getNumGradeDiv(data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],DATE_HTML);
@@ -638,6 +621,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 										if(i=="ENG_LEV_T7"||i=="ENG_LEV_T8"||i=="ENG_LEV_T9"||i=="ENG_LEV_T10"||i=="ENG_LEV_T11"||i=="ENG_LEV_T12"){
 											gradeDiv=topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
 											gradeDiv.find("select").chosen({width: "100%"});
+											//文字说明 解析:
 										}
 										//timePicker:
 									    var $inputBox = $("#" + data.itemId +child.EngLevelDate.itemId);
@@ -695,18 +679,6 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 						data.checkInputNotNull($inputBox);
 					    var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
 					    data.checkInputNotNull($inputBox2);
-//						 $inputBox.each(function(){
-//							   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-//								$(this).functionValidator({
-//									fun:function(val,el){
-//										if(val==""){
-//											return "此项必填";
-//										}else{
-//											return true;
-//										}
-//									}	
-//								}); 
-//						   });						
 				 }
 				 //所有看的到的select美化:
 				$("select").each(function(){
