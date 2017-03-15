@@ -3129,9 +3129,8 @@ console.log("callBack")
             //var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
             //window.open(viewUrl, "下载","status=no,menubar=yes,toolbar=no,location=no");
             
-            //材料导出var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_CLPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"' + classID + '","TZ_APPLY_PC_ID":"' + batchID + '","TZ_PWEI_OPRIDS":' + JudgeJson + '}}';
-            //面试导出
-            var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_MSPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"' + classID + '","TZ_APPLY_PC_ID":"' + batchID + '","TZ_PWEI_OPRIDS":' + JudgeJson + '}}';
+            var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_CLPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"' + classID + '","TZ_APPLY_PC_ID":"' + batchID + '","TZ_PWEI_OPRIDS":' + JudgeJson + '}}';
+            //面试导出 var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_MSPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"' + classID + '","TZ_APPLY_PC_ID":"' + batchID + '","TZ_PWEI_OPRIDS":' + JudgeJson + '}}';
             
             //加载数据
             Ext.tzLoad(tzParams,function(responseData){
