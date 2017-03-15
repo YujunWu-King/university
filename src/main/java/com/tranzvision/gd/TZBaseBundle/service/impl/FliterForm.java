@@ -579,7 +579,7 @@ public class FliterForm extends FrameworkImpl {
 									sqlWhere = sqlWhere + fieldName + " LIKE " + value;
 									break;
 								case 10:
-									fldValue = fldValue.replaceAll(" ", "");
+									fldValue = fldValue.replaceAll(" ", ",");
 									fldValue = fldValue.trim();
 									String[] inArr = fldValue.split(",");
 
