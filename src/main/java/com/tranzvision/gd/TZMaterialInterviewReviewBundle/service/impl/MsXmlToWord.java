@@ -71,7 +71,7 @@ public class MsXmlToWord {
 					+ new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + "/";
 			
 			//用于返回值
-			String FilepathandName = "/university"+Filepath;
+			String FilepathandName = request.getContextPath()+Filepath;
 			Filepath = request.getServletContext().getRealPath(Filepath);
 
 			// 检测文件夹是否存在，如果不存在，创建文件夹
@@ -216,7 +216,12 @@ public class MsXmlToWord {
 			List<Map<String, Object>> tz_cjbph_list = jdbcTemplate.queryForList(tz_cj_bph_sql,
 					new Object[] { TZ_JG_ID, TZ_MSCJ_SCOR_MD_ID });
 			// 扁平化每列的宽度
-			int bph_lk = 11950 / tz_cjbph_list.size();
+			int bph_lk = 11950;
+			if(tz_cjbph_list.size()==0){
+				//处理成绩扁平化没配置报错的问题;
+			}else{
+				 bph_lk = 11950 / tz_cjbph_list.size();	
+			}
 
 			/*
 			 * System.out.println("----------"+bph_lk); for (Object cjbphObj :

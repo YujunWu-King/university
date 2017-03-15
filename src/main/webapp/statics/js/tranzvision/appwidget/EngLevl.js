@@ -378,6 +378,18 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			   })
 		  })
 	},
+	checkInputNotNull:function(inputEl){
+		inputEl.formValidator({tipID:(inputEl.attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+		inputEl.functionValidator({
+				fun:function(val,el){
+					if(val==""){
+						return "此项必填";
+					}else{
+						return true;
+					}
+				}	
+			}); 
+	},
 	_getHtmlOne: function(data,index) {
 		/**/
 		if (SurveyBuild.appInsId=="0"&&data.children.length<data.defaultLines){
@@ -646,6 +658,10 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 									    var $inputBox = $("#" + data.itemId +child.EngLevelDate.itemId);
 									    var $selectBtn = $("#" + data.itemId +child.EngLevelDate.itemId + "_Btn");
 										data.bindTimePicker($inputBox,$selectBtn);
+										//非空验证:
+										data.checkInputNotNull($inputBox);
+									    var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
+									    data.checkInputNotNull($inputBox2);
 									}
 								}
 								//-------------------------
@@ -690,7 +706,22 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 								}	
 							});
 						});
-
+						//日期.成绩非空验证:
+						data.checkInputNotNull($inputBox);
+					    var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
+					    data.checkInputNotNull($inputBox2);
+//						 $inputBox.each(function(){
+//							   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+//								$(this).functionValidator({
+//									fun:function(val,el){
+//										if(val==""){
+//											return "此项必填";
+//										}else{
+//											return true;
+//										}
+//									}	
+//								}); 
+//						   });						
 				 }
 				 //所有看的到的select美化:
 				$("select").each(function(){
