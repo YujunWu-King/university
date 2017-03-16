@@ -15,7 +15,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			"orderby": 1,
 			"value": "",
 			"StorageType": "S",
-			"classname": "Select"
+			"classname": "SingleTextBox"
 		},
 		//通用成绩存储结构
 		"EngLevelGrade":{
