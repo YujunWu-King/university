@@ -28,10 +28,10 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 			"title": MsgSet["INTERVIEW_BATCH"],
 			"orderby": 2,
 			"value": "",
-			"StorageType": "S",
+			"StorageType": "L",
 			"option": {},
 			"wzsm" : "",
-			"classname":"Select"
+			"classname":"SingleTextBox"
 		}
 	},
 	minLines:"1",
