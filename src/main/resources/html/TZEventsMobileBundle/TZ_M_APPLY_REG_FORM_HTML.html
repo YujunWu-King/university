@@ -45,13 +45,12 @@
 	   </div>
 	</div>
 	
-	<script type="text/javascript">
+	<script type="text/javascript"> 
 		var applyURL = "%bind(:3)";
 		
 		function returnBack(){
-			location.href = document.referrer;
-			//history.back();
-		}
+			history.back(); 
+		} 
 		
 		/*用于拼装JSON字符串，然后用parseJSON转为JSON对象*/
 		function cmbcgbyyValueReplace(str){ 
