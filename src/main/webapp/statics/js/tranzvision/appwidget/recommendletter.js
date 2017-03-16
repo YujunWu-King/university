@@ -393,11 +393,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				c += '<div class="input-list-blank addNext">';
 				if(len<data.maxLines){
 					c += '<div class="input-list-suffix-blank right input-btn">'
-					c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_ONE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
+					c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
 					c += '</div>';
 				}else{
 					c += '<div class="input-list-suffix-blank right input-btn" style="padding-right:15px;">'
-					c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_ONE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
+					c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
 					c += '</div>';
 				}
 				c +='<div class="clear"></div>';
@@ -2841,7 +2841,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			var $tjr_by9 = $("#" + data.itemId + children[i - 1].recommend_22["itemId"]);
 			var $tjr_by10 = $("#" + data.itemId + children[i - 1].recommend_23["itemId"]);
 			
-			var cehckHtml=  function(val,elem,Regular){
+			var _checkHtml=  function(val,elem,Regular){
 				if (val == "") { //判断 是否为为空
 					return elem.itemName+MsgSet["REQUIRE"];
 					//return elem.itemName+MsgSet["REQUIRE"];
