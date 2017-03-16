@@ -41,15 +41,16 @@ public class LcSysvarClass {
 
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-
+			
 			// 查看报名表是不是已经提交了;
-			String appInsStatus = "", appTplId = "";
+			String appInsStatus = "", appTplId = "",classId="";
 			Map<String, Object> appinsMap = jdbcTemplate.queryForMap(
-					"select TZ_APP_FORM_STA,TZ_APP_TPL_ID from PS_TZ_APP_INS_T where TZ_APP_INS_ID=?",
+					"select A.TZ_APP_FORM_STA,A.TZ_APP_TPL_ID,B.TZ_CLASS_ID from PS_TZ_APP_INS_T A,PS_TZ_FORM_WRK_T B where A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_APP_INS_ID=?",
 					new Object[] { appIns });
 			if (appinsMap != null) {
 				appInsStatus = (String) appinsMap.get("TZ_APP_FORM_STA");
 				appTplId = (String) appinsMap.get("TZ_APP_TPL_ID");
+				classId = (String) appinsMap.get("TZ_CLASS_ID");
 			}
 			// 已经提交;
 			if ("U".equals(appInsStatus)) {
@@ -57,6 +58,9 @@ public class LcSysvarClass {
 			} else {
 				isPublish = "N";
 			}
+			
+			// 报名表链接;
+			String applyFromUrl = rootPath + "/dispatcher?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + siteId + "&TZ_PAGE_ID=" ;
 
 			String th = "";
 			String td = "";
@@ -89,7 +93,8 @@ public class LcSysvarClass {
 							}
 
 							span = "<span class=\"fl width_40\">" + TZ_XXX_MC + "</span>";
-
+							
+							
 							if ("Y".equals(isComplete)) {
 								/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
 										+ "/statics/css/website/m/images/reg_right.png\"></span>";*/
@@ -157,11 +162,13 @@ public class LcSysvarClass {
 							}
 
 							String td1 = "";
+							//每页对应额链接;
+							String everyApplyFromUrl = applyFromUrl + TZ_XXX_BH;
 							if ("Y".equals(isComplete)) {
 								td1 = "<td><img src=\"" + rootPath
-										+ "/statics/css/website/images/table_check.png\">已完成</td>";
+										+ "/statics/css/website/images/table_check.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">已完成</a></td>";
 							} else {
-								td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\">未完成</td>";
+								td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">未完成</a></td>";
 							}
 							if ("".equals(td)) {
 								td = td1;
@@ -235,7 +242,7 @@ public class LcSysvarClass {
 					if ("U".equals(appInsStatus)) {
 						tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
 					}else{
-						tjrqkxx = tjrqkxx + "<td colspan=\"3\"></td>";
+						tjrqkxx = tjrqkxx + "<td colspan=\"3\">需要先提交报名表</td>";
 					}
 					
 					tableHtml = tableHtml + "<tbody><tr>" + tjrqkxx + "</tr></tbody>";

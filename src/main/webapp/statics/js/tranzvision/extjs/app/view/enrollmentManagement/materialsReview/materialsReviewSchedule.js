@@ -179,9 +179,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     colName = 'col' + colName.substr(colName.length - 2);
                     dataRow.push(tmpdataArray[j][colName]);
                 }
+                console.log(tmpdataArray);
                 statisticsGridDataModel['gridData'].push(dataRow);
             }
-            
             //分布指标
             var tmpArray2 = respData.pw_fbzb_grid;
             statisticsGoalGridDataModel = {
@@ -202,10 +202,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     text: tmpArray2[i][colName],
                     sortable: false,
                     dataIndex: colName,
+                    editor: {
+                        xtype: 'numberfield',
+                        allowBlank: false,
+                        emptyText:"不允许为空！"
+                    },
                     flex: 1
                 };
 
-                statisticsGoalGridDataModel['gridColumns'].push(tmpColumn);
+                if(i>0){
+                	statisticsGoalGridDataModel['gridColumns'].push(tmpColumn);
+                }
                 statisticsGoalGridDataModel['gridFields'].push({
                     name: colName
                 });
@@ -863,7 +870,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                fields: statisticsGridDataModel['gridFields'],
 	                                data: statisticsGridDataModel['gridData']
 	                            }),
-	                            minHeight: 80,
+	                            minHeight: 180,
 	                            margin:'5 0',
 	                            selModel: {
 	                                type: 'checkboxmodel'
@@ -875,166 +882,22 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                xtype: "toolbar",
 	                                items: [{
 	                                    text: "计算选中评委的标准评分分布",
-	                                    tooltip: "计算选中评委的标准评分分布"
+	                                    tooltip: "计算选中评委的标准评分分布",
+	                                    handler:'calcuScoreDist'
 	                                }, "-", {
 	                                    text: "使用计算结果设置分布标准",
-	                                    tooltip: "使用计算结果设置分布标准"
+	                                    tooltip: "使用计算结果设置分布标准",
+	                                    handler:'userCalcuScoreDist'
 	                                }, "-", {
 	                                    text: "保存评议标准",
-	                                    tooltip: "保存评议标准"
+	                                    tooltip: "保存评议标准",
+	                                    handler:'saveEvaStandard'
 	                                }, "-", {
 	                                    text: "刷新图表",
+	                                    name:"toolbarShowTB",
 	                                    tooltip: "刷新图表",
 	                                    iconCls: "reset",
-	                                    handler: function(btn) {
-		                            		var form = btn.findParentByType('materialsReviewSchedule').child('form').getForm();
-		                            		var classID = form.findField('classID').getValue();
-		                            		var batchID = form.findField('batchID').getValue();
-		                            		// 评委登陆账号id用逗号分割
-		                            		var pw_ids = "";
-		                            		var selList = btn.findParentByType('grid').getSelectionModel().getSelection();
-		                            		for (var x = 0; x < selList.length; x++) {
-		                            			if (pw_ids == "") {
-		                            				pw_ids = selList[x].get("col01");
-		                            			} else {
-		                            				pw_ids = pw_ids + "," + selList[x].get("col01");
-		                            			}
-		                            		}
-	
-		                            		var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"QG",' + '"comParams":{"type":"chart","classID":"' + classID + '","batchID":"' + batchID + '","pw_ids":"' + pw_ids + '"}}';
-	
-		                            		Ext.tzLoad(tzParams, function(respData) {
-	
-		                                        // 统计分布图表series
-		                                        var seriesArray = [];
-		                                        // 统计图表fields定义
-		                                        chartfields = "'name'";
-		                                        var series1;
-		                                        tmpArray = respData.pw_dfqk_chart_field;
-		                                        var tips;
-		                                        for (var i = 0; i < tmpArray.length; i++) {
-		                                            chartfields = chartfields + ",'" + tmpArray[i].pw_field + "'";
-		                                            tips = tmpArray[i].pw_field;
-		                                            var fieldName = tmpArray[i].pw_field;
-		
-		                                            series1 = {
-		                                                type: 'line',
-		                                                highlight: {
-		                                                    size: 7,
-		                                                    radius: 7
-		                                                },
-		                                                axis: 'left',
-		                                                smooth: true,
-		                                                xField: 'fbName',
-		                                                yField: tips,
-		                                                markerConfig: {
-		                                                    type: 'circle',
-		                                                    size: 4,
-		                                                    radius: 4,
-		                                                    'stroke-width': 0
-		                                                },
-		                                                title: tmpArray[i].pw_name
-		                                            };
-		                                            seriesArray.push(series1);
-		                                        }
-		                                        msyrtislReviewScheduleChartStore2.fields = [chartfields];
-		
-		                                        msyrtislReviewScheduleChartStore.loadData(respData.columnChart);
-		
-		                                        // 计算最大值
-		                                        var arrData = respData.columnChart;
-		                                        for (i = 0; i < arrData.length; i++) {
-		                                            if (columnMaxCount < arrData[i].data1) {
-		                                                columnMaxCount = arrData[i].data1;
-		                                            }
-		                                        }
-		                                        // 统计分布图;
-		                                        // msyrtislReviewScheduleChartStore2.loadData(respData.lineChart);
-		                                        columnChart = new Ext.chart.Chart({
-		                                            width: 860,
-		                                            height: 400,
-		                                            animate: true,
-		                                            store: msyrtislReviewScheduleChartStore,
-		                                            shadow: true,
-		                                            axes: [{
-		                                                type: 'Numeric',
-		                                                position: 'left',
-		                                                fields: ['data1'],
-		                                                minimum: columnMinCount,
-		                                                maximum: columnMaxCount,
-		                                                label: {
-		                                                    renderer: function(value) {
-		                                                        return Ext.util.Format.number(value, '000.00');
-		                                                    }
-		                                                },
-		                                                title: '平均分',
-		                                                grid: true,
-		                                                minimum: 0
-		                                            },
-		                                            {
-		                                                type: 'Category',
-		                                                position: 'bottom',
-		                                                fields: ['name'],
-		                                                title: '评委列表'
-		                                            }],
-		                                            series: [{
-		                                                type: 'column',
-		                                                axis: 'bottom',
-		                                                highlight: true,
-		                                                xField: 'name',
-		                                                yField: 'data1'
-		                                            }]
-		                                        });
-		
-		                                        lineChart = new Ext.chart.Chart({
-		                                            xtype: 'chart',
-		                                            width: 860,
-		                                            height: 400,
-		                                            style: 'background:#fff',
-		                                            animate: true,
-		                                            store: msyrtislReviewScheduleChartStore2,
-		                                            shadow: true,
-		                                            theme: 'Category1',
-		                                            legend: {
-		                                                position: 'top'
-		                                            },
-		                                            axes: [{
-		                                                type: 'Numeric',
-		                                                position: 'left',
-		                                                fields: [chartfields],
-		                                                label: {
-		                                                    renderer: function(value) {
-		                                                        return Ext.util.Format.number(value, '000.00');
-		                                                    }
-		                                                },
-		                                                title: '分布比率',
-		                                                grid: true,
-		                                                maximum: lineMaxCount,
-		                                                minimum: lineMinCount
-		                                            },
-		                                            {
-		                                                type: 'Category',
-		                                                position: 'bottom',
-		                                                fields: ['fbName'],
-		                                                title: '分布区间',
-		                                                label: {
-		                                                    rotate: {
-		                                                        degrees: 270
-		                                                    }
-		                                                }
-		                                            }],
-		                                            series: seriesArray
-		                                        });
-		                                        mainPageFrame.removeAll();
-		                                        if (respData.display_pjf == 'Y') {
-		                                            mainPageFrame.add(columnChart);
-		                                        }
-		                                        mainPageFrame.add(lineChart);
-		                                        mainPageFrame.expand(true);
-		                                        mainPageFrame.doLayout();
-	
-		                            		});
-		                            	}
+	                                    handler: "showChart"
 	                                }]
 	                            }],
 	                            viewConfig: {
@@ -1048,10 +911,27 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            }),
 	                            minHeight: 80,
 	                            margin:'10 0',
-	                            selModel: {
-	                                type: 'checkboxmodel'
-	                            },
-	                            columns: statisticsGoalGridDataModel['gridColumns'],
+	                            columnLines: true,
+	                            viewConfig: {
+	                                enableTextSelection: true
+	                            },	       
+	                            plugins: [{
+	                                ptype: 'cellediting',
+	                            }],
+	                            columns:[
+	                            	{
+	                                    text:'指标名称',	                                    
+	                                    dataIndex:'col01',
+	                                    width:'10%'                                    
+	                                },
+	                                {
+	                                    text:'总分',
+	                                    lockable   : false,
+	                                    menuDisabled: true,
+	                                    columns:statisticsGoalGridDataModel['gridColumns']
+	                                }
+	                            ],
+	                            //columns: statisticsGoalGridDataModel['gridColumns'],
 	                            header: false,
 	                            border: false,
 		                        viewConfig: {
