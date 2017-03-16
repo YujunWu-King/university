@@ -3146,8 +3146,23 @@ console.log("callBack")
         }
         
     },
-    calcuScoreDist:function(){
-    	
+    calcuScoreDist:function(btn){
+    	var selList =  btn.findParentByType("grid").getSelectionModel();
+        if(selList.getSelection().length == 0){
+            Ext.Msg.alert("提示","请选择要操作的记录");
+            return;
+        }else{
+        	var pwIds = "";
+            for(var x = 0;x<selList.getSelection().length;x++) {
+                var select = btn.findParentByType("grid").getSelection(),
+                    index = btn.findParentByType("grid").getStore().indexOf(select[x]),
+                    record = btn.findParentByType("grid").getStore().getAt(index);
+                
+                var data = record.data;
+                pwIds = pwIds + data.col01 + ",";
+            }
+            //已有选中评委，提交到后台处理
+        }
     },
     userCalcuScoreDist:function(){
     	

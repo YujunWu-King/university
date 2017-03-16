@@ -222,10 +222,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 
 	    String strPwPjfHtml = "";
 	    int intFzNum=4;
-	    if ("Y".equals(strJsfs)) {
+	    /*if ("Y".equals(strJsfs)) {
 		strPwPjfHtml = "{\"col05\":\"平均分\"}";
 		intFzNum = intFzNum + 1;
-	    }
+	    }*/
+	    strPwPjfHtml = ",{\"col05\":\"平均分\"}";
+	    intFzNum = intFzNum + 1;
+		
 	    String strGridColHTML = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_BASE_HTML", strPwPjfHtml);
 	    int intFbzbNum = 1;
 	    String strGridGoalColHTML = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBZB_BASE_HTML");
@@ -286,6 +289,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			    new Object[] { strClassID,strBatchID });
 		if (pwList != null && pwList.size() > 0) {
 		    int intTb = 0;
+		    //为最后一行做准备		
+		    int intSize = 1;
+		    String strLastGridDataHTML = "";
 		    for(Object obj2:pwList){
 			Map<String,Object> result2=(Map<String,Object>) obj2;
 			strPwOprid = result2.get("TZ_PWEI_OPRID")==null ? "" : String.valueOf(result2.get("TZ_PWEI_OPRID"));
@@ -298,11 +304,17 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			
 			//登录账号
 			strGridDataHTML = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,strPwDlId);
+			if(intSize==pwList.size()){
+			    strLastGridDataHTML = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"");
+			}			
 			//评委姓名
 			intFzNum = intFzNum + 1;
 			colName = "0" + intFzNum;
 			strFzValue = "col" + this.right(colName,2);
 			strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,strFirstName);
+			if(intSize==pwList.size()){
+			    strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"评委（0）");
+			}
 			//完成数量
 			String strWc = "0";
 			String strWcNumSql = "SELECT COUNT(*) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLPS_LUNC=? AND TZ_SUBMIT_YN <> 'C'";
@@ -311,6 +323,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			colName = "0" + intFzNum;
 			strFzValue = "col" + this.right(colName,2);
 			strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,strWc);
+			if(intSize==pwList.size()){
+			    strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"0");
+			}
 			//提交状态
 			String strSubmitZt="",strSubmitZtDesc="未提交";
 			String strSubmitSql = "SELECT TZ_SUBMIT_YN FROM PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=?";
@@ -322,13 +337,23 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			colName = "0" + intFzNum;
 			strFzValue = "col" + this.right(colName,2);
 			strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,strSubmitZtDesc);
+			if(intSize==pwList.size()){
+			    strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"-");
+			}
 			//平均分
-			if ("Y".equals(strJsfs)) {
+			intFzNum = intFzNum + 1;
+			colName = "0" + intFzNum;
+			strFzValue = "col" + this.right(colName,2);
+			strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"1.20");
+			if(intSize==pwList.size()){
+			    strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"0");
+			}
+			/*if ("Y".equals(strJsfs)) {
 			    intFzNum = intFzNum + 1;
 			    colName = "0" + intFzNum;
 			    strFzValue = "col" + this.right(colName,2);
 			    strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"1.20");
-			}
+			}*/
 			//取得分布统计人数
 			String strMFbdzMxId="",strMFbdzMxName="",strMFbdzMxXX="",strMFbdzMxXxJx="",strMFbdzMxSx="",strMFbdzMxSxJx="";
 			String strFbdzSql = "SELECT  TZ_M_FBDZ_MX_ID,TZ_M_FBDZ_MX_NAME,TZ_M_FBDZ_MX_XX,TZ_M_FBDZ_MX_XX_JX,TZ_M_FBDZ_MX_SX_JX,TZ_M_FBDZ_MX_SX  FROM PS_TZ_FBDZ_MX_TBL WHERE TZ_M_FBDZ_ID = ? ORDER BY TZ_M_FBDZ_MX_XH ASC";
@@ -352,15 +377,22 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				colName = "0" + intFzNum;
 				strFzValue = "col" + this.right(colName,2);
 				strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,strDange);
+				if(intSize==pwList.size()){
+				    strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"0（0）");
+				}
 			    }
-			}
+			}			
 			if(strGridHtml!=null&&!"".equals(strGridHtml)){
 			    strGridHtml = strGridHtml + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DATA_IT_HTML", strPwOprid,strGridDataHTML);			    
 			}else{
 			    strGridHtml = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DATA_IT_HTML", strPwOprid,strGridDataHTML);
 			}
+			if(intSize==pwList.size()){
+			    strGridHtml = strGridHtml + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DATA_IT_HTML", "-",strLastGridDataHTML);
+			}
 			//图表
 			intTb = intTb + 1;
+			intSize = intSize + 1;
 			if(strChartFieldsHTML!=null&&!"".equals(strChartFieldsHTML)){
 			    strChartFieldsHTML = strChartFieldsHTML + ",{" + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML", "pw_field","data" + intTb);
 			}else{

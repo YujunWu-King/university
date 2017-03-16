@@ -179,9 +179,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     colName = 'col' + colName.substr(colName.length - 2);
                     dataRow.push(tmpdataArray[j][colName]);
                 }
+                console.log(tmpdataArray);
                 statisticsGridDataModel['gridData'].push(dataRow);
             }
-            
             //分布指标
             var tmpArray2 = respData.pw_fbzb_grid;
             statisticsGoalGridDataModel = {
@@ -870,7 +870,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                fields: statisticsGridDataModel['gridFields'],
 	                                data: statisticsGridDataModel['gridData']
 	                            }),
-	                            minHeight: 80,
+	                            minHeight: 180,
 	                            margin:'5 0',
 	                            selModel: {
 	                                type: 'checkboxmodel'
