@@ -1033,9 +1033,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                			series : [ {
 	                                				type : 'column',
 	                                				axis : 'bottom',
+	                                                label: {
+	                                                    display: 'insideEnd',
+	                                                    'text-anchor': 'middle',
+	                                                      field: 'graphData',
+	                                                      renderer: Ext.util.Format.numberRenderer('0.00'),
+	                                                      //orientation: 'vertical',控制数字横着还是竖着
+	                                                      color: '#333'
+	                                                },
 	                                				style: { width: 100 },
 	                                				xField : 'graphName',
-	                                				yField : 'graphData',// x与y轴的数据声明
+	                                				yField : 'graphData'// x与y轴的数据声明
 	                                			} ]
 	                                		});
 	                                		// ------------------------------------柱状图结束---------------------------
