@@ -242,7 +242,7 @@ public class LcSysvarClass {
 					if ("U".equals(appInsStatus)) {
 						tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
 					}else{
-						tjrqkxx = tjrqkxx + "<td colspan=\"3\"></td>";
+						tjrqkxx = tjrqkxx + "<td colspan=\"3\">需要先提交报名表</td>";
 					}
 					
 					tableHtml = tableHtml + "<tbody><tr>" + tjrqkxx + "</tr></tbody>";
