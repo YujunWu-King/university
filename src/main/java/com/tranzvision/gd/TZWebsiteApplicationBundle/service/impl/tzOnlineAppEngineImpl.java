@@ -1520,6 +1520,8 @@ public class tzOnlineAppEngineImpl {
 					tzOnlineAppUtility tzOnlineAppUtility = (tzOnlineAppUtility) ctx.getBean(strPath + "." + strName);
 					String strReturn = "";
 					// ////System.out.println("strMethod:" + strMethod);
+					//System.out.println("222:"+strMethod);
+					//System.out.println("333:"+strComMc);
 					switch (strMethod) {
 					case "requireValidator":
 						strReturn = tzOnlineAppUtility.requireValidator(numAppInsId, strTplId, strXxxBh, strXxxMc,

@@ -173,6 +173,17 @@ public class tzOnlineAppUtility {
 					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 				}
 				break;
+			case "ChooseClass": // 班级选择控件，校验批次是否选择了
+				// String strXxxBh2 = "";
+				//System.out.println("11111");
+				sql = "select TZ_APP_S_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID =? and TZ_XXX_BH like '%CC_Batch' ";
+				//System.out.println("sql:"+sql);
+				strXxxBh2 = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+				//System.out.println("strXxxBh2:"+strXxxBh2);
+				if ("".equals(strXxxBh2) || strXxxBh2 == null) {
+					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+				}
+				break;
 			case "CheckBox":
 				getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? AND TZ_IS_HIDDEN <> 'Y'";
 
@@ -488,13 +499,13 @@ public class tzOnlineAppUtility {
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
 			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
 			String strJygzTsxx) {
-		//System.out.println("---------regularValidator");
+		// System.out.println("---------regularValidator");
 		String returnMessage = "";
 
 		String getChildrenSql = "";
 
 		String strXxxValue = "";
-		//System.out.println("strXxxGdgsjy:"+strXxxGdgsjy);
+		// System.out.println("strXxxGdgsjy:"+strXxxGdgsjy);
 
 		try {
 			switch (strComMc) {
@@ -511,7 +522,7 @@ public class tzOnlineAppUtility {
 					strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
 					if (!"".equals(strXxxValue) && strXxxValue != null) {
 						//
-						//System.out.println("strXxxValue:"+strXxxValue);
+						// System.out.println("strXxxValue:"+strXxxValue);
 						switch (strXxxGdgsjy) {
 						case "email":
 							boolean isEmail = this.isValidEmail(strXxxValue);
@@ -722,7 +733,7 @@ public class tzOnlineAppUtility {
 
 	}
 
-	// 是否是证书编号   证书编号限定只能填写数字、字母和中横线
+	// 是否是证书编号 证书编号限定只能填写数字、字母和中横线
 	private boolean isCcertificateNo(String strValue) {
 
 		boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
@@ -730,24 +741,24 @@ public class tzOnlineAppUtility {
 		return isMatch;
 
 	}
-	
+
 	// 是否是Url
-		private boolean isValidUrl(String strValue) {
+	private boolean isValidUrl(String strValue) {
 
-			String regex = "^((https|http|ftp|rtsp|mms)?://)" + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@
-					+ "(([0-9]{1,3}\\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
-					+ "|" // 允许IP和DOMAIN（域名）
-					+ "([0-9a-z_!~*'()-]+\\.)*" // 域名- www.
-					+ "[a-z]{2,6})" // first level domain- .com or .museum
-					+ "(:[0-9]{1,4})?" // 端口- :80
-					+ "((/?)|" // a slash isn't required if there is no file name
-					+ "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+		String regex = "^((https|http|ftp|rtsp|mms)?://)" + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@
+				+ "(([0-9]{1,3}\\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
+				+ "|" // 允许IP和DOMAIN（域名）
+				+ "([0-9a-z_!~*'()-]+\\.)*" // 域名- www.
+				+ "[a-z]{2,6})" // first level domain- .com or .museum
+				+ "(:[0-9]{1,4})?" // 端口- :80
+				+ "((/?)|" // a slash isn't required if there is no file name
+				+ "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
 
-			boolean isMatch = strValue.matches(regex);
+		boolean isMatch = strValue.matches(regex);
 
-			return isMatch;
+		return isMatch;
 
-		}
+	}
 
 	// 是否是IdCard
 	private boolean isValidIdcard(String strValue) {
