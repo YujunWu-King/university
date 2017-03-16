@@ -20,21 +20,21 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from ps_tz_msarrdce_aet
+    from PS_TZ_MSARRDCE_AET
     where RUN_ID = #{runId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
-    delete from ps_tz_msarrdce_aet
+    delete from PS_TZ_MSARRDCE_AET
     where RUN_ID = #{runId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsArrDceAet" >
-    insert into ps_tz_msarrdce_aet (RUN_ID, TZ_REL_URL, TZ_JD_URL, 
+    insert into PS_TZ_MSARRDCE_AET (RUN_ID, TZ_REL_URL, TZ_JD_URL, 
       TZ_EXP_PARAMS_STR)
     values (#{runId,jdbcType=VARCHAR}, #{tzRelUrl,jdbcType=VARCHAR}, #{tzJdUrl,jdbcType=VARCHAR}, 
       #{tzExpParamsStr,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsArrDceAet" >
-    insert into ps_tz_msarrdce_aet
+    insert into PS_TZ_MSARRDCE_AET
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="runId != null" >
         RUN_ID,
@@ -65,7 +65,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsArrDceAet" >
-    update ps_tz_msarrdce_aet
+    update PS_TZ_MSARRDCE_AET
     <set >
       <if test="tzRelUrl != null" >
         TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
@@ -80,14 +80,14 @@
     where RUN_ID = #{runId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsArrDceAet" >
-    update ps_tz_msarrdce_aet
+    update PS_TZ_MSARRDCE_AET
     set TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
       TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR},
       TZ_EXP_PARAMS_STR = #{tzExpParamsStr,jdbcType=LONGVARCHAR}
     where RUN_ID = #{runId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsArrDceAet" >
-    update ps_tz_msarrdce_aet
+    update PS_TZ_MSARRDCE_AET
     set TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
       TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR}
     where RUN_ID = #{runId,jdbcType=VARCHAR}
