@@ -3145,5 +3145,14 @@ console.log("callBack")
             });
         }
         
+    },
+    calcuScoreDist:function(){
+    	
+    },
+    userCalcuScoreDist:function(){
+    	
+    },
+    saveEvaStandard: function(){
+    	
     }
 });

@@ -202,10 +202,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     text: tmpArray2[i][colName],
                     sortable: false,
                     dataIndex: colName,
+                    editor: {
+                        xtype: 'numberfield',
+                        allowBlank: false,
+                        emptyText:"不允许为空！"
+                    },
                     flex: 1
                 };
 
-                statisticsGoalGridDataModel['gridColumns'].push(tmpColumn);
+                if(i>0){
+                	statisticsGoalGridDataModel['gridColumns'].push(tmpColumn);
+                }
                 statisticsGoalGridDataModel['gridFields'].push({
                     name: colName
                 });
@@ -875,13 +882,16 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                xtype: "toolbar",
 	                                items: [{
 	                                    text: "计算选中评委的标准评分分布",
-	                                    tooltip: "计算选中评委的标准评分分布"
+	                                    tooltip: "计算选中评委的标准评分分布",
+	                                    handler:'calcuScoreDist'
 	                                }, "-", {
 	                                    text: "使用计算结果设置分布标准",
-	                                    tooltip: "使用计算结果设置分布标准"
+	                                    tooltip: "使用计算结果设置分布标准",
+	                                    handler:'userCalcuScoreDist'
 	                                }, "-", {
 	                                    text: "保存评议标准",
-	                                    tooltip: "保存评议标准"
+	                                    tooltip: "保存评议标准",
+	                                    handler:'saveEvaStandard'
 	                                }, "-", {
 	                                    text: "刷新图表",
 	                                    name:"toolbarShowTB",
@@ -901,10 +911,27 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            }),
 	                            minHeight: 80,
 	                            margin:'10 0',
-	                            selModel: {
-	                                type: 'checkboxmodel'
-	                            },
-	                            columns: statisticsGoalGridDataModel['gridColumns'],
+	                            columnLines: true,
+	                            viewConfig: {
+	                                enableTextSelection: true
+	                            },	       
+	                            plugins: [{
+	                                ptype: 'cellediting',
+	                            }],
+	                            columns:[
+	                            	{
+	                                    text:'指标名称',	                                    
+	                                    dataIndex:'col01',
+	                                    width:'10%'                                    
+	                                },
+	                                {
+	                                    text:'总分',
+	                                    lockable   : false,
+	                                    menuDisabled: true,
+	                                    columns:statisticsGoalGridDataModel['gridColumns']
+	                                }
+	                            ],
+	                            //columns: statisticsGoalGridDataModel['gridColumns'],
 	                            header: false,
 	                            border: false,
 		                        viewConfig: {
