@@ -3123,11 +3123,6 @@ console.log("callBack")
                 JudgeJson=JudgeJson+'='+selList[selList.length-1].data.judgeID+'"';
             }
             
-            //var comParams = '"PWARRAY":' + JudgeJson ;
-            //console.log(JudgeJson);
-            //var tzParams = '{"ComID":"TZ_CLMSPS_PF","PageID":"TZ_PF_STD","OperateType":"HTML","comParams":{"PF_TYPE":"CL","classID":"' + classID + '","batchID":"' + batchID + '","DQLC":"' + DQLC + '",' + comParams + '}}';
-            //var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
-            //window.open(viewUrl, "下载","status=no,menubar=yes,toolbar=no,location=no");
             
             var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_CLPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"' + classID + '","TZ_APPLY_PC_ID":"' + batchID + '","TZ_PWEI_OPRIDS":' + JudgeJson + '}}';
             //面试导出 var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_MSPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"' + classID + '","TZ_APPLY_PC_ID":"' + batchID + '","TZ_PWEI_OPRIDS":' + JudgeJson + '}}';
@@ -3138,8 +3133,6 @@ console.log("callBack")
                      Ext.MessageBox.alert('提示', '下载失败，请与管理员联系。');
                      return;
                 }else{
-                	//var url = "/university/statics/download/pydata/clpydata/2017-02-14/dc_pysj_2017-02-14 01-40-34.doc";
-                	//window.open(responseData.url, "download","status=no,menubar=yes,toolbar=no,location=no");	
                 	  window.open(responseData.url, '_blank');
                 }
             });
