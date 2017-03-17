@@ -3155,6 +3155,60 @@ console.log("callBack")
                 pwIds = pwIds + data.col01 + ",";
             }
             //已有选中评委，提交到后台处理
+            var view = this.getView();
+            var datas = view.child('form[name=materialsProgressForm]').getValues();
+            var classID = datas.classID;
+            var batchID = datas.batchID;
+            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"QG","comParams":{"type":"getPwDfData" , "classID":"' + classID + '","batchID":"' + batchID + '","pwIds":"' + pwIds + '"}}';
+            Ext.tzLoadAsync(tzParams, function(respData) {
+            	//统计信息
+                var tmpArray = respData.pw_dfqk_grid;
+               
+                statisticsGridDataModel = {
+                    gridFields: [],
+                    gridColumns: [],
+                    gridData: []
+                };          
+                
+                var tmpObject = {
+                    columns: []
+                };
+                for (var i = 0; i < tmpArray.length; i++) {
+                    var colName = '00' + (i + 1);
+                    colName = 'col' + colName.substr(colName.length - 2);
+
+                    var tmpColumn = {
+                        text: tmpArray[i][colName],
+                        sortable: false,
+                        dataIndex: colName,
+                        flex: 1
+                    };
+
+                    statisticsGridDataModel['gridColumns'].push(tmpColumn);
+                    statisticsGridDataModel['gridFields'].push({
+                        name: colName
+                    });
+                }
+
+                tmpArray = respData.pw_dfqk_grid_data;
+
+                for (var i = 0; i < tmpArray.length; i++) {
+                    var tmpdataArray = tmpArray[i].field_value;
+                    var dataRow = [];
+                    for (var j = 0; j < tmpdataArray.length; j++) {
+                        var colName = '00' + (j + 1);
+                        colName = 'col' + colName.substr(colName.length - 2);
+                        dataRow.push(tmpdataArray[j][colName]);
+                    }
+                    console.log(tmpdataArray);
+                    statisticsGridDataModel['gridData'].push(dataRow);
+                }
+                /*var tStore = Ext.create('Ext.data.ArrayStore', {
+                    fields: statisticsGoalGridDataModel['gridFields'],
+                    data: statisticsGoalGridDataModel['gridData']
+                });*/
+                btn.findParentByType("grid").setData(statisticsGridDataModel['gridData']);                
+            });
         }
     },
     userCalcuScoreDist:function(){

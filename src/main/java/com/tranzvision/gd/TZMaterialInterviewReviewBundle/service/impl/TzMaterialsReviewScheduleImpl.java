@@ -193,6 +193,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    jacksonUtil.json2Map(strParams);
 	    String strClassID = jacksonUtil.getString("classID");
 	    String strBatchID = jacksonUtil.getString("batchID");
+	    String strPwLists = "";
+	    try{
+		/*计算选中评委的分布*/
+		strPwLists = jacksonUtil.getString("pwIds");
+	    }catch(Exception e){
+		/*首次进入页面*/
+	    }
 	    String strCurrentOrgID = "SEM";
 	    
 	    String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
@@ -313,7 +320,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			strFzValue = "col" + this.right(colName,2);
 			strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,strFirstName);
 			if(intSize==pwList.size()){
-			    strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"评委（0）");
+			    strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue,"评委（" + strPwLists + "）");
 			}
 			//完成数量
 			String strWc = "0";

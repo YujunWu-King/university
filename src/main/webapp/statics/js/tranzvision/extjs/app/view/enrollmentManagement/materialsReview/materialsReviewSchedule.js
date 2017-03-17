@@ -332,7 +332,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         Ext.apply(this, {
             items: [{
                 xtype: 'form',
-                reference: 'materialsProgressForm',
+                name: 'materialsProgressForm',
                 layout: {
                     type: 'vbox',
                     align: 'stretch'
@@ -873,7 +873,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            minHeight: 180,
 	                            margin:'5 0',
 	                            selModel: {
-	                                type: 'checkboxmodel'
+	                                type: 'checkboxmodel',	                                
 	                            },
 	                            columns: statisticsGridDataModel['gridColumns'],
 	                            header: false,
