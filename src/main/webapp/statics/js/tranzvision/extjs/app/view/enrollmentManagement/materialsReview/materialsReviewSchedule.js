@@ -45,8 +45,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         var lineChart;
 
         columnChart = new Ext.chart.Chart({
-            width: 860,
-            height: 400,
+            width: 1300,
+            height: 230,
             animate: true,
             store: msyrtislReviewScheduleChartStore,
             shadow: true,
@@ -58,7 +58,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 maximum: 100,
                 label: {
                     renderer: function(value) {
-                        return Ext.util.Format.number(value, '000.00');
+                        return Ext.util.Format.number(value, '00');
                     }
                 },
                 title: '平均分',
@@ -81,8 +81,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         });
         lineChart = new Ext.chart.Chart({
             xtype: 'chart',
-            width: 860,
-            height: 800,
+            width: 1300,
+            height: 230,
             style: 'background:#fff',
             animate: true,
             store: msyrtislReviewScheduleChartStore2,
@@ -97,10 +97,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 fields: [chartfields],
                 label: {
                     renderer: function(value) {
-                        return Ext.util.Format.number(value, '000.00');
+                        return Ext.util.Format.number(value, '00');
                     }
                 },
-                title: '分布比率',
+                title: '分布比率（%）',
                 grid: true,
                 maximum: 100,
                 minimum: 0
@@ -127,7 +127,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 ptype: 'maximize'
             },
             name: 'averageChart',
-            items: [lineChart]
+            items: [columnChart,lineChart]
         });
 
         // 柱状图和曲线图最大值最小值
@@ -873,7 +873,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            minHeight: 180,
 	                            margin:'5 0',
 	                            selModel: {
-	                                type: 'checkboxmodel',	                                
+	                                type: 'checkboxmodel'
 	                            },
 	                            columns: statisticsGridDataModel['gridColumns'],
 	                            header: false,
@@ -898,40 +898,96 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    tooltip: "刷新图表",
 	                                    iconCls: "reset",
 	                                    handler: function(obj) {
+	                                    	var coluObj = [];//用于存放柱状图数据
+	                                    	var lineObj = [];//用于存放曲线图数据
 	                                    	//开始
-	                                        var jygzIDs ="";
-	                                        if(obj.name=="toolbarShowTB"){
+	                                    	console.log(statisticsGridDataModel);
+	                                    	console.log(statisticsGoalGridDataModel);
 	                                        	var selList = obj.ownerCt.ownerCt.getSelectionModel().getSelection();
 	                                            var checkLen = selList.length;
+	                                        var pw = "";
+	                                        var pw2 = "";
 	                                            if(checkLen == 0){
 	                                               Ext.MessageBox.alert("提示","请选择需要的评委！");
 	                                               return;
 	                                            }else{
+	                                        	//循环选中的评委
 	                                            	for (var i=0;i<selList.length;i++){
-	                                            		if(jygzIDs==""){
-	                                            			jygzIDs = selList[i].get("jygzID");	
+	                                            	 pw = selList[i].get("col01");	
+	                                            	 if (pw !== null && pw !== undefined && pw !== '') {
+		                                            	 //与总的评委比较，取选中评委的数据
+			                                             for (var j=0;j<statisticsGridDataModel.gridData.length;j++){
+			                                            	 pw2 = statisticsGridDataModel.gridData[j][0];
+			                                            	 if(pw==pw2){
+			                                            		 //处理柱状图
+			                                            		 var coltmpobj = {};
+			                                            		 coltmpobj["pw"] = statisticsGridDataModel.gridData[j][1];
+			                                            		 //处理非数字的情况
+			                                            		 if(isNaN(statisticsGridDataModel.gridData[j][4])){
+				                                            		 coltmpobj["pj"] = 0;
 	                                            		}else{
-	                                            			jygzIDs = jygzIDs+"="+selList[i].get("jygzID");
+				                                            		 coltmpobj["pj"] = parseFloat(statisticsGridDataModel.gridData[j][4]);
 	                                            		}
+			                                            		 coluObj.push(coltmpobj);
+			                                            		 //处理曲线图部分
+			                                            		 var linetmpobj = {};
+			                                            		 linetmpobj["pw"] = statisticsGridDataModel.gridData[j][1];
+			                                            		 //循环动态区间
+			                                            		 for (var k=5;k<statisticsGridDataModel.gridData[j].length;k++){
+			                                            			 //取得区间名称
+			                                            			 var colname = statisticsGridDataModel.gridColumns[k].text;
+			                                            			 //处理非数字的情况
+			                                            			 if(isNaN(statisticsGridDataModel.gridData[j][k])){
+			                                            				 linetmpobj[colname] = 0;
+			                                            			 }else{
+			                                            				 linetmpobj[colname] = parseFloat(statisticsGridDataModel.gridData[j][k]);
+			                                            			 }
+			                                            		 }
+			                                            		 lineObj.push(linetmpobj);
+			                                            	 }
+			                                             }
+	                                             	 }
 	                                            	}
 	                                            }
+	                                        // 添加标准数据
+	                                        var bzline = {};
+	                                        bzline["pw"] = "标准";
+	                                        var bzcoln = {};
+	                                        bzcoln["pw"] = "标准";
+	                                        for(var i=1;i<statisticsGoalGridDataModel.gridData[0].length;i++){
+	                                        	var colname = statisticsGoalGridDataModel.gridColumns[i-1].text;
+	                                        	//处理值为非数字的情况
+	                                        	if (statisticsGoalGridDataModel.gridData[0][i] !== null && statisticsGoalGridDataModel.gridData[0][i] !== undefined && statisticsGoalGridDataModel.gridData[0][i] !== '' && isNaN(statisticsGoalGridDataModel.gridData[0][i])==false) {
+	                                        		bzline[colname] = statisticsGoalGridDataModel.gridData[0][i];
 	                                        }else{
+	                                        		bzline[colname] = 0;
+	                                        	}
+	                                        	if(i==statisticsGoalGridDataModel.gridData[0].length-1){
+	                                        		//处理非数字的情况
+	                                        		if (statisticsGoalGridDataModel.gridData[0][i] !== null && statisticsGoalGridDataModel.gridData[0][i] !== undefined && statisticsGoalGridDataModel.gridData[0][i] !== '' && isNaN(statisticsGoalGridDataModel.gridData[0][i])==false) {
+	                                        			bzcoln["pj"] = statisticsGoalGridDataModel.gridData[0][i];
+		                                        	}else{
+		                                        		bzcoln["pj"] = 0;
+		                                        	}
+	                                        	}
 	                                        }
+	                                        lineObj.push(bzline);
+	                                        coluObj.push(bzcoln);
 	                                        //以上为参数处理
 	                                        //以下为处理图标部分-开始
 	                                		// 曲线图参数
-	                                		var lineObj = [ 
+	                                		var lineObj2 = [ 
 	                                		                {'pw' : 'zhangsan',	'n1' :10,'n2' : 20,'n3' : 30,'n4' : 40,'n5' : 40,'n6' : 40}, 
 	                                		                {'pw' : 'lisi',     'n1' :15,'n2' : 25,'n3' : 35,'n4' : 45,'n5' : 40,'n6' : 40},
 	                                		                {'pw' : 'wangwu',   'n1' :40,'n2' : 30,'n3' : 20,'n4' : 10,'n5' : 40,'n6' : 40},
-	                                		                {'pw' : '平均',     'n1' :22,'n2' : 25,'n3' : 30,'n4' : 33,'n5' : 40,'n6' : 40}
+	                                		                {'pw' : '标准曲线',     'n1' :22,'n2' : 25,'n3' : 30,'n4' : 33,'n5' : 40,'n6' : 40}
 	                                		              ];
 	                                		// 柱状图参数
-	                                		var coluObj = [
+	                                		var coluObj2 = [
 	                                		               {'pw' : 'zhangsan', 'pj' : 10},
 	                                		               {'pw' : 'lisi',     'pj' : 15},
 	                                		               {'pw' : 'wangwu',   'pj' : 40}, 
-	                                		               {'pw' : '平均',     'pj' : 22} 
+	                                		               {'pw' : '标准平均分','pj' : 22} 
 	                                		               ];
 	                                		// 评委数组
 	                                		// var pwArr = [ 'data1', 'data2', 'data3' ];
@@ -1007,7 +1063,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                		});
 	                                		// var colors = ['#6E548D','#94AE0A','#FF7348','#3D96AE'];
 	                                		// 动态定义曲线图id
-	                                		var id1 = "" + Math.ceil(Math.random() * 35);
+	                                		var id1 = "" + Math.ceil(Math.random() * 100);
 	                                		// 定义曲线图
 	                                		var columnChart = Ext.create('Ext.chart.Chart', {
 	                                			xtype : 'chart',
@@ -1041,7 +1097,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                                      //orientation: 'vertical',控制数字横着还是竖着
 	                                                      color: '#333'
 	                                                },
-	                                				style: { width: 100 },
+	                                				style: { width: 200 },
 	                                				xField : 'graphName',
 	                                				yField : 'graphData'// x与y轴的数据声明
 	                                			} ]
@@ -1068,8 +1124,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                				lineData[pw] = qjdata;
 	                                			}
 	                                			arrayDatas.push(lineData);
-	                                		}
-	                                		;
+	                                		};
 	                                		// 获取每个区间的数据-结束
 	                                		// 2、循环生成曲线-开始
 	                                		for (var k = 0; k < pwArr.length; k++) {
@@ -1083,7 +1138,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                				},
 	                                				tips : {
 	                                					trackMouse : true,
-	                                					width : 300,
+	                                					width : 430,
 	                                					height : 28,
 	                                					renderer : function(storeItem, item) {
 	                                						this.setTitle('评委：' + item.series.yField
@@ -1106,8 +1161,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                			arraySeries.push(SerieTmp);
 	                                			arrayLines.push(pwTmp);
 	                                			arrayNameLines.push(pwTmp);
-	                                		}
-	                                		;
+	                                		};
 	                                		// 循环生成曲线-结束
 	                                		// 处理曲线图的数据-开始
 	                                		// 曲线图定义部分-开始
@@ -1117,7 +1171,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                			data : arrayDatas
 	                                		});
 	                                		// 2、动态定义曲线图的id
-	                                		var id2 = "" + Math.ceil(Math.random() * 35);
+	                                		var id2 = "" + Math.ceil(Math.random() * 100);
 	                                		// 3、生成曲线图
 	                                		var lineChart = Ext.create('Ext.chart.Chart', {
 	                                			xtype : 'chart',
