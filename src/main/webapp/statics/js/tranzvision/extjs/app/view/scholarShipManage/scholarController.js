@@ -243,6 +243,7 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarController', {
             var formParams = form.getValues();
             var tzParams = '{"ComID":"TZ_SCHOLAR_COM","PageID":"TZ_SCHLR_LIST_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
             Ext.tzSubmit(tzParams,function(response){
+          
             },"",true,this);
         }
     },
@@ -262,12 +263,26 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarController', {
             },"",true,this);
         }
     },
-    onSchlrDetailClose:function(){
+    onSchlrDetailClose:function(btn){
+    	var panel=btn.findParentByType("panel");
+    	if(panel.parentGridStore!=null&&panel.parentGridStore!=""){
+			panel.parentGridStore.reload();
+		}
     	this.getView().close(); 
     },
     setWjdc:function(btn){
+    	//设置奖学金详情之前，先执行保存动作，避免在问卷详情里面重复设置时间和日期
         var form = btn.findParentByType("form").getForm();
         var wjId = form.findField("TZ_DC_WJ_ID").getValue();
+        
+        if(!form.isValid()){
+            return false;
+        }else{
+            var formParams = form.getValues();
+            var tzParams = '{"ComID":"TZ_SCHOLAR_COM","PageID":"TZ_SCHLR_LIST_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+            Ext.tzSubmit(tzParams,function(response){
+            },false,true,this);
+        }
         //显示资源集合信息编辑页面
         if(wjId==''){
             Ext.MessageBox.alert('提示', '问卷调查不存在');
