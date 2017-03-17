@@ -898,13 +898,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    tooltip: "刷新图表",
 	                                    iconCls: "reset",
 	                                    handler: function(obj) {
+	                                    	
+	                                    	//开始	                                    	
 	                                    	var coluObj = [];//用于存放柱状图数据
 	                                    	var lineObj = [];//用于存放曲线图数据
-	                                    	//开始
-	                                    	console.log(statisticsGridDataModel);
-	                                    	console.log(statisticsGoalGridDataModel);
-	                                        	var selList = obj.ownerCt.ownerCt.getSelectionModel().getSelection();
-	                                            var checkLen = selList.length;
+	                                    	//console.log(statisticsGridDataModel);
+	                                    	//console.log(statisticsGoalGridDataModel);
+	                                    	
+	                                        var selList = obj.ownerCt.ownerCt.getSelectionModel().getSelection();
+	                                        var checkLen = selList.length;
 	                                        var pw = "";
 	                                        var pw2 = "";
 	                                            if(checkLen == 0){
@@ -925,9 +927,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 			                                            		 //处理非数字的情况
 			                                            		 if(isNaN(statisticsGridDataModel.gridData[j][4])){
 				                                            		 coltmpobj["pj"] = 0;
-	                                            		}else{
+			                                            		 }else{
 				                                            		 coltmpobj["pj"] = parseFloat(statisticsGridDataModel.gridData[j][4]);
-	                                            		}
+			                                            		 }
 			                                            		 coluObj.push(coltmpobj);
 			                                            		 //处理曲线图部分
 			                                            		 var linetmpobj = {};
@@ -954,12 +956,37 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                        bzline["pw"] = "标准";
 	                                        var bzcoln = {};
 	                                        bzcoln["pw"] = "标准";
+	                                        
+	                                    	//取页面数据
+	                                    	var evaluationStandardGrid = Ext.ComponentQuery.query('grid[name=evaluationStandardGrid]')[0];
+                                       
 	                                        for(var i=1;i<statisticsGoalGridDataModel.gridData[0].length;i++){
+	                                        	
+	                                        	//从页面取值
+	                                        	var colname = statisticsGoalGridDataModel.gridColumns[i-1].text;
+	                                        	var colid = statisticsGoalGridDataModel.gridColumns[i-1].dataIndex;
+	                                        	var colvalue =evaluationStandardGrid.store.data.items[0].data[colid];
+	                                        	//处理值为非数字的情况
+	                                        	if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
+	                                        		bzline[colname] = colvalue;
+	                                        	}else{
+	                                        		bzline[colname] = 0;
+	                                        	}
+	                                        	if(i==statisticsGoalGridDataModel.gridData[0].length-1){
+	                                        		//处理非数字的情况
+	                                        		if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
+	                                        			bzcoln["pj"] = colvalue;
+		                                        	}else{
+		                                        		bzcoln["pj"] = 0;
+		                                        	}
+	                                        	}
+
+	                                        	/* 从后台取数据
 	                                        	var colname = statisticsGoalGridDataModel.gridColumns[i-1].text;
 	                                        	//处理值为非数字的情况
 	                                        	if (statisticsGoalGridDataModel.gridData[0][i] !== null && statisticsGoalGridDataModel.gridData[0][i] !== undefined && statisticsGoalGridDataModel.gridData[0][i] !== '' && isNaN(statisticsGoalGridDataModel.gridData[0][i])==false) {
 	                                        		bzline[colname] = statisticsGoalGridDataModel.gridData[0][i];
-	                                        }else{
+	                                        	}else{
 	                                        		bzline[colname] = 0;
 	                                        	}
 	                                        	if(i==statisticsGoalGridDataModel.gridData[0].length-1){
@@ -970,6 +997,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 		                                        		bzcoln["pj"] = 0;
 		                                        	}
 	                                        	}
+	                                        	*/
 	                                        }
 	                                        lineObj.push(bzline);
 	                                        coluObj.push(bzcoln);
@@ -1238,6 +1266,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            }),
 	                            minHeight: 80,
 	                            margin:'10 0',
+	                            name:"evaluationStandardGrid",
 	                            columnLines: true,
 	                            viewConfig: {
 	                                enableTextSelection: true
