@@ -3123,11 +3123,6 @@ console.log("callBack")
                 JudgeJson=JudgeJson+'='+selList[selList.length-1].data.judgeID+'"';
             }
             
-            //var comParams = '"PWARRAY":' + JudgeJson ;
-            //console.log(JudgeJson);
-            //var tzParams = '{"ComID":"TZ_CLMSPS_PF","PageID":"TZ_PF_STD","OperateType":"HTML","comParams":{"PF_TYPE":"CL","classID":"' + classID + '","batchID":"' + batchID + '","DQLC":"' + DQLC + '",' + comParams + '}}';
-            //var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
-            //window.open(viewUrl, "下载","status=no,menubar=yes,toolbar=no,location=no");
             
             var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_CLPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"' + classID + '","TZ_APPLY_PC_ID":"' + batchID + '","TZ_PWEI_OPRIDS":' + JudgeJson + '}}';
             //面试导出 var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_MSPYSJ_STD","OperateType":"DCPY","comParams":{"TZ_CLASS_ID":"' + classID + '","TZ_APPLY_PC_ID":"' + batchID + '","TZ_PWEI_OPRIDS":' + JudgeJson + '}}';
@@ -3138,8 +3133,6 @@ console.log("callBack")
                      Ext.MessageBox.alert('提示', '下载失败，请与管理员联系。');
                      return;
                 }else{
-                	//var url = "/university/statics/download/pydata/clpydata/2017-02-14/dc_pysj_2017-02-14 01-40-34.doc";
-                	//window.open(responseData.url, "download","status=no,menubar=yes,toolbar=no,location=no");	
                 	  window.open(responseData.url, '_blank');
                 }
             });
@@ -3162,6 +3155,60 @@ console.log("callBack")
                 pwIds = pwIds + data.col01 + ",";
             }
             //已有选中评委，提交到后台处理
+            var view = this.getView();
+            var datas = view.child('form[name=materialsProgressForm]').getValues();
+            var classID = datas.classID;
+            var batchID = datas.batchID;
+            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"QG","comParams":{"type":"getPwDfData" , "classID":"' + classID + '","batchID":"' + batchID + '","pwIds":"' + pwIds + '"}}';
+            Ext.tzLoadAsync(tzParams, function(respData) {
+            	//统计信息
+                var tmpArray = respData.pw_dfqk_grid;
+               
+                statisticsGridDataModel = {
+                    gridFields: [],
+                    gridColumns: [],
+                    gridData: []
+                };          
+                
+                var tmpObject = {
+                    columns: []
+                };
+                for (var i = 0; i < tmpArray.length; i++) {
+                    var colName = '00' + (i + 1);
+                    colName = 'col' + colName.substr(colName.length - 2);
+
+                    var tmpColumn = {
+                        text: tmpArray[i][colName],
+                        sortable: false,
+                        dataIndex: colName,
+                        flex: 1
+                    };
+
+                    statisticsGridDataModel['gridColumns'].push(tmpColumn);
+                    statisticsGridDataModel['gridFields'].push({
+                        name: colName
+                    });
+                }
+
+                tmpArray = respData.pw_dfqk_grid_data;
+
+                for (var i = 0; i < tmpArray.length; i++) {
+                    var tmpdataArray = tmpArray[i].field_value;
+                    var dataRow = [];
+                    for (var j = 0; j < tmpdataArray.length; j++) {
+                        var colName = '00' + (j + 1);
+                        colName = 'col' + colName.substr(colName.length - 2);
+                        dataRow.push(tmpdataArray[j][colName]);
+                    }
+                    console.log(tmpdataArray);
+                    statisticsGridDataModel['gridData'].push(dataRow);
+                }
+                /*var tStore = Ext.create('Ext.data.ArrayStore', {
+                    fields: statisticsGoalGridDataModel['gridFields'],
+                    data: statisticsGoalGridDataModel['gridData']
+                });*/
+                btn.findParentByType("grid").setData(statisticsGridDataModel['gridData']);                
+            });
         }
     },
     userCalcuScoreDist:function(){

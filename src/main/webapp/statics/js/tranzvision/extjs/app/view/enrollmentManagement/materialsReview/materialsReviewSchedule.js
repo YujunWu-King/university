@@ -45,8 +45,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         var lineChart;
 
         columnChart = new Ext.chart.Chart({
-            width: 860,
-            height: 400,
+            width: 1300,
+            height: 230,
             animate: true,
             store: msyrtislReviewScheduleChartStore,
             shadow: true,
@@ -58,7 +58,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 maximum: 100,
                 label: {
                     renderer: function(value) {
-                        return Ext.util.Format.number(value, '000.00');
+                        return Ext.util.Format.number(value, '00');
                     }
                 },
                 title: '平均分',
@@ -81,8 +81,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         });
         lineChart = new Ext.chart.Chart({
             xtype: 'chart',
-            width: 860,
-            height: 800,
+            width: 1300,
+            height: 230,
             style: 'background:#fff',
             animate: true,
             store: msyrtislReviewScheduleChartStore2,
@@ -97,10 +97,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 fields: [chartfields],
                 label: {
                     renderer: function(value) {
-                        return Ext.util.Format.number(value, '000.00');
+                        return Ext.util.Format.number(value, '00');
                     }
                 },
-                title: '分布比率',
+                title: '分布比率（%）',
                 grid: true,
                 maximum: 100,
                 minimum: 0
@@ -127,7 +127,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 ptype: 'maximize'
             },
             name: 'averageChart',
-            items: [lineChart]
+            items: [columnChart,lineChart]
         });
 
         // 柱状图和曲线图最大值最小值
@@ -332,7 +332,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         Ext.apply(this, {
             items: [{
                 xtype: 'form',
-                reference: 'materialsProgressForm',
+                name: 'materialsProgressForm',
                 layout: {
                     type: 'vbox',
                     align: 'stretch'
@@ -897,7 +897,362 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    name:"toolbarShowTB",
 	                                    tooltip: "刷新图表",
 	                                    iconCls: "reset",
-	                                    handler: "showChart"
+	                                    handler: function(obj) {
+	                                    	
+	                                    	//开始	                                    	
+	                                    	var coluObj = [];//用于存放柱状图数据
+	                                    	var lineObj = [];//用于存放曲线图数据
+	                                    	//console.log(statisticsGridDataModel);
+	                                    	//console.log(statisticsGoalGridDataModel);
+	                                    	
+	                                        var selList = obj.ownerCt.ownerCt.getSelectionModel().getSelection();
+	                                        var checkLen = selList.length;
+	                                        var pw = "";
+	                                        var pw2 = "";
+	                                            if(checkLen == 0){
+	                                               Ext.MessageBox.alert("提示","请选择需要的评委！");
+	                                               return;
+	                                            }else{
+	                                        	//循环选中的评委
+	                                            	for (var i=0;i<selList.length;i++){
+	                                            	 pw = selList[i].get("col01");	
+	                                            	 if (pw !== null && pw !== undefined && pw !== '') {
+		                                            	 //与总的评委比较，取选中评委的数据
+			                                             for (var j=0;j<statisticsGridDataModel.gridData.length;j++){
+			                                            	 pw2 = statisticsGridDataModel.gridData[j][0];
+			                                            	 if(pw==pw2){
+			                                            		 //处理柱状图
+			                                            		 var coltmpobj = {};
+			                                            		 coltmpobj["pw"] = statisticsGridDataModel.gridData[j][1];
+			                                            		 //处理非数字的情况
+			                                            		 if(isNaN(statisticsGridDataModel.gridData[j][4])){
+				                                            		 coltmpobj["pj"] = 0;
+			                                            		 }else{
+				                                            		 coltmpobj["pj"] = parseFloat(statisticsGridDataModel.gridData[j][4]);
+			                                            		 }
+			                                            		 coluObj.push(coltmpobj);
+			                                            		 //处理曲线图部分
+			                                            		 var linetmpobj = {};
+			                                            		 linetmpobj["pw"] = statisticsGridDataModel.gridData[j][1];
+			                                            		 //循环动态区间
+			                                            		 for (var k=5;k<statisticsGridDataModel.gridData[j].length;k++){
+			                                            			 //取得区间名称
+			                                            			 var colname = statisticsGridDataModel.gridColumns[k].text;
+			                                            			 //处理非数字的情况
+			                                            			 if(isNaN(statisticsGridDataModel.gridData[j][k])){
+			                                            				 linetmpobj[colname] = 0;
+			                                            			 }else{
+			                                            				 linetmpobj[colname] = parseFloat(statisticsGridDataModel.gridData[j][k]);
+			                                            			 }
+			                                            		 }
+			                                            		 lineObj.push(linetmpobj);
+			                                            	 }
+			                                             }
+	                                             	 }
+	                                            	}
+	                                            }
+	                                        // 添加标准数据
+	                                        var bzline = {};
+	                                        bzline["pw"] = "标准";
+	                                        var bzcoln = {};
+	                                        bzcoln["pw"] = "标准";
+	                                        
+	                                    	//取页面数据
+	                                    	var evaluationStandardGrid = Ext.ComponentQuery.query('grid[name=evaluationStandardGrid]')[0];
+                                       
+	                                        for(var i=1;i<statisticsGoalGridDataModel.gridData[0].length;i++){
+	                                        	
+	                                        	//从页面取值
+	                                        	var colname = statisticsGoalGridDataModel.gridColumns[i-1].text;
+	                                        	var colid = statisticsGoalGridDataModel.gridColumns[i-1].dataIndex;
+	                                        	var colvalue =evaluationStandardGrid.store.data.items[0].data[colid];
+	                                        	//处理值为非数字的情况
+	                                        	if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
+	                                        		bzline[colname] = colvalue;
+	                                        	}else{
+	                                        		bzline[colname] = 0;
+	                                        	}
+	                                        	if(i==statisticsGoalGridDataModel.gridData[0].length-1){
+	                                        		//处理非数字的情况
+	                                        		if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
+	                                        			bzcoln["pj"] = colvalue;
+		                                        	}else{
+		                                        		bzcoln["pj"] = 0;
+		                                        	}
+	                                        	}
+
+	                                        	/* 从后台取数据
+	                                        	var colname = statisticsGoalGridDataModel.gridColumns[i-1].text;
+	                                        	//处理值为非数字的情况
+	                                        	if (statisticsGoalGridDataModel.gridData[0][i] !== null && statisticsGoalGridDataModel.gridData[0][i] !== undefined && statisticsGoalGridDataModel.gridData[0][i] !== '' && isNaN(statisticsGoalGridDataModel.gridData[0][i])==false) {
+	                                        		bzline[colname] = statisticsGoalGridDataModel.gridData[0][i];
+	                                        	}else{
+	                                        		bzline[colname] = 0;
+	                                        	}
+	                                        	if(i==statisticsGoalGridDataModel.gridData[0].length-1){
+	                                        		//处理非数字的情况
+	                                        		if (statisticsGoalGridDataModel.gridData[0][i] !== null && statisticsGoalGridDataModel.gridData[0][i] !== undefined && statisticsGoalGridDataModel.gridData[0][i] !== '' && isNaN(statisticsGoalGridDataModel.gridData[0][i])==false) {
+	                                        			bzcoln["pj"] = statisticsGoalGridDataModel.gridData[0][i];
+		                                        	}else{
+		                                        		bzcoln["pj"] = 0;
+		                                        	}
+	                                        	}
+	                                        	*/
+	                                        }
+	                                        lineObj.push(bzline);
+	                                        coluObj.push(bzcoln);
+	                                        //以上为参数处理
+	                                        //以下为处理图标部分-开始
+	                                		// 曲线图参数
+	                                		var lineObj2 = [ 
+	                                		                {'pw' : 'zhangsan',	'n1' :10,'n2' : 20,'n3' : 30,'n4' : 40,'n5' : 40,'n6' : 40}, 
+	                                		                {'pw' : 'lisi',     'n1' :15,'n2' : 25,'n3' : 35,'n4' : 45,'n5' : 40,'n6' : 40},
+	                                		                {'pw' : 'wangwu',   'n1' :40,'n2' : 30,'n3' : 20,'n4' : 10,'n5' : 40,'n6' : 40},
+	                                		                {'pw' : '标准曲线',     'n1' :22,'n2' : 25,'n3' : 30,'n4' : 33,'n5' : 40,'n6' : 40}
+	                                		              ];
+	                                		// 柱状图参数
+	                                		var coluObj2 = [
+	                                		               {'pw' : 'zhangsan', 'pj' : 10},
+	                                		               {'pw' : 'lisi',     'pj' : 15},
+	                                		               {'pw' : 'wangwu',   'pj' : 40}, 
+	                                		               {'pw' : '标准平均分','pj' : 22} 
+	                                		               ];
+	                                		// 评委数组
+	                                		// var pwArr = [ 'data1', 'data2', 'data3' ];
+	                                		var pwArr = [];
+	                                		// 区间数组
+	                                		// var qjArr = [ 'n1', 'n2', 'n3', 'n4' ];
+	                                		var qjArr = [];
+	                                		//生成评委数组、区间数组
+	                                		for (var i = 0; i < lineObj.length; i++) {
+	                                			// 生成选择的评委数组
+	                                			var person = lineObj[i];
+	                                			var personCols = Object.keys(person);
+	                                			pwArr.push(person['pw']);
+	                                			// 生成区间数组
+	                                			if (i == 0) {
+	                                				for (var j = 0; j < personCols.length; j++) {
+	                                					var col = personCols[j];
+	                                					if (col != 'pw') {
+	                                						qjArr.push(col);
+	                                					}
+	                                				}
+	                                			}
+	                                		}
+	                                		// 变量定义 - 曲线图部分
+	                                		var arrayLines = []; // 创建一个空数组,用于存放曲线的图例;
+	                                		var arrayNameLines = []; // 创建一个空数组,用于存放曲线的图例（包括x坐标）;
+	                                		arrayNameLines.push("name");
+	                                		var arrayDatas = []; // 创建一个空数组,用于存放曲线数据（包括x坐标）;
+	                                		var arraySeries = []; // 创建一个空数组,用于存放曲线;
+	                                		// 变量定义 - 柱状图部分
+	                                		var arrayColumDatas = []; // 柱状图数据;
+	                                		// -----------------根据评委个数、区间个数设置页面的高度、宽度-----------------------------
+	                                		var pwNum = pwArr.length;// 评委个数
+	                                		var qjNum = qjArr.length;// 指标区间个数
+	                                		var columnWidth = 1300;// 柱状图宽度;
+	                                		if (((pwNum + 1) * 100) > 1300) {
+	                                			columnWidth = (pwNum + 1) * 100;
+	                                		}
+	                                		var columnHeight = 400;// 柱状图高度;
+	                                		var lineWidth = 1300; // 曲线图宽度;
+	                                		if ((qjNum * 150) > 1300) {
+	                                			lineWidth = qjNum * 200;
+	                                		}
+	                                		var lineHeigth = 400; // 曲线图高度;
+	                                		lineHeigth = (pwNum + 1) * 20 + 400;
+	                                		// 保持柱状图和线状图宽度一致
+	                                		if (columnWidth > lineWidth) {
+	                                			lineWidth = columnWidth;
+	                                		} else {
+	                                			columnWidth = lineWidth;
+	                                		}
+	                                		// ------------------------------------柱状图开始---------------------------
+	                                		// 1、生产柱状图数据
+	                                		for (var i = 0; i < pwArr.length; i++) {
+	                                			// 循环每个评委
+	                                			var pw = pwArr[i];
+	                                			var datatmp = {};
+	                                			datatmp['graphName'] = pw;
+	                                			// 从传递过来的数字里面取评委对应的数据;
+	                                			var pjs = 0;
+	                                			for (var j = 0; j < coluObj.length; j++) {
+	                                				if (pw == coluObj[j]['pw']) {
+	                                					pjs = coluObj[j]['pj']
+	                                				}
+	                                			}
+	                                			datatmp['graphData'] = pjs;
+	                                			arrayColumDatas.push(datatmp);
+	                                		}
+	                                		// 2、曲线图数据集
+	                                		var graphDataStore = Ext.create('Ext.data.Store', {
+	                                			fields : [ 'graphName', 'graphData' ],
+	                                			data : arrayColumDatas
+	                                		});
+	                                		// var colors = ['#6E548D','#94AE0A','#FF7348','#3D96AE'];
+	                                		// 动态定义曲线图id
+	                                		var id1 = "" + Math.ceil(Math.random() * 100);
+	                                		// 定义曲线图
+	                                		var columnChart = Ext.create('Ext.chart.Chart', {
+	                                			xtype : 'chart',
+	                                			id : 'columnChart' + id1,
+	                                			width : columnWidth,
+	                                			height : columnHeight,
+	                                			animate : true,// 使用动画
+	                                			store : graphDataStore,
+	                                			shadow : true,// 使用阴影
+	                                			axes : [ {// x轴与y轴的声明
+	                                				type : 'Numeric',
+	                                				position : 'left',
+	                                				title : '平均分',
+	                                				minimum : 0,
+	                                				maximum : 100,
+	                                				grid : true
+	                                			}, {
+	                                				type : 'Category',
+	                                				position : 'bottom',
+	                                				fields : 'graphName',
+	                                				title : '评委列表'
+	                                			} ],
+	                                			series : [ {
+	                                				type : 'column',
+	                                				axis : 'bottom',
+	                                                label: {
+	                                                    display: 'insideEnd',
+	                                                    'text-anchor': 'middle',
+	                                                      field: 'graphData',
+	                                                      renderer: Ext.util.Format.numberRenderer('0.00'),
+	                                                      //orientation: 'vertical',控制数字横着还是竖着
+	                                                      color: '#333'
+	                                                },
+	                                				style: { width: 200 },
+	                                				xField : 'graphName',
+	                                				yField : 'graphData'// x与y轴的数据声明
+	                                			} ]
+	                                		});
+	                                		// ------------------------------------柱状图结束---------------------------
+	                                		// ------------------------------------曲线图开始---------------------------
+	                                		// 处理曲线图的数据-开始
+	                                		// 1、获取每个区间的数据-开始
+	                                		for (var i = 0; i < qjArr.length; i++) {
+	                                			// 循环每个区间
+	                                			var qj = qjArr[i];// 区间
+	                                			var lineData = {};
+	                                			lineData["name"] = qjArr[i];
+	                                			for (var j = 0; j < pwArr.length; j++) {
+	                                				// 循环每个评委
+	                                				var pw = pwArr[j];
+	                                				// 从传递过来的数组里面取评委对应的数据;
+	                                				var qjdata = 0;
+	                                				for (var k = 0; k < lineObj.length; k++) {
+	                                					if (pw == lineObj[k]['pw']) {
+	                                						qjdata = lineObj[k][qj]
+	                                					}
+	                                				}
+	                                				lineData[pw] = qjdata;
+	                                			}
+	                                			arrayDatas.push(lineData);
+	                                		};
+	                                		// 获取每个区间的数据-结束
+	                                		// 2、循环生成曲线-开始
+	                                		for (var k = 0; k < pwArr.length; k++) {
+	                                			// 循环每个评委
+	                                			var pwTmp = pwArr[k];
+	                                			var SerieTmp = {
+	                                				type : 'line',
+	                                				highlight : {
+	                                					size : 7,
+	                                					radius : 7
+	                                				},
+	                                				tips : {
+	                                					trackMouse : true,
+	                                					width : 430,
+	                                					height : 28,
+	                                					renderer : function(storeItem, item) {
+	                                						this.setTitle('评委：' + item.series.yField
+	                                								+ '，分布区间：' + storeItem.get('name')
+	                                								+ '，分布比率 ' + item.value[1]);
+	                                					}
+	                                				},
+	                                				axis : 'left',
+	                                				fill : false,
+	                                				xField : 'name',
+	                                				yField : pwTmp,
+	                                				markerConfig : {
+	                                					type : 'circle',
+	                                					size : 4,
+	                                					radius : 4,
+	                                					'stroke-width' : 0
+	                                				},
+	                                				smooth : true
+	                                			};
+	                                			arraySeries.push(SerieTmp);
+	                                			arrayLines.push(pwTmp);
+	                                			arrayNameLines.push(pwTmp);
+	                                		};
+	                                		// 循环生成曲线-结束
+	                                		// 处理曲线图的数据-开始
+	                                		// 曲线图定义部分-开始
+	                                		// 1、曲线图的数据源
+	                                		var mystore = Ext.create('Ext.data.JsonStore', {
+	                                			fields : arrayLines,
+	                                			data : arrayDatas
+	                                		});
+	                                		// 2、动态定义曲线图的id
+	                                		var id2 = "" + Math.ceil(Math.random() * 100);
+	                                		// 3、生成曲线图
+	                                		var lineChart = Ext.create('Ext.chart.Chart', {
+	                                			xtype : 'chart',
+	                                			style : 'background:#fff',
+	                                			height : lineHeigth,
+	                                			// id: 'linechart',
+	                                			id : 'lineChart' + id2,
+	                                			width : lineWidth,
+	                                			animate : true,
+	                                			// insetPadding: 20,
+	                                			store : mystore,
+	                                			shadow : true,
+	                                			theme : 'Category1',
+	                                			layout : 'fit',
+	                                			axes : [ {
+	                                				type : 'Numeric',
+	                                				minimum : 0,
+	                                				position : 'left',
+	                                				fields : arrayLines,
+	                                				title : '分布比率（%）',
+	                                				minimum : 0,
+	                                				maximum : 100,
+	                                				minorTickSteps : 1,
+	                                				grid : {
+	                                					odd : {
+	                                						opacity : 1,
+	                                						fill : '#ddd',
+	                                						stroke : '#bbb',
+	                                						'stroke-width' : 0.5
+	                                					}
+	                                				}
+	                                			}, {
+	                                				type : 'Category',
+	                                				position : 'bottom',
+	                                				fields : [ 'name' ],
+	                                				title : '分布区间'
+	                                			} ],
+	                                			series : arraySeries,
+	                                			legend : {
+	                                				position : 'top'
+	                                			}
+	                                		});
+	                                		// 曲线图定义部分-结束
+	                                		// ------------------------------------曲线图结束---------------------------
+	                                		// 填充页面部分-开始
+	                                        mainPageFrame.removeAll();
+	                                        mainPageFrame.add(columnChart);
+	                                        mainPageFrame.add(lineChart);
+	                                        mainPageFrame.expand(true);
+	                                        mainPageFrame.doLayout();
+	                                		// 填充页面部分-结束
+	                                    	//结束
+	                                    }
 	                                }]
 	                            }],
 	                            viewConfig: {
@@ -911,6 +1266,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            }),
 	                            minHeight: 80,
 	                            margin:'10 0',
+	                            name:"evaluationStandardGrid",
 	                            columnLines: true,
 	                            viewConfig: {
 	                                enableTextSelection: true

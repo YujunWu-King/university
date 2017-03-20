@@ -1088,35 +1088,35 @@ public class RegisteServiceImpl {
 
 			// BIRTHDATE;
 			if ("BIRTHDATE".equals(regFieldId)) {
-			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_FIELD_HTML",
-				    isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", "", regDefValue, imgPath);
+			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML",
+				    regFldYsmc,isRequired, regFieldId, regWarm, selectPlaceholeder+regFldYsmc);
 			}
 
 			// TZ_COUNTRY;
 			if ("TZ_COUNTRY".equals(regFieldId)) {
 			    String countryClick = "TZ_COUNTRY_CLICK";
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML2",
-				    regFldYsmc,isRequired, regFieldId, "", selectPlaceholeder+regFldYsmc,"",countryClick);
+				    regFldYsmc,isRequired, regFieldId, regWarm, selectPlaceholeder+regFldYsmc,"",countryClick);
 			}
 
 			// TZ_SCH_CNAME;
 			if ("TZ_SCH_CNAME".equals(regFieldId)) {			    
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML3",
-				    regFldYsmc, isRequired,regFieldId + "_Country",selectPlaceholeder+"院校国家", regFieldId,selectPlaceholeder+regFldYsmc,"");
+				    regFldYsmc, isRequired,regFieldId + "_Country",selectPlaceholeder+"院校国家", regFieldId,selectPlaceholeder+regFldYsmc,regWarm);
 			}
 
 			// TZ_LEN_PROID;
 			if ("TZ_LEN_PROID".equals(regFieldId)) {
 			    String lenProidClick = "TZ_LEN_PROID_CLICK";
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML2",
-				    regFldYsmc,isRequired, regFieldId, "", inputPlaceholeder+regFldYsmc,"",lenProidClick);
+				    regFldYsmc,isRequired, regFieldId, regWarm, inputPlaceholeder+regFldYsmc,"",lenProidClick);
 			}
 
 			// TZ_LEN_CITY;
 			if ("TZ_LEN_CITY".equals(regFieldId)) {
 			    String lenCityClick = "TZ_LEN_CITY_CLICK";
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML2",
-				    regFldYsmc,isRequired, regFieldId, "", selectPlaceholeder+regFldYsmc,"",lenCityClick);
+				    regFldYsmc,isRequired, regFieldId, regWarm, selectPlaceholeder+regFldYsmc,"",lenCityClick);
 			}
 
 			// 如果启用面试申请号，则注册页面隐藏一个面试申请号字段，程序自动生成面试申请号;
@@ -1167,10 +1167,10 @@ public class RegisteServiceImpl {
 			    }
 
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MCOMBOXR_HTML",
-				    regFldYsmc,isRequired, regFieldId, combox, "");
+				    regFldYsmc,isRequired, regFieldId, combox, regWarm);
 			} else {
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML",
-				    regFldYsmc,isRequired, regFieldId, "", inputPlaceholeder+regFldYsmc);
+				    regFldYsmc,isRequired, regFieldId, regWarm, inputPlaceholeder+regFldYsmc);
 			}
 		    }
 		}
@@ -1521,35 +1521,35 @@ public class RegisteServiceImpl {
 
 			// BIRTHDATE;
 			if ("BIRTHDATE".equals(regFieldId)) {
-			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_FIELD_HTML",
-				    isRequired, regFldYsmc, regFieldId, "readonly=\"true\"", "", regDefValue, imgPath);
+			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML",
+				    regFldYsmc,isRequired, regFieldId, regWarm, selectPlaceholeder+regFldYsmc);
 			}
 
 			// TZ_COUNTRY;
 			if ("TZ_COUNTRY".equals(regFieldId)) {
 			    String countryClick = "TZ_COUNTRY_CLICK";
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML2",
-				    regFldYsmc,isRequired, regFieldId, "", selectPlaceholeder+regFldYsmc,"",countryClick);
+				    regFldYsmc,isRequired, regFieldId, regWarm, selectPlaceholeder+regFldYsmc,"",countryClick);
 			}
 
 			// TZ_SCH_CNAME;
 			if ("TZ_SCH_CNAME".equals(regFieldId)) {			    
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML3",
-				    regFldYsmc, isRequired,regFieldId + "_Country",selectPlaceholeder+"院校国家", regFieldId,selectPlaceholeder+regFldYsmc,"");
+				    regFldYsmc, isRequired,regFieldId + "_Country",selectPlaceholeder+"院校国家", regFieldId,selectPlaceholeder+regFldYsmc,regWarm);
 			}
 
 			// TZ_LEN_PROID;
 			if ("TZ_LEN_PROID".equals(regFieldId)) {
 			    String lenProidClick = "TZ_LEN_PROID_CLICK";
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML2",
-				    regFldYsmc,isRequired, regFieldId, "", inputPlaceholeder+regFldYsmc,"",lenProidClick);
+				    regFldYsmc,isRequired, regFieldId, regWarm, inputPlaceholeder+regFldYsmc,"",lenProidClick);
 			}
 
 			// TZ_LEN_CITY;
 			if ("TZ_LEN_CITY".equals(regFieldId)) {
 			    String lenCityClick = "TZ_LEN_CITY_CLICK";
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML2",
-				    regFldYsmc,isRequired, regFieldId, "", selectPlaceholeder+regFldYsmc,"",lenCityClick);
+				    regFldYsmc,isRequired, regFieldId, regWarm, selectPlaceholeder+regFldYsmc,"",lenCityClick);
 			}
 
 			// 如果启用面试申请号，则注册页面隐藏一个面试申请号字段，程序自动生成面试申请号;
@@ -1600,10 +1600,10 @@ public class RegisteServiceImpl {
 			    }
 
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MCOMBOXR_HTML",
-				    regFldYsmc,isRequired, regFieldId, combox, "");
+				    regFldYsmc,isRequired, regFieldId, combox, regWarm);
 			} else {
 			    fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MFIELD_HTML",
-				    regFldYsmc,isRequired, regFieldId, "", inputPlaceholeder+regFldYsmc);
+				    regFldYsmc,isRequired, regFieldId, regWarm, inputPlaceholeder+regFldYsmc);
 			}
 		    }
 		}

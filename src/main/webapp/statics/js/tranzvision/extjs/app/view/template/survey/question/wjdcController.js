@@ -1240,7 +1240,6 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         Ext.tzSubmit(tzParams,function(response){
             /*修改页面ID值*/
             form.setValues({"TZ_DC_WJ_ID":response.wjId});
-			console.log(panel.parentGridStore);
 			if(panel.parentGridStore!=null&&panel.parentGridStore!=""){
 				panel.parentGridStore.reload();
 			}

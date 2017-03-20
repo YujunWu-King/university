@@ -87,28 +87,32 @@ Ext.define('KitchenSink.view.scholarShipManage.setScholarDetailPanel', {
                     fieldLabel:  "开始日期",
                     format: 'Y-m-d',
                     editable:false,
-                    name: 'TZ_DC_WJ_KSRQ'
+                    name: 'TZ_DC_WJ_KSRQ',
+                    ignoreChangesFlag:true
                 },
                 {
                     xtype: 'timefield',
                     fieldLabel:  "开始时间",
                     format: 'H:i:s',
                     editable:false,
-                    name: 'TZ_DC_WJ_KSSJ'
+                    name: 'TZ_DC_WJ_KSSJ',
+                    ignoreChangesFlag:true
                 },
                 {
                     xtype: 'datefield',
                     fieldLabel: "结束日期",
                     format: 'Y-m-d',
                     editable:false,
-                    name: 'TZ_DC_WJ_JSRQ'
+                    name: 'TZ_DC_WJ_JSRQ',
+                    ignoreChangesFlag:true
                 },
                 {
                     xtype: 'timefield',
                     fieldLabel: "结束时间",
                     format: 'H:i:s',
                     editable:false,
-                    name: 'TZ_DC_WJ_JSSJ'
+                    name: 'TZ_DC_WJ_JSSJ',
+                    ignoreChangesFlag:true
                 },/*{
                     xtype: 'combobox',
                     fieldLabel:  "有效状态",

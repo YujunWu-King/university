@@ -8,6 +8,14 @@
 	function selectProvince(province){
 		$("#"+lenField).val(province);
 		closePop();
+		//清华MBA
+		if((typeof changeImg)=="function"){
+			var successFlg = "F";		
+			if(province!=null&&province!=""){
+				successFlg = "S";
+			}
+			changeImg(lenField,successFlg);
+		}
 	}
 </script>
 <div class="pop_tit">

@@ -54,6 +54,14 @@ var tzGeneralURL = "%bind(:1)";
 			$("#" + clickId).val(school);			
 			//关闭窗口
 			closePop();
+			//清华MBA
+			if((typeof changeImg)=="function"){
+				var successFlg = "F";		
+				if(school!=null&&school!=""){
+					successFlg = "S";
+				}
+				changeImg(clickId,successFlg);
+			}
 		}
 			
 		function findData(){			
