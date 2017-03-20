@@ -2005,7 +2005,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).blur();
 				}
 				if (rec_phone_no !="" && _yz=="") {
-					var _result = /^[\d-+]+$/.test(rec_phone_no);
+					var _result = /^1\d{10}$/.test(rec_phone_no);
 					if(!_result){
 						_yz="2";
 						_desc =   children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
@@ -2408,7 +2408,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["REQUIRE"];
 				}
 				if (_yz=="" && rec_phone_no!="") {
-					var _result = /^[\d-+]+$/.test(rec_phone_no);
+					var _result = /^1\\d{10}$/.test(rec_phone_no);
 					if(!_result){
 						_yz="1";
 						_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
@@ -2843,24 +2843,23 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			
 			var _checkHtml=  function(val,elem,Regular){
 				if (val == "") { //判断 是否为为空
-					return elem.itemName+MsgSet["REQUIRE"];
-					//return elem.itemName+MsgSet["REQUIRE"];
+					return elem.title+MsgSet["REQUIRE"];
 				}  else {
 					//正则表达式判断
-					if (Regular == "phone_area") {
+					if (Regular == 'phone_area') {
 						var _result = /^[\d-+]+$/.test(val);
 						if(!_result){
-							return elem.itemName+MsgSet["FORMAT_ERROR_MSG"];
+							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
 						}
-					} else if (egular == "phone_no") {
-						var _result = /^[\d-+]+$/.test(val);
+					} else if (Regular == 'phone_no') {
+						var _result = /^1\d{10}$/.test(val);
 						if(!_result){
-							return elem.itemName+MsgSet["FORMAT_ERROR_MSG"];
+							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
 						}
-					} else if (egular == "email") {
+					} else if (Regular == 'email') {
 						var std=/^([\w\-\.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
-						if (!std.test(_email)){
-							return elem.itemName+MsgSet["FORMAT_ERROR_MSG"];
+						if (!std.test(val)){
+							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
 						}
 					}
 				}	

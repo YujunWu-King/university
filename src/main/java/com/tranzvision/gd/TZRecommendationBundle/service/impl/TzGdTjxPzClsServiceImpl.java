@@ -290,29 +290,30 @@ public class TzGdTjxPzClsServiceImpl extends FrameworkImpl {
 				String str_tjr_title = tjxMap.get("TZ_TJX_TITLE") == null ? ""
 						: String.valueOf(tjxMap.get("TZ_TJX_TITLE"));
 
-				if (str_tjr_title != null && !"".equals(str_tjr_title) && !str_tjr_title.equals(str_none_blank)
-						&& !str_tjr_title.equals(str_none_blank_c)) {
-					str_name_suff = str_tjr_title;
-				}
+				//if (str_tjr_title != null && !"".equals(str_tjr_title) && !str_tjr_title.equals(str_none_blank)
+				//		&& !str_tjr_title.equals(str_none_blank_c)) {
+				//	str_name_suff = str_tjr_title;
+				//}
 
 				String str_tjr_gname = tjxMap.get("TZ_REFERRER_GNAME") == null ? ""
 						: String.valueOf(tjxMap.get("TZ_REFERRER_GNAME"));
-				if (str_tjr_gname != null && !"".equals(str_tjr_gname)) {
-					if (str_name_suff != null && !"".equals(str_name_suff)) {
-						str_name_suff = str_name_suff + " " + str_tjr_gname;
-					} else {
-						str_name_suff = str_tjr_gname;
-					}
-				}
+				//if (str_tjr_gname != null && !"".equals(str_tjr_gname)) {
+				//	if (str_name_suff != null && !"".equals(str_name_suff)) {
+				//		str_name_suff = str_name_suff + " " + str_tjr_gname;
+				//	} else {
+				//		str_name_suff = str_tjr_gname;
+				//	}
+				//}
 
 				String str_tjr_name = tjxMap.get("TZ_REFERRER_NAME") == null ? ""
 						: String.valueOf(tjxMap.get("TZ_REFERRER_NAME"));
 
-				if (str_name_suff != null && !"".equals(str_name_suff)) {
-					str_tjr_name = str_name_suff + " " + str_tjr_name;
-				}
+				//if (str_name_suff != null && !"".equals(str_name_suff)) {
+				//	str_tjr_name = str_name_suff + " " + str_tjr_name;
+				//}
 
 				returnMap.put("TJR_NAME", str_tjr_name);
+				returnMap.put("TJR_GNAME", str_tjr_gname);
 				returnMap.put("TJR_COMPANY", tjxMap.get("TZ_COMP_CNAME"));
 				returnMap.put("TJR_ZW", tjxMap.get("TZ_POSITION"));
 				returnMap.put("TJR_GX", tjxMap.get("TZ_TJR_GX"));

@@ -150,8 +150,9 @@
                                                      //获得该页面上的问卷ID
                                                      var wjId= button.findParentByType("form").getForm().findField("TZ_DC_WJ_ID").value;
                                                      var tplId=button.findParentByType("form").getForm().findField("TZ_APP_TPL_ID").value;
+                                                     //alert("wjId:"+wjId+" tplId:"+tplId)
                                                      //与后台交互，更新该问卷的json报文 U可以是add delete update
-                                                     var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_XJWJ_STD","OperateType":"U","comParams":{"update":[{"wjId":"' + wjId + '","tplId":"'+tplId+'"}]}}';
+                                                     var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"reloadTpl","comParams":{"wjId":"' + wjId + '","tplId":"'+tplId+'"}}';
                                                      Ext.tzLoad(tzParams, function (responseData) {
                                                          // console.log(responseData.responseText)
                                                      });

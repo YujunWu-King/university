@@ -216,7 +216,7 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		return strComContent;
 	}
 
-	 /*调查问卷设置保存*/ //当模板ID不为空的时候则复制模板表中信息到问卷表
+	 /*调查问卷设置保存*/ 
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		System.out.println("==设置===tzUpdate执行");
@@ -262,28 +262,10 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 			psTzDcWjDyTWithBLOBs.setTzDcWjId(TZ_DC_WJ_ID);
 		}
 		//模板ID 不为null则用模板表中数据覆盖问卷表中数据
-		if(dataMap.containsKey("TZ_APP_TPL_ID")&&dataMap.get("TZ_APP_TPL_ID")!=null&&!dataMap.get("TZ_APP_TPL_ID").equals("")){
+		if(dataMap.containsKey("TZ_APP_TPL_ID")&&dataMap.get("TZ_APP_TPL_ID")!=null){
 			String TZ_APP_TPL_ID=dataMap.get("TZ_APP_TPL_ID").toString();
-		    final String survyInfoFromTplSQL="SELECT * FROM PS_TZ_DC_DY_T WHERE TZ_APP_TPL_ID=? and TZ_JG_ID=?";
-		    Map<String,Object>tplSurvyInfoMap=new HashMap<String,Object>();
-		    tplSurvyInfoMap=jdbcTemplate.queryForMap(survyInfoFromTplSQL, new Object[]{TZ_APP_TPL_ID,jgId});
-			//System.out.println("==tplSurvyInfoMap:"+new JacksonUtil().Map2json(tplSurvyInfoMap));
 		    psTzDcWjDyTWithBLOBs.setTzAppTplId(TZ_APP_TPL_ID);
-			if(tplSurvyInfoMap!=null){
-			System.out.println("=====tzUpdateFattrInfo复制模板表信息到问卷表执行====");
-			Iterator<String> iterator=tplSurvyInfoMap.keySet().iterator();
-			while(iterator.hasNext()){
-				String key=iterator.next();
-				if(dataMap.containsKey(key)){
-					if(tplSurvyInfoMap.get(key)!=null)
-						dataMap.replace(key, tplSurvyInfoMap.get(key));}
-				else {
-					dataMap.put(key, tplSurvyInfoMap.get(key));}
-				//System.out.println("模板数据:");
-				//System.out.println("key:"+key+"==value:"+tplSurvyInfoMap.get(key));
-			}
-			System.out.println("=========Map复制结束=========");
-			}
+		
 		}
 		
 		//问卷标题
@@ -531,6 +513,51 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		//保存数据 选择性      
 		psTzDcWjDyTMapper.updateByPrimaryKeySelective(psTzDcWjDyTWithBLOBs);
 		return new JacksonUtil().Map2json(dataMap);
+	}
+
+	//点击重新 加载模版:当模板ID不为空的时候则复制模板表中信息到问卷表
+	@Override
+	public String tzOther(String oprType, String strParams, String[] errorMsg) {
+		
+		JacksonUtil jacksonUtil=new JacksonUtil();
+		PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs=new PsTzDcWjDyTWithBLOBs();
+		String jgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		if(oprType.equals("reloadTpl")){
+			//将String数据转换成Map
+			jacksonUtil.json2Map(strParams);
+			Map<String,Object>paramMap=jacksonUtil.getMap();
+			if(paramMap.get("tplId")!=null&&!paramMap.get("tplId").equals("")){
+				//模版ID 问卷ID:
+				String tplId=paramMap.get("tplId").toString();
+				String wjId=paramMap.get("wjId").toString();
+				//读取模版数据:
+			    final String survyInfoFromTplSQL="SELECT * FROM PS_TZ_DC_DY_T WHERE TZ_APP_TPL_ID=? and TZ_JG_ID=?";
+			    Map<String,Object>tplSurvyInfoMap=new HashMap<String,Object>();
+			    tplSurvyInfoMap=jdbcTemplate.queryForMap(survyInfoFromTplSQL, new Object[]{tplId,jgId});
+			    
+			    psTzDcWjDyTWithBLOBs.setTzDcWjId(wjId);
+			    psTzDcWjDyTWithBLOBs.setTzAppTplId(tplId);
+			    
+			    
+				if(tplSurvyInfoMap!=null){
+					//模版表中存在的数据 复制到当前问卷:复制卷头 卷尾内容
+					if(tplSurvyInfoMap.containsKey("TZ_DC_JTNR")&&tplSurvyInfoMap.get("TZ_DC_JTNR")!=null){
+						psTzDcWjDyTWithBLOBs.setTzDcJtnr(tplSurvyInfoMap.get("TZ_DC_JTNR").toString());
+					}
+					if(tplSurvyInfoMap.containsKey("TZ_DC_JWNR")&&tplSurvyInfoMap.get("TZ_DC_JWNR")!=null){
+						psTzDcWjDyTWithBLOBs.setTzDcJwnr(tplSurvyInfoMap.get("TZ_DC_JWNR").toString());
+					}
+				}
+				//选择性更新:只讲模版中的“卷头”和"卷尾"更新到当前问卷
+				psTzDcWjDyTMapper.updateByPrimaryKeySelective(psTzDcWjDyTWithBLOBs);
+				errorMsg[0]="0";
+				return strParams;
+		}else{
+			errorMsg[0]="1";
+			errorMsg[1]="请选择问卷模版";
+		}
+		}
+		return null;
 	}
 	
 }
