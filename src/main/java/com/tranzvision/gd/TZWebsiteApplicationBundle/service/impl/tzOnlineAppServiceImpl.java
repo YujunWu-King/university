@@ -930,6 +930,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			System.out.println("报名表保存数据预处理Begin");
 			String strForm = actData[num];
+
+			System.out.println("strForm:" + strForm);
+
 			// 解析json
 			jacksonUtil.json2Map(strForm);
 			strClassId = String.valueOf(jacksonUtil.getString("TZ_CLASS_ID"));
@@ -1341,9 +1344,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					time2 = System.currentTimeMillis();
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							strOtype, isPwd);
+							strOtype, isPwd, strRefLetterId);
 					if ("".equals(strMsg)) {
-						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "save");
+
+						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "save",
+								strTplType);
 						//// //System.out.println("checkFiledValid：" + strMsg);
 						if ("".equals(strMsg)) {
 							tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
@@ -1398,7 +1403,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 先保存数据
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							"SAVE", isPwd);
+							"SAVE", isPwd, strRefLetterId);
 					// 模版级事件 JAVA 版本目前没有 注销掉
 					// String sqlGetModalEvents = "SELECT
 					// CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM
@@ -1442,14 +1447,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// String strMsgAlter = "";
 
 					if ("".equals(strMsg)) {
-						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "pre");
+						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "pre",
+								strTplType);
 
 					}
 
 					if ("".equals(strMsg)) {
 						strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId,
 								strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,
-								strClassId, strPwd, strOtype, isPwd);
+								strClassId, strPwd, strOtype, isPwd, strRefLetterId);
 
 						if ("".equals(strMsg)) {
 							tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
@@ -1459,15 +1465,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
 							// 如果是管理员并且可编辑的话继续 By WRL@20161027
-						} else {
-							// 如果是推荐信，则提交后发送邮件
-							if ("TJX".equals(strTplType)) {
-								strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId,
-										strTplType, strBatchId, strPwd, isPwd);
-								String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
-							}
-							if ("BMB".equals(strTplType)) {
-							}
 						}
 					}
 					System.out.println("报名表保存PRE数据End,Time=" + (System.currentTimeMillis() - time2));
@@ -1477,7 +1474,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 先保存数据
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							strOtype, isPwd);
+							strOtype, isPwd, strRefLetterId);
 					// 模版级事件 JAVA 版本目前没有 注销掉
 					// String sqlGetModalEvents = "SELECT
 					// CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM
@@ -1520,7 +1517,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 提交数据
 					String strMsgAlter = "";
 					if ("".equals(strMsg)) {
-						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, "", "submit");
+						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, "", "submit", strTplType);
 					}
 					if ("".equals(strMsg)) {
 						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
@@ -1557,7 +1554,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					}
 					System.out.println("报名表保存CONFIRMSUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				}
-				
+
 			}
 
 			if (!"".equals(strMsg)) {
