@@ -49,6 +49,7 @@
 			td{color:#333;font-size:14px}
 			table img{vertical-align:middle}
 			p{margin:.5em 0}
+			.infobox{background-color:#e6e6e6;padding:24px;margin-top:40px;}
 		</style>
 	
 		<!-- scripts for exporting chart as an image -->
@@ -73,19 +74,32 @@
 			$(function() {
 				var pageno=$("#pageno").val();
 		        if(pageno<1){
-		        	$("#applyMBA").css("display","none");
-		        	$("#mbaDesc").css("display","none");
+		        	//$("#applyMBA").css("display","none");
+		        	//$("#mbaDesc").css("display","none"); 
+		        	$("#infoBoxDiv").css("display","none");
 		        }
-		        $("#applyMBA").bind("click", function(){
+		        /* $("#applyMBA").bind("click", function(){
 		        	window.parent.location.href="%bind(:4)"; 
-		        }); 
+		        });  */
 			});
+			function zc(){
+				window.parent.location.href="%bind(:4)"; 
+			}
 		</script>
 	</head>
 	<body style="padding: 10px">
 		 %bind(:3)
-		 <input type="button" value="马上申请清华MBA" id="applyMBA" />
-		 <p style="color:#997423;font-size: 14px;margin-left:5px;" id="mbaDesc">注册后可了解更多招生信息，可参加清华经管各类讲座论坛和招生宣讲会等活动</p>
+		 <div class="infobox" id="infoBoxDiv">
+		 	<!--  <input type="button" value="马上申请清华MBA" id="applyMBA" />
+		 	<p style="color:#997423;font-size: 14px;margin-left:5px;" id="mbaDesc">注册后可了解更多招生信息，可参加清华经管各类讲座论坛和招生宣讲会等活动</p> -->
+		 	<p class="btn">
+		 	  <a href="javascript:void(0)" onclick="zc();"><img alt="" height="53" width="215" src="%bind(:1)/statics/js/onlineSurvey/answer/images/icon.jpg"></a>
+		 	</p>
+		 	<p style="color:#997423;font-size: 14px;margin-left:5px;" id="mbaDesc">注册后可了解更多招生信息，可参加清华经管各类讲座论坛和招生宣讲会等活动</p>
+		 	<p class="btn">
+		 	  <a href="http://mba.sem.tsinghua.edu.cn" target="_blank"><img alt="" height="29" width="215" src="%bind(:1)/statics/js/onlineSurvey/answer/images/btn_info.jpg"></a>
+		 	</p>
+		 </div>
 		 <input type="hidden" value="%bind(:2)" id="pageno"/>
 	</body>
 </html>
