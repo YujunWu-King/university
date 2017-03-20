@@ -18,6 +18,11 @@ function getZnxList(siteid,pagenum){
 						znxNum = znxNum + resultNum;
 						// 插入数据到页面，放到最后面
 	                	$('.bg').append(result.comContent.result);
+	                	$(".slide").click(function(){
+
+	                        $(this).children('i').toggleClass('slide_up');
+	                        $(this).prev().toggleClass('slide_wz');
+	                    });
 					}else{
 						 // 锁定
                         me.lock();
