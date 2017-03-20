@@ -1,6 +1,6 @@
 ﻿Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.classInfoPanel', {
     extend: 'Ext.panel.Panel',
-    xtype: 'classInfo',
+    xtype: 'auditClassInfo',
     controller: 'appFormClass',
     requires: [
         'Ext.data.*',
@@ -20,22 +20,27 @@
         }
     },
     bodyPadding:10,
-    constructor: function (obj){
-        this.orgColorSortStore=obj.orgColorSortStore;
-        this.initData=obj.initData;
-        this.stuGridColorSortFilterOptions=obj.stuGridColorSortFilterOptions;
-        this.classID=obj.classID;
+    constructor: function (cfg){
+        Ext.apply(this,cfg);
         this.callParent();
     },
     initComponent:function(){
         var me = this;
         var appFormStuStore = new KitchenSink.view.enrollmentManagement.applicationForm.stuStore();
 
+        var submitStateStore = me.initialData.submitStateStore,
+	        auditStateStore = me.initialData.auditStateStore,
+	        interviewResultStore = me.initialData.interviewResultStore
+	        orgColorSortStore = me.initialData.orgColorSortStore;
+    
+        /*过滤器Options数据*/
+        var colorSortFilterOptions=me.initialData.colorSortFilterOptions,
+	    	submitStateFilterOptions=me.initialData.submitStateFilterOptions,
+	    	auditStateFilterOptions=me.initialData.auditStateFilterOptions,
+	    	interviewResultFilterOptions=me.initialData.interviewResultFilterOptions;
+        
         /*初始颜色类别数据*/
-        var initData=me.initData;
-        /*grid类别过滤数据*/
-        var stuGridColorSortFilterOptions=me.stuGridColorSortFilterOptions;
-        var orgColorSortStore =  me.orgColorSortStore;
+        var initialColorSortData=me.initialData.initialColorSortData;
         var validColorSortStore =  new KitchenSink.view.common.store.comboxStore({
             recname:'TZ_COLOR_SORT_T',
             condition:{TZ_JG_ID:{
@@ -54,7 +59,7 @@
             fields:[
                 "TZ_COLOR_SORT_ID","TZ_COLOR_NAME","TZ_COLOR_CODE"
             ],
-            data:initData
+            data:initialColorSortData
         });
         Ext.apply(this,{
             items: [{
@@ -116,6 +121,11 @@
                     overflowHandler: 'Menu',
                     xtype:"toolbar",
                     items:[
+						{
+						    text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.query","查询"),
+						    iconCls:"query",
+						    handler:"queryStudents"
+						},'-',   
                         {
                             text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.package","将选中人员材料批量打包"),
                             iconCls:"zip",
@@ -247,7 +257,18 @@
                                 lockable   : false,
                                 width: 95,
                                 filter: {
-                                    type: 'list'
+                                    type: 'list',
+                                    options: submitStateFilterOptions
+                                },
+                                renderer:function(v){
+                                    if(v){
+                                        var index = submitStateStore.find('TValue',v,0,false,true,true);
+                                        if(index>-1){
+                                            return submitStateStore.getAt(index).get("TSDesc");
+                                        }
+                                        
+                                        return "";
+                                    }
                                 }
                             },{
                                 xtype:'datecolumn',
@@ -267,7 +288,18 @@
                                 lockable   : false,
                                 width: 95,
                                 filter: {
-                                    type: 'list'
+                                    type: 'list',
+                                    options: auditStateFilterOptions
+                                },
+                                renderer:function(v){
+                                    if(v){
+                                        var index = auditStateStore.find('TValue',v,0,false,true,true);
+                                        if(index>-1){
+                                            return auditStateStore.getAt(index).get("TSDesc");
+                                        }
+                                        
+                                        return "";
+                                    }
                                 }
                             },{
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.interviewResult","面试结果"),
@@ -275,7 +307,18 @@
                                 lockable   : false,
                                 width: 95,
                                 filter: {
-                                    type: 'list'
+                                    type: 'list',
+                                    options: interviewResultFilterOptions
+                                },
+                                renderer:function(v){
+                                    if(v){
+                                        var index = interviewResultStore.find('TValue',v,0,false,true,true);
+                                        if(index>-1){
+                                            return interviewResultStore.getAt(index).get("TSDesc");
+                                        }
+                                        
+                                        return "";
+                                    }
                                 }
                             },{
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.colorType","类别"),
@@ -284,7 +327,7 @@
                                 width: 140,
                                 filter: {
                                     type: 'list',
-                                    options: stuGridColorSortFilterOptions
+                                    options: colorSortFilterOptions
                                 },
                                 editor: {
                                     xtype: 'combo',
@@ -332,7 +375,7 @@
                                             combo.store.loadData(arrayData);
                                         },
                                         blur: function (combo,event, eOpts) {
-                                            combo.store.loadData(initData);
+                                            combo.store.loadData(initialColorSortData);
                                         }
                                     }
                                 },

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -28,7 +29,8 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
-
+	@Autowired
+	private FliterForm fliterForm;
 	// 获取班级信息
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
@@ -77,6 +79,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 	/* 获取学生信息列表 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
@@ -84,57 +87,14 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
-
+		
 		try {
-
+			// 当前机构id;
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
 			jacksonUtil.json2Map(comParams);
 			// 班级编号;
 			String strClassID = jacksonUtil.getString("classID");
-			// 批次编号;
-			String strBatchID = jacksonUtil.getString("batchID");
-			
-			// 当前语言环境;
-			String strLanguageId = tzLoginServiceImpl.getSysLanaguageCD(request);
-			if (strLanguageId == null || "".equals(strLanguageId)) {
-				strLanguageId = "ZHS";
-			}
-			// 当前机构id;
-			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-
-			// 报名表评审状态;
-			String tzAuditStateSQL = "(SELECT IF(B.TZ_ZHZ_DMS IS NULL,A.TZ_ZHZ_DMS,B.TZ_ZHZ_DMS) TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A LEFT JOIN (SELECT * FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_LANGUAGE_ID='"
-					+ strLanguageId
-					+ "') B ON A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZ_ID=B.TZ_ZHZ_ID WHERE A.TZ_ZHZJH_ID ='TZ_AUDIT_STATE' AND A.TZ_ZHZ_ID=PS_TZ_APP_LIST_VW.TZ_AUDIT_STATE) TZ_AUDIT_STATE_DESC";
-			
-			// 报名表状态描述修改;
-			String tzSubmitStateSQL = "(SELECT IF(B.TZ_ZHZ_DMS IS NULL,A.TZ_ZHZ_DMS,B.TZ_ZHZ_DMS) TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A LEFT JOIN (SELECT * FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_LANGUAGE_ID='"
-					+ strLanguageId
-					+ "') B ON A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZ_ID=B.TZ_ZHZ_ID WHERE A.TZ_ZHZJH_ID ='TZ_APPFORM_STATE' AND A.TZ_ZHZ_ID=PS_TZ_APP_LIST_VW.TZ_SUBMIT_STATE) TZ_SUBMIT_STATE_DESC";
-			// 面试管理-面试结果;
-			String tzMsResultSQL = "(SELECT IF(B.TZ_ZHZ_DMS IS NULL,A.TZ_ZHZ_DMS,B.TZ_ZHZ_DMS) TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A LEFT JOIN (SELECT * FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_LANGUAGE_ID='"
-					+ strLanguageId
-					+ "') B ON A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZ_ID=B.TZ_ZHZ_ID WHERE A.TZ_ZHZJH_ID ='TZ_MS_RESULT' AND A.TZ_ZHZ_ID=PS_TZ_APP_LIST_VW.TZ_MS_RESULT) TZ_MS_RESULT_DESC";
-
-			// OPRID，报名表实例ID，面试申请号，证件号码，学生姓名，提交状态，提交时间，评审状态，颜色类别,面试结果;
-			String strOprID = "", strMshId = "", strNationalID = "", strStudentName = "", strSubmitState = "", strSubmitDate = "", strAuditState = "",
-					strColorType = "", strInterviewResult = "";
-
-			long appInsID = 0;
-			// 学生信息列表sql;
-			String sqlStudentList = "";
-			
-			if (numLimit == 0) {
-				sqlStudentList = "SELECT OPRID ,TZ_REALNAME ,TZ_APP_INS_ID ,TZ_MSH_ID ,NATIONAL_ID ,TZ_AUDIT_STATE," + tzAuditStateSQL
-						+ " ,TZ_COLOR_SORT_ID ,TZ_SUBMIT_STATE," + tzSubmitStateSQL
-						+ " ,TZ_SUBMIT_DT_STR ,TZ_MS_RESULT," + tzMsResultSQL
-						+ " FROM PS_TZ_APP_LIST_VW WHERE TZ_CLASS_ID=? ORDER BY TZ_APP_INS_ID DESC";
-			} else {
-				sqlStudentList = "SELECT OPRID ,TZ_REALNAME ,TZ_APP_INS_ID ,TZ_MSH_ID ,NATIONAL_ID ,TZ_AUDIT_STATE," + tzAuditStateSQL
-						+ " ,TZ_COLOR_SORT_ID ,TZ_SUBMIT_STATE," + tzSubmitStateSQL
-						+ " ,TZ_SUBMIT_DT_STR ,TZ_MS_RESULT," + tzMsResultSQL
-						+ " FROM PS_TZ_APP_LIST_VW WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? ORDER BY TZ_APP_INS_ID DESC LIMIT " + numStart
-						+ "," + numLimit;
-			}
 
 			// 报名表模板;
 			String strBmbTplSQL = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
@@ -148,6 +108,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			String appFormInfoView = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { "TZ_FORM_VAL_REC" },
 					"String");
 
+			
 			// 报名表审批学生列表模板;
 			String strAuditGridTplIDSQL = "SELECT B.TZ_EXPORT_TMP_ID FROM PS_TZ_CLASS_INF_T A,PS_TZ_EXPORT_TMP_T B WHERE A.TZ_APP_MODAL_ID=B.TZ_APP_MODAL_ID AND A.TZ_JG_ID = B.TZ_JG_ID AND A.TZ_CLASS_ID=? AND A.TZ_JG_ID=? AND B.TZ_EXP_TMP_STATUS='A' AND B.TZ_EXPORT_TMP_TYPE='1'";
 			String strAuditGridTplID = jdbcTemplate.queryForObject(strAuditGridTplIDSQL,
@@ -158,43 +119,56 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			
 			// 多行存储;
 			String sqlAppFormDataMulti = " SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='D' AND TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
-			List<Map<String, Object>> appFormDataMultiList = jdbcTemplate.queryForList(sqlAppFormDataMulti,
-					new Object[] { strBmbTpl, strAuditGridTplID });
+			List<Map<String, Object>> appFormDataMultiList =null;
+			if(!"".equals(strAuditGridTplID)){
+				appFormDataMultiList = jdbcTemplate.queryForList(sqlAppFormDataMulti,
+						new Object[] { strBmbTpl, strAuditGridTplID });
+			}
 			
+			//表存储
 			String sqlAppFormDataView = "SELECT TZ_XXX_BH FROM PS_TZ_FORM_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='R' AND TZ_XXX_BH IN( SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
-			List<Map<String, Object>> appFormDataViewList = jdbcTemplate.queryForList(sqlAppFormDataView, new Object[] { strBmbTpl, strAuditGridTplID });
+			List<Map<String, Object>> appFormDataViewList = null;
+			if(!"".equals(strAuditGridTplID)){
+				appFormDataViewList = jdbcTemplate.queryForList(sqlAppFormDataView, new Object[] { strBmbTpl, strAuditGridTplID });
+			}
 			
+			/*开始执行可配置搜索*/
 			
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(sqlStudentList, new Object[] { strClassID ,strBatchID});
-			if (list != null) {
+			// 排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][] {{"TZ_APP_INS_ID","DESC"}};
+
+			// json数据要的结果字段;
+			String[] resultFldArray = { "OPRID" ,"TZ_REALNAME" ,"TZ_APP_INS_ID" ,"TZ_MSH_ID" ,"NATIONAL_ID" ,"TZ_AUDIT_STATE" ,"TZ_COLOR_SORT_ID" ,"TZ_SUBMIT_STATE" ,"TZ_SUBMIT_DT_STR" ,"TZ_MS_RESULT"};
+
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
+
+			if (obj != null) {
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 				for (int i = 0; i < list.size(); i++) {
-					strOprID = (String) list.get(i).get("OPRID");
-					strStudentName = (String) list.get(i).get("TZ_REALNAME");
-					appInsID = Long.valueOf(list.get(i).get("TZ_APP_INS_ID").toString());
-
-					strMshId = (String) list.get(i).get("TZ_MSH_ID");
-					strNationalID = (String) list.get(i).get("NATIONAL_ID");
-							
-					// strAuditState =
-					// (String)list.get(i).get("TZ_AUDIT_STATE");
-					strAuditState = (String) list.get(i).get("TZ_AUDIT_STATE_DESC");
-					strColorType = (String) list.get(i).get("TZ_COLOR_SORT_ID");
-					// strSubmitState =
-					// (String)list.get(i).get("TZ_SUBMIT_STATE");
-					strSubmitState = (String) list.get(i).get("TZ_SUBMIT_STATE_DESC");
-					strSubmitDate = (String) list.get(i).get("TZ_SUBMIT_DT_STR");
-					// strInterviewResult =
-					// (String)list.get(i).get("TZ_MS_RESULT");
-					strInterviewResult = (String) list.get(i).get("TZ_MS_RESULT_DESC");
-
-					Map<String, Object> strGridColumnStoreMap = new HashMap<>();
+					String[] rowList = list.get(i);
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("classID", strClassID);
+					mapList.put("oprID", rowList[0]);
+					mapList.put("stuName", rowList[1]);
+					mapList.put("appInsID", rowList[2]);
+					mapList.put("interviewApplicationID", rowList[3]);
+					mapList.put("nationalID", rowList[4]);
+					mapList.put("auditState", rowList[5]);
+					mapList.put("colorType", rowList[6]);
+					mapList.put("submitState", rowList[7]);
+					mapList.put("submitDate", rowList[8]);					
+					mapList.put("interviewResult", rowList[9]);
 					
+					/*根据模板配置显示报名表信息*/
+					String appInsID = rowList[2];
+					Map<String, Object> strGridColumnStoreMap = new HashMap<>();
 					
 					if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
 						// 将模板中需要显示的数据全部查出存入数组 
 						String strInfoID = "", strInfoValue = "", strInfoDesc = "", strComClassName = "",
 								strInfoSelectID = "";
-								 // 控件类名称，下拉存储描述信息项编号;
+						// 控件类名称，下拉存储描述信息项编号;
 						ArrayList<String[]> arrAppFormInfoData = new ArrayList<>();
 						
 						// 单行存储;
@@ -229,8 +203,6 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 						}
 			
 						// 多行存储;
-						//String sqlAppFormDataMulti = " SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='D' AND TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
-						//List<Map<String, Object>> appFormDataMultiList = jdbcTemplate.queryForList(sqlAppFormDataMulti,new Object[] { strBmbTpl, strAuditGridTplID });
 						if (appFormDataMultiList != null) {
 							for (int j = 0; j < appFormDataMultiList.size(); j++) {
 								strInfoID = (String) appFormDataMultiList.get(j).get("TZ_XXX_BH");
@@ -255,8 +227,6 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				
 						// Hardcode定义视图取值;
 						if (appFormInfoView != null && !"".equals(appFormInfoView)) {
-							//String sqlAppFormDataView = "SELECT TZ_XXX_BH FROM PS_TZ_FORM_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='R' AND TZ_XXX_BH IN( SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
-							//List<Map<String, Object>> appFormDataViewList = jdbcTemplate.queryForList(sqlAppFormDataView, new Object[] { strBmbTpl, strAuditGridTplID });
 							if (appFormDataViewList != null) {
 								for (int j = 0; j < appFormDataViewList.size(); j++) {
 									strInfoID = (String) appFormDataViewList.get(j).get("TZ_XXX_BH");
@@ -278,8 +248,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 						if (gridColumnList != null) {
 							for (int j = 0; j < gridColumnList.size(); j++) {
 								strColumnID = (String) gridColumnList.get(j).get("TZ_DC_FIELD_ID");
-								// strColumnName =
-								// (String)gridColumnList.get(j).get("TZ_DC_FIELD_NAME");
+
 								strColumnSpe = (String) gridColumnList.get(j).get("TZ_DC_FIELD_FGF");
 								// 当前考生对应当前列的值 
 								String strColumnValue = ""; 
@@ -327,29 +296,11 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					if (strGridColumnStoreMap == null || strGridColumnStoreMap.isEmpty()) {
 						strGridColumnStoreMap.put("hasData", false);
 					}
-
-					strGridColumnStoreMap.put("classID", strClassID);
-					strGridColumnStoreMap.put("oprID", strOprID);
-					strGridColumnStoreMap.put("appInsID", appInsID);
-					strGridColumnStoreMap.put("interviewApplicationID", strMshId);
-					strGridColumnStoreMap.put("nationalID", strNationalID);	
-					strGridColumnStoreMap.put("stuName", strStudentName);
-					strGridColumnStoreMap.put("submitState", strSubmitState);
-					strGridColumnStoreMap.put("submitDate", strSubmitDate);
-					strGridColumnStoreMap.put("auditState", strAuditState);
-					strGridColumnStoreMap.put("colorType", strColorType);
-					strGridColumnStoreMap.put("interviewResult", strInterviewResult);
-
-					listData.add(strGridColumnStoreMap);
+					listData.add(mapList);
 				}
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
 			}
-
-			// 获取学生信息总数;
-			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";
-			int numTotal = jdbcTemplate.queryForObject(totalSQL, new Object[] { strClassID ,strBatchID}, "Integer");
-			mapRet.replace("total", numTotal);
-			mapRet.replace("root", listData);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

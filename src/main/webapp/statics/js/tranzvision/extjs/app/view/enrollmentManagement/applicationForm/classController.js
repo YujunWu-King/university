@@ -16,6 +16,24 @@
             }
         });
     },
+    queryStudents:function(btn){
+    	var store = btn.findParentByType("grid").store;
+    	
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.TZ_APP_LIST_VW',
+            condition:{
+                TZ_CLASS_ID:store.classID,
+                TZ_BATCH_ID:store.batchID
+            },
+            callback: function(seachCfg){
+                var tzStoreParams = Ext.decode(seachCfg);
+                tzStoreParams.classID = store.classID;
+                tzStoreParams.batchID = store.batchID;
+                store.tzStoreParams = Ext.encode(tzStoreParams);
+                store.load();
+            }
+        });
+    },
     onStuInfoSave: function(btn){
         //学生信息列表
         var grid = this.getView().child("grid");
@@ -130,72 +148,136 @@
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
         var batchID = record.data.batchID;
+	    
+        var render = function(initialData){
+        	
+	        	cmp = new ViewClass({
+	        		initialData:initialData,
+	                classID:classID,
+	                batchID:batchID
+		            }
+		        );
+		        cmp.on('afterrender',function(panel){
+		            var form = panel.child('form').getForm();
+		            var panelGrid = panel.child('grid');
+		            panelGrid.getView().on('expandbody', function (rowNode, record, expandRow, eOpts){
+		                if(!record.get('moreInfo')){
+		                    var appInsID = record.get('appInsID');
+		                    var tzExpandParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"tzLoadExpandData","comParams":{"classID":"'+classID+'","appInsID":"'+appInsID+'"}}';
+		                    Ext.tzLoad(tzExpandParams,function(respData){
+		                            if(panelGrid.getStore().getModifiedRecords().length>0){
+		                                record.set('moreInfo',respData);
+		                            }else{
+		                                record.set('moreInfo',respData);
+		                                panelGrid.getStore().commitChanges( );
+		                            }
+		                        },panelGrid
+		                    );
+		                }
+		            });
+		            var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+		            Ext.tzLoad(tzParams,function(respData){
+		                var formData = respData.formData;
+		                form.setValues(formData);
+		
+		                var tzStoreParams = {
+		                		"classID":classID,
+		                		"batchID":batchID,
+		                		"cfgSrhId": "TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.TZ_APP_LIST_VW",
+		                		"condition":{
+		                			"TZ_CLASS_ID-operator": "01",
+		                			"TZ_CLASS_ID-value": classID,
+		                			"TZ_BATCH_ID-operator": "01",
+		                			"TZ_BATCH_ID-value": batchID
+		                				}
+		                };
+		                panelGrid.store.classID=classID;
+		                panelGrid.store.batchID=batchID;
+		                panelGrid.store.tzStoreParams = Ext.encode(tzStoreParams);
+		                panelGrid.store.load();
+		            });
+		        });
+		
+		        tab = contentPanel.add(cmp);
+		
+		        contentPanel.setActiveTab(tab);
+		
+		        Ext.resumeLayouts(true);
+		
+		        if (cmp.floating) {
+		            cmp.show();
+		        }
+        };
         
-        var initData=[];
-        var stuGridColorSortFilterOptions=[];/*考生类别的过滤器数据*/
-        var orgColorSortStore = new KitchenSink.view.common.store.comboxStore({
-            recname:'TZ_ORG_COLOR_V',
-            condition:{
-                TZ_JG_ID:{
-                    value:Ext.tzOrgID,
-                    operator:'01',
-                    type:'01'
-                }},
-            result:'TZ_COLOR_SORT_ID,TZ_COLOR_NAME,TZ_COLOR_CODE',
-            listeners:{
-                load:function( store, records, successful, eOpts){
-                    for(var i=0;i<records.length;i++){
-                        initData.push(records[i].data);
-                        stuGridColorSortFilterOptions.push([records[i].data.TZ_COLOR_SORT_ID,records[i].data.TZ_COLOR_NAME]);
-                    };
-                    cmp = new ViewClass({
-                            orgColorSortStore:orgColorSortStore ,
-                            initData:initData,
-                            stuGridColorSortFilterOptions:stuGridColorSortFilterOptions,
-                            classID:classID
-                        }
-                    );
-                    cmp.on('afterrender',function(panel){
-                        var form = panel.child('form').getForm();
-                        var panelGrid = panel.child('grid');
-                        panelGrid.getView().on('expandbody', function (rowNode, record, expandRow, eOpts){
-                            if(!record.get('moreInfo')){
-                                var appInsID = record.get('appInsID');
-                                var tzExpandParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"tzLoadExpandData","comParams":{"classID":"'+classID+'","appInsID":"'+appInsID+'"}}';
-                                Ext.tzLoad(tzExpandParams,function(respData){
-                                        if(panelGrid.getStore().getModifiedRecords().length>0){
-                                            record.set('moreInfo',respData);
-                                        }else{
-                                            record.set('moreInfo',respData);
-                                            panelGrid.getStore().commitChanges( );
-                                        }
-                                    },panelGrid
-                                );
-                            }
-                        });
-                        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
-                        Ext.tzLoad(tzParams,function(respData){
-                            var formData = respData.formData;
-                            form.setValues(formData);
 
-                            var tzStoreParams = '{"classID":"'+classID+'","batchID":"'+batchID+'"}';
-                            panelGrid.store.tzStoreParams = tzStoreParams;
-                            panelGrid.store.load();
-                        });
-                    });
-
-                    tab = contentPanel.add(cmp);
-
-                    contentPanel.setActiveTab(tab);
-
-                    Ext.resumeLayouts(true);
-
-                    if (cmp.floating) {
-                        cmp.show();
-                    }
-                }
-            }
-        })
+        var submitStateStore = new KitchenSink.view.common.store.appTransStore("TZ_APPFORM_STATE"),
+        	auditStateStore = new KitchenSink.view.common.store.appTransStore("TZ_AUDIT_STATE"),
+        	interviewResultStore = new KitchenSink.view.common.store.appTransStore("TZ_MS_RESULT"),
+        	orgColorSortStore = new KitchenSink.view.common.store.comboxStore({
+                recname:'TZ_ORG_COLOR_V',
+                condition:{
+                    TZ_JG_ID:{
+                        value:Ext.tzOrgID,
+                        operator:'01',
+                        type:'01'
+                    }},
+                result:'TZ_COLOR_SORT_ID,TZ_COLOR_NAME,TZ_COLOR_CODE'
+            });
+        
+        //下拉项过滤器数据
+        var colorSortFilterOptions=[],
+        	submitStateFilterOptions=[],
+        	auditStateFilterOptions=[],
+        	interviewResultFilterOptions=[];
+        
+        //颜色类别初始化数据-学生颜色类别列渲染数据
+        var initialColorSortData=[];
+        
+        //4个下拉控件Store加载完毕之后打开页面
+        var times = 4;
+        var beforeRender = function(){
+        	times--;
+	        if(times==0){
+	        	render({
+	        		submitStateStore:submitStateStore,
+	        		auditStateStore:auditStateStore,
+	        		interviewResultStore:interviewResultStore,
+	        		orgColorSortStore:orgColorSortStore,
+	        		colorSortFilterOptions:colorSortFilterOptions,
+	            	submitStateFilterOptions:submitStateFilterOptions,
+	            	auditStateFilterOptions:auditStateFilterOptions,
+	            	interviewResultFilterOptions:interviewResultFilterOptions,
+	            	initialColorSortData:initialColorSortData
+	        	});
+	        }
+	    };
+	    
+        orgColorSortStore.on("load",function(store, records, successful, eOpts){
+        	beforeRender();
+        	for(var i=0;i<records.length;i++){
+            	initialColorSortData.push(records[i].data);
+                colorSortFilterOptions.push([records[i].data.TZ_COLOR_SORT_ID,records[i].data.TZ_COLOR_NAME]);
+            };
+	    });
+	    submitStateStore.on("load",function(store, records, successful, eOpts){
+	    	beforeRender();
+	    	for(var i=0;i<records.length;i++){
+	    		submitStateFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
+            };
+	    });
+	    auditStateStore.on("load",function(store, records, successful, eOpts){
+	    	beforeRender();
+	    	for(var i=0;i<records.length;i++){
+	    		auditStateFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
+            };
+	    });
+	    interviewResultStore.on("load",function(store, records, successful, eOpts){
+	    	beforeRender();
+	    	for(var i=0;i<records.length;i++){
+	    		interviewResultFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
+            };
+	    });
+	    
     },
     //报名流程结果公布（LZ添加）
     publishResult:function(grid, rowIndex, colIndex){
@@ -707,7 +789,7 @@
             Ext.syncRequire(className);
             ViewClass = Ext.ClassManager.get(className);
             //新建类
-            var modalID =btn.findParentByType('classInfo').child('form').getForm().findField('modalID').getValue();
+            var modalID =btn.findParentByType('auditClassInfo').child('form').getForm().findField('modalID').getValue();
             win = new ViewClass(modalID);
             this.getView().add(win);
         };
