@@ -195,13 +195,13 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 						ArrayList<String[]> arrAppFormInfoData = new ArrayList<>();
 						
 						// 单行存储;
-						String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,if(B.TZ_XXX_CCLX = 'S',A.TZ_APP_S_TEXT ,if(B.TZ_XXX_CCLX = 'L',A.TZ_APP_L_TEXT,'')) TZ_XXX_CCLX,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
+						String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,if(B.TZ_XXX_CCLX = 'S',A.TZ_APP_S_TEXT ,if(B.TZ_XXX_CCLX = 'L',A.TZ_APP_L_TEXT,'')) TZ_APP_TEXT,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
 						List<Map<String, Object>> appFormDataSingleList = jdbcTemplate.queryForList(
 								sqlAppFormDataSingle, new Object[] { strBmbTpl, appInsID, strAuditGridTplID });
 						if (appFormDataSingleList != null) {
 							for (int j = 0; j < appFormDataSingleList.size(); j++) {
 								strInfoID = (String) appFormDataSingleList.get(j).get("TZ_XXX_BH");
-								strInfoValue = (String) appFormDataSingleList.get(j).get("TZ_XXX_CCLX");
+								strInfoValue = (String) appFormDataSingleList.get(j).get("TZ_APP_TEXT");
 								strInfoDesc = (String) appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
 								strComClassName = (String) appFormDataSingleList.get(j).get("TZ_COM_LMC");
 								strInfoSelectID = (String) appFormDataSingleList.get(j).get("TZ_XXX_NO");
@@ -217,6 +217,10 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 									strInfoValue = strInfoDesc;
 								}
 
+								if ("CC_Batch".equals(strInfoSelectID.substring(0, 8))) {
+									strInfoValue = strInfoDesc;
+								}
+								
 								arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
 							}
 						}
@@ -554,13 +558,13 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				ArrayList<String[]> arrAppFormInfoData = new ArrayList<>();
 
 				// 单行存储;
-				String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,if(B.TZ_XXX_CCLX = 'S',A.TZ_APP_S_TEXT ,if(B.TZ_XXX_CCLX = 'L',A.TZ_APP_L_TEXT,'')) TZ_XXX_CCLX,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
+				String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,if(B.TZ_XXX_CCLX = 'S',A.TZ_APP_S_TEXT ,if(B.TZ_XXX_CCLX = 'L',A.TZ_APP_L_TEXT,'')) TZ_APP_TEXT,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
 				List<Map<String, Object>> appFormDataSingleList = jdbcTemplate.queryForList(
 						sqlAppFormDataSingle, new Object[] { strBmbTpl, strAppInsID, strAuditGridTplID });
 				if (appFormDataSingleList != null) {
 					for (int j = 0; j < appFormDataSingleList.size(); j++) {
 						strInfoID = (String) appFormDataSingleList.get(j).get("TZ_XXX_BH");
-						strInfoValue = (String) appFormDataSingleList.get(j).get("TZ_XXX_CCLX");
+						strInfoValue = (String) appFormDataSingleList.get(j).get("TZ_APP_TEXT");
 						strInfoDesc = (String) appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
 						strComClassName = (String) appFormDataSingleList.get(j).get("TZ_COM_LMC");
 						strInfoSelectID = (String) appFormDataSingleList.get(j).get("TZ_XXX_NO");
@@ -574,6 +578,11 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 						if ("bmr".equals(strComClassName.substring(0, 3))) {
 							strInfoValue = strInfoDesc;
 						}
+						
+						if ("CC_Batch".equals(strInfoSelectID.substring(0, 8))) {
+							strInfoValue = strInfoDesc;
+						}
+						
 						arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
 					}
 				} 

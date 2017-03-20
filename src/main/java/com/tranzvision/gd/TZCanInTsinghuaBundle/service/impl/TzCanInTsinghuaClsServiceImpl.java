@@ -32,6 +32,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -929,6 +930,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 		/*Oprid、机构编号、注册信息项是否完善、站点编号、URL*/
 		String strOprid = "",strJgId = "",strIsCmpl = "N",strSiteId = "",url = "#";
 		TzSession tzSession = new TzSession(request);
+		boolean isMobile = CommonUtils.isMobile(request);
 		Object objOprid = tzSession.getSession(userSessionName);
 
 		if (null != objOprid) {
@@ -953,7 +955,11 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			if(StringUtils.equals("Y", strIsCmpl)){
 				url = request.getContextPath() + "/user/login/" + strJgId.toLowerCase() + "/" + strSiteId;
 			}else{
-				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
+				if(isMobile){
+					url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/mperfect.html?userName=" + encryUserName;
+				}else{
+					url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
+				}
 			}
 
 			return url;

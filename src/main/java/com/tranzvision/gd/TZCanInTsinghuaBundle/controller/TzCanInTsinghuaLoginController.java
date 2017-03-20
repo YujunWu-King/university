@@ -35,10 +35,7 @@ public class TzCanInTsinghuaLoginController {
 	 
 	@Autowired
 	private TzCanInTsinghuaClsServiceImpl tzCanInTsinghuaClsServiceImpl;
-	
-	@Autowired
-	private TzRegMbaKsServiceImpl tzRegMbaKsServiceImpl;
-	
+
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
 
@@ -99,46 +96,5 @@ public class TzCanInTsinghuaLoginController {
 
 		return loginHtml;
 	}
-	
-	@RequestMapping(value = { "/reg/{min}/{max}" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	public String reg(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "max") int max, @PathVariable(value = "min")  int min) {
-		if(max == min){
-			max = max + 1;
-		}
-		String loginHtml = tzRegMbaKsServiceImpl.reg(max,min);
 
-		return loginHtml;
-	}
-	
-	@RequestMapping(value = { "/reg/delete" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	public String delete(HttpServletRequest request, HttpServletResponse response) {
-		String oprs = request.getParameter("oprs");
-		String oprids[] = StringUtils.split(oprs, ",");
-		String out = "";
-        for (String oprid : oprids) {
-        	String msg = tzRegMbaKsServiceImpl.delete(oprid);
-        	out = out + msg;
-        }
-        
-        return out;
-	}
-	
-	@RequestMapping(value = { "/reg/add" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	public String reg(HttpServletRequest request, HttpServletResponse response) {
-		String oprs = request.getParameter("oprs");
-		String oprids[] = StringUtils.split(oprs, ",");
-		String out = "";
-        for (String oprid : oprids) {
-        	int min = Integer.parseInt(oprid);
-        	int max = min + 1;
-        	String loginHtml = tzRegMbaKsServiceImpl.reg(max,min);
-        	out = out + loginHtml;
-        }
-		
-
-		return out;
-	}
 }
