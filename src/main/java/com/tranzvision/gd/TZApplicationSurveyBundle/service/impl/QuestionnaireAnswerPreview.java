@@ -636,7 +636,7 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 			System.out.println("strDivHtml最终值："+strDivHtml);
 		   String strTitle=jdbcTemplate.queryForObject("select TZ_DC_WJBT from PS_TZ_DC_WJ_DY_T where TZ_DC_WJ_ID=?", new Object[]{surveyID}, "String");
 		   int totalCount=jdbcTemplate.queryForObject("select count(*) from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?",new Object[]{surveyID},"int");
-		   strReturn=tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ANS_NEW_HTML",request.getContextPath(), strTitle, String.valueOf(totalCount), strDivHtml);
+			strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ANS_NEW_HTML",request.getContextPath(), strTitle, String.valueOf(totalCount), strDivHtml);
 		   return strReturn;
 		}
 		catch(Exception e){

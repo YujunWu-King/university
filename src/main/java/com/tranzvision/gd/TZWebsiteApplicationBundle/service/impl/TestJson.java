@@ -103,7 +103,8 @@ public class TestJson {
 											ccmap = (Map<String, Object>) cmap.get(key);
 											mapChildrens2.add(ccmap);
 										}
-										//System.out.println("分组框children的children：" + mapChildrens2.size());
+										// System.out.println("分组框children的children："
+										// + mapChildrens2.size());
 									}
 
 									// ////System.out.println("Size:" +
@@ -385,17 +386,62 @@ public class TestJson {
 		return s;
 	}
 
+	public void reinfo(String json) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Map<String, Object> mapAppData = jacksonUtil.parseJson2Map(json);
+
+		if (mapAppData != null) {
+			Map<String, Object> mapJsonItems = null;
+			List<String> itemName = new ArrayList<String>();
+
+			for (Entry<String, Object> entry : mapAppData.entrySet()) {
+				mapJsonItems = (Map<String, Object>) entry.getValue();
+				String strClassName = "";
+				if (mapJsonItems.containsKey("classname")) {
+					strClassName = String.valueOf(mapJsonItems.get("classname"));
+				}
+				if (strClassName.equals("recommendInfo")) {
+					if (mapJsonItems.containsKey("children")) {
+
+						List<Map<String, Object>> mapChildrens = (ArrayList<Map<String, Object>>) mapJsonItems
+								.get("children");
+
+						Map<String, Object> cmap = (Map<String, Object>) mapChildrens.get(0);
+						//System.out.println(cmap.toString());
+						Map<String, Object> ccmap = null;
+
+						List<Map<String, Object>> mapChildrens2 = new ArrayList<Map<String, Object>>();
+						for (String key : cmap.keySet()) {
+							ccmap = (Map<String, Object>) cmap.get(key);
+							//System.out.println(ccmap.toString());
+							mapChildrens2.add(ccmap);
+						}
+
+						for (Object children2 : mapChildrens2) {
+							Map<String, Object> mapChildren2 = (Map<String, Object>) children2;
+							String useby = String.valueOf(mapChildren2.get("useby"));
+							System.out.println("useby:" + useby);
+							if (useby.equals("Y")) {
+								System.out.println("需要填写的项:" + String.valueOf(mapChildren2.get("itemId")));
+								itemName.add(String.valueOf(mapChildren2.get("itemId")));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		//TestJson tj = new TestJson();
-		//String json = tj.readTxtFile("C:\\Users\\feifei\\Desktop\\NEW.json");
-		//System.out.println(json);
-		//tj.Detail(json, Long.parseLong("0"));
-		//String strValue="!2";
-		//boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
-		String a = "2017-03-13 17:30:17.0";
-				System.out.println(a.substring(0, 19));	
-		//System.out.println(isMatch);
+		TestJson tj = new TestJson();
+		String json = tj.readTxtFile("C:\\Users\\feifei\\Desktop\\json.json");
+		System.out.println(json);
+		tj.reinfo(json);
+		// String strValue="!2";
+		// boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
+
+		// System.out.println(isMatch);
 
 	}
 
