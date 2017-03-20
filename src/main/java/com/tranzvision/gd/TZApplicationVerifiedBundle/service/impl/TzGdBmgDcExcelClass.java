@@ -159,15 +159,15 @@ public class TzGdBmgDcExcelClass {
 								if ("S".equals(strSaveType)) {
 									strSaveTypeBoolean = false;
 
-									if ("bmr".equals(strComClassName.substring(0, 3))) {
-										strSelectField = "TZ_APP_L_TEXT"; /* 报名人相关控件取值从长字符串取描述 */
+									if ("bmr".equals(strComClassName.substring(0, 3))||"CC_Batch".equals(strInfoSelectID.substring(0, 8))) {
+										strSelectField = "TZ_APP_L_TEXT"; /* 报名人相关控件和组合控件选择批次取值从长字符串取描述 */
 									} else {
-										if (strCodeTable == null || "".equals(strCodeTable)) {
-											strSelectField = "TZ_APP_S_TEXT";
-										} else {
-											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=A.TZ_APP_S_TEXT AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now())";
-											strSelectFieldBoolean = true;
-										}
+										strSelectField = "TZ_APP_S_TEXT";
+									}
+									
+									if (strCodeTable != null &&!"".equals(strCodeTable)) {
+										strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=A."+strSelectField+" AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now())";
+										strSelectFieldBoolean = true;
 									}
 								}
 								/* 长文本 */
@@ -242,31 +242,6 @@ public class TzGdBmgDcExcelClass {
 
 									}
 
-									if ("bmr".equals(strComClassName.substring(0, 3))) {
-										String sql2 = "SELECT "
-												+ strSelectField.replaceAll("TZ_APP_S_TEXT", "TZ_APP_L_TEXT")
-												+ " FROM PS_TZ_APP_CC_T A WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH=?";
-										if (strSelectFieldBoolean == true) {
-											try {
-												strAppFormFieldValue = jdbcTemplate.queryForObject(
-														sql2, new Object[] { strCodeTable,
-																Long.parseLong(arrAppInsID[i]), strAppFormField },
-														String.class);
-											} catch (Exception e) {
-												strAppFormFieldValue = "";
-											}
-
-										} else {
-											try {
-												strAppFormFieldValue = jdbcTemplate.queryForObject(sql2, new Object[] {
-														Long.parseLong(arrAppInsID[i]), strAppFormField },
-														String.class);
-											} catch (Exception e) {
-												strAppFormFieldValue = "";
-											}
-
-										}
-									}
 								} else {
 									if (isRecordValue) {
 										
