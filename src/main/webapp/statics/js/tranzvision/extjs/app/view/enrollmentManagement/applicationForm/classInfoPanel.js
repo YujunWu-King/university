@@ -134,31 +134,34 @@
                             glyph: 61,
                             menu:[  {
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportExcel","导出Excel"),
-                                iconCls:"excel",
+                                glyph:'xf1c3@FontAwesome',
                                 menu:[{
                                     text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportApplicantsInfo","导出选中人员信息到Excel"),
-                                    iconCls:"excel",
+                                    glyph:'xf1c3@FontAwesome',
                                     name:'exportExcel',
                                     handler:'exportExcelOrDownload'
                                 },
                                 {
                                         text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.downloadExcel","查看导出结果并下载"),
-                                        iconCls:"download",
+                                        glyph:'xf019@FontAwesome',
                                         name:'downloadExcel',
                                         handler:'exportExcelOrDownload'
                                  }]
                             },{
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.printApplicationForm","打印报名表"),
-                                iconCls:"print",
+                                glyph:'xf02f@FontAwesome',
                                 handler:'printAppForm'
                             },{
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.addHmdUser","加入黑名单"),
+                                glyph:'xf067@FontAwesome',
                                 handler:'addHmd'
                             },{
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.viewEmailSendHis","查看邮件发送历史"),
+                                glyph:'xf1da@FontAwesome',
                                 handler:'viewMailHistory'
                             },{
 								text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendEmailSelectedPerson","给选中人发送邮件"),
+								glyph:'xf1d8@FontAwesome',
 								handler:'sendEmlSelPers'
 							}]
                         }
