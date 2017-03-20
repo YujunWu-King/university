@@ -4,6 +4,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.stuModel', {
         {name: 'classID'},
         {name: 'oprID'},
         {name: 'appInsID'},
+        {name: 'interviewApplicationID'},
+        {name: 'nationalID'},
         {name: 'stuName'},
         {name: 'submitState'},
         {name: 'submitDate',type:'date'},

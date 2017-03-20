@@ -223,6 +223,22 @@
                                     type: 'string'
                                 }
                             },{
+                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.interviewApplicationID","面试申请号"),
+                                dataIndex: 'interviewApplicationID',
+                                width:110,
+                                lockable   : false,
+                                filter: {
+                                    type: 'string'
+                                }
+                            },{
+                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.nationalID","证件号码"),
+                                dataIndex: 'nationalID',
+                                width:100,
+                                lockable   : false,
+                                filter: {
+                                    type: 'string'
+                                }
+                            },{
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.submitState","提交状态"),
                                 dataIndex: 'submitState',
                                 lockable   : false,

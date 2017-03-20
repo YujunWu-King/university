@@ -6,7 +6,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.classModel', {
 		{name: 'batchID'},
 		{name: 'batchName'},
 		{name: 'applyStatus'},
-		{name: 'applyStatusDesc'},
+		{name: 'admissionDate'},
         {name: 'applicantsNumber',type:'number'},
 		{name: 'noauditNumber',type:'number'},
         {name: 'expectedNumber',type:'number'},

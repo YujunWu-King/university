@@ -1145,7 +1145,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				if (!strAppFormState.equals(psTzAppInsT.getTzAppFormSta())) {
 					psTzAppInsT.setTzAppFormSta(strAppFormState);
 					//更改报名表最后一页的完成状态
-					String updateSubmitPageStateSql= "UPDATE PS_TZ_APP_COMP_TBL SET TZ_HAS_COMPLETE=? WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH = (select a.TZ_XXX_BH from  PS_TZ_APP_XXXPZ_T a,PS_TZ_APP_INS_T where a.TZ_APP_TPL_ID=b.TZ_APP_TPL_ID and b.TZ_APP_INS_ID=PS_TZ_APP_COMP_TBL.TZ_APP_INS_ID and  a.TZ_COM_LMC = 'Page' order by a.TZ_PAGE_NO desc limit 0,1);";;
+					String updateSubmitPageStateSql= "UPDATE PS_TZ_APP_COMP_TBL SET TZ_HAS_COMPLETE=? WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH = (select a.TZ_XXX_BH from  PS_TZ_APP_XXXPZ_T a,PS_TZ_APP_INS_T b where a.TZ_APP_TPL_ID=b.TZ_APP_TPL_ID and b.TZ_APP_INS_ID=PS_TZ_APP_COMP_TBL.TZ_APP_INS_ID and  a.TZ_COM_LMC = 'Page' order by a.TZ_PAGE_NO desc limit 0,1)";
 					if ("U".equals(strAppFormState)) {
 						psTzAppInsT.setTzAppSubDttm(new Date());
 						jdbcTemplate.update(updateSubmitPageStateSql, new Object[]{"Y",strAppInsID});

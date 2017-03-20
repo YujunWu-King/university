@@ -101,11 +101,12 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			// 当前机构id;
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
-			// 报名表状态描述修改;
+			// 报名表评审状态;
 			String tzAuditStateSQL = "(SELECT IF(B.TZ_ZHZ_DMS IS NULL,A.TZ_ZHZ_DMS,B.TZ_ZHZ_DMS) TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A LEFT JOIN (SELECT * FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_LANGUAGE_ID='"
 					+ strLanguageId
 					+ "') B ON A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZ_ID=B.TZ_ZHZ_ID WHERE A.TZ_ZHZJH_ID ='TZ_AUDIT_STATE' AND A.TZ_ZHZ_ID=PS_TZ_APP_LIST_VW.TZ_AUDIT_STATE) TZ_AUDIT_STATE_DESC";
-			// 报名表评审状态;
+			
+			// 报名表状态描述修改;
 			String tzSubmitStateSQL = "(SELECT IF(B.TZ_ZHZ_DMS IS NULL,A.TZ_ZHZ_DMS,B.TZ_ZHZ_DMS) TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A LEFT JOIN (SELECT * FROM PS_TZ_PT_ZHZXX_LNG WHERE TZ_LANGUAGE_ID='"
 					+ strLanguageId
 					+ "') B ON A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZ_ID=B.TZ_ZHZ_ID WHERE A.TZ_ZHZJH_ID ='TZ_APPFORM_STATE' AND A.TZ_ZHZ_ID=PS_TZ_APP_LIST_VW.TZ_SUBMIT_STATE) TZ_SUBMIT_STATE_DESC";
@@ -114,8 +115,8 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					+ strLanguageId
 					+ "') B ON A.TZ_ZHZJH_ID=B.TZ_ZHZJH_ID AND A.TZ_ZHZ_ID=B.TZ_ZHZ_ID WHERE A.TZ_ZHZJH_ID ='TZ_MS_RESULT' AND A.TZ_ZHZ_ID=PS_TZ_APP_LIST_VW.TZ_MS_RESULT) TZ_MS_RESULT_DESC";
 
-			// OPRID，报名表实例ID，学生姓名，提交状态，提交时间，评审状态，颜色类别,面试结果;
-			String strOprID = "", strStudentName = "", strSubmitState = "", strSubmitDate = "", strAuditState = "",
+			// OPRID，报名表实例ID，面试申请号，证件号码，学生姓名，提交状态，提交时间，评审状态，颜色类别,面试结果;
+			String strOprID = "", strMshId = "", strNationalID = "", strStudentName = "", strSubmitState = "", strSubmitDate = "", strAuditState = "",
 					strColorType = "", strInterviewResult = "";
 
 			long appInsID = 0;
@@ -123,12 +124,12 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			String sqlStudentList = "";
 			
 			if (numLimit == 0) {
-				sqlStudentList = "SELECT OPRID ,TZ_REALNAME ,TZ_APP_INS_ID ,TZ_AUDIT_STATE," + tzAuditStateSQL
+				sqlStudentList = "SELECT OPRID ,TZ_REALNAME ,TZ_APP_INS_ID ,TZ_MSH_ID ,NATIONAL_ID ,TZ_AUDIT_STATE," + tzAuditStateSQL
 						+ " ,TZ_COLOR_SORT_ID ,TZ_SUBMIT_STATE," + tzSubmitStateSQL
 						+ " ,TZ_SUBMIT_DT_STR ,TZ_MS_RESULT," + tzMsResultSQL
 						+ " FROM PS_TZ_APP_LIST_VW WHERE TZ_CLASS_ID=? ORDER BY TZ_APP_INS_ID DESC";
 			} else {
-				sqlStudentList = "SELECT OPRID ,TZ_REALNAME ,TZ_APP_INS_ID ,TZ_AUDIT_STATE," + tzAuditStateSQL
+				sqlStudentList = "SELECT OPRID ,TZ_REALNAME ,TZ_APP_INS_ID ,TZ_MSH_ID ,NATIONAL_ID ,TZ_AUDIT_STATE," + tzAuditStateSQL
 						+ " ,TZ_COLOR_SORT_ID ,TZ_SUBMIT_STATE," + tzSubmitStateSQL
 						+ " ,TZ_SUBMIT_DT_STR ,TZ_MS_RESULT," + tzMsResultSQL
 						+ " FROM PS_TZ_APP_LIST_VW WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? ORDER BY TZ_APP_INS_ID DESC LIMIT " + numStart
@@ -155,8 +156,6 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				strAuditGridTplID = "";
 			}
 			
-			
-			
 			// 多行存储;
 			String sqlAppFormDataMulti = " SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='D' AND TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
 			List<Map<String, Object>> appFormDataMultiList = jdbcTemplate.queryForList(sqlAppFormDataMulti,
@@ -172,6 +171,10 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					strOprID = (String) list.get(i).get("OPRID");
 					strStudentName = (String) list.get(i).get("TZ_REALNAME");
 					appInsID = Long.valueOf(list.get(i).get("TZ_APP_INS_ID").toString());
+
+					strMshId = (String) list.get(i).get("TZ_MSH_ID");
+					strNationalID = (String) list.get(i).get("NATIONAL_ID");
+							
 					// strAuditState =
 					// (String)list.get(i).get("TZ_AUDIT_STATE");
 					strAuditState = (String) list.get(i).get("TZ_AUDIT_STATE_DESC");
@@ -217,7 +220,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 									strInfoValue = strInfoDesc;
 								}
 
-								if ("CC_Batch".equals(strInfoSelectID.substring(0, 8))) {
+								if (strInfoSelectID!=null&&strInfoSelectID.indexOf("CC_Batch")>-1) {
 									strInfoValue = strInfoDesc;
 								}
 								
@@ -328,6 +331,8 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					strGridColumnStoreMap.put("classID", strClassID);
 					strGridColumnStoreMap.put("oprID", strOprID);
 					strGridColumnStoreMap.put("appInsID", appInsID);
+					strGridColumnStoreMap.put("interviewApplicationID", strMshId);
+					strGridColumnStoreMap.put("nationalID", strNationalID);	
 					strGridColumnStoreMap.put("stuName", strStudentName);
 					strGridColumnStoreMap.put("submitState", strSubmitState);
 					strGridColumnStoreMap.put("submitDate", strSubmitDate);
@@ -579,7 +584,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 							strInfoValue = strInfoDesc;
 						}
 						
-						if ("CC_Batch".equals(strInfoSelectID.substring(0, 8))) {
+						if (strInfoSelectID!=null&&strInfoSelectID.indexOf("CC_Batch")>-1) {
 							strInfoValue = strInfoDesc;
 						}
 						

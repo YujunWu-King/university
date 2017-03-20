@@ -79,8 +79,8 @@
                 dataIndex: 'className',
                 width:110
             }*/,{
-                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyStatus","申请状态"),
-                dataIndex: 'applyStatusDesc',
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.admissionDate","入学日期"),
+                dataIndex: 'admissionDate',
                 width:110
             },{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applicantsNumber","总申请人数"),
