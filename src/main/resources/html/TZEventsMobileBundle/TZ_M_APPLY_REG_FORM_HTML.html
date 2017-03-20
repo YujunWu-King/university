@@ -41,13 +41,12 @@
 		   	 %bind(:2)	
 		   	 <p id="tz-reg-tip-display" class="reg_tips" style="margin-top:10px;"></p> 
 	   	 </div>
-	   	 <a href="#" class="register_btn" onclick="tz_apply_submit()">确 定</a>
+	   	 <a href="javascript:void(0);" class="register_btn" onclick="tz_apply_submit()">确 定</a>
 	   </div>
 	</div>
 	
 	<script type="text/javascript"> 
 		var applyURL = "%bind(:3)";
-		
 		function returnBack(){
 			history.back(); 
 		} 
@@ -164,7 +163,6 @@
 			strParam = strParam + "}";
 			
 			var strComParams = "{\"ComID\":\"TZ_HD_MOBILE_COM\",\"PageID\":\"TZ_HD_APPFORM_STD\",\"OperateType\":\"EJSON\",\"comParams\":"+ strParam + "}";
-			//strComParams = encodeURIComponent(strComParams);
 			$.ajax({
 				type : "POST",
 				url : applyURL,
@@ -176,11 +174,8 @@
 					var result = data.result;
 					var resultDesc = data.resultDesc;
 					if(result == "3" || result == "4"){ 
-						history.back();//报名成功
 						alert(resultDesc);
-						generateRegCode();
-						$("#tz_regCode").val("");
-			
+						history.back(); 
 					}else{
 						alert(resultDesc);
 						generateRegCode();
