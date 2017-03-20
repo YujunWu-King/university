@@ -600,6 +600,12 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 		}
 		return null;
 	}
+	/**
+	 * 删除指定的账号信息
+	 * 
+	 * @param paramOprid
+	 * @return
+	 */
 	public String delete(String paramOprid) {
 		paramOprid = "MBA_" + paramOprid;
 		String sql1 = "DELETE FROM PSOPRDEFN WHERE OPRID = ?";
@@ -615,6 +621,46 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 		int del5 = sqlQuery.update(sql5, new Object[]{paramOprid});
 		
 		String ret = paramOprid + "-->" + del1 + "    -->" + del2 + "    -->" + del3 + "    -->" + del4 + "    -->" + del5;
+		return ret;
+	}
+	
+	/**
+	 * 删除重复数据
+	 * @return
+	 */
+	public String delRepeat() {
+		String sql = "SELECT M.OPRID,M.TZ_EMAIL FROM PS_TZ_MBASLFRG_TBL M,(SELECT TZ_EMAIL,COUNT(1) FROM PS_TZ_MBASLFRG_TBL GROUP BY TZ_EMAIL HAVING COUNT(1) > 1 ) C WHERE M.TZ_EMAIL = C.TZ_EMAIL ORDER BY M.TZ_EMAIL DESC,OPRID DESC";
+		List<?> resultlist = sqlQuery.queryForList(sql);
+		String tmpEmail = "";
+		String msg = "";
+		for (Object obj : resultlist) {
+			Map<String, Object> result = (Map<String, Object>) obj;
+			String attrOprid = result.get("OPRID") == null ? "" : String.valueOf(result.get("OPRID"));
+			String attrEmail = result.get("TZ_EMAIL") == null ? "" : String.valueOf(result.get("TZ_EMAIL"));
+			if(StringUtils.equals(tmpEmail, attrEmail)){
+				int del = sqlQuery.update("DELETE FROM PS_TZ_MBASLFRG_TBL WHERE OPRID = ?", new Object[]{attrOprid});
+				msg = msg + "<br>OPRID : " + attrOprid + "    -->  EMAIL : " + attrEmail + "   --> DELE :  = " + del;
+			}else{
+				tmpEmail = attrEmail;
+			}
+		}
+		return msg;
+	}
+	public String delAll() {
+
+		String sql1 = "DELETE FROM PSOPRDEFN WHERE OPRID REGEXP BINARY 'MBA_*'";
+		String sql2 = "DELETE FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID REGEXP BINARY 'MBA_*'";
+		String sql3 = "DELETE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LYDX_ID REGEXP BINARY 'MBA_*'";
+		String sql4 = "DELETE FROM PS_TZ_REG_USER_T WHERE OPRID REGEXP BINARY 'MBA_*'";
+		String sql5 = "DELETE FROM PSROLEUSER WHERE ROLEUSER REGEXP BINARY 'MBA_*'";
+		
+		int del1 = sqlQuery.update(sql1);
+		int del2 = sqlQuery.update(sql2);
+		int del3 = sqlQuery.update(sql3);
+		int del4 = sqlQuery.update(sql4);
+		int del5 = sqlQuery.update(sql5);
+		
+		String ret = "-->" + del1 + "    -->" + del2 + "    -->" + del3 + "    -->" + del4 + "    -->" + del5;
 		return ret;
 	}
 }
