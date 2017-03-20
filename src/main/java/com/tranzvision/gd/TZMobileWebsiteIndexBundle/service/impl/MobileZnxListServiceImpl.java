@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -66,7 +65,7 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZNX_TZ_LIST_JS_CSS",ctxPath,siteId);
 
 			
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ACTIVITY_LIST",title,"");
+			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_LIST",title,"");
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,menuId,content);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
@@ -128,7 +127,7 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 					//消息内容
 					String msgText =String.valueOf(list.get(i).get("TZ_MSG_TEXT")) ;
 					
-					content = content + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_SYSINFO_DIV",true,znxMsgId,sendTime,sendName,znxStatus,znxSubject,msgText);
+					content = content + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_SYSINFO_DIV",true,znxMsgId,sendTime,znxStatus,znxSubject,msgText);
 					resultNum = resultNum + 1;
 				}
 			}

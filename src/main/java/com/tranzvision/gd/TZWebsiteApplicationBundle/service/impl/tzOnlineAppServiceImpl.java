@@ -192,6 +192,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		// 是否可编辑(管理员审核查看报名表时传递的参数)
 		String strIsEdit = "N";
 
+		// 页面跳转ID
+		String strPageID = "";
+
 		if ("appId".equals(strReferenceId)) {
 			strClassId = request.getParameter("TZ_CLASS_ID");
 			strSiteId = request.getParameter("SITE_ID");
@@ -201,6 +204,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			strCopyFrom = request.getParameter("APPCOPY");
 			strAttachedTplId = request.getParameter("TZ_APP_TPL_ID");
 			strIsEdit = request.getParameter("isEdit");
+			strPageID = request.getParameter("TZ_PAGE_ID");
 			if (strClassId == null) {
 				strClassId = "";
 			}
@@ -214,9 +218,16 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			strCopyFrom = String.valueOf(jacksonUtil.getString("APPCOPY"));
 			strAttachedTplId = String.valueOf(jacksonUtil.getString("TZ_APP_TPL_ID"));
 			strIsEdit = String.valueOf(jacksonUtil.getString("isEdit"));
+
+			strPageID = String.valueOf(jacksonUtil.getString("TZ_PAGE_ID"));
+
 			if (strClassId == null) {
 				strClassId = "";
 			}
+		}
+
+		if (strPageID == null) {
+			strPageID = "";
 		}
 
 		if (strRefLetterId == null)
@@ -591,12 +602,21 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				if (strTZ_FPAGE_BH == null || strTZ_FPAGE_BH.trim().equals("")) {
 					strDivClass = "menu-active-top";
 				} else {
-					numChild = numChild + 1;
-					// 默认第一页高亮
-					if (numChild == 1) {
-						strDivClass = "menu-active";
+
+					if (strPageID == null || strPageID.equals("")) {
+						numChild = numChild + 1;
+						// 默认第一页高亮
+						if (numChild == 1) {
+							strDivClass = "menu-active";
+						} else {
+							strDivClass = "";
+						}
 					} else {
-						strDivClass = "";
+						if (strXxxBh.equals(strPageID)) {
+							strDivClass = "menu-active";
+						} else {
+							strDivClass = "";
+						}
 					}
 				}
 
@@ -826,10 +846,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
 						pwdError, pwdError2, PWDHTML);
-
+				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
+				time2 = System.currentTimeMillis();
+				System.out.println("报名表展现替换HTML页面Begin");
 				str_appform_main_html = siteRepCssServiceImpl.repTitle(str_appform_main_html, strSiteId);
 				str_appform_main_html = siteRepCssServiceImpl.repCss(str_appform_main_html, strSiteId);
-				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
+				System.out.println("报名表展现替换HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 			} catch (TzSystemException e) {
 				e.printStackTrace();
 			}
