@@ -64,13 +64,13 @@ public class TZAutomaticTagIniScrnServiceImpl extends TZAutomaticTagServiceImpl{
 						"Integer");
 			};
 			
-			String sqltzappint = "SELECT TZ_APP_INS_ID FROM PS_TZ_CS_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ORDER BY TZ_KSH_PSPM DESC LIMIT ?  ";
-			List<?> tzappintlist = SqlQuery.queryForList(sqltzappint, new Object[] { classId, batchId, count - a });
+			String sqltzappins = "SELECT TZ_APP_INS_ID FROM PS_TZ_CS_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ORDER BY TZ_KSH_PSPM DESC LIMIT ?  ";
+			List<?> tzappins = SqlQuery.queryForList(sqltzappins, new Object[] { classId, batchId, count - a });
 
-			if (tzappintlist != null && tzappintlist.size() > 0) {
-				for (int i = 0; i < tzappintlist.size(); i++) {
+			if (tzappins != null && tzappins.size() > 0) {
+				for (int i = 0; i < tzappins.size(); i++) {
 						PsTzCsKsbqTKey PsTzCsKsbqTKey = new PsTzCsKsbqTKey();
-						PsTzCsKsbqTKey.setTzAppInsId(Long.valueOf(tzappintlist.get(i).toString()));
+						PsTzCsKsbqTKey.setTzAppInsId(Long.valueOf(tzappins.get(i).toString()));
 						PsTzCsKsbqTKey.setTzClassId(classId);
 						PsTzCsKsbqTKey.setTzApplyPcId(batchId);
 						PsTzCsKsbqTKey.setTzZdbqId(zdbqIniScrnId);
