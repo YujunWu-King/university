@@ -264,10 +264,9 @@ Ext.define('KitchenSink.view.scholarShipManage.scholarController', {
         }
     },
     onSchlrDetailClose:function(btn){
-    	var panel=btn.findParentByType("panel");
-    	if(panel.parentGridStore!=null&&panel.parentGridStore!=""){
-			panel.parentGridStore.reload();
-		}
+    	//var panel=btn.findParentByType("panel");
+    	var interviewMgrPanel=Ext.ComponentQuery.query("panel[reference=scholarList]");
+        interviewMgrPanel[0].getStore().reload();
     	this.getView().close(); 
     },
     setWjdc:function(btn){
