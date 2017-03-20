@@ -1,0 +1,10 @@
+/target
+/target/*
+/src/main/webapp/statics/js/tmp
+/src/main/webapp/statics/js/tmp/*
+/src/main/resources/conf/jdbc.properties
+/src/main/webapp/WEB-INF/logs/*.log
+/src/main/resources/conf/cookieSession.properties
+/src/main/webapp/statics/.idea
+/src/main/webapp/statics/.idea/*
+/.settings
