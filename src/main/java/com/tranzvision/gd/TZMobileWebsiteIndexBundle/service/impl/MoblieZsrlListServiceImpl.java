@@ -169,7 +169,7 @@ public class MoblieZsrlListServiceImpl extends FrameworkImpl{
 						month = artDateList[1];
 						day = artDateList[2];
 					}
-					titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LI",month ,day,artTitle,artUrl,hotAndNewImg);
+					titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LI",day,month,artTitle,artUrl,hotAndNewImg);
 					
 					resultNum = resultNum +1;
 				}

@@ -103,7 +103,8 @@ public class MobileMyActivityListServiceImpl extends FrameworkImpl {
 				}
 			}
 			*/
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ACTIVITY_LIST",title,"");
+			String indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId=" + siteId;
+			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ACTIVITY_LIST",title,"",indexUrl);
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,menuId,content);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
