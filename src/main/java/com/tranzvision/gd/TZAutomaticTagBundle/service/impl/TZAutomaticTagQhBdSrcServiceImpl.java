@@ -1,8 +1,13 @@
 package com.tranzvision.gd.TZAutomaticTagBundle.service.impl;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticTagBundle.service.impl.TZAutomaticTagServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsbqTMapper;
@@ -14,12 +19,12 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * 
  * @author YTT
  * @since 2017-03-01
- * @description 标签前一年递补保留：前一年递补保留名单是否存在于“当前批次下所有报名表状态等于提交且初审状态不等于审批拒绝的考生中”
+ * @description 标签清华（北大）生源：本科教育经历是清华或北大，且有学士学位
  * 
  */
 
-@Service("com.tranzvision.gd.TZAutomaticTagBundle.service.impl.TZAutomaticTagLastYearRMNServiceImpl")
-public class TZAutomaticTagLastYearRMNServiceImpl extends TZAutomaticTagServiceImpl{
+@Service("com.tranzvision.gd.TZAutomaticTagBundle.service.impl.TZAutomaticTagQhBdSrcServiceImpl")
+public class TZAutomaticTagQhBdSrcServiceImpl extends TZAutomaticTagServiceImpl {
 	@Autowired
 	private SqlQuery SqlQuery;
 	@Autowired
@@ -27,12 +32,12 @@ public class TZAutomaticTagLastYearRMNServiceImpl extends TZAutomaticTagServiceI
 	@Autowired
 	private PsTzCsKsbqTMapper PsTzCsKsbqTMapper;
 
-	
 	@Override
 	public boolean automaticTagList(String classId, String batchId, String labelId) {
 		try {
-			String zdbqLyrmnIdSql = "SELECT TZ_HARDCODE_VAL FROM  TZGDQHDEV.PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_LYRMN_ID'";
-			String zdbqLyrmnId = SqlQuery.queryForObject(zdbqLyrmnIdSql, "String");
+			// 标签id：清华（北大）生源-本科教育经历是清华或北大，且有学士学位
+			String zdbqQBSrcIdSql = "SELECT TZ_HARDCODE_VAL FROM  TZGDQHDEV.PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_QBSRC_ID'";
+			String zdbqQBSrcId = SqlQuery.queryForObject(zdbqQBSrcIdSql, "String");
 
 			List<?> tzappins = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZAutomaticTagBundle.TZAutomaticTagLastYearRMNServiceSql"),
@@ -43,7 +48,7 @@ public class TZAutomaticTagLastYearRMNServiceImpl extends TZAutomaticTagServiceI
 					PsTzCsKsbqTKey.setTzAppInsId(Long.valueOf(tzappins.get(i).toString()));
 					PsTzCsKsbqTKey.setTzClassId(classId);
 					PsTzCsKsbqTKey.setTzApplyPcId(batchId);
-					PsTzCsKsbqTKey.setTzZdbqId(zdbqLyrmnId);
+					PsTzCsKsbqTKey.setTzZdbqId(zdbqQBSrcId);
 					PsTzCsKsbqTMapper.insert(PsTzCsKsbqTKey);				
 
 				}
@@ -54,6 +59,6 @@ public class TZAutomaticTagLastYearRMNServiceImpl extends TZAutomaticTagServiceI
 			e.printStackTrace();
 		}
 
-	return true;
+		return true;
 	}
 }

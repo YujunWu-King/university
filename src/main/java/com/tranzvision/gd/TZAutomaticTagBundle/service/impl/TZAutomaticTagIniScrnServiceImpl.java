@@ -1,17 +1,13 @@
 package com.tranzvision.gd.TZAutomaticTagBundle.service.impl;
 
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticTagBundle.service.impl.TZAutomaticTagServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsbqTMapper;
-import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -28,14 +24,8 @@ public class TZAutomaticTagIniScrnServiceImpl extends TZAutomaticTagServiceImpl{
 	@Autowired
 	private SqlQuery SqlQuery;
 	@Autowired
-	private TZGDObject TzSQLObject;
-	@Autowired
 	private PsTzCsKsbqTMapper PsTzCsKsbqTMapper;
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
-	private HttpServletRequest request;
-	
+
 	@Override
 	public boolean automaticTagList(String classId, String batchId, String labelId) {
 		try {
@@ -77,7 +67,6 @@ public class TZAutomaticTagIniScrnServiceImpl extends TZAutomaticTagServiceImpl{
 						PsTzCsKsbqTMapper.insert(PsTzCsKsbqTKey);
 
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
