@@ -752,7 +752,8 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			// 获取机构id;
 			String strJgid = "";
 			String strLang = "";
-
+			String siteId = "";
+			
 			if (jacksonUtil.containsKey("userEmail")) {
 				strUserEmail = jacksonUtil.getString("userEmail");
 			}
@@ -772,12 +773,18 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("lang")) {
 				strLang = jacksonUtil.getString("lang");
 			}
-						
+				
+			if (jacksonUtil.containsKey("siteId")) {
+			    siteId = jacksonUtil.getString("siteId");
+			}
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			//得到用户注册的siteid;
-			String siteId = jdbcTemplate.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
+			
 			if(siteId == null || "".equals(siteId)){
+			    siteId = jdbcTemplate.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
+			    if(siteId==null||"".equals(siteId)){
 				return "当前登录人员没有对应的注册站点id";
+			    }				
 			}
 			
 			// 页面文字双语化

@@ -2,6 +2,13 @@
 var tzGeneralURL = "%bind(:1)";
 </script>
 <script type="text/javascript">
+		function layerMsg(content){
+			layer.open({
+			    content: content,
+			    skin: 'msg',
+			    time: 2 //2秒后自动关闭
+			});	
+		}
 		function setTab(n,_this){
 			$(_this).parents("ul").find("li").removeClass("chose_on");
 			$(_this).addClass("chose_on");
@@ -35,7 +42,7 @@ var tzGeneralURL = "%bind(:1)";
 							$selectorList.append("<li school='" + term.schoolName + "' onclick='setFanhui2(this);'>" + term.schoolName + "</li>");
 						});
 					}else{
-						console.log("不管用")
+						//console.log("不管用")
 						$selectorList.append("<li>当前国家下暂无学校列表</li>");
 					}
 			  	}
@@ -47,6 +54,25 @@ var tzGeneralURL = "%bind(:1)";
 			$("#searchSchool").empty();
 			$("#body").css("position","relative");
 		}
+		
+		function sureOther(){
+			var otherSchool = $("#otherSchool").val();
+			if(otherSchool!=""&&otherSchool!=undefined){
+				//设置返回值
+				var clickId = $("#ParamCon").val();
+				$("#" + clickId).val(otherSchool);
+				//关闭窗口
+				closePop();
+				//清华MBA
+				if((typeof changeImg)=="function"){
+					var successFlg = "S";					
+					changeImg(clickId,successFlg);
+				}
+			}else{
+				layerMsg("请输入其他学校名称");
+			}
+		}
+		
 		function setFanhui2(obj){
 			var school = $(obj).attr("school");
 			//设置返回值
@@ -105,8 +131,9 @@ var tzGeneralURL = "%bind(:1)";
 <ul id="selectorList" class="country_list"></ul>
 <div class="pop_chose">其他学校</div>
 <div class="pop_search1">
-<input type="text" name="otherSchool" style="width: 88%; margin: 1% auto 4%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
-<a href="javascript:void(0)"><i></i></a>
+<input type="text" id="otherSchool" name="otherSchool" style="width: 86%; margin: 1% auto 4%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
+<!-- <a href="javascript:void(0)"><i></i></a> -->
+<input type="button" id="sureOtherSchool" name="sureOtherSchool" value="确认" style="width:42px;height:24px;border-radius:3px;background-color:#8f5dc0;text-align:center;margin-left:5px;margin-top:3px;" onclick="sureOther()"/>
 </div>		
 <input id="FanhuiValue2" type="hidden" />
 <input id="language" type="hidden" value="%bind(:5)"/>

@@ -183,7 +183,11 @@ $(document).ready(function() {
                 if (key == "TZ_GENDER") {
                     $("input[name='TZ_GENDER'][value='" + data[key] + "']").attr("checked", "checked");
                     $("input[name='TZ_GENDER'][value='" + data[key] + "']").next().addClass("bon-radio");
-                } else {
+                }else if(key == "TZ_COMMENT2"||key == "TZ_HIGHEST_EDU"||key == "TZ_COMMENT4"||key == "TZ_COMMENT5"||key == "TZ_COMMENT15"||key == "TZ_COMMENT6"||key == "TZ_COMMENT10"){
+                	$("#" + key).val(data[key]);
+                	var selectText = $("#" + key).find("option:selected").text();
+                	$("#s2id_" + key).find(".select2-chosen").text(selectText);
+                }else {
                     $("#" + key).val(data[key]);
                     if (key == "TZ_SCH_COUNTRY") {
                         $("#TZ_SCH_CNAME_Country").attr("ccode", data[key]);
@@ -244,6 +248,7 @@ $(document).ready(function() {
         if(_statusFlg=="error"){
         	return false;
         }
+        userInfoJson["siteId"] = TZ_GD_LOGIN_SITEI_ID; 
         userInfoJson["jgid"] = strJgid;
         userInfoJson["lang"] = strLang;
 
