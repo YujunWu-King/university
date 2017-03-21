@@ -69,20 +69,33 @@
 	            var index = $(".table_style tbody tr").index(this);
 	            if ($(this).hasClass('trSelected')) {
 	                $(this).hide();
-	                //removedRecords.push({stationMailId:'10'})
-	                console.log(index);
+	                removedRecords.push({
+	                	mailId:$(this).find("i.ico-check").attr("mailid")
+	                });
+	                
 	            }
 	          });
-	            
-	            var tzParams = {
-	   	   			 ComID:"TZ_WEBSITE_ZNX_COM",
-	   	   			 PageID:"TZ_WEBSITE_ZNX_STD",
-	   	   			 OperateType:"U",
-	   	   			 comParams:{
-	   	   				 delete:removedRecords
-	   	   	 		}
-	   	   	 	};
-	          //loadStationMails(1,0,"");
+	            if(removedRecords.length>0){
+		            var tzParams = {
+		   	   			 ComID:"TZ_WEBSITE_ZNX_COM",
+		   	   			 PageID:"TZ_WEBSITE_ZNX_STD",
+		   	   			 OperateType:"U",
+		   	   			 comParams:{
+		   	   				update:removedRecords
+		   	   	 		}
+		   	   	 	};
+		            $.ajax({
+						type:"POST",
+						url: urlBegin,
+						data:{
+							tzParams:JSON.stringify(tzParams)
+						},
+						success:function(response){
+							alert("删除成功！");
+						}
+		            });
+	            }
+	          loadStationMails(1,0,"");
         });
    	 	//搜索
    		$(".search_icon").click(function(event){
@@ -124,9 +137,6 @@
 						var data = eval("("+response+")").comContent;
 						
 						var pageCount = parseInt(data.total/15)+(data.total%15>0&&1||0)
-						if(pageCount<1){
-							$(".main_article_nav").hide();
-						}
 						//分页栏
 						var pageCountsHtml = '<li onclick="loadPage(-1)">&lt;&lt;</li>';
 						for(var i=1;i<=pageCount;i++){

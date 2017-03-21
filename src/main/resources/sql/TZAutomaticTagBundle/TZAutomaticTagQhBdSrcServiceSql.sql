@@ -1,7 +1,7 @@
 /**
  * 自动标签
  * 标签清华（北大）生源：本科教育经历是清华或北大，且有学士学位
- *  * TZ_APP_FORM_STA：S 保存；  U 提交；  P 预提交
+ * TZ_APP_FORM_STA：S 保存；  U 提交；  P 预提交
  * TZ_FORM_SP_STA：A 审批通过； B 拒绝； N 待审核
  */
 

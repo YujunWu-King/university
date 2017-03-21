@@ -161,9 +161,10 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 	
 	/* 删除站内信 */
 	@Override
-	public String tzDelete(String[] znxData, String[] errMsg) {
+	public String tzUpdate(String[] znxData, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
+		String strStationMailId = "";
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		// 若参数为空，直接返回;
 		if (znxData == null || znxData.length == 0) {
@@ -171,17 +172,12 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 		}
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-
 			int num = 0;
 			for (num = 0; num < znxData.length; num++) {
-				String strForm = znxData[num];
-				// 将字符串转换成json;
-				jacksonUtil.json2Map(strForm);
-				String strStationMailId = jacksonUtil.getString("stationMailId");
-				String strRecId = jacksonUtil.getString("znxRecId");
+				jacksonUtil.json2Map(znxData[num]);				
+				strStationMailId = jacksonUtil.getString("mailId");
 				String comPageSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_REC_DELSTATUS = 'Y' WHERE TZ_ZNX_MSGID = ? AND TZ_ZNX_RECID = ?";
-				jdbcTemplate.update(comPageSql,new Object[]{strStationMailId,strRecId});		
-				
+				jdbcTemplate.update(comPageSql,new Object[]{strStationMailId,oprid});		
 			}
 		} catch (Exception e) {
 			errMsg[0] = "1";

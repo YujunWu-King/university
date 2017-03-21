@@ -66,11 +66,11 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 				switch(strOperate){
 				case "next":
 					String nextSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID <? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
-					strMailId = jdbcTemplate.queryForObject(nextSQL, new Object[]{"TZ_14026",strMailId},"String");
+					strMailId = jdbcTemplate.queryForObject(nextSQL, new Object[]{oprid,strMailId},"String");
 					break;
 				case "prev":
 					String prevSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID >? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
-					strMailId = jdbcTemplate.queryForObject(prevSQL, new Object[]{"TZ_14026",strMailId},"String");
+					strMailId = jdbcTemplate.queryForObject(prevSQL, new Object[]{oprid,strMailId},"String");
 					break;
 				}
 			}
@@ -105,7 +105,7 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 			}
 			//站内信内容页面双语化
 			String znxContent = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "1",
-					language, "站内信内容", "站内信内容");
+					language, "站内信", "站内信");
 			String znxReturn = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "2",
 					language, "返回", "返回");
 			String znxPrev = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "3",
