@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsbqTMapper" >
-  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqT" >
     <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
     <id column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
     <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
     <id column="TZ_ZDBQ_ID" property="tzZdbqId" jdbcType="VARCHAR" />
+    <result column="TZ_BIAOQZ_NAME" property="tzBiaoqzName" jdbcType="VARCHAR" />
   </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, TZ_ZDBQ_ID, TZ_BIAOQZ_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_CS_KSBQ_T
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_ZDBQ_ID = #{tzZdbqId,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey" >
     delete from PS_TZ_CS_KSBQ_T
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
@@ -14,13 +27,13 @@
       and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
       and TZ_ZDBQ_ID = #{tzZdbqId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey" >
+  <insert id="insert" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqT" >
     insert into PS_TZ_CS_KSBQ_T (TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, 
-      TZ_ZDBQ_ID)
+      TZ_ZDBQ_ID, TZ_BIAOQZ_NAME)
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, 
-      #{tzZdbqId,jdbcType=VARCHAR})
+      #{tzZdbqId,jdbcType=VARCHAR}, #{tzBiaoqzName,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey" >
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqT" >
     insert into PS_TZ_CS_KSBQ_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzClassId != null" >
@@ -34,6 +47,9 @@
       </if>
       <if test="tzZdbqId != null" >
         TZ_ZDBQ_ID,
+      </if>
+      <if test="tzBiaoqzName != null" >
+        TZ_BIAOQZ_NAME,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -49,6 +65,29 @@
       <if test="tzZdbqId != null" >
         #{tzZdbqId,jdbcType=VARCHAR},
       </if>
+      <if test="tzBiaoqzName != null" >
+        #{tzBiaoqzName,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqT" >
+    update PS_TZ_CS_KSBQ_T
+    <set >
+      <if test="tzBiaoqzName != null" >
+        TZ_BIAOQZ_NAME = #{tzBiaoqzName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_ZDBQ_ID = #{tzZdbqId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqT" >
+    update PS_TZ_CS_KSBQ_T
+    set TZ_BIAOQZ_NAME = #{tzBiaoqzName,jdbcType=VARCHAR}
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+      and TZ_ZDBQ_ID = #{tzZdbqId,jdbcType=VARCHAR}
+  </update>
 </mapper>
