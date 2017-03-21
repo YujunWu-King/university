@@ -1,7 +1,7 @@
 Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.classModel', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: 'classID',type:'number'},
+        {name: 'classID'},
         {name: 'className'},
 		{name: 'batchID'},
 		{name: 'batchName'},

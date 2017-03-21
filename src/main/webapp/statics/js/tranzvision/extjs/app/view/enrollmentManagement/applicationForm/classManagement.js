@@ -49,9 +49,6 @@
 		var store = new KitchenSink.view.enrollmentManagement.applicationForm.classStore(),
 			applyStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_BMGL_APPLY_STATUS");
 		
-		store.on('load',function(s,records){
-			
-		});
 		applyStatusStore.on('load',function(){
 			store.load();
 		});

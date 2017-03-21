@@ -97,16 +97,16 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 			// 查询总数;
 			String totalSQL = "select count(*) from PS_TZ_CSWJ_PCT_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=?";
 			total = jdbcTemplate.queryForObject(totalSQL, new Object[] { strCswjId, strWjId, strXxxBh }, "Integer");
-			String sql = "select TZ_XXXKXZ_MC,TZ_XXXKXZ_MS,TZ_U_LIMIT,TZ_L_LIMIT,TZ_HISTORY_VAL,TZ_CURYEAR_VAL from  PS_TZ_CSWJ_PCT_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=? order by TZ_ORDER LIMIT ?,?";
+			String sql = "select TZ_XXXKXZ_MC,TZ_XXXKXZ_MS,TZ_U_LIMIT,TZ_L_LIMIT,TZ_HISTORY_VAL,TZ_CURYEAR_VAL from  PS_TZ_CSWJ_PCT_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=? order by TZ_XXXKXZ_MC+0 LIMIT ?,?";
 			List<?> listData = jdbcTemplate.queryForList(sql,
 					new Object[] { strCswjId, strWjId, strXxxBh, numStart, numLimit });
 			for (Object objData : listData) {
 				Map<String, Object> mapData = (Map<String, Object>) objData;
 				int TZ_ORDER = mapData.get("TZ_ORDER") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_ORDER")));
-				int TZ_L_LIMIT = mapData.get("TZ_L_LIMIT") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_L_LIMIT")));
-				int TZ_U_LIMIT = mapData.get("TZ_U_LIMIT") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_U_LIMIT")));
-				int TZ_HISTORY_VAL = mapData.get("TZ_HISTORY_VAL") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_HISTORY_VAL")));
-				int TZ_CURYEAR_VAL = mapData.get("TZ_CURYEAR_VAL") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_CURYEAR_VAL")));
+				float TZ_L_LIMIT = mapData.get("TZ_L_LIMIT") == null ? 0: Float.valueOf(String.valueOf(mapData.get("TZ_L_LIMIT")));
+				float TZ_U_LIMIT = mapData.get("TZ_U_LIMIT") == null ? 0: Float.valueOf(String.valueOf(mapData.get("TZ_U_LIMIT")));
+				float TZ_HISTORY_VAL = mapData.get("TZ_HISTORY_VAL") == null ? 0: Float.valueOf(String.valueOf(mapData.get("TZ_HISTORY_VAL")));
+				float TZ_CURYEAR_VAL = mapData.get("TZ_CURYEAR_VAL") == null ? 0: Float.valueOf(String.valueOf(mapData.get("TZ_CURYEAR_VAL")));
 				String TZ_XXXKXZ_MC = String.valueOf(mapData.get("TZ_XXXKXZ_MC"));
 				//String TZ_XXXKXZ_MS = jdbcTemplate.queryForObject("select TZ_XXXKXZ_MS from PS_TZ_DCWJ_XXKXZ_T where TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?",new Object[] { strWjId, strXxxBh, TZ_XXXKXZ_MC }, "String");
 				String TZ_XXXKXZ_MS=(mapData.get("TZ_XXXKXZ_MS")==null?"":String.valueOf(mapData.get("TZ_XXXKXZ_MS")));
@@ -472,10 +472,10 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 						TZ_XXXKXZ_MC="" + getSeqNum.getSeqNum("PS_TZ_CSWJ_PCT_TBL", "TZ_XXXKXZ_MC");
 					}
 					int TZ_ORDER = mapData.get("TZ_ORDER") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_ORDER")));
-					int TZ_L_LIMIT = mapData.get("TZ_L_LIMIT") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_L_LIMIT")));
-					int TZ_U_LIMIT = mapData.get("TZ_U_LIMIT") == null ? 0: Integer.valueOf(mapData.get("TZ_U_LIMIT").toString());
-					int TZ_HISTORY_VAL = mapData.get("TZ_HISTORY_VAL") == null ? 0: Integer.valueOf(mapData.get("TZ_HISTORY_VAL").toString());
-					int TZ_CURYEAR_VAL = mapData.get("TZ_CURYEAR_VAL") == null ? 0: Integer.valueOf(String.valueOf(mapData.get("TZ_CURYEAR_VAL")));
+					float TZ_L_LIMIT = mapData.get("TZ_L_LIMIT") == null ? 0: Float.valueOf(String.valueOf(mapData.get("TZ_L_LIMIT")));
+					float TZ_U_LIMIT = mapData.get("TZ_U_LIMIT") == null ? 0: Float.valueOf(mapData.get("TZ_U_LIMIT").toString());
+					float TZ_HISTORY_VAL = mapData.get("TZ_HISTORY_VAL") == null ? 0: Float.valueOf(mapData.get("TZ_HISTORY_VAL").toString());
+					float TZ_CURYEAR_VAL = mapData.get("TZ_CURYEAR_VAL") == null ? 0: Float.valueOf(String.valueOf(mapData.get("TZ_CURYEAR_VAL")));
 
 					String sqlGetMsgInfoTmp = "select count(*) from PS_TZ_CSWJ_PCT_TBL where TZ_CS_WJ_ID=? and TZ_DC_WJ_ID=? and TZ_XXX_BH=? and TZ_XXXKXZ_MC=?";
 					int count = jdbcTemplate.queryForObject(sqlGetMsgInfoTmp,new Object[] { TZ_CS_WJ_ID, TZ_DC_WJ_ID, TZ_XXX_BH, TZ_XXXKXZ_MC }, "Integer");

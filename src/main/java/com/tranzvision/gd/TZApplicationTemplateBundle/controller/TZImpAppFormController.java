@@ -29,6 +29,7 @@ public class TZImpAppFormController {
 	@Autowired
 	private TzRegMbaKsServiceImpl tzRegMbaKsServiceImpl;
 	
+	/*----------------------------考生数据导入相关方法---------------------------------*/
 	/**
 	 * 批量注册MBA历史考生
 	 * 
@@ -119,7 +120,7 @@ public class TZImpAppFormController {
         return msg;
 	}
 	
-	
+	/*----------------------------报名表导入相关方法---------------------------------*/
 	/**
 	 * 报名表导入
 	 * @param request
@@ -145,6 +146,7 @@ public class TZImpAppFormController {
 		return impMsg;
 	}
 	
+	/*----------------------------推荐信导入相关方法---------------------------------*/
 	/**
 	 * 推荐信导入
 	 * 
@@ -167,5 +169,13 @@ public class TZImpAppFormController {
 		String impMsg = tZImpAppFormServiceImpl.impAppLetter(clsid,min,max);
 
 		return impMsg;
+	}
+	@RequestMapping(value = { "/change" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String changePassword(HttpServletRequest request, HttpServletResponse response){
+		String mail = request.getParameter("mail");
+       	boolean retmsg = tZImpAppFormServiceImpl.changePassword(mail);
+       
+        return retmsg + "";
 	}
 }
