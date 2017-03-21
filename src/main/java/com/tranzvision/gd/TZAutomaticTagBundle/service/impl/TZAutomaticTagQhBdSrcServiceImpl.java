@@ -1,13 +1,8 @@
 package com.tranzvision.gd.TZAutomaticTagBundle.service.impl;
 
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticTagBundle.service.impl.TZAutomaticTagServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqT;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsbqTMapper;
@@ -51,6 +46,7 @@ public class TZAutomaticTagQhBdSrcServiceImpl extends TZAutomaticTagServiceImpl 
 					PsTzCsKsbqT.setTzClassId(classId);
 					PsTzCsKsbqT.setTzApplyPcId(batchId);
 					PsTzCsKsbqT.setTzZdbqId(zdbqQBSrcId);
+					PsTzCsKsbqT.setTzBiaoqzName(zdbqQBSrcName);
 					PsTzCsKsbqTMapper.insert(PsTzCsKsbqT);				
 
 				}
