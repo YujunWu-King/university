@@ -46,6 +46,7 @@ public class TZAutomaticTagLastYearRMNServiceImpl extends TZAutomaticTagServiceI
 					PsTzCsKsbqT.setTzClassId(classId);
 					PsTzCsKsbqT.setTzApplyPcId(batchId);
 					PsTzCsKsbqT.setTzZdbqId(zdbqLyrmnId);
+					PsTzCsKsbqT.setTzBiaoqzName(zdbqLyrmnName);
 					PsTzCsKsbqTMapper.insert(PsTzCsKsbqT);				
 
 				}

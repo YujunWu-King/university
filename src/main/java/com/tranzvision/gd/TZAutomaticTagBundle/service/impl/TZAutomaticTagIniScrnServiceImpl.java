@@ -1,15 +1,12 @@
 package com.tranzvision.gd.TZAutomaticTagBundle.service.impl;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticTagBundle.service.impl.TZAutomaticTagServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqT;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsbqTMapper;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 
@@ -67,7 +64,7 @@ public class TZAutomaticTagIniScrnServiceImpl extends TZAutomaticTagServiceImpl{
 						PsTzCsKsbqT.setTzClassId(classId);
 						PsTzCsKsbqT.setTzApplyPcId(batchId);
 						PsTzCsKsbqT.setTzZdbqId(zdbqIniScrnId);
-						PsTzCsKsbqT.setTzBiaoqzName(zdbqIniScrnId);
+						PsTzCsKsbqT.setTzBiaoqzName(zdbqIniScrnName);
 						PsTzCsKsbqTMapper.insert(PsTzCsKsbqT);
 
 				}
