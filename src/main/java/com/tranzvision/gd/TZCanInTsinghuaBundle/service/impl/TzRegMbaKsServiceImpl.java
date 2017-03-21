@@ -544,7 +544,7 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 	public String reg(int max, int min) {
 		try {
 			//列表SQL
-			String sql = "SELECT * FROM PS_TZ_MBASLFRG_TBL WHERE cast(OPRID as unsigned int) >= ? AND cast(OPRID as unsigned int) < ? order by cast(OPRID as unsigned int)";
+			String sql = "SELECT * FROM PS_TZ_MBASLFRG_TBL WHERE cast(OPRID as unsigned int) >= ? AND cast(OPRID as unsigned int) < ?  AND CONCAT('MBA_',OPRID) NOT IN (SELECT OPRID FROM PSOPRDEFN WHERE OPRID REGEXP BINARY 'MBA_*') order by cast(OPRID as unsigned int)";
 			List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { min,max });
 			String[] errMsg = { "0", "" };
 			Map<String, Object> mapRetJson = new HashMap<String, Object>();
@@ -585,9 +585,9 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 				paramsMap.put("data", mapData);
 				String strParams = jacksonUtil.Map2json(paramsMap);
 				
-				logger.info(attrOprid + " Params-----> " + strParams);
+//				logger.info(attrOprid + " Params-----> " + strParams);
 				String strResult = this.saveEnrollInfo(strParams , errMsg);
-				logger.info(attrOprid + " Result-----> " + strResult);
+//				logger.info(attrOprid + " Result-----> " + strResult);
 				if(StringUtils.equals(strResult, "failure")){
 					mapRetJson.put(attrOprid, errMsg[1]);
 				}
