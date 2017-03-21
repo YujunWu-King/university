@@ -23,9 +23,10 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl.MobileZnxListServiceImpl")
 public class MobileZnxListServiceImpl extends FrameworkImpl {
-	
 	@Autowired
 	private SqlQuery sqlQuery;
+	@Autowired
+	private SqlQuery jdbcTemplate;
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
@@ -64,7 +65,6 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 			//css和js
 			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZNX_TZ_LIST_JS_CSS",ctxPath,siteId);
 
-			
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_LIST",title,"");
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,menuId,content);
 		} catch (TzSystemException e) {
@@ -141,5 +141,31 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 		returnMap.replace("result", content);
 		
 		return jacksonUtil.Map2json(returnMap);
+	}
+	/* 更新站内信状态 */
+	@Override
+	public String tzUpdate(String[] znxData, String[] errMsg) {
+		String strRet = "{}";
+		String strMailId = "";
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			int num = 0;
+			for (num = 0; num < znxData.length; num++) {
+				jacksonUtil.json2Map(znxData[num]);				
+				strMailId = jacksonUtil.getString("mailId");
+				String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
+				String znxStatus = sqlQuery.queryForObject(znxStatusSql, new Object[] { strMailId,oprid},"String");
+				znxStatus = znxStatus == null ?"":znxStatus;
+				if (znxStatus.equals("N")){
+					String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
+					jdbcTemplate.update(updateStatusSql,new Object[]{strMailId,oprid});
+			}
+		}} catch (Exception e) {
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+			return strRet;
+		}
+		return strRet;
 	}
 }
