@@ -187,7 +187,7 @@ public class tzOnlineAppHisServiceImpl {
 					 Map<String, Object> mapChildrenInfo = (Map<String, Object>) childrenInfo;
 					 strXxxBhChild = mapChildrenInfo.get("TZ_XXX_BH") == null ? "" : String.valueOf(mapChildrenInfo.get("TZ_XXX_BH"));
 					 Map<String, Object> mapAppXxxInsJson = new HashMap<String, Object>();
-					 if("EduExperience".equals(strComLmc) || "workExperience".equals(strComLmc)||"EngLev".equals(strComLmc)){
+					 if("EduExperience".equals(strComLmc) || "workExperience".equals(strComLmc)||"EngLevl".equals(strComLmc)){
 						 mapAppXxxInsJson = this.getEduOrWorkExprXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, i, strOprNameApp); 
 					 }	 
 					 //1.解析"英语水平"控件   //2.解析"职业背景"控件  //3.解析"开始创业"控件 //4.解析"推荐信"控件
@@ -202,7 +202,7 @@ public class tzOnlineAppHisServiceImpl {
 					 }
 					 else{
 						 mapAppXxxInsJson = this.getDhXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, strXxxBh,i, strOprNameApp,strComLmc);
-						 System.out.println("mapAppXxxInsJson.size:"+mapAppXxxInsJson.size()+" strComLmc:"+strComLmc+" strXxxBhChild:"+strXxxBhChild);
+						 //System.out.println("mapAppXxxInsJson.size:"+mapAppXxxInsJson.size()+" strComLmc:"+strComLmc+" strXxxBhChild:"+strXxxBhChild);
 					 }
 			
 					 if(mapAppXxxInsJson!=null){
