@@ -2022,6 +2022,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 				
 				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
+				
+				//console.log("rec_sex:"+rec_sex);
 				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
 				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex==""){
 					_yz="1";
@@ -2187,7 +2189,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						//console.log(sendFlag);
 						
 						//console.log($(this).attr("id"));
-						console.log(sendFlag);
+						//console.log("rec_sexID:"+ data["itemId"] + children[m-1].recommend_15["itemId"]);
+						console.log("rec_sex:"+rec_sex);
 						
 						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 
@@ -2288,7 +2291,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
 				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
 				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
-				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex==""){
+				//console.log("rec_sex:"+rec_sex);
+				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex!=""){
 				}else{
 					rec_sex="";
 				}
@@ -2357,7 +2361,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				//}
 				
 				//console.log($(this).attr("id"));
-				console.log(sendFlag);
+				//console.log("rec_sexID:"+ data["itemId"] + children[m-1].recommend_15["itemId"]);
+				console.log("rec_sex:"+rec_sex);
 				
 				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 				

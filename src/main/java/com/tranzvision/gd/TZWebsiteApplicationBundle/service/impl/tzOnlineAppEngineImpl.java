@@ -1819,7 +1819,14 @@ public class tzOnlineAppEngineImpl {
 						}
 						if (!Listcheck) {
 							// System.out.println("推荐信推荐人信息校验失败");
-							returnMsg = returnMsg + "推荐人信息不完整" + "<br/>";
+							sql = "select TZ_APP_TPL_LAN from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?";
+							String LAN = sqlQuery.queryForObject(sql, new Object[] { strTplId }, "String");
+
+							if (LAN.equals("ENG")) {
+								returnMsg = returnMsg + "Reference information is incomplete" + "<br/>";
+							} else {
+								returnMsg = returnMsg + "推荐人信息不完整" + "<br/>";
+							}
 							listPageNo.add(0);
 						}
 					}
