@@ -2167,11 +2167,27 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						
 						//区分发送给自己 还是发送给 推荐人
 						var sendFlag ="";
-						if ($(this).attr("id")=="sendEmail_"+(Number(num)-1)) {
+						
+						
+						var sssid = $(this).attr("id");
+						
+						var index = sssid.indexOf('sendEmail_');
+						if(index==0){
 							sendFlag= "Y";  //发送给推荐人
 						} else {
 							sendFlag= "N";  //发送给自己
 						}
+						//if ($(this).attr("id")=="sendEmail_"+(Number(num)-1)) {
+						//	sendFlag= "Y";  //发送给推荐人
+						//} else {
+						//	sendFlag= "N";  //发送给自己
+						//}
+						
+						//console.log($(this).attr("id"));
+						//console.log(sendFlag);
+						
+						//console.log($(this).attr("id"));
+						console.log(sendFlag);
 						
 						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 
@@ -2326,11 +2342,22 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				
 				//区分发送给自己 还是发送给 推荐人
 				var sendFlag ="";
-				if ($(this).attr("id")=="reSendEmail_"+(Number(num)-1)) {
+				var sssid = $(this).attr("id");
+				
+				var index = sssid.indexOf('reSendEmail_');
+				if(index==0){
 					sendFlag= "Y";  //发送给推荐人
 				} else {
 					sendFlag= "N";  //发送给自己
 				}
+				//if ($(this).attr("id")=="reSendEmail_"+(Number(num)-1)) {
+				//	sendFlag= "Y";  //发送给推荐人
+				//} else {
+				//	sendFlag= "N";  //发送给自己
+				//}
+				
+				//console.log($(this).attr("id"));
+				console.log(sendFlag);
 				
 				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 				

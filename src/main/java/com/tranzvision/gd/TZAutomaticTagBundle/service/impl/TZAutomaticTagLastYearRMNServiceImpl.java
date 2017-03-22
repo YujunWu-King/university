@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAutomaticTagBundle.service.impl.TZAutomaticTagServiceImpl;
-import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey;
+import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqT;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsbqTMapper;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -33,18 +33,21 @@ public class TZAutomaticTagLastYearRMNServiceImpl extends TZAutomaticTagServiceI
 		try {
 			String zdbqLyrmnIdSql = "SELECT TZ_HARDCODE_VAL FROM  TZGDQHDEV.PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_LYRMN_ID'";
 			String zdbqLyrmnId = SqlQuery.queryForObject(zdbqLyrmnIdSql, "String");
+			String zdbqLyrmnNameSql = "SELECT TZ_BIAOQZ_NAME FROM  PS_TZ_BIAOQZ_BQ_T WHERE TZ_BIAOQ_ID=?";
+			String zdbqLyrmnName = SqlQuery.queryForObject(zdbqLyrmnNameSql,new Object[] { zdbqLyrmnId },  "String");
 
 			List<?> tzappins = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZAutomaticTagBundle.TZAutomaticTagLastYearRMNServiceSql"),
 					new Object[] { classId, batchId });
 			if (tzappins != null && tzappins.size() > 0) {
 				for (int i = 0; i < tzappins.size(); i++) {
-					PsTzCsKsbqTKey PsTzCsKsbqTKey = new PsTzCsKsbqTKey();
-					PsTzCsKsbqTKey.setTzAppInsId(Long.valueOf(tzappins.get(i).toString()));
-					PsTzCsKsbqTKey.setTzClassId(classId);
-					PsTzCsKsbqTKey.setTzApplyPcId(batchId);
-					PsTzCsKsbqTKey.setTzZdbqId(zdbqLyrmnId);
-					PsTzCsKsbqTMapper.insert(PsTzCsKsbqTKey);				
+					PsTzCsKsbqT PsTzCsKsbqT = new PsTzCsKsbqT();
+					PsTzCsKsbqT.setTzAppInsId(Long.valueOf(tzappins.get(i).toString()));
+					PsTzCsKsbqT.setTzClassId(classId);
+					PsTzCsKsbqT.setTzApplyPcId(batchId);
+					PsTzCsKsbqT.setTzZdbqId(zdbqLyrmnId);
+					PsTzCsKsbqT.setTzBiaoqzName(zdbqLyrmnName);
+					PsTzCsKsbqTMapper.insert(PsTzCsKsbqT);				
 
 				}
 

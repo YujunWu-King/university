@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
+import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
+import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
@@ -45,6 +48,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppRulesImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.encrypt.Sha3DesMD5;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -71,6 +75,9 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private GdKjComServiceImpl gdKjComServiceImpl;
+	
+	@Autowired
+	private PsoprdefnMapper psoprdefnMapper;
 	
 	@Autowired
 	private TZGDObject tzGDObject;
@@ -2333,5 +2340,27 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			
 			String ret = del1 + "    -->" + del2 + "    -->" + del3 + "    -->" + del4 + "    -->" + del5 + "    -->" + del6 + "    -->" + del7 + "    -->" + del8;
 			return ret;
+		}
+
+		/**
+		 * 初始化指定邮箱对应的账号密码为123456
+		 * 
+		 * @param mail
+		 * @return
+		 */
+		public boolean changePassword(String mail) {
+			String oprSql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_EMAIL = ?";
+			String oprId = sqlQuery.queryForObject(oprSql, new String[]{mail}, "String");
+		
+			Psoprdefn psoprdefn = new Psoprdefn();
+			psoprdefn.setOprid(oprId);
+			String password = DESUtil.encrypt("123456", "TZGD_Tranzvision");
+			psoprdefn.setOperpswd(password);
+			int change = psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
+			if(change > 0){
+				return true;
+			}else{
+				return false;
+			}
 		}
 }

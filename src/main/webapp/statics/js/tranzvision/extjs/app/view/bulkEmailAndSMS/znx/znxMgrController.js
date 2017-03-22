@@ -86,7 +86,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 
             znxDtForm.down('grid[reference=znxTmplItemGrid]').setStore(znxItemStore);
             znxDtForm.down('grid[reference=znxInfoItemGrid]').setStore(attaStore);
-
+            
+            /*
             var par = '{"znxQfId": "","queryID": "recever"}';
             receverStore.tzStoreParams=par;
 		
@@ -95,6 +96,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 					//znxDtForm.down('tagfield[reference=recever]').setStore(receverStore);
 				}
 			});
+			*/
 			znxDtForm.down('tagfield[reference=recever]').setStore(receverStore);
 			
 			ZnxTmplStore.load({
@@ -206,6 +208,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 					//emlBkDetForm.down('tagfield[reference=recever]').setStore(receverStore);
 				}
 			});
+			
 			emlBkDetForm.down('tagfield[reference=recever]').setStore(receverStore);
 			
 			ZnxTmplStore.load({
