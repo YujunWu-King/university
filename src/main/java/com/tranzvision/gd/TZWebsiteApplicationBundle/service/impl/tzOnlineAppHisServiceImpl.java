@@ -204,21 +204,25 @@ public class tzOnlineAppHisServiceImpl {
 						 mapAppXxxInsJson = this.getDhXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, strXxxBh,i, strOprNameApp,strComLmc);
 						 //System.out.println("mapAppXxxInsJson.size:"+mapAppXxxInsJson.size()+" strComLmc:"+strComLmc+" strXxxBhChild:"+strXxxBhChild);
 					 }
-			
-					 if(mapAppXxxInsJson!=null){
-						 for (Entry<String, Object> entry:mapAppXxxInsJson.entrySet()){
-							 String mapAppXxxInsJsonKey = entry.getKey();
-							 Map<String, Object> mapAppXxxInsJsonValue = (Map<String, Object>)entry.getValue();
-							 //分解mapAppXxxInsJsonValue
-							 for(Entry<String, Object>valEntry:mapAppXxxInsJsonValue.entrySet()){
-								 String valKey=valEntry.getKey();
-								 if(valKey.equals("children")){
-									 //將children中的值取出來作爲一個Map
-									 Map<String,Object>valChildren=((List<Map<String, Object>>) valEntry.getValue()).get(0);
-									 tempList.add(valChildren);
+					 
+					 if(mapAppXxxInsJson!=null&&"LayoutControls".equals(strComLmc) ){
+						 try{
+							 for (Entry<String, Object> entry:mapAppXxxInsJson.entrySet()){
+								 String mapAppXxxInsJsonKey = entry.getKey();
+								 Map<String, Object> mapAppXxxInsJsonValue = (Map<String, Object>)entry.getValue();
+								 //分解mapAppXxxInsJsonValue
+								 for(Entry<String, Object>valEntry:mapAppXxxInsJsonValue.entrySet()){
+									 String valKey=valEntry.getKey();
+									 if(valKey.equals("children")){
+										 //將children中的值取出來作爲一個Map
+										 Map<String,Object>valChildren=((List<Map<String, Object>>) valEntry.getValue()).get(0);
+										 tempList.add(valChildren);
+									 }
 								 }
+								 mapChild.put(mapAppXxxInsJsonKey, mapAppXxxInsJsonValue);
 							 }
-							 mapChild.put(mapAppXxxInsJsonKey, mapAppXxxInsJsonValue);
+						 }catch(Exception e){
+							 
 						 }
 					 }
 		
