@@ -229,6 +229,7 @@ public class tzOnlineAppHisServiceImpl {
 				  }
 				 //---------------------------------------------------------------------
 				 Map<String,Object>relChildrenData=new HashMap<String,Object>();
+				 try{
 				  if(tempList!=null&&tempList.size()>1){
 					  for(int index=0;index<tempList.size();index++){
 						  Map<String,Object>tempMap=tempList.get(index);
@@ -252,6 +253,9 @@ public class tzOnlineAppHisServiceImpl {
 							 }
 						  mapChild.replace(mapAppXxxInsJsonKey, mapAppXxxInsJsonValue);
 					  }
+				  }
+				  }catch(Exception e){
+					  
 				  }
 				  System.out.println("relChildrenData:"+new JacksonUtil().Map2json(relChildrenData));
 				  //---------------------------------------------------------------------
