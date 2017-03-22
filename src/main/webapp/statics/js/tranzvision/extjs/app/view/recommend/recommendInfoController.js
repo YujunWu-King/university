@@ -17,50 +17,171 @@ Ext.define('KitchenSink.view.recommend.recommendInfoController', {
 			}
 		});	
 	},
-	viewLetter: function(view,rowIndex){
+	
+	//查看推荐信
+	viewLetter: function(grid, rowIndex,colIndex){
+        Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+
+        var store = grid.getStore();
+        var record = store.getAt(rowIndex);
+        var refLetterID=record.get("letterID");
+        var appInsID=record.get("appInsID");
+        
+        if(appInsID!=""){
+            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'"}}';
+            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
+            var mask ;
+            var win = new Ext.Window({
+                name:'applicationFormWindow',
+                title : Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.viewRefLetter","查看推荐信"),
+                maximized : true,
+                controller:'recommendCon',
+                refLetterID :refLetterID,
+                appInsID : appInsID,
+                gridRecord:record,
+                width : Ext.getBody().width,
+                height : Ext.getBody().height,
+                autoScroll : true,
+                border:false,
+                bodyBorder : false,
+                isTopContainer : true,
+                modal : true,
+                resizable : false,
+                items:[
+                    new Ext.ux.IFrame({
+                        xtype: 'iframepanel',
+                        layout: 'fit',
+                        style : "border:0px none;scrollbar:true",
+                        border: false,
+                        src : viewUrl,
+                        height : "100%",
+                        width : "100%"
+                    })
+                ],
+                buttons: [ {
+                        text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
+                        iconCls:"close",
+                        handler: function(){
+                            win.close();
+                        }
+                    }]
+            })
+            win.show();
+        }else{
+        	Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.canNotFindRefLetter","找不到该推荐信"));
+        }
+    },
+
+	//查看报名表
+    viewApplicationForm: function(grid, rowIndex,colIndex){
+        Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+
+        var store = grid.getStore();
+        var record = store.getAt(rowIndex);
+        var classID=record.get("classId");
+        var oprID=record.get("oprID");
+        var appInsID=record.get("appInsID");
+        
+        if(appInsID!=""){
+            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'"}}';
+            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
+            var mask ;
+            var win = new Ext.Window({
+                name:'applicationFormWindow',
+                title : Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.viewApplicationForm","查看报名表"),
+                maximized : true,
+                controller:'recommendCon',
+                classID :classID,
+                oprID :oprID,
+                appInsID : appInsID,
+                gridRecord:record,
+                width : Ext.getBody().width,
+                height : Ext.getBody().height,
+                autoScroll : true,
+                border:false,
+                bodyBorder : false,
+                isTopContainer : true,
+                modal : true,
+                resizable : false,
+                items:[
+                    new Ext.ux.IFrame({
+                        xtype: 'iframepanel',
+                        layout: 'fit',
+                        style : "border:0px none;scrollbar:true",
+                        border: false,
+                        src : viewUrl,
+                        height : "100%",
+                        width : "100%"
+                    })
+                ],
+                buttons: [ {
+                    text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.audit","审批"),
+                    iconCls:"send",
+                    handler: "auditApplicationForm"
+                },
+                    {
+                        text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
+                        iconCls:"close",
+                        handler: function(){
+                            win.close();
+                        }
+                    }]
+            })
+            win.show();
+        }else{
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
+        }
+    },
+    
+    //发送邮件
+    sendEmail: function(btn){
+    	var grid = btn.findParentByType("grid");
+		var store = grid.getStore();
+		var selList = grid.getSelectionModel().getSelection();
 		
-		var store = view.findParentByType("grid").store;
-		var selRec = store.getAt(rowIndex);
-		var letterId = selRec.get("refLetterId");
-		
-		//是否有访问权限
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_HD_MANAGER_COM"]["TZ_HD_SJ_VIEW"];
-		if( pageResSet == "" || typeof(pageResSet) == "undefined" ){
-			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-			return;
+		//选中行长度
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","您没有选中任何记录");
+			return ;
 		}
 		
-		//该功能对应的JS类
-		var className = pageResSet["jsClassName"];
-		if(className == "" || typeof(className) == "undefined"  ){
-			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AQ_MENUADD_STD，请检查配置。');
-			return;
-		}
+		var personList = [];
+		for(var i=0;i<checkLen;i++){
+			var letterIDNum  = selList[i].get('letterID');
+			personList.push({"letterIDNum":letterIDNum});
+		};
 		
-		var win = this.lookupReference('activityCodePanel');
-	    if (!win) {
-			Ext.syncRequire(className);
-			ViewClass = Ext.ClassManager.get(className);
-			//新建类
-			win = new ViewClass();
-			this.getView().add(win);
-			win.title = "手机版活动详情页发布地址";    
-	    }
-	    win.on('afterrender',function(panel){
-	    	var codeForm = panel.child("form").getForm();
-	    	 //参数
-				var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_SJ_VIEW","OperateType":"QF","comParams":{"activityId":"'+activityId+'","siteId":"'+siteId+'","coluId":"'+columnId+'"}}';
-				
-				//加载数据
-				Ext.tzLoad(tzParams,function(responseData){
-					var formData = responseData.formData;
-					codeForm.setValues(formData);
-					panel.down('image[name=codeImage]').setSrc(TzUniversityContextPath + formData.codeImage);	
-					
-				});
-	    });
-	    win.show();
-	}
+		var params = {
+		        "ComID":"TZ_TJR_MANAGER_COM",
+		         "PageID":"TZ_TJR_DETAIL_STD",
+		         "OperateType":"U",
+		         "comParams":{"add":[{"personList":personList}]}
+		};
+		
+		Ext.tzLoad(Ext.JSON.encode(params),function(audID){
+			 Ext.tzSendEmail({
+				//发送的邮件模板;
+		        "EmailTmpName": ["TZ_ON_TRIAL_TG","TZ_ON_TRIAL_GQ"],
+		         //创建的需要发送的听众ID;
+		         "audienceId": audID,
+		         //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+		         "file": "N"
+			 });
+		});
+    },
 	onComRegClose: function(btn){
 		//关闭窗口
 		this.getView().close();
