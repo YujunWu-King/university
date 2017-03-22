@@ -348,7 +348,7 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
     	Ext.each(mappingRange,function(record,index){
     		if(record.get('field')!=undefined&&record.get('field')!=""){
     			if(targetFields[record.get('field')]==undefined){
-        			targetFields[record.get('field')] = record.get('column');
+        			targetFields[record.get('field')] = record.get('columnTitle');
         		}else{
         			targetFieldRepeat = true;
         		}
