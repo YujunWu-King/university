@@ -68,11 +68,9 @@ Ext.define('KitchenSink.view.recommend.recommendList', {
             },{
                 text: '申请状态',
                 sortable: true,
-                dataIndex: 'startDate',
-                //formatter: 'date("Y")',
+                dataIndex: 'applyState',
                 flex:1
             },{
-                //text: Ext.tzGetResourse("TZ_TJR_MANAGER_COM.TZ_TJR_INFO_STD.viewRecommend","查看报考学生"),
             	text:'推荐人管理',
                 xtype:'linkcolumn',
                 menuDisabled:true,

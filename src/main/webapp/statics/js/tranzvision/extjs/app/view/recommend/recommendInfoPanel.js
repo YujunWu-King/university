@@ -1,14 +1,13 @@
 Ext.define('KitchenSink.view.recommend.recommendInfoPanel', {
     extend: 'Ext.panel.Panel',
     xtype: 'recommendInfo',
-    controller: 'recommendMg',
+    controller: 'recommendCon',
     requires: [
         'Ext.data.*',
         'Ext.grid.*',
         'Ext.util.*',
         'Ext.grid.filters.Filters',
-//        'KitchenSink.view.recommend.recommendInfoController',
-        'KitchenSink.view.recommend.recommendListController',
+        'KitchenSink.view.recommend.recommendInfoController',
         'KitchenSink.view.recommend.recommendInfoStore'
     ],
     listeners:{

@@ -25,13 +25,15 @@ Ext.define('KitchenSink.view.recommend.recommendListController', {
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_TJR_MANAGER_COM"]["TZ_TJR_DETAIL_STD"];
         if( pageResSet == "" || pageResSet == undefined){
-            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.prompt","提示"),Ext.tzGetResourse("TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.nmyqx","您没有权限"));
+//            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.prompt","提示"),Ext.tzGetResourse("TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.nmyqx","您没有权限"));
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
         }
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.prompt","提示"), Ext.tzGetResourse("TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+//            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.prompt","提示"), Ext.tzGetResourse("TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_TJR_DETAIL_STD，请检查配置。');
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;
@@ -134,72 +136,6 @@ Ext.define('KitchenSink.view.recommend.recommendListController', {
         })
 	},
 
-	//查看报名表
-    viewApplicationForm: function(grid, rowIndex,colIndex){
-        Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
-        //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
-        if( pageResSet == "" || pageResSet == undefined){
-            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
-            return;
-        }
-
-        var store = grid.getStore();
-        var record = store.getAt(rowIndex);
-        var classID=record.get("classId");
-        var oprID=record.get("oprID");
-        var appInsID=record.get("appInsID");
-        
-        if(appInsID!=""){
-            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'"}}';
-            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
-            var mask ;
-            var win = new Ext.Window({
-                name:'applicationFormWindow',
-                title : Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.viewApplicationForm","查看报名表"),
-                maximized : true,
-                controller:'recommendMg',
-                classID :classID,
-                oprID :oprID,
-                appInsID : appInsID,
-                gridRecord:record,
-                width : Ext.getBody().width,
-                height : Ext.getBody().height,
-                autoScroll : true,
-                border:false,
-                bodyBorder : false,
-                isTopContainer : true,
-                modal : true,
-                resizable : false,
-                items:[
-                    new Ext.ux.IFrame({
-                        xtype: 'iframepanel',
-                        layout: 'fit',
-                        style : "border:0px none;scrollbar:true",
-                        border: false,
-                        src : viewUrl,
-                        height : "100%",
-                        width : "100%"
-                    })
-                ],
-                buttons: [ {
-                    text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.audit","审批"),
-                    iconCls:"send",
-                    handler: "auditApplicationForm"
-                },
-                    {
-                        text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
-                        iconCls:"close",
-                        handler: function(){
-                            win.close();
-                        }
-                    }]
-            })
-            win.show();
-        }else{
-            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
-        }
-    },	
 	onComRegClose: function(btn){
 		//关闭窗口
 		this.getView().close();

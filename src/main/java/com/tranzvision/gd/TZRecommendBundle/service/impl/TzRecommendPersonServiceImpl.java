@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZRecommendBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +14,12 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
+import com.tranzvision.gd.TZOnTrialBundle.model.PsTzOnTrialTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.TZWebSiteInfoMgBundle.dao.PsTzLmNrGlTMapper;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzKsTjxTblMapper;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
@@ -34,6 +39,12 @@ public class TzRecommendPersonServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private FliterForm fliterForm;
+	
+	@Autowired
+	private PsTzKsTjxTblMapper psTzKsTjxTblMapper;
+	
+	@Autowired
+	private CreateTaskServiceImpl createTaskServiceImpl;
 	
 	// 获取班级信息
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -137,5 +148,55 @@ public class TzRecommendPersonServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
+	}
+
+	/* 添加听众 */
+	@Override
+	public String tzAdd(String[] actData, String[] errMsg) {
+		// 返回值;
+		String audID = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		if (actData.length == 0) {
+			return audID;
+		}
+		try {
+			for (int num = 0; num < actData.length; num++) {
+				// 表单内容;
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
+
+				String str_jg_id = "ADMIN";
+				String letterId = "";
+
+				audID = createTaskServiceImpl.createAudience("", str_jg_id, "试用申请批量邮件发送", "JSRW");
+
+				// 群发邮件添加听众;
+				@SuppressWarnings("unchecked")
+				List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
+				if (list != null && list.size() > 0) {
+					for (int num_1 = 0; num_1 < list.size(); num_1++) {
+						Map<String, Object> map = list.get(num_1);
+						letterId = map.get("letterIDNum")== null?"":map.get("letterIDNum").toString();
+						if (letterId != null&& letterId != "") {
+							/* 为听众添加成员:姓名，称谓，报名人联系方式 */
+							PsTzKsTjxTbl psTzKsTjxTbl = psTzKsTjxTblMapper.selectByPrimaryKey(String.valueOf(letterId));
+							if (psTzKsTjxTbl != null) {
+								String strName = psTzKsTjxTbl.getTzReferrerName();
+								String mainEmail = psTzKsTjxTbl.getTzEmail();
+
+								createTaskServiceImpl.addAudCy(audID, strName, "", "", "", mainEmail, "", "", "", "",
+										"", "");
+							}
+
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return audID;
 	}
 }
