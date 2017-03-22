@@ -1,0 +1,25 @@
+/**
+ * 自动标签
+ * 标签GMAT720+：考试时间<5年 and 英语成绩>=720分  
+ * TZ_APP_FORM_STA：S 保存；  U 提交；  P 预提交
+ * TZ_FORM_SP_STA：A 审批通过； B 拒绝； N 待审核
+ * 考试类型、考试分数、考试日期 利用宽泛的条件进行初筛（英语水平有GMAT and 存在分数大于等于720 and 存在考试日期为5年内（考试日期大于等于班级入学日期的年份减去5年的日期））
+ */
+
+SELECT X.TZ_APP_INS_ID
+FROM PS_TZ_FORM_WRK_T Y,
+     PS_TZ_APP_INS_T X
+WHERE Y.TZ_APP_INS_ID=X.TZ_APP_INS_ID
+  AND X.TZ_APP_FORM_STA='U'
+  AND Y.TZ_FORM_SP_STA<>'B'
+  AND Y.TZ_BATCH_ID=?
+  AND Y.TZ_CLASS_ID=?
+  AND EXISTS (
+  	SELECT 'Y' FROM dual
+	WHERE ((SELECT COUNT(*) FROM PS_TZ_APP_CC_T
+		WHERE TZ_XXX_BH LIKE '%TZ_44exam_type%' AND TZ_APP_INS_ID=X.TZ_APP_INS_ID AND TZ_APP_S_TEXT= 'ENG_LEV_T2')>0
+		AND (SELECT COUNT(*) FROM PS_TZ_APP_CC_T
+		WHERE TZ_XXX_BH LIKE '%TZ_44exam_score%'  AND TZ_APP_INS_ID=X.TZ_APP_INS_ID AND TZ_APP_S_TEXT>=720)>0 
+		AND (SELECT COUNT(*) FROM PS_TZ_APP_CC_T
+		WHERE TZ_XXX_BH LIKE '%TZ_44exam_date%' and TZ_APP_INS_ID=X.TZ_APP_INS_ID AND TZ_APP_S_TEXT>= (select date_add(TZ_RX_DT, interval -5 year) FROM PS_TZ_CLASS_INF_T WHERE Y.TZ_CLASS_ID=TZ_CLASS_ID))>0)
+	)

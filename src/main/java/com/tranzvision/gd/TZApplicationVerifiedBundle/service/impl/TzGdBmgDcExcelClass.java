@@ -158,8 +158,8 @@ public class TzGdBmgDcExcelClass {
 								/* 短文本 */
 								if ("S".equals(strSaveType)) {
 									strSaveTypeBoolean = false;
-
-									if ("bmr".equals(strComClassName.substring(0, 3))||"CC_Batch".equals(strInfoSelectID.substring(0, 8))) {
+									
+									if ("bmr".equals(strComClassName.substring(0, 3))||(strInfoSelectID!=null&&strInfoSelectID.indexOf("CC_Batch")>-1)) {
 										strSelectField = "TZ_APP_L_TEXT"; /* 报名人相关控件和组合控件选择批次取值从长字符串取描述 */
 									} else {
 										strSelectField = "TZ_APP_S_TEXT";

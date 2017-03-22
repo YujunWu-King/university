@@ -32,6 +32,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -497,6 +498,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 				strCountHtml = "";
 				e.printStackTrace();
 			}
+			//测试问卷调查项目编号
+			String strClassId=sqlQuery.queryForObject("select TZ_CLASS_ID from PS_TZ_CSWJ_TBL where TZ_DC_WJ_ID=?", new Object[]{wjid}, "String");
 			String strXxxBh, strComLmc, strXxxKxzMs, strXxxKxzQz, strXxxKxzCode;
 			String strRadioBoxHtml, strRadioBoxHtml2;
 			String strCategories;
@@ -596,9 +599,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 单选题结果的Html
 							if(isMobile){
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML", TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML", TZ_TITLE,totalCount, strClassId, strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
 							}else{
-							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
+							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE,totalCount, strClassId, strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
 							}
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
@@ -665,9 +668,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 单选题结果的Html
 							if(isMobile){
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",  TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}else{
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML",  TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}
  
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
@@ -733,9 +736,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 单选题结果的Html
 							if(isMobile){
-							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}else{
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);	
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);	
 							}
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
@@ -802,9 +805,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						}
 						// 拼最终统计 单选题结果的Html
 						if(isMobile){
-							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 						}else{
-							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 						}
 						
 						// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
@@ -929,6 +932,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 		/*Oprid、机构编号、注册信息项是否完善、站点编号、URL*/
 		String strOprid = "",strJgId = "",strIsCmpl = "N",strSiteId = "",url = "#";
 		TzSession tzSession = new TzSession(request);
+		boolean isMobile = CommonUtils.isMobile(request);
 		Object objOprid = tzSession.getSession(userSessionName);
 
 		if (null != objOprid) {
@@ -953,7 +957,11 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			if(StringUtils.equals("Y", strIsCmpl)){
 				url = request.getContextPath() + "/user/login/" + strJgId.toLowerCase() + "/" + strSiteId;
 			}else{
-				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
+				if(isMobile){
+					url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/mperfect.html?userName=" + encryUserName;
+				}else{
+					url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
+				}
 			}
 
 			return url;

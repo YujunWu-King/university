@@ -159,14 +159,22 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			int MsgCount = 0;
 			String MsgSql = "select count(1) from PS_TZ_ZNX_REC_T where TZ_ZNX_RECID=? and TZ_ZNX_STATUS='N' and TZ_REC_DELSTATUS<>'Y'";
 			MsgCount = sqlQuery.queryForObject(MsgSql, new Object[] { m_curOPRID}, "int");
-			String strMsgCount = String.valueOf(MsgCount);
+			String strMsgCount = "";
 			
 			//我已报名但未过期的活动数量
 			int actCount = 0;
 			String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT = '1' and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
 			actCount = sqlQuery.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
-			String strActCount = String.valueOf(actCount);
+			String strActCount = "";
 			//System.out.println("strActCount=" + strActCount);
+			if(MsgCount > 0){
+				strMsgCount = "<div class=\"circle\"><span class=\"circle_span\">" + MsgCount + "</span></div>";
+			}
+			
+			if(actCount > 0){
+				strActCount = "<div class=\"circle\"><span class=\"circle_span\">" + actCount + "</span></div>";
+			}
+			
 			String personHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_GRXX_INFO_HTML",strModifyLabel,strRegEmailLabel,strMshXhLabel,strCityLabel,strSiteMsgLabel,strMyActLabel,strPhoto,strName,strRegEmail,strApplicationNum,strCity,strMsgCount,strActCount,accountMngUrl,znxListUrl,myActivityYetUrl);
 			
 			

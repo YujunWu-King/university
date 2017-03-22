@@ -349,7 +349,7 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 			String actAddr = "";
 			String startTime = "";
 			String endTime = "";
-			SimpleDateFormat simpleDatetimeFormat = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat simpleDatetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
 			sql = "select TZ_NACT_ADDR,concat(TZ_START_DT,' ',TZ_START_TM) as TZ_START_DT,concat(TZ_END_DT,' ',TZ_END_TM) as TZ_END_DT from PS_TZ_ART_HD_TBL where TZ_ART_ID=?";
 			Map<String, Object> actMap = sqlQuery.queryForMap(sql, new Object[] { actId });

@@ -1,19 +1,12 @@
 package com.tranzvision.gd.TZAutomaticTagBundle.service.impl;
 
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticTagBundle.service.impl.TZAutomaticTagServiceImpl;
-import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqTKey;
+import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsbqT;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsbqTMapper;
-import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * 
@@ -28,21 +21,18 @@ public class TZAutomaticTagIniScrnServiceImpl extends TZAutomaticTagServiceImpl{
 	@Autowired
 	private SqlQuery SqlQuery;
 	@Autowired
-	private TZGDObject TzSQLObject;
-	@Autowired
 	private PsTzCsKsbqTMapper PsTzCsKsbqTMapper;
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
-	private HttpServletRequest request;
-	
+
 	@Override
 	public boolean automaticTagList(String classId, String batchId, String labelId) {
 		try {
 			int fst_pm;
 			int lst_pm;
-			String zdbqIniScrnIdSql = "SELECT TZ_HARDCODE_VAL FROM  TZGDQHDEV.PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_INISCRN_ID'";
+			String zdbqIniScrnIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_INISCRN_ID'";
 			String zdbqIniScrnId = SqlQuery.queryForObject(zdbqIniScrnIdSql, "String");
+			String zdbqIniScrnNameSql = "SELECT TZ_BIAOQZ_NAME FROM  PS_TZ_BIAOQZ_BQ_T WHERE TZ_BIAOQ_ID=?";
+			String zdbqIniScrnName = SqlQuery.queryForObject(zdbqIniScrnNameSql,new Object[] { zdbqIniScrnId },  "String");
+
 			int a = 0;
 
 			String sqlcount = "SELECT COUNT(1) FROM PS_TZ_CS_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
@@ -69,15 +59,15 @@ public class TZAutomaticTagIniScrnServiceImpl extends TZAutomaticTagServiceImpl{
 
 			if (tzappins != null && tzappins.size() > 0) {
 				for (int i = 0; i < tzappins.size(); i++) {
-						PsTzCsKsbqTKey PsTzCsKsbqTKey = new PsTzCsKsbqTKey();
-						PsTzCsKsbqTKey.setTzAppInsId(Long.valueOf(tzappins.get(i).toString()));
-						PsTzCsKsbqTKey.setTzClassId(classId);
-						PsTzCsKsbqTKey.setTzApplyPcId(batchId);
-						PsTzCsKsbqTKey.setTzZdbqId(zdbqIniScrnId);
-						PsTzCsKsbqTMapper.insert(PsTzCsKsbqTKey);
+						PsTzCsKsbqT PsTzCsKsbqT= new PsTzCsKsbqT();
+						PsTzCsKsbqT.setTzAppInsId(Long.valueOf(tzappins.get(i).toString()));
+						PsTzCsKsbqT.setTzClassId(classId);
+						PsTzCsKsbqT.setTzApplyPcId(batchId);
+						PsTzCsKsbqT.setTzZdbqId(zdbqIniScrnId);
+						PsTzCsKsbqT.setTzBiaoqzName(zdbqIniScrnName);
+						PsTzCsKsbqTMapper.insert(PsTzCsKsbqT);
 
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

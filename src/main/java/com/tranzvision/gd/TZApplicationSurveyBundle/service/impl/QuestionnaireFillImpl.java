@@ -390,7 +390,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 		/* 调查问卷应用编号 */
 		String classId = request.getParameter("classid");
-
+		/*是否存在合法实例编号*/
+		boolean isHasIns = false;
 		/* 从参数中获取问卷编号、实例编号 */
 		if (classId != null && !classId.equals("")) {
 			surveyID = request.getParameter("SURVEY_WJ_ID");
@@ -412,6 +413,10 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			}
 		}
 
+		if (StringUtils.isNotBlank(surveyInsId) && Integer.parseInt(surveyInsId) > 0) {
+			isHasIns = true;
+		}
+		
 		/* 1.验证实例编号是否为null */
 		logger.info("--- 1.验证实例编号是否为null ---");
 		if (StringUtils.isBlank(surveyID)) {
@@ -503,7 +508,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		logger.info("5.问卷状态检查");
 		if (successFlag.equals("0")) {
 			boolRtn = surveryRulesImpl.checkSurveryStatus(psTzDcWjDyTWithBLOBs, language);
-			if (!boolRtn) {
+			if (!boolRtn && !isHasIns) {
 				successFlag = "1";
 				strMsg = surveryRulesImpl.msg;
 			}
@@ -513,7 +518,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		logger.info("6.开始结束时间、开始结束日期检查");
 		if (successFlag.equals("0")) {
 			boolRtn = surveryRulesImpl.checkSurveryDate(psTzDcWjDyTWithBLOBs, language);
-			if (!boolRtn) {
+			if (!boolRtn && !isHasIns) {
 				successFlag = "1";
 				strMsg = surveryRulesImpl.msg;
 			}

@@ -1,3 +1,5 @@
+var jzNum = 0;
+
 function getNotices(siteid,columnId,pagenum){
 	$('.viewport-adaptive').dropload({
 		scrollArea: window,
@@ -13,6 +15,7 @@ function getNotices(siteid,columnId,pagenum){
 					pagenum=pagenum+1;
 					var resultNum = resultJson.comContent.resultNum;
 					if(resultNum > 0){
+						jzNum = jzNum + resultNum;
 						// 插入数据到页面，放到最后面
 						$('.ziliao').append(resultJson.comContent.result);
 					}else{
@@ -20,9 +23,13 @@ function getNotices(siteid,columnId,pagenum){
                         me.lock();
                         // 无数据
                         me.noData();
+                  
 					}
 					
 					me.resetload();
+					if(jzNum > 0){
+						$('.dropload-noData').html("数据已全部加载");
+					}
 					
 				},
 				error: function(xhr, type) {

@@ -1,4 +1,3 @@
-
 /**
  * 自动标签
  * 标签前一年递补保留：前一年递补保留名单是否存在于“当前批次下所有报名表状态等于提交且初审状态不等于审批拒绝的考生中”
@@ -12,11 +11,7 @@ FROM PS_TZ_FORM_WRK_T Y,
 WHERE Y.TZ_APP_INS_ID=X.TZ_APP_INS_ID
   AND X.TZ_APP_FORM_STA='U'
   AND Y.TZ_FORM_SP_STA<>'B'
-<<<<<<< HEAD
   AND Y.TZ_BATCH_ID=?
-=======
-  AND Y.BATCH_ID=?
->>>>>>> 2abbd4ed4925d4878a965ffc7300421e35102a7a
   AND Y.TZ_CLASS_ID=?
   AND EXISTS (SELECT 'Y'  
   	FROM PS_TZ_APP_INS_T A,
@@ -27,5 +22,6 @@ WHERE Y.TZ_APP_INS_ID=X.TZ_APP_INS_ID
 			SELECT TZ_PRJ_ID 
 			FROM PS_TZ_CLASS_INF_T 
 			WHERE TZ_CLASS_ID=Y.TZ_CLASS_ID)
+		AND B.TZ_KSSSYEAR =YEAR(sysdate())-1
 		AND B.TZ_MSH_ID=C.TZ_MSH_ID 
 		AND C.OPRID=A.ROW_ADDED_OPRID)

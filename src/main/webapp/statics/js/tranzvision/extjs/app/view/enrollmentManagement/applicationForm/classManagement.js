@@ -49,9 +49,6 @@
 		var store = new KitchenSink.view.enrollmentManagement.applicationForm.classStore(),
 			applyStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_BMGL_APPLY_STATUS");
 		
-		store.on('load',function(s,records){
-			
-		});
 		applyStatusStore.on('load',function(){
 			store.load();
 		});
@@ -79,8 +76,8 @@
                 dataIndex: 'className',
                 width:110
             }*/,{
-                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applyStatus","申请状态"),
-                dataIndex: 'applyStatusDesc',
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.admissionDate","入学日期"),
+                dataIndex: 'admissionDate',
                 width:110
             },{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applicantsNumber","总申请人数"),

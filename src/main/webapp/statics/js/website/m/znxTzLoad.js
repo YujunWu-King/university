@@ -1,3 +1,5 @@
+var znxNum = 0;
+
 function getZnxList(siteid,pagenum){	
 	$('.viewport-adaptive').dropload({
 		scrollArea: window,
@@ -13,8 +15,23 @@ function getZnxList(siteid,pagenum){
 					pagenum=pagenum+1;
 					var resultNum = result.comContent.resultNum;
 					if(resultNum > 0){
+						znxNum = znxNum + resultNum;
 						// 插入数据到页面，放到最后面
 	                	$('.bg').append(result.comContent.result);
+	                	
+	                	$(".slide").click(function(){
+	                        $(this).children('i').toggleClass('slide_up');
+	                        $(this).prev().toggleClass('slide_wz');
+	                        var mailId = ($(this).attr("mailid"));
+	                        var updateRecords = [{"mailId":mailId}];
+	                        $.ajax({
+	            				type: 'GET',
+	            				url: TzUniversityContextPath+"/dispatcher",
+	            				data:{
+	            					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"U","comParams":{"update": '+ JSON.stringify(updateRecords) + '}}'
+	            				}
+	                        });
+	                    });
 					}else{
 						 // 锁定
                         me.lock();
@@ -24,6 +41,9 @@ function getZnxList(siteid,pagenum){
 					
 					// 每次数据插入，必须重置
                     me.resetload();
+                    if(znxNum > 0){
+                    	$('.dropload-noData').html("数据已全部加载");
+					}
 					
 				},
 				error: function(xhr, type) {
