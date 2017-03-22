@@ -253,29 +253,29 @@
 	    };
 	    
         orgColorSortStore.on("load",function(store, records, successful, eOpts){
-        	beforeRender();
         	for(var i=0;i<records.length;i++){
             	initialColorSortData.push(records[i].data);
                 colorSortFilterOptions.push([records[i].data.TZ_COLOR_SORT_ID,records[i].data.TZ_COLOR_NAME]);
-            };
+            }
+            beforeRender();
 	    });
 	    submitStateStore.on("load",function(store, records, successful, eOpts){
-	    	beforeRender();
 	    	for(var i=0;i<records.length;i++){
 	    		submitStateFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
-            };
+            }
+            beforeRender();
 	    });
 	    auditStateStore.on("load",function(store, records, successful, eOpts){
-	    	beforeRender();
 	    	for(var i=0;i<records.length;i++){
 	    		auditStateFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
-            };
+            }
+            beforeRender();
 	    });
 	    interviewResultStore.on("load",function(store, records, successful, eOpts){
-	    	beforeRender();
 	    	for(var i=0;i<records.length;i++){
 	    		interviewResultFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
-            };
+            }
+            beforeRender();
 	    });
 	    
     },

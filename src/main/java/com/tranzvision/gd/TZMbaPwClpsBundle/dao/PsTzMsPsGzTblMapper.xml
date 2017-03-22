@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsGzTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl" >
+    <id column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
+    <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <result column="TZ_PYKS_RQ" property="tzPyksRq" jdbcType="DATE" />
+    <result column="TZ_PYKS_SJ" property="tzPyksSj" jdbcType="TIME" />
+    <result column="TZ_PYJS_RQ" property="tzPyjsRq" jdbcType="DATE" />
+    <result column="TZ_PYJS_SJ" property="tzPyjsSj" jdbcType="TIME" />
+    <result column="TZ_MSPY_NUM" property="tzMspyNum" jdbcType="INTEGER" />
+    <result column="TZ_DQPY_ZT" property="tzDqpyZt" jdbcType="VARCHAR" />
+    <result column="TZ_PWKJ_TJB" property="tzPwkjTjb" jdbcType="VARCHAR" />
+    <result column="TZ_PWKJ_FBT" property="tzPwkjFbt" jdbcType="VARCHAR" />
+    <result column="TZ_GRP_COUNT" property="tzGrpCount" jdbcType="SMALLINT" />
+    <result column="TZ_BATCH_NAME" property="tzBatchName" jdbcType="VARCHAR" />
+    <result column="TZ_BATCH_TYPE" property="tzBatchType" jdbcType="VARCHAR" />
+    <result column="TZ_RELATIVE_ID" property="tzRelativeId" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl" extends="BaseResultMap" >
+    <result column="TZ_MSPS_SM" property="tzMspsSm" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APPLY_PC_ID, TZ_CLASS_ID, TZ_PYKS_RQ, TZ_PYKS_SJ, TZ_PYJS_RQ, TZ_PYJS_SJ, TZ_MSPY_NUM, 
+    TZ_DQPY_ZT, TZ_PWKJ_TJB, TZ_PWKJ_FBT, TZ_GRP_COUNT, TZ_BATCH_NAME, TZ_BATCH_TYPE, 
+    TZ_RELATIVE_ID
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_MSPS_SM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_MSPS_GZ_TBL
+    where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTblKey" >
+    delete from PS_TZ_MSPS_GZ_TBL
+    where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl" >
+    insert into PS_TZ_MSPS_GZ_TBL (TZ_APPLY_PC_ID, TZ_CLASS_ID, TZ_PYKS_RQ, 
+      TZ_PYKS_SJ, TZ_PYJS_RQ, TZ_PYJS_SJ, 
+      TZ_MSPY_NUM, TZ_DQPY_ZT, TZ_PWKJ_TJB, 
+      TZ_PWKJ_FBT, TZ_GRP_COUNT, TZ_BATCH_NAME, 
+      TZ_BATCH_TYPE, TZ_RELATIVE_ID, TZ_MSPS_SM
+      )
+    values (#{tzApplyPcId,jdbcType=VARCHAR}, #{tzClassId,jdbcType=VARCHAR}, #{tzPyksRq,jdbcType=DATE}, 
+      #{tzPyksSj,jdbcType=TIME}, #{tzPyjsRq,jdbcType=DATE}, #{tzPyjsSj,jdbcType=TIME}, 
+      #{tzMspyNum,jdbcType=INTEGER}, #{tzDqpyZt,jdbcType=VARCHAR}, #{tzPwkjTjb,jdbcType=VARCHAR}, 
+      #{tzPwkjFbt,jdbcType=VARCHAR}, #{tzGrpCount,jdbcType=SMALLINT}, #{tzBatchName,jdbcType=VARCHAR}, 
+      #{tzBatchType,jdbcType=VARCHAR}, #{tzRelativeId,jdbcType=VARCHAR}, #{tzMspsSm,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl" >
+    insert into PS_TZ_MSPS_GZ_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzApplyPcId != null" >
+        TZ_APPLY_PC_ID,
+      </if>
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzPyksRq != null" >
+        TZ_PYKS_RQ,
+      </if>
+      <if test="tzPyksSj != null" >
+        TZ_PYKS_SJ,
+      </if>
+      <if test="tzPyjsRq != null" >
+        TZ_PYJS_RQ,
+      </if>
+      <if test="tzPyjsSj != null" >
+        TZ_PYJS_SJ,
+      </if>
+      <if test="tzMspyNum != null" >
+        TZ_MSPY_NUM,
+      </if>
+      <if test="tzDqpyZt != null" >
+        TZ_DQPY_ZT,
+      </if>
+      <if test="tzPwkjTjb != null" >
+        TZ_PWKJ_TJB,
+      </if>
+      <if test="tzPwkjFbt != null" >
+        TZ_PWKJ_FBT,
+      </if>
+      <if test="tzGrpCount != null" >
+        TZ_GRP_COUNT,
+      </if>
+      <if test="tzBatchName != null" >
+        TZ_BATCH_NAME,
+      </if>
+      <if test="tzBatchType != null" >
+        TZ_BATCH_TYPE,
+      </if>
+      <if test="tzRelativeId != null" >
+        TZ_RELATIVE_ID,
+      </if>
+      <if test="tzMspsSm != null" >
+        TZ_MSPS_SM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzApplyPcId != null" >
+        #{tzApplyPcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPyksRq != null" >
+        #{tzPyksRq,jdbcType=DATE},
+      </if>
+      <if test="tzPyksSj != null" >
+        #{tzPyksSj,jdbcType=TIME},
+      </if>
+      <if test="tzPyjsRq != null" >
+        #{tzPyjsRq,jdbcType=DATE},
+      </if>
+      <if test="tzPyjsSj != null" >
+        #{tzPyjsSj,jdbcType=TIME},
+      </if>
+      <if test="tzMspyNum != null" >
+        #{tzMspyNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzDqpyZt != null" >
+        #{tzDqpyZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPwkjTjb != null" >
+        #{tzPwkjTjb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPwkjFbt != null" >
+        #{tzPwkjFbt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGrpCount != null" >
+        #{tzGrpCount,jdbcType=SMALLINT},
+      </if>
+      <if test="tzBatchName != null" >
+        #{tzBatchName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBatchType != null" >
+        #{tzBatchType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRelativeId != null" >
+        #{tzRelativeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMspsSm != null" >
+        #{tzMspsSm,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl" >
+    update PS_TZ_MSPS_GZ_TBL
+    <set >
+      <if test="tzPyksRq != null" >
+        TZ_PYKS_RQ = #{tzPyksRq,jdbcType=DATE},
+      </if>
+      <if test="tzPyksSj != null" >
+        TZ_PYKS_SJ = #{tzPyksSj,jdbcType=TIME},
+      </if>
+      <if test="tzPyjsRq != null" >
+        TZ_PYJS_RQ = #{tzPyjsRq,jdbcType=DATE},
+      </if>
+      <if test="tzPyjsSj != null" >
+        TZ_PYJS_SJ = #{tzPyjsSj,jdbcType=TIME},
+      </if>
+      <if test="tzMspyNum != null" >
+        TZ_MSPY_NUM = #{tzMspyNum,jdbcType=INTEGER},
+      </if>
+      <if test="tzDqpyZt != null" >
+        TZ_DQPY_ZT = #{tzDqpyZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPwkjTjb != null" >
+        TZ_PWKJ_TJB = #{tzPwkjTjb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPwkjFbt != null" >
+        TZ_PWKJ_FBT = #{tzPwkjFbt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGrpCount != null" >
+        TZ_GRP_COUNT = #{tzGrpCount,jdbcType=SMALLINT},
+      </if>
+      <if test="tzBatchName != null" >
+        TZ_BATCH_NAME = #{tzBatchName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBatchType != null" >
+        TZ_BATCH_TYPE = #{tzBatchType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRelativeId != null" >
+        TZ_RELATIVE_ID = #{tzRelativeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMspsSm != null" >
+        TZ_MSPS_SM = #{tzMspsSm,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl" >
+    update PS_TZ_MSPS_GZ_TBL
+    set TZ_PYKS_RQ = #{tzPyksRq,jdbcType=DATE},
+      TZ_PYKS_SJ = #{tzPyksSj,jdbcType=TIME},
+      TZ_PYJS_RQ = #{tzPyjsRq,jdbcType=DATE},
+      TZ_PYJS_SJ = #{tzPyjsSj,jdbcType=TIME},
+      TZ_MSPY_NUM = #{tzMspyNum,jdbcType=INTEGER},
+      TZ_DQPY_ZT = #{tzDqpyZt,jdbcType=VARCHAR},
+      TZ_PWKJ_TJB = #{tzPwkjTjb,jdbcType=VARCHAR},
+      TZ_PWKJ_FBT = #{tzPwkjFbt,jdbcType=VARCHAR},
+      TZ_GRP_COUNT = #{tzGrpCount,jdbcType=SMALLINT},
+      TZ_BATCH_NAME = #{tzBatchName,jdbcType=VARCHAR},
+      TZ_BATCH_TYPE = #{tzBatchType,jdbcType=VARCHAR},
+      TZ_RELATIVE_ID = #{tzRelativeId,jdbcType=VARCHAR},
+      TZ_MSPS_SM = #{tzMspsSm,jdbcType=LONGVARCHAR}
+    where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl" >
+    update PS_TZ_MSPS_GZ_TBL
+    set TZ_PYKS_RQ = #{tzPyksRq,jdbcType=DATE},
+      TZ_PYKS_SJ = #{tzPyksSj,jdbcType=TIME},
+      TZ_PYJS_RQ = #{tzPyjsRq,jdbcType=DATE},
+      TZ_PYJS_SJ = #{tzPyjsSj,jdbcType=TIME},
+      TZ_MSPY_NUM = #{tzMspyNum,jdbcType=INTEGER},
+      TZ_DQPY_ZT = #{tzDqpyZt,jdbcType=VARCHAR},
+      TZ_PWKJ_TJB = #{tzPwkjTjb,jdbcType=VARCHAR},
+      TZ_PWKJ_FBT = #{tzPwkjFbt,jdbcType=VARCHAR},
+      TZ_GRP_COUNT = #{tzGrpCount,jdbcType=SMALLINT},
+      TZ_BATCH_NAME = #{tzBatchName,jdbcType=VARCHAR},
+      TZ_BATCH_TYPE = #{tzBatchType,jdbcType=VARCHAR},
+      TZ_RELATIVE_ID = #{tzRelativeId,jdbcType=VARCHAR}
+    where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+  </update>
+</mapper>

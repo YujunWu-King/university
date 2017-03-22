@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzPwExtTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl" >
+    <id column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_CS_PASSWORD" property="tzCsPassword" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    OPRID, TZ_JG_ID, TZ_CS_PASSWORD
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_PW_EXT_T
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_PW_EXT_T
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl" >
+    insert into PS_TZ_PW_EXT_T (OPRID, TZ_JG_ID, TZ_CS_PASSWORD
+      )
+    values (#{oprid,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzCsPassword,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl" >
+    insert into PS_TZ_PW_EXT_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzCsPassword != null" >
+        TZ_CS_PASSWORD,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCsPassword != null" >
+        #{tzCsPassword,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl" >
+    update PS_TZ_PW_EXT_T
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCsPassword != null" >
+        TZ_CS_PASSWORD = #{tzCsPassword,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl" >
+    update PS_TZ_PW_EXT_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_CS_PASSWORD = #{tzCsPassword,jdbcType=VARCHAR}
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+</mapper>

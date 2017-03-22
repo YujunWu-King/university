@@ -44,7 +44,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
         });
 	},
     selectStu: function(btn){
-    	
+    	var arrAddAudience=[];
+        var addAudirec;
     	var stuWin = btn.findParentByType("searchStuWin");
 		var stuGrid = stuWin.child("grid");
 		var selList = stuGrid.getSelectionModel().getSelection();
@@ -58,10 +59,17 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
 		var arrAddData = [];
 		
 		for(var i=0; i<selList.length; i++){
+			addAudirec = {"id":selList[i].data.oprId,"desc":selList[i].data.oprName};
+            arrAddAudience.push(addAudirec);
 			var oprId = selList[i].data.oprId;
 			arrAddData.push(oprId);
 		}
-		if(arrAddData.length>0) receverField.addValue(arrAddData);
+         
+		if(arrAddData.length>0){
+			var storereceive = receverField.getStore();
+			storereceive.add(arrAddAudience);
+			receverField.addValue(arrAddData);
+		}
 		this.onWinClose(btn);
 	},
 	onWinClose:function(btn){
@@ -87,7 +95,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
                     }
                 },
                 srhConFields:{
-                    TZ_AUD_NAME:{
+                	TZ_AUD_NAM:{
                         desc:'听众名称',
                         operator:'07',
                         type:'01'
@@ -96,7 +104,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
             },
             srhresult:{
                 TZ_AUD_ID:'听众ID',
-                TZ_AUD_NAME: '听众名称',
+                TZ_AUD_NAM: '听众名称',
                 //TZ_ORG_CODE:'所属部门',
                 ROW_ADDED_DTTM:'创建时间'
                 // ROW_LASTMANT_DTTM:'修改时间'
@@ -106,13 +114,13 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxDetController', {
                 if(selection.length>0){
                     for(j=0;j<selection.length;j++){
                         addAudirec="";
-                        addAudirec = {"id":selection[j].data.TZ_AUD_ID,"desc":selection[j].data.TZ_AUD_NAME};
+                        addAudirec = {"id":selection[j].data.TZ_AUD_ID,"desc":selection[j].data.TZ_AUD_NAM};
                         arrAddAudience.push(addAudirec);
                         arrAddAudiValue.push(selection[j].data.TZ_AUD_ID);
                     };
                     var znxBulkDetForm = btn.findParentByType('znxBulkDet').child('form');
-                    //var storereceive=znxBulkDetForm.child('tagfield[reference="recever"]').getStore();
-                    //storereceive.add(arrAddAudience);
+                    var storereceive=znxBulkDetForm.child('tagfield[reference="recever"]').getStore();
+                    storereceive.add(arrAddAudience);
                     //znxBulkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
                     znxBulkDetForm.child('tagfield[reference="recever"]').addValue(arrAddAudiValue);
                     //znxBulkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');

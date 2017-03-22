@@ -269,18 +269,22 @@ public class TzZnxDetClsServiceImpl extends FrameworkImpl {
 		mapRet.put("root", listData);
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		/*
-		 * jacksonUtil.json2Map(comParams);
-		 * 
-		 * String strEmlQfId = ""; if (jacksonUtil.containsKey("emlQfId")) {
-		 * strEmlQfId = jacksonUtil.getString("emlQfId"); } else { return
-		 * jacksonUtil.Map2json(mapRet); }
-		 */
+		
+		jacksonUtil.json2Map(comParams);
+		 
+		String znxQfId = ""; 
+		if (jacksonUtil.containsKey("znxQfId")) {
+			znxQfId = jacksonUtil.getString("znxQfId"); 
+		} else { 
+			return jacksonUtil.Map2json(mapRet); 
+		}
+		
 
 		// 考生;
 		String strOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		String ksSQL = "select OPRID,IF(TZ_REALNAME is NULL,OPRID,TZ_REALNAME) TZ_REALNAME FROM PS_TZ_QFKSXX_VW WHERE TZ_JG_ID=?";
-		List<Map<String, Object>> list = jdbcTemplate.queryForList(ksSQL, new Object[] { strOrgId });
+		//String ksSQL = "select OPRID,IF(TZ_REALNAME is NULL,OPRID,TZ_REALNAME) TZ_REALNAME FROM PS_TZ_QFKSXX_VW WHERE TZ_JG_ID=?";
+		String ksSQL = " select OPRID,IF(TZ_REALNAME is NULL,OPRID,TZ_REALNAME) TZ_REALNAME FROM PS_TZ_QFKSXX_VW A ,PS_TZ_DXYJQFSJR_T B WHERE A.TZ_JG_ID=? AND B.TZ_MLSM_QFPC_ID=? AND A.OPRID=B.TZ_EMAIL";
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(ksSQL, new Object[] { strOrgId,znxQfId });
 		if (list != null && list.size() > 0) {
 			int i = 0;
 			String strID, strDesc;
@@ -297,8 +301,9 @@ public class TzZnxDetClsServiceImpl extends FrameworkImpl {
 		}
 
 		// 听众;
-		String strSql = "SELECT TZ_AUD_ID,TZ_AUD_NAM FROM PS_TZ_AUDIENCE_VW WHERE TZ_JG_ID=?";
-		List<Map<String, Object>> audlist = jdbcTemplate.queryForList(strSql, new Object[] { strOrgId });
+		//String strSql = "SELECT TZ_AUD_ID,TZ_AUD_NAM FROM PS_TZ_AUDIENCE_VW WHERE TZ_JG_ID=?";
+		String strSql = "SELECT A.TZ_AUD_ID,A.TZ_AUD_NAM FROM PS_TZ_AUDIENCE_VW A,PS_TZ_DXYJQAUD_T B WHERE A.TZ_JG_ID=? AND B.TZ_MLSM_QFPC_ID = ? AND A.TZ_AUD_ID=B.TZ_AUDIENCE_ID";
+		List<Map<String, Object>> audlist = jdbcTemplate.queryForList(strSql, new Object[] { strOrgId,znxQfId });
 		if (audlist != null && audlist.size() > 0) {
 			int i = 0;
 			String strID, strDesc;
