@@ -67,6 +67,8 @@ Ext.define('KitchenSink.view.recommend.recommendListController', {
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classId;
         var batchID = record.data.batchId;
+        alert("班级ID====" + classID)
+        alert("批次ID====" + batchID)
 
         var initData=[];
         var stuGridColorSortFilterOptions=[];/*考生类别的过滤器数据*/
@@ -117,8 +119,8 @@ Ext.define('KitchenSink.view.recommend.recommendListController', {
 //                            var tzStoreParams = '{"classID":"'+classID+'","batchID":"'+batchID+'"}';
 //                            panelGrid.store.tzStoreParams = tzStoreParams;
 //                            panelGrid.store.load();
-//                            panelGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.TZ_GD_TJRINF_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classID + '","TZ_BATCH_ID-operator": "01","TZ_BATCH_ID-value": "' + batchID + '"}}';
-//                            panelGrid.store.load();
+                            panelGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.TZ_GD_TJRINF_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classID + '","TZ_BATCH_ID-operator": "01","TZ_BATCH_ID-value": "' + batchID + '"}}';
+                            panelGrid.store.load();
                         });
                     });
 
