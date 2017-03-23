@@ -41,7 +41,7 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 				c += '<div class="input-list-wrap">';
 				c += '	<div class="input-list-otherinfo">';
 				c += '		<p><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '&nbsp;&nbsp;<div style="padding-top:5px;color:#0070c6" id="' + data.itemId + 'Size"></div></p>';
-				c += '		<p class="input-list-otherinfoEN">' + data.wzsm + '</p>';
+				//c += '		<p class="input-list-otherinfoEN">' + data.wzsm + '</p>';
 				c += '	</div>';
 				c += '	<div class="input-list-othertext">';
 				c += '		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea>';
@@ -68,10 +68,10 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			_fix += '<option value="' + reg + '"' + (data.preg == reg ? ' selected="selected"': "") + ">" + regObj["name"] + "</option>"
 		});
 		
-		e += '<div class="edit_item_warp">';
-        e += '  <span class="edit_item_label">描述：</span>';
-        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'wzsm\')" id="wzsm" value="' + data.wzsm + '"/>';
-        e += '</div>'; 
+//		e += '<div class="edit_item_warp">';
+//        e += '  <span class="edit_item_label">描述：</span>';
+//        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'wzsm\')" id="wzsm" value="' + data.wzsm + '"/>';
+//        e += '</div>'; 
 		e += '<div class="edit_item_warp">';
 		e += '	<span class="edit_item_label" >Label位置：</span>';
 		e += '	<select class="edit_format" onchange="SurveyBuild.saveAttr(this,\'format\')">';
