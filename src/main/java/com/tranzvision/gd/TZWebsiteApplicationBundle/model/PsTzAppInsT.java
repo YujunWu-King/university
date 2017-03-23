@@ -27,6 +27,8 @@ public class PsTzAppInsT {
 
     private String tzPwd;
 
+    private String tzAppPreSta;
+
     private String tzAppinsJsonStr;
 
     public Long getTzAppInsId() {
@@ -123,6 +125,14 @@ public class PsTzAppInsT {
 
     public void setTzPwd(String tzPwd) {
         this.tzPwd = tzPwd == null ? null : tzPwd.trim();
+    }
+
+    public String getTzAppPreSta() {
+        return tzAppPreSta;
+    }
+
+    public void setTzAppPreSta(String tzAppPreSta) {
+        this.tzAppPreSta = tzAppPreSta == null ? null : tzAppPreSta.trim();
     }
 
     public String getTzAppinsJsonStr() {

@@ -690,6 +690,20 @@ public class tzOnlineAppEngineImpl {
 		return strUserInfo;
 	}
 
+	// 报名表预提交
+	@SuppressWarnings("unchecked")
+	public String preAppForm(Long numAppInsId) {
+		String returnMsg = "";
+		PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
+		psTzAppInsT.setTzAppInsId(numAppInsId);
+		psTzAppInsT.setTzAppPreSta("P");
+
+		psTzAppInsT.setRowLastmantDttm(new Date());
+
+		psTzAppInsTMapper.updateByPrimaryKeySelective(psTzAppInsT);
+		return returnMsg;
+	}
+
 	// 报名表保存
 	@SuppressWarnings("unchecked")
 	public String saveAppForm(String strTplId, Long numAppInsId, String strClassId, String strAppOprId,
@@ -703,7 +717,7 @@ public class tzOnlineAppEngineImpl {
 		try {
 			String sql = "";
 			// int count = 0;
-			String TZ_APP_FORM_STA = null;
+			// String TZ_APP_FORM_STA = null;
 			String INS_ID = null;
 			boolean chageClass = false;
 
@@ -721,8 +735,8 @@ public class tzOnlineAppEngineImpl {
 			mapData = sqlQuery.queryForMap(sql, new Object[] { numAppInsId });
 
 			if (mapData != null) {
-				TZ_APP_FORM_STA = mapData.get("TZ_APP_FORM_STA") == null ? ""
-						: String.valueOf(mapData.get("TZ_APP_FORM_STA"));
+				// TZ_APP_FORM_STA = mapData.get("TZ_APP_FORM_STA") == null ? ""
+				// : String.valueOf(mapData.get("TZ_APP_FORM_STA"));
 
 				INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
 			}
@@ -736,15 +750,16 @@ public class tzOnlineAppEngineImpl {
 				psTzAppInsT.setTzAppTplId(strTplId);
 				psTzAppInsT.setTzAppInsVersion(strAppInsVersion);
 
-				if (strOtype.equals("PRE")) {
-					psTzAppInsT.setTzAppFormSta("P");
-				} else {
-					if (TZ_APP_FORM_STA.equals("P") && strAppInsState.equals("S")) {
-
-					} else {
-						psTzAppInsT.setTzAppFormSta(strAppInsState);
-					}
-				}
+				// if (strOtype.equals("PRE")) {
+				// psTzAppInsT.setTzAppFormSta("P");
+				// } else {
+				// if (TZ_APP_FORM_STA.equals("P") &&
+				// strAppInsState.equals("S")) {
+				//
+				// } else {
+				psTzAppInsT.setTzAppFormSta(strAppInsState);
+				// }
+				// }
 				psTzAppInsT.setTzAppinsJsonStr(strJsonData);
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());
@@ -758,11 +773,11 @@ public class tzOnlineAppEngineImpl {
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppTplId(strTplId);
 				psTzAppInsT.setTzAppInsVersion(strAppInsVersion);
-				if (strOtype.equals("PRE")) {
-					psTzAppInsT.setTzAppFormSta("P");
-				} else {
-					psTzAppInsT.setTzAppFormSta(strAppInsState);
-				}
+				// if (strOtype.equals("PRE")) {
+				// psTzAppInsT.setTzAppFormSta("P");
+				// } else {
+				psTzAppInsT.setTzAppFormSta(strAppInsState);
+				// }
 				psTzAppInsT.setTzAppinsJsonStr(strJsonData);
 				psTzAppInsT.setRowAddedOprid(oprid);
 				psTzAppInsT.setRowAddedDttm(new Date());
