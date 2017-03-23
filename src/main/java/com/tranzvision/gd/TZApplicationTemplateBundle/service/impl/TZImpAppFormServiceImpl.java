@@ -14,7 +14,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +56,8 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 
 @Service("com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.TZImpAppFormServiceImpl")
 public class TZImpAppFormServiceImpl extends FrameworkImpl {
+	Logger logger = Logger.getLogger(this.getClass());
+	
 	@Autowired
 	private SqlQuery sqlQuery;
 	
@@ -123,7 +127,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		
 		String sql = "SELECT * FROM PS_TZ_APPINS_TBL WHERE cast(TZ_APP_INS_ID as unsigned int) >= ? AND cast(TZ_APP_INS_ID as unsigned int) < ? order by cast(TZ_APP_INS_ID as unsigned int)";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { min,max });
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for (Object obj : resultlist) {
 			errMsg[0] = "0";
 			errMsg[1] = "";
@@ -149,6 +152,12 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			String isHas = sqlQuery.queryForObject(isHasOpr, new Object[] { attrOprid }, "String");
 			if(!StringUtils.equals("Y", isHas)){
 				retMsg  = retMsg + "<br>" + attrOprid +  "(" + attrInsid + ")   ----->    考生不存在";
+				continue;
+			}
+			String isHasIns = "SELECT 'Y' FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ? LIMIT 0,1";
+			isHas = sqlQuery.queryForObject(isHasIns, new Object[] { clsid,attrOprid }, "String");
+			if(StringUtils.equals("Y", isHas)){
+				retMsg  = retMsg + "<br>" + attrOprid +  "(" + attrInsid + ")   ----->    报名表已存在";
 				continue;
 			}
 			if(StringUtils.isBlank(tplJson)){
@@ -456,8 +465,8 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		for (int num = 0; num < dataLength; num++) {
 
 			long time = System.currentTimeMillis();
-
-			System.out.println("报名表保存数据预处理Begin");
+			logger.info("------报名表保存开始------");
+//			logger.info("报名表保存数据预处理Begin");
 			String strForm = actData[num];
 			// 解析json
 			jacksonUtil.json2Map(strForm);
@@ -520,9 +529,9 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					}
 				}
 
-				System.out.println("strClassId:" + strClassId);
-				System.out.println("tempClassId:" + tempClassId);
-				System.out.println("numAppInsId:" + numAppInsId);
+//				logger.info("strClassId:" + strClassId);
+//				logger.info("tempClassId:" + tempClassId);
+//				logger.info("numAppInsId:" + numAppInsId);
 
 				if (!errMsg[0].equals("1")) {
 					mapData = null;
@@ -648,33 +657,20 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				strAppInsVersion = strAppInsVersionDb;
 			}
 
-			System.out.println("strAppInsVersion:" + strAppInsVersion);
-			System.out.println("strAppInsVersionDb:" + strAppInsVersionDb);
+//			logger.info("strAppInsVersion:" + strAppInsVersion);
+//			logger.info("strAppInsVersionDb:" + strAppInsVersionDb);
 
 			if (strAppInsVersion.equals(strAppInsVersionDb)) {
 				DateFormat formatDate = new SimpleDateFormat("yyyyMMddhhmmss");
 				String simpleDate = formatDate.format(new Date());
-
-				String allChar = "0123456789";
-				StringBuffer sb = new StringBuffer();
-				Random random = new Random();
-				for (int i = 0; i < 10; i++) {
-					sb.append(allChar.charAt(random.nextInt(allChar.length())));
-				}
-				strAppInsVersionDb = String.valueOf(simpleDate) + sb.toString();
+				
+				strAppInsVersionDb = String.valueOf(simpleDate) + RandomStringUtils.random(10, false, true);
 			} else {
 				// 变更CLass 不需要校验这块
 				if (chageClass) {
 					DateFormat formatDate = new SimpleDateFormat("yyyyMMddhhmmss");
 					String simpleDate = formatDate.format(new Date());
-
-					String allChar = "0123456789";
-					StringBuffer sb = new StringBuffer();
-					Random random = new Random();
-					for (int i = 0; i < 10; i++) {
-						sb.append(allChar.charAt(random.nextInt(allChar.length())));
-					}
-					strAppInsVersionDb = String.valueOf(simpleDate) + sb.toString();
+					strAppInsVersionDb = String.valueOf(simpleDate) + RandomStringUtils.random(10, false, true);
 				} else {
 					errMsg[0] = "1";
 					errMsg[1] = strVersionError;
@@ -692,14 +688,14 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				}
 			}
 
-			System.out.println("报名表保存数据预处理End,Time=" + (System.currentTimeMillis() - time));
+//			logger.info("报名表保存数据预处理End,Time=" + (System.currentTimeMillis() - time));
 
 			time = System.currentTimeMillis();
-			System.out.println("报名表保存数据处理Begin");
+//			logger.info("报名表保存数据处理Begin");
 
 			if ("0".equals(errMsg[0]) && "".equals(strMsg)) {
 
-				System.out.println("报名表保存保存用户数据Begin");
+//				logger.info("报名表保存保存用户数据Begin");
 				long time2 = System.currentTimeMillis();
 
 				sql = "SELECT TZ_USE_TYPE FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = ?";
@@ -714,137 +710,17 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				if (!"U".equals(strAppInsState)) {
 					strAppInsState = "S";
 				}
-				// 如果是匿名报名，报名表保存，需要为匿名用户自动注册非激活账号，并创建用户信息
-				String strDefVal = "";
-				String strNAME = "";
-				String strFirstName = "";
-				String strLastName = "";
-				String strGuestOprId = "";
-				if ("Y".equals(strGuestApply) && "".equals(oprid) && "".equals(strAppOprId)) {
-					strIsGuest = "Y";
-					Map<String, Object> mapJsonItems = null;
-					String strIsDoubleLine = null;
-					String strIsSingleLine = null;
-					String strIsFixedContainer = null;
-					List<?> mapChildrens1 = null;
-					Map<String, Object> mapChildren1 = null;
-					Map<String, Object> mapJsonChildrenItems = null;
-					for (Entry<String, Object> entry : mapData.entrySet()) {
-						mapJsonItems = (Map<String, Object>) entry.getValue();
-						strIsDoubleLine = "";
-						if (mapJsonItems.containsKey("isDoubleLine")) {
-							strIsDoubleLine = String.valueOf(mapJsonItems.get("isDoubleLine"));
-						}
-						strIsSingleLine = "";
-						if (mapJsonItems.containsKey("isSingleLine")) {
-							strIsSingleLine = String.valueOf(mapJsonItems.get("isSingleLine"));
-						}
-						strIsFixedContainer = "";
-						if (mapJsonItems.containsKey("fixedContainer")) {
-							strIsSingleLine = String.valueOf(mapJsonItems.get("fixedContainer"));
-						}
-						if ("Y".equals(strIsDoubleLine)) {
-							// 多行容器
-							if ("Y".equals(strIsFixedContainer)) {
-								// 固定多行容器
-							} else {
-								mapChildrens1 = (ArrayList<?>) mapJsonItems.get("children");
-								for (Object children1 : mapChildrens1) {
-									mapChildren1 = null;
-									mapChildren1 = (Map<String, Object>) children1;
-									for (Entry<String, Object> entryChildren : mapChildren1.entrySet()) {
-										mapJsonChildrenItems = null;
-										mapJsonChildrenItems = (Map<String, Object>) entryChildren.getValue();
-										if (mapJsonChildrenItems.containsKey("children")) {
-											// donothing
-										} else {
-											if (mapJsonChildrenItems.containsKey("defaultval")) {
-												strDefVal = String.valueOf(mapJsonChildrenItems.get("defaultval"));
-												if (!"".equals(strDefVal) && strDefVal != null) {
-													// 取TZ_REALNAME
-													if ("".equals(strNAME) && strDefVal.contains("TZ_REALNAME")) {
-														strNAME = String.valueOf(mapJsonChildrenItems.get("value"));
-													}
-													// 取TZ_LAST_NAME
-													if ("".equals(strLastName) && strDefVal.contains("TZ_LAST_NAME")) {
-														strLastName = String.valueOf(mapJsonChildrenItems.get("value"));
-													}
-													// 取TZ_FIRST_NAME
-													if ("".equals(strFirstName)
-															&& strDefVal.contains("TZ_FIRST_NAME")) {
-														strFirstName = String
-																.valueOf(mapJsonChildrenItems.get("value"));
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						} else {
-							if ("Y".equals(strIsSingleLine)) {
-								// 当行控件 donothing
-							} else {
-								if (mapJsonItems.containsKey("defaultval")) {
-									strDefVal = String.valueOf(mapJsonItems.get("defaultval"));
-									if (!"".equals(strDefVal) && strDefVal != null) {
-										// 取TZ_REALNAME
-										if ("".equals(strNAME) && strDefVal.contains("TZ_REALNAME")) {
-											strNAME = String.valueOf(mapJsonItems.get("value"));
-										}
-										// 取TZ_LAST_NAME
-										if ("".equals(strLastName) && strDefVal.contains("TZ_LAST_NAME")) {
-											strLastName = String.valueOf(mapJsonItems.get("value"));
-										}
-										// 取TZ_FIRST_NAME
-										if ("".equals(strFirstName) && strDefVal.contains("TZ_FIRST_NAME")) {
-											strFirstName = String.valueOf(mapJsonItems.get("value"));
-										}
-									}
-								}
-							}
-						}
-					}
-
-					if (strLanguage != null && "ZHS".equals(strLanguage)) {
-						if ("".equals(strNAME) || strNAME == null) {
-							strNAME = "GUEST";
-						}
-					} else {
-						if ("".equals(strLastName) || strLastName == null) {
-							if ("".equals(strFirstName) || strFirstName == null) {
-								strNAME = "GUEST";
-							} else {
-								strNAME = strFirstName;
-							}
-						} else {
-							if ("".equals(strFirstName) || strFirstName == null) {
-								strNAME = strLastName;
-							} else {
-								strNAME = strFirstName + " " + strFirstName;
-							}
-						}
-					}
-					if (strAppOrgId == null || "".equals(strAppOrgId)) {
-						String sqlGetOrgId = "SELECT TZ_JG_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID = :1 AND TZ_EFFEXP_ZT = 'Y' LIMIT 1";
-						strAppOrgId = sqlQuery.queryForObject(sqlGetOrgId, new Object[] { strTplId }, "String");
-					}
-					// 创建用户
-					strGuestOprId = createGuestUser(strAppOrgId, strNAME);
-					strAppOprId = strGuestOprId;
-				}
-				System.out.println("报名表保存保存用户数据End,Time=" + (System.currentTimeMillis() - time2));
 
 				if ("SAVE".equals(strOtype)) {
-					System.out.println("报名表保存SAVE数据Begin");
+					logger.info("报名表保存SAVE数据Begin");
 					time2 = System.currentTimeMillis();
 					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
 							strOtype, isPwd);
 
-					System.out.println("报名表保存SAVE数据End,Time=" + (System.currentTimeMillis() - time2));
+					logger.info("报名表保存SAVE数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("PRE".equals(strOtype)) {
-					System.out.println("报名表保存PRE数据Begin");
+//					logger.info("报名表保存PRE数据Begin");
 					time2 = System.currentTimeMillis();
 					// 先保存数据
 					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
@@ -869,9 +745,9 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 							}
 						}
 					}
-					System.out.println("报名表保存PRE数据End,Time=" + (System.currentTimeMillis() - time2));
+//					logger.info("报名表保存PRE数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("SUBMIT".equals(strOtype)) {
-					System.out.println("报名表保存SUBMIT数据Begin");
+					logger.info("报名表保存SUBMIT数据Begin");
 					time2 = System.currentTimeMillis();
 					// 先保存数据
 					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
@@ -892,9 +768,9 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 							}
 						}
 					}
-					System.out.println("报名表保存SUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
+					logger.info("报名表保存SUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("CONFIRMSUBMIT".equals(strOtype)) {
-					System.out.println("报名表保存CONFIRMSUBMIT数据Begin");
+//					logger.info("报名表保存CONFIRMSUBMIT数据Begin");
 					time2 = System.currentTimeMillis();
 					/* 确认提交报名表 */
 					if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
@@ -908,7 +784,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 							this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
 						}
 					}
-					System.out.println("报名表保存CONFIRMSUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
+//					logger.info("报名表保存CONFIRMSUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				}
 				
 			}
@@ -917,36 +793,36 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				successFlag = "1";
 			}
 
-			System.out.println("报名表保存数据处理End,Time=" + (System.currentTimeMillis() - time));
-			time = System.currentTimeMillis();
+//			logger.info("报名表保存数据处理End,Time=" + (System.currentTimeMillis() - time));
+//			time = System.currentTimeMillis();
 
-			System.out.println("报名表保存页面完成状态Begin");
+//			logger.info("报名表保存页面完成状态Begin");
 			// 页面完成状态Json
-			String strPageXxxBh = "";
-			String strPageCompleteState = "";
+//			String strPageXxxBh = "";
+//			String strPageCompleteState = "";
 
 			ArrayList<Map<String, Object>> listJsonCompleteStateJson = new ArrayList<Map<String, Object>>();
-			String sqlGetPageCompleteState = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'Page'";
-			List<?> listGetPageCompleteState = sqlQuery.queryForList(sqlGetPageCompleteState,
-					new Object[] { strTplId });
-			Map<String, Object> MapGetPageCompleteState = null;
-			Map<String, Object> strPageCompleteStateJson = null;
-			String sqlPageHasCompleteFlag = "SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
-			for (Object objDataGetPageCompleteState : listGetPageCompleteState) {
-				MapGetPageCompleteState = (Map<String, Object>) objDataGetPageCompleteState;
-				strPageXxxBh = MapGetPageCompleteState.get("TZ_XXX_BH") == null ? ""
-						: String.valueOf(MapGetPageCompleteState.get("TZ_XXX_BH"));
-
-				strPageCompleteState = sqlQuery.queryForObject(sqlPageHasCompleteFlag,
-						new Object[] { numAppInsId, strPageXxxBh }, "String");
-				if (!"Y".equals(strPageCompleteState)) {
-					strPageCompleteState = "N";
-				}
-				strPageCompleteStateJson = new HashMap<String, Object>();
-				strPageCompleteStateJson.put("pageId", strPageXxxBh);
-				strPageCompleteStateJson.put("completeState", strPageCompleteState);
-				listJsonCompleteStateJson.add(strPageCompleteStateJson);
-			}
+//			String sqlGetPageCompleteState = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'Page'";
+//			List<?> listGetPageCompleteState = sqlQuery.queryForList(sqlGetPageCompleteState,
+//					new Object[] { strTplId });
+//			Map<String, Object> MapGetPageCompleteState = null;
+//			Map<String, Object> strPageCompleteStateJson = null;
+//			String sqlPageHasCompleteFlag = "SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
+//			for (Object objDataGetPageCompleteState : listGetPageCompleteState) {
+//				MapGetPageCompleteState = (Map<String, Object>) objDataGetPageCompleteState;
+//				strPageXxxBh = MapGetPageCompleteState.get("TZ_XXX_BH") == null ? ""
+//						: String.valueOf(MapGetPageCompleteState.get("TZ_XXX_BH"));
+//
+//				strPageCompleteState = sqlQuery.queryForObject(sqlPageHasCompleteFlag,
+//						new Object[] { numAppInsId, strPageXxxBh }, "String");
+//				if (!"Y".equals(strPageCompleteState)) {
+//					strPageCompleteState = "N";
+//				}
+//				strPageCompleteStateJson = new HashMap<String, Object>();
+//				strPageCompleteStateJson.put("pageId", strPageXxxBh);
+//				strPageCompleteStateJson.put("completeState", strPageCompleteState);
+//				listJsonCompleteStateJson.add(strPageCompleteStateJson);
+//			}
 			Map<String, Object> mapJsonRet = new HashMap<String, Object>();
 			mapJsonRet.put("code", successFlag);
 			mapJsonRet.put("msg", strMsg);
@@ -955,17 +831,12 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			mapJsonRet.put("appInsVersionId", strAppInsVersionDb);
 			strRet = jacksonUtil.Map2json(mapJsonRet);
 
-			System.out.println("报名表保存页面完成状态End,Time=" + (System.currentTimeMillis() - time));
+//			logger.info("报名表保存页面完成状态End,Time=" + (System.currentTimeMillis() - time));
+			logger.info("------报名表保存开始End, Time= ------" + (System.currentTimeMillis() - time)/1000);
 		} // end-for
 
 		return strRet;
 
-	}
-
-
-	private String createGuestUser(String strAppOrgId, String strNAME) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/**
@@ -1022,7 +893,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					password = formDataMap.get("PASSWORD").toString();
 				}
 				boolRtn = tzOnlineAppRulesImpl.checkTJXPwd(dataPwd, language, password);
-				//// //System.out.println("boolRtn:" + boolRtn);
+				//// //logger.info("boolRtn:" + boolRtn);
 				if (!boolRtn) {
 					successFlag = "1";
 					strMsg = tzOnlineAppRulesImpl.msg;
@@ -1034,7 +905,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					cookie.setMaxAge(-1);
 					cookie.setValue(appInsId + "_" + appTplId + "_Y");
 					response.addCookie(cookie);
-					//// //System.out.println("ADD cookie");
+					//// //logger.info("ADD cookie");
 				}
 				return "{\"code\": \"" + successFlag + "\",\"msg\": \"" + strMsg + "\"}";
 			} else if (strEType.equals("PWDHTML")) {
@@ -1102,8 +973,8 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
 				}
 
-				// System.out.println("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
-				// System.out.println("strOtype:" + strOtype);
+				// logger.info("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
+				// logger.info("strOtype:" + strOtype);
 				// if (count > 0) {
 				if (INS_ID != null && !INS_ID.equals("") && Long.parseLong(INS_ID) > 0) {
 					PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
@@ -1269,9 +1140,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 													mapChildrens2.add(ccmap);
 												}
 											}
-
-											// ////System.out.println("Size:" +
-											// mapChildrens2.size());
 
 											String strIsSingleLine2 = "";
 											if (mapJsonChildrenItems.containsKey("isSingleLine")) {
@@ -2342,7 +2210,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				String sql1 = "DELETE FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
 				String sql2 = "DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
 				String sql3 = "DELETE FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
-				String sql4 = "DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
 				String sql5 = "DELETE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
 				String sql6 = "DELETE FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
 				String sql7 = "DELETE FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
@@ -2353,13 +2220,12 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				int del1 = sqlQuery.update(sql1);
 				int del2 = sqlQuery.update(sql2);
 				int del3 = sqlQuery.update(sql3);
-				int del4 = sqlQuery.update(sql4);
 				int del5 = sqlQuery.update(sql5);
 				int del6 = sqlQuery.update(sql6);
 				int del7 = sqlQuery.update(sql7);
 				int del8 = sqlQuery.update(sql8);
 				
-				String ret = del1 + "    -->" + del2 + "    -->" + del3 + "    -->" + del4 + "    -->" + del5 + "    -->" + del6 + "    -->" + del7 + "    -->" + del8;
+				String ret = del1 + "    -->" + del2 + "    -->" + del3 + "    -->" +  del5 + "    -->" + del6 + "    -->" + del7 + "    -->" + del8;
 				return ret;
 			}
 
@@ -2400,6 +2266,32 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 
 			}
 			return retMsg;
+		}
+
+		/**
+		 * 删除重复报名表
+		 * @return
+		 */
+		public String dInsRepeat() {
+			String sql = "SELECT M.OPRID,M.TZ_APP_INS_ID FROM PS_TZ_APPINS_TBL M,(SELECT OPRID,COUNT(1) FROM PS_TZ_APPINS_TBL GROUP BY OPRID HAVING COUNT(1) > 1 ) C WHERE M.OPRID = C.OPRID ORDER BY OPRID DESC,cast(M.TZ_APP_INS_ID as unsigned int) DESC";
+			List<?> resultlist = sqlQuery.queryForList(sql);
+			String tmpOprid = "";
+			String msg = "";
+			
+			for (Object obj : resultlist) {
+				Map<String, Object> result = (Map<String, Object>) obj;
+				String attrOprid = result.get("OPRID") == null ? "" : String.valueOf(result.get("OPRID"));
+				String attrInsId = result.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(result.get("TZ_APP_INS_ID"));
+
+			
+				if(StringUtils.equals(tmpOprid, attrOprid)){
+					int del = sqlQuery.update("DELETE FROM PS_TZ_APPINS_TBL WHERE TZ_APP_INS_ID = ?", new Object[]{attrInsId});
+					msg = msg + "<br>OPRID : " + attrOprid + "    -->  EMAIL : " + attrInsId + "   --> DELE :  = " + del;
+				}else{
+					tmpOprid = attrOprid;
+				}
+			}
+			return msg;
 		}
 		
 }

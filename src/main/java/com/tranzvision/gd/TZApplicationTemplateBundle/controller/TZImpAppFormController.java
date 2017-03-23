@@ -162,6 +162,13 @@ public class TZImpAppFormController {
 		return impMsg;
 	}
 	
+	@RequestMapping(value = { "/impform/dInsRepeat" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String dInsRepeat(HttpServletRequest request, HttpServletResponse response) {
+		String impMsg = tZImpAppFormServiceImpl.dInsRepeat();
+		return impMsg;
+	}
+	
 	/*----------------------------推荐信导入相关方法---------------------------------*/
 	
 	
