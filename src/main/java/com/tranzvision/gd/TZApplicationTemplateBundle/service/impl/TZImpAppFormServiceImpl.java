@@ -20,10 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
-import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
@@ -74,9 +72,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 	private PsTzRegUserTMapper psTzRegUserTMapper;
 	
 	@Autowired
-	private GdKjComServiceImpl gdKjComServiceImpl;
-	
-	@Autowired
 	private PsoprdefnMapper psoprdefnMapper;
 	
 	@Autowired
@@ -119,7 +114,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public String impAppForm(int min, int max) {
+	public String impAppForm(String clsid,int min, int max) {
 		String[] errMsg = { "0", "" };
 		String retMsg = "";
 		String tplJson = "";
@@ -136,15 +131,13 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			Map<String, Object> result = (Map<String, Object>) obj;
 			String attrInsid = result.get("TZ_APP_INS_ID") == null ? "0" : String.valueOf(result.get("TZ_APP_INS_ID"));
 //			String attrClsid = result.get("TZ_CLASS_ID") == null ? "122" : String.valueOf(result.get("TZ_CLASS_ID"));
-			/*班级编号*/
-			String attrClsid = "123";
 			/*批次编号，这里不确定对应的批次是多少*/
-			String attrBatchid = result.get("TZ_BATCH_ID") == null ? "45" : String.valueOf(result.get("TZ_BATCH_ID"));
+//			String attrBatchid = result.get("TZ_BATCH_ID") == null ? "45" : String.valueOf(result.get("TZ_BATCH_ID"));
 			/*新版系统模板编号*/
 //			String attrTplid = result.get("TZ_APP_TPL_ID") == null ? "129" : String.valueOf(result.get("TZ_APP_TPL_ID"));
 //			String attrTplid = "129";
 			String attrOprid = result.get("OPRID") == null ? "" : String.valueOf(result.get("OPRID"));
-
+			
 			String attrText1 = result.get("TEXTAREA_1") == null ? "" : String.valueOf(result.get("TEXTAREA_1"));
 			String attrText2 = result.get("TEXTAREA_2") == null ? "" : String.valueOf(result.get("TEXTAREA_2"));
 			String attrText3 = result.get("TEXTAREA_3") == null ? "" : String.valueOf(result.get("TEXTAREA_3"));
@@ -180,8 +173,8 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			paramsMap.put("TZ_APP_INS_VERSION", "");
 			paramsMap.put("TZ_PAGE_ID", "");
 			paramsMap.put("TZ_LANGUAGE", "ZHS");
-			paramsMap.put("TZ_CLASS_ID", attrClsid);
-			paramsMap.put("TZ_BATCH_ID", attrBatchid);
+			paramsMap.put("TZ_CLASS_ID", clsid);
+			paramsMap.put("TZ_BATCH_ID", "");
 			paramsMap.put("TZ_NEW_CLASS_ID", "");
 			paramsMap.put("data", insJson);
 			String[] aryParam = new String[] { jacksonUtil1.Map2json(paramsMap) };
@@ -203,7 +196,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public String impAppLetter(String clsid, int min, int max) {
+	public String impAppLetter(String clsid) {
 
 		String[] errMsg = { "0", "" };
 		String retMsg = "";
@@ -213,8 +206,8 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil1 = new JacksonUtil();
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		
-		String sql = "SELECT * FROM PS_TZ_LETTER_INS_TBL WHERE cast(TZ_APP_INS_ID as unsigned int) >= ? AND cast(TZ_APP_INS_ID as unsigned int) < ? order by cast(TZ_APP_INS_ID as unsigned int)";
-		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { min,max });
+		String sql = "SELECT * FROM PS_TZ_LETTER_INS_TBL";
+		List<?> resultlist = sqlQuery.queryForList(sql);
 		for (Object obj : resultlist) {
 			errMsg[0] = "0";
 			errMsg[1] = "";
@@ -230,18 +223,39 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			
 			String isHasOpr = "SELECT 'Y' FROM PS_TZ_REG_USER_T WHERE OPRID = ? LIMIT 0,1";
 			String isHas = sqlQuery.queryForObject(isHasOpr, new Object[] { attrOprid }, "String");
-			
-			String attrInsid = "";
 			if(!StringUtils.equals("Y", isHas)){
 				retMsg  = retMsg + "<br>" + attrOprid + "----->    考生不存在";
 				continue;
 			}
+			String attrInsid = "";
+			//报名表实例编号
+			Long numAppinsId = sqlQuery.queryForObject("SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ? limit 0,1",
+					new Object[] { clsid, attrOprid}, "long");
 			
-			String strTjxId = this.createLetter(lang, clsid, attrOprid, attrEmail, attrInsid);
-			if(StringUtils.isBlank(attrInsid)){
-				retMsg  = retMsg + "<br>班级" + clsid +  "(" + attrOprid + ")   ----->    报名表不存在";
+			if(numAppinsId == null || numAppinsId < 1){
+				retMsg  = retMsg + "<br>学生" + attrOprid +  "   -----> 无对应报名表   " + errMsg[1];
 				continue;
 			}
+			attrInsid = String.valueOf(numAppinsId);
+			
+			String strTjxId = "";
+			String strTjxAppInsId = "";
+			
+			String tjxSql = "SELECT TZ_REF_LETTER_ID,TZ_TJX_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID = ? AND OPRID = ? AND LOWER(TZ_EMAIL) = LOWER(?)";
+			Map<String, Object> retMap = sqlQuery.queryForMap(tjxSql, new Object[] { numAppinsId, attrOprid,attrEmail});
+			if(retMap != null){
+				strTjxId = String.valueOf(retMap.get("TZ_REF_LETTER_ID"));
+				strTjxAppInsId = String.valueOf(retMap.get("TZ_TJX_APP_INS_ID"));
+			}else{
+				retMsg  = retMsg + "<br>学生" + attrOprid +  "   -----> 无对应推荐信编号   ";
+				continue;
+			}
+			
+			if(StringUtils.equals("0", strTjxId) || StringUtils.equals("0", strTjxAppInsId)){
+				retMsg  = retMsg + "<br>学生" + attrOprid +  "   -----> 无对应推荐信编号   ";
+				continue;
+			}
+
 			if(StringUtils.isBlank(engTplJson)){
 				//初始化英文推荐信内容
 				try {
@@ -285,7 +299,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			paramsMap.put("TZ_REF_LETTER_ID", strTjxId);
 			paramsMap.put("PASSWORD", "");
 			paramsMap.put("ISPWD", "N");
-			paramsMap.put("TZ_APP_INS_ID", attrInsid);
+			paramsMap.put("TZ_APP_INS_ID", strTjxAppInsId);
 			paramsMap.put("TZ_APP_INS_VERSION", "");
 			paramsMap.put("TZ_PAGE_ID", "");
 			paramsMap.put("TZ_LANGUAGE", lang);
@@ -479,18 +493,17 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 
 			numAppInsId = Long.parseLong(strAppInsId);
 
-			strSessionInvalidTips = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", strLanguage, "当前会话已失效，请重新登陆。", "The current session is timeout or the current access is invalid,Please relogin.");
-			strIllegalOperation = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", strLanguage, "非法操作", "Illegal operation");
-			strParaError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "PARAERROR", strLanguage, "参数错误", "Parameter error.");
-			strVersionError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "PAGE_INVALID", strLanguage, "当前页面已失效，请重新进入页面或刷新页面再试。","The current page has expired, please re-enter the page and try again.");
-			strClassError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "CLASSERROR", strLanguage, "该班级已经填写报名表，不允许重复。", "The class has filled in the application form, not allowed to repeat.");
+			strSessionInvalidTips = "当前会话已失效，请重新登陆。";
+			strIllegalOperation = "非法操作";
+			strParaError = "参数错误";
+			strVersionError = "当前页面已失效，请重新进入页面或刷新页面再试。";
+			strClassError = "该班级已经填写报名表，不允许重复。";
 			
 			Map<String, Object> mapData = null;
 			String sql = "";
 			if (!"".equals(strClassId) && strClassId != null) {
 				// 如果跟换 class那么检查 新的classId 是否已经存在并且已经提交 不允许保存，报错
 				// 整体逻辑变更，如果跟换班级，那么 修改 TZ_FORM_WRK_T 里面的内容 by caoy 20170118
-				//
 				if (!"".equals(strNewClassId) && strNewClassId != null) {
 					if (!strClassId.equals(strNewClassId)) {
 						if (!"TZ_GUEST".equals(oprid) && !"".equals(oprid)) {
@@ -602,6 +615,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 						mapData = sqlQuery.queryForMap(sqlGetKsTjxInfo, new Object[] { strRefLetterId, strAppInsId });
 						strAppInsIdRefer = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
 						strAppOprId = mapData.get("OPRID") == null ? "" : String.valueOf(mapData.get("OPRID"));
+	
 						// 有报名表实例编号
 						PsTzAppInsT psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(numAppInsId);
 						if (psTzAppInsT != null) {
@@ -1025,15 +1039,10 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				return "{\"code\": \"" + successFlag + "\",\"msg\": \"" + strMsg + "\"}";
 			} else if (strEType.equals("PWDHTML")) {
 				try {
-					String Pwdname = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
-							"TJXSETPWD", language, "访问密码", "Access password");
-					String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
-							"SUBMIT", language, "提交", "Submit");
-
+					String Pwdname = "访问密码";
+					String strSubmit = "提交";
 					String contextUrl = request.getContextPath();
-
-					String pwdError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
-							"TJXSETPWDError", language, "请填写密码", "Please fill in the password");
+					String pwdError = "请填写密码";
 
 					String PWDHTML = tzGDObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false,
 							Pwdname, strSubmit, pwdError, contextUrl);
@@ -1193,11 +1202,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 						}
 					}
 				}
-				// 保存数据到结构化表
-				// 解析json
 				JacksonUtil jacksonUtil = new JacksonUtil();
-				// jacksonUtil.json2Map(strJsonData);
-				// System.out.println("保存传入数据:"+strJsonData);
 				Map<String, Object> mapAppData = jacksonUtil.parseJson2Map(strJsonData);
 
 				if (mapAppData != null) {
@@ -1229,15 +1234,14 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 
 							List<?> mapChildrens1 = (ArrayList<?>) mapJsonItems.get("children");
 							if ("Y".equals(strIsDoubleLine)) {
-								// modity by caoy
+
 								if (strClassName.equals("LayoutControls")) {
 									this.saveDhLineNum(strItemIdLevel0, numAppInsId,
 											(short) ((Map<String, Object>) mapChildrens1.get(0)).size());
 								} else {
 									this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
 								}
-								// this.saveDhLineNum(strItemIdLevel0, numAppInsId,
-								// (short) mapChildrens1.size());
+
 								for (Object children1 : mapChildrens1) {
 									// 多行容器
 									Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
@@ -1249,10 +1253,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 											strItemIdLevel1 = String.valueOf(mapJsonChildrenItems.get("itemId"));
 										}
 										if (mapJsonChildrenItems.containsKey("children")) {
-											// 多行容器下的子容器 modity by caoy
 											// 解决分组框的某些组合控件的问题
-											//// //System.out.println("111:" +
-											// mapJsonChildrenItems.get("children"));
 											List<Map<String, Object>> mapChildrens2 = null;
 											try {
 												mapChildrens2 = (ArrayList<Map<String, Object>>) mapJsonChildrenItems
@@ -1287,22 +1288,12 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 												// 多行容器中的附件
 												String strStorageType = "";
 												if (mapJsonChildrenItems.containsKey("StorageType")) {
-													strStorageType = mapJsonChildrenItems.get("StorageType") == null ? ""
-															: String.valueOf(mapJsonChildrenItems.get("StorageType"));
+													strStorageType = mapJsonChildrenItems.get("StorageType") == null ? "" : String.valueOf(mapJsonChildrenItems.get("StorageType"));
 													if ("F".equals(strStorageType)) {
 														for (Object children2 : mapChildrens2) {
 															Map<String, Object> mapChildren2 = (Map<String, Object>) children2;
 															this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1,
 																	mapChildren2, numAppInsId,oprid);
-															String strIsHidden = "";
-															if (mapJsonChildrenItems.containsKey("isHidden")) {
-																strIsHidden = mapJsonChildrenItems.get("isHidden") == null
-																		? ""
-																		: String.valueOf(
-																				mapJsonChildrenItems.get("isHidden"));
-															}
-															this.saveXxxHidden(numAppInsId,
-																	strItemIdLevel0 + strItemIdLevel1, strIsHidden);
 														}
 													}
 												}
@@ -1310,8 +1301,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 										} else {
 											// 多行容器中的单选框.复选框、一般字段
 											String strStorageType = "";
-											strStorageType = mapJsonChildrenItems.get("StorageType") == null ? ""
-													: String.valueOf(mapJsonChildrenItems.get("StorageType"));
+											strStorageType = mapJsonChildrenItems.get("StorageType") == null ? "" : String.valueOf(mapJsonChildrenItems.get("StorageType"));
 											if ("S".equals(strStorageType) || "L".equals(strStorageType)) {
 												// 多行容器中的普通字段
 												this.savePerXxxIns(strItemIdLevel0, mapJsonChildrenItems, numAppInsId);
@@ -1343,8 +1333,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 									Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
 									String strStorageType = "";
 									if (mapChildren1.containsKey("StorageType")) {
-										strStorageType = mapChildren1.get("StorageType") == null ? ""
-												: String.valueOf(mapChildren1.get("StorageType"));
+										strStorageType = mapChildren1.get("StorageType") == null ? "" : String.valueOf(mapChildren1.get("StorageType"));
 									}
 									if ("S".equals(strStorageType) || "L".equals(strStorageType)) {
 										this.savePerXxxIns(strItemIdLevel0, mapChildren1, numAppInsId);
@@ -1354,19 +1343,12 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 								// 如果是附件信息
 								String strStorageType = "";
 								if (mapJsonItems.containsKey("StorageType")) {
-									strStorageType = mapJsonItems.get("StorageType") == null ? ""
-											: String.valueOf(mapJsonItems.get("StorageType"));
+									strStorageType = mapJsonItems.get("StorageType") == null ? "" : String.valueOf(mapJsonItems.get("StorageType"));
 								}
 								if ("F".equals(strStorageType)) {
 									for (Object children1 : mapChildrens1) {
 										Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
 										this.savePerAttrInfo(strItemIdLevel0, mapChildren1, numAppInsId,oprid);
-										String strIsHidden = "";
-										if (mapJsonItems.containsKey("isHidden")) {
-											strIsHidden = mapJsonItems.get("isHidden") == null ? ""
-													: String.valueOf(mapJsonItems.get("isHidden"));
-										}
-										this.saveXxxHidden(numAppInsId, strItemIdLevel0, strIsHidden);
 									}
 								}
 							}
@@ -1374,8 +1356,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 							// 没有Children节点
 							String strStorageType = "";
 							if (mapJsonItems.containsKey("StorageType")) {
-								strStorageType = mapJsonItems.get("StorageType") == null ? ""
-										: String.valueOf(mapJsonItems.get("StorageType"));
+								strStorageType = mapJsonItems.get("StorageType") == null ? "" : String.valueOf(mapJsonItems.get("StorageType"));
 							}
 							if ("D".equals(strStorageType)) {
 								// 如果是多项框或者单选框
@@ -1388,10 +1369,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 								}
 							} else if ("S".equals(strStorageType) || "L".equals(strStorageType)) {
 								this.savePerXxxIns("", mapJsonItems, numAppInsId);
-								if ("bmrPhoto".equals(strClassName)) {
-									// this.saveBmrPhoto("", mapJsonItems,
-									// numAppInsId);
-								}
 							}
 						}
 					}
@@ -1411,7 +1388,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			sqlQuery.update("DELETE FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID = ?", args);
 			sqlQuery.update("DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID = ?", args);
 			sqlQuery.update("DELETE FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID = ?", args);
-			sqlQuery.update("DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID = ?", args);
 			sqlQuery.update("DELETE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ?", args);
 			sqlQuery.update("DELETE FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID = ?", args);
 		}
@@ -1436,7 +1412,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		}
 
 		/* 设置字段是否隐藏 */
-		public void saveXxxHidden(Long numAppInsId, String strItemId, String strIsHidden) {
+		public void saveXxxHidden1(Long numAppInsId, String strItemId, String strIsHidden) {
 			/**/
 			String sql = "SELECT COUNT(1) FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 			int count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strItemId }, "Integer");
@@ -1523,18 +1499,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			psTzAppCcT.setTzAppSText(strValueS);
 			psTzAppCcT.setTzAppLText(strValueL);
 			psTzAppCcTMapper.insert(psTzAppCcT);
-
-			// 是否隐藏
-			String strIsHidden = "";
-			if (xxxObject.containsKey("isHidden")) {
-				strIsHidden = xxxObject.get("isHidden") == null ? "" : String.valueOf(xxxObject.get("isHidden"));
-				if ("".equals(strIsHidden)) {
-					strIsHidden = "N";
-				}
-			} else {
-				strIsHidden = "N";
-			}
-			this.saveXxxHidden(numAppInsId, strItemId, strIsHidden);
 		}
 		// 将json数据解析保存到报名表附件存储表
 		public void savePerAttrInfo(String strParentItemId, Map<String, Object> xxxObject, Long numAppInsId,String oprid) {
@@ -2231,7 +2195,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		private Map<String, Object> createLetterInsJson(String tplJson, Map<String, Object> zsMap) {
 			JacksonUtil jacksonUtil2 = new JacksonUtil();
 			jacksonUtil2.json2Map(tplJson);
-			Map<String, Object> itemsData = jacksonUtil2.getMap("items");
+			Map<String, Object> itemsData = jacksonUtil2.getMap();
 
 			for (String key : zsMap.keySet()) {
 				String value = zsMap.get(key) == null ? "" : String.valueOf(zsMap.get(key));
@@ -2243,19 +2207,14 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 
 
 		
-		private String createLetter(String lang,String classId,String strOprid,String strEmail, String strInsId){
+		private String[] createLetter(String lang,String classId,String strOprid,String strEmail, Long strInsId){
 			//推荐信类型
 			String strTjxType = "E";
 			if(StringUtils.equals("ZHS", lang)){
 				strTjxType = "C";
 			}
-			//报名表实例编号
-			Long numAppinsId = sqlQuery.queryForObject("SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ? limit 0,1",
-					new Object[] { classId, strOprid}, "long");
-			strInsId = String.valueOf(numAppinsId);
-			//推荐人编号
-			String strTjrId = sqlQuery.queryForObject("SELECT COUNT(*) + 1 FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID = ? AND OPRID = ?",new Object[] { classId, strOprid}, "String");
-			
+			String tjxSql = "SELECT TZ_REF_LETTER_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID = ? AND OPRID = ? AND TZ_EMAIL = ?";
+			sqlQuery.queryForObject(tjxSql, new Object[] { strInsId, strOprid,strEmail}, "String");
 			//推荐信编号
 			String strTjxId = "";
 			if (strTjxId == null || "".equals(strTjxId)) {
@@ -2265,12 +2224,17 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
 				strTjxId = str_seq1 + str_seq2;
 			}
+			
+			//推荐人编号
+			String strTjrId = sqlQuery.queryForObject("SELECT COUNT(*) + 1 FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID = ? AND OPRID = ?",new Object[] { strInsId, strOprid}, "String");
 
 			PsTzKsTjxTbl psTzKsTjxTbl = psTzKsTjxTblMapper.selectByPrimaryKey(strTjxId);
 			if (psTzKsTjxTbl == null) {
 				psTzKsTjxTbl = new PsTzKsTjxTbl();
 				psTzKsTjxTbl.setTzRefLetterId(strTjxId);
-				psTzKsTjxTbl.setTzAppInsId(numAppinsId);
+				psTzKsTjxTbl.setTzAppInsId(strInsId);
+				String tzTjxAppInsId = String.valueOf(getSeqNum.getSeqNum("TZ_APP_INS_T", "TZ_APP_INS_ID"));
+				psTzKsTjxTbl.setTzTjxAppInsId(Long.parseLong(tzTjxAppInsId));
 				psTzKsTjxTbl.setOprid(strOprid);
 				psTzKsTjxTbl.setTzTjxType(strTjxType);
 
@@ -2309,9 +2273,14 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				psTzKsTjxTbl.setRowAddedOprid(strOprid);
 				psTzKsTjxTbl.setRowLastmantDttm(dttm);
 				psTzKsTjxTbl.setRowLastmantOprid(strOprid);
-				psTzKsTjxTblMapper.insert(psTzKsTjxTbl);
+				int size = psTzKsTjxTblMapper.insert(psTzKsTjxTbl);
+				if(size > 0){
+					return new String[]{strTjxId,tzTjxAppInsId};
+				}else{
+					return new String[]{"0","0"};
+				}
 			}
-			return strTjxId;
+			return new String[]{"0","0"};
 		}
 		/**
 		 * 删除MBA历史账户设计到的报名表
@@ -2363,4 +2332,74 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				return false;
 			}
 		}
+
+		/**
+		 * 删除推荐信
+		 * @return
+		 */
+		public String delLetterAll() {
+
+				String sql1 = "DELETE FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql2 = "DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql3 = "DELETE FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql4 = "DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql5 = "DELETE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql6 = "DELETE FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql7 = "DELETE FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql8 = "DELETE FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*'";
+
+
+				
+				int del1 = sqlQuery.update(sql1);
+				int del2 = sqlQuery.update(sql2);
+				int del3 = sqlQuery.update(sql3);
+				int del4 = sqlQuery.update(sql4);
+				int del5 = sqlQuery.update(sql5);
+				int del6 = sqlQuery.update(sql6);
+				int del7 = sqlQuery.update(sql7);
+				int del8 = sqlQuery.update(sql8);
+				
+				String ret = del1 + "    -->" + del2 + "    -->" + del3 + "    -->" + del4 + "    -->" + del5 + "    -->" + del6 + "    -->" + del7 + "    -->" + del8;
+				return ret;
+			}
+
+		/*创建推荐信*/
+		public String createLetter(String clsid) {
+			String[] errMsg = { "0", "" };
+			String retMsg = "";
+			
+			String sql = "SELECT * FROM PS_TZ_LETTER_INS_TBL";
+			List<?> resultlist = sqlQuery.queryForList(sql);
+			for (Object obj : resultlist) {
+				errMsg[0] = "0";
+				errMsg[1] = "";
+				
+				Map<String, Object> result = (Map<String, Object>) obj;
+
+				String attrOprid = result.get("OPRID") == null ? "" : String.valueOf(result.get("OPRID"));
+				String attrEmail = result.get("TZ_EMAIL") == null ? "" : String.valueOf(result.get("TZ_EMAIL"));
+				String lang = result.get("LANGUAGE") == null ? "ZHS" : String.valueOf(result.get("LANGUAGE"));
+				
+				String isHasOpr = "SELECT 'Y' FROM PS_TZ_REG_USER_T WHERE OPRID = ? LIMIT 0,1";
+				String isHas = sqlQuery.queryForObject(isHasOpr, new Object[] { attrOprid }, "String");
+				if(!StringUtils.equals("Y", isHas)){
+					retMsg  = retMsg + "<br>" + attrOprid + "----->    考生不存在";
+					continue;
+				}
+
+				//报名表实例编号
+				Long numAppinsId = sqlQuery.queryForObject("SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ? limit 0,1",
+						new Object[] { clsid, attrOprid}, "long");
+				
+				if(numAppinsId == null || numAppinsId < 1){
+					retMsg  = retMsg + "<br>学生" + attrOprid +  "   -----> 无对应报名表   " + errMsg[1];
+					continue;
+				}
+				
+				this.createLetter(lang, clsid, attrOprid, attrEmail, numAppinsId);
+
+			}
+			return retMsg;
+		}
+		
 }
