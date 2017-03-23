@@ -65,11 +65,11 @@ Ext.define('KitchenSink.view.recommend.recommendList', {
                 dataIndex: 'entranceYear',
                 formatter: 'date("Y")',
                 flex:1,
-            },{
-                text: '申请状态',
-                sortable: true,
-                dataIndex: 'applyState',
-                flex:1
+//            },{
+//                text: '申请状态',
+//                sortable: true,
+//                dataIndex: 'applyState',
+//                flex:1
             },{
             	text:'推荐人管理',
                 xtype:'linkcolumn',
