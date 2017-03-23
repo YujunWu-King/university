@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.recommend.recommendInfoStore', {
     extend: 'Ext.data.Store',
     alias: 'store.recommendInfoStore',
     model: 'KitchenSink.view.recommend.recommendInfoModel',
-		autoLoad: true,
+		autoLoad: false,
 		pageSize: 10,
 		comID: 'TZ_TJR_MANAGER_COM',
 		pageID: 'TZ_TJR_DETAIL_STD',

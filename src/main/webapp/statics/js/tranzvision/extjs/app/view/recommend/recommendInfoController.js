@@ -32,9 +32,11 @@ Ext.define('KitchenSink.view.recommend.recommendInfoController', {
         var record = store.getAt(rowIndex);
         var refLetterID=record.get("letterID");
         var appInsID=record.get("appInsID");
+        alert("refLetterID====" + refLetterID)
+        alert("appInsID====" + appInsID)
         
         if(appInsID!=""){
-            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'"}}';
+        	var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'","TZ_REF_LETTER_ID":"'+refLetterID+'","TZ_MANAGER":"Y"}}';
             var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
             var mask ;
             var win = new Ext.Window({
