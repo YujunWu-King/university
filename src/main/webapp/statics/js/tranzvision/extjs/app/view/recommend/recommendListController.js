@@ -67,8 +67,6 @@ Ext.define('KitchenSink.view.recommend.recommendListController', {
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classId;
         var batchID = record.data.batchId;
-        alert("班级ID====" + classID)
-        alert("批次ID====" + batchID)
 
         var initData=[];
         var stuGridColorSortFilterOptions=[];/*考生类别的过滤器数据*/

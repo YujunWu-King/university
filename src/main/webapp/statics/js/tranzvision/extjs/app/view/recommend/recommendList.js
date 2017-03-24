@@ -7,6 +7,8 @@ Ext.define('KitchenSink.view.recommend.recommendList', {
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'tranzvision.extension.grid.column.Link',
+        'KitchenSink.view.recommend.recommendEmailStore',
+        'KitchenSink.view.recommend.recommendEmailModel',
         'KitchenSink.view.recommend.recommendListController',
         'KitchenSink.view.recommend.recommendListStore'
     ],
