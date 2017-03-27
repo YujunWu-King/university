@@ -1475,9 +1475,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					}
 
 					if ("".equals(strMsg)) {
-						strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId,
-								strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,
-								strClassId, strPwd, strOtype, isPwd, strRefLetterId);
+						strMsg = tzOnlineAppEngineImpl.preAppForm(numAppInsId);
 
 						if ("".equals(strMsg)) {
 							tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
@@ -1549,8 +1547,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							if ("TJX".equals(strTplType)) {
 								strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId,
 										strTplType, strBatchId, strPwd, isPwd);
-								//	清华不需要发感谢信
-								//String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
+								// 清华不需要发感谢信
+								// String strSubmitTjxSendEmail =
+								// tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
 							}
 							if ("BMB".equals(strTplType)) {
 							}

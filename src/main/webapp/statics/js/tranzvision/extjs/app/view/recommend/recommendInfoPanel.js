@@ -110,7 +110,7 @@ Ext.define('KitchenSink.view.recommend.recommendInfoPanel', {
             					handler:'sendEmail'
             				},{
             					text:'邮件发送史',
-            					handler:'emailSendHistory'
+            					handler:'sendEmailHistory'
             				}]
             			}
             		]
@@ -153,10 +153,12 @@ Ext.define('KitchenSink.view.recommend.recommendInfoPanel', {
                     },{ 
                         text: '邮箱',
                         dataIndex: 'email',
+                        minWidth: 240,
         				flex: 1
                     },{ 
                         text: '手机',
                         dataIndex: 'phone',
+                        minWidth: 120,
         				flex: 1
                     },{ 
                         text: '经管校友',

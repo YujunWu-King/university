@@ -34,7 +34,7 @@ Ext.define('KitchenSink.view.recommend.recommendInfoController', {
         var appInsID=record.get("appInsID");
         
         if(appInsID!=""){
-            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'"}}';
+        	var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'","TZ_REF_LETTER_ID":"'+refLetterID+'","TZ_MANAGER":"Y"}}';
             var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
             var mask ;
             var win = new Ext.Window({
@@ -182,8 +182,59 @@ Ext.define('KitchenSink.view.recommend.recommendInfoController', {
 			 });
 		});
     },
+    
+    //邮件发送史
+    sendEmailHistory: function(btn){
+    	
+    	var me = this;
+    	var grid = btn.findParentByType("grid");
+		var store = grid.getStore();
+		var selList = grid.getSelectionModel().getSelection();
+		
+		//选中行长度
+		var checkLen = selList.length;
+		if(checkLen == 0|| checkLen > 1){
+			Ext.Msg.alert("提示","必须只能选中一条记录");
+			return ;
+		}
+		
+		var email = selList[0].get('email');
+		
+		//是否有访问权限   
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_TJR_MANAGER_COM"]["TZ_TJR_EMAIL_STD"];
+		if (pageResSet == "" || pageResSet == undefined) {
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if (className == "" || className == undefined) {
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_TJR_EMAIL_STD，请检查配置。');
+			return;
+		}
+		
+		var win = me.lookupReference('recommendWindow');
+		if (!win) {
+			Ext.syncRequire(className);
+			ViewClass = Ext.ClassManager.get(className);
+			win = new ViewClass();
+			win.on('afterrender',function(window){
+				var emailGrid = window.child('grid');
+				emailGrid.store.tzStoreParams = '{"email":"'+email+'"}';
+				emailGrid.store.load();
+			})
+			win.show();
+		}
+    },
+    
 	onComRegClose: function(btn){
 		//关闭窗口
 		this.getView().close();
 	},
+	
+	//关闭窗口
+	onWindowClose: function(btn){
+		var win = btn.findParentByType("window");
+		win.close();
+	}
 });

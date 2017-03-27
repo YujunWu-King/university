@@ -354,20 +354,7 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 
 				// TZ_REALNAME或（FIRST_NAME/LAST_NAME) 必填一项;
 				if (strTZ_REALNAME == null || "".equals(strTZ_REALNAME)) {
-					if (strTZ_FIRST_NAME != null && !"".equals(strTZ_FIRST_NAME) && strTZ_LAST_NAME != null
-							&& !"".equals(strTZ_LAST_NAME)) {
-						if ("ENG".equals(strLang)) {
-							strTZ_REALNAME = strTZ_FIRST_NAME + " " + strTZ_LAST_NAME;
-						} else {
-							strTZ_REALNAME = strTZ_LAST_NAME + " " + strTZ_FIRST_NAME;
-						}
-					} else {
-						errMsg[0] = "6";
-						errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgId, strLang, "TZ_SITE_MESSAGE",
-								"65", "姓名或者FIRST_NAME、LAST_NAME 必填一项",
-								"Name or LAST_NAME, FIRST_NAME at least one required");
-						return strResult;
-					}
+					strTZ_REALNAME =  oprId;
 				}
 
 				// 通过所有校验，开始创建账号;
@@ -629,14 +616,18 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 	 * @return
 	 */
 	public String delRepeat() {
-		String sql = "SELECT M.OPRID,M.TZ_EMAIL FROM PS_TZ_MBASLFRG_TBL M,(SELECT TZ_EMAIL,COUNT(1) FROM PS_TZ_MBASLFRG_TBL GROUP BY TZ_EMAIL HAVING COUNT(1) > 1 ) C WHERE M.TZ_EMAIL = C.TZ_EMAIL ORDER BY M.TZ_EMAIL DESC,OPRID DESC";
+		String sql = "SELECT M.OPRID,M.TZ_EMAIL FROM PS_TZ_MBASLFRG_TBL M,(SELECT LOWER(TZ_EMAIL) AS TZ_EMAIL,COUNT(1) FROM PS_TZ_MBASLFRG_TBL GROUP BY LOWER(TZ_EMAIL) HAVING COUNT(1) > 1 ) C WHERE LOWER(M.TZ_EMAIL) = LOWER(C.TZ_EMAIL) ORDER BY LOWER(M.TZ_EMAIL) DESC,OPRID DESC";
 		List<?> resultlist = sqlQuery.queryForList(sql);
 		String tmpEmail = "";
 		String msg = "";
+		
 		for (Object obj : resultlist) {
 			Map<String, Object> result = (Map<String, Object>) obj;
 			String attrOprid = result.get("OPRID") == null ? "" : String.valueOf(result.get("OPRID"));
 			String attrEmail = result.get("TZ_EMAIL") == null ? "" : String.valueOf(result.get("TZ_EMAIL"));
+
+			attrEmail = StringUtils.lowerCase(attrEmail);
+			
 			if(StringUtils.equals(tmpEmail, attrEmail)){
 				int del = sqlQuery.update("DELETE FROM PS_TZ_MBASLFRG_TBL WHERE OPRID = ?", new Object[]{attrOprid});
 				msg = msg + "<br>OPRID : " + attrOprid + "    -->  EMAIL : " + attrEmail + "   --> DELE :  = " + del;

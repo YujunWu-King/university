@@ -95,7 +95,7 @@ public class tzOnlineAppHisServiceImpl {
 		String strGetXxxInfoSingleSql = "SELECT A.TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T A "
 				+ "WHERE TZ_APP_TPL_ID = ? "
 				+ "AND EXISTS (SELECT * FROM PS_TZ_TEMP_FIELD_T B WHERE A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID AND A.TZ_XXX_BH = B.TZ_XXX_BH) "
-				+ "AND A.TZ_COM_LMC NOT IN ('LayoutControls','DHContainer','workExperience','EduExperience','recommendletter','Page','TextExplain','Separator','EngLev')";
+				+ "AND A.TZ_COM_LMC NOT IN ('LayoutControls','DHContainer','workExperience','EduExperience','recommendletter','Page','TextExplain','Separator','EngLevl')";
 		
 		 List<?> XxxInfoSingleList = sqlQuery.queryForList(strGetXxxInfoSingleSql, 
 		    		new Object[] { strTplId });
@@ -127,7 +127,7 @@ public class tzOnlineAppHisServiceImpl {
 		 String strGetXxxInfoMultipleSql = "SELECT A.TZ_XXX_BH,A.TZ_XXX_SLID,A.TZ_COM_LMC,A.TZ_XXX_MIN_LINE,A.TZ_XXX_MAX_LINE FROM PS_TZ_APP_XXXPZ_T A "
 		 		+ "WHERE TZ_APP_TPL_ID = ? "
 		 		+ "AND EXISTS (SELECT * FROM PS_TZ_TEMP_FIELD_T B WHERE A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID AND A.TZ_XXX_BH = B.TZ_XXX_BH) "
-		 		+ "AND A.TZ_COM_LMC IN ('LayoutControls','DHContainer','workExperience','EduExperience','EngLev','recommendletter','FirmType','StartBusinessExp')";
+		 		+ "AND A.TZ_COM_LMC IN ('LayoutControls','DHContainer','workExperience','EduExperience','EngLevl','recommendletter','FirmType','StartBusinessExp')";
 		 List<?> XxxInfoMultipleList = sqlQuery.queryForList(strGetXxxInfoMultipleSql, 
 		    		new Object[] { strTplId });
 		 for (Object XxxInfoMultiple : XxxInfoMultipleList) {
@@ -204,52 +204,56 @@ public class tzOnlineAppHisServiceImpl {
 						 mapAppXxxInsJson = this.getDhXxxInfoJson(numAppInsId, strTplId, strXxxBhChild, strXxxBh,i, strOprNameApp,strComLmc);
 						 //System.out.println("mapAppXxxInsJson.size:"+mapAppXxxInsJson.size()+" strComLmc:"+strComLmc+" strXxxBhChild:"+strXxxBhChild);
 					 }
-			
+					 
 					 if(mapAppXxxInsJson!=null){
-						 for (Entry<String, Object> entry:mapAppXxxInsJson.entrySet()){
-							 String mapAppXxxInsJsonKey = entry.getKey();
-							 Map<String, Object> mapAppXxxInsJsonValue = (Map<String, Object>)entry.getValue();
-							 //分解mapAppXxxInsJsonValue
-							 for(Entry<String, Object>valEntry:mapAppXxxInsJsonValue.entrySet()){
-								 String valKey=valEntry.getKey();
-								 if(valKey.equals("children")){
-									 //將children中的值取出來作爲一個Map
-									 Map<String,Object>valChildren=((List<Map<String, Object>>) valEntry.getValue()).get(0);
-									 tempList.add(valChildren);
-								 }
+							 for (Entry<String, Object> entry:mapAppXxxInsJson.entrySet()){
+								 String mapAppXxxInsJsonKey = entry.getKey();
+								 Map<String, Object> mapAppXxxInsJsonValue = (Map<String, Object>)entry.getValue();
+								 //分解mapAppXxxInsJsonValue
+//								 for(Entry<String, Object>valEntry:mapAppXxxInsJsonValue.entrySet()){
+//									 String valKey=valEntry.getKey();
+//									 if(valKey.equals("children")){
+//										 //將children中的值取出來作爲一個Map
+//										 Map<String,Object>valChildren=((List<Map<String, Object>>) valEntry.getValue()).get(0);
+//										 tempList.add(valChildren);
+//									 }
+//								 }
+								 mapChild.put(mapAppXxxInsJsonKey, mapAppXxxInsJsonValue);
 							 }
-							 mapChild.put(mapAppXxxInsJsonKey, mapAppXxxInsJsonValue);
-						 }
 					 }
 		
 				  }
 				 //---------------------------------------------------------------------
-				 Map<String,Object>relChildrenData=new HashMap<String,Object>();
-				  if(tempList!=null&&tempList.size()>1){
-					  for(int index=0;index<tempList.size();index++){
-						  Map<String,Object>tempMap=tempList.get(index);
-						  for (Entry<String, Object> entry:tempMap.entrySet()){
-							  String dataKey=entry.getKey();
-							  Map<String,Object>dataVal=(Map<String, Object>)entry.getValue();
-							  relChildrenData.put(dataKey, dataVal);
-						  }
-					  }
-					  //將mapChild中的val中的children換成relChildrenData
-					  for (Entry<String, Object> entry:mapChild.entrySet()){
-						  String mapAppXxxInsJsonKey = entry.getKey();
-						  Map<String, Object> mapAppXxxInsJsonValue = (Map<String, Object>)entry.getValue();
-
-						  for(Entry<String, Object>valEntry:mapAppXxxInsJsonValue.entrySet()){
-								 String valKey=valEntry.getKey();
-								 if(valKey.equals("children")){
-									 //將children中的值取出來作爲一個Map
-									 mapAppXxxInsJsonValue.replace("children", relChildrenData);
-								 }
-							 }
-						  mapChild.replace(mapAppXxxInsJsonKey, mapAppXxxInsJsonValue);
-					  }
-				  }
-				  System.out.println("relChildrenData:"+new JacksonUtil().Map2json(relChildrenData));
+//				 Map<String,Object>relChildrenData=new HashMap<String,Object>();
+//				 try{
+//				  if(tempList!=null&&tempList.size()>1){
+//					  for(int index=0;index<tempList.size();index++){
+//						  Map<String,Object>tempMap=tempList.get(index);
+//						  for (Entry<String, Object> entry:tempMap.entrySet()){
+//							  String dataKey=entry.getKey();
+//							  Map<String,Object>dataVal=(Map<String, Object>)entry.getValue();
+//							  relChildrenData.put(dataKey, dataVal);
+//						  }
+//					  }
+//					  //將mapChild中的val中的children換成relChildrenData
+//					  for (Entry<String, Object> entry:mapChild.entrySet()){
+//						  String mapAppXxxInsJsonKey = entry.getKey();
+//						  Map<String, Object> mapAppXxxInsJsonValue = (Map<String, Object>)entry.getValue();
+//
+//						  for(Entry<String, Object>valEntry:mapAppXxxInsJsonValue.entrySet()){
+//								 String valKey=valEntry.getKey();
+//								 if(valKey.equals("children")){
+//									 //將children中的值取出來作爲一個Map
+//									 mapAppXxxInsJsonValue.replace("children", relChildrenData);
+//								 }
+//							 }
+//						  mapChild.replace(mapAppXxxInsJsonKey, mapAppXxxInsJsonValue);
+//					  }
+//				  }
+//				  }catch(Exception e){
+//					  
+//				  }
+//				  System.out.println("relChildrenData:"+new JacksonUtil().Map2json(relChildrenData));
 				  //---------------------------------------------------------------------
 				  listChild.add(mapChild);
 			 	}

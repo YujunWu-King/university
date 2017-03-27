@@ -321,9 +321,11 @@ public class ApplicationCenter2ServicerImpl extends FrameworkImpl {
 						
 						//流程发布内容;
 						if(lcContentHtml == null || "".equals(lcContentHtml)){
-							lcContentHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_CONTENT",TZ_APPPRO_RST,"triangle","triangle_span");
+							//lcContentHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_CONTENT",TZ_APPPRO_RST,"triangle","triangle_span");
+							lcContentHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_CONTENT",TZ_APPPRO_RST);
 						}else{
-							TZ_APPPRO_RST = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_CONTENT2",TZ_APPPRO_RST,"triangle"+(step-1),"triangle_span"+(step-1));
+							//TZ_APPPRO_RST = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_CONTENT2",TZ_APPPRO_RST,"triangle"+(step-1),"triangle_span"+(step-1));
+							TZ_APPPRO_RST = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_APPCENTER_LC_CONTENT2",TZ_APPPRO_RST);
 							lcContentHtml = lcContentHtml + TZ_APPPRO_RST;
 						}
 						

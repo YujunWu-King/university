@@ -117,8 +117,8 @@ Ext.define('KitchenSink.view.recommend.recommendListController', {
 //                            var tzStoreParams = '{"classID":"'+classID+'","batchID":"'+batchID+'"}';
 //                            panelGrid.store.tzStoreParams = tzStoreParams;
 //                            panelGrid.store.load();
-//                            panelGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.TZ_GD_TJRINF_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classID + '","TZ_BATCH_ID-operator": "01","TZ_BATCH_ID-value": "' + batchID + '"}}';
-//                            panelGrid.store.load();
+                            panelGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_TJR_MANAGER_COM.TZ_TJR_DETAIL_STD.TZ_GD_TJRINF_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classID + '","TZ_BATCH_ID-operator": "01","TZ_BATCH_ID-value": "' + batchID + '"}}';
+                            panelGrid.store.load();
                         });
                     });
 

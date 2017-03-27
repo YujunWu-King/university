@@ -843,8 +843,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								
 								//strAppStext = completionMap.get("TZ_APP_S_TEXT") == null ? null : completionMap.get("TZ_APP_S_TEXT").toString();
 								strXxxKxzMs= completionMap.get("TZ_XXXKXZ_MS") == null ? "" : completionMap.get("TZ_XXXKXZ_MS").toString();
-								int lowLimit= completionMap.get("TZ_L_LIMIT") == null ?0 : Integer.valueOf(completionMap.get("TZ_L_LIMIT").toString());
-								int upperLimit= completionMap.get("TZ_U_LIMIT") == null ?0 : Integer.valueOf(completionMap.get("TZ_U_LIMIT").toString());
+								float lowLimit= (float) (completionMap.get("TZ_L_LIMIT") == null ?0.0 : Float.parseFloat(completionMap.get("TZ_L_LIMIT").toString()));
+								float upperLimit= (float) (completionMap.get("TZ_U_LIMIT") == null ?0.0 : Float.parseFloat(completionMap.get("TZ_U_LIMIT").toString()));
 								int choseNum=sqlQuery.queryForObject("select  count(TZ_APP_S_TEXT) from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=? and TZ_APP_S_TEXT>=? and TZ_APP_S_TEXT<? and TZ_APP_S_TEXT<>''", new Object[]{wjid, strXxxBh,lowLimit,upperLimit}, "int");
 								if (choseNum > 0) {
 									// 投票百分比

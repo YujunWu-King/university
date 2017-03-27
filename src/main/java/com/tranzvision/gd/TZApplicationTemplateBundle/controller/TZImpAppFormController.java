@@ -107,7 +107,7 @@ public class TZImpAppFormController {
 	}
 	
 	/**
-	 * 删除MBA历史注册考生
+	 * 删除重复数据
 	 * @param request
 	 * @param response
 	 * @return
@@ -120,6 +120,22 @@ public class TZImpAppFormController {
         return msg;
 	}
 	
+	/**
+	 * 初始化邮箱密码
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = { "/reg/change" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String changePassword(HttpServletRequest request, HttpServletResponse response){
+		String mail = request.getParameter("mail");
+       	boolean retmsg = tZImpAppFormServiceImpl.changePassword(mail);
+       
+        return retmsg + "";
+	}
+	
 	/*----------------------------报名表导入相关方法---------------------------------*/
 	/**
 	 * 报名表导入
@@ -129,24 +145,33 @@ public class TZImpAppFormController {
 	 * @param min	报名表实例编号
 	 * @return
 	 */
-	@RequestMapping(value = { "/impform/{min}/{max}" }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/impform/{clsid}/{min}/{max}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String impform(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "max") int max, @PathVariable(value = "min")  int min) {
+	public String impform(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid,@PathVariable(value = "max") int max, @PathVariable(value = "min")  int min) {
 		if(max == min){
 			max = max + 1;
 		}
-		String impMsg = tZImpAppFormServiceImpl.impAppForm(min,max);
+		String impMsg = tZImpAppFormServiceImpl.impAppForm(clsid,min,max);
 		return impMsg;
 	}
 	
-	@RequestMapping(value = { "/delAppAll" }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/impform/delAppAll" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String delAppAll(HttpServletRequest request, HttpServletResponse response) {
 		String impMsg = tZImpAppFormServiceImpl.delAppAll();
 		return impMsg;
 	}
 	
+	@RequestMapping(value = { "/impform/dInsRepeat" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String dInsRepeat(HttpServletRequest request, HttpServletResponse response) {
+		String impMsg = tZImpAppFormServiceImpl.dInsRepeat();
+		return impMsg;
+	}
+	
 	/*----------------------------推荐信导入相关方法---------------------------------*/
+	
+	
 	/**
 	 * 推荐信导入
 	 * 
@@ -156,26 +181,42 @@ public class TZImpAppFormController {
 	 * @param min
 	 * @return
 	 */
-	@RequestMapping(value = { "/impletter/{clsid}/{min}/{max}" }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/createletter/{clsid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String impLetter(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid, @PathVariable(value = "max") int max, @PathVariable(value = "min")  int min){
-		if(max == min){
-			max = max + 1;
-		}
-		
+	public String createLetter(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid){
 		if(StringUtils.isBlank(clsid)){
 			clsid = "123";
 		}
-		String impMsg = tZImpAppFormServiceImpl.impAppLetter(clsid,min,max);
+		String impMsg = tZImpAppFormServiceImpl.createLetter(clsid);
 
 		return impMsg;
 	}
-	@RequestMapping(value = { "/change" }, produces = "text/html;charset=UTF-8")
+	
+	/**
+	 * 推荐信导入
+	 * 
+	 * @param request
+	 * @param response
+	 * @param max
+	 * @param min
+	 * @return
+	 */
+	@RequestMapping(value = { "/impletter/{clsid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String changePassword(HttpServletRequest request, HttpServletResponse response){
-		String mail = request.getParameter("mail");
-       	boolean retmsg = tZImpAppFormServiceImpl.changePassword(mail);
-       
-        return retmsg + "";
+	public String impLetter(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid){
+		if(StringUtils.isBlank(clsid)){
+			clsid = "123";
+		}
+		String impMsg = tZImpAppFormServiceImpl.impAppLetter(clsid);
+
+		return impMsg;
 	}
+	
+	@RequestMapping(value = { "/impform/delLetterAll" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String delLetterAll(HttpServletRequest request, HttpServletResponse response) {
+		String impMsg = tZImpAppFormServiceImpl.delLetterAll();
+		return impMsg;
+	}
+
 }
