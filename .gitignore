@@ -7,3 +7,4 @@
 /src/main/resources/conf/cookieSession.properties
 /src/main/webapp/statics/.idea
 /src/main/webapp/statics/.idea/*
+/university.iml
