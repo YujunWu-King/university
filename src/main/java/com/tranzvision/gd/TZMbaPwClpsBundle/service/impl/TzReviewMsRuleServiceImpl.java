@@ -72,10 +72,10 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 			case "JUDGROUP":
 				jacksonUtil.json2Map(strParams);
 				String classId = jacksonUtil.getString("classId");
-				System.out.println("classId:" + classId);
+				// System.out.println("classId:" + classId);
 
 				String batchId = jacksonUtil.getString("batchId");
-				System.out.println("batchId:" + batchId);
+				// System.out.println("batchId:" + batchId);
 
 				String judgidandname = this.judggroupteam(classId, batchId, errorMsg);
 				returMap.put("judggroup", judgidandname);
@@ -94,10 +94,10 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 			case "NUMCOUNT":
 				jacksonUtil.json2Map(strParams);
 				String classID = jacksonUtil.getString("classId");
-				System.out.println("classId:" + classID);
+				// System.out.println("classId:" + classID);
 
 				String batchID = jacksonUtil.getString("batchId");
-				System.out.println("batchId:" + batchID);
+				// System.out.println("batchId:" + batchID);
 
 				String count[] = this.StudentJugeNum(classID, batchID, errorMsg);
 				returMap.put("kspwnum", count[0]);
@@ -513,7 +513,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					// 信息内容
 					Map<String, Object> infoData = jacksonUtil.getMap("data");
 					String classId = infoData.get("classId") == null ? "" : String.valueOf(infoData.get("classId"));
-					System.out.println("classID:" + classId);
+					// System.out.println("classID:" + classId);
 					String batchId = infoData.get("batchId") == null ? "" : String.valueOf(infoData.get("batchId"));
 					String kspwnum = infoData.get("kspwnum") == null ? "" : String.valueOf(infoData.get("kspwnum"));
 					String pwTeamnum = infoData.get("pwTeamnum") == null ? ""

@@ -7,11 +7,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 	viewStudentInfo: function(btn) {
 		//是否有访问权限   
 		var setform = btn.findParentByType('form').getForm();
-		var classId = setform.findField('classId').getValue();
-		var batchId = setform.findField('batchId').getValue();
-		var ksNum = setform.findField('ksNum').getValue();
-		var reviewClpsKsNum = setform.findField('reviewClpsKsNum').getValue();
-		var reviewKsNum = setform.findField('reviewKsNum').getValue();
+		var vauleform=setform.getValues();
 
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_KS_STD"];
 		if (pageResSet == "" || pageResSet == undefined) {
@@ -46,26 +42,27 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 			var form = panel.child('form').getForm();
 			var stugrid = panel.child('grid');
 			var store = stugrid.getStore();
-			store.tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+			store.tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + vauleform.classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + vauleform.batchId + '"}}';
 			store.load();
-
-			form.findField('classId').setValue(classId);
+			form.setValues(vauleform);
+            //form.setValues({classId:classId,batchId:batchId,ksNum:ksNum,reviewClpsKsNum:reviewClpsKsNum,reviewKsNum:reviewKsNum});
+			//form.findField('classId').setValue(classId);
 			form.findField("classId").setReadOnly(true);
 			form.findField("classId").addCls("lanage_1");
 
-			form.findField('batchId').setValue(batchId);
+			//form.findField('batchId').setValue(batchId);
 			form.findField("batchId").setReadOnly(true);
 			form.findField("batchId").addCls("lanage_1");
 
-			form.findField('ksNum').setValue(ksNum);
+			//form.findField('ksNum').setValue(ksNum);
 			form.findField("ksNum").setReadOnly(true);
 			form.findField("ksNum").addCls("lanage_1");
 
-			form.findField('reviewClpsKsNum').setValue(reviewClpsKsNum);
+			//form.findField('reviewClpsKsNum').setValue(reviewClpsKsNum);
 			form.findField("reviewClpsKsNum").setReadOnly(true);
 			form.findField("reviewClpsKsNum").addCls("lanage_1");
 
-			form.findField('reviewKsNum').setValue(reviewKsNum);
+			//form.findField('reviewKsNum').setValue(reviewKsNum);
 			form.findField("reviewKsNum").setReadOnly(true);
 			form.findField("reviewKsNum").addCls("lanage_1");
 		});
@@ -201,6 +198,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 		if (newTab.title == "面试评委") {
 			var gridstore = newTab.down('grid').getStore();
 			var form = tabs.findParentByType('setmspsruler').down('form').getForm();
+			var gridfield=tabs.findParentByType('setmspsruler').down('grid');
 			 var kspwnum=tabs.findParentByType('setmspsruler').down('grid').down('numberfield[name=ksRevedpwnum]');
              var pwTeamnum=tabs.findParentByType('setmspsruler').down('grid').down('numberfield[name=countTeamnum]');
  
@@ -212,6 +210,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 
                 var tzParamsnum = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"NUMCOUNT","comParams":{"batchId":'+batchId+',"classId":'+classId+'}}';
                 Ext.tzLoad(tzParamsnum,function(responsedata){
+                	
                 	kspwnum.setValue(responsedata.kspwnum);
                 	pwTeamnum.setValue(responsedata.pwTeamnum);
 

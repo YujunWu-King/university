@@ -134,12 +134,12 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 				//style:"margin:10px",
 				dockedItems: [{
 					xtype: "toolbar",
-					items: [{
+					items: [/*{
 
 						text: '添加',
 						handler: this.onAddClick
 
-					}, {
+					},*/ {
 						xtype: 'splitbutton',
 						text: '批量设置录取状态',
 						reference: 'batchsetsplit',

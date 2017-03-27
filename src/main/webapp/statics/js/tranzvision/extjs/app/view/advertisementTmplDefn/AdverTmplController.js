@@ -232,8 +232,9 @@ Ext.define('KitchenSink.view.advertisementTmplDefn.AdverTmplController', {
             var comView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
             	form.findField("adcertTmpl").setReadOnly(true);
-                form.findField("adcertTmpl").addCls("lanage_1");               
-                form.findField("adcertTmpl").setValue(responseData.adcertTmpl);
+                form.findField("adcertTmpl").addCls("lanage_1");   
+                form.setValues({adcertTmpl:responseData.adcertTmpl});
+               // form.findField("adcertTmpl").setValues(responseData.adcertTmpl);
             	
                 comView.actType = "update";
             },"",true,this);
