@@ -58,7 +58,8 @@
     },
     //查询
     queryUser:function(btn){
-		Ext.tzShowCFGSearch({
+    	//搜索条件过多，无法使用可配置搜索
+		/*Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.TZ_REG_USER_V',
 			condition:
             {
@@ -69,7 +70,29 @@
 				store.tzStoreParams = seachCfg;
 				store.load();
 			}
-		});	
+		});	*/
+    	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_MGSEARCH_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_UM_MGSEARCH_STD，请检查配置。');
+            return;
+        }
+        
+        var win = this.lookupReference('userCfgSearch');
+        
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+        win.show();
     },
     saveUserMgInfos: function(btn){
 		//组件注册信息列表
@@ -214,7 +237,7 @@
 		cmp.on('afterrender',function(){
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
-			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]');
+			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]').getForm();
 			var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
@@ -227,13 +250,14 @@
 			
 			//考生导入信息;
 			ksdrInfoForm.setValues(formData.ksdrInfo);
-
-			var userInfoItems = [];
+			//考生个人信息
+			userInfoForm.setValues(formData.perInfo)
+			/*var userInfoItems = [];
 		
 			var fields = formData.column;
 			var size = fields.length;
-			typeField = {};
-			for(var i = 0;i < size;i++){
+			typeField = {};*/
+			/*for(var i = 0;i < size;i++){
 				var field = fields[i];
 				var fieldLabel,name,value;
 				for(var fieldName in field){
@@ -253,7 +277,7 @@
 					fieldStyle:'background:#F4F4F4',
 				}
 				userInfoForm.add(typeField);					
-			}
+			}*/
 			if(msgForm.down('hiddenfield[name=titleImageUrl]').getValue()){
 				msgForm.down('image[name=titileImage]').setSrc(TzUniversityContextPath + msgForm.down('hiddenfield[name=titleImageUrl]').getValue());	
 			}else{
@@ -289,7 +313,8 @@
 		cmp.on('afterrender',function(){
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
-			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]');
+			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]').getForm();
+			var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
 			//加载数据
@@ -299,7 +324,12 @@
 		
 			form.setValues(formData);
 
-			var userInfoItems = [];
+			//考生导入信息;
+			ksdrInfoForm.setValues(formData.ksdrInfo);
+			//考生个人信息
+			userInfoForm.setValues(formData.perInfo)
+			
+			/*var userInfoItems = [];
 		
 			var fields = formData.column;
 			var size = fields.length;
@@ -324,7 +354,7 @@
 					fieldStyle:'background:#F4F4F4',
 				}
 				userInfoForm.add(typeField);					
-			}
+			}*/
 			if(msgForm.down('hiddenfield[name=titleImageUrl]').getValue()){
 				msgForm.down('image[name=titileImage]').setSrc(TzUniversityContextPath + msgForm.down('hiddenfield[name=titleImageUrl]').getValue());	
 			}else{
@@ -818,7 +848,7 @@
 		},
 		
 	
-	/*另存为静态听众--测试*/
+	/*选中申请人另存为听众*/
 	saveAsStaAud: function() {
 
 		//获取选中人员；
@@ -882,7 +912,7 @@
 		var win = this.lookupReference('pageRegWindow');
 
 		if (!win) {
-			className = 'KitchenSink.view.enrollProject.userMg.userMgNewAud';
+			//className = 'KitchenSink.view.enrollProject.userMg.userMgNewAud';
 			Ext.syncRequire(className);
 			ViewClass = Ext.ClassManager.get(className);
 			//新建类
@@ -912,10 +942,7 @@
 
 		Ext.tzLoad(tzParams,function(responseData){
 			console.log(responseData);
-			form.setValues(responseData);
-		//	form.findField("audName").setReadOnly(true);
-
-		
+			form.setValues(responseData);		
 			gridStore.tzStoreParams = tzStoreParams;
 			gridStore.reload();
 			
@@ -924,7 +951,7 @@
 
 		win.show();
 		
-	    },
+	},
 	    
 	    onPageRegSave: function(btn){
 			//获取窗口

@@ -52,12 +52,15 @@
 					iconCls: 'mail',
 					handler:'viewMailHistory'	
 				},{
-					text:'另存为静态听众',
+					text:'选中申请人另存为听众',
 					handler:'saveAsStaAud'	
 				},{
+					text:'搜索结果另存为听众',
+					handler:'saveAsStaAud'	
+				}/*,{
 					text:'另存为动态听众',
 					handler:'saveAsDynAud'	
-				},{
+				}*/,{
 					text:'添加到已有听众',
 					handler:'saveToStaAud'	
 				}]
@@ -76,43 +79,58 @@
                 text: '姓名',
                 sortable: true,
                 dataIndex: 'userName',
-                width: 81
+                width: 75
+            },{
+                text: '身份证号',
+                sortable: true,
+                dataIndex: 'nationId',
+                width: 150
+            },{
+                text: '面试申请号',
+                sortable: true,
+                dataIndex: 'mshId',
+                width: 95
             },{
                 text: '性别',
                 sortable: true,
 				dataIndex: 'userSex',
-                width: 60
-            },{
-                text: '电子邮箱',
-                sortable: true,
-                dataIndex: 'userEmail',
-                width: 230
+                width: 55
             },{
                 text: '手机',
                 sortable: true,
                 dataIndex: 'userPhone',
-                width: 120
+                width: 100
+            },{
+                text: '电子邮箱',
+                sortable: true,
+                dataIndex: 'userEmail',
+                width: 180
+            },{
+                text: '报考批次',
+                sortable: true,
+                dataIndex: 'applyInfo',
+                flex:1,
+                width: 200
             },{
                 text: '账号激活状态',
                 sortable: true,
                 dataIndex: 'jihuoZt',
-                width: 120
+                width: 100
             },{
                 text: '创建日期时间',
                 sortable: true,
                 dataIndex: 'zcTime',
-                width: 150
+                width: 130
             },{
-                text: '账号锁定状态',
+                text: '锁定状态',
                 sortable: true,
                 dataIndex: 'acctlock',
-                width: 110,
+                width: 80,
             },{
-                text: '黑名单用戶',
+                text: '黑名单',
                 sortable: true,
                 dataIndex: 'hmdUser',
-                minWidth: 110,
-				flex:1,
+                width: 60,
             },{
 			   xtype: 'actioncolumn',
 			   text: '操作',	
