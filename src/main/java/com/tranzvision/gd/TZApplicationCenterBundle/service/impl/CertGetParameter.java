@@ -30,7 +30,12 @@ public class CertGetParameter {
 			String appIns = paramters[3];
 
 			String CertLogo = jdbcTemplate.queryForObject(CertLogoSql, String.class, new Object[] { jgId, appIns });
+			HttpServletRequest httpServletRequest = (HttpServletRequest) getSpringBeanUtil
+					.getSpringBeanByID("httpServletRequest");
+			CertLogo=  httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":"
+					+ String.valueOf(httpServletRequest.getServerPort()) + httpServletRequest.getContextPath()+CertLogo;
 			return CertLogo;
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";
