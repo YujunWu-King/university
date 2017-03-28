@@ -124,7 +124,11 @@ if(dataApp){
 									console.log("wrong1:->"+z)
 									console.dir(recApp["children"][i][j]["children"])//StartBusinessExp
 									if(perXxx.classname=="FirmType"||perXxx.classname=="StartBusinessExp"){
-										signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][0][z]["value"]);
+										try{
+											signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][0][z]["value"]);
+										}catch(error){
+											signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][z]["value"]);
+										}
 									}else{
 										signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][z]["value"]);
 									}if(signlePerXxx.hasOwnProperty("wzsm"))

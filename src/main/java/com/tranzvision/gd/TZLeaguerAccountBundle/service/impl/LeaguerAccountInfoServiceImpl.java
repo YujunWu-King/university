@@ -282,8 +282,24 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					}
 					
 				}
-				
-				
+				//查询考生个人信息
+				//出生日期、联系电话、证件类型、证件号码、工作所在省市、考生编号、准考证号、是否有海外学历、申请的专业硕士和专业、紧急联系人、紧急联系人性别、紧急联系人手机号码
+				//str_lenProvince	
+				Map<String, Object> perInfoMap = new HashMap<>();
+				perInfoMap.put("lenProvince", str_lenProvince);
+				Map< String, Object> grxxMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_REALNAME,A.BIRTHDATE,A.NATIONAL_ID_TYPE,A.NATIONAL_ID,B.TZ_ZY_SJ,A.TZ_COMMENT9,A.TZ_COMMENT10,A.TZ_COMMENT11 FROM PS_TZ_REG_USER_T A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID WHERE A.OPRID=?",new Object[]{str_oprid});
+				if(grxxMap!=null){
+				    perInfoMap.put("birthdate", grxxMap.get("BIRTHDATE"));
+				    perInfoMap.put("zyPhone", grxxMap.get("TZ_ZY_SJ"));
+				    perInfoMap.put("nationType", grxxMap.get("NATIONAL_ID_TYPE"));
+				    perInfoMap.put("nationId", grxxMap.get("NATIONAL_ID"));
+				    perInfoMap.put("jjlxr", grxxMap.get("TZ_COMMENT9"));
+				    perInfoMap.put("jjlxrSex", grxxMap.get("TZ_COMMENT10"));
+				    perInfoMap.put("jjlxrPhone", grxxMap.get("TZ_COMMENT11"));
+				    perInfoMap.put("kshNo", ksdrMap.get("lkksBh"));
+				    perInfoMap.put("isHaiwXuel", "");
+				    perInfoMap.put("appMajor", "");
+				}
 				Map<String, Object> jsonMap2 = new HashMap<String, Object>();
 				jsonMap2.put("OPRID", str_oprid);
 				jsonMap2.put("msSqh", str_msSqh);
@@ -297,6 +313,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				jsonMap2.put("titleImageUrl",titleImageUrl );
 				jsonMap2.put("column",arraylist );
 				jsonMap2.put("ksdrInfo",ksdrMap);
+				jsonMap2.put("perInfo", perInfoMap);
 				if(!"Y".equals(str_blackName)){
 				    str_blackName = "N";
 				}
