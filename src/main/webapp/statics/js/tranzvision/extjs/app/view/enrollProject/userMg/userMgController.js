@@ -59,8 +59,8 @@
     //查询
     queryUser:function(btn){
     	//搜索条件过多，无法使用可配置搜索
-		/*Ext.tzShowCFGSearch({
-			cfgSrhId: 'TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.TZ_REG_USER_V',
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.TZ_REG_USE2_V',
 			condition:
             {
                 "TZ_JG_ID": Ext.tzOrgID
@@ -70,8 +70,8 @@
 				store.tzStoreParams = seachCfg;
 				store.load();
 			}
-		});	*/
-    	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_MGSEARCH_STD"];
+		});	
+    	/*var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_MGSEARCH_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -92,7 +92,7 @@
             win = new ViewClass();
             this.getView().add(win);
         }
-        win.show();
+        win.show();*/
     },
     saveUserMgInfos: function(btn){
 		//组件注册信息列表

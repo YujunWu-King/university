@@ -287,7 +287,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				//str_lenProvince	
 				Map<String, Object> perInfoMap = new HashMap<>();
 				perInfoMap.put("lenProvince", str_lenProvince);
-				Map< String, Object> grxxMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_REALNAME,A.BIRTHDATE,A.NATIONAL_ID_TYPE,A.NATIONAL_ID,B.TZ_ZY_SJ,B.TZ_COMMENT9,B.TZ_COMMENT10,B.TZ_COMMENT11 FROM PS_TZ_REG_USER_T LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID WHERE A.OPRID=?",new Object[]{str_oprid});
+				Map< String, Object> grxxMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_REALNAME,A.BIRTHDATE,A.NATIONAL_ID_TYPE,A.NATIONAL_ID,B.TZ_ZY_SJ,A.TZ_COMMENT9,A.TZ_COMMENT10,A.TZ_COMMENT11 FROM PS_TZ_REG_USER_T A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID WHERE A.OPRID=?",new Object[]{str_oprid});
 				if(grxxMap!=null){
 				    perInfoMap.put("birthdate", grxxMap.get("BIRTHDATE"));
 				    perInfoMap.put("zyPhone", grxxMap.get("TZ_ZY_SJ"));
@@ -313,7 +313,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				jsonMap2.put("titleImageUrl",titleImageUrl );
 				jsonMap2.put("column",arraylist );
 				jsonMap2.put("ksdrInfo",ksdrMap);
-				jsonMap2.put("perInfo", grxxMap);
+				jsonMap2.put("perInfo", perInfoMap);
 				if(!"Y".equals(str_blackName)){
 				    str_blackName = "N";
 				}
