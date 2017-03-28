@@ -671,7 +671,7 @@ public class tzOnlineAppHisServiceImpl {
 						String sqlIsChecked = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE5");
 						strIsChecked = sqlQuery.queryForObject(sqlIsChecked, new Object[] { 
 								numAppInsId, strDxxxBh,strXxxBhLike + "%",strXxxBh, strXxxkxzMc,numDhSeq }, "String");
-						if(strIsChecked == "Y"){
+						if(strIsChecked.equals("Y")){
 							strAppXxxValueS = strXxxkxzMc;
 						}else{
 							strIsChecked = "N";
