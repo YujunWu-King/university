@@ -46,8 +46,8 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private TZGDObject tzGdObject;
 	
-	@Override
-	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
+	//@Override
+	public String tzQueryList11(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
@@ -65,17 +65,17 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			String strUserCountSql = "SELECT COUNT(*) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=?";
 			userCount = SqlQuery.queryForObject(strUserCountSql, new Object[]{strJgid}, "Integer");
 			
-			/*//显示的注册项;
+			//显示的注册项;
 			int showFieldNum = 0;
 			String showFieldNumSQL = "SELECT COUNT(1) from PS_TZ_REG_FIELD_T where TZ_JG_ID=? and TZ_ENABLE='Y' and TZ_REG_FIELD_ID not in ('TZ_PASSWORD','TZ_REPASSWORD') order by TZ_ORDER asc limit 0,10";
-			showFieldNum = jdbcTemplate.queryForObject(showFieldNumSQL, new Object[]{strJgid}, "Integer");
+			showFieldNum = SqlQuery.queryForObject(showFieldNumSQL, new Object[]{strJgid}, "Integer");
 			
 			// json数据要的结果字段;
 			String[] resultFldArray = new String[showFieldNum + 1];
 			resultFldArray[0] = "OPRID";			
 			if(showFieldNum != 0){
 				String showSQL = "SELECT TZ_REG_FIELD_ID from PS_TZ_REG_FIELD_T where TZ_JG_ID=? and TZ_ENABLE='Y' and TZ_REG_FIELD_ID not in ('TZ_PASSWORD','TZ_REPASSWORD') order by TZ_ORDER asc limit 0,10";
-				List<Map<String, Object>> list = jdbcTemplate.queryForList(showSQL,new Object[]{strJgid});
+				List<Map<String, Object>> list = SqlQuery.queryForList(showSQL,new Object[]{strJgid});
 				for(int j = 0; j<list.size(); j++){
 					String regFieldId = (String) list.get(j).get("TZ_REG_FIELD_ID");
 					if("TZ_GENDER".equals(regFieldId)){
@@ -113,8 +113,8 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 				mapRet.replace("total", obj[0]);
 				mapRet.replace("root", listData);
 
-			}*/
-			String strTransSql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'";
+			}
+			/*String strTransSql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'";
 			
 			//姓名、证件号、面试申请号、性别、手机、邮箱、报考批次（取值如下图，显示完整的班级批次名称，多个批次需要合并显示）、激活状态、创建时间、账号锁定状态、黑名单
 			String strRegUserList = "SELECT A.OPRID,A.TZ_REALNAME,A.TZ_GENDER,A.NATIONAL_ID,(SELECT A.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A WHERE A.TZ_ZHZJH_ID='TZ_GENDER' AND A.TZ_ZHZ_ID=A.TZ_GENDER AND TZ_EFF_STATUS='A' limit 0,1) TZ_GENDERDESC,B.TZ_ZY_SJ,B.TZ_ZY_EMAIL,C.TZ_JIHUO_ZT,(SELECT A.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A WHERE A.TZ_ZHZJH_ID='TZ_JIHUO_ZT' AND A.TZ_ZHZ_ID=C.TZ_JIHUO_ZT AND TZ_EFF_STATUS='A' limit 0,1) TZ_JIHUODESC,date_format(C.TZ_ZHCE_DT,'%Y-%m-%d %H:%i') TZ_ZHCE_DT,A.TZ_BLACK_NAME,(SELECT A.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL A WHERE A.TZ_ZHZJH_ID='TZ_BLACK_NAME' AND A.TZ_ZHZ_ID=A.TZ_BLACK_NAME AND TZ_EFF_STATUS='A' limit 0,1) TZ_BLACKUSER,C.TZ_MSH_ID FROM PS_TZ_REG_USER_T A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID JOIN PS_TZ_AQ_YHXX_TBL C ON A.OPRID=C.TZ_DLZH_ID WHERE B.TZ_LXFS_LY='ZCYH' AND TZ_JG_ID=? limit ?,?";
@@ -159,7 +159,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			    }
 			}
 			mapRet.replace("total", userCount);
-			mapRet.replace("root", listData);
+			mapRet.replace("root", listData);*/
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -170,8 +170,8 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	
 	
 	
-	//@Override
-	public String tzQueryList11(String strParams, int numLimit, int numStart, String[] errorMsg) {
+	@Override
+	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
@@ -186,7 +186,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 			
 			// json数据要的结果字段;
-			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_ZHZ_DMS", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT_DESC", "TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME"};
+			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT", "TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME"};
 			
 			String admin = "\"TZ_JG_ID-operator\":\"01\",\"TZ_JG_ID-value\":\"ADMIN\",";
 			strParams.replaceAll(admin, "");
@@ -209,11 +209,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("jihuoZt", rowList[5]);
 					mapList.put("zcTime", rowList[6]);
 					mapList.put("acctlock", rowList[7]);
-					String hmdUser = "否";
-					if("Y".equals(rowList[8])){
-					    hmdUser = "是";
-					}
-					mapList.put("hmdUser", hmdUser);
+					mapList.put("hmdUser", rowList[8]);
 					listData.add(mapList);
 				}
 

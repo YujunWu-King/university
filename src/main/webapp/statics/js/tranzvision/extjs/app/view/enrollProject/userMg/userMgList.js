@@ -69,6 +69,15 @@
 	}],
     initComponent: function () {    
     	var store = new KitchenSink.view.enrollProject.userMg.userMgStore();
+    	//性别
+    	var sexStore = new KitchenSink.view.common.store.appTransStore("TZ_GENDER");
+    	//账户激活状态
+    	var jihuoStore = new KitchenSink.view.common.store.appTransStore("TZ_JIHUO_ZT");
+    	//锁定状态
+    	var acctLockStore = new KitchenSink.view.common.store.appTransStore("ACCTLOCK");
+    	//黑名单用户
+    	var isYnStore = new KitchenSink.view.common.store.appTransStore("TZ_SF_SALE");
+    	
         Ext.apply(this, {
             columns: [{ 
                 text: '用户ID',
@@ -94,7 +103,17 @@
                 text: '性别',
                 sortable: true,
 				dataIndex: 'userSex',
-                width: 55
+                width: 55,
+                renderer:function(value,metadata,record){
+    				if(value == null || value==""){
+    					return "";	
+    				}
+    				var index = sexStore.find('TValue',value);   
+    				if(index!=-1){   
+    					   return sexStore.getAt(index).data.TSDesc;   
+    				}   
+    				return value;     				 
+    			}
             },{
                 text: '手机',
                 sortable: true,
@@ -115,7 +134,17 @@
                 text: '账号激活状态',
                 sortable: true,
                 dataIndex: 'jihuoZt',
-                width: 100
+                width: 100,
+                renderer:function(value,metadata,record){
+    				if(value == null || value==""){
+    					return "";	
+    				}
+    				var index = jihuoStore.find('TValue',value);   
+    				if(index!=-1){   
+    					   return jihuoStore.getAt(index).data.TSDesc;   
+    				}   
+    				return value;     				 
+    			}
             },{
                 text: '创建日期时间',
                 sortable: true,
@@ -126,11 +155,31 @@
                 sortable: true,
                 dataIndex: 'acctlock',
                 width: 80,
+                renderer:function(value,metadata,record){
+    				if(value == null || value==""){
+    					return "";	
+    				}
+    				var index = acctLockStore.find('TValue',value);   
+    				if(index!=-1){   
+    					   return acctLockStore.getAt(index).data.TSDesc;   
+    				}   
+    				return value;     				 
+    			}
             },{
                 text: '黑名单',
                 sortable: true,
                 dataIndex: 'hmdUser',
                 width: 60,
+                renderer:function(value,metadata,record){
+    				if(value == null || value==""){
+    					return "否";	
+    				}
+    				var index = isYnStore.find('TValue',value);   
+    				if(index!=-1){   
+    					   return isYnStore.getAt(index).data.TSDesc;   
+    				}   
+    				return value;     				 
+    			}
             },{
 			   xtype: 'actioncolumn',
 			   text: '操作',	
