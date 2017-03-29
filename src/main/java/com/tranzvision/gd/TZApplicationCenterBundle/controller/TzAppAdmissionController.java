@@ -9,11 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWeChartJSSDKSign;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.util.base.AnalysisSysVar;
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -26,7 +29,7 @@ import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT;
  * 录取通知书html5展示
  * 
  * @para 录取通知书html
- * @ret  报名表对应的解析证书模板后的html或静态html
+ * @ret 报名表对应的解析证书模板后的html或静态html
  * @author YTT
  * @since 2017-01-22
  */
@@ -39,118 +42,156 @@ public class TzAppAdmissionController {
 	@Autowired
 	private TzWebsiteServiceImpl tzWebsiteServiceImpl;
 	@Autowired
-	private TZGDObject tzGDObject;	
+	private TZGDObject tzGDObject;
 	@Autowired
-	private SqlQuery sqlQuery1;	
+	private SqlQuery sqlQuery1;
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
 	private PsTzUserregMbTMapper psTzUserregMbTMapper;
+	@Autowired
+	private TzWeChartJSSDKSign tzWeChartJSSDKSign;
+	@Autowired
+	private HttpServletRequest request;
 
-	//生成录取通知书html
+	// 生成录取通知书html
 	@RequestMapping(value = { "/{orgid}/{siteid}/{oprid}/{tzAppInsID}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String viewQrcodeAdmission(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "orgid") String orgid, @PathVariable(value = "siteid") String siteid,@PathVariable(value = "oprid") String oprid,@PathVariable(value = "tzAppInsID") String tzAppInsID,String[] errMsg) {
-		try{	
+	public String viewQrcodeAdmission(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "orgid") String orgid, @PathVariable(value = "siteid") String siteid,
+			@PathVariable(value = "oprid") String oprid, @PathVariable(value = "tzAppInsID") String tzAppInsID,
+			String[] errMsg) {
+		try {
 			orgid = orgid.toLowerCase();
 			String strRet = "";
-			String tzCertMergHtml="";
-			
-			String staticHtmlDirSql="select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-			//录取通知书静态html路径——"/statics/css/website/m/html"
-			String staticHtmlDir= sqlQuery1.queryForObject(staticHtmlDirSql, new Object[] {"TZ_GD_CERT_STCHTML_DIR"}, "String");
-			
-			
-			String dir =request.getServletContext().getRealPath(staticHtmlDir);
-			String fileName=tzAppInsID+".html";
-			
+			String tzCertMergHtml = "";
+
+			String staticHtmlDirSql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+			// 录取通知书静态html路径——"/statics/css/website/m/html"
+			String staticHtmlDir = sqlQuery1.queryForObject(staticHtmlDirSql, new Object[] { "TZ_GD_CERT_STCHTML_DIR" },
+					"String");
+
+			String dir = request.getServletContext().getRealPath(staticHtmlDir);
+			String fileName = tzAppInsID + ".html";
+
 			String filePath = "";
-			if((dir.lastIndexOf(File.separator)+1) != dir.length()){
+			if ((dir.lastIndexOf(File.separator) + 1) != dir.length()) {
 				filePath = dir + File.separator + fileName;
-			}else{
+			} else {
 				filePath = dir + fileName;
 			}
-			
-			//判断静态文件是否已存在
+
+			// 判断静态文件是否已存在
 			File file = new File(filePath);
-			if (!file.exists()){
-			
-				//【0】查询录取状态
-				String tzLuquStaSql="SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
-				String tzLuquSta= sqlQuery1.queryForObject(tzLuquStaSql, new Object[] {tzAppInsID}, "String");
+			if (!file.exists()) {
+
+				// 【0】查询录取状态
+				String tzLuquStaSql = "SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
+				String tzLuquSta = sqlQuery1.queryForObject(tzLuquStaSql, new Object[] { tzAppInsID }, "String");
+
+				// if (tzLuquSta=="A"){//条件录取
+				// 【1】查询证书模板id
+				String tzCertTplIdSql = "SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
+				String tzCertTplId = sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] { tzAppInsID }, "String");
+
+				// 【2】获取证书模板默认套打模板html
+				String tzCertMergHtmlSql = "SELECT TZ_CERT_MERG_HTML1 FROM PS_TZ_CERTTMPL_TBL WHERE TZ_CERT_TMPL_ID=? AND TZ_JG_ID=? AND TZ_USE_FLAG='Y'";
+				tzCertMergHtml = sqlQuery1.queryForObject(tzCertMergHtmlSql, new Object[] { tzCertTplId, orgid },
+						"String");
+
+				// 【3】解析系统变量、返回解析后的html
+				/**/int syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
+				while (syavarStartIndex != -1) {
+					int syavarEndIndex = tzCertMergHtml.indexOf(']', syavarStartIndex);
+					String sysvarId = tzCertMergHtml.substring(syavarStartIndex + 8, syavarEndIndex);
+					System.out.println(sysvarId);
+					String[] sysVarParam = { orgid, siteid, oprid, tzAppInsID };
+					AnalysisSysVar analysisSysVar = new AnalysisSysVar();
+					analysisSysVar.setM_SysVarID(sysvarId);
+					analysisSysVar.setM_SysVarParam(sysVarParam);
+					Object sysvarValue = analysisSysVar.GetVarValue();
+					System.out.println((String) sysvarValue);
+					System.out.println("[SYSVAR-" + sysvarId + "]");
+					tzCertMergHtml = tzCertMergHtml.replace("[SYSVAR-" + sysvarId + "]", (String) sysvarValue);
+
+					System.out.println(tzCertMergHtml);
+					syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
+				};
+
+				/*缩略图绝对地址*/
+				String CertLogoSql = "SELECT CONCAT(A.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA) FROM PS_TZ_CERTIMAGE_TBL A,PS_TZ_CERTTMPL_TBL B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND B.TZ_JG_ID=? AND B.TZ_CERT_TMPL_ID=(SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID)";
+				String CertLogo = sqlQuery1.queryForObject(CertLogoSql,  new Object[] { orgid, tzAppInsID }, "String");
+				CertLogo=  request.getScheme() + "://" + request.getServerName() + ":"
+						+ String.valueOf(request.getServerPort()) + request.getContextPath()+CertLogo;	
+				System.out.println(CertLogo);
 				
-				//if (tzLuquSta=="A"){//条件录取
-					//【1】查询证书模板id
-					String tzCertTplIdSql="SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
-					String tzCertTplId= sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] {tzAppInsID}, "String");
-					
-					//【2】获取证书模板默认套打模板html
-					String tzCertMergHtmlSql="SELECT TZ_CERT_MERG_HTML1 FROM PS_TZ_CERTTMPL_TBL WHERE TZ_CERT_TMPL_ID=? AND TZ_JG_ID=? AND TZ_USE_FLAG='Y'";
-					tzCertMergHtml= sqlQuery1.queryForObject(tzCertMergHtmlSql, new Object[] {tzCertTplId,orgid}, "String");
-						
-					//【3】解析系统变量、返回解析后的html
-					/**/int syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-					while (syavarStartIndex!=-1){
-						int syavarEndIndex=tzCertMergHtml.indexOf(']',syavarStartIndex);
-						String sysvarId=tzCertMergHtml.substring(syavarStartIndex+8,syavarEndIndex);
-						System.out.println(sysvarId);
-						String[] sysVarParam = { orgid,siteid,oprid,tzAppInsID };
-						AnalysisSysVar analysisSysVar = new AnalysisSysVar();
-						analysisSysVar.setM_SysVarID(sysvarId);
-						analysisSysVar.setM_SysVarParam(sysVarParam);
-						Object sysvarValue = analysisSysVar.GetVarValue();
-						System.out.println((String)sysvarValue);
-						System.out.println("[SYSVAR-"+sysvarId+"]");
-						tzCertMergHtml=tzCertMergHtml.replace("[SYSVAR-"+sysvarId+"]",(String)sysvarValue);
-						System.out.println(tzCertMergHtml);
-						syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-					};
-								
-					//【4】生成静态录取通知书html
-					boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
-		        	if(!bl){
-			        	errMsg[0] = "1";
-						errMsg[1] = "静态化html失败！";	        	
-			        }  
-				//}else{tzCertMergHtml="该学员还未录取！";}
-			}else{
-				strRet=request.getScheme() + "://" + request.getServerName() + ":"
-						+ String.valueOf(request.getServerPort()) + request.getContextPath()+staticHtmlDir ;
+				/* 微信签名信息 */
+				String sqlHardCode = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+				String WxCorpid = sqlQuery1.queryForObject(sqlHardCode, new Object[] { "TZ_WX_CORPID"  }, "String");
+				String WxSecret = sqlQuery1.queryForObject(sqlHardCode, new Object[] { "TZ_WX_SECRET"  }, "String");
+				String WxType =  sqlQuery1.queryForObject(sqlHardCode, new Object[] { "TZ_WX_TYPE"}, "String");
+				String url = request.getScheme() + "://" + request.getServerName() + ":"
+						+ String.valueOf(request.getServerPort()) + request.getContextPath()
+						+ "/admission/" + orgid + "/" + siteid + "/" + oprid + "/" + tzAppInsID;
+				System.out.println(WxCorpid+","+WxSecret+","+WxType+","+url);
+
+				Map<String, String> ret = tzWeChartJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
+				String WxNonce_str = ret.get("nonceStr");
+				System.out.println(WxNonce_str);
+				String WxTimestamp = ret.get("timestamp");
+				System.out.println(WxTimestamp);
+				String WxSignature = ret.get("signature");
+				System.out.println(WxSignature);
+
+				tzCertMergHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_WX_SCRIPT_HTML",
+						false,CertLogo,WxNonce_str,WxTimestamp,WxSignature)+tzCertMergHtml;
+				System.out.println(tzCertMergHtml);
 				
-				if((strRet.lastIndexOf(File.separator)+1) != strRet.length()){
+				// 【4】生成静态录取通知书html
+				boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
+				if (!bl) {
+					errMsg[0] = "1";
+					errMsg[1] = "静态化html失败！";
+				}
+				// }else{tzCertMergHtml="该学员还未录取！";}
+			} else {
+				strRet = request.getScheme() + "://" + request.getServerName() + ":"
+						+ String.valueOf(request.getServerPort()) + request.getContextPath() + staticHtmlDir;
+
+				if ((strRet.lastIndexOf(File.separator) + 1) != strRet.length()) {
 					strRet = strRet + File.separator + fileName;
-				}else{
+				} else {
 					strRet = strRet + fileName;
 				}
-				
+
 				response.sendRedirect(strRet);
 			}
-			
-			strRet=tzCertMergHtml;
+
+			strRet = tzCertMergHtml;
 			return strRet;
-			
-		}catch(Exception e){
+
+		} catch (Exception e) {
 			errMsg[0] = "2";
 			errMsg[1] = "晒录取通知书异常！";
-			return ""; 
+			return "";
 		}
 	}
-	
-	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg){
-		try{
+
+	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg) {
+		try {
 			System.out.println(dir);
 			File fileDir = new File(dir);
 			if (!fileDir.exists()) {
 				fileDir.mkdirs();
 			}
-			
+
 			String filePath = "";
-			if((dir.lastIndexOf(File.separator)+1) != dir.length()){
+			if ((dir.lastIndexOf(File.separator) + 1) != dir.length()) {
 				filePath = dir + File.separator + fileName;
-			}else{
+			} else {
 				filePath = dir + fileName;
 			}
-			
+
 			File file = new File(filePath);
 			if (!file.exists()) {
 				file.createNewFile();
@@ -160,13 +201,12 @@ public class TzAppAdmissionController {
 			bw.write(strReleasContent);
 			bw.close();
 			return true;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "3";
 			errMsg[1] = "静态化文件时异常！";
-			return false; 
+			return false;
 		}
 	}
 
 }
-

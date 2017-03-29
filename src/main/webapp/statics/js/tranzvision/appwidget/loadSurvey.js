@@ -121,8 +121,8 @@ if(dataApp){
 									{
 										signlePerXxx["itemId"] = itemId1 + "_" + i;
 									}
-									console.log("wrong1:->"+z)
-									console.dir(recApp["children"][i][j]["children"])//StartBusinessExp
+									//console.log("wrong1:->"+z)
+									//console.dir(recApp["children"][i][j]["children"])//StartBusinessExp
 									if(perXxx.classname=="FirmType"||perXxx.classname=="StartBusinessExp"){
 										try{
 											signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][0][z]["value"]);
