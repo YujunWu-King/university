@@ -1,4 +1,4 @@
-﻿﻿Ext.define('KitchenSink.view.enrollmentManagement.exportTemplate.exportTemplateInfoPanel', {
+﻿Ext.define('KitchenSink.view.enrollmentManagement.exportTemplate.exportTemplateInfoPanel', {
     extend: 'Ext.panel.Panel',
     xtype: 'exportTemplateInfo',
 	controller: 'exportTemplate',
@@ -175,10 +175,16 @@
                                 tooltip:"导出字段设置",
                                 handler: "exportFieldSet",
                                 isDisabled:function(view ,rowIndex ,colIndex ,item ,record ){
-                                	if(record.get("appCls")!=undefined&&record.get("appCls")!=""){
+                                	if(record.get("appClass")!=undefined&&record.get("appClass")!=""){
                                 		return true;
                                 	}
                                 	return false;
+                                },
+                                getClass:function(v ,metadata,r){
+                                    if(r.get("appClass")!=undefined&&r.get("appClass")!=""){
+                                        return Ext.baseCSSPrefix+"hidden-display";
+                                    }
+                                    return "";
                                 }
                             }],
                             width:130

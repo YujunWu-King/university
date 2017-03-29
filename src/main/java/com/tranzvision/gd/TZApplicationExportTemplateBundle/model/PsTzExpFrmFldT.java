@@ -3,6 +3,8 @@ package com.tranzvision.gd.TZApplicationExportTemplateBundle.model;
 public class PsTzExpFrmFldT extends PsTzExpFrmFldTKey {
     private String tzDcFieldName;
 
+    private String tzAppclsId;
+
     private Integer tzSortNum;
 
     private String tzDcFieldFgf;
@@ -17,6 +19,14 @@ public class PsTzExpFrmFldT extends PsTzExpFrmFldTKey {
 
     public void setTzDcFieldName(String tzDcFieldName) {
         this.tzDcFieldName = tzDcFieldName == null ? null : tzDcFieldName.trim();
+    }
+
+    public String getTzAppclsId() {
+        return tzAppclsId;
+    }
+
+    public void setTzAppclsId(String tzAppclsId) {
+        this.tzAppclsId = tzAppclsId == null ? null : tzAppclsId.trim();
     }
 
     public Integer getTzSortNum() {

@@ -396,7 +396,6 @@
                         store.add(model);
                     }
                 };
-				store.commitChanges();
             }
         })
     },
@@ -460,7 +459,6 @@
                         store.add(model);
                     }
                 };
-				store.commitChanges();
             }
         })
     },
