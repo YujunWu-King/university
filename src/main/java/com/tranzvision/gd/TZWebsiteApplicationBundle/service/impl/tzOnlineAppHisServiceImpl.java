@@ -275,11 +275,11 @@ public class tzOnlineAppHisServiceImpl {
 					map.put(strXxxSlid, mapAppXxxInsJson);
 					
 				 }
-				 System.out.println("worldList"+jacksonUtil.List2json(listChild));
+				 //System.out.println("worldList"+jacksonUtil.List2json(listChild));
 		 }
 		 
 		 strAppInsJson = jacksonUtil.Map2json(map);
-		 System.out.println("strAppInsJson:"+strAppInsJson);
+		 //System.out.println("strAppInsJson:"+strAppInsJson);
 		 return strAppInsJson;
 	}
 	
@@ -996,7 +996,7 @@ public class tzOnlineAppHisServiceImpl {
 					}else{
 						strItemId = strXxxBh;
 					}
-					/*
+				
 					String strAppxxxChildrenFbh = "";
 					
 					String sqlGetAppxxxChildrenFbh = "";
@@ -1030,7 +1030,7 @@ public class tzOnlineAppHisServiceImpl {
 								strViewFileName = strUseFileName;
 							}
 						}
-				    }*/
+				    }
 					break;
 				}
 			}
@@ -1094,15 +1094,7 @@ public class tzOnlineAppHisServiceImpl {
 			 //查看是否在容器中
 			String strDxxxBh = "";
 			String strXxxBhLike = "";
-			//FirmType和StartingBusiness单独处理：
-//			sql = "SELECT TZ_COM_LMC FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ?";
-//			String strChildComMc=sqlQuery.queryForObject(sql, new Object[] { strAppTplIdHis,strXxxBh }, "String");
-//			if(strChildComMc!=null&&!strChildComMc.equals("")){
-//				if(strChildComMc.equals("FirmType")||strChildComMc.equals("StartingBusiness")){
-//					strDxxxBh = strXxxBh;
-//				}
-//			}
-//			else{
+
 			String sqlGetDxxxBh = "SELECT TZ_D_XXX_BH FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? LIMIT 1";
 
 		    strDxxxBh = sqlQuery.queryForObject(sqlGetDxxxBh, new Object[] { strAppTplIdHis,strXxxBh }, "String");
@@ -1112,7 +1104,7 @@ public class tzOnlineAppHisServiceImpl {
 		    	strDxxxBh = strXxxBh;
 		    	strXxxBhLike = strXxxBh;
 		    }
-//}
+
 		    String strItemId = "";
 		    
 			sql = "SELECT TZ_XXX_SLID,TZ_COM_LMC,TZ_XXX_CCLX FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ?";
@@ -1209,7 +1201,7 @@ public class tzOnlineAppHisServiceImpl {
 					
 					break;
 				case "F":
-					/*
+					/**/
 					if(numDhSeq > 1){
 						strItemId = strXxxBh + "_" + String.valueOf((numDhSeq - 1));
 					}else{
@@ -1223,7 +1215,6 @@ public class tzOnlineAppHisServiceImpl {
 					strAppxxxChildrenFbh = sqlQuery.queryForObject(sqlGetAppxxxChildrenFbh, new Object[] { 
 							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq }, "String");
 				    arrAppFileJson = new ArrayList<Map<String, Object>>();
-				   
 				    if(strAppxxxChildrenFbh != null){
 				    	String strXxxMc = "";
 						String strSysFileName = "";
@@ -1235,6 +1226,8 @@ public class tzOnlineAppHisServiceImpl {
 						
 						List<?> appFileList = sqlQuery.queryForList(sqlGetFile, 
 					    		new Object[] { numAppInsId,strDxxxBh,strAppxxxChildrenFbh,strXxxBh,strComLmc });
+						System.out.println("attr:itemID"+strAppxxxChildrenFbh);
+						System.out.println("attrData:"+new JacksonUtil().List2json((ArrayList<?>) appFileList));
 						for (Object appFileObj : appFileList) {
 							Map<String, Object> mapAppFileObj = (Map<String, Object>) appFileObj;
 							strXxxMc = mapAppFileObj.get("TZ_XXX_MC") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_XXX_MC"));
@@ -1251,7 +1244,7 @@ public class tzOnlineAppHisServiceImpl {
 							}else{
 								strViewFileName = strUseFileName;
 							}
-							
+
 							Map<String, Object> mapAppFileJson = new HashMap<String, Object>();
 							mapAppFileJson.put("itemId", "attachment_Upload");
 							mapAppFileJson.put("orderby", strFileIndex);
@@ -1262,6 +1255,7 @@ public class tzOnlineAppHisServiceImpl {
 							arrAppFileJson.add(mapAppFileJson);
 						}
 				    }else{
+				    	System.out.println("read Data fail!");
 				    	Map<String, Object> mapAppFileJson = new HashMap<String, Object>();
 						mapAppFileJson.put("itemId", "attachment_Upload");
 						mapAppFileJson.put("orderby", "");
@@ -1270,7 +1264,7 @@ public class tzOnlineAppHisServiceImpl {
 						mapAppFileJson.put("viewFileName", "");
 						
 						arrAppFileJson.add(mapAppFileJson);
-				    }*/
+				    }/**/
 					flag = false;
 					break;
 					default:
@@ -1288,14 +1282,8 @@ public class tzOnlineAppHisServiceImpl {
 						String strAppxxxChildrenComLmc = "";
 						if("StartBusinessExp".equals(strComLmc)||"FirmType".equals(strComLmc)){
 							
-								//SELECT TZ_XXX_BH FROM PS_TZ_RQ_XXXPZ_T WHERE TZ_APP_TPL_ID = '121' AND TZ_D_XXX_BH ='TZ_5'  ORDER BY TZ_ORDER
-//								String SQL="SELECT TZ_XXX_BH FROM PS_TZ_RQ_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH =?  ORDER BY TZ_ORDER";
-//								List<Map<String,Object>> TZ_XXX_BH=sqlQuery.queryForList(SQL,new Object[]{strTplId,itemId});
-//								for(int index=0;index<TZ_XXX_BH.size();index++){
-//									strXxxBh=TZ_XXX_BH.get(index).get("TZ_XXX_BH").toString();
-					
-									arrAppChildrenJson.add(this.getGpCtrlsData(strComLmc, numAppInsId, strTplId, strXxxBh, itemId, strOprNameApp));
-								//}
+		
+								arrAppChildrenJson.add(this.getGpCtrlsData(strComLmc, numAppInsId, strTplId, strXxxBh, itemId, strOprNameApp));
 									//查询item通用数据 是唯一的
 								final String NORMAL_DATA_SQL="SELECT TZ_XXX_MC,TZ_COM_LMC,TZ_ORDER,TZ_XXX_CCLX,TZ_XXX_SLID FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=?";
 								Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{strTplId,strXxxBh});
@@ -1374,8 +1362,8 @@ public class tzOnlineAppHisServiceImpl {
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put(strXxxSlid, mapXxxInfo);
 				JacksonUtil jacksonUtil = new JacksonUtil();
-				System.out.println("mapXxxInfo:"+jacksonUtil.Map2json(mapXxxInfo));
-				System.out.println("World:"+ jacksonUtil.Map2json(map));
+				//System.out.println("mapXxxInfo:"+jacksonUtil.Map2json(mapXxxInfo));
+				//System.out.println("World:"+ jacksonUtil.Map2json(map));
 				return map;
 			}
 		}catch(Exception e){
