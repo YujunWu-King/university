@@ -16,7 +16,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     	'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewScheduleAppJudgeWindow', 
     	'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewScheduleAppsStore'
     ],
-    title: '进度管理',
+    title: '材料评审进度管理',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
     constructor: function(classID, batchID) {
         this.classID = classID;

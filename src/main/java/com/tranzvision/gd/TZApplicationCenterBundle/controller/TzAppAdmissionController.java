@@ -19,7 +19,6 @@ import com.tranzvision.gd.util.base.AnalysisSysVar;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
-import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWeChartJSSDKSign;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -117,34 +116,37 @@ public class TzAppAdmissionController {
 
 					System.out.println(tzCertMergHtml);
 					syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-				}
-				;
+				};
 
 				/*缩略图绝对地址*/
 				String CertLogoSql = "SELECT CONCAT(A.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA) FROM PS_TZ_CERTIMAGE_TBL A,PS_TZ_CERTTMPL_TBL B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND B.TZ_JG_ID=? AND B.TZ_CERT_TMPL_ID=(SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID)";
 				String CertLogo = sqlQuery1.queryForObject(CertLogoSql,  new Object[] { orgid, tzAppInsID }, "String");
 				CertLogo=  request.getScheme() + "://" + request.getServerName() + ":"
-						+ String.valueOf(request.getServerPort()) + request.getContextPath()+CertLogo;
-				
+						+ String.valueOf(request.getServerPort()) + request.getContextPath()+CertLogo;	
+				System.out.println(CertLogo);
 				
 				/* 微信签名信息 */
 				String sqlHardCode = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 				String WxCorpid = sqlQuery1.queryForObject(sqlHardCode, new Object[] { "TZ_WX_CORPID"  }, "String");
 				String WxSecret = sqlQuery1.queryForObject(sqlHardCode, new Object[] { "TZ_WX_SECRET"  }, "String");
 				String WxType =  sqlQuery1.queryForObject(sqlHardCode, new Object[] { "TZ_WX_TYPE"}, "String");
-
 				String url = request.getScheme() + "://" + request.getServerName() + ":"
 						+ String.valueOf(request.getServerPort()) + request.getContextPath()
 						+ "/admission/" + orgid + "/" + siteid + "/" + oprid + "/" + tzAppInsID;
+				System.out.println(WxCorpid+","+WxSecret+","+WxType+","+url);
 
 				Map<String, String> ret = tzWeChartJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
 				String WxNonce_str = ret.get("nonceStr");
+				System.out.println(WxNonce_str);
 				String WxTimestamp = ret.get("timestamp");
+				System.out.println(WxTimestamp);
 				String WxSignature = ret.get("signature");
+				System.out.println(WxSignature);
 
 				tzCertMergHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_WX_SCRIPT_HTML",
 						false,CertLogo,WxNonce_str,WxTimestamp,WxSignature)+tzCertMergHtml;
-
+				System.out.println(tzCertMergHtml);
+				
 				// 【4】生成静态录取通知书html
 				boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
 				if (!bl) {

@@ -3034,6 +3034,8 @@ console.log("callBack")
         })
     },
     viewThisApplicationForm: function(grid, rowIndex,colIndex){
+    	Ext.MessageBox.alert("提示","查看报名表暂无");
+    	return;
         Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];

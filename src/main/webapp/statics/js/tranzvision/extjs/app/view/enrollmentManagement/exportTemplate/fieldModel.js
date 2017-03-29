@@ -4,6 +4,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.exportTemplate.fieldModel', {
         {name: 'tplID'},
         {name: 'fieldID'},
         {name: 'fieldName'},
+        {name: 'appClass'},
         {name: 'fieldSeq',type:'number'},
         {name: 'separator'},
         {name: 'columnWidth',type:'number'},

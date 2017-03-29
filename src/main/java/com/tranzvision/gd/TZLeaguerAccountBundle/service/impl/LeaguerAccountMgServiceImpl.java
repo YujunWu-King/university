@@ -300,8 +300,6 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	//重置密码等操作;
 	@Override
 	public String tzOther(String oprType, String strParams, String[] errorMsg) {
-	    System.out.println("==================================");
-	    System.out.println(oprType);
 		String strRet = "{}";
 		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 		returnJsonMap.put("success", "");
@@ -376,7 +374,6 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	
 	//搜索条件中的下拉框值
 	public String getSearchTranslateValue(){
-	    System.out.println("-----------------------------");
 	    String strRet = "{}";
 	    Map<String, Object> returnJsonMap = new HashMap<String, Object>();
 	    returnJsonMap.put("success", "success");

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.TzImpMspsTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpMspsTbl" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_TIME" property="tzTime" jdbcType="VARCHAR" />
+    <result column="TZ_ADDRESS" property="tzAddress" jdbcType="VARCHAR" />
+    <result column="TZ_RESULT" property="tzResult" jdbcType="VARCHAR" />
+    <result column="TZ_RESULT_CODE" property="tzResultCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_TIME, TZ_ADDRESS, TZ_RESULT, TZ_RESULT_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_IMP_MSPS_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TZ_IMP_MSPS_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpMspsTbl" >
+    insert into TZ_IMP_MSPS_TBL (TZ_APP_INS_ID, TZ_TIME, TZ_ADDRESS, 
+      TZ_RESULT, TZ_RESULT_CODE)
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzTime,jdbcType=VARCHAR}, #{tzAddress,jdbcType=VARCHAR}, 
+      #{tzResult,jdbcType=VARCHAR}, #{tzResultCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpMspsTbl" >
+    insert into TZ_IMP_MSPS_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzTime != null" >
+        TZ_TIME,
+      </if>
+      <if test="tzAddress != null" >
+        TZ_ADDRESS,
+      </if>
+      <if test="tzResult != null" >
+        TZ_RESULT,
+      </if>
+      <if test="tzResultCode != null" >
+        TZ_RESULT_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzTime != null" >
+        #{tzTime,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddress != null" >
+        #{tzAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResult != null" >
+        #{tzResult,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResultCode != null" >
+        #{tzResultCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpMspsTbl" >
+    update TZ_IMP_MSPS_TBL
+    <set >
+      <if test="tzTime != null" >
+        TZ_TIME = #{tzTime,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddress != null" >
+        TZ_ADDRESS = #{tzAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResult != null" >
+        TZ_RESULT = #{tzResult,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResultCode != null" >
+        TZ_RESULT_CODE = #{tzResultCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpMspsTbl" >
+    update TZ_IMP_MSPS_TBL
+    set TZ_TIME = #{tzTime,jdbcType=VARCHAR},
+      TZ_ADDRESS = #{tzAddress,jdbcType=VARCHAR},
+      TZ_RESULT = #{tzResult,jdbcType=VARCHAR},
+      TZ_RESULT_CODE = #{tzResultCode,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>
