@@ -18,6 +18,14 @@ import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.TzImpClpsTblMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.TzImpMspsTblMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.TzImpLkbmTblMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.TzImpYlqTblMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpClpsTbl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpMspsTbl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpLkbmTbl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpYlqTbl;
 
 /**
  * 申请用户信息；原：TZ_GD_USERGL_PKG:TZ_GD_USER_CLS
@@ -25,8 +33,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author tang
  * @since 2015-11-20
  */
-@Service("com.tranzvision.gd.TZLeaguerAccountBundle.service.impl.LeaguerAccountInfoServiceImpl")
-public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
+@Service("com.tranzvision.gd.TZLeaguerAccountBundle.service.impl.LeaguerMshLchServiceImpl")
+public class LeaguerMshLchServiceImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
@@ -35,6 +43,14 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private PsTzRegUserTMapper psTzRegUserTMapper;
+	@Autowired
+	private TzImpClpsTblMapper TzImpClpsTblMapper;
+	@Autowired
+	private TzImpMspsTblMapper TzImpMspsTblMapper;
+	@Autowired
+	private TzImpLkbmTblMapper TzImpLkbmTblMapper;
+	@Autowired
+	private TzImpYlqTblMapper TzImpYlqTblMapper;
 	@Autowired
 	private PsoprdefnMapper psoprdefnMapper;
 	
@@ -52,6 +68,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				
 				// oprid;
 				String str_oprid = jacksonUtil.getString("OPRID");
+				String appIns = jacksonUtil.getString("appInsID");
+				
 				// 头像地址;
 				String titleImageUrlSQL = "SELECT B.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A , PS_TZ_OPR_PHOTO_T B WHERE A.OPRID=? AND A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA";
 				Map<String , Object> imgMap = jdbcTemplate.queryForMap(titleImageUrlSQL,new Object[]{str_oprid});
@@ -227,10 +245,10 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				
 				//考生导入信息;
 				//查询当前人员的报名表id;
-				Long appIns = jdbcTemplate.queryForObject(" select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T WHERE OPRID=? ORDER BY ROW_LASTMANT_DTTM LIMIT 0,1", new Object[]{str_oprid},"Long");
+				/*Long appIns = jdbcTemplate.queryForObject(" select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T WHERE OPRID=? ORDER BY ROW_LASTMANT_DTTM LIMIT 0,1", new Object[]{str_oprid},"Long");*/
 				Map<String, Object> ksdrMap = new HashMap<>();
 				
-				if(appIns != null && appIns > 0){
+				if(appIns != null && !"".equals(appIns)){
 					//材料评审
 					Map< String, Object> clmsMap = jdbcTemplate.queryForMap("SELECT TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
 					if(clmsMap != null){
@@ -284,25 +302,11 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				}
 				//查询考生个人信息
 				//出生日期、联系电话、证件类型、证件号码、工作所在省市、考生编号、准考证号、是否有海外学历、申请的专业硕士和专业、紧急联系人、紧急联系人性别、紧急联系人手机号码
-				//str_lenProvince	
-				Map<String, Object> perInfoMap = new HashMap<>();
-				perInfoMap.put("lenProvince", str_lenProvince);
-				Map< String, Object> grxxMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_REALNAME,A.BIRTHDATE,A.NATIONAL_ID_TYPE,A.NATIONAL_ID,B.TZ_ZY_SJ,A.TZ_COMMENT9,A.TZ_COMMENT10,A.TZ_COMMENT11 FROM PS_TZ_REG_USER_T A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID WHERE A.OPRID=?",new Object[]{str_oprid});
-				if(grxxMap!=null){
-				    perInfoMap.put("birthdate", grxxMap.get("BIRTHDATE"));
-				    perInfoMap.put("zyPhone", grxxMap.get("TZ_ZY_SJ"));
-				    perInfoMap.put("nationType", grxxMap.get("NATIONAL_ID_TYPE"));
-				    perInfoMap.put("nationId", grxxMap.get("NATIONAL_ID"));
-				    perInfoMap.put("jjlxr", grxxMap.get("TZ_COMMENT9"));
-				    perInfoMap.put("jjlxrSex", grxxMap.get("TZ_COMMENT10"));
-				    perInfoMap.put("jjlxrPhone", grxxMap.get("TZ_COMMENT11"));
-				    perInfoMap.put("kshNo", ksdrMap.get("lkksBh"));
-				    perInfoMap.put("isHaiwXuel", "");
-				    perInfoMap.put("appMajor", "");
-				}
+				//str_lenProvince					
 				Map<String, Object> jsonMap2 = new HashMap<String, Object>();
 				jsonMap2.put("OPRID", str_oprid);
 				jsonMap2.put("msSqh", str_msSqh);
+				jsonMap2.put("APPID", appIns);
 				jsonMap2.put("userName", str_name);
 				jsonMap2.put("userSex",str_sex );
 				jsonMap2.put("userEmail",str_email );
@@ -312,8 +316,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				jsonMap2.put("zcTime",str_zc_time);
 				jsonMap2.put("titleImageUrl",titleImageUrl );
 				jsonMap2.put("column",arraylist );
-				jsonMap2.put("ksdrInfo",ksdrMap);
-				jsonMap2.put("perInfo", perInfoMap);
+				jsonMap2.put("ksdrInfo",ksdrMap);				
 				if(!"Y".equals(str_blackName)){
 				    str_blackName = "N";
 				}
@@ -354,53 +357,126 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				String strForm = actData[num];
 				jacksonUtil.json2Map(strForm);
 				if(jacksonUtil.containsKey("data")){
-					Map<String, Object> map = jacksonUtil.getMap("data");
-					// 用户账号;
+				    Map<String, Object> map = jacksonUtil.getMap("data");
+				    // 用户账号;
 				    String strOprId = (String) map.get("OPRID");
-				    // 锁定状态;
-				    String strAcctLock = (String) map.get("acctlock");
-				    // 激活状态;
-				    String strJihuoZt = (String) map.get("jihuoZt");
-				    // 黑名单状态
-				    String strBlackName = (String) map.get("blackName");
-				    String strAllowApply = (String) map.get("allowApply");
-				    String strBeiZhu = (String) map.get("beizhu");
-				    
-				    Psoprdefn psoprdefn = new Psoprdefn();
-				    psoprdefn.setOprid(strOprId);
-				    if("1".equals(strAcctLock)){
-				    	psoprdefn.setAcctlock(Short.valueOf("1"));
-				    }else{
-				    	psoprdefn.setAcctlock(Short.valueOf("0"));
-				    }
-				    
-				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
-					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
-				
-					String updateJhuoZt = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_JIHUO_ZT=? WHERE OPRID=?";
-					jdbcTemplate.update(updateJhuoZt, new Object[]{strJihuoZt,strOprId});
+				    String strAppId = (String) map.get("APPID");
+				    Long appInsId = Long.valueOf(strAppId);
+				    //材料评审
+				    String strExistsSql = "SELECT 'Y' FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?";
+				    String strExistsFlg = jdbcTemplate.queryForObject(strExistsSql, new Object[]{strAppId}, "String");
+				    				    
+				    String str_clpsJg = (String) map.get("clpsJg");
+				    String str_sfmsZg = (String) map.get("sfmsZg");
+				    TzImpClpsTbl tzImpClpsTbl = new TzImpClpsTbl();
+				    tzImpClpsTbl.setTzAppInsId(appInsId);
+				    tzImpClpsTbl.setTzResult(str_clpsJg);
+				    tzImpClpsTbl.setTzResultCode(str_sfmsZg);
 					
-				    int i = psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
-				    
-				    //保存报名表提交状态
-				    ArrayList<String> appStatusUtil=new ArrayList<String>();
-				    appStatusUtil=(ArrayList<String>) map.get("updateStatus");
-				    if(appStatusUtil!=null&&appStatusUtil.size()>0){
-					for (Object obj : appStatusUtil) {
-					    Map<String, Object> mapFormData = (Map<String, Object>) obj;
-					    String strAppInsId = String.valueOf(mapFormData.get("appInsId"));					    
-					    String strStatus = String.valueOf(mapFormData.get("appSubStatus"));
-					    String StrUpdateSql = "UPDATE PS_TZ_APP_INS_T SET TZ_APP_FORM_STA='" + strStatus + "' WHERE TZ_APP_INS_ID='" + strAppInsId + "'";
-					    jdbcTemplate.update(StrUpdateSql, new Object[]{});
-					}
+				    if("Y".equals(strExistsFlg)){
+					TzImpClpsTblMapper.updateByPrimaryKeySelective(tzImpClpsTbl);
+				    }else{
+					TzImpClpsTblMapper.insert(tzImpClpsTbl);
 				    }
 				    
-				    if (i > 0) {
-					returnJsonMap.replace("OPRID", strOprId);
-				    } else {
-					errMsg[0] = "1";
-					errMsg[1] = "信息更新保存失败";
+				    //面试
+				    strExistsSql = "SELECT 'Y' FROM TZ_IMP_MSPS_TBL WHERE TZ_APP_INS_ID=?";
+				    strExistsFlg = jdbcTemplate.queryForObject(strExistsSql, new Object[]{strAppId}, "String");
+				    String str_msbdSj = (String) map.get("msbdSj");
+				    String str_msbdDd = (String) map.get("msbdDd");
+				    String str_msJg = (String) map.get("msJg");
+				    String str_msJgBz = (String) map.get("msJgBz");
+				    TzImpMspsTbl tzImpMspsTbl = new TzImpMspsTbl();
+				    tzImpMspsTbl.setTzAppInsId(appInsId);
+				    tzImpMspsTbl.setTzAddress(str_msbdDd);
+				    tzImpMspsTbl.setTzTime(str_msbdSj);
+				    tzImpMspsTbl.setTzResult(str_msJg);
+				    tzImpMspsTbl.setTzResultCode(str_msJgBz);
+
+				    if("Y".equals(strExistsFlg)){
+					TzImpMspsTblMapper.updateByPrimaryKeySelective(tzImpMspsTbl);
+				    }else{
+					TzImpMspsTblMapper.insert(tzImpMspsTbl);
 				    }
+				    
+				    //联考报名
+				    strExistsSql = "SELECT 'Y' FROM TZ_IMP_LKBM_TBL WHERE TZ_APP_INS_ID=?";
+				    strExistsFlg = jdbcTemplate.queryForObject(strExistsSql, new Object[]{strAppId}, "String");
+				    String str_lkNf = (String) map.get("lkNf");
+				    String str_lkZf = (String) map.get("lkZf");
+				    String str_lkYy = (String) map.get("lkYy");
+				    String str_lkZh = (String) map.get("lkZh");
+				    String str_lkSfgx = (String) map.get("lkSfgx");
+				    String str_Zz = (String) map.get("Zz");
+				    String str_yyTl = (String) map.get("yyTl");
+				    String str_zzTlSfGx = (String) map.get("zzTlSfGx");
+				    String str_sfYlq = (String) map.get("sfYlq");
+				    String str_lkksBh = (String) map.get("lkksBh");
+				    String str_lkbmsXlJyZt = (String) map.get("lkbmsXlJyZt");
+				    String str_ksbhHsw = (String) map.get("ksbhHsw");
+				    String str_zzYyTlKsSj = (String) map.get("zzYyTlKsSj");
+				    String str_zzYyTlKsDd = (String) map.get("zzYyTlKsDd");
+				    String str_ssJxjSqZt = (String) map.get("ssJxjSqZt");
+				    String str_zzTlKsBz = (String) map.get("zzTlKsBz");
+				    
+				    
+				    TzImpLkbmTbl tzImpLkbmTbl = new TzImpLkbmTbl();
+				    tzImpLkbmTbl.setTzAppInsId(appInsId);
+				    tzImpLkbmTbl.setTzYear(str_lkNf);
+				    tzImpLkbmTbl.setTzScore(str_lkZf);
+				    tzImpLkbmTbl.setTzEnglish(str_lkYy);
+				    tzImpLkbmTbl.setTzComprehensive(str_lkZh);
+				    tzImpLkbmTbl.setTzOverline(str_lkSfgx);
+				    tzImpLkbmTbl.setTzPolitics(str_Zz);
+				    tzImpLkbmTbl.setTzEngListening(str_yyTl);				    
+				    tzImpLkbmTbl.setTzPollsnOverline(str_zzTlSfGx);
+				    tzImpLkbmTbl.setTzPreAdmission(str_sfYlq);
+				    tzImpLkbmTbl.setTzStuNum(str_lkksBh);
+				    tzImpLkbmTbl.setTzDegreeCheck(str_lkbmsXlJyZt);
+				    tzImpLkbmTbl.setTzStuNumLast4(str_ksbhHsw);
+				    tzImpLkbmTbl.setTzPolEngTime(str_zzYyTlKsSj);
+				    tzImpLkbmTbl.setTzPolEngAddr(str_zzYyTlKsDd);
+				    tzImpLkbmTbl.setTzScholarshipSta(str_ssJxjSqZt);
+				    tzImpLkbmTbl.setTzPollsnDesc(str_zzTlKsBz);				    
+
+				    if("Y".equals(strExistsFlg)){
+					TzImpLkbmTblMapper.updateByPrimaryKeySelective(tzImpLkbmTbl);
+				    }else{
+					TzImpLkbmTblMapper.insert(tzImpLkbmTbl);
+				    }
+				    
+				    //材料评审
+				    strExistsSql = "SELECT 'Y' FROM TZ_IMP_YLQ_TBL WHERE TZ_APP_INS_ID=?";
+				    strExistsFlg = jdbcTemplate.queryForObject(strExistsSql, new Object[]{strAppId}, "String");
+				    				    
+				    String str_ssJxjZzJg = (String) map.get("ssJxjZzJg");
+				    String str_xfZeCk = (String) map.get("xfZeCk");
+				    String str_xh = (String) map.get("xh");
+				    String str_pyXyJs = (String) map.get("pyXyJs");
+				    String str_zzZmJs = (String) map.get("zzZmJs");
+				    String str_fbJg = (String) map.get("fbJg");
+				    String str_jgYx = (String) map.get("jgYx");
+				    String str_yxCsMm = (String) map.get("yxCsMm");
+				    
+				    TzImpYlqTbl tzImpYlqTbl = new TzImpYlqTbl();
+				    tzImpYlqTbl.setTzAppInsId(appInsId);
+				    tzImpYlqTbl.setTzScholarshipRst(str_ssJxjZzJg);
+				    tzImpYlqTbl.setTzTuitionReference(str_xfZeCk);
+				    tzImpYlqTbl.setTzStuId(str_xh);
+				    tzImpYlqTbl.setTzPyxyAccept(str_pyXyJs);
+				    tzImpYlqTbl.setTzGzzmAccept(str_zzZmJs);
+				    tzImpYlqTbl.setTzClassRst(str_fbJg);
+				    tzImpYlqTbl.setTzEmail(str_jgYx);
+				    tzImpYlqTbl.setTzInitialPswd(str_yxCsMm);
+					
+				    if("Y".equals(strExistsFlg)){
+					TzImpYlqTblMapper.updateByPrimaryKeySelective(tzImpYlqTbl);
+				    }else{
+					TzImpYlqTblMapper.insert(tzImpYlqTbl);
+				    }
+				    
+				    returnJsonMap.replace("OPRID", strOprId);
+				    
 				}else{
 					errMsg[0] = "1";
 					errMsg[1] = "参数错误";

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.TzImpLkbmTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpLkbmTbl" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_YEAR" property="tzYear" jdbcType="VARCHAR" />
+    <result column="TZ_SCORE" property="tzScore" jdbcType="VARCHAR" />
+    <result column="TZ_ENGLISH" property="tzEnglish" jdbcType="VARCHAR" />
+    <result column="TZ_COMPREHENSIVE" property="tzComprehensive" jdbcType="VARCHAR" />
+    <result column="TZ_OVERLINE" property="tzOverline" jdbcType="VARCHAR" />
+    <result column="TZ_POLITICS" property="tzPolitics" jdbcType="VARCHAR" />
+    <result column="TZ_ENG_LISTENING" property="tzEngListening" jdbcType="VARCHAR" />
+    <result column="TZ_POLLSN_OVERLINE" property="tzPollsnOverline" jdbcType="VARCHAR" />
+    <result column="TZ_PRE_ADMISSION" property="tzPreAdmission" jdbcType="VARCHAR" />
+    <result column="TZ_STU_NUM" property="tzStuNum" jdbcType="VARCHAR" />
+    <result column="TZ_DEGREE_CHECK" property="tzDegreeCheck" jdbcType="VARCHAR" />
+    <result column="TZ_STU_NUM_LAST4" property="tzStuNumLast4" jdbcType="VARCHAR" />
+    <result column="TZ_POL_ENG_TIME" property="tzPolEngTime" jdbcType="VARCHAR" />
+    <result column="TZ_POL_ENG_ADDR" property="tzPolEngAddr" jdbcType="VARCHAR" />
+    <result column="TZ_SCHOLARSHIP_STA" property="tzScholarshipSta" jdbcType="VARCHAR" />
+    <result column="TZ_POLLSN_DESC" property="tzPollsnDesc" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_YEAR, TZ_SCORE, TZ_ENGLISH, TZ_COMPREHENSIVE, TZ_OVERLINE, TZ_POLITICS, 
+    TZ_ENG_LISTENING, TZ_POLLSN_OVERLINE, TZ_PRE_ADMISSION, TZ_STU_NUM, TZ_DEGREE_CHECK, 
+    TZ_STU_NUM_LAST4, TZ_POL_ENG_TIME, TZ_POL_ENG_ADDR, TZ_SCHOLARSHIP_STA, TZ_POLLSN_DESC
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_IMP_LKBM_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TZ_IMP_LKBM_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpLkbmTbl" >
+    insert into TZ_IMP_LKBM_TBL (TZ_APP_INS_ID, TZ_YEAR, TZ_SCORE, 
+      TZ_ENGLISH, TZ_COMPREHENSIVE, TZ_OVERLINE, 
+      TZ_POLITICS, TZ_ENG_LISTENING, TZ_POLLSN_OVERLINE, 
+      TZ_PRE_ADMISSION, TZ_STU_NUM, TZ_DEGREE_CHECK, 
+      TZ_STU_NUM_LAST4, TZ_POL_ENG_TIME, TZ_POL_ENG_ADDR, 
+      TZ_SCHOLARSHIP_STA, TZ_POLLSN_DESC)
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzYear,jdbcType=VARCHAR}, #{tzScore,jdbcType=VARCHAR}, 
+      #{tzEnglish,jdbcType=VARCHAR}, #{tzComprehensive,jdbcType=VARCHAR}, #{tzOverline,jdbcType=VARCHAR}, 
+      #{tzPolitics,jdbcType=VARCHAR}, #{tzEngListening,jdbcType=VARCHAR}, #{tzPollsnOverline,jdbcType=VARCHAR}, 
+      #{tzPreAdmission,jdbcType=VARCHAR}, #{tzStuNum,jdbcType=VARCHAR}, #{tzDegreeCheck,jdbcType=VARCHAR}, 
+      #{tzStuNumLast4,jdbcType=VARCHAR}, #{tzPolEngTime,jdbcType=VARCHAR}, #{tzPolEngAddr,jdbcType=VARCHAR}, 
+      #{tzScholarshipSta,jdbcType=VARCHAR}, #{tzPollsnDesc,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpLkbmTbl" >
+    insert into TZ_IMP_LKBM_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzYear != null" >
+        TZ_YEAR,
+      </if>
+      <if test="tzScore != null" >
+        TZ_SCORE,
+      </if>
+      <if test="tzEnglish != null" >
+        TZ_ENGLISH,
+      </if>
+      <if test="tzComprehensive != null" >
+        TZ_COMPREHENSIVE,
+      </if>
+      <if test="tzOverline != null" >
+        TZ_OVERLINE,
+      </if>
+      <if test="tzPolitics != null" >
+        TZ_POLITICS,
+      </if>
+      <if test="tzEngListening != null" >
+        TZ_ENG_LISTENING,
+      </if>
+      <if test="tzPollsnOverline != null" >
+        TZ_POLLSN_OVERLINE,
+      </if>
+      <if test="tzPreAdmission != null" >
+        TZ_PRE_ADMISSION,
+      </if>
+      <if test="tzStuNum != null" >
+        TZ_STU_NUM,
+      </if>
+      <if test="tzDegreeCheck != null" >
+        TZ_DEGREE_CHECK,
+      </if>
+      <if test="tzStuNumLast4 != null" >
+        TZ_STU_NUM_LAST4,
+      </if>
+      <if test="tzPolEngTime != null" >
+        TZ_POL_ENG_TIME,
+      </if>
+      <if test="tzPolEngAddr != null" >
+        TZ_POL_ENG_ADDR,
+      </if>
+      <if test="tzScholarshipSta != null" >
+        TZ_SCHOLARSHIP_STA,
+      </if>
+      <if test="tzPollsnDesc != null" >
+        TZ_POLLSN_DESC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzYear != null" >
+        #{tzYear,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScore != null" >
+        #{tzScore,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEnglish != null" >
+        #{tzEnglish,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComprehensive != null" >
+        #{tzComprehensive,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOverline != null" >
+        #{tzOverline,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPolitics != null" >
+        #{tzPolitics,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEngListening != null" >
+        #{tzEngListening,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPollsnOverline != null" >
+        #{tzPollsnOverline,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPreAdmission != null" >
+        #{tzPreAdmission,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStuNum != null" >
+        #{tzStuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDegreeCheck != null" >
+        #{tzDegreeCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStuNumLast4 != null" >
+        #{tzStuNumLast4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPolEngTime != null" >
+        #{tzPolEngTime,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPolEngAddr != null" >
+        #{tzPolEngAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScholarshipSta != null" >
+        #{tzScholarshipSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPollsnDesc != null" >
+        #{tzPollsnDesc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpLkbmTbl" >
+    update TZ_IMP_LKBM_TBL
+    <set >
+      <if test="tzYear != null" >
+        TZ_YEAR = #{tzYear,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScore != null" >
+        TZ_SCORE = #{tzScore,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEnglish != null" >
+        TZ_ENGLISH = #{tzEnglish,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComprehensive != null" >
+        TZ_COMPREHENSIVE = #{tzComprehensive,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOverline != null" >
+        TZ_OVERLINE = #{tzOverline,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPolitics != null" >
+        TZ_POLITICS = #{tzPolitics,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEngListening != null" >
+        TZ_ENG_LISTENING = #{tzEngListening,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPollsnOverline != null" >
+        TZ_POLLSN_OVERLINE = #{tzPollsnOverline,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPreAdmission != null" >
+        TZ_PRE_ADMISSION = #{tzPreAdmission,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStuNum != null" >
+        TZ_STU_NUM = #{tzStuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDegreeCheck != null" >
+        TZ_DEGREE_CHECK = #{tzDegreeCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStuNumLast4 != null" >
+        TZ_STU_NUM_LAST4 = #{tzStuNumLast4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPolEngTime != null" >
+        TZ_POL_ENG_TIME = #{tzPolEngTime,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPolEngAddr != null" >
+        TZ_POL_ENG_ADDR = #{tzPolEngAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScholarshipSta != null" >
+        TZ_SCHOLARSHIP_STA = #{tzScholarshipSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPollsnDesc != null" >
+        TZ_POLLSN_DESC = #{tzPollsnDesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpLkbmTbl" >
+    update TZ_IMP_LKBM_TBL
+    set TZ_YEAR = #{tzYear,jdbcType=VARCHAR},
+      TZ_SCORE = #{tzScore,jdbcType=VARCHAR},
+      TZ_ENGLISH = #{tzEnglish,jdbcType=VARCHAR},
+      TZ_COMPREHENSIVE = #{tzComprehensive,jdbcType=VARCHAR},
+      TZ_OVERLINE = #{tzOverline,jdbcType=VARCHAR},
+      TZ_POLITICS = #{tzPolitics,jdbcType=VARCHAR},
+      TZ_ENG_LISTENING = #{tzEngListening,jdbcType=VARCHAR},
+      TZ_POLLSN_OVERLINE = #{tzPollsnOverline,jdbcType=VARCHAR},
+      TZ_PRE_ADMISSION = #{tzPreAdmission,jdbcType=VARCHAR},
+      TZ_STU_NUM = #{tzStuNum,jdbcType=VARCHAR},
+      TZ_DEGREE_CHECK = #{tzDegreeCheck,jdbcType=VARCHAR},
+      TZ_STU_NUM_LAST4 = #{tzStuNumLast4,jdbcType=VARCHAR},
+      TZ_POL_ENG_TIME = #{tzPolEngTime,jdbcType=VARCHAR},
+      TZ_POL_ENG_ADDR = #{tzPolEngAddr,jdbcType=VARCHAR},
+      TZ_SCHOLARSHIP_STA = #{tzScholarshipSta,jdbcType=VARCHAR},
+      TZ_POLLSN_DESC = #{tzPollsnDesc,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>
