@@ -265,11 +265,34 @@ body, button, input, select, textarea {
 			s = s.replace(/\n/g,"\\n");
 		    return s;
 		}
+		
+		
+		function checkMobile(mobile){
+			var mobileReg = /^1\d{10}$/;
+			if(mobileReg.test(mobile)){
+				return true;
+			}else{
+				return false;
+			}
+		}
+
+
+		function CheckMail(mail) {
+		 	var filter  = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\.[a-zA-Z]{2,3}$/;
+		 	if (filter.test(mail)){ 
+				return true;
+		 	}else{
+		 		return false;
+			}
+		}
 
 		/*提交事件*/
 		function tz_apply_float_iframe_submit() {
 			var allParam = $("input");
 			var selectParem = $("select");
+			
+			var mobile = $("#TZ_ZY_SJ").val();
+			var email = $("#TZ_ZY_EMAIL").val();
 
 			var applyURL = "%bind(:2)";
 			var strParam = "{";
@@ -308,9 +331,20 @@ body, button, input, select, textarea {
 			var strComParams = "{\"ComID\":\"TZ_APPONL_COM\",\"PageID\":\"TZ_APPREG_STD\",\"OperateType\":\"EJSON\",\"comParams\":"
 					+ strParam + "}";
 
-			// strComParams = $.parseJSON(strComParams);
-			console.log(strComParams);
-			//strComParams = encodeURIComponent(strComParams);
+			if(mobile && checkMobile(mobile)){
+			}else{
+				alert("手机格式不正确");
+				$("#TZ_ZY_SJ").focus();
+				return;
+			}
+
+			if(email && CheckMail(email)){
+			}else{
+				alert("邮箱格式不正确");
+				$("#TZ_ZY_EMAIL").focus();
+				return;
+			}
+					
 			$.ajax({
 				type : "POST",
 				url: applyURL,
