@@ -380,14 +380,16 @@ public class tzOnlineAppHisServiceImpl {
 				
 				break;
 			case "F":
-				/*
+			
 			    arrAppFileJson = new ArrayList<Map<String, Object>>();
 				String strXxxMc = "";
 				String strSysFileName = "";
 				String strUseFileName = "";
 				String strViewFileName = "";
 				String strFileIndex = "";
-				String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
+				String accPath="";
+				//修改视图:`A`.`TZ_ACCESS_PATH` AS `TZ_ACCESS_PATH`,
+				String sqlGetFile = "SELECT TZ_ACCESS_PATH,TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
 						+ "WHERE TZ_APP_INS_ID = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?"; 
 				List<?> appFileList = sqlQuery.queryForList(sqlGetFile, 
 			    		new Object[] { strTplId,strXxxBh,strComLmc });
@@ -395,7 +397,10 @@ public class tzOnlineAppHisServiceImpl {
 					Map<String, Object> mapAppFileObj = (Map<String, Object>) appFileObj;
 					strXxxMc = mapAppFileObj.get("TZ_XXX_MC") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_XXX_MC"));
 					strFileIndex = mapAppFileObj.get("TZ_INDEX") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_INDEX"));
+					//绝对路径:TZ_ACCESS_PATH
+					accPath=mapAppFileObj.get("TZ_ACCESS_PATH")==null?"":mapAppFileObj.get("TZ_ACCESS_PATH").toString();
 					strSysFileName = mapAppFileObj.get("ATTACHSYSFILENAME") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHSYSFILENAME"));
+					//strSysFileName=accPath+strSysFileName;
 					strUseFileName = mapAppFileObj.get("ATTACHUSERFILE") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHUSERFILE"));
 					if(strXxxMc.length()>17){
 						String suffix = strSysFileName.substring(strSysFileName.lastIndexOf(".") + 1);
@@ -411,6 +416,8 @@ public class tzOnlineAppHisServiceImpl {
 					Map<String, Object> mapAppFileJson = new HashMap<String, Object>();
 					mapAppFileJson.put("itemId", "attachment_Upload");
 					mapAppFileJson.put("orderby", strFileIndex);
+					//accessPath
+					mapAppFileJson.put("accessPath", accPath);
 					mapAppFileJson.put("fileName", strUseFileName);
 					mapAppFileJson.put("sysFileName", strSysFileName);
 					mapAppFileJson.put("viewFileName", strViewFileName);
@@ -420,8 +427,8 @@ public class tzOnlineAppHisServiceImpl {
 				}
 				if(arrAppFileJson.isEmpty()) 
 					flag = false;
-					*/
-				flag = false;
+					
+				//flag = false;
 				break;
 				default:
 					arrAppChildrenJson = new ArrayList<Map<String, Object>>();
@@ -503,10 +510,10 @@ public class tzOnlineAppHisServiceImpl {
 				if(mapAppXxxOptionJson != null){
 					mapXxxInfo.put("option", mapAppXxxOptionJson);
 				}
-				/*
+				
 				if(arrAppFileJson != null){
 					mapXxxInfo.put("children", arrAppFileJson);
-				}*/
+				}
 				if(arrAppChildrenJson != null){
 					mapXxxInfo.put("children", arrAppChildrenJson);
 				}
@@ -1004,20 +1011,56 @@ public class tzOnlineAppHisServiceImpl {
 					strAppxxxChildrenFbh = sqlQuery.queryForObject(sqlGetAppxxxChildrenFbh, new Object[] { 
 							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq }, "String");
 				    String strXxxMc = "";
-
+				    System.out.println("EDU attr:itemID->"+strAppxxxChildrenFbh);
 					String strFileIndex = "";
+//				    if(strAppxxxChildrenFbh != null){
+//				    	
+//						String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
+//								+ "WHERE TZ_APP_INS_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?"; 
+//						
+//						Map<String, Object> mapAppFileObj = sqlQuery.queryForMap(sqlGetFile, 
+//					    		new Object[] { numAppInsId,strDxxxBh,strAppxxxChildrenFbh,strXxxBh,strComLmc });
+//					    System.out.println("EDU attr:mapAppFileObj->"+new JacksonUtil().Map2json(mapAppFileObj));
+//						if(mapAppFileObj != null) {
+//							strXxxMc = mapAppFileObj.get("TZ_XXX_MC") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_XXX_MC"));
+//							strFileIndex = mapAppFileObj.get("TZ_INDEX") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_INDEX"));
+//							strSysFileName = mapAppFileObj.get("ATTACHSYSFILENAME") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHSYSFILENAME"));
+//							strUseFileName = mapAppFileObj.get("ATTACHUSERFILE") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHUSERFILE"));
+//							if(strXxxMc.length()>17){
+//								String suffix = strSysFileName.substring(strSysFileName.lastIndexOf(".") + 1);
+//								if("".equals(suffix) || suffix == null){
+//									strViewFileName = strUseFileName;
+//								}else{
+//									strViewFileName = strOprNameApp + "_" + strXxxMc.substring(1, 15) + "..._" + strFileIndex + "." + suffix;
+//								}
+//							}else{
+//								strViewFileName = strUseFileName;
+//							}
+//						}
+//				    }
+				    arrAppFileJson = new ArrayList<Map<String, Object>>();
 				    if(strAppxxxChildrenFbh != null){
-				    	
-						String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
+				    	 strXxxMc = "";
+						 strSysFileName = "";
+						 strUseFileName = "";
+						 strViewFileName = "";
+						 strFileIndex = "";
+						String accPath="";
+						String sqlGetFile = "SELECT TZ_ACCESS_PATH,TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
 								+ "WHERE TZ_APP_INS_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?"; 
 						
-						Map<String, Object> mapAppFileObj = sqlQuery.queryForMap(sqlGetFile, 
+						List<?> appFileList = sqlQuery.queryForList(sqlGetFile, 
 					    		new Object[] { numAppInsId,strDxxxBh,strAppxxxChildrenFbh,strXxxBh,strComLmc });
-						
-						if(mapAppFileObj != null) {
+						//System.out.println("attr:itemID"+strAppxxxChildrenFbh+" itemMc:"+strComLmc);
+						//System.out.println("attrData:"+new JacksonUtil().List2json((ArrayList<?>) appFileList));
+						for (Object appFileObj : appFileList) {
+							Map<String, Object> mapAppFileObj = (Map<String, Object>) appFileObj;
 							strXxxMc = mapAppFileObj.get("TZ_XXX_MC") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_XXX_MC"));
 							strFileIndex = mapAppFileObj.get("TZ_INDEX") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_INDEX"));
+							//绝对路径:TZ_ACCESS_PATH
+							accPath=mapAppFileObj.get("TZ_ACCESS_PATH")==null?"":mapAppFileObj.get("TZ_ACCESS_PATH").toString();
 							strSysFileName = mapAppFileObj.get("ATTACHSYSFILENAME") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHSYSFILENAME"));
+							//strSysFileName=accPath+strSysFileName;
 							strUseFileName = mapAppFileObj.get("ATTACHUSERFILE") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHUSERFILE"));
 							if(strXxxMc.length()>17){
 								String suffix = strSysFileName.substring(strSysFileName.lastIndexOf(".") + 1);
@@ -1029,13 +1072,36 @@ public class tzOnlineAppHisServiceImpl {
 							}else{
 								strViewFileName = strUseFileName;
 							}
+
+							Map<String, Object> mapAppFileJson = new HashMap<String, Object>();
+							mapAppFileJson.put("itemId", "attachment_Upload");
+							mapAppFileJson.put("orderby", strFileIndex);
+							mapAppFileJson.put("fileName", strUseFileName);
+							mapAppFileJson.put("sysFileName", strSysFileName);
+							//accessPath
+							mapAppFileJson.put("accessPath", accPath);
+							mapAppFileJson.put("viewFileName", strViewFileName);
+							
+							arrAppFileJson.add(mapAppFileJson);
 						}
+				    }else{
+				    	System.out.println("read Data fail!");
+				    	Map<String, Object> mapAppFileJson = new HashMap<String, Object>();
+						mapAppFileJson.put("itemId", "attachment_Upload");
+						mapAppFileJson.put("orderby", "");
+						mapAppFileJson.put("fileName", "");
+						mapAppFileJson.put("sysFileName", "");
+						mapAppFileJson.put("viewFileName", "");
+						
+						arrAppFileJson.add(mapAppFileJson);
 				    }
 					break;
+					default:;
 				}
 			}
 			if(flag){
 				Map<String, Object> mapXxxInfo = new HashMap<String, Object>();
+				
 				mapXxxInfo.put("instanceId", strXxxSlid);
 				mapXxxInfo.put("itemId", strItemId);
 				mapXxxInfo.put("classname", strComLmc);
@@ -1043,13 +1109,17 @@ public class tzOnlineAppHisServiceImpl {
 				mapXxxInfo.put("isSingleLine", "N");
 				mapXxxInfo.put("value", strAppXxxValueS);
 				mapXxxInfo.put("wzsm", strAppXxxValueL);
-				if("F".equals(strXxxCclx)){
-					mapXxxInfo.put("filename", "");
-					mapXxxInfo.put("sysFileName", "");
-					mapXxxInfo.put("path", "");
-					mapXxxInfo.put("accessPath", "");
+				//什么意思:
+//				if("F".equals(strXxxCclx)){
+//					mapXxxInfo.put("filename", "");
+//					mapXxxInfo.put("sysFileName", "");
+//					mapXxxInfo.put("path", "");
+//					mapXxxInfo.put("accessPath", "");
+//				}
+				//放入附件信息:
+				if(arrAppFileJson != null){
+						mapXxxInfo.put("children", arrAppFileJson);
 				}
-
 				//返回Map对象
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put(strXxxSlid, mapXxxInfo);
@@ -1221,18 +1291,22 @@ public class tzOnlineAppHisServiceImpl {
 						String strUseFileName = "";
 						String strViewFileName = "";
 						String strFileIndex = "";
-						String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
+						String accPath="";
+						String sqlGetFile = "SELECT TZ_ACCESS_PATH,TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
 								+ "WHERE TZ_APP_INS_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?"; 
 						
 						List<?> appFileList = sqlQuery.queryForList(sqlGetFile, 
 					    		new Object[] { numAppInsId,strDxxxBh,strAppxxxChildrenFbh,strXxxBh,strComLmc });
-						System.out.println("attr:itemID"+strAppxxxChildrenFbh);
-						System.out.println("attrData:"+new JacksonUtil().List2json((ArrayList<?>) appFileList));
+						//System.out.println("attr:itemID"+strAppxxxChildrenFbh);
+						//System.out.println("attrData:"+new JacksonUtil().List2json((ArrayList<?>) appFileList));
 						for (Object appFileObj : appFileList) {
 							Map<String, Object> mapAppFileObj = (Map<String, Object>) appFileObj;
 							strXxxMc = mapAppFileObj.get("TZ_XXX_MC") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_XXX_MC"));
 							strFileIndex = mapAppFileObj.get("TZ_INDEX") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_INDEX"));
+							//绝对路径:TZ_ACCESS_PATH
+							accPath=mapAppFileObj.get("TZ_ACCESS_PATH")==null?"":mapAppFileObj.get("TZ_ACCESS_PATH").toString();
 							strSysFileName = mapAppFileObj.get("ATTACHSYSFILENAME") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHSYSFILENAME"));
+							//strSysFileName=accPath+strSysFileName;
 							strUseFileName = mapAppFileObj.get("ATTACHUSERFILE") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHUSERFILE"));
 							if(strXxxMc.length()>17){
 								String suffix = strSysFileName.substring(strSysFileName.lastIndexOf(".") + 1);
@@ -1250,12 +1324,14 @@ public class tzOnlineAppHisServiceImpl {
 							mapAppFileJson.put("orderby", strFileIndex);
 							mapAppFileJson.put("fileName", strUseFileName);
 							mapAppFileJson.put("sysFileName", strSysFileName);
+							//accessPath
+							mapAppFileJson.put("accessPath", accPath);
 							mapAppFileJson.put("viewFileName", strViewFileName);
 							
 							arrAppFileJson.add(mapAppFileJson);
 						}
 				    }else{
-				    	System.out.println("read Data fail!");
+				    	System.out.println("read attr Data fail!");
 				    	Map<String, Object> mapAppFileJson = new HashMap<String, Object>();
 						mapAppFileJson.put("itemId", "attachment_Upload");
 						mapAppFileJson.put("orderby", "");
@@ -1265,7 +1341,7 @@ public class tzOnlineAppHisServiceImpl {
 						
 						arrAppFileJson.add(mapAppFileJson);
 				    }/**/
-					flag = false;
+					//flag = false;
 					break;
 					default:
 					arrAppChildrenJson = new ArrayList<Map<String, Object>>();
@@ -1282,8 +1358,7 @@ public class tzOnlineAppHisServiceImpl {
 						String strAppxxxChildrenComLmc = "";
 						if("StartBusinessExp".equals(strComLmc)||"FirmType".equals(strComLmc)){
 							
-		
-								arrAppChildrenJson.add(this.getGpCtrlsData(strComLmc, numAppInsId, strTplId, strXxxBh, itemId, strOprNameApp));
+									arrAppChildrenJson.add(this.getGpCtrlsData(strComLmc, numAppInsId, strTplId, strXxxBh, itemId, strOprNameApp));
 									//查询item通用数据 是唯一的
 								final String NORMAL_DATA_SQL="SELECT TZ_XXX_MC,TZ_COM_LMC,TZ_ORDER,TZ_XXX_CCLX,TZ_XXX_SLID FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=?";
 								Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{strTplId,strXxxBh});
@@ -1350,10 +1425,10 @@ public class tzOnlineAppHisServiceImpl {
 				if(mapAppXxxOptionJson != null){
 					mapXxxInfo.put("option", mapAppXxxOptionJson);
 				}
-				/*
+			
 				if(arrAppFileJson != null){
 					mapXxxInfo.put("children", arrAppFileJson);
-				}*/
+				}
 				
 				if(arrAppChildrenJson != null){
 					mapXxxInfo.put("children", arrAppChildrenJson);
@@ -1373,16 +1448,7 @@ public class tzOnlineAppHisServiceImpl {
 	}
 	////解析分组框中的:"职业背景","创业经历"控件数据  //'FirmType','StartBusinessExp'
 	public Map<String,Object> getGpCtrlsData(String  strComLmc,Long numAppInsId, String strTplId, String strXxxBhChild, String itemId, String strOprNameApp){
-		//System.out.println("進入getGpCtrlsData()");
 		Map<String,Object>childMap=new HashMap<String,Object>();
-		//1.“PS_TZ_TEMP_FIELD_T”查出 單項 ID:
-		//String sql="SELECT TZ_XXX_BH,TZ_XXX_NO FROM PS_TZ_TEMP_FIELD_T WHERE TZ_APP_TPL_ID =? AND TZ_D_XXX_BH=? AND TZ_XXX_BH LIKE ? AND TZ_XXX_NO <> ?";
-		//List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
-		//list=sqlQuery.queryForList(sql, new Object[]{strTplId,itemId,'%'+strXxxBhChild+'%',strXxxBhChild});
-		
-		//System.out.println("idList:"+list);
-		//查询item通用数据 是唯一的
-		//final String NORMAL_DATA_SQL="SELECT TZ_XXX_MC,TZ_COM_LMC,TZ_ORDER,TZ_XXX_CCLX,TZ_XXX_SLID FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=?";
 		
 		ArrayList<String> keyGp=null;
 		ArrayList<String> bgGp=null;
@@ -1441,21 +1507,6 @@ public class tzOnlineAppHisServiceImpl {
 			childMap.put(tempStr, tempMap);
 		}
 		return childMap;
-//		System.out.println("NORMAL_DATA_SQL:"+NORMAL_DATA_SQL);
-//		//---
-//		Map<String,Object>normalDataMap=sqlQuery.queryForMap(NORMAL_DATA_SQL,new Object[]{strTplId,strXxxBhChild});
-//		System.out.println("normalDataMap"+normalDataMap);
-//		
-//		String topInsId=normalDataMap.get("TZ_XXX_SLID").toString();
-//		Map<String,Object>topInsMap=new HashMap<String,Object>();
-//		topInsMap.put("instanceId", topInsId);
-//		topInsMap.put("children", childMap);
-//		topInsMap.put("itemId", strXxxBhChild);
-//		
-//		Map<String,Object>returnMap=new HashMap<String,Object>();
-//		returnMap.put(topInsId, topInsMap);
-//		System.out.println("参数:numAppInsId:"+numAppInsId+" strTplId:"+strTplId+" strXxxBh:"+strXxxBhChild+" itemId:"+itemId+" strOprNameApp:"+strOprNameApp+" strComLmc:"+strComLmc );
-//		return returnMap;
 
 	}
 	//解析"职业背景","创业经历"控件数据  //'FirmType','StartBusinessExp'

@@ -727,6 +727,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage, "我已阅读声明，确认提交报名表。",
 					"I have read the statement to confirm the submission of the registration form.");
 
+			String strDownLoadPDFMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"DOWN", strLanguage, "下载报名表", "Download");
+			
+			String strDownErrorMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"DOWNERR", strLanguage, "请先保存报名表", "Please save the application form。");
+
 			System.out.println("报名表展现双语化处理End,Time=" + (System.currentTimeMillis() - time2));
 
 			if ("N".equals(strIsGuest)) {
@@ -845,7 +851,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
 						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
-						pwdError, pwdError2, PWDHTML);
+						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg,strDownErrorMsg);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");
@@ -953,7 +959,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			System.out.println("报名表保存数据预处理Begin");
 			String strForm = actData[num];
 
-			System.out.println("strForm:" + strForm);
+			//System.out.println("strForm:" + strForm);
 
 			// 解析json
 			jacksonUtil.json2Map(strForm);
@@ -972,9 +978,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				isPwd = String.valueOf(jacksonUtil.getString("ISPWD"));
 			}
 
-			System.out.println("strPwd:" + strPwd);
+			//System.out.println("strPwd:" + strPwd);
 
-			System.out.println("isPwd:" + isPwd);
+			//System.out.println("isPwd:" + isPwd);
 
 			// 密码用MD5加密存储
 			if (strPwd != null && !strPwd.equals("")) {
