@@ -132,7 +132,8 @@
                         xtype:"toolbar",
                         items:[
                             {text:"加载报名表模板字段",tooltip:"加载报名表模板字段",iconCls:"refresh",handler:'loadAppFormModalFields'},"-",
-                            {text:"添加字段",tooltip:"添加字段",iconCls:"add",handler:'addField'}
+                            {text:"添加字段",tooltip:"添加字段",iconCls:"add",handler:'addField'},"-",
+                            {text:"添加应用程序类",tooltip:"添加应用程序类",iconCls:"add",handler:'addAppClass'}
                         ]
                     },
                     plugins: [
@@ -149,7 +150,6 @@
                     columns: [{
                         text: "导出字段序号",
                         dataIndex: 'fieldSeq',
-                        editable:false,
                         width: 120,
                         editor: {
                             xtype:'numberfield'
@@ -158,11 +158,14 @@
                             text: "导出字段名称",
                             dataIndex: 'fieldName',
                             minWidth: 200,
-                        editable:false,
                             flex:1,
                             editor: {
                                 xtype:'textfield'
                             }
+                        },{
+                            text: "应用程序类",
+                            dataIndex: 'appClass',
+                            width: 220
                         },{
                             xtype:'linkcolumn',
                             text:"导出字段设置",
@@ -170,7 +173,13 @@
                             items:[{
                                 text:"导出字段设置",
                                 tooltip:"导出字段设置",
-                                handler: "exportFieldSet"
+                                handler: "exportFieldSet",
+                                isDisabled:function(view ,rowIndex ,colIndex ,item ,record ){
+                                	if(record.get("appCls")!=undefined&&record.get("appCls")!=""){
+                                		return true;
+                                	}
+                                	return false;
+                                }
                             }],
                             width:130
                         },{
