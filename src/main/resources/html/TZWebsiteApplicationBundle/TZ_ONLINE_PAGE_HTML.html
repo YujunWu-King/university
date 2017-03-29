@@ -116,6 +116,9 @@
 				var showSubmitBtnOnly = "%bind(:37)";//最后页面只显示提交按钮
 				var data = %bind(:7); // 模板的data
 				var dataApp = %bind(:8); //用户保存的data
+				
+				var strTplType = "%bind(:19)"; //模版类型
+				
 				SurveyBuild.appInsVersion = "%bind(:31)"; //当前报名表版本实例
 				var isEdit = "%bind(:39)";		// 是否管理员查看
 				if (appReadOnly == "Y") {
@@ -214,6 +217,9 @@
 							if(pagelen==0){
 								$("#app_save").show();
 								$("#app_submit").show();
+								if (strTplType=="BMB") {
+									$("#app_download").show();
+								}
 								$("#app_prev").hide();
 								$("#app_next").hide();
 							}else{
@@ -221,11 +227,17 @@
 									if (pageno == 1) {
 										$("#app_save").show();
 										$("#app_submit").show();
+										if (strTplType=="BMB") {
+											$("#app_download").show();
+										}
 										$("#app_prev").hide();
 										$("#app_next").hide();
 									} else {
 										$("#app_save").show();
 										$("#app_submit").show();
+										if (strTplType=="BMB") {
+											$("#app_download").show();
+										}
 										$("#app_prev").show();
 										$("#app_next").hide();
 										
@@ -245,6 +257,7 @@
 									if (pageno == 1) {
 										$("#app_save").show();
 										$("#app_submit").hide();
+										$("#app_download").hide();
 										$("#app_prev").hide();
 										$("#app_next").show();
 									} else {
@@ -255,6 +268,7 @@
 										}
 										$("#app_save").show();
 										$("#app_submit").hide();
+										$("#app_download").hide();
 										$("#app_prev").show();
 										$("#app_next").show();
 									}
@@ -340,6 +354,9 @@
 						if(pagelen==0){
 							$("#app_save").show();
 							$("#app_submit").show();
+							if (strTplType=="BMB") {
+								$("#app_download").show();
+							}
 							$("#app_prev").hide();
 							$("#app_next").hide();
 						}else{
@@ -347,6 +364,9 @@
 								if (pageno == 1) {
 									$("#app_save").show();
 									$("#app_submit").show();
+									if (strTplType=="BMB") {
+										$("#app_download").show();
+									}
 									$("#app_prev").hide();
 									$("#app_next").hide();
 								} else {
@@ -359,6 +379,9 @@
 									}
 									$("#app_save").show();
 									$("#app_submit").show();
+									if (strTplType=="BMB") {
+										$("#app_download").show();
+									}
 									$("#app_prev").show();
 									$("#app_next").hide();
 									if(showSubmitBtnOnly == "Y"){
@@ -371,6 +394,7 @@
 								if (pageno == 1) {
 									$("#app_save").show();
 									$("#app_submit").hide();
+									$("#app_download").hide();
 									$("#app_prev").hide();
 									$("#app_next").show();
 								} else {
@@ -382,6 +406,7 @@
 									}
 									$("#app_save").show();
 									$("#app_submit").hide();
+									$("#app_download").hide();
 									$("#app_prev").show();
 									$("#app_next").show();
 								}
@@ -1068,6 +1093,15 @@
 							}
 						});
 					});
+					//PDF下载
+					$("#app_download").click(function() {
+						 if(SurveyBuild.appInsId!="" && SurveyBuild.appInsId!="0"){
+							var url = TzUniversityContextPath + "/PrintPdfServlet?instanceID="+SurveyBuild.appInsId;
+			    			window.open(url, '_blank');
+						 } else {
+							 alert("%bind(:52)");
+						 }
+					});	
 			
 					$("#fancybox-main .fancybox-thumbs").fancybox({
 						prevEffect: "fade",
@@ -1463,21 +1497,44 @@
 			<form method="post" name="main_list" id="main_list"></form>
 			%bind(:42)
 			<div class="operation-btn">
-				<a href="#" id="app_prev" style="display: none"><div
-						class="btn-action">
-						<span class="operation-btn-icon"><img
-							src="%bind(:32)/statics/images/appeditor/new/btn-prev.png" /></span>&nbsp;&nbsp;%bind(:30)
-					</div></a> <a href="#" id="app_save"><div class="btn-save">
-						%bind(:16)&nbsp;&nbsp;<span class="operation-btn-icon"><img
-							src="%bind(:32)/statics/images/appeditor/new/btn-save.png" /></span>
-					</div></a> <a href="#" id="app_next" style="display: none"><div
-						class="btn-action">
-						%bind(:17)&nbsp;&nbsp;<span class="operation-btn-icon"><img
-							src="%bind(:32)/statics/images/appeditor/new/btn-next.png" /></span>
-					</div></a> <a href="#" id="app_submit"><div class="btn-action">
-						%bind(:18)&nbsp;&nbsp;<span class="operation-btn-icon"><img
-							src="%bind(:32)/statics/images/appeditor/new/btn-save.png"></span>
-					</div></a>
+				<a href="#" id="app_prev" style="display: none">
+					<div class="btn-action">
+						<span class="operation-btn-icon">
+						<img src="%bind(:32)/statics/images/appeditor/new/btn-prev.png" /></span>&nbsp;&nbsp;%bind(:30)
+					</div>
+				</a> 
+				<a href="#" id="app_save">
+					<div class="btn-save">
+						%bind(:16)&nbsp;&nbsp;
+						<span class="operation-btn-icon">
+						<img src="%bind(:32)/statics/images/appeditor/new/btn-save.png" /></span>
+					</div>
+				</a> 
+				<a href="#" id="app_next" style="display: none">
+					<div class="btn-action">
+						%bind(:17)&nbsp;&nbsp;
+						<span class="operation-btn-icon">
+						<img src="%bind(:32)/statics/images/appeditor/new/btn-next.png" /></span>
+					</div>
+				</a> 
+				<a href="#" id="app_submit">
+					<div class="btn-action">
+						%bind(:18)&nbsp;&nbsp;
+						<span class="operation-btn-icon">
+						<img src="%bind(:32)/statics/images/appeditor/new/btn-save.png"></span>
+					</div>
+				</a>
+				<script type="text/javascript">
+				</script>
+				<a href="#" id="app_download">
+					<div class="btn-action" style="width:160px;">
+						%bind(:51)&nbsp;&nbsp;
+						<span class="operation-btn-icon">
+						<img src="%bind(:32)/statics/images/appeditor/new/btn-down.png"></span>
+					</div>
+				</a>
+				<script type="text/javascript">
+				</script>
 				<div class="clear"></div>
 			</div>
 		</div>
