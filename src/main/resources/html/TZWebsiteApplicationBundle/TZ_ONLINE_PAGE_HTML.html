@@ -1576,19 +1576,22 @@
 				LoadFooter("",%bind(:10),"");
 				
 
-				
+				var tplType = "%bind(:19)";
 				var isadmin = "%bind(:26)";
 				if (isadmin == "") {
 					//LoadHeader("%bind(:11)", "%bind(:10)");
 					LoadFooter("%bind(:11)", "%bind(:10)");
-					var tplType = "%bind(:19)";
+					
 					if (tplType == "BMB") {
 						//LoadMenu("%bind(:11)", "%bind(:10)");
 						//LoadWelcome("%bind(:11)", "%bind(:10)");
-					}
+					} 
 				}else{
 					$("#header").hide();
 					$("#footer").hide();
+				}
+				if (tplType != "BMB") {
+					$("#app_download").hide();
 				}
 				
 				checkExplorer($("#lang").val());

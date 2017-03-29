@@ -959,7 +959,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			System.out.println("报名表保存数据预处理Begin");
 			String strForm = actData[num];
 
-			System.out.println("strForm:" + strForm);
+			//System.out.println("strForm:" + strForm);
 
 			// 解析json
 			jacksonUtil.json2Map(strForm);
@@ -978,9 +978,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				isPwd = String.valueOf(jacksonUtil.getString("ISPWD"));
 			}
 
-			System.out.println("strPwd:" + strPwd);
+			//System.out.println("strPwd:" + strPwd);
 
-			System.out.println("isPwd:" + isPwd);
+			//System.out.println("isPwd:" + isPwd);
 
 			// 密码用MD5加密存储
 			if (strPwd != null && !strPwd.equals("")) {
