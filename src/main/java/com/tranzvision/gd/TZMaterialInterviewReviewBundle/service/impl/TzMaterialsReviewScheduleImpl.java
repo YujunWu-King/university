@@ -2,19 +2,28 @@ package com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpwpslsTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsGzTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsGzTbl;
 /**
  * 材料评审进度，原TZ_GD_CLPS_PKG:TZ_GD_SCHE_CLS
  * 
@@ -28,6 +37,18 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
     private GetSysHardCodeVal getSysHardCodeVal;
     @Autowired
     private TZGDObject tzGdObject;
+    @Autowired
+    private psTzClpwpslsTblMapper psTzClpwpslsTblMapper;
+    @Autowired
+    private psTzClpsPwTblMapper psTzClpsPwTblMapper;
+    /*@Autowired
+    private PsTzClpsGzTblMapper PsTzClpsGzTblMapper;
+    @Autowired
+    private PsTzClpsGzTbl PsTzClpsGzTbl;*/
+    @Autowired
+    private TzLoginServiceImpl tzLoginServiceImpl;
+    @Autowired
+    private HttpServletRequest request;
     
     @Override
     public String tzQueryList(String strParams,int numLimit, int numStart, String[] errMsg) {
@@ -57,6 +78,80 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	}
 	return strResponse;
     }
+    
+    @Override
+    public String tzUpdate(String[] actData, String[] errMsg) {
+	String strRet = "{}";
+	try{
+	    String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+	    
+	    JacksonUtil jacksonUtil = new JacksonUtil();
+	    int num = 0;
+	    for (num = 0; num < actData.length; num++) {
+		String strForm = actData[num];
+		jacksonUtil.json2Map(strForm);
+		String strClassID = jacksonUtil.getString("classID");
+		String strBatchID = jacksonUtil.getString("batchID");
+		String strDelibCount = jacksonUtil.getString("delibCount");
+		// 评委信息内容;
+		List<?> judgeInfoUtil = jacksonUtil.getList("judgeInfoUpdate");		
+		
+		for (Object obj : judgeInfoUtil) {
+		    Map<String, Object> mapFormData = (Map<String, Object>) obj;
+		    String strPwOprid = String.valueOf(mapFormData.get("judgeOprId"));
+		    
+		    String strSubmitYN = String.valueOf(mapFormData.get("submitYN"));
+		    String accountStatus = String.valueOf(mapFormData.get("accountStatus"));
+		    //账户状态
+		    String strExist="";
+		    String strExistSql = "SELECT 'Y' FROM PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=?";
+		    strExist = sqlQuery.queryForObject(strExistSql, new Object[] { strClassID,strBatchID,strPwOprid,strDelibCount },"String");
+		    psTzClpwpslsTbl psTzClpwpslsTbl = new psTzClpwpslsTbl();
+		    psTzClpwpslsTbl.setTzClassId(strClassID);
+		    psTzClpwpslsTbl.setTzApplyPcId(strBatchID);
+		    psTzClpwpslsTbl.setTzClpsLunc(Short.valueOf(strDelibCount));
+		    psTzClpwpslsTbl.setTzPweiOprid(strPwOprid);
+		    psTzClpwpslsTbl.setRowLastmantDttm(new Date());
+		    psTzClpwpslsTbl.setRowLastmantOprid(oprid);
+		    if(strSubmitYN==null||"".equals(strSubmitYN)){
+			strSubmitYN = "N";
+		    }
+		    psTzClpwpslsTbl.setTzSubmitYn(strSubmitYN);		    
+		    if("Y".equals(strExist)){
+			psTzClpwpslsTblMapper.updateByPrimaryKey(psTzClpwpslsTbl);
+		    }else{
+			psTzClpwpslsTbl.setRowAddedDttm(new Date());
+			psTzClpwpslsTbl.setRowAddedOprid(oprid);
+			psTzClpwpslsTblMapper.insert(psTzClpwpslsTbl);
+		    }
+		    //评委提交状态
+		    strExistSql = "SELECT 'Y' FROM PS_TZ_CLPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?";
+		    strExist = sqlQuery.queryForObject(strExistSql, new Object[] { strClassID,strBatchID,strPwOprid },"String");
+		    psTzClpsPwTbl psTzClpsPwTbl = new psTzClpsPwTbl();
+		    psTzClpsPwTbl.setTzClassId(strClassID);
+		    psTzClpsPwTbl.setTzApplyPcId(strBatchID);
+		    psTzClpsPwTbl.setTzPweiOprid(strPwOprid);
+		    psTzClpsPwTbl.setTzPweiZhzt(accountStatus);
+		    psTzClpsPwTbl.setRowLastmantDttm(new Date());
+		    psTzClpsPwTbl.setRowLastmantOprid(oprid);
+		    
+		    if("Y".equals(strExist)){
+			psTzClpsPwTblMapper.updateByPrimaryKey(psTzClpsPwTbl);
+		    }else{
+			psTzClpsPwTbl.setRowAddedDttm(new Date());
+			psTzClpsPwTbl.setRowAddedOprid(oprid);
+			psTzClpsPwTblMapper.insert(psTzClpsPwTbl);
+		    }
+		}
+	    }
+	}catch(Exception e){
+	    e.printStackTrace();
+	    errMsg[0] = "1";
+	    errMsg[1] = e.toString();
+	}
+	return strRet;
+    }
+    
     @Override
     public String tzQuery(String strParams, String[] errMsg) {
 	String strResponse = "\"failure\"";
@@ -65,7 +160,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    jacksonUtil.json2Map(strParams);
 	    String strClassID = jacksonUtil.getString("classID");
 	    String strBatchID = jacksonUtil.getString("batchID");
-	    String strCurrentOrg = "SEM";
+	    String strCurrentOrg = tzLoginServiceImpl.cookieOrgId;;
 
 	    String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 	    String strScoreModalId = sqlQuery.queryForObject(strScoreModalSql, new Object[] { strClassID },
@@ -136,10 +231,27 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    jacksonUtil.json2Map(strParams);
 	    String strType = jacksonUtil.getString("type");
 
-	    if ("isJiSuanFenZhi".equals(strType)) {
-		strResponse = this.isJiSuanFenZhi(strParams, errMsg);
+	    switch(strType){
+	    	case "isJiSuanFenZhi":
+	    	    //计算分值
+	    	    strResponse = this.isJiSuanFenZhi(strParams, errMsg);
+	    	    break;
+	    	case "check":
+	    	    //计算平均差
+	    	    break;
+	    	case "calculate":
+	    	    //撤销评议数据
+	    	    break;
+	    	case "reStartNewOnclick":
+	    	    //开启新一轮评审
+	    	    break;
+	    	case "closeReviewOnclick":
+	    	    //关闭评审
+	    	    break;
+	    	case "reStartReviewOnclick":
+	    	    //继续评审
+	    	    break;
 	    }
-
 	} catch (Exception e) {
 	    e.printStackTrace();
 	    errMsg[0] = "100";
@@ -155,7 +267,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    jacksonUtil.json2Map(strParams);
 	    String strClassID = jacksonUtil.getString("classID");
 	    String strBatchID = jacksonUtil.getString("batchID");
-	    String strCurrentOrg = "SEM";
+	    String strCurrentOrg = tzLoginServiceImpl.cookieOrgId;
 
 	    String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 	    String strScoreModalId = sqlQuery.queryForObject(strScoreModalSql, new Object[] { strClassID }, "String");
@@ -200,7 +312,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    }catch(Exception e){
 		/*首次进入页面*/
 	    }
-	    String strCurrentOrgID = "SEM";
+	    String strCurrentOrgID = tzLoginServiceImpl.cookieOrgId;
 	    
 	    String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 	    String strScoreModalId = sqlQuery.queryForObject(strScoreModalSql, new Object[] { strClassID }, "String");
@@ -425,7 +537,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    jacksonUtil.json2Map(strParams);
 	    String strClassID = jacksonUtil.getString("classID");
 	    String strBatchID = jacksonUtil.getString("batchID");
-	    String strCurrentOrg = "ADMIN";
+	    String strCurrentOrg = tzLoginServiceImpl.cookieOrgId;
 
 	    String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 	    String strScoreModalId = sqlQuery.queryForObject(strScoreModalSql, new Object[] { strClassID }, "String");
@@ -472,9 +584,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		    String strSubmited = strNeedSubmit + "/" + strHasSubmited;
 		    
 		    if(strResponse!=null&&!"".equals(strResponse)){
-			strResponse = strResponse + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_PWINFO_HTML", strClassID,strBatchID,strJudgeAccountID,strJudgeName,strJudgeGroup,strSubmitYN,strJudgeStatus,strSubmited,strJudgeStuSX,strJugeStuXX);
+			strResponse = strResponse + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_PWINFO_HTML", strClassID,strBatchID,strJudgeAccountID,strJudgeName,strJudgeGroup,strSubmitYN,strJudgeStatus,strSubmited,strJudgeStuSX,strJugeStuXX,strJudgeAccount);
 		    }else{
-			strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_PWINFO_HTML", strClassID,strBatchID,strJudgeAccountID,strJudgeName,strJudgeGroup,strSubmitYN,strJudgeStatus,strSubmited,strJudgeStuSX,strJugeStuXX);
+			strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_PWINFO_HTML", strClassID,strBatchID,strJudgeAccountID,strJudgeName,strJudgeGroup,strSubmitYN,strJudgeStatus,strSubmited,strJudgeStuSX,strJugeStuXX,strJudgeAccount);
 		    }
 		}
 	    }
@@ -499,7 +611,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    jacksonUtil.json2Map(strParams);
 	    String strClassID = jacksonUtil.getString("classID");
 	    String strBatchID = jacksonUtil.getString("batchID");
-	    String strCurrentOrg = "SEM";
+	    String strCurrentOrg = tzLoginServiceImpl.cookieOrgId;
 
 	    String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 	    String strScoreModalId = sqlQuery.queryForObject(strScoreModalSql, new Object[] { strClassID }, "String");
@@ -625,7 +737,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    jacksonUtil.json2Map(strParams);
 	    String strClassID = jacksonUtil.getString("classID");
 	    String strBatchID = jacksonUtil.getString("batchID");
-	    String strCurrentOrg = "SEM";
+	    String strCurrentOrg = tzLoginServiceImpl.cookieOrgId;
 	    String strPwDlzhIDs = jacksonUtil.getString("pw_ids");
 	    
 	    String[] strPwZhArray = strPwDlzhIDs.split(",");
@@ -802,6 +914,33 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    errMsg[1] = e.toString();
 	}
 	return strResponse;
+    }
+    
+    public String btnClick(String strParams, String[] errMsg) {
+	String strResponse = "\"failure\"";
+	JacksonUtil jacksonUtil = new JacksonUtil();
+	try {
+	    jacksonUtil.json2Map(strParams);
+	    String strClassID = jacksonUtil.getString("classID");
+	    String strBatchID = jacksonUtil.getString("batchID");
+	    String strDelibCount = jacksonUtil.getString("delibCount");
+	    
+	    String strBtnType = jacksonUtil.getString("type");
+	    switch(strBtnType){
+	    	case "reStartNewOnclick":
+	    	    //开启新一轮评审
+	    	    break;
+	    	case "closeReviewOnclick":
+	    	    //关闭本轮评审
+	    	    break;
+	    	case "reStartReviewOnclick":
+	    	    //重新开启本轮评审
+	    	    break;
+	    }
+	}catch(Exception e){
+	    
+	}
+	return "";
     }
     
     public String right(String strValue,int num){

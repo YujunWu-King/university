@@ -1229,7 +1229,7 @@
     msReviewScheduleMg:function(grid,rowIndex){
 
         //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_SCHE_STD"];
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_MSPS_SCHE_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有管理评审进度的权限');
             return;
@@ -1278,11 +1278,11 @@
         var batchID = record.get('batchID');
         cmp = new ViewClass(classID,batchID);
 
-        cmp.on('afterrender',function(panel){
-            var judgeStore =panel.down('tabpanel').child("form[name=judgeInfoForm]").child('grid').store,
+        cmp.on('afterrender',function(panel){        	
+            /*var judgeStore =panel.down('tabpanel').child("form[name=judgeFormInfo]").child('grid[name=interviewJudgeGrid]').store,
                 judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
                 form = panel.child('form').getForm();
-            var stuListStore = panel.down('tabpanel').child('grid[name=materialsStudentGrid]').store,
+            var stuListStore = panel.down('tabpanel').child('grid[name=interviewStudentGrid]').store,
                 stuListParams = '{"type":"stuList","classID":"'+classID+'","batchID":"'+batchID+'"}';
             var tzParams ='{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' +
                 '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
@@ -1323,7 +1323,66 @@
             });
             judgeStore.tzStoreParams = judgeParams;
             judgeStore.load();
-            stuListStore.tzStoreParams = stuListParams;
+            stuListStore.tzStoreParams = stuListParams;*/
+        	cmp.on('afterrender',function(panel){
+                var judgeStore =panel.down('tabpanel').child("form[name=judgeFormInfo]").child('grid[name=interviewJudgeGrid]').store,
+                    judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
+                    form = panel.child('form'),
+                    tzParams ='{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD",' +
+                        '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}',
+                    stuListStore = panel.down('tabpanel').child('grid[name=interviewStudentGrid]').getStore(),
+                    stuListParams = '{"type":"stuList","classID":"'+classID+'","batchID":"'+batchID+'"}';
+                
+                Ext.tzLoad(tzParams,function(respData){
+                    
+                    transValue.set(["TZ_JUGACC_STATUS","TZ_GENDER","TZ_LUQU_ZT","TZ_MSPS_ZT","TZ_MSPS_KSZT"],function(){
+                        respData.className = record.data.className;
+                        respData.batchName = record.data.batchName;
+                        form.getForm().setValues(respData);
+                        //根据加载的数据勾选复选框
+                        if(respData.judgeTJB === 'Y'){
+                            form.getForm().findField('judgeTJB').setValue(true);
+                        }
+                        if(respData.judgeFBT === 'Y'){
+                            form.getForm().findField('judgeFBT').setValue(true);
+                        }
+                        //设置按钮,评议状态的状态
+                        var finishbtn =form.down('button[name=finish]'),
+                            startbtn = form.down('button[name=startup]'),
+                            statusField = form.getForm().findField("interviewStatus");
+                        startbtn.defaultColor = startbtn.el.dom.style['background-color'];
+                        finishbtn.defaultColor = finishbtn.el.dom.style['background-color'];
+                        switch(respData.status){
+                            case 'A':
+                                //进行中
+                                startbtn.flagType='negative';
+                                finishbtn.flagType='positive';
+                                startbtn.setDisabled(true);
+                                statusField.setValue("进行中");
+                                break;
+                            case 'B':
+                                //已结束
+                                startbtn.flagType='positive';
+                                finishbtn.flagType='negative';
+                                finishbtn.setDisabled(true);
+                                statusField.setValue("已结束");
+                                break;
+                            case 'N':
+                            default:
+                                //初始状态和未开始相同
+                                startbtn.flagType='positive';
+                                finishbtn.flagType='negative';
+                                finishbtn.setDisabled(true);
+                                statusField.setValue("未开始");
+                                break;
+                        }
+                        judgeStore.tzStoreParams = judgeParams;
+                        judgeStore.load();
+                        stuListStore.tzStoreParams = stuListParams;
+                    });                   
+                });
+
+            });
         });
 
         tab = contentPanel.add(cmp);
