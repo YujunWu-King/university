@@ -1267,7 +1267,8 @@ public class tzOnlineAppEngineImpl {
 		sqlQuery.update("DELETE FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID = ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID = ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID = ?", args);
-		//sqlQuery.update("DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID = ?", args);
+		// sqlQuery.update("DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID =
+		// ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID = ?", args);
 	}
@@ -2559,6 +2560,8 @@ public class tzOnlineAppEngineImpl {
 		String brithday = "";
 		// 本科院校国家
 		String uniScholContry = "";
+		// 本科院校国家英文简写
+		String uniScholContryEn = "";
 		// 本科院校名称
 		String uniSchoolName = "";
 		// 本科毕业时间
@@ -2650,6 +2653,8 @@ public class tzOnlineAppEngineImpl {
 			brithday = ksMap.get("TZ_6birthday");
 
 			uniScholContry = ksMap.get("TZ_11luniversitycountry");
+			uniScholContryEn = sqlQuery.queryForObject("SELECT country from PS_COUNTRY_TBL where descr=?",
+					new Object[] { uniScholContry }, "String");
 
 			Contry1 = ksMap.get("TZ_10hdegreeunicountry");
 			Contry2 = ksMap.get("TZ_12ouniversitycountry");
@@ -2727,7 +2732,7 @@ public class tzOnlineAppEngineImpl {
 			psTzRegUserT.setTzRealname(name);
 			psTzRegUserT.setTzGender(sex);
 			psTzRegUserT.setBirthdate(DateUtil.parse(brithday));
-			psTzRegUserT.setTzSchCountry(uniScholContry);
+			psTzRegUserT.setTzSchCountry(uniScholContryEn);
 			psTzRegUserT.setTzSchCname(uniSchoolName);
 			psTzRegUserT.setTzComment1(unipsoinTime);
 			psTzRegUserT.setTzComment17(unimajor);
