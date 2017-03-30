@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsTblMapper;
+import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsTbl;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
-import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsTBLMapper;
 import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT;
-import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -37,7 +37,7 @@ public class TzNegativeBlackListServiceImpl extends TzNegativeListBundleServiceI
 	private HttpServletRequest request;
 
 	@Autowired
-	private PsTzCsKsTBLMapper PsTzCsKsTBLMapper;
+	private PsTzCsKsTblMapper PsTzCsKsTBLMapper;
 
 	@Override
 	public boolean makeNegativeList(String classId, String batchId, String labelId) {
@@ -45,7 +45,7 @@ public class TzNegativeBlackListServiceImpl extends TzNegativeListBundleServiceI
 		String OrgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		Date nowdate_time = new Date();
 		try {
-			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID'";
+			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID_BLACK'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
 			List<?> opridlist = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeApplyNumber"),
@@ -67,12 +67,13 @@ public class TzNegativeBlackListServiceImpl extends TzNegativeListBundleServiceI
 						PsTzCsKsFmT.setTzFmqdId(fmqdId);
 						PsTzCsKsFmT.setTzFmqdName("黑名单");
 						PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
-						PsTzCsKsTBL PsTzCsKsTBL = new PsTzCsKsTBL();
 
-						PsTzCsKsTBL.setTzAppInsId(appinsId);
+						PsTzCsKsTbl PsTzCsKsTBL = new PsTzCsKsTbl();
+
+						PsTzCsKsTBL.setTzAppInsId(Long.valueOf(appinsId));
 						PsTzCsKsTBL.setTzClassId(classId);
 						PsTzCsKsTBL.setTzApplyPcId(batchId);
-						PsTzCsKsTBL.setTzJgId(OrgID);
+						// PsTzCsKsTBL.setTzJgId(OrgID);
 						PsTzCsKsTBL.setRowLastmantDttm(nowdate_time);
 						PsTzCsKsTBL.setTzKshCsjg("N");
 						PsTzCsKsTBLMapper.updateByPrimaryKeySelective(PsTzCsKsTBL);
