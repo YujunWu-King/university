@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWxJSSDKSign;
 import javax.servlet.http.HttpServletRequest;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import java.util.Map;
 
 /**
@@ -173,7 +175,7 @@ public class CertGetParameter {
 				String url = ServerUrl + "/admission/" +jgId+"/" + siteId + "/" + oprid
 						+ "/" + appIns;
 			
-				TzWxJSSDKSign tzWxJSSDKSign =  (TzWxJSSDKSign) getSpringBeanUtil.getSpringBeanByID("tzWxJSSDKSign");
+				TzWxJSSDKSign tzWxJSSDKSign = new TzWxJSSDKSign() ;
 				Map<String, String> ret=tzWxJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
 				String WxNonce_str=ret.get("nonceStr");
 				
@@ -206,7 +208,7 @@ public class CertGetParameter {
 			String url = ServerUrl + "/admission/" +jgId+"/" + siteId + "/" + oprid
 					+ "/" + appIns;
 			
-			TzWxJSSDKSign tzWxJSSDKSign =  (TzWxJSSDKSign) getSpringBeanUtil.getSpringBeanByID("tzWxJSSDKSign");
+			TzWxJSSDKSign tzWxJSSDKSign = new TzWxJSSDKSign() ;
 			Map<String, String> ret=tzWxJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
 			String WxTimestamp = ret.get("timestamp");
 
@@ -239,7 +241,7 @@ public class CertGetParameter {
 			String url = ServerUrl + "/admission/" +jgId+"/" + siteId + "/" + oprid
 					+ "/" + appIns;
 			
-			TzWxJSSDKSign tzWxJSSDKSign =  (TzWxJSSDKSign) getSpringBeanUtil.getSpringBeanByID("tzWxJSSDKSign");
+			TzWxJSSDKSign tzWxJSSDKSign = new TzWxJSSDKSign();			
 			Map<String, String> ret=tzWxJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
 			String WxSignature = ret.get("signature");
 
