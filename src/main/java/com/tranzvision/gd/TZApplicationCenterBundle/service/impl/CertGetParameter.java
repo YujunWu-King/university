@@ -153,102 +153,20 @@ public class CertGetParameter {
 		}
 	}
 
-	// 参与签名的字段noncestr（随机字符串）;
-	public String getWxNonce_str(String[] paramters) {
+	//微信 ServerUrl;
+	public String getServerUrl(String[] paramters) {
 			try {
 				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
-				String jgId=paramters[0];
-				String siteId=paramters[1];
-				String oprid=paramters[2];
-				String appIns=paramters[3];
-				
-				/*微信签名信息*/			
-				String sqlHardCode="SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-				String WxCorpid = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_CORPID" });
-				String WxSecret = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_SECRET" });
-				String WxType = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_TYPE" });
-				
 				String ServerUrlSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 				String ServerUrl = jdbcTemplate.queryForObject(ServerUrlSql, String.class, new Object[] { "TZ_SERVER_URL" });
-				String url = ServerUrl + "/admission/" +jgId+"/" + siteId + "/" + oprid
-						+ "/" + appIns;
-			
-				TzWxJSSDKSign tzWxJSSDKSign = new TzWxJSSDKSign() ;
-				Map<String, String> ret=tzWxJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
-				String WxNonce_str=ret.get("nonceStr");
-				
-				return WxNonce_str;
+
+				return ServerUrl;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return "";
 			}
 		}
-
-	// 参与签名的字段noncestr（时间戳）;
-	public String getWxTimestamp(String[] paramters) {
-		try {
-			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-
-			String jgId = paramters[0];
-			String siteId = paramters[1];
-			String oprid = paramters[2];
-			String appIns = paramters[3];
-
-			/* 微信签名信息 */
-			String sqlHardCode = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-			String WxCorpid = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_CORPID" });
-			String WxSecret = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_SECRET" });
-			String WxType = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_TYPE" });
-
-			String ServerUrlSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-			String ServerUrl = jdbcTemplate.queryForObject(ServerUrlSql, String.class, new Object[] { "TZ_SERVER_URL" });
-			String url = ServerUrl + "/admission/" +jgId+"/" + siteId + "/" + oprid
-					+ "/" + appIns;
-			
-			TzWxJSSDKSign tzWxJSSDKSign = new TzWxJSSDKSign() ;
-			Map<String, String> ret=tzWxJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
-			String WxTimestamp = ret.get("timestamp");
-
-			return WxTimestamp;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
-
-	// 参与签名的字段signature（签名）;
-	public String getWxSignature(String[] paramters) {
-		try {
-			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-
-			String jgId = paramters[0];
-			String siteId = paramters[1];
-			String oprid = paramters[2];
-			String appIns = paramters[3];
-
-			/* 微信签名信息 */
-			String sqlHardCode = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-			String WxCorpid = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_CORPID" });
-			String WxSecret = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_SECRET" });
-			String WxType = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_TYPE" });
-
-			String ServerUrlSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-			String ServerUrl = jdbcTemplate.queryForObject(ServerUrlSql, String.class, new Object[] { "TZ_SERVER_URL" });
-			String url = ServerUrl + "/admission/" +jgId+"/" + siteId + "/" + oprid
-					+ "/" + appIns;
-			
-			TzWxJSSDKSign tzWxJSSDKSign = new TzWxJSSDKSign();			
-			Map<String, String> ret=tzWxJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
-			String WxSignature = ret.get("signature");
-
-			return WxSignature;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
-	}
+	
 }
