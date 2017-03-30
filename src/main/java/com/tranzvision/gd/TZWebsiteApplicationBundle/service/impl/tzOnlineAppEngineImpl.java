@@ -30,8 +30,6 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppKsInExtTblMapper
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormAttTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormWrkTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzKsTjxTblMapper;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzLxfInfoTblMapper;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzReUserTblMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCcT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppCompTbl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhccT;
@@ -42,8 +40,6 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppKsInExtTbl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormAttT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormWrkT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzLxfInfoTbl;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzReUserTbl;
 import com.tranzvision.gd.util.Calendar.DateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
@@ -112,12 +108,6 @@ public class tzOnlineAppEngineImpl {
 
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
-
-	@Autowired
-	private PsTzReUserTblMapper psTzReUserTblMapper;
-
-	@Autowired
-	private PsTzLxfInfoTblMapper psTzLxfInfoTblMapper;
 
 	@Autowired
 	private PsTzAppKsInExtTblMapper psTzAppKsInExtTblMapper;
@@ -2727,7 +2717,7 @@ public class tzOnlineAppEngineImpl {
 
 			String sql_ReisY = "SELECT 'Y' FROM PS_TZ_REG_USER_T WHERE OPRID=?";
 
-			PsTzReUserTbl psTzRegUserT = new PsTzReUserTbl();
+			PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
 			psTzRegUserT.setOprid(strAppOprId);
 			psTzRegUserT.setTzRealname(name);
 			psTzRegUserT.setTzGender(sex);
@@ -2758,13 +2748,14 @@ public class tzOnlineAppEngineImpl {
 
 			String ReisY = sqlQuery.queryForObject(sql_ReisY, new Object[] { strAppOprId }, "String");
 			if (ReisY != null && ReisY.equals("Y")) {
-				psTzReUserTblMapper.updateByPrimaryKeySelective(psTzRegUserT);
+				psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
 
 			} else {
-				psTzReUserTblMapper.insertSelective(psTzRegUserT);
+				psTzRegUserTMapper.insertSelective(psTzRegUserT);
 			}
+
 			String sql_LxisY = "SELECT 'Y' FROM PS_TZ_LXFSINFO_TBL  WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?";
-			PsTzLxfInfoTbl psTzLxfInfoTbl = new PsTzLxfInfoTbl();
+			PsTzLxfsInfoTbl psTzLxfInfoTbl = new PsTzLxfsInfoTbl();
 			psTzLxfInfoTbl.setTzLxfsLy("ZCYH");
 			psTzLxfInfoTbl.setTzLydxId(strAppOprId);
 			psTzLxfInfoTbl.setTzZyEmail(email);
@@ -2773,10 +2764,10 @@ public class tzOnlineAppEngineImpl {
 			System.out.println("LxisY:" + LxisY);
 			if (LxisY != null && LxisY.equals("Y")) {
 
-				psTzLxfInfoTblMapper.updateByPrimaryKeySelective(psTzLxfInfoTbl);
+				psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfInfoTbl);
 
 			} else {
-				psTzLxfInfoTblMapper.insertSelective(psTzLxfInfoTbl);
+				psTzLxfsInfoTblMapper.insertSelective(psTzLxfInfoTbl);
 
 			}
 			String sql_ksExtisY = "SELECT 'Y' FROM  PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?";
