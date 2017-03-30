@@ -1,13 +1,11 @@
-package com.tranzvision.gd.TZNegativeListInfeBundle.model;
+package com.tranzvision.gd.TZMaterialInterviewReviewBundle.model;
 
 import java.util.Date;
 
-public class PsTzCsKsTBL extends PsTzCsKsTBLKey {
-    private Integer tzScoreInsId;
+public class psTzClpwpslsTbl extends psTzClpwpslsTblKey {
+    private String tzClassId;
 
-    private String tzKshCsjg;
-
-    private String tzKshPspm;
+    private String tzSubmitYn;
 
     private Date rowAddedDttm;
 
@@ -21,28 +19,20 @@ public class PsTzCsKsTBL extends PsTzCsKsTBLKey {
 
     private Date syncdttm;
 
-    public Integer getTzScoreInsId() {
-        return tzScoreInsId;
+    public String getTzClassId() {
+        return tzClassId;
     }
 
-    public void setTzScoreInsId(Integer tzScoreInsId) {
-        this.tzScoreInsId = tzScoreInsId;
+    public void setTzClassId(String tzClassId) {
+        this.tzClassId = tzClassId == null ? null : tzClassId.trim();
     }
 
-    public String getTzKshCsjg() {
-        return tzKshCsjg;
+    public String getTzSubmitYn() {
+        return tzSubmitYn;
     }
 
-    public void setTzKshCsjg(String tzKshCsjg) {
-        this.tzKshCsjg = tzKshCsjg == null ? null : tzKshCsjg.trim();
-    }
-
-    public String getTzKshPspm() {
-        return tzKshPspm;
-    }
-
-    public void setTzKshPspm(String tzKshPspm) {
-        this.tzKshPspm = tzKshPspm == null ? null : tzKshPspm.trim();
+    public void setTzSubmitYn(String tzSubmitYn) {
+        this.tzSubmitYn = tzSubmitYn == null ? null : tzSubmitYn.trim();
     }
 
     public Date getRowAddedDttm() {

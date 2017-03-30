@@ -2,8 +2,10 @@ package com.tranzvision.gd.TZApplicationCenterBundle.service.impl;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWeChartJSSDKSign;
+import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWxJSSDKSign;
 import javax.servlet.http.HttpServletRequest;
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import java.util.Map;
 
@@ -30,10 +32,15 @@ public class CertGetParameter {
 			String appIns = paramters[3];
 
 			String CertLogo = jdbcTemplate.queryForObject(CertLogoSql, String.class, new Object[] { jgId, appIns });
-			HttpServletRequest httpServletRequest = (HttpServletRequest) getSpringBeanUtil
+			String ServerUrlSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+			String ServerUrl = jdbcTemplate.queryForObject(ServerUrlSql, String.class, new Object[] { "TZ_SERVER_URL" });
+
+			/*HttpServletRequest httpServletRequest = (HttpServletRequest) getSpringBeanUtil
 					.getSpringBeanByID("httpServletRequest");
 			CertLogo=  httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":"
-					+ String.valueOf(httpServletRequest.getServerPort()) + httpServletRequest.getContextPath()+CertLogo;
+					+ String.valueOf(httpServletRequest.getServerPort()) + httpServletRequest.getContextPath()+CertLogo;*/
+			CertLogo= ServerUrl+CertLogo;
+			
 			return CertLogo;
 		
 		} catch (Exception e) {
@@ -163,13 +170,13 @@ public class CertGetParameter {
 				String WxSecret = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_SECRET" });
 				String WxType = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_TYPE" });
 				
-				HttpServletRequest httpServletRequest= (HttpServletRequest) getSpringBeanUtil.getSpringBeanByID("httpServletRequest");				
-				String url = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":"
-						+ String.valueOf(httpServletRequest.getServerPort()) + httpServletRequest.getContextPath() + "/admission/" +jgId+"/" + siteId + "/" + oprid
+				String ServerUrlSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+				String ServerUrl = jdbcTemplate.queryForObject(ServerUrlSql, String.class, new Object[] { "TZ_SERVER_URL" });
+				String url = ServerUrl + "/admission/" +jgId+"/" + siteId + "/" + oprid
 						+ "/" + appIns;
 			
-				TzWeChartJSSDKSign tzWeChartJSSDKSign =  (TzWeChartJSSDKSign) getSpringBeanUtil.getSpringBeanByID("tzWeChartJSSDKSign");
-				Map<String, String> ret=tzWeChartJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
+				TzWxJSSDKSign tzWxJSSDKSign = new TzWxJSSDKSign() ;
+				Map<String, String> ret=tzWxJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
 				String WxNonce_str=ret.get("nonceStr");
 				
 				return WxNonce_str;
@@ -196,15 +203,13 @@ public class CertGetParameter {
 			String WxSecret = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_SECRET" });
 			String WxType = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_TYPE" });
 
-			HttpServletRequest httpServletRequest = (HttpServletRequest) getSpringBeanUtil
-					.getSpringBeanByID("httpServletRequest");
-			String url = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":"
-					+ String.valueOf(httpServletRequest.getServerPort()) + httpServletRequest.getContextPath()
-					+ "/admission/" + jgId + "/" + siteId + "/" + oprid + "/" + appIns;
-
-			TzWeChartJSSDKSign tzWeChartJSSDKSign = (TzWeChartJSSDKSign) getSpringBeanUtil
-					.getSpringBeanByID("tzWeChartJSSDKSign");
-			Map<String, String> ret = tzWeChartJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
+			String ServerUrlSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+			String ServerUrl = jdbcTemplate.queryForObject(ServerUrlSql, String.class, new Object[] { "TZ_SERVER_URL" });
+			String url = ServerUrl + "/admission/" +jgId+"/" + siteId + "/" + oprid
+					+ "/" + appIns;
+			
+			TzWxJSSDKSign tzWxJSSDKSign = new TzWxJSSDKSign() ;
+			Map<String, String> ret=tzWxJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
 			String WxTimestamp = ret.get("timestamp");
 
 			return WxTimestamp;
@@ -231,15 +236,13 @@ public class CertGetParameter {
 			String WxSecret = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_SECRET" });
 			String WxType = jdbcTemplate.queryForObject(sqlHardCode, String.class, new Object[] { "TZ_WX_TYPE" });
 
-			HttpServletRequest httpServletRequest = (HttpServletRequest) getSpringBeanUtil
-					.getSpringBeanByID("httpServletRequest");
-			String url = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName() + ":"
-					+ String.valueOf(httpServletRequest.getServerPort()) + httpServletRequest.getContextPath()
-					+ "/admission/" + jgId + "/" + siteId + "/" + oprid + "/" + appIns;
-
-			TzWeChartJSSDKSign tzWeChartJSSDKSign = (TzWeChartJSSDKSign) getSpringBeanUtil
-					.getSpringBeanByID("tzWeChartJSSDKSign");
-			Map<String, String> ret = tzWeChartJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
+			String ServerUrlSql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+			String ServerUrl = jdbcTemplate.queryForObject(ServerUrlSql, String.class, new Object[] { "TZ_SERVER_URL" });
+			String url = ServerUrl + "/admission/" +jgId+"/" + siteId + "/" + oprid
+					+ "/" + appIns;
+			
+			TzWxJSSDKSign tzWxJSSDKSign = new TzWxJSSDKSign();			
+			Map<String, String> ret=tzWxJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
 			String WxSignature = ret.get("signature");
 
 			return WxSignature;

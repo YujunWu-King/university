@@ -46,6 +46,52 @@
             }
         }
     },
+    //申请用户信息页面跳转过来
+    onAuditApplicationFormSave2:function(btn){
+        var panel = this.getView();
+        var form = panel.child("form").getForm();
+        var tabpanel = panel.child("tabpanel");
+        if (form.isValid()) {
+            var appFormStateOriginalValue = form.findField('appFormState').originalValue;
+            var tzParams = this.getStuInfoParams2(btn);
+            if(tzParams!=""){
+                Ext.tzSubmit(tzParams,function(responseData){
+                    panel.gridRecord.set('submitState',form.findField('appFormState').getRawValue());
+                    if(form.findField('appFormState').getValue()=='U'){
+                        if(appFormStateOriginalValue!='U'){
+                            panel.gridRecord.set('submitDate',Ext.Date.format(new Date(), 'Y-m-d'));
+                        }
+                    }else{
+                        panel.gridRecord.set('submitDate',null);
+                    };
+
+                    panel.gridRecord.set('auditState',form.findField('auditState').getRawValue());
+                    panel.gridRecord.set('colorType',form.findField('colorType').getValue());
+                    panel.gridRecord.commit();
+
+                    if(btn.name=='auditAppFormSaveBtn'){
+                    	//取消显示材料及流程结果
+                        /*var fileCheckStore = tabpanel.down('grid[name=fileCheckGrid]').getStore();
+                        if(fileCheckStore.isLoaded()){
+                            fileCheckStore.reload();
+                        };*/
+                        var refLetterStore = tabpanel.down('grid[name=refLetterGrid]').getStore();
+                        if(refLetterStore.isLoaded()){
+                            refLetterStore.reload();
+                        };
+                        var fileStore = tabpanel.down('grid[name=fileGrid]').getStore();
+                        if(fileStore.isLoaded()){
+                            fileStore.reload();
+                        };
+                    }
+                    if(btn.name=='auditAppFormEnsureBtn'){
+                        panel.close();
+                    }
+
+                },"",true,this);
+            }
+        }
+    },
     onAuditApplicationFormClose:function(btn){
         this.getView().close();
     },
@@ -90,6 +136,65 @@
             }
         }*/
 
+        /*推荐信列表修改数据*/
+        var refLetterGrid = this.getView().down('grid[name=refLetterGrid]');
+        var refLetterGridStore = refLetterGrid.getStore();
+        var refLetterGridModifiedRecs = refLetterGridStore.getModifiedRecords();
+        for(var j=0;j<refLetterGridModifiedRecs.length;j++){
+            if(editJson == ""){
+                editJson = '{"typeFlag":"REFLETTER","data":'+Ext.JSON.encode(refLetterGridModifiedRecs[j].data)+'}';
+            }else{
+                editJson = editJson + ',{"typeFlag":"REFLETTER","data":'+Ext.JSON.encode(refLetterGridModifiedRecs[j].data)+'}';
+            }
+        }
+
+        if(editJson != ""){
+            if(comParams == ""){
+                comParams = '"update":[' + editJson + "]";
+            }else{
+                comParams = comParams + ',"update":[' + editJson + "]";
+            }
+        }
+        /*附件删除*/
+        //删除json字符串
+        var removeJson = "";
+        var fileGrid = this.getView().down('grid[name=fileGrid]');
+        var fileStore = fileGrid.getStore();
+        //删除记录
+        var removeRecs = fileStore.getRemovedRecords();
+        //console.log(fileStore,removeRecs);
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        if(removeJson != ""){
+            if(comParams == ""){
+                comParams = '"delete":[' + removeJson + "]";
+            }else{
+                comParams = comParams + ',"delete":[' + removeJson + "]";
+            }
+        }
+        /*附件删除end*/
+        //提交参数
+        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_AUDIT_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        return tzParams;
+    },
+    getStuInfoParams2: function(btn){
+        //主要表单
+        var form = this.getView().child('form').getForm();
+        
+        //表单数据
+        var formParams = form.getValues();
+
+        //更新操作参数
+        var comParams = "";
+
+        //修改json字符串
+        var  editJson = '{"typeFlag":"STU","data":'+Ext.JSON.encode(formParams)+'}';
+    
         /*推荐信列表修改数据*/
         var refLetterGrid = this.getView().down('grid[name=refLetterGrid]');
         var refLetterGridStore = refLetterGrid.getStore();

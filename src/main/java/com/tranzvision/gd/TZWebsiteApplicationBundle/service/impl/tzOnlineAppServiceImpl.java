@@ -1,24 +1,24 @@
 package com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
+
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsroleuserMapper;
@@ -28,23 +28,23 @@ import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
 import com.tranzvision.gd.TZApplicationTemplateBundle.dao.PsTzApptplDyTMapper;
 import com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs;
 import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.TemplateEngine;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClassInfTMapper;
 import com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormPhotoTMapper;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormPhotoT;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppViewServiceImpl;
-import com.tranzvision.gd.TZRecommendationBundle.service.impl.TzTjxThanksServiceImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzOprPhotoTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhotoT;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
+import com.tranzvision.gd.TZRecommendationBundle.service.impl.TzTjxThanksServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceImpl;
-import com.tranzvision.gd.util.base.Global;
+import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormPhotoTMapper;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormPhotoT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.encrypt.DESUtil;
@@ -727,6 +727,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage, "我已阅读声明，确认提交报名表。",
 					"I have read the statement to confirm the submission of the registration form.");
 
+			String strDownLoadPDFMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"DOWN", strLanguage, "下载报名表", "Download");
+			
+			String strDownErrorMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"DOWNERR", strLanguage, "请先保存报名表", "Please save the application form。");
+
 			System.out.println("报名表展现双语化处理End,Time=" + (System.currentTimeMillis() - time2));
 
 			if ("N".equals(strIsGuest)) {
@@ -845,7 +851,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
 						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
-						pwdError, pwdError2, PWDHTML);
+						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg,strDownErrorMsg);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");
@@ -953,7 +959,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			System.out.println("报名表保存数据预处理Begin");
 			String strForm = actData[num];
 
-			System.out.println("strForm:" + strForm);
+			//System.out.println("strForm:" + strForm);
 
 			// 解析json
 			jacksonUtil.json2Map(strForm);
@@ -972,9 +978,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				isPwd = String.valueOf(jacksonUtil.getString("ISPWD"));
 			}
 
-			System.out.println("strPwd:" + strPwd);
+			//System.out.println("strPwd:" + strPwd);
 
-			System.out.println("isPwd:" + isPwd);
+			//System.out.println("isPwd:" + isPwd);
 
 			// 密码用MD5加密存储
 			if (strPwd != null && !strPwd.equals("")) {
@@ -1555,6 +1561,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							}
 						}
 					}
+					tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
 					System.out.println("报名表保存SUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("CONFIRMSUBMIT".equals(strOtype)) {
 					System.out.println("报名表保存CONFIRMSUBMIT数据Begin");
@@ -1567,7 +1574,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType,
 								strBatchId, strPwd, isPwd);
 						if ("BMB".equals(strTplType)) {
+
 							// 同步报名人联系方式
+							tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
 							tzOnlineAppEngineImpl.savaContactInfo(numAppInsId, strTplId, strAppOprId);
 							// 发送邮件
 							String strSubmitSendEmail = tzOnlineAppEngineImpl.sendSubmitEmail(numAppInsId, strTplId,

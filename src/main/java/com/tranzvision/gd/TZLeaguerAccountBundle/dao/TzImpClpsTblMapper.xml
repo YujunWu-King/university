@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.TzImpClpsTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpClpsTbl" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_RESULT" property="tzResult" jdbcType="VARCHAR" />
+    <result column="TZ_RESULT_CODE" property="tzResultCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_RESULT, TZ_RESULT_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_IMP_CLPS_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TZ_IMP_CLPS_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpClpsTbl" >
+    insert into TZ_IMP_CLPS_TBL (TZ_APP_INS_ID, TZ_RESULT, TZ_RESULT_CODE
+      )
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzResult,jdbcType=VARCHAR}, #{tzResultCode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpClpsTbl" >
+    insert into TZ_IMP_CLPS_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzResult != null" >
+        TZ_RESULT,
+      </if>
+      <if test="tzResultCode != null" >
+        TZ_RESULT_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzResult != null" >
+        #{tzResult,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResultCode != null" >
+        #{tzResultCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpClpsTbl" >
+    update TZ_IMP_CLPS_TBL
+    <set >
+      <if test="tzResult != null" >
+        TZ_RESULT = #{tzResult,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResultCode != null" >
+        TZ_RESULT_CODE = #{tzResultCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpClpsTbl" >
+    update TZ_IMP_CLPS_TBL
+    set TZ_RESULT = #{tzResult,jdbcType=VARCHAR},
+      TZ_RESULT_CODE = #{tzResultCode,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>

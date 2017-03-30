@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppKsInExtTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppKsInExtTbl" >
+    <id column="TZ_OPRID" property="tzOprid" jdbcType="VARCHAR" />
+    <result column="TZ_APP_MAJOR_NAME" property="tzAppMajorName" jdbcType="VARCHAR" />
+    <result column="TZ_VOLTER_YEAR" property="tzVolterYear" jdbcType="VARCHAR" />
+    <result column="TZ_SELF_EMP_FLG" property="tzSelfEmpFlg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_OPRID, TZ_APP_MAJOR_NAME, TZ_VOLTER_YEAR, TZ_SELF_EMP_FLG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_APP_KS_INFO_EXT_T
+    where TZ_OPRID = #{tzOprid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_APP_KS_INFO_EXT_T
+    where TZ_OPRID = #{tzOprid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppKsInExtTbl" >
+    insert into PS_TZ_APP_KS_INFO_EXT_T (TZ_OPRID, TZ_APP_MAJOR_NAME, TZ_VOLTER_YEAR, 
+      TZ_SELF_EMP_FLG)
+    values (#{tzOprid,jdbcType=VARCHAR}, #{tzAppMajorName,jdbcType=VARCHAR}, #{tzVolterYear,jdbcType=VARCHAR}, 
+      #{tzSelfEmpFlg,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppKsInExtTbl" >
+    insert into PS_TZ_APP_KS_INFO_EXT_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzOprid != null" >
+        TZ_OPRID,
+      </if>
+      <if test="tzAppMajorName != null" >
+        TZ_APP_MAJOR_NAME,
+      </if>
+      <if test="tzVolterYear != null" >
+        TZ_VOLTER_YEAR,
+      </if>
+      <if test="tzSelfEmpFlg != null" >
+        TZ_SELF_EMP_FLG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzOprid != null" >
+        #{tzOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppMajorName != null" >
+        #{tzAppMajorName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzVolterYear != null" >
+        #{tzVolterYear,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSelfEmpFlg != null" >
+        #{tzSelfEmpFlg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppKsInExtTbl" >
+    update PS_TZ_APP_KS_INFO_EXT_T
+    <set >
+      <if test="tzAppMajorName != null" >
+        TZ_APP_MAJOR_NAME = #{tzAppMajorName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzVolterYear != null" >
+        TZ_VOLTER_YEAR = #{tzVolterYear,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSelfEmpFlg != null" >
+        TZ_SELF_EMP_FLG = #{tzSelfEmpFlg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_OPRID = #{tzOprid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppKsInExtTbl" >
+    update PS_TZ_APP_KS_INFO_EXT_T
+    set TZ_APP_MAJOR_NAME = #{tzAppMajorName,jdbcType=VARCHAR},
+      TZ_VOLTER_YEAR = #{tzVolterYear,jdbcType=VARCHAR},
+      TZ_SELF_EMP_FLG = #{tzSelfEmpFlg,jdbcType=VARCHAR}
+    where TZ_OPRID = #{tzOprid,jdbcType=VARCHAR}
+  </update>
+</mapper>
