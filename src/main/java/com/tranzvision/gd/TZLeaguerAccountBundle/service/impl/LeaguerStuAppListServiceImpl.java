@@ -63,7 +63,7 @@ public class LeaguerStuAppListServiceImpl extends FrameworkImpl {
 		    jacksonUtil.json2Map(strParams);
 		    
 		    String oprid = jacksonUtil.getString("oprid");		   
-		    oprid="TZ_14104";
+		    
 		    String strSql = "SELECT A.TZ_APP_INS_ID,A.TZ_APP_FORM_STA,T.TZ_CLASS_ID,(SELECT C.TZ_CLASS_NAME FROM PS_TZ_CLASS_INF_T C WHERE T.TZ_CLASS_ID=C.TZ_CLASS_ID) TZ_CLASS_NAME,T.TZ_BATCH_ID,(SELECT BT.TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T BT WHERE BT.TZ_CLASS_ID=T.TZ_CLASS_ID AND T.TZ_BATCH_ID=BT.TZ_BATCH_ID limit 0,1) TZ_BATCH_NAME FROM PS_TZ_APP_INS_T A,PS_TZ_FORM_WRK_T T WHERE A.TZ_APP_INS_ID=T.TZ_APP_INS_ID AND T.OPRID=?";
 		    List<Map<String, Object>> list = SqlQuery.queryForList(strSql,new Object[]{oprid});
 		    if(list!=null&&list.size()>0){			
