@@ -3,6 +3,8 @@ package com.tranzvision.gd.TZApplicationCenterBundle.controller;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,10 +19,12 @@ import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWeChartJSSDKSign;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.util.base.AnalysisSysVar;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.dao.PsTzUserregMbTMapper;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT;
@@ -51,6 +55,9 @@ public class TzAppAdmissionController {
 	private PsTzUserregMbTMapper psTzUserregMbTMapper;
 	@Autowired
 	private TzWeChartJSSDKSign tzWeChartJSSDKSign;
+	
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	@Autowired
 	private HttpServletRequest request;
 
@@ -147,6 +154,45 @@ public class TzAppAdmissionController {
 			return "";
 		}
 	}
+	
+	
+	/***
+	 * 生成微信签名信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "wxSign", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String wxSign(HttpServletRequest request, HttpServletResponse response) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		jsonMap.put("result", "");
+		try{
+			String url = request.getParameter("url");
+			
+			String appId = getHardCodePoint.getHardCodePointVal("TZ_WX_CORPID");
+			String secret = getHardCodePoint.getHardCodePointVal("TZ_WX_SECRET");
+			String wxType = getHardCodePoint.getHardCodePointVal("TZ_WX_TYPE");
+			
+			Map<String,String> signMap = tzWeChartJSSDKSign.sign(appId, secret, wxType, url);
+
+			if(signMap != null){
+				jsonMap.replace("result", "success");
+				jsonMap.put("appId", appId);
+				jsonMap.put("timestamp", signMap.get("timestamp"));
+				jsonMap.put("nonceStr", signMap.get("nonceStr"));
+				jsonMap.put("signature", signMap.get("signature"));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			jsonMap.replace("result", "failure");
+		}
+		return jacksonUtil.Map2json(jsonMap);
+	}
+	
+	
+	
 
 	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg) {
 		try {
