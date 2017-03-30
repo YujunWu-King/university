@@ -205,7 +205,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public String impAppLetter(String clsid) {
+	public String impAppLetter(String clsid,int min,int max) {
 
 		String[] errMsg = { "0", "" };
 		String retMsg = "";
@@ -215,8 +215,10 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil1 = new JacksonUtil();
 		Map<String, Object> paramsMap = new HashMap<String, Object>();
 		
-		String sql = "SELECT * FROM PS_TZ_LETTER_INS_TBL";
-		List<?> resultlist = sqlQuery.queryForList(sql);
+//		String sql = "SELECT * FROM PS_TZ_LETTER_INS_TBL";
+		String sql = "SELECT * FROM PS_TZ_LETTER_INS_TBL WHERE OPRID IN (SELECT OPRID FROM PS_TZ_APPINS_TBL WHERE cast(TZ_APP_INS_ID as unsigned int) >= ? AND cast(TZ_APP_INS_ID as unsigned int) < ? order by cast(TZ_APP_INS_ID as unsigned int))";
+		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { min,max });
+		
 		for (Object obj : resultlist) {
 			errMsg[0] = "0";
 			errMsg[1] = "";
@@ -288,13 +290,13 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			Map<String, Object> zsMap = new HashMap<String, Object>();
 
 			if(StringUtils.equals("ENG", lang)){
-				//推荐信模板编号	131
+				//推荐信模板编号	131----149
 				zsMap.put("A1486707994123", attrText1);
 				zsMap.put("A1486708045185", attrText2);
 				zsMap.put("A1486708049933", attrText3);
 				tplJson = engTplJson;
 			}else{
-				//推荐信模板编号	130
+				//推荐信模板编号	130----148
 				zsMap.put("A1487041145815", attrText1);
 				zsMap.put("A1487041140318", attrText2);
 				zsMap.put("A1487041105658", attrText3);
@@ -2082,15 +2084,18 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				strTjxType = "C";
 			}
 			String tjxSql = "SELECT TZ_REF_LETTER_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID = ? AND OPRID = ? AND TZ_EMAIL = ?";
-			sqlQuery.queryForObject(tjxSql, new Object[] { strInsId, strOprid,strEmail}, "String");
-			//推荐信编号
 			String strTjxId = "";
+			strTjxId = sqlQuery.queryForObject(tjxSql, new Object[] { strInsId, strOprid,strEmail}, "String");
+			//推荐信编号
+
 			if (strTjxId == null || "".equals(strTjxId)) {
 				String str_seq1 = String.valueOf((int) (Math.random() * 10000000));
 				String str_seq2 = "00000000000000"
 						+ String.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
 				str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
 				strTjxId = str_seq1 + str_seq2;
+			}else{
+				return new String[]{"0","0"};
 			}
 			
 			//推荐人编号
@@ -2158,7 +2163,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			String sql1 = "DELETE FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID REGEXP BINARY 'MBA_*')";
 			String sql2 = "DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID REGEXP BINARY 'MBA_*')";
 			String sql3 = "DELETE FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID REGEXP BINARY 'MBA_*')";
-			String sql4 = "DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID REGEXP BINARY 'MBA_*')";
 			String sql5 = "DELETE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID REGEXP BINARY 'MBA_*')";
 			String sql6 = "DELETE FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID REGEXP BINARY 'MBA_*')";
 			String sql7 = "DELETE FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID REGEXP BINARY 'MBA_*')";
@@ -2169,13 +2173,12 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			int del1 = sqlQuery.update(sql1);
 			int del2 = sqlQuery.update(sql2);
 			int del3 = sqlQuery.update(sql3);
-			int del4 = sqlQuery.update(sql4);
 			int del5 = sqlQuery.update(sql5);
 			int del6 = sqlQuery.update(sql6);
 			int del7 = sqlQuery.update(sql7);
 			int del8 = sqlQuery.update(sql8);
 			
-			String ret = del1 + "    -->" + del2 + "    -->" + del3 + "    -->" + del4 + "    -->" + del5 + "    -->" + del6 + "    -->" + del7 + "    -->" + del8;
+			String ret = del1 + "    -->" + del2 + "    -->" + del3 + "    -->" + del5 + "    -->" + del6 + "    -->" + del7 + "    -->" + del8;
 			return ret;
 		}
 
@@ -2230,12 +2233,13 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			}
 
 		/*创建推荐信*/
-		public String createLetter(String clsid) {
+		public String createLetter(String clsid,int min, int max) {
 			String[] errMsg = { "0", "" };
 			String retMsg = "";
 			
-			String sql = "SELECT * FROM PS_TZ_LETTER_INS_TBL";
-			List<?> resultlist = sqlQuery.queryForList(sql);
+//			String sql = "SELECT * FROM PS_TZ_LETTER_INS_TBL";
+			String sql = "SELECT * FROM PS_TZ_LETTER_INS_TBL WHERE OPRID IN (SELECT OPRID FROM PS_TZ_APPINS_TBL WHERE cast(TZ_APP_INS_ID as unsigned int) >= ? AND cast(TZ_APP_INS_ID as unsigned int) < ? order by cast(TZ_APP_INS_ID as unsigned int))";
+			List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { min,max });
 			for (Object obj : resultlist) {
 				errMsg[0] = "0";
 				errMsg[1] = "";
