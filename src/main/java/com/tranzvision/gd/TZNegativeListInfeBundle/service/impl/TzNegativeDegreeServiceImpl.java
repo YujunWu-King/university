@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsTblMapper;
+import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsTbl;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
-import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsTBLMapper;
 import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT;
-import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -30,7 +30,7 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
-	private PsTzCsKsTBLMapper PsTzCsKsTBLMapper;
+	private PsTzCsKsTblMapper PsTzCsKsTBLMapper;
 
 	@Override
 	public boolean makeNegativeList(String classId, String batchId, String labelId) {
@@ -42,7 +42,7 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 		Integer appinsId = 0;
 		String degree = "";
 		try {
-			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID'";
+			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID_GEGREE'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
 			List<?> opridlist = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeApplyNumber"),
@@ -70,12 +70,12 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 							PsTzCsKsFmT.setTzFmqdId(fmqdId);
 							PsTzCsKsFmT.setTzFmqdName("学位学历");
 							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
-							PsTzCsKsTBL PsTzCsKsTBL = new PsTzCsKsTBL();
+							PsTzCsKsTbl PsTzCsKsTBL = new PsTzCsKsTbl();
 
-							PsTzCsKsTBL.setTzAppInsId(appinsId);
+							PsTzCsKsTBL.setTzAppInsId(Long.valueOf(appinsId));
 							PsTzCsKsTBL.setTzClassId(classId);
 							PsTzCsKsTBL.setTzApplyPcId(batchId);
-							PsTzCsKsTBL.setTzJgId(OrgID);
+							// PsTzCsKsTBL.setTzJgId(OrgID);
 							PsTzCsKsTBL.setRowLastmantDttm(nowdate_time);
 							PsTzCsKsTBL.setTzKshCsjg("N");
 							PsTzCsKsTBLMapper.updateByPrimaryKeySelective(PsTzCsKsTBL);
