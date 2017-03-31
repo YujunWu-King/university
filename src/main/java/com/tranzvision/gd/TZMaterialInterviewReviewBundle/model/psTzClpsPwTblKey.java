@@ -1,13 +1,11 @@
-package com.tranzvision.gd.TZNegativeListInfeBundle.model;
+package com.tranzvision.gd.TZMaterialInterviewReviewBundle.model;
 
-public class PsTzCsKsTBLKey {
+public class psTzClpsPwTblKey {
     private String tzClassId;
 
     private String tzApplyPcId;
 
-    private String tzJgId;
-
-    private Integer tzAppInsId;
+    private String tzPweiOprid;
 
     public String getTzClassId() {
         return tzClassId;
@@ -25,19 +23,11 @@ public class PsTzCsKsTBLKey {
         this.tzApplyPcId = tzApplyPcId == null ? null : tzApplyPcId.trim();
     }
 
-    public String getTzJgId() {
-        return tzJgId;
+    public String getTzPweiOprid() {
+        return tzPweiOprid;
     }
 
-    public void setTzJgId(String tzJgId) {
-        this.tzJgId = tzJgId == null ? null : tzJgId.trim();
-    }
-
-    public Integer getTzAppInsId() {
-        return tzAppInsId;
-    }
-
-    public void setTzAppInsId(Integer tzAppInsId) {
-        this.tzAppInsId = tzAppInsId;
+    public void setTzPweiOprid(String tzPweiOprid) {
+        this.tzPweiOprid = tzPweiOprid == null ? null : tzPweiOprid.trim();
     }
 }

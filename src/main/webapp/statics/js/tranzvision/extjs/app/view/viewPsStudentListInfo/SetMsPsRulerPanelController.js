@@ -192,6 +192,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 	//切换页签时触发
 	beforeOnTabchange: function(tabs, newTab, oldTab) {
 		var selectdata = [];
+		var groupidarray = [];
+		var groupnamearray = [];
 
 		console.log("new:" + newTab.name);
 		console.log("old:" + oldTab.name);

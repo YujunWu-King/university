@@ -40,7 +40,7 @@ public class TzNegativeApplyAgeOverServiceImpl extends TzNegativeListBundleServi
 
 		try {
 			String OrgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID'";
+			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID_AGE'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
 
 			List<?> opridlist = SqlQuery.queryForList(

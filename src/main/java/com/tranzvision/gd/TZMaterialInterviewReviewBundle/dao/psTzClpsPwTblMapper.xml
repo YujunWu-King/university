@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsTBLMapper" >
-  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL" >
+<mapper namespace="com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl" >
     <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
     <id column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
-    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
-    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="INTEGER" />
-    <result column="TZ_SCORE_INS_ID" property="tzScoreInsId" jdbcType="INTEGER" />
-    <result column="TZ_KSH_CSJG" property="tzKshCsjg" jdbcType="VARCHAR" />
-    <result column="TZ_KSH_PSPM" property="tzKshPspm" jdbcType="VARCHAR" />
+    <id column="TZ_PWEI_OPRID" property="tzPweiOprid" jdbcType="VARCHAR" />
+    <result column="TZ_PYKS_XX" property="tzPyksXx" jdbcType="INTEGER" />
+    <result column="TZ_PWEI_ZHZT" property="tzPweiZhzt" jdbcType="VARCHAR" />
+    <result column="TZ_PWZBH" property="tzPwzbh" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
@@ -17,40 +16,37 @@
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_JG_ID, TZ_APP_INS_ID, TZ_SCORE_INS_ID, TZ_KSH_CSJG, 
-    TZ_KSH_PSPM, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-    SYNCID, SYNCDTTM
+    TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_PWEI_OPRID, TZ_PYKS_XX, TZ_PWEI_ZHZT, TZ_PWZBH, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBLKey" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTblKey" >
     select 
     <include refid="Base_Column_List" />
-    from PS_TZ_CS_KS_TBL
+    from PS_TZ_CLPS_PW_TBL
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
-      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
-      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=INTEGER}
+      and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBLKey" >
-    delete from PS_TZ_CS_KS_TBL
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTblKey" >
+    delete from PS_TZ_CLPS_PW_TBL
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
-      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
-      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=INTEGER}
+      and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL" >
-    insert into PS_TZ_CS_KS_TBL (TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_JG_ID, 
-      TZ_APP_INS_ID, TZ_SCORE_INS_ID, TZ_KSH_CSJG, 
-      TZ_KSH_PSPM, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
-      SYNCDTTM)
-    values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
-      #{tzAppInsId,jdbcType=INTEGER}, #{tzScoreInsId,jdbcType=INTEGER}, #{tzKshCsjg,jdbcType=VARCHAR}, 
-      #{tzKshPspm,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
-      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
-      #{syncdttm,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl" >
+    insert into PS_TZ_CLPS_PW_TBL (TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_PWEI_OPRID, 
+      TZ_PYKS_XX, TZ_PWEI_ZHZT, TZ_PWZBH, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+      )
+    values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzPweiOprid,jdbcType=VARCHAR}, 
+      #{tzPyksXx,jdbcType=INTEGER}, #{tzPweiZhzt,jdbcType=VARCHAR}, #{tzPwzbh,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL" >
-    insert into PS_TZ_CS_KS_TBL
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl" >
+    insert into PS_TZ_CLPS_PW_TBL
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzClassId != null" >
         TZ_CLASS_ID,
@@ -58,20 +54,17 @@
       <if test="tzApplyPcId != null" >
         TZ_APPLY_PC_ID,
       </if>
-      <if test="tzJgId != null" >
-        TZ_JG_ID,
+      <if test="tzPweiOprid != null" >
+        TZ_PWEI_OPRID,
       </if>
-      <if test="tzAppInsId != null" >
-        TZ_APP_INS_ID,
+      <if test="tzPyksXx != null" >
+        TZ_PYKS_XX,
       </if>
-      <if test="tzScoreInsId != null" >
-        TZ_SCORE_INS_ID,
+      <if test="tzPweiZhzt != null" >
+        TZ_PWEI_ZHZT,
       </if>
-      <if test="tzKshCsjg != null" >
-        TZ_KSH_CSJG,
-      </if>
-      <if test="tzKshPspm != null" >
-        TZ_KSH_PSPM,
+      <if test="tzPwzbh != null" >
+        TZ_PWZBH,
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM,
@@ -99,20 +92,17 @@
       <if test="tzApplyPcId != null" >
         #{tzApplyPcId,jdbcType=VARCHAR},
       </if>
-      <if test="tzJgId != null" >
-        #{tzJgId,jdbcType=VARCHAR},
+      <if test="tzPweiOprid != null" >
+        #{tzPweiOprid,jdbcType=VARCHAR},
       </if>
-      <if test="tzAppInsId != null" >
-        #{tzAppInsId,jdbcType=INTEGER},
+      <if test="tzPyksXx != null" >
+        #{tzPyksXx,jdbcType=INTEGER},
       </if>
-      <if test="tzScoreInsId != null" >
-        #{tzScoreInsId,jdbcType=INTEGER},
+      <if test="tzPweiZhzt != null" >
+        #{tzPweiZhzt,jdbcType=VARCHAR},
       </if>
-      <if test="tzKshCsjg != null" >
-        #{tzKshCsjg,jdbcType=VARCHAR},
-      </if>
-      <if test="tzKshPspm != null" >
-        #{tzKshPspm,jdbcType=VARCHAR},
+      <if test="tzPwzbh != null" >
+        #{tzPwzbh,jdbcType=VARCHAR},
       </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
@@ -134,17 +124,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL" >
-    update PS_TZ_CS_KS_TBL
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl" >
+    update PS_TZ_CLPS_PW_TBL
     <set >
-      <if test="tzScoreInsId != null" >
-        TZ_SCORE_INS_ID = #{tzScoreInsId,jdbcType=INTEGER},
+      <if test="tzPyksXx != null" >
+        TZ_PYKS_XX = #{tzPyksXx,jdbcType=INTEGER},
       </if>
-      <if test="tzKshCsjg != null" >
-        TZ_KSH_CSJG = #{tzKshCsjg,jdbcType=VARCHAR},
+      <if test="tzPweiZhzt != null" >
+        TZ_PWEI_ZHZT = #{tzPweiZhzt,jdbcType=VARCHAR},
       </if>
-      <if test="tzKshPspm != null" >
-        TZ_KSH_PSPM = #{tzKshPspm,jdbcType=VARCHAR},
+      <if test="tzPwzbh != null" >
+        TZ_PWZBH = #{tzPwzbh,jdbcType=VARCHAR},
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
@@ -167,14 +157,13 @@
     </set>
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
-      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
-      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=INTEGER}
+      and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsTBL" >
-    update PS_TZ_CS_KS_TBL
-    set TZ_SCORE_INS_ID = #{tzScoreInsId,jdbcType=INTEGER},
-      TZ_KSH_CSJG = #{tzKshCsjg,jdbcType=VARCHAR},
-      TZ_KSH_PSPM = #{tzKshPspm,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl" >
+    update PS_TZ_CLPS_PW_TBL
+    set TZ_PYKS_XX = #{tzPyksXx,jdbcType=INTEGER},
+      TZ_PWEI_ZHZT = #{tzPweiZhzt,jdbcType=VARCHAR},
+      TZ_PWZBH = #{tzPwzbh,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
@@ -183,7 +172,6 @@
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
-      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
-      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=INTEGER}
+      and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}
   </update>
 </mapper>

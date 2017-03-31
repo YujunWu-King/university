@@ -3,6 +3,8 @@ package com.tranzvision.gd.TZApplicationCenterBundle.controller;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,11 +19,12 @@ import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWeChartJSSDKSign;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.util.base.AnalysisSysVar;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
+import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
-import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWeChartJSSDKSign;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.dao.PsTzUserregMbTMapper;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT;
@@ -52,6 +55,9 @@ public class TzAppAdmissionController {
 	private PsTzUserregMbTMapper psTzUserregMbTMapper;
 	@Autowired
 	private TzWeChartJSSDKSign tzWeChartJSSDKSign;
+	
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	@Autowired
 	private HttpServletRequest request;
 
@@ -101,7 +107,7 @@ public class TzAppAdmissionController {
 						"String");
 
 				// 【3】解析系统变量、返回解析后的html
-				/**/int syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
+				int syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
 				while (syavarStartIndex != -1) {
 					int syavarEndIndex = tzCertMergHtml.indexOf(']', syavarStartIndex);
 					String sysvarId = tzCertMergHtml.substring(syavarStartIndex + 8, syavarEndIndex);
@@ -117,34 +123,8 @@ public class TzAppAdmissionController {
 
 					System.out.println(tzCertMergHtml);
 					syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-				}
-				;
-
-				/*缩略图绝对地址*/
-				String CertLogoSql = "SELECT CONCAT(A.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA) FROM PS_TZ_CERTIMAGE_TBL A,PS_TZ_CERTTMPL_TBL B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND B.TZ_JG_ID=? AND B.TZ_CERT_TMPL_ID=(SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID)";
-				String CertLogo = sqlQuery1.queryForObject(CertLogoSql,  new Object[] { orgid, tzAppInsID }, "String");
-				CertLogo=  request.getScheme() + "://" + request.getServerName() + ":"
-						+ String.valueOf(request.getServerPort()) + request.getContextPath()+CertLogo;
+				};
 				
-				
-				/* 微信签名信息 */
-				String sqlHardCode = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-				String WxCorpid = sqlQuery1.queryForObject(sqlHardCode, new Object[] { "TZ_WX_CORPID"  }, "String");
-				String WxSecret = sqlQuery1.queryForObject(sqlHardCode, new Object[] { "TZ_WX_SECRET"  }, "String");
-				String WxType =  sqlQuery1.queryForObject(sqlHardCode, new Object[] { "TZ_WX_TYPE"}, "String");
-
-				String url = request.getScheme() + "://" + request.getServerName() + ":"
-						+ String.valueOf(request.getServerPort()) + request.getContextPath()
-						+ "/admission/" + orgid + "/" + siteid + "/" + oprid + "/" + tzAppInsID;
-
-				Map<String, String> ret = tzWeChartJSSDKSign.sign(WxCorpid, WxSecret, WxType, url);
-				String WxNonce_str = ret.get("nonceStr");
-				String WxTimestamp = ret.get("timestamp");
-				String WxSignature = ret.get("signature");
-
-				tzCertMergHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_WX_SCRIPT_HTML",
-						false,CertLogo,WxNonce_str,WxTimestamp,WxSignature)+tzCertMergHtml;
-
 				// 【4】生成静态录取通知书html
 				boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
 				if (!bl) {
@@ -174,6 +154,45 @@ public class TzAppAdmissionController {
 			return "";
 		}
 	}
+	
+	
+	/***
+	 * 生成微信签名信息
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "wxSign", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String wxSign(HttpServletRequest request, HttpServletResponse response) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		jsonMap.put("result", "");
+		try{
+			String url = request.getParameter("url");
+			
+			String appId = getHardCodePoint.getHardCodePointVal("TZ_WX_CORPID");
+			String secret = getHardCodePoint.getHardCodePointVal("TZ_WX_SECRET");
+			String wxType = getHardCodePoint.getHardCodePointVal("TZ_WX_TYPE");
+			
+			Map<String,String> signMap = tzWeChartJSSDKSign.sign(appId, secret, wxType, url);
+
+			if(signMap != null){
+				jsonMap.replace("result", "success");
+				jsonMap.put("appId", appId);
+				jsonMap.put("timestamp", signMap.get("timestamp"));
+				jsonMap.put("nonceStr", signMap.get("nonceStr"));
+				jsonMap.put("signature", signMap.get("signature"));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			jsonMap.replace("result", "failure");
+		}
+		return jacksonUtil.Map2json(jsonMap);
+	}
+	
+	
+	
 
 	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg) {
 		try {

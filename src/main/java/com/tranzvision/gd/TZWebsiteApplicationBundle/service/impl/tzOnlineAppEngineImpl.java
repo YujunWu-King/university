@@ -26,6 +26,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhccTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhhsTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppHiddenTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppKsInExtTblMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormAttTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormWrkTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzKsTjxTblMapper;
@@ -35,9 +36,11 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhccT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppDhhsT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppHiddenT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppKsInExtTbl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormAttT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormWrkT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
+import com.tranzvision.gd.util.Calendar.DateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -102,8 +105,12 @@ public class tzOnlineAppEngineImpl {
 
 	@Autowired
 	private CreateTaskServiceImpl createTaskServiceImpl;
+
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
+
+	@Autowired
+	private PsTzAppKsInExtTblMapper psTzAppKsInExtTblMapper;
 
 	@SuppressWarnings("unchecked")
 	public String checkAppViewQx(String strTplId, String oprid, String orgid, String strClassId) {
@@ -1250,7 +1257,8 @@ public class tzOnlineAppEngineImpl {
 		sqlQuery.update("DELETE FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID = ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID = ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID = ?", args);
-		sqlQuery.update("DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID = ?", args);
+		// sqlQuery.update("DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID =
+		// ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ?", args);
 		sqlQuery.update("DELETE FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID = ?", args);
 	}
@@ -2519,6 +2527,267 @@ public class tzOnlineAppEngineImpl {
 		psTzAppDhccT.setTzAppSText(strTxt);
 		psTzAppDhccT.setTzKxxQtz(strOtherValue);
 		psTzAppDhccTMapper.insert(psTzAppDhccT);
+
+	}
+
+	// MBA报名表提交后需要回写表(注：写死的自适应于清华MBA配置的报名表)
+	public void savaAppKsInfoExt(Long numAppInsId, String strAppOprId) {
+		System.out.println("保存注册信息开始");
+		DateUtil DateTrans = new DateUtil();
+		Map<String, String> ksMap = new HashMap<String, String>();
+		String ksMapkey = "";
+		String ksMapvalue = "";
+
+		Map<String, String> sex_ksMap = new HashMap<String, String>();
+		String sex_ksMapkey = "";
+		String sex_ksMapvalue = "";
+
+		// 真实姓名
+		String name = "";
+		// 考生性别
+		String sex = "";
+		// 出生日期
+		String brithday = "";
+		// 本科院校国家
+		String uniScholContry = "";
+		// 本科院校国家英文简写
+		String uniScholContryEn = "";
+		// 本科院校名称
+		String uniSchoolName = "";
+		// 本科毕业时间
+		String unipsoinTime = "";
+		// 本科专业
+		String unimajor = "";
+		// 本科专业类型
+		String unimajortype = "";
+		// 最高学历
+		String maxHeight = "";
+		// 最高学历毕业时间
+		String maxHeighTime = "";
+		// 是否拥有海外学历
+		String isOutLeft = "";
+		// 工作所在省市
+		String workProvince = "";
+		// 工作单位
+		String workPlace = "";
+		// 公司性质
+		String compNautre = "";
+		// 行业类别
+		String compaType = "";
+		// 工作部门
+		String workDepart = "";
+		// 工作职能类型
+		String workznlx = "";
+		// 工作职位
+		String jobPositio = "";
+		// 职位类型
+		String positiType = "";
+		// 邮寄地址
+		String Address = "";
+		// 邮政编码
+		String AddCode = "";
+		// 紧急联系人
+		String conName = "";
+		// 紧急联系人性别
+		String connameSex = "";
+		// 紧急联系人电话
+		String connamePhone = "";
+		// 管理工作年限
+		String AdminworkYear = "";
+		// 直接下属人数
+		String partperNum = "";
+		// 年收入
+		String income = "";
+		// 国家
+		String Contry1 = "";
+		String Contry2 = "";
+		String Contry3 = "";
+		// 邮箱
+		String email = "";
+		// 电话
+		String mobilPhone = "";
+		// 是否自主创业
+		String isOwrCompany = "";
+		// 报考自愿方向
+		String bkfx = "";
+
+		// String
+		try {
+			String ks_sex = "SELECT TZ_XXX_BH,TZ_XXXKXZ_MC FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID=? AND TZ_IS_CHECKED='Y'";
+			List<Map<String, Object>> listMap_sex = sqlQuery.queryForList(ks_sex, new Object[] { numAppInsId });
+			for (Map<String, Object> map : listMap_sex) {
+				sex_ksMapkey = map.get("TZ_XXX_BH").toString();
+				sex_ksMapvalue = map.get("TZ_XXXKXZ_MC").toString();
+				sex_ksMap.put(sex_ksMapkey, sex_ksMapvalue);
+				if (sex_ksMap.containsKey(sex_ksMapkey)) {
+
+				}
+			}
+
+			String ks_valuesql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? ";
+			List<Map<String, Object>> listMap = sqlQuery.queryForList(ks_valuesql, new Object[] { numAppInsId });
+			for (Map<String, Object> map : listMap) {
+				ksMapkey = map.get("TZ_XXX_BH").toString();
+				ksMapvalue = map.get("TZ_APP_S_TEXT").toString();
+				ksMap.put(ksMapkey, ksMapvalue);
+			}
+			for (Map.Entry<String, String> entry : ksMap.entrySet()) {
+
+				System.out.println("key= " + entry.getKey() + " and value= " + entry.getValue());
+
+			}
+			name = ksMap.get("TZ_6name");
+
+			sex = sex_ksMap.get("TZ_6gender");
+
+			brithday = ksMap.get("TZ_6birthday");
+
+			uniScholContry = ksMap.get("TZ_11luniversitycountry");
+			uniScholContryEn = sqlQuery.queryForObject("SELECT country from PS_COUNTRY_TBL where descr=?",
+					new Object[] { uniScholContry }, "String");
+
+			Contry1 = ksMap.get("TZ_10hdegreeunicountry");
+			Contry2 = ksMap.get("TZ_12ouniversitycountry");
+			Contry3 = ksMap.get("TZ_13ouniver3country");
+
+			System.out.println(uniScholContry + ":" + Contry1 + ":" + Contry2 + ":" + Contry3);
+			// 判断 是否有海外学历
+			if (uniScholContry.equals("中国") && Contry1.equals("中国") && Contry2.equals("中国") && Contry3.equals("中国")) {
+				isOutLeft = String.valueOf('N');
+			} else {
+				isOutLeft = String.valueOf('Y');
+			}
+			ksMap.get("TZ_11luniversitycountry");
+			ksMap.get("TZ_11luniversitycountry");
+
+			uniSchoolName = ksMap.get("TZ_11luniversitysch");
+
+			unipsoinTime = ksMap.get("TZ_11periodcom_enddate");
+
+			unimajor = ksMap.get("TZ_11major");
+
+			unimajortype = ksMap.get("TZ_11majortype");
+
+			maxHeight = ksMap.get("TZ_10highdegree");
+
+			maxHeighTime = ksMap.get("TZ_10hdegreeperiodcom_enddate");
+
+			workProvince = ksMap.get("TZ_20TZ_TZ_20_9");
+
+			workPlace = ksMap.get("TZ_20_TZ_TZ_20_6");
+
+			compNautre = ksMap.get("TZ_20TZ_TZ_20_14firm_type");
+
+			compaType = ksMap.get("TZ_20TZ_TZ_20_13");
+
+			workDepart = ksMap.get("TZ_20TZ_TZ_20_15");
+
+			workznlx = ksMap.get("TZ_20TZ_TZ_20_30");
+
+			jobPositio = ksMap.get("TZ_20TZ_TZ_20_16");
+
+			positiType = ksMap.get("TZ_20TZ_TZ_20_14position_type");
+
+			Address = ksMap.get("TZ_6address");
+
+			AddCode = ksMap.get("TZ_6code");
+
+			conName = ksMap.get("TZ_8conname");
+
+			connameSex = sex_ksMap.get("TZ_8congender");
+
+			connamePhone = ksMap.get("TZ_8conmobile");
+
+			AdminworkYear = ksMap.get("TZ_20TZ_TZ_20_3");
+
+			partperNum = ksMap.get("TZ_20TZ_TZ_20_23");
+
+			income = ksMap.get("TZ_20TZ_TZ_20_21");
+
+			bkfx = ksMap.get("TZ_3TZ_TZ_3_3");
+			if (ksMap.get("TZ_17TZ_TZ_17_1") == null || ksMap.get("TZ_17TZ_TZ_17_1").equals("")
+					|| ksMap.get("TZ_17TZ_TZ_17_1").equals(" ")) {
+				isOwrCompany = "N";
+			} else {
+				isOwrCompany = "Y";
+			}
+
+			email = ksMap.get("TZ_6email");
+			mobilPhone = ksMap.get("TZ_6mobile");
+
+			String sql_ReisY = "SELECT 'Y' FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+
+			PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
+			psTzRegUserT.setOprid(strAppOprId);
+			psTzRegUserT.setTzRealname(name);
+			psTzRegUserT.setTzGender(sex);
+			psTzRegUserT.setBirthdate(DateUtil.parse(brithday));
+			psTzRegUserT.setTzSchCountry(uniScholContryEn);
+			psTzRegUserT.setTzSchCname(uniSchoolName);
+			psTzRegUserT.setTzComment1(unipsoinTime);
+			psTzRegUserT.setTzComment17(unimajor);
+			psTzRegUserT.setTzComment2(unimajortype);
+			psTzRegUserT.setTzHighestEdu(maxHeight);
+			psTzRegUserT.setTzComment3(maxHeighTime);
+			psTzRegUserT.setTzComment4(isOutLeft);
+			psTzRegUserT.setTzLenProid(workProvince);
+			psTzRegUserT.setTzCompanyName(workPlace);
+			psTzRegUserT.setTzComment5(compNautre);
+			psTzRegUserT.setTzCompIndustry(compaType);
+			psTzRegUserT.setTzDeptment(workDepart);
+			psTzRegUserT.setTzComment16(jobPositio);
+			psTzRegUserT.setTzComment15(workznlx);
+			psTzRegUserT.setTzComment7(Address);
+			psTzRegUserT.setTzComment8(AddCode);
+			psTzRegUserT.setTzComment9(conName);
+			psTzRegUserT.setTzComment10(connameSex);
+			psTzRegUserT.setTzComment11(connamePhone);
+			psTzRegUserT.setTzComment12(AdminworkYear);
+			psTzRegUserT.setTzComment13(partperNum);
+			psTzRegUserT.setTzComment14(income);
+
+			String ReisY = sqlQuery.queryForObject(sql_ReisY, new Object[] { strAppOprId }, "String");
+			if (ReisY != null && ReisY.equals("Y")) {
+				psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
+
+			} else {
+				psTzRegUserTMapper.insertSelective(psTzRegUserT);
+			}
+
+			String sql_LxisY = "SELECT 'Y' FROM PS_TZ_LXFSINFO_TBL  WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?";
+			PsTzLxfsInfoTbl psTzLxfInfoTbl = new PsTzLxfsInfoTbl();
+			psTzLxfInfoTbl.setTzLxfsLy("ZCYH");
+			psTzLxfInfoTbl.setTzLydxId(strAppOprId);
+			psTzLxfInfoTbl.setTzZyEmail(email);
+			psTzLxfInfoTbl.setTzZySj(mobilPhone);
+			String LxisY = sqlQuery.queryForObject(sql_LxisY, new Object[] { strAppOprId }, "String");
+			System.out.println("LxisY:" + LxisY);
+			if (LxisY != null && LxisY.equals("Y")) {
+
+				psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfInfoTbl);
+
+			} else {
+				psTzLxfsInfoTblMapper.insertSelective(psTzLxfInfoTbl);
+
+			}
+			String sql_ksExtisY = "SELECT 'Y' FROM  PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?";
+			PsTzAppKsInExtTbl psTzAppKsInExtTbl = new PsTzAppKsInExtTbl();
+			String ksExtisY = sqlQuery.queryForObject(sql_ksExtisY, new Object[] { strAppOprId }, "String");
+			psTzAppKsInExtTbl.setTzOprid(strAppOprId);
+			psTzAppKsInExtTbl.setTzAppMajorName(bkfx);
+			psTzAppKsInExtTbl.setTzSelfEmpFlg(isOwrCompany);
+			if (ksExtisY != null && ksExtisY.equals("Y")) {
+
+				psTzAppKsInExtTblMapper.updateByPrimaryKeySelective(psTzAppKsInExtTbl);
+
+			} else {
+				psTzAppKsInExtTblMapper.insertSelective(psTzAppKsInExtTbl);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
 
 	}
 

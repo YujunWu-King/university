@@ -75,8 +75,8 @@
 		//验证必填项及手机邮箱格式
 		function vaildRegData(){
 			var isValid = true;
-			var mobelReg=/^1[3-8]{1}\d{9}$/;
-			var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+			var mobelReg= /^1\d{10}$/;
+			var emailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\.[a-zA-Z]{2,3}$/;
 			
 			for(var key in itemsJson){
 				var val = $("#" + key).val();

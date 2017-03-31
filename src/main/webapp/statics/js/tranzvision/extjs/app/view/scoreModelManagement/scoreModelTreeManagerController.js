@@ -189,100 +189,101 @@
 	
 	saveScoreModelHandler: function(btn){
 		var win = btn.findParentByType("scoreModelTreeNodeWin");
-		var form = win.child('form').getForm();
-		var formRec = form.getValues();
+		var form = win.child('form');
+		var formRec = form.getForm().getValues();
 		var updateArr = [];
 		var AddArr = [];
 		var deleteArr = [];
 		var closePanel = btn.closePanel;
-		
-		//自动初筛CheckBox
-		if(formRec.autoScreen != "Y"){
-			formRec.autoScreen = "N";
-		}
-		//表单信息
-		var formObj = {
-			type: 'nodeInfo',
-			data: formRec
-		}
-		//下拉选项信息
-		var gridStore = win.down('grid[name=comboTypeGrid]').getStore();
-		var gridModifyRec = gridStore.getModifiedRecords();
-		var gridRemoveRec = gridStore.getRemovedRecords(); 
-		//grid修改记录
-		var modifyData = [];
-		for(var i=0; i<gridModifyRec.length; i++){			
-			var modObj = gridModifyRec[i].data;
-			if(modObj.isDefault){
-				modObj.isDefault = "Y";
-			}else{
-				modObj.isDefault = "N";
+		if(form.isValid()){
+			//自动初筛CheckBox
+			if(formRec.autoScreen != "Y"){
+				formRec.autoScreen = "N";
 			}
-			modifyData.push(modObj);
-		}
-		//grid删除记录
-		var removeData = [];
-		for(var i=0; i<gridRemoveRec.length; i++){
-			removeData.push(gridRemoveRec[i].data);
-		}
-		
-		var config = win.opeConfig;
-		if(config.actType == "U"){
-			updateArr.push(formObj);
+			//表单信息
+			var formObj = {
+				type: 'nodeInfo',
+				data: formRec
+			}
+			//下拉选项信息
+			var gridStore = win.down('grid[name=comboTypeGrid]').getStore();
+			var gridModifyRec = gridStore.getModifiedRecords();
+			var gridRemoveRec = gridStore.getRemovedRecords(); 
+			//grid修改记录
+			var modifyData = [];
+			for(var i=0; i<gridModifyRec.length; i++){			
+				var modObj = gridModifyRec[i].data;
+				if(modObj.isDefault){
+					modObj.isDefault = "Y";
+				}else{
+					modObj.isDefault = "N";
+				}
+				modifyData.push(modObj);
+			}
+			//grid删除记录
+			var removeData = [];
+			for(var i=0; i<gridRemoveRec.length; i++){
+				removeData.push(gridRemoveRec[i].data);
+			}
 			
-			if(modifyData.length>0){
-				updateArr.push({
-					type: 'comboOpt',
-					data: modifyData
-				});
+			var config = win.opeConfig;
+			if(config.actType == "U"){
+				updateArr.push(formObj);
+				
+				if(modifyData.length>0){
+					updateArr.push({
+						type: 'comboOpt',
+						data: modifyData
+					});
+				}
+				if(removeData.length>0){
+					deleteArr.push({
+						type: 'comboOpt',
+						data: removeData
+					});
+				}
+			}else if(config.actType == "A"){
+				formObj.insertType = config.insertType;
+				formObj.OperatorItemId = config.OperatorItemId;
+				AddArr.push(formObj);
+				
+				if(modifyData.length>0){
+					AddArr.push({
+						type: 'comboOpt',
+						data: modifyData
+					});
+				}
 			}
-			if(removeData.length>0){
-				deleteArr.push({
-					type: 'comboOpt',
-					data: removeData
-				});
-			}
-		}else if(config.actType == "A"){
-			formObj.insertType = config.insertType;
-			formObj.OperatorItemId = config.OperatorItemId;
-			AddArr.push(formObj);
 			
-			if(modifyData.length>0){
-				AddArr.push({
-					type: 'comboOpt',
-					data: modifyData
-				});
+			var comParamsObj = {
+				ComID: 'TZ_SCORE_MOD_COM',
+				PageID: 'TZ_TREE_NODE_STD',
+				OperateType: 'U',
+				comParams:{
+					add: AddArr,
+					update: updateArr,
+					delete: deleteArr
+				}
 			}
-		}
-		
-		var comParamsObj = {
-			ComID: 'TZ_SCORE_MOD_COM',
-			PageID: 'TZ_TREE_NODE_STD',
-			OperateType: 'U',
-			comParams:{
-				add: AddArr,
-				update: updateArr,
-				delete: deleteArr
-			}
-		}
-		var tzParams = Ext.JSON.encode(comParamsObj);
-		Ext.tzSubmit(tzParams,function(respData){
-			if(respData.result == "success"){
-				if(config.actType == "A"){
-					win.opeConfig.actType = "U";
-					//设置成绩项ID只读
-					var itemIdField = form.findField("itemId");
-					itemIdField.setReadOnly(true);
-					itemIdField.addCls("lanage_1");
+			var tzParams = Ext.JSON.encode(comParamsObj);
+			Ext.tzSubmit(tzParams,function(respData){
+				if(respData.result == "success"){
+					if(config.actType == "A"){
+						win.opeConfig.actType = "U";
+						//设置成绩项ID只读
+						var itemIdField = form.getForm().findField("itemId");
+						itemIdField.setReadOnly(true);
+						itemIdField.addCls("lanage_1");
+					}
+					
+					win.treeReload();
 				}
 				
-				win.treeReload();
-			}
-			
-			if(closePanel == "Y"){
-				win.close();
-			}
-		},"保存成功",true,this);
+				if(closePanel == "Y"){
+					win.close();
+				}
+			},"保存成功",true,this);
+		}
 	},
 	
 	

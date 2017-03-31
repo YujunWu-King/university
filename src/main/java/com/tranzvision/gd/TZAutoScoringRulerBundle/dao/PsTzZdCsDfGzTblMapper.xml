@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZAutoScoringRulerBundle.dao.PsTzZdCsDfGzTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZAutoScoringRulerBundle.model.PsTzZdCsDfGzTbl" >
+    <id column="TZ_ZDCSGZ_ID" property="tzZdcsgzId" jdbcType="VARCHAR" />
+    <result column="TZ_ZDCSGZ_NAME" property="tzZdcsgzName" jdbcType="VARCHAR" />
+    <result column="TZ_ZDCSGZ" property="tzZdcsgz" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_ZDCSGZ_ID, TZ_ZDCSGZ_NAME, TZ_ZDCSGZ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_ZDCS_DFGZ_T
+    where TZ_ZDCSGZ_ID = #{tzZdcsgzId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_ZDCS_DFGZ_T
+    where TZ_ZDCSGZ_ID = #{tzZdcsgzId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZAutoScoringRulerBundle.model.PsTzZdCsDfGzTbl" >
+    insert into PS_TZ_ZDCS_DFGZ_T (TZ_ZDCSGZ_ID, TZ_ZDCSGZ_NAME, TZ_ZDCSGZ
+      )
+    values (#{tzZdcsgzId,jdbcType=VARCHAR}, #{tzZdcsgzName,jdbcType=VARCHAR}, #{tzZdcsgz,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAutoScoringRulerBundle.model.PsTzZdCsDfGzTbl" >
+    insert into PS_TZ_ZDCS_DFGZ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzZdcsgzId != null" >
+        TZ_ZDCSGZ_ID,
+      </if>
+      <if test="tzZdcsgzName != null" >
+        TZ_ZDCSGZ_NAME,
+      </if>
+      <if test="tzZdcsgz != null" >
+        TZ_ZDCSGZ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzZdcsgzId != null" >
+        #{tzZdcsgzId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZdcsgzName != null" >
+        #{tzZdcsgzName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZdcsgz != null" >
+        #{tzZdcsgz,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZAutoScoringRulerBundle.model.PsTzZdCsDfGzTbl" >
+    update PS_TZ_ZDCS_DFGZ_T
+    <set >
+      <if test="tzZdcsgzName != null" >
+        TZ_ZDCSGZ_NAME = #{tzZdcsgzName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZdcsgz != null" >
+        TZ_ZDCSGZ = #{tzZdcsgz,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_ZDCSGZ_ID = #{tzZdcsgzId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZAutoScoringRulerBundle.model.PsTzZdCsDfGzTbl" >
+    update PS_TZ_ZDCS_DFGZ_T
+    set TZ_ZDCSGZ_NAME = #{tzZdcsgzName,jdbcType=VARCHAR},
+      TZ_ZDCSGZ = #{tzZdcsgz,jdbcType=VARCHAR}
+    where TZ_ZDCSGZ_ID = #{tzZdcsgzId,jdbcType=VARCHAR}
+  </update>
+</mapper>

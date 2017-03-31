@@ -4,6 +4,9 @@
 	requires: [
        'KitchenSink.view.enrollProject.userMg.userMgInfoPanel'
     ],
+    
+    
+
 	   createUserInfoClass: function(){
     	//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_USERINFO_STD"];
@@ -54,6 +57,8 @@
 
         cmp = new ViewClass();
 		
+        
+        
         return cmp;
     },
     //查询
@@ -68,31 +73,30 @@
 			callback: function(seachCfg){
 				var store = btn.findParentByType("grid").store;
 				store.tzStoreParams = seachCfg;
+				console.log(seachCfg);
+			//	temp =seachCfg;
+				
+				 var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_GETSQL_STD","OperateType":"getQuerySQL","comParams":'+seachCfg+'}';
+				 console.log(tzParams);
+				 Ext.tzLoad(tzParams,function(responseData){
+						
+					
+						var getedSQL = responseData.SQL;
+						
+						window.getedSQL2=responseData.SQL;
+						
+						/*if(getedSQL2==""){
+							getedSQL2="SELECT OPRID FROM PS_TZ_REG_USE2_V"
+						}*/
+						
+						
+						console.log(getedSQL2);
+					 //    this.saveAsDynAud(getedSQL);		
+							});
+				 
 				store.load();
 			}
 		});	
-    	/*var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_MGSEARCH_STD"];
-        if( pageResSet == "" || pageResSet == undefined){
-            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-            return;
-        }
-        //该功能对应的JS类
-        var className = pageResSet["jsClassName"];
-        if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_UM_MGSEARCH_STD，请检查配置。');
-            return;
-        }
-        
-        var win = this.lookupReference('userCfgSearch');
-        
-        if (!win) {
-            Ext.syncRequire(className);
-            ViewClass = Ext.ClassManager.get(className);
-            //新建类
-            win = new ViewClass();
-            this.getView().add(win);
-        }
-        win.show();*/
     },
     saveUserMgInfos: function(btn){
 		//组件注册信息列表
@@ -929,6 +933,121 @@
 		var audType = "2";
 		var audMS = "";
 		var audSQL = "";
+		
+		
+		//参数
+		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"'+audId+'","audName":"'+audName+'","audStat":"'+audStat+'","audType":"'+audType+'","audMS":"'+audMS+'","audSQL":"'+audSQL+'"}}';
+		//页面注册信息表单
+		
+		var form = win.child("form").getForm();
+		
+		var gridStore =win.child("form").child("grid").getStore();
+		var tzStoreParams =  '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "'+ audId+'"}}';
+
+		Ext.tzLoad(tzParams,function(responseData){
+			console.log(responseData);
+			form.setValues(responseData);		
+			gridStore.tzStoreParams = tzStoreParams;
+			gridStore.reload();
+			
+		});
+		
+
+		win.show();
+		
+		
+	},
+	
+	/*选中申请人另存为听众*/
+	saveAsDynAud: function() {
+
+	//	console.log(getedSQL2);
+		
+		
+		//获取选中人员；
+		/*var selList = this.getView().getSelectionModel().getSelection();
+		//拼接参数，新开听众页面；
+		
+	    if(selList.length==0){
+ 			Ext.MessageBox.alert('提示', '动态');
+ 			return;
+ 		}*/
+		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{"add":[{"audJG":"ADMIN","audID":"NEXT","audName":"","audStat":"1","audType":"2","audMS":"","audSQL":"","audLY":"ZCYH"}]}}';
+		
+		//后台执行插入表操作
+		var AudID ="";
+		Ext.tzSubmit(tzParams,function(resp){
+			AudID =resp;
+						
+			/*var oprIDJson = "";
+			for(var i=0;i<selList.length;i++){
+				var OPRID = selList[i].get("OPRID");
+				console.log(OPRID);
+				if(oprIDJson == ""){
+					oprIDJson = '{"OPRID":"' + OPRID + '","AudID":"' + AudID + '"}';
+				}else{
+					oprIDJson = oprIDJson + ','+'{"OPRID":"' + OPRID + '","AudID":"' + AudID + '"}';
+				}
+			}
+			var comParamsOPRID = "";
+			if(oprIDJson != ""){
+				comParamsOPRID = '"add":[' + oprIDJson + "]";
+			}
+			var tzParams2 = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_LIST_STD","OperateType":"U","comParams":{'+comParamsOPRID+'}}';
+			console.log(tzParams2);
+			
+			Ext.tzSubmit(tzParams2,function(resp){
+				
+			},"",true,this,AudID);
+			*/
+	
+			
+	    },"",true,this);
+		
+				
+		
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_AUDDYN_STD"];
+	//	console.log(pageResSet);
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+	//	console.log(className);
+		
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_UM_AUDDYN_STD，请检查配置。');
+			return;
+		}
+		
+		var OriSQL="SELECT OPRID FROM PS_TZ_REG_USE2_V";
+	//	OriSQL=getedSQL2;
+		console.log(OriSQL);
+		
+		
+
+		var win = this.lookupReference('pageRegWindow');
+
+		if (!win) {
+			//className = 'KitchenSink.view.enrollProject.userMg.userMgNewAud';
+			Ext.syncRequire(className);
+			ViewClass = Ext.ClassManager.get(className);
+			//新建类
+			win = new ViewClass();
+			this.getView().add(win);
+		}
+		win.actType = "update";
+		
+		var audId = AudID;
+		console.log(audId);
+		
+		var audName = "";
+		var audStat = "1";
+		var audType = "1";
+		var audMS = "";
+		var audSQL = getedSQL2;
 		
 		
 		//参数

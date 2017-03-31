@@ -181,13 +181,13 @@ public class TZImpAppFormController {
 	 * @param min
 	 * @return
 	 */
-	@RequestMapping(value = { "/createletter/{clsid}" }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/createletter/{clsid}/{min}/{max}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String createLetter(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid){
+	public String createLetter(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid,@PathVariable(value = "max") int max, @PathVariable(value = "min")  int min){
 		if(StringUtils.isBlank(clsid)){
 			clsid = "123";
 		}
-		String impMsg = tZImpAppFormServiceImpl.createLetter(clsid);
+		String impMsg = tZImpAppFormServiceImpl.createLetter(clsid,min,max);
 
 		return impMsg;
 	}
@@ -201,13 +201,13 @@ public class TZImpAppFormController {
 	 * @param min
 	 * @return
 	 */
-	@RequestMapping(value = { "/impletter/{clsid}" }, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/impletter/{clsid}/{min}/{max}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String impLetter(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid){
+	public String impLetter(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid,@PathVariable(value = "max") int max, @PathVariable(value = "min")  int min){
 		if(StringUtils.isBlank(clsid)){
 			clsid = "123";
 		}
-		String impMsg = tZImpAppFormServiceImpl.impAppLetter(clsid);
+		String impMsg = tZImpAppFormServiceImpl.impAppLetter(clsid,min,max);
 
 		return impMsg;
 	}
