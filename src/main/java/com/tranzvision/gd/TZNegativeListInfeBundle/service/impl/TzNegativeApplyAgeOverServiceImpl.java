@@ -22,7 +22,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * @author tzhjl
  *
  */
-@Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeApplyAgeOver")
+@Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeApplyAgeOverServiceImpl")
 public class TzNegativeApplyAgeOverServiceImpl extends TzNegativeListBundleServiceImpl {
 	@Autowired
 	private SqlQuery SqlQuery;

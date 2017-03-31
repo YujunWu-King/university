@@ -22,7 +22,7 @@ import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
-@Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeApplyNumber")
+@Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeApplyNumberServiceImpl")
 public class TzNegativeApplyNumberServiceImpl extends TzNegativeListBundleServiceImpl {
 	@Autowired
 	private TZGDObject TzSQLObject;
