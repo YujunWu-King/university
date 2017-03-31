@@ -63,6 +63,21 @@
 				}*/,{
 					text:'添加到已有听众',
 					handler:'saveToStaAud'	
+				},{
+					text:Ext.tzGetResourse("TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.exportExcel","导出Excel"),
+					glyph:'xf1c3@FontAwesome',
+					menu:[{
+						text:Ext.tzGetResourse("TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.exportApplicantsInfo","导出选中人员信息到Excel"),
+						glyph:'xf1c3@FontAwesome',
+						name:'exportExcel',
+						handler:'exportExcelOrDownload'
+					},
+					{
+							text:Ext.tzGetResourse("TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.downloadExcel","查看导出结果并下载"),
+							glyph:'xf019@FontAwesome',
+							name:'downloadExcel',
+							handler:'exportExcelOrDownload'
+					}]
 				}]
 			}
 		]

@@ -1204,5 +1204,48 @@
 					//	pageGrid.store.reload();
 				    },"",true,this);
 				},
-			
+			 /*导出到Excel or 下载导出结果*/
+    exportExcelOrDownload:function(btn){
+        var btnName = btn.name;
+        var selList = btn.findParentByType("grid").getSelectionModel().getSelection();
+        if(btnName=='exportExcel'){
+            if(selList.length<1) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing","您没有选中任何记录"));
+                return;
+            };
+        }
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_EXP_EXCEL_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限") );
+            return;
+        }
+
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+
+        var win = this.lookupReference('exportExcelForm');
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            // var modalID =btn.findParentByType('userMgGL').child('form').getForm().findField('modalID').getValue();
+            win = new ViewClass();
+            this.getView().add(win);
+        };
+        win.selList=selList;
+
+        if(btnName=='downloadExcel'){
+            var tabPanel = win.lookupReference("exportExcelTabPanel");
+            tabPanel.setActiveTab(1);
+        }
+        var form = win.child("form").getForm();
+        form.reset();
+        win.show();
+    }
 });
