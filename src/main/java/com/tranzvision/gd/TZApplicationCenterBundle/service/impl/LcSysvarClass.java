@@ -239,12 +239,15 @@ public class LcSysvarClass {
 					tjrqkxx = "<td colspan=\"3\">" + tjrqkxx + "</td>";
 					//打印报名表;
 					String applyFormPrint = rootPath + "/PrintPdfServlet?instanceID=" + appIns;
+					//未提交也可以打印;
+					tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
+					/*
 					if ("U".equals(appInsStatus)) {
 						tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
 					}else{
 						tjrqkxx = tjrqkxx + "<td colspan=\"3\">需要先提交报名表</td>";
 					}
-					
+					*/
 					tableHtml = tableHtml + "<tbody><tr>" + tjrqkxx + "</tr></tbody>";
 				}
 
