@@ -1213,6 +1213,7 @@ public class tzOnlineAppEngineImpl {
 				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
 				psTzAppInsT.setTzAppInsId(numAppInsId);
 				psTzAppInsT.setTzAppFormSta("U");
+				psTzAppInsT.setTzAppPreSta("P");
 				psTzAppInsT.setTzAppSubDttm(new Date());
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());

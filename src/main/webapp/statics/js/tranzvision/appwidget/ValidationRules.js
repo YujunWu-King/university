@@ -8,6 +8,7 @@ var ValidationRules = {
 			 if($.trim($("#" + itemId).val())){
 				 return true;
 			 }else{
+				 //console.log("msg:"+msg);
 				 return msg;
 			 }
 		 }
@@ -164,12 +165,18 @@ var ValidationRules = {
 		 _eventList : {
 		 },
 		 _Validator : function(itemId, msg, item){
-
+			 //console.log("OKmsg"+msg);
 			 var _val = $.trim($("#"+itemId).val());
+			 //console.log("_val:"+_val);
 			 if(_val){
+				 //console.log("111");
+				 //console.log("111"+$("#"+itemId).attr("data-regular"));
 				var reg = eval($("#"+itemId).attr("data-regular"));
+				//console.log("reg"+reg);
 				var _result = new RegExp(reg).test(_val);
+				//console.log("_result"+_result);
 				if(!_result){
+					console.log("msg:"+msg);
 					return msg;
 				}
 			 }
