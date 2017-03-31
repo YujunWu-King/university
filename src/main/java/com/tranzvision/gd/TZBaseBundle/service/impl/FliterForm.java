@@ -1013,6 +1013,7 @@ public class FliterForm extends FrameworkImpl {
 		
 	
 	//获取可配置搜索SQL
+	/*
 	public String getQuerySQL(String[] resultFldArray,String[][] orderByArr, String strParams,String[] errorMsg){
 		JacksonUtil jacksonUtil= new JacksonUtil();
 		String strRet = null;
@@ -1023,7 +1024,7 @@ public class FliterForm extends FrameworkImpl {
 		
 		return strRet;
 	}
-	
+	*/
 	
 	public String getQuerySQL(String[] resultFldArray,String[][] orderByArr, String strParams,
 			String[] errorMsg) {
