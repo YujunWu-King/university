@@ -719,6 +719,12 @@
 	this.callParent();
 	},
     buttons: [{
+			text: '创建/管理活动',
+			iconCls:"edit",
+			name:"editAct",
+			hidden:true,
+			handler: 'editAct'
+		},{
 			text: '发布',
 			iconCls:"publish",
 			handler: 'publishArt'
