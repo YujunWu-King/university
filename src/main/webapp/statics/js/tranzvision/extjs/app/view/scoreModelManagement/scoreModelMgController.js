@@ -33,7 +33,7 @@
 		},
 		cmp = new ViewClass(config,function(){
 			//回调函数
-			btn.getParentByType('scoreModelMgList').getStore().reload();
+			btn.findParentByType('scoreModelMgList').getStore().reload();
 		});
 
 		cmp.on('afterrender',function(panel){
@@ -383,7 +383,7 @@
 					if(actType=="Add"){
 						panel.actType = "Update";
 						//设置成绩模型ID只读
-						var modelIdField = form.findField("modelId");
+						var modelIdField = form.getForm().findField("modelId");
 						modelIdField.setReadOnly(true);
 						modelIdField.addCls("lanage_1");
 						//显示tabpanel
@@ -413,7 +413,7 @@
 	//选择成绩模型树
 	pmtSearchScoreModelTree: function(field){
 		Ext.tzShowPromptSearch({
-            recname: 'PS_TZ_TREEDEFN',
+            recname: 'TZ_TREEDEFN',
             searchDesc: '选择成绩模型树',
             maxRow:20,
             condition:{
@@ -426,6 +426,10 @@
                         value: 'A', //成绩模型树
                         type: '01'
                     },
+                    TZ_EFFECT:{
+                    	value: 'Y',
+                        type: '01'
+                    }
                 },
                 srhConFields:{
                 	TREE_NAME:{
@@ -446,7 +450,7 @@
             },
             multiselect: false, 
             callback: function(selection){
-            	field.setValue("treeName",selection[0].data.TREE_NAME);
+            	field.setValue(selection[0].data.TREE_NAME);
             }
         });
 	},

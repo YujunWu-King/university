@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZBaseBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -627,7 +628,12 @@ public class FliterForm extends FrameworkImpl {
 									sqlWhere = sqlWhere + fieldName + "=" + value;
 									break;
 								}
-
+								/*System.out.println("fieldName   :"+fieldName);
+								System.out.println("value   :"+value);
+								System.out.println("sqlWhere   :"+sqlWhere);*/
+								
+								
+								
 							}
 						}
 					}
@@ -671,6 +677,8 @@ public class FliterForm extends FrameworkImpl {
 			} else {
 				sqlList = "SELECT " + result + " FROM " + tableName + sqlWhere + orderby + " limit ?,?";
 			}
+			
+		
 
 			try {
 				List<Map<String, Object>> resultlist = null;
@@ -708,10 +716,230 @@ public class FliterForm extends FrameworkImpl {
 
 	public String tzOther(String strOperateType, String comParams, String[] errorMsg) {
 		String strRet = "{}";
+		Map<String, Object> returMap = new HashMap<String, Object>();
 		try {
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			// JSONObject CLASSJson = PaseJsonUtil.getJson(comParams);
 			// String cfgSrhId = CLASSJson.getString("cfgSrhId");
+			if("getQuerySQL".equals(strOperateType)){
+				
+			
+				try{
+				ArrayList<String[]> list = new ArrayList<String[]>();
+
+				int numTotal = 0;
+				int maxNum = 0;
+
+				
+					// JSONObject CLASSJson = PaseJsonUtil.getJson(strParams);
+					// String cfgSrhId = CLASSJson.getString("cfgSrhId");
+					jacksonUtil.json2Map(comParams);
+					String cfgSrhId = jacksonUtil.getString("cfgSrhId");
+					
+				
+					String[] comPageRecArr = cfgSrhId.split("\\.");
+					if (comPageRecArr == null || comPageRecArr.length != 3) {
+						errorMsg[0] = "1";
+						errorMsg[1] = "可配置搜索参数有误，请于管理员联系";
+						return strRet;
+					}
+
+					/*** 获取可配置搜索组件、页面和view ****/
+					String comId = comPageRecArr[0];
+					String pageId = comPageRecArr[1];
+					String recname = comPageRecArr[2];
+
+					String sqlWhere = "";
+					// 搜索条件;
+					if (jacksonUtil.containsKey("condition")) {
+
+						// 得到搜索的操作符;
+						String operateKey = "";
+						String operate = "";
+
+						// 得到搜索的值;
+						String fldKey = "";
+						String fldValue = "";
+
+						Map<String, Object> conditionJson = jacksonUtil.getMap("condition");
+						System.out.println(jacksonUtil.getString("condition"));
+
+						
+						for (Map.Entry<String, Object> entry : conditionJson.entrySet()) {
+							String key = entry.getKey();
+							
+							if (key.indexOf("-value") > 0) {
+								fldKey = key;
+								String fieldName = "";
+								try {
+									fieldName = fldKey.replaceAll("-value", "");
+
+									operateKey = fieldName + "-operator";
+									operate = (String) conditionJson.get(operateKey);
+									System.out.println("operate= "+operate);
+								} catch (Exception e) {
+									errorMsg[0] = "1";
+									errorMsg[1] = "可配置搜索配置错误，请于管理员联系";
+									return strRet;
+								}
+								System.out.println("fieldName= "+fieldName);
+								
+								fldValue = (String) conditionJson.get(fldKey);
+								String value=fldValue;
+								if (fldValue == null) {
+									fldValue = "";
+								}
+								System.out.println("fldValue= "+fldValue);
+								
+								if ("".equals(sqlWhere)) {
+									sqlWhere = " WHERE ";
+								} else {
+									sqlWhere = sqlWhere + " AND ";
+								}
+
+								// 操作符;
+								if ("0".equals(operate.substring(0, 1))) {
+									operate = operate.substring(1);
+								}
+
+								switch (Integer.parseInt(operate)) {
+								case 1:
+									// 等于;
+									operate = "=";
+									value = "'" + fldValue + "'";
+									sqlWhere = sqlWhere + fieldName + operate + value;
+									break;
+								case 2:
+									// 不等于;
+									operate = "<>";
+									sqlWhere = sqlWhere + fieldName + operate + value;
+									break;
+								case 3:
+									// 大于;
+									operate = ">";
+									sqlWhere = sqlWhere + fieldName + operate + value;
+									break;
+								case 4:
+									// 大于等于;
+									operate = ">=";
+									sqlWhere = sqlWhere + fieldName + operate + value;
+									break;
+								case 5:
+									// 小于;
+									operate = "<";
+									sqlWhere = sqlWhere + fieldName + operate + value;
+									break;
+								case 6:
+									// 小于等于;
+									operate = "<=";
+									sqlWhere = sqlWhere + fieldName + operate + value;
+									break;
+								case 7:
+									// 包含;
+									
+										value = "'%" + fldValue + "%'";
+									
+									sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+									break;
+								case 8:
+									// 开始于…;
+									
+										value = "'" + fldValue + "%'";
+									
+									sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+									break;
+								case 9:
+									// 结束于…;
+									
+										value = "'%" + fldValue + "'";
+									
+									sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+									break;
+								case 10:
+									fldValue = fldValue.replaceAll(" ", ",");
+									fldValue = fldValue.trim();
+									String[] inArr = fldValue.split(",");
+
+									int inArrLen = inArr.length;
+									if (inArrLen > 0) {
+										value = "";
+										/*if ("Y".equals(isChar)) {
+											for (int ii = 0; ii < inArrLen; ii++) {
+												value = value + ",'" + inArr[ii] + "'";
+											}
+
+										} else {
+											for (int ii = 0; ii < inArrLen; ii++) {
+												value = value + "," + inArr[ii];
+											}
+										}*/
+										value = value.substring(1);
+										value = "(" + value + ")";
+									}
+
+									sqlWhere = sqlWhere + fieldName + " IN " + value;
+									break;
+								case 11:
+									// 为空;
+									/**
+									 * if("Y".equals(isChar)){ sqlWhere =
+									 * sqlWhere + fieldName + " = ' '"; }else{
+									 * sqlWhere = sqlWhere + fieldName +
+									 * " IS NULL"; }
+									 **/
+									sqlWhere = sqlWhere + fieldName + " IS NULL";
+									break;
+								case 12:
+									// 不为空;
+									/***
+									 * if("Y".equals(isChar)){ sqlWhere =
+									 * sqlWhere + fieldName + " <> ' '"; }else{
+									 * sqlWhere = sqlWhere + fieldName +
+									 * " IS NOT NULL"; }
+									 ***/
+									sqlWhere = sqlWhere + fieldName + " IS NOT NULL";
+									break;
+
+								default:
+									sqlWhere = sqlWhere + fieldName + "=" + value;
+									break;
+								}
+								
+							}
+							
+
+						}
+						
+					}
+				
+					
+					
+					
+					String orderby = "";
+					
+					// 查询结果;
+					String sqlList = "";
+					sqlList = "SELECT OPRID FROM PS_TZ_REG_USE2_V" + sqlWhere + orderby;
+					
+					strRet=sqlList;
+					
+					
+					returMap.put("SQL", sqlList);
+					System.out.println(sqlList);
+					
+					
+					
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					errorMsg[0] = "1";
+					errorMsg[1] = e.toString();
+				}
+			//	return strRet;
+				return jacksonUtil.Map2json(returMap);
+				
+			}else{
+			
 			jacksonUtil.json2Map(comParams);
 			String cfgSrhId = jacksonUtil.getString("cfgSrhId");
 
@@ -771,6 +999,7 @@ public class FliterForm extends FrameworkImpl {
 			} else {
 				strRet = "{\"success\": \"true\"}";
 			}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
@@ -778,6 +1007,20 @@ public class FliterForm extends FrameworkImpl {
 			strRet = "{\"success\": \"false\"}";
 		}
 
+		return strRet;
+		
+	}
+		
+	
+	//获取可配置搜索SQL
+	public String getQuerySQL(String[] resultFldArray,String[][] orderByArr, String strParams,String[] errorMsg){
+		JacksonUtil jacksonUtil= new JacksonUtil();
+		String strRet = null;
+		
+		// 结果值;
+				
+				
+		
 		return strRet;
 	}
 	
