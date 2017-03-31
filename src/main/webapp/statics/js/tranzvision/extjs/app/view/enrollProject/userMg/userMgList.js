@@ -56,7 +56,7 @@
 					handler:'saveAsStaAud'	
 				},{
 					text:'搜索结果另存为听众',
-					handler:'saveAsStaAud'	
+					handler:'saveAsDynAud'	
 				}/*,{
 					text:'另存为动态听众',
 					handler:'saveAsDynAud'	

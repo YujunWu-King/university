@@ -1,4 +1,4 @@
-Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
+Ext.define('KitchenSink.view.enrollProject.userMg.userMgDynAud', {
     extend: 'Ext.window.Window',
     requires: [
                'Ext.data.*',
@@ -7,17 +7,15 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 			   'Ext.grid.filters.Filters',
                'Ext.toolbar.Paging',
                'Ext.ux.ProgressBarPager',
-			//  'tranzvision.extension.grid.column.Link',
-			//	'tranzvision.extension.grid.Exporter',
-       		   'KitchenSink.view.audienceManagement.newAudWindowStore',
+       		//   'KitchenSink.view.audienceManagement.newAudWindowStore',
 			//   'KitchenSink.view.audienceManagement.myEnrollmentClueController',
-       		
+               'KitchenSink.view.enrollProject.userMg.userMgAudStore'
            ],
-    xtype: 'newAudWindow', 
+    xtype: 'newDynAudWindow', 
     title: '听众信息', 
-	reference: 'newAudWindow',
+	reference: 'newDynAudWindow',
     width: 600,
-    height: 620,
+    height: 550,
     minWidth: 300,
     minHeight: 380,
     layout: 'fit',
@@ -27,14 +25,8 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 	actType: 'add',
 	scrollable: true,  
 
-	initComponent: function () { 
-		
-	//	var audId = store.audId;
-	//	console.log(audId);
-		
-		var store = new KitchenSink.view.audienceManagement.newAudWindowStore();
-		
-		
+	initComponent: function () {
+		var store = new KitchenSink.view.enrollProject.userMg.userMgAudStore();
 		
         Ext.apply(this, {
 	items: [{
@@ -83,7 +75,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
             displayField: 'TSDesc',
             store: new KitchenSink.view.common.store.appTransStore("TZ_AUD_STAT"),
             queryMode: 'local',
-          //  value: '1',
+            value: '1',
             allowBlank: false,
            
 		},{
@@ -95,7 +87,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 	            store: new KitchenSink.view.common.store.appTransStore("TZ_AUD_TYPE"),
 	            queryMode: 'local',
 	         
-	        //    value: '1',
+	            value: '2',
 	            allowBlank: false,
 	            listeners: {
 					"change": function( cbox , newValue, oldValue,lastValue){
@@ -126,42 +118,23 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 			xtype: 'textarea',
 			fieldLabel: Ext.tzGetResourse("TZ_AUD_COM.TZ_AUD_LIST_STD.tips","备注"),
 			name: 'audMS'
-		},{
+		}
+		,{
 			xtype: 'textarea',
 			fieldLabel: Ext.tzGetResourse("TZ_AUD_COM.TZ_AUD_LIST_STD.sql","SQL"),
 			name: 'audSQL',
-		/*	listeners: {
-				"change": function( cbox , newValue, oldValue,lastValue){
-					//必填
-					
-					var audSQLs=cbox.findParentByType("form").getForm().findField("audSQL");
-				//	console.log(externalLink);
-					
-					
-					var form = cbox.findParentByType("form").getForm();
-					//表单数据
-						var formParams = form.getValues();
-						var audTypeNow =formParams["audType"];
-						
-						 console.log(audTypeNow);
-					
-					
-					if(lastValue=="1"){
-					
-						audSQLs.allowBlank = true;
-					}else{
-						audSQLs.allowBlank = false;
-					}
-				}
-			}
-			*/
+		
 			
-		},{
+		}
+		
+		,{
 			
 	            xtype:'grid',
 	            frame: true,
+	            maxheight:300,
+	            minHeight: 220,
 			//	name: 'audItemGrid',
-	/*			dockedItems:[{
+			/*	dockedItems:[{
 	        		xtype:"toolbar",
 	        		items:[
 	        			{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchComList"},"-",
@@ -171,9 +144,10 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 	        	}],
 	        	*/
 				columnLines: true,
-				selModel: {
+			/*	selModel: {
 	                type: 'checkboxmodel'
 	            },
+	            */
 	            style:"margin:10px",
 				reference: 'audItemGrid',
 				
@@ -183,20 +157,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 				
 				plugins: {
 							ptype: 'cellediting',
-							clicksToEdit: 1
-						//	pluginId: 'applyItemCellediting',
-						/*	listeners: {
-								beforeedit: function( editor, context, eOpts ){
-									
-									 var appplyItenId = context.record.data.applyItemId;
-									 if(appplyItenId =="TZ_CYR_NAME" || appplyItenId =="TZ_ZY_EMAIL" || appplyItenId =="TZ_ZY_SJ"){
-											
-										  Ext.Msg.alert("提示","【姓名】、【邮箱】、【手机】为不可修改项");
-										  editor.cancelEdit();
-									 }
-								}
-							}
-	        			*/		
+					
 	    						},
 	            viewConfig: {
 									plugins: {
@@ -280,7 +241,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 	                align:'center',
 	                xtype: 'actioncolumn',
 	 			   items:[
-	 			   	  {iconCls: 'remove',tooltip: '删除',handler: 'deleteComRegInfo'}
+	 			   	  {iconCls: 'remove',tooltip: '删除',handler: 'deleteAudInfo'}
 	 			   ]
 	             }],
 	           
