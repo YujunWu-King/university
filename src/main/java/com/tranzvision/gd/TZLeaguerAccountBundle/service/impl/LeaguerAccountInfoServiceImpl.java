@@ -381,12 +381,26 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					jdbcTemplate.update(updateJhuoZt, new Object[]{strJihuoZt,strOprId});
 					
 				    int i = psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
-					if (i > 0) {
-						returnJsonMap.replace("OPRID", strOprId);
-					} else {
-						errMsg[0] = "1";
-						errMsg[1] = "信息更新保存失败";
+				    
+				    //保存报名表提交状态
+				    ArrayList<String> appStatusUtil=new ArrayList<String>();
+				    appStatusUtil=(ArrayList<String>) map.get("updateStatus");
+				    if(appStatusUtil!=null&&appStatusUtil.size()>0){
+					for (Object obj : appStatusUtil) {
+					    Map<String, Object> mapFormData = (Map<String, Object>) obj;
+					    String strAppInsId = String.valueOf(mapFormData.get("appInsId"));					    
+					    String strStatus = String.valueOf(mapFormData.get("appSubStatus"));
+					    String StrUpdateSql = "UPDATE PS_TZ_APP_INS_T SET TZ_APP_FORM_STA='" + strStatus + "' WHERE TZ_APP_INS_ID='" + strAppInsId + "'";
+					    jdbcTemplate.update(StrUpdateSql, new Object[]{});
 					}
+				    }
+				    
+				    if (i > 0) {
+					returnJsonMap.replace("OPRID", strOprId);
+				    } else {
+					errMsg[0] = "1";
+					errMsg[1] = "信息更新保存失败";
+				    }
 				}else{
 					errMsg[0] = "1";
 					errMsg[1] = "参数错误";

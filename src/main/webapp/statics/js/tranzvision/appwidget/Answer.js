@@ -1075,7 +1075,7 @@ var SurveyBuild = {
         //if (confirm("是否删除该条信息？")) {
 		
         var index = $(el).closest(".main_inner_content_para").index();
-        console.log("index:"+index);
+        //console.log("index:"+index);
         var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
         if (index > 0) {
             $(el).closest(".main_inner_content_para").animate({height: 'hide',opacity: 'hide'},'slow',function() {
