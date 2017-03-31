@@ -66,7 +66,8 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgDynAud', {
 		}, {
 			xtype: 'textfield',
 			fieldLabel: Ext.tzGetResourse("TZ_AUD_COM.TZ_AUD_LIST_STD.audName","听众名称"),
-			name: 'audName'
+			name: 'audName',
+			allowBlank: false,
 		}, {
 			xtype: 'combobox',
 			fieldLabel: Ext.tzGetResourse("TZ_AUD_COM.TZ_AUD_LIST_STD.audStat","听众状态"),

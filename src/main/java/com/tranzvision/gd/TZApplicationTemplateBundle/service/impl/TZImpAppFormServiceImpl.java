@@ -583,9 +583,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 							} else {
 								if (TZ_IS_APP_OPEN != null && TZ_IS_APP_OPEN.equals("Y")) {
 									strTplId = TZ_APP_MODAL_ID;
-									String seq = "SELECT MAX(cast(TZ_APP_INS_ID as unsigned int)) + 1 FROM PS_TZ_APP_INS_T";
-									strAppInsId = sqlQuery.queryForObject(seq, "String");
-//									strAppInsId = String.valueOf(getSeqNum.getSeqNum("TZ_APP_INS_T", "TZ_APP_INS_ID"));
+									strAppInsId = String.valueOf(getSeqNum.getSeqNum("TZ_APP_INS_T", "TZ_APP_INS_ID"));
 									numAppInsId = Long.parseLong(strAppInsId);
 								}
 							}
@@ -694,7 +692,9 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
 							strOtype, isPwd);
-
+					if(StringUtils.isNotBlank(strMsg)){
+						logger.info("---saveAppForm error---" + strMsg);
+					}
 					logger.info("报名表保存SAVE数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("SUBMIT".equals(strOtype)) {
 					logger.info("报名表保存SUBMIT数据Begin");
@@ -704,6 +704,9 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
 							strOtype, isPwd);
 
+					if(StringUtils.isNotBlank(strMsg)){
+						logger.info("---SUBMIT saveAppForm error---" + strMsg);
+					}
 					if ("".equals(strMsg)) {
 						// 如果是推荐信，则提交后发送邮件
 						if ("TJX".equals(strTplType)) {
@@ -777,8 +780,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			}
 
 			StringBuffer url = request.getRequestURL();
-			String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length())
-					.append("/").toString();
+			String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
 
 			/* 问卷密码是否正确 BEGIN */
 			if (strEType.equals("PASSWORD")) {
@@ -788,19 +790,16 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					password = formDataMap.get("PASSWORD").toString();
 				}
 				boolRtn = tzOnlineAppRulesImpl.checkTJXPwd(dataPwd, language, password);
-				//// //logger.info("boolRtn:" + boolRtn);
 				if (!boolRtn) {
 					successFlag = "1";
 					strMsg = tzOnlineAppRulesImpl.msg;
 				} else {
 					Cookie cookie = new Cookie("SURVEY_TJX_IS_PASSWORD", "");
-					// logger.info("Domain=" + tempContextUrl);
 					cookie.setDomain(tempContextUrl);
 					cookie.setPath("/");
 					cookie.setMaxAge(-1);
 					cookie.setValue(appInsId + "_" + appTplId + "_Y");
 					response.addCookie(cookie);
-					//// //logger.info("ADD cookie");
 				}
 				return "{\"code\": \"" + successFlag + "\",\"msg\": \"" + strMsg + "\"}";
 			} else if (strEType.equals("PWDHTML")) {
@@ -810,20 +809,16 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					String contextUrl = request.getContextPath();
 					String pwdError = "请填写密码";
 
-					String PWDHTML = tzGDObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false,
-							Pwdname, strSubmit, pwdError, contextUrl);
+					String PWDHTML = tzGDObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false, Pwdname, strSubmit, pwdError, contextUrl);
 					return PWDHTML;
 				} catch (TzSystemException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return "";
 				}
-
 			}
 			/* 问卷密码是否正确 END */
-
 			return null;
-
 		} else {
 			return result;
 		}
@@ -922,8 +917,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 							if ("Y".equals(strIsDoubleLine)) {
 
 								if (strClassName.equals("LayoutControls")) {
-									this.saveDhLineNum(strItemIdLevel0, numAppInsId,
-											(short) ((Map<String, Object>) mapChildrens1.get(0)).size());
+									this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) ((Map<String, Object>) mapChildrens1.get(0)).size());
 								} else {
 									this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
 								}
@@ -932,8 +926,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 									// 多行容器
 									Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
 									for (Entry<String, Object> entryChildren : mapChildren1.entrySet()) {
-										Map<String, Object> mapJsonChildrenItems = (Map<String, Object>) entryChildren
-												.getValue();
+										Map<String, Object> mapJsonChildrenItems = (Map<String, Object>) entryChildren.getValue();
 										String strItemIdLevel1 = "";
 										if (mapJsonChildrenItems.containsKey("itemId")) {
 											strItemIdLevel1 = String.valueOf(mapJsonChildrenItems.get("itemId"));
@@ -942,13 +935,11 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 											// 解决分组框的某些组合控件的问题
 											List<Map<String, Object>> mapChildrens2 = null;
 											try {
-												mapChildrens2 = (ArrayList<Map<String, Object>>) mapJsonChildrenItems
-														.get("children");
+												mapChildrens2 = (ArrayList<Map<String, Object>>) mapJsonChildrenItems.get("children");
 											} catch (Exception e) {
 												// e.printStackTrace();
 												mapChildrens2 = new ArrayList<Map<String, Object>>();
-												Map<String, Object> cmap = (Map<String, Object>) mapJsonChildrenItems
-														.get("children");
+												Map<String, Object> cmap = (Map<String, Object>) mapJsonChildrenItems.get("children");
 												Map<String, Object> ccmap = null;
 												for (String key : cmap.keySet()) {
 													ccmap = (Map<String, Object>) cmap.get(key);
@@ -964,8 +955,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 												// 多行容器中的单行容器
 												for (Object children2 : mapChildrens2) {
 													Map<String, Object> mapChildren2 = (Map<String, Object>) children2;
-													this.savePerXxxIns(strItemIdLevel0 + strItemIdLevel1, mapChildren2,
-															numAppInsId);
+													this.savePerXxxIns(strItemIdLevel0 + strItemIdLevel1, mapChildren2, numAppInsId);
 												}
 											} else {
 												// 多行容器中的附件
@@ -975,8 +965,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 													if ("F".equals(strStorageType)) {
 														for (Object children2 : mapChildrens2) {
 															Map<String, Object> mapChildren2 = (Map<String, Object>) children2;
-															this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1,
-																	mapChildren2, numAppInsId,oprid);
+															this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1, mapChildren2, numAppInsId,oprid);
 														}
 													}
 												}
@@ -1885,8 +1874,8 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 
 			if (strTjxId == null || "".equals(strTjxId)) {
 				String str_seq1 = String.valueOf((int) (Math.random() * 10000000));
-				
-				String str_seq2 = "00000000000000" + RandomStringUtils.random(5, false, true);
+				String str_seq2 = "00000000000000"
+						+ String.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
 				str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
 				strTjxId = str_seq1 + str_seq2;
 			}else{
@@ -1902,9 +1891,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				psTzKsTjxTbl = new PsTzKsTjxTbl();
 				psTzKsTjxTbl.setTzRefLetterId(strTjxId);
 				psTzKsTjxTbl.setTzAppInsId(strInsId);
-				String seq = "SELECT MAX(cast(TZ_APP_INS_ID as unsigned int)) + 1 FROM PS_TZ_APP_INS_T";
-				String tzTjxAppInsId = sqlQuery.queryForObject(seq, "String");
-//				String tzTjxAppInsId = String.valueOf(getSeqNum.getSeqNum("TZ_APP_INS_T", "TZ_APP_INS_ID"));
+				String tzTjxAppInsId = String.valueOf(getSeqNum.getSeqNum("TZ_APP_INS_T", "TZ_APP_INS_ID"));
 				psTzKsTjxTbl.setTzTjxAppInsId(Long.parseLong(tzTjxAppInsId));
 				psTzKsTjxTbl.setOprid(strOprid);
 				psTzKsTjxTbl.setTzTjxType(strTjxType);
