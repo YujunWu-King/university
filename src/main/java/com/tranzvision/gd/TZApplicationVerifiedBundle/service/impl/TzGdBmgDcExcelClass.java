@@ -28,8 +28,6 @@ public class TzGdBmgDcExcelClass {
 
 		try {
 			
-			TzGdBmgExcelUtility tzGdBmgExcelUtility = new TzGdBmgExcelUtility();
-			
 			jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
 						new Object[] { "7", processinstance });
 			jdbcTemplate.execute("commit");
@@ -97,7 +95,7 @@ public class TzGdBmgDcExcelClass {
 				 */
 				List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 
-				// Hardcode定义取值视图;
+				// Hardcode定义页面展现取值视图（该部分数据也可导入到Excel中）;
 				String appFormInfoViewSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
 				String appFormInfoView = "";
 				try {
@@ -107,6 +105,15 @@ public class TzGdBmgDcExcelClass {
 					appFormInfoView = "";
 				}
 
+				// Hardcode定义导出到Excel取值视图;
+				String exportExcelViewSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
+				String exportExcelView = "";
+				try {
+					exportExcelView = jdbcTemplate.queryForObject(exportExcelViewSQL,
+							new Object[] { "TZ_FORM_EXL_REC" }, String.class);
+				} catch (Exception e) {
+					exportExcelView = "";
+				}
 				
 				for (int i = 0; i < row_count; i++) {
 					colum = 0;
@@ -129,20 +136,31 @@ public class TzGdBmgDcExcelClass {
 							
 							//不是报名表字段看看是不是工作表中的字段;
 							if(appFormFieldList == null || appFormFieldList.size() == 0){
-								sqlAppFormField = "select A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,'R' AS TZ_XXX_CCLX,'' AS TZ_COM_LMC,'' AS TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A,PS_TZ_FORM_DC_VW B  where B.FILED1 =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
+								sqlAppFormField = "select A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,'R' AS TZ_XXX_CCLX,'' AS TZ_COM_LMC,'' AS TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A,((SELECT COLUMN_NAME FROM `INFORMATION_SCHEMA`.`COLUMNS`WHERE (`information_schema`.`COLUMNS`.`TABLE_SCHEMA` = DATABASE()) AND TABLE_NAME=?)) B  where B.COLUMN_NAME =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
 								try {
-									appFormFieldList = jdbcTemplate.queryForList(sqlAppFormField,new Object[] { excelTpl, arrExcelTplField.get(j)[0] });
+									appFormFieldList = jdbcTemplate.queryForList(sqlAppFormField,new Object[] { appFormInfoView,excelTpl, arrExcelTplField.get(j)[0] });
+								} catch (Exception e) {
+									appFormFieldList = null;
+								}
+							}
+
+							//是否是导出到Excel中的字段;
+							if(appFormFieldList == null || appFormFieldList.size() == 0){
+								sqlAppFormField = "select A.TZ_FORM_FLD_ID,A.TZ_CODE_TABLE_ID,'E' AS TZ_XXX_CCLX,'' AS TZ_COM_LMC,'' AS TZ_XXX_NO FROM PS_TZ_FRMFLD_GL_T A,((SELECT COLUMN_NAME FROM `INFORMATION_SCHEMA`.`COLUMNS`WHERE (`information_schema`.`COLUMNS`.`TABLE_SCHEMA` = DATABASE()) AND TABLE_NAME=?)) B  where B.COLUMN_NAME =A.TZ_FORM_FLD_ID AND A.TZ_EXPORT_TMP_ID=? AND A.TZ_DC_FIELD_ID=? ORDER BY A.TZ_SORT_NUM ASC";
+								try {
+									appFormFieldList = jdbcTemplate.queryForList(sqlAppFormField,new Object[] { exportExcelView,excelTpl, arrExcelTplField.get(j)[0] });
 								} catch (Exception e) {
 									appFormFieldList = null;
 								}
 							
 							}
-
+							
+							/*
+							 * 报名表字段，码表，存储类型，控件类名称，
+							 * 下拉存储描述信息项编号
+							 */
 							String strAppFormField = "", strCodeTable = "", strSaveType = "", strComClassName = "",
-									strInfoSelectID = ""; /*
-															 * 报名表字段，码表，存储类型，控件类名称，
-															 * 下拉存储描述信息项编号
-															 */
+									strInfoSelectID = ""; 
 							
 							if (appFormFieldList != null && list.size() > 0) {
 								for (int k = 0; k < appFormFieldList.size(); k++) {
@@ -159,14 +177,11 @@ public class TzGdBmgDcExcelClass {
 									boolean strSelectFieldBoolean = false;
 
 									boolean isSingleValue = true; /* 一个信息项是否对应单个值 */
-									boolean isRecordValue = false; /* 是否从Hardcode定义的表中取值 */
-
-									// 是否其他类型
-									boolean strSaveTypeBoolean = true;
+									boolean isDisplayRecordValue = false; /* 是否是展现在页面中的值 */
+									boolean isExportRecordValue = false; /* 是否是导出到Excel的值 */
+									
 									/* 短文本 */
 									if ("S".equals(strSaveType)) {
-										strSaveTypeBoolean = false;
-										
 										if ("bmr".equals(strComClassName.substring(0, 3))||(strInfoSelectID!=null&&strInfoSelectID.indexOf("CC_Batch")>-1)) {
 											strSelectField = "TZ_APP_L_TEXT"; /* 报名人相关控件和组合控件选择批次取值从长字符串取描述 */
 										} else {
@@ -180,7 +195,6 @@ public class TzGdBmgDcExcelClass {
 									}
 									/* 长文本 */
 									if ("L".equals(strSaveType)) {
-										strSaveTypeBoolean = false;
 										if (strCodeTable == null || "".equals(strCodeTable)) {
 											strSelectField = "TZ_APP_L_TEXT";
 										} else {
@@ -190,25 +204,17 @@ public class TzGdBmgDcExcelClass {
 									}
 									/* 可选框 */
 									if ("D".equals(strSaveType)) {
-										strSaveTypeBoolean = false;
-
 										isSingleValue = false;
 									}
-									/* 表存储 */
+									/* 表存储 ：管理端展现数据*/
 									if ("R".equals(strSaveType)) {
-										strSaveTypeBoolean = false;
-
 										isSingleValue = false;
-										isRecordValue = true;
+										isDisplayRecordValue = true;
 									}
-									/* 其他值 */
-									if (strSaveTypeBoolean) {
-										if (strCodeTable == null || "".equals(strCodeTable)) {
-											strSelectField = "TZ_APP_S_TEXT";
-										} else {
-											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=A.TZ_APP_S_TEXT AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE <= now())";
-											strSelectFieldBoolean = true;
-										}
+									/* 表存储 ：导出到Excel数据*/
+									if ("E".equals(strSaveType)) {
+										isSingleValue = false;
+										isExportRecordValue = true;
 									}
 
 									String sql1 = "";
@@ -251,9 +257,10 @@ public class TzGdBmgDcExcelClass {
 										}
 
 									} else {
-										if (isRecordValue) {
+										if (isDisplayRecordValue||isExportRecordValue) {
 											
-											if (appFormInfoView != null && !"".equals(appFormInfoView)) {
+											//数据展现视图取值
+											if (appFormInfoView != null && !"".equals(appFormInfoView)&&isDisplayRecordValue) {
 												String sql3 = "SELECT " + strAppFormField + " FROM " + appFormInfoView
 														+ " WHERE TZ_APP_INS_ID=?";
 												try {
@@ -262,18 +269,32 @@ public class TzGdBmgDcExcelClass {
 												} catch (Exception e) {
 													strAppFormFieldValue = "";
 												}
-
-												if (strCodeTable != null && !"".equals(strCodeTable)) {
-													try {
-														strAppFormFieldValue = jdbcTemplate.queryForObject(
-																"SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now()",
-																new Object[] { strCodeTable, strAppFormFieldValue },
-																String.class);
-													} catch (Exception e) {
-														strAppFormFieldValue = "";
-													}
+											}
+											
+											//导出到Excel视图取值
+											if (exportExcelView != null && !"".equals(exportExcelView)&&isExportRecordValue) {
+												String sql3 = "SELECT " + strAppFormField + " FROM " + exportExcelView
+														+ " WHERE TZ_APP_INS_ID=?";
+												try {
+													strAppFormFieldValue = jdbcTemplate.queryForObject(sql3,
+															new Object[] { Long.parseLong(arrAppInsID[i]) }, String.class);
+												} catch (Exception e) {
+													strAppFormFieldValue = "";
 												}
 											}
+											
+											//获取转换值描述
+											if (strCodeTable != null && !"".equals(strCodeTable)&&strAppFormFieldValue != null && !"".equals(strAppFormFieldValue)) {
+												try {
+													strAppFormFieldValue = jdbcTemplate.queryForObject(
+															"SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now()",
+															new Object[] { strCodeTable, strAppFormFieldValue },
+															String.class);
+												} catch (Exception e) {
+													strAppFormFieldValue = "";
+												}
+											}
+											
 										} else {
 											// 多选框和单选框;
 											String sqlMutilValue = "SELECT TZ_APP_S_TEXT,TZ_KXX_QTZ FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH=? AND TZ_IS_CHECKED='Y'";
