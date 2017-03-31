@@ -1277,13 +1277,16 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 		psTzEmlTaskAetMapper.insert(psTzEmlTaskAet);
 
 		try {
-			BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZGD_QF_MS_AE");
+			String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+			String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
+			BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZGD_QF_MS_AE");
 			// 指定调度作业的相关参数
 			EngineParameters schdProcessParameters = new EngineParameters();
 
 			schdProcessParameters.setBatchServer("");
 			schdProcessParameters.setCycleExpression("");
-			schdProcessParameters.setLoginUserAccount("Admin");
+			schdProcessParameters.setLoginUserAccount(currentAccountId);
 			// 不是定时发送的;
 			if (!"Y".equals(strdsfsFlag)) {
 				schdProcessParameters.setPlanExcuteDateTime(new Date());

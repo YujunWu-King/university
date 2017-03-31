@@ -204,14 +204,16 @@ public class TzInterviewExpExcelImpl extends FrameworkImpl{
 				psTzMsArrDceAet.setTzExpParamsStr(actForm);
 				psTzMsArrDceAetMapper.insert(psTzMsArrDceAet);
 				
+				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				
-				BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZ_MSARR_EXP_EXCEL_PROC");
+				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_MSARR_EXP_EXCEL_PROC");
 				//指定调度作业的相关参数
 				EngineParameters schdProcessParameters = new EngineParameters();
 
-				schdProcessParameters.setBatchServer("SEM_GD_001");
+				schdProcessParameters.setBatchServer("");
 				schdProcessParameters.setCycleExpression("");
-				schdProcessParameters.setLoginUserAccount("Admin");
+				schdProcessParameters.setLoginUserAccount(currentAccountId);
 				schdProcessParameters.setPlanExcuteDateTime(new Date());
 				/*
 				Date execDate = addToDate(new Date(),-30);
