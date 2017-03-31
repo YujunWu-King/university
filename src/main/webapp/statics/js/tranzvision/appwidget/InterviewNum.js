@@ -16,6 +16,12 @@ SurveyBuild.extend("InterviewNum", "baseComponent", {
         	//data.defaultval = "{%BIND:TZ_MSH_ID}";
         	//this._getDefaultVal(data);
         	//data.wzsm = data.value;
+            
+            if (data.wzsm =="") {
+            	data.defaultval = "{%BIND:TZ_MSH_ID}";
+            	this._getDefaultVal(data);
+            	data.wzsm = data.value;      	
+            }
         	
         	
             c += '<div class="input-list">';

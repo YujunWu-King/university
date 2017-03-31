@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +27,6 @@ import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
-import com.tranzvision.gd.TZRecommendationBundle.service.impl.TzTjxThanksServiceImpl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppCcTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhccTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhhsTMapper;
@@ -80,9 +78,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private TZGDObject tzGDObject;
-
-	@Autowired
-	private TzTjxThanksServiceImpl tzTjxThanksServiceImpl;
 
 	@Autowired
 	private tzOnlineAppRulesImpl tzOnlineAppRulesImpl;
@@ -513,28 +508,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			Map<String, Object> mapData = null;
 			String sql = "";
 			if (!"".equals(strClassId) && strClassId != null) {
-				// 如果跟换 class那么检查 新的classId 是否已经存在并且已经提交 不允许保存，报错
-				// 整体逻辑变更，如果跟换班级，那么 修改 TZ_FORM_WRK_T 里面的内容 by caoy 20170118
-				if (!"".equals(strNewClassId) && strNewClassId != null) {
-					if (!strClassId.equals(strNewClassId)) {
-						if (!"TZ_GUEST".equals(oprid) && !"".equals(oprid)) {
-							sql = " SELECT COUNT(OPRID) from PS_TZ_FORM_WRK_T A,PS_TZ_APP_INS_T B where  A.TZ_CLASS_ID=? AND A.OPRID=? AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA='U'";
-							int have = sqlQuery.queryForObject(sql, new Object[] { strNewClassId, oprid }, "Integer");
-							if (have > 0) {
-								errMsg[0] = "1";
-								errMsg[1] = strClassError;
-								strMsg = strClassError;
-							}
-						}
-						chageClass = true;
-						strClassId = strNewClassId;
-					}
-				}
-
-//				logger.info("strClassId:" + strClassId);
-//				logger.info("tempClassId:" + tempClassId);
-//				logger.info("numAppInsId:" + numAppInsId);
-
 				if (!errMsg[0].equals("1")) {
 					mapData = null;
 
@@ -719,35 +692,10 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
 							strOtype, isPwd);
-
-					logger.info("报名表保存SAVE数据End,Time=" + (System.currentTimeMillis() - time2));
-				} else if ("PRE".equals(strOtype)) {
-//					logger.info("报名表保存PRE数据Begin");
-					time2 = System.currentTimeMillis();
-					// 先保存数据
-					strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
-							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							"SAVE", isPwd);
-
-					if ("".equals(strMsg)) {
-						strMsg = this.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId,
-								strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,
-								strClassId, strPwd, strOtype, isPwd);
-
-						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
-							// 如果是管理员并且可编辑的话继续 By WRL@20161027
-						} else {
-							// 如果是推荐信，则提交后发送邮件
-							if ("TJX".equals(strTplType)) {
-								strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId,
-										strTplType, strBatchId, strPwd, isPwd,oprid);
-								String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
-							}
-							if ("BMB".equals(strTplType)) {
-							}
-						}
+					if(StringUtils.isNotBlank(strMsg)){
+						logger.info("---saveAppForm error---" + strMsg);
 					}
-//					logger.info("报名表保存PRE数据End,Time=" + (System.currentTimeMillis() - time2));
+					logger.info("报名表保存SAVE数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("SUBMIT".equals(strOtype)) {
 					logger.info("报名表保存SUBMIT数据Begin");
 					time2 = System.currentTimeMillis();
@@ -756,75 +704,26 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
 							strOtype, isPwd);
 
+					if(StringUtils.isNotBlank(strMsg)){
+						logger.info("---SUBMIT saveAppForm error---" + strMsg);
+					}
 					if ("".equals(strMsg)) {
-						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
-							// 如果是管理员并且可编辑的话继续 By WRL@20161027
-						} else {
-							// 如果是推荐信，则提交后发送邮件
-							if ("TJX".equals(strTplType)) {
-								strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId,
-										strTplType, strBatchId, strPwd, isPwd,oprid);
-								String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
-							}
-							if ("BMB".equals(strTplType)) {
-							}
+						// 如果是推荐信，则提交后发送邮件
+						if ("TJX".equals(strTplType)) {
+							strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId,
+									strTplType, strBatchId, strPwd, isPwd,oprid);
 						}
 					}
 					logger.info("报名表保存SUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
-				} else if ("CONFIRMSUBMIT".equals(strOtype)) {
-//					logger.info("报名表保存CONFIRMSUBMIT数据Begin");
-					time2 = System.currentTimeMillis();
-					/* 确认提交报名表 */
-					if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
-						// 如果是管理员并且可编辑的话继续 By WRL@20161027
-						this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
-					} else {
-						strMsg = this.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType,
-								strBatchId, strPwd, isPwd,oprid);
-						if ("BMB".equals(strTplType)) {
-							// 同步报名人联系方式
-							this.savaContactInfo(numAppInsId, strTplId, strAppOprId);
-						}
-					}
-//					logger.info("报名表保存CONFIRMSUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				}
-				
 			}
 
 			if (!"".equals(strMsg)) {
 				successFlag = "1";
 			}
 
-//			logger.info("报名表保存数据处理End,Time=" + (System.currentTimeMillis() - time));
-//			time = System.currentTimeMillis();
-
-//			logger.info("报名表保存页面完成状态Begin");
-			// 页面完成状态Json
-//			String strPageXxxBh = "";
-//			String strPageCompleteState = "";
-
 			ArrayList<Map<String, Object>> listJsonCompleteStateJson = new ArrayList<Map<String, Object>>();
-//			String sqlGetPageCompleteState = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = 'Page'";
-//			List<?> listGetPageCompleteState = sqlQuery.queryForList(sqlGetPageCompleteState,
-//					new Object[] { strTplId });
-//			Map<String, Object> MapGetPageCompleteState = null;
-//			Map<String, Object> strPageCompleteStateJson = null;
-//			String sqlPageHasCompleteFlag = "SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
-//			for (Object objDataGetPageCompleteState : listGetPageCompleteState) {
-//				MapGetPageCompleteState = (Map<String, Object>) objDataGetPageCompleteState;
-//				strPageXxxBh = MapGetPageCompleteState.get("TZ_XXX_BH") == null ? ""
-//						: String.valueOf(MapGetPageCompleteState.get("TZ_XXX_BH"));
-//
-//				strPageCompleteState = sqlQuery.queryForObject(sqlPageHasCompleteFlag,
-//						new Object[] { numAppInsId, strPageXxxBh }, "String");
-//				if (!"Y".equals(strPageCompleteState)) {
-//					strPageCompleteState = "N";
-//				}
-//				strPageCompleteStateJson = new HashMap<String, Object>();
-//				strPageCompleteStateJson.put("pageId", strPageXxxBh);
-//				strPageCompleteStateJson.put("completeState", strPageCompleteState);
-//				listJsonCompleteStateJson.add(strPageCompleteStateJson);
-//			}
+
 			Map<String, Object> mapJsonRet = new HashMap<String, Object>();
 			mapJsonRet.put("code", successFlag);
 			mapJsonRet.put("msg", strMsg);
@@ -833,12 +732,9 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			mapJsonRet.put("appInsVersionId", strAppInsVersionDb);
 			strRet = jacksonUtil.Map2json(mapJsonRet);
 
-//			logger.info("报名表保存页面完成状态End,Time=" + (System.currentTimeMillis() - time));
 			logger.info("------报名表保存开始End, Time= ------" + (System.currentTimeMillis() - time)/1000);
-		} // end-for
-
+		}
 		return strRet;
-
 	}
 
 	/**
@@ -884,8 +780,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			}
 
 			StringBuffer url = request.getRequestURL();
-			String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length())
-					.append("/").toString();
+			String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).append("/").toString();
 
 			/* 问卷密码是否正确 BEGIN */
 			if (strEType.equals("PASSWORD")) {
@@ -895,19 +790,16 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					password = formDataMap.get("PASSWORD").toString();
 				}
 				boolRtn = tzOnlineAppRulesImpl.checkTJXPwd(dataPwd, language, password);
-				//// //logger.info("boolRtn:" + boolRtn);
 				if (!boolRtn) {
 					successFlag = "1";
 					strMsg = tzOnlineAppRulesImpl.msg;
 				} else {
 					Cookie cookie = new Cookie("SURVEY_TJX_IS_PASSWORD", "");
-					// logger.info("Domain=" + tempContextUrl);
 					cookie.setDomain(tempContextUrl);
 					cookie.setPath("/");
 					cookie.setMaxAge(-1);
 					cookie.setValue(appInsId + "_" + appTplId + "_Y");
 					response.addCookie(cookie);
-					//// //logger.info("ADD cookie");
 				}
 				return "{\"code\": \"" + successFlag + "\",\"msg\": \"" + strMsg + "\"}";
 			} else if (strEType.equals("PWDHTML")) {
@@ -917,20 +809,16 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 					String contextUrl = request.getContextPath();
 					String pwdError = "请填写密码";
 
-					String PWDHTML = tzGDObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false,
-							Pwdname, strSubmit, pwdError, contextUrl);
+					String PWDHTML = tzGDObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false, Pwdname, strSubmit, pwdError, contextUrl);
 					return PWDHTML;
 				} catch (TzSystemException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return "";
 				}
-
 			}
 			/* 问卷密码是否正确 END */
-
 			return null;
-
 		} else {
 			return result;
 		}
@@ -945,134 +833,54 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 
 			String returnMsg = "";
 
-//			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			String oprid = strAppOprId;
-			// Long numAppInsId = Long.parseLong(strAppInsId);
 			try {
-				String sql = "";
-				// int count = 0;
-				String TZ_APP_FORM_STA = null;
-				String INS_ID = null;
-				boolean chageClass = false;
 
-				if (newClassId != null && !newClassId.equals(strClassId)) {
-					chageClass = true;
-				}
-
-				// modity by caoy 保存的时候，如果是 预提交状态 那么状态不改变
-				// 更换班级 需要变更 报名表和WOrk表 只需要保存一份实例
-				sql = "SELECT TZ_APP_INS_ID,TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
-				// count = sqlQuery.queryForObject(sql, new Object[] { numAppInsId
-				// }, "Integer");
-				Map<String, Object> mapData = null;
-
-				mapData = sqlQuery.queryForMap(sql, new Object[] { numAppInsId });
-
-				if (mapData != null) {
-					TZ_APP_FORM_STA = mapData.get("TZ_APP_FORM_STA") == null ? ""
-							: String.valueOf(mapData.get("TZ_APP_FORM_STA"));
-
-					INS_ID = mapData.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(mapData.get("TZ_APP_INS_ID"));
-				}
-
-				// logger.info("TZ_APPINS_JSON_STR:" + TZ_APP_FORM_STA);
-				// logger.info("strOtype:" + strOtype);
-				// if (count > 0) {
-				if (INS_ID != null && !INS_ID.equals("") && Long.parseLong(INS_ID) > 0) {
-					PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
-					psTzAppInsT.setTzAppInsId(numAppInsId);
-					psTzAppInsT.setTzAppTplId(strTplId);
-					psTzAppInsT.setTzAppInsVersion(strAppInsVersion);
-
-					if (strOtype.equals("PRE")) {
-						psTzAppInsT.setTzAppFormSta("P");
-					} else {
-						if (TZ_APP_FORM_STA.equals("P") && strAppInsState.equals("S")) {
-
-						} else {
-							psTzAppInsT.setTzAppFormSta(strAppInsState);
-						}
-					}
-					psTzAppInsT.setTzAppinsJsonStr(strJsonData);
-					psTzAppInsT.setRowLastmantOprid(oprid);
-					psTzAppInsT.setRowLastmantDttm(new Date());
-
-					if (isPwd != null && isPwd.equals("Y")) {
-						psTzAppInsT.setTzPwd(pwd);
-					}
-					psTzAppInsTMapper.updateByPrimaryKeySelective(psTzAppInsT);
+				PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
+				psTzAppInsT.setTzAppInsId(numAppInsId);
+				psTzAppInsT.setTzAppTplId(strTplId);
+				psTzAppInsT.setTzAppInsVersion(strAppInsVersion);
+				if (strOtype.equals("PRE")) {
+					psTzAppInsT.setTzAppFormSta("P");
 				} else {
-					PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
-					psTzAppInsT.setTzAppInsId(numAppInsId);
-					psTzAppInsT.setTzAppTplId(strTplId);
-					psTzAppInsT.setTzAppInsVersion(strAppInsVersion);
-					if (strOtype.equals("PRE")) {
-						psTzAppInsT.setTzAppFormSta("P");
-					} else {
-						psTzAppInsT.setTzAppFormSta(strAppInsState);
-					}
-					psTzAppInsT.setTzAppinsJsonStr(strJsonData);
-					psTzAppInsT.setRowAddedOprid(oprid);
-					psTzAppInsT.setRowAddedDttm(new Date());
-					psTzAppInsT.setRowLastmantOprid(oprid);
-					psTzAppInsT.setRowLastmantDttm(new Date());
-					if (isPwd != null && isPwd.equals("Y")) {
-						psTzAppInsT.setTzPwd(pwd);
-					}
-					psTzAppInsTMapper.insert(psTzAppInsT);
+					psTzAppInsT.setTzAppFormSta(strAppInsState);
 				}
-
+				psTzAppInsT.setTzAppinsJsonStr(strJsonData);
+				psTzAppInsT.setRowAddedOprid(oprid);
+				psTzAppInsT.setRowAddedDttm(new Date());
+				psTzAppInsT.setRowLastmantOprid(oprid);
+				psTzAppInsT.setRowLastmantDttm(new Date());
+				if (isPwd != null && isPwd.equals("Y")) {
+					psTzAppInsT.setTzPwd(pwd);
+				}
+				psTzAppInsTMapper.insert(psTzAppInsT);
+				logger.info("---实例表---" + strAppOprId + "   ----AppInsId---" + numAppInsId);
 				if ("BMB".equals(strTplType)) {
 					int count = 0;
-					// 如果是 变更班级，那么
-					if (chageClass) {
-
-						sql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
-						count = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "Integer");
-						if (count > 0) {
-							StringBuffer sb = new StringBuffer();
-							sb.append("UPDATE PS_TZ_FORM_WRK_T SET TZ_CLASS_ID=?,OPRID=?,TZ_APP_INS_ID=?,");
-							sb.append("TZ_BATCH_ID=?,ROW_ADDED_DTTM=?,ROW_ADDED_OPRID=?,ROW_LASTMANT_DTTM=?,");
-							sb.append("ROW_LASTMANT_OPRID=? where TZ_CLASS_ID = ? AND OPRID = ?");
-							sqlQuery.update(sb.toString(), new Object[] { newClassId, strAppOprId, numAppInsId, strBathId,
-									new Date(), oprid, new Date(), oprid, strClassId, strAppOprId });
-						} else {
-							PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
-							psTzFormWrkT.setTzClassId(newClassId);
-							psTzFormWrkT.setOprid(strAppOprId);
-							psTzFormWrkT.setTzAppInsId(numAppInsId);
-							psTzFormWrkT.setRowAddedOprid(oprid);
-							psTzFormWrkT.setRowAddedDttm(new Date());
-							psTzFormWrkT.setRowLastmantOprid(oprid);
-							psTzFormWrkT.setRowLastmantDttm(new Date());
-							psTzFormWrkT.setTzBatchId(strBathId);
-							psTzFormWrkTMapper.insert(psTzFormWrkT);
-						}
+					String sql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
+					count = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "Integer");
+					if (count > 0) {
+						PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
+						psTzFormWrkT.setTzClassId(strClassId);
+						psTzFormWrkT.setOprid(strAppOprId);
+						psTzFormWrkT.setTzAppInsId(numAppInsId);
+						psTzFormWrkT.setRowLastmantOprid(oprid);
+						psTzFormWrkT.setRowLastmantDttm(new Date());
+						psTzFormWrkT.setTzBatchId(strBathId);
+						psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
+						logger.info("---更新工作表---" + strAppOprId + "   ----AppInsId---" + numAppInsId);
 					} else {
-						count = 0;
-						sql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
-						count = sqlQuery.queryForObject(sql, new Object[] { strClassId, strAppOprId }, "Integer");
-						if (count > 0) {
-							PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
-							psTzFormWrkT.setTzClassId(strClassId);
-							psTzFormWrkT.setOprid(strAppOprId);
-							psTzFormWrkT.setTzAppInsId(numAppInsId);
-							psTzFormWrkT.setRowLastmantOprid(oprid);
-							psTzFormWrkT.setRowLastmantDttm(new Date());
-							psTzFormWrkT.setTzBatchId(strBathId);
-							psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
-						} else {
-							PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
-							psTzFormWrkT.setTzClassId(strClassId);
-							psTzFormWrkT.setOprid(strAppOprId);
-							psTzFormWrkT.setTzAppInsId(numAppInsId);
-							psTzFormWrkT.setRowAddedOprid(oprid);
-							psTzFormWrkT.setRowAddedDttm(new Date());
-							psTzFormWrkT.setRowLastmantOprid(oprid);
-							psTzFormWrkT.setRowLastmantDttm(new Date());
-							psTzFormWrkT.setTzBatchId(strBathId);
-							psTzFormWrkTMapper.insert(psTzFormWrkT);
-						}
+						PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
+						psTzFormWrkT.setTzClassId(strClassId);
+						psTzFormWrkT.setOprid(strAppOprId);
+						psTzFormWrkT.setTzAppInsId(numAppInsId);
+						psTzFormWrkT.setRowAddedOprid(oprid);
+						psTzFormWrkT.setRowAddedDttm(new Date());
+						psTzFormWrkT.setRowLastmantOprid(oprid);
+						psTzFormWrkT.setRowLastmantDttm(new Date());
+						psTzFormWrkT.setTzBatchId(strBathId);
+						psTzFormWrkTMapper.insert(psTzFormWrkT);
+						logger.info("---插入工作表---" + strAppOprId + "      ----AppInsId---" + numAppInsId);
 					}
 				}
 				JacksonUtil jacksonUtil = new JacksonUtil();
@@ -1109,8 +917,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 							if ("Y".equals(strIsDoubleLine)) {
 
 								if (strClassName.equals("LayoutControls")) {
-									this.saveDhLineNum(strItemIdLevel0, numAppInsId,
-											(short) ((Map<String, Object>) mapChildrens1.get(0)).size());
+									this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) ((Map<String, Object>) mapChildrens1.get(0)).size());
 								} else {
 									this.saveDhLineNum(strItemIdLevel0, numAppInsId, (short) mapChildrens1.size());
 								}
@@ -1119,8 +926,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 									// 多行容器
 									Map<String, Object> mapChildren1 = (Map<String, Object>) children1;
 									for (Entry<String, Object> entryChildren : mapChildren1.entrySet()) {
-										Map<String, Object> mapJsonChildrenItems = (Map<String, Object>) entryChildren
-												.getValue();
+										Map<String, Object> mapJsonChildrenItems = (Map<String, Object>) entryChildren.getValue();
 										String strItemIdLevel1 = "";
 										if (mapJsonChildrenItems.containsKey("itemId")) {
 											strItemIdLevel1 = String.valueOf(mapJsonChildrenItems.get("itemId"));
@@ -1129,13 +935,11 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 											// 解决分组框的某些组合控件的问题
 											List<Map<String, Object>> mapChildrens2 = null;
 											try {
-												mapChildrens2 = (ArrayList<Map<String, Object>>) mapJsonChildrenItems
-														.get("children");
+												mapChildrens2 = (ArrayList<Map<String, Object>>) mapJsonChildrenItems.get("children");
 											} catch (Exception e) {
 												// e.printStackTrace();
 												mapChildrens2 = new ArrayList<Map<String, Object>>();
-												Map<String, Object> cmap = (Map<String, Object>) mapJsonChildrenItems
-														.get("children");
+												Map<String, Object> cmap = (Map<String, Object>) mapJsonChildrenItems.get("children");
 												Map<String, Object> ccmap = null;
 												for (String key : cmap.keySet()) {
 													ccmap = (Map<String, Object>) cmap.get(key);
@@ -1151,8 +955,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 												// 多行容器中的单行容器
 												for (Object children2 : mapChildrens2) {
 													Map<String, Object> mapChildren2 = (Map<String, Object>) children2;
-													this.savePerXxxIns(strItemIdLevel0 + strItemIdLevel1, mapChildren2,
-															numAppInsId);
+													this.savePerXxxIns(strItemIdLevel0 + strItemIdLevel1, mapChildren2, numAppInsId);
 												}
 											} else {
 												// 多行容器中的附件
@@ -1162,8 +965,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 													if ("F".equals(strStorageType)) {
 														for (Object children2 : mapChildrens2) {
 															Map<String, Object> mapChildren2 = (Map<String, Object>) children2;
-															this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1,
-																	mapChildren2, numAppInsId,oprid);
+															this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1, mapChildren2, numAppInsId,oprid);
 														}
 													}
 												}
@@ -1175,24 +977,6 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 											if ("S".equals(strStorageType) || "L".equals(strStorageType)) {
 												// 多行容器中的普通字段
 												this.savePerXxxIns(strItemIdLevel0, mapJsonChildrenItems, numAppInsId);
-											} else if ("D".equals(strStorageType)) {
-												// 单选框或者复选框
-												if (mapJsonChildrenItems.containsKey("option")) {
-													Map<String, Object> mapOptions = (Map<String, Object>) mapJsonChildrenItems
-															.get("option");
-													for (Entry<String, Object> entryOption : mapOptions.entrySet()) {
-														Map<String, Object> mapOption = (Map<String, Object>) entryOption
-																.getValue();
-														this.savePerXxxIns2(strItemIdLevel0 + strItemIdLevel1, "",
-																mapOption, numAppInsId);
-													}
-												}
-											} else if ("F".equals(strStorageType)) {
-												// 推荐信附件信息和其他固定容器附件
-												if (!"recommendletter".equals(strClassName)) {
-													this.savePerAttrInfo(strItemIdLevel0 + strItemIdLevel1,
-															mapJsonChildrenItems, numAppInsId,oprid);
-												}
 											}
 										}
 									}
@@ -2095,6 +1879,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
 				strTjxId = str_seq1 + str_seq2;
 			}else{
+				logger.info("推荐信推荐人重复 " + strInsId + "   ---" +  strOprid + "    ---" + strEmail);
 				return new String[]{"0","0"};
 			}
 			
@@ -2148,8 +1933,10 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 				psTzKsTjxTbl.setRowLastmantOprid(strOprid);
 				int size = psTzKsTjxTblMapper.insert(psTzKsTjxTbl);
 				if(size > 0){
+					logger.info("Success " + strInsId + "   ---" +  strOprid + "    ---" + strEmail);
 					return new String[]{strTjxId,tzTjxAppInsId};
 				}else{
+					logger.info("failure " + strInsId + "   ---" +  strOprid + "    ---" + strEmail);
 					return new String[]{"0","0"};
 				}
 			}
@@ -2171,12 +1958,19 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 
 			
 			int del1 = sqlQuery.update(sql1);
+			logger.info("删除报名表相关 - PS_TZ_APP_CC_T  " + del1);
 			int del2 = sqlQuery.update(sql2);
+			logger.info("删除报名表相关 - PS_TZ_APP_DHCC_T  " + del2);
 			int del3 = sqlQuery.update(sql3);
+			logger.info("删除报名表相关 - PS_TZ_FORM_ATT_T  " + del3);
 			int del5 = sqlQuery.update(sql5);
+			logger.info("删除报名表相关 - PS_TZ_APP_DHHS_T  " + del5);
 			int del6 = sqlQuery.update(sql6);
+			logger.info("删除报名表相关 - PS_TZ_APP_HIDDEN_T  " + del6);
 			int del7 = sqlQuery.update(sql7);
+			logger.info("删除报名表相关 - PS_TZ_APP_INS_T  " + del7);
 			int del8 = sqlQuery.update(sql8);
+			logger.info("删除报名表相关 - PS_TZ_FORM_WRK_T  " + del8);
 			
 			String ret = del1 + "    -->" + del2 + "    -->" + del3 + "    -->" + del5 + "    -->" + del6 + "    -->" + del7 + "    -->" + del8;
 			return ret;
@@ -2210,23 +2004,28 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		 */
 		public String delLetterAll() {
 
-				String sql1 = "DELETE FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
-				String sql2 = "DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
-				String sql3 = "DELETE FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
-				String sql5 = "DELETE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
-				String sql6 = "DELETE FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
-				String sql7 = "DELETE FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql1 = "DELETE FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_TJX_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql2 = "DELETE FROM PS_TZ_APP_DHCC_T WHERE TZ_APP_INS_ID IN (SELECT TZ_TJX_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql3 = "DELETE FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID IN (SELECT TZ_TJX_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql5 = "DELETE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_TJX_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql6 = "DELETE FROM PS_TZ_APP_HIDDEN_T WHERE TZ_APP_INS_ID IN (SELECT TZ_TJX_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
+				String sql7 = "DELETE FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID IN (SELECT TZ_TJX_APP_INS_ID FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*')";
 				String sql8 = "DELETE FROM PS_TZ_KS_TJX_TBL WHERE OPRID REGEXP BINARY 'MBA_*'";
 
-
-				
 				int del1 = sqlQuery.update(sql1);
+				logger.info("删除推荐信相关 - PS_TZ_APP_CC_T  " + del1);
 				int del2 = sqlQuery.update(sql2);
+				logger.info("删除推荐信相关 - PS_TZ_APP_DHCC_T  " + del2);
 				int del3 = sqlQuery.update(sql3);
+				logger.info("删除推荐信相关 - PS_TZ_FORM_ATT_T  " + del3);
 				int del5 = sqlQuery.update(sql5);
+				logger.info("删除推荐信相关 - PS_TZ_APP_DHHS_T  " + del5);
 				int del6 = sqlQuery.update(sql6);
+				logger.info("删除推荐信相关 - PS_TZ_APP_HIDDEN_T  " + del6);
 				int del7 = sqlQuery.update(sql7);
+				logger.info("删除推荐信相关 - PS_TZ_APP_INS_T  " + del7);
 				int del8 = sqlQuery.update(sql8);
+				logger.info("删除推荐信相关 - PS_TZ_KS_TJX_TBL  " + del8);
 				
 				String ret = del1 + "    -->" + del2 + "    -->" + del3 + "    -->" +  del5 + "    -->" + del6 + "    -->" + del7 + "    -->" + del8;
 				return ret;

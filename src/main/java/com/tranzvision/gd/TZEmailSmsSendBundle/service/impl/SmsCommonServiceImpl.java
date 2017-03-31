@@ -264,13 +264,16 @@ public class SmsCommonServiceImpl extends FrameworkImpl {
 							psTzEmlTaskAet.setTzEmlSmsTaskId(taskId);
 							psTzEmlTaskAetMapper.insert(psTzEmlTaskAet);
 							
-							BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZGD_SEND_EMAIL_AE");
+							String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+							String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+							
+							BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZGD_SEND_EMAIL_AE");
 							//指定调度作业的相关参数
 							EngineParameters schdProcessParameters = new EngineParameters();
 
 							schdProcessParameters.setBatchServer("");
 							schdProcessParameters.setCycleExpression("");
-							schdProcessParameters.setLoginUserAccount("Admin");
+							schdProcessParameters.setLoginUserAccount(currentAccountId);
 							schdProcessParameters.setPlanExcuteDateTime(new Date());
 							schdProcessParameters.setRunControlId(runCntlId);
 							

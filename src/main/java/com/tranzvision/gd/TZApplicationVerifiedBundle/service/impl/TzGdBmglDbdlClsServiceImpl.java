@@ -363,14 +363,16 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						psTzExcelDattTMapper.updateByPrimaryKey(psTzExcelDattT2);
 					}
 					*/
-					
-					BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZGD_DBDL_PROC_01");
+					String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+					String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+
+					BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZGD_DBDL_PROC_01");
 					//指定调度作业的相关参数
 					EngineParameters schdProcessParameters = new EngineParameters();
 
 					schdProcessParameters.setBatchServer("");
 					schdProcessParameters.setCycleExpression("");
-					schdProcessParameters.setLoginUserAccount("Admin");
+					schdProcessParameters.setLoginUserAccount(currentAccountId);
 					schdProcessParameters.setPlanExcuteDateTime(new Date());
 					schdProcessParameters.setRunControlId(runCntlId);
 					

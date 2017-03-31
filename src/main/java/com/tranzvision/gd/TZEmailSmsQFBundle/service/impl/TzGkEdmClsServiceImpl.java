@@ -454,13 +454,16 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 			psTzYjqftxrzTMapper.insert(psTzYjqftxrzT);
 
 			try {
-				BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZ_MAILTX_AE");
+				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				
+				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_MAILTX_AE");
 				// 指定调度作业的相关参数
 				EngineParameters schdProcessParameters = new EngineParameters();
 
 				schdProcessParameters.setBatchServer("");
 				schdProcessParameters.setCycleExpression("");
-				schdProcessParameters.setLoginUserAccount("Admin");
+				schdProcessParameters.setLoginUserAccount(currentAccountId);
 				schdProcessParameters.setPlanExcuteDateTime(new Date());
 				
 				schdProcessParameters.setRunControlId(runCntlId);
