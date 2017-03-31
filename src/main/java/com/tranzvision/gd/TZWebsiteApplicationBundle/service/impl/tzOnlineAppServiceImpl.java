@@ -729,7 +729,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			String strDownLoadPDFMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"DOWN", strLanguage, "下载报名表", "Download");
-			
+
 			String strDownErrorMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"DOWNERR", strLanguage, "请先保存报名表", "Please save the application form。");
 
@@ -851,7 +851,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
 						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
-						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg,strDownErrorMsg);
+						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");
@@ -959,7 +959,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			System.out.println("报名表保存数据预处理Begin");
 			String strForm = actData[num];
 
-			//System.out.println("strForm:" + strForm);
+			// System.out.println("strForm:" + strForm);
 
 			// 解析json
 			jacksonUtil.json2Map(strForm);
@@ -978,9 +978,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				isPwd = String.valueOf(jacksonUtil.getString("ISPWD"));
 			}
 
-			//System.out.println("strPwd:" + strPwd);
+			// System.out.println("strPwd:" + strPwd);
 
-			//System.out.println("isPwd:" + isPwd);
+			// System.out.println("isPwd:" + isPwd);
 
 			// 密码用MD5加密存储
 			if (strPwd != null && !strPwd.equals("")) {
@@ -1480,19 +1480,20 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 					}
 
+					// if ("".equals(strMsg)) {
+					//strMsg = tzOnlineAppEngineImpl.preAppForm(numAppInsId);
+
 					if ("".equals(strMsg)) {
 						strMsg = tzOnlineAppEngineImpl.preAppForm(numAppInsId);
-
-						if ("".equals(strMsg)) {
-							tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
-						} else {
-							tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "N");
-						}
-
-						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
-							// 如果是管理员并且可编辑的话继续 By WRL@20161027
-						}
+						tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
+					} else {
+						tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "N");
 					}
+
+					if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
+						// 如果是管理员并且可编辑的话继续 By WRL@20161027
+					}
+					// }
 					System.out.println("报名表保存PRE数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("SUBMIT".equals(strOtype)) {
 					System.out.println("报名表保存SUBMIT数据Begin");
