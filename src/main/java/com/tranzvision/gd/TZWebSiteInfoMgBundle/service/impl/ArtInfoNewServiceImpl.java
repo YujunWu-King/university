@@ -17,7 +17,9 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtAudienceTMapper;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtHdTblMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzArtAudienceTKey;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
@@ -104,6 +106,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzArtAudienceTMapper PsTzArtAudienceTMapper;
+	@Autowired
+	private PsTzArtHdTblMapper psTzArtHdTblMapper;
 	
 	/* 查询表单信息 */
 	@Override
@@ -170,6 +174,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		map.put("siteId", "");
 		map.put("coluId", "");
 		map.put("colus", "");
+		map.put("coluType", "");
 		map.put("siteType", "");
 		map.put("staticPath", "");
 		map.put("saveImageAccessUrl", "");
@@ -217,7 +222,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 				// 获取机构对应的站点以及栏目的说明
 				String siteId = null;
-				String siteSQL = " SELECT TZ_SITEI_ID,TZ_COLU_ABOUT FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
+				String siteSQL = " SELECT TZ_SITEI_ID,TZ_COLU_ABOUT,TZ_COLU_TYPE FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
 				Map<String, Object> DataMap = jdbcTemplate.queryForMap(siteSQL, new Object[] { coluId });
 				if (DataMap != null) {
 					if (DataMap.containsKey("TZ_SITEI_ID")) {
@@ -238,6 +243,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					}
 					if (DataMap.containsKey("TZ_COLU_ABOUT") && DataMap.get("TZ_COLU_ABOUT")!=null) {
 						map.replace("coluAbout", DataMap.get("TZ_COLU_ABOUT").toString());
+					}
+					if (DataMap.containsKey("TZ_COLU_TYPE") && DataMap.get("TZ_COLU_TYPE")!=null) {
+						map.replace("coluType", DataMap.get("TZ_COLU_TYPE").toString());
 					}
 				} else {
 					errMsg[0] = "1";
@@ -942,6 +950,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			String strStaticName = "";
 			// 静态化名称自动编号
 			String strAutoStaticName = "";
+			
+			//String artFlag = "";
+			boolean actFlag = false;
 
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -1001,6 +1012,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 						// 标题;
 						String artTitle = (String) dataMap.get("artTitle");
+						
 						// 简短标题
 						String artShortTitle = (String) dataMap.get("artShortTitle");
 						// 副标题
@@ -1409,6 +1421,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			String sqlGetSiteType = "select TZ_SITEI_TYPE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			strSiteType = jdbcTemplate.queryForObject(sqlGetSiteType, new Object[] { this.instanceSiteId }, "String");
 			
+			/* 获取栏目类型 */
+			String sqlGetColuType = "SELECT TZ_COLU_TYPE FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID = ?";
+			String strColuType = jdbcTemplate.queryForObject(sqlGetColuType, new Object[] { this.instanceColuId }, "String");
+			
 			String dir = getSysHardCodeVal.getWebsiteEnrollPath();
 			String strFilePathdelete = dir; // 用于删除文件
 			String strFilePathdeleteSj = strFilePathdelete; // 用于删除文件
@@ -1643,6 +1659,24 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			returnJsonMap.replace("publishUrl", publishUrlAll);
 			returnJsonMap.replace("viewUrl", viewUrl);
 			// System.out.println("执行update方法");
+			//添加活动表;
+			if("D".equals(strColuType)){
+				
+				int actCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM PS_TZ_ART_HD_TBL "
+						+ " WHERE TZ_ART_ID = ?",
+						new Object[] { this.instanceArtId }, "Integer");
+				
+				if (actCount == 0) {
+					String strActName = jdbcTemplate.queryForObject("SELECT TZ_ART_TITLE FROM PS_TZ_ART_REC_TBL "
+							+ " WHERE TZ_ART_ID = ? LIMIT 0,1",
+							new Object[] { this.instanceArtId }, "String");
+					PsTzArtHdTbl psTzArtHdTbl = new PsTzArtHdTbl();
+					psTzArtHdTbl.setTzArtId(this.instanceArtId);
+					psTzArtHdTbl.setTzNactName(strActName);
+					psTzArtHdTblMapper.insert(psTzArtHdTbl);
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
