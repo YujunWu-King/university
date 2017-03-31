@@ -17,7 +17,7 @@ import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
-@Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeDegree")
+@Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeDegreeServiceImpl")
 public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl {
 	@Autowired
 	private TZGDObject TzSQLObject;
@@ -41,6 +41,8 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 		String sql1 = "";
 		Integer appinsId = 0;
 		String degree = "";
+		String degree1 = "";
+		String degree2 = "";
 		try {
 			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID_GEGREE'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
@@ -56,9 +58,13 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 						sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
 						appinsId = SqlQuery.queryForObject(sql, new Object[] { classId, oprid }, "Integer");
 						sql1 = "SELECT TZ_APP_S_TEXT from PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH=?";
-						degree = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "XXXXX" }, "String");
 
-						if (degree == null || degree.equals("") || degree.equals("XXX") || degree.equals("XXX")) {
+						degree = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_13TZ_TZ_13_6" }, "String");
+						degree1 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_12fl2" }, "String");
+						degree2 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_11fl" }, "String");
+
+						if (degree == null || !degree.equals("1") || degree1 == null || !degree1.equals("1")
+								|| degree2 == null || degree2.equals("1")) {
 							PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
 							// String fmqdId = "TZ_FMQ" +
 							// String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T",

@@ -22,7 +22,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author tzhjl
  * @since 2017-02-09
  */
-@Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeApplyLastTen")
+@Service("com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeApplyLastTenServiceImpl")
 public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServiceImpl {
 	@Autowired
 	private SqlQuery SqlQuery;
