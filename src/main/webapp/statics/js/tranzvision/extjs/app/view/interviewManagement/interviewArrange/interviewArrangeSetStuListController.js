@@ -31,7 +31,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     */
                 },
                 srhConFields:{
-                    TZ_AUD_NAME:{
+                	TZ_AUD_NAM:{
                         desc:'听众名称',
                         operator:'07',
                         type:'01'
@@ -40,7 +40,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
             },
             srhresult:{
                 TZ_AUD_ID:'听众ID',
-                TZ_AUD_NAME: '听众名称',
+                TZ_AUD_NAM: '听众名称',
                 ROW_ADDED_DTTM:'创建时间'
             },
             multiselect: true,

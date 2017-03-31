@@ -48,7 +48,7 @@ SurveyBuild.extend("FormDesc", "baseComponent", {
 				    //$("#" + data["itemId"]+"_DIV").css("display","block");
 				  },
 				  function () {
-				    $(this).children(".form_sm").css("background-color","#fff");
+				    $(this).children(".form_sm").css("background-color","transparent");
 				    $(this).children(".form_sm").css("color","#000");
 				    $(this).children(".form_input").css("display","none");
 					  //$(this).css("background-color","#fff");
