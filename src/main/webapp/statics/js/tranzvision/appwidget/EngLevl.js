@@ -422,7 +422,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			//-----
 			//1.公司性质
 			if (SurveyBuild._readonly) {
-				
+				htmlContent += '<div  class="main_inner_content_info_autoheight">';
 				//<!--通用只读模式 成绩+日期显示-->
 				htmlContent+=this.getReadDiv(data,child,EXAM_TYPE_DEF,EXAM_TYPE_MAP);
 				//<!--通用上传控件部分-->
