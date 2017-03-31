@@ -246,7 +246,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				}
 				//----------------------------放入创业类型OPT "请选择"：MsgSet["PLEASE_SELECT"]
 				htmlContent += '<div class="input-list">';
-				htmlContent += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + '：</div>';
+				htmlContent += '	<div class="input-list-info left"> ' + child.WorkExper1.itemName + '：</div>';
 				htmlContent += '	<div class="input-list-text left">';
 				htmlContent +=btypeDesc;
 				htmlContent += '	</div>';
@@ -282,7 +282,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					NET_DIV+='<div id="NET_TYPE_SHOW" style="display:none">'
 				}
 					//<!--融资标题-->
-					NET_DIV+='<div class="input-list-info left"><span class="red">*</span>'+MsgSet["FINANCING"]+'：</div>'
+					NET_DIV+='<div class="input-list-info left"> '+MsgSet["FINANCING"]+'：</div>'
 					//<!---融资radioGroup-->	
 					NET_DIV+='<div  class="input-list-text left">'
 					NET_DIV+=finDesc;	
@@ -382,7 +382,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				}
 				//----------------------------放入创业类型OPT "请选择"：MsgSet["PLEASE_SELECT"]
 				htmlContent += '<div class="input-list">';
-				htmlContent += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + '：</div>';
+				htmlContent += '	<div class="input-list-info left"> ' + child.WorkExper1.itemName + '：</div>';
 				htmlContent += '	<div class="input-list-text left input-edu-select">';
 				htmlContent += '		<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width:100%;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
 				//htmlContent += '			<option value="-1">' + '--'+"请选择"+'--' + '</option>';
@@ -407,7 +407,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				}
 					//<!--融资标题-->
 				//原始版：
-//					NET_DIV+='<div class="input-list-info left"><span class="red">*</span>'+MsgSet["FINANCING"]+'：</div>'
+//					NET_DIV+='<div class="input-list-info left"> '+MsgSet["FINANCING"]+'：</div>'
 //					//<!---融资radioGroup-->	
 //					NET_DIV+='<div class="margart8 input-list-textwrap left">'
 //						//<!--加入一个隐藏input缓存radio数据-->checkedRadio
@@ -423,7 +423,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					//-------------------------------------修正版:
 		
 						//<!--融资标题-->
-						NET_DIV+='<div class="input-list-info left" style="height:240px"><span class="red">*</span>'+MsgSet["FINANCING"]+'：</div>'
+						NET_DIV+='<div class="input-list-info left" style="height:240px"> '+MsgSet["FINANCING"]+'：</div>'
 						//<!---融资radioGroup-->	
 						NET_DIV+='<div class="right" name="financingGp" style="width:65%;height:240px">'
 							//隐藏DIV中的input存值
@@ -776,6 +776,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 	
 		
 		//---所有的input,select非空验证:
+		/*
 		//验证所有的select:WorkExper1
 		 var selectEl = $("#" + data.itemId +child.WorkExper1.itemId);
 		 	 selectEl.each(function(){
@@ -807,6 +808,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						}	
 					}); 
 			   });
+		}*/
 		}
-		}
+		
 })
