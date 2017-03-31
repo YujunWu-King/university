@@ -383,9 +383,13 @@ public class TZGDObject
 				if(val.contains("\\")){
 					//val = val.replace("\\", "\\\\");
 				}
+				//System.out.println("val1:"+val);
 				if(val.contains("$")){
-					val = val.replace("$", "\\$");
+					//modity by caoy  修改$替换问题
+					val = java.util.regex.Matcher.quoteReplacement(val); 
+					//val = val.replace("$", "\\$");
 				}
+				//System.out.println("val2:"+val);
 				
 				htmlText = htmlText.replaceAll(repStr1, val);
 				htmlText = htmlText.replaceAll(repStr2, repStr3);
@@ -438,7 +442,9 @@ public class TZGDObject
 					val = val.replace("\\", "\\\\");
 				}
 				if(val.contains("$")){
-					val = val.replace("$", "\\$");
+					//modity by caoy  修改$替换问题
+					val = java.util.regex.Matcher.quoteReplacement(val); 
+					//val = val.replace("$", "\\$");
 				}
 				
 				//System.out.println(val);
