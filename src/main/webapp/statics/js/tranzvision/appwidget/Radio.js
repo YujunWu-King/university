@@ -177,6 +177,8 @@ SurveyBuild.extend("Radio", "baseComponent", {
 	_eventbind: function(data) {
 		var $inputBox = $(":radio[name='" + data.itemId + "']");
 		$inputBox.parents(".radio-btn").on('click', function () {
+			
+			$inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
 		    var _this = $(this),block = _this.parent().parent();
 		    block.find('input:radio').prop('checked', false);
 		    block.find(".radio-btn").removeClass('checkedRadio');
@@ -241,7 +243,7 @@ SurveyBuild.extend("Radio", "baseComponent", {
 				}
 			});
 		}
-
+		console.log(allowEmpty);
 		$inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
 		if (!allowEmpty) {
 			$inputBox.inputValidator({min: 1,onError: errorMsg});
