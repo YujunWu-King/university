@@ -1015,8 +1015,8 @@ url("chrome://browser/content/history/history-panel.xul")
 	display: inline-block;
 }
 .input-list-upload{
-	width:63%;
-	margin:10px 0 0 15px;
+	width:65%;
+	margin:10px auto;
 }
 .input-list-upload-con{
 	width:100%;
