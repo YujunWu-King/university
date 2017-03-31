@@ -16,7 +16,9 @@ Ext.define('KitchenSink.view.payment.accountInfo', {
     xtype: 'accountInfo',
     controller: 'accountController',
     reference:'accountInfo',
-
+	selModel: {
+       	type: 'checkboxmodel'
+    },
     columnLines: true,
 
     style:"margin:8px",
@@ -96,7 +98,7 @@ Ext.define('KitchenSink.view.payment.accountInfo', {
                     xtype: 'actioncolumn',
                     fit:1,
                     items:[
-                        {iconCls:'remove',tooltip:'删除',handler:'deleteAccount'},'-',
+                        {iconCls:'remove',tooltip:'删除',handler:'deleteOneAccount'},'-',
                         {iconCls:'edit',tooltip:'编辑',handler:'editAccount'}
                         ]
               
