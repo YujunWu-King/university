@@ -105,7 +105,6 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				}
 			}
 			c += '<div class="main_inner_content">';
-
 			c += htmlContent;
 			//--------
 			/*添加 (添加下一条) 按钮*/
@@ -283,7 +282,15 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		//------------------
 		var ReadDiv="";
 		ReadDiv+='<div name="'+data.itemId+'_READ_DIV" id="'+data.itemId+'_READ_DIV" class="input-list">'
+			//只读考试名称:
+			ReadDiv+='<div class="input-list-info left"><span class="red-star">*</span><span>'+child.EngLevelType.itemId+'：</span></div> '
+			ReadDiv+='<div class="input-list-text left">'
+			ReadDiv+=EXAM_TYPE_DEF;
+			ReadDiv+='</div>'	
+			ReadDiv+='<div class="clear"></div>'
+			//日期:	
 			ReadDiv+=dateHtml
+			//值:
 			ReadDiv+='<div class="clear"></div>'
 			ReadDiv+='<div class="input-list-info left"><span class="red-star">*</span><span>'+label+'：</span></div> '
 			ReadDiv+='<div class="input-list-text left">'

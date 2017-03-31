@@ -16,7 +16,9 @@ Ext.define('KitchenSink.view.payment.platformInfo', {
     xtype: 'platformInfo',
     controller: 'platformController',
     reference:'platformInfo',
-
+	selModel: {
+       	type: 'checkboxmodel'
+    },
     columnLines: true,
 
     style:"margin:8px",
@@ -24,7 +26,7 @@ Ext.define('KitchenSink.view.payment.platformInfo', {
     title: '支付平台管理',
     viewConfig: {
         enableTextSelection: true
-    },
+     },
     header:false,
     frame: true,
     dockedItems:[{
@@ -82,7 +84,7 @@ Ext.define('KitchenSink.view.payment.platformInfo', {
                     xtype: 'actioncolumn',
                     fit:1,
                     items:[
-                        {iconCls:'remove',tooltip:'删除',handler:'deletePlatform'},'-',
+                        {iconCls:'remove',tooltip:'删除',handler:'deleteOnePlatform'},'-',
                         {iconCls:'edit',tooltip:'编辑',handler:'editPlatform'}
                         ]
               

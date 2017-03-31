@@ -51,52 +51,62 @@ public class TzPaymentPlatformManageImpl extends FrameworkImpl
 		//时间转换：字符串转Date
 		//SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy-dd-MM HH:mm:ss");
 		
-		//将页面传入数据，转成Map
-		JacksonUtil jsonUtil=new JacksonUtil();
-		Map<String,Object>paramsMap=new HashMap<String,Object>();
-		jsonUtil.json2Map(actData[0]);
-		paramsMap=jsonUtil.getMap();
-
-		PsTzPaymentPlatformT psTzPaymentPlatformT=new PsTzPaymentPlatformT();
-
-		if(paramsMap.get("platformId")!=null){
-			psTzPaymentPlatformT.setTzPlatformId(paramsMap.get("platformId").toString());
-		}
-		if(paramsMap.get("platformName")!=null){
-			psTzPaymentPlatformT.setTzPlatformName(paramsMap.get("platformName").toString());
-		}
-		if(paramsMap.get("platformInterface")!=null){
-			psTzPaymentPlatformT.setTzPaymentInterface(paramsMap.get("platformInterface").toString());
-		}
-		if(paramsMap.get("returnUrl")!=null){
-			psTzPaymentPlatformT.setTzReturnUrl(paramsMap.get("returnUrl").toString());
-		}
-		if(paramsMap.get("dealClass")!=null){
-			psTzPaymentPlatformT.setTzDealClass(paramsMap.get("dealClass").toString());
-		}
-		if(paramsMap.get("platformState")!=null){
-			psTzPaymentPlatformT.setTzPlatformState(paramsMap.get("platformState").toString());
-		}
-		if(paramsMap.get("waitTime")!=null){
-			psTzPaymentPlatformT.setTzWaitTime(Integer.valueOf(paramsMap.get("waitTime").toString()));
-		}
-		if(paramsMap.get("platformDescribe")!=null){
-			psTzPaymentPlatformT.setTzPlatformDescribe(paramsMap.get("platformDescribe").toString());
-		}
-		//时间 操作人 放入数据库
-		psTzPaymentPlatformT.setRowLastmantOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
-		psTzPaymentPlatformT.setRowLastmantDttm(new Date());
-		//增加和编辑处理
-		if(psTzPaymentPlatformTMapper.selectByPrimaryKey(paramsMap.get("platformId").toString())!=null){
-			//跟新操作的时候 只需要加入 跟新人和跟新时间
-			psTzPaymentPlatformTMapper.updateByPrimaryKeySelective(psTzPaymentPlatformT);
-		}
-		else{
-			
-			//第一次插入支付平台数据的时候，加入增加人和增加时间字段
-			psTzPaymentPlatformT.setRowAddedOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
-			psTzPaymentPlatformT.setRowAddedDttm(new Date());
-			psTzPaymentPlatformTMapper.insert(psTzPaymentPlatformT);
+		try{
+			//将页面传入数据，转成Map
+			JacksonUtil jsonUtil=new JacksonUtil();
+			Map<String,Object>paramsMap=new HashMap<String,Object>();
+			//更新只有一条数据：
+			jsonUtil.json2Map(actData[0]);
+			paramsMap=jsonUtil.getMap();
+	
+			PsTzPaymentPlatformT psTzPaymentPlatformT=new PsTzPaymentPlatformT();
+	
+			if(paramsMap.get("platformId")!=null){
+				psTzPaymentPlatformT.setTzPlatformId(paramsMap.get("platformId").toString());
+			}
+			if(paramsMap.get("platformName")!=null){
+				psTzPaymentPlatformT.setTzPlatformName(paramsMap.get("platformName").toString());
+			}
+			if(paramsMap.get("platformInterface")!=null){
+				psTzPaymentPlatformT.setTzPaymentInterface(paramsMap.get("platformInterface").toString());
+			}
+			if(paramsMap.get("returnUrl")!=null){
+				psTzPaymentPlatformT.setTzReturnUrl(paramsMap.get("returnUrl").toString());
+			}
+			if(paramsMap.get("dealClass")!=null){
+				psTzPaymentPlatformT.setTzDealClass(paramsMap.get("dealClass").toString());
+			}
+			if(paramsMap.get("platformState")!=null){
+				psTzPaymentPlatformT.setTzPlatformState(paramsMap.get("platformState").toString());
+			}
+			if(paramsMap.get("waitTime")!=null){
+				psTzPaymentPlatformT.setTzWaitTime(Integer.valueOf(paramsMap.get("waitTime").toString()));
+			}
+			if(paramsMap.get("platformDescribe")!=null){
+				psTzPaymentPlatformT.setTzPlatformDescribe(paramsMap.get("platformDescribe").toString());
+			}
+			//时间 操作人 放入数据库
+			psTzPaymentPlatformT.setRowLastmantOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
+			psTzPaymentPlatformT.setRowLastmantDttm(new Date());
+			//增加和编辑处理
+			if(psTzPaymentPlatformTMapper.selectByPrimaryKey(paramsMap.get("platformId").toString())!=null){
+				//跟新操作的时候 只需要加入 跟新人和跟新时间
+				psTzPaymentPlatformTMapper.updateByPrimaryKeySelective(psTzPaymentPlatformT);
+			}
+			else{
+				
+				//第一次插入支付平台数据的时候，加入增加人和增加时间字段
+				psTzPaymentPlatformT.setRowAddedOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
+				psTzPaymentPlatformT.setRowAddedDttm(new Date());
+				psTzPaymentPlatformTMapper.insert(psTzPaymentPlatformT);
+			}
+			Map<String,Object>returnMap=new HashMap<String,Object>();
+			returnMap.put("result", "SUCCESS");
+			return new JacksonUtil().Map2json(returnMap);
+		}catch(Exception e){
+			e.printStackTrace();
+			errMsg[0]="1";
+			errMsg[1]=e.toString();
 		}
 		return null; 
 	}
@@ -141,6 +151,8 @@ public class TzPaymentPlatformManageImpl extends FrameworkImpl
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			errorMsg[0]="1";
+			errorMsg[1]=e.toString();
 		}
 		
 		return jacksonUtil.Map2json(returnMap) ;
@@ -152,16 +164,25 @@ public class TzPaymentPlatformManageImpl extends FrameworkImpl
 	public String tzDelete(String[] actData, String[] errMsg) {
 		
 		System.out.println("==进入支付平台管理tzDelete()方法==");
-		for(int i=0;i<actData.length;i++){
-			System.out.println("actData:"+actData[i]);
+		try{
+			for(int i=0;i<actData.length;i++){
+				System.out.println("actData:"+actData[i]);
+				Map<String,Object>paramMap=new HashMap<String,Object>();
+				JacksonUtil jsonUtil=new JacksonUtil();
+				jsonUtil.json2Map(actData[i]);
+				paramMap=jsonUtil.getMap();
+				if(paramMap.get("platformId")!=null){
+					psTzPaymentPlatformTMapper.deleteByPrimaryKey(paramMap.get("platformId").toString());
+				}
+			}
+			Map<String,Object>returnMap=new HashMap<String,Object>();
+			returnMap.put("result", "SUCCESS");
+			return new JacksonUtil().Map2json(returnMap);
 		}
-		Map<String,Object>paramMap=new HashMap<String,Object>();
-		JacksonUtil jsonUtil=new JacksonUtil();
-		jsonUtil.json2Map(actData[0]);
-		paramMap=jsonUtil.getMap();
-		if(paramMap.get("platformId")!=null){
-			psTzPaymentPlatformTMapper.deleteByPrimaryKey(paramMap.get("platformId").toString());
-			return paramMap.get("platformId").toString();
+		catch(Exception e){
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
 		}
 		return null;
 	}
