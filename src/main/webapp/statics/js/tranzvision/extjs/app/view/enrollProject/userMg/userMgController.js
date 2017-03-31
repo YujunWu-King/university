@@ -961,7 +961,7 @@
 	/*选中申请人另存为听众*/
 	saveAsDynAud: function() {
 
-	//	console.log(getedSQL2);
+	
 		
 		
 		//获取选中人员；
@@ -1022,10 +1022,16 @@
 			return;
 		}
 		
-		var OriSQL="SELECT OPRID FROM PS_TZ_REG_USE2_V";
-	//	OriSQL=getedSQL2;
-		console.log(OriSQL);
+		var JGID=Ext.tzOrgID;
+		console.log("JGID="+JGID);
 		
+		var OriSQL="SELECT OPRID FROM PS_TZ_REG_USE2_V where TZ_JG_ID='"+JGID+"'";
+		console.log("OriSQL="+OriSQL);
+		if((typeof getedSQL2)=="undefined"){
+			console.log("没有定义");
+			getedSQL2=OriSQL;
+		}
+			
 		
 
 		var win = this.lookupReference('pageRegWindow');
@@ -1088,6 +1094,22 @@
 			//	console.log(view);
 		        //信息表单
 		        var form = win.child("form").getForm();
+		        
+		        var formParams = form.getValues();
+				var audSQL =formParams["audSQL"];
+				var audID =formParams["audID"];
+				 console.log(audSQL);
+				 console.log(audID);
+				if(audSQL !=""){
+					
+					 var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"tzOther","comParams":{"audSQL":"'+audSQL+'","audID":"'+audID+'"}}';
+					 
+					 Ext.tzLoad(tzParams,function(responseData){										
+					});
+				}
+		        
+		        
+		        
 		        var gridStore =win.child("form").child("grid").getStore();
 				var selList = win.child("form").child("grid").getSelectionModel().getSelection();
 			
