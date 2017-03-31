@@ -283,7 +283,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		var ReadDiv="";
 		ReadDiv+='<div name="'+data.itemId+'_READ_DIV" id="'+data.itemId+'_READ_DIV" class="input-list">'
 			//只读考试名称:
-			ReadDiv+='<div class="input-list-info left"><span class="red-star">*</span><span>'+child.EngLevelType.itemId+'：</span></div> '
+			ReadDiv+='<div class="input-list-info left"><span class="red-star">*</span><span>'+child.EngLevelType.itemName+'：</span></div> '
 			ReadDiv+='<div class="input-list-text left">'
 			ReadDiv+=EXAM_TYPE_DEF;
 			ReadDiv+='</div>'	
