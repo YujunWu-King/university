@@ -336,11 +336,15 @@ public class SendSmsOrMalQfServiceImpl {
 						if (bl == false) {
 							content = this.analysisEmlOrSmsContent(strPicID,strJgId, strYmbId, audId, audCyId, "SMS", "",
 									smsContent,"");
+							//添加短信签名
+							content = content + "【清华经管】";
 							bl = true;
 						}
 					} else {
 						content = this.analysisEmlOrSmsContent(strPicID,strJgId, strYmbId, audId, audCyId, "SMS", "",
 								smsContent,"");
+						//添加短信签名
+						content = content + "【清华经管】";
 					}
 					Map<String, String> mapRst = new HashMap<String, String>();
 					String errCode = "", errMsg = "";
