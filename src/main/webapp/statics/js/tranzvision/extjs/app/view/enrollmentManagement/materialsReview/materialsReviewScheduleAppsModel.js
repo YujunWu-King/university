@@ -2,13 +2,16 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     extend: 'Ext.data.Model',
     fields: [
         {name: 'insID'},
+        {name: 'classID'},
+        {name: 'batchID'},
+        {name: 'oprID'},
         {name: 'name'},
         {name: 'gender'},
-        {name:'judgePC'},
+        {name: 'judgePC'},
         {name: 'viewQUA'},
-        {name:'aveScore'},
-        {name:'judgeInfo'},
-        {name:'judgeStatus'}
+        {name: 'aveScore'},
+        {name: 'judgeInfo'},
+        {name: 'judgeStatus'}
 
     ]
 });
