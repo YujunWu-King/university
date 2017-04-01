@@ -179,11 +179,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     colName = 'col' + colName.substr(colName.length - 2);
                     dataRow.push(tmpdataArray[j][colName]);
                 }
-                console.log(tmpdataArray);
+                //console.log(tmpdataArray);
                 statisticsGridDataModel['gridData'].push(dataRow);
             }
             //分布指标
-            var tmpArray2 = respData.pw_fbzb_grid;
+            var tmpArray2 = respData.pw_fbzb_sGrid;
             statisticsGoalGridDataModel = {
                 gridFields: [],
                 gridColumns: [],
@@ -193,15 +193,30 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             var tmpObject2 = {
             	columns: []
             };
-            
+            var tmpArray3 = respData.pw_fbzb_sGridName;
             for (i = 0; i < tmpArray2.length; i++) {
                 var colName = '00' + (i + 1);
                 colName = 'col' + colName.substr(colName.length - 2);
-
+                var mxId = tmpArray2[i][colName];
+                var mxName = "";
+                
+                for(var s=0; s < tmpArray3.length; s++){
+                	sGrid = tmpArray3[s];
+                	if(sGrid[mxId]!=undefined){
+                		mxName = sGrid[mxId];
+                		break;
+                	}
+                }
+                var dataIndex;
+                if(i>0){
+                	dataIndex = tmpArray2[i][colName];
+                }else{
+                	dataIndex = 'col01';
+                }
                 var tmpColumn = {
-                    text: tmpArray2[i][colName],
+                    text: mxName,
                     sortable: false,
-                    dataIndex: colName,
+                    dataIndex: dataIndex,
                     editor: {
                         xtype: 'numberfield',
                         allowBlank: false,
@@ -209,30 +224,79 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     },
                     flex: 1
                 };
-
+                statisticsGoalGridDataModel['gridColumns'].push(tmpColumn);
+                statisticsGoalGridDataModel['gridFields'].push({
+                    name: dataIndex
+                });
+                /*
                 if(i>0){
                 	statisticsGoalGridDataModel['gridColumns'].push(tmpColumn);
-                }
-                statisticsGoalGridDataModel['gridFields'].push({
-                    name: colName
-                });
+                	statisticsGoalGridDataModel['gridFields'].push({
+                        name: dataIndex
+                    });
+                }*/                
             }
             
-            tmpArray2 = respData.pw_fbzb_grid_data;
+            tmpArray4 = respData.pw_fbzb_grid_data;
 
+            for (i = 0; i < tmpArray4.length; i++) {
+                var tmpdataArray = tmpArray4[i].field_value;
+                var dataRow = [];
+                for (var j = 0; j < tmpdataArray.length; j++) {
+                    var colName = '00' + (j + 1);
+                    
+                    colName = 'col' + colName.substr(colName.length - 2);
+                    if(j==0){
+                    	dataRow.push(tmpdataArray[j][colName]);
+                    }else{
+                    	for(var u=1;u<tmpArray2.length;u++){
+                    		var mxId2 = tmpArray2[u][colName];
+                        	var mxS = tmpdataArray[j][mxId2];
+                        	//console.log(mxS);
+                        	if(mxS!=undefined){
+                        		dataRow.push(mxS);
+                        		break;
+                        	}
+                        	
+                        	//dataRow.push();
+                        }
+                    }                    
+                    
+                }
+                statisticsGoalGridDataModel['gridData'].push(dataRow);
+            }
+            /*tmpArray2 = respData.pw_fbzb_grid_data;
             for (i = 0; i < tmpArray2.length; i++) {
                 var tmpdataArray = tmpArray2[i].field_value;
                 var dataRow = [];
                 for (var j = 0; j < tmpdataArray.length; j++) {
                     var colName = '00' + (j + 1);
+                    
                     colName = 'col' + colName.substr(colName.length - 2);
-                    dataRow.push(tmpdataArray[j][colName]);
+
+                    dataRow.push(tmpdataArray[j][mxName]);
                 }
                 statisticsGoalGridDataModel['gridData'].push(dataRow);
-            }
+            }*/
+            //console.log(statisticsGoalGridDataModel['gridData']);
         });
 
         var applicantsColumns = [{
+            text: "班级",
+            dataIndex: 'classID',
+            hidden:true
+        },
+        {
+            text: "批次",
+            dataIndex: 'batchID',
+            hidden:true
+        },
+        {
+            text: "人员编号",
+            dataIndex: 'oprID',
+            hidden:true
+        },
+        {
             text: "报名表编号",
             dataIndex: 'insID',
             align: 'center',
@@ -301,8 +365,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         var dockedItems;
 
         var tzAppColsParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' + '"OperateType":"isJiSuanFenZhi","comParams":{"type":"isJiSuanFenZhi","classID":"' + classID + '","batchID":"' + batchID + '"}}';
-        Ext.tzLoadAsync(tzAppColsParams,
-        function(respData) {
+        Ext.tzLoadAsync(tzAppColsParams,function(respData) {
             var transScoreValue = respData.ZFZ;
             if (transScoreValue == 'Y') {
                 applicantsColumns.push({
@@ -573,7 +636,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             if (newCard.name == "judgeInfoForm") {
                                 var form = tabPanel.findParentByType('materialsReviewSchedule').child('form').getForm();
                                 var store = newCard.child('grid').store;
-                                console.log(store);
+                                //console.log(store);
                                 var classID = form.findField('classID').getValue();
                                 var batchID = form.findField('batchID').getValue();
                                 if (store.isLoaded() == false) {
@@ -871,6 +934,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                data: statisticsGridDataModel['gridData']
 	                            }),
 	                            minHeight: 180,
+	                            name:'statisticalGrid',
 	                            margin:'5 0',
 	                            selModel: {
 	                                type: 'checkboxmodel'
@@ -1274,7 +1338,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            plugins: [{
 	                                ptype: 'cellediting',
 	                            }],
-	                            columns:[
+	                            columns:statisticsGoalGridDataModel['gridColumns'],
+	                            /*columns:[
 	                            	{
 	                                    text:'指标名称',	                                    
 	                                    dataIndex:'col01',
@@ -1286,7 +1351,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    menuDisabled: true,
 	                                    columns:statisticsGoalGridDataModel['gridColumns']
 	                                }
-	                            ],
+	                            ],*/
 	                            //columns: statisticsGoalGridDataModel['gridColumns'],
 	                            header: false,
 	                            border: false,

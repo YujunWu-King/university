@@ -33,7 +33,6 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
             fields:['name','data1'],
             data:[]
         });
-
         var interviewReviewScheduleChartStore2=new Ext.data.JsonStore({
             fields:[],
             data:[]
@@ -218,6 +217,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                 }
             ];
         });
+        
         //柱状图chart和曲线图chart
         var columnChart;
         var lineChart;
@@ -251,6 +251,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                 yField: 'data1'
             }]
         });
+        
         lineChart = new Ext.chart.Chart({
             xtype: 'chart',
             width: 860,
@@ -307,7 +308,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         var chartfields;
 
         var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD",' +
-            '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'","getPwDfData":"true"}}';
+            '"OperateType":"QG","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'","type":"getPwDfData"}}';
 
         Ext.tzLoadAsync(tzParams,function(respData) {
             var tmpArray = respData.pw_dfqk_grid;
@@ -467,7 +468,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                         items:[{
                                             xtype: 'displayfield',
                                             fieldLabel:"评审状态",
-                                            name:'status',
+                                            name:'interviewStatus',
                                             ignoreChangesFlag: true
                                         }]
                                     },

@@ -1272,59 +1272,13 @@
             }
             // </debug>
         }
-
+        var transValue = this.transValues();
         var record = grid.store.getAt(rowIndex);
         var classID = record.get('classID');
         var batchID = record.get('batchID');
         cmp = new ViewClass(classID,batchID);
-
-        cmp.on('afterrender',function(panel){        	
-            /*var judgeStore =panel.down('tabpanel').child("form[name=judgeFormInfo]").child('grid[name=interviewJudgeGrid]').store,
-                judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
-                form = panel.child('form').getForm();
-            var stuListStore = panel.down('tabpanel').child('grid[name=interviewStudentGrid]').store,
-                stuListParams = '{"type":"stuList","classID":"'+classID+'","batchID":"'+batchID+'"}';
-            var tzParams ='{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' +
-                '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
-            Ext.tzLoad(tzParams,function(respData){
-                respData.className = record.data.className;
-                respData.batchName = record.data.batchName;
-                form.setValues(respData);
-                var formButton =panel.child('form');
-                var btnStartNewReview=formButton.down('button[name=startNewReview]'),
-                    btnCloseReview=formButton.down('button[name=closeReview]'),
-                    btnReStartReview=formButton.down('button[name=reStartReview]');
-                if(respData.status=='进行中'){
-                    btnStartNewReview.flagType='positive';
-                    btnCloseReview.flagtype='positive';
-                    btnReStartReview.flagType='negative';
-                    btnStartNewReview.setDisabled(true);
-                    btnReStartReview.setDisabled(true);
-                }
-                if(respData.status=='已关闭'){
-                    btnStartNewReview.flagType='positive';
-                    btnCloseReview.flagtype='negative';
-                    btnReStartReview.flagType='positive';
-                    btnCloseReview.setDisabled(true);
-                }
-                if(respData.status=='未开始'){
-                    btnStartNewReview.flagType='negative';
-                    btnCloseReview.flagtype='negative';
-                    btnReStartReview.flagType='positive';
-                    btnCloseReview.setDisabled(true);
-                }
-                if(respData.delibCount==0){
-                    btnStartNewReview.flagType='positive';
-                    btnCloseReview.flagtype='negative';
-                    btnReStartReview.flagType='negative';
-                    btnCloseReview.setDisabled(true);
-                    btnReStartReview.setDisabled(true);
-                }
-            });
-            judgeStore.tzStoreParams = judgeParams;
-            judgeStore.load();
-            stuListStore.tzStoreParams = stuListParams;*/
-        	cmp.on('afterrender',function(panel){
+console.log("1");
+        cmp.on('afterrender',function(panel){            
                 var judgeStore =panel.down('tabpanel').child("form[name=judgeFormInfo]").child('grid[name=interviewJudgeGrid]').store,
                     judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
                     form = panel.child('form'),
@@ -1380,7 +1334,6 @@
                         judgeStore.load();
                         stuListStore.tzStoreParams = stuListParams;
                     });                   
-                });
 
             });
         });
@@ -1393,6 +1346,75 @@
 
         if (cmp.floating) {
             cmp.show();
+        }
+    },
+    transValues:function(){
+        var transvalueCollection = {},
+            self = this;
+        return {
+            set:function(sets,callback){
+                if(sets instanceof Array || typeof sets === 'string'){  
+                    //可以传入一个数组或者单个字符串作为参数
+                    if(sets instanceof Array){
+                        var unload = [];
+                        //遍历查找还未加载的数据
+                        for(var x = sets.length-1;
+                            x>=0&&!transvalueCollection[sets[x]]||(transvalueCollection[sets[x]]&&transvalueCollection[sets[x]].isLoaded());
+                            x--){
+                            unload.push(sets[x]);
+                        }
+
+                        var finishCount = self.isAllFinished(unload);
+                        //加载未加载的数据
+                        if(unload.length>0){
+                            for(var x = unload.length-1;x>=0;x--){
+                                transvalueCollection[unload[x]] = new KitchenSink.view.common.store.appTransStore(unload[x]);
+                                transvalueCollection[unload[x]].load({
+                                    callback:function(){
+                                        finishCount(callback);
+                                    }
+                                });sets[x]
+                            }
+                        }else{
+                            if(callback instanceof Function){
+                                callback();
+                            }
+                        }
+                    }else{
+                        if(transvalueCollection[sets]&&transvalueCollection[sets].isLoaded()){
+                            //当前store已经加载
+                            if(callback instanceof Function){
+                                callback();
+                            }
+                        }else{
+                            var finishCount = self.isAllFinished(sets);
+                            transvalueCollection[sets] = new KitchenSink.view.common.store.appTransStore(sets);
+                            transvalueCollection[sets].load({
+                                callback:function(){
+                                    finishCount(callback);
+                                }
+                            });
+                        }
+                    }
+
+                }else{
+                    Ext.MessageBox.alert("传入参数有误");
+                }
+            },
+            get:function(name){
+                return transvalueCollection[name];
+            }
+        }
+    },
+    isAllFinished:function(sets){
+        var len = sets instanceof Array ? sets.length : 1;
+        return function(callback){
+            len--;
+            if(len===0){
+                if(callback instanceof Function){
+                    callback();
+                }
+            }
         }
     }
 });
