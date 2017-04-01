@@ -8,7 +8,9 @@ function pageReadOnly()
 //	$("form textarea").prop("disabled", true);
 	$("form textarea").unbind();
 	$("form input").nextAll('img').unbind("click");
-	
+	if($("[id$='Btnselect']").length>0){
+		$("[id$='Btnselect']").hide();
+	}
 	$(".addNext").hide();
 	$(".btn-addcon").hide();
 	$(".main_inner_content_info").hide();
