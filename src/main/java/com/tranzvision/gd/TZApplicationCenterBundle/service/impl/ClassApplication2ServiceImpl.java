@@ -171,8 +171,12 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 
 				// 已经报名了，显示报名流程;
 				if (TZ_APP_INS_ID > 0) {
-					applicationCenterHtml = this.getBmlc(TZ_APP_INS_ID, classId, strSiteId, language,msPcName);
-					
+					//applicationCenterHtml = this.getBmlc(TZ_APP_INS_ID, classId, strSiteId, language,msPcName);
+					//直接跳转到报名表;
+					// 报名表链接;
+					String applyFromUrl = ZSGL_URL + "?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + strSiteId;
+					applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_REDIRECT_BMB_HTML", applyFromUrl);
+					return applicationCenterHtml;
 				} else {
 					// 未报名的显示开始申请按钮;
 					// 1:是否允许报名,"N"表示不允许报名;
@@ -186,7 +190,12 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 					if ("Y".equals(isBlack) || "N".equals(isAllowedApp)) {
 						///不允许报名，是否有以前的报名表，有则显示报名;
 						if(hasAppIns > 0){
-							applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language,hasMsPcName);
+							//applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language,hasMsPcName);
+							//直接跳转到报名表;
+							// 报名表链接;
+							String applyFromUrl = ZSGL_URL + "?classid=appId&TZ_CLASS_ID=" + hasClassId + "&SITE_ID=" + strSiteId;
+							applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_REDIRECT_BMB_HTML", applyFromUrl);
+							return applicationCenterHtml;
 						}else{
 							applicationCenterHtml = tzGDObject.getHTMLText(
 									"HTML.TZApplicationCenterBundle.TZ_CLASS_CANTNOT_APPLY", ApplicationCenter,
@@ -244,7 +253,12 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 			} else {
 				//没有开通的班级,有没有历史报名表；
 				if(hasAppIns > 0){
-					applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language,hasMsPcName);
+					//applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language,hasMsPcName);
+					//直接跳转到报名表;
+					// 报名表链接;
+					String applyFromUrl = ZSGL_URL + "?classid=appId&TZ_CLASS_ID=" + hasClassId + "&SITE_ID=" + strSiteId;
+					applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_REDIRECT_BMB_HTML", applyFromUrl);
+					return applicationCenterHtml;
 				}else{
 					applicationCenterHtml = tzGDObject.getHTMLText(
 							"HTML.TZApplicationCenterBundle.TZ_CLASS_CANTNOT_APPLY", ApplicationCenter, addNewSqBtDesc);
