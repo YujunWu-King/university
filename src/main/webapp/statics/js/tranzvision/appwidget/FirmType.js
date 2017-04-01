@@ -96,10 +96,10 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		e += '          </div>';
 		e += '      </div>';
 //		//高级设置
-//		e += '      <div class="edit_item_warp">';
-//		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
-//		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-//		e += '      </div>';
+		e += '      <div class="edit_item_warp">';
+		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
+		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+		e += '      </div>';
 		e += '</div>';
 		return e;
 	},
