@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
@@ -42,7 +43,7 @@ public class TzGdBmgDcExcelClass {
 				map = null;
 			}
 			if (map != null) {
-				String excelName = (String) map.get("TZ_EXCEL_NAME");
+				//String excelName = (String) map.get("TZ_EXCEL_NAME");
 				String excelTpl = (String) map.get("TZ_EXPORT_TMP_ID");
 				String appFormModalID = (String) map.get("TZ_APP_TPL_ID");
 				String appInsIdList = (String) map.get("TZ_AUD_LIST");
@@ -54,7 +55,7 @@ public class TzGdBmgDcExcelClass {
 				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 				String sDttm = datetimeFormate.format(dt);
 
-				String strUseFileName = sDttm + "_" + excelName + "." + "xlsx";
+				String strUseFileName = sDttm + "_" + (new Random().nextInt(99999 - 10 + 1) + 10000) + "." + "xlsx";
 
 				int colum = 0;
 				ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
@@ -180,43 +181,47 @@ public class TzGdBmgDcExcelClass {
 									boolean isDisplayRecordValue = false; /* 是否是展现在页面中的值 */
 									boolean isExportRecordValue = false; /* 是否是导出到Excel的值 */
 									
-									/* 短文本 */
-									if ("S".equals(strSaveType)) {
-										if ("bmr".equals(strComClassName.substring(0, 3))||(strInfoSelectID!=null&&strInfoSelectID.indexOf("CC_Batch")>-1)) {
-											strSelectField = "TZ_APP_L_TEXT"; /* 报名人相关控件和组合控件选择批次取值从长字符串取描述 */
-										} else {
-											strSelectField = "TZ_APP_S_TEXT";
-										}
+									// 是否其他类型
+									boolean strSaveTypeBoolean = true;
+									
+									/* 短文本和长文本  */
+									if ("S".equals(strSaveType)||"L".equals(strSaveType)) {
+										strSaveTypeBoolean = false;
+										strSelectField = "IF(TZ_APP_L_TEXT='',TZ_APP_S_TEXT,IF(TZ_APP_L_TEXT IS NULL,TZ_APP_S_TEXT,TZ_APP_L_TEXT)) AS TZ_APP_TEXT";
 										
 										if (strCodeTable != null &&!"".equals(strCodeTable)) {
-											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=A."+strSelectField+" AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now())";
-											strSelectFieldBoolean = true;
-										}
-									}
-									/* 长文本 */
-									if ("L".equals(strSaveType)) {
-										if (strCodeTable == null || "".equals(strCodeTable)) {
-											strSelectField = "TZ_APP_L_TEXT";
-										} else {
-											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=A.TZ_APP_L_TEXT AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now())";
+											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND (TZ_ZHZ_ID=A.TZ_APP_S_TEXT OR TZ_ZHZ_ID=A.TZ_APP_L_TEXT) A.AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now() limit 0,1)";
 											strSelectFieldBoolean = true;
 										}
 									}
 									/* 可选框 */
 									if ("D".equals(strSaveType)) {
+										strSaveTypeBoolean = false;
 										isSingleValue = false;
 									}
 									/* 表存储 ：管理端展现数据*/
 									if ("R".equals(strSaveType)) {
+										strSaveTypeBoolean = false;
 										isSingleValue = false;
 										isDisplayRecordValue = true;
 									}
 									/* 表存储 ：导出到Excel数据*/
 									if ("E".equals(strSaveType)) {
+										strSaveTypeBoolean = false;
 										isSingleValue = false;
 										isExportRecordValue = true;
 									}
 
+									/* 其他值 */
+									if (strSaveTypeBoolean) {
+										if (strCodeTable == null || "".equals(strCodeTable)) {
+											strSelectField = "TZ_APP_S_TEXT";
+										} else {
+											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=A.TZ_APP_S_TEXT AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE <= now())";
+											strSelectFieldBoolean = true;
+										}
+									}
+									
 									String sql1 = "";
 									if (isSingleValue) {
 										sql1 = "SELECT " + strSelectField

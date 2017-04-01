@@ -83,7 +83,7 @@
            }else if(checkLen >1){
                Ext.Msg.alert("提示","只能选择一条要修改的记录");
                return;
-           };
+           }
            tplID = selList[0].get("tplID");
            modalID=selList[0].get("modalID");
        }else{
@@ -225,13 +225,13 @@
         if(actType=="add"){
             Ext.Msg.alert("提示","请先保存导出模板信息再加载报名表模板字段。");
             return;
-        };
+        }
 
         if(modalID==""||modalID==null){
             Ext.Msg.alert("提示","请先选择报名表模板ID再加载报名表模板字段。");
             form.findField("modalID").focus();
             return;
-        };
+        }
 
         var grid = btn.findParentByType("grid");
         var store = grid.getStore();
@@ -275,6 +275,7 @@
                    tplID:exportTplID,
                    fieldID:fieldList[i].infoID,
                    fieldName:fieldList[i].infoName,
+                   appClass:"",
                    fieldSeq:seq,
                    separator:'',
                    columnWidth:100,
@@ -306,7 +307,7 @@
         var winGrid = win.child('grid');
         if(tplType!='1'){
             win.down('fieldset[name=fieldAttribute]').setHidden(true);
-        };
+        }
         winForm.setValues({
             fieldName:rec.get("fieldName"),
             separator:rec.get("separator"),
@@ -328,7 +329,7 @@
         if(actType=="add"){
             Ext.Msg.alert("提示","请先保存导出模板信息再加载报名表模板字段。");
             return;
-        };
+        }
 
         if(modalID==""||modalID.length<1){
             Ext.MessageBox.alert('提示', '您没有配置报名表模板编号，无法新增模板字段。');
@@ -382,6 +383,7 @@
                             tplID:tplID,
                             fieldID:tplField,
                             fieldName:tplFieldDesc,
+                            appClass:"",
                             fieldSeq:0,
                             separator:'',
                             columnWidth:100,
@@ -395,7 +397,7 @@
                         });
                         store.add(model);
                     }
-                };
+                }
             }
         })
     },
@@ -408,7 +410,7 @@
         if(actType=="add"){
             Ext.Msg.alert("提示","请先保存导出模板信息再添加应用程序类。");
             return;
-        };
+        }
 
         if(modalID==""||modalID.length<1){
             Ext.MessageBox.alert('提示', '您没有配置报名表模板编号，无法添加应用程序类。');
@@ -458,7 +460,7 @@
                         });
                         store.add(model);
                     }
-                };
+                }
             }
         })
     },
@@ -674,6 +676,7 @@
                             appFormField:appFormField,
                             appFormFieldName:appFormFieldName,
                             codeTable:"",
+                            appClass:"",
                             codeTableName:"",
                             appFormFieldSeq:store.getCount()+1
                         })

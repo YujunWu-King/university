@@ -165,20 +165,20 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					
 					if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
 						// 将模板中需要显示的数据全部查出存入数组 
-						String strInfoID = "", strInfoValue = "", strInfoDesc = "", strComClassName = "",
+						String strInfoID = "", strInfoValue = "", /*strInfoDesc = "",*/ strComClassName = "",
 								strInfoSelectID = "";
 						// 控件类名称，下拉存储描述信息项编号;
 						ArrayList<String[]> arrAppFormInfoData = new ArrayList<>();
 						
 						// 单行存储;
-						String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,if(B.TZ_XXX_CCLX = 'S',A.TZ_APP_S_TEXT ,if(B.TZ_XXX_CCLX = 'L',A.TZ_APP_L_TEXT,'')) TZ_APP_TEXT,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
+						String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,IF(TZ_APP_L_TEXT='',TZ_APP_S_TEXT,IF(TZ_APP_L_TEXT IS NULL,TZ_APP_S_TEXT,TZ_APP_L_TEXT)) TZ_APP_TEXT,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
 						List<Map<String, Object>> appFormDataSingleList = jdbcTemplate.queryForList(
 								sqlAppFormDataSingle, new Object[] { strBmbTpl, appInsID, strAuditGridTplID });
 						if (appFormDataSingleList != null) {
 							for (int j = 0; j < appFormDataSingleList.size(); j++) {
 								strInfoID = (String) appFormDataSingleList.get(j).get("TZ_XXX_BH");
 								strInfoValue = (String) appFormDataSingleList.get(j).get("TZ_APP_TEXT");
-								strInfoDesc = (String) appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
+								//strInfoDesc = (String) appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
 								strComClassName = (String) appFormDataSingleList.get(j).get("TZ_COM_LMC");
 								strInfoSelectID = (String) appFormDataSingleList.get(j).get("TZ_XXX_NO");
 								if ("Select".equals(strComClassName) || "bmrBatch".equals(strComClassName)
@@ -187,14 +187,6 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 									String msSQL = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?";
 									strInfoValue = jdbcTemplate.queryForObject(msSQL,
 											new Object[] { strBmbTpl, strInfoSelectID, strInfoValue }, "String");
-								}
-
-								if ("bmr".equals(strComClassName.substring(0, 3))) {
-									strInfoValue = strInfoDesc;
-								}
-
-								if (strInfoSelectID!=null&&strInfoSelectID.indexOf("CC_Batch")>-1) {
-									strInfoValue = strInfoDesc;
 								}
 								
 								arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
@@ -503,20 +495,20 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 						"String");
 				
 				/*将模板中需要显示的数据全部查出存入数组*/
-				String strBmbTpl = "", strInfoID = "", strInfoValue = "", strInfoDesc = "", strComClassName = "", strInfoSelectID = ""; /*控件类名称，下拉存储描述信息项编号*/
+				String strBmbTpl = "", strInfoID = "", strInfoValue = "", /*strInfoDesc = "",*/ strComClassName = "", strInfoSelectID = ""; /*控件类名称，下拉存储描述信息项编号*/
 				strBmbTpl = jdbcTemplate.queryForObject("SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?", new Object[]{strAppInsID},"String");
 				
 				ArrayList<String[]> arrAppFormInfoData = new ArrayList<>();
 
 				// 单行存储;
-				String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,if(B.TZ_XXX_CCLX = 'S',A.TZ_APP_S_TEXT ,if(B.TZ_XXX_CCLX = 'L',A.TZ_APP_L_TEXT,'')) TZ_APP_TEXT,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
+				String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,IF(TZ_APP_L_TEXT='',TZ_APP_S_TEXT,IF(TZ_APP_L_TEXT IS NULL,TZ_APP_S_TEXT,TZ_APP_L_TEXT)) TZ_APP_TEXT,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
 				List<Map<String, Object>> appFormDataSingleList = jdbcTemplate.queryForList(
 						sqlAppFormDataSingle, new Object[] { strBmbTpl, strAppInsID, strAuditGridTplID });
 				if (appFormDataSingleList != null) {
 					for (int j = 0; j < appFormDataSingleList.size(); j++) {
 						strInfoID = (String) appFormDataSingleList.get(j).get("TZ_XXX_BH");
 						strInfoValue = (String) appFormDataSingleList.get(j).get("TZ_APP_TEXT");
-						strInfoDesc = (String) appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
+						//strInfoDesc = (String) appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
 						strComClassName = (String) appFormDataSingleList.get(j).get("TZ_COM_LMC");
 						strInfoSelectID = (String) appFormDataSingleList.get(j).get("TZ_XXX_NO");
 						if ("Select".equals(strComClassName) || "CompanyNature".equals(strComClassName)
@@ -524,14 +516,6 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 							String msSQL = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?";
 							strInfoValue = jdbcTemplate.queryForObject(msSQL,
 									new Object[] { strBmbTpl, strInfoSelectID, strInfoValue }, "String");
-						}
-
-						if ("bmr".equals(strComClassName.substring(0, 3))) {
-							strInfoValue = strInfoDesc;
-						}
-						
-						if (strInfoSelectID!=null&&strInfoSelectID.indexOf("CC_Batch")>-1) {
-							strInfoValue = strInfoDesc;
 						}
 						
 						arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
