@@ -162,7 +162,6 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					
 					/*根据模板配置显示报名表信息*/
 					String appInsID = rowList[2];
-					Map<String, Object> strGridColumnStoreMap = new HashMap<>();
 					
 					if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
 						// 将模板中需要显示的数据全部查出存入数组 
@@ -240,7 +239,6 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 						}
 
 						// 查询grid需要显示的报名表字段并拼装模板数据 
-						
 						String strColumnID = "", strColumnSpe = "", strColumnFieldID = "", strColumnFieldCodeTable = "";
 						String sqlGridColumn = "SELECT TZ_DC_FIELD_ID ,TZ_DC_FIELD_NAME ,if(TZ_DC_FIELD_FGF='',',',if(TZ_DC_FIELD_FGF is null,',',TZ_DC_FIELD_FGF)) TZ_DC_FIELD_FGF FROM PS_TZ_EXP_FRMFLD_T WHERE TZ_EXPORT_TMP_ID=? ORDER BY TZ_SORT_NUM ASC";
 						List<Map<String, Object>> gridColumnList = jdbcTemplate.queryForList(sqlGridColumn,
@@ -287,15 +285,12 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 									}
 								}
 
-								strGridColumnStoreMap.put(strColumnID, strColumnValue);
+								mapList.put(strColumnID, strColumnValue);
 							}
 						}
 						
 					}
 
-					if (strGridColumnStoreMap == null || strGridColumnStoreMap.isEmpty()) {
-						strGridColumnStoreMap.put("hasData", false);
-					}
 					listData.add(mapList);
 				}
 				mapRet.replace("total", obj[0]);
