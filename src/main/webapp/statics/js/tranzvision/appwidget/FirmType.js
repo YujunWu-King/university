@@ -166,7 +166,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				}
 				//----------------------------放入公司性质OPT
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> ' + child.WorkExper1.itemName + ':</div>';
 				types += '	<div class="input-list-text left">';
 				types +=valDesc;
 				types += '	</div>';
@@ -182,7 +182,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				//----------------------------放入公司性质OPT
 				types +='<div class="clear"></div>'
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper1.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> ' + child.WorkExper1.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
 				types += '		<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 100%;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
 				types += '			<option value="-1">' +MsgSet["PLEASE_SELECT"]+'</option>';
@@ -223,7 +223,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				//var OPT_POSITION='--请选择--';
 				//----------------------------职位类型OPT 请把"请选择"跟换成“MsgSet["PLEASE_SELECT"]”
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper2.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> ' + child.WorkExper2.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
 				types +=valDesc;
 				types += '	</div>';
@@ -248,7 +248,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				//var OPT_POSITION='--请选择--';
 				//----------------------------职位类型OPT 请把"请选择"跟换成“MsgSet["PLEASE_SELECT"]”
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"><span class="red">*</span>' + child.WorkExper2.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> ' + child.WorkExper2.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
 				types += '		<select id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 100%;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
 				//types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
@@ -340,23 +340,23 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//console.log(child.WorkExper2.value);
 		});
 		 //所有select非空验证:WorkExper1 WorkExper2
-		var select_id_gp=["WorkExper1","WorkExper1"];
-		for(var j=0;j<select_id_gp.length;j++){
-			 var EngLevelOpt=""+select_id_gp[j];
-			   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
-			   $selectEl.each(function(){
-				   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-					$(this).functionValidator({
-						fun:function(val,el){
-							if(val==""||val=="-1"){
-								return "此项必选";
-							}else{
-								return true;
-							}
-						}	
-					}); 
-			   });
-		}
+//		var select_id_gp=["WorkExper1","WorkExper2"];
+//		for(var j=0;j<select_id_gp.length;j++){
+//			 var EngLevelOpt=""+select_id_gp[j];
+//			   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
+//			   $selectEl.each(function(){
+//				   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+//					$(this).functionValidator({
+//						fun:function(val,el){
+//							if(val==""||val=="-1"){
+//								return "此项必选";
+//							}else{
+//								return true;
+//							}
+//						}	
+//					}); 
+//			   });
+//		}
 	
 	}
 })
