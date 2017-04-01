@@ -242,7 +242,7 @@
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
 			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]').getForm();
-			var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
+			//var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
 			//加载数据
@@ -253,7 +253,7 @@
 			form.setValues(formData);
 			
 			//考生导入信息;
-			ksdrInfoForm.setValues(formData.ksdrInfo);
+			//ksdrInfoForm.setValues(formData.ksdrInfo);
 			//考生个人信息
 			userInfoForm.setValues(formData.perInfo)
 			/*var userInfoItems = [];
@@ -318,7 +318,7 @@
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
 			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]').getForm();
-			var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
+			//var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
 			//加载数据
@@ -329,7 +329,7 @@
 			form.setValues(formData);
 
 			//考生导入信息;
-			ksdrInfoForm.setValues(formData.ksdrInfo);
+			//ksdrInfoForm.setValues(formData.ksdrInfo);
 			//考生个人信息
 			userInfoForm.setValues(formData.perInfo)
 			
