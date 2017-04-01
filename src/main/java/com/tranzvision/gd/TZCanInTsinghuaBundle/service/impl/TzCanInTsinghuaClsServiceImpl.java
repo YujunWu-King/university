@@ -21,6 +21,7 @@ import com.tranzvision.gd.TZAccountMgBundle.dao.PsroleuserMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
@@ -77,6 +78,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsroleuserMapper psroleuserMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 	
 	/**
 	 * Session存储的测试考生的Oprid
@@ -429,6 +432,12 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			logger.info("------test type -----" + objOprid);
 			if (null != objOprid) {
 				strOprid = String.valueOf(objOprid);
+			}else{
+				//是否有当前登录人 ldd 170401
+				String strCurUser=tzLoginServiceImpl.getLoginedManagerOprid(request);
+				if (null!=strCurUser){
+					strOprid=strCurUser;
+				}
 			}
 			
 			/*获取机构编号*/
