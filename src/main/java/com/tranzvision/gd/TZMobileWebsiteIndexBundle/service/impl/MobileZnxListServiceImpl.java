@@ -66,7 +66,7 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZNX_TZ_LIST_JS_CSS",ctxPath,siteId);
 			//跳转首页url
 			String indexUrl = ctxPath+"/dispatcher?classid=mIndex&siteId="+siteId;
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_LIST",title,indexUrl,"");
+			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_LIST",title,"");
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,menuId,content);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
