@@ -1332,7 +1332,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
                     }
                 },
                 srhConFields:{
-                    TZ_AUD_NAME:{
+                    TZ_AUD_NAM:{
                         desc:'听众名称',
                         operator:'07',
                         type:'01'
@@ -1341,7 +1341,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
             },
             srhresult:{
                 TZ_AUD_ID:'听众ID',
-                TZ_AUD_NAME: '听众名称',
+                TZ_AUD_NAM: '听众名称',
                 //TZ_ORG_CODE:'所属部门',
                 ROW_ADDED_DTTM:'创建时间'
                 // ROW_LASTMANT_DTTM:'修改时间'
