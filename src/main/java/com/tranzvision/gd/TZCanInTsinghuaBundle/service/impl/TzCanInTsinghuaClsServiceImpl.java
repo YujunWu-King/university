@@ -397,7 +397,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 */
 	@Override
 	public String tzGetHtmlContent(String strParams) {
-		String isMobile = "";
+		String isMobile = request.getParameter("isMobile");
 		String strResponse = "获取数据失败，请联系管理员";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -405,7 +405,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("isMobile")){
 				isMobile = jacksonUtil.getString("isMobile").trim();
 			}
-
+            
 			// 考生可参与的有效的测试方向
 			return this.createTestDirection(isMobile);
 		} catch (Exception e) {
