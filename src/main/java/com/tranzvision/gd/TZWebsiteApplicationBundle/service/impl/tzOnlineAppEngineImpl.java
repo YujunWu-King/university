@@ -2754,6 +2754,7 @@ public class tzOnlineAppEngineImpl {
 			psTzRegUserT.setTzComment13(partperNum);
 			psTzRegUserT.setTzComment14(income);
 			psTzRegUserT.setNationalId(idnum);
+			psTzRegUserT.setNationalIdType("A");// 证件类型A：为身份证
 
 			String ReisY = sqlQuery.queryForObject(sql_ReisY, new Object[] { strAppOprId }, "String");
 			if (ReisY != null && ReisY.equals("Y")) {
