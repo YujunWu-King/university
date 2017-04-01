@@ -51,13 +51,13 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			var typeLi = '';
 			//公司类型
 			typeLi += '<div class="type_item_li">';
-			typeLi += '	<span class="type_item_label">'+MsgSet["FIRM_TYPE"]+'：</span>';
+			typeLi += '	<span class="type_item_label"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+MsgSet["FIRM_TYPE"]+'：</span>';
 			typeLi += '		<b class="read-select" style="min-width:120px;">'+MsgSet["PLEASE_SELECT"]+'</b>';
 			typeLi += '	</div>';
 
 			//岗位类型
 			typeLi += '<div class="type_item_li">';
-			typeLi += '	<span class="type_item_label">'+MsgSet["POSITION_TYPE"]+'：</span>';
+			typeLi += '	<span class="type_item_label"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+MsgSet["POSITION_TYPE"]+'：</span>';
 			typeLi += '		<b class="read-select" style="min-width:120px;">'+MsgSet["PLEASE_SELECT"]+'</b>';
 			typeLi += '	</div>';
 			
@@ -85,22 +85,22 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 //		e += '  </div>';
 //		e += '</div>';
 //		//规则设置
-//		e += '<div class="edit_jygz">';
-//		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
-//		e += '      <div class="groupbox">';
-//		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
-//		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
-//		e += '                 <label for="is_require">是否必填';
-//		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
-//		e += '                 </label>';
-//		e += '          </div>';
-//		e += '      </div>';
+		e += '<div class="edit_jygz">';
+		e += '	    <span class="title"><i class="icon-cog"></i> 校验规则</span>';
+		e += '      <div class="groupbox">';
+		e += '          <div class="edit_item_warp" style="margin-top:5px;">';
+		e += '              <input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isRequire\')"' + (data.isRequire == "Y" ? "checked='checked'": "") + ' id="is_require">';
+		e += '                 <label for="is_require">是否必填';
+		e += '                  <a href="#" data-for-id="help_isRequire" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
+		e += '                 </label>';
+		e += '          </div>';
+		e += '      </div>';
 //		//高级设置
 //		e += '      <div class="edit_item_warp">';
 //		e += '          <a href="javascript:void(0);" onclick="SurveyBuild.RulesSet(this);"><i class="icon-cogs"></i> 高级设置</a>';
 //		e += '		    <a href="#" data-for-id="help_advancedSetup" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a>';
 //		e += '      </div>';
-//		e += '</div>';
+		e += '</div>';
 		return e;
 	},
 	_getContentHtml: function(data) {
@@ -166,7 +166,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				}
 				//----------------------------放入公司性质OPT
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"> ' + child.WorkExper1.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> <span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.WorkExper1.itemName + ':</div>';
 				types += '	<div class="input-list-text left">';
 				types +=valDesc;
 				types += '	</div>';
@@ -182,7 +182,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				//----------------------------放入公司性质OPT
 				types +='<div class="clear"></div>'
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"> ' + child.WorkExper1.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> <span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.WorkExper1.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
 				types += '		<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 100%;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
 				types += '			<option value="-1">' +MsgSet["PLEASE_SELECT"]+'</option>';
@@ -223,7 +223,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				//var OPT_POSITION='--请选择--';
 				//----------------------------职位类型OPT 请把"请选择"跟换成“MsgSet["PLEASE_SELECT"]”
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"> ' + child.WorkExper2.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> <span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.WorkExper2.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
 				types +=valDesc;
 				types += '	</div>';
@@ -248,7 +248,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				//var OPT_POSITION='--请选择--';
 				//----------------------------职位类型OPT 请把"请选择"跟换成“MsgSet["PLEASE_SELECT"]”
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"> ' + child.WorkExper2.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> <span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.WorkExper2.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
 				types += '		<select id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 100%;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
 				//types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
@@ -340,23 +340,26 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//console.log(child.WorkExper2.value);
 		});
 		 //所有select非空验证:WorkExper1 WorkExper2
-//		var select_id_gp=["WorkExper1","WorkExper2"];
-//		for(var j=0;j<select_id_gp.length;j++){
-//			 var EngLevelOpt=""+select_id_gp[j];
-//			   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
-//			   $selectEl.each(function(){
-//				   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-//					$(this).functionValidator({
-//						fun:function(val,el){
-//							if(val==""||val=="-1"){
-//								return "此项必选";
-//							}else{
-//								return true;
-//							}
-//						}	
-//					}); 
-//			   });
-//		}
+		if(data.isRequire == "Y"){
+			//console.log("必填校验");
+			var select_id_gp=["WorkExper1","WorkExper2"];
+			for(var j=0;j<select_id_gp.length;j++){
+				 var EngLevelOpt=""+select_id_gp[j];
+				   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
+				   $selectEl.each(function(){
+					   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+						$(this).functionValidator({
+							fun:function(val,el){
+								if(val==""||val=="-1"){
+									return "此项必选";
+								}else{
+									return true;
+								}
+							}	
+						}); 
+				   });
+			}
+		}
 	
 	}
 })
