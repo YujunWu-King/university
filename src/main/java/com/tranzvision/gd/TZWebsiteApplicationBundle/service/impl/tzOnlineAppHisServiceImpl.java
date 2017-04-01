@@ -585,7 +585,7 @@ public class tzOnlineAppHisServiceImpl {
 					sqlGetValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE");
 					
 					Map<String, Object> MapXxxValue = sqlQuery.queryForMap(sqlGetValue, new Object[] { 
-							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq });
+							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq - 1 });
 					
 					if(MapXxxValue!=null){
 						strAppXxxValueS = MapXxxValue.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValue.get("TZ_APP_S_TEXT"));
@@ -619,7 +619,7 @@ public class tzOnlineAppHisServiceImpl {
 					}
 					sqlGetValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE");
 					Map<String, Object> MapXxxValueL = sqlQuery.queryForMap(sqlGetValue, 
-							new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq });
+							new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq - 1 });
 					if(MapXxxValueL!=null){
 						strAppXxxValueS = MapXxxValueL.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValueL.get("TZ_APP_S_TEXT"));
 						strAppXxxValueL = MapXxxValueL.get("TZ_APP_L_TEXT") == null ? "" : String.valueOf(MapXxxValueL.get("TZ_APP_L_TEXT"));
@@ -677,7 +677,7 @@ public class tzOnlineAppHisServiceImpl {
 						numOption++;
 						String sqlIsChecked = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE5");
 						strIsChecked = sqlQuery.queryForObject(sqlIsChecked, new Object[] { 
-								numAppInsId, strDxxxBh,strXxxBhLike + "%",strXxxBh, strXxxkxzMc,numDhSeq }, "String");
+								numAppInsId, strDxxxBh,strXxxBhLike + "%",strXxxBh, strXxxkxzMc,numDhSeq - 1 }, "String");
 						if(strIsChecked.equals("Y")){
 							strAppXxxValueS = strXxxkxzMc;
 						}else{
@@ -705,7 +705,7 @@ public class tzOnlineAppHisServiceImpl {
 					String sqlGetAppxxxChildrenFbh = "";
 					sqlGetAppxxxChildrenFbh = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE4");
 					strAppxxxChildrenFbh = sqlQuery.queryForObject(sqlGetAppxxxChildrenFbh, new Object[] { 
-							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq }, "String");
+							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq - 1 }, "String");
 				    String strXxxMc = "";
 
 					String strFileIndex = "";
@@ -888,7 +888,7 @@ public class tzOnlineAppHisServiceImpl {
 					sqlGetValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE");
 					
 					Map<String, Object> MapXxxValue = sqlQuery.queryForMap(sqlGetValue, new Object[] { 
-							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq });
+							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq - 1 });
 					
 					if(MapXxxValue!=null){
 						strAppXxxValueS = MapXxxValue.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValue.get("TZ_APP_S_TEXT"));
@@ -921,7 +921,7 @@ public class tzOnlineAppHisServiceImpl {
 					}
 					sqlGetValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE");
 					Map<String, Object> MapXxxValueL = sqlQuery.queryForMap(sqlGetValue, 
-							new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq });
+							new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq - 1 });
 					if(MapXxxValueL!=null){
 						strAppXxxValueS = MapXxxValueL.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValueL.get("TZ_APP_S_TEXT"));
 						strAppXxxValueL = MapXxxValueL.get("TZ_APP_L_TEXT") == null ? "" : String.valueOf(MapXxxValueL.get("TZ_APP_L_TEXT"));
@@ -980,7 +980,7 @@ public class tzOnlineAppHisServiceImpl {
 						numOption++;
 						String sqlIsChecked = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE5");
 						strIsChecked = sqlQuery.queryForObject(sqlIsChecked, new Object[] { 
-								numAppInsId, strDxxxBh,strXxxBhLike + "%",strXxxBh, strXxxkxzMc,numDhSeq }, "String");
+								numAppInsId, strDxxxBh,strXxxBhLike + "%",strXxxBh, strXxxkxzMc,numDhSeq - 1}, "String");
 						if(strIsChecked == "Y"){
 							strAppXxxValueS = strXxxkxzMc;
 						}else{
@@ -1009,7 +1009,7 @@ public class tzOnlineAppHisServiceImpl {
 					String sqlGetAppxxxChildrenFbh = "";
 					sqlGetAppxxxChildrenFbh = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE4");
 					strAppxxxChildrenFbh = sqlQuery.queryForObject(sqlGetAppxxxChildrenFbh, new Object[] { 
-							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq }, "String");
+							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq - 1 }, "String");
 				    String strXxxMc = "";
 				    System.out.println("EDU attr:itemID->"+strAppxxxChildrenFbh);
 					String strFileIndex = "";
@@ -1190,7 +1190,7 @@ public class tzOnlineAppHisServiceImpl {
 					sqlGetValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE");
 					
 					Map<String, Object> MapXxxValue = sqlQuery.queryForMap(sqlGetValue, new Object[] { 
-							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq });
+							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq - 1 });
 					
 					if(MapXxxValue!=null){
 						strAppXxxValueS = MapXxxValue.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValue.get("TZ_APP_S_TEXT"));
@@ -1223,7 +1223,7 @@ public class tzOnlineAppHisServiceImpl {
 						strItemId = strXxxBh;
 					}
 					sqlGetValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE");
-					Map<String, Object> MapXxxValueL = sqlQuery.queryForMap(sqlGetValue, new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq });
+					Map<String, Object> MapXxxValueL = sqlQuery.queryForMap(sqlGetValue, new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq - 1 });
 					if(MapXxxValueL!=null){
 						strAppXxxValueS = MapXxxValueL.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValueL.get("TZ_APP_S_TEXT"));
 						strAppXxxValueL = MapXxxValueL.get("TZ_APP_L_TEXT") == null ? "" : String.valueOf(MapXxxValueL.get("TZ_APP_L_TEXT"));
@@ -1256,7 +1256,7 @@ public class tzOnlineAppHisServiceImpl {
 						numOption++;
 						String sqlIsChecked = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE3");
 						strIsChecked = sqlQuery.queryForObject(sqlIsChecked, new Object[] { 
-								numAppInsId, strDxxxBh,strXxxBhLike + "%",strXxxBh, strXxxkxzMs,strXxxkxzMc,numDhSeq }, "String");
+								numAppInsId, strDxxxBh,strXxxBhLike + "%",strXxxBh, strXxxkxzMs,strXxxkxzMc,numDhSeq - 1 }, "String");
 						if(strIsChecked == null || "".equals(strIsChecked)){
 							strIsChecked = "N";
 						}
@@ -1283,7 +1283,7 @@ public class tzOnlineAppHisServiceImpl {
 					String sqlGetAppxxxChildrenFbh = "";
 					sqlGetAppxxxChildrenFbh = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE4");
 					strAppxxxChildrenFbh = sqlQuery.queryForObject(sqlGetAppxxxChildrenFbh, new Object[] { 
-							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq }, "String");
+							numAppInsId,strDxxxBh,strXxxBhLike + "%",strXxxBh, strComLmc,numDhSeq - 1 }, "String");
 				    arrAppFileJson = new ArrayList<Map<String, Object>>();
 				    if(strAppxxxChildrenFbh != null){
 				    	String strXxxMc = "";
@@ -1384,7 +1384,7 @@ public class tzOnlineAppHisServiceImpl {
 
 							String sqlGetChildrenValue = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GETDHXXXCHILD_VALUE2");
 							Map<String, Object> mapGetChildrenValue = sqlQuery.queryForMap(sqlGetChildrenValue, 
-									new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + strAppxxxChildrenBh + "%",strAppxxxChildrenBh,numDhSeq });
+									new Object[] { numAppInsId,strDxxxBh,strXxxBhLike + strAppxxxChildrenBh + "%",strAppxxxChildrenBh,numDhSeq - 1 });
 							if(mapGetChildrenValue != null){
 								strAppxxxChildrenValue = mapGetChildrenValue.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(mapGetChildrenValue.get("TZ_APP_S_TEXT"));
 								strAppxxxChildrenComLmc = mapGetChildrenValue.get("TZ_COM_LMC") == null ? "" : String.valueOf(mapGetChildrenValue.get("TZ_COM_LMC"));
