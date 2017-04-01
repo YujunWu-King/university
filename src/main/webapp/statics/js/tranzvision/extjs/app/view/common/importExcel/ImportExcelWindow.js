@@ -420,7 +420,7 @@ Ext.define('KitchenSink.view.common.importExcel.ImportExcelWindow', {
                         dataArray.push(columnData);
 
                         if(dataArray.length<=1000){
-                            var jsonData = ""
+                            var jsonData = "";
                             for(var j=0;j<columnData.length;j++){
                                 var encodeColumnData = Ext.JSON.encode(columnData[j].replace(/</g,'&lt').replace(/>/g,'&gt'));
                                 if(jsonData==""){
