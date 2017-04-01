@@ -2611,6 +2611,8 @@ public class tzOnlineAppEngineImpl {
 		String isOwrCompany = "";
 		// 报考自愿方向
 		String bkfx = "";
+		// 证件号
+		String idnum = "";
 
 		// String
 		try {
@@ -2653,13 +2655,15 @@ public class tzOnlineAppEngineImpl {
 
 			System.out.println(uniScholContry + ":" + Contry1 + ":" + Contry2 + ":" + Contry3);
 			// 判断 是否有海外学历
-			if (uniScholContry.equals("中国") && Contry1.equals("中国") && Contry2.equals("中国") && Contry3.equals("中国")) {
+			if (ksMap.get("TZ_11luniversitycountry") == null ? true
+					: uniScholContry.equals("中国") && ksMap.get("TZ_10hdegreeunicountry") == null ? true
+							: Contry1.equals("中国") && ksMap.get("TZ_12ouniversitycountry") == null ? true
+									: Contry2.equals("中国") && ksMap.get("TZ_13ouniver3country") == null ? true
+											: Contry3.equals("中国")) {
 				isOutLeft = String.valueOf('N');
 			} else {
 				isOutLeft = String.valueOf('Y');
 			}
-			ksMap.get("TZ_11luniversitycountry");
-			ksMap.get("TZ_11luniversitycountry");
 
 			uniSchoolName = ksMap.get("TZ_11luniversitysch");
 
@@ -2706,6 +2710,9 @@ public class tzOnlineAppEngineImpl {
 			income = ksMap.get("TZ_20TZ_TZ_20_21");
 
 			bkfx = ksMap.get("TZ_3TZ_TZ_3_3");
+
+			idnum = ksMap.get("TZ_6idnum");
+
 			if (ksMap.get("TZ_17TZ_TZ_17_1") == null || ksMap.get("TZ_17TZ_TZ_17_1").equals("")
 					|| ksMap.get("TZ_17TZ_TZ_17_1").equals(" ")) {
 				isOwrCompany = "N";
@@ -2746,6 +2753,7 @@ public class tzOnlineAppEngineImpl {
 			psTzRegUserT.setTzComment12(AdminworkYear);
 			psTzRegUserT.setTzComment13(partperNum);
 			psTzRegUserT.setTzComment14(income);
+			psTzRegUserT.setNationalId(idnum);
 
 			String ReisY = sqlQuery.queryForObject(sql_ReisY, new Object[] { strAppOprId }, "String");
 			if (ReisY != null && ReisY.equals("Y")) {
