@@ -13,7 +13,7 @@ Ext.define('KitchenSink.view.enrollProject.userMg.exportExcel.exportExcelControl
                 var applicantsList = new Array();
                 for(var i=0;i<win.selList.length;i++){
                    applicantsList.push(win.selList[i].get('OPRID'));
-				   console.log(win.selList[i].get('OPRID'));
+				   //console.log(win.selList[i].get('OPRID'));
                 }
                 this.doExportExcelAction(win,applicantsList,appFormModalID,excelTpl,excelName);
             }else{
@@ -37,7 +37,7 @@ Ext.define('KitchenSink.view.enrollProject.userMg.exportExcel.exportExcelControl
     },
     queryExcel:function(btn){
         Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_BMGL_BMBSH_COM.TZ_EXP_EXCEL_STD.TZ_GD_DCEXCEL_V',
+            cfgSrhId: 'TZ_UM_USERMG_COM.TZ_EXP_EXCEL_STD.TZ_GD_DCEXCEL_V',
             condition:
             {
                 TZ_DLZH_ID: TranzvisionMeikecityAdvanced.Boot.loginUserId
@@ -148,7 +148,7 @@ Ext.define('KitchenSink.view.enrollProject.userMg.exportExcel.exportExcelControl
         }
 
         //提交参数
-        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_EXP_EXCEL_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_EXP_EXCEL_STD","OperateType":"U","comParams":{'+comParams+'}}';
         //保存数据
         Ext.tzSubmit(tzParams,function(){
             store.reload();
