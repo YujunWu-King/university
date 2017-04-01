@@ -242,19 +242,19 @@ public class TzGdBmgDcExcelClass {
 												strAppFormFieldValue = jdbcTemplate.queryForObject(sql1,
 														new Object[] { Long.parseLong(arrAppInsID[i]), strAppFormField },
 														String.class);
-											} catch (Exception e) {
-												strAppFormFieldValue = "";
-											}
-
-										}
-										if ("Select".equals(strComClassName) || "CompanyNature".equals(strComClassName)
-												|| "Degree".equals(strComClassName) || "Diploma".equals(strComClassName)) {
-											try {
-												strAppFormFieldValue = jdbcTemplate.queryForObject(
-														"SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?",
-														new Object[] { appFormModalID, strInfoSelectID,
-																strAppFormFieldValue },
-														String.class);
+												//没有配置码表，而且是以下控件类名称则从可选值选项里面取描述
+												if ("Select".equals(strComClassName) || "CompanyNature".equals(strComClassName)
+														|| "Degree".equals(strComClassName) || "Diploma".equals(strComClassName)) {
+													try {
+														strAppFormFieldValue = jdbcTemplate.queryForObject(
+																"SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?",
+																new Object[] { appFormModalID, strInfoSelectID,
+																		strAppFormFieldValue },
+																String.class);
+													} catch (Exception e) {
+														strAppFormFieldValue = "";
+													}
+												}
 											} catch (Exception e) {
 												strAppFormFieldValue = "";
 											}
