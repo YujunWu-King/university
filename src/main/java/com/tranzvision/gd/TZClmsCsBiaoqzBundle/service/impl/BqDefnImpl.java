@@ -1,12 +1,10 @@
 package com.tranzvision.gd.TZClmsCsBiaoqzBundle.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,19 +64,19 @@ public class BqDefnImpl extends FrameworkImpl {
 			String strbqName = jacksonUtil.getString("bqName");
 			String strDesc = jacksonUtil.getString("bqDesc");
 			String strJava = jacksonUtil.getString("java");
-			
+
 			PsTzBiaoqzBqT PsTzBiaoqzBqT = new PsTzBiaoqzBqT();
-					PsTzBiaoqzBqT.setTzBiaoqzId(strbqzID);
-					PsTzBiaoqzBqT.setTzBiaoqId(strbqID);
-					PsTzBiaoqzBqT.setTzJgId(orgid);
-					PsTzBiaoqzBqT.setTzBiaoqzName(strbqName);
-					PsTzBiaoqzBqT.setTzBiaoqzJava(strJava);
-					PsTzBiaoqzBqT.setTzDesc(strDesc);
-					int i = PsTzBiaoqzBqTMapper.insert(PsTzBiaoqzBqT);
-					if(i <= 0){
-						errMsg[0] = "1";
-						errMsg[1] = "保存失败";
-					}
+			PsTzBiaoqzBqT.setTzBiaoqzId(strbqzID);
+			PsTzBiaoqzBqT.setTzBiaoqId(strbqID);
+			PsTzBiaoqzBqT.setTzJgId(orgid);
+			PsTzBiaoqzBqT.setTzBiaoqzName(strbqName);
+			PsTzBiaoqzBqT.setTzBiaoqzJava(strJava);
+			PsTzBiaoqzBqT.setTzDesc(strDesc);
+			int i = PsTzBiaoqzBqTMapper.insert(PsTzBiaoqzBqT);
+			if (i <= 0) {
+				errMsg[0] = "1";
+				errMsg[1] = "保存失败";
+			}
 
 		} catch (Exception e) {
 			errMsg[0] = "1";
@@ -111,8 +109,8 @@ public class BqDefnImpl extends FrameworkImpl {
 			// 标签名称;
 			String strbqName = jacksonUtil.getString("bqName");
 			String strDesc = jacksonUtil.getString("bqDesc");
-			String strJava = jacksonUtil.getString("strJava");
-			
+			String strJava = jacksonUtil.getString("java");
+
 			PsTzBiaoqzBqT PsTzBiaoqzBqT = new PsTzBiaoqzBqT();
 			PsTzBiaoqzBqT.setTzBiaoqzId(strbqzID);
 			PsTzBiaoqzBqT.setTzBiaoqId(strbqID);
@@ -121,16 +119,15 @@ public class BqDefnImpl extends FrameworkImpl {
 			PsTzBiaoqzBqT.setTzBiaoqzJava(strJava);
 			PsTzBiaoqzBqT.setTzDesc(strDesc);
 			int i = PsTzBiaoqzBqTMapper.updateByPrimaryKeySelective(PsTzBiaoqzBqT);
-			if(i <= 0){
+			if (i <= 0) {
 				errMsg[0] = "1";
 				errMsg[1] = "更新数据失败";
 			}
 
-			/*} else {
-				errMsg[0] = "1";
-				errMsg[1] = "当前标签组下，标签ID为：" + strPageID + "的信息不存在";
-				return strRet;
-			}*/
+			/*
+			 * } else { errMsg[0] = "1"; errMsg[1] = "当前标签组下，标签ID为：" + strPageID
+			 * + "的信息不存在"; return strRet; }
+			 */
 
 		} catch (Exception e) {
 			errMsg[0] = "1";

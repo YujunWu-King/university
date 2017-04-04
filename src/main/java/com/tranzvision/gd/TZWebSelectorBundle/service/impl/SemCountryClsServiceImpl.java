@@ -24,7 +24,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  * 
  * @author yuds
  * 
- * 另存CountryClsServiceImpl，已使用手机版开发
+ *         另存CountryClsServiceImpl，已使用手机版开发
  */
 @Service("com.tranzvision.gd.TZWebSelectorBundle.service.impl.SemCountryClsServiceImpl")
 public class SemCountryClsServiceImpl extends FrameworkImpl {
@@ -175,12 +175,14 @@ public class SemCountryClsServiceImpl extends FrameworkImpl {
 		String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 		imgPath = request.getContextPath() + imgPath + "/" + skinId;
 
+		String title1 = this.getMessageTextWithLanguageCd(jgId, language, "TZ_GD_COUNTRY_SELECT", "C_COUNTRY", "国家选择",
+				"Country Choose");
 		String title = this.getMessageTextWithLanguageCd(jgId, language, "TZ_GD_COUNTRY_SELECT", "C_TITLE", "国家/地区选择",
 				"Country/State Select");
 		String chooseState = this.getMessageTextWithLanguageCd(jgId, language, "TZ_GD_COUNTRY_SELECT", "CHOOSE_STATE",
 				"选择洲", "Choose State");
-		String chooseCountry = this.getMessageTextWithLanguageCd(jgId, language, "TZ_GD_COUNTRY_SELECT", "CHOOSE_COUNTRY",
-			"选择国家", "Choose Country");
+		String chooseCountry = this.getMessageTextWithLanguageCd(jgId, language, "TZ_GD_COUNTRY_SELECT",
+				"CHOOSE_COUNTRY", "选择国家", "Choose Country");
 		String query = this.getMessageTextWithLanguageCd(jgId, language, "TZ_GD_COUNTRY_SELECT", "QUERY", "搜索",
 				"Search");
 		String ok = this.getMessageTextWithLanguageCd(jgId, language, "TZ_GD_COUNTRY_SELECT", "OK", "确 认", "OK");
@@ -190,7 +192,7 @@ public class SemCountryClsServiceImpl extends FrameworkImpl {
 		String nationalHtml = "";
 		try {
 			nationalHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_MNATIONAL_SELECT", tzGeneralURL, title,
-					 chooseState, chooseCountry, language);
+					chooseState, chooseCountry, language, title1);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}
