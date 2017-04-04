@@ -174,21 +174,27 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 #sendBtn[disabled]{background-color:#ddd;color:#999;}
 /*注册弹窗*/
 .shade{display:none;width: 100%; height: 100%; position:fixed; top:0; left: 0; background-color: #000; opacity: 0.6; filter: alpha(opacity=60); -ms-filter: "alpha(opacity=30)"; z-index: 135;}
-.country_pop{display:none;width:90%;height:auto;position:fixed;z-index:150;top:15%;left:5%;background-color:#fff;border-radius:0.3rem;}
-.school_pop{display:none;width:90%;height:auto;position:fixed;z-index:150;top:15%;left:5%;background-color:#fff;border-radius:0.3rem;}
+.country_pop{display:block;width:100%;height:auto;background-color:#fff;border-radius:0.3rem;margin:3% auto;}
+/* .country_pop{display:none;width:90%;height:auto;position:fixed;z-index:150;top:15%;left:5%;background-color:#fff;border-radius:0.3rem;}*/
+/* .school_pop{display:none;width:90%;height:auto;position:fixed;z-index:150;top:15%;left:5%;background-color:#fff;border-radius:0.3rem;} */
+
+.school_pop{display:block;width:100%;height:auto;margin:3% auto;background-color:#fff;border-radius:0.3rem;}
 .pop_tit{width:94%;height:auto;margin:2% auto;font-size:0.6rem;color:#8f5dbf;overflow:hidden;}
 .pop_tit span{float:left;}
 .pop_tit a{display:block;float:right;}
 .pop_search{width:94%;margin:2% auto;overflow:hidden;}
 .pop_search1{width:94%;margin:0 auto;overflow:hidden;}
-.pop_search i{margin-top:2%;float:right;display:block;width:1rem;height:1rem;background:url(../images/pop_se.png)no-repeat center center;background-color:#8f5dbf;border-radius:5px;background-size:70%;}
+.pop_search i{margin-top:2%;float:right;display:block;width:1.5rem;height:1.5rem;background:url(../images/pop_se.png)no-repeat center center;background-color:#8f5dbf;border-radius:5px;background-size:70%;}
+/* .pop_search i{margin-top:2%;float:right;display:block;width:1rem;height:1rem;background:url(../images/pop_se.png)no-repeat center center;background-color:#8f5dbf;border-radius:5px;background-size:70%;} */
 .pop_search1 i{margin-top:2%;float:right;display:block;width:1rem;height:1rem;background:url(../images/pop_se.png)no-repeat center center;background-color:#8f5dbf;border-radius:5px;background-size:70%;}
 .pop_chose{width:94%;margin:4% auto;font-size:0.6rem;color:#333;border-bottom:1px solid #ddd;padding-bottom: 2%;}
 .chose_list{width:94%;margin:2% auto;font-size:0.54rem;color:#666;overflow:hidden;}
 .chose_list li{float:left;padding:2% 5%;}
 .chose_on{color:#8f5dbf;}
-.country_list{width:94%;margin:2% auto;font-size:0.54rem;color:#666;height:100px;overflow-y:auto;}
-.country_list li{padding:2% 0 0 5%;}
+.country_list{width:94%;margin:2% auto;font-size:0.54rem;color:#666;}
+.country_list li{padding:2% 0 2% 5%;}
+/* .country_list{width:94%;margin:2% auto;font-size:0.54rem;color:#666;height:100px;overflow-y:auto;}
+.country_list li{padding:2% 0 0 5%;} */
 .pop_close{color:#666 !important;}
 
 /*下拉选择*/
