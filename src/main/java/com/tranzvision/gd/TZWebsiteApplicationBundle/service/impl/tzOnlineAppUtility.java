@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -61,6 +63,7 @@ public class tzOnlineAppUtility {
 		String strXxxValue = "";
 
 		try {
+			
 			switch (strComMc) {
 			case "EduExperience":
 				break;
@@ -204,7 +207,64 @@ public class tzOnlineAppUtility {
 					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 					break;
 				}
+				break;
+			//公司性质后台校验:
+			case "FirmType":
+				returnMessage="";
+				getChildrenSql="select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+				//区分"公司性质"和"岗位性质":
+				String opts[]=new String[]{"firm_type","position_type"};
+				//System.out.println(strComMc);
+				System.out.println(strXxxBh);
+				for(String opt:opts){
+					Map<String,Object>valMap=new HashMap<String,Object>();
+					valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
+					if(valMap!=null){
+						strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if ("".equals(strXxxValue)||"-1".equals(strXxxValue)) {
+							if(opt.equals("firm_type")){
+								returnMessage = this.getMsg("公司性质", strJygzTsxx);
+							}else if(opt.equals("position_type")){
+								returnMessage = this.getMsg("岗位类型", strJygzTsxx);
+							}
+							//returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							break;
+						}
+					}
+					else{
+						returnMessage = this.getMsg("公司性质和岗位类型", strJygzTsxx);
+					}
+				}
+				
 
+				break;
+			//英语水平后台校验		
+			case "EngLevl":	
+				getChildrenSql="select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+				//附件部分验证:
+				String getAttCount="select COUNT(1) from PS_TZ_FORM_ATT_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+				List<Map<String,Object>>valList=new ArrayList<Map<String,Object>>();
+				valList=sqlQuery.queryForList(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+"%"});
+				
+				int attCount=sqlQuery.queryForObject(getAttCount, new Object[]{numAppInsId,"%"+strXxxBh+"%"}, "int");
+				returnMessage="";
+				if(attCount==0){
+					returnMessage = this.getMsg(strXxxMc, "请上传附件");
+					
+				}
+				if(valList!=null){
+					for(Map<String,Object>valMap:valList){
+						strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if ("".equals(strXxxValue)||"-1".equals(strXxxValue)) {
+							// 校验失败
+							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							break;
+						}
+					}
+				}
+				else{
+					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+				}
 				break;
 			default:
 				getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? AND TZ_IS_HIDDEN <> 'Y'";

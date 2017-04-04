@@ -57,7 +57,7 @@ public class TzGdBmgExcelUtility {
 		String strBmrSqYear = "";
 		
 		strBmrSqYear = jdbcTemplate.queryForObject("SELECT year(TZ_RX_DT) TZ_RX_DT FROM PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B "
-				+ "WHERE A.TZ_APP_INS_ID = ? AND A.TZ_CLASS_ID = B.TZ_CLASS_ID LIMIT 0,1",new Object[]{appInsId},String.class);
+				+ " WHERE A.TZ_APP_INS_ID = ? AND A.TZ_CLASS_ID = B.TZ_CLASS_ID LIMIT 0,1",new Object[]{appInsId},String.class);
 		
 		if(strBmrSqYear==null){
 			strBmrSqYear = "";
@@ -123,7 +123,7 @@ public class TzGdBmgExcelUtility {
 				+ " PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B,PS_TZ_CLS_BATCH_T C"
 				+ " WHERE A.TZ_APP_INS_ID = ? AND A.TZ_CLASS_ID = B.TZ_CLASS_ID"
 				+ " AND A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_BATCH_ID = C.TZ_BATCH_ID"
-				+	"LIMIT 0,1",
+				+ " LIMIT 0,1",
 				new Object[]{appInsId});
 		if(getBmrSqInfoMap != null){
 			strBmrSqYear = getBmrSqInfoMap.get("TZ_RX_DT") == null ? "":String.valueOf(getBmrSqInfoMap.get("TZ_RX_DT"));
@@ -138,4 +138,35 @@ public class TzGdBmgExcelUtility {
 		
 		return strBmrSqInfo;	
 	}
+	
+	/*获取报名人学校类型*/
+	public String getBmrSchoolType(String strAppInsId ,String strAppTplId) throws Exception
+	{
+		Long appInsId = Long.parseLong(strAppInsId);
+		
+		String strBmrSchoolBhxxx = "";
+		
+		String strBmrSchool = "";
+		
+		String strBmrSchoolType = "";
+		
+		strBmrSchoolBhxxx = jdbcTemplate.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 0,1",
+						new Object[]{"TZ_BMR_SCHOOL_XXXBH"},String.class);
+		
+		strBmrSchool = jdbcTemplate.queryForObject("SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T A WHERE TZ_APP_INS_ID= ? AND TZ_XXX_BH= ? LIMIT 0,1",
+				new Object[]{appInsId,strBmrSchoolBhxxx},String.class);
+		
+		
+		if(strBmrSchool==null || "".equals(strBmrSchool)){
+			strBmrSchoolType = jdbcTemplate.queryForObject("select TZ_SCHOOL_TYPENAME from PS_TZ_SCH_LIB_TBL A, PS_TZ_SCHOOL_TYPE_TBL B WHERE A.TZ_SCHOOL_TYPE = B.TZ_SCHOOL_TYPEID AND A.TZ_SCHOOL_NAME = ? LIMIT 0,1",
+					new Object[]{strBmrSchool},String.class);
+			if(strBmrSchool==null || "".equals(strBmrSchool)){
+				strBmrSchoolType = "";
+			}
+		}
+		
+		return strBmrSchoolType;	
+	}
+	
+	
 }
