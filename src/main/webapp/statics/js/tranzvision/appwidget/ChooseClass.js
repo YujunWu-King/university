@@ -91,7 +91,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	    	 if(SurveyBuild._readonly || $("#ClassId").length <= 0){
 	    		 e += '	<div class="input-list-text left">' + child.bmrClass.wzsm + '</div>';
 	    	 } else {
-	    		 e += '	<div class="input-list-text left" ><span id="'+data["itemId"]+child.bmrClass.itemId+'_SPAN">' + child.bmrClass.wzsm + '</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="'+data["itemId"]+child.bmrClass.itemId+'_Btn">'+MsgSet["CHAGE_CLASS"]+'</a></div>';
+	    		 e += '	<div class="input-list-text left" ><span id="'+data["itemId"]+child.bmrClass.itemId+'_SPAN">' + child.bmrClass.wzsm + '</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="'+data["itemId"]+child.bmrClass.itemId+'_Btnselect">'+MsgSet["CHAGE_CLASS"]+'</a></div>';
 	    	 }
 	    	 
 	    	 e += '	<div class="input-list-suffix left"></div>';
@@ -199,7 +199,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 		if (child == undefined) {
    		 child=data["children"];
    	 	}
-		var $selectBtn = $("#"+data["itemId"] +child.bmrClass.itemId+ "_Btn");
+		var $selectBtn = $("#"+data["itemId"] +child.bmrClass.itemId+ "_Btnselect");
 
 		var siteId=$("#siteId").val();
 		

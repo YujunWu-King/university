@@ -73,7 +73,7 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportWindow', {
 		var mappingStore = new Ext.data.Store({
 			fields:['columnTitle','field'],
 			data:[]
-		})
+		});
 		
 		//导入模板字段
 		var tplFieldsStore = new Ext.data.Store({
@@ -90,7 +90,7 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportWindow', {
 					"TZ_TPL_ID-value":me.tplId
 				}
 			})
-		})
+		});
 		
         Ext.apply(this,{
             items:[
@@ -273,6 +273,7 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportWindow', {
                                             xtype: 'checkboxfield',
                                             boxLabel: '首行是标题行',
                                             name: 'firstLineTitle_2',
+                                            value:"Y",
                                             inputValue: 'Y'
                                         }
                                     ]

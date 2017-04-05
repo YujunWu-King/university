@@ -48,6 +48,18 @@ var tzGeneralURL = "%bind(:1)";
 			  	}
 			});
 		}
+		//新增加返回按钮
+		
+		
+        
+		function returnResi(){
+			//关闭窗口后一定要清空该项
+			$("#searchSchool").empty();
+			$("#searchSchool").fadeOut("slow");
+	       // $("#new_school").fadeOut("slow");
+	       $("#body").css("position","relative");
+           $("#before").fadeIn("slow");
+		}
 	
 		function closePop(){
 			$(".shade").hide();
@@ -61,8 +73,10 @@ var tzGeneralURL = "%bind(:1)";
 				//设置返回值
 				var clickId = $("#ParamCon").val();
 				$("#" + clickId).val(otherSchool);
-				//关闭窗口
-				closePop();
+				/* //关闭窗口
+				closePop(); */
+				//返回窗口
+				returnResi();
 				//清华MBA
 				if((typeof changeImg)=="function"){
 					var successFlg = "S";					
@@ -78,8 +92,10 @@ var tzGeneralURL = "%bind(:1)";
 			//设置返回值
 			var clickId = $("#ParamCon").val();
 			$("#" + clickId).val(school);			
-			//关闭窗口
-			closePop();
+			/* //关闭窗口
+			closePop(); */
+			//返回
+			returnResi();
 			//清华MBA
 			if((typeof changeImg)=="function"){
 				var successFlg = "F";		
@@ -119,8 +135,19 @@ var tzGeneralURL = "%bind(:1)";
 			});
 		}
 	</script>
+
+
+    
+
+	   <div class="bg1">
+	     <!-- 头部 -->
+	     <div class="topbar">
+	   	    院校选择 <a  href="javascript:void(0)" class="return_r" onclick="returnResi()"><i></i></a>
+	   	 </div>
+	   
+	   		<div class="school_pop">   
 <div class="pop_tit">
-	<span>选择学校</span> <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a>
+	<span>选择学校</span> <!-- <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a> -->
 </div>
 <div class="pop_search">
 	<input type="text" name="search-text" id="search-text"
@@ -133,10 +160,13 @@ var tzGeneralURL = "%bind(:1)";
 <div class="pop_search1">
 <input type="text" id="otherSchool" name="otherSchool" style="width: 86%; margin: 1% auto 4%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
 <!-- <a href="javascript:void(0)"><i></i></a> -->
+<!-- <a href="#" class="login_btn" style="width:94%;position:fixed;bottom:2%;left:50%;margin:0 0 0 -47%;">确认</a> -->
 <input type="button" id="sureOtherSchool" name="sureOtherSchool" value="确认" style="width:42px;height:24px;border-radius:3px;background-color:#8f5dc0;text-align:center;margin-left:5px;margin-top:3px;" onclick="sureOther()"/>
 </div>		
 <input id="FanhuiValue2" type="hidden" />
 <input id="language" type="hidden" value="%bind(:5)"/>
+</div>
+</div>
 <script type="text/javascript">
 	$(document).ready(function(){
 		setTab(1);

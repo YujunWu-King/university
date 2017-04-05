@@ -30,7 +30,7 @@ var RegisterTips={
 	_phone_eng:"The mobile phone is incorrect!",
 	_phone_zhs:"手机号码不正确！",
 	_pwd_eng:"Stronger password needed.",
-	_pwd_zhs:"密码不正确！",
+	_pwd_zhs:"6-32个字符，只能包含字母、数字及下划线，字母、数字和下划线至少包含两种！",
 	_pwdl_eng:"Password length must be greater than 6 less than 32!",
 	_pwdl_zhs:"密码长度必须大于6小于32位!",
 	_pwdc_eng:"Password and confirm password is Inconsistent!",
@@ -92,6 +92,7 @@ $(document).ready(function(){
 		var TipCode = "";
 		var PwdLen ="";
 		var PwdCor="";
+		var pwdFormatErr = "";
 		if ($("#lang").val()=="ENG")
 		{
 			TipBlank = RegisterTips._blank_eng;
@@ -100,7 +101,7 @@ $(document).ready(function(){
 			PwdError = RegisterTips._pwd_eng;
 			TipCode = RegisterTips._code_eng;
 			PwdLen=RegisterTips._pwdl_eng;
-			PwdCor=RegisterTips._pwdc_eng;
+			PwdCor=RegisterTips._pwdc_eng;			
 		}else{
 			TipBlank = RegisterTips._blank_zhs;
 			TipEmail = RegisterTips._email_zhs;
@@ -245,33 +246,40 @@ $(document).ready(function(){
 					}else if(fieldId=="TZ_REPASSWORD"){//确认密码
 						var password =$("#TZ_PASSWORD").val();
 						if(password !=''){
+							var pwd = $("#status_PASSWORD").val();
+							
 							if(password.length<6 ||password.length>32){
 								$('#TZ_PASSWORD_status').html(PwdLen); 
 								$('#status_TZ_PASSWORD').attr("value", 1);
 								//$("#TZ_PASSWORD_status").show();
 								changeImg(fieldId,"F");
-							}else if(val ==''){
-								$('#TZ_PASSWORD_status').html("");
+							}else if(val ==''){								
 								$('#TZ_REPASSWORD_status').html(TipBlank);
 						     	$('#status_TZ_PASSWORD').attr("value", 1); 
-						     	//$('#TZ_PASSWORD_status').hide();
-								changeImg("TZ_PASSWORD","S");
+						     	if(pwd == 0){
+						     		$('#TZ_PASSWORD_status').html("");
+						     		changeImg("TZ_PASSWORD","S");
+						     	}								
 								//$('#TZ_REPASSWORD_status').show();
 								changeImg(fieldId,"F");
-							}else if(val == password){
-								$('#TZ_PASSWORD_status').html("");
+							}else if(val == password){								
 								$('#TZ_REPASSWORD_status').html("");
 					        	$('#status_TZ_PASSWORD').attr("value", 0); 
 					        	//$('#TZ_PASSWORD_status').hide();
-								changeImg("TZ_PASSWORD","S");
+					        	if(pwd == 0){
+					        		$('#TZ_PASSWORD_status').html("");
+						     		changeImg("TZ_PASSWORD","S");
+						     	}
 								//$('#TZ_REPASSWORD_status').hide();
 								changeImg(fieldId,"S");
-							}else if(val != password){
-								$('#TZ_PASSWORD_status').html("");
+							}else if(val != password){								
 								$('#TZ_REPASSWORD_status').html(PwdCor); 
 								$('#status_TZ_PASSWORD').attr("value", 1);
 								//$('#TZ_PASSWORD_status').hide();
-								changeImg("TZ_PASSWORD","S");
+								if(pwd == 0){
+									$('#TZ_PASSWORD_status').html("");
+						     		changeImg("TZ_PASSWORD","S");
+						     	}
 								//$('#TZ_REPASSWORD_status').show();
 								changeImg(fieldId,"F");
 							}
@@ -422,9 +430,12 @@ $(document).ready(function(){
 				success: function(result){
 					$("#searchCountry").html("");
 					$("#searchCountry").html(result);
-					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchCountry").show();
+					//$("#body").css("position","fixed");
+					//$(".shade").show();
+					
+					$("#before").hide();
+				    $("#searchCountry").fadeIn("slow"); 
+                     loaded ();
 				}
 			});
 		});
@@ -467,8 +478,11 @@ $(document).ready(function(){
 				$("#searchSchool").html("");
 				$("#searchSchool").html(result);
 				$("#body").css("position","fixed");
-				$(".shade").show();
-			    $("#searchSchool").show();
+				$("#before").hide();
+				$("#searchSchool").fadeIn("slow"); 
+                 loaded1 ();
+				/*$(".shade").show();
+			    $("#searchSchool").show();*/
 			}
 		});
     });
@@ -506,10 +520,16 @@ $(document).ready(function(){
 				dataType: "html",
 				success: function(result){
 					$("#searchState").html("");
+				$("#searchState").html(result);
+				$("#body").css("position","fixed");
+				$("#before").hide();
+				$("#searchState").fadeIn("slow"); 
+                 loaded1 ();
+				/*	$("#searchState").html("");
 					$("#searchState").html(result);
 					$("#body").css("position","fixed");
 					$(".shade").show();
-				    $("#searchState").show();
+				    $("#searchState").show();*/
 				}
 			});
 		});

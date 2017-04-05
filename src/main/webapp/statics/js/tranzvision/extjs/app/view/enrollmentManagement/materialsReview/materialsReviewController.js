@@ -301,7 +301,7 @@
             result:'TZ_COLOR_SORT_ID,TZ_COLOR_NAME,TZ_COLOR_CODE',
             listeners:{
                 load:function( store, records, successful, eOpts){
-                    console.log(records);
+                    
                     for(var i=0;i<records.length;i++){
                         initData.push(records[i].data);
                         stuGridColorSortFilterOptions.push([records[i].data.TZ_COLOR_SORT_ID,records[i].data.TZ_COLOR_NAME]);
@@ -1165,7 +1165,7 @@
                 appInsID=selList[0].data.appInsID;
                 PLapp=appInsID;
             }
-            console.log(grid,selList)
+            
             cmp = new ViewClass(
                 appGrid=grid,
                 appRowIndex="",
@@ -1496,15 +1496,12 @@
             var store = win.child('grid').getStore(),
                 tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_ADDAPP_STD.TZ_CL_ADDAPP_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+Ext.tzOrgID+'","TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value":"'+classID+'"}}';
            store.tzStoreParams = tzStoreParams;
-            console.log("storeload")
+            
             store.load({
                 callback:function(){
-console.log("callBack")
 //                store.on('prefetch',self.ifClearCondition(store));
             }
                 });
-            console.log(store)
-            console.log(store.filter)
 //           store.filterBy(function(record) {
 //            return record.get('FirstTrialStatus') == "已通过";
 //        });
@@ -1770,7 +1767,7 @@ console.log("callBack")
                             adminRemark = form.findField("adminRemark").getValue(),
                             colorType= form.findField("colorType").getValue(),
                             record = selList[0];
-                        console.log(record);
+                        
                         record.set("interviewQualification",interviewQualification||'');
                         record.set("colorType",colorType||'');
                         record.set("remark",remark||'');
@@ -1789,7 +1786,7 @@ console.log("callBack")
         }
     },
     editCurrentApplicant:function(btn,rowIndex){
-        console.log('qwe');
+        
         var self=this,
             form = btn.findParentByType("grid").findParentByType("form").getForm(),
             grid = btn.findParentByType("grid"),
@@ -1797,7 +1794,7 @@ console.log("callBack")
             batchID = form.findField("batchID").getValue(),
             datas = grid.getStore().getAt(rowIndex).data;
         var interviewQualification=datas.interviewQualification;
-        console.log(interviewQualification);
+        
         var colorType=datas.colorType;
         if (interviewQualification=="")
         {  interviewQualification="W"}
@@ -1931,7 +1928,7 @@ console.log("callBack")
                         adminRemark = form.findField("adminRemark").getValue(),
                         colorType= form.findField("colorType").getValue(),
                         record = grid.getStore().getAt(rowIndex);
-                    console.log(record);
+                    
                     record.set("interviewQualification",interviewQualification||'');
                     record.set("remark",remark||'');
                     record.set("colorType",colorType||'');
@@ -1970,7 +1967,7 @@ console.log("callBack")
                     {
                         if (selList[i].data.judgeList!="")
                         {
-                            console.log(selList)
+                            
                             tiShi=tiShi+1;
                             selList.splice(i,"1"," ");
                         }
@@ -2487,8 +2484,8 @@ console.log("callBack")
                 }
             }
         }
-        console.log(allJudge);
-        console.log(allJudge[0]);
+        //console.log(allJudge);
+        //console.log(allJudge[0]);
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_VWJUD_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
@@ -2547,7 +2544,7 @@ console.log("callBack")
             var scoreItems=[];
 //返回json的root
             var value=resp.root;
-            console.log(value)
+            //console.log(value)
             //因为考虑到无评委不会提交请求，故返回的root内必有数据
             //所有数据的打分类型一致，取第一组数据打分类型
             var scoreTypes=value[0].score;
@@ -2583,7 +2580,7 @@ console.log("callBack")
 
     },
     viewJudge:function(grid,record,rowIndex){
-
+    	Ext.tzSetCompResourses("TZ_REVIEW_CL_COM");
         var gridData=grid.getStore().getAt(rowIndex).data;
         if(gridData.judgeInfo==""){
             return;
@@ -2609,9 +2606,9 @@ console.log("callBack")
         var form = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab().child('form').getForm(),
             JSONData={
                 appInsID:gridData.insID,
-                classID  :form.findField('classID').getValue(),
+                classID :form.findField('classID').getValue(),
                 batchID : form.findField('batchID').getValue(),
-                judgeList : gridData.judgeInfo.split(',')
+                oprID	: gridData.oprID
             };
 
         var comParams = Ext.JSON.encode(JSONData);
@@ -2620,9 +2617,9 @@ console.log("callBack")
         Ext.tzLoad(params, function(resp){
 
             var scoreItems=[];
-//返回json的root
+            //返回json的root
             var value=resp.root;
-            console.log(value)
+            //console.log(value)
             //因为考虑到无评委不会提交请求，故返回的root内必有数据
             //所有数据的打分类型一致，取第一组数据打分类型
             var scoreTypes=value[0].score;
@@ -2635,31 +2632,6 @@ console.log("callBack")
                 }
 
             }
-//
-//            var scoreItems=[];
-//
-//            var value=resp.root;
-//            var GridData,judgeScore,scoreItem;
-//
-//            for (var i=0;i<value.length;i++) {
-//                GridData = value[i];
-//
-//                judgeScore = Ext.JSON.decode(GridData.score);
-//
-//                for (var x = judgeScore.length - 1; x >= 0; x--) {
-//                    var n = 0;
-//                    scoreItem = judgeScore[x].name;
-//
-//                    for (var y = 0; y < scoreItems.length; y++) {
-//                        if (scoreItems[y] == scoreItem) {
-//                            n = n + 1;
-//                        }
-//                    }
-//                    if (n == 0) {
-//                        scoreItems.push(scoreItem);
-//                    }
-//                }
-//            }
 
             if (!win) {
                 Ext.syncRequire(className);
@@ -2699,7 +2671,7 @@ console.log("callBack")
             reStartReviewBtn = form.down("button[name=reStartReview]");
         //处理按钮样式
         //目前的逻辑，只有在点击启动后，结束按钮变为可用，所以只尝试修改结束按钮的样式
-
+        
         //删除不需要想后台传输的数据
         delete datas.batchName;
         delete datas.className;
@@ -2712,7 +2684,7 @@ console.log("callBack")
         if(judgeFormValue){
             datas.reviewCount = judgeFormValue.toString();
         }
-
+        
         //获取各个按钮的点击状态
         datas.startNewReviewClicked = form.down('button[name=startNewReview]').setType.toString();
         datas.closeReviewClicked = form.down('button[name=closeReview]').setType.toString();
@@ -2857,6 +2829,85 @@ console.log("callBack")
         this.judgeInfoController(btn,[{name:'submitYN',value:'N'}]);
 
     },
+    viewThisApplicationForm : function(grid, rowIndex, colIndex) {
+		Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+		// 是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
+		if (pageResSet == "" || pageResSet == undefined) {
+			Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+			return;
+		}
+
+		var store = grid.getStore();
+		var record = store.getAt(rowIndex);
+		
+		var classID = record.get("classID");
+		var oprID = record.get("oprID");
+		var appInsID = record.get("insID");	
+        
+		if (appInsID != "") {
+			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"' + appInsID + '","OPRID":"' + oprID + '"}}';
+			var viewUrl = Ext.tzGetGeneralURL() + "?tzParams="
+					+ encodeURIComponent(tzParams);
+			var mask;
+			var win = new Ext.Window(
+					{
+						name : 'applicationFormWindow',
+						title : Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.viewApplicationForm","查看报名表"),
+						maximized : true,
+						controller : 'materialsReview',
+						classID : classID,
+						oprID : oprID,
+						appInsID : appInsID,
+						gridRecord : record,
+						width : Ext.getBody().width,
+						height : Ext.getBody().height,
+						autoScroll : true,
+						border : false,
+						bodyBorder : false,
+						isTopContainer : true,
+						modal : true,
+						resizable : false,
+						items : [ new Ext.ux.IFrame(
+								{
+									xtype : 'iframepanel',
+									layout : 'fit',
+									style : "border:0px none;scrollbar:true",
+									border : false,
+									src : viewUrl,
+									height : "100%",
+									width : "100%"
+								}) 
+						],
+						buttons : [
+								{
+									text : Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.audit","审批"),
+									iconCls : "send",
+									handler : "auditApplicationForm"
+								},
+								{
+									text : Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
+									iconCls : "close",
+									handler : function() {
+										win.close();
+									}
+								} 
+						]
+					})
+			win.show();
+		} else {
+			Ext.MessageBox
+					.alert(
+							Ext
+									.tzGetResourse(
+											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt",
+											"提示"),
+							Ext
+									.tzGetResourse(
+											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm",
+											"找不到该报名人的报名表"));
+		}
+	},
     revokeData : function(btn){
         var selection = btn.findParentByType('grid').getSelectionModel().getSelection();
         if(selection.length == 0){
@@ -3032,67 +3083,7 @@ console.log("callBack")
                 }
             }
         })
-    },
-    viewThisApplicationForm: function(grid, rowIndex,colIndex){
-    	Ext.MessageBox.alert("提示","查看报名表暂无");
-    	return;
-        Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
-        //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
-        if( pageResSet == "" || pageResSet == undefined){
-            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
-            return;
-        }
-
-        var store = grid.getStore();
-        var record = store.getAt(rowIndex);
-        var classID=record.get("classID");
-        var appInsID=record.get("insID");
-
-        if(appInsID!=""){
-            var tzParams="{ComID:'TZ_ONLINE_REG_COM',PageID:'TZ_ONLINE_APP_STD',OperateType:'HTML',comParams:{TZ_APP_INS_ID:'"+appInsID+"'}}";
-            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+tzParams;
-            var mask ;
-            var win = new Ext.Window({
-                name:'applicationFormWindow',
-                title : Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.viewApplicationForm","查看报名表"),
-                maximized : true,
-                classID :classID,
-                appInsID : appInsID,
-                gridRecord:record,
-                width : Ext.getBody().width,
-                height : Ext.getBody().height,
-                autoScroll : true,
-                border:false,
-                bodyBorder : false,
-                isTopContainer : true,
-                modal : true,
-                resizable : false,
-                items:[
-                    new Ext.ux.IFrame({
-                        xtype: 'iframepanel',
-                        layout: 'fit',
-                        style : "border:0px none;scrollbar:true",
-                        border: false,
-                        src : viewUrl,
-                        height : "100%",
-                        width : "100%"
-                    })
-                ],
-                buttons: [
-                    {
-                        text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
-                        iconCls:"close",
-                        handler: function(){
-                            win.close();
-                        }
-                    }]
-            })
-            win.show();
-        }else{
-            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
-        }
-    },
+    },    
     printPFZB: function(btn){
         //Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
 
@@ -3147,12 +3138,18 @@ console.log("callBack")
             Ext.Msg.alert("提示","请选择要操作的记录");
             return;
         }else{
+        	var win = btn.findParentByType("materialsReviewSchedule");
+        	
         	var pwIds = "";
+        	var selectedIndex = [];
+        	var selectedRecords = [];
+        	var selectTmp = btn.findParentByType("grid[name=statisticalGrid]").getSelection();
             for(var x = 0;x<selList.getSelection().length;x++) {
-                var select = btn.findParentByType("grid").getSelection(),
-                    index = btn.findParentByType("grid").getStore().indexOf(select[x]),
-                    record = btn.findParentByType("grid").getStore().getAt(index);
-                
+                var select = btn.findParentByType("grid[name=statisticalGrid]").getSelection(),
+                    index = btn.findParentByType("grid[name=statisticalGrid]").getStore().indexOf(select[x]),
+                    record = btn.findParentByType("grid[name=statisticalGrid]").getStore().getAt(index);
+                selectedIndex.push(index);
+                selectedRecords.push(record);
                 var data = record.data;
                 pwIds = pwIds + data.col01 + ",";
             }
@@ -3201,22 +3198,98 @@ console.log("callBack")
                         var colName = '00' + (j + 1);
                         colName = 'col' + colName.substr(colName.length - 2);
                         dataRow.push(tmpdataArray[j][colName]);
-                    }
-                    console.log(tmpdataArray);
+                    }                    
                     statisticsGridDataModel['gridData'].push(dataRow);
                 }
-                /*var tStore = Ext.create('Ext.data.ArrayStore', {
-                    fields: statisticsGoalGridDataModel['gridFields'],
-                    data: statisticsGoalGridDataModel['gridData']
-                });*/
-                btn.findParentByType("grid").setData(statisticsGridDataModel['gridData']);                
+
+                var gridData = statisticsGridDataModel['gridData'];
+                var gridStore = btn.findParentByType("grid").getStore();
+                gridStore.setData(gridData);
+                //btn.findParentByType("grid").getSelectionModel().selectRows(selectedIndex);
+                
+                console.log(selectedIndex);
+                console.log(selectedRecords);
+                var getSle = btn.findParentByType("grid").getSelectionModel();
+                /*getSle.select(selectedIndex);
+                getSle.select(selectedRecords);*/
+                
+                /*for(var m=0;m<selectedIndex.length;m++){
+                	var selIndex = selectedIndex[m];
+                	btn.findParentByType("grid").getSelectionModel().selectRows(selIndex);
+                }*/
+                
+                //btn.findParentByType("grid").getSelectionModel().select(selectedRecords,true,true);
+                
+                win.ignoreChanges = false;
             });
         }
     },
-    userCalcuScoreDist:function(){
+    userCalcuScoreDist:function(btn){
+    	var grid =  btn.findParentByType("grid")
+    	var store = grid.getStore();
     	
+    	if(store.data.length>0){
+    		var lastIndex = store.data.length - 1;
+    		var lastData = store.getAt(lastIndex).data;
+    		var len = Object.getOwnPropertyNames(lastData).length;
+    		if(len>5){
+    			var form = btn.findParentByType("grid").findParentByType("form");    		
+    	    	var eGrid = form.child("grid[name=evaluationStandardGrid]");
+    	    	var eStore = eGrid.getStore();
+    	    	//只对第一行比率赋值
+    	    	var record = eStore.getAt(0);
+    			//动态属性部分赋值
+    	    	var j = 1;
+    			for(var i=6;i<len;i++){
+    				var colName = '00' + i;
+                    colName = 'col' + colName.substr(colName.length - 2);
+                    var sValue = lastData[colName];
+                    sValue = sValue.substr(0,sValue.indexOf("（"));
+                    var mxId = Object.getOwnPropertyNames(record.data)[j];
+                    record.set(mxId,sValue);
+                    
+                    j = j + 1;
+    			}
+    		}
+    	}
+    	    	
     },
-    saveEvaStandard: function(){
+    saveEvaStandard: function(btn){
+    	var view = this.getView();
+        var datas = view.child('form[name=materialsProgressForm]').getValues();
+        
+    	var form = btn.findParentByType("grid").findParentByType("form");    		
+    	var grid = form.child("grid[name=evaluationStandardGrid]");
+    	
+    	var store = grid.getStore();
+    	var modiRecords = store.getModifiedRecords();
+    	var data = {};
+    	data.type = "savePyData";
+        data.classID = datas.classID;
+        data.batchID = datas.batchID;
+        
+    	if(modiRecords.length !== 0){
+    		data.pyInfoUpdate = [];
+            for(var x =modiRecords.length-1;x>=0;x--){
+                var thisdata = modiRecords[x].data;                
+                data.pyInfoUpdate.push(thisdata);
+            }
+        }
+    	var win = btn.findParentByType("materialsReviewSchedule");
+    	var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":'  + Ext.JSON.encode(data) + '}';
+    	Ext.tzSubmit(tzParams,function(responseData){
+    		if(responseData!="success"){
+    			store.setData(responseData);
+    		}    		
+    	});
+    	win.ignoreChanges = true;
+    	/*Ext.tzLoad(tzParams, function (responseData) {
+    		
+    		if(responseData!="success"){
+    			store.setData(responseData);
+    		}
+    		win.ignoreChanges = false;
+        });*/
     	
     }
 });

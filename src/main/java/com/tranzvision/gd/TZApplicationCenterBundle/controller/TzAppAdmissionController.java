@@ -55,7 +55,7 @@ public class TzAppAdmissionController {
 	private PsTzUserregMbTMapper psTzUserregMbTMapper;
 	@Autowired
 	private TzWeChartJSSDKSign tzWeChartJSSDKSign;
-	
+
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
 	@Autowired
@@ -96,35 +96,39 @@ public class TzAppAdmissionController {
 				String tzLuquStaSql = "SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
 				String tzLuquSta = sqlQuery1.queryForObject(tzLuquStaSql, new Object[] { tzAppInsID }, "String");
 
-				// if (tzLuquSta=="A"){//条件录取
-				// 【1】查询证书模板id
-				String tzCertTplIdSql = "SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
-				String tzCertTplId = sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] { tzAppInsID }, "String");
+				if (tzLuquSta == "LQ") {// 条件录取
+					// 【1】查询证书模板id
+					String tzCertTplIdSql = "SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
+					String tzCertTplId = sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] { tzAppInsID },
+							"String");
 
-				// 【2】获取证书模板默认套打模板html
-				String tzCertMergHtmlSql = "SELECT TZ_CERT_MERG_HTML1 FROM PS_TZ_CERTTMPL_TBL WHERE TZ_CERT_TMPL_ID=? AND TZ_JG_ID=? AND TZ_USE_FLAG='Y'";
-				tzCertMergHtml = sqlQuery1.queryForObject(tzCertMergHtmlSql, new Object[] { tzCertTplId, orgid },
-						"String");
+					// 【2】获取证书模板默认套打模板html
+					String tzCertMergHtmlSql = "SELECT TZ_CERT_MERG_HTML1 FROM PS_TZ_CERTTMPL_TBL WHERE TZ_CERT_TMPL_ID=? AND TZ_JG_ID=? AND TZ_USE_FLAG='Y'";
+					tzCertMergHtml = sqlQuery1.queryForObject(tzCertMergHtmlSql, new Object[] { tzCertTplId, orgid },
+							"String");
 
-				// 【3】解析系统变量、返回解析后的html
-				int syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-				while (syavarStartIndex != -1) {
-					int syavarEndIndex = tzCertMergHtml.indexOf(']', syavarStartIndex);
-					String sysvarId = tzCertMergHtml.substring(syavarStartIndex + 8, syavarEndIndex);
-					System.out.println(sysvarId);
-					String[] sysVarParam = { orgid, siteid, oprid, tzAppInsID };
-					AnalysisSysVar analysisSysVar = new AnalysisSysVar();
-					analysisSysVar.setM_SysVarID(sysvarId);
-					analysisSysVar.setM_SysVarParam(sysVarParam);
-					Object sysvarValue = analysisSysVar.GetVarValue();
-					System.out.println((String) sysvarValue);
-					System.out.println("[SYSVAR-" + sysvarId + "]");
-					tzCertMergHtml = tzCertMergHtml.replace("[SYSVAR-" + sysvarId + "]", (String) sysvarValue);
+					// 【3】解析系统变量、返回解析后的html
+					int syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
+					while (syavarStartIndex != -1) {
+						int syavarEndIndex = tzCertMergHtml.indexOf(']', syavarStartIndex);
+						String sysvarId = tzCertMergHtml.substring(syavarStartIndex + 8, syavarEndIndex);
+						System.out.println(sysvarId);
+						String[] sysVarParam = { orgid, siteid, oprid, tzAppInsID };
+						AnalysisSysVar analysisSysVar = new AnalysisSysVar();
+						analysisSysVar.setM_SysVarID(sysvarId);
+						analysisSysVar.setM_SysVarParam(sysVarParam);
+						Object sysvarValue = analysisSysVar.GetVarValue();
+						System.out.println((String) sysvarValue);
+						System.out.println("[SYSVAR-" + sysvarId + "]");
+						tzCertMergHtml = tzCertMergHtml.replace("[SYSVAR-" + sysvarId + "]", (String) sysvarValue);
 
-					System.out.println(tzCertMergHtml);
-					syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-				};
-				
+						System.out.println(tzCertMergHtml);
+						syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
+					}
+				} else {
+					tzCertMergHtml = "抱歉，该考生未录取，无法查看录取通知书";
+				}
+
 				// 【4】生成静态录取通知书html
 				boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
 				if (!bl) {
@@ -154,10 +158,10 @@ public class TzAppAdmissionController {
 			return "";
 		}
 	}
-	
-	
+
 	/***
 	 * 生成微信签名信息
+	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -168,31 +172,28 @@ public class TzAppAdmissionController {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("result", "");
-		try{
+		try {
 			String url = request.getParameter("url");
-			
+
 			String appId = getHardCodePoint.getHardCodePointVal("TZ_WX_CORPID");
 			String secret = getHardCodePoint.getHardCodePointVal("TZ_WX_SECRET");
 			String wxType = getHardCodePoint.getHardCodePointVal("TZ_WX_TYPE");
-			
-			Map<String,String> signMap = tzWeChartJSSDKSign.sign(appId, secret, wxType, url);
 
-			if(signMap != null){
+			Map<String, String> signMap = tzWeChartJSSDKSign.sign(appId, secret, wxType, url);
+
+			if (signMap != null) {
 				jsonMap.replace("result", "success");
 				jsonMap.put("appId", appId);
 				jsonMap.put("timestamp", signMap.get("timestamp"));
 				jsonMap.put("nonceStr", signMap.get("nonceStr"));
 				jsonMap.put("signature", signMap.get("signature"));
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			jsonMap.replace("result", "failure");
 		}
 		return jacksonUtil.Map2json(jsonMap);
 	}
-	
-	
-	
 
 	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg) {
 		try {

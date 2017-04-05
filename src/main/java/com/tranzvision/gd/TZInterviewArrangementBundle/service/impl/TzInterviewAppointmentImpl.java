@@ -380,9 +380,37 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 					
 					PsTzMsyyKsTbl psTzMsyyKsTbl = psTzMsyyKsTblMapper.selectByPrimaryKey(psTzMsyyKsTblKey);
 					if(psTzMsyyKsTbl != null){
-						psTzMsyyKsTblMapper.deleteByPrimaryKey(psTzMsyyKsTblKey);
-						errorMsg[0] = "1";
-						errorMsg[1] = "撤销预约成功";
+						int del = psTzMsyyKsTblMapper.deleteByPrimaryKey(psTzMsyyKsTblKey);
+						if(del > 0){
+							errorMsg[0] = "0";
+							errorMsg[1] = "撤销预约成功";
+							
+							//撤销成功后发送站内信
+							try{
+								sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+								String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
+								//面试预约成功站内信模板
+								String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CX_ZNX_TMP");
+								//当前机构
+								String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+								
+								//创建邮件任务实例
+								String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
+								// 创建邮件发送听众
+								String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约成功站内信通知", "JSRW");
+								//添加听众成员
+								boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", pcId, oprid, classId, planId, "");
+								if(bl){
+									sendSmsOrMalServiceImpl.send(taskId, "");
+								}
+							}catch(NullPointerException nullEx){
+								//没有配置邮件模板
+								nullEx.printStackTrace();
+							}
+						}else{
+							errorMsg[0] = "1";
+							errorMsg[1] = "撤销预约失败";
+						}
 					}else{
 						psTzMsyyKsTbl = new PsTzMsyyKsTbl();
 						psTzMsyyKsTbl.setTzClassId(classId);
@@ -396,34 +424,33 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 						int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
 						if(rtn != 0){
 							errorMsg[0] = "0";
-							errorMsg[1] = "预约成功,将会发生预约信息至您的邮箱，请注意查收。";
+							errorMsg[1] = "预约成功";
 							
-							//预约成功后给发送邮件
-							sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
-							String mainEmail = jdbcTemplate.queryForObject(sql, new Object[]{ appInsId }, "String");
-							if(!"".equals(mainEmail) && mainEmail !=null){
+							//预约成功后发送站内信
+							try{
 								sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 								String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
-								try{
-									//面试预约成功通知邮件模板
-									String mailModel = getHardCodePoint.getHardCodePointVal("TZ_MS_APPO_MAIL_TMP");
-									//当前机构
-									String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-									
-									//创建邮件任务实例
-									String taskId = createTaskServiceImpl.createTaskIns(jgid, mailModel, "MAL", "A");
-									// 创建邮件发送听众
-									String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约通知邮件", "JSRW");
-									//添加听众成员
-									boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", mainEmail, "", pcId, oprid, classId, planId, "");
-									if(bl){
-										sendSmsOrMalServiceImpl.send(taskId, "");
-									}
-								}catch(NullPointerException nullEx){
-									//没有配置邮件模板
-									nullEx.printStackTrace();
+								//面试预约成功站内信模板
+								String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CG_ZNX_TMP");
+								//当前机构
+								String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+								
+								//创建邮件任务实例
+								String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
+								// 创建邮件发送听众
+								String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约成功站内信通知", "JSRW");
+								//添加听众成员
+								boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", pcId, oprid, classId, planId, "");
+								if(bl){
+									sendSmsOrMalServiceImpl.send(taskId, "");
 								}
+							}catch(NullPointerException nullEx){
+								//没有配置邮件模板
+								nullEx.printStackTrace();
 							}
+						}else{
+							errorMsg[0] = "1";
+							errorMsg[1] = "预约失败";
 						}
 					}
 					

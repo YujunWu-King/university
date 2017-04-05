@@ -251,7 +251,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				String orgId = classMap.get("TZ_JG_ID").toString();
 				
 				//String scoreModeId = classMap.get("TZ_CS_SCOR_MD_ID").toString();
-				String csTreeName = classMap.get("TREE_NAME").toString();
+				String csTreeName = classMap.get("TREE_NAME") == null ? "" : classMap.get("TREE_NAME").toString();
 				
 				if(!"".equals(csTreeName) && csTreeName != null){
 					
@@ -270,10 +270,9 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 						
 						columnsList.add(colMap);
 					}
-					
-					rtnMap.replace("className", className);
 					rtnMap.replace("columns", columnsList);
 				}
+				rtnMap.replace("className", className);
 			}
 		}catch(Exception e){
 			e.printStackTrace();

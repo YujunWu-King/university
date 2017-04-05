@@ -42,17 +42,18 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
         	}
         	        	
         	c += '<div class="input-list-blank margart15" id="upload_' + data.itemId + '">';
-        	c += '	<div class="input-list-infoupload left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+        	c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
         	c += '   	<div class="input-list-texttemplate left" style="display:' + (SurveyBuild._readonly?'none':'block') + '">';
         	c += '		<div>' + data.onShowMessage + '</div>';
         	c += '		<div class="filebtn left">';
         	c += '			<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
         	c += '			<input type="file" class="filebtn-orgtext" data-instancid = "' + data.instanceId + '" id = "' + data.itemId + '" name = "' + data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.uploadAttachment(this,\'' + data.instanceId + '\')">';
         	c += '		</div>';
+        	c += '	<div class="clear"></div>';
 			/*c += '		<div class="file-list-suffix">'+ data.suffix +'</div>';*/
 			c += '	<div class="file-list-suffix" style="display:' + (SurveyBuild._readonly?'none':'block') + '">' + (data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a>" : "") +'</div>';
 			c += '		<div class="clear"></div>';
-        	c += '		<div>' + msg + '<div id="' + data.itemId + 'Tip" class="onShow" style="line-height:32px;height:18px;"><div class="onShow"></div></div></div>';
+        	c += '		<div>' + msg + '<div id="' + data.itemId + 'Tip" class="onShow" style="line-height:32px;height:18px;margin-left: -18px;"><div class="onShow"></div></div></div>';
         	c += '	</div>';
         	c += '	<div class="input-list-info-blank left" style="display:' + (SurveyBuild._readonly?'none':'block') + '"><span class="red"></div>';                
         	c += '   	<div class="input-list-upload left">';
