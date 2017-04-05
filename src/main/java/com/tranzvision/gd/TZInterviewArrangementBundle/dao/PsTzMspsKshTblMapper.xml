@@ -5,6 +5,8 @@
     <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
     <id column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
     <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_MSPS_PWJ_PC" property="tzMspsPwjPc" jdbcType="DECIMAL" />
+    <result column="TZ_LUQU_ZT" property="tzLuquZt" jdbcType="VARCHAR" />
     <result column="TZ_BEIZHU" property="tzBeizhu" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
@@ -14,8 +16,8 @@
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, TZ_BEIZHU, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, TZ_MSPS_PWJ_PC, TZ_LUQU_ZT, TZ_BEIZHU, 
+    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTblKey" >
     select 
@@ -33,13 +35,15 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl" >
     insert into PS_TZ_MSPS_KSH_TBL (TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, 
-      TZ_BEIZHU, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
-      SYNCDTTM)
+      TZ_MSPS_PWJ_PC, TZ_LUQU_ZT, TZ_BEIZHU, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+      )
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, 
-      #{tzBeizhu,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
-      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
-      #{syncdttm,jdbcType=TIMESTAMP})
+      #{tzMspsPwjPc,jdbcType=DECIMAL}, #{tzLuquZt,jdbcType=VARCHAR}, #{tzBeizhu,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl" >
     insert into PS_TZ_MSPS_KSH_TBL
@@ -52,6 +56,12 @@
       </if>
       <if test="tzAppInsId != null" >
         TZ_APP_INS_ID,
+      </if>
+      <if test="tzMspsPwjPc != null" >
+        TZ_MSPS_PWJ_PC,
+      </if>
+      <if test="tzLuquZt != null" >
+        TZ_LUQU_ZT,
       </if>
       <if test="tzBeizhu != null" >
         TZ_BEIZHU,
@@ -85,6 +95,12 @@
       <if test="tzAppInsId != null" >
         #{tzAppInsId,jdbcType=BIGINT},
       </if>
+      <if test="tzMspsPwjPc != null" >
+        #{tzMspsPwjPc,jdbcType=DECIMAL},
+      </if>
+      <if test="tzLuquZt != null" >
+        #{tzLuquZt,jdbcType=VARCHAR},
+      </if>
       <if test="tzBeizhu != null" >
         #{tzBeizhu,jdbcType=VARCHAR},
       </if>
@@ -111,6 +127,12 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl" >
     update PS_TZ_MSPS_KSH_TBL
     <set >
+      <if test="tzMspsPwjPc != null" >
+        TZ_MSPS_PWJ_PC = #{tzMspsPwjPc,jdbcType=DECIMAL},
+      </if>
+      <if test="tzLuquZt != null" >
+        TZ_LUQU_ZT = #{tzLuquZt,jdbcType=VARCHAR},
+      </if>
       <if test="tzBeizhu != null" >
         TZ_BEIZHU = #{tzBeizhu,jdbcType=VARCHAR},
       </if>
@@ -139,7 +161,9 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl" >
     update PS_TZ_MSPS_KSH_TBL
-    set TZ_BEIZHU = #{tzBeizhu,jdbcType=VARCHAR},
+    set TZ_MSPS_PWJ_PC = #{tzMspsPwjPc,jdbcType=DECIMAL},
+      TZ_LUQU_ZT = #{tzLuquZt,jdbcType=VARCHAR},
+      TZ_BEIZHU = #{tzBeizhu,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},

@@ -1211,7 +1211,7 @@
                 form.setValues(formData);
                 
                 var grid1 = panel.child('grid');
-                console.log(grid1);
+                //console.log(grid1);
                 var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_APPS_STD.PS_TZ_CLPS_KSH_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classID + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchID + '"}}';
                 grid1.store.tzStoreParams = tzStoreParams;
                 grid1.store.load();
@@ -1276,8 +1276,8 @@
         var record = grid.store.getAt(rowIndex);
         var classID = record.get('classID');
         var batchID = record.get('batchID');
-        cmp = new ViewClass(classID,batchID);
-console.log("1");
+        cmp = new ViewClass(classID,batchID,transValue);
+//console.log("1");
         cmp.on('afterrender',function(panel){            
                 var judgeStore =panel.down('tabpanel').child("form[name=judgeFormInfo]").child('grid[name=interviewJudgeGrid]').store,
                     judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',

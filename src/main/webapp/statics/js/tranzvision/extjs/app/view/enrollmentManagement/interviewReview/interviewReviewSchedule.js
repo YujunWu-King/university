@@ -37,17 +37,18 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
             fields:[],
             data:[]
         });
+        
         var dockedItemBtn,columnsItems;
         var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD",' +
             '"OperateType":"IFS","comParams":{"type":"IFP","classID":"'+this.classID+'","batchID":"'+this.batchID+'"}}';
         Ext.tzLoadAsync(tzParams,function(respData){
-            dockedItemBtn = respData.ifScore==="Y"?{
+            dockedItemBtn = {
                 xtype: "toolbar",
                 items: [
-                    {text: "计算标准差", tooltip: "计算标准差", handler: "calculate"}
+                    {text: "计算偏差", tooltip: "计算偏差", handler: "calculate"}
                 ]
-            }:null;
-            columnsItems = respData.ifScore==="Y"?[
+            };
+            columnsItems = [
                 {
                     text: "报名表编号",
                     dataIndex: 'insID',
@@ -65,7 +66,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                         this.text=v;
                         return ;
                     }
-                } ,
+                },
+                {
+                    text: "面试申请号",
+                    dataIndex: 'mshID',
+                    align:'center',
+                    minWidth: 80
+                },
                 {
                     text: "性别",
                     dataIndex: 'gender',
@@ -81,7 +88,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                             return v;
                         }
                     }
-                },{
+                },
+                {
+                    text: "面试资格",
+                    dataIndex: 'mshZg',
+                    align:'center',
+                    minWidth: 80
+                },
+                {
                     text: "评委间偏差",
                     dataIndex: 'judgePC',
                     align:'center',
@@ -134,88 +148,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                         }
                     }
                 }
-            ]:[
-                {
-                    text: "报名表编号",
-                    dataIndex: 'insID',
-                    align:'center',
-                    minWidth: 150
-                },
-                {
-                    header: "姓名",
-                    dataIndex: 'name',
-                    align:'center',
-                    minWidth: 100,
-                    xtype:'linkcolumn',
-                    handler:'viewThisApplicationForm',
-                    renderer:function(v){
-                        this.text=v;
-                        return ;
-                    }
-                } ,
-                {
-                    text: "性别",
-                    dataIndex: 'gender',
-                    align:'center',
-                    minWidth: 30,
-                    renderer: function (v) {
-                        var x;
-                        var genderStore = transValue.get("TZ_GENDER");
-                        if(x = genderStore.find('TValue',v)>=0){
-                            x=+x;
-                            return genderStore.getAt(x).data.TSDesc;
-                        }else{
-                            return v;
-                        }
-                    }
-                },
-                {
-                    text: "评委信息",
-                    dataIndex: 'judgeNames',
-                    name:'judgeNames',
-                    align:'center',
-                    minWidth: 100,
-                    flex:1,
-                    renderer:function(v) {
-                        if (v) {
-                            return '<a class="tz_lzh_interviewReview_app" href = "javaScript:void(0)">' + v + '</a>';
-                        } else {
-                            return "";
-                        }
-                    }
-                },
-                {
-                    text: "评审状态",
-                    dataIndex: 'judgeStatus',
-                    align:'center',
-                    minWidth: 150,
-                    flex:1,
-                    renderer: function (v,grid,record) {
-                        var x;
-                        var KSPWPSEHNZT = transValue.get("TZ_MSPS_KSZT");
-                        if((x = KSPWPSEHNZT.find('TValue',v))>=0){
-                            return v==='N' ? KSPWPSEHNZT.getAt(x).data.TSDesc+"("+record.data.progress+")":KSPWPSEHNZT.getAt(x).data.TSDesc;
-                        }else{
-                            return v;
-                        }
-                    }
-                } ,
-                {
-                    text: "录取状态",
-                    dataIndex: 'status',
-                    align:'center',
-                    minWidth: 150,
-                    renderer: function (v) {
-                        var x;
-                        var admitStore = transValue.get("TZ_LUQU_ZT");
-                        if((x = admitStore.find('TValue',v))>=0){
-                            return admitStore.getAt(x).data.TSDesc;
-                        }else{
-                            return v;
-                        }
-                    }
-                }
-            ];
+            ]
         });
         
         //柱状图chart和曲线图chart
@@ -504,6 +437,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                             xtype: 'checkboxfield',
                                             fieldLabel: '评委可见统计表',
                                             name: 'judgeTJB',
+                                            inputValue:'Y',
                                             ignoreChangesFlag: true
                                         },
                                         {
@@ -511,6 +445,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                             style: 'margin-left:88px',
                                             fieldLabel: '评委可见分布图',
                                             name: 'judgeFBT',
+                                            inputValue:'Y',
                                             ignoreChangesFlag: true
                                         }
                                    ]

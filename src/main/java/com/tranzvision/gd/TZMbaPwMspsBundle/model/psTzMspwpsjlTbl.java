@@ -1,14 +1,9 @@
-package com.tranzvision.gd.TZInterviewArrangementBundle.model;
+package com.tranzvision.gd.TZMbaPwMspsBundle.model;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
-public class PsTzMspsKshTbl extends PsTzMspsKshTblKey {
-    private BigDecimal tzMspsPwjPc;
-
-    private String tzLuquZt;
-
-    private String tzBeizhu;
+public class psTzMspwpsjlTbl extends psTzMspwpsjlTblKey {
+    private String tzSubmitYn;
 
     private Date rowAddedDttm;
 
@@ -22,28 +17,12 @@ public class PsTzMspsKshTbl extends PsTzMspsKshTblKey {
 
     private Date syncdttm;
 
-    public BigDecimal getTzMspsPwjPc() {
-        return tzMspsPwjPc;
+    public String getTzSubmitYn() {
+        return tzSubmitYn;
     }
 
-    public void setTzMspsPwjPc(BigDecimal tzMspsPwjPc) {
-        this.tzMspsPwjPc = tzMspsPwjPc;
-    }
-
-    public String getTzLuquZt() {
-        return tzLuquZt;
-    }
-
-    public void setTzLuquZt(String tzLuquZt) {
-        this.tzLuquZt = tzLuquZt == null ? null : tzLuquZt.trim();
-    }
-
-    public String getTzBeizhu() {
-        return tzBeizhu;
-    }
-
-    public void setTzBeizhu(String tzBeizhu) {
-        this.tzBeizhu = tzBeizhu == null ? null : tzBeizhu.trim();
+    public void setTzSubmitYn(String tzSubmitYn) {
+        this.tzSubmitYn = tzSubmitYn == null ? null : tzSubmitYn.trim();
     }
 
     public Date getRowAddedDttm() {
