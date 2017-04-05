@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
@@ -25,11 +26,18 @@ import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.PdfPrintbyMod
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.sql.type.TzSQLObject;
 
 /*打包批处理方法*/
 @Service
 public class TzGdBmglDbdlEngineCls extends BaseEngine {
 
+	@Autowired
+	private TZGDObject TzSQLObject;
+	@Autowired
+	private SqlQuery SqlQuery;
+	
 	public void OnExecute() throws Exception {
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 		SqlQuery jdbcTemplate = (SqlQuery) getSpringBeanUtil.getAutowiredSpringBean("SqlQuery");
@@ -172,8 +180,15 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 				// 将考生的材料复制;
 				String str_attachfilename = "", str_attachfile = "";
 				String sqlPackage = "SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TEMP.TZ_XXX_BH  FROM PS_TZ_TEMP_FIELD_T TEMP , PS_TZ_APP_XXXPZ_T APP  WHERE TEMP.TZ_APP_TPL_ID = APP.TZ_APP_TPL_ID AND TEMP.TZ_XXX_NO = APP.TZ_XXX_BH AND APP.TZ_APP_TPL_ID = (SELECT C.TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T C WHERE C.TZ_APP_INS_ID=?) AND APP.TZ_IS_DOWNLOAD='Y') UNION SELECT ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ACCESS_PATH  FROM PS_TZ_FORM_ATT_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH IN (SELECT TZ_XXX_BH FROM PS_TZ_FORM_ATT2_T WHERE TZ_APP_INS_ID=? )";
-				List<Map<String, Object>> packList = jdbcTemplate.queryForList(sqlPackage,
-						new Object[] { appInsID, appInsID, appInsID, appInsID });
+				/*List<Map<String, Object>> packList = jdbcTemplate.queryForList(sqlPackage,
+						new Object[] { appInsID, appInsID, appInsID, appInsID });*/
+				
+				List<Map<String, Object>> packList = SqlQuery.queryForList(
+						TzSQLObject.getSQLText("SQL.TZApplicationVerifiedBundle.TzGetDbdl"),
+						new Object[] { appInsID, appInsID, appInsID, appInsID,appInsID });
+				
+				
+				
 				if (packList != null && packList.size() > 0) {
 					for (int j = 0; j < packList.size(); j++) {
 						str_attachfilename = (String) packList.get(j).get("ATTACHSYSFILENAME");
