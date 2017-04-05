@@ -246,7 +246,7 @@ public class tzOnlineAppUtility {
 				List<Map<String,Object>>valList=new ArrayList<Map<String,Object>>();
 				valList=sqlQuery.queryForList(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+"%"});
 				
-				int attCount=sqlQuery.queryForObject(getAttCount, new Object[]{numAppInsId,"%"+strXxxBh+"%"}, "int");
+				int attCount=sqlQuery.queryForObject(getAttCount, new Object[]{numAppInsId,"%"+strXxxBh}, "int");
 				returnMessage="";
 				if(attCount==0){
 					returnMessage = this.getMsg(strXxxMc, "请上传附件");
