@@ -1416,6 +1416,56 @@ console.log("1");
                 }
             }
         }
+    },
+    
+    //自动初筛
+    automaticScreen: function(grid,rowIndex){
+    	Ext.tzSetCompResourses("TZ_AUTO_SCREEN_COM");
+		
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AUTO_SCREEN_COM"]["TZ_AUTO_SCREEN_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_AUTO_SCREEN_STD，请检查配置。');
+			return;
+		}
+
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+		contentPanel.body.addCls('kitchensink-example');
+	
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}	
+		
+		ViewClass = Ext.ClassManager.get(className);
+		
+		var record = grid.store.getAt(rowIndex);
+        var classID = record.data.classID;
+        var batchID = record.data.batchID;
+
+		cmp = new ViewClass({
+			classId: classID,
+			batchId: batchID
+		});
+		
+		cmp.on('afterrender',function(gridPanel){});
+		
+		tab = contentPanel.add(cmp);     
+		
+		contentPanel.setActiveTab(tab);
+
+		Ext.resumeLayouts(true);
+
+		if (cmp.floating) {
+			cmp.show();
+		}
     }
 });
 
