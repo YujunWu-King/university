@@ -2636,7 +2636,7 @@ public class tzOnlineAppEngineImpl {
 			}
 			for (Map.Entry<String, String> entry : ksMap.entrySet()) {
 
-				System.out.println("key= " + entry.getKey() + " and value= " + entry.getValue());
+				///System.out.println("key= " + entry.getKey() + " and value= " + entry.getValue());
 
 			}
 			name = ksMap.get("TZ_6name");
@@ -2653,7 +2653,7 @@ public class tzOnlineAppEngineImpl {
 			Contry2 = ksMap.get("TZ_12ouniversitycountry");
 			Contry3 = ksMap.get("TZ_13ouniver3country");
 
-			System.out.println(uniScholContry + ":" + Contry1 + ":" + Contry2 + ":" + Contry3);
+			//System.out.println(uniScholContry + ":" + Contry1 + ":" + Contry2 + ":" + Contry3);
 			// 判断 是否有海外学历
 			if (ksMap.get("TZ_11luniversitycountry") == null ? true
 					: uniScholContry.equals("中国") && ksMap.get("TZ_10hdegreeunicountry") == null ? true
@@ -2771,7 +2771,7 @@ public class tzOnlineAppEngineImpl {
 			psTzLxfInfoTbl.setTzZyEmail(email);
 			psTzLxfInfoTbl.setTzZySj(mobilPhone);
 			String LxisY = sqlQuery.queryForObject(sql_LxisY, new Object[] { strAppOprId }, "String");
-			System.out.println("LxisY:" + LxisY);
+			//System.out.println("LxisY:" + LxisY);
 			if (LxisY != null && LxisY.equals("Y")) {
 
 				psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfInfoTbl);

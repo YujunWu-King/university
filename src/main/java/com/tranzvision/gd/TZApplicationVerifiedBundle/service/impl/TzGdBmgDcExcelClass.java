@@ -190,7 +190,7 @@ public class TzGdBmgDcExcelClass {
 										strSelectField = "IF(TZ_APP_L_TEXT='',TZ_APP_S_TEXT,IF(TZ_APP_L_TEXT IS NULL,TZ_APP_S_TEXT,TZ_APP_L_TEXT)) AS TZ_APP_TEXT";
 										
 										if (strCodeTable != null &&!"".equals(strCodeTable)) {
-											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND (TZ_ZHZ_ID=A.TZ_APP_S_TEXT OR TZ_ZHZ_ID=A.TZ_APP_L_TEXT) A.AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now() limit 0,1)";
+											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND (TZ_ZHZ_ID=A.TZ_APP_S_TEXT OR TZ_ZHZ_ID=A.TZ_APP_L_TEXT) AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now() ORDER BY TZ_ZHZ_DMS DESC limit 0,1)";
 											strSelectFieldBoolean = true;
 										}
 									}
@@ -242,19 +242,19 @@ public class TzGdBmgDcExcelClass {
 												strAppFormFieldValue = jdbcTemplate.queryForObject(sql1,
 														new Object[] { Long.parseLong(arrAppInsID[i]), strAppFormField },
 														String.class);
-											} catch (Exception e) {
-												strAppFormFieldValue = "";
-											}
-
-										}
-										if ("Select".equals(strComClassName) || "CompanyNature".equals(strComClassName)
-												|| "Degree".equals(strComClassName) || "Diploma".equals(strComClassName)) {
-											try {
-												strAppFormFieldValue = jdbcTemplate.queryForObject(
-														"SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?",
-														new Object[] { appFormModalID, strInfoSelectID,
-																strAppFormFieldValue },
-														String.class);
+												//没有配置码表，而且是以下控件类名称则从可选值选项里面取描述
+												if ("Select".equals(strComClassName) || "CompanyNature".equals(strComClassName)
+														|| "Degree".equals(strComClassName) || "Diploma".equals(strComClassName)) {
+													try {
+														strAppFormFieldValue = jdbcTemplate.queryForObject(
+																"SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?",
+																new Object[] { appFormModalID, strInfoSelectID,
+																		strAppFormFieldValue },
+																String.class);
+													} catch (Exception e) {
+														strAppFormFieldValue = "";
+													}
+												}
 											} catch (Exception e) {
 												strAppFormFieldValue = "";
 											}

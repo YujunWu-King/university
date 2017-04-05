@@ -1,13 +1,22 @@
 <script>
 	var lenField = "%bind(:2)";
-	function closePop(){
+	function returnResi(){
+		//关闭窗口后一定要清空该项
+		$("#searchState").empty();
+		$("#searchState").fadeOut("slow");
+       // $("#new_school").fadeOut("slow");
+       $("#body").css("position","relative");
+       $("#before").fadeIn("slow");
+	}
+
+	/* function closePop(){
 		$(".shade").hide();
 		$("#searchState").empty();
 		$("#body").css("position","relative");
-	}
+	} */
 	function selectProvince(province){
 		$("#"+lenField).val(province);
-		closePop();
+		returnResi();
 		//清华MBA
 		if((typeof changeImg)=="function"){
 			var successFlg = "F";		
@@ -18,7 +27,16 @@
 		}
 	}
 </script>
+ <div class="bg1">
+	     <!-- 头部 -->
+	     <div class="topbar">
+	   	    院校选择 <a  href="javascript:void(0)" class="return_r" onclick="returnResi()"><i></i></a>
+	   	 </div>
+	   	 <div class="country_pop">
 <div class="pop_tit">
-	<span>选择省份</span> <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a>
+	<span>选择省份</span> <!-- <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a> -->
 </div>
+
 <ul id="selectorList" class="chose_list">%bind(:1)</ul>
+</div>
+</div>
