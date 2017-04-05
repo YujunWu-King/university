@@ -386,7 +386,7 @@
             },
             multiselect: false, 
             callback: function(selection){
-            	field.setValue("itemId",selection[0].data.TZ_CKZL_ID);
+            	field.setValue(selection[0].data.TZ_CKZL_ID);
             }
         });
 	}
