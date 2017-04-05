@@ -96,7 +96,7 @@ public class TzAppAdmissionController {
 				String tzLuquStaSql = "SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
 				String tzLuquSta = sqlQuery1.queryForObject(tzLuquStaSql, new Object[] { tzAppInsID }, "String");
 
-				if (tzLuquSta == "LQ") {// 条件录取
+				if ("LQ".equals(tzLuquSta)) {// 条件录取
 					// 【1】查询证书模板id
 					String tzCertTplIdSql = "SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
 					String tzCertTplId = sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] { tzAppInsID },
@@ -126,7 +126,7 @@ public class TzAppAdmissionController {
 						syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
 					}
 				} else {
-					tzCertMergHtml = "抱歉，该考生未录取，无法查看录取通知书";
+					tzCertMergHtml = "<html style='font-size:30px'>抱歉，该考生未录取，无法查看录取通知书</html>";
 				}
 
 				// 【4】生成静态录取通知书html
