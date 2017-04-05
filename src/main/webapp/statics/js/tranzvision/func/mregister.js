@@ -430,9 +430,12 @@ $(document).ready(function(){
 				success: function(result){
 					$("#searchCountry").html("");
 					$("#searchCountry").html(result);
-					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchCountry").show();
+					//$("#body").css("position","fixed");
+					//$(".shade").show();
+					
+					$("#before").hide();
+				    $("#searchCountry").fadeIn("slow"); 
+                     loaded ();
 				}
 			});
 		});
@@ -475,8 +478,11 @@ $(document).ready(function(){
 				$("#searchSchool").html("");
 				$("#searchSchool").html(result);
 				$("#body").css("position","fixed");
-				$(".shade").show();
-			    $("#searchSchool").show();
+				$("#before").hide();
+				$("#searchSchool").fadeIn("slow"); 
+                 loaded1 ();
+				/*$(".shade").show();
+			    $("#searchSchool").show();*/
 			}
 		});
     });
@@ -514,10 +520,16 @@ $(document).ready(function(){
 				dataType: "html",
 				success: function(result){
 					$("#searchState").html("");
+				$("#searchState").html(result);
+				$("#body").css("position","fixed");
+				$("#before").hide();
+				$("#searchState").fadeIn("slow"); 
+                 loaded1 ();
+				/*	$("#searchState").html("");
 					$("#searchState").html(result);
 					$("#body").css("position","fixed");
 					$(".shade").show();
-				    $("#searchState").show();
+				    $("#searchState").show();*/
 				}
 			});
 		});
