@@ -1114,25 +1114,44 @@
         }
 
         var record = grid.store.getAt(rowIndex);
-        var classID = record.data.classID;
-        var batchID = record.data.batchID;
-        cmp = new ViewClass();
-        cmp.classID=classID;
-        cmp.batchID=batchID;
+        var classId = record.data.classID;
+        var className = record.data.className;
+        var batchId = record.data.batchID;
+        var batchName = record.data.batchName;
+        var applicantsNumber = record.data.applicantsNumber;
+        cmp = new ViewClass({
+            classId:classId,
+            batchId:batchId
+        });
 
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
-            var countForm = panel.lookupReference("CountForm").getForm();
+            var statisticsNumForm = panel.down("form[name=statisticsNumForm]").getForm();
 
             var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
-                '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+                '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
 
             Ext.tzLoad(tzParams,function(respData){
                 var formData = respData.formData;
-                form.setValues(formData);
+                if(formData!="" && formData!=undefined) {
+                    panel.actType="update";
+                    form.setValues(formData);
 
-                countForm.findField("materialsReviewApplicantsNumber").setValue(formData.materialsReviewApplicantsNumber);
-                countForm.findField("reviewCountAll").setValue(parseInt(formData.materialsReviewApplicantsNumber)*(formData.reviewCount));
+                    statisticsNumForm.findField("clpsksNum").setValue(formData.clpsksNum);
+                    //要求评审人次更新
+                    statisticsNumForm.findField("reviewNumSet").setValue(parseInt(formData.clpsksNum)*(formData.judgeNumSet));
+                } else {
+                    panel.actType="add";
+                    form.findField("classId").setValue(classId);
+                    form.findField("className").setValue(className);
+                    form.findField("batchId").setValue(batchId);
+                    form.findField("batchName").setValue(batchName);
+                    form.findField("bkksNum").setValue(applicantsNumber);
+                    form.findField("clpsksNum").setValue(0);
+                    form.findField("dqpsStatus").setValue("N");
+                    form.findField("dqpsStatusDesc").setValue("未开始");
+                }
+
             });
         });
 
@@ -1146,11 +1165,11 @@
             cmp.show();
         }
     },
-    /*材料评审考生名单*/
-    viewMaterialStuApplicants:function(view,rowIndex){
-    	Ext.tzSetCompResourses("TZ_REVIEW_CL_COM");
+    /*材料评审--材料评审考生名单*/
+    viewMaterialStuApplicants:function(grid,rowIndex){
+        Ext.tzSetCompResourses("TZ_REVIEW_CL_COM");
         //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_APPS_STD"];
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_KS_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -1158,7 +1177,7 @@
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_APPS_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_KS_STD，请检查配置。');
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;
@@ -1191,30 +1210,45 @@
             }
             // </debug>
         }
-        
-        var record = view.findParentByType("grid").store.getAt(rowIndex);
-        var classID = record.data.classID;
-        var batchID = record.data.batchID;
+
+
+        var record = grid.store.getAt(rowIndex);
+        var classId = record.data.classID;
+        var className = record.data.className;
+        var batchId = record.data.batchID;
+        var batchName = record.data.batchName;
+        var applicantsNumber = record.data.applicantsNumber;
 
         cmp = new ViewClass({
-            classID:classID,
-            batchID:batchID
+            classId:classId,
+            batchId:batchId
         });
+
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
-            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_APPS_STD",' + '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
 
             Ext.tzLoad(tzParams,function(respData){
                 var formData = respData.formData;
-                formData.className = record.data.className;
-                formData.batchName = record.data.batchName;
-                form.setValues(formData);
-                
-                var grid1 = panel.child('grid');
-                console.log(grid1);
-                var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_APPS_STD.PS_TZ_CLPS_KSH_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classID + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchID + '"}}';
-                grid1.store.tzStoreParams = tzStoreParams;
-                grid1.store.load();
+                if(formData!="" && formData!=undefined) {
+                    panel.actType="update";
+                    formData.className = record.data.className;
+                    formData.batchName = record.data.batchName;
+                    form.setValues(formData);
+
+                    var examineeGrid = panel.down('grid');
+                    var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+                    examineeGrid.store.tzStoreParams = tzStoreParams;
+                    examineeGrid.store.load();
+                } else {
+                    panel.actType="add";
+                    form.findField("classId").setValue(classId);
+                    form.findField("className").setValue(className);
+                    form.findField("batchId").setValue(batchId);
+                    form.findField("batchName").setValue(batchName);
+                    form.findField("bkksNum").setValue(applicantsNumber);
+                    form.findField("clpsksNum").setValue(0);
+                }
             });
         });
         
