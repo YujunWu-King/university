@@ -871,7 +871,7 @@
                     }
                 },
                 srhConFields:{
-                    TZ_AUD_NAME:{
+                    TZ_AUD_NAM:{
                         desc:'听众名称',
                         operator:'07',
                         type:'01'
@@ -880,7 +880,7 @@
             },
             srhresult:{
                 TZ_AUD_ID:'听众ID',
-                TZ_AUD_NAME: '听众名称',
+                TZ_AUD_NAM: '听众名称',
                 //TZ_ORG_CODE:'所属部门',
                 ROW_ADDED_DTTM:'创建时间'
                 // ROW_LASTMANT_DTTM:'修改时间'
@@ -904,7 +904,7 @@
                 }
                 for(j=0;j<selection.length;j++){
                     var TagModel=new KitchenSink.view.activity.tagModel();
-                    var audName = selection[j].data.TZ_AUD_NAME;
+                    var audName = selection[j].data.TZ_AUD_NAM;
                     var audId=selection[j].data.TZ_AUD_ID;
                     TagModel.set('tagId',audId);
                     TagModel.set('tagName',audName);

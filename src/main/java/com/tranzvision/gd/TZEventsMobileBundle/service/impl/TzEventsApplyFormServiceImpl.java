@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzLxfsinfoTblMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzLxfsinfoTbl;
@@ -21,6 +23,7 @@ import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
 import com.tranzvision.gd.TZEventsBundle.service.impl.TzEventActCodeServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.captcha.Patchca;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.MySqlLockService;
@@ -62,6 +65,15 @@ public class TzEventsApplyFormServiceImpl extends FrameworkImpl{
 	@Autowired
 	private TzEventActCodeServiceImpl tzEventActCodeServiceImpl;
 
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
+	
+	@Autowired
+	private CreateTaskServiceImpl createTaskServiceImpl;
+	
+	@Autowired
+	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
+	
 	@Autowired
 	PsTzNaudlistTMapper psTzNaudlistTMapper;
 
@@ -456,6 +468,30 @@ public class TzEventsApplyFormServiceImpl extends FrameworkImpl{
 						psTzNaudlistT.setTzNregStat("1");
 						strResult = "3";
 						strResultMsg = applySuccess;
+						
+						//发送报名成功站内信
+						try{
+							sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+							String name = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "String");
+							//报名成功成功站内信模板
+							String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CG_ZNX_TMP");
+							//当前机构
+							String jgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+							
+							//创建邮件任务实例
+							String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
+							// 创建邮件发送听众
+							String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"活动报名成功站内信通知", "JSRW");
+							//添加听众成员
+							boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", "", oprid, "", strApplyId, "");
+							if(bl){
+								sendSmsOrMalServiceImpl.send(taskId, "");
+							}
+						}catch(NullPointerException nullEx){
+							//没有配置邮件模板
+							nullEx.printStackTrace();
+						}
+						
 					} else {
 						// 等待队列
 						psTzNaudlistT.setTzNregStat("4");
