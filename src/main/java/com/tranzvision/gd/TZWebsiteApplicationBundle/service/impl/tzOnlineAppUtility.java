@@ -245,12 +245,27 @@ public class tzOnlineAppUtility {
 				String getAttCount="select COUNT(1) from PS_TZ_FORM_ATT_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
 				List<Map<String,Object>>valList=new ArrayList<Map<String,Object>>();
 				valList=sqlQuery.queryForList(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+"%"});
-				
-				int attCount=sqlQuery.queryForObject(getAttCount, new Object[]{numAppInsId,"%"+strXxxBh}, "int");
-				returnMessage="";
-				if(attCount==0){
-					returnMessage = this.getMsg(strXxxMc, "请上传附件");
-					
+		
+				//查询行数:
+				sql="SELECT TZ_XXX_LINE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
+				int comNum=sqlQuery.queryForObject(sql, new Object[]{numAppInsId,strXxxBh}, "int");
+				boolean breakFlg=false;
+				for(int i=0;i<comNum;i++){
+					String opt="exam_upload";
+					if(i>0){
+						opt=opt+"_"+i;
+					}
+					//System.out.println("EngLevl-strXxxBh:"+strXxxBh+opt);
+					int attCount=sqlQuery.queryForObject(getAttCount, new Object[]{numAppInsId,"%"+strXxxBh+opt}, "int");
+					returnMessage="";
+					if(attCount==0){
+						returnMessage = this.getMsg(strXxxMc, "请上传附件");
+						breakFlg=true;
+						break;
+					}
+				}
+				if(breakFlg){
+					break;
 				}
 				if(valList!=null){
 					for(Map<String,Object>valMap:valList){

@@ -133,14 +133,35 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				String excelTpl = jacksonUtil.getString("excelTpl");
 				// Excel名称;
 				String excelName = jacksonUtil.getString("excelName");
+				/*导出类型*/
+				String strResultSource = jacksonUtil.getString("resultSource");
+				/*导出Sql*/
+				String searchSql = jacksonUtil.getString("searchSql");
 				
 				appFormModalID = jdbcTemplate.queryForObject("SELECT TZ_APP_MODAL_ID FROM PS_TZ_EXPORT_TMP_T WHERE TZ_EXPORT_TMP_ID = ?",
 						new Object[] { excelTpl }, "String");
 				
 				//报名表编号;
 				@SuppressWarnings("unchecked")
-				List<String> oprIdArray = (List<String>)jacksonUtil.getList("applicantsList");
+				List<String> oprIdArray = new ArrayList<String>();
 				
+				List<Map<String, Object>> oprList = null;
+				
+				if("A".equals(strResultSource)){
+					
+					oprIdArray = (List<String>)jacksonUtil.getList("applicantsList");
+				}else{
+					oprList = jdbcTemplate.queryForList(searchSql);
+					String oprId;
+					if (oprList != null && oprList.size() > 0) {
+						for (int i102 = 0; i102 < oprList.size(); i102++) {
+							oprId = oprList.get(i102).get("OPRID").toString();
+							oprIdArray.add(oprId);
+						}
+					}
+				}
+				
+
 				String strAppInsIdList = "";
 				String strAppInsId = "";
 				int dcCount = 0;
@@ -148,14 +169,14 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				for(i = 0; i < oprIdArray.size(); i++){
 					List<Map<String, Object>> list = null;
 					try {
-						System.out.println(oprIdArray.get(i));
+						//System.out.println(oprIdArray.get(i));
 						list = jdbcTemplate.queryForList("SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=?",
 								new Object[] { oprIdArray.get(i) });
 						
 						if (list != null && list.size() > 0) {
 							for (int i101 = 0; i101 < list.size(); i101++) {
 								strAppInsId =  list.get(i101).get("TZ_APP_INS_ID").toString();
-								System.out.println("报名表实例" + strAppInsId);
+								//System.out.println("报名表实例" + strAppInsId);
 								if(!"null".equals(strAppInsId) && !"".equals(strAppInsId))
 								{
 									if("".equals(strAppInsIdList)){
@@ -174,80 +195,84 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 					
 				}
 				
-				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-				String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-				String downloadPath = getSysHardCodeVal.getDownloadPath();
-				String expDirPath = downloadPath + "/" + orgid + "/" + getDateNow() + "/" + "EXPORTBMBEXCEL";
-				String absexpDirPath = request.getServletContext().getRealPath(expDirPath);
-				
-				
-				/*生成运行控制ID*/
-				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMddHHmmss");
-			    String s_dt = dateFormate.format(new Date());
-				String runCntlId = "BMBXLS" + s_dt + "_" + getSeqNum.getSeqNum("TZ_BMGL_BMBSH_COM", "DCE_AE");
-				
-				PsTzBmbDceT psTzBmbDceT = new PsTzBmbDceT();
-				psTzBmbDceT.setRunCntlId(runCntlId);
-				psTzBmbDceT.setTzAppTplId(appFormModalID);
-				psTzBmbDceT.setTzExportTmpId(excelTpl);
-				psTzBmbDceT.setTzAudList(strAppInsIdList);
-				psTzBmbDceT.setTzExcelName(excelName);
-				psTzBmbDceT.setTzRelUrl(expDirPath);
-				psTzBmbDceT.setTzJdUrl(absexpDirPath);
-				psTzBmbDceTMapper.insert(psTzBmbDceT);
-				
-				//processinstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
-				processinstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
-				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
-				psTzExcelDrxxT.setProcessinstance(processinstance);
-				psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");
-				psTzExcelDrxxT.setTzPageId("TZ_EXP_EXCEL_STD");
-				psTzExcelDrxxT.setTzDrLxbh("1");
-				psTzExcelDrxxT.setTzDrTaskDesc(excelName); 
-				psTzExcelDrxxT.setTzStartDtt(new Date());
-				psTzExcelDrxxT.setTzDrTotalNum(dcCount);
-				psTzExcelDrxxT.setOprid(oprid);
-				psTzExcelDrxxT.setTzIsViewAtt("Y");
-				psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
-				
-				int numSeq = getSeqNum.getSeqNum("TZ_GD_DCE_AE", "TZ_EXCEL_ID");
-				String strExcelID = oprid + "_" + s_dt + "_" + String.valueOf(numSeq);
-				PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
-				psTzExcelDattT.setProcessinstance(processinstance);
-				psTzExcelDattT.setTzSysfileName(strExcelID);
-				psTzExcelDattT.setTzFileName(excelName);
-				psTzExcelDattT.setTzCfLj("A");
-				psTzExcelDattT.setTzFjRecName("TZ_APP_CC_T");
-				psTzExcelDattT.setTzFwqFwlj(""); 
-				psTzExcelDattTMapper.insert(psTzExcelDattT);
+				if(!"".equals(strAppInsIdList)){
+					String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+					String downloadPath = getSysHardCodeVal.getDownloadPath();
+					String expDirPath = downloadPath + "/" + orgid + "/" + getDateNow() + "/" + "EXPORTBMBEXCEL";
+					String absexpDirPath = request.getServletContext().getRealPath(expDirPath);
+					
+					
+					/*生成运行控制ID*/
+					SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+				    String s_dt = dateFormate.format(new Date());
+					String runCntlId = "BMBXLS" + s_dt + "_" + getSeqNum.getSeqNum("TZ_BMGL_BMBSH_COM", "DCE_AE");
+					
+					PsTzBmbDceT psTzBmbDceT = new PsTzBmbDceT();
+					psTzBmbDceT.setRunCntlId(runCntlId);
+					psTzBmbDceT.setTzAppTplId(appFormModalID);
+					psTzBmbDceT.setTzExportTmpId(excelTpl);
+					psTzBmbDceT.setTzAudList(strAppInsIdList);
+					psTzBmbDceT.setTzExcelName(excelName);
+					psTzBmbDceT.setTzRelUrl(expDirPath);
+					psTzBmbDceT.setTzJdUrl(absexpDirPath);
+					psTzBmbDceTMapper.insert(psTzBmbDceT);
+					
+					//processinstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
+					processinstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
+					PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
+					psTzExcelDrxxT.setProcessinstance(processinstance);
+					psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");
+					psTzExcelDrxxT.setTzPageId("TZ_EXP_EXCEL_STD");
+					psTzExcelDrxxT.setTzDrLxbh("1");
+					psTzExcelDrxxT.setTzDrTaskDesc(excelName); 
+					psTzExcelDrxxT.setTzStartDtt(new Date());
+					psTzExcelDrxxT.setTzDrTotalNum(dcCount);
+					psTzExcelDrxxT.setOprid(oprid);
+					psTzExcelDrxxT.setTzIsViewAtt("Y");
+					psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
+					
+					int numSeq = getSeqNum.getSeqNum("TZ_GD_DCE_AE", "TZ_EXCEL_ID");
+					String strExcelID = oprid + "_" + s_dt + "_" + String.valueOf(numSeq);
+					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
+					psTzExcelDattT.setProcessinstance(processinstance);
+					psTzExcelDattT.setTzSysfileName(strExcelID);
+					psTzExcelDattT.setTzFileName(excelName);
+					psTzExcelDattT.setTzCfLj("A");
+					psTzExcelDattT.setTzFjRecName("TZ_APP_CC_T");
+					psTzExcelDattT.setTzFwqFwlj(""); 
+					psTzExcelDattTMapper.insert(psTzExcelDattT);
 
-				Psprcsrqst psprcsrqst = new Psprcsrqst();
-				psprcsrqst.setPrcsinstance(processinstance);
-				psprcsrqst.setRunId(runCntlId);
-				psprcsrqst.setOprid(oprid);
-				psprcsrqst.setRundttm(new Date());
-				psprcsrqst.setRunstatus("5");
-				psprcsrqstMapper.insert(psprcsrqst);
-				
-				//TzGdBmgDcExcelClass tzGdBmgDcExcelClass = new TzGdBmgDcExcelClass();
-				//tzGdBmgDcExcelClass.tzGdDcBmbExcel(runCntlId);
-				//this.tzGdDceAe(runCntlId, processinstance,expDirPath,absexpDirPath);
-				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-				
-				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_GD_EXCEL_DB");
-				//指定调度作业的相关参数
-				EngineParameters schdProcessParameters = new EngineParameters();
+					Psprcsrqst psprcsrqst = new Psprcsrqst();
+					psprcsrqst.setPrcsinstance(processinstance);
+					psprcsrqst.setRunId(runCntlId);
+					psprcsrqst.setOprid(oprid);
+					psprcsrqst.setRundttm(new Date());
+					psprcsrqst.setRunstatus("5");
+					psprcsrqstMapper.insert(psprcsrqst);
+					
+					//TzGdBmgDcExcelClass tzGdBmgDcExcelClass = new TzGdBmgDcExcelClass();
+					//tzGdBmgDcExcelClass.tzGdDcBmbExcel(runCntlId);
+					//this.tzGdDceAe(runCntlId, processinstance,expDirPath,absexpDirPath);
+					String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+					String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+					
+					BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_GD_EXCEL_DB");
+					//指定调度作业的相关参数
+					EngineParameters schdProcessParameters = new EngineParameters();
 
-				schdProcessParameters.setBatchServer("");
-				schdProcessParameters.setCycleExpression("");
-				schdProcessParameters.setLoginUserAccount(currentAccountId);
-				schdProcessParameters.setPlanExcuteDateTime(new Date());
-				schdProcessParameters.setRunControlId(runCntlId);
-				
-				//调度作业
-				tmpEngine.schedule(schdProcessParameters);
-				
+					schdProcessParameters.setBatchServer("");
+					schdProcessParameters.setCycleExpression("");
+					schdProcessParameters.setLoginUserAccount(currentAccountId);
+					schdProcessParameters.setPlanExcuteDateTime(new Date());
+					schdProcessParameters.setRunControlId(runCntlId);
+					
+					//调度作业
+					tmpEngine.schedule(schdProcessParameters);
+				}else{
+					errMsg[0] = "1";
+					errMsg[1] = "导出信息为空";
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
