@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZUnifiedBaseBundle.dao.PsTzCjxTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTbl" >
+    <id column="TZ_SCORE_INS_ID" property="tzScoreInsId" jdbcType="BIGINT" />
+    <id column="TZ_SCORE_ITEM_ID" property="tzScoreItemId" jdbcType="VARCHAR" />
+    <result column="TZ_SCORE_NUM" property="tzScoreNum" jdbcType="DECIMAL" />
+    <result column="TZ_CJX_XLK_XXBH" property="tzCjxXlkXxbh" jdbcType="VARCHAR" />
+    <result column="TZ_SCORE_BZ" property="tzScoreBz" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_SCORE_PY_VALUE" property="tzScorePyValue" jdbcType="LONGVARCHAR" />
+    <result column="TZ_SCORE_DFGC" property="tzScoreDfgc" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SCORE_INS_ID, TZ_SCORE_ITEM_ID, TZ_SCORE_NUM, TZ_CJX_XLK_XXBH, TZ_SCORE_BZ
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_SCORE_PY_VALUE, TZ_SCORE_DFGC
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_CJX_TBL
+    where TZ_SCORE_INS_ID = #{tzScoreInsId,jdbcType=BIGINT}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblKey" >
+    delete from PS_TZ_CJX_TBL
+    where TZ_SCORE_INS_ID = #{tzScoreInsId,jdbcType=BIGINT}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs" >
+    insert into PS_TZ_CJX_TBL (TZ_SCORE_INS_ID, TZ_SCORE_ITEM_ID, TZ_SCORE_NUM, 
+      TZ_CJX_XLK_XXBH, TZ_SCORE_BZ, TZ_SCORE_PY_VALUE, 
+      TZ_SCORE_DFGC)
+    values (#{tzScoreInsId,jdbcType=BIGINT}, #{tzScoreItemId,jdbcType=VARCHAR}, #{tzScoreNum,jdbcType=DECIMAL}, 
+      #{tzCjxXlkXxbh,jdbcType=VARCHAR}, #{tzScoreBz,jdbcType=VARCHAR}, #{tzScorePyValue,jdbcType=LONGVARCHAR}, 
+      #{tzScoreDfgc,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs" >
+    insert into PS_TZ_CJX_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzScoreInsId != null" >
+        TZ_SCORE_INS_ID,
+      </if>
+      <if test="tzScoreItemId != null" >
+        TZ_SCORE_ITEM_ID,
+      </if>
+      <if test="tzScoreNum != null" >
+        TZ_SCORE_NUM,
+      </if>
+      <if test="tzCjxXlkXxbh != null" >
+        TZ_CJX_XLK_XXBH,
+      </if>
+      <if test="tzScoreBz != null" >
+        TZ_SCORE_BZ,
+      </if>
+      <if test="tzScorePyValue != null" >
+        TZ_SCORE_PY_VALUE,
+      </if>
+      <if test="tzScoreDfgc != null" >
+        TZ_SCORE_DFGC,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzScoreInsId != null" >
+        #{tzScoreInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzScoreItemId != null" >
+        #{tzScoreItemId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreNum != null" >
+        #{tzScoreNum,jdbcType=DECIMAL},
+      </if>
+      <if test="tzCjxXlkXxbh != null" >
+        #{tzCjxXlkXxbh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreBz != null" >
+        #{tzScoreBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScorePyValue != null" >
+        #{tzScorePyValue,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzScoreDfgc != null" >
+        #{tzScoreDfgc,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs" >
+    update PS_TZ_CJX_TBL
+    <set >
+      <if test="tzScoreNum != null" >
+        TZ_SCORE_NUM = #{tzScoreNum,jdbcType=DECIMAL},
+      </if>
+      <if test="tzCjxXlkXxbh != null" >
+        TZ_CJX_XLK_XXBH = #{tzCjxXlkXxbh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreBz != null" >
+        TZ_SCORE_BZ = #{tzScoreBz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScorePyValue != null" >
+        TZ_SCORE_PY_VALUE = #{tzScorePyValue,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzScoreDfgc != null" >
+        TZ_SCORE_DFGC = #{tzScoreDfgc,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_SCORE_INS_ID = #{tzScoreInsId,jdbcType=BIGINT}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs" >
+    update PS_TZ_CJX_TBL
+    set TZ_SCORE_NUM = #{tzScoreNum,jdbcType=DECIMAL},
+      TZ_CJX_XLK_XXBH = #{tzCjxXlkXxbh,jdbcType=VARCHAR},
+      TZ_SCORE_BZ = #{tzScoreBz,jdbcType=VARCHAR},
+      TZ_SCORE_PY_VALUE = #{tzScorePyValue,jdbcType=LONGVARCHAR},
+      TZ_SCORE_DFGC = #{tzScoreDfgc,jdbcType=LONGVARCHAR}
+    where TZ_SCORE_INS_ID = #{tzScoreInsId,jdbcType=BIGINT}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTbl" >
+    update PS_TZ_CJX_TBL
+    set TZ_SCORE_NUM = #{tzScoreNum,jdbcType=DECIMAL},
+      TZ_CJX_XLK_XXBH = #{tzCjxXlkXxbh,jdbcType=VARCHAR},
+      TZ_SCORE_BZ = #{tzScoreBz,jdbcType=VARCHAR}
+    where TZ_SCORE_INS_ID = #{tzScoreInsId,jdbcType=BIGINT}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+  </update>
+</mapper>
