@@ -190,7 +190,7 @@ public class TzGdBmgDcExcelClass {
 										strSelectField = "IF(TZ_APP_L_TEXT='',TZ_APP_S_TEXT,IF(TZ_APP_L_TEXT IS NULL,TZ_APP_S_TEXT,TZ_APP_L_TEXT)) AS TZ_APP_TEXT";
 										
 										if (strCodeTable != null &&!"".equals(strCodeTable)) {
-											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND (TZ_ZHZ_ID=A.TZ_APP_S_TEXT OR TZ_ZHZ_ID=A.TZ_APP_L_TEXT) A.AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now() limit 0,1)";
+											strSelectField = "(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND (TZ_ZHZ_ID=A.TZ_APP_S_TEXT OR TZ_ZHZ_ID=A.TZ_APP_L_TEXT) AND TZ_EFF_STATUS<>'I' AND TZ_EFF_DATE<=now() ORDER BY TZ_ZHZ_DMS DESC limit 0,1)";
 											strSelectFieldBoolean = true;
 										}
 									}
