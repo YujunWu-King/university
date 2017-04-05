@@ -2580,7 +2580,7 @@
 
     },
     viewJudge:function(grid,record,rowIndex){
-
+    	Ext.tzSetCompResourses("TZ_REVIEW_CL_COM");
         var gridData=grid.getStore().getAt(rowIndex).data;
         if(gridData.judgeInfo==""){
             return;
@@ -2606,9 +2606,9 @@
         var form = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab().child('form').getForm(),
             JSONData={
                 appInsID:gridData.insID,
-                classID  :form.findField('classID').getValue(),
+                classID :form.findField('classID').getValue(),
                 batchID : form.findField('batchID').getValue(),
-                judgeList : gridData.judgeInfo.split(',')
+                oprID	: gridData.oprID
             };
 
         var comParams = Ext.JSON.encode(JSONData);
@@ -2617,7 +2617,7 @@
         Ext.tzLoad(params, function(resp){
 
             var scoreItems=[];
-//返回json的root
+            //返回json的root
             var value=resp.root;
             //console.log(value)
             //因为考虑到无评委不会提交请求，故返回的root内必有数据
@@ -2632,31 +2632,6 @@
                 }
 
             }
-//
-//            var scoreItems=[];
-//
-//            var value=resp.root;
-//            var GridData,judgeScore,scoreItem;
-//
-//            for (var i=0;i<value.length;i++) {
-//                GridData = value[i];
-//
-//                judgeScore = Ext.JSON.decode(GridData.score);
-//
-//                for (var x = judgeScore.length - 1; x >= 0; x--) {
-//                    var n = 0;
-//                    scoreItem = judgeScore[x].name;
-//
-//                    for (var y = 0; y < scoreItems.length; y++) {
-//                        if (scoreItems[y] == scoreItem) {
-//                            n = n + 1;
-//                        }
-//                    }
-//                    if (n == 0) {
-//                        scoreItems.push(scoreItem);
-//                    }
-//                }
-//            }
 
             if (!win) {
                 Ext.syncRequire(className);

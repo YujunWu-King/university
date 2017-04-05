@@ -185,8 +185,12 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 										|| "bmrMajor".equals(strComClassName) || "CompanyNature".equals(strComClassName)
 										|| "Degree".equals(strComClassName) || "Diploma".equals(strComClassName)) {
 									String msSQL = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?";
-									strInfoValue = jdbcTemplate.queryForObject(msSQL,
+									String strInfoValueTmp  = jdbcTemplate.queryForObject(msSQL,
 											new Object[] { strBmbTpl, strInfoSelectID, strInfoValue }, "String");
+									
+									if(strInfoValueTmp!=null&&!"".equals(strInfoValueTmp)){
+										strInfoValue = strInfoValueTmp;
+									}
 								}
 								
 								arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
@@ -514,8 +518,12 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 						if ("Select".equals(strComClassName) || "CompanyNature".equals(strComClassName)
 								|| "Degree".equals(strComClassName) || "Diploma".equals(strComClassName)) {
 							String msSQL = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?";
-							strInfoValue = jdbcTemplate.queryForObject(msSQL,
+							String strInfoValueTmp = jdbcTemplate.queryForObject(msSQL,
 									new Object[] { strBmbTpl, strInfoSelectID, strInfoValue }, "String");
+							
+							if(strInfoValueTmp!=null&&!"".equals(strInfoValueTmp)){
+								strInfoValue = strInfoValueTmp;
+							}
 						}
 						
 						arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
