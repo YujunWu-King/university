@@ -232,14 +232,16 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				//TzGdBmgDcExcelClass tzGdBmgDcExcelClass = new TzGdBmgDcExcelClass();
 				//tzGdBmgDcExcelClass.tzGdDcBmbExcel(runCntlId);
 				//this.tzGdDceAe(runCntlId, processinstance,expDirPath,absexpDirPath);
+				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				
-				BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZ_GD_EXCEL_DB");
+				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_GD_EXCEL_DB");
 				//指定调度作业的相关参数
 				EngineParameters schdProcessParameters = new EngineParameters();
 
 				schdProcessParameters.setBatchServer("");
 				schdProcessParameters.setCycleExpression("");
-				schdProcessParameters.setLoginUserAccount("Admin");
+				schdProcessParameters.setLoginUserAccount(currentAccountId);
 				schdProcessParameters.setPlanExcuteDateTime(new Date());
 				schdProcessParameters.setRunControlId(runCntlId);
 				

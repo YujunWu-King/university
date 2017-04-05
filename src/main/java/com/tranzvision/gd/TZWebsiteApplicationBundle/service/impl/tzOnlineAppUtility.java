@@ -63,8 +63,7 @@ public class tzOnlineAppUtility {
 		String strXxxValue = "";
 
 		try {
-			System.out.println(strComMc);
-			System.out.println(strXxxBh);
+			
 			switch (strComMc) {
 			case "EduExperience":
 				break;
@@ -208,12 +207,15 @@ public class tzOnlineAppUtility {
 					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 					break;
 				}
+				break;
 			//公司性质后台校验:
 			case "FirmType":
 				returnMessage="";
 				getChildrenSql="select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
 				//区分"公司性质"和"岗位性质":
 				String opts[]=new String[]{"firm_type","position_type"};
+				//System.out.println(strComMc);
+				System.out.println(strXxxBh);
 				for(String opt:opts){
 					Map<String,Object>valMap=new HashMap<String,Object>();
 					valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
