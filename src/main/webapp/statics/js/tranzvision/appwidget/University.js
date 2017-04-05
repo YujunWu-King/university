@@ -108,10 +108,10 @@ SurveyBuild.extend("University", "baseComponent", {
                 c += '<div class="input-list">';
                 c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
                 c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
-                c += '    	<input type="text" class="inpu-list-text-enter" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
+                c += '    	<input type="text" class="inpu-list-text-enter" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '" readOnly="true" ><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
                 c += '	</div>';
                 c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
-                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '" readOnly="true" >';
                 c += '	</div>';
                 c += '	<div class="input-list-suffix left"><div id="' + data["itemId"]  + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
                 c += '	<div class="clear"></div>';
