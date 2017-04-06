@@ -455,15 +455,6 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 			    String s_dtm = datetimeFormate.format(new Date());
 				String runCntlId = "ZDCS" + s_dtm + "_" + getSeqNum.getSeqNum("PSPRCSRQST", "RUN_ID");
 				
-				/*
-				Psprcsrqst psprcsrqst = new Psprcsrqst();
-				psprcsrqst.setPrcsinstance(processInstance);
-				psprcsrqst.setRunId(runCntlId);
-				psprcsrqst.setOprid(currentOprid);
-				psprcsrqst.setRundttm(new Date());
-				psprcsrqst.setRunstatus("5");
-				psprcsrqstMapper.insert(psprcsrqst);
-				*/
 				
 				PsTzCsJcAet psTzCsJcAet = new PsTzCsJcAet();
 				psTzCsJcAet.setRunId(runCntlId);
@@ -510,6 +501,8 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				psTzCsLsjcTKey.setTzApplyPcId(batchId);
 				psTzCsLsjcTKey.setPrcsinstance(processinstance);
 				psTzCsLsjcTMapper.insert(psTzCsLsjcTKey);
+				
+				rtnMap.replace("processIns", processinstance);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -561,7 +554,20 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 							psTzCsKsTbl.setTzKshCsjg(status);
 							psTzCsKsTbl.setRowLastmantDttm(new Date());
 							psTzCsKsTbl.setRowLastmantOprid(oprid);
+							psTzCsKsTbl.setRowLastmantDttm(new Date());
+							psTzCsKsTbl.setRowLastmantOprid(oprid);
 							psTzCsKsTblMapper.updateByPrimaryKey(psTzCsKsTbl);
+						}else{
+							psTzCsKsTbl = new PsTzCsKsTbl();
+							psTzCsKsTbl.setTzClassId(classId);
+							psTzCsKsTbl.setTzApplyPcId(batchId);
+							psTzCsKsTbl.setTzAppInsId(appId);
+							psTzCsKsTbl.setTzKshCsjg(status);
+							psTzCsKsTbl.setRowAddedDttm(new Date());
+							psTzCsKsTbl.setRowAddedOprid(oprid);
+							psTzCsKsTbl.setRowLastmantDttm(new Date());
+							psTzCsKsTbl.setRowLastmantOprid(oprid);
+							psTzCsKsTblMapper.insert(psTzCsKsTbl);
 						}
 					}
 				}
