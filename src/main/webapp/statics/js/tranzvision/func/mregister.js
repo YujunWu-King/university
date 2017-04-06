@@ -448,6 +448,7 @@ $(document).ready(function(){
 	});
 	//默认国家为中国
 	$("#TZ_SCH_CNAME_Country").val("中国");
+	$("#TZ_SCH_CNAME_Country").html("中国");
 	$("#TZ_SCH_CNAME_Country").attr("ccode","CHN");
 	$("#TZ_SCH_CNAME").click(function(e) {
 		/*$("#ParamValue").val("TZ_SCH_CNAME");		
