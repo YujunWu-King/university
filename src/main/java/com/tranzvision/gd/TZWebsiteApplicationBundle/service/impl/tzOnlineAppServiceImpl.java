@@ -719,6 +719,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			if (strLanguage.equals("ENG")) {
 				strSave = "Save";
 			}
+			
 
 			String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"SUBMIT", strLanguage, "提交", "Submit");
