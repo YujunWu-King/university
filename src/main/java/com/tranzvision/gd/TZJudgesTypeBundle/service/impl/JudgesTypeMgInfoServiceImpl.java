@@ -103,6 +103,7 @@ public class JudgesTypeMgInfoServiceImpl extends FrameworkImpl {
 				String strJugTypeName = (String) infoData.get("jugTypeName");
 				// 角色名称;
 				String strRoleName = (String) infoData.get("roleName");
+//				String strRoleId = (String) infoData.get("roleId");
 				//有效状态
 				String strjugTypeStatus = (String) infoData.get("jugTypeStatus");
 				PsTzJugtypTbl psTzJugtypTbl;
@@ -115,6 +116,7 @@ public class JudgesTypeMgInfoServiceImpl extends FrameworkImpl {
 					psTzJugtypTbl.setTzJugtypId(strJugTypeId);
 					psTzJugtypTbl.setTzJugtypName(strJugTypeName);
 					psTzJugtypTbl.setRolename(strRoleName);
+//					psTzJugtypTbl.setRolename(strRoleId);
 					psTzJugtypTbl.setTzJugtypStat(strjugTypeStatus);
 					psTzJugtypTbl.setRowAddedDttm(new Date());
 					psTzJugtypTbl.setRowAddedOprid(oprid);
@@ -136,6 +138,7 @@ public class JudgesTypeMgInfoServiceImpl extends FrameworkImpl {
 						psTzJugtypTbl.setTzJugtypId(strJugTypeId);
 						psTzJugtypTbl.setTzJugtypName(strJugTypeName);
 						psTzJugtypTbl.setRolename(strRoleName);
+//						psTzJugtypTbl.setRolename(strRoleId);
 						psTzJugtypTbl.setTzJugtypStat(strjugTypeStatus);
 						psTzJugtypTbl.setRowAddedDttm(new Date());
 						psTzJugtypTbl.setRowAddedOprid(oprid);

@@ -41,13 +41,13 @@
                 text: '面试评审组ID',
                 sortable: true,
                 dataIndex: 'jugGroupId',
-                flx:1,
                 width: 305
             },{
                 text: '面试评审组名称',
                 sortable: true,
                 dataIndex: 'jugGroupName',
-                width: 305
+                width: 305,
+                flex: 1
             },{
                menuDisabled: true,
                sortable: false,

@@ -15,7 +15,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 材料评审考生名单-添加考生
+ * 材料评审考生名单-新增考生
  * @author LuYan
  * 2017-3-30
  *
@@ -50,8 +50,7 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 			
 			//json数据要的结果字段
 			String[] resultFldArray = {
-					"TZ_CLASS_ID","TZ_CLASS_NAME","TZ_APPLY_PC_ID","TZ_BATCH_NAME","TZ_REALNAME","TZ_MSSQH","TZ_APP_INS_ID","TZ_GENDER","TZ_GENDER_DESC",
-					"TZ_PW_LIST","TZ_PWPS_ZT"};
+					"TZ_CLASS_ID","TZ_CLASS_NAME","TZ_APPLY_PC_ID","TZ_BATCH_NAME","TZ_REALNAME","TZ_MSSQH","TZ_APP_INS_ID","TZ_GENDER","TZ_GENDER_DESC"};
 			
 			//可配置搜索通用函数
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errMsg);
@@ -65,14 +64,20 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 					String batchId = rowList[2];
 					String appinsId = rowList[6];
 					
+					String sql = "";
+					
 					//评委列表、评审状态
 					String pwList = "",reviewStatusDesc = "";
 					//评委数
 					Integer pwNum = 0;
 					//每生评审人数
-					Integer mspsNum = 0;
+					sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+					Integer mspsNum = sqlQuery.queryForObject(sql, new Object[] {classId,batchId},"Integer");
+					if(mspsNum==null) {
+						mspsNum=0;
+					}
 					
-					String sql = "";
+
 					sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
 					List<Map<String, Object>> listPw = sqlQuery.queryForList(sql, new Object[] {classId,batchId,appinsId});
 					
@@ -80,8 +85,8 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 						
 						pwNum++;
 						
-						String pwOprid = (String) mapPw.get("TZ_PWEI_OPRID");
-
+						String pwOprid = mapPw.get("TZ_PWEI_OPRID")  == null ? "" : mapPw.get("TZ_PWEI_OPRID").toString();
+						
 						if(!"".equals(pwList)) {
 							pwList += "," + pwOprid;
 						} else {
@@ -89,10 +94,11 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 						}
 					}
 					
+					
 					if(mspsNum.equals(pwNum)) {
 						reviewStatusDesc = "已完成";
 					} else {
-						reviewStatusDesc = "未完成（"+pwNum+"/"+pwNum+"）";
+						reviewStatusDesc = "未完成（"+pwNum+"/"+mspsNum+"）";
 					}
 					
 					Map<String, Object> mapList = new HashMap<String,Object>();

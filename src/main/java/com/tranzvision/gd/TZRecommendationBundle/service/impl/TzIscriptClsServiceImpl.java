@@ -45,7 +45,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 	/* 推荐信接口 */
 	@Override
 	public String tzOther(String operateType, String strParams, String[] errorMsg) {
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String mess = "";
 		try {
@@ -244,7 +244,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 					return "\"" + mess + "\"";
 				}
 			}
-			//System.out.println(operateType);
+			// System.out.println(operateType);
 			if ("SEND".equals(operateType)) {
 				// modity by caoy 推荐信点击重新发送，重新转发的时候，如果是同一个推荐人，
 				// 则需要判断一下发送间隔，如果是10分钟之内刚发送，则需要提示，您发送的邮件间隔太短了，在XXX点之前您不能在重复给XXX邮箱发送邮件。
@@ -262,17 +262,18 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 				} else {
 					email = strEmail;
 				}
-				//System.out.println("sendFlag:"+sendFlag);
-				//System.out.println("email:"+email);
+				// System.out.println("sendFlag:"+sendFlag);
+				// System.out.println("email:"+email);
 				String sql = "SELECT TZ_FS_DT FROM PS_TZ_TJX_FSRZ_TBL WHERE TZ_APP_INS_ID=? AND OPRID=? AND TZ_FS_ZT=? AND TZ_JS_EMAIL=? order by TZ_FS_DT desc limit 0,1";
 				String sendTime = jdbcTemplate.queryForObject(sql, new Object[] { numAppinsId, strOprid, "SUC", email },
 						"String");
 				boolean flag = true;
-				//System.out.println("sendTime:" + sendTime);
+				// System.out.println("sendTime:" + sendTime);
 				if (sendTime != null && !sendTime.equals("")) {
-					//2017-03-13 17:30:17.0
+					// 2017-03-13 17:30:17.0
 					Calendar calendar = Calendar.getInstance();
-					calendar.setTime(com.tranzvision.gd.util.Calendar.DateUtil.parseTimeStamp(sendTime.substring(0, 19)));
+					calendar.setTime(
+							com.tranzvision.gd.util.Calendar.DateUtil.parseTimeStamp(sendTime.substring(0, 19)));
 					calendar.add(Calendar.MINUTE, 10);
 					java.util.Date checkTime = calendar.getTime();
 
@@ -296,13 +297,15 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 					// System.out.println("mess:" + mess);
 					if ("SUCCESS".equals(mess)) {
 
-
 						// System.out.println("sendFlag:" + sendFlag);
 						mess = tzTjxClsServiceImpl.sendTJX(numAppinsId, strOprid, strTjrId, sendFlag);
 
 						// 写入推荐信发送日志表
 						if ("SUCCESS".equals(mess)) {
 							tzTjxClsServiceImpl.sendTJXLog(numAppinsId, strOprid, strTjrId, email, "SUC");
+							// 推荐人推荐信发出 发送站内信
+							tzTjxClsServiceImpl.sendSiteEmail(numAppinsId, "TZ_TJX_SEND", "推荐人推荐信发出提醒", "TJXS");
+
 						} else {
 							tzTjxClsServiceImpl.sendTJXLog(numAppinsId, strOprid, strTjrId, email, "FAIL");
 						}

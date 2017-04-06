@@ -55,7 +55,7 @@ public class TzAppAdmissionController {
 	private PsTzUserregMbTMapper psTzUserregMbTMapper;
 	@Autowired
 	private TzWeChartJSSDKSign tzWeChartJSSDKSign;
-
+	
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
 	@Autowired
@@ -126,9 +126,8 @@ public class TzAppAdmissionController {
 						syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
 					}
 				} else {
-					tzCertMergHtml = "抱歉，该考生未录取，无法查看录取通知书";
+					tzCertMergHtml = "<html style='font-size:40px'>抱歉，该考生未录取，无法查看录取通知书</html>";
 				}
-
 				// 【4】生成静态录取通知书html
 				boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
 				if (!bl) {
@@ -158,10 +157,10 @@ public class TzAppAdmissionController {
 			return "";
 		}
 	}
-
+	
+	
 	/***
 	 * 生成微信签名信息
-	 * 
 	 * @param request
 	 * @param response
 	 * @return
@@ -172,28 +171,31 @@ public class TzAppAdmissionController {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("result", "");
-		try {
+		try{
 			String url = request.getParameter("url");
-
+			
 			String appId = getHardCodePoint.getHardCodePointVal("TZ_WX_CORPID");
 			String secret = getHardCodePoint.getHardCodePointVal("TZ_WX_SECRET");
 			String wxType = getHardCodePoint.getHardCodePointVal("TZ_WX_TYPE");
+			
+			Map<String,String> signMap = tzWeChartJSSDKSign.sign(appId, secret, wxType, url);
 
-			Map<String, String> signMap = tzWeChartJSSDKSign.sign(appId, secret, wxType, url);
-
-			if (signMap != null) {
+			if(signMap != null){
 				jsonMap.replace("result", "success");
 				jsonMap.put("appId", appId);
 				jsonMap.put("timestamp", signMap.get("timestamp"));
 				jsonMap.put("nonceStr", signMap.get("nonceStr"));
 				jsonMap.put("signature", signMap.get("signature"));
 			}
-		} catch (Exception e) {
+		}catch(Exception e){
 			e.printStackTrace();
 			jsonMap.replace("result", "failure");
 		}
 		return jacksonUtil.Map2json(jsonMap);
 	}
+	
+	
+	
 
 	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg) {
 		try {

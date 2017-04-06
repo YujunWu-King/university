@@ -1,4 +1,4 @@
-Ext.define('KitchenSink.view.materialsReview.materialsReview.materialsReviewExamineeWindowModel',{
+Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeWindowModel',{
 	extend: 'Ext.data.Model',
     field:[
     	{name:'classId'},

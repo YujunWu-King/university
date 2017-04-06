@@ -40,21 +40,21 @@
         Ext.apply(this, {
 			store: store,
             columns: [{
+                text: '编号',
+                sortable: true,
+                dataIndex: 'jugTypeId',
+                width: 150
+            },{
                 text: '评审类型名称',
                 sortable: true,
                 dataIndex: 'jugTypeName',
-                flx:1,
-                width: 305
+                width: 305,
+                flex:1
             },{
                 text: '角色名称',
                 sortable: true,
                 dataIndex: 'rolName',
                 width: 305
-            },{
-                text: '编号',
-                sortable: true,
-                dataIndex: 'jugTypeId',
-                width: 150
             },{
                 text:"状态",
                 sortable: true,
