@@ -68,11 +68,14 @@ var tzGeneralURL = "%bind(:1)";
 		}
 		
 		function sureOther(){
+			
 			var otherSchool = $("#otherSchool").val();
 			if(otherSchool!=""&&otherSchool!=undefined){
 				//设置返回值
 				var clickId = $("#ParamCon").val();
 				$("#" + clickId).val(otherSchool);
+				$("#" + clickId).html(otherSchool);
+				$("#" + clickId).css("color","#333");
 				/* //关闭窗口
 				closePop(); */
 				//返回窗口
@@ -88,6 +91,9 @@ var tzGeneralURL = "%bind(:1)";
 		}
 		
 		function setFanhui2(obj){
+			
+			$(obj).parents("ul").find("li").removeClass("chose_on");
+			$(obj).addClass("chose_on");
 			var school = $(obj).attr("school");
 			//设置返回值
 			var clickId = $("#ParamCon").val();
