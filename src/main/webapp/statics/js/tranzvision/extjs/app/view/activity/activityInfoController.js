@@ -871,7 +871,7 @@
                     }
                 },
                 srhConFields:{
-                    TZ_AUD_NAME:{
+                    TZ_AUD_NAM:{
                         desc:'听众名称',
                         operator:'07',
                         type:'01'
