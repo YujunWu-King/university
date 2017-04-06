@@ -126,7 +126,7 @@ public class TzAppAdmissionController {
 						syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
 					}
 				} else {
-					tzCertMergHtml = "抱歉，该考生未录取，无法查看录取通知书";
+					tzCertMergHtml = "<html style='font-size:40px'>抱歉，该考生未录取，无法查看录取通知书</html>";
 				}
 
 				// 【4】生成静态录取通知书html
