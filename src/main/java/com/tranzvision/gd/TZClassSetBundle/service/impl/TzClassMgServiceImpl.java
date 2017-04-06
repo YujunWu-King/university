@@ -47,7 +47,7 @@ public class TzClassMgServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_PRJ_NAME","TZ_RX_DT", "TZ_START_DT", "TZ_END_DT",
+			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_PRJ_NAME","TZ_RX_DT", "TZ_APP_START_DT", "TZ_APP_END_DT",
 					"TZ_IS_OPEN_DESC" };
 
 			// 可配置搜索通用函数;
