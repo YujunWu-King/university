@@ -721,7 +721,17 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
             }
 			//邮箱-结束
 
-			//性别-开始                                  
+			//性别-开始                         
+           
+            if (_ref_sex == "M") {
+            	child[i].recommend_15["option"]["MAN"]["checked"] = "Y";
+            	child[i].recommend_15["option"]["WOMAN"]["checked"] = "N";
+            }
+            if (_ref_sex == "F") {
+            	child[i].recommend_15["option"]["MAN"]["checked"] = "N";
+            	child[i].recommend_15["option"]["WOMAN"]["checked"] = "Y";
+            }
+            
             works += '<div class="input-list" '+(child[i].recommend_15["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
     		works += '<div class="input-list-info left">'+ '<span class="red">*</span>'+ child[i].recommend_15["itemName"] +'：</div>';
     		works += '<div class="margart8 input-list-textwrap left">';
