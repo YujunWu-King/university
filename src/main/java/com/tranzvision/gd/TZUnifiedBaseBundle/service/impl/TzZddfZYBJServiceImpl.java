@@ -34,7 +34,7 @@ import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
-@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfWYServiceImpl")
+@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfZYBJServiceImpl")
 public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 	
 	@Autowired
