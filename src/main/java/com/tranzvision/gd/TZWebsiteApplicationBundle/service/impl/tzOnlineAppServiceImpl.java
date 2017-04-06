@@ -796,7 +796,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				String pwdTitleDivId = "PwdTitleDiv";
 				String pwdDivId = "setPwdDiv";
 				String pwdDivId2 = "setPwdDiv2";
-				// 推荐信 密码设置控制 add by caoy 2017-1-22
+				// 推荐信 密码设置控制 add by caoy 2017-1-22  strIsAdmin
 				if ("TJX".equals(strTplType)) {
 
 					if (strTJXIsPwd.equals("Y")) {
