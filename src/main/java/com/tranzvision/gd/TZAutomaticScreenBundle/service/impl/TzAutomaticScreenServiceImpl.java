@@ -119,7 +119,14 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 					mapList.put("appId", rowList[2]);
 					mapList.put("name", rowList[3]);
 					mapList.put("msApplyId", rowList[4]);
-					mapList.put("status", rowList[5]);
+					
+					boolean bool_status;
+					if("N".equals(rowList[5])){
+						bool_status = true;
+					}else{
+						bool_status = false;
+					}
+					mapList.put("status", bool_status);
 					mapList.put("ranking", rowList[6]);
 					
 					//成绩单ID
@@ -450,7 +457,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 			if(!"".equals(classId) && classId != null 
 					&& !"".equals(batchId) && batchId != null){
 				//当前用户;
-				//String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				/*生成运行控制ID*/
 				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 			    String s_dtm = datetimeFormate.format(new Date());
@@ -461,6 +468,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				psTzCsJcAet.setRunId(runCntlId);
 				psTzCsJcAet.setTzClassId(classId);
 				psTzCsJcAet.setTzApplyPcId(batchId);
+				psTzCsJcAet.setOprid(currentOprid);
 				psTzCsJcAetMapper.insert(psTzCsJcAet);
 				
 				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
