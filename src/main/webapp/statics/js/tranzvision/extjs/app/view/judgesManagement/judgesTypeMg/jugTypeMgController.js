@@ -207,8 +207,7 @@
    		 var store = view.findParentByType("grid").store;
    		 var selRec = store.getAt(rowIndex);
    		 
-   	      var jugTypeId = selRec.get("jugTypeId");
-//   		console.log(jugTypeId);
+   	     var jugTypeId = selRec.get("jugTypeId");
    		var contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
       		contentPanel.body.addCls('kitchensink-example');
    	
@@ -217,7 +216,6 @@
    		cmp.on('afterrender',function(panel){
    			var form = this.lookupReference('jugTypeForm').getForm();
 			//参数
-   			console.log(jugTypeId);
 			var tzParams = '{"ComID":"TZ_JUDGE_TYPE_COM","PageID":"TZ_JUDGE_INFO_STD","OperateType":"QF","comParams":{"jugTypeId":"'+jugTypeId+'"}}';
 			//加载数据
 			Ext.tzLoad(tzParams,function(responseData){
@@ -308,7 +306,6 @@
         var removeJson = "";
         //删除记录
         var removeRecs = store.getRemovedRecords();
-console.log(removeRecs);
         for(var i=0;i<removeRecs.length;i++){
             if(removeJson == ""){
                 removeJson = Ext.JSON.encode(removeRecs[i].data);
@@ -349,7 +346,11 @@ console.log(removeRecs);
 		//提交参数
 		var tzParams = '{"ComID":"TZ_JUDGE_TYPE_COM","PageID":"TZ_JUDGE_INFO_STD","OperateType":"U","comParams":{"'+win.actType+'":[{"data":'+Ext.JSON.encode(formParams)+'}]}}';
 		
-		Ext.tzSubmit(tzParams,function(){
+		Ext.tzSubmit(tzParams,function(responseData){
+			if(responseData['jugID']){
+				form.setValues({jugTypeId:responseData.jugID});
+
+			};
 			var interviewMgrPanel = Ext.ComponentQuery.query("panel[reference=jugMgPanel]");
             interviewMgrPanel[0].getStore().reload();
 	    },"",true,this);
@@ -371,7 +372,6 @@ console.log(removeRecs);
 	searchRoleName: function(btn){
 //		var form = btn.findParentByType("panel").child("form");
 		var form = this.getView().child("form").getForm();
-//		console.log(form);
 		Ext.tzShowPromptSearch({
 			recname: 'PSROLEDEFN_VW',
 			searchDesc: '搜索角色名称',
@@ -400,6 +400,7 @@ console.log(removeRecs);
 			multiselect: false,
 			callback: function(selection){
 				form.findField("roleName").setValue(selection[0].data.ROLENAME);
+//				form.findField("roleName").setValue(selection[0].data.DESCR);
 			}
 		});	
 	},

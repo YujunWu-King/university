@@ -3,6 +3,7 @@ Ext.define('KitchenSink.view.judgesManagement.judgesTypeMg.jugTypeMgModel', {
     fields: [
         {name: 'jugTypeId'},
         {name: 'jugTypeName'},
+        {name: 'rolId'},
         {name: 'rolName'},
         {name: 'lxState'},
 	]
