@@ -119,7 +119,14 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 					mapList.put("appId", rowList[2]);
 					mapList.put("name", rowList[3]);
 					mapList.put("msApplyId", rowList[4]);
-					mapList.put("status", rowList[5]);
+					
+					boolean bool_status;
+					if("N".equals(rowList[5])){
+						bool_status = true;
+					}else{
+						bool_status = false;
+					}
+					mapList.put("status", bool_status);
 					mapList.put("ranking", rowList[6]);
 					
 					//成绩单ID
@@ -251,7 +258,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				String orgId = classMap.get("TZ_JG_ID").toString();
 				
 				//String scoreModeId = classMap.get("TZ_CS_SCOR_MD_ID").toString();
-				String csTreeName = classMap.get("TREE_NAME") == null ? "" : classMap.get("TREE_NAME").toString();
+				String csTreeName = classMap.get("TREE_NAME").toString();
 				
 				if(!"".equals(csTreeName) && csTreeName != null){
 					
@@ -270,9 +277,10 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 						
 						columnsList.add(colMap);
 					}
+					
+					rtnMap.replace("className", className);
 					rtnMap.replace("columns", columnsList);
 				}
-				rtnMap.replace("className", className);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -449,26 +457,18 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 			if(!"".equals(classId) && classId != null 
 					&& !"".equals(batchId) && batchId != null){
 				//当前用户;
-				//String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				/*生成运行控制ID*/
 				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 			    String s_dtm = datetimeFormate.format(new Date());
 				String runCntlId = "ZDCS" + s_dtm + "_" + getSeqNum.getSeqNum("PSPRCSRQST", "RUN_ID");
 				
-				/*
-				Psprcsrqst psprcsrqst = new Psprcsrqst();
-				psprcsrqst.setPrcsinstance(processInstance);
-				psprcsrqst.setRunId(runCntlId);
-				psprcsrqst.setOprid(currentOprid);
-				psprcsrqst.setRundttm(new Date());
-				psprcsrqst.setRunstatus("5");
-				psprcsrqstMapper.insert(psprcsrqst);
-				*/
 				
 				PsTzCsJcAet psTzCsJcAet = new PsTzCsJcAet();
 				psTzCsJcAet.setRunId(runCntlId);
 				psTzCsJcAet.setTzClassId(classId);
 				psTzCsJcAet.setTzApplyPcId(batchId);
+				psTzCsJcAet.setOprid(currentOprid);
 				psTzCsJcAetMapper.insert(psTzCsJcAet);
 				
 				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
@@ -510,6 +510,8 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				psTzCsLsjcTKey.setTzApplyPcId(batchId);
 				psTzCsLsjcTKey.setPrcsinstance(processinstance);
 				psTzCsLsjcTMapper.insert(psTzCsLsjcTKey);
+				
+				rtnMap.replace("processIns", processinstance);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -561,7 +563,20 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 							psTzCsKsTbl.setTzKshCsjg(status);
 							psTzCsKsTbl.setRowLastmantDttm(new Date());
 							psTzCsKsTbl.setRowLastmantOprid(oprid);
+							psTzCsKsTbl.setRowLastmantDttm(new Date());
+							psTzCsKsTbl.setRowLastmantOprid(oprid);
 							psTzCsKsTblMapper.updateByPrimaryKey(psTzCsKsTbl);
+						}else{
+							psTzCsKsTbl = new PsTzCsKsTbl();
+							psTzCsKsTbl.setTzClassId(classId);
+							psTzCsKsTbl.setTzApplyPcId(batchId);
+							psTzCsKsTbl.setTzAppInsId(appId);
+							psTzCsKsTbl.setTzKshCsjg(status);
+							psTzCsKsTbl.setRowAddedDttm(new Date());
+							psTzCsKsTbl.setRowAddedOprid(oprid);
+							psTzCsKsTbl.setRowLastmantDttm(new Date());
+							psTzCsKsTbl.setRowLastmantOprid(oprid);
+							psTzCsKsTblMapper.insert(psTzCsKsTbl);
 						}
 					}
 				}

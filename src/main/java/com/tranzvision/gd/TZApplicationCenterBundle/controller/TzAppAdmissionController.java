@@ -88,15 +88,16 @@ public class TzAppAdmissionController {
 				filePath = dir + fileName;
 			}
 
-			// 判断静态文件是否已存在
-			File file = new File(filePath);
-			if (!file.exists()) {
+			// 【0】查询录取状态
+			String tzLuquStaSql = "SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
+			String tzLuquSta = sqlQuery1.queryForObject(tzLuquStaSql, new Object[] { tzAppInsID }, "String");
 
-				// 【0】查询录取状态
-				String tzLuquStaSql = "SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
-				String tzLuquSta = sqlQuery1.queryForObject(tzLuquStaSql, new Object[] { tzAppInsID }, "String");
+			if ("LQ".equals(tzLuquSta)) {// 条件录取
 
-				if (tzLuquSta == "LQ") {// 条件录取
+				// 判断静态文件是否已存在
+				File file = new File(filePath);
+				if (!file.exists()) {
+					
 					// 【1】查询证书模板id
 					String tzCertTplIdSql = "SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
 					String tzCertTplId = sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] { tzAppInsID },
@@ -125,28 +126,27 @@ public class TzAppAdmissionController {
 						System.out.println(tzCertMergHtml);
 						syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
 					}
-				} else {
-					tzCertMergHtml = "<html style='font-size:40px'>抱歉，该考生未录取，无法查看录取通知书</html>";
-				}
 
-				// 【4】生成静态录取通知书html
-				boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
-				if (!bl) {
-					errMsg[0] = "1";
-					errMsg[1] = "静态化html失败！";
+					// 【4】生成静态录取通知书html
+					boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
+					if (!bl) {
+						errMsg[0] = "1";
+						errMsg[1] = "静态化html失败！";
+					}
+				} else {
+					strRet = request.getScheme() + "://" + request.getServerName() + ":"
+							+ String.valueOf(request.getServerPort()) + request.getContextPath() + staticHtmlDir;
+
+					if ((strRet.lastIndexOf(File.separator) + 1) != strRet.length()) {
+						strRet = strRet + File.separator + fileName;
+					} else {
+						strRet = strRet + fileName;
+					}
+
+					response.sendRedirect(strRet);
 				}
-				// }else{tzCertMergHtml="该学员还未录取！";}
 			} else {
-				strRet = request.getScheme() + "://" + request.getServerName() + ":"
-						+ String.valueOf(request.getServerPort()) + request.getContextPath() + staticHtmlDir;
-
-				if ((strRet.lastIndexOf(File.separator) + 1) != strRet.length()) {
-					strRet = strRet + File.separator + fileName;
-				} else {
-					strRet = strRet + fileName;
-				}
-
-				response.sendRedirect(strRet);
+				tzCertMergHtml = "<html style='font-size:40px'>抱歉，该考生未录取，无法查看录取通知书</html>";
 			}
 
 			strRet = tzCertMergHtml;

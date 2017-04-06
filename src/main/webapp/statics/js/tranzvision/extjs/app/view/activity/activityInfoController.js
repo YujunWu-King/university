@@ -387,7 +387,7 @@
 		var store = grid.getStore();
 		
 		//修改记录
-		var mfRecs = store.getModifiedRecords(); 
+		var mfRecs = store.getRange(); 
 		for(var i=0;i<mfRecs.length;i++){
 			if(editJson == ""){
 				editJson = '{"typeFlag":"ACTAPPLYINFO","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
@@ -854,8 +854,8 @@
 	viewArtContent:  function(view, rowIndex){
 		var store = view.findParentByType("grid").store;
 		
-		var previewUrl = store.getAt(rowIndex).data.previewUrl;
-		window.open(previewUrl);
+		var publicUrl = store.getAt(rowIndex).data.publicUrl;
+		window.open(publicUrl);
     },
   //查看听众
     searchListeners:function(btn){
@@ -871,7 +871,7 @@
                     }
                 },
                 srhConFields:{
-                    TZ_AUD_NAME:{
+                    TZ_AUD_NAM:{
                         desc:'听众名称',
                         operator:'07',
                         type:'01'

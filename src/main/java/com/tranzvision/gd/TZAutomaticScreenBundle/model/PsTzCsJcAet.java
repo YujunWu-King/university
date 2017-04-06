@@ -7,6 +7,8 @@ public class PsTzCsJcAet {
 
     private String tzApplyPcId;
 
+    private String oprid;
+
     public String getRunId() {
         return runId;
     }
@@ -29,5 +31,13 @@ public class PsTzCsJcAet {
 
     public void setTzApplyPcId(String tzApplyPcId) {
         this.tzApplyPcId = tzApplyPcId == null ? null : tzApplyPcId.trim();
+    }
+
+    public String getOprid() {
+        return oprid;
+    }
+
+    public void setOprid(String oprid) {
+        this.oprid = oprid == null ? null : oprid.trim();
     }
 }

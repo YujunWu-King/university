@@ -38,18 +38,32 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                     }
                 });
             }
-            c += '<div class="input-list">';
-            c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-            c += '  <div class="input-list-text left headshot">';
-            c += '		<div class="headshot-pic">';
-            c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-            c += '			<a id="photo' + data.itemId + '" style="cursor: pointer;"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" /></a>';
-            c += '		</div>';
-            c += '	</div>';
-            c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-            c += '	<div class="clear"></div><br>';
-            c += '</div>';
-            c += '<input type="hidden" value="" name="mbaSqphoto" id="mbaSqphoto">';
+            if(SurveyBuild._readonly) {
+            	c += '<div class="input-list">';
+            	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+            	c += '  <div class="input-list-text left headshot">';
+            	c += '		<div class="headshot-pic">';
+            	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+            	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" />';
+            	c += '		</div>';
+            	c += '	</div>';
+            	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+            	c += '	<div class="clear"></div><br>';
+            	c += '</div>';
+            } else {
+            	c += '<div class="input-list">';
+            	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+            	c += '  <div class="input-list-text left headshot">';
+            	c += '		<div class="headshot-pic">';
+            	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+            	c += '			<a id="photo' + data.itemId + '" style="cursor: pointer;"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" /></a>';
+            	c += '		</div>';
+            	c += '	</div>';
+            	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+            	c += '	<div class="clear"></div><br>';
+            	c += '</div>';
+            	c += '<input type="hidden" value="" name="mbaSqphoto" id="mbaSqphoto">';
+            }
         } else {
             c += '<div class="question-answer">';
             c += '	<div class="format">';

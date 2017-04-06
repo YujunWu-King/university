@@ -67,12 +67,12 @@
                 dataIndex:'rx_time',
                 width:110
             },{
-                text: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.begin_time","开始时间"),
+                text: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.beginBm_dt","报名开始日期"),
                 sortable: true,
                 dataIndex: 'begin_time',
                 width: 110
             },{
-                text: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.end_time","结束时间"),
+                text: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJCX_STD.endBm_dt","报名结束日期"),
                 sortable: true,
                 dataIndex: 'end_time',
                 width: 110

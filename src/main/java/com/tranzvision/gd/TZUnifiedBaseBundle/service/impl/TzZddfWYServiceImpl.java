@@ -23,34 +23,49 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudDefnTMapper;
 import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
+import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
+import com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeListBundleServiceImpl;
 import com.tranzvision.gd.TZUnifiedBaseBundle.dao.PsTzCjxTblMapper;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
+@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfWYServiceImpl")
+public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 
-public class TzZddfWYServiceImpl {
-
+	@Autowired
+	private TZGDObject TzSQLObject;
+	@Autowired
+	private SqlQuery SqlQuery;
+	@Autowired
+	private PsTzCsKsFmTMapper PsTzCsKsFmTMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
 	
 	//获取参数：成绩单ID、外语水平成绩项ID、报名表ID
-			public float getWYScore(String TZ_SCORE_INS_ID,String TZ_SCORE_ITEM_ID,String[] paramters) {
+	@Override
+	public float AutoCalculate(String TZ_APP_ID,String TZ_SCORE_ID,String TZ_SCORE_ITEM) {
 				try {
 					//声明float型字段“得分”，string型字段“打分记录”
 					float Score;
 					String MarkRecord = null;
 					
 					//根据报名表ID查询考生循环考生英语成绩，查询考生英语成绩类型
-					String YYLX = paramters[0];	//类型
-					String CJ = paramters[1];	//成绩
-					String YYZT = paramters[2];	//状态（是否通过、高中低级）
+					String YYLX ="A";	//类型
+					String CJ="A";	//成绩
+					String YYZT="A" ;	//状态（是否通过、高中低级）
 					
 					//根据报名表ID查询考生是否有其他语种的外语成绩
-					String QTYZ = paramters[6];
+					String QTYZ="A";
 					
 					float YYCJ= Float.parseFloat(CJ);
 		
@@ -121,7 +136,7 @@ public class TzZddfWYServiceImpl {
 						
 					}
 					//其他语种成绩
-					String QTYZCS = paramters[66];
+					String QTYZCS ="";
 					if(QTYZ!=null && QTYZ.length() != 0){
 						MarkRecord.concat("|其他语种：").concat(QTYZCS);
 					}
@@ -133,10 +148,10 @@ public class TzZddfWYServiceImpl {
 						//插入表TZ_CJX_TBL
 						PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs=new PsTzCjxTblWithBLOBs();
 							//成绩单ID
-							Long tzScoreInsId=Long.parseLong(TZ_SCORE_INS_ID);
+							Long tzScoreInsId=Long.parseLong(TZ_SCORE_ID);
 							psTzCjxTblWithBLOBs.setTzScoreInsId(tzScoreInsId);
 							//成绩项ID
-							psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+							psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM);
 							//分值
 							BigDecimal BigDeScore = new BigDecimal(Float.toString(Score));
 							psTzCjxTblWithBLOBs.setTzScoreNum(BigDeScore);

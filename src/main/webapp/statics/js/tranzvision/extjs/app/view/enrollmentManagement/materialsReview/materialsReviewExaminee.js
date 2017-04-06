@@ -1,33 +1,32 @@
 Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExaminee',{
 	extend: 'Ext.panel.Panel',
 	xtype: 'materialsReviewExaminee',
-	controller: 'materialsReview',
+	controller: 'materialsReviewExamineeController',
     requires: [
     	'Ext.data.*', 
     	'Ext.grid.*', 
-    	'Ext.util.*', 
+    	'Ext.util.*',
+		'Ext.grid.filters.Filters',
     	'Ext.toolbar.Paging', 
-    	'Ext.ux.ProgressBarPager', 
-    	'Ext.ux.MaximizeTool',
-		'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeWindow',
+    	'Ext.ux.ProgressBarPager',
     	'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeStore',
     	'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeController'
     ],
 	title: Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.title","材料评审考生名单"),
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
 	actType:'',
-    constructor: function(obj) {
-        this.classId = obj.classId;
-        this.batchId = obj.batchId;
-        this.callParent();
-    },
-    initComponent:function() {
-    	
+	constructor: function(obj) {
+		this.classId = obj.classId;
+		this.batchID = obj.batchId;
+		this.callParent();
+	},
+	initComponent: function() {
+
     	//考生名单store
     	var examineeStore = new KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeStore();
-    
+
     	Ext.apply(this,{
-    		items:[{
+			items:[{
     			xtype:'form',
     			reference:'materialsReviewExamineeForm',
     			layout:{
@@ -42,7 +41,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     				labelWidth:110,
     				labelStyle:'font-weight:bold'
     			},
-    			items:[{
+				items:[{
     				xtype:'textfield',
     				name:'classId',
     				hidden:true
@@ -59,6 +58,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     				name:'dqpsStatus',
     				hidden:true
     			},{
+					xtype:'numberfield',
+					name:'judgeNumSet',
+					hidden:true
+				},{
     				xtype:'textfield',
     				fieldLabel:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.className","报考班级"),
     				name:'className',
@@ -195,12 +198,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     					items:[{
     						iconCls:'people',tooltip:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_STD.people","指定评委"),handler:'setJudgeForOne'
     					},{
-    						iconCls:'remove',tooltip:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_STD.remove","删除"),handler:'removeExaminee'
+    						iconCls:'remove',tooltip:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_STD.remove","删除"),handler:'removeExamineeOne'
     					}]
     				}],
     				store:examineeStore
     			}]
-    		}]		
+    		}]
     	});
     	this.callParent();
     },

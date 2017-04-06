@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<title>清华大学经济管理学院MBA材料评审系统</title>
+<style>
+	html,body{height:100%;overflow:hidden}
+</style>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/evaluation/style.css" />
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/evaluation/default.css" />
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/kitchensink/resources/Sencha-Examples/style.css" />
+<script type="text/javascript">
+	var ContextPath = "%bind(:1)";
+	var OrgCode = "%bind(:2)";
+</script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/extjs/bootstrap.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery-qtip/jquery.qtip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/jquery-qtip/jquery.qtip.min.css" />
+
+<!--简约样式-->
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/kitchensink/theme-simple/resources/KitchenSink-all.css"/>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-theme-simple/build/resources/ext-theme-simple-all.css"/>
+
+<script type="text/javascript" charset="UTF-8" src="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts-debug.js"></script>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts-all-debug.scss"/>
+
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/material/evaluation-detail.js" charset="utf-8"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/material/batch-list.js" charset="utf-8"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/material/main-evaluation.js" charset="utf-8"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/material/main.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+$(function(){
+	$("#tz_zlps_container").width(Ext.getBody().getWidth()*3);
+	var baseUrl = ContextPath+"/dispatcher?classid=material&OperateType=EJSON"
+	var urlObject = {
+			"getBatchListUrl":baseUrl+"&type=list",
+			"getBatchDataUrl":baseUrl+"&type=data",
+			"getNextApplicantUrl":baseUrl,
+			"getApplicantDataUrl":baseUrl,
+			"submitApplicantDataUrl":baseUrl,
+			"printStatisticsTableUrl":baseUrl
+	};
+	
+	/*var urlObject = {
+		"getBatchListUrl":'/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_ReadPSPCList?languageCd=ZHS',
+		"getBatchDataUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_ReadPWMPData?languageCd=ZHS",
+		"getNextApplicantUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS",
+		"getApplicantDataUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_ReadKSHEvaluateData?languageCd=ZHS",
+		"submitApplicantDataUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS",
+		"printStatisticsTableUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_DYBB.TZ_DYPFZB.FieldFormula.IScript_Printreport"
+	};*/
+	
+	initializeEvaluateSystem(urlObject);
+});
+</script>
+</head>
+<body style="background:#eee"><div id="all" style="height:100%">
+  
+  <!-- content start -->
+  <div class="main" style="height:100%">
+  	<div class="top_main">
+           <ul>
+           	<li class="fa fa-user">&nbsp;欢迎%bind(:3)登录清华经管学院MBA材料评审系统</li>
+           	<li style="float:right;">
+           		<a class="fa fa-home" style="margin-right:5px">&nbsp;首页</a>
+           		<a class="fa fa-edit" style="margin-left:5px;margin-right:5px">&nbsp;修改密码</a>
+           		<a class="fa fa-sign-out" style="margin-left:5px;color:white;" href="../logout?type=material">&nbsp;退出</a>
+           	</li>
+           </ul>           
+	</div>
+  		<!-- evaluation main start -->
+		<div style="height:auto;overflow-x:hidden;margin:0px;position:relative">
+			<div id="tz_zlps_loading" style="height:auto;width:100%;overflow:hidden;z-index:1600;background-color:#F4F4EC;position:absolute;bottom:40px;">
+				<div style="margin:auto; width:100%;height: 100%; text-align:center;line-height:500px;font-size:25px;font-family:Microsoft Yahei;">	
+					<p>欢迎登录清华经管学院MBA材料评审系统，数据加载中，请稍候……</p>
+				</div>
+			</div>
+			<div id="tz_zlps_container" style="width: 5050px;height:100%;min-height:500px;position:relative;overflow:hidden">
+				<table width="100%" height="100%" style="background-color:#F4F4EC">
+					<tr>
+						<td align="center" valign="top">
+							<div id="tz_zlps_pclb" tztype="page" style="background-color:#F4F4EC;z-index:1400;list-style:none;width:1070px;min-height:480px;float:left;overflow-x:hidden">
+								<table width="100%" height="100%">
+									<tr>
+										<td align="center" valign="top">
+											<div id="tz_zlps_pclb_a" style="vertical-align:middle"></div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td align="center" valign="top">
+							<div id="tz_zlps_zym" tztype="page" style="background-color:#F4F4EC;z-index:1200;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+								<table width="100%">
+									<tr>
+										<td>
+											<table width="100%">
+												<tr>
+													<td><div id="tz_plps_main_page"></div></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td align="center" valign="top">
+							<div id="tz_zlps_dfym" tztype="page" style="background-color:#F4F4EC;z-index:1000;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+								<table width="100%">
+									<tr>
+										<td>
+											<div id="tz_applicant_evaluate_page"></div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<!-- evaluation main end -->
+  </div>
+	<!-- content end --> 
+	<div class="clear"></div>
+	<!-- foot start -->
+	<div id="footarea" class="footer assdiv" style="background-color:#fff;position:absolute;bottom:0;left:0">
+  	<p>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</p>
+    </div>
+</div></body>
+</html>

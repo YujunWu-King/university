@@ -23,19 +23,37 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudDefnTMapper;
 import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
+import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
 import com.tranzvision.gd.TZUnifiedBaseBundle.dao.PsTzCjxTblMapper;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
-public class TzZddfZYBJServiceImpl {
+@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfZYBJServiceImpl")
+public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
+	
+	@Autowired
+	private TZGDObject TzSQLObject;
+	@Autowired
+	private SqlQuery SqlQuery;
+	@Autowired
+	private PsTzCsKsFmTMapper PsTzCsKsFmTMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
+	
+	
 	//获取参数：成绩单ID、职业背景成绩项ID、报名表ID
-	public float getZYScore(String TZ_SCORE_INS_ID,String TZ_SCORE_ITEM_ID,String[] paramters) {
+	@Override
+	public float AutoCalculate(String TZ_APP_ID,String TZ_SCORE_ID,String TZ_SCORE_ITEM) {
 		try {
 			//声明float型字段“得分”，string型字段“打分记录”
 			float Score = 0;
@@ -44,34 +62,34 @@ public class TzZddfZYBJServiceImpl {
 			float Score2=0;
 			
 			//根据报名表ID查询考生职业背景，获取公司性质
-			String GSXZ = paramters[0];	
+			String GSXZ = "A";	
 			//政府机构或事业单位，获取职位类型
-			String ZWLX = paramters[0];	
+			String ZWLX = "A";	
 			
 			//创业类型
-			String CY = paramters[1];	
+			String CY = "A";	
 			
 			//融资情况
-			String RZ = paramters[1];
+			String RZ = "A";
 			//融资数额
-			String RZE = paramters[1];
+			String RZE = "A";
 			//用户数
-			String YH = paramters[1];
+			String YH = "A";
 			float YHS= Float.parseFloat(YH);
 			//营收情况
-			String YSQK = paramters[1];
+			String YSQK = "A";
 			int YS = Integer.parseInt(YSQK);
 
 			//自有资金
-			String ZYZJ = paramters[1];
+			String ZYZJ = "A";
 			//家族企业资产
-			String JZZC = paramters[1];
+			String JZZC = "A";
 			//其他企业营收
-			String QTYS = paramters[1];
+			String QTYS = "A";
 			//其他企业利润
-			String QTLR = paramters[1];
+			String QTLR ="A";
 			//其他企业规模
-			String QTGM = paramters[1];
+			String QTGM = "A";
 			
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
@@ -182,10 +200,10 @@ public class TzZddfZYBJServiceImpl {
 				//插入表TZ_CJX_TBL
 				PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs=new PsTzCjxTblWithBLOBs();
 					//成绩单ID
-					Long tzScoreInsId=Long.parseLong(TZ_SCORE_INS_ID);
+					Long tzScoreInsId=Long.parseLong(TZ_SCORE_ID);
 					psTzCjxTblWithBLOBs.setTzScoreInsId(tzScoreInsId);
 					//成绩项ID
-					psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+					psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM);
 					//分值
 					BigDecimal BigDeScore = new BigDecimal(Float.toString(Score));
 					psTzCjxTblWithBLOBs.setTzScoreNum(BigDeScore);

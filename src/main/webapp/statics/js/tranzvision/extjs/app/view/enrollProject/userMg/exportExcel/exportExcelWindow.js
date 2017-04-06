@@ -20,8 +20,6 @@
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     selList:[],
     modalID:'',
-	searchSql:"",
-	resultSource:'',
     y:25,
     constructor:function(){
         this.callParent();
