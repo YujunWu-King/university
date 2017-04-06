@@ -216,6 +216,7 @@ public class tzOnlineAppUtility {
 				String opts[]=new String[]{"firm_type","position_type"};
 				//System.out.println(strComMc);
 				System.out.println(strXxxBh);
+				//exam_type exam_score exam_date
 				for(String opt:opts){
 					Map<String,Object>valMap=new HashMap<String,Object>();
 					valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
@@ -243,9 +244,6 @@ public class tzOnlineAppUtility {
 				getChildrenSql="select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
 				//附件部分验证:
 				String getAttCount="select COUNT(1) from PS_TZ_FORM_ATT_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
-				List<Map<String,Object>>valList=new ArrayList<Map<String,Object>>();
-				valList=sqlQuery.queryForList(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+"%"});
-		
 				//查询行数:
 				sql="SELECT TZ_XXX_LINE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 				int comNum=sqlQuery.queryForObject(sql, new Object[]{numAppInsId,strXxxBh}, "int");
@@ -267,18 +265,72 @@ public class tzOnlineAppUtility {
 				if(breakFlg){
 					break;
 				}
-				if(valList!=null){
-					for(Map<String,Object>valMap:valList){
-						strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-						if ("".equals(strXxxValue)||"-1".equals(strXxxValue)) {
-							// 校验失败
+				//日期控件处理1.2.3.4.13含有日期 需要验证日期
+				String hasDateOpt="GRE-GMAT-TOFEL-IELTS-TOEIC（990）";
+				//考试类型 成绩 日期验证:
+				//1.验证成绩类型:
+				Map<String,Object>valMap=new HashMap<String,Object>();//exam_score//exam_date
+				String opt="_exam_type";
+				valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
+				if(valMap!=null){
+					strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+					if("".equals(strXxxValue)||"-1".equals(strXxxValue)){
+						returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+						//returnMessage = this.getMsg(strXxxMc, "请选择考试类型");
+						break;
+					}else if(hasDateOpt.contains("strXxxValue")){
+						//验证成绩+日期
+						opt="_exam_score";
+						valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
+						if(valMap!=null){
+							strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+							if(strXxxValue.equals("")){
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+								//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+								break;
+							}
+						}else{
 							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+							break;
+						}
+						//验证日期：
+						opt="_exam_date";
+						valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
+						if(valMap!=null){
+							strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+							if(strXxxValue.equals("")){
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+								//returnMessage = this.getMsg(strXxxMc, "考试日期必填");
+								break;
+							}
+						}else{
+							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							//returnMessage = this.getMsg(strXxxMc, "考试日期必填");
+							break;
+						}
+						
+					}else{
+						//验证成绩
+						opt="_exam_score";
+						valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
+						if(valMap!=null){
+							strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+							if(strXxxValue.equals("")){
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+								//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+								break;
+							}
+						}else{
+							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
 							break;
 						}
 					}
 				}
 				else{
 					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+					//returnMessage = this.getMsg(strXxxMc, "请选择考试类型");
 				}
 				break;
 			default:

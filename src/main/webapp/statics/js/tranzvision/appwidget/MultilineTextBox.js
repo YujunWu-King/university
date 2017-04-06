@@ -251,7 +251,7 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			var len = $inputBox.val().length;
 			if (len != 0){
 				//$("#" + data.itemId + "Size").text("已输入"+len+"字");
-				$("#" + data.itemId + "Size").text(MsgSet["INPUTED"]+len+MsgSet["WORD"]);
+				$("#" + data.itemId + "Size").text(MsgSet["INPUTED"]+" "+len+" "+MsgSet["WORD"]);
 			}
 		});
 		

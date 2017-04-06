@@ -22,17 +22,6 @@
 	 
 	initComponent: function () {
 		var me = this;
-		
-		var IDTypeReg = /^[0-9a-zA-Z_]+$/;
-		Ext.apply(Ext.form.field.VTypes, {
-            IdValType: function(val, field) {
-                var bolFlag;
-                bolFlag = IDTypeReg.test(val);
-                return bolFlag;
-            },
-            IdValTypeText: '只能输入字母、数字和下划线'
-        });
-		
 		//有效状态Store
 		var effeStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_ISVALID");
 		//总分分布统计模型Store
@@ -93,7 +82,6 @@
 					name: 'modelId',
 					allowBlank: false,
 					readOnly: modeIdReadOnly,
-					vtype: 'IdValType',
 					cls: modeIdCls,
 		            afterLabelTextTpl: [
 		                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
@@ -102,7 +90,7 @@
 		            xtype: 'textfield',
 		            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_SCRMOD_DEFN_STD.modeName","模型名称"),
 					name: 'modeName',
-					maxLength: 50,
+					maxLength: 18,
 		            allowBlank: false
 		        },{
 		           	xtype: 'combo',

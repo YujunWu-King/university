@@ -13,11 +13,6 @@ function checkExplorer(language){
 			}
 		}
 	}
-	//是否为Edge
-	else if(explorer.indexOf("Windows NT") >=0 && explorer.indexOf("Trident/7.0;")>0){
-		checkBZ =true;
-	}
-	
 	//firefox 
 	else if (explorer.indexOf("Firefox") >= 0) {
 		checkBZ =true;

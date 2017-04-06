@@ -35,16 +35,6 @@
 	initComponent: function () {
 		var me = this;
 		
-		var IDTypeReg = /^[0-9a-zA-Z_]+$/;
-		Ext.apply(Ext.form.field.VTypes, {
-            IdValType: function(val, field) {
-                var bolFlag;
-                bolFlag = IDTypeReg.test(val);
-                return bolFlag;
-            },
-            IdValTypeText: '只能输入字母、数字和下划线'
-        });
-		
 		//成绩项类型Store
 		var itemTypestore = Ext.create('Ext.data.Store', {
 			 fields: [{
@@ -155,8 +145,7 @@
 		            xtype: 'textfield',
 		            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.itemId","成绩项ID"),
 					name: 'itemId',
-		            allowBlank: false,
-		            vtype: 'IdValType'
+		            allowBlank: false
 		        },{
 		            xtype: 'textfield',
 		            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.itemName","成绩项名称"),

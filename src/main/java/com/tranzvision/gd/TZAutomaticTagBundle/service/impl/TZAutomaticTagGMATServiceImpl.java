@@ -30,7 +30,7 @@ public class TZAutomaticTagGMATServiceImpl extends TZAutomaticTagServiceImpl {
 	@Override
 	public boolean automaticTagList(String classId, String batchId, String labelId) {
 		try {
-			String zdbqGMATIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_GMAT_ID'";
+			String zdbqGMATIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_INISCRN_ID'";
 			String zdbqGMATId = SqlQuery.queryForObject(zdbqGMATIdSql, "String");
 			String zdbqGMATNameSql = "SELECT TZ_BIAOQZ_NAME FROM  PS_TZ_BIAOQZ_BQ_T WHERE TZ_BIAOQ_ID=?";
 			String zdbqGMATName = SqlQuery.queryForObject(zdbqGMATNameSql, new Object[] { zdbqGMATId }, "String");
@@ -47,7 +47,7 @@ public class TZAutomaticTagGMATServiceImpl extends TZAutomaticTagServiceImpl {
 					List<?> Seq = SqlQuery.queryForList(
 							"SELECT substring(TZ_XXX_BH, length('TZ_44exam_type')+1) FROM PS_TZ_APP_CC_T WHERE TZ_APP_S_TEXT='ENG_LEV_T2' AND TZ_APP_INS_ID=?",
 							new Object[] { tzappins.get(i).toString() });
-					
+					if (Seq != null && Seq.size() > 0) {
 						for (int j = 0; j < Seq.size(); j++) {
 
 							/*
@@ -75,7 +75,8 @@ public class TZAutomaticTagGMATServiceImpl extends TZAutomaticTagServiceImpl {
 								// 如果符合条件，则跳出循环，直接检查下一报名表
 								break;
 							}
-						}				
+						}
+					}
 					// 循环考试类型为GMAT的字段id对应的序号--end
 				}
 			}

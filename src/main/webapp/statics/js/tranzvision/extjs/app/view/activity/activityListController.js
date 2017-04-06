@@ -108,73 +108,73 @@
 			
     cmp.on('afterrender',function(panel){
     	
-	    	/*隐藏发布对象*/
-			var fbSet = panel.down('fieldset[name=fbSet]');
-			fbSet.hide();
-			//附件列表
-			/*
-			var attachmentGrid = this.lookupReference('attachmentGrid');
-			var attachmentToolBar = this.lookupReference('attachmentToolBar');
-			attachmentGrid.store.load();
-			attachmentToolBar.store.load();	
-			*/			
-			//信息项列表
-			//var applyItemGrid = this.lookupReference('applyItemGrid');
-			//var tzStoreParams = "{'activityId':''}";
-			//applyItemGrid.store.tzStoreParams = tzStoreParams;
-			//applyItemGrid.store.load();
-			
-			var cmpForm = panel.child("form").getForm();
-			//新建时，隐藏听众列表
-			cmpForm.findField("AudList").hide(); 
-			var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":""}}';
-			//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"","siteId":"","coluId":""}}';
-			//加载数据
-			/**/
-			Ext.tzLoad(tzParams,function(responseData){
-				var formData = responseData.formData;
-				cmpForm.setValues(formData);
-				//cmpForm.findField("siteIds").setValue(formData.siteids);
-				//cmpForm.findField("columsHide").setValue(formData.columsHide);
-				//cmpForm.findField("saveImageAccessUrl").setValue(formData.saveImageAccessUrl);
-				//cmpForm.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
-			});
-			
-			var applyItemGrid = this.lookupReference('applyItemGrid');
-			var r = Ext.create('KitchenSink.view.activity.applyItemModel', {
-				activityId: "",
-				applyItemId: "TZ_CYR_NAME",
-				applyItemNum: 1,
-				applyItemName: '姓名',
-				applyItemNameEng:'Name',
-				applyItemRequired: 'Y',
-				applyItemType: '1'
-			});
-			applyItemGrid.store.insert(0,r);
-	 
-			var r = Ext.create('KitchenSink.view.activity.applyItemModel', {
-				activityId: "",
-				applyItemId: "TZ_ZY_SJ",
-				applyItemNum: 2,
-				applyItemName: '手机',
-				applyItemNameEng:'Phone',
-				applyItemRequired: 'Y',
-				applyItemType: '1'
-			});
-			applyItemGrid.store.insert(1,r);
-	 
-			var r = Ext.create('KitchenSink.view.activity.applyItemModel', {
-				activityId: "",
-				applyItemId: "TZ_ZY_EMAIL",
-				applyItemNum: 3,
-				applyItemName: '邮箱',
-				applyItemNameEng:'Email',
-				applyItemRequired: 'Y',
-				applyItemType: '1'
-			});
-			applyItemGrid.store.insert(2,r);
+    	/*隐藏发布对象*/
+		var fbSet = panel.down('fieldset[name=fbSet]');
+		fbSet.hide();
+				//附件列表
+				/*
+				var attachmentGrid = this.lookupReference('attachmentGrid');
+				var attachmentToolBar = this.lookupReference('attachmentToolBar');
+				attachmentGrid.store.load();
+				attachmentToolBar.store.load();	
+				*/			
+				//信息项列表
+				//var applyItemGrid = this.lookupReference('applyItemGrid');
+				//var tzStoreParams = "{'activityId':''}";
+				//applyItemGrid.store.tzStoreParams = tzStoreParams;
+				//applyItemGrid.store.load();
+				
+				var cmpForm = panel.child("form").getForm();
+				//新建时，隐藏听众列表
+				cmpForm.findField("AudList").hide(); 
+				var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":""}}';
+				//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"","siteId":"","coluId":""}}';
+				//加载数据
+				/**/
+				Ext.tzLoad(tzParams,function(responseData){
+						var formData = responseData.formData;
+						cmpForm.setValues(formData);
+						//cmpForm.findField("siteIds").setValue(formData.siteids);
+						//cmpForm.findField("columsHide").setValue(formData.columsHide);
+						//cmpForm.findField("saveImageAccessUrl").setValue(formData.saveImageAccessUrl);
+						//cmpForm.findField("saveAttachAccessUrl").setValue(formData.saveAttachAccessUrl);
+				});
+				
+				var applyItemGrid = this.lookupReference('applyItemGrid');
+				var r = Ext.create('KitchenSink.view.activity.applyItemModel', {
+    			activityId: "",
+        	applyItemId: "TZ_CYR_NAME",
+					applyItemNum: 1,
+					applyItemName: '姓名',
+					applyItemNameEng:'Name',
+					applyItemRequired: 'Y',
+					applyItemType: '1'
+    		});
+    	 applyItemGrid.store.insert(0,r);
+    	 
+    	 var r = Ext.create('KitchenSink.view.activity.applyItemModel', {
+    			activityId: "",
+        	applyItemId: "TZ_ZY_SJ",
+					applyItemNum: 2,
+					applyItemName: '手机',
+					applyItemNameEng:'Phone',
+					applyItemRequired: 'Y',
+					applyItemType: '1'
+    		});
+    	 applyItemGrid.store.insert(1,r);
+    	 
+    	 var r = Ext.create('KitchenSink.view.activity.applyItemModel', {
+    			activityId: "",
+        	applyItemId: "TZ_ZY_EMAIL",
+					applyItemNum: 3,
+					applyItemName: '邮箱',
+					applyItemNameEng:'Email',
+					applyItemRequired: 'Y',
+					applyItemType: '1'
+    		});
+    	 applyItemGrid.store.insert(2,r);
 
-	  });
+		});
 			
       tab = contentPanel.add(cmp);     
 	  tab.on(Ext.tzTabOn(tab,this.getView(),cmp));	
