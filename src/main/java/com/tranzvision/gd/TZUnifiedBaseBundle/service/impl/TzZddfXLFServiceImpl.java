@@ -31,8 +31,8 @@ import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
-
-public class TzZddfXLFServiceImpl {
+@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfXLFServiceImpl")
+public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 
 	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
@@ -44,17 +44,18 @@ public class TzZddfXLFServiceImpl {
 	private GetSeqNum getSeqNum;
 	
 	// 获取参数：成绩单ID、学历分成绩项ID、报名表ID
-		public float getXlfScore(String TZ_SCORE_INS_ID,String TZ_SCORE_ITEM_ID,String[] paramters) {
+	@Override
+	public float AutoCalculate(String TZ_APP_ID,String TZ_SCORE_ID,String TZ_SCORE_ITEM) {
 			try {
 				//根据报名表ID查询考生本科学历的学历、学位、学校ID
-				String XL = paramters[0];
-				String XW = paramters[1];
-				String XX=paramters[2];
+				String XL ="A";
+				String XW = "A";
+				String XX="A";
 				int XXID = Integer.parseInt(XX);
 				 
 				//声明    学历=研究生，学位等于硕士/博士
-				String XLYJS = paramters[3];
-				String XWYJS = paramters[4];
+				String XLYJS = "A";
+				String XWYJS = "A";
 				int XLYJSID = Integer.parseInt(XLYJS);
 				int XWYJSID = Integer.parseInt(XWYJS);
 				
@@ -98,10 +99,10 @@ public class TzZddfXLFServiceImpl {
 					//插入表TZ_CJX_TBL
 					PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs=new PsTzCjxTblWithBLOBs();
 						//成绩单ID
-						Long tzScoreInsId=Long.parseLong(TZ_SCORE_INS_ID);
+						Long tzScoreInsId=Long.parseLong(TZ_SCORE_ID);
 						psTzCjxTblWithBLOBs.setTzScoreInsId(tzScoreInsId);
 						//成绩项ID
-						psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+						psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM);
 						//分值
 						BigDecimal BigDeScore = new BigDecimal(Float.toString(Score));
 						psTzCjxTblWithBLOBs.setTzScoreNum(BigDeScore);

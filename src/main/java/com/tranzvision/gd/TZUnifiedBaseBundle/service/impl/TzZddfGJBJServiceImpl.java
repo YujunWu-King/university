@@ -23,27 +23,43 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudDefnTMapper;
 import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
+import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
 import com.tranzvision.gd.TZUnifiedBaseBundle.dao.PsTzCjxTblMapper;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
-public class TzZddfGJBJServiceImpl {
+@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfGJBJServiceImpl")
+public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
+	@Autowired
+	private TZGDObject TzSQLObject;
+	@Autowired
+	private SqlQuery SqlQuery;
+	@Autowired
+	private PsTzCsKsFmTMapper PsTzCsKsFmTMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
+	
 	//获取参数：成绩单ID、国际化背景成绩项ID、报名表ID
-	public float getGJHScore(String TZ_SCORE_INS_ID,String TZ_SCORE_ITEM_ID,String[] paramters) {
+	@Override
+	public float AutoCalculate(String TZ_APP_ID,String TZ_SCORE_ID,String TZ_SCORE_ITEM) {
 		try {
 			//声明float型字段“得分”，string型字段“打分记录”
 			float Score;
 			String MarkRecord = null;
 			
 			//根据报名表ID查询考生境外工作经历，国家类别和时间，根据查询结果
-			String GJLB = paramters[0];	//国家类别
-			String SJ = paramters[1];	//时间
+			String GJLB = "A";	//国家类别
+			String SJ = "A";	//时间
 		
 			float SJF= Float.parseFloat(SJ);
 
@@ -66,10 +82,10 @@ public class TzZddfGJBJServiceImpl {
 				//插入表TZ_CJX_TBL
 				PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs=new PsTzCjxTblWithBLOBs();
 					//成绩单ID
-					Long tzScoreInsId=Long.parseLong(TZ_SCORE_INS_ID);
+					Long tzScoreInsId=Long.parseLong(TZ_SCORE_ID);
 					psTzCjxTblWithBLOBs.setTzScoreInsId(tzScoreInsId);
 					//成绩项ID
-					psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+					psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM);
 					//分值
 					BigDecimal BigDeScore = new BigDecimal(Float.toString(Score));
 					psTzCjxTblWithBLOBs.setTzScoreNum(BigDeScore);
