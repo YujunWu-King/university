@@ -119,13 +119,17 @@ public class DistributionTableInfoServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
 		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("result", 0);
+		mapRet.put("formData", "");
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 获取当前登录机构
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			// 当前登录人
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
-			JacksonUtil jacksonUtil = new JacksonUtil();
+//			JacksonUtil jacksonUtil = new JacksonUtil();
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -158,16 +162,29 @@ public class DistributionTableInfoServiceImpl extends FrameworkImpl {
 					psTzFbdzTbl.setRowAddedOprid(oprid);
 					psTzFbdzTbl.setRowLastmantDttm(new Date());
 					psTzFbdzTbl.setRowLastmantOprid(oprid);
-					psTzFbdzTblMapper.insert(psTzFbdzTbl);
+					int rtn = psTzFbdzTblMapper.insert(psTzFbdzTbl);
+					if(rtn != 0){
+						Map<String, Object> mapForm = new HashMap<String, Object>();
+						mapForm.put("distrId", distrId);
+						mapForm.put("distrName", distrName);
+						mapRet.replace("result", "success");
+						mapRet.replace("formData", mapForm);
+					}else{
+						errMsg[0] = "1";
+						errMsg[1] = "保存失败";
+						mapRet.replace("result", "fail");
+					}
 				} else {
 					errMsg[0] = "1";
-					errMsg[1] = "参数错误";
+					errMsg[1] = "分布对照表编号已存在";
+					mapRet.replace("result", "fail");
 				}
 			}
 		} catch (Exception e) {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		strRet = jacksonUtil.Map2json(mapRet);
 		return strRet;
 	}
 

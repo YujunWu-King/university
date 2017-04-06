@@ -25,7 +25,7 @@
 			xtype:"toolbar",
 			items:[
 				{text:Ext.tzGetResourse("TZ_DISTRI_TAB_COM.TZ_DISTRI_GL_STD.query","查询"),iconCls: "query",handler:"cfgSearchDistribution"},'-',
-				{text:Ext.tzGetResourse("TZ_DISTRI_TAB_COM.TZ_DISTRI_GL_STD.add","新增"),iconCls: "add",handler:"addNewScoreModel"}/*,'-',
+				{text:Ext.tzGetResourse("TZ_DISTRI_TAB_COM.TZ_DISTRI_GL_STD.add","新增"),iconCls: "add",handler:"addDistribution"}/*,'-',
 				{text:Ext.tzGetResourse("TZ_DISTRI_TAB_COM.TZ_DISTRI_GL_STD.edit","编辑"),iconCls:"edit",handler:'editSelScoreModel'}*/
 			]
 		}
