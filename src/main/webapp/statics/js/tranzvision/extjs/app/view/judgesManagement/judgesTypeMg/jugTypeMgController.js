@@ -406,7 +406,7 @@
 	},
     searchDataList: function(btn){
     	Ext.tzShowCFGSearch({
-
+ 
             cfgSrhId: 'TZ_JUDGE_TYPE_COM.TZ_JUDGE_LIST_STD.TZ_JUGTYP_VW',
             condition:
             {
