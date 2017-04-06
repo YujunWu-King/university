@@ -1600,6 +1600,8 @@
 					$("#backindex").hide();
 				}
 				
+				
+				
 				checkExplorer($("#lang").val());
 				
 				
@@ -1660,6 +1662,11 @@
 					};
 				}
 				
+				if (isadmin == "Y") {
+					$("#mask").hide();
+					$("#inpwd").hide();
+					$("#MainDiv").show(); 
+				} else {
 				if(passAuth && passAuth === "Y"){
 					
 					var is_password = getcookie("SURVEY_TJX_IS_PASSWORD");
@@ -1678,6 +1685,7 @@
 					$("#inpwd").hide();
 					$("#MainDiv").show(); 
 
+				}
 				}
 			});
 		</script>
