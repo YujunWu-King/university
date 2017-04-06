@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<title>清华大学经济管理学院MBA材料评审系统</title>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/evaluation/style.css" />
+<script type="text/javascript">
+	var ContextPath = "%bind(:1)";
+	var OrgCode = "%bind(:2)";
+</script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/layer/layer.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/util/checkExplorer.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/material/login.js"></script>
+</head>
+<body style="background:#eee"><div id="all">
+  
+  <!-- content start -->
+  <div class="main">    
+	<form action="" method="post" enctype="multipart/form-data" name="Loginform" id="Loginform">
+		<div class="login_bg">
+			<div class="login_body">
+				<img src="../../statics/images/evaluation/login_material_top.png">
+				<div class="main_body">
+					<div class="main_login">
+						<p>请登录</p>
+						<div class="login_number">
+							<span class="text_in">账 &nbsp;&nbsp;号：</span>
+							<input id="userName" name="userName" class="number_input" type="text">
+						</div>
+						<div class="login_number">
+							<span class="text_in">密 &nbsp;&nbsp;码：</span>
+							<input id="password" name="password" class="number_input" type="password">
+						</div>
+						<div class="login_number">
+							<span class="text_in">验证码：</span>
+							<input id="yzm" name="yzm" class="confirm_input" type="text">
+							<img class="confirm_img" id="yzmImg" src="">							
+							<a href="javascript:void(0)" class="update">看不清楚？</a>
+						</div>
+						<input id="TZ_IS_SUBMIT" name="TZ_IS_SUBMIT" value="Y1" type="hidden"/>
+                        <div id="errormsg" style="display:none;" class="tips_error"><span></span></div>
+						<a href="javascript:void(0)" class="login_btn" id="submitbtn">登录</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+  </div>
+	<!-- content end --> 
+	<div class="clear"></div>
+	<!-- foot start -->
+	<div id="footarea" class="footer assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" style="background-color:#fff">
+  	<p>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</p>
+    </div>
+</div></body>
+</html>
