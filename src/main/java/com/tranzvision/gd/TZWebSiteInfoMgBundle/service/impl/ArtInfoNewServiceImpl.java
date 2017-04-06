@@ -18,8 +18,12 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtAudienceTMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtHdTblMapper;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxETMapper;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzArtAudienceTKey;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxET;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxT;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
@@ -108,6 +112,11 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 	private PsTzArtAudienceTMapper PsTzArtAudienceTMapper;
 	@Autowired
 	private PsTzArtHdTblMapper psTzArtHdTblMapper;
+	@Autowired
+	private PsTzZxbmXxxTMapper psTzZxbmXxxTMapper;
+
+	@Autowired
+	private PsTzZxbmXxxETMapper psTzZxbmXxxETMapper;
 	
 	/* 查询表单信息 */
 	@Override
@@ -1674,6 +1683,61 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					psTzArtHdTbl.setTzArtId(this.instanceArtId);
 					psTzArtHdTbl.setTzNactName(strActName);
 					psTzArtHdTblMapper.insert(psTzArtHdTbl);
+					
+					/*报名表预留信息项*/
+					/*姓名*/
+					PsTzZxbmXxxT psTzZxbmXxxT;
+					psTzZxbmXxxT = new PsTzZxbmXxxT();
+					psTzZxbmXxxT.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxT.setTzZxbmXxxId("TZ_CYR_NAME");
+					psTzZxbmXxxT.setTzPxXh(1);
+					psTzZxbmXxxT.setTzZxbmXxxName("姓名");
+					psTzZxbmXxxT.setTzZxbmXxxBt("Y");
+					psTzZxbmXxxT.setTzZxbmXxxZsxs("1");
+					psTzZxbmXxxTMapper.insert(psTzZxbmXxxT);
+					
+					PsTzZxbmXxxET psTzZxbmXxxET;
+					psTzZxbmXxxET = new PsTzZxbmXxxET();
+					psTzZxbmXxxET.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxET.setTzZxbmXxxId("TZ_CYR_NAME");
+					psTzZxbmXxxET.setLanguageCd("ENG");
+					psTzZxbmXxxET.setTzZxbmXxxName("Name");
+					psTzZxbmXxxETMapper.insert(psTzZxbmXxxET);
+					
+					/*手机*/
+					psTzZxbmXxxT = new PsTzZxbmXxxT();
+					psTzZxbmXxxT.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxT.setTzZxbmXxxId("TZ_ZY_SJ");
+					psTzZxbmXxxT.setTzPxXh(2);
+					psTzZxbmXxxT.setTzZxbmXxxName("手机");
+					psTzZxbmXxxT.setTzZxbmXxxBt("Y");
+					psTzZxbmXxxT.setTzZxbmXxxZsxs("1");
+					psTzZxbmXxxTMapper.insert(psTzZxbmXxxT);
+					
+					psTzZxbmXxxET = new PsTzZxbmXxxET();
+					psTzZxbmXxxET.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxET.setTzZxbmXxxId("TZ_ZY_SJ");
+					psTzZxbmXxxET.setLanguageCd("ENG");
+					psTzZxbmXxxET.setTzZxbmXxxName("Phone");
+					psTzZxbmXxxETMapper.insert(psTzZxbmXxxET);
+					
+					/*邮箱*/
+					psTzZxbmXxxT = new PsTzZxbmXxxT();
+					psTzZxbmXxxT.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxT.setTzZxbmXxxId("TZ_ZY_EMAIL");
+					psTzZxbmXxxT.setTzPxXh(3);
+					psTzZxbmXxxT.setTzZxbmXxxName("邮箱");
+					psTzZxbmXxxT.setTzZxbmXxxBt("Y");
+					psTzZxbmXxxT.setTzZxbmXxxZsxs("1");
+					psTzZxbmXxxTMapper.insert(psTzZxbmXxxT);
+					
+					psTzZxbmXxxET = new PsTzZxbmXxxET();
+					psTzZxbmXxxET.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxET.setTzZxbmXxxId("TZ_ZY_EMAIL");
+					psTzZxbmXxxET.setLanguageCd("ENG");
+					psTzZxbmXxxET.setTzZxbmXxxName("Email");
+					psTzZxbmXxxETMapper.insert(psTzZxbmXxxET);
+					
 				}
 			}
 			
