@@ -261,76 +261,92 @@ public class tzOnlineAppUtility {
 						breakFlg=true;
 						break;
 					}
+					//input部分验证:
+					
 				}
 				if(breakFlg){
 					break;
 				}
-				//日期控件处理1.2.3.4.13含有日期 需要验证日期
-				String hasDateOpt="GRE-GMAT-TOFEL-IELTS-TOEIC（990）";
-				//考试类型 成绩 日期验证:
-				//1.验证成绩类型:
-				Map<String,Object>valMap=new HashMap<String,Object>();//exam_score//exam_date
-				String opt="_exam_type";
-				valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
-				if(valMap!=null){
-					strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-					if("".equals(strXxxValue)||"-1".equals(strXxxValue)){
-						returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
-						//returnMessage = this.getMsg(strXxxMc, "请选择考试类型");
-						break;
-					}else if(hasDateOpt.contains("strXxxValue")){
-						//验证成绩+日期
-						opt="_exam_score";
-						valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
-						if(valMap!=null){
-							strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-							if(strXxxValue.equals("")){
+				for(int i=0;i<comNum;i++){
+					//日期控件处理1.2.3.4.13含有日期 需要验证日期
+					String hasDateOpt="GRE-GMAT-TOFEL-IELTS-TOEIC（990）";
+					//考试类型 成绩 日期验证:
+					//1.验证成绩类型:
+					Map<String,Object>valMap=new HashMap<String,Object>();//exam_score//exam_date
+					String opt="exam_type";
+					if(i>0){
+						opt=opt+"_"+i;
+					}
+					valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt});
+					if(valMap!=null){
+						strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if("".equals(strXxxValue)||"-1".equals(strXxxValue)){
+							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							//returnMessage = this.getMsg(strXxxMc, "请选择考试类型");
+							break;
+						}else if(hasDateOpt.contains(strXxxValue)){
+							//验证成绩+日期
+							opt="exam_score";
+							if(i>0){
+								opt=opt+"_"+i;
+							}
+							valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt});
+							if(valMap!=null){
+								strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+								if(strXxxValue.equals("")){
+									returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+									//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+									break;
+								}
+							}else{
 								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 								//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
 								break;
 							}
-						}else{
-							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
-							//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
-							break;
-						}
-						//验证日期：
-						opt="_exam_date";
-						valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
-						if(valMap!=null){
-							strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-							if(strXxxValue.equals("")){
+							//验证日期：
+							opt="exam_date";
+							if(i>0){
+								opt=opt+"_"+i;
+							}
+							valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt});
+							if(valMap!=null){
+								strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+								if(strXxxValue.equals("")){
+									returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+									//returnMessage = this.getMsg(strXxxMc, "考试日期必填");
+									break;
+								}
+							}else{
 								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 								//returnMessage = this.getMsg(strXxxMc, "考试日期必填");
 								break;
 							}
+							
 						}else{
-							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
-							//returnMessage = this.getMsg(strXxxMc, "考试日期必填");
-							break;
-						}
-						
-					}else{
-						//验证成绩
-						opt="_exam_score";
-						valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
-						if(valMap!=null){
-							strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-							if(strXxxValue.equals("")){
+							//验证成绩
+							opt="exam_score";
+							if(i>0){
+								opt=opt+"_"+i;
+							}
+							valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt});
+							if(valMap!=null){
+								strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+								if(strXxxValue.equals("")){
+									returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+									//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+									break;
+								}
+							}else{
 								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 								//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
 								break;
 							}
-						}else{
-							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
-							//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
-							break;
 						}
 					}
-				}
-				else{
-					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
-					//returnMessage = this.getMsg(strXxxMc, "请选择考试类型");
+					else{
+						returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+						//returnMessage = this.getMsg(strXxxMc, "请选择考试类型");
+					}
 				}
 				break;
 			default:
