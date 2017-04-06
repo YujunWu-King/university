@@ -48,11 +48,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         }
 
 
-        var form = btn.findParentByType('form').getForm(),
+        var form = view.child("form").getForm(),
             classId = form.findField('classId').getValue(),
             batchId = form.findField('batchId').getValue(),
             className = form.findField('className').getValue(),
-            batchName = form.findField('batchName').getValue();
+            batchName = form.findField('batchName').getValue(),
+            bkksNum = form.findField('bkksNum').getValue();
 
         cmp = new ViewClass({
             classId:classId,
@@ -67,15 +68,25 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
             Ext.tzLoad(tzParams,function(respData){
                 var formData = respData.formData;
-                formData.className = className;
-                formData.batchName = batchName;
-                form.setValues(formData);
+                if(formData!="" && formData!=undefined) {
+                    panel.actType="update";
+                    formData.className = className;
+                    formData.batchName = batchName;
+                    form.setValues(formData);
 
-                //考生名单grid
-                var tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator":"01","TZ_CLASS_ID-value":"'+classId+'","TZ_APPLY_PC_ID-operator":"01","TZ_APPLY_PC_ID-value":"'+batchId+'"}}';
-                var store = panel.child('form').child("grid").store;
-                store.tzStoreParams = tzStoreParams;
-                store.load();
+                    var examineeGrid = panel.down('grid');
+                    var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+                    examineeGrid.store.tzStoreParams = tzStoreParams;
+                    examineeGrid.store.load();
+                } else {
+                    panel.actType="add";
+                    form.findField("classId").setValue(classId);
+                    form.findField("className").setValue(className);
+                    form.findField("batchId").setValue(batchId);
+                    form.findField("batchName").setValue(batchName);
+                    form.findField("bkksNum").setValue(bkksNum);
+                    form.findField("clpsksNum").setValue(0);
+                }
             });
         });
 
@@ -235,11 +246,76 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     },
     //设置评审规则-更多操作-给选中评委发送邮件
     sendEmail:function(btn) {
+        var me = this,
+            view = me.getView();
+        var grid = view.down("grid[name=materialJudgeGrid]");
+        var selList = grid.getSelectionModel().getSelection();
+
+        var selectJudgeOprid="";
+
+        var checkLen = selList.length;
+        if(checkLen==0) {
+            Ext.MessageBox.alert('提示','您没有选中任何记录');
+            return;
+        } else {
+            for(var i=0;i<checkLen;i++) {
+                if(selectJudgeOprid=="") {
+                    selectJudgeOprid='"'+selList[i].data.judgeOprid+'"';
+                } else {
+                    selectJudgeOprid+=',"'+selList[i].data.judgeOprid+'"';
+                }
+            }
+        }
+
+        var comParams = '"selectJudgeOprid":['+selectJudgeOprid+']';
+
+        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD","OperateType":"tzSendEmail","comParams":{'+comParams+'}}';
+        Ext.tzLoad(tzParams,function(responseData){
+            Ext.tzSendEmail({
+                //发送的邮件模板;
+                "EmailTmpName": ["TZ_CLPS_PW_M"],
+                //创建的需要发送的听众ID;
+                "audienceId": responseData.audienceId,
+                //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                "file": "N"
+            })
+        });
 
     },
     //设置评审规则-更多操作-给选中评委发送短信
     sendMessage:function(btn) {
+        var me = this,
+            view = me.getView();
+        var grid = view.down("grid[name=materialJudgeGrid]");
+        var selList = grid.getSelectionModel().getSelection();
 
+        var selectJudgeOprid="";
+
+        var checkLen = selList.length;
+        if(checkLen==0) {
+            Ext.MessageBox.alert('提示','您没有选中任何记录');
+            return;
+        } else {
+            for(var i=0;i<checkLen;i++) {
+                if(selectJudgeOprid=="") {
+                    selectJudgeOprid='"'+selList[i].data.judgeOprid+'"';
+                } else {
+                    selectJudgeOprid+=',"'+selList[i].data.judgeOprid+'"';
+                }
+            }
+        }
+
+        var comParams = '"selectJudgeOprid":['+selectJudgeOprid+']';
+
+        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD","OperateType":"tzSendMessage","comParams":{'+comParams+'}}';
+        Ext.tzLoad(tzParams,function(responseData){
+            Ext.tzSendSms({
+                //发送的短信模板;
+                "SmsTmpName": ["TZ_CLPS_PW_M"],
+                //发送的听众;
+                "audienceId": responseData.audienceId
+            })
+        });
     },
     //设置评审规则-更多操作-批量导出评委
     exportJudge:function(btn) {

@@ -10,6 +10,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.xmlbeans.impl.jam.mutable.MPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTblKey;
@@ -58,7 +60,10 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 	private PsoprdefnMapper psoprdefnMapper;
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
+	@Autowired
+	private CreateTaskServiceImpl createTaskServiceImpl;
 
+	
 	@Override
 	public String tzQuery(String strParams,String[] errMsg) {
 		String strRet="";
@@ -378,6 +383,14 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			if("tzResetPassword".equals(operateType)) {
 				strRet = resetPassword(strParams,errMsg);
 			}
+			//给选中评委发送邮件
+			if("tzSendEmail".equals(operateType)) {
+				strRet = sendEmail(strParams,errMsg);
+			}
+			//给选中评委发送短信
+			if("tzSendMessage".equals(operateType)) {
+				strRet = sendMessage(strParams,errMsg);
+			}
 			//批量导出评委
 			if("tzExportJudge".equals(operateType)) {
 				strRet = exportJudge(strParams,errMsg);
@@ -569,6 +582,104 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			}
 			
 		} catch(Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		
+		return strRet;
+	}
+	
+	
+	/*给选中评委发送邮件*/
+	public String sendEmail(String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try {
+			
+			//当前机构
+			String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
+			jacksonUtil.json2Map(strParams);
+			List<?> listJudgeOprid = jacksonUtil.getList("selectJudgeOprid");
+			
+			//创建邮件发送听众
+			String crtAudi = createTaskServiceImpl.createAudience("",currentOrgId,"材料评审评委邮件发送", "CLPS");
+			
+			if (!"".equals(crtAudi)) {
+				
+				//添加听众成员
+				for(Object judgeOprid : listJudgeOprid) {
+					
+					String sql = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
+					Map<String, Object> mapData = sqlQuery.queryForMap(sql,new Object[]{currentOrgId,judgeOprid});
+					if(mapData!=null) {
+						String name = mapData.get("TZ_REALNAME") == null ? "" : mapData.get("TZ_REALNAME").toString();
+						String email = mapData.get("TZ_EMAIL") == null ? "" : mapData.get("TZ_EMAIL").toString();
+						String mobile = mapData.get("TZ_MOBILE") == null ? "" : mapData.get("TZ_MOBILE").toString();
+				
+						createTaskServiceImpl.addAudCy(crtAudi,name, "", mobile, "", email, "", "", String.valueOf(judgeOprid), "",
+							"", "");
+					}
+				}
+				
+				
+				mapRet.put("audienceId", crtAudi);
+				strRet = jacksonUtil.Map2json(mapRet);
+			}
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		
+		return strRet;
+	}
+	
+	
+	/*给选中评委发送短信*/
+	public String sendMessage(String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try {
+			
+			//当前机构
+			String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
+			jacksonUtil.json2Map(strParams);
+			List<?> listJudgeOprid = jacksonUtil.getList("selectJudgeOprid");
+			
+			//创建邮件发送听众
+			String crtAudi = createTaskServiceImpl.createAudience("",currentOrgId,"材料评审评委短信发送", "CLPS");
+			
+			if (!"".equals(crtAudi)) {
+				
+				//添加听众成员
+				for(Object judgeOprid : listJudgeOprid) {
+					
+					String sql = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
+					Map<String, Object> mapData = sqlQuery.queryForMap(sql,new Object[]{currentOrgId,judgeOprid});
+					if(mapData!=null) {
+						String name = mapData.get("TZ_REALNAME") == null ? "" : mapData.get("TZ_REALNAME").toString();
+						String email = mapData.get("TZ_EMAIL") == null ? "" : mapData.get("TZ_EMAIL").toString();
+						String mobile = mapData.get("TZ_MOBILE") == null ? "" : mapData.get("TZ_MOBILE").toString();
+				
+						createTaskServiceImpl.addAudCy(crtAudi,name, "", mobile, "", email, "", "", String.valueOf(judgeOprid), "",
+							"", "");
+					}
+				}
+				
+				
+				mapRet.put("audienceId", crtAudi);
+				strRet = jacksonUtil.Map2json(mapRet);
+			}
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
