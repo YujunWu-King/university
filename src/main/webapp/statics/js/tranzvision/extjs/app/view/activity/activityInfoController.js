@@ -387,7 +387,7 @@
 		var store = grid.getStore();
 		
 		//修改记录
-		var mfRecs = store.getModifiedRecords(); 
+		var mfRecs = store.getRange(); 
 		for(var i=0;i<mfRecs.length;i++){
 			if(editJson == ""){
 				editJson = '{"typeFlag":"ACTAPPLYINFO","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
