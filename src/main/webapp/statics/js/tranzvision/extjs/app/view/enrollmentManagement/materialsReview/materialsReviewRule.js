@@ -1,7 +1,7 @@
 Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewRule',{
 	extend: 'Ext.panel.Panel',
 	xtype: 'materialsReviewRule',
-	controller: 'materialsReview',
+	controller: 'materialsReviewRuleController',
     requires: [
     	'Ext.data.*', 
     	'Ext.grid.*', 

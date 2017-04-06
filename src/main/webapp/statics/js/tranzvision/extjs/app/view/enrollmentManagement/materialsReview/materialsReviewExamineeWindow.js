@@ -1,7 +1,7 @@
 Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeWindow',{
 	extend: 'Ext.window.Window',
 	xtype: 'materialsReviewExamineeWindow',
-	controller: 'materialsReview',
+	controller: 'materialsReviewExamineeController',
     requires: [
     	'Ext.data.*', 
     	'Ext.grid.*', 

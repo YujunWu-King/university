@@ -70,11 +70,6 @@
 					handler:'exportExcelOrDownload'
 				},
 				{
-					text:Ext.tzGetResourse("TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.exportSearchResultInfo","导出搜索结果人员信息到Excel"),
-					name:'exportSearchResultExcel',
-					handler:'exportSearchResultExcel'
-				},
-				{
 					text:Ext.tzGetResourse("TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.downloadExcel","查看导出结果并下载"),
 					name:'downloadExcel',
 					handler:'exportExcelOrDownload'

@@ -1,6 +1,6 @@
 Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewRuleController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.materialsReview',
+    alias: 'controller.materialsReviewRuleController',
     //设置评审规则-查看考生
     viewApplicationForm : function(btn){
         var me=this,

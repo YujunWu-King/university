@@ -1,7 +1,7 @@
 Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewAddJudgeWindow',{
     extend:'Ext.window.Window',
     xtype: 'materialsReviewAddJudgeWindow',
-    controller: 'materialsReview',
+    controller: 'materialsReviewRuleController',
     requires: [
         'Ext.data.*',
         'Ext.grid.*',
@@ -259,6 +259,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                         var classId = targetForm.findField("classId").getValue();
                         var batchId = targetForm.findField("batchId").getValue();
 
+                        var existFlag = false;
+
                         for (var i = 0; i < selection.length; i++) {
                             var judgeOprid =selection[i].data.judgeOprid;
                             //查询是否存在，如果存在则不插入
@@ -279,8 +281,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                                 });
 
                                 targetStore.insert(0, r);
+                            } else {
+                                existFlag=true;
                             }
+                        }
 
+                        if(existFlag) {
+                            Ext.Msg.alert("提示","在您所选的记录中，有评委已经存在于名单中");
                         }
 
                         //表单

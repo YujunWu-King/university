@@ -88,17 +88,17 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 				String pwzId = (String) mapPw.get("TZ_PWZBH");
 				String pwzName = (String) mapPw.get("TZ_CLPS_GR_NAME");
 				
-				String selectFlag="";
+				Boolean selectFlag=false;
 				if(!"".equals(appinsId)) {
 					String sqlPw = "SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
 					Integer num = sqlQuery.queryForObject(sqlPw, new Object[]{classId,batchId,appinsId,pwOprid},"Integer");
 					if(num>0) {
-						selectFlag="true";
+						selectFlag=true;
 					} else {
-						selectFlag="false";
+						selectFlag=false;
 					}
 				} else {
-					selectFlag="false";
+					selectFlag=false;
 				}
 					
 				Map<String, Object> mapList = new HashMap<String,Object>();
@@ -121,6 +121,8 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		
+		strRet = jacksonUtil.Map2json(mapRet);
 		
 		return strRet;
 	}
@@ -155,19 +157,24 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 			
 			String classId = jacksonUtil.getString("classId");
 			String batchId = jacksonUtil.getString("batchId");
-			List<?> appinsIdList = jacksonUtil.getList("appinsId");
-			List<?> selectJudgeList = jacksonUtil.getList("selectJudge");
-			List<?> NOselectJudgeIDList = jacksonUtil.getList("NOselectJudgeID");
+			String appinsIdTmp = jacksonUtil.getString("appinsId");
+			String selectJudgeTmp = jacksonUtil.getString("selectJudge");
+			String NOselectJudgeIDTmp = jacksonUtil.getString("NOselectJudgeID");
 			Integer clpsksNum = Integer.valueOf(jacksonUtil.getString("clpsksNum"));
 			Short dqpsLunc = Short.valueOf(String.valueOf(jacksonUtil.getInt("dqpsLunc")));
+			
+			String[] appinsIdList = appinsIdTmp.split(",");
+			String[] selectJudgeList = selectJudgeTmp.split(",");
+			String[] NOselectJudgeIDList = NOselectJudgeIDTmp.split(",");
+			
 			
 			//当前登录人
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			
 			String sql = "";
 			
-			for(Object appinsId : appinsIdList) {
-				for(Object NOselectJudgeID : NOselectJudgeIDList) {
+			for(String appinsId : appinsIdList) {
+				for(String NOselectJudgeID : NOselectJudgeIDList) {
 					sql = "DELETE FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
 					sqlQuery.update(sql,new Object[]{classId,batchId,appinsId,NOselectJudgeID});
 					
@@ -175,7 +182,7 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 					sqlQuery.update(sql,new Object[]{classId,batchId,appinsId,NOselectJudgeID});
 				}
 				
-				for(Object selectJudge : selectJudgeList) {
+				for(String selectJudge : selectJudgeList) {
 					//评委已达上限，则无法指定给考生
 					sql = "SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B ";
 					sql += " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID";
@@ -245,12 +252,16 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 						String pweiOpridDesc = "";
 						sql = "SELECT TZ_PWEI_OPRID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_DIRC_ID=? AND TZ_APP_INS_ID=?";
 						List<Map<String, Object>> ksPwList = sqlQuery.queryForList(sql,new Object[]{classId,batchId,appinsId});
-						for(Map<String,Object> ksPwMap : ksPwList) {
-							String pweiOprid = (String) ksPwMap.get("TZ_PWEI_OPRID");
-							if(!"".equals(pweiOpridDesc)) {
-								pweiOpridDesc += "," + pweiOprid;
-							} else {
-								pweiOpridDesc = pweiOprid;
+						if(ksPwList==null) {
+							
+						} else {
+							for(Map<String,Object> ksPwMap : ksPwList) {
+								String pweiOprid = (String) ksPwMap.get("TZ_PWEI_OPRID");
+								if(!"".equals(pweiOpridDesc)) {
+									pweiOpridDesc += "," + pweiOprid;
+								} else {
+									pweiOpridDesc = pweiOprid;
+								}
 							}
 						}
 						
@@ -273,7 +284,7 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 							psTzClpskspwTbl.setRowAddedOprid(oprid);
 							psTzClpskspwTbl.setRowLastmantDttm(new Date());
 							psTzClpskspwTbl.setRowLastmantOprid(oprid);
-							psTzClpskspwTblMapper.insert(psTzClpskspwTbl);
+							psTzClpskspwTblMapper.insertSelective(psTzClpskspwTbl);
 						} else {
 							psTzClpskspwTbl.setTzClpwList(pweiOpridDesc);
 							psTzClpskspwTbl.setRowLastmantDttm(new Date());

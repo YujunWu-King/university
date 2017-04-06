@@ -831,7 +831,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			for(Object scoreMap:scoreMapList){
 			    Map<String,Object> result2 = (Map<String,Object>) scoreMap;
 			    String singleScore = result2.get("TZ_SCORE_NUM")==null?"0":String.valueOf(result2.get("TZ_SCORE_NUM"));
-			    strTotalScore = strTotalScore + (new Double(singleScore)).intValue();
+			    strTotalScore = strTotalScore + Integer.valueOf(singleScore);
 			    count = count + 1;
 			}
 			strAveScore = strTotalScore/count;
