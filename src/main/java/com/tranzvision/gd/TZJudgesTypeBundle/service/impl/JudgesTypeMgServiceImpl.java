@@ -40,7 +40,7 @@ public class JudgesTypeMgServiceImpl extends FrameworkImpl {
 		String[][] orderByArr = new String[][] { { "TZ_JUGTYP_ID", "ASC" } };
 
 		// json数据要的结果字段;
-		String[] resultFldArray = { "TZ_JUGTYP_ID", "TZ_JUGTYP_NAME", "ROLENAME", "TZ_JUGTYP_STAT" };
+		String[] resultFldArray = { "TZ_JUGTYP_ID", "TZ_JUGTYP_NAME", "ROLENAME", "TZ_JUGTYP_STAT", "DESCR" };
 
 		// 可配置搜索通用函数;
 		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr,comParams, numLimit, numStart, errorMsg);
@@ -52,8 +52,9 @@ public class JudgesTypeMgServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapList = new HashMap<String, Object>();
 				mapList.put("jugTypeId", rowList[0]);
 				mapList.put("jugTypeName", rowList[1]);
-				mapList.put("rolName", rowList[2]);
+				mapList.put("rolId", rowList[2]);
 				mapList.put("jugTypeStatus", rowList[3]);
+				mapList.put("rolName", rowList[4]);
 				listData.add(mapList);
 			}
 			mapRet.replace("total", obj[0]);

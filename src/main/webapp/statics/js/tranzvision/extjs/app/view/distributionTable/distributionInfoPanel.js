@@ -67,16 +67,16 @@
                     allowBlank: false,
                     readOnly: distrIdReadOnly,
                     cls: modeIdCls,
-//                    beforeLabelTextTpl: [
-//                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-//                    ]
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ]
                 },{
                     xtype: 'textfield',
                     fieldLabel: Ext.tzGetResourse("TZ_DISTRI_TAB_COM.TZ_DISTRI_INFO_STD.distrName","分布对照表名称"),
                     name: 'distrName',
-                    maxLength: 18,
+                    maxLength: 50,
                     allowBlank: false,
-                    beforeLabelTextTpl: [
+                    afterLabelTextTpl: [
                         '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                     ]
                 },{
@@ -92,21 +92,6 @@
                     value:'Y'
                 }]
             },{
-//                    xtype: 'tabpanel',
-////					  xtype: 'grid',
-//                    hideHeaders:true,
-//                    frame: true,
-//                    activeTab: 0,
-//                    plain:false,
-//                    resizeTabs:true,
-//                    defaults :{
-//                        autoScroll: false
-//                    },
-//                    hidden: hiddenTab,
-//
-//                    listeners:{
-//                    },
-//                    items:[{
                 xtype: 'grid',
 //                    title: "分布对照表明细设置",
                 tabType: 'A',
@@ -224,7 +209,9 @@
                     dataIndex: 'lowScore',
                     width:120,
                     editor: {
-                        xtype: 'textfield',
+//                        xtype: 'textfield',
+                        xtype: 'numberfield',
+                        minValue: 0,
                         allowBlank: false
                     }
                 },{
@@ -245,7 +232,9 @@
                     dataIndex: 'upScore',
                     width:120,
                     editor: {
-                        xtype: 'textfield',
+//                        xtype: 'textfield',
+                        xtype: 'numberfield',
+                        minValue: 0,
                         allowBlank: false
                     }
                 },

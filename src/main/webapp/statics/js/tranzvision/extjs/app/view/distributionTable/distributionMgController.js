@@ -3,7 +3,7 @@
 	alias: 'controller.distributionMgController',
 	
 	//新增
-	addNewScoreModel: function(btn){
+	addDistribution: function(btn){
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_DISTRI_TAB_COM"]["TZ_DISTRI_INFO_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
@@ -33,7 +33,7 @@
 		},
 		cmp = new ViewClass(config,function(){
 			//回调函数
-			btn.getParentByType('distributionMgList').getStore().reload();
+			btn.findParentByType('distributionMgList').getStore().reload();
 		});
 
 		/*cmp.on('afterrender',function(panel){
@@ -141,7 +141,6 @@
 
 			//form表单数据
 			var formRec = form.getForm().getValues();
-//			console.log(formRec);
 			if(actType == "Add"){
 				formObj = {
 					type: 'tableInfo',
@@ -155,20 +154,123 @@
 				}
 				updateArr.push(formObj);
 			}
-//			var detailGrid = panel.down("tabpanel").child('grid[name=detailGrid]');
 			var detailGrid = panel.down("grid");
 			var detailGridGridStore = detailGrid.getStore();
 			var GridModifyRec = detailGridGridStore.getModifiedRecords();
 			var GridRemoveRec = detailGridGridStore.getRemovedRecords(); 
 			var CellEditingPlugin = detailGrid.getPlugin('detailCellediting');
+			
 			//分布对照表明细grid数据
 			var GridAllRecs = detailGridGridStore.getRange();
-//			console.log(GridAllRecs);
 			var dfItemsIdArr = [];
 			for(var i=0; i<GridAllRecs.length; i++){
-//				var itemId = GridAllRecs[i].get("itemId");
-				var sortNum = GridAllRecs[i].get("sortNum");
+//				var sortNum = GridAllRecs[i].get("sortNum");
+				var sequence = GridAllRecs[i].get("sequence");
+				var name = GridAllRecs[i].get("name");
+				var explain = GridAllRecs[i].get("explain");
+				var lowOpt = GridAllRecs[i].get("lowOpt");
+				var lowScore = GridAllRecs[i].get("lowScore");
+				var upOpt = GridAllRecs[i].get("upOpt");
+				var upScore = GridAllRecs[i].get("upScore");
+				if(sequence == "" || sequence == null){
+					Ext.MessageBox.alert('提示','分布对照表页面序号项不能为空！',
+						function(e){
+							if(e == "ok"|| e == "OK" || e == "确定"){
+								for(var j=0;j<detailGrid.columns.length;j++){
+									if("sequence"==detailGrid.columns[j].dataIndex){
+										CellEditingPlugin.startEdit(GridAllRecs[i], detailGrid.columns[j]);
+									}
+								}
+							}
+					});
+					return;
+				}
+				if(name == "" || name == null){
+					Ext.MessageBox.alert('提示', '分布对照表页面名称项不能为空！',
+						function(e){
+							if(e == "ok"|| e == "OK" || e == "确定"){
+								for (var j=0; j<detailGrid.columns.length; j++) {
+									if ("name"==detailGrid.columns[j].dataIndex){
+										CellEditingPlugin.startEdit(GridAllRecs[i], detailGrid.columns[j]);
+									}
+								}
+							}
+						}
+					);
+					return;
+				}
+				if(explain == "" || explain == null){
+					Ext.MessageBox.alert('提示', '分布对照表页面说明项不能为空！',
+							function(e){
+						if(e == "ok"|| e == "OK" || e == "确定"){
+							for (var j=0; j<detailGrid.columns.length; j++) {
+								if ("explain"==detailGrid.columns[j].dataIndex){
+									CellEditingPlugin.startEdit(GridAllRecs[i], detailGrid.columns[j]);
+								}
+							}
+						}
+					}
+					);
+					return;
+				}
+				if(lowOpt == "" || lowOpt == null){
+					Ext.MessageBox.alert('提示', '分布对照表页面下限操作符项不能为空！',
+							function(e){
+						if(e == "ok"|| e == "OK" || e == "确定"){
+							for (var j=0; j<detailGrid.columns.length; j++) {
+								if ("lowOpt"==detailGrid.columns[j].dataIndex){
+									CellEditingPlugin.startEdit(GridAllRecs[i], detailGrid.columns[j]);
+								}
+							}
+						}
+					}
+					);
+					return;
+				}
+				if(lowScore == null){
+					Ext.MessageBox.alert('提示', '分布对照表页面分值下限项不能为空！',
+							function(e){
+						if(e == "ok"|| e == "OK" || e == "确定"){
+							for (var j=0; j<detailGrid.columns.length; j++) {
+								if ("lowScore"==detailGrid.columns[j].dataIndex){
+									CellEditingPlugin.startEdit(GridAllRecs[i], detailGrid.columns[j]);
+								}
+							}
+						}
+					}
+					);
+					return;
+				}
+				if(upOpt == "" || upOpt == null){
+					Ext.MessageBox.alert('提示', '分布对照表页面上限操作符项不能为空！',
+							function(e){
+						if(e == "ok"|| e == "OK" || e == "确定"){
+							for (var j=0; j<detailGrid.columns.length; j++) {
+								if ("upOpt"==detailGrid.columns[j].dataIndex){
+									CellEditingPlugin.startEdit(GridAllRecs[i], detailGrid.columns[j]);
+								}
+							}
+						}
+					}
+					);
+					return;
+				}
+				if(upScore == null){
+					Ext.MessageBox.alert('提示', '分布对照表页面分值上限项不能为空！',
+							function(e){
+						if(e == "ok"|| e == "OK" || e == "确定"){
+							for (var j=0; j<detailGrid.columns.length; j++) {
+								if ("upScore"==detailGrid.columns[j].dataIndex){
+									CellEditingPlugin.startEdit(GridAllRecs[i], detailGrid.columns[j]);
+								}
+							}
+						}
+					}
+					);
+					return;
+				}
 			}
+				
 			//grid修改
 			var ModifyData = [];
 			for(var i=0; i<GridModifyRec.length; i++){
@@ -181,7 +283,7 @@
 				});
 			}
 			
-			//打分grid删除
+			//grid删除
 			var RemoveData = [];
 			for(var i=0; i<GridRemoveRec.length; i++){
 				RemoveData.push(GridRemoveRec[i].data);
@@ -206,23 +308,18 @@
 			}
 			
 			var tzParams = Ext.JSON.encode(comParamsObj);
-//			console.log(tzParams);
 			Ext.tzSubmit(tzParams,function(respData){
 				if(respData.result == "success"){
 					form.getForm().setValues(respData.formData);
 					if(actType=="Add"){
 						panel.actType = "Update";
-						var distrIdField = form.findField("distrId");
+						var distrIdField = form.getForm().findField("distrId");
 						distrIdField.setReadOnly(true);
 						distrIdField.addCls("lanage_1");
 					}
-					
+				}
 					panel.reloadGrid();//刷新grid
-				}
 				
-				if(closePanel == "Y"){
-					panel.close();
-				}
 			},"保存成功",true,this);
 		}
 	},
@@ -230,6 +327,7 @@
 	//确定
 	onFormEnsure: function(btn){
 		this.onFormSave(btn);
+		this.view.close();
 	},
 	//关闭
 	onFormClose: function(btn){
@@ -240,11 +338,16 @@
 	
 	
 	addItem: function(btn,rowIndex){
+		if(this.getView().actType == "Add"){
+			Ext.MessageBox.alert("提示","请先保存分布对照表信息后，再新增。");
+			return;
+		}
 		var form = btn.up('distributionInfo').child('form').getForm();
 		var grid = btn.findParentByType('grid');
 		var gridStore = grid.getStore();
 		var type = grid.tabType;
-		var rowCount = rowIndex + 1;
+//		var rowCount = rowIndex + 1;
+		var rowCount = gridStore.getCount();
 		var distrId = form.getValues().distrId;
 		var CellEditing = grid.getPlugin('detailCellediting');	
 		
@@ -253,7 +356,14 @@
 			distrId: distrId,
 			distrMXId: "",
 			itemType: type,
-			sortNum: rowCount,
+			sortNum: rowCount + 1,
+			explain:"",
+			lowOpt:"",
+			lowScore:null,
+			name:"",
+			sequence:"",
+			upOpt:"",
+			upScore:null
     	});
 		
 		gridStore.insert(rowCount,row);
@@ -378,7 +488,7 @@
                 grid.commitChanges(grid);
             },"",true,this);
         }else{
-        	Ext.Msg.alert("提示","保存成功");
+//        	Ext.Msg.alert("提示","保存成功");
         }
     },
     ensureList: function(btn){
