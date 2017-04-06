@@ -548,6 +548,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				rightWidthStyle = "width:" + rightWidth + "%";
 			}
 
+			
 			String strMenuId = "";
 
 			sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
