@@ -19,7 +19,7 @@
 		
 		this.callParent();	
 	},
-	
+	 
 	initComponent: function () {
 		var me = this;
 		
@@ -125,6 +125,7 @@
 			            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_SCRMOD_DEFN_STD.treeName","树名称"),
 						name: 'treeName',
 			            allowBlank: false,
+			            vtype: 'IdValType',
 			            triggers: {
 							search: {
 								cls: 'x-form-search-trigger',
