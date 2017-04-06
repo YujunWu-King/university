@@ -250,7 +250,7 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 						}
 						
 						String pweiOpridDesc = "";
-						sql = "SELECT TZ_PWEI_OPRID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_DIRC_ID=? AND TZ_APP_INS_ID=?";
+						sql = "SELECT TZ_PWEI_OPRID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
 						List<Map<String, Object>> ksPwList = sqlQuery.queryForList(sql,new Object[]{classId,batchId,appinsId});
 						if(ksPwList==null) {
 							
@@ -278,7 +278,7 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 							psTzClpskspwTbl.setTzClassId(classId);
 							psTzClpskspwTbl.setTzApplyPcId(batchId);
 							psTzClpskspwTbl.setTzAppInsId(Long.valueOf(String.valueOf(appinsId)));
-							psTzClpskspwTblKey.setTzClpsLunc(dqpsLunc);
+							psTzClpskspwTbl.setTzClpsLunc(dqpsLunc);
 							psTzClpskspwTbl.setTzClpwList(pweiOpridDesc);
 							psTzClpskspwTbl.setRowAddedDttm(new Date());
 							psTzClpskspwTbl.setRowAddedOprid(oprid);

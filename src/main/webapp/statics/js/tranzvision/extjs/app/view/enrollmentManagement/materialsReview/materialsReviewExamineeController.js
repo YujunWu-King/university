@@ -482,7 +482,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     },
     //材料评审考生-更多操作-导出选中考生评议数据
     exportExcel:function(btn) {
-        var selList = this.getView().getSelectionModel().getSelection();
+        var grid = this.getView().down("grid[name=materialsReviewExamineeGrid]");
+        var selList = grid.getSelectionModel().getSelection();
         var checkLen = selList.length;
         if(checkLen == 0) {
             Ext.Msg.alert("提示","请选择需要导出的考生记录");
