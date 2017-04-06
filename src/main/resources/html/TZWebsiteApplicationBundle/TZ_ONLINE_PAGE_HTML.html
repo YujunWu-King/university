@@ -1071,6 +1071,8 @@
 													var tzurl = "%bind(:22)";
 													if (tzurl != "") {
 														window.location.href = tzurl;
+													} else {
+														window.location.reload(); 
 													}
 												}
 											}
@@ -1554,11 +1556,12 @@
 	<!--底部结束-->
 
 	<!--侧滑内容开始-->
-	<div class="sideslip">
+	<div class="sideslip" id="backindex">
 		<a href="javascript:void(0);"
 			onclick='backToHome("%bind(:10)","%bind(:11)");'><img
 			src="%bind(:32)/statics/images/appeditor/new/backindex.png" /></a>
 	</div>
+
 	<!--侧滑内容结束-->
 	<div id="fancybox-main" style="display: none">
 		<ul></ul>
@@ -1594,6 +1597,7 @@
 				}
 				if (tplType != "BMB") {
 					$("#app_download").hide();
+					$("#backindex").hide();
 				}
 				
 				checkExplorer($("#lang").val());

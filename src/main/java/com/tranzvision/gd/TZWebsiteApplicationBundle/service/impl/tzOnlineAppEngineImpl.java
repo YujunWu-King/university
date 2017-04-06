@@ -618,8 +618,8 @@ public class tzOnlineAppEngineImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		System.out.println("orgid:" + orgid);
-		System.out.println("oprid:" + oprid);
+		//System.out.println("orgid:" + orgid);
+		//System.out.println("oprid:" + oprid);
 		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? ORDER BY TZ_ORDER";
 		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid });
 		String sql = "";
@@ -2497,6 +2497,66 @@ public class tzOnlineAppEngineImpl {
 		return returnMsg;
 	}
 
+	/**
+	 * 发送站内信
+	 * 
+	 * @param numAppInsId
+	 * @param siteEmailID
+	 * @param strAppOprId
+	 * @param strAppOrgId
+	 * @param strAudienceDesc
+	 * @param strAudLy
+	 * @param strTplId
+	 * @return
+	 */
+	public String sendSiteEmail(Long numAppInsId, String siteEmailID, String strAppOprId, String strAppOrgId,
+			String strAudienceDesc, String strAudLy) {
+		String sql = "";
+		// 推荐信提交成功的需要特殊处理
+		if (siteEmailID.equals("TZ_TJX_SUBSUC")) {
+			sql = "SELECT OPRID FROM PS_TZ_KS_TJX_TBL WHERE TZ_TJX_APP_INS_ID=?";
+			strAppOprId = sqlQuery.queryForObject(sql, new Object[] { String.valueOf(numAppInsId) }, "String");
+			sql = "SELECT TZ_JG_ID FROM PS_TZ_APPTPL_DY_T A,PS_TZ_APP_INS_T B WHERE A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID AND B.TZ_APP_INS_ID=?";
+			strAppOrgId = sqlQuery.queryForObject(sql, new Object[] { String.valueOf(numAppInsId) }, "String");
+			
+		}
+
+		System.out.println("strAppOprId:" + strAppOprId);
+		System.out.println("strAppOrgId:" + strAppOrgId);
+
+		String returnMsg = "true";
+		// 收件人姓名
+		String strName = "";
+		sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+		strName = sqlQuery.queryForObject(sql, new Object[] { strAppOprId }, "String");
+
+		// 创建站内信发送任务 创建任务的时候，类型为“ZNX”， oprid是收站内信的人。 手机和邮箱为空字符串就可以了
+		String strTaskId = createTaskServiceImpl.createTaskIns(strAppOrgId, siteEmailID, "ZNX", "A");
+		if (strTaskId == null || "".equals(strTaskId)) {
+			return "false";
+		}
+		// 创建听众;
+		String createAudience = createTaskServiceImpl.createAudience(strTaskId, strAppOrgId, strAudienceDesc, strAudLy);
+		if ("".equals(createAudience) || createAudience == null) {
+			return "false";
+		}
+		// 为听众添加听众成员
+		boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience, strName, strName, "", "", "", "", "",
+				strAppOprId, "", "", String.valueOf(numAppInsId));
+		if (!addAudCy) {
+			return "false";
+		}
+		// 得到创建的任务ID
+		if ("".equals(strTaskId) || strTaskId == null) {
+			return "false";
+		} else {
+			// 发送
+			sendSmsOrMalServiceImpl.send(strTaskId, "");
+		}
+
+		return returnMsg;
+	}
+
 	// 将json数据解析保存到报名表存储表
 	private void savePerXxxIns2(String strParentItemId, String strOtherValue, Map<String, Object> xxxObject,
 			Long numAppInsId) {
@@ -2636,7 +2696,8 @@ public class tzOnlineAppEngineImpl {
 			}
 			for (Map.Entry<String, String> entry : ksMap.entrySet()) {
 
-				///System.out.println("key= " + entry.getKey() + " and value= " + entry.getValue());
+				/// System.out.println("key= " + entry.getKey() + " and value= "
+				/// + entry.getValue());
 
 			}
 			name = ksMap.get("TZ_6name");
@@ -2653,7 +2714,8 @@ public class tzOnlineAppEngineImpl {
 			Contry2 = ksMap.get("TZ_12ouniversitycountry");
 			Contry3 = ksMap.get("TZ_13ouniver3country");
 
-			//System.out.println(uniScholContry + ":" + Contry1 + ":" + Contry2 + ":" + Contry3);
+			// System.out.println(uniScholContry + ":" + Contry1 + ":" + Contry2
+			// + ":" + Contry3);
 			// 判断 是否有海外学历
 			if (ksMap.get("TZ_11luniversitycountry") == null ? true
 					: uniScholContry.equals("中国") && ksMap.get("TZ_10hdegreeunicountry") == null ? true
@@ -2771,7 +2833,7 @@ public class tzOnlineAppEngineImpl {
 			psTzLxfInfoTbl.setTzZyEmail(email);
 			psTzLxfInfoTbl.setTzZySj(mobilPhone);
 			String LxisY = sqlQuery.queryForObject(sql_LxisY, new Object[] { strAppOprId }, "String");
-			//System.out.println("LxisY:" + LxisY);
+			// System.out.println("LxisY:" + LxisY);
 			if (LxisY != null && LxisY.equals("Y")) {
 
 				psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfInfoTbl);

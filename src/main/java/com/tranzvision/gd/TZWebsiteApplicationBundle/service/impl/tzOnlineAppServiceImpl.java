@@ -713,6 +713,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SAVE",
 					strLanguage, "保存", "Save");
+
+			// 莫名其妙错误，做特殊处理
+			if (strLanguage.equals("ENG")) {
+				strSave = "Save";
+			}
+
 			String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"SUBMIT", strLanguage, "提交", "Submit");
 			String strNext = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "NEXT",
@@ -1481,11 +1487,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					}
 
 					// if ("".equals(strMsg)) {
-					//strMsg = tzOnlineAppEngineImpl.preAppForm(numAppInsId);
+					// strMsg = tzOnlineAppEngineImpl.preAppForm(numAppInsId);
 
 					if ("".equals(strMsg)) {
 						strMsg = tzOnlineAppEngineImpl.preAppForm(numAppInsId);
 						tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
+						// 预备提交发送站内信件
+						tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_BMB_PRESUB", strAppOprId, strAppOrgId,
+								"报名表预提交发送站内信", "BMBP");
 					} else {
 						tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "N");
 					}
@@ -1542,7 +1551,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// }
 
 					// 提交数据
-					String strMsgAlter = "";
+					// String strMsgAlter = "";
 					if ("".equals(strMsg)) {
 						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, "", "submit", strTplType);
 					}
@@ -1557,6 +1566,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								// 清华不需要发感谢信
 								// String strSubmitTjxSendEmail =
 								// tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
+								// TJX提交 发送站内信
+								tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_TJX_SUBSUC", strAppOprId,
+										strAppOrgId, "推荐信提交发送站内信", "TJXZ");
 							}
 							if ("BMB".equals(strTplType)) {
 							}
@@ -1582,8 +1594,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							// 发送邮件
 							String strSubmitSendEmail = tzOnlineAppEngineImpl.sendSubmitEmail(numAppInsId, strTplId,
 									strAppOprId, strAppOrgId, strTplType);
-							
-							//发送站内信
+
+							// 报名表提交 发送站内信
+							tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_BMB_FORSUB", strAppOprId, strAppOrgId,
+									"报名表提交发送站内信", "BMBZ");
 						}
 					}
 					System.out.println("报名表保存CONFIRMSUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));

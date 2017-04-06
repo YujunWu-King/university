@@ -205,6 +205,60 @@ public class TzTjxClsServiceImpl {
 		jdbcTemplate.update(sql, new Object[] { TZ_TJX_SEND_ID, numAppinsId, strOprid, TZ_FS_ZT, strEmail });
 	}
 
+	/**
+	 * 发送推荐信 后发送站内信
+	 * 
+	 * @param numAppInsId
+	 * @param siteEmailID
+	 * @param strAudienceDesc
+	 * @param strAudLy
+	 * @return
+	 */
+	public String sendSiteEmail(long numAppInsId, String siteEmailID, String strAudienceDesc, String strAudLy) {
+		String sql = "";
+
+		sql = "SELECT OPRID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=?";
+		String strAppOprId = jdbcTemplate.queryForObject(sql, new Object[] { String.valueOf(numAppInsId) }, "String");
+
+		sql = "SELECT TZ_JG_ID FROM PS_TZ_APPTPL_DY_T A,PS_TZ_APP_INS_T B WHERE A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID AND B.TZ_APP_INS_ID=?";
+		String strAppOrgId = jdbcTemplate.queryForObject(sql, new Object[] { String.valueOf(numAppInsId) }, "String");
+		System.out.println("numAppInsId:" + numAppInsId);
+		System.out.println("strAppOprId:" + strAppOprId);
+		System.out.println("strAppOrgId:" + strAppOrgId);
+
+		String returnMsg = "true";
+		// 收件人姓名
+		String strName = "";
+		sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+		strName = jdbcTemplate.queryForObject(sql, new Object[] { strAppOprId }, "String");
+
+		// 创建站内信发送任务 创建任务的时候，类型为“ZNX”， oprid是收站内信的人。 手机和邮箱为空字符串就可以了
+		String strTaskId = createTaskServiceImpl.createTaskIns(strAppOrgId, siteEmailID, "ZNX", "A");
+		if (strTaskId == null || "".equals(strTaskId)) {
+			return "false";
+		}
+		// 创建听众;
+		String createAudience = createTaskServiceImpl.createAudience(strTaskId, strAppOrgId, strAudienceDesc, strAudLy);
+		if ("".equals(createAudience) || createAudience == null) {
+			return "false";
+		}
+		// 为听众添加听众成员
+		boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience, strName, strName, "", "", "", "", "",
+				strAppOprId, "", "", String.valueOf(numAppInsId));
+		if (!addAudCy) {
+			return "false";
+		}
+		// 得到创建的任务ID
+		if ("".equals(strTaskId) || strTaskId == null) {
+			return "false";
+		} else {
+			// 发送
+			sendSmsOrMalServiceImpl.send(strTaskId, "");
+		}
+
+		return returnMsg;
+	}
+
 	// 发送推荐信邮件;
 	public String sendTJX(long numAppinsId, String strOprid, String strTjrId, String sendFlag) {
 		String strRtn = "";
