@@ -548,6 +548,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				rightWidthStyle = "width:" + rightWidth + "%";
 			}
 
+			
 			String strMenuId = "";
 
 			sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
@@ -718,6 +719,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			if (strLanguage.equals("ENG")) {
 				strSave = "Save";
 			}
+			
 
 			String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"SUBMIT", strLanguage, "提交", "Submit");
