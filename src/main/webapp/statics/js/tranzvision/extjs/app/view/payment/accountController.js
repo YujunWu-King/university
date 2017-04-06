@@ -71,21 +71,34 @@
     },
     saveAccount:function(btn){
     	//alert("执行增加支付账户保存！");
+    	var store=btn.findParentByType("grid").getStore();
     	var win = btn.findParentByType("window");
         var form=win.down("form").getForm();
         if(!form.isValid() ){
             return false;
         }
+    	//如果存在相同的 accountId给提示
+        var flag=false;
+    	store.each(function(record,index){
+    		//console.log("index:"+index);
+    		//console.dir(record);
+    		console.log(record.get("accountId"));
+    		if(form.findField("accountId").getValue()==record.get("accountId")){
+    			 Ext.MessageBox.alert('提示', '账户ID重复，请重新输入');
+    			 flag=true;
+    			 return false;
+    		}
+    	})
+    	if(flag){
+    		return null;
+    	}
         var formParams = form.getValues();
         var tzParams = '{"ComID":"TZ_ZFZHGL_COM","PageID":"TZ_ZFZHGL_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
         Ext.tzSubmit(tzParams,function(){
             
            // form.setValues(response.formData);
         	//增加完毕数据 父窗体grid数据重新加载
-        	//alert("父窗体："+win.findParentByType("grid"));
-			if(win.parentGridStore!=null&&win.parentGridStore!=""){
-				
-			}
+        	store.reload();
         },"",true,this);
     },
     //编辑支付账户

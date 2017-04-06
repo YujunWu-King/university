@@ -124,7 +124,7 @@
 						data = f.comContent;
 					}
 					if(data.length) {
-						//$autocomplete.html("");
+						$autocomplete.html("");
 						//遍历data，添加到自动完成区
 						$.each(data, function(index,term) {
 							//创建li标签,添加到下拉列表中 
@@ -159,10 +159,10 @@
 						
 						$autocomplete.css('width','250px');
 						$autocomplete.css({'height':'auto!important','min-height':'0','max-height':'300px'});
-						$autocomplete.css('overflow-y','scroll');
+						$autocomplete.css('overflow-y','auto');
 						$autocomplete.css({'position':'absolute','left':xpos + "px",'top':ypos +"px"});
-						setSelectedItem(0);
-						//selectedItem=-1;
+						//setSelectedItem(0);
+						selectedItem=-1;
 						//显示下拉列表
 						$autocomplete.focus();
 						$autocomplete.show();

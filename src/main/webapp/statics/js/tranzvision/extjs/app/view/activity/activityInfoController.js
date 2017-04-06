@@ -854,8 +854,8 @@
 	viewArtContent:  function(view, rowIndex){
 		var store = view.findParentByType("grid").store;
 		
-		var previewUrl = store.getAt(rowIndex).data.previewUrl;
-		window.open(previewUrl);
+		var publicUrl = store.getAt(rowIndex).data.publicUrl;
+		window.open(publicUrl);
     },
   //查看听众
     searchListeners:function(btn){

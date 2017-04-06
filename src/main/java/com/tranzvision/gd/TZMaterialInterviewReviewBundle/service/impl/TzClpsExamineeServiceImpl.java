@@ -90,6 +90,8 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 			Integer bkksNum=0;
 			//材料评审考生
 			Integer clpsksNum=0;
+			//每生评审人数
+			String judgeNumSet="";
 			
 			String sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialRuleInfo");
 			Map<String, Object> mapBasic = sqlQuery.queryForMap(sql,new Object[] {classId,batchId});
@@ -101,6 +103,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 				dqpsStatus = (String) mapBasic.get("TZ_DQPY_ZT"); 
 				bkksNum = mapBasic.get("TZ_BKKS_NUM") == null ? 0 : Integer.valueOf(mapBasic.get("TZ_BKKS_NUM").toString());
 				clpsksNum = mapBasic.get("TZ_CLPS_KS_NUM") == null ? 0 : Integer.valueOf(mapBasic.get("TZ_CLPS_KS_NUM").toString());
+				judgeNumSet = mapBasic.get("TZ_MSPY_NUM") == null ? "" : String.valueOf(mapBasic.get("TZ_MSPY_NUM"));
 				
 				mapData.put("classId", classId);
 				mapData.put("className", className);
@@ -110,6 +113,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 				mapData.put("dqpsStatus", dqpsStatus);		
 				mapData.put("bkksNum", bkksNum);
 				mapData.put("clpsksNum", clpsksNum);
+				mapData.put("judgeNumSet", judgeNumSet);
 				
 				mapRet.put("formData", mapData);
 			}
@@ -156,6 +160,8 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 				for(int i=0;i<list.size();i++) {
 					String[] rowList = list.get(i);
 					
+					String sql = "";
+					
 					String classId = rowList[0];
 					String batchId = rowList[1];
 					String appinsId = rowList[4];
@@ -167,9 +173,13 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 					//评委数
 					Integer pwNum = 0;
 					//每生评审人数
-					Integer mspsNum = 0;
+					sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+					Integer mspsNum = sqlQuery.queryForObject(sql, new Object[] {classId,batchId},"Integer");
+					if(mspsNum==null) {
+						mspsNum=0;
+					}
 					
-					String sql = "";
+					
 					sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
 					List<Map<String, Object>> listPw = sqlQuery.queryForList(sql, new Object[] {classId,batchId,appinsId});
 					
@@ -177,15 +187,15 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 						
 						pwNum++;
 						
-						String pwOprid = (String) mapPw.get("TZ_PWEI_OPRID");
-						String scoreInsId = (String) mapPw.get("TZ_SCORE_INS_ID");
+						String pwOprid = mapPw.get("TZ_PWEI_OPRID")  == null ? "" : mapPw.get("TZ_PWEI_OPRID").toString();
+						String pwDlzhId = mapPw.get("TZ_DLZH_ID") == null ? "" : mapPw.get("TZ_DLZH_ID").toString();
+						String scoreInsId = mapPw.get("TZ_SCORE_INS_ID") == null ? "" : mapPw.get("TZ_SCORE_INS_ID").toString();
 						Float scoreNum = mapPw.get("TZ_SCORE_NUM") == null ? Float.valueOf("0") : Float.valueOf(mapPw.get("TZ_SCORE_NUM").toString());
-						mspsNum = mapPw.get("TZ_MSPY_NUM") == null ? 0 : Integer.valueOf(mapPw.get("TZ_MSPY_NUM").toString());
 						
 						if(!"".equals(pwList)) {
-							pwList += "," + pwOprid;
+							pwList += "," + pwDlzhId;
 						} else {
-							pwList = pwOprid;
+							pwList = pwDlzhId;
 						}
 						pwTotal += scoreNum;
 					}
@@ -193,7 +203,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 					if(mspsNum.equals(pwNum)) {
 						reviewStatusDesc = "已完成";
 					} else {
-						reviewStatusDesc = "未完成（"+pwNum+"/"+pwNum+"）";
+						reviewStatusDesc = "未完成（"+pwNum+"/"+mspsNum+"）";
 					}
 					
 					Map<String, Object> mapList = new HashMap<String,Object>();
@@ -279,10 +289,10 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 				String typeFlag = jacksonUtil.getString("typeFlag");
 				Map<String,Object> mapData = jacksonUtil.getMap("data");
 				
-				/*if("RULE".equals(typeFlag)) {
+				if("RULE".equals(typeFlag)) {
 					//评审规则基本信息
 					String strRule = saveRuleBasic(mapData,errMsg);
-				}*/
+				}
 				
 				if("EXAMINEE".equals(typeFlag)) {
 					//考生
@@ -476,10 +486,10 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 				psTzClpsGzTbl.setRowLastmantOprid(currentOprid);
 				psTzClpsGzTblMapper.insertSelective(psTzClpsGzTbl);
 			} else {
-				psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
+				/*psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
 				psTzClpsGzTbl.setRowLastmantDttm(new Date());
 				psTzClpsGzTbl.setRowLastmantOprid(currentOprid);
-				psTzClpsGzTblMapper.updateByPrimaryKey(psTzClpsGzTbl);
+				psTzClpsGzTblMapper.updateByPrimaryKey(psTzClpsGzTbl);*/
 			}
 			
 			

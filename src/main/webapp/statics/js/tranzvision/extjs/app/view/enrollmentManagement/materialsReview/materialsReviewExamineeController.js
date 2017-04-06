@@ -1,6 +1,6 @@
 Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.materialsReview',
+    alias: 'controller.materialsReviewExamineeController',
     //材料评审考生名单-查询
     queryExaminee:function(btn) {
         var form = btn.findParentByType("form").getForm();
@@ -92,29 +92,53 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         });
     },
     //材料评审考生名单-新增考生-确定
-    addExamineeEnsure:function() {
-        var selectRecords = btn.findParentByType("panel").child("grid").getSelectionModel().getSelection();
-        var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
-            targetStore = activeTab.down("grid[name=materialsReviewExamineeGrid]").getStore();
+    addExamineeEnsure:function(btn) {
+        var grid = btn.findParentByType("panel").child("grid");
+        var selectRecords = grid.getSelectionModel().getSelection();
 
-        var isExist = false,
-            newRecord = [];
+        var selectLength = selectRecords.length;
 
-        //循环中将非重复数据保存到中间变量，避免之后的循环会额外查询到之前的循环插入的数据
-        for(var x =0;x<selectRecords.length;x++){
-            if(targetStore.find('appinsId',selectRecords[x].data.appinsId)<0) {
-                delete selectRecords[x].data.id;
-                newRecord.push(selectRecords[x].data);
-            }else{
-                isExist = true;
+        if(selectLength==0) {
+            Ext.Msg.alert("提示","您没有选中任何记录");
+            return;
+        } else {
+            var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
+                form = activeTab.down("form").getForm(),
+                targetStore = activeTab.down("grid[name=materialsReviewExamineeGrid]").getStore();
+            var classId = form.findField("classId").getValue();
+            var className = form.findField("className").getValue();
+            var batchId = form.findField("batchId").getValue();
+            var batchName = form.findField("batchName").getValue();
+            var judgeNumSet = form.findField("judgeNumSet").getValue();
+
+            var isExist = false,
+                newRecord = [];
+
+            //循环中将非重复数据保存到中间变量，避免之后的循环会额外查询到之前的循环插入的数据
+            for(var x =0;x<selectLength;x++){
+                if(targetStore.find('appinsId',selectRecords[x].data.appinsId)<0) {
+                    delete selectRecords[x].data.id;
+                    selectRecords[x].data.classId = classId;
+                    selectRecords[x].data.className = className;
+                    selectRecords[x].data.batchId = batchId;
+                    selectRecords[x].data.batchName = batchName;
+                    selectRecords[x].data.judgeList="";
+                    selectRecords[x].data.judgeTotal="0";
+                    selectRecords[x].data.reviewStatusDesc="未完成（0/"+judgeNumSet+"）";
+                    selectRecords[x].data.interviewStatus = "W";
+                    selectRecords[x].data.interviewStatusDesc = "待定";
+                    newRecord.push(selectRecords[x].data);
+                }else{
+                    isExist = true;
+                }
             }
+            //循环完毕后再向store中添加数据
+            targetStore.add(newRecord);
+            if(isExist){
+                Ext.Msg.alert("提示","在您所选的记录中，有考生已经存在于名单中");
+            }
+            btn.findParentByType("panel").close();
         }
-        //循环完毕后再向store中添加数据
-        targetStore.add(newRecord);
-        if(isExist){
-            Ext.Msg.alert("提示","在您所选的记录中，有考生已经存在于名单中");
-        }
-        btn.findParentByType("panel").close();
     },
     //材料评审考生名单-新增考生-关闭
     addExamineeClose:function(btn) {
@@ -160,7 +184,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         }
     },
     //材料评审考生-指定评委
-    setJudgeForExaminee:function() {
+    setJudgeForExaminee:function(btn) {
         var form=btn.findParentByType('form').getForm();
         var classId = form.findField('classId').getValue();
         var batchId =form.findField('batchId').getValue();
@@ -246,10 +270,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 appinsId=selList[0].data.appinsId;
                 examineeList=appinsId;
             }
-            cmp = new ViewClass(
-                appRowIndex="",
-                appSelList=examineeList
-            );
+            cmp = new ViewClass({
+                appRowIndex:"",
+                appSelList:examineeList
+            });
 
             cmp.on('afterrender',function(win){
                 var grid= win.child('grid'),
@@ -267,8 +291,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     setJudgeEnsure:function(btn) {
         var win=btn.findParentByType("window");
 
-        var appRowIndex = win.down("appRowIndex").value;
-        var appSelList = win.down("appSelList").value;
+        var appRowIndex = win.down("textfield[name=appRowIndex]").value;
+        var appSelList = win.down("textfield[name=appSelList]").value;
 
         //向后台提交的报名表编号
         var appinsId='';
@@ -282,11 +306,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
             examineeGrid = activeTab.down("grid[name=materialsReviewExamineeGrid]");
 
-        var form = examineeGrid.findParentByType('form');
+        var form = examineeGrid.findParentByType('form').getForm();
         var dqpsLunc = form.findField("dqpsLunc").getValue();
         var clpsksNum = form.findField("clpsksNum").getValue();
 
-        var grid = btn.findParentByType('grid'),
+        var grid = win.down('grid'),
             store = grid.getStore(),
             selectJudge = "",
             selectJudgeID = " " ,
@@ -352,7 +376,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 else{   Ext.Msg.alert ("提示","指定评委成功");
                 }
                 win.close();
-            },'',true,me);
+            },'',true,this);
         }
     },
     //材料评审考生-指定评委-关闭
@@ -361,8 +385,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     },
     //材料评审考生-grid操作列-指定评委
     setJudgeForOne:function(btn,rowIndex) {
-        var grid= this.getView().lookupReference("materialsReviewExamineeGrid"),
+        var me = this,
+            view = me.getView();
+
+        var grid= view.down("grid[name=materialsReviewExamineeGrid]"),
             store = grid.getStore();
+
         var modiefyGrid=store.getModifiedRecords(),
             removeGrid=store.getRemovedRecords();
         if (modiefyGrid!=0||removeGrid!=0)
@@ -370,8 +398,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             Ext.Msg.alert('提示','请您先保存页面考生数据，再指定评委');
             return;
         }
+
         var form=btn.findParentByType('form').getForm();
-        if(form.findField('dqpsStatus').getValue()=='A'){
+        var dqpsStatus = form.findField("dqpsStatus").getValue();
+        if(dqpsStatus=='A'){
             Ext.Msg.alert('提示','当前评审状态为进行中，不可为考生指定评委');
             return ;
         }
@@ -420,6 +450,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     themeName + '\'. Is this intentional?');
             }
         }
+
         cmp = new ViewClass({
             appRowIndex:appinsId,
             appSelList:""
@@ -429,14 +460,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             var grid= win.child('grid'),
                 store =grid.getStore();
 
-            var  tzStoreParams = '{"classID":"'+classId+'","batchID":"'+batchId+'","appinsId":"'+appinsId+'"}';
+            var  tzStoreParams = '{"classId":"'+classId+'","batchId":"'+batchId+'","appinsId":"'+appinsId+'"}';
             store.tzStoreParams = tzStoreParams;
             store.load();
         });
         cmp.show();
     },
     //材料评审考生-grid操作列-删除
-    removeExaminee:function(view,rowIndex) {
+    removeExamineeOne:function(view,rowIndex) {
         var form = view.findParentByType("grid").findParentByType("form").getForm();
         if(form.findField('dqpsStatus').getValue()=='A') {
             Ext.Msg.alert('提示','当前评审状态为进行中，不可移除考生');
@@ -534,13 +565,16 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     },
     //材料评审考生-保存获取参数
     getExamineeParams:function(actType) {
-        var form = this.getView().child("form").getForm();
+        var me = this,
+            view = me.getView();
+
+        var form = view.child("form").getForm();
         var classId = form.findField('classId').getValue(),
             batchId = form.findField('batchId').getValue();
 
         var formValues = form.getValues();
 
-        var grid = this.getView().down("form[name=materialJudgeGrid]");
+        var grid = view.down("grid[name=materialsReviewExamineeGrid]");
 
         var store = grid.getStore(),
             storeNumber = store.getCount();
@@ -584,7 +618,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         }
 
         //提交参数
-        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD","OperateType":"U","comParams":' + comParams + '}';
+        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD","OperateType":"U","comParams":{' + comParams + '}}';
         return tzParams;
     }
 
