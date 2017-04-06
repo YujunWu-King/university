@@ -217,7 +217,7 @@ public class TzTjxClsServiceImpl {
 	public String sendSiteEmail(long numAppInsId, String siteEmailID, String strAudienceDesc, String strAudLy) {
 		String sql = "";
 
-		sql = "SELECT OPRID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=?";
+		sql = "SELECT OPRID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? limit 1";
 		String strAppOprId = jdbcTemplate.queryForObject(sql, new Object[] { String.valueOf(numAppInsId) }, "String");
 
 		sql = "SELECT TZ_JG_ID FROM PS_TZ_APPTPL_DY_T A,PS_TZ_APP_INS_T B WHERE A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID AND B.TZ_APP_INS_ID=?";
