@@ -96,37 +96,6 @@ public class TzAppAdmissionController {
 				String tzLuquStaSql = "SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
 				String tzLuquSta = sqlQuery1.queryForObject(tzLuquStaSql, new Object[] { tzAppInsID }, "String");
 
-<<<<<<< HEAD
-				// if (tzLuquSta=="A"){//条件录取
-				// 【1】查询证书模板id
-				String tzCertTplIdSql = "SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
-				String tzCertTplId = sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] { tzAppInsID }, "String");
-
-				// 【2】获取证书模板默认套打模板html
-				String tzCertMergHtmlSql = "SELECT TZ_CERT_MERG_HTML1 FROM PS_TZ_CERTTMPL_TBL WHERE TZ_CERT_TMPL_ID=? AND TZ_JG_ID=? AND TZ_USE_FLAG='Y'";
-				tzCertMergHtml = sqlQuery1.queryForObject(tzCertMergHtmlSql, new Object[] { tzCertTplId, orgid },
-						"String");
-
-				// 【3】解析系统变量、返回解析后的html
-				int syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-				while (syavarStartIndex != -1) {
-					int syavarEndIndex = tzCertMergHtml.indexOf(']', syavarStartIndex);
-					String sysvarId = tzCertMergHtml.substring(syavarStartIndex + 8, syavarEndIndex);
-					System.out.println(sysvarId);
-					String[] sysVarParam = { orgid, siteid, oprid, tzAppInsID };
-					AnalysisSysVar analysisSysVar = new AnalysisSysVar();
-					analysisSysVar.setM_SysVarID(sysvarId);
-					analysisSysVar.setM_SysVarParam(sysVarParam);
-					Object sysvarValue = analysisSysVar.GetVarValue();
-					System.out.println((String) sysvarValue);
-					System.out.println("[SYSVAR-" + sysvarId + "]");
-					tzCertMergHtml = tzCertMergHtml.replace("[SYSVAR-" + sysvarId + "]", (String) sysvarValue);
-
-					System.out.println(tzCertMergHtml);
-					syavarStartIndex = tzCertMergHtml.indexOf("[SYSVAR-");
-				};
-				
-=======
 				if (tzLuquSta == "LQ") {// 条件录取
 					// 【1】查询证书模板id
 					String tzCertTplIdSql = "SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
@@ -159,8 +128,6 @@ public class TzAppAdmissionController {
 				} else {
 					tzCertMergHtml = "<html style='font-size:40px'>抱歉，该考生未录取，无法查看录取通知书</html>";
 				}
-
->>>>>>> f407b30eaf094c0669bf6a2704fbf609247cf0af
 				// 【4】生成静态录取通知书html
 				boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
 				if (!bl) {
