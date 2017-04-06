@@ -407,7 +407,7 @@
     searchDataList: function(btn){
     	Ext.tzShowCFGSearch({
 
-            cfgSrhId: 'TZ_JUDGE_TYPE_COM.TZ_JUDGE_LIST_STD.TZ_JUGTYP_TBL',
+            cfgSrhId: 'TZ_JUDGE_TYPE_COM.TZ_JUDGE_LIST_STD.TZ_JUGTYP_VW',
             condition:
             {
                 "TZ_JG_ID": Ext.tzOrgID
