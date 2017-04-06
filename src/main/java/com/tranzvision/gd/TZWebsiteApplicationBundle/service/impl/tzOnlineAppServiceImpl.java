@@ -1594,13 +1594,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							// 发送邮件
 							String strSubmitSendEmail = tzOnlineAppEngineImpl.sendSubmitEmail(numAppInsId, strTplId,
 									strAppOprId, strAppOrgId, strTplType);
-<<<<<<< HEAD
-=======
+
 
 							// 报名表提交 发送站内信
 							tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_BMB_FORSUB", strAppOprId, strAppOrgId,
 									"报名表提交发送站内信", "BMBZ");
->>>>>>> f407b30eaf094c0669bf6a2704fbf609247cf0af
+
 						}
 					}
 					System.out.println("报名表保存CONFIRMSUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
