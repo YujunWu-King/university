@@ -1,53 +1,25 @@
 package com.tranzvision.gd.TZUnifiedBaseBundle.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudDefnTMapper;
-import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
-import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
 //import com.tranzvision.gd.TZUnifiedBaseBundle.dao.PsTzCjxTblMapper;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.*;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
-import com.tranzvision.gd.util.base.GetSpringBeanUtil;
-import com.tranzvision.gd.util.encrypt.DESUtil;
-import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.sql.TZGDObject;
 
 @Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfZYBJServiceImpl")
 public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 	
-	@Autowired
-	private TZGDObject TzSQLObject;
+
 	@Autowired
 	private SqlQuery SqlQuery;
-	@Autowired
-	private PsTzCsKsFmTMapper PsTzCsKsFmTMapper;
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
-	private HttpServletRequest request;
+
 	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
 	
@@ -92,13 +64,12 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			//其他企业规模
 			String QTGM = "A";
 			
-			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+
 			
 			//如果单位性质是政府机构或事业单位，查询报名表职称字段，到表TZ_CSMB_ZY_T查询对应的得分
 			if("ZFJG".equals(GSXZ)||"SYDW".equals(GSXZ)){
 			String sql = "SELECT DISTINCT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T where  (TZ_CSMB_CK1='ZFJG' or TZ_CSMB_CK1='SYDW') and TZ_CSMB_CK2=?";
-			String FSCJ = jdbcTemplate.queryForObject(sql, String.class, new Object[] {ZWLX});
+			String FSCJ = SqlQuery.queryForObject(sql, new Object[] {ZWLX},"String");
 			Score=Float.parseFloat(FSCJ);
 			
 			MarkRecord="公司类型：".concat(GSXZ).concat("|职位类型：").concat(ZWLX);
@@ -108,7 +79,7 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			}else if("QY".equals(GSXZ)){
 				String NSR = null;	//年收入字段
 				String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_CK3 <=? AND TZ_CSMB_CK2 >? AND TZ_CSMB_CK1 = 'QY'";
-				String FSCJ2 = jdbcTemplate.queryForObject(sql2, String.class, new Object[] {NSR,NSR});
+				String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {NSR,NSR},"String");
 				Score=Float.parseFloat(FSCJ2);
 				
 				MarkRecord="公司类型：".concat("企业类").concat("|年收入：").concat(NSR);
@@ -130,11 +101,11 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 					//A轮B轮天使轮	
 					}else{	
 					String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= ? AND TZ_CSMB_TJ1 = 'IT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ = jdbcTemplate.queryForObject(sql, String.class, new Object[] {RZ,RZE,RZE});
+					String FSCJ = SqlQuery.queryForObject(sql, new Object[] {RZ,RZE,RZE},"String");
 					Score1=Float.parseFloat(FSCJ);
 					
 					String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'YS' AND TZ_CSMB_TJ1 = 'IT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ2 = jdbcTemplate.queryForObject(sql2, String.class, new Object[] {YS,YS});
+					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {YS,YS},"String");
 					Score2=Float.parseFloat(FSCJ2);
 					
 						if(Score1>Score2){
@@ -151,11 +122,11 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 				//家族创业类	
 				}else if("JZ".equals(CY)){
 					String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'ZYZJ' AND TZ_CSMB_TJ1 = 'JZ' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ = jdbcTemplate.queryForObject(sql, String.class, new Object[] {ZYZJ,ZYZJ});
+					String FSCJ = SqlQuery.queryForObject(sql, new Object[] {ZYZJ,ZYZJ},"String");
 					Score1=Float.parseFloat(FSCJ);
 					
 					String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'JZZC' AND TZ_CSMB_TJ1 = 'JZ' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ2 = jdbcTemplate.queryForObject(sql2, String.class, new Object[] {JZZC,JZZC});
+					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {JZZC,JZZC},"String");
 					Score2=Float.parseFloat(FSCJ2);
 					
 						if(Score1>Score2){
@@ -170,15 +141,15 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 				//其他企业		
 				}else if("QT".equals(CY)){
 					String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'YS' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=	? and TZ_CSMB_TJ4>?";
-					String FSCJ = jdbcTemplate.queryForObject(sql, String.class, new Object[] {QTYS,QTYS});
+					String FSCJ = SqlQuery.queryForObject(sql, new Object[] {QTYS,QTYS},"String");
 					Score1=Float.parseFloat(FSCJ);
 					
 					String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'LR' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ2 = jdbcTemplate.queryForObject(sql2, String.class, new Object[] {QTLR,QTLR});
+					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {QTLR,QTLR},"String");
 					Score2=Float.parseFloat(FSCJ2);
 					
 					String sql3 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'GM' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ3 = jdbcTemplate.queryForObject(sql3, String.class, new Object[] {QTGM,QTGM});
+					String FSCJ3 = SqlQuery.queryForObject(sql3, new Object[] {QTGM,QTGM},"String");
 					float Score3=Float.parseFloat(FSCJ3);
 					
 					
