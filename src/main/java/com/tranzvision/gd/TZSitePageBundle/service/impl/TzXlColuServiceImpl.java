@@ -272,9 +272,9 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 
 				String strUrl = dispatcherUrl + "?classid=art_view&operatetype=HTML&siteId=" + strSiteId + "&columnId="
 						+ strColuId + "&artId=" + strArtId + "&oprate=R";
-
+                /*新开窗口查看详细页面--琚峰 修改2017-04-06*/
 				strResultContent = strResultContent
-						+ "<li><div class=\"main_mid_recruit_list_title2\"><a href=" + strUrl + ">"
+						+ "<li><div class=\"main_mid_recruit_list_title2\"><a href=" + strUrl + " target ='_blank'>"
 						+ strArtTitle + "</a></div><div class=\"main_mid_recruit_list_date\">" + strArtTime
 						+ "</div></li>";
 

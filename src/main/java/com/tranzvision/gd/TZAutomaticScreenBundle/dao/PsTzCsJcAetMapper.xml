@@ -5,9 +5,10 @@
     <id column="RUN_ID" property="runId" jdbcType="VARCHAR" />
     <result column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
     <result column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    RUN_ID, TZ_CLASS_ID, TZ_APPLY_PC_ID
+    RUN_ID, TZ_CLASS_ID, TZ_APPLY_PC_ID, OPRID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -20,10 +21,10 @@
     where RUN_ID = #{runId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcAet" >
-    insert into PS_TZ_CS_JC_AET (RUN_ID, TZ_CLASS_ID, TZ_APPLY_PC_ID
-      )
-    values (#{runId,jdbcType=VARCHAR}, #{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}
-      )
+    insert into PS_TZ_CS_JC_AET (RUN_ID, TZ_CLASS_ID, TZ_APPLY_PC_ID, 
+      OPRID)
+    values (#{runId,jdbcType=VARCHAR}, #{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, 
+      #{oprid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcAet" >
     insert into PS_TZ_CS_JC_AET
@@ -37,6 +38,9 @@
       <if test="tzApplyPcId != null" >
         TZ_APPLY_PC_ID,
       </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="runId != null" >
@@ -47,6 +51,9 @@
       </if>
       <if test="tzApplyPcId != null" >
         #{tzApplyPcId,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -59,13 +66,17 @@
       <if test="tzApplyPcId != null" >
         TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR},
       </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
     </set>
     where RUN_ID = #{runId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsJcAet" >
     update PS_TZ_CS_JC_AET
     set TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
-      TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR},
+      OPRID = #{oprid,jdbcType=VARCHAR}
     where RUN_ID = #{runId,jdbcType=VARCHAR}
   </update>
 </mapper>

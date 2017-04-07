@@ -15,7 +15,7 @@
 	
 	constructor: function(config){
 		this.tzConfig = config;
-		
+		this.storeReload = config.storeReload;
 		this.callParent();	
 	},
 
@@ -34,6 +34,25 @@
 		var ksbqStore = new KitchenSink.view.automaticScreen.autoTagOrFmListStore(ksbqConfig);
 		//负面清单store
 		var fmqdStore = new KitchenSink.view.automaticScreen.autoTagOrFmListStore(fmqdConfig);
+		
+		//手工标签
+		var labelTagStore= new KitchenSink.view.common.store.comboxStore({
+            recname:'TZ_TAG_STORE_V',
+            condition:{
+                TZ_JG_ID:{
+                    value:Ext.tzOrgID,
+                    operator:'01',
+                    type:'01'
+                },
+                TZ_APP_INS_ID:{
+                    value: config.appId,
+                    operator:'01',
+                    type:'01'
+                }
+            },
+            result:'TZ_LABEL_ID,TZ_LABEL_NAME'
+        });
+		labelTagStore.load();
 
     	//初筛结果Store
 		var csStatusStore = Ext.create('Ext.data.Store', {
@@ -108,7 +127,6 @@
 					listeners: {
 						change: function (field) {
 							var appId = field.getValue();
-							console.log(appId+"---");
 							var viewApplyForm = this.viewApplyForm;
 							var len = appId.length;
 							if(len > 0){
@@ -151,9 +169,16 @@
                     queryMode: 'local',
                     readOnly: true
 		        },{
-		        	xtype: 'textfield',
+		        	xtype: 'tagfield',
 		        	name: 'manualLabel',
-		        	fieldLabel: '手工标签'
+		        	fieldLabel: '手工标签',
+		        	store:labelTagStore,
+                    valueField: 'TZ_LABEL_ID',
+                    displayField: 'TZ_LABEL_NAME',
+                    filterPickList:true,
+                    createNewOnEnter: true,
+                    createNewOnBlur: true,
+                    queryMode: 'local'
 		        },{
 		        	xtype: 'displayfield',
 		        	name: 'updateOpr',

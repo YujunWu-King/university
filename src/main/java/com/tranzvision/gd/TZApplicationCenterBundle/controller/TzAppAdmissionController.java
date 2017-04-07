@@ -66,8 +66,7 @@ public class TzAppAdmissionController {
 	@ResponseBody
 	public String viewQrcodeAdmission(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "orgid") String orgid, @PathVariable(value = "siteid") String siteid,
-			@PathVariable(value = "oprid") String oprid, @PathVariable(value = "tzAppInsID") String tzAppInsID,
-			String[] errMsg) {
+			@PathVariable(value = "oprid") String oprid, @PathVariable(value = "tzAppInsID") String tzAppInsID) {
 		try {
 			orgid = orgid.toLowerCase();
 			String strRet = "";
@@ -99,7 +98,7 @@ public class TzAppAdmissionController {
 				if (!file.exists()) {
 					
 					// 【1】查询证书模板id
-					String tzCertTplIdSql = "SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
+					String tzCertTplIdSql = "SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B ,PS_TZ_CLASS_INF_T C,PS_TZ_FORM_WRK_T D WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID AND D.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND C.TZ_CLASS_ID=D.TZ_CLASS_ID AND B.TZ_PRJ_ID=C.TZ_PRJ_ID";
 					String tzCertTplId = sqlQuery1.queryForObject(tzCertTplIdSql, new Object[] { tzAppInsID },
 							"String");
 
@@ -128,10 +127,10 @@ public class TzAppAdmissionController {
 					}
 
 					// 【4】生成静态录取通知书html
-					boolean bl = this.staticFile(tzCertMergHtml, dir, fileName, errMsg);
+					boolean bl = this.staticFile(tzCertMergHtml, dir, fileName);
 					if (!bl) {
-						errMsg[0] = "1";
-						errMsg[1] = "静态化html失败！";
+						//errMsg[0] = "1";
+						//errMsg[1] = "静态化html失败！";
 					}
 				} else {
 					strRet = request.getScheme() + "://" + request.getServerName() + ":"
@@ -153,8 +152,9 @@ public class TzAppAdmissionController {
 			return strRet;
 
 		} catch (Exception e) {
-			errMsg[0] = "2";
-			errMsg[1] = "晒录取通知书异常！";
+			e.printStackTrace();
+			//errMsg[0] = "2";
+			//errMsg[1] = "晒录取通知书异常！";
 			return "";
 		}
 	}
@@ -195,7 +195,7 @@ public class TzAppAdmissionController {
 		return jacksonUtil.Map2json(jsonMap);
 	}
 
-	public boolean staticFile(String strReleasContent, String dir, String fileName, String[] errMsg) {
+	public boolean staticFile(String strReleasContent, String dir, String fileName) {
 		try {
 			System.out.println(dir);
 			File fileDir = new File(dir);
@@ -221,8 +221,8 @@ public class TzAppAdmissionController {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			errMsg[0] = "3";
-			errMsg[1] = "静态化文件时异常！";
+			//errMsg[0] = "3";
+			//errMsg[1] = "静态化文件时异常！";
 			return false;
 		}
 	}

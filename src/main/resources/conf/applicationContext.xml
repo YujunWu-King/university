@@ -107,4 +107,8 @@
 	
 	<!-- 邮件退信bean -->
 	<bean id="analysisBounceServiceImpl" class="com.tranzvision.gd.TZEmailSmsQFBundle.service.impl.analysisBounceServiceImpl" />
+	
+	<!-- 自动初筛bean -->
+	<bean id="tzAutoScreenEngineServiceImpl" class="com.tranzvision.gd.TZAutomaticScreenBundle.service.impl.TzAutoScreenEngineServiceImpl" />
+	
 </beans>

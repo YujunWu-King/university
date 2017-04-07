@@ -417,6 +417,7 @@ $(document).ready(function(){
 	},300);
 	$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
 		el.click(function(e) { 
+			
 			$("#ParamCon").val(el.attr("id"));
 			var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
 			$.ajax({
@@ -448,6 +449,7 @@ $(document).ready(function(){
 	});
 	//默认国家为中国
 	$("#TZ_SCH_CNAME_Country").val("中国");
+	$("#TZ_SCH_CNAME_Country").html("中国");
 	$("#TZ_SCH_CNAME_Country").attr("ccode","CHN");
 	$("#TZ_SCH_CNAME").click(function(e) {
 		/*$("#ParamValue").val("TZ_SCH_CNAME");		
@@ -494,6 +496,12 @@ $(document).ready(function(){
 	});
 	$.each([$("#TZ_LEN_PROID"),$("#TZ_LEN_PROID_click")],function(i,el){
 		el.click(function(e) { 
+			$("#TZ_LEN_PROID").focus(function(){
+              document.activeElement.blur();
+           });
+           $("#TZ_LEN_PROID_click").focus(function(){
+              document.activeElement.blur();
+           });
 			/*var _prov_id = "TZ_LEN_PROID";
 			prov = $.layer({
 				type: 2,
@@ -521,6 +529,11 @@ $(document).ready(function(){
 				success: function(result){
 					$("#searchState").html("");
 				$("#searchState").html(result);
+				$("#searchState").focus(function(){
+                     document.activeElement.blur();
+                });
+				
+				
 				$("#body").css("position","fixed");
 				$("#before").hide();
 				$("#searchState").fadeIn("slow"); 

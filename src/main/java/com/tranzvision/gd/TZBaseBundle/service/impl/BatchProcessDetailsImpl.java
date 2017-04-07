@@ -63,6 +63,9 @@ public class BatchProcessDetailsImpl extends FrameworkImpl{
 						case "QUENED":
 							runStatusDesc = "排队中";
 							break;
+						case "SCHEDULED":
+							runStatusDesc = "调度中";
+							break;
 						//已启动
 						case "STARTED":
 							runStatusDesc = "已启动";

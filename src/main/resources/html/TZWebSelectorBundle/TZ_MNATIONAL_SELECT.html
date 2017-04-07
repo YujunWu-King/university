@@ -71,6 +71,8 @@ var tzGeneralURL = "%bind(:1)";
 			$("#body").css("position","relative");
 		}
 		function setFanhui2(obj){
+			$(obj).parents("ul").find("li").removeClass("chose_on");
+			$(obj).addClass("chose_on");
 			var countryCode = $(obj).attr("ccode");
 			var countryDesc = $(obj).attr("title");
 			$("#FanhuiValue").val(countryCode);	
