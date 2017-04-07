@@ -710,7 +710,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			}
 			// 获取个人基本信息
 			String strUserInfoSet = "";
-			strUserInfoSet = tzOnlineAppEngineImpl.getUserInfo(strAppInsId);
+			strUserInfoSet = tzOnlineAppEngineImpl.getUserInfo(strAppInsId,strTplType);
 
 			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SAVE",
 					strLanguage, "保存", "Save");
