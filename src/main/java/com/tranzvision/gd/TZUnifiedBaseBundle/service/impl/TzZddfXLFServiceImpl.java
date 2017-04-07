@@ -1,35 +1,15 @@
 package com.tranzvision.gd.TZUnifiedBaseBundle.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudDefnTMapper;
-import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT;
-import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 //import com.tranzvision.gd.TZUnifiedBaseBundle.dao.PsTzCjxTblMapper;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.*;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
-import com.tranzvision.gd.util.base.GetSpringBeanUtil;
-import com.tranzvision.gd.util.encrypt.DESUtil;
-import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfXLFServiceImpl")
@@ -39,10 +19,7 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 	private PsTzCjxTblMapper psTzCjxTblMapper;
 	@Autowired
 	private SqlQuery jdbcTemplate;
-	@Autowired
-	private FliterForm fliterForm;
-	@Autowired
-	private GetSeqNum getSeqNum;
+
 	
 	// 获取参数：成绩单ID、学历分成绩项ID、报名表ID
 	@Override
@@ -61,10 +38,8 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				int XWYJSID = Integer.parseInt(XWYJS);
 				
 				//根据考生学校ID查询所属学校类型
-				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 				String sql = "select TZ_AUD_XM from PS_TZ_AUDCYUAN_T where TZ_AUDIENCE_ID=?";
-				String XXLX = jdbcTemplate.queryForObject(sql, String.class, new Object[] { XXID });
+				String XXLX = jdbcTemplate.queryForObject(sql, new Object[] { XXID },"String");
 				
 				//声明float型字段“得分”，string型字段“打分记录”；
 				float Score;
@@ -73,10 +48,10 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				//根据考生查询到的学历、学位、学校类型在TZ_CSMB_XLF_T查询对应的得分，如果没有查询到对应得分，得分=0
 				String ExistSql = "select 'Y' from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
 				String isExist = "";
-				isExist = jdbcTemplate.queryForObject(ExistSql, String.class, new Object[] { XXLX,XW,XL });
+				isExist = jdbcTemplate.queryForObject(ExistSql, new Object[] { XXLX,XW,XL },"String");
 				if ("Y".equals(isExist)) {
 					String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
-					String StrScore = jdbcTemplate.queryForObject(SearchSql, String.class, new Object[] { XXLX,XW,XL });
+					String StrScore = jdbcTemplate.queryForObject(SearchSql,  new Object[] { XXLX,XW,XL },"String");
 					Score=Float.parseFloat(StrScore);
 					
 					//查询考生其他教育经历中，是否有学历=研究生，学位等于硕士/博士的教育经历，如果有，得分=得分+5

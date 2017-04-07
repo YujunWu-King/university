@@ -3,51 +3,25 @@ package com.tranzvision.gd.TZUnifiedBaseBundle.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import com.tranzvision.gd.TZAudMgBundle.dao.PsTzAudDefnTMapper;
-import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
-import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
-import com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeListBundleServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.*;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
-import com.tranzvision.gd.util.base.GetSpringBeanUtil;
-import com.tranzvision.gd.util.encrypt.DESUtil;
-import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.sql.TZGDObject;
+
 
 @Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfWYServiceImpl")
 public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 
-	@Autowired
-	private TZGDObject TzSQLObject;
+
 	@Autowired
 	private SqlQuery SqlQuery;
-	@Autowired
-	private PsTzCsKsFmTMapper PsTzCsKsFmTMapper;
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
-	private HttpServletRequest request;
+
 	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
 	
@@ -89,8 +63,6 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 					
 					List<Float> WYScore = new ArrayList<Float>();
 					
-					GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-					JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 					
 					for (int i = 0; i < TESTSqlCon2.size(); i++) {
 						String WYLX=TESTSqlCon2.get(i);  
@@ -101,14 +73,14 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 						//上下限类型，查询报名表中的证书成绩字段
 						if(WYLX.equals("GRE")||WYLX.equals("GMAT")||WYLX.equals("TOFEL")||WYLX.equals("IELTS")||WYLX.equals("710E6")||WYLX.equals("710E4")||WYLX.equals("100E6")||WYLX.equals("100E4")||WYLX.equals("TOEIC")){
 							String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK2>? AND TZ_CSMB_CK3<=?;";
-							String FSCJ = jdbcTemplate.queryForObject(sql, String.class, new Object[] {WYLX,WYCJ,WYCJ});
+							String FSCJ = SqlQuery.queryForObject(sql, new Object[] {WYLX,WYCJ,WYCJ},"String");
 							FSCJF=Float.parseFloat(FSCJ);
 							WYScore.add(FSCJF);
 							
 						//证书类型，查询报名表中的证书等级字段
 						}else if(WYLX.equals("ZYYY")||WYLX.equals("GJKY")||WYLX.equals("ZJKY")||WYLX.equals("BEC")){
 							String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK1=?";
-							String FSCJ = jdbcTemplate.queryForObject(sql2, String.class, new Object[] {WYLX,WYJB});
+							String FSCJ = SqlQuery.queryForObject(sql2,  new Object[] {WYLX,WYJB},"String");
 							FSCJF=Float.parseFloat(FSCJ);
 							WYScore.add(FSCJF);
 							
