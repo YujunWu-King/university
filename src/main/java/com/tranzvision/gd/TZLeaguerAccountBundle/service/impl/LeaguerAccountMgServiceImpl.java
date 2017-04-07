@@ -186,7 +186,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 			
 			// json数据要的结果字段;
-			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT", "TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME"};
+			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT", "TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME","NATIONAL_ID","TZ_MSH_ID","TZ_CLASS_NAME"};
 			
 			String admin = "\"TZ_JG_ID-operator\":\"01\",\"TZ_JG_ID-value\":\"ADMIN\",";
 			strParams.replaceAll(admin, "");
@@ -210,6 +210,9 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("zcTime", rowList[6]);
 					mapList.put("acctlock", rowList[7]);
 					mapList.put("hmdUser", rowList[8]);
+					mapList.put("nationId", rowList[9]);
+					mapList.put("mshId", rowList[10]);
+					mapList.put("applyInfo", rowList[11]);
 					listData.add(mapList);
 				}
 

@@ -244,7 +244,7 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 /*报考中心*/
 .none{display: block;max-width:30%;height: auto;width: 100%;margin:20% auto 5%;}
 /*.none_tips{color:#999;font-size:0.58rem;text-align:center;}*/
-.none_tips{color:#999;font-size:0.64rem;text-align:center;}
+.none_tips{color:#999;font-size:1rem;text-align:center;}
 .none_tips a{display:inline-block;color:#8f5dbf;}
 .new_btn{width:45%;padding:4% 0;text-align: center;margin:10% auto;font-size:0.58rem;color:#9363c1;border:2px solid #8f5dbf;border-radius:0.3rem;}
  

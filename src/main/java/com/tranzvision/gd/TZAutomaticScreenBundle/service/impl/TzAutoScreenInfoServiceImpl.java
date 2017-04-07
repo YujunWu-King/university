@@ -66,8 +66,8 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 			String sql = "select TZ_KSH_CSJG,TZ_KSH_PSPM,ROW_LASTMANT_OPRID,ROW_LASTMANT_DTTM from PS_TZ_CS_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?;";
 			Map<String,Object> csKsMap = jdbcTemplate.queryForMap(sql, new Object[]{ classId,batchId,appId });
 			if(csKsMap != null){
-				String status = csKsMap.get("TZ_KSH_CSJG").toString();
-				String ranking = csKsMap.get("TZ_KSH_PSPM").toString();
+				String status = csKsMap.get("TZ_KSH_CSJG") == null ? "" : csKsMap.get("TZ_KSH_CSJG").toString();
+				String ranking = csKsMap.get("TZ_KSH_PSPM") == null ? "" : csKsMap.get("TZ_KSH_PSPM").toString();
 				String updateOpr = csKsMap.get("ROW_LASTMANT_OPRID") == null ? "" 
 						: csKsMap.get("ROW_LASTMANT_OPRID").toString();
 				
