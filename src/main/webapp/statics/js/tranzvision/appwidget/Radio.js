@@ -50,7 +50,7 @@ SurveyBuild.extend("Radio", "baseComponent", {
 				if (data["option"][i]["other"] == "Y" && data["option"][i]["checked"] == "Y"){
 				    if(SurveyBuild._readonly){
 				        //只读模式
-				        e += '<input type="text" readonly="readonly" class="inputother" value="' + data["option"][i]["othervalue"] + '">';
+				        e += '<input type="text" disabled=true class="inputother" value="' + data["option"][i]["othervalue"] + '">';
 				    }else{
 				        //编辑模式
 				        e += '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="inputother" value="' + data["option"][i]["othervalue"] + '">';
