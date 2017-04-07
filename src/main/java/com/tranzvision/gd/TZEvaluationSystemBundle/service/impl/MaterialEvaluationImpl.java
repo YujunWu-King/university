@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZEvaluationSystemBundle.service.impl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,13 +10,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpwpslsTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl.XmlToWord;
 
 /**
  * 材料面试评审
@@ -28,13 +34,15 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery sqlQuery;
-
 	@Autowired
 	private HttpServletRequest request;
-
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-
+	@Autowired
+	private XmlToWord xmlToWord;
+	@Autowired
+	psTzClpwpslsTblMapper psTzClpspwlsTblMapper;
+	
 	@Override
 	public String tzGetJsonData(String strParams) {
 
@@ -50,6 +58,14 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			if ("data".equals(type)) {
 				strReturn = this.getBatchData(strParams);
 			}
+			// 打印评审总表
+			if ("print".equals(type)) {
+				strReturn = printEvaluationList(strParams);
+			}
+			// 提交全部考生数据
+			if ("submit".equals(type)) {
+				strReturn = submitAllData(strParams);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -58,14 +74,113 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 		return strReturn;
 	}
 
-	public String getBatchList(String strParams) {
+	public String submitAllData(String strParams) {
 
-		String maxRowCount = request.getParameter(
-				"MaxRowCount"); /* 数字，返回最大行数。如果不指定，默认返回10条新闻或者通知记录 */
-		String startRowNumber = request.getParameter(
-				"StartRowNumber"); /* 数字，返回起始行数，即从第几行开始返回。如果不指定，默认从第一行开始返回 */
-		String moreRowsFlag = request.getParameter(
-				"MoreRowsFlag"); /* 字符串，更多行标志，即是否还有更多的数据。Y，是；N，否 */
+		String batchId = request.getParameter("BaokaoPCID"); /*请求报考批次编号*/
+		String classId =request.getParameter("BaokaoClassID"); /*字符串，请求班级编号*/
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		
+		String error_code = "", error_decription = "";
+
+		short TZ_DQPY_LUNC = 1; /*当前评审轮次*/
+		
+	    //班级名称
+		String className = "";		
+		
+		if(!StringUtils.isBlank(classId)&&!StringUtils.isBlank(batchId)){  
+			//当前报考轮次
+			String STR_DQPY_LUNC = sqlQuery.queryForObject("select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?", 
+					new Object[]{classId,batchId}, "String");
+			if(STR_DQPY_LUNC!=null&&!"".equals(STR_DQPY_LUNC)){
+				TZ_DQPY_LUNC = Short.parseShort(STR_DQPY_LUNC);
+			}
+		}
+
+		//判断当前评委是否是暂停状态
+		String TZ_PWEI_ZHZT = sqlQuery.queryForObject("select TZ_PWEI_ZHZT from PS_TZ_CLPS_PW_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID=?", 
+				new Object[]{classId,batchId,oprid}, "String");
+		
+		if(TZ_PWEI_ZHZT==null||"B".equals(TZ_PWEI_ZHZT)){
+			error_code = "PAUSE";
+			error_decription = "当前评委账号为暂停状态";
+		}else{
+			 //判断当前评委是否已经提交;
+			 String TZ_SUBMIT_YN = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?",
+					 new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC}, "String");
+			 
+			 if("Y".equals(TZ_SUBMIT_YN)){
+				 error_code = "SUBMITTED";
+				 error_decription = "当前评委账号已经提交，不能再提交";
+			 }else{
+				   //允许评议数量
+				   int TZ_PYKS_XX = 0;
+				   
+				   String STR_PYKS_XX = sqlQuery.queryForObject("select TZ_PYKS_XX from PS_TZ_CLPS_PW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_PWEI_ZHZT = 'A'  ", 
+							new Object[]{classId,batchId,oprid},"String");
+				   if(STR_PYKS_XX!=null){
+					   TZ_PYKS_XX = Integer.parseInt(STR_PYKS_XX);
+					}
+				   
+				   int submitCount = sqlQuery.queryForObject("select count(1) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=(select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?) ", 
+							new Object[]{classId,batchId,oprid,classId,batchId},"Integer");
+				   
+				   /*所有考生的提交状态都是“已提交”*/
+				   String submit_zt = sqlQuery.queryForObject("select 'Y' from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=? and TZ_SUBMIT_YN<>'Y'and TZ_SUBMIT_YN<>'C'", 
+							new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
+				   
+				   if("Y".equals(submit_zt)){
+					   error_decription = "存在未评审的考生";
+					   error_code = "SUBMTALL03";
+				   }else{
+					   if(submitCount<TZ_PYKS_XX){
+						   error_decription = "您当前评审的学生数量未达到要求";
+						   error_code = "SUBMTALL02";
+					   }else{
+						   	String clpwpslsExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_CLPWPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=? and TZ_SUBMIT_YN<>'Y'", 
+						   			new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
+						   
+							psTzClpwpslsTbl psTzClpwpslsTbl = new psTzClpwpslsTbl();
+							psTzClpwpslsTbl.setTzClassId(classId);
+							psTzClpwpslsTbl.setTzApplyPcId(batchId);
+							psTzClpwpslsTbl.setTzPweiOprid(oprid);
+							psTzClpwpslsTbl.setTzClpsLunc(TZ_DQPY_LUNC);
+							psTzClpwpslsTbl.setTzSubmitYn("Y");
+							psTzClpwpslsTbl.setRowLastmantOprid(oprid);
+							psTzClpwpslsTbl.setRowLastmantDttm(new Date());
+						    
+							if("Y".equals(clpwpslsExist)){
+								psTzClpspwlsTblMapper.updateByPrimaryKeySelective(psTzClpwpslsTbl);
+							}else{
+								psTzClpwpslsTbl.setRowAddedOprid(oprid);
+								psTzClpwpslsTbl.setRowAddedDttm(new Date());
+								psTzClpspwlsTblMapper.insertSelective(psTzClpwpslsTbl);
+							}
+							
+							error_decription = "";;
+							error_code = "0";
+					   }
+				   }
+			 }
+		}
+
+		Map<String,Object> retMap = new HashMap<String,Object>();
+		retMap.put("success", true);
+		retMap.put("ps_class_id", classId);
+		retMap.put("ps_class_name", className);
+		retMap.put("ps_bkpc_id", batchId);
+		retMap.put("operation_type", "SUBMTALL");
+		retMap.put("error_code", error_code);
+		retMap.put("error_decription", error_decription);
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		return jacksonUtil.Map2json(retMap);
+	}
+
+	private String getBatchList(String strParams) {
+
+		String maxRowCount = request.getParameter("MaxRowCount"); /* 数字，返回最大行数。如果不指定，默认返回10条新闻或者通知记录 */
+		String startRowNumber = request.getParameter("StartRowNumber"); /* 数字，返回起始行数，即从第几行开始返回。如果不指定，默认从第一行开始返回 */
+		String moreRowsFlag = request.getParameter("MoreRowsFlag"); /* 字符串，更多行标志，即是否还有更多的数据。Y，是；N，否 */
 
 		try {
 			int error_code = 0;
@@ -161,7 +276,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 
 	}
 
-	public String getBatchData(String strParams) {
+	private String getBatchData(String strParams) {
 
 		String requestDataType = request.getParameter("RequestDataType"); /*字符串，请求数据类型。A，返回全部数据，S，返回局部动态刷新数据。此接口该参数取值A*/
 		String classId = request.getParameter("BaokaoClassID"); /* 字符串，请求班级编号 */
@@ -209,6 +324,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					new Object[] { classId, batchId });
 			if (evaluationDescMap != null) {
 				ps_description = (String) evaluationDescMap.get("TZ_CLPS_SM");
+				ps_description = ps_description==null?"":ps_description;
 				//TZ_PYJS_RQ = (String) evaluationDescMap.get("TZ_PYJS_RQ");
 				//TZ_PYJS_SJ = (String) evaluationDescMap.get("TZ_PYJS_SJ");
 			}
@@ -326,7 +442,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			/*
 			 * For &i = 1 To &anyArr.Len
 			 * 
-			 * Local string &FBMS; SQLExec(
+			 * String &FBMS; SQLExec(
 			 * "SELECT TZ_M_FBDZ_MX_SM FROM PS_TZ_FBDZ_MX_TBL WHERE TZ_M_FBDZ_ID=:1 AND TZ_M_FBDZ_MX_ID=:2"
 			 * , &TZ_M_FBDZ_ID, &anyArr [&i][1], &FBMS); If All(&fbsjrow) Then
 			 * &fbsjrow = &fbsjrow | "," | GetHTMLText(HTML.TZ_THIRD_PWDF_1,
@@ -576,5 +692,39 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			return jacksonUtil.Map2json(expMap);
 		}
 
+	}
+	
+	public String printEvaluationList(String strParams) {
+		String classId = request.getParameter("TZ_CLASS_ID");
+		String batchId = request.getParameter("TZ_PC_ID");
+		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		
+		String url = "";
+		
+		Map<String, Object> mapData = new HashMap<String, Object>();
+		// 检查参数的合法性
+		if (StringUtils.isBlank(classId) || StringUtils.isBlank(batchId)
+				|| StringUtils.isBlank(oprId)) {
+
+			mapData.put("errorCode", "1");
+			mapData.put("errorMsg", "参数不全");
+		} else {
+
+			try {
+				url = xmlToWord.createWord(classId, batchId, oprId);
+			} catch (TzSystemException e) {
+				e.printStackTrace();
+			}
+
+			if ("1".equals(url)) {
+				mapData.put("errorCode", "1");
+				mapData.put("errorMsg", "参数不全");
+			} else {
+				mapData.put("url", url);
+			}
+		}
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		return jacksonUtil.Map2json(mapData);
 	}
 }

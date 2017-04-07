@@ -9,6 +9,7 @@ function createReturnMenu(parentObject, jsonObject)
   				{
   					text: '返回批次列表页面',
   					tooltip:'单击此按钮返回评审批次列表页面。',
+  					glyph:'xf04a@FontAwesome',
   					width: 130,
   					handler: function(item,pressed){showPreviousEvaluatePage(1);},
   					pressed: true
@@ -350,9 +351,64 @@ function loadBatchDataByIdandShowNextPage(batchId,jsonObject)
 /*打印评分总表的函数*/
 function printStatisticsTotalTable(classId,batchId,className,batchName)
 {
-    var fileDownloadUrl = window.printStatisticsTableUrl + '?TZ_CLASS_ID='+ classId +'&TZ_PC_ID=' + batchId;
-    window.open(fileDownloadUrl);
 	
+    var url = window.printStatisticsTableUrl;
+    maskWindow("正在生成评审总表，请稍候...");
+    Ext.Ajax.request(
+    		{
+    			url:url,
+    			method:'POST',
+    			timeout:10000,
+    			params: {
+    				TZ_CLASS_ID:classId,
+    				TZ_PC_ID:batchId
+				},
+    			success:function(response)
+    			{
+    				var jsonObject = null;
+    				
+    				try
+    				{
+    					jsonObject = Ext.JSON.decode(response.responseText).comContent;
+    					
+    					if(jsonObject.errorCode&&jsonObject.errorCode == '1')
+    					{
+    						//unmask window
+    						unmaskWindow();
+    					
+    						loadSuccess = false;
+    						Ext.Msg.alert("提示","生成评审总表失败："+jsonObject.errorMsg);
+    					}
+    					else
+    					{
+    						url = jsonObject.url;
+    						if(url){
+    							window.open(url);
+    						}else{
+    							Ext.Msg.alert("提示","生成评审总表失败");
+    						}
+    						unmaskWindow();
+    					}
+    				}
+    				catch(e1)
+    				{
+    					Ext.Msg.alert("提示","生成评审总表失败："+e1.toString());
+    				}
+    			},
+    			failure:function(response)
+    			{
+    				loadSuccess = false;
+    				if(window.evaluateSystemDebugFlag == 'Y')
+    				{
+    					Ext.Msg.alert("提示","生成评审总表失败："+response.responseText+"，请与系统管理员联系。");
+    				}
+    				else
+    				{
+    					Ext.Msg.alert("提示","生成评审总表失败：请与系统管理员联系。");
+    				}
+    			}
+    		}
+    	);
 	/*var printStatisticsTips = 	'请注意：打印评审总表时，为避免表格不同列字数不均引起的页数过多的问题，请评委在word中调整一下表格列宽度。<br />'
 								+'以Word2007为例，具体步骤如下：<br />'
 								+'1. 选中表格；<br />'
@@ -408,10 +464,10 @@ function initializeEvaluatePiciGrid(jsonObject)
       multiSelect: false,
       columnLines: true,
       width:'100%',
+      minHeight:100,
       stateId: 'EvaluateBatchListGrid',
       style:'cursor:default;vertical:middle;',
       //margin:'auto',
-      padding:'10px 0 0 0',
       columns: [
           {
               text     : '报考方向名称',

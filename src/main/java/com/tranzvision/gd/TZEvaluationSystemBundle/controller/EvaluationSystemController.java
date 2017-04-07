@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -37,7 +38,11 @@ public class EvaluationSystemController {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
-
+	@Autowired
+	private TzCookie tzCookie;
+	
+	private final String cookieOrgId = "tzmo";
+	
 	@RequestMapping(value = { "/material/{orgid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String materialEvaluationLogin(HttpServletRequest request, HttpServletResponse response,
@@ -74,21 +79,25 @@ public class EvaluationSystemController {
 		try {
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
 			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[]{oprid}, "String");
+			String timeOut = "false";
 			
-			indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_METERIAL_EVALUATION_INDEX",request.getContextPath(),orgid,userName);
-
-			if(null==request.getSession(false)){ 
-				if(true==request.getSession(true).isNew()){
-					
-				}else{ 
-					indexHtml = "redirect:" + "/evaluation/material/" + orgid;
-				} 
+			// 判断下用户有没有登录;
+			if (oprid == null || "".equals(oprid) || orgid == null || "".equals(orgid) || zhid == null
+					|| "".equals(zhid)) {
+				timeOut = "true";
+				
+				if(orgid==null||"".equals(orgid)){
+					orgid = tzCookie.getStringCookieVal(request, cookieOrgId);
+				}
 			}
+						
+			indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_METERIAL_EVALUATION_INDEX",request.getContextPath(),orgid,timeOut,userName);
 			
 		} catch (TzSystemException e) {
 			e.printStackTrace();
-			indexHtml = "";
+			indexHtml = e.toString();
 		}
 		return indexHtml;
 	}
@@ -102,8 +111,17 @@ public class EvaluationSystemController {
 		String loginHtml = "";
 		try {
 			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
+
+			String sql = "select 'Y' from PS_TZ_JG_BASE_T where TZ_JG_EFF_STA='Y' AND upper(TZ_JG_ID)=?";
+
+			String orgExist = sqlQuery.queryForObject(sql,new Object[]{orgid},"String");
 			
-			loginHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_LOGIN",request.getContextPath(),orgid);
+			if("Y".equals(orgExist)){
+				loginHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_LOGIN",request.getContextPath(),orgid);
+			}else{
+				loginHtml = "无效的机构："+orgid+"，请确认您输入的浏览器地址是否正确！";
+			}
+
 			
 		} catch (TzSystemException e) {
 			e.printStackTrace();
@@ -112,6 +130,36 @@ public class EvaluationSystemController {
 		return loginHtml;
 	}
 	
+	@RequestMapping(value = { "/interview/index" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String interviewEvaluationIndex(HttpServletRequest request, HttpServletResponse response) {
+
+		String indexHtml = "";
+		try {
+			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[]{oprid}, "String");
+			String timeOut = "false";
+			
+			// 判断下用户有没有登录;
+			if (oprid == null || "".equals(oprid) || orgid == null || "".equals(orgid) || zhid == null
+					|| "".equals(zhid)) {
+				timeOut = "true";
+				
+				if(orgid==null||"".equals(orgid)){
+					orgid = tzCookie.getStringCookieVal(request, cookieOrgId);
+				}
+			}
+			
+			indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_INDEX",request.getContextPath(),orgid,timeOut,userName);
+			
+		} catch (TzSystemException e) {
+			e.printStackTrace();
+			indexHtml = e.toString();
+		}
+		return indexHtml;
+	}
 	@RequestMapping(value = { "/login" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response) {
@@ -123,7 +171,7 @@ public class EvaluationSystemController {
 		String userPwd = request.getParameter("password");
 		String code = request.getParameter("yzm");
 		String type = request.getParameter("type");
-		String judgeType = "inteview".equals(type)?"1":"2";
+		String judgeType = "interview".equals(type)?"1":"2";
 		
 		ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
@@ -157,6 +205,10 @@ public class EvaluationSystemController {
 		type = "interview".equals(type)?type:"material";
 		
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		
+		if(orgid==null||"".equals(orgid)){
+			orgid = tzCookie.getStringCookieVal(request, cookieOrgId);
+		}
 		
 		tzLoginServiceImpl.doLogout(request, response);
 

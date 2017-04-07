@@ -50,62 +50,6 @@ function tzPageSlider(divElem,divWidth,speed,count)
 
 tzPageSlider.prototype =
 {
-	leftAnimate:function(animateObject,leftCheckPosition,animateTime)
-	{
-		var currentLeftOffset = 0;
-		
-		if(window.myPageSlider[0].divElem[0].style.left != 'undefined' && window.myPageSlider[0].divElem[0].style.left != '' && window.myPageSlider[0].divElem[0].style.left != null)
-		{
-			var tmpLeftPosition = window.myPageSlider[0].divElem[0].style.left;
-			
-			tmpLeftPosition = tmpLeftPosition.replace(/px/g,'');
-			tmpLeftPosition = tmpLeftPosition.replace(/pt/g,'');
-			
-			currentLeftOffset = Math.abs(1 * tmpLeftPosition);
-		}
-		if(Math.abs(leftCheckPosition - currentLeftOffset) <= 5)
-		{
-			window.myPageSlider[0].divElem[0].style.left = leftPosition;
-			
-			
-			if(Ext.isIE == false)
-		  {
-		  	window.setTimeout(function()
-		  	{
-		  		var count = 0;
-		      
-		  		for(var i=0;i<window.myPageSlider[0].divPage.length;i++)
-		  		{
-		  			if(i > window.myPageSlider[0].pageIndex)
-			      	{
-			        	window.myPageSlider[0].divPage.eq(i).hide();
-			        }
-			        else
-			        {
-			        	count ++;
-			        }
-		  		}
-					
-			      window.myPageSlider[0].divElem.width(count * window.myPageSlider[0].divWidth);
-			      window.myPageSlider[0].divElem[0].style.left = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
-			},
-			10);
-		  }
-		  else
-		  {
-		  	window.myPageSlider[0].divElem[0].style.left = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
-		  }
-			return;
-		}
-		
-		
-		animateObject.animate({left:"-=" + (Math.abs(leftCheckPosition - currentLeftOffset) / 2) + "px"},animateTime / 2,'swing',
-				function(){
-					window.myPageSlider[0].leftAnimate(animateObject,leftCheckPosition,animateTime / 2);
-				}
-		);
-	},
-	
 	leftScroll:function(tipCount,scrollBackTagId)
 	{
 		if(this.pageIndex == 1 && (scrollBackTagId == '' || scrollBackTagId == null || scrollBackTagId == 'undefined'))
@@ -117,13 +61,11 @@ tzPageSlider.prototype =
 		
 		if(this.num >= this.divWidth * (this.pageCount - 1)) return;
 		
-		
 		if(Ext.isIE == false)
 		{
 			this.divElem.width(this.divWidth * this.pageCount);
 			this.divPage.show();
 		}
-		
 		
 		this.pageIndex += tipCount;
 		this.divElem.height(this.divPage.eq(this.pageIndex).height());
@@ -136,8 +78,7 @@ tzPageSlider.prototype =
 		}
 		
 		this.num += this.divWidth * tipCount;
-		
-		this.divElem.stop().animate({left:"-=" + this.divWidth * tipCount + "px"},
+		this.divElem.animate({left:"-=" + this.divWidth * tipCount + "px"},
 		                     this.slideSpeed,
 		                     'swing',
 		                     function(){
@@ -165,9 +106,9 @@ tzPageSlider.prototype =
 				 													var leftPosition = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
 				 													window.myPageSlider[0].divElem[0].style.left = leftPosition;
 				 												}
-		                     					 				,10
-		                     				);
-             					 		}
+				 												,10
+				 							);
+		                     			}
              					 		else
              					 		{
              					 			var leftPosition = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
@@ -176,53 +117,7 @@ tzPageSlider.prototype =
 		                     		}
 		                    );
 	},
-	
-	rightAnimate:function(animateObject,leftCheckPosition,animateTime)
-	{
-		var currentLeftOffset = 0;
-		
-		if(window.myPageSlider[0].divElem[0].style.left != 'undefined')
-		{
-			currentLeftOffset = window.myPageSlider[0].divElem[0].style.left;
-		}
-		if(Math.abs(leftCheckPosition - currentLeftOffset) <= 5)
-		{
-			window.myPageSlider[0].divElem[0].style.left = leftPosition;
-			
-			
-			if(Ext.isIE == false)
-			{
-				window.setTimeout(function()
-						{
-							var count = 0;
-		      
-							for(var i=0;i<window.myPageSlider[0].divPage.length;i++)
-						    {
-						      	if(i > window.myPageSlider[0].pageIndex)
-						      	{
-						        	window.myPageSlider[0].divPage.eq(i).hide();
-						        }
-						        else
-						        {
-						        	count ++;
-						        }
-						     }
-					
-							window.myPageSlider[0].divElem.width(count * window.myPageSlider[0].divWidth);
-						},
-						10);
-		  } 
-			return;
-		}
-		
-		
-		animateObject.stop().animate({left:"+=" + ((leftCheckPosition - currentLeftOffset) / 2) + "px"},animateTime / 2,'swing',
-				function(){
-							window.myPageSlider[0].leftAnimate(animateObject,leftCheckPosition,animateTime / 2);
-						  }
-		);
-	},
-	
+
 	rightScroll:function(tipCount,autoScroll)
 	{
 		if(tipCount <= 0 || tipCount > this.pageCount ) return;
@@ -261,8 +156,7 @@ tzPageSlider.prototype =
 		}
 		
 		this.num -= this.divWidth * tipCount;
-
-		this.divElem.stop().animate({left:"+=" + this.divWidth * tipCount + "px"},
+		this.divElem.animate({left:"+=" + this.divWidth * tipCount + "px"},
 		                     this.slideSpeed,
 		                     'swing',
 		                     function(){
@@ -291,8 +185,8 @@ tzPageSlider.prototype =
 				 													window.myPageSlider[0].divElem[0].style.left = leftPosition;
 				 												}
 				 												,10
-		                     					 			);
-		                     				}
+		                     				);
+             					 		}
              					 		else
              					 		{
              					 			var leftPosition = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
@@ -329,7 +223,7 @@ function initializeTzPageSlider()
 {
 	if(window.myPageSlider.length == 0)
 	{
-		window.myPageSlider[0] = new tzPageSlider('tz_zlps_container',Ext.getBody().getWidth(),500,3);
+		window.myPageSlider[0] = new tzPageSlider('tz_msps_container',1060,500,3);
 	}
 }
 
@@ -343,14 +237,27 @@ function initializeExtObjects(jsonObject)
 		Ext.QuickTips.init();
 		initializeEvaluatePiciGrid(jsonObject);
 	
-		$("#tz_zlps_loading").fadeOut(2000);
+		$("#tz_msps_loading").fadeOut(2000);
 	
 		window.setTimeout(initializeTzPageSlider,10);
 	}
 	catch(e1)
 	{
-		alert('资料评审初始化错误，请与系统管理员联系：[' + e1 + ']');
+		alert('面试评审初始化错误，请与系统管理员联系：[' + e1 + ']');
 	}
+}
+
+
+//记录当前显示的页面与首页（即默认页）的层级深度，应用于点击导航栏的"首页"链接
+var top_menu_home_deep = 0; 
+
+function showNextEvaluatePage(tipCount,scrollBackTagId)
+{
+	if(top_menu_home_deep<2) top_menu_home_deep++;
+	myPageSlider[0].leftScroll(tipCount,scrollBackTagId);
+	
+	//unmask window
+	unmaskWindow();
 }
 
 
@@ -412,6 +319,8 @@ function initializeEvaluateDataObjects(urlObject)
 	window.getApplicantDataUrl = urlObject['getApplicantDataUrl'];
 	window.submitApplicantDataUrl = urlObject['submitApplicantDataUrl'];
 	window.printStatisticsTableUrl = urlObject['printStatisticsTableUrl'];
+	window.getAddDelOneKsDataUrl = urlObject['getAddDelOneKsDataUrl'];
+	window.checkPWAccStateURL = urlObject['checkPWAccStateURL'];
 	window.evaluateSystemDebugFlag = 'Y';
 	
 	//library_main_evalute_page 的评审考生列表GRID对象，用于实现第二、三个页面考生 GRID 的自动HIGHLIGHT
@@ -429,31 +338,35 @@ function initializeEvaluateSystem(urlObject)
 	
 	var width = Ext.getBody().getWidth();
 	
-	$("#tz_zlps_pclb").width(width);
-	//$("#tz_zlps_pclb").height(480);
+	$("#tz_msps_pclb").width(width);
+	//$("#tz_msps_pclb").height(480);
 	
-	$("#tz_zlps_zym").width(width);
-	//$("#tz_zlps_zym").height(480);
+	$("#tz_msps_zym").width(width);
+	//$("#tz_msps_zym").height(480);
 	
-	$("#tz_zlps_dfym").width(width);
-	//$("#tz_zlps_dfym").height(480);
+	$("#tz_msps_dfym").width(width);
+	//$("#tz_msps_dfym").height(480);
 	
 	if(Ext.isIE == true)
 	{
-		$("#tz_zlps_container").height(480);
-		$("#tz_zlps_pclb").height(480);
-		$("#tz_zlps_zym").height(480);
-		$("#tz_zlps_dfym").height(480);
+		$("#tz_msps_container").height(480);
+		$("#tz_msps_pclb").height(480);
+		$("#tz_msps_zym").height(480);
+		$("#tz_msps_dfym").height(480);
 	}
 	
 	
-	//$("#tz_zlps_loading").width($("#tz_zlps_pclb").width());
-	//$("#tz_zlps_loading").height($("#tz_zlps_pclb").height());
+	$("#tz_msps_loading").width($("#tz_msps_pclb").width());
+	$("#tz_msps_loading").height($("#tz_msps_pclb").height());
 	
 	//加载当前登录评委的评审批次数据
-	window.setTimeout (function(){loadEvaluateBatchData(initializeExtObjects);},100);
+	window.setTimeout (function()
+							{
+						 		loadEvaluateBatchData(initializeExtObjects);
+							},
+							100
+					  );
 }
-
 
 //显示、隐藏窗体的蒙板层
 function maskWindow(msg){
@@ -618,3 +531,7 @@ Ext.tzSubmit =  function(params,callback,msg)
     	unmaskWindow();
     }
 }
+
+
+
+
