@@ -16,6 +16,9 @@
 	} */
 	function selectProvince(province){
 		$("#"+lenField).val(province);
+		$("#"+lenField).html(province);
+		$("#"+lenField).css("color","#333");
+		
 		returnResi();
 		//清华MBA
 		if((typeof changeImg)=="function"){
