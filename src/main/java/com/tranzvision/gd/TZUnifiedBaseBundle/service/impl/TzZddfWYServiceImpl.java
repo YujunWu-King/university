@@ -27,7 +27,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
 import com.tranzvision.gd.TZNegativeListInfeBundle.service.impl.TzNegativeListBundleServiceImpl;
-import com.tranzvision.gd.TZUnifiedBaseBundle.dao.PsTzCjxTblMapper;
+import com.tranzvision.gd.TZAutomaticScreenBundle.dao.*;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.encrypt.DESUtil;

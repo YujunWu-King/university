@@ -8,6 +8,8 @@ public interface PsTzCjxTblMapper {
     int deleteByPrimaryKey(PsTzCjxTblKey key);
 
     int insert(PsTzCjxTblWithBLOBs record);
+    
+    int insert(com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs);
 
     int insertSelective(PsTzCjxTblWithBLOBs record);
 
