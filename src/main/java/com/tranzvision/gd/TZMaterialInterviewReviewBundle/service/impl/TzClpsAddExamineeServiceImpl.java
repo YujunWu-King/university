@@ -85,12 +85,13 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 						
 						pwNum++;
 						
-						String pwOprid = mapPw.get("TZ_PWEI_OPRID")  == null ? "" : mapPw.get("TZ_PWEI_OPRID").toString();
+						//String pwOprid = mapPw.get("TZ_PWEI_OPRID")  == null ? "" : mapPw.get("TZ_PWEI_OPRID").toString();
+						String pwDlzhId = mapPw.get("TZ_DLZH_ID") == null ? "" : mapPw.get("TZ_DLZH_ID").toString();
 						
 						if(!"".equals(pwList)) {
-							pwList += "," + pwOprid;
+							pwList += "," + pwDlzhId;
 						} else {
-							pwList = pwOprid;
+							pwList = pwDlzhId;
 						}
 					}
 					

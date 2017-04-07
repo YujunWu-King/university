@@ -211,7 +211,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     					autoHeight:true,
     					items:[{
     						xtype:'grid',
-    						minHeight:80,
+    						minHeight:160,
     						name:'materialJudgeGrid',
     						columnLines:true,
     						autoHeight:true,

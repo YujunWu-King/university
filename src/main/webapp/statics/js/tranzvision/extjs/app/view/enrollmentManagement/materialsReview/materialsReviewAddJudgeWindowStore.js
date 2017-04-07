@@ -2,10 +2,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     extend: 'Ext.data.Store',
     alias: 'store.materialsReviewAddJudgeWindowStore',
     model: 'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewAddJudgeWindowModel',
-    autoLoad:false,
+    autoLoad:true,
     comID: 'TZ_REVIEW_CL_COM',
     pageID: 'TZ_CLPS_ADDPW_STD',
-    pageSize:0,
+    pageSize:10,
     tzStoreParams:'',
     proxy: Ext.tzListProxy()
 });
