@@ -14,7 +14,9 @@ import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzKshLqlcTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzKshLqlcTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -30,6 +32,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
+	private SqlQuery SqlQuery;
+	@Autowired
 	private HttpServletRequest request;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -37,6 +41,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 	private PsTzRegUserTMapper psTzRegUserTMapper;
 	@Autowired
 	private PsoprdefnMapper psoprdefnMapper;
+	@Autowired
+	private PsTzKshLqlcTblMapper psTzKshLqlcTblMapper;
+
 	
 	/* 查询表单信息 */
 	@Override
@@ -282,6 +289,47 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					}
 					
 				}
+				//tmt 修改 2017-4-7录取流程信息
+				Map<String, Object> lqlcInfoMap = new HashMap<>();
+				//lqlcInfoMap.put("lqlc", str_lenProvince);
+				Map< String, Object> getlqlcInfoMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_MSPS_MC,A.TZ_MSPS_PC,A.TZ_TJLQZG,A.TZ_TJLQZG_XM,A.TZ_MSJG_PC,A.TZ_LKQ_TZQK,A.TZ_TZYY_NOTES,A.TZ_LKQ_TJLQZG,A.TZ_LKQ_TJLQZG_XM,A.TZ_LKBM,A.TZ_LKSK,A.TZ_LKGX,A.TZ_LKZZGX,A.TZ_LKYYTLGX,A.TZ_YLQ_TZQK,A.TZ_TZYY_NOTES2,A.TZ_YLQ_ZG,A.TZ_YLQ_ZG_XM,A.TZ_ZSLQ_TZQK,A.TZ_TZYY_NOTES3,A.TZ_ZSLQ_ZG,A.TZ_ZSLQ_ZG_XM,A.TZ_RXQ_TZQK,A.TZ_TZYY_NOTES4,A.TZ_RX_QK,A.TZ_RX_XM FROM PS_TZ_KSH_LQLC_TBL A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID = B.TZ_LYDX_ID AND A.OPRID=?",new Object[]{str_oprid});
+				if(getlqlcInfoMap!=null){
+					lqlcInfoMap.put("mspsmc", getlqlcInfoMap.get("TZ_MSPS_MC"));
+					lqlcInfoMap.put("mspspc", getlqlcInfoMap.get("TZ_MSPS_PC"));
+					lqlcInfoMap.put("tjlqzg", getlqlcInfoMap.get("TZ_TJLQZG"));
+					lqlcInfoMap.put("tjlqzgxm", getlqlcInfoMap.get("TZ_TJLQZG_XM"));
+					lqlcInfoMap.put("msjgpc", getlqlcInfoMap.get("TZ_MSJG_PC"));
+					
+					lqlcInfoMap.put("lkbm", getlqlcInfoMap.get("TZ_LKBM"));
+					lqlcInfoMap.put("lqlzqk", getlqlcInfoMap.get("TZ_LKQ_TZQK"));
+					lqlcInfoMap.put("tzyyNotes", getlqlcInfoMap.get("TZ_TZYY_NOTES"));
+					lqlcInfoMap.put("lkqtjluzg", getlqlcInfoMap.get("TZ_LKQ_TJLQZG"));
+					lqlcInfoMap.put("lkqtjluzgxm", getlqlcInfoMap.get("TZ_LKQ_TJLQZG_XM"));
+					
+					lqlcInfoMap.put("lksk", getlqlcInfoMap.get("TZ_LKSK"));
+					lqlcInfoMap.put("yytlgx", getlqlcInfoMap.get("TZ_LKYYTLGX"));
+					lqlcInfoMap.put("zzgx", getlqlcInfoMap.get("TZ_LKZZGX"));
+					lqlcInfoMap.put("lkgx", getlqlcInfoMap.get("TZ_LKGX"));
+					lqlcInfoMap.put("ylqzzqk", getlqlcInfoMap.get("TZ_YLQ_TZQK"));
+					
+					lqlcInfoMap.put("tzyyNotes2", getlqlcInfoMap.get("TZ_TZYY_NOTES2"));
+					lqlcInfoMap.put("ylqzg", getlqlcInfoMap.get("TZ_YLQ_ZG"));
+					lqlcInfoMap.put("ylqzgxm", getlqlcInfoMap.get("TZ_YLQ_ZG_XM"));
+					lqlcInfoMap.put("zslqzzqk", getlqlcInfoMap.get("TZ_ZSLQ_TZQK"));
+					lqlcInfoMap.put("tzyyNotes3", getlqlcInfoMap.get("TZ_TZYY_NOTES3"));
+					
+					lqlcInfoMap.put("zslqzg", getlqlcInfoMap.get("TZ_ZSLQ_ZG"));
+					lqlcInfoMap.put("zslqzgxm", getlqlcInfoMap.get("TZ_ZSLQ_ZG_XM"));
+					lqlcInfoMap.put("rxqzzqk", getlqlcInfoMap.get("TZ_RXQ_TZQK"));
+					lqlcInfoMap.put("tzyyNotes4", getlqlcInfoMap.get("TZ_TZYY_NOTES4"));
+					lqlcInfoMap.put("rxqk", getlqlcInfoMap.get("TZ_RX_QK"));
+					lqlcInfoMap.put("rxxm", getlqlcInfoMap.get("TZ_RX_XM"));
+					
+					
+					
+					
+					
+				}
 				//查询考生个人信息
 				//出生日期、联系电话、证件类型、证件号码、工作所在省市、考生编号、准考证号、是否有海外学历、申请的专业硕士和专业、紧急联系人、紧急联系人性别、紧急联系人手机号码
 				//str_lenProvince	
@@ -314,6 +362,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				jsonMap2.put("column",arraylist );
 				jsonMap2.put("ksdrInfo",ksdrMap);
 				jsonMap2.put("perInfo", perInfoMap);
+				jsonMap2.put("lqlcInfo", lqlcInfoMap);
 				if(!"Y".equals(str_blackName)){
 				    str_blackName = "N";
 				}
@@ -373,10 +422,82 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    }else{
 				    	psoprdefn.setAcctlock(Short.valueOf("0"));
 				    }
+				    //tmt 修改
+				    //录取流程
+				    String mspsmc=(String) map.get("mspsmc");
+				    String mspspc=(String) map.get("mspspc");
+				    String tjlqzg=(String) map.get("tjlqzg");
+				    String tjlqzgxm=(String) map.get("tjlqzgxm");
+				    String msjgpc=(String) map.get("msjgpc");
 				    
+				    String lkbm=(String) map.get("lkbm");
+				    String lqlzqk=(String) map.get("lqlzqk");
+				    String tzyyNotes=(String) map.get("tzyyNotes");
+				    String lkqtjluzg=(String) map.get("lkqtjluzg");
+				    String lkqtjluzgxm=(String) map.get("lkqtjluzgxm");
+				    
+				    String lksk=(String) map.get("lksk");
+				    String yytlgx=(String) map.get("yytlgx");
+				    String zzgx=(String) map.get("zzgx");
+				    String lkgx=(String) map.get("lkgx");
+				    String ylqzzqk=(String) map.get("ylqzzqk");
+				    
+				    String tzyyNotes2=(String) map.get("tzyyNotes2");
+				    String ylqzg=(String) map.get("ylqzg");
+				    String ylqzgxm=(String) map.get("ylqzgxm");
+				    String zslqzzqk=(String) map.get("zslqzzqk");
+				    String tzyyNotes3=(String) map.get("tzyyNotes3");
+				    
+				    String zslqzg=(String) map.get("zslqzg");
+				    String zslqzgxm=(String) map.get("zslqzgxm");
+				    String rxqzzqk=(String) map.get("rxqzzqk");
+				    String tzyyNotes4=(String) map.get("tzyyNotes4");
+				    String rxqk=(String) map.get("rxqk");
+				    String rxxm=(String) map.get("rxxm");
 				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
 					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
-				
+					//tmt 修改 录取流程信息 
+					PsTzKshLqlcTbl psTzKshLqlcTbl=new PsTzKshLqlcTbl();
+					psTzKshLqlcTbl.setOprid(strOprId);
+					psTzKshLqlcTbl.setTzMspsMc(mspsmc);
+					psTzKshLqlcTbl.setTzMspsPc(mspspc);
+					psTzKshLqlcTbl.setTzTjlqzg(tjlqzg);
+					psTzKshLqlcTbl.setTzTjlqzgXm(tjlqzgxm);
+					psTzKshLqlcTbl.setTzMsjgPc(msjgpc);	
+					
+					psTzKshLqlcTbl.setTzLkbm(lkbm);
+					psTzKshLqlcTbl.setTzLkqTzqk(lqlzqk);
+					psTzKshLqlcTbl.setTzTzyyNotes(tzyyNotes);
+					psTzKshLqlcTbl.setTzLkqTjlqzg(lkqtjluzg);
+					psTzKshLqlcTbl.setTzLkqTjlqzgXm(lkqtjluzgxm);
+					
+					
+					psTzKshLqlcTbl.setTzLksk(lksk);
+					psTzKshLqlcTbl.setTzLkyytlgx(yytlgx);
+					psTzKshLqlcTbl.setTzLkzzgx(zzgx);
+					psTzKshLqlcTbl.setTzLkgx(lkgx);
+					psTzKshLqlcTbl.setTzYlqTzqk(ylqzzqk);
+					
+					psTzKshLqlcTbl.setTzTzyyNotes2(tzyyNotes2);
+					psTzKshLqlcTbl.setTzYlqZg(ylqzg);
+					psTzKshLqlcTbl.setTzYlqZgXm(ylqzgxm);
+					psTzKshLqlcTbl.setTzZslqTzqk(zslqzzqk);
+					psTzKshLqlcTbl.setTzTzyyNotes3(tzyyNotes3);
+					
+					psTzKshLqlcTbl.setTzZslqZg(zslqzg);
+					psTzKshLqlcTbl.setTzZslqZgXm(zslqzgxm);
+					psTzKshLqlcTbl.setTzRxqTzqk(rxqzzqk);
+					psTzKshLqlcTbl.setTzTzyyNotes4(tzyyNotes4);
+					psTzKshLqlcTbl.setTzRxQk(rxqk);
+					psTzKshLqlcTbl.setTzRxXm(rxxm);
+					PsTzKshLqlcTbl info=psTzKshLqlcTblMapper.selectByPrimaryKey(strOprId);
+					if(info==null){
+						psTzKshLqlcTblMapper.insert(psTzKshLqlcTbl);
+					}else{
+						psTzKshLqlcTblMapper.updateByPrimaryKeySelective(psTzKshLqlcTbl);
+					}
+					//jdbcTemplate.update(updatelqlcSql, new Object[]{strOprId});
+					
 					String updateJhuoZt = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_JIHUO_ZT=? WHERE OPRID=?";
 					jdbcTemplate.update(updateJhuoZt, new Object[]{strJihuoZt,strOprId});
 					
