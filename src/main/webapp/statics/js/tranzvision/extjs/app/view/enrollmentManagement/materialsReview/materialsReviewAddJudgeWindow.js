@@ -217,10 +217,6 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     }],
                     store: store,
                     bbar: {
-                        /*xtype: 'pagingtoolbar',
-                         pageSize: 10,
-                         store: store,
-                         plugins: new Ext.ux.ProgressBarPager()*/
                         xtype: 'pagingtoolbar',
                         pageSize: 10,
                         listeners: {
@@ -317,7 +313,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         //搜索信息表单
         var form = this.child("form").getForm();
         //搜索结果列表
-        var grid = this.child("grid");
+        var grid = this.down("grid");
         //搜索结果数据源
         var store = grid.getStore();
         //搜索条件
