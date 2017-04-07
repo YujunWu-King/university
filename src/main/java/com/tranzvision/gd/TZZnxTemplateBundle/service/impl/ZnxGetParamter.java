@@ -119,7 +119,7 @@ public class ZnxGetParamter {
 			String bmbId = jdbcTemplate.queryForObject(sql, String.class, new Object[] { audId, audCyId });
 			if (bmbId != null && !"".equals(bmbId)){
 				//String referrerSql = "SELECT TZ_REFERRER_NAME FROM PS_TZ_KS_TJX_TBL WHERE TZ_REF_LETTER_ID =?";
-				String referrerSql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = (SELECT OPRID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=?)";
+				String referrerSql = "SELECT TZ_REFERRER_NAME FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID = ?";
 				String referrerName = jdbcTemplate.queryForObject(referrerSql, String.class, new Object[] { bmbId });
 				return referrerName;
 			}else{
