@@ -84,8 +84,14 @@ $(document).ready(function() {
     },function(){
     	/*未选择*/
     });
+    //取消input的键盘
+    $.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country"),$("#TZ_SCH_CNAME"), $("#TZ_SCH_CNAME_click"),$("#TZ_LEN_PROID"), $("#TZ_LEN_PROID_click")],function(i,el){
+    el.focus(function(){
+    	document.activeElement.blur();
+    })
+    });
     $.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
-		el.click(function(e) { 
+		el.click(function(e) { 			
 			$("#ParamCon").val(el.attr("id"));
 			var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+strLang+'","sen":"2"}}';
 			$.ajax({
@@ -100,8 +106,10 @@ $(document).ready(function() {
 					$("#searchCountry").html("");
 					$("#searchCountry").html(result);
 					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchCountry").show();
+					$("#before").hide();
+				    $("#searchCountry").fadeIn("slow"); 
+					/*$(".shade").show();
+				    $("#searchCountry").show();*/
 				}
 			});
 		});
@@ -129,8 +137,10 @@ $(document).ready(function() {
     				$("#searchSchool").html("");
     				$("#searchSchool").html(result);
     				$("#body").css("position","fixed");
-    				$(".shade").show();
-    			    $("#searchSchool").show();
+    			    $("#before").hide();
+				    $("#searchSchool").fadeIn("slow"); 
+    				/*$(".shade").show();
+    			    $("#searchSchool").show();*/
     			}
     		});
         });
@@ -158,8 +168,10 @@ $(document).ready(function() {
 					$("#searchState").html("");
 					$("#searchState").html(result);
 					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchState").show();
+					$("#before").hide();
+				    $("#searchState").fadeIn("slow"); 
+					/*$(".shade").show();
+				    $("#searchState").show();*/
 				}
 			});
         });

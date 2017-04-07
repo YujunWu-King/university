@@ -1,4 +1,4 @@
-<div class="bg">
+<div class="bg" id="before">
 	<!-- 头部 -->
 	<div class="topbar">
 		账户管理 <a href="javascript:void(0);" onclick="history.back(-1);"><i></i></a>
@@ -55,7 +55,7 @@
 						<div class="overhidden" style="border-bottom: 1px solid #ddd;">
 							<input type="hidden" id="TZ_SCH_COUNTRY" name="TZ_SCH_COUNTRY" />
 							<input type="text" id="TZ_SCH_CNAME_Country"
-								name="TZ_SCH_CNAME_Country" placeholder="请选择所属国家">
+								name="TZ_SCH_CNAME_Country" placeholder="请选择所属国家" readonly="readonly">
 						</div>
 						<div class="overhidden">
 							<input type="text" name="TZ_SCH_CNAME" placeholder="请选择所属院校"
@@ -315,6 +315,13 @@
 <div id="datePlugin"></div>
 <div class="shade"></div>
 <input type="hidden" id="ParamCon" name="ParamCon" />
-<div class="country_pop" id="searchCountry"></div>
+<!-- <div class="country_pop" id="searchCountry"></div>
 <div class="school_pop" id="searchSchool"></div>
-<div class="country_pop" id="searchState"></div>
+<div class="country_pop" id="searchState"></div> -->
+<div class="viewport-adaptive" id="searchCountry"></div>
+<!-- <div class="country_pop" id="searchCountry"></div> -->
+	  <!-- 院校选择 -->
+ <div class="viewport-adaptive" id="searchSchool"></div>
+<!-- <div class="school_pop" id="searchSchool"></div> -->
+<div class="viewport-adaptive" id="searchState"></div>
+<!-- <div class="country_pop" id="searchState"></div> -->
