@@ -254,14 +254,14 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 			
 			Map<String,Object> classMap = sqlQuery.queryForMap(sql, new Object[]{ classId });
 			if(classMap != null){
-				String className = classMap.get("TZ_CLASS_NAME").toString();
-				String orgId = classMap.get("TZ_JG_ID").toString();
-				
-				//String scoreModeId = classMap.get("TZ_CS_SCOR_MD_ID").toString();
-				String csTreeName = classMap.get("TREE_NAME").toString();
+				String className = classMap.get("TZ_CLASS_NAME") == null ? "" 
+						: classMap.get("TZ_CLASS_NAME").toString();
+				String orgId = classMap.get("TZ_JG_ID") == null ? "" 
+						: classMap.get("TZ_JG_ID").toString();
+				String csTreeName = classMap.get("TREE_NAME") == null ? "" 
+						: classMap.get("TREE_NAME").toString();
 				
 				if(!"".equals(csTreeName) && csTreeName != null){
-					
 					
 					//查询初筛模型中成绩项类型为“数字成绩录入项”且启用自动初筛的成绩项
 					sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzAutoScreenScoreItems");
@@ -277,10 +277,9 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 						
 						columnsList.add(colMap);
 					}
-					
-					rtnMap.replace("className", className);
 					rtnMap.replace("columns", columnsList);
 				}
+				rtnMap.replace("className", className);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -367,7 +366,11 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				
 				//最后名次
 				String sql = "select max(TZ_KSH_PSPM) from PS_TZ_CS_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?";
-				int lastMc = sqlQuery.queryForObject(sql, new Object[]{ classId, batchId }, "Integer");
+				int lastMc = 0;
+				String lastMci = sqlQuery.queryForObject(sql, new Object[]{ classId, batchId }, "String");
+				if(!"".equals(lastMci) && lastMci != null){
+					lastMc = Integer.valueOf(lastMci);
+				}
 				
 				int i;
 				for(i=0;i<outNum;i++){
