@@ -202,7 +202,7 @@ public class ZnxGetParamter {
 						String batchIdSql = "SELECT TZ_BATCH_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ?";
 						String batchId = jdbcTemplate.queryForObject(batchIdSql, String.class, new Object[] { bmbId });
 						if (batchId != null && !"".equals(batchId)){
-							String batchNameSql = "SELECT PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID = ? AND TZ_BATCH_ID = ?";
+							String batchNameSql = "SELECT TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID = ? AND TZ_BATCH_ID = ?";
 							String batchName = jdbcTemplate.queryForObject(batchNameSql, String.class, new Object[] { classId,batchId });
 							return batchName;	
 						}else{
