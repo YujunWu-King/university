@@ -8,8 +8,6 @@
 			collapsible:true,
 			collapsed:true,
             width:'100%',
-            height:200,
-			//collapsed:true,
 			margins:'5 0 5 5',
 			layout:'fit',
 			bodyPadding:'10 10 10 15',

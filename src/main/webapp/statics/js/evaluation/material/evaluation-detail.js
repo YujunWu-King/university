@@ -1509,14 +1509,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//每个考生一个IFRAME
 		var tmpBatchIdBMBID = tmpBatchId + '_' + userpoints.bmbId;
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'"}}';
-		var bmb_url = "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl); 
+		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl); 
 		
 		if($('#bmb_iframe_'+tmpBatchIdBMBID)[0]!=null && $('#bmb_iframe_'+tmpBatchIdBMBID)[0]!="undefined"){
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
 			$('#bmb_iframe_'+tmpBatchIdBMBID).show();
 		}else{
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
-			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="'+ bmb_url +'" frameborder="0" width="100%" height="100%"></iframe>');
+			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="' + bmb_url +'" frameborder="0" width="100%" height="100%"></iframe>');
 		}
 	}
 
@@ -1582,7 +1582,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	function createBMBPanel(east_ksbmb_url, df_bmbid){
 		// 采用IFrame方式
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+df_bmbid+'"}}';
-		var bmb_url = "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
+		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		show_BMB_html = bmb_url;
 	}
 	/***************************************************************************
@@ -1608,7 +1608,12 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				split: true,
 				title: '考生列表',
 				width: '30%',
-				items: [dfPageWest_grid[tmpBatchId]]
+				items: [dfPageWest_grid[tmpBatchId]],
+				listeners:{
+					collapse:function(){
+						Ext.fly("tz_evaluation_main").setScrollTop(0);
+					}
+				}
 			},
 			{
 				region: 'east',
