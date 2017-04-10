@@ -62,7 +62,7 @@ SurveyBuild.extend("University", "baseComponent", {
         		var defaulCountry = data.defaultval;
         		//console.log("111"+defaulCountry);
         		
-        		if (defaulCountry != undefined  && defaulCountry.length > 0) {
+        		if (SurveyBuild.appInsId == "0"  && defaulCountry != undefined  && defaulCountry.length > 0) {
         			params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","search-text":"' +defaulCountry + '"}}';
 					$.ajax({
                         type: "POST",
@@ -80,7 +80,8 @@ SurveyBuild.extend("University", "baseComponent", {
 							if(data.length) {
 								//遍历data，添加到自动完成区
 								$.each(data, function(index,term) {
-									if (term.descr == defaulCountry) {
+									//console.dir(term);
+									if (term.descr == defaulCountry || defaulCountry.indexOf("%BIND") > 0) {
 										children[0]["value"] = term.descr;
 										children[0]["ccode"] = term.country;
 									}
