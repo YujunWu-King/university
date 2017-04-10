@@ -1650,7 +1650,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					{
 						text: '返回批次评审主页面',
 						tooltip:'单击此按钮返回批次评审主页面。',
-						width: 130,
+						width: 150,
 						glyph:'xf04a@FontAwesome',
 						handler: function(item,pressed){showPreviousEvaluatePage(1);},
 						pressed: true
