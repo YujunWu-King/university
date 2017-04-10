@@ -371,7 +371,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			colspan : 2,
 			html:show_ksinfohtml
 		});
-		ksInfoPanel[tmpBatchId].on({expand:function(){autoAdjustHeight();},collapse:function(){autoAdjustHeight();}});
+		//ksInfoPanel[tmpBatchId].on({expand:function(){autoAdjustHeight();},collapse:function(){autoAdjustHeight();}});
 	}
 
 	
@@ -1276,9 +1276,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + 103;
 		dfAreaPanel[tmpBatchId] = Ext.create("Ext.FormPanel",{
-						title		: '打分区',
+						//title		: '打分区',
+						header		: false,
 						collapsible	: true,
-						hideCollapseTool: true,
+						//hideCollapseTool: true,
 						overflowY	: 'auto',
 						margins		: '5 0 5 5',
 						bodyPadding	: 10,
@@ -1288,7 +1289,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						layout		: 'form',
 						items		: FieldContainerData
 					});	
-		dfAreaPanel[tmpBatchId].on({expand:function(){autoAdjustHeight();},collapse:function(){autoAdjustHeight();}});
+		dfAreaPanel[tmpBatchId].on({
+			expand:function(){
+				autoAdjustHeight();
+			},
+			collapse:function(){
+				Ext.fly("tz_evaluation_main").setScrollTop(0);
+				autoAdjustHeight();
+			}
+		});
 					
 	}
 
@@ -1614,7 +1623,12 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				split: true,
 				width: '70%',
 				//items: [ksInfoPanel[tmpBatchId],xxtzPanel[tmpBatchId],dfAreaPanel[tmpBatchId]]
-				items: [dfAreaPanel[tmpBatchId]]
+				items: [dfAreaPanel[tmpBatchId]],
+				listeners:{
+					collapse:function(){
+						Ext.fly("tz_evaluation_main").setScrollTop(0);
+					}
+				}
 			}, {
 				region: 'center',
 				autoScroll	: false,
@@ -1648,7 +1662,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 											layout:'fit',
 											overflowY:'hidden',
 											collapsible:false,
-											width: '100%',
+											width: Ext.getBody().getWidth()-17,
 											height:600,
 											items: evaluatePage
 										});

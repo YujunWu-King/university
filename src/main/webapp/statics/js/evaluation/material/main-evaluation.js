@@ -1,6 +1,5 @@
 ﻿function createMainPageHeader(jsonObject)
 {
-	var width = Ext.getBody().getWidth();
 	//创建评委评审主页面页头区
 	var mainPageHeader = Ext.create('Ext.panel.Panel',{
 			//title: '报考年份：' + jsonObject['ps_baok_nf'] + '，报考批次：' + jsonObject['ps_baok_pc'] + '，报考项目：' + jsonObject['ps_baok_zy'],
@@ -8,7 +7,8 @@
 			collapseMode:'header',
 			collapsible:true,
 			collapsed:true,
-            width:width,
+            width:'100%',
+            height:200,
 			//collapsed:true,
 			margins:'5 0 5 5',
 			layout:'fit',
@@ -1208,21 +1208,31 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 		
 		//创建评委打分主页面框架
 		mainPageFrame = Ext.create('Ext.Panel',
-										{
-											region:'center',
-											autoScroll:false,
-											margins:'0 0 0 0',
-											bodyPadding:'0 0 0 0',
-											cls:'empty',
-											bodyStyle:'background:#ffffff',
-											layout:{type:'table',columns: 1},
-											width:"100%",
-											autoHeight:true,
-											items:itemArray
-										});
+			{
+				region:'center',
+				autoScroll:false,
+				margins:0,
+				//bodyPadding:"0 17px 0 0",
+				cls:'empty',
+				bodyStyle:'background:#ffffff',
+				//layout:{type:'table',columns: 1},
+				width:"100%",
+				autoHeight:true,
+				items:itemArray
+			});
 	}
-	
+	mainPageFrame.on("resize",function(t,width,height){
+		t.suspendEvent("resize");
+		if(Ext.fly("tz_evaluation_main").getHeight()<height){
+			t.setWidth(Ext.getBody().getWidth()-17);
+		}else{
+			t.setWidth(Ext.getBody().getWidth());
+		}
+		t.resumeEvent("resize");
 		
+		t.updateLayout();
+	})
+	
 	return mainPageFrame;
 }
 
