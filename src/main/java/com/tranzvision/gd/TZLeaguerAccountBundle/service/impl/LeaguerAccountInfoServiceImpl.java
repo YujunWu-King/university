@@ -292,7 +292,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				//tmt 修改 2017-4-7录取流程信息
 				Map<String, Object> lqlcInfoMap = new HashMap<>();
 				//lqlcInfoMap.put("lqlc", str_lenProvince);
-				Map< String, Object> getlqlcInfoMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_MSPS_MC,A.TZ_MSPS_PC,A.TZ_TJLQZG,A.TZ_TJLQZG_XM,A.TZ_MSJG_PC,A.TZ_LKQ_TZQK,A.TZ_TZYY_NOTES,A.TZ_LKQ_TJLQZG,A.TZ_LKQ_TJLQZG_XM,A.TZ_LKBM,A.TZ_LKSK,A.TZ_LKGX,A.TZ_LKZZGX,A.TZ_LKYYTLGX,A.TZ_YLQ_TZQK,A.TZ_TZYY_NOTES2,A.TZ_YLQ_ZG,A.TZ_YLQ_ZG_XM,A.TZ_ZSLQ_TZQK,A.TZ_TZYY_NOTES3,A.TZ_ZSLQ_ZG,A.TZ_ZSLQ_ZG_XM,A.TZ_RXQ_TZQK,A.TZ_TZYY_NOTES4,A.TZ_RX_QK,A.TZ_RX_XM FROM PS_TZ_KSH_LQLC_TBL A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID = B.TZ_LYDX_ID AND A.OPRID=?",new Object[]{str_oprid});
+				Map< String, Object> getlqlcInfoMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_MSPS_MC,A.TZ_MSPS_PC,A.TZ_TJLQZG,A.TZ_TJLQZG_XM,A.TZ_MSJG_PC,A.TZ_LKQ_TZQK,A.TZ_TZYY_NOTES,A.TZ_LKQ_TJLQZG,A.TZ_LKQ_TJLQZG_XM,A.TZ_LKBM,A.TZ_LKSK,A.TZ_LKGX,A.TZ_LKZZGX,A.TZ_LKYYTLGX,A.TZ_YLQ_TZQK,A.TZ_TZYY_NOTES2,A.TZ_YLQ_ZG,A.TZ_YLQ_ZG_XM,A.TZ_ZSLQ_TZQK,A.TZ_TZYY_NOTES3,A.TZ_ZSLQ_ZG,A.TZ_ZSLQ_ZG_XM,A.TZ_RXQ_TZQK,A.TZ_TZYY_NOTES4,A.TZ_RX_QK,A.TZ_RX_XM FROM PS_TZ_KSH_LQLC_TBL A ,PS_TZ_LXFSINFO_TBL B where A.OPRID = B.TZ_LYDX_ID AND A.OPRID=?",new Object[]{str_oprid});
 				if(getlqlcInfoMap!=null){
 					lqlcInfoMap.put("mspsmc", getlqlcInfoMap.get("TZ_MSPS_MC"));
 					lqlcInfoMap.put("mspspc", getlqlcInfoMap.get("TZ_MSPS_PC"));
