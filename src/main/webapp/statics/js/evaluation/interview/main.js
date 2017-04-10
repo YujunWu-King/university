@@ -50,62 +50,6 @@ function tzPageSlider(divElem,divWidth,speed,count)
 
 tzPageSlider.prototype =
 {
-	leftAnimate:function(animateObject,leftCheckPosition,animateTime)
-	{
-		var currentLeftOffset = 0;
-		
-		if(window.myPageSlider[0].divElem[0].style.left != 'undefined' && window.myPageSlider[0].divElem[0].style.left != '' && window.myPageSlider[0].divElem[0].style.left != null)
-		{
-			var tmpLeftPosition = window.myPageSlider[0].divElem[0].style.left;
-			
-			tmpLeftPosition = tmpLeftPosition.replace(/px/g,'');
-			tmpLeftPosition = tmpLeftPosition.replace(/pt/g,'');
-			
-			currentLeftOffset = Math.abs(1 * tmpLeftPosition);
-		}
-		if(Math.abs(leftCheckPosition - currentLeftOffset) <= 5)
-		{
-			window.myPageSlider[0].divElem[0].style.left = leftPosition;
-			
-			
-			if(Ext.isIE == false)
-		  {
-		  	window.setTimeout(function()
-		  	{
-		  		var count = 0;
-		      
-		  		for(var i=0;i<window.myPageSlider[0].divPage.length;i++)
-		  		{
-		  			if(i > window.myPageSlider[0].pageIndex)
-			      	{
-			        	window.myPageSlider[0].divPage.eq(i).hide();
-			        }
-			        else
-			        {
-			        	count ++;
-			        }
-		  		}
-					
-			      window.myPageSlider[0].divElem.width(count * window.myPageSlider[0].divWidth);
-			      window.myPageSlider[0].divElem[0].style.left = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
-			},
-			10);
-		  }
-		  else
-		  {
-		  	window.myPageSlider[0].divElem[0].style.left = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
-		  }
-			return;
-		}
-		
-		
-		animateObject.animate({left:"-=" + (Math.abs(leftCheckPosition - currentLeftOffset) / 2) + "px"},animateTime / 2,'swing',
-				function(){
-					window.myPageSlider[0].leftAnimate(animateObject,leftCheckPosition,animateTime / 2);
-				}
-		);
-	},
-	
 	leftScroll:function(tipCount,scrollBackTagId)
 	{
 		if(this.pageIndex == 1 && (scrollBackTagId == '' || scrollBackTagId == null || scrollBackTagId == 'undefined'))
@@ -117,13 +61,11 @@ tzPageSlider.prototype =
 		
 		if(this.num >= this.divWidth * (this.pageCount - 1)) return;
 		
-		
 		if(Ext.isIE == false)
 		{
 			this.divElem.width(this.divWidth * this.pageCount);
 			this.divPage.show();
 		}
-		
 		
 		this.pageIndex += tipCount;
 		this.divElem.height(this.divPage.eq(this.pageIndex).height());
@@ -136,8 +78,7 @@ tzPageSlider.prototype =
 		}
 		
 		this.num += this.divWidth * tipCount;
-		
-		this.divElem.stop().animate({left:"-=" + this.divWidth * tipCount + "px"},
+		this.divElem.animate({left:"-=" + this.divWidth * tipCount + "px"},
 		                     this.slideSpeed,
 		                     'swing',
 		                     function(){
@@ -165,9 +106,9 @@ tzPageSlider.prototype =
 				 													var leftPosition = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
 				 													window.myPageSlider[0].divElem[0].style.left = leftPosition;
 				 												}
-		                     					 				,10
-		                     				);
-             					 		}
+				 												,10
+				 							);
+		                     			}
              					 		else
              					 		{
              					 			var leftPosition = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
@@ -176,53 +117,7 @@ tzPageSlider.prototype =
 		                     		}
 		                    );
 	},
-	
-	rightAnimate:function(animateObject,leftCheckPosition,animateTime)
-	{
-		var currentLeftOffset = 0;
-		
-		if(window.myPageSlider[0].divElem[0].style.left != 'undefined')
-		{
-			currentLeftOffset = window.myPageSlider[0].divElem[0].style.left;
-		}
-		if(Math.abs(leftCheckPosition - currentLeftOffset) <= 5)
-		{
-			window.myPageSlider[0].divElem[0].style.left = leftPosition;
-			
-			
-			if(Ext.isIE == false)
-			{
-				window.setTimeout(function()
-						{
-							var count = 0;
-		      
-							for(var i=0;i<window.myPageSlider[0].divPage.length;i++)
-						    {
-						      	if(i > window.myPageSlider[0].pageIndex)
-						      	{
-						        	window.myPageSlider[0].divPage.eq(i).hide();
-						        }
-						        else
-						        {
-						        	count ++;
-						        }
-						     }
-					
-							window.myPageSlider[0].divElem.width(count * window.myPageSlider[0].divWidth);
-						},
-						10);
-		  } 
-			return;
-		}
-		
-		
-		animateObject.stop().animate({left:"+=" + ((leftCheckPosition - currentLeftOffset) / 2) + "px"},animateTime / 2,'swing',
-				function(){
-							window.myPageSlider[0].leftAnimate(animateObject,leftCheckPosition,animateTime / 2);
-						  }
-		);
-	},
-	
+
 	rightScroll:function(tipCount,autoScroll)
 	{
 		if(tipCount <= 0 || tipCount > this.pageCount ) return;
@@ -261,8 +156,7 @@ tzPageSlider.prototype =
 		}
 		
 		this.num -= this.divWidth * tipCount;
-
-		this.divElem.stop().animate({left:"+=" + this.divWidth * tipCount + "px"},
+		this.divElem.animate({left:"+=" + this.divWidth * tipCount + "px"},
 		                     this.slideSpeed,
 		                     'swing',
 		                     function(){
@@ -291,8 +185,8 @@ tzPageSlider.prototype =
 				 													window.myPageSlider[0].divElem[0].style.left = leftPosition;
 				 												}
 				 												,10
-		                     					 			);
-		                     				}
+		                     				);
+             					 		}
              					 		else
              					 		{
              					 			var leftPosition = -1 * window.myPageSlider[0].pageIndex * window.myPageSlider[0].divWidth;
@@ -329,7 +223,7 @@ function initializeTzPageSlider()
 {
 	if(window.myPageSlider.length == 0)
 	{
-		window.myPageSlider[0] = new tzPageSlider('tz_zlps_container',1060,500,3);
+		window.myPageSlider[0] = new tzPageSlider('tz_msps_container',1060,500,3);
 	}
 }
 
@@ -343,14 +237,27 @@ function initializeExtObjects(jsonObject)
 		Ext.QuickTips.init();
 		initializeEvaluatePiciGrid(jsonObject);
 	
-		$("#tz_zlps_loading").fadeOut(2000);
+		$("#tz_msps_loading").fadeOut(2000);
 	
 		window.setTimeout(initializeTzPageSlider,10);
 	}
 	catch(e1)
 	{
-		alert('资料评审初始化错误，请与系统管理员联系：[' + e1 + ']');
+		alert('面试评审初始化错误，请与系统管理员联系：[' + e1 + ']');
 	}
+}
+
+
+//记录当前显示的页面与首页（即默认页）的层级深度，应用于点击导航栏的"首页"链接
+var top_menu_home_deep = 0; 
+
+function showNextEvaluatePage(tipCount,scrollBackTagId)
+{
+	if(top_menu_home_deep<2) top_menu_home_deep++;
+	myPageSlider[0].leftScroll(tipCount,scrollBackTagId);
+	
+	//unmask window
+	unmaskWindow();
 }
 
 
@@ -412,6 +319,8 @@ function initializeEvaluateDataObjects(urlObject)
 	window.getApplicantDataUrl = urlObject['getApplicantDataUrl'];
 	window.submitApplicantDataUrl = urlObject['submitApplicantDataUrl'];
 	window.printStatisticsTableUrl = urlObject['printStatisticsTableUrl'];
+	window.getAddDelOneKsDataUrl = urlObject['getAddDelOneKsDataUrl'];
+	window.checkPWAccStateURL = urlObject['checkPWAccStateURL'];
 	window.evaluateSystemDebugFlag = 'Y';
 	
 	//library_main_evalute_page 的评审考生列表GRID对象，用于实现第二、三个页面考生 GRID 的自动HIGHLIGHT
@@ -427,64 +336,202 @@ function initializeEvaluateSystem(urlObject)
 {
 	initializeEvaluateDataObjects(urlObject);
 	
-	$("#tz_zlps_pclb").width(1060);
-	//$("#tz_zlps_pclb").height(480);
+	var width = Ext.getBody().getWidth();
 	
-	$("#tz_zlps_zym").width(1060);
-	//$("#tz_zlps_zym").height(480);
+	$("#tz_msps_pclb").width(width);
+	//$("#tz_msps_pclb").height(480);
 	
-	$("#tz_zlps_dfym").width(1060);
-	//$("#tz_zlps_dfym").height(480);
+	$("#tz_msps_zym").width(width);
+	//$("#tz_msps_zym").height(480);
+	
+	$("#tz_msps_dfym").width(width);
+	//$("#tz_msps_dfym").height(480);
 	
 	if(Ext.isIE == true)
 	{
-		$("#tz_zlps_container").height(480);
-		$("#tz_zlps_pclb").height(480);
-		$("#tz_zlps_zym").height(480);
-		$("#tz_zlps_dfym").height(480);
+		$("#tz_msps_container").height(480);
+		$("#tz_msps_pclb").height(480);
+		$("#tz_msps_zym").height(480);
+		$("#tz_msps_dfym").height(480);
 	}
 	
 	
-	$("#tz_zlps_loading").width($("#tz_zlps_pclb").width());
-	$("#tz_zlps_loading").height($("#tz_zlps_pclb").height());
+	$("#tz_msps_loading").width($("#tz_msps_pclb").width());
+	$("#tz_msps_loading").height($("#tz_msps_pclb").height());
 	
 	//加载当前登录评委的评审批次数据
 	window.setTimeout (function()
 							{
-								loadEvaluateBatchData(initializeExtObjects);
+						 		loadEvaluateBatchData(initializeExtObjects);
 							},
 							100
-						);
+					  );
 }
 
-
 //显示、隐藏窗体的蒙板层
-var WindowMaskAll;
-function maskWindow(){
-
-	var setMaskHeight = $("div[class='header_outer_width']").height();
-	var setMaskWidth = $("div[class='header_outer_width']").width();
+function maskWindow(msg){
+	var maskMsg = msg!=undefined&&msg!=""?msg:"加载中，请稍候...";
 	
-	if(setMaskHeight<document.body.clientHeight) setMaskHeight = document.body.clientHeight;
-	if(setMaskWidth<document.body.clientWidth) setMaskWidth = document.body.clientWidth;
-	
-	if(WindowMaskAll == null || WindowMaskAll == '' || WindowMaskAll == 'undefined')
-	{
-		WindowMaskAll = new Ext.LoadMask(document.body, {msg:"数据交互中，请稍等..."});
-		
-		WindowMaskAll.show();
-		$("div[class='x-mask']").height(setMaskHeight).width(setMaskWidth);
-	}
-	else
-	{
-		WindowMaskAll.show();
-		$("div[class='x-mask']").height(setMaskHeight).width(setMaskWidth);
-	}
+	Ext.getBody().mask(maskMsg);
 }
 
 
 function unmaskWindow(){
-	WindowMaskAll.hide();
+	Ext.getBody().unmask();
 }
+
+function changePassword(){
+	var win = Ext.modifyPwdWindow;
+	if(!win){
+		Ext.define('KitchenSink.view.common.modifyPwdWindow', {
+		    extend: 'Ext.window.Window',
+		    xtype: 'modifyPwdWindow', 
+		    title: '修改密码', 
+		    width: 500,
+		    height: 200,
+		    layout: 'fit',
+		    resizable: false,
+		    modal: true,
+		    closeAction: 'hide',
+			items: [{
+				xtype: 'form',	
+				layout: {
+					type: 'vbox',
+					align: 'stretch'
+				},
+				border: false,
+				bodyPadding: 10,
+				ignoreLabelWidth: true,
+			
+				fieldDefaults: {
+					msgTarget: 'side',
+					labelWidth: 120,
+					fieldStyle:"margin-bottom:5px",
+					labelStyle: 'font-size:13px;'
+				},
+				items: [{
+					xtype: 'textfield',
+					fieldLabel: "原密码",
+					name: 'oldPwd',
+					inputType: 'password',
+					afterLabelTextTpl: [
+						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+					],
+					allowBlank: false
+				}, {
+					xtype: 'textfield',
+					fieldLabel: "新密码",
+					name: 'newPwd',
+					inputType: 'password',
+					afterLabelTextTpl: [
+						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+					],
+					allowBlank: false
+				}, {
+					xtype: 'textfield',
+					fieldLabel: "确认新密码",
+					name: 'comfirmPwd',
+					inputType: 'password',
+					afterLabelTextTpl: [
+						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+					],
+					allowBlank: false
+				}]
+			}],
+		    buttons: [
+			{
+				text: '确定',
+				handler: function(btn){
+					var bl = true;
+					var win = btn.findParentByType("window");
+					var form = win.child("form").getForm();
+					if(!form.isValid()){
+						bl =  false;
+					}
+					//表单数据
+					var formParams = form.getValues();
+					//密码
+					if(formParams["newPwd"] != formParams["comfirmPwd"]){
+						Ext.MessageBox.alert('提示', '两次密码输入不一致', this);
+						bl =  false;
+					}
+					//新旧密码不能相同
+					if(formParams["oldPwd"] == formParams["newPwd"]){
+						Ext.MessageBox.alert('提示', '新旧密码不能相同', this);
+						bl =  false;
+					}
+					if (bl == true){
+					//提交参数
+					var tzParams = '{"ComID":"TZ_GD_XGPWD_COM","PageID":"TZ_GD_XGPWD_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+					Ext.tzSubmit(tzParams,function(){
+						var form = win.child("form").getForm();
+						form.reset();
+						win.close();
+					},"密码修改成功！");
+				}
+				}
+			}, {
+				text: '关闭',
+				handler: function(btn){
+					btn.findParentByType("window").close();
+				}
+			}]
+		});
+		Ext.modifyPwdWindow = win = new KitchenSink.view.common.modifyPwdWindow();
+	}
+	win.show();
+}
+
+Ext.tzSubmit =  function(params,callback,msg)
+{
+    maskWindow();
+
+    try
+    {
+        Ext.Ajax.request(
+            {
+                url: ContextPath+"/dispatcher",
+                params:{tzParams: params},
+                timeout: 60000,
+                async: false,
+                success: function(response, opts)
+                {
+                    //返回值内容
+                    var jsonText = response.responseText;
+                    try
+                    {
+                        var jsonObject = Ext.util.JSON.decode(jsonText);
+                        /*判断服务器是否返回了正确的信息*/
+                        if(jsonObject.state.errcode == 1){
+                        	Ext.Msg.alert("提示",jsonObject.state.errdesc);
+                        }else{
+                        	typeof callback == "function"&&callback();
+                        	Ext.Msg.alert("提示",msg||"保存成功！");
+                        }
+                    }
+                    catch(e)
+                    {
+                        Ext.Msg.alert("提示","密码修改失败："+e.toString()+"，请与系统管理员联系。");
+                    }
+                },
+                failure: function(response, opts)
+                {
+                	var respText = Ext.util.JSON.decode(response.responseText);
+                	Ext.Msg.alert("提示","密码修改失败："+respText.error+"，请与系统管理员联系。");
+                },
+                callback: function(opts,success,response)
+                {
+                    unmaskWindow();
+                }
+            });
+    }
+    catch(e1)
+    {
+    	Ext.Msg.alert("提示","密码修改失败：请与系统管理员联系。");
+    	unmaskWindow();
+    }
+}
+
+
 
 

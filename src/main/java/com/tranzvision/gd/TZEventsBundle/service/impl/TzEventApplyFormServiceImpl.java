@@ -193,7 +193,7 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 					List<Map<String, Object>> listOpts = sqlQuery.queryForList(sql,
 							new Object[] { strApplyId, strItemId });
 
-					String strOptHtml = "<option><option>";
+					String strOptHtml = "<option></option>";
 
 					for (Map<String, Object> mapOpt : listOpts) {
 						String strOptId = mapOpt.get("TZ_XXX_TRANS_ID") == null ? ""

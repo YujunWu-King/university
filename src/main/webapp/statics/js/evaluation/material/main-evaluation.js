@@ -1,457 +1,4 @@
-﻿/*var jsonEvaluateBatchDataObjectArray1 = [];
-jsonEvaluateBatchDataObjectArray1['pc_f_01'] = 
-{
-	'ps_bkfx_id':'pc_f_01',
-	'ps_bkfx_mc':'2012年第01批F班',
-	'ps_baok_nf':'2012',
-	'ps_baok_pc':'第01批',
-	'ps_baok_zy':'F班',
-	'ps_description':'请各位评委注意，今天开始进行资料评估',
-	'ps_gaiy_info':'您当前已完成XX个考生的资料评估，您一共需要完成评估的考生数量不少于XX个考生，不多于XX个考生。',
-	'ps_data_cy': {
-									"ps_tjzb_btmc": [
-																		{
-																			"col01":"指标名称",
-																			"ps_cht_flg":"N",
-																			"ps_grp_flg":"N"
-																		},
-																		{
-																			"col02":"平均分指标",
-																			"ps_cht_flg":"N",
-																			"ps_grp_flg":"Y",
-																			"ps_sub_col":	[
-																											{
-																												"sub_col01":"标准平均分",
-																												"ps_cht_flg":"Y"
-																											},
-																											{
-																												"sub_col02":"允许误差",
-																												"ps_cht_flg":"N"
-																											},
-																											{
-																												"sub_col03":"实际平均分",
-																												"ps_cht_flg":"Y"
-																											},
-																											{
-																												"sub_col04":"实际误差",
-																												"ps_cht_flg":"N"
-																											},
-																											{
-																												"sub_col05":"是否符合要求",
-																												"ps_cht_flg":"N"
-																											}
-																										]
-																		},
-																		{
-																			"col03":"均方差指标",
-																			"ps_cht_flg":"N",
-																			"ps_grp_flg":"Y",
-																			"ps_sub_col":	[
-																											{
-																												"sub_col01":"标准均方差",
-																												"ps_cht_flg":"Y"
-																											},
-																											{
-																												"sub_col02":"允许误差",
-																												"ps_cht_flg":"N"
-																											},
-																											{
-																												"sub_col03":"实际均方差",
-																												"ps_cht_flg":"Y"
-																											},
-																											{
-																												"sub_col04":"实际误差",
-																												"ps_cht_flg":"N"
-																											},
-																											{
-																												"sub_col05":"是否符合要求",
-																												"ps_cht_flg":"N"
-																											}
-																										]
-																		}
-																	],
-									"ps_tjzb_mxsj": [
-																		{
-																			"col01":"隐性指标",
-																			"col02":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							},
-																			"col03":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							}
-																		},
-																		{
-																			"col01":"显性指标",
-																			"col02":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							},
-																			"col03":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							}
-																		},
-																		{
-																			"col01":"总分",
-																			"col02":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							},
-																			"col03":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							}
-																		}
-																	]
-								},
-	'ps_data_fb':[
-							 		{
-							 			'ps_fszb_mc':'隐性指标',
-							 			'ps_fszb_fbsj':[
-							 												{
-																	 			'ps_fb_mc':'-1，<0',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'0',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'1',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'0-3，>=0且<3',
-																	 			'ps_bzfb_bilv':'0.2',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.1',
-																	 			'ps_sjfb_rshu':'4',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'3-5，>=3且<5',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.5',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'5-7，>=5且<7',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.7',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'4.5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'7-9，>=7且<9',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'2.9',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'9-13，>=9且<=13',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'1',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'0.6',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		}
-																	 ]
-									},
-									{
-							 			'ps_fszb_mc':'显性指标',
-							 			'ps_fszb_fbsj':[
-							 												{
-																	 			'ps_fb_mc':'-1，<0',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'0',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'1',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'0-3，>=0且<3',
-																	 			'ps_bzfb_bilv':'0.2',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.1',
-																	 			'ps_sjfb_rshu':'4',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'3-5，>=3且<5',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.5',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'5-7，>=5且<7',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.7',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'4.5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'7-9，>=7且<9',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'2.9',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'9-13，>=9且<=13',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'1',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'0.6',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		}
-																	 ]
-									},
-									{
-							 			'ps_fszb_mc':'总分',
-							 			'ps_fszb_fbsj':[
-							 												{
-																	 			'ps_fb_mc':'-1，<0',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'0',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'1',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'0-3，>=0且<3',
-																	 			'ps_bzfb_bilv':'0.2',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.1',
-																	 			'ps_sjfb_rshu':'4',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'3-5，>=3且<5',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.5',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'5-7，>=5且<7',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.7',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'4.5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'7-9，>=7且<9',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'2.9',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'9-13，>=9且<=13',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'1',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'0.6',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		}
-																	 ]
-									}
-							 ],
-	'MaxRowCount':'30',
-	'StartRowNumber':'1',
-	'MoreRowsFlag':'N',
-	'TotalRowCount':'30',
-	'ps_data_kslb':{
-										'ps_ksh_list_headers':[
-																						{'ps_ksh_xh':'序号'},
-																						{'ps_ksh_id':'考生编号'},
-																						{'ps_ksh_bmbid':'报名表编号'},
-																						{'ps_ksh_xm':'考生姓名'},
-																						{'ps_ksh_ppm':'上次排名'},
-																						{'ps_ksh_cpm':'本次排名'},
-																						{'col01':'总分'},
-																						{'col02':'教育背景'},
-																						{'col03':'职业背景'},
-																						{'col04':'人际关系'},
-																						{'col05':'例外推荐'},
-																						{'col06':'不合适'},
-																						{'ps_ksh_zt':'评议状态'},
-																						{'ps_ksh_pc':'偏差'},
-																						{'ps_ksh_dt':'评审时间'}
-																					],
-										'ps_ksh_list_contents':[
-																							{
-																								'ps_row_id':'ks-00001',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'1'},
-																																{'ps_ksh_id':'ks-00001'},
-																																{'ps_ksh_bmbid':'ks-00001'},
-																																{'ps_ksh_xm':'黄飞鸿-01'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 17:20'}
-																															]
-																							},
-																							{
-																								'ps_row_id':'ks-00002',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'2'},
-																																{'ps_ksh_id':'ks-00002'},
-																																{'ps_ksh_bmbid':'ks-00002'},
-																																{'ps_ksh_xm':'黄飞鸿-02'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03]':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 17:36'}
-																															]
-																							},
-																							{
-																								'ps_row_id':'ks-00003',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'3'},
-																																{'ps_ksh_id':'ks-00003'},
-																																{'ps_ksh_bmbid':'ks-00003'},
-																																{'ps_ksh_xm':'黄飞鸿-03'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03]':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 17:50'}
-																															]
-																							},
-																							{
-																								'ps_row_id':'ks-00004',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'4'},
-																																{'ps_ksh_id':'ks-00004'},
-																																{'ps_ksh_bmbid':'ks-00004'},
-																																{'ps_ksh_xm':'黄飞鸿-04'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 18:00'}
-																															]
-																							},
-																							{
-																								'ps_row_id':'ks-00005',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'5'},
-																																{'ps_ksh_id':'ks-00005'},
-																																{'ps_ksh_bmbid':'ks-00005'},
-																																{'ps_ksh_xm':'黄飞鸿-05'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 18:00'}
-																															]
-																							}
-																					 ]
-								 },
-	'error_code':'0',
-	'error_decription ':''
-}
-*/
-
-function createMainPageHeader(jsonObject)
+﻿function createMainPageHeader(jsonObject)
 {
 	var width = Ext.getBody().getWidth();
 	//创建评委评审主页面页头区
@@ -638,6 +185,7 @@ function createFenbuGrid(jsonObject)
       collapsible: false,
       multiSelect: false,
       columnLines: true,
+      frame:true,
       stateId: 'EvaluateFenbuGrid',
       features: groupingFeature,
       margin:'0 0 0 0',
@@ -1087,7 +635,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 										collapsed:true,
 										layout: {type: 'table',columns: chartArray.length},
 										defaults: {frame:true, width:totalWidth/chartArray.length - 2, height: 480},
-										width: totalWidth,
+										width: "100%",
 										items: chartArray
 									});
 		
@@ -1235,7 +783,7 @@ function submitEvaluateBatch(classid,pc_id)
 												
 												try
 												{
-													jsonObject = Ext.JSON.decode(response.responseText);
+													jsonObject = Ext.JSON.decode(response.responseText).comContent;
 													
 													if(jsonObject.error_code != '0')
 													{
@@ -1422,6 +970,7 @@ function createApplicantList(jsonObject)
       bodyPadding:'0 0 0 0',
       scroll:true,
       width:"100%",
+      minHeight:200,
       columns: getApplicantListColumns(jsonObject['ps_data_kslb']['ps_ksh_list_headers']),
       title: '当前已归属您的评审考生列表',
       viewConfig: {
@@ -1533,7 +1082,6 @@ function createApplicantList(jsonObject)
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex){
 					var rec = store1.getAt(rowIndex);
 					//var clickColName = rec.self.getFields()[colIndex]['name'];
-					console.log(gridViewObject.grid.columns[colIndex]);
 					var clickColName = gridViewObject.grid.columns[colIndex]["dataIndex"];
 					
 					gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
@@ -1583,7 +1131,7 @@ function createStatisticsArea(batchId,jsonObject)
 	var gaiyaoArea = {
 											xtype: 'component',
 											html: Ext.String.format('<ul><li>' + jsonObject['ps_gaiy_info'] + '</li></ul>'),
-											style: 'margin-bottom:2px;margin-top:2px;font-size:12'
+											style: 'margin-bottom:2px;margin-top:2px;font-size:13px'
 									 };
 	itemArray.push(gaiyaoArea);
 
@@ -1704,98 +1252,98 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
     var classid = arr[0];
     var pcid = arr[1];
 	Ext.Ajax.request(
-										{
-											url:window.getBatchDataUrl,
-											method:'POST',
-											timeout:10000,
-											params: {
-																	LanguageCd:'ZHS',
-                                                                    BaokaoClassID:classid,
-                                                                    BaokaoPCID:pcid,
-																	RequestDataType:'S',
-																	MaxRowCount:1000,
-																	StartRowNumber:1,
-																	MoreRowsFlag:'N'
-															},
-											success:function(response)
-											{
-												var jsonObject = null;
-												
-												try
-												{
-													jsonObject = Ext.JSON.decode(response.responseText);
-													
-													if(jsonObject.error_code != '0')
-													{
-														//unmask window
-														unmaskWindow();
-													
-														loadSuccess = false;
-														alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-													}
-													else
-													{
-														/*缓存当前局部刷新数据*/
-														window.batchJSONArray[batchId]['ps_gaiy_info'] = jsonObject['ps_gaiy_info'];
-														window.batchJSONArray[batchId]['ps_data_cy'] = jsonObject['ps_data_cy'];
-														window.batchJSONArray[batchId]['ps_data_fb'] = jsonObject['ps_data_fb'];
-														window.batchJSONArray[batchId]['ps_data_kslb'] = jsonObject['ps_data_kslb'];
-														window.batchJSONArray[batchId]['ps_kslb_submtall'] = jsonObject['ps_kslb_submtall'];
-														
-														
-														/*获取新的局部数据，并使用局部数据刷新当前批次评审主页面数据*/
-														refreshBatchDataByBatchId(jsonObject,'ps_ksh_bmbid',applicantObject.applicantBaomingbiaoID);
-														
-														//回调指定函数
-														if(operationType == 'NXT')
-														{//因为获取下一个考生而产生的回调，该回调将导致当前页面切换到指定考生资料评审主页面
-															callBackFunction(applicantObject);
-														}
-														else
-														{
-															//其他暂无操作
-															;
-															
-															//unmask window
-															unmaskWindow();
-														}
-														
-														
-														if(tipMessage != null && tipMessage != '' && tipMessage != 'undefined')
-														{
-															alert(tipMessage);
-														}
-													}
-												}
-												catch(e1)
-												{
-													loadSuccess = false;
-													if(window.evaluateSystemDebugFlag == 'Y')
-													{
-														alert('刷新当前评审批次[' + batchId + ']数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
-														var mytmpWindow = window.open("about:blank");
-														mytmpWindow.document.body.innerHTML = response.responseText;
-													}
-													else
-													{
-														alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
-													}
-												}
-											},
-											failure:function(response)
-											{
-												loadSuccess = false;
-												if(window.evaluateSystemDebugFlag == 'Y')
-												{
-													alert('刷新当前评审批次[' + batchId + ']数据时发生错误，请与系统管理员联系：' + response.responseText);
-												}
-												else
-												{
-													alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误，请与系统管理员联系。');
-												}
-											}
-										}
-									);
+		{
+			url:window.getBatchDataUrl,
+			method:'POST',
+			timeout:10000,
+			params: {
+									LanguageCd:'ZHS',
+                                    BaokaoClassID:classid,
+                                    BaokaoPCID:pcid,
+									RequestDataType:'S',
+									MaxRowCount:1000,
+									StartRowNumber:1,
+									MoreRowsFlag:'N'
+							},
+			success:function(response)
+			{
+				var jsonObject = null;
+				
+				try
+				{
+					jsonObject = Ext.JSON.decode(response.responseText);
+					
+					if(jsonObject.error_code != '0')
+					{
+						//unmask window
+						unmaskWindow();
+					
+						loadSuccess = false;
+						alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+					}
+					else
+					{
+						/*缓存当前局部刷新数据*/
+						window.batchJSONArray[batchId]['ps_gaiy_info'] = jsonObject['ps_gaiy_info'];
+						window.batchJSONArray[batchId]['ps_data_cy'] = jsonObject['ps_data_cy'];
+						window.batchJSONArray[batchId]['ps_data_fb'] = jsonObject['ps_data_fb'];
+						window.batchJSONArray[batchId]['ps_data_kslb'] = jsonObject['ps_data_kslb'];
+						window.batchJSONArray[batchId]['ps_kslb_submtall'] = jsonObject['ps_kslb_submtall'];
+						
+						
+						/*获取新的局部数据，并使用局部数据刷新当前批次评审主页面数据*/
+						refreshBatchDataByBatchId(jsonObject,'ps_ksh_bmbid',applicantObject.applicantBaomingbiaoID);
+						
+						//回调指定函数
+						if(operationType == 'NXT')
+						{//因为获取下一个考生而产生的回调，该回调将导致当前页面切换到指定考生资料评审主页面
+							callBackFunction(applicantObject);
+						}
+						else
+						{
+							//其他暂无操作
+							;
+							
+							//unmask window
+							unmaskWindow();
+						}
+						
+						
+						if(tipMessage != null && tipMessage != '' && tipMessage != 'undefined')
+						{
+							alert(tipMessage);
+						}
+					}
+				}
+				catch(e1)
+				{
+					loadSuccess = false;
+					if(window.evaluateSystemDebugFlag == 'Y')
+					{
+						alert('刷新当前评审批次[' + batchId + ']数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+						var mytmpWindow = window.open("about:blank");
+						mytmpWindow.document.body.innerHTML = response.responseText;
+					}
+					else
+					{
+						alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+					}
+				}
+			},
+			failure:function(response)
+			{
+				loadSuccess = false;
+				if(window.evaluateSystemDebugFlag == 'Y')
+				{
+					alert('刷新当前评审批次[' + batchId + ']数据时发生错误，请与系统管理员联系：' + response.responseText);
+				}
+				else
+				{
+					alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误，请与系统管理员联系。');
+				}
+			}
+		}
+	);
 }
 
 /*自动重新高亮显示已选中数据行的函数*/

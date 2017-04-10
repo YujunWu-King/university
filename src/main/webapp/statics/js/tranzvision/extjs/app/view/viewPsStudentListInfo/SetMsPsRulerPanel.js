@@ -45,26 +45,34 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.classId", "班级编号"),
 					name: 'classId',
 					allowBlank: false,
-					value: '105'
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
+					//value: '105'
 
 				}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.batchId", "批次编号"),
 					name: 'batchId',
 					allowBlank: false,
-					value: '2'
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
+					//value: '2'
 
 				}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.ksNum", "报考考生数量"),
 					name: 'ksNum',
-					allowBlank: false
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
 
 				}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.reviewClpsKsNum", "材料审批考生"),
 					name: 'reviewClpsKsNum',
-					allowBlank: false
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
 
 				}, {
 					layout: {
@@ -79,7 +87,9 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							// cls:'lanage_1',
 							//                                format: 'Y-m-d h:i',
 							//readOnly:true
-							allowBlank: false
+							allowBlank: false,
+							fieldStyle:'background:#F4F4F4',
+    				        readOnly:true
 						}]
 					}, {
 						items: [{

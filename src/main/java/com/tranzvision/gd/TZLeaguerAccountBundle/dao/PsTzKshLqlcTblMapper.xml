@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzKshLqlcTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzKshLqlcTbl" >
+    <id column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <result column="TZ_TJLQZG" property="tzTjlqzg" jdbcType="VARCHAR" />
+    <result column="TZ_TJLQZG_XM" property="tzTjlqzgXm" jdbcType="VARCHAR" />
+    <result column="TZ_MSJG_PC" property="tzMsjgPc" jdbcType="VARCHAR" />
+    <result column="TZ_MSPS_MC" property="tzMspsMc" jdbcType="VARCHAR" />
+    <result column="TZ_MSPS_PC" property="tzMspsPc" jdbcType="VARCHAR" />
+    <result column="TZ_LKQ_TZQK" property="tzLkqTzqk" jdbcType="VARCHAR" />
+    <result column="TZ_TZYY_NOTES" property="tzTzyyNotes" jdbcType="VARCHAR" />
+    <result column="TZ_LKQ_TJLQZG" property="tzLkqTjlqzg" jdbcType="VARCHAR" />
+    <result column="TZ_LKQ_TJLQZG_XM" property="tzLkqTjlqzgXm" jdbcType="VARCHAR" />
+    <result column="TZ_LKBM" property="tzLkbm" jdbcType="VARCHAR" />
+    <result column="TZ_LKSK" property="tzLksk" jdbcType="VARCHAR" />
+    <result column="TZ_LKGX" property="tzLkgx" jdbcType="VARCHAR" />
+    <result column="TZ_LKZZGX" property="tzLkzzgx" jdbcType="VARCHAR" />
+    <result column="TZ_LKYYTLGX" property="tzLkyytlgx" jdbcType="VARCHAR" />
+    <result column="TZ_YLQ_TZQK" property="tzYlqTzqk" jdbcType="VARCHAR" />
+    <result column="TZ_TZYY_NOTES2" property="tzTzyyNotes2" jdbcType="VARCHAR" />
+    <result column="TZ_YLQ_ZG" property="tzYlqZg" jdbcType="VARCHAR" />
+    <result column="TZ_YLQ_ZG_XM" property="tzYlqZgXm" jdbcType="VARCHAR" />
+    <result column="TZ_ZSLQ_TZQK" property="tzZslqTzqk" jdbcType="VARCHAR" />
+    <result column="TZ_TZYY_NOTES3" property="tzTzyyNotes3" jdbcType="VARCHAR" />
+    <result column="TZ_ZSLQ_ZG" property="tzZslqZg" jdbcType="VARCHAR" />
+    <result column="TZ_ZSLQ_ZG_XM" property="tzZslqZgXm" jdbcType="VARCHAR" />
+    <result column="TZ_RXQ_TZQK" property="tzRxqTzqk" jdbcType="VARCHAR" />
+    <result column="TZ_TZYY_NOTES4" property="tzTzyyNotes4" jdbcType="VARCHAR" />
+    <result column="TZ_RX_QK" property="tzRxQk" jdbcType="VARCHAR" />
+    <result column="TZ_RX_XM" property="tzRxXm" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    OPRID, TZ_TJLQZG, TZ_TJLQZG_XM, TZ_MSJG_PC, TZ_MSPS_MC, TZ_MSPS_PC, TZ_LKQ_TZQK, 
+    TZ_TZYY_NOTES, TZ_LKQ_TJLQZG, TZ_LKQ_TJLQZG_XM, TZ_LKBM, TZ_LKSK, TZ_LKGX, TZ_LKZZGX, 
+    TZ_LKYYTLGX, TZ_YLQ_TZQK, TZ_TZYY_NOTES2, TZ_YLQ_ZG, TZ_YLQ_ZG_XM, TZ_ZSLQ_TZQK, 
+    TZ_TZYY_NOTES3, TZ_ZSLQ_ZG, TZ_ZSLQ_ZG_XM, TZ_RXQ_TZQK, TZ_TZYY_NOTES4, TZ_RX_QK, 
+    TZ_RX_XM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_KSH_LQLC_TBL
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_KSH_LQLC_TBL
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzKshLqlcTbl" >
+    insert into PS_TZ_KSH_LQLC_TBL (OPRID, TZ_TJLQZG, TZ_TJLQZG_XM, 
+      TZ_MSJG_PC, TZ_MSPS_MC, TZ_MSPS_PC, 
+      TZ_LKQ_TZQK, TZ_TZYY_NOTES, TZ_LKQ_TJLQZG, 
+      TZ_LKQ_TJLQZG_XM, TZ_LKBM, TZ_LKSK, 
+      TZ_LKGX, TZ_LKZZGX, TZ_LKYYTLGX, 
+      TZ_YLQ_TZQK, TZ_TZYY_NOTES2, TZ_YLQ_ZG, 
+      TZ_YLQ_ZG_XM, TZ_ZSLQ_TZQK, TZ_TZYY_NOTES3, 
+      TZ_ZSLQ_ZG, TZ_ZSLQ_ZG_XM, TZ_RXQ_TZQK, 
+      TZ_TZYY_NOTES4, TZ_RX_QK, TZ_RX_XM
+      )
+    values (#{oprid,jdbcType=VARCHAR}, #{tzTjlqzg,jdbcType=VARCHAR}, #{tzTjlqzgXm,jdbcType=VARCHAR}, 
+      #{tzMsjgPc,jdbcType=VARCHAR}, #{tzMspsMc,jdbcType=VARCHAR}, #{tzMspsPc,jdbcType=VARCHAR}, 
+      #{tzLkqTzqk,jdbcType=VARCHAR}, #{tzTzyyNotes,jdbcType=VARCHAR}, #{tzLkqTjlqzg,jdbcType=VARCHAR}, 
+      #{tzLkqTjlqzgXm,jdbcType=VARCHAR}, #{tzLkbm,jdbcType=VARCHAR}, #{tzLksk,jdbcType=VARCHAR}, 
+      #{tzLkgx,jdbcType=VARCHAR}, #{tzLkzzgx,jdbcType=VARCHAR}, #{tzLkyytlgx,jdbcType=VARCHAR}, 
+      #{tzYlqTzqk,jdbcType=VARCHAR}, #{tzTzyyNotes2,jdbcType=VARCHAR}, #{tzYlqZg,jdbcType=VARCHAR}, 
+      #{tzYlqZgXm,jdbcType=VARCHAR}, #{tzZslqTzqk,jdbcType=VARCHAR}, #{tzTzyyNotes3,jdbcType=VARCHAR}, 
+      #{tzZslqZg,jdbcType=VARCHAR}, #{tzZslqZgXm,jdbcType=VARCHAR}, #{tzRxqTzqk,jdbcType=VARCHAR}, 
+      #{tzTzyyNotes4,jdbcType=VARCHAR}, #{tzRxQk,jdbcType=VARCHAR}, #{tzRxXm,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzKshLqlcTbl" >
+    insert into PS_TZ_KSH_LQLC_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzTjlqzg != null" >
+        TZ_TJLQZG,
+      </if>
+      <if test="tzTjlqzgXm != null" >
+        TZ_TJLQZG_XM,
+      </if>
+      <if test="tzMsjgPc != null" >
+        TZ_MSJG_PC,
+      </if>
+      <if test="tzMspsMc != null" >
+        TZ_MSPS_MC,
+      </if>
+      <if test="tzMspsPc != null" >
+        TZ_MSPS_PC,
+      </if>
+      <if test="tzLkqTzqk != null" >
+        TZ_LKQ_TZQK,
+      </if>
+      <if test="tzTzyyNotes != null" >
+        TZ_TZYY_NOTES,
+      </if>
+      <if test="tzLkqTjlqzg != null" >
+        TZ_LKQ_TJLQZG,
+      </if>
+      <if test="tzLkqTjlqzgXm != null" >
+        TZ_LKQ_TJLQZG_XM,
+      </if>
+      <if test="tzLkbm != null" >
+        TZ_LKBM,
+      </if>
+      <if test="tzLksk != null" >
+        TZ_LKSK,
+      </if>
+      <if test="tzLkgx != null" >
+        TZ_LKGX,
+      </if>
+      <if test="tzLkzzgx != null" >
+        TZ_LKZZGX,
+      </if>
+      <if test="tzLkyytlgx != null" >
+        TZ_LKYYTLGX,
+      </if>
+      <if test="tzYlqTzqk != null" >
+        TZ_YLQ_TZQK,
+      </if>
+      <if test="tzTzyyNotes2 != null" >
+        TZ_TZYY_NOTES2,
+      </if>
+      <if test="tzYlqZg != null" >
+        TZ_YLQ_ZG,
+      </if>
+      <if test="tzYlqZgXm != null" >
+        TZ_YLQ_ZG_XM,
+      </if>
+      <if test="tzZslqTzqk != null" >
+        TZ_ZSLQ_TZQK,
+      </if>
+      <if test="tzTzyyNotes3 != null" >
+        TZ_TZYY_NOTES3,
+      </if>
+      <if test="tzZslqZg != null" >
+        TZ_ZSLQ_ZG,
+      </if>
+      <if test="tzZslqZgXm != null" >
+        TZ_ZSLQ_ZG_XM,
+      </if>
+      <if test="tzRxqTzqk != null" >
+        TZ_RXQ_TZQK,
+      </if>
+      <if test="tzTzyyNotes4 != null" >
+        TZ_TZYY_NOTES4,
+      </if>
+      <if test="tzRxQk != null" >
+        TZ_RX_QK,
+      </if>
+      <if test="tzRxXm != null" >
+        TZ_RX_XM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjlqzg != null" >
+        #{tzTjlqzg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjlqzgXm != null" >
+        #{tzTjlqzgXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsjgPc != null" >
+        #{tzMsjgPc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMspsMc != null" >
+        #{tzMspsMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMspsPc != null" >
+        #{tzMspsPc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkqTzqk != null" >
+        #{tzLkqTzqk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTzyyNotes != null" >
+        #{tzTzyyNotes,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkqTjlqzg != null" >
+        #{tzLkqTjlqzg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkqTjlqzgXm != null" >
+        #{tzLkqTjlqzgXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkbm != null" >
+        #{tzLkbm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLksk != null" >
+        #{tzLksk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkgx != null" >
+        #{tzLkgx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkzzgx != null" >
+        #{tzLkzzgx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkyytlgx != null" >
+        #{tzLkyytlgx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYlqTzqk != null" >
+        #{tzYlqTzqk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTzyyNotes2 != null" >
+        #{tzTzyyNotes2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYlqZg != null" >
+        #{tzYlqZg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYlqZgXm != null" >
+        #{tzYlqZgXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZslqTzqk != null" >
+        #{tzZslqTzqk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTzyyNotes3 != null" >
+        #{tzTzyyNotes3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZslqZg != null" >
+        #{tzZslqZg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZslqZgXm != null" >
+        #{tzZslqZgXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRxqTzqk != null" >
+        #{tzRxqTzqk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTzyyNotes4 != null" >
+        #{tzTzyyNotes4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRxQk != null" >
+        #{tzRxQk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRxXm != null" >
+        #{tzRxXm,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzKshLqlcTbl" >
+    update PS_TZ_KSH_LQLC_TBL
+    <set >
+      <if test="tzTjlqzg != null" >
+        TZ_TJLQZG = #{tzTjlqzg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjlqzgXm != null" >
+        TZ_TJLQZG_XM = #{tzTjlqzgXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsjgPc != null" >
+        TZ_MSJG_PC = #{tzMsjgPc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMspsMc != null" >
+        TZ_MSPS_MC = #{tzMspsMc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMspsPc != null" >
+        TZ_MSPS_PC = #{tzMspsPc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkqTzqk != null" >
+        TZ_LKQ_TZQK = #{tzLkqTzqk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTzyyNotes != null" >
+        TZ_TZYY_NOTES = #{tzTzyyNotes,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkqTjlqzg != null" >
+        TZ_LKQ_TJLQZG = #{tzLkqTjlqzg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkqTjlqzgXm != null" >
+        TZ_LKQ_TJLQZG_XM = #{tzLkqTjlqzgXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkbm != null" >
+        TZ_LKBM = #{tzLkbm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLksk != null" >
+        TZ_LKSK = #{tzLksk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkgx != null" >
+        TZ_LKGX = #{tzLkgx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkzzgx != null" >
+        TZ_LKZZGX = #{tzLkzzgx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLkyytlgx != null" >
+        TZ_LKYYTLGX = #{tzLkyytlgx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYlqTzqk != null" >
+        TZ_YLQ_TZQK = #{tzYlqTzqk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTzyyNotes2 != null" >
+        TZ_TZYY_NOTES2 = #{tzTzyyNotes2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYlqZg != null" >
+        TZ_YLQ_ZG = #{tzYlqZg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYlqZgXm != null" >
+        TZ_YLQ_ZG_XM = #{tzYlqZgXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZslqTzqk != null" >
+        TZ_ZSLQ_TZQK = #{tzZslqTzqk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTzyyNotes3 != null" >
+        TZ_TZYY_NOTES3 = #{tzTzyyNotes3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZslqZg != null" >
+        TZ_ZSLQ_ZG = #{tzZslqZg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZslqZgXm != null" >
+        TZ_ZSLQ_ZG_XM = #{tzZslqZgXm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRxqTzqk != null" >
+        TZ_RXQ_TZQK = #{tzRxqTzqk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTzyyNotes4 != null" >
+        TZ_TZYY_NOTES4 = #{tzTzyyNotes4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRxQk != null" >
+        TZ_RX_QK = #{tzRxQk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRxXm != null" >
+        TZ_RX_XM = #{tzRxXm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzKshLqlcTbl" >
+    update PS_TZ_KSH_LQLC_TBL
+    set TZ_TJLQZG = #{tzTjlqzg,jdbcType=VARCHAR},
+      TZ_TJLQZG_XM = #{tzTjlqzgXm,jdbcType=VARCHAR},
+      TZ_MSJG_PC = #{tzMsjgPc,jdbcType=VARCHAR},
+      TZ_MSPS_MC = #{tzMspsMc,jdbcType=VARCHAR},
+      TZ_MSPS_PC = #{tzMspsPc,jdbcType=VARCHAR},
+      TZ_LKQ_TZQK = #{tzLkqTzqk,jdbcType=VARCHAR},
+      TZ_TZYY_NOTES = #{tzTzyyNotes,jdbcType=VARCHAR},
+      TZ_LKQ_TJLQZG = #{tzLkqTjlqzg,jdbcType=VARCHAR},
+      TZ_LKQ_TJLQZG_XM = #{tzLkqTjlqzgXm,jdbcType=VARCHAR},
+      TZ_LKBM = #{tzLkbm,jdbcType=VARCHAR},
+      TZ_LKSK = #{tzLksk,jdbcType=VARCHAR},
+      TZ_LKGX = #{tzLkgx,jdbcType=VARCHAR},
+      TZ_LKZZGX = #{tzLkzzgx,jdbcType=VARCHAR},
+      TZ_LKYYTLGX = #{tzLkyytlgx,jdbcType=VARCHAR},
+      TZ_YLQ_TZQK = #{tzYlqTzqk,jdbcType=VARCHAR},
+      TZ_TZYY_NOTES2 = #{tzTzyyNotes2,jdbcType=VARCHAR},
+      TZ_YLQ_ZG = #{tzYlqZg,jdbcType=VARCHAR},
+      TZ_YLQ_ZG_XM = #{tzYlqZgXm,jdbcType=VARCHAR},
+      TZ_ZSLQ_TZQK = #{tzZslqTzqk,jdbcType=VARCHAR},
+      TZ_TZYY_NOTES3 = #{tzTzyyNotes3,jdbcType=VARCHAR},
+      TZ_ZSLQ_ZG = #{tzZslqZg,jdbcType=VARCHAR},
+      TZ_ZSLQ_ZG_XM = #{tzZslqZgXm,jdbcType=VARCHAR},
+      TZ_RXQ_TZQK = #{tzRxqTzqk,jdbcType=VARCHAR},
+      TZ_TZYY_NOTES4 = #{tzTzyyNotes4,jdbcType=VARCHAR},
+      TZ_RX_QK = #{tzRxQk,jdbcType=VARCHAR},
+      TZ_RX_XM = #{tzRxXm,jdbcType=VARCHAR}
+    where OPRID = #{oprid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,4 +1,4 @@
-package com.tranzvision.gd.TZMbaPwClpsBundle.service.impl;
+package com.tranzvision.gd.TZEvaluationSystemBundle.service.impl;
 
 import java.util.Date;
 import java.math.BigDecimal;
@@ -33,6 +33,7 @@ import com.tranzvision.gd.TZScoreModeManagementBundle.service.impl.TzScoreInsCal
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * MBA材料面试评审-评委系统-材料评审-打分页
@@ -41,9 +42,9 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @since 2017-02-08
  */
 
-@Service("com.tranzvision.gd.TZMbaPwClpsBundle.service.impl.TzMbaPwClpsScoreServiceImpl")
+@Service("com.tranzvision.gd.TZEvaluationSystemBundle.service.impl.MaterialEvaluationScoreImpl")
 
-public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
+public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 
 	@Autowired
 	private SqlQuery sqlQuery;
@@ -65,6 +66,8 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 	private PsTzClpskspwTblMapper psTzClpskspwTblMapper;
 	@Autowired
 	private TzScoreInsCalculationObject tzScoreInsCalculationObject;
+	@Autowired
+	private TZGDObject tzSQLObject;
 	
 	
 	@Override
@@ -227,7 +230,6 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 		try {
 			//当前登录人
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			//String oprid = "clpw07";
 			
 			ArrayList<Map<String, Object>> examineeJson = new ArrayList<Map<String,Object>>();
 			Integer count = 0;
@@ -302,8 +304,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 				mapRet.put("message", message);
 			
 			/*当前登录人*/
-			//String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			String oprid = "clpw07";
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			/*当前考生在当前评委下的成绩单ID*/
 			String sql = "SELECT TZ_SCORE_INS_ID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
@@ -346,20 +347,15 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			//考生标签：显示自动初筛形成的标签&管理员后台手工添加的标签，负面清单标签不显示
 			String examineeTag = "";
 			
-			String sqlBq = "SELECT A.TZ_ZDBQ_ID,B.TZ_BIAOQZ_NAME FROM PS_TZ_CS_KSBQ_T A,PS_TZ_BIAOQZ_BQ_T B,PS_TZ_CLASS_INF_T C";
-			sqlBq = sqlBq + " WHERE A.TZ_ZDBQ_ID=B.TZ_BIAOQ_ID AND B.TZ_BIAOQZ_ID=C.TZ_CS_KSBQZ_ID AND B.TZ_JG_ID=C.TZ_JG_ID AND C.TZ_CLASS_ID=A.TZ_CLASS_ID";
-			sqlBq = sqlBq + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
-			
-			List<Map<String, Object>> listBq = sqlQuery.queryForList(sqlBq, new Object[] {classId,applyBatchId,bmbId});
+			String sqlBq = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsBqInfo");
+			List<Map<String, Object>> listBq = sqlQuery.queryForList(sqlBq, new Object[] {bmbId,bmbId});
 			
 			for (Map<String, Object> mapBq : listBq) {
-				String zdbqId = mapBq.get("TZ_ZDBQ_ID") == null ? "" : mapBq.get("TZ_ZDBQ_ID").toString();
-				String zdbqName= mapBq.get("TZ_BIAOQZ_NAME") == null ? "" : mapBq.get("TZ_BIAOQZ_NAME").toString();
+				String bqId = mapBq.get("TZ_BQ_ID") == null ? "" : mapBq.get("TZ_BQ_ID").toString();
+				String bqName= mapBq.get("TZ_BQ_NAME") == null ? "" : mapBq.get("TZ_BQ_NAME").toString();
 				
-				examineeTag = examineeTag + "【" + zdbqName + "】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";			
+				examineeTag = examineeTag + "【" + bqName + "】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";			
 			}
-			//-------------------------------------还差手工标签
-			
 			mapRet.put("examineeTag", examineeTag);
 			
 			
@@ -440,7 +436,7 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 				mapScoreJson.put("itemLowerLimit", scoreItemValueLower);
 				mapScoreJson.put("itemValue", scoreItemValue);
 				mapScoreJson.put("itemCommentUpperLimit", scoreItemCommentUpper);
-				mapScoreJson.put("itemCommentLowerLimit ", scoreItemCommentLower);
+				mapScoreJson.put("itemCommentLowerLimit", scoreItemCommentLower);
 				mapScoreJson.put("itemComment", scoreItemComment);
 				mapScoreJson.put("itemOptions", optionListJson);
 				mapScoreJson.put("itemDfsm", scoreItemDfsm);
@@ -506,6 +502,8 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
+			mapRet.put("messageCode", "1");
+			mapRet.put("message", e.toString());
 		}
 		
 		strRtn = jacksonUtil.Map2json(mapRet);
@@ -1074,6 +1072,8 @@ public class TzMbaPwClpsScoreServiceImpl extends FrameworkImpl{
 			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
+			mapRet.put("messageCode", "1");
+			mapRet.put("message", e.toString());
 		}
 		
 		strRtn = jacksonUtil.Map2json(mapRet);

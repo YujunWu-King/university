@@ -684,7 +684,7 @@ public class tzOnlineAppEngineImpl {
 			}
 		} else {
 			// 首次填写报名表
-			if (strAppInsId.equals("0")) {
+			if (strAppInsId == null || strAppInsId.equals("") || strAppInsId.equals("0")) {
 				sql = "SELECT TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 				TZ_MSH_ID = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 				if (TZ_MSH_ID == null) {

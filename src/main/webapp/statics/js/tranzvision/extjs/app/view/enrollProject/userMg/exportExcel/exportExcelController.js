@@ -7,23 +7,28 @@ Ext.define('KitchenSink.view.enrollProject.userMg.exportExcel.exportExcelControl
         var form = win.child("form").getForm();
         if (form.isValid()) {
             var appFormModalID = win.modalID;
+			var resultSource = win.resultSource;
+			var searchSql = win.searchSql;
             var excelTpl = form.getValues()['excelTpl'];
             var excelName = form.getValues()['excelName']
-            if(win.selList&&win.selList.length>0){
-                var applicantsList = new Array();
-                for(var i=0;i<win.selList.length;i++){
-                   applicantsList.push(win.selList[i].get('OPRID'));
-				   //console.log(win.selList[i].get('OPRID'));
-                }
-                this.doExportExcelAction(win,applicantsList,appFormModalID,excelTpl,excelName);
-            }else{
-                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.noApplicantsSelected","没有选中任何考生，无法导出Excel"));
-            }
-
+			if(resultSource=="A"){
+				if(win.selList&&win.selList.length>0){
+					var applicantsList = new Array();
+					for(var i=0;i<win.selList.length;i++){
+					   applicantsList.push(win.selList[i].get('OPRID'));
+					   //console.log(win.selList[i].get('OPRID'));
+					}
+					this.doExportExcelAction(win,applicantsList,appFormModalID,excelTpl,excelName,resultSource,searchSql);
+				}else{
+					Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.noApplicantsSelected","没有选中任何考生，无法导出Excel"));
+				}
+			}else{
+				this.doExportExcelAction(win,applicantsList,appFormModalID,excelTpl,excelName,resultSource,searchSql);
+			}
         }
     },
-    doExportExcelAction: function(win,applicantsList,appFormModalID,excelTpl,excelName){
-        var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_EXP_EXCEL_STD","OperateType":"U","comParams":{"add":[{"excelTpl":"'+excelTpl+'","appFormModalID":"'+appFormModalID+'","excelName":"'+excelName+'","applicantsList":'+Ext.JSON.encode(applicantsList)+'}]} }';
+    doExportExcelAction: function(win,applicantsList,appFormModalID,excelTpl,excelName,resultSource,searchSql){
+        var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_EXP_EXCEL_STD","OperateType":"U","comParams":{"add":[{"excelTpl":"'+excelTpl+'","resultSource":"'+resultSource+'","searchSql":"'+searchSql+'","appFormModalID":"'+appFormModalID+'","excelName":"'+excelName+'","applicantsList":'+Ext.JSON.encode(applicantsList)+'}]} }';
 
         var tabPanel = win.lookupReference("exportExcelTabPanel");
         Ext.tzSubmit(tzParams,function(responseData){
