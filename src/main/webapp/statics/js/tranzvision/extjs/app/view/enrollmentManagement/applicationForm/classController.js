@@ -1504,6 +1504,207 @@
 		if (cmp.floating) {
 			cmp.show();
 		}
+    },
+        /*面试评审--设置评审规则*/
+    setInterviewReviewRule:function(grid,rowIndex){
+    	Ext.tzSetCompResourses("TZ_REVIEW_MS_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_RULE_STD"];
+
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSPS_RULE_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+        var record = grid.store.getAt(rowIndex);
+        var classId = record.data.classID;
+        var className = record.data.className;
+        var batchId = record.data.batchID;
+        var batchName = record.data.batchName;
+        var applicantsNumber = record.data.applicantsNumber;
+        cmp = new ViewClass({
+            classId:classId,
+            batchId:batchId
+        });
+        console.log(classId+":"+batchId);
+
+        cmp.on('afterrender',function(panel){
+            var form = panel.child('form').getForm();
+           // var statisticsNumForm = panel.down("form[name=statisticsNumForm]").getForm();
+
+            var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' +
+                '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
+
+            Ext.tzLoad(tzParams,function(respData){
+                var formData = respData.formData;
+                if(formData!="" && formData!=undefined) {
+                    panel.actType="update";
+                    form.setValues(formData);
+
+                  //  statisticsNumForm.findField("clpsksNum").setValue(formData.clpsksNum);
+                    //要求评审人次更新
+                   // statisticsNumForm.findField("reviewNumSet").setValue(parseInt(formData.clpsksNum)*(formData.judgeNumSet));
+                } else {
+                    panel.actType="add";
+                    form.findField("classId").setValue(classId);
+                   // form.findField("className").setValue(className);
+                    form.findField("batchId").setValue(batchId);
+                   // form.findField("batchName").setValue(batchName);
+                  // form.findField("bkksNum").setValue(applicantsNumber);
+                    //form.findField("clpsksNum").setValue(0);
+                   // form.findField("dqpsStatus").setValue("N");
+                    //form.findField("dqpsStatusDesc").setValue("未开始");
+
+                   // var statisticsForm = panel.down("form[name=statisticsNumForm]").getForm();
+                   // statisticsForm.findField("clpsksNum").setValue(0);
+                   // statisticsForm.findField("reviewNumSet").setValue(0);
+                }
+
+            });
+        });
+
+        tab = contentPanel.add(cmp);
+
+        contentPanel.setActiveTab(tab);
+
+        Ext.resumeLayouts(true);
+
+        if (cmp.floating) {
+            cmp.show();
+        }
+    },
+    /*材料评审--材料评审考生名单*/
+    viewInterviewStuApplicants:function(grid,rowIndex){
+        Ext.tzSetCompResourses("TZ_REVIEW_MS_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_KS_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_KS_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+
+
+        var record = grid.store.getAt(rowIndex);
+        var classId = record.data.classID;
+        var className = record.data.className;
+        var batchId = record.data.batchID;
+        var batchName = record.data.batchName;
+        var applicantsNumber = record.data.applicantsNumber;
+
+        cmp = new ViewClass({
+            classId:classId,
+            batchId:batchId
+        });
+
+        cmp.on('afterrender',function(panel){
+            var form = panel.child('form').getForm();
+            var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
+
+            Ext.tzLoad(tzParams,function(respData){
+                var formData = respData.formData;
+                if(formData!="" && formData!=undefined) {
+                    panel.actType="update";
+                    formData.className = record.data.className;
+                    formData.batchName = record.data.batchName;
+                    form.setValues(formData);
+
+                    var examineeGrid = panel.down('grid');
+                    
+                    var tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+                   // var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-vlue": "' + batchId + '"}}';
+                    examineeGrid.store.tzStoreParams = tzStoreParams;
+                    examineeGrid.store.load();
+                } else {
+                    panel.actType="add";
+                    form.findField("classId").setValue(classId);
+                   // form.findField("className").setValue(className);
+                    form.findField("batchId").setValue(batchId);
+                   // form.findField("batchName").setValue(batchName);
+                    form.findField("ksNum").setValue(applicantsNumber);
+                    form.findField("reviewClpsKsNum").setValue(0);
+                    form.findField("reviewKsNum").setValue(0);
+                }
+            });
+        });
+        
+        tab = contentPanel.add(cmp);
+        contentPanel.setActiveTab(tab);
+        Ext.resumeLayouts(true);
+        if (cmp.floating) {
+            cmp.show();
+        }
     }
 });
 
