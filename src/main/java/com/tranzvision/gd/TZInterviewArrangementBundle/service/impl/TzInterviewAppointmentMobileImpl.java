@@ -94,7 +94,13 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			//在线预约list
 			String appoHtml = appoMap.get("appoHtml").toString();
 			
-			interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_MAIN_HTML",contextPath,appoDesc,appoHtml,ZSGL_URL,siteId,"1");
+			String noneAppoHtml = appoMap.get("noneAppoHtml").toString();
+			
+			if(!"".equals(noneAppoHtml)){
+				interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_NONE_APPO_MAIN_HTML",contextPath,ZSGL_URL,siteId,"1",noneAppoHtml);
+			}else{
+				interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_MAIN_HTML",contextPath,appoDesc,appoHtml,ZSGL_URL,siteId,"1");
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -128,6 +134,7 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
 		rtnMap.put("appoDesc", "");
 		rtnMap.put("appoHtml", "");
+		rtnMap.put("noneAppoHtml", "");
 
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
@@ -260,13 +267,14 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			}
 			
 			//没有面试预约显示
-			String noAppointmentText = "您暂时没有可预约的面试，如果有面试预约，我们将会邮件通知您。";
+			String noAppointmentHtml = "";
 			if(planCount == 0){
-				msExplainInfo = noAppointmentText;
+				noAppointmentHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_NONE_APPOINT_HTML",contextPath);
 			}
 			
 			rtnMap.replace("appoDesc", msExplainInfo);
 			rtnMap.replace("appoHtml", msPlanListHtml);
+			rtnMap.replace("noneAppoHtml", noAppointmentHtml);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
