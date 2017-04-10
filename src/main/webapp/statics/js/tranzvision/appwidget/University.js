@@ -209,7 +209,7 @@ SurveyBuild.extend("University", "baseComponent", {
 				shade: [0.3, '#000', true],
 				border: [3, 0.3, '#000', true],
 				offset: ['50%', ''],
-				area: ['830px', '720px'],
+				area: ['830px', '740px'],
 				iframe: {src: schoollUrl}
 			});
 		});
