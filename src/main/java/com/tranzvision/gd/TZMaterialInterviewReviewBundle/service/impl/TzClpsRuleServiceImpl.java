@@ -94,7 +94,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				String batchName = (String) mapBasic.get("TZ_BATCH_NAME");
 				Date startDate = mapBasic.get("TZ_PYKS_RQ") == null ? null : dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_RQ")));
 				Date startTime = mapBasic.get("TZ_PYKS_SJ") == null ? null : timeSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_SJ")));
-				Date endDate = mapBasic.get("TZ_PYKS_RQ") == null ? null : dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_RQ")));
+				Date endDate = mapBasic.get("TZ_PYJS_RQ") == null ? null : dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYJS_RQ")));
 				Date endTime = mapBasic.get("TZ_PYJS_SJ") == null ? null : timeSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYJS_SJ")));
 				String materialDesc = (String) mapBasic.get("TZ_CLPS_SM");
 				String dqpsStatus = (String) mapBasic.get("TZ_DQPY_ZT");
@@ -343,7 +343,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				List<Map<String, Object>> ksList = sqlQuery.queryForList(sql,new Object[]{classId,batchId});
 				
 				for(Map<String, Object> ksMap : ksList) {
-					String appinsId = (String) ksMap.get("TZ_APP_INS_ID");
+					String appinsId = ksMap.get("TZ_APP_INS_ID") == null ? "" : ksMap.get("TZ_APP_INS_ID").toString();
 					
 					String pwDesc = "";
 					String sqlPw = "SELECT B.TZ_PWEI_OPRID,	C.TZ_REALNAME FROM  PS_TZ_CP_PW_KS_TBL A LEFT JOIN PS_TZ_AQ_YHXX_TBL B ON A.TZ_PWEI_OPRID=B.OPRID WHERE A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
@@ -428,7 +428,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			Date endDate = dateSimpleDateFormat.parse((String) mapParams.get("endDate"));
 			Date endTime = timeSimpleDateFormat.parse((String) mapParams.get("endTime"));
 			String materialDesc = (String) mapParams.get("materialDesc");
-			Integer judgeNumSet = (String) mapParams.get("judgeNumSet") == null ? 0 : Integer.valueOf((String) mapParams.get("judgeNumSet"));
+			Integer judgeNumSet = mapParams.get("judgeNumSet") == null ? 0 : Integer.valueOf((String) mapParams.get("judgeNumSet"));
 			
 			PsTzClpsGzTblKey psTzClpsGzTblKey = new PsTzClpsGzTblKey();
 			psTzClpsGzTblKey.setTzClassId(classId);
@@ -462,7 +462,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
 				psTzClpsGzTbl.setRowLastmantDttm(new Date());
 				psTzClpsGzTbl.setRowLastmantOprid(currentOprid);
-				psTzClpsGzTblMapper.updateByPrimaryKey(psTzClpsGzTbl);
+				psTzClpsGzTblMapper.updateByPrimaryKeySelective(psTzClpsGzTbl);
 			}
 			
 			

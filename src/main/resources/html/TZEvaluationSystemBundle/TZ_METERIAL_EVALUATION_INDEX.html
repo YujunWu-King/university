@@ -42,14 +42,16 @@ Ext.onReady(function(){
             }
         },this);
 	}else{
-		var baseUrl = ContextPath+"/dispatcher?classid=material&OperateType=EJSON"
+		var baseUrl = ContextPath+"/dispatcher?classid=material&OperateType=EJSON";
+		var scoreUrl = ContextPath+"/dispatcher";
 		var urlObject = {
 				"getBatchListUrl":baseUrl+"&type=list",
 				"getBatchDataUrl":baseUrl+"&type=data",
 				"getNextApplicantUrl":baseUrl+"&type=next",
 				"getApplicantDataUrl":baseUrl+"&type=applicant",
 				"submitApplicantDataUrl":baseUrl+"&type=submit",
-				"printStatisticsTableUrl":baseUrl+"&type=print"
+				"printStatisticsTableUrl":baseUrl+"&type=print",
+				"scoreUrl":scoreUrl
 		};
 		initializeEvaluateSystem(urlObject);
 	}
