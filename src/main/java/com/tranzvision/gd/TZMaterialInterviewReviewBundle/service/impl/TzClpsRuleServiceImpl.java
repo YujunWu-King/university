@@ -346,7 +346,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 					String appinsId = ksMap.get("TZ_APP_INS_ID") == null ? "" : ksMap.get("TZ_APP_INS_ID").toString();
 					
 					String pwDesc = "";
-					String sqlPw = "SELECT B.TZ_PWEI_OPRID,	C.TZ_REALNAME FROM  PS_TZ_CP_PW_KS_TBL A LEFT JOIN PS_TZ_AQ_YHXX_TBL B ON A.TZ_PWEI_OPRID=B.OPRID WHERE A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
+					String sqlPw = "SELECT A.TZ_PWEI_OPRID,	B.TZ_REALNAME FROM  PS_TZ_CP_PW_KS_TBL A LEFT JOIN PS_TZ_AQ_YHXX_TBL B ON A.TZ_PWEI_OPRID=B.OPRID WHERE A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
 					List<Map<String, Object>> pwList = sqlQuery.queryForList(sqlPw,new Object[]{classId,batchId,appinsId});
 					
 					for(Map<String, Object> pwMap : pwList) {
