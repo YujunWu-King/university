@@ -241,9 +241,12 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    }
 	    Integer numtotal = materialStudents * judgeCount;
 	    // 得出当前班级，当前批次，当前轮次的已评审人次数
-	    String strClpsCountSql = "SELECT COUNT(*) FROM ps_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=?";
+	    String strClpsCountSql = "SELECT ifnull(COUNT(*),0) FROM ps_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=?";
 	    String strClpsCount = sqlQuery.queryForObject(strClpsCountSql,
 		    new Object[] { strClassID, strBatchID, strDelibCount }, "String");
+	    if(strClpsCount==null){
+		strClpsCount = "0";
+	    }
 	    String strProgress = strClpsCount + "/" + numtotal;
 
 	    Map<String, Object> mapData = new HashMap<String, Object>();

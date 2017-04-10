@@ -335,7 +335,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				//str_lenProvince	
 				Map<String, Object> perInfoMap = new HashMap<>();
 				perInfoMap.put("lenProvince", str_lenProvince);
-				Map< String, Object> grxxMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_REALNAME,A.BIRTHDATE,A.NATIONAL_ID_TYPE,A.NATIONAL_ID,B.TZ_ZY_SJ,A.TZ_COMMENT9,A.TZ_COMMENT10,A.TZ_COMMENT11 FROM PS_TZ_REG_USER_T A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID WHERE A.OPRID=?",new Object[]{str_oprid});
+				Map< String, Object> grxxMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_REALNAME,A.BIRTHDATE,A.NATIONAL_ID_TYPE,A.NATIONAL_ID,B.TZ_ZY_SJ,A.TZ_COMMENT4,A.TZ_COMMENT9,A.TZ_COMMENT10,A.TZ_COMMENT11 FROM PS_TZ_REG_USER_T A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID WHERE A.OPRID=?",new Object[]{str_oprid});
 				if(grxxMap!=null){
 				    perInfoMap.put("birthdate", grxxMap.get("BIRTHDATE"));
 				    perInfoMap.put("zyPhone", grxxMap.get("TZ_ZY_SJ"));
@@ -345,9 +345,15 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    perInfoMap.put("jjlxrSex", grxxMap.get("TZ_COMMENT10"));
 				    perInfoMap.put("jjlxrPhone", grxxMap.get("TZ_COMMENT11"));
 				    perInfoMap.put("kshNo", ksdrMap.get("lkksBh"));
-				    perInfoMap.put("isHaiwXuel", "");
-				    perInfoMap.put("appMajor", "");
+				    perInfoMap.put("isHaiwXuel", grxxMap.get("TZ_COMMENT4"));
+				    
 				}
+				String appMajor = jdbcTemplate.queryForObject("SELECT TZ_APP_MAJOR_NAME FROM PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?", new Object[]{str_oprid}, "String");
+				if(appMajor==null){
+				    appMajor = "";
+				}
+				perInfoMap.put("appMajor", appMajor);
+				
 				Map<String, Object> jsonMap2 = new HashMap<String, Object>();
 				jsonMap2.put("OPRID", str_oprid);
 				jsonMap2.put("msSqh", str_msSqh);

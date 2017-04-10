@@ -22,6 +22,9 @@ import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
 /**
  * 申请用户管理；原：TZ_GD_USERGL_PKG:TZ_GD_USERGL_CLS
  * 
@@ -172,7 +175,6 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
-
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
@@ -188,15 +190,15 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT", "TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME","NATIONAL_ID","TZ_MSH_ID","TZ_CLASS_NAME"};
 			
-			String admin = "\"TZ_JG_ID-operator\":\"01\",\"TZ_JG_ID-value\":\"ADMIN\",";
-			strParams.replaceAll(admin, "");
+			//String admin = "\"TZ_JG_ID-operator\":\"01\",\"TZ_JG_ID-value\":\"ADMIN\",";
+			//strParams.replaceAll(admin, "");
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, strParams, numLimit, numStart, errorMsg);
-
+			
 			if (obj != null && obj.length > 0) {
 
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
-
+				
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
 
@@ -215,7 +217,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("applyInfo", rowList[11]);
 					listData.add(mapList);
 				}
-
+				
 				mapRet.replace("total", obj[0]);
 				mapRet.replace("root", listData);
 				
@@ -223,7 +225,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		return jacksonUtil.Map2json(mapRet);
 	}
 	
