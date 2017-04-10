@@ -1244,11 +1244,53 @@
             this.getView().add(win);
         };
         win.selList=selList;
+		win.resultSource = "A";
 
         if(btnName=='downloadExcel'){
             var tabPanel = win.lookupReference("exportExcelTabPanel");
             tabPanel.setActiveTab(1);
         }
+        var form = win.child("form").getForm();
+        form.reset();
+        win.show();
+    },
+	/*导出到Excel or 下载导出结果*/
+    exportSearchResultExcel:function(btn){
+        var JGID=Ext.tzOrgID;
+		
+		var OriSQL="SELECT OPRID FROM PS_TZ_REG_USE2_V where TZ_JG_ID='"+JGID+"'";
+		console.log("OriSQL="+OriSQL);
+		if((typeof getedSQL2)=="undefined"){
+			getedSQL2=OriSQL;
+		}
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_EXP_EXCEL_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限") );
+            return;
+        }
+
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+
+        var win = this.lookupReference('exportExcelForm');
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            // var modalID =btn.findParentByType('userMgGL').child('form').getForm().findField('modalID').getValue();
+            win = new ViewClass();
+            this.getView().add(win);
+        };
+        win.searchSql=getedSQL2;
+		win.resultSource = "B";
+
+       
         var form = win.child("form").getForm();
         form.reset();
         win.show();
