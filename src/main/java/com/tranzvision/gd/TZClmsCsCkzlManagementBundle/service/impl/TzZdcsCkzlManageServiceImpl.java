@@ -18,7 +18,8 @@ import com.tranzvision.gd.TZClmsCsCkzlManagementBundle.model.PsTzCkzlT;
 import com.tranzvision.gd.TZComRegMgBundle.dao.PsTzAqComzcTblMapper;
 import com.tranzvision.gd.TZComRegMgBundle.model.PsTzAqComzcTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
-	import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.GetSeqNum;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 	/**
 	 * 功能说明：参考资料相关类
@@ -38,6 +39,8 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 		private PsTzCkzlTMapper psTzCkzlTMapper;
 		@Autowired
 		private FliterForm fliterForm;
+		@Autowired
+		private GetSeqNum getSeqNum;
 
 		
 		
@@ -156,7 +159,11 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 					Map<String, Object> infoData = jacksonUtil.getMap("data");
 					if ("COM".equals(strFlag)) {
 						
-						String strCkzlID = (String) infoData.get("ckzlid");
+						int NewCkzlID=getSeqNum.getSeqNum("PS_TZ_CKZL_T", "TZ_CKZL_ID");
+						String strNewCkzlID =	String.valueOf(NewCkzlID);
+						String strCkzlID =	String.valueOf(strNewCkzlID);
+//						String strCkzlID = (String) infoData.get("ckzlid");
+						
 						String strCkzlName = (String) infoData.get("ckzlName");
 						String strJava = (String) infoData.get("java");
 						String strJGID = (String) infoData.get("jgName");

@@ -52,6 +52,14 @@
 
 		cmp = new ViewClass();
 		
+		cmp.on('afterrender',function(panel){
+	    	
+					var cmpForm = panel.child("form").getForm();
+		
+					var cmpB3=panel.down("button[reference=ckzlSave]").setVisible(false);
+				
+			});
+		
 		tab = contentPanel.add(cmp);     
 		
 		contentPanel.setActiveTab(tab);
