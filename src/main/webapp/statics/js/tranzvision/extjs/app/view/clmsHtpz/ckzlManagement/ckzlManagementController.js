@@ -475,6 +475,8 @@ var win = this.lookupReference('ckzlManagementInfoListForm');
 			Ext.tzSubmit(tzParams,function(responseData){
 				//关闭窗口						   
 				comView.close();	
+				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+			    contentPanel.child("ckzlManagementList").store.reload();
 			},"",true,this);
 		}
 	},
