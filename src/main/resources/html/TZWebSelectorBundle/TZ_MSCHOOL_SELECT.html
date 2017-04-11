@@ -76,6 +76,8 @@ var tzGeneralURL = "%bind(:1)";
 				$("#" + clickId).val(otherSchool);
 				$("#" + clickId).html(otherSchool);
 				$("#" + clickId).css("color","#333");
+				$("#TZ_SCH_CNAME_1").html(otherSchool);
+				$("#TZ_SCH_CNAME_1").css("color","#333");
 				/* //关闭窗口
 				closePop(); */
 				//返回窗口
@@ -98,6 +100,9 @@ var tzGeneralURL = "%bind(:1)";
 			//设置返回值
 			var clickId = $("#ParamCon").val();
 			$("#" + clickId).val(school);
+			$("#TZ_SCH_CNAME_1").html(school);
+			$("#TZ_SCH_CNAME_1").css("color","#333");
+			console.log(school);
 			$("#" + clickId).html(school);
 			$("#" + clickId).css("color","#333");
 			/* //关闭窗口
@@ -179,6 +184,6 @@ var tzGeneralURL = "%bind(:1)";
 <script type="text/javascript">
 	$(document).ready(function(){
 		setTab(1);
-		$("#search-text").focus();
+		/* $("#search-text").focus(); */
 	})
 </script>
