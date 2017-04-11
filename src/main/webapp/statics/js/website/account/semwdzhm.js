@@ -221,6 +221,9 @@ $(document).ready(function() {
                     if (key == "TZ_SCH_COUNTRY") {
                     	$("#TZ_SCH_COUNTRY").html(data[key]);
                     	 $("#TZ_SCH_CNAME_Country_1").html( data['TZ_SCH_CNAME_Country']);
+                    	 $("#TZ_SCH_CNAME_Country_1").css("color","#333");
+                    	 $("#TZ_LEN_PROID_1").css("color","#333");
+                    	 $("#TZ_SCH_CNAME_1").css("color","#333");                    	
                         // $("#TZ_SCH_CNAME_Country").attr("ccode", data[key]);
                          $("#TZ_LEN_PROID_1").html(data['TZ_LEN_PROID']);
                          console.log(data['TZ_LEN_PROID']);
