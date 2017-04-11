@@ -193,12 +193,12 @@ public class MaterialEvaluationCls{
 			   
 			   //分布区间的个数;
 			   fbdzmxMap.put("num_dange", num_dange);
-				  
+			   
 			   //分布区间的比率;
 			   if(num_dange==0||wc_num==0){
-				   fbdzmxMap.put("num_rate", 0);
+				   fbdzmxMap.put("num_rate", (double)0);
 			   }else{
-				   fbdzmxMap.put("num_rate", Math.round(num_dange/wc_num*100*100)/100);
+				   fbdzmxMap.put("num_rate", (double)Math.round((double)num_dange/wc_num*100*100)/100);
 			   }
 
 			   retList.add(fbdzmxMap);
@@ -207,5 +207,4 @@ public class MaterialEvaluationCls{
 
 		return retList;
 	}
-
 }

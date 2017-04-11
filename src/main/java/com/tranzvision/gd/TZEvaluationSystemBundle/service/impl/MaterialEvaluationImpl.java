@@ -138,7 +138,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					String pweiZhzt = mapData.get("TZ_PWEI_ZHZT") == null ? "" : mapData.get("TZ_PWEI_ZHZT").toString();
 					String pwzbh = mapData.get("TZ_PWZBH") == null ? "" : mapData.get("TZ_PWZBH").toString();
 					String dqpyZt = mapData.get("TZ_DQPY_ZT") == null ? "" : mapData.get("TZ_DQPY_ZT").toString();
-					Short dqpyLunc = mapData.get("TZ_DQPY_LUNC") == null ? 0 : Short.valueOf(mapData.get("TZ_DQPY_LUNC").toString());
+					Short dqpyLunc = mapData.get("TZ_DQPY_LUNC") == null ? 1 : Short.valueOf(mapData.get("TZ_DQPY_LUNC").toString());
 					Integer mspyNum = mapData.get("TZ_MSPY_NUM") == null ? 0 : Integer.valueOf(mapData.get("TZ_MSPY_NUM").toString());
 					String submitAllFlag = mapData.get("TZ_SUBMIT_YN") == null ? "" : mapData.get("TZ_SUBMIT_YN").toString();
 					Integer pwksNum = mapData.get("TZ_PWKS_NUM") == null ? 0 : Integer.valueOf(mapData.get("TZ_PWKS_NUM").toString());
@@ -717,7 +717,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					
 					Map<String,Object> fbsjrowItem = new HashMap<String,Object>();
 					fbsjrowItem.put("ps_fb_mc", FBMS);
-					fbsjrowItem.put("ps_sjfb_bilv", (Integer)evaluationDataList.get(i).get("num_rate"));
+					fbsjrowItem.put("ps_sjfb_bilv", (Double)evaluationDataList.get(i).get("num_rate"));
 					fbsjrowItem.put("ps_sjfb_rshu", (Integer)evaluationDataList.get(i).get("num_dange"));
 					
 					fbsjrow.add(fbsjrowItem);
