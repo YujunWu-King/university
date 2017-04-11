@@ -790,7 +790,7 @@ function submitEvaluateBatch(classid,pc_id)
 							//unmask window
 							unmaskWindow();
 							
-							alert('提交当前评审批次时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+							alert('提交当前评审批次时发生错误：' + jsonObject.error_decription );
 						}
 						else
 						{
@@ -870,7 +870,7 @@ function getNextApplicant(jsonObject)
 						//unmask window
 						unmaskWindow();
 						
-						alert('获取考生信息时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+						alert('获取考生信息时发生错误：' + jsonObject.error_decription );
 					}
 					else
 					{
@@ -1283,7 +1283,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 						unmaskWindow();
 					
 						loadSuccess = false;
-						alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+						alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription);
 					}
 					else
 					{
@@ -1511,39 +1511,39 @@ function refreshBatchDataByBatchId(jsonObject,dataIndexName,dataIndexValue)
 function partRefreshTestFunction(batchId)
 {
 	Ext.Ajax.request(
-										{
-											url:window.getBatchDataUrl,
-											method:'POST',
-											timeout:10000,
-											params: {
-																LanguageCd:'ZHS',
-																BaokaoFXID:batchId,
-																RequestDataType:'A',
-																MaxRowCount:1000,
-																StartRowNumber:1,
-																MoreRowsFlag:'N'
-															},
-											success:function(response)
-											{
-												var jsonObject = null;
-												
-												try
-												{
-													jsonObject = Ext.JSON.decode(response.responseText);
-													
-													refreshBatchDataByBatchId(jsonObject,null,null);
-												}
-												catch(e1)
-												{
-													alert('局部数据刷新测试失败，JSON数据解析错误:' + e1.description);
-												}
-											},
-											failure:function(response)
-											{
-												alert('局部数据刷新测试失败，服务器错误。');
-											}
-										}
-									);
+		{
+			url:window.getBatchDataUrl,
+			method:'POST',
+			timeout:10000,
+			params: {
+								LanguageCd:'ZHS',
+								BaokaoFXID:batchId,
+								RequestDataType:'A',
+								MaxRowCount:1000,
+								StartRowNumber:1,
+								MoreRowsFlag:'N'
+							},
+			success:function(response)
+			{
+				var jsonObject = null;
+				
+				try
+				{
+					jsonObject = Ext.JSON.decode(response.responseText);
+					
+					refreshBatchDataByBatchId(jsonObject,null,null);
+				}
+				catch(e1)
+				{
+					alert('局部数据刷新测试失败，JSON数据解析错误:' + e1.description);
+				}
+			},
+			failure:function(response)
+			{
+				alert('局部数据刷新测试失败，服务器错误。');
+			}
+		}
+	);
 }
 
 
