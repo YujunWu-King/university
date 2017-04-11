@@ -5,7 +5,6 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
-import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * PS类: TZ_GD_COM_EMLSMS_APP:emlSmsGetParamter
@@ -221,7 +220,7 @@ public class ZnxGetParamter {
 			String msyyDescr = "";
 			try {
 				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-				SqlQuery jdbcTemplate = (SqlQuery) getSpringBeanUtil.getSpringBeanByID("SqlQuery");
+				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 				String sql = "select TZ_WEIXIN,TZ_XSXS_ID,TZ_HUOD_ID from PS_TZ_AUDCYUAN_T where TZ_AUDIENCE_ID=? and  TZ_AUDCY_ID=?";
 				String audId = paramters[0];
 				String audCyId = paramters[1];
@@ -235,7 +234,7 @@ public class ZnxGetParamter {
 					planId = msyyMap.get("TZ_HUOD_ID") == null ? "" : (String)msyyMap.get("TZ_HUOD_ID");
 				
 					String msDescSql = "SELECT concat(date_format(TZ_MS_DATE,'%Y-%m-%d'),' ',date_format(TZ_START_TM,'%H:%i'),' ', TZ_MS_LOCATION) as TZ_MS_DESC FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_CLASS_ID =? AND TZ_BATCH_ID =? AND TZ_MS_PLAN_SEQ =?";
-					String msDescr = jdbcTemplate.queryForObject(msDescSql, new Object[]{ classId, pcId, planId }, "String");
+					String msDescr = jdbcTemplate.queryForObject(msDescSql, new Object[]{ classId, pcId, planId }, String.class);
 
 					if(!"".equals(msDescr) && msDescr != null){
 						msyyDescr = msDescr;
