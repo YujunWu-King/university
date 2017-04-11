@@ -48,7 +48,7 @@ public class MaterialEvaluationCls{
 		   double pjf = 0;
 
 		   //某个报考班级批次下：单个评委在某个成绩项的总分;
-		   int dgpw_all_num = 0;
+		   double dgpw_all_num = 0;
 		   //某个报考方向下：单个评委完成的数量;
 		   int dgpw_wc_num = 0;
 
@@ -65,7 +65,7 @@ public class MaterialEvaluationCls{
 			   		"select sum( b.TZ_SCORE_NUM) from PS_TZ_CP_PW_KS_TBL a,PS_TZ_CJX_TBL b ,PS_TZ_KSCLPSLS_TBL c where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID and a.TZ_CLASS_ID = c.TZ_CLASS_ID and a.TZ_APPLY_PC_ID = c.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID = c.TZ_PWEI_OPRID and a.TZ_APP_INS_ID = c.TZ_APP_INS_ID and c.TZ_SUBMIT_YN <> 'C' and a.TZ_CLASS_ID = ? and a.TZ_APPLY_PC_ID = ? and a.TZ_PWEI_OPRID = ? and b.TZ_SCORE_ITEM_ID = ? and c.TZ_CLPS_LUNC = ?",
 			   		new Object[] { classId, batchId ,oprid,scoreItemId ,TZ_DQPY_LUNC}, "String");		   
 		   if(str_dgpw_all_num!=null&&!"".equals(str_dgpw_all_num)){
-			   dgpw_all_num = Integer.parseInt(str_dgpw_all_num);
+			   dgpw_all_num = Double.parseDouble(str_dgpw_all_num);
 		   }
 		   
 		   //完成数量
