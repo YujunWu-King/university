@@ -777,7 +777,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl  {
 		    strChartFieldsHTML = strChartFieldsHTML + "}";
 		}
 		strGridGoalHtml = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_TJ_JSON_HTML","bl","比率",strBlHtml) + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_TJ_JSON_HTML","wc","误差",strWcHtml);;
-		strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_JSON_HTML", strClassID,strBatchID,strGridColHTML,strGridHtml,strChartFieldsHTML,strGridGoalColHTML,strGridGoalHtml);
+		strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_JSON_HTML", strClassID,strBatchID,strGridColHTML,strGridHtml,strChartFieldsHTML,strGridGoalColHTML,strGridGoalHtml,"","");
 	    }
 	} catch (Exception e) {
 	    System.out.println(e.toString());
