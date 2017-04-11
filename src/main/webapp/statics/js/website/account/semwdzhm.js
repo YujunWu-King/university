@@ -95,8 +95,8 @@ $(document).ready(function() {
         document.activeElement.blur();
     });
     selectDate.init({trigger:"#BIRTHDATE",min:"1960/01/01",position:"bottom"});
-    selectDate1.init({trigger:"#TZ_COMMENT1",min:"1960/01/01",position:"bottom"});
-    selectDate2.init({trigger:"#TZ_COMMENT3",min:"1960/01/01",position:"bottom"});
+    selectDate1.init({trigger:"#TZ_COMMENT1",min:"1960/01/01", max:"2025/12/01",position:"bottom"});
+    selectDate2.init({trigger:"#TZ_COMMENT3",min:"1960/01/01", max:"2025/12/01",position:"bottom"});
     
     //取消input的键盘
     $.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country"),$("#TZ_SCH_CNAME"), $("#TZ_SCH_CNAME_click"),$("#TZ_LEN_PROID"), $("#TZ_LEN_PROID_click")],function(i,el){
