@@ -1327,7 +1327,7 @@
                 
                 Ext.tzLoad(tzParams,function(respData){
                     
-                    transValue.set(["TZ_JUGACC_STATUS","TZ_GENDER","TZ_LUQU_ZT","TZ_MSPS_ZT","TZ_MSPS_KSZT"],function(){
+                    transValue.set(["TZ_PWEI_ZHZT","TZ_GENDER","TZ_LUQU_ZT","TZ_MSPS_ZT","TZ_MSPS_KSZT"],function(){
                         respData.className = record.data.className;
                         respData.batchName = record.data.batchName;
                         form.getForm().setValues(respData);

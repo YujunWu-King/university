@@ -93,7 +93,7 @@
     setReviewRule:function(grid,rowIndex){
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_RULE_STD"];
-        // var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_PLAN_STD"];
+        // var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_SCHE_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -847,7 +847,7 @@
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSPS_PLAN_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSPS_SCHE_STD，请检查配置。');
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;
@@ -903,7 +903,7 @@
     reviewScheduleMg:function(grid,rowIndex){
         var self = this;
 //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_PLAN_STD"];
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_SCHE_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -911,7 +911,7 @@
 //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSPS_PLAN_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSPS_SCHE_STD，请检查配置。');
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;
@@ -960,7 +960,7 @@
             //standStore = panel.down('tabpanel').child("grid[title=评审标准]").store,
             //standParams = '{"type":"standard","classID":"'+classID+'","batchID":"'+batchID+'"}',
                 form = panel.child('form'),
-                tzParams ='{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_PLAN_STD",' +
+                tzParams ='{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD",' +
                     '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}',
                 stuListStore = panel.down('tabpanel').child('grid[name=interviewStudentGrid]').getStore(),
                 stuListParams = '{"type":"stuList","classID":"'+classID+'","batchID":"'+batchID+'"}';
@@ -1034,7 +1034,7 @@
         if(btn.flagType === 'positive') {
             var classID = btn.findParentByType('form').getForm().findField('classID').getValue(),
                 batchID = btn.findParentByType('form').getForm().findField('batchID').getValue(),
-                tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_PLAN_STD","OperateType":"CK","comParams":{"type":"startClick","classID":"' + classID + '","batchID":"' + batchID + '"}}';
+                tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD","OperateType":"CK","comParams":{"type":"startClick","classID":"' + classID + '","batchID":"' + batchID + '"}}';
             Ext.tzLoad(tzParams, function (responseData) {
                 if (responseData.isPass === 'Y') {
 
@@ -1062,7 +1062,7 @@
         if (btn.flagType === 'positive') {
             var classID = btn.findParentByType('form').getForm().findField('classID').getValue(),
                 batchID = btn.findParentByType('form').getForm().findField('batchID').getValue(),
-                tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_PLAN_STD","OperateType":"CK","comParams":{"type":"finishClick","classID":"' + classID + '","batchID":"' + batchID + '"}}';
+                tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD","OperateType":"CK","comParams":{"type":"finishClick","classID":"' + classID + '","batchID":"' + batchID + '"}}';
             Ext.tzLoad(tzParams, function (respData) {
                 //可点击状态，设置setType值为1,当前按钮已点击
                 btn.setType = 1;
