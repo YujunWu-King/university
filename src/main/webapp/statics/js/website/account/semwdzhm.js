@@ -220,10 +220,11 @@ $(document).ready(function() {
                     $("#" + key).val(data[key]);
                     if (key == "TZ_SCH_COUNTRY") {
                     	$("#TZ_SCH_COUNTRY").html(data[key]);
-                    	 $("#TZ_SCH_CNAME_Country").html( data['TZ_SCH_CNAME_Country']);
+                    	 $("#TZ_SCH_CNAME_Country_1").html( data['TZ_SCH_CNAME_Country']);
                         // $("#TZ_SCH_CNAME_Country").attr("ccode", data[key]);
-                         $("#TZ_LEN_PROID").html(data['TZ_LEN_PROID']);
-                         $("#TZ_SCH_CNAME").html(data['TZ_SCH_CNAME']);
+                         $("#TZ_LEN_PROID_1").html(data['TZ_LEN_PROID']);
+                         console.log(data['TZ_LEN_PROID']);
+                         $("#TZ_SCH_CNAME_1").html(data['TZ_SCH_CNAME']);
                         $("#TZ_SCH_CNAME_Country").attr("ccode", data[key]);
                     }
                 }                
