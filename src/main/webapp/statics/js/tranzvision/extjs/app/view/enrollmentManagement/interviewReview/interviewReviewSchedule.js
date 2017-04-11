@@ -85,6 +85,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                     text: "评委间偏差",
                     dataIndex: 'judgePC',
                     align:'center',
+                    inputValue:'Y',
                     minWidth: 130,
                     flex:1
                 },
@@ -93,6 +94,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                     dataIndex: 'judgeNames',
                     name:'judgeNames',
                     align:'center',
+                    inputValue:'Y',
                     minWidth: 100,
                     flex:1,
                     renderer:function(v) {

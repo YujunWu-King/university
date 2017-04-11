@@ -1,16 +1,10 @@
 package com.tranzvision.gd.TZZnxTemplateBundle.service.impl;
 
-import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
-import com.tranzvision.gd.util.encrypt.DESUtil;
 
 /**
  * PS类: TZ_GD_COM_EMLSMS_APP:emlSmsGetParamter
@@ -220,43 +214,10 @@ public class ZnxGetParamter {
 			}
 		}
 		
-		//获取面试预约名称
-		public String getMsName(String[] paramters) {
-			try {
-				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-				String sql = "select TZ_WEIXIN,TZ_XSXS_ID,TZ_HUOD_ID from PS_TZ_AUDCYUAN_T where TZ_AUDIENCE_ID=? and  TZ_AUDCY_ID=?";
-				String audId = paramters[0];
-				String audCyId = paramters[1];
-				String pcId = "";
-				String classId = "";
-				String planId = "";
-				List<Map<String, Object>> msyyList  = jdbcTemplate.queryForList(sql,new Object[] { audId, audCyId });
-				if(msyyList != null && msyyList.size() > 0){
-					for (int i = 0;i < msyyList.size();i++){
-						pcId = (String)msyyList.get(i).get("TZ_WEIXIN") == null?"":(String)msyyList.get(i).get("TZ_WEIXIN");
-						classId = (String)msyyList.get(i).get("TZ_XSXS_ID") == null?"":(String)msyyList.get(i).get("TZ_XSXS_ID");
-						planId = (String)msyyList.get(i).get("TZ_HUOD_ID") == null?"":(String)msyyList.get(i).get("TZ_HUOD_ID");
-					}
-					//String msLocationSql = "SELECT TZ_MS_LOCATION FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_CLASS_ID =? AND TZ_BATCH_ID =? AND TZ_MS_PLAN_SEQ =?";
-					//String msLocation = jdbcTemplate.queryForObject(msLocationSql, String.class,new Object[] { classId,pcId,planId});
-					String classNameSql = "SELECT TZ_CLASS_NAME FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID =?";
-					String className = jdbcTemplate.queryForObject(classNameSql, String.class,new Object[] {classId});
-					String batchSQL = "SELECT TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID = ? AND TZ_BATCH_ID =?";
-					String batchName = jdbcTemplate.queryForObject(batchSQL, String.class,new Object[] {classId,pcId});
-					String msLocation = className + batchName +"面试预约";
-					return msLocation;
-				}else{
-					return "";
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "";
-			}
-		}
 		
-		//获取面试预约说明
+		//获取面试预约说明,时间地点
 		public String getMsDesc(String[] paramters) {
+			String msyyDescr = "";
 			try {
 				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
@@ -266,22 +227,22 @@ public class ZnxGetParamter {
 				String pcId = "";
 				String classId = "";
 				String planId = "";
-				List<Map<String, Object>> msyyList  = jdbcTemplate.queryForList(sql,new Object[] { audId, audCyId });
-				if(msyyList != null && msyyList.size() > 0){
-					for (int i = 0;i < msyyList.size();i++){
-						pcId = (String)msyyList.get(i).get("TZ_WEIXIN") == null?"":(String)msyyList.get(i).get("TZ_WEIXIN");
-						classId = (String)msyyList.get(i).get("TZ_XSXS_ID") == null?"":(String)msyyList.get(i).get("TZ_XSXS_ID");
-						planId = (String)msyyList.get(i).get("TZ_HUOD_ID") == null?"":(String)msyyList.get(i).get("TZ_HUOD_ID");
+				Map<String, Object> msyyMap  = jdbcTemplate.queryForMap(sql,new Object[] { audId, audCyId });
+				if(msyyMap != null){
+					pcId = msyyMap.get("TZ_WEIXIN") == null ? "" : (String)msyyMap.get("TZ_WEIXIN");
+					classId = msyyMap.get("TZ_XSXS_ID") == null ? "" : (String)msyyMap.get("TZ_XSXS_ID");
+					planId = msyyMap.get("TZ_HUOD_ID") == null ? "" : (String)msyyMap.get("TZ_HUOD_ID");
+				
+					String msDescSql = "SELECT concat(date_format(TZ_MS_DATE,'%Y-%m-%d'),' ',date_format(TZ_START_TM,'%H:%i'),' ', TZ_MS_LOCATION) as TZ_MS_DESC FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_CLASS_ID =? AND TZ_BATCH_ID =? AND TZ_MS_PLAN_SEQ =?";
+					String msDescr = jdbcTemplate.queryForObject(msDescSql, new Object[]{ classId, pcId, planId }, String.class);
+
+					if(!"".equals(msDescr) && msDescr != null){
+						msyyDescr = msDescr;
 					}
-					String msDescSql = "SELECT TZ_MS_ARR_DEMO FROM PS_TZ_MSSJ_ARR_TBL WHERE TZ_CLASS_ID =? AND TZ_BATCH_ID =? AND TZ_MS_PLAN_SEQ =?";
-					String msDesc = jdbcTemplate.queryForObject(msDescSql, String.class,new Object[] { classId,pcId,planId});
-					return msDesc;
-				}else{
-					return "";
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				return "";
 			}
+			return msyyDescr;
 		}
 }

@@ -207,9 +207,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 	    String strScoreModalId = sqlQuery.queryForObject(strScoreModalSql, new Object[] { strClassID },
 			"String");
-	    // 当前班级报考人数
-	    String strTotalStudentSql = "SELECT COUNT(*) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=?";
-	    String strTotalStudentCount = sqlQuery.queryForObject(strTotalStudentSql, new Object[] { strClassID },
+	    // 当前班级批次下已提交报名表报考人数
+	    String strTotalStudentSql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T A,PS_TZ_APP_INS_T B WHERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA='U' AND A.TZ_CLASS_ID=? AND A.TZ_BATCH_ID=?";
+	    String strTotalStudentCount = sqlQuery.queryForObject(strTotalStudentSql, new Object[] { strClassID,strBatchID },
 			"String");
 	    // 当前批次人数
 	    String strCurBatchStuSql = "SELECT COUNT(*) FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
@@ -241,9 +241,12 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    }
 	    Integer numtotal = materialStudents * judgeCount;
 	    // 得出当前班级，当前批次，当前轮次的已评审人次数
-	    String strClpsCountSql = "SELECT COUNT(*) FROM ps_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=?";
+	    String strClpsCountSql = "SELECT ifnull(COUNT(*),0) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=?";
 	    String strClpsCount = sqlQuery.queryForObject(strClpsCountSql,
 		    new Object[] { strClassID, strBatchID, strDelibCount }, "String");
+	    if(strClpsCount==null){
+		strClpsCount = "0";
+	    }
 	    String strProgress = strClpsCount + "/" + numtotal;
 
 	    Map<String, Object> mapData = new HashMap<String, Object>();
@@ -332,7 +335,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    // new Object[] { strTreeName }, "String");
 
 	    //是否计算分数，默认为是
-	    //String strZfzSql = "select ifnull(A.TZ_JSFS,0) from ps_TZ_RS_MODAL_TBL A,ps_TZ_BPH_VW1 b where A.TREE_NAME=? and A.TZ_SCORE_MODAL_ID=B.TZ_SCORE_MODAL_ID AND B.TZ_SCORE_MODAL_ID=? AND ROWNUM=1";
+	    //String strZfzSql = "select ifnull(A.TZ_JSFS,0) from PS_TZ_RS_MODAL_TBL A,PS_TZ_BPH_VW1 b where A.TREE_NAME=? and A.TZ_SCORE_MODAL_ID=B.TZ_SCORE_MODAL_ID AND B.TZ_SCORE_MODAL_ID=? AND ROWNUM=1";
 	    //String strZfz = sqlQuery.queryForObject(strZfzSql, new Object[] { strTreeName, strScoreModalId }, "String");
 	    String strZfz = "Y";
 	    Map<String, Object> mapData = new HashMap<String, Object>();
@@ -752,7 +755,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	    intDqpyLunc = sqlQuery.queryForObject(strDqpyLuncSql, new Object[] { strClassID, strBatchID }, "Integer");
 	    
 	    Integer numZfz = 0;
-	    String strZfzSql = "SELECT COUNT(*) FROM PS_TZ_MODAL_DT_TBL A,ps_TZ_CJ_BPH_TBL B WHERE A.TREE_NAME=? AND A.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND B.TZ_SCORE_MODAL_ID=? AND A.TZ_SCR_TO_SCORE='Y' AND B.TZ_ITEM_S_TYPE='Y'";
+	    String strZfzSql = "SELECT COUNT(*) FROM PS_TZ_MODAL_DT_TBL A,PS_TZ_CJ_BPH_TBL B WHERE A.TREE_NAME=? AND A.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND B.TZ_SCORE_MODAL_ID=? AND A.TZ_SCR_TO_SCORE='Y' AND B.TZ_ITEM_S_TYPE='Y'";
 	    numZfz = sqlQuery.queryForObject(strZfzSql, new Object[] { strTreeName, strScoreModalId }, "Integer");
 	    
 	    //报名表编号 姓名     性别    面试资格   评委间偏差    评委信息      评审状态   操作人   平均分;
@@ -839,7 +842,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		    
 		    /*		    
 		    Integer intNumPwei = 0;
-		    String strSql6 = "SELECT ifnull(COUNT(TZ_PWEI_OPRID),0) FROM ps_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND  TZ_APP_INS_ID=?";
+		    String strSql6 = "SELECT ifnull(COUNT(TZ_PWEI_OPRID),0) FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND  TZ_APP_INS_ID=?";
 		    intNumPwei = sqlQuery.queryForObject(strSql6, new Object[] { strClassID,strBatchID,strAppInsID }, "Integer");
 		    if(intNumPwei!=0){
 			DecimalFormat df  = new DecimalFormat("######0.00");   
@@ -1214,7 +1217,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		    String strUpdateSql1 = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='C' WHERE TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLASS_ID=?";
 		    sqlQuery.update(strUpdateSql1, new Object[]{strBatchID,strJudgeId,strClassID});
 		    //更新 MBA材料评审评委评审历史 中的数据为撤销
-		    String strUpdateSql2 = "UPDATE ps_TZ_CLPWPSLS_TBL SET TZ_SUBMIT_YN = 'C' WHERE TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLASS_ID=?";
+		    String strUpdateSql2 = "UPDATE PS_TZ_CLPWPSLS_TBL SET TZ_SUBMIT_YN = 'C' WHERE TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLASS_ID=?";
 		    sqlQuery.update(strUpdateSql2, new Object[]{strBatchID,strJudgeId,strClassID});
 		}
 	    }

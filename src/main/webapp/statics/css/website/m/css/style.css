@@ -177,7 +177,7 @@ input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; bo
 .country_pop{display:block;width:100%;height:auto;background-color:#fff;border-radius:0.3rem;margin:3% auto;}
 /* .country_pop{display:none;width:90%;height:auto;position:fixed;z-index:150;top:15%;left:5%;background-color:#fff;border-radius:0.3rem;}*/
 /* .school_pop{display:none;width:90%;height:auto;position:fixed;z-index:150;top:15%;left:5%;background-color:#fff;border-radius:0.3rem;} */
-
+select{appearance:none;-moz-appearance:none;-webkit-appearance:none;border:none;background-color:transparent;}
 .school_pop{display:block;width:100%;height:auto;margin:3% auto;background-color:#fff;border-radius:0.3rem;}
 .pop_tit{width:94%;height:auto;margin:2% auto;font-size:0.6rem;color:#8f5dbf;overflow:hidden;}
 .pop_tit span{float:left;}
