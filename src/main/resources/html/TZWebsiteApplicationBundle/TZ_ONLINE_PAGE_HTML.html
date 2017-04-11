@@ -1161,7 +1161,10 @@
 					var home_page =$("#HOME_PAGE").parent().attr("id");
 					$(document).on("click","#"+home_page, function(event){
 						//alert("backToHome");
-						backToHome("%bind(:10)","%bind(:11)");
+						var isadmin = "%bind(:26)";
+						if (isadmin == "") {
+							backToHome("%bind(:10)","%bind(:11)");
+						}
 					});
 					
 				     $(document).on("click", "#app_preButtom", function(event){
@@ -1595,6 +1598,7 @@
 				}else{
 					$("#header").hide();
 					$("#footer").hide();
+					$("#backindex").hide();
 				}
 				if (tplType != "BMB") {
 					$("#app_download").hide();
