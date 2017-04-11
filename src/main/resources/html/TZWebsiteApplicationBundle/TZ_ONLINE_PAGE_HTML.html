@@ -1582,15 +1582,15 @@
 	<script type="text/javascript">
 			$(document).ready(function() {
 				
-				LoadHeader("",%bind(:10),"");
-				LoadFooter("",%bind(:10),"");
+				//LoadHeader("",%bind(:10),"");
+				//LoadFooter("",%bind(:10),"");
 				
 
 				var tplType = "%bind(:19)";
 				var isadmin = "%bind(:26)";
 				if (isadmin == "") {
 					//LoadHeader("%bind(:11)", "%bind(:10)");
-					LoadFooter("%bind(:11)", "%bind(:10)");
+					//LoadFooter("%bind(:11)", "%bind(:10)");
 					
 					if (tplType == "BMB") {
 						//LoadMenu("%bind(:11)", "%bind(:10)");
@@ -1598,8 +1598,8 @@
 					} 
 				}else{
 					$("#headarea").hide();
-					$("#footer").hide();
 					$("#footarea").hide();
+					$("#backindex").hide();
 				}
 				if (tplType != "BMB") {
 					$("#app_download").hide();
