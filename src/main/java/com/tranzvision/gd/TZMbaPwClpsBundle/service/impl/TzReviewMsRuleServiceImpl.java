@@ -269,11 +269,19 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		String RetrnStr = "";
 		String Strjudegid = "";
 		String Strjudename = "";
+		int count = 0;
 		try {
 			String Orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String teamsql = "SELECT TZ_GRP_COUNT FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
 
-			int count = sqlQuery.queryForObject(teamsql, new Object[] { classId, batchId }, "Integer");
+			String count1 = sqlQuery.queryForObject(teamsql, new Object[] { classId, batchId }, "String");
+			if (count1 == null) {
+				count = 999999999;
+			} else {
+				count = Integer.valueOf(count1);
+
+			}
+
 			String sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY  CAST(TZ_CLPS_GR_ID AS UNSIGNED INTEGER) ASC  LIMIT ? ";
 			List<Map<String, Object>> listMap = sqlQuery.queryForList(sql, new Object[] { Orgid, count });
 			for (Map<String, Object> map : listMap) {
