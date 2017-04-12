@@ -223,7 +223,7 @@ function initializeTzPageSlider()
 {
 	if(window.myPageSlider.length == 0)
 	{
-		window.myPageSlider[0] = new tzPageSlider('tz_msps_container',1060,500,3);
+		window.myPageSlider[0] = new tzPageSlider('tz_msps_container',Ext.getBody().getWidth(),500,3);
 	}
 }
 
