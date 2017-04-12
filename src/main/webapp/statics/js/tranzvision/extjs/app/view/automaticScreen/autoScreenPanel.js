@@ -104,17 +104,68 @@
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.negativeList","负面清单"),
 			dataIndex: 'negativeList',
-			minWidth:140,
+			minWidth:200,
+			xtype: 'templatecolumn',
+			tpl: Ext.create('Ext.XTemplate','{[this.labels(values)]}',{
+				labels: function(values){
+					var labels = "";
+					var val = values.negativeList;
+					if(val.trim() != ""){
+						var labelArr = val.split("|");
+						for(var i=0;i<labelArr.length;i++){
+							labels = labels 
+							+ '<span style="margin:0px 2px;padding:3px 5px;background:#CCC7C7;border-radius:5px;">' 
+							+ labelArr[i] 
+							+ '</span>';
+						}
+					}
+					return labels;
+				}
+			}),
 			flex:1
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoLabel","自动标签"),
 			dataIndex: 'autoLabel',
-			minWidth:140,
+			minWidth:200,
+			xtype: 'templatecolumn',
+			tpl: Ext.create('Ext.XTemplate','{[this.labels(values)]}',{
+				labels: function(values){
+					var labels = "";
+					var val = values.autoLabel;
+					if(val.trim() != ""){
+						var labelArr = val.split("|");
+						for(var i=0;i<labelArr.length;i++){
+							labels = labels 
+							+ '<span style="margin:0px 2px;padding:3px 5px;background:#CCC7C7;border-radius:5px;">' 
+							+ labelArr[i] 
+							+ '</span>';
+						}
+					}
+					return labels;
+				}
+			}),
 			flex:1
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.manualLabel","手工标签"),
 			dataIndex: 'manualLabel',
-			minWidth:140,
+			minWidth:200,
+			xtype: 'templatecolumn',
+			tpl: Ext.create('Ext.XTemplate','{[this.labels(values)]}',{
+				labels: function(values){
+					var labels = "";
+					var val = values.manualLabel;
+					if(val.trim() != ""){
+						var labelArr = val.split("|");
+						for(var i=0;i<labelArr.length;i++){
+							labels = labels 
+							+ '<span style="margin:0px 2px;padding: 3px 5px;background:#CCC7C7;border-radius:5px;">' 
+							+ labelArr[i] 
+							+ '</span>';
+						}
+					}
+					return labels;
+				}
+			}),
 			flex:1
     	},{
     		xtype:'checkcolumn',

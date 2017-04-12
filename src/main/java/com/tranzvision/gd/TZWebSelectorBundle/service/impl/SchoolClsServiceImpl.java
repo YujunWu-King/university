@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,10 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			String strOType = jacksonUtil.getString("OType");
 			String strValue = jacksonUtil.getString("search-text");
+			String province = "";
+			if(jacksonUtil.containsKey("province")){
+				province = jacksonUtil.getString("province");
+			}
 			String strCountry = "";
 			try{
 			    strCountry = jacksonUtil.getString("country");
@@ -92,7 +97,50 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 					e1.printStackTrace();
 				}
 			}
+			/*国家为中国时，按省份初始化数据*/
+			if ("BYPROVINCE".equals(strOType)) {
+				sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where 1 = 1";
 
+				Object[] params = new Object[] {};
+				if(StringUtils.isBlank(province)){
+					province = "%";
+				}else{
+					province += "%";
+					System.out.println("---ffff------" + province);
+				}
+				System.out.println(strValue + "---------" + province);
+				if(StringUtils.isNotBlank(strValue)){
+					sqlFindScholls += " AND COUNTRY=?  AND TZ_PROVINCES LIKE ? ";
+					params = new Object[] {strValue,province};
+				}else{
+					sqlFindScholls += " AND TZ_PROVINCES LIKE ? ";
+					params = new Object[] {province};
+				}
+				
+				sqlFindScholls += " ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+				System.out.println("---------" + sqlFindScholls);
+				list = jdbcTemplate.queryForList(sqlFindScholls, params);
+
+				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						Map<String, Object> returnMap = new HashMap<>();
+						String schoolname_en = (String) list.get(i).get("TZ_SCHOOL_NAMEENG");
+						if (list.get(i).get("TZ_SCHOOL_NAMEENG") != null && !"".equals(schoolname_en)) {
+							returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME") + "(" + schoolname_en + ")");
+						} else {
+							returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME"));
+						}
+
+						arraylist.add(returnMap);
+					}
+				}
+				try {
+					result = mapper.writeValueAsString(arraylist);
+				} catch (JsonProcessingException e1) {
+					e1.printStackTrace();
+				}
+			}
 			if ("BYSEARCH".equals(strOType)) {
 			    	if("".equals(strCountry)||strCountry==null){
 			    	    sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? OR TZ_SCHOOL_NAMEENG LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";

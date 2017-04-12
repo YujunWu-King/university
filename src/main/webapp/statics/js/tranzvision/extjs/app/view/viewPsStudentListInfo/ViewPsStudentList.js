@@ -56,35 +56,45 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
 					labelWidth: 110,
 					name: 'classId',
-					allowBlank: false
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
 
 				}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.batchId", "批次编号"),
 					labelWidth: 110,
 					name: 'batchId',
-					allowBlank: false
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
 
 				}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksNum", "报考考生数量"),
 					labelWidth: 110,
 					name: 'ksNum',
-					allowBlank: false
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
 
 				}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.reviewClpsKsNum", "材料审批考生"),
 					labelWidth: 110,
 					name: 'reviewClpsKsNum',
-					allowBlank: false
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
 
 				}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.reviewKsNum", "参与面试考生"),
 					labelWidth: 110,
 					name: 'reviewKsNum',
-					allowBlank: false
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
 
 				}]
 			}, {

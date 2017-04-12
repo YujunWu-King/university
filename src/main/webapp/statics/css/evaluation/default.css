@@ -11,7 +11,7 @@ a, img, q, dl, dt, dd, ol, ul, li, form, label, caption{
 	font-size:100%;
 
 }
-*{ margin:0; padding:0;}
+*{ margin:0; padding:0;outline: 0;}
 body{margin:0; padding:0;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px; }
 div{ text-align:left;}
 ul,ol,li{ list-style:none;}
@@ -23,7 +23,7 @@ a{blr:expression(this.onFocus=this.blur());}
 a:focus { outline:none;
      -moz-outline:none;}
 td{ text-align:left; font-weight:normal; border-collapse:collapse;}
-table{ border-spacing:0px;border-collapse:collapse;}
+table{ border-spacing:0px;}
 .clear{
 	clear: both;
 	font-size: 1px;
@@ -73,3 +73,59 @@ table{ border-spacing:0px;border-collapse:collapse;}
 .banner_right img{ border:none; margin-right: 0px;_margin-right: 0px;}
 v\:* { behavior: url(#default#VML); } 
 .dfbz tr td{ font-size:13px}
+
+/*head and footer*/
+.main {
+    padding: 0px;
+    width: 100%;
+    margin-right: auto;
+    margin-bottom: 0px;
+    margin-left: auto;
+    height: auto;
+    overflow: hidden;
+}
+.top_main {
+    padding: 0px;
+    /* height: 110px; */
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    background-image: url("../../images/evaluation/top.png");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.top_main ul {
+    width: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+.top_main ul li {
+    font-size: 14px;
+    color: #fff;
+    margin: 10px 15px;
+    float: left;
+}
+.footer {
+    width: 100%;
+    height: 58px;
+    background: url(../../images/evaluation/footer.png) no-repeat;
+    /*margin-top: 1%;*/
+}
+.footer p {
+    color: #f2f2f2;
+    font-size: 12px;
+    line-height: 58px;
+    text-align: center;
+}
+
+/*override Ext styles*/
+.x-btn-default-small{
+	background-color:#8e60bc!important;
+	border-color:#8e60bc!important;
+}
+.x-title-text{
+	color:#773fae!important;
+}
+.x-grid-td {
+    vertical-align: middle!important;
+}

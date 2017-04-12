@@ -4,10 +4,6 @@
 <meta charset="utf-8">
 <title>活动报名</title>
 <style type="text/css">
-* {
-	
-}
-
 input[type="text"], input[type="password"] {
 	border: solid 1px #d2d2d2;
 	border-left-color: #ccc;
@@ -71,18 +67,19 @@ body, button, input, select, textarea {
 }
 
 .apply-items.inptype {
-	width: 320px; //
-	height: 18px;
-}
+	width: 320px; 
+	height: 29px;
+	line-height: 29px;
+} 
 
 .apply-items.seltype {
 	width: 335px;
-	height: 49px;
+	height: 39px;
 }
 
-.apply-items:focus {
-	border-color: #95C8F1;
-	box-shadow: 0 0 4px #95C8F1;
+.apply-items.inptype:focus,.apply-items.seltype:focus {
+	border-color: #8f5dc0;
+	box-shadow: 0 0 1px #8f5dc0;
 }
 
 .apply-signin {
@@ -95,8 +92,12 @@ body, button, input, select, textarea {
 	position: relative;
 	line-height: 40px;
 	height: 40px;
+	background-color: #8f5dc0;
+	color:#fff;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
 }
-
+ 
 .apply-popbody {
 	padding: 60px 15px;
 	max-height: 325px;
@@ -108,17 +109,17 @@ body, button, input, select, textarea {
 	width: 600px
 }
 
-.apply-poptit .close {
-	float: right;
-	color: #999;
-	padding: 5px;
-	margin: -2px;
+.apply-poptit a.close {
+	float: right;   
+	color: #fff;
+	padding: 5px; 
+	margin: 5px; 
 	font: bold 18px/18px simsun;
-	text-shadow: 0 1px 0 #ddd
+	opacity: 1;
 }
 
-.apply-poptit .close:hover {
-	color: #444;
+.apply-poptit a.close:hover {
+	color: #aaa!important;
 }
 
 .apply-signin {
@@ -159,7 +160,7 @@ body, button, input, select, textarea {
 	width: 80px;
 	height: 40px;
 	line-height:40px;
-	border-radius: 2px;
+	border-radius: 5px;
 	cursor: pointer;
 	color: #FFF;
 	font-size: 14px;
@@ -168,35 +169,31 @@ body, button, input, select, textarea {
 }
 
 .apply-back {
-	background-color: #666;
-	border: 1px solid #999;
+	background-color: #f1c748;
 }
-
+ 
 .apply-back:hover {
-	background-color: #999
+	background-color: #f1c748;
 }
 
 .apply-submit {
 	background-color: #8f5dc0;
-	border: 1px solid #b7a5c6;
 }
 
 .apply-submit:hover {
-	background-color: #b7a5c6;
+	background-color: #8f5dc0;
 }
 
 .apply-popover {
 	z-index: 999999;
 	position: absolute;
-	top: 50%;
+	top: 50%; 
 	left: 50%;
 	width: 660px;
 	max-height: 519px;
 	margin: -180px 0 0 -330px;
-	border-radius: 5px;
-	border: solid 2px #666;
+	border-radius: 15px;
 	background-color: #fff;
-	box-shadow: 0 0 10px #666;
 }
 </style>
 
@@ -266,7 +263,7 @@ body, button, input, select, textarea {
 		    return s;
 		}
 		
-		
+		//检查手机格式
 		function checkMobile(mobile){
 			var mobileReg = /^1\d{10}$/;
 			if(mobileReg.test(mobile)){
@@ -275,10 +272,9 @@ body, button, input, select, textarea {
 				return false;
 			}
 		}
-
-
+		//检查邮箱格式
 		function CheckMail(mail) {
-		 	var filter  = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+\.[a-zA-Z]{2,3}$/;
+		 	var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 		 	if (filter.test(mail)){ 
 				return true;
 		 	}else{
@@ -288,6 +284,8 @@ body, button, input, select, textarea {
 
 		/*提交事件*/
 		function tz_apply_float_iframe_submit() {
+			var self = this; 
+			
 			var allParam = $("input");
 			var selectParem = $("select");
 			
@@ -326,7 +324,7 @@ body, button, input, select, textarea {
 			}
 
 			strParam = strParam.substr(0, strParam.length - 1);
-			strParam = strParam + "}";
+			strParam = strParam + "}"; 
 
 			var strComParams = "{\"ComID\":\"TZ_APPONL_COM\",\"PageID\":\"TZ_APPREG_STD\",\"OperateType\":\"EJSON\",\"comParams\":"
 					+ strParam + "}";
@@ -344,11 +342,13 @@ body, button, input, select, textarea {
 				$("#TZ_ZY_EMAIL").focus();
 				return;
 			}
-					
+			
+			$(this).unbind('click', tz_apply_float_iframe_submit);
 			$.ajax({
 				type : "POST",
 				url: applyURL,
 				dataType : "json",
+				async:false,
 				data:{"tzParams":strComParams},
 				success : function(data) {
 					var result = data.comContent.result;
@@ -357,15 +357,16 @@ body, button, input, select, textarea {
 					var bmrid = data.comContent.bmrid;
 					if (result == "1" || result == "2") {
 						alert(resultDesc);
+						$(self).click(tz_apply_float_iframe_submit);
 					} else {
 						alert(resultDesc);
-						parent.changebmzt(artid, bmrid);
+						$(self).click(tz_apply_float_iframe_submit);
+						parent.changebmzt(artid, bmrid); 
 						parent.tz_close_float_iframe_apply();
-
 					}
-
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					$(self).click(tz_apply_float_iframe_submit);  
 					if (textStatus == "timeout") {
 						alert("%bind(:5)");
 						return;

@@ -303,8 +303,12 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 						// 写入推荐信发送日志表
 						if ("SUCCESS".equals(mess)) {
 							tzTjxClsServiceImpl.sendTJXLog(numAppinsId, strOprid, strTjrId, email, "SUC");
+
+							// N:发送给自己 Y：发送给推荐人
 							// 推荐人推荐信发出 发送站内信
-							tzTjxClsServiceImpl.sendSiteEmail(numAppinsId, "TZ_TJX_SEND", "推荐人推荐信发出提醒", "TJXS");
+							if (sendFlag.equals("Y")) {
+								tzTjxClsServiceImpl.sendSiteEmail(numAppinsId, "TZ_TJX_SEND", "推荐人推荐信发出提醒", "TJXS");
+							}
 
 						} else {
 							tzTjxClsServiceImpl.sendTJXLog(numAppinsId, strOprid, strTjrId, email, "FAIL");

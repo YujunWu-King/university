@@ -2,9 +2,9 @@
     extend: 'Ext.app.ViewController',
     alias: 'controller.userMgController', 
 	requires: [
-       'KitchenSink.view.enrollProject.userMg.userMgInfoPanel'
-    ],
-    
+       'KitchenSink.view.enrollProject.userMg.userMgInfoPanel',
+       'Ext.ux.IFrame'
+    ],    
     
 
 	   createUserInfoClass: function(){
@@ -242,6 +242,7 @@
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
 			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]').getForm();
+			var processInfoForm =this.lookupReference('userMgForm').down('form[name=processInfoForm]').getForm();
 			//var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
@@ -256,6 +257,8 @@
 			//ksdrInfoForm.setValues(formData.ksdrInfo);
 			//考生个人信息
 			userInfoForm.setValues(formData.perInfo)
+			//录取流程
+			processInfoForm.setValues(formData.lqlcInfo);
 			/*var userInfoItems = [];
 		
 			var fields = formData.column;
@@ -318,6 +321,7 @@
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
 			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]').getForm();
+			var processInfoForm =this.lookupReference('userMgForm').down('form[name=processInfoForm]').getForm();
 			//var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
@@ -332,7 +336,8 @@
 			//ksdrInfoForm.setValues(formData.ksdrInfo);
 			//考生个人信息
 			userInfoForm.setValues(formData.perInfo)
-			
+			//录取流程
+			processInfoForm.setValues(formData.lqlcInfo);
 			/*var userInfoItems = [];
 		
 			var fields = formData.column;
@@ -607,7 +612,18 @@
 		//表单数据
 		var formParams = form.getValues();
 	
-
+		//除表单数据外，还有申请材料中提交状态字段
+		var grid = win.lookupReference("viewAppGrid");
+		var store = grid.getStore();
+		var mfRecs = store.getModifiedRecords(); 
+		var editJson = [];
+		for(var i=0;i<mfRecs.length;i++){
+			editJson[i] = {};
+			editJson[i].appInsId = mfRecs[i].data.appInsId;
+			editJson[i].appSubStatus = mfRecs[i].data.appSubStatus;			
+		}
+		formParams.updateStatus = editJson;		
+		
 		win.actType = "update";
 
 		//提交参数
@@ -1239,6 +1255,7 @@
             this.getView().add(win);
         };
         win.selList=selList;
+		win.resultSource = "A";
 
         if(btnName=='downloadExcel'){
             var tabPanel = win.lookupReference("exportExcelTabPanel");
@@ -1247,5 +1264,776 @@
         var form = win.child("form").getForm();
         form.reset();
         win.show();
+    },
+	/*导出到Excel or 下载导出结果*/
+    exportSearchResultExcel:function(btn){
+        var JGID=Ext.tzOrgID;
+		
+		var OriSQL="SELECT OPRID FROM PS_TZ_REG_USE2_V where TZ_JG_ID='"+JGID+"'";
+		console.log("OriSQL="+OriSQL);
+		if((typeof getedSQL2)=="undefined"){
+			getedSQL2=OriSQL;
+		}
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_EXP_EXCEL_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限") );
+            return;
+        }
+
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+
+        var win = this.lookupReference('exportExcelForm');
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            // var modalID =btn.findParentByType('userMgGL').child('form').getForm().findField('modalID').getValue();
+            win = new ViewClass();
+            this.getView().add(win);
+        };
+        win.searchSql=getedSQL2;
+		win.resultSource = "B";
+
+       
+        var form = win.child("form").getForm();
+        form.reset();
+        win.show();
+    },
+    viewApplicationForm : function(grid, rowIndex, colIndex) {
+
+    	Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+
+    	// 是否有访问权限
+
+    	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
+
+    	if (pageResSet == "" || pageResSet == undefined) {
+
+    		Ext.MessageBox.alert(Ext.tzGetResourse(
+
+    				"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt",
+
+    				"提示"), Ext.tzGetResourse(
+
+    				"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx",
+
+    				"您没有权限"));
+
+    		return;
+
+    	}
+
+
+
+    	var store = grid.getStore();
+
+    	var record = store.getAt(rowIndex);
+
+    	var classID = record.get("appClassId");
+
+    	var oprID = record.get("oprID");
+
+    	var appInsID = record.get("appInsId");
+
+
+
+    	if (appInsID != "") {
+
+    		var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'
+
+    				+ appInsID + '"}}';
+
+    		var viewUrl = Ext.tzGetGeneralURL() + "?tzParams="
+
+    				+ encodeURIComponent(tzParams);
+
+    		var mask;
+
+    		var win = new Ext.Window(
+
+    				{
+
+    					name : 'applicationFormWindow',
+
+    					title : Ext
+
+    							.tzGetResourse(
+
+    									"TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.viewApplicationForm",
+
+    									"查看报名表"),
+
+    					maximized : true,
+
+    					controller : 'userMgController',
+
+    					classID : classID,
+
+    					oprID : oprID,
+
+    					appInsID : appInsID,
+
+    					gridRecord : record,
+
+    					width : Ext.getBody().width,
+
+    					height : Ext.getBody().height,
+
+    					autoScroll : true,
+
+    					border : false,
+
+    					bodyBorder : false,
+
+    					isTopContainer : true,
+
+    					modal : true,
+
+    					resizable : false,
+
+    					items : [ new Ext.ux.IFrame(
+
+    							{
+
+    								xtype : 'iframepanel',
+
+    								layout : 'fit',
+
+    								style : "border:0px none;scrollbar:true",
+
+    								border : false,
+
+    								src : viewUrl,
+
+    								height : "100%",
+
+    								width : "100%"
+
+    							}) ],
+
+    					buttons : [
+
+    							{
+
+    								text : Ext
+
+    										.tzGetResourse(
+
+    												"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.audit",
+
+    												"审批"),
+
+    								iconCls : "send",
+
+    								handler : "auditApplicationForm"
+
+    							},
+
+    							{
+
+    								text : Ext
+
+    										.tzGetResourse(
+
+    												"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close",
+
+    												"关闭"),
+
+    								iconCls : "close",
+
+    								handler : function() {
+
+    									win.close();
+
+    								}
+
+    							} ]
+
+    				})
+
+    		win.show();
+
+    	} else {
+
+    		Ext.MessageBox
+
+    				.alert(
+
+    						Ext
+
+    								.tzGetResourse(
+
+    										"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt",
+
+    										"提示"),
+
+    						Ext
+
+    								.tzGetResourse(
+
+    										"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm",
+
+    										"找不到该报名人的报名表"));
+
+    	}
+
+    },
+
+    printAppForm : function(obj, rowIndex, colIndex) {
+
+    	Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+
+    	// 是否有访问权限
+
+    	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_PRINT_ADMIN_STD"];
+
+    	if (pageResSet == "" || pageResSet == undefined) {
+
+    		Ext.MessageBox.alert(Ext.tzGetResourse(
+
+    				"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt",
+
+    				"提示"), Ext.tzGetResourse(
+
+    				"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx",
+
+    				"您没有权限"));
+
+    		return;
+
+    	}
+
+    	var appInsID;
+
+    	if (!obj.store) {
+
+    		var selList = obj.findParentByType("grid")
+
+    				.getSelectionModel().getSelection();
+
+
+
+    		if (selList.length < 1) {
+
+    			Ext.MessageBox
+
+    					.alert(
+
+    							Ext
+
+    									.tzGetResourse(
+
+    											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt",
+
+    											"提示"),
+
+    							Ext
+
+    									.tzGetResourse(
+
+    											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing",
+
+    											"您没有选中任何记录"));
+
+    			return;
+
+    		}
+
+    		if (selList.length > 1) {
+
+    			Ext.MessageBox
+
+    					.alert(
+
+    							Ext
+
+    									.tzGetResourse(
+
+    											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt",
+
+    											"提示"),
+
+    							Ext
+
+    									.tzGetResourse(
+
+    											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.canSelectOneOnly",
+
+    											"只能选中一条记录"));
+
+    			return;
+
+    		}
+
+    		appInsID = selList[0].get('appInsId');
+
+    	} else {
+
+    		appInsID = obj.getStore().getAt(rowIndex).get(
+
+    				'appInsId');
+
+    	}
+
+
+
+    	if (appInsID != "") {
+
+
+
+    		var url = TzUniversityContextPath
+
+    				+ "/PrintPdfServlet?instanceID=" + appInsID;
+
+    		window.open(url, '_blank');
+
+    	} else {
+
+    		Ext.MessageBox
+
+    				.alert(
+
+    						Ext
+
+    								.tzGetResourse(
+
+    										"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt",
+
+    										"提示"),
+
+    						Ext
+
+    								.tzGetResourse(
+
+    										"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm",
+
+    										"找不到该报名人的报名表"));
+
+    	}
+
+
+
+    },
+
+    viewBmSch : function(grid, rowIndex, colIndex) {
+
+
+
+    	var store = grid.getStore();
+
+    	var record = store.getAt(rowIndex);
+
+    	var classID = record.get("appClassId");
+
+    	var oprID = record.get("oprID");
+
+    	var appInsID = record.get("appInsId");
+
+
+
+    	var contentPanel = Ext
+
+    			.getCmp('tranzvision-framework-content-panel');
+
+    	contentPanel.body.addCls('kitchensink-example');
+
+
+
+    	// 是否有访问权限
+
+    	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_MSHLCH_STD"];
+
+    	if (pageResSet == "" || pageResSet == undefined) {
+
+    		Ext.MessageBox.alert('提示', '您没有访问或修改数据的权限');
+
+    		return;
+
+    	}
+
+    	// 该功能对应的JS类
+
+    	var className = pageResSet["jsClassName"];
+
+    	if (className == "" || className == undefined) {
+
+    		Ext.MessageBox
+
+    				.alert('提示',
+
+    						'未找到该功能页面对应的JS类，页面ID为：TZ_UM_MSHLCH_STD，请检查配置。');
+
+    		return;
+
+    	}
+
+
+
+    	var contentPanel, cmp, className, ViewClass, clsProto;
+
+    	var themeName = Ext.themeName;
+
+
+
+    	// contentPanel =
+
+    	// Ext.getCmp('tranzvision-framework-content-panel');
+
+    	// contentPanel.body.addCls('kitchensink-example');
+
+
+
+    	// className =
+
+    	// 'KitchenSink.view.enrollProject.userMg.userBmSchView';
+
+    	if (!Ext.ClassManager.isCreated(className)) {
+
+    		Ext.syncRequire(className);
+
+    	}
+
+    	ViewClass = Ext.ClassManager.get(className);
+
+
+
+    	clsProto = ViewClass.prototype;
+
+
+
+    	if (clsProto.themes) {
+
+    		clsProto.themeInfo = clsProto.themes[themeName];
+
+
+
+    		if (themeName === 'gray') {
+
+    			clsProto.themeInfo = Ext.applyIf(
+
+    					clsProto.themeInfo || {},
+
+    					clsProto.themes.classic);
+
+    		} else if (themeName !== 'neptune'
+
+    				&& themeName !== 'classic') {
+
+    			if (themeName === 'crisp-touch') {
+
+    				clsProto.themeInfo = Ext.applyIf(
+
+    						clsProto.themeInfo || {},
+
+    						clsProto.themes['neptune-touch']);
+
+    			}
+
+    			clsProto.themeInfo = Ext.applyIf(
+
+    					clsProto.themeInfo || {},
+
+    					clsProto.themes.neptune);
+
+    		}
+
+    		// <debug warn>
+
+    		// Sometimes we forget to include allowances for
+
+    		// other themes, so issue a warning as a reminder.
+
+    		if (!clsProto.themeInfo) {
+
+    			Ext.log
+
+    					.warn('Example \''
+
+    							+ className
+
+    							+ '\' lacks a theme specification for the selected theme: \''
+
+    							+ themeName
+
+    							+ '\'. Is this intentional?');
+
+    		}
+
+    		// </debug>
+
+    	}
+
+
+
+    	cmp = new ViewClass();
+
+
+
+    	cmp.on('afterrender',function() {
+
+    						var msgForm = this.lookupReference('userMgForm');
+
+    						var form = this.lookupReference('userMgForm').getForm();											
+
+    						var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
+
+    						var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_MSHLCH_STD","OperateType":"QF","comParams":{"OPRID":"'  + oprID + '","appInsID":"' + appInsID + '"}}';
+
+    						// 加载数据
+
+    						Ext.tzLoad(
+
+    										tzParams,
+
+    										function(
+
+    												responseData) {
+
+    											// 用户账号信息数据
+
+    											var formData = responseData.formData;
+
+
+
+    											form.setValues(formData);
+
+    											ksdrInfoForm.setValues(formData.ksdrInfo);
+
+    											if (msgForm
+
+    													.down(
+
+    															'hiddenfield[name=titleImageUrl]')
+
+    													.getValue()) {
+
+    												msgForm
+
+    														.down(
+
+    																'image[name=titileImage]')
+
+    														.setSrc(
+
+    																TzUniversityContextPath
+
+    																		+ msgForm
+
+    																				.down(
+
+    																						'hiddenfield[name=titleImageUrl]')
+
+    																				.getValue());
+
+    											} else {
+
+    												msgForm
+
+    														.down(
+
+    																'image[name=titileImage]')
+
+    														.setSrc(
+
+    																TzUniversityContextPath
+
+    																		+ "/statics/images/tranzvision/mrtx02.jpg");
+
+    											}
+
+    										});
+
+
+
+    					});
+
+
+
+    	tab = contentPanel.add(cmp);
+
+
+
+    	contentPanel.setActiveTab(tab);
+
+
+
+    	Ext.resumeLayouts(true);
+
+
+
+    	if (cmp.floating) {
+
+    		cmp.show();
+
+    	}
+
+    },
+
+    auditApplicationForm:function(grid, rowIndex, colIndex){
+
+    	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_AUDIT2_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+
+            Ext.MessageBox.alert("提示","您没有访问或修改数据权限");
+
+            return;
+
+        }
+
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert("提示", "未找到该功能页面对应的JS类，请检查配置。");
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+       
+        var store = grid.getStore();
+        var record = store.getAt(rowIndex);
+    	var classID = record.get("appClassId");
+    	var oprID = record.get("oprID");
+    	var batchID = record.get("appBatchId");
+    	var appInsID = record.get("appInsId");
+    	
+        var applicationFormTagStore= new KitchenSink.view.common.store.comboxStore({
+
+            recname:'TZ_TAG_STORE_V',
+
+            condition:{
+
+                TZ_JG_ID:{
+
+                    value:Ext.tzOrgID,
+
+                    operator:'01',
+
+                    type:'01'
+
+                },
+
+                TZ_APP_INS_ID:{
+
+                    value:appInsID,
+
+                    operator:'01',
+
+                    type:'01'
+
+                }
+
+            },
+
+            result:'TZ_LABEL_ID,TZ_LABEL_NAME'
+
+        });
+
+        applicationFormTagStore.load(
+
+            {
+
+                scope:this,
+
+                callback:function(){
+
+                    cmp = new ViewClass({appInsID:appInsID,applicationFormTagStore:applicationFormTagStore,gridRecord:record});
+
+                    cmp.on('afterrender',function(panel){
+
+                        var form = panel.child('form').getForm();
+
+                        var tabpanel = panel.child("tabpanel");
+
+                        var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_AUDIT2_STD","OperateType":"QF","comParams":{"classID":"'+classID+'","oprID":"'+oprID+'"}}';
+
+                        Ext.tzLoad(tzParams,function(respData){
+
+                            var formData = respData.formData;
+
+                            form.setValues(formData);
+
+                            var refLetterStore = tabpanel.down('grid[name=refLetterGrid]').store;
+                            var fileStore = tabpanel.down('grid[name=fileGrid]').store;
+                            if(!refLetterStore.isLoaded()){
+                                tzStoreParams = '{"classID":"'+classID+'","oprID":"' + oprID + '","queryType":"REFLETTER"}';
+                                refLetterStore.tzStoreParams = tzStoreParams;
+                                refLetterStore.load();
+                            }
+                            if(!fileStore.isLoaded()){
+                                tzStoreParams = '{"classID":"'+classID+'","oprID":"' + oprID + '","queryType":"ATTACHMENT"}';
+                                fileStore.tzStoreParams = tzStoreParams;
+                                fileStore.load();
+                            }
+                            
+
+                        });
+
+                    });
+
+
+
+                    tab = contentPanel.add(cmp);
+
+
+
+                    contentPanel.setActiveTab(tab);
+
+
+
+                    Ext.resumeLayouts(true);
+
+
+
+                    if (cmp.floating) {
+
+                        cmp.show();
+
+                    }
+
+                }
+
+
+
+            }
+
+        )
+
     }
 });

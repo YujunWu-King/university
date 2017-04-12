@@ -158,6 +158,9 @@
 .notice-en{
 	margin-top:20px;
 }
+.notice-ch {
+	text-align: center;
+}
 
 /*操作按钮*/
 .operation-btn{	
@@ -320,6 +323,7 @@
 	font-size:14px;
 	color:#999;
 	line-height:46px;
+	max-height:46px;
 }
 .input-list .headshot{
 	width:14%;
@@ -1052,12 +1056,12 @@ url("chrome://browser/content/history/history-panel.xul")
     font-size: 16px;
     height: 46px;
     line-height: 35px;
-    margin-left:20px;
+    /* margin-left:20px; */
 }
 
 /*附件后缀*/
 .file-list-suffix{
-	padding-left:140px;
+/*	padding-left:140px;  */
 	font-size:14px;
 	color:#999;
 	line-height:46px;
@@ -1068,13 +1072,22 @@ url("chrome://browser/content/history/history-panel.xul")
 	display: inline-block;
 }
 
-.input-list-uploadcon-listl{
+/*.input-list-uploadcon-listl{
 	width:75%;
 }
 .input-list-uploadcon-listr{
 	width:5%;
 	height: 35px;
     line-height: 35px;
+}  */
+.input-list-uploadcon-listl {
+	margin-left: 3%;
+}
+
+.input-list-uploadcon-listr {
+	height: 35px;
+	line-height: 46px;
+	margin-left: 2%;
 }
 .upload-del{
 	width:50px;

@@ -7,8 +7,7 @@
 <script type="text/javascript">
 	var TzUniversityContextPath = "%bind(:2)";
 </script>
-
-<script type="text/javascript" src="%bind(:2)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:2)/statics/js/onlineSurvey/formvalidator/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="%bind(:2)/statics/js/tranzvision/extjs/app/view/website/set/js/pagefunc.js"></script>
 <style type="text/css">
 		.autocomplete{
@@ -239,11 +238,14 @@
 		});
        
      	function setTab(n){
-			/* var menu=document.getElementById("chose").getElementsByTagName("a");  
+			var menu=document.getElementById("chose").getElementsByTagName("a");  
 			for(i=0;i<menu.length;i++){
 		   		menu[i].className=i==n?"now2":""; 
 			}
-			var title = $(menu[n]).attr("title"); */
+			var province = $(menu[n]).attr("title");
+			if(province == undefined || province == null){
+				province = ""; 
+			}
 			//yuds 不使用国籍作为院校选择器国家选择搜索条件
 			//var $CountryCode = $("#CountryCode", window.parent.document).val();
 			//var title = $("#" + $CountryCode, window.parent.document).attr("ccode"); 
@@ -259,7 +261,11 @@
 				if($CountryCode==undefined||$CountryCode==null){
 					$CountryCode = ""; 
 				}
-				 tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + $CountryCode + '"}}';
+				if(n > 30){
+					tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + $CountryCode + '"}}';
+				}else{
+					tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYPROVINCE","search-text":"' + $CountryCode + '","province":"' + province + '"}}';
+				}
 			}
 			if (type == "B") {
 				var $CountryCode = $("#CountryCode", window.parent.document).val();
@@ -267,8 +273,12 @@
 				if(title==undefined||title==null){
 					title = ""; 
 				}
-				//console.log("title:"+title);
-				 tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + title + '"}}';
+				console.log("title:" + title + "        province:" + province);
+				if(n > 30){
+					tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + title + '"}}';
+				}else{
+					tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYPROVINCE","search-text":"' + title + '","province":"' + province + '"}}';
+				}
 			}
 			
 			
@@ -402,7 +412,7 @@
  <!--  <div class="search_right">
 	 <a href="#" id="search" class="alpha" onclick="findData();" > <img src="%bind(:3)/search_bt.png" width="40" height="39"/></a></div>
  </div> -->
-<div class="city_main_title2"><span class="font_gray_16px_s">如果搜索不到相应学校，请点击其他学校或境外学校输入对应的学校</span></div>
+<div class="city_main_title2"><span class="font_gray_16px_s">如果搜索不到相应学校，请点击其他学校输入对应的学校</span></div>
   <div class="city_main_title3" id="tab1">
       <div class="float_left">
       <ul>
@@ -416,7 +426,7 @@
     </div>
     <div  id="content1">
     <div class="tab1 block">
-  <!--  <div class="city_main_line2" id="chose">
+  <div class="city_main_line2" id="chose" style="display:none;">
     <div class="city_main_city"><a title="北京" href="javascript:;" onclick="setTab(0);layerChange();">北京</a></div>
     <div class="city_main_city"><a title="天津" href="javascript:;" onclick="setTab(1);layerChange();">天津</a></div>
     <div class="city_main_city"><a title="河北" href="javascript:;" onclick="setTab(2);layerChange();">河北</a></div>
@@ -449,7 +459,7 @@
 	<div class="city_main_city"><a title="青海" href="javascript:;" onclick="setTab(29);layerChange();">青海</a></div>
 	<div class="city_main_city"><a title="新疆" href="javascript:;" onclick="setTab(30);layerChange();">新疆</a></div>
 	
-  </div> -->
+  </div>
   <div class="city_main_line3" id="selectorList" style="padding-top:15px;">
   </div>
   </div>
@@ -487,7 +497,21 @@
 		parent.layer.iframeAuto(index);
 	}
 	$(document).ready(function(){
-		setTab(1);
+		var type = "%bind(:4)";
+		var $CountryCode="";
+    	if(type=="A"){
+    		$CountryCode = $("#TZ_SCH_CNAME_Country",window.parent.document).attr("ccode");	    			    		
+    	}else if(type=="B"){
+    		$CountryCode = $("#CountryCode", window.parent.document).val();
+    		$CountryCode = $("#" + $CountryCode, window.parent.document).attr("ccode"); 
+    	}
+    	if($CountryCode == 'CHN'){
+    		$("#chose").show();
+    		setTab(0);
+    	}else{
+    		setTab(90);
+    	}
+		
 		layerChange();
 		
     });

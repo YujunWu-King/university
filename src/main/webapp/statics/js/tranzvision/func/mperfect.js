@@ -251,8 +251,10 @@ $(document).ready(function(){
 					$("#searchCountry").html("");
 					$("#searchCountry").html(result);
 					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchCountry").show();
+					$("#before").hide();
+				    $("#searchCountry").fadeIn("slow"); 
+					/*$(".shade").show();
+				    $("#searchCountry").show();*/
 				}
 			});
 		});
@@ -281,8 +283,10 @@ $(document).ready(function(){
 				$("#searchSchool").html("");
 				$("#searchSchool").html(result);
 				$("#body").css("position","fixed");
-				$(".shade").show();
-			    $("#searchSchool").show();
+				$("#before").hide();
+				$("#searchSchool").fadeIn("slow");
+				/*$(".shade").show();
+			    $("#searchSchool").show();*/
 			}
 		});
     });
@@ -309,8 +313,10 @@ $(document).ready(function(){
 					$("#searchState").html("");
 					$("#searchState").html(result);
 					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchState").show();
+					$("#before").hide();
+				    $("#searchState").fadeIn("slow");
+					/*$(".shade").show();
+				    $("#searchState").show();*/
 				}
 			});
 		});

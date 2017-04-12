@@ -607,7 +607,7 @@ public class tzOnlineAppEngineImpl {
 		return m;
 	}
 
-	public String getUserInfo(String strAppInsId) {
+	public String getUserInfo(String strAppInsId, String strTplType) {
 
 		// 当前登陆人
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -618,8 +618,8 @@ public class tzOnlineAppEngineImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		//System.out.println("orgid:" + orgid);
-		//System.out.println("oprid:" + oprid);
+		// System.out.println("orgid:" + orgid);
+		// System.out.println("oprid:" + oprid);
 		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? ORDER BY TZ_ORDER";
 		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid });
 		String sql = "";
@@ -676,17 +676,26 @@ public class tzOnlineAppEngineImpl {
 		//// //System.out.println("strAppInsId:" + strAppInsId);
 		String TZ_MSH_ID = "";
 		//// //System.out.println("oprid:" + oprid);
-		if (oprid == null || oprid.equals("")) {
+		if (strTplType.equals("TJX")) {
 			sql = "SELECT A.TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL A,PS_TZ_KS_TJX_TBL B WHERE A.OPRID=B.OPRID AND B.TZ_TJX_APP_INS_ID=?";
 			TZ_MSH_ID = sqlQuery.queryForObject(sql, new Object[] { strAppInsId }, "String");
 			if (TZ_MSH_ID == null) {
 				TZ_MSH_ID = "";
 			}
 		} else {
-			sql = "SELECT TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
-			TZ_MSH_ID = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
-			if (TZ_MSH_ID == null) {
-				TZ_MSH_ID = "";
+			// 首次填写报名表
+			if (strAppInsId == null || strAppInsId.equals("") || strAppInsId.equals("0")) {
+				sql = "SELECT TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+				TZ_MSH_ID = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
+				if (TZ_MSH_ID == null) {
+					TZ_MSH_ID = "";
+				}
+			} else {
+				sql = "SELECT A.TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL A,PS_TZ_FORM_WRK_T B WHERE A.OPRID=B.OPRID AND B.TZ_APP_INS_ID=?";
+				TZ_MSH_ID = sqlQuery.queryForObject(sql, new Object[] { strAppInsId }, "String");
+				if (TZ_MSH_ID == null) {
+					TZ_MSH_ID = "";
+				}
 			}
 		}
 		//// //System.out.println("TZ_MSH_ID:" + TZ_MSH_ID);
@@ -2518,7 +2527,7 @@ public class tzOnlineAppEngineImpl {
 			strAppOprId = sqlQuery.queryForObject(sql, new Object[] { String.valueOf(numAppInsId) }, "String");
 			sql = "SELECT TZ_JG_ID FROM PS_TZ_APPTPL_DY_T A,PS_TZ_APP_INS_T B WHERE A.TZ_APP_TPL_ID=B.TZ_APP_TPL_ID AND B.TZ_APP_INS_ID=?";
 			strAppOrgId = sqlQuery.queryForObject(sql, new Object[] { String.valueOf(numAppInsId) }, "String");
-			
+
 		}
 
 		System.out.println("strAppOprId:" + strAppOprId);

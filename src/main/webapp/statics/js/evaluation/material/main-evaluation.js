@@ -1,475 +1,23 @@
-﻿/*var jsonEvaluateBatchDataObjectArray1 = [];
-jsonEvaluateBatchDataObjectArray1['pc_f_01'] = 
+﻿function createMainPageHeader(jsonObject)
 {
-	'ps_bkfx_id':'pc_f_01',
-	'ps_bkfx_mc':'2012年第01批F班',
-	'ps_baok_nf':'2012',
-	'ps_baok_pc':'第01批',
-	'ps_baok_zy':'F班',
-	'ps_description':'请各位评委注意，今天开始进行资料评估',
-	'ps_gaiy_info':'您当前已完成XX个考生的资料评估，您一共需要完成评估的考生数量不少于XX个考生，不多于XX个考生。',
-	'ps_data_cy': {
-									"ps_tjzb_btmc": [
-																		{
-																			"col01":"指标名称",
-																			"ps_cht_flg":"N",
-																			"ps_grp_flg":"N"
-																		},
-																		{
-																			"col02":"平均分指标",
-																			"ps_cht_flg":"N",
-																			"ps_grp_flg":"Y",
-																			"ps_sub_col":	[
-																											{
-																												"sub_col01":"标准平均分",
-																												"ps_cht_flg":"Y"
-																											},
-																											{
-																												"sub_col02":"允许误差",
-																												"ps_cht_flg":"N"
-																											},
-																											{
-																												"sub_col03":"实际平均分",
-																												"ps_cht_flg":"Y"
-																											},
-																											{
-																												"sub_col04":"实际误差",
-																												"ps_cht_flg":"N"
-																											},
-																											{
-																												"sub_col05":"是否符合要求",
-																												"ps_cht_flg":"N"
-																											}
-																										]
-																		},
-																		{
-																			"col03":"均方差指标",
-																			"ps_cht_flg":"N",
-																			"ps_grp_flg":"Y",
-																			"ps_sub_col":	[
-																											{
-																												"sub_col01":"标准均方差",
-																												"ps_cht_flg":"Y"
-																											},
-																											{
-																												"sub_col02":"允许误差",
-																												"ps_cht_flg":"N"
-																											},
-																											{
-																												"sub_col03":"实际均方差",
-																												"ps_cht_flg":"Y"
-																											},
-																											{
-																												"sub_col04":"实际误差",
-																												"ps_cht_flg":"N"
-																											},
-																											{
-																												"sub_col05":"是否符合要求",
-																												"ps_cht_flg":"N"
-																											}
-																										]
-																		}
-																	],
-									"ps_tjzb_mxsj": [
-																		{
-																			"col01":"隐性指标",
-																			"col02":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							},
-																			"col03":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							}
-																		},
-																		{
-																			"col01":"显性指标",
-																			"col02":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							},
-																			"col03":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							}
-																		},
-																		{
-																			"col01":"总分",
-																			"col02":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							},
-																			"col03":{
-																								"sub_col01":"8.5",
-																								"sub_col02":"0.3",
-																								"sub_col03":"8.66",
-																								"sub_col04":"0.16",
-																								"sub_col05":"符合"
-																							}
-																		}
-																	]
-								},
-	'ps_data_fb':[
-							 		{
-							 			'ps_fszb_mc':'隐性指标',
-							 			'ps_fszb_fbsj':[
-							 												{
-																	 			'ps_fb_mc':'-1，<0',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'0',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'1',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'0-3，>=0且<3',
-																	 			'ps_bzfb_bilv':'0.2',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.1',
-																	 			'ps_sjfb_rshu':'4',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'3-5，>=3且<5',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.5',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'5-7，>=5且<7',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.7',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'4.5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'7-9，>=7且<9',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'2.9',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'9-13，>=9且<=13',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'1',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'0.6',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		}
-																	 ]
-									},
-									{
-							 			'ps_fszb_mc':'显性指标',
-							 			'ps_fszb_fbsj':[
-							 												{
-																	 			'ps_fb_mc':'-1，<0',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'0',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'1',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'0-3，>=0且<3',
-																	 			'ps_bzfb_bilv':'0.2',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.1',
-																	 			'ps_sjfb_rshu':'4',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'3-5，>=3且<5',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.5',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'5-7，>=5且<7',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.7',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'4.5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'7-9，>=7且<9',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'2.9',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'9-13，>=9且<=13',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'1',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'0.6',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		}
-																	 ]
-									},
-									{
-							 			'ps_fszb_mc':'总分',
-							 			'ps_fszb_fbsj':[
-							 												{
-																	 			'ps_fb_mc':'-1，<0',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'0',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'1',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'0-3，>=0且<3',
-																	 			'ps_bzfb_bilv':'0.2',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.1',
-																	 			'ps_sjfb_rshu':'4',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'3-5，>=3且<5',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.5',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'5-7，>=5且<7',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'4.7',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'4.5',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'7-9，>=7且<9',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'3',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'2.9',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		},
-																	 		{
-																	 			'ps_fb_mc':'9-13，>=9且<=13',
-																	 			'ps_bzfb_bilv':'0.1',
-																	 			'ps_bzfb_rshu':'1',
-																	 			'ps_bzfb_wcrs':'1',
-																	 			'ps_sjfb_bilv':'0.05',
-																	 			'ps_sjfb_rshu':'0.6',
-																	 			'ps_sjfb_wcrs':'1',
-																	 			'ps_sjfb_fhyq':'符合'
-																	 		}
-																	 ]
-									}
-							 ],
-	'MaxRowCount':'30',
-	'StartRowNumber':'1',
-	'MoreRowsFlag':'N',
-	'TotalRowCount':'30',
-	'ps_data_kslb':{
-										'ps_ksh_list_headers':[
-																						{'ps_ksh_xh':'序号'},
-																						{'ps_ksh_id':'考生编号'},
-																						{'ps_ksh_bmbid':'报名表编号'},
-																						{'ps_ksh_xm':'考生姓名'},
-																						{'ps_ksh_ppm':'上次排名'},
-																						{'ps_ksh_cpm':'本次排名'},
-																						{'col01':'总分'},
-																						{'col02':'教育背景'},
-																						{'col03':'职业背景'},
-																						{'col04':'人际关系'},
-																						{'col05':'例外推荐'},
-																						{'col06':'不合适'},
-																						{'ps_ksh_zt':'评议状态'},
-																						{'ps_ksh_pc':'偏差'},
-																						{'ps_ksh_dt':'评审时间'}
-																					],
-										'ps_ksh_list_contents':[
-																							{
-																								'ps_row_id':'ks-00001',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'1'},
-																																{'ps_ksh_id':'ks-00001'},
-																																{'ps_ksh_bmbid':'ks-00001'},
-																																{'ps_ksh_xm':'黄飞鸿-01'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 17:20'}
-																															]
-																							},
-																							{
-																								'ps_row_id':'ks-00002',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'2'},
-																																{'ps_ksh_id':'ks-00002'},
-																																{'ps_ksh_bmbid':'ks-00002'},
-																																{'ps_ksh_xm':'黄飞鸿-02'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03]':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 17:36'}
-																															]
-																							},
-																							{
-																								'ps_row_id':'ks-00003',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'3'},
-																																{'ps_ksh_id':'ks-00003'},
-																																{'ps_ksh_bmbid':'ks-00003'},
-																																{'ps_ksh_xm':'黄飞鸿-03'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03]':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 17:50'}
-																															]
-																							},
-																							{
-																								'ps_row_id':'ks-00004',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'4'},
-																																{'ps_ksh_id':'ks-00004'},
-																																{'ps_ksh_bmbid':'ks-00004'},
-																																{'ps_ksh_xm':'黄飞鸿-04'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 18:00'}
-																															]
-																							},
-																							{
-																								'ps_row_id':'ks-00005',
-																								'ps_row_cnt':[
-																																{'ps_ksh_xh':'5'},
-																																{'ps_ksh_id':'ks-00005'},
-																																{'ps_ksh_bmbid':'ks-00005'},
-																																{'ps_ksh_xm':'黄飞鸿-05'},
-																																{'ps_ksh_ppm':'12'},
-																																{'ps_ksh_cpm':'3'},
-																																{'col01':'20'},
-																																{'col02':'5'},
-																																{'col03':'12'},
-																																{'col04':'3'},
-																																{'col05':''},
-																																{'col06':''},
-																																{'ps_ksh_zt':''},
-																																{'ps_ksh_pc':'2'},
-																																{'ps_ksh_dt':'2012/05/30 18:00'}
-																															]
-																							}
-																					 ]
-								 },
-	'error_code':'0',
-	'error_decription ':''
-}
-*/
-
-function createMainPageHeader(jsonObject)
-{
-	var width = Ext.getBody().getWidth();
 	//创建评委评审主页面页头区
+	
+	var desc = Ext.String.format(jsonObject['ps_description']);
+	
 	var mainPageHeader = Ext.create('Ext.panel.Panel',{
 			//title: '报考年份：' + jsonObject['ps_baok_nf'] + '，报考批次：' + jsonObject['ps_baok_pc'] + '，报考项目：' + jsonObject['ps_baok_zy'],
 			title: '评审说明',
 			collapseMode:'header',
 			collapsible:true,
 			collapsed:true,
-            width:width,
-			//collapsed:true,
+            width:'100%',
 			margins:'5 0 5 5',
 			layout:'fit',
 			bodyPadding:'10 10 10 15',
-			html :Ext.String.format(jsonObject['ps_description']),
+			html :desc,
 			autoEl:{
-								tag: 'div',
-			html:'<p>通知与说明显示区</p>'
+				tag: 'div',
+				html:'<p>通知与说明显示区</p>'
 			}
 	});
 	
@@ -552,9 +100,9 @@ function createPJFTJGrid(batchId,jsonObject)
 	var myDataModel = getDataModelForPJFTJGrid(jsonObject);
 
 	var store = Ext.create('Ext.data.ArrayStore', {
-													fields: myDataModel['gridFields'],
-													data: myDataModel['gridData']
-												});
+			fields: myDataModel['gridFields'],
+			data: myDataModel['gridData']
+		});
   
   PJFTJGrid_batchID = 'EvaluatePJFTJGrid' + batchId;
 
@@ -571,9 +119,7 @@ function createPJFTJGrid(batchId,jsonObject)
       columnLines: true,
 	  	id: PJFTJGrid_batchID,
       stateId: 'EvaluatePJFTJGrid',
-      width: 1020,
-      margin:'0 0 0 0',
-      padding:'0 5 0 0',
+      width: "100%",
       columns: myDataModel['gridColumns'],
       title: '已评审考生得分统计',
       viewConfig: {
@@ -599,13 +145,8 @@ function getDataForFenbuGrid(jsonObject)
 			
 			tmpArray[0] = jsonObject['ps_data_fb'][i]['ps_fszb_mc'];
 			tmpArray[1] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_fb_mc'];
-            //tmpArray[2] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_bzfb_bilv'];
-            //tmpArray[3] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_bzfb_rshu'];
-            //tmpArray[4] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_bzfb_wcrs'];
 			tmpArray[2] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_sjfb_bilv'];
 			tmpArray[3] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_sjfb_rshu'];
-            //tmpArray[7] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_sjfb_wcrs'];
-            //tmpArray[8] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_sjfb_fhyq'];
 			
 			ebList[counter] = tmpArray;
 			counter ++;
@@ -638,10 +179,11 @@ function createFenbuGrid(jsonObject)
       collapsible: false,
       multiSelect: false,
       columnLines: true,
+      frame:true,
       stateId: 'EvaluateFenbuGrid',
       features: groupingFeature,
-      margin:'0 0 0 0',
-      padding:'0 5 0 0',
+      margin:0,
+      padding:0,
       columns: [
           {
               text     : '指标名称',
@@ -932,20 +474,20 @@ function createSubStatisticsCharts(chartDataArray,chartStore)
 	if(chartStore == null)
 	{
 		store1 = Ext.create('Ext.data.JsonStore',
-												{
-													// 2015-12-08 解决曲线显示不正确的问题 fields: ['name', 'data1','data2'],
-                                                    fields : [{
-                                                        name : 'name',
-                                                        type : 'string'
-                                                    }, {
-                                                        name : 'data1',
-                                                        type : 'float'
-                                                    }, {
-                                                        name : 'data2',
-                                                        type : 'float'
-                                                    }],
-													data: getSubDataForFenbuChart(chartDataArray['ps_fszb_fbsj'])
-												});
+				{
+					// 2015-12-08 解决曲线显示不正确的问题 fields: ['name', 'data1','data2'],
+                    fields : [{
+                        name : 'name',
+                        type : 'string'
+                    }, {
+                        name : 'data1',
+                        type : 'float'
+                    }, {
+                        name : 'data2',
+                        type : 'float'
+                    }],
+					data: getSubDataForFenbuChart(chartDataArray['ps_fszb_fbsj'])
+				});
 	}
 	else
 	{
@@ -954,41 +496,41 @@ function createSubStatisticsCharts(chartDataArray,chartStore)
 	
 	
 	var series1 = {
-									type: 'line',
-									highlight: {size: 7,radius: 7},
-									axis: 'left',
-									smooth: true,
-									xField: 'name',
-									yField: 'data1',
-									markerConfig: {type: 'cross',size: 4,radius: 4,'stroke-width': 0},
-									title: '标准分布曲线',
-									tips: {
-													trackMouse: true,
-													width: 180,
-													renderer: function(storeItem, item)
-																		{
-																			this.setTitle('分布区间[' + storeItem.get('name') + ']<br>标准分布比率: ' + Ext.util.Format.number(storeItem.get('data1'),'000.00'));
-																		}
-												}
-								};
+		type: 'line',
+		highlight: {size: 7,radius: 7},
+		axis: 'left',
+		smooth: true,
+		xField: 'name',
+		yField: 'data1',
+		markerConfig: {type: 'cross',size: 4,radius: 4,'stroke-width': 0},
+		title: '标准分布曲线',
+		tips: {
+			trackMouse: true,
+			width: 180,
+			renderer: function(storeItem, item)
+				{
+					this.setTitle('分布区间[' + storeItem.get('name') + ']<br>标准分布比率: ' + Ext.util.Format.number(storeItem.get('data1'),'000.00'));
+				}
+		}
+	};
 	var series2 = {
-									type: 'line',
-									highlight: {size: 7,radius: 7},
-									axis: 'left',
-									smooth: true,
-									xField: 'name',
-									yField: 'data2',
-									markerConfig: {type: 'circle',size: 4,radius: 4,'stroke-width': 0},
-									title: '实际分布曲线',
-									tips: {
-													trackMouse: true,
-													width: 180,
-													renderer: function(storeItem, item)
-																		{
-																			this.setTitle('分布区间[' + storeItem.get('name') + ']<br>实际分布比率: ' + Ext.util.Format.number(storeItem.get('data2'),'000.00'));
-																		}
-											}
-								};
+		type: 'line',
+		highlight: {size: 7,radius: 7},
+		axis: 'left',
+		smooth: true,
+		xField: 'name',
+		yField: 'data2',
+		markerConfig: {type: 'circle',size: 4,radius: 4,'stroke-width': 0},
+		title: '实际分布曲线',
+		tips: {
+				trackMouse: true,
+				width: 180,
+				renderer: function(storeItem, item)
+				{
+					this.setTitle('分布区间[' + storeItem.get('name') + ']<br>实际分布比率: ' + Ext.util.Format.number(storeItem.get('data2'),'000.00'));
+				}
+		}
+	};
 	
 	
 	var seriesArray = [];
@@ -1011,42 +553,47 @@ function createSubStatisticsCharts(chartDataArray,chartStore)
 	if(seriesArray.length >= 1)
 	{
 		fsChart1 = Ext.create('Ext.chart.Chart',
-								{
-									xtype: 'chart',
-									style: 'background:#fff',
-									animate: true,
-									store: store1,
-									shadow: true,
-									theme: 'Category1',
-									legend: {position: 'top'},
-									axes: [
-													{
-														type: 'Numeric',
-														position: 'left',
-														fields: [ 'data2'],
-														label:{renderer: function(value){return Ext.util.Format.number(value,'000.00');}},
-														title: '分布比率',
-														grid: true,
-														maximum:100,
-														minimum:0
-													},
-													{
-														type: 'Category',
-														position: 'bottom',
-														fields: ['name'],
-														title: '分布区间',
-														label: {rotate: {degrees: 270}}
-													}
-												],
-									series: seriesArray
-								});
+			{
+				xtype: 'chart',
+				style: 'background:#fff',
+				animate: true,
+				store: store1,
+				shadow: true,
+				theme: 'Category1',
+				legend: {position: 'top'},
+				axes: [
+					{
+						type: 'Numeric',
+						position: 'left',
+						fields: [ 'data2'],
+						label:{renderer: function(value){return Ext.util.Format.number(value,'000.00');}},
+						title: '分布比率',
+						grid: true,
+						maximum:100,
+						minimum:0
+					},
+					{
+						type: 'Category',
+						position: 'bottom',
+						fields: ['name'],
+						title: '分布区间',
+						label: {rotate: {degrees: 270}}
+					}
+				],
+				series: seriesArray
+			});
 	}
 	
 	
 	var retObject = null;
 	if(fsChart1 != null)
 	{
-		retObject = {title:chartDataArray['ps_fszb_mc'] + '指标统计曲线图',layout:'fit',items:fsChart1};
+		retObject = {
+				title:chartDataArray['ps_fszb_mc'] + '指标统计曲线图',
+				layout:'fit',
+				//width:'100%',
+				items:fsChart1
+		};
 	}
 	
 	return retObject;
@@ -1082,12 +629,13 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 									{
 										title:'评审结果分布曲线图',
 										margin:'0 0 0 0',
-										padding:'0 6 0 0',
+										bodyPadding:8,
+										padding:0,
 										collapsible:true,
 										collapsed:true,
-										layout: {type: 'table',columns: chartArray.length},
-										defaults: {frame:true, width:totalWidth/chartArray.length - 2, height: 480},
-										width: totalWidth,
+										//layout: {type: 'table',columns: chartArray.length},
+										defaults: {frame:true, width:totalWidth/*totalWidth/chartArray.length - 2*/, height: 480},
+										width: "100%",
 										items: chartArray
 									});
 		
@@ -1134,7 +682,7 @@ function getApplicantListColumns(jsonObject)
 	}
 	
 	columnList.push({text:"评议状态",width:70,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
-	columnList.push({text:"评审时间",width:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_dt"});
+	columnList.push({text:"评审时间",width:140,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_dt"});
 	columnList.push({text:"考生类别",width:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_type"});
 	
 	columnList.push({
@@ -1219,76 +767,76 @@ function submitEvaluateBatch(classid,pc_id)
 	maskWindow();
 	
 	Ext.Ajax.request(
-										{
-											url:window.submitApplicantDataUrl,
-											method:'POST',
-											timeout:10000,
-											params: {
-																LanguageCd:'ZHS',
-																OperationType:'SUBMTALL',
-                                                                BaokaoClassID:classid,
-                                                                BaokaoPCID:pc_id
-															},
-											success:function(response)
-											{
-												var jsonObject = null;
-												
-												try
-												{
-													jsonObject = Ext.JSON.decode(response.responseText);
-													
-													if(jsonObject.error_code != '0')
-													{
-														//unmask window
-														unmaskWindow();
-														
-														alert('提交当前评审批次时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-													}
-													else
-													{
-														//局部刷新当前当前评审批次数据
-														//getPartBatchDataByBatchId(batchId,null,{applicantBaomingbiaoID:''},'SUBMTALL','当前评审班级批次[' + getBatchNameById(batchId) + ']提交成功。');
-                                                        //更新总体提交状态
-                                                        alert("当前评审班级批次提交成功。");
-                                                        //提交成功后取消模态窗口;
-                                                        unmaskWindow();
-                                                        var ps_kslb_submtall_status = "已提交";
-                                                        $("#ps_kslb_submtall_"+(jsonObject['ps_class_id']+"_"+jsonObject['ps_bkpc_id'])).html("【"+ps_kslb_submtall_status+"】");
-													}
-												}
-												catch(e1)
-												{
-													if(window.evaluateSystemDebugFlag == 'Y')
-													{
-														alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
-														var mytmpWindow = window.open("about:blank");
-														mytmpWindow.document.body.innerHTML = response.responseText;
-													}
-													else
-													{
-														alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
-													}
-													
-													//unmask window
-													unmaskWindow();
-												}
-											},
-											failure:function(response)
-											{
-												if(window.evaluateSystemDebugFlag == 'Y')
-												{
-													alert('提交当前评审批次时发生错误，请与系统管理员联系：' + response.responseText);
-												}
-												else
-												{
-													alert('提交当前评审批次时发生错误，请与系统管理员联系。');
-												}
-												
-												//unmask window
-												unmaskWindow();
-											}
-										}
-									);
+			{
+				url:window.submitApplicantDataUrl,
+				method:'POST',
+				timeout:10000,
+				params: {
+					LanguageCd:'ZHS',
+					OperationType:'SUBMTALL',
+                    BaokaoClassID:classid,
+                    BaokaoPCID:pc_id
+				},
+				success:function(response)
+				{
+					var jsonObject = null;
+					
+					try
+					{
+						jsonObject = Ext.JSON.decode(response.responseText).comContent;
+						
+						if(jsonObject.error_code != '0')
+						{
+							//unmask window
+							unmaskWindow();
+							
+							alert('提交当前评审批次时发生错误：' + jsonObject.error_decription );
+						}
+						else
+						{
+							//局部刷新当前当前评审批次数据
+							//getPartBatchDataByBatchId(batchId,null,{applicantBaomingbiaoID:''},'SUBMTALL','当前评审班级批次[' + getBatchNameById(batchId) + ']提交成功。');
+                            //更新总体提交状态
+                            alert("当前评审班级批次提交成功。");
+                            //提交成功后取消模态窗口;
+                            unmaskWindow();
+                            var ps_kslb_submtall_status = "已提交";
+                            $("#ps_kslb_submtall_"+(jsonObject['ps_class_id']+"_"+jsonObject['ps_bkpc_id'])).html("【"+ps_kslb_submtall_status+"】");
+						}
+					}
+					catch(e1)
+					{
+						if(window.evaluateSystemDebugFlag == 'Y')
+						{
+							alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+							var mytmpWindow = window.open("about:blank");
+							mytmpWindow.document.body.innerHTML = response.responseText;
+						}
+						else
+						{
+							alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+						}
+						
+						//unmask window
+						unmaskWindow();
+					}
+				},
+				failure:function(response)
+				{
+					if(window.evaluateSystemDebugFlag == 'Y')
+					{
+						alert('提交当前评审批次时发生错误，请与系统管理员联系：' + response.responseText);
+					}
+					else
+					{
+						alert('提交当前评审批次时发生错误，请与系统管理员联系。');
+					}
+					
+					//unmask window
+					unmaskWindow();
+				}
+			}
+		);
 }
 
 
@@ -1299,107 +847,99 @@ function getNextApplicant(jsonObject)
 	maskWindow();
 	
 	Ext.Ajax.request(
-										{
-											url:window.getNextApplicantUrl,
-											method:'POST',
-											timeout:10000,
-											params: {
-																LanguageCd:'ZHS',
-																OperationType:'NXT',
-																BaokaoClassID:jsonObject['ps_class_id'],
-                                                                BaokaoPCID:jsonObject['ps_bkpc_id']
-															},
-											success:function(response)
-											{
-												var jsonObject = null;
-												
-												try
-												{
-													jsonObject = Ext.JSON.decode(response.responseText);
-													
-													if(jsonObject.error_code != '0')
-													{
-														//unmask window
-														unmaskWindow();
-														
-														alert('获取考生信息时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-													}
-													else
-													{
-														if(window.KSINFO_JSON_DATA == null)
-														{
-															window.KSINFO_JSON_DATA = new Array();
-														}
-														
-														var tmpBmbID = jsonObject['ps_ksh_bmbid'];
-														if(KSINFO_JSON_DATA[tmpBmbID] != 'undefined' && KSINFO_JSON_DATA[tmpBmbID]!= null && KSINFO_JSON_DATA[tmpBmbID]!= '')
-														{
-															//unmask window
-															unmaskWindow();
-															
-															alert('获取考生信息时发生错误，请与系统管理员联系：获取到重复的考生信息。');
-														}
-														else
-														{
-															KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
-															
-															//加载指定考生评审信息页面并显示
-															var tzEObject = new tzEvaluateObject();
-															
-															/*tzEObject.baokaoDirectionID = jsonObject['ps_bkfx_id'];
-															tzEObject.baokaoDirectionName = jsonObject['ps_bkfx_mc'];
-															tzEObject.baokaoYear = jsonObject['ps_baok_nf'];
-															tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
-															tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];*/
-                                                            tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-                                                            tzEObject.baokaoClassName = jsonObject['ps_class_name'];
-                                                            //lw tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
-                                                            tzEObject.baokaoPcID = jsonObject['ps_bkpc_id'];
-                                                            tzEObject.baokaoPcName = jsonObject['ps_baok_pc'];
-															tzEObject.applicantName = jsonObject['ps_ksh_xm'];
-															//tzEObject.applicantInterviewID = jsonObject['ps_ksh_msid'];
-                                                            tzEObject.applicantInterviewID = jsonObject['ps_ksh_bmbid'];
-															tzEObject.applicantBaomingbiaoID = jsonObject['ps_ksh_bmbid'];
-															
-															//获取新的局部数据，并使用局部数据刷新当前页面
-                                                            var cls_pc_id = jsonObject['ps_class_id'] +"_" + jsonObject['ps_bkpc_id'];
-															getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
-														}
-													}
-												}
-												catch(e1)
-												{
-													//unmask window
-													unmaskWindow();
-													
-													if(window.evaluateSystemDebugFlag == 'Y')
-													{
-														alert('获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
-														var mytmpWindow = window.open("about:blank");
-														mytmpWindow.document.body.innerHTML = response.responseText;
-													}
-													else
-													{
-														alert('获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
-													}
-												}
-											},
-											failure:function(response)
-											{
-												//unmask window
-												unmaskWindow();
-													
-												if(window.evaluateSystemDebugFlag == 'Y')
-												{
-													alert('获取考生信息失败，请与系统管理员联系：' + response.responseText);
-												}
-												else
-												{
-													alert('获取考生信息失败，请与系统管理员联系。');
-												}
-											}
-										}
-									);
+		{
+			url:window.getNextApplicantUrl,
+			method:'POST',
+			timeout:10000,
+			params: {
+				LanguageCd:'ZHS',
+				OperationType:'NXT',
+				BaokaoClassID:jsonObject['ps_class_id'],
+                BaokaoPCID:jsonObject['ps_bkpc_id']
+			},
+			success:function(response)
+			{
+				var jsonObject = null;
+				
+				try
+				{
+					jsonObject = Ext.JSON.decode(response.responseText).comContent;
+					
+					if(jsonObject.error_code != '0')
+					{
+						//unmask window
+						unmaskWindow();
+						
+						alert('获取考生信息时发生错误：' + jsonObject.error_decription );
+					}
+					else
+					{
+						if(window.KSINFO_JSON_DATA == null)
+						{
+							window.KSINFO_JSON_DATA = new Array();
+						}
+						
+						var tmpBmbID = jsonObject['ps_ksh_bmbid'];
+						if(KSINFO_JSON_DATA[tmpBmbID] != 'undefined' && KSINFO_JSON_DATA[tmpBmbID]!= null && KSINFO_JSON_DATA[tmpBmbID]!= '')
+						{
+							//unmask window
+							unmaskWindow();
+							
+							alert('获取考生信息时发生错误，请与系统管理员联系：获取到重复的考生信息。');
+						}
+						else
+						{
+							KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
+							
+							//加载指定考生评审信息页面并显示
+							var tzEObject = new tzEvaluateObject();
+                            tzEObject.baokaoClassID = jsonObject['ps_class_id'];
+                            tzEObject.baokaoClassName = jsonObject['ps_class_name'];
+                            tzEObject.baokaoPcID = jsonObject['ps_bkpc_id'];
+                            tzEObject.baokaoPcName = jsonObject['ps_baok_pc'];
+							tzEObject.applicantName = jsonObject['ps_ksh_xm'];
+                            tzEObject.applicantInterviewID = jsonObject['ps_ksh_bmbid'];
+							tzEObject.applicantBaomingbiaoID = jsonObject['ps_ksh_bmbid'];
+							
+							//获取新的局部数据，并使用局部数据刷新当前页面
+                            var cls_pc_id = jsonObject['ps_class_id'] +"_" + jsonObject['ps_bkpc_id'];
+							getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
+						}
+					}
+				}
+				catch(e1)
+				{
+					//unmask window
+					unmaskWindow();
+					
+					if(window.evaluateSystemDebugFlag == 'Y')
+					{
+						alert('获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+						var mytmpWindow = window.open("about:blank");
+						mytmpWindow.document.body.innerHTML = response.responseText;
+					}
+					else
+					{
+						alert('获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+					}
+				}
+			},
+			failure:function(response)
+			{
+				//unmask window
+				unmaskWindow();
+					
+				if(window.evaluateSystemDebugFlag == 'Y')
+				{
+					alert('获取考生信息失败，请与系统管理员联系：' + response.responseText);
+				}
+				else
+				{
+					alert('获取考生信息失败，请与系统管理员联系。');
+				}
+			}
+		}
+	);
 }
 
 function createApplicantList(jsonObject)
@@ -1422,6 +962,7 @@ function createApplicantList(jsonObject)
       bodyPadding:'0 0 0 0',
       scroll:true,
       width:"100%",
+      minHeight:200,
       columns: getApplicantListColumns(jsonObject['ps_data_kslb']['ps_ksh_list_headers']),
       title: '当前已归属您的评审考生列表',
       viewConfig: {
@@ -1520,12 +1061,9 @@ function createApplicantList(jsonObject)
       					text:'打印评审总表',
       					tooltip:'单击此按钮打印当前评审批次评审统计表。',
       					handler : function()
-      										{
-                                                //lw var cls_pc_id = jsonObject['ps_class_id']+"_"+jsonObject['ps_pc_id'];
-                                                //var cls_pc_id = jsonObject['ps_class_id']+"_"+jsonObject['ps_bkpc_id'];
-      											//printStatisticsTotalTable(cls_pc_id,getBatchNameById(cls_pc_id));
-                                                printStatisticsTotalTable(jsonObject['ps_class_id'],jsonObject['ps_bkpc_id'],jsonObject['ps_class_mc'],jsonObject['ps_bkpc_mc']);
-      										}
+							{
+                                printStatisticsTotalTable(jsonObject['ps_class_id'],jsonObject['ps_bkpc_id'],jsonObject['ps_class_mc'],jsonObject['ps_bkpc_mc']);
+							}
       				}
       			]
   });
@@ -1533,7 +1071,6 @@ function createApplicantList(jsonObject)
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex){
 					var rec = store1.getAt(rowIndex);
 					//var clickColName = rec.self.getFields()[colIndex]['name'];
-					console.log(gridViewObject.grid.columns[colIndex]);
 					var clickColName = gridViewObject.grid.columns[colIndex]["dataIndex"];
 					
 					gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
@@ -1581,10 +1118,10 @@ function createStatisticsArea(batchId,jsonObject)
 	
 	/*创建概要信息显示区*/
 	var gaiyaoArea = {
-											xtype: 'component',
-											html: Ext.String.format('<ul><li>' + jsonObject['ps_gaiy_info'] + '</li></ul>'),
-											style: 'margin-bottom:2px;margin-top:2px;font-size:12'
-									 };
+			xtype: 'component',
+			html: Ext.String.format('<ul><li>' + jsonObject['ps_gaiy_info'] + '</li></ul>'),
+			style: 'margin-bottom:10px;margin-top:2px;font-size:13px;'
+	 };
 	itemArray.push(gaiyaoArea);
 
 	/*创建评委评分平均分统计表格*/
@@ -1596,14 +1133,14 @@ function createStatisticsArea(batchId,jsonObject)
 	itemArray.push(tjFBgrid);
 
 	/*创建评委评分平均分统计图表*/
-	var tjCharts1 = createStatisticsChart(jsonObject,null,1020);
+	var tjCharts1 = createStatisticsChart(jsonObject,null,"100%");
 	if(tjCharts1 != null)
 	{
 		itemArray.push(tjCharts1);
 	}
 	
 	/*创建评委评分分布统计图表*/
-	var tjCharts2 = createStatisticsCharts(jsonObject,null,1020);
+	var tjCharts2 = createStatisticsCharts(jsonObject,null,"100%");
 	if(tjCharts2 != null)
 	{
 		itemArray.push(tjCharts2);
@@ -1611,17 +1148,20 @@ function createStatisticsArea(batchId,jsonObject)
 	
 	
 	var tjArea = Ext.create('Ext.Panel',
-							 {
-									title:'评审统计信息区',
-									collapsible:true,
-									margins:'5 5 5 5',
-									bodyPadding:'10 15 10 15',
-									layout:'form',
-									autoHeight:true,
-									width:"100%",
-									defaultType:'textfield',
-									items:itemArray
-							 });
+		 {
+			title:'评审统计信息区',
+			collapsible:true,
+			bodyPadding:10,
+			layout:'form',
+			autoHeight:true,
+			width:"100%",
+			layout: {
+                type: 'vbox',
+                align: 'stretch'
+            },
+			defaultType:'textfield',
+			items:itemArray
+		 });
 	
 	return tjArea;
 }
@@ -1660,21 +1200,32 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 		
 		//创建评委打分主页面框架
 		mainPageFrame = Ext.create('Ext.Panel',
-										{
-											region:'center',
-											autoScroll:false,
-											margins:'0 0 0 0',
-											bodyPadding:'0 0 0 0',
-											cls:'empty',
-											bodyStyle:'background:#ffffff',
-											layout:{type:'table',columns: 1},
-											width:"100%",
-											autoHeight:true,
-											items:itemArray
-										});
+			{
+				region:'center',
+				autoScroll:false,
+				margins:0,
+				//bodyPadding:"0 17px 0 0",
+				cls:'empty',
+				bodyStyle:'background:#ffffff',
+				//layout:{type:'table',columns: 1},
+				width:"100%",
+				autoHeight:true,
+				items:itemArray
+			});
 	}
-	
+	mainPageFrame.on("resize",function(t,width,height){
+		t.suspendEvent("resize");
+		if(Ext.fly("tz_evaluation_main").getHeight()<height){
+			t.setWidth(Ext.getBody().getWidth()-17);
+		}else{
+			t.setWidth(Ext.getBody().getWidth());
+		}
+		t.resumeEvent("resize");
 		
+		t.updateLayout();
+		
+	})
+	
 	return mainPageFrame;
 }
 
@@ -1687,6 +1238,7 @@ function loadApplicantData(applicantObject)
     if(classId != null && classId != '' && classId != 'undefined' && batchId != null && batchId != '' && batchId != 'undefined')
   {
   	displayApplicantEvaluatePage(applicantObject,showNextEvaluatePage,1,'ks_id_' + applicantObject.applicantInterviewID);
+  	Ext.fly("tz_evaluation_main").setScrollTop(0);
   }
   else
   {
@@ -1704,98 +1256,98 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
     var classid = arr[0];
     var pcid = arr[1];
 	Ext.Ajax.request(
-										{
-											url:window.getBatchDataUrl,
-											method:'POST',
-											timeout:10000,
-											params: {
-																	LanguageCd:'ZHS',
-                                                                    BaokaoClassID:classid,
-                                                                    BaokaoPCID:pcid,
-																	RequestDataType:'S',
-																	MaxRowCount:1000,
-																	StartRowNumber:1,
-																	MoreRowsFlag:'N'
-															},
-											success:function(response)
-											{
-												var jsonObject = null;
-												
-												try
-												{
-													jsonObject = Ext.JSON.decode(response.responseText);
-													
-													if(jsonObject.error_code != '0')
-													{
-														//unmask window
-														unmaskWindow();
-													
-														loadSuccess = false;
-														alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-													}
-													else
-													{
-														/*缓存当前局部刷新数据*/
-														window.batchJSONArray[batchId]['ps_gaiy_info'] = jsonObject['ps_gaiy_info'];
-														window.batchJSONArray[batchId]['ps_data_cy'] = jsonObject['ps_data_cy'];
-														window.batchJSONArray[batchId]['ps_data_fb'] = jsonObject['ps_data_fb'];
-														window.batchJSONArray[batchId]['ps_data_kslb'] = jsonObject['ps_data_kslb'];
-														window.batchJSONArray[batchId]['ps_kslb_submtall'] = jsonObject['ps_kslb_submtall'];
-														
-														
-														/*获取新的局部数据，并使用局部数据刷新当前批次评审主页面数据*/
-														refreshBatchDataByBatchId(jsonObject,'ps_ksh_bmbid',applicantObject.applicantBaomingbiaoID);
-														
-														//回调指定函数
-														if(operationType == 'NXT')
-														{//因为获取下一个考生而产生的回调，该回调将导致当前页面切换到指定考生资料评审主页面
-															callBackFunction(applicantObject);
-														}
-														else
-														{
-															//其他暂无操作
-															;
-															
-															//unmask window
-															unmaskWindow();
-														}
-														
-														
-														if(tipMessage != null && tipMessage != '' && tipMessage != 'undefined')
-														{
-															alert(tipMessage);
-														}
-													}
-												}
-												catch(e1)
-												{
-													loadSuccess = false;
-													if(window.evaluateSystemDebugFlag == 'Y')
-													{
-														alert('刷新当前评审批次[' + batchId + ']数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
-														var mytmpWindow = window.open("about:blank");
-														mytmpWindow.document.body.innerHTML = response.responseText;
-													}
-													else
-													{
-														alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
-													}
-												}
-											},
-											failure:function(response)
-											{
-												loadSuccess = false;
-												if(window.evaluateSystemDebugFlag == 'Y')
-												{
-													alert('刷新当前评审批次[' + batchId + ']数据时发生错误，请与系统管理员联系：' + response.responseText);
-												}
-												else
-												{
-													alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误，请与系统管理员联系。');
-												}
-											}
-										}
-									);
+		{
+			url:window.getBatchDataUrl,
+			method:'POST',
+			timeout:10000,
+			params: {
+					LanguageCd:'ZHS',
+                    BaokaoClassID:classid,
+                    BaokaoPCID:pcid,
+					RequestDataType:'S',
+					MaxRowCount:1000,
+					StartRowNumber:1,
+					MoreRowsFlag:'N'
+			},
+			success:function(response)
+			{
+				var jsonObject = null;
+				
+				try
+				{
+					jsonObject = Ext.JSON.decode(response.responseText).comContent;
+					
+					if(jsonObject.error_code != '0')
+					{
+						//unmask window
+						unmaskWindow();
+					
+						loadSuccess = false;
+						alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription);
+					}
+					else
+					{
+						/*缓存当前局部刷新数据*/
+						window.batchJSONArray[batchId]['ps_gaiy_info'] = jsonObject['ps_gaiy_info'];
+						window.batchJSONArray[batchId]['ps_data_cy'] = jsonObject['ps_data_cy'];
+						window.batchJSONArray[batchId]['ps_data_fb'] = jsonObject['ps_data_fb'];
+						window.batchJSONArray[batchId]['ps_data_kslb'] = jsonObject['ps_data_kslb'];
+						window.batchJSONArray[batchId]['ps_kslb_submtall'] = jsonObject['ps_kslb_submtall'];
+						
+						
+						/*获取新的局部数据，并使用局部数据刷新当前批次评审主页面数据*/
+						refreshBatchDataByBatchId(jsonObject,'ps_ksh_bmbid',applicantObject.applicantBaomingbiaoID);
+						
+						//回调指定函数
+						if(operationType == 'NXT')
+						{//因为获取下一个考生而产生的回调，该回调将导致当前页面切换到指定考生资料评审主页面
+							callBackFunction(applicantObject);
+						}
+						else
+						{
+							//其他暂无操作
+							;
+							
+							//unmask window
+							unmaskWindow();
+						}
+						
+						
+						if(tipMessage != null && tipMessage != '' && tipMessage != 'undefined')
+						{
+							alert(tipMessage);
+						}
+					}
+				}
+				catch(e1)
+				{
+					loadSuccess = false;
+					if(window.evaluateSystemDebugFlag == 'Y')
+					{
+						alert('刷新当前评审批次[' + batchId + ']数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+						var mytmpWindow = window.open("about:blank");
+						mytmpWindow.document.body.innerHTML = response.responseText;
+					}
+					else
+					{
+						alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+					}
+				}
+			},
+			failure:function(response)
+			{
+				loadSuccess = false;
+				if(window.evaluateSystemDebugFlag == 'Y')
+				{
+					alert('刷新当前评审批次[' + batchId + ']数据时发生错误，请与系统管理员联系：' + response.responseText);
+				}
+				else
+				{
+					alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误，请与系统管理员联系。');
+				}
+			}
+		}
+	);
 }
 
 /*自动重新高亮显示已选中数据行的函数*/
@@ -1959,39 +1511,39 @@ function refreshBatchDataByBatchId(jsonObject,dataIndexName,dataIndexValue)
 function partRefreshTestFunction(batchId)
 {
 	Ext.Ajax.request(
-										{
-											url:window.getBatchDataUrl,
-											method:'POST',
-											timeout:10000,
-											params: {
-																LanguageCd:'ZHS',
-																BaokaoFXID:batchId,
-																RequestDataType:'A',
-																MaxRowCount:1000,
-																StartRowNumber:1,
-																MoreRowsFlag:'N'
-															},
-											success:function(response)
-											{
-												var jsonObject = null;
-												
-												try
-												{
-													jsonObject = Ext.JSON.decode(response.responseText);
-													
-													refreshBatchDataByBatchId(jsonObject,null,null);
-												}
-												catch(e1)
-												{
-													alert('局部数据刷新测试失败，JSON数据解析错误:' + e1.description);
-												}
-											},
-											failure:function(response)
-											{
-												alert('局部数据刷新测试失败，服务器错误。');
-											}
-										}
-									);
+		{
+			url:window.getBatchDataUrl,
+			method:'POST',
+			timeout:10000,
+			params: {
+								LanguageCd:'ZHS',
+								BaokaoFXID:batchId,
+								RequestDataType:'A',
+								MaxRowCount:1000,
+								StartRowNumber:1,
+								MoreRowsFlag:'N'
+							},
+			success:function(response)
+			{
+				var jsonObject = null;
+				
+				try
+				{
+					jsonObject = Ext.JSON.decode(response.responseText);
+					
+					refreshBatchDataByBatchId(jsonObject,null,null);
+				}
+				catch(e1)
+				{
+					alert('局部数据刷新测试失败，JSON数据解析错误:' + e1.description);
+				}
+			},
+			failure:function(response)
+			{
+				alert('局部数据刷新测试失败，服务器错误。');
+			}
+		}
+	);
 }
 
 
@@ -2013,7 +1565,7 @@ function getColumnChartObject()
 	try
 	{
 		var tmpStore = rfObject1['items']['items'][1]['items']['items'][3]['items']['items'][0].getStore();
-		retCCObject = createStatisticsChart(window.batchJSONArray[batchId],tmpStore,960);
+		retCCObject = createStatisticsChart(window.batchJSONArray[batchId],tmpStore,"100%");
 	}
 	catch(e1)
 	{
@@ -2047,7 +1599,7 @@ function getLineChartObject()
 			chartStoreArray[i] = pwFenbuCharts[i]['items']['items'][0].getStore();
 		}
 		
-		retLCObject = createStatisticsCharts(window.batchJSONArray[batchId],chartStoreArray,960);
+		retLCObject = createStatisticsCharts(window.batchJSONArray[batchId],chartStoreArray,"100%");
 	}
 	catch(e5)
 	{

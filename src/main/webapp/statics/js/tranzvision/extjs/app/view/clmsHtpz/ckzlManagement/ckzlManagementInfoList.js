@@ -35,11 +35,14 @@ Ext.define('KitchenSink.view.clmsHtpz.ckzlManagement.ckzlManagementInfoList', {
             xtype: 'textfield',
             fieldLabel: "参考资料编号",
 			name: 'ckzlid',
-		//	maxLength: 20,
-       //     allowBlank: false
+			allowBlank: false,
+            readOnly:true,
+            fieldStyle:'background:#F4F4F4',
+            value: 'NEXT'
         }, {
             xtype: 'textfield',
             fieldLabel: "参考资料名称",
+            allowBlank: false,
 			name: 'ckzlName'
         }, {
             xtype: 'textfield',
@@ -56,7 +59,8 @@ Ext.define('KitchenSink.view.clmsHtpz.ckzlManagement.ckzlManagementInfoList', {
     buttons: [{
 		text: '保存',
 		iconCls:"save",
-		handler: 'onComRegSave'
+		handler: 'onComRegSave',
+		reference:'ckzlSave'
 	}, {
 		text: '确定',
 		iconCls:"ensure",

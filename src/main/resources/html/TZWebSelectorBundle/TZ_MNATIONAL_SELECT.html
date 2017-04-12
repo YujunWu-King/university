@@ -81,11 +81,17 @@ var tzGeneralURL = "%bind(:1)";
 			$("#" + clickId).val(countryDesc);
 			$("#" + clickId).attr("ccode",countryCode);
 			$("#" + clickId).html(countryDesc);
+			$("#TZ_SCH_CNAME_Country_1").html(countryDesc);
+			console.log("#TZ_SCH_CNAME_Country_1");
+			console.log(countryDesc);
+			
+			$("#TZ_SCH_CNAME_Country_1").css("color","#333");
+			$("#" + clickId).html(countryDesc);
 			$("#" + clickId).css("color","#333");
 			
 			
 			//关闭窗口
-			//returnResi();
+			returnResi();
 			//closePop();
 		}
 	
@@ -139,7 +145,7 @@ var tzGeneralURL = "%bind(:1)";
 	<li onclick="setTab(5,this);" title="南美洲 South America">南美洲 South America</li>
 
 </ul>
-<a href="javascript:void(0)" class="login_btn" onclick="returnResi()" style="width:94%;position:fixed;bottom:2%;left:50%;margin:0 0 0 -47%;">确认</a>
+<!-- <a href="javascript:void(0)" class="login_btn" onclick="returnResi()" style="width:94%;position:fixed;bottom:2%;left:50%;margin:0 0 0 -47%;">确认</a> -->
 <div class="pop_chose">%bind(:4)</div>
 <ul id="selectorList" class="country_list"></ul>
 <input id="FanhuiValue2" type="hidden" />
@@ -148,6 +154,6 @@ var tzGeneralURL = "%bind(:1)";
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#search-text").focus();
+		/* $("#search-text").focus(); */
 	})
 </script>

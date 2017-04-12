@@ -329,7 +329,8 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						FAM_DIV+='<div  class="input-list-info left">'+MsgSet["FAMILY_MONEY"]+'：</div>'
 						FAM_DIV+='<div class="input-list-text left"  >'
 							FAM_DIV+=familyMoneyDesc;	
-						FAM_DIV+='</div>'	
+						FAM_DIV+='</div>'
+					FAM_DIV+='</div>'		
 				FAM_DIV+='</div>'	
 				//------其他创业类型关联的DIV--------
 				var OTH_DIV='';
@@ -337,9 +338,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				var incomeODesc='';
 				var yearIncomeDesc='';
 				var firmScaleDesc='';
-				if(FINANCING_DEL=="03"){
+				if(BUSINESS_TYPE_DEF=="03"){
 					OTH_DIV+='<div id="OTHER_TYPE_SHOW">'
-					incomODesc=	child.WorkExper7.value+MsgSet["ONE_MILLION"];
+					incomeODesc=child.WorkExper7.value+MsgSet["ONE_MILLION"];
 					yearIncomeDesc=	child.WorkExper8.value+MsgSet["ONE_MILLION"];
 					firmScaleDesc=	child.WorkExper9.value+MsgSet["PEOPLES"];
 				}else{
@@ -431,7 +432,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 							//<!--B轮融资->
 							NET_DIV+='<div id="FB">'
 								NET_DIV+='<div name="financingB" class="input-list-text left" style="width:53%">'
-									NET_DIV+='<div class="left" style="width:32%"><div class="radio-btn'+(FINANCING_DEL=="B_FINANCING"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="B_FINANCING" '+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+'></i></div>'+MsgSet["B_FINANCING"]+'</div>'
+									NET_DIV+='<div class="left" style="width:32%"><div name="radioInput" class="radio-btn'+(FINANCING_DEL=="B_FINANCING"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="B_FINANCING" '+(FINANCING_DEL=="B_FINANCING"?'checked="checked"': '')+'></i></div>'+MsgSet["B_FINANCING"]+'</div>'
 									NET_DIV+='<div class="right" style="width:68%;  '+(FINANCING_DEL=="B_FINANCING"?'':' display:none')+'"><input class="inpu-list-text-enter" style="width:100%;margin-left:2.5px;margin-top:2.5px;height:35px"  id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'"></div>'
 								NET_DIV+='</div>'
 								NET_DIV+='<div class="input-list-suffix left" '+(FINANCING_DEL=="B_FINANCING"?'':' style="display:none"')+'>'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper2_1.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
@@ -439,7 +440,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 							//<!--A轮融资->
 							NET_DIV+='<div id="FA">'
 								NET_DIV+='<div name="financingA" class="input-list-text left" style="width:53%">'
-									NET_DIV+='<div class="left" style="width:32%"><div class="radio-btn'+(FINANCING_DEL=="A_FINANCING"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="A_FINANCING" '+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+'></i></div>'+MsgSet["A_FINANCING"]+'</div>'
+									NET_DIV+='<div class="left" style="width:32%"><div name="radioInput" class="radio-btn'+(FINANCING_DEL=="A_FINANCING"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="A_FINANCING" '+(FINANCING_DEL=="A_FINANCING"?'checked="checked"': '')+'></i></div>'+MsgSet["A_FINANCING"]+'</div>'
 									NET_DIV+='<div class="right" style="width:68%; '+(FINANCING_DEL=="A_FINANCING"?'':' display:none')+'"><input class="inpu-list-text-enter" style="width:100%;margin-left:2.5px;margin-top:2.5px;height:35px"  id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'"></div>'
 								NET_DIV+='</div>'
 								NET_DIV+='<div class="input-list-suffix left" '+(FINANCING_DEL=="A_FINANCING"?'':' style="display:none"')+'>'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper2_2.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
@@ -447,7 +448,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 							//<!--天使轮融资->
 							NET_DIV+='<div id="FAN">'
 								NET_DIV+='<div name="financingAn" class="input-list-text left" style="width:53%">'
-									NET_DIV+='<div class="left" style="width:32%"><div class="radio-btn'+(FINANCING_DEL=="ANGEL_INVEST"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="ANGEL_INVEST" '+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+'></i></div>'+MsgSet["ANGEL_INVEST"]+'</div>'
+									NET_DIV+='<div class="left" style="width:32%"><div name="radioInput" class="radio-btn'+(FINANCING_DEL=="ANGEL_INVEST"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="ANGEL_INVEST" '+(FINANCING_DEL=="ANGEL_INVEST"?'checked="checked"': '')+'></i></div>'+MsgSet["ANGEL_INVEST"]+'</div>'
 									NET_DIV+='<div class="right" style="width:68%; '+(FINANCING_DEL=="ANGEL_INVEST"?'':' display:none')+'"><input class="inpu-list-text-enter" style="width:100%;margin-left:2.5px;margin-top:2.5px;height:35px"  id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'"></div>'
 								NET_DIV+='</div>'
 								NET_DIV+='<div class="input-list-suffix left" '+(FINANCING_DEL=="ANGEL_INVEST"?'':' style="display:none"')+'>'+MsgSet["ONE_MILLION"]+'<span class="input-list-suffix-span">&nbsp;</span><div id="'+data["itemId"] + child.WorkExper2_3.itemId+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;"><div class="onShow" tips="&nbsp;">&nbsp;</div></div></div>'
@@ -455,13 +456,13 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 							//<!--未融资->
 							NET_DIV+='<div id="FNO">'
 								NET_DIV+='<div name="financingNo" class="input-list-text left" style="width:53%">'
-									NET_DIV+='<div class="left"><div class="radio-btn'+(FINANCING_DEL=="NO_FINANCING"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="NO_FINANCING" '+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+'></i></div>'+MsgSet["NO_FINANCING"]+'</div>'
+									NET_DIV+='<div class="left"><div name="radioInput" class="radio-btn'+(FINANCING_DEL=="NO_FINANCING"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="NO_FINANCING" '+(FINANCING_DEL=="NO_FINANCING"?'checked="checked"': '')+'></i></div>'+MsgSet["NO_FINANCING"]+'</div>'
 								NET_DIV+='</div>'
 							NET_DIV+='</div>'
 							//<!--初创->	
 							NET_DIV+='<div id="FNE">'
 								NET_DIV+='<div name="financingNe" class="input-list-text left" style="width:53%">'
-									NET_DIV+='<div class="left"><div class="radio-btn'+(FINANCING_DEL=="NEW_CREATE"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="NEW_CREATE" '+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+'></i></div>'+MsgSet["NEW_CREATE"]+'</div>'
+									NET_DIV+='<div class="left"><div name="radioInput" class="radio-btn'+(FINANCING_DEL=="NEW_CREATE"?' checkedRadio': '')+'"><i><input type="radio" name="financing_type" value="NEW_CREATE" '+(FINANCING_DEL=="NEW_CREATE"?'checked="checked"': '')+'></i></div>'+MsgSet["NEW_CREATE"]+'</div>'
 								NET_DIV+='</div>'
 							NET_DIV+='</div>'									
 							//<!--加入一个隐藏input缓存radio数据-->checkedRadio
@@ -702,76 +703,80 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			});
 		});
 		//----"互联网"类型下，radio的切换处理
-		$(".radio-btn").click(function(){
-			var radioEl=$(this).find("input[name='financing_type']");
-
-			$(this).addClass("checkedRadio");
-			var financingTypeVal=radioEl.val();
-			//alert(financingTypeVal);
-			//获取5个radio的句柄
-			var b_financing_i=$(this).parents("div[name='financingGp']").find("#FB").find("div[name='financingB']").find(".right");
-			var b_financing_s=$(this).parents("div[name='financingGp']").find("#FB").find(".input-list-suffix");
-			
-			//console.log("b_financing_i:");
-			//console.dir(b_financing_i);
-			var a_financing_i=$(this).parents("div[name='financingGp']").find("#FA").find("div[name='financingA']").find(".right");
-			var a_financing_s=$(this).parents("div[name='financingGp']").find("#FA").find(".input-list-suffix");
-			
-			var ang_financing_i=$(this).parents("div[name='financingGp']").find("#FAN").find("div[name='financingAn']").find(".right");
-			var ang_financing_s=$(this).parents("div[name='financingGp']").find("#FAN").find(".input-list-suffix");
-			
-			var no_radio=$(this).parents("div[name='financingGp']").find("#FNO").find("div[name='financingNo']").find(".radio-btn");
-			var new_radio=$(this).parents("div[name='financingGp']").find("#FNE").find("div[name='financingNe']").find(".radio-btn");
-
-			//---radio-1
-			if(financingTypeVal=="B_FINANCING"){
-				b_financing_i.css("display","inline");
-				b_financing_s.css("display","inline");
-			}else{
-				b_financing_i.siblings(".left").find(".radio-btn").removeClass("checkedRadio");
-				b_financing_i.css("display","none");
-				b_financing_s.css("display","none");
-				//清空B轮融资的数据：
-				b_financing_i.find("input").val("");
-			}
-			//---radio-2
-			if(financingTypeVal=="A_FINANCING"){
-				a_financing_i.css("display","inline");
-				a_financing_s.css("display","inline");
-			}else{
-				a_financing_i.siblings(".left").find(".radio-btn").removeClass("checkedRadio");
-				a_financing_i.css("display","none");
-				a_financing_s.css("display","none");
-				//清空A轮融资的数据:
-				a_financing_i.find("input").val("");
-			}
-			//---radio-3
-			if(financingTypeVal=="ANGEL_INVEST"){
-				ang_financing_i.css("display","inline");
-				ang_financing_s.css("display","inline");
-			}else{
-				ang_financing_i.siblings(".left").find(".radio-btn").removeClass("checkedRadio");
-				ang_financing_i.css("display","none");
-				ang_financing_s.css("display","none");
-				//清空天使融资的数据：
-				ang_financing_i.find("input").val("");
-			}
-			if(financingTypeVal!="NO_FINANCING"){
-				no_radio.removeClass("checkedRadio");
-			}
-			if(financingTypeVal!="NEW_CREATE"){
-				new_radio.removeClass("checkedRadio");
-			}
-			if(financingTypeVal=="NO_FINANCING"||financingTypeVal=="NEW_CREATE"){
-				//清楚B轮融资 A轮融资 天使融资 数据:
-				a_financing_i.val("");
-				b_financing_i.val("");
-				ang_financing_i.val("");
-			}
-			//-----------将raido中的数据放入radioGroup下的隐藏input中
-			var radioValInput=$(this).parents(".right").find("div[name='radioData']").find("#"+data["itemId"] + child.WorkExper2.itemId);
-			radioValInput.val(financingTypeVal);
-		});
+		var radioEl;
+		if($(".radio-btn[name='radioInput']")!=undefined){
+			radioEl=$(".radio-btn[name='radioInput']");
+			radioEl.click(function(){
+				var radioEl=$(this).find("input[name='financing_type']");
+	
+				$(this).addClass("checkedRadio");
+				var financingTypeVal=radioEl.val();
+				//alert(financingTypeVal);
+				//获取5个radio的句柄
+				var b_financing_i=$(this).parents("div[name='financingGp']").find("#FB").find("div[name='financingB']").find(".right");
+				var b_financing_s=$(this).parents("div[name='financingGp']").find("#FB").find(".input-list-suffix");
+				
+				//console.log("b_financing_i:");
+				//console.dir(b_financing_i);
+				var a_financing_i=$(this).parents("div[name='financingGp']").find("#FA").find("div[name='financingA']").find(".right");
+				var a_financing_s=$(this).parents("div[name='financingGp']").find("#FA").find(".input-list-suffix");
+				
+				var ang_financing_i=$(this).parents("div[name='financingGp']").find("#FAN").find("div[name='financingAn']").find(".right");
+				var ang_financing_s=$(this).parents("div[name='financingGp']").find("#FAN").find(".input-list-suffix");
+				
+				var no_radio=$(this).parents("div[name='financingGp']").find("#FNO").find("div[name='financingNo']").find(".radio-btn");
+				var new_radio=$(this).parents("div[name='financingGp']").find("#FNE").find("div[name='financingNe']").find(".radio-btn");
+	
+				//---radio-1
+				if(financingTypeVal=="B_FINANCING"){
+					b_financing_i.css("display","inline");
+					b_financing_s.css("display","inline");
+				}else{
+					b_financing_i.siblings(".left").find(".radio-btn").removeClass("checkedRadio");
+					b_financing_i.css("display","none");
+					b_financing_s.css("display","none");
+					//清空B轮融资的数据：
+					b_financing_i.find("input").val("");
+				}
+				//---radio-2
+				if(financingTypeVal=="A_FINANCING"){
+					a_financing_i.css("display","inline");
+					a_financing_s.css("display","inline");
+				}else{
+					a_financing_i.siblings(".left").find(".radio-btn").removeClass("checkedRadio");
+					a_financing_i.css("display","none");
+					a_financing_s.css("display","none");
+					//清空A轮融资的数据:
+					a_financing_i.find("input").val("");
+				}
+				//---radio-3
+				if(financingTypeVal=="ANGEL_INVEST"){
+					ang_financing_i.css("display","inline");
+					ang_financing_s.css("display","inline");
+				}else{
+					ang_financing_i.siblings(".left").find(".radio-btn").removeClass("checkedRadio");
+					ang_financing_i.css("display","none");
+					ang_financing_s.css("display","none");
+					//清空天使融资的数据：
+					ang_financing_i.find("input").val("");
+				}
+				if(financingTypeVal!="NO_FINANCING"){
+					no_radio.removeClass("checkedRadio");
+				}
+				if(financingTypeVal!="NEW_CREATE"){
+					new_radio.removeClass("checkedRadio");
+				}
+				if(financingTypeVal=="NO_FINANCING"||financingTypeVal=="NEW_CREATE"){
+					//清楚B轮融资 A轮融资 天使融资 数据:
+					a_financing_i.val("");
+					b_financing_i.val("");
+					ang_financing_i.val("");
+				}
+				//-----------将raido中的数据放入radioGroup下的隐藏input中
+				var radioValInput=$(this).parents(".right").find("div[name='radioData']").find("#"+data["itemId"] + child.WorkExper2.itemId);
+				radioValInput.val(financingTypeVal);
+			});
+		}
 		//--------------------------
 	
 		

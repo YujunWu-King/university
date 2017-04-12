@@ -171,27 +171,6 @@ public class TZImpAppFormController {
 	
 	/*----------------------------推荐信导入相关方法---------------------------------*/
 	
-	
-	/**
-	 * 推荐信导入
-	 * 
-	 * @param request
-	 * @param response
-	 * @param max
-	 * @param min
-	 * @return
-	 */
-	@RequestMapping(value = { "/createletter/{clsid}/{min}/{max}" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
-	public String createLetter(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid,@PathVariable(value = "max") int max, @PathVariable(value = "min")  int min){
-		if(StringUtils.isBlank(clsid)){
-			clsid = "123";
-		}
-		String impMsg = tZImpAppFormServiceImpl.createLetter(clsid,min,max);
-
-		return impMsg;
-	}
-	
 	/**
 	 * 推荐信导入
 	 * 

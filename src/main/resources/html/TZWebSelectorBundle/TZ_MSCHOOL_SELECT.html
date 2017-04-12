@@ -76,6 +76,8 @@ var tzGeneralURL = "%bind(:1)";
 				$("#" + clickId).val(otherSchool);
 				$("#" + clickId).html(otherSchool);
 				$("#" + clickId).css("color","#333");
+				$("#TZ_SCH_CNAME_1").html(otherSchool);
+				$("#TZ_SCH_CNAME_1").css("color","#333");
 				/* //关闭窗口
 				closePop(); */
 				//返回窗口
@@ -98,12 +100,15 @@ var tzGeneralURL = "%bind(:1)";
 			//设置返回值
 			var clickId = $("#ParamCon").val();
 			$("#" + clickId).val(school);
+			$("#TZ_SCH_CNAME_1").html(school);
+			$("#TZ_SCH_CNAME_1").css("color","#333");
+			console.log(school);
 			$("#" + clickId).html(school);
 			$("#" + clickId).css("color","#333");
 			/* //关闭窗口
 			closePop(); */
 			//返回
-			//returnResi();
+			returnResi();
 			//清华MBA
 			if((typeof changeImg)=="function"){
 				var successFlg = "F";		
@@ -166,11 +171,12 @@ var tzGeneralURL = "%bind(:1)";
 <ul id="selectorList" class="country_list"></ul>
 <div class="pop_chose">其他学校</div>
 <div class="pop_search1">
-<input type="text" id="otherSchool" name="otherSchool" style="width: 86%; margin: 1% auto 4%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
+<input type="text" id="otherSchool" name="otherSchool" style="width: 99%; margin: 1% auto 4%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
 <!-- <a href="javascript:void(0)"><i></i></a> -->
-<a href="javascript:void(0)" class="login_btn" onclick="sureOther()" style="width:94%;position:fixed;bottom:2%;left:50%;margin:0 0 0 -47%;">确认</a>
-<!-- <input type="button" id="sureOtherSchool" name="sureOtherSchool" value="确认" style="width:42px;height:24px;border-radius:3px;background-color:#8f5dc0;text-align:center;margin-left:5px;margin-top:3px;" onclick="sureOther()"/> -->
-</div>		
+<!-- <a href="javascript:void(0)" class="login_btn" onclick="sureOther()" style="width:94%;position:fixed;bottom:2%;left:50%;margin:0 0 0 -47%;">确认</a>
+ --><!-- <input type="button" id="sureOtherSchool" name="sureOtherSchool" value="确认" style="width:42px;height:24px;border-radius:3px;background-color:#8f5dc0;text-align:center;margin-left:5px;margin-top:3px;" onclick="sureOther()"/> -->
+</div>
+<a href="javascript:void(0)" class="login_btn" onclick="sureOther()" style="width:94%;margin:2% auto;">确认</a>		
 <input id="FanhuiValue2" type="hidden" />
 <input id="language" type="hidden" value="%bind(:5)"/>
 </div>
@@ -178,6 +184,6 @@ var tzGeneralURL = "%bind(:1)";
 <script type="text/javascript">
 	$(document).ready(function(){
 		setTab(1);
-		$("#search-text").focus();
+		/* $("#search-text").focus(); */
 	})
 </script>

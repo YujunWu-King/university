@@ -14,6 +14,7 @@
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/layer/layer.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/util/checkExplorer.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/login.js"></script>
 </head>
 <body style="background:#eee"><div id="all">
   
@@ -37,12 +38,12 @@
 						<div class="login_number">
 							<span class="text_in">验证码：</span>
 							<input id="yzm" name="yzm" class="confirm_input" type="text">
-							<img class="confirm_img" id="yzmImg" onclick="SetImgCode()" src="">							
-							<a href="javascript:void(0)" class="update" onclick="SetImgCode()">看不清楚？</a>
+							<img class="confirm_img" id="yzmImg" src="">							
+							<a href="javascript:void(0)" class="update">看不清楚？</a>
 						</div>
 						<input id="TZ_IS_SUBMIT" name="TZ_IS_SUBMIT" value="Y1" type="hidden"/>
-                                                <div id="errormsg" style="display:none;" class="tips_error"><span></span></div>
-						<a href="javascript:void(0)" class="login_btn" id="submitbnt" onclick="Login()">登录</a>
+                        <div id="errormsg" style="display:none;" class="tips_error"><span></span></div>
+						<a href="javascript:void(0)" class="login_btn" id="submitbtn">登录</a>
 					</div>
 				</div>
 			</div>
@@ -55,10 +56,5 @@
 	<div id="footarea" class="footer assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" style="background-color:#fff">
   	<p>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</p>
     </div>
-    <input id="pagetype" name="pagetype" value="loginpage" type="hidden">
-    <input id="jgid" name="jgid" type="hidden" value="SEM">
-    <input id="siteid" name="siteid" type="hidden" value="72">
-    <input id="lang" name="lang" type="hidden" value="ZHS">
-    <input id="operator" name="operator" value="D" type="hidden">
 </div></body>
 </html>

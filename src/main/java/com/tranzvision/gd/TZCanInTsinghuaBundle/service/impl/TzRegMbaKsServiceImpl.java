@@ -154,7 +154,12 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 				if (dataMap.containsKey("TZ_DEPTMENT")) {
 					strTZ_DEPTMENT = ((String) dataMap.get("TZ_DEPTMENT")).trim();
 				}
-
+				//面试申请号
+				String tzMshId = "";
+				if (dataMap.containsKey("TZ_MSH_ID")) {
+					tzMshId = ((String) dataMap.get("TZ_MSH_ID")).trim();
+				}
+				
 				// 职务;
 				String strTZ_ZHIWU = "";
 				if (dataMap.containsKey("TZ_ZHIWU")) {
@@ -393,11 +398,11 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 				//注册产生的账号默认为完善
 				psTzAqYhxxTbl.setTzIsCmpl("Y");
 				//产生面试申请号，流水号格式：yyyy+00001
-				Calendar date=Calendar.getInstance();
-				String currentYear = String.valueOf(date.get(Calendar.YEAR));
-				String xuhao = "0000" + getSeqNum.getSeqNum(currentYear, "TZ_MSH_ID");
-				xuhao = xuhao.substring(xuhao.length()-5);
-				String tzMshId = currentYear + xuhao;
+//				Calendar date=Calendar.getInstance();
+//				String currentYear = String.valueOf(date.get(Calendar.YEAR));
+//				String xuhao = "0000" + getSeqNum.getSeqNum(currentYear, "TZ_MSH_ID");
+//				xuhao = xuhao.substring(xuhao.length()-5);
+//				String tzMshId = currentYear + xuhao;
 				psTzAqYhxxTbl.setTzMshId(tzMshId);
 				psTzAqYhxxTbl.setRowAddedDttm(new Date());
 				psTzAqYhxxTbl.setRowAddedOprid(oprId);
@@ -550,6 +555,7 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 				String attrCity = result.get("TZ_LEN_CITY") == null ? "" : String.valueOf(result.get("TZ_LEN_CITY"));
 				String attrCompName = result.get("TZ_COMPANY_NAME") == null ? "" : String.valueOf(result.get("TZ_COMPANY_NAME"));
 				String attrCompInd = result.get("TZ_COMP_INDUSTRY") == null ? "" : String.valueOf(result.get("TZ_COMP_INDUSTRY"));
+				String attrMshId = result.get("TZ_MSH_ID") == null ? "" : String.valueOf(result.get("TZ_MSH_ID"));
 				
 				String pross = (Math.random() * 10000 + "").replace(".", "").substring(0, 6);  
 
@@ -569,6 +575,7 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 				mapData.put("TZ_LEN_CITY", attrCity);
 				mapData.put("TZ_SCH_CNAME",attrSchName);
 				mapData.put("TZ_GENDER",attrSex);
+				mapData.put("TZ_MSH_ID", attrMshId);
 				paramsMap.put("data", mapData);
 				String strParams = jacksonUtil.Map2json(paramsMap);
 				

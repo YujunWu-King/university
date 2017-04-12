@@ -11,7 +11,6 @@
 <script type="text/javascript">
 	var TzUniversityContextPath = "%bind(:2)";
 	var siteId = "%bind(:4)";
-	
 	$(document).ready(function(){
 		var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_MENU_STD","OperateType":"HTML","comParams":{"siteId":"' + %bind(:4) +'","menuId":"' + %bind(:5) + '"}}';
 		$.ajax({
@@ -33,7 +32,7 @@
 %bind(:3)
 </head>
 <body>
-	<div class="viewport-adaptive">
+	<div class="viewport-adaptive" >
 	   <!-- 主体内容 -->
 	   %bind(:6)
 	</div>

@@ -274,8 +274,8 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 						+ strColuId + "&artId=" + strArtId + "&oprate=R";
                 /*新开窗口查看详细页面--琚峰 修改2017-04-06*/
 				strResultContent = strResultContent
-						+ "<li><div class=\"main_mid_recruit_list_title2\"><a href=" + strUrl + " target ='_blank'>"
-						+ strArtTitle + "</a></div><div class=\"main_mid_recruit_list_date\">" + strArtTime
+						+ "<li><div class=\"main_mid_recruit_list_title2\" style=\"width:800px;overflow:hidden\"><a href=" + strUrl + " target ='_blank'>"
+						+ strArtTitle + "</a></div><div class=\"main_mid_recruit_list_date\" style=\"color:#666\">" + strArtTime
 						+ "</div></li>";
 
 			}

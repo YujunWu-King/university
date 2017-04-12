@@ -186,6 +186,55 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 						mapList.put(itemId+"_label", scoreGc);
 					}
 					
+					//自动标签
+					String zdbqVal = "";
+					String zdbqSql = "select TZ_ZDBQ_ID,TZ_BIAOQZ_NAME from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+					List<Map<String,Object>> zdbqList = sqlQuery.queryForList(zdbqSql, new Object[]{ classId, rowList[1], rowList[2] });
+					for(Map<String,Object> zdbqMap : zdbqList){
+						String LabelDesc = zdbqMap.get("TZ_BIAOQZ_NAME") == null ? "" : zdbqMap.get("TZ_BIAOQZ_NAME").toString();
+						if(!"".equals(LabelDesc)){
+							if("".equals(zdbqVal)){
+								zdbqVal = LabelDesc ;
+							}else{
+								zdbqVal = zdbqVal + "|" + LabelDesc ;
+							}
+						}
+					}
+					mapList.put("autoLabel", zdbqVal);
+					
+					//负面清单
+					String fmqdVal = "";
+					String fmqdSql = "select TZ_FMQD_ID,TZ_FMQD_NAME from PS_TZ_CS_KSFM_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+					List<Map<String,Object>> fmqdList = sqlQuery.queryForList(fmqdSql, new Object[]{ classId, rowList[1], rowList[2] });
+					for(Map<String,Object> fmqdMap : fmqdList){
+						String LabelDesc = fmqdMap.get("TZ_FMQD_NAME") == null ? "" : fmqdMap.get("TZ_FMQD_NAME").toString();
+						if(!"".equals(LabelDesc)){
+							if("".equals(fmqdVal)){
+								fmqdVal = LabelDesc;
+							}else{
+								fmqdVal = fmqdVal + "|" + LabelDesc;
+							}
+						}
+					}
+					mapList.put("negativeList", fmqdVal);
+					
+					//手动标签
+					String sdbqVal = "";
+					String sdbqSql = "select TZ_LABEL_NAME from PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B where A.TZ_LABEL_ID=B.TZ_LABEL_ID and TZ_APP_INS_ID=?";
+					List<Map<String,Object>> sdbqList = sqlQuery.queryForList(sdbqSql, new Object[]{ rowList[2] });
+					for(Map<String,Object> sdbqMap: sdbqList){
+						String LabelDesc = sdbqMap.get("TZ_LABEL_NAME") == null ? "" : sdbqMap.get("TZ_LABEL_NAME").toString();
+						if(!"".equals(LabelDesc)){
+							if("".equals(sdbqVal)){
+								sdbqVal = LabelDesc;
+							}else{
+								sdbqVal = sdbqVal + "|" + LabelDesc;
+							}
+						}
+					}
+					mapList.put("manualLabel", sdbqVal);
+					
+					
 					listData.add(mapList);
 				}
 

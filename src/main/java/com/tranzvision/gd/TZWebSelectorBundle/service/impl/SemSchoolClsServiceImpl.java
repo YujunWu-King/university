@@ -56,7 +56,7 @@ public class SemSchoolClsServiceImpl extends FrameworkImpl {
 			String sqlFindScholls = "";
 			List<Map<String, Object>> list;
 			// 通过省市名称查询 BEGIN
-			if ("BYSCHOOL".equals(strOType)) {				
+			if ("BYSCHOOL".equals(strOType)) {
 				if ("".equals(strValue)) {
 					sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
 					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] {});
@@ -109,8 +109,9 @@ public class SemSchoolClsServiceImpl extends FrameworkImpl {
 			}
 
 			if ("BYSCHOOLNAME".equals(strOType)) {
-				sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
-				list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { "%" + strValue + "%" });
+				sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME LIKE ? OR TZ_SCHOOL_NAMEENG LIKE ? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+				list = jdbcTemplate.queryForList(sqlFindScholls,
+						new Object[] { "%" + strValue + "%", "%" + strValue + "%" });
 				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
@@ -175,14 +176,13 @@ public class SemSchoolClsServiceImpl extends FrameworkImpl {
 
 		String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 		imgPath = request.getContextPath() + imgPath + "/" + skinId;
-		
-		
-		//A:注册用  B:报名表
+
+		// A:注册用 B:报名表
 		String type = jacksonUtil.getString("Type");
-		
+
 		try {
 			schoolHtml = tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_MSCHOOL_SELECT", tzGeneralURL, contextUrl,
-					imgPath,type);
+					imgPath, type);
 		} catch (TzSystemException e) {
 			e.printStackTrace();
 		}

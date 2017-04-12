@@ -412,6 +412,7 @@ function initializeEvaluateDataObjects(urlObject)
 	window.getApplicantDataUrl = urlObject['getApplicantDataUrl'];
 	window.submitApplicantDataUrl = urlObject['submitApplicantDataUrl'];
 	window.printStatisticsTableUrl = urlObject['printStatisticsTableUrl'];
+	window.scoreUrl = urlObject['scoreUrl'];
 	window.evaluateSystemDebugFlag = 'Y';
 	
 	//library_main_evalute_page 的评审考生列表GRID对象，用于实现第二、三个页面考生 GRID 的自动HIGHLIGHT
@@ -456,8 +457,10 @@ function initializeEvaluateSystem(urlObject)
 
 
 //显示、隐藏窗体的蒙板层
-function maskWindow(){
-	Ext.getBody().mask("加载中，请稍候...");
+function maskWindow(msg){
+	var maskMsg = msg!=undefined&&msg!=""?msg:"加载中，请稍候...";
+	
+	Ext.getBody().mask(maskMsg);
 }
 
 
@@ -465,4 +468,154 @@ function unmaskWindow(){
 	Ext.getBody().unmask();
 }
 
+function changePassword(){
+	var win = Ext.modifyPwdWindow;
+	if(!win){
+		Ext.define('KitchenSink.view.common.modifyPwdWindow', {
+		    extend: 'Ext.window.Window',
+		    xtype: 'modifyPwdWindow', 
+		    title: '修改密码', 
+		    width: 500,
+		    height: 200,
+		    layout: 'fit',
+		    resizable: false,
+		    modal: true,
+		    closeAction: 'hide',
+			items: [{
+				xtype: 'form',	
+				layout: {
+					type: 'vbox',
+					align: 'stretch'
+				},
+				border: false,
+				bodyPadding: 10,
+				ignoreLabelWidth: true,
+			
+				fieldDefaults: {
+					msgTarget: 'side',
+					labelWidth: 120,
+					fieldStyle:"margin-bottom:5px",
+					labelStyle: 'font-size:13px;'
+				},
+				items: [{
+					xtype: 'textfield',
+					fieldLabel: "原密码",
+					name: 'oldPwd',
+					inputType: 'password',
+					afterLabelTextTpl: [
+						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+					],
+					allowBlank: false
+				}, {
+					xtype: 'textfield',
+					fieldLabel: "新密码",
+					name: 'newPwd',
+					inputType: 'password',
+					afterLabelTextTpl: [
+						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+					],
+					allowBlank: false
+				}, {
+					xtype: 'textfield',
+					fieldLabel: "确认新密码",
+					name: 'comfirmPwd',
+					inputType: 'password',
+					afterLabelTextTpl: [
+						'<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+					],
+					allowBlank: false
+				}]
+			}],
+		    buttons: [
+			{
+				text: '确定',
+				handler: function(btn){
+					var bl = true;
+					var win = btn.findParentByType("window");
+					var form = win.child("form").getForm();
+					if(!form.isValid()){
+						bl =  false;
+					}
+					//表单数据
+					var formParams = form.getValues();
+					//密码
+					if(formParams["newPwd"] != formParams["comfirmPwd"]){
+						Ext.MessageBox.alert('提示', '两次密码输入不一致', this);
+						bl =  false;
+					}
+					//新旧密码不能相同
+					if(formParams["oldPwd"] == formParams["newPwd"]){
+						Ext.MessageBox.alert('提示', '新旧密码不能相同', this);
+						bl =  false;
+					}
+					if (bl == true){
+					//提交参数
+					var tzParams = '{"ComID":"TZ_GD_XGPWD_COM","PageID":"TZ_GD_XGPWD_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+					Ext.tzSubmit(tzParams,function(){
+						var form = win.child("form").getForm();
+						form.reset();
+						win.close();
+					},"密码修改成功！");
+				}
+				}
+			}, {
+				text: '关闭',
+				handler: function(btn){
+					btn.findParentByType("window").close();
+				}
+			}]
+		});
+		Ext.modifyPwdWindow = win = new KitchenSink.view.common.modifyPwdWindow();
+	}
+	win.show();
+}
 
+Ext.tzSubmit =  function(params,callback,msg)
+{
+    maskWindow();
+
+    try
+    {
+        Ext.Ajax.request(
+            {
+                url: ContextPath+"/dispatcher",
+                params:{tzParams: params},
+                timeout: 60000,
+                async: false,
+                success: function(response, opts)
+                {
+                    //返回值内容
+                    var jsonText = response.responseText;
+                    try
+                    {
+                        var jsonObject = Ext.util.JSON.decode(jsonText);
+                        /*判断服务器是否返回了正确的信息*/
+                        if(jsonObject.state.errcode == 1){
+                        	Ext.Msg.alert("提示",jsonObject.state.errdesc);
+                        }else{
+                        	typeof callback == "function"&&callback();
+                        	Ext.Msg.alert("提示",msg||"保存成功！");
+                        }
+                    }
+                    catch(e)
+                    {
+                        Ext.Msg.alert("提示","密码修改失败："+e.toString()+"，请与系统管理员联系。");
+                    }
+                },
+                failure: function(response, opts)
+                {
+                	var respText = Ext.util.JSON.decode(response.responseText);
+                	Ext.Msg.alert("提示","密码修改失败："+respText.error+"，请与系统管理员联系。");
+                },
+                callback: function(opts,success,response)
+                {
+                    unmaskWindow();
+                }
+            });
+    }
+    catch(e1)
+    {
+    	Ext.Msg.alert("提示","密码修改失败：请与系统管理员联系。");
+    	unmaskWindow();
+    }
+} 

@@ -28,6 +28,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
  * MBA材料面试评审-面试规则-面试规则设置
@@ -53,6 +54,102 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 	private PsTzPwExtTblMapper psTzPwExtTblMapper;
 	@Autowired
 	private PsTzMsPsGzTblMapper psTzMsPsGzTblMapper;
+	@Autowired
+	private TZGDObject tzSQLObject;
+
+	@Override
+	public String tzQuery(String strParams, String[] errMsg) {
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		HashMap<String, Object> mapRet = new HashMap<String, Object>();
+		HashMap<String, Object> mapData = new HashMap<String, Object>();
+
+		try {
+
+			String dtFormat = getSysHardCodeVal.getDateFormat();
+			String tmFormat = getSysHardCodeVal.getTimeHMFormat();
+
+			SimpleDateFormat dateSimpleDateFormat = new SimpleDateFormat(dtFormat);
+			SimpleDateFormat timeSimpleDateFormat = new SimpleDateFormat(tmFormat);
+
+			jacksonUtil.json2Map(strParams);
+
+			// 班级编号
+			String classId = jacksonUtil.getString("classId");
+			// 批次编号
+			String batchId = jacksonUtil.getString("batchId");
+
+			String sql = tzSQLObject.getSQLText("SQL.TZMbaPwClps.TZ_MSPS_SET_RELUER");
+			Map<String, Object> mapBasic = sqlQuery.queryForMap(sql, new Object[] { classId, batchId });
+
+			if (mapBasic != null) {
+				String className = (String) mapBasic.get("TZ_CLASS_NAME");
+				String batchName = (String) mapBasic.get("TZ_BATCH_NAME");
+				Date startDate = mapBasic.get("TZ_PYKS_RQ") == null ? null
+						: dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_RQ")));
+				Date startTime = mapBasic.get("TZ_PYKS_SJ") == null ? null
+						: timeSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_SJ")));
+				Date endDate = mapBasic.get("TZ_PYKS_RQ") == null ? null
+						: dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_RQ")));
+				Date endTime = mapBasic.get("TZ_PYJS_SJ") == null ? null
+						: timeSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYJS_SJ")));
+				String materialDesc = (String) mapBasic.get("TZ_MSPS_SM");
+				String dqpsStatus = (String) mapBasic.get("TZ_DQPY_ZT");
+				String dqpsStatusDesc = (String) mapBasic.get("TZ_DQPY_ZT_DESC");
+				String bkksNum = mapBasic.get("TZ_BKKS_NUM") == null ? "" : String.valueOf(mapBasic.get("TZ_BKKS_NUM"));
+				String clpsksNum = mapBasic.get("TZ_CLPS_KS_NUM") == null ? ""
+						: String.valueOf(mapBasic.get("TZ_CLPS_KS_NUM"));
+				String mspsksNum = mapBasic.get("TZ_MSPS_KS_NUM") == null ? ""
+						: String.valueOf(mapBasic.get("TZ_MSPS_KS_NUM"));
+				String judgeNumSet = mapBasic.get("TZ_MSPY_NUM") == null ? ""
+						: String.valueOf(mapBasic.get("TZ_MSPY_NUM"));
+
+				String strStartDate = "";
+				if (null != startDate) {
+					strStartDate = dateSimpleDateFormat.format(startDate);
+				}
+				String strStartTime = "";
+				if (null != startTime) {
+					strStartTime = timeSimpleDateFormat.format(startTime);
+				}
+				String strEndDate = "";
+				if (null != endDate) {
+					strEndDate = dateSimpleDateFormat.format(endDate);
+				}
+				String strEndTime = "";
+				if (null != endTime) {
+					strEndTime = timeSimpleDateFormat.format(endTime);
+				}
+
+				mapData.put("classId", classId);
+				mapData.put("batchId", batchId);
+				mapData.put("className", className);
+				mapData.put("batchName", batchName);
+				mapData.put("ksNum", bkksNum);
+				mapData.put("reviewClpsKsNum", clpsksNum);
+				mapData.put("reviewKsNum", mspsksNum);
+				mapData.put("dqpsStatus", dqpsStatus);
+				mapData.put("desc", dqpsStatusDesc);
+				mapData.put("StartDate", strStartDate);
+				mapData.put("StartTime", strStartTime);
+				mapData.put("EndDate", strEndDate);
+				mapData.put("EndTime", strEndTime);
+				mapData.put("desc", materialDesc);
+				mapData.put("judgeNumSet", judgeNumSet);
+
+				mapRet.put("formData", mapData);
+			}
+
+			strRet = jacksonUtil.Map2json(mapRet);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+
+		return strRet;
+	}
 
 	// 面试规则 其他操作
 	@Override
@@ -172,11 +269,19 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		String RetrnStr = "";
 		String Strjudegid = "";
 		String Strjudename = "";
+		int count = 0;
 		try {
 			String Orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String teamsql = "SELECT TZ_GRP_COUNT FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
 
-			int count = sqlQuery.queryForObject(teamsql, new Object[] { classId, batchId }, "Integer");
+			String count1 = sqlQuery.queryForObject(teamsql, new Object[] { classId, batchId }, "String");
+			if (count1 == null) {
+				count = 999999999;
+			} else {
+				count = Integer.valueOf(count1);
+
+			}
+
 			String sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY  CAST(TZ_CLPS_GR_ID AS UNSIGNED INTEGER) ASC  LIMIT ? ";
 			List<Map<String, Object>> listMap = sqlQuery.queryForList(sql, new Object[] { Orgid, count });
 			for (Map<String, Object> map : listMap) {

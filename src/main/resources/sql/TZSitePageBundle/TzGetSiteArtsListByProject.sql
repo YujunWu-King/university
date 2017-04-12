@@ -42,5 +42,6 @@ where
 	)
 order by 
 	PT2.TZ_MAX_ZD_SEQ desc, 
+	PT2.TZ_ART_SEQ desc,
 	PT2.TZ_ART_NEWS_DT desc
 limit ?,?

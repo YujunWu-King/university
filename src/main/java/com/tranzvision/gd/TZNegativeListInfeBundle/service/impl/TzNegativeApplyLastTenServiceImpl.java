@@ -3,13 +3,11 @@ package com.tranzvision.gd.TZNegativeListInfeBundle.service.impl;
 
 import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsTblMapper;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsTbl;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
@@ -28,22 +26,19 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 	private SqlQuery SqlQuery;
 	@Autowired
 	private PsTzCsKsFmTMapper PsTzCsKsFmTMapper;
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
-	private HttpServletRequest request;
+
 	@Autowired
 	private PsTzCsKsTblMapper PsTzCsKsTBLMapper;
 
 	@Override
 	public boolean makeNegativeList(String classId, String batchId, String labelId) {
 		try {
-			String OrgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String OrgID = "SEM";
 
 			Date nowdate_time = new Date();
 			int frisone_pm;
 			int lastone_pm;
-			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID_LASTTEN'";
+			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_KSFMQDID_LASTTEN'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
 			int a = 0;
 
@@ -57,6 +52,7 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 			 * 1.a=0; 2.循环比较最后百分之10的第a个和前百分之90的最后一个， 3.如果相同 4.a++
 			 * 5.就在比较最后百分之10的第二个前百分之90的最后一个 循环
 			 ***/
+
 			frisone_pm = SqlQuery.queryForObject(sqlfristone, new Object[] { classId, batchId, count - 1 - a },
 					"Integer");
 			lastone_pm = SqlQuery.queryForObject(sqllastone, new Object[] { classId, batchId, count }, "Integer");
@@ -68,7 +64,8 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 
 			}
 			String sqltzappint = "SELECT TZ_APP_INS_ID FROM PS_TZ_CS_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ORDER BY TZ_KSH_PSPM DESC LIMIT ?  ";
-			List<?> tzappintlist = SqlQuery.queryForList(sqltzappint, new Object[] { classId, batchId, count - a });
+			List<Map<String, Object>> tzappintlist = SqlQuery.queryForList(sqltzappint,
+					new Object[] { classId, batchId, count - a });
 
 			if (tzappintlist != null && tzappintlist.size() > 0) {
 				for (int i = 0; i < tzappintlist.size(); i++) {
@@ -76,17 +73,16 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 					// String fmqdId = "TZ_FMQ" +
 					// String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T",
 					// "TZ_FMQD_ID"));
-					PsTzCsKsFmT.setTzAppInsId(Long.valueOf(tzappintlist.get(i).toString()));
+					PsTzCsKsFmT.setTzAppInsId(Long.valueOf(tzappintlist.get(i).get("TZ_APP_INS_ID").toString()));
 					PsTzCsKsFmT.setTzClassId(classId);
 					PsTzCsKsFmT.setTzApplyPcId(batchId);
-					PsTzCsKsFmT.setTzJgId(OrgID);
 					PsTzCsKsFmT.setTzFmqdId(fmqdId);
 					PsTzCsKsFmT.setTzFmqdName("排名后百分之十");
 
 					PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
 					PsTzCsKsTbl PsTzCsKsTBL = new PsTzCsKsTbl();
 
-					PsTzCsKsTBL.setTzAppInsId(Long.valueOf(tzappintlist.get(i).toString()));
+					PsTzCsKsTBL.setTzAppInsId(Long.valueOf(tzappintlist.get(i).get("TZ_APP_INS_ID").toString()));
 					PsTzCsKsTBL.setTzClassId(classId);
 					PsTzCsKsTBL.setTzApplyPcId(batchId);
 					// PsTzCsKsTBL.setTzJgId(OrgID);
