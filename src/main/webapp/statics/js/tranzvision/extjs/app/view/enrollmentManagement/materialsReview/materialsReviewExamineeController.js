@@ -71,7 +71,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         cmp.on('afterrender',function(win){
             var store = win.child('grid').getStore();
-            var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value":"'+classId+'","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value":"'+batchId+'"}}';
+            var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_ADDKS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value":"'+classId+'","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value":"'+batchId+'"}}';
             store.tzStoreParams = tzStoreParams;
             store.load();
         });
@@ -80,9 +80,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     },
     //材料评审考生名单-新增考生-查询
     queryExamineeAdd:function(btn) {
+        var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
+            form = activeTab.down("form").getForm();
+        var classId = form.findField("classId").getValue();
         Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_KS_VW',
-            condition:{},
+            cfgSrhId: 'TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_ADDKS_VW',
+            condition:{
+                TZ_CLASS_ID:classId
+            },
             callback: function(seachCfg){
                 var store = btn.findParentByType("grid").store;
                 btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
