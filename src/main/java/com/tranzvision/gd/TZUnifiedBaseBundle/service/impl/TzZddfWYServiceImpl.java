@@ -153,8 +153,11 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 						}
 						
 						//记录打分记录：英语成绩类型：GMAT>=750|其他语种：日语二级|100分
-						MarkRecord=MarkRecord+"英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
-						
+						if(MarkRecord != null){
+							MarkRecord=MarkRecord+"英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
+						}else{
+							MarkRecord="英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
+						}
 					}
 					
 					//其他语种成绩

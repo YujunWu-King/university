@@ -47,7 +47,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			String MarkRecord = null;
 			
 			//根据报名表ID查询考生境外工作经历，国家类别和时间，根据查询结果
-			String GJ = ksMap.get("TZ_20TZ_TZ_20_14firm_type");		//国家
+			String GJ = ksMap.get("TZ_42TZ_TZ_42_1");		//国家
 			String is_developed = "select 'Y' from PS_COUNTRY_TBL where is_developed ='Y' and descr=?";
 			String GJLB=SqlQuery.queryForObject(is_developed,  new Object[]{GJ}, "String");		//国家类别
 			
