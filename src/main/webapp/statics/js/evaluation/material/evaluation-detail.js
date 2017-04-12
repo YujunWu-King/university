@@ -389,7 +389,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var bmb_url = "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表">新开窗口查看考生材料</a>';
 
-		rtn_ksinfohtml += '<tr><td style="font-weight:bold;" width="87px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="612px">'+ three_btn_html +'</td></tr>';
+		rtn_ksinfohtml += '<tr><td style="font-weight:bold;" width="97px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
 		
 		rtn_ksinfohtml += '</table>';
 		
@@ -902,7 +902,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 									text	: '保 存',
 									width	: 100,
 									height	: 30,
-									margin	: 10,
+									margin	: '10 10 10 0',
 									handler : function() {
 												if(dfAreaPanel[tmpBatchId].getForm().isValid()){
 													// mask window
@@ -933,14 +933,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																try {
 																	var jsonObject = Ext.util.JSON.decode(jsonText);
 																	//判断服务器是否返回了正确的信息
-																	if (jsonObject.state.errcode == 0) {
+																	if (jsonObject.comContent.result==undefined || jsonObject.comContent.result == 0) {
 																		//刷新打分区
 																		refreshDfAreaFormPanel(jsonObject.comContent);
 
 																		//刷新当前考生在本地的缓存数据
 																		updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																		//更新全局缓存，进行局部刷新
-																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID, null, {applicantBaomingbiaoID: form.findField("KSH_BMBID").getValue()}, 'RFH');
+																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID, null, {applicantBaomingbiaoID: form.findField("KSH_BMBID").getValue()}, 'RFH');
 
 																		//若返回报文中有提示信息，则显示该提示信息，否则显示“提交成功！”
 																		if ($.trim(jsonObject.comContent.message) != "") {
@@ -955,7 +955,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		// unmask window
 																		unmaskWindow();
 
-																		Ext.Msg.alert('失败', jsonObject.state.error);
+																		Ext.Msg.alert('失败', jsonObject.comContent.resultMsg);
 																	}
 																} catch(e1){
 
@@ -1061,7 +1061,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 														var comParams = "";
 														comParams = '"update":['+formJson+']';
 														
-														var tzParams = '{"ComID":"TZ_PW_MSPS_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
+														var tzParams = '{"ComID":"TZ_EVA_MATERIAL_COM","PageID":"TZ_CLPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
 														
 														Ext.Ajax.request({
 															url : dfArea_Submit_URL,
@@ -1075,7 +1075,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 									                            {
 									                                var jsonObject = Ext.util.JSON.decode(jsonText);
 									                                //判断服务器是否返回了正确的信息
-									                                if(jsonObject.state.errcode == 0) {	
+									                                if(jsonObject.comContent.result==undefined || jsonObject.comContent.result == 0) {
 									                               
 									                                	//更新本地缓存的考生数据
 																		updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), '', true);
@@ -1090,7 +1090,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																		   
 																		//更新全局缓存，进行局部刷新
-																	    getPartBatchDataByBatchId(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
+																	    getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
 																	   
 																   		//若返回报文中有提示信息，则显示该提示信息，否则显示"提交成功！"
 																		if($.trim(jsonObject.comContent.message)!=""){
@@ -1111,9 +1111,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		//刷新当前考生在本地的缓存数据
 																		updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																		//更新全局缓存，进行局部刷新
-																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
+																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
 																		unmaskWindow();
-																		Ext.Msg.alert('失败', jsonObject.state.error);
+																		Ext.Msg.alert('失败', jsonObject.comContent.resultMsg);
 									                                }
 									                            }
 									                            catch(e1){
@@ -1245,7 +1245,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//生成考生基本信息的HTML内容
 		var show_ksinfohtml = genKSInfoHTML(userpoints);
 		
-		var parentFieldContainer = new Ext.form.FieldContainer({
+		/*var parentFieldContainer = new Ext.form.FieldContainer({
 											//fieldLabel		: '',
 											//hideLabel		: true,
 											combineErrors	: false,
@@ -1256,7 +1256,13 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																name : field_name,
 																value: '<div style="margin:0;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
 															  }]
-									});
+									});*/
+		var parentFieldContainer = new Ext.container.Container({
+			combineErrors	: false,
+			height			: thisFieldContainerHeight,
+			name            : field_name,
+			html            : '<div style="margin:0;width: 300%;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
+		});
 
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight + 50;
@@ -1322,7 +1328,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					newFormField = createParentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemParentId);	
 				} else {
 					//生成叶子节点
-					newFormField = createLeafPointFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemLowerLimit, node_data.itemUpperLimit, node_data.itemDfsm, node_data.itemCkwt,node_data.itemMsff, node_data.itemParentId);
+					newFormField = createLeafPointFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemLowerLimit, node_data.itemUpperLimit, node_data.itemCkwt,node_data.itemDfsm,node_data.itemMsff, node_data.itemParentId);
 				}
 			}
 		}
@@ -1618,7 +1624,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			{
 				region: 'east',
 				title: '【打分区】',
-				style: 'text-align:right;',
+				//style: 'text-align:right;',
 				//titleAlign: 'right',
 				collapsible: true,
 				collapsed: true,
@@ -1900,7 +1906,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	/**
 	* 提交、保存等操作后，更新本地缓存的JSON数据
 	*/
-	function updateKSJSONData(df_bkfxid, df_bmbid, userpoints, getAgain){
+	function updateKSJSONData(df_classid, df_batchid, df_bmbid, userpoints, getAgain){
 		if(getAgain){
 
 			var tzParams = '{"ComID":"TZ_EVA_MATERIAL_COM","PageID":"TZ_CLPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+df_classid+'","applyBatchId":"'+df_batchid+'","bmbId":"'+df_bmbid+'"}}';
@@ -1960,11 +1966,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		createExamineeGrid(ksjson_data);
 		//生成中间考生相关信息
 		//createKSInfoPanel(ksjson_data);
-		//生成中间打分区域
+		//生成右侧打分区域
 		createDfAreaPanel(ksjson_data);
 		//生成中间图表
 		//createDfAreaCharts();
-		//生成右侧考生报名表
+		//生成中间考生报名表
 		createBMBPanel("", df_bmbid);
 		//生成页面
 		createDfAreaExtPage(ksjson_data);
@@ -1990,7 +1996,6 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			content: {
 				// Set the text to an image HTML string with the correct src URL to the loading image you want to use
 				text: dfarea_leaftips_data[1],
-				
 				title: {
 					text: dfarea_leaftips_data[2], // Give the tooltip a title using each elements text
 					button: true

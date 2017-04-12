@@ -122,10 +122,56 @@
 			    				dataIndex: 'datetime',
 			    				width:140
 			    			},{
+			    				xtype: 'linkcolumn',
 			    				text: "日志详细内容",
 			    				dataIndex: 'logContent',
 			    				width:200,
-			    				flex:1
+			    				flex:1,
+			    				renderer:function(v){
+			    					this.text=v;
+			    					this.tooltip=v;
+			    					return ;
+			    				},
+				    			handler: function(view, rowIndex){
+				    				var store = view.findParentByType("grid").store;
+				    				var selRec = store.getAt(rowIndex);
+				    				var logContent = selRec.get("logContent");
+				    				
+				    				var logContentWin = Ext.widget('window', {
+										 title: '日志详情',
+										 width: 600,
+										 height: 400,
+										 resizable: false,
+										 modal: true,
+										 closeAction: 'destroy',
+										 bodyStyle:'overflow-y:auto;overflow-x:hidden',
+										 items:[{
+											 xtype:'form',
+											 bodyPadding: 10,
+											 items:[{
+												 xtype: 'label',
+											     text: '日志详细内容:',
+											     style:'font-weight:bold;',
+											 },{
+												 xtype:'displayfield',
+												 fieldLabel: '日志详细内容',
+												 hideLabel: true,
+												 value: logContent
+											 }]
+										 }],
+										 dockedItems: [{
+											xtype: 'toolbar',
+											dock: 'bottom',
+											ui: 'footer',
+											items:['->',{
+													text: '关闭',iconCls:'close',handler: function(closeBtn){
+														closeBtn.findParentByType('window').close();
+												}
+											}]
+										 }]
+									});
+				    				logContentWin.show();
+			    				},
 			    			}],
 			    			bbar: {
 			    				xtype: 'pagingtoolbar',
@@ -142,7 +188,6 @@
 					
 						var logWin = Ext.widget('window', {
 							 title: '进程运行日志',
-							 closeAction: 'hide',
 							 width: 800,
 							 minWidth: 800,
 							 height: 400,

@@ -82,11 +82,15 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 					List<Map<String, Object>> listPw = sqlQuery.queryForList(sql, new Object[] {classId,batchId,appinsId});
 					
 					for(Map<String, Object> mapPw : listPw) {
-						
-						pwNum++;
-						
+
 						//String pwOprid = mapPw.get("TZ_PWEI_OPRID")  == null ? "" : mapPw.get("TZ_PWEI_OPRID").toString();
 						String pwDlzhId = mapPw.get("TZ_DLZH_ID") == null ? "" : mapPw.get("TZ_DLZH_ID").toString();
+						String submitFlag = mapPw.get("TZ_SUBMIT_YN") == null ? "" : mapPw.get("TZ_SUBMIT_YN").toString();
+						
+						if("Y".equals(submitFlag)) {
+							//已评审
+							pwNum++;
+						}
 						
 						if(!"".equals(pwList)) {
 							pwList += "," + pwDlzhId;

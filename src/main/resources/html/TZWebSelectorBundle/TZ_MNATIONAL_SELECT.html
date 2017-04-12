@@ -81,6 +81,12 @@ var tzGeneralURL = "%bind(:1)";
 			$("#" + clickId).val(countryDesc);
 			$("#" + clickId).attr("ccode",countryCode);
 			$("#" + clickId).html(countryDesc);
+			$("#TZ_SCH_CNAME_Country_1").html(countryDesc);
+			console.log("#TZ_SCH_CNAME_Country_1");
+			console.log(countryDesc);
+			
+			$("#TZ_SCH_CNAME_Country_1").css("color","#333");
+			$("#" + clickId).html(countryDesc);
 			$("#" + clickId).css("color","#333");
 			
 			
@@ -148,6 +154,6 @@ var tzGeneralURL = "%bind(:1)";
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#search-text").focus();
+		/* $("#search-text").focus(); */
 	})
 </script>

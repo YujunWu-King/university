@@ -123,7 +123,7 @@ v\:* { behavior: url(#default#VML); }
 	background-color:#8e60bc!important;
 	border-color:#8e60bc!important;
 }
-.x-panel-header-title-default,.x-window-header-title-default{
+.x-title-text{
 	color:#773fae!important;
 }
 .x-grid-td {

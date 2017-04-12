@@ -1072,6 +1072,7 @@
 													if (tzurl != "") {
 														window.location.href = tzurl;
 													//推荐信不需要刷新
+													}
 													//} else {
 													//	window.location.reload(); 
 													//}
@@ -1161,7 +1162,10 @@
 					var home_page =$("#HOME_PAGE").parent().attr("id");
 					$(document).on("click","#"+home_page, function(event){
 						//alert("backToHome");
-						backToHome("%bind(:10)","%bind(:11)");
+						var isadmin = "%bind(:26)";
+						if (isadmin == "") {
+							backToHome("%bind(:10)","%bind(:11)");
+						}
 					});
 					
 				     $(document).on("click", "#app_preButtom", function(event){
@@ -1578,23 +1582,23 @@
 	<script type="text/javascript">
 			$(document).ready(function() {
 				
-				LoadHeader("",%bind(:10),"");
-				LoadFooter("",%bind(:10),"");
+				
 				
 
 				var tplType = "%bind(:19)";
 				var isadmin = "%bind(:26)";
 				if (isadmin == "") {
-					//LoadHeader("%bind(:11)", "%bind(:10)");
-					LoadFooter("%bind(:11)", "%bind(:10)");
+					LoadHeader("%bind(:11)",%bind(:10),"");
+					LoadFooter("%bind(:11)",%bind(:10),"");
 					
 					if (tplType == "BMB") {
 						//LoadMenu("%bind(:11)", "%bind(:10)");
 						//LoadWelcome("%bind(:11)", "%bind(:10)");
 					} 
 				}else{
-					$("#header").hide();
-					$("#footer").hide();
+					$("#headarea").hide();
+					$("#footarea").hide();
+					$("#backindex").hide();
 				}
 				if (tplType != "BMB") {
 					$("#app_download").hide();

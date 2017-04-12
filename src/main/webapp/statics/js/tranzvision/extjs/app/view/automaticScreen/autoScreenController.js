@@ -219,14 +219,32 @@
 		var dateIndex = columns[colIndex-1]['dataIndex'];
 		
 		var dfgcStr = rec.get(dateIndex+"_label");
-		if(dfgcStr.length > 0){
-			var dfgcHtmlContent = "";
-			
+		
+		var dfgcHtmlContent = "";
+		if(dfgcStr.length > 0){			
 			var dfgcArr = dfgcStr.split("|");
 			for(var i=0; i<dfgcArr.length; i++){
-				dfgcHtmlContent = dfgcHtmlContent + '<span>'+ dfgcArr[i] +'</span>';
+				dfgcHtmlContent = dfgcHtmlContent 
+					+ '<span style="margin: 0px 5px;'
+					+ 'padding: 0px 12px;'
+					+ 'background: #CCC7C7;'
+					+ 'height: 35px;'
+					+ 'display: inline-block;'
+					+ 'line-height: 35px;'
+					+ 'border-radius: 5px;">'+ dfgcArr[i] +'</span>';
 			}
+		}else{
+			dfgcHtmlContent = '<p class="fancybox-error">没有打分过程</p>';
 		}
+
+		$.fancybox({
+			padding: 20,
+			type: 'html',
+			title: '',
+			minHeight: 30,
+			minWidth:400, 
+			content: dfgcHtmlContent
+		});
 	},
 	
 	

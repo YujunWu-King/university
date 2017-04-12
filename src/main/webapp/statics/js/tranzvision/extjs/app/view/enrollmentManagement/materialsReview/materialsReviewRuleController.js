@@ -336,54 +336,100 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         var me = this,
             view = me.getView();
         var form = view.child("form").getForm();
+        var clpsksNum = form.findField("clpsksNum").getValue();
+
         var grid = view.down("grid[name=materialJudgeGrid]");
-        var store = grid.getStore();
+        var judgeStore = grid.getStore();
 
         var actType = view.actType;
 
         if(form.isValid()) {
             //校验评委各组评议人数合是否等于考生人数
             var checkFlag = me.checkJudgeExamineeTotal();
-
             if(checkFlag==true) {
                 var tzParams = me.getRuleParams(actType);
                 Ext.tzSubmit(tzParams,function(responseData) {
                     if(actType=="add") {
                         view.actType="update";
                     }
-                },"",true,this);
-            } else {
-                Ext.Msg.alert('提示','评委各组评议人数合不等于考生人数');
-                return ;
-            }
-        }
-    },
-    //设置评审规则-确定
-    onRuleEnsure:function(btn) {
-        var me = this,
-            view = me.getView();
-        var form = view.child("form").getForm();
-        var grid = view.down("grid[name=materialJudgeGrid]");
-        var store = grid.getStore();
-
-        var actType = view.actType;
-
-        if(form.isValid()) {
-            //校验评委各组评议人数合是否等于考生人数
-            var checkFlag = me.checkJudgeExamineeTotal();
-
-            if(checkFlag==true) {
-                var tzParams = me.getRuleParams(actType);
-                Ext.tzSubmit(tzParams,function(responseData) {
-                    if(actType=="add") {
-                        view.actType="update";
+                    if(btn.name=='onRuleEnsure') {
+                        view.close();
                     }
-                    view.close();
                 },"",true,this);
             } else {
                 Ext.Msg.alert('提示','评委各组评议人数合不等于考生人数');
                 return ;
             }
+
+            /*var judgeGroupData = [];
+
+            var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
+                recname:'TZ_CLPS_GR_TBL',
+                condition:{
+                    TZ_JG_ID:{
+                        value:Ext.tzOrgID,
+                        operator:'01',
+                        type:'01'
+                    }
+                },
+                result:'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME',
+                listeners:{
+                    load:function(store,records,successful,eOpts) {
+                        for(i=0;i<records.length;i++) {
+                            judgeGroupData.push(records[i].data);
+                        }
+
+                        var judgeGroup,judgeExamineeNum;
+                        var judgeExamineeTotal=0;
+                        var judgeExamineeTotalTmp=0;
+                        var arrayTotal = [];
+
+                        for(var i=0;i<judgeGroupData.length;i++) {
+                            var rec = judgeGroupData[i];
+                            judgeGroup = rec.TZ_CLPS_GR_ID;
+
+                            for(var j=0;j<judgeStore.getCount();j++) {
+                                var record = judgeStore.getAt(j);
+                                if(judgeGroup == record.get("judgeGroup")) {
+                                    judgeExamineeNum = record.get("judgeExamineeNum");
+                                    judgeExamineeTotal+=judgeExamineeNum;
+                                }
+                            }
+
+                            arrayTotal.push(judgeExamineeTotal);
+                            judgeExamineeTotalTmp+=judgeExamineeTotal;
+                            judgeExamineeTotal=0;
+                        }
+
+                        var checkFlag=true;
+                        for(var k=0;k<arrayTotal.length;k++) {
+                            if(clpsksNum!=arrayTotal[k]) {
+                                checkFlag=false;
+                                break;
+                            }
+                        }
+
+                        if(checkFlag==true) {
+                            var statisticsNumForm = view.down("form[name=statisticsNumForm]").getForm();
+                            statisticsNumForm.findField("judgeNumTotal").setValue(judgeExamineeTotalTmp);
+
+                            var tzParams = me.getRuleParams(actType);
+                            Ext.tzSubmit(tzParams,function(responseData) {
+                                if(actType=="add") {
+                                    view.actType="update";
+                                }
+                                if(btn.name=='onRuleEnsure') {
+                                    view.close();
+                                }
+                            },"",true,this);
+                        } else {
+                            Ext.Msg.alert('提示','评委各组评议人数合不等于考生人数');
+                            return ;
+                        }
+
+                    }
+                }
+            });*/
         }
     },
     //设置评审规则-关闭
@@ -399,9 +445,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         var clpsksNum = form.findField("clpsksNum").getValue();
 
         var grid = view.down("grid[name=materialJudgeGrid]");
-        var store = grid.getStore();
+        var judgeStore = grid.getStore();
 
-        var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
+       /* var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
             recname:'TZ_CLPS_GR_TBL',
             condition:{
                 TZ_JG_ID:{
@@ -412,26 +458,29 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             },
             result:'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME'
         });
+        judgeGroupStore.load();*/
+
+        var judgeGroupData = view.judgeGroupData;
 
         var judgeGroup,judgeExamineeNum;
-        var judgeExamineeTotal=0;
+        var judgeExamineeTotalTmp=0;
         var arrayTotal = [];
 
-        for(var i=0;i<judgeGroupStore.getCount();i++) {
-            var rec = judgeGroupStore.getAt(i);
-            judgeGroup = rec.get("TZ_CLPS_GR_ID");
+        for(var i=0;i<judgeGroupData.length;i++) {
+            var judgeExamineeTotal=0;
+            var rec = judgeGroupData[i];
+            judgeGroup = rec.TZ_CLPS_GR_ID;
 
-            for(var j=0;j<store.getCount();j++) {
-                var record = store.getAt(j);
-                if(judgeGroup = record.get("judgeGroup")) {
+            for(var j=0;j<judgeStore.getCount();j++) {
+                var record = judgeStore.getAt(j);
+                if(judgeGroup == record.get("judgeGroup")) {
                     judgeExamineeNum = record.get("judgeExamineeNum");
-                    judgeExamineeTotal+=judgeExamineeNum;
+                    judgeExamineeTotal = parseInt(judgeExamineeTotal)+parseInt(judgeExamineeNum);
                 }
             }
 
             arrayTotal.push(judgeExamineeTotal);
-            judgeExamineeTotal=0;
-
+            judgeExamineeTotalTmp+=judgeExamineeTotal;
         }
 
         var checkFlag=true;
@@ -440,6 +489,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 checkFlag=false;
                 break;
             }
+        }
+
+        if(checkFlag==true) {
+            var statisticsNumForm = view.down("form[name=statisticsNumForm]").getForm();
+            statisticsNumForm.findField("judgeNumTotal").setValue(judgeExamineeTotalTmp);
         }
 
         return checkFlag;

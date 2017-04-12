@@ -58,23 +58,24 @@ $(document).ready(function() {
         	elem: '#BIRTHDATE'
         });
     });*/
-	var bir_option = {
+/*	var bir_option = {
 			beginyear:1900,
 			endyear:2017
-	};
-    $("#BIRTHDATE").date(bir_option
+	};*/
+	
+   /* $("#BIRTHDATE").date(bir_option
     ,function(dateStr){
     	$("#BIRTHDATE").val(dateStr);
     },function(){
-    	/*未选择*/
-    });
+    	未选择
+    });*/
     //本科毕业时间
-    var bn_option = {};
+/*    var bn_option = {};
     $("#TZ_COMMENT1").date(bn_option
     ,function(dateStr){
     	$("#TZ_COMMENT1").val(dateStr);
     },function(){
-    	/*未选择*/
+    	未选择
     });
   //本最高学历获得时间
     var hig_option = {};
@@ -82,8 +83,21 @@ $(document).ready(function() {
     ,function(dateStr){
     	$("#TZ_COMMENT3").val(dateStr);
     },function(){
-    	/*未选择*/
+    	未选择
+    });*/
+    $("#BIRTHDATE").focus(function(){
+        document.activeElement.blur();
     });
+      $("#TZ_COMMENT1").focus(function(){
+        document.activeElement.blur();
+    });
+      $("#TZ_COMMENT3").focus(function(){
+        document.activeElement.blur();
+    });
+    selectDate.init({trigger:"#BIRTHDATE",min:"1960/01/01",position:"bottom"});
+    selectDate1.init({trigger:"#TZ_COMMENT1",min:"1960/01/01", max:"2025/12/01",position:"bottom"});
+    selectDate2.init({trigger:"#TZ_COMMENT3",min:"1960/01/01", max:"2025/12/01",position:"bottom"});
+    
     //取消input的键盘
     $.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country"),$("#TZ_SCH_CNAME"), $("#TZ_SCH_CNAME_click"),$("#TZ_LEN_PROID"), $("#TZ_LEN_PROID_click")],function(i,el){
     el.focus(function(){
@@ -205,6 +219,15 @@ $(document).ready(function() {
                 }else {
                     $("#" + key).val(data[key]);
                     if (key == "TZ_SCH_COUNTRY") {
+                    	$("#TZ_SCH_COUNTRY").html(data[key]);
+                    	 $("#TZ_SCH_CNAME_Country_1").html( data['TZ_SCH_CNAME_Country']);
+                    	 $("#TZ_SCH_CNAME_Country_1").css("color","#333");
+                    	 $("#TZ_LEN_PROID_1").css("color","#333");
+                    	 $("#TZ_SCH_CNAME_1").css("color","#333");                    	
+                        // $("#TZ_SCH_CNAME_Country").attr("ccode", data[key]);
+                         $("#TZ_LEN_PROID_1").html(data['TZ_LEN_PROID']);
+                         console.log(data['TZ_LEN_PROID']);
+                         $("#TZ_SCH_CNAME_1").html(data['TZ_SCH_CNAME']);
                         $("#TZ_SCH_CNAME_Country").attr("ccode", data[key]);
                     }
                 }                

@@ -15,6 +15,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	title: Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_RULE_STD.title","设置评审规则"),
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
 	actType:'',
+	judgeGroupData:'',
     constructor: function(obj) {
         this.classId = obj.classId;
         this.batchID = obj.batchId;
@@ -329,7 +330,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     						},{
     							text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_RULE_STD.judgeExamineeNum","评审考生人数"),
     							dataIndex:'judgeExamineeNum',
-    							minWidth:130
+    							minWidth:130,
+								editor:{
+									xtype:'numberfield',
+									minValue:0,
+									allowDecimals:false
+								}
     						},{
     							text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_RULE_STD.judgeStatusDesc","评委状态"),
     							dataIndex:'judgeStatusDesc',
@@ -404,12 +410,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     buttons: [{
         text: Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_STD.save","保存"),
         iconCls: "save",
+		name:'onRuleSave',
         handler: 'onRuleSave'
     },
     {
         text: Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_STD.ensure","确定"),
         iconCls: "ensure",
-        handler: 'onRuleEnsure'
+		name:'onRuleEnsure',
+        handler: 'onRuleSave'
     },
     {
         text: Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_STD.close","关闭"),

@@ -612,7 +612,18 @@
 		//表单数据
 		var formParams = form.getValues();
 	
-
+		//除表单数据外，还有申请材料中提交状态字段
+		var grid = win.lookupReference("viewAppGrid");
+		var store = grid.getStore();
+		var mfRecs = store.getModifiedRecords(); 
+		var editJson = [];
+		for(var i=0;i<mfRecs.length;i++){
+			editJson[i] = {};
+			editJson[i].appInsId = mfRecs[i].data.appInsId;
+			editJson[i].appSubStatus = mfRecs[i].data.appSubStatus;			
+		}
+		formParams.updateStatus = editJson;		
+		
 		win.actType = "update";
 
 		//提交参数

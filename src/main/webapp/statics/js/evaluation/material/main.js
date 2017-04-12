@@ -618,4 +618,4 @@ Ext.tzSubmit =  function(params,callback,msg)
     	Ext.Msg.alert("提示","密码修改失败：请与系统管理员联系。");
     	unmaskWindow();
     }
-}
+} 
