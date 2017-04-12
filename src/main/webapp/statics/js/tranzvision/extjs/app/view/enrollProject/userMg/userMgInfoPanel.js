@@ -267,7 +267,7 @@
                                 fieldLabel : '联系电话',
                                 name : 'zyPhone',
                             },
-                            {
+                            /*{
                                 xtype : 'combobox',
                                 fieldLabel : '证件类型',
                                 name : 'nationType',
@@ -278,7 +278,7 @@
                                 displayField: 'TLDesc',
                                 store: new KitchenSink.view.common.store.appTransStore("TZ_NATION_ID_TYPE"),
                                 queryMode: 'local',
-                            },
+                            },*/
                             {
                                 xtype : 'textfield',
                                 fieldLabel : '证件号码',
