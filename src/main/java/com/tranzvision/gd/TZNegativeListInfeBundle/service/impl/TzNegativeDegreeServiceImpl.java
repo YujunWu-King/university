@@ -30,7 +30,6 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 	@Override
 	public boolean makeNegativeList(String classId, String batchId, String labelId) {
 		String oprid = "";
-		String OrgID = "SEM";
 		Date nowdate_time = new Date();
 		String sql = "";
 		String sql1 = "";
@@ -38,6 +37,7 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 		String degree = "";
 		String degree1 = "";
 		String degree2 = "";
+		int have_one = 0;
 		try {
 			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_KSFMQDID_GEGREE'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
@@ -69,7 +69,15 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 							PsTzCsKsFmT.setTzApplyPcId(batchId);
 							PsTzCsKsFmT.setTzFmqdId(fmqdId);
 							PsTzCsKsFmT.setTzFmqdName("学位学历");
-							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
+							have_one = SqlQuery.queryForObject(
+									"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
+									new Object[] { classId, batchId, Long.valueOf(appinsId), fmqdId }, "Integer");
+							if (have_one > 0) {
+
+							} else {
+								PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
+							}
+
 							PsTzCsKsTbl PsTzCsKsTBL = new PsTzCsKsTbl();
 
 							PsTzCsKsTBL.setTzAppInsId(Long.valueOf(appinsId));

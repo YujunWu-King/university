@@ -36,7 +36,7 @@ public class TzNegativeApplyNumberServiceImpl extends TzNegativeListBundleServic
 	public boolean makeNegativeList(String classId, String batchId, String labelId) {
 		Integer havenumber = 0;
 		String oprid = "";
-		String OrgID = "SEM";
+		int have_one = 0;
 
 		Date nowdate_time = new Date();
 
@@ -67,7 +67,14 @@ public class TzNegativeApplyNumberServiceImpl extends TzNegativeListBundleServic
 						PsTzCsKsFmT.setTzApplyPcId(batchId);
 						PsTzCsKsFmT.setTzFmqdId(fmqdId);
 						PsTzCsKsFmT.setTzFmqdName("申请次数大于3次");
-						PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
+						have_one = SqlQuery.queryForObject(
+								"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
+								new Object[] { classId, batchId, Long.valueOf(appinsId), fmqdId }, "Integer");
+						if (have_one > 0) {
+
+						} else {
+							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
+						}
 
 						PsTzCsKsTbl PsTzCsKsTBL = new PsTzCsKsTbl();
 
