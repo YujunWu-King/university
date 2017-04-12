@@ -1608,13 +1608,13 @@
                 } else {
                     panel.actType="add";
                     form.findField("classId").setValue(classId);
-                   // form.findField("className").setValue(className);
+                    form.findField("className").setValue(className);
                     form.findField("batchId").setValue(batchId);
                     
                     form.findField("ksNum").setValue(applicantsNumber);
                     form.findField("reviewClpsKsNum").setValue(0);
                     form.findField("reviewKsNum").setValue(0);
-                   // form.findField("batchName").setValue(batchName);
+                    form.findField("batchName").setValue(batchName);
                   // form.findField("bkksNum").setValue(applicantsNumber);
                     //form.findField("clpsksNum").setValue(0);
                    // form.findField("dqpsStatus").setValue("N");
@@ -1718,9 +1718,9 @@
                 } else {
                     panel.actType="add";
                     form.findField("classId").setValue(classId);
-                   // form.findField("className").setValue(className);
+                    form.findField("className").setValue(className);
                     form.findField("batchId").setValue(batchId);
-                   // form.findField("batchName").setValue(batchName);
+                    form.findField("batchName").setValue(batchName);
                     form.findField("ksNum").setValue(applicantsNumber);
                     form.findField("reviewClpsKsNum").setValue(0);
                     form.findField("reviewKsNum").setValue(0);

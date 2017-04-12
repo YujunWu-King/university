@@ -138,11 +138,11 @@
 						
 						var pageCount = parseInt(data.total/15)+(data.total%15>0&&1||0)
 						//分页栏
-						var pageCountsHtml = '<li onclick="loadPage(-1)">&lt;&lt;</li>';
+						var pageCountsHtml = '<li onclick="loadPage(1)">&lt;&lt;</li>';
 						for(var i=1;i<=pageCount;i++){
 							pageCountsHtml = pageCountsHtml+'<li '+(i==page?'class="now"':'')+' onclick="loadPage('+i+')">'+i+'</li>';
 						}
-						var pageCountsHtml = pageCountsHtml+'<li onclick="loadPage(1)">&gt;&gt;</li>';
+						var pageCountsHtml = pageCountsHtml+'<li onclick="loadPage('+pageCount+')">&gt;&gt;</li>';
 
 						$("#pagecount").html(pageCountsHtml);
 						$("#nowpage").html(page);
@@ -177,6 +177,12 @@
 				  		//ToDo
 		    	}    
 		});
+   	};
+   	
+   	function loadPage(page){
+   		$(".table_style tbody").html("");
+   		var start = (page-1)*15;
+   		loadStationMails(page,start,"");
    	}
 </script>
 
