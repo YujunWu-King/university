@@ -158,6 +158,15 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 						//打分记录
 						psTzCjxTblWithBLOBs.setTzScoreDfgc(MarkRecord);
 					
+						//删除已有数据	
+						PsTzCjxTblKey psTzCjxTblKey=new PsTzCjxTblKey();
+						
+						psTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
+						psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM);
+						
+						psTzCjxTblMapper.deleteByPrimaryKey(psTzCjxTblKey);
+						
+					//插入	
 					psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
 					
 					return Score;

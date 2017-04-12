@@ -122,13 +122,15 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 								hotTagDisplay = artTitleStyle.indexOf("HOT")>-1?"block":hotTagDisplay;
 								newTagDisplay = artTitleStyle.indexOf("NEW")>-1?"block":newTagDisplay;
 							}
-							//报考日历如果是活动发布则取活动开始日期、活动地点;
+							//如果是活动发布则取活动开始日期、活动地点;
 							int actRel = 0;
 							String actRelCount = "SELECT COUNT(*) FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
 							actRel = jdbcTemplate.queryForObject(actRelCount, new Object[] {artId}, "int");
-							if(actRel != 0){
-								String actRelSql = "SELECT DATE_FORMAT(TZ_START_DT,'%Y-%m-%d') AS TZ_START_DT  FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
-								artDate = jdbcTemplate.queryForObject(actRelSql, new Object[] {artId}, "String");
+							String actRelSql = "SELECT DATE_FORMAT(TZ_START_DT,'%Y-%m-%d') AS TZ_START_DT  FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
+							String activDate = jdbcTemplate.queryForObject(actRelSql, new Object[] {artId}, "String");
+							//如果有活动开始日期则取活动开始日期,从内容发布的招生活动没有活动日期;
+							if(actRel != 0 && (activDate!=null && !"".equals(activDate))){
+								artDate = activDate;
 							}
 							StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_view&operatetype=HTML&siteId=")
 									.append(strSiteId).append("&columnId=").append(currentColumnId).append("&artId=").append(artId);
