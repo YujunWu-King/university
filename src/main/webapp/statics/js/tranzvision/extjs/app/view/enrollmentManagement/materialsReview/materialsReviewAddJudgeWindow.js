@@ -272,8 +272,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                                     judgeEmail: selection[i].data.judgeEmail,
                                     judgeGroup: selection[i].data.judgeGroup,
                                     judgeExamineeNum: 0,
-                                    judgeStatus: "N",
-                                    judgeStatusDesc: "新建"
+                                    judgeStatus: "A",
+                                    judgeStatusDesc: "正常"
                                 });
 
                                 targetStore.insert(0, r);

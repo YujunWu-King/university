@@ -1119,55 +1119,80 @@
         var batchId = record.data.batchID;
         var batchName = record.data.batchName;
         var applicantsNumber = record.data.applicantsNumber;
-        cmp = new ViewClass({
-            classId:classId,
-            batchId:batchId
-        });
 
-        cmp.on('afterrender',function(panel){
-            var form = panel.child('form').getForm();
-            var statisticsNumForm = panel.down("form[name=statisticsNumForm]").getForm();
+        var judgeGroupData = [];
 
-            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
-                '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
-
-            Ext.tzLoad(tzParams,function(respData){
-                var formData = respData.formData;
-                if(formData!="" && formData!=undefined) {
-                    panel.actType="update";
-                    form.setValues(formData);
-
-                    statisticsNumForm.findField("clpsksNum").setValue(formData.clpsksNum);
-                    //要求评审人次更新
-                    statisticsNumForm.findField("reviewNumSet").setValue(parseInt(formData.clpsksNum)*(formData.judgeNumSet));
-                } else {
-                    panel.actType="add";
-                    form.findField("classId").setValue(classId);
-                    form.findField("className").setValue(className);
-                    form.findField("batchId").setValue(batchId);
-                    form.findField("batchName").setValue(batchName);
-                    form.findField("bkksNum").setValue(applicantsNumber);
-                    form.findField("clpsksNum").setValue(0);
-                    form.findField("dqpsStatus").setValue("N");
-                    form.findField("dqpsStatusDesc").setValue("未开始");
-
-                    var statisticsForm = panel.down("form[name=statisticsNumForm]").getForm();
-                    statisticsForm.findField("clpsksNum").setValue(0);
-                    statisticsForm.findField("reviewNumSet").setValue(0);
+        var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
+            recname:'TZ_CLPS_GR_TBL',
+            condition:{
+                TZ_JG_ID:{
+                    value:Ext.tzOrgID,
+                    operator:'01',
+                    type:'01'
                 }
+            },
+            result:'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME',
+            listeners: {
+                load: function (store, records, successful, eOpts) {
+                    for (i = 0; i < records.length; i++) {
+                        judgeGroupData.push(records[i].data);
+                    }
 
-            });
+                    cmp = new ViewClass({
+                        classId:classId,
+                        batchId:batchId
+                    });
+
+                    cmp.on('afterrender',function(panel){
+
+                        panel.judgeGroupData=judgeGroupData;
+
+                        var form = panel.child('form').getForm();
+                        var statisticsNumForm = panel.down("form[name=statisticsNumForm]").getForm();
+
+                        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
+                            '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
+
+                        Ext.tzLoad(tzParams,function(respData){
+                            var formData = respData.formData;
+                            if(formData!="" && formData!=undefined) {
+                                panel.actType="update";
+                                form.setValues(formData);
+
+                                statisticsNumForm.findField("clpsksNum").setValue(formData.clpsksNum);
+                                //要求评审人次更新
+                                statisticsNumForm.findField("reviewNumSet").setValue(parseInt(formData.clpsksNum)*(formData.judgeNumSet));
+                            } else {
+                                panel.actType="add";
+                                form.findField("classId").setValue(classId);
+                                form.findField("className").setValue(className);
+                                form.findField("batchId").setValue(batchId);
+                                form.findField("batchName").setValue(batchName);
+                                form.findField("bkksNum").setValue(applicantsNumber);
+                                form.findField("clpsksNum").setValue(0);
+                                form.findField("dqpsStatus").setValue("N");
+                                form.findField("dqpsStatusDesc").setValue("未开始");
+
+                                var statisticsForm = panel.down("form[name=statisticsNumForm]").getForm();
+                                statisticsForm.findField("clpsksNum").setValue(0);
+                                statisticsForm.findField("reviewNumSet").setValue(0);
+                            }
+
+                        });
+                    });
+
+                    tab = contentPanel.add(cmp);
+
+                    contentPanel.setActiveTab(tab);
+
+                    Ext.resumeLayouts(true);
+
+                    if (cmp.floating) {
+                        cmp.show();
+                    }
+                }
+            }
         });
-
-        tab = contentPanel.add(cmp);
-
-        contentPanel.setActiveTab(tab);
-
-        Ext.resumeLayouts(true);
-
-        if (cmp.floating) {
-            cmp.show();
-        }
     },
     /*材料评审--材料评审考生名单*/
     viewMaterialStuApplicants:function(grid,rowIndex){
@@ -1583,13 +1608,13 @@
                 } else {
                     panel.actType="add";
                     form.findField("classId").setValue(classId);
-                   // form.findField("className").setValue(className);
+                    form.findField("className").setValue(className);
                     form.findField("batchId").setValue(batchId);
                     
                     form.findField("ksNum").setValue(applicantsNumber);
                     form.findField("reviewClpsKsNum").setValue(0);
                     form.findField("reviewKsNum").setValue(0);
-                   // form.findField("batchName").setValue(batchName);
+                    form.findField("batchName").setValue(batchName);
                   // form.findField("bkksNum").setValue(applicantsNumber);
                     //form.findField("clpsksNum").setValue(0);
                    // form.findField("dqpsStatus").setValue("N");
@@ -1693,9 +1718,9 @@
                 } else {
                     panel.actType="add";
                     form.findField("classId").setValue(classId);
-                   // form.findField("className").setValue(className);
+                    form.findField("className").setValue(className);
                     form.findField("batchId").setValue(batchId);
-                   // form.findField("batchName").setValue(batchName);
+                    form.findField("batchName").setValue(batchName);
                     form.findField("ksNum").setValue(applicantsNumber);
                     form.findField("reviewClpsKsNum").setValue(0);
                     form.findField("reviewKsNum").setValue(0);

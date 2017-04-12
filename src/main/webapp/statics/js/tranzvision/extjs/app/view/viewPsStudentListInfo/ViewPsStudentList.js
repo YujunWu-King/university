@@ -51,14 +51,36 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 				margin: '8px',
 				style: 'border:0px',
 
-				items: [{
+				items: [
+					{
+					xtype: 'textfield',
+					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.classIdname", "报考班级"),
+					name: 'className',
+					labelWidth: 110,
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
+					//value: '105'
+
+				}, {
+					xtype: 'textfield',
+					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.batchIdname", "批次"),
+					name: 'batchName',
+					labelWidth: 110,
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
+					//value: '2'
+
+				},{
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
 					labelWidth: 110,
 					name: 'classId',
 					allowBlank: false,
 					fieldStyle:'background:#F4F4F4',
-    				readOnly:true
+    				readOnly:true,
+    				hidden:true
 
 				}, {
 					xtype: 'textfield',
@@ -67,7 +89,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					name: 'batchId',
 					allowBlank: false,
 					fieldStyle:'background:#F4F4F4',
-    				readOnly:true
+    				readOnly:true,
+    				hidden:true
 
 				}, {
 					xtype: 'textfield',
@@ -124,12 +147,12 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 						iconCls: "add",
 						handler: 'onAddMsPsXs'
 					}, "-",
-					{
+					/*{
 						text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.add", "新增"),
 						tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.adddata", "新增"),
 						iconCls: "add",
 						handler: this.onAddClick
-					}, "-",
+					}, "-",*/
 					{
 						text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.delete", "删除"),
 						tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.editdata", "删除"),
@@ -253,11 +276,11 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					align: 'center',
 					xtype: 'actioncolumn',
 					flex: 1,
-					items: [{
+					items: [/*{
 						iconCls: 'edit',
 						tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.edit", "编辑"),
 						handler: this.onAddClick
-					}, {
+					},*/ {
 						iconCls: 'people',
 						tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.edit", "指定评委"),
 						handler: 'setStuOnepw'

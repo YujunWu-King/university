@@ -239,6 +239,8 @@ public class TzTjxClsServiceImpl {
 		}
 		// 创建听众;
 		String createAudience = createTaskServiceImpl.createAudience(strTaskId, strAppOrgId, strAudienceDesc, strAudLy);
+		System.out.println("createAudience:" + createAudience);
+		System.out.println("strTaskId:" + strTaskId);
 		if ("".equals(createAudience) || createAudience == null) {
 			return "false";
 		}
