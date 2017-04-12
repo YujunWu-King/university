@@ -422,268 +422,238 @@
                             store:new KitchenSink.view.common.store.appTransStore("TZ_MSPS_PC"),
                             name:'msjgpc'
                         },{
-                            xtype:'combobox',
-                            fieldLabel:'联考报名',
-                            editable:false,
-                            valueField:'value',
-                            displayField:'desc',
-                            store:new Ext.data.ArrayStore({
-                                fields: ['value', 'desc'],
-                                data: [['', '无'], ['Y', '是'], ['N', '否']]
-                            }),
-name:'lkbm'
-},{
-    xtype:'textfield',
-        fieldLabel:'联考前调整情况',
-        name:'lqlzqk'
-},{
-    xtype:'textfield',
-        fieldLabel:'调整原因备注',
-        name:'tzyyNotes'
-},{
-    xtype:'combobox',
-        fieldLabel:'联考前条件录取资格',
-        editable:false,
-        valueField:'TValue',
-        displayField:'TLDesc',
-        store:new KitchenSink.view.common.store.appTransStore("TZ_LKQ_TJLQZG"),
-        name:'lkqtjluzg'
-},{
-    xtype:'combobox',
-        fieldLabel:'联考前条件录取资格项目',
-        editable:false,
-        valueField:'TValue',
-        displayField:'TLDesc',
-        store:new KitchenSink.view.common.store.appTransStore("TZ_LQZG_XM"),
-        name:'lkqtjluzgxm'
-},{
-    xtype:'combobox',
-        fieldLabel:'联考实考',
-        editable:false,
-        valueField:'value',
-        displayField:'desc',
-        store:new Ext.data.ArrayStore({
-        fields: ['value', 'desc'],
-        data: [['', '无'], ['Y', '是'], ['N', '否']]
-    }),
-        name:'lksk'
-},{
-    xtype:'combobox',
-        fieldLabel:'英语听力过线',
-        editable:false,
-        valueField:'value',
-        displayField:'desc',
-        store:new Ext.data.ArrayStore({
-        fields: ['value', 'desc'],
-        data: [['', '无'], ['Y', '是'], ['N', '否']]
-    }),
-        name:'yytlgx'
-},{
-    xtype:'combobox',
-        fieldLabel:'政治过线',
-        editable:false,
-        valueField:'value',
-        displayField:'desc',
-        store:new Ext.data.ArrayStore({
-        fields: ['value', 'desc'],
-        data: [['', '无'], ['Y', '是'], ['N', '否']]
-    }),
-        name:'zzgx'
-},{
-    xtype:'combobox',
-        fieldLabel:'联考过线',
-        editable:false,
-        valueField:'value',
-        displayField:'desc',
-        store:new Ext.data.ArrayStore({
-        fields: ['value', 'desc'],
-        data: [['', '无'], ['Y', '是'], ['N', '否']]
-    }),
-        name:'lkgx'
-},{
-    xtype:'textfield',
-        fieldLabel:'预录取前调整情况',
-        name:'ylqzzqk'
-},{
-    xtype:'textfield',
-        fieldLabel:'调整原因备注2',
-        name:'tzyyNotes2'
-},{
-    xtype:'combobox',
-        fieldLabel:'预录取资格',
-        editable:false,
-        valueField:'TValue',
-        displayField:'TLDesc',
-        store:new KitchenSink.view.common.store.appTransStore("TZ_YLQ_ZG"),
-        name:'ylqzg'
-},{
-    xtype:'combobox',
-        fieldLabel:'预录取资格项目',
-        editable:false,
-        valueField:'TValue',
-        displayField:'TLDesc',
-        store:new KitchenSink.view.common.store.appTransStore("TZ_LQZG_XM"),
-        name:'ylqzgxm'
-},{
-    xtype:'textfield',
-        fieldLabel:'正式录取前调整情况',
-        name:'zslqzzqk'
-},{
-    xtype:'textfield',
-        fieldLabel:'调整原因备注3',
-        name:'tzyyNotes3'
-},{
-    xtype:'combobox',
-        fieldLabel:'正式录取资格',
-        editable:false,
-        valueField:'TValue',
-        displayField:'TLDesc',
-        store:new KitchenSink.view.common.store.appTransStore("TZ_ZSLQ_ZG"),
-        name:'zslqzg'
-},{
-    xtype:'combobox',
-        fieldLabel:'正式录取资格项目',
-        editable:false,
-        valueField:'TValue',
-        displayField:'TLDesc',
-        store:new KitchenSink.view.common.store.appTransStore("TZ_LQZG_XM"),
-        name:'zslqzgxm'
-},{
-    xtype:'textfield',
-        fieldLabel:'入学前前调整情况',
-        name:'rxqzzqk'
-},{
-    xtype:'textfield',
-        fieldLabel:'调整原因备注4',
-        name:'tzyyNotes4'
-},{
-    xtype:'combobox',
-        fieldLabel:'入学情况',
-        editable:false,
-        valueField:'TValue',
-        displayField:'TLDesc',
-        store:new KitchenSink.view.common.store.appTransStore("TZ_RX_QK"),
-        name:'rxqk'
-},{
-    xtype:'combobox',
-        fieldLabel:'入学项目',
-        editable:false,
-        valueField:'TValue',
-        displayField:'TLDesc',
-        store:new KitchenSink.view.common.store.appTransStore("TZ_LQZG_XM"),
-        name:'rxxm'
-}]
-},{
-    title : '申请材料',
-        xtype : 'form',
-        name : 'appClInfoForm',
-        layout : {
-        type : 'vbox',
-            align : 'stretch'
-    },
-    // frame: true,
-    border : false,
-        bodyPadding : '0 10 10 10',
-        // margin:10,
-        bodyStyle : 'overflow-y:auto;overflow-x:hidden',
-        fieldDefaults : {
-        msgTarget : 'side',
-            labelWidth : 120,
-            labelStyle : 'font-weight:bold'
-    },
-    items : [
-        {
-            xtype: 'grid',
-            height: 180,
-            frame: true,
-            columnLines: false,
-            name: 'viewAppGrid',
-            reference: 'viewAppGrid',
-            style:"margin-top:10px",
-            store: {
-                type: 'stuAppStore'
-            },
-            viewConfig: {
-                enableTextSelection: true
-            },
-            plugins: [{
-                ptype: 'cellediting'
-            }],
-            columns: [
-                {
-                    text: '班级编号',
-                    dataIndex: 'classId',
-                    sortable: false,
-                    hidden:true
-                },
-                {
-                    text: '批次编号',
-                    dataIndex: 'batchId',
-                    sortable: false,
-                    hidden:true
-                },
-                {
-                    text: '报考方向',
-                    dataIndex: 'appInfo',
-                    flex:1,
-                    sortable: false
-                },
-                {
-                    text: '批次名称',
-                    dataIndex: 'batchName',
-                    width:300,
-                    sortable: false
-                },
-                {
-                    text: '申请单编号',
-                    dataIndex: 'appInsId',
-                    sortable: false
-                },
-                {
-                    text: '提交状态',
-                    dataIndex: 'appSubStatus',
-                    sortable: false,
-                    editor: {
-                        xtype: 'combobox',
-                        store: new KitchenSink.view.common.store.appTransStore("TZ_APPFORM_STATE"),
-                        displayField: 'TLDesc',
-                        valueField: 'TValue',
-                        editable: false
-                    },
-                    width:'10%',
-                    renderer:function(value,metadata,record){
-                        console.log(value);
-                        if(value=="U"){
-                            return "已提交";
-                        }else if(value=="OUT"){
-                            return "撤销";
-                        }else if(value=="BACK"){
-                            return "退回修改";
-                        }else{
-                            return "新建";
-                        }
-                    }
-                },
-                {
-                    xtype: 'actioncolumn',
-                    text: '操作',
-                    menuDisabled: true,
-                    menuText: '操作',
-                    sortable: false,
-                    align: 'center',
-                    items:[
-                        {text: '查看报名表',iconCls: 'preview',tooltip: '查看报名表',handler:'viewApplicationForm'},
-                        {text: '打印报名表',iconCls: 'print',tooltip: '打印报名表',handler:'printAppForm'},
-                        {text: '报名流程',iconCls: 'edit',tooltip: '报名流程',handler:'viewBmSch'},
-                        {text: '申请材料查看',iconCls: 'view',tooltip: '申请材料查看',handler:'auditApplicationForm'}
-                    ]
-                }]
-
-        }
-    ]
-}]
-} ]
-} ]
+                            xtype:'textfield',
+                            fieldLabel:'联考报名（是/否）',
+                            maxLength:4,
+		name:'lkbm'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'联考前调整情况',
+		        name:'lqlzqk'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'调整原因备注',
+		        name:'tzyyNotes'
+		},{
+		    xtype:'combobox',
+		        fieldLabel:'联考前条件录取资格',
+		        editable:false,
+		        valueField:'TValue',
+		        displayField:'TLDesc',
+		        store:new KitchenSink.view.common.store.appTransStore("TZ_LKQ_TJLQZG"),
+		        name:'lkqtjluzg'
+		},{
+		    xtype:'combobox',
+		        fieldLabel:'联考前条件录取资格项目',
+		        editable:false,
+		        valueField:'TValue',
+		        displayField:'TLDesc',
+		        store:new KitchenSink.view.common.store.appTransStore("TZ_LQZG_XM"),
+		        name:'lkqtjluzgxm'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'联考实考（是/否）',
+		        maxLength:4,
+		        name:'lksk'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'英语听力过线（是/否）',
+		        maxLength:4,
+		        name:'yytlgx'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'政治过线（是/否）',
+		        maxLength:4,
+		        name:'zzgx'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'联考过线（是/否）',
+		        maxLength:4,
+		        name:'lkgx'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'预录取前调整情况',
+		        name:'ylqzzqk'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'调整原因备注2',
+		        name:'tzyyNotes2'
+		},{
+		    xtype:'combobox',
+		        fieldLabel:'预录取资格',
+		        editable:false,
+		        valueField:'TValue',
+		        displayField:'TLDesc',
+		        store:new KitchenSink.view.common.store.appTransStore("TZ_YLQ_ZG"),
+		        name:'ylqzg'
+		},{
+		    xtype:'combobox',
+		        fieldLabel:'预录取资格项目',
+		        editable:false,
+		        valueField:'TValue',
+		        displayField:'TLDesc',
+		        store:new KitchenSink.view.common.store.appTransStore("TZ_LQZG_XM"),
+		        name:'ylqzgxm'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'正式录取前调整情况',
+		        name:'zslqzzqk'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'调整原因备注3',
+		        name:'tzyyNotes3'
+		},{
+		    xtype:'combobox',
+		        fieldLabel:'正式录取资格',
+		        editable:false,
+		        valueField:'TValue',
+		        displayField:'TLDesc',
+		        store:new KitchenSink.view.common.store.appTransStore("TZ_ZSLQ_ZG"),
+		        name:'zslqzg'
+		},{
+		    xtype:'combobox',
+		        fieldLabel:'正式录取资格项目',
+		        editable:false,
+		        valueField:'TValue',
+		        displayField:'TLDesc',
+		        store:new KitchenSink.view.common.store.appTransStore("TZ_LQZG_XM"),
+		        name:'zslqzgxm'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'入学前前调整情况',
+		        name:'rxqzzqk'
+		},{
+		    xtype:'textfield',
+		        fieldLabel:'调整原因备注4',
+		        name:'tzyyNotes4'
+		},{
+		    xtype:'combobox',
+		        fieldLabel:'入学情况',
+		        editable:false,
+		        valueField:'TValue',
+		        displayField:'TLDesc',
+		        store:new KitchenSink.view.common.store.appTransStore("TZ_RX_QK"),
+		        name:'rxqk'
+		},{
+		    xtype:'combobox',
+		        fieldLabel:'入学项目',
+		        editable:false,
+		        valueField:'TValue',
+		        displayField:'TLDesc',
+		        store:new KitchenSink.view.common.store.appTransStore("TZ_LQZG_XM"),
+		        name:'rxxm'
+		}]
+		},{
+		    title : '申请材料',
+		        xtype : 'form',
+		        name : 'appClInfoForm',
+		        layout : {
+		        type : 'vbox',
+		            align : 'stretch'
+		    },
+		    // frame: true,
+		    border : false,
+		        bodyPadding : '0 10 10 10',
+		        // margin:10,
+		        bodyStyle : 'overflow-y:auto;overflow-x:hidden',
+		        fieldDefaults : {
+		        msgTarget : 'side',
+		            labelWidth : 120,
+		            labelStyle : 'font-weight:bold'
+		    },
+		    items : [
+		        {
+		            xtype: 'grid',
+		            height: 180,
+		            frame: true,
+		            columnLines: false,
+		            name: 'viewAppGrid',
+		            reference: 'viewAppGrid',
+		            style:"margin-top:10px",
+		            store: {
+		                type: 'stuAppStore'
+		            },
+		            viewConfig: {
+		                enableTextSelection: true
+		            },
+		            plugins: [{
+		                ptype: 'cellediting'
+		            }],
+		            columns: [
+		                {
+		                    text: '班级编号',
+		                    dataIndex: 'classId',
+		                    sortable: false,
+		                    hidden:true
+		                },
+		                {
+		                    text: '批次编号',
+		                    dataIndex: 'batchId',
+		                    sortable: false,
+		                    hidden:true
+		                },
+		                {
+		                    text: '报考方向',
+		                    dataIndex: 'appInfo',
+		                    flex:1,
+		                    sortable: false
+		                },
+		                {
+		                    text: '批次名称',
+		                    dataIndex: 'batchName',
+		                    width:300,
+		                    sortable: false
+		                },
+		                {
+		                    text: '申请单编号',
+		                    dataIndex: 'appInsId',
+		                    sortable: false
+		                },
+		                {
+		                    text: '提交状态',
+		                    dataIndex: 'appSubStatus',
+		                    sortable: false,
+		                    editor: {
+		                        xtype: 'combobox',
+		                        store: new KitchenSink.view.common.store.appTransStore("TZ_APPFORM_STATE"),
+		                        displayField: 'TLDesc',
+		                        valueField: 'TValue',
+		                        editable: false
+		                    },
+		                    width:'10%',
+		                    renderer:function(value,metadata,record){
+		                        console.log(value);
+		                        if(value=="U"){
+		                            return "已提交";
+		                        }else if(value=="OUT"){
+		                            return "撤销";
+		                        }else if(value=="BACK"){
+		                            return "退回修改";
+		                        }else{
+		                            return "新建";
+		                        }
+		                    }
+		                },
+		                {
+		                    xtype: 'actioncolumn',
+		                    text: '操作',
+		                    menuDisabled: true,
+		                    menuText: '操作',
+		                    sortable: false,
+		                    align: 'center',
+		                    items:[
+		                        {text: '查看报名表',iconCls: 'preview',tooltip: '查看报名表',handler:'viewApplicationForm'},
+		                        {text: '打印报名表',iconCls: 'print',tooltip: '打印报名表',handler:'printAppForm'},
+		                        {text: '报名流程',iconCls: 'edit',tooltip: '报名流程',handler:'viewBmSch'},
+		                        {text: '申请材料查看',iconCls: 'view',tooltip: '申请材料查看',handler:'auditApplicationForm'}
+		                    ]
+		                }]
+		
+		        }
+		    ]
+		}]
+		} ]
+		} ]
 } ],
 buttons : [ {
     text : '保存',
