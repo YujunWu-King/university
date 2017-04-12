@@ -6,11 +6,10 @@
     <id column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
     <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
     <id column="TZ_FMQD_ID" property="tzFmqdId" jdbcType="VARCHAR" />
-    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <result column="TZ_FMQD_NAME" property="tzFmqdName" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, TZ_FMQD_ID, TZ_JG_ID, TZ_FMQD_NAME
+    TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, TZ_FMQD_ID, TZ_FMQD_NAME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmTKey" >
     select 
@@ -20,7 +19,6 @@
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
       and TZ_FMQD_ID = #{tzFmqdId,jdbcType=VARCHAR}
-      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmTKey" >
     delete from PS_TZ_CS_KSFM_T
@@ -28,15 +26,12 @@
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
       and TZ_FMQD_ID = #{tzFmqdId,jdbcType=VARCHAR}
-      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT" >
     insert into PS_TZ_CS_KSFM_T (TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, 
-      TZ_FMQD_ID, TZ_JG_ID, TZ_FMQD_NAME
-      )
+      TZ_FMQD_ID, TZ_FMQD_NAME)
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, 
-      #{tzFmqdId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzFmqdName,jdbcType=VARCHAR}
-      )
+      #{tzFmqdId,jdbcType=VARCHAR}, #{tzFmqdName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT" >
     insert into PS_TZ_CS_KSFM_T
@@ -52,9 +47,6 @@
       </if>
       <if test="tzFmqdId != null" >
         TZ_FMQD_ID,
-      </if>
-      <if test="tzJgId != null" >
-        TZ_JG_ID,
       </if>
       <if test="tzFmqdName != null" >
         TZ_FMQD_NAME,
@@ -73,9 +65,6 @@
       <if test="tzFmqdId != null" >
         #{tzFmqdId,jdbcType=VARCHAR},
       </if>
-      <if test="tzJgId != null" >
-        #{tzJgId,jdbcType=VARCHAR},
-      </if>
       <if test="tzFmqdName != null" >
         #{tzFmqdName,jdbcType=VARCHAR},
       </if>
@@ -92,7 +81,6 @@
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
       and TZ_FMQD_ID = #{tzFmqdId,jdbcType=VARCHAR}
-      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT" >
     update PS_TZ_CS_KSFM_T
@@ -101,6 +89,5 @@
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
       and TZ_FMQD_ID = #{tzFmqdId,jdbcType=VARCHAR}
-      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
   </update>
 </mapper>

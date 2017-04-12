@@ -9,8 +9,6 @@ public class PsTzCsKsFmTKey {
 
     private String tzFmqdId;
 
-    private String tzJgId;
-
     public String getTzClassId() {
         return tzClassId;
     }
@@ -41,13 +39,5 @@ public class PsTzCsKsFmTKey {
 
     public void setTzFmqdId(String tzFmqdId) {
         this.tzFmqdId = tzFmqdId == null ? null : tzFmqdId.trim();
-    }
-
-    public String getTzJgId() {
-        return tzJgId;
-    }
-
-    public void setTzJgId(String tzJgId) {
-        this.tzJgId = tzJgId == null ? null : tzJgId.trim();
     }
 }
