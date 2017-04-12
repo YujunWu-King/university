@@ -386,7 +386,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		if(ksinfoJSON.name=="undefined") ksinfoJSON.name = "";
 		
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+ksinfoJSON.bmbId+'"}}';
-		var bmb_url = "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
+		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表">新开窗口查看考生材料</a>';
 
 		rtn_ksinfohtml += '<tr><td style="font-weight:bold;" width="97px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
@@ -533,7 +533,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	
 	
 	/**
-	* 功能：创建（打分）叶子节点的实例对象，生成 标准说明、参考问题 的TIP数组
+	* 功能：创建（打分）叶子节点的实例对象，生成 标准说明、参考问题、参考资料 的TIP数组
 	* 参数：
 	*		field_label		节点名称
 	*		field_level		所处层级，整型，0,1,2,3,4...
@@ -543,12 +543,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		point_end		分值上限
 	*		bzsm_content	标准说明内容
 	*		ckwt_content	参考问题内容
+	*		ckzl_content    参考资料内容
 	*		field_parent_id	父节点的name值
 	*/
-	function createLeafPointFieldContainer(field_label,field_level,field_value,field_name,point_begin,point_end,bzsm_content,ckwt_content,field_parent_id){
+	function createLeafPointFieldContainer(field_label,field_level,field_value,field_name,point_begin,point_end,bzsm_content,ckwt_content,ckzl_content,field_parent_id){
 		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 20px 的倍数向右缩进
 		var pointbzsm_id = "pointbzsm_"+ field_name + tmpBatchId;  //标准说明的ID
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
+		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
 		var thisFieldContainerHeight = 30;
 		
 		if(field_value==""){
@@ -556,6 +558,17 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				field_value = 0;
 			else
 				field_value = point_begin;
+		}
+
+		var ckzlItem;
+		if(ckzl_content!=null&&ckzl_content!="") {
+			ckzlItem={
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				id			: pointckzl_id,
+				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">参考问题</span>',
+				width		: 100
+			}
 		}
 		
 		var leafPointFieldContainer = new Ext.form.FieldContainer({
@@ -603,14 +616,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 										id			: pointckwt_id,
 										value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
 										width		: 100
-									}
-					
+									},
+					                ckzlItem
 								  ]
 
 		});
 		
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafPointFieldContainer);
-		createLeafTipsConfig(pointbzsm_id,pointckwt_id,bzsm_content,ckwt_content);
+		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointckzl_id,bzsm_content,ckwt_content,ckzl_content);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
 
@@ -624,14 +637,16 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		field_name		文本输入框的名称
 	*		bzsm_content	标准说明内容
 	*		ckwt_content	参考问题内容
+	*		ckzl_content    参考资料内容
 	*		field_pyzs_sx	评语的限制字数上限
 	*		field_pyzs_xx	评语的限制字数下限
 	*/
-	function createLeafCommentFieldContainer(field_label,field_level,field_value,field_name,bzsm_content,ckwt_content,field_pyzs_sx,field_pyzs_xx){
+	function createLeafCommentFieldContainer(field_label,field_level,field_value,field_name,bzsm_content,ckwt_content,ckzl_content,field_pyzs_sx,field_pyzs_xx){
 		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 20px 的倍数向右缩进
 		var pointbzsm_id = "pointbzsm_"+ field_name + tmpBatchId;  //标准说明的ID
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
-		var thisFieldContainerHeight = 40;
+		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
+		var thisFieldContainerHeight = 84;
 		field_value = field_value.replace('\\n',"\n");
 		
 		//根据评语字数下限，判断该字段是否必填
@@ -640,6 +655,17 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var leafC_minLength = field_pyzs_xx;
 		if(field_pyzs_xx > 0){
 			leafC_allowBlank = false;
+		}
+
+		var ckzlItem;
+		if(ckzl_content!=null&&ckzl_content!="") {
+			ckzlItem={
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				id			: pointckzl_id,
+				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">参考问题</span>',
+				width		: 100
+			}
 		}
 		
 		var leafCommentFieldContainer = new Ext.form.FieldContainer({
@@ -674,14 +700,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 										id			: pointckwt_id,
 										value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
 										width		: 50
-									}
-					
+									},
+					                ckzlItem
 								  ]
 
 		});
 		
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafCommentFieldContainer);
-		createLeafTipsConfig(pointbzsm_id,pointckwt_id,bzsm_content,ckwt_content);
+		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointckzl_id,bzsm_content,ckwt_content,ckzl_content);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
 	
@@ -695,18 +721,31 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		field_name		文本输入框的名称
 	*		bzsm_content	标准说明内容
 	*		ckwt_content	参考问题内容
+	*	    ckzl_content    参考资料内容
 	*		field_options	下拉框值
 	*/
-	function createLeafDropdownFieldContainer(field_label,field_level,field_value,field_name,bzsm_content,ckwt_content,field_options){
+	function createLeafDropdownFieldContainer(field_label,field_level,field_value,field_name,bzsm_content,ckwt_content,ckzl_content,field_options){
 		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 40px 的倍数向右缩进
 		var pointbzsm_id = "pointbzsm_"+ field_name + tmpBatchId;  //标准说明的ID
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
+		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
 		var thisFieldContainerHeight = 40;
 		
 		var store = Ext.create("Ext.data.Store",{
 			fields:['optionName','optionValue'],
 			data:field_options
-		})
+		});
+
+		var ckzlItem;
+		if(ckzl_content!=null&&ckzl_content!="") {
+			ckzlItem={
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				id			: pointckzl_id,
+				value		: '<span style="cursor:pointer;" id="'+pointckzl_id+'">参考问题</span>',
+				width		: 100
+			}
+		}
 		
 		var leafDropdownFieldContainer = new Ext.form.FieldContainer({
 			fieldLabel		: '<span style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
@@ -740,11 +779,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				id			: pointckwt_id,
 				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
 				width		: 60
-			}]
+			}, ckzlItem]
 		});
 		
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafDropdownFieldContainer);
-		createLeafTipsConfig(pointbzsm_id,pointckwt_id,bzsm_content,ckwt_content);
+		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointckzl_id,bzsm_content,ckwt_content,ckzl_content);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
 	
@@ -754,14 +793,20 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 参数：
 	*		pointckwt_id	标准说明的文字ID
 	*		pointckwt_id	参考问题的文字ID
+	*		pointckzl_id	参考资料的文字ID
 	*		bzsm_content	标准说明内容
 	*		ckwt_content	参考问题内容
+	*		ckzl_content	参考资料内容
 	*/
-	function createLeafTipsConfig(pointbzsm_id,pointckwt_id,bzsm_content,ckwt_content){
+	function createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointckzl_id,bzsm_content,ckwt_content,ckzl_content){
 		var ary1 = new Array(pointbzsm_id, bzsm_content, "标准");
 		var ary2 = new Array(pointckwt_id, ckwt_content, "说明");
-		
-		allLeavesNodeData[tmpBatchId].push(ary1, ary2);
+		if(ckzl_content==null) {
+			allLeavesNodeData[tmpBatchId].push(ary1, ary2);
+		} else {
+			var ary3 = new Array(pointckzl_id, ckzl_content, "参考资料");
+			allLeavesNodeData[tmpBatchId].push(ary1, ary2,ary3);
+		}
 	}
 	
 	
@@ -1318,17 +1363,17 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var newFormField;
 		
 		if(node_data.itemType=="C"){ //是否评语类型的数据
-			newFormField = createLeafCommentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemComment, node_data.itemId, node_data.itemDfsm, node_data.itemCkwt, node_data.itemCommentUpperLimit, node_data.itemCommentLowerLimit);
+			newFormField = createLeafCommentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemComment, node_data.itemId, node_data.itemDfsm, node_data.itemCkwt,node_data.itemCkzl, node_data.itemCommentUpperLimit, node_data.itemCommentLowerLimit);
 		}else{
 			if(node_data.itemType=="D"){ //是否下拉框类型的数据
-				newFormField = createLeafCommentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemDfsm, node_data.itemCkwt, node_data.itemMsff,node_data.itemOptions);
+				newFormField = createLeafCommentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemDfsm, node_data.itemCkwt, node_data.itemMsff,node_data.itemCkzl,node_data.itemOptions);
 			} else {
 				//生成非叶子节点
 				if(node_data.itemIsLeaf=="N"){
 					newFormField = createParentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemParentId);	
 				} else {
 					//生成叶子节点
-					newFormField = createLeafPointFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemLowerLimit, node_data.itemUpperLimit, node_data.itemCkwt,node_data.itemDfsm,node_data.itemMsff, node_data.itemParentId);
+					newFormField = createLeafPointFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemLowerLimit, node_data.itemUpperLimit, node_data.itemCkwt,node_data.itemDfsm,node_data.itemMsff,node_data.itemCkzl, node_data.itemParentId);
 				}
 			}
 		}
@@ -2004,7 +2049,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			position: {
 				at: 'top right', // Position the tooltip above the link
 				my: 'bottom right',
-				viewport: $(window), // Keep the tooltip on-screen at all times
+				//viewport: $(window), // Keep the tooltip on-screen at all times
+				viewport:$("#tz_evaluation_main"),
 				effect: false // Disable positioning animation
 			},
 			show: {
