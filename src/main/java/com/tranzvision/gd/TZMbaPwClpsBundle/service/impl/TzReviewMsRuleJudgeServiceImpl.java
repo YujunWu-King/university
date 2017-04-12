@@ -54,7 +54,7 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_JG_ID", "OPRID", "TZ_REALNAME" };
+			String[] resultFldArray = { "TZ_JG_ID", "OPRID", "TZ_REALNAME", "TZ_DLZH_ID" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -66,9 +66,14 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
-					mapList.put("judgId", rowList[1]);
-					mapList.put("judgName", rowList[2]);
-					mapList.put("judgGroupId", "");
+					if (rowList[0].equals("SEM")) {
+						mapList.put("judgId", rowList[1]);
+						mapList.put("judzhxx", rowList[3]);
+						mapList.put("judgName", rowList[2]);
+						mapList.put("judgGroupId", "");
+					} else {
+
+					}
 
 					listData.add(mapList);
 				}

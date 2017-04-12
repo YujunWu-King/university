@@ -219,8 +219,13 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		try {
 			String sql = "SELECT TZ_MSPY_NUM,TZ_GRP_COUNT FROM PS_TZ_MSPS_GZ_TBL WHERE  TZ_CLASS_ID=? AND  TZ_APPLY_PC_ID=?";
 			Map<String, Object> map = sqlQuery.queryForMap(sql, new Object[] { classID, batchID });
-			reStr[0] = map.get("TZ_MSPY_NUM") == null ? "" : map.get("TZ_MSPY_NUM").toString();
-			reStr[1] = map.get("TZ_GRP_COUNT") == null ? "" : map.get("TZ_GRP_COUNT").toString();
+			/* System.out.println("map.get:" + map.get("TZ_MSPY_NUM")); */
+			if (map != null) {
+
+				reStr[0] = map.get("TZ_MSPY_NUM") == null ? "" : map.get("TZ_MSPY_NUM").toString();
+				reStr[1] = map.get("TZ_GRP_COUNT") == null ? "" : map.get("TZ_GRP_COUNT").toString();
+
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
