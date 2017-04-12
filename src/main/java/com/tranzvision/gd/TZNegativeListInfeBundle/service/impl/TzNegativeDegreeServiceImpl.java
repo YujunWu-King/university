@@ -2,13 +2,11 @@ package com.tranzvision.gd.TZNegativeListInfeBundle.service.impl;
 
 import java.util.Date;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsTblMapper;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsTbl;
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
@@ -25,17 +23,14 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 	private SqlQuery SqlQuery;
 	@Autowired
 	private PsTzCsKsFmTMapper PsTzCsKsFmTMapper;
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
-	private HttpServletRequest request;
+
 	@Autowired
 	private PsTzCsKsTblMapper PsTzCsKsTBLMapper;
 
 	@Override
 	public boolean makeNegativeList(String classId, String batchId, String labelId) {
 		String oprid = "";
-		String OrgID = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String OrgID = "SEM";
 		Date nowdate_time = new Date();
 		String sql = "";
 		String sql1 = "";
@@ -44,14 +39,14 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 		String degree1 = "";
 		String degree2 = "";
 		try {
-			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCD_PNT='TZ_KSFMQDID_GEGREE'";
+			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_KSFMQDID_GEGREE'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
-			List<?> opridlist = SqlQuery.queryForList(
+			List<Map<String, Object>> opridlist = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeApplyNumber"),
 					new Object[] { classId, batchId });
 			if (opridlist != null && opridlist.size() > 0) {
 				for (int i = 0; i < opridlist.size(); i++) {
-					oprid = (String) opridlist.get(i);
+					oprid = opridlist.get(i).get("OPRID").toString();
 					String sqlhave = "SELECT 'Y' FROM PS_TZ_BLACK_LIST_V WHERE OPRID=?";
 					if (SqlQuery.queryForObject(sqlhave, "String") != null
 							&& SqlQuery.queryForObject(sqlhave, "String").equals("Y")) {
@@ -72,7 +67,6 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 							PsTzCsKsFmT.setTzAppInsId(Long.valueOf(appinsId));
 							PsTzCsKsFmT.setTzClassId(classId);
 							PsTzCsKsFmT.setTzApplyPcId(batchId);
-							PsTzCsKsFmT.setTzJgId(OrgID);
 							PsTzCsKsFmT.setTzFmqdId(fmqdId);
 							PsTzCsKsFmT.setTzFmqdName("学位学历");
 							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
