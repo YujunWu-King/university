@@ -183,14 +183,18 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 					sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
 					List<Map<String, Object>> listPw = sqlQuery.queryForList(sql, new Object[] {classId,batchId,appinsId});
 					
-					for(Map<String, Object> mapPw : listPw) {
-						
-						pwNum++;
+					for(Map<String, Object> mapPw : listPw) {	
 						
 						String pwOprid = mapPw.get("TZ_PWEI_OPRID")  == null ? "" : mapPw.get("TZ_PWEI_OPRID").toString();
 						String pwDlzhId = mapPw.get("TZ_DLZH_ID") == null ? "" : mapPw.get("TZ_DLZH_ID").toString();
 						String scoreInsId = mapPw.get("TZ_SCORE_INS_ID") == null ? "" : mapPw.get("TZ_SCORE_INS_ID").toString();
 						Float scoreNum = mapPw.get("TZ_SCORE_NUM") == null ? Float.valueOf("0") : Float.valueOf(mapPw.get("TZ_SCORE_NUM").toString());
+						String submitFlag = mapPw.get("TZ_SUBMIT_YN") == null ? "" : mapPw.get("TZ_SUBMIT_YN").toString();
+						
+						if("Y".equals(submitFlag)) {
+							//已评审
+							pwNum++;
+						}
 						
 						if(!"".equals(pwList)) {
 							pwList += "," + pwDlzhId;
