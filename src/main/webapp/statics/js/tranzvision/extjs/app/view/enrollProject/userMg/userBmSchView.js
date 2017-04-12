@@ -153,14 +153,20 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 							xtype : 'textfield',							
 							fieldLabel : '材料评审结果',
 							name : 'clpsJg'							
-						}, {
+						}, 
+						{
+							xtype : 'textfield',							
+							fieldLabel : '是否有面试资格',
+							name : 'sfmsZg'							
+						}
+						/*{
 							xtype : 'combobox',
 							fieldLabel : '是否有面试资格',
 							name : 'sfmsZg',
 							valueField: 'TValue',
 					        displayField: 'TLDesc',
 					        store: new KitchenSink.view.common.store.appTransStore("TZ_SF_SALE")
-						} ]
+						}*/ ]
 					}, {
 						xtype : 'fieldset',
 						title : '面试',
@@ -176,18 +182,25 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 							xtype : 'textfield',
 							fieldLabel : '面试报到地点',
 							name : 'msbdDd'
-						}, {
+						}, 
+						{
 							xtype : 'textfield',
 							fieldLabel : '面试结果',
 							name : 'msJg'
-						}, {
+						}, 
+						{
+							xtype : 'textfield',
+							fieldLabel : '面试结果标识',
+							name : 'msJgBz'
+						}
+						/*{
 							xtype : 'combobox',
 							fieldLabel : '面试结果标识',
 							name : 'msJgBz',
 							valueField: 'TValue',
 					        displayField: 'TLDesc',
 					        store: new KitchenSink.view.common.store.appTransStore("TZ_MSH_RESULT_FLG"),
-						} ]
+						}*/ ]
 					}, {
 						xtype : 'fieldset',
 						title : '联考报名',
