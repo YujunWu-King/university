@@ -633,6 +633,27 @@
 
 	    },"",true,this);
 	},
+	
+	saveDataInfo2: function(){
+		
+		var win =this.getView();
+
+		//页面注册信息表单
+		var form = this.getView().child('form').getForm();
+
+		//表单数据
+		var formParams = form.getValues();
+		//console.log(formParams);
+		
+		win.actType = "update";
+
+		//提交参数
+		var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_MSHLCH_STD","OperateType":"U","comParams":{"'+win.actType+'":[{"data":'+Ext.JSON.encode(formParams)+'}]}}';
+		
+		Ext.tzSubmit(tzParams,function(){
+
+	    },"",true,this);
+	},
     onFormClose: function(){
 		this.getView().close();
 	},
@@ -647,6 +668,16 @@
 		 
 	},
 	
+	onFormSave2:function(){
+		this.saveDataInfo2();
+	},
+	onFormEnsure2:function(){
+		this.saveDataInfo2();
+	
+		this.getView().close();
+		
+		 
+	},
 	/*查看邮件发送历史--测试*/
 	viewMailHistory: function(){
 		 //选中行

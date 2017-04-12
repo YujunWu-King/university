@@ -6,6 +6,8 @@ import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCjxTblWithBLOBs;
 
 public interface PsTzCjxTblMapper {
     int deleteByPrimaryKey(PsTzCjxTblKey key);
+    
+    int deleteByPrimaryKey(com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblKey psTzCjxTblKey);
 
     int insert(PsTzCjxTblWithBLOBs record);
     
