@@ -33,11 +33,11 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 	@Override
 	public boolean makeNegativeList(String classId, String batchId, String labelId) {
 		try {
-			String OrgID = "SEM";
 
 			Date nowdate_time = new Date();
 			int frisone_pm;
 			int lastone_pm;
+			int have_one = 0;
 			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_KSFMQDID_LASTTEN'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
 			int a = 0;
@@ -45,6 +45,7 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 			String sqlcount = "SELECT COUNT(1) FROM PS_TZ_CS_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ";
 			int count = SqlQuery.queryForObject(sqlcount, new Object[] { classId, batchId }, "Integer");
 			count = (int) (count * 0.1);
+			System.out.println("count:" + count);
 			String sqlfristone = "SELECT TZ_KSH_PSPM FROM PS_TZ_CS_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ORDER BY TZ_KSH_PSPM DESC LIMIT ?,1";
 
 			String sqllastone = "SELECT TZ_KSH_PSPM FROM PS_TZ_CS_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ORDER BY TZ_KSH_PSPM DESC LIMIT ?,1";
@@ -78,8 +79,17 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 					PsTzCsKsFmT.setTzApplyPcId(batchId);
 					PsTzCsKsFmT.setTzFmqdId(fmqdId);
 					PsTzCsKsFmT.setTzFmqdName("排名后百分之十");
+					have_one = SqlQuery.queryForObject(
+							"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
+							new Object[] { Long.valueOf(tzappintlist.get(i).get("TZ_APP_INS_ID").toString()), classId,
+									batchId, fmqdId },
+							"Integer");
+					if (have_one > 0) {
 
-					PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
+					} else {
+						PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
+					}
+
 					PsTzCsKsTbl PsTzCsKsTBL = new PsTzCsKsTbl();
 
 					PsTzCsKsTBL.setTzAppInsId(Long.valueOf(tzappintlist.get(i).get("TZ_APP_INS_ID").toString()));

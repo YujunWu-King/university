@@ -36,7 +36,6 @@ public class TzNegativeBlackListServiceImpl extends TzNegativeListBundleServiceI
 	@Override
 	public boolean makeNegativeList(String classId, String batchId, String labelId) {
 		String oprid = "";
-		String OrgID = "SEM";
 		Date nowdate_time = new Date();
 		try {
 			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_KSFMQDID_BLACK'";
