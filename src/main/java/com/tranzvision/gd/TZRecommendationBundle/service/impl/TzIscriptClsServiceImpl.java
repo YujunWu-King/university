@@ -307,7 +307,8 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 							// N:发送给自己 Y：发送给推荐人
 							// 推荐人推荐信发出 发送站内信
 							if (sendFlag.equals("Y")) {
-								tzTjxClsServiceImpl.sendSiteEmail(numAppinsId, "TZ_TJX_SEND", "推荐人推荐信发出提醒", "TJXS");
+								tzTjxClsServiceImpl.sendSiteEmail(numAppinsId, "TZ_TJX_SEND", "推荐人推荐信发出提醒", "TJXS",
+										tzTjxClsServiceImpl.tjxId);
 							}
 
 						} else {
