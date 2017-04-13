@@ -32,7 +32,44 @@ public class ImportStuAdmissionsProcessImpl implements UnifiedImportBase {
 			//查询转换值SQL
 			String transValSql = "select TZ_ZHZ_ID from PS_TZ_PT_ZHZXX_TBL where TZ_ZHZJH_ID=? and TZ_ZHZ_DMS=? and TZ_EFF_STATUS='A'";
 			
-			if (data != null && data.size()>0){
+			//校验数据正确性
+			String validCode = "0";
+			String validMsg = "";
+			if(data != null && data.size()>0){
+				int i = 0;
+				int count = 0;//用于统计错误条数，最多显示N条
+				for(i=0; i<data.size(); i++ ){
+					//OPRID实际传过来的是面试申请号
+					String strInterviewAppId = ((String)data.get(i).get("OPRID"));
+					if(strInterviewAppId!=null&&!"".equals(strInterviewAppId)){
+						//查询面试申请号对应的OPRID
+						String oprId = sqlQuery.queryForObject(sqlSelectOprId,new Object[]{strInterviewAppId}, "String");
+						if(oprId==null || "".equals(oprId)){
+							validCode = "1";
+							validMsg = validMsg + "第"+ (i+1) +"行，系统中没有找到面试申请号为"+ strInterviewAppId +"的考生;";
+							count ++;
+						}
+					}else{
+						validCode = "1";
+						validMsg = validMsg + "第"+ (i+1) +"行，面试申请编号为空;";
+						count ++;
+					}
+					
+					if(count >= 10){
+						validMsg = validMsg + "......";
+						break;
+					}
+				}
+			}else{
+				validCode = "1";
+				validMsg = validMsg + "导入数据条数为0;";
+			}
+			
+			
+			if (!"0".equals(validCode)){
+				errMsg[0] = validCode;
+				errMsg[1] = validMsg + ",数据导入失败，请重新导入。";
+			}else{
 				for(Map<String,Object> dataMap : data){
 					//更新SQL
 					String updateSql = "update "+targetTbl +" set ";
@@ -46,7 +83,7 @@ public class ImportStuAdmissionsProcessImpl implements UnifiedImportBase {
 					//OPRID实际传过来的是面试申请号
 					String strInterviewAppId = ((String)dataMap.get("OPRID"));
 					
-					if(strInterviewAppId!=null&&!"".equals(strInterviewAppId)){
+					if(strInterviewAppId!=null && !"".equals(strInterviewAppId)){
 						//查询面试申请号对应的OPRID
 						String oprId = sqlQuery.queryForObject(sqlSelectOprId,new Object[]{strInterviewAppId}, "String");
 						if(oprId!=null&&!"".equals(oprId)){
