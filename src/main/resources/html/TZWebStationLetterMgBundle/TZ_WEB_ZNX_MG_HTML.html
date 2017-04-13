@@ -139,13 +139,20 @@
 						var pageCount = parseInt(data.total/15)+(data.total%15>0&&1||0)
 						//分页栏
 					    var prevPage = page-1;
-						var pageCountsHtml = '<li onclick="loadPage('+prevPage+')">&lt;&lt;</li>';
+						if (prevPage<=1){
+							var pageCountsHtml = '<li onclick="loadPage(1)">&lt;&lt;</li>';
+						}else{
+							var pageCountsHtml = '<li onclick="loadPage('+prevPage+')">&lt;&lt;</li>';
+						}
 						for(var i=1;i<=pageCount;i++){
 							pageCountsHtml = pageCountsHtml+'<li '+(i==page?'class="now"':'')+' onclick="loadPage('+i+')">'+i+'</li>';
 						}
-						var nextPage = page+1;
-						var pageCountsHtml = pageCountsHtml+'<li onclick="loadPage('+nextPage+')">&gt;&gt;</li>';
-
+						var nextPage= page+1;
+						if (nextPage >= pageCount){
+							var pageCountsHtml = pageCountsHtml+'<li onclick="loadPage('+pageCount+')">&gt;&gt;</li>';
+						}else{
+							var pageCountsHtml = pageCountsHtml+'<li onclick="loadPage('+nextPage+')">&gt;&gt;</li>';
+						}
 						$("#pagecount").html(pageCountsHtml);
 						$("#nowpage").html(page);
 						$("#allpages").html(pageCount);
