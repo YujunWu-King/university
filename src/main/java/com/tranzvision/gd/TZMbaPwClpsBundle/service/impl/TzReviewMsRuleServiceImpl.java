@@ -330,7 +330,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_PWEI_OPRID", "TZ_PWEI_GRPID",
-					"TZ_REALNAME" };
+					"TZ_REALNAME", "TZ_DLZH_ID" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -346,6 +346,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					mapList.put("judgId", rowList[2]);
 					mapList.put("judgGroupId", rowList[3]);
 					mapList.put("judgName", rowList[4]);
+					mapList.put("judzhxx", rowList[5]);
 
 					listData.add(mapList);
 				}

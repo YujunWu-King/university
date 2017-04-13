@@ -398,6 +398,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		String isMobile = request.getParameter("isMobile");
+		//是否是从网站首页进入
+		String isWebsite=request.getParameter("isWebsite");
 		String strResponse = "获取数据失败，请联系管理员";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -407,7 +409,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			}
             
 			// 考生可参与的有效的测试方向
-			return this.createTestDirection(isMobile);
+			return this.createTestDirection(isMobile,isWebsite);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -418,10 +420,11 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 * 当前考生能参与的测试方向
 	 * 
 	 * @param isMobile
+	 * @param isWebsite 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private String createTestDirection(String isMobile) {
+	private String createTestDirection(String isMobile, String isWebsite) {
 		String strTypes = "获取数据失败，请联系管理员";
 		String strHtml = "";
 		try {
@@ -475,7 +478,11 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			if(StringUtils.equals("Y", isMobile)){
 				strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_MTESTTYPE",request.getContextPath(),strTypes);
 			}else{
-				strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TESTTYPE",request.getContextPath(),strTypes);
+				if(StringUtils.equals("Y", isWebsite)){
+					strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_W_TESTTYPE",request.getContextPath(),strTypes);
+				}else{
+					strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TESTTYPE",request.getContextPath(),strTypes);
+				}
 			}
 			
 		}catch(Exception e){
@@ -946,6 +953,15 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 
 		if (null != objOprid) {
 			strOprid = String.valueOf(objOprid);
+		}else{
+			String strCurUser=tzLoginServiceImpl.getLoginedManagerOprid(request);
+			if (null!=strCurUser){
+				strOprid=strCurUser;
+			}
+		}
+		
+		if (null != strOprid&&!"".equals(strOprid)) {
+			
 			String jgSql = "SELECT TZ_JG_ID,TZ_IS_CMPL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ? limit 0,1";
 			String siteSql = "SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T WHERE OPRID = ? limit 0,1";
 
