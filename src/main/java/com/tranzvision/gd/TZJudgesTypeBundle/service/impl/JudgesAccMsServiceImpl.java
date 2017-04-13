@@ -189,8 +189,9 @@ public class JudgesAccMsServiceImpl extends FrameworkImpl {
 						if (roleName != null) {
 //							roleName = (String) map.get("ROLENAME");
 						
+							
 						String roleSQL = "INSERT INTO PSROLEUSER(ROLEUSER,ROLENAME,DYNAMIC_SW) VALUES(?,?,?)";
-						jdbcTemplate.update(roleSQL, new Object[]{accountNo,roleName,"N"});
+						jdbcTemplate.update(roleSQL, new Object[]{oprID,roleName,"N"});
 						}
 					}
 			    	
@@ -253,7 +254,7 @@ public class JudgesAccMsServiceImpl extends FrameworkImpl {
 					Map<String, Object> map = jdbcTemplate.queryForMap(sql2, new Object[] { rylx, oprID });
 					// 角色名称
 					String sqlRole = "SELECT A.ROLENAME,DESCR FROM PSROLEUSER A, PSROLEDEFN_VW B WHERE A.ROLENAME=B.ROLENAME AND A.ROLEUSER=? ";
-					Map<String, Object> mapRole = jdbcTemplate.queryForMap(sqlRole, new Object[] { accountNo });
+					Map<String, Object> mapRole = jdbcTemplate.queryForMap(sqlRole, new Object[] { oprID });
 					
 
 					if (map1 != null) {
@@ -374,7 +375,7 @@ public class JudgesAccMsServiceImpl extends FrameworkImpl {
 				    	jdbcTemplate.update(deleteOPDSQL, new Object[]{oprID} );
 //				    	//删除用户角色;
 				    	String deleteROLESQL = "DELETE FROM PSROLEUSER WHERE ROLEUSER=?";
-				    	jdbcTemplate.update(deleteROLESQL, new Object[]{accountNo});
+				    	jdbcTemplate.update(deleteROLESQL, new Object[]{oprID});
 				    	
 					}
 			    }
@@ -487,17 +488,17 @@ public class JudgesAccMsServiceImpl extends FrameworkImpl {
 					// 用户角色;
 					int roleNum = 0;
 					String isExistRole = "SELECT COUNT(1) FROM PSROLEUSER WHERE ROLEUSER=? ";
-					roleNum = jdbcTemplate.queryForObject(isExistRole, new Object[] { accountNo },
+					roleNum = jdbcTemplate.queryForObject(isExistRole, new Object[] { oprID },
 								"Integer");
 					
 					if (roleNum <= 0) {
 						if ((judgePhoneNumber != null && !"".equals(judgePhoneNumber)) || (judgeEmail != null && !"".equals(judgeEmail))) {
 							String roleSQL = "INSERT INTO PSROLEUSER(ROLEUSER,ROLENAME,DYNAMIC_SW) VALUES(?,?,?)";
-							jdbcTemplate.update(roleSQL, new Object[]{accountNo,roleName,"N"});
+							jdbcTemplate.update(roleSQL, new Object[]{oprID,roleName,"N"});
 						}
 					} else {
 						String roleSQL = "UPDATE PSROLEUSER SET ROLENAME=?,DYNAMIC_SW=? WHERE ROLEUSER=? ";
-						jdbcTemplate.update(roleSQL, new Object[]{roleName, "N", accountNo});
+						jdbcTemplate.update(roleSQL, new Object[]{roleName, "N", oprID});
 
 					}
 					// 评委 账号-类型-关系;
