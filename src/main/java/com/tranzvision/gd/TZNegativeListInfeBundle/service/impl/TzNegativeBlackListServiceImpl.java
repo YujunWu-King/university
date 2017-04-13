@@ -38,18 +38,23 @@ public class TzNegativeBlackListServiceImpl extends TzNegativeListBundleServiceI
 		String oprid = "";
 		Date nowdate_time = new Date();
 		int have_one = 0;
+		int count = 0;
+		System.out.println("进入黑名单");
 		try {
 			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_KSFMQDID_BLACK'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
 			List<Map<String, Object>> opridlist = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeApplyNumber"),
-					new Object[] { classId, batchId });
+					new Object[] { batchId, classId });
 			if (opridlist != null && opridlist.size() > 0) {
 				for (int i = 0; i < opridlist.size(); i++) {
+
+					System.out.println("黑名单Id" + opridlist.get(i).get("OPRID").toString());
 					oprid = opridlist.get(i).get("OPRID").toString();
-					String sqlhave = "SELECT 'Y' FROM PS_TZ_BLACK_LIST_V WHERE OPRID=?";
-					if (SqlQuery.queryForObject(sqlhave, "String") != null
-							&& SqlQuery.queryForObject(sqlhave, "String").equals("Y")) {
+					String sqlhave = "SELECT COUNT(1) FROM PS_TZ_BLACK_LIST_V WHERE OPRID=?";
+					count = SqlQuery.queryForObject(sqlhave, new Object[] { oprid }, "Integer");
+
+					if (count > 0) {
 						String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
 						Integer appinsId = SqlQuery.queryForObject(sql, new Object[] { oprid, classId }, "Integer");
 						PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
