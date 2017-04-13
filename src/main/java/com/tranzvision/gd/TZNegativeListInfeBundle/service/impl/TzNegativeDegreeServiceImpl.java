@@ -59,8 +59,13 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 					degree1 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_12fl2" }, "String");
 					degree2 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_11fl" }, "String");
 					System.out.println("degree:" + degree + "degree1:" + degree1 + "degree2:" + degree2);
-					if (degree == null || !degree.equals("1") || degree1 == null || !degree1.equals("1")
-							|| degree2 == null || degree2.equals("1")) {
+					boolean isture = (degree != null && !degree.equals("1") && !degree.equals(""))
+							|| (degree1 != null && !degree1.equals("1") && !degree1.equals(""))
+							|| (degree2 != null && !degree2.equals("1") && !degree2.equals(""));
+					System.out.println("isture:" + isture);
+					if ((degree != null && !degree.equals("1") && !degree.equals(""))
+							|| (degree1 != null && !degree1.equals("1") && !degree1.equals(""))
+							|| (degree2 != null && !degree2.equals("1") && !degree2.equals(""))) {
 						PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
 						// String fmqdId = "TZ_FMQ" +
 						// String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T",
