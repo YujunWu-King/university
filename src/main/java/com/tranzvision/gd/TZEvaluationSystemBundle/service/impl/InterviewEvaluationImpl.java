@@ -76,6 +76,10 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			if ("data".equals(type)) {
 				strReturn = getBatchData(strParams);
 			}
+			// 搜索考生数据
+			if ("search".equals(type)){
+				strReturn = searchApplicant(strParams);
+			}
 			// 提交全部考生数据
 			if ("submit".equals(type)) {
 				strReturn = submitAllData(strParams);
@@ -91,6 +95,48 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		return strReturn;
 	}
 
+	private String searchApplicant(String strParams){
+		String classId = request.getParameter("BaokaoClassID"); /*字符串，请求班级编号*/
+		String batchId = request.getParameter("BaokaoPCID"); /*字符串，请求报考批次编号*/
+		String srch_msid = request.getParameter("KSH_SEARCH_MSID"); /*考生面试申请号（搜索条件）*/
+		String srch_name = request.getParameter("KSH_SEARCH_NAME"); /*考生姓名（搜索条件）*/
+		
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		
+		Map<String,Object> userInfo;
+		
+		userInfo = InterviewEvaluationCls.getSearchResult(sqlQuery,classId, batchId, srch_msid, srch_name);
+		
+		//判断返回是否有效值
+		if((boolean)userInfo.get("result")==true){
+			 //取出用户数据;
+			 String str_class_name = "", str_pc_name = "";
+			 
+			 str_class_name = sqlQuery.queryForObject("select TZ_CLASS_NAME from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?", 
+					 new Object[]{classId}, "String");
+			 str_pc_name = sqlQuery.queryForObject("select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?", 
+					 new Object[]{classId,batchId}, "String");
+			 
+			 rtnMap.put("success", true);
+			 rtnMap.put("ps_class_id", classId);
+			 rtnMap.put("ps_class_name", str_class_name);
+			 rtnMap.put("ps_pc_id", batchId);
+			 rtnMap.put("ps_pc_name", str_pc_name);
+			 rtnMap.put("ps_ksh_xm", userInfo.get("realName"));
+			 rtnMap.put("ps_ksh_msid",  userInfo.get("msId"));
+			 rtnMap.put("ps_ksh_bmbid", userInfo.get("appInsId"));
+			 rtnMap.put("error_code", 0);
+			 rtnMap.put("error_decription", "");
+			 
+		}else{
+			rtnMap.put("error_code", -1);
+			rtnMap.put("error_decription", userInfo.get("msg"));
+		}
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		return jacksonUtil.Map2json(rtnMap);
+	}
+	
 	private String checkJudgeAccount(String strParams){
 
 		String classId = request.getParameter("BaokaoClassID"); /* 字符串，请求班级编号 */
@@ -231,8 +277,6 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		
-		//Local TZ_MSGL:TZ_MSGL_PW_PY &tz_msgl_obj = create TZ_MSGL:TZ_MSGL_PW_PY();
 		
 		try {
 			// 班级名称、报名模板表编号

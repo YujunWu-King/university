@@ -48,13 +48,13 @@ Ext.onReady(function(){
 	}else{		
 		var baseUrl = ContextPath+"/dispatcher?classid=interview&OperateType=EJSON"
 		var urlObject = {
+				"baseUrl":baseUrl,
 				"getBatchListUrl":baseUrl+"&type=list",
 				"getBatchDataUrl":baseUrl+"&type=data",
 				"getNextApplicantUrl":baseUrl+"&type=next",
-				"getApplicantDataUrl":baseUrl+"&type=applicant",
 				"submitApplicantDataUrl":baseUrl+"&type=submit",
 				"printStatisticsTableUrl":baseUrl+"&type=print",
-				"getAddDelOneKsDataUrl":baseUrl,
+				"getAddDelOneKsDataUrl":baseUrl+"&type=applicant",
 				"checkPWAccStateURL":baseUrl+"&type=check"
 		};
 		

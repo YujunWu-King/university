@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZEvaluationSystemBundle.service.impl;
 
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,77 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @since 2017/03/06
  */
 public class InterviewEvaluationCls{
+	
+	//获取考生搜索结果
+	static Map<String,Object> getSearchResult(SqlQuery sqlQuery, String classId, String batchId, String srch_msid, String srch_name){
+		
+		Map<String,Object> rtn = new HashMap<String,Object>();
+		
+		String sqlString = "SELECT A.TZ_APP_INS_ID,B.OPRID,C.TZ_REALNAME,C.TZ_MSH_ID FROM PS_TZ_MSPS_KSH_TBL A,PS_TZ_FORM_WRK_T B,PS_TZ_AQ_YHXX_TBL C where A.TZ_CLASS_ID = B.TZ_CLASS_ID and A.TZ_APP_INS_ID = B.TZ_APP_INS_ID and B.OPRID=C.OPRID";
+		String sqlWhere = "";
+		Object[] searchObj = null;
+
+		if((srch_msid==null&&"".equals(srch_msid))&&(srch_name ==null||"".equals(srch_name))){
+			rtn.put("result", false);
+			rtn.put("msg", "请输入查询关键字！");
+			
+			return rtn;
+		}
+
+		if(srch_msid!=null&&!"".equals(srch_msid)&&srch_name!=null&&!"".equals(srch_msid)){
+			sqlWhere = " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND C.TZ_MSH_ID=? AND C.TZ_REALNAME=?";
+			sqlString = sqlString + sqlWhere;
+			searchObj = new Object[]{classId,batchId,srch_msid,srch_name};
+		}else{
+			  if(srch_msid!=null&&!"".equals(srch_msid)){
+				  sqlWhere = " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND C.TZ_MSH_ID=?";
+					sqlString = sqlString + sqlWhere;
+					searchObj = new Object[]{classId,batchId,srch_msid};
+			  }
+			  
+			  if(srch_name!=null&&!"".equals(srch_name)){
+				  sqlWhere = " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND C.TZ_REALNAME=?";
+					sqlString = sqlString + sqlWhere;
+					searchObj = new Object[]{classId,batchId,srch_name};
+			  }
+		}
+		
+		List<Map<String, Object>> list = sqlQuery.queryForList(sqlString,
+				searchObj);
+		
+		int unum = 0;
+		if(list!=null){
+			
+			for(int i=0;i<list.size();i++){
+				unum = i+1;
+				if(i>1){
+					break;
+				}
+				BigInteger appInsId = (BigInteger)list.get(i).get("TZ_APP_INS_ID");
+				String appOprId = (String)list.get(i).get("OPRID");
+				String realName = (String)list.get(i).get("TZ_REALNAME");
+				String msId = (String)list.get(i).get("TZ_MSH_ID");
+				
+				rtn.put("result", true);
+				rtn.put("appInsId",appInsId);
+				rtn.put("oprId",appOprId);
+				rtn.put("realName",realName);
+				rtn.put("msId",msId);
+			}
+		}
+
+		if(unum == 0){
+			rtn.put("result", false);
+			rtn.put("msg", "未查找到相关考生信息。");
+		}
+
+		if(unum > 1){
+			rtn.put("result", false);
+			rtn.put("msg", "查找到多个相关考生信息，请输入准确的检索条件。");
+		}
+		
+		return rtn;
+	}
 	
 	//平均分计算（包括：单个评委和多个评委的情况）;
 	static double calculateAverage(SqlQuery sqlQuery,String classId,String batchId,String oprid,String scoreItemId,int error_code,String error_decription){

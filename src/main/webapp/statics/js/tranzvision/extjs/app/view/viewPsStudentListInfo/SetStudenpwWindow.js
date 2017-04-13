@@ -65,30 +65,33 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetStudenpwWindow', {
 				columns: [{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_SETPW_STD.classId", "班级编号"),
 					dataIndex: 'classId',
-					width: 120,
+					width: 120
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_SETPW_STD.batchIdg", "批次编号"),
 					dataIndex: 'batchId',
-					width: 120,
+					width: 120
 					
 				}, {
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_SETPW_STD.judgzhxx", "评委账号"),
+					dataIndex: 'judgzhxx',
+					width: 120							
+				},  {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_SETPW_STD.ksOprIdg", "评委账号"),
 					dataIndex: 'judgeID',
 					width: 120,
 					hidden:true
-					
-				}, {
+				},
+				{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_SETPW_STD.ksNameg", "评委名称"),
 					dataIndex: 'judgeName',
-					width: 120,
+					width: 120
 					
 				},{
 
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_SETPW_STD.judgeGroup", "面试组"),
 					dataIndex: 'judgeGroup',
 					width: 120,
-					
 					flex: 1
 					
 

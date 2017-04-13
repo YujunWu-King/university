@@ -126,7 +126,35 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 					}
 				}
 			}
-
+			// 返回所有国家信息 BEGIN;
+			if ("ALLCOUNTRY".equals(strOType)) {
+                //1.从注册表读取数据:
+				if(strValue.startsWith("{")&&strValue.endsWith("}")){
+					//用于处理默认值:只有一条数据(sure)
+					Map<String,Object>countryMap=this.getCountryByOprId(language);
+					arraylist.add(countryMap);
+				}//2.原始处理:
+				else{
+					String sqlFindScholls = "";
+					List<Map<String, Object>> list;
+					if ("ENG".equals(language)) {
+						sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRYENG_V WHERE LANGUAGE_CD = ? ORDER BY COUNTRY";
+						list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { language});
+					} else {
+						sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRY_V ORDER BY COUNTRY";
+						list = jdbcTemplate.queryForList(sqlFindScholls);
+					}
+					
+					if (list != null && list.size() > 0) {
+						for (int i = 0; i < list.size(); i++) {
+							Map<String, Object> returnMap = new HashMap<>();
+							returnMap.put("country", list.get(i).get("COUNTRY"));
+							returnMap.put("descr", list.get(i).get("DESCR"));
+							arraylist.add(returnMap);
+						}
+					}
+				}
+			}
 			try {
 				result = mapper.writeValueAsString(arraylist);
 			} catch (JsonProcessingException e1) {
