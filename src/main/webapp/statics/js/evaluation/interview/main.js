@@ -312,14 +312,13 @@ function initializeEvaluateDataObjects(urlObject)
 	if(window.batchJSONArray == null) window.batchJSONArray = {};
 	if(window.onbeforeunload == null) window.onbeforeunload = onLeaveEstimateSystem;
 	
-	
+	window.baseUrl = urlObject['baseUrl'];
 	window.getBatchListUrl = urlObject['getBatchListUrl'];
 	window.getBatchDataUrl = urlObject['getBatchDataUrl'];
 	window.getNextApplicantUrl = urlObject['getNextApplicantUrl'];
 	window.getApplicantDataUrl = urlObject['getApplicantDataUrl'];
 	window.submitApplicantDataUrl = urlObject['submitApplicantDataUrl'];
 	window.printStatisticsTableUrl = urlObject['printStatisticsTableUrl'];
-	window.getAddDelOneKsDataUrl = urlObject['getAddDelOneKsDataUrl'];
 	window.checkPWAccStateURL = urlObject['checkPWAccStateURL'];
 	window.evaluateSystemDebugFlag = 'Y';
 	
@@ -493,7 +492,7 @@ Ext.tzSubmit =  function(params,callback,msg)
                 url: ContextPath+"/dispatcher",
                 params:{tzParams: params},
                 timeout: 60000,
-                async: false,
+                async: true,
                 success: function(response, opts)
                 {
                     //返回值内容
@@ -511,13 +510,13 @@ Ext.tzSubmit =  function(params,callback,msg)
                     }
                     catch(e)
                     {
-                        Ext.Msg.alert("提示","密码修改失败："+e.toString()+"，请与系统管理员联系。");
+                        Ext.Msg.alert("提示","保存出现错误："+e.toString()+"，请与系统管理员联系。");
                     }
                 },
                 failure: function(response, opts)
                 {
                 	var respText = Ext.util.JSON.decode(response.responseText);
-                	Ext.Msg.alert("提示","密码修改失败："+respText.error+"，请与系统管理员联系。");
+                	Ext.Msg.alert("提示","保存失败："+respText.error+"，请与系统管理员联系。");
                 },
                 callback: function(opts,success,response)
                 {
@@ -527,7 +526,7 @@ Ext.tzSubmit =  function(params,callback,msg)
     }
     catch(e1)
     {
-    	Ext.Msg.alert("提示","密码修改失败：请与系统管理员联系。");
+    	Ext.Msg.alert("提示","保存失败：请与系统管理员联系。");
     	unmaskWindow();
     }
 }

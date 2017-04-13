@@ -3,311 +3,316 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 	if(isFromDfPanel!="undefined" && isFromDfPanel!=null) showThisPanelHeader = false;
 	
 	var MainPageSearchKSPanel = Ext.create("Ext.FormPanel",{
-					title		: '搜索考生',
-					header		: showThisPanelHeader,
-					collapsible	: true,
-					hideCollapseTool: false,
-					overflowY	: 'hidden',
-					//margins		: '5 0 5 5',
-					bodyPadding	: 10,
-					margin		: '0 0 2 0',
-					width		: "100%", 
-					//height		: 200,
-					layout		: 'form',
-					items		: [
-									{
-										xtype: "fieldcontainer",
-										fieldLabel		: '搜索操作',
-										hideLabel		: true,
-										combineErrors	: false,
-										//msgTarget		: 'side',
-										layout			: 'hbox',
-										height			: 35,
-										defaults		: {hideLabel: false},
-										items			: [
-															{
-																xtype     	: 'textfield',
-																name      	: 'KSH_SEARCH_MSID',
-																fieldLabel	: '请输入报名表编号',
-																labelWidth	: 130,
-																value		: '',
-																enableKeyEvents	: true,
-																margin		: '0 30 0 0',
-																allowBlank	: true,
-																width		: 320
-															},
-															{
-																xtype     	: 'textfield',
-																name      	: 'KSH_SEARCH_NAME',
-																fieldLabel	: '或&nbsp;&nbsp;姓名',
-																labelWidth	: 75,
-																value		: '',
-																enableKeyEvents	: true,
-																margin		: '0 5 0 0',
-																allowBlank	: true,
-																width		: 270
-															},
-															{
-																xtype		: 'hiddenfield',
-																name		: 'KSH_BMBID',
-																value		: ''
-															},
-															{
-																xtype		: 'hiddenfield',
-																name		: 'KSH_KSNAME',
-																value		: ''
-															},
-															{
-																xtype		: 'hiddenfield',
-																name		: 'KSH_MSID',
-																value		: ''
-															}
-														  ]
-									},
-									{
-										xtype: "fieldcontainer",
-										hidden			: false,
-										fieldLabel		: '搜索结果',
-										hideLabel		: true,
-										combineErrors	: false,
-										//msgTarget		: 'side',
-										layout			: 'hbox',
-										//height			: 35,
-										defaults		: {hideLabel: false},
-										items			: [
-															{
-																xtype		: 'displayfield',
-																name		: 'SearchKSResult',
-																value		: '请输入报名表编号或姓名进行查找',
-																width		: 1000
-															}
-														  ]
-														  
-									},
-									{
-										xtype: "fieldcontainer",
-										fieldLabel		: '操作按钮',
-										hideLabel		: true,
-										combineErrors	: false,
-										//msgTarget		: 'side',
-										layout			: 'hbox',
-										//height			: 35,
-										defaults		: {hideLabel: false},
-										items			: [
-															{
-																xtype		: 'button',
-																text		: '查&nbsp;&nbsp;找',
-																width		: 100,
-																//height		: 25,
-																margin		: '10 10 10 0',
-																handler 	: function() {
-																				if(MainPageSearchKSPanel.getForm().isValid()){
-																					
-																					var searchKSForm = MainPageSearchKSPanel.getForm();
-																					
-																					var searchMSID = Ext.String.trim(searchKSForm.findField('KSH_SEARCH_MSID').getValue());
-																					var searchKSNM = Ext.String.trim(searchKSForm.findField('KSH_SEARCH_NAME').getValue());
-																					searchKSForm.findField('KSH_SEARCH_MSID').setValue(searchMSID);
-																					searchKSForm.findField('KSH_SEARCH_NAME').setValue(searchKSNM);
-																					
-																					searchKSForm.findField('KSH_BMBID').setValue('');
-																					
-																					if(searchMSID=='' && searchKSNM==''){
-																						Ext.Msg.alert('提示','报名表编号或姓名至少输入一项！');
-																						searchKSForm.findField('SearchKSResult').setValue('请输入报名表编号或姓名进行查找');
-																						return;
-																					}
-																					
-																					searchKSForm.findField('SearchKSResult').setValue('正在查找，请稍后');
-																					
-																					maskWindow();
-																					
-																					/* Normally we would submit the form to the server here and handle the response... */
-																					searchKSForm.submit({
-																						clientValidation: false,
-																						url: window.getAddDelOneKsDataUrl,
-																						params: {
-																									LanguageCd:'ZHS',
-																									OperationType:'Search',
-                                                                                                    BaokaoClassID:jsonObject['ps_class_id'],
-                                                                                                    BaokaoPCID:jsonObject['ps_pc_id']
-																								},
-																						success: function(form, action) {
-																							//unmask window
-																							unmaskWindow();
-																							
-																							try{
-																							
-																								if(action.result.error_code=="0"){
-																									//显示查询结果
-																									var searchRstZJHM = Ext.String.trim(action.result.ps_ksh_zjhm);
-																									searchRstZJHM = searchRstZJHM==''?'无':searchRstZJHM;
-																									
-																									//searchKSForm.findField("SearchKSResult").setValue('<b>查询结果：</b>姓名【'+ action.result.ps_ksh_xm +'】，考生申请号【'+ action.result.ps_ksh_msid +'】，证件编号【'+ searchRstZJHM +'】');
-																									searchKSForm.findField("SearchKSResult").setValue('<b>查询结果：</b>报名表编号【'+ action.result.ps_ksh_msid +'】，姓名【'+ action.result.ps_ksh_xm +'】');
-																									
-																									searchKSForm.findField("KSH_BMBID").setValue(action.result.ps_ksh_bmbid);
-																									searchKSForm.findField("KSH_KSNAME").setValue(action.result.ps_ksh_xm);
-																									searchKSForm.findField("KSH_MSID").setValue(action.result.ps_ksh_msid);
-																									
-																								}else{
-																									Ext.Msg.alert('失败', action.result.error_decription);
-																									searchKSForm.findField('SearchKSResult').setValue('请输入考生申请号或姓名进行查找');
-																								}
-																							
-																							}
-																							catch(e1){
-																								alert('查询失败！请重试！多次失败请联系管理员！');
-																								searchKSForm.findField('SearchKSResult').setValue('请输入考生申请号或姓名进行查找');
-																							}
-																						
-																							
-																						},
-																						failure: function(form, action) {
-																							//unmask window
-																							unmaskWindow();
-																							searchKSForm.findField('SearchKSResult').setValue('请输入考生申请号或姓名进行查找');
-																							
-																							switch (action.failureType) {
-																								case Ext.form.action.Action.CLIENT_INVALID:
-																									Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
-																									break;
-																								case Ext.form.action.Action.CONNECT_FAILURE:
-																									Ext.Msg.alert('Failure', 'Ajax communication failed');
-																									break;
-																								case Ext.form.action.Action.SERVER_INVALID:
-																								   Ext.Msg.alert('Failure', action.result.msg);
-																						   }
-																						}
-																					});
-																					
-																					//Ext.Msg.alert('Submitted Values', form.getValues(true));
-																				}
-							
-																		}
-																
-															},
-															{
-																xtype		: 'button',
-																hidden		: false,
-																text		: '进行评审',
-																width		: 100,
-																//height		: 25,
-																margin		: '10 10 10 0',
-																handler 	: function() {
-																				if(MainPageSearchKSPanel.getForm().isValid()){
-																					var searchKSForm = MainPageSearchKSPanel.getForm();
-																					
-																					var searchKSBMBID = Ext.String.trim(searchKSForm.findField("KSH_BMBID").getValue());
-																					var searchKSKSNAME = Ext.String.trim(searchKSForm.findField("KSH_KSNAME").getValue());
-																					var searchKSMSID = Ext.String.trim(searchKSForm.findField("KSH_MSID").getValue());
-																					
-																					if(searchKSBMBID==""){
-																						return;
-																					}
-																									
-																					maskWindow();
-																					
-																					/* Normally we would submit the form to the server here and handle the response... */
-																					searchKSForm.submit({
-																						clientValidation: false,
-																						url: window.getAddDelOneKsDataUrl,
-																						params: {
-																									LanguageCd:'ZHS',
-																									OperationType:'Add',
-                                                                                                    BaokaoClassID:jsonObject['ps_class_id'],
-                                                                                                    BaokaoPCID:jsonObject['ps_pc_id']
-																								},
-																						success: function(form, action) {
-																							//unmask window
-																							unmaskWindow();
-																							
-																							//try{
-																								//0-新抽取的考生 或者是 2-列表中已存在的考生，则直接跳转到评分页面
-																								if(action.result.error_code=="0" || action.result.error_decription=="2"){
-																									
-																									//var searchKSBMBID = Ext.string.trim(searchKSForm.fineField("KSH_BMBID").getValue());
-																									
-																									//局部刷新本地数据并跳转到打分页面
-																									if(window.KSINFO_JSON_DATA == null)
-																									{
-																										window.KSINFO_JSON_DATA = new Array();
-																									}
-																									
-																									var tmpBmbID = searchKSBMBID;
-																									KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
-															
-																									var tzEObject = new tzEvaluateObject();
-																									
-																									//tzEObject.baokaoDirectionID = jsonObject['ps_bkfx_id'];
-																									//tzEObject.baokaoDirectionName = jsonObject['ps_bkfx_mc'];
-																									//tzEObject.baokaoYear = jsonObject['ps_baok_nf'];
-                                                                                                    //tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
-                                                                                                    //tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];
-                                                                                                    tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-                                                                                                    tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
-                                                                                                    tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
-                                                                                                    tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
+		title		: '搜索考生',
+		header		: showThisPanelHeader,
+		collapsible	: true,
+		hideCollapseTool: false,
+		overflowY	: 'hidden',
+		//margins		: '5 0 5 5',
+		bodyPadding	: 10,
+		margin		: '0 0 2 0',
+		width		: "100%", 
+		//height		: 200,
+		layout		: 'form',
+		items		: [
+				{
+					xtype: "fieldcontainer",
+					fieldLabel		: '搜索操作',
+					hideLabel		: true,
+					combineErrors	: false,
+					//msgTarget		: 'side',
+					layout			: 'hbox',
+					height			: 35,
+					defaults		: {hideLabel: false},
+					items			: [
+						{
+							xtype     	: 'textfield',
+							name      	: 'KSH_SEARCH_MSID',
+							fieldLabel	: '请输入面试申请号',
+							labelWidth	: 130,
+							value		: '',
+							enableKeyEvents	: true,
+							margin		: '0 30 0 0',
+							allowBlank	: true,
+							width		: 320
+						},
+						{
+							xtype     	: 'textfield',
+							name      	: 'KSH_SEARCH_NAME',
+							fieldLabel	: '或&nbsp;&nbsp;姓名',
+							labelWidth	: 75,
+							value		: '',
+							enableKeyEvents	: true,
+							margin		: '0 5 0 0',
+							allowBlank	: true,
+							width		: 270
+						},
+						{
+							xtype		: 'hiddenfield',
+							name		: 'KSH_BMBID',
+							value		: ''
+						},
+						{
+							xtype		: 'hiddenfield',
+							name		: 'KSH_KSNAME',
+							value		: ''
+						},
+						{
+							xtype		: 'hiddenfield',
+							name		: 'KSH_MSID',
+							value		: ''
+						}
+					  ]
+},
+{
+	xtype: "fieldcontainer",
+	hidden			: false,
+	fieldLabel		: '搜索结果',
+	hideLabel		: true,
+	combineErrors	: false,
+	//msgTarget		: 'side',
+	layout			: 'hbox',
+	//height			: 35,
+	defaults		: {hideLabel: false},
+	items			: [
+						{
+							xtype		: 'displayfield',
+							name		: 'SearchKSResult',
+							value		: '请输入面试申请号或姓名进行查找',
+							width		: 1000
+						}
+					  ]
+					  
+},
+{
+	xtype: "fieldcontainer",
+	fieldLabel		: '操作按钮',
+	hideLabel		: true,
+	combineErrors	: false,
+	//msgTarget		: 'side',
+	layout			: 'hbox',
+	//height			: 35,
+	defaults		: {hideLabel: false},
+	items			: [
+		{
+			xtype		: 'button',
+			text		: '查&nbsp;&nbsp;找',
+			width		: 100,
+			//height		: 25,
+			margin		: '10 10 10 0',
+			handler 	: function() {
+					if(MainPageSearchKSPanel.getForm().isValid()){
+						
+						var searchKSForm = MainPageSearchKSPanel.getForm();
+						
+						var searchMSID = Ext.String.trim(searchKSForm.findField('KSH_SEARCH_MSID').getValue());
+						var searchKSNM = Ext.String.trim(searchKSForm.findField('KSH_SEARCH_NAME').getValue());
+						searchKSForm.findField('KSH_SEARCH_MSID').setValue(searchMSID);
+						searchKSForm.findField('KSH_SEARCH_NAME').setValue(searchKSNM);
+						
+						searchKSForm.findField('KSH_BMBID').setValue('');
+						
+						if(searchMSID=='' && searchKSNM==''){
+							Ext.Msg.alert('提示','报名表编号或姓名至少输入一项！');
+							searchKSForm.findField('SearchKSResult').setValue('请输入报名表编号或姓名进行查找');
+							return;
+						}
+						
+						searchKSForm.findField('SearchKSResult').setValue('正在查找，请稍后');
+						
+						maskWindow("正在查找，请稍后。。。");
 
-																									tzEObject.applicantName = searchKSKSNAME;
-																									tzEObject.applicantInterviewID = searchKSMSID;
-																									tzEObject.applicantBaomingbiaoID = searchKSBMBID;
-																									
-																									//获取新的局部数据，并使用局部数据刷新当前页面
+					    try
+					    {
+					        Ext.Ajax.request(
+					            {
+					                url: window.baseUrl,
+					                params:{
+					                	LanguageCd:'ZHS',
+										type:'search',
+		                                BaokaoClassID:jsonObject['ps_class_id'],
+		                                BaokaoPCID:jsonObject['ps_pc_id'],
+		                                KSH_SEARCH_MSID:searchMSID,
+		                                KSH_SEARCH_NAME:searchKSNM
+					                },
+					                timeout: 60000,
+					                async: true,
+					                success: function(response, opts)
+					                {
+					                    //返回值内容
+					                    var jsonText = response.responseText;
+					                    try
+					                    {
+					                        var jsonObject = Ext.util.JSON.decode(jsonText);
+					                        /*判断服务器是否返回了正确的信息*/
+					                        if(jsonObject.state.errcode == 1){
+					                        	Ext.Msg.alert("提示",jsonObject.state.errdesc);
+					                        }else{
+					                        	if(jsonObject.comContent.error_code=="0"){
+													//显示查询结果
+													var searchRstZJHM = Ext.String.trim(jsonObject.comContent.ps_ksh_zjhm);
+													searchRstZJHM = searchRstZJHM==''?'无':searchRstZJHM;
+													
+													searchKSForm.findField("SearchKSResult").setValue('<b>查询结果：</b>面试申请号【'+ jsonObject.comContent.ps_ksh_msid +'】，报名表编号【'+ jsonObject.comContent.ps_ksh_bmbid +'】，姓名【'+ jsonObject.comContent.ps_ksh_xm +'】');
+													
+													searchKSForm.findField("KSH_BMBID").setValue(jsonObject.comContent.ps_ksh_bmbid);
+													searchKSForm.findField("KSH_KSNAME").setValue(jsonObject.comContent.ps_ksh_xm);
+													searchKSForm.findField("KSH_MSID").setValue(jsonObject.comContent.ps_ksh_msid);
+													
+												}else{
+													Ext.Msg.alert('失败', jsonObject.comContent.error_decription);
+													searchKSForm.findField('SearchKSResult').setValue('请输入考生申请号或姓名进行查找');
+												}
+					                        }
+					                    }
+					                    catch(e)
+					                    {
+					                        Ext.Msg.alert("提示","查询失败！请重试！多次失败请联系管理员！");
+					                        searchKSForm.findField('SearchKSResult').setValue('请输入考生申请号或姓名进行查找');
+					                    }
+					                },
+					                failure: function(response, opts)
+					                {
+					                	var respText = Ext.util.JSON.decode(response.responseText);
+					                	Ext.Msg.alert("提示","查询失败："+respText.error+"，请与系统管理员联系。");
+					                	searchKSForm.findField('SearchKSResult').setValue('请输入考生申请号或姓名进行查找');
+					                },
+					                callback: function(opts,success,response)
+					                {
+					                    unmaskWindow();
+					                }
+					            });
+					    }
+					    catch(e1)
+					    {
+					    	Ext.Msg.alert("提示","保存：请与系统管理员联系。");
+					    	unmaskWindow();
+					    }
+					}
+			}
+			
+		},
+		{
+			xtype		: 'button',
+			hidden		: false,
+			text		: '进行评审',
+			width		: 100,
+			//height		: 25,
+			margin		: '10 10 10 0',
+			handler 	: function() {
+							if(MainPageSearchKSPanel.getForm().isValid()){
+								var searchKSForm = MainPageSearchKSPanel.getForm();
+								
+								var searchKSBMBID = Ext.String.trim(searchKSForm.findField("KSH_BMBID").getValue());
+								var searchKSKSNAME = Ext.String.trim(searchKSForm.findField("KSH_KSNAME").getValue());
+								var searchKSMSID = Ext.String.trim(searchKSForm.findField("KSH_MSID").getValue());
+								
+								if(searchKSBMBID==""){
+									return;
+								}
+												
+								maskWindow();
+								
+								/* Normally we would submit the form to the server here and handle the response... */
+								searchKSForm.submit({
+									clientValidation: false,
+									url: window.baseUrl,
+									params: {
+										LanguageCd:'ZHS',
+										type:'add',
+                                        BaokaoClassID:jsonObject['ps_class_id'],
+                                        BaokaoPCID:jsonObject['ps_pc_id']
+									},
+									success: function(form, action) {
+										//unmask window
+										unmaskWindow();
+										
+										//try{
+											//0-新抽取的考生 或者是 2-列表中已存在的考生，则直接跳转到评分页面
+											if(action.result.error_code=="0" || action.result.error_decription=="2"){
+												
+												//var searchKSBMBID = Ext.string.trim(searchKSForm.fineField("KSH_BMBID").getValue());
+												
+												//局部刷新本地数据并跳转到打分页面
+												if(window.KSINFO_JSON_DATA == null)
+												{
+													window.KSINFO_JSON_DATA = new Array();
+												}
+												
+												var tmpBmbID = searchKSBMBID;
+												KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
+		
+												var tzEObject = new tzEvaluateObject();
+												
+												//tzEObject.baokaoDirectionID = jsonObject['ps_bkfx_id'];
+												//tzEObject.baokaoDirectionName = jsonObject['ps_bkfx_mc'];
+												//tzEObject.baokaoYear = jsonObject['ps_baok_nf'];
+                                                //tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
+                                                //tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];
+                                                tzEObject.baokaoClassID = jsonObject['ps_class_id'];
+                                                tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
+                                                tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
+                                                tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
 
-                                                                                                    //
-                                                                                                    var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
-																									//若是在打分页面，则刷新；否则要跳转到打分页面
-																									if(showThisPanelHeader){
-																										//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
-                                                                                                        getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
-																									}else{
-																										//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
-                                                                                                        getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
-																									}
-																									
-																								}else{
-																									
-																									Ext.Msg.alert('失败', action.result.error_decription);
-																									
-																								}
-																							
-																							//}
-																							//catch(e1){
-																							//	alert('操作失败，请重试！多次失败请联系管理员！');
-																							//}
-																						
-																							
-																						},
-																						failure: function(form, action) {
-																							//unmask window
-																							unmaskWindow();
-																							
-																							switch (action.failureType) {
-																								case Ext.form.action.Action.CLIENT_INVALID:
-																									Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
-																									break;
-																								case Ext.form.action.Action.CONNECT_FAILURE:
-																									Ext.Msg.alert('Failure', 'Ajax communication failed');
-																									break;
-																								case Ext.form.action.Action.SERVER_INVALID:
-																								   Ext.Msg.alert('Failure', action.result.msg);
-																						   }
-																						}
-																					});
-																					
-																					//Ext.Msg.alert('Submitted Values', form.getValues(true));
-																				}
-							
-																		}
-																
-															}
-														  ]
-														  
+												tzEObject.applicantName = searchKSKSNAME;
+												tzEObject.applicantInterviewID = searchKSMSID;
+												tzEObject.applicantBaomingbiaoID = searchKSBMBID;
+												
+												//获取新的局部数据，并使用局部数据刷新当前页面
+
+                                                //
+                                                var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
+												//若是在打分页面，则刷新；否则要跳转到打分页面
+												if(showThisPanelHeader){
+													//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
+                                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
+												}else{
+													//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
+                                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
+												}
+												
+											}else{
+												
+												Ext.Msg.alert('失败', action.result.error_decription);
+												
+											}
+										
+										//}
+										//catch(e1){
+										//	alert('操作失败，请重试！多次失败请联系管理员！');
+										//}
+									
+										
+									},
+									failure: function(form, action) {
+										//unmask window
+										unmaskWindow();
+										
+										switch (action.failureType) {
+											case Ext.form.action.Action.CLIENT_INVALID:
+												Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
+												break;
+											case Ext.form.action.Action.CONNECT_FAILURE:
+												Ext.Msg.alert('Failure', 'Ajax communication failed');
+												break;
+											case Ext.form.action.Action.SERVER_INVALID:
+											   Ext.Msg.alert('Failure', action.result.msg);
+									   }
 									}
-					
-						]
-				});	
+								});
+								
+								//Ext.Msg.alert('Submitted Values', form.getValues(true));
+								}
+
+						}
+				
+			}
+		  ]
+						  
+	}
+
+]
+	});	
 	
 	
 	
@@ -463,8 +468,6 @@ function createPJFTJGrid(batchId,jsonObject,doHidePanel)
 	  	id: PJFTJGrid_batchID,
       stateId: 'EvaluatePJFTJGrid',
       width: "100%",
-      margin:'0 0 0 0',
-      padding:'0 5 0 0',
       columns: myDataModel['gridColumns'],
       title: '已评审考生得分统计',
       viewConfig: {
@@ -538,8 +541,6 @@ function createFenbuGrid(jsonObject,doHidePanel)
 	  hidden: boolHidePanel,
       stateId: 'EvaluateFenbuGrid',
       features: groupingFeature,
-      margin:'0 0 0 0',
-      padding:'0 5 0 0',
       columns: [
           {
               text     : '指标名称',
@@ -817,18 +818,16 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth,doHidePanel)
 									 });
 		
 		var chartPanel = Ext.create('Ext.panel.Panel',
-										{
-											title: '指标统计柱状图',
-											margin:'0 0 0 0',
-											padding:'0 6 0 0',
-											layout:'fit',
-                                            hidden : hiddenGrid,
-											collapsible:true,
-											collapsed:true,
-											height: 400,
-											width: totalWidth,
-											items: fsChart2
-										});
+						{
+							title: '指标统计柱状图',
+							layout:'fit',
+                            hidden : hiddenGrid,
+							collapsible:true,
+							collapsed:true,
+							height: 400,
+							width: totalWidth,
+							items: fsChart2
+						});
 		
 		if(chartStore == null)
 		{
@@ -1024,12 +1023,14 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth,doHidePane
 		chartPanel = Ext.create('Ext.panel.Panel',
 			{
 				title:'各统计指标得分区间人数比率分布统计曲线图',
+				margin:0,
 				bodyPadding:5,
+				padding:0,
 				collapsible:true,
 				collapsed:true,
 				//layout: {type: 'table',columns: chartArray.length},
 				defaults: {frame:true, width:totalWidth/*totalWidth/chartArray.length - 2*/, height: 480},
-				width: totalWidth,
+				width: "100%",
 				items: chartArray
 			});
 		
@@ -1376,7 +1377,7 @@ function getNextApplicant(jsonObject)
 
 function createApplicantList(jsonObject)
 {
-	var store1 = Ext.create('Ext.data.ArrayStore', {
+	var store1 = Ext.create('Ext.data.Store', {
       fields: getApplicantListColumnHeaders(jsonObject['ps_data_kslb']['ps_ksh_list_headers']),
       data: getApplicantListColumnValues(jsonObject['ps_data_kslb']['ps_ksh_list_contents'])
   });
@@ -1402,7 +1403,7 @@ function createApplicantList(jsonObject)
           forceFit: true,
           scrollOffset: 0
       },
-      tbar: [
+      _tbar: [
       				'->',
       				{
       					text:'提 交',
@@ -1411,19 +1412,19 @@ function createApplicantList(jsonObject)
 						hidden: true,
       					pressed: true,
       					handler : function()
-      										{
-      											Ext.Msg.confirm('提示', '是否提交本次评议的全部考生信息？<br />提交后将无法对考生评议成绩进行修改，是否继续？', function(button) {
-													if (button === 'yes') {
-                                                        var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
-														//submitEvaluateBatch(jsonObject['ps_bkfx_id']);
-                                                        submitEvaluateBatch(cls_pc_id);
-														
-													} else {
+						{
+							Ext.Msg.confirm('提示', '是否提交本次评议的全部考生信息？<br />提交后将无法对考生评议成绩进行修改，是否继续？', function(button) {
+								if (button === 'yes') {
+                                    var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
+									//submitEvaluateBatch(jsonObject['ps_bkfx_id']);
+                                    submitEvaluateBatch(cls_pc_id);
+									
+								} else {
 
-													}
-												});
-												
-      										}
+								}
+							});
+							
+						}
       				},
       				{
       					text:'打印评审总表',
@@ -1460,147 +1461,145 @@ function createApplicantList(jsonObject)
       					tooltip:'单击此按钮提交当前评审批次。',
 						width: 80,
       					handler : function()
-      										{
-      											Ext.Msg.confirm('提示', '是否提交本次评议的全部考生信息？<br />提交后将无法对考生评议成绩进行修改，是否继续？', function(button) {
-													if (button === 'yes') {
-                                                        var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
-														//submitEvaluateBatch(jsonObject['ps_bkfx_id']);
-                                                        submitEvaluateBatch(cls_pc_id);
-														
-													} else {
+						{
+							Ext.Msg.confirm('提示', '是否提交本次评议的全部考生信息？<br />提交后将无法对考生评议成绩进行修改，是否继续？', function(button) {
+								if (button === 'yes') {
+                                    var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
+									//submitEvaluateBatch(jsonObject['ps_bkfx_id']);
+                                    submitEvaluateBatch(cls_pc_id);
+									
+								} else {
 
-													}
-												});
-												
-      										}
+								}
+							});
+							
+						}
       				},
       				{
       					text:'打印评审总表',
       					tooltip:'单击此按钮打印当前评审批次评审统计表。',
 						hidden: true,
       					handler : function()
-      										{
-                                                cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
-      											printStatisticsTotalTable(cls_pc_id,getBatchNameById(cls_pc_id));
-      										}
+						{
+                            cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
+							printStatisticsTotalTable(cls_pc_id,getBatchNameById(cls_pc_id));
+						}
       				}
       			]
   });
   
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex)
-  											{
-  												var rec = store1.getAt(rowIndex);
-  												var clickColName = rec.self.getFields()[colIndex]['name'];
-  												
-  												
-  												gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
-  												
-  												
-												if(clickColName == 'pw_delks_col'){
-													var doDelKSName = rec.get('ps_ksh_xm');
-													Ext.Msg.confirm("提示", "您确定要移除考生【"+ doDelKSName +"】吗？", function(button){
-														if(button==="yes"){
+		{
+			var rec = store1.getAt(rowIndex);
 
-																maskWindow();
-																
-																/* Normally we would submit the form to the server here and handle the response... */
-																Ext.Ajax.request(
-																{
-																	url:window.getAddDelOneKsDataUrl,
-																	method:'POST',
-																	timeout:10000,
-																	params: {
-																				LanguageCd:'ZHS',
-																				OperationType:'Del',
-                                                                                BaokaoClassID:jsonObject['ps_class_id'],
-                                                                                BaokaoPCID:jsonObject['ps_pc_id'],
-																				KSH_BMBID:rec.get('ps_ksh_bmbid')
-																			},
-																	success:function(response)
-																	{
-																	
-																		//unmask window
-																		unmaskWindow();
-																		
-																		var DeljsonObject = null;
-																		
-																		try
-																		{
-																		
-																			DeljsonObject = Ext.JSON.decode(response.responseText);
+			var clickColName = gridViewObject.grid.columns[colIndex]["dataIndex"];
+			
+			gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
+			
+			
+			if(clickColName == 'pw_delks_col'){
+				var doDelKSName = rec.get('ps_ksh_xm');
+				Ext.Msg.confirm("提示", "您确定要移除考生【"+ doDelKSName +"】吗？", function(button){
+					if(button==="yes"){
 
-																			if(DeljsonObject.error_code=="0"){
-																				//移除成功，刷新局部数据
-																				//alert(jsonObject['ps_bkfx_id']+','+null+','+rec.get('ps_ksh_bmbid')+','+'RFH');
-                                                                                var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
-																				//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],null,{applicantBaomingbiaoID:rec.get('ps_ksh_bmbid')},'RFH');
-                                                                                getPartBatchDataByBatchId(cls_pc_id,null,{applicantBaomingbiaoID:rec.get('ps_ksh_bmbid')},'RFH');
-																				
-																				Ext.Msg.alert('提示', '移除成功！');
-																				
-																			}else{
-																				Ext.Msg.alert('失败', DeljsonObject.error_decription);
-																			}
-																		
-																		}
-																		catch(e1){
-																			alert('移除失败！请重试！多次失败请联系管理员！');
-																		}
-																	
-																		
-																	},
-																	failure:function(response)
-																	{
-																		
-																		alert('移除考生时发生错误，请与系统管理员联系。');
-																		
-																		//unmask window
-																		unmaskWindow();
-																	}
-																});
-														}	
-													});
-													
-													
-												}else{
-												
-													if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_kaosheng_id'))
-													{
-														var tmpKshID = jQuery.trim(rec.get('ps_ksh_bmbid'));
-														
-														if(tmpKshID == null || tmpKshID == '' || tmpKshID == 'undefined')
-														{
-															alert('系统错误：无法获取指定考生对应的编号。');
-														}
-														else
-														{
-															//mask window
-															maskWindow();
-															
-															//加载指定考生评审信息页面并显示
-															var tzEObject = new tzEvaluateObject();
-															
-															/*tzEObject.baokaoDirectionID = jsonObject['ps_bkfx_id'];
-															tzEObject.baokaoDirectionName = jsonObject['ps_bkfx_mc'];
-															tzEObject.baokaoYear = jsonObject['ps_baok_nf'];
-															tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
-															tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];
-															*/
-                                                            tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-                                                            tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
-                                                            tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
-                                                            tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
-															tzEObject.applicantName = rec.get('ps_ksh_xm');
-															tzEObject.applicantInterviewID = rec.get('ps_kaosheng_id');
-															tzEObject.applicantBaomingbiaoID = rec.get('ps_ksh_bmbid');
-															
-															loadApplicantData(tzEObject);
-														}
-														
-													}
-												}
-												
-  											}
+							maskWindow();
+							
+							/* Normally we would submit the form to the server here and handle the response... */
+							Ext.Ajax.request(
+							{
+								url:window.baseUrl,
+								method:'POST',
+								timeout:10000,
+								params: {
+									LanguageCd:'ZHS',
+									type:'delete',
+                                    BaokaoClassID:jsonObject['ps_class_id'],
+                                    BaokaoPCID:jsonObject['ps_pc_id'],
+									KSH_BMBID:rec.get('ps_ksh_bmbid')
+								},
+								success:function(response)
+								{
+								
+									//unmask window
+									unmaskWindow();
+									
+									var DeljsonObject = null;
+									
+									try
+									{
+									
+										DeljsonObject = Ext.JSON.decode(response.responseText).comContent;
+
+										if(DeljsonObject.error_code=="0"){
+											//移除成功，刷新局部数据
+											var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
+											getPartBatchDataByBatchId(cls_pc_id,null,{applicantBaomingbiaoID:rec.get('ps_ksh_bmbid')},'RFH');
+											
+											Ext.Msg.alert('提示', '移除成功！');
+											
+										}else{
+											Ext.Msg.alert('失败', DeljsonObject.error_decription);
+										}
+									
+									}
+									catch(e1){
+										alert('移除失败！请重试！多次失败请联系管理员！');
+									}
+								
+									
+								},
+								failure:function(response)
+								{
+									
+									alert('移除考生时发生错误，请与系统管理员联系。');
+									
+									//unmask window
+									unmaskWindow();
+								}
+							});
+					}	
+				});
+				
+				
+			}else{
+			
+				if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_ksh_id'))
+				{
+					var tmpKshID = jQuery.trim(rec.get('ps_ksh_bmbid'));
+					
+					if(tmpKshID == null || tmpKshID == '' || tmpKshID == 'undefined')
+					{
+						alert('系统错误：无法获取指定考生对应的编号。');
+					}
+					else
+					{
+						//mask window
+						maskWindow();
+						
+						//加载指定考生评审信息页面并显示
+						var tzEObject = new tzEvaluateObject();
+						
+						/*tzEObject.baokaoDirectionID = jsonObject['ps_bkfx_id'];
+						tzEObject.baokaoDirectionName = jsonObject['ps_bkfx_mc'];
+						tzEObject.baokaoYear = jsonObject['ps_baok_nf'];
+						tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
+						tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];
+						*/
+                        tzEObject.baokaoClassID = jsonObject['ps_class_id'];
+                        tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
+                        tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
+                        tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
+						tzEObject.applicantName = rec.get('ps_ksh_xm');
+						tzEObject.applicantInterviewID = rec.get('ps_kaosheng_id');
+						tzEObject.applicantBaomingbiaoID = rec.get('ps_ksh_bmbid');
+						
+						loadApplicantData(tzEObject);
+					}
+					
+				}
+			}
+			
+		}
   			 );
   grid.on({expand:function(){myPageSlider[0].adjustHeight();},collapse:function(){myPageSlider[0].adjustHeight();}});
   
@@ -1656,18 +1655,19 @@ function createStatisticsArea(batchId,jsonObject)
 	
 	var tjArea = Ext.create('Ext.Panel',
 			 {
-					title:'评审统计信息区',
-					collapsible:true,
-					collapsed:true,
-					bodyPadding:10,
-					layout: {
-		                type: 'vbox',
-		                align: 'stretch'
-		            },
-					autoHeight:true,
-					width:"100%",
-					defaultType:'textfield',
-					items:itemArray
+				title:'评审统计信息区',
+				collapsible:true,
+				collapsed:true,
+				margin:'0 0 2 0',
+				bodyPadding:15,
+				layout: {
+	                type: 'vbox',
+	                align: 'stretch'
+	            },
+				autoHeight:true,
+				width:"100%",
+				defaultType:'textfield',
+				items:itemArray
 			 });
 	
 	return tjArea;

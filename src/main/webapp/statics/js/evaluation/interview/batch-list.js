@@ -4,7 +4,7 @@ function createReturnMenu(parentObject, jsonObject)
 	var tb = Ext.create('Ext.toolbar.Toolbar');
 	
 	tb.render(parentObject);
-	console.log(jsonObject);
+	
 	tb.add(
 			{
 				text: '返回批次列表页面',

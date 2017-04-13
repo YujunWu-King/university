@@ -626,18 +626,18 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 	if(chartArray.length > 0)
 	{
 		chartPanel = Ext.create('Ext.panel.Panel',
-									{
-										title:'评审结果分布曲线图',
-										margin:'0 0 0 0',
-										bodyPadding:5,
-										padding:0,
-										collapsible:true,
-										collapsed:true,
-										//layout: {type: 'table',columns: chartArray.length},
-										defaults: {frame:true, width:totalWidth/*totalWidth/chartArray.length - 2*/, height: 480},
-										width: "100%",
-										items: chartArray
-									});
+			{
+				title:'评审结果分布曲线图',
+				margin: 0,
+				bodyPadding:5,
+				padding:0,
+				collapsible:true,
+				collapsed:true,
+				//layout: {type: 'table',columns: chartArray.length},
+				defaults: {frame:true, width:totalWidth/*totalWidth/chartArray.length - 2*/, height: 480},
+				width: "100%",
+				items: chartArray
+			});
 		
 		if(chartStoreArray == null)
 		{
@@ -1151,8 +1151,7 @@ function createStatisticsArea(batchId,jsonObject)
 		 {
 			title:'评审统计信息区',
 			collapsible:true,
-			bodyPadding:10,
-			layout:'form',
+			bodyPadding:15,
 			autoHeight:true,
 			width:"100%",
 			layout: {
