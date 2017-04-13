@@ -47,11 +47,11 @@
 				},{
 					text:'加入黑名单',
 					handler:'addHmd'
-				},{
+				},/*{
 					text:'邮件发送历史',
 					iconCls: 'mail',
 					handler:'viewMailHistory'	
-				},{
+				},*/{
 					text:'选中申请人另存为听众',
 					handler:'saveAsStaAud'	
 				},{

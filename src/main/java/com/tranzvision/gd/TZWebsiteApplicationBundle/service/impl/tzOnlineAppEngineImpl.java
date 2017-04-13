@@ -2519,7 +2519,7 @@ public class tzOnlineAppEngineImpl {
 	 * @return
 	 */
 	public String sendSiteEmail(Long numAppInsId, String siteEmailID, String strAppOprId, String strAppOrgId,
-			String strAudienceDesc, String strAudLy) {
+			String strAudienceDesc, String strAudLy, String strRefLetterId) {
 		String sql = "";
 		// 推荐信提交成功的需要特殊处理
 		if (siteEmailID.equals("TZ_TJX_SUBSUC")) {
@@ -2550,8 +2550,15 @@ public class tzOnlineAppEngineImpl {
 			return "false";
 		}
 		// 为听众添加听众成员
-		boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience, strName, strName, "", "", "", "", "",
-				strAppOprId, "", "", String.valueOf(numAppInsId));
+		boolean addAudCy = false;
+		if (siteEmailID.equals("TZ_TJX_SUBSUC")) {
+			addAudCy = createTaskServiceImpl.addAudCy(createAudience, strName, strName, "", "", "", "", "", strAppOprId,
+					"", "", strRefLetterId);
+		} else {
+			addAudCy = createTaskServiceImpl.addAudCy(createAudience, strName, strName, "", "", "", "", "", strAppOprId,
+					"", "", String.valueOf(numAppInsId));
+		}
+
 		if (!addAudCy) {
 			return "false";
 		}
@@ -2800,6 +2807,9 @@ public class tzOnlineAppEngineImpl {
 			psTzRegUserT.setOprid(strAppOprId);
 			psTzRegUserT.setTzRealname(name);
 			psTzRegUserT.setTzGender(sex);
+			if (brithday == null) {
+				brithday = "";
+			}
 			psTzRegUserT.setBirthdate(DateUtil.parse(brithday));
 			psTzRegUserT.setTzSchCountry(uniScholContryEn);
 			psTzRegUserT.setTzSchCname(uniSchoolName);

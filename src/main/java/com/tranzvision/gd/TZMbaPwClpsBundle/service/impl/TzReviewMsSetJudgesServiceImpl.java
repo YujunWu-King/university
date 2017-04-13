@@ -53,7 +53,7 @@ public class TzReviewMsSetJudgesServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_PWEI_GRPID", "TZ_PWEI_OPRID",
-					"TZ_CLPS_GR_NAME", "TZ_REALNAME" };
+					"TZ_CLPS_GR_NAME", "TZ_REALNAME", "TZ_DLZH_ID" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -69,6 +69,7 @@ public class TzReviewMsSetJudgesServiceImpl extends FrameworkImpl {
 					mapList.put("judgeID", rowList[3]);
 					mapList.put("judgeGroup", rowList[4]);
 					mapList.put("judgeName", rowList[5]);
+					mapList.put("judgzhxx", rowList[6]);
 
 					lisdata.add(mapList);
 				}

@@ -1503,7 +1503,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
 						// 预备提交发送站内信件
 						tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_BMB_PRESUB", strAppOprId, strAppOrgId,
-								"报名表预提交发送站内信", "BMBP");
+								"报名表预提交发送站内信", "BMBP", null);
 					} else {
 						tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "N");
 					}
@@ -1577,13 +1577,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								// tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
 								// TJX提交 发送站内信
 								tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_TJX_SUBSUC", strAppOprId,
-										strAppOrgId, "推荐信提交发送站内信", "TJXZ");
+										strAppOrgId, "推荐信提交发送站内信", "TJXZ", strRefLetterId);
 							}
 							if ("BMB".equals(strTplType)) {
 							}
 						}
 					}
-					tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
+					if ("BMB".equals(strTplType)) {
+						tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
+					}
 					System.out.println("报名表保存SUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("CONFIRMSUBMIT".equals(strOtype)) {
 					System.out.println("报名表保存CONFIRMSUBMIT数据Begin");
@@ -1606,7 +1608,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 							// 报名表提交 发送站内信
 							tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_BMB_FORSUB", strAppOprId, strAppOrgId,
-									"报名表提交发送站内信", "BMBZ");
+									"报名表提交发送站内信", "BMBZ", null);
 
 						}
 					}

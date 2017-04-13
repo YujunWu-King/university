@@ -89,8 +89,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 						: dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_RQ")));
 				Date startTime = mapBasic.get("TZ_PYKS_SJ") == null ? null
 						: timeSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_SJ")));
-				Date endDate = mapBasic.get("TZ_PYKS_RQ") == null ? null
-						: dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_RQ")));
+				Date endDate = mapBasic.get("TZ_PYJS_RQ") == null ? null
+						: dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYJS_RQ")));
 				Date endTime = mapBasic.get("TZ_PYJS_SJ") == null ? null
 						: timeSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYJS_SJ")));
 				String materialDesc = (String) mapBasic.get("TZ_MSPS_SM");
@@ -121,6 +121,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					strEndTime = timeSimpleDateFormat.format(endTime);
 				}
 
+				String count[] = this.StudentJugeNum(classId, batchId, errMsg);
+
 				mapData.put("classId", classId);
 				mapData.put("batchId", batchId);
 				mapData.put("className", className);
@@ -136,6 +138,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				mapData.put("EndTime", strEndTime);
 				mapData.put("desc", materialDesc);
 				mapData.put("judgeNumSet", judgeNumSet);
+				mapData.put("kspwnum", count[0]);
+				mapData.put("pwTeamnum", count[1]);
 
 				mapRet.put("formData", mapData);
 			}
@@ -551,7 +555,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		try {
 			int dataLength = actData.length;
 			Date dateNow = new Date();
-			DateFormat timeFormat = new SimpleDateFormat("mm:ss");
+			DateFormat timeFormat = new SimpleDateFormat("HH:mm");
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容;
