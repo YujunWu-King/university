@@ -454,7 +454,42 @@
 			}*/
 		}
 	},
-
+	//放大镜搜索角色名称
+	searchRoleName: function(btn){
+//		var form = btn.findParentByType("panel").child("form");
+		var form = this.getView().child("form").getForm();
+		Ext.tzShowPromptSearch({
+			recname: 'PSROLEDEFN_VW',
+			searchDesc: '搜索角色名称',
+			maxRow:50,
+			condition:{
+				presetFields:{
+					
+				},
+				srhConFields:{
+					ROLENAME:{
+						desc:'角色名称',
+						operator:'07',
+						type:'01'	
+					},
+					DESCR:{
+						desc:'描述',
+						operator:'07',
+						type:'01'		
+					}	
+				}	
+			},
+			srhresult:{
+				ROLENAME: '角色名称',
+				DESCR: '描述'	
+			},
+			multiselect: false,
+			callback: function(selection){
+				form.findField("roleName").setValue(selection[0].data.ROLENAME);
+				form.findField("roleNameDesc").setValue(selection[0].data.DESCR);
+			}
+		});	
+	},
 	//可配置搜索
 	searchJudgeAcc: function(btn){
 		Ext.tzShowCFGSearch({

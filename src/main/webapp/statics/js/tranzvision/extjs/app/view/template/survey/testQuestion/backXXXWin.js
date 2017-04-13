@@ -75,7 +75,7 @@
             }
         },{
 		    text: "取值上限",
-			dataIndex: 'numberfield',
+			dataIndex: 'TZ_U_LIMIT',
 			minWidth:80,
             editor: {
                 xtype:'numberfield',

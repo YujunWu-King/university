@@ -1,0 +1,45 @@
+<meta name="viewport" content="width=device-width,inital-scale=1.0,minimum-scale=0.5,maximum-scale=2.0,user-scalable=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="%bind(:1)/statics/js/lib/jquery/jquery.min.js" type="text/javascript"></script>
+<script src="%bind(:1)/statics/js/lib/layer/layer.js" type="text/javascript"></script>
+<script type="text/javascript">
+	function jy() {
+		var radioSize = $(":radio").size();
+		if(radioSize == 0){
+			$("#msg").html("没有可选择的测试方向！");
+			return false;
+		}
+		
+		var selectType = $('input:radio:checked').val();
+		if (selectType == "" || selectType == null) {
+			$("#msg").html("请选择一个测试方向！");
+		} else {
+			var wj = "A" + $('input:radio:checked').attr("id");
+			//window.top.location.href = $("#" + wj).attr("href");
+			parent.layer.closeAll();
+			window.open($("#" + wj).attr("href"));
+		}
+	}
+</script>
+<style type="text/css">
+	.button,.button span{-moz-border-radius:.3em;border-radius:.3em}
+	.button span{border-top:1px solid #fff;border-top:1px solid rgba(255,255,255,0.5);display:block;padding:0.3em 2.0em}
+	.button-blue{background:#21722A;background:-webkit-gradient(linear,left top,left bottom,from(#21722A),to(#21722A));background:-moz-linear-gradient(-90deg,#21722A,#21722A);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#21722A',endColorstr='#21722A')}
+	.button{margin:0px;text-decoration:none;font:bold 1.5em 'Trebuchet MS',Arial,Helvetica;display:inline-block;text-align:center;color:#fff;border:1px solid #9c9c9c;border:1px solid rgba(0,0,0,0.3);text-shadow:0 1px 0 rgba(0,0,0,0.4);box-shadow:0 0 .05em rgba(0,0,0,0.4);-moz-box-shadow:0 0 .05em rgba(0,0,0,0.4);-webkit-box-shadow:0 0 .05em rgba(0,0,0,0.4)}
+	.button:link{font-size:12px;color:white;text-decoration:none}
+	.button:visited{font-size:12px;color:white;text-decoration:none}
+	.button:hover{font-size:12px;color:white;text-decoration:none}
+	.xzwj{text-align:center;margin-top:0px;color:#0c1a6f;font-family:"微软雅黑";font-size:18px}
+</style>
+<body style="margin-top: 0px;">
+	<div style="height: 15px;"></div>
+	<div class="xzwj">
+		<form name="form1" method="post" action="" target="_top">
+			<table style="margin-top: 0px; margin-left: 5px; height: 125px;" id="tb" class="tb">%bind(:2)</table>
+			<span id="msg" style="color: red; font-size: 14px;">&nbsp;</span>
+			<div style="margin-top: 5px;">
+				<a class="button button-blue" href="javascript:void(0);" onclick="jy();"><span>确定</span></a>
+			</div>
+		</form>
+	</div>
+</body>

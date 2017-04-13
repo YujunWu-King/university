@@ -13,6 +13,9 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Service;
+
+@Service("com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl.TzMaterialsPwListImpl")
 public class TzMaterialsPwListImpl extends FrameworkImpl
 {
 
@@ -20,11 +23,8 @@ public class TzMaterialsPwListImpl extends FrameworkImpl
 	private TZGDObject tzGdObject;
 	private HttpServletRequest request;
 	private TzLoginServiceImpl tzLoginServiceImpl;
-
-	public TzMaterialsPwListImpl()
-	{
-	}
-
+ 
+	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String errMsg[])
 	{
 		String strResponse = "";

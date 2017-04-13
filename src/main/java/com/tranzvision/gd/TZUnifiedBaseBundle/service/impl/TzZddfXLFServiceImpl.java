@@ -104,7 +104,21 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 						break;
 				}
 
+				//2是本科，1为研究生
+				if("2".equals(XL)){
+					XL="2";
+				}else{
+					XL="1";
+				}
 				
+				//1是本科，2是研究生
+				if("3".equals(XW)){
+					XW="1";
+				}else if("1".equals(XW)||"2".equals(XW)){
+					XW="2";
+				}else{
+					return 0;
+				}
 							  
 				//声明float型字段“得分”，string型字段“打分记录”；
 				float Score;
@@ -114,6 +128,9 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				String ExistSql = "select 'Y' from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
 				String isExist = "";
 				isExist = SqlQuery.queryForObject(ExistSql, new Object[] { XXLX,XW,XL },"String");
+				
+				
+				
 				if ("Y".equals(isExist)) {
 					String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
 					String StrScore = SqlQuery.queryForObject(SearchSql,  new Object[] { XXLX,XW,XL },"String");
@@ -123,26 +140,36 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 					//PS:  学历=研究生TZ_10highdegree（1、3），学位TZ_10hxuewei=硕士/博士（1，2）
 								
 					//查询考生其他教育经历中，是否有学历=研究生，学位等于硕士/博士的教育经历，如果有，得分=得分+5
-					if(XL.equals("1")||XL.equals("3")){
-						if(XW.equals("1")||XW.equals("2")){
+					if(XW.equals("2")&&XL.equals("1")){
 						Score+=5;
 						}
-					}
+					
 					
 					//得分如果>100，得分=100；
 					if(Score>100){
 						Score=100;
 					}
 					
+					if(XL.equals("1")){
+						XL="研究生";
+					}else{
+						XL="本科";
+					}
+					
+					if(XW.equals("2")){
+						XW="硕士";
+					}else{
+						XW="学士";
+					}
+					
 					//记录打分记录：示例：985|学历：本科|学位：学士|研究生|95分
 					MarkRecord="学校类型：".concat(XXType).concat("|学历：").concat(XL).concat("|学位：").concat(XW);
 					
 					//是否拼接研究生；
-					if(XL.equals("1")||XL.equals("3")){
-						if(XW.equals("1")||XW.equals("2")){
+					if(XW.equals("2")&&XL.equals("1")){
 							MarkRecord.concat("|研究生");
 						}
-					}
+					
 					MarkRecord=MarkRecord+"|"+String.valueOf(Score).concat("分");
 					
 					//插入表TZ_CJX_TBL

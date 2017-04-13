@@ -15,7 +15,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author ShaweYet
  * @since 2017/03/06
  */
-public class MaterialEvaluationCls{
+public class InterviewEvaluationCls{
 	
 	//平均分计算（包括：单个评委和多个评委的情况）;
 	static double calculateAverage(SqlQuery sqlQuery,String classId,String batchId,String oprid,String scoreItemId,int error_code,String error_decription){
@@ -36,8 +36,8 @@ public class MaterialEvaluationCls{
 		   
 		   
 		   if(scoreItemId==null||"".equals(scoreItemId)){
-				//没有传值，取材料评审总分成绩项;
-				String TZ_SCORE_MODAL_ID = sqlQuery.queryForObject("select TZ_ZLPS_SCOR_MD_ID from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?", 
+				//没有传值，取面试评审总分成绩项;
+				String TZ_SCORE_MODAL_ID = sqlQuery.queryForObject("select TZ_MSCJ_SCOR_MD_ID from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?", 
 						new Object[]{classId}, "String");
 
 				scoreItemId = sqlQuery.queryForObject("SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=(SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=?) and PARENT_NODE_NUM=0", 
@@ -52,26 +52,17 @@ public class MaterialEvaluationCls{
 		   //某个报考方向下：单个评委完成的数量;
 		   int dgpw_wc_num = 0;
 
-		   //当前轮次
-		   int TZ_DQPY_LUNC = 1;
-		   String STR_DQPY_LUNC = sqlQuery.queryForObject(
-		   		"select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?",
-		   		new Object[] { classId, batchId }, "String");
-		   if(STR_DQPY_LUNC!=null&&!"".equals(STR_DQPY_LUNC)){
-		   		TZ_DQPY_LUNC = Integer.parseInt(STR_DQPY_LUNC);
-		   }
-
 		   String str_dgpw_all_num = sqlQuery.queryForObject(
-			   		"select sum( b.TZ_SCORE_NUM) from PS_TZ_CP_PW_KS_TBL a,PS_TZ_CJX_TBL b ,PS_TZ_KSCLPSLS_TBL c where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID and a.TZ_CLASS_ID = c.TZ_CLASS_ID and a.TZ_APPLY_PC_ID = c.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID = c.TZ_PWEI_OPRID and a.TZ_APP_INS_ID = c.TZ_APP_INS_ID and c.TZ_SUBMIT_YN <> 'C' and a.TZ_CLASS_ID = ? and a.TZ_APPLY_PC_ID = ? and a.TZ_PWEI_OPRID = ? and b.TZ_SCORE_ITEM_ID = ? and c.TZ_CLPS_LUNC = ?",
-			   		new Object[] { classId, batchId ,oprid,scoreItemId ,TZ_DQPY_LUNC}, "String");		   
+			   		"select sum( b.TZ_SCORE_NUM) from PS_TZ_MP_PW_KS_TBL a,PS_TZ_CJX_TBL b where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  and a.TZ_CLASS_ID = ? and a.TZ_APPLY_PC_ID=? and a.TZ_PWEI_OPRID = ? and b.TZ_SCORE_ITEM_ID = ? AND a.TZ_DELETE_ZT <> 'Y' AND a.TZ_PSHEN_ZT = 'Y'",
+			   		new Object[] { classId, batchId ,oprid,scoreItemId }, "String");		   
 		   if(str_dgpw_all_num!=null&&!"".equals(str_dgpw_all_num)){
 			   dgpw_all_num = Double.parseDouble(str_dgpw_all_num);
 		   }
 		   
 		   //完成数量
 		   String str_dgpw_wc_num = sqlQuery.queryForObject(
-			   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? and TZ_CLPS_LUNC = ? and  TZ_SUBMIT_YN <> 'C'",
-			   		new Object[] { classId, batchId ,oprid ,TZ_DQPY_LUNC}, "String");		   
+			   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? and TZ_PWEI_OPRID = ?  AND TZ_DELETE_ZT <> 'Y' and  TZ_PSHEN_ZT = 'Y'",
+			   		new Object[] { classId, batchId ,oprid }, "String");		   
 		   if(str_dgpw_wc_num!=null&&!"".equals(str_dgpw_wc_num)){
 			   dgpw_wc_num = Integer.parseInt(str_dgpw_wc_num);
 		   }
