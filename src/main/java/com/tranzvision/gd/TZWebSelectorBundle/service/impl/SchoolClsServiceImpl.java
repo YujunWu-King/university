@@ -106,9 +106,8 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 					province = "%";
 				}else{
 					province += "%";
-					System.out.println("---ffff------" + province);
 				}
-				System.out.println(strValue + "---------" + province);
+
 				if(StringUtils.isNotBlank(strValue)){
 					sqlFindScholls += " AND COUNTRY=?  AND TZ_PROVINCES LIKE ? ";
 					params = new Object[] {strValue,province};
@@ -118,7 +117,6 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 				}
 				
 				sqlFindScholls += " ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
-				System.out.println("---------" + sqlFindScholls);
 				list = jdbcTemplate.queryForList(sqlFindScholls, params);
 
 				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
@@ -192,7 +190,36 @@ public class SchoolClsServiceImpl extends FrameworkImpl {
 					e1.printStackTrace();
 				}
 			}
+			// 通过省市名称查询 BEGIN
+			if ("BYCOUNTRY".equals(strOType)) {				
+				if ("".equals(strValue)) {
+					sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] {});
+				} else {
+					sqlFindScholls = "SELECT TZ_SCHOOL_NAME,TZ_SCHOOL_NAMEENG FROM PS_TZ_SCH_LIB_TBL where COUNTRY=? ORDER BY convert(TZ_SCHOOL_NAME using gbk) asc";
+					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { strValue });
+				}
 
+				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
+				if (list != null && list.size() > 0) {
+					for (int i = 0; i < list.size(); i++) {
+						Map<String, Object> returnMap = new HashMap<>();
+						String schoolname_en = (String) list.get(i).get("TZ_SCHOOL_NAMEENG");
+						if (list.get(i).get("TZ_SCHOOL_NAMEENG") != null && !"".equals(schoolname_en)) {
+							returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME") + "(" + schoolname_en + ")");
+						} else {
+							returnMap.put("schoolName", list.get(i).get("TZ_SCHOOL_NAME"));
+						}
+
+						arraylist.add(returnMap);
+					}
+				}
+				try {
+					result = mapper.writeValueAsString(arraylist);
+				} catch (JsonProcessingException e1) {
+					e1.printStackTrace();
+				}
+			}
 		} catch (Exception e) {
 
 		}
