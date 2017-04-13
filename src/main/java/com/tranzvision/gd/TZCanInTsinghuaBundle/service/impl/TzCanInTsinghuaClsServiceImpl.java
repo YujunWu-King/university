@@ -452,7 +452,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 
 			//列表SQL
 //			String sql = "SELECT TZ_CS_WJ_ID,TZ_CS_WJ_NAME,TZ_DC_WJ_ID, date_format(TZ_DC_WJ_JSSJ,'%H:%i:%s') TZ_DC_WJ_KSSJ,date_format(TZ_DC_WJ_JSSJ,'%H:%i:%s') TZ_DC_WJ_JSSJ FROM PS_TZ_CSWJ_TBL WHERE TZ_JG_ID = ? AND TZ_STATE = '0' AND TZ_DC_WJ_ZT = '1' AND TZ_DC_WJ_KSRQ <= curdate() AND TZ_DC_WJ_JSRQ >= curdate() ORDER BY TZ_DC_WJ_KSRQ";
-			String sql = "SELECT TZ_CS_WJ_ID,TZ_CS_WJ_NAME,TZ_DC_WJ_ID FROM PS_TZ_CSWJ_TBL WHERE TZ_JG_ID = ? AND TZ_STATE = '0' AND TZ_DC_WJ_ZT = '1' AND str_to_date(concat(TZ_DC_WJ_KSRQ,' ',TZ_DC_WJ_KSSJ),'%Y-%m-%d %T') <= date_format(curdate(),'%Y-%m-%d %T') AND str_to_date(concat(TZ_DC_WJ_JSRQ,' ',TZ_DC_WJ_JSSJ),'%Y-%m-%d %T') >= date_format(curdate(),'%Y-%m-%d %T') ORDER BY TZ_DC_WJ_KSRQ";
+			//String sql = "SELECT TZ_CS_WJ_ID,TZ_CS_WJ_NAME,TZ_DC_WJ_ID FROM PS_TZ_CSWJ_TBL WHERE TZ_JG_ID = ? AND TZ_STATE = '0' AND TZ_DC_WJ_ZT = '1' AND str_to_date(concat(TZ_DC_WJ_KSRQ,' ',TZ_DC_WJ_KSSJ),'%Y-%m-%d %T') <= date_format(curdate(),'%Y-%m-%d %T') AND str_to_date(concat(TZ_DC_WJ_JSRQ,' ',TZ_DC_WJ_JSSJ),'%Y-%m-%d %T') >= date_format(curdate(),'%Y-%m-%d %T') ORDER BY TZ_DC_WJ_KSRQ";
+			String sql="SELECT TZ_CS_WJ_ID,TZ_CS_WJ_NAME,A.TZ_DC_WJ_ID FROM PS_TZ_CSWJ_TBL A,PS_TZ_DC_WJ_DY_T B WHERE A.TZ_DC_WJ_ID=B.TZ_DC_WJ_ID AND B.TZ_JG_ID =? AND TZ_STATE = '0' AND B.TZ_DC_WJ_ZT = '1' AND str_to_date(concat(B.TZ_DC_WJ_KSRQ,' ',B.TZ_DC_WJ_KSSJ),'%Y-%m-%d %T') <= date_format(curdate(),'%Y-%m-%d %T') AND str_to_date(concat(B.TZ_DC_WJ_JSRQ,' ',B.TZ_DC_WJ_JSSJ),'%Y-%m-%d %T') >= date_format(curdate(),'%Y-%m-%d %T') ORDER BY B.TZ_DC_WJ_KSRQ;";
 			List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { jgid});
 			
 			strTypes = "";
