@@ -1591,6 +1591,10 @@
 
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
+             var kspwnum=panel.down('grid').down('numberfield[name=ksRevedpwnum]');
+             var pwTeamnum=panel.down('grid').down('numberfield[name=countTeamnum]');
+             
+ 
            // var statisticsNumForm = panel.down("form[name=statisticsNumForm]").getForm();
 
             var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' +
@@ -1601,6 +1605,10 @@
                 if(formData!="" && formData!=undefined) {
                     panel.actType="update";
                     form.setValues(formData);
+                    kspwnum.setValue(formData.kspwnum);
+                    pwTeamnum.setValue(formData.pwTeamnum);
+                    
+                    
 
                   //  statisticsNumForm.findField("clpsksNum").setValue(formData.clpsksNum);
                     //要求评审人次更新
@@ -1615,6 +1623,8 @@
                     form.findField("reviewClpsKsNum").setValue(0);
                     form.findField("reviewKsNum").setValue(0);
                     form.findField("batchName").setValue(batchName);
+                    kspwnum.setValue(0);
+                    pwTeamnum.setValue(0);
                   // form.findField("bkksNum").setValue(applicantsNumber);
                     //form.findField("clpsksNum").setValue(0);
                    // form.findField("dqpsStatus").setValue("N");

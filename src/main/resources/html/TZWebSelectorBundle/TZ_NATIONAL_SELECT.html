@@ -3,11 +3,6 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>国家选择器</title>
-
-		<!--
-		<link href="/onlineReg/css/css.css" rel="stylesheet" type="text/css" />
-		-->
-
 		<style type="text/css">
 			.autocomplete {border: 1px solid #8f8f8f;border-radius: 0px 5px 5px 0px;background-color: white;text-align: left;}
 			.autocomplete li {font-size: 16px;font-weight: normal;color: #046dba;list-style-type: none;padding-left: 3px;line-height: 40px;}
@@ -18,9 +13,13 @@
 		</style>
 
 		<script type="text/javascript" src="%bind(:7)/statics/js/lib/jquery/jquery.min.js"></script>
+		<link href="%bind(:7)/statics/js/lib/jqueryui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+		<script type="text/javascript" src="%bind(:7)/statics/js/lib/jqueryui/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="%bind(:7)/statics/js/lib/laydate/laydate.js"></script>
-		<link rel="stylesheet" href="%bind(:7)/statics/css/appeditor/css.css" />
-<!--张浪添加--START-->
+		<!-- <link rel="stylesheet" href="%bind(:7)/statics/css/appeditor/css.css" /> -->
+		<link rel="stylesheet" href="%bind(:7)/statics/css/website/css.css" />
+
+		<!--张浪添加--START-->
 		<script type="text/javascript">
 			$(document).ready(function(){
 				var linkList = window.parent.document.getElementsByTagName("link");//获取父窗口link标签对象列表
@@ -33,7 +32,7 @@
 						l.href = linkList[i].href;
 						head.appendChild(l);
 				}
-			})
+			});
 
 			//屏蔽浏览器按backspace键返回上一页
 			 $(document).keydown(function(e){
@@ -51,27 +50,11 @@
 			      }
 			     }
 			 });
+			var tzGeneralURL = "%bind(:1)";
+			var source = [];
 		</script>
-<!--张浪添加--END-->
-
-		<!-- 靳凯云添加 -->
-<!--张浪注释
-		<script type="text/javascript">
-			window.onload = function(){
-				var linkList = window.parent.document.getElementsByTagName("link");//获取父窗口link标签对象列表
-				var head = document.getElementsByTagName("head").item(0);
-				//在子窗口中添加父窗口的外联样式
-				for(var i = 0;i<linkList.length;i++){
-					var l = document.createElement("link");
-						l.rel = 'stylesheet'
-						l.type = 'text/css'; 
-						l.href = linkList[i].href;
-						head.appendChild(l);
-				}
-			}
-		</script>
--->
-
+		<!--张浪添加--END-->
+		<!-- 
 		<script type="text/javascript">
 			var tzGeneralURL = "%bind(:1)";
 		
@@ -144,6 +127,7 @@
 								data = f.comContent;
 							}
 							if(data.length) {
+								$autocomplete.html("");
 								//遍历data，添加到自动完成区
 								$.each(data, function(index,term) {
 									//创建li标签,添加到下拉列表中 
@@ -255,110 +239,114 @@
 				});
 			});
 		</script>
-
+		 -->
 
 		<script type="text/javascript">
-		// 这里是修改某一元素某一属性的方法
-		function MM_changeProp(objId,x,theProp,theValue) { //v9.0
-		  var obj = null; with (document){ if (getElementById)
-		  obj = getElementById(objId); }
-		  if (obj){
-		    if (theValue == true || theValue == false)
-		      	eval("obj.style."+theProp+"="+theValue);
-		    else
-		    	eval("obj.style."+theProp+"='"+theValue+"'");
-		  }
-		}
-		function setTab(n){
-			var menu=document.getElementById("chose").getElementsByTagName("a");  
-			for(i=0;i<menu.length;i++){
-		   		menu[i].className=i==n?"now2":""; 
+			// 这里是修改某一元素某一属性的方法
+			function MM_changeProp(objId,x,theProp,theValue) { //v9.0
+			  var obj = null; with (document){ if (getElementById)
+			  obj = getElementById(objId); }
+			  if (obj){
+			    if (theValue == true || theValue == false)
+			      	eval("obj.style."+theProp+"="+theValue);
+			    else
+			    	eval("obj.style."+theProp+"='"+theValue+"'");
+			  }
 			}
-			var $title = $(menu[n]).attr("title");
-			var tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYSTATE","LANGUAGE":"' + $("#language").val() + '","search-text":"' + $title + '"}}';
-			
-			$.ajax({
-				'url':tzGeneralURL, //服务器的地址
-				'data':{tzParams:tzByStateParams}, //参数
-				'dataType':'json', //返回数据类型
-				'type':'POST', //请求类型
-				'success':function(f){
-							var data = [];
-							if(f.state.errcode == "0"){
-								data = f.comContent;
-							}
-							var $selectorList = $("#selectorList");
-							if(data.length){
-								$selectorList.empty();
-								$.each(data, function(index,term) {
-									$('<div class="city_main_city2"><label for="radio" style="cursor:pointer;" onclick="setFanhui2(this);"><input type="radio" name="radio" ccode="'+term.country+'" value="'+ term.descr +'" onclick="setFanhui(this);" />'+term.descr+' ' +term.country+'</label></div>').appendTo($selectorList);
-								});
-							}else{
-								$selectorList.empty();
-							}
-			  	}
-			});
-		}
-	
-		function setFanhuiLi(obj){
-			$("#FanhuiValue").val($(obj).attr("title"));
-			$("#FanhuiValue2").val( $(obj).attr("ccode"));
-			setScholl();
-		}
-	
-		function setFanhui(obj){
-			$("#FanhuiValue").val($(obj).val());
-			$("#FanhuiValue2").val($(obj).find("input:radio").attr("ccode"));
-		}
-		function setFanhui2(obj){
-			$(obj).find("input").attr('checked','checked');
-			$("#FanhuiValue").val($(obj).find("input:radio").val());	
-			$("#FanhuiValue2").val($(obj).find("input:radio").attr("ccode"));
-		}
-	
-		function setScholl(){
-			var $value = $("#FanhuiValue").val();
-			var $value2 = $("#FanhuiValue2").val();
-			
-			var $ParamCon = $("#ParamCon",window.parent.document).val();
-			$("#"+$ParamCon,window.parent.document).val($value);
-			$("#"+$ParamCon,window.parent.document).focus();
-			/* parent.$("#"+$ParamCon,window.parent.document).trigger("change"); caoy*/
-			parent.$("#"+$ParamCon,window.parent.document).trigger("blur");
-			
-			$("#"+$ParamCon,window.parent.document).attr("ccode",$value2);
-			closeThis();
-		}
-	
-		function findData(){
-			var tzByCountryParams='{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","LANGUAGE":"' + $("#language").val() + '","search-text":"' + $("#search-text").val() + '"}}';
-			$.ajax({
-				'url':tzGeneralURL, //服务器的地址
-				'data':{tzParams:tzByCountryParams}, //参数
-				'dataType':'json', //返回数据类型
-				'type':'POST', //请求类型
-				'success':function(f){
-					var data = [];
-					if(f.state.errcode == "0"){
-						data = f.comContent;
-					}
-					var $selectorList = $("#selectorList");
-					if(data.length){
-						$selectorList.empty();
-						$.each(data, function(index,term) {
-							$("<div class='city_main_city2'><label for='radio' style='cursor:pointer;' onclick='setFanhui2(this);'><input type='radio' name='radio' ccode='"+term.country+"' value='"+term.descr+"' onclick='setFanhui(this);'  />"+term.descr+" " +term.country+"</label></div>").appendTo($selectorList);
-						 });
-					}else{
-						$selectorList.empty();
-					}
+			function setTab(n){
+				var menu=document.getElementById("chose").getElementsByTagName("a");  
+				for(i=0;i<menu.length;i++){
+			   		menu[i].className=i==n?"now2":""; 
 				}
-			});
-		}
-	</script>
-
+				var $title = $(menu[n]).attr("title");
+				var tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYSTATE","LANGUAGE":"' + $("#language").val() + '","search-text":"' + $title + '"}}';
+				
+				$.ajax({
+					'url':tzGeneralURL, //服务器的地址
+					'data':{tzParams:tzByStateParams}, //参数
+					'dataType':'json', //返回数据类型
+					'type':'POST', //请求类型
+					'success':function(f){
+								var data = [];
+								if(f.state.errcode == "0"){
+									data = f.comContent;
+								}
+								var $selectorList = $("#selectorList");
+								if(data.length){
+									$selectorList.empty();
+									$.each(data, function(index,term) {
+										$('<div class="city_main_city2"><label for="radio" style="cursor:pointer;" onclick="setFanhui2(this);"><input type="radio" name="radio" ccode="'+term.country+'" value="'+ term.descr +'" onclick="setFanhui(this);" />'+term.descr+' ' +term.country+'</label></div>').appendTo($selectorList);
+									});
+								}else{
+									$selectorList.empty();
+								}
+				  	}
+				});
+			}
+		
+			function setFanhuiLi(obj){
+				var val = obj.value;
+				$("#FanhuiValue").val(val.substring(0,val.lastIndexOf(" ")));
+				$("#FanhuiValue2").val(val.substring(val.lastIndexOf(" ") + 1));
+				setScholl();
+			}
+		
+			function setFanhui(obj){
+				$("#FanhuiValue").val($(obj).val());
+				$("#FanhuiValue2").val($(obj).find("input:radio").attr("ccode"));
+			}
+			function setFanhui2(obj){
+				$(obj).find("input").attr('checked','checked');
+				$("#FanhuiValue").val($(obj).find("input:radio").val());	
+				$("#FanhuiValue2").val($(obj).find("input:radio").attr("ccode"));
+			}
+		
+			function setScholl(){
+				var $value = $("#FanhuiValue").val();
+				var $value2 = $("#FanhuiValue2").val();
+				
+				var $ParamCon = $("#ParamCon",window.parent.document).val();
+				$("#"+$ParamCon,window.parent.document).val($value);
+				$("#"+$ParamCon,window.parent.document).focus();
+				/* parent.$("#"+$ParamCon,window.parent.document).trigger("change"); caoy*/
+				parent.$("#"+$ParamCon,window.parent.document).trigger("blur");
+				
+				$("#"+$ParamCon,window.parent.document).attr("ccode",$value2);
+				closeThis();
+			}
+		
+			function findData(){
+				var tzByCountryParams='{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","LANGUAGE":"' + $("#language").val() + '","search-text":"' + $("#search-text").val() + '"}}';
+				$.ajax({
+					'url':tzGeneralURL, //服务器的地址
+					'data':{tzParams:tzByCountryParams}, //参数
+					'dataType':'json', //返回数据类型
+					'type':'POST', //请求类型
+					'success':function(f){
+						var data = [];
+						if(f.state.errcode == "0"){
+							data = f.comContent;
+						}
+						var $selectorList = $("#selectorList");
+						if(data.length){
+							$selectorList.empty();
+							$.each(data, function(index,term) {
+								$("<div class='city_main_city2'><label for='radio' style='cursor:pointer;' onclick='setFanhui2(this);'><input type='radio' name='radio' ccode='"+term.country+"' value='"+term.descr+"' onclick='setFanhui(this);'  />"+term.descr+" " +term.country+"</label></div>").appendTo($selectorList);
+							 });
+						}else{
+							$selectorList.empty();
+						}
+					}
+				});
+			}
+		</script>
 	</head>
-
 	<body>
+		<style type="text/css">
+			.ui-autocomplete{width:240px;min-height:40px;max-height:300px;overflow-y:scroll;overflow-x:hidden;position:absolute;left:71.7344px;top:93px}
+			.ui-menu-item{font-size:16px;font-weight:normal;color:#046dba;list-style-type:none;padding-left:3px;line-height:40px}
+			.ui-state-hover,.ui-widget-content .ui-state-hover,.ui-widget-header .ui-state-hover,.ui-state-focus,.ui-widget-content .ui-state-focus,.ui-widget-header .ui-state-focus{border:0px solid #8f8f8f;background:#8f8f8f url("images/ui-bg_glass_100_fdf5ce_1x400.png") 50% 50% repeat-x;font-weight:normal;color:#046dba}
+		</style>
 		<div class="city_top3">
 			<div class="city_close" onclick="closeThis();">
 				<img src="%bind(:8)/del.png" width="15" height="15" />
@@ -419,7 +407,7 @@
 			</div>
 			<div class="city_main_line3" id="selectorList"></div>
 
-			<!--<div class="main_full_lines_400px"></div>-->
+			<div class="main_full_lines_400px"></div>
 			<div class="center_bt">
 				<div class="bt_blue" onclick='setScholl()'>%bind(:5)</div>
 			</div>
@@ -443,7 +431,35 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$("#search-text").focus();
-			})
+			});
+			var tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"ALLCOUNTRY"}}';
+			$.ajax({
+				'url': tzGeneralURL,	//服务器的地址
+				'data': {tzParams: tzByStateParams},	//参数
+				'dataType': 'json',		//返回数据类型
+				'type': 'POST',	//请求类型
+				'success': function(f) {
+					if (f.state.errcode == "0") {
+						j = 0;
+						for (var i in f.comContent) {
+							source[j] = f.comContent[i]["descr"] + " " + f.comContent[i]["country"];
+							j++;
+						}
+					}
+				}
+			});
+			//取得div层
+			var $search = $('.city_main2');
+			//取得输入框JQuery对象
+			var $searchInput = $search.find('#search-text');
+			$searchInput.autocomplete({
+				source: source
+			});
+			$searchInput.autocomplete({
+				select: function(event, ui) {
+					setFanhuiLi(ui.item);
+				}
+			});
 		</script>
 	</body>
 </html>

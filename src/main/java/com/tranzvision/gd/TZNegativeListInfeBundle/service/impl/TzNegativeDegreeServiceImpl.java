@@ -38,59 +38,64 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 		String degree1 = "";
 		String degree2 = "";
 		int have_one = 0;
+		System.out.println("进入学位学历");
+
 		try {
 			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_KSFMQDID_GEGREE'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
 			List<Map<String, Object>> opridlist = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeApplyNumber"),
-					new Object[] { classId, batchId });
+					new Object[] { batchId, classId });
 			if (opridlist != null && opridlist.size() > 0) {
 				for (int i = 0; i < opridlist.size(); i++) {
 					oprid = opridlist.get(i).get("OPRID").toString();
-					String sqlhave = "SELECT 'Y' FROM PS_TZ_BLACK_LIST_V WHERE OPRID=?";
-					if (SqlQuery.queryForObject(sqlhave, "String") != null
-							&& SqlQuery.queryForObject(sqlhave, "String").equals("Y")) {
-						sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
-						appinsId = SqlQuery.queryForObject(sql, new Object[] { classId, oprid }, "Integer");
-						sql1 = "SELECT TZ_APP_S_TEXT from PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH=?";
+					System.out.println("学位学历的opird" + oprid);
 
-						degree = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_13TZ_TZ_13_6" }, "String");
-						degree1 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_12fl2" }, "String");
-						degree2 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_11fl" }, "String");
+					sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
+					appinsId = SqlQuery.queryForObject(sql, new Object[] { oprid, classId }, "Integer");
+					sql1 = "SELECT TZ_APP_S_TEXT from PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH=?";
 
-						if (degree == null || !degree.equals("1") || degree1 == null || !degree1.equals("1")
-								|| degree2 == null || degree2.equals("1")) {
-							PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
-							// String fmqdId = "TZ_FMQ" +
-							// String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T",
-							// "TZ_FMQD_ID"));
-							PsTzCsKsFmT.setTzAppInsId(Long.valueOf(appinsId));
-							PsTzCsKsFmT.setTzClassId(classId);
-							PsTzCsKsFmT.setTzApplyPcId(batchId);
-							PsTzCsKsFmT.setTzFmqdId(fmqdId);
-							PsTzCsKsFmT.setTzFmqdName("学位学历");
-							have_one = SqlQuery.queryForObject(
-									"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
-									new Object[] { classId, batchId, Long.valueOf(appinsId), fmqdId }, "Integer");
-							if (have_one > 0) {
+					degree = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_13TZ_TZ_13_6" }, "String");
+					degree1 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_12fl2" }, "String");
+					degree2 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_11fl" }, "String");
+					System.out.println("degree:" + degree + "degree1:" + degree1 + "degree2:" + degree2);
+					boolean isture = (degree != null && !degree.equals("1") && !degree.equals(""))
+							|| (degree1 != null && !degree1.equals("1") && !degree1.equals(""))
+							|| (degree2 != null && !degree2.equals("1") && !degree2.equals(""));
+					System.out.println("isture:" + isture);
+					if ((degree != null && !degree.equals("1") && !degree.equals(""))
+							|| (degree1 != null && !degree1.equals("1") && !degree1.equals(""))
+							|| (degree2 != null && !degree2.equals("1") && !degree2.equals(""))) {
+						PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
+						// String fmqdId = "TZ_FMQ" +
+						// String.valueOf(getSeqNum.getSeqNum("PS_TZ_CS_KSFM_T",
+						// "TZ_FMQD_ID"));
+						PsTzCsKsFmT.setTzAppInsId(Long.valueOf(appinsId));
+						PsTzCsKsFmT.setTzClassId(classId);
+						PsTzCsKsFmT.setTzApplyPcId(batchId);
+						PsTzCsKsFmT.setTzFmqdId(fmqdId);
+						PsTzCsKsFmT.setTzFmqdName("学位学历");
+						have_one = SqlQuery.queryForObject(
+								"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
+								new Object[] { classId, batchId, Long.valueOf(appinsId), fmqdId }, "Integer");
+						if (have_one > 0) {
 
-							} else {
-								PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
-							}
-
-							PsTzCsKsTbl PsTzCsKsTBL = new PsTzCsKsTbl();
-
-							PsTzCsKsTBL.setTzAppInsId(Long.valueOf(appinsId));
-							PsTzCsKsTBL.setTzClassId(classId);
-							PsTzCsKsTBL.setTzApplyPcId(batchId);
-							// PsTzCsKsTBL.setTzJgId(OrgID);
-							PsTzCsKsTBL.setRowLastmantDttm(nowdate_time);
-							PsTzCsKsTBL.setTzKshCsjg("N");
-							PsTzCsKsTBLMapper.updateByPrimaryKeySelective(PsTzCsKsTBL);
-
+						} else {
+							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
 						}
 
+						PsTzCsKsTbl PsTzCsKsTBL = new PsTzCsKsTbl();
+
+						PsTzCsKsTBL.setTzAppInsId(Long.valueOf(appinsId));
+						PsTzCsKsTBL.setTzClassId(classId);
+						PsTzCsKsTBL.setTzApplyPcId(batchId);
+						// PsTzCsKsTBL.setTzJgId(OrgID);
+						PsTzCsKsTBL.setRowLastmantDttm(nowdate_time);
+						PsTzCsKsTBL.setTzKshCsjg("N");
+						PsTzCsKsTBLMapper.updateByPrimaryKeySelective(PsTzCsKsTBL);
+
 					}
+
 				}
 			}
 

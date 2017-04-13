@@ -1121,32 +1121,40 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 									                                var jsonObject = Ext.util.JSON.decode(jsonText);
 									                                //判断服务器是否返回了正确的信息
 									                                if(jsonObject.comContent.result==undefined || jsonObject.comContent.result == 0) {
-									                               
-									                                	//更新本地缓存的考生数据
-																		updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), '', true);
-																		   
-																	    //刷新打分区为“下一个”考生
-																	    refreshDfAreaFormPanel(jsonObject.comContent);
-																		   
-																		//刷新其他的HTML文本区域
-																		refreshDfHTMLPanel(jsonObject.comContent);
-																		   
-																		//将该“下一个”考生的数据到本地
-																		updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
-																		   
-																		//更新全局缓存，进行局部刷新
-																	    getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
-																	   
-																   		//若返回报文中有提示信息，则显示该提示信息，否则显示"提交成功！"
-																		if($.trim(jsonObject.comContent.message)!=""){
-																			Ext.Msg.alert('提示', jsonObject.comContent.message + "<br />请给下一个考生打分！");
-																		}else{
+
+																		if(jsonObject.comContent.messageCode == 0) {
+																			//更新本地缓存的考生数据
+																			updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), '', true);
+
+																			//刷新打分区为“下一个”考生
+																			refreshDfAreaFormPanel(jsonObject.comContent);
+
+																			//刷新其他的HTML文本区域
+																			refreshDfHTMLPanel(jsonObject.comContent);
+
+																			//将该“下一个”考生的数据到本地
+																			updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
+
+																			//更新全局缓存，进行局部刷新
+																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
+
 																			// unmask window
 																			unmaskWindow();
-																		    
+
 																			Ext.Msg.alert('提示', "保存成功！请给下一个考生打分！");
+																		} else {
+                                                                            //刷新打分区
+																			refreshDfAreaFormPanel(jsonObject.comContent);
+
+																			//刷新当前考生在本地的缓存数据
+																			updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
+																			//更新全局缓存，进行局部刷新
+																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
+																			unmaskWindow();
+
+																			Ext.Msg.alert('失败',jsonObject.comContent.message);
 																		}
-									                                	
+
 									                                } else {
 									                                	// unmask window
 																		
@@ -1158,7 +1166,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		//更新全局缓存，进行局部刷新
 																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
 																		unmaskWindow();
-																		Ext.Msg.alert('失败', jsonObject.comContent.resultMsg);
+
+																		Ext.Msg.alert('失败',jsonObject.comContent.resultMsg);
 									                                }
 									                            }
 									                            catch(e1){

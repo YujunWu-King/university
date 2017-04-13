@@ -190,16 +190,21 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 							//计算排名
 							this.examineeRank(classId,applyBatchId,oprid,errMsg);
 							
-							String messageCode = "";
+							String messageCode = "0";
 							String message = "";
+							String bmbIdNext = "";
 						
 							if("SGN".equals(type)) {
 								/*保存提交并获取下一个考生*/
 								String getNext = this.getNextExaminee(classId,applyBatchId,oprid,errMsg);
 								jacksonUtil.json2Map(getNext);
-								bmbId = jacksonUtil.getString("bmbIdNext");
+								bmbIdNext = jacksonUtil.getString("bmbIdNext");
 								messageCode = jacksonUtil.getString("messageCode");
 								message = jacksonUtil.getString("message");
+							}
+							
+							if(!"".equals(bmbIdNext)) {
+								bmbId=bmbIdNext;
 							}
 						
 							strRtn = this.getExamineeScoreInfo(classId, applyBatchId, bmbId, messageCode,message,errMsg);
@@ -307,14 +312,6 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 		
 		try {
 			
-			if("1".equals(messageCode)) {
-				mapRet.put("messageCode", messageCode);
-				mapRet.put("message", message);
-			} else {
-				
-				mapRet.put("messageCode", messageCode);
-				mapRet.put("message", message);
-			
 			/*当前登录人*/
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
@@ -332,6 +329,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			Map<String, Object> mapRootBasic = sqlQuery.queryForMap(sqlBasic,new Object[] { classId, applyBatchId, bmbId});
 			
 			if(mapRootBasic == null) {
+				mapRet.put("messageCode", "1");
+				mapRet.put("message", "没有考生信息");
 				return strRtn;
 			}
 			
@@ -515,7 +514,10 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			
 			mapRet.put("examineeList", examineeJson);
 			*/
-			}
+			
+			mapRet.put("messageCode", messageCode);
+			mapRet.put("message", message);
+			
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -758,6 +760,10 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 		String strRtn = "";
 		
 		try {
+			
+			/*当前机构*/
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
 			String sql;
 			
 			//清除临时表数据
@@ -768,11 +774,11 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			sql = "SELECT A.TZ_PWEI_OPRID,A.TZ_SCORE_INS_ID,C.TZ_SCORE_NUM";
 			sql = sql + " FROM PS_TZ_CJX_TBL C,PS_TZ_CP_PW_KS_TBL A,PS_TZ_KSCLPSLS_TBL B";
 			sql = sql + " WHERE A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID";
-			sql = sql + " AND C.TZ_SCORE_ITEM_ID=(SELECT D.TREE_NODE FROM PSTREENODE D,PS_TZ_RS_MODAL_TBL E,PS_TZ_CLASS_INF_T FWHERE D.TREE_NAME=E.TREE_NAME AND E.TZ_SCORE_MODAL_ID=F.TZ_ZLPS_SCOR_MD_ID AND F.TZ_CLASS_ID=A.TZ_CLASS_ID AND D.PARENT_NODE_NUM=0) ";
+			sql = sql + " AND C.TZ_SCORE_ITEM_ID=(SELECT D.TREE_NODE FROM PSTREENODE D,PS_TZ_RS_MODAL_TBL E,PS_TZ_CLASS_INF_T F WHERE D.TREE_NAME=E.TREE_NAME AND E.TZ_SCORE_MODAL_ID=F.TZ_ZLPS_SCOR_MD_ID AND E.TZ_JG_ID=? AND F.TZ_CLASS_ID=A.TZ_CLASS_ID AND D.PARENT_NODE_NUM=0) ";
 			sql = sql + " AND B.TZ_CLASS_ID=A.TZ_CLASS_ID AND B.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND B.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND B.TZ_PWEI_OPRID=A.TZ_PWEI_OPRID";
 			sql = sql + " AND B.TZ_CLPS_LUNC=? AND B.TZ_SUBMIT_YN<>'C' AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
 			
-			List<Map<String,Object>> scoreList = sqlQuery.queryForList(sql,new Object[]{dqpyLunc,classId,applyBatchId,bmbId});
+			List<Map<String,Object>> scoreList = sqlQuery.queryForList(sql,new Object[]{orgId,dqpyLunc,classId,applyBatchId,bmbId});
 			
 			Double score = 0.0;
 			Integer i = 0;
@@ -1054,7 +1060,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 													}
 													
 													bmbIdNext = String.valueOf(tzAppInsId);
-													messageCode = "";
+													messageCode = "0";
 													message = "";
 							
 												} else {
