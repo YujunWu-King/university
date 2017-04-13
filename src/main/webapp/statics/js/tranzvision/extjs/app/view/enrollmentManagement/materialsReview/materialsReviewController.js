@@ -2580,7 +2580,7 @@
 
     },
     viewJudge:function(grid,record,rowIndex){
-
+    	Ext.tzSetCompResourses("TZ_REVIEW_CL_COM");
         var gridData=grid.getStore().getAt(rowIndex).data;
         if(gridData.judgeInfo==""){
             return;

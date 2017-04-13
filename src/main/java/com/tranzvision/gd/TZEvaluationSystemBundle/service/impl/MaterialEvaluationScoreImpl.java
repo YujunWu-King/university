@@ -399,7 +399,14 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				String scoreItemComment = "";
 				String scoreItemDfsm = mapScore.get("TZ_SCORE_ITEM_DFSM") == null ? "" : mapScore.get("TZ_SCORE_ITEM_DFSM").toString();//说明
 				String scoreItemCkwt = mapScore.get("TZ_SCORE_ITEM_CKWT") == null ? "" : mapScore.get("TZ_SCORE_ITEM_CKWT").toString();//标准
-				String scoreItemCkzl = mapScore.get("TZ_SCORE_CKZL") == null ? "" : mapScore.get("TZ_SCORE_CKZL").toString();
+				String scoreItemCkzlId = mapScore.get("TZ_SCORE_CKZL") == null ? "" : mapScore.get("TZ_SCORE_CKZL").toString();//参考资料
+				
+				//调用封装方法获取参考资料HTML-------------------------------------、
+				String scoreItemCkzl="";
+				if(!"".equals(scoreItemCkzlId)&& scoreItemCkzlId!=null) {
+					
+				}
+				
 				
 				/*查询成绩项分值和评语值*/
 				String sqlScoreValue = "SELECT TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";

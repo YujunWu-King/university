@@ -47,7 +47,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			String MarkRecord = null;
 			
 			//根据报名表ID查询考生境外工作经历，国家类别和时间，根据查询结果
-			String GJ = ksMap.get("TZ_20TZ_TZ_20_14firm_type");		//国家
+			String GJ = ksMap.get("TZ_42TZ_TZ_42_1");		//国家
 			String is_developed = "select 'Y' from PS_COUNTRY_TBL where is_developed ='Y' and descr=?";
 			String GJLB=SqlQuery.queryForObject(is_developed,  new Object[]{GJ}, "String");		//国家类别
 			
@@ -57,36 +57,72 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");	//设置日期格式
 			String today= df.format(new Date());						// new Date()为获取当前系统时间
+			float result = 0;
 			
-			float result;
-			if("Y".equals(ToToday)){
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				Calendar c1 = Calendar.getInstance();
-				Calendar c2 = Calendar.getInstance();
-				String date1 = StartDate;
-				c1.setTime(sdf.parse(date1));
-				String date2 = today;
-				c2.setTime(sdf.parse(date2));
-				int a=c2.get(Calendar.YEAR)-c1.get(Calendar.YEAR);
-				result = c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH);
-				if(a>0){
-					result+=12;
+			if (StartDate != null && !StartDate.equals("")) {
+				if(EndDate != null && !EndDate.equals("")){
+					if("Y".equals(ToToday)){
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						Calendar c1 = Calendar.getInstance();
+						Calendar c2 = Calendar.getInstance();
+						String date1 = StartDate;
+						c1.setTime(sdf.parse(date1));
+						String date2 = today;
+						c2.setTime(sdf.parse(date2));
+						int a=c2.get(Calendar.YEAR)-c1.get(Calendar.YEAR);
+						result = c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH);
+						if(a>0){
+							result+=12;
+						}
+					}else{
+						SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+						Calendar cc1 = Calendar.getInstance();
+						Calendar cc2 = Calendar.getInstance();
+						String dateA = StartDate;
+						cc1.setTime(sdf2.parse(dateA));
+						String dateB = EndDate;
+						cc2.setTime(sdf2.parse(dateB));
+						int d=cc2.get(Calendar.YEAR)-cc1.get(Calendar.YEAR);
+						result = cc2.get(Calendar.MONTH) - cc1.get(Calendar.MONTH);
+						if(d>0){
+							result+=12;
+						}
+					}
+				}else if(ToToday != null && !ToToday.equals("")){
+					if("Y".equals(ToToday)){
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						Calendar c1 = Calendar.getInstance();
+						Calendar c2 = Calendar.getInstance();
+						String date1 = StartDate;
+						c1.setTime(sdf.parse(date1));
+						String date2 = today;
+						c2.setTime(sdf.parse(date2));
+						int a=c2.get(Calendar.YEAR)-c1.get(Calendar.YEAR);
+						result = c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH);
+						if(a>0){
+							result+=12;
+						}
+					}else{
+						SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+						Calendar cc1 = Calendar.getInstance();
+						Calendar cc2 = Calendar.getInstance();
+						String dateA = StartDate;
+						cc1.setTime(sdf2.parse(dateA));
+						String dateB = EndDate;
+						cc2.setTime(sdf2.parse(dateB));
+						int d=cc2.get(Calendar.YEAR)-cc1.get(Calendar.YEAR);
+						result = cc2.get(Calendar.MONTH) - cc1.get(Calendar.MONTH);
+						if(d>0){
+							result+=12;
+						}
+					}
+				}else{
+					Score=0;
 				}
 			}else{
-				SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-				Calendar cc1 = Calendar.getInstance();
-				Calendar cc2 = Calendar.getInstance();
-				String dateA = StartDate;
-				cc1.setTime(sdf2.parse(dateA));
-				String dateB = EndDate;
-				cc2.setTime(sdf2.parse(dateB));
-				int d=cc2.get(Calendar.YEAR)-cc1.get(Calendar.YEAR);
-				result = cc2.get(Calendar.MONTH) - cc1.get(Calendar.MONTH);
-				if(d>0){
-					result+=12;
-				}
+				Score=0;
 			}
-			
+
 			float SJF= result;
 			String SJ=String.valueOf(SJF);
 
@@ -118,7 +154,16 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 					psTzCjxTblWithBLOBs.setTzScoreNum(BigDeScore);
 					//打分记录
 					psTzCjxTblWithBLOBs.setTzScoreDfgc(MarkRecord);
+					
+					//删除已有数据	
+					PsTzCjxTblKey psTzCjxTblKey=new PsTzCjxTblKey();
+					
+					psTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
+					psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM);
+					
+					psTzCjxTblMapper.deleteByPrimaryKey(psTzCjxTblKey);
 				
+				//插入	
 				psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
 				
 				return Score;

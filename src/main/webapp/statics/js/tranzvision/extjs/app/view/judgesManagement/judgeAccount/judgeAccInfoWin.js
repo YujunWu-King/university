@@ -132,6 +132,24 @@
                     fieldLabel: "邮箱",
                     name: 'judgeEmail'
                 },{
+                    xtype: 'textfield',
+                    fieldLabel: "角色描述",
+                    name: 'roleNameDesc',
+                    readOnly:true,
+                    fieldStyle:'background:#F4F4F4'
+                },{
+                    xtype: 'textfield',
+                    fieldLabel: '角色名称',
+        			maxLength: 70,
+        			name: 'roleName',
+        			editable: false,
+                    triggers: {
+                        search: {
+                            cls: 'x-form-search-trigger',
+                            handler: "searchRoleName"
+                        }
+                    }
+                },{
                 	xtype: 'checkbox',
                 	fieldLabel: '用户类型',
                 	boxLabel: '面试评委',

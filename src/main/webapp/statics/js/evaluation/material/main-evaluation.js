@@ -629,7 +629,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 									{
 										title:'评审结果分布曲线图',
 										margin:'0 0 0 0',
-										bodyPadding:8,
+										bodyPadding:5,
 										padding:0,
 										collapsible:true,
 										collapsed:true,
@@ -664,12 +664,12 @@ function getApplicantListColumns(jsonObject)
 {
 	var columnList = [
       {text:"序号",width:50,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_xh"},
-      {text:"考生编号",width:80,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_id",
+      {text:"考生编号",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_id",
        renderer:function(value){return Ext.String.format('<a id="ks_id_{1}" href="JavaScript:void(0)" title="单击此链接进入该考生资料评审主页面。">{0}</a>',value,value);}
 	  },
-	  {text:'考生姓名',width:100,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
-	  {text:"上次排名",width:70,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"},
-	  {text:"本次排名",width:70,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_cpm"},
+	  {text:'考生姓名',flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
+	  {text:"上次排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"},
+	  {text:"本次排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_cpm"},
 	];
 	
 	//动态列
@@ -681,9 +681,9 @@ function getApplicantListColumns(jsonObject)
         }});
 	}
 	
-	columnList.push({text:"评议状态",width:70,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
-	columnList.push({text:"评审时间",width:140,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_dt"});
-	columnList.push({text:"考生类别",width:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_type"});
+	columnList.push({text:"评议状态",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
+	columnList.push({text:"评审时间",flex:1,minWidth:140,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_dt"});
+	columnList.push({text:"考生类别",flex:1,minWidth:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_type"});
 	
 	columnList.push({
 		text:'评审',

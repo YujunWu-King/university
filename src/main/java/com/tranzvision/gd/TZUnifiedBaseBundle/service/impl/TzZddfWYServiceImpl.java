@@ -153,8 +153,11 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 						}
 						
 						//记录打分记录：英语成绩类型：GMAT>=750|其他语种：日语二级|100分
-						MarkRecord=MarkRecord+"英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
-						
+						if(MarkRecord != null){
+							MarkRecord=MarkRecord+"英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
+						}else{
+							MarkRecord="英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
+						}
 					}
 					
 					//其他语种成绩
@@ -218,7 +221,7 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 					//对比考生的英语成绩得分、外语成绩得分，海外院校得分，取得分最大的外语成绩
 					Score=Collections.max(WYScore);
 					
-					MarkRecord=MarkRecord+String.valueOf(Score).concat("分");
+					MarkRecord=MarkRecord+"|"+String.valueOf(Score).concat("分");
 						//插入表TZ_CJX_TBL
 						PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs=new PsTzCjxTblWithBLOBs();
 							//成绩单ID
@@ -232,6 +235,15 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 							//打分记录
 							psTzCjxTblWithBLOBs.setTzScoreDfgc(MarkRecord);
 						
+						//删除已有数据	
+						PsTzCjxTblKey psTzCjxTblKey=new PsTzCjxTblKey();
+						
+						psTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
+						psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM);
+						
+						psTzCjxTblMapper.deleteByPrimaryKey(psTzCjxTblKey);
+					
+						//插入	
 						psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
 						
 						return Score;
