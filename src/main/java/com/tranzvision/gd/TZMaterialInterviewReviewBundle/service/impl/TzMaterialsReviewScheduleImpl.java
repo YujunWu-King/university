@@ -1317,8 +1317,8 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				numLunc = 0;
 			    }
 			    
-			    String strMapSql = "SELECT TZ_SUBMIT_YN FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_APPLY_DIRC_ID = ? AND TZ_APP_INS_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLPS_LUNC = ?";
-			    String strSubmitStatus = sqlQuery.queryForObject(strMapSql, new Object[]{strBatchID,strAppInsID,str_PwOprid,numLunc}, "String");
+			    String strMapSql = "SELECT TZ_SUBMIT_YN FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLPS_LUNC = ?";
+			    String strSubmitStatus = sqlQuery.queryForObject(strMapSql, new Object[]{strClassID,strBatchID,strAppInsID,str_PwOprid,numLunc}, "String");
 			    if(!"C".equals(strSubmitStatus)){
 				String strListSql2 = "SELECT B.TZ_SCORE_MODAL_ID,A.TZ_SCORE_INS_ID,A.TZ_SCORE_ITEM_ID,A.TZ_SCORE_NUM,TZ_SCORE_PY_VALUE FROM PS_TZ_CP_PW_KS_TBL C JOIN PS_TZ_CJX_TBL A ON A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID JOIN PS_TZ_SRMBAINS_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID WHERE C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=? AND C.TZ_PWEI_OPRID=?";
 				List<Map<String, Object>> mapList2 = sqlQuery.queryForList(strListSql2, new Object[] { strClassID,strBatchID,strAppInsID, str_PwOprid});
@@ -1350,7 +1350,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		    String strPianChaSql = "SELECT stddev(TZ_SCORE_NUM) FROM PS_TZ_PW_KS_PC_TBL";
 		    Double doublePianCha = sqlQuery.queryForObject(strPianChaSql, "Double");
 		    if(doublePianCha==null){
-			doublePianCha = 0.0;
+		    	doublePianCha = 0.0;
 		    }
 		    /*String strExistsSql = "SELECT 'Y' FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
 		    String strExFlg = sqlQuery.queryForObject(strExistsSql, new Object[]{strClassID,strBatchID,strAppInsID}, "String");
@@ -1369,10 +1369,12 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			PsTzClpsKshTblMapper.insert(psTzClpsKshTbl);
 		    }
 		    */
+		    DecimalFormat df  = new DecimalFormat("######0.00");			
+			String tmpAveScore = df.format(doublePianCha);	
 		    if("".equals(strContent)){
-			strContent = "{\"appInsID\":\"" + strAppInsID + "\",\"standardDeviation\":\"" + doublePianCha + "\"}";
+		    	strContent = "{\"appInsID\":\"" + strAppInsID + "\",\"standardDeviation\":\"" + tmpAveScore + "\"}";
 		    }else{
-			strContent = strContent + ",{\"appInsID\":\"" + strAppInsID + "\",\"standardDeviation\":\"" + doublePianCha + "\"}";
+		    	strContent = strContent + ",{\"appInsID\":\"" + strAppInsID + "\",\"standardDeviation\":\"" + tmpAveScore + "\"}";
 		    }		    		   
 		}
 	    }
