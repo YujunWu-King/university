@@ -7,7 +7,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 	autoScroll: false,
 	actType: 'add',
 	bodyStyle: 'overflow-y:auto;overflow-x:hidden',
-	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.MSPSKSMD", "面试评审考生名单"),
+	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.MSPSKSMD", "设置面试规则"),
 	frame: true,
 /*listeners: {
      resize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
