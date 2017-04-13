@@ -104,6 +104,46 @@ public class TzWebsiteLoginController {
 
 	}
 
+	@RequestMapping(value = { "/{orgid}" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String userLoginWebsiteByQHMBA(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "orgid") String orgid) {
+
+		String strRet = "";
+
+		try {
+			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
+			String siteid="72";
+			siteid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(siteid);
+
+			if (null != orgid && !"".equals(orgid) && null != siteid && !"".equals(siteid)) {
+
+				String loginHtml = "";
+				Boolean isMobile = CommonUtils.isMobile(request);
+				if (isMobile) {
+					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid);
+					strRet = loginHtml;
+				} else {
+					loginHtml = tzWebsiteServiceImpl.getLoginPublishCode(request, orgid, siteid);
+					strRet = loginHtml;
+				}
+
+			} else {
+
+				strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+						"Can not visit the site.Please check the url.");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+					"Can not visit the site.Please check the url.");
+		}
+
+		return strRet;
+
+	}
+
 	@RequestMapping(value = "dologin", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response) {
