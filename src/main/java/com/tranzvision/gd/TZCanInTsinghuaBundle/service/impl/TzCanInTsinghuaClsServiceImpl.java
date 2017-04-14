@@ -522,6 +522,18 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			flagCount=flagCount+1;
 		}
 		
+		TzSession tzSession = new TzSession(request);
+		Object objOprid = tzSession.getSession(userSessionName);
+        String strOprid="";
+		if (null != objOprid) {
+			strOprid = String.valueOf(objOprid);
+		}else{
+			String strCurUser=tzLoginServiceImpl.getLoginedManagerOprid(request);
+			if (null!=strCurUser){
+				strOprid=strCurUser;
+			}
+		}
+		
 		this.logger.info(new Date() + " >---问卷编号:---- " + wjid + " >----PageNo----" + pageno);
 		try {
 			String strDivHtml = "";
@@ -572,11 +584,11 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					strComLmc = dcwjXxxPzMap.get("TZ_COM_LMC") == null ? null : dcwjXxxPzMap.get("TZ_COM_LMC").toString();
 
 					//TZ_IS_AVG = dcwjXxxPzMap.get("TZ_IS_AVG") == null ? "N" : dcwjXxxPzMap.get("TZ_IS_AVG").toString();
-					String strPersonId = tzLoginServiceImpl.getLoginedManagerOprid(request);
-					String strInsId=sqlQuery.queryForObject("select TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? and PERSON_ID=? LIMIT 0,1", new Object[]{wjid,strPersonId}, "String");
+					//String strPersonId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					String strInsId=sqlQuery.queryForObject("select TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? and PERSON_ID=? LIMIT 0,1", new Object[]{wjid,strOprid}, "String");
 					String TZ_BY_DESC="";
 					//根据当前登录人和问卷编号查找问卷实例编号
-					if (!"".equals(strPersonId)) {
+					if (null!=strOprid&&!"".equals(strOprid)) {
 						String	TZ_BYSJ_BH=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_BYSJ_XXXBH"}, "String");
 						String	TZ_XUELI_BH=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_XUELE_XXXBH"}, "String");
 						//学历
