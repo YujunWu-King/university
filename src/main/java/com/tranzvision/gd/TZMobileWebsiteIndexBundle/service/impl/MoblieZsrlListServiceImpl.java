@@ -138,11 +138,11 @@ public class MoblieZsrlListServiceImpl extends FrameworkImpl{
 					String hotAndNewImg = "";
 					//int showImgNum = 0;
 					if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
-						if(artTitleStyle.indexOf("HOT") > 0){
+						if(artTitleStyle.indexOf("HOT") > -1){
 							hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/hot.png");
 							//showImgNum ++;
 						}
-						if(artTitleStyle.indexOf("NEW") > 0){
+						if(artTitleStyle.indexOf("NEW") > -1){
 							hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/new.png");
 							//showImgNum ++;
 						}

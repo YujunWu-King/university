@@ -320,6 +320,7 @@ select{appearance:none;-moz-appearance:none;-webkit-appearance:none;border:none;
 .mine a span{float:left;margin-left:5px;color:#666;font-size:0.58rem;line-height:2.5rem;}
 .arrow{width:1.9rem;height:1.9rem;background:url(../images/arrow.png)no-repeat center center;background-size:30%;float:right;margin-top:0.3rem;}
 .my_xx{width:1.9rem;height:1.9rem;background:url(../images/my_xx.png)no-repeat center center;background-size:80%;float:left;margin-top:0.3rem;margin-left:3%;}
+.my_ls{width:1.9rem;height:1.9rem;background:url(../images/my_ls.png)no-repeat center center;background-size:80%;float:left;margin-top:0.3rem;margin-left:3%;}
 .my_jxj{width:1.9rem;height:1.9rem;background:url(../images/my_jxj.png)no-repeat center center;background-size:80%;float:left;margin-top:0.3rem;margin-left:3%;}
 .my_zh{width:1.9rem;height:1.9rem;background:url(../images/my_zh.png)no-repeat center center;background-size:80%;float:left;margin-top:0.3rem;margin-left:3%;}
 .my_wx{width:1.9rem;height:1.9rem;background:url(../images/my_wx.png)no-repeat center center;background-size:80%;float:left;margin-top:0.3rem;margin-left:3%;}

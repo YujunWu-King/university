@@ -163,7 +163,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			//我已报名但未过期的活动数量
 			int actCount = 0;
-			String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT = '1' and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
+			String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT in ('1','4') and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
 			actCount = sqlQuery.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
 			String strActCount = "";
 			//System.out.println("strActCount=" + strActCount);
@@ -370,11 +370,11 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 							String hotAndNewImg = "";
 							int showImgNum = 0;
 							if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
-								if(artTitleStyle.indexOf("HOT") > 0){
+								if(artTitleStyle.indexOf("HOT") > -1){
 									hotAndNewImg = "<img class=\"fr add_hot\" src=\"" + ctxPath + "/statics/css/website/m/images/hot.png\">";
 									showImgNum ++;
 								}
-								if(artTitleStyle.indexOf("NEW") > 0){
+								if(artTitleStyle.indexOf("NEW") > -1){
 									hotAndNewImg = hotAndNewImg + "<img class=\"fr add_hot\" src=\"" + ctxPath + "/statics/css/website/m/images/new.png\">";
 									showImgNum ++;
 								}

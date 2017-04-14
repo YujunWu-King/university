@@ -715,7 +715,8 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 											items:[{
 												boxLabel  : '不显示',
                     		name      : 'showModel',
-                    		inputValue : '1'
+                    		inputValue : '1',
+                    		checked: true
 											},{
 												boxLabel  : '显示总席位数，已报名人数',
                     		name      : 'showModel',
