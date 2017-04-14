@@ -182,11 +182,20 @@ public class TzScoreInsCalculationObject {
 					if("0".equals(rtn)){
 						//保存成功
 						
-						//更新材料评审评委考生关系表，卢艳添加，2017-4-11
 						if("Y".equals(updateFlag)) {
-							sqlQuery.update("UPDATE PS_TZ_CP_PW_KS_TBL SET TZ_SCORE_INS_ID=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?",
-									new Object[]{tzScoreInsId,classId,batchId,bmbId,oprId});
-							sqlQuery.execute("commit");
+							//更新材料评审评委考生关系表，卢艳添加，2017-4-11
+							if("CL".equals(type)){
+								sqlQuery.update("UPDATE PS_TZ_CP_PW_KS_TBL SET TZ_SCORE_INS_ID=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?",
+										new Object[]{tzScoreInsId,classId,batchId,bmbId,oprId});
+								sqlQuery.execute("commit");
+							} else {
+								if("MS".equals(type)){
+									//更新面试评审评委考生关系表，卢艳添加，2017-4-14
+									sqlQuery.update("UPDATE PS_TZ_MP_PW_KS_TBL SET TZ_SCORE_INS_ID=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?",
+											new Object[]{tzScoreInsId,classId,batchId,bmbId,oprId});
+									sqlQuery.execute("commit");
+								}
+							}
 						}
 
 					}else{

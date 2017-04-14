@@ -1790,7 +1790,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 												
 												try
 												{
-													jsonObject = Ext.JSON.decode(response.responseText);
+													jsonObject = Ext.JSON.decode(response.responseText).comContent;
 													
 													if(jsonObject.error_code != '0')
 													{
@@ -1798,7 +1798,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 														unmaskWindow();
 													
 														loadSuccess = false;
-														alert('1刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+														alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
 													}
 													else
 													{
