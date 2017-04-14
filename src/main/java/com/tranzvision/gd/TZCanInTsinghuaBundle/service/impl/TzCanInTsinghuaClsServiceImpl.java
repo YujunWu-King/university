@@ -21,6 +21,7 @@ import com.tranzvision.gd.TZAccountMgBundle.dao.PsroleuserMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
+import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcInsTMapper;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
@@ -32,6 +33,7 @@ import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceI
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.captcha.Patchca;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.session.TzSession;
@@ -56,7 +58,13 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	private GetSeqNum getSeqNum;
 	
 	@Autowired
+	private PsTzDcInsTMapper psTzDcInsTMapper;
+	
+	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
@@ -909,7 +917,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 				lastPageNo=maxPageNo;
 			}
 			//获取注册信息页面
-			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), String.valueOf(lastPageNo), strDivHtml,this.createPerfectUrl());
+			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), String.valueOf(lastPageNo), strDivHtml,this.createPerfectUrl(wjid));
 			return strCountHtml;
 			
 		} catch (Exception e) {
@@ -944,7 +952,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 * 
 	 * @return
 	 */
-	private String createPerfectUrl(){
+	private String createPerfectUrl(String wjid){
 		
 		/*Oprid、机构编号、注册信息项是否完善、站点编号、URL*/
 		String strOprid = "",strJgId = "",strIsCmpl = "N",strSiteId = "",url = "#";
@@ -988,8 +996,34 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 				}else{
 					url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
 				}
-			}
+				
+				String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND PERSON_ID = ? LIMIT 0,1";
+				String insId = sqlQuery.queryForObject(sql, new Object[] { wjid,strOprid},"String");
 
+				String sSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ? LIMIT 0,1";
+				String dSql = "SELECT TZ_XXXKXZ_MC FROM PS_TZ_DC_DHCC_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ? AND TZ_IS_CHECKED = 'Y' LIMIT 0,1";
+				if(StringUtils.isNotBlank(insId)){
+					String ug = getHardCodePoint.getHardCodePointVal("TZ_CAN_UG");
+					String ugVal = sqlQuery.queryForObject(sSql, new Object[] { insId,ug},"String");
+					
+					String province = getHardCodePoint.getHardCodePointVal("TZ_CAN_PROVINCE");
+					String provinceVal = sqlQuery.queryForObject(sSql, new Object[] { insId,province},"String");
+					
+					String dept = getHardCodePoint.getHardCodePointVal("TZ_CAN_DEPT");
+					String deptVal = sqlQuery.queryForObject(sSql, new Object[] { insId,dept},"String");
+					
+					String industry = getHardCodePoint.getHardCodePointVal("TZ_CAN_INDUSTRY");
+					String industryVal = sqlQuery.queryForObject(dSql, new Object[] { insId,industry},"String");
+					
+					PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
+					psTzRegUserT.setOprid(strOprid);
+					psTzRegUserT.setTzSchCname(ugVal);
+					psTzRegUserT.setTzLenProid(provinceVal);
+					psTzRegUserT.setTzCompanyName(deptVal);
+					psTzRegUserT.setTzCompIndustry(industryVal);
+					psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
+				}
+			}
 			return url;
 		}else{
 			return url;
