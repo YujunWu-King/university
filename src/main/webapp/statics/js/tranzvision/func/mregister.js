@@ -415,6 +415,13 @@ $(document).ready(function(){
 			$('#BIRTHDATEStyle').hide();
 		}
 	},300);
+	
+		/**取消input键盘***/
+	$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country"),$("#TZ_SCH_CNAME"),$("#TZ_LEN_PROID")],function(i,el){	
+		el.focus(function(){
+        document.activeElement.blur();
+       })
+     });
 	$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
 		el.click(function(e) { 
 			

@@ -113,8 +113,8 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 						searchKSForm.findField('KSH_BMBID').setValue('');
 						
 						if(searchMSID=='' && searchKSNM==''){
-							Ext.Msg.alert('提示','报名表编号或姓名至少输入一项！');
-							searchKSForm.findField('SearchKSResult').setValue('请输入报名表编号或姓名进行查找');
+							Ext.Msg.alert('提示','面试申请号或姓名至少输入一项！');
+							searchKSForm.findField('SearchKSResult').setValue('请输入面试申请号或姓名进行查找');
 							return;
 						}
 						
@@ -1489,19 +1489,20 @@ function createApplicantList(jsonObject)
   });
   
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex)
-		{
-			var rec = store1.getAt(rowIndex);
-
-			var clickColName = gridViewObject.grid.columns[colIndex]["dataIndex"];
-			
-			gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
-			
-			
-			if(clickColName == 'pw_delks_col'){
-				var doDelKSName = rec.get('ps_ksh_xm');
-				Ext.Msg.confirm("提示", "您确定要移除考生【"+ doDelKSName +"】吗？", function(button){
-					if(button==="yes"){
-
+  											{
+  												var rec = store1.getAt(rowIndex);
+  												//var clickColName = rec.self.getFields()[colIndex]['name'];
+												var clickColName = gridViewObject.grid.columns[colIndex]["dataIndex"];
+  												
+  												
+  												gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
+  												
+  												
+												if(clickColName == 'pw_delks_col'){
+													var doDelKSName = rec.get('ps_ksh_xm');
+													Ext.Msg.confirm("提示", "您确定要移除考生【"+ doDelKSName +"】吗？", function(button){
+														if(button==="yes"){
+							
 							maskWindow();
 							
 							/* Normally we would submit the form to the server here and handle the response... */
@@ -1563,7 +1564,7 @@ function createApplicantList(jsonObject)
 				
 			}else{
 			
-				if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_ksh_id'))
+				if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_ksh_bmbid'))
 				{
 					var tmpKshID = jQuery.trim(rec.get('ps_ksh_bmbid'));
 					
@@ -1585,12 +1586,12 @@ function createApplicantList(jsonObject)
 						tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
 						tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];
 						*/
-                        tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-                        tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
-                        tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
-                        tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
+						tzEObject.baokaoClassID = jsonObject['ps_class_id'];
+						tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
+						tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
+						tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
 						tzEObject.applicantName = rec.get('ps_ksh_xm');
-						tzEObject.applicantInterviewID = rec.get('ps_kaosheng_id');
+						tzEObject.applicantInterviewID = rec.get('ps_ksh_id');
 						tzEObject.applicantBaomingbiaoID = rec.get('ps_ksh_bmbid');
 						
 						loadApplicantData(tzEObject);
@@ -1598,6 +1599,7 @@ function createApplicantList(jsonObject)
 					
 				}
 			}
+		
 			
 		}
   			 );
@@ -1788,7 +1790,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 												
 												try
 												{
-													jsonObject = Ext.JSON.decode(response.responseText);
+													jsonObject = Ext.JSON.decode(response.responseText).comContent;
 													
 													if(jsonObject.error_code != '0')
 													{
@@ -1796,7 +1798,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 														unmaskWindow();
 													
 														loadSuccess = false;
-														alert('1刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+														alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
 													}
 													else
 													{
@@ -2003,7 +2005,7 @@ function refreshBatchDataByBatchId(jsonObject,dataIndexName,dataIndexValue)
 					autoHighlightRow(rfObject1['items']['items'][grid_pos_num],'ps_ksh_bmbid',currentSelectedRow[0].get('ps_ksh_bmbid'));
 					autoHighlightRow(dfPageWest_grid[batchId],'ps_ksh_bmbid',currentSelectedRow[0].get('ps_ksh_bmbid'));
 					
-					var tmpApplicantInterviewId = currentSelectedRow[0].get('ps_kaosheng_id');
+					var tmpApplicantInterviewId = currentSelectedRow[0].get('ps_ksh_id');
 					if(tmpApplicantInterviewId != null && tmpApplicantInterviewId != '' && tmpApplicantInterviewId != 'undefined')
 					{
 						window.myPageSlider[0].autoScrollHtmlTagId = 'ks_id_' + tmpApplicantInterviewId;
@@ -2016,7 +2018,7 @@ function refreshBatchDataByBatchId(jsonObject,dataIndexName,dataIndexValue)
 			autoHighlightRow(rfObject1['items']['items'][grid_pos_num],dataIndexName,dataIndexValue);
 			autoHighlightRow(dfPageWest_grid[batchId],dataIndexName,dataIndexValue);
 			
-			var tmpApplicantInterviewId = rfObject1['items']['items'][grid_pos_num].getSelectionModel().getSelection()[0].get('ps_kaosheng_id');
+			var tmpApplicantInterviewId = rfObject1['items']['items'][grid_pos_num].getSelectionModel().getSelection()[0].get('ps_ksh_id');
 			if(tmpApplicantInterviewId != null && tmpApplicantInterviewId != '' && tmpApplicantInterviewId != 'undefined')
 			{
 				window.myPageSlider[0].autoScrollHtmlTagId = 'ks_id_' + tmpApplicantInterviewId;

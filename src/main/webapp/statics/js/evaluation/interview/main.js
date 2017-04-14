@@ -320,6 +320,7 @@ function initializeEvaluateDataObjects(urlObject)
 	window.submitApplicantDataUrl = urlObject['submitApplicantDataUrl'];
 	window.printStatisticsTableUrl = urlObject['printStatisticsTableUrl'];
 	window.checkPWAccStateURL = urlObject['checkPWAccStateURL'];
+	window.scoreUrl = urlObject['scoreUrl'];
 	window.evaluateSystemDebugFlag = 'Y';
 	
 	//library_main_evalute_page 的评审考生列表GRID对象，用于实现第二、三个页面考生 GRID 的自动HIGHLIGHT
@@ -369,7 +370,7 @@ function initializeEvaluateSystem(urlObject)
 
 //显示、隐藏窗体的蒙板层
 function maskWindow(msg){
-	var maskMsg = msg!=undefined&&msg!=""?msg:"加载中，请稍候...";
+	var maskMsg = msg!=undefined&&msg!=""?msg:"数据加载中，请稍候...";
 	
 	Ext.getBody().mask(maskMsg);
 }
@@ -466,7 +467,7 @@ function changePassword(){
 						var form = win.child("form").getForm();
 						form.reset();
 						win.close();
-					},"密码修改成功！");
+					},"密码修改成功！",false);
 				}
 				}
 			}, {
@@ -481,9 +482,11 @@ function changePassword(){
 	win.show();
 }
 
-Ext.tzSubmit =  function(params,callback,msg)
+Ext.tzSubmit =  function(params,callback,msg,showMask)
 {
-    maskWindow();
+	if(showMask!=false){
+		maskWindow("数据请求中，请稍候...")
+	}
 
     try
     {
@@ -510,7 +513,7 @@ Ext.tzSubmit =  function(params,callback,msg)
                     }
                     catch(e)
                     {
-                        Ext.Msg.alert("提示","保存出现错误："+e.toString()+"，请与系统管理员联系。");
+                        Ext.Msg.alert("提示","保存失败："+e.toString()+"，请与系统管理员联系。");
                     }
                 },
                 failure: function(response, opts)

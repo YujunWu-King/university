@@ -130,6 +130,16 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			}
 			/*---检查是否已经报名End  ---*/
 
+			/*---检查新编号已经存在Begin  ---*/
+			String isChong = "SELECT 'Y' FROM PS_TZ_APPINS_TBL WHERE TZ_APP_INS_ID = ? LIMIT 0,1";
+			String isC = sqlQuery.queryForObject(isChong, new Object[] { numAppInsId }, "String");
+			if (StringUtils.equals("Y", isC)) {
+				retMsg = retMsg + "<br>" + numAppInsId + "(" + attrInsid + ")   ----->    新编号已经存在";
+				logger.info(numAppInsId + "(" + attrInsid + ")   ----->    新编号已经存在");
+				continue;
+			}
+			/*---检查新编号已经存在End  ---*/
+			
 			// 报名表报文
 			String strJsonData = "{}";
 			try {

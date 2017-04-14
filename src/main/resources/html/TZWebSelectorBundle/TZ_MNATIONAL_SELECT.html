@@ -49,6 +49,7 @@ var tzGeneralURL = "%bind(:1)";
 	       // $("#new_school").fadeOut("slow");
 	       $("#body").css("position","relative");
            $("#before").fadeIn("slow");
+           
 		}
 	   /*  $("#pop_c").click(function(){
 	       $("#before").hide();
@@ -78,6 +79,9 @@ var tzGeneralURL = "%bind(:1)";
 			$("#FanhuiValue").val(countryCode);	
 			//设置返回值
 			var clickId = $("#ParamCon").val();
+			
+			$("#TZ_SCH_COUNTRY").val(countryCode);
+			
 			$("#" + clickId).val(countryDesc);
 			$("#" + clickId).attr("ccode",countryCode);
 			$("#" + clickId).html(countryDesc);
