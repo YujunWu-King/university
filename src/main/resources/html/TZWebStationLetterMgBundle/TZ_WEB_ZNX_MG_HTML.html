@@ -165,13 +165,13 @@
 							'<td><div class="check-box"> <i class="ico-check" id="checkAll" mailid={1}></i></div></td>',
 							'<td>{2}</td>',
 							'<td style="display:none">{3}</td>',
-							'<td class="ex_left"><a href="%bind(:1)/dispatcher?classid=webZnxInfo&siteId=%bind(:8)&mailId={1}">{4}</a></td>',
+							'<td class="ex_left"><a href="%bind(:1)/dispatcher?classid=webZnxInfo&siteId=%bind(:8)&mailId={1}" style="{6}">{4}</a></td>',
 							'<td>{5}</td>',
 							'</tr>'
 						];
 				      
 				      	$.each(list,function(index,record){
-				      		listHtmlContent=listHtmlContent+$.format(recordBase.join(""),record["znxStatus"]=="Y"?"read_on":"",record["stationMailId"],record["znxStatus"]=="Y"?"已读":"未读",record["sendName"],record["stationMailTitle"],record["stationMailReceived"])
+				      		listHtmlContent=listHtmlContent+$.format(recordBase.join(""),record["znxStatus"]=="Y"?"read_on":"",record["stationMailId"],record["znxStatus"]=="Y"?"已读":"未读",record["sendName"],record["stationMailTitle"],record["stationMailReceived"],record["znxStatus"]=="Y"?"color:#999":"color:black")
 				      	});
 				      	$(".table_style tbody").html(listHtmlContent);
 				      	$(".table_style tbody tr td div").click(function(){
