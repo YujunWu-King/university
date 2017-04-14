@@ -586,6 +586,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					//TZ_IS_AVG = dcwjXxxPzMap.get("TZ_IS_AVG") == null ? "N" : dcwjXxxPzMap.get("TZ_IS_AVG").toString();
 					//String strPersonId = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					String strInsId=sqlQuery.queryForObject("select TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? and PERSON_ID=? LIMIT 0,1", new Object[]{wjid,strOprid}, "String");
+					logger.info("===当前登录人====personId:" + strOprid);
+					logger.info("===问卷实例ID====strInsId:" + strInsId);
 					String TZ_BY_DESC="";
 					//根据当前登录人和问卷编号查找问卷实例编号
 					if (null!=strOprid&&!"".equals(strOprid)) {
@@ -599,6 +601,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						String nowTimeStr = simpleDateFormat.format(new Date());
 						Date nowDate = simpleDateFormat.parse(nowTimeStr);
 						//相隔天数
+						logger.info("===毕业时间====graduateDate:" + graduateDate);
 						int year=(int) ((nowDate.getTime()-graduateDate.getTime())/86400000/365);
 						String strSfFh="不符合";
 						if (strXueli>=2&&year>=3){
