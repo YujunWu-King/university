@@ -61,7 +61,7 @@ public class MobileAppHistoryServiceImpl extends FrameworkImpl {
 		
 		try {
 			//title;
-			String title = "历史申请纪录 ";
+			String title = "历史申请记录 ";
 			//css和js
 			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_JS_CSS",ctxPath);
 			

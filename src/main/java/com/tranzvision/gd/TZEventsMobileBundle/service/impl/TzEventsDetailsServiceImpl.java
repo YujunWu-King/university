@@ -427,18 +427,15 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 				if(!"".equals(endTime)){
 					endTime = simpleDttmFormat.format(simpleDatetimeFormat.parse(endTime)); 
 				}
-			}else{
+			}
+			
+			if("".equals(actAddr) && "".equals(startTime) && "".equals(endTime)){
 				//如果不是活动，地点取内容表中的TZ_LONG1字段，时间就取TZ_DATE1
-				sql = "select TZ_LONG1,TZ_DATE1 from PS_TZ_ART_REC_TBL where TZ_ART_ID=?";
+				sql = "select TZ_LONG1,date_format(TZ_DATE1,'%Y/%m/%d') as TZ_DATE1 from PS_TZ_ART_REC_TBL where TZ_ART_ID=?";
 				actMap = sqlQuery.queryForMap(sql, new Object[] { actId });
 				if(actMap != null){
 					actAddr = actMap.get("TZ_LONG1") == null ? "" : actMap.get("TZ_LONG1").toString();
 					startTime = actMap.get("TZ_DATE1") == null ? "" : actMap.get("TZ_DATE1").toString();
-					
-					SimpleDateFormat simpleDttmFormat2 = new SimpleDateFormat("yyyy/MM/dd");
-					if(!"".equals(startTime)){
-						startTime = simpleDttmFormat2.format(simpleDatetimeFormat.parse(startTime)); 
-					}
 				}
 			}
 			

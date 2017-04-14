@@ -1426,11 +1426,14 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				}
 
 				if ("M".equals(strActivateType)) {
+
 					// String siteId = jdbcTemplate.queryForObject("select
 					// TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE
 					// upper(TZ_JG_ID)=upper(?) AND TZ_SITEI_ENABLE='Y' LIMIT
 					// 0,1",new Object[] { strOrgId }, "String");
-					strJumUrl = request.getContextPath() + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
+					// strJumUrl = request.getContextPath() + "/site/index/" +
+					// strOrgId.toLowerCase() + "/" + strSiteId;
+					strJumUrl = request.getContextPath() + "/user/login/" + strOrgId.toLowerCase() + "/" + strSiteId;
 				} else {
 					String strEmailSendParas = "{\"email\":\"" + strTZ_EMAIL + "\",\"orgid\":\"" + strOrgId
 							+ "\",\"lang\":\"" + strLang + "\",\"siteid\":\"" + strSiteId + "\",\"dlzhid\":\"" + oprid
@@ -1443,6 +1446,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strJumUrl = request.getContextPath() + "/dispatcher";
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {
+
 						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
 								+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
 								+ "\",\"sen\":\"11\"}}";

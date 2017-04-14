@@ -1193,8 +1193,7 @@ $(document).ready(function(){
 		success:function(data){
 		mperjsonValue=data.comContent;
 		
-		
-		$("#TZ_SCH_CNAME_Country").val(mperjsonValue.strCounttry);
+		$("#TZ_SCH_CNAME_Country").val(mperjsonValue.strCounttryName);
 		$("#TZ_SCH_CNAME_Country").css("color","#333");
 		$("#TZ_SCH_CNAME").val(mperjsonValue.strschoolName);
 		$("#TZ_SCH_CNAME").css("color","#333");
@@ -1202,6 +1201,7 @@ $(document).ready(function(){
 		$("#TZ_LEN_PROID").css("color","#333");
 		$("#TZ_COMPANY_NAME").val(mperjsonValue.strCompanName);
 		$("#TZ_COMP_INDUSTRY").val(mperjsonValue.strIndustry);
+		$("#TZ_SCH_CNAME_Country").attr("ccode",mperjsonValue.strCounttry);
 		
 		
 		}
