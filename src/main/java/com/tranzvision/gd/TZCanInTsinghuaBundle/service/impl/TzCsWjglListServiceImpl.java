@@ -50,10 +50,10 @@ public class TzCsWjglListServiceImpl extends FrameworkImpl {
 					mapList.put("TZ_STATE", rowList[4]);
 					mapList.put("TZ_DC_WJ_ID", rowList[5]);
 					if(!"".equals(rowList[5])){
-						Map<String,Object> map=sqlQuery.queryForMap("select TZ_DC_WJBT,TZ_DC_WJ_KSRQ,TZ_DC_WJ_KSSJ from PS_TZ_DC_WJ_DY_T where TZ_DC_WJ_ID=?",new Object[]{rowList[5]});
+						Map<String,Object> map=sqlQuery.queryForMap("select TZ_DC_WJBT,TZ_DC_WJ_KSRQ,TZ_DC_WJ_JSRQ from PS_TZ_DC_WJ_DY_T where TZ_DC_WJ_ID=?",new Object[]{rowList[5]});
 						mapList.put("TZ_CS_WJ_NAME", String.valueOf(map.get("TZ_DC_WJBT")));
 						mapList.put("TZ_DC_WJ_KSRQ", String.valueOf(map.get("TZ_DC_WJ_KSRQ")));
-						mapList.put("TZ_DC_WJ_JSRQ", String.valueOf(map.get("TZ_DC_WJ_KSSJ")));
+						mapList.put("TZ_DC_WJ_JSRQ", String.valueOf(map.get("TZ_DC_WJ_JSRQ")));
 					}else{
 						mapList.put("TZ_CS_WJ_NAME", rowList[1]);
 						mapList.put("TZ_DC_WJ_KSRQ", rowList[2]);

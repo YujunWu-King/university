@@ -37,6 +37,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
+
 @Service("com.tranzvision.gd.TZCanInTsinghuaBundle.service.impl.TzCswjXxxServiceImpl")
 public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	@Autowired
@@ -45,22 +46,16 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private GetSeqNum getSeqNum;
-
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-
 	@Autowired
 	private PsTzDcWjDyTMapper psTzDcWjDyTMapper;
-
 	@Autowired
 	private PsTzDcWjLjgzTMapper psTzDcWjLjgzTMapper;
-
 	@Autowired
 	private PsTzDcWjYbgzTMapper psTzDcWjYbgzTMapper;
-
 	@Autowired
 	private PsTzDcWjLjxsTMapper psTzDcWjLjxsTMapper;
-
 	@Autowired
 	private PsTzDcWjGzgxTMapper psTzDcWjGzgxTMapper;
 	@Autowired
@@ -69,7 +64,6 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	private PsTzCswjDcxTblMapper PsTzCswjDcxTblMapper;
 	@Autowired
 	private PsTzCswjPctTblMapper PsTzCswjPctTblMapper;
-
 	@Autowired
 	private QuestionnaireEditorEngineImpl questionnaireEditorEngineImpl;
 
@@ -139,7 +133,6 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	/*开通在线调查
 	 * 根据问卷模板创建在线调查，在线调查创建成功后，建立与测试问卷之间的关系
 	 * */
-	
 	@Override
 	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
@@ -258,7 +251,10 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 				PsTzCswjTblMapper.updateByPrimaryKeySelective(PsTzCswjTbl);
 
 				/* 初始化测试问卷调查项配置表 */
-				final String cswjDcxSql = "select TZ_XXX_BH,TZ_XXX_MC,TZ_TITLE from PS_TZ_DCWJ_XXX_VW where TZ_DC_WJ_ID=? ORDER BY TZ_ORDER";
+				//您的本科院校 信息项编号定义为hardcode点
+				String	strBkSchool=jdbcTemplate.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_BKYX_XXXBH"}, "String");
+					
+				final String cswjDcxSql = "select TZ_XXX_BH,TZ_XXX_MC,TZ_TITLE,TZ_COM_LMC from PS_TZ_DCWJ_XXX_VW where TZ_DC_WJ_ID=? ORDER BY TZ_ORDER";
 				List<Map<String, Object>> cswjDcxDataList = new ArrayList<Map<String, Object>>();
 				cswjDcxDataList = jdbcTemplate.queryForList(cswjDcxSql, new Object[] { TZ_DC_WJ_ID });
 				if (cswjDcxDataList != null) {
@@ -270,19 +266,36 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 						String TZ_XXX_BH = mbLJXSMap.get("TZ_XXX_BH") == null ? null: mbLJXSMap.get("TZ_XXX_BH").toString();
 						String TZ_XXX_MC = mbLJXSMap.get("TZ_XXX_MC") == null ? null: mbLJXSMap.get("TZ_XXX_MC").toString();
 						String TZ_TITLE = mbLJXSMap.get("TZ_TITLE") == null ? null: mbLJXSMap.get("TZ_TITLE").toString();
-						PsTzCswjDcxTbl PsTzCswjDcxTbl = new PsTzCswjDcxTbl();
-						PsTzCswjDcxTbl.setTzCsWjId(csWjId);
-						PsTzCswjDcxTbl.setTzDcWjId(TZ_DC_WJ_ID);
-						PsTzCswjDcxTbl.setTzOrder(j);
-						PsTzCswjDcxTbl.setTzXxxBh(TZ_XXX_BH);
-						PsTzCswjDcxTbl.setTzXxxDesc(TZ_TITLE);
-						PsTzCswjDcxTbl.setTzXxxMc(TZ_XXX_MC);
-						PsTzCswjDcxTblMapper.insert(PsTzCswjDcxTbl);
+						//组件类型
+						String TZ_COM_LMC=mbLJXSMap.get("TZ_COM_LMC") == null ? null: mbLJXSMap.get("TZ_COM_LMC").toString();
+						//填空题只统计 您的院校类型，其它的填空题不统计
+						if(TZ_COM_LMC.equals("autoCompletion")&&TZ_XXX_BH.equals(strBkSchool)){
+							PsTzCswjDcxTbl PsTzCswjDcxTbl = new PsTzCswjDcxTbl();
+							PsTzCswjDcxTbl.setTzCsWjId(csWjId);
+							PsTzCswjDcxTbl.setTzDcWjId(TZ_DC_WJ_ID);
+							PsTzCswjDcxTbl.setTzOrder(j);
+							PsTzCswjDcxTbl.setTzXxxBh(TZ_XXX_BH);
+							PsTzCswjDcxTbl.setTzXxxDesc(TZ_TITLE);
+							PsTzCswjDcxTbl.setTzXxxMc(TZ_XXX_MC);
+							PsTzCswjDcxTblMapper.insert(PsTzCswjDcxTbl);
+						}else{
+							if(!TZ_COM_LMC.equals("autoCompletion")){
+								PsTzCswjDcxTbl PsTzCswjDcxTbl = new PsTzCswjDcxTbl();
+								PsTzCswjDcxTbl.setTzCsWjId(csWjId);
+								PsTzCswjDcxTbl.setTzDcWjId(TZ_DC_WJ_ID);
+								PsTzCswjDcxTbl.setTzOrder(j);
+								PsTzCswjDcxTbl.setTzXxxBh(TZ_XXX_BH);
+								PsTzCswjDcxTbl.setTzXxxDesc(TZ_TITLE);
+								PsTzCswjDcxTbl.setTzXxxMc(TZ_XXX_MC);
+								PsTzCswjDcxTblMapper.insert(PsTzCswjDcxTbl);
+							}
+						}
+						
 					}
 				}
 
 				/* 初始化调查项统计百分比配置表 */
-				List<Map<String, Object>> cswjXxxDataList = jdbcTemplate.queryForList("select TZ_XXX_BH from PS_TZ_DCWJ_XXX_VW where TZ_DC_WJ_ID=?", new Object[] { TZ_DC_WJ_ID });
+				List<Map<String, Object>> cswjXxxDataList = jdbcTemplate.queryForList("select TZ_XXX_BH from PS_TZ_DCWJ_XXX_VW where TZ_DC_WJ_ID=? and TZ_XXX_BH<>?", new Object[] { TZ_DC_WJ_ID,strBkSchool});
 				if (cswjXxxDataList != null) {
 					for (int z = 0; z < cswjXxxDataList.size(); z++) {
 						Map<String, Object> cswjXXMap = new HashMap<String, Object>();
@@ -309,7 +322,6 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 								PsTzCswjPctTbl.setTzXxxkxzMc(TZ_XXXKXZ_MC);
 								PsTzCswjPctTbl.setTzXxxkxzMs(TZ_XXXKXZ_MS);
 								PsTzCswjPctTbl.setTzOrder(j);
-
 								PsTzCswjPctTblMapper.insert(PsTzCswjPctTbl);
 							}
 						}
@@ -523,7 +535,7 @@ public class TzCswjXxxServiceImpl extends FrameworkImpl {
 	@Override
 	@Transactional
 	public String tzDelete(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		//String strRet = "{}";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String strCswjID="";
 		try {
