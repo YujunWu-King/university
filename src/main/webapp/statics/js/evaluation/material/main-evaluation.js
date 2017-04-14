@@ -11,7 +11,7 @@
 			collapsible:true,
 			collapsed:true,
             width:'100%',
-			margins:'5 0 5 5',
+			margin:'0 0 2 0',
 			layout:'fit',
 			bodyPadding:'10 10 10 15',
 			html :desc,
@@ -1151,6 +1151,7 @@ function createStatisticsArea(batchId,jsonObject)
 		 {
 			title:'评审统计信息区',
 			collapsible:true,
+			margin:'0 0 2 0',
 			bodyPadding:15,
 			autoHeight:true,
 			width:"100%",
@@ -1202,7 +1203,7 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 			{
 				region:'center',
 				autoScroll:false,
-				margins:0,
+				margin:0,
 				//bodyPadding:"0 17px 0 0",
 				cls:'empty',
 				bodyStyle:'background:#ffffff',

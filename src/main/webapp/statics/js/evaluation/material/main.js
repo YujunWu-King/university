@@ -458,7 +458,7 @@ function initializeEvaluateSystem(urlObject)
 
 //显示、隐藏窗体的蒙板层
 function maskWindow(msg){
-	var maskMsg = msg!=undefined&&msg!=""?msg:"加载中，请稍候...";
+	var maskMsg = msg!=undefined&&msg!=""?msg:"数据加载中，请稍候...";
 	
 	Ext.getBody().mask(maskMsg);
 }
@@ -555,7 +555,7 @@ function changePassword(){
 						var form = win.child("form").getForm();
 						form.reset();
 						win.close();
-					},"密码修改成功！");
+					},"密码修改成功！",false);
 				}
 				}
 			}, {
@@ -570,9 +570,12 @@ function changePassword(){
 	win.show();
 }
 
-Ext.tzSubmit =  function(params,callback,msg)
+Ext.tzSubmit =  function(params,callback,msg,showMask)
 {
-    maskWindow();
+	
+	if(showMask!=false){
+		maskWindow("数据请求中，请稍候...")
+	}
 
     try
     {
@@ -581,7 +584,7 @@ Ext.tzSubmit =  function(params,callback,msg)
                 url: ContextPath+"/dispatcher",
                 params:{tzParams: params},
                 timeout: 60000,
-                async: false,
+                async: true,
                 success: function(response, opts)
                 {
                     //返回值内容
@@ -599,13 +602,13 @@ Ext.tzSubmit =  function(params,callback,msg)
                     }
                     catch(e)
                     {
-                        Ext.Msg.alert("提示","密码修改失败："+e.toString()+"，请与系统管理员联系。");
+                        Ext.Msg.alert("提示","保存失败："+e.toString()+"，请与系统管理员联系。");
                     }
                 },
                 failure: function(response, opts)
                 {
                 	var respText = Ext.util.JSON.decode(response.responseText);
-                	Ext.Msg.alert("提示","密码修改失败："+respText.error+"，请与系统管理员联系。");
+                	Ext.Msg.alert("提示","保存失败："+respText.error+"，请与系统管理员联系。");
                 },
                 callback: function(opts,success,response)
                 {
@@ -615,7 +618,7 @@ Ext.tzSubmit =  function(params,callback,msg)
     }
     catch(e1)
     {
-    	Ext.Msg.alert("提示","密码修改失败：请与系统管理员联系。");
+    	Ext.Msg.alert("提示","保存失败：请与系统管理员联系。");
     	unmaskWindow();
     }
 } 

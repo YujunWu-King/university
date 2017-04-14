@@ -432,7 +432,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 						// 考生姓名;
 						String first_name = "";
 						Map<String, Object> map1 = sqlQuery.queryForMap(
-								"select A.OPRID,B.TZ_REALNAME from PS_TZ_FORM_WRK_T A,PS_TZ_REG_USER_T B where A.OPRID = B.OPRID and A.TZ_APP_INS_ID=?",
+								"select A.OPRID,B.TZ_REALNAME from PS_TZ_FORM_WRK_T A,PS_TZ_REG_USER_T B where A.OPRID = B.OPRID and A.TZ_APP_INS_ID=? LIMIT 0,1",
 								new Object[] { TZ_APP_INS_ID });
 						if (map1 != null) {
 							//ksPerson_id = (String) map1.get("OPRID");

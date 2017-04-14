@@ -113,8 +113,8 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 						searchKSForm.findField('KSH_BMBID').setValue('');
 						
 						if(searchMSID=='' && searchKSNM==''){
-							Ext.Msg.alert('提示','报名表编号或姓名至少输入一项！');
-							searchKSForm.findField('SearchKSResult').setValue('请输入报名表编号或姓名进行查找');
+							Ext.Msg.alert('提示','面试申请号或姓名至少输入一项！');
+							searchKSForm.findField('SearchKSResult').setValue('请输入面试申请号或姓名进行查找');
 							return;
 						}
 						

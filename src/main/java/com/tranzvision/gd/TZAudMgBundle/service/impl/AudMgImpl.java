@@ -138,6 +138,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			try {
 				int num = 0;
+				boolean bl=false;
 				for (num = 0; num < actData.length; num++) {
 				
 				
@@ -146,9 +147,18 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 					jacksonUtil.json2Map(strForm);
 					if(jacksonUtil.containsKey("OPRID")){
 						// 用户账号;
+												
 					    String strOprId = jacksonUtil.getString("OPRID");
 					    String strAudId = jacksonUtil.getString("AudID");
 
+					    String isExistSql = "SELECT count(1) FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? and OPRID=?";
+
+						int count = jdbcTemplate.queryForObject(isExistSql, new Object[] { strAudId,strOprId }, "Integer");
+
+						if (count == 1) {
+							bl=true;
+						}else{
+					    
 					    System.out.println(strOprId);
 					    PsTzAudListT psTzAudListT=new PsTzAudListT();
 					    
@@ -166,6 +176,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 						} else {
 							errMsg[0] = "1";
 							errMsg[1] = "信息保存失败";
+							}
 						}
 					}else{
 						errMsg[0] = "1";
