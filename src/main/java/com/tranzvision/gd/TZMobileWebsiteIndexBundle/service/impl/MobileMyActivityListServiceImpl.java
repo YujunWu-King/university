@@ -54,6 +54,13 @@ public class MobileMyActivityListServiceImpl extends FrameworkImpl {
 			siteId = request.getParameter("siteId");
 		}
 		
+		String lx = "";
+		if(jacksonUtil.containsKey("lx")){
+			lx = jacksonUtil.getString("lx");
+		}else{
+			lx = request.getParameter("lx");
+		}
+		
 		String menuId = "";
 		if(jacksonUtil.containsKey("menuId")){
 			menuId = jacksonUtil.getString("menuId");
@@ -104,6 +111,9 @@ public class MobileMyActivityListServiceImpl extends FrameworkImpl {
 			}
 			*/
 			String indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId=" + siteId;
+			if("back".equals(lx)){
+				indexUrl = "javascript:history.back(-1);";
+			}
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ACTIVITY_LIST",title,"",indexUrl);
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,menuId,content);
 		} catch (TzSystemException e) {

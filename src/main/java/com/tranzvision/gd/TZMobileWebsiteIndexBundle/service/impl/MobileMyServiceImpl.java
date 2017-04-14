@@ -44,7 +44,7 @@ public class MobileMyServiceImpl extends FrameworkImpl {
 			//首页
 			String indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId="+siteId;
 			//已报名活动;
-			String myActivityYetUrl = ctxPath + "/dispatcher?classid=myActivity&siteId="+siteId;
+			String myActivityYetUrl = ctxPath + "/dispatcher?classid=myActivity&siteId="+siteId+"&lx=back";
 			//系统站内信;
 			String znxListUrl = ctxPath+"/dispatcher?classid=znxList&siteId="+siteId+"&lx=back";
 			//查看历史报名
