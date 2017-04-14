@@ -1,21 +1,25 @@
 package com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZApplicationCenterBundle.service.impl.AnalysisLcResult;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cookie.TzCookie;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -32,6 +36,8 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
+	private HttpServletResponse response;
+	@Autowired
 	private TZGDObject tzGDObject;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -39,6 +45,8 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 	private ValidateUtil validateUtil;
 	@Autowired
 	private TzCookie tzCookie;
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
 	
 
 	/*手机版招生网站首页*/
@@ -448,7 +456,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			String content = topHtml + personHtml + xmjdHtml + hdHtml + kjcdHtml;
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_CONTENT_HTML",content);
 			
-			indexHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content);
+			indexHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content,orgId);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			indexHtml = "";
@@ -456,5 +464,61 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 		}
 
 		return indexHtml;
+	}
+	
+	
+	public String tzOther(String operateType,String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		
+		try {
+			
+			String orgId = jacksonUtil.getString("orgId");
+			String siteId = jacksonUtil.getString("siteId");
+			
+			if("verify".equals(operateType)) {
+				String success = "", url = "";
+				
+				String ctxPath = request.getContextPath();
+				
+				String dlzhId = tzCookie.getStringCookieVal(request, "TZGD_TOKEN_DLZH");
+				String loginUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
+				
+				if(loginUrl == null || "".equals(loginUrl)){
+					loginUrl = ctxPath + "/user/login/" + orgId.toLowerCase() + "/" + siteId;
+				}
+				if(!"".equals(dlzhId)&&dlzhId!=null) {
+					ArrayList<String> aryErrorMsg = new ArrayList<String>();
+					String sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?)";
+					String passwordJm = sqlQuery.queryForObject(sql, new Object[]{dlzhId},"String");
+					String password = DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
+					
+					boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, orgId, siteId,
+							dlzhId, password, "", "ZHS", aryErrorMsg);
+					if (boolResult) {
+						success = "true";
+						url = ""; 
+					} else {
+						success = "false";
+						url = loginUrl;
+					}
+				} else {
+					success = "false";
+					url=loginUrl;
+				}
+				
+				mapRet.put("success", success);
+				mapRet.put("url", url);
+				strRet = jacksonUtil.Map2json(mapRet);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return strRet;
 	}
 }

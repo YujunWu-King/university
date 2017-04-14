@@ -8,28 +8,40 @@
 <!-- 需要引入的css和js  -->
 <link href="%bind(:2)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="%bind(:2)/statics/js/website/m/jquery-1.8.3.min.js"></script>
+
 <script type="text/javascript">
-	var TzUniversityContextPath = "%bind(:2)";
-	var siteId = "%bind(:4)";
-	$(document).ready(function(){
-		var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_MENU_STD","OperateType":"HTML","comParams":{"siteId":"' + %bind(:4) +'","menuId":"' + %bind(:5) + '"}}';
-		$.ajax({
-			type:"POST",
-			url: TzUniversityContextPath+"/dispatcher",
-			data:{
-				tzParams:tzParams
-			},
-			success:function(response){
-				$('.footer-nav').prop('innerHTML', response);
-			},
-			failure: function () {
-			  	
-			} 
-			
-		});
-	});
+var TzUniversityContextPath = "%bind(:2)";
+var siteId = "%bind(:4)";
 </script>
 %bind(:3)
+<script type="text/javascript">
+
+	//验证用户是否已成功登录过并未安全退出，则可直接显示登录页面，卢艳添加，2017-4-17
+	var verifyFlag = verifyUser("%bind(:4)","%bind(:7)");
+
+	$(document).ready(function(){
+	
+		if(verifyFlag) {
+	
+			var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_MENU_STD","OperateType":"HTML","comParams":{"siteId":"' + %bind(:4) +'","menuId":"' + %bind(:5) + '"}}';
+			$.ajax({
+				type:"POST",
+				url: TzUniversityContextPath+"/dispatcher",
+				data:{
+					tzParams:tzParams
+				},
+				success:function(response){
+					$('.footer-nav').prop('innerHTML', response);
+				},
+				failure: function () {
+				  	
+				} 
+				
+			});
+		}
+	});
+</script>
+
 </head>
 <body>
 	<div class="viewport-adaptive" >
