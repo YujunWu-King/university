@@ -320,6 +320,7 @@ function initializeEvaluateDataObjects(urlObject)
 	window.submitApplicantDataUrl = urlObject['submitApplicantDataUrl'];
 	window.printStatisticsTableUrl = urlObject['printStatisticsTableUrl'];
 	window.checkPWAccStateURL = urlObject['checkPWAccStateURL'];
+	window.scoreUrl = urlObject['scoreUrl'];
 	window.evaluateSystemDebugFlag = 'Y';
 	
 	//library_main_evalute_page 的评审考生列表GRID对象，用于实现第二、三个页面考生 GRID 的自动HIGHLIGHT

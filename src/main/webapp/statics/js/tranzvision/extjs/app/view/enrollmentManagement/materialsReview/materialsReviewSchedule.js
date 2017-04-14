@@ -391,10 +391,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     },'-',
                     {
                         xtype: 'checkboxfield',
-                        fieldLabel: '实时计算评委偏差',
+                        fieldLabel: '实时计算评委偏差',                        
                         name: 'calPwPanC',
                         inputValue:'Y',
-                        hidden: false
+                        labelWidth: 120,
+                        labelAlign: 'right'
                     }]
                 }]
             }
@@ -1329,14 +1330,16 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    fieldLabel: '评委可见偏差',
 	                                    inputValue:'Y',
 	                                    name: 'judgePanCFlg',
-	                                    hidden: false
+	                                    labelWidth: 90,
+	                                    labelAlign: 'right'
 	                                },'-',
 	                                {
 	                                    xtype: 'checkboxfield',
 	                                    fieldLabel: '评委可见评议标准数据',
 	                                    name: 'judgePyDataFlg',
 	                                    inputValue:'Y',
-	                                    hidden: false
+	                                    labelWidth: 150,
+	                                    labelAlign: 'right'
 	                                }]
 	                            }],
 	                            viewConfig: {

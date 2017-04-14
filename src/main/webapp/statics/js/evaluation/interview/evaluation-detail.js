@@ -131,7 +131,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					columnConfig =
 					{
 						text     : GridHeaderJsonData[ExamineeGridFldName],
-						width    : 76,
+						width    : 90,
 						sortable : true,
 						dataIndex: ExamineeGridFldName
 					};	
@@ -139,7 +139,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					columnConfig =
 					{
 						text     : GridHeaderJsonData[ExamineeGridFldName],
-						width    : 58,
+						width    : 90,
 						sortable : true,
 						dataIndex: ExamineeGridFldName
 					};
@@ -147,7 +147,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				columnConfig =
 					{
 						text     : GridHeaderJsonData[ExamineeGridFldName],
-						width    : 45,
+						width    : 50,
 						sortable : true,
 						dataIndex: ExamineeGridFldName
 					};
@@ -182,7 +182,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		if(classId == null || batchId == null) return;
 		
 		/*获取评审打分统计信息区对象*/
-		var rfObject1 = window.batchEvaluateMainPageObject[batchId];
+		var rfObject1 = window.batchEvaluateMainPageObject[classId+"_"+batchId];
 		if(rfObject1 == null) return;
 		
 		//dfPageWest_grid_store[tmpBatchId] = rfObject1['items']['items'][3].getStore();
@@ -234,7 +234,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		});
 		dfPageWest_grid[tmpBatchId].on({'cellclick':function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex)
 			{
-				var rec = dfPageWest_grid_store[tmpBatchId].getAt(rowIndex);
+				/*var rec = dfPageWest_grid_store[tmpBatchId].getAt(rowIndex);
 				var clickColName = rec.self.getFields()[colIndex]['ps_ksh_xm'];
 			
 				window.myPageSlider[0].autoScrollHtmlTagId = 'ks_id_' + rec.get('ps_ksh_id');
@@ -247,6 +247,22 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					maskWindow();
 					
 					changeExaminee(evaluateObject.classID,evaluateObject.baokaoPcID , rec.get('ps_ksh_bmbid'));
+				}*/
+
+				var rec = dfPageWest_grid_store[tmpBatchId].getAt(rowIndex);
+
+				window.myPageSlider[0].autoScrollHtmlTagId = 'ks_id_' + rec.get('ps_ksh_id');
+
+				gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
+				autoHighlightRow(window.library_main_evalute_page_ks_grid[tmpClassId+"_"+tmpBatchId],'ps_ksh_bmbid',rec.get('ps_ksh_bmbid'));
+
+
+				//点击姓名列
+				if(colIndex==0) {
+					// mask window
+					maskWindow();
+
+					changeExaminee(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID , rec.get('ps_ksh_bmbid'));
 				}
 			}
 		});
@@ -386,7 +402,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表"><span style="color:blue;">新开窗口看考生材料</span></a>';
 		
-		rtn_ksinfohtml += '<tr><td style="font-weight:bold;" width="97px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="612px">'+ three_btn_html +'</td></tr>';
+		rtn_ksinfohtml += '<tr><td style="font-weight:bold;" width="97px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
 		rtn_ksinfohtml += '<tr><td colspan="5" height="40"><b>考生标签：</b>' + ksinfoJSON.examineeTag + '</td></tr>';
 		//【初筛淘汰】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【校友推荐】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【自主创业】
 		rtn_ksinfohtml += '<tr><td colspan="5" height="40"><b>材料评审成绩参考：</b> '+ ksinfoJSON.materialReviewDesc +' </td></tr>';
@@ -626,7 +642,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		});
 		
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafPointFieldContainer);
-		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointmsff_id,bzsm_content,ckwt_content,msff_content);
+		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointmsff_id,pointckzl_id,bzsm_content,ckwt_content,msff_content,ckzl_content);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
 
@@ -656,7 +672,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var leafC_allowBlank = true;
 		var leafC_maxLength = field_pyzs_sx;
 		var leafC_minLength = field_pyzs_xx;
-		if(field_pyzsxx > 0){
+		if(field_pyzs_xx > 0){
 			leafC_allowBlank = false;
 		}
 
@@ -698,7 +714,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		});
 		
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafCommentFieldContainer);
-		createLeafTipsConfig(pointbzsm_id,pointckwt_id,'',bzsm_content,ckwt_content,'');
+		createLeafTipsConfig(pointbzsm_id,pointckwt_id,'',pointckzl_id,bzsm_content,ckwt_content,'',ckzl_content);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
 
@@ -783,7 +799,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		});
 		
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafDropdownFieldContainer);
-		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointmsff_id,bzsm_content,ckwt_content,msff_content);
+		createLeafTipsConfig(pointbzsm_id,pointckwt_id,pointmsff_id,pointckzl_id,bzsm_content,ckwt_content,msff_content,ckzl_content);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
 
@@ -953,7 +969,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 									var comParams = "";
 									comParams = '"update":['+formJson+']';
 									
-									var tzParams = '{"ComID":"TZ_PW_MSPS_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
+									var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
 									
 									Ext.Ajax.request({
 										url : dfArea_Submit_URL,
@@ -966,8 +982,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				                            try
 				                            {
 				                                var jsonObject = Ext.util.JSON.decode(jsonText);
+
 				                                //判断服务器是否返回了正确的信息
-				                                if(jsonObject.state.errcode == 0) {
+				                                if(jsonObject.comContent.messageCode == 0) {
 				                                	//刷新打分区
 													refreshDfAreaFormPanel(jsonObject.comContent);
 												   
@@ -976,7 +993,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 													//更新全局缓存，进行局部刷新
 													getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
 													
-													
+
 													//若返回报文中有提示信息，则显示该提示信息，否则显示“提交成功！”
 													// unmask window
 													unmaskWindow();
@@ -989,7 +1006,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				                                	// unmask window
 													unmaskWindow();
 													
-													Ext.Msg.alert('失败', jsonObject.state.error);
+													Ext.Msg.alert('失败', jsonObject.comContent.message);
 				                                }
 				                            }
 				                            catch(e1) {
@@ -1063,6 +1080,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 							}
 						}
 					}),
+					//隐藏此按钮了，功能就没有实现
 					new Ext.button.Button({
 						formBind: true,
 						text	: '保存并获取下一个考生',
@@ -1086,7 +1104,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 									var comParams = "";
 									comParams = '"update":['+formJson+']';
 									
-									var tzParams = '{"ComID":"TZ_PW_MSPS_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
+									var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
 									
 									Ext.Ajax.request({
 										url : dfArea_Submit_URL,
@@ -1412,7 +1430,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//将更新父节点值得标识位改为Y
 		doChangeFieldValue[tmpBatchId]="Y";
 		
-		var library_main_evalute_page_ks_grid_idx = window.library_main_evalute_page_ks_grid[tmpBatchId].getSelectionModel().getSelection();
+		var library_main_evalute_page_ks_grid_idx = window.library_main_evalute_page_ks_grid[tmpClassId+"_"+tmpBatchId].getSelectionModel().getSelection();
 		if(library_main_evalute_page_ks_grid_idx != null && library_main_evalute_page_ks_grid_idx != 'undefined')
 		{
 			if(library_main_evalute_page_ks_grid_idx[0] != null && library_main_evalute_page_ks_grid_idx[0] != 'undefined')
@@ -1570,8 +1588,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	function createBMBPanel(east_ksbmb_url, df_bmbid){
 		// 采用IFrame方式
 		
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+ksinfoJSON.bmbId+'"}}';
-		var bmb_url = "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+df_bmbid+'"}}';
+		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		show_BMB_html = bmb_url;
 	}
 	/***************************************************************************
@@ -1729,7 +1747,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	//var dfArea_initLoad_URL = "http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_ReadKSHEvaluateData?languageCd=ZHS";
 	//var dfArea_initLoad_URL = "dafen.json.example.html";
 	//var dfArea_initLoad_URL = '/dispatcher';
-	var dfArea_initLoad_URL = window.getApplicantDataUrl;
+	var dfArea_initLoad_URL = window.scoreUrl;
 	/*本地调试代码*/
 	/*
 	if(evaluateObject.applicantInterviewID == '201003187')
@@ -1747,7 +1765,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	//var dfArea_Submit_URL = "http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS";
 	//var dfArea_Submit_URL = "dafen.json.submit.html";
 	//var dfArea_Submit_URL = '/dispatcher';
-	var dfArea_Submit_URL = window.submitApplicantDataUrl;
+	var dfArea_Submit_URL = window.scoreUrl;
 	
 	//页面初始化，Ajax获取服务器端生成的JSON数据，根据数据生成打分区每一行的 ExtJs对象 数组
 	if(window.KSINFO_JSON_DATA == null)
@@ -1764,7 +1782,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	function highlightSelectedRowInApplicantList()
 	{
 		//------ highlight the selected row 
-		var library_main_evalute_page_ks_grid_idx = window.library_main_evalute_page_ks_grid[tmpBatchId].getSelectionModel().getSelection();
+		var library_main_evalute_page_ks_grid_idx = window.library_main_evalute_page_ks_grid[tmpClassId+"_"+tmpBatchId].getSelectionModel().getSelection();
 		if(library_main_evalute_page_ks_grid_idx != null && library_main_evalute_page_ks_grid_idx != 'undefined')
 		{
 			if(library_main_evalute_page_ks_grid_idx[0] != null && library_main_evalute_page_ks_grid_idx[0] != 'undefined')
@@ -1819,7 +1837,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		}
 		else
 		{
-			var tzParams = '{"ComID":"TZ_PW_MSPS_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+df_classid+'","applyBatchId":"'+df_batchid+'","bmbId":"'+df_bmbid+'"}}';
+			var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+df_classid+'","applyBatchId":"'+df_batchid+'","bmbId":"'+df_bmbid+'"}}';
 			
 			Ext.Ajax.request({
 				url		: dfArea_initLoad_URL,
@@ -1896,7 +1914,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	function updateKSJSONData(df_classid, df_batchid, df_bmbid, userpoints, getAgain){
 		if(getAgain){
 			
-			var tzParams = '{"ComID":"TZ_PW_MSPS_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+df_classid+'","applyBatchId":"'+df_batchid+'","bmbId":"'+df_bmbid+'"}}';
+			var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+df_classid+'","applyBatchId":"'+df_batchid+'","bmbId":"'+df_bmbid+'"}}';
 
 			Ext.Ajax.request({	
 				url		: dfArea_initLoad_URL,

@@ -14,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjDyTMapper;
+import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyT;
+import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZCanInTsinghuaBundle.dao.PsTzCswjDcxTblMapper;
@@ -41,6 +44,8 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 	private PsTzCswjTblMapper PsTzCswjTblMapper;
 	@Autowired
 	private PsTzCswjPctTblMapper PsTzCswjPctTblMapper;
+	@Autowired
+	private PsTzDcWjDyTMapper PsTzDcWjDyTMapper;
 	@Autowired
 	private GetSeqNum getSeqNum;
 	
@@ -157,7 +162,7 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 	@Override
 	@Transactional
 	public String tzAdd(String[] actData, String[] errMsg) {
-		String strRet = "{}";
+		//String strRet = "{}";
 		String TZ_CS_WJ_ID = null;
 		Map<String, Object> returnJson = new HashMap<String, Object>();
 		returnJson.put("formData", "{}");
@@ -179,8 +184,7 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapData = jacksonUtil.getMap("data");
 
 				if ("ORG".equals(typeFlag)) {
-
-					 TZ_CS_WJ_ID = String.valueOf(mapData.get("TZ_CS_WJ_ID"));
+					TZ_CS_WJ_ID = String.valueOf(mapData.get("TZ_CS_WJ_ID"));
 					String TZ_CS_WJ_NAME = String.valueOf(mapData.get("TZ_CS_WJ_NAME"));
 					String TZ_CLASS_ID =mapData.get("TZ_CLASS_ID")==null?"": String.valueOf(mapData.get("TZ_CLASS_ID"));
 					String TZ_DC_WJ_ZT = mapData.get("TZ_DC_WJ_ZT")==null?"":String.valueOf(mapData.get("TZ_DC_WJ_ZT"));
@@ -271,30 +275,28 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapData = jacksonUtil.getMap("data");
 
 				if ("ORG".equals(typeFlag)) {
-
-					    TZ_CS_WJ_ID = String.valueOf(mapData.get("TZ_CS_WJ_ID"));
-						String TZ_CS_WJ_NAME = String.valueOf(mapData.get("TZ_CS_WJ_NAME"));
-						String TZ_CLASS_ID = mapData.get("TZ_CLASS_ID")==null?"":String.valueOf(mapData.get("TZ_CLASS_ID"));
-						String TZ_DC_WJ_ZT = mapData.get("TZ_DC_WJ_ZT")==null?"":String.valueOf(mapData.get("TZ_DC_WJ_ZT"));
-						Date TZ_DC_WJ_KSRQ = dateFormat.parse(String.valueOf(mapData.get("TZ_DC_WJ_KSRQ")));
-						Date TZ_DC_WJ_JSRQ = dateFormat.parse(String.valueOf(mapData.get("TZ_DC_WJ_JSRQ")));
-						Date TZ_DC_WJ_KSSJ = timeFormat.parse(String.valueOf(mapData.get("TZ_DC_WJ_KSSJ")));
-						Date TZ_DC_WJ_JSSJ = timeFormat.parse(String.valueOf(mapData.get("TZ_DC_WJ_JSSJ")));
-						String TZ_STATE = mapData.get("TZ_STATE")==null?"":String.valueOf(mapData.get("TZ_STATE"));
-						String TZ_APP_TPL_ID = mapData.get("TZ_APP_TPL_ID")==null?"":String.valueOf(mapData.get("TZ_APP_TPL_ID"));
-						String TZ_DC_WJ_ID = mapData.get("TZ_DC_WJ_ID")==null?"":String.valueOf(mapData.get("TZ_DC_WJ_ID"));
-						String strPreset = String.valueOf(mapData.get("TZ_PRESET_NUM"));
-						int TZ_PRESET_NUM=0;
-						if (!"".equals(strPreset)){
-							TZ_PRESET_NUM=Integer.valueOf(strPreset);
-						}
-						TZ_CS_WJ_NAME = TZ_CS_WJ_NAME.trim();
+				    TZ_CS_WJ_ID = String.valueOf(mapData.get("TZ_CS_WJ_ID"));
+					String TZ_CS_WJ_NAME = String.valueOf(mapData.get("TZ_CS_WJ_NAME"));
+					String TZ_CLASS_ID = mapData.get("TZ_CLASS_ID")==null?"":String.valueOf(mapData.get("TZ_CLASS_ID"));
+					String TZ_DC_WJ_ZT = mapData.get("TZ_DC_WJ_ZT")==null?"":String.valueOf(mapData.get("TZ_DC_WJ_ZT"));
+					Date TZ_DC_WJ_KSRQ = dateFormat.parse(String.valueOf(mapData.get("TZ_DC_WJ_KSRQ")));
+					Date TZ_DC_WJ_JSRQ = dateFormat.parse(String.valueOf(mapData.get("TZ_DC_WJ_JSRQ")));
+					Date TZ_DC_WJ_KSSJ = timeFormat.parse(String.valueOf(mapData.get("TZ_DC_WJ_KSSJ")));
+					Date TZ_DC_WJ_JSSJ = timeFormat.parse(String.valueOf(mapData.get("TZ_DC_WJ_JSSJ")));
+					String TZ_STATE = mapData.get("TZ_STATE")==null?"":String.valueOf(mapData.get("TZ_STATE"));
+					String TZ_APP_TPL_ID = mapData.get("TZ_APP_TPL_ID")==null?"":String.valueOf(mapData.get("TZ_APP_TPL_ID"));
+					String TZ_DC_WJ_ID = mapData.get("TZ_DC_WJ_ID")==null?"":String.valueOf(mapData.get("TZ_DC_WJ_ID"));
+					String strPreset = String.valueOf(mapData.get("TZ_PRESET_NUM"));
+					int TZ_PRESET_NUM=0;
+					if (!"".equals(strPreset)){
+						TZ_PRESET_NUM=Integer.valueOf(strPreset);
+					}
+					TZ_CS_WJ_NAME = TZ_CS_WJ_NAME.trim();
 					/*模版名称是否已经存在*/
 					String sql = "select count(*) from PS_TZ_CSWJ_TBL where TZ_CS_WJ_NAME=? and TZ_CS_WJ_ID<>?";
 					int isExistAppProcessTmpNum = sqlQuery.queryForObject(sql, new Object[] { TZ_CS_WJ_NAME,TZ_CS_WJ_ID }, "Integer");
 					
 					if (isExistAppProcessTmpNum == 0) {
-					
 						String sqlGetAppProcessTmp = "select COUNT(1) from PS_TZ_CSWJ_TBL WHERE TZ_CS_WJ_ID=?";
 						int count = sqlQuery.queryForObject(sqlGetAppProcessTmp, new Object[] { TZ_CS_WJ_ID }, "Integer");
 						if (count > 0) {
@@ -316,8 +318,18 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 							//PsTzCswjTbl.setRowAddedOprid(oprid);
 							PsTzCswjTbl.setRowLastmantDttm(new Date());
 							PsTzCswjTbl.setRowLastmantOprid(oprid);
-							
 							PsTzCswjTblMapper.updateByPrimaryKeySelective(PsTzCswjTbl);
+							
+							//更新问卷调查表
+							PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = new PsTzDcWjDyTWithBLOBs();
+							psTzDcWjDyTWithBLOBs.setTzDcWjId(TZ_DC_WJ_ID);
+							psTzDcWjDyTWithBLOBs.setTzDcWjbt(TZ_CS_WJ_NAME);
+							psTzDcWjDyTWithBLOBs.setTzDcWjZt(TZ_DC_WJ_ZT);
+							psTzDcWjDyTWithBLOBs.setTzDcWjKsrq(TZ_DC_WJ_KSRQ);
+							psTzDcWjDyTWithBLOBs.setTzDcWjKssj(TZ_DC_WJ_KSSJ);
+							psTzDcWjDyTWithBLOBs.setTzDcWjJsrq(TZ_DC_WJ_JSRQ);
+							psTzDcWjDyTWithBLOBs.setTzDcWjJssj(TZ_DC_WJ_JSSJ);
+							PsTzDcWjDyTMapper.updateByPrimaryKeySelective(psTzDcWjDyTWithBLOBs);
 							
 						}else{
 							errMsg[0] = "1";
@@ -444,28 +456,44 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 				// 测试问卷编号;
 				String tzCsWjId = jacksonUtil.getString("TZ_CS_WJ_ID");
 				PsTzCswjTbl PStzCsWjTbl = PsTzCswjTblMapper.selectByPrimaryKey(tzCsWjId);
-				String TZ_DC_WJMC;
+				//String TZ_DC_WJMC;
 				if (PStzCsWjTbl != null) {
-					if(!"".equals(PStzCsWjTbl.getTzDcWjId().toString())){
+					//问卷模板
+					String strDcWjId=PStzCsWjTbl.getTzDcWjId().toString();
+					/*if(!"".equals(strDcWjId)){
 					    TZ_DC_WJMC=sqlQuery.queryForObject("select TZ_APP_TPL_MC from PS_TZ_DC_DY_T where TZ_APP_TPL_ID=?", new Object[]{PStzCsWjTbl.getTzAppTplId()}, "String");
 						TZ_DC_WJMC=(TZ_DC_WJMC==null?"":TZ_DC_WJMC.toString());
 					}else{
 						TZ_DC_WJMC="";
-					}
+					}*/
+					//优先查找对应问卷的名称，开始日期-时间，结束日期-时间，状态
 					Map<String, Object> retMap = new HashMap<String, Object>();
 					retMap.put("TZ_CS_WJ_ID", PStzCsWjTbl.getTzCsWjId().toString());
-					retMap.put("TZ_CS_WJ_NAME", PStzCsWjTbl.getTzCsWjName());
 					retMap.put("TZ_STATE", PStzCsWjTbl.getTzState());
 					retMap.put("TZ_PRESET_NUM", PStzCsWjTbl.getTzPresetNum());
 					retMap.put("TZ_APP_TPL_ID", PStzCsWjTbl.getTzAppTplId());
 					retMap.put("TZ_DC_WJ_ID", PStzCsWjTbl.getTzDcWjId().toString());
 					retMap.put("TZ_DC_WJ_ZT", PStzCsWjTbl.getTzDcWjZt());
-					retMap.put("TZ_DC_WJ_KSRQ", dateFormat.format(PStzCsWjTbl.getTzDcWjKsrq()));
-					retMap.put("TZ_DC_WJ_KSSJ", timeFormat.format(PStzCsWjTbl.getTzDcWjKssj()));
-					retMap.put("TZ_DC_WJ_JSRQ",dateFormat.format(PStzCsWjTbl.getTzDcWjJsrq()));
-					retMap.put("TZ_DC_WJ_JSSJ", timeFormat.format(PStzCsWjTbl.getTzDcWjJssj()));
 					retMap.put("TZ_CLASS_ID", PStzCsWjTbl.getTzClassId());
-					retMap.put("TZ_DC_WJMC", TZ_DC_WJMC);
+					
+					PsTzDcWjDyT psTzDcWjDyT=PsTzDcWjDyTMapper.selectByPrimaryKey(strDcWjId);
+					if(psTzDcWjDyT!=null){
+						retMap.put("TZ_CS_WJ_NAME", psTzDcWjDyT.getTzDcWjbt());
+						retMap.put("TZ_DC_WJMC", psTzDcWjDyT.getTzDcWjbt());
+						retMap.put("TZ_DC_WJ_ZT", psTzDcWjDyT.getTzDcWjZt());
+						retMap.put("TZ_DC_WJ_KSRQ", dateFormat.format(psTzDcWjDyT.getTzDcWjKsrq()));
+						retMap.put("TZ_DC_WJ_KSSJ", timeFormat.format(psTzDcWjDyT.getTzDcWjKssj()));
+						retMap.put("TZ_DC_WJ_JSRQ",dateFormat.format(psTzDcWjDyT.getTzDcWjJsrq()));
+						retMap.put("TZ_DC_WJ_JSSJ", timeFormat.format(psTzDcWjDyT.getTzDcWjJssj()));
+					}else{
+						retMap.put("TZ_CS_WJ_NAME", PStzCsWjTbl.getTzCsWjName());
+						retMap.put("TZ_DC_WJ_ZT", PStzCsWjTbl.getTzDcWjZt());
+						retMap.put("TZ_DC_WJMC", "");
+						retMap.put("TZ_DC_WJ_KSRQ", dateFormat.format(PStzCsWjTbl.getTzDcWjKsrq()));
+						retMap.put("TZ_DC_WJ_KSSJ", timeFormat.format(PStzCsWjTbl.getTzDcWjKssj()));
+						retMap.put("TZ_DC_WJ_JSRQ",dateFormat.format(PStzCsWjTbl.getTzDcWjJsrq()));
+						retMap.put("TZ_DC_WJ_JSSJ", timeFormat.format(PStzCsWjTbl.getTzDcWjJssj()));
+					}
 					returnJsonMap.replace("formData",retMap);
 				} else {
 					errMsg[0] = "1";
@@ -486,7 +514,6 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 	@Override
 	@Transactional
 	public String tzDelete(String[] actData, String[] errMsg) {
-		String strRet = "{}";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String strCswjID="";
 		try {
