@@ -59,7 +59,7 @@
 			}
 		},
 	
-        columns: [{
+        columns: [/*{
             text: "序号",
             dataIndex: 'TZ_ORDER',
             hidden: true
@@ -67,7 +67,7 @@
 		    text: "名称",
 			dataIndex: 'TZ_XXXKXZ_MC',
             hidden:true
-		},{ 
+		},*/{ 
 		    text: "信息项描述",
 			dataIndex: 'TZ_XXXKXZ_MS',
 			minWidth: 150,
