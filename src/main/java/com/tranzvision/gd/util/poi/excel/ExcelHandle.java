@@ -771,11 +771,10 @@ public class ExcelHandle {
 				Map<String, Object> mapCell = new HashMap<String, Object>();
 
 				// 遍历所有列
-				int cellnum = 0;
-				Iterator<org.apache.poi.ss.usermodel.Cell> cellIterator = row.cellIterator();
-				while (cellIterator.hasNext()) {
-
-					org.apache.poi.ss.usermodel.Cell cell = cellIterator.next();
+				for(int cellnum = 0; cellnum<row.getLastCellNum(); cellnum++) {
+					
+				    // if the cell is missing from the file, generate a blank one
+					org.apache.poi.ss.usermodel.Cell cell = row.getCell(cellnum,Row.CREATE_NULL_AS_BLANK);
 
 					if (rownum == 0 && firstRowKeys) {
 						// 如果是第一行，并且第一行包含表头，则读取表头
@@ -809,7 +808,7 @@ public class ExcelHandle {
 							continue;
 						}
 					}
-
+					
 					switch (cell.getCellType()) {
 					case org.apache.poi.ss.usermodel.Cell.CELL_TYPE_BOOLEAN:
 						mapCell.put(cellKey, cell.getBooleanCellValue());
@@ -842,7 +841,6 @@ public class ExcelHandle {
 						mapCell.put(cellKey, "");
 						break;
 					}
-					cellnum++;
 				}
 
 				if (!firstRowKeys || rownum > 0) {

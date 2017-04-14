@@ -2,6 +2,13 @@
 var tzGeneralURL = "%bind(:1)";
 </script>
 <script type="text/javascript">
+		function layerMsg(content){
+			layer.open({
+			    content: content,
+			    skin: 'msg',
+			    time: 2 //2秒后自动关闭
+			});	
+		}
 		function setTab(n,_this){
 			$(_this).parents("ul").find("li").removeClass("chose_on");
 			$(_this).addClass("chose_on");
@@ -35,11 +42,23 @@ var tzGeneralURL = "%bind(:1)";
 							$selectorList.append("<li school='" + term.schoolName + "' onclick='setFanhui2(this);'>" + term.schoolName + "</li>");
 						});
 					}else{
-						console.log("不管用")
+						//console.log("不管用")
 						$selectorList.append("<li>当前国家下暂无学校列表</li>");
 					}
 			  	}
 			});
+		}
+		//新增加返回按钮
+		
+		
+        
+		function returnResi(){
+			//关闭窗口后一定要清空该项
+			$("#searchSchool").empty();
+			$("#searchSchool").fadeOut("slow");
+	       // $("#new_school").fadeOut("slow");
+	       $("#body").css("position","relative");
+           $("#before").fadeIn("slow");
 		}
 	
 		function closePop(){
@@ -47,13 +66,57 @@ var tzGeneralURL = "%bind(:1)";
 			$("#searchSchool").empty();
 			$("#body").css("position","relative");
 		}
+		
+		function sureOther(){
+			
+			var otherSchool = $("#otherSchool").val();
+			if(otherSchool!=""&&otherSchool!=undefined){
+				//设置返回值
+				var clickId = $("#ParamCon").val();
+				$("#" + clickId).val(otherSchool);
+				$("#" + clickId).html(otherSchool);
+				$("#" + clickId).css("color","#333");
+				$("#TZ_SCH_CNAME_1").html(otherSchool);
+				$("#TZ_SCH_CNAME_1").css("color","#333");
+				/* //关闭窗口
+				closePop(); */
+				//返回窗口
+				returnResi();
+				//清华MBA
+				if((typeof changeImg)=="function"){
+					var successFlg = "S";					
+					changeImg(clickId,successFlg);
+				}
+			}else{
+				layerMsg("请输入其他学校名称");
+			}
+		}
+		
 		function setFanhui2(obj){
+			
+			$(obj).parents("ul").find("li").removeClass("chose_on");
+			$(obj).addClass("chose_on");
 			var school = $(obj).attr("school");
 			//设置返回值
 			var clickId = $("#ParamCon").val();
-			$("#" + clickId).val(school);			
-			//关闭窗口
-			closePop();
+			$("#" + clickId).val(school);
+			$("#TZ_SCH_CNAME_1").html(school);
+			$("#TZ_SCH_CNAME_1").css("color","#333");
+			console.log(school);
+			$("#" + clickId).html(school);
+			$("#" + clickId).css("color","#333");
+			/* //关闭窗口
+			closePop(); */
+			//返回
+			returnResi();
+			//清华MBA
+			if((typeof changeImg)=="function"){
+				var successFlg = "F";		
+				if(school!=null&&school!=""){
+					successFlg = "S";
+				}
+				changeImg(clickId,successFlg);
+			}
 		}
 			
 		function findData(){			
@@ -85,8 +148,19 @@ var tzGeneralURL = "%bind(:1)";
 			});
 		}
 	</script>
+
+
+    
+
+	   <div class="bg1">
+	     <!-- 头部 -->
+	     <div class="topbar">
+	   	    院校选择 <a  href="javascript:void(0)" class="return_r" onclick="returnResi()"><i></i></a>
+	   	 </div>
+	   
+	   		<div class="school_pop">   
 <div class="pop_tit">
-	<span>选择学校</span> <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a>
+	<span>选择学校</span> <!-- <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a> -->
 </div>
 <div class="pop_search">
 	<input type="text" name="search-text" id="search-text"
@@ -97,14 +171,19 @@ var tzGeneralURL = "%bind(:1)";
 <ul id="selectorList" class="country_list"></ul>
 <div class="pop_chose">其他学校</div>
 <div class="pop_search1">
-<input type="text" name="otherSchool" style="width: 88%; margin: 1% auto 4%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
-<a href="javascript:void(0)"><i></i></a>
-</div>		
+<input type="text" id="otherSchool" name="otherSchool" style="width: 99%; margin: 1% auto 4%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
+<!-- <a href="javascript:void(0)"><i></i></a> -->
+<!-- <a href="javascript:void(0)" class="login_btn" onclick="sureOther()" style="width:94%;position:fixed;bottom:2%;left:50%;margin:0 0 0 -47%;">确认</a>
+ --><!-- <input type="button" id="sureOtherSchool" name="sureOtherSchool" value="确认" style="width:42px;height:24px;border-radius:3px;background-color:#8f5dc0;text-align:center;margin-left:5px;margin-top:3px;" onclick="sureOther()"/> -->
+</div>
+<a href="javascript:void(0)" class="login_btn" onclick="sureOther()" style="width:94%;margin:2% auto;">确认</a>		
 <input id="FanhuiValue2" type="hidden" />
 <input id="language" type="hidden" value="%bind(:5)"/>
+</div>
+</div>
 <script type="text/javascript">
 	$(document).ready(function(){
 		setTab(1);
-		$("#search-text").focus();
+		/* $("#search-text").focus(); */
 	})
 </script>

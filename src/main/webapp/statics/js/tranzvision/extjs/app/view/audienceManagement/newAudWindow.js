@@ -183,6 +183,7 @@ Ext.define('KitchenSink.view.audienceManagement.newAudWindow', {
 				
 				plugins: {
 							ptype: 'cellediting',
+							clicksToEdit: 1
 						//	pluginId: 'applyItemCellediting',
 						/*	listeners: {
 								beforeedit: function( editor, context, eOpts ){

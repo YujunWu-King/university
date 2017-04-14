@@ -100,6 +100,7 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 //					String artListSql = "SELECT B.TZ_COLU_ID,A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,DATE_FORMAT(B.TZ_ART_NEWS_DT,'%Y-%m-%d') AS TZ_ART_NEWS_DT FROM PS_TZ_ART_REC_TBL A "
 //							+ "INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=?) "
 //							+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT DESC LIMIT 5";
+					/*首页显示活动排序规则：置顶顺序-文章顺序-发布时间*/
 					String artListSql = tzGDObject.getSQLText("SQL.TZWebSiteAreaInfoBundle.TZ_ADM_ACT_ART_LIST");
 							
 					List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,currentColumnId,oprid });
@@ -121,13 +122,15 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 								hotTagDisplay = artTitleStyle.indexOf("HOT")>-1?"block":hotTagDisplay;
 								newTagDisplay = artTitleStyle.indexOf("NEW")>-1?"block":newTagDisplay;
 							}
-							//报考日历如果是活动发布则取活动开始日期、活动地点;
+							//如果是活动发布则取活动开始日期、活动地点;
 							int actRel = 0;
 							String actRelCount = "SELECT COUNT(*) FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
 							actRel = jdbcTemplate.queryForObject(actRelCount, new Object[] {artId}, "int");
-							if(actRel != 0){
-								String actRelSql = "SELECT DATE_FORMAT(TZ_START_DT,'%Y-%m-%d') AS TZ_START_DT  FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
-								artDate = jdbcTemplate.queryForObject(actRelSql, new Object[] {artId}, "String");
+							String actRelSql = "SELECT DATE_FORMAT(TZ_START_DT,'%Y-%m-%d') AS TZ_START_DT  FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
+							String activDate = jdbcTemplate.queryForObject(actRelSql, new Object[] {artId}, "String");
+							//如果有活动开始日期则取活动开始日期,从内容发布的招生活动没有活动日期;
+							if(actRel != 0 && (activDate!=null && !"".equals(activDate))){
+								artDate = activDate;
 							}
 							StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_view&operatetype=HTML&siteId=")
 									.append(strSiteId).append("&columnId=").append(currentColumnId).append("&artId=").append(artId);

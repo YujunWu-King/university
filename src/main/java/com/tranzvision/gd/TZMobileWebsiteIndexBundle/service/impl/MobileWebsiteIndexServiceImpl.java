@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl.MobileWebsiteIndexServiceImpl")
 public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
-	private final static String cookieWebSiteId = "tzws";
-	
 	@Autowired
 	private SqlQuery sqlQuery;
 	@Autowired
@@ -85,14 +82,9 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 
 			//得到登录地址;
 			loginOutUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
-			System.out.println("loginOutUrl===2===>"+loginOutUrl);
-			//得到访问的siteId;
-			String testsiteId = tzCookie.getStringCookieVal(request,cookieWebSiteId);
-			System.out.println("testsiteId===test===>"+testsiteId);
 			
 			if(loginOutUrl == null || "".equals(loginOutUrl)){
 				loginOutUrl = ctxPath + "/user/login/" + orgId.toLowerCase() + "/" + siteId;
-				System.out.println("loginOutUrl===3===>"+loginOutUrl);
 			}
 			
 			//个人维护信息双语
@@ -105,6 +97,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			String strViewJdLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "7","查看进度", "查看进度");
 			
+			String strAppHisLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "8","查看历史报名", "查看历史报名");
 			//title;
 			String title = "清华MBA招生";
 			//css和js
@@ -113,11 +106,13 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			String topHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_TOP",ctxPath,loginOutUrl);
 			//查看进度链接;
 			String viewJdUrl = ctxPath + "/dispatcher?classid=mAppstatus&siteId="+siteId;
+			//查看历史报名
+			String viewAppHisUrl = ctxPath + "/dispatcher?classid=mAppHistory&siteId="+siteId;
 			/*个人信息*/;
 			//账户管理链接;
 			String accountMngUrl =  ctxPath + "/dispatcher?classid=phZhgl&siteId="+siteId;
 			//系统消息;
-			String znxListUrl = "";
+			String znxListUrl = ctxPath+"/dispatcher?classid=znxList&siteId="+siteId;
 			//已经报名的活动;
 			String myActivityYetUrl = ctxPath + "/dispatcher?classid=myActivity&siteId="+siteId;
 			
@@ -164,14 +159,21 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			int MsgCount = 0;
 			String MsgSql = "select count(1) from PS_TZ_ZNX_REC_T where TZ_ZNX_RECID=? and TZ_ZNX_STATUS='N' and TZ_REC_DELSTATUS<>'Y'";
 			MsgCount = sqlQuery.queryForObject(MsgSql, new Object[] { m_curOPRID}, "int");
-			String strMsgCount = String.valueOf(MsgCount);
+			String strMsgCount = "";
 			
 			//我已报名但未过期的活动数量
 			int actCount = 0;
 			String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT = '1' and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
 			actCount = sqlQuery.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
-			String strActCount = String.valueOf(actCount);
+			String strActCount = "";
 			//System.out.println("strActCount=" + strActCount);
+			if(MsgCount > 0){
+				strMsgCount = "<div class=\"circle\"><span class=\"circle_span\">" + MsgCount + "</span></div>";
+			}
+			
+			if(actCount > 0){
+				strActCount = "<div class=\"circle\"><span class=\"circle_span\">" + actCount + "</span></div>";
+			}
 			
 			String personHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_GRXX_INFO_HTML",strModifyLabel,strRegEmailLabel,strMshXhLabel,strCityLabel,strSiteMsgLabel,strMyActLabel,strPhoto,strName,strRegEmail,strApplicationNum,strCity,strMsgCount,strActCount,accountMngUrl,znxListUrl,myActivityYetUrl);
 			
@@ -182,15 +184,24 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
 			int totalNum = sqlQuery.queryForObject(totalSQL, new Object[] { siteId,orgId }, "Integer");
 			//是否报名;
-			String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1";
+			String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID,TZ_BATCH_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1";
 			long TZ_APP_INS_ID = 0;
 			String classId = "";
+			String msPcId = "";
+			String msPcName = "";
 			Map<String, Object> classAndBmbMap = new HashMap<String, Object>();
 			try{
 				classAndBmbMap = sqlQuery.queryForMap(appinsSQL,new Object[] { m_curOPRID,siteId,orgId  });
 				if(classAndBmbMap != null){
 					TZ_APP_INS_ID = Long.parseLong(String.valueOf(classAndBmbMap.get("TZ_APP_INS_ID")));
 					classId = String.valueOf(classAndBmbMap.get("TZ_CLASS_ID"));
+					msPcId = String.valueOf(classAndBmbMap.get("TZ_BATCH_ID"));
+					if(classId != null && !"".equals(classId) && msPcId != null && !"".equals(msPcId)){
+						msPcName = sqlQuery.queryForObject("select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?", new Object[]{classId,msPcId},"String");
+						if(msPcName == null){
+							msPcName = "";
+						}
+					}
 				}
 			}catch(NullPointerException nullException){
 				TZ_APP_INS_ID = 0;
@@ -256,7 +267,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 							if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
 								String type = "A";
 								//解析系统变量;
-								String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , ctxPath, TZ_APPPRO_RST,"Y");
+								String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , ctxPath, TZ_APPPRO_RST,"Y",siteId);
 
 								isFb = result[0];
 								TZ_APPPRO_RST = result[1];
@@ -308,7 +319,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 					
 					
 				}
-				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className,stepHtml,strViewJdLabel,viewJdUrl);
+				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className + msPcName,stepHtml,strViewJdLabel,viewJdUrl,strAppHisLabel,viewAppHisUrl);
 			}else{
 				//有开通的班级；
 				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_NO_ZSJD_HTML");
@@ -333,14 +344,14 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 						if(i==0){
 							hdheadLabel = "<li class=\"list_on\" date-column=\""+currentColumnId+"\">"+columnName+"</li>";
 						}else{
-							hdheadLabel = hdheadLabel + "<li date-column=\""+currentColumnId+">"+columnName+"</li>";
+							hdheadLabel = hdheadLabel + "<li date-column=\""+currentColumnId+"\">"+columnName+"</li>";
 						}
 					}
 					
-					//根据栏目下已发布的文章列表，每个栏目限制5条
-					String artListSql = tzGDObject.getSQLText("SQL.TZWebSiteAreaInfoBundle.TZ_ADM_ACT_ART_LIST");
+					//根据栏目下已发布的文章列表，每个栏目限制3条
+					String artListSql = tzGDObject.getSQLText("SQL.TZMobileWebsiteIndexBundle.TZ_HD_TZ_ART_LIST_BY_LIMIT");
 							
-					List<Map<String, Object>> artList = sqlQuery.queryForList(artListSql,new Object[] { siteId,currentColumnId,m_curOPRID });
+					List<Map<String, Object>> artList = sqlQuery.queryForList(artListSql,new Object[] { siteId,currentColumnId,m_curOPRID,3 });
 					
 					String titleLi = "";
 					if (artList != null && artList.size()>0){
@@ -349,9 +360,37 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 							String artId = (String) artList.get(j).get("TZ_ART_ID");
 							String artTitle = (String) artList.get(j).get("TZ_ART_TITLE");
 							String artTitleStyle = (String) artList.get(j).get("TZ_ART_TITLE_STYLE");
-							String artDate = (String) artList.get(j).get("TZ_ART_NEWS_DT");
+				
+							//活动通知链接;
+							String artUrl = (String) artList.get(j).get("TZ_ART_URL");
+							if(artUrl == null){
+								artUrl = "";
+							}
+						
+							String hotAndNewImg = "";
+							int showImgNum = 0;
+							if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
+								if(artTitleStyle.indexOf("HOT") > 0){
+									hotAndNewImg = "<img class=\"fr add_hot\" src=\"" + ctxPath + "/statics/css/website/m/images/hot.png\">";
+									showImgNum ++;
+								}
+								if(artTitleStyle.indexOf("NEW") > 0){
+									hotAndNewImg = hotAndNewImg + "<img class=\"fr add_hot\" src=\"" + ctxPath + "/statics/css/website/m/images/new.png\">";
+									showImgNum ++;
+								}
+							}
 							
-							titleLi = titleLi + "<li><a href=\"#\"><p>"+artTitle+"</p></a></li>";
+							if(showImgNum == 2){
+								titleLi = titleLi + "<li><a href=\""+artUrl+"\"><p>"+artTitle+"</p>" + hotAndNewImg + "</a></li>";
+							}else{
+								if(showImgNum == 1){
+									titleLi = titleLi + "<li><a href=\""+artUrl+"\"><p style=\"width:83%\">"+artTitle+"</p>" + hotAndNewImg + "</a></li>";
+								}else{
+									titleLi = titleLi + "<li><a href=\""+artUrl+"\"><p style=\"width:91%\">"+artTitle+"</p></a></li>";
+								}
+							}
+							
+							
 							/*
 							String hotTagDisplay = "none";
 							String newTagDisplay = "none";
@@ -385,7 +424,25 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			}
 			
 			//快捷菜单;
-			String kjcdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_KJCD_HTML",ctxPath,"","",viewJdUrl,"","","");
+			//申请指导;
+			//对应的栏目id;
+			String sqzdColumnId = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_SQZD_COLUMN_ID"},"String");
+			//对应的文章id;
+			String sqzdArtid = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_SQZD_ART_ID"},"String");
+			String sqzd = sqlQuery.queryForObject("SELECT case A.TZ_ART_TYPE1 when 'B' then A.TZ_OUT_ART_URL  else  B.TZ_ART_URL END TZ_ART_URL FROM PS_TZ_ART_REC_TBL A INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=? AND A.TZ_ART_ID=?)", new Object[]{siteId,sqzdColumnId,sqzdArtid}, "String");
+			//报考自测;
+			//String bkzc = ctxPath + "/exam/"+orgId.toLowerCase()+"/"+siteId;
+			//String bkzc = ctxPath + "/dispatcher?tzParams={\"ComID\":\"TZ_CAN_TSINGHUA_COM\",\"PageID\":\"TZ_CAN_TSING_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"isMobile\":\"Y\"}}";
+			String bkzc = ctxPath +"/dispatcher?classid=canInTsing&isMobile=Y";
+			//在线预约;
+			String zxyy = ctxPath + "/dispatcher?classid=InterviewMobile&siteId=" + siteId;
+			//资料专区;
+			//对应的栏目id;
+			String zlzqColumnId = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_ZLZQ_COLUMN_ID"},"String");
+			String zlzq = ctxPath + "/dispatcher?classid=mEventNotice&siteId=" + siteId + "&columnId=" + zlzqColumnId;
+			//常见问题;
+			String cjwt = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_CJWT_URL"},"String");
+			String kjcdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_KJCD_HTML",ctxPath,sqzd,bkzc,viewJdUrl,zxyy,zlzq,cjwt);
 			
 			//展示内容
 			String content = topHtml + personHtml + xmjdHtml + hdHtml + kjcdHtml;

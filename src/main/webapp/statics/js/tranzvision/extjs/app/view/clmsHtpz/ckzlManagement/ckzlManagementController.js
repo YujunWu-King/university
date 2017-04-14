@@ -52,6 +52,14 @@
 
 		cmp = new ViewClass();
 		
+		cmp.on('afterrender',function(panel){
+	    	
+					var cmpForm = panel.child("form").getForm();
+		
+					var cmpB3=panel.down("button[reference=ckzlSave]").setVisible(false);
+				
+			});
+		
 		tab = contentPanel.add(cmp);     
 		
 		contentPanel.setActiveTab(tab);
@@ -467,6 +475,8 @@ var win = this.lookupReference('ckzlManagementInfoListForm');
 			Ext.tzSubmit(tzParams,function(responseData){
 				//关闭窗口						   
 				comView.close();	
+				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+			    contentPanel.child("ckzlManagementList").store.reload();
 			},"",true,this);
 		}
 	},

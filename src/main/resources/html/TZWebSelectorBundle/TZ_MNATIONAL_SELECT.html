@@ -3,6 +3,8 @@ var tzGeneralURL = "%bind(:1)";
 </script>
 <script type="text/javascript">
 // 这里是修改某一元素某一属性的方法
+
+      
 		function setTab(n,_this){
 			$(_this).parents("ul").find("li").removeClass("chose_on");
 			$(_this).addClass("chose_on");
@@ -36,24 +38,65 @@ var tzGeneralURL = "%bind(:1)";
 			  	}
 			});
 		}
+		//新增加返回按钮
+		
+	
+         
+		function returnResi(){
+			//关闭窗口后一定要清空该项
+			$("#searchCountry").empty();
+			$("#searchCountry").fadeOut("slow");
+	       // $("#new_school").fadeOut("slow");
+	       $("#body").css("position","relative");
+           $("#before").fadeIn("slow");
+           
+		}
+	   /*  $("#pop_c").click(function(){
+	       $("#before").hide();
+	       $("#country").fadeIn("slow");
+            loaded ();
+         }); */
+      /*    $(".return_r").click(function(){
+	       
+         });
+          $("#pop_r").click(function(){
+	       $("#before").hide();
+	       $("#new_school").fadeIn("slow");
+           loaded1 ();
+         }); */
 	
 		function closePop(){
-			$(".shade").hide();
+			//$(".shade").hide();
 			//关闭窗口后一定要清空该项
 			$("#searchCountry").empty();
 			$("#body").css("position","relative");
 		}
 		function setFanhui2(obj){
+			$(obj).parents("ul").find("li").removeClass("chose_on");
+			$(obj).addClass("chose_on");
 			var countryCode = $(obj).attr("ccode");
 			var countryDesc = $(obj).attr("title");
 			$("#FanhuiValue").val(countryCode);	
 			//设置返回值
 			var clickId = $("#ParamCon").val();
+			
+			$("#TZ_SCH_COUNTRY").val(countryCode);
+			
 			$("#" + clickId).val(countryDesc);
 			$("#" + clickId).attr("ccode",countryCode);
+			$("#" + clickId).html(countryDesc);
+			$("#TZ_SCH_CNAME_Country_1").html(countryDesc);
+			console.log("#TZ_SCH_CNAME_Country_1");
+			console.log(countryDesc);
+			
+			$("#TZ_SCH_CNAME_Country_1").css("color","#333");
+			$("#" + clickId).html(countryDesc);
+			$("#" + clickId).css("color","#333");
+			
 			
 			//关闭窗口
-			closePop();
+			returnResi();
+			//closePop();
 		}
 	
 		function findData(){
@@ -82,8 +125,14 @@ var tzGeneralURL = "%bind(:1)";
 			});
 		}
 	</script>
+	<div class="bg1">
+	     <!-- 头部 -->
+	   	 <div class="topbar">
+	   	    %bind(:6) <a  href="javascript:void(0)" class="return_r"    onclick="returnResi()"><i></i></a>
+	   	 </div>
+	   	 <div class="school_pop">
 <div class="pop_tit">
-	<span>%bind(:2)</span> <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a>
+	<span>%bind(:2)</span> <!-- <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a> -->
 </div>
 <div class="pop_search">
 	<input type="text" name="search-text" id="search-text"
@@ -100,12 +149,15 @@ var tzGeneralURL = "%bind(:1)";
 	<li onclick="setTab(5,this);" title="南美洲 South America">南美洲 South America</li>
 
 </ul>
+<!-- <a href="javascript:void(0)" class="login_btn" onclick="returnResi()" style="width:94%;position:fixed;bottom:2%;left:50%;margin:0 0 0 -47%;">确认</a> -->
 <div class="pop_chose">%bind(:4)</div>
 <ul id="selectorList" class="country_list"></ul>
 <input id="FanhuiValue2" type="hidden" />
 <input id="language" type="hidden" value="%bind(:5)"/>
+</div>
+</div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#search-text").focus();
+		/* $("#search-text").focus(); */
 	})
 </script>

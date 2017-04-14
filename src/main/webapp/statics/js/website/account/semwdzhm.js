@@ -58,20 +58,24 @@ $(document).ready(function() {
         	elem: '#BIRTHDATE'
         });
     });*/
-	var bir_option = {};
-    $("#BIRTHDATE").date(bir_option
+/*	var bir_option = {
+			beginyear:1900,
+			endyear:2017
+	};*/
+	
+   /* $("#BIRTHDATE").date(bir_option
     ,function(dateStr){
     	$("#BIRTHDATE").val(dateStr);
     },function(){
-    	/*未选择*/
-    });
+    	未选择
+    });*/
     //本科毕业时间
-    var bn_option = {};
+/*    var bn_option = {};
     $("#TZ_COMMENT1").date(bn_option
     ,function(dateStr){
     	$("#TZ_COMMENT1").val(dateStr);
     },function(){
-    	/*未选择*/
+    	未选择
     });
   //本最高学历获得时间
     var hig_option = {};
@@ -79,10 +83,29 @@ $(document).ready(function() {
     ,function(dateStr){
     	$("#TZ_COMMENT3").val(dateStr);
     },function(){
-    	/*未选择*/
+    	未选择
+    });*/
+    $("#BIRTHDATE").focus(function(){
+        document.activeElement.blur();
+    });
+      $("#TZ_COMMENT1").focus(function(){
+        document.activeElement.blur();
+    });
+      $("#TZ_COMMENT3").focus(function(){
+        document.activeElement.blur();
+    });
+    selectDate.init({trigger:"#BIRTHDATE",min:"1960/01/01",position:"bottom"});
+    selectDate1.init({trigger:"#TZ_COMMENT1",min:"1960/01/01", max:"2025/12/01",position:"bottom"});
+    selectDate2.init({trigger:"#TZ_COMMENT3",min:"1960/01/01", max:"2025/12/01",position:"bottom"});
+    
+    //取消input的键盘
+    $.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country"),$("#TZ_SCH_CNAME"), $("#TZ_SCH_CNAME_click"),$("#TZ_LEN_PROID"), $("#TZ_LEN_PROID_click")],function(i,el){
+    el.focus(function(){
+    	document.activeElement.blur();
+    })
     });
     $.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
-		el.click(function(e) { 
+		el.click(function(e) { 			
 			$("#ParamCon").val(el.attr("id"));
 			var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+strLang+'","sen":"2"}}';
 			$.ajax({
@@ -97,8 +120,10 @@ $(document).ready(function() {
 					$("#searchCountry").html("");
 					$("#searchCountry").html(result);
 					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchCountry").show();
+					$("#before").hide();
+				    $("#searchCountry").fadeIn("slow"); 
+					/*$(".shade").show();
+				    $("#searchCountry").show();*/
 				}
 			});
 		});
@@ -126,8 +151,10 @@ $(document).ready(function() {
     				$("#searchSchool").html("");
     				$("#searchSchool").html(result);
     				$("#body").css("position","fixed");
-    				$(".shade").show();
-    			    $("#searchSchool").show();
+    			    $("#before").hide();
+				    $("#searchSchool").fadeIn("slow"); 
+    				/*$(".shade").show();
+    			    $("#searchSchool").show();*/
     			}
     		});
         });
@@ -155,8 +182,10 @@ $(document).ready(function() {
 					$("#searchState").html("");
 					$("#searchState").html(result);
 					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchState").show();
+					$("#before").hide();
+				    $("#searchState").fadeIn("slow"); 
+					/*$(".shade").show();
+				    $("#searchState").show();*/
 				}
 			});
         });
@@ -183,9 +212,22 @@ $(document).ready(function() {
                 if (key == "TZ_GENDER") {
                     $("input[name='TZ_GENDER'][value='" + data[key] + "']").attr("checked", "checked");
                     $("input[name='TZ_GENDER'][value='" + data[key] + "']").next().addClass("bon-radio");
-                } else {
+                }else if(key == "TZ_COMMENT2"||key == "TZ_HIGHEST_EDU"||key == "TZ_COMMENT4"||key == "TZ_COMMENT5"||key == "TZ_COMMENT15"||key == "TZ_COMMENT6"||key == "TZ_COMMENT10"||key=='TZ_COMP_INDUSTRY'){
+                	$("#" + key).val(data[key]);
+                	var selectText = $("#" + key).find("option:selected").text();
+                	$("#s2id_" + key).find(".select2-chosen").text(selectText);
+                }else {
                     $("#" + key).val(data[key]);
                     if (key == "TZ_SCH_COUNTRY") {
+                    	$("#TZ_SCH_COUNTRY").html(data[key]);
+                    	 $("#TZ_SCH_CNAME_Country_1").html( data['TZ_SCH_CNAME_Country']);
+                    	 $("#TZ_SCH_CNAME_Country_1").css("color","#333");
+                    	 $("#TZ_LEN_PROID_1").css("color","#333");
+                    	 $("#TZ_SCH_CNAME_1").css("color","#333");                    	
+                        // $("#TZ_SCH_CNAME_Country").attr("ccode", data[key]);
+                         $("#TZ_LEN_PROID_1").html(data['TZ_LEN_PROID']);
+                         console.log(data['TZ_LEN_PROID']);
+                         $("#TZ_SCH_CNAME_1").html(data['TZ_SCH_CNAME']);
                         $("#TZ_SCH_CNAME_Country").attr("ccode", data[key]);
                     }
                 }                
@@ -244,6 +286,7 @@ $(document).ready(function() {
         if(_statusFlg=="error"){
         	return false;
         }
+        userInfoJson["siteId"] = strSiteId; 
         userInfoJson["jgid"] = strJgid;
         userInfoJson["lang"] = strLang;
 

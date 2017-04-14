@@ -4,10 +4,6 @@
 <meta charset="utf-8">
 <title>活动报名</title>
 <style type="text/css">
-* {
-	
-}
-
 input[type="text"], input[type="password"] {
 	border: solid 1px #d2d2d2;
 	border-left-color: #ccc;
@@ -71,18 +67,19 @@ body, button, input, select, textarea {
 }
 
 .apply-items.inptype {
-	width: 320px; //
-	height: 18px;
-}
+	width: 320px; 
+	height: 29px;
+	line-height: 29px;
+} 
 
 .apply-items.seltype {
 	width: 335px;
-	height: 49px;
+	height: 39px;
 }
 
-.apply-items:focus {
-	border-color: #95C8F1;
-	box-shadow: 0 0 4px #95C8F1;
+.apply-items.inptype:focus,.apply-items.seltype:focus {
+	border-color: #8f5dc0;
+	box-shadow: 0 0 1px #8f5dc0;
 }
 
 .apply-signin {
@@ -95,8 +92,12 @@ body, button, input, select, textarea {
 	position: relative;
 	line-height: 40px;
 	height: 40px;
+	background-color: #8f5dc0;
+	color:#fff;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
 }
-
+ 
 .apply-popbody {
 	padding: 60px 15px;
 	max-height: 325px;
@@ -108,17 +109,17 @@ body, button, input, select, textarea {
 	width: 600px
 }
 
-.apply-poptit .close {
-	float: right;
-	color: #999;
-	padding: 5px;
-	margin: -2px;
+.apply-poptit a.close {
+	float: right;   
+	color: #fff;
+	padding: 5px; 
+	margin: 5px; 
 	font: bold 18px/18px simsun;
-	text-shadow: 0 1px 0 #ddd
+	opacity: 1;
 }
 
-.apply-poptit .close:hover {
-	color: #444;
+.apply-poptit a.close:hover {
+	color: #aaa!important;
 }
 
 .apply-signin {
@@ -159,7 +160,7 @@ body, button, input, select, textarea {
 	width: 80px;
 	height: 40px;
 	line-height:40px;
-	border-radius: 2px;
+	border-radius: 5px;
 	cursor: pointer;
 	color: #FFF;
 	font-size: 14px;
@@ -168,35 +169,31 @@ body, button, input, select, textarea {
 }
 
 .apply-back {
-	background-color: #666;
-	border: 1px solid #999;
+	background-color: #f1c748;
 }
-
+ 
 .apply-back:hover {
-	background-color: #999
+	background-color: #f1c748;
 }
 
 .apply-submit {
 	background-color: #8f5dc0;
-	border: 1px solid #b7a5c6;
 }
 
 .apply-submit:hover {
-	background-color: #b7a5c6;
+	background-color: #8f5dc0;
 }
 
 .apply-popover {
 	z-index: 999999;
 	position: absolute;
-	top: 50%;
+	top: 50%; 
 	left: 50%;
 	width: 660px;
 	max-height: 519px;
 	margin: -180px 0 0 -330px;
-	border-radius: 5px;
-	border: solid 2px #666;
+	border-radius: 15px;
 	background-color: #fff;
-	box-shadow: 0 0 10px #666;
 }
 </style>
 
@@ -241,7 +238,7 @@ body, button, input, select, textarea {
 					<input class="btn apply-back" type="button" name="submit"
 						value="%bind(:10)" onclick="parent.tz_close_float_iframe_apply();" />
 					<input class="btn apply-submit" type="button" name="submit"
-						value="%bind(:11)" onclick="tz_apply_float_iframe_submit();" />
+						value="%bind(:11)" onclick="tz_apply_float_iframe_submit(this);" />
 				</div>
 			</form>
 		</div>
@@ -249,41 +246,49 @@ body, button, input, select, textarea {
 
 	<script type="text/javascript">
 		/*用于拼装JSON字符串，然后用parseJSON转为JSON对象*/
-		function cmbcgbyyValueReplace(str) {
-
-			var s = "";
-
-			if (str == undefined) {
+		function cmbcgbyyValueReplace(str){ 
+		    var s = "";
+			if(str == undefined) {
 				return str;
 			}
-
-			if (str.length == 0)
-				return "";
-
+		    if(str.length == 0) return "";
 			s = $.trim(str.toString());
-
-			s = s.replace(/\\/g, "\\\\")
-
-			s = s.replace(/\"/g, "\\\"");
-
-			s = s.replace(/\'/g, "\\'");
-
-			s = s.replace(/\t/g, "\\t");
-
-			s = s.replace(/\f/g, "\\f");
-
-			s = s.replace(/\//g, "\\/");
-
-			s = s.replace(/\n/g, "\\n");
-
-			return s;
-
+			s = s.replace(/\\/g,"\\\\")
+			s = s.replace(/\"/g,"\\\"");
+			//s = s.replace(/\'/g,"\\'");
+			s = s.replace(/\t/g,"\\t");
+			s = s.replace(/\f/g,"\\f");
+			s = s.replace(/\//g,"\\/");
+			s = s.replace(/\n/g,"\\n");
+		    return s;
+		}
+		
+		//检查手机格式
+		function checkMobile(mobile){
+			var mobileReg = /^1\d{10}$/;
+			if(mobileReg.test(mobile)){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		//检查邮箱格式
+		function CheckMail(mail) {
+		 	var filter  = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})$/;
+		 	if (filter.test(mail)){ 
+				return true;
+		 	}else{
+		 		return false;
+			}
 		}
 
 		/*提交事件*/
-		function tz_apply_float_iframe_submit() {
+		function tz_apply_float_iframe_submit(el) {
 			var allParam = $("input");
 			var selectParem = $("select");
+			
+			var mobile = $("#TZ_ZY_SJ").val();
+			var email = $("#TZ_ZY_EMAIL").val();
 
 			var applyURL = "%bind(:2)";
 			var strParam = "{";
@@ -294,16 +299,11 @@ body, button, input, select, textarea {
 						|| $(allParam[i]).attr("type") == "text") {
 					var inputValue = $.trim($(allParam[i]).val());
 
-					if ($(allParam[i]).attr("required") == "required"
-							&& inputValue == "") {
+					if ($(allParam[i]).attr("required") == "required" && inputValue == "") {
 						alert("%bind(:12)");
 						return;
 					} else {
-						strParam = strParam
-								+ "\""
-								+ cmbcgbyyValueReplace($(allParam[i])
-										.attr("id")) + "\":\""
-								+ cmbcgbyyValueReplace(inputValue) + "\",";
+						strParam = strParam + "\"" + cmbcgbyyValueReplace($(allParam[i]).attr("id")) + "\":\"" + cmbcgbyyValueReplace(inputValue) + "\",";
 					}
 				}
 			}
@@ -317,28 +317,36 @@ body, button, input, select, textarea {
 					alert("%bind(:12)");
 					return;
 				} else {
-					strParam = strParam
-							+ "\""
-							+ cmbcgbyyValueReplace($(selectParem[i]).attr("id"))
-							+ "\":\"" + cmbcgbyyValueReplace(inputValue)
-							+ "\",";
+					strParam = strParam + "\"" + cmbcgbyyValueReplace($(selectParem[i]).attr("id")) + "\":\"" + cmbcgbyyValueReplace(inputValue) + "\",";
 				}
 			}
 
 			strParam = strParam.substr(0, strParam.length - 1);
-			strParam = strParam + "}";
+			strParam = strParam + "}"; 
 
-			strComParams = "{\"ComID\":\"TZ_APPONL_COM\",\"PageID\":\"TZ_APPREG_STD\",\"OperateType\":\"EJSON\",\"comParams\":"
+			var strComParams = "{\"ComID\":\"TZ_APPONL_COM\",\"PageID\":\"TZ_APPREG_STD\",\"OperateType\":\"EJSON\",\"comParams\":"
 					+ strParam + "}";
 
-			// strComParams = $.parseJSON(strComParams);
-			// console.log(strComParams);
-			strComParams = encodeURIComponent(strComParams);
+			if(mobile && checkMobile(mobile)){
+			}else{
+				alert("手机格式不正确");
+				$("#TZ_ZY_SJ").focus();
+				return;
+			}
+
+			if(email && CheckMail(email)){
+			}else{
+				alert("邮箱格式不正确");
+				$("#TZ_ZY_EMAIL").focus();
+				return;
+			}
+			
 			$.ajax({
 				type : "POST",
-				url : applyURL + "?tzParams=" + strComParams,
-				//data: {"tzParams":strComParams},
+				url: applyURL,
 				dataType : "json",
+				async:false,
+				data:{"tzParams":strComParams},
 				success : function(data) {
 					var result = data.comContent.result;
 					var resultDesc = data.comContent.resultDesc;
@@ -348,14 +356,12 @@ body, button, input, select, textarea {
 						alert(resultDesc);
 					} else {
 						alert(resultDesc);
-						parent.changebmzt(artid, bmrid);
+						parent.changebmzt(artid, bmrid); 
 						parent.tz_close_float_iframe_apply();
-
 					}
-
 				},
-				error : function(XMLHttpRequest, textStatus, errorThrown) {
-					if (textStatus == "timeout") {
+				error : function(XMLHttpRequest, textStatus, errorThrown) {  
+					if (textStatus == "timeout") { 
 						alert("%bind(:5)");
 						return;
 					} else {
@@ -364,7 +370,6 @@ body, button, input, select, textarea {
 					}
 				}
 			});
-
 		}		
 	</script>
 </body>

@@ -187,7 +187,14 @@
                                             {
                                             iconCls:'download',
                                             sortable:false,
-                                            handler: "downloadFile"
+                                            handler: "downloadFile",
+                                            isDisabled:function(view ,rowIndex ,colIndex ,item ,record ){
+                                                if(record.get("AEState")=="9"){
+                                                    return false;
+                                                }else{
+                                                    return true;
+                                                };
+                                            }
                                         }
                                         ],
                                         width:60

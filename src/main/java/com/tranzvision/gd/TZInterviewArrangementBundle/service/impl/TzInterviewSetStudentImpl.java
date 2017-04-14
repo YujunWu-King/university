@@ -90,8 +90,20 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 							String appIns = String.valueOf(mapData.get("TZ_APP_INS_ID"));
 							
 							//查询姓名
-							sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=(SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND TZ_APP_INS_ID=? limit 1)";
-							String name = jdbcTemplate.queryForObject(sql, new Object[]{classID, appIns}, "String");
+							sql = "SELECT TZ_REALNAME,TZ_MSH_ID,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=(SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND TZ_APP_INS_ID=? limit 1)";
+							//String name = jdbcTemplate.queryForObject(sql, new Object[]{classID, appIns}, "String");
+							Map<String,Object> yhxxMap = jdbcTemplate.queryForMap(sql, new Object[]{classID, appIns});
+							String name = "";
+							String interviewAppId = "";
+							String mobile = "";
+							String email = "";
+							if(yhxxMap != null){
+								name = yhxxMap.get("TZ_REALNAME") == null ? "" : yhxxMap.get("TZ_REALNAME").toString();
+								interviewAppId = yhxxMap.get("TZ_MSH_ID") == null ? "" : yhxxMap.get("TZ_MSH_ID").toString();
+								mobile = yhxxMap.get("TZ_MOBILE") == null ? "" : yhxxMap.get("TZ_MOBILE").toString();
+								email = yhxxMap.get("TZ_EMAIL") == null ? "" : yhxxMap.get("TZ_EMAIL").toString();
+							}
+							
 							//面试资格
 							sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
 							String msZgFlag = jdbcTemplate.queryForObject(sql, new Object[]{classID, appIns}, "String");
@@ -116,9 +128,15 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 							mapJson.put("appId", appIns);
 							mapJson.put("stuName", name);
 							mapJson.put("msZGFlag", msZgFlag);
+							
+							mapJson.put("mobile", mobile);
+							mapJson.put("email", email);
+							/*
 							mapJson.put("city", "");//城市，取值待定
 							mapJson.put("country", "");//国家，取值待定
+							*/
 							mapJson.put("label", strLabel);
+							mapJson.put("interviewAppId", interviewAppId);
 							
 							listJson.add(mapJson);
 						}

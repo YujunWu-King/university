@@ -7,15 +7,15 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
 			   'Ext.grid.filters.Filters',
                'Ext.toolbar.Paging',
                'Ext.ux.ProgressBarPager',
-       		   'KitchenSink.view.audienceManagement.newAudWindowStore',
+       		//   'KitchenSink.view.audienceManagement.newAudWindowStore',
 			//   'KitchenSink.view.audienceManagement.myEnrollmentClueController',
-       		
+               'KitchenSink.view.enrollProject.userMg.userMgAudStore'
            ],
     xtype: 'newAudWindow', 
     title: '听众信息', 
 	reference: 'newAudWindow',
     width: 600,
-    height: 620,
+    height: 550,
     minWidth: 300,
     minHeight: 380,
     layout: 'fit',
@@ -26,7 +26,7 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
 	scrollable: true,  
 
 	initComponent: function () {
-		var store = new KitchenSink.view.audienceManagement.newAudWindowStore();
+		var store = new KitchenSink.view.enrollProject.userMg.userMgAudStore();
 		
         Ext.apply(this, {
 	items: [{
@@ -66,7 +66,8 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
 		}, {
 			xtype: 'textfield',
 			fieldLabel: Ext.tzGetResourse("TZ_AUD_COM.TZ_AUD_LIST_STD.audName","听众名称"),
-			name: 'audName'
+			name: 'audName',
+			allowBlank: false,
 		}, {
 			xtype: 'combobox',
 			fieldLabel: Ext.tzGetResourse("TZ_AUD_COM.TZ_AUD_LIST_STD.audStat","听众状态"),
@@ -118,17 +119,21 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
 			xtype: 'textarea',
 			fieldLabel: Ext.tzGetResourse("TZ_AUD_COM.TZ_AUD_LIST_STD.tips","备注"),
 			name: 'audMS'
-		},{
+		}
+	/*	,{
 			xtype: 'textarea',
 			fieldLabel: Ext.tzGetResourse("TZ_AUD_COM.TZ_AUD_LIST_STD.sql","SQL"),
 			name: 'audSQL',
 		
 			
-		},{
+		}
+		*/
+		,{
 			
 	            xtype:'grid',
 	            frame: true,
-	            height:200,
+	            maxheight:300,
+	            minHeight: 220,
 			//	name: 'audItemGrid',
 			/*	dockedItems:[{
 	        		xtype:"toolbar",
@@ -140,9 +145,10 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
 	        	}],
 	        	*/
 				columnLines: true,
-				selModel: {
+			/*	selModel: {
 	                type: 'checkboxmodel'
 	            },
+	            */
 	            style:"margin:10px",
 				reference: 'audItemGrid',
 				
@@ -252,11 +258,11 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
     buttons: [{
 		text: '保存',
 		iconCls:"save",
-		handler: 'onPageRegSave'
+		handler: 'onPageRegSave1'
 	}, {
 		text: '确定',
 		iconCls:"ensure",
-		handler: 'onPageRegEnsure'
+		handler: 'onPageRegEnsure1'
 	}, {
 		text: '关闭',
 		iconCls:"close",

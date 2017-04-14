@@ -1,0 +1,80 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0;"/>
+<title>%bind(:1)</title>
+<!-- 需要引入的css和js  -->
+<link href="%bind(:2)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="%bind(:2)/statics/js/website/m/jquery-select2/3.4/select2.min.css">
+<script type="text/javascript" src="%bind(:2)/statics/js/website/m/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="%bind(:2)/statics/js/website/m/rem.js"></script>
+<script type="text/javascript" src="%bind(:2)/statics/js/website/m/common.js"></script>
+<script type="text/javascript">
+	var TzUniversityContextPath = "%bind(:2)";
+	var siteId = "%bind(:4)";
+	
+	$(document).ready(function(){
+		var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_MENU_STD","OperateType":"HTML","comParams":{"siteId":"' + %bind(:4) +'","menuId":"' + %bind(:5) + '"}}';
+		$.ajax({
+			type:"POST",
+			url: TzUniversityContextPath+"/dispatcher",
+			data:{
+				tzParams:tzParams
+			},
+			success:function(response){
+				$('.footer-nav').prop('innerHTML', response);
+			},
+			failure: function () {
+			  	
+			} 
+			
+		});
+	});
+</script>
+%bind(:3)
+</head>
+<body style="background-color:#e4e4e4;">
+	<div class="viewport-adaptive">
+	   <div class="bg">
+	     <!-- 头部 -->
+	   	 <div class="topbar">我的 <a  href="javascript:history.back(-1);"><i></i></a>
+	   	 </div>
+	   	 <div class="mine">
+	   	   <a href="%bind(:6)">
+	   	 	  	 <i class="my_hd"></i>
+	   	 		 <span>已报名活动</span>
+	   	 		 <i class="arrow"></i>
+	   	 	  
+	   	 	</a>	
+	   	 	<a href="%bind(:7)">
+	   	 	  	 <i class="my_xx"></i>
+	   	 		 <span>系统站内信</span>
+	   	 		 <i class="arrow"></i>
+	   	 	</a>
+	   	 </div>
+	   	 <div class="mine" style="margin-top: 2%;">
+	   	   <a href="%bind(:8)">
+	   	 	  
+	   	 	  	 <i class="my_jxj"></i>
+	   	 		 <span>申请奖学金</span>
+	   	 		 <i class="arrow"></i>
+	   	 	  
+	   	 	</a>	
+	   	 	<a href="%bind(:9)">
+	   	 	  	 <i class="my_zh"></i>
+	   	 		 <span>账户管理</span>
+	   	 		 <i class="arrow"></i>
+	   	 	</a>
+	   	 </div>
+	   </div>
+	</div>
+	<!-- 底部菜单 -->
+	<div class="footer-wrap mt10">
+	  <nav class="footer-nav">
+		  
+	  </nav>
+	</div>
+</body>
+</html>

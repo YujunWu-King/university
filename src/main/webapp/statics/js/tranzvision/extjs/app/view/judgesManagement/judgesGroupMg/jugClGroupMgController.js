@@ -210,7 +210,12 @@
         //提交参数
         var tzParams = '{"ComID":"TZ_CLPS_GROP_COM","PageID":"TZ_CLJUP_INFO_STD","OperateType":"U","comParams":{"' + win.actType + '":[{"data":' + Ext.JSON.encode(formParams) + '}]}}';
 
-        Ext.tzSubmit(tzParams, function () {
+        Ext.tzSubmit(tzParams, function (responseData) {
+//        	console.log(responseData)
+        	if(responseData['jugGroupId']){
+				form.setValues({jugGroupId:responseData.jugGroupId});
+
+			};
             var interviewMgrPanel = Ext.ComponentQuery.query("panel[reference=jugClMgPanel]");
             interviewMgrPanel[0].getStore().reload();
         }, "", true, this);

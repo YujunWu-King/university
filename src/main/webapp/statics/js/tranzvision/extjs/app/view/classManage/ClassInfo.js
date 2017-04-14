@@ -346,6 +346,11 @@
                                 }
                             ]
                         },{
+							xtype:'datefield',
+							fieldLabel:'入学日期',
+							format:'Y-m-d',
+							name:'rx_time'
+						},{
                             xtype: 'datefield',
                             fieldLabel: Ext.tzGetResourse("TZ_GD_BJGL_COM.TZ_GD_BJJB_STD.begin_time","班级开始日期"),
                             format: 'Y-m-d',

@@ -107,22 +107,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 						xtype:"toolbar",
 						items:[
 							{text:"新增",tooltip:"新增",iconCls:"add",handler:'addInterviewAppoStu'},'-',
-							{text:"删除",tooltip:"删除",iconCls:"remove",handler:'delInterviewAppoStubat'},'->',
-							/*{
-								xtype:'splitbutton',
-								text:'更多操作',
-								iconCls: 'list',
-								glyph: 61,
-								menu:[{
-										text:"撤销选中记录",
-										iconCls:"revoke",
-										handler:'UndoSelList'
-									},{
-										text:"导出选中记录到Excel",
-										iconCls:"excel",
-										handler:'exportToExcel'
-									}]
-							}*/
+							{text:"删除",tooltip:"删除",iconCls:"remove",handler:'delInterviewAppoStubat'},'->'
 						]
 					}],
 					plugins: [/*{
@@ -171,17 +156,27 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 						dataIndex: 'msPlanSeq',
 						groupable: true
 					},{
+						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.appInsID", '报名表编号'),
+						dataIndex: 'appInsID',
+						width: 120
+					},{
+						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.interviewAppID", '面试申请号'),
+						dataIndex: 'interviewAppID',
+						width: 140
+					},{
 						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.name", '姓名'),
 						dataIndex: 'name',
-						width: 120
+						width: 140
 					},{
 						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.emial", '邮箱'),
 						dataIndex: 'email',
-						width: 160
+						width: 160,
+						flex:1
 					},{
 						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.mobile", '手机'),
 						dataIndex: 'mobile',
-						width: 140
+						width: 140,
+						flex:1
 					},/*{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.skypeAcc", 'Skype账号'),
 						dataIndex: 'skypeAcc',
@@ -196,7 +191,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 						 items:[
 							 {iconCls: 'skype',tooltip: 'Skype',handler:'transferSkype'}
 						 ]
-					},*/{
+					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.sort", "类别") ,
 						sortable: true,
 						dataIndex: 'sort',
@@ -248,7 +243,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 								}
 							}
 						}
-					},{
+					},*/{
 						menuDisabled: true,
 						sortable: false,
 						header:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.active", '操作'),
@@ -260,7 +255,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 					}],
 					bbar: {
 						xtype: 'pagingtoolbar',
-						pageSize: 10,
+						pageSize: 1000,
 						listeners:{
 							afterrender: function(pbar){
 								var grid = pbar.findParentByType("grid");

@@ -212,7 +212,11 @@
         //提交参数
         var tzParams = '{"ComID":"TZ_MSPS_GROP_COM","PageID":"TZ_MSPS_INFO_STD","OperateType":"U","comParams":{"' + win.actType + '":[{"data":' + Ext.JSON.encode(formParams) + '}]}}';
 //		console.log(tzParams);
-        Ext.tzSubmit(tzParams, function () {
+        Ext.tzSubmit(tzParams, function (responseData) {
+        	if(responseData['jugGroupId']){
+				form.setValues({jugGroupId:responseData.jugGroupId});
+
+			};
             var interviewMgrPanel = Ext.ComponentQuery.query("panel[reference=jugMsMgPanel]");
             interviewMgrPanel[0].getStore().reload();
         }, "", true, this);

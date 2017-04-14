@@ -99,6 +99,7 @@
 		
 		dataPanel.columnId = columnId;
 		//----------过滤 "活动内容"
+		/*
 		var coluType=record.data.coluType;
 		var btn=dataPanel.down("toolbar").down("button[name='add']");
 		if(coluType!=undefined&&coluType=="D"){
@@ -106,7 +107,7 @@
 		}
 		else{
 			btn.setDisabled(false);
-		}
+		}*/
 		//--------------
         if(record.parentNode){
             title = record.parentNode.data.text + " - " + title;
@@ -314,7 +315,14 @@
 							var pubAud = panel.down('fieldset[name=pubAud]');
 //							pubAud.setHidden(true);
 						}
-						
+						//栏目类型
+						var coluType = formData.coluType;
+						if(coluType=="D"){	
+							var actEdit = panel.down('button[name=editAct]');
+							actEdit.setHidden(false);
+						}else{
+							
+						}
 				});
 			});
     	
@@ -359,7 +367,7 @@
 		var refs = this.getReferences(),
 			dataGrid = refs.artListGrid;
 		var store = dataGrid.getStore();
-        if(store.getRemovedRecords().length>0){
+        if(store.getRemovedRecords().length>0 || store.getModifiedRecords().length>0){
             var tzParams = this.submitContentParams("D","保存成功");
         };
         if(btn.name=="ensure"){
@@ -511,6 +519,17 @@
 					//活动基本信息
 					var formData = responseData.formData;
 					form.setValues(formData);
+					var titleStyle = form.findField("titleStyleView").getValue();
+					if (titleStyle == "HOT"){
+						var artTitle = form.findField("artTitle").getValue();
+						var styleTitle = artTitle+"<span><font color ='#6633CC'> HOT</font></span>";
+						panel.down('#titleView').getEl().setHtml(styleTitle);
+					}
+					if (titleStyle == "NEW"){
+						var artTitle = form.findField("artTitle").getValue();
+						var styleTitle = artTitle+"<span><font color ='#bb1914'> NEW</font></span>";
+						panel.down('#titleView').getEl().setHtml(styleTitle);
+					}
 					var publishStatus = form.findField("publishStatus").getValue();
 					var siteId = form.findField("siteId").getValue();
 					if (publishStatus == "Y"){
@@ -637,6 +656,14 @@
 					if(siteType=="A" || siteType == "B"){
 						var pubAud = panel.down('fieldset[name=pubAud]');
 						pubAud.setHidden(true);
+					}
+					
+					//栏目类型
+					var coluType = formData.coluType;
+					if(coluType=="D"){	
+						var actEdit = panel.down('button[name=editAct]');
+						actEdit.setHidden(false);
+					}else{
 					}
 					
 					panel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + panel.down('hiddenfield[name=titleImageUrl]').getValue());	

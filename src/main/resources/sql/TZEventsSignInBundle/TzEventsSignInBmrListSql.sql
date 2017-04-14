@@ -1,0 +1,17 @@
+SELECT 
+    TZ_HD_BMR_ID,
+    TZ_CYR_NAME,
+    TZ_ZY_SJ,
+    TZ_ZY_EMAIL,
+    TZ_HD_QDM,
+    OPRID
+FROM
+    PS_TZ_NAUDLIST_T A,
+    PS_TZ_LXFSINFO_TBL B
+WHERE
+    A.TZ_ART_ID = ?
+        AND B.TZ_LXFS_LY = 'HDBM'
+        AND A.TZ_HD_BMR_ID = B.TZ_LYDX_ID
+        AND TZ_NREG_STAT = '1'
+        AND (TZ_BMCY_ZT IN ('A'))
+ORDER BY CONVERT( TZ_CYR_NAME USING GBK) COLLATE gbk_chinese_ci ASC

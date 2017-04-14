@@ -42,7 +42,7 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
         	}
         	        	
         	c += '<div class="input-list-blank margart15" id="upload_' + data.itemId + '">';
-        	c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+        	c += '	<div class="input-list-infoupload left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
         	c += '   	<div class="input-list-texttemplate left" style="display:' + (SurveyBuild._readonly?'none':'block') + '">';
         	c += '		<div>' + data.onShowMessage + '</div>';
         	c += '		<div class="filebtn left">';

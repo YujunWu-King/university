@@ -60,6 +60,7 @@ function getQueryString(name) {
 } 
 
 userName = getQueryString("userName");
+console.log(userName);
 
 function layerMsg(content){
 	layer.open({
@@ -76,6 +77,7 @@ function BindEnter(obj)
 		 $("#submitbutton").trigger("click");
 	}
 }
+
 
 
 var jsonValue;
@@ -131,11 +133,13 @@ $(document).ready(function(){
 								if(val.length>1){
 									$('#' + fieldId + '_status').html("");
 									$('#status_' + fieldId).attr("value", 0);
-									$('#' + fieldId + '_status').hide();
+									//$('#' + fieldId + '_status').hide();
+									changeImg(fieldId,"S");
 								}else{
 									$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
 									$('#status_' + fieldId).attr("value", 1);
-									$('#' + fieldId + '_status').show();
+									//$('#' + fieldId + '_status').show();
+									changeImg(fieldId,"F");
 								}
 						
 						}else{
@@ -143,7 +147,8 @@ $(document).ready(function(){
 								//$('#' + fieldId).val("请输入真实名字");
 								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
 								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + '_status').show();
+								//$('#' + fieldId + '_status').show();
+								changeImg(fieldId,"F");
 							}
 						}
 					}else if(fieldId=="TZ_MOBILE"){//手机
@@ -152,7 +157,8 @@ $(document).ready(function(){
 							if (!patrn.test(val)){
 								$('#' + fieldId + '_status').html("<span>"+TipPhone+"</span>");
 							  	$('#status_' + fieldId).attr("value", 1);
-							  	$('#' + fieldId + '_status').show();
+							  	//$('#' + fieldId + '_status').show();
+							  	changeImg(fieldId,"F");
 							}else{
 								var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"phone":"'+val+'","orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"1"}}';
 								$.ajax({
@@ -167,11 +173,13 @@ $(document).ready(function(){
 										if(result.comContent =="success"){
 											$('#' + fieldId + '_status').html("");
 											$('#status_' + fieldId).attr("value", 0); 
-											$('#' + fieldId + '_status').hide();
+											//$('#' + fieldId + '_status').hide();
+											changeImg(fieldId,"S");
 										}else{
 											$('#' + fieldId + '_status').html("<span>"+result.state.errdesc+"</span>");
 											$('#status_' + fieldId).attr("value", 1);
-											$('#' + fieldId + '_status').show();
+											//$('#' + fieldId + '_status').show();
+											changeImg(fieldId,"F");
 										}
 									}
 								});
@@ -180,7 +188,8 @@ $(document).ready(function(){
 							if(data[fieldId] == "Y"){
 								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
 								$('#status_' + fieldId).attr("value", 1);
-								$('#' + fieldId + '_status').show();
+								//$('#' + fieldId + '_status').show();
+								changeImg(fieldId,"F");
 							}
 						}					
 					}else if(fieldId=="TZ_SCH_CNAME"){
@@ -190,14 +199,28 @@ $(document).ready(function(){
 					}else{//其他
 						if(data[fieldId] == "Y"){
 							if(val != ""){
-								$('#' + fieldId + '_status').hide();
+								//$('#' + fieldId + '_status').hide();
+								changeImg(fieldId,"S");
 							}else{
 								$('#' + fieldId + '_status').html("<span>"+TipBlank+"</span>");
-								$('#' + fieldId + '_status').show();
+								//$('#' + fieldId + '_status').show();
+								changeImg(fieldId,"F");
 							}
 						}
 					}
-				})
+				});
+				//为select添加事件
+				if(key=="TZ_COMP_INDUSTRY"){
+					$("#" + key).on("change",function(){
+						var selectFieldId = this.id;
+						var sValue = this.value;
+						if(sValue!=""){
+							changeImg(selectFieldId,"S");
+						}else{
+							changeImg(selectFieldId,"F");
+						}
+					});
+				}
 		    }
 		}
 	});
@@ -214,6 +237,14 @@ $(document).ready(function(){
 			$('#BIRTHDATEStyle').hide();
 		}
 	},300);
+	
+	/**取消input***/
+	$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country"),$("#TZ_SCH_CNAME"),$("#TZ_LEN_PROID")],function(i,el){	
+		el.focus(function(){
+        document.activeElement.blur();
+    })
+   });
+		
 	$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
 		el.click(function(e) { 
 			$("#ParamCon").val(el.attr("id"));
@@ -230,8 +261,10 @@ $(document).ready(function(){
 					$("#searchCountry").html("");
 					$("#searchCountry").html(result);
 					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchCountry").show();
+					$("#before").hide();
+				    $("#searchCountry").fadeIn("slow"); 
+					/*$(".shade").show();
+				    $("#searchCountry").show();*/
 				}
 			});
 		});
@@ -260,8 +293,10 @@ $(document).ready(function(){
 				$("#searchSchool").html("");
 				$("#searchSchool").html(result);
 				$("#body").css("position","fixed");
-				$(".shade").show();
-			    $("#searchSchool").show();
+				$("#before").hide();
+				$("#searchSchool").fadeIn("slow");
+				/*$(".shade").show();
+			    $("#searchSchool").show();*/
 			}
 		});
     });
@@ -288,8 +323,10 @@ $(document).ready(function(){
 					$("#searchState").html("");
 					$("#searchState").html(result);
 					$("#body").css("position","fixed");
-					$(".shade").show();
-				    $("#searchState").show();
+					$("#before").hide();
+				    $("#searchState").fadeIn("slow");
+					/*$(".shade").show();
+				    $("#searchState").show();*/
 				}
 			});
 		});
@@ -327,18 +364,23 @@ $(document).ready(function(){
 		var yzfs = $("#yzfs").val();
 		if(yzfs == "M"){
 			$("#yzfsEmail").hide();
+			$("#yzm_Emailstatus").hide();
 			$("#yzfsMobile").show();
 			$("#button_yzfs").show();
+			$("#yzm_status").show();
 		}else{
 			$("#yzfsEmail").show();
+			$("#yzm_Emailstatus").show();
 			$("#yzfsMobile").hide();
 			$("#button_yzfs").hide();
+			$("#yzm_status").hide();
 		}
     });
 	$("#changeImgEmail").on("click",function(){
 		create_yzm();
 	});
 }).on("click", "#submitbutton", function () {
+	console.log($("#signupForm").serializeJson());
 	var _nameFlg=$("#status_TZ_REALNAME").val();
 	var _emailFlg=$("#status_TZ_EMAIL").val();
 	var _moblieFlg=$("#status_TZ_MOBILE").val();
@@ -376,7 +418,8 @@ $(document).ready(function(){
 			if(jsonValue[key] == "Y"){
 				if(_nameFlg !=0 || $('#TZ_REALNAME').val()==''){
 					$('#TZ_REALNAME_status').html("<span>"+TipBlank+"</span>");
-					$("#TZ_REALNAMEStyle").show();
+					//$("#TZ_REALNAMEStyle").show();
+					changeImg(key,"F");
 					_statusFlg="error";
 				}
 			}
@@ -384,11 +427,13 @@ $(document).ready(function(){
 			if(jsonValue[key] == "Y"){
 				if(_moblieFlg !=0 || $('#TZ_MOBILE').val()==''){
 					$('#TZ_MOBILE_status').html("<span>"+TipPhone+"</span>");
-					$("#TZ_MOBILE_status").show();
+					//$("#TZ_MOBILE_status").show();
+					changeImg(key,"F");
 					_statusFlg="error";
 				}
 			}else{
-				$('#' + key + '_status').hide();
+				//$('#' + key + '_status').hide();
+				changeImg(key,"S");
 			}
 		}else if(key=="TZ_SCH_CNAME_Country"){
 			var schCountry = $("#TZ_SCH_CNAME_Country").attr("ccode");
@@ -399,10 +444,12 @@ $(document).ready(function(){
 			if(jsonValue[key] == "Y"){
 				if($('#' + key).val() == ''){
 					$('#' + key + '_status').html("<span>"+TipBlank+"</span>");
-					$('#' + key + '_status').show();
+					//$('#' + key + '_status').show();
+					changeImg(key,"F");
 					_statusFlg="error";
 				}else{
-					$('#' + key + '_status').hide();
+					//$('#' + key + '_status').hide();
+					changeImg(key,"S");
 				}
 			}
 		}
@@ -429,12 +476,15 @@ $(document).ready(function(){
 	if(_statusFlg=="error"){
 		return false;
 	}
-
+	 
+     console.log( _nameFlg+":"+_moblieFlg+":"+_yzmFlg)
 	if(_nameFlg=="0"&& _moblieFlg=="0" && _yzmFlg=="0"){
 		//$('#submitbutton').submit();
 		//var signupsContent = $("#signupForm").serialize();
 		
 		var signupsContent =$("#signupForm").serializeJson();
+		
+		console.log(signupsContent);
 
 		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"5","isMobile":"Y","userName":"' + userName + '"}}';
 		$.ajax({
@@ -721,3 +771,52 @@ function len(str){
 	}
 	return sum;
 }
+
+//验证信息通过或不通过后，更改提示
+function changeImg(strId,strSuccessFlg){
+	var divBody = $("#" + strId).parent().parent();
+	var tipImg = divBody.find("img");
+	if(tipImg!=null&&tipImg!=undefined){
+		var successImg = TzUniversityContextPath + "/statics/css/website/m/images/reg_right.png";
+		var failImg = TzUniversityContextPath + "/statics/css/website/m/images/reg_wrong.png";
+		if(strSuccessFlg=="S"){
+			tipImg.attr("src",successImg);
+			$('#' + strId + '_status').hide();
+		}else if(strSuccessFlg=="F"){
+			tipImg.attr("src",failImg);
+			$('#' + strId + '_status').show();
+		}
+	}
+}
+/***页面默认设置**/
+var mperjsonValue;
+$(document).ready(function(){
+		//加载页面字段
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"sen":"6","isMobile":"Y","userName":"' + userName + '"}}';
+	$.ajax({
+		type:"post",
+		data:{
+			tzParams:tzParams
+		},
+		dataType:"json",
+		async:false,
+		url: TzUniversityContextPath + "/dispatcher",
+		success:function(data){
+		mperjsonValue=data.comContent;
+		console.log(mperjsonValue);
+		
+		$("#TZ_SCH_CNAME_Country").val(mperjsonValue.strCounttryName);
+		$("#TZ_SCH_CNAME_Country").css("color","#333");
+		$("#TZ_SCH_CNAME").val(mperjsonValue.strschoolName);
+		$("#TZ_SCH_CNAME").css("color","#333");
+		$("#TZ_LEN_PROID").val(mperjsonValue.strPrivence);
+		$("#TZ_LEN_PROID").css("color","#333");
+		$("#TZ_COMPANY_NAME").val(mperjsonValue.strCompanName);
+		$("#TZ_COMP_INDUSTRY").val(mperjsonValue.strIndustry);
+		$("#TZ_SCH_CNAME_Country").attr("ccode",mperjsonValue.strCounttry);
+		
+		
+		
+		}
+	})
+})

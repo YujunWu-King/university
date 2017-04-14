@@ -1,0 +1,14 @@
+<div id='wqdList-nav' class='listNav'></div>
+<ul id='wqdList' class='liwithpic myWqdList'>
+%bind(:1)
+</ul>
+<script>
+$(function() {
+	$('.myWqdList').listnav({
+		noMatchText: '没有内容',
+		includeNums: false,
+		removeDisabled: true,
+		showCounts: false
+		});
+})
+</script>

@@ -10,7 +10,7 @@ var SurveyBuild = {
     appManager:"",
     _qid: [],
     _oid: [],
-    _preg: {"email": {"name": "邮箱","regExp": "/^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$/"},"telphone": {"name": "手机","regExp": "/^1\\d{10}$/"},"idcard": {"name": "身份证号","regExp": "/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/"},"url": {"name": "网址URL","regExp": "/(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?/"}},
+    _preg: {"email": {"name": "邮箱","regExp": "/^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$/"},"telphone": {"name": "手机","regExp": "/^1\\d{10}$/"},"idcard": {"name": "身份证号","regExp": "/(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/"},"url": {"name": "网址URL","regExp": "/(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?/"},"certNo": {"name": "证书编号","regExp": "/^[A-Za-z0-9\-]+$/"}},
     is_edit: false,
     is_edit_moda: true,
     _alph: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
@@ -234,7 +234,9 @@ var SurveyBuild = {
                             component["isNumSize"] = "Y";
                         } else if (classname == "RegularValidator") {
                             component["preg"] = "Y";
-                        }
+                        } else if (classname == "RowLenValidator") {
+                        	 component["isCheckRows"] = "Y";
+                        }       
                     }
                 });
             //把校验规则Copy到实例对象中
@@ -616,6 +618,14 @@ var SurveyBuild = {
                             if (obj["isCheckStrLen"] == "Y") _onError = obj["rules"]["CharLenValidator"]["messages"];
                         }
                     }
+                    if (obj["isCheckRows"] == "Y") {
+                        _min = Math.max(obj["minRow"], _min);
+                        if (obj["maxRow"] > 0) _max = obj["maxRow"];
+                        if (_max > 1 || obj["minRow"] > 0) {
+                            if (obj["isCheckRows"] == "Y") _onError = obj["rules"]["RowLenValidator"]["messages"];
+                        }
+                    }
+                    
                     if (obj["isNumSize"] == "Y") {
                         _min = Math.max(obj["min"], _min);
                         if (obj["max"] > 0) _max = obj["max"];
@@ -1065,6 +1075,7 @@ var SurveyBuild = {
         //if (confirm("是否删除该条信息？")) {
 		
         var index = $(el).closest(".main_inner_content_para").index();
+        //console.log("index:"+index);
         var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
         if (index > 0) {
             $(el).closest(".main_inner_content_para").animate({height: 'hide',opacity: 'hide'},'slow',function() {
@@ -1073,7 +1084,7 @@ var SurveyBuild = {
             $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".main_inner_content_para").eq(index - 1).offset().top},1000);
 			//console.log($(el).closest(".dhcontainer"));
 			//console.log($(el).closest(".dhcontainer").find(".main_inner_content_info_add"));
-            $(el).closest(".dhcontainer").find(".input-addbtn").show();
+            $(el).closest(".main_inner_content").find(".addNext").find(".main_inner_content_info_add ").show();
 			this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
             SurveyBuild._items[instanceId]["children"].splice(index, 1);
 			
@@ -1097,7 +1108,7 @@ var SurveyBuild = {
         //}
 		var paraObject = $(el).closest(".main_inner_content_para").siblings(".main_inner_content_para");
 		$.each(paraObject,function(i,paraObj){
-			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["ENG_LEV"] + ' ' +(i+1)+ ' :' + SurveyBuild._items[instanceId].title);
+			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["ENG_LEV"] + ' ' +(i+1));
 		})
 		
 		

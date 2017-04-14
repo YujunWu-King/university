@@ -53,6 +53,30 @@
 		}
 		
 	},
+	editAct:function(){
+		//内容表单
+		var me = this;
+		var form = this.getView().child("form").getForm();
+		if (form.isValid()) {
+			//获取内容信息参数
+			var tzParams = this.getArtInfoParams();
+			var comView = this.getView();
+			var actType = comView.actType;
+			var artId = form.findField("artId").getValue();
+			if(actType=="update" && (artId=="" || typeof(artId) == "undefined")){
+					Ext.Msg.alert("提示","保存出错");
+			}else{
+					Ext.tzSubmit(tzParams,function(responseData){
+							/*打开活动窗口*/
+							
+							me.editActivityIdByID(responseData.artId);
+							comView.close();
+					},"",true,this);
+			}
+		}else{
+				Ext.Msg.alert("提示","请填写必填项");
+		}
+	},
 	publishArt:function(){
 		//内容表单
 		var form = this.getView().child("form").getForm();
@@ -386,15 +410,20 @@
 		var form = this.getView().child("form").getForm();
 		var artTitle = form.findField("artTitle").getValue();
 		var styleTitle = artTitle+"<span><font color ='#6633CC'> HOT</font></span>";
-		form.findField("titleStyleView").setValue(styleTitle);
+		form.findField("titleStyleView").setValue("HOT");
 		btn.findParentByType('form').findParentByType('panel').down('#titleView').getEl().setHtml(styleTitle);
 	},
 	addNewStyle:function(btn){
 		var form = this.getView().child("form").getForm();
 		var artTitle = form.findField("artTitle").getValue();
 		var styleTitle = artTitle+"<span><font color ='#bb1914'> NEW</font></span>";
-		form.findField("titleStyleView").setValue(styleTitle);
+		form.findField("titleStyleView").setValue("NEW");
 		btn.findParentByType('form').findParentByType('panel').down('#titleView').getEl().setHtml(styleTitle);
+	},
+	clearStyle:function(btn){
+		var form = this.getView().child("form").getForm();
+		form.findField("titleStyleView").setValue("");
+		btn.findParentByType('form').findParentByType('panel').down('#titleView').getEl().setHtml("");
 	},
 	addAudience:function(btn){
         var arrAddAudience=[];
@@ -462,7 +491,7 @@
                     }
                 },
                 srhConFields:{
-                    TZ_AUD_NAME:{
+                    TZ_AUD_NAM:{
                         desc:'听众名称',
                         operator:'07',
                         type:'01'
@@ -505,5 +534,167 @@
                 btn.findParentByType("form").getForm().findField("AudList").setValue(oprIdArray);
             }
         })
-    }
+    },
+	editActivityIdByID: function(activityId){
+		Ext.tzSetCompResourses("TZ_HD_MANAGER_COM");
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_HD_MANAGER_COM"]["TZ_HD_INFO_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_HD_INFO_STD，请检查配置。');
+			return;
+		}
+		
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		var themeName = Ext.themeName;
+		
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+		contentPanel.body.addCls('kitchensink-example');
+
+		//className = 'KitchenSink.view.activity.activityInfoPanel';
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}	
+		ViewClass = Ext.ClassManager.get(className);
+
+		clsProto = ViewClass.prototype;
+
+		if (clsProto.themes) {
+			clsProto.themeInfo = clsProto.themes[themeName];
+
+			if (themeName === 'gray') {
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+			} else if (themeName !== 'neptune' && themeName !== 'classic') {
+				if (themeName === 'crisp-touch') {
+					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+				}
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+			}
+			// <debug warn>
+			// Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+			if (!clsProto.themeInfo) {
+				Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+					themeName + '\'. Is this intentional?');
+			}
+			// </debug>
+		}
+
+		cmp = new ViewClass();
+		//操作类型设置为更新
+		cmp.actType = "update";
+		
+		cmp.on('afterrender',function(panel){
+			/*隐藏发布对象*/
+			var fbSet = panel.down('fieldset[name=fbSet]');
+			fbSet.hide();
+			//活动表单信息;
+			var form = panel.child('form').getForm();
+			//form.findField("activityId").setReadOnly(true);
+			//附件集;
+			//var attachGrid = Ext.getCmp('attachmentGrid');
+			var attachGrid = panel.down('grid[name=attachmentGrid]');
+			//报名信息项列表
+			//var grid = panel.child('grid');
+		  //var grid = Ext.getCmp('applyItemGrid');
+			var grid =panel.down('grid[name=applyItemGrid]');
+			
+			//预览发布列表
+			var viewArtGrid =panel.down('grid[name=viewArtGrid]');
+			
+			//参数
+			//var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"'+activityId+'","siteId":"'+siteId+'","coluId":"'+columnId+'"}}';
+			var tzParams = '{"ComID":"TZ_HD_MANAGER_COM","PageID":"TZ_HD_INFO_STD","OperateType":"QF","comParams":{"activityId":"'+activityId+'"}}';
+			
+			//加载数据
+			Ext.tzLoad(tzParams,function(responseData){
+				//活动基本信息
+				var formData = responseData.formData;
+				form.setValues(formData);
+				
+									
+				//听众赋值20170209
+				 var audIDList=formData.AudID;
+				 var audNameList=formData.AudName;
+				 var oprIdArray=new Array();
+				 var i=0,j=0;
+					for(j=0;j<audIDList.length;j++){
+						var TagModel=new KitchenSink.view.activity.tagModel();
+						var audId = audIDList[j];
+						var audName=audNameList[j];
+						TagModel.set('tagId',audId);
+						TagModel.set('tagName',audName);
+						oprIdArray[i]=TagModel;
+						i++;
+					}
+					form.findField("AudList").setValue(oprIdArray);
+					
+				 //根据发布对象判断是否因此听众
+				 var str_limit=formData.limit;
+				 if ("B"==str_limit){
+					 //听众
+					 form.findField("AudList").show(); 
+				 }else{
+					 //无限制
+					 form.findField("AudList").hide(); 
+				 }
+				 
+				 
+				
+				/*
+				var publishStatus = form.findField("publishStatus").getValue();
+				var siteId = form.findField("siteId").getValue();
+				var coluId = form.findField("coluId").getValue();
+				if (publishStatus == "Y"){
+					form.findField("publishStatusDesc").setValue("已发布");
+					var viewUrl = formData.publishUrl;
+					form.findField("publishUrl").setValue(viewUrl);
+				}
+				
+				if (publishStatus == "N"){
+					form.findField("publishStatusDesc").setValue("未发布");
+				}
+				*/
+					//Ext.getCmp( "titileImage").setSrc(Ext.getCmp( "titleImageUrl").getValue());	
+					var titleImageUrl = panel.down('hiddenfield[name=titleImageUrl]').getValue();
+					if(titleImageUrl!=""){
+						panel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + titleImageUrl);	
+					}
+					//附件集
+					var tzStoreParams = '{"activityId":"'+activityId+'","gridTyp":"FJ"}';
+					attachGrid.store.tzStoreParams = tzStoreParams;
+					attachGrid.store.load();			
+				  //报名信息项列表
+					var tzStoreParams = '{"activityId":"'+activityId+'","gridTyp":"BMX"}';
+					grid.store.tzStoreParams = tzStoreParams;
+					grid.store.load();	
+					
+					//图片集;
+					var picDataView = panel.down('dataview[name=picView]');
+					var tzStoreParams = '{"activityId":"'+activityId+'","gridTyp":"TPJ"}';
+					picDataView.store.tzStoreParams = tzStoreParams;
+					picDataView.store.load();	
+					
+					//预览发布列表;
+					var tzStoreParams = '{"activityId":"'+activityId+'","gridTyp":"VIEWART"}';
+					viewArtGrid.store.tzStoreParams = tzStoreParams;
+					viewArtGrid.store.load();		
+			});
+			
+		});
+		
+		tab = contentPanel.add(cmp);     
+		tab.on(Ext.tzTabOn(tab,this.getView(),cmp));
+		contentPanel.setActiveTab(tab);
+
+		Ext.resumeLayouts(true);
+
+		if (cmp.floating) {
+			cmp.show();
+		}
+	}
 });

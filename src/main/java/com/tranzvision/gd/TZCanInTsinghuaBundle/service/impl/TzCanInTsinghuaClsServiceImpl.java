@@ -21,6 +21,8 @@ import com.tranzvision.gd.TZAccountMgBundle.dao.PsroleuserMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
+import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcInsTMapper;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
@@ -31,7 +33,9 @@ import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceI
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.captcha.Patchca;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -54,7 +58,13 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	private GetSeqNum getSeqNum;
 	
 	@Autowired
+	private PsTzDcInsTMapper psTzDcInsTMapper;
+	
+	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
@@ -76,6 +86,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsroleuserMapper psroleuserMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 	
 	/**
 	 * Session存储的测试考生的Oprid
@@ -393,7 +405,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 */
 	@Override
 	public String tzGetHtmlContent(String strParams) {
-		String isMobile = "";
+		String isMobile = request.getParameter("isMobile");
+		//是否是从网站首页进入
+		String isWebsite=request.getParameter("isWebsite");
 		String strResponse = "获取数据失败，请联系管理员";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -401,9 +415,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("isMobile")){
 				isMobile = jacksonUtil.getString("isMobile").trim();
 			}
-
+            
 			// 考生可参与的有效的测试方向
-			return this.createTestDirection(isMobile);
+			return this.createTestDirection(isMobile,isWebsite);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -414,10 +428,11 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 * 当前考生能参与的测试方向
 	 * 
 	 * @param isMobile
+	 * @param isWebsite 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private String createTestDirection(String isMobile) {
+	private String createTestDirection(String isMobile, String isWebsite) {
 		String strTypes = "获取数据失败，请联系管理员";
 		String strHtml = "";
 		try {
@@ -428,6 +443,12 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			logger.info("------test type -----" + objOprid);
 			if (null != objOprid) {
 				strOprid = String.valueOf(objOprid);
+			}else{
+				//是否有当前登录人 ldd 170401
+				String strCurUser=tzLoginServiceImpl.getLoginedManagerOprid(request);
+				if (null!=strCurUser){
+					strOprid=strCurUser;
+				}
 			}
 			
 			/*获取机构编号*/
@@ -439,7 +460,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 
 			//列表SQL
 //			String sql = "SELECT TZ_CS_WJ_ID,TZ_CS_WJ_NAME,TZ_DC_WJ_ID, date_format(TZ_DC_WJ_JSSJ,'%H:%i:%s') TZ_DC_WJ_KSSJ,date_format(TZ_DC_WJ_JSSJ,'%H:%i:%s') TZ_DC_WJ_JSSJ FROM PS_TZ_CSWJ_TBL WHERE TZ_JG_ID = ? AND TZ_STATE = '0' AND TZ_DC_WJ_ZT = '1' AND TZ_DC_WJ_KSRQ <= curdate() AND TZ_DC_WJ_JSRQ >= curdate() ORDER BY TZ_DC_WJ_KSRQ";
-			String sql = "SELECT TZ_CS_WJ_ID,TZ_CS_WJ_NAME,TZ_DC_WJ_ID FROM PS_TZ_CSWJ_TBL WHERE TZ_JG_ID = ? AND TZ_STATE = '0' AND TZ_DC_WJ_ZT = '1' AND str_to_date(concat(TZ_DC_WJ_KSRQ,' ',TZ_DC_WJ_KSSJ),'%Y-%m-%d %T') <= date_format(curdate(),'%Y-%m-%d %T') AND str_to_date(concat(TZ_DC_WJ_JSRQ,' ',TZ_DC_WJ_JSSJ),'%Y-%m-%d %T') >= date_format(curdate(),'%Y-%m-%d %T') ORDER BY TZ_DC_WJ_KSRQ";
+			//String sql = "SELECT TZ_CS_WJ_ID,TZ_CS_WJ_NAME,TZ_DC_WJ_ID FROM PS_TZ_CSWJ_TBL WHERE TZ_JG_ID = ? AND TZ_STATE = '0' AND TZ_DC_WJ_ZT = '1' AND str_to_date(concat(TZ_DC_WJ_KSRQ,' ',TZ_DC_WJ_KSSJ),'%Y-%m-%d %T') <= date_format(curdate(),'%Y-%m-%d %T') AND str_to_date(concat(TZ_DC_WJ_JSRQ,' ',TZ_DC_WJ_JSSJ),'%Y-%m-%d %T') >= date_format(curdate(),'%Y-%m-%d %T') ORDER BY TZ_DC_WJ_KSRQ";
+			String sql="SELECT TZ_CS_WJ_ID,TZ_CS_WJ_NAME,A.TZ_DC_WJ_ID FROM PS_TZ_CSWJ_TBL A,PS_TZ_DC_WJ_DY_T B WHERE A.TZ_DC_WJ_ID=B.TZ_DC_WJ_ID AND B.TZ_JG_ID =? AND TZ_STATE = '0' AND B.TZ_DC_WJ_ZT = '1' AND str_to_date(concat(B.TZ_DC_WJ_KSRQ,' ',B.TZ_DC_WJ_KSSJ),'%Y-%m-%d %T') <= date_format(curdate(),'%Y-%m-%d %T') AND str_to_date(concat(B.TZ_DC_WJ_JSRQ,' ',B.TZ_DC_WJ_JSSJ),'%Y-%m-%d %T') >= date_format(curdate(),'%Y-%m-%d %T') ORDER BY B.TZ_DC_WJ_KSRQ;";
 			List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { jgid});
 			
 			strTypes = "";
@@ -465,7 +487,11 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			if(StringUtils.equals("Y", isMobile)){
 				strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_MTESTTYPE",request.getContextPath(),strTypes);
 			}else{
-				strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TESTTYPE",request.getContextPath(),strTypes);
+				if(StringUtils.equals("Y", isWebsite)){
+					strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_W_TESTTYPE",request.getContextPath(),strTypes);
+				}else{
+					strHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TESTTYPE",request.getContextPath(),strTypes);
+				}
 			}
 			
 		}catch(Exception e){
@@ -497,6 +523,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 				strCountHtml = "";
 				e.printStackTrace();
 			}
+			//测试问卷调查项目编号
+			String strClassId=sqlQuery.queryForObject("select TZ_CLASS_ID from PS_TZ_CSWJ_TBL where TZ_DC_WJ_ID=?", new Object[]{wjid}, "String");
 			String strXxxBh, strComLmc, strXxxKxzMs, strXxxKxzQz, strXxxKxzCode;
 			String strRadioBoxHtml, strRadioBoxHtml2;
 			String strCategories;
@@ -596,9 +624,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 单选题结果的Html
 							if(isMobile){
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML", TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML", TZ_TITLE,totalCount, strClassId, strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
 							}else{
-							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
+							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE,totalCount, strClassId, strXxxBh, strRadioBoxHtml,strCategories,strRadioBoxHtml2);
 							}
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
@@ -665,9 +693,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 单选题结果的Html
 							if(isMobile){
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",  TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}else{
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML",  TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}
  
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
@@ -733,9 +761,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							}
 							// 拼最终统计 单选题结果的Html
 							if(isMobile){
-							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+							    strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 							}else{
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);	
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);	
 							}
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
@@ -802,9 +830,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						}
 						// 拼最终统计 单选题结果的Html
 						if(isMobile){
-							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_M_HTML",TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 						}else{
-							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
+							strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_TB_HTML", TZ_TITLE, totalCount, strClassId, strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2);
 						}
 						
 						// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
@@ -840,8 +868,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								
 								//strAppStext = completionMap.get("TZ_APP_S_TEXT") == null ? null : completionMap.get("TZ_APP_S_TEXT").toString();
 								strXxxKxzMs= completionMap.get("TZ_XXXKXZ_MS") == null ? "" : completionMap.get("TZ_XXXKXZ_MS").toString();
-								int lowLimit= completionMap.get("TZ_L_LIMIT") == null ?0 : Integer.valueOf(completionMap.get("TZ_L_LIMIT").toString());
-								int upperLimit= completionMap.get("TZ_U_LIMIT") == null ?0 : Integer.valueOf(completionMap.get("TZ_U_LIMIT").toString());
+								float lowLimit= (float) (completionMap.get("TZ_L_LIMIT") == null ?0.0 : Float.parseFloat(completionMap.get("TZ_L_LIMIT").toString()));
+								float upperLimit= (float) (completionMap.get("TZ_U_LIMIT") == null ?0.0 : Float.parseFloat(completionMap.get("TZ_U_LIMIT").toString()));
 								int choseNum=sqlQuery.queryForObject("select  count(TZ_APP_S_TEXT) from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=? and TZ_APP_S_TEXT>=? and TZ_APP_S_TEXT<? and TZ_APP_S_TEXT<>''", new Object[]{wjid, strXxxBh,lowLimit,upperLimit}, "int");
 								if (choseNum > 0) {
 									// 投票百分比
@@ -889,7 +917,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 				lastPageNo=maxPageNo;
 			}
 			//获取注册信息页面
-			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), String.valueOf(lastPageNo), strDivHtml,this.createPerfectUrl());
+			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), String.valueOf(lastPageNo), strDivHtml,this.createPerfectUrl(wjid));
 			return strCountHtml;
 			
 		} catch (Exception e) {
@@ -924,15 +952,25 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 	 * 
 	 * @return
 	 */
-	private String createPerfectUrl(){
+	private String createPerfectUrl(String wjid){
 		
 		/*Oprid、机构编号、注册信息项是否完善、站点编号、URL*/
 		String strOprid = "",strJgId = "",strIsCmpl = "N",strSiteId = "",url = "#";
 		TzSession tzSession = new TzSession(request);
+		boolean isMobile = CommonUtils.isMobile(request);
 		Object objOprid = tzSession.getSession(userSessionName);
 
 		if (null != objOprid) {
 			strOprid = String.valueOf(objOprid);
+		}else{
+			String strCurUser=tzLoginServiceImpl.getLoginedManagerOprid(request);
+			if (null!=strCurUser){
+				strOprid=strCurUser;
+			}
+		}
+		
+		if (null != strOprid&&!"".equals(strOprid)) {
+			
 			String jgSql = "SELECT TZ_JG_ID,TZ_IS_CMPL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ? limit 0,1";
 			String siteSql = "SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T WHERE OPRID = ? limit 0,1";
 
@@ -951,11 +989,41 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			String encryUserName = DESUtil.encrypt(strOprid,"TZ_GD_TRANZVISION");
 			
 			if(StringUtils.equals("Y", strIsCmpl)){
-				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/login";
+				url = request.getContextPath() + "/user/login/" + strJgId.toLowerCase() + "/" + strSiteId;
 			}else{
-				url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
-			}
+				if(isMobile){
+					url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/mperfect.html?userName=" + encryUserName;
+				}else{
+					url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
+				}
+				
+				String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND PERSON_ID = ? LIMIT 0,1";
+				String insId = sqlQuery.queryForObject(sql, new Object[] { wjid,strOprid},"String");
 
+				String sSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ? LIMIT 0,1";
+				String dSql = "SELECT TZ_XXXKXZ_MC FROM PS_TZ_DC_DHCC_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ? AND TZ_IS_CHECKED = 'Y' LIMIT 0,1";
+				if(StringUtils.isNotBlank(insId)){
+					String ug = getHardCodePoint.getHardCodePointVal("TZ_CAN_UG");
+					String ugVal = sqlQuery.queryForObject(sSql, new Object[] { insId,ug},"String");
+					
+					String province = getHardCodePoint.getHardCodePointVal("TZ_CAN_PROVINCE");
+					String provinceVal = sqlQuery.queryForObject(sSql, new Object[] { insId,province},"String");
+					
+					String dept = getHardCodePoint.getHardCodePointVal("TZ_CAN_DEPT");
+					String deptVal = sqlQuery.queryForObject(sSql, new Object[] { insId,dept},"String");
+					
+					String industry = getHardCodePoint.getHardCodePointVal("TZ_CAN_INDUSTRY");
+					String industryVal = sqlQuery.queryForObject(dSql, new Object[] { insId,industry},"String");
+					
+					PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
+					psTzRegUserT.setOprid(strOprid);
+					psTzRegUserT.setTzSchCname(ugVal);
+					psTzRegUserT.setTzLenProid(provinceVal);
+					psTzRegUserT.setTzCompanyName(deptVal);
+					psTzRegUserT.setTzCompIndustry(industryVal);
+					psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
+				}
+			}
 			return url;
 		}else{
 			return url;

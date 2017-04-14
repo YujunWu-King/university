@@ -53,44 +53,53 @@ public class TzPaymentAccountManageImpl extends FrameworkImpl
 		}
 		
 		//将页面传入数据，转成Map
-		JacksonUtil jsonUtil=new JacksonUtil();
-		Map<String,Object>paramsMap=new HashMap<String,Object>();
-		jsonUtil.json2Map(actData[0]);
-		paramsMap=jsonUtil.getMap();
-		
-		PsTzPaymentAccountT psTzPaymentAccountT=new PsTzPaymentAccountT();
-
-		psTzPaymentAccountT.setTzJgId(tzLoginServiceImpl.getLoginedManagerOrgid(request));
-		if(paramsMap.get("accountId")!=null){
-			psTzPaymentAccountT.setTzAccountId(paramsMap.get("accountId").toString());
-		}
-		if(paramsMap.get("accountName")!=null){
-			psTzPaymentAccountT.setTzAccountName(paramsMap.get("accountName").toString());
-		}
-		if(paramsMap.get("accountKey")!=null){
-			psTzPaymentAccountT.setTzAccountKey(paramsMap.get("accountKey").toString());
-		}
-		if(paramsMap.get("accountState")!=null){
-			psTzPaymentAccountT.setTzAccountState(paramsMap.get("accountState").toString());
-		}
-		if(paramsMap.get("accountDescribe")!=null){
-			psTzPaymentAccountT.setTzAccountDescribe(paramsMap.get("accountDescribe").toString());
-		}
-		if(paramsMap.get("accountPlatform")!=null){
-			psTzPaymentAccountT.setTzPlatformId(paramsMap.get("accountPlatform").toString());
-		}
-		//时间 操作人 放入数据库
-		psTzPaymentAccountT.setRowLastmantDttm(new Date());
-		psTzPaymentAccountT.setRowLastmantOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
-		//增加和编辑处理
-		if(psTzPaymentAccountTMapper.selectByPrimaryKey(paramsMap.get("accountId").toString())!=null){
+		try{
+			JacksonUtil jsonUtil=new JacksonUtil();
+			Map<String,Object>paramsMap=new HashMap<String,Object>();
+			jsonUtil.json2Map(actData[0]);
+			paramsMap=jsonUtil.getMap();
 			
-			psTzPaymentAccountTMapper.updateByPrimaryKeySelective(psTzPaymentAccountT);
-		}
-		else{
-			psTzPaymentAccountT.setRowAddedDttm(new Date());
-			psTzPaymentAccountT.setRowAddedOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
-			psTzPaymentAccountTMapper.insert(psTzPaymentAccountT);
+			PsTzPaymentAccountT psTzPaymentAccountT=new PsTzPaymentAccountT();
+	
+			psTzPaymentAccountT.setTzJgId(tzLoginServiceImpl.getLoginedManagerOrgid(request));
+			if(paramsMap.get("accountId")!=null){
+				psTzPaymentAccountT.setTzAccountId(paramsMap.get("accountId").toString());
+			}
+			if(paramsMap.get("accountName")!=null){
+				psTzPaymentAccountT.setTzAccountName(paramsMap.get("accountName").toString());
+			}
+			if(paramsMap.get("accountKey")!=null){
+				psTzPaymentAccountT.setTzAccountKey(paramsMap.get("accountKey").toString());
+			}
+			if(paramsMap.get("accountState")!=null){
+				psTzPaymentAccountT.setTzAccountState(paramsMap.get("accountState").toString());
+			}
+			if(paramsMap.get("accountDescribe")!=null){
+				psTzPaymentAccountT.setTzAccountDescribe(paramsMap.get("accountDescribe").toString());
+			}
+			if(paramsMap.get("accountPlatform")!=null){
+				psTzPaymentAccountT.setTzPlatformId(paramsMap.get("accountPlatform").toString());
+			}
+			//时间 操作人 放入数据库
+			psTzPaymentAccountT.setRowLastmantDttm(new Date());
+			psTzPaymentAccountT.setRowLastmantOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
+			//增加和编辑处理
+			if(psTzPaymentAccountTMapper.selectByPrimaryKey(paramsMap.get("accountId").toString())!=null){
+				
+				psTzPaymentAccountTMapper.updateByPrimaryKeySelective(psTzPaymentAccountT);
+			}
+			else{
+				psTzPaymentAccountT.setRowAddedDttm(new Date());
+				psTzPaymentAccountT.setRowAddedOprid(tzLoginServiceImpl.getLoginedManagerOprid(request));
+				psTzPaymentAccountTMapper.insert(psTzPaymentAccountT);
+			}
+			Map<String,Object>returnMap=new HashMap<String,Object>();
+			returnMap.put("result", "SUCCESS");
+			return new JacksonUtil().Map2json(returnMap);
+		}catch(Exception e){
+			e.printStackTrace();
+			errMsg[0]="1";
+			errMsg[1]=e.toString();
 		}
 		return null; 
 	}
@@ -153,16 +162,25 @@ public class TzPaymentAccountManageImpl extends FrameworkImpl
 	public String tzDelete(String[] actData, String[] errMsg) {
 		
 		System.out.println("==执行删除操作tzDelete()方法==");
-		for(int i=0;i<actData.length;i++){
-			System.out.println("actData:"+actData[i]);
+		try{
+			for(int i=0;i<actData.length;i++){
+				System.out.println("actData:"+actData[i]);
+				Map<String,Object>paramMap=new HashMap<String,Object>();
+				JacksonUtil jsonUtil=new JacksonUtil();
+				jsonUtil.json2Map(actData[i]);
+				paramMap=jsonUtil.getMap();
+				if(paramMap.get("accountId")!=null){
+					psTzPaymentAccountTMapper.deleteByPrimaryKey(paramMap.get("accountId").toString());
+				}
+			}
+			Map<String,Object>returnMap=new HashMap<String,Object>();
+			returnMap.put("result", "SUCCESS");
+			return new JacksonUtil().Map2json(returnMap);
 		}
-		Map<String,Object>paramMap=new HashMap<String,Object>();
-		JacksonUtil jsonUtil=new JacksonUtil();
-		jsonUtil.json2Map(actData[0]);
-		paramMap=jsonUtil.getMap();
-		if(paramMap.get("accountId")!=null){
-			psTzPaymentAccountTMapper.deleteByPrimaryKey(paramMap.get("accountId").toString());
-			return paramMap.get("accountId").toString();
+		catch(Exception e){
+			e.printStackTrace();
+			errMsg[0]="1";
+			errMsg[1]=e.toString();
 		}
 		return null;
 	}
@@ -194,28 +212,34 @@ public class TzPaymentAccountManageImpl extends FrameworkImpl
 	//查询支付账户  用于编辑的时候 加载信息
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
-		final String SQL="SELECT TZ_PLATFORM_NAME FROM PS_TZ_PAYMENT_PLATFORM_T WHERE TZ_PLATFORM_ID=?";
+		//final String SQL="SELECT TZ_PLATFORM_NAME FROM PS_TZ_PAYMENT_PLATFORM_T WHERE TZ_PLATFORM_ID=?";
 		System.out.println("进入TzPaymentAccountManageImpl中的tzQuery()方法");
 		System.out.println("strParams:"+strParams);
-		Map<String,Object>returnMap=new HashMap<String,Object>();
-		
-		JacksonUtil jsonUtil=new JacksonUtil();
-		Map<String,Object>paramsMap=new HashMap<String,Object>();
-		jsonUtil.json2Map(strParams);
-		paramsMap=jsonUtil.getMap();
-
-		if(paramsMap.get("accountId")!=null){
-			PsTzPaymentAccountT  psTzPaymentAccountT =new PsTzPaymentAccountT();
-			psTzPaymentAccountT=psTzPaymentAccountTMapper.selectByPrimaryKey(paramsMap.get("accountId").toString());
-			returnMap.put("accountId", paramsMap.get("accountId").toString());
-			returnMap.put("accountName", psTzPaymentAccountT.getTzAccountName());
-			returnMap.put("accountKey", psTzPaymentAccountT.getTzAccountKey());
-			returnMap.put("accountDescribe", psTzPaymentAccountT.getTzAccountDescribe());
-			returnMap.put("accountState", psTzPaymentAccountT.getTzAccountState());
-			returnMap.put("accountPlatform", psTzPaymentAccountT.getTzPlatformId());
-			Map<String,Object>map=new  HashMap<String,Object>();
-			map.put("formData", returnMap);
-			return jsonUtil.Map2json(map);
+		try{
+			Map<String,Object>returnMap=new HashMap<String,Object>();
+			
+			JacksonUtil jsonUtil=new JacksonUtil();
+			Map<String,Object>paramsMap=new HashMap<String,Object>();
+			jsonUtil.json2Map(strParams);
+			paramsMap=jsonUtil.getMap();
+	
+			if(paramsMap.get("accountId")!=null){
+				PsTzPaymentAccountT  psTzPaymentAccountT =new PsTzPaymentAccountT();
+				psTzPaymentAccountT=psTzPaymentAccountTMapper.selectByPrimaryKey(paramsMap.get("accountId").toString());
+				returnMap.put("accountId", paramsMap.get("accountId").toString());
+				returnMap.put("accountName", psTzPaymentAccountT.getTzAccountName());
+				returnMap.put("accountKey", psTzPaymentAccountT.getTzAccountKey());
+				returnMap.put("accountDescribe", psTzPaymentAccountT.getTzAccountDescribe());
+				returnMap.put("accountState", psTzPaymentAccountT.getTzAccountState());
+				returnMap.put("accountPlatform", psTzPaymentAccountT.getTzPlatformId());
+				Map<String,Object>map=new  HashMap<String,Object>();
+				map.put("formData", returnMap);
+				return jsonUtil.Map2json(map);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			errMsg[0]="1";
+			errMsg[1]=e.toString();
 		}
 		return null;
 	}

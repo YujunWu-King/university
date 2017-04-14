@@ -67,7 +67,7 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 			// 查询总数;
 			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_EXP_FRMFLD_T WHERE TZ_EXPORT_TMP_ID=?";
 			total = sqlQuery.queryForObject(totalSQL, new Object[] { strAppExportTplId },"Integer");
-			String sql = "SELECT TZ_DC_FIELD_ID,TZ_DC_FIELD_NAME,TZ_DC_FIELD_FGF ,TZ_SORT_NUM,TZ_DC_COL_WIDTH,TZ_DC_COL_FILTER FROM PS_TZ_EXP_FRMFLD_T  WHERE TZ_EXPORT_TMP_ID= ? ORDER BY TZ_SORT_NUM";
+			String sql = "SELECT TZ_DC_FIELD_ID,TZ_DC_FIELD_NAME,TZ_APPCLS_ID,TZ_DC_FIELD_FGF ,TZ_SORT_NUM,TZ_DC_COL_WIDTH,TZ_DC_COL_FILTER FROM PS_TZ_EXP_FRMFLD_T  WHERE TZ_EXPORT_TMP_ID= ? ORDER BY TZ_SORT_NUM";
 			List<?> listData = sqlQuery.queryForList(sql, 
 					new Object[] { strAppExportTplId });
 			for (Object objData : listData) {
@@ -75,6 +75,7 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 				Map<String, Object> mapData = (Map<String, Object>) objData;
 				String strFieldId = "";
 				String strFieldName = "";
+				String strAppClass = "";
 				String strFieldSep = "";
 				String strSortNum = "";
 				String strColumnWidth = "";
@@ -82,6 +83,7 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 			
 				strFieldId = String.valueOf(mapData.get("TZ_DC_FIELD_ID"));
 				strFieldName = String.valueOf(mapData.get("TZ_DC_FIELD_NAME"));
+				strAppClass = String.valueOf(mapData.get("TZ_APPCLS_ID"));
 				strFieldSep = String.valueOf(mapData.get("TZ_DC_FIELD_FGF"));
 				strSortNum = String.valueOf(mapData.get("TZ_SORT_NUM"));
 				strColumnWidth = String.valueOf(mapData.get("TZ_DC_COL_WIDTH"));
@@ -128,6 +130,7 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 				mapJson.put("tplID", strAppExportTplId);
 				mapJson.put("fieldID", strFieldId);
 				mapJson.put("fieldName", strFieldName);
+				mapJson.put("appClass", strAppClass);
 				mapJson.put("fieldSeq", strSortNum);
 				mapJson.put("separator", strFieldSep);
 				mapJson.put("columnWidth", strColumnWidth);
@@ -319,6 +322,7 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 					String strAppExportTplId = String.valueOf(mapData.get("tplID"));
 					String strFieldID = String.valueOf(mapData.get("fieldID"));
 					String strFieldName = String.valueOf(mapData.get("fieldName"));
+					String strAppClass = String.valueOf(mapData.get("appClass"));
 					int numFieldSeq = Integer.parseInt(String.valueOf(mapData.get("fieldSeq")));
 					String strSeparator = String.valueOf(mapData.get("separator"));
 					short numColumnWidth = Short.parseShort(String.valueOf(mapData.get("columnWidth")));
@@ -332,6 +336,7 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 							psTzExpFrmFldT.setTzExportTmpId(strAppExportTplId);
 							psTzExpFrmFldT.setTzDcFieldId(strFieldID);
 							psTzExpFrmFldT.setTzDcFieldName(strFieldName);
+							psTzExpFrmFldT.setTzAppclsId(strAppClass);
 							psTzExpFrmFldT.setTzSortNum(numFieldSeq);
 							psTzExpFrmFldT.setTzDcFieldFgf(strSeparator);
 							psTzExpFrmFldT.setTzDcColWidth(numColumnWidth);
@@ -342,6 +347,7 @@ public class appExportTplInfoServiceImpl extends FrameworkImpl{
 							psTzExpFrmFldT.setTzExportTmpId(strAppExportTplId);
 							psTzExpFrmFldT.setTzDcFieldId(strFieldID);
 							psTzExpFrmFldT.setTzDcFieldName(strFieldName);
+							psTzExpFrmFldT.setTzAppclsId(strAppClass);
 							psTzExpFrmFldT.setTzSortNum(numFieldSeq);
 							psTzExpFrmFldT.setTzDcFieldFgf(strSeparator);
 							psTzExpFrmFldT.setTzDcColWidth(numColumnWidth);

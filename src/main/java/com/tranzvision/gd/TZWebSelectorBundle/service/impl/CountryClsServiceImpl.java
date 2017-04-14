@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
@@ -36,6 +37,9 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 	private TZGDObject tzGdObject;
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+
 
 	@Override
 	public String tzGetJsonData(String strParams) {
@@ -64,25 +68,33 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 
 			// 通过国家名称查询 BEGIN;
 			if ("BYCOUNTRY".equals(strOType)) {
-
-				String sqlFindScholls = "";
-				List<Map<String, Object>> list;
-				if ("ENG".equals(language)) {
-					sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRYENG_V WHERE LANGUAGE_CD = ? AND (UPPER(COUNTRY) LIKE ? OR UPPER(DESCR) LIKE ?) ORDER BY COUNTRY";
-					list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { language,
-							"%" + strValue.toUpperCase() + "%", "%" + strValue.toUpperCase() + "%" });
-				} else {
-					sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRY_V WHERE (UPPER(COUNTRY) LIKE ? OR UPPER(DESCR) LIKE ?) ORDER BY COUNTRY";
-					list = jdbcTemplate.queryForList(sqlFindScholls,
-							new Object[] { "%" + strValue.toUpperCase() + "%", "%" + strValue.toUpperCase() + "%" });
+                //1.从注册表读取数据:
+				if(strValue.startsWith("{")&&strValue.endsWith("}")){
+					//用于处理默认值:只有一条数据(sure)
+					Map<String,Object>countryMap=this.getCountryByOprId(language);
+					arraylist.add(countryMap);
 				}
-
-				if (list != null && list.size() > 0) {
-					for (int i = 0; i < list.size(); i++) {
-						Map<String, Object> returnMap = new HashMap<>();
-						returnMap.put("country", list.get(i).get("COUNTRY"));
-						returnMap.put("descr", list.get(i).get("DESCR"));
-						arraylist.add(returnMap);
+				//2.原始处理:
+				else{
+					String sqlFindScholls = "";
+					List<Map<String, Object>> list;
+					if ("ENG".equals(language)) {
+						sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRYENG_V WHERE LANGUAGE_CD = ? AND (UPPER(COUNTRY) LIKE ? OR UPPER(DESCR) LIKE ?) ORDER BY COUNTRY";
+						list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { language,
+								"%" + strValue.toUpperCase() + "%", "%" + strValue.toUpperCase() + "%" });
+					} else {
+						sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRY_V WHERE (UPPER(COUNTRY) LIKE ? OR UPPER(DESCR) LIKE ?) ORDER BY COUNTRY";
+						list = jdbcTemplate.queryForList(sqlFindScholls,
+								new Object[] { "%" + strValue.toUpperCase() + "%", "%" + strValue.toUpperCase() + "%" });
+					}
+					
+					if (list != null && list.size() > 0) {
+						for (int i = 0; i < list.size(); i++) {
+							Map<String, Object> returnMap = new HashMap<>();
+							returnMap.put("country", list.get(i).get("COUNTRY"));
+							returnMap.put("descr", list.get(i).get("DESCR"));
+							arraylist.add(returnMap);
+						}
 					}
 				}
 			}
@@ -114,14 +126,42 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 					}
 				}
 			}
-
+			// 返回所有国家信息 BEGIN;
+			if ("ALLCOUNTRY".equals(strOType)) {
+                //1.从注册表读取数据:
+				if(strValue.startsWith("{")&&strValue.endsWith("}")){
+					//用于处理默认值:只有一条数据(sure)
+					Map<String,Object>countryMap=this.getCountryByOprId(language);
+					arraylist.add(countryMap);
+				}//2.原始处理:
+				else{
+					String sqlFindScholls = "";
+					List<Map<String, Object>> list;
+					if ("ENG".equals(language)) {
+						sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRYENG_V WHERE LANGUAGE_CD = ? ORDER BY COUNTRY";
+						list = jdbcTemplate.queryForList(sqlFindScholls, new Object[] { language});
+					} else {
+						sqlFindScholls = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRY_V ORDER BY COUNTRY";
+						list = jdbcTemplate.queryForList(sqlFindScholls);
+					}
+					
+					if (list != null && list.size() > 0) {
+						for (int i = 0; i < list.size(); i++) {
+							Map<String, Object> returnMap = new HashMap<>();
+							returnMap.put("country", list.get(i).get("COUNTRY"));
+							returnMap.put("descr", list.get(i).get("DESCR"));
+							arraylist.add(returnMap);
+						}
+					}
+				}
+			}
 			try {
 				result = mapper.writeValueAsString(arraylist);
 			} catch (JsonProcessingException e1) {
 				e1.printStackTrace();
 			}
 		} catch (Exception e) {
-
+				e.printStackTrace();
 		}
 		return result;
 	}
@@ -224,5 +264,29 @@ public class CountryClsServiceImpl extends FrameworkImpl {
 			}
 		}
 		return tmpMsgText;
+	}
+	//解决"国家绑定"和"院校绑定"，不能同时显示:
+	public Map<String,Object> getCountryByOprId(String lang){
+		Map<String,Object>returnMap=new HashMap<String,Object>();
+		returnMap.put("country","");
+		returnMap.put("descr","");
+		
+		//用户ID:
+		String oprId=tzLoginServiceImpl.getLoginedManagerOprid(request);
+		//1.根据用户ID,取得“国家CODE”:表PS_TZ_REG_USER_T
+		final String SQL="SELECT TZ_SCH_COUNTRY FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+		String countryCode=jdbcTemplate.queryForObject(SQL, new Object[]{oprId}, "String");
+		//2.根据“国家CODE”获得国家描述+CODE
+		if(countryCode!=null){
+			String getCountry = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRY_V WHERE COUNTRY=?";
+			if(lang.equals("ENG")){
+				getCountry = "SELECT COUNTRY,DESCR FROM PS_TZ_COUNTRYENG_V WHERE COUNTRY=?";
+			}
+			Map<String,Object>dataMap=jdbcTemplate.queryForMap(getCountry, new Object[]{countryCode});
+			returnMap.replace("country", dataMap.get("COUNTRY")==null?"":dataMap.get("COUNTRY").toString());
+			returnMap.replace("descr", dataMap.get("DESCR")==null?"":dataMap.get("DESCR").toString());
+		}
+		//3.返回数据
+		return returnMap;
 	}
 }

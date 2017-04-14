@@ -55,7 +55,8 @@ public class SemPhUserManagementServiceImpl extends FrameworkImpl {
 				}
 			}
 			String strHeadHtml = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_ZHGL_HEAD_HTML",contextPath,commonUrl,jgId,strSiteId,language);
-			String strMainHtml = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_ZHGL_HTML",contextPath);
+			String indexUrl = commonUrl + "?classid=mIndex&siteId=" + strSiteId;
+			String strMainHtml = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_ZHGL_HTML",contextPath,indexUrl);
 
 			String strOrgId = "";
 			String strLang = "";
@@ -69,7 +70,7 @@ public class SemPhUserManagementServiceImpl extends FrameworkImpl {
 			}
 
 			try {				
-				strResultConten = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "", strHeadHtml, strMainHtml);
+				strResultConten = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "",contextPath, strHeadHtml,strSiteId,"5", strMainHtml);
 			} catch (TzSystemException e) {
 				e.printStackTrace();
 				return "【TZ_MOBILE_BASE_HTML】html对象未定义";

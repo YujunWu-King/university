@@ -239,22 +239,22 @@
     		store: new KitchenSink.view.common.store.appTransStore("TZ_JIHUO_FS")
     },{
     		xtype: 'combobox',
-        fieldLabel: Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.rylx","账号类型"),
-        editable:false,
-        emptyText:'请选择',
-        queryMode: 'remote',
+    		fieldLabel: Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHXX_STD.rylx","账号类型"),
+    		editable:false,
+    		emptyText:'请选择',
+    		queryMode: 'remote',
 	    	name: 'rylx',
 	    	valueField: 'TValue',
     		displayField: 'TSDesc',
     		store: new KitchenSink.view.common.store.appTransStore("TZ_RYLX"),
     		afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-        ],
-        allowBlank: false,
-        listeners:{
-            	afterrender: function(combox){
-            		//当前登录人机构id
-	            	combox.readOnly = true;
+             ],
+             	allowBlank: false,
+             	listeners:{
+             		afterrender: function(combox){
+             			//当前登录人机构id
+             			//combox.readOnly = true;
 	            }
 	          }
 	          

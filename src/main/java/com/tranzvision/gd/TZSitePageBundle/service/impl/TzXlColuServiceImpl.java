@@ -272,9 +272,19 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 
 				String strUrl = dispatcherUrl + "?classid=art_view&operatetype=HTML&siteId=" + strSiteId + "&columnId="
 						+ strColuId + "&artId=" + strArtId + "&oprate=R";
-
+				//如果是活动发布则取活动开始日期、活动地点  -- jufeng 修改2017-04-12;
+				int actRel = 0;
+				String actRelCount = "SELECT COUNT(*) FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
+				actRel = sqlQuery.queryForObject(actRelCount, new Object[] {strArtId}, "int");
+				String actRelSql = "SELECT DATE_FORMAT(TZ_START_DT,'%Y-%m-%d %h:%i') AS TZ_START_DT  FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
+				String activDate = sqlQuery.queryForObject(actRelSql, new Object[] {strArtId}, "String");
+				//如果有活动开始日期则取活动开始日期,从内容发布的招生活动没有活动日期;
+				if(actRel != 0 && (activDate!=null && !"".equals(activDate))){
+					strArtTime = activDate;
+				}
+                /*新开窗口查看详细页面--琚峰 修改2017-04-06*/
 				strResultContent = strResultContent
-						+ "<li><div class=\"main_mid_recruit_list_title2\"><a href=" + strUrl + ">"
+						+ "<li><div class=\"main_mid_recruit_list_title2\" style=\"width:800px;overflow:hidden\"><a href=" + strUrl + " target ='_blank' style=\"color:#666\">"
 						+ strArtTitle + "</a></div><div class=\"main_mid_recruit_list_date\">" + strArtTime
 						+ "</div></li>";
 

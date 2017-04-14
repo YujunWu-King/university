@@ -1,12 +1,19 @@
 <link href="%bind(:1)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
-<link href="%bind(:1)/statics/css/website/m/css/date.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.css">
+<link href="%bind(:1)/statics/css/website/m/css/dialog.css" rel="stylesheet" type="text/css">
+<link href="%bind(:1)/statics/css/website/m/css/mobile-select-date.css" rel="stylesheet" type="text/css">
+<!-- <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.css"> -->
 <script type="text/javascript" src="%bind(:1)/statics/js/website/m/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/website/m/rem.js"></script>
-<script type="text/javascript" src="%bind(:1)/statics/js/website/m/iscroll.js"></script>
-<script type="text/javascript" src="%bind(:1)/statics/js/website/m/date.js"></script>
+<!-- <script type="text/javascript" src="%bind(:1)/statics/js/website/m/iscroll.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/website/m/date.js"></script> -->
+
+<script type="text/javascript" src="%bind(:1)/statics/js/website/m/dialog.js"></script>
+
+<script type="text/javascript" src="%bind(:1)/statics/js/website/m/mobile-select-date.js"></script>
+
+
 <script type="text/javascript" src="%bind(:1)/statics/js/website/m/common.js"></script> 
-<script type="text/javascript" src="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.js"></script>
+<!-- <script type="text/javascript" src="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.js"></script> -->
 <script type="text/javascript" src="%bind(:1)/statics/js/website/m/jeesite.min.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/layer/mobile/layer.js"></script>
 <script type="text/javascript">
@@ -15,6 +22,10 @@
 	var strJgid = "%bind(:3)";
 	var strSiteId = "%bind(:4)";
 	var strLang = "%bind(:5)";
+	var selectDate = new MobileSelectDate();
+	var selectDate1 = new MobileSelectDate();
+	var selectDate2 = new MobileSelectDate();
+	
 </script>
 
 <script type="text/javascript">		

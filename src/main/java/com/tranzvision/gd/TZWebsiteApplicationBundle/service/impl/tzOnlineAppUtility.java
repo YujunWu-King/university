@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -45,7 +47,8 @@ public class tzOnlineAppUtility {
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 
 		String returnMessage = "";
 
@@ -60,6 +63,7 @@ public class tzOnlineAppUtility {
 		String strXxxValue = "";
 
 		try {
+			
 			switch (strComMc) {
 			case "EduExperience":
 				break;
@@ -83,7 +87,7 @@ public class tzOnlineAppUtility {
 					strDxxxBh = strXxxBh;
 					strXxxBhLike = strXxxBh;
 				}
-				//System.out.println("11111");
+				// System.out.println("11111");
 				getChildrenSql = "SELECT DISTINCT TZ_LINE_NUM FROM PS_TZ_APP_CC_VW2 WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH LIKE ?";
 
 				List<?> ListLineNum = sqlQuery.queryForList(getChildrenSql,
@@ -94,7 +98,7 @@ public class tzOnlineAppUtility {
 					numLineNum = mapObjLineNum.get("TZ_LINE_NUM") == null ? 0
 							: ((Long) mapObjLineNum.get("TZ_LINE_NUM")).intValue();
 
-					//System.out.println("numLineNum:" + numLineNum);
+					// System.out.println("numLineNum:" + numLineNum);
 
 					// sqlGetDate =
 					strToToday = sqlQuery.queryForObject(sqlGetDate, new Object[] { numAppInsId, strTplId, strDxxxBh,
@@ -172,6 +176,17 @@ public class tzOnlineAppUtility {
 					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 				}
 				break;
+			case "ChooseClass": // 班级选择控件，校验批次是否选择了
+				// String strXxxBh2 = "";
+				//System.out.println("11111");
+				sql = "select TZ_APP_S_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID =? and TZ_XXX_BH like '%CC_Batch' ";
+				//System.out.println("sql:"+sql);
+				strXxxBh2 = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+				//System.out.println("strXxxBh2:"+strXxxBh2);
+				if ("".equals(strXxxBh2) || strXxxBh2 == null) {
+					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+				}
+				break;
 			case "CheckBox":
 				getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? AND TZ_IS_HIDDEN <> 'Y'";
 
@@ -192,7 +207,147 @@ public class tzOnlineAppUtility {
 					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 					break;
 				}
+				break;
+			//公司性质后台校验:
+			case "FirmType":
+				returnMessage="";
+				getChildrenSql="select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+				//区分"公司性质"和"岗位性质":
+				String opts[]=new String[]{"firm_type","position_type"};
+				//System.out.println(strComMc);
+				System.out.println(strXxxBh);
+				//exam_type exam_score exam_date
+				for(String opt:opts){
+					Map<String,Object>valMap=new HashMap<String,Object>();
+					valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
+					if(valMap!=null){
+						strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if ("".equals(strXxxValue)||"-1".equals(strXxxValue)) {
+							if(opt.equals("firm_type")){
+								returnMessage = this.getMsg("公司性质", strJygzTsxx);
+							}else if(opt.equals("position_type")){
+								returnMessage = this.getMsg("岗位类型", strJygzTsxx);
+							}
+							//returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							break;
+						}
+					}
+					else{
+						returnMessage = this.getMsg("公司性质和岗位类型", strJygzTsxx);
+					}
+				}
+				
 
+				break;
+			//英语水平后台校验		
+			case "EngLevl":	
+				getChildrenSql="select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+				//附件部分验证:
+				String getAttCount="select COUNT(1) from PS_TZ_FORM_ATT_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+				//查询行数:
+				sql="SELECT TZ_XXX_LINE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
+				int comNum=sqlQuery.queryForObject(sql, new Object[]{numAppInsId,strXxxBh}, "int");
+				boolean breakFlg=false;
+				for(int i=0;i<comNum;i++){
+					String opt="exam_upload";
+					if(i>0){
+						opt=opt+"_"+i;
+					}
+					//System.out.println("EngLevl-strXxxBh:"+strXxxBh+opt);
+					int attCount=sqlQuery.queryForObject(getAttCount, new Object[]{numAppInsId,"%"+strXxxBh+opt}, "int");
+					returnMessage="";
+					if(attCount==0){
+						returnMessage = this.getMsg(strXxxMc, "请上传附件");
+						breakFlg=true;
+						break;
+					}
+					//input部分验证:
+					
+				}
+				if(breakFlg){
+					break;
+				}
+				for(int i=0;i<comNum;i++){
+					//日期控件处理1.2.3.4.13含有日期 需要验证日期
+					String hasDateOpt="GRE-GMAT-TOFEL-IELTS-TOEIC（990）";
+					//考试类型 成绩 日期验证:
+					//1.验证成绩类型:
+					Map<String,Object>valMap=new HashMap<String,Object>();//exam_score//exam_date
+					String opt="exam_type";
+					if(i>0){
+						opt=opt+"_"+i;
+					}
+					valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt});
+					if(valMap!=null){
+						strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if("".equals(strXxxValue)||"-1".equals(strXxxValue)){
+							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							//returnMessage = this.getMsg(strXxxMc, "请选择考试类型");
+							break;
+						}else if(hasDateOpt.contains(strXxxValue)){
+							//验证成绩+日期
+							opt="exam_score";
+							if(i>0){
+								opt=opt+"_"+i;
+							}
+							valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt});
+							if(valMap!=null){
+								strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+								if(strXxxValue.equals("")){
+									returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+									//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+									break;
+								}
+							}else{
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+								//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+								break;
+							}
+							//验证日期：
+							opt="exam_date";
+							if(i>0){
+								opt=opt+"_"+i;
+							}
+							valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt});
+							if(valMap!=null){
+								strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+								if(strXxxValue.equals("")){
+									returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+									//returnMessage = this.getMsg(strXxxMc, "考试日期必填");
+									break;
+								}
+							}else{
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+								//returnMessage = this.getMsg(strXxxMc, "考试日期必填");
+								break;
+							}
+							
+						}else{
+							//验证成绩
+							opt="exam_score";
+							if(i>0){
+								opt=opt+"_"+i;
+							}
+							valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt});
+							if(valMap!=null){
+								strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+								if(strXxxValue.equals("")){
+									returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+									//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+									break;
+								}
+							}else{
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+								//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+								break;
+							}
+						}
+					}
+					else{
+						returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+						//returnMessage = this.getMsg(strXxxMc, "请选择考试类型");
+					}
+				}
 				break;
 			default:
 				getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ? AND TZ_IS_HIDDEN <> 'Y'";
@@ -217,13 +372,15 @@ public class tzOnlineAppUtility {
 		}
 		return returnMessage;
 	}
+	
 
 	// 英文字母校验
 	public String ahphValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 		String returnMessage = "";
 
 		String strXxxValue = "";
@@ -256,8 +413,8 @@ public class tzOnlineAppUtility {
 			String strComMc, int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax,
 			String strXxxZsxzgs, String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz,
 			String strXxxCharBz, int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax,
-			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub,
-			String strJygzTsxx) {
+			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine,
+			String strTjxSub, String strJygzTsxx) {
 		String returnMessage = "";
 
 		String strXxxValue = "";
@@ -291,7 +448,8 @@ public class tzOnlineAppUtility {
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 		String returnMessage = "";
 
 		String getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
@@ -324,12 +482,66 @@ public class tzOnlineAppUtility {
 		return returnMessage;
 	}
 
+	// 多行文本框 行数校验
+	public String rowLenValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
+			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
+			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
+			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
+		String returnMessage = "";
+
+		String getChildrenSql = "SELECT if(TZ_APP_S_TEXT = ''||TZ_APP_S_TEXT is null,TZ_APP_L_TEXT,TZ_APP_S_TEXT) TZ_VALUE FROM PS_TZ_APP_CC_VW WHERE TZ_APP_INS_ID = ? AND TZ_APP_TPL_ID = ? AND TZ_XXX_NO = ?";
+
+		String strXxxValue = "";
+
+		List<?> ListValues = sqlQuery.queryForList(getChildrenSql, new Object[] { numAppInsId, strTplId, strXxxBh });
+		for (Object ObjValue : ListValues) {
+			Map<String, Object> MapValue = (Map<String, Object>) ObjValue;
+			strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
+			if (!"".equals(strXxxValue) && strXxxValue != null) {
+				// 校验失败
+				int numXxxValueLen = this.getCount(strXxxValue, "\n") + 1;
+				System.out.println("strXxxValue:" + numXxxValueLen);
+				System.out.println("numXxxMinLine:" + numXxxMinLine);
+				System.out.println("numXxxMaxLine:" + numXxxMaxLine);
+				if (numXxxMinLine > 0) {
+					if (numXxxValueLen < numXxxMinLine) {
+						returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+					}
+				}
+				if ("".equals(returnMessage)) {
+					if (numXxxMaxLine > 0) {
+						if (numXxxValueLen > numXxxMaxLine) {
+							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							break;
+						}
+					}
+				}
+			}
+		}
+		System.out.println(returnMessage);
+		return returnMessage;
+	}
+
+	private int getCount(String str, String sub) {
+		int index = 0;
+		int count = 0;
+		while ((index = str.indexOf(sub, index)) != -1) {
+
+			index = index + sub.length();
+			count++;
+		}
+		return count;
+	}
+
 	// 值校验
 	public String valueValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc,
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 		String returnMessage = "";
 
 		String getChildrenSql = "";
@@ -429,12 +641,15 @@ public class tzOnlineAppUtility {
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
+		// System.out.println("---------regularValidator");
 		String returnMessage = "";
 
 		String getChildrenSql = "";
 
 		String strXxxValue = "";
+		// System.out.println("strXxxGdgsjy:"+strXxxGdgsjy);
 
 		try {
 			switch (strComMc) {
@@ -451,7 +666,7 @@ public class tzOnlineAppUtility {
 					strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
 					if (!"".equals(strXxxValue) && strXxxValue != null) {
 						//
-
+						// System.out.println("strXxxValue:"+strXxxValue);
 						switch (strXxxGdgsjy) {
 						case "email":
 							boolean isEmail = this.isValidEmail(strXxxValue);
@@ -474,6 +689,12 @@ public class tzOnlineAppUtility {
 						case "url":
 							boolean isUrl = this.isValidUrl(strXxxValue);
 							if (isUrl == false) {
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							}
+							break;
+						case "certNo":
+							boolean isCcertificateNo = this.isCcertificateNo(strXxxValue);
+							if (isCcertificateNo == false) {
 								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 							}
 							break;
@@ -529,7 +750,8 @@ public class tzOnlineAppUtility {
 			int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax, String strXxxZsxzgs,
 			String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz, String strXxxCharBz,
 			int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax, String strXxxXsws,
-			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub, String strJygzTsxx) {
+			String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine, String strTjxSub,
+			String strJygzTsxx) {
 		String returnMessage = "";
 
 		try {
@@ -556,8 +778,8 @@ public class tzOnlineAppUtility {
 			String strComMc, int numPageNo, String strXxxRqgs, String strXxxXfmin, String strXxxXfmax,
 			String strXxxZsxzgs, String strXxxZdxzgs, String strXxxYxsclx, String strXxxYxscdx, String strXxxBtBz,
 			String strXxxCharBz, int numXxxMinlen, long numXxxMaxlen, String strXxxNumBz, int numXxxMin, long numXxxMax,
-			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, String strTjxSub,
-			String strJygzTsxx) {
+			String strXxxXsws, String strXxxGdgsjy, String strXxxDrqBz, int numXxxMinLine, int numXxxMaxLine,
+			String strTjxSub, String strJygzTsxx) {
 		String returnMessage = "";
 
 		// 是否需要校验推荐信
@@ -650,6 +872,15 @@ public class tzOnlineAppUtility {
 		if (numPhoneLen > 24 || numPhoneLen < 6) {
 			isMatch = false;
 		}
+
+		return isMatch;
+
+	}
+
+	// 是否是证书编号 证书编号限定只能填写数字、字母和中横线
+	private boolean isCcertificateNo(String strValue) {
+
+		boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
 
 		return isMatch;
 

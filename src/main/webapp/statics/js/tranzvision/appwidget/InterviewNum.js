@@ -10,21 +10,37 @@ SurveyBuild.extend("InterviewNum", "baseComponent", {
     _getHtml: function(data, previewmode) {
         var c = "";
         if (previewmode) {
-            //SurveyBuild.appInsId == "0" && (data.defaultval = "{%BIND:TZ_MSH_ID}") ;
-            //SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-            //SurveyBuild.appInsId == "0" && (data.wzsm = data.value);
-        	data.defaultval = "{%BIND:TZ_MSH_ID}";
-        	this._getDefaultVal(data);
-        	data.wzsm = data.value;
+            SurveyBuild.appInsId == "0" && (data.defaultval = "{%BIND:TZ_MSH_ID}") ;
+            SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+            SurveyBuild.appInsId == "0" && (data.wzsm = data.value);
+        	//data.defaultval = "{%BIND:TZ_MSH_ID}";
+        	//this._getDefaultVal(data);
+        	//data.wzsm = data.value;
+            
+            if (data.wzsm =="") {
+            	data.defaultval = "{%BIND:TZ_MSH_ID}";
+            	this._getDefaultVal(data);
+            	data.wzsm = data.value;      	
+            }
         	
         	
             c += '<div class="input-list">';
             c += '	<div class="input-list-info left"><span class="red">*</span>' + data.title + '</div>';
             c += '	<div class="input-list-text left">' + data.value + '</div>';
-            c += '	<div class="input-list-suffix left" style="display:' + (SurveyBuild._readonly?'none':'') + '"><a class="blue" target="' + (data.suffixUrl ? "_blank" : "") + '" href="' + (data.suffixUrl ? data.suffixUrl : "javascript:void(0);") + '">' + data.suffix + '</a></div>';
+            c += '  <div class="input-list-suffix left">' + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "") + '</div>';
+            //c += '	<div class="input-list-suffix left" style="display:' + (SurveyBuild._readonly?'none':'') + '"><a class="blue" target="' + (data.suffixUrl ? "_blank" : "") + '" href="' + (data.suffixUrl ? data.suffixUrl : "javascript:void(0);") + '">' + data.suffix + '</a></div>';
             c += '	<div class="clear"></div>';
             c += '</div>';
             c += '<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + data.value + '">';
+            if ($.trim(data.onShowMessage) != "") {
+				c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
+				c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
+				c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
+				c += '	<div class="input-list-suffix-blank left"></div>';
+				c += '	<div class="clear"></div>';
+				c += '</div>';
+			}
+            
         } else {
             c += '<div class="question-answer">';
             c +=         '<div class="format">';
@@ -38,21 +54,16 @@ SurveyBuild.extend("InterviewNum", "baseComponent", {
     },
     _edit: function(data) {
         var e = "";
-        //后缀
-        e += '<fieldset>';
-        e += '	<legend>';
-        e += '      <span class="edit_item_label">后缀：</span>';
-        e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'suffix\')" value="' + data.suffix + '"/>';
-        e += '	</legend>';
-        e += '</fieldset>';
+        
+        e += '<div class="edit_item_warp">';
+		e += '  <span class="edit_item_label">提示信息：</span>';
+		e += '  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'onShowMessage\')" value="' + data.onShowMessage + '"/>';
+		e += '</div>';
+		e += '<div class="edit_item_warp">';
+		e += '  <span class="edit_item_label">后缀：<a href="#" data-for-id="help_suffix" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a></span>';
+		e += '  <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'suffix\')" value="' + data.suffix + '"/>';
+		e += '</div>';
 
-        //后缀链接
-        e += '<fieldset>';
-        e += '	<legend>';
-        e += '      <span class="edit_item_label">后缀链接：</span>';
-        e += '     <input type="text" class="medium" onkeyup="SurveyBuild.saveAttr(this,\'suffixUrl\')" value="' + data.suffixUrl + '"/>';
-        e += '	</legend>';
-        e += '</fieldset>';
 
         return e;
     },

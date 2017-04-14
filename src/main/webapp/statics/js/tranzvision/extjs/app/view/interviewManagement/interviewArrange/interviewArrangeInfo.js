@@ -168,7 +168,8 @@
 					dockedItems:[{
 						xtype:"toolbar",
 						items:[
-							{text:"自动生成面试安排计划",tooltip:"自动生成面试安排计划",iconCls:"",handler:'SetInterviewTime'},'-',
+							/*{text:"自动生成面试安排计划",tooltip:"自动生成面试安排计划",iconCls:"",handler:'SetInterviewTime'},'-',*/
+							{text:"新增面试安排",tooltip:"新增面试安排",iconCls:"add",handler:'addInterviewTime'},'-',
 							{text:"设置参与本批次面试的考生",tooltip:"设置参与本批次面试的考生",iconCls:"set",handler:'setInterviewApplicant'},'-',
 							{text:"查看预约考生",tooltip:"查看预约考生",iconCls:"view",handler:'viewArrangeStuList'},'->',
 							{
@@ -195,48 +196,28 @@
 									},{
 										text:"导出选中记录到Excel",
 										iconCls:"excel",
-										handler:'exportToExcel'
+										menu:[{
+		                                    text: '导出选中记录到Excel',
+		                                    iconCls:"excel",
+		                                    name:'exportExcel',
+		                                    handler:'exportToExcel'
+			                            },{
+	                                        text: "查看导出结果并下载",
+	                                        iconCls:"download",
+	                                        name:'downloadExcel',
+	                                        handler:'exportToExcel'
+			                            }]
 									}]
 							}
 						]
 					}],
-					plugins: [/*{
-						ptype:'rowexpander',
-						rowBodyTpl : new Ext.XTemplate(
-							'<div class="x-grid-group-title" style="margin-left:30px">',
-							'<table class="x-grid3-row-table" cellspacing="0" cellpadding="0" border="0" >',
-							'<tpl for="moreInfo">',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">所在城市 ：</td><td style="font-weight: normal;max-width:800px;">{city}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">所在国家 ：</td><td style="font-weight: normal;max-width:800px;">{country}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">所属时区 ：</td><td style="font-weight: normal;max-width:800px;">{timezone}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">时差（同北京） ：</td><td style="font-weight: normal;max-width:800px;">{timezoneDiff}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">当地开始日期 ：</td><td style="font-weight: normal;max-width:800px;">{localStartDate}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">当地结束日期 ：</td><td style="font-weight: normal;max-width:800px;">{localFinishDate}</td>',
-							'</tr>',
-							'<tr style="line-height:30px;">',
-							'<td  class="x-grid3-hd x-grid3-cell x-grid3-td-11" style="padding-right: 20px;">邮箱 ：</td><td style="font-weight: normal;max-width:800px;">{lxEmail}</td>',
-							'</tr>',
-							'</tpl>',
-							'</table>',
-							'</div>',{}),
-						lazyRender : true,
-						enableCaching : false
-					},*/{
+					/*
+					plugins: [{
 						ptype: 'cellediting',
 						pluginId: 'msArrCellEditingPlugin',
 						clicksToEdit: 1
 					}],
+					*/
 					columnLines: true,    //显示纵向表格线
 					selModel:{
 						type: 'checkboxmodel'
@@ -247,71 +228,84 @@
 						format:'Y-m-d',
 						sortable: true,
 						dataIndex: 'msDate',
+						/*
 						editor:{
 							xtype:"datefield",
 							format:"Y-m-d"
-						},
-						width: 120
+						},*/
+						width: 100
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.maxPerson", '最多预约人数'),
 						sortable: true,
 						dataIndex: 'maxPerson',
+						/*
 						editor:{
 							xtype:'numberfield',
 							allowBlank:false,
 							minValue: 1
-						},
-						width: 120
+						},*/
+						width: 110,
+						align:'center'
+					},{
+						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.appoPerson", '已预约人数'),
+						sortable: true,
+						dataIndex: 'appoPerson',
+						width: 100,
+						align:'center'
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsStartTime",'开始时间'),
 						xtype:'datecolumn',
 						format:'H:i',
 						sortable: true,
 						dataIndex: 'bjMsStartTime',
+						/*
 						editor:{
 							xtype: 'timefield',
 							increment:5,
 							editable:false,
 							allowBlank: false,
 							format:'H:i'
-						},
-						width: 100
+						},*/
+						width: 90
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsEndTime", '结束时间'),
 						sortable: true,
 						dataIndex: 'bjMsEndTime',
 						xtype:'datecolumn',
 						format:'H:i',
+						/*
 						editor:{
 							xtype: 'timefield',
 							increment:5,
 							editable:false,
 							allowBlank: false,
 							format:'H:i'
-						},
-						width: 100
+						},*/
+						width: 90
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msLocation", '面试地点'),
 						dataIndex: 'msLocation',
+						/*
 						editor:{
 							xtype:'textfield'
-						},
+						},*/
 						minWidth: 120,
 						width: 120,
 						flex: 1
 					},{
 						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msXxBz", '备注'),
 						dataIndex: 'msXxBz',
+						/*
 						editor:{
 							xtype:'textfield'
-						},
+						},*/
 						minWidth: 120,
 						width: 120,
 						flex: 1
 					},{
 						xtype: 'actioncolumn',
 						header:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.releaseOrUndo","发布/撤销") ,
-						minWidth:100,
+						minWidth:90,
 						width:100,
 						items:[
 							{
@@ -336,13 +330,14 @@
 						width:60,
 						xtype: 'actioncolumn',
 						items:[
-							{	iconCls: 'add',tooltip: '添加',handler:'addMsCalRow'},
+							/*{	iconCls: 'add',tooltip: '添加',handler:'addMsCalRow'},*/
+							{	iconCls: 'edit',tooltip: '编辑',handler:'editMsCalRow'},
 							{	iconCls: 'remove',tooltip: '删除',handler:'deleteMsCalRow'}
 						]
 					}],
 					bbar: {
 						xtype: 'pagingtoolbar',
-						pageSize: 10,
+						pageSize: 200,
 						listeners:{
 							afterrender: function(pbar){
 								var grid = pbar.findParentByType("grid");
@@ -350,12 +345,6 @@
 							}
 						},
 						displayInfo: true,
-						/*
-						displayMsg: '显示{0}-{1}条，共{2}条',
-						beforePageText: '第',
-						afterPageText: '页/共{0}页',
-						emptyMsg: '没有数据显示',
-						*/
 						plugins: new Ext.ux.ProgressBarPager()
 					}
 				}]

@@ -190,12 +190,24 @@
 				}
 			});
 		}else{
-			comParamsObj.OperateType = "tzRunBatchProcess";
-			tzParams = Ext.JSON.encode(comParamsObj);
-			
-			Ext.tzSubmit(tzParams,function(respData){
-				
-			},"运行成功",true,this);
+			Ext.MessageBox.confirm('提示', '开启自动初筛后，系统会清除当前项目下的所有初筛信息重新打分。自动初筛进程可能会持续一段时间。是否确定开启自动初筛进程？', 
+					function(btnId){
+				if(btnId == 'yes'){
+					comParamsObj.OperateType = "tzRunBatchProcess";
+					tzParams = Ext.JSON.encode(comParamsObj);
+					
+					Ext.tzSubmit(tzParams,function(respData){
+						var processIns = respData.processIns;
+						Ext.tzBatchProcessDetails({
+							//进程实例ID
+							processIns: processIns,
+							callBack:function(statusCode){
+								
+							}
+						});
+					},"运行成功",true,this);
+				}
+			});
 		}
 	},
 	
@@ -207,14 +219,32 @@
 		var dateIndex = columns[colIndex-1]['dataIndex'];
 		
 		var dfgcStr = rec.get(dateIndex+"_label");
-		if(dfgcStr.length > 0){
-			var dfgcHtmlContent = "";
-			
+		
+		var dfgcHtmlContent = "";
+		if(dfgcStr.length > 0){			
 			var dfgcArr = dfgcStr.split("|");
 			for(var i=0; i<dfgcArr.length; i++){
-				dfgcHtmlContent = dfgcHtmlContent + '<span>'+ dfgcArr[i] +'</span>';
+				dfgcHtmlContent = dfgcHtmlContent 
+					+ '<span style="margin: 0px 5px;'
+					+ 'padding: 0px 12px;'
+					+ 'background: #CCC7C7;'
+					+ 'height: 35px;'
+					+ 'display: inline-block;'
+					+ 'line-height: 35px;'
+					+ 'border-radius: 5px;">'+ dfgcArr[i] +'</span>';
 			}
+		}else{
+			dfgcHtmlContent = '<p class="fancybox-error">没有打分过程</p>';
 		}
+
+		$.fancybox({
+			padding: 20,
+			type: 'html',
+			title: '',
+			minHeight: 30,
+			minWidth:400, 
+			content: dfgcHtmlContent
+		});
 	},
 	
 	
@@ -291,13 +321,14 @@
 	//确定设置批量淘汰
 	setWeedOutStuEnsure: function(btn){
 		var win = btn.findParentByType('setWeedOutWindow');
+		var setForm = win.child('form');
 		var form = win.child('form').getForm();
 		
 		var classId = win.classId;
 		var batchId = win.batchId;
 		var screenNum = win.screenNum;
 		
-		if(form.isVaild()){
+		if(setForm.isValid()){
 			var outNum = form.findField('personNum').getValue();
 			if(outNum > screenNum){
 				Ext.Msg.alert("提示","淘汰人数不能超过参与初筛人数！");
@@ -320,6 +351,7 @@
 			Ext.tzSubmit(tzParams,function(respData){
 				//回调刷新
 				win.reLoadGrid();
+				win.close();
 			},"保存成功",true,this);
 		}
 	},
@@ -362,7 +394,10 @@
 			batchId: batchId,
 			appId:appId,
 			name:name,
-			msApplyId:msApplyId
+			msApplyId:msApplyId,
+			storeReload: function(){
+				grid.getStore().reload();
+			} 
 		});
 
 		cmp.on('afterrender',function(panel){
@@ -402,8 +437,8 @@
 	//保存自动初筛详细信息
 	onAutoScreenDetailsSave: function(btn){
 		var panel = btn.findParentByType('autoScreenDetails');
-		var closePanel = panle.closePanel;
-		
+		var closePanel = btn.closePanel;
+
 		var form = panel.child('form');
 		var formRec = form.getForm().getValues();
 		if(form.isValid()){
@@ -412,7 +447,7 @@
 				PageID: 'TZ_ZDCS_INFO_STD',
 				OperateType: 'U',
 				comParams:{
-					update: formRec
+					update: [formRec]
 				}
 			}
 			
@@ -420,7 +455,10 @@
 			Ext.tzSubmit(tzParams,function(respData){
 				var formDate = respData.formData;
 				form.getForm().setValues(formDate);
-				
+
+				if(panel.storeReload){
+					panel.storeReload();
+				}
 				if(closePanel == "Y"){
 					panel.close();
 				}
@@ -436,6 +474,51 @@
 	onAutoScreenDetailsClose: function(btn){
 		var panel = btn.findParentByType('autoScreenDetails');
 		if(panel) panel.close();
+	},
+	
+	
+	showApplicationForm: function(grid,rowIndex,colIndex){
+		var rec = grid.getStore().getAt(rowIndex);
+		var appId = rec.get("appId");
+
+		Ext.tzSetCompResourses("TZ_ONLINE_REG_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ONLINE_REG_COM"]["TZ_ONLINE_APP_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert("提示","您没有权限");
+            return;
+        }
+
+		var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appId+'","TZ_MANAGER":"Y"}}';
+        var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
+        var win = new Ext.Window({
+            title : "查看报名表",
+            maximized : true,
+            width : Ext.getBody().width,
+            height : Ext.getBody().height,
+            autoScroll : true,
+            border:false,
+            bodyBorder : false,
+            isTopContainer : true,
+            modal : true,
+            resizable : false,
+            contentEl : Ext.DomHelper.append(document.body, {
+                bodyBorder : false,
+                tag : 'iframe',
+                style : "border:0px none;scrollbar:true",
+                src : viewUrl,
+                height : "100%",
+                width : "100%"
+            }),
+            buttons: [ {
+                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
+                iconCls:"close",
+                handler: function(){
+                    win.close();
+                }
+            }]
+        });
+        win.show();
 	},
 	
 	

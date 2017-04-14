@@ -561,7 +561,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                 },{
                     xtype: 'textfield',
                     fieldLabel:Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.smsQm","短信签名") ,
-                    name: 'smsQm'
+                    name: 'smsQm',
+                    hidden:true
                 },{
                     xtype: 'textareafield',
                     fieldLabel: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.smsCont","短信内容") ,

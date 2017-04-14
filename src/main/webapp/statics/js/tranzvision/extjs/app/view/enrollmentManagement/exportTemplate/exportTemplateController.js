@@ -83,7 +83,7 @@
            }else if(checkLen >1){
                Ext.Msg.alert("提示","只能选择一条要修改的记录");
                return;
-           };
+           }
            tplID = selList[0].get("tplID");
            modalID=selList[0].get("modalID");
        }else{
@@ -225,13 +225,13 @@
         if(actType=="add"){
             Ext.Msg.alert("提示","请先保存导出模板信息再加载报名表模板字段。");
             return;
-        };
+        }
 
         if(modalID==""||modalID==null){
             Ext.Msg.alert("提示","请先选择报名表模板ID再加载报名表模板字段。");
             form.findField("modalID").focus();
             return;
-        };
+        }
 
         var grid = btn.findParentByType("grid");
         var store = grid.getStore();
@@ -275,6 +275,7 @@
                    tplID:exportTplID,
                    fieldID:fieldList[i].infoID,
                    fieldName:fieldList[i].infoName,
+                   appClass:"",
                    fieldSeq:seq,
                    separator:'',
                    columnWidth:100,
@@ -306,7 +307,7 @@
         var winGrid = win.child('grid');
         if(tplType!='1'){
             win.down('fieldset[name=fieldAttribute]').setHidden(true);
-        };
+        }
         winForm.setValues({
             fieldName:rec.get("fieldName"),
             separator:rec.get("separator"),
@@ -328,7 +329,7 @@
         if(actType=="add"){
             Ext.Msg.alert("提示","请先保存导出模板信息再加载报名表模板字段。");
             return;
-        };
+        }
 
         if(modalID==""||modalID.length<1){
             Ext.MessageBox.alert('提示', '您没有配置报名表模板编号，无法新增模板字段。');
@@ -375,13 +376,14 @@
                 var store = btn.findParentByType('grid').store;
                 for(var i=0;i<selection.length;i++){
                     var tplField = selection[i].data.TZ_XXX_BH;
-                    var tplName = selection[i].data.TZ_XXX_MC;
+                    var tplFieldDesc = selection[i].data.TZ_XXX_MC;
 
-                    if(store.find('fieldID',tplField,0,false,false,true)==-1){
+                    if(store.find('fieldID',tplField,0,false,true,true)==-1){
                         var model = new KitchenSink.view.enrollmentManagement.exportTemplate.fieldModel({
                             tplID:tplID,
                             fieldID:tplField,
-                            fieldName:tplName,
+                            fieldName:tplFieldDesc,
+                            appClass:"",
                             fieldSeq:0,
                             separator:'',
                             columnWidth:100,
@@ -389,14 +391,76 @@
                             appFormField:[{
                                 appFormFieldSeq:1,
                                 appFormField:tplField,
-                                appFormFieldName:tplName,
+                                appFormFieldName:tplFieldDesc,
                                 codeTable:""
                             }]
                         });
                         store.add(model);
                     }
-                };
-				store.commitChanges();
+                }
+            }
+        })
+    },
+    addAppClass:function(btn){
+        var actType = this.getView().actType;
+        var form = this.getView().child('form').getForm();
+        var modalID = form.findField("modalID").getValue();
+        var tplID = form.findField("tplID").getValue();
+
+        if(actType=="add"){
+            Ext.Msg.alert("提示","请先保存导出模板信息再添加应用程序类。");
+            return;
+        }
+
+        if(modalID==""||modalID.length<1){
+            Ext.MessageBox.alert('提示', '您没有配置报名表模板编号，无法添加应用程序类。');
+            return;
+        }
+        Ext.tzShowPromptSearch({
+            recname: 'TZ_APPCLS_TBL',
+            searchDesc: '添加应用程序类',
+            maxRow:20,
+            condition:{
+                srhConFields:{
+                	TZ_APPCLS_ID :{
+                        desc:'应用程序类',
+                        operator:'07',
+                        type:'01'
+                    },
+                    TZ_DESCR100:{
+                        desc:'描述',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+            	TZ_APPCLS_ID: '应用程序类',
+            	TZ_DESCR100: '描述'
+            },
+            multiselect: true,
+            callback: function(selection){
+                var store = btn.findParentByType('grid').store;
+                for(var i=0;i<selection.length;i++){
+                	var appClass = selection[i].data.TZ_APPCLS_ID;
+                    var tplField = "APPCLS_"+appClass;
+                    var tplFieldDesc = selection[i].data.TZ_DESCR100;
+
+                    if(store.find('fieldID',tplField,0,false,true,true)==-1){
+                        var model = new KitchenSink.view.enrollmentManagement.exportTemplate.fieldModel({
+                            tplID:tplID,
+                            fieldID:tplField,
+                            fieldName:tplFieldDesc,
+                            appClass:appClass,
+                            fieldSeq:0,
+                            separator:'',
+                            columnWidth:100,
+                            filter:"string",
+                            appFormField:[]
+                        });
+                        store.add(model);
+                    }
+                }
             }
         })
     },
@@ -612,6 +676,7 @@
                             appFormField:appFormField,
                             appFormFieldName:appFormFieldName,
                             codeTable:"",
+                            appClass:"",
                             codeTableName:"",
                             appFormFieldSeq:store.getCount()+1
                         })

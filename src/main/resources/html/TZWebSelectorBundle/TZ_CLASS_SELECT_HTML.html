@@ -69,7 +69,7 @@
 a{text-decoration: none;}
 .dire_lable{color:#666;font-size: 14px;display: block;margin:5px 40px;}
 .btn{overflow: hidden;width:180px;margin:20px auto;}
-.btn_left{float: left;padding:10px 20px;text-align: center;background-color:#8e8e8e;font-size: 14px;border-radius: 5px;color: #fff;}
+.btn_left{float: left;padding:10px 20px;text-align: center;background-color:#f1c748;font-size: 14px;border-radius: 5px;color: #fff;}
 .btn_right{float: right;padding:10px 20px;text-align: center;background-color:#8f5dc0;font-size: 14px;border-radius: 5px;color: #fff;}
 </style>
 </style>
@@ -84,8 +84,8 @@ a{text-decoration: none;}
       </div>
       %bind(:1)
       <div class="btn">
-      	  <a href="#" class="btn_left" onclick="closeThis();">%bind(:6)</a>
-      	   <a href="#" class="btn_right" onclick="changeProvince();">%bind(:5)</a>
+      		<a href="#" class="btn_right" onclick="closeThis();">%bind(:6)</a>
+      	  <a href="#" class="btn_left" onclick="changeProvince();" >%bind(:5)</a>
       </div>
  </div>
 

@@ -255,28 +255,28 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 					String itemName = formDate.get("itemName").toString();
 					String itemType = formDate.get("itemType").toString();
 					//String UpHzXs = formDate.get("UpHzXs").toString();
-					BigDecimal UpHzXs = formDate.get("UpHzXs") == null ? new BigDecimal(0) 
+					BigDecimal UpHzXs = formDate.get("UpHzXs") == null || "".equals(formDate.get("UpHzXs").toString()) ? new BigDecimal(0) 
 							: BigDecimal.valueOf(Double.valueOf(formDate.get("UpHzXs").toString()));
 					//String weightA = formDate.get("weightA").toString();
-					BigDecimal weightA = formDate.get("weightA") == null ? new BigDecimal(0) 
+					BigDecimal weightA = formDate.get("weightA") == null || "".equals(formDate.get("weightA").toString()) ? new BigDecimal(0) 
 							: BigDecimal.valueOf(Double.valueOf(formDate.get("weightA").toString()));
 					String lowerOperator = formDate.get("lowerOperator").toString();
 					//String lowerLimit = formDate.get("lowerLimit").toString();
-					BigDecimal lowerLimit = formDate.get("lowerLimit") == null ? new BigDecimal(0) 
+					BigDecimal lowerLimit = formDate.get("lowerLimit") == null || "".equals(formDate.get("lowerLimit").toString()) ? new BigDecimal(0) 
 							: BigDecimal.valueOf(Double.valueOf(formDate.get("lowerLimit").toString()));
 					String upperOperator = formDate.get("upperOperator").toString();
 					//String upperLimit = formDate.get("upperLimit").toString();
-					BigDecimal upperLimit = formDate.get("upperLimit") == null ? new BigDecimal(0) 
+					BigDecimal upperLimit = formDate.get("upperLimit") == null || "".equals(formDate.get("upperLimit").toString()) ? new BigDecimal(0) 
 							: BigDecimal.valueOf(Double.valueOf(formDate.get("upperLimit").toString()));
 					//String wordLowerLimit = formDate.get("wordLowerLimit").toString();
-					Integer wordLowerLimit = formDate.get("wordLowerLimit") == null ? 0 
+					Integer wordLowerLimit = formDate.get("wordLowerLimit") == null || "".equals(formDate.get("wordLowerLimit")) ? 0 
 							: Integer.valueOf(formDate.get("wordLowerLimit").toString());
 					//String wordUpperLimit = formDate.get("wordUpperLimit").toString();
-					Integer wordUpperLimit = formDate.get("wordUpperLimit") == null ? 0 
+					Integer wordUpperLimit = formDate.get("wordUpperLimit") == null || "".equals(formDate.get("wordUpperLimit").toString()) ? 0 
 							: Integer.valueOf(formDate.get("wordUpperLimit").toString());
 					String xlTransScore = formDate.get("xlTransScore").toString();
 					//String weightD = formDate.get("weightD").toString();
-					BigDecimal weightD = formDate.get("weightD") == null ? new BigDecimal(0) 
+					BigDecimal weightD = formDate.get("weightD") == null || "".equals(formDate.get("weightD").toString()) ? new BigDecimal(0) 
 							: BigDecimal.valueOf(Double.valueOf(formDate.get("weightD").toString()));
 					
 					String autoScreen = formDate.get("autoScreen").toString();

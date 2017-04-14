@@ -79,7 +79,7 @@
    function tab(nav,content,on,type)
    {
      $(nav).children().bind(type,(function(){
-    
+    	
        var $tab=$(this);
        var tab_index=$tab.prevAll().length;
        var $content = $(content).children();
@@ -98,6 +98,13 @@
 		});
     	 
     	tab(".zxj_mba .step_head",".zxj_mba .step_Note","","mousedown");
+    	
+    	$(".steps .step_li").click(function(){
+		      $(this).parents("").find(".step_li").children(".triangle_span").hide();
+		      $(this).parents("").find(".step_li").children(".triangle").hide();
+		      $(this).find(".triangle_span").show();
+		      $(this).find(".triangle").show();
+		 }); 
     });
      
      

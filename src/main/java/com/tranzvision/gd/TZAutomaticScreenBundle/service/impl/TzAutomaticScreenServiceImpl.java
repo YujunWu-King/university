@@ -119,49 +119,21 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 					mapList.put("appId", rowList[2]);
 					mapList.put("name", rowList[3]);
 					mapList.put("msApplyId", rowList[4]);
-					mapList.put("status", rowList[5]);
+					
+					boolean bool_status;
+					if("N".equals(rowList[5])){
+						bool_status = true;
+					}else{
+						bool_status = false;
+					}
+					mapList.put("status", bool_status);
 					mapList.put("ranking", rowList[6]);
 					
 					//成绩单ID
 					String scoreInsId = rowList[7];
 					mapList.put("scoreInsId", scoreInsId);
 					
-					/*
-					//查询成绩项分数
-					String sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzClassAutoScreenInfo");
-					Map<String,Object> classMap = jdbcTemplate.queryForMap(sql, new Object[]{ classId });
-					if(classMap != null){
-						String orgId = classMap.get("TZ_JG_ID").toString();
-						String csTreeName = classMap.get("TREE_NAME").toString();
-						
-						if(!"".equals(csTreeName) && csTreeName != null){
-
-							//查询初筛模型中成绩项类型为“数字成绩录入项”且启用自动初筛的成绩项
-							sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzAutoScreenScoreItems");
-							List<Map<String,Object>> itemsList = jdbcTemplate.queryForList(sql, new Object[]{ orgId, csTreeName });
-							
-							for(Map<String,Object> itemMap : itemsList){
-								String itemId = itemMap.get("TZ_SCORE_ITEM_ID").toString();
-								
-								sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
-								Map<String,Object> scoreMap = jdbcTemplate.queryForMap(sql, new Object[]{ scoreInsId, itemId });
-								
-								String scoreNum = "0";
-								String scoreGc = "";
-								
-								if(scoreMap != null){
-									scoreNum = scoreMap.get("TZ_SCORE_NUM") == null? "0" : scoreMap.get("TZ_SCORE_NUM").toString();
-									//打分过程
-									scoreGc = scoreMap.get("TZ_SCORE_DFGC").toString();
-								}
-
-								mapList.put(itemId, scoreNum);
-								mapList.put(itemId+"_label", scoreGc);
-							}
-						}
-					}
-					*/
-					
+					/*自动打分项*/
 					for(String itemId : itemsList){
 						String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
 						Map<String,Object> scoreMap = sqlQuery.queryForMap(sql, new Object[]{ scoreInsId, itemId });
@@ -178,6 +150,63 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 						mapList.put(itemId, scoreNum);
 						mapList.put(itemId+"_label", scoreGc);
 					}
+					//总分，Total
+					String totalScore = "";
+					String sql = "select TZ_SCORE_NUM from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID='Total'";
+					Map<String,Object> totalScoreMap = sqlQuery.queryForMap(sql, new Object[]{ scoreInsId });
+					if(totalScoreMap != null){
+						totalScore = totalScoreMap.get("TZ_SCORE_NUM") == null ? "" : totalScoreMap.get("TZ_SCORE_NUM").toString();
+					}
+					mapList.put("total", totalScore);
+					
+					//自动标签
+					String zdbqVal = "";
+					String zdbqSql = "select TZ_ZDBQ_ID,TZ_BIAOQZ_NAME from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+					List<Map<String,Object>> zdbqList = sqlQuery.queryForList(zdbqSql, new Object[]{ classId, rowList[1], rowList[2] });
+					for(Map<String,Object> zdbqMap : zdbqList){
+						String LabelDesc = zdbqMap.get("TZ_BIAOQZ_NAME") == null ? "" : zdbqMap.get("TZ_BIAOQZ_NAME").toString();
+						if(!"".equals(LabelDesc)){
+							if("".equals(zdbqVal)){
+								zdbqVal = LabelDesc ;
+							}else{
+								zdbqVal = zdbqVal + "|" + LabelDesc ;
+							}
+						}
+					}
+					mapList.put("autoLabel", zdbqVal);
+					
+					//负面清单
+					String fmqdVal = "";
+					String fmqdSql = "select TZ_FMQD_ID,TZ_FMQD_NAME from PS_TZ_CS_KSFM_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+					List<Map<String,Object>> fmqdList = sqlQuery.queryForList(fmqdSql, new Object[]{ classId, rowList[1], rowList[2] });
+					for(Map<String,Object> fmqdMap : fmqdList){
+						String LabelDesc = fmqdMap.get("TZ_FMQD_NAME") == null ? "" : fmqdMap.get("TZ_FMQD_NAME").toString();
+						if(!"".equals(LabelDesc)){
+							if("".equals(fmqdVal)){
+								fmqdVal = LabelDesc;
+							}else{
+								fmqdVal = fmqdVal + "|" + LabelDesc;
+							}
+						}
+					}
+					mapList.put("negativeList", fmqdVal);
+					
+					//手动标签
+					String sdbqVal = "";
+					String sdbqSql = "select TZ_LABEL_NAME from PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B where A.TZ_LABEL_ID=B.TZ_LABEL_ID and TZ_APP_INS_ID=?";
+					List<Map<String,Object>> sdbqList = sqlQuery.queryForList(sdbqSql, new Object[]{ rowList[2] });
+					for(Map<String,Object> sdbqMap: sdbqList){
+						String LabelDesc = sdbqMap.get("TZ_LABEL_NAME") == null ? "" : sdbqMap.get("TZ_LABEL_NAME").toString();
+						if(!"".equals(LabelDesc)){
+							if("".equals(sdbqVal)){
+								sdbqVal = LabelDesc;
+							}else{
+								sdbqVal = sdbqVal + "|" + LabelDesc;
+							}
+						}
+					}
+					mapList.put("manualLabel", sdbqVal);
+					
 					
 					listData.add(mapList);
 				}
@@ -247,14 +276,14 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 			
 			Map<String,Object> classMap = sqlQuery.queryForMap(sql, new Object[]{ classId });
 			if(classMap != null){
-				String className = classMap.get("TZ_CLASS_NAME").toString();
-				String orgId = classMap.get("TZ_JG_ID").toString();
-				
-				//String scoreModeId = classMap.get("TZ_CS_SCOR_MD_ID").toString();
-				String csTreeName = classMap.get("TREE_NAME").toString();
+				String className = classMap.get("TZ_CLASS_NAME") == null ? "" 
+						: classMap.get("TZ_CLASS_NAME").toString();
+				String orgId = classMap.get("TZ_JG_ID") == null ? "" 
+						: classMap.get("TZ_JG_ID").toString();
+				String csTreeName = classMap.get("TREE_NAME") == null ? "" 
+						: classMap.get("TREE_NAME").toString();
 				
 				if(!"".equals(csTreeName) && csTreeName != null){
-					
 					
 					//查询初筛模型中成绩项类型为“数字成绩录入项”且启用自动初筛的成绩项
 					sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzAutoScreenScoreItems");
@@ -270,10 +299,9 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 						
 						columnsList.add(colMap);
 					}
-					
-					rtnMap.replace("className", className);
 					rtnMap.replace("columns", columnsList);
 				}
+				rtnMap.replace("className", className);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -309,7 +337,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 			if(!"".equals(classId) && classId != null 
 					&& !"".equals(batchId) && batchId != null){
 				//报考总数量
-				String sql = "select count(1) from PS_TZ_FORM_WRK_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
+				String sql = "select count(1) from PS_TZ_FORM_WRK_T A where TZ_CLASS_ID=? and TZ_BATCH_ID=? and exists(select 'x' from PS_TZ_APP_INS_T where TZ_APP_INS_ID=A.TZ_APP_INS_ID and TZ_APP_FORM_STA='U')";
 				int totalNum = sqlQuery.queryForObject(sql, new Object[]{ classId,batchId }, "Integer");
 				//参与初筛人数
 				sql = "select count(1) from PS_TZ_CS_STU_VW where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
@@ -360,7 +388,11 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				
 				//最后名次
 				String sql = "select max(TZ_KSH_PSPM) from PS_TZ_CS_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?";
-				int lastMc = sqlQuery.queryForObject(sql, new Object[]{ classId, batchId }, "Integer");
+				int lastMc = 0;
+				String lastMci = sqlQuery.queryForObject(sql, new Object[]{ classId, batchId }, "String");
+				if(!"".equals(lastMci) && lastMci != null){
+					lastMc = Integer.valueOf(lastMci);
+				}
 				
 				int i;
 				for(i=0;i<outNum;i++){
@@ -450,36 +482,30 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 			if(!"".equals(classId) && classId != null 
 					&& !"".equals(batchId) && batchId != null){
 				//当前用户;
-				//String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				/*生成运行控制ID*/
 				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 			    String s_dtm = datetimeFormate.format(new Date());
 				String runCntlId = "ZDCS" + s_dtm + "_" + getSeqNum.getSeqNum("PSPRCSRQST", "RUN_ID");
 				
-				/*
-				Psprcsrqst psprcsrqst = new Psprcsrqst();
-				psprcsrqst.setPrcsinstance(processInstance);
-				psprcsrqst.setRunId(runCntlId);
-				psprcsrqst.setOprid(currentOprid);
-				psprcsrqst.setRundttm(new Date());
-				psprcsrqst.setRunstatus("5");
-				psprcsrqstMapper.insert(psprcsrqst);
-				*/
 				
 				PsTzCsJcAet psTzCsJcAet = new PsTzCsJcAet();
 				psTzCsJcAet.setRunId(runCntlId);
 				psTzCsJcAet.setTzClassId(classId);
 				psTzCsJcAet.setTzApplyPcId(batchId);
+				psTzCsJcAet.setOprid(currentOprid);
 				psTzCsJcAetMapper.insert(psTzCsJcAet);
 				
+				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				
-				BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZ_AUTO_SCREEN_PROC");
+				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_AUTO_SCREEN_PROC");
 				//指定调度作业的相关参数
 				EngineParameters schdProcessParameters = new EngineParameters();
 
-				schdProcessParameters.setBatchServer("SEM_GD_001");
+				schdProcessParameters.setBatchServer("");
 				schdProcessParameters.setCycleExpression("");
-				schdProcessParameters.setLoginUserAccount("Admin");
+				schdProcessParameters.setLoginUserAccount(currentAccountId);
 				schdProcessParameters.setPlanExcuteDateTime(new Date());
 				schdProcessParameters.setRunControlId(runCntlId);
 				
@@ -509,6 +535,8 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				psTzCsLsjcTKey.setTzApplyPcId(batchId);
 				psTzCsLsjcTKey.setPrcsinstance(processinstance);
 				psTzCsLsjcTMapper.insert(psTzCsLsjcTKey);
+				
+				rtnMap.replace("processIns", processinstance);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -560,7 +588,20 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 							psTzCsKsTbl.setTzKshCsjg(status);
 							psTzCsKsTbl.setRowLastmantDttm(new Date());
 							psTzCsKsTbl.setRowLastmantOprid(oprid);
+							psTzCsKsTbl.setRowLastmantDttm(new Date());
+							psTzCsKsTbl.setRowLastmantOprid(oprid);
 							psTzCsKsTblMapper.updateByPrimaryKey(psTzCsKsTbl);
+						}else{
+							psTzCsKsTbl = new PsTzCsKsTbl();
+							psTzCsKsTbl.setTzClassId(classId);
+							psTzCsKsTbl.setTzApplyPcId(batchId);
+							psTzCsKsTbl.setTzAppInsId(appId);
+							psTzCsKsTbl.setTzKshCsjg(status);
+							psTzCsKsTbl.setRowAddedDttm(new Date());
+							psTzCsKsTbl.setRowAddedOprid(oprid);
+							psTzCsKsTbl.setRowLastmantDttm(new Date());
+							psTzCsKsTbl.setRowLastmantOprid(oprid);
+							psTzCsKsTblMapper.insert(psTzCsKsTbl);
 						}
 					}
 				}

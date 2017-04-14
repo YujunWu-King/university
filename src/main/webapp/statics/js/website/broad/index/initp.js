@@ -230,6 +230,13 @@ $(document).ready(function(){
 				var $content = $(".zxj_mba .step_Note").children();
 	            $content.hide();
 	            $content.eq(showLcNum).show();
+	            
+	            var $shade1 = $(".step_li .triangle");
+	            var $shade2 = $(".step_li .triangle_span");
+	            $shade1.hide();
+	            $shade2.hide();
+	            $shade1.eq(showLcNum/2).show();
+	            $shade2.eq(showLcNum/2).show();
 			}
 			
 			$(".sq_btn").click(function(){
@@ -237,6 +244,13 @@ $(document).ready(function(){
 			       $(".sq_pop").show();
 			  
 			});
+			
+			$(".steps .step_li").click(function(){
+			      $(this).parents("").find(".step_li").children(".triangle_span").hide();
+			      $(this).parents("").find(".step_li").children(".triangle").hide();
+			      $(this).find(".triangle_span").show();
+			      $(this).find(".triangle").show();
+			    }); 
 		},
 		failure: function () {
 		  	

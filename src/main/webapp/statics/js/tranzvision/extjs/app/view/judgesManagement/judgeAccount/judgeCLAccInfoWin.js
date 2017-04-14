@@ -131,7 +131,40 @@
                     xtype: 'textfield',
                     fieldLabel: "邮箱",
                     name: 'judgeEmail'
-                },{
+                },/*{
+	                xtype: 'textfield',
+	                fieldLabel: "角色描述",
+	                name: 'roleNameDesc',
+	                readOnly:true,
+	                fieldStyle:'background:#F4F4F4'
+	            },*/{
+	            	layout: {
+	                    type: 'column'
+	                },
+	                items:[{
+	                	columnWidth:.25,
+	                	xtype: 'textfield',
+	                    fieldLabel: '角色名称',
+	        			// maxLength: 170,
+	        			name: 'roleName',
+	        			editable: false,
+	                    triggers: {
+	                        search: {
+	                            cls: 'x-form-search-trigger',
+	                            handler: "searchRoleName"
+	                        }
+	                    }
+	                },{
+	                	columnWidth:.75,
+	                	xtype: 'displayfield',
+	                    hideLabel: true,
+	                    // fieldLabel: "角色描述",
+	                    name: 'roleNameDesc',
+	                    //readOnly:true,
+	                    //fieldStyle:'background:#F4F4F4'
+	                }]
+	                
+	            },{
                 	xtype: 'checkbox',
                 	fieldLabel: '用户类型',
                 	boxLabel: '材料评委',

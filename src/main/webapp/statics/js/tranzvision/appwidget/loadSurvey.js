@@ -8,7 +8,9 @@ function pageReadOnly()
 //	$("form textarea").prop("disabled", true);
 	$("form textarea").unbind();
 	$("form input").nextAll('img').unbind("click");
-	
+	if($("[id$='Btnselect']").length>0){
+		$("[id$='Btnselect']").hide();
+	}
 	$(".addNext").hide();
 	$(".btn-addcon").hide();
 	$(".main_inner_content_info").hide();
@@ -120,14 +122,25 @@ if(dataApp){
 									if(i>0)
 									{
 										signlePerXxx["itemId"] = itemId1 + "_" + i;
-									}			
-									signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][z]["value"]);
-									if(signlePerXxx.hasOwnProperty("wzsm"))
+									}
+									//console.log("wrong1:->"+z)
+									//console.dir(recApp["children"][i][j]["children"])//StartBusinessExp
+									if(perXxx.classname=="FirmType"||perXxx.classname=="StartBusinessExp"){
+										try{
+											signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][0][z]["value"]);
+										}catch(error){
+											signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][z]["value"]);
+										}
+									}else{
+										signlePerXxx["value"] =  SurveyBuild.htmlCharReplace(recApp["children"][i][j]["children"][z]["value"]);
+									}if(signlePerXxx.hasOwnProperty("wzsm"))
 									{
 										signlePerXxx["wzsm"] =  recApp["children"][i][j]["children"][z]["wzsm"];
 									}
 								})
-							}else if(perXxx.classname  == "imagesUpload" || perXxx.classname  == "AttachmentUpload"){
+							}
+							
+							else if(perXxx.classname  == "imagesUpload" || perXxx.classname  == "AttachmentUpload"){
 								/*多行容器的控件*/
 								if(recApp["children"][i][j].hasOwnProperty("children"))
 								{

@@ -47,7 +47,7 @@ public class TzClassMgServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_PRJ_NAME", "TZ_START_DT", "TZ_END_DT",
+			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_PRJ_NAME","TZ_RX_DT", "TZ_APP_START_DT", "TZ_APP_END_DT",
 					"TZ_IS_OPEN_DESC" };
 
 			// 可配置搜索通用函数;
@@ -65,9 +65,10 @@ public class TzClassMgServiceImpl extends FrameworkImpl {
 					mapList.put("bj_id", rowList[0]);
 					mapList.put("bj_name", rowList[1]);
 					mapList.put("xm_name", rowList[2]);
-					mapList.put("begin_time", rowList[3]);
-					mapList.put("end_time", rowList[4]);
-					mapList.put("bj_kt_desc", rowList[5]);
+					mapList.put("rx_time", rowList[3]);
+					mapList.put("begin_time", rowList[4]);
+					mapList.put("end_time", rowList[5]);
+					mapList.put("bj_kt_desc", rowList[6]);
 
 					listData.add(mapList);
 				}

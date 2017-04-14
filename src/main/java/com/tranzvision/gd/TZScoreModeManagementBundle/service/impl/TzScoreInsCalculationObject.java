@@ -165,10 +165,14 @@ public class TzScoreInsCalculationObject {
 						}
 					}
 					itemsScoreValMap = itemValMap;
+					//更新材料评审评委考生关系表标志
+					String updateFlag = "";
 					//查询成绩单编号
 					String scoreInsId = sqlQuery.queryForObject(pwkshSql, new Object[]{classId,batchId,bmbId,oprId}, "String");
 					if(!"".equals(scoreInsId) && scoreInsId != null){
 						tzScoreInsId = Long.valueOf(scoreInsId);
+					} else {
+						updateFlag = "Y";
 					}
 					
 					//保存打分
@@ -178,11 +182,21 @@ public class TzScoreInsCalculationObject {
 					if("0".equals(rtn)){
 						//保存成功
 						
-						
-						
-						
-						
-						
+						if("Y".equals(updateFlag)) {
+							//更新材料评审评委考生关系表，卢艳添加，2017-4-11
+							if("CL".equals(type)){
+								sqlQuery.update("UPDATE PS_TZ_CP_PW_KS_TBL SET TZ_SCORE_INS_ID=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?",
+										new Object[]{tzScoreInsId,classId,batchId,bmbId,oprId});
+								sqlQuery.execute("commit");
+							} else {
+								if("MS".equals(type)){
+									//更新面试评审评委考生关系表，卢艳添加，2017-4-14
+									sqlQuery.update("UPDATE PS_TZ_MP_PW_KS_TBL SET TZ_SCORE_INS_ID=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?",
+											new Object[]{tzScoreInsId,classId,batchId,bmbId,oprId});
+									sqlQuery.execute("commit");
+								}
+							}
+						}
 
 					}else{
 						errorMsg = "保存失败";
@@ -232,6 +246,9 @@ public class TzScoreInsCalculationObject {
 				Float rootScoreAmount = this.TraverseTree(treeNodeNum, treeNode);
 				
 				if(!"".equals(errorMsg) && errorMsg != null){
+					//有错误信息，保存失败
+					errorCode = "-1";
+				} else {
 					/**
 					 * 保存打分数据到成绩项实例表PS_TZ_CJX_TBL，数据存放在itemsScoreValListTmp
 					 */
@@ -242,9 +259,6 @@ public class TzScoreInsCalculationObject {
 						//保存失败
 						errorCode = "-2";
 					}
-				}else{
-					//有错误信息，保存失败
-					errorCode = "-1";
 				}
 			}
 		}catch(Exception e){
@@ -404,6 +418,7 @@ public class TzScoreInsCalculationObject {
 				psTzSrmbaInsTbl.setRowLastmantOprid(oprId);
 				
 				psTzSrmbaInsTblMapper.insert(psTzSrmbaInsTbl);
+				
 				
 			}
 			

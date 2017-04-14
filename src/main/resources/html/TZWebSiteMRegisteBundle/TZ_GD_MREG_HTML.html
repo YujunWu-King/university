@@ -1,25 +1,118 @@
 <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/website/m/css/style.css">
-<link rel="stylesheet" type="text/css"
-	href="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.css">
+<!-- <link rel="stylesheet" type="text/css"
+	href="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.css"> -->
 <script type="text/javascript"
 	src="%bind(:1)/statics/js/website/m/jquery-1.8.3.min.js"></script>
 <script type="text/javascript"
 	src="%bind(:1)/statics/js/website/m/rem.js"></script>
 <script type="text/javascript"
 	src="%bind(:1)/statics/js/website/m/common.js"></script>
-<script type="text/javascript"
-	src="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.js"></script>
+<!-- <script type="text/javascript"
+	src="%bind(:1)/statics/js/website/m/jquery-select2/3.4/select2.min.js"></script> -->
 <script type="text/javascript"
 	src="%bind(:1)/statics/js/website/m/jeesite.min.js"></script>
 <script type="text/javascript"
-	src="%bind(:1)/statics/js/lib/layer/mobile/layer.js"></script>		
+	src="%bind(:1)/statics/js/lib/layer/mobile/layer.js"></script>
+<script type="text/javascript"
+    src="%bind(:1)/statics/js/website/m/iscroll.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/func/mregister.js"></script>	
 <style>
 	.select_pros{
 		margin-top:2% !important;
 	}
+	#searchCountry{display:none;}
+	#searchSchool{display:none;}
+	.iScrollVerticalScrollbar {
+	position: absolute;
+	z-index: 9999;
+	width:6px;
+	bottom: 2px;
+	top: 2px;
+	right:3%;
+	overflow: hidden;
+}
+
+.iScrollVerticalScrollbar.iScrollBothScrollbars {
+	bottom: 18px;
+}
+
+.iScrollIndicator {
+	position: absolute;
+	background: #cc3f6e;
+	border-width: 1px;
+	border-radius: 8px;
+}
+.iScrollVerticalScrollbar .iScrollIndicator {
+	width: 100%;
+	background-color: #8f5dbf;
+}
+
+    .wrapper {
+	position: relative;
+	z-index: 1;
+	height: 190px;
+	overflow: hidden;
+}
+ .wrapper1 {
+	position: relative;
+	z-index: 1;
+	height: 190px;
+	overflow: hidden;
+}
+.scroller {
+	position: absolute;
+	z-index: 1;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	width: 100%;
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	-o-text-size-adjust: none;
+	text-size-adjust: none;
+}
+.scroller1 {
+	position: absolute;
+	z-index: 1;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	width: 100%;
+	-webkit-transform: translateZ(0);
+	-moz-transform: translateZ(0);
+	-ms-transform: translateZ(0);
+	-o-transform: translateZ(0);
+	transform: translateZ(0);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-text-size-adjust: none;
+	-moz-text-size-adjust: none;
+	-ms-text-size-adjust: none;
+	-o-text-size-adjust: none;
+	text-size-adjust: none;
+}
 </style>
-<div class="viewport-adaptive">
+<script type="text/javascript">
+ var myScroll;
+        var scroll;
+		function loaded () {
+			myScroll = new IScroll('.wrapper', { scrollY: true, scrollbars: 'Vertical' });
+		}
+		function loaded1 () {
+			scroll = new IScroll('.wrapper1', { scrollY: true, scrollbars: 'Vertical' });
+		}
+</script>
+<div class="viewport-adaptive" id="before">
 	<div class="bg1">
 		<!-- 头部 -->
 		<div class="topbar">
@@ -58,7 +151,11 @@
 		<a href="javascript:void(0)" class="register_btn" id="submitbutton">注 册</a>
 	</div>
 </div>
-<div class="shade"></div>
-<div class="country_pop" id="searchCountry"></div>
-<div class="school_pop" id="searchSchool"></div>
-<div class="country_pop" id="searchState"></div>
+<!-- <div class="shade"></div> -->
+<div class="viewport-adaptive" id="searchCountry"></div>
+<!-- <div class="country_pop" id="searchCountry"></div> -->
+	  <!-- 院校选择 -->
+ <div class="viewport-adaptive" id="searchSchool"></div>
+<!-- <div class="school_pop" id="searchSchool"></div> -->
+<div class="viewport-adaptive" id="searchState"></div>
+<!-- <div class="country_pop" id="searchState"></div> -->

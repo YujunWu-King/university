@@ -12,6 +12,9 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 	minLen: "0",
 	maxLen: "300",
 	isShowLabel:"Y",
+	isCheckRows: "Y",   //是否校验行数
+	minRow: "0",
+	maxRow:"10",
 	format:"L",
 	"StorageType":"L",
 
@@ -38,7 +41,7 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 				c += '<div class="input-list-wrap">';
 				c += '	<div class="input-list-otherinfo">';
 				c += '		<p><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '&nbsp;&nbsp;<div style="padding-top:5px;color:#0070c6" id="' + data.itemId + 'Size"></div></p>';
-				c += '		<p class="input-list-otherinfoEN">' + data.wzsm + '</p>';
+				//c += '		<p class="input-list-otherinfoEN">' + data.wzsm + '</p>';
 				c += '	</div>';
 				c += '	<div class="input-list-othertext">';
 				c += '		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea>';
@@ -65,10 +68,10 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			_fix += '<option value="' + reg + '"' + (data.preg == reg ? ' selected="selected"': "") + ">" + regObj["name"] + "</option>"
 		});
 		
-		e += '<div class="edit_item_warp">';
-        e += '  <span class="edit_item_label">描述：</span>';
-        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'wzsm\')" id="wzsm" value="' + data.wzsm + '"/>';
-        e += '</div>'; 
+//		e += '<div class="edit_item_warp">';
+//        e += '  <span class="edit_item_label">描述：</span>';
+//        e += '  <input type="text" class="medium" onchange="SurveyBuild.saveAttr(this,\'wzsm\')" id="wzsm" value="' + data.wzsm + '"/>';
+//        e += '</div>'; 
 		e += '<div class="edit_item_warp">';
 		e += '	<span class="edit_item_label" >Label位置：</span>';
 		e += '	<select class="edit_format" onchange="SurveyBuild.saveAttr(this,\'format\')">';
@@ -122,6 +125,19 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 		e += '		<span class="edit_item_label">最多：<a href="#" data-for-id="help_maxLen" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a></span>';
 		e += '		<input type="text" maxlength="11" class="medium maxLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxLen\')" value="' + data.maxLen + '" style="ime-mode: disabled;" />';
 		e += '	</div>';
+		//add by caoy 行数限制
+		e += '	<div class="edit_item_warp">';
+		e += '		<input class="mbIE" type="checkbox" onchange="SurveyBuild.saveAttr(this,\'isCheckRows\')"' + (data.isCheckRows == "Y" ? "checked='checked'": "") + 'id="is_CheckRows" class="edit_checkStrLen"> <label for="is_CheckRows">行数范围</label>';
+		e += '	</div>';
+		e += '	<div class="edit_item_warp">';
+		e += '		<span class="edit_item_label">最少：</span>';
+		e += '		<input type="text" maxlength="11" class="medium minRow" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'minRow\')" value="' + data.minRow + '" style="ime-mode: disabled;" />';
+		e += '	</div>';
+		e += '	<div class="edit_item_warp mb10">';
+		e += '		<span class="edit_item_label">最多：<a href="#" data-for-id="help_maxLen" onclick="SurveyBuild.showMsg(this,event)" class="big-link" data-reveal-id="myModal" data-animation="fade">(?)</a></span>';
+		e += '		<input type="text" maxlength="11" class="medium maxRow" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'maxRow\')" value="' + data.maxRow + '" style="ime-mode: disabled;" />';
+		e += '	</div>';
+		
 		e += '	<div class="edit_item_warp mb10" style="display:none">';
 		e += '		<span class="edit_item_label" >校验规则：</span>';
 		e += '		<select id="is_preg" style="width:200px;" onchange="SurveyBuild.saveAttr(this,\'preg\')">';
@@ -142,6 +158,14 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 		var $min = $("#question-edit .minLen");
 		var $max = $("#question-edit .maxLen");
 		var msg = "";
+		
+		//console.log("minRow:"+data.minRow);
+		//console.log("maxRow:"+data.maxRow);
+		//console.log("minLen:"+data.minLen);
+		//console.log("maxLen:"+data.maxLen);
+		//console.log("isCheckStrLen:"+data.isCheckStrLen);
+		//console.log("isCheckRows:"+data.isCheckRows);
+		
 		if (isNaN(data.minLen)){
 			SurveyBuild.fail($min, "请填写数字！");
 			return false;
@@ -150,6 +174,7 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			SurveyBuild.fail($max, "请填写数字！");
 			return false;
 		}
+		
 		if (data.isCheckStrLen == "Y"){
 			if (data.minLen == ""){
 				SurveyBuild.fail($min, "请填写最少值！");
@@ -161,15 +186,52 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			}
 			if (data.minLen && data.maxLen){
 				if (data.minLen <= data.maxLen){
+					//return true;
+				}else{
+					SurveyBuild.fail($max, "最大值不能小于最少值！");
+					return false;
+				}
+			}
+		}
+		
+		$min = $("#question-edit .minRow");
+		$max = $("#question-edit .maxRow");
+		//console.log($min);
+		//console.log($max);
+		if (isNaN(data.minRow)){
+			SurveyBuild.fail($min, "请填写数字！");
+			return false;
+		}
+		if (isNaN(data.maxRow)){
+			SurveyBuild.fail($max, "请填写数字！");
+			return false;
+		}
+		if (data.isCheckRows == "Y"){
+			 
+			if (data.minRow == ""){
+				//console.log("1111");
+				SurveyBuild.fail($min, "请填写最少值！");
+				return false;
+			}
+			if (data.maxRow == ""){
+				SurveyBuild.fail($max, "请填写最多值！");
+				return false;
+			}
+			if (data.minRow && data.maxRow){
+				//console.log("1111");
+				//console.log(data.minRow);
+				//console.log(data.maxRow);
+				//console.log(data.minRow <= data.maxRow);
+				if (data.minRow <= data.maxRow){
 					return true;
 				}else{
 					SurveyBuild.fail($max, "最大值不能小于最少值！");
 					return false;
 				}
 			}
-		} else {
-			return true;
-		}
+		} 
+		return true;
+		
 	},
 
 	_eventbind:function(data){
@@ -188,11 +250,13 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			//}
 			var len = $inputBox.val().length;
 			if (len != 0){
-				$("#" + data.itemId + "Size").text("已输入"+len+"字");
+				//$("#" + data.itemId + "Size").text("已输入"+len+"字");
+				$("#" + data.itemId + "Size").text(MsgSet["INPUTED"]+" "+len+" "+MsgSet["WORD"]);
 			}
 		});
 		
-		$inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+		//$inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+		$inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
 		$inputBox.functionValidator({
 			fun:function(val,elem){
 				
@@ -205,8 +269,10 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 					$.each(data["rules"],function(classname, classObj) {
 						if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
 							var _ruleClass = ValidationRules[classname];
+							//console.log(_ruleClass);
 							if (_ruleClass && _ruleClass._Validator) {
 								_result = _ruleClass._Validator(data["itemId"], classObj["messages"], data);
+								console.log(_result);
 								if(_result !== true){
 									return false;
 								}

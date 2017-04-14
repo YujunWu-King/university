@@ -1,9 +1,10 @@
 var urlBegin= TzUniversityContextPath + "/dispatcher";
 var clsTzXlColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzXlColuServiceImpl";
-var clsTzHyColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzHyColuServiceImpl";
+//var clsTzHyColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzHyColuServiceImpl";
+var clsTzMyActServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzMyActServiceImpl";
 var clsTzZxColuServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzZxColuServiceImpl";
 var claTzMyActServiceImpl = "com.tranzvision.gd.TZSitePageBundle.service.impl.TzMyActServiceImpl";
-/*
+/*TzMyActServiceImpl
 function checkHisApply(classId,languageCd){
 	  var confirmValue = false;
 	  var siteid=$("#siteid").val();
@@ -112,7 +113,7 @@ $(".autoload").each(function(index,element){
 
 	var appCls ="";
 	if(areaType =="HY"){
-		appCls = clsTzHyColuServiceImpl;
+		appCls = clsTzMyActServiceImpl;
 	}
 
 	if(areaType =="XL"){
@@ -353,7 +354,7 @@ var areaid=	getQueryString("areaId");
 	{
 		areaType="";
 	}
-	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzHyColuServiceImpl+'","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzMyActServiceImpl+'","page":"'+page+'","pagesize":"10","type":"'+type+'","qureyFrom":"'+qureyFrom+'","areaId":"'+areaid+'","areaZone":"'+areaZone+'","areaType":"'+areaType+'"}}';
 
 	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_MG_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuid+'","appCls":"'+clsTzHyColuServiceImpl+'","page":"'+page+'","type":"'+type+'","qureyFrom":"'+qureyFrom+'"}}';
      
@@ -1090,7 +1091,7 @@ function openRqQrcode(appIns){
 	      shade : [0.3 , '#000' , true],
 	      border : [3 , 0.3 , '#000', true],
 	      offset: ['20%',''],
-	      area: ['250px','270px'],
+	      area: ['215px','250px'],
 	  	 content: rqQrcodeUrl
 	 });
 	

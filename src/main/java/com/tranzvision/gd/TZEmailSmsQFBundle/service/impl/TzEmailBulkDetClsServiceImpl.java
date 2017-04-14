@@ -1162,7 +1162,7 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 				ArrayList<String> audPersonidArr = new ArrayList<>();
 				for(int i = 0; i < audList.size(); i++){
 					String audiendeId = (String)audList.get(i).get("TZ_AUDIENCE_ID");
-					String sql = "select a.OPRID,b.TZ_ZY_EMAIL,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT='Y'";
+					String sql = "select a.OPRID,b.TZ_ZY_EMAIL,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
 					List<Map<String, Object>> oprList = jdbcTemplate.queryForList(sql,new Object[]{audiendeId});
 					
 					if(oprList != null && oprList.size()>0){
@@ -1277,13 +1277,16 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 		psTzEmlTaskAetMapper.insert(psTzEmlTaskAet);
 
 		try {
-			BaseEngine tmpEngine = tZGDObject.createEngineProcess("ADMIN", "TZGD_QF_MS_AE");
+			String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+			String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
+			BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZGD_QF_MS_AE");
 			// 指定调度作业的相关参数
 			EngineParameters schdProcessParameters = new EngineParameters();
 
 			schdProcessParameters.setBatchServer("");
 			schdProcessParameters.setCycleExpression("");
-			schdProcessParameters.setLoginUserAccount("Admin");
+			schdProcessParameters.setLoginUserAccount(currentAccountId);
 			// 不是定时发送的;
 			if (!"Y".equals(strdsfsFlag)) {
 				schdProcessParameters.setPlanExcuteDateTime(new Date());

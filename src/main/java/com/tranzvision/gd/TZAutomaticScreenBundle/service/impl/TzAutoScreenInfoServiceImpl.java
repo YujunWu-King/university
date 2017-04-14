@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzFormLabelTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormLabelTKey;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCsKsTblMapper;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCsKsTbl;
@@ -45,6 +47,10 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 	@Autowired
 	private PsTzCsKsTblMapper psTzCsKsTblMapper;
 	
+	@Autowired
+	private PsTzFormLabelTMapper psTzFormLabelTMapper;
+	
+	
 	
 	@Override
 	public String tzQuery(String strParams, String[] errorMsg) {
@@ -60,8 +66,8 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 			String sql = "select TZ_KSH_CSJG,TZ_KSH_PSPM,ROW_LASTMANT_OPRID,ROW_LASTMANT_DTTM from PS_TZ_CS_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?;";
 			Map<String,Object> csKsMap = jdbcTemplate.queryForMap(sql, new Object[]{ classId,batchId,appId });
 			if(csKsMap != null){
-				String status = csKsMap.get("TZ_KSH_CSJG").toString();
-				String ranking = csKsMap.get("TZ_KSH_PSPM").toString();
+				String status = csKsMap.get("TZ_KSH_CSJG") == null ? "" : csKsMap.get("TZ_KSH_CSJG").toString();
+				String ranking = csKsMap.get("TZ_KSH_PSPM") == null ? "" : csKsMap.get("TZ_KSH_PSPM").toString();
 				String updateOpr = csKsMap.get("ROW_LASTMANT_OPRID") == null ? "" 
 						: csKsMap.get("ROW_LASTMANT_OPRID").toString();
 				
@@ -80,18 +86,43 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 					mapRet.put("updateDttm", dttmSimpleDateFormat.format(updateDate));
 				}
 			}
+			
 			//自动标签
+			int i = 0;
 			sql = "select TZ_ZDBQ_ID from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
-			List<String> ksbqList = jdbcTemplate.queryForList(sql, new Object[]{ classId,batchId,appId });
-			if(ksbqList != null){
-				mapRet.put("autoLabel", ksbqList);
+			List<Map<String,Object>> ksbqList = jdbcTemplate.queryForList(sql, new Object[]{ classId,batchId,appId });
+			String [] ksbqArr = new String[ksbqList.size()];
+			for(Map<String,Object> ksbqMap : ksbqList){
+				ksbqArr[i] = ksbqMap.get("TZ_ZDBQ_ID").toString();
+				i++;
 			}
+			mapRet.put("autoLabel", ksbqArr);
+			
+			
 			//负面清单
 			sql = "select TZ_FMQD_ID from PS_TZ_CS_KSFM_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
-			List<String> fmqdList = jdbcTemplate.queryForList(sql, new Object[]{ classId,batchId,appId });
-			if(fmqdList != null){
-				mapRet.put("negativeList", fmqdList);
+			List<Map<String,Object>> fmqdList = jdbcTemplate.queryForList(sql, new Object[]{ classId,batchId,appId });
+			String [] fmbqArr = new String[fmqdList.size()];
+			i = 0;
+			for(Map<String,Object> fmbqMap : fmqdList){
+				fmbqArr[i] = fmbqMap.get("TZ_FMQD_ID").toString();
+				i++;
 			}
+			mapRet.put("negativeList", fmbqArr);
+			
+			
+			//手工标签
+			sql = "select TZ_LABEL_ID from PS_TZ_FORM_LABEL_T where TZ_APP_INS_ID=?";
+			List<Map<String,Object>> labelList = jdbcTemplate.queryForList(sql, new Object[]{ appId });
+			String [] labelArr = new String[labelList.size()];
+			i = 0;
+			for(Map<String,Object> labelMap: labelList){
+				if(labelMap.get("TZ_LABEL_ID") != null){
+					labelArr[i] = labelMap.get("TZ_LABEL_ID").toString();
+					i++;
+				}
+			}
+			mapRet.put("manualLabel", labelArr);
 			
 		}catch(Exception e){
 			e.printStackTrace();
@@ -168,6 +199,7 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
@@ -190,7 +222,9 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 				Long appId = Long.valueOf(jacksonUtil.getString("appId"));
 				
 				String status = jacksonUtil.getString("status");
-				String manualLabel = jacksonUtil.getString("manualLabel");
+				//String manualLabel = jacksonUtil.getString("manualLabel");
+				List<String> manualLabelList = (List<String>) jacksonUtil.getList("manualLabel");
+				
 				
 				PsTzCsKsTblKey psTzCsKsTblKey = new PsTzCsKsTblKey();
 				psTzCsKsTblKey.setTzClassId(classId);
@@ -213,6 +247,17 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 					formMap.put("updateOpr", oprid);
 					
 					mapRet.replace("formData", formMap);
+				}
+				
+				
+				String delSql = "delete from PS_TZ_FORM_LABEL_T where TZ_APP_INS_ID=?";
+				jdbcTemplate.update(delSql, new Object[]{ appId });
+				for(String label : manualLabelList){
+					PsTzFormLabelTKey psTzFormLabelTKey = new PsTzFormLabelTKey();
+					psTzFormLabelTKey.setTzAppInsId(appId);
+					psTzFormLabelTKey.setTzLabelId(label);
+					
+					psTzFormLabelTMapper.insert(psTzFormLabelTKey);
 				}
 			}
 		} catch (Exception e) {

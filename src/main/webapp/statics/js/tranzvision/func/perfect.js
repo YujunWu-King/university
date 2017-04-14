@@ -240,6 +240,8 @@ function submitEnroll() {
 
 
 
+
+
 function BindEnter(obj)
 {
 	if(obj.keyCode == 13)        
@@ -1175,3 +1177,33 @@ function len(str){
 	}
 	return sum;
 }
+/*完善信息页面**福默认值**/
+var mperjsonValue;
+$(document).ready(function(){
+		//加载页面字段
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"sen":"6","isMobile":"Y","userName":"' + userName + '"}}';
+	$.ajax({
+		type:"post",
+		data:{
+			tzParams:tzParams
+		},
+		dataType:"json",
+		async:false,
+		url: TzUniversityContextPath + "/dispatcher",
+		success:function(data){
+		mperjsonValue=data.comContent;
+		
+		
+		$("#TZ_SCH_CNAME_Country").val(mperjsonValue.strCounttry);
+		$("#TZ_SCH_CNAME_Country").css("color","#333");
+		$("#TZ_SCH_CNAME").val(mperjsonValue.strschoolName);
+		$("#TZ_SCH_CNAME").css("color","#333");
+		$("#TZ_LEN_PROID").val(mperjsonValue.strPrivence);
+		$("#TZ_LEN_PROID").css("color","#333");
+		$("#TZ_COMPANY_NAME").val(mperjsonValue.strCompanName);
+		$("#TZ_COMP_INDUSTRY").val(mperjsonValue.strIndustry);
+		
+		
+		}
+	})
+})

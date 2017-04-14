@@ -1,16 +1,16 @@
-<div class="bg">
+<div class="bg" id="before">
 	<!-- 头部 -->
 	<div class="topbar">
-		账户管理 <a href="#"><i></i></a>
+		账户管理 <a href="javascript:void(0);" onclick="history.back(-1);"><i></i></a>
 	</div>
-	<div class="Tab_school">
+	 <div class="Tab_school"> 
 		<div class="tit_tab">
 			<li class="school_on">修改个人信息<img class="school_t"
 				src="%bind(:1)/statics/css/website/m/images/on.png"></li>
 			<li>修改密码<img class="school_t "
 				src="%bind(:1)/statics/css/website/m/images/on.png"></li>
 		</div>
-		<div class="tabN_school">
+		 <div class="tabN_school">
 			<div class="schooled">
 				<div class="account">
 					<div class="register_body">
@@ -46,27 +46,32 @@
 					<div class="register_body">
 						<p>出生日期*</p>
 						<div class="overhidden">
-							<input id="BIRTHDATE" name="BIRTHDATE" type="text" name=""
-								placeholder="YYYY-MM-DD">
+							<input id="BIRTHDATE" name="BIRTHDATE" type="text" name="" 
+							placeholder="YYYY-MM-DD"  readonly="readonly">
+								
 						</div>
 					</div>
 					<div class="register_body">
 						<p>本科院校*</p>
 						<div class="overhidden" style="border-bottom: 1px solid #ddd;">
-							<input type="hidden" id="TZ_SCH_COUNTRY" name="TZ_SCH_COUNTRY" />
+							<input type="hidden" id="TZ_SCH_COUNTRY" name="TZ_SCH_COUNTRY" /> -->
+							<!-- <a id="TZ_SCH_CNAME_Country" name="TZ_SCH_CNAME_Country"  placeholder="请选择所属国家"  style="width: 90%;float: left;border: none;height: 1rem;font-size: 0.54rem;color: #333;line-height: 1rem;margin-top: 2%;">
+							<span style="color:#999" id=TZ_SCH_CNAME_Country_1>请选择所属国家</span></a> -->
 							<input type="text" id="TZ_SCH_CNAME_Country"
-								name="TZ_SCH_CNAME_Country" placeholder="请选择所属国家">
+								name="TZ_SCH_CNAME_Country" placeholder="请选择所属国家" readonly="readonly"> 
 						</div>
 						<div class="overhidden">
+						   <!-- <a id="TZ_SCH_CNAME" name="TZ_SCH_CNAME" placeholder="请选择所属院校" style="width: 90%;float: left;border: none;height: 1rem;font-size: 0.54rem;color: #333;line-height: 1rem;margin-top: 2%;" >
+							<span style="color:#999" id=TZ_SCH_CNAME_1>请选择所属院校</span></a> -->
 							<input type="text" name="TZ_SCH_CNAME" placeholder="请选择所属院校"
-								id="TZ_SCH_CNAME">
+								id="TZ_SCH_CNAME" readonly="readonly"> 
 						</div>
 					</div>
 					<div class="register_body">
 						<p>本科毕业时间*</p>
 						<div class="overhidden">
 							<input type="text" name="" placeholder="YYYY-MM-DD"
-								id="TZ_COMMENT1" name="TZ_COMMENT1">
+								id="TZ_COMMENT1" name="TZ_COMMENT1" readonly="readonly">
 						</div>
 					</div>
 					<div class="register_body">
@@ -80,7 +85,7 @@
 						<p>本科专业类别*</p>
 						<div class="overhidden">
 							<select class="select_pros" id="TZ_COMMENT2" name="TZ_COMMENT2">
-								<option value="">请选择行业类别</option>
+								<option value="">请选择</option>
 								<option value="01">01-工科</option>
 								<option value="02">02-商科</option>
 								<option value="03">03-文科</option>
@@ -94,7 +99,7 @@
 						<div class="overhidden">
 							<select class="select_pros" id="TZ_HIGHEST_EDU"
 								name="TZ_HIGHEST_EDU">
-								<option value="">请选择行业类别</option>
+								<option value="">请选择</option>
 								<option value="D">博士</option>
 								<option value="S">硕士</option>
 								<option value="X">学士</option>
@@ -105,7 +110,7 @@
 						<p>最高学历毕业时间*</p>
 						<div class="overhidden">
 							<input type="text" name="" placeholder="YYYY-MM-DD"
-								id="TZ_COMMENT3" name="TZ_COMMENT3">
+								id="TZ_COMMENT3" name="TZ_COMMENT3" readonly="readonly">
 						</div>
 					</div>
 					<div class="register_body">
@@ -121,8 +126,10 @@
 					<div class="register_body">
 						<p>工作所在省市*</p>
 						<div class="overhidden">
-							<input type="text" name="" placeholder="工作所在省市" id="TZ_LEN_PROID"
-								name="TZ_LEN_PROID">
+						<!-- <a  id="TZ_LEN_PROID" name="TZ_LEN_PROID" placeholder="工作所在省市" style="width: 90%;float: left;border: none;height: 1rem;font-size: 0.54rem;color: #333;line-height: 1rem;margin-top: 2%;">
+							<span style="color:#999" id=TZ_LEN_PROID_1>工作所在省市</span></a> -->
+							 <input type="text" name="" placeholder="工作所在省市" id="TZ_LEN_PROID"
+								name="TZ_LEN_PROID" readonly="readonly">
 						</div>
 					</div>
 					<div class="register_body">
@@ -136,7 +143,7 @@
 						<p>公司性质*</p>
 						<div class="overhidden">
 							<select class="select_pros" id="TZ_COMMENT5" name="TZ_COMMENT5">
-								<option value="">请选择公司性质</option>
+								<option value="">请选择</option>
 								<option value="01">01-外资/合资企业</option>
 								<option value="02">02-自主创业</option>
 								<option value="03">03-国有企业</option>
@@ -312,8 +319,17 @@
 		</div>
 	</div>
 </div>
-<div id="datePlugin"></div>
-<div class="shade"></div>
-<div class="country_pop" id="searchCountry"></div>
+<!-- <div id="datePlugin"></div>>
+<div class="shade"></div> 
+
+<!-- <input type="hidden" id="ParamCon" name="ParamCon" /> -->
+<!-- <div class="country_pop" id="searchCountry"></div>
 <div class="school_pop" id="searchSchool"></div>
-<div class="country_pop" id="searchState"></div>
+<div class="country_pop" id="searchState"></div> -->
+<div class="viewport-adaptive" id="searchCountry"></div>
+<!-- <div class="country_pop" id="searchCountry"></div> -->
+	  <!-- 院校选择 -->
+ <div class="viewport-adaptive" id="searchSchool"></div>
+<!-- <div class="school_pop" id="searchSchool"></div> -->
+<div class="viewport-adaptive" id="searchState"></div>
+<!-- <div class="country_pop" id="searchState"></div> -->

@@ -1,0 +1,17 @@
+Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewJudgeModel',{
+    extend:'Ext.data.Model',
+    fields:[
+        {name:'classId'},
+        {name:'batchId'},
+        {name:'judgeOprid'},
+        {name:'judgeId'},
+        {name:'judgeName'},
+        {name:'judgeMobile'},
+        {name:'judgeEmail'},
+        {name:'judgeGroup'},
+        {name:'judgeGroupDesc'},
+        {name:'judgeExamineeNum'},
+        {name:'judgeStatus'},
+        {name:'judgeStatusDesc'}
+    ]
+});

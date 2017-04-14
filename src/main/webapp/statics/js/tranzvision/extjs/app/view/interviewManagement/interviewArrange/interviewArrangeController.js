@@ -39,107 +39,48 @@
 		form.setValues({classID:classID,batchID:batchID,startDate:batchStartDate,endDate:batchEndDate});
         win.show();
     },
-	//建议时间内自动安排考生
-	msJYSJAutoArrStus:function(btn){
-		//alert('--');
-		var msArrGrid = btn.up('grid');
-		var msArrGridAllRecs = msArrGrid.store.getRange();
-		var msArrGridModifiedRecs =  msArrGrid.store.getModifiedRecords();
-		var msArrGridRemovedRecs= msArrGrid.store.getRemovedRecords();
-		var msArrForm = msArrGrid.up('form');
-		var msArrFormRec = msArrForm.getForm().getFieldValues();
-		var msArrFormclassID = msArrFormRec["classID"];
-		var msArrFormbatchId = msArrFormRec["batchID"];
-
-		//alert(msArrGridAllRecs.length+"__"+msArrGridModifiedRecs.length+"__"+msArrGridRemovedRecs.length+"__"+msArrFormclassID+"__"+msArrFormbatchId);
-		if(msArrGridModifiedRecs.length>0 ||msArrGridRemovedRecs.length>0  ){
-			Ext.Msg.alert("提示","页面有尚未保存的数据，请先保存.");
-			return;
-		};
-		if(msArrGridAllRecs.length==0){
-			Ext.Msg.alert("提示","尚无面试安排计划，请先生成面试安排计划.");
-			return;
-		};
-		var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"queryCurBatIfArr","comParams":{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}}';
-		Ext.tzLoad(tzParams,function(responseData){
-			if(responseData['arrFlag']=='YES'){
-				Ext.MessageBox.confirm('确认', '当批次下已存在考生安排记录，是否清除？', function(btnId){
-					if(btnId == 'yes'){
-						tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"autoArrStu","comParams":{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'","clearFlag":"YES"}}';
-						Ext.tzLoad(tzParams,function(responseData){
-							if (responseData['arrsta']=='2'){
-								Ext.Msg.alert("提示",responseData['desc']);
-								return; 
-							}
-							if (responseData['arrsta']=='0'){
-								Ext.Msg.alert("提示",responseData['desc']);
-							}
-							var Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
-							msArrGrid.store.tzStoreParams = Params;
-							msArrGrid.store.reload();
-						});
-					}else{
-						tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"autoArrStu","comParams":{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'","clearFlag":"NO"}}';
-						Ext.tzLoad(tzParams,function(responseData){
-							if (responseData['arrsta']=='2'){
-								Ext.Msg.alert("提示",responseData['desc']);
-								return;
-							}
-							if (responseData['arrsta']=='0'){
-								Ext.Msg.alert("提示",responseData['desc']);
-							}
-							var Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
-							msArrGrid.store.tzStoreParams = Params;
-							msArrGrid.store.reload();
-						});
-					}
-				},this);
-			}else if(responseData['arrFlag']=='NO'){
-				tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"autoArrStu","comParams":{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'","clearFlag":"YES"}}';
-				Ext.tzLoad(tzParams,function(responseData){
-					if (responseData['arrsta']=='2'){
-						Ext.Msg.alert("提示",responseData['desc']);
-						return;
-					}
-					if (responseData['arrsta']=='0'){
-						Ext.Msg.alert("提示",responseData['desc']);
-					}
-					var Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
-					msArrGrid.store.tzStoreParams = Params;
-					msArrGrid.store.reload();
-				});
-			}
-		});
-	},
-	//弹出面试建议时间定义页面
-	ms_jytime: function(btn) {
-		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MS_JYSJ_STD"];
+    
+    //新增面试安排
+    addInterviewTime: function(btn){
+    	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MSJH_SET_STD"];
 		if( pageResSet == "" || pageResSet == undefined){
 			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
 			return;
 		}
 		var className = pageResSet["jsClassName"];
 		if(className == "" || className == undefined){
-			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MS_JYSJ_STD，请检查配置。');
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSJH_SET_STD，请检查配置。');
 			return;
 		}
-		var win = this.lookupReference('addClass');
+
+		var grid = btn.up('grid');
+		var msArrForm = btn.up('grid').up('form');
+		var msArrFormRec = msArrForm.getForm().getFieldValues();
+		var clearAllTimeArr = msArrFormRec["clearAllTimeArr"];
+		if("ALL"==clearAllTimeArr){
+			Ext.MessageBox.alert('提示', '页面有尚未保存的数据，请先保存.');
+			return;
+		}
+
+		var win = this.lookupReference('interviewArrangePlanSet');
         if (!win) {
 			Ext.syncRequire(className);
 			ViewClass = Ext.ClassManager.get(className);
             win = new ViewClass();
-			var form = win.child('form').getForm();
-			win.on('afterrender',function(panel){
-				var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_JYSJ_STD","OperateType":"QF","comParams":{}}';
-				Ext.tzLoad(tzParams,function(responseData){
-					var formData = responseData.msjysj;
-					form.setValues(formData);
-				});
-			});
             this.getView().add(win);
         }
+        win.actType = "A";
+        win.msArrGrid = grid;
+		var comSiteParams = this.getView().child("form").getForm().getValues();
+		var classID = comSiteParams["classID"];
+		var batchID = comSiteParams["batchID"];
+
+		var form = win.child("form").getForm();
+		form.reset();
+		form.setValues({classID:classID,batchID:batchID});
         win.show();
     },
+
 	//批量清除考生安排
 	ms_cleanAp: function(){
 	   //选中行
@@ -292,6 +233,8 @@
 				if(respData.result == "success"){
 					var audform = panel.down("form[reference=audienceForm]");
 	                audform.down('tagfield[name="audTag"]').setValue(respData.audIDs);
+	                
+	                panel.commitChanges(panel);
 				}
 			});
 			
@@ -503,9 +446,59 @@
 		//alert(grid.store.getAt(rowCount).data.classID);
 		//tagCellEditing.startEdit(r, 1);
 	},
+	
+	
+	editMsCalRow: function(grid, rowIndex, colIndex){
+		var msArrGridRowRecord = grid.store.getAt(rowIndex);
+		var classID = msArrGridRowRecord.get("classID");
+		var batchID = msArrGridRowRecord.get("batchID");
+		var msJxNo = msArrGridRowRecord.get("msJxNo");
+		
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MSJH_SET_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSJH_SET_STD，请检查配置。');
+			return;
+		}
+
+		var win = this.lookupReference('interviewArrangePlanSet');
+        if (!win) {
+			Ext.syncRequire(className);
+			ViewClass = Ext.ClassManager.get(className);
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+        win.actType = "U";
+        win.msArrGrid = grid;
+		var form = win.child("form").getForm();
+		form.reset();
+
+		var comParamsObj = {
+			ComID: 	"TZ_MS_ARR_MG_COM",
+			PageID:	"TZ_MSJH_SET_STD",
+			OperateType: "getMsPlanFormData",
+			comParams:{
+				classID: classID,
+				batchID: batchID,
+				msJxNo: msJxNo
+			}
+		}
+		var tzParams = Ext.JSON.encode(comParamsObj);
+		Ext.tzLoad(tzParams,function(respData){
+			form.setValues(respData);
+			win.commitChanges(win);
+		});
+        win.show();		
+	},
+	
+	
 	//删除
 	deleteMsCalRow:function(grid, rowIndex, colIndex){
-		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+		Ext.MessageBox.confirm('确认', '删除面试安排将同时删除对应预约考生，您确定要删除所选记录吗?', function(btnId){
 			if(btnId == 'yes'){
 				grid.store.removeAt(rowIndex);
 			}
@@ -856,12 +849,10 @@
 
 		var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"saveMsArrInfo","comParams":{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'","clearAllTimeArr":"'+clearAllTimeArr+'","formData":'+ Ext.JSON.encode(msArrFormRec) +','+comParams+'}}';
 		
-		console.log(tzParams);
-		
-		var formDataSet={classID:msArrFormclassID,batchID:msArrFormbatchId,clearAllTimeArr:""}
+		var formDataSet={classID:msArrFormclassID,batchID:msArrFormbatchId,clearAllTimeArr:""};
 		Ext.tzSubmit(tzParams,function(responseData){
-			console.log(responseData)
-			if(responseData.success=='success'){
+			//console.log(responseData)
+			if(responseData.result=='success'){
 				msArrForm.getForm().setValues(formDataSet);
 				Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
 				msArrGrid.store.tzStoreParams = Params;
@@ -1017,5 +1008,56 @@
 		if (cmp.floating) {
 			cmp.show();
 		}
+	},
+	
+	
+	//导出Excel
+	exportToExcel:function(btn){
+		var btnName = btn.name;
+		var msArrGrid = btn.findParentByType("grid");
+		var selList = msArrGrid.getSelectionModel().getSelection();
+		
+		if(btnName=='exportExcel' && selList.length<1) {
+			Ext.MessageBox.alert("提示", "您没有选中任何记录");
+			return;
+		};
+
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MS_ARR_EXP_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert("提示","您没有权限");
+			return;
+		}
+
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert("提示","未找到该功能页面对应的JS类，请检查配置。");
+			return;
+		}
+		
+		if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+		ViewClass = Ext.ClassManager.get(className);
+
+		var msArrFormRec = msArrGrid.up('form').getForm().getFieldValues();
+		var msArrFormclassID = msArrFormRec["classID"];
+		var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"getModalId","comParams":{"classID":"'+msArrFormclassID+'"}}';
+
+		Ext.tzLoadAsync(tzParams,function(responseData){
+			win = new ViewClass(responseData.modalId);
+			win.selList=selList;
+			
+			if(btnName=='downloadExcel'){
+	            var tabPanel = win.lookupReference("exportExcelTabPanel");
+	            tabPanel.setActiveTab(1);
+	            tabPanel.tabBar.items.items[0].hide();
+	        }
+			
+			var form = win.child("form").getForm();
+			form.reset();
+			win.show();
+		});
 	}
 });

@@ -1,0 +1,14 @@
+<div id='yqdList-nav' class='listNav'></div>
+<ul id='yqdList' class='liwithpic myYqdList'>
+%bind(:1)
+</ul>
+<script>
+$(function() {
+	$('.myYqdList').listnav({
+		noMatchText: '没有内容',
+		includeNums: false,
+		removeDisabled: true,
+		showCounts: false
+	});
+})
+</script>

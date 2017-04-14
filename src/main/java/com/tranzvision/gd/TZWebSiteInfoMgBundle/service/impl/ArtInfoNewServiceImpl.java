@@ -17,7 +17,13 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtAudienceTMapper;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtHdTblMapper;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxETMapper;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzArtAudienceTKey;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxET;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxT;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.dao.PsTzSiteiDefnTMapper;
 import com.tranzvision.gd.TZOrganizationSiteMgBundle.model.PsTzSiteiDefnTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
@@ -104,6 +110,13 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzArtAudienceTMapper PsTzArtAudienceTMapper;
+	@Autowired
+	private PsTzArtHdTblMapper psTzArtHdTblMapper;
+	@Autowired
+	private PsTzZxbmXxxTMapper psTzZxbmXxxTMapper;
+
+	@Autowired
+	private PsTzZxbmXxxETMapper psTzZxbmXxxETMapper;
 	
 	/* 查询表单信息 */
 	@Override
@@ -115,6 +128,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		Map<String, Object> map = new HashMap<>();
 		map.put("artId", "");
 		map.put("artTitle", "");
+		map.put("titleStyleView", "");
 		map.put("artShortTitle", "");
 		map.put("artSubHead", "");
 		map.put("artAbout", "");
@@ -169,6 +183,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 		map.put("siteId", "");
 		map.put("coluId", "");
 		map.put("colus", "");
+		map.put("coluType", "");
 		map.put("siteType", "");
 		map.put("staticPath", "");
 		map.put("saveImageAccessUrl", "");
@@ -216,7 +231,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 				// 获取机构对应的站点以及栏目的说明
 				String siteId = null;
-				String siteSQL = " SELECT TZ_SITEI_ID,TZ_COLU_ABOUT FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
+				String siteSQL = " SELECT TZ_SITEI_ID,TZ_COLU_ABOUT,TZ_COLU_TYPE FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?";
 				Map<String, Object> DataMap = jdbcTemplate.queryForMap(siteSQL, new Object[] { coluId });
 				if (DataMap != null) {
 					if (DataMap.containsKey("TZ_SITEI_ID")) {
@@ -237,6 +252,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					}
 					if (DataMap.containsKey("TZ_COLU_ABOUT") && DataMap.get("TZ_COLU_ABOUT")!=null) {
 						map.replace("coluAbout", DataMap.get("TZ_COLU_ABOUT").toString());
+					}
+					if (DataMap.containsKey("TZ_COLU_TYPE") && DataMap.get("TZ_COLU_TYPE")!=null) {
+						map.replace("coluType", DataMap.get("TZ_COLU_TYPE").toString());
 					}
 				} else {
 					errMsg[0] = "1";
@@ -486,6 +504,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 */
 				map.replace("artId", strArtId);
 				map.replace("artTitle", psTzArtRecTbl.getTzArtTitle());
+				map.replace("titleStyleView", psTzArtRecTbl.getTzArtTitleStyle());
 				map.replace("artShortTitle", psTzArtRecTbl.getTzArtShorttitle());
 				map.replace("artSubHead", psTzArtRecTbl.getTzSubhead());
 				map.replace("artAbout", psTzArtRecTbl.getTzAbout());
@@ -682,7 +701,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						} else {
 							artContent = (String) dataMap.get("contentInfo1");
 						}
-
+						
+						//文章标题样式;
+						String artTtileStyle = (String) dataMap.get("titleStyleView");
 						//活动听众表
 						if(dataMap.containsKey("AudList")&& dataMap.get("AudList")!=null && !dataMap.get("AudList").toString().equals("")){
 							ArrayList<String> strListenersId=new ArrayList<String>();
@@ -791,7 +812,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzLong3(tzlong3);
 						PsTzArtRecTbl.setTzDate1(yldt1);
 						PsTzArtRecTbl.setTzDate2(yldt2);
-						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
+						PsTzArtRecTbl.setTzArtTitleStyle(artTtileStyle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
 
 						// 增加内容编辑类型
@@ -938,6 +959,9 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			String strStaticName = "";
 			// 静态化名称自动编号
 			String strAutoStaticName = "";
+			
+			//String artFlag = "";
+			boolean actFlag = false;
 
 			for (num = 0; num < actData.length; num++) {
 				// 表单内容;
@@ -997,6 +1021,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 
 						// 标题;
 						String artTitle = (String) dataMap.get("artTitle");
+						
 						// 简短标题
 						String artShortTitle = (String) dataMap.get("artShortTitle");
 						// 副标题
@@ -1038,6 +1063,8 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						} else {
 							artContent = (String) dataMap.get("contentInfo1");
 						}
+						//文章标题样式;
+						String artTtileStyle = (String) dataMap.get("titleStyleView");
 						
 						//活动听众表
 						if(dataMap.containsKey("AudList")&& dataMap.get("AudList")!=null && !dataMap.get("AudList").toString().equals("")){
@@ -1176,7 +1203,7 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						PsTzArtRecTbl.setTzLong3(tzlong3);
 						PsTzArtRecTbl.setTzDate1(yldt1);
 						PsTzArtRecTbl.setTzDate2(yldt2);
-						PsTzArtRecTbl.setTzArtTitleStyle(artTitle);
+						PsTzArtRecTbl.setTzArtTitleStyle(artTtileStyle);
 						PsTzArtRecTbl.setTzArtConent(artContent);
 
 						PsTzArtRecTbl.setTzArtEdittype(editType);
@@ -1402,6 +1429,10 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			/* 获取站点类型 */
 			String sqlGetSiteType = "select TZ_SITEI_TYPE from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 			strSiteType = jdbcTemplate.queryForObject(sqlGetSiteType, new Object[] { this.instanceSiteId }, "String");
+			
+			/* 获取栏目类型 */
+			String sqlGetColuType = "SELECT TZ_COLU_TYPE FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID = ?";
+			String strColuType = jdbcTemplate.queryForObject(sqlGetColuType, new Object[] { this.instanceColuId }, "String");
 			
 			String dir = getSysHardCodeVal.getWebsiteEnrollPath();
 			String strFilePathdelete = dir; // 用于删除文件
@@ -1637,6 +1668,79 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 			returnJsonMap.replace("publishUrl", publishUrlAll);
 			returnJsonMap.replace("viewUrl", viewUrl);
 			// System.out.println("执行update方法");
+			//添加活动表;
+			if("D".equals(strColuType)){
+				
+				int actCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM PS_TZ_ART_HD_TBL "
+						+ " WHERE TZ_ART_ID = ?",
+						new Object[] { this.instanceArtId }, "Integer");
+				
+				if (actCount == 0) {
+					String strActName = jdbcTemplate.queryForObject("SELECT TZ_ART_TITLE FROM PS_TZ_ART_REC_TBL "
+							+ " WHERE TZ_ART_ID = ? LIMIT 0,1",
+							new Object[] { this.instanceArtId }, "String");
+					PsTzArtHdTbl psTzArtHdTbl = new PsTzArtHdTbl();
+					psTzArtHdTbl.setTzArtId(this.instanceArtId);
+					psTzArtHdTbl.setTzNactName(strActName);
+					psTzArtHdTblMapper.insert(psTzArtHdTbl);
+					
+					/*报名表预留信息项*/
+					/*姓名*/
+					PsTzZxbmXxxT psTzZxbmXxxT;
+					psTzZxbmXxxT = new PsTzZxbmXxxT();
+					psTzZxbmXxxT.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxT.setTzZxbmXxxId("TZ_CYR_NAME");
+					psTzZxbmXxxT.setTzPxXh(1);
+					psTzZxbmXxxT.setTzZxbmXxxName("姓名");
+					psTzZxbmXxxT.setTzZxbmXxxBt("Y");
+					psTzZxbmXxxT.setTzZxbmXxxZsxs("1");
+					psTzZxbmXxxTMapper.insert(psTzZxbmXxxT);
+					
+					PsTzZxbmXxxET psTzZxbmXxxET;
+					psTzZxbmXxxET = new PsTzZxbmXxxET();
+					psTzZxbmXxxET.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxET.setTzZxbmXxxId("TZ_CYR_NAME");
+					psTzZxbmXxxET.setLanguageCd("ENG");
+					psTzZxbmXxxET.setTzZxbmXxxName("Name");
+					psTzZxbmXxxETMapper.insert(psTzZxbmXxxET);
+					
+					/*手机*/
+					psTzZxbmXxxT = new PsTzZxbmXxxT();
+					psTzZxbmXxxT.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxT.setTzZxbmXxxId("TZ_ZY_SJ");
+					psTzZxbmXxxT.setTzPxXh(2);
+					psTzZxbmXxxT.setTzZxbmXxxName("手机");
+					psTzZxbmXxxT.setTzZxbmXxxBt("Y");
+					psTzZxbmXxxT.setTzZxbmXxxZsxs("1");
+					psTzZxbmXxxTMapper.insert(psTzZxbmXxxT);
+					
+					psTzZxbmXxxET = new PsTzZxbmXxxET();
+					psTzZxbmXxxET.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxET.setTzZxbmXxxId("TZ_ZY_SJ");
+					psTzZxbmXxxET.setLanguageCd("ENG");
+					psTzZxbmXxxET.setTzZxbmXxxName("Phone");
+					psTzZxbmXxxETMapper.insert(psTzZxbmXxxET);
+					
+					/*邮箱*/
+					psTzZxbmXxxT = new PsTzZxbmXxxT();
+					psTzZxbmXxxT.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxT.setTzZxbmXxxId("TZ_ZY_EMAIL");
+					psTzZxbmXxxT.setTzPxXh(3);
+					psTzZxbmXxxT.setTzZxbmXxxName("邮箱");
+					psTzZxbmXxxT.setTzZxbmXxxBt("Y");
+					psTzZxbmXxxT.setTzZxbmXxxZsxs("1");
+					psTzZxbmXxxTMapper.insert(psTzZxbmXxxT);
+					
+					psTzZxbmXxxET = new PsTzZxbmXxxET();
+					psTzZxbmXxxET.setTzArtId(this.instanceArtId);
+					psTzZxbmXxxET.setTzZxbmXxxId("TZ_ZY_EMAIL");
+					psTzZxbmXxxET.setLanguageCd("ENG");
+					psTzZxbmXxxET.setTzZxbmXxxName("Email");
+					psTzZxbmXxxETMapper.insert(psTzZxbmXxxET);
+					
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";

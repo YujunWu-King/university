@@ -6,24 +6,23 @@ package com.tranzvision.gd.TZEventsBundle.service.impl;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
-import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cms.CmsUtils;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -57,6 +56,15 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private MySqlLockService mySqlLockService;
+	
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
+	
+	@Autowired
+	private CreateTaskServiceImpl createTaskServiceImpl;
+	
+	@Autowired
+	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
 
 	/**
 	 * 显示在线报名条
@@ -376,7 +384,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 			// 报名状态为1-已报名，4-等候
 			if ("1".equals(strRegStatus) || "4".equals(strRegStatus)) {
-
+				
 				PsTzNaudlistT psTzNaudlistT = new PsTzNaudlistT();
 				psTzNaudlistT.setTzArtId(strAPPLYID);
 				psTzNaudlistT.setTzHdBmrId(strBMRID);
@@ -384,10 +392,39 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 				int updNum = psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
 				if (updNum > 0) {
 
+					String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+					String orgId = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+					
+					//撤销报名成功站内信
+					try{
+						sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+						String name = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "String");
+						//报名成功成功站内信模板
+						String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CX_ZNX_TMP");
+						//创建邮件任务实例
+						String taskId = createTaskServiceImpl.createTaskIns(orgId, znxModel, "ZNX", "A");
+						// 创建邮件发送听众
+						String crtAudi = createTaskServiceImpl.createAudience(taskId,orgId,"活动撤销报名成功站内信通知", "JSRW");
+						//添加听众成员
+						boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", "", oprid, "", strAPPLYID, "");
+						if(bl){
+							sendSmsOrMalServiceImpl.send(taskId, "");
+						}
+					}catch(NullPointerException nullEx){
+						//没有配置邮件模板
+						nullEx.printStackTrace();
+					}
+					
 					// 报名最早的状态为“等待”的报名人
-					sql = "select TZ_HD_BMR_ID from PS_TZ_NAUDLIST_T where TZ_ART_ID=? and TZ_NREG_STAT='4' order by TZ_REG_TIME limit 0,1";
-					String waitBmr = sqlQuery.queryForObject(sql, new Object[] { strAPPLYID }, "String");
-
+					sql = "select TZ_HD_BMR_ID,OPRID from PS_TZ_NAUDLIST_T where TZ_ART_ID=? and TZ_NREG_STAT='4' order by TZ_REG_TIME limit 0,1";
+					String waitBmr = "";
+					String waitOprid = "";
+					Map<String,Object> bmrInfoMap = sqlQuery.queryForMap(sql, new Object[]{ strAPPLYID });
+					if(bmrInfoMap != null){
+						waitBmr = bmrInfoMap.get("TZ_HD_BMR_ID").toString();
+						waitOprid = bmrInfoMap.get("OPRID").toString();
+					}
+					
 					if (null != waitBmr && !"".equals(waitBmr) && "1".equals(strRegStatus)) {
 						// 若撤销报名的人是已报名状态，则撤销成功后自动进补
 						// 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数
@@ -408,12 +445,34 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 							psTzNaudlistT.setTzHdBmrId(waitBmr);
 							psTzNaudlistT.setTzNregStat("1");
 							psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
+							
+							if(waitOprid != null && !"".equals(waitOprid)){
+								//活动报名成功站内信
+								try{
+									sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+									String name = sqlQuery.queryForObject(sql, new Object[]{ waitOprid }, "String");
+									//报名成功成功站内信模板
+									String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CG_ZNX_TMP");
+									//创建邮件任务实例
+									String taskId = createTaskServiceImpl.createTaskIns(orgId, znxModel, "ZNX", "A");
+									// 创建邮件发送听众
+									String crtAudi = createTaskServiceImpl.createAudience(taskId,orgId,"活动报名成功站内信通知", "JSRW");
+									//添加听众成员
+									boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", "", waitOprid, "", strAPPLYID, "");
+									if(bl){
+										sendSmsOrMalServiceImpl.send(taskId, "");
+									}
+								}catch(NullPointerException nullEx){
+									//没有配置邮件模板
+									nullEx.printStackTrace();
+								}
+							}
 						}
 
 						// 解锁
 						mySqlLockService.unlockRow(sqlQuery);
 					}
-					errorCode = "1";
+					errorCode = "0";
 					errorMsg = cancelSuccess;
 				} else {
 					errorCode = "1";

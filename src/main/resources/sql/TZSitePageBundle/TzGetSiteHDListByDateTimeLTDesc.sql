@@ -10,17 +10,16 @@ select
 	PT4.TZ_APPE_DT,
 	concat(PT4.TZ_APPE_DT,' ', PT4.TZ_APPE_TM) as TZ_APPE_TM
 from 
-	PS_TZ_SITEI_COLU_T PT1, 
-	PS_TZ_LM_NR_GL_T PT2, 
+	(SELECT A.* FROM  PS_TZ_LM_NR_GL_T A,( 
+        select TZ_SITE_ID,TZ_ART_ID,max(TZ_COLU_ID) TZ_COLU_ID from PS_TZ_LM_NR_GL_T where TZ_ART_PUB_STATE='Y' group by TZ_SITE_ID,TZ_ART_ID) B
+        WHERE A.TZ_SITE_ID=B.TZ_SITE_ID AND A.TZ_COLU_ID=B.TZ_COLU_ID AND A.TZ_ART_ID=B.TZ_ART_ID) PT2, 
 	PS_TZ_ART_REC_TBL PT3, 
 	PS_TZ_ART_HD_TBL PT4  
 where     
-	PT1.TZ_SITEI_ID = PT2.TZ_SITE_ID 
-	and PT1.TZ_COLU_ID = PT2.TZ_COLU_ID 
-	and PT2.TZ_ART_ID = PT3.TZ_ART_ID 
+	PT2.TZ_ART_ID = PT3.TZ_ART_ID 
 	and PT3.TZ_ART_ID = PT4.TZ_ART_ID  
 	and PT2.TZ_ART_PUB_STATE = 'Y' 
-	and PT1.TZ_SITEI_ID = ? 
+	and PT2.TZ_SITE_ID = ? 
 	and concat(PT4.TZ_END_DT,' ', PT4.TZ_END_TM) < ?
 	and (
     	PT3.TZ_PROJECT_LIMIT<>'B' OR 
@@ -29,5 +28,6 @@ where
         ) WHERE AUD.TZ_ART_ID=PT4.TZ_ART_ID))
 order by 
 	PT2.TZ_MAX_ZD_SEQ desc, 
+	PT2.TZ_ART_SEQ desc,
 	PT4.TZ_START_DT desc 
 limit ?,?

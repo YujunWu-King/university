@@ -58,26 +58,37 @@
     },
     //新增窗口确定
     ensurePlatform:function(btn){
-        var win=btn.findParentByType("window");
+    	this.savePlatform(btn);
+    	this.closeForm(btn);
+    },
+    /*关闭新增窗口*/
+    closeForm:function(btn){
+    	var win=btn.findParentByType("window");
         var grid=win.findParentByType("grid");
         var store=grid.getStore();
         store.reload();
         win.close();
     },
-    /*关闭新增窗口*/
-    closeForm:function(btn){
-        var win=btn.findParentByType("window");
-        win.close();
+    deleteOnePlatform:function(view, rowIndex){
+        Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+            if(btnId == 'yes'){
+                var store = view.findParentByType("grid").store;
+                store.removeAt(rowIndex);
+            }
+        },this);
     },
     //删除账户,从界面中删除，必须保存才能从数据库中删除
-    deletePlatform:function(btn){
+    deletePlatform:function(btn,rowIndex){
         //选中行
         var selList =  btn.findParentByType("grid").getSelectionModel().getSelection();
         //选中行长度
         var checkLen = selList.length;
         if(checkLen == 0){
-            Ext.Msg.alert("提示","请选择要删除的记录");
-            return;
+        	selList=btn.getSelectionModel().getSelected();
+            if(selList.length==0){
+            	 Ext.Msg.alert("提示","请选择要删除的记录");
+                 return;
+            }
         }else{
             Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
                 if(btnId == 'yes'){
@@ -99,12 +110,16 @@
         var removeJson = "";
         var removeRecs = store.getRemovedRecords();
         for(var i=0;i<removeRecs.length;i++){
+        	console.log("account del:")
+        	console.dir(removeRecs[i]);
             if(removeJson == ""){
-            	alert(removeRecs[i].data);
+            	
                 removeJson = Ext.JSON.encode(removeRecs[i].data);
             }else{
                 removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
             }
+            console.log("here");
+            console.log("removeJson:"+removeJson);
         }
         if(removeJson != ""){
             comParams = '"delete":[' + removeJson + "]";
@@ -115,7 +130,7 @@
         var tzParams = '{"ComID":"TZ_ZFPTGL_COM","PageID":"TZ_ZFPTGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
         Ext.tzSubmit(tzParams,function(){
             store.reload();
-        },"",true,this);
+        },"保存成功",true,this);
     },
   //编辑支付平台
     editPlatform:function(obj){

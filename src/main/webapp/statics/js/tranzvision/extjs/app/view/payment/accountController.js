@@ -71,40 +71,44 @@
     },
     saveAccount:function(btn){
     	//alert("执行增加支付账户保存！");
+    	var store=btn.findParentByType("grid").getStore();
     	var win = btn.findParentByType("window");
         var form=win.down("form").getForm();
         if(!form.isValid() ){
             return false;
         }
+    	//如果存在相同的 accountId给提示
+        var flag=false;
+    	store.each(function(record,index){
+    		//console.log("index:"+index);
+    		//console.dir(record);
+    		console.log(record.get("accountId"));
+    		if(form.findField("accountId").getValue()==record.get("accountId")){
+    			 Ext.MessageBox.alert('提示', '账户ID重复，请重新输入');
+    			 flag=true;
+    			 return false;
+    		}
+    	})
+    	if(flag){
+    		return null;
+    	}
         var formParams = form.getValues();
         var tzParams = '{"ComID":"TZ_ZFZHGL_COM","PageID":"TZ_ZFZHGL_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
         Ext.tzSubmit(tzParams,function(){
             
            // form.setValues(response.formData);
         	//增加完毕数据 父窗体grid数据重新加载
-        	//alert("父窗体："+win.findParentByType("grid"));
-			if(win.parentGridStore!=null&&win.parentGridStore!=""){
-				//win.findParentByType("grid").getStore().reload();
-			}
+        	store.reload();
         },"",true,this);
     },
     //编辑支付账户
-    editAccount:function(obj){
+    editAccount:function(btn,rowIndex){
     	//alert("执行编辑支付账户！");
     	//拿到当前编辑按钮 直属父类grid
-    	var grid=obj.findParentByType("grid");
-		//获取当前选中行
-    	var selList = grid.getSelectionModel().getSelection();
-    	
-    	var checkLen = selList.length;
-	    if(checkLen == 0){
-			Ext.Msg.alert("提示","请选择一条要修改的记录");   
-			return;
-	    }else if(checkLen >1){
-		   Ext.Msg.alert("提示","只能选择一条要修改的记录");   
-		   return;
-	    }
-		var accountId= selList[0].get("accountId");
+    	var grid=btn.findParentByType("grid");
+		//获取当前选中行,单行选中
+    	var row = btn.findParentByType("grid").store.getAt(rowIndex);
+		var accountId= row.get("accountId");
 	   
 	    //取得进行编辑的窗体
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_ZFZHGL_COM"]["TZ_ZFZHGL_EDIT_STD"];
@@ -150,16 +154,24 @@
     },
     //新增窗口确定
     ensureAccount:function(btn){
-        var win=btn.findParentByType("window");
-        var grid=win.findParentByType("grid");
+    	this.saveAccount(btn);
+    	this.closeForm(btn);
+    },
+    /*关闭新增窗口*/
+    closeForm:function(btn){
+    	var win=btn.findParentByType("window");
+    	var grid=win.findParentByType("grid");
         var store=grid.getStore();
         store.reload();
         win.close();
     },
-    /*关闭新增窗口*/
-    closeForm:function(btn){
-        var win=btn.findParentByType("window");
-        win.close();
+    deleteOneAccount:function(view, rowIndex){
+        Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+            if(btnId == 'yes'){
+                var store = view.findParentByType("grid").store;
+                store.removeAt(rowIndex);
+            }
+        },this);
     },
     //删除账户,从界面中删除，必须保存才能从数据库中删除
     deleteAccount:function(btn){

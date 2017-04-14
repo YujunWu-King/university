@@ -488,6 +488,7 @@ $(document).ready(function() {
         if(_statusFlg=="error"){
         	return false;
         }
+        userInfoJson["siteId"] = TZ_GD_LOGIN_SITEI_ID; 
         userInfoJson["jgid"] = $("#jgid").val();
         userInfoJson["lang"] = $("#lang").val();
 

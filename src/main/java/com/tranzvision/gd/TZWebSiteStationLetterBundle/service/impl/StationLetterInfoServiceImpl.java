@@ -65,12 +65,14 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 			if(strOperate!=null&&!"".equals(strOperate)){
 				switch(strOperate){
 				case "next":
-					String nextSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID <? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
-					strMailId = jdbcTemplate.queryForObject(nextSQL, new Object[]{"TZ_14026",strMailId},"String");
+					//String nextSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID <? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
+					String nextSQL = "SELECT TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_RECID = ? AND TZ_ZNX_MSGID>? ORDER BY TZ_ZNX_MSGID ASC limit 1";
+					strMailId = jdbcTemplate.queryForObject(nextSQL, new Object[]{oprid,strMailId},"String");
 					break;
 				case "prev":
-					String prevSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID >? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
-					strMailId = jdbcTemplate.queryForObject(prevSQL, new Object[]{"TZ_14026",strMailId},"String");
+					//String prevSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID >? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
+					String prevSQL = "SELECT TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_RECID = ? AND TZ_ZNX_MSGID<? limit 1";
+					strMailId = jdbcTemplate.queryForObject(prevSQL, new Object[]{oprid,strMailId},"String");
 					break;
 				}
 			}
@@ -105,7 +107,7 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 			}
 			//站内信内容页面双语化
 			String znxContent = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "1",
-					language, "站内信内容", "站内信内容");
+					language, "站内信", "站内信");
 			String znxReturn = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "2",
 					language, "返回", "返回");
 			String znxPrev = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_ZNX_INFO_MESSAGE", "3",
@@ -136,11 +138,11 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 				jdbcTemplate.update(updateStatusSql,new Object[]{strMailId,oprid});
 			}
 			//当前站内信的下一条站内信ID;
-			String nextMailSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID <? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
+			String nextMailSQL = "SELECT TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_RECID = ? AND TZ_ZNX_MSGID>? ORDER BY TZ_ZNX_MSGID ASC limit 1";
 			String nextMailId ="";
 			nextMailId = jdbcTemplate.queryForObject(nextMailSQL, new Object[]{oprid,strMailId},"String");
 			//当前站内信的上一条站内信ID;
-			String prevMailSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID >? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
+			String prevMailSQL = "SELECT TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_RECID = ? AND TZ_ZNX_MSGID<? limit 1";
 			String prevMailId ="";
 			prevMailId = jdbcTemplate.queryForObject(prevMailSQL, new Object[]{oprid,strMailId},"String");
 			//站内信内容

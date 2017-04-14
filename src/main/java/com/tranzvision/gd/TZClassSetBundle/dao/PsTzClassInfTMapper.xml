@@ -29,6 +29,7 @@
     <result column="TZ_TT_BL" property="tzTtBl" jdbcType="REAL" />
     <result column="TZ_CS_KSBQZ_ID" property="tzCsKsbqzId" jdbcType="VARCHAR" />
     <result column="TZ_CS_FMBQZ_ID" property="tzCsFmbqzId" jdbcType="VARCHAR" />
+    <result column="TZ_RX_DT" property="tzRxDt" jdbcType="DATE" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT" extends="BaseResultMap" >
     <result column="TZ_CLASS_DESC" property="tzClassDesc" jdbcType="LONGVARCHAR" />
@@ -38,7 +39,7 @@
     TZ_APP_START_TM, TZ_APP_END_DT, TZ_APP_END_TM, TZ_IS_APP_OPEN, TZ_APP_MODAL_ID, TZ_IS_SUB_BATCH, 
     TZ_ZLPS_SCOR_MD_ID, TZ_MSCJ_SCOR_MD_ID, TZ_PS_APP_MODAL_ID, TZ_GUEST_APPLY, ROW_ADDED_DTTM, 
     ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_CS_SCOR_MD_ID, 
-    TZ_TT_BL, TZ_CS_KSBQZ_ID, TZ_CS_FMBQZ_ID
+    TZ_TT_BL, TZ_CS_KSBQZ_ID, TZ_CS_FMBQZ_ID, TZ_RX_DT
   </sql>
   <sql id="Blob_Column_List" >
     TZ_CLASS_DESC
@@ -65,7 +66,7 @@
       ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
       SYNCID, SYNCDTTM, TZ_CS_SCOR_MD_ID, 
       TZ_TT_BL, TZ_CS_KSBQZ_ID, TZ_CS_FMBQZ_ID, 
-      TZ_CLASS_DESC)
+      TZ_RX_DT, TZ_CLASS_DESC)
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzPrjId,jdbcType=VARCHAR}, 
       #{tzClassName,jdbcType=VARCHAR}, #{tzStartDt,jdbcType=DATE}, #{tzEndDt,jdbcType=DATE}, 
       #{tzAppStartDt,jdbcType=DATE}, #{tzAppStartTm,jdbcType=TIME}, #{tzAppEndDt,jdbcType=DATE}, 
@@ -75,7 +76,7 @@
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
       #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzCsScorMdId,jdbcType=VARCHAR}, 
       #{tzTtBl,jdbcType=REAL}, #{tzCsKsbqzId,jdbcType=VARCHAR}, #{tzCsFmbqzId,jdbcType=VARCHAR}, 
-      #{tzClassDesc,jdbcType=LONGVARCHAR})
+      #{tzRxDt,jdbcType=DATE}, #{tzClassDesc,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClassInfT" >
     insert into PS_TZ_CLASS_INF_T
@@ -160,6 +161,9 @@
       </if>
       <if test="tzCsFmbqzId != null" >
         TZ_CS_FMBQZ_ID,
+      </if>
+      <if test="tzRxDt != null" >
+        TZ_RX_DT,
       </if>
       <if test="tzClassDesc != null" >
         TZ_CLASS_DESC,
@@ -247,6 +251,9 @@
       <if test="tzCsFmbqzId != null" >
         #{tzCsFmbqzId,jdbcType=VARCHAR},
       </if>
+      <if test="tzRxDt != null" >
+        #{tzRxDt,jdbcType=DATE},
+      </if>
       <if test="tzClassDesc != null" >
         #{tzClassDesc,jdbcType=LONGVARCHAR},
       </if>
@@ -333,6 +340,9 @@
       <if test="tzCsFmbqzId != null" >
         TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR},
       </if>
+      <if test="tzRxDt != null" >
+        TZ_RX_DT = #{tzRxDt,jdbcType=DATE},
+      </if>
       <if test="tzClassDesc != null" >
         TZ_CLASS_DESC = #{tzClassDesc,jdbcType=LONGVARCHAR},
       </if>
@@ -367,6 +377,7 @@
       TZ_TT_BL = #{tzTtBl,jdbcType=REAL},
       TZ_CS_KSBQZ_ID = #{tzCsKsbqzId,jdbcType=VARCHAR},
       TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR},
+      TZ_RX_DT = #{tzRxDt,jdbcType=DATE},
       TZ_CLASS_DESC = #{tzClassDesc,jdbcType=LONGVARCHAR}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
   </update>
@@ -397,7 +408,8 @@
       TZ_CS_SCOR_MD_ID = #{tzCsScorMdId,jdbcType=VARCHAR},
       TZ_TT_BL = #{tzTtBl,jdbcType=REAL},
       TZ_CS_KSBQZ_ID = #{tzCsKsbqzId,jdbcType=VARCHAR},
-      TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR}
+      TZ_CS_FMBQZ_ID = #{tzCsFmbqzId,jdbcType=VARCHAR},
+      TZ_RX_DT = #{tzRxDt,jdbcType=DATE}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
   </update>
 </mapper>

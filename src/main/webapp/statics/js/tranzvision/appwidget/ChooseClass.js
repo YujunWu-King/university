@@ -31,7 +31,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 			"StorageType": "S",
 			"option": {},
 			"wzsm" : "",
-			"classname":"Select"
+			"classname":"SingleTextBox"
 		}
 	},
 	minLines:"1",
@@ -82,7 +82,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	            }
 	            
 	    	 e += '<div class="input-list">';
-	    	 e += '	<div class="input-list-info left"><span class="red">*</span>' + child.bmrClass.title + '</div>';
+	    	 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.bmrClass.title + '</div>';
 	    	 
 	    	 //console.log("wzsm:"+child.bmrClass.wzsm);
 	    	 //console.log("bmrClass:"+child.bmrClass.value);
@@ -91,7 +91,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	    	 if(SurveyBuild._readonly || $("#ClassId").length <= 0){
 	    		 e += '	<div class="input-list-text left">' + child.bmrClass.wzsm + '</div>';
 	    	 } else {
-	    		 e += '	<div class="input-list-text left" ><span id="'+data["itemId"]+child.bmrClass.itemId+'_SPAN">' + child.bmrClass.wzsm + '</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="'+data["itemId"]+child.bmrClass.itemId+'_Btn">'+MsgSet["CHAGE_CLASS"]+'</a></div>';
+	    		 e += '	<div class="input-list-text left" ><span id="'+data["itemId"]+child.bmrClass.itemId+'_SPAN">' + child.bmrClass.wzsm + '</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" id="'+data["itemId"]+child.bmrClass.itemId+'_Btnselect">'+MsgSet["CHAGE_CLASS"]+'</a></div>';
 	    	 }
 	    	 
 	    	 e += '	<div class="input-list-suffix left"></div>';
@@ -104,7 +104,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	                // 只读模式
 	        	 // child.bmrBatch.isRequire="Y";
 	        	 e += '<div class="input-list">';
-	        	 e += '	<div class="input-list-info left"><span class="red-star">' + (child.bmrBatch.isRequire == "Y" ? "*": "") + '</span>' + child.bmrBatch.title + '</div>';
+	        	 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire  == "Y" ? "*": "") + '</span>' + child.bmrBatch.title + '</div>';
 	        	 e += '  <div class="input-list-text left">' + child.bmrBatch.wzsm + '</div>';
 	        	 e += '  <div class="input-list-suffix left"></div>';
 	        	 e += '  <div class="clear"></div>';
@@ -140,13 +140,13 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	                	op+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
 	                }
 	                e += '<div class="input-list">';
-	                e += '	<div class="input-list-info left"><span class="red-star">' + (child.bmrBatch.isRequire == "Y" ? "*": "") + '</span>' + child.bmrBatch.title + '</div>';
+	                e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.bmrBatch.title + '</div>';
 	                e += '    <div class="input-list-text left input-edu-select">';
 	                e += '          <select name="' + child.bmrBatch.itemId + '" class="chosen-select" id="' + data["itemId"]+child.bmrBatch.itemId + '" style="width:100%;" title="' + child.bmrBatch.itemName + '">';
 	                e +=                    op;
 	                e += '          </select>';
 	                e += '    </div>';
-	                //e += '    <div class="input-list-suffix left">' + (child.bmrBatch.suffix != "" ? child.bmrBatch.suffix: "") + '<div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+	                e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
 	                e += '    <div class="clear"></div>';
 	                e += '</div>'; 
 	            } 
@@ -199,7 +199,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 		if (child == undefined) {
    		 child=data["children"];
    	 	}
-		var $selectBtn = $("#"+data["itemId"] +child.bmrClass.itemId+ "_Btn");
+		var $selectBtn = $("#"+data["itemId"] +child.bmrClass.itemId+ "_Btnselect");
 
 		var siteId=$("#siteId").val();
 		
@@ -248,10 +248,20 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
             }
         });
 		
-		if (data.isRequire == "Y"){
-			//$obj.formValidator({tipID:data["itemId"]+child.bmrBatch.itemId+'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"})			
-			 $obj.inputValidator({min:'1',onError: child.bmrBatch.itemName + MsgSet["REQUIRE"]});
-		}; 
+		
+		$obj.formValidator({tipID:(data["itemId"] +child.bmrBatch.itemId+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+		$obj.functionValidator({
+			fun:function(val,el){
+				if (data.isRequire == "Y"){
+					if ($("#BatchId").val().length>0) {
+						return 	true;
+					} else {
+						return MsgSet["REQUIRE"];
+					}
+				}
+			}	
+		});
+		
 	}
 	
 });

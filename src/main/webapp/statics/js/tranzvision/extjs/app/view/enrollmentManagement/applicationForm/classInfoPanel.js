@@ -1,6 +1,6 @@
 ﻿Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.classInfoPanel', {
     extend: 'Ext.panel.Panel',
-    xtype: 'classInfo',
+    xtype: 'auditClassInfo',
     controller: 'appFormClass',
     requires: [
         'Ext.data.*',
@@ -20,22 +20,27 @@
         }
     },
     bodyPadding:10,
-    constructor: function (obj){
-        this.orgColorSortStore=obj.orgColorSortStore;
-        this.initData=obj.initData;
-        this.stuGridColorSortFilterOptions=obj.stuGridColorSortFilterOptions;
-        this.classID=obj.classID;
+    constructor: function (cfg){
+        Ext.apply(this,cfg);
         this.callParent();
     },
     initComponent:function(){
         var me = this;
         var appFormStuStore = new KitchenSink.view.enrollmentManagement.applicationForm.stuStore();
 
+        var submitStateStore = me.initialData.submitStateStore,
+	        auditStateStore = me.initialData.auditStateStore,
+	        interviewResultStore = me.initialData.interviewResultStore
+	        orgColorSortStore = me.initialData.orgColorSortStore;
+    
+        /*过滤器Options数据*/
+        var colorSortFilterOptions=me.initialData.colorSortFilterOptions,
+	    	submitStateFilterOptions=me.initialData.submitStateFilterOptions,
+	    	auditStateFilterOptions=me.initialData.auditStateFilterOptions,
+	    	interviewResultFilterOptions=me.initialData.interviewResultFilterOptions;
+        
         /*初始颜色类别数据*/
-        var initData=me.initData;
-        /*grid类别过滤数据*/
-        var stuGridColorSortFilterOptions=me.stuGridColorSortFilterOptions;
-        var orgColorSortStore =  me.orgColorSortStore;
+        var initialColorSortData=me.initialData.initialColorSortData;
         var validColorSortStore =  new KitchenSink.view.common.store.comboxStore({
             recname:'TZ_COLOR_SORT_T',
             condition:{TZ_JG_ID:{
@@ -54,7 +59,7 @@
             fields:[
                 "TZ_COLOR_SORT_ID","TZ_COLOR_NAME","TZ_COLOR_CODE"
             ],
-            data:initData
+            data:initialColorSortData
         });
         Ext.apply(this,{
             items: [{
@@ -116,6 +121,11 @@
                     overflowHandler: 'Menu',
                     xtype:"toolbar",
                     items:[
+						{
+						    text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.query","查询"),
+						    iconCls:"query",
+						    handler:"queryStudents"
+						},'-',   
                         {
                             text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.package","将选中人员材料批量打包"),
                             iconCls:"zip",
@@ -134,31 +144,34 @@
                             glyph: 61,
                             menu:[  {
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportExcel","导出Excel"),
-                                iconCls:"excel",
+                                glyph:'xf1c3@FontAwesome',
                                 menu:[{
                                     text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportApplicantsInfo","导出选中人员信息到Excel"),
-                                    iconCls:"excel",
+                                    glyph:'xf1c3@FontAwesome',
                                     name:'exportExcel',
                                     handler:'exportExcelOrDownload'
                                 },
                                 {
                                         text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.downloadExcel","查看导出结果并下载"),
-                                        iconCls:"download",
+                                        glyph:'xf019@FontAwesome',
                                         name:'downloadExcel',
                                         handler:'exportExcelOrDownload'
                                  }]
                             },{
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.printApplicationForm","打印报名表"),
-                                iconCls:"print",
+                                glyph:'xf02f@FontAwesome',
                                 handler:'printAppForm'
                             },{
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.addHmdUser","加入黑名单"),
+                                glyph:'xf067@FontAwesome',
                                 handler:'addHmd'
                             },{
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.viewEmailSendHis","查看邮件发送历史"),
+                                glyph:'xf1da@FontAwesome',
                                 handler:'viewMailHistory'
                             },{
 								text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendEmailSelectedPerson","给选中人发送邮件"),
+								glyph:'xf1d8@FontAwesome',
 								handler:'sendEmlSelPers'
 							}]
                         }
@@ -223,12 +236,39 @@
                                     type: 'string'
                                 }
                             },{
+                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.interviewApplicationID","面试申请号"),
+                                dataIndex: 'interviewApplicationID',
+                                width:110,
+                                lockable   : false,
+                                filter: {
+                                    type: 'string'
+                                }
+                            },{
+                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.nationalID","证件号码"),
+                                dataIndex: 'nationalID',
+                                width:100,
+                                lockable   : false,
+                                filter: {
+                                    type: 'string'
+                                }
+                            },{
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.submitState","提交状态"),
                                 dataIndex: 'submitState',
                                 lockable   : false,
                                 width: 95,
                                 filter: {
-                                    type: 'list'
+                                    type: 'list',
+                                    options: submitStateFilterOptions
+                                },
+                                renderer:function(v){
+                                    if(v){
+                                        var index = submitStateStore.find('TValue',v,0,false,true,true);
+                                        if(index>-1){
+                                            return submitStateStore.getAt(index).get("TSDesc");
+                                        }
+                                        
+                                        return "";
+                                    }
                                 }
                             },{
                                 xtype:'datecolumn',
@@ -248,7 +288,18 @@
                                 lockable   : false,
                                 width: 95,
                                 filter: {
-                                    type: 'list'
+                                    type: 'list',
+                                    options: auditStateFilterOptions
+                                },
+                                renderer:function(v){
+                                    if(v){
+                                        var index = auditStateStore.find('TValue',v,0,false,true,true);
+                                        if(index>-1){
+                                            return auditStateStore.getAt(index).get("TSDesc");
+                                        }
+                                        
+                                        return "";
+                                    }
                                 }
                             },{
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.interviewResult","面试结果"),
@@ -256,7 +307,18 @@
                                 lockable   : false,
                                 width: 95,
                                 filter: {
-                                    type: 'list'
+                                    type: 'list',
+                                    options: interviewResultFilterOptions
+                                },
+                                renderer:function(v){
+                                    if(v){
+                                        var index = interviewResultStore.find('TValue',v,0,false,true,true);
+                                        if(index>-1){
+                                            return interviewResultStore.getAt(index).get("TSDesc");
+                                        }
+                                        
+                                        return "";
+                                    }
                                 }
                             },{
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.colorType","类别"),
@@ -265,7 +327,7 @@
                                 width: 140,
                                 filter: {
                                     type: 'list',
-                                    options: stuGridColorSortFilterOptions
+                                    options: colorSortFilterOptions
                                 },
                                 editor: {
                                     xtype: 'combo',
@@ -313,7 +375,7 @@
                                             combo.store.loadData(arrayData);
                                         },
                                         blur: function (combo,event, eOpts) {
-                                            combo.store.loadData(initData);
+                                            combo.store.loadData(initialColorSortData);
                                         }
                                     }
                                 },

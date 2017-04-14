@@ -125,7 +125,7 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] { { "ROW_ADDED_DTTM", "DESC" } };
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_ZNX_MSGID", "TZ_ZNX_SENDNAME","TZ_MSG_SUBJECT","ROW_ADDED_DTTM"};
+			String[] resultFldArray = { "TZ_ZNX_MSGID","TZ_ZNX_STATUS", "TZ_ZNX_SENDNAME","TZ_MSG_SUBJECT","ROW_ADDED_DTTM"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -137,9 +137,10 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("stationMailId", rowList[0]);
-					mapList.put("sendName", rowList[1]);
-					mapList.put("stationMailTitle", rowList[2]);
-					mapList.put("stationMailReceived", rowList[3]);
+					mapList.put("znxStatus", rowList[1]);
+					mapList.put("sendName", rowList[2]);
+					mapList.put("stationMailTitle", rowList[3]);
+					mapList.put("stationMailReceived", rowList[4]);
 					
 					listData.add(mapList);
 				}
@@ -160,9 +161,10 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 	
 	/* 删除站内信 */
 	@Override
-	public String tzDelete(String[] znxData, String[] errMsg) {
+	public String tzUpdate(String[] znxData, String[] errMsg) {
 		// 返回值;
 		String strRet = "{}";
+		String strStationMailId = "";
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		// 若参数为空，直接返回;
 		if (znxData == null || znxData.length == 0) {
@@ -170,18 +172,12 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 		}
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-
 			int num = 0;
 			for (num = 0; num < znxData.length; num++) {
-				String strForm = znxData[num];
-				// 将字符串转换成json;
-				jacksonUtil.json2Map(strForm);
-				// 组件ID;
-				
-				String strStationMailId = jacksonUtil.getString("stationMailId");
-				String comPageSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_REC_DELSTATUS = 'Y' WHERE TZ_ZNX_MSGID = ?";
-				jdbcTemplate.update(comPageSql,new Object[]{strStationMailId});		
-				
+				jacksonUtil.json2Map(znxData[num]);				
+				strStationMailId = jacksonUtil.getString("mailId");
+				String comPageSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_REC_DELSTATUS = 'Y' WHERE TZ_ZNX_MSGID = ? AND TZ_ZNX_RECID = ?";
+				jdbcTemplate.update(comPageSql,new Object[]{strStationMailId,oprid});		
 			}
 		} catch (Exception e) {
 			errMsg[0] = "1";

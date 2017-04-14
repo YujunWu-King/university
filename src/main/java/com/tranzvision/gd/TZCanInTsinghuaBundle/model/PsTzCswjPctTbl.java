@@ -1,47 +1,47 @@
 package com.tranzvision.gd.TZCanInTsinghuaBundle.model;
 
 public class PsTzCswjPctTbl extends PsTzCswjPctTblKey {
-    private Integer tzULimit;
+    private Float tzULimit;
 
-    private Integer tzLLimit;
+    private Float tzLLimit;
 
-    private Integer tzHistoryVal;
+    private Float tzHistoryVal;
 
-    private Integer tzCuryearVal;
+    private Float tzCuryearVal;
 
     private Integer tzOrder;
 
     private String tzXxxkxzMs;
 
-    public Integer getTzULimit() {
+    public Float getTzULimit() {
         return tzULimit;
     }
 
-    public void setTzULimit(Integer tzULimit) {
+    public void setTzULimit(Float tzULimit) {
         this.tzULimit = tzULimit;
     }
 
-    public Integer getTzLLimit() {
+    public Float getTzLLimit() {
         return tzLLimit;
     }
 
-    public void setTzLLimit(Integer tzLLimit) {
+    public void setTzLLimit(Float tzLLimit) {
         this.tzLLimit = tzLLimit;
     }
 
-    public Integer getTzHistoryVal() {
+    public Float getTzHistoryVal() {
         return tzHistoryVal;
     }
 
-    public void setTzHistoryVal(Integer tzHistoryVal) {
+    public void setTzHistoryVal(Float tzHistoryVal) {
         this.tzHistoryVal = tzHistoryVal;
     }
 
-    public Integer getTzCuryearVal() {
+    public Float getTzCuryearVal() {
         return tzCuryearVal;
     }
 
-    public void setTzCuryearVal(Integer tzCuryearVal) {
+    public void setTzCuryearVal(Float tzCuryearVal) {
         this.tzCuryearVal = tzCuryearVal;
     }
 

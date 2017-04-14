@@ -6,13 +6,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-		import org.springframework.stereotype.Service;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudDefnT;
 import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListT;
 import com.tranzvision.gd.TZAudMgBundle.model.PsTzAudListTKey;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 		import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 		
@@ -21,6 +25,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZComRegMgBundle.model.PsTzAqComzcTbl;
 import com.tranzvision.gd.TZComRegMgBundle.model.PsTzAqPagzcTbl;
 import com.tranzvision.gd.TZComRegMgBundle.model.PsTzAqPagzcTblKey;
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -46,6 +51,10 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 			private FliterForm fliterForm;
 			@Autowired
 			private GetSeqNum getSeqNum;
+			@Autowired
+			private TzLoginServiceImpl tzLoginServiceImpl;
+			@Autowired
+			private HttpServletRequest request;
 			
 			/* 查询听众管理列表 */
 			@Override
@@ -141,13 +150,13 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					//	PsTzAqPagzcTbl psTzAqPagzcTbl = psTzAqPagzcTblMapper.selectByPrimaryKey(psTzAqPagzcTblKey);
 						
 						returnJsonMap.put("audID", strAudID);
-						returnJsonMap.put("audName", strAudName);
-						returnJsonMap.put("audStat", strAudStat);
-						returnJsonMap.put("audType", strAudType);
-						returnJsonMap.put("audMS", strAudTips);
-						returnJsonMap.put("audSQL", strAudSql);
-						returnJsonMap.put("audLY", strAudLY);
-						
+						returnJsonMap.put("audName", psTzAudDefnT.getTzAudNam());
+						returnJsonMap.put("audStat", psTzAudDefnT.getTzAudStat());
+						returnJsonMap.put("audType", psTzAudDefnT.getTzAudType());
+						returnJsonMap.put("audMS", psTzAudDefnT.getTzAudMs());
+						returnJsonMap.put("audSQL", psTzAudDefnT.getTzAudSql());
+						returnJsonMap.put("audLY", psTzAudDefnT.getTzLxfsLy());
+				
 					} else {
 						errMsg[0] = "1";
 						errMsg[1] = "无法获取页面信息";
@@ -280,7 +289,11 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 							psTzAudDefnT.setTzAudSql(strSql);
 							psTzAudDefnT.setTzLxfsLy(strLY);
 							
-							
+							String updateOperid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+							psTzAudDefnT.setRowAddedDttm(new Date());
+							psTzAudDefnT.setRowAddedOprid(updateOperid);
+							psTzAudDefnT.setRowLastmantDttm(new Date());
+							psTzAudDefnT.setRowLastmantOprid(updateOperid);
 							
 							strRet=String.valueOf(strAudID);
 							
@@ -368,7 +381,15 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 							String comExistSql  = "SELECT 'Y' FROM PS_TZ_AUD_DEFN_T WHERE TZ_AUD_ID=? ";
 							String isExist = "";
 							isExist = jdbcTemplate.queryForObject(comExistSql, new Object[] { strAudId }, "String");
-
+							
+					/*		
+							String TESTSql  = "SELECT TZ_AUD_NAM FROM PS_TZ_AUD_DEFN_T WHERE TZ_AUD_STAT=2 ";
+						//	String TESTSqlCon = jdbcTemplate.queryForObject(TESTSql, new Object[] { strAudId }, "String");
+							List<String> TESTSqlCon2 =jdbcTemplate.queryForList(TESTSql, "String");
+						//	Map<String, Object> entry1=jdbcTemplate.queryForMap(TESTSql);    
+							System.out.println(TESTSqlCon2.get(2));
+						//	System.out.println(entry1);
+*/
 							if (!"Y".equals(isExist)) {
 								errMsg[0] = "1";
 								errMsg[1] = "ID为：" + strAudId + "的信息不存在。";
@@ -388,6 +409,13 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 							
 					//		PsTzAudListT PsTzAudListT=new PsTzAudListT();
 					//		PsTzAudListT.setTzDxzt(strDxID);
+							
+							String updateOperid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+							psTzAudDefnT.setRowAddedDttm(new Date());
+							psTzAudDefnT.setRowAddedOprid(updateOperid);
+							psTzAudDefnT.setRowLastmantDttm(new Date());
+							psTzAudDefnT.setRowLastmantOprid(updateOperid);
+							
 							
 							
 							int i = psTzAudDefnTMapper.updateByPrimaryKeySelective(psTzAudDefnT);
@@ -495,7 +523,13 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						String SaudSQL = jacksonUtil.getString("audSQL");
 						String SaudID = jacksonUtil.getString("audID");
 						
-						
+						System.out.println(SaudID);
+						String DeleteSql = "DELETE FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? and TZ_DXZT='A'";
+						int ensure=jdbcTemplate.update(DeleteSql,new Object[]{SaudID});
+						System.out.println("ensure"+ensure);
+					
+							
+									
 						
 						//执行;
 						String deleteSQL = SaudSQL;
@@ -509,7 +543,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						
 						List<Map<String, Object>> resultlist = null;
 						resultlist = jdbcTemplate.queryForList(SaudSQL);
-						System.out.println(resultlist);
+						System.out.println("resultlist:"+resultlist);
 						
 						
 		/*				List<Map<String, Object>> list;
@@ -519,11 +553,20 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 		*/				
 						for (int K = 0; K < resultlist.size(); K++) {
 							Map<String, Object> resultMap = resultlist.get(K);
-							System.out.println(StringUtils.strip(resultMap.values().toString(),"[]"));
+							System.out.println("resultMap.value:"+StringUtils.strip(resultMap.values().toString(),"[]"));
+							
 							
 							String InsertID=StringUtils.strip(resultMap.values().toString(),"[]");
-							String comPageSql = "insert into PS_TZ_AUD_LIST_T values(?,'ZCYH',?,'A',?)";
-							jdbcTemplate.update(comPageSql,new Object[]{SaudID,InsertID,InsertID});
+							
+
+							GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+							JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+							String Searchsql = "select TZ_RYLX from PS_TZ_AQ_YHXX_TBL where OPRID=?";
+							String YHLX = jdbcTemplate.queryForObject(Searchsql, String.class, new Object[] { InsertID });
+							
+							
+							String comPageSql = "insert into PS_TZ_AUD_LIST_T values(?,?,?,'A',?)";
+							jdbcTemplate.update(comPageSql,new Object[]{SaudID,YHLX,InsertID,InsertID});
 							
 							
 			/*				String[] rowList = new String[resultFldNum];

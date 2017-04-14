@@ -393,11 +393,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				c += '<div class="input-list-blank addNext">';
 				if(len<data.maxLines){
 					c += '<div class="input-list-suffix-blank right input-btn">'
-					c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_ONE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
+					c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
 					c += '</div>';
 				}else{
 					c += '<div class="input-list-suffix-blank right input-btn" style="padding-right:15px;">'
-					c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_ONE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
+					c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
 					c += '</div>';
 				}
 				c +='<div class="clear"></div>';
@@ -2005,7 +2005,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).blur();
 				}
 				if (rec_phone_no !="" && _yz=="") {
-					var _result = /^[\d-+]+$/.test(rec_phone_no);
+					var _result = /^1\d{10}$/.test(rec_phone_no);
 					if(!_result){
 						_yz="2";
 						_desc =   children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
@@ -2022,6 +2022,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 				
 				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
+				
+				//console.log("rec_sex:"+rec_sex);
 				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
 				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex==""){
 					_yz="1";
@@ -2167,11 +2169,28 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						
 						//区分发送给自己 还是发送给 推荐人
 						var sendFlag ="";
-						if ($(this).attr("id")=="sendEmail_"+(Number(num)-1)) {
+						
+						
+						var sssid = $(this).attr("id");
+						
+						var index = sssid.indexOf('sendEmail_');
+						if(index==0){
 							sendFlag= "Y";  //发送给推荐人
 						} else {
 							sendFlag= "N";  //发送给自己
 						}
+						//if ($(this).attr("id")=="sendEmail_"+(Number(num)-1)) {
+						//	sendFlag= "Y";  //发送给推荐人
+						//} else {
+						//	sendFlag= "N";  //发送给自己
+						//}
+						
+						//console.log($(this).attr("id"));
+						//console.log(sendFlag);
+						
+						//console.log($(this).attr("id"));
+						//console.log("rec_sexID:"+ data["itemId"] + children[m-1].recommend_15["itemId"]);
+						console.log("rec_sex:"+rec_sex);
 						
 						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 
@@ -2272,7 +2291,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
 				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
 				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
-				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex==""){
+				//console.log("rec_sex:"+rec_sex);
+				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex!=""){
 				}else{
 					rec_sex="";
 				}
@@ -2326,11 +2346,23 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				
 				//区分发送给自己 还是发送给 推荐人
 				var sendFlag ="";
-				if ($(this).attr("id")=="reSendEmail_"+(Number(num)-1)) {
+				var sssid = $(this).attr("id");
+				
+				var index = sssid.indexOf('reSendEmail_');
+				if(index==0){
 					sendFlag= "Y";  //发送给推荐人
 				} else {
 					sendFlag= "N";  //发送给自己
 				}
+				//if ($(this).attr("id")=="reSendEmail_"+(Number(num)-1)) {
+				//	sendFlag= "Y";  //发送给推荐人
+				//} else {
+				//	sendFlag= "N";  //发送给自己
+				//}
+				
+				//console.log($(this).attr("id"));
+				//console.log("rec_sexID:"+ data["itemId"] + children[m-1].recommend_15["itemId"]);
+				console.log("rec_sex:"+rec_sex);
 				
 				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 				
@@ -2408,7 +2440,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["REQUIRE"];
 				}
 				if (_yz=="" && rec_phone_no!="") {
-					var _result = /^[\d-+]+$/.test(rec_phone_no);
+					var _result = /^1\\d{10}$/.test(rec_phone_no);
 					if(!_result){
 						_yz="1";
 						_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
@@ -2841,26 +2873,25 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			var $tjr_by9 = $("#" + data.itemId + children[i - 1].recommend_22["itemId"]);
 			var $tjr_by10 = $("#" + data.itemId + children[i - 1].recommend_23["itemId"]);
 			
-			var cehckHtml=  function(val,elem,Regular){
+			var _checkHtml=  function(val,elem,Regular){
 				if (val == "") { //判断 是否为为空
-					return elem.itemName+MsgSet["REQUIRE"];
-					//return elem.itemName+MsgSet["REQUIRE"];
+					return elem.title+MsgSet["REQUIRE"];
 				}  else {
 					//正则表达式判断
-					if (Regular == "phone_area") {
+					if (Regular == 'phone_area') {
 						var _result = /^[\d-+]+$/.test(val);
 						if(!_result){
-							return elem.itemName+MsgSet["FORMAT_ERROR_MSG"];
+							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
 						}
-					} else if (egular == "phone_no") {
-						var _result = /^[\d-+]+$/.test(val);
+					} else if (Regular == 'phone_no') {
+						var _result = /^1\d{10}$/.test(val);
 						if(!_result){
-							return elem.itemName+MsgSet["FORMAT_ERROR_MSG"];
+							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
 						}
-					} else if (egular == "email") {
+					} else if (Regular == 'email') {
 						var std=/^([\w\-\.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
-						if (!std.test(_email)){
-							return elem.itemName+MsgSet["FORMAT_ERROR_MSG"];
+						if (!std.test(val)){
+							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
 						}
 					}
 				}	

@@ -224,8 +224,8 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
             var tzParams = this.getResSetInfoParams();
             var comView = this.getView();
             Ext.tzSubmit(tzParams,function(responseData){
-            	
-            	form.findField("zhjgID").setValue(responseData.zhjgID);
+            	form.setValues({zhjgID:responseData.zhjgID});
+            	//form.findField("zhjgID").setValues(responseData.zhjgID);
                 comView.actType = "update";
             },"",true,this);
         }
@@ -250,8 +250,9 @@ Ext.define('KitchenSink.view.zsorganizationManagement.ZsJgMagListController', {
         
     },
     closeResSets:function(btn){
+    	
         //关闭窗口
-        var comView = this.getView();
+        var comView = btn.findParentByType("zsbfjgMgInfo");
         comView.close();
     },
 

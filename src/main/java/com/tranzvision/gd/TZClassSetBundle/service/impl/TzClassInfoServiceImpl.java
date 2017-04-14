@@ -267,6 +267,11 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					str_fmqd_desc = sqlQuery.queryForObject(sql, new Object[] { orgid,str_fmqd_id }, "String");
 				}
 				/*20170118-end*/
+				String str_rx_dt = "";
+				if (psTzClassInfT.getTzRxDt() != null){
+					str_rx_dt = dateFormat.format(psTzClassInfT.getTzRxDt());
+				}
+				
 				String str_st_dt = "";
 				if (psTzClassInfT.getTzStartDt() != null) {
 					str_st_dt = dateFormat.format(psTzClassInfT.getTzStartDt());
@@ -302,6 +307,7 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 				mapJson.put("bj_name", str_bj_name);
 				mapJson.put("xm_id", str_xm_id);
 				mapJson.put("bm_kt", str_zxbm);
+				mapJson.put("rx_time", str_rx_dt);
 				mapJson.put("begin_time", str_st_dt);
 				mapJson.put("end_time", str_end_dt);
 				mapJson.put("beginBm_time", str_bmst_dt);
@@ -391,7 +397,13 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setTzJgId(tzJgId);
 					psTzClassInfT.setTzPrjId(jacksonUtil.getString("xm_id"));
 					psTzClassInfT.setTzClassName(str_bj_name);
-
+					
+					String rx_time = jacksonUtil.getString("rx_time");
+					if (null != rx_time && !"".equals(rx_time)){
+						Date tzRxDt = dateFormat.parse(rx_time);
+						psTzClassInfT.setTzRxDt(tzRxDt);
+					}
+					
 					String begin_time = jacksonUtil.getString("begin_time");
 					if (null != begin_time && !"".equals(begin_time)) {
 						Date tzStartDt = dateFormat.parse(begin_time);
@@ -621,7 +633,15 @@ public class TzClassInfoServiceImpl extends FrameworkImpl {
 					psTzClassInfT.setTzClassName(
 							mapData.get("bj_name") == null ? "" : String.valueOf(mapData.get("bj_name")));
 					psTzClassInfT.setTzPrjId(mapData.get("xm_id") == null ? "" : String.valueOf(mapData.get("xm_id")));
-
+					
+					String strRxDt = String.valueOf(mapData.get("rx_time"));
+					if (!"".equals(strRxDt) && strRxDt != null) {
+						Date tzRxDt = dateFormat.parse(strRxDt);
+						psTzClassInfT.setTzRxDt(tzRxDt);
+					}else{
+						psTzClassInfT.setTzRxDt(null);
+					}
+					
 					String strStartDt = String.valueOf(mapData.get("begin_time"));
 					if (!"".equals(strStartDt) && strStartDt != null) {
 						Date tzStartDt = dateFormat.parse(strStartDt);

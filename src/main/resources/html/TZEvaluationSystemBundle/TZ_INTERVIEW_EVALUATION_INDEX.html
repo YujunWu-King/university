@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit">
+<meta http-equiv="pragma" content="no-cache">  
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">  
+<meta http-equiv="expires" content="0">
+<title>清华大学经济管理学院MBA面试评审系统</title>
+<style>
+	html,body{height:100%;overflow:hidden}
+</style>
+<!--link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/evaluation/style.css" /-->
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/evaluation/default.css" />
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/kitchensink/resources/Sencha-Examples/style.css" />
+<script type="text/javascript">
+	var ContextPath = "%bind(:1)";
+	var OrgCode = "%bind(:2)";
+	var TimeOut = %bind(:3);
+</script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/extjs/bootstrap.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/extjs/ext-lang-zh_CN.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery-qtip/jquery.qtip.min.js"></script>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/jquery-qtip/jquery.qtip.min.css" />
+
+<!--简约样式-->
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/kitchensink/theme-simple/resources/KitchenSink-all.css"/>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-theme-simple/build/resources/ext-theme-simple-all.css"/>
+
+<script type="text/javascript" charset="UTF-8" src="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts-debug.js"></script>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts-all-debug.scss"/>
+
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/evaluation-detail.js" charset="utf-8"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/batch-list.js" charset="utf-8"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/main-evaluation.js" charset="utf-8"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/main.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+Ext.onReady(function(){
+
+	if(TimeOut===true){
+		Ext.Msg.alert('提示','当前会话已超时或者非法访问，请重新登录。',function(btn) {
+            if (btn === 'ok' || btn === 'cancel') {
+            	window.location.href = ContextPath+"/evaluation/interview/"+OrgCode.toLowerCase();
+            }
+        },this);
+	}else{		
+		var baseUrl = ContextPath+"/dispatcher?classid=interview&OperateType=EJSON";
+		var scoreUrl = ContextPath+"/dispatcher";
+		var urlObject = {
+				"baseUrl":baseUrl,
+				"getBatchListUrl":baseUrl+"&type=list",
+				"getBatchDataUrl":baseUrl+"&type=data",
+				"getNextApplicantUrl":baseUrl+"&type=next",
+				"submitApplicantDataUrl":baseUrl+"&type=submit",
+				"printStatisticsTableUrl":baseUrl+"&type=print",
+				"getAddDelOneKsDataUrl":baseUrl+"&type=applicant",
+				"checkPWAccStateURL":baseUrl+"&type=check",
+				"scoreUrl":scoreUrl
+		};
+		
+		initializeEvaluateSystem(urlObject);
+	}
+	/*var urlObject = {};
+						
+		urlObject['getBatchListUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_ReadPSPCList?languageCd=ZHS';
+		urlObject['getBatchDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_ReadPWMPData?languageCd=ZHS';
+		urlObject['getNextApplicantUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS';
+		urlObject['getApplicantDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_ReadKSHEvaluateData?languageCd=ZHS';
+		urlObject['submitApplicantDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS';
+		urlObject['printStatisticsTableUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_MSPRT.TZ_DYPFZB.FieldFormula.IScript_Printreport';
+		urlObject['getAddDelOneKsDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_SearchKSHData?languageCd=ZHS';
+		urlObject['checkPWAccStateURL'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_CheckPWState?languageCd=ZHS';
+		initializeEvaluateSystem(urlObject);
+	*/
+})
+$(function(){
+	$("#tz_evaluation_main").height(Ext.getBody().getHeight()-58-37);
+	$("#tz_msps_container").width(Ext.getBody().getWidth()*3);
+});
+</script>
+</head>
+<body style="background:#eee"><div id="all" style="height:100%">
+  
+  <!-- content start -->
+  <div class="main" style="height:100%">
+  	<div class="top_main">
+           <ul>
+           	<li class="fa fa-user">&nbsp;欢迎%bind(:4)登录清华经管学院MBA面试评审系统</li>
+           	<li style="float:right;">
+           		<a class="fa fa-home" style="margin-right:5px;color:white;" href="javascript:topMenuHomePage()">&nbsp;首页</a>
+           		<a class="fa fa-edit" style="margin-left:5px;margin-right:5px;color:white;" href="javascript:changePassword()">&nbsp;修改密码</a>
+           		<a class="fa fa-sign-out" style="margin-left:5px;color:white;" href="../logout?type=interview">&nbsp;退出</a>
+           	</li>
+           </ul>           
+	</div>
+  		<!-- evaluation main start -->
+		<div id="tz_evaluation_main" style="height:auto;overflow-x:hidden;margin:0px;position:relative">
+			<div id="tz_msps_loading" style="height:auto;width:100%;overflow:hidden;z-index:1600;background-color:#F4F4EC;position:absolute;bottom:40px;">
+				<div style="margin:auto; width:100%;height: 100%; text-align:center;line-height:500px;font-size:25px;font-family:Microsoft Yahei;">	
+					<p>欢迎登录清华经管学院MBA面试评审系统，数据加载中，请稍候……</p>
+				</div>
+			</div>
+			<div id="tz_msps_container" style="width: 5050px;height:100%;min-height:500px;position:relative;overflow:hidden">
+				<table width="100%" height="100%" style="background-color:#F4F4EC">
+					<tr>
+						<td align="center" valign="top">
+							<div id="tz_msps_pclb" tztype="page" style="background-color:#F4F4EC;z-index:1400;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+								<table width="100%" height="100%">
+									<tr>
+										<td align="center" valign="top">
+											<div id="tz_msps_pclb_a" style="vertical-align:middle"></div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td align="center" valign="top">
+							<div id="tz_msps_zym" tztype="page" style="background-color:#F4F4EC;z-index:1200;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+								<table width="100%">
+									<tr>
+										<td>
+											<table width="100%">
+												<tr>
+													<td><div id="tz_msps_main_page"></div></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td align="center" valign="top">
+							<div id="tz_msps_dfym" tztype="page" style="background-color:#F4F4EC;z-index:1000;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+								<table width="100%">
+									<tr>
+										<td>
+											<div id="tz_applicant_evaluate_page"></div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<!-- evaluation main end -->
+  </div>
+	<!-- content end --> 
+	<div class="clear"></div>
+	<!-- foot start -->
+	<div id="footarea" class="footer assdiv" style="background-color:#fff;position:absolute;bottom:0;left:0">
+  	<p>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</p>
+    </div>
+</div></body>
+</html>
