@@ -348,6 +348,11 @@ select{appearance:none;-moz-appearance:none;-webkit-appearance:none;border:none;
 .slide_down{float:left;margin-left: 5px;width:1rem;height:1rem;background:url(../images/slide.png)no-repeat center center;background-position:0 0;background-size:200%;}
 .slide_up{background-position:-1.2rem 0;}
 .slide_wz{white-space:normal !important;}
+.new_znx{width:100%;height:auto;overflow: hidden;}
+.new_znx a{width: 100%;height:auto;border-bottom: 1px solid #ddd;overflow: hidden;}
+.newz_left{width:77%;float:left;margin-left: 3%;}
+.new_znx a p{font-size:0.6rem;color:#333;margin:3% 0 1% 0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.newz_read{color:#999 !important;}
 
 /*忘记密码*/
 
