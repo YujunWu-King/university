@@ -873,7 +873,9 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					}
 
 					// 下拉框
-					if (strComLmc != null && strComLmc.equals("ComboBox")) {
+					String province = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CAN_PROVINCE"}, "String");
+					//省份不统计
+					if (strComLmc != null && strComLmc.equals("ComboBox")&&!strXxxBh.equals(province)&&null!=province) {
 						strRadioBoxHtml = "";
 						strRadioBoxHtml2 = "";
 						strCategories="";
