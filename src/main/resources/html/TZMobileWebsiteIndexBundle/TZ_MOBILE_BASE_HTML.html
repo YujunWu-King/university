@@ -17,11 +17,11 @@ var siteId = "%bind(:4)";
 <script type="text/javascript">
 
 	//验证用户是否已成功登录过并未安全退出，则可直接显示登录页面，卢艳添加，2017-4-17
-	var verifyFlag = verifyUser("%bind(:4)","%bind(:7)");
+	//var verifyFlag = verifyUser("%bind(:4)","%bind(:7)");
 
 	$(document).ready(function(){
 	
-		if(verifyFlag) {
+		//if(verifyFlag) {
 	
 			var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_MENU_STD","OperateType":"HTML","comParams":{"siteId":"' + %bind(:4) +'","menuId":"' + %bind(:5) + '"}}';
 			$.ajax({
@@ -38,7 +38,7 @@ var siteId = "%bind(:4)";
 				} 
 				
 			});
-		}
+		//}
 	});
 </script>
 

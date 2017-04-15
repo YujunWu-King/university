@@ -15,9 +15,11 @@ import com.tranzvision.gd.TZApplicationCenterBundle.service.impl.AnalysisLcResul
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -47,6 +49,10 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 	private TzCookie tzCookie;
 	@Autowired
 	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
+	@Autowired
+	private GdObjectServiceImpl gdObjectServiceImpl;
 	
 
 	/*手机版招生网站首页*/
@@ -93,6 +99,49 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			if(loginOutUrl == null || "".equals(loginOutUrl)){
 				loginOutUrl = ctxPath + "/user/login/" + orgId.toLowerCase() + "/" + siteId;
+			}
+			
+			/*卢艳添加，2017-4-15*/
+			Boolean logoutFlag = false;
+			//手机版URL参数
+			String mobileUrlParams = getHardCodePoint.getHardCodePointVal("TZ_MBA_BKXT_MURL_PARAMS");
+			String queryString = request.getQueryString();
+			if(mobileUrlParams.equals(queryString)) {
+				//是否超时
+				Boolean bool = gdObjectServiceImpl.isSessionValid(request);
+				if(bool) {
+					//是否有免登陆cookie
+					String tokenDlzh = tzCookie.getStringCookieVal(request, "TZGD_TOKEN_DLZH");
+					if(!"".equals(tokenDlzh)&&tokenDlzh!=null) {
+						ArrayList<String> aryErrorMsg = new ArrayList<String>();
+					
+						String sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?)";
+						String passwordJm = sqlQuery.queryForObject(sql, new Object[]{tokenDlzh},"String");
+						String password = DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
+						
+						boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, orgId, siteId,
+								tokenDlzh, password, "", "ZHS", aryErrorMsg);
+						
+						if(boolResult) {
+							
+						} else {
+							logoutFlag = true;
+						}
+					} else {
+						logoutFlag = true;
+					}
+				} else {
+					logoutFlag = true;
+				}
+				
+			}
+			
+			if(logoutFlag) {
+				try {
+				response.sendRedirect(loginOutUrl);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
 			//个人维护信息双语

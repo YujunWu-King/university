@@ -102,9 +102,13 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	 */
 	public final String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
 	/**
-	 * 记录用户是否已登录，卢艳添加，2017-4-14；
+	 * 记录用户登录账号，卢艳添加，2017-4-14；
 	 */
 	public final String cookieWebLoginedDlzh = "TZGD_TOKEN_DLZH";
+	/**
+	 * 记录用户登录密码，卢艳添加，2017-4-15；
+	 */
+	//public final String cookieWebLoginedPswd = "TZGD_TOKEN_PASSWORD";
 
 	/*
 	 * (non-Javadoc)
@@ -213,8 +217,10 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			}
 			tzCookie.addCookie(response, cookieWebLoginUrl, strLoginUrl);
 			
-			//记录当前用户已登录过，卢艳添加，2017-4-14
+			//记录用户登录账号，卢艳添加，2017-4-14
 			tzCookie.addCookie(response, cookieWebLoginedDlzh, psTzAqYhxxTblKey.getTzDlzhId());
+			//记录用户登录密码，卢艳添加，2017-4-15
+			//tzCookie.addCookie(response, cookieWebLoginedPswd, DESUtil.encrypt(userPwd, "TZGD_Tranzvision"));
 			
 			errorMsg.add("0");
 			errorMsg.add("");
@@ -288,8 +294,10 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		TzSession tzSession = new TzSession(request);
 		tzSession.invalidate(request, response);
 		
-		//删除记录用户登录成功的cookie，卢艳添加，2017-4-17
+		//删除用户登录账号，卢艳添加，2017-4-15
 		tzCookie.removeCookie(response, "TZGD_TOKEN_DLZH");
+		//删除用户登录密码，卢艳添加，2017-4-15
+		//tzCookie.removeCookie(response, "TZGD_TOKEN_PASSWORD");
 		
 	}
 
