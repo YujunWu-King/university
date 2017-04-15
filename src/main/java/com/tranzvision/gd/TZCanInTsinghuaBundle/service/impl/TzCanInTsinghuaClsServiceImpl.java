@@ -585,7 +585,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 
 					//TZ_IS_AVG = dcwjXxxPzMap.get("TZ_IS_AVG") == null ? "N" : dcwjXxxPzMap.get("TZ_IS_AVG").toString();
 					//String strPersonId = tzLoginServiceImpl.getLoginedManagerOprid(request);
-					String strInsId=sqlQuery.queryForObject("select TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? and PERSON_ID=? LIMIT 0,1", new Object[]{wjid,strOprid}, "String");
+					String strInsId=sqlQuery.queryForObject("select TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? and PERSON_ID=? order by TZ_APP_INS_ID DESC LIMIT 0,1", new Object[]{wjid,strOprid}, "String");
 					logger.info("===当前登录人====personId:" + strOprid);
 					logger.info("===问卷实例ID====strInsId:" + strInsId);
 					String TZ_BY_DESC="";
@@ -597,9 +597,11 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						int strXueli=sqlQuery.queryForObject("select TZ_XXXKXZ_MC from PS_TZ_DC_DHCC_T WHERE TZ_APP_INS_ID=? and TZ_XXX_BH=?", new Object[]{strInsId,TZ_XUELI_BH}, "int");
 						//毕业时间
 						Date graduateDate=sqlQuery.queryForObject("select TZ_APP_S_TEXT  from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID=? and TZ_XXX_BH=?", new Object[]{strInsId,TZ_BYSJ_BH}, "date");
+						//入学时间
+						String	TZ_CAN_RXSJ=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CAN_RXSJ"}, "String");
 						SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						String nowTimeStr = simpleDateFormat.format(new Date());
-						Date nowDate = simpleDateFormat.parse(nowTimeStr);
+						//String nowTimeStr = simpleDateFormat.format(new Date());
+						Date nowDate = simpleDateFormat.parse(TZ_CAN_RXSJ);
 						//相隔天数
 						logger.info("===毕业时间====graduateDate:" + graduateDate);
 						int year=0;
