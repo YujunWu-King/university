@@ -590,7 +590,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					logger.info("===问卷实例ID====strInsId:" + strInsId);
 					String TZ_BY_DESC="";
 					//根据当前登录人和问卷编号查找问卷实例编号
-					if (null!=strOprid&&!"".equals(strOprid)) {
+					if (null!=strOprid&&!"".equals(strOprid)&&null!=strInsId&&!"".equals(strInsId)) {
 						String	TZ_BYSJ_BH=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_BYSJ_XXXBH"}, "String");
 						String	TZ_XUELI_BH=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_XUELE_XXXBH"}, "String");
 						//学历
@@ -602,7 +602,11 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						Date nowDate = simpleDateFormat.parse(nowTimeStr);
 						//相隔天数
 						logger.info("===毕业时间====graduateDate:" + graduateDate);
-						int year=(int) ((nowDate.getTime()-graduateDate.getTime())/86400000/365);
+						int year=0;
+						if (null==graduateDate||(nowDate.getTime()<=graduateDate.getTime())){
+						}else{
+							year=(int) ((nowDate.getTime()-graduateDate.getTime())/86400000/365);
+						}
 						String strSfFh="不符合";
 						if (strXueli>=2&&year>=3){
 							strSfFh="符合";
@@ -620,6 +624,10 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							String TZ_JY_DESC2=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_JY_DESC2"}, "String");
 							String TZ_JY_DESC3=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_JY_DESC3"}, "String");
 							String hisGzjy=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_HISJY_"+wjid}, "String");
+							logger.info("===历史工作经验====hisGzjy:" + hisGzjy);
+							if(null==hisGzjy||"".equals(hisGzjy)){
+								hisGzjy="0";
+							}
 							TZ_JY_DESC1=TZ_JY_DESC1.replaceAll("X", year+"");
 							TZ_JY_DESC2=TZ_JY_DESC2.replaceAll("X", strClassId);
 							TZ_JY_DESC2=TZ_JY_DESC2.replaceAll("Y", hisGzjy);
@@ -630,7 +638,12 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 							for(int i=0;i<list.size();i++){
 								Map<String,Object> map=list.get(i);
 								Date dateTmp=simpleDateFormat.parse(map.get("TZ_APP_S_TEXT").toString());
-								float tmpYear=(float) ((nowDate.getTime()-dateTmp.getTime())/86400000/365);
+								float tmpYear;
+								if(nowDate.getTime()<=dateTmp.getTime()){
+									tmpYear=0;
+								}else{
+									tmpYear=(float) ((nowDate.getTime()-dateTmp.getTime())/86400000/365);
+								}
 								countByYear=countByYear+tmpYear;
 							}
 							double avgYear=0;
