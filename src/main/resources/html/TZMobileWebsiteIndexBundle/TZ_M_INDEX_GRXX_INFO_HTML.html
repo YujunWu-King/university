@@ -1,3 +1,43 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_INDEX_STD","OperateType":"ZNXHDNUM","comParams":{}}';
+
+		$.ajax({
+			type: "POST",
+			url: TzUniversityContextPath+"/dispatcher",
+			data: {
+				tzParams: tzParams
+			},
+			dataType:'json',
+			async :false,
+			success: function (response) {
+				
+				var msgCount = response.comContent.msgCount;
+				var actCount = response.comContent.actCount;
+				
+				if(msgCount > 0){
+					document.getElementById("msgCount").style.display = "block";
+					$("#msgCountNum").text(msgCount);
+				}else{
+					document.getElementById("msgCount").style.display = "none";
+					$("#msgCountNum").text(msgCount);
+				}
+				
+				if(actCount > 0){
+					document.getElementById("actCount").style.display = "block";
+					$("#actCountNum").text(actCount);
+				}else{
+					document.getElementById("actCount").style.display = "none";
+					$("#actCountNum").text(actCount);
+				}
+				
+			},
+			failure: function () {
+				
+			}
+		});
+	});
+</script>
 <!--手机版首页个人信息区域-->
 <div class="personal_infor" style="width:100%;height:auto;background-color:#fff;overflow: hidden;padding-bottom: 10px;">
 	<div class="inner">
