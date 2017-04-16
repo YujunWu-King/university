@@ -1179,7 +1179,8 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					String ugVal = sqlQuery.queryForObject(sSql, new Object[] { insId,ug},"String");
 					
 					String province = getHardCodePoint.getHardCodePointVal("TZ_CAN_PROVINCE");
-					String provinceVal = sqlQuery.queryForObject(sSql, new Object[] { insId,province},"String");
+					String descSql = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_DCWJ_XXKXZ_T K,PS_TZ_DC_CC_T C WHERE K.TZ_XXX_BH = C.TZ_XXX_BH AND K.TZ_XXX_BH = ? AND K.TZ_DC_WJ_ID = ? AND C.TZ_APP_INS_ID = ? AND K.TZ_XXXKXZ_MC = C.TZ_APP_S_TEXT LIMIT 0,1";
+					String provinceDesc = sqlQuery.queryForObject(descSql, new Object[] { province,wjid,insId},"String");
 					
 					String dept = getHardCodePoint.getHardCodePointVal("TZ_CAN_DEPT");
 					String deptVal = sqlQuery.queryForObject(sSql, new Object[] { insId,dept},"String");
@@ -1190,7 +1191,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
 					psTzRegUserT.setOprid(strOprid);
 					psTzRegUserT.setTzSchCname(ugVal);
-					psTzRegUserT.setTzLenProid(provinceVal);
+					psTzRegUserT.setTzLenProid(provinceDesc);
 					psTzRegUserT.setTzCompanyName(deptVal);
 					psTzRegUserT.setTzCompIndustry(industryVal);
 					psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
