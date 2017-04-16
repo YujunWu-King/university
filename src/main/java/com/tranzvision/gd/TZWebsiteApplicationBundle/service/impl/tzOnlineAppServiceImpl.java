@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Random;
 
 import javax.servlet.http.Cookie;
@@ -835,6 +837,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				strTplData = strTplData.replace("\\", "\\\\");
 				strTplData = strTplData.replace("$", "\\$");
+				
+				Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)"); 
+				Matcher mc = CRLF.matcher(strInsData);
+				if(mc.find()){
+					strInsData = mc.replaceAll("\\\\n");
+				}
 				strInsData = strInsData.replace("\\", "\\\\");
 				strInsData = strInsData.replace("$", "\\$");
 				// 处理HTML换行符号，是替换的\u2028;
