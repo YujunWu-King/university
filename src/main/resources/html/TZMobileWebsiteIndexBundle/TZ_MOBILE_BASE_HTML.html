@@ -31,6 +31,15 @@ var siteId = "%bind(:4)";
 					tzParams:tzParams
 				},
 				success:function(response){
+					try{
+						if(response.indexOf("当前会话已超时") >=0){
+							window.location.href= TzUniversityContextPath + "/user/login/sem/%bind(:4)";
+							return ;
+						}
+					}catch(err)
+					{
+					   
+					}
 					$('.footer-nav').prop('innerHTML', response);
 				},
 				failure: function () {

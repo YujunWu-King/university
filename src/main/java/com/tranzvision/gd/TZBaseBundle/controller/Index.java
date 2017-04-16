@@ -476,7 +476,6 @@ public class Index {
 			// 错误码;
 			errorCode = "1";
 		}
-		
 		if ("HTML".equals(strOprType)) {
 			if ("0".equals(errorCode)) {
 				strRetContent = strComContent;
