@@ -346,11 +346,11 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					if(list != null && !"1".equals(errorMsg[0])){
 						for(int i = 0 ; i< list.size(); i++){
 							String OPRID = (String) list.get(i).get("OPRID");
-							password = DESUtil.encrypt(password,"TZGD_Tranzvision");
+							String tmpPassword = DESUtil.encrypt(password,"TZGD_Tranzvision");
 							
 							Psoprdefn psoprdefn = new Psoprdefn();
 						    psoprdefn.setOprid(OPRID);
-						    psoprdefn.setOperpswd(password);
+						    psoprdefn.setOperpswd(tmpPassword);
 						    
 						    int success = psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);
 							if (success > 0) {
