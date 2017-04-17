@@ -70,23 +70,26 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 					String pwList = "",reviewStatusDesc = "";
 					//评委数
 					Integer pwNum = 0;
-					//每生评审人数
-					sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-					Integer mspsNum = sqlQuery.queryForObject(sql, new Object[] {classId,batchId},"Integer");
-					if(mspsNum==null) {
-						mspsNum=0;
-					}
+					//每生评审人数、当前评审轮次
+					sql = "SELECT TZ_MSPY_NUM,TZ_DQPY_LUNC FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+					Map<String, Object> mapRule = sqlQuery.queryForMap(sql, new Object[] {classId,batchId});
+					Integer mspsNum = mapRule.get("TZ_MSPY_NUM") == null ? 0 : Integer.valueOf(mapRule.get("TZ_MSPY_NUM").toString());
+					Integer dqpyLunc = mapRule.get("TZ_DQPY_LUNC") == null ? 0 : Integer.valueOf(mapRule.get("TZ_DQPY_LUNC").toString());
 					
-
+					
 					sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
-					List<Map<String, Object>> listPw = sqlQuery.queryForList(sql, new Object[] {classId,batchId,appinsId});
+					List<Map<String, Object>> listPw = sqlQuery.queryForList(sql, new Object[] {classId,batchId,appinsId,dqpyLunc});
 					
 					for(Map<String, Object> mapPw : listPw) {
-						
-						pwNum++;
-						
+
 						//String pwOprid = mapPw.get("TZ_PWEI_OPRID")  == null ? "" : mapPw.get("TZ_PWEI_OPRID").toString();
 						String pwDlzhId = mapPw.get("TZ_DLZH_ID") == null ? "" : mapPw.get("TZ_DLZH_ID").toString();
+						String submitFlag = mapPw.get("TZ_SUBMIT_YN") == null ? "" : mapPw.get("TZ_SUBMIT_YN").toString();
+						
+						if("Y".equals(submitFlag)) {
+							//已评审
+							pwNum++;
+						}
 						
 						if(!"".equals(pwList)) {
 							pwList += "," + pwDlzhId;

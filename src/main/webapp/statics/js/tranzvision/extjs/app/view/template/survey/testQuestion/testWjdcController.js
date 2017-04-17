@@ -448,12 +448,46 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
     setWjdc:function(btn){
         var form = btn.findParentByType("form").getForm();
         var wjId = form.findField("TZ_DC_WJ_ID").getValue();
-        //显示资源集合信息编辑页面
+        
         if(wjId==''){
-          Ext.MessageBox.alert('提示', '该测试问卷没有开通问卷调查！');
+            Ext.MessageBox.alert('提示', '该测试问卷没有开通问卷调查！');
+            return false;
+          }
+        
+       //设置在线调查之前，先执行保存动作，避免在问卷详情里面重复设置时间和日期
+        if(!form.isValid()){
+            return false;
         }else{
-          this.editWjdcByID(wjId);
+            var grid = this.getView().child("grid");
+            var store = grid.getStore();
+            var actType = this.getView().actType;
+            //记录查重
+            var mfRecs = store.getModifiedRecords();
+            var tagCellEditing = grid.getPlugin('tagCellEditing');
+            for(var i=0;i<mfRecs.length;i++) {
+                //记录查重
+                var TZ_XXX_BH = mfRecs[i].get("TZ_XXX_BH");
+                var tagNameCount = 0;
+                var recIndex = store.findBy(function (record, id) {
+                    if (record.get("TZ_XXX_BH") == TZ_XXX_BH) {
+                        tagNameCount++;
+                    }}, 0);
+               }
+            if (tagNameCount > 1) {
+                Ext.MessageBox.alert('提示','信息项编号不能重复');
+            }else{
+	            var form = this.getView().child("form").getForm();
+	            if (form.isValid()) {
+	                var tzParams = this.getOrgInfoParams();
+	                var comView = this.getView();
+	                Ext.tzSubmit(tzParams, function (responseData) {
+	                    form.setValues({"TZ_CS_WJ_ID": responseData.id});
+	                    comView.actType = "update";
+	                }, false, true, this);
+	              }
+            }
         }
+        this.editWjdcByID(wjId);
     },
     /*根据问卷id设置问卷*/
     editWjdcByID:function(wjId){
@@ -535,7 +569,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var pageResSet;
         var className;
 
-        if(comMc=='DigitalCompletion'){
+        if(comMc=='DigitalCompletion'||comMc=='autoCompletion'){
             pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CSWJ_LIST_COM"]["TZ_CSWJ_XXX_STD2"];
             if( pageResSet == "" || pageResSet == undefined){
                 Ext.MessageBox.alert(Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD2.prompt","提示"), Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD2.nmyqx","您没有权限"));
@@ -622,8 +656,15 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var totalHisVal=0;
         var totalCurVal=0;
         store.each(function (rec) {
-            var hisVal = rec.get("TZ_HISTORY_VAL");
-            totalCurVal=totalCurVal+rec.get("TZ_CURYEAR_VAL");
+        	var curVal=rec.get("TZ_CURYEAR_VAL");
+        	var hisVal=rec.get("TZ_HISTORY_VAL");
+        	if(curVal==undefined){
+        		curVal=0;
+        	}
+        	if(hisVal==undefined){
+        		hisVal=0;
+        	}
+            totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
@@ -651,10 +692,18 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var totalHisVal=0;
         var totalCurVal=0;
         store.each(function (rec) {
-            var hisVal = rec.get("TZ_HISTORY_VAL");
-            totalCurVal=totalCurVal+rec.get("TZ_CURYEAR_VAL");
+        	var curVal=rec.get("TZ_CURYEAR_VAL");
+        	var hisVal=rec.get("TZ_HISTORY_VAL");
+        	if(curVal==undefined){
+        		curVal=0;
+        	}
+        	if(hisVal==undefined){
+        		hisVal=0;
+        	}
+            totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
+        
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
             var tzParams = this.getBackMsgParams(btn);
             var comView = this.getView();
@@ -676,8 +725,15 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var totalHisVal=0;
         var totalCurVal=0;
         store.each(function (rec) {
-            var hisVal = rec.get("TZ_HISTORY_VAL");
-            totalCurVal=totalCurVal+rec.get("TZ_CURYEAR_VAL");
+        	var curVal=rec.get("TZ_CURYEAR_VAL");
+        	var hisVal=rec.get("TZ_HISTORY_VAL");
+        	if(curVal==undefined){
+        		curVal=0;
+        	}
+        	if(hisVal==undefined){
+        		hisVal=0;
+        	}
+            totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
@@ -701,8 +757,15 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var totalHisVal=0;
         var totalCurVal=0;
         store.each(function (rec) {
-            var hisVal = rec.get("TZ_HISTORY_VAL");
-            totalCurVal=totalCurVal+rec.get("TZ_CURYEAR_VAL");
+        	var curVal=rec.get("TZ_CURYEAR_VAL");
+        	var hisVal=rec.get("TZ_HISTORY_VAL");
+        	if(curVal==undefined){
+        		curVal=0;
+        	}
+        	if(hisVal==undefined){
+        		hisVal=0;
+        	}
+            totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
@@ -843,7 +906,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         store.insert(rowCount, modal);
         dropBoxSetCellediting.startEditByPosition({
             row: rowCount,
-            column: 1
+            column: 0
         }); 
     }, 
     deleteOption:function(view,rowIndex){

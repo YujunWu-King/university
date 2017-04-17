@@ -7,7 +7,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 	autoScroll: false,
 	actType: 'add',
 	bodyStyle: 'overflow-y:auto;overflow-x:hidden',
-	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.MSPSKSMD", "面试评审考生名单"),
+	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.MSPSKSMD", "设置面试规则"),
 	frame: true,
 /*listeners: {
      resize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
@@ -42,11 +42,30 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 
 				items: [{
 					xtype: 'textfield',
+					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.classIdname", "报考班级"),
+					name: 'className',
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
+					//value: '105'
+
+				}, {
+					xtype: 'textfield',
+					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.batchIdname", "批次"),
+					name: 'batchName',
+					allowBlank: false,
+					fieldStyle:'background:#F4F4F4',
+    				readOnly:true
+					//value: '2'
+
+				},{
+					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.classId", "班级编号"),
 					name: 'classId',
 					allowBlank: false,
 					fieldStyle:'background:#F4F4F4',
-    				readOnly:true
+    				readOnly:true,
+    				hidden:true
 					//value: '105'
 
 				}, {
@@ -55,7 +74,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 					name: 'batchId',
 					allowBlank: false,
 					fieldStyle:'background:#F4F4F4',
-    				readOnly:true
+    				readOnly:true,
+    				hidden:true
 					//value: '2'
 
 				}, {
@@ -292,6 +312,11 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							columns: [{
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgId", "评委账号"),
 								dataIndex: 'judgId',
+								width: 200,
+								hidden:true
+							},{
+								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgzh", "评委账号"),
+								dataIndex: 'judzhxx',
 								width: 200
 							}, {
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgName", "评委姓名"),

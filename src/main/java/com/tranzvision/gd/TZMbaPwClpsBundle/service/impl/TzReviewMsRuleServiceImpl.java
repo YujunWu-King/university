@@ -89,8 +89,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 						: dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_RQ")));
 				Date startTime = mapBasic.get("TZ_PYKS_SJ") == null ? null
 						: timeSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_SJ")));
-				Date endDate = mapBasic.get("TZ_PYKS_RQ") == null ? null
-						: dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYKS_RQ")));
+				Date endDate = mapBasic.get("TZ_PYJS_RQ") == null ? null
+						: dateSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYJS_RQ")));
 				Date endTime = mapBasic.get("TZ_PYJS_SJ") == null ? null
 						: timeSimpleDateFormat.parse(String.valueOf(mapBasic.get("TZ_PYJS_SJ")));
 				String materialDesc = (String) mapBasic.get("TZ_MSPS_SM");
@@ -121,6 +121,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					strEndTime = timeSimpleDateFormat.format(endTime);
 				}
 
+				String count[] = this.StudentJugeNum(classId, batchId, errMsg);
+
 				mapData.put("classId", classId);
 				mapData.put("batchId", batchId);
 				mapData.put("className", className);
@@ -136,6 +138,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				mapData.put("EndTime", strEndTime);
 				mapData.put("desc", materialDesc);
 				mapData.put("judgeNumSet", judgeNumSet);
+				mapData.put("kspwnum", count[0]);
+				mapData.put("pwTeamnum", count[1]);
 
 				mapRet.put("formData", mapData);
 			}
@@ -219,8 +223,13 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		try {
 			String sql = "SELECT TZ_MSPY_NUM,TZ_GRP_COUNT FROM PS_TZ_MSPS_GZ_TBL WHERE  TZ_CLASS_ID=? AND  TZ_APPLY_PC_ID=?";
 			Map<String, Object> map = sqlQuery.queryForMap(sql, new Object[] { classID, batchID });
-			reStr[0] = map.get("TZ_MSPY_NUM") == null ? "" : map.get("TZ_MSPY_NUM").toString();
-			reStr[1] = map.get("TZ_GRP_COUNT") == null ? "" : map.get("TZ_GRP_COUNT").toString();
+			/* System.out.println("map.get:" + map.get("TZ_MSPY_NUM")); */
+			if (map != null) {
+
+				reStr[0] = map.get("TZ_MSPY_NUM") == null ? "" : map.get("TZ_MSPY_NUM").toString();
+				reStr[1] = map.get("TZ_GRP_COUNT") == null ? "" : map.get("TZ_GRP_COUNT").toString();
+
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -325,7 +334,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_PWEI_OPRID", "TZ_PWEI_GRPID",
-					"TZ_REALNAME" };
+					"TZ_REALNAME", "TZ_DLZH_ID" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -341,6 +350,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					mapList.put("judgId", rowList[2]);
 					mapList.put("judgGroupId", rowList[3]);
 					mapList.put("judgName", rowList[4]);
+					mapList.put("judzhxx", rowList[5]);
 
 					listData.add(mapList);
 				}
@@ -545,7 +555,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		try {
 			int dataLength = actData.length;
 			Date dateNow = new Date();
-			DateFormat timeFormat = new SimpleDateFormat("mm:ss");
+			DateFormat timeFormat = new SimpleDateFormat("HH:mm");
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容;

@@ -50,6 +50,22 @@ public class TzGdBmgExcelUtility {
 		
 	}
 	
+	/*获取考生编号*/
+	public String getBmrKsbh(String strAppInsId ,String strAppTplId) throws Exception
+	{
+		Long appInsId = Long.parseLong(strAppInsId);
+		
+		String strBmrksbh = "";
+		
+		strBmrksbh = jdbcTemplate.queryForObject("SELECT TZ_STU_NUM FROM TZ_IMP_LKBM_TBL WHERE TZ_APP_INS_ID = ? LIMIT 0,1",new Object[]{appInsId},String.class);
+		
+		if(strBmrksbh==null){
+			strBmrksbh = "";
+		}
+		
+		return strBmrksbh;	
+	}
+	
 	/*获取申请年份*/
 	public String getBmrSqYear(String strAppInsId ,String strAppTplId) throws Exception
 	{

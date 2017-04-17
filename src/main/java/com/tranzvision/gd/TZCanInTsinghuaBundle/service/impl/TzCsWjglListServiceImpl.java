@@ -3,14 +3,8 @@ package com.tranzvision.gd.TZCanInTsinghuaBundle.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -22,6 +16,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzCsWjglListServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
+	@Autowired
+	private SqlQuery sqlQuery;
 	
 	/*获取用户账号信息列表*/
 	@Override
@@ -42,6 +38,7 @@ public class TzCsWjglListServiceImpl extends FrameworkImpl {
 					
 			//可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit,numStart, errorMsg);
+			
 			if (obj != null && obj.length > 0) {
 
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
@@ -50,12 +47,18 @@ public class TzCsWjglListServiceImpl extends FrameworkImpl {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("TZ_CS_WJ_ID", rowList[0]);
-					mapList.put("TZ_CS_WJ_NAME", rowList[1]);
-					mapList.put("TZ_DC_WJ_KSRQ", rowList[2]);
-					mapList.put("TZ_DC_WJ_JSRQ", rowList[3]);
 					mapList.put("TZ_STATE", rowList[4]);
 					mapList.put("TZ_DC_WJ_ID", rowList[5]);
-					
+					if(!"".equals(rowList[5])){
+						Map<String,Object> map=sqlQuery.queryForMap("select TZ_DC_WJBT,TZ_DC_WJ_KSRQ,TZ_DC_WJ_JSRQ from PS_TZ_DC_WJ_DY_T where TZ_DC_WJ_ID=?",new Object[]{rowList[5]});
+						mapList.put("TZ_CS_WJ_NAME", String.valueOf(map.get("TZ_DC_WJBT")));
+						mapList.put("TZ_DC_WJ_KSRQ", String.valueOf(map.get("TZ_DC_WJ_KSRQ")));
+						mapList.put("TZ_DC_WJ_JSRQ", String.valueOf(map.get("TZ_DC_WJ_JSRQ")));
+					}else{
+						mapList.put("TZ_CS_WJ_NAME", rowList[1]);
+						mapList.put("TZ_DC_WJ_KSRQ", rowList[2]);
+						mapList.put("TZ_DC_WJ_JSRQ", rowList[3]);
+					}
 					listData.add(mapList);
 				}
 				mapRet.replace("total", obj[0]);

@@ -41,13 +41,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD",' +
             '"OperateType":"IFS","comParams":{"type":"IFP","classID":"'+this.classID+'","batchID":"'+this.batchID+'"}}';
         Ext.tzLoadAsync(tzParams,function(respData){
-            dockedItemBtn = respData.ifScore==="Y"?{
+            dockedItemBtn = {
                 xtype: "toolbar",
                 items: [
                     {text: "计算标准差", tooltip: "计算标准差", handler: "calculate"}
                 ]
-            }:null;
-            columnsItems = respData.ifScore==="Y"?[
+            };
+            columnsItems = [
                 {
                     text: "报名表编号",
                     dataIndex: 'insID',
@@ -81,10 +81,18 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                             return v;
                         }
                     }
-                },{
+                },
+                {
+                    text: "面试资格",
+                    dataIndex: 'viewQua',
+                    align:'center',                    
+                    minWidth: 130,
+                    flex:1
+                },
+                {
                     text: "评委间偏差",
                     dataIndex: 'judgePC',
-                    align:'center',
+                    align:'center',                    
                     minWidth: 130,
                     flex:1
                 },
@@ -109,7 +117,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                     align:'center',
                     minWidth: 150,
                     flex:1,
-                    renderer: function (v,grid,record) {
+                    /*renderer: function (v,grid,record) {
                         var x;
                         var KSPWPSEHNZT = transValue.get("TZ_MSPS_KSZT");
                         if((x = KSPWPSEHNZT.find('TValue',v))>=0){
@@ -117,7 +125,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                         }else{
                             return v;
                         }
-                    }
+                    }*/
                 } ,
                 {
                     text: "录取状态",
@@ -134,88 +142,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                         }
                     }
                 }
-            ]:[
-                {
-                    text: "报名表编号",
-                    dataIndex: 'insID',
-                    align:'center',
-                    minWidth: 150
-                },
-                {
-                    header: "姓名",
-                    dataIndex: 'name',
-                    align:'center',
-                    minWidth: 100,
-                    xtype:'linkcolumn',
-                    handler:'viewThisApplicationForm',
-                    renderer:function(v){
-                        this.text=v;
-                        return ;
-                    }
-                } ,
-                {
-                    text: "性别",
-                    dataIndex: 'gender',
-                    align:'center',
-                    minWidth: 30,
-                    renderer: function (v) {
-                        var x;
-                        var genderStore = transValue.get("TZ_GENDER");
-                        if(x = genderStore.find('TValue',v)>=0){
-                            x=+x;
-                            return genderStore.getAt(x).data.TSDesc;
-                        }else{
-                            return v;
-                        }
-                    }
-                },
-                {
-                    text: "评委信息",
-                    dataIndex: 'judgeNames',
-                    name:'judgeNames',
-                    align:'center',
-                    minWidth: 100,
-                    flex:1,
-                    renderer:function(v) {
-                        if (v) {
-                            return '<a class="tz_lzh_interviewReview_app" href = "javaScript:void(0)">' + v + '</a>';
-                        } else {
-                            return "";
-                        }
-                    }
-                },
-                {
-                    text: "评审状态",
-                    dataIndex: 'judgeStatus',
-                    align:'center',
-                    minWidth: 150,
-                    flex:1,
-                    renderer: function (v,grid,record) {
-                        var x;
-                        var KSPWPSEHNZT = transValue.get("TZ_MSPS_KSZT");
-                        if((x = KSPWPSEHNZT.find('TValue',v))>=0){
-                            return v==='N' ? KSPWPSEHNZT.getAt(x).data.TSDesc+"("+record.data.progress+")":KSPWPSEHNZT.getAt(x).data.TSDesc;
-                        }else{
-                            return v;
-                        }
-                    }
-                } ,
-                {
-                    text: "录取状态",
-                    dataIndex: 'status',
-                    align:'center',
-                    minWidth: 150,
-                    renderer: function (v) {
-                        var x;
-                        var admitStore = transValue.get("TZ_LUQU_ZT");
-                        if((x = admitStore.find('TValue',v))>=0){
-                            return admitStore.getAt(x).data.TSDesc;
-                        }else{
-                            return v;
-                        }
-                    }
-                }
-            ];
+           ]
         });
         
         //柱状图chart和曲线图chart
@@ -503,6 +430,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                     	{
                                             xtype: 'checkboxfield',
                                             fieldLabel: '评委可见统计表',
+                                            inputValue:'Y',
                                             name: 'judgeTJB',
                                             ignoreChangesFlag: true
                                         },
@@ -510,6 +438,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                             xtype: 'checkboxfield',
                                             style: 'margin-left:88px',
                                             fieldLabel: '评委可见分布图',
+                                            inputValue:'Y',
                                             name: 'judgeFBT',
                                             ignoreChangesFlag: true
                                         }
@@ -617,8 +546,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                                 }
                                             ],
                                             columns: [{
-                                                    width:1
-                                                }, {
+                                                width: 1
+                                            	},{
                                                     xtype: 'rownumberer',
                                                     width: 50,
                                                     align:'center'
@@ -676,7 +605,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                                     flex: 1,
                                                     renderer:function(v){
                                                         var x;
-                                                        var jugaccStatusStore = transValue.get("TZ_JUGACC_STATUS");
+                                                        var jugaccStatusStore = transValue.get("TZ_PWEI_ZHZT");
                                                         if((x = jugaccStatusStore.find('TValue',v))>=0){
                                                             return jugaccStatusStore.getAt(x).data.TSDesc;
                                                         }else{

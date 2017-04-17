@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Random;
 
 import javax.servlet.http.Cookie;
@@ -100,8 +102,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	private PsTzRegUserTMapper psTzRegUserTMapper;
 	@Autowired
 	private PsroleuserMapper psroleuserMapper;
-	@Autowired
-	private TzTjxThanksServiceImpl tzTjxThanksServiceImpl;
+	// @Autowired
+	// private TzTjxThanksServiceImpl tzTjxThanksServiceImpl;
 
 	@Autowired
 	private PsTzOprPhotoTMapper psTzOprPhotoTMapper;
@@ -208,7 +210,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			if (strClassId == null) {
 				strClassId = "";
 			}
-
 		} else {
 			strClassId = String.valueOf(jacksonUtil.getString("TZ_CLASS_ID"));
 			strSiteId = String.valueOf(jacksonUtil.getString("SITE_ID"));
@@ -224,17 +225,24 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			if (strClassId == null) {
 				strClassId = "";
 			}
+
 		}
 
-		if (strPageID == null) {
+		if (strSiteId == null || strSiteId.equals("null")) {
+			strSiteId = "";
+		}
+		if (strIsEdit == null || strIsEdit.equals("null")) {
+			strIsEdit = "";
+		}
+		if (strPageID == null || strPageID.equals("null")) {
 			strPageID = "";
 		}
 
-		if (strRefLetterId == null)
+		if (strRefLetterId == null || strRefLetterId.equals("null"))
 			strRefLetterId = "";
-		if (strManagerView == null)
+		if (strManagerView == null || strManagerView.equals("null"))
 			strManagerView = "";
-		if (strCopyFrom == null)
+		if (strCopyFrom == null || strCopyFrom.equals("null"))
 			strCopyFrom = "N";
 
 		if ("".equals(strAppInsId) || strAppInsId == null) {
@@ -548,7 +556,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				rightWidthStyle = "width:" + rightWidth + "%";
 			}
 
-			
 			String strMenuId = "";
 
 			sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
@@ -680,6 +687,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			strInsData = m.get("strInsData");
 			strRefLetterId = m.get("strRefLetterId");
 
+			if (strRefLetterId == null || strRefLetterId.equals("null")) {
+				strRefLetterId = "";
+			}
 			System.out.println("strAppInsId:" + strAppInsId);
 			System.out.println("strRefLetterId:" + strRefLetterId);
 			System.out.println("报名表展现历史报名表处理End,Time=" + (System.currentTimeMillis() - time2));
@@ -710,7 +720,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			}
 			// 获取个人基本信息
 			String strUserInfoSet = "";
-			strUserInfoSet = tzOnlineAppEngineImpl.getUserInfo(strAppInsId,strTplType);
+			strUserInfoSet = tzOnlineAppEngineImpl.getUserInfo(strAppInsId, strTplType);
 
 			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SAVE",
 					strLanguage, "保存", "Save");
@@ -719,7 +729,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			if (strLanguage.equals("ENG")) {
 				strSave = "Save";
 			}
-			
 
 			String strSubmit = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"SUBMIT", strLanguage, "提交", "Submit");
@@ -796,7 +805,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				String pwdTitleDivId = "PwdTitleDiv";
 				String pwdDivId = "setPwdDiv";
 				String pwdDivId2 = "setPwdDiv2";
-				// 推荐信 密码设置控制 add by caoy 2017-1-22  strIsAdmin
+				// 推荐信 密码设置控制 add by caoy 2017-1-22 strIsAdmin
 				if ("TJX".equals(strTplType)) {
 
 					if (strTJXIsPwd.equals("Y")) {
@@ -828,6 +837,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				strTplData = strTplData.replace("\\", "\\\\");
 				strTplData = strTplData.replace("$", "\\$");
+				
+				Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)"); 
+				Matcher mc = CRLF.matcher(strInsData);
+				if(mc.find()){
+					strInsData = mc.replaceAll("\\\\n");
+				}
 				strInsData = strInsData.replace("\\", "\\\\");
 				strInsData = strInsData.replace("$", "\\$");
 				// 处理HTML换行符号，是替换的\u2028;
@@ -1496,7 +1511,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
 						// 预备提交发送站内信件
 						tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_BMB_PRESUB", strAppOprId, strAppOrgId,
-								"报名表预提交发送站内信", "BMBP");
+								"报名表预提交发送站内信", "BMBP", null);
 					} else {
 						tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "N");
 					}
@@ -1570,13 +1585,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								// tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
 								// TJX提交 发送站内信
 								tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_TJX_SUBSUC", strAppOprId,
-										strAppOrgId, "推荐信提交发送站内信", "TJXZ");
+										strAppOrgId, "推荐信提交发送站内信", "TJXZ", strRefLetterId);
 							}
 							if ("BMB".equals(strTplType)) {
 							}
 						}
 					}
-					tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
+					if ("BMB".equals(strTplType)) {
+						tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
+					}
 					System.out.println("报名表保存SUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("CONFIRMSUBMIT".equals(strOtype)) {
 					System.out.println("报名表保存CONFIRMSUBMIT数据Begin");
@@ -1597,10 +1614,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							String strSubmitSendEmail = tzOnlineAppEngineImpl.sendSubmitEmail(numAppInsId, strTplId,
 									strAppOprId, strAppOrgId, strTplType);
 
-
 							// 报名表提交 发送站内信
 							tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_BMB_FORSUB", strAppOprId, strAppOrgId,
-									"报名表提交发送站内信", "BMBZ");
+									"报名表提交发送站内信", "BMBZ", null);
 
 						}
 					}

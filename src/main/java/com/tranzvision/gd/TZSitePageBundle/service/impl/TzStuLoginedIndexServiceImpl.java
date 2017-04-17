@@ -4,11 +4,13 @@
 package com.tranzvision.gd.TZSitePageBundle.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -31,6 +34,9 @@ public class TzStuLoginedIndexServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	private HttpServletResponse response;
 
 	@Autowired
 	private SqlQuery sqlQuery;
@@ -40,6 +46,9 @@ public class TzStuLoginedIndexServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
+	
+	@Autowired
+	private TzCookie tzCookie;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {

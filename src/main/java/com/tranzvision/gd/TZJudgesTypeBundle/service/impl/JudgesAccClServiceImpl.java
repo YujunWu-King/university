@@ -123,6 +123,8 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					// 手机、邮箱
 					String judgePhoneNumber = (String) infoData.get("judgePhoneNumber");
 					String judgeEmail = (String) infoData.get("judgeEmail");
+					// 用户角色
+					String roleName = (String) infoData.get("roleName");
 					// 用户类型
 					String userType = (String) infoData.get("userType");
 					// 人员类型，激活状态
@@ -182,11 +184,11 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 						String yhlxSQL = "INSERT INTO PS_TZ_JUSR_REL_TBL(TZ_JG_ID,OPRID,TZ_JUGTYP_ID) VALUES(?,?,?)";
 						jdbcTemplate.update(yhlxSQL, new Object[]{orgID, oprID, userType});
 //						//添加用户角色;
-						String roleName="";
-						String sqlType = "SELECT ROLENAME FROM PS_TZ_JUGTYP_TBL WHERE TZ_JUGTYP_ID=?";
-						Map<String, Object> map = jdbcTemplate.queryForMap(sqlType, new Object[] { userType });
-						if (map != null) {
-							roleName = (String) map.get("ROLENAME");
+//						String roleName="";
+//						String sqlType = "SELECT ROLENAME FROM PS_TZ_JUGTYP_TBL WHERE TZ_JUGTYP_ID=?";
+//						Map<String, Object> map = jdbcTemplate.queryForMap(sqlType, new Object[] { userType });
+						if (roleName != null) {
+//							roleName = (String) map.get("ROLENAME");
 						
 						String roleSQL = "INSERT INTO PSROLEUSER(ROLEUSER,ROLENAME,DYNAMIC_SW) VALUES(?,?,?)";
 						jdbcTemplate.update(roleSQL, new Object[]{oprID,roleName,"N"});
@@ -219,11 +221,12 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 				String userOrg = jacksonUtil.getString("orgId");
 
 				// 用户ID,姓名，电子邮件，手机号码，人员类型，邮箱绑定标志，手机绑定标志，激活状态，激活方式;
-				String oprID = "", name = "", perType = "", eBindFlg = "", mBindFlg = "",
+				String oprID = "", name = "", perType = "",
 						jhState = "", jhMethod = "";
 				String email = "", mobile = "";
 				String originOrgId = "";
 				String userType = "0";
+				String roleNameDesc="",roleName="";
 				// 密码;
 				String password = "";
 				String rylx = "";
@@ -249,6 +252,9 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					Map<String, Object> map1 = jdbcTemplate.queryForMap(userTypeSql, new Object[] { oprID });
 					String sql2 = "SELECT TZ_ZY_SJ,TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY=? AND TZ_LYDX_ID=?";
 					Map<String, Object> map = jdbcTemplate.queryForMap(sql2, new Object[] { rylx, oprID });
+					// 角色名称
+					String sqlRole = "SELECT A.ROLENAME,DESCR FROM PSROLEUSER A, PSROLEDEFN_VW B WHERE A.ROLENAME=B.ROLENAME AND A.ROLEUSER=? ";
+					Map<String, Object> mapRole = jdbcTemplate.queryForMap(sqlRole, new Object[] { oprID });
 					
 
 					if (map1 != null) {
@@ -257,6 +263,10 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					if (map != null) {
 						mobile = (String) map.get("TZ_ZY_SJ");
 						email = (String) map.get("TZ_ZY_EMAIL");
+					}
+					if (mapRole != null) {
+						roleName = (String) mapRole.get("ROLENAME");
+						roleNameDesc = (String) mapRole.get("DESCR");
 					}
 					
 					Psoprdefn psoprdefn = new Psoprdefn();
@@ -308,7 +318,8 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 				returnJsonMap.put("clockFlag", acctLock);
 //				returnJsonMap.put("bdEmail", bdEmail);
 				returnJsonMap.put("userType", userType);
-
+				returnJsonMap.put("roleName", roleName);
+				returnJsonMap.put("roleNameDesc", roleNameDesc);
 			} else {
 				errMsg[0] = "1";
 				errMsg[1] = "无法获取用户信息";
@@ -366,9 +377,9 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 				    	//删除用户;
 				    	String deleteOPDSQL = "DELETE FROM PSOPRDEFN WHERE OPRID=?";
 				    	jdbcTemplate.update(deleteOPDSQL, new Object[]{oprID} );
-//				    	//删除用户角色;
-//				    	String deleteROLESQL = "DELETE FROM PSROLEUSER WHERE ROLEUSER=?";
-//				    	jdbcTemplate.update(deleteROLESQL, new Object[]{oprID});
+				    	//删除用户角色;
+				    	String deleteROLESQL = "DELETE FROM PSROLEUSER WHERE ROLEUSER=?";
+				    	jdbcTemplate.update(deleteROLESQL, new Object[]{oprID});
 				    	
 					}
 			    }
@@ -414,8 +425,11 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					// 手机、邮箱
 					String judgePhoneNumber = (String) infoData.get("judgePhoneNumber");
 					String judgeEmail = (String) infoData.get("judgeEmail");
+					// 用户角色
+					String roleName = (String) infoData.get("roleName");
+//					String roleNameDesc = (String) infoData.get("roleNameDesc");
 					// 用户类型
-					String userType = (String) infoData.get("userType");
+//					String userType = (String) infoData.get("userType");
 					// 人员类型，激活状态
 //					String tzRylx = (String) infoData.get("rylx");
 //					String tzJihuoZt = "Y";
@@ -437,12 +451,12 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					String updateOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 					jdbcTemplate.update(updateOprdSql, new Object[]{accountNo,judgeName, tzRylx,judgeEmail, judgePhoneNumber,updateOprid, oprID});
 
-					short userTypeNum;
+					/*short userTypeNum;
 					if ("Y".equals(userType) || "on".equals(userType)) {
 						userTypeNum = 2;
 					} else {
 						userTypeNum = 0;
-					}
+					}*/
 					short clockFlagNum;
 					if ("Y".equals(clockFlag) || "on".equals(clockFlag) || "1".equals(clockFlag)) {
 						clockFlagNum = 1;
@@ -475,9 +489,25 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 						jdbcTemplate.update(updatelSFSSql, new Object[]{judgePhoneNumber, judgeEmail, tzRylx, oprID});
 
 					}
+					// 用户角色;
+					int roleNum = 0;
+					String isExistRole = "SELECT COUNT(1) FROM PSROLEUSER WHERE ROLEUSER=? ";
+					roleNum = jdbcTemplate.queryForObject(isExistRole, new Object[] { oprID },
+								"Integer");
+					
+					if (roleNum <= 0) {
+						if ((judgePhoneNumber != null && !"".equals(judgePhoneNumber)) || (judgeEmail != null && !"".equals(judgeEmail))) {
+							String roleSQL = "INSERT INTO PSROLEUSER(ROLEUSER,ROLENAME,DYNAMIC_SW) VALUES(?,?,?)";
+							jdbcTemplate.update(roleSQL, new Object[]{oprID,roleName,"N"});
+						}
+					} else {
+						String roleSQL = "UPDATE PSROLEUSER SET ROLENAME=?,DYNAMIC_SW=? WHERE ROLEUSER=? ";
+						jdbcTemplate.update(roleSQL, new Object[]{roleName, "N", oprID});
+
+					}
 					// 评委 账号-类型-关系;
-					String updateZhlxSql = "UPDATE PS_TZ_JUSR_REL_TBL SET TZ_JUGTYP_ID=? WHERE TZ_JG_ID=? AND OPRID=?";
-					jdbcTemplate.update(updateZhlxSql, new Object[]{userTypeNum, orgID, oprID});
+//					String updateZhlxSql = "UPDATE PS_TZ_JUSR_REL_TBL SET TZ_JUGTYP_ID=? WHERE TZ_JG_ID=? AND OPRID=?";
+//					jdbcTemplate.update(updateZhlxSql, new Object[]{userTypeNum, orgID, oprID});
 
 				}else{
 					errMsg[0] = "1";

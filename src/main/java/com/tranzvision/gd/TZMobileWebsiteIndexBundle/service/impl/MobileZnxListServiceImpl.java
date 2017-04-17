@@ -59,6 +59,13 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 			menuId = "1";
 		}
 		
+		String lx = "";
+		if(jacksonUtil.containsKey("lx")){
+			lx = jacksonUtil.getString("lx");
+		}else{
+			lx = request.getParameter("lx");
+		}
+		
 		String content = "";
 		String title = "站内信";
 		try {
@@ -66,7 +73,10 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZNX_TZ_LIST_JS_CSS",ctxPath,siteId);
 			//跳转首页url
 			String indexUrl = ctxPath+"/dispatcher?classid=mIndex&siteId="+siteId;
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_LIST",title,"");
+			if("back".equals(lx)){
+				indexUrl = "javascript:history.back(-1);";
+			}
+			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_LIST",title,indexUrl,"");
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,menuId,content);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
@@ -111,7 +121,7 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 			int limit = 10;
 			int startNum = (pagenum - 1) * limit;
 			
-		    String znxSql = "SELECT A.TZ_ZNX_MSGID,A.TZ_ZNX_STATUS,DATE_FORMAT(B.ROW_ADDED_DTTM,'%Y/%m/%d')TZ_SEND_TIME,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = B.TZ_ZNX_SENDID)TZ_ZNX_SENDNAME,B.TZ_MSG_SUBJECT,A.TZ_MSG_TEXT FROM PS_TZ_ZNX_REC_T A,PS_TZ_ZNX_MSG_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND A.TZ_REC_DELSTATUS <> 'Y' AND A.TZ_ZNX_RECID = ? ORDER BY B.ROW_ADDED_DTTM DESC LIMIT ?,?";
+		    String znxSql = "SELECT A.TZ_ZNX_MSGID,A.TZ_ZNX_STATUS,DATE_FORMAT(B.ROW_ADDED_DTTM,'%Y-%m-%d %k:%i')TZ_SEND_TIME,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = B.TZ_ZNX_SENDID)TZ_ZNX_SENDNAME,B.TZ_MSG_SUBJECT,A.TZ_MSG_TEXT FROM PS_TZ_ZNX_REC_T A,PS_TZ_ZNX_MSG_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND A.TZ_REC_DELSTATUS <> 'Y' AND A.TZ_ZNX_RECID = ? ORDER BY B.ROW_ADDED_DTTM DESC LIMIT ?,?";
 			List<Map<String, Object>> list = sqlQuery.queryForList(znxSql,new Object[]{m_curOPRID,startNum,limit});
 			if(list!=null && list.size()>0){
 				for(int i=0; i < list.size(); i++){
@@ -127,8 +137,15 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 					String znxSubject =String.valueOf(list.get(i).get("TZ_MSG_SUBJECT")) ;
 					//消息内容
 					String msgText =String.valueOf(list.get(i).get("TZ_MSG_TEXT")) ;
-					
-					content = content + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_SYSINFO_DIV",znxMsgId,sendTime,znxStatus,znxSubject,msgText);
+					String znxStyle = "";
+					//znxStatus:N-未读
+					if ("N".equals(znxStatus)){
+						znxStyle = "";
+					}else{
+						znxStyle = "newz_read";
+					}
+					String viewZnxUrl =  ctxPath+"/dispatcher?classid=znxContent&siteId="+siteId+"&znxMsgId="+znxMsgId;
+					content = content + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_SYSINFO_DIV",true,viewZnxUrl,znxMsgId,znxStyle,znxSubject,sendTime);
 					resultNum = resultNum + 1;
 				}
 			}

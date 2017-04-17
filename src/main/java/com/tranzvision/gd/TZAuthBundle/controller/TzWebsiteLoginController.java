@@ -104,6 +104,46 @@ public class TzWebsiteLoginController {
 
 	}
 
+	@RequestMapping(value = { "/{orgid}" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String userLoginWebsiteByQHMBA(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "orgid") String orgid) {
+
+		String strRet = "";
+
+		try {
+			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
+			String siteid="72";
+			siteid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(siteid);
+
+			if (null != orgid && !"".equals(orgid) && null != siteid && !"".equals(siteid)) {
+
+				String loginHtml = "";
+				Boolean isMobile = CommonUtils.isMobile(request);
+				if (isMobile) {
+					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid);
+					strRet = loginHtml;
+				} else {
+					loginHtml = tzWebsiteServiceImpl.getLoginPublishCode(request, orgid, siteid);
+					strRet = loginHtml;
+				}
+
+			} else {
+
+				strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+						"Can not visit the site.Please check the url.");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+					"Can not visit the site.Please check the url.");
+		}
+
+		return strRet;
+
+	}
+
 	@RequestMapping(value = "dologin", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response) {
@@ -316,4 +356,142 @@ public class TzWebsiteLoginController {
 
 		return strRet;
 	}
+	
+	//免登录，卢艳添加，2017-4-15
+	/*@RequestMapping(value = "avoidlogin", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String avoidlogin(HttpServletRequest request, HttpServletResponse response) {
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(request.getParameter("tzParams"));
+
+		Map<String, Object> mapData = jacksonUtil.getMap("comParams");
+
+		String strOrgId = mapData.get("orgid") == null ? "" : String.valueOf(mapData.get("orgid"));
+		String strLang = mapData.get("lang") == null ? "" : String.valueOf(mapData.get("lang"));
+		String strSiteId = mapData.get("siteid") == null ? "" : String.valueOf(mapData.get("siteid"));
+		String isMobile = mapData.get("isMobile") == null ? "" : String.valueOf(mapData.get("isMobile"));
+
+		String classIdParams = request.getParameter("classIdParams");
+		
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+
+		try {
+
+			if (null != strOrgId && !"".equals(strOrgId)) {
+				strOrgId = strOrgId.toUpperCase();
+				String sql = "";
+		
+				if (null != strSiteId && !"".equals(strSiteId)) {
+					sql = tzGDObject.getSQLText("SQL.TZAuthBundle.TzGetZcyhDlzhId");
+					
+					String strUserName ="",strPassWord="";
+
+						ArrayList<String> aryErrorMsg = new ArrayList<String>();
+
+						boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, strOrgId, strSiteId,
+								strUserName, strPassWord, "", strLang, aryErrorMsg);
+						String loginStatus = aryErrorMsg.get(0);
+						String errorMsg = aryErrorMsg.get(1);
+						if (boolResult) {
+							jsonMap.put("success", "true");
+						} else {
+							jsonMap.put("success", "false");
+						}
+
+						jsonMap.put("errorCode", loginStatus);
+						jsonMap.put("errorDesc", errorMsg);
+
+						if (boolResult) {
+							String ctxPath = request.getContextPath();
+							// 如果信息未完善，则跳转到待完善页面
+							String indexUrl = "";
+							boolean infoIsCmpl = tzWebsiteLoginServiceImpl.getLoginIndex(strUserName, strOrgId);
+							if (infoIsCmpl) {
+
+								// 跳转会原来的页面
+								if (classIdParams != null && !classIdParams.equals("")) {
+									// 以___分割
+									String[] cparams = Global.split(classIdParams, "___");
+									if (cparams != null && cparams.length >= 1) {
+										String type = cparams[0];
+
+										// 活动新闻浏览
+										if (type.equals("art_view")) {
+											if (cparams.length == 3) {
+												indexUrl = ctxPath
+														+ "/dispatcher?classid=art_view&operatetype=HTML&siteId="
+														+ strSiteId + "&columnId=" + cparams[1] + "&artId="
+														+ cparams[2];
+											} else {
+												if ("Y".equals(isMobile)) {
+													indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId="
+															+ strSiteId;
+												} else {
+													indexUrl = ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/"
+															+ strSiteId;
+												}
+											}
+										}
+									} else {
+										if ("Y".equals(isMobile)) {
+											indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId=" + strSiteId;
+										} else {
+											indexUrl = ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/"
+													+ strSiteId;
+										}
+									}
+
+								} else {
+									// 如果为手机，则跳转到手机页面-待完成
+									if ("Y".equals(isMobile)) {
+										indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId=" + strSiteId;
+									} else {
+										indexUrl = ctxPath + "/site/index/" + strOrgId.toLowerCase() + "/" + strSiteId;
+									}
+								}
+							} else {
+								String strParams = "";
+								if ("Y".equals(isMobile)) {
+									strParams = "{\"siteid\":\"" + strSiteId + "\",\"sen\":\"8\",\"isMobile\":\"Y\"}";
+								} else {
+									strParams = "{\"siteid\":\"" + strSiteId + "\",\"sen\":\"8\",\"isMobile\":\"N\"}";
+								}
+								String completeInfoUrl = siteEnrollClsServiceImpl.getCompleteUrl(strParams);
+
+								jacksonUtil.json2Map(completeInfoUrl);
+								indexUrl = jacksonUtil.getString("url");
+								String encryUserName = DESUtil.encrypt(strUserName, "TZ_GD_TRANZVISION");
+								indexUrl = indexUrl + "?userName=" + encryUserName;
+							}
+
+							jsonMap.put("url", indexUrl);
+
+						}
+
+
+				} else {
+					int errorCode = 5;
+					String strErrorDesc = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZ_SITE_MESSAGE",
+							"44", strLang, "站点异常", "The website is abnormal .");
+					jsonMap.put("success", "false");
+					jsonMap.put("errorCode", errorCode);
+					jsonMap.put("errorDesc", strErrorDesc);
+				}
+			} else {
+				int errorCode = 5;
+				String strErrorDesc = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZ_SITE_MESSAGE", "45",
+						strLang, "机构异常", "The organization is abnormal .");
+				jsonMap.put("success", "false");
+				jsonMap.put("errorCode", errorCode);
+				jsonMap.put("errorDesc", strErrorDesc);
+			}
+		} catch (TzSystemException e) {
+			e.printStackTrace();
+		}
+
+		// {"success":"%bind(:1)","error":"%bind(:2)","indexUrl":"%bind(:3)"}
+
+		return jacksonUtil.Map2json(jsonMap);
+	}*/
 }

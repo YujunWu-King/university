@@ -543,7 +543,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						
 						List<Map<String, Object>> resultlist = null;
 						resultlist = jdbcTemplate.queryForList(SaudSQL);
-						System.out.println(resultlist);
+						System.out.println("resultlist:"+resultlist);
 						
 						
 		/*				List<Map<String, Object>> list;
@@ -553,7 +553,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 		*/				
 						for (int K = 0; K < resultlist.size(); K++) {
 							Map<String, Object> resultMap = resultlist.get(K);
-							System.out.println(StringUtils.strip(resultMap.values().toString(),"[]"));
+							System.out.println("resultMap.value:"+StringUtils.strip(resultMap.values().toString(),"[]"));
 							
 							
 							String InsertID=StringUtils.strip(resultMap.values().toString(),"[]");

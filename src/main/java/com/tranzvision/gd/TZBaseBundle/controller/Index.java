@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZBaseBundle.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,12 +14,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjInitServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.OperateType;
 import com.tranzvision.gd.util.cookie.TzCookie;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +51,8 @@ public class Index {
 	private TzCookie tzCookie;
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
 	
 	Logger logger = Logger.getLogger(this.getClass());
 
@@ -227,6 +232,100 @@ public class Index {
 		}
 		
 		//logger.info("strParams:"+strParams);
+		
+		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 begin*/
+		//会话是否有效
+		Boolean bool = gdObjectServiceImpl.isSessionValid(request);
+		
+		if(bool) {
+			
+		} else {
+			
+			Boolean logoutFlag = false;
+			String sql = "";
+			
+			String tmpSiteId = request.getParameter("siteId");
+			if(tmpClassId != null && !"".equals(tmpClassId)
+					&& tmpSiteId != null && !"".equals(tmpSiteId)) 
+			{
+				//手机版URL参数
+				sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+				String mobileUrlParams = jdbcTemplate.queryForObject(sql, new Object[]{"TZ_MBA_BKXT_MURL_PARAMS"},"String");
+				if(mobileUrlParams!=null && !"".equals(mobileUrlParams)) {
+					String classIdParam = "", siteIdParam = "", orgIdParam ="";
+					
+					String[] params = mobileUrlParams.split("&");
+					for(int i=0;i<params.length;i++) {
+						String[] paramsTmp = params[i].split("=");
+						if("classid".equals(paramsTmp[0])){
+							classIdParam = paramsTmp[1];
+						}
+						if("siteId".equals(paramsTmp[0])){
+							siteIdParam = paramsTmp[1];
+						}
+						if("orgId".equals(paramsTmp[0])){
+							orgIdParam = paramsTmp[1];
+						}
+					}
+					
+					if(classIdParam != null && !"".equals(classIdParam)
+							&& siteIdParam != null && !"".equals(siteIdParam)) {
+						
+						if(tmpClassId.equals(classIdParam) && tmpSiteId.equals(siteIdParam)) {
+							
+							//是否有免登陆cookie
+							String tokenDlzh = tzCookie.getStringCookieVal(request, "TZGD_TOKEN_DLZH");
+							
+							if(!"".equals(tokenDlzh)&&tokenDlzh!=null) {
+								ArrayList<String> aryErrorMsg = new ArrayList<String>();
+								
+								sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?)";
+								String passwordJm = jdbcTemplate.queryForObject(sql, new Object[]{tokenDlzh},"String");
+								String password = DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
+								
+								boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, orgIdParam, siteIdParam,
+										tokenDlzh, password, "", "ZHS", aryErrorMsg);
+								
+								if(boolResult) {
+									
+								} else {
+									logoutFlag = true;
+								}
+							} else {
+								logoutFlag = true;
+							}
+							
+						}
+					}
+					
+				}
+			}
+			
+			if(logoutFlag) {
+				
+				//rootPath;
+				String ctxPath = request.getContextPath();
+				
+				//得到登录地址;
+				String loginOutUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
+				
+				if(loginOutUrl == null || "".equals(loginOutUrl)){
+					sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+					String loginUrl = jdbcTemplate.queryForObject(sql, new Object[]{"TZ_MBA_BKXT_MURL_LOGIN"},"String");												
+					loginOutUrl = ctxPath + loginUrl;
+				}
+				
+				try {
+					response.sendRedirect(loginOutUrl);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
+		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 end*/
+		
 
 		// 操作类型;
 		String strOprType = "";
@@ -377,7 +476,6 @@ public class Index {
 			// 错误码;
 			errorCode = "1";
 		}
-		
 		if ("HTML".equals(strOprType)) {
 			if ("0".equals(errorCode)) {
 				strRetContent = strComContent;

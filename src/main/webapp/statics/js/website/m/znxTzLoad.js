@@ -32,6 +32,18 @@ function getZnxList(siteid,pagenum){
 	            				}
 	                        });
 	                    });
+	                  
+	                	$(".viewZnxContent").click(function(){
+	                        var mailId = ($(this).attr("mailid"));
+	                        var updateRecords = [{"mailId":mailId}];
+	                        $.ajax({
+	            				type: 'GET',
+	            				url: TzUniversityContextPath+"/dispatcher",
+	            				data:{
+	            					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"U","comParams":{"update": '+ JSON.stringify(updateRecords) + '}}'
+	            				}
+	                        });
+	                    });
 					}else{
 						 // 锁定
                         me.lock();

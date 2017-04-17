@@ -388,6 +388,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                         text: "计算偏差",
                         tooltip: "计算偏差",
                         handler: "calDeviation"
+                    },'-',
+                    {
+                        xtype: 'checkboxfield',
+                        fieldLabel: '实时计算评委偏差',                        
+                        name: 'calPwPanC',
+                        inputValue:'Y',
+                        labelWidth: 120,
+                        labelAlign: 'right'
                     }]
                 }]
             }
@@ -766,13 +774,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             dockedItems: [{
                                 xtype: "toolbar",
                                 items: [{
-                                    text: "暂停",
-                                    tooltip: "暂停",
+                                    text: "暂停选中的评委账户",
+                                    tooltip: "暂停选中的评委账户",
                                     handler: "pause"
                                 },
                                 "-", {
-                                    text: "设置评委状态为正常",
-                                    tooltip: "设置评委状态为正常",
+                                    text: "启用选中的评委账户",
+                                    tooltip: "启用选中的评委账户",
                                     handler: "setNoaml"
                                 },
                                 "-", {
@@ -1317,6 +1325,21 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                		// 填充页面部分-结束
 	                                    	//结束
 	                                    }
+	                                },'-',{
+	                                    xtype: 'checkboxfield',
+	                                    fieldLabel: '评委可见偏差',
+	                                    inputValue:'Y',
+	                                    name: 'judgePanCFlg',
+	                                    labelWidth: 90,
+	                                    labelAlign: 'right'
+	                                },'-',
+	                                {
+	                                    xtype: 'checkboxfield',
+	                                    fieldLabel: '评委可见评议标准数据',
+	                                    name: 'judgePyDataFlg',
+	                                    inputValue:'Y',
+	                                    labelWidth: 150,
+	                                    labelAlign: 'right'
 	                                }]
 	                            }],
 	                            viewConfig: {

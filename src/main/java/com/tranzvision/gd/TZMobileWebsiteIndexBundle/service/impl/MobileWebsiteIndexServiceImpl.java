@@ -1,21 +1,27 @@
 package com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZApplicationCenterBundle.service.impl.AnalysisLcResult;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cookie.TzCookie;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -32,6 +38,8 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
+	private HttpServletResponse response;
+	@Autowired
 	private TZGDObject tzGDObject;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -39,6 +47,12 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 	private ValidateUtil validateUtil;
 	@Autowired
 	private TzCookie tzCookie;
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
+	@Autowired
+	private GdObjectServiceImpl gdObjectServiceImpl;
 	
 
 	/*手机版招生网站首页*/
@@ -86,6 +100,8 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			if(loginOutUrl == null || "".equals(loginOutUrl)){
 				loginOutUrl = ctxPath + "/user/login/" + orgId.toLowerCase() + "/" + siteId;
 			}
+			
+			
 			
 			//个人维护信息双语
 			String strModifyLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "1","修改", "Modify");
@@ -163,16 +179,20 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			//我已报名但未过期的活动数量
 			int actCount = 0;
-			String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT = '1' and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
+			String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT in ('1','4') and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
 			actCount = sqlQuery.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
 			String strActCount = "";
 			//System.out.println("strActCount=" + strActCount);
 			if(MsgCount > 0){
-				strMsgCount = "<div class=\"circle\"><span class=\"circle_span\">" + MsgCount + "</span></div>";
+				strMsgCount = "<div id=\"msgCount\" class=\"circle\"><span class=\"circle_span\" id=\"msgCountNum\">" + MsgCount + "</span></div>";
+			}else{
+				strMsgCount = "<div id=\"msgCount\" class=\"circle\" style=\"display:none\"><span class=\"circle_span\" id=\"msgCountNum\">" + MsgCount + "</span></div>";
 			}
 			
 			if(actCount > 0){
-				strActCount = "<div class=\"circle\"><span class=\"circle_span\">" + actCount + "</span></div>";
+				strActCount = "<div id=\"actCount\" class=\"circle\"><span class=\"circle_span\" id=\"actCountNum\">" + actCount + "</span></div>";
+			}else{
+				strActCount = "<div id=\"actCount\" class=\"circle\" style=\"display:none\"><span class=\"circle_span\" id=\"actCountNum\">" + actCount + "</span></div>";
 			}
 			
 			String personHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_GRXX_INFO_HTML",strModifyLabel,strRegEmailLabel,strMshXhLabel,strCityLabel,strSiteMsgLabel,strMyActLabel,strPhoto,strName,strRegEmail,strApplicationNum,strCity,strMsgCount,strActCount,accountMngUrl,znxListUrl,myActivityYetUrl);
@@ -370,11 +390,11 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 							String hotAndNewImg = "";
 							int showImgNum = 0;
 							if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
-								if(artTitleStyle.indexOf("HOT") > 0){
+								if(artTitleStyle.indexOf("HOT") > -1){
 									hotAndNewImg = "<img class=\"fr add_hot\" src=\"" + ctxPath + "/statics/css/website/m/images/hot.png\">";
 									showImgNum ++;
 								}
-								if(artTitleStyle.indexOf("NEW") > 0){
+								if(artTitleStyle.indexOf("NEW") > -1){
 									hotAndNewImg = hotAndNewImg + "<img class=\"fr add_hot\" src=\"" + ctxPath + "/statics/css/website/m/images/new.png\">";
 									showImgNum ++;
 								}
@@ -448,7 +468,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			String content = topHtml + personHtml + xmjdHtml + hdHtml + kjcdHtml;
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_CONTENT_HTML",content);
 			
-			indexHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content);
+			indexHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content,orgId);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			indexHtml = "";
@@ -456,5 +476,79 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 		}
 
 		return indexHtml;
+	}
+	
+	
+	public String tzOther(String operateType,String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		
+		try {
+			
+			String orgId = jacksonUtil.getString("orgId");
+			String siteId = jacksonUtil.getString("siteId");
+			
+			if("verify".equals(operateType)) {
+				String success = "", url = "";
+				
+				String ctxPath = request.getContextPath();
+				
+				String dlzhId = tzCookie.getStringCookieVal(request, "TZGD_TOKEN_DLZH");
+				String loginUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
+				
+				if(loginUrl == null || "".equals(loginUrl)){
+					loginUrl = ctxPath + "/user/login/" + orgId.toLowerCase() + "/" + siteId;
+				}
+				if(!"".equals(dlzhId)&&dlzhId!=null) {
+					ArrayList<String> aryErrorMsg = new ArrayList<String>();
+					String sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?)";
+					String passwordJm = sqlQuery.queryForObject(sql, new Object[]{dlzhId},"String");
+					String password = DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
+					
+					boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, orgId, siteId,
+							dlzhId, password, "", "ZHS", aryErrorMsg);
+					if (boolResult) {
+						success = "true";
+						url = ""; 
+					} else {
+						success = "false";
+						url = loginUrl;
+					}
+				} else {
+					success = "false";
+					url=loginUrl;
+				}
+				
+				mapRet.put("success", success);
+				mapRet.put("url", url);
+				strRet = jacksonUtil.Map2json(mapRet);
+			}else{
+				if("ZNXHDNUM".equals(operateType)){
+					//刷新报名数和站内信未读数量;
+					String m_curOPRID = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					//未读站内信数量
+					int msgCount = 0;
+					String MsgSql = "select count(1) from PS_TZ_ZNX_REC_T where TZ_ZNX_RECID=? and TZ_ZNX_STATUS='N' and TZ_REC_DELSTATUS<>'Y'";
+					msgCount = sqlQuery.queryForObject(MsgSql, new Object[] { m_curOPRID}, "int");
+					
+					//我已报名但未过期的活动数量
+					int actCount = 0;
+					String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT in ('1','4') and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
+					actCount = sqlQuery.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
+					mapRet.put("msgCount", msgCount);
+					mapRet.put("actCount", actCount);
+					strRet = jacksonUtil.Map2json(mapRet);
+					
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return strRet;
 	}
 }

@@ -258,11 +258,11 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userMgNewAud', {
     buttons: [{
 		text: '保存',
 		iconCls:"save",
-		handler: 'onPageRegSave'
+		handler: 'onPageRegSave1'
 	}, {
 		text: '确定',
 		iconCls:"ensure",
-		handler: 'onPageRegEnsure'
+		handler: 'onPageRegEnsure1'
 	}, {
 		text: '关闭',
 		iconCls:"close",

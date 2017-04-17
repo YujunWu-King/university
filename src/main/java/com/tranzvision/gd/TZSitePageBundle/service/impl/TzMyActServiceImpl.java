@@ -413,10 +413,15 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 					if ("Y".equals(strKqbm)) {
 
 						// 新逻辑
-						if (datetimeformat.parse(timeBmStart).getTime() <= dateNow.getTime()
-								&& datetimeformat.parse(timeBmEnd).getTime() > dateNow.getTime()) {
-							strkBmFlg = "Y";
+						try{
+							if (datetimeformat.parse(timeBmStart).getTime() <= dateNow.getTime()
+									&& datetimeformat.parse(timeBmEnd).getTime() > dateNow.getTime()) {
+								strkBmFlg = "Y";
+							}
+						}catch(Exception e){
+							
 						}
+						
 
 						/*
 						 * 老的逻辑 if (dateFormat.parse(dtBmStart).getTime() <

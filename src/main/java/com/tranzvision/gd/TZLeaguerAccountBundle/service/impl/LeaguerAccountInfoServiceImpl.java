@@ -134,9 +134,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					} 
 					
 					
-					String accoutztSQL = "select (SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_JIHUO_ZT' AND TZ_ZHZ_ID=TZ_JIHUO_ZT AND TZ_EFF_STATUS='A') TZ_JIHUO_ZT, date_format(TZ_ZHCE_DT, '%Y-%m-%d %H:%i:%s') TZ_ZHCE_DT,TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=?";
+					String accoutztSQL = "select TZ_JIHUO_ZT, date_format(TZ_ZHCE_DT, '%Y-%m-%d %H:%i:%s') TZ_ZHCE_DT,TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=?";
 					Map<String, Object> accoutztMap = jdbcTemplate.queryForMap(accoutztSQL,new Object[]{str_oprid});
-					if(phoneAndEmailMap != null){
+					if(accoutztMap != null){
 						str_jihuozt = (String) accoutztMap.get("TZ_JIHUO_ZT");
 						str_jihuozt = (str_jihuozt != null) ? str_jihuozt : "";
 						

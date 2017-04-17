@@ -1,3 +1,5 @@
+var urlBegin= TzUniversityContextPath + "/dispatcher";
+
 //招生活动和报考通知更多链接点击事件
 function hdtzMore(siteId){
 	var columnId = $(".zhaos .list .list_on").attr("date-column");
@@ -19,4 +21,64 @@ function openRqQrcode(appIns){
 	      area: ['215px','250px'],
 	  	 content: rqQrcodeUrl
 	 });
+}
+
+
+/*退出系统*/
+function Logout(){
+	window.location = TzUniversityContextPath + "/user/login/logout";
+	/*
+	 var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"siteId":"'+$("#siteid").val()+'","typeflg":"logout"}}';
+	 $.ajax({
+	 type:"POST",
+	 url:urlBegin,
+	 data:{
+	 tzParams:tzParams
+	 },
+	 dataType:'json',
+	 success:function(response){
+
+	 if (response.comContent.success == "true") {
+	 window.location.href=response.comContent.url;
+
+	 }else{
+	 alert(response.state.errdesc);
+	 }
+	 },
+	 failure: function () {
+	 alert(response.state.errdesc);
+	 }
+	 });
+	 */
+}
+
+
+//验证用户是否已成功登录过并未安全退出，则可直接显示登录页面，卢艳添加，2017-4-17
+function verifyUser(siteId,orgId) {
+	var flag = true;
+
+	var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_INDEX_STD","OperateType":"verify","comParams":{"orgId":"' + orgId + '","siteId":"' + siteId + '"}}';
+
+	$.ajax({
+		type: "POST",
+		url: urlBegin,
+		data: {
+			tzParams: tzParams
+		},
+		dataType:'json',
+		async :false,
+		success: function (response) {
+			if (response.comContent.success == "true") {
+			} else {
+				window.location.href = response.comContent.url;
+				flag = false;
+			}
+		},
+		failure: function () {
+			alert(response.state.errdesc);
+			flag = false;
+		}
+	});
+
+	return flag;
 }

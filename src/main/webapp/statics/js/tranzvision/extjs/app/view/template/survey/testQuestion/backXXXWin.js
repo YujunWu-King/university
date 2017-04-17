@@ -53,7 +53,7 @@
 			}
 		},
 	
-        columns: [{
+        columns: [/*{
             text: "序号",
             dataIndex: 'TZ_ORDER',
             hidden: true
@@ -61,7 +61,7 @@
 		    text: "信息项编号",
 			dataIndex: 'TZ_XXXKXZ_MC',
             hidden: true
-		},{ 
+		},*/{ 
 		    text: "信息项描述",
 			dataIndex: 'TZ_XXXKXZ_MS',
 			minWidth: 150
@@ -75,7 +75,7 @@
             }
         },{
 		    text: "取值上限",
-			dataIndex: 'numberfield',
+			dataIndex: 'TZ_U_LIMIT',
 			minWidth:80,
             editor: {
                 xtype:'numberfield',

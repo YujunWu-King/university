@@ -34,6 +34,8 @@ public class TzTjxClsServiceImpl {
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
 
+	public String tjxId;
+
 	// 保存推荐信信息;
 	public String saveTJX(long numAppinsId, String strOprid, String strTjrId, String strEmail, String strTjxType,
 			String strTitle, String strGname, String strName, String strCompany, String strPosition,
@@ -71,7 +73,7 @@ public class TzTjxClsServiceImpl {
 					str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
 					strTjxId = str_seq1 + str_seq2;
 				}
-
+				this.tjxId = strTjxId;
 				PsTzKsTjxTbl psTzKsTjxTbl = psTzKsTjxTblMapper.selectByPrimaryKey(strTjxId);
 				if (psTzKsTjxTbl == null) {
 					psTzKsTjxTbl = new PsTzKsTjxTbl();
@@ -212,9 +214,11 @@ public class TzTjxClsServiceImpl {
 	 * @param siteEmailID
 	 * @param strAudienceDesc
 	 * @param strAudLy
+	 * @param tjxId
 	 * @return
 	 */
-	public String sendSiteEmail(long numAppInsId, String siteEmailID, String strAudienceDesc, String strAudLy) {
+	public String sendSiteEmail(long numAppInsId, String siteEmailID, String strAudienceDesc, String strAudLy,
+			String tjxId) {
 		String sql = "";
 
 		sql = "SELECT OPRID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? limit 1";
@@ -225,7 +229,7 @@ public class TzTjxClsServiceImpl {
 		System.out.println("numAppInsId:" + numAppInsId);
 		System.out.println("strAppOprId:" + strAppOprId);
 		System.out.println("strAppOrgId:" + strAppOrgId);
-
+		System.out.println("tjxId:" + tjxId);
 		String returnMsg = "true";
 		// 收件人姓名
 		String strName = "";
@@ -239,12 +243,14 @@ public class TzTjxClsServiceImpl {
 		}
 		// 创建听众;
 		String createAudience = createTaskServiceImpl.createAudience(strTaskId, strAppOrgId, strAudienceDesc, strAudLy);
+		System.out.println("createAudience:" + createAudience);
+		System.out.println("strTaskId:" + strTaskId);
 		if ("".equals(createAudience) || createAudience == null) {
 			return "false";
 		}
 		// 为听众添加听众成员
 		boolean addAudCy = createTaskServiceImpl.addAudCy(createAudience, strName, strName, "", "", "", "", "",
-				strAppOprId, "", "", String.valueOf(numAppInsId));
+				strAppOprId, "", "", tjxId);
 		if (!addAudCy) {
 			return "false";
 		}
