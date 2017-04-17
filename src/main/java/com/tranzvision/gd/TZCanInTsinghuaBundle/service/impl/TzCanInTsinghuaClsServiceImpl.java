@@ -686,7 +686,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								completionMap = cswjPzxDataList.get(i);
 								String TZ_SCHOOL_TYPEID=completionMap.get("TZ_SCHOOL_TYPEID").toString();
 								String TZ_SCHOOL_TYPENAME=completionMap.get("TZ_SCHOOL_TYPENAME").toString();
-								int choseNum=sqlQuery.queryForObject("select count(*) FROM (select  TZ_APP_S_TEXT,(select TZ_SCHOOL_TYPE from PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=TZ_APP_S_TEXT)TZ_SCHOOL_TYPE  from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=?)TMP where TMP.TZ_SCHOOL_TYPE=?", new Object[]{wjid, strXxxBh,TZ_SCHOOL_TYPEID}, "int");
+								int choseNum=sqlQuery.queryForObject("select count(*) FROM (select  TZ_APP_S_TEXT,(select TZ_SCHOOL_TYPE from PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=TZ_APP_S_TEXT limit 0,1)TZ_SCHOOL_TYPE  from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=?)TMP where TMP.TZ_SCHOOL_TYPE=?", new Object[]{wjid, strXxxBh,TZ_SCHOOL_TYPEID}, "int");
 								if (choseNum > 0) {
 									// 投票百分比
 									tempCount = Double.valueOf(decimalFormat.format((double) choseNum / (double) total * 100));
