@@ -1169,7 +1169,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 					url = request.getContextPath() + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/perfect.html?userName=" + encryUserName;
 				}
 				
-				String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND PERSON_ID = ? LIMIT 0,1";
+				String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND PERSON_ID = ? ORDER BY TZ_APP_INS_ID DESC LIMIT 0,1";
 				String insId = sqlQuery.queryForObject(sql, new Object[] { wjid,strOprid},"String");
 
 				String sSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ? LIMIT 0,1";

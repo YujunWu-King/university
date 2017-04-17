@@ -1687,6 +1687,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						text: '返回批次评审主页面',
 						tooltip:'单击此按钮返回批次评审主页面。',
 						width: 140,
+						glyph:'xf04a@FontAwesome',
 						handler: function(item,pressed){showPreviousEvaluatePage(1);},
 						pressed: true
 					},
@@ -2022,7 +2023,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			position: {
 				at: 'top right', // Position the tooltip above the link
 				my: 'bottom right',
-				viewport: $(window), // Keep the tooltip on-screen at all times
+				//viewport: $(window), // Keep the tooltip on-screen at all times
+				viewport: $("#tz_evaluation_main"),
 				effect: false // Disable positioning animation
 			},
 			show: {

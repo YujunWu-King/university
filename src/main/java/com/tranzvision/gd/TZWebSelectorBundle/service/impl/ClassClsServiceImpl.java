@@ -52,6 +52,7 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 		String language = "";
 		String classId = "";
 		String className = "";
+		String projectID="";
 		String pageID = "";
 		String linkId = "";
 		if (jacksonUtil.containsKey("siteId")) {
@@ -86,7 +87,7 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 				if (psTzClassInfT != null) {
 
 					StringBuffer sb = new StringBuffer();
-					sb.append("SELECT TZ_CLASS_ID,TZ_CLASS_NAME FROM  PS_TZ_CLASS_INF_T ");
+					sb.append("SELECT TZ_CLASS_ID,TZ_CLASS_NAME,TZ_PRJ_ID FROM  PS_TZ_CLASS_INF_T ");
 					sb.append("where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) ");
 					sb.append(
 							"AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' AND TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL ");
@@ -103,10 +104,11 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 						for (int i = 0; i < classList.size(); i++) {
 							classId = (String) classList.get(i).get("TZ_CLASS_ID");
 							className = (String) classList.get(i).get("TZ_CLASS_NAME");
+							projectID = (String) classList.get(i).get("TZ_PRJ_ID");
 							try {
 								classInfo = classInfo
 										+ tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_CLASS_A_HTML", "CLASS_RD",
-												classId, className, "CLASS_RD" + i);
+												classId+"--"+projectID, className, "CLASS_RD" + i);
 							} catch (TzSystemException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
