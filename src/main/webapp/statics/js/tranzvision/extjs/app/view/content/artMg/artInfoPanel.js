@@ -158,7 +158,7 @@
             },
             items:[
 				 {
-                	margin:'7px 27px 0 0',		
+                	margin:'4px 27px 0 0',		
 					xtype:'label',
 					name:'viewLabel',
 					html:'<span style="font-weight:bold">'+ Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.titleStyleView","标题格式预览") +':</span>'

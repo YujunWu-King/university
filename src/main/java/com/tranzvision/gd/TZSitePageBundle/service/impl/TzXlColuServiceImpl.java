@@ -247,11 +247,13 @@ public class TzXlColuServiceImpl extends FrameworkImpl {
 			List<Map<String, Object>> listSiteArts;
 			if (haveBmCount == 0 && selectShowCount == 0) {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteArtsList");
-				listSiteArts = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId, numMinRow, numPageRow });
+				listSiteArts = sqlQuery.queryForList(sql, new Object[] { strSiteId, strColuId,oprid, numMinRow, numPageRow });
+				System.out.println("TzGetSiteArtsList"+"strColuId"+strColuId+"strSiteId"+strSiteId);
 			} else {
 				sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzGetSiteArtsListByProject");
 				listSiteArts = sqlQuery.queryForList(sql,
 						new Object[] { strSiteId, strColuId, oprid, oprid, numMinRow, numPageRow });
+				System.out.println("TzGetSiteArtsListByProject");
 			}
 
 			String strResultContent = "";
