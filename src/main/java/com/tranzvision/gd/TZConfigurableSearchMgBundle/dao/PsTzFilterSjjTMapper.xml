@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFilterSjjTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterSjjT" >
+    <id column="TZ_COM_ID" property="tzComId" jdbcType="VARCHAR" />
+    <id column="TZ_PAGE_ID" property="tzPageId" jdbcType="VARCHAR" />
+    <id column="TZ_VIEW_NAME" property="tzViewName" jdbcType="VARCHAR" />
+    <id column="TZ_SEQNUM" property="tzSeqnum" jdbcType="INTEGER" />
+    <result column="TZ_FILTER_FLD" property="tzFilterFld" jdbcType="VARCHAR" />
+    <result column="TZ_QUERY_VIEW_NAME" property="tzQueryViewName" jdbcType="VARCHAR" />
+    <result column="TZ_DPQ_DESC" property="tzDpqDesc" jdbcType="VARCHAR" />
+    <result column="TZ_DPQ_STATE" property="tzDpqState" jdbcType="VARCHAR" />
+    <result column="TZ_DEFAULT_FLG" property="tzDefaultFlg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, TZ_SEQNUM, TZ_FILTER_FLD, TZ_QUERY_VIEW_NAME, 
+    TZ_DPQ_DESC, TZ_DPQ_STATE, TZ_DEFAULT_FLG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterSjjTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_FILTER_SJJ_T
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_SEQNUM = #{tzSeqnum,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterSjjTKey" >
+    delete from PS_TZ_FILTER_SJJ_T
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_SEQNUM = #{tzSeqnum,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterSjjT" >
+    insert into PS_TZ_FILTER_SJJ_T (TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, 
+      TZ_SEQNUM, TZ_FILTER_FLD, TZ_QUERY_VIEW_NAME, 
+      TZ_DPQ_DESC, TZ_DPQ_STATE, TZ_DEFAULT_FLG
+      )
+    values (#{tzComId,jdbcType=VARCHAR}, #{tzPageId,jdbcType=VARCHAR}, #{tzViewName,jdbcType=VARCHAR}, 
+      #{tzSeqnum,jdbcType=INTEGER}, #{tzFilterFld,jdbcType=VARCHAR}, #{tzQueryViewName,jdbcType=VARCHAR}, 
+      #{tzDpqDesc,jdbcType=VARCHAR}, #{tzDpqState,jdbcType=VARCHAR}, #{tzDefaultFlg,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterSjjT" >
+    insert into PS_TZ_FILTER_SJJ_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzComId != null" >
+        TZ_COM_ID,
+      </if>
+      <if test="tzPageId != null" >
+        TZ_PAGE_ID,
+      </if>
+      <if test="tzViewName != null" >
+        TZ_VIEW_NAME,
+      </if>
+      <if test="tzSeqnum != null" >
+        TZ_SEQNUM,
+      </if>
+      <if test="tzFilterFld != null" >
+        TZ_FILTER_FLD,
+      </if>
+      <if test="tzQueryViewName != null" >
+        TZ_QUERY_VIEW_NAME,
+      </if>
+      <if test="tzDpqDesc != null" >
+        TZ_DPQ_DESC,
+      </if>
+      <if test="tzDpqState != null" >
+        TZ_DPQ_STATE,
+      </if>
+      <if test="tzDefaultFlg != null" >
+        TZ_DEFAULT_FLG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzComId != null" >
+        #{tzComId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPageId != null" >
+        #{tzPageId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzViewName != null" >
+        #{tzViewName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSeqnum != null" >
+        #{tzSeqnum,jdbcType=INTEGER},
+      </if>
+      <if test="tzFilterFld != null" >
+        #{tzFilterFld,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQueryViewName != null" >
+        #{tzQueryViewName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDpqDesc != null" >
+        #{tzDpqDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDpqState != null" >
+        #{tzDpqState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDefaultFlg != null" >
+        #{tzDefaultFlg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterSjjT" >
+    update PS_TZ_FILTER_SJJ_T
+    <set >
+      <if test="tzFilterFld != null" >
+        TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQueryViewName != null" >
+        TZ_QUERY_VIEW_NAME = #{tzQueryViewName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDpqDesc != null" >
+        TZ_DPQ_DESC = #{tzDpqDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDpqState != null" >
+        TZ_DPQ_STATE = #{tzDpqState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDefaultFlg != null" >
+        TZ_DEFAULT_FLG = #{tzDefaultFlg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_SEQNUM = #{tzSeqnum,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterSjjT" >
+    update PS_TZ_FILTER_SJJ_T
+    set TZ_FILTER_FLD = #{tzFilterFld,jdbcType=VARCHAR},
+      TZ_QUERY_VIEW_NAME = #{tzQueryViewName,jdbcType=VARCHAR},
+      TZ_DPQ_DESC = #{tzDpqDesc,jdbcType=VARCHAR},
+      TZ_DPQ_STATE = #{tzDpqState,jdbcType=VARCHAR},
+      TZ_DEFAULT_FLG = #{tzDefaultFlg,jdbcType=VARCHAR}
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_SEQNUM = #{tzSeqnum,jdbcType=INTEGER}
+  </update>
+</mapper>

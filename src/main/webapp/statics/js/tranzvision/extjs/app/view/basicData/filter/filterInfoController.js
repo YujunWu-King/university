@@ -35,10 +35,56 @@
 		var ComID = formParams['ComID'];
    	 	var PageID = formParams['PageID'];
    	 	var ViewMc = formParams['ViewMc'];
+   	 	//默认搜索可配置搜索主视图中的字段
+   	 	var FieldView= formParams['ViewMc'];
+   	 	formParams['FieldView']=formParams['ViewMc'];
    	 	var winform = win.child("form").getForm();
    	 	var grid = win.child("form").child("grid");
    	 	winform.setValues(formParams);
-   	 	var tzStoreParams = '{"ComID":"' + ComID + '","PageID":"' + PageID + '","ViewMc":"' + ViewMc + '","FieldMc":""}';
+   	 	var tzStoreParams = '{"ComID":"' + ComID + '","PageID":"' + PageID + '","ViewMc":"' + ViewMc +'","FieldView":"' + FieldView + '","FieldMc":""}';
+        grid.store.tzStoreParams = tzStoreParams;
+
+        win.show();
+    },
+    //添加DeepQuery字段
+    addDqFld: function() {
+    	if(this.getView().actType == "add"){
+			Ext.MessageBox.alert("提示","请先保存组信息后，再新增字段信息。");
+			return;
+		}
+        //是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_FILTER_COM"]["TZ_GD_FLDTZDQ_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_FLDTZDQ_STD，请检查配置。');
+			return;
+		}
+		var win = this.lookupReference('filterFldWindowDeepQuery');
+        
+        if (!win) {
+			Ext.syncRequire(className);
+			ViewClass = Ext.ClassManager.get(className);
+		    //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+		var form = this.getView().child("form").getForm();
+		var formParams = form.getValues();
+		var ComID = formParams['ComID'];
+   	 	var PageID = formParams['PageID'];
+   	 	var ViewMc = formParams['ViewMc'];
+   	 	//默认搜索可配置搜索主视图中的字段
+   	 	var FieldView= formParams['ViewMc'];
+   	 	formParams['FieldView']=formParams['ViewMc'];
+   	 	var winform = win.child("form").getForm();
+   	 	var grid = win.child("form").child("grid");
+   	 	winform.setValues(formParams);
+   	 	var tzStoreParams = '{"ComID":"' + ComID + '","PageID":"' + PageID + '","ViewMc":"' + ViewMc +'","FieldView":"' + FieldView + '","FieldMc":""}';
         grid.store.tzStoreParams = tzStoreParams;
 
         win.show();
@@ -49,7 +95,8 @@
     	comParams = 'add:[' + Ext.JSON.encode(record.data) + ']';
     	//提交参数
 		var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_GD_FLDTZ_STD","OperateType":"U","comParams":{' + comParams + '}}';
-        //保存数据
+        console.log(tzParams);
+		//保存数据
 		var grid = this.getView().child("grid");
 		Ext.tzSubmit(tzParams,function(){
 			grid.store.reload();
@@ -157,6 +204,18 @@
                 //资源集合信息数据
                 var formData = responseData.formData;
                 form.setValues(formData);
+                
+                var strDeepQueryFlg=formData.deepQueryFlg;
+                form.findField("deepQueryFlg").hide();
+                if (strDeepQueryFlg=="Y"){
+                	  form.findField("deepQueryView").show();
+                	  form.findField("deepQueryFld").show();
+                }else{
+                	 form.findField("deepQueryView").hide();
+               	  	 form.findField("deepQueryFld").hide();
+                }
+                
+                
                 //资源集合信息列表数据
                 var roleList = responseData.listData;
             });

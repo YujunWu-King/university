@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.basicData.filter.filterFldWindow', {
+﻿Ext.define('KitchenSink.view.basicData.filter.filterFldWindowDeepQuery', {
     extend: 'Ext.window.Window',
     requires: [
 	    'Ext.data.*',
@@ -8,9 +8,9 @@
         'Ext.ux.ProgressBarPager',
 		'KitchenSink.view.basicData.filter.FldStore'
 	],
-    xtype: 'filterWindow', 
+    //xtype: 'filterWindow', 
     title: '可配置搜索配置-选择搜索条件字段', 
-	reference: 'filterFldWindow',
+	reference: 'filterFldWindowDeepQuery',
     y:20,
     width: 740,
     maxHeight: 500,
@@ -40,9 +40,10 @@
 		}, {
 			xtype: 'hiddenfield',
 			fieldLabel: '可配置搜索视图名称',
-			name: 'ViewMc'
-		},{
-			xtype: 'hiddenfield',
+			name: 'ViewMc',
+			padding:10
+		}, {
+			xtype: 'textfield',
 			fieldLabel: '视图名称',
 			name: 'FieldView',
 			padding:10
@@ -69,7 +70,8 @@
 			   	 	var PageID = formParams['PageID'];
 			   	 	var ViewMc = formParams['ViewMc'];
 			   	 	var FieldMc = formParams['FieldMc'];
-			   	 	var FieldView= formParams['FieldView'];
+			   	 	
+			   	 	var FieldView=formParams['FieldView'];
 			   	 	
 			   	 	var grid = form.child("grid");
 			   	 	var tzStoreParams = '{"ComID":"' + ComID + '","PageID":"' + PageID + '","ViewMc":"' + ViewMc +'","FieldView":"' + FieldView + '","FieldMc":"' + FieldMc + '"}';

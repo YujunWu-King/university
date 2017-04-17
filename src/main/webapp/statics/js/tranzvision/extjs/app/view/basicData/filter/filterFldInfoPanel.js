@@ -223,12 +223,24 @@
         	 xtype: 'combobox',
         	 fieldLabel: '搜索字段不区分大小写',
         	 valueField: 'TValue',
-           displayField: 'TLDesc',
-           store: new KitchenSink.view.common.store.appTransStore("TZ_NO_UPORLOW"),
-           queryMode: 'local',
-           value: "B",
-    			 name: 'fltFldNoUpperLower'
-    		},{
+             displayField: 'TLDesc',
+             store: new KitchenSink.view.common.store.appTransStore("TZ_NO_UPORLOW"),
+             queryMode: 'local',
+             value: "B",
+    		 name: 'fltFldNoUpperLower'
+    	 },{
+    			xtype: 'textfield',
+    			fieldLabel: '是否DeepQuery字段',
+    			name: 'deepQueryFlg'
+    	 },{
+	 			xtype: 'textfield',
+				fieldLabel: 'DeepQuery视图',
+				name: 'deepQueryView'
+		 },{
+				xtype: 'textfield',
+				fieldLabel: 'DeepQuery关联字段',
+				name: 'deepQueryFld'
+		 },{
 	    	xtype: 'tabpanel',
 	      frame: true,
 	      items:[{
