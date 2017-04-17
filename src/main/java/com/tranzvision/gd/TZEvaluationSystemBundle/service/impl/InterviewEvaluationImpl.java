@@ -501,7 +501,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						BigInteger cjdId = null;
 						
 						Map<String, Object> map4 = sqlQuery.queryForMap(
-								"select A.TZ_KSH_PSPM,date_format(A.ROW_LASTMANT_DTTM, '%Y-%m-%d %H:%i') ROW_LASTMANT_DTTM ,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_PSHEN_ZT' AND TZ_ZHZ_ID=A.TZ_PSHEN_ZT AND TZ_EFF_STATUS='A') AS TZ_PSHEN_ZT,TZ_SCORE_INS_ID from ps_TZ_MP_PW_KS_TBL A WHERE A.TZ_CLASS_ID=? and A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?",
+								"select A.TZ_KSH_PSPM,date_format(A.ROW_LASTMANT_DTTM, '%Y-%m-%d %H:%i') ROW_LASTMANT_DTTM ,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_PSHEN_ZT' AND TZ_ZHZ_ID=A.TZ_PSHEN_ZT AND TZ_EFF_STATUS='A') AS TZ_PSHEN_ZT,TZ_SCORE_INS_ID from PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_CLASS_ID=? and A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?",
 								new Object[] { classId, batchId, TZ_APP_INS_ID, oprid });
 						if (map4 != null) {
 							TZ_KSH_PSPM2 = (String) map4.get("OPRID");
