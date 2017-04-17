@@ -576,20 +576,22 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			dcwjXxxPzDataList = sqlQuery.queryForList(dcwjXxxPzSQL, new Object[] { wjid,TZ_PAGE_NO });
 			if (dcwjXxxPzDataList != null) {
 				for (int index = 0; index < dcwjXxxPzDataList.size(); index++) {
+					
 					Map<String, Object> dcwjXxxPzMap = new HashMap<String, Object>();
 					dcwjXxxPzMap = dcwjXxxPzDataList.get(index);
 					strXxxBh = dcwjXxxPzMap.get("TZ_XXX_BH") == null ? null : dcwjXxxPzMap.get("TZ_XXX_BH").toString();
 					TZ_TITLE = dcwjXxxPzMap.get("TZ_TITLE") == null ? "" : dcwjXxxPzMap.get("TZ_TITLE").toString();
 					TZ_XXX_QID = dcwjXxxPzMap.get("TZ_XXX_QID") == null ? "" : dcwjXxxPzMap.get("TZ_XXX_QID").toString();
 					strComLmc = dcwjXxxPzMap.get("TZ_COM_LMC") == null ? null : dcwjXxxPzMap.get("TZ_COM_LMC").toString();
-
+					String isExistFlag=sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_CSWJ_DCX_TBL WHERE TZ_DC_WJ_ID=? and TZ_XXX_BH=?", new Object[]{wjid,strXxxBh},"String");
+				    if(null!=isExistFlag&&"Y".equals(isExistFlag)){
 					//TZ_IS_AVG = dcwjXxxPzMap.get("TZ_IS_AVG") == null ? "N" : dcwjXxxPzMap.get("TZ_IS_AVG").toString();
 					//String strPersonId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					//根据当前登录人和问卷编号查找问卷实例编号
 					String strInsId=sqlQuery.queryForObject("select TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? and PERSON_ID=? order by TZ_APP_INS_ID DESC LIMIT 0,1", new Object[]{wjid,strOprid}, "String");
 					logger.info("===当前登录人====personId:" + strOprid);
 					logger.info("===问卷实例ID====strInsId:" + strInsId);
 					String TZ_BY_DESC="";
-					//根据当前登录人和问卷编号查找问卷实例编号
 					if (null!=strOprid&&!"".equals(strOprid)&&null!=strInsId&&!"".equals(strInsId)) {
 						String	TZ_BYSJ_BH=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_BYSJ_XXXBH"}, "String");
 						String	TZ_XUELI_BH=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_XUELE_XXXBH"}, "String");
@@ -1082,7 +1084,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						}
 					}
 
-				
+				}
 			}
 		}
 			// 整合结果html

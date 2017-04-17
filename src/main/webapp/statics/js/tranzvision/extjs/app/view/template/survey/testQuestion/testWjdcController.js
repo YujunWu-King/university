@@ -664,9 +664,12 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         	if(hisVal==undefined){
         		hisVal=0;
         	}
-            totalCurVal=totalCurVal+curVal;
-            totalHisVal = totalHisVal + hisVal;
+            totalCurVal= totalCurVal+curVal;
+            totalHisVal = totalHisVal+hisVal;
         });
+        totalHisVal=parseFloat(totalHisVal).toFixed(0);
+        totalCurVal=parseFloat(totalCurVal).toFixed(0);
+       // console.log(totalHisVal,totalCurVal);
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
         	  var tzParams = this.getBackMsgParams(btn);
               var comView = this.getView();
@@ -703,7 +706,8 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
             totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
-        
+        totalHisVal=parseFloat(totalHisVal).toFixed(0);
+        totalCurVal=parseFloat(totalCurVal).toFixed(0);
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
             var tzParams = this.getBackMsgParams(btn);
             var comView = this.getView();
@@ -736,6 +740,8 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
             totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
+        totalHisVal=parseFloat(totalHisVal).toFixed(0);
+        totalCurVal=parseFloat(totalCurVal).toFixed(0);
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
             var tzParams = this.getBackMsgParams(btn);
             var comView = this.getView();
@@ -768,6 +774,8 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
             totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
+        totalHisVal=parseFloat(totalHisVal).toFixed(0);
+        totalCurVal=parseFloat(totalCurVal).toFixed(0);
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
         	  var tzParams = this.getBackMsgParams(btn);
               var comView = this.getView();
