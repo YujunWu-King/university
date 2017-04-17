@@ -176,17 +176,8 @@ public class InterviewEvaluationCls{
 		List<Map<String,Object>> retList = new ArrayList<Map<String,Object>>();
 
 		//由报考报考找到“成绩模型id”
-		String TZ_SCORE_MODAL_ID = sqlQuery.queryForObject("select TZ_ZLPS_SCOR_MD_ID from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?", 
+		String TZ_SCORE_MODAL_ID = sqlQuery.queryForObject("select TZ_MSCJ_SCOR_MD_ID from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?", 
 				new Object[]{classId}, "String");
-		
-		//根据报考班级和批次取得当前轮次;
-	    int TZ_DQPY_LUNC = 1;
-	    String STR_DQPY_LUNC = sqlQuery.queryForObject(
-	   		"select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?",
-	   		new Object[] { classId, batchId }, "String");
-	    if(STR_DQPY_LUNC!=null&&!"".equals(STR_DQPY_LUNC)){
-	   		TZ_DQPY_LUNC = Integer.parseInt(STR_DQPY_LUNC);
-	    }
 		   
 		//分布对照id
 		String TZ_M_FBDZ_ID = sqlQuery.queryForObject(
@@ -197,8 +188,8 @@ public class InterviewEvaluationCls{
 		//完成数量;
 		int wc_num = 0;
 		String str_wc_num = sqlQuery.queryForObject(
-		   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? and TZ_CLPS_LUNC = ? and  TZ_SUBMIT_YN <> 'C'",
-		   		new Object[] { classId, batchId ,oprid ,TZ_DQPY_LUNC}, "String");		   
+		   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID= ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? and  TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT = 'Y'",
+		   		new Object[] { classId, batchId ,oprid}, "String");		   
 		if(str_wc_num!=null&&!"".equals(str_wc_num)){
 		   wc_num = Integer.parseInt(str_wc_num);
 		}
@@ -234,15 +225,12 @@ public class InterviewEvaluationCls{
 				//分项个数
 				int num_dange = 0;
 				String str_num_dange = sqlQuery.queryForObject(
-				   		new StringBuffer("select count(distinct a.TZ_APP_INS_ID) from PS_TZ_CP_PW_KS_TBL a ,PS_TZ_CJX_TBL b ,PS_TZ_KSCLPSLS_TBL c ")
-				   		.append("where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  and a.TZ_CLASS_ID = c.TZ_CLASS_ID ")
-				   		.append("and a.TZ_APPLY_PC_ID = c.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID = c.TZ_PWEI_OPRID ")
-				   		.append("and a.TZ_APP_INS_ID = c.TZ_APP_INS_ID and c.TZ_SUBMIT_YN <> 'C' ")
-				   		.append("and a.TZ_CLASS_ID = ? and a.TZ_APPLY_PC_ID = ? and a.TZ_PWEI_OPRID =? ")
-				   		.append("and b.TZ_SCORE_ITEM_ID = ?  and c.TZ_CLPS_LUNC = ? ")
+				   		new StringBuffer("select count(distinct a.TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL a ,PS_TZ_CJX_TBL b where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  AND ")
+				   		.append("a.TZ_DELETE_ZT <> 'Y' AND a.TZ_PSHEN_ZT = 'Y'  and  a.TZ_CLASS_ID = ? ")
+				   		.append("and a.TZ_APPLY_PC_ID= ? and a.TZ_PWEI_OPRID = ? and b.TZ_SCORE_ITEM_ID = ? ")
 				   		.append("and b.TZ_SCORE_NUM ").append(TZ_M_FBDZ_MX_XX_JX).append(TZ_M_FBDZ_MX_XX)
 				   		.append(" and b.TZ_SCORE_NUM ").append(TZ_M_FBDZ_MX_SX_JX).append(TZ_M_FBDZ_MX_SX).toString(),
-				   		new Object[] { classId, batchId ,oprid ,scoreItemId,TZ_DQPY_LUNC}, "String");		
+				   		new Object[] { classId, batchId ,oprid ,scoreItemId}, "String");		
 				
 			   if(str_num_dange!=null&&!"".equals(str_num_dange)){
 				   num_dange = Integer.parseInt(str_num_dange);

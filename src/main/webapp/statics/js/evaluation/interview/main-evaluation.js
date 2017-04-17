@@ -1198,70 +1198,70 @@ function submitEvaluateBatch(batchId)
     var classid = arr[0];
     var pcid = arr[1];
 	Ext.Ajax.request(
-										{
-											url:window.submitApplicantDataUrl,
-											method:'POST',
-											timeout:10000,
-											params: {
-																LanguageCd:'ZHS',
-																OperationType:'SUBMTALL',
-                                                                BaokaoClassID:classid,
-                                                                BaokaoPCID:pcid
-															},
-											success:function(response)
-											{
-												var jsonObject = null;
-												
-												try
-												{
-													jsonObject = Ext.JSON.decode(response.responseText);
-													
-													if(jsonObject.error_code != '0')
-													{
-														//unmask window
-														unmaskWindow();
-														
-														alert('提交当前评审批次时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-													}
-													else
-													{
-														//局部刷新当前当前评审批次数据
-														getPartBatchDataByBatchId(batchId,null,{applicantBaomingbiaoID:''},'SUBMTALL','当前评审批次[' + getBatchNameById(batchId) + ']提交成功。');
-													}
-												}
-												catch(e1)
-												{
-													if(window.evaluateSystemDebugFlag == 'Y')
-													{
-														alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
-														var mytmpWindow = window.open("about:blank");
-														mytmpWindow.document.body.innerHTML = response.responseText;
-													}
-													else
-													{
-														alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
-													}
-													
-													//unmask window
-													unmaskWindow();
-												}
-											},
-											failure:function(response)
-											{
-												if(window.evaluateSystemDebugFlag == 'Y')
-												{
-													alert('提交当前评审批次时发生错误，请与系统管理员联系：' + response.responseText);
-												}
-												else
-												{
-													alert('提交当前评审批次时发生错误，请与系统管理员联系。');
-												}
-												
-												//unmask window
-												unmaskWindow();
-											}
-										}
-									);
+		{
+			url:window.submitApplicantDataUrl,
+			method:'POST',
+			timeout:10000,
+			params: {
+				LanguageCd:'ZHS',
+				OperationType:'SUBMTALL',
+                BaokaoClassID:classid,
+                BaokaoPCID:pcid
+			},
+			success:function(response)
+			{
+				var jsonObject = null;
+				
+				try
+				{
+					jsonObject = Ext.JSON.decode(response.responseText).comContent;
+					
+					if(jsonObject.error_code != '0')
+					{
+						//unmask window
+						unmaskWindow();
+						
+						alert('提交当前评审批次时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+					}
+					else
+					{
+						//局部刷新当前当前评审批次数据
+						getPartBatchDataByBatchId(batchId,null,{applicantBaomingbiaoID:''},'SUBMTALL','当前评审批次[' + getBatchNameById(batchId) + ']提交成功。');
+					}
+				}
+				catch(e1)
+				{
+					if(window.evaluateSystemDebugFlag == 'Y')
+					{
+						alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+						var mytmpWindow = window.open("about:blank");
+						mytmpWindow.document.body.innerHTML = response.responseText;
+					}
+					else
+					{
+						alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+					}
+					
+					//unmask window
+					unmaskWindow();
+				}
+			},
+			failure:function(response)
+			{
+				if(window.evaluateSystemDebugFlag == 'Y')
+				{
+					alert('提交当前评审批次时发生错误，请与系统管理员联系：' + response.responseText);
+				}
+				else
+				{
+					alert('提交当前评审批次时发生错误，请与系统管理员联系。');
+				}
+				
+				//unmask window
+				unmaskWindow();
+			}
+		}
+	);
 }
 
 
