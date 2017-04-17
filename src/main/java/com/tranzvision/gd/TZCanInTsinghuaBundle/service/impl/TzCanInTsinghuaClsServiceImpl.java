@@ -1070,11 +1070,29 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 									strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(tempCount),arrColor[i]);
 								}
 							}
+							
+							String histCont="";
+							String TZ_CANIN_XSRS=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CANIN_XSRS"}, "String");
+							String TZ_CANIN_GWJY=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CANIN_GWJY"}, "String");
+							//下属人数
+							if(null!=TZ_CANIN_XSRS&&strXxxBh.equals(TZ_CANIN_XSRS)){
+								histCont=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CANIN_XSRH_"+wjid}, "String");
+								if(null!=histCont){
+								  histCont=histCont.replaceAll("X", strClassId);
+								}
+							}
+							//岗位经验
+							if(null!=TZ_CANIN_GWJY&&strXxxBh.equals(TZ_CANIN_GWJY)){
+								histCont=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CANIN_GWJY_"+wjid}, "String");
+								if(null!=histCont){
+								 histCont=histCont.replaceAll("X", strClassId);
+								}
+							}
 							// 拼最终统计 数字填空题结果的Html
 							if(isMobile){
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_M_HTML",  TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2,digitalComAns);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_M_HTML",  TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2,digitalComAns,histCont);
 							}else{
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2,digitalComAns);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2,digitalComAns,histCont);
 							}
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
