@@ -476,9 +476,9 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 						}
 					} else {
 						if(num==1) {
-							ckcjxTxtInfoTmp = "<span width='127px'>" + scoreItemNameClps+"：</span><span>"+scoreValue+"</span>";
+							ckcjxTxtInfoTmp = "<div style='float:left;width:90px;'>" + scoreItemNameClps+"：</div><div style='float:left;'>"+scoreValue+"</div><br />";
 						} else {
-							ckcjxTxtInfoTmp += "</br><span width='127px'></span><span>" + scoreValue + "</span>";
+							ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
 						}
 					}					
 				}
