@@ -505,6 +505,15 @@ var SurveyBuild = {
             }
             me.loadScript(item["classname"], callback, [item["classname"], item]);
         });
+        
+        //清华特有的改动
+        var ProjectId = $("#ProjectId").val(); 
+		console.log(ProjectId);
+		if (ProjectId =="PRJ_57") {		
+		} else {
+			$("#TZ_TZ_3_4").hide(); 
+			$("#TZ_TZ_3_3").parent().parent().hide(); 
+		}
     },
     _initAssociatedShowHide: function(b) {
         var a = "",
