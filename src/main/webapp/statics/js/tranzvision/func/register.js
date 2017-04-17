@@ -677,7 +677,7 @@ $(document).ready(function(){
 		});
 	});
 	//默认国家为中国
-	$("#TZ_SCH_CNAME_Country").val("中国大陆");
+	$("#TZ_SCH_CNAME_Country").val("中国");
 	$("#TZ_SCH_CNAME_Country").attr("ccode","CHN");
 	$.each([$("#TZ_SCH_CNAME"),$("#TZ_SCH_CNAME_click")],function(i,el){	
 		el.click(function(e){
