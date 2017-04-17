@@ -276,7 +276,7 @@ $(document).ready(function(){
 	   	$("#TZ_COUNTRY_click").css("cursor","");
 	});
 	//默认国家为中国
-	$("#TZ_SCH_CNAME_Country").val("中国");
+	$("#TZ_SCH_CNAME_Country").val("中国大陆");
 	$("#TZ_SCH_CNAME_Country").attr("ccode","CHN");
 	$("#TZ_SCH_CNAME").click(function(e) {
 		$("#ParamCon").val("TZ_SCH_CNAME");
