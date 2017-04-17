@@ -403,32 +403,98 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			
 
 			//材料评审成绩参考
-			String ckcjxId = getHardCodePoint.getHardCodePointVal("TZ_MSPS_CLPS_CKCJX_ID");
-			String ckcjxIdTmp = ","+ckcjxId+",";
-			String materialReviewDesc = "";
+			String ckcjxIdNum = getHardCodePoint.getHardCodePointVal("TZ_MSPS_CLPS_CKCJX_ID_NUM");
+			String ckcjxIdNumTmp = ","+ckcjxIdNum+",";
+			String ckcjxIdTxt = getHardCodePoint.getHardCodePointVal("TZ_MSPS_CLPS_CKCJX_ID_TXT");
+			String[] ckcjxIdTxtArr = ckcjxIdTxt.split(",");
+			String pyCjxId = getHardCodePoint.getHardCodePointVal("TZ_CLPS_PYCJX_ID");
 			
-			String sqlClps = "SELECT M.TZ_SCORE_ITEM_ID,M.AVG_NUM,N.DESCR FROM";
-			sqlClps = sqlClps + " (SELECT B.TZ_SCORE_ITEM_ID,AVG(B.TZ_SCORE_NUM) AVG_NUM FROM PS_TZ_CJX_TBL B";
-			sqlClps = sqlClps + " WHERE EXISTS (SELECT 'Y' FROM PS_TZ_MP_PW_KS_TBL C WHERE C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=?  AND C.TZ_APP_INS_ID=? AND C.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID)";
-			sqlClps = sqlClps + " AND EXISTS (SELECT 'Y' FROM PS_TZ_MODAL_DT_TBL D WHERE D.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND D.TREE_NAME=? AND D.TZ_SCORE_ITEM_TYPE='W' )";
-			sqlClps = sqlClps + " GROUP BY B.TZ_SCORE_ITEM_ID) M";
-			sqlClps = sqlClps + " ,( SELECT A.TZ_SCORE_ITEM_ID,A.DESCR FROM PS_TZ_MODAL_DT_TBL A WHERE A.TREE_NAME=?) N";
-			sqlClps = sqlClps + " WHERE M.TZ_SCORE_ITEM_ID=N.TZ_SCORE_ITEM_ID";
+			String materialReviewDesc = "<table border='0' width='100%' style='font-size:12px;'>";
 			
-			List<Map<String, Object>> listClps = sqlQuery.queryForList(sqlClps, new Object[] {classId,applyBatchId,bmbId,scoreTreeMaterial,scoreTreeMaterial});
+			String sqlClps = "";
+			String ckcjxNumInfo = "",ckcjxTxtInfo = "";
 			
-			for(Map<String, Object> mapClps : listClps) {
-				String scoreItemIdClps = mapClps.get("TZ_SCORE_ITEM_ID") == null ? "" : mapClps.get("TZ_SCORE_ITEM_ID").toString();
-				String scoreItemNameClps = mapClps.get("DESCR") == null ? "" : mapClps.get("DESCR").toString();
-				Double scoreAvgNum = mapClps.get("AVG_NUM") == null ? 0.0 : Double.valueOf(mapClps.get("AVG_NUM").toString());
+			//数字成绩录入项
+			sqlClps = "SELECT M.TZ_SCORE_ITEM_ID,M.AVG_NUM,N.DESCR";
+			sqlClps += " FROM";
+			sqlClps += " (SELECT B.TZ_SCORE_ITEM_ID,AVG(B.TZ_SCORE_NUM) AVG_NUM FROM PS_TZ_CJX_TBL B";
+			sqlClps += " WHERE EXISTS (SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL C WHERE B.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID AND C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=?)";
+			sqlClps += " AND EXISTS (SELECT 'Y' FROM PS_TZ_MODAL_DT_TBL D WHERE D.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND D.TREE_NAME=? AND D.TZ_SCORE_ITEM_TYPE='B')";
+			sqlClps += " GROUP BY B.TZ_SCORE_ITEM_ID) M,";
+			sqlClps += " (SELECT A.TZ_SCORE_ITEM_ID,A.DESCR FROM PS_TZ_MODAL_DT_TBL A WHERE A.TREE_NAME=?) N";
+			sqlClps += " WHERE M.TZ_SCORE_ITEM_ID=N.TZ_SCORE_ITEM_ID";
+
+			List<Map<String, Object>> listClpsNum = sqlQuery.queryForList(sqlClps, new Object[] {classId,applyBatchId,bmbId,scoreTreeMaterial,scoreTreeMaterial});
+			
+			for(Map<String, Object> mapClpsNum : listClpsNum) {
+				String scoreItemIdClps = mapClpsNum.get("TZ_SCORE_ITEM_ID") == null ? "" : mapClpsNum.get("TZ_SCORE_ITEM_ID").toString();
+				String scoreItemNameClps = mapClpsNum.get("DESCR") == null ? "" : mapClpsNum.get("DESCR").toString();
+				Double scoreAvgNum = mapClpsNum.get("AVG_NUM") == null ? 0.0 : Double.valueOf(mapClpsNum.get("AVG_NUM").toString());
 				
-				Integer findFlag = ckcjxIdTmp.indexOf(","+scoreItemIdClps+",");
-				if("-1".equals(findFlag)) {
+				Integer findFlag = ckcjxIdNumTmp.indexOf(","+scoreItemIdClps+",");
+				if("-1".equals(String.valueOf(findFlag))) {
 					//未找到
-				} else {
-					materialReviewDesc = materialReviewDesc + scoreItemNameClps+"【"+scoreAvgNum+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+				} else {	
+					ckcjxNumInfo = ckcjxNumInfo + scoreItemNameClps+"【"+scoreAvgNum+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 				}
 			}
+			
+			if(!"".equals(ckcjxNumInfo)) {
+				materialReviewDesc += "<tr height='25'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td width='626px'>" + ckcjxNumInfo + "</td></tr>";
+			}
+			
+			//评语类型
+			int i=0;
+			for(i=0;i<ckcjxIdTxtArr.length;i++) {
+				String scoreItemIdClps = ckcjxIdTxtArr[i];
+				
+				sqlClps = "SELECT M.TZ_SCORE_PY_VALUE,N.DESCR";
+				sqlClps += " FROM";
+				sqlClps += " (SELECT B.TZ_SCORE_ITEM_ID,B.TZ_SCORE_INS_ID,B.TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL B";
+				sqlClps += " WHERE EXISTS (SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL C WHERE B.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID AND C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=?";
+				sqlClps += " AND B.TZ_SCORE_ITEM_ID=?)) M,";
+				sqlClps += " (SELECT A.TZ_SCORE_ITEM_ID,A.DESCR FROM PS_TZ_MODAL_DT_TBL A WHERE A.TREE_NAME=?) N";
+				sqlClps += " WHERE M.TZ_SCORE_ITEM_ID=N.TZ_SCORE_ITEM_ID";
+				
+				List<Map<String, Object>> listClpsTxt = sqlQuery.queryForList(sqlClps, new Object[] {classId,applyBatchId,bmbId,scoreItemIdClps,scoreTreeMaterial});
+				
+				int num = 0;
+				String ckcjxTxtInfoTmp = "";
+				
+				for(Map<String, Object> mapClpsTxt : listClpsTxt) {
+					String scoreItemNameClps = mapClpsTxt.get("DESCR") == null ? "" : mapClpsTxt.get("DESCR").toString();
+					String scoreValue = mapClpsTxt.get("TZ_SCORE_PY_VALUE") == null ? "": mapClpsTxt.get("TZ_SCORE_PY_VALUE").toString();
+					
+					num++;
+					
+					if(scoreItemIdClps.equals(pyCjxId)) {
+						//评语
+						if(num==1) {
+							ckcjxTxtInfoTmp = "评委"+String.valueOf(num)+"评语："+scoreValue;
+						} else {
+							ckcjxTxtInfoTmp +="</br>评委"+String.valueOf(num)+"评语："+scoreValue;
+						}
+					} else {
+						if(num==1) {
+							ckcjxTxtInfoTmp = "<div style='float:left;width:90px;'>" + scoreItemNameClps+"：</div><div style='float:left;'>"+scoreValue+"</div><br />";
+						} else {
+							ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
+						}
+					}					
+				}
+				
+				String trHeight = String.valueOf(num*25);
+				
+				if(!"".equals(ckcjxNumInfo)) {
+					ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td width='626px'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+				} else {
+					ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td width='626px'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+				}
+				
+				materialReviewDesc += ckcjxTxtInfo;
+			}
+			
+			materialReviewDesc += "</table>";
 			
 			mapRet.put("materialReviewDesc", materialReviewDesc);
 

@@ -25,6 +25,12 @@ public class PsTzFilterFldT extends PsTzFilterFldTKey {
 
     private String tzNoUporlow;
 
+    private String tzDeepqueryFlg;
+
+    private String tzDeepqueryView;
+
+    private String tzDeepqueryFld;
+
     public String getTzFilterFldDesc() {
         return tzFilterFldDesc;
     }
@@ -119,5 +125,29 @@ public class PsTzFilterFldT extends PsTzFilterFldTKey {
 
     public void setTzNoUporlow(String tzNoUporlow) {
         this.tzNoUporlow = tzNoUporlow == null ? null : tzNoUporlow.trim();
+    }
+
+    public String getTzDeepqueryFlg() {
+        return tzDeepqueryFlg;
+    }
+
+    public void setTzDeepqueryFlg(String tzDeepqueryFlg) {
+        this.tzDeepqueryFlg = tzDeepqueryFlg == null ? null : tzDeepqueryFlg.trim();
+    }
+
+    public String getTzDeepqueryView() {
+        return tzDeepqueryView;
+    }
+
+    public void setTzDeepqueryView(String tzDeepqueryView) {
+        this.tzDeepqueryView = tzDeepqueryView == null ? null : tzDeepqueryView.trim();
+    }
+
+    public String getTzDeepqueryFld() {
+        return tzDeepqueryFld;
+    }
+
+    public void setTzDeepqueryFld(String tzDeepqueryFld) {
+        this.tzDeepqueryFld = tzDeepqueryFld == null ? null : tzDeepqueryFld.trim();
     }
 }

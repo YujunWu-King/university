@@ -1558,7 +1558,7 @@ public class tzOnlineAppEngineImpl {
 				if (strPretPageNo != null && !strPretPageNo.equals("")) {
 					int PretPageNo = Integer.parseInt(strPretPageNo);
 					if (PretPageNo == numCurrentPageNo) {
-						sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
+						sql = "SELECT TZ_APP_PRE_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
 						String TZ_APP_FORM_STA = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
 						if (TZ_APP_FORM_STA.equals("P")) {
 							return "";

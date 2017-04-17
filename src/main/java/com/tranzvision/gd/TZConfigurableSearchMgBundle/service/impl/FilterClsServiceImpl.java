@@ -16,6 +16,8 @@ import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnTKey;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldTKey;
+import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfT;
+import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -106,12 +108,18 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 			String str_view_name = jacksonUtil.getString("ViewMc");
 
 			int total = 0;
+			
+			String strDqFlgDesc="";
+			String strDqFlg="";
+			String strDqView="";
+			String strDqFld="";
+			
 			// 查询总数;
 			String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
 			total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name },
 					"Integer");
 
-			String sql = "SELECT TZ_FILTER_FLD,TZ_FILTER_FLD_DESC,TZ_SORT_NUM,TZ_FLD_READONLY,TZ_FLD_HIDE,TZ_PROMPT_TBL_NAME,TZ_PROMPT_FLD FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? order by TZ_SORT_NUM asc limit ?,?";
+			String sql = "SELECT TZ_FILTER_FLD,TZ_FILTER_FLD_DESC,TZ_SORT_NUM,TZ_FLD_READONLY,TZ_FLD_HIDE,TZ_PROMPT_TBL_NAME,TZ_PROMPT_FLD,ifnull(TZ_DEEPQUERY_FLG,'N')TZ_DEEPQUERY_FLG,TZ_DEEPQUERY_VIEW,TZ_DEEPQUERY_FLD FROM PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? order by TZ_SORT_NUM asc limit ?,?";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
 					new Object[] { str_com_id, str_page_id, str_view_name, numStart, numLimit });
 			if (list != null && list.size()>0) {
@@ -123,6 +131,23 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 					String str_fld_hide = (String) list.get(i).get("TZ_FLD_HIDE");
 					String str_prompt_tbl = (String) list.get(i).get("TZ_PROMPT_TBL_NAME");
 					String str_prompt_fld = (String) list.get(i).get("TZ_PROMPT_FLD");
+					
+					strDqFlg="";
+					strDqView="";
+					strDqFld="";
+					strDqFlgDesc="";
+					
+					 strDqFlg=(String) list.get(i).get("TZ_DEEPQUERY_FLG");
+					 strDqView=(String) list.get(i).get("TZ_DEEPQUERY_VIEW");
+					 strDqFld=(String) list.get(i).get("TZ_DEEPQUERY_FLD");
+					 
+					 if ("Y".equals(strDqFlg)){
+						 strDqFlgDesc="是";
+					 }else{
+						 strDqFlgDesc="否";
+					 }
+					
+										
 					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("ComID", str_com_id);
 					map.put("PageID", str_page_id);
@@ -134,6 +159,11 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 					map.put("promptTab", str_prompt_tbl);
 					map.put("promptFld", str_prompt_fld);
 					map.put("orderNum", num_xh);
+					
+					map.put("deepQueryFlg", strDqFlg);
+					map.put("deepQueryFlgDesc", strDqFlgDesc);
+					map.put("deepQueryView", strDqView);
+					map.put("deepQueryFld", strDqFld);
 
 					listData.add(map);
 				}
@@ -300,6 +330,15 @@ public class FilterClsServiceImpl extends FrameworkImpl {
 				psTzFilterFldTKey.setTzViewName(str_view_name);
 				psTzFilterFldTKey.setTzFilterFld(str_field_name);
 				psTzFilterFldTMapper.deleteByPrimaryKey(psTzFilterFldTKey);
+				
+				//Mabc，20170412，add-删除字段同时删除TZ_FILTER_YSF_T表
+				String strDelYsfSql = "delete from PS_TZ_FILTER_YSF_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
+				jdbcTemplate.update(strDelYsfSql,new Object[] { str_com_id, str_page_id, str_view_name ,str_field_name});
+				
+				//Mabc，20170412，add-删除字段同时删除TZ_FLTPRM_FLD_T表
+				String strDelPrmTblSql = "delete from PS_TZ_FLTPRM_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
+				jdbcTemplate.update(strDelPrmTblSql,new Object[] { str_com_id, str_page_id, str_view_name ,str_field_name});
+				
 
 			}
 		} catch (Exception e) {

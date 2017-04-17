@@ -392,7 +392,6 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 参数：从服务器获取的考生的相关JSON数据
 	*/
 	function genKSInfoHTML(ksinfoJSON){
-		var rtn_ksinfohtml = '<table border="0" width="100%" style="font-size:12px;">';
 
 		if(ksinfoJSON.interviewApplyId=="undefined") ksinfoJSON.interviewApplyId = "";
 		if(ksinfoJSON.name=="undefined") ksinfoJSON.name = "";
@@ -401,13 +400,20 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表"><span style="color:blue;">新开窗口看考生材料</span></a>';
-		
-		rtn_ksinfohtml += '<tr><td style="font-weight:bold;" width="97px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
-		rtn_ksinfohtml += '<tr><td colspan="5" height="40"><b>考生标签：</b>' + ksinfoJSON.examineeTag + '</td></tr>';
+
+		var rtn_ksinfohtml = '<table border="0" width="100%" style="font-size:12px;">';
+		rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="97px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
+		rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="97px">考生标签：</td><td colspan="4">' + ksinfoJSON.examineeTag + '</td></tr>';
 		//【初筛淘汰】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【校友推荐】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【自主创业】
-		rtn_ksinfohtml += '<tr><td colspan="5" height="40"><b>材料评审成绩参考：</b> '+ ksinfoJSON.materialReviewDesc +' </td></tr>';
-		//本科学校和成绩【80】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校中获得的奖励【80】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;英语水平【90】
 		rtn_ksinfohtml += '</table>';
+		//材料评审成绩参考
+		rtn_ksinfohtml += ksinfoJSON.materialReviewDesc;
+
+		//rtn_ksinfohtml += '<table border="0" width="100%" style="font-size:12px;">';
+		//rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px">材料评审成绩参考：</td><td width="626px">'+ ksinfoJSON.materialReviewDesc +'</td></tr>';
+		//本科学校和成绩【80】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;学校中获得的奖励【80】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;英语水平【90】
+		//rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px"></td><td width="626px">'+ ksinfoJSON.materialReviewDesc +'</td></tr>';
+		//rtn_ksinfohtml += '</table>';
 		
 		return rtn_ksinfohtml;
 	}
@@ -952,7 +958,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						text	: '保 存',
 						width	: 100,
 						height	: 30,
-						margin	: 10,
+						margin	: '10 10 10 0',
 						handler : function() {
 							if(dfAreaPanel[tmpBatchId].getForm().isValid()){
 								// mask window
@@ -1370,6 +1376,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 参数： 新的JSON数据
 	*/
 	function refreshDfAreaInIE(DfArea_NewJSON){
+
 		//销毁TIPs
 		Ext.destroy(dfArea_gzsm_ckwt_extObj[tmpBatchId]);
 		dfArea_gzsm_ckwt_extObj[tmpBatchId] = new Array();
@@ -1382,11 +1389,13 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var nowForm = dfAreaPanel[tmpBatchId].getForm();
 		
 		for(var item_i=0;item_i<item_data.length;item_i++){
+
 			var node_data = item_data[item_i];
 			var nowFormField = nowForm.findField(node_data.itemId);
 			if(nowFormField!=null){ //判断是否存在该字段，若存在则更新数值
 				var setTreeNodeValue = $.trim(node_data.itemValue);
 				if(node_data.itemIsLeaf=="N"){
+
 					if(setTreeNodeValue==""){
 						setTreeNodeValue="--";
 					}else{
@@ -1510,9 +1519,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		
 		//更新基本信息
 		var show_ksinfohtml=genKSInfoHTML(userpoints);
-		$("#show_ksinfo_div"+tmpBatchId).html(show_ksinfohtml);
+		$("#show_ksinfo_div_"+tmpBatchId).html(show_ksinfohtml);
 		
 		//更新报名表
+		//每个考生一个IFRAME
 		var tmpBatchIdBMBID = tmpBatchId + '_' + userpoints.bmbId;
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
@@ -1615,7 +1625,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				layout:'fit',
 				split: true,
 				width: '100%',
-				height:152,
+				//height:152,
 				items: dfPageWest_KsSearch[tmpBatchId]
 			},
 			{
@@ -1677,6 +1687,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						text: '返回批次评审主页面',
 						tooltip:'单击此按钮返回批次评审主页面。',
 						width: 140,
+						glyph:'xf04a@FontAwesome',
 						handler: function(item,pressed){showPreviousEvaluatePage(1);},
 						pressed: true
 					},
@@ -2012,7 +2023,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			position: {
 				at: 'top right', // Position the tooltip above the link
 				my: 'bottom right',
-				viewport: $(window), // Keep the tooltip on-screen at all times
+				//viewport: $(window), // Keep the tooltip on-screen at all times
+				viewport: $("#tz_evaluation_main"),
 				effect: false // Disable positioning animation
 			},
 			show: {

@@ -78,11 +78,21 @@
         },{
             xtype: 'checkboxfield',
             boxLabel: '<span style="font-weight:bold;">基本搜索模式下搜索条件操作运算符不可编辑</span>',
-            margin: '0 0 5 170',
+            margin: '0 0 5 175',
             hideLabel: true,
             inputvalue:'Y',
 			name: 'baseSchEdit',
 			hidden:true
+        },{
+        	 xtype: 'component',
+        	 html:'<a href="javascript:void(0)" style="text-decoration:none">' + '<span style="font-weight:bold;">高级设置</span>' + '</a>',
+             margin: '0 0 0 175',
+	         listeners:{
+	            	click:{
+	            		 element: 'el', //bind to the underlying el property on the panel
+	            		 fn: ''
+	            	}
+	            }
         }]
     },{
 		xtype: 'grid',
@@ -94,6 +104,7 @@
             xtype:"toolbar",
             items:[
                 {text:"新增",tooltip:"新增",iconCls:"add",handler:'addFld'},"-",
+                {text:"新增DeepQuery字段",tooltip:"新增DeepQuery字段",iconCls:"add",handler:'addDqFld'},"-",
                 {text:"编辑",tooltip:"编辑",iconCls:"edit",handler:'editSelFld'},"-",
                 {text:"删除",tooltip:"删除",iconCls:"remove",handler:'deleteFlds'}
             ]
@@ -220,6 +231,23 @@
 			Width: 120,
 			flex: 1
 		},{
+            text: '是否DeepQuery字段',
+			dataIndex: 'deepQueryFlgDesc',
+			Width: 200,
+			flex: 1
+		},{
+            text: '是否DeepQuery字段',
+            dataIndex: 'deepQueryFlg',
+            hidden: true
+        },{
+            text: 'DeepQuery视图',
+            dataIndex: 'deepQueryView',
+            hidden: true
+        },{
+            text: 'DeepQuery字段',
+            dataIndex: 'deepQueryFld',
+            hidden: true
+        },{
            menuDisabled: true,
            sortable: false,
 		   width:60,

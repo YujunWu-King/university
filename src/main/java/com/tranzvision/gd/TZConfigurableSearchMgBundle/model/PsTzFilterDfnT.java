@@ -7,6 +7,8 @@ public class PsTzFilterDfnT extends PsTzFilterDfnTKey {
 
     private Integer tzResultMaxNum;
 
+    private String tzCfgVSql;
+
     public String getTzAdvanceModel() {
         return tzAdvanceModel;
     }
@@ -29,5 +31,13 @@ public class PsTzFilterDfnT extends PsTzFilterDfnTKey {
 
     public void setTzResultMaxNum(Integer tzResultMaxNum) {
         this.tzResultMaxNum = tzResultMaxNum;
+    }
+
+    public String getTzCfgVSql() {
+        return tzCfgVSql;
+    }
+
+    public void setTzCfgVSql(String tzCfgVSql) {
+        this.tzCfgVSql = tzCfgVSql == null ? null : tzCfgVSql.trim();
     }
 }

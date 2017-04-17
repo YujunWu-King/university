@@ -60,6 +60,7 @@ function getQueryString(name) {
 } 
 
 userName = getQueryString("userName");
+console.log(userName);
 
 function layerMsg(content){
 	layer.open({
@@ -76,6 +77,7 @@ function BindEnter(obj)
 		 $("#submitbutton").trigger("click");
 	}
 }
+
 
 
 var jsonValue;
@@ -235,6 +237,14 @@ $(document).ready(function(){
 			$('#BIRTHDATEStyle').hide();
 		}
 	},300);
+	
+	/**取消input***/
+	$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country"),$("#TZ_SCH_CNAME"),$("#TZ_LEN_PROID")],function(i,el){	
+		el.focus(function(){
+        document.activeElement.blur();
+    })
+   });
+		
 	$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
 		el.click(function(e) { 
 			$("#ParamCon").val(el.attr("id"));
@@ -370,6 +380,7 @@ $(document).ready(function(){
 		create_yzm();
 	});
 }).on("click", "#submitbutton", function () {
+	console.log($("#signupForm").serializeJson());
 	var _nameFlg=$("#status_TZ_REALNAME").val();
 	var _emailFlg=$("#status_TZ_EMAIL").val();
 	var _moblieFlg=$("#status_TZ_MOBILE").val();
@@ -465,12 +476,15 @@ $(document).ready(function(){
 	if(_statusFlg=="error"){
 		return false;
 	}
-
+	 
+     console.log( _nameFlg+":"+_moblieFlg+":"+_yzmFlg)
 	if(_nameFlg=="0"&& _moblieFlg=="0" && _yzmFlg=="0"){
 		//$('#submitbutton').submit();
 		//var signupsContent = $("#signupForm").serialize();
 		
 		var signupsContent =$("#signupForm").serializeJson();
+		
+		console.log(signupsContent);
 
 		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"data":'+JSON.stringify(signupsContent)+',"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"5","isMobile":"Y","userName":"' + userName + '"}}';
 		$.ajax({
@@ -774,3 +788,35 @@ function changeImg(strId,strSuccessFlg){
 		}
 	}
 }
+/***页面默认设置**/
+var mperjsonValue;
+$(document).ready(function(){
+		//加载页面字段
+		var tzParams = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"sen":"6","isMobile":"Y","userName":"' + userName + '"}}';
+	$.ajax({
+		type:"post",
+		data:{
+			tzParams:tzParams
+		},
+		dataType:"json",
+		async:false,
+		url: TzUniversityContextPath + "/dispatcher",
+		success:function(data){
+		mperjsonValue=data.comContent;
+		console.log(mperjsonValue);
+		
+		$("#TZ_SCH_CNAME_Country").val(mperjsonValue.strCounttryName);
+		$("#TZ_SCH_CNAME_Country").css("color","#333");
+		$("#TZ_SCH_CNAME").val(mperjsonValue.strschoolName);
+		$("#TZ_SCH_CNAME").css("color","#333");
+		$("#TZ_LEN_PROID").val(mperjsonValue.strPrivence);
+		$("#TZ_LEN_PROID").css("color","#333");
+		$("#TZ_COMPANY_NAME").val(mperjsonValue.strCompanName);
+		$("#TZ_COMP_INDUSTRY").val(mperjsonValue.strIndustry);
+		$("#TZ_SCH_CNAME_Country").attr("ccode",mperjsonValue.strCounttry);
+		
+		
+		
+		}
+	})
+})

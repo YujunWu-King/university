@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Random;
 
 import javax.servlet.http.Cookie;
@@ -194,6 +196,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		// 页面跳转ID
 		String strPageID = "";
+		
+		//班级项目ID
+		String classProjectID="";
 
 		if ("appId".equals(strReferenceId)) {
 			strClassId = request.getParameter("TZ_CLASS_ID");
@@ -302,6 +307,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					psTzApptplDyTWithBLOBs = psTzApptplDyTMapper.selectByPrimaryKey(strTplId);
 
 					if (psTzApptplDyTWithBLOBs != null) {
+						
+						
 
 						/*----查看是否是查看附属模版 Start  ----*/
 						if (!"".equals(strAttachedTplId) && strAttachedTplId != null
@@ -330,6 +337,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								strAppOprId = String.valueOf(mapData.get("OPRID"));
 								strClassId = String.valueOf(mapData.get("TZ_CLASS_ID"));
 								strBatchId = String.valueOf(mapData.get("TZ_BATCH_ID"));
+								psTzClassInfT = psTzClassInfTMapper.selectByPrimaryKey(strClassId);
+								
+								classProjectID = psTzClassInfT.getTzPrjId();
 								if ("".equals(strSiteId) || strSiteId == null) {
 									// 如果没有传入siteId，则取班级对应的站点
 									sql = "select TZ_SITEI_ID from PS_TZ_CLASS_INF_T A,PS_TZ_PROJECT_SITE_T B where A.TZ_CLASS_ID=? AND A.TZ_PRJ_ID = B.TZ_PRJ_ID LIMIT 1";
@@ -440,7 +450,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			// 模版ID没有传过来
 			if (!"".equals(strClassId) && strClassId != null) {
 				psTzClassInfT = psTzClassInfTMapper.selectByPrimaryKey(strClassId); // TZ_IS_APP_OPEN
+				
 				if (psTzClassInfT != null && psTzClassInfT.getTzIsAppOpen().equals("Y")) {
+					classProjectID = psTzClassInfT.getTzPrjId();
 					if ("TZ_GUEST".equals(oprid) || "".equals(oprid)) {
 						/*--------匿名报名判断Begin---------*/
 						strTplId = psTzClassInfT.getTzAppModalId();
@@ -835,6 +847,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				strTplData = strTplData.replace("\\", "\\\\");
 				strTplData = strTplData.replace("$", "\\$");
+				
+				Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)"); 
+				Matcher mc = CRLF.matcher(strInsData);
+				if(mc.find()){
+					strInsData = mc.replaceAll("\\\\n");
+				}
 				strInsData = strInsData.replace("\\", "\\\\");
 				strInsData = strInsData.replace("$", "\\$");
 				// 处理HTML换行符号，是替换的\u2028;
@@ -866,7 +884,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
 						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
-						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg);
+						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg,classProjectID);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");

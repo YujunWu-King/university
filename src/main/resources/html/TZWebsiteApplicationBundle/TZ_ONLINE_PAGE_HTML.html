@@ -1578,6 +1578,8 @@
 	<input id="siteId" type="hidden" name="siteId" value="%bind(:10)" />
 	<input id="ClassId" type="hidden" name="ClassId" value="%bind(:5)" />
 	<input id="BatchId" type="hidden" name="BatchId" value="%bind(:40)"/>
+	<input id="ProjectId" type="hidden" name="BatchId" value="%bind(:53)"/>
+
 
 	<script type="text/javascript">
 			$(document).ready(function() {
@@ -1672,26 +1674,26 @@
 					$("#inpwd").hide();
 					$("#MainDiv").show(); 
 				} else {
-				if(passAuth && passAuth === "Y"){
+					if(passAuth && passAuth === "Y"){
 					
-					var is_password = getcookie("SURVEY_TJX_IS_PASSWORD");
-					var targetVal = SurveyBuild.appInsId + "_" + SurveyBuild.appTplId + "_Y";
-					//console.log("is_password:"+is_password);
-					//console.log("targetVal:"+targetVal);
-					if(is_password && is_password === targetVal){
+						var is_password = getcookie("SURVEY_TJX_IS_PASSWORD");
+						var targetVal = SurveyBuild.appInsId + "_" + SurveyBuild.appTplId + "_Y";
+						//console.log("is_password:"+is_password);
+						//console.log("targetVal:"+targetVal);
+						if(is_password && is_password === targetVal){
+							$("#mask").hide();
+							$("#inpwd").hide();
+							$("#MainDiv").show(); 
+						} else {
+							showMask(); 
+						}
+					} else {
 						$("#mask").hide();
 						$("#inpwd").hide();
 						$("#MainDiv").show(); 
-					} else {
-						showMask(); 
 					}
-				} else {
-					$("#mask").hide();
-					$("#inpwd").hide();
-					$("#MainDiv").show(); 
-
 				}
-				}
+				
 			});
 		</script>
 	<script type="text/javascript"

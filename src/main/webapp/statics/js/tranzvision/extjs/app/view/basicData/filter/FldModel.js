@@ -6,6 +6,7 @@ Ext.define('KitchenSink.view.basicData.filter.FldModel', {
         {name: 'PageID'},
         {name: 'ViewMc'},
         {name: 'FieldMc'},
-        {name: 'fieldDesc'}
+        {name: 'fieldDesc'},
+        {name: 'FieldView'}
     ]
 });

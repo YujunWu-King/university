@@ -569,7 +569,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var pageResSet;
         var className;
 
-        if(comMc=='DigitalCompletion'){
+        if(comMc=='DigitalCompletion'||comMc=='autoCompletion'){
             pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CSWJ_LIST_COM"]["TZ_CSWJ_XXX_STD2"];
             if( pageResSet == "" || pageResSet == undefined){
                 Ext.MessageBox.alert(Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD2.prompt","提示"), Ext.tzGetResourse("TZ_CSWJ_LIST_COM.TZ_CSWJ_XXX_STD2.nmyqx","您没有权限"));
@@ -656,8 +656,15 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var totalHisVal=0;
         var totalCurVal=0;
         store.each(function (rec) {
-            var hisVal = rec.get("TZ_HISTORY_VAL");
-            totalCurVal=totalCurVal+rec.get("TZ_CURYEAR_VAL");
+        	var curVal=rec.get("TZ_CURYEAR_VAL");
+        	var hisVal=rec.get("TZ_HISTORY_VAL");
+        	if(curVal==undefined){
+        		curVal=0;
+        	}
+        	if(hisVal==undefined){
+        		hisVal=0;
+        	}
+            totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
@@ -685,10 +692,18 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var totalHisVal=0;
         var totalCurVal=0;
         store.each(function (rec) {
-            var hisVal = rec.get("TZ_HISTORY_VAL");
-            totalCurVal=totalCurVal+rec.get("TZ_CURYEAR_VAL");
+        	var curVal=rec.get("TZ_CURYEAR_VAL");
+        	var hisVal=rec.get("TZ_HISTORY_VAL");
+        	if(curVal==undefined){
+        		curVal=0;
+        	}
+        	if(hisVal==undefined){
+        		hisVal=0;
+        	}
+            totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
+        
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
             var tzParams = this.getBackMsgParams(btn);
             var comView = this.getView();
@@ -710,8 +725,15 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var totalHisVal=0;
         var totalCurVal=0;
         store.each(function (rec) {
-            var hisVal = rec.get("TZ_HISTORY_VAL");
-            totalCurVal=totalCurVal+rec.get("TZ_CURYEAR_VAL");
+        	var curVal=rec.get("TZ_CURYEAR_VAL");
+        	var hisVal=rec.get("TZ_HISTORY_VAL");
+        	if(curVal==undefined){
+        		curVal=0;
+        	}
+        	if(hisVal==undefined){
+        		hisVal=0;
+        	}
+            totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
@@ -735,8 +757,15 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         var totalHisVal=0;
         var totalCurVal=0;
         store.each(function (rec) {
-            var hisVal = rec.get("TZ_HISTORY_VAL");
-            totalCurVal=totalCurVal+rec.get("TZ_CURYEAR_VAL");
+        	var curVal=rec.get("TZ_CURYEAR_VAL");
+        	var hisVal=rec.get("TZ_HISTORY_VAL");
+        	if(curVal==undefined){
+        		curVal=0;
+        	}
+        	if(hisVal==undefined){
+        		hisVal=0;
+        	}
+            totalCurVal=totalCurVal+curVal;
             totalHisVal = totalHisVal + hisVal;
         });
         if ((totalHisVal==100 || totalHisVal==0)&&(totalCurVal==100 || totalCurVal==0)) {
@@ -877,7 +906,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjdcController', {
         store.insert(rowCount, modal);
         dropBoxSetCellediting.startEditByPosition({
             row: rowCount,
-            column: 1
+            column: 0
         }); 
     }, 
     deleteOption:function(view,rowIndex){

@@ -72,7 +72,10 @@ public class MoblieZsrlListServiceImpl extends FrameworkImpl{
 		try {
 			//css和js														
 			jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LIST_JS_CSS",ctxPath,siteId,currentColumnId);
-			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LIST_HTML", columnName,"");
+			
+			//跳转首页url
+			String indexUrl = ctxPath+"/dispatcher?classid=mIndex&siteId="+siteId;
+			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LIST_HTML", columnName,"",indexUrl);
 			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",columnName,ctxPath,jsCss,siteId,menuId,listHtml);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -138,11 +141,11 @@ public class MoblieZsrlListServiceImpl extends FrameworkImpl{
 					String hotAndNewImg = "";
 					//int showImgNum = 0;
 					if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
-						if(artTitleStyle.indexOf("HOT") > 0){
+						if(artTitleStyle.indexOf("HOT") > -1){
 							hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/hot.png");
 							//showImgNum ++;
 						}
-						if(artTitleStyle.indexOf("NEW") > 0){
+						if(artTitleStyle.indexOf("NEW") > -1){
 							hotAndNewImg = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_HOT_NEW_HTML", ctxPath + "/statics/css/website/m/images/new.png");
 							//showImgNum ++;
 						}

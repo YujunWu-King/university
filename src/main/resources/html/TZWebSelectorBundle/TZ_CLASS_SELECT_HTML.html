@@ -108,6 +108,11 @@ a{text-decoration: none;}
 				alert("%bind(:8)");
 				return;
 			} else {
+				
+				var aaa = classid.split("--");
+				classid = aaa[0];
+				var projectID=aaa[1];
+				
 				var pageid = "%bind(:2)";
 				var linkId = "%bind(:9)";
 				$("#" + pageid, window.parent.document).val(classid);
@@ -152,7 +157,21 @@ a{text-decoration: none;}
 				}
 				$("#" + linkId, window.parent.document).html(FIRM_TYPE);
 				window.parent.$("#" + linkId).trigger("chosen:updated");
+				
+				//清华特有修改，根据不同的班级 显示某些控件需要隐藏
+				//var classIDDD = $("#ClassId").val(); 
+				console.log(projectID);
+				
+				if (projectID =="PRJ_57") {	
+					$("#TZ_TZ_3_4", window.parent.document).show(); 
+					$("#TZ_TZ_3_3", window.parent.document).parent().parent().show(); 
+				} else {
+					$("#TZ_TZ_3_4", window.parent.document).hide(); 
+					$("#TZ_TZ_3_3", window.parent.document).parent().parent().hide(); 
+				}
 				closeThis();
+				
+				
 			}
 		}
 		function closeThis() {

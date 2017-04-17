@@ -37,14 +37,14 @@ public class FliterForm extends FrameworkImpl {
 				cfgSrhId = jacksonUtil.getString("cfgSrhId");
 			}catch(Exception e){
 				errorMsg[0] = "1";
-				errorMsg[1] = "未获取对应的可配置搜索，请于管理员联系";
+				errorMsg[1] = "未获取对应的可配置搜索，请与管理员联系";
 				return strRet;
 			}
 
 			String[] cfgArr = cfgSrhId.split("\\.");
 			if (cfgArr == null || cfgArr.length != 3) {
 				errorMsg[0] = "1";
-				errorMsg[1] = "可配置搜索获取搜索条件失败，请于管理员联系";
+				errorMsg[1] = "可配置搜索获取搜索条件失败，请与管理员联系";
 				return strRet;
 			}
 
@@ -85,7 +85,7 @@ public class FliterForm extends FrameworkImpl {
 
 			if (!"Y".equals(isExist)) {
 				errorMsg[0] = "1";
-				errorMsg[1] = "找不到对应的配置搜索，请于管理员联系";
+				errorMsg[1] = "找不到对应的配置搜索，请与管理员联系";
 				return strRet;
 			}
 
@@ -123,8 +123,13 @@ public class FliterForm extends FrameworkImpl {
 			String fldQzType;
 			// 转换值字段:TZ_ZHZJH_ID;
 			String zhzJhId;
+			
+			//DeepQuery
+			//是否DeepQuery字段；DeepQuery视图；DeepQuery关联字段
+			String strDqFlg,strDqView,strDqFld;
+			
 			// 配置的搜索字段;
-			String cfgFldSql = "SELECT TZ_FILTER_FLD,TZ_FILTER_FLD_DESC,TZ_RESULT_MAX_NUM,TZ_FLD_READONLY,TZ_FLD_HIDE,TZ_PROMPT_TBL_NAME,TZ_PROMPT_FLD,TZ_PROMPT_DESC_FLD,TZ_ISDOWN_FLD,TZ_FLT_FLD_QZ_TYPE,TZ_ZHZJH_ID from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? order by TZ_SORT_NUM";
+			String cfgFldSql = "SELECT TZ_FILTER_FLD,TZ_FILTER_FLD_DESC,TZ_RESULT_MAX_NUM,TZ_FLD_READONLY,TZ_FLD_HIDE,TZ_PROMPT_TBL_NAME,TZ_PROMPT_FLD,TZ_PROMPT_DESC_FLD,TZ_ISDOWN_FLD,TZ_FLT_FLD_QZ_TYPE,TZ_ZHZJH_ID,TZ_DEEPQUERY_FLG,TZ_DEEPQUERY_VIEW,TZ_DEEPQUERY_FLD from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? order by TZ_SORT_NUM";
 			String fldJson = "";
 			try {
 				/** 字段类型 **/
@@ -142,6 +147,10 @@ public class FliterForm extends FrameworkImpl {
 					isDowm = (String) list.get(list_i).get("TZ_ISDOWN_FLD");
 					fldQzType = (String) list.get(list_i).get("TZ_FLT_FLD_QZ_TYPE");
 					zhzJhId = (String) list.get(list_i).get("TZ_ZHZJH_ID");
+					
+					strDqFlg=(String) list.get(list_i).get("TZ_DEEPQUERY_FLG");
+					strDqView=(String) list.get(list_i).get("TZ_DEEPQUERY_VIEW");
+					strDqFld=(String) list.get(list_i).get("TZ_DEEPQUERY_FLD");
 
 					String fldReadOnly = "";
 					if ("1".equals(readOnly)) {
@@ -211,26 +220,58 @@ public class FliterForm extends FrameworkImpl {
 						}
 
 					} else {
-						int index = resultFldTypeList.indexOf(fieldName);
-						if (index < 0) {
-							errorMsg[0] = "1";
-							errorMsg[1] = "字段：" + fieldName + "在可配置搜索中不存在，请于管理员联系";
-							return strRet;
-						} else {
-							String fieldType = resultFldTypeList.get(index + 1);
-
-							if (intTypeString.contains(fieldType)) {
-								// 数字;
-								fldType = "02";
-							} else if ("DATE".equals(fieldType)) {
-								// 是否是日期;
-								fldType = "03";
-							} else if ("TIME".equals(fieldType)) {
-								// 是否是时间;
-								fldType = "04";
+						
+						if("Y".equals(strDqFlg)){
+							//DeepQuery字段
+							String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=?";
+							String strDeepQueryFlgType = jdbcTemplate.queryForObject(strDeepQueryFldTypeSql, new Object[] {strDqView,fieldName }, "String");
+							if(!"".equals(strDeepQueryFlgType) ){
+								
+								if (intTypeString.contains(strDeepQueryFlgType)) {
+									// 数字;
+									fldType = "02";
+								} else if ("DATE".equals(strDeepQueryFlgType)) {
+									// 是否是日期;
+									fldType = "03";
+								} else if ("TIME".equals(strDeepQueryFlgType)) {
+									// 是否是时间;
+									fldType = "04";
+								} else {
+									// 字符串;
+									fldType = "01";
+								}
+								
+							}else{
+								errorMsg[0] = "1";
+								errorMsg[1] = "字段：" + fieldName + "在DeepQuery视图中不存在，请与管理员联系";
+								return strRet;
+							}							
+							
+							
+						}else{
+							//非DeepQuery字段
+						
+							int index = resultFldTypeList.indexOf(fieldName);
+							if (index < 0) {
+								errorMsg[0] = "1";
+								errorMsg[1] = "字段：" + fieldName + "在可配置搜索中不存在，请与管理员联系";
+								return strRet;
 							} else {
-								// 字符串;
-								fldType = "01";
+								String fieldType = resultFldTypeList.get(index + 1);
+	
+								if (intTypeString.contains(fieldType)) {
+									// 数字;
+									fldType = "02";
+								} else if ("DATE".equals(fieldType)) {
+									// 是否是日期;
+									fldType = "03";
+								} else if ("TIME".equals(fieldType)) {
+									// 是否是时间;
+									fldType = "04";
+								} else {
+									// 字符串;
+									fldType = "01";
+								}
 							}
 						}
 					}
@@ -278,7 +319,7 @@ public class FliterForm extends FrameworkImpl {
 
 		if (resultFldArray == null) {
 			errorMsg[0] = "1";
-			errorMsg[1] = "可配置搜索无返回字段，请于管理员联系";
+			errorMsg[1] = "可配置搜索无返回字段，请与管理员联系";
 			return strRet;
 		}
 
@@ -299,7 +340,7 @@ public class FliterForm extends FrameworkImpl {
 			String[] comPageRecArr = cfgSrhId.split("\\.");
 			if (comPageRecArr == null || comPageRecArr.length != 3) {
 				errorMsg[0] = "1";
-				errorMsg[1] = "可配置搜索参数有误，请于管理员联系";
+				errorMsg[1] = "可配置搜索参数有误，请与管理员联系";
 				return strRet;
 			}
 
@@ -331,7 +372,7 @@ public class FliterForm extends FrameworkImpl {
 
 			if (!"Y".equals(exist)) {
 				errorMsg[0] = "1";
-				errorMsg[1] = "可配置搜索未配置【" + cfgSrhId + "】，请于管理员联系";
+				errorMsg[1] = "可配置搜索未配置【" + cfgSrhId + "】，请与管理员联系";
 				return strRet;
 			}
 
@@ -365,7 +406,7 @@ public class FliterForm extends FrameworkImpl {
 				int index = resultFldTypeList.indexOf(resultFld);
 				if (index < 0) {
 					errorMsg[0] = "1";
-					errorMsg[1] = "结果字段：" + resultFld + "在可配置搜索中不存在，请于管理员联系";
+					errorMsg[1] = "结果字段：" + resultFld + "在可配置搜索中不存在，请与管理员联系";
 					return strRet;
 				} else {
 					String fieldType = resultFldTypeList.get(index + 1);
@@ -398,6 +439,8 @@ public class FliterForm extends FrameworkImpl {
 			result = result.substring(1);
 
 			String sqlWhere = "";
+			String sqlDeepQuery="";
+			
 			// 搜索条件;
 			if (jacksonUtil.containsKey("condition")) {
 
@@ -425,7 +468,7 @@ public class FliterForm extends FrameworkImpl {
 								operate = (String) conditionJson.get(operateKey);
 							} catch (Exception e) {
 								errorMsg[0] = "1";
-								errorMsg[1] = "可配置搜索配置错误，请于管理员联系";
+								errorMsg[1] = "可配置搜索配置错误，请与管理员联系";
 								return strRet;
 							}
 							
@@ -463,6 +506,27 @@ public class FliterForm extends FrameworkImpl {
 								fldValue = "";
 								
 							}
+							
+							//查看DeepQuery字段
+							//是否DeepQuery字段；DeepQuery视图；DeepQuery关联字段
+							String strDqFlg="";
+							String strDqView="";
+							String strDqFld="";
+							String strDqSql = "SELECT TZ_DEEPQUERY_FLG,TZ_DEEPQUERY_VIEW,TZ_DEEPQUERY_FLD from PS_TZ_FILTER_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FILTER_FLD=?";
+							Map<String, Object> mapDeepQuery = jdbcTemplate.queryForMap(strDqSql,new Object[]{comId, pageId, recname, fieldName});
+							
+							if (mapDeepQuery != null) {
+								strDqFlg = (String) mapDeepQuery.get("TZ_DEEPQUERY_FLG");
+								strDqView = (String) mapDeepQuery.get("TZ_DEEPQUERY_VIEW");
+								strDqFld = (String) mapDeepQuery.get("TZ_DEEPQUERY_FLD");
+							}
+							if ("Y".equals(strDqFlg)){
+								if("".equals(strDqView)||"".equals(strDqFld)){
+									errorMsg[0] = "1";
+									errorMsg[1] = "字段：" + fieldName + "在可配置搜索中未配置DeepQuery视图或关联字段，请与管理员联系";
+									return strRet;	
+								}
+							}
 
 							// 查看搜索字段是不是不区分大小写:TZ_NO_UPORLOW;
 							String noUpOrLow = "";
@@ -478,24 +542,22 @@ public class FliterForm extends FrameworkImpl {
 							String value = "";
 							String isChar = "";
 
-							int index = resultFldTypeList.indexOf(fieldName);
-							if (index < 0) {
-								errorMsg[0] = "1";
-								errorMsg[1] = "字段：" + fieldName + "在可配置搜索中不存在，请于管理员联系";
-								return strRet;
-							} else {
-								String fieldType = resultFldTypeList.get(index + 1);
+							if("Y".equals(strDqFlg)){
+								//是DeepQuery字段,拼装DeepQuery查询SQL;;
+								
+								String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=?";
+								String strDeepQueryFlgType = jdbcTemplate.queryForObject(strDeepQueryFldTypeSql, new Object[] {strDqView,fieldName }, "String");
 
-								if (intTypeString.contains(fieldType)) {
+								if (intTypeString.contains(strDeepQueryFlgType)) {
 									// 数字;
 									value = fldValue;
-								} else if ("DATE".equals(fieldType)) {
+								} else if ("DATE".equals(strDeepQueryFlgType)) {
 									// 是否是日期;
 									value = " str_to_date('" + fldValue + "','%Y-%m-%d')";
-								} else if ("TIME".equals(fieldType)) {
+								} else if ("TIME".equals(strDeepQueryFlgType)) {
 									// 是否是时间;
 									value = " str_to_date('" + fldValue + "','%H:%i')";
-								} else if ("DATETIME".equals(fieldType) || "TIMESTAMP".equals(fieldType)) {
+								} else if ("DATETIME".equals(strDeepQueryFlgType) || "TIMESTAMP".equals(strDeepQueryFlgType)) {
 									// 是否日期时间;
 									value = " str_to_date('" + fldValue + "','%Y-%m-%d %H:%i')";
 								} else {
@@ -510,10 +572,10 @@ public class FliterForm extends FrameworkImpl {
 									}
 								}
 
-								if ("".equals(sqlWhere)) {
-									sqlWhere = " WHERE ";
+								if ("".equals(sqlDeepQuery)) {
+									sqlDeepQuery="  (EXISTS (SELECT 'X' FROM "+strDqView+" WHERE "+strDqView+"."+strDqFld+" ="+tableName+"."+strDqFld+" AND ";
 								} else {
-									sqlWhere = sqlWhere + " AND ";
+									sqlDeepQuery = sqlDeepQuery + ")) AND  (EXISTS (SELECT 'X' FROM "+strDqView+" WHERE "+strDqView+"."+strDqFld+" ="+tableName+"."+strDqFld+" AND ";
 								}
 
 								// 操作符;
@@ -525,32 +587,32 @@ public class FliterForm extends FrameworkImpl {
 								case 1:
 									// 等于;
 									operate = "=";
-									sqlWhere = sqlWhere + fieldName + operate + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + operate + value;
 									break;
 								case 2:
 									// 不等于;
 									operate = "<>";
-									sqlWhere = sqlWhere + fieldName + operate + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + operate + value;
 									break;
 								case 3:
 									// 大于;
 									operate = ">";
-									sqlWhere = sqlWhere + fieldName + operate + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + operate + value;
 									break;
 								case 4:
 									// 大于等于;
 									operate = ">=";
-									sqlWhere = sqlWhere + fieldName + operate + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + operate + value;
 									break;
 								case 5:
 									// 小于;
 									operate = "<";
-									sqlWhere = sqlWhere + fieldName + operate + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + operate + value;
 									break;
 								case 6:
 									// 小于等于;
 									operate = "<=";
-									sqlWhere = sqlWhere + fieldName + operate + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + operate + value;
 									break;
 								case 7:
 									// 包含;
@@ -559,7 +621,7 @@ public class FliterForm extends FrameworkImpl {
 									} else {
 										value = "'%" + fldValue + "%'";
 									}
-									sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + " LIKE " + value;
 									break;
 								case 8:
 									// 开始于…;
@@ -568,7 +630,7 @@ public class FliterForm extends FrameworkImpl {
 									} else {
 										value = "'" + fldValue + "%'";
 									}
-									sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + " LIKE " + value;
 									break;
 								case 9:
 									// 结束于…;
@@ -577,7 +639,7 @@ public class FliterForm extends FrameworkImpl {
 									} else {
 										value = "'%" + fldValue + "'";
 									}
-									sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + " LIKE " + value;
 									break;
 								case 10:
 									fldValue = fldValue.replaceAll(" ", ",");
@@ -601,7 +663,7 @@ public class FliterForm extends FrameworkImpl {
 										value = "(" + value + ")";
 									}
 
-									sqlWhere = sqlWhere + fieldName + " IN " + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + " IN " + value;
 									break;
 								case 11:
 									// 为空;
@@ -611,7 +673,7 @@ public class FliterForm extends FrameworkImpl {
 									 * sqlWhere = sqlWhere + fieldName +
 									 * " IS NULL"; }
 									 **/
-									sqlWhere = sqlWhere + fieldName + " IS NULL";
+									sqlDeepQuery = sqlDeepQuery + fieldName + " IS NULL";
 									break;
 								case 12:
 									// 不为空;
@@ -621,23 +683,183 @@ public class FliterForm extends FrameworkImpl {
 									 * sqlWhere = sqlWhere + fieldName +
 									 * " IS NOT NULL"; }
 									 ***/
-									sqlWhere = sqlWhere + fieldName + " IS NOT NULL";
+									sqlDeepQuery = sqlDeepQuery + fieldName + " IS NOT NULL";
 									break;
 
 								default:
-									sqlWhere = sqlWhere + fieldName + "=" + value;
+									sqlDeepQuery = sqlDeepQuery + fieldName + "=" + value;
 									break;
 								}
-								/*System.out.println("fieldName   :"+fieldName);
-								System.out.println("value   :"+value);
-								System.out.println("sqlWhere   :"+sqlWhere);*/
+							}else{
 								
-								
+								int index = resultFldTypeList.indexOf(fieldName);
+								if (index < 0) {
+									errorMsg[0] = "1";
+									errorMsg[1] = "字段：" + fieldName + "在可配置搜索中不存在，请与管理员联系";
+									return strRet;
+								} else {
+									String fieldType = resultFldTypeList.get(index + 1);
+
+									if (intTypeString.contains(fieldType)) {
+										// 数字;
+										value = fldValue;
+									} else if ("DATE".equals(fieldType)) {
+										// 是否是日期;
+										value = " str_to_date('" + fldValue + "','%Y-%m-%d')";
+									} else if ("TIME".equals(fieldType)) {
+										// 是否是时间;
+										value = " str_to_date('" + fldValue + "','%H:%i')";
+									} else if ("DATETIME".equals(fieldType) || "TIMESTAMP".equals(fieldType)) {
+										// 是否日期时间;
+										value = " str_to_date('" + fldValue + "','%Y-%m-%d %H:%i')";
+									} else {
+										// 字符串;
+										isChar = "Y";
+										fldValue = fldValue.replaceAll("'", "''");
+										value = "'" + fldValue + "'";
+										if ("A".equals(noUpOrLow) && !"10".equals(operate) && !"11".equals(operate)
+												&& !"12".equals(operate)) {
+											value = "upper(" + value + ")";
+											fieldName = "upper(" + fieldName + ")";
+										}
+									}
+
+									if ("".equals(sqlWhere)) {
+										sqlWhere = " WHERE ";
+									} else {
+										sqlWhere = sqlWhere + " AND ";
+									}
+
+									// 操作符;
+									if ("0".equals(operate.substring(0, 1))) {
+										operate = operate.substring(1);
+									}
+
+									switch (Integer.parseInt(operate)) {
+									case 1:
+										// 等于;
+										operate = "=";
+										sqlWhere = sqlWhere + fieldName + operate + value;
+										break;
+									case 2:
+										// 不等于;
+										operate = "<>";
+										sqlWhere = sqlWhere + fieldName + operate + value;
+										break;
+									case 3:
+										// 大于;
+										operate = ">";
+										sqlWhere = sqlWhere + fieldName + operate + value;
+										break;
+									case 4:
+										// 大于等于;
+										operate = ">=";
+										sqlWhere = sqlWhere + fieldName + operate + value;
+										break;
+									case 5:
+										// 小于;
+										operate = "<";
+										sqlWhere = sqlWhere + fieldName + operate + value;
+										break;
+									case 6:
+										// 小于等于;
+										operate = "<=";
+										sqlWhere = sqlWhere + fieldName + operate + value;
+										break;
+									case 7:
+										// 包含;
+										if ("A".equals(noUpOrLow)) {
+											value = "'%" + fldValue.toUpperCase() + "%'";
+										} else {
+											value = "'%" + fldValue + "%'";
+										}
+										sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+										break;
+									case 8:
+										// 开始于…;
+										if ("A".equals(noUpOrLow)) {
+											value = "'" + fldValue.toUpperCase() + "%'";
+										} else {
+											value = "'" + fldValue + "%'";
+										}
+										sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+										break;
+									case 9:
+										// 结束于…;
+										if ("A".equals(noUpOrLow)) {
+											value = "'%" + fldValue.toUpperCase() + "'";
+										} else {
+											value = "'%" + fldValue + "'";
+										}
+										sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+										break;
+									case 10:
+										fldValue = fldValue.replaceAll(" ", ",");
+										fldValue = fldValue.trim();
+										String[] inArr = fldValue.split(",");
+
+										int inArrLen = inArr.length;
+										if (inArrLen > 0) {
+											value = "";
+											if ("Y".equals(isChar)) {
+												for (int ii = 0; ii < inArrLen; ii++) {
+													value = value + ",'" + inArr[ii] + "'";
+												}
+
+											} else {
+												for (int ii = 0; ii < inArrLen; ii++) {
+													value = value + "," + inArr[ii];
+												}
+											}
+											value = value.substring(1);
+											value = "(" + value + ")";
+										}
+
+										sqlWhere = sqlWhere + fieldName + " IN " + value;
+										break;
+									case 11:
+										// 为空;
+										/**
+										 * if("Y".equals(isChar)){ sqlWhere =
+										 * sqlWhere + fieldName + " = ' '"; }else{
+										 * sqlWhere = sqlWhere + fieldName +
+										 * " IS NULL"; }
+										 **/
+										sqlWhere = sqlWhere + fieldName + " IS NULL";
+										break;
+									case 12:
+										// 不为空;
+										/***
+										 * if("Y".equals(isChar)){ sqlWhere =
+										 * sqlWhere + fieldName + " <> ' '"; }else{
+										 * sqlWhere = sqlWhere + fieldName +
+										 * " IS NOT NULL"; }
+										 ***/
+										sqlWhere = sqlWhere + fieldName + " IS NOT NULL";
+										break;
+
+									default:
+										sqlWhere = sqlWhere + fieldName + "=" + value;
+										break;
+									}
+									/*System.out.println("fieldName   :"+fieldName);
+									System.out.println("value   :"+value);
+									System.out.println("sqlWhere   :"+sqlWhere);*/
+									
+									
+									
+								}
 								
 							}
+							
+							
 						}
 					}
 				}
+			}
+			
+			if (!"".equals(sqlDeepQuery)){
+				sqlDeepQuery=sqlDeepQuery+"))";
 			}
 
 			String orderby = "";
@@ -650,11 +872,23 @@ public class FliterForm extends FrameworkImpl {
 				orderby = " ORDER BY " + orderby;
 			}
 			
+			if("".equals(sqlWhere)){
+				if(!"".equals(sqlDeepQuery)){
+					sqlWhere=" WHERE "+sqlDeepQuery;
+				}
+			}else{
+				if(!"".equals(sqlDeepQuery)){
+					sqlWhere=sqlWhere+" AND"+sqlDeepQuery;
+				}
+			}
+			
+			
+			
 			// 得到总条数;
 			String totalSQL = "SELECT COUNT(1) FROM " + tableName + sqlWhere;
 			numTotal = jdbcTemplate.queryForObject(totalSQL, "Integer");
 
-			
+
 
 			// 总数;
 			if (maxNum > 0 && numTotal > maxNum) {
@@ -740,7 +974,7 @@ public class FliterForm extends FrameworkImpl {
 					String[] comPageRecArr = cfgSrhId.split("\\.");
 					if (comPageRecArr == null || comPageRecArr.length != 3) {
 						errorMsg[0] = "1";
-						errorMsg[1] = "可配置搜索参数有误，请于管理员联系";
+						errorMsg[1] = "可配置搜索参数有误，请与管理员联系";
 						return strRet;
 					}
 
@@ -779,7 +1013,7 @@ public class FliterForm extends FrameworkImpl {
 									System.out.println("operate= "+operate);
 								} catch (Exception e) {
 									errorMsg[0] = "1";
-									errorMsg[1] = "可配置搜索配置错误，请于管理员联系";
+									errorMsg[1] = "可配置搜索配置错误，请与管理员联系";
 									return strRet;
 								}
 								System.out.println("fieldName= "+fieldName);
@@ -1087,7 +1321,7 @@ public class FliterForm extends FrameworkImpl {
 
 			if (!"Y".equals(exist)) {
 				errorMsg[0] = "1";
-				errorMsg[1] = "可配置搜索未配置【" + cfgSrhId + "】，请于管理员联系";
+				errorMsg[1] = "可配置搜索未配置【" + cfgSrhId + "】，请与管理员联系";
 				return strRet;
 			}
 
@@ -1121,7 +1355,7 @@ public class FliterForm extends FrameworkImpl {
 				int index = resultFldTypeList.indexOf(resultFld);
 				if (index < 0) {
 					errorMsg[0] = "1";
-					errorMsg[1] = "结果字段：" + resultFld + "在可配置搜索中不存在，请于管理员联系";
+					errorMsg[1] = "结果字段：" + resultFld + "在可配置搜索中不存在，请与管理员联系";
 					return strRet;
 				} else {
 					String fieldType = resultFldTypeList.get(index + 1);
@@ -1181,7 +1415,7 @@ public class FliterForm extends FrameworkImpl {
 								operate = (String) conditionJson.get(operateKey);
 							} catch (Exception e) {
 								errorMsg[0] = "1";
-								errorMsg[1] = "可配置搜索配置错误，请于管理员联系";
+								errorMsg[1] = "可配置搜索配置错误，请与管理员联系";
 								return strRet;
 							}
 							
@@ -1237,7 +1471,7 @@ public class FliterForm extends FrameworkImpl {
 							int index = resultFldTypeList.indexOf(fieldName);
 							if (index < 0) {
 								errorMsg[0] = "1";
-								errorMsg[1] = "字段：" + fieldName + "在可配置搜索中不存在，请于管理员联系";
+								errorMsg[1] = "字段：" + fieldName + "在可配置搜索中不存在，请与管理员联系";
 								return strRet;
 							} else {
 								String fieldType = resultFldTypeList.get(index + 1);
