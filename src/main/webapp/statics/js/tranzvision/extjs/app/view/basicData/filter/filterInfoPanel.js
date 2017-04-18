@@ -83,7 +83,7 @@
             inputvalue:'Y',
 			name: 'baseSchEdit',
 			hidden:true
-        },{
+        }/*,{
         	 xtype: 'component',
         	 html:'<a href="javascript:void(0)" style="text-decoration:none">' + '<span style="font-weight:bold;">高级设置</span>' + '</a>',
              margin: '0 0 0 175',
@@ -93,7 +93,7 @@
 	            		 fn: ''
 	            	}
 	            }
-        }]
+        }*/]
     },{
 		xtype: 'grid',
 		height: 360,

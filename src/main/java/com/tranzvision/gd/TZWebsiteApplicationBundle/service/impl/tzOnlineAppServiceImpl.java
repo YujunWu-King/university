@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Random;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +40,6 @@ import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzOprPhotoTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhotoT;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
-import com.tranzvision.gd.TZRecommendationBundle.service.impl.TzTjxThanksServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
@@ -196,9 +195,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		// 页面跳转ID
 		String strPageID = "";
-		
-		//班级项目ID
-		String classProjectID="";
+
+		// 班级项目ID
+		String classProjectID = "";
 
 		if ("appId".equals(strReferenceId)) {
 			strClassId = request.getParameter("TZ_CLASS_ID");
@@ -307,8 +306,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					psTzApptplDyTWithBLOBs = psTzApptplDyTMapper.selectByPrimaryKey(strTplId);
 
 					if (psTzApptplDyTWithBLOBs != null) {
-						
-						
 
 						/*----查看是否是查看附属模版 Start  ----*/
 						if (!"".equals(strAttachedTplId) && strAttachedTplId != null
@@ -338,7 +335,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								strClassId = String.valueOf(mapData.get("TZ_CLASS_ID"));
 								strBatchId = String.valueOf(mapData.get("TZ_BATCH_ID"));
 								psTzClassInfT = psTzClassInfTMapper.selectByPrimaryKey(strClassId);
-								
+
 								classProjectID = psTzClassInfT.getTzPrjId();
 								if ("".equals(strSiteId) || strSiteId == null) {
 									// 如果没有传入siteId，则取班级对应的站点
@@ -450,7 +447,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			// 模版ID没有传过来
 			if (!"".equals(strClassId) && strClassId != null) {
 				psTzClassInfT = psTzClassInfTMapper.selectByPrimaryKey(strClassId); // TZ_IS_APP_OPEN
-				
+
 				if (psTzClassInfT != null && psTzClassInfT.getTzIsAppOpen().equals("Y")) {
 					classProjectID = psTzClassInfT.getTzPrjId();
 					if ("TZ_GUEST".equals(oprid) || "".equals(oprid)) {
@@ -847,10 +844,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				strTplData = strTplData.replace("\\", "\\\\");
 				strTplData = strTplData.replace("$", "\\$");
-				
-				Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)"); 
+
+				Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
 				Matcher mc = CRLF.matcher(strInsData);
-				if(mc.find()){
+				if (mc.find()) {
 					strInsData = mc.replaceAll("\\\\n");
 				}
 				strInsData = strInsData.replace("\\", "\\\\");
@@ -884,7 +881,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
 						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
-						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg,classProjectID);
+						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg, classProjectID);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");
@@ -1602,7 +1599,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						}
 					}
 					if ("BMB".equals(strTplType)) {
-						tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
+
 					}
 					System.out.println("报名表保存SUBMIT数据End,Time=" + (System.currentTimeMillis() - time2));
 				} else if ("CONFIRMSUBMIT".equals(strOtype)) {
@@ -1616,9 +1613,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId, strTplType,
 								strBatchId, strPwd, isPwd);
 						if ("BMB".equals(strTplType)) {
+							/* 20170417 by hjl */
+							if ("".equals(strMsg)) {
+								// 同步报名人联系方式 提交成功后保存数据
+								tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
+							}
 
-							// 同步报名人联系方式
-							tzOnlineAppEngineImpl.savaAppKsInfoExt(numAppInsId, strAppOprId);
 							tzOnlineAppEngineImpl.savaContactInfo(numAppInsId, strTplId, strAppOprId);
 							// 发送邮件
 							String strSubmitSendEmail = tzOnlineAppEngineImpl.sendSubmitEmail(numAppInsId, strTplId,
