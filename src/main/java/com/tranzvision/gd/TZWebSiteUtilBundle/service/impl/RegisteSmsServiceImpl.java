@@ -754,7 +754,9 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 			siteid = jacksonUtil.getString("siteid").trim();
 			isMobile = jacksonUtil.getString("isMobile").trim();
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "55", "获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
-			String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "122", "密码强度不够", "Stronger password needed.");
+			/*String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "122", "密码强度不够", "Stronger password needed.");*/
+			String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "134",
+					"密码格式不符合要求", "Wrong password format.");
 			String strNotice = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "123", "请重置新密码", "Please Enter New Password.");
 			
 			//String siteidSQL = "SELECT TZ_SITEI_ID,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y'";
