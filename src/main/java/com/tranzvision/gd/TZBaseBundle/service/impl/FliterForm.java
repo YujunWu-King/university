@@ -1111,6 +1111,7 @@ public class FliterForm extends FrameworkImpl {
 											}
 
 										} else {
+											
 											for (int ii = 0; ii < inArrLen; ii++) {
 												value = value + "," + inArr[ii];
 											}
