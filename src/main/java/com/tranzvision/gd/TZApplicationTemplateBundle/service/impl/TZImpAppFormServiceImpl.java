@@ -3,7 +3,10 @@ package com.tranzvision.gd.TZApplicationTemplateBundle.service.impl;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +100,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		if (maxInsId != null && maxInsId > numAppInsId) {
 			numAppInsId = maxInsId;
 		}
-
+		Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)"); 
 		String sql = "SELECT * FROM PS_TZ_APPINS_TBL WHERE cast(TZ_APP_INS_ID as unsigned int) >= ? AND cast(TZ_APP_INS_ID as unsigned int) < ? order by cast(TZ_APP_INS_ID as unsigned int)";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { min, max });
 		for (Object obj : resultlist) {
@@ -111,7 +114,18 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			String attrText1 = result.get("TEXTAREA_1") == null ? "" : String.valueOf(result.get("TEXTAREA_1"));
 			String attrText2 = result.get("TEXTAREA_2") == null ? "" : String.valueOf(result.get("TEXTAREA_2"));
 			String attrText3 = result.get("TEXTAREA_3") == null ? "" : String.valueOf(result.get("TEXTAREA_3"));
-
+//			Matcher m = CRLF.matcher(attrText1);
+//			if(m.find()){
+//				attrText1 = m.replaceAll("\\\\n");
+//			}
+//			Matcher m2 = CRLF.matcher(attrText2);
+//			if(m2.find()){
+//				attrText2 = m2.replaceAll("\\\\n");
+//			}
+//			Matcher m3 = CRLF.matcher(attrText3);
+//			if(m3.find()){
+//				attrText3 = m3.replaceAll("\\\\n");
+//			}
 			/*---检查考生是否存在 Begin ---*/
 			String isHasOpr = "SELECT 'Y' FROM PS_TZ_REG_USER_T WHERE OPRID = ? LIMIT 0,1";
 			String isHas = sqlQuery.queryForObject(isHasOpr, new Object[] { attrOprid }, "String");

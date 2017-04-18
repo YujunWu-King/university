@@ -1039,9 +1039,15 @@ public class FliterForm extends FrameworkImpl {
 								switch (Integer.parseInt(operate)) {
 								case 1:
 									// 等于;
+									
+									if(value==""){
+										value = "'%" + fldValue + "%'";
+										sqlWhere = sqlWhere + fieldName + " LIKE " + value;
+									}else{
 									operate = "=";
 									value = "'" + fldValue + "'";
 									sqlWhere = sqlWhere + fieldName + operate + value;
+									}
 									break;
 								case 2:
 									// 不等于;
@@ -1090,23 +1096,26 @@ public class FliterForm extends FrameworkImpl {
 									sqlWhere = sqlWhere + fieldName + " LIKE " + value;
 									break;
 								case 10:
+									//默认为字符
+									String isChar = "Y";
 									fldValue = fldValue.replaceAll(" ", ",");
 									fldValue = fldValue.trim();
 									String[] inArr = fldValue.split(",");
 
 									int inArrLen = inArr.length;
 									if (inArrLen > 0) {
-										value = "";
-										/*if ("Y".equals(isChar)) {
+										value = "";										
+										if ("Y".equals(isChar)) {
 											for (int ii = 0; ii < inArrLen; ii++) {
 												value = value + ",'" + inArr[ii] + "'";
 											}
 
 										} else {
+											
 											for (int ii = 0; ii < inArrLen; ii++) {
 												value = value + "," + inArr[ii];
 											}
-										}*/
+										}
 										value = value.substring(1);
 										value = "(" + value + ")";
 									}
