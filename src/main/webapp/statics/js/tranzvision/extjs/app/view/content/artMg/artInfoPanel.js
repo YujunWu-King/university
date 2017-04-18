@@ -158,7 +158,7 @@
             },
             items:[
 				 {
-                	margin:'7px 27px 0 0',		
+                	margin:'4px 27px 0 0',		
 					xtype:'label',
 					name:'viewLabel',
 					html:'<span style="font-weight:bold">'+ Ext.tzGetResourse("TZ_ART_MG_COM.TZ_ART_INFO_STD.titleStyleView","标题格式预览") +':</span>'
@@ -217,7 +217,8 @@
             fieldLabel: "排序",
 			name: 'artSeq',
 			allowDecimals: false,
-			maxLength : 254
+			maxLength : 254,
+			minValue:0
         },
        {
             xtype: 'textfield',
@@ -294,7 +295,8 @@
         },{
             xtype: 'displayfield',
             fieldLabel: '编辑说明',
-            name: 'coluAbout'
+            name: 'coluAbout',
+            hidden:true
          },{
         	xtype:'radiogroup',
         	fieldLabel:'内容编辑类型',
@@ -518,10 +520,10 @@
 							  	},
 							  	bodyStyle:'padding:10px 0 0 0',
 							  	xtype: 'form',  
-									items: [{
+								items: [{
 										columnWidth:.65,
-            				xtype: "fileuploadfield",  
-										buttonText: '上传',
+										xtype: "fileuploadfield",  
+										buttonText: '　上传　',
 										//name: 'picUpload',
 										name: 'websitefile',
 										buttonOnly:true,
@@ -530,16 +532,16 @@
 												addAttach(file, value, "IMG");
 											}
 										}	
-        					},{
-        						columnWidth:.35,
-            				xtype: 'button',
-            				text: '删除',
-										listeners:{
-											click:function(bt, value, eOpts){
-												deleteImage(bt, value, eOpts);
+	        					},{
+		        						columnWidth:.35,
+			            				xtype: 'button',
+			            				text: '删除',
+											listeners:{
+												click:function(bt, value, eOpts){
+													deleteImage(bt, value, eOpts);
+												}
 											}
-										}
-        					}]
+	        					}]
         				}]
 							},{
 								columnWidth:.8,

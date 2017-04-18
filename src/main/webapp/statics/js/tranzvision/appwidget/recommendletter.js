@@ -2193,62 +2193,66 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						console.log("rec_sex:"+rec_sex);
 						
 						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
-
-						$.ajax({
-							type: "post",
-							url: _Url + encodeURIComponent(param),
-							dataType: "json",
-							success: function(result){
-								if (result.comContent=="SUCCESS"){
-									$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
-									$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
-									$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
-									$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
-									
-									$("#changeRecS_"+(Number(mm)-1)).css("display","block");
-									alert(MsgSet["SEND_SC"]);
-									$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["SendEmail"]+"</span>");
-									$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).prop("readonly", true);
-									$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").prop("disabled", true);
-									$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").prop("disabled", true);
-									$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").prop("disabled", true);
-									$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).prop("readonly", true);
-									
-									$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).prop("readonly", true);
-									//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).prop("disabled", true);
-									//console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).closest(".main_inner_content_para").find(".chosen-container").html());
-									$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).next(".chosen-container").unbind();
-									
-									//console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).html());
-									//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"] + "_chosen").find(".chosen-results").hide();
-									//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
-									$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","Y");
-									$("#tjx_delete_"+(Number(mm)-1)).hide();
-									$("#app_save").click();
-								}else {
-									alert(result.comContent);
+						if(_tz_app_ins_id == "0"){
+							/*提示先保存报名表*/
+							alert(MsgSet["SAVEBMBFIRST"]); 
+						}else{
+							$.ajax({
+								type: "post",
+								url: _Url + encodeURIComponent(param),
+								dataType: "json",
+								success: function(result){
+									if (result.comContent=="SUCCESS"){
+										$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										
+										$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+										alert(MsgSet["SEND_SC"]);
+										$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["SendEmail"]+"</span>");
+										$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).prop("readonly", true);
+										$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").prop("disabled", true);
+										$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").prop("disabled", true);
+										$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").prop("disabled", true);
+										$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).prop("readonly", true);
+										
+										$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).prop("readonly", true);
+										//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).prop("disabled", true);
+										//console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).closest(".main_inner_content_para").find(".chosen-container").html());
+										$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).next(".chosen-container").unbind();
+										
+										//console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).html());
+										//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"] + "_chosen").find(".chosen-results").hide();
+										//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
+										$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","Y");
+										$("#tjx_delete_"+(Number(mm)-1)).hide();
+										$("#app_save").click();
+									}else {
+										alert(result.comContent);
+									}
 								}
-							}
-						});
+							});
+						}
 					}
 				}else if (_yz="2")
 				{

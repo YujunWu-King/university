@@ -576,20 +576,22 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			dcwjXxxPzDataList = sqlQuery.queryForList(dcwjXxxPzSQL, new Object[] { wjid,TZ_PAGE_NO });
 			if (dcwjXxxPzDataList != null) {
 				for (int index = 0; index < dcwjXxxPzDataList.size(); index++) {
+					
 					Map<String, Object> dcwjXxxPzMap = new HashMap<String, Object>();
 					dcwjXxxPzMap = dcwjXxxPzDataList.get(index);
 					strXxxBh = dcwjXxxPzMap.get("TZ_XXX_BH") == null ? null : dcwjXxxPzMap.get("TZ_XXX_BH").toString();
 					TZ_TITLE = dcwjXxxPzMap.get("TZ_TITLE") == null ? "" : dcwjXxxPzMap.get("TZ_TITLE").toString();
 					TZ_XXX_QID = dcwjXxxPzMap.get("TZ_XXX_QID") == null ? "" : dcwjXxxPzMap.get("TZ_XXX_QID").toString();
 					strComLmc = dcwjXxxPzMap.get("TZ_COM_LMC") == null ? null : dcwjXxxPzMap.get("TZ_COM_LMC").toString();
-
+					String isExistFlag=sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_CSWJ_DCX_TBL WHERE TZ_DC_WJ_ID=? and TZ_XXX_BH=?", new Object[]{wjid,strXxxBh},"String");
+				    if(null!=isExistFlag&&"Y".equals(isExistFlag)){
 					//TZ_IS_AVG = dcwjXxxPzMap.get("TZ_IS_AVG") == null ? "N" : dcwjXxxPzMap.get("TZ_IS_AVG").toString();
 					//String strPersonId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					//根据当前登录人和问卷编号查找问卷实例编号
 					String strInsId=sqlQuery.queryForObject("select TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? and PERSON_ID=? order by TZ_APP_INS_ID DESC LIMIT 0,1", new Object[]{wjid,strOprid}, "String");
 					logger.info("===当前登录人====personId:" + strOprid);
 					logger.info("===问卷实例ID====strInsId:" + strInsId);
 					String TZ_BY_DESC="";
-					//根据当前登录人和问卷编号查找问卷实例编号
 					if (null!=strOprid&&!"".equals(strOprid)&&null!=strInsId&&!"".equals(strInsId)) {
 						String	TZ_BYSJ_BH=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_BYSJ_XXXBH"}, "String");
 						String	TZ_XUELI_BH=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_XUELE_XXXBH"}, "String");
@@ -684,7 +686,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								completionMap = cswjPzxDataList.get(i);
 								String TZ_SCHOOL_TYPEID=completionMap.get("TZ_SCHOOL_TYPEID").toString();
 								String TZ_SCHOOL_TYPENAME=completionMap.get("TZ_SCHOOL_TYPENAME").toString();
-								int choseNum=sqlQuery.queryForObject("select count(*) FROM (select  TZ_APP_S_TEXT,(select TZ_SCHOOL_TYPE from PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=TZ_APP_S_TEXT)TZ_SCHOOL_TYPE  from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=?)TMP where TMP.TZ_SCHOOL_TYPE=?", new Object[]{wjid, strXxxBh,TZ_SCHOOL_TYPEID}, "int");
+								int choseNum=sqlQuery.queryForObject("select count(*) FROM (select  TZ_APP_S_TEXT,(select TZ_SCHOOL_TYPE from PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=TZ_APP_S_TEXT limit 0,1)TZ_SCHOOL_TYPE  from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=?)TMP where TMP.TZ_SCHOOL_TYPE=?", new Object[]{wjid, strXxxBh,TZ_SCHOOL_TYPEID}, "int");
 								if (choseNum > 0) {
 									// 投票百分比
 									tempCount = Double.valueOf(decimalFormat.format((double) choseNum / (double) total * 100));
@@ -1044,7 +1046,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 								if (upperLimit==0.0){
 									choseNum=sqlQuery.queryForObject("select  count(TZ_APP_S_TEXT) from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=? and TZ_APP_S_TEXT>=?  and TZ_APP_S_TEXT<>''", new Object[]{wjid, strXxxBh,lowLimit}, "int");
 								}else{
-									choseNum=sqlQuery.queryForObject("select  count(TZ_APP_S_TEXT) from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=? and TZ_APP_S_TEXT>=? and TZ_APP_S_TEXT<? and TZ_APP_S_TEXT<>''", new Object[]{wjid, strXxxBh,lowLimit,upperLimit}, "int");
+									choseNum=sqlQuery.queryForObject("select  count(TZ_APP_S_TEXT) from PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID in (select  TZ_APP_INS_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=?) and TZ_XXX_BH=? and TZ_APP_S_TEXT>=? and TZ_APP_S_TEXT<=? and TZ_APP_S_TEXT<>''", new Object[]{wjid, strXxxBh,lowLimit,upperLimit}, "int");
 								}
 								 
 								if (choseNum > 0) {
@@ -1068,11 +1070,29 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 									strRadioBoxHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUB_TB2_HTML", strXxxKxzMs, String.valueOf(tempCount),arrColor[i]);
 								}
 							}
+							
+							String histCont="";
+							String TZ_CANIN_XSRS=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CANIN_XSRS"}, "String");
+							String TZ_CANIN_GWJY=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CANIN_GWJY"}, "String");
+							//下属人数
+							if(null!=TZ_CANIN_XSRS&&strXxxBh.equals(TZ_CANIN_XSRS)){
+								histCont=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CANIN_XSRH_"+wjid}, "String");
+								if(null!=histCont){
+								  histCont=histCont.replaceAll("X", strClassId);
+								}
+							}
+							//岗位经验
+							if(null!=TZ_CANIN_GWJY&&strXxxBh.equals(TZ_CANIN_GWJY)){
+								histCont=sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?", new Object[]{"TZ_CANIN_GWJY_"+wjid}, "String");
+								if(null!=histCont){
+								 histCont=histCont.replaceAll("X", strClassId);
+								}
+							}
 							// 拼最终统计 数字填空题结果的Html
 							if(isMobile){
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_M_HTML",  TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2,digitalComAns);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_M_HTML",  TZ_TITLE,totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2,digitalComAns,histCont);
 							}else{
-								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2,digitalComAns);
+								strDivHtml = strDivHtml + tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_DIG_TB_HTML",  TZ_TITLE, totalCount, "", strXxxBh, strRadioBoxHtml, strCategories,strRadioBoxHtml2,digitalComAns,histCont);
 							}
 							// strRadioBoxHtml,strRadioBoxHtml2变量通用于所有控件
 							// 每次用完要进行初始化
@@ -1082,7 +1102,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 						}
 					}
 
-				
+				}
 			}
 		}
 			// 整合结果html

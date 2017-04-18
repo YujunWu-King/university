@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.template.survey.testQuestion.testWjXxxStore', {
     extend: 'Ext.data.Store',
     alias: 'store.testWjXxxStore',
     model: 'KitchenSink.view.template.survey.testQuestion.testWjXxxModal',
-    autoLoad: true,
+    //autoLoad: true,
     pageSize: 10,
     comID:'TZ_CSWJ_LIST_COM',
     pageID:'TZ_CSWJ_DETAIL_STD',
