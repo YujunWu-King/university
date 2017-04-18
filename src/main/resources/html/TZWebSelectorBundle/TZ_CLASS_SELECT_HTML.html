@@ -151,10 +151,21 @@ a{text-decoration: none;}
 				//		"<option value=''>"+ window.parent.MsgSet["PLEASE_SELECT"]+ "</option>");
 
 				for ( var i in option) {
-					//$("#" + linkId, window.parent.document).append(
-					//		"<option value='"+ option[i]["code"]+ "'>"+ option[i]["txt"] + "</option>");
 					FIRM_TYPE = FIRM_TYPE +"<option value='"+ option[i]["code"]+ "'>"+ option[i]["txt"] + "</option>";
 				}
+				//var index=0;
+                //for (var i in option) {
+                //	console.log("i="+index);
+                //	for (var y in option) {
+                //		console.log("y="+option[y]["index"]);
+                //		if (option[y]["index"] ==  index.toString()) {
+                //			console.log("OK");
+                //			FIRM_TYPE = FIRM_TYPE +"<option value='"+ option[y]["code"]+ "'>"+ option[y]["txt"] + "</option>";
+                //		}
+                //	}	
+                //	index =index+1;
+                //}
+				
 				$("#" + linkId, window.parent.document).html(FIRM_TYPE);
 				window.parent.$("#" + linkId).trigger("chosen:updated");
 				

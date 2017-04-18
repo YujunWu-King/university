@@ -127,17 +127,32 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 	                    }
 	                });
 	                
+	                //var  lensss = child.bmrBatch.["option"].length;
 	                //console.dir(child.bmrBatch);
-	                //console.log("code:"+child.bmrBatch.value);
+	                //console.log(lensss);
 	                //console.log("itemId:"+child.bmrBatch.itemId);
 	                //console.log("title:"+child.bmrBatch.title);
 	                //console.log("wzsm:"+child.bmrBatch.wzsm);
 	                var op='';
 	                op += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+	                
+	                //var index=0;
+	                //for (var i in child.bmrBatch.option) {
+	                //	console.log("i="+index);
+	                //	for (var y in child.bmrBatch.option) {
+	                //		console.log("y="+child.bmrBatch["option"][y]["index"]);
+	                //		if (child.bmrBatch["option"][y]["index"] ==  index.toString()) {
+	                //			console.log("OK");
+	                //			op+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][y]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][y]["code"] + '">' + child.bmrBatch["option"][y]["txt"] + '</option>';
+	                //			
+	                //		}
+	                //	}	
+	                //	index =index+1;
+	                //}
+	                
+	                //排序
 	                for (var i in child.bmrBatch.option) {
-	                	//console.log("code"+i+":"+child.bmrBatch["option"][i]["code"]);
-	                	
-	                	op+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
+	                		op+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
 	                }
 	                e += '<div class="input-list">';
 	                e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.bmrBatch.title + '</div>';
