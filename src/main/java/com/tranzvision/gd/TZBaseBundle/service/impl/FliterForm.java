@@ -1090,14 +1090,16 @@ public class FliterForm extends FrameworkImpl {
 									sqlWhere = sqlWhere + fieldName + " LIKE " + value;
 									break;
 								case 10:
+									//默认为字符
+									String isChar = "Y";
 									fldValue = fldValue.replaceAll(" ", ",");
 									fldValue = fldValue.trim();
 									String[] inArr = fldValue.split(",");
 
 									int inArrLen = inArr.length;
 									if (inArrLen > 0) {
-										value = "";
-										/*if ("Y".equals(isChar)) {
+										value = "";										
+										if ("Y".equals(isChar)) {
 											for (int ii = 0; ii < inArrLen; ii++) {
 												value = value + ",'" + inArr[ii] + "'";
 											}
@@ -1106,7 +1108,7 @@ public class FliterForm extends FrameworkImpl {
 											for (int ii = 0; ii < inArrLen; ii++) {
 												value = value + "," + inArr[ii];
 											}
-										}*/
+										}
 										value = value.substring(1);
 										value = "(" + value + ")";
 									}
