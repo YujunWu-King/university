@@ -376,7 +376,7 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 						PsTzCswjDcxTbl.setTzOrder(Integer.parseInt(TZ_ORDER));
 						PsTzCswjDcxTblMapper.insertSelective(PsTzCswjDcxTbl);
 						//信息项重新排序
-						final String cswjDcxSql = "select TZ_XXX_BH from PS_TZ_DCWJ_XXX_VW where TZ_DC_WJ_ID=? ORDER BY TZ_ORDER";
+						/*final String cswjDcxSql = "select TZ_XXX_BH from PS_TZ_DCWJ_XXX_VW where TZ_DC_WJ_ID=? ORDER BY TZ_ORDER";
 						List<Map<String, Object>> cswjDcxDataList = new ArrayList<Map<String, Object>>();
 						cswjDcxDataList = sqlQuery.queryForList(cswjDcxSql, new Object[] { TZ_DC_WJ_ID });
 						if (cswjDcxDataList != null) {
@@ -398,7 +398,7 @@ public class TzCswjDetailServiceImpl extends FrameworkImpl {
 								PsTzCswjDcxTblMapper.updateByPrimaryKeySelective(PsTzCswjDcx2Tbl);
 							   }
 							}
-						}
+						}*/
 
 						//插入信息项可选值
 						final String cswjPctSql = "select a.TZ_XXXKXZ_MC from PS_TZ_DCWJ_XXKXZ_T a where  a.TZ_DC_WJ_ID=? and a.TZ_XXX_BH=? ORDER BY a.TZ_ORDER";
