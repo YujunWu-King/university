@@ -533,8 +533,10 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				"只能包含字母、数字以及下划线", "Can only contain letters, numbers, and underscores.");
 		String strPassTips3 = validateUtil.getMessageTextWithLanguageCd(jgId, strLang, "TZ_SITE_MESSAGE", "36",
 				"字母、数字和下划线至少包含2种", "Letters, numbers and underscores at least two .");
-		String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(jgId, strLang, "TZ_SITE_MESSAGE", "122",
-				"密码强度不够", "Stronger password needed.");
+		/*String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(jgId, strLang, "TZ_SITE_MESSAGE", "122",
+				"密码强度不够", "Stronger password needed.");*/
+		String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(jgId, strLang, "TZ_SITE_MESSAGE", "134",
+				"密码格式不符合要求", "Wrong password format.");
 
 		// 通用链接;
 		String contextPath = request.getContextPath();
