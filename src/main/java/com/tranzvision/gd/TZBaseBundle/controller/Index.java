@@ -232,7 +232,8 @@ public class Index {
 		}
 		
 		//logger.info("strParams:"+strParams);
-		
+
+
 		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 begin*/
 		//会话是否有效
 		Boolean bool = gdObjectServiceImpl.isSessionValid(request);
@@ -244,61 +245,77 @@ public class Index {
 			Boolean logoutFlag = false;
 			String sql = "";
 			
-			String tmpSiteId = request.getParameter("siteId");
-			if(tmpClassId != null && !"".equals(tmpClassId)
-					&& tmpSiteId != null && !"".equals(tmpSiteId)) 
-			{
-				//手机版URL参数
-				sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-				String mobileUrlParams = jdbcTemplate.queryForObject(sql, new Object[]{"TZ_MBA_BKXT_MURL_PARAMS"},"String");
-				if(mobileUrlParams!=null && !"".equals(mobileUrlParams)) {
-					String classIdParam = "", siteIdParam = "", orgIdParam ="";
+			//是否站点的页面
+			//String tmpSiteId = request.getParameter("siteId");
+			String tmpSiteId = tzCookie.getStringCookieVal(request, "tzws");
+			String orgId = tzCookie.getStringCookieVal(request, "tzmo");
+			if(tmpSiteId != null && !"".equals(tmpSiteId) 
+					&& orgId != null && !"".equals(orgId)) {
+				
+				//查询站点所在机构
+				//sql = "SELECT TZ_JG_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?";
+				//orgId = jdbcTemplate.queryForObject(sql, new Object[]{tmpSiteId},"String");
+				
+				//if(orgId != null && !"".equals(orgId)) {
 					
-					String[] params = mobileUrlParams.split("&");
-					for(int i=0;i<params.length;i++) {
-						String[] paramsTmp = params[i].split("=");
-						if("classid".equals(paramsTmp[0])){
-							classIdParam = paramsTmp[1];
+					//判断是否MBA报考服务系统手机版首页
+					Boolean mbaIndexM = false;
+					
+					//手机版URL参数
+					sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+					String mobileUrlParams = jdbcTemplate.queryForObject(sql, new Object[]{"TZ_MBA_BKXT_MURL_PARAMS"},"String");
+					if(mobileUrlParams!=null && !"".equals(mobileUrlParams)) {
+						String classIdParam = "", siteIdParam = "", orgIdParam ="";
+						
+						String[] params = mobileUrlParams.split("&");
+						for(int i=0;i<params.length;i++) {
+							String[] paramsTmp = params[i].split("=");
+							if("classid".equals(paramsTmp[0])){
+								classIdParam = paramsTmp[1];
+							}
+							if("siteId".equals(paramsTmp[0])){
+								siteIdParam = paramsTmp[1];
+							}
+							if("orgId".equals(paramsTmp[0])){
+								orgIdParam = paramsTmp[1];
+							}
 						}
-						if("siteId".equals(paramsTmp[0])){
-							siteIdParam = paramsTmp[1];
-						}
-						if("orgId".equals(paramsTmp[0])){
-							orgIdParam = paramsTmp[1];
+						
+						if(classIdParam != null && !"".equals(classIdParam)
+								&& siteIdParam != null && !"".equals(siteIdParam)) {
+							if(tmpClassId.equals(classIdParam) && tmpSiteId.equals(siteIdParam)) {
+								mbaIndexM = true;
+							}
 						}
 					}
 					
-					if(classIdParam != null && !"".equals(classIdParam)
-							&& siteIdParam != null && !"".equals(siteIdParam)) {
+					
+					//是否有免登陆cookie
+					String tokenDlzh = tzCookie.getStringCookieVal(request, "TZGD_TOKEN_DLZH");
+					if(!"".equals(tokenDlzh)&&tokenDlzh!=null) {
+						ArrayList<String> aryErrorMsg = new ArrayList<String>();
 						
-						if(tmpClassId.equals(classIdParam) && tmpSiteId.equals(siteIdParam)) {
+						sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?)";
+						String passwordJm = jdbcTemplate.queryForObject(sql, new Object[]{tokenDlzh},"String");
+						String password = DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
+						
+						boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, orgId, tmpSiteId,
+								tokenDlzh, password, "", "ZHS", aryErrorMsg);
+						
+						if(boolResult) {
 							
-							//是否有免登陆cookie
-							String tokenDlzh = tzCookie.getStringCookieVal(request, "TZGD_TOKEN_DLZH");
-							
-							if(!"".equals(tokenDlzh)&&tokenDlzh!=null) {
-								ArrayList<String> aryErrorMsg = new ArrayList<String>();
-								
-								sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?)";
-								String passwordJm = jdbcTemplate.queryForObject(sql, new Object[]{tokenDlzh},"String");
-								String password = DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
-								
-								boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, orgIdParam, siteIdParam,
-										tokenDlzh, password, "", "ZHS", aryErrorMsg);
-								
-								if(boolResult) {
-									
-								} else {
-									logoutFlag = true;
-								}
-							} else {
+						} else {
+							if(mbaIndexM) {
 								logoutFlag = true;
 							}
-							
+						}
+						
+					} else {
+						if(mbaIndexM) {
+							logoutFlag = true;
 						}
 					}
-					
-				}
+				//}
 			}
 			
 			if(logoutFlag) {
@@ -324,7 +341,7 @@ public class Index {
 			
 		}
 		
-		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 end*/
+		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 end*/	
 		
 
 		// 操作类型;

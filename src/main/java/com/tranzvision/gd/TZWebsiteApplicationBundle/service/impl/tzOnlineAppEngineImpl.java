@@ -1899,6 +1899,33 @@ public class tzOnlineAppEngineImpl {
 
 				// 页面全部设置成完成
 
+				// 提交进行证件号校验--开始 by hjl
+				String tz_idnum = "TZ_6idnum";// 证件id 写死
+				String idnumsql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? AND TZ_XXX_BH=?";
+				String stridnum = sqlQuery.queryForObject(idnumsql, new Object[] { numAppInsId, tz_idnum }, "String");
+				if (!"".equals(stridnum)) {
+					String haidnumsql = "SELECT COUNT(1)  FROM PS_TZ_REG_USER_T WHERE NATIONAL_ID=?";
+					int idcount = sqlQuery.queryForObject(haidnumsql, new Object[] { stridnum }, "Integer");
+					if (idcount > 0) {
+						String sqlluange = "select TZ_APP_TPL_LAN from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?";
+						String luange = sqlQuery.queryForObject(sqlluange, new Object[] { strTplId }, "String");
+						if (luange.equals("ENG")) {
+
+							returnMsg = returnMsg
+									+ "“NATION ID”:There are other account number and your certificate number"
+									+ "<br/>";
+						} else {
+							returnMsg = returnMsg + "“身份证”:有其他账号的证件号与您的证件号相同!" + "<br/>";
+						}
+					} else {
+
+					}
+				} else {
+
+				}
+
+				// 提交进行证件号校验--结束
+
 				String sqlGetPageXxxBh = "SELECT TZ_XXX_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_COM_LMC = ? AND  TZ_PAGE_NO>0 ";
 				List<?> ListPageXxxBh = sqlQuery.queryForList(sqlGetPageXxxBh, new Object[] { strTplId, "Page" });
 				Map<String, Object> MapXxxBh = null;
@@ -2734,10 +2761,10 @@ public class tzOnlineAppEngineImpl {
 			// + ":" + Contry3);
 			// 判断 是否有海外学历
 			if (ksMap.get("TZ_11luniversitycountry") == null ? true
-					: uniScholContry.equals("中国") && ksMap.get("TZ_10hdegreeunicountry") == null ? true
-							: Contry1.equals("中国") && ksMap.get("TZ_12ouniversitycountry") == null ? true
-									: Contry2.equals("中国") && ksMap.get("TZ_13ouniver3country") == null ? true
-											: Contry3.equals("中国")) {
+					: uniScholContry.equals("中国大陆") && ksMap.get("TZ_10hdegreeunicountry") == null ? true
+							: Contry1.equals("中国大陆") && ksMap.get("TZ_12ouniversitycountry") == null ? true
+									: Contry2.equals("中国大陆") && ksMap.get("TZ_13ouniver3country") == null ? true
+											: Contry3.equals("中国大陆")) {
 				isOutLeft = String.valueOf('N');
 			} else {
 				isOutLeft = String.valueOf('Y');
