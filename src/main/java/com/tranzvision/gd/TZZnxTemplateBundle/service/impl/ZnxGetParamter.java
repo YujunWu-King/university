@@ -41,7 +41,7 @@ public class ZnxGetParamter {
 			String opridSQL = "SELECT TZ_HUOD_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND TZ_AUDCY_ID=?";
 			String strActId = jdbcTemplate.queryForObject(opridSQL, String.class, new Object[] { audId, audCyId });
 			if (strActId != null && !"".equals(strActId)) {
-				String actDtSql = "SELECT DATE_FORMAT( TZ_START_DT, '%Y-%m-%d') FROM PS_TZ_ART_HD_TBL WHERE TZ_ART_ID =?";
+				String actDtSql = "SELECT concat(DATE_FORMAT(TZ_START_DT,'%Y-%m-%d'),' ',date_format(TZ_START_TM,'%H:%i')) as TZ_START_DT FROM PS_TZ_ART_HD_TBL WHERE TZ_ART_ID =?";
 				String actDt = jdbcTemplate.queryForObject(actDtSql, String.class, new Object[] { strActId });
 				return actDt;
 			}else{
