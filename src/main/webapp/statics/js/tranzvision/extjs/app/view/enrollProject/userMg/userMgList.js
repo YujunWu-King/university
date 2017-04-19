@@ -139,7 +139,7 @@
                 dataIndex: 'userEmail',
                 width: 180
             },{
-                text: '报考批次',
+                text: '报考信息',
                 sortable: true,
                 dataIndex: 'applyInfo',
                 flex:1,
