@@ -1057,11 +1057,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 					}
 					// 待完成
 					double strTotalScore = 0.00;
-					double strAveScore = 0.00;
-					String strToalScoreSql = "SELECT ifnull(B.TZ_SCORE_NUM,0) TZ_SCORE_NUM FROM PS_TZ_CP_PW_KS_TBL A LEFT JOIN PS_TZ_CJX_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID LEFT JOIN PS_TZ_CLPWPSLS_TBL C ON A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID=C.TZ_PWEI_OPRID WHERE B.TZ_SCORE_ITEM_ID='Total' AND C.TZ_SUBMIT_YN='Y' AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND C.TZ_CLPS_LUNC=?";
+					String strAveScore = "0";
+					//String strToalScoreSql = "SELECT ifnull(B.TZ_SCORE_NUM,0) TZ_SCORE_NUM FROM PS_TZ_CP_PW_KS_TBL A LEFT JOIN PS_TZ_CJX_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID LEFT JOIN PS_TZ_CLPWPSLS_TBL C ON A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID=C.TZ_PWEI_OPRID WHERE B.TZ_SCORE_ITEM_ID='Total' AND C.TZ_SUBMIT_YN='Y' AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND C.TZ_CLPS_LUNC=?";
+					String strToalScoreSql = "SELECT ifnull(B.TZ_SCORE_NUM,0) TZ_SCORE_NUM FROM PS_TZ_CP_PW_KS_TBL A LEFT JOIN PS_TZ_CJX_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID LEFT JOIN PS_TZ_CLPWPSLS_TBL C ON A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID=C.TZ_PWEI_OPRID WHERE B.TZ_SCORE_ITEM_ID='Total' AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND C.TZ_CLPS_LUNC=?";
 					//String strToalScoreSql = "SELECT ifnull(B.TZ_SCORE_NUM,0) TZ_SCORE_NUM FROM PS_TZ_CP_PW_KS_TBL A LEFT JOIN PS_TZ_CJX_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID LEFT JOIN PS_TZ_CLPWPSLS_TBL C ON A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID=C.TZ_PWEI_OPRID WHERE B.TZ_SCORE_ITEM_ID='Total' AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND C.TZ_CLPS_LUNC=?";
 					List<Map<String, Object>> scoreMapList = sqlQuery.queryForList(strToalScoreSql,
 							new Object[] { strClassID, strBatchID, strAppInsID, intDqpyLunc });
+
 					if (scoreMapList != null && scoreMapList.size() > 0) {
 						int count = 0;
 						for (Object scoreMap : scoreMapList) {
@@ -1072,25 +1074,15 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 							strTotalScore = strTotalScore + Double.valueOf(singleScore);
 							count = count + 1;
 						}
-						strAveScore = strTotalScore / count;
+						double tmpDouble = strTotalScore / count;
+						strAveScore = df.format(tmpDouble);
 					}
-
-					/*
-					 * Integer intNumPwei = 0; String strSql6 =
-					 * "SELECT ifnull(COUNT(TZ_PWEI_OPRID),0) FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND  TZ_APP_INS_ID=?"
-					 * ; intNumPwei = sqlQuery.queryForObject(strSql6, new
-					 * Object[] { strClassID,strBatchID,strAppInsID },
-					 * "Integer"); if(intNumPwei!=0){ DecimalFormat df = new
-					 * DecimalFormat("######0.00"); double tmpDouble =
-					 * (double)(strTotalScore/intNumPwei); String tmpAveScore =
-					 * df.format(tmpDouble); strAveScore =
-					 * Double.valueOf(tmpAveScore); }
-					 */
+					
 					if (!"".equals(strResponse) && strResponse != null) {
 						strResponse = strResponse + ","
 								+ tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_KSINFO_HTML",
 										strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress,
-										strViewQua, String.valueOf(strAveScore), strStuProgress, strClassID, strBatchID,
+										strViewQua, strAveScore, strStuProgress, strClassID, strBatchID,
 										strOprID);
 					} else {
 						strResponse = tzGdObject.getHTMLText(
@@ -1401,7 +1393,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				if ("Y".equals(strExistsFlg)) {
 					PsTzClpsGzTblMapper.updateByPrimaryKeySelective(psTzClpsGzTbl);
 				} else {
-					PsTzClpsGzTblMapper.insertSelective(psTzClpsGzTbl);
+					PsTzClpsGzTblMapper.insert(psTzClpsGzTbl);
 				}
 				// 将上一轮次的考生信息向新轮次insert数据，并且将状态都设置为“未提交”
 				String strSql3 = "SELECT TZ_APP_INS_ID,TZ_PWEI_OPRID,TZ_GUANX_LEIX,TZ_KSH_PSPM FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
@@ -1432,7 +1424,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						PsTzKsclpslsTbl.setRowAddedOprid(oprid);
 						PsTzKsclpslsTbl.setRowLastmantDttm(new Date());
 						PsTzKsclpslsTbl.setRowLastmantOprid(oprid);
-						PsTzKsclpslsTblMapper.insertSelective(PsTzKsclpslsTbl);
+						PsTzKsclpslsTblMapper.insert(PsTzKsclpslsTbl);
 					}
 				}
 				// 成功开启，返回总人数
@@ -1446,7 +1438,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				if ("Y".equals(strExistsFlg)) {
 					PsTzClpsGzTblMapper.updateByPrimaryKeySelective(psTzClpsGzTbl);
 				} else {
-					PsTzClpsGzTblMapper.insertSelective(psTzClpsGzTbl);
+					PsTzClpsGzTblMapper.insert(psTzClpsGzTbl);
 				}
 				strResponse = "{\"status\":\"B\"}";
 				break;
@@ -1458,7 +1450,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				if ("Y".equals(strExistsFlg)) {
 					PsTzClpsGzTblMapper.updateByPrimaryKeySelective(psTzClpsGzTbl);
 				} else {
-					PsTzClpsGzTblMapper.insertSelective(psTzClpsGzTbl);
+					PsTzClpsGzTblMapper.insert(psTzClpsGzTbl);
 				}
 				strResponse = "{\"status\":\"A\"}";
 				break;
@@ -1562,19 +1554,15 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			List<?> listAppID = jacksonUtil.getList("appID");
 
 			if (listAppID != null && listAppID.size() > 0) {				
-
-				String strDeleteSql = "DELETE FROM PS_TZ_PW_KS_PC_TBL";
-				sqlQuery.update(strDeleteSql);
-
+			
 				for (Object pwObj : listAppID) {
 					ArrayList<String> mapScore = new ArrayList();
 					String strAppInsID = String.valueOf(pwObj);
 
+					String strDeleteSql = "DELETE FROM PS_TZ_PW_KS_PC_TBL";
+					sqlQuery.update(strDeleteSql);
 					
-					Double doublePianCha = this.caluatePianch(strClassID, strBatchID, strAppInsID);
-					if (doublePianCha == null) {
-						doublePianCha = 0.0;
-					}
+					double doublePianCha = this.caluatePianch(strClassID, strBatchID, strAppInsID);
 					
 					DecimalFormat df = new DecimalFormat("######0.00");
 					String tmpAveScore = df.format(doublePianCha);
@@ -1676,7 +1664,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 							if ("Y".equals(strExistFlg)) {
 								PsTzCpfbBzhTblMapper.updateByPrimaryKeySelective(psTzCpfbBzhTbl);
 							} else {
-								PsTzCpfbBzhTblMapper.insertSelective(psTzCpfbBzhTbl);
+								PsTzCpfbBzhTblMapper.insert(psTzCpfbBzhTbl);
 							}
 						}
 					}

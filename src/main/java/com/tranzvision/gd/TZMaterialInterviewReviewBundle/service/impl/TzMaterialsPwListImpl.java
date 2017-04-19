@@ -90,32 +90,27 @@ public class TzMaterialsPwListImpl extends FrameworkImpl{
 								strScoreNum = aMap.get("TZ_SCORE_NUM") != null ? String.valueOf(aMap.get("TZ_SCORE_NUM")) : "";
 								strScorePyValue = aMap.get("TZ_SCORE_PY_VALUE") != null ? String.valueOf(aMap.get("TZ_SCORE_PY_VALUE")) : "";
 							}
-							if ("W".equals(strScoreItemType) || "R".equals(strScoreItemType))
-							{
-								if ("".equals(strDyColValue)){
-									strDyColValue = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPSSCO_HTML", new String[] {strScorePyValue, strScoreItemMc});
-								}else{
-									strDyColValue = strDyColValue + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPSSCO_HTML", new String[] {strScorePyValue, strScoreItemMc});
-								}		
-							} 
-							else
-							{
-								if ("X".equals(strScoreItemType))
-								{
+							switch(strScoreItemType){
+								case "A"://数字汇总项
+									strScorePyValue = strScoreNum;
+									break;
+								case "B"://数字打分项
+									strScorePyValue = strScoreNum;
+									break;
+								case "C"://评语
+									//strScorePyValue默认为评语值，无须转换
+									break;
+								case "D"://下拉框
 									String xlk_xxbh = strScorePyValue;
 									String strSql4 = "SELECT TZ_CJX_XLK_XXMC FROM PS_TZ_ZJCJXXZX_T WHERE TREE_NAME=? AND TZ_SCORE_ITEM_ID=? AND TZ_CJX_XLK_XXBH=?";
 									strScorePyValue = (String)sqlQuery.queryForObject(strSql4, new Object[] {strTreeName, strScoreItemId, xlk_xxbh}, "String");
-								}
-								if ("A".equals(strScoreItemType)){
-									strScorePyValue = strScoreNum;
-								}
-								if ("".equals(strDyColValue)){
-									strDyColValue = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPSSCO_HTML", new String[] {strScorePyValue, strScoreItemMc});
-								}else{
-									strDyColValue = strDyColValue + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPSSCO_HTML", new String[] {strScorePyValue, strScoreItemMc});
-								}
-								
+									break;									
 							}
+							if ("".equals(strDyColValue)){
+								strDyColValue = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPSSCO_HTML", new String[] {strScorePyValue, strScoreItemMc});
+							}else{
+								strDyColValue = strDyColValue + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPSSCO_HTML", new String[] {strScorePyValue, strScoreItemMc});
+							}													
 						}
 					}
 					strDyColValue = "[" + strDyColValue + "]";
