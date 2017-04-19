@@ -628,7 +628,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     listeners: {
                         tabchange: function(tabPanel, newCard, oldCard) {
                             if (newCard.name == "materialsStudentGrid") {
-                                var form = tabPanel.findParentByType('materialsReviewSchedule').child('form').getForm();
+                                /*var form = tabPanel.findParentByType('materialsReviewSchedule').child('form').getForm();
                                 var store = newCard.store;
                                 var classID = form.findField('classID').getValue();
                                 var batchID = form.findField('batchID').getValue();
@@ -639,7 +639,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                                         // store.loadData(respData.root);
                                     });
                                     this.doLayout();
-                                }
+                                }*/
                             };
                             if (newCard.name == "judgeInfoForm") {
                                 var form = tabPanel.findParentByType('materialsReviewSchedule').child('form').getForm();

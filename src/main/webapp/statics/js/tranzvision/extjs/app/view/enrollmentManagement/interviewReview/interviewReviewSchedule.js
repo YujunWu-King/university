@@ -246,13 +246,23 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
             {
                 var colName = '00' + (i + 1);
                 colName = 'col' + colName.substr(colName.length - 2);
-
-                var tmpColumn = {
-                    text     : tmpArray[i][colName],
-                    sortable : false,
-                    dataIndex: colName,
-                    flex:1
-                };
+                var tmpColumn;
+                
+                if(i<5){
+                	tmpColumn = {
+                			text     : tmpArray[i][colName],
+                            sortable : false,
+                            dataIndex: colName,
+                            width:85
+                        };
+                }else{
+                	tmpColumn = {
+                			text     : tmpArray[i][colName],
+                            sortable : false,
+                            dataIndex: colName,
+                            flex:1
+                        };
+                }
 
                 statisticsGridDataModel['gridColumns'].push(tmpColumn);
                 statisticsGridDataModel['gridFields'].push({name:colName});
@@ -530,9 +540,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                                 {
                                                     xtype: "toolbar",
                                                     items: [
-                                                        {text: "暂停", tooltip: "暂停", handler: "pause"},
+                                                        {text: "暂停选中的评委账户", tooltip: "暂停选中的评委账户", handler: "pause"},
                                                         "-",
-                                                        {text: "设置评委状态为正常", tooltip: "设置评委状态为正常", handler: "setUsual"},
+                                                        {text: "启用选中的评委账户", tooltip: "启用选中的评委账户", handler: "setUsual"},
                                                         "-",
                                                         {text: "提交评委数据", tooltip: "提交评委数据",  handler: "submitData"},
                                                         "-",
@@ -540,7 +550,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                                         "-",
                                                         {text: "撤销面试数据", tooltip: "撤销面试数据", handler: "revokeData"},
                                                         "-",
-                                                        {text: "打印评分总表",tooltip: "打印评分总表" , handler: "printChart"}
+                                                        {text: "打印评分总表",tooltip: "打印评分总表" , handler: "printPFZB"}
 
                                                     ]
                                                 }
@@ -653,13 +663,19 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                              selModel: {
                                                  type: 'checkboxmodel'
                                              },
+                                            name:'statisticalGrid',
                                             columns: statisticsGridDataModel['gridColumns'],
                                             header: false,
                                             border:false,
                                              dockedItems:[{
                                                  xtype:"toolbar",
-                                                 dock: 'bottom',
+                                                 /*dock: 'bottom',*/
                                                  items:[
+                                                	 {
+                 	                                    text: "计算选中评委的标准评分分布",
+                 	                                    tooltip: "计算选中评委的标准评分分布",
+                 	                                    handler:'calcuScoreDist'
+                 	                                }, "-",
                                                      {text:"刷新图表",tooltip:"刷新图表",iconCls: "refresh",handler:function(btn){
                                                          var form = btn.findParentByType('interviewReviewSchedule').child('form').getForm();
                                                          var classID = form.findField('classID').getValue();

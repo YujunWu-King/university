@@ -3128,17 +3128,17 @@
                 batchID=selList[0].data.batchID,
                 DQLC=form.findField("delibCount").getValue();
             if (selList.length==1){
-                var JudgeJson= '"' + selList[0].data.judgeID + '"';
+                var JudgeJson= '"' + selList[0].data.judgeOprId + '"';
             }
             else{
                 for (var i=0;i<selList.length-1;i++)
                 {
                     if(JudgeJson=="")
                     {
-                        JudgeJson= '"' + selList[i].data.judgeID;}
-                    else{JudgeJson=JudgeJson+'='+selList[i].data.judgeID}
+                        JudgeJson= '"' + selList[i].data.judgeOprId;}
+                    else{JudgeJson=JudgeJson+'='+selList[i].data.judgeOprId}
                 }
-                JudgeJson=JudgeJson+'='+selList[selList.length-1].data.judgeID+'"';
+                JudgeJson=JudgeJson+'='+selList[selList.length-1].data.judgeOprId+'"';
             }
             
             

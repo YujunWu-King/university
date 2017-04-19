@@ -56,7 +56,9 @@
 				menu:[{
 					text:'发送函件',handler:'showSendWindow'
 				},{
-					text:'活动报名人导出',handler:'exportApplyInfo'
+					text:'导出选中活动报名人信息',handler:'exportApplyInfo'
+				},{
+					text:'导出搜索结果中报名人信息',handler:'exportSearchApplyInfo'
 				},{
 					text:'批量更改参与状态',handler:"showSetStatusWindow"
 				}]
@@ -131,7 +133,7 @@
 			} 
 			
 		},{
-			text: Ext.tzGetResourse("TZ_GD_BMRGL_COM.TZ_BMRGL_STD.applyStatusDesc",""),
+			text: '报名状态',
 			dataIndex: 'applyStatusDesc',
 			hidden:true
 		},{
@@ -185,7 +187,7 @@
 				return record.get('channelDesc');  
 			}
 		},{
-			text: Ext.tzGetResourse("TZ_GD_BMRGL_COM.TZ_BMRGL_STD.channelDesc",""),
+			text: '报名渠道',
 			dataIndex: 'channelDesc',
 			hidden:true
 		},{
@@ -217,7 +219,7 @@
 				 
 			}
 		},{
-			text: Ext.tzGetResourse("TZ_GD_BMRGL_COM.TZ_BMRGL_STD.signStatusDesc",""),
+			text: '签到状态',
 			dataIndex: 'signStatusDesc',
 			hidden:true
 		},{
@@ -275,20 +277,13 @@
 			columns:columns,
 			bbar: {
 				xtype: 'pagingtoolbar',
-				pageSize: 10,
+				pageSize: 500,
 				listeners:{
 					afterrender: function(pbar){
 						var grid = pbar.findParentByType("grid");
 						pbar.setStore(grid.store);
 					}
 				},
-				/*
-				displayInfo: true,
-				displayMsg: '显示{0}-{1}条，共{2}条',
-				beforePageText: '第',
-				afterPageText: '页/共{0}页',
-				emptyMsg: '没有数据显示',
-				*/
 				plugins: new Ext.ux.ProgressBarPager()
 			}	   
 		});
