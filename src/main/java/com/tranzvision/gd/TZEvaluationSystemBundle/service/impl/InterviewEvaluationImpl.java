@@ -364,7 +364,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			Map<String, Object> sjfzRow1 = new HashMap<String, Object>();
 			sjfzRow1.put("col01", "总分");			
 			Map<String, Object> sjfzRow2 = new HashMap<String, Object>();
-			sjfzRow1.put("col02", pjf);			
+			sjfzRow2.put("col02", pjf);			
 			sjfzRowList.add(sjfzRow1);
 			sjfzRowList.add(sjfzRow2);
 			

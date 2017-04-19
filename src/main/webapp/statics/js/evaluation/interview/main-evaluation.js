@@ -681,39 +681,9 @@ function getDataModelForStatisticsChart(jsonObject)
         var colName = '00' + (i + 1);
         colName = 'col' + colName.substr(colName.length - 2);
         dataRow[colName] = tmpArray[i][colName];
-		
-		/*lw for(itm1 in tmpArray[i])
-		{
-			if(Object.prototype.toString.call(tmpArray[i][itm1]) == '[object Object]')
-			{
-				for(itm2 in tmpArray[i][itm1])
-				{
-					dataRow[itm1 + '_' + itm2] = tmpArray[i][itm1][itm2];
-					
-					if(Ext.isNumeric(tmpArray[i][itm1][itm2]) == true && drawChartFields[itm1 + '_' + itm2] == 'Y')
-					{
-						var tmpNumber = 1 * tmpArray[i][itm1][itm2];
-						if(tmpNumber < statisticsChartDataModel['minValue']) statisticsChartDataModel['minValue'] = tmpNumber;
-						if(tmpNumber > statisticsChartDataModel['maxValue']) statisticsChartDataModel['maxValue'] = tmpNumber;
-					}
-				}
-			}
-			else
-			{
-				dataRow[itm1] = tmpArray[i][itm1];
-				
-				if(Ext.isNumeric(tmpArray[i][itm1]) == true)
-				{
-					var tmpNumber = 1 * tmpArray[i][itm1];
-					if(tmpNumber < statisticsChartDataModel['minValue']) statisticsChartDataModel['minValue'] = tmpNumber;
-					if(tmpNumber > statisticsChartDataModel['maxValue']) statisticsChartDataModel['maxValue'] = tmpNumber;
-				}
-			}
-		}*/
-		
-		
-
+	
 	}
+	
     if(statisticsChartDataModel['minValue'] == statisticsChartDataModel['maxValue'] && statisticsChartDataModel['minValue'] == 0)
     {
         statisticsChartDataModel['minValue'] = 0;
@@ -722,7 +692,7 @@ function getDataModelForStatisticsChart(jsonObject)
 
 
     statisticsChartDataModel['chartData'].push(dataRow);
-	
+
 	return statisticsChartDataModel;
 }
 
@@ -746,14 +716,14 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth,doHidePanel)
             hiddenGrid = false;
         }
 		var store1 = null;
-		
+
 		if(chartStore == null)
 		{
 			store1 = Ext.create('Ext.data.JsonStore',
-								 					{
-								 						fields: chartDataModel['chartFields'],
-								 						data: chartDataModel['chartData']
-								 					});
+ 					{
+ 						fields: chartDataModel['chartFields'],
+ 						data: chartDataModel['chartData']
+ 					});
 		}
 		else
 		{
@@ -762,60 +732,60 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth,doHidePanel)
 		
 		
 		var fsChart2 = Ext.create('Ext.chart.Chart',
-									 {
-									 		xtype: 'chart',
-											hidden: boolHidePanel,
-									 		style: 'background:#fff',
-									 		animate: true,
-									 		shadow: true,
-									 		store: store1,
-									 		legend: {position: 'top'},
-								 			axes: [
-								 							{
-									 							type: 'Numeric',
-									 							position: 'left',
-									 							fields: chartDataModel['dataFields'],
-									 							label:{renderer: Ext.util.Format.numberRenderer('000.00')},
-									 							title: '统计指标值',
-									 							grid: true,
-									 							maximum: chartDataModel['maxValue'],
-									 							minimum: chartDataModel['minValue']
-									 						},
-								 							{
-								 								type: 'Category',
-								 								position: 'bottom',
-								 								fields: ['col01'],
-								 								title: '统计指标名称'
-								 							}
-									 					],
-									 		series: [
-									 							{
-									 								type: 'column',
-									 								axis: 'left',
-									 								highlight: true,
-									 								title:chartDataModel['seriesTitle'],
-									 								tips: {
-									 												trackMouse: true,
-								 													width: 180,
-								 													renderer: function(storeItem, item)
-								 																		{
-								 																			this.setTitle(storeItem.get('col01') + '-' + chartDataModel['seriesTips'][item['yField']] + ' : ' + Ext.util.Format.number(storeItem.get(item['yField']),'000.00'));
-								 																		}
-								 												},
-								 									label: {
-								 														font: '18px Helvetica, sans-serif',
-								 														display: 'insideEnd',
-								 														'text-anchor': 'middle',
-								 														field: chartDataModel['dataFields'],
-								 														renderer: Ext.util.Format.numberRenderer('000.00'),
-									 													//orientation: 'vertical',
-									 													color: '#333'
-									 											 },
-									 								xField: 'col01',
-									 								yField: chartDataModel['dataFields']
-									 							}
-									 						]
-									 });
+			 {
+			 		xtype: 'chart',
+					hidden: boolHidePanel,
+			 		style: 'background:#fff',
+			 		animate: true,
+			 		shadow: true,
+			 		store: store1,
+			 		legend: {position: 'top'},
+		 			axes: [
+		 							{
+			 							type: 'Numeric',
+			 							position: 'left',
+			 							fields: chartDataModel['dataFields'],
+			 							label:{renderer: Ext.util.Format.numberRenderer('000.00')},
+			 							title: '统计指标值',
+			 							grid: true,
+			 							maximum: chartDataModel['maxValue'],
+			 							minimum: chartDataModel['minValue']
+			 						},
+		 							{
+		 								type: 'Category',
+		 								position: 'bottom',
+		 								fields: ['col01'],
+		 								title: '统计指标名称'
+		 							}
+			 					],
+			 		series: [
+			 							{
+			 								type: 'column',
+			 								axis: 'left',
+			 								highlight: true,
+			 								title:chartDataModel['seriesTitle'],
+			 								tips: {
+			 												trackMouse: true,
+		 													width: 180,
+		 													renderer: function(storeItem, item)
+		 																		{
+		 																			this.setTitle(storeItem.get('col01') + '-' + chartDataModel['seriesTips'][item['yField']] + ' : ' + Ext.util.Format.number(storeItem.get(item['yField']),'000.00'));
+		 																		}
+		 												},
+		 									label: {
+		 														font: '18px Helvetica, sans-serif',
+		 														display: 'insideEnd',
+		 														'text-anchor': 'middle',
+		 														field: chartDataModel['dataFields'],
+		 														renderer: Ext.util.Format.numberRenderer('000.00'),
+			 													//orientation: 'vertical',
+			 													color: '#333'
+			 											 },
+			 								xField: 'col01',
+			 								yField: chartDataModel['dataFields']
+			 							}
+			 						]
+			 });
 		
 		var chartPanel = Ext.create('Ext.panel.Panel',
 						{
@@ -850,18 +820,23 @@ function getSubDataForFenbuChart(chartDataArray)
 		var tmpNumber1 = 0;
 		var tmpNumber2 = 0;
 		
-		if(Ext.isNumeric(chartDataArray[i]['ps_bzfb_bilv']) == true)
+		var ps_bzfb_bilv = chartDataArray[i]['ps_bzfb_bilv'];
+		ps_bzfb_bilv = ps_bzfb_bilv!=undefined?ps_bzfb_bilv.replace("%",""):0;
+		
+		var ps_sjfb_bilv = chartDataArray[i]['ps_sjfb_bilv'];
+		ps_sjfb_bilv = ps_sjfb_bilv!=undefined?ps_sjfb_bilv.replace("%",""):0;
+		
+		if(Ext.isNumeric(ps_bzfb_bilv) == true)
 		{
-			tmpNumber1 = 1.0 * chartDataArray[i]['ps_bzfb_bilv'];
+			tmpNumber1 = 1.0 * ps_bzfb_bilv;
 		}
-		if(Ext.isNumeric(chartDataArray[i]['ps_sjfb_bilv']) == true)
+		if(Ext.isNumeric(ps_sjfb_bilv) == true)
 		{
-			tmpNumber2 = 1.0 * chartDataArray[i]['ps_sjfb_bilv'];
+			tmpNumber2 = 1.0 * ps_sjfb_bilv;
 		}
 		
 		data.push({name:chartDataArray[i]['ps_fb_mc'],data1:tmpNumber1,data2:tmpNumber2});
 	}
-	
 	return data;
 }
 
@@ -936,7 +911,6 @@ function createSubStatisticsCharts(chartDataArray,chartStore,boolHidePanel)
 			}
 		}
 	}
-	
 	
 	var fsChart1 = null
 	if(seriesArray.length >= 1)
@@ -1221,7 +1195,7 @@ function submitEvaluateBatch(batchId)
 						//unmask window
 						unmaskWindow();
 						
-						alert('提交当前评审批次时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+						alert('提交当前评审批次时发生错误：' + jsonObject.error_decription);
 					}
 					else
 					{
@@ -1264,116 +1238,6 @@ function submitEvaluateBatch(batchId)
 	);
 }
 
-
-/*获取下一个考生的方法*/
-function getNextApplicant(jsonObject)
-{
-	//mask window
-	maskWindow();
-	
-	Ext.Ajax.request(
-										{
-											url:window.getNextApplicantUrl,
-											method:'POST',
-											timeout:10000,
-											params: {
-																LanguageCd:'ZHS',
-																OperationType:'NXT',
-                                                                BaokaoClassID:jsonObject['ps_class_id'],
-                                                                BaokaoPCID:jsonObject['ps_bkpc_id']
-															},
-											success:function(response)
-											{
-												var jsonObject = null;
-												
-												try
-												{
-													jsonObject = Ext.JSON.decode(response.responseText);
-													
-													if(jsonObject.error_code != '0')
-													{
-														//unmask window
-														unmaskWindow();
-														
-														alert('获取考生信息时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-													}
-													else
-													{
-														if(window.KSINFO_JSON_DATA == null)
-														{
-															window.KSINFO_JSON_DATA = new Array();
-														}
-														
-														var tmpBmbID = jsonObject['ps_ksh_bmbid'];
-														if(KSINFO_JSON_DATA[tmpBmbID] != 'undefined' && KSINFO_JSON_DATA[tmpBmbID]!= null && KSINFO_JSON_DATA[tmpBmbID]!= '')
-														{
-															//unmask window
-															unmaskWindow();
-															
-															alert('获取考生信息时发生错误，请与系统管理员联系：获取到重复的考生信息。');
-														}
-														else
-														{
-															KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
-															
-															//加载指定考生评审信息页面并显示
-															var tzEObject = new tzEvaluateObject();
-															
-															/*lwtzEObject.baokaoDirectionID = jsonObject['ps_bkfx_id'];
-															tzEObject.baokaoDirectionName = jsonObject['ps_bkfx_mc'];
-															tzEObject.baokaoYear = jsonObject['ps_baok_nf'];
-															tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
-															tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];*/
-                                                            tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-                                                            tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
-                                                            tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
-                                                            tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
-															tzEObject.applicantName = jsonObject['ps_ksh_xm'];
-															tzEObject.applicantInterviewID = jsonObject['ps_ksh_msid'];
-															tzEObject.applicantBaomingbiaoID = jsonObject['ps_ksh_bmbid'];
-
-                                                            var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
-															
-															//获取新的局部数据，并使用局部数据刷新当前页面
-															//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
-                                                            getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
-														}
-													}
-												}
-												catch(e1)
-												{
-													//unmask window
-													unmaskWindow();
-													
-													if(window.evaluateSystemDebugFlag == 'Y')
-													{
-														alert('获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
-														var mytmpWindow = window.open("about:blank");
-														mytmpWindow.document.body.innerHTML = response.responseText;
-													}
-													else
-													{
-														alert('获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
-													}
-												}
-											},
-											failure:function(response)
-											{
-												//unmask window
-												unmaskWindow();
-													
-												if(window.evaluateSystemDebugFlag == 'Y')
-												{
-													alert('获取考生信息失败，请与系统管理员联系：' + response.responseText);
-												}
-												else
-												{
-													alert('获取考生信息失败，请与系统管理员联系。');
-												}
-											}
-										}
-									);
-}
 
 function createApplicantList(jsonObject)
 {
