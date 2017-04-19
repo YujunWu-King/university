@@ -6,13 +6,12 @@
 		<link href="%bind(:21)/statics/js/onlineSurvey/css/public.css" rel="stylesheet" type="text/css" />
 		<link href="%bind(:21)/statics/js/onlineSurvey/css/index.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="%bind(:21)/statics/js/onlineSurvey/formvalidator/themes/Default/style/style.css" />
-		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.css" type="text/css">
-		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox-thumbs.css" type="text/css">
-        <link href="%bind(:21)/statics/js/survey/assets/libs/jqueryui/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.css" type="text/css"/>
+		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox-thumbs.css" type="text/css"/>
+        <link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/jqueryui/css/jquery-ui-1.10.4.min.css"/>
 		<script type="text/javascript">
 			var TzUniversityContextPath = "%bind(:21)";
 		</script>
-		
 		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/jquery.min.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/browser.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/bootstrap/js/bootstrap.min.js"></script>
@@ -27,11 +26,9 @@
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/baseComponent.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/formvalidator/ValidationRules.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/formvalidator/formValidator.js"></script>
-		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/layer.js"></script>
-		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/tranzvision/util/layer.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.pack.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox-thumbs.js"></script>
-
 		<style>
 			.noteing{font-weight:700;text-align:center;font-size:14px;font-weight:700;position:fixed;display:none;z-index:10000;cursor:pointer;}
 			.noteing .alert{padding:8px 20px;}
@@ -50,7 +47,6 @@
 			.alert-block p+p{margin-top:5px;}
 			.alert-danger,.alert-error{border-color: #d59595;color: #b94a48;}
 			.alert-success,.alert-danger,.alert-error,.alert-info{text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);}
-
 		</style>
 		<script type="text/javascript">
 			SurveyBuild.tzGeneralURL = "%bind(:3)";		//统一接口
@@ -135,15 +131,18 @@
 				}
 			}
 		</script>
+		
 	</head>
 
 	<body>
 		<div class="container">
+			<!-- 不显示调试模式提醒 
 			<div class="top">
 				%bind(:14)
 				<div class="clear"></div>
 			</div>
-
+			 -->
+			<!-- 卷头 -->
 			<div class="uploadlogo">%bind(:1)</div>
 
 			<div class="maincon">
@@ -159,9 +158,10 @@
 					<span class="sendbtn"><img src="%bind(:21)/statics/js/onlineSurvey/images/m/gou.png" /></span>
 				</div>
 			</div>
+			<!-- 卷尾 -->
 			<div class="fotter">%bind(:2)</div>
 		</div>
-		<input type="hidden" id="unique" name="unique" value="%bind(:20)">
+		<input type="hidden" id="unique" name="unique" value="%bind(:20)"/>
 		<div id="flowtips" style="padding:5px;border-radius:3px;position:absolute;display:none;word-break:break-all;max-width:150px;background-color:#FF893A;border:1px solid;border-color:#FF0000;"></div>
 	</body>
 	<script type="text/javascript">
@@ -175,7 +175,7 @@
 				onError:function(msg,obj,errorlist){
 					$("#errorlist").empty();
 					$.map(errorlist,function(msg){	
-						$("#errorlist").append("<li>" + msg + "</li>")
+						$("#errorlist").append("<li>" + msg + "</li>")	
 					});
 				},
 				submitAfterAjaxPrompt : '有数据正在异步验证，请稍等...'	
@@ -233,6 +233,10 @@
 		SurveyBuild.is_edit_moda = false;
 	</script>
 	<script type="text/javascript">
+		function processing(){								
+			var loadi = layer.load("加载中...");
+			layer.area(loadi,"top:200px");
+		}
 		//获取参与者答题内容
 		function getData(){
 			var _a = SurveyBuild["_items"];
@@ -258,7 +262,6 @@
 		//提交
 		$("#app_submit").click(function(){
 			var isValid = $.formValidator.pageIsValid();
-		    //processing();
 			if(isValid){
 				 SaveSurvey("SUBMIT");
 			}else{
@@ -267,6 +270,7 @@
 		});
 		/*保存在线调查*/
 		function SaveSurvey(cType){
+			processing();
 			if(SurveyBuild.subState == 'S'){
 				if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
 					$(".pagebtn1").hide();
@@ -299,11 +303,11 @@
 						SurveyBuild.appInsId = f.comContent.insid;
 						SurveyBuild.subState = f.comContent.subState;
 						if (f.comContent.code == "0") {
-							 if (cType == "SUBMIT"){
+							if (cType == "SUBMIT"){
 								noteing(MsgSet.SAVE_SUCCEED);
 								var tzSuccessParams = '?tzParams={"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_SUCC_STD","OperateType":"HTML","comParams":{"AC":"P","SURVEY_WJ_ID":' + templId + '}}';
 								window.location.href = SurveyBuild.tzGeneralURL + tzSuccessParams;
-							 }else{
+							}else{
 								/*处理翻页数据加载*/
 								if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
 									$(".pagebtn1").hide();
@@ -317,13 +321,17 @@
 									$(".pagebtn2").show();
 								}
 								SurveyBuild._load();
-							 }
-							 noteing(MsgSet.SAVE_SUCCEED);
+								layer.closeAll();
+							}
+							layer.closeAll();
+							noteing(MsgSet.SAVE_SUCCEED);
 						}else{
+							layer.closeAll();
 							noteing(f.comContent.msg);
 						}
 					}else{
-						 noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc);
+						layer.closeAll();
+						noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc);
 					}
                 }
             });
@@ -355,33 +363,21 @@
 				//只有一页，禁止跳转
 				return false;
 			}
-			var isValid = true;
 			if(SurveyBuild.subState != 'S'){
+				//未提交进行验证
 				var isValid = $.formValidator.pageIsValid();
-			}
-			if(isValid){
-				SurveyBuild.curPageNo = pageno;
-				SaveSurvey("SAVE");
-			/*张浪注释，该部分放在保存成功之后执行，SurveyBuild._load()中需要查询保存后的数据	
-				SaveSurvey("SAVE");
-				SurveyBuild.curPageNo = pageno;
-				if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
-					$(".pagebtn1").hide();
+				if(isValid){
+					SurveyBuild.curPageNo = pageno;
+					SaveSurvey("SAVE");
+					setTimeout(function(){refreshTip();}, 2000);
 				}else{
-					$(".pagebtn1").show();
+					scrollTop();
 				}
-
-				if(SurveyBuild.curPageNo == SurveyBuild.maxPage){
-					$(".pagebtn2").hide();
-				}else{
-					$(".pagebtn2").show();
-				}
-
-				SurveyBuild._load();
-			*/
-				refreshTip();
 			}else{
-				scrollTop();
+				//已提交页面跳转
+				SurveyBuild.curPageNo = pageno;
+				SurveyBuild._load();
+				setTimeout(function(){refreshTip();}, 2000);
 			}
 		}
 		//是否密码安全
@@ -390,7 +386,7 @@
 			var targetVal = SurveyBuild.appInsId + "_" + templId + "_Y";
 			if(is_password && is_password === targetVal){
 				SurveyBuild._load();
-				refreshTip();
+				setTimeout(function(){refreshTip();}, 2000);
 			}else{
 				layer.prompt(
 					{
@@ -412,7 +408,7 @@
 									if(f.comContent.code && f.comContent.code == "0"){
 										layer.closeAll();
 										SurveyBuild._load();
-										refreshTip();
+										setTimeout(function(){refreshTip();}, 2000);
 									}else{
 										alert(f.comContent.msg);
 									}
@@ -426,8 +422,12 @@
 				);
 			}
 		}else{
+			processing();
 			SurveyBuild._load();
-			refreshTip();
+			setTimeout(function(){refreshTip();}, 2000);
+			setTimeout(function(){
+				  layer.closeAll('loading');
+				}, 2000);
 		}
 		
 		//处理formvalidator的tips

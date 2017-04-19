@@ -30,11 +30,11 @@ SurveyBuild.extend("DateBox", "Completion", {
             }else{
                 SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
                 c += '<div class="listcon">';
-                c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '      <div class="onShow"></div>';
-                c += '  </div>';
                 c += '	<div class="question">';
                 c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
+                c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
+                c += '      	<div class="onShow"></div>';
+                c += '  	</div>';
                 c += '	</div>';
                 c += '  <div class="answer" style="position: relative;">';
                 c += '      <input id="' + data.itemId + '" name="' + data.itemId + '" type="text" value="' + data.value + '"class="input-date-text " style="line-height: 39px;font-size:1.285em;margin:0 0 0 4px" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '">';

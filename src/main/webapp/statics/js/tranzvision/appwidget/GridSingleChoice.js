@@ -88,11 +88,11 @@ SurveyBuild.extend("GridSingleChoice", "baseComponent", {
             }else{
 				//手机版
                 c += '<div class="listcon">';
-				c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-				c += '      <div class="onShow"></div>';
-				c += '  </div>';
 				c += '	<div class="question">';
 				c += '		<span class="fontblue-blod">'+ data.qCode +'.</span>' + data.title;
+				c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
+				c += '      	<div class="onShow"></div>';
+				c += '  	</div>';
 				c += '	</div>';
 				c += '	<div class="answer-onechoose" id="' + data.itemId + '">';
 				for (var ch in data.child) {
@@ -305,7 +305,7 @@ SurveyBuild.extend("GridSingleChoice", "baseComponent", {
 				});
 			}
 	
-			$inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+			$inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 			if(!allowEmpty){
 				$inputBox.inputValidator({min:1, onError:errorMsg});
 			}

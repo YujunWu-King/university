@@ -272,7 +272,7 @@ public class TzWebsiteLoginController {
 
 						int errorCode = 2;
 						String strErrorDesc = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,
-								"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00049", strLang, "登录失败，请确认用户名和密码是否正确。",
+								"TZGD_FWINIT_MSGSET", "TZGD_FWINIT_00102", strLang, "登录失败，请确认账户是否存在或者是否绑定了手机、邮箱。",
 								"Email address or password is incorrect .");
 						jsonMap.put("success", "false");
 						jsonMap.put("errorCode", errorCode);

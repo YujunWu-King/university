@@ -1,7 +1,5 @@
 package com.tranzvision.gd.TZWebSiteInfoBundle.service.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,9 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 
 /**
  * 查看发布内容；原：TZ_GD_ARTGL:ArtView
@@ -110,6 +108,40 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 							strRet = "未定义外部链接";
 						} else {
 							strRet = "<script type=\"text/javascript\">;location.href=\"" + outurl + "\"</script>";
+							
+							/*********************如果外部链接为活动链接引用，需要处理form参数，张浪添加，20170419***********************/
+							int actIndex = outurl.indexOf("/dispatcher?");  //判断外部链接是否为活动引用
+							int actIndex2 = outurl.indexOf("classid=art_view");
+							int actIndex3 = outurl.indexOf("operatetype=HTML");
+							if(actIndex > 0 && actIndex2 > 0 && actIndex3 > 0){
+								/**
+								 * 防止进入死循环
+								 */
+								String currentUrl; //当前URL
+								if("".equals(request.getQueryString())){
+									currentUrl = request.getRequestURL().toString();
+								}else{
+									currentUrl = request.getRequestURL().toString()+"?"+request.getQueryString();
+								}
+								
+								boolean isNotSame = this.isNotSameUrl(outurl, currentUrl);
+								if(!isNotSame){
+									strRet = "外部链接定义不能定义为当前活动发布连接";
+								}else{
+									int fromIndex = outurl.indexOf("from=m");
+									if("m".equals(from)){
+										if(fromIndex < 0){
+											outurl = outurl + "&from=m";
+										}
+									}else{
+										if(fromIndex >= 0){
+											outurl = outurl.replace("&from=m", "").replace("?from=m&", "?").replace("?from=m", "");
+										}
+									}
+									strRet = "<script type=\"text/javascript\">;location.href=\"" + outurl + "\"</script>";
+								}
+							}
+							/*********************如果外部链接为活动链接引用，需要处理form参数，张浪添加，20170419***********************/
 						}
 					}else{
 						/* 不需要根据发布时间顾虑*/
@@ -135,5 +167,36 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 		}
 
 		return strRet;
+	}
+	
+	
+	
+	/**
+	 * 判断是否为同一个活动的发布url
+	 * @param url1
+	 * @param url2
+	 * @return
+	 */
+	private boolean isNotSameUrl(String url1,String url2){
+		boolean notSameUrl = false;
+		//去除form参数
+		String strUrl1 = url1.replace("&from=m", "").replace("?from=m", "");
+		String strUrl2 = url2.replace("&from=m", "").replace("?from=m", "");
+		
+		if(strUrl1.equals(strUrl2)){
+			notSameUrl = false;
+		}else{
+			String[] urlParamsArr = strUrl1.split("[?|&]");
+			int i;
+			for(i=0; i<urlParamsArr.length; i++){
+				int index = strUrl2.indexOf(urlParamsArr[i]);
+				if(index < 0){
+					//不是同一个活动发布url
+					notSameUrl = true;
+					break;
+				}
+			}
+		}
+		return notSameUrl;
 	}
 }

@@ -69,11 +69,11 @@ SurveyBuild.extend("ImgUpload", "baseComponent", {
 			} else {
 				//手机版
 				c += '<div class="listcon">';
-				c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-				c += '      <div class="onShow"></div>';
-				c += '  </div>';
 				c += '	<div class="question">';
 				c += '		<span class="fontblue-blod">'+ data.qCode +'.</span>' + data.title + t;
+				c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
+				c += '      	<div class="onShow"></div>';
+				c += '  	</div>';
 				c += '	</div>';
 				c += '	<div class="file-upload" style="margin-top:10px;">';
 				c += '		<span class="upload-icon"><img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/images/m/addImg.png"></span><span class="upload-text">'+MsgSet["CHOOSE_PICTURE"]+'</span>';
@@ -176,7 +176,7 @@ SurveyBuild.extend("ImgUpload", "baseComponent", {
 	
 	_eventbind: function(data) {
 		var $fileInput = $("#" + data.itemId);
-		$fileInput.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+		$fileInput.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 		$fileInput.functionValidator({
 			fun:function(val,el){
 				if (data.isRequire == "Y"){

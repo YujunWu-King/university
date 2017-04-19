@@ -106,9 +106,13 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	 */
 	public final String cookieWebLoginedDlzh = "TZGD_TOKEN_DLZH";
 	/**
-	 * 记录用户登录密码，卢艳添加，2017-4-15；
+	 * 记录当前站点，卢艳添加，2017-4-19；
 	 */
-	//public final String cookieWebLoginedPswd = "TZGD_TOKEN_PASSWORD";
+	public final String cookieWebLoginedSiteId = "TZGD_TOKEN_SITEID";
+	/**
+	 * 记录当前机构，卢艳添加，2017-4-19；
+	 */
+	public final String cookieWebLoginedOrgId = "TZGD_TOKEN_ORGID";
 
 	/*
 	 * (non-Javadoc)
@@ -163,7 +167,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			if (null == dataMap) {
 				errorMsg.add("2");
 				errorMsg.add(gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_FWINIT_MSGSET",
-						"TZGD_FWINIT_00049", language, "登录失败，请确认用户名和密码是否正确。",
+						"TZGD_FWINIT_00102", language, "登录失败，请确认账户是否存在或者是否绑定了手机、邮箱。",
 						"Email address or password is incorrect ."));
 				return false;
 			}
@@ -219,8 +223,10 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			
 			//记录用户登录账号，卢艳添加，2017-4-14
 			tzCookie.addCookie(response, cookieWebLoginedDlzh, psTzAqYhxxTblKey.getTzDlzhId());
-			//记录用户登录密码，卢艳添加，2017-4-15
-			//tzCookie.addCookie(response, cookieWebLoginedPswd, DESUtil.encrypt(userPwd, "TZGD_Tranzvision"));
+			//记录当前站点，卢艳添加，2017-4-19
+			tzCookie.addCookie(response, cookieWebLoginedSiteId, siteid);
+			//记录当前机构，卢艳添加，2017-4-19
+			tzCookie.addCookie(response, cookieWebLoginedOrgId, psTzAqYhxxTblKey.getTzJgId());
 			
 			errorMsg.add("0");
 			errorMsg.add("");

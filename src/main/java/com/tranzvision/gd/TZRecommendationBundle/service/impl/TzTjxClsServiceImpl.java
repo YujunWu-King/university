@@ -11,6 +11,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzKsTjxTblMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.sql.GetSeqNum;
+import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -33,6 +34,8 @@ public class TzTjxClsServiceImpl {
 	private CreateTaskServiceImpl createTaskServiceImpl;
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
+	@Autowired
+	private MySqlLockService mySqlLockService;
 
 	public String tjxId;
 
@@ -57,6 +60,7 @@ public class TzTjxClsServiceImpl {
 			strRtn = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "REF_E_DIF",
 					str_language, "", "");
 		} else {
+			mySqlLockService.lockRow(jdbcTemplate,"TZ_KS_TJX_TBL");
 			strTjxId = jdbcTemplate.queryForObject(
 					"select TZ_REF_LETTER_ID from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and OPRID=?  and TZ_TJR_ID=? and TZ_MBA_TJX_YX='Y' limit 0,1",
 					new Object[] { numAppinsId, strOprid, strTjrId }, "String");
@@ -158,6 +162,7 @@ public class TzTjxClsServiceImpl {
 					psTzKsTjxTblMapper.updateByPrimaryKeySelective(psTzKsTjxTbl);
 				}
 			}
+			mySqlLockService.unlockRow(jdbcTemplate);
 			strRtn = "SUCCESS";
 		}
 
