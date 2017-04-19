@@ -473,20 +473,29 @@ public class LcSysvarClass {
 							String xxxId = fieldIdList.get(i);
 							String xxxmc = fieldNameList.get(i);
 							String xxxValue = "";
+							
 							if (valueMap != null) {
-								isPublish = "Y";
 								xxxValue = valueMap.get(xxxId) == null ? "" : String.valueOf(valueMap.get(xxxId));
 							}
 							if (xxxValue == null) {
 								xxxValue = "";
+							}
+							
+							//至少要有一个有值才表示已经发布并显示;
+							xxxValue = xxxValue.trim();
+							if(!"".equals(xxxValue)){
+								isPublish = "Y";
 							}
 
 							content = content +  "<div class=\"overhidden\"><span class=\"fl width_40\">" + xxxmc + "</span><span class=\"fl\">" + xxxValue + "</span></div>";
 
 						}
 					}
-					result[0] = isPublish;
-					result[1] = content;
+					if("Y".equals(isPublish)){
+						result[0] = isPublish;
+						result[1] = content;
+					}
+					
 				}
 			}else{
 				if (totalnum > 0) {
@@ -570,12 +579,14 @@ public class LcSysvarClass {
 							String xxxmc = fieldNameList.get(i);
 							String xxxValue = "";
 							if (valueMap != null) {
-								isPublish = "Y";
 								xxxValue = valueMap.get(xxxId) == null ? "" : String.valueOf(valueMap.get(xxxId));
 							}
 							if (xxxValue == null) {
 								xxxValue = "";
 							}
+							
+							xxxValue = xxxValue.trim();
+							
 
 							if ("".equals(th)) {
 								if(i < TABLE_COLUM_NUM){
@@ -609,6 +620,11 @@ public class LcSysvarClass {
 								if("有".equals(msRsl)){
 									xxxValue = xxxValue + "，面试预约请<a href=\"" + rootPath + "/dispatcher?classid=Interview&siteId="+siteId+"\">点击此处</a>";
 								}
+							}
+							
+							//至少要有一个有值才表示已经发布并显示;
+							if(!"".equals(xxxValue)){
+								isPublish = "Y";
 							}
 							
 							if ("".equals(td)) {
@@ -654,8 +670,11 @@ public class LcSysvarClass {
 					String tableHtmlEnd = "</table>";
 
 					content = tableHtmlStart + tableHtml + tableHtmlEnd;
-					result[0] = isPublish;
-					result[1] = content;
+					if("Y".equals(isPublish)){
+						result[0] = isPublish;
+						result[1] = content;
+					}
+					
 				}
 			}
 

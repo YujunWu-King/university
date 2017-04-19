@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.activity.applicants.applicantsStore', {
     alias: 'store.applicantsStore',
     model: 'KitchenSink.view.activity.applicants.applicantsModel',
 	autoLoad: false,
-	pageSize: 10,
+	pageSize: 500,
 	comID: 'TZ_GD_BMRGL_COM',
 	pageID: 'TZ_GD_BMRGL_STD',
 	/*

@@ -523,8 +523,28 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 				break;
 			case "EXPORT":
 				// 导出报名人信息
-
-				List<?> listBmrIdsExport = jacksonUtil.getList("bmrIds");
+				List<?> listBmrIdsExport = new ArrayList<String>();
+				
+				//导出选中报名人
+				if(jacksonUtil.containsKey("bmrIds")){
+					listBmrIdsExport = jacksonUtil.getList("bmrIds");
+				}
+				//导出搜索结果报名人
+				if(jacksonUtil.containsKey("searchSql")){
+					String searchSql = jacksonUtil.getString("searchSql");
+					
+					List<Map<String,Object>> bmrList = sqlQuery.queryForList(searchSql);
+					
+					List<Object> bmrIdList = new ArrayList<Object>();
+					for(Map<String,Object> bmrMap: bmrList){
+						Object[] bmrIdArr = bmrMap.values().toArray();
+						if(bmrIdArr.length > 0){
+							bmrIdList.add(bmrIdArr[0]);
+						}
+					}
+					
+					listBmrIdsExport = bmrIdList;
+				}
 
 				String filepath = this.exportApplyInfo(strActivityId, listBmrIdsExport, errorMsg);
 
@@ -532,6 +552,18 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 
 				strRet = jacksonUtil.Map2json(mapRet);
 
+				break;
+				
+			case "getSearchSql":
+				/*可配置搜索查询语句*/
+				String[] resultFldArray = {"TZ_HD_BMR_ID"};
+				
+				String[][] orderByArr=null;
+				
+				String searchSql = fliterForm.getQuerySQL(resultFldArray,orderByArr,strParams,errorMsg);
+				
+				mapRet.put("SQL", searchSql);
+				strRet = jacksonUtil.Map2json(mapRet);
 				break;
 			}
 

@@ -94,6 +94,9 @@ public class QuestionnaireSuccessImpl extends FrameworkImpl {
 				}
 				if (dateMap.containsKey("TZ_DC_WJ_TLSJ") && dateMap.get("TZ_DC_WJ_TLSJ") != null) {
 					time = dateMap.get("TZ_DC_WJ_TLSJ").toString();
+					if(StringUtils.isBlank(time)){
+						time = "0";
+					}
 				}
 				if (dateMap.containsKey("TZ_DC_WJ_JGNR") && dateMap.get("TZ_DC_WJ_JGNR") != null) {
 					strJGNR = dateMap.get("TZ_DC_WJ_JGNR").toString();

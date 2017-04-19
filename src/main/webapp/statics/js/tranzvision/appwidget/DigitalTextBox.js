@@ -40,7 +40,7 @@ SurveyBuild.extend("DigitalTextBox", "baseComponent", {
 				if ($.trim(data.onShowMessage) != "") {
 					c += '<div class="input-list-blank" id="' + data.itemId + 'Tip">';
 					c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
-					c += '	<div class="input-list-wz left"><span class="blue">请填写住宅地址信息</span></div>';
+					c += '	<div class="input-list-wz left"><span class="blue">'+data.onShowMessage+'</span></div>';
 					c += '	<div class="input-list-suffix-blank left"></div>';
 					c += '	<div class="clear"></div>';
 					c += '</div>';

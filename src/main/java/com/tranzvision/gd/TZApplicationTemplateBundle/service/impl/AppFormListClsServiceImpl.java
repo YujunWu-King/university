@@ -502,13 +502,14 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			return jacksonUtil.Map2json(mapRet);
 		}
 
-		/* 班级批次   modity by caoy 增加批次时间的处理*/
+		/* 班级批次 modity by caoy 增加批次时间的处理 */
 		if (StringUtils.equals(oType, "BATCH")) {
 			String classId = jacksonUtil.getString("CLASSID");
 			String sqlBatch = "SELECT B.TZ_BATCH_ID,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T C, PS_TZ_CLS_BATCH_T B WHERE C.TZ_CLASS_ID = B.TZ_CLASS_ID AND C.TZ_IS_SUB_BATCH = 'Y' AND B.TZ_APP_PUB_STATUS = 'Y' AND C.TZ_CLASS_ID = ? AND B.TZ_APP_END_DT >= current_date() ORDER BY B.TZ_APP_END_DT";
 			List<?> resultlist = sqlQuery.queryForList(sqlBatch, new Object[] { classId });
 
-			Map<String, Object> mapRet = new HashMap<String, Object>();
+			Map<String, Object> mapRet = new LinkedHashMap<String, Object>();
+			//int i = 0;
 			for (Object obj : resultlist) {
 				Map<String, Object> result = (Map<String, Object>) obj;
 
@@ -517,13 +518,15 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 				String batchName = result.get("TZ_BATCH_NAME") == null ? ""
 						: String.valueOf(result.get("TZ_BATCH_NAME"));
 
-				Map<String, Object> mapOptJson = new HashMap<String, Object>();
+				Map<String, Object> mapOptJson = new LinkedHashMap<String, Object>();
 				mapOptJson.put("code", batchId);
 				mapOptJson.put("txt", batchName);
 				mapOptJson.put("orderby", 0);
 				mapOptJson.put("defaultval", "N");
 				mapOptJson.put("other", "N");
 				mapOptJson.put("weight", 0);
+				//mapOptJson.put("index", i);
+				//i++;
 				mapRet.put(optId, mapOptJson);
 			}
 			return jacksonUtil.Map2json(mapRet);
@@ -769,16 +772,16 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			int dataLength = actData.length;
 
-			//System.out.println();
+			// System.out.println();
 			for (int num = 0; num < dataLength; num++) {
 				// 表单内容
 				String strForm = actData[num];
-				//System.out.println("strForm:" + strForm);
+				// System.out.println("strForm:" + strForm);
 				// 解析json
 				jacksonUtil.json2Map(strForm);
-				
-				//System.out.println("strForm:"+strForm);
-				
+
+				// System.out.println("strForm:"+strForm);
+
 				String tid = jacksonUtil.getString("tid");
 				Map<String, Object> infoData = jacksonUtil.getMap("data");
 				strRet = templateEngine.saveTpl(tid, infoData);

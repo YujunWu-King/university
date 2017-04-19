@@ -340,7 +340,7 @@
 	+开发人：马炳春											+
 	********************************************************/
 	searchComList: function(btn){     //searchComList为各自搜索按钮的handler event;
-		//var activetyId = btn.findParentByType('panel').child('form').getForm().getValues()['activetyId'];
+		var appGrid = btn.findParentByType('applicantsMg');
 		var activetyId = btn.findParentByType('panel').child('form').getForm().getValues()['activityId'];
 		//console.log(activetyId);
         Ext.tzShowCFGSearch({            
@@ -353,6 +353,13 @@
                 var store = btn.findParentByType("grid").store;
                 store.tzStoreParams = seachCfg;
                 store.load();
+                
+                //console.log(seachCfg);
+                var tzParams = '{"ComID":"TZ_GD_BMRGL_COM","PageID":"TZ_GD_BMRGL_STD","OperateType":"getSearchSql","comParams":'+seachCfg+'}';
+				Ext.tzLoad(tzParams,function(responseData){
+					var getedSQL = responseData.SQL;
+					appGrid.getedSQL = getedSQL;
+				});
             }
         });    
     },
@@ -378,5 +385,25 @@
 	onComRegClose: function(btn){
 		//关闭窗口
 		this.getView().close();
+	},
+	
+	//导出搜索结果报名人信息
+	exportSearchApplyInfo: function(btn){
+		var appGrid = btn.findParentByType('applicantsMg');
+		var activetyId = appGrid.child('form').getForm().getValues()['activityId'];
+		var searchSql = "";
+		
+		if((typeof appGrid.getedSQL) == "undefined"){
+			searchSql = "SELECT TZ_HD_BMR_ID FROM PS_TZ_NAUDLIST_T WHERE TZ_ART_ID='"+ activetyId +"' AND TZ_NREG_STAT IN('1','4')";
+		}else{
+			searchSql = appGrid.getedSQL;
+		}
+		
+		jsonData = '{"ComID":"TZ_GD_BMRGL_COM","PageID":"TZ_GD_BMRGL_STD","OperateType":"EXPORT","comParams":{"activityId":"'+ activetyId +'","searchSql":"'+ searchSql +'"}}';
+		
+		Ext.tzSubmit(jsonData,function(respDate){
+			var fileUrl = respDate.fileUrl;
+			window.location.href=fileUrl;
+		},"导出报名人信息成功",true,this);
 	}
 });

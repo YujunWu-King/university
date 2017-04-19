@@ -56,11 +56,11 @@ SurveyBuild.extend("QuantifyQu", "baseComponent", {
                 }
 
                 c += '<div class="listcon">';
-                c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '      <div class="onShow"></div>';
-                c += '  </div>';
                 c += '	<div class="question">';
                 c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
+                c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
+                c += '      	<div class="onShow"></div>';
+                c += '  	</div>';
                 c += '	</div>';
                 c += '	<div class="dropbox-answer">';
                 c += '		<div class="dropbox">';
@@ -147,7 +147,7 @@ SurveyBuild.extend("QuantifyQu", "baseComponent", {
             SurveyBuild.handleInput(this);
         });
 
-        $inputBox.formValidator({tipID:(data["itemId"] + 'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+        $inputBox.formValidator({tipID:(data["itemId"] + 'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
         $inputBox.functionValidator({
             fun:function(val,elem){
                 //执行高级设置中的自定义规则

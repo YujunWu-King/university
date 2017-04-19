@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -15,10 +18,14 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author ShaweYet
  * @since 2017/03/06
  */
+@Service
 public class MaterialEvaluationCls{
 	
+	@Autowired
+	private SqlQuery sqlQuery;
+	
 	//平均分计算（包括：单个评委和多个评委的情况）;
-	static double calculateAverage(SqlQuery sqlQuery,String classId,String batchId,String oprid,String scoreItemId,int error_code,String error_decription){
+	protected double calculateAverage(String classId,String batchId,String oprid,String scoreItemId,int error_code,String error_decription){
 		   
 		   //参数验证
 		   if(oprid==null||"".equals(oprid)){
@@ -89,7 +96,7 @@ public class MaterialEvaluationCls{
 	}
 	
 	//某个报考班级批次下：某个评委：某个成绩项的指标项的计算;
-	static List<Map<String,Object>> getScoreItemEvaluationData(SqlQuery sqlQuery,String classId,String batchId,String oprid,String scoreItemId,int error_code,String error_decription){
+	protected List<Map<String,Object>> getScoreItemEvaluationData(String classId,String batchId,String oprid,String scoreItemId,int error_code,String error_decription){
 
 	   //参数验证
 	   if(oprid==null||"".equals(oprid)){

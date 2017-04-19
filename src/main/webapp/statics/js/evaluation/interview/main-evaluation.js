@@ -120,7 +120,7 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 						
 						searchKSForm.findField('SearchKSResult').setValue('正在查找，请稍后');
 						
-						maskWindow("正在查找，请稍后。。。");
+						maskWindow("正在查找，请稍后...");
 
 					    try
 					    {
@@ -143,24 +143,24 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 					                    var jsonText = response.responseText;
 					                    try
 					                    {
-					                        var jsonObject = Ext.util.JSON.decode(jsonText);
+					                        var responseJsonObject = Ext.util.JSON.decode(jsonText);
 					                        /*判断服务器是否返回了正确的信息*/
-					                        if(jsonObject.state.errcode == 1){
-					                        	Ext.Msg.alert("提示",jsonObject.state.errdesc);
+					                        if(responseJsonObject.state.errcode == 1){
+					                        	Ext.Msg.alert("提示",responseJsonObject.state.errdesc);
 					                        }else{
-					                        	if(jsonObject.comContent.error_code=="0"){
+					                        	if(responseJsonObject.comContent.error_code=="0"){
 													//显示查询结果
-													var searchRstZJHM = Ext.String.trim(jsonObject.comContent.ps_ksh_zjhm);
+													var searchRstZJHM = Ext.String.trim(responseJsonObject.comContent.ps_ksh_zjhm);
 													searchRstZJHM = searchRstZJHM==''?'无':searchRstZJHM;
 													
-													searchKSForm.findField("SearchKSResult").setValue('<b>查询结果：</b>面试申请号【'+ jsonObject.comContent.ps_ksh_msid +'】，报名表编号【'+ jsonObject.comContent.ps_ksh_bmbid +'】，姓名【'+ jsonObject.comContent.ps_ksh_xm +'】');
+													searchKSForm.findField("SearchKSResult").setValue('<b>查询结果：</b>面试申请号【'+ responseJsonObject.comContent.ps_ksh_msid +'】，报名表编号【'+ responseJsonObject.comContent.ps_ksh_bmbid +'】，姓名【'+ responseJsonObject.comContent.ps_ksh_xm +'】');
 													
-													searchKSForm.findField("KSH_BMBID").setValue(jsonObject.comContent.ps_ksh_bmbid);
-													searchKSForm.findField("KSH_KSNAME").setValue(jsonObject.comContent.ps_ksh_xm);
-													searchKSForm.findField("KSH_MSID").setValue(jsonObject.comContent.ps_ksh_msid);
+													searchKSForm.findField("KSH_BMBID").setValue(responseJsonObject.comContent.ps_ksh_bmbid);
+													searchKSForm.findField("KSH_KSNAME").setValue(responseJsonObject.comContent.ps_ksh_xm);
+													searchKSForm.findField("KSH_MSID").setValue(responseJsonObject.comContent.ps_ksh_msid);
 													
 												}else{
-													Ext.Msg.alert('失败', jsonObject.comContent.error_decription);
+													Ext.Msg.alert('失败', responseJsonObject.comContent.error_decription);
 													searchKSForm.findField('SearchKSResult').setValue('请输入考生申请号或姓名进行查找');
 												}
 					                        }
@@ -200,36 +200,48 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 			//height		: 25,
 			margin		: '10 10 10 0',
 			handler 	: function() {
-							if(MainPageSearchKSPanel.getForm().isValid()){
-								var searchKSForm = MainPageSearchKSPanel.getForm();
-								
-								var searchKSBMBID = Ext.String.trim(searchKSForm.findField("KSH_BMBID").getValue());
-								var searchKSKSNAME = Ext.String.trim(searchKSForm.findField("KSH_KSNAME").getValue());
-								var searchKSMSID = Ext.String.trim(searchKSForm.findField("KSH_MSID").getValue());
-								
-								if(searchKSBMBID==""){
-									return;
-								}
-												
-								maskWindow();
-								
-								/* Normally we would submit the form to the server here and handle the response... */
-								searchKSForm.submit({
-									clientValidation: false,
-									url: window.baseUrl,
-									params: {
-										LanguageCd:'ZHS',
-										type:'add',
-                                        BaokaoClassID:jsonObject['ps_class_id'],
-                                        BaokaoPCID:jsonObject['ps_pc_id']
-									},
-									success: function(form, action) {
-										//unmask window
-										unmaskWindow();
-										
-										//try{
+				if(MainPageSearchKSPanel.getForm().isValid()){
+					var searchKSForm = MainPageSearchKSPanel.getForm();
+					
+					var searchKSBMBID = Ext.String.trim(searchKSForm.findField("KSH_BMBID").getValue());
+					var searchKSKSNAME = Ext.String.trim(searchKSForm.findField("KSH_KSNAME").getValue());
+					var searchKSMSID = Ext.String.trim(searchKSForm.findField("KSH_MSID").getValue());
+					
+					if(searchKSBMBID==""){
+						Ext.Msg.alert("提示","请先查找需要评审的考生。");
+						return;
+					}
+
+					maskWindow();
+					try
+				    {
+				        Ext.Ajax.request(
+				            {
+				                url: window.baseUrl,
+				                params:{
+				                	LanguageCd:'ZHS',
+				                	type:'add',
+		                            BaokaoClassID:jsonObject['ps_class_id'],
+		                            BaokaoPCID:jsonObject['ps_pc_id'],
+				            		KSH_BMBID:searchKSBMBID
+				                },
+				                timeout: 60000,
+				                async: true,
+				                success: function(response, opts)
+				                {
+				                    //返回值内容
+				                    var jsonText = response.responseText;
+				                    try
+				                    {
+				                        var responseJsonObject = Ext.util.JSON.decode(jsonText);
+				                        /*判断服务器是否返回了正确的信息*/
+				                        if(responseJsonObject.state.errcode == 1){
+				                        	Ext.Msg.alert("提示",responseJsonObject.state.errdesc);
+				                        }else{
+				                        	//unmask window
+											unmaskWindow();											
 											//0-新抽取的考生 或者是 2-列表中已存在的考生，则直接跳转到评分页面
-											if(action.result.error_code=="0" || action.result.error_decription=="2"){
+											if(responseJsonObject.comContent.error_code=="0" ||responseJsonObject.comContent.error_decription=="2"){
 												
 												//var searchKSBMBID = Ext.string.trim(searchKSForm.fineField("KSH_BMBID").getValue());
 												
@@ -241,18 +253,13 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 												
 												var tmpBmbID = searchKSBMBID;
 												KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
-		
+
 												var tzEObject = new tzEvaluateObject();
 												
-												//tzEObject.baokaoDirectionID = jsonObject['ps_bkfx_id'];
-												//tzEObject.baokaoDirectionName = jsonObject['ps_bkfx_mc'];
-												//tzEObject.baokaoYear = jsonObject['ps_baok_nf'];
-                                                //tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
-                                                //tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];
-                                                tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-                                                tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
-                                                tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
-                                                tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
+				                                tzEObject.baokaoClassID = jsonObject['ps_class_id'];
+				                                tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
+				                                tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
+				                                tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
 
 												tzEObject.applicantName = searchKSKSNAME;
 												tzEObject.applicantInterviewID = searchKSMSID;
@@ -260,51 +267,48 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 												
 												//获取新的局部数据，并使用局部数据刷新当前页面
 
-                                                //
-                                                var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
+				                                //
+				                                var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
 												//若是在打分页面，则刷新；否则要跳转到打分页面
 												if(showThisPanelHeader){
 													//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
-                                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
+				                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
 												}else{
 													//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
-                                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
+				                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
 												}
 												
-											}else{
-												
-												Ext.Msg.alert('失败', action.result.error_decription);
-												
+											}else{												
+												Ext.Msg.alert('失败', jsonObject.comContent.error_decription);
 											}
-										
-										//}
-										//catch(e1){
-										//	alert('操作失败，请重试！多次失败请联系管理员！');
-										//}
-									
-										
-									},
-									failure: function(form, action) {
-										//unmask window
-										unmaskWindow();
-										
-										switch (action.failureType) {
-											case Ext.form.action.Action.CLIENT_INVALID:
-												Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
-												break;
-											case Ext.form.action.Action.CONNECT_FAILURE:
-												Ext.Msg.alert('Failure', 'Ajax communication failed');
-												break;
-											case Ext.form.action.Action.SERVER_INVALID:
-											   Ext.Msg.alert('Failure', action.result.msg);
-									   }
-									}
-								});
-								
-								//Ext.Msg.alert('Submitted Values', form.getValues(true));
-								}
+				                        }
+				                    }
+				                    catch(e)
+				                    {
+				                    	console&&console.error(e);
+				                        Ext.Msg.alert("提示","进行评审失败！请重试！多次失败请联系管理员！");
+				                    }
+				                },
+				                failure: function(response, opts)
+				                {
+				                	var respText = Ext.util.JSON.decode(response.responseText);
+				                	Ext.Msg.alert("提示",respText.error+"，请与系统管理员联系。");
+				                },
+				                callback: function(opts,success,response)
+				                {
+				                    unmaskWindow();
+				                }
+				            });
+				    }
+				    catch(e1)
+				    {
+				    	console&&console.error(e1);
+				    	Ext.Msg.alert("提示","出现错误：请与系统管理员联系。");
+				    	unmaskWindow();
+				    }
+				}
 
-						}
+			}
 				
 			}
 		  ]
@@ -681,39 +685,9 @@ function getDataModelForStatisticsChart(jsonObject)
         var colName = '00' + (i + 1);
         colName = 'col' + colName.substr(colName.length - 2);
         dataRow[colName] = tmpArray[i][colName];
-		
-		/*lw for(itm1 in tmpArray[i])
-		{
-			if(Object.prototype.toString.call(tmpArray[i][itm1]) == '[object Object]')
-			{
-				for(itm2 in tmpArray[i][itm1])
-				{
-					dataRow[itm1 + '_' + itm2] = tmpArray[i][itm1][itm2];
-					
-					if(Ext.isNumeric(tmpArray[i][itm1][itm2]) == true && drawChartFields[itm1 + '_' + itm2] == 'Y')
-					{
-						var tmpNumber = 1 * tmpArray[i][itm1][itm2];
-						if(tmpNumber < statisticsChartDataModel['minValue']) statisticsChartDataModel['minValue'] = tmpNumber;
-						if(tmpNumber > statisticsChartDataModel['maxValue']) statisticsChartDataModel['maxValue'] = tmpNumber;
-					}
-				}
-			}
-			else
-			{
-				dataRow[itm1] = tmpArray[i][itm1];
-				
-				if(Ext.isNumeric(tmpArray[i][itm1]) == true)
-				{
-					var tmpNumber = 1 * tmpArray[i][itm1];
-					if(tmpNumber < statisticsChartDataModel['minValue']) statisticsChartDataModel['minValue'] = tmpNumber;
-					if(tmpNumber > statisticsChartDataModel['maxValue']) statisticsChartDataModel['maxValue'] = tmpNumber;
-				}
-			}
-		}*/
-		
-		
-
+	
 	}
+	
     if(statisticsChartDataModel['minValue'] == statisticsChartDataModel['maxValue'] && statisticsChartDataModel['minValue'] == 0)
     {
         statisticsChartDataModel['minValue'] = 0;
@@ -722,7 +696,7 @@ function getDataModelForStatisticsChart(jsonObject)
 
 
     statisticsChartDataModel['chartData'].push(dataRow);
-	
+
 	return statisticsChartDataModel;
 }
 
@@ -746,14 +720,14 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth,doHidePanel)
             hiddenGrid = false;
         }
 		var store1 = null;
-		
+
 		if(chartStore == null)
 		{
 			store1 = Ext.create('Ext.data.JsonStore',
-								 					{
-								 						fields: chartDataModel['chartFields'],
-								 						data: chartDataModel['chartData']
-								 					});
+ 					{
+ 						fields: chartDataModel['chartFields'],
+ 						data: chartDataModel['chartData']
+ 					});
 		}
 		else
 		{
@@ -762,60 +736,60 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth,doHidePanel)
 		
 		
 		var fsChart2 = Ext.create('Ext.chart.Chart',
-									 {
-									 		xtype: 'chart',
-											hidden: boolHidePanel,
-									 		style: 'background:#fff',
-									 		animate: true,
-									 		shadow: true,
-									 		store: store1,
-									 		legend: {position: 'top'},
-								 			axes: [
-								 							{
-									 							type: 'Numeric',
-									 							position: 'left',
-									 							fields: chartDataModel['dataFields'],
-									 							label:{renderer: Ext.util.Format.numberRenderer('000.00')},
-									 							title: '统计指标值',
-									 							grid: true,
-									 							maximum: chartDataModel['maxValue'],
-									 							minimum: chartDataModel['minValue']
-									 						},
-								 							{
-								 								type: 'Category',
-								 								position: 'bottom',
-								 								fields: ['col01'],
-								 								title: '统计指标名称'
-								 							}
-									 					],
-									 		series: [
-									 							{
-									 								type: 'column',
-									 								axis: 'left',
-									 								highlight: true,
-									 								title:chartDataModel['seriesTitle'],
-									 								tips: {
-									 												trackMouse: true,
-								 													width: 180,
-								 													renderer: function(storeItem, item)
-								 																		{
-								 																			this.setTitle(storeItem.get('col01') + '-' + chartDataModel['seriesTips'][item['yField']] + ' : ' + Ext.util.Format.number(storeItem.get(item['yField']),'000.00'));
-								 																		}
-								 												},
-								 									label: {
-								 														font: '18px Helvetica, sans-serif',
-								 														display: 'insideEnd',
-								 														'text-anchor': 'middle',
-								 														field: chartDataModel['dataFields'],
-								 														renderer: Ext.util.Format.numberRenderer('000.00'),
-									 													//orientation: 'vertical',
-									 													color: '#333'
-									 											 },
-									 								xField: 'col01',
-									 								yField: chartDataModel['dataFields']
-									 							}
-									 						]
-									 });
+			 {
+			 		xtype: 'chart',
+					hidden: boolHidePanel,
+			 		style: 'background:#fff',
+			 		animate: true,
+			 		shadow: true,
+			 		store: store1,
+			 		legend: {position: 'top'},
+		 			axes: [
+		 							{
+			 							type: 'Numeric',
+			 							position: 'left',
+			 							fields: chartDataModel['dataFields'],
+			 							label:{renderer: Ext.util.Format.numberRenderer('000.00')},
+			 							title: '统计指标值',
+			 							grid: true,
+			 							maximum: chartDataModel['maxValue'],
+			 							minimum: chartDataModel['minValue']
+			 						},
+		 							{
+		 								type: 'Category',
+		 								position: 'bottom',
+		 								fields: ['col01'],
+		 								title: '统计指标名称'
+		 							}
+			 					],
+			 		series: [
+			 							{
+			 								type: 'column',
+			 								axis: 'left',
+			 								highlight: true,
+			 								title:chartDataModel['seriesTitle'],
+			 								tips: {
+			 												trackMouse: true,
+		 													width: 180,
+		 													renderer: function(storeItem, item)
+		 																		{
+		 																			this.setTitle(storeItem.get('col01') + '-' + chartDataModel['seriesTips'][item['yField']] + ' : ' + Ext.util.Format.number(storeItem.get(item['yField']),'000.00'));
+		 																		}
+		 												},
+		 									label: {
+		 														font: '18px Helvetica, sans-serif',
+		 														display: 'insideEnd',
+		 														'text-anchor': 'middle',
+		 														field: chartDataModel['dataFields'],
+		 														renderer: Ext.util.Format.numberRenderer('000.00'),
+			 													//orientation: 'vertical',
+			 													color: '#333'
+			 											 },
+			 								xField: 'col01',
+			 								yField: chartDataModel['dataFields']
+			 							}
+			 						]
+			 });
 		
 		var chartPanel = Ext.create('Ext.panel.Panel',
 						{
@@ -850,18 +824,23 @@ function getSubDataForFenbuChart(chartDataArray)
 		var tmpNumber1 = 0;
 		var tmpNumber2 = 0;
 		
-		if(Ext.isNumeric(chartDataArray[i]['ps_bzfb_bilv']) == true)
+		var ps_bzfb_bilv = chartDataArray[i]['ps_bzfb_bilv'];
+		ps_bzfb_bilv = ps_bzfb_bilv!=undefined?ps_bzfb_bilv.replace("%",""):0;
+		
+		var ps_sjfb_bilv = chartDataArray[i]['ps_sjfb_bilv'];
+		ps_sjfb_bilv = ps_sjfb_bilv!=undefined?ps_sjfb_bilv.replace("%",""):0;
+		
+		if(Ext.isNumeric(ps_bzfb_bilv) == true)
 		{
-			tmpNumber1 = 1.0 * chartDataArray[i]['ps_bzfb_bilv'];
+			tmpNumber1 = 1.0 * ps_bzfb_bilv;
 		}
-		if(Ext.isNumeric(chartDataArray[i]['ps_sjfb_bilv']) == true)
+		if(Ext.isNumeric(ps_sjfb_bilv) == true)
 		{
-			tmpNumber2 = 1.0 * chartDataArray[i]['ps_sjfb_bilv'];
+			tmpNumber2 = 1.0 * ps_sjfb_bilv;
 		}
 		
 		data.push({name:chartDataArray[i]['ps_fb_mc'],data1:tmpNumber1,data2:tmpNumber2});
 	}
-	
 	return data;
 }
 
@@ -936,7 +915,6 @@ function createSubStatisticsCharts(chartDataArray,chartStore,boolHidePanel)
 			}
 		}
 	}
-	
 	
 	var fsChart1 = null
 	if(seriesArray.length >= 1)
@@ -1201,7 +1179,7 @@ function submitEvaluateBatch(batchId)
 		{
 			url:window.submitApplicantDataUrl,
 			method:'POST',
-			timeout:10000,
+			timeout:30000,
 			params: {
 				LanguageCd:'ZHS',
 				OperationType:'SUBMTALL',
@@ -1221,7 +1199,7 @@ function submitEvaluateBatch(batchId)
 						//unmask window
 						unmaskWindow();
 						
-						alert('提交当前评审批次时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+						alert('提交当前评审批次时发生错误：' + jsonObject.error_decription);
 					}
 					else
 					{
@@ -1264,116 +1242,6 @@ function submitEvaluateBatch(batchId)
 	);
 }
 
-
-/*获取下一个考生的方法*/
-function getNextApplicant(jsonObject)
-{
-	//mask window
-	maskWindow();
-	
-	Ext.Ajax.request(
-										{
-											url:window.getNextApplicantUrl,
-											method:'POST',
-											timeout:10000,
-											params: {
-																LanguageCd:'ZHS',
-																OperationType:'NXT',
-                                                                BaokaoClassID:jsonObject['ps_class_id'],
-                                                                BaokaoPCID:jsonObject['ps_bkpc_id']
-															},
-											success:function(response)
-											{
-												var jsonObject = null;
-												
-												try
-												{
-													jsonObject = Ext.JSON.decode(response.responseText);
-													
-													if(jsonObject.error_code != '0')
-													{
-														//unmask window
-														unmaskWindow();
-														
-														alert('获取考生信息时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-													}
-													else
-													{
-														if(window.KSINFO_JSON_DATA == null)
-														{
-															window.KSINFO_JSON_DATA = new Array();
-														}
-														
-														var tmpBmbID = jsonObject['ps_ksh_bmbid'];
-														if(KSINFO_JSON_DATA[tmpBmbID] != 'undefined' && KSINFO_JSON_DATA[tmpBmbID]!= null && KSINFO_JSON_DATA[tmpBmbID]!= '')
-														{
-															//unmask window
-															unmaskWindow();
-															
-															alert('获取考生信息时发生错误，请与系统管理员联系：获取到重复的考生信息。');
-														}
-														else
-														{
-															KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
-															
-															//加载指定考生评审信息页面并显示
-															var tzEObject = new tzEvaluateObject();
-															
-															/*lwtzEObject.baokaoDirectionID = jsonObject['ps_bkfx_id'];
-															tzEObject.baokaoDirectionName = jsonObject['ps_bkfx_mc'];
-															tzEObject.baokaoYear = jsonObject['ps_baok_nf'];
-															tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
-															tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];*/
-                                                            tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-                                                            tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
-                                                            tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
-                                                            tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
-															tzEObject.applicantName = jsonObject['ps_ksh_xm'];
-															tzEObject.applicantInterviewID = jsonObject['ps_ksh_msid'];
-															tzEObject.applicantBaomingbiaoID = jsonObject['ps_ksh_bmbid'];
-
-                                                            var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
-															
-															//获取新的局部数据，并使用局部数据刷新当前页面
-															//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
-                                                            getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
-														}
-													}
-												}
-												catch(e1)
-												{
-													//unmask window
-													unmaskWindow();
-													
-													if(window.evaluateSystemDebugFlag == 'Y')
-													{
-														alert('获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
-														var mytmpWindow = window.open("about:blank");
-														mytmpWindow.document.body.innerHTML = response.responseText;
-													}
-													else
-													{
-														alert('获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
-													}
-												}
-											},
-											failure:function(response)
-											{
-												//unmask window
-												unmaskWindow();
-													
-												if(window.evaluateSystemDebugFlag == 'Y')
-												{
-													alert('获取考生信息失败，请与系统管理员联系：' + response.responseText);
-												}
-												else
-												{
-													alert('获取考生信息失败，请与系统管理员联系。');
-												}
-											}
-										}
-									);
-}
 
 function createApplicantList(jsonObject)
 {
@@ -1510,10 +1378,10 @@ function createApplicantList(jsonObject)
 							{
 								url:window.baseUrl,
 								method:'POST',
-								timeout:10000,
+								timeout:30000,
 								params: {
 									LanguageCd:'ZHS',
-									type:'delete',
+									type:'remove',
                                     BaokaoClassID:jsonObject['ps_class_id'],
                                     BaokaoPCID:jsonObject['ps_pc_id'],
 									KSH_BMBID:rec.get('ps_ksh_bmbid')
@@ -1774,7 +1642,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 										{
 											url:window.getBatchDataUrl,
 											method:'POST',
-											timeout:10000,
+											timeout:30000,
 											params: {
 																	LanguageCd:'ZHS',
                                                                     BaokaoClassID:classid,
@@ -2041,7 +1909,7 @@ function partRefreshTestFunction(batchId)
 										{
 											url:window.getBatchDataUrl,
 											method:'POST',
-											timeout:10000,
+											timeout:30000,
 											params: {
 																LanguageCd:'ZHS',
 																BaokaoFXID:batchId,
