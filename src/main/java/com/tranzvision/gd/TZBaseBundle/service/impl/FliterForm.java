@@ -1364,21 +1364,21 @@ public class FliterForm extends FrameworkImpl {
 
 					if (intTypeString.contains(fieldType)) {
 						// 数字;
-						result = result + ", CONCAT(ifnull(" + resultFld + ",0),'')";
+						result = result + ", CONCAT(ifnull(" + resultFld + ",0),'') "+resultFld;
 					} else if ("DATE".equals(fieldType)) {
 						// 是否是日期;
-						result = result + ", ifnull(date_format(" + resultFld + ",'%Y-%m-%d'),'')";
+						result = result + ", ifnull(date_format(" + resultFld + ",'%Y-%m-%d'),'') "+resultFld;
 
 					} else if ("TIME".equals(fieldType)) {
 						// 是否是时间;
-						result = result + ", ifnull(date_format(" + resultFld + ",'%H:%i'),'')";
+						result = result + ", ifnull(date_format(" + resultFld + ",'%H:%i'),'') "+resultFld;
 
 					} else if ("DATETIME".equals(fieldType) || "TIMESTAMP".equals(fieldType)) {
 						// 是否日期时间;
-						result = result + ", ifnull(date_format(" + resultFld + ",'%Y-%m-%d %H:%i'),'')";
+						result = result + ", ifnull(date_format(" + resultFld + ",'%Y-%m-%d %H:%i'),'') "+resultFld;
 					} else {
 						// 字符串;
-						result = result + ", ifnull(" + resultFld + ",'')";
+						result = result + ", ifnull(" + resultFld + ",'') "+resultFld;
 					}
 
 					resultUnChange = resultUnChange + ", " + resultFld;
