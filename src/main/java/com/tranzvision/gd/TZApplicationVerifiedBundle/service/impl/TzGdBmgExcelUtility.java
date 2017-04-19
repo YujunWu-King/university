@@ -141,7 +141,7 @@ public class TzGdBmgExcelUtility {
 		
 		String strBmrMshId = "";
 		
-		strBmrMshId = jdbcTemplate.queryForObject("SELECT TZ_MSSQH FROM PS_TZ_FORM_WRK_T A,PS_TZ_REG_USER_T B "
+		strBmrMshId = jdbcTemplate.queryForObject("SELECT TZ_MSH_ID FROM PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B "
 				+ " WHERE A.TZ_APP_INS_ID = ? AND A.OPRID = B.OPRID LIMIT 0,1",new Object[]{appInsId},String.class);
 		
 		if(strBmrMshId==null){
