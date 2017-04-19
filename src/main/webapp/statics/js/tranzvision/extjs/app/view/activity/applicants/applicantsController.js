@@ -354,7 +354,7 @@
                 store.tzStoreParams = seachCfg;
                 store.load();
                 
-                console.log(seachCfg);
+                //console.log(seachCfg);
                 var tzParams = '{"ComID":"TZ_GD_BMRGL_COM","PageID":"TZ_GD_BMRGL_STD","OperateType":"getSearchSql","comParams":'+seachCfg+'}';
 				Ext.tzLoad(tzParams,function(responseData){
 					var getedSQL = responseData.SQL;
