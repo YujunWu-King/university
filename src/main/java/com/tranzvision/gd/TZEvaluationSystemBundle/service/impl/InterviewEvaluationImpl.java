@@ -38,6 +38,8 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private psTzMspwpsjlTblMapper psTzMspwpsjlTblMapper;
+	@Autowired
+	InterviewEvaluationCls applicationCls;
 	
 	@Override
 	public String tzGetJsonData(String strParams) {
@@ -50,7 +52,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			if ("list".equals(type)) {
 				strReturn = getBatchList(strParams);
 			}
-			// 获取下一个考生
+			// 检查评委帐号
 			if ("check".equals(type)) {
 				strReturn = checkJudgeAccount(strParams);
 			}
@@ -62,6 +64,14 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			if ("search".equals(type)){
 				strReturn = searchApplicant(strParams);
 			}
+			// 添加考生
+			if ("add".equals(type)){
+				strReturn = addApplicant(strParams);
+			}
+			// 移除考生
+			if ("remove".equals(type)){
+				strReturn = removeApplicant(strParams);
+			}	
 			// 提交全部考生数据
 			if ("submit".equals(type)) {
 				strReturn = submitAllData(strParams);
@@ -83,7 +93,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		
 		Map<String,Object> userInfo;
 		
-		userInfo = InterviewEvaluationCls.getSearchResult(sqlQuery,classId, batchId, srch_msid, srch_name);
+		userInfo = applicationCls.getSearchResult(classId, batchId, srch_msid, srch_name);
 		
 		//判断返回是否有效值
 		if((boolean)userInfo.get("result")==true){
@@ -109,6 +119,60 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		}else{
 			rtnMap.put("error_code", -1);
 			rtnMap.put("error_decription", userInfo.get("msg"));
+		}
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		return jacksonUtil.Map2json(rtnMap);
+	}
+	
+	private String addApplicant(String strParams){
+		String classId = request.getParameter("BaokaoClassID"); /*字符串，请求班级编号*/
+		String batchId = request.getParameter("BaokaoPCID"); /*字符串，请求报考批次编号*/
+		String appInsId = request.getParameter("KSH_BMBID"); /*报名表编号*/
+		
+		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		
+		Map<String,Object> removeRst = applicationCls.addJudgeApplicant(classId, batchId, appInsId, oprId);
+		
+		//判断返回是否有效值
+		if((boolean)removeRst.get("result")==true){
+		 
+			 rtnMap.put("success", true);
+			 rtnMap.put("error_code", 0);
+			 rtnMap.put("error_decription", "");
+			 
+		}else{
+			rtnMap.put("error_code", -1);
+			rtnMap.put("error_decription", removeRst.get("msg"));
+		}
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		return jacksonUtil.Map2json(rtnMap);
+	}
+	
+	private String removeApplicant(String strParams){
+		String classId = request.getParameter("BaokaoClassID"); /*字符串，请求班级编号*/
+		String batchId = request.getParameter("BaokaoPCID"); /*字符串，请求报考批次编号*/
+		String appInsId = request.getParameter("KSH_BMBID"); /*报名表编号*/
+		
+		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		
+		Map<String,Object> removeRst = applicationCls.removeJudgeApplicant(classId, batchId, appInsId, oprId);
+		
+		//判断返回是否有效值
+		if((boolean)removeRst.get("result")==true){
+		 
+			 rtnMap.put("success", true);
+			 rtnMap.put("error_code", 0);
+			 rtnMap.put("error_decription", "");
+			 
+		}else{
+			rtnMap.put("error_code", -1);
+			rtnMap.put("error_decription", removeRst.get("msg"));
 		}
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -358,7 +422,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			// 计算平均分
 			double pjf = 0;
 			
-			pjf = InterviewEvaluationCls.calculateAverage(sqlQuery, classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
+			pjf = applicationCls.calculateAverage(classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
 			 
 			List<Map<String,Object>> sjfzRowList= new ArrayList<Map<String,Object>>();
 			Map<String, Object> sjfzRow1 = new HashMap<String, Object>();
@@ -379,7 +443,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			/* 第3部分 当前评委打分分布统计信息 */
 			//int TOTALPWRS = tz_done_num;/*完成数量*/
 
-			List<Map<String,Object>> evaluationDataList = InterviewEvaluationCls.getScoreItemEvaluationData(sqlQuery, classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
+			List<Map<String,Object>> evaluationDataList = applicationCls.getScoreItemEvaluationData(classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
 
 			List<Map<String,Object>> fbsjrow = new ArrayList<Map<String,Object>>();
 			
@@ -482,7 +546,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 								"select A.TZ_KSH_PSPM,date_format(A.ROW_LASTMANT_DTTM, '%Y-%m-%d %H:%i') ROW_LASTMANT_DTTM ,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_PSHEN_ZT' AND TZ_ZHZ_ID=A.TZ_PSHEN_ZT AND TZ_EFF_STATUS='A') AS TZ_PSHEN_ZT,TZ_SCORE_INS_ID from PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_CLASS_ID=? and A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?",
 								new Object[] { classId, batchId, TZ_APP_INS_ID, oprid });
 						if (map4 != null) {
-							TZ_KSH_PSPM2 = (String) map4.get("OPRID");
+							TZ_KSH_PSPM2 = (String) map4.get("TZ_KSH_PSPM");
 							pssj = (String) map4.get("ROW_LASTMANT_DTTM");
 							pyZt = (String) map4.get("TZ_PSHEN_ZT");
 							cjdId = (BigInteger) map4.get("TZ_SCORE_INS_ID");
@@ -684,7 +748,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		String TZ_PWEI_ZHZT = sqlQuery.queryForObject("select TZ_PWEI_ZHZT from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=?", 
 				new Object[]{classId,batchId,oprid}, "String");
 		
-		if(TZ_PWEI_ZHZT==null||"B".equals(TZ_PWEI_ZHZT)){
+		if("B".equals(TZ_PWEI_ZHZT)){
 			error_code = "JUDGE_PAUSE";
 			error_decription = "当前评委账号为暂停状态";
 		}else{

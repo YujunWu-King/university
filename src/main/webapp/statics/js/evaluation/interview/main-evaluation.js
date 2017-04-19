@@ -120,7 +120,7 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 						
 						searchKSForm.findField('SearchKSResult').setValue('正在查找，请稍后');
 						
-						maskWindow("正在查找，请稍后。。。");
+						maskWindow("正在查找，请稍后...");
 
 					    try
 					    {
@@ -143,24 +143,24 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 					                    var jsonText = response.responseText;
 					                    try
 					                    {
-					                        var jsonObject = Ext.util.JSON.decode(jsonText);
+					                        var responseJsonObject = Ext.util.JSON.decode(jsonText);
 					                        /*判断服务器是否返回了正确的信息*/
-					                        if(jsonObject.state.errcode == 1){
-					                        	Ext.Msg.alert("提示",jsonObject.state.errdesc);
+					                        if(responseJsonObject.state.errcode == 1){
+					                        	Ext.Msg.alert("提示",responseJsonObject.state.errdesc);
 					                        }else{
-					                        	if(jsonObject.comContent.error_code=="0"){
+					                        	if(responseJsonObject.comContent.error_code=="0"){
 													//显示查询结果
-													var searchRstZJHM = Ext.String.trim(jsonObject.comContent.ps_ksh_zjhm);
+													var searchRstZJHM = Ext.String.trim(responseJsonObject.comContent.ps_ksh_zjhm);
 													searchRstZJHM = searchRstZJHM==''?'无':searchRstZJHM;
 													
-													searchKSForm.findField("SearchKSResult").setValue('<b>查询结果：</b>面试申请号【'+ jsonObject.comContent.ps_ksh_msid +'】，报名表编号【'+ jsonObject.comContent.ps_ksh_bmbid +'】，姓名【'+ jsonObject.comContent.ps_ksh_xm +'】');
+													searchKSForm.findField("SearchKSResult").setValue('<b>查询结果：</b>面试申请号【'+ responseJsonObject.comContent.ps_ksh_msid +'】，报名表编号【'+ responseJsonObject.comContent.ps_ksh_bmbid +'】，姓名【'+ responseJsonObject.comContent.ps_ksh_xm +'】');
 													
-													searchKSForm.findField("KSH_BMBID").setValue(jsonObject.comContent.ps_ksh_bmbid);
-													searchKSForm.findField("KSH_KSNAME").setValue(jsonObject.comContent.ps_ksh_xm);
-													searchKSForm.findField("KSH_MSID").setValue(jsonObject.comContent.ps_ksh_msid);
+													searchKSForm.findField("KSH_BMBID").setValue(responseJsonObject.comContent.ps_ksh_bmbid);
+													searchKSForm.findField("KSH_KSNAME").setValue(responseJsonObject.comContent.ps_ksh_xm);
+													searchKSForm.findField("KSH_MSID").setValue(responseJsonObject.comContent.ps_ksh_msid);
 													
 												}else{
-													Ext.Msg.alert('失败', jsonObject.comContent.error_decription);
+													Ext.Msg.alert('失败', responseJsonObject.comContent.error_decription);
 													searchKSForm.findField('SearchKSResult').setValue('请输入考生申请号或姓名进行查找');
 												}
 					                        }
@@ -200,36 +200,48 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 			//height		: 25,
 			margin		: '10 10 10 0',
 			handler 	: function() {
-							if(MainPageSearchKSPanel.getForm().isValid()){
-								var searchKSForm = MainPageSearchKSPanel.getForm();
-								
-								var searchKSBMBID = Ext.String.trim(searchKSForm.findField("KSH_BMBID").getValue());
-								var searchKSKSNAME = Ext.String.trim(searchKSForm.findField("KSH_KSNAME").getValue());
-								var searchKSMSID = Ext.String.trim(searchKSForm.findField("KSH_MSID").getValue());
-								
-								if(searchKSBMBID==""){
-									return;
-								}
-												
-								maskWindow();
-								
-								/* Normally we would submit the form to the server here and handle the response... */
-								searchKSForm.submit({
-									clientValidation: false,
-									url: window.baseUrl,
-									params: {
-										LanguageCd:'ZHS',
-										type:'add',
-                                        BaokaoClassID:jsonObject['ps_class_id'],
-                                        BaokaoPCID:jsonObject['ps_pc_id']
-									},
-									success: function(form, action) {
-										//unmask window
-										unmaskWindow();
-										
-										//try{
+				if(MainPageSearchKSPanel.getForm().isValid()){
+					var searchKSForm = MainPageSearchKSPanel.getForm();
+					
+					var searchKSBMBID = Ext.String.trim(searchKSForm.findField("KSH_BMBID").getValue());
+					var searchKSKSNAME = Ext.String.trim(searchKSForm.findField("KSH_KSNAME").getValue());
+					var searchKSMSID = Ext.String.trim(searchKSForm.findField("KSH_MSID").getValue());
+					
+					if(searchKSBMBID==""){
+						Ext.Msg.alert("提示","请先查找需要评审的考生。");
+						return;
+					}
+
+					maskWindow();
+					try
+				    {
+				        Ext.Ajax.request(
+				            {
+				                url: window.baseUrl,
+				                params:{
+				                	LanguageCd:'ZHS',
+				                	type:'add',
+		                            BaokaoClassID:jsonObject['ps_class_id'],
+		                            BaokaoPCID:jsonObject['ps_pc_id'],
+				            		KSH_BMBID:searchKSBMBID
+				                },
+				                timeout: 60000,
+				                async: true,
+				                success: function(response, opts)
+				                {
+				                    //返回值内容
+				                    var jsonText = response.responseText;
+				                    try
+				                    {
+				                        var responseJsonObject = Ext.util.JSON.decode(jsonText);
+				                        /*判断服务器是否返回了正确的信息*/
+				                        if(responseJsonObject.state.errcode == 1){
+				                        	Ext.Msg.alert("提示",responseJsonObject.state.errdesc);
+				                        }else{
+				                        	//unmask window
+											unmaskWindow();											
 											//0-新抽取的考生 或者是 2-列表中已存在的考生，则直接跳转到评分页面
-											if(action.result.error_code=="0" || action.result.error_decription=="2"){
+											if(responseJsonObject.comContent.error_code=="0" ||responseJsonObject.comContent.error_decription=="2"){
 												
 												//var searchKSBMBID = Ext.string.trim(searchKSForm.fineField("KSH_BMBID").getValue());
 												
@@ -241,18 +253,13 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 												
 												var tmpBmbID = searchKSBMBID;
 												KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
-		
+
 												var tzEObject = new tzEvaluateObject();
 												
-												//tzEObject.baokaoDirectionID = jsonObject['ps_bkfx_id'];
-												//tzEObject.baokaoDirectionName = jsonObject['ps_bkfx_mc'];
-												//tzEObject.baokaoYear = jsonObject['ps_baok_nf'];
-                                                //tzEObject.baokaoBatch = jsonObject['ps_baok_pc'];
-                                                //tzEObject.baokaoZhiyuan = jsonObject['ps_baok_zy'];
-                                                tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-                                                tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
-                                                tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
-                                                tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
+				                                tzEObject.baokaoClassID = jsonObject['ps_class_id'];
+				                                tzEObject.baokaoClassName = jsonObject['ps_class_mc'];
+				                                tzEObject.baokaoPcID = jsonObject['ps_pc_id'];
+				                                tzEObject.baokaoPcName = jsonObject['ps_pc_name'];
 
 												tzEObject.applicantName = searchKSKSNAME;
 												tzEObject.applicantInterviewID = searchKSMSID;
@@ -260,51 +267,48 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 												
 												//获取新的局部数据，并使用局部数据刷新当前页面
 
-                                                //
-                                                var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
+				                                //
+				                                var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
 												//若是在打分页面，则刷新；否则要跳转到打分页面
 												if(showThisPanelHeader){
 													//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
-                                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
+				                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
 												}else{
 													//getPartBatchDataByBatchId(jsonObject['ps_bkfx_id'],loadApplicantData,tzEObject,'NXT');
-                                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
+				                                    getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
 												}
 												
-											}else{
-												
-												Ext.Msg.alert('失败', action.result.error_decription);
-												
+											}else{												
+												Ext.Msg.alert('失败', jsonObject.comContent.error_decription);
 											}
-										
-										//}
-										//catch(e1){
-										//	alert('操作失败，请重试！多次失败请联系管理员！');
-										//}
-									
-										
-									},
-									failure: function(form, action) {
-										//unmask window
-										unmaskWindow();
-										
-										switch (action.failureType) {
-											case Ext.form.action.Action.CLIENT_INVALID:
-												Ext.Msg.alert('Failure', 'Form fields may not be submitted with invalid values');
-												break;
-											case Ext.form.action.Action.CONNECT_FAILURE:
-												Ext.Msg.alert('Failure', 'Ajax communication failed');
-												break;
-											case Ext.form.action.Action.SERVER_INVALID:
-											   Ext.Msg.alert('Failure', action.result.msg);
-									   }
-									}
-								});
-								
-								//Ext.Msg.alert('Submitted Values', form.getValues(true));
-								}
+				                        }
+				                    }
+				                    catch(e)
+				                    {
+				                    	console&&console.error(e);
+				                        Ext.Msg.alert("提示","进行评审失败！请重试！多次失败请联系管理员！");
+				                    }
+				                },
+				                failure: function(response, opts)
+				                {
+				                	var respText = Ext.util.JSON.decode(response.responseText);
+				                	Ext.Msg.alert("提示",respText.error+"，请与系统管理员联系。");
+				                },
+				                callback: function(opts,success,response)
+				                {
+				                    unmaskWindow();
+				                }
+				            });
+				    }
+				    catch(e1)
+				    {
+				    	console&&console.error(e1);
+				    	Ext.Msg.alert("提示","出现错误：请与系统管理员联系。");
+				    	unmaskWindow();
+				    }
+				}
 
-						}
+			}
 				
 			}
 		  ]
@@ -1175,7 +1179,7 @@ function submitEvaluateBatch(batchId)
 		{
 			url:window.submitApplicantDataUrl,
 			method:'POST',
-			timeout:10000,
+			timeout:30000,
 			params: {
 				LanguageCd:'ZHS',
 				OperationType:'SUBMTALL',
@@ -1374,10 +1378,10 @@ function createApplicantList(jsonObject)
 							{
 								url:window.baseUrl,
 								method:'POST',
-								timeout:10000,
+								timeout:30000,
 								params: {
 									LanguageCd:'ZHS',
-									type:'delete',
+									type:'remove',
                                     BaokaoClassID:jsonObject['ps_class_id'],
                                     BaokaoPCID:jsonObject['ps_pc_id'],
 									KSH_BMBID:rec.get('ps_ksh_bmbid')
@@ -1638,7 +1642,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 										{
 											url:window.getBatchDataUrl,
 											method:'POST',
-											timeout:10000,
+											timeout:30000,
 											params: {
 																	LanguageCd:'ZHS',
                                                                     BaokaoClassID:classid,
@@ -1905,7 +1909,7 @@ function partRefreshTestFunction(batchId)
 										{
 											url:window.getBatchDataUrl,
 											method:'POST',
-											timeout:10000,
+											timeout:30000,
 											params: {
 																LanguageCd:'ZHS',
 																BaokaoFXID:batchId,
