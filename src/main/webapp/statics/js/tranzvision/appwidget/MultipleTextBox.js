@@ -67,11 +67,11 @@ SurveyBuild.extend("MultipleTextBox", "baseComponent", {
                     e += '</li>';
                 }
                 c += '<div class="listcon">';
-                c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '      <div class="onShow"></div>';
-                c += '  </div>';
                 c += '  <div class="question">';
                 c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
+                c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
+                c += '      	<div class="onShow"></div>';
+                c += '  	</div>';
                 c += '	</div>';
                 c += '  <div class="answer" name="'+ data.itemId +'" id="'+ data.itemId +'">';
                 c += '		<ul>' + e +  '</ul>';
@@ -155,7 +155,7 @@ SurveyBuild.extend("MultipleTextBox", "baseComponent", {
             });
         });
         var $inputBox = $("[name='" + data.itemId + "']");
-        $inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "&nbsp;",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
+        $inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
 
         if (ValidationRules) {
             $.each(data["rules"],function(classname, classObj) {
@@ -168,7 +168,7 @@ SurveyBuild.extend("MultipleTextBox", "baseComponent", {
                 }
             });
         }
-        $inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "&nbsp;",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
+        $inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
         $inputBox.functionValidator({
             fun:function(val,el){
                 if (data.isRequire == "Y"){

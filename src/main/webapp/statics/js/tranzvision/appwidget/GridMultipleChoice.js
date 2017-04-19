@@ -87,11 +87,11 @@ SurveyBuild.extend("GridMultipleChoice", "baseComponent", {
             }else{
 				//手机版
                 c += '<div class="listcon">';
-				c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-				c += '      <div class="onShow"></div>';
-				c += '  </div>';
 				c += '	<div class="question">';
 				c += '		<span class="fontblue-blod">'+ data.qCode +'.</span>' + data.title;
+				c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
+				c += '      	<div class="onShow"></div>';
+				c += '  	</div>';
 				c += '	</div>';
 				c += '	<div class="answer-onechoose" id="' + data.itemId + '">';
 				for (var ch in data.child) {

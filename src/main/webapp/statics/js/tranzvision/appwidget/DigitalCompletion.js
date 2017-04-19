@@ -29,11 +29,11 @@ SurveyBuild.extend("DigitalCompletion", "baseComponent", {
                 c += '</div>';
             }else{
                 c += '<div class="listcon">';
-                c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '      <div class="onShow"></div>';
-                c += '  </div>';
                 c += '	<div class="question">';
                 c += '      <span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
+                c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
+                c += '      	<div class="onShow"></div>';
+                c += '  	</div>';
                 c += '  </div>';
                 c += '	<div class="answer">';
                 c += '		<input id="' + data.itemId + '" onchange="SurveyBuild.handleInput(this);" onkeyup="SurveyBuild.handleInput(this); " name="' + data.itemId + '" data-regular="'+ regular +'" class="inputtext" value="' + data.value + '">';
@@ -151,7 +151,7 @@ SurveyBuild.extend("DigitalCompletion", "baseComponent", {
     _eventbind:function(data){
         var $inputBox = $("#" + data.itemId);
 
-        $inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+        $inputBox.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
         $inputBox.functionValidator({
             fun:function(val,elem){
                 var digital = $.trim($inputBox.val());

@@ -33,11 +33,11 @@ SurveyBuild.extend("Completion", "baseComponent", {
                 c += '</div>';
             }else{
                 c += '<div class="listcon">';
-                c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '      <div class="onShow"></div>';
-                c += '  </div>';
                 c += '	<div class="question">';
                 c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
+                c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
+                c += '      	<div class="onShow"></div>';
+                c += '  	</div>';
                 c += '	</div>';
                 c += '	<div class="answer">';
                 c += '		<input id="' + data.itemId + '" onchange="SurveyBuild.handleInput(this);" onkeyup="SurveyBuild.handleInput(this); " name="' + data.itemId + '" class="inputtext" data-regular="' + regular + '" value="' + data.value + '">';
