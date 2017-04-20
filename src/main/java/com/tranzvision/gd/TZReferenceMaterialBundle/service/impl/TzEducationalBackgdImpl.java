@@ -33,7 +33,7 @@ public class TzEducationalBackgdImpl implements TzRefMaterialBase {
 			
 			String scoreProcessHtml = tzGenRefMaterialPage.getScoreProcessHtml(classId, batchId, appInsId, cjxId);
 			
-			String stuInfoHtml  = tzGenRefMaterialPage.getStuInfoHtml(appInsId, appTmpId);
+			String stuInfoHtml  = tzGenRefMaterialPage.getStuInfoUrl(appInsId, appTmpId);
 			
 			refDataHtml = scoreProcessHtml + stuInfoHtml;
 					
