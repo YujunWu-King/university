@@ -960,7 +960,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			String strBlHtml = "", strWcHtml = "";
 			String strCjModalId = "", strFbdzId = "";
 			if (strClassID != null && !"".equals(strClassID)) {
-				String strCjModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
+				String strCjModalSql = "SELECT TZ_MSCJ_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 				strCjModalId = sqlQuery.queryForObject(strCjModalSql, new Object[] { strClassID }, "String");
 				if (strCjModalId != null && !"".equals(strCjModalId)) {
 					String strFbdzSql = "SELECT TZ_M_FBDZ_ID FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?";
@@ -1328,9 +1328,12 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 						+ tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_TJ_JSON_HTML", "wc",
 								"误差", strWcHtml);
 				;
-				strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_JSON_HTML",
+				/*strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_JSON_HTML",
 						strClassID, strBatchID, strGridColHTML, strGridHtml, strChartFieldsHTML, strGridGoalColHTML,
-						strGridGoalHtml, strGridGoalColHTML2, strGridGoalColHTML3);
+						strGridGoalHtml, strGridGoalColHTML2, strGridGoalColHTML3);*/
+				strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_JSON_HTML",
+						strClassID, strBatchID, strGridColHTML, strGridHtml, strChartFieldsHTML, "",
+						"", "", "");
 			}
 		} catch (Exception e) {
 			System.out.println(e.toString());
