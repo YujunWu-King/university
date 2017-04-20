@@ -21,12 +21,13 @@ var tzGeneralURL = "%bind(:1)";
 			for(i=0;i<menu.length;i++){
 		   		menu[i].className=i==n?"now2":""; 
 			} */
+			var countryCode=$("#TZ_SCH_COUNTRY",window.parent.document).val();
 			var $CountryCode = $("#TZ_SCH_CNAME_Country",window.parent.document).attr("ccode");
 			var title = $("#TZ_SCH_CNAME_Country",window.parent.document).val();
 			if($CountryCode==undefined||$CountryCode==null){
 				$CountryCode = ""; 
 			}
- 			if($CountryCode=="CHN"){
+ 			if($CountryCode=="CHN"||countryCode=="CHN"){
 				$("#provice_show").css("display","block");
 				var province=$(_this).html();
 				console.log(province);
