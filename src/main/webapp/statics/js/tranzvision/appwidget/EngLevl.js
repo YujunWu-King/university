@@ -394,7 +394,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		var EXAM_TYPE_MAP={
 			"ENG_LEV_T1":"GRE",
 			"ENG_LEV_T2":"GMAT",
-			"ENG_LEV_T3":"TOFEL",
+			"ENG_LEV_T3":"TOEFL",
 			"ENG_LEV_T4":"IELTS",
 			"ENG_LEV_T5":"英语六级（710分制）",
 			"ENG_LEV_T6":"英语四级（710分制）",
@@ -589,7 +589,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				var EXAM_TYPE_MAP={
 					"ENG_LEV_T1":"GRE",
 					"ENG_LEV_T2":"GMAT",
-					"ENG_LEV_T3":"TOFEL",
+					"ENG_LEV_T3":"TOEFL",
 					"ENG_LEV_T4":"IELTS",
 					"ENG_LEV_T5":"英语六级（710分制）",
 					"ENG_LEV_T6":"英语四级（710分制）",
