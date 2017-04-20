@@ -1046,7 +1046,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				String strGridDataHTML = "";
 
 				String strPwOprid = "", strPwDlId = "", strFirstName = "";
-				String strPwSql = "SELECT TZ_PWEI_OPRID,(SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=A.TZ_PWEI_OPRID limit 0,1) TZ_DLZH_ID,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL R WHERE R.OPRID=A.TZ_PWEI_OPRID) TZ_REALNAME FROM PS_TZ_MP_PW_KS_TBL A WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+				String strPwSql = "SELECT TZ_PWEI_OPRID,(SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=A.TZ_PWEI_OPRID limit 0,1) TZ_DLZH_ID,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL R WHERE R.OPRID=A.TZ_PWEI_OPRID) TZ_REALNAME FROM PS_TZ_MSPS_PW_TBL A WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 				List<Map<String, Object>> pwList = sqlQuery.queryForList(strPwSql,
 						new Object[] { strClassID, strBatchID });
 				if (pwList != null && pwList.size() > 0) {

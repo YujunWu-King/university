@@ -271,7 +271,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 }
                 statisticsGoalGridDataModel['gridData'].push(dataRow);
             }
-            console.log(statisticsGoalGridDataModel);
+            
             /*tmpArray2 = respData.pw_fbzb_grid_data;
             for (i = 0; i < tmpArray2.length; i++) {
                 var tmpdataArray = tmpArray2[i].field_value;
