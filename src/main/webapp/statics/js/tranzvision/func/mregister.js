@@ -455,8 +455,10 @@ $(document).ready(function(){
 	   	$("#TZ_COUNTRY_click").css("cursor","");
 	});
 	//默认国家为中国
-	$("#TZ_SCH_CNAME_Country").val("中国");
-	$("#TZ_SCH_CNAME_Country").html("中国");
+	//2017-420修改中国为中国大陆
+	$("#TZ_SCH_COUNTRY").val("CHN");
+	$("#TZ_SCH_CNAME_Country").val("中国大陆");
+	$("#TZ_SCH_CNAME_Country").html("中国大陆");
 	$("#TZ_SCH_CNAME_Country").attr("ccode","CHN");
 	$("#TZ_SCH_CNAME").click(function(e) {
 		/*$("#ParamValue").val("TZ_SCH_CNAME");		
