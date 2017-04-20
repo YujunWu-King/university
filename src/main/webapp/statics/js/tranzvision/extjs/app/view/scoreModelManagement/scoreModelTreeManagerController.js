@@ -354,7 +354,8 @@
 	
 	//选择参考资料
 	ckzlPmtSearch: function(field){
-		var formRec = field.findParentByType('form').getForm().getValues();
+		var form = field.findParentByType('form').getForm();
+		var formRec = form.getValues();
 		var orgId = formRec.orgId;
 		Ext.tzShowPromptSearch({
             recname: 'PS_TZ_CKZL_T',
@@ -386,7 +387,8 @@
             },
             multiselect: false, 
             callback: function(selection){
-            	field.setValue("itemId",selection[0].data.TZ_CKZL_ID);
+            	field.setValue(selection[0].data.TZ_CKZL_ID);
+            	form.findField('refDataDescr').setValue(selection[0].data.TZ_CKZL_NAME);
             }
         });
 	}

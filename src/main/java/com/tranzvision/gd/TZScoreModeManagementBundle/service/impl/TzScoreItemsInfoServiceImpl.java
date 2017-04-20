@@ -140,11 +140,17 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 				mapRet.put("autoScreen", autoScreen);
 				mapRet.put("scoringRules", scoringRules);
 				
+				String refDataDescr = "";
+				if(!"".equals(refDataSet) && refDataSet != null){
+					String ckzlSql = "select TZ_CKZL_NAME from PS_TZ_CKZL_T where TZ_JG_ID=? and TZ_CKZL_ID=?";
+					refDataDescr = sqlQuery.queryForObject(ckzlSql, new Object[]{ orgId,refDataSet }, "String");
+				}
+				
 				mapRet.put("refDataSet", refDataSet);
+				mapRet.put("refDataDescr", refDataDescr);
 				mapRet.put("standard", standard);
 				mapRet.put("descr", descr);
 				mapRet.put("interviewMethod", interviewMethod);
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
