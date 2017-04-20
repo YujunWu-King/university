@@ -119,7 +119,10 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 			// 获取数据失败，请联系管理员;
 			applicationCenterHtml = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "8",
 					language, "获取数据失败，请联系管理员", "获取数据失败，请联系管理员");
-
+			
+			//不可报名时的按钮title描述：暂时未开放申请，请耐心等待...;
+			String noApplyTitle = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "100",language, "暂时未开放申请，请耐心等待...","暂时未开放申请，请耐心等待...");
+			
 			// 是否开通了班级;
 			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
 			int totalNum = jdbcTemplate.queryForObject(totalSQL, new Object[] { strSiteId, str_jg_id }, "Integer");
@@ -199,7 +202,7 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 						}else{
 							applicationCenterHtml = tzGDObject.getHTMLText(
 									"HTML.TZApplicationCenterBundle.TZ_CLASS_CANTNOT_APPLY", ApplicationCenter,
-									addNewSqBtDesc);
+									addNewSqBtDesc,noApplyTitle);
 						}
 						
 						
@@ -261,7 +264,7 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 					return applicationCenterHtml;
 				}else{
 					applicationCenterHtml = tzGDObject.getHTMLText(
-							"HTML.TZApplicationCenterBundle.TZ_CLASS_CANTNOT_APPLY", ApplicationCenter, addNewSqBtDesc);
+							"HTML.TZApplicationCenterBundle.TZ_CLASS_CANTNOT_APPLY", ApplicationCenter, addNewSqBtDesc,noApplyTitle);
 				}
 				
 				
