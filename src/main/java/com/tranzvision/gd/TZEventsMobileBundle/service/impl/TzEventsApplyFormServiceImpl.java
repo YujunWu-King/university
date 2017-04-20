@@ -100,6 +100,8 @@ public class TzEventsApplyFormServiceImpl extends FrameworkImpl{
 
 			// 当前登录人所属机构
 			String orgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+			//当前登录人oprid
+			String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 
 			String contextPath = request.getContextPath();
 			// 统一URL;
@@ -117,8 +119,16 @@ public class TzEventsApplyFormServiceImpl extends FrameworkImpl{
 
 			if (null != mapUserInfo) {
 				name = mapUserInfo.get("TZ_REALNAME") == null ? "" : String.valueOf(mapUserInfo.get("TZ_REALNAME"));
-				email = mapUserInfo.get("TZ_EMAIL") == null ? "" : String.valueOf(mapUserInfo.get("TZ_EMAIL"));
-				mobile = mapUserInfo.get("TZ_MOBILE") == null ? "" : String.valueOf(mapUserInfo.get("TZ_MOBILE"));
+				//email = mapUserInfo.get("TZ_EMAIL") == null ? "" : String.valueOf(mapUserInfo.get("TZ_EMAIL"));
+				//mobile = mapUserInfo.get("TZ_MOBILE") == null ? "" : String.valueOf(mapUserInfo.get("TZ_MOBILE"));
+			}
+			
+			/*手机邮箱信息从联系方式表中获取*/
+			sql = "select TZ_ZY_EMAIL,TZ_ZY_SJ from PS_TZ_LXFSINFO_TBL where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
+			Map<String, Object> mapUserEmlPhone = sqlQuery.queryForMap(sql, new Object[] { oprid });
+			if(mapUserEmlPhone != null){
+				email = mapUserEmlPhone.get("TZ_ZY_EMAIL") == null ? "" : String.valueOf(mapUserEmlPhone.get("TZ_ZY_EMAIL"));
+				mobile = mapUserEmlPhone.get("TZ_ZY_SJ") == null ? "" : String.valueOf(mapUserEmlPhone.get("TZ_ZY_SJ"));
 			}
 
 			// 必填项的html标识
