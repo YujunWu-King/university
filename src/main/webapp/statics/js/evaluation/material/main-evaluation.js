@@ -770,7 +770,7 @@ function submitEvaluateBatch(classid,pc_id)
 			{
 				url:window.submitApplicantDataUrl,
 				method:'POST',
-				timeout:10000,
+				timeout:30000,
 				params: {
 					LanguageCd:'ZHS',
 					OperationType:'SUBMTALL',
@@ -850,7 +850,7 @@ function getNextApplicant(jsonObject)
 		{
 			url:window.getNextApplicantUrl,
 			method:'POST',
-			timeout:10000,
+			timeout:30000,
 			params: {
 				LanguageCd:'ZHS',
 				OperationType:'NXT',
@@ -1259,7 +1259,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 		{
 			url:window.getBatchDataUrl,
 			method:'POST',
-			timeout:10000,
+			timeout:30000,
 			params: {
 					LanguageCd:'ZHS',
                     BaokaoClassID:classid,
@@ -1514,7 +1514,7 @@ function partRefreshTestFunction(batchId)
 		{
 			url:window.getBatchDataUrl,
 			method:'POST',
-			timeout:10000,
+			timeout:30000,
 			params: {
 								LanguageCd:'ZHS',
 								BaokaoFXID:batchId,

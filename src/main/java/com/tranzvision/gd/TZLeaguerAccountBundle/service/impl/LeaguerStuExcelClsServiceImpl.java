@@ -111,6 +111,7 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 		return jacksonUtil.Map2json(mapRet);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
 		// 返回值;
@@ -133,18 +134,34 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				String excelTpl = jacksonUtil.getString("excelTpl");
 				// Excel名称;
 				String excelName = jacksonUtil.getString("excelName");
-				
+				String strResultSource = jacksonUtil.getString("resultSource");
+				String searchSql = jacksonUtil.getString("searchSql");
 				appFormModalID = jdbcTemplate.queryForObject("SELECT TZ_APP_MODAL_ID FROM PS_TZ_EXPORT_TMP_T WHERE TZ_EXPORT_TMP_ID = ?",
 						new Object[] { excelTpl }, "String");
 				
-				//报名表编号;
-				@SuppressWarnings("unchecked")
-				List<String> oprIdArray = (List<String>)jacksonUtil.getList("applicantsList");
-				
+				List<String> oprIdArray = new ArrayList<String>();
+				List<Map<String, Object>> oprList = null;
+				if ("A".equals(strResultSource))
+				{
+					oprIdArray = (List<String>)jacksonUtil.getList("applicantsList");
+				} else
+				{
+					oprList = jdbcTemplate.queryForList(searchSql);
+					if (oprList != null && oprList.size() > 0)
+					{
+						for (int i102 = 0; i102 < oprList.size(); i102++)
+						{
+							String oprId = oprList.get(i102).get("OPRID").toString();
+							oprIdArray.add(oprId);
+						}
+
+					}
+				}
 				String strAppInsIdList = "";
 				String strAppInsId = "";
 				int dcCount = 0;
 				int i = 0;
+				
 				for(i = 0; i < oprIdArray.size(); i++){
 					List<Map<String, Object>> list = null;
 					try {
@@ -247,8 +264,8 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				
 				//调度作业
 				tmpEngine.schedule(schdProcessParameters);
-				
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			

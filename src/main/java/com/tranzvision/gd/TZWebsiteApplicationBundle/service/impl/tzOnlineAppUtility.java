@@ -269,7 +269,7 @@ public class tzOnlineAppUtility {
 				}
 				for(int i=0;i<comNum;i++){
 					//日期控件处理1.2.3.4.13含有日期 需要验证日期
-					String hasDateOpt="GRE-GMAT-TOFEL-IELTS-TOEIC（990）";
+					String hasDateOpt="GRE-GMAT-TOEFL-IELTS-TOEIC（990）";
 					//考试类型 成绩 日期验证:
 					//1.验证成绩类型:
 					Map<String,Object>valMap=new HashMap<String,Object>();//exam_score//exam_date

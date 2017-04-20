@@ -14,16 +14,14 @@
 	reference: 'scoreModelTreeNodeWin',
 	
 	width: 800,
-	height: 500,
-	minWidth: 600,
-	minHeight: 400,
+	height: 520,
   	resizable: false,
 	modal: true,
 	closeAction: 'destroy',
 	
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	title: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.scoreItemInfo","成绩项详细设置"),
-	pageY:80, 
+	pageY:50, 
 	
 	constructor: function(config, callback){
 		this.opeConfig = config;
@@ -201,7 +199,9 @@
 				            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.UpHzXs","向上级成绩汇总系数"),
 							name: 'UpHzXs',
 							decimalPrecision: 2,
-							decimalSeparator: '.'
+							decimalSeparator: '.',
+							minValue: 0,
+							maxValue: 100
 						},{
 							xtype:'displayfield',
 							value: '%'
@@ -226,7 +226,11 @@
 							columnWidth: 1,
 			        		xtype: 'numberfield',
 				            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.weight","权重"),
-							name: 'weightA'
+							name: 'weightA',
+							decimalPrecision: 2,
+							decimalSeparator: '.',
+							minValue: 0,
+							maxValue: 100
 						},{
 							xtype:'displayfield',
 							value: '%'
@@ -332,7 +336,11 @@
 							columnWidth: 1,
 			        		xtype: 'numberfield',
 				            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.weight","权重"),
-							name: 'weightD'
+							name: 'weightD',
+							decimalPrecision: 2,
+							decimalSeparator: '.',
+							minValue: 0,
+							maxValue: 100
 						},{
 							xtype:'displayfield',
 							value: '%'
@@ -410,29 +418,40 @@
 						}]
 		        	}]
 		        },{
-		        	 xtype: 'textfield',
-			         fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.refDataSet","参考资料设置"),
-					 name: 'refDataSet',
-					 //editable: false,
-                     triggers: {
-                         clear: {
-                             cls: 'x-form-clear-trigger',
-                             hidden: true,
-             				 handler: function(field){
-             					field.setValue("");
-             					field.getTrigger('clear').hide();
-             				 }
-                         },
-                         search: {
-                             cls: 'x-form-search-trigger',
-                             handler: "ckzlPmtSearch"
-                         }
-                     },
-                     listeners: {
-                    	 change: function(field, newValue, oldValue) {
-                    		 field.getTrigger('clear')[(newValue.length > 0) ? 'show' : 'hide']();
-                         }
-                     }
+		        	layout: {
+						type: 'column'
+					},
+					items:[{
+						columnWidth: 1, 
+						xtype: 'textfield',
+				        fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.refDataSet","参考资料设置"),
+					    name: 'refDataSet',
+						editable: false,
+	                    triggers: {
+	                         clear: {
+	                             cls: 'x-form-clear-trigger',
+	                             hidden: true,
+	             				 handler: function(field){
+	             					field.setValue("");
+	             					field.getTrigger('clear').hide();
+	             					field.findParentByType('form').getForm().findField('refDataDescr').setValue('');
+	             				 }
+	                         },
+	                         search: {
+	                             cls: 'x-form-search-trigger',
+	                             handler: "ckzlPmtSearch"
+	                         }
+	                     },
+	                     listeners: {
+	                    	 change: function(field, newValue, oldValue) {
+	                    		 field.getTrigger('clear')[(newValue.length > 0) ? 'show' : 'hide']();
+	                         }
+	                     }
+					},{
+						xtype: 'displayfield',
+						name: 'refDataDescr',
+						style: 'margin-left:20px;'
+					}]
 		        },{
 		        	xtype: 'ueditor',
 		            fieldLabel: Ext.tzGetResourse("TZ_SCORE_MOD_COM.TZ_TREE_NODE_STD.standard","标准"),

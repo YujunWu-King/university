@@ -92,7 +92,7 @@ function loadEvaluateBatchData(callBackFunction)
 	Ext.Ajax.request({
 			url:window.getBatchListUrl,
 			method:'POST',
-			timeout:10000,
+			timeout:30000,
 			params:{LanguageCd:'ZHS',MaxRowCount:1000,StartRowNumber:1,MoreRowsFlag:'N'},
 			success:function(response)
 			{
@@ -236,7 +236,7 @@ function loadBatchDataById(batchId,callBackFunction)
 			{
 				url:window.getBatchDataUrl,
 				method:'POST',
-				timeout:10000,
+				timeout:30000,
 				params: {
 					LanguageCd:'ZHS',
                     BaokaoClassID:classid,

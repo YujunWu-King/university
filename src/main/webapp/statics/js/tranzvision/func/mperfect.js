@@ -500,13 +500,13 @@ $(document).ready(function(){
 				if(result.comContent.result=='success'){
 					//$("#resetbtn").trigger("click");
 					//loading();
-					if($("#yzfs").val() == "M"){
+					/*if($("#yzfs").val() == "M"){
 						if ($("#lang").val()=="ENG"){
 							layerMsg("Save successful.");
 						}else{
 							layerMsg("保存成功");
 						}
-					}
+					}*/
 					window.location.href=result.comContent.jumpurl;
 				}else{
 					layerMsg(result.state.errdesc);

@@ -675,19 +675,19 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzEmail(strTZ_EMAIL);
 				psTzAqYhxxTbl.setTzMobile(strTZ_MOBILE);
 				psTzAqYhxxTbl.setTzRylx("ZCYH");
-				// 清华修改，如果有手机则默认手机绑定、有邮箱默认邮箱绑定
-				/*
-				 * if ("M".equals(strActivateType)) {
-				 * psTzAqYhxxTbl.setTzSjbdBz("Y"); } if
-				 * ("E".equals(strActivateType)) {
-				 * psTzAqYhxxTbl.setTzYxbdBz("Y"); }
-				 */
-				if (strTZ_EMAIL != null && !"".equals(strTZ_EMAIL)) {
+				
+				if ("M".equals(strActivateType)) {
+					psTzAqYhxxTbl.setTzSjbdBz("Y"); 
+				} if("E".equals(strActivateType)) {
+					psTzAqYhxxTbl.setTzYxbdBz("Y"); 
+				}
+				 
+				/*if (strTZ_EMAIL != null && !"".equals(strTZ_EMAIL)) {
 					psTzAqYhxxTbl.setTzYxbdBz("Y");
 				}
 				if (strTZ_MOBILE != null && !"".equals(strTZ_MOBILE)) {
 					psTzAqYhxxTbl.setTzSjbdBz("Y");
-				}
+				}*/
 				psTzAqYhxxTbl.setTzJihuoZt(strActiveStatus);
 				psTzAqYhxxTbl.setTzJihuoFs(strActivateType);
 				psTzAqYhxxTbl.setTzZhceDt(new Date());
@@ -815,7 +815,21 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					// TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE
 					// upper(TZ_JG_ID)=upper(?) AND TZ_SITEI_ENABLE='Y' LIMIT
 					// 0,1",new Object[] { strOrgId }, "String");
-					strJumUrl = request.getContextPath() + "/user/login/" + strOrgId.toLowerCase() + "/" + strSiteId;
+					//20170420,手机激活成功后不进入登录页面，进入账户注册成功信息页面
+					//strJumUrl = request.getContextPath() + "/user/login/" + strOrgId.toLowerCase() + "/" + strSiteId;
+					strJumUrl = request.getContextPath() + "/dispatcher";
+					String strJumPar = "";
+					if ("Y".equals(isMobile)) {
+						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+							+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+							+ "\",\"sen\":\"13\"}}";
+					}else{
+						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+								+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+								+ "\",\"sen\":\"12\"}}";
+					}
+					strJumUrl = strJumUrl + strJumPar;
+					
 				} else {
 					String strEmailSendParas = "{\"email\":\"" + strTZ_EMAIL + "\",\"orgid\":\"" + strOrgId
 							+ "\",\"lang\":\"" + strLang + "\",\"siteid\":\"" + strSiteId + "\",\"dlzhid\":\"" + oprId
@@ -1311,20 +1325,19 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzRealname(strTZ_REALNAME);
 				psTzAqYhxxTbl.setTzEmail(strTZ_EMAIL);
 				psTzAqYhxxTbl.setTzMobile(strTZ_MOBILE);
-				psTzAqYhxxTbl.setTzRylx("ZCYH");
-				// 清华修改，如果有手机则默认手机绑定、有邮箱默认邮箱绑定
+				psTzAqYhxxTbl.setTzRylx("ZCYH");				
+				if ("M".equals(strActivateType)) {
+					psTzAqYhxxTbl.setTzSjbdBz("Y"); 
+				} if("E".equals(strActivateType)) {
+					psTzAqYhxxTbl.setTzYxbdBz("Y"); 
+				}
 				/*
-				 * if ("M".equals(strActivateType)) {
-				 * psTzAqYhxxTbl.setTzSjbdBz("Y"); } if
-				 * ("E".equals(strActivateType)) {
-				 * psTzAqYhxxTbl.setTzYxbdBz("Y"); }
-				 */
 				if (strTZ_EMAIL != null && !"".equals(strTZ_EMAIL)) {
 					psTzAqYhxxTbl.setTzYxbdBz("Y");
 				}
 				if (strTZ_MOBILE != null && !"".equals(strTZ_MOBILE)) {
 					psTzAqYhxxTbl.setTzSjbdBz("Y");
-				}
+				}*/
 				psTzAqYhxxTbl.setTzJihuoZt(strActiveStatus);
 				psTzAqYhxxTbl.setTzJihuoFs(strActivateType);
 				psTzAqYhxxTbl.setTzZhceDt(new Date());
@@ -1433,7 +1446,20 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					// 0,1",new Object[] { strOrgId }, "String");
 					// strJumUrl = request.getContextPath() + "/site/index/" +
 					// strOrgId.toLowerCase() + "/" + strSiteId;
-					strJumUrl = request.getContextPath() + "/user/login/" + strOrgId.toLowerCase() + "/" + strSiteId;
+					//20170420,手机激活成功后不进入登录页面，进入账户注册成功信息页面
+					//strJumUrl = request.getContextPath() + "/user/login/" + strOrgId.toLowerCase() + "/" + strSiteId;
+					strJumUrl = request.getContextPath() + "/dispatcher";
+					String strJumPar = "";
+					if ("Y".equals(isMobile)) {
+						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+							+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+							+ "\",\"sen\":\"13\"}}";
+					}else{
+						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+								+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+								+ "\",\"sen\":\"12\"}}";
+					}
+					strJumUrl = strJumUrl + strJumPar;
 				} else {
 					String strEmailSendParas = "{\"email\":\"" + strTZ_EMAIL + "\",\"orgid\":\"" + strOrgId
 							+ "\",\"lang\":\"" + strLang + "\",\"siteid\":\"" + strSiteId + "\",\"dlzhid\":\"" + oprid
@@ -1697,7 +1723,16 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			// 手机版注册成功后
 			if ("11".equals(strSen)) {
 				return this.createMPageForEmlLogin(strParams);
+			}			
+			// pc版手机注册完成信息页面
+			if ("12".equals(strSen)) {
+				return this.createPageForSmsLogin(strParams);
 			}
+			
+			// pc版手机注册完成信息页面
+			if ("13".equals(strSen)) {
+				return this.createMPageForSmsLogin(strParams);
+			}	
 			String strMessage = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "119",
 					"链接错误，请确认您输入的URL地址无误！", "Url is invalid, please makesure the url is valid!");
 			return strMessage;
@@ -1758,6 +1793,57 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		return strResult;
 	}
 
+	public String createPageForSmsLogin(String strParams){
+		String strPhone = "";
+		String strOrgid = "";
+		String strSiteId = "";
+		String strLang = "";
+		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			strPhone = jacksonUtil.getString("phone");
+			strOrgid = jacksonUtil.getString("orgid");
+			strSiteId = jacksonUtil.getString("siteid");
+			String sql = "SELECT TZ_SITEI_ID ,TZ_SITE_LANG,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strSiteId });
+			// String sql = "SELECT TZ_SITEI_ID ,TZ_SITE_LANG,TZ_SKIN_ID FROM
+			// PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit
+			// 0,1";
+			// Map<String, Object> map = jdbcTemplate.queryForMap(sql, new
+			// Object[] { strOrgid });
+			if (map != null) {
+				strSiteId = (String) map.get("TZ_SITEI_ID");
+				strLang = (String) map.get("TZ_SITE_LANG");
+				String skinId = (String) map.get("TZ_SKIN_ID");
+				strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
+						"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+				
+				String strContent = "";
+				if ("ENG".equals(strLang)) {
+					strContent = "Save success。<span id='timeSpan' style='color:red;'>3</span>&nbsp;seconds after entering the login page。";
+				} else {
+					strContent = "保存成功，<span id='timeSpan' style='color:red;'>3</span>&nbsp;秒后将跳转到登录页面。";
+				}
+
+				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
+				imgPath = request.getContextPath() + imgPath + "/" + skinId;
+
+				String strJumUrl = request.getContextPath() + "/user/login/" + strOrgid.toLowerCase() + "/" + strSiteId;
+				
+				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_TIME_SUCCESSE_HTML", strContent,
+						imgPath,strJumUrl);
+				strResult = objRep.repTitle(strResult, strSiteId);
+				strResult = objRep.repCss(strResult, strSiteId);
+				return strResult;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return strResult;
+		}
+		return strResult;
+	}
+	
 	public String createMPageForEmlLogin(String strParams) {
 		String strEmail = "";
 		String strOrgid = "";
@@ -1808,6 +1894,57 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		return strResult;
 	}
 
+	public String createMPageForSmsLogin(String strParams) {
+		String strPhone = "";
+		String strOrgid = "";
+		String strSiteId = "";
+		String strLang = "";
+		String strResult = "获取数据失败，请联系管理员";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			strPhone = jacksonUtil.getString("phone");
+			strOrgid = jacksonUtil.getString("orgid");
+			strSiteId = jacksonUtil.getString("siteid");
+			String sql = "SELECT TZ_SITEI_ID ,TZ_SITE_LANG,TZ_SKIN_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=? AND TZ_SITEI_ENABLE='Y' limit 0,1";
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strSiteId });
+			// String sql = "SELECT TZ_SITEI_ID ,TZ_SITE_LANG,TZ_SKIN_ID FROM
+			// PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID=? AND TZ_SITEI_ENABLE='Y' limit
+			// 0,1";
+			// Map<String, Object> map = jdbcTemplate.queryForMap(sql, new
+			// Object[] { strOrgid });
+			if (map != null) {
+				strSiteId = (String) map.get("TZ_SITEI_ID");
+				strLang = (String) map.get("TZ_SITE_LANG");
+				String skinId = (String) map.get("TZ_SKIN_ID");
+				strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
+						"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
+				String strContent = "";
+				if ("ENG".equals(strLang)) {
+					strContent = "Save success。<span id='timeSpan' style='color:red;'>3</span>&nbsp;seconds after entering the login page。";
+				} else {
+					strContent = "保存成功，<span id='timeSpan' style='color:red;'>3</span>&nbsp;秒后将跳转到登录页面。";
+				}
+
+
+				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
+				imgPath = request.getContextPath() + imgPath + "/" + skinId;
+
+				String strJumUrl = request.getContextPath() + "/user/login/" + strOrgid.toLowerCase() + "/" + strSiteId;
+				
+				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_TIME_MSUCCESSE_HTML", strContent,
+						request.getContextPath(),strJumUrl);
+				strResult = objRep.repTitle(strResult, strSiteId);
+				strResult = objRep.repCss(strResult, strSiteId);
+				return strResult;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return strResult;
+		}
+		return strResult;
+	}
+	
 	public String activeEmailSuccess(String strParams) {
 		String strTokenSign = "";
 		String strOprid = "";

@@ -60,6 +60,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 	private PsTzClpskspwTblMapper psTzClpskspwTblMapper;
 	@Autowired
 	private PsTzCpPwKsTblMapper psTzCpPwKsTblMapper;
+	@Autowired
+	private MaterialEvaluationCls materialEvaluationCls;
 	
 	@Override
 	public String tzGetJsonData(String strParams) {
@@ -326,7 +328,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					"SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? and PARENT_NODE_NUM=0",
 					new Object[] { TREE_NAME }, "String");
 			
-			pjf = MaterialEvaluationCls.calculateAverage(sqlQuery, classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
+			pjf = materialEvaluationCls.calculateAverage(classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
 			 
 			List<Map<String,Object>> sjfzRowList= new ArrayList<Map<String,Object>>();
 			Map<String, Object> sjfzRow1 = new HashMap<String, Object>();
@@ -347,7 +349,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			*/
 			
 			/* 第3部分 当前评委打分分布统计信息 */
-			List<Map<String,Object>> evaluationDataList = MaterialEvaluationCls.getScoreItemEvaluationData(sqlQuery, classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
+			List<Map<String,Object>> evaluationDataList = materialEvaluationCls.getScoreItemEvaluationData(classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
 
 			List<Map<String,Object>> fbsjrow = new ArrayList<Map<String,Object>>();
 			
