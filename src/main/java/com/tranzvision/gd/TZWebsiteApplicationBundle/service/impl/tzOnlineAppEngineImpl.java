@@ -1901,11 +1901,12 @@ public class tzOnlineAppEngineImpl {
 
 				// 提交进行证件号校验--开始 by hjl
 				String tz_idnum = "TZ_6idnum";// 证件id 写死
+				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				String idnumsql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? AND TZ_XXX_BH=?";
 				String stridnum = sqlQuery.queryForObject(idnumsql, new Object[] { numAppInsId, tz_idnum }, "String");
 				if (!"".equals(stridnum)) {
-					String haidnumsql = "SELECT COUNT(1)  FROM PS_TZ_REG_USER_T WHERE NATIONAL_ID=?";
-					int idcount = sqlQuery.queryForObject(haidnumsql, new Object[] { stridnum }, "Integer");
+					String haidnumsql = "SELECT COUNT(1)  FROM PS_TZ_REG_USER_T WHERE NATIONAL_ID=? AND  OPRID<>? ";
+					int idcount = sqlQuery.queryForObject(haidnumsql, new Object[] { stridnum, oprid }, "Integer");
 					if (idcount > 0) {
 						String sqlluange = "select TZ_APP_TPL_LAN from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?";
 						String luange = sqlQuery.queryForObject(sqlluange, new Object[] { strTplId }, "String");
