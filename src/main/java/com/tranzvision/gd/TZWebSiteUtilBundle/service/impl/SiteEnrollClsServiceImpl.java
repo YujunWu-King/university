@@ -1821,9 +1821,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				
 				String strContent = "";
 				if ("ENG".equals(strLang)) {
-					strContent = "Account created successfully。<span id='timeSpan' style='color:red;'>3</span>&nbsp;seconds after entering the login page。";
+					strContent = "Save success。<span id='timeSpan' style='color:red;'>3</span>&nbsp;seconds after entering the login page。";
 				} else {
-					strContent = "账户已成功注册，<span id='timeSpan' style='color:red;'>3</span>&nbsp;秒后将跳转到登录页面。";
+					strContent = "保存成功，<span id='timeSpan' style='color:red;'>3</span>&nbsp;秒后将跳转到登录页面。";
 				}
 
 				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
@@ -1921,9 +1921,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
 				String strContent = "";
 				if ("ENG".equals(strLang)) {
-					strContent = "Account created successfully。<span id='timeSpan' style='color:red;'>3</span>&nbsp;seconds after entering the login page。";
+					strContent = "Save success。<span id='timeSpan' style='color:red;'>3</span>&nbsp;seconds after entering the login page。";
 				} else {
-					strContent = "账户已成功注册，<span id='timeSpan' style='color:red;'>3</span>&nbsp;秒后将跳转到登录页面。";
+					strContent = "保存成功，<span id='timeSpan' style='color:red;'>3</span>&nbsp;秒后将跳转到登录页面。";
 				}
 
 

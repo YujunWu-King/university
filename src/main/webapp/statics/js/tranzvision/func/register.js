@@ -921,13 +921,13 @@ $(document).ready(function(){
 				if(result.comContent.result=='success'){
 					//$("#resetbtn").trigger("click");
 					//loading();
-					if($("#yzfs").val() == "M"){
+					/*if($("#yzfs").val() == "M"){
 						if ($("#lang").val()=="ENG"){
 							alert("Registration successful.");
 						}else{
 							alert("注册成功");
 						}
-					}
+					}*/
 					window.location.href=result.comContent.jumpurl;
 				}else{
 					alert(result.state.errdesc);
