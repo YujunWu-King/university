@@ -86,7 +86,11 @@
             },{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.expectedNumber","预报名人数"),
                 dataIndex: 'expectedNumber',
-                width:140
+                width:110
+            },{
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.submittedNumber","已提交人数"),
+                dataIndex: 'submittedNumber',
+                width:110
             }/*,{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.firstChoiceNumber","第一志愿申请人数"),
                 dataIndex: 'firstChoiceNumber',
