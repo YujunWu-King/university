@@ -1,0 +1,37 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0;"/>
+<title></title>
+<link href="%bind(:2)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
+<script>
+var countdown=3; 
+function settime() {
+	var span = document.getElementById("timeSpan");
+	if (countdown == 0) { 
+		window.location.href = "%bind(:3)";
+	} else { 
+		span.innerHTML = countdown;
+		countdown--; 
+	} 
+	setTimeout(function() { 
+		settime() 
+	},1000) 
+}
+window.onload = function() { 
+	settime();
+}
+</script>
+</head>
+<body>
+	<div class="viewport-adaptive">
+	   <div class="bg1">
+	   
+	   	 <img class="none" src="%bind(:2)/statics/css/website/m/images/email_tips.png" style="margin:30% auto 5%;">
+	   	 <p class="none_tips" style="width:85%;margin:0 auto;">%bind(:1)</p>
+	   </div>
+	</div>	
+</body>
+</html>
