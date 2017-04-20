@@ -124,8 +124,11 @@ var tzGeneralURL = "%bind(:1)";
 			//设置返回值
 			var clickId = $("#ParamCon").val();
 			$("#" + clickId).val(school);
-			$("#TZ_SCH_CNAME_1").html(school);
-			$("#TZ_SCH_CNAME_1").css("color","#333");
+			console.log(clickId);
+			
+			
+			$("#TZ_SCH_CNAME").val(school);
+			$("#TZ_SCH_CNAME").css("color","#333");
 			console.log(school);
 			$("#" + clickId).html(school);
 			$("#" + clickId).css("color","#333");
