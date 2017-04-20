@@ -353,6 +353,10 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 							}
 						}
 					}
+					//面试申请号
+					String strMshSQl="SELECT ifnull(TZ_MSH_ID,'') FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+					String strMshID = sqlQuery.queryForObject(strMshSQl,new Object[]{strOprID},"String");
+					
 					// 面试资格从材料评审中获取
 					String strTmpSql1 = "SELECT TZ_MSHI_ZGFLG FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
 					strViewQua = sqlQuery.queryForObject(strTmpSql1,
@@ -391,12 +395,12 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 						strResponse = strResponse + ","
 								+ tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MSPS_STULIST_HTML",
 										strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress, strLqZt,
-										strPwList, strJudgeProgress, strViewQua, strOprID);
+										strPwList, strJudgeProgress, strViewQua, strOprID,strMshID);
 					} else {
 						strResponse = tzGdObject.getHTMLText(
 								"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MSPS_STULIST_HTML", strAppInsID, strName,
 								strGender, strPweiPc, strPwList, strStuProgress, strLqZt, strPwList, strJudgeProgress,
-								strViewQua, strOprID);
+								strViewQua, strOprID,strMshID);
 					}
 				}
 			}
