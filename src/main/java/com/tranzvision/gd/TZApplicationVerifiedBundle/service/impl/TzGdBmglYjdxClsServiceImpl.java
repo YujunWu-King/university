@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				String sOprID = "";
 				
 				if(bMultiType){
-					int sAppInsID = 0;
+					long sAppInsID;
 					//群发邮件添加听众;
 					@SuppressWarnings("unchecked")
 					List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
@@ -77,7 +78,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 						for(int num_1 = 0; num_1 < list.size(); num_1 ++){
 							Map<String, Object> map = list.get(num_1);
 				            sOprID = (String)map.get("oprID");
-				            sAppInsID = (int)map.get("appInsID");
+				            sAppInsID = Long.parseLong((String)map.get("appInsID"));
 				            if(sOprID != null && !"".equals(sOprID)
 				            		&& sAppInsID != 0){
 				            	/*为听众添加成员:姓名，称谓，报名人联系方式*/
