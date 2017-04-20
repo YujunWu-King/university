@@ -821,8 +821,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                             viewConfig: {
                                                 enableTextSelection: true
                                             }
-                                        }),
-                                        mainPageFrame]
+                                        })/*,mainPageFrame*/]
                                 }]
                         }
                     ]
