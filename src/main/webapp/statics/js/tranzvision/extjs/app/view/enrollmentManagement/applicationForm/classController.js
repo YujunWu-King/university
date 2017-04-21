@@ -634,8 +634,8 @@
         var appInsID=record.get("appInsID");
         
         if(appInsID!=""){
-            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'"}}';
-            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams)+"&isEdit=Y";
+            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'","isEdit":"Y"}}';
+            var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
             var mask ;
             var win = new Ext.Window({
                 name:'applicationFormWindow',
@@ -647,8 +647,6 @@
                 appInsID : appInsID,
                 gridRecord:record,
                 width : Ext.getBody().width,
-                height : Ext.getBody().height,
-                autoScroll : true,
                 border:false,
                 bodyBorder : false,
                 isTopContainer : true,
