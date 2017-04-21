@@ -86,6 +86,7 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 										Long.valueOf(tzappintlist.get(i).get("TZ_APP_INS_ID").toString()), fmqdId },
 								"Integer");
 						if (have_one > 0) {
+							PsTzCsKsFmTMapper.updateByPrimaryKeySelective(PsTzCsKsFmT);
 
 						} else {
 							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);

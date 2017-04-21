@@ -2864,6 +2864,7 @@ public class tzOnlineAppEngineImpl {
 			psTzRegUserT.setTzComment14(income);
 			psTzRegUserT.setNationalId(idnum);
 			psTzRegUserT.setNationalIdType("A");// 证件类型A：为身份证
+			psTzRegUserT.setTzAllowApply("N");// 添加是否允许继续申请 为N/不允许
 
 			String ReisY = sqlQuery.queryForObject(sql_ReisY, new Object[] { strAppOprId }, "String");
 			if (ReisY != null && ReisY.equals("Y")) {
