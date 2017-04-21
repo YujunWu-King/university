@@ -451,14 +451,17 @@ var SurveyBuild = {
 
 
             //控件绑定事件(固定多行容器存在问题)
+           
             var _eventbind = data._eventbind;
             if (_eventbind && typeof _eventbind == "function") {
+            	//console.log("2222");
                 _eventbind(data);
             }
             if (data["isDoubleLine"] == "Y" && data.children && data.children.length > 0) {
                 $.each(data.children,function (i, child) {
                     $.each(child,function (instanceId, obj) {
                         if (obj._eventbind && typeof obj._eventbind == "function") {
+                        	//console.log("1111");
                             obj._eventbind(obj);
                         }
                         if(data["fixedContainer"] != "Y" && obj.classname == "CheckBox" && obj.hasOwnProperty("rules")){
@@ -487,7 +490,7 @@ var SurveyBuild = {
                 $(_c).find(".addnextbtn").hide();
             }
         };
-
+        //console.log("2222");
         /*加载信息项对应的JavaScript文件以及事件绑定 Begin*/
         $.each(this._items, function (c) {
             ++me._count;
