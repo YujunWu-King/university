@@ -15,13 +15,21 @@
     ],
     bodyPadding:10,
     constructor: function (obj){
-				var canshu = obj.canshu;
-				console.log(canshu);
-				// this.classID=obj.classID;
+    			this.coluObj = obj.coluObj;
+    			this.lineObj = obj.lineObj;
+				//console.log(this.coluObj);
+				//console.log(this.lineObj);
+				//this.classID=obj.classID;
 				this.callParent();
     },
     initComponent:function(){
-
+ 
+				var coluObj = this.coluObj;
+				var lineObj = this.lineObj;
+				
+				console.log("000000");
+				console.log(coluObj);
+    			/*
     			// 曲线图参数
 				var lineObj = [ 
 				                {'pw' : 'zhangsan',	'n1' :10,'n2' : 20,'n3' : 30,'n4' : 40,'n5' : 40,'n6' : 40}, 
@@ -36,7 +44,8 @@
 				               {'pw' : 'wangwu',   'pj' : 40}, 
 				               {'pw' : '平均',     'pj' : 22} 
 				               ];
-
+				*/
+    	
 				// 评委数组
 				// var pwArr = [ 'data1', 'data2', 'data3' ];
 				var pwArr = [];
