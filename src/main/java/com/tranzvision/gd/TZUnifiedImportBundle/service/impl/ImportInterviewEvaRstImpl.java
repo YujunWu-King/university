@@ -91,5 +91,11 @@ public class ImportInterviewEvaRstImpl implements UnifiedImportBase {
 		}
 		return strRet;
 	}
+
+	@Override
+	public void tzValidate(List<Map<String, Object>> data, List<String> fields, String targetTbl, Object[] result,
+			String[] errMsg) {
+		
+	}
 	
 }
