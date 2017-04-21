@@ -66,7 +66,7 @@ public class TzSQLObject
 			}
 			
 			isFirstRow = rs.first();
-			moveCusorOk = true;
+			moveCusorOk = isFirstRow;
 		}
 		else
 		{

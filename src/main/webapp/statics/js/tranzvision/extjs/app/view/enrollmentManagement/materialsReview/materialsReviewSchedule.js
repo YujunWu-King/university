@@ -1017,11 +1017,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 			                                            		 for (var k=5;k<statisticsGridDataModel.gridData[j].length;k++){
 			                                            			 //取得区间名称
 			                                            			 var colname = statisticsGridDataModel.gridColumns[k].text;
-			                                            			 //处理非数字的情况
-			                                            			 if(isNaN(statisticsGridDataModel.gridData[j][k])){
+			                                            			 //处理非数字的情况(取百分比数据)
+			                                            			 var tmpobj = statisticsGridDataModel.gridData[j][k];
+			                                            			 var tmppwpyqjdata = tmpobj.split('（')[1].replace('）','').replace('%','');
+			                                            			 
+			                                            			 if(isNaN(tmppwpyqjdata)){
 			                                            				 linetmpobj[colname] = 0;
 			                                            			 }else{
-			                                            				 linetmpobj[colname] = parseFloat(statisticsGridDataModel.gridData[j][k]);
+			                                            				 linetmpobj[colname] = parseFloat(tmppwpyqjdata);
 			                                            			 }
 			                                            		 }
 			                                            		 lineObj.push(linetmpobj);
@@ -1039,25 +1042,39 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    	//取页面数据
 	                                    	var evaluationStandardGrid = Ext.ComponentQuery.query('grid[name=evaluationStandardGrid]')[0];
                                        
-	                                        for(var i=1;i<statisticsGoalGridDataModel.gridData[0].length;i++){
-	                                        	
+	                                        for(var i=1;i<statisticsGoalGridDataModel.gridData[0].length;i++){	
 	                                        	//从页面取值
-	                                        	var colname = statisticsGoalGridDataModel.gridColumns[i-1].text;
-	                                        	var colid = statisticsGoalGridDataModel.gridColumns[i-1].dataIndex;
+	                                        	var colname = statisticsGoalGridDataModel.gridColumns[i].text;
+	                                        	var colid = statisticsGoalGridDataModel.gridColumns[i].dataIndex;
 	                                        	var colvalue =evaluationStandardGrid.store.data.items[0].data[colid];
-	                                        	//处理值为非数字的情况
-	                                        	if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
-	                                        		bzline[colname] = colvalue;
-	                                        	}else{
-	                                        		bzline[colname] = 0;
-	                                        	}
-	                                        	if(i==statisticsGoalGridDataModel.gridData[0].length-1){
+	                                        	
+	                                        	if(i==1){
+
+	                                        		//柱状图的平均值（grid列表的第二项默认为平均值）
 	                                        		//处理非数字的情况
 	                                        		if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
 	                                        			bzcoln["pj"] = colvalue;
 		                                        	}else{
 		                                        		bzcoln["pj"] = 0;
 		                                        	}
+	                                        		
+		                                        	//处理值为非数字的情况
+	                                        		/*
+		                                        	if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
+		                                        		bzline[colname] = parseFloat(colvalue);	                                        		
+		                                        	}else{
+		                                        		bzline[colname] = 0;
+		                                        	}*/
+	                                        		
+	                                        	}else{
+
+		                                        	//处理值为非数字的情况
+		                                        	if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
+		                                        		bzline[colname] = parseFloat(colvalue);
+		                                        	}else{
+		                                        		bzline[colname] = 0;
+		                                        	}
+	                                        		
 	                                        	}
 
 	                                        	/* 从后台取数据
@@ -1080,6 +1097,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                        }
 	                                        lineObj.push(bzline);
 	                                        coluObj.push(bzcoln);
+
 	                                        //以上为参数处理
 	                                        //以下为处理图标部分-开始
 	                                		// 曲线图参数
@@ -1277,6 +1295,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                			fields : arrayLines,
 	                                			data : arrayDatas
 	                                		});
+	                                		
+	                                		
+	                                		
 	                                		// 2、动态定义曲线图的id
 	                                		var id2 = "" + Math.ceil(Math.random() * 100);
 	                                		// 3、生成曲线图
