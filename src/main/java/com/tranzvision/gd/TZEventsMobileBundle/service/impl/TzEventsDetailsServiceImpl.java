@@ -353,7 +353,7 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 			
 			// 获取活动显示模式
 			String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventDisplayMode");
-			Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { actId, dateNow, dateNow });
+			Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { dateNow, dateNow, dateNow, actId });
 			
 			// 是否有效记录
 			String validTD = "";
@@ -365,23 +365,43 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 			}
 			
 			// 只有启用在线报名并且在有效报名时间内才显示在线报名条
-			if ("Y".equals(strQy_zxbm) && "Y".equals(validTD)) {
+			if ("Y".equals(strQy_zxbm)) {
 				rtnMap.replace("diaplayAppBar","Y");
 				
-				sql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
+				sql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID,TZ_NREG_STAT FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
 				Map<String, Object> mapBM = sqlQuery.queryForMap(sql, new Object[] { oprid, actId });
 
 				// 是否已注册报名标识
 				String regFlag = "";
 				// 报名人ID
 				String strBmrId = "";
+				//报名状态
+				String applySta = "";
 				if (mapBM != null) {
 					regFlag = mapBM.get("REG_FLAG") == null ? "" : String.valueOf(mapBM.get("REG_FLAG"));
 					strBmrId = mapBM.get("TZ_HD_BMR_ID") == null ? "" : String.valueOf(mapBM.get("TZ_HD_BMR_ID"));
+					applySta = mapBM.get("TZ_NREG_STAT") == null ? "" : String.valueOf(mapBM.get("TZ_NREG_STAT"));
 				}
 				
+				//显示报名状态
+				String statusText = "";
+				switch(applySta){
+				case "1":
+					statusText = "已报名";
+					break;
+				case "4":
+					//等候席位数
+					sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetWaitingNumber");
+					int waitNum = sqlQuery.queryForObject(sql, new Object[]{ actId, strBmrId }, "int");
+					statusText = "等候席第"+ waitNum +"位";
+					break;
+				}
+				
+				rtnMap.put("statusText", statusText);
+
 				rtnMap.put("regFlag", regFlag);
 				rtnMap.put("bmrId", strBmrId);
+				rtnMap.put("valid_dt", validTD);
 				
 				
 				String strBaseUrl = request.getServletContext().getContextPath() + "/dispatcher?tzParams=";
