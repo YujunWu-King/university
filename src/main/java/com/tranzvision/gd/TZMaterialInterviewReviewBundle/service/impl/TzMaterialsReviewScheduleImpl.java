@@ -24,9 +24,11 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpwpslsTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzCpfbBzhTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzQttjTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzCpfbBzhTbl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsGzTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzKsclpslsTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsKshTblMapper;
@@ -59,7 +61,8 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	private PsTzClpsKshTblMapper PsTzClpsKshTblMapper;
 	@Autowired
 	private PsTzCpfbBzhTblMapper PsTzCpfbBzhTblMapper;
-
+	@Autowired
+	private PsTzQttjTblMapper PsTzQttjTblMapper;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
@@ -448,11 +451,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			String strGridColHTML = tzGdObject
 					.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_BASE_HTML", strPwPjfHtml);
 
-			int intFbzbNum = 1;
+			int intFbzbNum = 2;
 			String strGridGoalColHTML = tzGdObject
 					.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBZB_BASE_HTML");
 			String strGridGoalColHTML2 = tzGdObject
 					.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBZB_BASE_HTML");
+			strGridGoalColHTML2 = strGridGoalColHTML2 + ","	+ tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",	"col02", "平均分");
+			
 			String strGridGoalColHTML3 = "";
 
 			String strBlHtml = "", strWcHtml = "";
@@ -547,6 +552,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				String strPwSql = "SELECT TZ_PWEI_OPRID,(SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=A.TZ_PWEI_OPRID limit 0,1) TZ_DLZH_ID,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL R WHERE R.OPRID=A.TZ_PWEI_OPRID) TZ_REALNAME FROM PS_TZ_CLPS_PW_TBL A WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 				List<Map<String, Object>> pwList = sqlQuery.queryForList(strPwSql,
 						new Object[] { strClassID, strBatchID });
+				double saveScore = 0.0;
 				if (pwList != null && pwList.size() > 0) {
 					int intTb = 0;
 					// 为最后一行做准备
@@ -692,9 +698,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						strGridDataHTML = strGridDataHTML + ","
 								+ tzGdObject.getHTMLText(
 										"HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-										strFzValue, tmpPjf2);
+										strFzValue, tmpPjf2);						
 						if (intSize == pwList.size()) {
-							double saveScore = 0.0;
+							
 							if(selectPwList.length>0){
 								saveScore = aveScoreTotal/selectPwList.length;
 							}
@@ -717,7 +723,8 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 								strMFbdzMxSx = "", strMFbdzMxSxJx = "";
 						String strFbdzSql = "SELECT  TZ_M_FBDZ_MX_ID,TZ_M_FBDZ_MX_NAME,TZ_M_FBDZ_MX_XX,TZ_M_FBDZ_MX_XX_JX,TZ_M_FBDZ_MX_SX_JX,TZ_M_FBDZ_MX_SX  FROM PS_TZ_FBDZ_MX_TBL WHERE TZ_M_FBDZ_ID = ? ORDER BY TZ_M_FBDZ_MX_XH ASC";
 						List<Map<String, Object>> fbdzList = sqlQuery.queryForList(strFbdzSql,
-								new Object[] { strFbdzId });
+								new Object[] { strFbdzId });					
+						
 						if (fbdzList != null && fbdzList.size() > 0) {
 							//汇总项分布及比率
 							Integer intAveIns = 0;							
@@ -828,10 +835,17 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						strChartFieldsHTML = strChartFieldsHTML + "}";
 					}
 				}
+				String strAveSql = "SELECT TZ_TJL_BZH,TZ_TJL_WCZ FROM PS_TZ_QTTJ_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_TJGN_ID=?";
+				Map<String,Object> s2Map = sqlQuery.queryForMap(strAveSql, new Object[]{strClassID,strBatchID,strCjModalId,"TOTAL","001"});
+				String strAve2 = "0.00",strWcAve2 = "0.00";
+				if(s2Map!=null){
+					strAve2 = s2Map.get("TZ_TJL_BZH")==null?"0.00":String.valueOf(s2Map.get("TZ_TJL_BZH"));
+					strWcAve2 = s2Map.get("TZ_TJL_WCZ")==null?"0.00":String.valueOf(s2Map.get("TZ_TJL_WCZ"));
+				}
 				strGridGoalHtml = tzGdObject.getHTMLText(
-						"HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_TJ_JSON_HTML", "bl", "比率", strBlHtml) + ","
+						"HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_TJ_JSON_HTML", "bl", "比率", strBlHtml,strAve2) + ","
 						+ tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_TJ_JSON_HTML", "wc",
-								"误差", strWcHtml);
+								"误差", strWcHtml,strWcAve2);
 				;
 				strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_JSON_HTML",
 						strClassID, strBatchID, strGridColHTML, strGridHtml, strChartFieldsHTML, strGridGoalColHTML,
@@ -1630,7 +1644,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						for (Object pwObj : pyData) {
 							Map<String, Object> result = (Map<String, Object>) pwObj;
 							try {
-								String colName = String.valueOf(result.get("col01"));
+								String colName = String.valueOf(result.get("col00"));
 								if ("比率".equals(colName)) {
 									strBl = result.get(strColId) == null ? "" : String.valueOf(result.get(strColId));
 								} else {
@@ -1661,6 +1675,8 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 								Double douWc = Double.valueOf(strWc);
 								psTzCpfbBzhTbl.setTzYxwcNum(BigDecimal.valueOf(douWc));
 							}
+							
+							
 							if ("Y".equals(strExistFlg)) {
 								PsTzCpfbBzhTblMapper.updateByPrimaryKeySelective(psTzCpfbBzhTbl);
 							} else {
@@ -1669,6 +1685,51 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						}
 					}
 				}
+				for (Object pwObj : pyData) {
+					Map<String, Object> result = (Map<String, Object>) pwObj;
+					try {
+						String colName = String.valueOf(result.get("col00"));
+						String strBlAve="",strWcAve="";
+						//比率平均和误差平均列，为col02
+						String strColId = "col01";
+						if ("比率".equals(colName)) {
+							strBlAve = result.get(strColId) == null ? "0.00" : String.valueOf(result.get(strColId));
+						} else {
+							strWcAve = result.get(strColId) == null ? "0.00" : String.valueOf(result.get(strColId));
+						}
+																	
+						String str_ScoreItemId = "TOTAL";
+						String str_TjgnID = "001";
+						String strExistSql = "SELECT 'Y' FROM PS_TZ_QTTJ_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_TJGN_ID=?";
+						String strExistFlg = sqlQuery.queryForObject(strExistSql, new Object[] { strClassID,
+								strBatchID, strScoreModalID, str_ScoreItemId, str_TjgnID }, "String");
+						
+						PsTzQttjTbl psTzQttjTbl = new PsTzQttjTbl();
+						psTzQttjTbl.setTzClassId(strClassID);
+						psTzQttjTbl.setTzApplyPcId(strBatchID);
+						psTzQttjTbl.setTzScoreModalId(strScoreModalID);
+						psTzQttjTbl.setTzScoreItemId(str_ScoreItemId);
+						psTzQttjTbl.setTzTjgnId(str_TjgnID);
+
+						if(!"".equals(strBlAve)){
+							double doubleBlAve = Double.valueOf(strBlAve);
+							psTzQttjTbl.setTzTjlBzh(BigDecimal.valueOf(doubleBlAve));
+						}
+						if(!"".equals(strWcAve)){
+							double doubleWcAve = Double.valueOf(strWcAve);
+							psTzQttjTbl.setTzTjlWcz(BigDecimal.valueOf(doubleWcAve));
+						}
+						
+						if("Y".equals(strExistFlg)){
+							PsTzQttjTblMapper.updateByPrimaryKeySelective(psTzQttjTbl);
+						}else{
+							PsTzQttjTblMapper.insert(psTzQttjTbl);
+						}
+					} catch (Exception e) {
+						/* 未做过修改，doNothing */
+					}
+				}
+				
 				// 重新获取数据
 				String strSql = "SELECT TZ_M_FBDZ_MX_ID,TZ_BZFB_BL,TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID='Total' AND TZ_M_FBDZ_ID=?";
 				List<Map<String, Object>> dataList = sqlQuery.queryForList(strSql,
@@ -1677,9 +1738,18 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				if (dataList != null && dataList.size() > 0) {
 					ArrayList toAr = new ArrayList();
 					ArrayList blAr = new ArrayList();
+					String strAveSql = "SELECT TZ_TJL_BZH,TZ_TJL_WCZ FROM PS_TZ_QTTJ_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_TJGN_ID=?";
+					Map<String,Object> s2Map = sqlQuery.queryForMap(strAveSql, new Object[]{strClassID,strBatchID,strScoreModalID,"TOTAL","001"});
+					String strAve2 = "0.00",strWcAve2 = "0.00";
+					if(s2Map!=null){
+						strAve2 = s2Map.get("TZ_TJL_BZH")==null?"0.00":String.valueOf(s2Map.get("TZ_TJL_BZH"));
+						strWcAve2 = s2Map.get("TZ_TJL_WCZ")==null?"0.00":String.valueOf(s2Map.get("TZ_TJL_WCZ"));
+					}
 					blAr.add("比率");
+					blAr.add(strAve2);
 					ArrayList wcAr = new ArrayList();
 					wcAr.add("误差");
+					wcAr.add(strWcAve2);
 					for (Object resObj : dataList) {
 						Map<String, Object> sMapA = (Map<String, Object>) resObj;
 						String strB = sMapA.get("TZ_BZFB_BL") == null ? "" : String.valueOf(sMapA.get("TZ_BZFB_BL"));

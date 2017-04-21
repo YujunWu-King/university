@@ -840,6 +840,8 @@ public class BaseEngine extends BaseJob implements Runnable
 			
 			//将任务提交到数据库中
 			tmpProcessInstanceRecord.insert();
+			
+			processInstanceID = tmpProcessInstanceID;
 		}
 		catch(TzException e)
 		{
@@ -851,6 +853,12 @@ public class BaseEngine extends BaseJob implements Runnable
 		}
 		
 		return true;
+	}
+	
+	//返回当前进程实例ID，当调度成功时返回进程实例ID，如果调度失败返回的进程实例ID为0
+	public Integer getProcessInstanceID()
+	{
+		return processInstanceID;
 	}
 	
 	//该方法应该由子类继承覆盖，该方法主要用于子类编写需要完成的业务逻辑的代码

@@ -46,6 +46,8 @@ public class TzRecord
 	//主键键值对映射表
 	private Map<String,Object> primaryColListMap;
 	
+	private boolean isSelectByKeyOk = false;
+	
 	public TzRecord()
 	{
 		colTypeListMap = new HashMap<String,String>();
@@ -301,7 +303,7 @@ public class TzRecord
 		}
 		
 		//如果查询结果集的成员数为0 ，则返回false，否则返回true
-		return colListMap.size() >= 1;
+		return isSelectByKeyOk;
 	}
 	
 	public void setColumnValue(String colName,Object value) throws TzException
@@ -461,6 +463,8 @@ public class TzRecord
 				recExistsFlag = false;
 			}
 		}
+		
+		isSelectByKeyOk = recExistsFlag;
 		
 		String[] colNames = rs.getMetaData().getColumnNames();
 		

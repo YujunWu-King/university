@@ -177,13 +177,26 @@ public class TZGDObject
 	 */
 	private void updateSqlExec(String sqlText,SqlParams params) throws TzSystemException
 	{
+		int ret = 0;
+		
 		if(params != null)
 		{
-			jdbcTemplate.update(sqlText, params.getValue());
+			ret = jdbcTemplate.update(sqlText, params.getValue());
 		}
 		else
 		{
-			jdbcTemplate.update(sqlText);
+			ret = jdbcTemplate.update(sqlText);
+		}
+		
+		String tmpSQLText = sqlText.toUpperCase().trim();
+		if(sqlText.startsWith("INSERT") == true)
+		{
+			tmpSQLText = tmpSQLText.substring(6).trim();
+			
+			if(tmpSQLText.startsWith("IGNORE") == true && ret == 0)
+			{
+				throw new TzSystemException("failed to insert the specified record into the specified table: the primary key(s) may be duplicate.");
+			}
 		}
 	}
 	
@@ -383,13 +396,9 @@ public class TZGDObject
 				if(val.contains("\\")){
 					//val = val.replace("\\", "\\\\");
 				}
-				//System.out.println("val1:"+val);
 				if(val.contains("$")){
-					//modity by caoy  修改$替换问题
-					val = java.util.regex.Matcher.quoteReplacement(val); 
-					//val = val.replace("$", "\\$");
+					val = val.replace("$", "\\$");
 				}
-				//System.out.println("val2:"+val);
 				
 				htmlText = htmlText.replaceAll(repStr1, val);
 				htmlText = htmlText.replaceAll(repStr2, repStr3);
@@ -442,9 +451,7 @@ public class TZGDObject
 					val = val.replace("\\", "\\\\");
 				}
 				if(val.contains("$")){
-					//modity by caoy  修改$替换问题
-					val = java.util.regex.Matcher.quoteReplacement(val); 
-					//val = val.replace("$", "\\$");
+					val = val.replace("$", "\\$");
 				}
 				
 				//System.out.println(val);

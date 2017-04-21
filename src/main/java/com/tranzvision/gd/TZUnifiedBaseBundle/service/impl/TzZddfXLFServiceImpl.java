@@ -45,11 +45,15 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				String XW = ksMap.get("TZ_10hxuewei");			//学位
 				String XX= ksMap.get("TZ_11luniversitysch");	//学校
 				 
+				//声明float型字段“得分”，string型字段“打分记录”；
+				float Score;
+				String MarkRecord;
+				
 				//根据考生学校ID查询所属学校类型
 				String sql = "SELECT TZ_SCHOOL_TYPE FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
 				String XXLX = SqlQuery.queryForObject(sql, new Object[] { XX },"String");
-				String XXType;
-				
+				String XXType="";
+				if(XXLX !=null&& !XXLX.equals("")){
 				switch (Integer.parseInt(XXLX)) {
 					case 1:
 						// 清华大学;
@@ -103,6 +107,9 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 						XXType="其他";
 						break;
 				}
+				}else{
+					Score=0;
+				}
 
 				//2是本科，1为研究生
 				if("2".equals(XL)){
@@ -120,9 +127,7 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 					return 0;
 				}
 							  
-				//声明float型字段“得分”，string型字段“打分记录”；
-				float Score;
-				String MarkRecord;
+				
 				
 				//根据考生查询到的学历、学位、学校类型在TZ_CSMB_XLF_T查询对应的得分，如果没有查询到对应得分，得分=0
 				String ExistSql = "select 'Y' from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";

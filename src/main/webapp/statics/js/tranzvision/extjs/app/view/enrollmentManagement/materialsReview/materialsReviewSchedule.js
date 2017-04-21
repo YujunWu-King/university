@@ -208,11 +208,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 	}
                 }
                 var dataIndex;
-                if(i>0){
+                if(i>1){
                 	dataIndex = tmpArray2[i][colName];
                 }else{
-                	dataIndex = 'col01';
+                	if(i==0){
+                		mxName = "指标名称";
+                	}else if(i==1){
+                		mxName = "平均分";
+                	}
+                	dataIndex = 'col0' + i;
                 }
+                console.log(dataIndex);
                 var tmpColumn = {
                     text: mxName,
                     sortable: false,
@@ -246,7 +252,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     var colName = '00' + (j + 1);
                     
                     colName = 'col' + colName.substr(colName.length - 2);
-                    if(j==0){
+                    if(j<=1){
                     	dataRow.push(tmpdataArray[j][colName]);
                     }else{
                     	for(var u=1;u<tmpArray2.length;u++){
@@ -265,6 +271,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 }
                 statisticsGoalGridDataModel['gridData'].push(dataRow);
             }
+            
             /*tmpArray2 = respData.pw_fbzb_grid_data;
             for (i = 0; i < tmpArray2.length; i++) {
                 var tmpdataArray = tmpArray2[i].field_value;

@@ -5,6 +5,8 @@ package com.tranzvision.gd.TZAuthBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -102,17 +104,9 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	 */
 	public final String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
 	/**
-	 * 记录用户登录账号，卢艳添加，2017-4-14；
+	 * 记录免密自动登录密钥的cookie名称变量，李刚添加，2017.04.20
 	 */
-	public final String cookieWebLoginedDlzh = "TZGD_TOKEN_DLZH";
-	/**
-	 * 记录当前站点，卢艳添加，2017-4-19；
-	 */
-	public final String cookieWebLoginedSiteId = "TZGD_TOKEN_SITEID";
-	/**
-	 * 记录当前机构，卢艳添加，2017-4-19；
-	 */
-	public final String cookieWebLoginedOrgId = "TZGD_TOKEN_ORGID";
+	public final String cookieWebLoginName = "TZGD_AUTO_LOGIN";
 
 	/*
 	 * (non-Javadoc)
@@ -221,12 +215,36 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			}
 			tzCookie.addCookie(response, cookieWebLoginUrl, strLoginUrl);
 			
-			//记录用户登录账号，卢艳添加，2017-4-14
-			tzCookie.addCookie(response, cookieWebLoginedDlzh, psTzAqYhxxTblKey.getTzDlzhId());
-			//记录当前站点，卢艳添加，2017-4-19
-			tzCookie.addCookie(response, cookieWebLoginedSiteId, siteid);
-			//记录当前机构，卢艳添加，2017-4-19
-			tzCookie.addCookie(response, cookieWebLoginedOrgId, psTzAqYhxxTblKey.getTzJgId());
+			//生产自动免密登录cookie
+			String tmpPwdKey = "TZGD_@_!_*_20170420_Tranzvision";
+			String tmpWebLoginCookieValue = "";
+			String myUUID = "" + UUID.randomUUID() + "-" + UUID.randomUUID();
+			String[] myRandomKeys = myUUID.split("-");
+			String[] myRandomArray = new String[]{myRandomKeys[0],"A===" + psTzAqYhxxTblKey.getTzJgId(),myRandomKeys[1],"B===" + siteid,myRandomKeys[2],"C===" + psTzAqYhxxTblKey.getTzDlzhId(),myRandomKeys[3],myRandomKeys[4]};
+			//将数据顺序打乱
+			Random tmpRand =new Random();
+			String tmpKeyValue = "";
+			for(int i=0;i < 30;i ++)
+			{
+				int myRandomSeed = tmpRand.nextInt(8);
+				tmpKeyValue = myRandomArray[0];
+				myRandomArray[0] = myRandomArray[myRandomSeed];
+				myRandomArray[myRandomSeed] = tmpKeyValue;
+			}
+			//使用“|”拼接数据字符串
+			for(int i=0;i < myRandomArray.length;i ++)
+			{
+				if(i == 0)
+				{
+					tmpWebLoginCookieValue = myRandomArray[i];
+				}
+				else
+				{
+					tmpWebLoginCookieValue += "|" + myRandomArray[i];
+				}
+			}
+			tmpWebLoginCookieValue = DESUtil.encrypt(tmpWebLoginCookieValue,tmpPwdKey);
+			tzCookie.addCookie(response, cookieWebLoginName,tmpWebLoginCookieValue);
 			
 			errorMsg.add("0");
 			errorMsg.add("");
@@ -301,7 +319,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		tzSession.invalidate(request, response);
 		
 		//删除用户登录账号，卢艳添加，2017-4-15
-		tzCookie.removeCookie(response, "TZGD_TOKEN_DLZH");
+		tzCookie.removeCookie(response,cookieWebLoginName);
 		//删除用户登录密码，卢艳添加，2017-4-15
 		//tzCookie.removeCookie(response, "TZGD_TOKEN_PASSWORD");
 		

@@ -3265,11 +3265,17 @@
     	    	var record = eStore.getAt(0);
     			//动态属性部分赋值
     	    	var j = 1;
-    			for(var i=6;i<len;i++){
+    			for(var i=5;i<len;i++){
     				var colName = '00' + i;
                     colName = 'col' + colName.substr(colName.length - 2);
                     var sValue = lastData[colName];
-                    sValue = sValue.substr(0,sValue.indexOf("（"));
+                    if(i!=5){
+                    	sValue = sValue.substr(sValue.indexOf("（"),sValue.indexOf("）"));
+                    	sValue = sValue.replace("（","");
+                    	sValue = sValue.replace("）","");
+                    	sValue = sValue.replace("%","");
+                    }
+                    
                     var mxId = Object.getOwnPropertyNames(record.data)[j];
                     record.set(mxId,sValue);
                     

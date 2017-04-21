@@ -64,6 +64,9 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 					for (Map<String, Object> map2 : SqlCon2) {
 						String WYLXXXX = map2.get("TZ_XXX_BH").toString();		//外语类型信息项
 						String WYLX = map2.get("TZ_APP_S_TEXT").toString();		//外语类型
+						String LX=null;
+//						System.out.println("外语类型信息项"+WYLXXXX);
+//						System.out.println("外语类型"+WYLX);
 						
 						String WYCJXXX=WYLXXXX.replace("type", "score");		//外语成绩信息项
 						String EngScoreSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE( TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?)";
@@ -72,47 +75,61 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 						float FSCJF;
 						
 						switch(WYLX){
-						case "专业英语":
+						case "ENG_LEV_T9":
 							WYLX="ZYYY";
+							LX="专业英语";
 						break;
-						case "高级口译":
+						case "ENG_LEV_T10":
 							WYLX="GJKY";
+							LX="高级口译";
 						break;
-						case "中级口译":
+						case "ENG_LEV_T11":
 							WYLX="ZJKY";
+							LX="中级口译";
 						break;
-						case "BEC":
+						case "ENG_LEV_T12":
 							WYLX="BEC";
+							LX="BEC";
 						break;
-						case "GRE":
+						case "ENG_LEV_T1":
 							WYLX="GRE";
+							LX="GRE";
 						break;
-						case "GMAT":
+						case "ENG_LEV_T2":
 							WYLX="GMAT";
+							LX="GMAT";
 						break;
-						case "TOFEL":
+						case "ENG_LEV_T3":
 							WYLX="TOFEL";
+							LX="TOFEL";
 						break;
-						case "IELTS":
+						case "ENG_LEV_T4":
 							WYLX="IELTS";
+							LX="IELTS";
 						break;
-						case "英语六级（710分制）":
+						case "ENG_LEV_T5":
 							WYLX="710E6";
+							LX="英语六级（710分制）";
 						break;
-						case "英语四级（710分制）":
+						case "ENG_LEV_T6":
 							WYLX="710E4";
+							LX="英语四级（710分制）";
 						break;
-						case "英语六级（100分制）":
+						case "ENG_LEV_T7":
 							WYLX="100E6";
+							LX="英语六级（100分制）";
 						break;
-						case "英语四级（100分制）":
+						case "ENG_LEV_T8":
 							WYLX="100E4";
+							LX="英语四级（100分制）";
 						break;
-						case "TOEIC（990）":
+						case "ENG_LEV_T13":
 							WYLX="TOEIC";
+							LX="TOEIC";
 						break;
 						}
 						
+						if(WYCJ!=null&&!WYCJ.equals("")){
 						switch(WYCJ){
 						case "专业八级":
 							WYCJ="A";
@@ -137,32 +154,41 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 						break;
 						
 						}
-						
+						}
 						if(WYLX.equals("GRE")||WYLX.equals("GMAT")||WYLX.equals("TOFEL")||WYLX.equals("IELTS")||WYLX.equals("710E6")||WYLX.equals("710E4")||WYLX.equals("100E6")||WYLX.equals("100E4")||WYLX.equals("TOEIC")){
-							String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK2>? AND TZ_CSMB_CK3<=?;";
+							String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK2>? AND TZ_CSMB_CK3<=?";
 							String FSCJ = SqlQuery.queryForObject(sql, new Object[] {WYLX,WYCJ,WYCJ},"String");
+							if(FSCJ!=null&&!FSCJ.equals("")){
 							FSCJF=Float.parseFloat(FSCJ);
-							WYScore.add(FSCJF);
+							WYScore.add((float)FSCJF);
+							}
+							
 							
 						//证书类型，查询报名表中的证书等级字段
 						}else if(WYLX.equals("ZYYY")||WYLX.equals("GJKY")||WYLX.equals("ZJKY")||WYLX.equals("BEC")){
 							String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK1=?";
 							String FSCJ = SqlQuery.queryForObject(sql2,  new Object[] {WYLX,WYCJ},"String");
 							FSCJF=Float.parseFloat(FSCJ);
-							WYScore.add(FSCJF);
+							WYScore.add((float)FSCJF);
+							
+							System.out.println("证书类型："+FSCJF);
 						}
 						
 						//记录打分记录：英语成绩类型：GMAT>=750|其他语种：日语二级|100分
 						if(MarkRecord != null){
-							MarkRecord=MarkRecord+"英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
+							MarkRecord=MarkRecord+"英语成绩类型：".concat(LX).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
 						}else{
-							MarkRecord="英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
+							System.out.println(WYCJori);
+							System.out.println(map2.get("TZ_APP_S_TEXT").toString());
+							
+							MarkRecord="英语成绩类型：".concat(LX).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
 						}
 					}
 					
 					//其他语种成绩
-					if(QTYZ!=null && QTYZ.length() != 0){
+					if(QTYZ!=null && !QTYZ.equals("")){
 						WYScore.add((float)80);
+						System.out.println("其他类型："+WYScore);
 						
 						String ForScoreSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=?  and TZ_XXX_BH ='TZ_18othlang'";
 						String QTYZCJ = SqlQuery.queryForObject(ForScoreSql, new Object[] { TZ_APP_ID},"String");	//其他语种
@@ -190,12 +216,7 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 						MarkRecord=MarkRecord+"其他语种：".concat(QTYZCJ);
 					}
 					
-					//根据报名表ID查询考生是否有海外院校学位，获取考生学位
-					if("Y".equals("海外院校")&&"Y".equals("学士")){
-						WYScore.add((float)100);
-					}else if("Y".equals("海外院校")&&"Y".equals("硕士")){
-						WYScore.add((float)90);
-					}
+					
 					
 					String uniScholContry = ksMap.get("TZ_11luniversitycountry");
 					String Contry1 = ksMap.get("TZ_10hdegreeunicountry");
@@ -213,10 +234,14 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 					} else {
 						if(XW.equals("1")||XW.equals("2")){
 							WYScore.add((float)90);
+//							System.out.println("海外硕士："+WYScore);
 						}else{
 						WYScore.add((float)100);
+//						System.out.println("海外学士："+WYScore);
 						}
 					}
+					
+					System.out.println(WYScore);
 					
 					//对比考生的英语成绩得分、外语成绩得分，海外院校得分，取得分最大的外语成绩
 					Score=Collections.max(WYScore);

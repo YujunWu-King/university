@@ -624,6 +624,7 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 
 			}
 
+			dataCellKeys.add(new String[] { "bmzt", "报名状态" });
 			dataCellKeys.add(new String[] { "bmqd", "报名渠道" });
 			dataCellKeys.add(new String[] { "qdzt", "签到状态" });
 
@@ -654,21 +655,26 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 				}
 
 				// 报名渠道、签到状态;
-				sql = "SELECT TZ_ZXBM_LY,TZ_BMCY_ZT FROM  PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
+				sql = "SELECT TZ_NREG_STAT,TZ_ZXBM_LY,TZ_BMCY_ZT FROM  PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
 				Map<String, Object> mapqdzt = sqlQuery.queryForMap(sql, new Object[] { strHdId, bmrid });
 				String strBmqd = "";
 				String strQdzt = "";
+				String strBmzt = "";
 				if (mapqdzt != null) {
 					strBmqd = mapqdzt.get("TZ_ZXBM_LY") == null ? "" : String.valueOf(mapqdzt.get("TZ_ZXBM_LY"));
 					strQdzt = mapqdzt.get("TZ_BMCY_ZT") == null ? "" : String.valueOf(mapqdzt.get("TZ_BMCY_ZT"));
+					strBmzt = mapqdzt.get("TZ_NREG_STAT") == null ? "" : String.valueOf(mapqdzt.get("TZ_NREG_STAT"));
 
 					/* 报名渠道、签到状态取转换值配置 */
 					sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_BMR_APPLY_QD' AND TZ_ZHZ_ID=?";
 					strBmqd = sqlQuery.queryForObject(sql, new Object[] { strBmqd }, "String");
 					sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_MBRGL_CYZT' AND TZ_ZHZ_ID=?";
 					strQdzt = sqlQuery.queryForObject(sql, new Object[] { strQdzt }, "String");
+					sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_BMR_APPLY_STA' AND TZ_ZHZ_ID=?";
+					strBmzt = sqlQuery.queryForObject(sql, new Object[] { strBmzt }, "String");
 				}
 
+				mapData.put("bmzt", strBmzt);
 				mapData.put("bmqd", strBmqd);
 				mapData.put("qdzt", strQdzt);
 

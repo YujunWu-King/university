@@ -83,6 +83,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                     }
                 },
                 {
+                    text: "面试申请号",
+                    dataIndex: 'mshID',
+                    align:'center',                    
+                    minWidth: 100
+                },
+                {
                     text: "面试资格",
                     dataIndex: 'viewQua',
                     align:'center',                    
@@ -821,8 +827,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                             viewConfig: {
                                                 enableTextSelection: true
                                             }
-                                        }),
-                                        mainPageFrame]
+                                        })/*,mainPageFrame*/]
                                 }]
                         }
                     ]
