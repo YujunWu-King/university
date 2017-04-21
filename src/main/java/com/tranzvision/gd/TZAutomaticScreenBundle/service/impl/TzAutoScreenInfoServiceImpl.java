@@ -63,6 +63,10 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 			String batchId = jacksonUtil.getString("batchId");
 			String appId = jacksonUtil.getString("appId");
 			
+			mapRet.put("classId", classId);
+			mapRet.put("batchId", batchId);
+			mapRet.put("appId", appId);
+			
 			String sql = "select TZ_KSH_CSJG,TZ_KSH_PSPM,ROW_LASTMANT_OPRID,ROW_LASTMANT_DTTM from PS_TZ_CS_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?;";
 			Map<String,Object> csKsMap = jdbcTemplate.queryForMap(sql, new Object[]{ classId,batchId,appId });
 			if(csKsMap != null){
@@ -71,9 +75,6 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 				String updateOpr = csKsMap.get("ROW_LASTMANT_OPRID") == null ? "" 
 						: csKsMap.get("ROW_LASTMANT_OPRID").toString();
 				
-				mapRet.put("classId", classId);
-				mapRet.put("batchId", batchId);
-				mapRet.put("appId", appId);
 				mapRet.put("status", status);
 				mapRet.put("ranking", ranking);
 				mapRet.put("updateOpr", updateOpr);
