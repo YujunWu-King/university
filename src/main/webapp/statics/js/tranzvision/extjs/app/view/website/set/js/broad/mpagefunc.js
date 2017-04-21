@@ -437,6 +437,13 @@ function Login(){
 	//var yzm = encodeURI($("#yzm").val());
 	
 	var siteid = encodeURI($("#siteid").val());
+	
+	//if 
+	var classid = getQueryString("classid");
+	
+	if (classid == undefined) {
+		classid = "";
+	}
 
 	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'"}}';
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'","isMobile":"Y"}}';
@@ -445,13 +452,15 @@ function Login(){
 		url: TzUniversityContextPath + "/user/login/dologin",
 		data:{
 			tzParams:tzParams,
-			language:$("#lang").val()
+			language:$("#lang").val(),
+			classIdParams : classid
 		},
 		dataType:'json',
 		success:function(response){			
 			if (response.success == "true") {  
 			   $("#errormsg").hide();
-               	window.location.href=response.url;
+			   var _url = response.url + "&from=m";
+               window.location.href = _url;
 				
             }else{
 			   if (response.errorCode=="1")
