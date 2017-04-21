@@ -221,7 +221,7 @@ public class TzWebsiteLoginController {
 												indexUrl = ctxPath
 														+ "/dispatcher?classid=art_view&operatetype=HTML&siteId="
 														+ strSiteId + "&columnId=" + cparams[1] + "&artId="
-														+ cparams[2];
+														+ cparams[2] + ("Y".equals(isMobile) == true ? "&from=m" : "");
 											} else {
 												if ("Y".equals(isMobile)) {
 													indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId="
