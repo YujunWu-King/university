@@ -673,6 +673,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                              },
                                             name:'statisticalGrid',
                                             columns: statisticsGridDataModel['gridColumns'],
+                                            listeners:{
+            	                            	beforeselect:function(_this,record,index,opts){
+            	                            		var data = record.getData();
+            	                            		var pwId = data["col01"];
+            	                            		if(pwId!=undefined&&pwId==''){
+            	                            			return false;
+            	                            		}
+            	                            	}
+            	                            },
                                             header: false,
                                             border:false,
                                              dockedItems:[{

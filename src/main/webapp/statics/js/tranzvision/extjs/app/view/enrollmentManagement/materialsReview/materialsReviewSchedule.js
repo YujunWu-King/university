@@ -959,6 +959,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            columns: statisticsGridDataModel['gridColumns'],
 	                            header: false,
 	                            border: false,
+	                            listeners:{
+	                            	beforeselect:function(_this,record,index,opts){
+	                            		var data = record.getData();
+	                            		var pwId = data["col01"];
+	                            		if(pwId!=undefined&&pwId==''){
+	                            			return false;
+	                            		}
+	                            	}
+	                            },
 	                            dockedItems: [{
 	                                xtype: "toolbar",
 	                                items: [{
