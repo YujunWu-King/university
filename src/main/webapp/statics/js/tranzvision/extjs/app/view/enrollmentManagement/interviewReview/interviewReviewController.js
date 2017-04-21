@@ -2258,28 +2258,129 @@
             });
         }
     },
-    showMSTB : function(obj,rowIndex){
-        var jygzIDs ="";
-        if(obj.name=="toolbarShowTB"){
-            var selList = this.getView().getSelectionModel().getSelection();
-            var checkLen = selList.length;
-            if(checkLen == 0){
-                Ext.MessageBox.alert("提示","请选择需要的评委！");
-                return;
-            }else{
-            	for (var i=0;i<selList.length;i++){
-            		if(jygzIDs==""){
-            			jygzIDs = selList[i].get("jygzID");	
-            		}else{
-            			jygzIDs = jygzIDs+"="+selList[i].get("jygzID");
-            		}
+    showMSTB : function(btn){
+    	
+    	// 柱状图参数
+    	var coluObj = [];
+    	// 曲线图参数
+    	var lineObj = [];
+    	/*
+		// 曲线图参数
+		lineObj = [ 
+		                {'pw' : 'zhangsan',	'n1' :10,'n2' : 20,'n3' : 30,'n4' : 40,'n5' : 40,'n6' : 40}, 
+		                {'pw' : 'lisi',     'n1' :15,'n2' : 25,'n3' : 35,'n4' : 45,'n5' : 40,'n6' : 40},
+		                {'pw' : 'wangwu',   'n1' :40,'n2' : 30,'n3' : 20,'n4' : 10,'n5' : 40,'n6' : 40},
+		                {'pw' : '平均',     'n1' :22,'n2' : 25,'n3' : 30,'n4' : 33,'n5' : 40,'n6' : 40}
+		              ];
+		// 柱状图参数
+		
+		coluObj = [
+		               {'pw' : 'zhangsan', 'pj' : 10},
+		               {'pw' : 'lisi',     'pj' : 15},
+		               {'pw' : 'wangwu',   'pj' : 40}, 
+		               {'pw' : '平均',     'pj' : 22} 
+		               ];
+		*/
+		console.log('-------------');
+		//console.log(this.getView().statisticsGrid);
+		//console.log(btn.ownerCt.ownerCt);
+        var PWIDs ="";//存放选择的评委;
+		var grid = btn.ownerCt.ownerCt;//获取grid;
+		var selList = grid.getSelectionModel().getSelection();//获取选中的数据;
+        var checkLen = selList.length;
+        //取得选择的评委串;
+        if(checkLen == 0){
+            Ext.MessageBox.alert("提示","请选择需要的评委！");
+            return;
+        }else{
+            for (var i=0;i<selList.length;i++){
+            	if(PWIDs==""){
+            		PWIDs = selList[i].get("col01");	
+            	}else{
+            		PWIDs = PWIDs+"="+selList[i].get("col01");
             	}
             }
-        }else{
-            //var store = obj.findParentByType("grid").store;
-            //var selRec = store.getAt(rowIndex);
-            //jygzID = selRec.get("jygzID");
         }
+        //console.log(PWIDs);
+        //循环grid（所有，包括没有选择的，目的是取得汇总的数据）;
+		for(var i=0;i<grid.getStore().data.length;i++){
+			var pwdata = grid.getStore().getAt(i).data;//pwdata就是对应record的一个一个的对象;
+			var pw = pwdata.col01;// 获取每行的评委;
+			if (pw !== null && pw !== undefined && pw !== '') {
+				//如果非空，判断是否为选择项;
+				if(PWIDs.indexOf(pw) >= 0){
+					//对选择的评委进行处理;
+					//处理柱状图
+					var coltmpobj = {};
+					coltmpobj["pw"] = pw;
+					var tmppj = pwdata.col05;
+                	//处理值为非数字的情况
+                	if (tmppj !== null && tmppj !== undefined && tmppj !== '' && isNaN(tmppj)==false) {
+    					coltmpobj["pj"] = parseFloat(tmppj);
+                	}else{
+                		coltmpobj["pj"] = 0;
+                	}
+					coluObj.push(coltmpobj);
+					
+					//处理曲线图部分;
+					var linetmpobj = {};
+					linetmpobj["pw"] = pw;
+					for(var j=5;j<this.getView().statisticsGrid.gridColumns.length;j++){
+						var colname = this.getView().statisticsGrid.gridColumns[j].text;
+						var colid =   this.getView().statisticsGrid.gridColumns[j].dataIndex;
+						var colvalue =pwdata[colid];
+						//处理非数字的情况(取百分比数据)
+						var tmppwpyqjdata = colvalue.split('（')[1].replace('）','').replace('%','');
+           			 	if(isNaN(tmppwpyqjdata)){
+           			 		linetmpobj[colname] = 0;
+           			 	}else{
+           			 		linetmpobj[colname] = parseFloat(tmppwpyqjdata);
+           			 	}
+
+					}
+					lineObj.push(linetmpobj);
+					
+				}else{
+					//未选择的不进行处理;
+					//console.log("未选上");
+				}
+			}else{
+				//取得汇总行的数据;
+				//console.log("汇总");
+				//处理柱状图
+				var coltmpobj = {};
+				coltmpobj["pw"] = "标准";
+				
+				var tmppj = pwdata.col05;
+            	//处理值为非数字的情况
+            	if (tmppj !== null && tmppj !== undefined && tmppj !== '' && isNaN(tmppj)==false) {
+					coltmpobj["pj"] = parseFloat(tmppj);
+            	}else{
+            		coltmpobj["pj"] = 0;
+            	}
+				coluObj.push(coltmpobj);
+				
+				//处理曲线图部分;
+				var linetmpobj = {};
+				linetmpobj["pw"] = "标准";
+				for(var j=5;j<this.getView().statisticsGrid.gridColumns.length;j++){
+					var colname = this.getView().statisticsGrid.gridColumns[j].text;
+					var colid =   this.getView().statisticsGrid.gridColumns[j].dataIndex;
+					var colvalue =pwdata[colid];
+					//处理非数字的情况(取百分比数据)
+					var tmppwpyqjdata = colvalue.split('（')[1].replace('）','').replace('%','');
+       			 	if(isNaN(tmppwpyqjdata)){
+       			 		linetmpobj[colname] = 0;
+       			 	}else{
+       			 		linetmpobj[colname] = parseFloat(tmppwpyqjdata);
+       			 	}
+				}
+				lineObj.push(linetmpobj);
+				
+			}
+			
+		}
+    
         //是否有访问权限
     	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_MSTB_STD"];
@@ -2320,12 +2421,8 @@
             }
             // </debug>
         }
-    	var lineData1 = {};
-    	lineData1["name"]="n1";
-    	lineData1["data1"]=10;
-    	lineData1["data2"]=12;
-    	lineData1["data3"]=14;
-        cmp = new ViewClass({"canshu":lineData1});
+
+        cmp = new ViewClass({"coluObj":coluObj,"lineObj":lineObj});
         tab = contentPanel.add(cmp);
         contentPanel.setActiveTab(tab);
         Ext.resumeLayouts(true);

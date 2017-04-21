@@ -24,6 +24,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         this.transValue = transValue;
         this.callParent();
     },
+    statisticsGrid:'',
     initComponent:function(){
         var classID =this.classID;
         var batchID = this.batchID;
@@ -291,6 +292,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
 
         });
 
+        this.statisticsGrid = statisticsGridDataModel;
         Ext.apply(this,{
             items: [
                 {
