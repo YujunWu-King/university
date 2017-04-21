@@ -52,7 +52,9 @@
     	
     	//定义grid的columns
     	var columns = [{
-			xtype:'rownumberer'
+			xtype:'rownumberer',
+			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.order","序号"),
+			width:40
 		},{ 
 			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.appId","报名表编号"),
 			dataIndex: 'appId',
@@ -278,7 +280,7 @@
 	    			columns: columns,
 	    			bbar: {
 	    				xtype: 'pagingtoolbar',
-	    				pageSize: 10,
+	    				pageSize: 500,
 	    				listeners:{
 	    					afterrender: function(pbar){
 	    						var grid = pbar.findParentByType("grid");
