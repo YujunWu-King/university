@@ -196,8 +196,8 @@ if(dataApp){
 								{
 									perXxx["value"] = recApp["children"][i][j]["value"];
 								}
-								if(recApp["othervalue"]){
-									perXxx["othervalue"] = SurveyBuild.htmlCharReplace(recApp[i][j]["othervalue"]);
+								if(recApp["children"][i][j]["othervalue"]){
+									perXxx["othervalue"] = SurveyBuild.htmlCharReplace(recApp["children"][i][j]["othervalue"]);
 								}
 							}else if(perXxx.classname  == "refLetterFile"){
 								/*推荐信附件*/
