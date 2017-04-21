@@ -226,6 +226,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     editor: {
                         xtype: 'numberfield',
                         allowBlank: false,
+                        allowDecimals:true,
+                        decimalPrecision:2,
                         emptyText:"不允许为空！"
                     },
                     flex: 1

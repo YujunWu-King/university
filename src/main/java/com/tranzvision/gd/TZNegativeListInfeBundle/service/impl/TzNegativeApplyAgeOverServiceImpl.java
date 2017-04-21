@@ -71,6 +71,7 @@ public class TzNegativeApplyAgeOverServiceImpl extends TzNegativeListBundleServi
 								"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
 								new Object[] { classId, batchId, appinsId, fmqdId }, "Integer");
 						if (have_one > 0) {
+							PsTzCsKsFmTMapper.updateByPrimaryKeySelective(PsTzCsKsFmT);
 
 						} else {
 							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);

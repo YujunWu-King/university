@@ -246,5 +246,9 @@ public class Patchca {
 		}
 		return false;
 	}
-
+	
+	public String getTokenName()
+	{
+		return tokenName;
+	}
 }

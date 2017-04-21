@@ -23,7 +23,6 @@
         Ext.util.CSS.createStyleSheet(" .readOnly-tagfield-cls div {background:#eee;}","readOnly-tagfield-cls");
         
     	var config = this.tzConfig;
-    	console.log(config);
     	var ksbqConfig = config;
     	ksbqConfig.queryType = "KSBQ";
     	

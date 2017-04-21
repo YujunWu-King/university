@@ -7,34 +7,32 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzCpfbBzhTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzQttjTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpwpslsTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzCpfbBzhTbl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjTbl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsGzTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsKshTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzKsclpslsTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsGzTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsKshTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzKsclpslsTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpwpslsTblMapper;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMapper;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzCpfbBzhTblMapper;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzQttjTblMapper;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzCpfbBzhTbl;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjTbl;
-import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsGzTblMapper;
-import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzKsclpslsTblMapper;
-import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsKshTblMapper;
-import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsGzTbl;
-import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzKsclpslsTbl;
-import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsKshTbl;
 
 /**
  * 材料评审进度，原TZ_GD_CLPS_PKG:TZ_GD_SCHE_CLS
@@ -254,7 +252,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			Map<String, Object> list2Map = sqlQuery.queryForMap(strStatusSql, new Object[] { strClassID, strBatchID });
 			if (list2Map != null && list2Map.size() > 0) {
 				strStatus = list2Map.get("STATUS") == null ? "" : String.valueOf(list2Map.get("STATUS"));
-				strDelibCount = list2Map.get("TZ_DQPY_LUNC") == null ? ""
+				strDelibCount = list2Map.get("TZ_DQPY_LUNC") == null ? "0"
 						: String.valueOf(list2Map.get("TZ_DQPY_LUNC"));
 				strPwkjPch = list2Map.get("TZ_PWKJ_PCH") == null ? "" : String.valueOf(list2Map.get("TZ_PWKJ_PCH"));
 				strPwkjFbt = list2Map.get("TZ_PWKJ_FBT") == null ? "" : String.valueOf(list2Map.get("TZ_PWKJ_FBT"));
