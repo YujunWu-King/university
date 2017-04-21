@@ -338,25 +338,30 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		return RELATED_DIV;
 	},
 	bindTimePicker:function($inputBox,$selectBtn){
-		$inputBox.each(function(){
-			  $(this).datetimepicker({
-				showButtonPanel:true,
+		//$inputBox.each(function(){
+		$inputBox.datetimepicker({
+				//showButtonPanel:true,
 				showTimepicker: false,
 				changeMonth: true,
 				changeYear: true,
 				yearRange: "1960:2030",
 				dateFormat:"yy-mm-dd",
-				onClose:function(dateText, inst){
-					$(this).trigger("blur");
-				}
+				//onClose:function(dateText, inst){
+				//	$(this).trigger("blur");
+				//}
+				onSelect: function(dateText, inst) {
+					$inputBox.datetimepicker( "hide" );
+					$inputBox.trigger("blur");
+	            }
 			  });
-		 });
+		 //});
 		   //日期小图标事件绑定:
-		 $selectBtn.each(function(){
-			   $(this).click(function(){
-				   $(this).prev().click();
+		 //$selectBtn.each(function(){
+			$selectBtn.click(function(){
+				  // $(this).prev().click();
+				$inputBox.focus();
 			   })
-		  })
+		  //})
 	},
 	checkInputNotNull:function(inputEl){
 		inputEl.formValidator({tipID:(inputEl.attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
@@ -606,19 +611,28 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				 if(len==undefined){
 					 len=1;
 				 }
-				 var type_select="";
+				 var $type_select;
 //				 //为所有的select注册事件
 				 for(var i=0;i<len;i++){
 					 var child=children[i];
-						type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
-						type_select.each(function(index){
-							type_select.chosen({width: "100%"});
-							$(this).on("change",function(){
+					 $type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
+					
+					 console.log("i="+i);
+					 $type_select.each(function(){
+						 console.log("selectID="+data["itemId"] + child.EngLevelType.itemId);
+						 //$type_select.unbind("change"); 
+						 $(this).chosen({width: "100%"});
+						 $(this).on("change",function(){
+						 console.log("222");
+						// $(this).unbind("change").bind("change",function(){
+							 	console.log($(this));
+							 	console.log($type_select);
+								console.log("change");
 								//-------------------------清空数据:
-								child.EngLevelDate.value="";
-								child.EngLevelGrade.value="";
+								//child.EngLevelDate.value="";
+								//child.EngLevelGrade.value="";
 								//-------------------------
-								for(var i in EXAM_TYPE_MAP){
+								/*for(var i in EXAM_TYPE_MAP){
 									if($(this).val()==EXAM_TYPE_MAP[i]){
 										var relatedDiv=data.getRelatedDiv(data,child,EXAM_TYPE_MAP[i],EXAM_TYPE_MAP);
 										
@@ -636,6 +650,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 											//文字说明 解析:
 										}
 										//timePicker:
+										console.log("DATE ID"+data.itemId +child.EngLevelDate.itemId);
 									    var $inputBox = $("#" + data.itemId +child.EngLevelDate.itemId);
 									    var $selectBtn = $("#" + data.itemId +child.EngLevelDate.itemId + "_Btn");
 										data.bindTimePicker($inputBox,$selectBtn);
@@ -646,13 +661,13 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 											data.checkInputNotNull($inputBox2);
 										}
 									}
-								}
+								} */
 								//-------------------------
-							})
+							});
 						});
 						//为所有的timePicker注册事件:
 						//日期控件处理1.2.3.4.13
-
+						console.log("DATEID="+data.itemId +child.EngLevelDate.itemId);
 					    var $inputBox = $("#" + data.itemId +child.EngLevelDate.itemId);
 					    var $selectBtn = $("#" + data.itemId +child.EngLevelDate.itemId + "_Btn");
 						data.bindTimePicker($inputBox,$selectBtn);
