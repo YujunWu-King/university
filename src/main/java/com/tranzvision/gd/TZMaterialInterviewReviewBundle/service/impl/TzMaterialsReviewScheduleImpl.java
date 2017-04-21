@@ -252,7 +252,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			Map<String, Object> list2Map = sqlQuery.queryForMap(strStatusSql, new Object[] { strClassID, strBatchID });
 			if (list2Map != null && list2Map.size() > 0) {
 				strStatus = list2Map.get("STATUS") == null ? "" : String.valueOf(list2Map.get("STATUS"));
-				strDelibCount = list2Map.get("TZ_DQPY_LUNC") == null ? ""
+				strDelibCount = list2Map.get("TZ_DQPY_LUNC") == null ? "0"
 						: String.valueOf(list2Map.get("TZ_DQPY_LUNC"));
 				strPwkjPch = list2Map.get("TZ_PWKJ_PCH") == null ? "" : String.valueOf(list2Map.get("TZ_PWKJ_PCH"));
 				strPwkjFbt = list2Map.get("TZ_PWKJ_FBT") == null ? "" : String.valueOf(list2Map.get("TZ_PWKJ_FBT"));
