@@ -106,6 +106,51 @@ public class BlackListMgInfoServiceImpl extends FrameworkImpl{
 					str_lenCity= psTzRegUserT.getTzLenCity();
 					str_comName= psTzRegUserT.getTzCompanyName();
 					str_comIndus= psTzRegUserT.getTzCompIndustry();
+					
+					switch(str_comIndus){
+						case"1":
+							str_comIndus="金融服务";
+							break;
+						case"2":
+							str_comIndus="咨询";
+							break;
+						case"3":
+							str_comIndus="能源/化工";
+							break;
+						case"4":
+							str_comIndus="科技/新媒体/电信";
+							break;
+						case"5":
+							str_comIndus="房地产开发及装饰";
+							break;
+						case"6":
+							str_comIndus="服务行业（物流、信息、教育、培训、外包、交通运输等）";
+							break;
+						case"7":
+							str_comIndus="非营利组织/政府机构/事业单位";
+							break;
+						case"8":
+							str_comIndus="制造业";
+							break;
+						case"9":
+							str_comIndus="批发/零售/贸易";
+							break;
+						case"10":
+							str_comIndus="医药/保健/生物科技";
+							break;
+						case"11":
+							str_comIndus="媒体/娱乐/广告公关";
+							break;
+						case"12":
+							str_comIndus="其他";
+							break;
+						default:	
+							str_comIndus="无";
+						
+					}
+					
+					
+					
 					str_schName= psTzRegUserT.getTzSchCname();
 					
 					

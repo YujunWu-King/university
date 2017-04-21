@@ -364,7 +364,7 @@ select{appearance:none;-moz-appearance:none;-webkit-appearance:none;border:none;
 
 .bottom_btn{position:fixed;bottom:0;left:0;width:100%;padding:2% 0;text-align:center;color:#fff;background-color:#8f5dbf;font-size:0.6rem;display:block;}
 .bottom_btn_left{position:fixed;bottom:0;left:0;width:50%;padding:2% 0;text-align:center;color:#666;background-color:#ddd;font-size:0.6rem;display:block;}
-.bottom_btn_right{position:fixed;bottom:0;right:0;width:50%;padding:2% 0;text-align:center;color:#f25050;background-color:#ddd;font-size:0.6rem;display:block;}
+.bottom_btn_right{position:fixed;bottom:0;right:0;width:100%;padding:2% 0;text-align:center;color:#f25050;background-color:#ddd;font-size:0.6rem;display:block;}
 
 /*帮助中心*/
 .question_body{width:94%;margin:2% auto;font-size:0.56rem;line-height:1rem;}

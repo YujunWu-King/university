@@ -100,9 +100,9 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 				// 获取活动显示模式
 				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventDisplayMode");
-				Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { strApplyId, dateNow, dateNow });
+				Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { dateNow, dateNow, dateNow, strApplyId });
 
-				// 是否有效记录
+				// 是否有效记录,Y-在报名时间内，B-报名为开始，E-报名已结束
 				String validTD = "";
 				// 显示模式
 				String tzXSMS = "";
@@ -116,7 +116,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 				if (mapData != null) {
 
 					validTD = mapData.get("VALID_TD") == null ? "" : String.valueOf(mapData.get("VALID_TD"));
-					tzXSMS = mapData.get("TZ_XSMS") == null ? "" : String.valueOf(mapData.get("TZ_XSMS"));
+					tzXSMS = mapData.get("TZ_XSMS") == null ? "1" : String.valueOf(mapData.get("TZ_XSMS"));
 					strQy_zxbm = mapData.get("TZ_QY_ZXBM") == null ? "" : String.valueOf(mapData.get("TZ_QY_ZXBM"));
 					numActXW = mapData.get("TZ_XWS") == null ? 0
 							: Integer.parseInt(String.valueOf(mapData.get("TZ_XWS")));
@@ -145,18 +145,39 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 						"MSG07", tzSiteLang, "服务端请求发生错误。", "Server Request Error");
 
 				// 只有启用在线报名并且在有效报名时间内才显示在线报名条
-				if ("Y".equals(strQy_zxbm) && "Y".equals(validTD)) {
+				if ("Y".equals(strQy_zxbm)) {
+					//报名时间限制，只有在报名时间内才可报名，否则按钮不可点击
+					 boolean clickEnable;
+					 String tipMsg = "";
+					 String btnDisabledClass = "";/*按钮不可点class*/
+					 if("Y".equals(validTD)){
+						 clickEnable = true;
+					 }else if("B".equals(validTD)){
+						 clickEnable = false;
+						 tipMsg = "未开始";
+						 btnDisabledClass = "click-disabled";
+					 }else if("E".equals(validTD)){
+						 clickEnable = false;
+						 tipMsg = "已结束";
+						 btnDisabledClass = "click-disabled";
+					 }else{
+						 clickEnable = false;
+						 btnDisabledClass = "click-disabled";
+					 }
 
-					sql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
+					sql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID,TZ_NREG_STAT FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
 					Map<String, Object> mapBM = sqlQuery.queryForMap(sql, new Object[] { oprid, strApplyId });
 
 					// 是否已注册报名标识
 					String regFlag = "";
 					// 报名人ID
 					String strBmrId = "";
+					//报名状态
+					String applySta = "";
 					if (mapBM != null) {
 						regFlag = mapBM.get("REG_FLAG") == null ? "" : String.valueOf(mapBM.get("REG_FLAG"));
 						strBmrId = mapBM.get("TZ_HD_BMR_ID") == null ? "" : String.valueOf(mapBM.get("TZ_HD_BMR_ID"));
+						applySta = mapBM.get("TZ_NREG_STAT") == null ? "" : String.valueOf(mapBM.get("TZ_NREG_STAT"));
 					}
 
 					// 构造链接参数
@@ -167,7 +188,8 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					String strBaseUrl = request.getContextPath() + "/dispatcher?tzParams=";
 					// 报名按钮
 					String btnHtml = "";
-					System.out.println("regFlag:" + regFlag);
+					//报名状态显示
+					String statusHtml = "";
 					if ("Y".equals(regFlag)) {
 
 						mapComParams.put("APPLYID", strApplyId);
@@ -182,8 +204,31 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 						String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams, "UTF-8");
 
+						//按钮显示修改
+						if(!clickEnable && !"".equals(tipMsg)){
+							cancelText = tipMsg;
+						}
+						
+						//显示报名状态
+						String statusText = "";
+						switch(applySta){
+						case "1":
+							statusText = "已报名";
+							break;
+						case "4":
+							//等候席位数
+							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetWaitingNumber");
+							int waitNum = sqlQuery.queryForObject(sql, new Object[]{ strApplyId, strBmrId }, "int");
+							statusText = "等候席第"+ waitNum +"位";
+							break;
+						}
+						if(!"".equals(statusText)){
+							statusHtml = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY_STATUES","状态",statusText);
+						}
+						
+						
 						btnHtml = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_GD_EVENT_CANCEL_BTN", strUrl,
-								cancelText);
+								cancelText, btnDisabledClass);
 
 					} else {
 
@@ -198,12 +243,17 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 						String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams, "UTF-8");
 
+						//按钮显示修改
+						if(!clickEnable && !"".equals(tipMsg)){
+							onlineApplyText = tipMsg;
+						}
+						
 						btnHtml = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_GD_EVENT_APPLY_BTN", strUrl,
-								onlineApplyText);
+								onlineApplyText, btnDisabledClass);
 
 					}
-					System.out.println("btnHtml:" + btnHtml);
-					System.out.println("tzXSMS:" + tzXSMS);
+					//System.out.println("btnHtml:" + btnHtml);
+					//System.out.println("tzXSMS:" + tzXSMS);
 					String strHtml = "";
 					switch (tzXSMS) {
 					case "1":
@@ -215,7 +265,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 						/* 显示总席位数，已报名人数 */
 						strHtml = btnHtml + tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY",
 								strActXW, String.valueOf(numYBM), String.valueOf(numWait), allSeatText, appliedNumText,
-								waitingNumText);
+								waitingNumText,statusHtml);
 						break;
 					case "3":
 						/* 显示总席位数，已报名人数，且可以查看已报名人的姓名 */
@@ -238,18 +288,18 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 							strHtml = btnHtml + tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY",
 									strActXW, strYBMurl, String.valueOf(numWait), allSeatText, appliedNumText,
-									waitingNumText);
+									waitingNumText,statusHtml);
 
 						} else {
 
 							strHtml = btnHtml + tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY",
 									strActXW, String.valueOf(numYBM), String.valueOf(numWait), allSeatText,
-									appliedNumText, waitingNumText);
+									appliedNumText, waitingNumText,statusHtml);
 
 						}
 						break;
 					}
-					System.out.println("strHtml:" + strHtml);
+					//System.out.println("strHtml:" + strHtml);
 					strRet = tzGDObject.getHTMLText("HTML.TZEventsBundle.TZ_APPLY_ONLINE_DISPLAY_HEAD", strHtml,
 							timeOut, serverError, "", request.getContextPath());
 

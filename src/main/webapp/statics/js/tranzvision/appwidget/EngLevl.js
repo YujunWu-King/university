@@ -213,7 +213,10 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		var DATE_DIV='';
 		DATE_DIV += '  <div id="'+top_id+'_DATE_DIV" class="input-list" style="display:block"><span class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+MsgSet["EXAM_TDATE"]+'：</span>';
 		
-		DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onclick="this.focus()" title="' +date_name + '">';
+		//DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="SurveyBuild.reFocus(\'' + date_id + '\'); title="' +date_name + '">';
+		
+		DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="this.focus()"; title="' +date_name + '">';
+
 		DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" style="position:relative;top:5px;left:-31px;cursor:pointer;">';
 		//DATE_DIV += ' <div class="clear"> </div>';
 		//---------日期 input格式检验:
@@ -337,24 +340,63 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		}
 		return RELATED_DIV;
 	},
+	getChangedGradeDiv:function(data,child,EXAM_TYPE_DEF,EXAM_TYPE_MAP){
+		var RELATED_DIV="";
+		var DATE_HTML="";
+		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2||EXAM_TYPE_DEF==""){
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_TSCORE"],DATE_HTML);
+		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T3){
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_TOTAL"],DATE_HTML);
+		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4){
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_ISCORE"],DATE_HTML);
+		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T5||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T6||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],"");
+		}
+//		else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
+//			var optList='<option value="'+MsgSet["PASS_Y"]+'">'+MsgSet["PASS_Y"]+'</option>';
+//				optList+=('<option value="'+MsgSet["PASS_N"]+'">'+MsgSet["PASS_N"]+'</option>');
+//			RELATED_DIV=this.getChoseGradeDiv(data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_PASS"],optList);//,child.EngLevelGrade.value
+//		}
+		else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T9){
+			var optList='<option value="'+MsgSet["EXAM_TEM4"]+'">'+MsgSet["EXAM_TEM4"]+'</option>';
+			optList+=('<option value="'+MsgSet["EXAM_TEM8"]+'">'+MsgSet["EXAM_TEM8"]+'</option>');
+			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//,child.EngLevelGrade.value EXAM_GSCORE
+		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T10||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T11){
+			var optList='<option value="'+MsgSet["INTER_A"]+'">'+MsgSet["INTER_A"]+'</option>';
+			optList+=('<option value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
+			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//,child.EngLevelGrade.value EXAM_GSCORE
+		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T12){//LEV_C
+			var optList='<option value="'+MsgSet["LEV_A"]+'">'+MsgSet["LEV_A"]+'</option>';
+			optList+=('<option value="'+MsgSet["LEV_B"]+'">'+MsgSet["LEV_B"]+'</option>');
+			optList+=('<option value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
+			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//EXAM_SCORE
+		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13){
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],DATE_HTML);
+		}
+		return RELATED_DIV;
+	},
 	bindTimePicker:function($inputBox,$selectBtn){
+		
 		$inputBox.each(function(){
+			   var me=$(this);
 			  $(this).datetimepicker({
 				showButtonPanel:true,
 				showTimepicker: false,
 				changeMonth: true,
 				changeYear: true,
-				yearRange: "1960:2030",
+				maxDate: new Date("2030-12-31"),
+				yearRange: "1900:2030",
 				dateFormat:"yy-mm-dd",
-				onClose:function(dateText, inst){
-					$(this).trigger("blur");
+				onSelect:function(dateText, inst){
+					me.datetimepicker("hide");
+					me.trigger("blur");
 				}
 			  });
 		 });
 		   //日期小图标事件绑定:
 		 $selectBtn.each(function(){
 			   $(this).click(function(){
-				   $(this).prev().click();
+				   $(this).prev().focus();
 			   })
 		  })
 	},
@@ -535,9 +577,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+child.EngLevelUp.itemId+ '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')" type="file" class="filebtn-orgtext"/>';
 								htmlContent+= '</div>';
 								htmlContent+='<div class="clear"></div>'
-									
+									if(data.isRequire == "Y"){
 										htmlContent+= '<div>' + msg + '<div id="' + child.EngLevelUp.itemId + 'Tip" class="onShow" style="line-height:32px;height:18px;"><div class="onShow"></div></div></div>';
-					        	
+									}
 						htmlContent+='</div>'
 
 						    //--------------------------图片上传处理:3.上传图片"预览"和"删除"   		
@@ -603,60 +645,85 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				};
 				 var children = data.children;
 				 len = children.length;
+//				 console.log("len:"+len);
 				 if(len==undefined){
 					 len=1;
 				 }
 				 var type_select="";
 //				 //为所有的select注册事件
-				 for(var i=0;i<len;i++){
-					 var child=children[i];
+				 for(var ii=0;ii<len;ii++){
+					 var child=children[ii];
 						type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
+						type_select.chosen({width: "100%"});
 						type_select.each(function(index){
-							type_select.chosen({width: "100%"});
 							$(this).on("change",function(){
 								//-------------------------清空数据:
-								child.EngLevelDate.value="";
-								child.EngLevelGrade.value="";
+								$(this).blur();
 								//-------------------------
 								for(var i in EXAM_TYPE_MAP){
 									if($(this).val()==EXAM_TYPE_MAP[i]){
+										//切换select时，已经渲染完毕:
+										//如何获取当前项在多行容器中的第几行？
+										var indexx = $(this).closest(".main_inner_content_para").index()
+										child=data.children[indexx];
+										child.EngLevelDate.value="";
+										child.EngLevelGrade.value="";
 										var relatedDiv=data.getRelatedDiv(data,child,EXAM_TYPE_MAP[i],EXAM_TYPE_MAP);
 										
 										var topDiv=$(this).closest(".main_inner_content_info_autoheight");
+										//时间DIV
 										var timeDiv=topDiv.find("#"+data["itemId"]+"_DATE_DIV");
+										//成绩DIV
 										var gradeDiv=topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
 										
-										gradeDiv.after(relatedDiv);
+										//gradeDiv.after(relatedDiv);
+										//changeSpanLabel(timeDiv.find())
 										gradeDiv.remove();
-										timeDiv.remove();
+										//timeDiv.remove();
 										//SELECT美化：
+										var dateSpan=timeDiv.find(".input-list-info");
+										//清空dateInput中的value：
+										var dateInput=timeDiv.find("#"+data.itemId +child.EngLevelDate.itemId);
+										//console.log("dateInput:");
+										//console.dir(dateInput);
+										dateInput.val("");
+										if(i=="ENG_LEV_T1"||i=="ENG_LEV_T2"||i=="ENG_LEV_T3"||i=="ENG_LEV_T4"||i=="ENG_LEV_T13"){
+											//改变date标签:
+											//1.date标签change
+											timeDiv.show();
+										}else{
+											//隐藏date
+											timeDiv.hide();
+										}
+										var newGradeDiv=data.getChangedGradeDiv(data,child,EXAM_TYPE_MAP[i],EXAM_TYPE_MAP);
+										//替换成绩显示框:
+										gradeDiv.remove();
+										timeDiv.after(newGradeDiv);
 										if(i=="ENG_LEV_T7"||i=="ENG_LEV_T8"||i=="ENG_LEV_T9"||i=="ENG_LEV_T10"||i=="ENG_LEV_T11"||i=="ENG_LEV_T12"){
 											gradeDiv=topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
 											gradeDiv.find("select").chosen({width: "100%"});
 											//文字说明 解析:
 										}
-										//timePicker:
-									    var $inputBox = $("#" + data.itemId +child.EngLevelDate.itemId);
-									    var $selectBtn = $("#" + data.itemId +child.EngLevelDate.itemId + "_Btn");
-										data.bindTimePicker($inputBox,$selectBtn);
 										//非空验证:
 										if(data.isRequire == "Y"){
 											data.checkInputNotNull($inputBox);
 											var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
 											data.checkInputNotNull($inputBox2);
 										}
+										return false;
 									}
+									//-------------------------
 								}
-								//-------------------------
 							})
 						});
 						//为所有的timePicker注册事件:
+						
 						//日期控件处理1.2.3.4.13
-
 					    var $inputBox = $("#" + data.itemId +child.EngLevelDate.itemId);
 					    var $selectBtn = $("#" + data.itemId +child.EngLevelDate.itemId + "_Btn");
-						data.bindTimePicker($inputBox,$selectBtn);
-		
+					    data.bindTimePicker($inputBox,$selectBtn);
+						//绑定TimePicker bindTime
+						//data.bindTime(data.itemId +child.EngLevelDate.itemId);
 						//------上传控件验证:
 						var $fileInput=$("#"+child["EngLevelUp"].itemId);
 						
@@ -664,8 +731,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 							$(this).mouseover(function(e){
 								$(this).prev().css("opacity","0.8");	
 							});
-							$(this).attr("len",i);
-							//console.log("len:"+$(this).attr("len"));
+							$(this).attr("len",ii);
 							$(this).mouseout(function(e) {
 								$(this).prev().css("opacity","1");
 					        });
@@ -674,7 +740,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 							$(this).functionValidator({
 								fun:function(val,el){
 									//必须上传
-									//if (child["EngLevelUp"].isRequire == "Y"){
+									if (data.isRequire == "Y"){
 										//如果该div中上传附件数量>1,则不显示提示,如果=1可能是"只有一个节点数据为空"要提示
 									var child=children[me.attr("len")];
 										if (child["EngLevelUp"].children.length > 1){
@@ -685,7 +751,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 											return MsgSet["FILE_UPL_REQUIRE"];
 											//return "length:"+child["EngLevelUp"].children.length+"name:"+child["EngLevelUp"].children[0].fileName;
 										}
-									//}
+									}
 								}	
 							});
 						});
@@ -695,6 +761,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 							var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
 							data.checkInputNotNull($inputBox2);
 						}
+						
 				 }
 				 //所有看的到的select美化:
 				$("select").each(function(){

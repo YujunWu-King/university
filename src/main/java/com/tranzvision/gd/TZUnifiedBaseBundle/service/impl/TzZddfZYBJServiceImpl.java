@@ -57,6 +57,7 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			String ZWLXori=ksMap.get("TZ_20TZ_TZ_20_14position_type");
 			String ZWLX = ZWLXori;
 			//职位类型转换
+			if(ZWLX!=null && !ZWLX.equals("")){
 			switch(ZWLX){
 				case "B1":
 					ZWLX="1";
@@ -77,54 +78,65 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 					ZWLX="6";
 				break;
 			
-			default:
-				ZWLX="6";
-				break;
+				default:
+					ZWLX="6";
+					break;
+				}
 			}
 			//年收入字段
 			String NSR = ksMap.get("TZ_20TZ_TZ_20_21");		
 			
 			//创业类型
-			String CY = ksMap.get("TZ_20TZ_TZ_20_111business_type");	
+			String CY = ksMap.get("TZ_17TZ_TZ_17_20business_type");	
 			
+			String RZE1="0";
+			String RZE2="0";
+			String RZE3="0";
 			
 			//融资情况
-			String RZ = ksMap.get("TZ_20TZ_TZ_20_111financing_type");	
-			switch (RZ){
-			case "ANGEL_INVEST":
-				RZ="C";
-			break;
-			case "A_FINANCING":
-				RZ="B";
-			break;
-			case "B_FINANCING":
-				RZ="A";
-			break;
-			}
+			String RZ = ksMap.get("TZ_17TZ_TZ_17_20financing_type");
+			if(RZ != null && !RZ.equals("")){
+				switch (RZ){
+				case "ANGEL_INVEST":
+					RZ="C";
+				break;
+				case "A_FINANCING":
+					RZ="B";
+				break;
+				case "B_FINANCING":
+					RZ="A";
+				break;
+				}
+			
 			//融资数额
-			String RZE1 =  ksMap.get("TZ_20TZ_TZ_20_111financing_binput");		//B轮融资额
-			String RZE2 =  ksMap.get("TZ_20TZ_TZ_20_111financing_ainput");		//A轮融资额
-			String RZE3 =  ksMap.get("TZ_20TZ_TZ_20_111financing_anginput");	//天使轮融资额
-					 
+			RZE1 =  ksMap.get("TZ_17TZ_TZ_17_20financing_binput");		//B轮融资额
+			RZE2 =  ksMap.get("TZ_17TZ_TZ_17_20financing_ainput");		//A轮融资额
+			RZE3 =  ksMap.get("TZ_17TZ_TZ_17_20financing_anginput");	//天使轮融资额
+			}		 
 			
 			//用户数
-			String YH = ksMap.get("TZ_20TZ_TZ_20_111user_num");
-			float YHS= Float.parseFloat(YH);
+			String YH = ksMap.get("TZ_17TZ_TZ_17_20user_num");
+			int YHS=0;
+			if(YH != null && !YH.equals("")){
+				 YHS= Integer.parseInt(YH);
+			}
 			//营收情况（近12个月收入）
-			String YSQK = ksMap.get("TZ_20TZ_TZ_20_111income_y");
-			int YS = Integer.parseInt(YSQK);
-
+			String YSQK = ksMap.get("TZ_17TZ_TZ_17_20income_y");
+			int YS=0;
+			if(YSQK != null && !YSQK.equals("")){
+			YS = Integer.parseInt(YSQK);
+			}
 			//自有资金
-			String ZYZJ = ksMap.get("TZ_20TZ_TZ_20_111own_money");
+			String ZYZJ = ksMap.get("TZ_17TZ_TZ_17_20own_money");
 			//家族企业资产
-			String JZZC = ksMap.get("TZ_20TZ_TZ_20_111family_money");
+			String JZZC = ksMap.get("TZ_17TZ_TZ_17_20family_money");
 			
 			//其他企业营收（近12个月收入）
-			String QTYS = ksMap.get("TZ_20TZ_TZ_20_111income_o");
+			String QTYS = ksMap.get("TZ_17TZ_TZ_17_20income_o");
 			//其他企业利润（年纯利润）
-			String QTLR =ksMap.get("TZ_20TZ_TZ_20_111year_profit");
+			String QTLR =ksMap.get("TZ_17TZ_TZ_17_20year_profit");
 			//其他企业规模
-			String QTGM = ksMap.get("TZ_20TZ_TZ_20_111firm_scale");
+			String QTGM = ksMap.get("TZ_17TZ_TZ_17_20firm_scale");
 			
 			
 
@@ -134,6 +146,30 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			String sql = "SELECT DISTINCT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T where  (TZ_CSMB_CK1='ZFJG' or TZ_CSMB_CK1='SYDW') and TZ_CSMB_CK2=?";
 			String FSCJ = SqlQuery.queryForObject(sql, new Object[] {ZWLX},"String");
 			Score=Float.parseFloat(FSCJ);
+			
+			switch(ZWLX){
+			case "B1":
+				ZWLXori="处级及以上";
+			break;
+			case "B2":
+				ZWLXori="副处级";
+			break;
+			case "B3":
+				ZWLXori="正科级";
+			break;
+			case "B4":
+				ZWLXori="副科级";
+			break;
+			case "B5":
+				ZWLXori="一般科员";
+			break;
+			case "B6":
+				ZWLXori="其他";
+			break;
+			default:
+				ZWLXori="其他";
+				
+			}
 			
 			if("05".equals(GSXZ)){
 				MarkRecord="公司类型：".concat("政府机关").concat("|职位类型：").concat(ZWLXori);
@@ -145,10 +181,15 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			}else if("01".equals(GSXZ)||"03".equals(GSXZ)||"04".equals(GSXZ)){
 				
 				String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_CK3 <=? AND TZ_CSMB_CK2 >? AND TZ_CSMB_CK1 = 'QY'";
-				String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {NSR,NSR},"String");
+				
+				
+				int c=Integer.parseInt(NSR);
+				String FSCJ2 =  SqlQuery.queryForObject(sql2,  new Object[] {c,c},"String");
+				
 				Score=Float.parseFloat(FSCJ2);
 				
-				MarkRecord="公司类型：".concat("企业类").concat("|年收入：").concat(NSR);
+				
+				MarkRecord="公司类型：".concat("企业类").concat("|年收入：").concat(NSR).concat("万元");
 				
 			//如果单位性质是创业类，查询报名表中的创业经历	
 			}else if("02".equals(GSXZ)){
@@ -167,16 +208,19 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 					//A轮B轮天使轮	
 					}else{	
 						if("ANGEL_INVEST".equals(RZ)){
+							RZ="C";
 							//天使轮
 							String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= ? AND TZ_CSMB_TJ1 = 'IT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
 							String FSCJ = SqlQuery.queryForObject(sql, new Object[] {RZ,RZE3,RZE3},"String");
 							Score1=Float.parseFloat(FSCJ);
 						}else if("A_FINANCING".equals(RZ)){
+							RZ="B";
 							//A轮融资
 							String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= ? AND TZ_CSMB_TJ1 = 'IT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
 							String FSCJ = SqlQuery.queryForObject(sql, new Object[] {RZ,RZE2,RZE2},"String");
 							Score1=Float.parseFloat(FSCJ);
 						}else{
+							RZ="A";
 							//B轮融资
 							String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= ? AND TZ_CSMB_TJ1 = 'IT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
 							String FSCJ = SqlQuery.queryForObject(sql, new Object[] {RZ,RZE1,RZE1},"String");
@@ -205,27 +249,34 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 					case "NO_FINANCING":
 						RZQK="尚未获得投资";
 					break;	
-					case "ANGEL_INVEST":
+					case "C":
 						RZQK="天使投资";
 					break;
-					case "A_FINANCING":
+					case "B":
 						RZQK="A轮融资";
 					break;
-					case "B_FINANCING":
+					case "A":
 						RZQK="B轮融资";
 					break;	
 					}
 					
-					MarkRecord="自主创业：".concat("互联网类").concat("|融资情况：").concat(RZQK).concat("|营收情况：")+YS+"|用户数："+YHS;
+					/*System.out.println("融资情况"+RZQK);
+					System.out.println("营收情况"+YS);
+					System.out.println("用户数"+YHS);*/
+					
+					
+					MarkRecord="自主创业：".concat("互联网类").concat("|融资情况：").concat(RZQK).concat("|营收情况：")+YS+"万元|用户数："+YHS+"人";
 					
 				//家族创业类	
 				}else if("02".equals(CY)){
 					String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'ZYZJ' AND TZ_CSMB_TJ1 = 'JZ' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ = SqlQuery.queryForObject(sql, new Object[] {ZYZJ,ZYZJ},"String");
+					int c=Integer.parseInt(ZYZJ);
+					String FSCJ = SqlQuery.queryForObject(sql, new Object[] {c,c},"String");
 					Score1=Float.parseFloat(FSCJ);
 					
 					String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'JZZC' AND TZ_CSMB_TJ1 = 'JZ' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {JZZC,JZZC},"String");
+					int d=Integer.parseInt(JZZC);
+					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {d,d},"String");
 					Score2=Float.parseFloat(FSCJ2);
 					
 						if(Score1>Score2){
@@ -233,22 +284,25 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 						}else{
 							Score=Score1;
 						}
-						MarkRecord="自主创业：".concat("家族企业").concat("|自有资金：").concat(ZYZJ).concat("|家族企业资产：").concat(JZZC);
+						MarkRecord="自主创业：".concat("家族企业").concat("|自有资金：").concat(ZYZJ).concat("万元|家族企业资产：").concat(JZZC)+"万元";
 							
 						
 						
 				//其他企业		
 				}else if("03".equals(CY)){
 					String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'YS' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=	? and TZ_CSMB_TJ4>?";
-					String FSCJ = SqlQuery.queryForObject(sql, new Object[] {QTYS,QTYS},"String");
+					int a=Integer.parseInt(QTYS);
+					String FSCJ = SqlQuery.queryForObject(sql, new Object[] {a,a},"String");
 					Score1=Float.parseFloat(FSCJ);
 					
 					String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'LR' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {QTLR,QTLR},"String");
+					int b=Integer.parseInt(QTLR);
+					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {b,b},"String");
 					Score2=Float.parseFloat(FSCJ2);
 					
 					String sql3 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'GM' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					String FSCJ3 = SqlQuery.queryForObject(sql3, new Object[] {QTGM,QTGM},"String");
+					int c=Integer.parseInt(QTGM);
+					String FSCJ3 = SqlQuery.queryForObject(sql3, new Object[] {c,c},"String");
 					float Score3=Float.parseFloat(FSCJ3);
 					
 					
@@ -261,10 +315,15 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 						if(Score>Score3){
 							Score=Score3;
 						}
+						
+						MarkRecord="自主创业：".concat("其他类型").concat("|近12个月收入：").concat(QTYS).concat("万元|年纯利润：").concat(QTLR).concat("万元|企业规模：").concat(QTGM)+"人";
+						
 				}else{
 					Score=0;
 				}
-				MarkRecord="自主创业：".concat("其他类型").concat("|近12个月收入：").concat(QTYS).concat("|年纯利润：").concat(QTLR).concat("|企业规模：").concat(QTGM);
+			
+				
+				
 				
 			}else{
 				Score=0;
@@ -272,6 +331,7 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			
 			MarkRecord=MarkRecord+("|")+String.valueOf(Score).concat("分");
 			
+			//System.out.println("职业背景打分记录"+MarkRecord);
 				//插入表TZ_CJX_TBL
 				PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs=new PsTzCjxTblWithBLOBs();
 					//成绩单ID

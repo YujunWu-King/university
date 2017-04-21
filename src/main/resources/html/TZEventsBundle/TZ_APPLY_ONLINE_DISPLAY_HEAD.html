@@ -26,13 +26,14 @@
 
 	}
 	
-	function tz_apply_click_to_signin_action2(tz_apply_action_url) {
-
+	function tz_apply_click_to_signin_action2(el,tz_apply_action_url) {
+		if($(el).hasClass("click-disabled")) return;
 		parent.tz_show_float_iframe_apply(tz_apply_action_url);
 
 	}
 
-	function tz_apply_click_to_cancel_reg(tz_apply_action_url) {
+	function tz_apply_click_to_cancel_reg(el,tz_apply_action_url) {
+		if($(el).hasClass("click-disabled")) return; 
 		$.ajax({
 			type : "POST",
 			url : tz_apply_action_url,

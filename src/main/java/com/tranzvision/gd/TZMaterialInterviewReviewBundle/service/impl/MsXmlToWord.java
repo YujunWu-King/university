@@ -288,7 +288,25 @@ public class MsXmlToWord {
 				}
 				
 				// 1、获取班级批次、评委信息;
-				String[] pcpwarr = { class_pc, DQDATE, TZ_CLPS_GR_NAME, arr[i] };
+				
+				//评委账号修改为评委的登录账号2017-4-21;
+				String TZ_PW_ZH_SQL = "";
+				TZ_PW_ZH_SQL = "select TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID =? and OPRID =?";
+				// 存放查询的评委账号对象
+				Map<String, Object> TZ_PW_ZH_MAP = null;
+				TZ_PW_ZH_MAP = jdbcTemplate.queryForMap(TZ_PW_ZH_SQL,
+						new Object[] { TZ_JG_ID,arr[i] });
+				
+				String TZ_PW_ZH = "";
+				if (TZ_PW_ZH_MAP == null) {
+					TZ_PW_ZH = "";
+				} else {
+					TZ_PW_ZH = TZ_PW_ZH_MAP.get("TZ_DLZH_ID") == null ? ""
+							: String.valueOf(TZ_PW_ZH_MAP.get("TZ_DLZH_ID"));
+				}
+				//String[] pcpwarr = { class_pc, DQDATE, TZ_CLPS_GR_NAME, arr[i] };
+				String[] pcpwarr = { class_pc, DQDATE, TZ_CLPS_GR_NAME, TZ_PW_ZH};
+				
 				String pc_pw_html = tzGDObject
 						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_PCINFO_HTML", pcpwarr);
 				// 2、获取班级批次、评委信息下面的空行;
