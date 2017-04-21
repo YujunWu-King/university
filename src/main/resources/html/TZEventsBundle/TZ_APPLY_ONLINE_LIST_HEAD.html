@@ -5,33 +5,56 @@
 <title>活动报名信息</title>
 <style type="text/css">
 .apply-back {
-	background-color: #666;
-	border: 1px solid #999;
+	background-color: #f1c748;
 }
 
 .apply-back:hover {
-	background-color: #999
+	background-color: #f1c748
 }
 
 .apply-oprList {
-	width: 550px;
-	max-height: 450px;
+	width: 600px;
+	max-height: 500px;
 	margin: 250px auto 0;
-	padding-top: 15px;
 	background-color: #FFF;
-	border-radius: 5px;
+	border-radius: 15px;
 	box-shadow: 0 0 10px #666;
 }
-
+.apply-people-title{
+	height: 40px;
+	line-height: 40px;
+	padding-left: 15px; 
+	background: #8f5dc0;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+	font-size:16px;
+	color: #fff;
+	font-weight: bold;
+	position: relative;
+}
+.apply-people-title a{
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	text-decoration: none;
+	color: #fff;
+	font: bold 18px/18px simsun;
+	opacity: 1;
+}
+.apply-people-title a:hover{
+	color: #aaa!important;
+}
 .apply-people {
-	margin-top: 5px;
-	max-height: 290px;
+	margin-top: 8px;
+	max-height: 350px;
 	overflow: auto;
+	min-height: 180px;
 }
 
 .apply-oprList table {
 	margin: 0 auto;
-	border: 1px solid #CCC
+	border: 1px solid #CCC;
+	width: 565px;
 }
 
 .apply-oprList th {
@@ -39,8 +62,7 @@
 	height: 30px;
 	font-size: 14px;
 	font-weight: bold;
-	color: #FFF;
-	background: #1E8826;
+	color: #8f5dc0;
 }
 
 .apply-oprList td {
@@ -52,32 +74,38 @@
 
 .apply-back-btn {
 	border-top: 1px solid #ddd;
-	margin-top: 5px;
+	margin-top: 8px;
 	padding-bottom: 1px;
 }
 
 .apply-back-btn .btn.apply-back {
 	width: 80px;
-	height: 25px;
+	height: 40px;
+	border-radius: 5px;
 	color: #FFF;
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: bold;
-	margin: 8px auto;
+	margin: 2px auto; 
 	display: block;
 	cursor: pointer;
+	border: 1px solid;
+	outline: none;
 }
 </style>
 </head>
 <body>
 	<div class="apply-oprList">
+		<div class="apply-people-title">活动报名信息
+			<a href="javascript:void(0);" title="关闭" class="close" onclick="parent.tz_close_float_iframe_apply();">×</a>
+		</div>
 		<div class="apply-people">
 			<div class="apply-people-list">
 				<table cellpadding="0" cellspacing="0">
 					<tr>
-						<th width="50" align="center">%bind(:2)</th>
-						<th width="115" align="center">%bind(:3)</th>
-						<th width="210" align="center">%bind(:4)</th>
-						<th width="110" align="center">%bind(:5)</th>
+						<th width="60" align="center">%bind(:2)</th>
+						<th width="140" align="center">%bind(:3)</th>
+						<th width="230" align="center">%bind(:4)</th>
+						<th width="120" align="center">%bind(:5)</th>
 					</tr>
 					%bind(:1)
 				</table>
