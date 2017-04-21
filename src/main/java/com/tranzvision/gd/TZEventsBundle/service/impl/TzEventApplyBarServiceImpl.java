@@ -154,11 +154,11 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 						 clickEnable = true;
 					 }else if("B".equals(validTD)){
 						 clickEnable = false;
-						 tipMsg = "未开始";
+						 tipMsg = "报名未开始";
 						 btnDisabledClass = "click-disabled";
 					 }else if("E".equals(validTD)){
 						 clickEnable = false;
-						 tipMsg = "已结束";
+						 tipMsg = "报名已结束";
 						 btnDisabledClass = "click-disabled";
 					 }else{
 						 clickEnable = false;
@@ -258,7 +258,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					switch (tzXSMS) {
 					case "1":
 						/* 不显示 */
-						strHtml = btnHtml;
+						strHtml = btnHtml + statusHtml;
 						break;
 
 					case "2":

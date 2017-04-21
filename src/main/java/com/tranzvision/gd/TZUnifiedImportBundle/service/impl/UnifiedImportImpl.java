@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZUnifiedImportBundle.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,14 +58,12 @@ public class UnifiedImportImpl extends FrameworkImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public String tzUpdate(String[] actData, String[] errMsg) {
+	public String tzOther(String oprType,String strParams, String[] errMsg) {
 		String strRet = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-			// 表单内容;
-			String strForm = actData[0];
 			// 将字符串转换成json;
-			jacksonUtil.json2Map(strForm);
+			jacksonUtil.json2Map(strParams);
 			
 			String tplId = jacksonUtil.getString("tplId");
 			
@@ -83,17 +82,42 @@ public class UnifiedImportImpl extends FrameworkImpl {
 			//导入数据;
 			List<Map<String, Object>> dataList = (List<Map<String, Object>>) jacksonUtil.getList("data");
 			
-			//导入结果
-			int[] result=new int[]{dataList.size(),0};
-			
-			if(javaClass!=null&&!"".equals(javaClass)){
-				UnifiedImportBase obj = (UnifiedImportBase) ctx.getBean(javaClass);
-				strRet = obj.tzSave(dataList,fieldList, targetTbl ,result, errMsg);
-				this.tzWritingLog(tplId,result);
-			}else{
-				strRet = this.tzSave(dataList,fieldList, targetTbl ,result, errMsg);
-				this.tzWritingLog(tplId,result);
+			/*
+			 * 操作类型:tzValidate-校验导入数据，tzSave-保存导入数据
+			 */
+			if("tzValidate".equals(oprType)){
+				//校验结果
+				Object[] result=new Object[]{true,""};
+				
+				Map<String,Object> retMap = new HashMap<String,Object>();
+				
+				if(javaClass!=null&&!"".equals(javaClass)){
+					UnifiedImportBase obj = (UnifiedImportBase) ctx.getBean(javaClass);
+					obj.tzValidate(dataList,fieldList, targetTbl ,result, errMsg);
+
+					retMap.put("result", result[0]);
+					retMap.put("resultMsg", result[1]);
+				}else{
+					retMap.put("result", result[0]);
+					retMap.put("resultMsg", result[1]);
+				}
+				strRet = jacksonUtil.Map2json(retMap);
 			}
+			
+			if("tzSave".equals(oprType)){
+				//导入结果
+				int[] result=new int[]{dataList.size(),0};
+				
+				if(javaClass!=null&&!"".equals(javaClass)){
+					UnifiedImportBase obj = (UnifiedImportBase) ctx.getBean(javaClass);
+					strRet = obj.tzSave(dataList,fieldList, targetTbl ,result, errMsg);
+					this.tzWritingLog(tplId,result);
+				}else{
+					strRet = this.tzSave(dataList,fieldList, targetTbl ,result, errMsg);
+					this.tzWritingLog(tplId,result);
+				}
+			}
+			
 						
 		} catch (Exception e) {
 			e.printStackTrace();

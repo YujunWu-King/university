@@ -308,13 +308,17 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					if (psTzApptplDyTWithBLOBs != null) {
 
 						/*----查看是否是查看附属模版 Start  ----*/
-						if (!"".equals(strAttachedTplId) && strAttachedTplId != null
-								&& strAttachedTplId.equals(psTzApptplDyTWithBLOBs.getTzAppMTplId())) {
-							strTplId = strAttachedTplId;
-							// 根据报名表实例和附属模版编号去获得报名表Json数据
-							strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
-							strIsAdmin = "Y";
-							strAppFormReadOnly = "Y";
+						if (!"".equals(strAttachedTplId) && strAttachedTplId != null){
+								//&& strAttachedTplId.equals(psTzApptplDyTWithBLOBs.getTzAppMTplId())) {
+							//附属模板
+							PsTzApptplDyTWithBLOBs attachedPsTzApptplDyTWithBLOBs = psTzApptplDyTMapper.selectByPrimaryKey(strAttachedTplId);
+							if(strTplId.equals(attachedPsTzApptplDyTWithBLOBs.getTzAppMTplId())){
+								strTplId = strAttachedTplId;
+								// 根据报名表实例和附属模版编号去获得报名表Json数据
+								strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
+								strIsAdmin = "Y";
+								strAppFormReadOnly = "Y";
+							}
 						}
 						/*----查看是否是查看附属模版 end  ----*/
 
