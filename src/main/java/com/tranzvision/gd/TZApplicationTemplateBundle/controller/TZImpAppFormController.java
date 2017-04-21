@@ -197,5 +197,14 @@ public class TZImpAppFormController {
 		String impMsg = tZImpAppFormServiceImpl.delLetterAll();
 		return impMsg;
 	}
+	
+	@RequestMapping(value = { "/createform/{clsid}" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String createAppForm(HttpServletRequest request, HttpServletResponse response,@PathVariable(value = "clsid") String clsid) {
+		String params = request.getParameter("oprids");
+		String[] oprids = StringUtils.split(params,",");
+		String impMsg = tZImpAppFormServiceImpl.createAppForm(clsid,oprids);
+		return impMsg;
+	}
 
 }
