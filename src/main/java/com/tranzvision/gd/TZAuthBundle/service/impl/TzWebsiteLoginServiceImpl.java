@@ -260,6 +260,188 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 
 		return false;
 	}
+	
+	public void autoLoginByCookie(HttpServletRequest request, HttpServletResponse response)
+	{
+		// 组件配置的类引用ID;
+		String tmpClassId = request.getParameter("classid");
+		
+		//用于记录判断当前功能页是否手机版首页结果的变量
+		Boolean mbaIndexM = false;
+		String tmpSQLText = "";
+		
+		//会话是否有效
+		Boolean bool = gdObjectServiceImpl.isSessionValid(request);
+		Boolean isAnonymous = false;
+		if(bool)
+		{
+			String tmpCurrentLoginUser = gdObjectServiceImpl.getOPRID(request);
+			if("TZ_GUEST".equals(tmpCurrentLoginUser) == true)
+			{
+				isAnonymous = true;
+			}
+		}
+		
+		//用于控制是否将用户重定向到登录页的变量
+		Boolean logoutFlag = false;
+		
+		//获取用于免登录的站点编号、组织机构编号和用户账号
+		String tmpSiteId = "";
+		String tmpOrgId = "";
+		String tmpUserDlzh = "";
+		
+		String tmpPwdKey = "TZGD_@_!_*_20170420_Tranzvision";
+		String tmpAutoLoginCookieValue = tzCookie.getStringCookieVal(request, "TZGD_AUTO_LOGIN");
+		
+		if(bool == false || isAnonymous == true)
+		{
+			tmpAutoLoginCookieValue = tmpAutoLoginCookieValue == null ? "" : DESUtil.decrypt(tmpAutoLoginCookieValue,tmpPwdKey);
+			if(tmpAutoLoginCookieValue != null && "".equals(tmpAutoLoginCookieValue) == false)
+			{
+				String[] tmpLoginKeys = tmpAutoLoginCookieValue.split("\\|");
+				for(int i=0;i < tmpLoginKeys.length;i ++)
+				{
+					if(tmpLoginKeys[i].startsWith("A===") == true)
+					{
+						tmpOrgId = tmpLoginKeys[i].substring(4);
+					}
+					else if(tmpLoginKeys[i].startsWith("B===") == true)
+					{
+						tmpSiteId = tmpLoginKeys[i].substring(4);
+					}
+					else if(tmpLoginKeys[i].startsWith("C===") == true)
+					{
+						tmpUserDlzh = tmpLoginKeys[i].substring(4);
+					}
+				}
+			}
+			String tmpURLSiteId = request.getParameter("siteId");
+			if(tmpSiteId == null || "".equals(tmpSiteId) == true)
+			{
+				tmpSiteId = tmpURLSiteId;
+			}
+			
+			//判断是否在前端网站首页
+			tmpSQLText = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+			String mobileUrlParams = sqlQuery.queryForObject(tmpSQLText, new Object[]{"TZ_MBA_BKXT_MURL_PARAMS"},"String");
+			if(mobileUrlParams!=null && !"".equals(mobileUrlParams))
+			{
+				String classIdParam = "", siteIdParam = "", orgIdParam = "";
+				
+				String[] params = mobileUrlParams.split("&");
+				for(int i=0;i<params.length;i++) {
+					String[] paramsTmp = params[i].split("=");
+					if("classid".equals(paramsTmp[0]))
+					{
+						classIdParam = paramsTmp[1];
+					}
+					if("siteId".equals(paramsTmp[0]))
+					{
+						siteIdParam = paramsTmp[1];
+					}
+					if("orgId".equals(paramsTmp[0]))
+					{
+						orgIdParam = paramsTmp[1];
+					}
+				}
+				
+				if(classIdParam != null && !"".equals(classIdParam)
+						&& siteIdParam != null && !"".equals(siteIdParam))
+				{
+					if(classIdParam.equals(tmpClassId) && (siteIdParam.equals(tmpSiteId) || siteIdParam.equals(tmpURLSiteId)))
+					{
+						mbaIndexM = true;
+					}
+				}
+			}
+		}
+		
+		//如果当前功能页面为手机版首页且为匿名用户访问，则需要将用户重定向到登录页
+		if(mbaIndexM == true && isAnonymous == true)
+		{
+			logoutFlag = true;
+		}
+		
+		//判断是否需要根据免密cookie记录的信息进行自动登录
+		if(logoutFlag == false)
+		{
+			//是否具备用于免登录使用的站点编号、机构编号和用户登录账号
+			if(tmpSiteId != null && !"".equals(tmpSiteId))
+			{
+				if(tmpOrgId != null && !"".equals(tmpOrgId))
+				{		
+					if(!"".equals(tmpUserDlzh) && tmpUserDlzh != null)
+					{
+						ArrayList<String> aryErrorMsg = new ArrayList<String>();
+						
+						tmpSQLText = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?)";
+						String passwordJm = sqlQuery.queryForObject(tmpSQLText, new Object[]{tmpUserDlzh},"String");
+						String password = passwordJm == null ? "" : DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
+						
+						Patchca patchca = new Patchca();
+						String tmpTokenValue = patchca.getToken(request);
+						if(tmpTokenValue == null)
+						{
+							tmpTokenValue = "AbCd";
+							TzSession tmpSession = new TzSession(request);
+							tmpSession.addSession(patchca.getTokenName(),tmpTokenValue);
+						}
+						
+						boolean boolResult = doLogin(request, response, tmpOrgId, tmpSiteId,
+								tmpUserDlzh, password, tmpTokenValue, "ZHS", aryErrorMsg);
+						
+						if(boolResult == false)
+						{
+							if(mbaIndexM)
+							{
+								logoutFlag = true;
+							}
+						}
+					}
+					else
+					{
+						if(mbaIndexM)
+						{
+							logoutFlag = true;
+						}
+					}
+				}
+				else
+				{
+					if(mbaIndexM)
+					{
+						logoutFlag = true;
+					}
+				}
+			}
+		}
+		
+		//如果满足将用户重定向到登录的条件，则将用户重定向到登录页
+		if(logoutFlag == true)
+		{
+			//rootPath;
+			String ctxPath = request.getContextPath();
+			
+			//得到登录地址;
+			String loginOutUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
+			
+			if(loginOutUrl == null || "".equals(loginOutUrl))
+			{
+				tmpSQLText = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+				String loginUrl = sqlQuery.queryForObject(tmpSQLText, new Object[]{"TZ_MBA_BKXT_MURL_LOGIN"},"String");												
+				loginOutUrl = ctxPath + loginUrl;
+			}
+			
+			try
+			{
+				response.sendRedirect(loginOutUrl);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

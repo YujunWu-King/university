@@ -43,8 +43,13 @@ public class TzWebsiteIndexController {
 
 		orgid = orgid.toLowerCase();
 		String strRet = "";
+		
+		if(tzWebsiteLoginServiceImpl.checkUserLogin(request, response) == false)
+		{
+			tzWebsiteLoginServiceImpl.autoLoginByCookie(request, response);
+		}
 
-		if (!tzWebsiteLoginServiceImpl.checkUserLogin(request, response)) {
+		if(!tzWebsiteLoginServiceImpl.checkUserLogin(request, response)) {
 			String redirectUrl = request.getContextPath() + "/user/login/" + orgid + "/" + siteid;
 			try {
 				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzDoLoginRedirectScript", redirectUrl);
