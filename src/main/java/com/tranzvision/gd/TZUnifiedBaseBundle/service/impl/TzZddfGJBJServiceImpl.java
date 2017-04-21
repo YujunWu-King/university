@@ -48,12 +48,16 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			
 			//根据报名表ID查询考生境外工作经历，国家类别和时间，根据查询结果
 			String GJ = ksMap.get("TZ_42TZ_TZ_42_1");		//国家
-			String is_developed = "select 'Y' from PS_COUNTRY_TBL where is_developed ='Y' and descr=?";
+			String is_developed =" select is_developed from PS_COUNTRY_TBL where descr=?; ";
 			String GJLB=SqlQuery.queryForObject(is_developed,  new Object[]{GJ}, "String");		//国家类别
 			
-			String StartDate = ksMap.get("TZ_TZ_42_6com_startdate");		//开始日期
-			String EndDate = ksMap.get("TZ_TZ_42_6com_enddate");			//结束日期
-			String ToToday = ksMap.get("TZ_TZ_42_6com_todate");				//至今
+			String StartDate = ksMap.get("TZ_42TZ_TZ_42_6com_startdate");		//开始日期
+			String EndDate = ksMap.get("TZ_42TZ_TZ_42_6com_enddate");			//结束日期
+			String ToToday = ksMap.get("TZ_42TZ_TZ_42_6com_todate");			//至今
+			
+			/*System.out.println("ToToday:"+ToToday);
+			System.out.println("EndDate:"+EndDate);
+			System.out.println("StartDate:"+StartDate);*/
 			
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");	//设置日期格式
 			String today= df.format(new Date());						// new Date()为获取当前系统时间
@@ -72,7 +76,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 						int a=c2.get(Calendar.YEAR)-c1.get(Calendar.YEAR);
 						result = c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH);
 						if(a>0){
-							result+=12;
+							result=result+a*12;
 						}
 					}else{
 						SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
@@ -85,7 +89,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 						int d=cc2.get(Calendar.YEAR)-cc1.get(Calendar.YEAR);
 						result = cc2.get(Calendar.MONTH) - cc1.get(Calendar.MONTH);
 						if(d>0){
-							result+=12;
+							result=result+d*12;
 						}
 					}
 				}else if(ToToday != null && !ToToday.equals("")){
@@ -100,7 +104,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 						int a=c2.get(Calendar.YEAR)-c1.get(Calendar.YEAR);
 						result = c2.get(Calendar.MONTH) - c1.get(Calendar.MONTH);
 						if(a>0){
-							result+=12;
+							result=result+a*12;
 						}
 					}else{
 						SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
@@ -113,7 +117,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 						int d=cc2.get(Calendar.YEAR)-cc1.get(Calendar.YEAR);
 						result = cc2.get(Calendar.MONTH) - cc1.get(Calendar.MONTH);
 						if(d>0){
-							result+=12;
+							result=result+d*12;
 						}
 					}
 				}else{
@@ -123,6 +127,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 				Score=0;
 			}
 
+			//System.out.println("工作时间："+result);
 			float SJF= result;
 			String SJ=String.valueOf(SJF);
 
@@ -132,14 +137,19 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			String FSCJ = SqlQuery.queryForObject(sql, new Object[] {SJF,SJF},"String");
 			Score=Float.parseFloat(FSCJ);
 			GJLB="发达国家";
-			}else{
+			MarkRecord="国家类型：".concat(GJLB).concat("|时间：").concat(SJ.substring(0,SJ.indexOf(".")))+"个月";
+			}else if("N".equals(GJLB)){
 				String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_GJH_T where  TZ_CSMB_CK1>? AND TZ_CSMB_CK2<=? AND TZ_CSMB_DESC='B'";
 				String FSCJ = SqlQuery.queryForObject(sql2, new Object[] {SJF,SJF},"String");
 				Score=Float.parseFloat(FSCJ);
 				GJLB="一般国家";
+				MarkRecord="国家类型：".concat(GJLB).concat("|时间：").concat(SJ.substring(0,SJ.indexOf(".")))+"个月";
+			}else{
+				Score=0;
+				MarkRecord="无境外工作经历";
 			}
 			
-			MarkRecord="国家类型：".concat(GJLB).concat("|时间：").concat(SJ);
+			
 			MarkRecord=MarkRecord+("|")+String.valueOf(Score).concat("分");
 			
 				//插入表TZ_CJX_TBL
