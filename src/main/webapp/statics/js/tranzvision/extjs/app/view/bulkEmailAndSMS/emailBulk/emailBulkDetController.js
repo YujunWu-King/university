@@ -1349,7 +1349,26 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
 
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
-            var tzParams = '{"ComID":"TZ_EMLQ_PREVIEW_COM","PageID":"TZ_EMLQ_VIEW_STD","OperateType":"previewEmail","comParams":{"type":"previewEmail","sendPcId":"'+sendPcId+'","sendType":"'+sendType+'","viewNumber":"1","senderEmail":"'+senderEmail+'","keyInputEmail":"'+ShiJiEmail+'","audIDTotal":"'+Audience+'", "emlTmpId":"'+emlTmpId+'","emailTheme":"'+emailTheme+'","emailModal":"'+emailModal+'","emailContent":"'+emailContent+'"}}';
+            //var tzParams = '{"ComID":"TZ_EMLQ_PREVIEW_COM","PageID":"TZ_EMLQ_VIEW_STD","OperateType":"previewEmail","comParams":{"type":"previewEmail","sendPcId":"'+sendPcId+'","sendType":"'+sendType+'","viewNumber":"1","senderEmail":"'+senderEmail+'","keyInputEmail":"'+ShiJiEmail+'","audIDTotal":"'+Audience+'", "emlTmpId":"'+emlTmpId+'","emailTheme":"'+emailTheme+'","emailModal":"'+emailModal+'","emailContent":"'+emailContent+'"}}';
+            var tzParamsJson = {
+            		"ComID":"TZ_EMLQ_PREVIEW_COM",
+            		"PageID":"TZ_EMLQ_VIEW_STD",
+            		"OperateType":"previewEmail",
+            		"comParams":{
+            			"type":"previewEmail",
+            			"sendPcId":sendPcId,
+            			"sendType":sendType,
+            			"viewNumber":"1",
+            			"senderEmail":senderEmail,
+            			"keyInputEmail":ShiJiEmail,
+            			"audIDTotal":Audience,
+            			"emlTmpId":emlTmpId,
+            			"emailTheme":emailTheme,
+            			"emailModal":emailModal,
+            			"emailContent":emailContent
+            		}
+            };
+            var tzParams = Ext.JSON.encode(tzParamsJson);
             Ext.tzLoad(tzParams,function(responseData){
                     var formData = responseData.formData;
                     formData.configuration = Ext.encode(configuration);

@@ -205,7 +205,7 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 		}
 		
 		if ("true".equals(sendType)) {
-			if (showNum > arr_str_input_email.length && emlTmpId != null && !"".equals(emlTmpId)) {
+			if (arr_str_input_email != null && showNum > arr_str_input_email.length && emlTmpId != null && !"".equals(emlTmpId)) {
 				// 元模板ID,听众成员ID;
 				String ymbId = "", audCyId = "";
 				String currentOprID = arr_str_choice_OprID[showNum - arr_str_input_email.length - 1];
