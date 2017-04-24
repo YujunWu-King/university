@@ -149,29 +149,87 @@ function check_password(){
 	var password =$("#NewPassword").val();
 	var repassword=$("#reNewPassword").val();
 	if(password !=''){
-		if(password.length<6 ||password.length>32){
-			$('#tips_styles').html("Password length must be greater than 6 less than 32!"); 
-			$('#status_password').attr("value", 1);
-			$("#tips_styles").show();
-		}else if(repassword ==''){			
-			$('#tips_styles').html("It cannot be blank!");
-	     	$('#status_password').attr("value", 1); 
-			$("#tips_styles").show();
-					
-		}else if(repassword==password){			
-        	$('#status_password').attr("value", 0); 
-			$("#tips_styles").hide();
-		}else if(repassword !=password){
-			$('#tips_styles').html("Password and confirm password is Inconsistent!"); 
-			$('#status_password').attr("value", 1);
-			$("#tips_styles").show();
-		}
+		//判断是否符合格式要求
+		var patrn;
+		var num = 0;
+		var num1 = 0;
+		var num2 = 0;
+		var num3 = 0;
+		var num4 = 0;
+		var num5=0;
+		var num6=0;
+		var str1 = 0;
+		var str2 = 0;
+		var cr;
+		for (var i=0;i<password.length ;i++ )
+		{
+			 cr = password.charAt(i);
+									
+			 patrn= /\w/;
+			 if (patrn.test(cr)){
+				num = num + 1;
+			 }else{
+				num5=1;
+			 }
+			
+		 }
+		
+		 patrn= /[A-Z]/;
+		 if (patrn.test(password)){
+		 	num6 = num6+1;
+		 }
+		 patrn= /[a-z]/;
+		 if (patrn.test(password)){
+		 	num6 = num6+1;
+		 }
+		 patrn= /[0-9]/;
+		 if (patrn.test(password)){
+		 	num6 = num6+1;
+		 }
+		 patrn= /[_]/;
+		 if (patrn.test(password)){
+		 	num6 = num6+1;
+		 }
 
-/*  		if($("#status_PASSWORD").val()=="1"){
-			$('#tips_styles').html("%bind(:5)");
-			$('#status_password').attr("value", 1);
+		 if(password.length >= 6 && password.length <= 32){
+			num1 = 1;
+		}else{
+			num1 = 0;
+		}
+		
+		if(num > 0 && num5==0){
+			num2 = 1;
+		}else{			
+			num2 = 0;
+		}
+		
+		if(num5==0 && num6>1){
+			num3 = 1;
+		}else{
+			num3 = 0;
+		}
+		
+		num4 = num1 + num2 + num3;		
+
+		if(num4 >= 3){
+			if(repassword ==''){			
+				$('#tips_styles').html("It cannot be blank!");
+		     	$('#status_password').attr("value", 1); 
+				$("#tips_styles").show();
+						
+			}else if(repassword==password){			
+	        	$('#status_password').attr("value", 0); 
+				$("#tips_styles").hide();
+			}else if(repassword !=password){
+				$('#tips_styles').html("Password and confirm password is Inconsistent!"); 
+				$('#status_password').attr("value", 1);
+				$("#tips_styles").show();
+			}
+		}else{			
+			$('#tips_styles').html("Password length must be greater than 6 less than 32!");
+			$('#status_PASSWORD').attr("value", 1);
 			$("#tips_styles").show();
-		} */
+		}		
 
 	}else {
 		$('#tips_styles').html("It cannot be blank!");

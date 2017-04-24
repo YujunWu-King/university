@@ -13,6 +13,7 @@
 	src="%bind(:7)/statics/js/website/m/rem.js"></script>	
 <script type="text/javascript"
 	src="%bind(:7)/statics/js/lib/layer/mobile/layer.js"></script>
+<!-- 注意、手机找回和邮箱找回，均使用了该Html -->	
 <script type="text/javascript">
 function layerMsg(content){
 	layer.open({
@@ -37,18 +38,18 @@ $(document).ready(function(){
 	var passwordFlg=$("#status_password").val();
 	var yzmFlg=$("#status_yzm").val();
 	if(passwordFlg =='0' && yzmFlg=='0'){
-	    var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_SMS_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","phone":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","siteid":"%bind(:10)","sen":"5"}}';
+	    var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","tokensign":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","siteid":"%bind(:10)","sen":"4"}}';
 	    var tzParams2 = {};
 	    tzParams2.ComID = "TZ_SITE_UTIL_COM";
-	    tzParams2.PageID = "TZ_SITE_SMS_STD";
+	    tzParams2.PageID = "TZ_SITE_ENROLL_STD";
 	    tzParams2.OperateType = "QF";
 	    tzParams2.comParams = {};
 	    tzParams2.comParams.pwd = pwd;
 	    tzParams2.comParams.repwd = repwd;
 	    tzParams2.comParams.checkCode = strYZM;
-	    tzParams2.comParams.phone = "%bind(:2)";
+	    tzParams2.comParams.tokensign = "%bind(:2)";
 	    tzParams2.comParams.lang = "%bind(:3)";
-	    tzParams2.comParams.sen = "5";
+	    tzParams2.comParams.sen = "4";
 	    tzParams2.comParams.orgid = "%bind(:4)";
 	    tzParams2.comParams.siteid = "%bind(:10)";
 	    var tzParams = "";
