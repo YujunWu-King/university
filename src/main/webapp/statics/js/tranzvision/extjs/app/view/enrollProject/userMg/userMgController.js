@@ -1001,7 +1001,7 @@
 		//参数
 		var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"'+audId+'","audName":"'+audName+'","audStat":"'+audStat+'","audType":"'+audType+'","audMS":"'+audMS+'","audSQL":"'+audSQL+'"}}';
 		//页面注册信息表单
-		
+		console.log(tzParams);
 		var form = win.child("form").getForm();
 		
 		var gridStore =win.child("form").child("grid").getStore();
@@ -1009,6 +1009,7 @@
 
 		Ext.tzLoad(tzParams,function(responseData){
 		
+			console.log(responseData);
 			form.setValues(responseData);		
 			gridStore.tzStoreParams = tzStoreParams;
 			gridStore.reload();

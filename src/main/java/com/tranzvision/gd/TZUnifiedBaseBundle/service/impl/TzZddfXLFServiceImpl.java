@@ -49,6 +49,18 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				float Score;
 				String MarkRecord;
 				
+				
+				//如果是外国学校，截取（前的内容			
+				if(XX.indexOf("(")>0){					
+					String ExistSql = "SELECT 'Y' FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=? and TZ_SCHOOL_NAMEENG is not null;";
+					String isExist = SqlQuery.queryForObject(ExistSql, new Object[] {XX},"String");
+					
+					if ("Y".equals(isExist)) {
+					XX=XX.substring(0, XX.indexOf("("));
+					}
+				}
+				
+				
 				//根据考生学校ID查询所属学校类型
 				String sql = "SELECT TZ_SCHOOL_TYPE FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
 				String XXLX = SqlQuery.queryForObject(sql, new Object[] { XX },"String");
@@ -111,20 +123,20 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 					Score=0;
 				}
 
-				//2是本科，1为研究生
-				if("2".equals(XL)){
-					XL="2";
-				}else{
-					XL="1";
-				}
+				//学历
+				//数据库：2是本科，1为研究生
+				//传入参数：1博士	2本科	3硕士
 				
-				//1是本科，2是研究生
-				if("3".equals(XW)){
-					XW="1";
-				}else if("1".equals(XW)||"2".equals(XW)){
-					XW="2";
-				}else{
-					return 0;
+				String XLF="1";
+				
+				//学位
+				//数据库：1是学士，2是无
+				//传入参数：1博士	2硕士	3学士	4无
+				String XWF;
+				if("4".equals(XW)){
+					XWF="2";
+				}else {
+					XWF="1";
 				}
 							  
 				
@@ -132,22 +144,33 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				//根据考生查询到的学历、学位、学校类型在TZ_CSMB_XLF_T查询对应的得分，如果没有查询到对应得分，得分=0
 				String ExistSql = "select 'Y' from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
 				String isExist = "";
-				isExist = SqlQuery.queryForObject(ExistSql, new Object[] { XXLX,XW,XL },"String");
+				isExist = SqlQuery.queryForObject(ExistSql, new Object[] { XXLX,XWF,XLF },"String");
 				
 				
 				
 				if ("Y".equals(isExist)) {
 					String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
-					String StrScore = SqlQuery.queryForObject(SearchSql,  new Object[] { XXLX,XW,XL },"String");
+					String StrScore = SqlQuery.queryForObject(SearchSql,  new Object[] { XXLX,XWF,XLF },"String");
 					Score=Float.parseFloat(StrScore);
 					
 					
 					//PS:  学历=研究生TZ_10highdegree（1、3），学位TZ_10hxuewei=硕士/博士（1，2）
 								
 					//查询考生其他教育经历中，是否有学历=研究生，学位等于硕士/博士的教育经历，如果有，得分=得分+5
-					if(XW.equals("2")&&XL.equals("1")){
+					
+					//学历
+					//数据库：2是本科，1为研究生
+					//传入参数：1博士	2本科	3硕士 
+					
+					//学位
+					//数据库：1是学士，2是无
+					//传入参数：1博士	2硕士	3学士	4无
+					
+					if(XW.equals("2")||XW.equals("1")){
+						if(XL.equals("3")||XL.equals("1")){
 						Score+=5;
 						}
+					}
 					
 					
 					//得分如果>100，得分=100；
@@ -155,25 +178,38 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 						Score=100;
 					}
 					
-					if(XL.equals("1")){
-						XL="研究生";
+					String XLMS=null;
+					String XWMS=null;
+					if(XL.equals("3")||XL.equals("1")){
+						XLMS="研究生";
 					}else{
-						XL="本科";
+						XLMS="本科";
 					}
 					
-					if(XW.equals("2")){
-						XW="硕士";
-					}else{
-						XW="学士";
+					switch(XW){
+					case "1":
+						XWMS="博士";
+						break;
+					case "2":
+						XWMS="硕士";
+						break;
+					case "3":
+						XWMS="学士";
+						break;
+						default:XWMS="无";
 					}
+				
+					
 					
 					//记录打分记录：示例：985|学历：本科|学位：学士|研究生|95分
-					MarkRecord="学校类型：".concat(XXType).concat("|学历：").concat(XL).concat("|学位：").concat(XW);
+					MarkRecord="学校类型：".concat(XXType).concat("|学历：").concat(XLMS).concat("|学位：").concat(XWMS);
 					
 					//是否拼接研究生；
-					if(XW.equals("2")&&XL.equals("1")){
+					if(XW.equals("2")||XW.equals("1")){
+						if(XL.equals("3")||XL.equals("1")){
 							MarkRecord.concat("|研究生");
 						}
+					}
 					
 					MarkRecord=MarkRecord+"|"+String.valueOf(Score).concat("分");
 					

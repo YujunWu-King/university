@@ -133,11 +133,11 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 
 			
 			if("Y".equals(GJLB)){
-			String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_GJH_T where  TZ_CSMB_CK1>? AND TZ_CSMB_CK2<=? AND TZ_CSMB_DESC='A'";
-			String FSCJ = SqlQuery.queryForObject(sql, new Object[] {SJF,SJF},"String");
-			Score=Float.parseFloat(FSCJ);
-			GJLB="发达国家";
-			MarkRecord="国家类型：".concat(GJLB).concat("|时间：").concat(SJ.substring(0,SJ.indexOf(".")))+"个月";
+				String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_GJH_T where  TZ_CSMB_CK1>? AND TZ_CSMB_CK2<=? AND TZ_CSMB_DESC='A'";
+				String FSCJ = SqlQuery.queryForObject(sql, new Object[] {SJF,SJF},"String");
+				Score=Float.parseFloat(FSCJ);
+				GJLB="发达国家";
+				MarkRecord="国家类型：".concat(GJLB).concat("|时间：").concat(SJ.substring(0,SJ.indexOf(".")))+"个月";
 			}else if("N".equals(GJLB)){
 				String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_GJH_T where  TZ_CSMB_CK1>? AND TZ_CSMB_CK2<=? AND TZ_CSMB_DESC='B'";
 				String FSCJ = SqlQuery.queryForObject(sql2, new Object[] {SJF,SJF},"String");

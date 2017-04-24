@@ -107,7 +107,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 				return jacksonUtil.Map2json(mapRet);
 			}
 
-			/* 获取组件页面信息 */
+			/* 获取听众详细信息 */
 			@Override
 			public String tzQuery(String strParams, String[] errMsg) {
 				// 返回值;
@@ -129,9 +129,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					
 					
 					if (strAudID != null && !"".equals(strAudID) ) {
-			//		if (strAudID != null && !"".equals(strAudID) && strAudName != null && !"".equals(strAudName)&& strAudStat != null && !"".equals(strAudStat)&& strAudType != null && !"".equals(strAudType)) {
-							
-						//	PsTzAqPagzcTblKey psTzAqPagzcTblKey = new PsTzAqPagzcTblKey();
+			
 						PsTzAudDefnT psTzAudDefnT=new PsTzAudDefnT();
 					
 						psTzAudDefnT.setTzAudId(strAudID);
@@ -142,12 +140,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						psTzAudDefnT.setTzAudSql(strAudSql);
 						psTzAudDefnT.setTzLxfsLy(strAudLY);
 						
-						
-				
-						
-						// 获取页面注册信息;
-							  
-					//	PsTzAqPagzcTbl psTzAqPagzcTbl = psTzAqPagzcTblMapper.selectByPrimaryKey(psTzAqPagzcTblKey);
 						
 						returnJsonMap.put("audID", strAudID);
 						returnJsonMap.put("audName", psTzAudDefnT.getTzAudNam());
@@ -167,7 +159,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					errMsg[1] = e.toString();
 				}
 				strRet = jacksonUtil.Map2json(returnJsonMap);
-				System.out.println(strRet);
+				System.out.println("strtzQuery==="+strRet);
 				return strRet;
 			}
 			
@@ -194,13 +186,8 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						// 组件ID;
 						
 					//	String sComID = jacksonUtil.getString("comID");
-						String strDxID = jacksonUtil.getString("dxID");
-			//			System.out.println(strDxID);
+						String strDxID = jacksonUtil.getString("dxID");			
 						String strAudID = jacksonUtil.getString("audID");
-			//			System.out.println(strAudID);
-						
-						
-					//	psTzAudListTMapper.deleteByPrimaryKey(strAudID);
 						
 						String comPageSql = "DELETE FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? and TZ_LYDX_ID=?";
 						jdbcTemplate.update(comPageSql,new Object[]{strAudID,strDxID});
@@ -243,7 +230,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 					String strSql = jacksonUtil.getString("audSQL");
 					
 					String strLY = jacksonUtil.getString("audLY");
-					System.out.println(strLY);
+					System.out.println("ADD===LY"+strLY);
 					
 
 	
@@ -351,45 +338,28 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 						if ("FORM".equals(strFlag)) {
 				
 						String strJgID = (String) infoData.get("audJG");
-						//	String strJgID = jacksonUtil.getString("audJG");
-					
 						
-					//	String strAudId =	jacksonUtil.getString("audID");
 						String strAudId = (String) infoData.get("audID");
 						
-				//		String strAudName = jacksonUtil.getString("audName");
 						String strAudName = (String) infoData.get("audName");
 						
-				//		String strAudStat = jacksonUtil.getString("audStat");
 						String strAudStat = (String) infoData.get("audStat");
 						
-					//	String strAudType = jacksonUtil.getString("audType");
 						String strAudType = (String) infoData.get("audType");
 						
-					//	String strTips = jacksonUtil.getString("audMS");
 						String strTips = (String) infoData.get("audMS");
 						
-					//	String strSql = jacksonUtil.getString("audSQL");
 						String strSql = (String) infoData.get("audSQL");
 						
 						String strLY = (String) infoData.get("audLY");
-						
-					/*	String strDxID = jacksonUtil.getString("dxID");
-						System.out.println("ID:"+strDxID);
-					 */
+					
+					
 							// 是否已经存在;
 							String comExistSql  = "SELECT 'Y' FROM PS_TZ_AUD_DEFN_T WHERE TZ_AUD_ID=? ";
 							String isExist = "";
 							isExist = jdbcTemplate.queryForObject(comExistSql, new Object[] { strAudId }, "String");
 							
-					/*		
-							String TESTSql  = "SELECT TZ_AUD_NAM FROM PS_TZ_AUD_DEFN_T WHERE TZ_AUD_STAT=2 ";
-						//	String TESTSqlCon = jdbcTemplate.queryForObject(TESTSql, new Object[] { strAudId }, "String");
-							List<String> TESTSqlCon2 =jdbcTemplate.queryForList(TESTSql, "String");
-						//	Map<String, Object> entry1=jdbcTemplate.queryForMap(TESTSql);    
-							System.out.println(TESTSqlCon2.get(2));
-						//	System.out.println(entry1);
-*/
+
 							if (!"Y".equals(isExist)) {
 								errMsg[0] = "1";
 								errMsg[1] = "ID为：" + strAudId + "的信息不存在。";
