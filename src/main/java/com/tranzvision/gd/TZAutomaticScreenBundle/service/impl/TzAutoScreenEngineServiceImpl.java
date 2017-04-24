@@ -224,6 +224,7 @@ public class TzAutoScreenEngineServiceImpl {
 				tmp_score = scoreNum;
 			} else {
 				if (scoreNum != tmp_score) {
+					tmp_score = scoreNum;
 					sortNum = (short) (count + 1);
 				}
 			}

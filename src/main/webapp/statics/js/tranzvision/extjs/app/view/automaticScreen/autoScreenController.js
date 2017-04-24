@@ -201,9 +201,7 @@
 						Ext.tzBatchProcessDetails({
 							//进程实例ID
 							processIns: processIns,
-							callBack:function(statusCode){
-								
-							}
+							callBack:function(statusCode){}
 						});
 					},"运行成功",true,this);
 				}
