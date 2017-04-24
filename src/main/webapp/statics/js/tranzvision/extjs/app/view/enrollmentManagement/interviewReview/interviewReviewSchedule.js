@@ -646,15 +646,19 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                     selModel: {
                                         type: 'checkboxmodel'
                                     },
-                                    store:{
+                                    /*store:{
                                         type:'interviewReviewScheduleAppsStore'
-                                    },
-                                    dockedItems: [dockedItemBtn]
-                                    ,
-                                    /*store: {
-                                     type: 'interviewReviewApplicants'
-                                     },*/
-                                    columns: columnsItems
+                                    },*/
+                                    dockedItems: [dockedItemBtn],
+                                    columns: columnsItems,
+                                    store:interviewReviewScheduleAppsStore,
+                                    bbar: {
+                                        xtype: 'pagingtoolbar',
+                                        pageSize: 10,
+                                        store: interviewReviewScheduleAppsStore,
+                                        plugins: new Ext.ux.ProgressBarPager()
+                                    }
+                                    
                                 },{
                                     xtype: 'form',
                                     title: '统计信息',

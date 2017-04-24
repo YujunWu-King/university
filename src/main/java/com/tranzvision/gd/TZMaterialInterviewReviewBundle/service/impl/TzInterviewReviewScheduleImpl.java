@@ -1717,7 +1717,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 						}
 						psTzMspwpsjlTbl.setTzSubmitYn(strSubmitYN);
 						if ("Y".equals(strExist)) {
-							psTzMspwpsjlTblMapper.updateByPrimaryKey(psTzMspwpsjlTbl);
+							psTzMspwpsjlTblMapper.updateByPrimaryKeySelective(psTzMspwpsjlTbl);
 						} else {
 							psTzMspwpsjlTbl.setRowAddedDttm(new Date());
 							psTzMspwpsjlTbl.setRowAddedOprid(oprid);

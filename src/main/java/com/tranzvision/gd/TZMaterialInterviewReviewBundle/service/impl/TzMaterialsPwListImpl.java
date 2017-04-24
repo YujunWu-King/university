@@ -61,6 +61,9 @@ public class TzMaterialsPwListImpl extends FrameworkImpl{
 					
 					Map<String,Object> sMap = (Map<String,Object>) sUitl;
 					String judgeOprid = sMap.get("TZ_PWEI_OPRID")==null?"":String.valueOf(sMap.get("TZ_PWEI_OPRID"));
+					if("".equals(judgeOprid)){
+						continue;
+					}
 					String judgeRealName = sMap.get("TZ_REALNAME")==null?"":String.valueOf(sMap.get("TZ_REALNAME"));
 					String judgeInsId = sMap.get("TZ_SCORE_INS_ID")==null?"":String.valueOf(sMap.get("TZ_SCORE_INS_ID"));
 					String bphSql = "SELECT TZ_SCORE_ITEM_ID,TZ_XS_MC FROM PS_TZ_CJ_BPH_TBL WHERE TZ_ITEM_S_TYPE = 'A' AND TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=? ORDER BY TZ_PX";
