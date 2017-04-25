@@ -135,6 +135,7 @@ public class TzAutoScreenEngineServiceImpl {
 			}
 
 			psTzCsKsTbl.setTzScoreInsId(scoreInsId);
+			psTzCsKsTbl.setTzKshCsjg("Y");
 			psTzCsKsTbl.setRowLastmantDttm(new Date());
 			psTzCsKsTbl.setRowLastmantOprid(oprId);
 

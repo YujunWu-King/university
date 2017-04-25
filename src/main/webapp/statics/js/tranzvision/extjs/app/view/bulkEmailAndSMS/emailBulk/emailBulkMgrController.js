@@ -140,7 +140,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
 		        					            emlBkDtForm.child('toolbar').child('button[reference=clearAllBtn]').addCls('x-item-disabled x-btn-disabled');
 		        								
 		        					            emlBkDtForm.down('checkbox[name=edmFlag]').setValue(true);
-		        					            emlBkDtForm.down('checkbox[name=qxdyFlag]').setValue(true);
+		        					            emlBkDtForm.down('checkbox[name=qxdyFlag]').setValue(false);
 		        					            emlBkDtForm.down('checkbox[name=qypfFlag]').setValue(true);
 		        					            emlBkDtForm.down('textfield[name=fsslXs]').setVisible(true);
 		        					            emlBkDtForm.down('textfield[name=fsslXs]').setValue('2500');

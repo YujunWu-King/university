@@ -545,9 +545,14 @@ public class FliterForm extends FrameworkImpl {
 							if("Y".equals(strDqFlg)){
 								//是DeepQuery字段,拼装DeepQuery查询SQL;;
 								
-								String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=?";
+								String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=? limit 1";
 								String strDeepQueryFlgType = jdbcTemplate.queryForObject(strDeepQueryFldTypeSql, new Object[] {strDqView,fieldName }, "String");
-
+								
+								if(!"".equals(strDeepQueryFlgType) && strDeepQueryFlgType != null){
+									strDeepQueryFlgType = strDeepQueryFlgType.toUpperCase();
+								}
+								
+								
 								if (intTypeString.contains(strDeepQueryFlgType)) {
 									// 数字;
 									value = fldValue;
@@ -1499,9 +1504,13 @@ public class FliterForm extends FrameworkImpl {
 							if("Y".equals(strDqFlg)){
 								//是DeepQuery字段,拼装DeepQuery查询SQL;;
 								
-								String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=?";
+								String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=? limit 1";
 								String strDeepQueryFlgType = jdbcTemplate.queryForObject(strDeepQueryFldTypeSql, new Object[] {strDqView,fieldName }, "String");
-
+								
+								if(!"".equals(strDeepQueryFlgType) && strDeepQueryFlgType != null){
+									strDeepQueryFlgType = strDeepQueryFlgType.toUpperCase();
+								}
+								
 								if (intTypeString.contains(strDeepQueryFlgType)) {
 									// 数字;
 									value = fldValue;

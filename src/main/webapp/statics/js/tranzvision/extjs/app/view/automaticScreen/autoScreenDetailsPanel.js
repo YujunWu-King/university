@@ -54,6 +54,7 @@
 		labelTagStore.load();
 
     	//初筛结果Store
+		/*
 		var csStatusStore = Ext.create('Ext.data.Store', {
 			 fields: [{
 				 	name:'value'
@@ -68,7 +69,9 @@
              		descr: '淘汰'
              	}]
 		 });
-    	
+    	*/
+		var csStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_ZDCS_JG");
+		
     	Ext.apply(this, {
     	   items: [{        
 		        xtype: 'form',
@@ -145,8 +148,10 @@
 		        	store: csStatusStore,
 		        	queryMode: 'local',
 		            editable:false,
-		            valueField: 'value',
-		    		displayField: 'descr'
+		            //valueField: 'value',
+		    		//displayField: 'descr'
+		            valueField: 'TValue',
+	            	displayField: 'TSDesc'
 		        },{
 		        	xtype: 'displayfield',
 		        	name: 'ranking',

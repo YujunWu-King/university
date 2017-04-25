@@ -305,7 +305,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 					/*----查看是否是查看附属模版 Start  ----*/
 					// 主模版的实例ID+附属模版的模版ID
-					if (!"".equals(strAttachedTplId) && strAttachedTplId != null) {
+					if (StringUtils.isNotBlank(strAttachedTplId) && !StringUtils.equals(strAttachedTplId, "null")) {
 						// &&
 						// strAttachedTplId.equals(psTzApptplDyTWithBLOBs.getTzAppMTplId()))
 						// {
@@ -863,7 +863,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					strInsData = mc.replaceAll("\\\\n");
 				}
 				strInsData = strInsData.replace("\\", "\\\\");
-				strInsData = strInsData.replace("$", "\\$");
+//				strInsData = strInsData.replace("$", "\\$");
 				// 处理HTML换行符号，是替换的\u2028;
 				strInsData = strInsData.replace(" ", "");
 				String pwdError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
