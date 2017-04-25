@@ -519,7 +519,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				psTzClpsPwTbl.setTzPwzbh(judgeGroup);
 				psTzClpsPwTbl.setRowLastmantDttm(new Date());
 				psTzClpsPwTbl.setRowLastmantOprid(currentOprid);
-				psTzClpsPwTblMapper.updateByPrimaryKey(psTzClpsPwTbl);
+				psTzClpsPwTblMapper.updateByPrimaryKeySelective(psTzClpsPwTbl);
 			}
 
 		} catch (Exception e) {
@@ -576,7 +576,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 					psoprdefn.setOperpswd(password);
 					psoprdefn.setLastupddttm(new Date());
 					psoprdefn.setLastupdoprid(currentOprid);
-					psoprdefnMapper.updateByPrimaryKey(psoprdefn);	
+					psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);	
 				}
 				
 			}

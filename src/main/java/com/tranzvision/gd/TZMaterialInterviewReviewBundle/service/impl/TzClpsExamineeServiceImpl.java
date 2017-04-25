@@ -629,7 +629,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 				/*psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
 				psTzClpsGzTbl.setRowLastmantDttm(new Date());
 				psTzClpsGzTbl.setRowLastmantOprid(currentOprid);
-				psTzClpsGzTblMapper.updateByPrimaryKey(psTzClpsGzTbl);*/
+				psTzClpsGzTblMapper.updateByPrimaryKeySelective(psTzClpsGzTbl);*/
 			}
 			
 			
@@ -674,7 +674,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 				psTzClpsKshTbl.setRowLastmantOprid(oprid);
 				psTzClpsKshTblMapper.insertSelective(psTzClpsKshTbl);
 			} else {
-				psTzClpsKshTblMapper.updateByPrimaryKey(psTzClpsKshTbl);
+				psTzClpsKshTblMapper.updateByPrimaryKeySelective(psTzClpsKshTbl);
 			}
 			
 		} catch (Exception e) {

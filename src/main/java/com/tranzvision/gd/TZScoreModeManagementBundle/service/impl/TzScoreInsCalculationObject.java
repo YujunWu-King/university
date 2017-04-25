@@ -172,6 +172,7 @@ public class TzScoreInsCalculationObject {
 					if(!"".equals(scoreInsId) && scoreInsId != null){
 						tzScoreInsId = Long.valueOf(scoreInsId);
 					} else {
+						tzScoreInsId = Long.valueOf(0);
 						updateFlag = "Y";
 					}
 					

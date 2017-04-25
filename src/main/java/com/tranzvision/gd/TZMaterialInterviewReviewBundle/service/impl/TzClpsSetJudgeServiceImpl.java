@@ -216,7 +216,7 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 						} else {
 							psTzCpPwKsTbl.setRowLastmantDttm(new Date());
 							psTzCpPwKsTbl.setRowLastmantOprid(oprid);
-							psTzCpPwKsTblMapper.updateByPrimaryKey(psTzCpPwKsTbl);
+							psTzCpPwKsTblMapper.updateByPrimaryKeySelective(psTzCpPwKsTbl);
 						}
 						
 						
@@ -246,7 +246,7 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 							psTzKsclpslsTbl.setTzSubmitYn("U");
 							psTzKsclpslsTbl.setRowLastmantDttm(new Date());
 							psTzKsclpslsTbl.setRowLastmantOprid(oprid);
-							psTzKsclpslsTblMapper.updateByPrimaryKey(psTzKsclpslsTbl);	
+							psTzKsclpslsTblMapper.updateByPrimaryKeySelective(psTzKsclpslsTbl);	
 						}
 						
 						String pweiOpridDesc = "";
@@ -289,7 +289,7 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 							psTzClpskspwTbl.setTzClpwList(pweiOpridDesc);
 							psTzClpskspwTbl.setRowLastmantDttm(new Date());
 							psTzClpskspwTbl.setRowLastmantOprid(oprid);
-							psTzClpskspwTblMapper.updateByPrimaryKey(psTzClpskspwTbl);
+							psTzClpskspwTblMapper.updateByPrimaryKeySelective(psTzClpskspwTbl);
 						}
 						
 					}

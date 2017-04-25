@@ -147,6 +147,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				
 				//当前登录人
 				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				//当前机构
+				String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				
 				String sql;
 				
@@ -188,7 +190,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 							this.examineeReviewHis(classId, applyBatchId, bmbId, oprid, dqpyLunc,errMsg);
 						
 							//计算排名
-							this.examineeRank(classId,applyBatchId,oprid,errMsg);
+							this.examineeRank(classId,applyBatchId,oprid,orgId,errMsg);
 							
 							String messageCode = "0";
 							String message = "";
@@ -353,6 +355,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			mapRet.put("bmbId", bmbId);
 			mapRet.put("name", name);
 			mapRet.put("interviewApplyId", interviewApplyId);
+
 			
 			
 			//考生标签：显示自动初筛形成的标签&管理员后台手工添加的标签，负面清单标签不显示
@@ -396,23 +399,19 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				String scoreItemCommentUpper = mapScore.get("TZ_SCORE_PY_ZSLIM") == null ? "" : mapScore.get("TZ_SCORE_PY_ZSLIM").toString();
 				String scoreItemCommentLower = mapScore.get("TZ_SCORE_PY_ZSLIM0") == null ? "" : mapScore.get("TZ_SCORE_PY_ZSLIM0").toString();
 				String scoreItemComment = "";
+				String scoreItemXlkId = "";
 				String scoreItemDfsm = mapScore.get("TZ_SCORE_ITEM_DFSM") == null ? "" : mapScore.get("TZ_SCORE_ITEM_DFSM").toString();//说明
 				String scoreItemCkwt = mapScore.get("TZ_SCORE_ITEM_CKWT") == null ? "" : mapScore.get("TZ_SCORE_ITEM_CKWT").toString();//标准
-				String scoreItemCkzlId = mapScore.get("TZ_SCORE_CKZL") == null ? "" : mapScore.get("TZ_SCORE_CKZL").toString();//参考资料
-				
-				//调用封装方法获取参考资料HTML-------------------------------------、
-				String scoreItemCkzl="";
-				if(!"".equals(scoreItemCkzlId)&& scoreItemCkzlId!=null) {
-					
-				}
+				String scoreItemCkzl = mapScore.get("TZ_SCORE_CKZL") == null ? "" : mapScore.get("TZ_SCORE_CKZL").toString();//参考资料
 				
 				
 				/*查询成绩项分值和评语值*/
-				String sqlScoreValue = "SELECT TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
+				String sqlScoreValue = "SELECT TZ_CJX_XLK_XXBH,TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
 				Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemId});
 				if(mapScoreValue==null) {
 					
 				} else {
+					scoreItemXlkId = mapScoreValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapScoreValue.get("TZ_CJX_XLK_XXBH").toString();
 					scoreItemValue = mapScoreValue.get("TZ_SCORE_NUM") == null ? "" : mapScoreValue.get("TZ_SCORE_NUM").toString();
 					scoreItemComment = mapScoreValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapScoreValue.get("TZ_SCORE_PY_VALUE").toString();
 				}
@@ -441,6 +440,14 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 						mapOptionJson.put("itemOptionDefault", scoreItemOptionDefault);
 						
 						optionListJson.add(mapOptionJson);
+						
+						if(!"".equals(scoreItemXlkId)&&scoreItemXlkId!=null) {
+							
+						} else {
+							if("Y".equals(scoreItemOptionDefault)) {
+								scoreItemXlkId = scoreItemOptionId;
+							}
+						}
 					}
 				}
 				
@@ -456,10 +463,12 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				mapScoreJson.put("itemCommentUpperLimit", scoreItemCommentUpper);
 				mapScoreJson.put("itemCommentLowerLimit", scoreItemCommentLower);
 				mapScoreJson.put("itemComment", scoreItemComment);
+				mapScoreJson.put("itemXlkId", scoreItemXlkId);
 				mapScoreJson.put("itemOptions", optionListJson);
 				mapScoreJson.put("itemDfsm", scoreItemDfsm);
 				mapScoreJson.put("itemCkwt", scoreItemCkwt);
 				mapScoreJson.put("itemCkzl", scoreItemCkzl);
+				mapScoreJson.put("scoreModelId", scoreModelId);
 				
 				scoreItemJson.add(mapScoreJson);
 			}
@@ -706,17 +715,18 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 	 * 计算排名
 	 * 先校验成绩和评语的有效性，有效后调用封装方法
 	 */
-	public String examineeRank(String classId,String applyBatchId,String oprid,String[] errMsg) {
+	public String examineeRank(String classId,String applyBatchId,String oprid,String orgId,String[] errMsg) {
 		String strRtn = "";
 		
 		try {
+			
 			String sql = "SELECT A.TZ_APP_INS_ID,A.TZ_SCORE_INS_ID,B.TZ_SCORE_MODAL_ID,C.TREE_NAME,D.TREE_NODE,E.TZ_SCORE_NUM";
 			sql = sql + " FROM PSTREENODE D,PS_TZ_CP_PW_KS_TBL A ,PS_TZ_SRMBAINS_TBL B,PS_TZ_RS_MODAL_TBL C,PS_TZ_CJX_TBL E";
-			sql = sql + " WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND B.TZ_SCORE_MODAL_ID=C.TZ_SCORE_MODAL_ID AND D.TREE_NAME=C.TREE_NAME AND D.PARENT_NODE_NUM=0 AND E.TZ_SCORE_INS_ID=A.TZ_APP_INS_ID AND E.TZ_SCORE_ITEM_ID=D.TREE_NODE";
-			sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?";
+			sql = sql + " WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND B.TZ_SCORE_MODAL_ID=C.TZ_SCORE_MODAL_ID AND D.TREE_NAME=C.TREE_NAME AND D.PARENT_NODE_NUM=0 AND E.TZ_SCORE_INS_ID=A.TZ_SCORE_INS_ID AND E.TZ_SCORE_ITEM_ID=D.TREE_NODE";
+			sql = sql + " AND C.TZ_JG_ID=? AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?";
 			sql = sql + " ORDER BY E.TZ_SCORE_NUM DESC";
 			
-			List<Map<String, Object>> listData = sqlQuery.queryForList(sql,new Object[]{classId,applyBatchId,oprid});
+			List<Map<String, Object>> listData = sqlQuery.queryForList(sql,new Object[]{orgId,classId,applyBatchId,oprid});
 			
 			Integer rank = 0;
 		
@@ -741,7 +751,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 					psTzCpPwKsTbl.setTzKshPspm(String.valueOf(rank));
 					psTzCpPwKsTbl.setRowLastmantDttm(new Date());
 					psTzCpPwKsTbl.setRowLastmantOprid(oprid);
-					psTzCpPwKsTblMapper.updateByPrimaryKey(psTzCpPwKsTbl);
+					psTzCpPwKsTblMapper.updateByPrimaryKeySelective(psTzCpPwKsTbl);
 				}
 			}
 		} catch(Exception e) {
@@ -820,7 +830,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				psTzClpsKshTbl.setTzClpsPwjPc(BigDecimal.valueOf(pcValue));
 				psTzClpsKshTbl.setRowLastmantDttm(new Date());
 				psTzClpsKshTbl.setRowLastmantOprid(oprid);
-				psTzClpsKshTblMapper.updateByPrimaryKey(psTzClpsKshTbl);
+				psTzClpsKshTblMapper.updateByPrimaryKeySelective(psTzClpsKshTbl);
 			}
 			
 			
@@ -1020,7 +1030,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 														psTzKsclpslsTbl.setTzSubmitYn("U");
 														psTzKsclpslsTbl.setRowLastmantDttm(new Date());
 														psTzKsclpslsTbl.setRowLastmantOprid(oprid);
-														psTzKsclpslsTblMapper.updateByPrimaryKey(psTzKsclpslsTbl);
+														psTzKsclpslsTblMapper.updateByPrimaryKeySelective(psTzKsclpslsTbl);
 													}
 												
 													//材料评审考生评委信息
@@ -1056,7 +1066,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 														psTzClpskspwTbl.setTzClpwList(ksPwList);
 														psTzClpskspwTbl.setRowLastmantDttm(new Date());
 														psTzClpskspwTbl.setRowLastmantOprid(oprid);
-														psTzClpskspwTblMapper.updateByPrimaryKey(psTzClpskspwTbl);
+														psTzClpskspwTblMapper.updateByPrimaryKeySelective(psTzClpskspwTbl);
 													}
 													
 													bmbIdNext = String.valueOf(tzAppInsId);
