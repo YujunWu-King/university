@@ -266,6 +266,7 @@
                                 xtype : 'textfield',
                                 fieldLabel : '联系电话',
                                 name : 'zyPhone',
+                                readOnly : true
                             },
                             /*{
                                 xtype : 'combobox',
