@@ -1,4 +1,4 @@
-var refreshTaskMgr=new Ext.util.TaskRunner();
+﻿var refreshTaskMgr=new Ext.util.TaskRunner();
 Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
     extend: 'Ext.panel.Panel',
     requires: [
