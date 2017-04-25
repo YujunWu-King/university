@@ -18,6 +18,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 		type:'fit'
 	},
     initComponent:function() {
+
+        var store = new KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeWindowStore();
+
     	Ext.apply(this,{
     		items:[{
     			xtype:'grid',
@@ -33,14 +36,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 selModel: {
                     type: 'checkboxmodel'
                 },
-                store: {
-                    type:'materialsReviewExamineeWindowStore'
-                },
+                store: store,
                 dockedItems:[{
                     xtype:'toolbar',
                     items:[{text:"查询",iconCls:'query',tooltip:"从所有考生中查询",handler:"queryExamineeAdd"}]
                 }],
                 columns: [{
+                    dataIndex:'mssqh',
+                    hidden:true
+                },{
                     text: "姓名",
                     dataIndex: 'name',
                     minWidth: 100,
@@ -103,9 +107,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 bbar: {
                     xtype: 'pagingtoolbar',
                     pageSize: 50,
-                    store:  {
-                        type:'materialsReviewExamineeWindowStore'
-                    },
+                    store: store,
                     plugins: new Ext.ux.ProgressBarPager()
                 }
     		}]
