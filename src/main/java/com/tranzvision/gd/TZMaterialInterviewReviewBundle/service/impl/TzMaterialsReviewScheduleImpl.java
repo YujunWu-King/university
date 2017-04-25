@@ -1379,7 +1379,6 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			String strExistsFlg = sqlQuery.queryForObject(strExistsSql, new Object[] { strClassID, strBatchID },
 					"String");
 			PsTzClpsGzTbl psTzClpsGzTbl = new PsTzClpsGzTbl();
-
 			switch (strBtnType) {
 			case "reStartNewOnclick":
 				// 开启新一轮评审
@@ -1388,13 +1387,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				Integer numStu = sqlQuery.queryForObject(strSql1, new Object[] { strClassID, strBatchID }, "Integer");
 				// 每位考生需要被多少位评委评审
 				String strSql2 = "SELECT ifnull(TZ_MSPY_NUM,0) FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-				Integer judgeCount = sqlQuery.queryForObject(strSql1, new Object[] { strClassID, strBatchID },
+				Integer judgeCount = sqlQuery.queryForObject(strSql2, new Object[] { strClassID, strBatchID },
 						"Integer");
-
 				int numTotal = 0;
 				if (numStu != null && judgeCount != null) {
 					numTotal = numStu * judgeCount;
 				}
+
 				/* 规则待定 */
 				psTzClpsGzTbl.setTzClassId(strClassID);
 				psTzClpsGzTbl.setTzApplyPcId(strBatchID);
@@ -1443,6 +1442,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				}
 				// 成功开启，返回总人数
 				strResponse = String.valueOf(numTotal);
+
 				break;
 			case "closeReviewOnclick":
 				// 关闭本轮评审
