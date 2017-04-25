@@ -114,7 +114,10 @@ public class CreateQfTaskServiceImpl {
 				}
 
 		        mailContent = mailContentHandlerServiceImpl.emailConPreprocess(strPicId, taskId);
-		        
+		        String serverHost = request.getScheme() + "://" + request.getServerName() + ":"
+						+ request.getServerPort();
+		        mailContent = mailContent.replace("<img src=\"/", "<img src=\"" + serverHost + "/");
+				
 		        psTzDxyjfsrwTbl.setTzMalContent(mailContent);
 			}else{
 				if("SMS".equals(taskType)){
