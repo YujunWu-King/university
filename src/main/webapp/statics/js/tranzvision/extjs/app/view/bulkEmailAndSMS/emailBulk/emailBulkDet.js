@@ -325,6 +325,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
 						handler:'copyHistoryData'
 					}]			
 				},{
+					xtype: 'component',
+					style:{
+						marginLeft: '123px'	
+					},
+					html: '<span style="color: #F00;">发送多个收件人时，邮箱使用半角逗号“,”隔开。</span>'	
+				},{
                     xtype: 'tagfield',
                     fieldLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.recever","收件人"),
                     reference: 'recever',
