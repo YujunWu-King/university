@@ -316,13 +316,17 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			switch (strType) {
 			case "isJiSuanFenZhi":
 				// 计算分值
-				strResponse = this.isJiSuanFenZhi(strParams, errMsg);
+				//strResponse = this.isJiSuanFenZhi(strParams, errMsg);
 				break;
 			case "check":
 				// 计算平均差
 				break;
+			case "revoke":
+				//撤销评议数据
+				strResponse = this.removeJudgeData(strParams, errMsg);
+				break;
 			case "calculate":
-				// 撤销评议数据
+				// 计算偏差
 				strResponse = this.calculate(strParams, errMsg);
 				break;
 			case "reStartNewOnclick":
@@ -1481,14 +1485,12 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		String strResponse = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-
 		try {
 			String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
 			jacksonUtil.json2Map(strParams);
 
 			List<?> removeList = jacksonUtil.getList("remove");
-
 			if (removeList != null && removeList.size() > 0) {
 				for (Object obj : removeList) {
 					Map<String, Object> mapFormData = (Map<String, Object>) obj;
@@ -1506,42 +1508,48 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 					if (numLunc == null) {
 						numLunc = 0;
 					}
+					//评委OPRID
+					String strPweOSQL = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?";
+					String strPweiOprid = sqlQuery.queryForObject(strPweOSQL, new Object[]{strJudgeId}, "String");
 					// 评委列表
-					String strSql2 = "SELECT TZ_CLPW_LIST,TZ_APP_INS_ID FROM PS_TZ_CLPSKSPW_TBL WHERE TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? AND TZ_CLPS_LUNC=?";
-					List<Map<String, Object>> mapList = sqlQuery.queryForList(strSql2,
-							new Object[] { strClassID, strBatchID, numLunc });
+					String strSql2 = "SELECT TZ_APP_INS_ID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ?";
+					List<Map<String, Object>> mapList = sqlQuery.queryForList(strSql2,new Object[] { strClassID, strBatchID, strPweiOprid });
 					if (mapList != null && mapList.size() > 0) {
 						for (Object pwObj : mapList) {
 							Map<String, Object> result = (Map<String, Object>) pwObj;
-							String strJudgeList = result.get("TZ_CLPW_LIST") == null ? ""
-									: String.valueOf(result.get("TZ_CLPW_LIST"));
-							String strAppInsId = result.get("TZ_APP_INS_ID") == null ? ""
-									: String.valueOf(result.get("TZ_APP_INS_ID"));
-							// 从所有当前班级和批次的考生的评委列表中查找出当前评委并删除
-							if (strJudgeList != null && !"".equals(strJudgeList)) {
-								if (strJudgeList.contains(strJudgeId + ",")) {
-									strJudgeList.replace(strJudgeId + ",", "");
-								} else if (strJudgeList.contains("," + strJudgeId)) {
-									strJudgeList.replace("," + strJudgeId, "");
-								} else {
-									strJudgeList.replace(strJudgeId, "");
+							
+							String strAppInsId = result.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(result.get("TZ_APP_INS_ID"));
+							
+							String strSql3 = "SELECT TZ_CLPS_LUNC,TZ_CLPW_LIST FROM PS_TZ_CLPSKSPW_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID = ?";
+							List<Map<String, Object>> mapList2 = sqlQuery.queryForList(strSql3,new Object[] { strClassID, strBatchID, strAppInsId });
+							if(mapList2!=null&&mapList2.size()>0){
+								String strClpsLunc = result.get("TZ_CLPS_LUNC") == null ? "" : String.valueOf(result.get("TZ_CLPW_LIST"));
+								String strJudgeList = result.get("TZ_CLPW_LIST") == null ? "" : String.valueOf(result.get("TZ_CLPW_LIST"));
+								// 从所有当前班级和批次的考生的评委列表中查找出当前评委并删除
+								if (strJudgeList != null && !"".equals(strJudgeList)) {
+									if (strJudgeList.contains(strJudgeId + ",")) {
+										strJudgeList.replace(strJudgeId + ",", "");
+									} else if (strJudgeList.contains("," + strJudgeId)) {
+										strJudgeList.replace("," + strJudgeId, "");
+									} else {
+										strJudgeList.replace(strJudgeId, "");
+									}
+									//更新考生的评委列表;
+									String strUpdateSql = "UPDATE PS_TZ_CLPSKSPW_TBL SET TZ_CLPW_LIST=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_CLPS_LUNC=?";
+									sqlQuery.update(strUpdateSql,new Object[]{strJudgeList,strClassID,strBatchID,strAppInsId,strClpsLunc});
 								}
-								String strUpdateSql = "UPDATE PS_TZ_CLPSKSPW_TBL SET TZ_CLPW_LIST='" + strJudgeList
-										+ "' WHERE TZ_APPLY_PC_ID='" + strBatchID + "' AND TZ_CLASS_ID='" + strClassID
-										+ "' AND TZ_APP_INS_ID='" + strAppInsId + "'";
-								sqlQuery.update(strUpdateSql);
-							}
+							}							
 						}
 					}
 					// 删除MBA材料评审评委考生关系表 中的数据
 					String strDeleteSql1 = "DELETE FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLASS_ID=?";
-					sqlQuery.update(strDeleteSql1, new Object[] { strBatchID, strJudgeId, strClassID });
+					sqlQuery.update(strDeleteSql1, new Object[] { strBatchID, strPweiOprid, strClassID });
 					// 奖评委考生记录表中的数据设置为撤销
 					String strUpdateSql1 = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='C' WHERE TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLASS_ID=?";
-					sqlQuery.update(strUpdateSql1, new Object[] { strBatchID, strJudgeId, strClassID });
+					sqlQuery.update(strUpdateSql1, new Object[] { strBatchID, strPweiOprid, strClassID });
 					// 更新 MBA材料评审评委评审历史 中的数据为撤销
 					String strUpdateSql2 = "UPDATE PS_TZ_CLPWPSLS_TBL SET TZ_SUBMIT_YN = 'C' WHERE TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLASS_ID=?";
-					sqlQuery.update(strUpdateSql2, new Object[] { strBatchID, strJudgeId, strClassID });
+					sqlQuery.update(strUpdateSql2, new Object[] { strBatchID, strPweiOprid, strClassID });
 				}
 			}
 			errMsg[0] = "0";
@@ -1553,7 +1561,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	}
 
 	public String calculate(String strParams, String[] errMsg) {
-		String strResponse = "\"failure\"";
+		String strResponse = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
