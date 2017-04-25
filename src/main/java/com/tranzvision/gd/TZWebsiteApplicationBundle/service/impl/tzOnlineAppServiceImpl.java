@@ -302,25 +302,33 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					strAppInsVersion = "";
 				}
 				if (!"".equals(strTplId) && strTplId != null) {
+
+					/*----查看是否是查看附属模版 Start  ----*/
+					// 主模版的实例ID+附属模版的模版ID
+					if (!"".equals(strAttachedTplId) && strAttachedTplId != null) {
+						// &&
+						// strAttachedTplId.equals(psTzApptplDyTWithBLOBs.getTzAppMTplId()))
+						// {
+						// 附属模板
+						sql = "SELECT TZ_APP_M_TPL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID=?";
+						// PsTzApptplDyTWithBLOBs attachedPsTzApptplDyTWithBLOBs
+						// =
+						// psTzApptplDyTMapper.selectByPrimaryKey(strAttachedTplId);
+						String TZ_APP_M_TPL_ID = sqlQuery.queryForObject(sql, new Object[] { strAppInsId }, "String");
+						if (strTplId.equals(TZ_APP_M_TPL_ID)) {
+							strTplId = strAttachedTplId;
+							// 根据报名表实例和附属模版编号去获得报名表Json数据
+							strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
+							strIsAdmin = "Y";
+							strAppFormReadOnly = "Y";
+						}
+					}
+					/*----查看是否是查看附属模版 end  ----*/
+
 					// 获取模版信息
 					psTzApptplDyTWithBLOBs = psTzApptplDyTMapper.selectByPrimaryKey(strTplId);
 
 					if (psTzApptplDyTWithBLOBs != null) {
-
-						/*----查看是否是查看附属模版 Start  ----*/
-						if (!"".equals(strAttachedTplId) && strAttachedTplId != null){
-								//&& strAttachedTplId.equals(psTzApptplDyTWithBLOBs.getTzAppMTplId())) {
-							//附属模板
-							PsTzApptplDyTWithBLOBs attachedPsTzApptplDyTWithBLOBs = psTzApptplDyTMapper.selectByPrimaryKey(strAttachedTplId);
-							if(strTplId.equals(attachedPsTzApptplDyTWithBLOBs.getTzAppMTplId())){
-								strTplId = strAttachedTplId;
-								// 根据报名表实例和附属模版编号去获得报名表Json数据
-								strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
-								strIsAdmin = "Y";
-								strAppFormReadOnly = "Y";
-							}
-						}
-						/*----查看是否是查看附属模版 end  ----*/
 
 						strLanguage = psTzApptplDyTWithBLOBs.getTzAppTplLan();// TZ_APP_TPL_LAN
 						strTplType = psTzApptplDyTWithBLOBs.getTzUseType(); // TZ_USE_TYPE
