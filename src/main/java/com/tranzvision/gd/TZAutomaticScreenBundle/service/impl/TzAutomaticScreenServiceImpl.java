@@ -241,7 +241,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				case "getLastEngineStatus":	//获取最后一次自动初筛引擎运行状态
 					strRet = this.getLastEngineStatus(strParams,errorMsg);
 					break;
-				case "tzRunBatchProcess":	//运行自动初筛引擎
+				case "runBatchProcess":	//运行自动初筛引擎
 					strRet = this.tzRunBatchProcess(strParams,errorMsg);
 					break;
 			}
@@ -399,8 +399,13 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 					//淘汰名次
 					int outMc = lastMc - i;
 					if(outMc>0){
-						sqlQuery.update("update PS_TZ_CS_KS_TBL set TZ_KSH_CSJG='N' where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_KSH_PSPM=?", new Object[]{ classId, batchId, outMc });
-						sqlQuery.execute("commit");
+						sql = "select 'Y' from PS_TZ_CS_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_KSH_PSPM limit 1";
+						String exists = sqlQuery.queryForObject(sql, new Object[]{ classId, batchId, outMc }, "String");
+						
+						if("Y".equals(exists)){
+							sqlQuery.update("update PS_TZ_CS_KS_TBL set TZ_KSH_CSJG='N' where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_KSH_PSPM=?", new Object[]{ classId, batchId, outMc });
+							sqlQuery.execute("commit");
+						}
 					}
 				}
 			}
