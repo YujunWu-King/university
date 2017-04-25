@@ -233,8 +233,8 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 				psTzCsKsTblKey.setTzAppInsId(appId);
 				PsTzCsKsTbl psTzCsKsTbl = psTzCsKsTblMapper.selectByPrimaryKey(psTzCsKsTblKey);
 				
+				Date currDate = new Date();
 				if(psTzCsKsTbl != null){
-					Date currDate = new Date();
 					psTzCsKsTbl.setTzKshCsjg(status);
 					psTzCsKsTbl.setRowLastmantDttm(currDate);
 					psTzCsKsTbl.setRowLastmantOprid(oprid);
@@ -248,6 +248,17 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 					formMap.put("updateOpr", oprid);
 					
 					mapRet.replace("formData", formMap);
+				}else{
+					psTzCsKsTbl = new PsTzCsKsTbl();
+					psTzCsKsTbl.setTzClassId(classId);
+					psTzCsKsTbl.setTzApplyPcId(batchId);
+					psTzCsKsTbl.setTzAppInsId(appId);
+					psTzCsKsTbl.setTzKshCsjg(status);
+					psTzCsKsTbl.setRowAddedOprid(oprid);
+					psTzCsKsTbl.setRowAddedDttm(currDate);
+					psTzCsKsTbl.setRowLastmantDttm(currDate);
+					psTzCsKsTbl.setRowLastmantOprid(oprid);
+					psTzCsKsTblMapper.insert(psTzCsKsTbl);
 				}
 				
 				
