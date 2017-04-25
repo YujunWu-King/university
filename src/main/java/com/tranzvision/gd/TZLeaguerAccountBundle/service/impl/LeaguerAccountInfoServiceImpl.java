@@ -109,10 +109,10 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				}else{
 					//性别;
 					str_sex = psTzRegUserT.getTzGender();
-					if(str_sex != null && !"".equals(str_sex)){
+					/*if(str_sex != null && !"".equals(str_sex)){
 						String sexSQL = "select TZ_ZHZ_DMS from PS_TZ_GENDER_V where TZ_ZHZ_ID=?";
 						str_sex = jdbcTemplate.queryForObject(sexSQL, new Object[]{str_sex},"String");
-					}
+					}*/
 					
 					str_name= psTzRegUserT.getTzRealname();
 					//-----------------
