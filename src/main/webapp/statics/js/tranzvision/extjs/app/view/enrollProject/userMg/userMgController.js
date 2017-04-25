@@ -1877,6 +1877,36 @@
 
     },
 
+    selectProvince:function(){
+    	var form = this.getView().child("form").getForm();
+		Ext.tzShowPromptSearch({
+			recname: 'PS_STATE_TBL',
+			searchDesc: '搜索州省',
+			maxRow:50,
+			condition:{
+				presetFields:{
+					
+				},
+				srhConFields:{
+					descr:{
+						desc:'州省描述',
+						operator:'07',
+						type:'01'		
+					}	
+				}	
+			},
+			srhresult:{
+				state: '州省',
+				descr: '描述'	
+			},
+			multiselect: false,
+			callback: function(selection){
+				var provinceDesc = selection[0].data.descr;
+				var province = provinceDesc.substr(0,provinceDesc.indexOf(" "));
+				form.findField("lenProvince").setValue(province);
+			}
+		});	
+    },
     auditApplicationForm:function(grid, rowIndex, colIndex){
 
     	Ext.tzSetCompResourses("TZ_BMGL_BMBSH_COM");
