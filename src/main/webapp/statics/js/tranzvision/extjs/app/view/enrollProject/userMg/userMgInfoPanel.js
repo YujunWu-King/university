@@ -295,7 +295,7 @@
                                 editable:false,
                                 valueField: 'TValue',
                                 displayField: 'TLDesc',
-                                store: new KitchenSink.view.common.store.appTransStore("TZ_GENDER"),
+                                store: new KitchenSink.view.common.store.appTransStore("TZ_JJLXR_GENDER"),
                                 name : 'jjlxrSex',
                             },
                             {
