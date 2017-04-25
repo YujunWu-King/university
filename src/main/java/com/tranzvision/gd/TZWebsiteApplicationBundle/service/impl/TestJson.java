@@ -434,16 +434,18 @@ public class TestJson {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
-		String str = "123ABC456";
-		String re = "#7T\\$/#";
-		if(re.contains("$")){
+		TestJson ts = new TestJson();
+		String json = ts.readTxtFile("C:\\Users\\feifei\\Desktop\\json.json");
+		ts.Detail(json, new Long(9999));
+		//String str = "123ABC456";
+		//String re = "#7T\\$/#";
+		//if(re.contains("$")){
 			//re = re.replace("$", "\\\\$");
-			re = java.util.regex.Matcher.quoteReplacement(re);  
-		}
+		//	re = java.util.regex.Matcher.quoteReplacement(re);  
+		//}
 		//re = java.util.regex.Matcher.quoteReplacement(re);  
-		System.out.println(re);
-		System.out.println(str.replaceAll("ABC", re));
+		//System.out.println(re);
+		//System.out.println(str.replaceAll("ABC", re));
 
 		// String strValue="!2";
 		// boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");

@@ -16,7 +16,9 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzDxyjfsrwTblMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzEmlTaskAetMapper;
+import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjfsrwTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzEmlTaskAet;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
@@ -53,6 +55,9 @@ public class TzSmsViewHistoryClsServiceImpl extends FrameworkImpl{
 	
 	@Autowired
 	private TZGDObject tZGDObject;
+	
+	@Autowired
+	private PsTzDxyjfsrwTblMapper psTzDxyjfsrwTblMapper;
 	
 	//获取短信发送历史grid列表
 	@Override
@@ -246,6 +251,9 @@ public class TzSmsViewHistoryClsServiceImpl extends FrameworkImpl{
 			// 重新发送任务ID;
 	        String taskId = jacksonUtil.getString("taskId");
 	        //String smsQfID = jacksonUtil.getString("smsQfID");
+	        PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = psTzDxyjfsrwTblMapper.selectByPrimaryKey(taskId);
+	        psTzDxyjfsrwTbl.setTzRwzxZt("A");
+	        psTzDxyjfsrwTblMapper.updateByPrimaryKey(psTzDxyjfsrwTbl);
 	         
 			int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 			// 当前用户;

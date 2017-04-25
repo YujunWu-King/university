@@ -16,7 +16,9 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzDxyjfsrwTblMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzEmlTaskAetMapper;
+import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjfsrwTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzEmlTaskAet;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
@@ -59,6 +61,9 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 	
 	@Autowired
 	private AyalysisMbSysVar ayalysisMbSysVar;
+	
+	@Autowired
+	private PsTzDxyjfsrwTblMapper psTzDxyjfsrwTblMapper;
 
 	
 	//邮件历史查看
@@ -252,7 +257,7 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 				"SELECT TZ_SEND_MODEL,TZ_TMPL_ID,TZ_MAL_CONTENT FROM PS_TZ_DXYJQF_DY_T WHERE TZ_MLSM_QFPC_ID=?",
 				new Object[] { sendPcId });
 		if (map3 != null) {
-			sendModel = map3.get("TZ_AUDIENCE_ID") == null ? "" : (String) map3.get("TZ_SEND_MODEL");
+			sendModel = map3.get("TZ_SEND_MODEL") == null ? "" : (String) map3.get("TZ_SEND_MODEL");
 			tmplId = map3.get("TZ_TMPL_ID") == null ? "" : (String) map3.get("TZ_TMPL_ID");
 			content = map3.get("TZ_MAL_CONTENT") == null ? "" : (String) map3.get("TZ_MAL_CONTENT");
 		}
@@ -342,6 +347,9 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 				// 重新发送任务ID;
 		        String taskId = jacksonUtil.getString("taskId");
 		        //String emlQfId = jacksonUtil.getString("emlQfId");
+		        PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = psTzDxyjfsrwTblMapper.selectByPrimaryKey(taskId);
+		        psTzDxyjfsrwTbl.setTzRwzxZt("A");
+		        psTzDxyjfsrwTblMapper.updateByPrimaryKey(psTzDxyjfsrwTbl);
 		         
 				int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 				// 当前用户;
