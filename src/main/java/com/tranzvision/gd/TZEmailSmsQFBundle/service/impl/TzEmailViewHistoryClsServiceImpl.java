@@ -252,7 +252,7 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 				"SELECT TZ_SEND_MODEL,TZ_TMPL_ID,TZ_MAL_CONTENT FROM PS_TZ_DXYJQF_DY_T WHERE TZ_MLSM_QFPC_ID=?",
 				new Object[] { sendPcId });
 		if (map3 != null) {
-			sendModel = map3.get("TZ_AUDIENCE_ID") == null ? "" : (String) map3.get("TZ_SEND_MODEL");
+			sendModel = map3.get("TZ_SEND_MODEL") == null ? "" : (String) map3.get("TZ_SEND_MODEL");
 			tmplId = map3.get("TZ_TMPL_ID") == null ? "" : (String) map3.get("TZ_TMPL_ID");
 			content = map3.get("TZ_MAL_CONTENT") == null ? "" : (String) map3.get("TZ_MAL_CONTENT");
 		}
