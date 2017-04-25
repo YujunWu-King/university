@@ -314,7 +314,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						// PsTzApptplDyTWithBLOBs attachedPsTzApptplDyTWithBLOBs
 						// =
 						// psTzApptplDyTMapper.selectByPrimaryKey(strAttachedTplId);
-						String TZ_APP_M_TPL_ID = sqlQuery.queryForObject(sql, new Object[] { strAppInsId }, "String");
+						String TZ_APP_M_TPL_ID = sqlQuery.queryForObject(sql, new Object[] { strAttachedTplId }, "String");
 						if (strTplId.equals(TZ_APP_M_TPL_ID)) {
 							strTplId = strAttachedTplId;
 							// 根据报名表实例和附属模版编号去获得报名表Json数据
