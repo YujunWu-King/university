@@ -426,18 +426,30 @@ public class TzSmsQfDefClsServiceImpl extends FrameworkImpl {
 	private String getSmsTmpInfo(String comParams, String[] errorMsg) {
 		// 返回值;
 		Map<String, Object> map = new HashMap<>();
-		map.put("smsCont", "");
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
-		if (jacksonUtil.containsKey("SmsTmpId")) {
+		if (jacksonUtil.containsKey("SmsTmpId") && jacksonUtil.containsKey("smsQfId")) {
 			String tmpId = jacksonUtil.getString("SmsTmpId");
+			String smsQfId = jacksonUtil.getString("smsQfId");
+			//如果没变则不返回数据;
+			if(smsQfId != null && !"".equals(smsQfId) && tmpId != null && !"".equals(tmpId)){
+				int existNum = jdbcTemplate.queryForObject("select COUNT(1) from PS_TZ_DXYJQF_DY_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_TMPL_ID=?", new Object[]{smsQfId,tmpId},"Integer");
+				if(existNum > 0){
+					return jacksonUtil.Map2json(map);
+				}
+			}
+			
+			map.put("smsCont", "");
 			String strOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
 			String smsContent = jdbcTemplate.queryForObject(
 					" SELECT TZ_SMS_CONTENT FROM PS_TZ_SMSTMPL_TBL WHERE TZ_JG_ID=? AND TZ_TMPL_ID=?",
 					new Object[] { strOrgId, tmpId }, "String");
-			map.replace("smsCont", smsContent);
+			if(smsContent!=null && !"".equals(smsContent)){
+				map.replace("smsCont", smsContent);
+			}
+			
 		}
 		return jacksonUtil.Map2json(map);
 	}
@@ -1240,6 +1252,9 @@ public class TzSmsQfDefClsServiceImpl extends FrameworkImpl {
 		String strSmsQfId = ""; /* 群发任务id */
 		if (jacksonUtil.containsKey("smsQfId")) {
 			strSmsQfId = jacksonUtil.getString("smsQfId");
+			if(strSmsQfId == null || "".equals(strSmsQfId)){
+				return jacksonUtil.Map2json(mapRet);
+			}
 		} else {
 			return jacksonUtil.Map2json(mapRet);
 		}
