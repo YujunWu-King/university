@@ -344,6 +344,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
 						width:100
 					}]*/
                 },{
+					xtype: 'component',
+					style:{
+						marginLeft: '123px'	
+					},
+					html: '<span style="color: #F00;">发送多个收件人时，手机号码使用半角逗号“,”隔开。</span>'	
+				},{
                     xtype: 'tagfield',
                     fieldLabel: Ext.tzGetResourse("TZ_SMSQ_COM.TZ_SMSQ_DET_STD.recever","收件人"),
                     //emptyText:'可手工填写电子邮箱；也可从EXCEL中粘贴某一列的电子邮箱',

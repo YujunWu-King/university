@@ -137,7 +137,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefnCont
         var smsBkDetForm = field.findParentByType('form');
         var newValue=newValue+"";
         var oldValue=oldValue+"";
-        alert("newValue:"+newValue);
+        
         newValue = newValue.replace(/(^\s*)|(\s*$)/g, "");
         
         while (newValue.indexOf("，") >= 0){
