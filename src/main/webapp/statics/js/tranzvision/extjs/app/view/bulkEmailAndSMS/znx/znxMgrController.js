@@ -101,11 +101,30 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 			
 			ZnxTmplStore.load({
 				callback: function (records, options, success) {
-					//znxDtForm.down('combobox[reference=znxTmpId]').setStore(ZnxTmplStore);
+					znxDtForm.down('combobox[reference=znxTmpId]').setStore(ZnxTmplStore);
+					
+					var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getCreInfo","comParams":{}}';
+		            Ext.tzLoad(tzParams,function(responseData){
+		            	//znxDtForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
+		    	
+		            	znxDtForm.getForm().setValues(responseData);
+		                panel.BulkTaskId = znxDtForm.down('textfield[name=znxQfId]').getValue();
+
+		                par = '{"znxQfId": "'+responseData['znxQfId']+'","queryID": "atta"}';
+		                attaStore.tzStoreParams=par;
+		                attaStore.load();
+		                                             
+		                //znxDtForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
+						
+		                znxDtForm.down('button[reference=setZnxTmpl]').disabled=true;
+		                znxDtForm.down('button[reference=setZnxTmpl]').addCls('disabled-button-color');
+		                
+		                panel.commitChanges(panel);
+		            });
 				}
 			});
-			znxDtForm.down('combobox[reference=znxTmpId]').setStore(ZnxTmplStore);
-
+			//znxDtForm.down('combobox[reference=znxTmpId]').setStore(ZnxTmplStore);
+			/*
             var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getCreInfo","comParams":{}}';
             Ext.tzLoad(tzParams,function(responseData){
             	//znxDtForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
@@ -122,7 +141,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
                 znxDtForm.down('button[reference=setZnxTmpl]').disabled=true;
                 znxDtForm.down('button[reference=setZnxTmpl]').addCls('disabled-button-color');
             });
-
+			 */
         });
 
         tab = contentPanel.add(cmp);
@@ -213,101 +232,103 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgrController', {
 			
 			ZnxTmplStore.load({
 				callback: function (records, options, success) {
-					//emlBkDetForm.down('combobox[reference=znxTmpId]').setStore(ZnxTmplStore);
-				}
-			});
-			emlBkDetForm.down('combobox[reference=znxTmpId]').setStore(ZnxTmplStore);
-			
-			var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"QF","comParams":{"znxQfId":"'+znxQfId+'"}}';
-			Ext.tzLoad(tzParams,function(responseData){
-				emlBkDetForm.getForm().setValues(responseData);
-				
-				panel.BulkTaskId = emlBkDetForm.down('textfield[name=znxQfId]').getValue();
-
-				/*
-					emlBkDetForm.down('button[reference=setZnxTmpl]').disabled=false;
-					var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getZnxTmpItem","comParams":{"znxQfId":"'+znxQfId+'","znxTmpId":"'+responseData['znxTmpId']+'"}}';
+					emlBkDetForm.down('combobox[reference=znxTmpId]').setStore(ZnxTmplStore);
+					
+					var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"QF","comParams":{"znxQfId":"'+znxQfId+'"}}';
 					Ext.tzLoad(tzParams,function(responseData){
-						znxItemStore.add(responseData['root']);
-						znxItemStore.commitChanges();
+						emlBkDetForm.getForm().setValues(responseData);
+						
+						panel.BulkTaskId = emlBkDetForm.down('textfield[name=znxQfId]').getValue();
 
-						var userAgent = navigator.userAgent;
-						if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) {
-							var copyItemsDom = document.getElementsByName("itememlCopy");
-							for (var i = 0; i < copyItemsDom.length; i++) {
-								$(copyItemsDom[i]).zclip({
-									beforeCopy: function () {
-										var itemHtml = this.parentNode.parentNode.parentNode.innerHTML;
-										var itemFirstCharPositon = itemHtml.indexOf("[");
-										var itemLastCharPositon = itemHtml.indexOf("]");
-										var itemPara = itemHtml.slice(itemFirstCharPositon, itemLastCharPositon + 1);
-										emlBkDetForm.down('textfield[name=copyfield]').setValue(itemPara);
-									},
-									copy: function () {
-										return emlBkDetForm.down('textfield[name=copyfield]').getValue();
+						/*
+							emlBkDetForm.down('button[reference=setZnxTmpl]').disabled=false;
+							var tzParams = '{"ComID":"TZ_ZNX_GL_COM","PageID":"TZ_ZNX_DET_STD","OperateType":"getZnxTmpItem","comParams":{"znxQfId":"'+znxQfId+'","znxTmpId":"'+responseData['znxTmpId']+'"}}';
+							Ext.tzLoad(tzParams,function(responseData){
+								znxItemStore.add(responseData['root']);
+								znxItemStore.commitChanges();
+
+								var userAgent = navigator.userAgent;
+								if (userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) {
+									var copyItemsDom = document.getElementsByName("itememlCopy");
+									for (var i = 0; i < copyItemsDom.length; i++) {
+										$(copyItemsDom[i]).zclip({
+											beforeCopy: function () {
+												var itemHtml = this.parentNode.parentNode.parentNode.innerHTML;
+												var itemFirstCharPositon = itemHtml.indexOf("[");
+												var itemLastCharPositon = itemHtml.indexOf("]");
+												var itemPara = itemHtml.slice(itemFirstCharPositon, itemLastCharPositon + 1);
+												emlBkDetForm.down('textfield[name=copyfield]').setValue(itemPara);
+											},
+											copy: function () {
+												return emlBkDetForm.down('textfield[name=copyfield]').getValue();
+											}
+										});
 									}
-								});
+								}
+							});
+						*/
+						par = '{"znxQfId": "'+znxQfId+'","queryID": "atta"}';
+						attaStore.tzStoreParams=par;
+						attaStore.load();
+		/*
+						if (responseData['rwzxZt']==""||responseData['rwzxZt']=="D"||responseData['rwzxZt']=="E"){
+							if(responseData['recever']!=""){
+								emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
+								emlBkDetForm.down('tagfield[reference=recever]').setValue(responseData['recever']);
+								emlBkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
+								
+								var arrRecever = responseData['recever'];
+								var hasEmailAdd = false;
+								for(var i=0; i<arrRecever.length; i++){
+									var EmailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;	
+									if (EmailReg.test(arrRecever[i])){
+										hasEmailAdd = true;
+										break;
+									}
+								}
+								if(hasEmailAdd) {
+									emlBkDetForm.down('combobox[reference=znxTmpId]').disabled=true;
+									emlBkDetForm.down('combobox[reference=znxTmpId]').addCls('readOnly-combox-BackgroundColor');	
+								}else{
+									emlBkDetForm.down('combobox[reference=znxTmpId]').disabled=false;
+									emlBkDetForm.down('combobox[reference=znxTmpId]').removeCls('readOnly-combox-BackgroundColor');
+								}
 							}
-						}
-					});
-				*/
-				par = '{"znxQfId": "'+znxQfId+'","queryID": "atta"}';
-				attaStore.tzStoreParams=par;
-				attaStore.load();
-/*
-				if (responseData['rwzxZt']==""||responseData['rwzxZt']=="D"||responseData['rwzxZt']=="E"){
-					if(responseData['recever']!=""){
-						emlBkDetForm.down('tagfield[reference="recever"]').removeListener('change','receverChange');
-						emlBkDetForm.down('tagfield[reference=recever]').setValue(responseData['recever']);
-						emlBkDetForm.down('tagfield[reference="recever"]').addListener('change','receverChange');
-						
-						var arrRecever = responseData['recever'];
-						var hasEmailAdd = false;
-						for(var i=0; i<arrRecever.length; i++){
-							var EmailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;	
-							if (EmailReg.test(arrRecever[i])){
-								hasEmailAdd = true;
-								break;
-							}
-						}
-						if(hasEmailAdd) {
-							emlBkDetForm.down('combobox[reference=znxTmpId]').disabled=true;
-							emlBkDetForm.down('combobox[reference=znxTmpId]').addCls('readOnly-combox-BackgroundColor');	
+
+							if(responseData['sendModel']=="EXC"){
+								emlBkDetForm.down('radio[reference=sendModelExc]').setValue(true);
+
+								emlBkDetForm.child('tagfield[reference=recever]').setEditable(false);
+								emlBkDetForm.child('tagfield[reference=recever]').disabled=true;
+								emlBkDetForm.child('toolbar').child('button[reference=addAudienceBtn]').disabled=true;
+								emlBkDetForm.child('toolbar').child('button[reference=addAudienceBtn]').addCls('x-item-disabled x-btn-disabled');
+								
+								emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
+								
+								emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
+								emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
+								
+								emlBkDetForm.down('combobox[reference=znxTmpId]').disabled=true;
+								emlBkDetForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
+								emlBkDetForm.down('combobox[reference=znxTmpId]').addCls('readOnly-combox-BackgroundColor');
+							};
 						}else{
-							emlBkDetForm.down('combobox[reference=znxTmpId]').disabled=false;
-							emlBkDetForm.down('combobox[reference=znxTmpId]').removeCls('readOnly-combox-BackgroundColor');
+							panel.down('button[reference=saveBtn]').setDisabled(true);
+							panel.down('button[reference=sendBtn]').setDisabled(true);
+							panel.getController().pageReadonly(emlBkDetForm);
 						}
-					}
 
-					if(responseData['sendModel']=="EXC"){
-						emlBkDetForm.down('radio[reference=sendModelExc]').setValue(true);
-
-						emlBkDetForm.child('tagfield[reference=recever]').setEditable(false);
-						emlBkDetForm.child('tagfield[reference=recever]').disabled=true;
-						emlBkDetForm.child('toolbar').child('button[reference=addAudienceBtn]').disabled=true;
-						emlBkDetForm.child('toolbar').child('button[reference=addAudienceBtn]').addCls('x-item-disabled x-btn-disabled');
-						
-						emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
-						
-						emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
-						emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
-						
-						emlBkDetForm.down('combobox[reference=znxTmpId]').disabled=true;
-						emlBkDetForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
-						emlBkDetForm.down('combobox[reference=znxTmpId]').addCls('readOnly-combox-BackgroundColor');
-					};
-				}else{
-					panel.down('button[reference=saveBtn]').setDisabled(true);
-					panel.down('button[reference=sendBtn]').setDisabled(true);
-					panel.getController().pageReadonly(emlBkDetForm);
+						if(responseData['rwzxZt']=="B"){
+							panel.down('button[reference=revokeBtn]').setVisible(true);
+						}
+		*/
+						panel.commitChanges(panel);
+					});
 				}
-
-				if(responseData['rwzxZt']=="B"){
-					panel.down('button[reference=revokeBtn]').setVisible(true);
-				}
-*/
-				panel.commitChanges(panel);
 			});
+			//emlBkDetForm.down('combobox[reference=znxTmpId]').setStore(ZnxTmplStore);
+			
+			
         });
 
         tab = contentPanel.add(cmp);

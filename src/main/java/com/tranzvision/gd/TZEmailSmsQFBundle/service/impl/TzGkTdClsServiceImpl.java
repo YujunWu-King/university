@@ -61,11 +61,18 @@ public class TzGkTdClsServiceImpl extends FrameworkImpl {
 			String strAudRyId = tdParams [1];
 			
 			Map<String, Object> map = jdbcTemplate.queryForMap("select TZ_LINK_TYPE,TZ_MLSM_QFPC_ID,TZ_REDT_URL,TZ_ADD_DTTM,TZ_EML_SMS_TASK_ID from PS_TZ_LINKPAR_TBL where TZ_LINKPRA_ID=?",new Object[]{strLinkId});
-			String strLinkType = String.valueOf(map.get("TZ_LINK_TYPE"));
-			String strDxYjId= String.valueOf(map.get("TZ_MLSM_QFPC_ID"));
-			String strLinkSite= String.valueOf(map.get("TZ_REDT_URL"));
-			//Date strAddTime= (Date) map.get("TZ_ADD_DTTM");
-			String strTaskId = String.valueOf(map.get("TZ_EML_SMS_TASK_ID"));
+			String strLinkType = "";
+			String strDxYjId= "";
+			String strLinkSite = "";
+			String strTaskId = "";
+			if(map != null){
+				strLinkType = map.get("TZ_LINK_TYPE") == null ? "":String.valueOf(map.get("TZ_LINK_TYPE"));
+				strDxYjId= map.get("TZ_MLSM_QFPC_ID") == null ?"":String.valueOf(map.get("TZ_MLSM_QFPC_ID"));
+				strLinkSite= map.get("TZ_REDT_URL")==null ?"":String.valueOf(map.get("TZ_REDT_URL"));
+				//Date strAddTime= (Date) map.get("TZ_ADD_DTTM");
+				strTaskId = map.get("TZ_EML_SMS_TASK_ID")==null ?"":String.valueOf(map.get("TZ_EML_SMS_TASK_ID"));
+			}
+			
 			
 			/*获得听众ID*/
 			String strAudId = jdbcTemplate.queryForObject("select TZ_AUDIENCE_ID from PS_TZ_DXYJFSRW_TBL where TZ_EML_SMS_TASK_ID=?", new Object[]{strTaskId},"String");

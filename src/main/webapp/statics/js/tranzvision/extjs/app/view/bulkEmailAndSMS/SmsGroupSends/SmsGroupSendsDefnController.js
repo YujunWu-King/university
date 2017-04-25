@@ -137,7 +137,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefnCont
         var smsBkDetForm = field.findParentByType('form');
         var newValue=newValue+"";
         var oldValue=oldValue+"";
-        
+        alert("newValue:"+newValue);
         newValue = newValue.replace(/(^\s*)|(\s*$)/g, "");
         
         while (newValue.indexOf("，") >= 0){
@@ -167,10 +167,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefnCont
         var arrOldValue = oldValue.split(',');
         //处理 清除所有 按钮
         if(newValue==""){
+        	/*
             if(!smsBkDetForm.down('fieldset[reference=sendModelSet]').child('radio[reference=sendModelExc]').checked){
                 smsBkDetForm.down('combobox[reference=smsTmpId]').disabled=false;
                 smsBkDetForm.down('combobox[reference=smsTmpId]').removeCls('readOnly-combox-BackgroundColor');
             }
+            */
         }else{
             if(newValue.length>oldValue.length){
                 var newinput= arrNewValue[arrNewValue.length-1];
@@ -197,6 +199,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefnCont
                     smsBkDetForm.down('combobox[reference=smsTmpId]').addCls('readOnly-combox-BackgroundColor');
                 }
 				*/
+            	/*
 				var hasPhoneAdd = false;
 				for(var i=0; i<arrNewValue.length; i++){
 					var phoneReg = /^1\d{10}$/;	
@@ -205,6 +208,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefnCont
 						break;
 					}
 				}
+				
 				if(hasPhoneAdd) {
 					smsBkDetForm.down('combobox[reference=smsTmpId]').disabled=true;
                     smsBkDetForm.down('combobox[reference=smsTmpId]').addCls('readOnly-combox-BackgroundColor');	
@@ -212,6 +216,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefnCont
 					smsBkDetForm.down('combobox[reference=smsTmpId]').disabled=false;
                     smsBkDetForm.down('combobox[reference=smsTmpId]').removeCls('readOnly-combox-BackgroundColor');
 				}
+				*/
             }
         }
     },

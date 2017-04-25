@@ -359,7 +359,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                     publishes: 'value',
 					//minHeight: 200,
                     listeners: {
-                        change:'receverChange'
+                        //change:'receverChange'
                     },
                     listConfig:{
                         maxHeight:1
@@ -481,9 +481,9 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                                     if(t.findParentByType('form').down('radio[reference=sendModelNor]').checked){
                                         var SmsGroupDtFrom = t.findParentByType('form');
                                         if(newValue!=""){
-                                            SmsGroupDtFrom.child('tagfield[reference=receverTagField]').setEditable(false);
-                                            SmsGroupDtFrom.child('tagfield[reference=receverTagField]').disabled=true;
-                                            SmsGroupDtFrom.down('tagfield[reference=receverTagField]').addCls('readOnly-tagfield-BackgroundColor');
+                                            //SmsGroupDtFrom.child('tagfield[reference=receverTagField]').setEditable(false);
+                                            //SmsGroupDtFrom.child('tagfield[reference=receverTagField]').disabled=true;
+                                            //SmsGroupDtFrom.down('tagfield[reference=receverTagField]').addCls('readOnly-tagfield-BackgroundColor');
                                             SmsGroupDtFrom.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
 											
 											SmsGroupDtFrom.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
@@ -492,7 +492,9 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                                             SmsGroupDtFrom.down('button[reference=setSmsTmpl]').setDisabled(false);
                                             SmsGroupDtFrom.down('button[reference=setSmsTmpl]').removeCls('disabled-button-color');
                                             //加载邮件模版信息
-                                            var tzParams = '{"ComID":"TZ_SMSQ_COM","PageID":"TZ_SMSQ_DET_STD","OperateType":"getSmsTmpInfo","comParams":{"SmsTmpId":"'+newValue+'"}}';
+                                            //短信群发id;
+                                            var smsQfId = SmsGroupDtFrom.getForm().findField("smsQfId").getValue();
+                                            var tzParams = '{"ComID":"TZ_SMSQ_COM","PageID":"TZ_SMSQ_DET_STD","OperateType":"getSmsTmpInfo","comParams":{"SmsTmpId":"'+newValue+'","smsQfId":"'+smsQfId+'"}}';
                                             Ext.tzLoadAsync(tzParams,function(responseData){
                                                 SmsGroupDtFrom.getForm().setValues(responseData);
                                             });
@@ -530,9 +532,9 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.SmsGroupSends.SmsGroupSendsDefn', {
                                                 }
                                             });
                                         }else{
-                                            SmsGroupDtFrom.child('tagfield[reference=receverTagField]').setEditable(true);
-                                            SmsGroupDtFrom.child('tagfield[reference=receverTagField]').disabled=false;
-                                            SmsGroupDtFrom.down('tagfield[reference=receverTagField]').removeCls('readOnly-tagfield-BackgroundColor');
+                                            //SmsGroupDtFrom.child('tagfield[reference=receverTagField]').setEditable(true);
+                                            //SmsGroupDtFrom.child('tagfield[reference=receverTagField]').disabled=false;
+                                            //SmsGroupDtFrom.down('tagfield[reference=receverTagField]').removeCls('readOnly-tagfield-BackgroundColor');
                                             SmsGroupDtFrom.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=false;
 											
 											SmsGroupDtFrom.child('toolbar').child('button[reference=selectStuBtn]').disabled=false;

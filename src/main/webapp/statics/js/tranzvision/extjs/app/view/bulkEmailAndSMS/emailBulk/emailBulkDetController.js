@@ -132,10 +132,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
         var arrOldValue = oldValue.split(',');
         //处理 清除所有 按钮
         if(newValue==""){
+        	/*
             if(!emlBkDetForm.child('fieldset[reference=sendModelSet]').child('radio[reference=sendModelExc]').checked){
                 emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=false;
                 emlBkDetForm.down('combobox[reference=emlTmpId]').removeCls('readOnly-combox-BackgroundColor');
             }
+            */
         }else{
             if(newValue.length>oldValue.length){
                 var newinput= arrNewValue[arrNewValue.length-1];
@@ -163,6 +165,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
                     emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');
                 }
 				*/
+            	
+            	/*
 				var hasEmailAdd = false;
 				for(var i=0; i<arrNewValue.length; i++){
 					var EmailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;	
@@ -171,6 +175,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
 						break;
 					}
 				}
+				
 				if(hasEmailAdd) {
 					emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=true;
                     emlBkDetForm.down('combobox[reference=emlTmpId]').addCls('readOnly-combox-BackgroundColor');	
@@ -178,6 +183,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDetController', 
 					emlBkDetForm.down('combobox[reference=emlTmpId]').disabled=false;
                     emlBkDetForm.down('combobox[reference=emlTmpId]').removeCls('readOnly-combox-BackgroundColor');
 				}
+				*/
             }
         }
     },
