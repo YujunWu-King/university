@@ -130,12 +130,12 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						psTzClpwpslsTbl.setTzPweiOprid(strPwOprid);
 						psTzClpwpslsTbl.setRowLastmantDttm(new Date());
 						psTzClpwpslsTbl.setRowLastmantOprid(oprid);
-						if (strSubmitYN == null || "".equals(strSubmitYN)) {
-							strSubmitYN = "N";
+						if (strSubmitYN != null && !"".equals(strSubmitYN)) {
+							psTzClpwpslsTbl.setTzSubmitYn(strSubmitYN);
 						}
-						psTzClpwpslsTbl.setTzSubmitYn(strSubmitYN);
+						
 						if ("Y".equals(strExist)) {
-							psTzClpwpslsTblMapper.updateByPrimaryKey(psTzClpwpslsTbl);
+							psTzClpwpslsTblMapper.updateByPrimaryKeySelective(psTzClpwpslsTbl);
 						} else {
 							psTzClpwpslsTbl.setRowAddedDttm(new Date());
 							psTzClpwpslsTbl.setRowAddedOprid(oprid);
@@ -149,12 +149,14 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						psTzClpsPwTbl.setTzClassId(strClassID);
 						psTzClpsPwTbl.setTzApplyPcId(strBatchID);
 						psTzClpsPwTbl.setTzPweiOprid(strPwOprid);
-						psTzClpsPwTbl.setTzPweiZhzt(accountStatus);
+						if(accountStatus!=null&&!"".equals(accountStatus)){
+							psTzClpsPwTbl.setTzPweiZhzt(accountStatus);
+						}
 						psTzClpsPwTbl.setRowLastmantDttm(new Date());
 						psTzClpsPwTbl.setRowLastmantOprid(oprid);
 
 						if ("Y".equals(strExist)) {
-							psTzClpsPwTblMapper.updateByPrimaryKey(psTzClpsPwTbl);
+							psTzClpsPwTblMapper.updateByPrimaryKeySelective(psTzClpsPwTbl);
 						} else {
 							psTzClpsPwTbl.setRowAddedDttm(new Date());
 							psTzClpsPwTbl.setRowAddedOprid(oprid);
@@ -1385,7 +1387,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				String strSql1 = "SELECT COUNT(*) FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 				Integer numStu = sqlQuery.queryForObject(strSql1, new Object[] { strClassID, strBatchID }, "Integer");
 				// 每位考生需要被多少位评委评审
-				String strSql2 = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+				String strSql2 = "SELECT ifnull(TZ_MSPY_NUM,0) FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 				Integer judgeCount = sqlQuery.queryForObject(strSql1, new Object[] { strClassID, strBatchID },
 						"Integer");
 

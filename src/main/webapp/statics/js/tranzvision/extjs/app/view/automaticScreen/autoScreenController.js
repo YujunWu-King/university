@@ -193,7 +193,7 @@
 			Ext.MessageBox.confirm('提示', '开启自动初筛后，系统会清除当前项目下的所有初筛信息重新打分。自动初筛进程可能会持续一段时间。是否确定开启自动初筛进程？', 
 					function(btnId){
 				if(btnId == 'yes'){
-					comParamsObj.OperateType = "tzRunBatchProcess";
+					comParamsObj.OperateType = "runBatchProcess";
 					tzParams = Ext.JSON.encode(comParamsObj);
 					
 					Ext.tzSubmit(tzParams,function(respData){
@@ -201,9 +201,7 @@
 						Ext.tzBatchProcessDetails({
 							//进程实例ID
 							processIns: processIns,
-							callBack:function(statusCode){
-								
-							}
+							callBack:function(statusCode){}
 						});
 					},"运行成功",true,this);
 				}

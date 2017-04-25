@@ -32,6 +32,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -2399,6 +2400,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strResult = "获取数据失败，请联系管理员";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
+			//20170424,yuds
+			Boolean isMobile = CommonUtils.isMobile(request);
+			
 			jacksonUtil.json2Map(strParams);
 			strOrgid = jacksonUtil.getString("orgid");
 			strLang = jacksonUtil.getString("lang");
@@ -2410,7 +2414,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			/*String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "122",
 					"密码强度不够", "Stronger password needed.");*/
 			String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "134",
-					"密码格式不符合要求", "Wrong password format.");
+					"密码格式不符合要求", "Wrong password format.");			
 			String strNotice = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "123",
 					"请重置新密码", "Please Enter New Password.");
 
@@ -2442,18 +2446,27 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 								strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
 								imgPath);
 					} else {
-						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML",
+						if(isMobile){
+							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_HTML2",strBeginUrl, strTokenSign2, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
+						}else{
+							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML",
 								strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
 								imgPath);
+						}
 					}
 
 					str_content = objRep.repTitle(str_content, strSiteId);
 					str_content = objRep.repCss(str_content, strSiteId);
 					return str_content;
 				} else {
-					// 无效；
-					strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
+					// 增加手机验证；
+					if(isMobile){
+						strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
+								+ "&lang=" + strLang + "&sen=10";
+					}else{
+						strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
 							+ "&lang=" + strLang + "&sen=4";
+					}
 					String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
 							"58", "重置密码时间为30分钟，已超时，请重新发送忘记密码邮件！",
 							"Reset password time for 30 minutes, has timed out, please re send forget password message!");
@@ -2462,8 +2475,14 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					return str_content;
 				}
 			} else {
-				strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid + "&lang="
-						+ strLang + "&sen=4";
+				// 增加手机验证；
+				if(isMobile){
+					strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
+							+ "&lang=" + strLang + "&sen=10";
+				}else{
+					strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
+						+ "&lang=" + strLang + "&sen=4";
+				}
 				String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "59",
 						"重置密码链接已失效，请重新发送忘记密码邮件！",
 						"Reset password link has failed, please re send forget password mail!");

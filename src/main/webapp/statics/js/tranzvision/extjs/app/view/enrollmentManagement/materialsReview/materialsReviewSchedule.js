@@ -921,9 +921,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                         listeners: {
                             activate: 'stuListActive'
                         },
-                        store: {
+                        /*store: {
                             type: 'materialsReviewScheduleAppsStore'
-                        },
+                        },*/
                         plugins: [{
                             ptype: 'cellediting',
                             pluginId: 'judgeCellEditing',
@@ -937,7 +937,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             }
                         }],
                         dockedItems: dockedItems,
-                        columns: applicantsColumns
+                        columns: applicantsColumns,
+                        store:materialsReviewScheduleAppsStore,
+                        bbar: {
+                            xtype: 'pagingtoolbar',
+                            pageSize: 10,
+                            store: materialsReviewScheduleAppsStore,
+                            plugins: new Ext.ux.ProgressBarPager()
+                        }
                     },                    
                     {
                         xtype: 'form',
