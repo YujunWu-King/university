@@ -518,6 +518,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
 				    psTzAqYhxxTbl.setTzDlzhId(strOprId);
 				    psTzAqYhxxTbl.setTzJgId(strUserOrg);
+				    if(strUserName!=null&&!"".equals(strUserName)){
+				    	psTzAqYhxxTbl.setTzRealname(strUserName);
+				    }
 				    if(strUserEmail!=null){
 				    	psTzAqYhxxTbl.setTzEmail(strUserEmail);
 				    }

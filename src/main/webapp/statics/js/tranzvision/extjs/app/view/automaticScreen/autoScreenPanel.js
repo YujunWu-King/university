@@ -55,18 +55,18 @@
 			xtype:'rownumberer',
 			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.order","序号"),
 			width:40
-		},{ 
+		}/*,{ 
 			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.appId","报名表编号"),
 			dataIndex: 'appId',
 			width:90
+		}*/,{ 
+			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.msApplyId","面试申请号"),
+			dataIndex: 'msApplyId',
+			width:100
 		},{ 
 			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.name","姓名"),
 			dataIndex: 'name',
 			width:90
-		},{ 
-			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.msApplyId","面试申请号"),
-			dataIndex: 'msApplyId',
-			width:100
 		}]
     	
     	//成绩项分值列
@@ -248,12 +248,18 @@
 	    					{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set",handler:"runAutoScreenEngine"},"-",
 	    					{
 	    						xtype:'button',
-	    						text:'批量设置进入材料评审状态',
+	    						text:'设置淘汰状态',
 	    						iconCls:  'set',
 	    						menu:[{
-	    							text:'进入材料评审',iconCls:"check",handler:'setScreenPass'
+	    							text:'将所选考生设置为淘汰',handler:'setScreenNoPass'
 	    						},{
-	    							text:'淘汰',iconCls:"close",handler:'setScreenNoPass'
+	    							text:'将所选考生取消淘汰',handler:'setScreenPass'
+	    						},{
+	    							text:'将查询结果所有考生设置为淘汰',handler:'setSearchScreenNoPass'
+	    						},{
+	    							text:'将查询结果所有考生取消淘汰',handler:'setSearchScreenPass'
+	    						},{
+	    							text:'根据名次批量淘汰',handler:'setWeedOutByRank'
 	    						}]
 	    					},
 	    					'->',
@@ -264,8 +270,6 @@
 	    						glyph: 61,
 	    						menu:[{
 	    							text:'查看自动初筛进程运行详情',iconCls:"view",handler:'showBatchProcessInfo'
-	    						},{
-	    							text:'根据名次批量淘汰',iconCls:"set",handler:'setWeedOutByRank'
 	    						}]
 	    					}
 	    				]
@@ -280,7 +284,7 @@
 	    			columns: columns,
 	    			bbar: {
 	    				xtype: 'pagingtoolbar',
-	    				pageSize: 500,
+	    				pageSize: 1000,
 	    				listeners:{
 	    					afterrender: function(pbar){
 	    						var grid = pbar.findParentByType("grid");

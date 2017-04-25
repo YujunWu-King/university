@@ -99,7 +99,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 					filter:{
 						type:'list'
 					}
-				}]
+				}],
+                bbar: {
+                    xtype: 'pagingtoolbar',
+                    pageSize: 50,
+                    store:  {
+                        type:'materialsReviewExamineeWindowStore'
+                    },
+                    plugins: new Ext.ux.ProgressBarPager()
+                }
     		}]
     	});
     	this.callParent();

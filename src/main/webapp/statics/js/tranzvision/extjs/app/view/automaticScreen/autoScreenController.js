@@ -30,6 +30,13 @@
 				var store = btn.findParentByType("grid").store;
 				store.tzStoreParams = seachCfg;
 				store.load();
+				
+				
+				var tzParams = '{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"getSearchSql","comParams":'+seachCfg+'}';
+				Ext.tzLoad(tzParams,function(responseData){
+					var getedSQL = responseData.searchSql;
+					panel.getedSQL = getedSQL;
+				});
 			}
 		});
 	},
@@ -193,10 +200,20 @@
 			Ext.MessageBox.confirm('提示', '开启自动初筛后，系统会清除当前项目下的所有初筛信息重新打分。自动初筛进程可能会持续一段时间。是否确定开启自动初筛进程？', 
 					function(btnId){
 				if(btnId == 'yes'){
-					comParamsObj.OperateType = "runBatchProcess";
-					tzParams = Ext.JSON.encode(comParamsObj);
+					var comParamsObj2 = {
+							ComID: 'TZ_AUTO_SCREEN_COM',
+							PageID: 'TZ_AUTO_SCREEN_STD',
+							OperateType: 'runBatchProcess',
+							comParams:{
+								classId: classId,
+								batchId: batchId
+							}
+						};
+					console.log(comParamsObj2);
+					var tzParams2 = Ext.JSON.encode(comParamsObj2);
+					console.log(tzParams2);
 					
-					Ext.tzSubmit(tzParams,function(respData){
+					Ext.tzSubmit(tzParams2,function(respData){
 						var processIns = respData.processIns;
 						Ext.tzBatchProcessDetails({
 							//进程实例ID
@@ -562,6 +579,51 @@
             }]
         });
         win.show();
+	},
+	
+	
+	//将查询结果所有考生设置为淘汰
+	setSearchScreenNoPass: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		this.setSearchResultHandler(panel,"N");
+	},
+	
+	//将查询结果所有考生取消淘汰 
+	setSearchScreenPass: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		this.setSearchResultHandler(panel,"Y");
+	},
+	
+	setSearchResultHandler: function(panel,type){
+		var grid = panel.down('grid');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		
+		//构造搜索sql
+		if((typeof panel.getedSQL) == "undefined"){
+			searchSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_CS_STU_VW WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_BATCH_ID='"+ batchId +"'";
+		}else{
+			searchSql = panel.getedSQL;
+		}
+		
+		console.log(searchSql);
+		
+		var comParamsObj = {
+			ComID: 'TZ_AUTO_SCREEN_COM',
+			PageID: 'TZ_AUTO_SCREEN_STD',
+			OperateType: 'setSearchPsjgStatus',
+			comParams:{
+				classId: classId,
+				batchId: batchId,
+				setType: type,
+				searchSql: searchSql
+			}
+		};
+		var tzParams = Ext.JSON.encode(comParamsObj);
+		
+		Ext.tzSubmit(tzParams,function(respDate){
+			grid.getStore().reload();
+		},"设置成功",true,this);
 	}
 	
 });
