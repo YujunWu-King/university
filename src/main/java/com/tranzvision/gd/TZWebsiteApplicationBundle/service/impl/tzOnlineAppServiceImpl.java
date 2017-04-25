@@ -855,7 +855,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				}
 
 				strTplData = strTplData.replace("\\", "\\\\");
-				strTplData = strTplData.replace("$", "\\$");
+				//strTplData = strTplData.replace("$", "\\$");
 
 				Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
 				Matcher mc = CRLF.matcher(strInsData);
@@ -864,7 +864,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				}
 				strInsData = strInsData.replace("\\", "\\\\");
 				
-				strInsData = strInsData.replace("$", "\\$");
+				//strInsData = strInsData.replace("$", "\\$");
 				// 处理HTML换行符号，是替换的\u2028;
 				strInsData = strInsData.replace(" ", "");
 				String pwdError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
