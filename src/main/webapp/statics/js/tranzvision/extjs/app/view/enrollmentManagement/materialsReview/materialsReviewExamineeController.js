@@ -345,7 +345,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     }
                     if (selectJudge == "") {
                         selectJudge = store.getAt(select).get('judgeOprid');
-                    }
+                }
                     else {
                         selectJudge = selectJudge + "," + store.getAt(select).get('judgeOprid');
                     }
@@ -381,10 +381,23 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
             Ext.tzSubmit(tzParams, function (respData) {
                 examineeGrid.getStore().reload();
+               /* var pweiList = respData.pweiList;
+                //选中行
+                var selList = examineeGrid.getSelectionModel().getSelection();
+                for(var i=0;i<selList.length;i++) {
+                    var appinsId = selList[i].get("appinsId");
+                    for(var j=0;j<pweiList.length;j++) {
+                        if(pweiList[j].appinsId==appinsId) {
+                            selList[i].set('judgeList',pweiList[j].pweiDlzhDesc);
+                        }
+                    }
+                }*/
+
                 if(respData.Nomal==1){
                     Ext.Msg.alert ("注意","在您所选的评委中,有评委指定的考生已达上限，未能成功指定评委，请修改");
                 }
-                else{   Ext.Msg.alert ("提示","指定评委成功");
+                else{
+                    Ext.Msg.alert ("提示","指定评委成功");
                 }
                 win.close();
             },'',true,this);

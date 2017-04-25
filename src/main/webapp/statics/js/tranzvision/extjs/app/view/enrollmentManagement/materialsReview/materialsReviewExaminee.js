@@ -201,7 +201,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     						iconCls:'remove',tooltip:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_STD.remove","删除"),handler:'removeExamineeOne'
     					}]
     				}],
-    				store:examineeStore
+    				store:examineeStore,
+					bbar: {
+						xtype: 'pagingtoolbar',
+						pageSize: 50,
+						store: examineeStore,
+						plugins: new Ext.ux.ProgressBarPager()
+					}
     			}]
     		}]
     	});
