@@ -909,17 +909,14 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 					String strJudgeName = sqlQuery.queryForObject(strPwNameSql,
 							new Object[] { strCurrentOrg, strJudgeAccount }, "String");
 					// 考生材料评审历史表（里面记录了各个轮次评委的打分情况）
-					String strSql1 = "SELECT count(*) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=? AND TZ_PWEI_OPRID=?";
-					String strHasSubmited = sqlQuery.queryForObject(strSql1,
-							new Object[] { strClassID, strBatchID, intDqpyLunc, strJudgeAccount }, "String");
-
 					String strPwIdSql = "SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
-					strJudgeAccountID = sqlQuery.queryForObject(strPwIdSql,
-							new Object[] { strCurrentOrg, strJudgeAccount }, "String");
+					strJudgeAccountID = sqlQuery.queryForObject(strPwIdSql,	new Object[] { strCurrentOrg, strJudgeAccount }, "String");
 
-					String strSql2 = "SELECT COUNT(*) FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? ";
-					String strNeedSubmit = sqlQuery.queryForObject(strSql2,
-							new Object[] { strClassID, strBatchID, strJudgeAccount }, "String");
+					String strSql1 = "SELECT COUNT(DISTINCT TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=? AND TZ_SUBMIT_YN='Y'";
+					String strHasSubmited = sqlQuery.queryForObject(strSql1,new Object[] { strClassID, strBatchID, strJudgeAccount, intDqpyLunc }, "String");
+					
+					String strSql2 = "SELECT COUNT(DISTINCT TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=? AND TZ_SUBMIT_YN<>'C'";
+					String strNeedSubmit = sqlQuery.queryForObject(strSql2,	new Object[] { strClassID, strBatchID, strJudgeAccount, intDqpyLunc }, "String");
 
 					String strSubmited = strNeedSubmit + "/" + strHasSubmited;
 

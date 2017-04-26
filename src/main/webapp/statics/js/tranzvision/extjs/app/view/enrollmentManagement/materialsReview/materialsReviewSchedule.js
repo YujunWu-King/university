@@ -861,7 +861,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             // width:130
                             // }
                             , {
-                                text: "抽取数量/已评审数量",
+                                text: "抽取数量/已提交数量",
                                 dataIndex: 'hasSubmited',
                                 align: 'center',
                                 minWidth: 100,
