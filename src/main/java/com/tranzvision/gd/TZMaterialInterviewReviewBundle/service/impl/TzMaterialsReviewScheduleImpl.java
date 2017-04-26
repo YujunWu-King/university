@@ -345,6 +345,10 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				// 保存评议数据
 				strResponse = this.savePyData(strParams, errMsg);
 				break;
+			case "submitPweiData":
+				// 提交评委数据
+				strResponse = this.saveSubmitPwData(strParams, errMsg);
+				break;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1952,6 +1956,50 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return str_pjf;
 	}
 
+	public String saveSubmitPwData(String strParams, String[] errMsg) {
+		String strResponse = "\"success\"";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+
+		try {
+			String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+
+			jacksonUtil.json2Map(strParams);
+			String strClassID = jacksonUtil.getString("classID");
+			String strBatchID = jacksonUtil.getString("batchID");
+
+			String strContent = "";
+			String strJudgeOpridList = jacksonUtil.getString("pwOpridList");
+			String[] judgeOpridList = strJudgeOpridList.split(";");
+
+			if (judgeOpridList != null &&judgeOpridList.length > 0) {				
+			
+				String debCountSQL = "SELECT ifnull(TZ_DQPY_LUNC,0) FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+				Integer debCount = sqlQuery.queryForObject(debCountSQL, new Object[]{strClassID, strBatchID}, "Integer");
+				for (int i=0;i<judgeOpridList.length;i++) {
+					String strPwOprID = judgeOpridList[i];
+					String strSql1 = "SELECT COUNT(TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID = ? AND TZ_CLPS_LUNC = ? AND TZ_SUBMIT_YN <> 'Y' AND TZ_SUBMIT_YN <> 'C'";
+					Integer TZ_APP_INS_ID_NUM = sqlQuery.queryForObject(strSql1, new Object[]{strClassID,strBatchID,strPwOprID,debCount}, "Integer");
+					if(TZ_APP_INS_ID_NUM!=0){
+						String strRealName = "";
+						String strSql2 = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+						strRealName = sqlQuery.queryForObject(strSql2, new Object[]{strPwOprID}, "String");
+						
+						strResponse = "\"评委 " + strRealName + " 有未提交考生数据，无法提交。\"";
+						return strResponse;
+					}
+				}
+			}
+
+			errMsg[0] = "0";
+			
+		} catch (Exception e) {
+			errMsg[0] = "100";
+			errMsg[1] = e.toString();
+		}
+		return strResponse;
+	}
+	
 	public String right(String strValue, int num) {
 		String returnValue = "";
 		try {
