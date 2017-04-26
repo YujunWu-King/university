@@ -345,7 +345,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         if(form.isValid()) {
             //校验评委各组评议人数合是否等于考生人数
-            var checkFlag = me.checkJudgeExamineeTotal();
+            //var checkFlag = me.checkJudgeExamineeTotal();
+            var checkFlag = true;
             if(checkFlag==true) {
                 var tzParams = me.getRuleParams(actType);
                 Ext.tzSubmit(tzParams,function(responseData) {
