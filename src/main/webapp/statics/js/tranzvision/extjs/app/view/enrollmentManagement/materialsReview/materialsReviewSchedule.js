@@ -371,44 +371,46 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             align: 'center',
             width: 200
         }];
+        
         var dockedItems;
-
-        var tzAppColsParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' + '"OperateType":"isJiSuanFenZhi","comParams":{"type":"isJiSuanFenZhi","classID":"' + classID + '","batchID":"' + batchID + '"}}';
+        applicantsColumns.push({
+            text: "评委间偏差",
+            dataIndex: 'judgePC',
+            align: 'center',
+            width: 130,
+            flex: 1
+        });
+        applicantsColumns.push({
+            text: "平均分",
+            dataIndex: 'aveScore',
+            align: 'center',
+            width: 100,
+            flex: 1
+        });
+        dockedItems = [{
+            xtype: "toolbar",
+            items: [{
+                text: "计算偏差",
+                tooltip: "计算偏差",
+                handler: "calDeviation"
+            },'-',
+            {
+                xtype: 'checkboxfield',
+                fieldLabel: '实时计算评委偏差',                        
+                name: 'calPwPanC',
+                inputValue:'Y',
+                labelWidth: 120,
+                labelAlign: 'right'
+            }]
+        }]
+        
+        /*var tzAppColsParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' + '"OperateType":"isJiSuanFenZhi","comParams":{"type":"isJiSuanFenZhi","classID":"' + classID + '","batchID":"' + batchID + '"}}';
         Ext.tzLoadAsync(tzAppColsParams,function(respData) {
             var transScoreValue = respData.ZFZ;
             if (transScoreValue == 'Y') {
-                applicantsColumns.push({
-                    text: "评委间偏差",
-                    dataIndex: 'judgePC',
-                    align: 'center',
-                    width: 130,
-                    flex: 1
-                });
-                applicantsColumns.push({
-                    text: "平均分",
-                    dataIndex: 'aveScore',
-                    align: 'center',
-                    width: 100,
-                    flex: 1
-                });
-                dockedItems = [{
-                    xtype: "toolbar",
-                    items: [{
-                        text: "计算偏差",
-                        tooltip: "计算偏差",
-                        handler: "calDeviation"
-                    },'-',
-                    {
-                        xtype: 'checkboxfield',
-                        fieldLabel: '实时计算评委偏差',                        
-                        name: 'calPwPanC',
-                        inputValue:'Y',
-                        labelWidth: 120,
-                        labelAlign: 'right'
-                    }]
-                }]
+                
             }
-        });
+        });*/
         Ext.apply(this, {
             items: [{
                 xtype: 'form',
@@ -859,7 +861,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             // width:130
                             // }
                             , {
-                                text: "抽取数量/已评审数量",
+                                text: "抽取数量/已提交数量",
                                 dataIndex: 'hasSubmited',
                                 align: 'center',
                                 minWidth: 100,

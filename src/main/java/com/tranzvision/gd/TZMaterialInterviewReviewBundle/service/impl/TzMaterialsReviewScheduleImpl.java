@@ -345,6 +345,10 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				// 保存评议数据
 				strResponse = this.savePyData(strParams, errMsg);
 				break;
+			case "submitPweiData":
+				// 提交评委数据
+				strResponse = this.saveSubmitPwData(strParams, errMsg);
+				break;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -617,13 +621,16 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						}
 						// 要求评委评审考生数量
 						String strTmpSql1 = "SELECT ifnull(TZ_PYKS_XX,0) FROM PS_TZ_CLPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?";
-						Integer intTmp1 = sqlQuery.queryForObject(strTmpSql1,
-								new Object[] { strClassID, strBatchID, strPwOprid }, "Integer");
+						Integer intTmp1 = sqlQuery.queryForObject(strTmpSql1,new Object[] { strClassID, strBatchID, strPwOprid }, "Integer");
+						if(intTmp1==null){
+							intTmp1 = 0;
+						}
 						// 要求每个考生被评审数量
 						String strTmpSql2 = "SELECT ifnull(TZ_MSPY_NUM,0) FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-						Integer intTmp2 = sqlQuery.queryForObject(strTmpSql2, new Object[] { strClassID, strBatchID },
-								"Integer");
-
+						Integer intTmp2 = sqlQuery.queryForObject(strTmpSql2, new Object[] { strClassID, strBatchID },"Integer");
+						if(intTmp2==null){
+							intTmp2 = 0;
+						}
 						// 如果该评委被选中计算平均分布，拼接最后一行数据
 						if (selectPwList.length > 0) {
 							for (String sA : selectPwList) {
@@ -638,21 +645,14 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 								}
 							}
 						}
-
 						strWc = strWc + "/" + (intTmp1 * intTmp2);
 						intFzNum = intFzNum + 1;
 						colName = "0" + intFzNum;
 						strFzValue = "col" + this.right(colName, 2);
-						strGridDataHTML = strGridDataHTML + ","
-								+ tzGdObject.getHTMLText(
-										"HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-										strFzValue, strWc);
+						strGridDataHTML = strGridDataHTML + ","	+ tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, strWc);
 
 						if (intSize == pwList.size()) {
-							strLastGridDataHTML = strLastGridDataHTML + ","
-									+ tzGdObject.getHTMLText(
-											"HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-											strFzValue, intTotalWc + "/" + intTotal);
+							strLastGridDataHTML = strLastGridDataHTML + ","	+ tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, intTotalWc + "/" + intTotal);
 						}
 						// 提交状态
 						String strSubmitZt = "", strSubmitZtDesc = "未提交";
@@ -679,9 +679,8 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						intFzNum = intFzNum + 1;
 						colName = "0" + intFzNum;
 						strFzValue = "col" + this.right(colName, 2);
-						String strAveSql = "SELECT ifnull(SUM( B.TZ_SCORE_NUM),0) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CJX_TBL B ,PS_TZ_KSCLPSLS_TBL C WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND A.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND A.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND C.TZ_SUBMIT_YN <> 'C'  AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND B.TZ_SCORE_ITEM_ID = ? AND C.TZ_CLPS_LUNC = ?";
-						Integer sumScore = sqlQuery.queryForObject(strAveSql,
-								new Object[] { strBatchID, strPwOprid, "Total", intDqpyLunc }, "Integer");
+						String strAveSql = "SELECT SUM( B.TZ_SCORE_NUM) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CJX_TBL B ,PS_TZ_KSCLPSLS_TBL C WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND A.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND A.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND C.TZ_SUBMIT_YN <> 'C'  AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND B.TZ_SCORE_ITEM_ID = ? AND C.TZ_CLPS_LUNC = ?";
+						Integer sumScore = sqlQuery.queryForObject(strAveSql, new Object[] { strBatchID, strPwOprid, "Total", intDqpyLunc }, "Integer");
 						if (sumScore == null) {
 							sumScore = 0;
 						}
@@ -699,19 +698,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 							aveScoreTotal = aveScoreTotal + Double.valueOf(tmpPjf2);
 						}
 												
-						strGridDataHTML = strGridDataHTML + ","
-								+ tzGdObject.getHTMLText(
-										"HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-										strFzValue, tmpPjf2);						
+						strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",	strFzValue, tmpPjf2);						
 						if (intSize == pwList.size()) {
 							
 							if(selectPwList.length>0){
 								saveScore = aveScoreTotal/selectPwList.length;
 							}
-							strLastGridDataHTML = strLastGridDataHTML + ","
-									+ tzGdObject.getHTMLText(
-											"HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-											strFzValue, df.format(saveScore));
+							strLastGridDataHTML = strLastGridDataHTML + ","	+ tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",	strFzValue, df.format(saveScore));
 						}
 						/*
 						 * if ("Y".equals(strJsfs)) { intFzNum = intFzNum + 1;
@@ -857,6 +850,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			}
 		} catch (Exception e) {
 			System.out.println(e.toString());
+			e.printStackTrace();
 		}
 		return strResponse;
 	}
@@ -915,17 +909,14 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 					String strJudgeName = sqlQuery.queryForObject(strPwNameSql,
 							new Object[] { strCurrentOrg, strJudgeAccount }, "String");
 					// 考生材料评审历史表（里面记录了各个轮次评委的打分情况）
-					String strSql1 = "SELECT count(*) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=? AND TZ_PWEI_OPRID=?";
-					String strHasSubmited = sqlQuery.queryForObject(strSql1,
-							new Object[] { strClassID, strBatchID, intDqpyLunc, strJudgeAccount }, "String");
-
 					String strPwIdSql = "SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
-					strJudgeAccountID = sqlQuery.queryForObject(strPwIdSql,
-							new Object[] { strCurrentOrg, strJudgeAccount }, "String");
+					strJudgeAccountID = sqlQuery.queryForObject(strPwIdSql,	new Object[] { strCurrentOrg, strJudgeAccount }, "String");
 
-					String strSql2 = "SELECT COUNT(*) FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? ";
-					String strNeedSubmit = sqlQuery.queryForObject(strSql2,
-							new Object[] { strClassID, strBatchID, strJudgeAccount }, "String");
+					String strSql1 = "SELECT COUNT(DISTINCT TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=? AND TZ_SUBMIT_YN='Y'";
+					String strHasSubmited = sqlQuery.queryForObject(strSql1,new Object[] { strClassID, strBatchID, strJudgeAccount, intDqpyLunc }, "String");
+					
+					String strSql2 = "SELECT COUNT(DISTINCT TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=? AND TZ_SUBMIT_YN<>'C'";
+					String strNeedSubmit = sqlQuery.queryForObject(strSql2,	new Object[] { strClassID, strBatchID, strJudgeAccount, intDqpyLunc }, "String");
 
 					String strSubmited = strNeedSubmit + "/" + strHasSubmited;
 
@@ -1811,8 +1802,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			int pw_num = 1;
 			for (Object mapObj : mapList1) {
 				Map<String, Object> result = (Map<String, Object>) mapObj;
-				String str_PwOprid = result.get("TZ_PWEI_OPRID") == null ? ""
-						: String.valueOf(result.get("TZ_PWEI_OPRID"));
+				String str_PwOprid = result.get("TZ_PWEI_OPRID") == null ? "" : String.valueOf(result.get("TZ_PWEI_OPRID"));
 
 				// 获取当前班级批次下的轮次
 				String strSql12 = "SELECT TZ_DQPY_LUNC FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
@@ -1827,9 +1817,15 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						new Object[] { strClassID, strBatchID, strAppInsID, str_PwOprid, numLunc },
 						"String");
 				if (!"C".equals(strSubmitStatus)) {
-					String strListSql2 = "SELECT B.TZ_SCORE_MODAL_ID,A.TZ_SCORE_INS_ID,A.TZ_SCORE_ITEM_ID,A.TZ_SCORE_NUM,TZ_SCORE_PY_VALUE FROM PS_TZ_CP_PW_KS_TBL C JOIN PS_TZ_CJX_TBL A ON A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID JOIN PS_TZ_SRMBAINS_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID WHERE C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=? AND C.TZ_PWEI_OPRID=?";
-					List<Map<String, Object>> mapList2 = sqlQuery.queryForList(strListSql2,
-							new Object[] { strClassID, strBatchID, strAppInsID, str_PwOprid });
+					String strSql4 = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL B,PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_GZ_TBL C WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND B.TZ_CLASS_ID=C.TZ_CLASS_ID AND B.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=? AND C.TZ_DQPY_LUNC=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND A.TZ_SCORE_ITEM_ID=?";
+					Integer intScoreNum = sqlQuery.queryForObject(strSql4,new Object[]{ strClassID, strBatchID, numLunc, strAppInsID, str_PwOprid, strTreeNode },"Integer");
+					if(intScoreNum!=null){
+						String strInsertSql = "INSERT INTO PS_TZ_PW_KS_PC_TBL VALUES(" + pw_num + ",'"	+ intScoreNum + "')";
+						sqlQuery.update(strInsertSql);
+						pw_num = pw_num + 1;
+					}
+					/*String strListSql2 = "SELECT B.TZ_SCORE_MODAL_ID,A.TZ_SCORE_INS_ID,A.TZ_SCORE_ITEM_ID,A.TZ_SCORE_NUM,TZ_SCORE_PY_VALUE FROM PS_TZ_CP_PW_KS_TBL C JOIN PS_TZ_CJX_TBL A ON A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID JOIN PS_TZ_SRMBAINS_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID WHERE C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=? AND C.TZ_PWEI_OPRID=?";
+					List<Map<String, Object>> mapList2 = sqlQuery.queryForList(strListSql2,	new Object[] { strClassID, strBatchID, strAppInsID, str_PwOprid });
 					if (mapList2 != null && mapList2.size() > 0) {
 						for (Object sObj : mapList2) {
 							Map<String, Object> resultMap = (Map<String, Object>) sObj;
@@ -1853,7 +1849,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 							sqlQuery.update(strInsertSql);
 						}
 
-					}
+					}*/
 				}
 			}
 		}
@@ -1862,7 +1858,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		String strPianChaSql = "SELECT stddev(TZ_SCORE_NUM) FROM PS_TZ_PW_KS_PC_TBL";
 		Double doublePianCha = sqlQuery.queryForObject(strPianChaSql, "Double");
 		if (doublePianCha == null) {
-			doublePianCha = 0.0;
+			doublePianCha = 0.00;
 		}
 		return doublePianCha;
 	}
@@ -1952,6 +1948,50 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return str_pjf;
 	}
 
+	public String saveSubmitPwData(String strParams, String[] errMsg) {
+		String strResponse = "\"success\"";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+
+		try {
+			String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+
+			jacksonUtil.json2Map(strParams);
+			String strClassID = jacksonUtil.getString("classID");
+			String strBatchID = jacksonUtil.getString("batchID");
+
+			String strContent = "";
+			String strJudgeOpridList = jacksonUtil.getString("pwOpridList");
+			String[] judgeOpridList = strJudgeOpridList.split(";");
+
+			if (judgeOpridList != null &&judgeOpridList.length > 0) {				
+			
+				String debCountSQL = "SELECT ifnull(TZ_DQPY_LUNC,0) FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+				Integer debCount = sqlQuery.queryForObject(debCountSQL, new Object[]{strClassID, strBatchID}, "Integer");
+				for (int i=0;i<judgeOpridList.length;i++) {
+					String strPwOprID = judgeOpridList[i];
+					String strSql1 = "SELECT COUNT(TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID = ? AND TZ_CLPS_LUNC = ? AND TZ_SUBMIT_YN <> 'Y' AND TZ_SUBMIT_YN <> 'C'";
+					Integer TZ_APP_INS_ID_NUM = sqlQuery.queryForObject(strSql1, new Object[]{strClassID,strBatchID,strPwOprID,debCount}, "Integer");
+					if(TZ_APP_INS_ID_NUM!=0){
+						String strRealName = "";
+						String strSql2 = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+						strRealName = sqlQuery.queryForObject(strSql2, new Object[]{strPwOprID}, "String");
+						
+						strResponse = "\"评委 " + strRealName + " 有未提交考生数据，无法提交。\"";
+						return strResponse;
+					}
+				}
+			}
+
+			errMsg[0] = "0";
+			
+		} catch (Exception e) {
+			errMsg[0] = "100";
+			errMsg[1] = e.toString();
+		}
+		return strResponse;
+	}
+	
 	public String right(String strValue, int num) {
 		String returnValue = "";
 		try {

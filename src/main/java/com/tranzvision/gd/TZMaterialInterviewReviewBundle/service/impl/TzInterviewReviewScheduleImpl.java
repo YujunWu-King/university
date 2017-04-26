@@ -2020,9 +2020,15 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 						new Object[] { strClassID, strBatchID,  str_PwOprid },
 						"String");
 				if (!"C".equals(strSubmitStatus)) {
-					String strListSql2 = "SELECT B.TZ_SCORE_MODAL_ID,A.TZ_SCORE_INS_ID,A.TZ_SCORE_ITEM_ID,A.TZ_SCORE_NUM,TZ_SCORE_PY_VALUE FROM PS_TZ_MP_PW_KS_TBL C JOIN PS_TZ_CJX_TBL A ON A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID JOIN PS_TZ_SRMBAINS_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID WHERE C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=? AND C.TZ_PWEI_OPRID=?";
-					List<Map<String, Object>> mapList2 = sqlQuery.queryForList(strListSql2,
-							new Object[] { strClassID, strBatchID, strAppInsID, str_PwOprid });
+					String strSql4 = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL B,PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND A.TZ_SCORE_ITEM_ID=?";
+					Integer intScoreNum = sqlQuery.queryForObject(strSql4,new Object[]{ strClassID, strBatchID, strAppInsID, str_PwOprid, strTreeNode },"Integer");
+					if(intScoreNum!=null){
+						String strInsertSql = "INSERT INTO PS_TZ_PW_KS_PC_TBL VALUES(" + pw_num + ",'"	+ intScoreNum + "')";
+						sqlQuery.update(strInsertSql);
+						pw_num = pw_num + 1;
+					}
+					/*String strListSql2 = "SELECT B.TZ_SCORE_MODAL_ID,A.TZ_SCORE_INS_ID,A.TZ_SCORE_ITEM_ID,A.TZ_SCORE_NUM,TZ_SCORE_PY_VALUE FROM PS_TZ_MP_PW_KS_TBL C JOIN PS_TZ_CJX_TBL A ON A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID JOIN PS_TZ_SRMBAINS_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID WHERE C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=? AND C.TZ_PWEI_OPRID=?";
+					List<Map<String, Object>> mapList2 = sqlQuery.queryForList(strListSql2,	new Object[] { strClassID, strBatchID, strAppInsID, str_PwOprid });
 					if (mapList2 != null && mapList2.size() > 0) {
 						for (Object sObj : mapList2) {
 							Map<String, Object> resultMap = (Map<String, Object>) sObj;
@@ -2046,7 +2052,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 							sqlQuery.update(strInsertSql);
 						}
 
-					}
+					}*/
 				}
 			}
 		}
