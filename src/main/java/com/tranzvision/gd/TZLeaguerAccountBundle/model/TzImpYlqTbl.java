@@ -3,6 +3,8 @@ package com.tranzvision.gd.TZLeaguerAccountBundle.model;
 public class TzImpYlqTbl {
     private Long tzAppInsId;
 
+    private String tzMshId;
+
     private String tzScholarshipRst;
 
     private String tzTuitionReference;
@@ -19,12 +21,22 @@ public class TzImpYlqTbl {
 
     private String tzInitialPswd;
 
+    private String tzRemark;
+
     public Long getTzAppInsId() {
         return tzAppInsId;
     }
 
     public void setTzAppInsId(Long tzAppInsId) {
         this.tzAppInsId = tzAppInsId;
+    }
+
+    public String getTzMshId() {
+        return tzMshId;
+    }
+
+    public void setTzMshId(String tzMshId) {
+        this.tzMshId = tzMshId == null ? null : tzMshId.trim();
     }
 
     public String getTzScholarshipRst() {
@@ -89,5 +101,13 @@ public class TzImpYlqTbl {
 
     public void setTzInitialPswd(String tzInitialPswd) {
         this.tzInitialPswd = tzInitialPswd == null ? null : tzInitialPswd.trim();
+    }
+
+    public String getTzRemark() {
+        return tzRemark;
+    }
+
+    public void setTzRemark(String tzRemark) {
+        this.tzRemark = tzRemark == null ? null : tzRemark.trim();
     }
 }
