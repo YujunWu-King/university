@@ -46,11 +46,11 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("areaId")) {
 				strAreaId = jacksonUtil.getString("areaId");
 			}
-			
+
 			if (jacksonUtil.containsKey("siteId")) {
 				strSiteId = jacksonUtil.getString("siteId");
 			}
-			
+
 			// language;
 			String language = "";
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -63,87 +63,101 @@ public class AdmissionActivitiesImpl extends FrameworkImpl {
 			if (language == null || "".equals(language)) {
 				language = "ZHS";
 			}
-			
+
 			String contextPath = request.getContextPath();
-			
-			//TZWebSiteAreaInfo。TZ_SITE_AREA_HDTZ_TAB_LI_HTML 占位符内容
+
+			// TZWebSiteAreaInfo。TZ_SITE_AREA_HDTZ_TAB_LI_HTML 占位符内容
 			String firstTabColumnId = "";
 			String firstTabName = "";
 			String otherTabsHeader = "";
-			String more = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEBACT_MESSAGE", "1", language, "更多","More");
-			StringBuffer sbArtContentTabsHtml = new StringBuffer("");			
-			
-			//获取栏目编号;
+			String more = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_WEBACT_MESSAGE", "1", language, "更多",
+					"More");
+			StringBuffer sbArtContentTabsHtml = new StringBuffer("");
+
+			// 获取栏目编号;
 			String columnSQL = "SELECT TZ_COLU_ID FROM PS_TZ_SITEI_AREA_T WHERE TZ_SITEI_ID=? AND TZ_AREA_ID=?";
-			String columnId = jdbcTemplate.queryForObject(columnSQL, new Object[] { strSiteId,strAreaId }, "String");
-			
-			if(columnId!=null&&!"".equals(columnId)){
+			String columnId = jdbcTemplate.queryForObject(columnSQL, new Object[] { strSiteId, strAreaId }, "String");
+
+			if (columnId != null && !"".equals(columnId)) {
 				String[] columns = columnId.split(",");
-				
-				for(int i=0;i<columns.length;i++){
+
+				for (int i = 0; i < columns.length; i++) {
 					String currentColumnId = columns[i];
-					
-					//获取栏目名称;
+
+					// 获取栏目名称;
 					String columnNameSQL = "SELECT TZ_COLU_NAME FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? and TZ_COLU_ID=?";
-					String columnName = jdbcTemplate.queryForObject(columnNameSQL, new Object[] { strSiteId,currentColumnId }, "String");
-					
-					if(columnName!=null){
-						if(i==0){
+					String columnName = jdbcTemplate.queryForObject(columnNameSQL,
+							new Object[] { strSiteId, currentColumnId }, "String");
+
+					if (columnName != null) {
+						if (i == 0) {
 							firstTabColumnId = currentColumnId;
 							firstTabName = columnName;
-						}else{
-							otherTabsHeader = otherTabsHeader+"<li tab-col=\""+currentColumnId+"\">"+columnName+"</li>";
+						} else {
+							otherTabsHeader = otherTabsHeader + "<li tab-col=\"" + currentColumnId + "\">" + columnName
+									+ "</li>";
 						}
 					}
-					
-					//根据栏目下已发布的文章列表，每个栏目限制5条
-//					String artListSql = "SELECT B.TZ_COLU_ID,A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,DATE_FORMAT(B.TZ_ART_NEWS_DT,'%Y-%m-%d') AS TZ_ART_NEWS_DT FROM PS_TZ_ART_REC_TBL A "
-//							+ "INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=?) "
-//							+ "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT DESC LIMIT 5";
-					/*首页显示活动排序规则：置顶顺序-文章顺序-发布时间*/
+
+					// 根据栏目下已发布的文章列表，每个栏目限制5条
+					// String artListSql = "SELECT
+					// B.TZ_COLU_ID,A.TZ_ART_ID,A.TZ_ART_TITLE,A.TZ_ART_TITLE_STYLE,DATE_FORMAT(B.TZ_ART_NEWS_DT,'%Y-%m-%d')
+					// AS TZ_ART_NEWS_DT FROM PS_TZ_ART_REC_TBL A "
+					// + "INNER JOIN PS_TZ_LM_NR_GL_T B
+					// ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND
+					// B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=?) "
+					// + "ORDER BY B.TZ_ART_SEQ,B.TZ_ART_NEWS_DT DESC LIMIT 5";
+					/* 首页显示活动排序规则：置顶顺序-文章顺序-发布时间 */
 					String artListSql = tzGDObject.getSQLText("SQL.TZWebSiteAreaInfoBundle.TZ_ADM_ACT_ART_LIST");
-							
-					List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,new Object[] { strSiteId,currentColumnId,oprid });
-					
+
+					List<Map<String, Object>> artList = jdbcTemplate.queryForList(artListSql,
+							new Object[] { strSiteId, currentColumnId, oprid });
+
 					StringBuffer artContentTabLisHtml = null;
-					if (artList != null && artList.size()>0){
-						artContentTabLisHtml= new StringBuffer("");
-						
-						for(int j=0;j<artList.size();j++){	
+					if (artList != null && artList.size() > 0) {
+						artContentTabLisHtml = new StringBuffer("");
+
+						for (int j = 0; j < artList.size(); j++) {
 							String artId = (String) artList.get(j).get("TZ_ART_ID");
 							String artTitle = (String) artList.get(j).get("TZ_ART_TITLE");
 							String artTitleStyle = (String) artList.get(j).get("TZ_ART_TITLE_STYLE");
 							String artDate = (String) artList.get(j).get("TZ_ART_NEWS_DT");
-							
+
 							String hotTagDisplay = "none";
 							String newTagDisplay = "none";
-							
-							if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
-								hotTagDisplay = artTitleStyle.indexOf("HOT")>-1?"block":hotTagDisplay;
-								newTagDisplay = artTitleStyle.indexOf("NEW")>-1?"block":newTagDisplay;
+
+							if (artTitleStyle != null && !"".equals(artTitleStyle)) {
+								hotTagDisplay = artTitleStyle.indexOf("HOT") > -1 ? "block" : hotTagDisplay;
+								newTagDisplay = artTitleStyle.indexOf("NEW") > -1 ? "block" : newTagDisplay;
 							}
-							//如果是活动发布则取活动开始日期、活动地点;
+							// 如果是活动发布则取活动开始日期、活动地点;
 							int actRel = 0;
 							String actRelCount = "SELECT COUNT(*) FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
-							actRel = jdbcTemplate.queryForObject(actRelCount, new Object[] {artId}, "int");
+							actRel = jdbcTemplate.queryForObject(actRelCount, new Object[] { artId }, "int");
 							String actRelSql = "SELECT DATE_FORMAT(TZ_START_DT,'%Y-%m-%d') AS TZ_START_DT  FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
-							String activDate = jdbcTemplate.queryForObject(actRelSql, new Object[] {artId}, "String");
-							//如果有活动开始日期则取活动开始日期,从内容发布的招生活动没有活动日期;
-							if(actRel != 0 && (activDate!=null && !"".equals(activDate))){
+							String activDate = jdbcTemplate.queryForObject(actRelSql, new Object[] { artId }, "String");
+							// 如果有活动开始日期则取活动开始日期,从内容发布的招生活动没有活动日期;
+							if (actRel != 0 && (activDate != null && !"".equals(activDate))) {
 								artDate = activDate;
 							}
-							StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_view&operatetype=HTML&siteId=")
-									.append(strSiteId).append("&columnId=").append(currentColumnId).append("&artId=").append(artId);
-							
-							artContentTabLisHtml = artContentTabLisHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_TAB_LI_HTML", sbArtUrl.toString(),
-									artTitle,artDate,hotTagDisplay,newTagDisplay));
+							StringBuffer sbArtUrl = new StringBuffer(contextPath)
+									.append("/dispatcher?classid=art_view&operatetype=HTML&siteId=").append(strSiteId)
+									.append("&columnId=").append(currentColumnId).append("&artId=").append(artId);
+
+							artContentTabLisHtml = artContentTabLisHtml.append(tzGDObject.getHTMLTextForDollar(
+									"HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_TAB_LI_HTML", sbArtUrl.toString(),
+									artTitle, artDate, hotTagDisplay, newTagDisplay));
 						}
 					}
-					sbArtContentTabsHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_TAB_HTML",i==0?"dis_block":"dis_none", artContentTabLisHtml!=null?artContentTabLisHtml.toString():""));
+					sbArtContentTabsHtml
+							.append(tzGDObject.getHTMLTextForDollar("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_TAB_HTML",
+									i == 0 ? "dis_block" : "dis_none",
+									artContentTabLisHtml != null ? artContentTabLisHtml.toString() : ""));
 				}
-				
+
 			}
-			areaContentHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_HTML",firstTabColumnId,firstTabName,otherTabsHeader,more,sbArtContentTabsHtml.toString());
+			areaContentHtml = tzGDObject.getHTMLTextForDollar("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_HDTZ_HTML",
+					firstTabColumnId, firstTabName, otherTabsHeader, more, sbArtContentTabsHtml.toString());
 			return areaContentHtml;
 		} catch (Exception e) {
 			e.printStackTrace();

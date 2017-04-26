@@ -314,7 +314,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						// PsTzApptplDyTWithBLOBs attachedPsTzApptplDyTWithBLOBs
 						// =
 						// psTzApptplDyTMapper.selectByPrimaryKey(strAttachedTplId);
-						String TZ_APP_M_TPL_ID = sqlQuery.queryForObject(sql, new Object[] { strAttachedTplId }, "String");
+						String TZ_APP_M_TPL_ID = sqlQuery.queryForObject(sql, new Object[] { strAttachedTplId },
+								"String");
 						if (strTplId.equals(TZ_APP_M_TPL_ID)) {
 							strTplId = strAttachedTplId;
 							// 根据报名表实例和附属模版编号去获得报名表Json数据
@@ -854,17 +855,17 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					strTJXIsPwd = "N";
 				}
 
-				strTplData = strTplData.replace("\\", "\\\\");
-				//strTplData = strTplData.replace("$", "\\$");
+				// strTplData = strTplData.replace("\\", "\\\\");
+				// strTplData = strTplData.replace("$", "\\$");
 
 				Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
 				Matcher mc = CRLF.matcher(strInsData);
 				if (mc.find()) {
 					strInsData = mc.replaceAll("\\\\n");
 				}
-				strInsData = strInsData.replace("\\", "\\\\");
-				
-				//strInsData = strInsData.replace("$", "\\$");
+				// strInsData = strInsData.replace("\\", "\\\\");
+
+				// strInsData = strInsData.replace("$", "\\$");
 				// 处理HTML换行符号，是替换的\u2028;
 				strInsData = strInsData.replace(" ", "");
 				String pwdError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
@@ -886,15 +887,16 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				System.out.println("报名表展现构造HTML页面Begin");
 				time2 = System.currentTimeMillis();
-				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
-						false, strTzGeneralURL, strComRegInfo, strTplId, strAppInsId, strClassId, strRefLetterId,
-						strTplData, strInsData, strTabs, strSiteId, strAppOrgId, strMenuId, strAppFormReadOnly,
-						strMsgSet, strLanguage, strSave, strNext, strSubmit, strTplType, strLoading, strProcessing,
-						strAfterSubmitUrl, strOnlineHead, strOnlineFoot, strOnlineLeft, strIsAdmin, strMainInnerStyle,
-						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
-						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
-						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
-						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg, classProjectID);
+				str_appform_main_html = tzGdObject.getHTMLTextForDollar(
+						"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML", false, strTzGeneralURL, strComRegInfo,
+						strTplId, strAppInsId, strClassId, strRefLetterId, strTplData, strInsData, strTabs, strSiteId,
+						strAppOrgId, strMenuId, strAppFormReadOnly, strMsgSet, strLanguage, strSave, strNext, strSubmit,
+						strTplType, strLoading, strProcessing, strAfterSubmitUrl, strOnlineHead, strOnlineFoot,
+						strOnlineLeft, strIsAdmin, strMainInnerStyle, strUserInfoSet, strMainStyle, strPrev,
+						strAppInsVersion, contextUrl, leftWidthStyle, rightWidthStyle, strLeftStyle, strRightStyle,
+						showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit, strBatchId, strTJXIsPwd, passWordHtml,
+						setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2, pwdError, pwdError2, PWDHTML,
+						strDownLoadPDFMsg, strDownErrorMsg, classProjectID);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");

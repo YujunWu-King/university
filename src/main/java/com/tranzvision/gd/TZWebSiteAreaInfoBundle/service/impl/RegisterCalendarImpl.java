@@ -104,20 +104,20 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 					StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_view&operatetype=HTML&siteId=")
 							.append(strSiteId).append("&columnId=").append(columnId).append("&artId=").append(artId);
 					if(registerCalendarLisHtml==null){
-						registerCalendarLisHtml = new StringBuffer("<ul>").append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
+						registerCalendarLisHtml = new StringBuffer("<ul>").append(tzGDObject.getHTMLTextForDollar("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
 								artDay,artMonth,artTitle,artAddr));
 					}else{
 						if(i==2){
 							registerCalendarLisHtml.append("</ul><ul>");
 						}
-						registerCalendarLisHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
+						registerCalendarLisHtml.append(tzGDObject.getHTMLTextForDollar("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
 										artDay,artMonth,artTitle,artAddr));
 					}
 				}
 				registerCalendarLisHtml.append("</ul>");
 			}
 			
-			registerCalendarHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_HTML", registerCalendar,
+			registerCalendarHtml = tzGDObject.getHTMLTextForDollar("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_HTML", registerCalendar,
 					more,registerCalendarLisHtml==null?"":registerCalendarLisHtml.toString(),strColumnId); 
 			
 			return registerCalendarHtml;

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -441,8 +442,8 @@ public class TestJson {
 		//String json = ts.readTxtFile("C:\\Users\\feifei\\Desktop\\json.json");
 		//ts.Detail(json, new Long(9999));
 		//String str = "123ABC456";
-		String strInsData =  "时间：2016年03月-至今 \n职位：大中国区翻新仪器业务经理\n工作职责：负责安捷伦大中国区官方翻新仪器业务\n工作业绩：FY16销售额$800K, FY17上半年$1.2M\n汇报关系：全球翻新仪器市场经理\n下属人数：0\n时间：2014年11月-2016年3月\n职位：政府项目经理\n工作职责：负责政府大项目招投标\n工作业绩：年销售额15M\n汇报关系：政府大客户团队经理\n下属人数：0\n时间：2009年5月-2014年11月\n职位：核磁共振销售，核磁共振销售经理，研究产品销售经理\n工作职责：负责核磁共振产品销售\n工作业绩：个人5-6M，团队20M。\n汇报关系：大中国区生命科学高级经理\n下属人数：4\n";
-		
+		//String strInsData =  "时间：2016年03月-至今 \n职位：大中国区翻新仪器业务经理\n工作职责：负责安捷伦大中国区官方翻新仪器业务\n工作业绩：FY16销售额$800K, FY17上半年$1.2M\n汇报关系：全球翻新仪器市场经理\n下属人数：0\n时间：2014年11月-2016年3月\n职位：政府项目经理\n工作职责：负责政府大项目招投标\n工作业绩：年销售额15M\n汇报关系：政府大客户团队经理\n下属人数：0\n时间：2009年5月-2014年11月\n职位：核磁共振销售，核磁共振销售经理，研究产品销售经理\n工作职责：负责核磁共振产品销售\n工作业绩：个人5-6M，团队20M。\n汇报关系：大中国区生命科学高级经理\n下属人数：4\n";
+		String strInsData ="\\$$$\\\"!@#%^&*()+_-|/?";
 		System.out.println(strInsData);
 		System.out.println("--------------------------");
 		Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
@@ -450,22 +451,32 @@ public class TestJson {
 		if (mc.find()) {
 			strInsData = mc.replaceAll("\\\\n");
 		}
-		strInsData = strInsData.replace("\\", "\\\\");
+		//strInsData = strInsData.replace("\\", "\\\\");
 		//strInsData = strInsData.replace("$", "\\$");
 		
-		System.out.println(strInsData);
-		System.out.println("--------------------------");
-		if (strInsData.contains("\\")) {
+		//System.out.println(strInsData);
+		//System.out.println("--------------------------");
+		//if (strInsData.contains("\\")) {
 			// val = val.replace("\\", "\\\\");
-		}
-		if (strInsData.contains("$")) {
-			strInsData = java.util.regex.Matcher.quoteReplacement(strInsData);
+		//}
+		//if (strInsData.contains("$")) {
+		strInsData = java.util.regex.Matcher.quoteReplacement(strInsData);
 			// val = val.replace("$", "\\$");
-		}
+		//}
 
 		System.out.println(strInsData);
 		System.out.println("--------------------------");
-
+		strInsData = java.util.regex.Matcher.quoteReplacement(strInsData);
+		System.out.println(strInsData);
+		System.out.println("--------------------------");
+//		JacksonUtil jacksonUtil = new JacksonUtil();
+//		String val = "ABC\\%$\"{}[]=:";
+//		Map<String, Object> jsonObject = new HashMap<String, Object>();
+//		jsonObject.put("A", val);
+//		val = jacksonUtil.Map2json(jsonObject);
+//		System.out.println(val);
+//		val = val.substring(6, val.length() - 2);
+//		System.out.println(val);
 
 		 //String strValue="!2";
 		 //boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
