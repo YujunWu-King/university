@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZAutomaticTagBundle.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAutomaticTagBundle.service.impl.TZAutomaticTagServiceImpl;
@@ -31,8 +33,13 @@ public class TZAutomaticTagGMATServiceImpl extends TZAutomaticTagServiceImpl {
 	public boolean automaticTagList(String classId, String batchId, String labelId) {
 		try {
 			//GMAT720+ 标签id hardcode点;
-			String zdbqGMATIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_INISCRN_ID'";
+			String zdbqGMATIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_GMAT_ID'";
 			String zdbqGMATId = SqlQuery.queryForObject(zdbqGMATIdSql, "String");
+			if(zdbqGMATId != null && !"".equals(zdbqGMATId)){
+				//删除该班级批次下人员的GMAT720+，重新计算 ;
+				SqlQuery.update("delete from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_ZDBQ_ID=?",new Object[]{classId,batchId,zdbqGMATId});
+			}
+			
 			String zdbqGMATNameSql = "SELECT TZ_BIAOQZ_NAME FROM  PS_TZ_BIAOQZ_BQ_T WHERE TZ_BIAOQ_ID=?";
 			String zdbqGMATName = SqlQuery.queryForObject(zdbqGMATNameSql, new Object[] { zdbqGMATId }, "String");
 			
@@ -56,40 +63,37 @@ public class TZAutomaticTagGMATServiceImpl extends TZAutomaticTagServiceImpl {
 			String engKsDateBh =  engLevel + "exam_date";
 			//考试成绩编号;
 			String engKsCjBh = engLevel + "exam_score";
-			System.out.println("GMAT打分开始======>");
-			List<?> tzappins = SqlQuery.queryForList(
+
+			List<Map<String, Object>> tzappins = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZAutomaticTagBundle.TZAutomaticTagGMATServiceSql"),
 					new Object[] { batchId,classId,engKsTypeBh+'%',GMATType, engKsCjBh+"%", engKsDateBh+"%"});
-			System.out.println("SQL======>"+TzSQLObject.getSQLText("SQL.TZAutomaticTagBundle.TZAutomaticTagGMATServiceSql"));
-			
-			System.out.println(classId+"===>"+ batchId+"===>"+engKsTypeBh+'%'+"===>"+GMATType+"===>"+ engKsCjBh+"%"+"===>"+engKsDateBh+"%");
 			// 循环符合初筛条件的报名表id--start
 			if (tzappins != null && tzappins.size() > 0) {
 				for (int i = 0; i < tzappins.size(); i++) {
-					long appind = Long.valueOf(String.valueOf(tzappins.get(i)));
-					System.out.println("=======appind========>"+ appind);
+					long appind = Long.valueOf(String.valueOf(tzappins.get(i).get("TZ_APP_INS_ID")));
 					// 循环考试类型为GMAT的字段id对应的序号--start
-					List<?> Seq = SqlQuery.queryForList(
-							"SELECT substring(TZ_XXX_BH, length('"+engKsTypeBh+"')+1) FROM PS_TZ_APP_CC_T WHERE TZ_APP_S_TEXT=? AND TZ_APP_INS_ID=? and TZ_XXX_BH like ?",
+					//多条数据取固定id后的编号;
+					List<Map<String, Object>> Seq = SqlQuery.queryForList(
+							"SELECT substring(TZ_XXX_BH, length('"+engKsTypeBh+"')+1) TZ_XXX_BH FROM PS_TZ_APP_CC_T WHERE TZ_APP_S_TEXT=? AND TZ_APP_INS_ID=? and TZ_XXX_BH like ?",
 							new Object[] {GMATType,appind,engKsTypeBh+'%' });
 					if (Seq != null && Seq.size() > 0) {
 						for (int j = 0; j < Seq.size(); j++) {
-
+							String lastBh = Seq.get(j).get("TZ_XXX_BH") == null ? "" : String.valueOf(Seq.get(j).get("TZ_XXX_BH"));
 							/*
 							 * 是否符合自动标签条件： 考试类型为GMAT and GMAT对应分数>=720 and
 							 * GMAT对应考试日期为5年内（考试日期大于等于班级入学日期的年份减去5年的日期）;
 							 */
 
 							String FlgSql = "SELECT 'Y' FROM dual WHERE (SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_XXX_BH = '"
-									+ engKsCjBh + String.valueOf(Seq.get(j))
+									+ engKsCjBh + lastBh
 									+ "'  AND TZ_APP_INS_ID=? )>=720 AND (SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_XXX_BH = '"
-									+ engKsDateBh + String.valueOf(Seq.get(j))
+									+ engKsDateBh + lastBh
 									+ "' and TZ_APP_INS_ID=? )>= (select date_add(TZ_RX_DT, interval -5 year) FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?)";
 							String Flg = SqlQuery.queryForObject(FlgSql,
 									new Object[] { appind, appind, classId },
 									"String");
 
-							if (Flg == "Y") {
+							if ("Y".equals(Flg)) {
 								PsTzCsKsbqT PsTzCsKsbqT = new PsTzCsKsbqT();
 								PsTzCsKsbqT.setTzAppInsId(appind);
 								PsTzCsKsbqT.setTzClassId(classId);
@@ -104,8 +108,6 @@ public class TZAutomaticTagGMATServiceImpl extends TZAutomaticTagServiceImpl {
 					}
 					// 循环考试类型为GMAT的字段id对应的序号--end
 				}
-			}else{
-				System.out.println("===================>gmat没有符合条件的报名表");
 			}
 			// 循环符合初筛条件的报名表id--end
 
