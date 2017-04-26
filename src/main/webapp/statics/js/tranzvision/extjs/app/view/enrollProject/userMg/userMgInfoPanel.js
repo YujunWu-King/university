@@ -560,20 +560,6 @@
 		                    },
 		                    width:'10%',
 		                    renderer:function(value,metadata,record){
-		                    	var store = new KitchenSink.view.common.store.appTransStore("TZ_APPFORM_STATE");
-		                    	var datas = store.data.items;
-		                    	if(datas!=undefined&&datas.length>0){
-		                    		for(var i=0;i<datas.length;i++){
-		                    			data = datas[i].data;
-		                    			var tValue = data.TValue;
-		                    			var tDescr = data.TSDesc;
-		                    			if(tValue!=undefined&&tValue==value&&tDescr!=undefined){
-		                    				return tDescr;
-		                    				break;
-		                    			}
-		                    		}
-		                    	}
-		                        /*console.log(value);
 		                        if(value=="U"){
 		                            return "已提交";
 		                        }else if(value=="OUT"){
@@ -584,7 +570,7 @@
 		                        	return "预提交"
 		                        }else{
 		                            return "新建";
-		                        }*/
+		                        }
 		                    }
 		                },
 		                {
