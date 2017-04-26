@@ -2827,27 +2827,47 @@
         this.judgeInfoController(btn,[{name:'accountStatus',value:'A'}]);
     },
     submitData : function(btn){
-        var selection = btn.findParentByType('grid').getSelectionModel().getSelection();
+    	var judgeGrid = btn.findParentByType("grid");
+        var selection = judgeGrid.getSelectionModel().getSelection();
         if(selection.length == 0){
             Ext.Msg.alert("提示","请选择要操作的记录");
             return;
         }
-        // data[0].value = str.replace(/\/\d+$/,'/'+str.match(/^(\d+)\//)[1]);
+        var view = this.getView();
+        var datas = view.child('form[name=materialsProgressForm]').getValues();
+        var classID = datas.classID;
+        var batchID = datas.batchID;       
+    
+        var judgeOprIdList = "";
         for(var x = selection.length-1;x>=0;x--) {
-            var select = btn.findParentByType("grid").getSelection(),
-                index = btn.findParentByType("grid").getStore().indexOf(select[x]),
-                record = btn.findParentByType("grid").getStore().getAt(index);
-            var  str = selection[x].data.hasSubmited,
+            var select = judgeGrid.getSelection(),
+                index = judgeGrid.getStore().indexOf(select[x]),
+                record = judgeGrid.getStore().getAt(index);
+            judgeOprIdList = judgeOprIdList + record.data.judgeOprId + ";";
+            /*var  str = selection[x].data.hasSubmited,
                 totalApp=selection[x].data.lower;
             if (str.match(/^\d+\//)[0].replace(/\//, '') == str.match(/\/\d+$/)[0].replace(/\//, '') && !str.match(/^0\//)&&str.match(/^\d+\//)[0].replace(/\//, '') ==totalApp) {
                 //抽取数量与已提交的数量相同同时抽取数量不为空=>当前评委抽取的所有考生都已评审
                 //btn.findParentByType('grid').getSelectionModel().getSelection()[0].data.isChange = 'submit';
                 record.set('submitYN','Y');
             }else{
-                Ext.Msg.alert("提示","在您选择提交数据的评委中，存在未完成所有考生评审的评委");
+                Ext.Msg.alert("提示","在您选择提交数据的评委中，发现有未提交考生数据。");
                 //  record.set('submitYN','N');
-            }
+            }*/
         }
+        tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":{"type":"submitPweiData","classID":"' + classID + '","batchID":"' + batchID + '","pwOpridList":"' + judgeOprIdList + '"}}';
+        Ext.tzLoad(tzParams, function (respData) {
+        	if(respData=="success"){
+        		for(var x = selection.length-1;x>=0;x--) {
+                    var select = btn.findParentByType("grid").getSelection(),
+                        index = btn.findParentByType("grid").getStore().indexOf(select[x]),
+                        record = btn.findParentByType("grid").getStore().getAt(index);
+                    record.set('submitYN','Y');
+                }
+        	}else{
+        		Ext.Msg.alert("提示","在您选择提交数据的评委中，发现有未提交考生数据。");
+        	}        	
+        });
 
     },
     setNoSubmit : function(btn){
