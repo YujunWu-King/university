@@ -400,7 +400,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 					//淘汰名次
 					int outMc = lastMc - i;
 					if(outMc>0){
-						sql = "select count(1) from PS_TZ_CS_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_KSH_PSPM limit 1";
+						sql = "select count(1) from PS_TZ_CS_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_KSH_PSPM=?";
 						int existsNum = sqlQuery.queryForObject(sql, new Object[]{ classId, batchId, outMc }, "int");
 						
 						if(existsNum > 0){
