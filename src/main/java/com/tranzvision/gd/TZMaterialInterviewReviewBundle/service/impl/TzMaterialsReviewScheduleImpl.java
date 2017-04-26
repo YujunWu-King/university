@@ -265,18 +265,24 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			String sql10 = "SELECT COUNT(*) FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 			Integer materialStudents = sqlQuery.queryForObject(sql10, new Object[] { strClassID, strBatchID },
 					"Integer");
-
+			//每位考生要求评审人次
 			String strTotalSql = "SELECT ifnull(TZ_MSPY_NUM,0) FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-			Integer judgeCount = sqlQuery.queryForObject(strTotalSql, new Object[] { strClassID, strBatchID },
-					"Integer");
+			Integer judgeCount = sqlQuery.queryForObject(strTotalSql, new Object[] { strClassID, strBatchID },"Integer");
 			if (judgeCount == null) {
 				judgeCount = 0;
 			}
+			//要求评审总人次
 			Integer numtotal = materialStudents * judgeCount;
+			//当前选择评审人次
+			String strCurrentSumSQL = "SELECT SUM(TZ_PYKS_XX) FROM PS_TZ_CLPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			Integer intCurrentSum = sqlQuery.queryForObject(strCurrentSumSQL, new Object[] { strClassID, strBatchID },"Integer");
+			if(intCurrentSum==null){
+				intCurrentSum = 0;
+			}
+			
 			// 得出当前班级，当前批次，当前轮次的已评审人次数
-			String strClpsCountSql = "SELECT ifnull(COUNT(*),0) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=?";
-			String strClpsCount = sqlQuery.queryForObject(strClpsCountSql,
-					new Object[] { strClassID, strBatchID, strDelibCount }, "String");
+			String strClpsCountSql = "SELECT COUNT(*) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=?";
+			String strClpsCount = sqlQuery.queryForObject(strClpsCountSql,	new Object[] { strClassID, strBatchID, strDelibCount }, "String");
 			if (strClpsCount == null) {
 				strClpsCount = "0";
 			}
@@ -290,7 +296,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			mapData.put("status", strStatus);
 			mapData.put("progress", strProgress);
 			mapData.put("delibCount", strDelibCount);
-			mapData.put("reviewCount", judgeCount);
+			mapData.put("reviewCount", intCurrentSum);
 			mapData.put("calPwPanC", strPwRealTime);
 			mapData.put("judgePanCFlg", strPwkjPch);
 			mapData.put("judgePyDataFlg", strPwkjFbt);
