@@ -634,19 +634,21 @@
 
 		//页面注册信息表单
 		var form = this.getView().child('form').getForm();
+		if(form.isValid()){
+			//表单数据
+			var formParams = form.getValues();
+			
+			
+			win.actType = "update";
 
-		//表单数据
-		var formParams = form.getValues();
-		
-		
-		win.actType = "update";
+			//提交参数
+			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_MSHLCH_STD","OperateType":"U","comParams":{"'+win.actType+'":[{"data":'+Ext.JSON.encode(formParams)+'}]}}';
+			
+			Ext.tzSubmit(tzParams,function(){
 
-		//提交参数
-		var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_MSHLCH_STD","OperateType":"U","comParams":{"'+win.actType+'":[{"data":'+Ext.JSON.encode(formParams)+'}]}}';
+		    },"",true,this);
+		}
 		
-		Ext.tzSubmit(tzParams,function(){
-
-	    },"",true,this);
 	},
     onFormClose: function(){
 		this.getView().close();

@@ -152,11 +152,13 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 						items : [ {
 							xtype : 'textfield',							
 							fieldLabel : '材料评审结果',
+							maxLength:254,
 							name : 'clpsJg'							
 						}, 
 						{
 							xtype : 'textfield',							
 							fieldLabel : '是否有面试资格',
+							maxLength:30,
 							name : 'sfmsZg'							
 						}
 						/*{
@@ -177,20 +179,24 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 						items : [ {
 							xtype : 'textfield',
 							fieldLabel : '面试报到时间',
+							maxLength:60,
 							name : 'msbdSj'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '面试报到地点',
+							maxLength:60,
 							name : 'msbdDd'
 						}, 
 						{
 							xtype : 'textfield',
 							fieldLabel : '面试结果',
+							maxLength:254,
 							name : 'msJg'
 						}, 
 						{
 							xtype : 'textfield',
 							fieldLabel : '面试结果标识',
+							maxLength:30,
 							name : 'msJgBz'
 						}
 						/*{
@@ -211,66 +217,82 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 						items : [ {
 							xtype : 'textfield',
 							fieldLabel : '联考年份',
+							maxLength:10,
 							name : 'lkNf'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '联考总分',
+							maxLength:10,
 							name : 'lkZf'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '联考英语',
+							maxLength:10,
 							name : 'lkYy'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '联考综合',
+							maxLength:10,
 							name : 'lkZh'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '联考是否过线',
+							maxLength:10,
 							name : 'lkSfgx'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '政治',
+							maxLength:10,
 							name : 'Zz'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '英语听力',
+							maxLength:10,
 							name : 'yyTl'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '政治听力是否过线',
+							maxLength:10,
 							name : 'zzTlSfGx'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '是否预录取',
+							maxLength:10,
 							name : 'sfYlq'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '联考考生编号',
+							maxLength:30,
 							name : 'lkksBh'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '联考报名时学历校验状态',
+							maxLength:30,
 							name : 'lkbmsXlJyZt'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '考生编号后四位',
+							maxLength:10,
 							name : 'ksbhHsw'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '政治英语听力考试时间',
+							maxLength:60,
 							name : 'zzYyTlKsSj'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '政治英语听力考试地点',
+							maxLength:60,
 							name : 'zzYyTlKsDd'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '新生奖学金申请状态',
+							maxLength:100,
 							name : 'ssJxjSqZt'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '政治听力考试备注',
+							maxLength:254,
 							name : 'zzTlKsBz'
 						} ]
 					}, {
@@ -283,35 +305,48 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 						items : [ {
 							xtype : 'textfield',
 							fieldLabel : '新生奖学金最终结果',
+							maxLength:254,
 							name : 'ssJxjZzJg'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '学费总额参考',
+							maxLength:254,
 							name : 'xfZeCk'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '学号',
+							maxLength:20,
 							name : 'xh'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '培养协议接受',
+							maxLength:10,
 							name : 'pyXyJs'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '工作证明接受',
+							maxLength:10,
 							name : 'zzZmJs'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '分班结果',
+							maxLength:254,
 							name : 'fbJg'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '经管邮箱',
+							maxLength:70,
 							name : 'jgYx'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '邮箱初始密码',
+							maxLength:30,
 							name : 'yxCsMm'
+						},{
+							xtype : 'textfield',
+							maxLength:200,
+							fieldLabel : '备注',
+							name : 'yxRemark'
 						} ]
 					} ]
 				} ]

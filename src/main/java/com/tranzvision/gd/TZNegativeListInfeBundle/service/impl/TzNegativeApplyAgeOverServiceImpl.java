@@ -43,15 +43,15 @@ public class TzNegativeApplyAgeOverServiceImpl extends TzNegativeListBundleServi
 			List<Map<String, Object>> opridlist = SqlQuery.queryForList(
 					TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeApplyNumber"),
 					new Object[] { batchId, classId });
-			System.out.println("opridlist.size:" + opridlist.size());
+			// System.out.println("opridlist.size:" + opridlist.size());
 			if (opridlist != null && opridlist.size() > 0) {
 
 				for (int i = 0; i < opridlist.size(); i++) {
-					System.out.println(opridlist.get(i).get("OPRID").toString());
+					// System.out.println(opridlist.get(i).get("OPRID").toString());
 					String sqlage = "SELECT BIRTHDATE FROM PS_TZ_REG_USER_T WHERE OPRID=?";
 					int agename = this.getAge(SqlQuery.queryForObject(sqlage,
 							new Object[] { opridlist.get(i).get("OPRID").toString() }, "Date"));
-					System.out.println("agename:" + agename);
+					// System.out.println("agename:" + agename);
 					if (this.getAge(SqlQuery.queryForObject(sqlage,
 							new Object[] { opridlist.get(i).get("OPRID").toString() }, "Date")) > 45) {
 						String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
@@ -104,7 +104,8 @@ public class TzNegativeApplyAgeOverServiceImpl extends TzNegativeListBundleServi
 			age = now.get(Calendar.YEAR) - born.get(Calendar.YEAR);
 			int nowDayOfYear = now.get(Calendar.DAY_OF_YEAR);
 			int bornDayOfYear = born.get(Calendar.DAY_OF_YEAR);
-			System.out.println("nowDayOfYear:" + nowDayOfYear + " bornDayOfYear:" + bornDayOfYear);
+			// System.out.println("nowDayOfYear:" + nowDayOfYear + "
+			// bornDayOfYear:" + bornDayOfYear);
 			if (nowDayOfYear < bornDayOfYear) {
 				age -= 1;
 			}

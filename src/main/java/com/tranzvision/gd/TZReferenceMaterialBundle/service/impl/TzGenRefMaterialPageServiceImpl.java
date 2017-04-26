@@ -1,21 +1,10 @@
 package com.tranzvision.gd.TZReferenceMaterialBundle.service.impl;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZApplicationTemplateBundle.dao.PsTzApptplDyTMapper;
-import com.tranzvision.gd.TZApplicationTemplateBundle.model.PsTzApptplDyTWithBLOBs;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT;
-import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -30,12 +19,6 @@ public class TzGenRefMaterialPageServiceImpl {
 	
 	@Autowired
 	private HttpServletRequest request;
-	
-	@Autowired
-	private PsTzAppInsTMapper psTzAppInsTMapper;
-	
-	@Autowired
-	private PsTzApptplDyTMapper psTzApptplDyTMapper;
 	
 	
 	/**
@@ -84,10 +67,10 @@ public class TzGenRefMaterialPageServiceImpl {
 		String appUrl = "";
 		
 		String contextUrl = request.getContextPath();
-		String strTzGeneralURL = contextUrl + "/dispatcher";
+		String strTzGeneralURL = contextUrl + "/refMaterial/attachApp";
 		
 		
-		appUrl = strTzGeneralURL+ "?classid=appId&isEdit=N&TZ_APP_INS_ID="+appInsId+"&TZ_APP_TPL_ID="+strTplId;
+		appUrl = strTzGeneralURL+ "?isEdit=N&TZ_APP_INS_ID="+appInsId+"&TZ_APP_TPL_ID="+strTplId;
 		
 		return appUrl;
 	}
