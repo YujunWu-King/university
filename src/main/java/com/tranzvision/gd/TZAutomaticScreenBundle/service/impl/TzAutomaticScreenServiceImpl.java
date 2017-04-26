@@ -95,7 +95,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 			
 			//TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] {};
+			String[][] orderByArr = new String[][] {new String[] { "TZ_KSH_PSPM", "ASC" }};
 
 			// json数据要的结果字段;
 			String[] resultFldArray = {"TZ_CLASS_ID","TZ_BATCH_ID","TZ_APP_INS_ID","TZ_REALNAME","TZ_MSH_ID","TZ_KSH_CSJG","TZ_KSH_PSPM","TZ_SCORE_INS_ID","TZ_TOTAL_SCORE"};

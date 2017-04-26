@@ -47,8 +47,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 },{
                     text: "姓名",
                     dataIndex: 'name',
-                    minWidth: 100,
-                    width:120,
+                    width:90,
                     filter: {
                         type: 'string',
                         itemDefaults: {
@@ -59,7 +58,6 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 },{
                     text: "性别",
                     dataIndex: 'sexDesc',
-                    minWidth: 15,
                     width:60,
                     filter: {
                         type: 'list'
@@ -74,8 +72,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 },{
                     text: "报考班级",
                     dataIndex: 'className',
-                    minWidth: 120,
-                    width:90,
+                    width:150,
                     flex: 1,
                     filter: {
                         type: 'list'
@@ -83,8 +80,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 },{
                     text: "材料评审批次",
                     dataIndex: 'batchName',
-                    minWidth: 100,
-                    flex: 1,
+                    minWidth: 110,
                     filter: {
                         type: 'string',
                         itemDefaults: {
@@ -94,12 +90,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 },{
 					text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.judgeList","评委"),
 					dataIndex:'judgeList',
-					width:120,
-					flex:1
+					width:150
 				},{
 					text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.reviewStatusDesc","评审状态"),
 					dataIndex:'reviewStatusDesc',
-					width:120,
+					width:110,
 					filter:{
 						type:'list'
 					}
