@@ -4,7 +4,8 @@
         'Ext.data.*',
         'Ext.util.*',
         'KitchenSink.view.automaticScreen.autoScreenController',
-        'KitchenSink.view.automaticScreen.autoTagOrFmListStore',
+        'KitchenSink.view.automaticScreen.autoTagStore',
+        'KitchenSink.view.automaticScreen.fmqdListStore',
         'KitchenSink.view.automaticScreen.autoTagOrFmListModel'
     ],
     xtype: 'autoScreenDetails',
@@ -14,6 +15,7 @@
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	
 	constructor: function(config){
+		
 		this.tzConfig = config;
 		this.storeReload = config.storeReload;
 		this.callParent();	
@@ -23,16 +25,12 @@
         Ext.util.CSS.createStyleSheet(" .readOnly-tagfield-cls div {background:#eee;}","readOnly-tagfield-cls");
         
     	var config = this.tzConfig;
-    	var ksbqConfig = config;
-    	ksbqConfig.queryType = "KSBQ";
-    	
-    	var fmqdConfig = config;
-    	fmqdConfig.queryType = "FMQD";
-    	
+
     	//考生自动标签store
-		var ksbqStore = new KitchenSink.view.automaticScreen.autoTagOrFmListStore(ksbqConfig);
+		var ksbqStore = new KitchenSink.view.automaticScreen.autoTagStore(config);
+
 		//负面清单store
-		var fmqdStore = new KitchenSink.view.automaticScreen.autoTagOrFmListStore(fmqdConfig);
+		var fmqdStore = new KitchenSink.view.automaticScreen.fmqdListStore(config);
 		
 		//手工标签
 		var labelTagStore= new KitchenSink.view.common.store.comboxStore({
@@ -163,6 +161,7 @@
 		        	displayField: 'desc',
                     valueField: 'id',
                     queryMode: 'local',
+                    store: fmqdStore,
                     readOnly: true
 		        },{
 		        	xtype: 'tagfield',
@@ -171,6 +170,7 @@
 		        	displayField: 'desc',
                     valueField: 'id',
                     queryMode: 'local',
+                    store: ksbqStore,
                     readOnly: true
 		        },{
 		        	xtype: 'tagfield',
@@ -180,8 +180,8 @@
                     valueField: 'TZ_LABEL_ID',
                     displayField: 'TZ_LABEL_NAME',
                     filterPickList:true,
-                    createNewOnEnter: true,
-                    createNewOnBlur: true,
+                    createNewOnEnter: false,
+                    createNewOnBlur: false,
                     queryMode: 'local'
 		        },{
 		        	xtype: 'displayfield',

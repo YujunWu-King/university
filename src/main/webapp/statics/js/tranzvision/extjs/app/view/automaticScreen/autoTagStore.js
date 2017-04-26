@@ -1,6 +1,6 @@
-Ext.define('KitchenSink.view.automaticScreen.autoTagOrFmListStore', {
+Ext.define('KitchenSink.view.automaticScreen.autoTagStore', {
     extend: 'Ext.data.Store',
-    alias: 'store.autoTagOrFmListStore',
+    alias: 'store.autoTagStore',
     model: 'KitchenSink.view.automaticScreen.autoTagOrFmListModel',
 	autoLoad: true,
 	pageSize: 100,
@@ -12,9 +12,8 @@ Ext.define('KitchenSink.view.automaticScreen.autoTagOrFmListStore', {
 		var classId = config.classId;
 		var batchId = config.batchId;
 		var appId = config.appId;
-		var queryType = config.queryType;
 		
-		this.tzStoreParams = '{"queryType":"'+queryType+'","classId":"'+classId+'","batchId":"'+batchId+'","appId":"'+appId+'"}';
+		this.tzStoreParams = '{"queryType":"KSBQ","classId":"'+classId+'","batchId":"'+batchId+'","appId":"'+appId+'"}';
 		
 		this.callParent();	
 	}

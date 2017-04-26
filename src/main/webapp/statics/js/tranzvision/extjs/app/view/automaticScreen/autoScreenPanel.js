@@ -20,7 +20,7 @@
 		resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
 			var buttonHeight = 36;
 			var grid = panel.child('form').child('grid');
-			if(grid) grid.setHeight( height-buttonHeight- 52);
+			if(grid) grid.setHeight( height-buttonHeight- 80);
 		}
 	},
 	
@@ -30,6 +30,8 @@
 		this.paramsConfig = config;
 		this.classId = config.classId;
 		this.batchId = config.batchId;
+		this.batchName = config.batchName;
+		className = config.className;
 		
 		var tzParams ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreColumns","comParams":{"classId":"'+ config.classId +'"}}';
 		Ext.tzLoadAsync(tzParams,function(respData){
@@ -223,10 +225,17 @@
 		        },{
 		        	xtype: 'textfield',
 					name: 'className',
-					fieldLabel: '班级',
+					fieldLabel: '报考方向',
 					readOnly: true,
 					cls: 'lanage_1',
 					value: this.className
+		        },{
+		        	xtype: 'textfield',
+					name: 'batchName',
+					fieldLabel: '申请批次',
+					readOnly: true,
+					cls: 'lanage_1',
+					value: this.batchName
 		        },{
 		        	xtype:'grid',
 		        	
@@ -284,7 +293,7 @@
 	    			columns: columns,
 	    			bbar: {
 	    				xtype: 'pagingtoolbar',
-	    				pageSize: 1000,
+	    				pageSize: 500,
 	    				listeners:{
 	    					afterrender: function(pbar){
 	    						var grid = pbar.findParentByType("grid");

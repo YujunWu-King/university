@@ -1510,10 +1510,14 @@
 		var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
         var batchID = record.data.batchID;
+        var batchName = record.data.batchName;
+        var className = record.data.className;
 
 		cmp = new ViewClass({
 			classId: classID,
-			batchId: batchID
+			batchId: batchID,
+			className:className,
+			batchName: batchName
 		});
 		
 		cmp.on('afterrender',function(gridPanel){});
