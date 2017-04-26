@@ -414,45 +414,77 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 
         //保存数据
         var tzSubmit = function(){
-        	Ext.tzSubmit(tzSavingParams,function(){
-    			me.up('window').close();
-    		},"",true,this);
+        	Ext.MessageBox.show({
+                msg: '保存数据中，请稍候...',
+                progress: true,
+                progressText:'保存数据中...',
+                width: 300,
+                wait: {
+                    interval: 50
+                }
+            });
+        	Ext.defer(
+	          function(){
+	        	  Ext.tzSubmit(tzSavingParams,function(){
+	          		Ext.MessageBox.hide();
+	      			me.up('window').close();
+	      		},"",false,null,function(){
+	      			Ext.MessageBox.hide();
+	      		});
+	          },10,this,[tzSavingParams]);
+        	
         }
         
         //校验数据
-        Ext.tzLoad(tzValidationParams,function(response){
-        	//校验通过
-        	if(response!=undefined&&response.result==true){
-        		//如果有校验提示信息，则弹出提示，让用户自行选择是否保存
-        		if(response.resultMsg!=undefined&&_this.trim(response.resultMsg)!=""){
-        			Ext.Msg.confirm("确认",response.resultMsg+"<br/>是否继续导入？",function(btn){
-        				if(btn=="yes"){
-        					tzSubmit();
-        				}
-        			});
-        		}else{
-        			tzSubmit();
-        		}
-        	}else{
-        		//校验不通过则弹出提示，不允许进行保存
-        		if(response!=undefined&&response.resultMsg!=undefined&&_this.trim(response.resultMsg)!=""){
-        			Ext.Msg.show({
-        				title:"提示",
-        				icon:Ext.MessageBox.ERROR,
-        				msg:"数据校验未通过！<br/>"+response.resultMsg
-        			});
-        			
-        		}else{
-        			Ext.Msg.show({
-        				title:"提示",
-        				icon:Ext.MessageBox.ERROR,
-        				msg:"数据校验未通过，请检查导入数据，如果修改数据重试之后仍不成功请联系管理员。"
-        			});
-        		}
-        	}
-        	
-		});
-		
+        Ext.MessageBox.show({
+            msg: '校验数据中，请稍候...',
+            progress: true,
+            progressText:'校验数据中...',
+            width: 300,
+            wait: {
+                interval: 50
+            }
+        });
+        
+        Ext.defer(
+          function(){
+        	  Ext.tzSubmit(tzValidationParams,function(response){
+              	Ext.MessageBox.hide();
+              	//校验通过
+              	if(response!=undefined&&response.result==true){
+              		//如果有校验提示信息，则弹出提示，让用户自行选择是否保存
+              		if(response.resultMsg!=undefined&&_this.trim(response.resultMsg)!=""){
+              			Ext.Msg.confirm("确认",response.resultMsg+"<br/>是否继续导入？",function(btn){
+              				if(btn=="yes"){
+              					tzSubmit();
+              				}
+              			});
+              		}else{
+              			tzSubmit();
+              		}
+              	}else{
+              		//校验不通过则弹出提示，不允许进行保存
+              		if(response!=undefined&&response.resultMsg!=undefined&&_this.trim(response.resultMsg)!=""){
+              			Ext.Msg.show({
+              				title:"提示",
+              				icon:Ext.MessageBox.ERROR,
+              				msg:"数据校验未通过！<br/>"+response.resultMsg
+              			});
+              			
+              		}else{
+              			Ext.Msg.show({
+              				title:"提示",
+              				icon:Ext.MessageBox.ERROR,
+              				msg:"数据校验未通过，请检查导入数据，如果修改数据重试之后仍不成功请联系管理员。"
+              			});
+              		}
+              	}
+              	
+      		},false,false,null,function(){
+      			Ext.MessageBox.hide();
+      		});
+          },10,this,[tzValidationParams]);
+        
     },
     
     trim:function(str){ 

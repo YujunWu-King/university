@@ -48,10 +48,10 @@ public class ImportPreAdmissionImpl implements UnifiedImportBase {
 			String sqlSelectByKey = "SELECT 'Y' FROM TZ_IMP_YLQ_TBL WHERE TZ_MSH_ID=? AND TZ_APP_INS_ID=?";
 			
 			//更新SQL
-			String updateSql = "UPDATE TZ_IMP_YLQ_TBL SET TZ_SCHOLARSHIP_RST=?,TZ_TUITION_REFERENCE=?,TZ_STU_ID=?,TZ_PYXY_ACCEPT=?,TZ_GZZM_ACCEPT=?,TZ_CLASS_RST=?,TZ_EMAIL=?,TZ_INITIAL_PSWD=? WHERE TZ_MSH_ID=? AND TZ_APP_INS_ID=?";
+			String updateSql = "UPDATE TZ_IMP_YLQ_TBL SET TZ_SCHOLARSHIP_RST=?,TZ_TUITION_REFERENCE=?,TZ_STU_ID=?,TZ_PYXY_ACCEPT=?,TZ_GZZM_ACCEPT=?,TZ_CLASS_RST=?,TZ_EMAIL=?,TZ_INITIAL_PSWD=?,TZ_REMARK=? WHERE TZ_MSH_ID=? AND TZ_APP_INS_ID=?";
 
 			//插入SQL
-			String insertSql = "INSERT INTO TZ_IMP_YLQ_TBL(TZ_MSH_ID,TZ_APP_INS_ID,TZ_SCHOLARSHIP_RST,TZ_TUITION_REFERENCE,TZ_STU_ID,TZ_PYXY_ACCEPT,TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD) VALUES(?,?,?,?,?,?,?,?,?,?)";
+			String insertSql = "INSERT INTO TZ_IMP_YLQ_TBL(TZ_MSH_ID,TZ_APP_INS_ID,TZ_SCHOLARSHIP_RST,TZ_TUITION_REFERENCE,TZ_STU_ID,TZ_PYXY_ACCEPT,TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD,TZ_REMARK) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
 			
 			//如果没有报名表新增报名表默认班级和报名表模板
 			String strDefaultClass = "",strAppTpl = "";
@@ -72,6 +72,7 @@ public class ImportPreAdmissionImpl implements UnifiedImportBase {
 					String TZ_CLASS_RST = (String)data.get(i).get("TZ_CLASS_RST");
 					String TZ_EMAIL = (String)data.get(i).get("TZ_EMAIL");
 					String TZ_INITIAL_PSWD = (String)data.get(i).get("TZ_INITIAL_PSWD");
+					String TZ_REMARK = (String)data.get(i).get("TZ_REMARK");
 					
 					if(TZ_MSH_ID!=null&&!"".equals(TZ_MSH_ID)){
 						//检查报名表编号是否存在，如果不存在则为该考生新增一张报名表
@@ -128,11 +129,11 @@ public class ImportPreAdmissionImpl implements UnifiedImportBase {
 						if(dataExist!=null){
 							//更新模式
 							sqlQuery.update(updateSql, new Object[]{TZ_SCHOLARSHIP_RST,TZ_TUITION_REFERENCE,TZ_STU_ID,TZ_PYXY_ACCEPT,
-									TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD,TZ_MSH_ID,TZ_APP_INS_ID});
+									TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD,TZ_REMARK,TZ_MSH_ID,TZ_APP_INS_ID});
 						}else{
 							//新增模式
 							sqlQuery.update(insertSql, new Object[]{TZ_MSH_ID,TZ_APP_INS_ID,TZ_SCHOLARSHIP_RST,
-									TZ_TUITION_REFERENCE,TZ_STU_ID,TZ_PYXY_ACCEPT,TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD});
+									TZ_TUITION_REFERENCE,TZ_STU_ID,TZ_PYXY_ACCEPT,TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD,TZ_REMARK});
 						}
 						
 					}else{

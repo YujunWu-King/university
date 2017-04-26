@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.tranzvision.gd.util.base.JacksonUtil;
 
 /**
@@ -434,23 +437,40 @@ public class TestJson {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		TestJson ts = new TestJson();
-		String json = ts.readTxtFile("C:\\Users\\feifei\\Desktop\\json.json");
-		ts.Detail(json, new Long(9999));
+		//TestJson ts = new TestJson();
+		//String json = ts.readTxtFile("C:\\Users\\feifei\\Desktop\\json.json");
+		//ts.Detail(json, new Long(9999));
 		//String str = "123ABC456";
-		//String re = "#7T\\$/#";
-		//if(re.contains("$")){
-			//re = re.replace("$", "\\\\$");
-		//	re = java.util.regex.Matcher.quoteReplacement(re);  
-		//}
-		//re = java.util.regex.Matcher.quoteReplacement(re);  
-		//System.out.println(re);
-		//System.out.println(str.replaceAll("ABC", re));
+		String strInsData =  "时间：2016年03月-至今 \n职位：大中国区翻新仪器业务经理\n工作职责：负责安捷伦大中国区官方翻新仪器业务\n工作业绩：FY16销售额$800K, FY17上半年$1.2M\n汇报关系：全球翻新仪器市场经理\n下属人数：0\n时间：2014年11月-2016年3月\n职位：政府项目经理\n工作职责：负责政府大项目招投标\n工作业绩：年销售额15M\n汇报关系：政府大客户团队经理\n下属人数：0\n时间：2009年5月-2014年11月\n职位：核磁共振销售，核磁共振销售经理，研究产品销售经理\n工作职责：负责核磁共振产品销售\n工作业绩：个人5-6M，团队20M。\n汇报关系：大中国区生命科学高级经理\n下属人数：4\n";
+		
+		System.out.println(strInsData);
+		System.out.println("--------------------------");
+		Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
+		Matcher mc = CRLF.matcher(strInsData);
+		if (mc.find()) {
+			strInsData = mc.replaceAll("\\\\n");
+		}
+		strInsData = strInsData.replace("\\", "\\\\");
+		//strInsData = strInsData.replace("$", "\\$");
+		
+		System.out.println(strInsData);
+		System.out.println("--------------------------");
+		if (strInsData.contains("\\")) {
+			// val = val.replace("\\", "\\\\");
+		}
+		if (strInsData.contains("$")) {
+			strInsData = java.util.regex.Matcher.quoteReplacement(strInsData);
+			// val = val.replace("$", "\\$");
+		}
 
-		// String strValue="!2";
-		// boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
+		System.out.println(strInsData);
+		System.out.println("--------------------------");
 
-		// System.out.println(isMatch);
+
+		 //String strValue="!2";
+		 //boolean isMatch = strValue.matches("^[0-9a-zA-Z\\-]*$");
+
+		 //System.out.println(isMatch);
 
 	}
 
