@@ -39,10 +39,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
             data:[]
         });
         var dockedItemBtn,columnsItems;
-        var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD",' +
-            '"OperateType":"IFS","comParams":{"type":"IFP","classID":"'+this.classID+'","batchID":"'+this.batchID+'"}}';
-        Ext.tzLoadAsync(tzParams,function(respData){
-            dockedItemBtn = {
+        
+        dockedItemBtn = {
                 xtype: "toolbar",
                 items: [
                     {text: "计算标准差", tooltip: "计算标准差", handler: "calculate"}
@@ -150,7 +148,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                     }
                 }
            ]
-        });
+            
+	        /*var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD","OperateType":"IFS","comParams":{"type":"IFP","classID":"'+this.classID+'","batchID":"'+this.batchID+'"}}';
+	        Ext.tzLoadAsync(tzParams,function(respData){
+	            
+	        });*/
         
         //柱状图chart和曲线图chart
         var columnChart;
