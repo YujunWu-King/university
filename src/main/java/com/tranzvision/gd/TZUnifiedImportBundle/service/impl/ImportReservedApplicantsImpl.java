@@ -57,7 +57,7 @@ public class ImportReservedApplicantsImpl implements UnifiedImportBase {
 						
 						if(dataExist==null){
 							//新增模式
-							sqlQuery.update(insertSql, new Object[]{TZ_PRJ_NAME,TZ_KSSSYEAR,TZ_MSH_ID});
+							sqlQuery.update(insertSql, new Object[]{TZ_PRJ_ID,TZ_KSSSYEAR,TZ_MSH_ID});
 						}
 						
 					}else{
