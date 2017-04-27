@@ -504,6 +504,15 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    	}
 				    	psTzAqYhxxTbl.setTzMobile(strUserPhone);
 				    }
+				    
+				    if("".equals(strUserEmail)&&"".equals(strUserPhone)){
+				    	returnJsonMap.replace("OPRID", strOprId);
+		    			strRet = jacksonUtil.Map2json(returnJsonMap);
+		    			errMsg[0] = "1";
+		    			errMsg[1] = "绑定手机或绑定邮箱至少要有一个";
+		    			
+		    			return strRet;
+				    }
 				    if(strJihuoZt!=null){
 				    	psTzAqYhxxTbl.setTzJihuoZt(strJihuoZt);
 				    }
