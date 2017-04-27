@@ -99,9 +99,9 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 
 	private String getBatchList(String strParams) {
 
-		String maxRowCount = request.getParameter("MaxRowCount"); /* 数字，返回最大行数。如果不指定，默认返回10条新闻或者通知记录 */
-		String startRowNumber = request.getParameter("StartRowNumber"); /* 数字，返回起始行数，即从第几行开始返回。如果不指定，默认从第一行开始返回 */
-		String moreRowsFlag = request.getParameter("MoreRowsFlag"); /* 字符串，更多行标志，即是否还有更多的数据。Y，是；N，否 */
+		String maxRowCount = request.getParameter("MaxRowCount"); /*数字，返回最大行数。如果不指定，默认返回10条新闻或者通知记录 */
+		String startRowNumber = request.getParameter("StartRowNumber"); /*数字，返回起始行数，即从第几行开始返回。如果不指定，默认从第一行开始返回 */
+		String moreRowsFlag = request.getParameter("MoreRowsFlag"); /*字符串，更多行标志，即是否还有更多的数据。Y，是；N，否 */
 
 		try {
 			int error_code = 0;
@@ -200,11 +200,11 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 	private String getBatchData(String strParams) {
 
 		String requestDataType = request.getParameter("RequestDataType"); /*字符串，请求数据类型。A，返回全部数据，S，返回局部动态刷新数据。此接口该参数取值A*/
-		String classId = request.getParameter("BaokaoClassID"); /* 字符串，请求班级编号 */
-		String batchId = request.getParameter("BaokaoPCID"); /* 字符串，请求报考批次编号 */
-		String maxRowCount = request.getParameter("MaxRowCount"); /* 数字，返回最大行数。如果不指定，默认返回10条 */
-		String startRowNumber = request.getParameter("StartRowNumber"); /* 数字，返回起始行数，即从第几行开始返回。如果不指定，默认从第一行开始返回 */
-		String moreRowsFlag = request.getParameter("MoreRowsFlag"); /* 字符串，更多行标志，即是否还有更多的数据。Y，是；N，否 */
+		String classId = request.getParameter("BaokaoClassID"); /*字符串，请求班级编号 */
+		String batchId = request.getParameter("BaokaoPCID"); /*字符串，请求报考批次编号 */
+		String maxRowCount = request.getParameter("MaxRowCount"); /*数字，返回最大行数。如果不指定，默认返回10条 */
+		String startRowNumber = request.getParameter("StartRowNumber"); /*数字，返回起始行数，即从第几行开始返回。如果不指定，默认从第一行开始返回 */
+		String moreRowsFlag = request.getParameter("MoreRowsFlag"); /*字符串，更多行标志，即是否还有更多的数据。Y，是；N，否 */
 
 		String ps_description = "", ps_gaiy_info = "", error_decription = "";
 		String TZ_APPLY_PCH = "";
@@ -231,7 +231,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					"SELECT TREE_NAME,TZ_M_FBDZ_ID FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?",
 					new Object[] { TZ_ZLPS_SCOR_MD_ID ,orgid});
 			if (scoreModalMap != null) {
-				/* 树名称、分布对照id（总分） */
+				/*树名称、分布对照id（总分） */
 				TREE_NAME = (String) scoreModalMap.get("TREE_NAME");
 				TZ_M_FBDZ_ID = (String) scoreModalMap.get("TZ_M_FBDZ_ID");
 			}
@@ -266,12 +266,17 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					new Object[] { classId, batchId, oprid }, "Integer");
 			TZ_PYKS_XX = TZ_PYKS_XX==null?0:TZ_PYKS_XX;
 			
-			/* 完成的数量 */
+			//评议的考生数量
+			int totalEvaluationNum = sqlQuery.queryForObject(
+					"SELECT COUNT(*) FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?",
+					new Object[] { classId, batchId, oprid }, "Integer");
+			
+			/*完成的数量 */
 			tz_done_num = sqlQuery.queryForObject(
 					"select count(TZ_APP_INS_ID) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID = ? and TZ_CLPS_LUNC in ( select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?) and TZ_SUBMIT_YN = 'Y'",
 					new Object[] { classId, batchId, oprid, classId, batchId }, "Integer");
 			
-			/* 评委评审概要信息 */
+			/*评委评审概要信息 */
 			ps_gaiy_info = "您在" +TZ_PYJS_RQ+ " " +TZ_PYJS_SJ+ "前需要完成" +TZ_PYKS_XX+ "份考生资料评审工作，您目前已完成了" +tz_done_num+ "份。";
 
 			if (moreRowsFlag == null || "".equals(moreRowsFlag)) {
@@ -303,7 +308,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			}
 
 
-			/* 第2部分 当前评委打分平均分统计信息 */
+			/*第2部分 当前评委打分平均分统计信息 */
 			List<Map<String,Object>> secondPwdfThList= new ArrayList<Map<String,Object>>();
 			Map<String, Object> secondPwdfTh1 = new HashMap<String, Object>();
 			secondPwdfTh1.put("col01", "指标名称");
@@ -338,9 +343,9 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			 
 			List<Map<String,Object>> sjfzRowList= new ArrayList<Map<String,Object>>();
 			Map<String, Object> sjfzRow1 = new HashMap<String, Object>();
-			sjfzRow1.put("col01", "评审结果");			
+			sjfzRow1.put("col01", "总分");
 			Map<String, Object> sjfzRow2 = new HashMap<String, Object>();
-			sjfzRow2.put("col02", pjf);			
+			sjfzRow2.put("col02", pjf);	
 			sjfzRowList.add(sjfzRow1);
 			sjfzRowList.add(sjfzRow2);
 			
@@ -348,27 +353,64 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			second_total_map.put("ps_tjzb_btmc", secondPwdfThList);
 			second_total_map.put("ps_tjzb_mxsj", sjfzRowList);
 			
-
-			/*int TOTALPWRS = sqlQuery.queryForObject(
-					"SELECT COUNT(*) FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?",
-					new Object[] { classId, batchId, oprid }, "Integer");
-			*/
-			
-			/* 第3部分 当前评委打分分布统计信息 */
+			/*第3部分 当前评委打分分布统计信息 */
 			List<Map<String,Object>> evaluationDataList = materialEvaluationCls.getScoreItemEvaluationData(classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
 
 			List<Map<String,Object>> fbsjrow = new ArrayList<Map<String,Object>>();
 			
 			if(evaluationDataList!=null){
 				for(int i=0;i<evaluationDataList.size();i++){
+					
+					String TZ_M_FBDZ_MX_ID = (String)evaluationDataList.get(i).get("mx_id");
 					String FBMS = sqlQuery.queryForObject(
 							"SELECT TZ_M_FBDZ_MX_SM FROM PS_TZ_FBDZ_MX_TBL WHERE TZ_M_FBDZ_ID=? AND TZ_M_FBDZ_MX_ID=?",
-							new Object[] { TZ_M_FBDZ_ID ,(String)evaluationDataList.get(i).get("mx_id")}, "String");
+							new Object[] { TZ_M_FBDZ_ID ,TZ_M_FBDZ_MX_ID}, "String");
 					
 					Map<String,Object> fbsjrowItem = new HashMap<String,Object>();
 					fbsjrowItem.put("ps_fb_mc", FBMS);
 					fbsjrowItem.put("ps_sjfb_bilv", (Double)evaluationDataList.get(i).get("num_rate")+"%");
 					fbsjrowItem.put("ps_sjfb_rshu", (Integer)evaluationDataList.get(i).get("num_dange"));
+					
+					//如果显示评议标准数据
+					if("Y".equals(TZ_PWKJ_BZH)){
+						//标准分布比率、标准分布人数、允许误差人数
+						Double TZ_BZFB_BL = (double)0, TZ_BZFB_NUM = (double)0, TZ_YXWC_NUM = (double)0;
+						Map<String, Object> evaluationStandardMap = sqlQuery.queryForMap(
+								"select TZ_BZFB_BL,TZ_BZFB_NUM,TZ_YXWC_NUM from PS_TZ_CPFB_BZH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? and TZ_SCORE_ITEM_ID=? and TZ_M_FBDZ_ID=? and TZ_M_FBDZ_MX_ID=?",
+								new Object[] {classId,batchId,TZ_ZLPS_SCOR_MD_ID,TZ_SCORE_ITEM_ID,TZ_M_FBDZ_ID,TZ_M_FBDZ_MX_ID});
+						if (evaluationStandardMap != null) {
+							BigDecimal BD_TZ_BZFB_BL = (BigDecimal) evaluationStandardMap.get("TZ_BZFB_BL");
+							BigDecimal BD_TZ_BZFB_NUM = (BigDecimal) evaluationStandardMap.get("TZ_BZFB_NUM");
+							BigDecimal BD_TZ_YXWC_NUM = (BigDecimal) evaluationStandardMap.get("TZ_YXWC_NUM");
+							
+							if(BD_TZ_BZFB_BL!=null){
+								TZ_BZFB_BL = BD_TZ_BZFB_BL.doubleValue();
+							}
+							if(BD_TZ_BZFB_NUM!=null){
+								TZ_BZFB_NUM = BD_TZ_BZFB_NUM.doubleValue();
+							}
+							if(BD_TZ_YXWC_NUM!=null){
+								TZ_YXWC_NUM = BD_TZ_YXWC_NUM.doubleValue();
+							}
+						}
+
+						TZ_BZFB_NUM = (double)Math.round((double)totalEvaluationNum*TZ_BZFB_BL/100);
+
+						//评分误差
+						long deviation = Math.round(Math.abs((Integer)evaluationDataList.get(i).get("num_dange")-TZ_BZFB_NUM));
+						
+						//是否符合要求
+						String meetRequirement = "符合";
+						if(deviation>Math.abs(TZ_YXWC_NUM)){
+							meetRequirement = "不符合";
+						}
+						
+						fbsjrowItem.put("ps_bzfb_bilv", TZ_BZFB_BL+"%");
+						fbsjrowItem.put("ps_bzfb_rshu", TZ_BZFB_NUM);
+						fbsjrowItem.put("ps_bzfb_wcrs", TZ_YXWC_NUM);
+						fbsjrowItem.put("ps_sjfb_wcrs", deviation);
+						fbsjrowItem.put("ps_sjfb_fhyq", meetRequirement);
+					}
 					
 					fbsjrow.add(fbsjrowItem);
 				}
@@ -383,12 +425,18 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			Map<String, Object> thdFbMap = new HashMap<String, Object>();
 			thdFbMap.put("ps_fszb_mc", DESCR2);
 			List<String> ps_cht_flds= new ArrayList<String>();
+
+			//如果显示评议标准数据，则图表区域显示评议标准曲线图
+			if("Y".equals(TZ_PWKJ_BZH)){
+				ps_cht_flds.add("ps_bzfb_bilv");
+			}
 			ps_cht_flds.add("ps_sjfb_bilv");
+			
 			thdFbMap.put("ps_cht_flds", ps_cht_flds);
 			thdFbMap.put("ps_fszb_fbsj", fbsjrow);
 			thdFbList.add(thdFbMap);
 			
-			/* 第4部分 当前评委已评审考生统计信息 */
+			/*第4部分 当前评委已评审考生统计信息 */
 			Map<String,Object> dyColThMap= new HashMap<String,Object>();			
 			String TZ_XS_MC2 = "";
 			int dyColNum2 = 0;
@@ -408,13 +456,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			}
 
 			Long TZ_APP_INS_ID;
-			String forthSql = "select TZ_APP_INS_ID from PS_TZ_CP_PW_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=?";
-
-			/* 评委可见偏差 
-			String TZ_PWKJ_PCH = sqlQuery.queryForObject(
-					"select TZ_PWKJ_PCH from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?",
-					new Object[] { classId, batchId }, "String");
-			 */
+			String forthSql = "select TZ_APP_INS_ID ,TZ_SCORE_INS_ID from PS_TZ_CP_PW_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=?";
 			
 			List<Map<String, Object>> applicantsList = sqlQuery.queryForList(forthSql,
 					new Object[] { classId, batchId, oprid });
@@ -429,9 +471,6 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 
 					if (xh >= Integer.parseInt(startRowNumber) + 1
 							&& xh < (Integer.parseInt(startRowNumber) + Integer.parseInt(maxRowCount))) {
-
-						// 考生人员ID;
-						//String ksPerson_id = "";
 
 						// 考生编号;
 						String ksbh = "";
@@ -457,9 +496,21 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 						String TZ_KSH_PSPM2 = "";
 						// 评议状态;
 						String pyZt = "";
-						// 偏差;
-						//int pc = 0;
-
+						// 偏差
+						String pc = sqlQuery.queryForObject(
+								"select TZ_CLPS_PWJ_PC from PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?",
+								new Object[] { classId, batchId, TZ_APP_INS_ID}, "String");
+						//其他评委是否已经复评
+						String re_evaluation = sqlQuery.queryForObject(
+								"SELECT 'Y' FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID<>? AND TZ_SUBMIT_YN='Y' GROUP BY TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID,TZ_PWEI_OPRID HAVING COUNT(*)>1",
+								new Object[] { classId, batchId, TZ_APP_INS_ID,oprid}, "String");
+						
+						if("Y".equals(re_evaluation)){
+							re_evaluation = "是";
+						}else{
+							re_evaluation = "否";
+						}
+						         
 						// 评审时间;
 						String pssj = "";
 						Map<String, Object> map2 = sqlQuery.queryForMap(
@@ -469,22 +520,20 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 							TZ_KSH_PSPM2 = (String) map2.get("TZ_KSH_PSPM");
 							pssj = (String) map2.get("ROW_LASTMANT_DTTM");
 							pyZt = (String) map2.get("TZ_SUBMIT_YN");
-							
 						}
 
-						/* 动态列的值 */
+						/*动态列的值 */
 						Map<String, Object> dyRowValueItem = new HashMap<String, Object>();
 						
 						String TZ_SCORE_ITEM_ID3 = "";
 						int dyColNum = 0;
 
-						/* 考生成绩单ID */
-						int cjdId = 0;
-						String strCjdId = sqlQuery.queryForObject(
-								"select TZ_SCORE_INS_ID from PS_TZ_CP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? and TZ_APP_INS_ID=? and TZ_PWEI_OPRID=?",
-								new Object[] { classId, batchId, TZ_APP_INS_ID, oprid }, "String");
-						if(strCjdId!=null&&!"".equals(strCjdId)){
-							cjdId = Integer.parseInt(strCjdId);
+						/*考生成绩单ID */
+						long cjdId = 0;
+						BigInteger biCjdId = (BigInteger) applicantsList.get(i).get("TZ_SCORE_INS_ID");
+						
+						if(biCjdId!=null){
+							cjdId = biCjdId.longValue();
 						}
 						
 						if (scoreModalList != null) {
@@ -544,11 +593,12 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 							TZ_KSH_PSPM2 = "0";
 						}
 				        
-						/*添加考生类别*/				         
+						/*添加考生类别				         
 				        String TZ_KSH_TYPE = sqlQuery.queryForObject(
 								"select TZ_COLOR_NAME FROM PS_TZ_ORG_COLOR_V WHERE TZ_COLOR_SORT_ID=(select TZ_COLOR_SORT_ID from PS_TZ_FORM_WRK_T where TZ_APP_INS_ID=? limit 0,1) AND TZ_JG_ID=?",
 								new Object[] { TZ_APP_INS_ID, orgid}, "String");
-				        
+				        */
+						
 				        dyRowValueItem.put("ps_ksh_xh",String.valueOf(xh));
 				        dyRowValueItem.put("ps_ksh_id",ksbh);
 				        dyRowValueItem.put("ps_msh_id",msh_id);
@@ -558,8 +608,14 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 				        dyRowValueItem.put("ps_ksh_cpm",TZ_KSH_PSPM2);
 				        dyRowValueItem.put("ps_ksh_zt",pyZt);
 				        dyRowValueItem.put("ps_ksh_dt",pssj);
-				        dyRowValueItem.put("ps_ksh_type",TZ_KSH_TYPE);
-				      
+				        //评委间偏差
+				        if("Y".equals(TZ_PWKJ_PCH)){
+				        	dyRowValueItem.put("ps_ksh_pc",pc==null?0:Double.parseDouble(pc));
+				        }
+				        //其他评委已复评
+				        dyRowValueItem.put("ps_re_evaluation",re_evaluation);
+				        //dyRowValueItem.put("ps_ksh_type",TZ_KSH_TYPE);
+				        
 				        dyRowValueItem.put("ps_row_id", ksbh);
 				        dyRowValue.add(dyRowValueItem);
 
@@ -608,7 +664,9 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			allDataMap.put("ps_kslb_submtall",ps_kslb_submtall);
 			allDataMap.put("ps_data_cy",second_total_map);
 			allDataMap.put("ps_data_fb",thdFbList);
-
+			allDataMap.put("ps_show_standard","Y".equals(TZ_PWKJ_BZH));
+			allDataMap.put("ps_show_deviation","Y".equals(TZ_PWKJ_PCH));
+			
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			return jacksonUtil.Map2json(allDataMap);
 		} catch (Exception e) {
