@@ -2264,6 +2264,9 @@
         var datas = form.getForm().getValues(),
             isGuiFan=datas.strWaring;
 
+        var judgeGrid = form.child("tabpanel").child("form[name=judgeInfoForm]").child("grid");
+        var store = judgeGrid.getStore();
+        
         if (isGuiFan=="N")
         {
            // alert("评审考生上限小于下限，请重新设置");
@@ -2303,8 +2306,10 @@
                     reStartReviewButton.setDisabled(true);
                     reStartReviewButton.setType = 0;
                     reStartReviewButton.flagType = 'negative';
+                    store.reload();
                 }
-            }  )    }
+            })    
+        }
     },
     closeReview:function(btn){
         var form = btn.findParentByType('form'),
