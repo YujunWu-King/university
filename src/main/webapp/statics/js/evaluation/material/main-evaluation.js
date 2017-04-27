@@ -106,18 +106,13 @@ function createPJFTJGrid(batchId,jsonObject)
   
   PJFTJGrid_batchID = 'EvaluatePJFTJGrid' + batchId;
 
-    var hiddenGrid = true;
-    if(jsonObject['ps_display_fs'] == "Y"){
-        hiddenGrid = false;
-    }
   var grid = Ext.create('Ext.grid.Panel', {
       store: store,
       stateful: true,
       collapsible: false,
       multiSelect: false,
-      hidden : hiddenGrid,
       columnLines: true,
-	  	id: PJFTJGrid_batchID,
+	  id: PJFTJGrid_batchID,
       stateId: 'EvaluatePJFTJGrid',
       width: "100%",
       columns: myDataModel['gridColumns'],
@@ -342,19 +337,14 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth)
 	
 	if(chartDataModel['chartFields'].length >= 1 && chartDataModel['chartData'].length >= 1 && chartDataModel['dataFields'].length >= 1 && chartDataModel['seriesTitle'].length >= 1)
 	{
-        var hiddenGrid = true;
-        if(jsonObject['ps_display_fs'] == "Y"){
-            hiddenGrid = false;
-        }
 		var store1 = null;
 		
 		if(chartStore == null)
 		{
-			store1 = Ext.create('Ext.data.JsonStore',
-								 					{
-								 						fields: chartDataModel['chartFields'],
-								 						data: chartDataModel['chartData']
-								 					});
+			store1 = Ext.create('Ext.data.JsonStore',{
+ 						fields: chartDataModel['chartFields'],
+ 						data: chartDataModel['chartData']
+ 					});
 		}
 		else
 		{
@@ -362,74 +352,71 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth)
 		}
 		
 		
-		var fsChart2 = Ext.create('Ext.chart.Chart',
-									 {
-									 		xtype: 'chart',
-									 		style: 'background:#fff',
-									 		animate: true,
-									 		shadow: true,
-									 		store: store1,
-									 		legend: {position: 'top'},
-								 			axes: [
-								 							{
-									 							type: 'Numeric',
-									 							position: 'left',
-									 							fields: chartDataModel['dataFields'],
-									 							label:{renderer: Ext.util.Format.numberRenderer('000.00')},
-									 							title: '统计指标值',
-									 							grid: true,
-									 							maximum: chartDataModel['maxValue'],
-									 							minimum: chartDataModel['minValue']
-									 						},
-								 							{
-								 								type: 'Category',
-								 								position: 'bottom',
-								 								fields: ['col01'],
-								 								title: '统计指标名称'
-								 							}
-									 					],
-									 		series: [
-									 							{
-									 								type: 'column',
-									 								axis: 'left',
-									 								highlight: true,
-									 								title:chartDataModel['seriesTitle'],
-									 								tips: {
-									 												trackMouse: true,
-								 													width: 180,
-								 													renderer: function(storeItem, item)
-								 																		{
-								 																			this.setTitle(storeItem.get('col01') + '-' + chartDataModel['seriesTips'][item['yField']] + ' : ' + Ext.util.Format.number(storeItem.get(item['yField']),'000.00'));
-								 																		}
-								 												},
-								 									label: {
-								 														font: '18px Helvetica, sans-serif',
-								 														display: 'insideEnd',
-								 														'text-anchor': 'middle',
-								 														field: chartDataModel['dataFields'],
-								 														renderer: Ext.util.Format.numberRenderer('000.00'),
-									 													//orientation: 'vertical',
-									 													color: '#333'
-									 											 },
-									 								xField: 'col01',
-									 								yField: chartDataModel['dataFields']
-									 							}
-									 						]
-									 });
+		var fsChart2 = Ext.create('Ext.chart.Chart',{
+	 		xtype: 'chart',
+	 		style: 'background:#fff',
+	 		animate: true,
+	 		shadow: true,
+	 		store: store1,
+	 		legend: {position: 'top'},
+ 			axes: [
+ 							{
+	 							type: 'Numeric',
+	 							position: 'left',
+	 							fields: chartDataModel['dataFields'],
+	 							label:{renderer: Ext.util.Format.numberRenderer('000.00')},
+	 							title: '统计指标值',
+	 							grid: true,
+	 							maximum: chartDataModel['maxValue'],
+	 							minimum: chartDataModel['minValue']
+	 						},
+ 							{
+ 								type: 'Category',
+ 								position: 'bottom',
+ 								fields: ['col01'],
+ 								title: '统计指标名称'
+ 							}
+	 					],
+	 		series: [{
+						type: 'column',
+						axis: 'left',
+						highlight: true,
+						title:chartDataModel['seriesTitle'],
+						tips: {
+										trackMouse: true,
+										width: 180,
+										renderer: function(storeItem, item)
+															{
+																this.setTitle(storeItem.get('col01') + '-' + chartDataModel['seriesTips'][item['yField']] + ' : ' + Ext.util.Format.number(storeItem.get(item['yField']),'000.00'));
+															}
+									},
+						label: {
+											font: '18px Helvetica, sans-serif',
+											display: 'insideEnd',
+											'text-anchor': 'middle',
+											field: chartDataModel['dataFields'],
+											renderer: Ext.util.Format.numberRenderer('000.00'),
+											//orientation: 'vertical',
+											color: '#333'
+									 },
+						xField: 'col01',
+						yField: chartDataModel['dataFields']
+					}
+				]
+	 });
 		
 		var chartPanel = Ext.create('Ext.panel.Panel',
-										{
-											title: '指标统计柱状图',
-											margin:'0 0 0 0',
-											padding:'0 6 0 0',
-											layout:'fit',
-                                            hidden : hiddenGrid,
-											collapsible:true,
-											collapsed:true,
-											height: 400,
-											width: totalWidth,
-											items: fsChart2
-										});
+			{
+				title: '指标统计柱状图',
+				margin:'0 0 2 0',
+				padding:0,
+				layout:'fit',
+				collapsible:true,
+				collapsed:true,
+				height: 400,
+				width: totalWidth,
+				items: fsChart2
+			});
 		
 		if(chartStore == null)
 		{
@@ -650,7 +637,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 
 function getApplicantListColumnHeaders(jsonObject)
 {
-	var clHeader = ['ps_ksh_bmbid','ps_ksh_cpm','ps_ksh_dt','ps_ksh_id','ps_ksh_ppm','ps_ksh_type','ps_ksh_xh','ps_ksh_xm','ps_ksh_zt','ps_row_id'];
+	var clHeader = ['ps_ksh_bmbid','ps_msh_id','ps_ksh_cpm','ps_ksh_dt','ps_ksh_id','ps_ksh_ppm','ps_ksh_type','ps_ksh_xh','ps_ksh_xm','ps_ksh_zt','ps_row_id'];
 
 	for(itm in jsonObject)
 	{
@@ -664,7 +651,7 @@ function getApplicantListColumns(jsonObject)
 {
 	var columnList = [
       {text:"序号",width:50,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_xh"},
-      {text:"考生编号",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_id",
+      {text:"面试申请号",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_msh_id",
        renderer:function(value){return Ext.String.format('<a id="ks_id_{1}" href="JavaScript:void(0)" title="单击此链接进入该考生资料评审主页面。">{0}</a>',value,value);}
 	  },
 	  {text:'考生姓名',flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
@@ -672,10 +659,16 @@ function getApplicantListColumns(jsonObject)
 	  {text:"本次排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_cpm"},
 	];
 	
-	//动态列
-	for(itm in jsonObject)
-	{
-		columnList.push({text:jsonObject[itm],flex:1,align:'left',sortable:true,resizable:true,dataIndex:itm, renderer: function (v, metaData) {
+	//动态列：先进行排序
+	var dynamicColumns = [];
+	for(itm in jsonObject){
+		dynamicColumns.push(itm);
+	}
+	dynamicColumns.sort(function(a,b){
+        return a>b;
+    });
+	for(var i=0;i<dynamicColumns.length;i++){
+		columnList.push({text:jsonObject[dynamicColumns[i]],flex:1,align:'left',sortable:true,resizable:true,dataIndex:dynamicColumns[i], renderer: function (v, metaData) {
             var resultHTML=Ext.util.Format.htmlEncode(v)
             return resultHTML;
         }});
@@ -1075,7 +1068,7 @@ function createApplicantList(jsonObject)
 					
 					gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
 					
-					if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_ksh_bmbid'))
+					if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_msh_id'))
 					{
 						var tmpKshID = jQuery.trim(rec.get('ps_ksh_bmbid'));
 						
@@ -1176,11 +1169,7 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 	if(jsonObject != null)
 	{
         //显示总分
-        if(jsonObject['ps_display_fs'] != "Y"){
-            window.evaluateDfPanelDisplayZf ="N";
-        }else{
-            window.evaluateDfPanelDisplayZf ="Y";
-        }
+		window.evaluateDfPanelDisplayZf ="Y";
 
 		var itemArray = new Array();
 
@@ -1215,7 +1204,9 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 	}
 	mainPageFrame.on("resize",function(t,width,height){
 		t.suspendEvent("resize");
-		if(Ext.fly("tz_evaluation_main").getHeight()<height){
+		var mainEl = $(".main")[0];
+		//判断是否有滚动条
+		if(height>Ext.getBody().getHeight()-$(".top_main").height()-$(".footer").height()){
 			t.setWidth(Ext.getBody().getWidth()-17);
 		}else{
 			t.setWidth(Ext.getBody().getWidth());

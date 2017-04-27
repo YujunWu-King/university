@@ -1023,7 +1023,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth,doHidePane
 
 function getApplicantListColumnHeaders(jsonObject)
 {
-	var clHeader = ["ps_ksh_xh","ps_ksh_id","ps_ksh_bmbid","ps_ksh_xm","ps_ksh_ppm","ps_ksh_zt","ps_ksh_dt"];
+	var clHeader = ["ps_ksh_xh","ps_ksh_id","ps_msh_id","ps_ksh_bmbid","ps_ksh_xm","ps_ksh_ppm","ps_ksh_zt","ps_ksh_dt"];
 	
 	for(itm in jsonObject)
 	{
@@ -1037,8 +1037,8 @@ function getApplicantListColumns(jsonObject)
 {
 	var columnList = [
 	      {text:"面试顺序",width:80,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_xh"},
-	      {text:"考生编号",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_id",
-				renderer:function(value){return Ext.String.format('<a id="ks_id_{1}" href="JavaScript:void(0)" title="单击此链接进入该考生面试评审主页面。">{0}</a>',value,value);}
+	      {text:"面试申请号",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_msh_id",
+				renderer:function(value){return Ext.String.format('<a id="msh_id_{1}" href="JavaScript:void(0)" title="单击此链接进入该考生面试评审主页面。">{0}</a>',value,value);}
 			},
 		  {text:'考生姓名',flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
 		  {text:"考生排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"}
@@ -1432,7 +1432,7 @@ function createApplicantList(jsonObject)
 				
 			}else{
 			
-				if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_ksh_bmbid'))
+				if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_msh_id'))
 				{
 					var tmpKshID = jQuery.trim(rec.get('ps_ksh_bmbid'));
 					

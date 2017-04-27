@@ -209,7 +209,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 		String ps_description = "", ps_gaiy_info = "", error_decription = "";
 		String TZ_APPLY_PCH = "";
 		String TZ_ZLPS_SCOR_MD_ID = "",TREE_NAME = "";
-		//String TZ_PYJS_RQ = "",TZ_PYJS_SJ = "";
+		String TZ_PYJS_RQ = "",TZ_PYJS_SJ = "";
 		String TZ_M_FBDZ_ID = "";
 		int error_code = 0, totalRowCount = 0,  tz_done_num = 0;
 
@@ -227,9 +227,6 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 				TZ_ZLPS_SCOR_MD_ID = (String) classInfoMap.get("TZ_ZLPS_SCOR_MD_ID");
 			}
 
-			// 评委是否可见评议标准数据;
-			//String TZ_PWKJ_PYBZSJ = "Y";
-			
 			Map<String, Object> scoreModalMap = sqlQuery.queryForMap(
 					"SELECT TREE_NAME,TZ_M_FBDZ_ID FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?",
 					new Object[] { TZ_ZLPS_SCOR_MD_ID ,orgid});
@@ -239,15 +236,23 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 				TZ_M_FBDZ_ID = (String) scoreModalMap.get("TZ_M_FBDZ_ID");
 			}
 
-			// 评委评审详细说明与通知信息
+			// 评委评审可见偏差、可见评议标准数据、详细说明与通知信息
+			String TZ_PWKJ_PCH = "",TZ_PWKJ_BZH = "";
 			Map<String, Object> evaluationDescMap = sqlQuery.queryForMap(
-					"select TZ_CLPS_SM,date_format(TZ_PYJS_RQ, '%Y-%m-%d') TZ_PYJS_RQ,date_format(TZ_PYJS_SJ, '%H:%i') TZ_PYJS_SJ from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?",
+					"select TZ_CLPS_SM,date_format(TZ_PYJS_RQ, '%Y-%m-%d') TZ_PYJS_RQ,date_format(TZ_PYJS_SJ, '%H:%i') TZ_PYJS_SJ ,TZ_PWKJ_PCH,TZ_PWKJ_FBT from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?",
 					new Object[] { classId, batchId });
 			if (evaluationDescMap != null) {
 				ps_description = (String) evaluationDescMap.get("TZ_CLPS_SM");
 				ps_description = ps_description==null?"":ps_description;
-				//TZ_PYJS_RQ = (String) evaluationDescMap.get("TZ_PYJS_RQ");
-				//TZ_PYJS_SJ = (String) evaluationDescMap.get("TZ_PYJS_SJ");
+				
+				TZ_PYJS_RQ = (String) evaluationDescMap.get("TZ_PYJS_RQ");
+				TZ_PYJS_RQ = TZ_PYJS_RQ==null?"":TZ_PYJS_RQ;
+				TZ_PYJS_SJ = (String) evaluationDescMap.get("TZ_PYJS_SJ");
+				TZ_PYJS_SJ = TZ_PYJS_SJ==null?"":TZ_PYJS_SJ;
+				
+				//评委可见评议标准数据对应数据库字段为TZ_PWKJ_FBT（评委可见分布图）
+				TZ_PWKJ_PCH = (String) evaluationDescMap.get("TZ_PWKJ_PCH");
+				TZ_PWKJ_BZH = (String) evaluationDescMap.get("TZ_PWKJ_FBT");
 			}
 
 			// 当评审说明区域存在：由word复制粘贴过来的表格时，进行处理，添加div;
@@ -255,18 +260,19 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			ps_description = new StringBuffer(table_css).append("<div id=\"pwxxsm_id\">").append(ps_description)
 					.append("</div>").toString();
 
-			// 评议考生上限
-			/*
-			TZ_PYKS_SX = sqlQuery.queryForObject(
-					"select TZ_PYKS_SX from PS_TZ_CLPS_PW_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID= ?",
-					new Object[] { classId, batchId, oprid }, "String");
-			*/
+			// 评议考生下限
+			Integer TZ_PYKS_XX = sqlQuery.queryForObject(
+					"select TZ_PYKS_XX from PS_TZ_CLPS_PW_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID= ?",
+					new Object[] { classId, batchId, oprid }, "Integer");
+			TZ_PYKS_XX = TZ_PYKS_XX==null?0:TZ_PYKS_XX;
 			
 			/* 完成的数量 */
 			tz_done_num = sqlQuery.queryForObject(
 					"select count(TZ_APP_INS_ID) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID = ? and TZ_CLPS_LUNC in ( select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?) and TZ_SUBMIT_YN = 'Y'",
 					new Object[] { classId, batchId, oprid, classId, batchId }, "Integer");
-			ps_gaiy_info = "您目前已完成了" + tz_done_num + "份。"; /* 评委评审概要信息 */
+			
+			/* 评委评审概要信息 */
+			ps_gaiy_info = "您在" +TZ_PYJS_RQ+ " " +TZ_PYJS_SJ+ "前需要完成" +TZ_PYKS_XX+ "份考生资料评审工作，您目前已完成了" +tz_done_num+ "份。";
 
 			if (moreRowsFlag == null || "".equals(moreRowsFlag)) {
 				moreRowsFlag = "N";
@@ -334,7 +340,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			Map<String, Object> sjfzRow1 = new HashMap<String, Object>();
 			sjfzRow1.put("col01", "评审结果");			
 			Map<String, Object> sjfzRow2 = new HashMap<String, Object>();
-			sjfzRow1.put("col02", pjf);			
+			sjfzRow2.put("col02", pjf);			
 			sjfzRowList.add(sjfzRow1);
 			sjfzRowList.add(sjfzRow2);
 			
@@ -431,14 +437,14 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 						String ksbh = "";
 						ksbh = String.valueOf(TZ_APP_INS_ID);
 
-						// 考生姓名;
-						String first_name = "";
+						// 考生姓名、面试申请号;
+						String first_name = "",msh_id = "";
 						Map<String, Object> map1 = sqlQuery.queryForMap(
-								"select A.OPRID,B.TZ_REALNAME from PS_TZ_FORM_WRK_T A,PS_TZ_REG_USER_T B where A.OPRID = B.OPRID and A.TZ_APP_INS_ID=? LIMIT 0,1",
+								"select B.TZ_MSH_ID,B.TZ_REALNAME from PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B where A.OPRID = B.OPRID and A.TZ_APP_INS_ID=? AND B.TZ_RYLX='ZCYH' LIMIT 0,1",
 								new Object[] { TZ_APP_INS_ID });
 						if (map1 != null) {
-							//ksPerson_id = (String) map1.get("OPRID");
 							first_name = (String) map1.get("TZ_REALNAME");
+							msh_id = (String) map1.get("TZ_MSH_ID");
 						}
 
 						// 上次排名;
@@ -545,6 +551,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 				        
 				        dyRowValueItem.put("ps_ksh_xh",String.valueOf(xh));
 				        dyRowValueItem.put("ps_ksh_id",ksbh);
+				        dyRowValueItem.put("ps_msh_id",msh_id);
 				        dyRowValueItem.put("ps_ksh_bmbid",String.valueOf(TZ_APP_INS_ID));
 				        dyRowValueItem.put("ps_ksh_xm",first_name);
 				        dyRowValueItem.put("ps_ksh_ppm",TZ_KSH_PSPM);
