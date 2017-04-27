@@ -1129,15 +1129,17 @@ SurveyBuild.extend("recommendInfo", "baseComponent", {
 					return elem.title+MsgSet["REQUIRE"];
 				}  else {
 					if (Regular == 'phone_area') {
+						/*
 						var _result = /^[\d-+]+$/.test(val);
 						if(!_result){
 							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
-						}
+						}*/
 					} else if (Regular == 'phone_no') {
+						/*
 						var _result = /^1\d{10}$/.test(val);
 						if(!_result){
 							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
-						}
+						}*/
 					} else if (Regular == 'email') {
 						var std=/^([\w\-\.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
 						if (!std.test(val)){
