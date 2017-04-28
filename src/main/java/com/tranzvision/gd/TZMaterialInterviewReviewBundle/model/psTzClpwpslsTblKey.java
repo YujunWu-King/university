@@ -7,6 +7,8 @@ public class psTzClpwpslsTblKey {
 
     private Short tzClpsLunc;
 
+    private String tzClassId;
+
     public String getTzApplyPcId() {
         return tzApplyPcId;
     }
@@ -29,5 +31,13 @@ public class psTzClpwpslsTblKey {
 
     public void setTzClpsLunc(Short tzClpsLunc) {
         this.tzClpsLunc = tzClpsLunc;
+    }
+
+    public String getTzClassId() {
+        return tzClassId;
+    }
+
+    public void setTzClassId(String tzClassId) {
+        this.tzClassId = tzClassId == null ? null : tzClassId.trim();
     }
 }

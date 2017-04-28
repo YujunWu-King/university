@@ -5,7 +5,7 @@
     <id column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
     <id column="TZ_PWEI_OPRID" property="tzPweiOprid" jdbcType="VARCHAR" />
     <id column="TZ_CLPS_LUNC" property="tzClpsLunc" jdbcType="SMALLINT" />
-    <result column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
     <result column="TZ_SUBMIT_YN" property="tzSubmitYn" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
@@ -25,12 +25,14 @@
     where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}
       and TZ_CLPS_LUNC = #{tzClpsLunc,jdbcType=SMALLINT}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTblKey" >
     delete from PS_TZ_CLPWPSLS_TBL
     where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}
       and TZ_CLPS_LUNC = #{tzClpsLunc,jdbcType=SMALLINT}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl" >
     insert into PS_TZ_CLPWPSLS_TBL (TZ_APPLY_PC_ID, TZ_PWEI_OPRID, TZ_CLPS_LUNC, 
@@ -118,9 +120,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl" >
     update PS_TZ_CLPWPSLS_TBL
     <set >
-      <if test="tzClassId != null" >
-        TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
-      </if>
       <if test="tzSubmitYn != null" >
         TZ_SUBMIT_YN = #{tzSubmitYn,jdbcType=VARCHAR},
       </if>
@@ -146,11 +145,11 @@
     where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}
       and TZ_CLPS_LUNC = #{tzClpsLunc,jdbcType=SMALLINT}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl" >
     update PS_TZ_CLPWPSLS_TBL
-    set TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
-      TZ_SUBMIT_YN = #{tzSubmitYn,jdbcType=VARCHAR},
+    set TZ_SUBMIT_YN = #{tzSubmitYn,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
@@ -160,5 +159,6 @@
     where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}
       and TZ_CLPS_LUNC = #{tzClpsLunc,jdbcType=SMALLINT}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
   </update>
 </mapper>

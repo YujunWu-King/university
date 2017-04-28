@@ -384,9 +384,12 @@ public class MsXmlToWord {
 					String ksName = "";//考生姓名
 					String ksMssqh = "";//考生面试申请号
 					String OPRID = "";
-					String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND TZ_APP_INS_ID = ?";
-					OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_CLASS_ID,TZ_APP_INS_ID},"String");
-					
+					//2017-04-28-查询人员的时候， 去掉班级的搜索条件，因为材料评审同一批次的考生可能属于不同的班级;
+					//String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND TZ_APP_INS_ID = ?";
+					//OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_CLASS_ID,TZ_APP_INS_ID},"String");
+					String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ?";
+					OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_APP_INS_ID},"String");
+
 					//取得姓名、面试申请号
 					String Name_Mssqh_SQL = "";
 					Name_Mssqh_SQL = "SELECT TZ_REALNAME,TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID = ? AND OPRID = ?";
@@ -441,7 +444,7 @@ public class MsXmlToWord {
 							// 查询成绩项类型;
 							String SCORE_ITEM_TYPE_SQL = "SELECT TZ_SCORE_ITEM_TYPE FROM PS_TZ_MODAL_DT_TBL WHERE TZ_JG_ID = ? AND TREE_NAME = ? AND TZ_SCORE_ITEM_ID = ?";
 							Map<String, Object> SCORE_ITEM_TYPE_MAP = jdbcTemplate.queryForMap(SCORE_ITEM_TYPE_SQL,
-									new Object[] { TZ_JG_ID, TREE_NAME, TZ_MSCJ_SCOR_MD_ID });
+									new Object[] { TZ_JG_ID, TREE_NAME, TZ_SCORE_ITEM_ID });
 							String TZ_SCORE_ITEM_TYPE = "";
 							if (SCORE_ITEM_TYPE_MAP != null) {
 								TZ_SCORE_ITEM_TYPE = SCORE_ITEM_TYPE_MAP.get("TZ_SCORE_ITEM_TYPE") == null ? ""
