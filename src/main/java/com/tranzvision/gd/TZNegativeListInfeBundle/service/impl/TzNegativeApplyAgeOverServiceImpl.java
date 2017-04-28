@@ -51,7 +51,7 @@ public class TzNegativeApplyAgeOverServiceImpl extends TzNegativeListBundleServi
 					String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
 					Long appinsId = SqlQuery.queryForObject(sql,
 							new Object[] { opridlist.get(i).get("OPRID").toString(), classId }, "Long");
-					String sqlage = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=?";
+					String sqlage = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? AND TZ_XXX_BH='TZ_6birthday'";
 					// 修改生日直接去报名表中的数据
 					// String sqlage = "SELECT BIRTHDATE FROM PS_TZ_REG_USER_T
 					// WHERE OPRID=?";
