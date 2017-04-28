@@ -283,7 +283,9 @@ public class TzAutoScreenEngineServiceImpl {
 
 						TzNegativeListBundleServiceImpl neGListObj = (TzNegativeListBundleServiceImpl) ctx
 								.getBean(javaClass);
-
+						// 运行负面清单前根据班级id 和批次id 删除负面标签表;
+						String delNegaListsql = "DELETE FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+						sqlQuery.update(delNegaListsql, new Object[] { classId, batchId });
 						/* TzNegativeListBundleServiceImpl neGListObj = new */
 						neGListObj.makeNegativeList(classId, batchId, labelId);
 					} catch (Exception e3) {
