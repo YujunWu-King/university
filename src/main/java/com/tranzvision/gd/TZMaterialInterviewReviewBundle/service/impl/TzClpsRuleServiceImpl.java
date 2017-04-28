@@ -11,6 +11,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.border.EtchedBorder;
 
+import org.apache.commons.lang.ObjectUtils.Null;
 import org.apache.xmlbeans.impl.jam.mutable.MPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -425,21 +426,36 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			//当前登录人
 			String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			
-			String dtFormat = getSysHardCodeVal.getDateFormat();
-			String tmFormat = getSysHardCodeVal.getTimeHMFormat();
-
-			SimpleDateFormat dateSimpleDateFormat = new SimpleDateFormat(dtFormat);
-			SimpleDateFormat timeSimpleDateFormat = new SimpleDateFormat(tmFormat);
+			String dttmFormat = getSysHardCodeVal.getDateTimeHMFormat();
+			SimpleDateFormat dttmSimpleDateFormat = new SimpleDateFormat(dttmFormat);
 						
 			String classId = (String) mapParams.get("classId");
 			String batchId = (String) mapParams.get("batchId");
 			String dqpsStatus = (String) mapParams.get("dqpsStatus");
-			Date startDate = dateSimpleDateFormat.parse((String) mapParams.get("startDate"));
-			Date startTime = timeSimpleDateFormat.parse((String) mapParams.get("startTime"));
-			Date endDate = dateSimpleDateFormat.parse((String) mapParams.get("endDate"));
-			Date endTime = timeSimpleDateFormat.parse((String) mapParams.get("endTime"));
+			String strStartDate = mapParams.get("startDate") == null ? "" : String.valueOf(mapParams.get("startDate"));	
+			String strStartTime = mapParams.get("startTime") == null ? "" : String.valueOf(mapParams.get("startTime"));
+			String strEndDate = mapParams.get("endDate") == null ? "" : String.valueOf(mapParams.get("endDate"));
+			String strEndTime = mapParams.get("endTime") == null ? "" : String.valueOf(mapParams.get("endTime"));
 			String materialDesc = (String) mapParams.get("materialDesc");
 			Integer judgeNumSet = mapParams.get("judgeNumSet") == null ? 0 : Integer.valueOf((String) mapParams.get("judgeNumSet"));
+			
+			Date startDateTime = null;
+			if(!"".equals(strStartDate)) {
+				if(!"".equals(strStartTime)) {
+					startDateTime = dttmSimpleDateFormat.parse(strStartDate + " " + strStartTime);
+				} else {
+					startDateTime = dttmSimpleDateFormat.parse(strStartDate);
+				}
+			}
+			
+			Date endDateTime = null;
+			if(!"".equals(strEndDate)) {
+				if(!"".equals(strEndTime)) {
+					endDateTime = dttmSimpleDateFormat.parse(strEndDate + " " + strEndTime);
+				} else {
+					endDateTime = dttmSimpleDateFormat.parse(strEndDate);
+				}
+			}
 			
 			PsTzClpsGzTblKey psTzClpsGzTblKey = new PsTzClpsGzTblKey();
 			psTzClpsGzTblKey.setTzClassId(classId);
@@ -451,10 +467,10 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				psTzClpsGzTbl = new PsTzClpsGzTbl();
 				psTzClpsGzTbl.setTzClassId(classId);
 				psTzClpsGzTbl.setTzApplyPcId(batchId);
-				psTzClpsGzTbl.setTzPyksRq(startDate);
-				psTzClpsGzTbl.setTzPyksSj(startTime);
-				psTzClpsGzTbl.setTzPyjsRq(endDate);
-				psTzClpsGzTbl.setTzPyjsSj(endTime);
+				psTzClpsGzTbl.setTzPyksRq(startDateTime);
+				psTzClpsGzTbl.setTzPyksSj(startDateTime);
+				psTzClpsGzTbl.setTzPyjsRq(endDateTime);
+				psTzClpsGzTbl.setTzPyjsSj(endDateTime);
 				psTzClpsGzTbl.setTzClpsSm(materialDesc);
 				psTzClpsGzTbl.setTzMspyNum(judgeNumSet);
 				psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
@@ -464,16 +480,16 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				psTzClpsGzTbl.setRowLastmantOprid(currentOprid);
 				psTzClpsGzTblMapper.insertSelective(psTzClpsGzTbl);
 			} else {
-				psTzClpsGzTbl.setTzPyksRq(startDate);
-				psTzClpsGzTbl.setTzPyksSj(startTime);
-				psTzClpsGzTbl.setTzPyjsRq(endDate);
-				psTzClpsGzTbl.setTzPyjsSj(endTime);
+				psTzClpsGzTbl.setTzPyksRq(startDateTime);
+				psTzClpsGzTbl.setTzPyksSj(startDateTime);
+				psTzClpsGzTbl.setTzPyjsRq(endDateTime);
+				psTzClpsGzTbl.setTzPyjsSj(endDateTime);
 				psTzClpsGzTbl.setTzClpsSm(materialDesc);
 				psTzClpsGzTbl.setTzMspyNum(judgeNumSet);
 				psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
 				psTzClpsGzTbl.setRowLastmantDttm(new Date());
 				psTzClpsGzTbl.setRowLastmantOprid(currentOprid);
-				psTzClpsGzTblMapper.updateByPrimaryKeySelective(psTzClpsGzTbl);
+				psTzClpsGzTblMapper.updateByPrimaryKey(psTzClpsGzTbl);
 			}
 			
 			

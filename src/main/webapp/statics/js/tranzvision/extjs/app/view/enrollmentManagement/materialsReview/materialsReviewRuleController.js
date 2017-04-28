@@ -446,6 +446,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         var grid = view.down("grid[name=materialJudgeGrid]");
         var judgeStore = grid.getStore();
+        if(!judgeStore.isLoaded()) {
+            var classId = form.findField("classId").getValue();
+            var batchId = form.findField("batchId").getValue();
+            var tzParams = '{"classId":"'+classId+'","batchId":"'+batchId+'"}';
+            judgeStore.tzStoreParams = tzParams;
+            judgeStore.load();
+        }
 
        /* var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
             recname:'TZ_CLPS_GR_TBL',
@@ -508,6 +515,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         var form = view.child("form").getForm();
         var formValues = form.getValues();
+        formValues.startTime = form.findField("startTime").getValue();
+        formValues.endTime = form.findField("endTime").getValue();
 
         var comParams="";
 
