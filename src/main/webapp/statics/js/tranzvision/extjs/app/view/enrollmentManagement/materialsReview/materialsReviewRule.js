@@ -18,13 +18,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	judgeGroupData:'',
     constructor: function(obj) {
         this.classId = obj.classId;
-        this.batchID = obj.batchId;
+        this.batchId = obj.batchId;
+		this.judgeGroupData = obj.judgeGroupData;
         this.callParent();
     },
     initComponent: function() {
 
 		//所属评委组
-		var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
+		/*var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
 			recname:'TZ_CLPS_GR_TBL',
 			condition:{
 				TZ_JG_ID:{
@@ -34,6 +35,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 				}
 			},
 			result:'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME'
+		});*/
+
+		var judgeGroupStore = Ext.create("Ext.data.Store", {
+			fields: ["TZ_CLPS_GR_ID", "TZ_CLPS_GR_NAME"],
+			data: this.judgeGroupData
 		});
 
     	Ext.apply(this,{
@@ -248,6 +254,24 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 											var clpsksNum = form.findField("clpsksNum").getValue();
 											var reviewNumSet = clpsksNum*parseInt(newValue);
 											form.findField("reviewNumSet").setValue(reviewNumSet);
+
+											//所属评委组更新
+											/*var classId = form.findField("classId").getValue();
+											var batchId = form.findField("batchId").getValue();
+
+											var grid = field.findParentByType("materialsReviewRule").down("grid[name=materialJudgeGrid]");
+
+											var judgeGroupParams =  '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
+												'"OperateType":"tzGetJudgeGroup","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
+											Ext.tzLoad(judgeGroupParams,function(responseData) {
+												var judgeGroupData = responseData.groupData;
+
+												judgeGroupStore = Ext.create("Ext.data.Store", {
+													fields: ["TZ_CLPS_GR_ID", "TZ_CLPS_GR_NAME"],
+													data: judgeGroupData
+												});
+											});*/
+
 										}
 									}
 								},{
