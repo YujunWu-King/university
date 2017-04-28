@@ -842,7 +842,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 							passWordHtml = tzGdObject.getHTMLText(
 									"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_PWD_HTML", false, pwdTitle, setPwd,
-									setPwd2, setPwdId, setPwd2Id, pwdDivId, pwdDivId2);
+									setPwd2, setPwdId, setPwd2Id,pwdTitleDivId, pwdDivId, pwdDivId2);
 						}
 					}
 
