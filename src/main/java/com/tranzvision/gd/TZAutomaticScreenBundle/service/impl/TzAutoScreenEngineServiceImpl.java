@@ -271,6 +271,9 @@ public class TzAutoScreenEngineServiceImpl {
 
 		/***************** 循环执行班级下负面清单标签组标签定义java类---开始 *****************/
 		if (!"".equals(fmqdGroup) && fmqdGroup != null) {
+			// 运行负面清单前根据班级id 和批次id 删除负面标签表;
+			String delNegaListsql = "DELETE FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			sqlQuery.update(delNegaListsql, new Object[] { classId, batchId });
 			List<Map<String, Object>> fmqdList = sqlQuery.queryForList(autoLabelSql, new Object[] { orgId, fmqdGroup });
 			for (Map<String, Object> fmqdMap : fmqdList) {
 				String labelId = fmqdMap.get("TZ_BIAOQ_ID").toString();
@@ -283,9 +286,7 @@ public class TzAutoScreenEngineServiceImpl {
 
 						TzNegativeListBundleServiceImpl neGListObj = (TzNegativeListBundleServiceImpl) ctx
 								.getBean(javaClass);
-						// 运行负面清单前根据班级id 和批次id 删除负面标签表;
-						String delNegaListsql = "DELETE FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-						sqlQuery.update(delNegaListsql, new Object[] { classId, batchId });
+
 						/* TzNegativeListBundleServiceImpl neGListObj = new */
 						neGListObj.makeNegativeList(classId, batchId, labelId);
 					} catch (Exception e3) {
