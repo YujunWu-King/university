@@ -34,7 +34,7 @@ public class ImportReservedApplicantsImpl implements UnifiedImportBase {
 			String sqlSelectByKey = "SELECT 'Y' FROM PS_TZ_QYNDBBL_KS_T WHERE TZ_PRJ_ID=? AND TZ_KSSSYEAR=? AND TZ_MSH_ID=?";
 
 			//插入SQL
-			String insertSql = "INSERT INTO TZ_IMP_MSPS_TBL(TZ_PRJ_ID,TZ_KSSSYEAR,TZ_MSH_ID) VALUES(?,?,?)";
+			String insertSql = "INSERT INTO PS_TZ_QYNDBBL_KS_T(TZ_PRJ_ID,TZ_KSSSYEAR,TZ_MSH_ID) VALUES(?,?,?)";
 			
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			
@@ -57,7 +57,7 @@ public class ImportReservedApplicantsImpl implements UnifiedImportBase {
 						
 						if(dataExist==null){
 							//新增模式
-							sqlQuery.update(insertSql, new Object[]{TZ_PRJ_NAME,TZ_KSSSYEAR,TZ_MSH_ID});
+							sqlQuery.update(insertSql, new Object[]{TZ_PRJ_ID,TZ_KSSSYEAR,TZ_MSH_ID});
 						}
 						
 					}else{

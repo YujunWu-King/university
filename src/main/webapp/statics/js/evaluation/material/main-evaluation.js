@@ -106,18 +106,13 @@ function createPJFTJGrid(batchId,jsonObject)
   
   PJFTJGrid_batchID = 'EvaluatePJFTJGrid' + batchId;
 
-    var hiddenGrid = true;
-    if(jsonObject['ps_display_fs'] == "Y"){
-        hiddenGrid = false;
-    }
   var grid = Ext.create('Ext.grid.Panel', {
       store: store,
       stateful: true,
       collapsible: false,
       multiSelect: false,
-      hidden : hiddenGrid,
       columnLines: true,
-	  	id: PJFTJGrid_batchID,
+	  id: PJFTJGrid_batchID,
       stateId: 'EvaluatePJFTJGrid',
       width: "100%",
       columns: myDataModel['gridColumns'],
@@ -134,22 +129,15 @@ function createPJFTJGrid(batchId,jsonObject)
 function getDataForFenbuGrid(jsonObject)
 {
 	var ebList = [];
-	var counter = 0;
 	
 	for(var i=0;i<jsonObject['ps_data_fb'].length;i++)
-	//for(var i=jsonObject['ps_data_fb'].length-1;i>=0;i--)
 	{
 		for(var j=0;j<jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'].length;j++)
 		{
-			var tmpArray = [];
 			
-			tmpArray[0] = jsonObject['ps_data_fb'][i]['ps_fszb_mc'];
-			tmpArray[1] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_fb_mc'];
-			tmpArray[2] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_sjfb_bilv'];
-			tmpArray[3] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_sjfb_rshu'];
-			
-			ebList[counter] = tmpArray;
-			counter ++;
+			var tmpObj = Ext.clone(jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]);
+			tmpObj["ps_fszb_mc"] = jsonObject['ps_data_fb'][i]['ps_fszb_mc']
+			ebList.push(tmpObj);
 		}
 	}
 	
@@ -160,10 +148,10 @@ function createFenbuGrid(jsonObject)
 {
 	var myData = getDataForFenbuGrid(jsonObject);
 	
-	var store = Ext.create('Ext.data.ArrayStore', {
-      fields: [{name:'zb_mc'},{name:'zb_fb_mc'},{name:'ps_sj_fblv'},{name:'ps_sj_fbrs'}],
-      groupField: 'zb_mc',
-      sorters: ['zb_fb_mc','ps_sj_fblv','ps_sj_fbrs'],
+	var store = Ext.create('Ext.data.Store', {
+      fields: ['ps_fszb_mc','ps_fszb_mc','ps_bzfb_bilv','ps_bzfb_rshu','ps_bzfb_wcrs','ps_sjfb_bilv','ps_sjfb_rshu','ps_sjfb_wcrs','ps_sjfb_fhyq'],
+      groupField: 'ps_fszb_mc',
+      //sorters: ['zb_fb_mc','ps_bzfb_bilv','ps_bzfb_rshu','ps_sj_fblv','ps_sj_fbrs'],
       data: myData
   });
   
@@ -172,6 +160,78 @@ function createFenbuGrid(jsonObject)
         hideGroupedHeader: true,
         enableNoGroups:false
     });
+  
+  var columns = [{
+	     text     : '指标名称',
+	     flex     : 1,
+	     sortable : false,
+	     resizable: false,
+	     dataIndex: 'ps_fszb_mc'
+	 },{
+	     text     : '分布名称',
+	     width    : 180,
+	     sortable : false,
+	     resizable: false,
+	     dataIndex: 'ps_fb_mc'
+	 },{
+	     text     : '标准分布比率',
+	     flex     : 1,
+	     sortable : false,
+	     resizable: false,
+	     dataIndex: 'ps_bzfb_bilv'
+	 },{
+	     text     : '标准分布人数',
+	     flex     : 1,
+	     sortable : false,
+	     resizable: false,
+	     dataIndex: 'ps_bzfb_rshu'
+	 },{
+	     text     : '允许误差人数',
+	     flex     : 1,
+	     sortable : false,
+	     resizable: false,
+	     dataIndex: 'ps_bzfb_wcrs'
+	 },{
+	      text     : '您目前评审分布比率',
+	      flex     : 1,
+	      sortable : false,
+	      resizable: false,
+	      dataIndex: 'ps_sjfb_bilv'
+	  },{
+	      text     : '您目前评审分布人数',
+	      flex     : 1,
+	      sortable : false,
+	      resizable: false,
+	      dataIndex: 'ps_sjfb_rshu'
+	  },{
+	     text     : '您目前评分误差人数',
+	     flex     : 1,
+	     sortable : false,
+	     resizable: false,
+	     dataIndex: 'ps_sjfb_wcrs'
+	  },{
+	     text     : '是否符合要求',
+	     flex     : 1,
+	     sortable : false,
+	     resizable: false,
+	     dataIndex: 'ps_sjfb_fhyq',
+	     renderer:function(value){
+	    	 if(value=="不符合"){
+	    		 return "<span style='color:red'>不符合</span>";
+	    	 }else{
+	    		 return value
+	    	 }
+	     }
+	  }];
+  
+  //是否显示评分标准？不显示则移除分布标准列。
+  if(jsonObject["ps_show_standard"]!=undefined&&jsonObject["ps_show_standard"]==false){
+	  columns.splice(8,1);
+	  columns.splice(7,1);
+	  columns.splice(4,1);
+	  columns.splice(3,1);
+	  columns.splice(2,1);
+  }
   
   var grid = Ext.create('Ext.grid.Panel', {
       store: store,
@@ -184,38 +244,7 @@ function createFenbuGrid(jsonObject)
       features: groupingFeature,
       margin:0,
       padding:0,
-      columns: [
-          {
-              text     : '指标名称',
-              flex     : 1,
-              sortable : false,
-              resizable: false,
-              dataIndex: 'zb_mc'
-          },
-          {
-              text     : '分布名称',
-              width    : 180,
-              sortable : false,
-              resizable: false,
-              dataIndex: 'zb_fb_mc'
-          },
-          {
-              text     : '目前评审分布比率',
-              //width    : 130,
-              flex     : 1,
-              sortable : false,
-              resizable: false,
-              dataIndex: 'ps_sj_fblv'
-          },
-          {
-              text     : '目前评审分布人数',
-              //width    : 130,
-              flex     : 1,
-              sortable : false,
-              resizable: false,
-              dataIndex: 'ps_sj_fbrs'
-          }
-      ],
+      columns: columns,
       width: "100%",
       title: '已评审考生评议结果分布统计',
       viewConfig: {
@@ -342,19 +371,14 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth)
 	
 	if(chartDataModel['chartFields'].length >= 1 && chartDataModel['chartData'].length >= 1 && chartDataModel['dataFields'].length >= 1 && chartDataModel['seriesTitle'].length >= 1)
 	{
-        var hiddenGrid = true;
-        if(jsonObject['ps_display_fs'] == "Y"){
-            hiddenGrid = false;
-        }
 		var store1 = null;
 		
 		if(chartStore == null)
 		{
-			store1 = Ext.create('Ext.data.JsonStore',
-								 					{
-								 						fields: chartDataModel['chartFields'],
-								 						data: chartDataModel['chartData']
-								 					});
+			store1 = Ext.create('Ext.data.JsonStore',{
+ 						fields: chartDataModel['chartFields'],
+ 						data: chartDataModel['chartData']
+ 					});
 		}
 		else
 		{
@@ -362,74 +386,71 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth)
 		}
 		
 		
-		var fsChart2 = Ext.create('Ext.chart.Chart',
-									 {
-									 		xtype: 'chart',
-									 		style: 'background:#fff',
-									 		animate: true,
-									 		shadow: true,
-									 		store: store1,
-									 		legend: {position: 'top'},
-								 			axes: [
-								 							{
-									 							type: 'Numeric',
-									 							position: 'left',
-									 							fields: chartDataModel['dataFields'],
-									 							label:{renderer: Ext.util.Format.numberRenderer('000.00')},
-									 							title: '统计指标值',
-									 							grid: true,
-									 							maximum: chartDataModel['maxValue'],
-									 							minimum: chartDataModel['minValue']
-									 						},
-								 							{
-								 								type: 'Category',
-								 								position: 'bottom',
-								 								fields: ['col01'],
-								 								title: '统计指标名称'
-								 							}
-									 					],
-									 		series: [
-									 							{
-									 								type: 'column',
-									 								axis: 'left',
-									 								highlight: true,
-									 								title:chartDataModel['seriesTitle'],
-									 								tips: {
-									 												trackMouse: true,
-								 													width: 180,
-								 													renderer: function(storeItem, item)
-								 																		{
-								 																			this.setTitle(storeItem.get('col01') + '-' + chartDataModel['seriesTips'][item['yField']] + ' : ' + Ext.util.Format.number(storeItem.get(item['yField']),'000.00'));
-								 																		}
-								 												},
-								 									label: {
-								 														font: '18px Helvetica, sans-serif',
-								 														display: 'insideEnd',
-								 														'text-anchor': 'middle',
-								 														field: chartDataModel['dataFields'],
-								 														renderer: Ext.util.Format.numberRenderer('000.00'),
-									 													//orientation: 'vertical',
-									 													color: '#333'
-									 											 },
-									 								xField: 'col01',
-									 								yField: chartDataModel['dataFields']
-									 							}
-									 						]
-									 });
+		var fsChart2 = Ext.create('Ext.chart.Chart',{
+	 		xtype: 'chart',
+	 		style: 'background:#fff',
+	 		animate: true,
+	 		shadow: true,
+	 		store: store1,
+	 		legend: {position: 'top'},
+ 			axes: [
+ 							{
+	 							type: 'Numeric',
+	 							position: 'left',
+	 							fields: chartDataModel['dataFields'],
+	 							label:{renderer: Ext.util.Format.numberRenderer('000.00')},
+	 							title: '统计指标值',
+	 							grid: true,
+	 							maximum: chartDataModel['maxValue'],
+	 							minimum: chartDataModel['minValue']
+	 						},
+ 							{
+ 								type: 'Category',
+ 								position: 'bottom',
+ 								fields: ['col01'],
+ 								title: '统计指标名称'
+ 							}
+	 					],
+	 		series: [{
+						type: 'column',
+						axis: 'left',
+						highlight: true,
+						title:chartDataModel['seriesTitle'],
+						tips: {
+										trackMouse: true,
+										width: 180,
+										renderer: function(storeItem, item)
+															{
+																this.setTitle(storeItem.get('col01') + '-' + chartDataModel['seriesTips'][item['yField']] + ' : ' + Ext.util.Format.number(storeItem.get(item['yField']),'000.00'));
+															}
+									},
+						label: {
+											font: '18px Helvetica, sans-serif',
+											display: 'insideEnd',
+											'text-anchor': 'middle',
+											field: chartDataModel['dataFields'],
+											renderer: Ext.util.Format.numberRenderer('000.00'),
+											//orientation: 'vertical',
+											color: '#333'
+									 },
+						xField: 'col01',
+						yField: chartDataModel['dataFields']
+					}
+				]
+	 });
 		
 		var chartPanel = Ext.create('Ext.panel.Panel',
-										{
-											title: '指标统计柱状图',
-											margin:'0 0 0 0',
-											padding:'0 6 0 0',
-											layout:'fit',
-                                            hidden : hiddenGrid,
-											collapsible:true,
-											collapsed:true,
-											height: 400,
-											width: totalWidth,
-											items: fsChart2
-										});
+			{
+				title: '指标统计柱状图',
+				margin:'0 0 2 0',
+				padding:0,
+				layout:'fit',
+				collapsible:true,
+				collapsed:true,
+				height: 400,
+				width: totalWidth,
+				items: fsChart2
+			});
 		
 		if(chartStore == null)
 		{
@@ -460,7 +481,7 @@ function getSubDataForFenbuChart(chartDataArray)
 			tmpNumber2 = 1.0 * chartDataArray[i]['ps_sjfb_bilv'];
 		}
 		
-		data.push({name:chartDataArray[i]['ps_fb_mc'],data1:chartDataArray[i].ps_sjfb_rshu,data2:chartDataArray[i].ps_sjfb_bilv });
+		data.push({name:chartDataArray[i]['ps_fb_mc'],data1:chartDataArray[i].ps_bzfb_bilv,data2:chartDataArray[i].ps_sjfb_bilv });
 
 	}
 
@@ -650,7 +671,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 
 function getApplicantListColumnHeaders(jsonObject)
 {
-	var clHeader = ['ps_ksh_bmbid','ps_ksh_cpm','ps_ksh_dt','ps_ksh_id','ps_ksh_ppm','ps_ksh_type','ps_ksh_xh','ps_ksh_xm','ps_ksh_zt','ps_row_id'];
+	var clHeader = ['ps_ksh_bmbid','ps_msh_id','ps_ksh_cpm','ps_ksh_dt','ps_ksh_id','ps_ksh_ppm','ps_ksh_type','ps_ksh_xh','ps_ksh_xm','ps_ksh_zt','ps_row_id','ps_ksh_pc','ps_re_evaluation'];
 
 	for(itm in jsonObject)
 	{
@@ -660,7 +681,7 @@ function getApplicantListColumnHeaders(jsonObject)
 	return clHeader;
 }
 
-function getApplicantListColumns(jsonObject)
+function getApplicantListColumns(jsonObject,ps_show_deviation)
 {
 	var columnList = [
       {text:"序号",width:50,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_xh"},
@@ -672,18 +693,29 @@ function getApplicantListColumns(jsonObject)
 	  {text:"本次排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_cpm"},
 	];
 	
-	//动态列
-	for(itm in jsonObject)
-	{
-		columnList.push({text:jsonObject[itm],flex:1,align:'left',sortable:true,resizable:true,dataIndex:itm, renderer: function (v, metaData) {
+	//动态列：先进行排序
+	var dynamicColumns = [];
+	for(itm in jsonObject){
+		dynamicColumns.push(itm);
+	}
+	dynamicColumns.sort(function(a,b){
+        return a>b;
+    });
+	for(var i=0;i<dynamicColumns.length;i++){
+		columnList.push({text:jsonObject[dynamicColumns[i]],flex:1,align:'left',sortable:true,resizable:true,dataIndex:dynamicColumns[i], renderer: function (v, metaData) {
             var resultHTML=Ext.util.Format.htmlEncode(v)
             return resultHTML;
         }});
 	}
 	
-	columnList.push({text:"评议状态",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
+	columnList.push({text:"评议状态",width:90,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
 	columnList.push({text:"评审时间",flex:1,minWidth:140,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_dt"});
-	columnList.push({text:"考生类别",flex:1,minWidth:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_type"});
+	//columnList.push({text:"考生类别",flex:1,minWidth:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_type"});
+	if(ps_show_deviation!=undefined&&ps_show_deviation==true){
+		//评委可见偏差
+		columnList.push({text:"评委间偏差",width:100,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_pc"});
+	}
+	columnList.push({text:"其他评委已复评",width:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_re_evaluation"});
 	
 	columnList.push({
 		text:'评审',
@@ -963,7 +995,7 @@ function createApplicantList(jsonObject)
       scroll:true,
       width:"100%",
       minHeight:200,
-      columns: getApplicantListColumns(jsonObject['ps_data_kslb']['ps_ksh_list_headers']),
+      columns: getApplicantListColumns(jsonObject['ps_data_kslb']['ps_ksh_list_headers'],jsonObject["ps_show_deviation"]),
       title: '当前已归属您的评审考生列表',
       viewConfig: {
           stripeRows: true,
@@ -1075,7 +1107,7 @@ function createApplicantList(jsonObject)
 					
 					gridViewObject.getSelectionModel().getSelection()[0].index = rowIndex;
 					
-					if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_ksh_bmbid'))
+					if(clickColName == 'pw_evaluate_col' || rec.get(clickColName) == rec.get('ps_ksh_id'))
 					{
 						var tmpKshID = jQuery.trim(rec.get('ps_ksh_bmbid'));
 						
@@ -1176,11 +1208,7 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 	if(jsonObject != null)
 	{
         //显示总分
-        if(jsonObject['ps_display_fs'] != "Y"){
-            window.evaluateDfPanelDisplayZf ="N";
-        }else{
-            window.evaluateDfPanelDisplayZf ="Y";
-        }
+		window.evaluateDfPanelDisplayZf ="Y";
 
 		var itemArray = new Array();
 
@@ -1215,7 +1243,9 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 	}
 	mainPageFrame.on("resize",function(t,width,height){
 		t.suspendEvent("resize");
-		if(Ext.fly("tz_evaluation_main").getHeight()<height){
+		var mainEl = $(".main")[0];
+		//判断是否有滚动条
+		if(height>Ext.getBody().getHeight()-$(".top_main").height()-$(".footer").height()){
 			t.setWidth(Ext.getBody().getWidth()-17);
 		}else{
 			t.setWidth(Ext.getBody().getWidth());
@@ -1238,7 +1268,6 @@ function loadApplicantData(applicantObject)
     if(classId != null && classId != '' && classId != 'undefined' && batchId != null && batchId != '' && batchId != 'undefined')
   {
   	displayApplicantEvaluatePage(applicantObject,showNextEvaluatePage,1,'ks_id_' + applicantObject.applicantInterviewID);
-  	Ext.fly("tz_evaluation_main").setScrollTop(0);
   }
   else
   {

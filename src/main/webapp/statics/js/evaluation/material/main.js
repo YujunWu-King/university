@@ -253,7 +253,9 @@ tzPageSlider.prototype =
 				
 				if(tmpHtmlObject != null && $(window)[0] != null && this.pageIndex == 1)
 				{
-					$(window)[0].scrollTo(tmpHtmlObject.offset().left,tmpHtmlObject.offset().top);
+					if(tmpHtmlObject.offset()!=undefined){
+						$(window)[0].scrollTo(tmpHtmlObject.offset().left,tmpHtmlObject.offset().top);
+					}
 				}
 				
 				this.autoScrollHtmlTagId = "";
@@ -342,7 +344,7 @@ function initializeExtObjects(jsonObject)
 		initializeGridColumnHeaders();
 		Ext.QuickTips.init();
 		initializeEvaluatePiciGrid(jsonObject);
-	
+
 		$("#tz_zlps_loading").fadeOut(2000);
 	
 		window.setTimeout(initializeTzPageSlider,10);
@@ -431,25 +433,11 @@ function initializeEvaluateSystem(urlObject)
 	var width = Ext.getBody().getWidth();
 	
 	$("#tz_zlps_pclb").width(width);
-	//$("#tz_zlps_pclb").height(480);
 	
 	$("#tz_zlps_zym").width(width);
-	//$("#tz_zlps_zym").height(480);
 	
 	$("#tz_zlps_dfym").width(width);
-	//$("#tz_zlps_dfym").height(480);
 	
-	if(Ext.isIE == true)
-	{
-		$("#tz_zlps_container").height(480);
-		$("#tz_zlps_pclb").height(480);
-		$("#tz_zlps_zym").height(480);
-		$("#tz_zlps_dfym").height(480);
-	}
-	
-	
-	//$("#tz_zlps_loading").width($("#tz_zlps_pclb").width());
-	//$("#tz_zlps_loading").height($("#tz_zlps_pclb").height());
 	
 	//加载当前登录评委的评审批次数据
 	window.setTimeout (function(){loadEvaluateBatchData(initializeExtObjects);},100);

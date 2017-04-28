@@ -751,7 +751,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                                 xtype: 'displayfield',
                                 margin: '0px 8px',
                                 readOnly: true,
-                                name: 'reviewCount',
+                                name: 'currentReviewCount',
                                 value: "0",
                                 style: 'display:inline-block'
                             },

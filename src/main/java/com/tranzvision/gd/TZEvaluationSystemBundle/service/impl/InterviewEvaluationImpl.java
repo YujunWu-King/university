@@ -524,13 +524,14 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						String ksbh = "";
 						ksbh = String.valueOf(TZ_APP_INS_ID);
 
-						// 考生姓名;
-						String first_name = "";
+						// 考生姓名、面试申请号;
+						String first_name = "",msh_id = "";
 						Map<String, Object> map3 = sqlQuery.queryForMap(
-								"select A.OPRID,B.TZ_REALNAME from PS_TZ_FORM_WRK_T A,PS_TZ_REG_USER_T B where A.OPRID = B.OPRID and A.TZ_APP_INS_ID=?",
+								"select B.TZ_MSH_ID,B.TZ_REALNAME from PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B where A.OPRID = B.OPRID and A.TZ_APP_INS_ID=? AND B.TZ_RYLX='ZCYH' LIMIT 0,1",
 								new Object[] { TZ_APP_INS_ID });
 						if (map3 != null) {
 							first_name = (String) map3.get("TZ_REALNAME");
+							msh_id = (String) map3.get("TZ_MSH_ID");
 						}
 
 						//组内排名;
@@ -620,6 +621,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						}
 				        
 						dyRowValueItem.put("ps_ksh_id",ksbh);
+						dyRowValueItem.put("ps_msh_id",msh_id);
 				        dyRowValueItem.put("ps_ksh_bmbid",String.valueOf(TZ_APP_INS_ID));
 				        dyRowValueItem.put("ps_ksh_xm",first_name);
 				        dyRowValueItem.put("ps_ksh_zt",pyZt);

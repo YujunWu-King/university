@@ -9,7 +9,6 @@ a, img, q, dl, dt, dd, ol, ul, li, form, label, caption{
 	vertical-align: baseline;
 	text-decoration:none;
 	font-size:100%;
-
 }
 *{ margin:0; padding:0;outline: 0;}
 body{margin:0; padding:0;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:12px; }
@@ -82,7 +81,7 @@ v\:* { behavior: url(#default#VML); }
     margin-bottom: 0px;
     margin-left: auto;
     height: auto;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 .top_main {
     padding: 0px;
@@ -128,4 +127,7 @@ v\:* { behavior: url(#default#VML); }
 }
 .x-grid-td {
     vertical-align: middle!important;
+}
+.x-mask{
+	z-index:200!important;
 }

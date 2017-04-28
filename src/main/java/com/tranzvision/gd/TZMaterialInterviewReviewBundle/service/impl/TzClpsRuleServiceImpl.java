@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.border.EtchedBorder;
 
 import org.apache.xmlbeans.impl.jam.mutable.MPackage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,12 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				String bkksNum = mapBasic.get("TZ_BKKS_NUM") == null ? "" : String.valueOf(mapBasic.get("TZ_BKKS_NUM"));
 				String clpsksNum = mapBasic.get("TZ_CLPS_KS_NUM") == null ? "" : String.valueOf(mapBasic.get("TZ_CLPS_KS_NUM"));
 				String judgeNumSet = mapBasic.get("TZ_MSPY_NUM") == null ? "" : String.valueOf(mapBasic.get("TZ_MSPY_NUM"));
+				//每位考生要求被几个评委审批，如果没有，默认为2
+				if(!"".equals(judgeNumSet)) {
+					
+				} else {
+					judgeNumSet="2";
+				}
 				
 				String strStartDate = "";
 				if(null!=startDate) {
@@ -394,6 +401,10 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			//批量导出评委
 			if("tzExportJudge".equals(operateType)) {
 				strRet = exportJudge(strParams,errMsg);
+			}
+			//查询评委组
+			if("tzGetJudgeGroup".equals(operateType)) {
+				strRet = getJudgeGroup(strParams,errMsg);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -765,6 +776,62 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				errMsg[0] = "1";
 				errMsg[1] = "导出失败";
 			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		
+		return strRet;
+	}
+	
+	
+	//查询评委组
+	public String getJudgeGroup(String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String,Object> mapRet = new HashMap<String,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try {
+			
+			//当前机构
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
+			jacksonUtil.json2Map(strParams);
+			String classId = jacksonUtil.getString("classId");
+			String batchId = jacksonUtil.getString("batchId");
+			
+			String sql = "";
+			
+			//每位考生要求被几个评委审批
+			sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			Integer judgeSetNum = sqlQuery.queryForObject(sql, new Object[]{classId,batchId},"Integer");
+			if(!"0".equals(judgeSetNum)) {
+				
+			} else {
+				judgeSetNum = 2;
+			}
+			
+			sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_CLPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY CAST(TZ_CLPS_GR_ID AS SIGNED INTEGER) LIMIT 0,?";
+			List<Map<String, Object>> listGroup = sqlQuery.queryForList(sql, new Object[]{orgId,judgeSetNum});
+			
+			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+			
+			for(Map<String, Object> mapGroup : listGroup) {
+				String groupId = mapGroup.get("TZ_CLPS_GR_ID") == null ? "" : mapGroup.get("TZ_CLPS_GR_ID").toString();
+				String groupName = mapGroup.get("TZ_CLPS_GR_NAME") == null ? "" : mapGroup.get("TZ_CLPS_GR_NAME").toString();
+				
+				Map<String, Object> mapData = new HashMap<String,Object>();
+				mapData.put("TZ_CLPS_GR_ID", groupId);
+				mapData.put("TZ_CLPS_GR_NAME", groupName);
+				
+				dataList.add(mapData);	
+			}
+			
+			mapRet.put("groupData", dataList);
+			
+			strRet = jacksonUtil.Map2json(mapRet);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

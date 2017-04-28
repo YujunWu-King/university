@@ -454,6 +454,72 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    String strJjlxrPhone = (String) map.get("jjlxrPhone");
 				    
 				    //20170425,yuds,申请用户信息修改
+				    
+				    //用户信息表
+				    String strUserOrgSQL = "SELECT TZ_JG_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+				    String strUserOrg = jdbcTemplate.queryForObject(strUserOrgSQL, new Object[]{strOprId}, "String");
+				    PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
+				    psTzAqYhxxTbl.setTzDlzhId(strOprId);
+				    psTzAqYhxxTbl.setTzJgId(strUserOrg);
+				    if(strUserName!=null&&!"".equals(strUserName)){
+				    	psTzAqYhxxTbl.setTzRealname(strUserName);
+				    }
+				    if(strUserEmail!=null){
+				    	//查重邮箱
+				    	if(!"".equals(strUserEmail)){
+				    		String strEmailCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_EMAIL=?";
+				    		String strCheckFlg = jdbcTemplate.queryForObject(strEmailCheckSQL, new Object[]{strOprId,strUserEmail}, "String");
+				    		if("Y".equals(strCheckFlg)){
+				    			returnJsonMap.replace("OPRID", strOprId);
+				    			strRet = jacksonUtil.Map2json(returnJsonMap);
+				    			errMsg[0] = "1";
+				    			errMsg[1] = "该邮箱已被绑定，请更换绑定邮箱.";
+				    			
+				    			return strRet;
+				    		}else{
+				    			psTzAqYhxxTbl.setTzYxbdBz("Y");
+				    		}
+				    	}else{
+				    		psTzAqYhxxTbl.setTzYxbdBz("N");
+				    	}
+				    	psTzAqYhxxTbl.setTzEmail(strUserEmail);
+				    }
+				    if(strUserPhone!=null){
+				    	//查重手机
+				    	if(!"".equals(strUserPhone)){
+				    		String strPhoneCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_MOBILE=?";
+				    		String strCheckFlg = jdbcTemplate.queryForObject(strPhoneCheckSQL, new Object[]{strOprId,strUserPhone}, "String");
+				    		if("Y".equals(strCheckFlg)){
+				    			returnJsonMap.replace("OPRID", strOprId);
+				    			strRet = jacksonUtil.Map2json(returnJsonMap);
+				    			errMsg[0] = "1";
+				    			errMsg[1] = "该手机已被绑定，请更换绑定手机.";
+				    			
+				    			return strRet;
+				    		}else{
+				    			psTzAqYhxxTbl.setTzSjbdBz("Y");
+				    		}
+				    	}else{
+				    		psTzAqYhxxTbl.setTzSjbdBz("N");
+				    	}
+				    	psTzAqYhxxTbl.setTzMobile(strUserPhone);
+				    }
+				    
+				    if("".equals(strUserEmail)&&"".equals(strUserPhone)){
+				    	returnJsonMap.replace("OPRID", strOprId);
+		    			strRet = jacksonUtil.Map2json(returnJsonMap);
+		    			errMsg[0] = "1";
+		    			errMsg[1] = "绑定手机或绑定邮箱至少要有一个";
+		    			
+		    			return strRet;
+				    }
+				    if(strJihuoZt!=null){
+				    	psTzAqYhxxTbl.setTzJihuoZt(strJihuoZt);
+				    }
+				    psTzAqYhxxTbl.setRowLastmantDttm(new Date());
+				    psTzAqYhxxTbl.setRowLastmantOprid(strCurrentOprid);
+				    psTzAqYhxxTblMapper.updateByPrimaryKeySelective(psTzAqYhxxTbl);
+				    
 				    //注册信息表
 				    PsTzRegUserT psTzRegUserT = new PsTzRegUserT();
 				    psTzRegUserT.setOprid(strOprId);
@@ -512,27 +578,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    	psTzLxfsInfoTbl.setTzZyEmail(strZyEmail);
 				    }
 				    psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
-				    //用户信息表
-				    String strUserOrgSQL = "SELECT TZ_JG_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
-				    String strUserOrg = jdbcTemplate.queryForObject(strUserOrgSQL, new Object[]{strOprId}, "String");
-				    PsTzAqYhxxTbl psTzAqYhxxTbl = new PsTzAqYhxxTbl();
-				    psTzAqYhxxTbl.setTzDlzhId(strOprId);
-				    psTzAqYhxxTbl.setTzJgId(strUserOrg);
-				    if(strUserName!=null&&!"".equals(strUserName)){
-				    	psTzAqYhxxTbl.setTzRealname(strUserName);
-				    }
-				    if(strUserEmail!=null){
-				    	psTzAqYhxxTbl.setTzEmail(strUserEmail);
-				    }
-				    if(strUserPhone!=null){
-				    	psTzAqYhxxTbl.setTzMobile(strUserPhone);
-				    }
-				    if(strJihuoZt!=null){
-				    	psTzAqYhxxTbl.setTzJihuoZt(strJihuoZt);
-				    }
-				    psTzAqYhxxTbl.setRowLastmantDttm(new Date());
-				    psTzAqYhxxTbl.setRowLastmantOprid(strCurrentOprid);
-				    psTzAqYhxxTblMapper.updateByPrimaryKeySelective(psTzAqYhxxTbl);
+				    
 				    
 				    //扩展表
 				    String strExistsSql = "SELECT 'Y' FROM PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?";

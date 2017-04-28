@@ -125,7 +125,9 @@ public class TzTjxClsServiceImpl {
 					psTzKsTjxTbl.setTzRefLetterId(strTjxId);
 					psTzKsTjxTbl.setTzAppInsId(numAppinsId);
 					psTzKsTjxTbl.setOprid(strOprid);
-					psTzKsTjxTbl.setTzTjxType(strTjxType);
+					if(!"".equals(strTjxType)){
+						psTzKsTjxTbl.setTzTjxType(strTjxType);
+					}
 					psTzKsTjxTbl.setTzTjrId(strTjrId);
 					psTzKsTjxTbl.setTzMbaTjxYx(str_tjx_valid);
 					psTzKsTjxTbl.setTzTjxTitle(strTitle);
@@ -137,7 +139,9 @@ public class TzTjxClsServiceImpl {
 					psTzKsTjxTbl.setTzPhoneArea(strPhone_area);
 					psTzKsTjxTbl.setTzPhone(strPhone_no);
 					psTzKsTjxTbl.setTzGender(strGender);
-					psTzKsTjxTbl.setTzReflettertype(str_refLetterType);
+					if(!"".equals(str_refLetterType)){
+						psTzKsTjxTbl.setTzReflettertype(str_refLetterType);
+					}
 
 					psTzKsTjxTbl.setTzTjxYl1(strAdd1);
 					psTzKsTjxTbl.setTzTjxYl2(strAdd2);
@@ -175,7 +179,9 @@ public class TzTjxClsServiceImpl {
 		String str_language = "";
 		if (numAppinsId > 0 && (strTjrId != null && !"".equals(strTjrId))
 				&& (strOprid != null && !"".equals(strOprid))) {
+			/**
 			// 判断该推荐人的推荐信是否已提交;
+			
 			String strTjxState = jdbcTemplate.queryForObject(
 					"select B.TZ_APP_FORM_STA from PS_TZ_KS_TJX_TBL A,PS_TZ_APP_INS_T B where A.TZ_APP_INS_ID=? AND A.TZ_TJR_ID=? AND A.OPRID=? AND A.TZ_MBA_TJX_YX='Y' AND A.TZ_TJX_APP_INS_ID=B.TZ_APP_INS_ID limit 0,1",
 					new Object[] { numAppinsId, strTjrId, strOprid }, "String");
@@ -194,6 +200,13 @@ public class TzTjxClsServiceImpl {
 						new Object[] { numAppinsId, strTjrId, strOprid });
 				strRtn = "SUCCESS";
 			}
+			*/
+			/*不再判断推荐信是否提交，任何时候都可更换推荐人*/
+			// 设置推荐信失效;
+			jdbcTemplate.update(
+					"update PS_TZ_KS_TJX_TBL A set TZ_MBA_TJX_YX='N' where  A.TZ_APP_INS_ID=? AND A.TZ_TJR_ID=? AND A.OPRID=?",
+					new Object[] { numAppinsId, strTjrId, strOprid });
+			strRtn = "SUCCESS";
 		} else {
 			// 参数不完整;
 			strRtn = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "P_INCOM",

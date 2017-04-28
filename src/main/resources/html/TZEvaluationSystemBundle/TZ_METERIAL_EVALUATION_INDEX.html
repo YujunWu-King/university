@@ -62,18 +62,11 @@ Ext.onReady(function(){
 		
 		
 	}
-	/*var urlObject = {
-		"getBatchListUrl":'/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_ReadPSPCList?languageCd=ZHS',
-		"getBatchDataUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_ReadPWMPData?languageCd=ZHS",
-		"getNextApplicantUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS",
-		"getApplicantDataUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_ReadKSHEvaluateData?languageCd=ZHS",
-		"submitApplicantDataUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_ZILIAO_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS",
-		"printStatisticsTableUrl":"/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_DYBB.TZ_DYPFZB.FieldFormula.IScript_Printreport"
-	};*/
 })
 
 $(function(){
-	$("#tz_evaluation_main").height(Ext.getBody().getHeight()-58-37);
+	$("#tz_zlps_loading").height(Ext.getBody().getHeight()-58-37);
+	$("#tz_zlps_pclb").height(Ext.getBody().getHeight()-58-37);
 	$("#tz_zlps_container").width(Ext.getBody().getWidth()*3);
 });
 </script>
@@ -93,17 +86,17 @@ $(function(){
            </ul>           
 	</div>
   		<!-- evaluation main start -->
-		<div id="tz_evaluation_main" style="height:100%;overflow-x:hidden;margin:0px;position:relative">
-			<div id="tz_zlps_loading" style="height:auto;width:100%;overflow:hidden;z-index:1600;background-color:#F4F4EC;position:absolute;bottom:40px;">
-				<div style="margin:auto; width:100%;height: 100%; text-align:center;line-height:500px;font-size:25px;font-family:Microsoft Yahei;">	
+		<div id="tz_evaluation_main" style="overflow-x:hidden;margin:0px;position:relative">
+			<div id="tz_zlps_loading" style="height:auto;width:100%;overflow:hidden;z-index:1600;background-color:#F4F4EC;position:absolute;bottom:0;">
+				<div style="margin:auto; width:100%;height: 100%; margin-top:20%;text-align:center;font-size:25px;font-family:Microsoft Yahei;">	
 					<p>欢迎登录清华经管学院MBA材料评审系统，数据加载中，请稍候……</p>
 				</div>
 			</div>
-			<div id="tz_zlps_container" style="width: 5050px;height:100%;min-height:500px;position:relative;overflow:hidden">
+			<div id="tz_zlps_container" style="width: 5050px;height:100%;position:relative;overflow:hidden">
 				<table style="background-color:#F4F4EC;width:100%;height:100%">
 					<tr>
 						<td align="center" valign="top">
-							<div id="tz_zlps_pclb" tztype="page" style="background-color:#F4F4EC;z-index:1400;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+							<div id="tz_zlps_pclb" tztype="page" style="background-color:#F4F4EC;z-index:1400;list-style:none;width:100%;float:left;overflow-x:hidden">
 								<table  style="width:100%;height:100%">
 									<tr>
 										<td align="center" valign="top">
@@ -114,7 +107,7 @@ $(function(){
 							</div>
 						</td>
 						<td align="center" valign="top">
-							<div id="tz_zlps_zym" tztype="page" style="background-color:#F4F4EC;z-index:1200;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+							<div id="tz_zlps_zym" tztype="page" style="background-color:#F4F4EC;z-index:1200;list-style:none;width:100%;min-height:500pxpx;float:left;overflow-x:hidden">
 								<table width="100%">
 									<tr>
 										<td>
@@ -129,7 +122,7 @@ $(function(){
 							</div>
 						</td>
 						<td align="center" valign="top" style="width:1349px;">
-							<div id="tz_zlps_dfym" tztype="page" style="background-color:#F4F4EC;z-index:1000;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+							<div id="tz_zlps_dfym" tztype="page" style="background-color:#F4F4EC;z-index:1000;list-style:none;width:100%;min-height:500px;float:left;overflow-x:hidden">
 								<table width="100%">
 									<tr>
 										<td>

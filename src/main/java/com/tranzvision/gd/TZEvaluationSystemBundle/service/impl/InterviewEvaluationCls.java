@@ -52,7 +52,7 @@ public class InterviewEvaluationCls{
 			return rtn;
 		}
 
-		if(srch_msid!=null&&!"".equals(srch_msid)&&srch_name!=null&&!"".equals(srch_msid)){
+		if(srch_msid!=null&&!"".equals(srch_msid)&&srch_name!=null&&!"".equals(srch_name)){
 			sqlWhere = " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND C.TZ_MSH_ID=? AND C.TZ_REALNAME=?";
 			sqlString = sqlString + sqlWhere;
 			searchObj = new Object[]{classId,batchId,srch_msid,srch_name};
@@ -69,7 +69,7 @@ public class InterviewEvaluationCls{
 					searchObj = new Object[]{classId,batchId,srch_name};
 			  }
 		}
-		
+
 		List<Map<String, Object>> list = sqlQuery.queryForList(sqlString,
 				searchObj);
 		

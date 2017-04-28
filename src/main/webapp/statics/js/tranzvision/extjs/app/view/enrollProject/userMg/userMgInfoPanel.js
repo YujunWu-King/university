@@ -560,13 +560,14 @@
 		                    },
 		                    width:'10%',
 		                    renderer:function(value,metadata,record){
-		                        console.log(value);
 		                        if(value=="U"){
 		                            return "已提交";
 		                        }else if(value=="OUT"){
 		                            return "撤销";
 		                        }else if(value=="BACK"){
 		                            return "退回修改";
+		                        }else if(value=="P"){
+		                        	return "预提交"
 		                        }else{
 		                            return "新建";
 		                        }
