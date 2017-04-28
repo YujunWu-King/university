@@ -209,9 +209,13 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		return gradeDiv;
 	},
 	//日期:input
-	getDateDiv:function(data,top_id,date_id,date_val,date_name,date_title){
+	getDateDiv:function(data,top_id,date_id,date_val,date_name,date_title,flg){
 		var DATE_DIV='';
-		DATE_DIV += '  <div id="'+top_id+'_DATE_DIV" class="input-list" style="display:block"><span class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+MsgSet["EXAM_TDATE"]+'：</span>';
+		if(flg!=undefined&&flg=="N"){
+			DATE_DIV += '  <div id="'+top_id+'_DATE_DIV" class="input-list" style="display:none"><span class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+MsgSet["EXAM_TDATE"]+'：</span>';
+		}else{
+			DATE_DIV += '  <div id="'+top_id+'_DATE_DIV" class="input-list" style="display:block"><span class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+MsgSet["EXAM_TDATE"]+'：</span>';
+		}
 		
 		//DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="SurveyBuild.reFocus(\'' + date_id + '\'); title="' +date_name + '">';
 		
@@ -249,8 +253,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		var val=child.EngLevelGrade.value;
 		//------------------1.2.3.4.13有日期
 		var dateHtml="";
-
-		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2||EXAM_TYPE_DEF==""){
+		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2){
 			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
 			label=MsgSet["EXAM_TSCORE"];
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T3){
@@ -300,15 +303,40 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			ReadDiv+=val;
 			ReadDiv+='</div>'
 		ReadDiv+='</div>';
-		//------------------	
+		//------------------"无"选项:
+			if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""){
+				ReadDiv="";
+				ReadDiv+='<div name="'+data.itemId+'_READ_DIV" id="'+data.itemId+'_READ_DIV" class="input-list">'
+					//只读考试名称:
+					ReadDiv+='<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span><span>'+child.EngLevelType.itemName+'：</span></div> '
+					ReadDiv+='<div class="input-list-text left">'
+					ReadDiv+=EXAM_TYPE_DEF;
+					ReadDiv+='</div>'	
+					ReadDiv+='<div class="clear"></div>'
+				ReadDiv+='</div>';
+			}
+		//------------------
 		return ReadDiv;
 	},
 	//考试类型“关联div”切换:
 	getRelatedDiv:function(data,child,EXAM_TYPE_DEF,EXAM_TYPE_MAP){
 		//alert("data:"+EXAM_TYPE_DEF+"  val:"+EXAM_TYPE_MAP.ENG_LEV_T6)
+		var upTips=$("#"+child.EngLevelUp.itemId+"_greGmatTips");
+		
+		if(upTips!=undefined){
+			if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2){
+				upTips.show();
+			}else{
+				
+				upTips.hide();
+			}
+		}
 		var RELATED_DIV="";
 		var DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
-		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2||EXAM_TYPE_DEF==""){
+		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""){
+			RELATED_DIV=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName,"N");
+		}
+		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2){
 			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_TSCORE"],DATE_HTML);
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T3){
 			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_TOTAL"],DATE_HTML);
@@ -434,6 +462,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		//考试种类OPT
 		//var TzUniversityContextPath="/university";
 		var EXAM_TYPE_MAP={
+			"ENG_LEV_T0":"无",
 			"ENG_LEV_T1":"GRE",
 			"ENG_LEV_T2":"GMAT",
 			"ENG_LEV_T3":"TOEFL",
@@ -454,6 +483,8 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			htmlContent+='<div class="clear"></div>'
 			htmlContent += '<div class="mainright-title">';
 				htmlContent += '<span class="title-line"></span>' + MsgSet["ENG_LEV"]  +index+ ' :</div>';
+				//加入一段提示文字:
+				//htmlContent += '<span class="title-line"></span>' + MsgSet["ENG_LEV"]  +index+ MsgSet["ENG_LEV_TIPS"]+'</div>';
 			htmlContent += '<div class="mainright-box pos-rela">';
 			//-----
 			if(index > 1&&!SurveyBuild._readonly){
@@ -468,10 +499,13 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				//<!--通用只读模式 成绩+日期显示-->
 				htmlContent+=this.getReadDiv(data,child,EXAM_TYPE_DEF,EXAM_TYPE_MAP);
 				//<!--通用上传控件部分-->
-				//<!--通用上传控件部分-->
-				htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP" class="input-list" style="display:block">'
-				htmlContent+='<div class="clear"></div>';
-				htmlContent+='<div class="input-list-info left"><span >证书/成绩扫描件:</span></div>'
+				if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""){
+					htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP" class="input-list" style="display:none">'
+				}else{
+					htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP" class="input-list" style="display:block">'
+				}
+				htmlContent+='<div class="clear"></div>';//证书/成绩扫描件
+				htmlContent+='<div class="input-list-info left"><span >'+MsgSet["SCORE_UP"]+':</span></div>'
 				//var filename = child.EngLevelUp.filename;
 				//htmlContent += '<div class="main_inner_content_info_text"><a id="'+data["itemId"]+child.EngLevelUp["itemId"]+'Attch" class="fancybox" href="' +child.EngLevelUp.accessPath + child.EngLevelUp.sysFileName + '" target="_blank">' + (filename ? filename.substring(0,20) + "..." : "") + '</a></div>';
 				//htmlContent += '<input id="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" type="hidden" name="'+data["itemId"]+child.EngLevelUp.itemId+'Attch" value="'+child.EngLevelUp.itemId+'"></div>';
@@ -568,7 +602,11 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			        }
 			    }
 			     //------------------图片上传处理:2.上传图片div显示区域  
-				htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP"  class="input-list" style="display:block">'
+				 if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""){
+					 htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP"  class="input-list" style="display:none">'
+				 }else{
+					 htmlContent+='<div name="'+data.itemId+'UP" id="'+data.itemId+'UP"  class="input-list" style="display:block">'
+				 }
 					htmlContent+='<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span><span >'+MsgSet["SCORE_UP"]+'</span></div>'
 						htmlContent+='<div class="input-list-texttemplate left" >'
 							//'<input type="file" id="'+data["itemId"] + child.EngLevelUp.itemId+'File"  name="' + data["itemId"] + child.EngLevelUp.itemId + 'File" onchange=SurveyBuild.eduImgUpload(this,"EngLevelUp") accept="image/*"/>'
@@ -576,6 +614,12 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 								htmlContent+= '	<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
 								htmlContent+= '	<input data-instancid="' + data.instanceId + '" id="'+child.EngLevelUp.itemId+ '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')" type="file" class="filebtn-orgtext"/>';
 								htmlContent+= '</div>';
+								//GRE和GMAT特有:"请提供正式成绩单"ENG_UP_TIPS
+								//if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2){
+								//	htmlContent+='<div id="'+child.EngLevelUp.itemId+'_greGmatTips" style="line-height:46px;margin-left:8px;display:inline-block;color:red;font-size:16px">'+MsgSet["ENG_UP_TIPS"]+'</div>';
+								//}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""){
+								//	htmlContent+='<div id="'+child.EngLevelUp.itemId+'_greGmatTips" style="line-height:46px;margin-left:8px;display:inline-block none;color:red;font-size:16px">'+MsgSet["ENG_UP_TIPS"]+'</div>';
+								//}
 								htmlContent+='<div class="clear"></div>'
 									if(data.isRequire == "Y"){
 										htmlContent+= '<div>' + msg + '<div id="' + child.EngLevelUp.itemId + 'Tip" class="onShow" style="line-height:32px;height:18px;"><div class="onShow"></div></div></div>';
@@ -629,6 +673,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 	_eventbind: function(data) {
 				//选中隐藏和显示相应值
 				var EXAM_TYPE_MAP={
+					"ENG_LEV_T0":"无",
 					"ENG_LEV_T1":"GRE",
 					"ENG_LEV_T2":"GMAT",
 					"ENG_LEV_T3":"TOEFL",
@@ -675,6 +720,14 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 										var timeDiv=topDiv.find("#"+data["itemId"]+"_DATE_DIV");
 										//成绩DIV
 										var gradeDiv=topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
+										//上传DIV
+										//上传部位:
+										var upDiv=topDiv.find("#"+data["itemId"]+"UP");
+										if(i=="ENG_LEV_T0"){
+											upDiv.hide();
+										}else{
+											upDiv.show();
+										}
 										
 										//gradeDiv.after(relatedDiv);
 										//changeSpanLabel(timeDiv.find())

@@ -279,11 +279,12 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 
 					java.util.Date now = new java.util.Date();
 
+					/*临时注释
 					if (checkTime.after(now)) {
 						mess = "您发送的邮件间隔太短了，在" + com.tranzvision.gd.util.Calendar.DateUtil.formatLongDate(checkTime)
 								+ "之前您不能在重复给" + email + "邮箱发送邮件。";
 						flag = false;
-					}
+					}*/
 
 				}
 
@@ -334,7 +335,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			if ("DELETE".equals(operateType)) {
 				jdbcTemplate.update("DELETE FROM PS_TZ_KS_TJX_TBL  WHERE TZ_APP_INS_ID = ? AND TZ_MBA_TJX_YX = 'N'",
 						new Object[] { numAppinsId });
-				jdbcTemplate.update("DELETE FROM PS_TZ_KS_TJX_TBL  WHERE TZ_APP_INS_ID = ? AND TZ_REFLETTERTYPE = 'U'",
+				jdbcTemplate.update("DELETE FROM PS_TZ_KS_TJX_TBL  WHERE TZ_APP_INS_ID = ? AND (TZ_REFLETTERTYPE = 'U' OR TZ_REFLETTERTYPE = '')",
 						new Object[] { numAppinsId });
 			}
 
@@ -354,7 +355,9 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 						psTzKsTjxTbl.setTzRefLetterId(str_ref_id);
 						psTzKsTjxTbl.setTzAppInsId(numAppinsId);
 						psTzKsTjxTbl.setOprid(strOprid);
-						psTzKsTjxTbl.setTzTjxType(strTjxType);
+						if(!"".equals(strTjxType)){	
+							psTzKsTjxTbl.setTzTjxType(strTjxType);
+						}
 						psTzKsTjxTbl.setTzTjrId(strTjrId);
 						psTzKsTjxTbl.setTzMbaTjxYx(str_tjx_valid);
 						psTzKsTjxTbl.setTzTjxTitle(strTitle);
@@ -366,7 +369,9 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 						psTzKsTjxTbl.setTzPhoneArea(strPhone_area);
 						psTzKsTjxTbl.setTzPhone(strPhone_no);
 						psTzKsTjxTbl.setTzGender(strGender);
-						psTzKsTjxTbl.setTzReflettertype(str_refLetterType);
+						if(!"".equals(str_refLetterType)){
+							psTzKsTjxTbl.setTzReflettertype(str_refLetterType);
+						}
 						psTzKsTjxTbl.setTzTjxYl1(strAdd1);
 						psTzKsTjxTbl.setTzTjxYl2(strAdd2);
 						psTzKsTjxTbl.setTzTjxYl3(strAdd3);
@@ -431,8 +436,9 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			String str_tjx_app_tpl_id = "";
 			String str_refLetterSysFile = "", str_refLetterUserFile = "";
 			String str_att_a_url = "";
+			String strRefType = "";
 
-			String sql = "SELECT TZ_TJX_APP_INS_ID,'Y' STR_Y,TZ_REF_LETTER_ID,TZ_TJX_TYPE,ATTACHSYSFILENAME,ATTACHUSERFILE,TZ_ACCESS_PATH FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? limit 0,1";
+			String sql = "SELECT TZ_TJX_APP_INS_ID,'Y' STR_Y,TZ_REF_LETTER_ID,TZ_TJX_TYPE,TZ_REFLETTERTYPE,ATTACHSYSFILENAME,ATTACHUSERFILE,TZ_ACCESS_PATH FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? limit 0,1";
 			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { str_app_ins_id, str_rownum });
 			if (map != null) {
 				try {
@@ -453,6 +459,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 				str_refLetterSysFile = (String) map.get("ATTACHSYSFILENAME");
 				str_refLetterUserFile = (String) map.get("ATTACHUSERFILE");
 				str_att_a_url = (String) map.get("TZ_ACCESS_PATH");
+				strRefType = (String) map.get("TZ_REFLETTERTYPE");
 			}
 
 			if ("Y".equals(str_y)) {
@@ -466,13 +473,23 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 						if (str_att_a_url != null && !"".equals(str_att_a_url)) {
 							str_tjx_zt = "已完成";
 						} else {
-							str_tjx_app_ins_id = 0;
-							str_ref_letter_id = "0";
-							str_tjx_zt = "已发送";
+							if("".equals(strRefType)){
+								str_tjx_app_ins_id = 0;
+								str_ref_letter_id = "0";
+								str_tjx_zt = "未发送";
+							}else{
+								str_tjx_app_ins_id = 0;
+								str_ref_letter_id = "0";
+								str_tjx_zt = "已发送";
+							}
 						}
 					}
 				} else {
-					str_tjx_zt = "已发送";
+					if("".equals(strRefType)){
+						str_tjx_zt = "未发送";
+					}else{
+						str_tjx_zt = "已发送";
+					}
 				}
 			}
 

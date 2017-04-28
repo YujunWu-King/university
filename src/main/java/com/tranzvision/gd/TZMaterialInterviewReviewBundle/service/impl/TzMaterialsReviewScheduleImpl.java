@@ -279,21 +279,37 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				strClpsCount = "0";
 			}
 			String strProgress = strClpsCount + "/" + numtotal;
+			//当前选择评委评议人次
+			String strCurrentReviewSQL = "SELECT SUM(TZ_PYKS_XX) FROM PS_TZ_CLPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			String strCurrentReviewCount = sqlQuery.queryForObject(strCurrentReviewSQL, new Object[] { strClassID, strBatchID }, "String");
+			if(strCurrentReviewCount==null){
+				strCurrentReviewCount = "0";
+			}
 
 			Map<String, Object> mapData = new HashMap<String, Object>();
 			mapData.put("classID", strClassID);
 			mapData.put("batchID", strBatchID);
 			mapData.put("totalStudents", strTotalStudentCount);
 			mapData.put("materialStudents", strCurBatchStuCount);
+			//状态
 			mapData.put("status", strStatus);
+			//评审进度
 			mapData.put("progress", strProgress);
+			//当前评审轮次
 			mapData.put("delibCount", strDelibCount);
-			mapData.put("reviewCount", intCurrentSum);
+			//每个考生被几个评委评审
+			mapData.put("reviewCount", judgeCount);
+			//实时计算评委偏差
 			mapData.put("calPwPanC", strPwRealTime);
+			//评委可见偏差
 			mapData.put("judgePanCFlg", strPwkjPch);
+			//评委可见评议标准
 			mapData.put("judgePyDataFlg", strPwkjFbt);
 			// 要求评审人次
 			mapData.put("requiredCount", numtotal);
+			//当前选择评委评委人次
+			mapData.put("currentReviewCount", strCurrentReviewCount);
+			
 			strResponse = jacksonUtil.Map2json(mapData);
 		} catch (Exception e) {
 			e.printStackTrace();
