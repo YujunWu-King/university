@@ -148,7 +148,9 @@ tzPageSlider.prototype =
 				
 				if(tmpHtmlObject != null && $(window)[0] != null && this.pageIndex == 1)
 				{
-					$(window)[0].scrollTo(tmpHtmlObject.offset().left,tmpHtmlObject.offset().top);
+					if(tmpHtmlObject.offset()!=undefined){
+						$(window)[0].scrollTo(tmpHtmlObject.offset().left,tmpHtmlObject.offset().top);
+					}
 				}
 				
 				this.autoScrollHtmlTagId = "";

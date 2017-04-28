@@ -345,8 +345,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         if(form.isValid()) {
             //校验评委各组评议人数合是否等于考生人数
-            //var checkFlag = me.checkJudgeExamineeTotal();
-            var checkFlag = true;
+            var checkFlag = me.checkJudgeExamineeTotal();
             if(checkFlag==true) {
                 var tzParams = me.getRuleParams(actType);
                 Ext.tzSubmit(tzParams,function(responseData) {
@@ -358,7 +357,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     }
                 },"",true,this);
             } else {
-                Ext.Msg.alert('提示','评委各组评议人数合不等于考生人数');
+                Ext.Msg.alert('提示','评委各组评议人数和不等于考生人数');
                 return ;
             }
 

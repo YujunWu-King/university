@@ -1760,8 +1760,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		//发送邮件 -开始
 		if ((data.itemLx=="L"&&child[i].recommend_8["value"]!="U")||data.itemLx=="F"){
-			if(SurveyBuild._readonly!=true){
-				works += '<div class="input-list-blank" style="margin: 0 auto;'+((_zd=="Z" || _zd=="N")?"display:none":"")+'" id="Tjx_SendEmail_'+i+'">';
+			if(SurveyBuild.appManager != "Y"){
+				//works += '<div class="input-list-blank" style="margin: 0 auto;'+((_zd=="Z" || _zd=="N")?"display:none":"")+'" id="Tjx_SendEmail_'+i+'">';
+				//如果不是管理员，一直显示
+				works += '<div class="input-list-blank" style="margin: 0 auto;" id="Tjx_SendEmail_'+i+'">';
 				works += '<div class="input-list-info left"></div>';
 				works += '<div class="input-list-texttemplate" style="width:100%">';
 				//发送邮件  如果已经发送，那么不显示
@@ -1785,7 +1787,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '</div>';
 				
 				//更换推荐人
+				/*
 				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
+				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';*/
+				/*更换推荐人一直显示*/
+				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 			
@@ -1827,7 +1834,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '</div>';		
 		}else{
 			if(SurveyBuild._readonly!=true){
-				works += '<div class="input-list-blank" style="margin: 0 auto;display:none" id="Tjx_SendEmail_'+i+'">';
+				works += '<div class="input-list-blank" style="margin: 0 auto;display:none" id="-'+i+'">';
 				works += '<div class="input-list-info left" style="padding-left:6px;"></div>';
 				works += '<div class="input-list-texttemplate" style="width:100%">';
 			
@@ -1851,6 +1858,13 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '</div>';
 				
 				//更换推荐人
+				/*
+				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
+				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				*/
+				
+				/*更换推荐人一直显示*/
 				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
@@ -1985,7 +1999,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				} else{
 					rec_phone_area="";
 				}
-				
+				/*
 				if (rec_phone_area !="" && _yz=="") {
 					var _result_area = /^[\d-+]+$/.test(rec_phone_area);
 					if(!_result_area){
@@ -1995,7 +2009,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).blur();
 					}
 				}
-				
+				*/
 				
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
 				if (children[m-1].recommend_4["useby"]=="Y"&&rec_phone_no==""){
@@ -2004,6 +2018,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).blur();
 				}
+				/*
 				if (rec_phone_no !="" && _yz=="") {
 					var _result = /^1\d{10}$/.test(rec_phone_no);
 					if(!_result){
@@ -2012,7 +2027,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).focus();
 						$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).blur();
 					}
-				}
+				}*/
 				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
 				if (children[m-1].recommend_5["useby"]=="Y"&&rec_email==""){
 					_yz="1";
@@ -2430,26 +2445,28 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_desc =   children[m-1].recommend_16["itemName"]+ MsgSet["REQUIRE"];
 					
 				}
+				/*
 				if (_yz=="" && rec_phone_area!="") {
 					var _result_phone_area = /^[\d-+]+$/.test(rec_phone_area);
 					if(!_result_phone_area){
 						_yz="1";
 						_desc = children[m-1].recommend_16["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
 					}
-				}
+				}*/
 				
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
 				if (children[m-1].recommend_4["useby"]=="Y"&&rec_phone_no==""){
 					_yz="1";
 					_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["REQUIRE"];
 				}
+				/*
 				if (_yz=="" && rec_phone_no!="") {
 					var _result = /^1\\d{10}$/.test(rec_phone_no);
 					if(!_result){
 						_yz="1";
 						_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
 					}	
-				}
+				}*/
 				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
 				if (children[m-1].recommend_5["useby"]=="Y"&&rec_email==""){
 					_yz="1";
@@ -2545,6 +2562,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				var rec_num = children[m-1].recommend_99["value"];
 				var rec_type = $("#" + data["itemId"] + children[m-1].recommend_8["itemId"]).val();
 				
+				rec_type = "";
+				
 				var _file=children[m-1].recommend_9["filename"];
 				var _sysfile=children[m-1].recommend_9["sysFileName"];
 				var _accessPath=children[m-1].recommend_9["accessPath"];
@@ -2572,7 +2591,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				_sysfile = SurveyBuild.specialCharReplace(_sysfile);
 				_accessPath = SurveyBuild.specialCharReplace(_accessPath);
 				
-				if (rec_type=="U")
+				/*任何情况都可以保存推荐信*/
+				if (rec_type=="U" || true)
 				{
 					console.log("_file"+_file);
 					console.log("_sysfile"+_sysfile);
@@ -2609,123 +2629,126 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			//更换推荐人
 			$("#changeRec_"+(Number(num)-1)).unbind("click");
 			$("#changeRec_"+(Number(num)-1)).click(function(){
-				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-				
-				var m=Number(lineno)+1;
-				var mm = this.id.split("_")[1];
-				var mm=Number(mm)+1;
-				var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
-				var rec_gname = $("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).val();
-				var rec_name = $("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).val();
-				var rec_company = $("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).val();
-				var rec_post = $("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).val();
-				var rec_phone_area = $("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).val();
-				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
-				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
-				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
-				var rec_relation = $("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).val();
-				//var rec_language = $("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]:checked").val();
-				var rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
-				//var rec_num= m;
-				var rec_num = children[m-1].recommend_99["value"];
-				var rec_by1 = $("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).val();
-				var rec_by2 = $("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).val();
-				var rec_by3 = $("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).val();
-				var rec_by4 = $("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).val();
-				var rec_by5 = $("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).val();
-				var rec_by6 = $("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).val();
-				var rec_by7 = $("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).val();
-				var rec_by8 = $("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).val();
-				var rec_by9 = $("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).val();
-				var rec_by10 = $("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).val();
+				var confirmValue = confirm(MsgSet["CHANGE_TJX_CONFIRM_MSG"]);
+				if(confirmValue==true){
+					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+					
+					var m=Number(lineno)+1;
+					var mm = this.id.split("_")[1];
+					var mm=Number(mm)+1;
+					var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
+					var rec_gname = $("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).val();
+					var rec_name = $("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).val();
+					var rec_company = $("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).val();
+					var rec_post = $("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).val();
+					var rec_phone_area = $("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).val();
+					var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
+					var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
+					var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
+					var rec_relation = $("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).val();
+					//var rec_language = $("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]:checked").val();
+					var rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
+					//var rec_num= m;
+					var rec_num = children[m-1].recommend_99["value"];
+					var rec_by1 = $("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).val();
+					var rec_by2 = $("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).val();
+					var rec_by3 = $("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).val();
+					var rec_by4 = $("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).val();
+					var rec_by5 = $("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).val();
+					var rec_by6 = $("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).val();
+					var rec_by7 = $("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).val();
+					var rec_by8 = $("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).val();
+					var rec_by9 = $("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).val();
+					var rec_by10 = $("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).val();
 
-				
-				rec_title = SurveyBuild.specialCharReplace(rec_title);
-				rec_gname = SurveyBuild.specialCharReplace(rec_gname);
-				rec_name = SurveyBuild.specialCharReplace(rec_name);
-				rec_company = SurveyBuild.specialCharReplace(rec_company);
-				rec_post = SurveyBuild.specialCharReplace(rec_post);
-				rec_phone_area = SurveyBuild.specialCharReplace(rec_phone_area);
-				rec_phone_no = SurveyBuild.specialCharReplace(rec_phone_no);
-				rec_email = SurveyBuild.specialCharReplace(rec_email);
-				rec_relation = SurveyBuild.specialCharReplace(rec_relation);
-				rec_by1 = SurveyBuild.specialCharReplace(rec_by1);
-				rec_by2 = SurveyBuild.specialCharReplace(rec_by2);
-				rec_by3 = SurveyBuild.specialCharReplace(rec_by3);
-				rec_by4 = SurveyBuild.specialCharReplace(rec_by4);
-				rec_by5 = SurveyBuild.specialCharReplace(rec_by5);
-				rec_by6 = SurveyBuild.specialCharReplace(rec_by6);
-				rec_by7 = SurveyBuild.specialCharReplace(rec_by7);
-				rec_by8 = SurveyBuild.specialCharReplace(rec_by8);
-				rec_by9 = SurveyBuild.specialCharReplace(rec_by9);
-				rec_by10 = SurveyBuild.specialCharReplace(rec_by10);
-				
-				var _tz_app_ins_id=SurveyBuild.appInsId;
-				var _tz_app_version_id=SurveyBuild.appInsVersion;
-				var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
-				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"CHANGE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'"}}';
-				var _email_tx = $("#yincang_tx").val();
-				//console.log(encodeURIComponent(param));
-				
-				$.ajax({
-					type: "post",
-					url: _Url + encodeURIComponent(param),
-					dataType: "json",
-					success: function(result){
-						if (result.comContent=="SUCCESS"){
-							$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
-							$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
-							
-							$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
-							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
-							
-							$("#changeRecS_"+(Number(mm)-1)).css("display","none");
-							$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
-							//$("#tjxzt_desc_"+(Number(rec_num)-1)).html("推荐信状态：未发送");
-							$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).removeAttr("readonly");
-							$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").removeAttr("disabled");
-							$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").removeAttr("disabled");
-							$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").removeAttr("disabled");
-							$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).removeAttr("readonly");
-							
-							$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).removeAttr("readonly");
-							
-							console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]));
-							//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).trigger("liszt:updated");
-							//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).find(".chosen-results").show();
-							//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"] + "_chosen").find(".chosen-results").show();
-							$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
-							$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen();
-							
-							$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","N");
-							
-							$("#tjx_delete_"+(Number(mm)-1)).show();
-							$("#app_save").click();
-						}else {
-							alert(result.comContent);
+					
+					rec_title = SurveyBuild.specialCharReplace(rec_title);
+					rec_gname = SurveyBuild.specialCharReplace(rec_gname);
+					rec_name = SurveyBuild.specialCharReplace(rec_name);
+					rec_company = SurveyBuild.specialCharReplace(rec_company);
+					rec_post = SurveyBuild.specialCharReplace(rec_post);
+					rec_phone_area = SurveyBuild.specialCharReplace(rec_phone_area);
+					rec_phone_no = SurveyBuild.specialCharReplace(rec_phone_no);
+					rec_email = SurveyBuild.specialCharReplace(rec_email);
+					rec_relation = SurveyBuild.specialCharReplace(rec_relation);
+					rec_by1 = SurveyBuild.specialCharReplace(rec_by1);
+					rec_by2 = SurveyBuild.specialCharReplace(rec_by2);
+					rec_by3 = SurveyBuild.specialCharReplace(rec_by3);
+					rec_by4 = SurveyBuild.specialCharReplace(rec_by4);
+					rec_by5 = SurveyBuild.specialCharReplace(rec_by5);
+					rec_by6 = SurveyBuild.specialCharReplace(rec_by6);
+					rec_by7 = SurveyBuild.specialCharReplace(rec_by7);
+					rec_by8 = SurveyBuild.specialCharReplace(rec_by8);
+					rec_by9 = SurveyBuild.specialCharReplace(rec_by9);
+					rec_by10 = SurveyBuild.specialCharReplace(rec_by10);
+					
+					var _tz_app_ins_id=SurveyBuild.appInsId;
+					var _tz_app_version_id=SurveyBuild.appInsVersion;
+					var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
+					var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"CHANGE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'"}}';
+					var _email_tx = $("#yincang_tx").val();
+					//console.log(encodeURIComponent(param));
+					
+					$.ajax({
+						type: "post",
+						url: _Url + encodeURIComponent(param),
+						dataType: "json",
+						success: function(result){
+							if (result.comContent=="SUCCESS"){
+								$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
+								$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
+								
+								$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+								$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+								
+								$("#changeRecS_"+(Number(mm)-1)).css("display","none");
+								$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
+								//$("#tjxzt_desc_"+(Number(rec_num)-1)).html("推荐信状态：未发送");
+								$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).removeAttr("readonly");
+								$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").removeAttr("disabled");
+								$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").removeAttr("disabled");
+								$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).removeAttr("readonly");
+								
+								$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).removeAttr("readonly");
+								
+								console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]));
+								//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).trigger("liszt:updated");
+								//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).find(".chosen-results").show();
+								//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"] + "_chosen").find(".chosen-results").show();
+								$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
+								$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen();
+								
+								$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","N");
+								
+								$("#tjx_delete_"+(Number(mm)-1)).show();
+								$("#app_save").click();
+							}else {
+								alert(result.comContent);
+							}
 						}
-					}
-				});
+					});
+				}
 			});
 			$("#"+data.itemId + children[num-1].recommend_15["itemId"]+"_M").click(function(){
 				var readOnly = $(this).attr("readonlyflag");
@@ -2883,15 +2906,17 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}  else {
 					//正则表达式判断
 					if (Regular == 'phone_area') {
+						/*	
 						var _result = /^[\d-+]+$/.test(val);
 						if(!_result){
 							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
-						}
+						}*/
 					} else if (Regular == 'phone_no') {
+						/*
 						var _result = /^1\d{10}$/.test(val);
 						if(!_result){
 							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
-						}
+						}*/
 					} else if (Regular == 'email') {
 						var std=/^([\w\-\.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
 						if (!std.test(val)){

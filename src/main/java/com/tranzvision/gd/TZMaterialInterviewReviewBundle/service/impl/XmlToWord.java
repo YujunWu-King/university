@@ -413,19 +413,24 @@ public class XmlToWord {
 									: String.valueOf(KS_SCORE_MAP.get("TZ_SCORE_NUM"));
 							String TZ_SCORE_PY_VALUE = KS_SCORE_MAP.get("TZ_SCORE_PY_VALUE") == null ? ""
 									: String.valueOf(KS_SCORE_MAP.get("TZ_SCORE_PY_VALUE"));
+							
 
 							// 查询成绩项类型;
 							String SCORE_ITEM_TYPE_SQL = "SELECT TZ_SCORE_ITEM_TYPE FROM PS_TZ_MODAL_DT_TBL WHERE TZ_JG_ID = ? AND TREE_NAME = ? AND TZ_SCORE_ITEM_ID = ?";
 							Map<String, Object> SCORE_ITEM_TYPE_MAP = jdbcTemplate.queryForMap(SCORE_ITEM_TYPE_SQL,
-									new Object[] { TZ_JG_ID, TREE_NAME, TZ_ZLPS_SCOR_MD_ID });
+									new Object[] { TZ_JG_ID, TREE_NAME, TZ_SCORE_ITEM_ID });
 							String TZ_SCORE_ITEM_TYPE = "";
 							if (SCORE_ITEM_TYPE_MAP != null) {
 								TZ_SCORE_ITEM_TYPE = SCORE_ITEM_TYPE_MAP.get("TZ_SCORE_ITEM_TYPE") == null ? ""
 										: String.valueOf(SCORE_ITEM_TYPE_MAP.get("TZ_SCORE_ITEM_TYPE"));
 							}
 							// 评语项和打分项分别处理
+							
+							
 							if (StringUtils.equals(TZ_SCORE_ITEM_TYPE, "C")) {
 								// "C" 为评语项
+								System.out.println("TZ_SCORE_PY_VALUE=" + TZ_SCORE_PY_VALUE+"=");
+								
 								pw_ks_bph_html = pw_ks_bph_html + tzGDObject.getHTMLText(
 										"HTML.TZMaterialInterviewReviewBundle.TZ_GD_CL_PY_PW_STULIST_TC_HTML",
 										TZ_SCORE_PY_VALUE);

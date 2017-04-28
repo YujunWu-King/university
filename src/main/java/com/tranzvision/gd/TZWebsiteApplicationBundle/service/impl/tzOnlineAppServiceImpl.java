@@ -842,7 +842,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 							passWordHtml = tzGdObject.getHTMLText(
 									"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_PWD_HTML", false, pwdTitle, setPwd,
-									setPwd2, setPwdId, setPwd2Id, pwdDivId, pwdDivId2);
+									setPwd2, setPwdId, setPwd2Id,pwdTitleDivId, pwdDivId, pwdDivId2);
 						}
 					}
 
@@ -1419,15 +1419,29 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
 							strOtype, isPwd, strRefLetterId);
 					if ("".equals(strMsg)) {
-
-						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "save",
+						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "submit",
+								strTplType);
+						/*当前页面是否完成*/
+						String sqlCurrentPageCompleteState = "SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
+						String strPageCompleteState1 = sqlQuery.queryForObject(sqlCurrentPageCompleteState,
+								new Object[] { numAppInsId, strPageId }, "String");
+						if(!"Y".equals(strPageCompleteState1)){
+							strMsg = "当前页面未完成";
+						}else{
+							strMsg = "";
+						}
+							
+						/*
+						 * strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "save",
 								strTplType);
 						//// //System.out.println("checkFiledValid：" + strMsg);
+						
 						if ("".equals(strMsg)) {
 							tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "Y");
 						} else {
 							tzOnlineAppEngineImpl.savePageCompleteState(numAppInsId, strPageId, "N");
 						}
+						*/
 					}
 					// 模版级事件 JAVA 版本目前没有 注销掉
 					// String sqlGetModalEvents = "SELECT
