@@ -55,7 +55,7 @@ public class TzNegativeApplyNumberServiceImpl extends TzNegativeListBundleServic
 					havenumber = SqlQuery.queryForObject(
 							TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeOverthree"),
 							new Object[] { oprid, classId }, "Integer");
-					if (havenumber != null && havenumber > 3) {
+					if (havenumber != null && havenumber >= 3) {
 						String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
 						Integer appinsId = SqlQuery.queryForObject(sql, new Object[] { oprid, classId }, "Integer");
 						PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
