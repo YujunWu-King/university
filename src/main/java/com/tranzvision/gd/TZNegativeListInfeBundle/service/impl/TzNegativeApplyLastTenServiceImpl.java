@@ -65,6 +65,7 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 						frisone_pm = SqlQuery.queryForObject(sqlfristone,
 								new Object[] { classId, batchId, count - 1 - a }, "Integer");
 					else {
+						break;
 
 					}
 
