@@ -441,7 +441,7 @@ public class MsXmlToWord {
 							// 查询成绩项类型;
 							String SCORE_ITEM_TYPE_SQL = "SELECT TZ_SCORE_ITEM_TYPE FROM PS_TZ_MODAL_DT_TBL WHERE TZ_JG_ID = ? AND TREE_NAME = ? AND TZ_SCORE_ITEM_ID = ?";
 							Map<String, Object> SCORE_ITEM_TYPE_MAP = jdbcTemplate.queryForMap(SCORE_ITEM_TYPE_SQL,
-									new Object[] { TZ_JG_ID, TREE_NAME, TZ_MSCJ_SCOR_MD_ID });
+									new Object[] { TZ_JG_ID, TREE_NAME, TZ_SCORE_ITEM_ID });
 							String TZ_SCORE_ITEM_TYPE = "";
 							if (SCORE_ITEM_TYPE_MAP != null) {
 								TZ_SCORE_ITEM_TYPE = SCORE_ITEM_TYPE_MAP.get("TZ_SCORE_ITEM_TYPE") == null ? ""
