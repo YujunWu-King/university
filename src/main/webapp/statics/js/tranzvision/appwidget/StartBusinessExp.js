@@ -273,9 +273,9 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						familyMoney=child.WorkExper3.value+MsgSet["ONE_MILLION"];
 					}else if(FINANCING_DEL=="ANGEL_INVEST"){
 						finDesc=MsgSet["ANGEL_INVEST"]+child.WorkExper2_3.value+MsgSet["ONE_MILLION"];
-					}else if(FINANCING_DEL="NO_FINANCING"){
+					}else if(FINANCING_DEL=="NO_FINANCING"){
 						finDesc=MsgSet["NO_FINANCING"];
-					}else if(FINANCING_DEL="NEW_CREATE"){
+					}else if(FINANCING_DEL=="NEW_CREATE"){
 						finDesc=MsgSet["NEW_CREATE"];
 					}
 				}else{
