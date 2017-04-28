@@ -365,8 +365,14 @@ public class XmlToWord {
 					String ksName = "";//考生姓名
 					String ksMssqh = "";//考生面试申请号
 					String OPRID = "";
-					String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND TZ_APP_INS_ID = ?";
-					OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_CLASS_ID,TZ_APP_INS_ID},"String");
+					//2017-04-28-查询人员的时候， 去掉班级的搜索条件，因为材料评审同一批次的考生可能属于不同的班级;
+					//String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND TZ_APP_INS_ID = ?";
+					//OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_CLASS_ID,TZ_APP_INS_ID},"String");
+					String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE  TZ_APP_INS_ID = ?";
+					OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_APP_INS_ID},"String");
+					
+					
+					
 					
 					//取得姓名、面试申请号
 					String Name_Mssqh_SQL = "";
@@ -429,7 +435,7 @@ public class XmlToWord {
 							
 							if (StringUtils.equals(TZ_SCORE_ITEM_TYPE, "C")) {
 								// "C" 为评语项
-								System.out.println("TZ_SCORE_PY_VALUE=" + TZ_SCORE_PY_VALUE+"=");
+								//System.out.println("TZ_SCORE_PY_VALUE=" + TZ_SCORE_PY_VALUE+"=");
 								
 								pw_ks_bph_html = pw_ks_bph_html + tzGDObject.getHTMLText(
 										"HTML.TZMaterialInterviewReviewBundle.TZ_GD_CL_PY_PW_STULIST_TC_HTML",

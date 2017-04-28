@@ -384,9 +384,12 @@ public class MsXmlToWord {
 					String ksName = "";//考生姓名
 					String ksMssqh = "";//考生面试申请号
 					String OPRID = "";
-					String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND TZ_APP_INS_ID = ?";
-					OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_CLASS_ID,TZ_APP_INS_ID},"String");
-					
+					//2017-04-28-查询人员的时候， 去掉班级的搜索条件，因为材料评审同一批次的考生可能属于不同的班级;
+					//String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND TZ_APP_INS_ID = ?";
+					//OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_CLASS_ID,TZ_APP_INS_ID},"String");
+					String OPRID_SQL = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ?";
+					OPRID= jdbcTemplate.queryForObject(OPRID_SQL, new Object[]{TZ_APP_INS_ID},"String");
+
 					//取得姓名、面试申请号
 					String Name_Mssqh_SQL = "";
 					Name_Mssqh_SQL = "SELECT TZ_REALNAME,TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID = ? AND OPRID = ?";
