@@ -575,13 +575,56 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				field_value = point_begin;
 		}
 
+		//标准
+		var bzsmItem;
+		if(bzsm_content!=null&&bzsm_content!="") {
+			bzsmItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '<span style="cursor:pointer;" id="'+pointbzsm_id+'">标准</span>',
+				width		: 100
+			}
+		} else {
+			bzsmItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '',
+				width		: 100
+			}
+		}
+
+		//说明
+		var ckwtItem;
+		if(ckwt_content!=null&&ckwt_content!="") {
+			ckwtItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
+				width		: 100
+			}
+		} else {
+			ckwtItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '',
+				width		: 100
+			}
+		}
+
+		//参考资料
 		var ckzlItem;
 		if(ckzl_content!=null&&ckzl_content!="") {
 			ckzlItem={
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				id			: pointckzl_id,
 				value		: '<span style="cursor:pointer;" id="'+pointckzl_id+'">参考资料</span>',
+				width		: 100
+			}
+		} else {
+			ckzlItem={
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '',
 				width		: 100
 			}
 		}
@@ -618,20 +661,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 										value		: '（'+ point_begin +' ~ '+ point_end +'）',
 										width		: 130
 									},
-									{
-										xtype		: 'displayfield',
-										fieldStyle	: 'text-align:right;',
-										id			: pointbzsm_id,
-										value		: '<span style="cursor:pointer;" id="'+pointbzsm_id+'">标准</span>',
-										width		: 100
-									},
-									{
-										xtype		: 'displayfield',
-										fieldStyle	: 'text-align:right;',
-										id			: pointckwt_id,
-										value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
-										width		: 100
-									},
+									bzsmItem,
+									ckwtItem,
 					                ckzlItem
 								  ]
 
@@ -674,13 +705,56 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			leafC_allowBlank = false;
 		}
 
+		//标准
+		var bzsmItem;
+		if(bzsm_content!=null&&bzsm_content!="") {
+			bzsmItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '<span style="cursor:pointer;" id="'+pointbzsm_id+'">标准</span>',
+				width		: 50
+			}
+		} else {
+			bzsmItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '',
+				width		: 50
+			}
+		}
+
+		//说明
+		var ckwtItem;
+		if(ckwt_content!=null&&ckwt_content!="") {
+			ckwtItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
+				width		: 50
+			}
+		} else {
+			ckwtItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '',
+				width		: 50
+			}
+		}
+
+		//参考资料
 		var ckzlItem;
 		if(ckzl_content!=null&&ckzl_content!="") {
 			ckzlItem={
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				id			: pointckzl_id,
 				value		: '<span style="cursor:pointer;" id="'+pointckzl_id+'">参考资料</span>',
+				width		: 100
+			}
+		} else {
+			ckzlItem={
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '',
 				width		: 100
 			}
 		}
@@ -704,20 +778,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 										allowBlank	: leafC_allowBlank,
 										width		: 400,
 										height		: thisFieldContainerHeight
-									}/*,
-									{
-										xtype		: 'displayfield',
-										id			: pointbzsm_id,
-										value		: '<span style="cursor:pointer;" id="'+pointbzsm_id+'">标准说明</span>',
-										width		: 100
-									}*/,
-									{
-										xtype		: 'displayfield',
-										fieldStyle	: 'text-align:right;',
-										id			: pointckwt_id,
-										value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
-										width		: 50
 									},
+									bzsmItem,
+									ckwtItem,
 					                ckzlItem
 								  ]
 
@@ -755,13 +818,56 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			data:field_options
 		});
 
+		//标准
+		var bzsmItem;
+		if(bzsm_content!=null&&bzsm_content!="") {
+			bzItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '<span style="cursor:pointer;" id="'+pointbzsm_id+'">标准</span>',
+				width		: 100
+			}
+		} else {
+			bzItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '',
+				width		: 100
+			}
+		}
+
+		//说明
+		var ckwtItem;
+		if(ckwt_content!=null&&ckwt_content!="") {
+			ckwtItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
+				width		: 100
+			}
+		} else {
+			ckwtItem = {
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '',
+				width		: 100
+			}
+		}
+
+		//参考资料
 		var ckzlItem;
 		if(ckzl_content!=null&&ckzl_content!="") {
 			ckzlItem={
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				id			: pointckzl_id,
 				value		: '<span style="cursor:pointer;" id="'+pointckzl_id+'">参考资料</span>',
+				width		: 100
+			}
+		} else {
+			ckzlItem={
+				xtype		: 'displayfield',
+				fieldStyle	: 'text-align:right;',
+				value		: '',
 				width		: 100
 			}
 		}
@@ -786,19 +892,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				margin		: '0 5 0 0',
 				allowBlank	: false,
 				width		: 250
-			},{
-				xtype		: 'displayfield',
-				fieldStyle	: 'text-align:right;',
-				id			: pointbzsm_id,
-				value		: '<span style="cursor:pointer;" id="'+pointbzsm_id+'">标准</span>',
-				width		: 100
-			},{
-				xtype		: 'displayfield',
-				fieldStyle	: 'text-align:right;',
-				id			: pointckwt_id,
-				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
-				width		: 100
-			}, ckzlItem]
+			}, bzsmItem, ckwtItem, ckzlItem]
 		});
 		
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(leafDropdownFieldContainer);
@@ -829,7 +923,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		} else {
 			var ckzl_content_url = ContextPath + "/refMaterial/onload?classId="+tmpClassId+"&batchId="+tmpBatchId+"&appInsId="+bmb_id+"&model="+scoreModel+"&cjxId="+cjxId;
 			//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
-			var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='100%' height='100%'></iframe>";
+			var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='568'></iframe>";
 			var ary3 = new Array(pointckzl_id, ckzl_content, "参考资料");
 			allLeavesNodeDataCkzl[tmpBatchId].push(ary3);
 		}
@@ -1407,7 +1501,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					newFormField = createParentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemParentId);	
 				} else {
 					//生成叶子节点
-					newFormField = createLeafPointFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemLowerLimit, node_data.itemUpperLimit, node_data.itemCkwt,node_data.itemDfsm,node_data.itemCkzl, node_data.itemParentId,node_data.scoreModelId,bmb_id);
+					newFormField = createLeafPointFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemLowerLimit, node_data.itemUpperLimit, node_data.itemDfsm,node_data.itemCkwt,node_data.itemCkzl, node_data.itemParentId,node_data.scoreModelId,bmb_id);
 				}
 			}
 		}
@@ -1570,7 +1664,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				} else {
 					var ckzl_content_url = ContextPath + "/refMaterial/onload?classId="+tmpClassId+"&batchId="+tmpBatchId+"&appInsId="+bmb_id+"&model="+scoreModel+"&cjxId="+cjxId;
 					//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
-					var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='100%' height='100%'></iframe>";
+					var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='568'></iframe>";
 					var ary3 = new Array(pointckzl_id, ckzl_content, "参考资料");
 					allLeavesNodeDataCkzl[tmpBatchId].push(ary3);
 				}
@@ -2127,7 +2221,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				at: 'top right', // Position the tooltip above the link
 				my: 'bottom right',
 				//viewport: $(window), // Keep the tooltip on-screen at all times
-				viewport:$("#tz_evaluation_main"),
+				//viewport:$("#tz_evaluation_main"),
+				viewport:$("#all"),
 				effect: false // Disable positioning animation
 			},
 			show: {

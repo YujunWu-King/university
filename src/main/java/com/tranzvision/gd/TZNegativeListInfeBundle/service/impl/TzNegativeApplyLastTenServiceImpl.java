@@ -59,12 +59,13 @@ public class TzNegativeApplyLastTenServiceImpl extends TzNegativeListBundleServi
 						"Integer");
 				lastone_pm = SqlQuery.queryForObject(sqllastone, new Object[] { classId, batchId, count }, "Integer");
 
-				while (frisone_pm >= lastone_pm) {
+				while (lastone_pm >= frisone_pm) {
 					a++;
 					if ((count - 1 - a) >= 0)
 						frisone_pm = SqlQuery.queryForObject(sqlfristone,
 								new Object[] { classId, batchId, count - 1 - a }, "Integer");
 					else {
+						break;
 
 					}
 

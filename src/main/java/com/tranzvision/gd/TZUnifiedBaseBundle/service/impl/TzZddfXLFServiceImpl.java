@@ -25,6 +25,7 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 	@Override
 	public float AutoCalculate(String TZ_APP_ID,String TZ_SCORE_ID,String TZ_SCORE_ITEM) {
 			try {
+
 				//报名表信息初始化
 				Map<String, String> ksMap = new HashMap<String, String>();
 				String ksMapkey = "";
@@ -44,27 +45,35 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				String XL = ksMap.get("TZ_10highdegree");		//学历
 				String XW = ksMap.get("TZ_10hxuewei");			//学位
 				String XX= ksMap.get("TZ_11luniversitysch");	//学校
+				String XLFL= ksMap.get("TZ_11fl");				//学历分类						
+				
 				 
 				//声明float型字段“得分”，string型字段“打分记录”；
 				float Score;
 				String MarkRecord;
+				String XXLX="";
+				String XXType="";
 				
-				
-				//如果是外国学校，截取（前的内容			
-				if(XX.indexOf("(")>0){					
-					String ExistSql = "SELECT 'Y' FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=? and TZ_SCHOOL_NAMEENG is not null;";
-					String isExist = SqlQuery.queryForObject(ExistSql, new Object[] {XX},"String");
+				//判断是否为国外学校
+				String uniScholContry = ksMap.get("TZ_11luniversitycountry");
+				if ("中国大陆".equals(uniScholContry)) {	
+				} else {	
 					
-					if ("Y".equals(isExist)) {
-					XX=XX.substring(0, XX.indexOf("("));
+					//如果是外国学校，截取（前的内容			
+					if(XX.indexOf("(")>0){	
+						XX=XX.substring(0, XX.indexOf("("));						
+					}else{
+						XX="邓莱里文艺理工学院";
 					}
 				}
 				
 				
+				
+				
 				//根据考生学校ID查询所属学校类型
 				String sql = "SELECT TZ_SCHOOL_TYPE FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
-				String XXLX = SqlQuery.queryForObject(sql, new Object[] { XX },"String");
-				String XXType="";
+				XXLX = SqlQuery.queryForObject(sql, new Object[] { XX },"String");
+				
 				if(XXLX !=null&& !XXLX.equals("")){
 				switch (Integer.parseInt(XXLX)) {
 					case 1:
@@ -120,14 +129,31 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 						break;
 				}
 				}else{
-					Score=0;
+					XXLX="6";
+					XXType="其他";
 				}
 
 				//学历
-				//数据库：2是本科，1为研究生
-				//传入参数：1博士	2本科	3硕士
+				//数据库：1是本科，2自考本科 	3成教本科   4专升本
+				//传入参数：1是本科	2自考本科 	3成教本科   4专升本
 				
 				String XLF="1";
+								
+				switch(XLFL){
+					case"1":
+						XLF="1";
+						break;
+					case"2":
+						XLF="2";
+						break;
+					case"3":
+						XLF="3";
+						break;
+					case"4":
+						XLF="4";
+						break;
+				}
+				
 				
 				//学位
 				//数据库：1是学士，2是无
@@ -180,11 +206,23 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 					
 					String XLMS=null;
 					String XWMS=null;
-					if(XL.equals("3")||XL.equals("1")){
-						XLMS="研究生";
-					}else{
-						XLMS="本科";
+					
+					
+					switch(XLFL){
+					case"1":
+						XLMS="普通本科";
+						break;
+					case"2":
+						XLMS="自考本科";
+						break;
+					case"3":
+						XLMS="成教本科";
+						break;
+					case"4":
+						XLMS="专升本";
+						break;
 					}
+					
 					
 					switch(XW){
 					case "1":

@@ -3,8 +3,6 @@ package com.tranzvision.gd.TZMaterialInterviewReviewBundle.model;
 import java.util.Date;
 
 public class psTzClpwpslsTbl extends psTzClpwpslsTblKey {
-    private String tzClassId;
-
     private String tzSubmitYn;
 
     private Date rowAddedDttm;
@@ -18,14 +16,6 @@ public class psTzClpwpslsTbl extends psTzClpwpslsTblKey {
     private Integer syncid;
 
     private Date syncdttm;
-
-    public String getTzClassId() {
-        return tzClassId;
-    }
-
-    public void setTzClassId(String tzClassId) {
-        this.tzClassId = tzClassId == null ? null : tzClassId.trim();
-    }
 
     public String getTzSubmitYn() {
         return tzSubmitYn;

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZNegativeListInfeBundle.dao.PsTzCsKsFmTMapper;
 import com.tranzvision.gd.TZNegativeListInfeBundle.model.PsTzCsKsFmT;
+import com.tranzvision.gd.util.Calendar.DateUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -61,8 +62,18 @@ public class TzNegativeApplyAgeOverServiceImpl extends TzNegativeListBundleServi
 					 * new Object[] { opridlist.get(i).get("OPRID").toString()
 					 * }, "Date"));
 					 */
+					int agename;
+					String bridthday = SqlQuery.queryForObject(sqlage, new Object[] { appinsId }, "String");
+					if ("".equals(bridthday)) {
+						agename = 0;
 
-					int agename = this.getAge(SqlQuery.queryForObject(sqlage, new Object[] { appinsId }, "Date"));
+					} else {
+						agename = this.getAge(DateUtil.parse(bridthday));
+						// = this.getAge(SqlQuery.queryForObject(sqlage, new
+						// Object[] { appinsId }, "Date"));
+
+					}
+
 					// System.out.println("agename:" + agename);
 					if (agename > 45) {
 						/*

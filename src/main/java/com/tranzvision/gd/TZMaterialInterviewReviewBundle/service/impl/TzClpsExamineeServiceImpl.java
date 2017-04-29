@@ -467,11 +467,11 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 				sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKspyInfo");
 				Map<String,Object> mapExaminee = sqlQuery.queryForMap(sql,
 						new Object[] {schoolNameXxxId,highestRecordXxxId,companyAddressXxxId,companyNameXxxId,departmentXxxId,positionXxxId,selfEmploymentXxxId,
-								appinsId,classId});
+								currentOrgId,appinsId,classId});
 				if(mapExaminee!=null) {
 					className = mapExaminee.get("TZ_CLASS_NAME") == null ? "" : mapExaminee.get("TZ_CLASS_NAME").toString();
 					nationId = mapExaminee.get("NATIONAL_ID") == null ? "" : mapExaminee.get("NATIONAL_ID").toString();
-					mssqh = mapExaminee.get("TZ_MSSQH") == null ? "" : mapExaminee.get("TZ_MSSQH").toString();
+					mssqh = mapExaminee.get("TZ_MSH_ID") == null ? "" : mapExaminee.get("TZ_MSH_ID").toString();
 					name = mapExaminee.get("TZ_REALNAME") == null ? "" : mapExaminee.get("TZ_REALNAME").toString();
 					birthday = mapExaminee.get("BIRTHDATE") == null ? "" : mapExaminee.get("BIRTHDATE").toString();
 					age = mapExaminee.get("AGE") == null ? "" : mapExaminee.get("AGE").toString();
