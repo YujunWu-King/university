@@ -88,15 +88,44 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
+			/*排序*/
+			String[][] orderByArr;
 			
+			String sort = request.getParameter("sort");
+			if(!"".equals(sort) && sort != null){
+				sort = "{\"sort\":"+ sort +"}";
+				
+				jacksonUtil.json2Map(sort);
+				List<Map<String,String>> sortList = (List<Map<String, String>>) jacksonUtil.getList("sort");
+
+				List<String[]> orderList = new ArrayList<String[]>();
+				for(Map<String,String> sortMap: sortList){
+					String columnField = sortMap.get("property");
+					String sortStr = sortMap.get("direction");
+					
+					if("ranking".equals(columnField)){
+						orderList.add(new String[]{ "TZ_KSH_PSPM", sortStr });
+					}
+					if("total".equals(columnField)){
+						orderList.add(new String[]{ "TZ_TOTAL_SCORE", sortStr });
+					}
+				}
+				
+				orderByArr = new String[orderList.size()][2];
+				for(int i=0; i<orderList.size(); i++){
+					orderByArr[i] = orderList.get(i);
+				}
+			}else{
+				//默认按排名排序
+				orderByArr = new String[][] {new String[] { "TZ_KSH_PSPM", "ASC" }};
+			}
+			
+
 			jacksonUtil.json2Map(strParams);
 			//成绩项
 			List<String> itemsList = (List<String>) jacksonUtil.getList("items");
 			
 			//TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW
-			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] {new String[] { "TZ_KSH_PSPM", "ASC" }};
-
 			// json数据要的结果字段;
 			String[] resultFldArray = {"TZ_CLASS_ID","TZ_BATCH_ID","TZ_APP_INS_ID","TZ_REALNAME","TZ_MSH_ID","TZ_KSH_CSJG","TZ_KSH_PSPM","TZ_SCORE_INS_ID","TZ_TOTAL_SCORE"};
 

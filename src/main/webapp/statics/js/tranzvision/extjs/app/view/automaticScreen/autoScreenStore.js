@@ -8,6 +8,7 @@ Ext.define('KitchenSink.view.automaticScreen.autoScreenStore', {
 	pageID: 'TZ_AUTO_SCREEN_STD ',
 	tzStoreParams: '',
 	proxy: Ext.tzListProxy(),
+	remoteSort: true,
 	
 	constructor: function(config){
 		var classId = config.classId;
