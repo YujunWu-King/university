@@ -345,21 +345,28 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         if(form.isValid()) {
             //校验评委各组评议人数合是否等于考生人数
-            var checkFlag = me.checkJudgeExamineeTotal();
-            if(checkFlag==true) {
-                var tzParams = me.getRuleParams(actType);
-                Ext.tzSubmit(tzParams,function(responseData) {
-                    if(actType=="add") {
-                        view.actType="update";
-                    }
-                    if(btn.name=='onRuleEnsure') {
-                        view.close();
-                    }
-                },"",true,this);
-            } else {
-                Ext.Msg.alert('提示','评委各组评议人数和不等于考生人数');
-                return ;
-            }
+            var tzParamsNum = me.getCheckNumParams();
+            Ext.tzLoad(tzParamsNum,function(responseData) {
+                if(responseData.success==true) {
+                    var tzParams = me.getRuleParams(actType);
+                    Ext.tzSubmit(tzParams,function(responseData) {
+                        if(actType=="add") {
+                            view.actType="update";
+                        }
+                        if(btn.name=='onRuleEnsure') {
+                            view.close();
+                        }
+                        if(responseData.judgeNumTotal!=undefined) {
+                            var statisticsForm = view.down("form[name=statisticsNumForm]").getForm();
+                            form.findField("judgeNumTotal").setValue(responseData.judgeNumTotal);
+                        }
+                    },"",true,this);
+                } else {
+                    Ext.Msg.alert('提示','评委各组评议人数和不等于考生人数');
+                    return ;
+                }
+
+            });
 
             /*var judgeGroupData = [];
 
@@ -515,8 +522,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         var form = view.child("form").getForm();
         var formValues = form.getValues();
-        formValues.startTime = form.findField("startTime").getValue();
-        formValues.endTime = form.findField("endTime").getValue();
+        //formValues.startTime = form.findField("startTime").getValue();
+        //formValues.endTime = form.findField("endTime").getValue();
 
         var comParams="";
 
@@ -556,6 +563,42 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         //提交参数
         var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        return tzParams;
+
+    },
+    //设置评审规则-校验评委各组评议人数合是否等于考生人数参数
+    getCheckNumParams:function() {
+        var me = this,
+            view = me.getView();
+
+        var actType = view.actType;
+
+        var form = view.child("form").getForm();
+        var clpsksNum = form.findField("clpsksNum").getValue();
+        var judgeNumSet = form.findField("judgeNumSet").getValue();
+
+
+        var comParams= '"clpsksNum":"'+ clpsksNum+ '","judgeNumSet":"' + judgeNumSet +'"';
+
+        var editJson="";
+
+        var grid = view.down("grid[name=materialJudgeGrid]");
+        var store = grid.getStore();
+        var records = store.getRange(0,store.getCount()-1);
+        for(var i=0;i<records.length;i++) {
+            if(editJson!="") {
+                editJson = editJson + ',' + Ext.JSON.encode(records[i].data);
+            } else {
+                editJson = Ext.JSON.encode(records[i].data);
+            }
+        }
+
+        if(editJson!="") {
+            comParams = comParams + ',"data":[' + editJson + "]";
+        }
+
+        //提交参数
+        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD","OperateType":"tzCheckNum","comParams":{'+comParams+'}}';
         return tzParams;
 
     }

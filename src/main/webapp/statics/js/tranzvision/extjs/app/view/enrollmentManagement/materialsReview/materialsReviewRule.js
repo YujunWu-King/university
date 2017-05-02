@@ -43,14 +43,6 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 		});
 
 
-		/*var classId = this.classId;
-		var batchId = this.batchId;
-		var tzParams = '{"classId":"'+classId+'","batchId":"'+batchId+'"}';
-		var gridStore = new KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewJudgeStore();
-		gridStore.tzStoreParams = tzParams;
-		gridStore.load();
-		this.doLayout();*/
-
     	Ext.apply(this,{
     		items:[{
     			xtype:'form',

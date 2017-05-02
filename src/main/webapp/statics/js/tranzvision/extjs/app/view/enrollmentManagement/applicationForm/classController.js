@@ -1158,6 +1158,7 @@
                         form.findField("clpsksNum").setValue(0);
                         form.findField("dqpsStatus").setValue("N");
                         form.findField("dqpsStatusDesc").setValue("未开始");
+                        form.findField("judgeNumSet").setValue(2);
 
                         var statisticsForm = panel.down("form[name=statisticsNumForm]").getForm();
                         statisticsForm.findField("clpsksNum").setValue(0);

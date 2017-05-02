@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.swing.border.EtchedBorder;
 
 import org.apache.commons.lang.ObjectUtils.Null;
+import org.apache.tomcat.util.bcel.classfile.ElementValue;
 import org.apache.xmlbeans.impl.jam.mutable.MPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -274,6 +275,8 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 		
 		try {
 			
+			Integer judgeNumTotal = 0;
+			
 			int num = 0;
 			for(num=0;num<actData.length;num++) {
 				String strForm =actData[num];
@@ -290,6 +293,11 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				if("JUDGE".equals(typeFlag)) {
 					//评委
 					String strJudge = saveJudgeInfo(mapData, errMsg);
+					Integer judgeExamineeNum = Integer.valueOf(mapData.get("judgeExamineeNum") == null ? "0" : String.valueOf(mapData.get("judgeExamineeNum")));
+					judgeNumTotal += judgeExamineeNum;
+					Map<String, Object> mapRet = new HashMap<String,Object>();
+					mapRet.put("judgeNumTotal", judgeNumTotal);
+					strRet = jacksonUtil.Map2json(mapRet);
 				}
 			}
 			
@@ -407,6 +415,10 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			if("tzGetJudgeGroup".equals(operateType)) {
 				strRet = getJudgeGroup(strParams,errMsg);
 			}
+			//校验评委各组评议人数合是否等于考生人数
+			if("tzCheckNum".equals(operateType)) {
+				strRet = checkNum(strParams,errMsg);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
@@ -426,8 +438,10 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			//当前登录人
 			String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			
-			String dttmFormat = getSysHardCodeVal.getDateTimeHMFormat();
-			SimpleDateFormat dttmSimpleDateFormat = new SimpleDateFormat(dttmFormat);
+			String dtFormat = getSysHardCodeVal.getDateFormat();
+			String tmFormat = getSysHardCodeVal.getTimeHMFormat();
+			SimpleDateFormat dateSimpleDateFormat = new SimpleDateFormat(dtFormat);
+			SimpleDateFormat timeSimpleDateFormat = new SimpleDateFormat(tmFormat);
 						
 			String classId = (String) mapParams.get("classId");
 			String batchId = (String) mapParams.get("batchId");
@@ -439,22 +453,22 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			String materialDesc = (String) mapParams.get("materialDesc");
 			Integer judgeNumSet = mapParams.get("judgeNumSet") == null ? 0 : Integer.valueOf((String) mapParams.get("judgeNumSet"));
 			
-			Date startDateTime = null;
+			Date startDate = null;
 			if(!"".equals(strStartDate)) {
-				if(!"".equals(strStartTime)) {
-					startDateTime = dttmSimpleDateFormat.parse(strStartDate + " " + strStartTime);
-				} else {
-					startDateTime = dttmSimpleDateFormat.parse(strStartDate);
-				}
+				startDate = dateSimpleDateFormat.parse(strStartDate);
+			}
+			Date startTime = null;
+			if(!"".equals(strStartTime)) {
+				startTime = timeSimpleDateFormat.parse(strStartTime);
 			}
 			
-			Date endDateTime = null;
+			Date endDate = null;
 			if(!"".equals(strEndDate)) {
-				if(!"".equals(strEndTime)) {
-					endDateTime = dttmSimpleDateFormat.parse(strEndDate + " " + strEndTime);
-				} else {
-					endDateTime = dttmSimpleDateFormat.parse(strEndDate);
-				}
+				endDate = dateSimpleDateFormat.parse(strEndDate);
+			}
+			Date endTime = null;
+			if(!"".equals(strEndTime)) {
+				endTime = timeSimpleDateFormat.parse(strEndTime);
 			}
 			
 			PsTzClpsGzTblKey psTzClpsGzTblKey = new PsTzClpsGzTblKey();
@@ -467,10 +481,10 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				psTzClpsGzTbl = new PsTzClpsGzTbl();
 				psTzClpsGzTbl.setTzClassId(classId);
 				psTzClpsGzTbl.setTzApplyPcId(batchId);
-				psTzClpsGzTbl.setTzPyksRq(startDateTime);
-				psTzClpsGzTbl.setTzPyksSj(startDateTime);
-				psTzClpsGzTbl.setTzPyjsRq(endDateTime);
-				psTzClpsGzTbl.setTzPyjsSj(endDateTime);
+				psTzClpsGzTbl.setTzPyksRq(startDate);
+				psTzClpsGzTbl.setTzPyksSj(startTime);
+				psTzClpsGzTbl.setTzPyjsRq(endDate);
+				psTzClpsGzTbl.setTzPyjsSj(endTime);
 				psTzClpsGzTbl.setTzClpsSm(materialDesc);
 				psTzClpsGzTbl.setTzMspyNum(judgeNumSet);
 				psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
@@ -480,10 +494,10 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				psTzClpsGzTbl.setRowLastmantOprid(currentOprid);
 				psTzClpsGzTblMapper.insertSelective(psTzClpsGzTbl);
 			} else {
-				psTzClpsGzTbl.setTzPyksRq(startDateTime);
-				psTzClpsGzTbl.setTzPyksSj(startDateTime);
-				psTzClpsGzTbl.setTzPyjsRq(endDateTime);
-				psTzClpsGzTbl.setTzPyjsSj(endDateTime);
+				psTzClpsGzTbl.setTzPyksRq(startDate);
+				psTzClpsGzTbl.setTzPyksSj(startTime);
+				psTzClpsGzTbl.setTzPyjsRq(endDate);
+				psTzClpsGzTbl.setTzPyjsSj(endTime);
 				psTzClpsGzTbl.setTzClpsSm(materialDesc);
 				psTzClpsGzTbl.setTzMspyNum(judgeNumSet);
 				psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
@@ -823,7 +837,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			//每位考生要求被几个评委审批
 			sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 			Integer judgeSetNum = sqlQuery.queryForObject(sql, new Object[]{classId,batchId},"Integer");
-			if(!"0".equals(judgeSetNum)) {
+			if(!"0".equals(judgeSetNum) && judgeSetNum!=null) {
 				
 			} else {
 				judgeSetNum = 2;
@@ -849,6 +863,73 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			
 			strRet = jacksonUtil.Map2json(mapRet);
 			
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		
+		return strRet;
+	}
+	
+	
+	//校验评委各组评议人数合是否等于考生人数
+	public String checkNum(String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String,Object> mapRet = new HashMap<String,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try {
+			
+			//当前机构
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
+			jacksonUtil.json2Map(strParams);
+			Integer clpsksNum = Integer.valueOf(jacksonUtil.getString("clpsksNum"));
+			Integer judgeNumSet = Integer.valueOf(jacksonUtil.getString("judgeNumSet"));
+			List<?> pweiData = jacksonUtil.getList("data");
+			
+			Boolean success = true;
+			
+			if(pweiData!=null && !"".equals(pweiData)) {
+				
+				List<Map<String, Object>> groupNumList = new ArrayList<Map<String,Object>>();
+				String sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_CLPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY CAST(TZ_CLPS_GR_ID AS SIGNED INTEGER) LIMIT 0,?";
+				List<Map<String, Object>> listGroup = sqlQuery.queryForList(sql, new Object[]{orgId,judgeNumSet});
+				
+				for(Map<String, Object> mapGroup : listGroup) {
+					Integer groupNum = 0;
+					String groupId = mapGroup.get("TZ_CLPS_GR_ID") == null ? "" : mapGroup.get("TZ_CLPS_GR_ID").toString();
+					for(Object pwei : pweiData) {
+						Map<String, Object> mapPwei = (Map<String, Object>) pwei;
+						String judgeGroup = mapPwei.get("judgeGroup") == null ? "" : mapPwei.get("judgeGroup").toString();
+						Integer judgeExamineeNum = mapPwei.get("judgeExamineeNum") == null ? 0 : Integer.valueOf(mapPwei.get("judgeExamineeNum").toString());
+						if(groupId.equals(judgeGroup)) {
+							groupNum = groupNum + judgeExamineeNum;
+						}
+					}
+					Map<String, Object> mapGroupNum = new HashMap<String,Object>();
+					mapGroupNum.put("groupId", groupId);
+					mapGroupNum.put("groupNum", groupNum);
+					groupNumList.add(mapGroupNum);
+				}
+				
+				if(listGroup.size()!=groupNumList.size()) {
+					success = false;
+				} else {
+					for(Map<String, Object> mapNum : groupNumList) {
+						Integer groupNum = mapNum.get("groupNum") == null ? 0 : Integer.valueOf(mapNum.get("groupNum").toString());
+						if(!clpsksNum.equals(groupNum)) {
+							success = false;
+							break;
+						} 
+					}
+				}				
+			} 
+			
+			mapRet.put("success", success);
+			strRet = jacksonUtil.Map2json(mapRet);
+					
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
