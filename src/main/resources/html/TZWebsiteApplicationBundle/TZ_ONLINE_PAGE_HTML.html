@@ -139,7 +139,7 @@
 			
 				$(document).ready(function() {
 					
-
+					
 					
 					//点击菜单的动作 如果是顶级层，则不做动作
 					$(".regmain-menu ul li[class!='menu-active-top']").click(function(){
@@ -217,6 +217,7 @@
 							if(pagelen==0){
 								$("#app_save").show();
 								$("#app_submit").show();
+								$("#app_state").show();
 								if (strTplType=="BMB") {
 									$("#app_download").show();
 								}
@@ -227,6 +228,7 @@
 									if (pageno == 1) {
 										$("#app_save").show();
 										$("#app_submit").show();
+										$("#app_state").show();
 										if (strTplType=="BMB") {
 											$("#app_download").show();
 										}
@@ -235,6 +237,7 @@
 									} else {
 										$("#app_save").show();
 										$("#app_submit").show();
+										$("#app_state").show();
 										if (strTplType=="BMB") {
 											$("#app_download").show();
 										}
@@ -257,6 +260,7 @@
 									if (pageno == 1) {
 										$("#app_save").show();
 										$("#app_submit").hide();
+										$("#app_state").hide();
 										$("#app_download").hide();
 										$("#app_prev").hide();
 										$("#app_next").show();
@@ -268,6 +272,7 @@
 										}
 										$("#app_save").show();
 										$("#app_submit").hide();
+										$("#app_state").hide();
 										$("#app_download").hide();
 										$("#app_prev").show();
 										$("#app_next").show();
@@ -277,12 +282,22 @@
 			
 							if (appReadOnly == "Y") {
 								$("#app_save").hide();
-								if("%bind(:54)" == "U" && strTplType == "BMB"){
-									$("#app_submit").attr("readOnly","readOnly");
-									$("#app_submit").attr("disabled","disabled");
+								$("#app_submit").hide();
+								$("#app_state").hide();
+							}
+							if("%bind(:54)" == "U" && strTplType == "BMB"){
+								$("#app_submit").attr("readOnly","readOnly");
+								$("#app_submit").attr("disabled","disabled");
+								$("#app_submit_div").css("background-color","#999");
+								if(pageno==0||pageno==1||pageno== pagelen){
+									$("#app_submit").show();
+									$("#app_state").show();
 								}else{
 									$("#app_submit").hide();
+									$("#app_state").hide();
 								}
+							}else{
+								$("#app_state").hide();
 							}
 							currentPageId = $(this).attr("id");
 							//var tabClass = $("#tabNav").children("div:last-child").attr('class');
@@ -358,6 +373,7 @@
 						if(pagelen==0){
 							$("#app_save").show();
 							$("#app_submit").show();
+							$("#app_state").show();
 							if (strTplType=="BMB") {
 								$("#app_download").show();
 							}
@@ -368,6 +384,7 @@
 								if (pageno == 1) {
 									$("#app_save").show();
 									$("#app_submit").show();
+									$("#app_state").show();
 									if (strTplType=="BMB") {
 										$("#app_download").show();
 									}
@@ -383,6 +400,7 @@
 									}
 									$("#app_save").show();
 									$("#app_submit").show();
+									$("#app_state").show();
 									if (strTplType=="BMB") {
 										$("#app_download").show();
 									}
@@ -398,6 +416,7 @@
 								if (pageno == 1) {
 									$("#app_save").show();
 									$("#app_submit").hide();
+									$("#app_state").hide();
 									$("#app_download").hide();
 									$("#app_prev").hide();
 									$("#app_next").show();
@@ -410,22 +429,32 @@
 									}
 									$("#app_save").show();
 									$("#app_submit").hide();
+									$("#app_state").hide();
 									$("#app_download").hide();
 									$("#app_prev").show();
 									$("#app_next").show();
 								}
 							}
 						}
-			
 						if (appReadOnly == "Y") {
 							$("#app_save").hide();
-							//$("#app_submit").hide();
-							if("%bind(:54)" == "U" && strTplType == "BMB"){
-								$("#app_submit").attr("readOnly","readOnly");
-								$("#app_submit").attr("disabled","disabled");
+							$("#app_submit").hide();
+							$("#app_state").hide();
+						}
+						if("%bind(:54)" == "U" && strTplType == "BMB"){
+							
+							$("#app_submit").attr("readOnly","readOnly");
+							$("#app_submit").attr("disabled","disabled");
+							$("#app_submit_div").css("background-color","#999");
+							if(pageno==0||pageno==1||pageno== pagelen){
+								$("#app_submit").show();
+								$("#app_state").show();
 							}else{
 								$("#app_submit").hide();
+								$("#app_state").hide();
 							}
+						}else{
+							$("#app_state").hide();
 						}
 					
 						
@@ -705,7 +734,6 @@
 					}
 			
 					$("#app_save").click(function() {
-						console.log("触发了保存事件:");
 						var pwdTitleId = $("#%bind(:45)");
 						var pwdDivId = $("#%bind(:46)");
 						var pwdDiv2Id = $("#%bind(:47)");
@@ -1076,6 +1104,7 @@
 											}else{
 												appReadOnly = "Y";
 												pageReadOnly();
+												$('#app_submit').hide();
 												if (isadmin == "") {
 													/*跳转*/
 													var tzurl = "%bind(:22)";
@@ -1537,7 +1566,7 @@
 					</div>
 				</a> 
 				<a href="javascript:void(0);" id="app_submit">
-					<div class="btn-action">
+					<div class="btn-action" id="app_submit_div">
 						%bind(:18)&nbsp;&nbsp;
 						<span class="operation-btn-icon">
 						<img src="%bind(:32)/statics/images/appeditor/new/btn-save.png"></span>
@@ -1551,6 +1580,9 @@
 						<span class="operation-btn-icon">
 						<img src="%bind(:32)/statics/images/appeditor/new/btn-down.png"></span>
 					</div>
+				</a>
+				<a href="javascript:void(0);" id="app_state" style="color: #E53333;font-size: 16px;display: none">
+					<div style="line-height: 46px;float: left;">报名表已提交</div>
 				</a>
 				<script type="text/javascript">
 				</script>
@@ -1594,10 +1626,12 @@
 	<script type="text/javascript">
 			$(document).ready(function() {
 				
-				
-				
-
 				var tplType = "%bind(:19)";
+				
+				if(tplType!="BMB" && appReadOnly == "Y"){
+					$("#app_submit").hide();
+				}
+				
 				var isadmin = "%bind(:26)";
 				if (isadmin == "") {
 					LoadHeader("%bind(:11)",%bind(:10),"");

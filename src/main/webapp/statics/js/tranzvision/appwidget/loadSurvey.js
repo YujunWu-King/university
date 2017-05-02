@@ -26,7 +26,7 @@ function pageReadOnly()
 	$('#app_submit').unbind("click"); 
 	$(".chosen-container").unbind();
 	$('#app_save').hide();
-	$('#app_submit').hide();
+	//$('#app_submit').hide();
 }
 
 /*加载formvalidator信息*/
