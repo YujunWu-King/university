@@ -140,7 +140,7 @@ public class TzMenuSetedServiceImpl extends FrameworkImpl {
 						strMenuNowCls = "main_left_nav0";
 					}
 
-					strMenuHtml = strMenuHtml + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzMenuDiv", strMenuId,
+					strMenuHtml = strMenuHtml + tzGDObject.getHTMLTextForDollar("HTML.TZSitePageBundle.TzMenuDiv", strMenuId,
 							strMenuName, strMenuImg, strMenuNowCls, strSiteId, strOpenType.trim());
 				}
 
