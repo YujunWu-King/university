@@ -14,6 +14,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzKsTjxTblMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppEngineImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -41,6 +42,9 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 	private PsTzKsTjxTblMapper psTzKsTjxTblMapper;
 	@Autowired
 	private TZGDObject tzGdObject;
+	@Autowired
+	private tzOnlineAppEngineImpl tzOnlineAppEngineImpl;
+	
 
 	/* 推荐信接口 */
 	@Override
@@ -64,6 +68,11 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 
 			// 报名表ID;
 			long numAppinsId = Long.parseLong(jacksonUtil.getString("rec_app_ins_id"));
+			
+			String strTplId = jdbcTemplate.queryForObject(
+					"SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T A WHERE TZ_APP_INS_ID = ?",
+					new Object[] { numAppinsId }, "String");
+			
 			if (!"DELETE".equals(operateType)) {
 				// 推荐人编号;
 				strTjrId = jacksonUtil.getString("rec_num");
@@ -212,7 +221,12 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 
 			String str_app_ins_version_db = "";
 			String str_refLetterType = "";
-			String strOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			//String strOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			/*OPRID应该获取报名表工作表中的OPRID*/
+			String strOprid = jdbcTemplate.queryForObject(
+					"SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? limit 0,1",
+					new Object[] { numAppinsId }, "String");
+			
 			if (numAppinsId == 0) {
 				if ("E".equals(strTjxType)) {
 					mess = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "SEND_FAILD",
@@ -330,6 +344,8 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			if ("CHANGE".equals(operateType)) {
 				// 更换推荐人;
 				mess = tzTjxClsServiceImpl.changeTJR(numAppinsId, strTjrId, strOprid);
+				/*检查推荐信*/
+				tzOnlineAppEngineImpl.checkRefletter(numAppinsId, strTplId);
 			}
 
 			if ("DELETE".equals(operateType)) {
@@ -399,7 +415,8 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 							strAdd2, strAdd3, strAdd4, strAdd5, strAdd6, strAdd7, strAdd8, strAdd9, strAdd10, strTjrgx,
 							str_sysfilename, str_filename, str_refLetterType, str_tjx_valid, accessPath, tzAttAUrl);
 				}
-
+				/*检查推荐信*/
+				tzOnlineAppEngineImpl.checkRefletter(numAppinsId, strTplId);
 			}
 
 		} catch (Exception e) {
@@ -421,6 +438,26 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 		returnMap.put("refFileName", "");
 		returnMap.put("refFileUrl", "");
 		returnMap.put("viewFileName", "");
+		returnMap.put("recommend_18", "");
+		returnMap.put("recommend_1", "");
+		returnMap.put("recommend_17", "");
+		returnMap.put("recommend_2", "");
+		returnMap.put("recommend_3", "");
+		returnMap.put("recommend_15", "");
+		returnMap.put("recommend_16", "");
+		returnMap.put("recommend_4", "");
+		returnMap.put("recommend_5", "");
+		returnMap.put("recommend_6", "");
+		returnMap.put("recommend_10", "");
+		returnMap.put("recommend_11", "");
+		returnMap.put("recommend_12", "");
+		returnMap.put("recommend_13", "");
+		returnMap.put("recommend_14", "");
+		returnMap.put("recommend_19", "");
+		returnMap.put("recommend_20", "");
+		returnMap.put("recommend_21", "");
+		returnMap.put("recommend_22", "");
+		returnMap.put("recommend_23", "");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
@@ -437,8 +474,33 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			String str_refLetterSysFile = "", str_refLetterUserFile = "";
 			String str_att_a_url = "";
 			String strRefType = "";
-
-			String sql = "SELECT TZ_TJX_APP_INS_ID,'Y' STR_Y,TZ_REF_LETTER_ID,TZ_TJX_TYPE,TZ_REFLETTERTYPE,ATTACHSYSFILENAME,ATTACHUSERFILE,TZ_ACCESS_PATH FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? limit 0,1";
+			String strRecommend_1 = "";
+			String strRecommend_2 = "";
+			String strRecommend_3 = "";
+			String strRecommend_4 = "";
+			String strRecommend_5 = "";
+			String strRecommend_6 = "";
+			String strRecommend_7 = "";
+			String strRecommend_8 = "";
+			String strRecommend_9 = "";
+			String strRecommend_10 = "";
+			String strRecommend_11 = "";
+			String strRecommend_12 = "";
+			String strRecommend_13 = "";
+			String strRecommend_14 = "";
+			String strRecommend_15 = "";
+			String strRecommend_16 = "";
+			String strRecommend_17 = "";
+			String strRecommend_18 = "";
+			String strRecommend_19 = "";
+			String strRecommend_20 = "";
+			String strRecommend_21 = "";
+			String strRecommend_22 = "";
+			String strRecommend_23 = "";
+			String sql = "SELECT TZ_TJX_APP_INS_ID,'Y' STR_Y,TZ_REF_LETTER_ID,TZ_TJX_TYPE,TZ_REFLETTERTYPE,ATTACHSYSFILENAME,ATTACHUSERFILE,TZ_ACCESS_PATH,"
+					+ " TZ_REFERRER_NAME,TZ_REFERRER_GNAME,TZ_COMP_CNAME,TZ_POSITION,TZ_TJX_TITLE,TZ_TJR_GX,TZ_EMAIL,TZ_PHONE_AREA,TZ_PHONE,TZ_GENDER,"
+					+ " TZ_TJX_YL_1,TZ_TJX_YL_2,TZ_TJX_YL_3,TZ_TJX_YL_4,TZ_TJX_YL_5,TZ_TJX_YL_6,TZ_TJX_YL_7,TZ_TJX_YL_8,TZ_TJX_YL_9,TZ_TJX_YL_10"
+					+ " FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? limit 0,1";
 			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { str_app_ins_id, str_rownum });
 			if (map != null) {
 				try {
@@ -460,6 +522,27 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 				str_refLetterUserFile = (String) map.get("ATTACHUSERFILE");
 				str_att_a_url = (String) map.get("TZ_ACCESS_PATH");
 				strRefType = (String) map.get("TZ_REFLETTERTYPE");
+				strRecommend_18 =  map.get("TZ_TJX_TITLE")== null?"":String.valueOf(map.get("TZ_TJX_TITLE"));
+				strRecommend_1 =  map.get("TZ_REFERRER_NAME")== null?"":String.valueOf(map.get("TZ_REFERRER_NAME"));
+				strRecommend_17 =  map.get("TZ_REFERRER_GNAME")== null?"":String.valueOf(map.get("TZ_REFERRER_GNAME"));
+				strRecommend_2 =  map.get("TZ_COMP_CNAME")== null?"":String.valueOf(map.get("TZ_COMP_CNAME"));
+				strRecommend_3 =  map.get("TZ_POSITION")== null?"":String.valueOf(map.get("TZ_POSITION"));
+				strRecommend_15 =  map.get("TZ_GENDER")== null?"":String.valueOf(map.get("TZ_GENDER"));
+				strRecommend_16 =  map.get("TZ_PHONE_AREA")== null?"":String.valueOf(map.get("TZ_PHONE_AREA"));
+				strRecommend_4 =  map.get("TZ_PHONE")== null?"":String.valueOf(map.get("TZ_PHONE"));
+				strRecommend_5 =  map.get("TZ_EMAIL")== null?"":String.valueOf(map.get("TZ_EMAIL"));
+				strRecommend_6 =  map.get("TZ_TJR_GX")== null?"":String.valueOf(map.get("TZ_TJR_GX"));
+				strRecommend_10 =  map.get("TZ_TJX_YL_1")== null?"":String.valueOf(map.get("TZ_TJX_YL_1"));
+				strRecommend_11 =  map.get("TZ_TJX_YL_2")== null?"":String.valueOf(map.get("TZ_TJX_YL_2"));
+				strRecommend_12 =  map.get("TZ_TJX_YL_3")== null?"":String.valueOf(map.get("TZ_TJX_YL_3"));
+				strRecommend_13 =  map.get("TZ_TJX_YL_4")== null?"":String.valueOf(map.get("TZ_TJX_YL_4"));
+				strRecommend_14 =  map.get("TZ_TJX_YL_5")== null?"":String.valueOf(map.get("TZ_TJX_YL_5"));
+				strRecommend_19 =  map.get("TZ_TJX_YL_6")== null?"":String.valueOf(map.get("TZ_TJX_YL_6"));
+				strRecommend_20 =  map.get("TZ_TJX_YL_7")== null?"":String.valueOf(map.get("TZ_TJX_YL_7"));
+				strRecommend_21 =  map.get("TZ_TJX_YL_8")== null?"":String.valueOf(map.get("TZ_TJX_YL_8"));
+				strRecommend_22 =  map.get("TZ_TJX_YL_9")== null?"":String.valueOf(map.get("TZ_TJX_YL_9"));
+				strRecommend_23 =  map.get("TZ_TJX_YL_10")== null?"":String.valueOf(map.get("TZ_TJX_YL_10"));
+
 			}
 
 			if ("Y".equals(str_y)) {
@@ -548,6 +631,26 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			returnMap.replace("refFileName", str_refLetterSysFile);
 			returnMap.replace("refFileUrl", str_att_a_url);
 			returnMap.replace("viewFileName", str_refLetterUserFile);
+			returnMap.replace("recommend_18", strRecommend_18);
+			returnMap.replace("recommend_1", strRecommend_1);
+			returnMap.replace("recommend_17", strRecommend_17);
+			returnMap.replace("recommend_2", strRecommend_2);
+			returnMap.replace("recommend_3", strRecommend_3);
+			returnMap.replace("recommend_15", strRecommend_15);
+			returnMap.replace("recommend_16", strRecommend_16);
+			returnMap.replace("recommend_4", strRecommend_4);
+			returnMap.replace("recommend_5", strRecommend_5);
+			returnMap.replace("recommend_6", strRecommend_6);
+			returnMap.replace("recommend_10", strRecommend_10);
+			returnMap.replace("recommend_11", strRecommend_11);
+			returnMap.replace("recommend_12", strRecommend_12);
+			returnMap.replace("recommend_13", strRecommend_13);
+			returnMap.replace("recommend_14", strRecommend_14);
+			returnMap.replace("recommend_19", strRecommend_19);
+			returnMap.replace("recommend_20", strRecommend_20);
+			returnMap.replace("recommend_21", strRecommend_21);
+			returnMap.replace("recommend_22", strRecommend_22);
+			returnMap.replace("recommend_23", strRecommend_23);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

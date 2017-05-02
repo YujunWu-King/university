@@ -202,10 +202,14 @@ public class TzTjxClsServiceImpl {
 			}
 			*/
 			/*不再判断推荐信是否提交，任何时候都可更换推荐人*/
-			// 设置推荐信失效;
+			String str_seq1 = String.valueOf((int) (Math.random() * 10000000));
+			String str_seq2 = "00000000000000"
+					+ String.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
+			str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
+			String strTjxId = str_seq1 + str_seq2;
 			jdbcTemplate.update(
-					"update PS_TZ_KS_TJX_TBL A set TZ_MBA_TJX_YX='N' where  A.TZ_APP_INS_ID=? AND A.TZ_TJR_ID=? AND A.OPRID=?",
-					new Object[] { numAppinsId, strTjrId, strOprid });
+					"update PS_TZ_KS_TJX_TBL A set TZ_REF_LETTER_ID = ?, TZ_TJX_TYPE='',TZ_REFLETTERTYPE='' where  A.TZ_APP_INS_ID=? AND A.TZ_TJR_ID=? AND A.OPRID=?",
+					new Object[] { strTjxId,numAppinsId, strTjrId, strOprid });
 			strRtn = "SUCCESS";
 		} else {
 			// 参数不完整;

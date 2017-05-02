@@ -277,9 +277,13 @@
 			
 							if (appReadOnly == "Y") {
 								$("#app_save").hide();
-								$("#app_submit").hide();
+								if("%bind(:54)" == "U" && strTplType == "BMB"){
+									$("#app_submit").attr("readOnly","readOnly");
+									$("#app_submit").attr("disabled","disabled");
+								}else{
+									$("#app_submit").hide();
+								}
 							}
-							
 							currentPageId = $(this).attr("id");
 							//var tabClass = $("#tabNav").children("div:last-child").attr('class');
 						//}
@@ -415,7 +419,13 @@
 			
 						if (appReadOnly == "Y") {
 							$("#app_save").hide();
-							$("#app_submit").hide();
+							//$("#app_submit").hide();
+							if("%bind(:54)" == "U" && strTplType == "BMB"){
+								$("#app_submit").attr("readOnly","readOnly");
+								$("#app_submit").attr("disabled","disabled");
+							}else{
+								$("#app_submit").hide();
+							}
 						}
 					
 						
@@ -695,7 +705,7 @@
 					}
 			
 					$("#app_save").click(function() {
-						
+						console.log("触发了保存事件:");
 						var pwdTitleId = $("#%bind(:45)");
 						var pwdDivId = $("#%bind(:46)");
 						var pwdDiv2Id = $("#%bind(:47)");
@@ -706,7 +716,7 @@
 						var pwd="";
 						var pwd2="";
 						
-						if (pwdTitleId != undefined && pwdDivId != undefined && pwdDiv2Id!= undefined) {
+						if (pwdTitleId != undefined && pwdDivId != undefined && pwdDiv2Id!= undefined && strTplType=="TJX") {
 							pwd = $("#%bind(:43)").val();
 							pwd2 = $("#%bind(:44)").val();
 							//console.log("pwd:"+pwd);
@@ -1526,7 +1536,7 @@
 						<img src="%bind(:32)/statics/images/appeditor/new/btn-next.png" /></span>
 					</div>
 				</a> 
-				<a href="#" id="app_submit">
+				<a href="javascript:void(0);" id="app_submit">
 					<div class="btn-action">
 						%bind(:18)&nbsp;&nbsp;
 						<span class="operation-btn-icon">
