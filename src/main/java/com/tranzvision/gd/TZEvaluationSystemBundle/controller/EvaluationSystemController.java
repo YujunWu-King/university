@@ -176,7 +176,7 @@ public class EvaluationSystemController {
 		ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
 		//验证评委帐号有效性		
-		String sqlAccount = "select 'Y' from PS_TZ_YHZH_VW where upper(TZ_JG_ID)=? and TZ_DLZH_ID=? and exists(select 1 from PS_TZ_JUSR_REL_TBL where OPRID = PS_TZ_YHZH_VW.OPRID AND TZ_JUGTYP_ID=?)";
+		String sqlAccount = "select 'Y' from PS_TZ_AQ_YHXX_TBL where upper(TZ_JG_ID)=? and TZ_DLZH_ID=? and TZ_JIHUO_ZT='Y' and exists(select 1 from PS_TZ_JUSR_REL_TBL where OPRID = PS_TZ_AQ_YHXX_TBL.OPRID AND TZ_JUGTYP_ID=?)";
 		String accountExist = sqlQuery.queryForObject(sqlAccount,new Object[]{orgId,userName,judgeType},"String");
 		
 		String loginStatus,errorMsg;
@@ -187,7 +187,7 @@ public class EvaluationSystemController {
 			errorMsg = aryErrorMsg.get(1);
 		}else{
 			loginStatus = "1";
-			errorMsg = "帐号不存在，请重新输入！";
+			errorMsg = "帐号不存在或者无效，请重新输入！";
 		}
 				
 		Map<String, Object> jsonMap = new HashMap<String, Object>();

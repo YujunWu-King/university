@@ -671,7 +671,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth)
 
 function getApplicantListColumnHeaders(jsonObject)
 {
-	var clHeader = ['ps_ksh_bmbid','ps_msh_id','ps_ksh_cpm','ps_ksh_dt','ps_ksh_id','ps_ksh_ppm','ps_ksh_type','ps_ksh_xh','ps_ksh_xm','ps_ksh_zt','ps_row_id','ps_ksh_pc','ps_re_evaluation'];
+	var clHeader = ['ps_ksh_bmbid','ps_msh_id','ps_ksh_cpm','ps_ksh_dt','ps_ksh_id','ps_ksh_ppm','ps_ksh_type','ps_ksh_xh','ps_ksh_xm','ps_ksh_zt','ps_row_id','ps_ksh_pc','ps_re_evaluation','ps_ksh_school','ps_ksh_company'];
 
 	for(itm in jsonObject)
 	{
@@ -685,12 +685,12 @@ function getApplicantListColumns(jsonObject,ps_show_deviation)
 {
 	var columnList = [
       {text:"序号",width:50,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_xh"},
-      {text:"考生编号",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_id",
+      {text:"考生编号",minWidth:80,flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_id",
        renderer:function(value){return Ext.String.format('<a id="ks_id_{1}" href="JavaScript:void(0)" title="单击此链接进入该考生资料评审主页面。">{0}</a>',value,value);}
 	  },
-	  {text:'考生姓名',flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
-	  {text:"上次排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"},
-	  {text:"本次排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_cpm"},
+	  {text:'考生姓名',minWidth:80,flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
+	  {text:"上次排名",minWidth:80,flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"},
+	  {text:"本次排名",minWidth:80,flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_cpm"},
 	];
 	
 	//动态列：先进行排序
@@ -702,18 +702,20 @@ function getApplicantListColumns(jsonObject,ps_show_deviation)
         return a>b;
     });
 	for(var i=0;i<dynamicColumns.length;i++){
-		columnList.push({text:jsonObject[dynamicColumns[i]],flex:1,align:'left',sortable:true,resizable:true,dataIndex:dynamicColumns[i], renderer: function (v, metaData) {
+		columnList.push({text:jsonObject[dynamicColumns[i]],minWidth:80,flex:1,align:'left',sortable:true,resizable:true,dataIndex:dynamicColumns[i], renderer: function (v, metaData) {
             var resultHTML=Ext.util.Format.htmlEncode(v)
             return resultHTML;
         }});
 	}
 	
-	columnList.push({text:"评议状态",width:90,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
-	columnList.push({text:"评审时间",flex:1,minWidth:140,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_dt"});
+	columnList.push({text:"本科院校",width:150,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_school"});
+	columnList.push({text:"工作单位",width:150,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_company"});
+	columnList.push({text:"评议状态",width:80,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
+	columnList.push({text:"评审时间",flex:1,minWidth:130,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_dt"});
 	//columnList.push({text:"考生类别",flex:1,minWidth:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_type"});
 	if(ps_show_deviation!=undefined&&ps_show_deviation==true){
 		//评委可见偏差
-		columnList.push({text:"评委间偏差",width:100,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_pc"});
+		columnList.push({text:"评委间偏差",width:95,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_pc"});
 	}
 	columnList.push({text:"其他评委已复评",width:120,align:'left',sortable:true,resizable:false,dataIndex:"ps_re_evaluation"});
 	
@@ -995,6 +997,7 @@ function createApplicantList(jsonObject)
       scroll:true,
       width:"100%",
       minHeight:200,
+      style:"overflow-x:auto",
       columns: getApplicantListColumns(jsonObject['ps_data_kslb']['ps_ksh_list_headers'],jsonObject["ps_show_deviation"]),
       title: '当前已归属您的评审考生列表',
       viewConfig: {

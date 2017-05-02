@@ -30,6 +30,10 @@ $(function(){
 			return; 
 		}
 		
+		var index = layer.load(1, {
+			  shade: [0.5,'#999']
+			});
+		
 		$.ajax({
 			type:"POST",
 			url: ContextPath + "/evaluation/login",
@@ -42,7 +46,7 @@ $(function(){
 			},
 			dataType:'json',
 			success:function(response){
-		
+				window.setTimeout("layer.close("+index+")",500);
 				if (response.success == "success") {  
 				   $("#errormsg").hide();
 	               	window.location.href=ContextPath+response.indexUrl;
@@ -74,9 +78,10 @@ $(function(){
 				}    
 			},
 		    failure: function () {
-
-				 $("#errormsg").children("span").innerHTML= "数据请求异常,请检查网络或联系管理员！";
-				 $("#errormsg").show();
+		    	window.setTimeout("layer.close("+index+")",500);
+		    	layer.close(index);
+				$("#errormsg").children("span").innerHTML= "数据请求异常,请检查网络或联系管理员！";
+				$("#errormsg").show();
 		    }    
 		});
 	}

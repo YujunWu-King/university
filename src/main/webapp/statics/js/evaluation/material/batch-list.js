@@ -534,6 +534,13 @@ function initializeEvaluatePiciGrid(jsonObject)
       }
   });
   
+  //列表渲染完毕之后加载评委提醒信息
+  if(jsonObject.remindData!=undefined&&jsonObject.remindData.length>0){
+		 var reminHtml = "尊敬的评委：<br/><br/><span style='margin-left:20px;'>";
+		 reminHtml+=jsonObject.remindData.join("</span><br/><br/><span style='margin-left:20px;'>");
+		 reminHtml+="</span>";
+		 openRemindWindow(reminHtml);
+  }
   
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex){
 
@@ -593,4 +600,38 @@ function getBatchNameById(batchId)
 	}
 
 	return batchName;
+}
+
+/*登录之后批次列表也买呢显示评委未完成的任务提醒*/
+function openRemindWindow(html){
+	var win = new Ext.window.Window({
+        modal:true,
+        defaults: {
+            border:false
+        },
+        style:"overflow-y:auto",
+        layout:'fit',
+        buttonAlign:'center',
+        iframeLoad:function(iframe){
+            win.body.unmask();
+        },
+        items:[{
+            xtype:'component',
+            padding:10,
+            style:"font-size:13px;font-family:MicroSoft Yahei",
+            html:html,
+            minHeight : 160,
+            width : 650,
+        }],
+        buttons:[
+            {
+                text:"我知道了",
+                style:'background-color:#a9abd1;width:100px;height:30px;border-radius:6px;-webkit-border-radius:6px;line-height:30px;font-size:14px',
+                handler:function(btn){
+                    btn.findParentByType('window').close();
+                }
+            }
+        ]
+    });
+	win.show();
 }
