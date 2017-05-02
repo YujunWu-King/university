@@ -275,8 +275,6 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 		
 		try {
 			
-			Integer judgeNumTotal = 0;
-			
 			int num = 0;
 			for(num=0;num<actData.length;num++) {
 				String strForm =actData[num];
@@ -293,11 +291,6 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				if("JUDGE".equals(typeFlag)) {
 					//评委
 					String strJudge = saveJudgeInfo(mapData, errMsg);
-					Integer judgeExamineeNum = Integer.valueOf(mapData.get("judgeExamineeNum") == null ? "0" : String.valueOf(mapData.get("judgeExamineeNum")));
-					judgeNumTotal += judgeExamineeNum;
-					Map<String, Object> mapRet = new HashMap<String,Object>();
-					mapRet.put("judgeNumTotal", judgeNumTotal);
-					strRet = jacksonUtil.Map2json(mapRet);
 				}
 			}
 			
