@@ -893,6 +893,29 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		var _refAppTplId = "";
 		var _refFileName = "";
 		var _refFileUrl = "";
+		var _ref_recommend_1 = "";
+		var _ref_recommend_2 = "";
+		var _ref_recommend_3 = "";
+		var _ref_recommend_4 = "";
+		var _ref_recommend_5 = "";
+		var _ref_recommend_6 = "";
+		var _ref_recommend_7 = "";
+		var _ref_recommend_8 = "";
+		var _ref_recommend_9 = "";
+		var _ref_recommend_10 = "";
+		var _ref_recommend_11 = "";
+		var _ref_recommend_12 = "";
+		var _ref_recommend_13 = "";
+		var _ref_recommend_14 = "";
+		var _ref_recommend_15 = "";
+		var _ref_recommend_16= "";
+		var _ref_recommend_17 = "";
+		var _ref_recommend_18 = "";
+		var _ref_recommend_19 = "";
+		var _ref_recommend_20 = "";
+		var _ref_recommend_21 = "";
+		var _ref_recommend_22 = "";
+		var _ref_recommend_23 = "";
 		var params = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"EJSON","comParams":{"APP_INS_ID":"'+tz_app_ins_id+'","rownum":"'+_tjrXh+'","class_id":"'+_class_id+'","TZ_APP_TPL_ID":"'+tz_app_tpl_id+'"}}';
 		$.ajax({
 			type: "get",
@@ -912,6 +935,26 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_refAppTplId = f.comContent.refAppTplId;
 					_refFileName = f.comContent.refFileName;
 					_refFileUrl = f.comContent.refFileUrl;
+					_ref_recommend_18 = f.comContent.recommend_18;
+					_ref_recommend_1 = f.comContent.recommend_1;
+					_ref_recommend_17 = f.comContent.recommend_17;
+					_ref_recommend_2 = f.comContent.recommend_2;
+					_ref_recommend_3 = f.comContent.recommend_3;
+					_ref_recommend_15 = f.comContent.recommend_15;
+					_ref_recommend_16 = f.comContent.recommend_16;
+					_ref_recommend_4 = f.comContent.recommend_4;
+					_ref_recommend_5 = f.comContent.recommend_5;
+					_ref_recommend_6 = f.comContent.recommend_6;
+					_ref_recommend_10 = f.comContent.recommend_10;
+					_ref_recommend_11 = f.comContent.recommend_11;
+					_ref_recommend_12 = f.comContent.recommend_12;
+					_ref_recommend_13 = f.comContent.recommend_13;
+					_ref_recommend_14 = f.comContent.recommend_14;
+					_ref_recommend_19 = f.comContent.recommend_19;
+					_ref_recommend_20 = f.comContent.recommend_20;
+					_ref_recommend_21 = f.comContent.recommend_21;
+					_ref_recommend_22 = f.comContent.recommend_22;
+					_ref_recommend_23 = f.comContent.recommend_23;
 				}
 			}
 		});
@@ -949,7 +992,78 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			_zd="N";
 		}
 		//SurveyBuild._readonly = true;
-		
+		/*推荐信信息从推荐人表中获取*/
+		/*称呼*/
+		if(_ref_recommend_18!=""){
+			child[i].recommend_18.value = _ref_recommend_18;
+		}
+		/*name*/
+		if(_ref_recommend_1!=""){
+			child[i].recommend_1.value = _ref_recommend_1;
+		}
+		/*gname*/
+		if(_ref_recommend_17!=""){
+			child[i].recommend_17.value = _ref_recommend_17;
+		}
+		/*公司*/
+		if(_ref_recommend_2!=""){
+			child[i].recommend_2.value = _ref_recommend_2;
+		}
+		/*职务*/
+		if(_ref_recommend_3!=""){
+			child[i].recommend_3.value = _ref_recommend_3;
+		}
+		/*性别*/
+		if(_ref_recommend_15!=""){
+			child[i].recommend_15.value = _ref_recommend_15;
+		}
+		/*区号*/
+		if(_ref_recommend_16!=""){
+			child[i].recommend_16.value = _ref_recommend_16;
+		}
+		/*手机*/
+		if(_ref_recommend_4!=""){
+			child[i].recommend_4.value = _ref_recommend_4;
+		}
+		/*邮箱*/
+		if(_ref_recommend_5!=""){
+			child[i].recommend_5.value = _ref_recommend_5;
+		}
+		/*关系*/
+		if(_ref_recommend_6!=""){
+			child[i].recommend_6.value = _ref_recommend_6;
+		}
+		/*备用*/
+		if(_ref_recommend_10!=""){
+			child[i].recommend_10.value = _ref_recommend_10;
+		}
+		if(_ref_recommend_11!=""){
+			child[i].recommend_11.value = _ref_recommend_11;
+		}
+		if(_ref_recommend_12!=""){
+			child[i].recommend_12.value = _ref_recommend_12;
+		}
+		if(_ref_recommend_13!=""){
+			child[i].recommend_13.value = _ref_recommend_13;
+		}
+		if(_ref_recommend_14!=""){
+			child[i].recommend_14.value = _ref_recommend_14;
+		}
+		if(_ref_recommend_19!=""){
+			child[i].recommend_19.value = _ref_recommend_19;
+		}
+		if(_ref_recommend_20!=""){
+			child[i].recommend_20.value = _ref_recommend_20;
+		}
+		if(_ref_recommend_21!=""){
+			child[i].recommend_21.value = _ref_recommend_21;
+		}
+		if(_ref_recommend_22!=""){
+			child[i].recommend_22.value = _ref_recommend_22;
+		}
+		if(_ref_recommend_23!=""){
+			child[i].recommend_23.value = _ref_recommend_23;
+		}
 		works += '<div id="main_inner_content_para'+i+'" class="main_inner_content_para">';
 		
 		works += '<div class="mainright-title">';
@@ -978,9 +1092,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		if(SurveyBuild._readonly||_zd=="Y"||_zd=="Z"){
 			_readOnlyRadio = "Y";
 		}
+	
+		/*任何情况下都可以修改推荐信*/	
+		var tjxEditMode = false;
 		
 		//称呼-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             var desc = "";
             for (var i101 in child[i].recommend_18.option) {
@@ -1052,7 +1169,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//称呼-结束
 
 		//姓氏-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_1["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_1["itemName"] +'：</div>';
@@ -1076,7 +1193,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//姓氏-结束
 		
 		//名字-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_17["itemName"] +'：</div>';
@@ -1100,7 +1217,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//姓名-结束
 		
 		//单位-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             works += '<div class="input-list" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_2["value"] + '</div>';
@@ -1122,7 +1239,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//单位-结束
 
 		//职务-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             works += '<div class="input-list" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_3["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_3["value"] +  '</div>';
@@ -1144,7 +1261,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//职务-结束
 
 		//手机-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_4["itemName"] +'：</div>';
@@ -1179,7 +1296,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//手机-结束
 
 		//邮箱-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_5["itemName"] +'：</div>';
@@ -1232,7 +1349,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//性别-结束
 
 		//申请人关系-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_6["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_6["itemName"] +'：</div>';
@@ -1257,7 +1374,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//申请人关系-结束
 
 		//备用字段一-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_10["itemName"] +'：</div>';
@@ -1282,7 +1399,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段一-结束
 
 		//备用字段二-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_11["itemName"] +'：</div>';
@@ -1307,7 +1424,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段二-结束
 
 		//备用字段三-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_12["itemName"] +'：</div>';
@@ -1332,7 +1449,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段三-结束
 
 		//备用字段四-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_13["itemName"] +'：</div>';
@@ -1357,7 +1474,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段四-结束
 
 		//备用字段五-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_14["itemName"] +'：</div>';
@@ -1382,7 +1499,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段五结束
         
         //备用字段六-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_19["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_19["itemName"] +'：</div>';
@@ -1407,7 +1524,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段六结束
         
         //备用字段七-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_20["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_20["itemName"] +'：</div>';
@@ -1432,7 +1549,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段七结束
         
         //备用字段八-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_21["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_21["itemName"] +'：</div>';
@@ -1457,7 +1574,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段八结束
 
         //备用字段九-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_22["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_22["itemName"] +'：</div>';
@@ -1482,7 +1599,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段九结束
         
         //备用字段十-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_23["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_23["itemName"] +'：</div>';
@@ -1792,7 +1909,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';*/
 				/*更换推荐人一直显示*/
-				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
+				if(SurveyBuild._readonly){
+					works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
+				}else{
+					works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
+				}
+				
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 			
@@ -1865,7 +1987,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				*/
 				
 				/*更换推荐人一直显示*/
-				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
+				
+				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z") ?"display:none":"")+'">';
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 			
@@ -2412,7 +2535,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 
 				var _yz="";
 				var _desc="";
-				
+				var _name_yz = "";
 				
 				var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
 				if (children[m-1].recommend_18["useby"]=="Y"&&rec_title==""){
@@ -2428,6 +2551,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				if (children[m-1].recommend_1["useby"]=="Y"&&rec_name==""){
 					_desc =  children[m-1].recommend_1["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
+					_name_yz = "1";
 				}
 				var rec_company = $("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).val();
 				if (children[m-1].recommend_2["useby"]=="Y"&&rec_company==""){
@@ -2444,6 +2568,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_yz="1";
 					_desc =   children[m-1].recommend_16["itemName"]+ MsgSet["REQUIRE"];
 					
+				}else{
+					rec_phone_area = "";
 				}
 				/*
 				if (_yz=="" && rec_phone_area!="") {
@@ -2601,9 +2727,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					
 					rec_language = "";
 					var _tz_tjx_valid = "N";
-					if(_yz==""){
+					if(_yz=="" || _name_yz == ""){
 						_tz_tjx_valid = "Y";
 					}
+					
 					var _tz_app_ins_id=SurveyBuild.appInsId;
 					var _tz_app_version_id=SurveyBuild.appInsVersion;
 					var _email_tx = $("#yincang_tx").val();
@@ -2712,9 +2839,20 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 								$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).removeAttr("readonly");
 								$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).removeAttr("readonly");
 								$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).removeAttr("disabled");
 								$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").removeAttr("disabled");
 								$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").removeAttr("disabled");
 								$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").removeAttr("disabled");
+								$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").removeAttr("readonlyflag");
+								$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").removeAttr("readonlyflag");
+								$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").removeAttr("readonlyflag");
 								$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).removeAttr("readonly");
 								$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).removeAttr("readonly");
 								$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).removeAttr("readonly");
@@ -2726,6 +2864,18 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 								$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).removeAttr("readonly");
 								$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).removeAttr("readonly");
 								$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).removeAttr("readonly");
+								
+								$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).removeAttr("disabled");
+								
+								$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).removeAttr("disabled");
 								
 								console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]));
 								//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).trigger("liszt:updated");

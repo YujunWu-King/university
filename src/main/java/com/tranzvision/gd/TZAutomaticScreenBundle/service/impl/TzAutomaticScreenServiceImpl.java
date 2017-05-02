@@ -88,15 +88,44 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
+			/*排序*/
+			String[][] orderByArr;
 			
+			String sort = request.getParameter("sort");
+			if(!"".equals(sort) && sort != null){
+				sort = "{\"sort\":"+ sort +"}";
+				
+				jacksonUtil.json2Map(sort);
+				List<Map<String,String>> sortList = (List<Map<String, String>>) jacksonUtil.getList("sort");
+
+				List<String[]> orderList = new ArrayList<String[]>();
+				for(Map<String,String> sortMap: sortList){
+					String columnField = sortMap.get("property");
+					String sortStr = sortMap.get("direction");
+					
+					if("ranking".equals(columnField)){
+						orderList.add(new String[]{ "TZ_KSH_PSPM", sortStr });
+					}
+					if("total".equals(columnField)){
+						orderList.add(new String[]{ "TZ_TOTAL_SCORE", sortStr });
+					}
+				}
+				
+				orderByArr = new String[orderList.size()][2];
+				for(int i=0; i<orderList.size(); i++){
+					orderByArr[i] = orderList.get(i);
+				}
+			}else{
+				//默认按排名排序
+				orderByArr = new String[][] {new String[] { "TZ_KSH_PSPM", "ASC" }};
+			}
+			
+
 			jacksonUtil.json2Map(strParams);
 			//成绩项
 			List<String> itemsList = (List<String>) jacksonUtil.getList("items");
 			
 			//TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW
-			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] {new String[] { "TZ_KSH_PSPM", "ASC" }};
-
 			// json数据要的结果字段;
 			String[] resultFldArray = {"TZ_CLASS_ID","TZ_BATCH_ID","TZ_APP_INS_ID","TZ_REALNAME","TZ_MSH_ID","TZ_KSH_CSJG","TZ_KSH_PSPM","TZ_SCORE_INS_ID","TZ_TOTAL_SCORE"};
 
@@ -155,6 +184,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 
 					//自动标签
 					String zdbqVal = "";
+					/*
 					String zdbqSql = "select TZ_ZDBQ_ID,TZ_BIAOQZ_NAME from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
 					List<Map<String,Object>> zdbqList = sqlQuery.queryForList(zdbqSql, new Object[]{ classId, rowList[1], rowList[2] });
 					for(Map<String,Object> zdbqMap : zdbqList){
@@ -166,11 +196,14 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 								zdbqVal = zdbqVal + "|" + LabelDesc ;
 							}
 						}
-					}
+					}*/
+					String zdbqSql = "select group_concat(TZ_BIAOQZ_NAME SEPARATOR '|') as TZ_ZDBQ from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+					zdbqVal = sqlQuery.queryForObject(zdbqSql, new Object[]{ classId, rowList[1], rowList[2] } , "String");
 					mapList.put("autoLabel", zdbqVal);
 					
 					//负面清单
 					String fmqdVal = "";
+					/*
 					String fmqdSql = "select TZ_FMQD_ID,TZ_FMQD_NAME from PS_TZ_CS_KSFM_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
 					List<Map<String,Object>> fmqdList = sqlQuery.queryForList(fmqdSql, new Object[]{ classId, rowList[1], rowList[2] });
 					for(Map<String,Object> fmqdMap : fmqdList){
@@ -182,11 +215,14 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 								fmqdVal = fmqdVal + "|" + LabelDesc;
 							}
 						}
-					}
+					}*/
+					String fmqdSql = "select group_concat(TZ_FMQD_NAME SEPARATOR '|') as TZ_FMQD from PS_TZ_CS_KSFM_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+					fmqdVal = sqlQuery.queryForObject(fmqdSql, new Object[]{ classId, rowList[1], rowList[2] } , "String");
 					mapList.put("negativeList", fmqdVal);
 					
 					//手动标签
 					String sdbqVal = "";
+					/*
 					String sdbqSql = "select TZ_LABEL_NAME from PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B where A.TZ_LABEL_ID=B.TZ_LABEL_ID and TZ_APP_INS_ID=?";
 					List<Map<String,Object>> sdbqList = sqlQuery.queryForList(sdbqSql, new Object[]{ rowList[2] });
 					for(Map<String,Object> sdbqMap: sdbqList){
@@ -198,7 +234,9 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 								sdbqVal = sdbqVal + "|" + LabelDesc;
 							}
 						}
-					}
+					}*/
+					String sdbqSql = "select group_concat(TZ_LABEL_NAME SEPARATOR '|') as TZ_LABEL_NAME from PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B where A.TZ_LABEL_ID=B.TZ_LABEL_ID and TZ_APP_INS_ID=?";
+					sdbqVal = sqlQuery.queryForObject(sdbqSql, new Object[]{ rowList[2] } , "String");
 					mapList.put("manualLabel", sdbqVal);
 					
 					

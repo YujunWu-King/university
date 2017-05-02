@@ -52,6 +52,7 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			String MarkRecord = "报名表填写不完整";
 			float Score1=0;
 			float Score2=0;
+			float Score3=0;
 			
 			//根据报名表ID查询考生职业背景，获取公司性质
 			String GSXZ = ksMap.get("TZ_20TZ_TZ_20_14firm_type");
@@ -212,7 +213,9 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 							float TSL=Float.parseFloat(RZE3);
 							int TSL1=(int)(TSL);
 							String FSCJ = SqlQuery.queryForObject(sql, new Object[] {RZ1,TSL1,TSL1},"String");
+							if(FSCJ!=null){
 							Score1=Float.parseFloat(FSCJ);
+							}
 						}else if("A_FINANCING".equals(RZ)){
 							String RZ2="B";
 							//A轮融资
@@ -220,7 +223,9 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 							float ARZ=Float.parseFloat(RZE2);
 							int ARZ1=(int)(ARZ);
 							String FSCJ = SqlQuery.queryForObject(sql, new Object[] {RZ2,ARZ1,ARZ1},"String");
+							if(FSCJ!=null){
 							Score1=Float.parseFloat(FSCJ);
+							}
 						}else if("B_FINANCING".equals(RZ)){
 							String RZ3="A";
 							//B轮融资
@@ -228,7 +233,9 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 							float BRZ=Float.parseFloat(RZE1);
 							int BRZ1=(int)(BRZ);
 							String FSCJ = SqlQuery.queryForObject(sql, new Object[] {RZ3,BRZ1,BRZ1},"String");
+							if(FSCJ!=null){
 							Score1=Float.parseFloat(FSCJ);
+							}
 						}
 					}	
 						
@@ -285,14 +292,16 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 					float cc=Float.parseFloat(ZYZJ);
 					int c=(int)(cc);
 					String FSCJ = SqlQuery.queryForObject(sql, new Object[] {c,c},"String");
+					if(FSCJ!=null){
 					Score1=Float.parseFloat(FSCJ);
-					
+					}
 					String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'JZZC' AND TZ_CSMB_TJ1 = 'JZ' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
 					int dd=Integer.parseInt(JZZC);
 					int d=(int)(dd);
 					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {d,d},"String");
+					if(FSCJ2!=null){
 					Score2=Float.parseFloat(FSCJ2);
-					
+					}
 						if(Score1>Score2){
 							CYScore=Score1;
 						}else{
@@ -319,20 +328,23 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 					int aa=Integer.parseInt(QTYS);
 					int a=(int)(aa);
 					String FSCJ = SqlQuery.queryForObject(sql, new Object[] {a,a},"String");
+					if(FSCJ!=null){
 					Score1=Float.parseFloat(FSCJ);
-					
+					}
 					String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'LR' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
 					int bb=Integer.parseInt(QTLR);
 					int b=(int)(bb);
 					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] {b,b},"String");
+					if(FSCJ2!=null){
 					Score2=Float.parseFloat(FSCJ2);
-					
+					}
 					String sql3 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'GM' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
 					int cc=Integer.parseInt(QTGM);
 					int c=(int)(cc);
 					String FSCJ3 = SqlQuery.queryForObject(sql3, new Object[] {c,c},"String");
-					float Score3=Float.parseFloat(FSCJ3);
-					
+					if(FSCJ3!=null){
+					Score3=Float.parseFloat(FSCJ3);
+					}
 						if(Score1>Score2){
 							CYScore=Score1;
 						}else{

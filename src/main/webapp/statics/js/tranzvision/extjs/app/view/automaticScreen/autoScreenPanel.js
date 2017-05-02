@@ -12,6 +12,7 @@
     ],
     xtype: 'autoScreen',
 	controller: 'autoScreenController',
+	//multiColumnSort: true,
 	
 	title: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoScreen","自动初筛"),
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
@@ -64,10 +65,16 @@
 		}*/,{ 
 			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.msApplyId","面试申请号"),
 			dataIndex: 'msApplyId',
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			width:100
 		},{ 
 			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.name","姓名"),
 			dataIndex: 'name',
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			width:90
 		}]
     	
@@ -88,6 +95,9 @@
     			text: descr,
 				dataIndex: itemColumns[i].columnId,
 				width:colWidth,
+				menuDisabled: true,
+				sortable: false,
+				hideable:false,
 				items:[{
 					getText: function(v, meta, rec) {
 						return v;
@@ -100,15 +110,20 @@
     	columns.push({
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.total","总分"),
 			dataIndex: 'total',
-			width:80
+			width:80,
+			hideable:false
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.ranking","排名"),
 			dataIndex: 'ranking',
-			width:80
+			width:80,
+			hideable:false
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.negativeList","负面清单"),
 			dataIndex: 'negativeList',
 			minWidth:200,
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			xtype: 'templatecolumn',
 			tpl: Ext.create('Ext.XTemplate','{[this.labels(values)]}',{
 				labels: function(values){
@@ -131,6 +146,9 @@
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoLabel","自动标签"),
 			dataIndex: 'autoLabel',
 			minWidth:200,
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			xtype: 'templatecolumn',
 			tpl: Ext.create('Ext.XTemplate','{[this.labels(values)]}',{
 				labels: function(values){
@@ -153,6 +171,9 @@
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.manualLabel","手工标签"),
 			dataIndex: 'manualLabel',
 			minWidth:200,
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			xtype: 'templatecolumn',
 			tpl: Ext.create('Ext.XTemplate','{[this.labels(values)]}',{
 				labels: function(values){
@@ -175,10 +196,14 @@
     		xtype:'checkcolumn',
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.status","是否淘汰"),
 			dataIndex: 'status',
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			width:80
     	},{
 			menuDisabled: true,
 			sortable: false,
+			hideable:false,
 			width:60,
 			xtype: 'actioncolumn',
 			align: 'center',
@@ -293,7 +318,7 @@
 	    			columns: columns,
 	    			bbar: {
 	    				xtype: 'pagingtoolbar',
-	    				pageSize: 500,
+	    				pageSize: 100,
 	    				listeners:{
 	    					afterrender: function(pbar){
 	    						var grid = pbar.findParentByType("grid");

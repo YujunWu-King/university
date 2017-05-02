@@ -363,7 +363,21 @@ public class tzOnlineAppEngineImpl {
 				}
 				if (!"".equals(strPageXxxBh)) {
 					if ("".equals(strMsg)) {
-						this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y");
+						/*是否存在未发送推荐信的推荐人信息*/
+						String sqlGetRefLetterCount = "SELECT COUNT(*) FROM PS_TZ_KS_TJX_TBL A WHERE ((A.ATTACHSYSFILENAME = '' OR A.ATTACHUSERFILE = ' ') AND NOT EXISTS (SELECT * FROM PS_TZ_APP_INS_T B WHERE A.TZ_TJX_APP_INS_ID = B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA = 'U')) "
+								+ " AND A.TZ_APP_INS_ID = ? AND A.TZ_MBA_TJX_YX = 'Y' AND TZ_REFLETTERTYPE = ''";
+						Integer numRefletter = sqlQuery.queryForObject(sqlGetRefLetterCount, new Object[] { numAppInsId }, "Integer");
+						if (numRefletter > 0) {
+							this.savePageCompleteState(numAppInsId, strPageXxxBh, "N");
+						}else{
+							this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y");
+						}
+						/*如果推荐人信息没有填写*/
+						String sqlGetRefLetterCount2 = "SELECT COUNT(*) FROM PS_TZ_KS_TJX_TBL A WHERE A.TZ_APP_INS_ID = ? AND A.TZ_MBA_TJX_YX = 'Y'";
+						Integer numRefletter2 = sqlQuery.queryForObject(sqlGetRefLetterCount2, new Object[] { numAppInsId }, "Integer");
+						if (numRefletter2 == 0) {
+							this.savePageCompleteState(numAppInsId, strPageXxxBh, "B");
+						}
 					} else {
 						this.savePageCompleteState(numAppInsId, strPageXxxBh, "N");
 					}
@@ -1952,6 +1966,18 @@ public class tzOnlineAppEngineImpl {
 							}else{
 								this.savePageCompleteState(numAppInsId, strPageXxxBh, "B");
 							}
+							if("TZ_35".equals(strPageXxxBh)){
+								/*不是预提交页面，则不用更新页面完成状态为无*/
+								String strPreSubmit = sqlQuery.queryForObject("SELECT TZ_APP_PRE_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?" ,
+										new Object[] { numAppInsId }, "String");
+								if("P".equals(strPreSubmit)){
+									/*不是预提交页面，则不用更新页面完成状态为无*/
+									this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y");
+								}else{
+									this.savePageCompleteState(numAppInsId, strPageXxxBh, "N");
+								}
+								
+							}
 						}
 					}
 				}
@@ -1966,6 +1992,8 @@ public class tzOnlineAppEngineImpl {
 						this.savePageCompleteState(numAppInsId, strXxxBh2, "N");
 					}
 				}
+				/*如果页面是推荐信页面*/
+				this.checkRefletter(numAppInsId, strTplId);
 
 			}
 		} catch (Exception e) {
@@ -2005,7 +2033,6 @@ public class tzOnlineAppEngineImpl {
 		
 		return b_flag;
 	}
-	
 
 	// 同步报名人联系方式
 	public void savaContactInfo(Long numAppInsId, String strTplId, String strAppOprId) {
@@ -2812,10 +2839,10 @@ public class tzOnlineAppEngineImpl {
 			// System.out.println(uniScholContry + ":" + Contry1 + ":" + Contry2
 			// + ":" + Contry3);
 			// 判断 是否有海外学历
-			if (ksMap.get("TZ_11luniversitycountry") == null ? true
-					: uniScholContry.equals("中国大陆") && ksMap.get("TZ_10hdegreeunicountry") == null ? true
-							: Contry1.equals("中国大陆") && ksMap.get("TZ_12ouniversitycountry") == null ? true
-									: Contry2.equals("中国大陆") && ksMap.get("TZ_13ouniver3country") == null ? true
+			if ((ksMap.get("TZ_11luniversitycountry") == null||"".equals(uniScholContry)) ? true
+					: uniScholContry.equals("中国大陆") &&(ksMap.get("TZ_10hdegreeunicountry")== null||"".equals(Contry1))? true
+							: Contry1.equals("中国大陆") && (ksMap.get("TZ_12ouniversitycountry") == null||"".equals(Contry2)) ? true
+									: Contry2.equals("中国大陆") && (ksMap.get("TZ_13ouniver3country") == null||"".equals(Contry3)) ? true
 											: Contry3.equals("中国大陆")) {
 				isOutLeft = String.valueOf('N');
 			} else {
