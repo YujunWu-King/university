@@ -179,8 +179,10 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 							int tz_days = (Integer) list.get(i).get("TZ_DAYS");
 							
 							/*评委评审概要信息 */
-							String ps_gaiy_info = strClassName+","+strBatchName+"，距离评审截止日期 <span style='color:red'>" +tz_end_date+"</span>还有 <span style='color:red'>"+tz_days+"</span>天，"
-													+ "您有 <span style='color:red'>"+(tz_need_eva_num-tz_done_num)+"</span>位考生未评审。";
+							String ps_gaiy_info = new StringBuffer(strClassName).append(" ").append(strBatchName)
+									.append("，距离评审截止日期 <span style='color:red'>").append(tz_end_date).append("</span>")
+									.append(tz_need_eva_num-tz_done_num>0?"还有":"已过去").append("<span style='color:red'>").append(tz_days)
+									.append("</span>天，您有<span style='color:red'>").append(Math.abs(tz_need_eva_num-tz_done_num)).append("</span>位考生未评审。").toString();
 							
 							remindData.add(ps_gaiy_info);
 						}
@@ -503,14 +505,16 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 						String ksbh = "";
 						ksbh = String.valueOf(TZ_APP_INS_ID);
 
-						// 考生姓名、面试申请号;
-						String first_name = "",msh_id = "";
+						// 考生姓名、面试申请号,本科院校，工作单位;
+						String first_name = "",msh_id = "",ksh_school = "",ksh_company = "";
 						Map<String, Object> map1 = sqlQuery.queryForMap(
-								"select B.TZ_MSH_ID,B.TZ_REALNAME from PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B where A.OPRID = B.OPRID and A.TZ_APP_INS_ID=? AND B.TZ_RYLX='ZCYH' LIMIT 0,1",
+								"select B.TZ_MSH_ID,B.TZ_REALNAME,TZ_SCH_CNAME,TZ_COMPANY_NAME from PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B,PS_TZ_REG_USER_T C where A.OPRID = B.OPRID and A.OPRID=C.OPRID and A.TZ_APP_INS_ID=? AND B.TZ_RYLX='ZCYH' LIMIT 0,1",
 								new Object[] { TZ_APP_INS_ID });
 						if (map1 != null) {
 							first_name = (String) map1.get("TZ_REALNAME");
 							msh_id = (String) map1.get("TZ_MSH_ID");
+							ksh_school = (String) map1.get("TZ_SCH_CNAME");
+							ksh_company = (String) map1.get("TZ_COMPANY_NAME");
 						}
 
 						// 上次排名;
@@ -635,6 +639,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 				        dyRowValueItem.put("ps_ksh_cpm",TZ_KSH_PSPM2);
 				        dyRowValueItem.put("ps_ksh_zt",pyZt);
 				        dyRowValueItem.put("ps_ksh_dt",pssj);
+				        dyRowValueItem.put("ps_ksh_school",ksh_school);
+				        dyRowValueItem.put("ps_ksh_company",ksh_company);
 				        //评委间偏差
 				        if("Y".equals(TZ_PWKJ_PCH)){
 				        	dyRowValueItem.put("ps_ksh_pc",pc==null?0:Double.parseDouble(pc));

@@ -79,7 +79,6 @@ $(function(){
 			},
 		    failure: function () {
 		    	window.setTimeout("layer.close("+index+")",500);
-		    	layer.close(index);
 				$("#errormsg").children("span").innerHTML= "数据请求异常,请检查网络或联系管理员！";
 				$("#errormsg").show();
 		    }    
