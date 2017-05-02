@@ -208,7 +208,7 @@ public class TzTjxClsServiceImpl {
 			str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
 			String strTjxId = str_seq1 + str_seq2;
 			jdbcTemplate.update(
-					"update PS_TZ_KS_TJX_TBL A set TZ_REF_LETTER_ID = ?, TZ_TJX_TYPE='',TZ_REFLETTERTYPE='' where  A.TZ_APP_INS_ID=? AND A.TZ_TJR_ID=? AND A.OPRID=?",
+					"update PS_TZ_KS_TJX_TBL A set TZ_REF_LETTER_ID = ?, TZ_TJX_TYPE='',TZ_REFLETTERTYPE='',TZ_TJX_APP_INS_ID = NULL where  A.TZ_APP_INS_ID=? AND A.TZ_TJR_ID=? AND A.OPRID=?",
 					new Object[] { strTjxId,numAppinsId, strTjrId, strOprid });
 			strRtn = "SUCCESS";
 		} else {
