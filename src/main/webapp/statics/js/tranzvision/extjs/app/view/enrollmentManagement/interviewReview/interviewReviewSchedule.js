@@ -30,6 +30,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         var batchID = this.batchID;
         var statisticsGridDataModel;
         var transValue = this.transValue;
+        var interviewReviewScheduleAppsStore = new KitchenSink.view.enrollmentManagement.interviewReview.interviewReviewScheduleAppsStore();
         var interviewReviewScheduleChartStore=new Ext.data.JsonStore({
             fields:['name','data1'],
             data:[]

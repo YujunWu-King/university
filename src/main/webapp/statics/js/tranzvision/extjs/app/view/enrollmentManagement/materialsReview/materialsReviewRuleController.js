@@ -129,10 +129,21 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         Ext.syncRequire(className);
         ViewClass = Ext.ClassManager.get(className);
 
-        var win = new ViewClass();
-        me.getView().add(win);
-        win.down("grid").getStore().load();
-        win.show();
+        var judgeGroupParams =  '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
+            '"OperateType":"tzGetJudgeGroup","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
+        Ext.tzLoad(judgeGroupParams,function(responseData) {
+            var judgeGroupData = responseData.groupData;
+
+
+            var win = new ViewClass({
+                judgeGroupData:judgeGroupData
+            });
+            me.getView().add(win);
+            win.down("grid").getStore().load();
+            win.show();
+        });
+
+
     },
     //设置评审规则-新增评委-批量设置选中教师评委组
     setJudgeGroupBatch:function(btn) {
@@ -224,6 +235,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         var selList = grid.getSelectionModel().getSelection();
 
         var selectJudgeOprid="";
+        var noMobileJudge="";
 
         var checkLen = selList.length;
         if(checkLen==0) {
@@ -231,17 +243,28 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             return;
         } else {
             for(var i=0;i<checkLen;i++) {
-                if(selectJudgeOprid=="") {
-                    selectJudgeOprid=selList[i].data.judgeOprid;
+                if(selList[i].data.judgeMobile!="") {
+                    if(selectJudgeOprid=="") {
+                        selectJudgeOprid=selList[i].data.judgeOprid;
+                    } else {
+                        selectJudgeOprid+=","+selList[i].data.judgeOprid;
+                    }
                 } else {
-                    selectJudgeOprid+=","+selList[i].data.judgeOprid;
+                    noMobileJudge = "Y";
                 }
             }
         }
 
+        var msg = "";
+        if(noMobileJudge=="Y") {
+            msg = "没有手机的评委无法重置密码，其他评委密码重置成功"
+        } else {
+            msg = "评委密码重置成功";
+        }
+
         var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD","OperateType":"tzResetPassword","comParams":{"selectJudgeOprid":"'+selectJudgeOprid+'"}}';
         Ext.tzSubmit(tzParams,function(){
-        },"重置评委密码成功",true,this);
+        },msg,true,this);
 
     },
     //设置评审规则-更多操作-给选中评委发送邮件
@@ -356,10 +379,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                         if(btn.name=='onRuleEnsure') {
                             view.close();
                         }
-                        if(responseData.judgeNumTotal!=undefined) {
-                            var statisticsForm = view.down("form[name=statisticsNumForm]").getForm();
-                            form.findField("judgeNumTotal").setValue(responseData.judgeNumTotal);
+
+                        var judgeNumTotal = 0;
+                        var records = judgeStore.getRange(0,judgeStore.getCount()-1);
+                        for(var i=0;i<records.length;i++) {
+                            judgeNumTotal = parseInt(judgeNumTotal)+parseInt(records[i].data.judgeExamineeNum);
                         }
+                        var statisticsForm = view.down("form[name=statisticsNumForm]").getForm();
+                        form.findField("judgeNumTotal").setValue(judgeNumTotal);
+
                     },"",true,this);
                 } else {
                     Ext.Msg.alert('提示','评委各组评议人数和不等于考生人数');

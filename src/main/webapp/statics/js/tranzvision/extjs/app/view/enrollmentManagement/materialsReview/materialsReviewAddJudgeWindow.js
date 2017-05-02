@@ -26,11 +26,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
              win.doLayout();
         }
     },
+    constructor: function(obj) {
+        this.judgeGroupData = obj.judgeGroupData;
+        this.callParent();
+    },
     initComponent:function() {
         var me = this;
 
         //评委组
-        var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
+        /*var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
             recname:'TZ_CLPS_GR_TBL',
             condition:{
                 TZ_JG_ID:{
@@ -40,6 +44,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 }
             },
             result:'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME'
+        });*/
+
+        var judgeGroupStore = Ext.create("Ext.data.Store", {
+            fields: ["TZ_CLPS_GR_ID", "TZ_CLPS_GR_NAME"],
+            data: this.judgeGroupData
         });
 
         var store = new KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewAddJudgeWindowStore();
@@ -151,17 +160,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             labelWidth: 120,
                             hideLabel: true,
                             name: 'judgeGroupSet',
-                            store: new KitchenSink.view.common.store.comboxStore({
-                                recname: 'TZ_CLPS_GR_TBL',
-                                condition: {
-                                    TZ_JG_ID: {
-                                        value: Ext.tzOrgID,
-                                        operator: '01',
-                                        type: '01'
-                                    }
-                                },
-                                result: 'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME'
-                            }),
+                            store: judgeGroupStore,
                             displayField: "TZ_CLPS_GR_NAME",
                             valueField: "TZ_CLPS_GR_ID",
                             editable: false,
