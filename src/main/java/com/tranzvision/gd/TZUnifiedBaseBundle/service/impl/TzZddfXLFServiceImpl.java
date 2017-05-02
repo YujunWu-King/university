@@ -56,7 +56,7 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				
 				//判断是否为国外学校
 				String uniScholContry = ksMap.get("TZ_11luniversitycountry");
-				if ("中国大陆".equals(uniScholContry)) {	
+				if ("中国大陆".equals(uniScholContry)||"中国".equals(uniScholContry)) {	
 				} else {	
 					
 					//如果是外国学校，截取（前的内容			
