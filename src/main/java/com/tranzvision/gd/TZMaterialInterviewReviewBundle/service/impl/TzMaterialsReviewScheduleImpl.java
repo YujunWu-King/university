@@ -511,7 +511,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 								} else {
 									strGridGoalColHTML3 = strGridGoalColHTML3 + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", "mx_" + strFbdzMxId, strFbdzMxSm);
 								}
-								String strSql1 = "SELECT TZ_BZFB_BL,TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_M_FBDZ_ID=? AND TZ_M_FBDZ_MX_ID=?";
+								String strSql1 = "SELECT TZ_BZFB_BL,cast(TZ_YXWC_NUM as SIGNED) TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_M_FBDZ_ID=? AND TZ_M_FBDZ_MX_ID=?";
 								List<Map<String, Object>> fbDataList = sqlQuery.queryForList(strSql1, new Object[] { strClassID, strBatchID, strCjModalId, strScoreItemId, strFbdzId, strFbdzMxId });
 								String strBl = "", strWc = "";
 								if (fbDataList != null && fbDataList.size() > 0) {
@@ -1094,7 +1094,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			intDqpyLunc = sqlQuery.queryForObject(strDqpyLuncSql, new Object[] { strClassID, strBatchID }, "Integer");
 
 			// 总分平均分-待完成
-			double douZfPjf = 12.5;
+			double douZfPjf = 0.0;
 			String strTotalName = "标准平均分";
 
 			if (strColumnChartHTML != null && !"".equals(strColumnChartHTML)) {
@@ -1501,7 +1501,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						// 比率平均和误差平均列，为col02
 						String strColId = "col01";
 						if ("比率".equals(colName)) {
-							strBlAve = result.get(strColId) == null ? "0.00" : String.valueOf(result.get(strColId));
+							strBlAve = result.get(strColId) == null ? "0" : String.valueOf(result.get(strColId));
 						} else {
 							strWcAve = result.get(strColId) == null ? "0.00" : String.valueOf(result.get(strColId));
 						}
@@ -1538,7 +1538,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				}
 
 				// 重新获取数据
-				String strSql = "SELECT TZ_M_FBDZ_MX_ID,TZ_BZFB_BL,TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID='Total' AND TZ_M_FBDZ_ID=?";
+				String strSql = "SELECT TZ_M_FBDZ_MX_ID,TZ_BZFB_BL,cast(TZ_YXWC_NUM as SIGNED) TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID='Total' AND TZ_M_FBDZ_ID=?";
 				List<Map<String, Object>> dataList = sqlQuery.queryForList(strSql, new Object[] { strClassID, strBatchID, strScoreModalID, strFbdzID });
 
 				if (dataList != null && dataList.size() > 0) {
