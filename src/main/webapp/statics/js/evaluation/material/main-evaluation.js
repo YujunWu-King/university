@@ -208,14 +208,7 @@ function createFenbuGrid(jsonObject)
 	     flex     : 1,
 	     sortable : false,
 	     resizable: false,
-	     dataIndex: 'ps_sjfb_fhyq',
-	     renderer:function(value){
-	    	 if(value=="不符合"){
-	    		 return "<span style='color:red'>不符合</span>";
-	    	 }else{
-	    		 return value
-	    	 }
-	     }
+	     dataIndex: 'ps_sjfb_fhyq'
 	  }];
   
   //是否显示评分标准？不显示则移除分布标准列。
