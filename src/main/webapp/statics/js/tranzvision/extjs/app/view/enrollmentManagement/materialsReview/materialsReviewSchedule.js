@@ -218,7 +218,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 	}
                 	dataIndex = 'col0' + i;
                 }
-                console.log(dataIndex);
+                //console.log(dataIndex);
                 var tmpColumn = {
                     text: mxName,
                     sortable: false,

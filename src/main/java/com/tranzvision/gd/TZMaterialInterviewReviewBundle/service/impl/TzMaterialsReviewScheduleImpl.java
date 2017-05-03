@@ -967,14 +967,18 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						count = 0;
 					}
 					String strTotalScoreSQL = "SELECT SUM(C.TZ_SCORE_NUM) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_KSCLPSLS_TBL B,PS_TZ_CJX_TBL C WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_PWEI_OPRID=B.TZ_PWEI_OPRID AND A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID AND B.TZ_CLASS_ID = ? AND B.TZ_APPLY_PC_ID=? and B.TZ_APP_INS_ID = ? AND TZ_SCORE_ITEM_ID=? AND B.TZ_CLPS_LUNC = ? AND B.TZ_SUBMIT_YN<>'C'";
-					Integer intTotalScore = sqlQuery.queryForObject(strTotalScoreSQL, new Object[] { strClassID, strBatchID, strAppInsID, strScoreItemId, intDqpyLunc }, "Integer");
-					if (intTotalScore == null) {
-						intTotalScore = 0;
+					Double douTotalScore = sqlQuery.queryForObject(strTotalScoreSQL, new Object[] { strClassID, strBatchID, strAppInsID, strScoreItemId, intDqpyLunc }, "Double");
+					if (douTotalScore == null) {
+						douTotalScore = 0.0;
 					}
-					if (count == 0 || intTotalScore == 0) {
+					double doubleTmp = 0.0;
+					BigDecimal data1 = new BigDecimal(doubleTmp); 
+					BigDecimal data2 = new BigDecimal(douTotalScore); 
+					int resultCompare = data1.compareTo(data2);
+					if (count == 0 || resultCompare == 0) {
 						strAveScore = "0.00";
 					} else {
-						double tmpDouble = intTotalScore / count;
+						double tmpDouble = douTotalScore / count;
 						strAveScore = df.format(tmpDouble);
 					}
 
@@ -1617,7 +1621,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				String strSubmitStatus = sqlQuery.queryForObject(strMapSql, new Object[] { strClassID, strBatchID, strAppInsID, str_PwOprid, numLunc }, "String");
 				if (!"C".equals(strSubmitStatus)) {
 					String strSql4 = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL B,PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_GZ_TBL C WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_DQPY_LUNC=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=? AND B.TZ_SCORE_ITEM_ID=?";
-					Integer intScoreNum = sqlQuery.queryForObject(strSql4, new Object[] { strClassID, strBatchID, numLunc, strAppInsID, str_PwOprid, strTreeNode }, "Integer");
+					Double intScoreNum = sqlQuery.queryForObject(strSql4, new Object[] { strClassID, strBatchID, numLunc, strAppInsID, str_PwOprid, strTreeNode }, "Double");
 					if (intScoreNum != null) {
 						String strInsertSql = "INSERT INTO PS_TZ_PW_KS_PC_TBL VALUES(" + pw_num + ",'" + intScoreNum + "')";
 						sqlQuery.update(strInsertSql);
