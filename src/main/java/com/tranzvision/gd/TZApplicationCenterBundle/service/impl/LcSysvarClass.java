@@ -94,15 +94,21 @@ public class LcSysvarClass {
 
 							span = "<span class=\"fl width_40\">" + TZ_XXX_MC + "</span>";
 							
-							
+							//完成;
 							if ("Y".equals(isComplete)) {
 								/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
 										+ "/statics/css/website/m/images/reg_right.png\"></span>";*/
 								span = span + "<span class=\"fl\">已完成</span>";
 							} else {
-								/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
-										+ "/statics/css/website/m/images/reg_warm.png\"></span>";*/
-								span = span + "<span class=\"fl\">未完成</span>";
+								//无
+								if("B".equals(isComplete)){
+									span = span + "<span class=\"fl\">无</span>";
+								}else{
+									/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
+									+ "/statics/css/website/m/images/reg_warm.png\"></span>";*/
+									span = span + "<span class=\"fl\">未完成</span>";
+								}
+								
 							}
 							
 							content = content +  "<div class=\"overhidden\">" + span + "</div>";
@@ -167,7 +173,9 @@ public class LcSysvarClass {
 							if ("Y".equals(isComplete)) {
 								td1 = "<td><img src=\"" + rootPath
 										+ "/statics/css/website/images/table_check.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">已完成</a></td>";
-							} else {
+							} else if("B".equals(isComplete)){
+								td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">无</a></td>";
+							}else {
 								td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">未完成</a></td>";
 							}
 							if ("".equals(td)) {
