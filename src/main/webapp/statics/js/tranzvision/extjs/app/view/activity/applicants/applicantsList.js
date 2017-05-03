@@ -54,13 +54,19 @@
 				iconCls:  'list',
 				glyph: 61,
 				menu:[{
-					text:'发送函件',handler:'showSendWindow'
-				},{
-					text:'导出选中活动报名人信息',handler:'exportApplyInfo'
-				},{
-					text:'导出搜索结果中报名人信息',handler:'exportSearchApplyInfo'
+					text:'发送函件',
+					handler:'showSendWindow'
 				},{
 					text:'批量更改参与状态',handler:"showSetStatusWindow"
+				},{
+					text: '导出活动报名人信息',
+					menu:[{
+						text:'导出选中活动报名人信息',handler:'exportApplyInfo',
+					},{
+						text:'导出搜索结果中报名人信息',handler:'exportSearchApplyInfo'
+					}]
+				},{
+					text:'下载导出结果',handler:'downloadExportFile'
 				}]
 			}
 		]},{
@@ -169,7 +175,7 @@
 				valueField: 'TValue',
             	displayField: 'TSDesc',
 				typeAhead: true,
-				mode:"remote",
+				mode:"local",
 				//store: new KitchenSink.view.common.store.appTransStore("TZ_BMR_APPLY_QD"),
 				store: bmqdStore,
 				//allowBlank: false
@@ -199,7 +205,7 @@
 				forceSelection: true,
 				valueField: 'TZ_ZHZ_ID',
             	displayField: 'TZ_ZHZ_CMS',
-				mode:"remote",
+				mode:"local",
 				store: cyztStore,
 				tpl:'<tpl for=".">' +   
 					'<div class="x-boundlist-item" style="height:30px;">' +   
@@ -268,11 +274,18 @@
 			 {text: '查看',iconCls: 'view',tooltip: '查看'}
 		   ]
 		}];
-	
+
 		for (var i=0; i<gdColumn.length; i++){
 			columns.push(gdColumn[i]);	
 		}
 
+		//添加面试申请编号
+		columns.unshift({
+			text: Ext.tzGetResourse("TZ_GD_BMRGL_COM.TZ_BMRGL_STD.msApplyNo","面试申请号"),
+			dataIndex: 'msApplyNo',
+			width: 100
+		});
+		
        Ext.apply(this, {
 			columns:columns,
 			bbar: {

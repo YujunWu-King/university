@@ -3,6 +3,7 @@ Ext.define('KitchenSink.view.activity.applicants.applicantsModel', {
     fields: [
         {name: 'activityId'},//活动编号
 		{name: 'applicantsId'},//报名人编号
+		{name: 'msApplyNo'},//面试申请号
         {name: 'TZ_CYR_NAME'},//姓名
         {name: 'TZ_ZY_SJ'},//手机号码
 		{name: 'TZ_ZY_EMAIL'},//电子邮箱

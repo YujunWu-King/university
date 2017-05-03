@@ -318,7 +318,7 @@
 	    			columns: columns,
 	    			bbar: {
 	    				xtype: 'pagingtoolbar',
-	    				pageSize: 100,
+	    				pageSize: 50,
 	    				listeners:{
 	    					afterrender: function(pbar){
 	    						var grid = pbar.findParentByType("grid");

@@ -561,7 +561,8 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				tmpEngine.schedule(schdProcessParameters);
 				
 				// 进程id;
-				int processinstance = sqlQuery.queryForObject("SELECT TZ_JCSL_ID FROM TZ_JC_SHLI_T where TZ_YUNX_KZID = ? limit 0,1", new Object[] { runCntlId },"Integer");
+				//int processinstance = sqlQuery.queryForObject("SELECT TZ_JCSL_ID FROM TZ_JC_SHLI_T where TZ_YUNX_KZID = ? limit 0,1", new Object[] { runCntlId },"Integer");
+				int processinstance = tmpEngine.getProcessInstanceID();
 				
 				PsTzCsJcTKey psTzCsJcTKey = new PsTzCsJcTKey();
 				psTzCsJcTKey.setTzClassId(classId);

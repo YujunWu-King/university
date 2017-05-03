@@ -208,6 +208,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 	}
                 }
                 var dataIndex;
+                var tmpColumn = {};
                 if(i>1){
                 	dataIndex = tmpArray2[i][colName];
                 }else{
@@ -219,7 +220,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 	dataIndex = 'col0' + i;
                 }
                 //console.log(dataIndex);
-                var tmpColumn = {
+                tmpColumn = {
                     text: mxName,
                     sortable: false,
                     dataIndex: dataIndex,
@@ -1408,22 +1409,38 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            },	       
 	                            plugins: [{
 	                                ptype: 'cellediting',
+	                                listeners:{
+	                                	beforeedit:function(editor,context,eOpts){
+	                                		var record = context.record;
+	                                		var data = record.data;
+	                                		var colMx = data.col00;
+	                                		var colMx1 = data.col01;
+	                                		var column;
+	                                		column = context.column;
+	                                		if(column.dataIndex=="col00"){
+	                                			return;
+	                                		}
+	                                		if(colMx=="误差"&&column.dataIndex!="col01"){
+	                                			column.setEditor({
+	                                                xtype: 'numberfield',
+	                                                allowBlank: false,
+	                                                allowDecimals:false,
+	                                                decimalPrecision:0,
+	                                                emptyText:"不允许为空！"
+	                                            })
+	                                		}else{
+	                                			column.setEditor({
+	                                                xtype: 'numberfield',
+	                                                allowBlank: false,
+	                                                allowDecimals:true,
+	                                                decimalPrecision:2,
+	                                                emptyText:"不允许为空！"
+	                                            })
+	                                		}
+	                                	}
+	                                }
 	                            }],
 	                            columns:statisticsGoalGridDataModel['gridColumns'],
-	                            /*columns:[
-	                            	{
-	                                    text:'指标名称',	                                    
-	                                    dataIndex:'col01',
-	                                    width:'10%'                                    
-	                                },
-	                                {
-	                                    text:'总分',
-	                                    lockable   : false,
-	                                    menuDisabled: true,
-	                                    columns:statisticsGoalGridDataModel['gridColumns']
-	                                }
-	                            ],*/
-	                            //columns: statisticsGoalGridDataModel['gridColumns'],
 	                            header: false,
 	                            border: false,
 		                        viewConfig: {
