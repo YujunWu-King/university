@@ -54,7 +54,7 @@ function getDataModelForPJFTJGrid(jsonObject)
 				subColName = 'sub_col' + subColName.substr(subColName.length - 2);
 				var tmpColumn = {
               						text     : tmpArray[i]['ps_sub_col'][j][subColName],
-              						width    : 80,
+              						width    : 100,
               						sortable : false,
               						resizable: true,
               						dataIndex: colName + '_' + subColName
@@ -83,14 +83,8 @@ function getDataModelForPJFTJGrid(jsonObject)
 	}
 	
 	tmpArray = jsonObject['ps_data_cy']['ps_tjzb_mxsj'];
-    var dataRow = [];
-	for(var i=0;i<tmpArray.length;i++)
-	{
-        var colName = '00' + (i + 1);
-        colName = 'col' + colName.substr(colName.length - 2);
-        dataRow.push(tmpArray[i][colName]);
-	}
-    statisticsGridDataModel['gridData'].push(dataRow);
+
+    statisticsGridDataModel['gridData'] = tmpArray;
 	
 	return statisticsGridDataModel;
 }
@@ -99,7 +93,7 @@ function createPJFTJGrid(batchId,jsonObject)
 {
 	var myDataModel = getDataModelForPJFTJGrid(jsonObject);
 
-	var store = Ext.create('Ext.data.ArrayStore', {
+	var store = Ext.create('Ext.data.Store', {
 			fields: myDataModel['gridFields'],
 			data: myDataModel['gridData']
 		});
@@ -306,49 +300,8 @@ function getDataModelForStatisticsChart(jsonObject)
 	}
 	
 	tmpArray = jsonObject['ps_data_cy']['ps_tjzb_mxsj'];
-    var dataRow = {};
-	for(var i=0;i<tmpArray.length;i++)
-	{
-
-
-        var colName = '00' + (i + 1);
-        colName = 'col' + colName.substr(colName.length - 2);
-        /*var tmpNumber = 1 * tmpArray[i][colName];
-        if(tmpNumber < statisticsChartDataModel['minValue']) statisticsChartDataModel['minValue'] = tmpNumber;
-        if(tmpNumber > statisticsChartDataModel['maxValue']) statisticsChartDataModel['maxValue'] = tmpNumber;*/
-        dataRow[colName] = tmpArray[i][colName];
-		/*lw for(itm1 in tmpArray[i])
-		{
-			if(Object.prototype.toString.call(tmpArray[i][itm1]) == '[object Object]')
-			{
-				for(itm2 in tmpArray[i][itm1])
-				{
-					dataRow[itm1 + '_' + itm2] = tmpArray[i][itm1][itm2];
-					
-					if(Ext.isNumeric(tmpArray[i][itm1][itm2]) == true && drawChartFields[itm1 + '_' + itm2] == 'Y')
-					{
-						var tmpNumber = 1 * tmpArray[i][itm1][itm2];
-						if(tmpNumber < statisticsChartDataModel['minValue']) statisticsChartDataModel['minValue'] = tmpNumber;
-						if(tmpNumber > statisticsChartDataModel['maxValue']) statisticsChartDataModel['maxValue'] = tmpNumber;
-					}
-				}
-			}
-			else
-			{
-				dataRow[itm1] = tmpArray[i][itm1];
-				
-				if(Ext.isNumeric(tmpArray[i][itm1]) == true)
-				{
-					var tmpNumber = 1 * tmpArray[i][itm1];
-					if(tmpNumber < statisticsChartDataModel['minValue']) statisticsChartDataModel['minValue'] = tmpNumber;
-					if(tmpNumber > statisticsChartDataModel['maxValue']) statisticsChartDataModel['maxValue'] = tmpNumber;
-				}
-			}
-		}*/
-		
-		
-
-	}
+    var dataRow = tmpArray;
+	
     if(statisticsChartDataModel['minValue'] == statisticsChartDataModel['maxValue'] && statisticsChartDataModel['minValue'] == 0)
     {
         statisticsChartDataModel['minValue'] = 0;
@@ -356,7 +309,7 @@ function getDataModelForStatisticsChart(jsonObject)
     }
 
 
-    statisticsChartDataModel['chartData'].push(dataRow);
+    statisticsChartDataModel['chartData'] = tmpArray;
 	
 	return statisticsChartDataModel;
 }
@@ -375,7 +328,7 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth)
 		
 		if(chartStore == null)
 		{
-			store1 = Ext.create('Ext.data.JsonStore',{
+			store1 = Ext.create('Ext.data.Store',{
  						fields: chartDataModel['chartFields'],
  						data: chartDataModel['chartData']
  					});

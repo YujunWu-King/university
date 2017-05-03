@@ -344,9 +344,46 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			secondPwdfTh1.put("ps_cht_flg", "N");
 			secondPwdfTh1.put("ps_grp_flg", "N");
 			Map<String, Object> secondPwdfTh2 = new HashMap<String, Object>();
-			secondPwdfTh2.put("col02", "评分平均分");
-			secondPwdfTh2.put("ps_cht_flg", "Y");
-			secondPwdfTh2.put("ps_grp_flg", "N");
+			
+			//评委可见评议标准数据
+			if("Y".equals(TZ_PWKJ_BZH)){
+				secondPwdfTh2.put("col02", "平均分指标");
+				secondPwdfTh2.put("ps_cht_flg", "N");
+				secondPwdfTh2.put("ps_grp_flg", "Y");
+				
+				List<Map<String,Object>> subColList= new ArrayList<Map<String,Object>>();
+				Map<String, Object> subColMap = new HashMap<String, Object>();
+				subColMap.put("sub_col01", "标准平均分");
+				subColMap.put("ps_cht_flg", "Y");
+				subColMap.put("ps_grp_flg", "N");
+				subColList.add(subColMap);
+				subColMap = new HashMap<String, Object>();
+				subColMap.put("sub_col02", "允许误差");
+				subColMap.put("ps_cht_flg", "N");
+				subColMap.put("ps_grp_flg", "N");
+				subColList.add(subColMap);
+				subColMap = new HashMap<String, Object>();
+				subColMap.put("sub_col03", "实际平均分");
+				subColMap.put("ps_cht_flg", "Y");
+				subColMap.put("ps_grp_flg", "N");
+				subColList.add(subColMap);
+				subColMap = new HashMap<String, Object>();
+				subColMap.put("sub_col04", "实际误差");
+				subColMap.put("ps_cht_flg", "N");
+				subColMap.put("ps_grp_flg", "N");
+				subColList.add(subColMap);
+				subColMap = new HashMap<String, Object>();
+				subColMap.put("sub_col05", "是否符合要求");
+				subColMap.put("ps_cht_flg", "N");
+				subColMap.put("ps_grp_flg", "N");
+				subColList.add(subColMap);
+				secondPwdfTh2.put("ps_sub_col", subColList);
+			}else{
+				secondPwdfTh2.put("col02", "评分平均分");
+				secondPwdfTh2.put("ps_cht_flg", "Y");
+				secondPwdfTh2.put("ps_grp_flg", "N");
+			}
+			
 			
 			secondPwdfThList.add(secondPwdfTh1);
 			secondPwdfThList.add(secondPwdfTh2);
@@ -371,12 +408,38 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			pjf = materialEvaluationCls.calculateAverage(classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
 			 
 			List<Map<String,Object>> sjfzRowList= new ArrayList<Map<String,Object>>();
-			Map<String, Object> sjfzRow1 = new HashMap<String, Object>();
-			sjfzRow1.put("col01", "总分");
-			Map<String, Object> sjfzRow2 = new HashMap<String, Object>();
-			sjfzRow2.put("col02", pjf);	
-			sjfzRowList.add(sjfzRow1);
-			sjfzRowList.add(sjfzRow2);
+			Map<String, Object> sjfzRow = new HashMap<String, Object>();
+			sjfzRow.put("col01", "总分");
+			
+			//评委可见评议标准数据
+			if("Y".equals(TZ_PWKJ_BZH)){
+				//查询标准平均分和允许误差
+				Double standardAvg = (double)0,avgAllowDeviation = (double)0;
+				Map<String, Object> avgStandardMap = sqlQuery.queryForMap(
+						"select TZ_TJL_BZH,TZ_TJL_WCZ from PS_TZ_QTTJ_BZH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_SCORE_MODAL_ID=? and TZ_SCORE_ITEM_ID=? and TZ_TJGN_ID=?",
+						new Object[] { classId, batchId ,TZ_ZLPS_SCOR_MD_ID,"TOTAL","001"});
+				if (avgStandardMap != null) {
+					standardAvg = avgStandardMap.get("TZ_TJL_BZH")==null?standardAvg:((BigDecimal) avgStandardMap.get("TZ_TJL_BZH")).doubleValue();
+					avgAllowDeviation = avgStandardMap.get("TZ_TJL_WCZ")==null?standardAvg:((BigDecimal) avgStandardMap.get("TZ_TJL_WCZ")).doubleValue();
+				}
+				
+				//实际误差和是否符合要求
+				BigDecimal bg = new BigDecimal(Math.abs(standardAvg-pjf));
+				double actualDeviation = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+				String avgMeetRequirement = actualDeviation>avgAllowDeviation?"不符合":"符合";
+
+				sjfzRow.put("col02_sub_col01", standardAvg);
+				sjfzRow.put("col02_sub_col02", avgAllowDeviation);
+				sjfzRow.put("col02_sub_col03", pjf);
+				sjfzRow.put("col02_sub_col04", actualDeviation);
+				sjfzRow.put("col02_sub_col05", avgMeetRequirement);
+				
+			}else{
+				sjfzRow.put("col02", pjf);
+			}
+			
+			sjfzRowList.add(sjfzRow);
+			
 			
 			Map<String,Object> second_total_map = new HashMap<String, Object>();			
 			second_total_map.put("ps_tjzb_btmc", secondPwdfThList);
@@ -533,8 +596,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 								new Object[] { classId, batchId, TZ_APP_INS_ID}, "String");
 						//其他评委是否已经复评
 						String re_evaluation = sqlQuery.queryForObject(
-								"SELECT 'Y' FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID<>? AND TZ_SUBMIT_YN='Y' GROUP BY TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID,TZ_PWEI_OPRID HAVING COUNT(*)>1 limit 0,1",
-								new Object[] { classId, batchId, TZ_APP_INS_ID,oprid}, "String");
+								"SELECT 'Y' FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID<>? AND TZ_CLPS_LUNC=? AND TZ_SUBMIT_YN='Y' AND TZ_IS_PW_FP='Y' limit 0,1",
+								new Object[] { classId, batchId, TZ_APP_INS_ID,oprid,TZ_DQPY_LUNC}, "String");
 						
 						if("Y".equals(re_evaluation)){
 							re_evaluation = "是";
@@ -1033,71 +1096,79 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 		 }
 		*/
 		
-		//判断当前评委是否已经提交;
-		 String TZ_SUBMIT_YN = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?",
-				 new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC}, "String");
-		 
-		 if("Y".equals(TZ_SUBMIT_YN)){
-			 error_code = "SUBMITTED";
-			 error_decription = "当前评委账号已经提交，不能再提交";
-		 }else{
-			   //允许评议数量
-			   int TZ_PYKS_XX = 0;
-			   
-			   String STR_PYKS_XX = sqlQuery.queryForObject("select TZ_PYKS_XX from PS_TZ_CLPS_PW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_PWEI_ZHZT = 'A'  ", 
-						new Object[]{classId,batchId,oprid},"String");
-			   if(STR_PYKS_XX!=null){
-				   TZ_PYKS_XX = Integer.parseInt(STR_PYKS_XX);
-				}
-			   
-			   int submitCount = sqlQuery.queryForObject("select count(1) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=(select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?) ", 
-						new Object[]{classId,batchId,oprid,classId,batchId},"Integer");
-			   
-			   /*所有考生的提交状态都是“已提交”*/
-			   String submit_zt = sqlQuery.queryForObject("select 'Y' from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=? and TZ_SUBMIT_YN<>'Y'and TZ_SUBMIT_YN<>'C'", 
-						new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
-			   
-			   if("Y".equals(submit_zt)){
-				   error_decription = "存在未评审的考生";
-				   error_code = "SUBMTALL03";
-			   }else{
-				   if(submitCount<TZ_PYKS_XX){
-					   error_decription = "您当前评审的学生数量未达到要求";
-					   error_code = "SUBMTALL02";
+		//检查是否有排名重复考生
+		String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_CP_PW_KS_TBL a, PS_TZ_CP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID AND a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and a.TZ_PWEI_OPRID=? and a.TZ_CLASS_ID=? AND a.TZ_APPLY_PC_ID=?",
+				 new Object[]{oprid,classId,batchId}, "String");
+		if("Y".equals(have_equal)){
+			error_code = "SORTREPEAT";
+			error_decription = "发现排名重复考生，不能提交数据。";
+		}else{
+			//判断当前评委是否已经提交;
+			 String TZ_SUBMIT_YN = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?",
+					 new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC}, "String");
+			 
+			 if("Y".equals(TZ_SUBMIT_YN)){
+				 error_code = "SUBMITTED";
+				 error_decription = "当前评委账号已经提交，不能再提交";
+			 }else{
+				   //允许评议数量
+				   int TZ_PYKS_XX = 0;
+				   
+				   String STR_PYKS_XX = sqlQuery.queryForObject("select TZ_PYKS_XX from PS_TZ_CLPS_PW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_PWEI_ZHZT = 'A'  ", 
+							new Object[]{classId,batchId,oprid},"String");
+				   if(STR_PYKS_XX!=null){
+					   TZ_PYKS_XX = Integer.parseInt(STR_PYKS_XX);
+					}
+				   
+				   int submitCount = sqlQuery.queryForObject("select count(1) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=(select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?) ", 
+							new Object[]{classId,batchId,oprid,classId,batchId},"Integer");
+				   
+				   /*所有考生的提交状态都是“已提交”*/
+				   String submit_zt = sqlQuery.queryForObject("select 'Y' from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=? and TZ_SUBMIT_YN<>'Y'and TZ_SUBMIT_YN<>'C'", 
+							new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
+				   
+				   if("Y".equals(submit_zt)){
+					   error_decription = "存在未评审的考生";
+					   error_code = "SUBMTALL03";
 				   }else{
-					   //校验评审是否符合要求
-					    if(materialEvaluationCls.validateEvaluation(classId,batchId,oprid,error_code,error_decription)){
-					    	String clpwpslsExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_CLPWPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?", 
-						   			new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
-						   
-							psTzClpwpslsTbl psTzClpwpslsTbl = new psTzClpwpslsTbl();
-							psTzClpwpslsTbl.setTzClassId(classId);
-							psTzClpwpslsTbl.setTzApplyPcId(batchId);
-							psTzClpwpslsTbl.setTzPweiOprid(oprid);
-							psTzClpwpslsTbl.setTzClpsLunc(TZ_DQPY_LUNC);
-							psTzClpwpslsTbl.setTzSubmitYn("Y");
-							psTzClpwpslsTbl.setRowLastmantOprid(oprid);
-							psTzClpwpslsTbl.setRowLastmantDttm(new Date());
-						    
-							if("Y".equals(clpwpslsExist)){
-								psTzClpspwlsTblMapper.updateByPrimaryKeySelective(psTzClpwpslsTbl);
-							}else{
-								psTzClpwpslsTbl.setRowAddedOprid(oprid);
-								psTzClpwpslsTbl.setRowAddedDttm(new Date());
-								psTzClpspwlsTblMapper.insertSelective(psTzClpwpslsTbl);
-							}
-							
-							error_decription = "";;
-							error_code = "0";
-					    }else{
-					    	error_decription = "您当前评审不符合要求。";
-							error_code = "FAILED";
-					    }
-					   	
+					   if(submitCount<TZ_PYKS_XX){
+						   error_decription = "您当前评审的学生数量未达到要求";
+						   error_code = "SUBMTALL02";
+					   }else{
+						   //校验评审是否符合要求
+						    if(materialEvaluationCls.validateEvaluation(classId,batchId,oprid,error_code,error_decription)){
+						    	String clpwpslsExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_CLPWPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?", 
+							   			new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
+							   
+								psTzClpwpslsTbl psTzClpwpslsTbl = new psTzClpwpslsTbl();
+								psTzClpwpslsTbl.setTzClassId(classId);
+								psTzClpwpslsTbl.setTzApplyPcId(batchId);
+								psTzClpwpslsTbl.setTzPweiOprid(oprid);
+								psTzClpwpslsTbl.setTzClpsLunc(TZ_DQPY_LUNC);
+								psTzClpwpslsTbl.setTzSubmitYn("Y");
+								psTzClpwpslsTbl.setRowLastmantOprid(oprid);
+								psTzClpwpslsTbl.setRowLastmantDttm(new Date());
+							    
+								if("Y".equals(clpwpslsExist)){
+									psTzClpspwlsTblMapper.updateByPrimaryKeySelective(psTzClpwpslsTbl);
+								}else{
+									psTzClpwpslsTbl.setRowAddedOprid(oprid);
+									psTzClpwpslsTbl.setRowAddedDttm(new Date());
+									psTzClpspwlsTblMapper.insertSelective(psTzClpwpslsTbl);
+								}
+								
+								error_decription = "";;
+								error_code = "0";
+						    }else{
+						    	error_decription = "您当前评审不符合要求。";
+								error_code = "FAILED";
+						    }
+						   	
+					   }
 				   }
-			   }
-		 }
-		 
+			 }
+		}
+	    
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("success", true);
 		retMap.put("ps_class_id", classId);
