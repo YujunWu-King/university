@@ -54,7 +54,7 @@ function getDataModelForPJFTJGrid(jsonObject)
 				subColName = 'sub_col' + subColName.substr(subColName.length - 2);
 				var tmpColumn = {
               						text     : tmpArray[i]['ps_sub_col'][j][subColName],
-              						width    : 100,
+              						width    : 150,
               						sortable : false,
               						resizable: true,
               						dataIndex: colName + '_' + subColName
