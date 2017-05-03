@@ -274,7 +274,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 													var judgeGroupDataNew = responseData.groupData;
 
 													if (grid.columns[4].editor != undefined) {
-														grid.columns[4].editor.store = Ext.create("Ext.data.Store", {
+														judgeGroupStore = grid.columns[4].editor.store = Ext.create("Ext.data.Store", {
 															fields: ["TZ_CLPS_GR_ID", "TZ_CLPS_GR_NAME"],
 															data: judgeGroupDataNew
 														});
