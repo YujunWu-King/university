@@ -298,8 +298,8 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 						mess = "您发送的邮件间隔太短了，在" + com.tranzvision.gd.util.Calendar.DateUtil.formatLongDate(checkTime)
 								+ "之前您不能在重复给" + email + "邮箱发送邮件。";
 						flag = false;
-					}*/
-
+					}
+					 */
 				}
 
 				if (flag) {

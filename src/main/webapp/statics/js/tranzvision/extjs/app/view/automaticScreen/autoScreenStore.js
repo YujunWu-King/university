@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.automaticScreen.autoScreenStore', {
     alias: 'store.autoScreenStore',
     model: 'KitchenSink.view.automaticScreen.autoScreenModel',
 	autoLoad: true,
-	pageSize: 100,
+	pageSize: 50,
 	comID: 'TZ_AUTO_SCREEN_COM',
 	pageID: 'TZ_AUTO_SCREEN_STD ',
 	tzStoreParams: '',

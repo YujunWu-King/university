@@ -511,7 +511,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 								} else {
 									strGridGoalColHTML3 = strGridGoalColHTML3 + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", "mx_" + strFbdzMxId, strFbdzMxSm);
 								}
-								String strSql1 = "SELECT TZ_BZFB_BL,TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_M_FBDZ_ID=? AND TZ_M_FBDZ_MX_ID=?";
+								String strSql1 = "SELECT TZ_BZFB_BL,cast(TZ_YXWC_NUM as SIGNED) TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_M_FBDZ_ID=? AND TZ_M_FBDZ_MX_ID=?";
 								List<Map<String, Object>> fbDataList = sqlQuery.queryForList(strSql1, new Object[] { strClassID, strBatchID, strCjModalId, strScoreItemId, strFbdzId, strFbdzMxId });
 								String strBl = "", strWc = "";
 								if (fbDataList != null && fbDataList.size() > 0) {
@@ -967,14 +967,18 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						count = 0;
 					}
 					String strTotalScoreSQL = "SELECT SUM(C.TZ_SCORE_NUM) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_KSCLPSLS_TBL B,PS_TZ_CJX_TBL C WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_PWEI_OPRID=B.TZ_PWEI_OPRID AND A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID AND B.TZ_CLASS_ID = ? AND B.TZ_APPLY_PC_ID=? and B.TZ_APP_INS_ID = ? AND TZ_SCORE_ITEM_ID=? AND B.TZ_CLPS_LUNC = ? AND B.TZ_SUBMIT_YN<>'C'";
-					Integer intTotalScore = sqlQuery.queryForObject(strTotalScoreSQL, new Object[] { strClassID, strBatchID, strAppInsID, strScoreItemId, intDqpyLunc }, "Integer");
-					if (intTotalScore == null) {
-						intTotalScore = 0;
+					Double douTotalScore = sqlQuery.queryForObject(strTotalScoreSQL, new Object[] { strClassID, strBatchID, strAppInsID, strScoreItemId, intDqpyLunc }, "Double");
+					if (douTotalScore == null) {
+						douTotalScore = 0.0;
 					}
-					if (count == 0 || intTotalScore == 0) {
+					double doubleTmp = 0.0;
+					BigDecimal data1 = new BigDecimal(doubleTmp); 
+					BigDecimal data2 = new BigDecimal(douTotalScore); 
+					int resultCompare = data1.compareTo(data2);
+					if (count == 0 || resultCompare == 0) {
 						strAveScore = "0.00";
 					} else {
-						double tmpDouble = intTotalScore / count;
+						double tmpDouble = douTotalScore / count;
 						strAveScore = df.format(tmpDouble);
 					}
 
@@ -1090,7 +1094,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			intDqpyLunc = sqlQuery.queryForObject(strDqpyLuncSql, new Object[] { strClassID, strBatchID }, "Integer");
 
 			// 总分平均分-待完成
-			double douZfPjf = 12.5;
+			double douZfPjf = 0.0;
 			String strTotalName = "标准平均分";
 
 			if (strColumnChartHTML != null && !"".equals(strColumnChartHTML)) {
@@ -1497,7 +1501,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						// 比率平均和误差平均列，为col02
 						String strColId = "col01";
 						if ("比率".equals(colName)) {
-							strBlAve = result.get(strColId) == null ? "0.00" : String.valueOf(result.get(strColId));
+							strBlAve = result.get(strColId) == null ? "0" : String.valueOf(result.get(strColId));
 						} else {
 							strWcAve = result.get(strColId) == null ? "0.00" : String.valueOf(result.get(strColId));
 						}
@@ -1534,7 +1538,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				}
 
 				// 重新获取数据
-				String strSql = "SELECT TZ_M_FBDZ_MX_ID,TZ_BZFB_BL,TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID='Total' AND TZ_M_FBDZ_ID=?";
+				String strSql = "SELECT TZ_M_FBDZ_MX_ID,TZ_BZFB_BL,cast(TZ_YXWC_NUM as SIGNED) TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID='Total' AND TZ_M_FBDZ_ID=?";
 				List<Map<String, Object>> dataList = sqlQuery.queryForList(strSql, new Object[] { strClassID, strBatchID, strScoreModalID, strFbdzID });
 
 				if (dataList != null && dataList.size() > 0) {
@@ -1617,7 +1621,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				String strSubmitStatus = sqlQuery.queryForObject(strMapSql, new Object[] { strClassID, strBatchID, strAppInsID, str_PwOprid, numLunc }, "String");
 				if (!"C".equals(strSubmitStatus)) {
 					String strSql4 = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL B,PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_GZ_TBL C WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_DQPY_LUNC=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=? AND B.TZ_SCORE_ITEM_ID=?";
-					Integer intScoreNum = sqlQuery.queryForObject(strSql4, new Object[] { strClassID, strBatchID, numLunc, strAppInsID, str_PwOprid, strTreeNode }, "Integer");
+					Double intScoreNum = sqlQuery.queryForObject(strSql4, new Object[] { strClassID, strBatchID, numLunc, strAppInsID, str_PwOprid, strTreeNode }, "Double");
 					if (intScoreNum != null) {
 						String strInsertSql = "INSERT INTO PS_TZ_PW_KS_PC_TBL VALUES(" + pw_num + ",'" + intScoreNum + "')";
 						sqlQuery.update(strInsertSql);

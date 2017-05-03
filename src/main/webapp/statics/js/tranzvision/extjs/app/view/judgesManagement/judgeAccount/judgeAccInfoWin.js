@@ -126,9 +126,12 @@
 				},*/{
                     xtype: 'textfield',
                     fieldLabel: "手机",
-                    name: 'judgePhoneNumber'
+                    name: 'judgePhoneNumber',
+                    regex: /^[1]\d{10}$/,
+                    allowBlank: false                    
                 },{
                     xtype: 'textfield',
+                    vtype:'email',
                     fieldLabel: "邮箱",
                     name: 'judgeEmail'
                 },/*{
