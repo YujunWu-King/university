@@ -948,31 +948,26 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																{
 																	xtype	: 'hiddenfield',
 																	name	: 'LanguageCd',
-																	id		: 'LanguageCd',
 																	value	: 'ZHS'
 																},
 																{
 																	xtype	: 'hiddenfield',
 																	name	: 'OperationType',
-																	id		: 'OperationType',
 																	value	: ''
 																},
 																{
 																	xtype	: 'hiddenfield',
 																	name	: 'ClassID',
-																	id		: 'ClassID',
 																	value	: ClassIDval
 																},
 																{
 																	xtype	: 'hiddenfield',
 																	name	: 'BatchID',
-																	id		: 'BatchID',
 																	value	: BatchIDval
 																},
 																{
 																	xtype	: 'hiddenfield',
 																	name	: 'KSH_BMBID',
-																	id		: 'KSH_BMBID',
 																	value	: KSH_BMBIDval
 																}
 															]
@@ -1877,7 +1872,6 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var tmpEvaluatePanel = Ext.create('Ext.panel.Panel',
 										{
 											title: '考生资料评审页面',
-											//id: 'KSZLPSYM_ID'+tmpBatchId,
 											margin:'0 0 0 0',
 											padding:'10px 0 0 0',
 											layout:'fit',
@@ -2221,8 +2215,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				at: 'top right', // Position the tooltip above the link
 				my: 'bottom right',
 				//viewport: $(window), // Keep the tooltip on-screen at all times
-				//viewport:$("#tz_evaluation_main"),
-				viewport:$("#all"),
+				viewport:$(".main"),
 				effect: false // Disable positioning animation
 			},
 			show: {
