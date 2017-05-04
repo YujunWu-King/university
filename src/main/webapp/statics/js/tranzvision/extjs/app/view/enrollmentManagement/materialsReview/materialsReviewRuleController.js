@@ -387,29 +387,29 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 var tzParamsNum = me.getCheckNumParams();
                 Ext.tzLoad(tzParamsNum, function (responseData) {
                     if (responseData.success == true) {
-                        var tzParams = me.getRuleParams(actType);
-                        Ext.tzSubmit(tzParams, function (responseData) {
-                            if (actType == "add") {
-                                view.actType = "update";
-                            }
-                            if (btn.name == 'onRuleEnsure') {
-                                view.close();
-                            }
-                            judgeStore.reload();
-
-                            /* var judgeNumTotal = 0;
-                             var records = judgeStore.getRange(0,judgeStore.getCount()-1);
-                             for(var i=0;i<records.length;i++) {
-                             judgeNumTotal = parseInt(judgeNumTotal)+parseInt(records[i].data.judgeExamineeNum);
-                             }
-                             var statisticsForm = view.down("form[name=statisticsNumForm]").getForm();
-                             form.findField("judgeNumTotal").setValue(judgeNumTotal);*/
-
-                        }, "", true, this);
                     } else {
-                        Ext.Msg.alert('提示', '评委各组评议人数和不等于考生人数');
-                        return;
+                    	 Ext.Msg.alert('提示', '评委各组评议人数和不等于考生人数');
                     }
+                    
+                    var tzParams = me.getRuleParams(actType);
+                    Ext.tzSubmit(tzParams, function (responseData) {
+                        if (actType == "add") {
+                            view.actType = "update";
+                        }
+                        if (btn.name == 'onRuleEnsure') {
+                            view.close();
+                        }
+                        judgeStore.reload();
+
+                        /* var judgeNumTotal = 0;
+                         var records = judgeStore.getRange(0,judgeStore.getCount()-1);
+                         for(var i=0;i<records.length;i++) {
+                         judgeNumTotal = parseInt(judgeNumTotal)+parseInt(records[i].data.judgeExamineeNum);
+                         }
+                         var statisticsForm = view.down("form[name=statisticsNumForm]").getForm();
+                         form.findField("judgeNumTotal").setValue(judgeNumTotal);*/
+
+                    }, "", true, this);
 
                 });
             }
@@ -568,6 +568,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         var form = view.child("form").getForm();
         var formValues = form.getValues();
+        if(form.findField("judgeNumSet").disabled==true) {
+        	formValues.judgeNumSet = form.findField("judgeNumSet").getValue();
+        }
         //formValues.startTime = form.findField("startTime").getValue();
         //formValues.endTime = form.findField("endTime").getValue();
 
