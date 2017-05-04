@@ -440,7 +440,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 					
 					
 				}
-				hdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_HD_HTML",hdheadLabel,hdTitle,siteId);
+				hdHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_HD_HTML",hdheadLabel,hdTitle,siteId);
 			}
 			
 			//快捷菜单;
@@ -466,9 +466,9 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			//展示内容
 			String content = topHtml + personHtml + xmjdHtml + hdHtml + kjcdHtml;
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_CONTENT_HTML",content);
+			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_CONTENT_HTML",content);
 			
-			indexHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content,orgId);
+			indexHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content,orgId);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			indexHtml = "";
