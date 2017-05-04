@@ -279,6 +279,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 															data: judgeGroupDataNew
 														});
 													}
+													
 												});
 											}
 										}

@@ -480,7 +480,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			Map<String, Object> mapHeader = new HashMap<String,Object>();
 			mapHeader.put("col01", "总分");
 			mapHeader.put("ps_ksh_id", "面试申请号");
-			mapHeader.put("ps_ksh_ppm", "排名");
+			mapHeader.put("ps_ksh_cpm", "排名");
 			mapHeader.put("ps_ksh_xh", "面试顺序");
 			mapHeader.put("ps_ksh_xm", "姓名");
 			
