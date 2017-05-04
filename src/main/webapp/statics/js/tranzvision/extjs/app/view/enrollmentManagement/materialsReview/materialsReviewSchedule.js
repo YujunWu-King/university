@@ -1243,7 +1243,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                                      //orientation: 'vertical',控制数字横着还是竖着
 	                                                      color: '#333'
 	                                                },
-	                                				style: { width: 200 },
+	                                				style: { width: 50 },
 	                                				xField : 'graphName',
 	                                				yField : 'graphData'// x与y轴的数据声明
 	                                			} ]
