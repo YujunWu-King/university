@@ -1248,6 +1248,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                				yField : 'graphData'// x与y轴的数据声明
 	                                			} ]
 	                                		});
+	                                		
 	                                		// ------------------------------------柱状图结束---------------------------
 	                                		// ------------------------------------曲线图开始---------------------------
 	                                		// 处理曲线图的数据-开始
