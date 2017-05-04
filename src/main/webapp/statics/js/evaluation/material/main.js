@@ -449,6 +449,7 @@ function maskWindow(msg){
 	var maskMsg = msg!=undefined&&msg!=""?msg:"数据加载中，请稍候...";
 	
 	Ext.getBody().mask(maskMsg);
+	
 }
 
 

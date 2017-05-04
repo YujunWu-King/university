@@ -181,8 +181,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 							/*评委评审概要信息 */
 							String ps_gaiy_info = new StringBuffer(strClassName).append(" ").append(strBatchName)
 									.append("，距离评审截止日期 <span style='color:red'>").append(tz_end_date).append("</span>")
-									.append(tz_need_eva_num-tz_done_num>0?"还有":"已过去").append("<span style='color:red'>").append(tz_days)
-									.append("</span>天，您有<span style='color:red'>").append(Math.abs(tz_need_eva_num-tz_done_num)).append("</span>位考生未评审。").toString();
+									.append(tz_days>0?"还有":"已过去").append("<span style='color:red'>").append(Math.abs(tz_days))
+									.append("</span>天，您有<span style='color:red'>").append(tz_need_eva_num-tz_done_num).append("</span>位考生未评审。").toString();
 							
 							remindData.add(ps_gaiy_info);
 						}
@@ -1086,89 +1086,87 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			}
 		}
 
-		/*判断当前评委是否是暂停状态
-		 * 目前暂停状态也可以提交
-		 * String TZ_PWEI_ZHZT = sqlQuery.queryForObject("select TZ_PWEI_ZHZT from PS_TZ_CLPS_PW_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID=?", 
+		//判断当前评委是否是暂停状态
+		 String TZ_PWEI_ZHZT = sqlQuery.queryForObject("select TZ_PWEI_ZHZT from PS_TZ_CLPS_PW_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID=?", 
 				new Object[]{classId,batchId,oprid}, "String");
 		 if(TZ_PWEI_ZHZT==null||"B".equals(TZ_PWEI_ZHZT)){
 			error_code = "PAUSE";
-			error_decription = "当前评委账号为暂停状态";
+			error_decription = "当前评委账号为暂停状态，不能提交数据。";
+		 }else{
+			//检查是否有排名重复考生
+				String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_CP_PW_KS_TBL a, PS_TZ_CP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID AND a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and a.TZ_PWEI_OPRID=? and a.TZ_CLASS_ID=? AND a.TZ_APPLY_PC_ID=?",
+						 new Object[]{oprid,classId,batchId}, "String");
+				if("Y".equals(have_equal)){
+					error_code = "SORTREPEAT";
+					error_decription = "发现排名重复考生，不能提交数据。";
+				}else{
+					//判断当前评委是否已经提交;
+					 String TZ_SUBMIT_YN = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?",
+							 new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC}, "String");
+					 
+					 if("Y".equals(TZ_SUBMIT_YN)){
+						 error_code = "SUBMITTED";
+						 error_decription = "当前评委账号已经提交，不能再提交";
+					 }else{
+						   //允许评议数量
+						   int TZ_PYKS_XX = 0;
+						   
+						   String STR_PYKS_XX = sqlQuery.queryForObject("select TZ_PYKS_XX from PS_TZ_CLPS_PW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_PWEI_ZHZT = 'A'  ", 
+									new Object[]{classId,batchId,oprid},"String");
+						   if(STR_PYKS_XX!=null){
+							   TZ_PYKS_XX = Integer.parseInt(STR_PYKS_XX);
+							}
+						   
+						   int submitCount = sqlQuery.queryForObject("select count(1) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=(select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?) ", 
+									new Object[]{classId,batchId,oprid,classId,batchId},"Integer");
+						   
+						   /*所有考生的提交状态都是“已提交”*/
+						   String submit_zt = sqlQuery.queryForObject("select 'Y' from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=? and TZ_SUBMIT_YN<>'Y'and TZ_SUBMIT_YN<>'C'", 
+									new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
+						   
+						   if("Y".equals(submit_zt)){
+							   error_decription = "存在未评审的考生";
+							   error_code = "SUBMTALL03";
+						   }else{
+							   if(submitCount<TZ_PYKS_XX){
+								   error_decription = "您当前评审的学生数量未达到要求";
+								   error_code = "SUBMTALL02";
+							   }else{
+								   //校验评审是否符合要求
+								    if(materialEvaluationCls.validateEvaluation(classId,batchId,oprid,error_code,error_decription)){
+								    	String clpwpslsExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_CLPWPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?", 
+									   			new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
+									   
+										psTzClpwpslsTbl psTzClpwpslsTbl = new psTzClpwpslsTbl();
+										psTzClpwpslsTbl.setTzClassId(classId);
+										psTzClpwpslsTbl.setTzApplyPcId(batchId);
+										psTzClpwpslsTbl.setTzPweiOprid(oprid);
+										psTzClpwpslsTbl.setTzClpsLunc(TZ_DQPY_LUNC);
+										psTzClpwpslsTbl.setTzSubmitYn("Y");
+										psTzClpwpslsTbl.setRowLastmantOprid(oprid);
+										psTzClpwpslsTbl.setRowLastmantDttm(new Date());
+									    
+										if("Y".equals(clpwpslsExist)){
+											psTzClpspwlsTblMapper.updateByPrimaryKeySelective(psTzClpwpslsTbl);
+										}else{
+											psTzClpwpslsTbl.setRowAddedOprid(oprid);
+											psTzClpwpslsTbl.setRowAddedDttm(new Date());
+											psTzClpspwlsTblMapper.insertSelective(psTzClpwpslsTbl);
+										}
+										
+										error_decription = "";;
+										error_code = "0";
+								    }else{
+								    	error_decription = "您当前评审不符合要求。";
+										error_code = "FAILED";
+								    }
+								   	
+							   }
+						   }
+					 }
+				}
 		 }
-		*/
 		
-		//检查是否有排名重复考生
-		String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_CP_PW_KS_TBL a, PS_TZ_CP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID AND a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and a.TZ_PWEI_OPRID=? and a.TZ_CLASS_ID=? AND a.TZ_APPLY_PC_ID=?",
-				 new Object[]{oprid,classId,batchId}, "String");
-		if("Y".equals(have_equal)){
-			error_code = "SORTREPEAT";
-			error_decription = "发现排名重复考生，不能提交数据。";
-		}else{
-			//判断当前评委是否已经提交;
-			 String TZ_SUBMIT_YN = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?",
-					 new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC}, "String");
-			 
-			 if("Y".equals(TZ_SUBMIT_YN)){
-				 error_code = "SUBMITTED";
-				 error_decription = "当前评委账号已经提交，不能再提交";
-			 }else{
-				   //允许评议数量
-				   int TZ_PYKS_XX = 0;
-				   
-				   String STR_PYKS_XX = sqlQuery.queryForObject("select TZ_PYKS_XX from PS_TZ_CLPS_PW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_PWEI_ZHZT = 'A'  ", 
-							new Object[]{classId,batchId,oprid},"String");
-				   if(STR_PYKS_XX!=null){
-					   TZ_PYKS_XX = Integer.parseInt(STR_PYKS_XX);
-					}
-				   
-				   int submitCount = sqlQuery.queryForObject("select count(1) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN='Y' AND TZ_CLPS_LUNC=(select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?) ", 
-							new Object[]{classId,batchId,oprid,classId,batchId},"Integer");
-				   
-				   /*所有考生的提交状态都是“已提交”*/
-				   String submit_zt = sqlQuery.queryForObject("select 'Y' from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=? and TZ_SUBMIT_YN<>'Y'and TZ_SUBMIT_YN<>'C'", 
-							new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
-				   
-				   if("Y".equals(submit_zt)){
-					   error_decription = "存在未评审的考生";
-					   error_code = "SUBMTALL03";
-				   }else{
-					   if(submitCount<TZ_PYKS_XX){
-						   error_decription = "您当前评审的学生数量未达到要求";
-						   error_code = "SUBMTALL02";
-					   }else{
-						   //校验评审是否符合要求
-						    if(materialEvaluationCls.validateEvaluation(classId,batchId,oprid,error_code,error_decription)){
-						    	String clpwpslsExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_CLPWPSLS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?", 
-							   			new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
-							   
-								psTzClpwpslsTbl psTzClpwpslsTbl = new psTzClpwpslsTbl();
-								psTzClpwpslsTbl.setTzClassId(classId);
-								psTzClpwpslsTbl.setTzApplyPcId(batchId);
-								psTzClpwpslsTbl.setTzPweiOprid(oprid);
-								psTzClpwpslsTbl.setTzClpsLunc(TZ_DQPY_LUNC);
-								psTzClpwpslsTbl.setTzSubmitYn("Y");
-								psTzClpwpslsTbl.setRowLastmantOprid(oprid);
-								psTzClpwpslsTbl.setRowLastmantDttm(new Date());
-							    
-								if("Y".equals(clpwpslsExist)){
-									psTzClpspwlsTblMapper.updateByPrimaryKeySelective(psTzClpwpslsTbl);
-								}else{
-									psTzClpwpslsTbl.setRowAddedOprid(oprid);
-									psTzClpwpslsTbl.setRowAddedDttm(new Date());
-									psTzClpspwlsTblMapper.insertSelective(psTzClpwpslsTbl);
-								}
-								
-								error_decription = "";;
-								error_code = "0";
-						    }else{
-						    	error_decription = "您当前评审不符合要求。";
-								error_code = "FAILED";
-						    }
-						   	
-					   }
-				   }
-			 }
-		}
-	    
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("success", true);
 		retMap.put("ps_class_id", classId);

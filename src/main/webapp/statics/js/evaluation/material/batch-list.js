@@ -267,6 +267,9 @@ function loadBatchDataById(batchId,callBackFunction)
 								},
 				success:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
 					var jsonObject = null;
 					
 					try
@@ -277,8 +280,6 @@ function loadBatchDataById(batchId,callBackFunction)
 						{
 							loadSuccess = false;
 							Ext.Msg.alert("提示",'当前资料评审[' + getBatchNameById(batchId) + ']数据加载失败：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-							//unmask window
-							unmaskWindow();
 						}
 						else
 						{
@@ -302,13 +303,13 @@ function loadBatchDataById(batchId,callBackFunction)
 						}
 						//var mytmpWindow = window.open("about:blank");
 						//mytmpWindow.document.body.innerHTML = response.responseText;
-						
-						//unmask window
-						unmaskWindow();
 					}
 				},
 				failure:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
 					loadSuccess = false;
 					if(window.evaluateSystemDebugFlag == 'Y')
 					{
@@ -318,9 +319,6 @@ function loadBatchDataById(batchId,callBackFunction)
 					{
 						alert('当前资料评审批次[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系。');
 					}
-					
-					//unmask window
-					unmaskWindow();
 				}
 			}
 		);
@@ -365,6 +363,9 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
 				},
     			success:function(response)
     			{
+    				//unmask window
+					unmaskWindow();
+					
     				var jsonObject = null;
     				
     				try
@@ -373,9 +374,6 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
     					
     					if(jsonObject.errorCode&&jsonObject.errorCode == '1')
     					{
-    						//unmask window
-    						unmaskWindow();
-    					
     						loadSuccess = false;
     						Ext.Msg.alert("提示","生成评审总表失败："+jsonObject.errorMsg);
     					}
@@ -387,7 +385,6 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
     						}else{
     							Ext.Msg.alert("提示","生成评审总表失败");
     						}
-    						unmaskWindow();
     					}
     				}
     				catch(e1)
@@ -397,6 +394,9 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
     			},
     			failure:function(response)
     			{
+    				//unmask window
+					unmaskWindow();
+					
     				loadSuccess = false;
     				if(window.evaluateSystemDebugFlag == 'Y')
     				{
