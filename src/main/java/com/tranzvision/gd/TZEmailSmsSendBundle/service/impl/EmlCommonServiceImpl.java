@@ -203,7 +203,8 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 
 					String name = str[0];
 					String value = str[1];
-					emailContent = emailContent.replaceAll(name, value);
+					
+					emailContent = emailContent.replace(name, value);
 				}
 			}
 			jsonMap.put("emailContent", emailContent);

@@ -784,10 +784,10 @@ public class SendSmsOrMalQfServiceImpl {
 						}
 
 						// 邮件内容链接中听众占位符替换;
-						content = content.replaceAll("\\[邮件群发\\.听众成员编号占位符\\]", audCyId);
+						content = content.replace("[邮件群发.听众成员编号占位符]", audCyId);
 						// 收件人邮箱加密;
 						String emailAddrAddEncrypt = DESUtil.encrypt(emailAddrAdd, "Tranzvision_Mail");
-						content = content.replaceAll("\\[TRANZVISION_YJQF_PC_ID_BZ\\.邮件群发\\.加密收件邮箱地址\\]",
+						content = content.replace("[TRANZVISION_YJQF_PC_ID_BZ.邮件群发.加密收件邮箱地址]",
 								emailAddrAddEncrypt);
 
 						// 设置收件人
@@ -1278,7 +1278,7 @@ public class SendSmsOrMalQfServiceImpl {
 				String name = str[0];
 				String value = str[1];
 
-				content = content.replaceAll(name, value);
+				content = content.replace(name, value);
 			}
 		}
 
@@ -1293,17 +1293,23 @@ public class SendSmsOrMalQfServiceImpl {
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 
-				String itemName = (String) list.get(i).get("TZ_XXX_NAME");
-				String StoreFieldName = (String) list.get(i).get("TZ_FIELD_NAME");
+				String itemName = list.get(i).get("TZ_XXX_NAME") == null ? "" : (String) list.get(i).get("TZ_XXX_NAME");
+				String StoreFieldName = list.get(i).get("TZ_FIELD_NAME") == null ? "" : (String) list.get(i).get("TZ_FIELD_NAME");
+				
+				if(itemName != null && !"".equals(itemName) && StoreFieldName != null && !"".equals(StoreFieldName)){
+					String selectSql = "SELECT " + StoreFieldName
+							+ " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
+					String fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[] { strPicId, audCyId },
+							"String");
+					if(fieldValue == null){
+						fieldValue = "";
+					}
 
-				String selectSql = "SELECT " + StoreFieldName
-						+ " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
-				String fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[] { strPicId, audCyId },
-						"String");
-
-				String name = "\\[" + itemName + "\\]";
-				String[] returnString = { name, fieldValue };
-				arrayList.add(returnString);
+					String name = "[" + itemName + "]";
+					String[] returnString = { name, fieldValue };
+					arrayList.add(returnString);
+				}
+				
 			}
 		}
 		return arrayList;

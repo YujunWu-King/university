@@ -114,6 +114,9 @@ public class CreateQfTaskServiceImpl {
 				}
 
 		        mailContent = mailContentHandlerServiceImpl.emailConPreprocess(strPicId, taskId);
+		        if(mailContent == null){
+		        	mailContent = "";
+		        }
 		        String serverHost = request.getScheme() + "://" + request.getServerName() + ":"
 						+ request.getServerPort();
 		        mailContent = mailContent.replace("<img src=\"/", "<img src=\"" + serverHost + "/");

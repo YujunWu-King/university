@@ -22,15 +22,21 @@ public class AyalysisExcItemsValServiceImpl {
 		List<Map<String, Object>> excItemList = jdbcTemplate.queryForList("SELECT TZ_XXX_NAME,TZ_FIELD_NAME FROM PS_TZ_EXC_SET_TBL WHERE TZ_MLSM_QFPC_ID=?",new Object[]{strPicId});
 		if(excItemList != null && excItemList.size() > 0){
 			for(int i = 0; i < excItemList.size(); i++){
-				itemName = (String)excItemList.get(i).get("TZ_XXX_NAME");
-				StoreFieldName = (String)excItemList.get(i).get("TZ_FIELD_NAME");
+				itemName = excItemList.get(i).get("TZ_XXX_NAME") == null ? "" : (String)excItemList.get(i).get("TZ_XXX_NAME");
+				StoreFieldName = excItemList.get(i).get("TZ_FIELD_NAME") == null ? "" : (String)excItemList.get(i).get("TZ_FIELD_NAME");
 				String fieldValue = "";
-				String selectSql = "SELECT " + StoreFieldName + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
-				fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[]{strPicId,audCyId},"String");
-				Map<String, String> map = new HashMap<>();
-				map.put("name", "[" + itemName + "]");
-				map.put("value", fieldValue);
-				list.add(map);
+				if(itemName != null && !"".equals(itemName) && StoreFieldName!= null && !"".equals(StoreFieldName)){
+					String selectSql = "SELECT " + StoreFieldName + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
+					fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[]{strPicId,audCyId},"String");
+					if(fieldValue == null){
+						fieldValue = "";
+					}
+					Map<String, String> map = new HashMap<>();
+					map.put("name", "[" + itemName + "]");
+					map.put("value", fieldValue);
+					list.add(map);
+				}
+				
 			}
 		}
 
