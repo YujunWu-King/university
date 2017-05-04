@@ -759,6 +759,9 @@ function submitEvaluateBatch(classid,pc_id)
 				},
 				success:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
 					var jsonObject = null;
 					
 					try
@@ -767,9 +770,6 @@ function submitEvaluateBatch(classid,pc_id)
 						
 						if(jsonObject.error_code != '0')
 						{
-							//unmask window
-							unmaskWindow();
-							
 							alert('提交当前评审批次时发生错误：' + jsonObject.error_decription );
 						}
 						else
@@ -797,12 +797,13 @@ function submitEvaluateBatch(classid,pc_id)
 							alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 						}
 						
-						//unmask window
-						unmaskWindow();
 					}
 				},
 				failure:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
 					if(window.evaluateSystemDebugFlag == 'Y')
 					{
 						alert('提交当前评审批次时发生错误，请与系统管理员联系：' + response.responseText);
@@ -811,9 +812,6 @@ function submitEvaluateBatch(classid,pc_id)
 					{
 						alert('提交当前评审批次时发生错误，请与系统管理员联系。');
 					}
-					
-					//unmask window
-					unmaskWindow();
 				}
 			}
 		);
@@ -839,6 +837,9 @@ function getNextApplicant(jsonObject)
 			},
 			success:function(response)
 			{
+				//unmask window
+				unmaskWindow();
+				
 				var jsonObject = null;
 				
 				try
@@ -847,9 +848,6 @@ function getNextApplicant(jsonObject)
 					
 					if(jsonObject.error_code != '0')
 					{
-						//unmask window
-						unmaskWindow();
-						
 						alert('获取考生信息时发生错误：' + jsonObject.error_decription );
 					}
 					else
@@ -861,10 +859,7 @@ function getNextApplicant(jsonObject)
 						
 						var tmpBmbID = jsonObject['ps_ksh_bmbid'];
 						if(KSINFO_JSON_DATA[tmpBmbID] != 'undefined' && KSINFO_JSON_DATA[tmpBmbID]!= null && KSINFO_JSON_DATA[tmpBmbID]!= '')
-						{
-							//unmask window
-							unmaskWindow();
-							
+						{							
 							alert('获取考生信息时发生错误，请与系统管理员联系：获取到重复的考生信息。');
 						}
 						else
@@ -888,10 +883,7 @@ function getNextApplicant(jsonObject)
 					}
 				}
 				catch(e1)
-				{
-					//unmask window
-					unmaskWindow();
-					
+				{					
 					if(window.evaluateSystemDebugFlag == 'Y')
 					{
 						alert('获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
@@ -1249,6 +1241,9 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 			},
 			success:function(response)
 			{
+				//unmask window
+				unmaskWindow();
+				
 				var jsonObject = null;
 				
 				try
@@ -1256,10 +1251,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 					jsonObject = Ext.JSON.decode(response.responseText).comContent;
 					
 					if(jsonObject.error_code != '0')
-					{
-						//unmask window
-						unmaskWindow();
-					
+					{					
 						loadSuccess = false;
 						alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription);
 					}
@@ -1285,9 +1277,6 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 						{
 							//其他暂无操作
 							;
-							
-							//unmask window
-							unmaskWindow();
 						}
 						
 						
@@ -1314,6 +1303,9 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 			},
 			failure:function(response)
 			{
+				//unmask window
+				unmaskWindow();
+				
 				loadSuccess = false;
 				if(window.evaluateSystemDebugFlag == 'Y')
 				{

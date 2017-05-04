@@ -248,6 +248,9 @@ function loadBatchDataById(batchId,callBackFunction)
 				},
 				success:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
 					var jsonObject = null;
 					
 					try
@@ -258,7 +261,6 @@ function loadBatchDataById(batchId,callBackFunction)
 						{
 							loadSuccess = false;
                             alert('当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-							unmaskWindow();
 						}
 						else
 						{
@@ -270,7 +272,7 @@ function loadBatchDataById(batchId,callBackFunction)
 					}
 					catch(e1)
 					{
-						console.log(e1);
+						console&&console.log(e1);
 						loadSuccess = false;
 						if(window.evaluateSystemDebugFlag == 'Y')
 						{
@@ -280,11 +282,13 @@ function loadBatchDataById(batchId,callBackFunction)
 						{
                             alert('当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 						}
-						unmaskWindow();
 					}
 				},
 				failure:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
 					loadSuccess = false;
 					if(window.evaluateSystemDebugFlag == 'Y')
 					{
@@ -294,9 +298,6 @@ function loadBatchDataById(batchId,callBackFunction)
 					{
                         alert('当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系。');
 					}
-					
-					//unmask window
-					unmaskWindow();
 				}
 			}
 		);

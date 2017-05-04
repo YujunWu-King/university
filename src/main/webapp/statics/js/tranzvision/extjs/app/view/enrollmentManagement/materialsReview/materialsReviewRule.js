@@ -257,7 +257,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 											statisticsNumForm.findField("reviewNumSet").setValue(reviewNumSet);
 
 											//所属评委组更新
-											if(judgeGroupStore.data.length == newValue) {
+											/*if(judgeGroupStore.data.length == newValue) {
 
 											} else {
 
@@ -281,7 +281,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 													}
 
 												});
-											}
+											}*/
 										}
 									}
 								},{
@@ -394,7 +394,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 										var reviewNumCount = 0;
 										for(var i=0;i<store.getCount();i++) {
 											var record = store.getAt(i);
-											reviewNumCount = reviewNumCount + parseInt(record.get("judgeExamineeNum"));
+											if(record.get("judgeExamineeNum")!=null && record.get("judgeExamineeNum")!="") {
+												reviewNumCount = reviewNumCount + parseInt(record.get("judgeExamineeNum"));
+											}	
 										}
 										//当前选择评委评议总人次
 										form.findField("judgeNumTotal").setValue(reviewNumCount);
