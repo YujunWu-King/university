@@ -155,7 +155,7 @@
 					series : [ {
 						type : 'column',
 						axis : 'bottom',
-						style: { width: 100 },
+						style: { width: 50 },
 						xField : 'graphName',
 						yField : 'graphData',// x与y轴的数据声明
 					} ]
