@@ -16,23 +16,29 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzCpfbBzhTblMapper;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzQttjTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzQttjBzhTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpwpslsTblMapper;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzClpsLogTblMapper;
+
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzCpfbBzhTbl;
-import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjTbl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjBzhTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzClpsLogTbl;
+
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsGzTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsKshTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzKsclpslsTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsGzTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsKshTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzKsclpslsTbl;
+
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 
 /**
  * 材料评审进度，原TZ_GD_CLPS_PKG:TZ_GD_SCHE_CLS
@@ -60,12 +66,17 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzCpfbBzhTblMapper PsTzCpfbBzhTblMapper;
 	@Autowired
-	private PsTzQttjTblMapper PsTzQttjTblMapper;
+	private PsTzQttjBzhTblMapper psTzQttjBzhTblMapper;
+	@Autowired
+	private PsTzClpsLogTblMapper psTzClpsLogTblMapper;
+	@Autowired
+	private GetSeqNum getSeqNum;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errMsg) {
 		String strResponse = "\"failure\"";
@@ -95,6 +106,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
@@ -221,6 +233,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strRet;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 		String strResponse = "\"failure\"";
@@ -319,6 +332,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzOther(String strOprType, String strParams, String[] errMsg) {
 		String strResponse = "\"failure\"";
@@ -372,6 +386,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String isJiSuanFenZhi(String strParams, String[] errMsg) {
 		String strResponse = "\"failure\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -412,6 +427,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String tzGetPwDfTotalPjfGridData(String strParams, String[] errMsg) {
 		String strResponse = "\"failure\"";
 
@@ -776,6 +792,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String queryJudgeInfo(String strParams, String[] errMsg) {
 		String strResponse = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -855,6 +872,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String queryStuList(String strParams, int numLimit, int numStart, String[] errMsg) {
 		String strResponse = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -896,13 +914,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 					strViewQua = result.get("TZ_MSHI_ZGFLG") == null ? "" : String.valueOf(result.get("TZ_MSHI_ZGFLG"));
 					strPweiPc = result.get("TZ_CLPS_PWJ_PC") == null ? "" : String.valueOf(result.get("TZ_CLPS_PWJ_PC"));
 
-					// 是否实时计算评委偏差
-					String strRealTimeCalFlg = sqlQuery.queryForObject("SELECT TZ_REAL_TIME_PWPC FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?", new Object[] { strClassID, strBatchID }, "String");
+					// 是否实时计算评委偏差-实时计算偏差对评委打分时生效
+					/*String strRealTimeCalFlg = sqlQuery.queryForObject("SELECT TZ_REAL_TIME_PWPC FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?", new Object[] { strClassID, strBatchID }, "String");
 					if ("Y".equals(strRealTimeCalFlg)) {
 						String strDeleteSql = "DELETE FROM PS_TZ_PW_KS_PC_TBL";
 						sqlQuery.update(strDeleteSql);
 						strPweiPc = df.format(this.caluatePianch(strClassID, strBatchID, strAppInsID));
-					}
+					}*/
 					String sql2 = "SELECT TZ_APP_INS_ID ,(SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=A.TZ_APP_INS_ID limit 0,1) OPRID, (SELECT TZ_REALNAME FROM PS_TZ_FORM_WRK_T B ,PS_TZ_REG_USER_T C WHERE B.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND B.OPRID = C.OPRID limit 0,1) TZ_REALNAME, (SELECT TZ_GENDER FROM PS_TZ_FORM_WRK_T B ,PS_TZ_REG_USER_T C WHERE B.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND B.OPRID = C.OPRID limit 0,1)TZ_GENDER FROM PS_TZ_CLPS_KSH_TBL A WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
 					List<Map<String, Object>> mapList2 = sqlQuery.queryForList(sql2, new Object[] { strClassID, strBatchID, strAppInsID });
 					if (mapList2 != null && mapList2.size() > 0) {
@@ -1001,6 +1019,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String queryPwDfChartData(String strParams, String[] errMsg) {
 		String strResponse = "\"failure\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -1184,6 +1203,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String btnClick(String strParams, String[] errMsg) {
 		String strResponse = "\"failure\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -1197,6 +1217,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 
 			String strBtnType = jacksonUtil.getString("type");
 
+			//日志表
+			PsTzClpsLogTbl psTzClpsLogTbl = new PsTzClpsLogTbl();
+			
 			String strExistsSql = "SELECT 'Y' FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 			String strExistsFlg = sqlQuery.queryForObject(strExistsSql, new Object[] { strClassID, strBatchID }, "String");
 			PsTzClpsGzTbl psTzClpsGzTbl = new PsTzClpsGzTbl();
@@ -1255,6 +1278,17 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						PsTzKsclpslsTblMapper.insert(PsTzKsclpslsTbl);
 					}
 				}
+				//记录历史
+				Integer intRzlsNum = getSeqNum.getSeqNum("TZ_CLPS_LOG_TBL", "TZ_RZLS_NUM");
+				psTzClpsLogTbl.setTzRzlsNum(String.valueOf(intRzlsNum));
+				psTzClpsLogTbl.setTzClassId(strClassID);
+				psTzClpsLogTbl.setTzBatchId(strBatchID);
+				psTzClpsLogTbl.setTzClpsLunc(delibCount);
+				//A-开放，B-关闭，C-开启新一轮评审
+				psTzClpsLogTbl.setTzOprType("C");
+				psTzClpsLogTbl.setTzOprid(oprid);
+				psTzClpsLogTbl.setTzOprDttm(new Date());
+				psTzClpsLogTblMapper.insert(psTzClpsLogTbl);
 				// 成功开启，返回总人数
 				strResponse = String.valueOf(numTotal);
 
@@ -1269,6 +1303,19 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				} else {
 					PsTzClpsGzTblMapper.insert(psTzClpsGzTbl);
 				}
+				
+				//记录历史
+				Integer intRzlsNum2 = getSeqNum.getSeqNum("TZ_CLPS_LOG_TBL", "TZ_RZLS_NUM");
+				psTzClpsLogTbl.setTzRzlsNum(String.valueOf(intRzlsNum2));
+				psTzClpsLogTbl.setTzClassId(strClassID);
+				psTzClpsLogTbl.setTzBatchId(strBatchID);
+				psTzClpsLogTbl.setTzClpsLunc(Short.valueOf(strDelibCount));
+				//A-开放，B-关闭，C-开启新一轮评审
+				psTzClpsLogTbl.setTzOprType("B");
+				psTzClpsLogTbl.setTzOprid(oprid);
+				psTzClpsLogTbl.setTzOprDttm(new Date());
+				psTzClpsLogTblMapper.insert(psTzClpsLogTbl);
+				
 				strResponse = "{\"status\":\"B\"}";
 				break;
 			case "reStartReviewOnclick":
@@ -1281,6 +1328,19 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				} else {
 					PsTzClpsGzTblMapper.insert(psTzClpsGzTbl);
 				}
+				
+				//记录历史
+				Integer intRzlsNum3 = getSeqNum.getSeqNum("TZ_CLPS_LOG_TBL", "TZ_RZLS_NUM");
+				psTzClpsLogTbl.setTzRzlsNum(String.valueOf(intRzlsNum3));
+				psTzClpsLogTbl.setTzClassId(strClassID);
+				psTzClpsLogTbl.setTzBatchId(strBatchID);
+				psTzClpsLogTbl.setTzClpsLunc(Short.valueOf(strDelibCount));
+				//A-开放，B-关闭，C-开启新一轮评审
+				psTzClpsLogTbl.setTzOprType("A");
+				psTzClpsLogTbl.setTzOprid(oprid);
+				psTzClpsLogTbl.setTzOprDttm(new Date());
+				psTzClpsLogTblMapper.insert(psTzClpsLogTbl);
+				
 				strResponse = "{\"status\":\"A\"}";
 				break;
 			}
@@ -1292,6 +1352,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		return strResponse;
 	}
 
+	@SuppressWarnings("unchecked")
 	public String removeJudgeData(String strParams, String[] errMsg) {
 		String strResponse = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -1366,7 +1427,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		}
 		return strResponse;
 	}
-
+	@SuppressWarnings("unchecked")
 	public String calculate(String strParams, String[] errMsg) {
 		String strResponse = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -1411,7 +1472,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		}
 		return strResponse;
 	}
-
+	@SuppressWarnings("unchecked")
 	public String savePyData(String strParams, String[] errMsg) {
 		String strResponse = "\"failure\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -1511,7 +1572,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						String strExistSql = "SELECT 'Y' FROM PS_TZ_QTTJ_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_TJGN_ID=?";
 						String strExistFlg = sqlQuery.queryForObject(strExistSql, new Object[] { strClassID, strBatchID, strScoreModalID, str_ScoreItemId, str_TjgnID }, "String");
 
-						PsTzQttjTbl psTzQttjTbl = new PsTzQttjTbl();
+						PsTzQttjBzhTbl psTzQttjTbl = new PsTzQttjBzhTbl();
 						psTzQttjTbl.setTzClassId(strClassID);
 						psTzQttjTbl.setTzApplyPcId(strBatchID);
 						psTzQttjTbl.setTzScoreModalId(strScoreModalID);
@@ -1528,9 +1589,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						}
 
 						if ("Y".equals(strExistFlg)) {
-							PsTzQttjTblMapper.updateByPrimaryKeySelective(psTzQttjTbl);
+							psTzQttjBzhTblMapper.updateByPrimaryKeySelective(psTzQttjTbl);
 						} else {
-							PsTzQttjTblMapper.insert(psTzQttjTbl);
+							psTzQttjBzhTblMapper.insert(psTzQttjTbl);
 						}
 					} catch (Exception e) {
 						/* 未做过修改，doNothing */
@@ -1541,21 +1602,23 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				String strSql = "SELECT TZ_M_FBDZ_MX_ID,TZ_BZFB_BL,cast(TZ_YXWC_NUM as SIGNED) TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID='Total' AND TZ_M_FBDZ_ID=?";
 				List<Map<String, Object>> dataList = sqlQuery.queryForList(strSql, new Object[] { strClassID, strBatchID, strScoreModalID, strFbdzID });
 
+				ArrayList toAr = new ArrayList();
+				
+				ArrayList blAr = new ArrayList();
+				String strAveSql = "SELECT TZ_TJL_BZH,TZ_TJL_WCZ FROM PS_TZ_QTTJ_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_TJGN_ID=?";
+				Map<String, Object> s2Map = sqlQuery.queryForMap(strAveSql, new Object[] { strClassID, strBatchID, strScoreModalID, "TOTAL", "001" });
+				String strAve2 = "0.00", strWcAve2 = "0.00";
+				if (s2Map != null) {
+					strAve2 = s2Map.get("TZ_TJL_BZH") == null ? "0.00" : String.valueOf(s2Map.get("TZ_TJL_BZH"));
+					strWcAve2 = s2Map.get("TZ_TJL_WCZ") == null ? "0.00" : String.valueOf(s2Map.get("TZ_TJL_WCZ"));
+				}
+				blAr.add("比率");
+				blAr.add(strAve2);
+				ArrayList wcAr = new ArrayList();
+				wcAr.add("误差");
+				wcAr.add(strWcAve2);
 				if (dataList != null && dataList.size() > 0) {
-					ArrayList toAr = new ArrayList();
-					ArrayList blAr = new ArrayList();
-					String strAveSql = "SELECT TZ_TJL_BZH,TZ_TJL_WCZ FROM PS_TZ_QTTJ_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_TJGN_ID=?";
-					Map<String, Object> s2Map = sqlQuery.queryForMap(strAveSql, new Object[] { strClassID, strBatchID, strScoreModalID, "TOTAL", "001" });
-					String strAve2 = "0.00", strWcAve2 = "0.00";
-					if (s2Map != null) {
-						strAve2 = s2Map.get("TZ_TJL_BZH") == null ? "0.00" : String.valueOf(s2Map.get("TZ_TJL_BZH"));
-						strWcAve2 = s2Map.get("TZ_TJL_WCZ") == null ? "0.00" : String.valueOf(s2Map.get("TZ_TJL_WCZ"));
-					}
-					blAr.add("比率");
-					blAr.add(strAve2);
-					ArrayList wcAr = new ArrayList();
-					wcAr.add("误差");
-					wcAr.add(strWcAve2);
+					
 					for (Object resObj : dataList) {
 						Map<String, Object> sMapA = (Map<String, Object>) resObj;
 						String strB = sMapA.get("TZ_BZFB_BL") == null ? "" : String.valueOf(sMapA.get("TZ_BZFB_BL"));
@@ -1563,12 +1626,12 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						blAr.add(strB);
 						wcAr.add(strW);
 					}
-					toAr.add(blAr);
-					toAr.add(wcAr);
-
-					strResponse = jacksonUtil.List2json(toAr);
-					return strResponse;
+									
 				}
+				toAr.add(blAr);
+				toAr.add(wcAr);	
+				strResponse = jacksonUtil.List2json(toAr);
+				return strResponse;
 			}
 
 			strResponse = "\"success\"";
@@ -1579,7 +1642,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		}
 		return strResponse;
 	}
-
+	@SuppressWarnings("unchecked")
 	public double caluatePianch(String strClassID, String strBatchID, String strAppInsID) {
 
 		String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
@@ -1671,6 +1734,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	}
 
 	// 平均分计算（包括：单个评委和多个评委的情况）
+	@SuppressWarnings("unchecked")
 	public String caluateAverage(String strClassID, String strBatchID, String strClpsLunc, String StrScoreModalID, String strScoreItemID, String[] pwList) {
 
 		String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
@@ -1750,7 +1814,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		}
 		return str_pjf;
 	}
-
+	@SuppressWarnings("unchecked")
 	public String saveSubmitPwData(String strParams, String[] errMsg) {
 		String strResponse = "\"success\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -1794,7 +1858,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		}
 		return strResponse;
 	}
-
+	@SuppressWarnings("unchecked")
 	public String right(String strValue, int num) {
 		String returnValue = "";
 		try {
@@ -1813,7 +1877,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		}
 		return returnValue;
 	}
-
+	@SuppressWarnings("unchecked")
 	public int find(String[] arr, String strValue) {
 		int index = -1;
 		if (arr != null && arr.length > 0) {
