@@ -229,6 +229,9 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 				                async: true,
 				                success: function(response, opts)
 				                {
+				                	//unmask window
+									unmaskWindow();	
+									
 				                    //返回值内容
 				                    var jsonText = response.responseText;
 				                    try
@@ -237,9 +240,7 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 				                        /*判断服务器是否返回了正确的信息*/
 				                        if(responseJsonObject.state.errcode == 1){
 				                        	Ext.Msg.alert("提示",responseJsonObject.state.errdesc);
-				                        }else{
-				                        	//unmask window
-											unmaskWindow();											
+				                        }else{								
 											//0-新抽取的考生 或者是 2-列表中已存在的考生，则直接跳转到评分页面
 											if(responseJsonObject.comContent.error_code=="0" ||responseJsonObject.comContent.error_decription=="2"){
 												
@@ -1188,6 +1189,9 @@ function submitEvaluateBatch(batchId)
 			},
 			success:function(response)
 			{
+				//unmask window
+				unmaskWindow();
+				
 				var jsonObject = null;
 				
 				try
@@ -1195,10 +1199,7 @@ function submitEvaluateBatch(batchId)
 					jsonObject = Ext.JSON.decode(response.responseText).comContent;
 					
 					if(jsonObject.error_code != '0')
-					{
-						//unmask window
-						unmaskWindow();
-						
+					{						
 						alert('提交当前评审批次时发生错误：' + jsonObject.error_decription);
 					}
 					else
@@ -1219,13 +1220,13 @@ function submitEvaluateBatch(batchId)
 					{
 						alert('提交当前评审批次时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 					}
-					
-					//unmask window
-					unmaskWindow();
 				}
 			},
 			failure:function(response)
 			{
+				//unmask window
+				unmaskWindow();
+				
 				if(window.evaluateSystemDebugFlag == 'Y')
 				{
 					alert('提交当前评审批次时发生错误，请与系统管理员联系：' + response.responseText);
@@ -1233,10 +1234,7 @@ function submitEvaluateBatch(batchId)
 				else
 				{
 					alert('提交当前评审批次时发生错误，请与系统管理员联系。');
-				}
-				
-				//unmask window
-				unmaskWindow();
+				}				
 			}
 		}
 	);
@@ -1654,6 +1652,9 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 															},
 											success:function(response)
 											{
+												//unmask window
+												unmaskWindow();
+												
 												var jsonObject = null;
 												
 												try
@@ -1662,9 +1663,6 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 													
 													if(jsonObject.error_code != '0')
 													{
-														//unmask window
-														unmaskWindow();
-													
 														loadSuccess = false;
 														alert('刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
 													}
@@ -1690,9 +1688,6 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 														else
 														{
 															//其他暂无操作
-															
-															//unmask window
-															unmaskWindow();
 														}
 														
 														
@@ -1719,6 +1714,9 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 											},
 											failure:function(response)
 											{
+												//unmask window
+												unmaskWindow();
+												
 												loadSuccess = false;
 												if(window.evaluateSystemDebugFlag == 'Y')
 												{

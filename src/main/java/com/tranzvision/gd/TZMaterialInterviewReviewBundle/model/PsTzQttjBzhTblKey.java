@@ -1,6 +1,6 @@
 package com.tranzvision.gd.TZMaterialInterviewReviewBundle.model;
 
-public class PsTzQttjTblKey {
+public class PsTzQttjBzhTblKey {
     private String tzClassId;
 
     private String tzApplyPcId;
