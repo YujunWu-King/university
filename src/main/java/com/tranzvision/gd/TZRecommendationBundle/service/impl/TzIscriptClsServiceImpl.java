@@ -293,13 +293,13 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 
 					java.util.Date now = new java.util.Date();
 
-					/*临时注释
+					/*临时注释*/
 					if (checkTime.after(now)) {
 						mess = "您发送的邮件间隔太短了，在" + com.tranzvision.gd.util.Calendar.DateUtil.formatLongDate(checkTime)
 								+ "之前您不能在重复给" + email + "邮箱发送邮件。";
 						flag = false;
 					}
-					 */
+					 
 				}
 
 				if (flag) {
