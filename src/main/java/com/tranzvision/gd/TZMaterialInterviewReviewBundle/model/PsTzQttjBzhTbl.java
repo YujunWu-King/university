@@ -2,7 +2,7 @@ package com.tranzvision.gd.TZMaterialInterviewReviewBundle.model;
 
 import java.math.BigDecimal;
 
-public class PsTzQttjTbl extends PsTzQttjTblKey {
+public class PsTzQttjBzhTbl extends PsTzQttjBzhTblKey {
     private String tzTjbzZt;
 
     private BigDecimal tzTjlBzh;

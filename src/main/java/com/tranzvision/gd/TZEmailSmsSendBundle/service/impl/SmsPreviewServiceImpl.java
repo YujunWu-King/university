@@ -67,7 +67,8 @@ public class SmsPreviewServiceImpl extends FrameworkImpl {
 						String[] str = arrayList.get(i);
 						String name = str[0];
 						String value = str[1];
-						smsContent = smsContent.replaceAll(name, value);
+						
+						smsContent = smsContent.replace(name, value);
 					}
 				}
 

@@ -282,7 +282,8 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 				String[] str = arrayList.get(i);
 				String name = str[0];
 				String value = str[1];
-				content = content.replaceAll(name, value);
+				
+				content = content.replace(name, value);
 			}
 		}
 		/*
@@ -318,15 +319,20 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					
-					String itemName = (String)list.get(i).get("TZ_XXX_NAME");
-					String StoreFieldName = (String)list.get(i).get("TZ_FIELD_NAME");
+					String itemName = list.get(i).get("TZ_XXX_NAME") == null ? "" : (String)list.get(i).get("TZ_XXX_NAME");
+					String StoreFieldName = list.get(i).get("TZ_FIELD_NAME") == null ? "" : (String)list.get(i).get("TZ_FIELD_NAME");
 					
-					String selectSql = "SELECT " + StoreFieldName + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
-					String fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[]{strPicId,audCyId},"String");
-
-					String name = "\\[" + itemName + "\\]";
-					String[] returnString = { name, fieldValue };
-					arrayList.add(returnString);
+					if(itemName == null && !"".equals(itemName) && StoreFieldName == null && !"".equals(StoreFieldName)){
+						String selectSql = "SELECT " + StoreFieldName + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
+						String fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[]{strPicId,audCyId},"String");
+						if(fieldValue == null){
+							fieldValue = "";
+						}
+						
+						String name = "[" + itemName + "]";
+						String[] returnString = { name, fieldValue };
+						arrayList.add(returnString);
+					}
 				}
 			}
 			return arrayList;

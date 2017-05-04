@@ -123,7 +123,8 @@ public class SmsCommonServiceImpl extends FrameworkImpl {
 
 					String name = str[0];
 					String value = str[1];
-					smsContent = smsContent.replaceAll(name, value);
+					
+					smsContent = smsContent.replace(name, value);
 				}
 			}
 			

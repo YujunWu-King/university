@@ -444,7 +444,11 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			String strEndDate = mapParams.get("endDate") == null ? "" : String.valueOf(mapParams.get("endDate"));
 			String strEndTime = mapParams.get("endTime") == null ? "" : String.valueOf(mapParams.get("endTime"));
 			String materialDesc = (String) mapParams.get("materialDesc");
-			Integer judgeNumSet = mapParams.get("judgeNumSet") == null ? 0 : Integer.valueOf((String) mapParams.get("judgeNumSet"));
+			String strJudgeNum = mapParams.get("judgeNumSet") == null ? "" : mapParams.get("judgeNumSet").toString();
+			Integer judgeNumSet = 0;
+			if(!"".equals(strJudgeNum)) {
+				judgeNumSet = Integer.valueOf(strJudgeNum);
+			}
 			
 			Date startDate = null;
 			if(!"".equals(strStartDate)) {
@@ -523,7 +527,11 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			String batchId = (String) mapParams.get("batchId");
 			String judgeOprid = (String) mapParams.get("judgeOprid");
 			String judgeGroup = (String) mapParams.get("judgeGroup");
-			Integer judgeExamineeNum = Integer.valueOf(mapParams.get("judgeExamineeNum") == null ? "0" : String.valueOf(mapParams.get("judgeExamineeNum")));
+			String strJudgeNum = mapParams.get("judgeExamineeNum") == null ? "" : mapParams.get("judgeExamineeNum").toString();
+			Integer judgeExamineeNum = 0;
+			if(!"".equals(strJudgeNum)) {
+				judgeExamineeNum = Integer.valueOf(strJudgeNum);
+			}
 			String judgeStatus = (String) mapParams.get("judgeStatus");
 			
 			psTzClpsPwTblKey psTzClpsPwTblKey = new psTzClpsPwTblKey();
@@ -826,18 +834,24 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			String batchId = jacksonUtil.getString("batchId");
 			
 			String sql = "";
-			
-			//每位考生要求被几个评委审批
-			sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-			Integer judgeSetNum = sqlQuery.queryForObject(sql, new Object[]{classId,batchId},"Integer");
-			if(!"0".equals(judgeSetNum) && judgeSetNum!=null) {
-				
+			Integer judgeNumSet = 0;
+			String strJudgeNumSet = "";
+			if(jacksonUtil.containsKey("judgeNumSet")) {
+				strJudgeNumSet = jacksonUtil.getString("judgeNumSet");
 			} else {
-				judgeSetNum = 2;
+				//每位考生要求被几个评委审批
+				sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+				strJudgeNumSet= sqlQuery.queryForObject(sql, new Object[]{classId,batchId},"String");	
+			}
+			
+			if(!"".equals(strJudgeNumSet) && strJudgeNumSet!=null && !"0".equals(strJudgeNumSet)) {
+				judgeNumSet = Integer.valueOf(strJudgeNumSet);
+			} else {
+				judgeNumSet = 2;
 			}
 			
 			sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_CLPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY CAST(TZ_CLPS_GR_ID AS SIGNED INTEGER) LIMIT 0,?";
-			List<Map<String, Object>> listGroup = sqlQuery.queryForList(sql, new Object[]{orgId,judgeSetNum});
+			List<Map<String, Object>> listGroup = sqlQuery.queryForList(sql, new Object[]{orgId,judgeNumSet});
 			
 			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 			
@@ -896,8 +910,12 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 					for(Object pwei : pweiData) {
 						Map<String, Object> mapPwei = (Map<String, Object>) pwei;
 						String judgeGroup = mapPwei.get("judgeGroup") == null ? "" : mapPwei.get("judgeGroup").toString();
-						Integer judgeExamineeNum = mapPwei.get("judgeExamineeNum") == null ? 0 : Integer.valueOf(mapPwei.get("judgeExamineeNum").toString());
-						if(groupId.equals(judgeGroup)) {
+					    String strJudgeNum = mapPwei.get("judgeExamineeNum") == null ? "" : mapPwei.get("judgeExamineeNum").toString();
+					    Integer judgeExamineeNum = 0;
+					    if(!"".equals(strJudgeNum)) {
+					    	judgeExamineeNum = Integer.valueOf(strJudgeNum);
+					    }
+					    if(groupId.equals(judgeGroup)) {
 							groupNum = groupNum + judgeExamineeNum;
 						}
 					}
@@ -911,7 +929,11 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 					success = false;
 				} else {
 					for(Map<String, Object> mapNum : groupNumList) {
-						Integer groupNum = mapNum.get("groupNum") == null ? 0 : Integer.valueOf(mapNum.get("groupNum").toString());
+						String strGroupNum = mapNum.get("groupNum") == null ? "" : mapNum.get("groupNum").toString(); 
+						Integer groupNum = 0;
+						if(!"".equals(strGroupNum)) {
+							groupNum = Integer.valueOf(strGroupNum);
+						}
 						if(!clpsksNum.equals(groupNum)) {
 							success = false;
 							break;

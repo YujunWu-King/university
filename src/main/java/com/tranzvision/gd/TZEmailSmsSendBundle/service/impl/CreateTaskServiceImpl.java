@@ -104,6 +104,9 @@ public class CreateTaskServiceImpl {
 
 				String serverHost = request.getScheme() + "://" + request.getServerName() + ":"
 						+ request.getServerPort();
+				if(emailContent == null){
+					emailContent = "";
+				}
 				emailContent = emailContent.replace("<img src=\"/", "<img src=\"" + serverHost + "/");
 
 				String emailServSQL = "select TZ_EML_ADDR100,TZ_EML_ALIAS from PS_TZ_EMLS_DEF_TBL where TZ_EMLSERV_ID=?";
@@ -300,6 +303,9 @@ public class CreateTaskServiceImpl {
 	// 更新邮件内容;
 	public boolean updateEmailSendContent(String taskId, String content) {
 		String serverHost = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+		if(content == null){
+			content = "";
+		}
 		content = content.replace("<img src=\"/", "<img src=\"" + serverHost + "/");
 		PsTzYjmbshliTbl psTzYjmbshliTbl = new PsTzYjmbshliTbl();
 		psTzYjmbshliTbl.setTzEmlSmsTaskId(taskId);

@@ -39,7 +39,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 store: store,
                 dockedItems:[{
                     xtype:'toolbar',
-                    items:[{text:"查询",iconCls:'query',tooltip:"从所有考生中查询",handler:"queryExamineeAdd"}]
+                    items:[
+                        {text:"查询",iconCls:'query',tooltip:"从所有考生中查询",handler:"queryExamineeAdd"}/*,"-",
+                        {text:"添加所有考生",iconCls:'add',tooltip:"添加所有考生",handler:"addExamineeAll"}*/]
                 }],
                 columns: [{
                     dataIndex:'mssqh',

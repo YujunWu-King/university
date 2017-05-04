@@ -1145,6 +1145,10 @@
                         panel.actType="update";
                         form.setValues(formData);
 
+                        if(formData.dqpsStatus=="A") {
+                            form.findField("judgeNumSet").setDisabled(true);
+                        }
+
                         statisticsNumForm.findField("clpsksNum").setValue(formData.clpsksNum);
                         //要求评审人次更新
                         statisticsNumForm.findField("reviewNumSet").setValue(parseInt(formData.clpsksNum)*(formData.judgeNumSet));
