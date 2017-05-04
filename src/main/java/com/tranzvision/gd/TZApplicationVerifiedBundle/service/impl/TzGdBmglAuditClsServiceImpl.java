@@ -43,6 +43,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.encrypt.Sha3DesMD5;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -90,6 +91,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 	private PsTzAppCcTMapper psTzAppCcTMapper;
 	@Autowired
 	private PsTzAppDhccTMapper psTzAppDhccTMapper;
+	
 
 	/* 获取报名人信息 */
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -906,6 +908,32 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			} catch (Exception e) {
 				errorMsg[0] = "1";
 				errorMsg[1] = e.toString();
+			}
+		}else {
+			if ("PWD".equals(oprType)) {
+				try {
+					jacksonUtil.json2Map(strParams);
+					// 报名表实例编号
+					Long numAppInsId = 0L;
+					// 报名表编号;
+					String strAppTjxInsID = jacksonUtil.getString("appInsID");
+					String strAppTjxPwd = jacksonUtil.getString("password");
+					
+					numAppInsId = Long.parseLong(strAppTjxInsID);
+					//System.out.println("numAppInsId" + numAppInsId);
+					//System.out.println("password" + strAppTjxPwd);
+					// 密码用MD5加密存储
+					if (strAppTjxPwd != null && !strAppTjxPwd.equals("")) {
+						strAppTjxPwd = Sha3DesMD5.md5(strAppTjxPwd);
+						PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
+						psTzAppInsT.setTzAppInsId(numAppInsId);
+						psTzAppInsT.setTzPwd(strAppTjxPwd);
+						psTzAppInsTMapper.updateByPrimaryKeySelective(psTzAppInsT);
+					}
+				}catch (Exception e) {
+					errorMsg[0] = "1";
+					errorMsg[1] = "修改密码失败" + e.toString();
+				}
 			}
 		}
 

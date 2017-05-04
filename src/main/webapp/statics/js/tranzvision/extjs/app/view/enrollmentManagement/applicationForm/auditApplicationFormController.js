@@ -983,5 +983,74 @@
         } else{
             Ext.Msg.alert("",Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.deleteerror","不能删除"));
         }
-    }
+    },
+	resetTjxPassword: function(grid,rowIndex){
+	
+		var form = this.getView().child("form").getForm();
+        var appTjxInsID = grid.store.getAt(rowIndex).get('refLetterAppInsId');
+        var refLetterID  = grid.store.getAt(rowIndex).get('refLetterId');
+		var refLetterPwd = grid.store.getAt(rowIndex).get('refLetterPwd');
+
+		 if (appTjxInsID!=""&&appTjxInsID!="0") {
+			 var win = this.lookupReference('setTjxPasswordWindow');
+			 if (!win) {
+					className = 'KitchenSink.view.enrollmentManagement.applicationForm.setTjxPassword';
+						Ext.syncRequire(className);
+						ViewClass = Ext.ClassManager.get(className);
+						//新建类
+					win = new ViewClass();
+					
+					this.getView().add(win);
+			  }
+			  win.appTjxInsId = appTjxInsID;
+			  win.show();
+		 }else{
+			Ext.Msg.alert("提示","当前推荐人未填写推荐信。");   
+			return;
+		 }
+		 
+	},
+	onSetPwdClose: function(btn){
+		//获取窗口
+		var win = btn.findParentByType("window");
+		//重置密码信息表单
+		var form = win.child("form").getForm();
+		//重置表单
+			form.reset();
+		//关闭窗口
+		win.close();
+	},
+	onSetPwdEnsure: function(btn){
+		//获取窗口
+		var win = btn.findParentByType("window");
+		var appInsID = win.appTjxInsId;
+
+		//重置密码信息表单
+		if(appInsID!=""&&appInsID!="0"){
+			var form = win.child("form").getForm();
+			if (!form.isValid()) {//表单校验未通过
+				return false;
+			}
+				
+			//表单数据
+			var formParams = form.getValues();
+			//密码
+			var password = formParams["password"];
+			//密码参数
+			var pwdParams = '"password":"'+password+'"';
+			var appInsIdParams = '"appInsID":"'+appInsID+'"';
+			//提交参数
+			var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_AUDIT_STD","OperateType":"PWD","comParams":{'+pwdParams+","+appInsIdParams+'}}';
+			form.reset();
+			Ext.tzSubmit(tzParams,function(){
+				//重置表单
+				//form.reset();
+				//关闭窗口
+				win.close();						   
+			},"重置密码成功",true,this);
+		}else{
+			Ext.Msg.alert("提示","重置密码失败。");   
+			return;
+		}
+	}
 });
