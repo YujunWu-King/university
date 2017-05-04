@@ -102,6 +102,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             }
         });
     },
+    //材料评审考生名单-新增考生-添加所有考生
+    addExamineeAll:function(btn) {
+        var store = btn.findParentByType("grid").store;
+        var tzStoreParams = store.tzStoreParams;
+    },
     //材料评审考生名单-新增考生-确定
     addExamineeEnsure:function(btn) {
         var grid = btn.findParentByType("panel").child("grid");

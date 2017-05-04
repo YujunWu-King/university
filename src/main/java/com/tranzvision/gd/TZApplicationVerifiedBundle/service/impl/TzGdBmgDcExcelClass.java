@@ -362,9 +362,9 @@ public class TzGdBmgDcExcelClass {
 									strAppClsMethod = (String)mapClsInfo.get("TZ_APPCLS_METHOD");
 									Object myMethod = Class.forName(strAppClsPath + "." + strAppClsName).newInstance();  
 							        //获得这个类中名叫say的参数为Integer的方法  
-							        Method method = myMethod.getClass().getMethod(strAppClsMethod, String.class, String.class);  
+							        Method method = myMethod.getClass().getMethod(strAppClsMethod, String.class,String.class, String.class);  
 							        //调用这个方法，12是参数，String与之类似  
-							        strAppFormFieldValues = (String) method.invoke(myMethod, arrAppInsID[i],appFormModalID);
+							        strAppFormFieldValues = (String) method.invoke(myMethod, arrAppInsID[i],"",appFormModalID);
 								}catch (Exception e) {
 									e.printStackTrace();
 								} 

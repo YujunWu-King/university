@@ -230,6 +230,7 @@ public class MaterialEvaluationCls{
 				new Object[] { classId, batchId },"String");
 		
 		if("Y".equals(TZ_PWKJ_BZH)){
+			
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			
 			String TZ_ZLPS_SCOR_MD_ID=sqlQuery.queryForObject(
@@ -250,13 +251,37 @@ public class MaterialEvaluationCls{
 					"SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? and PARENT_NODE_NUM=0",
 					new Object[] { TREE_NAME }, "String");
 			
+			int int_error_code = 0;
+			
+			/*1、校验平均分指标是否符合要求*/
+			double pjf = this.calculateAverage(classId, batchId, oprid, TZ_SCORE_ITEM_ID, int_error_code, error_decription);
+			error_code = String.valueOf(int_error_code);
+			
+			//查询标准平均分和允许误差
+			Double standardAvg = (double)0,avgAllowDeviation = (double)0;
+			Map<String, Object> avgStandardMap = sqlQuery.queryForMap(
+					"select TZ_TJL_BZH,TZ_TJL_WCZ from PS_TZ_QTTJ_BZH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_SCORE_MODAL_ID=? and TZ_SCORE_ITEM_ID=? and TZ_TJGN_ID=?",
+					new Object[] { classId, batchId ,TZ_ZLPS_SCOR_MD_ID,"TOTAL","001"});
+			if (avgStandardMap != null) {
+				standardAvg = avgStandardMap.get("TZ_TJL_BZH")==null?standardAvg:((BigDecimal) avgStandardMap.get("TZ_TJL_BZH")).doubleValue();
+				avgAllowDeviation = avgStandardMap.get("TZ_TJL_WCZ")==null?standardAvg:((BigDecimal) avgStandardMap.get("TZ_TJL_WCZ")).doubleValue();
+			}
+			
+			//实际误差和是否符合要求
+			BigDecimal bg = new BigDecimal(Math.abs(standardAvg-pjf));
+			double actualDeviation = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+			if(actualDeviation>avgAllowDeviation){
+				//不符合要求
+				return false;
+			}
+			
+			/*2、校验分布统计数据是否符合要求*/
 			//评议的考生数量
 			int totalEvaluationNum = sqlQuery.queryForObject(
 					"SELECT COUNT(*) FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?",
 					new Object[] { classId, batchId, oprid }, "Integer");
 			
 			/*当前评委打分分布统计信息 */
-			int int_error_code = 0;
 			List<Map<String,Object>> evaluationDataList = this.getScoreItemEvaluationData(classId, batchId, oprid, TZ_SCORE_ITEM_ID, int_error_code, error_decription);
 			error_code = String.valueOf(int_error_code);
 			

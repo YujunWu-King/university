@@ -169,11 +169,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 						result = "1";
 						resultMsg = "评议数据已经提交，不允许对考生数据进行修改";
 					} else {
-						//更新考生评审得分历史表
-						sql = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='Y'";
-						sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=?";
-						sqlQuery.update(sql,new Object[]{classId,applyBatchId,bmbId,oprid,dqpyLunc});
-					
+
 						//保存成绩项
 						String saveScoreItemRtn = this.scoreItemSave(classId,applyBatchId,bmbId,strForm,errMsg);
 						jacksonUtil.json2Map(saveScoreItemRtn);
@@ -190,7 +186,12 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 							this.examineeReviewHis(classId, applyBatchId, bmbId, oprid, dqpyLunc,errMsg);
 						
 							//计算排名
-							this.examineeRank(classId,applyBatchId,oprid,orgId,errMsg);
+							this.examineeRank(classId,applyBatchId,oprid,orgId,dqpyLunc,errMsg);
+							
+							//更新考生评审得分历史表
+							sql = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='Y'";
+							sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=?";
+							sqlQuery.update(sql,new Object[]{classId,applyBatchId,bmbId,oprid,dqpyLunc});
 							
 							String messageCode = "0";
 							String message = "";
@@ -480,7 +481,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			Map<String, Object> mapHeader = new HashMap<String,Object>();
 			mapHeader.put("col01", "总分");
 			mapHeader.put("ps_ksh_id", "面试申请号");
-			mapHeader.put("ps_ksh_ppm", "排名");
+			mapHeader.put("ps_ksh_cpm", "排名");
 			mapHeader.put("ps_ksh_xh", "面试顺序");
 			mapHeader.put("ps_ksh_xm", "姓名");
 			
@@ -695,13 +696,22 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				psTzKsclpslsTbl.setTzAppInsId(Long.valueOf(bmbId));
 				psTzKsclpslsTbl.setTzPweiOprid(oprid);
 				psTzKsclpslsTbl.setTzClpsLunc(Short.valueOf(dqpyLunc));
-				psTzKsclpslsTbl.setTzSubmitYn("Y");
+				psTzKsclpslsTbl.setTzSubmitYn("N");
+				psTzKsclpslsTbl.setTzIsPwFp("N");
 				psTzKsclpslsTbl.setRowAddedDttm(new Date());
 				psTzKsclpslsTbl.setRowAddedOprid(oprid);
 				psTzKsclpslsTbl.setRowLastmantDttm(new Date());
 				psTzKsclpslsTbl.setRowLastmantOprid(oprid);
 				psTzKsclpslsTblMapper.insert(psTzKsclpslsTbl);
-			} 
+			} else {
+				psTzKsclpslsTbl.setTzIsPwFp("Y");
+				psTzKsclpslsTbl.setRowLastmantDttm(new Date());
+				psTzKsclpslsTbl.setRowLastmantOprid(oprid);
+				psTzKsclpslsTblMapper.updateByPrimaryKeySelective(psTzKsclpslsTbl);
+				
+				String sql = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='N' WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=? AND TZ_SUBMIT_YN NOT IN ('C','Y')";
+				sqlQuery.update(sql,new Object[]{classId,applyBatchId,bmbId,oprid,dqpyLunc});
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
@@ -713,9 +723,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 	
 	/**
 	 * 计算排名
-	 * 先校验成绩和评语的有效性，有效后调用封装方法
 	 */
-	public String examineeRank(String classId,String applyBatchId,String oprid,String orgId,String[] errMsg) {
+	public String examineeRank(String classId,String applyBatchId,String oprid,String orgId,String dqpyLunc,String[] errMsg) {
 		String strRtn = "";
 		
 		try {
@@ -753,7 +762,38 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 					psTzCpPwKsTbl.setRowLastmantOprid(oprid);
 					psTzCpPwKsTblMapper.updateByPrimaryKeySelective(psTzCpPwKsTbl);
 				}
+				
+				
+				PsTzKsclpslsTblKey psTzKsclpslsTblKey = new PsTzKsclpslsTblKey();
+				psTzKsclpslsTblKey.setTzClassId(classId);
+				psTzKsclpslsTblKey.setTzApplyPcId(applyBatchId);
+				psTzKsclpslsTblKey.setTzAppInsId(Long.valueOf(bmbId));
+				psTzKsclpslsTblKey.setTzPweiOprid(oprid);
+				psTzKsclpslsTblKey.setTzClpsLunc(Short.valueOf(dqpyLunc));
+				
+				PsTzKsclpslsTbl psTzKsclpslsTbl = psTzKsclpslsTblMapper.selectByPrimaryKey(psTzKsclpslsTblKey);
+				
+				if(psTzKsclpslsTbl == null) {
+					psTzKsclpslsTbl = new PsTzKsclpslsTbl();
+					psTzKsclpslsTbl.setTzClassId(classId);
+					psTzKsclpslsTbl.setTzApplyPcId(applyBatchId);
+					psTzKsclpslsTbl.setTzAppInsId(Long.valueOf(bmbId));
+					psTzKsclpslsTbl.setTzPweiOprid(oprid);
+					psTzKsclpslsTbl.setTzClpsLunc(Short.valueOf(dqpyLunc));
+					psTzKsclpslsTbl.setTzKshPspm(String.valueOf(rank));
+					psTzKsclpslsTbl.setRowAddedDttm(new Date());
+					psTzKsclpslsTbl.setRowAddedOprid(oprid);
+					psTzKsclpslsTbl.setRowLastmantDttm(new Date());
+					psTzKsclpslsTbl.setRowLastmantOprid(oprid);
+					psTzKsclpslsTblMapper.insert(psTzKsclpslsTbl);
+				} else {
+					psTzKsclpslsTbl.setTzKshPspm(String.valueOf(rank));
+					psTzKsclpslsTbl.setRowLastmantDttm(new Date());
+					psTzKsclpslsTbl.setRowLastmantOprid(oprid);
+					psTzKsclpslsTblMapper.updateByPrimaryKeySelective(psTzKsclpslsTbl);
+				}
 			}
+				
 		} catch(Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
@@ -1030,7 +1070,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 														psTzKsclpslsTbl.setTzSubmitYn("U");
 														psTzKsclpslsTbl.setRowLastmantDttm(new Date());
 														psTzKsclpslsTbl.setRowLastmantOprid(oprid);
-														psTzKsclpslsTblMapper.updateByPrimaryKeySelective(psTzKsclpslsTbl);
+														psTzKsclpslsTblMapper.updateByPrimaryKey(psTzKsclpslsTbl);
 													}
 												
 													//材料评审考生评委信息

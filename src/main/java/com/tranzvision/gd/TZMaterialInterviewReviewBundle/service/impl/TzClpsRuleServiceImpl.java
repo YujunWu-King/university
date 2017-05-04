@@ -826,18 +826,24 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			String batchId = jacksonUtil.getString("batchId");
 			
 			String sql = "";
-			
-			//每位考生要求被几个评委审批
-			sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-			Integer judgeSetNum = sqlQuery.queryForObject(sql, new Object[]{classId,batchId},"Integer");
-			if(!"0".equals(judgeSetNum) && judgeSetNum!=null) {
-				
+			Integer judgeNumSet = 0;
+			String strJudgeNumSet = "";
+			if(jacksonUtil.containsKey("judgeNumSet")) {
+				strJudgeNumSet = jacksonUtil.getString("judgeNumSet");
 			} else {
-				judgeSetNum = 2;
+				//每位考生要求被几个评委审批
+				sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+				strJudgeNumSet= sqlQuery.queryForObject(sql, new Object[]{classId,batchId},"String");	
+			}
+			
+			if(!"".equals(strJudgeNumSet) && strJudgeNumSet!=null && !"0".equals(strJudgeNumSet)) {
+				judgeNumSet = Integer.valueOf(strJudgeNumSet);
+			} else {
+				judgeNumSet = 2;
 			}
 			
 			sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_CLPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY CAST(TZ_CLPS_GR_ID AS SIGNED INTEGER) LIMIT 0,?";
-			List<Map<String, Object>> listGroup = sqlQuery.queryForList(sql, new Object[]{orgId,judgeSetNum});
+			List<Map<String, Object>> listGroup = sqlQuery.queryForList(sql, new Object[]{orgId,judgeNumSet});
 			
 			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
 			
