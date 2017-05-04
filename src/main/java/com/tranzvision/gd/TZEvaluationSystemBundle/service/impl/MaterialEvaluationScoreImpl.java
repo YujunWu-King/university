@@ -169,11 +169,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 						result = "1";
 						resultMsg = "评议数据已经提交，不允许对考生数据进行修改";
 					} else {
-						//更新考生评审得分历史表
-						//sql = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='Y'";
-						//sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=?";
-						//sqlQuery.update(sql,new Object[]{classId,applyBatchId,bmbId,oprid,dqpyLunc});
-					
+
 						//保存成绩项
 						String saveScoreItemRtn = this.scoreItemSave(classId,applyBatchId,bmbId,strForm,errMsg);
 						jacksonUtil.json2Map(saveScoreItemRtn);
@@ -191,6 +187,11 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 						
 							//计算排名
 							this.examineeRank(classId,applyBatchId,oprid,orgId,dqpyLunc,errMsg);
+							
+							//更新考生评审得分历史表
+							sql = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='Y'";
+							sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=?";
+							sqlQuery.update(sql,new Object[]{classId,applyBatchId,bmbId,oprid,dqpyLunc});
 							
 							String messageCode = "0";
 							String message = "";
