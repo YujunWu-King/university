@@ -1109,7 +1109,7 @@ public class TzCanInTsinghuaClsServiceImpl extends FrameworkImpl {
 			logger.info("strDivHtml最终值：" + strDivHtml);
 			
 			//获取注册信息页面
-			strCountHtml = tzGdObject.getHTMLText("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), String.valueOf(lastPageNo), strDivHtml,this.createPerfectUrl(wjid));
+			strCountHtml = tzGdObject.getHTMLTextForDollar("HTML.TZCanInTsinghuaBundle.TZ_CAN_TSINGHUA_SUR_ANS_NEW_HTML", request.getContextPath(), String.valueOf(lastPageNo), strDivHtml,this.createPerfectUrl(wjid));
 			return strCountHtml;
 			
 		} catch (Exception e) {
