@@ -317,24 +317,24 @@ public class TzGdBmgExcelUtility {
 			Map<String, Object> getBmrSqInfoMap;
 
 			String strGetBatchName = "";
-			String strBmrSqYear = "";
+			//String strBmrSqYear = "";
 			String strGetClassName = "";
 			
-			getBmrSqInfoMap = jdbcTemplate.queryForMap("SELECT year(TZ_RX_DT) TZ_RX_DT,B.TZ_CLASS_NAME,C.TZ_BATCH_NAME FROM "
-					+ " PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B,PS_TZ_CLS_BATCH_T C"
-					+ " WHERE A.TZ_APP_INS_ID = ? AND A.TZ_CLASS_ID = B.TZ_CLASS_ID"
-					+ " AND A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_BATCH_ID = C.TZ_BATCH_ID"
-					+ " LIMIT 0,1",
+			getBmrSqInfoMap = jdbcTemplate.queryForMap("SELECT B.TZ_CLASS_NAME,C.TZ_BATCH_NAME FROM "
+					+ " PS_TZ_FORM_WRK_T A JOIN PS_TZ_CLASS_INF_T B ON A.TZ_CLASS_ID = B.TZ_CLASS_ID"
+					+ " LEFT JOIN PS_TZ_CLS_BATCH_T C"
+					+ " ON A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_BATCH_ID = C.TZ_BATCH_ID"
+					+ " WHERE A.TZ_APP_INS_ID = ? LIMIT 0,1",
 					new Object[]{appInsId});
 			if(getBmrSqInfoMap != null){
-				strBmrSqYear = getBmrSqInfoMap.get("TZ_RX_DT") == null ? "":String.valueOf(getBmrSqInfoMap.get("TZ_RX_DT"));
+				//strBmrSqYear = getBmrSqInfoMap.get("TZ_RX_DT") == null ? "":String.valueOf(getBmrSqInfoMap.get("TZ_RX_DT"));
 				strGetClassName = getBmrSqInfoMap.get("TZ_CLASS_NAME") == null ? "":String.valueOf(getBmrSqInfoMap.get("TZ_CLASS_NAME"));
 				strGetBatchName = getBmrSqInfoMap.get("TZ_BATCH_NAME") == null ? "":String.valueOf(getBmrSqInfoMap.get("TZ_BATCH_NAME"));
-				
+				/*
 				if(!"".equals(strBmrSqYear)){
 					strBmrSqYear = strBmrSqYear + "年";
-				}
-				strBmrSqInfo = strBmrSqYear + strGetBatchName + strGetClassName;
+				}*/
+				strBmrSqInfo = strGetClassName  + strGetBatchName;
 			}
 		}
 		return strBmrSqInfo;	
