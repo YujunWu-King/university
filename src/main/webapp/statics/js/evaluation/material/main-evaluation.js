@@ -1304,7 +1304,7 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 			failure:function(response)
 			{
 				//unmask window
-				();
+				unmaskWindow();
 				
 				loadSuccess = false;
 				if(window.evaluateSystemDebugFlag == 'Y')
