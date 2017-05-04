@@ -1038,7 +1038,8 @@ public class SendSmsOrMalServiceImpl {
 				String[] str = arrayList.get(i);
 				String name = str[0];
 				String value = str[1];
-				content = content.replaceAll(name, value);
+				
+				content = content.replace(name, value);
 			}
 		}
 		return content;
@@ -1052,16 +1053,17 @@ public class SendSmsOrMalServiceImpl {
 		if (list != null && list.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				Map<String, Object> map = list.get(i);
-				String ymbCslbm = (String) map.get("TZ_YMB_CSLBM");
-				String ymbParaId = (String) map.get("TZ_PARA_ID");
-				String ymbParaAlias = (String) map.get("TZ_PARA_ALIAS");
-				String sysvarId = (String) map.get("TZ_SYSVARID");
+				String ymbCslbm =  map.get("TZ_YMB_CSLBM") == null ? "" : (String) map.get("TZ_YMB_CSLBM");
+				String ymbParaId = map.get("TZ_PARA_ID")  == null ? "" : (String) map.get("TZ_PARA_ID");
+				String ymbParaAlias = map.get("TZ_PARA_ALIAS")  == null ? "" : (String) map.get("TZ_PARA_ALIAS");
+				String sysvarId = map.get("TZ_SYSVARID")  == null ? "" : (String) map.get("TZ_SYSVARID");
 				String[] sysVarParam = { audId, audCyId };
 				AnalysisSysVar analysisSysVar = new AnalysisSysVar();
 				analysisSysVar.setM_SysVarID(sysvarId);
 				analysisSysVar.setM_SysVarParam(sysVarParam);
 				Object obj = analysisSysVar.GetVarValue();
 				
+				/*
 				ymbCslbm = ymbCslbm.replaceAll("\\(", "\\\\("); 
 			   	ymbCslbm = ymbCslbm.replaceAll("\\)", "\\\\)"); 
 			   	
@@ -1072,7 +1074,9 @@ public class SendSmsOrMalServiceImpl {
 			   	ymbParaAlias = ymbParaAlias.replaceAll("\\)", "\\\\)"); 
 
 				String name = "\\[" + ymbCslbm + "\\." + ymbParaId + "\\." + ymbParaAlias + "\\]";
-				String value = (String) obj;
+				*/
+				String name = "[" + ymbCslbm + "." + ymbParaId + "." + ymbParaAlias + "]";
+				String value = obj == null ? "" : (String) obj;
 				String[] returnString = { name, value };
 				arrayList.add(returnString);
 			}
