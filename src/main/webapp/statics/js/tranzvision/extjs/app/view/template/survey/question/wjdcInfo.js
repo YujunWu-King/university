@@ -9,7 +9,9 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
         'KitchenSink.view.template.survey.question.wjdcModel',
         'KitchenSink.view.template.survey.question.wjdcController',
         'KitchenSink.view.template.survey.question.wjdcStore',
-        'tranzvision.extension.grid.Exporter'
+        'tranzvision.extension.grid.Exporter',
+        'KitchenSink.view.template.survey.question.export.exportExcelWindow',
+        'KitchenSink.view.template.survey.question.export.exportExcelController'
 
     ],
     xtype: 'wjdcInfo',
@@ -46,23 +48,22 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
             {text:"新增",tooltip:"新增",iconCls:"add",handler:'addDcwj'},'-',
           //  {text:'删除',tooltip:'删除',iconCls:"remove",handler:'deleteWjdc'},'-',
           //   {text:'删除',tooltip:'删除',iconCls:"remove",handler:'generateWjdc'},'-',
-            {text:'发布',tooltip:'发布',iconCls:"publish",handler:'publishWjdc'},'->'
-            /**
-            *lzh-20160414------------------start
-            *仅为燕京提供在线调查数据导出功能，
-            *FIXME:在需要取消在线调查功能限制后取消此注释
+            {text:'发布',tooltip:'发布',iconCls:"publish",handler:'publishWjdc'},'->',
             {
                 xtype:'splitbutton',
                 text:'更多操作',
                 iconCls:  'list',
                 glyph: 61,
                 menu:[
-                    {
-                        text: '下载数据',
+                	/*{
+                        text: '下载调查问卷',
                         handler: 'downloadDcwj'
+                    },*/
+                    {
+                        text: '查看我的导出记录并下载',
+                        handler: 'downloadExportFile'
                     }]
             }
-            ------------------------------------------end*/
         ]
     }],
     initComponent: function () {
@@ -137,6 +138,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
 //                                }
 //                           }
 //						}
+                        {iconCls:'excel',tooltip:'导出调查结果',handler:'exportAnswerToExcel'},
                         {iconCls:' view',tooltip:'在线查看全部答案',handler:'onViewAllAnswer',
                             isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
                                 if(record.get('TZ_DC_WJ_FB')=='0'){
@@ -145,8 +147,8 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                                     return false;
                                 }
                             }
-                        }/*,
-                        {iconCls:' people',tooltip:'参与人管理',handler:'majorPersonMg'}*/
+                        },
+                        /*{iconCls:' people',tooltip:'参与人管理',handler:'majorPersonMg'}*/
                     ]
                 }
 //                ,  {
@@ -169,11 +171,11 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                     xtype: 'pagingtoolbar',
                     pageSize: 10,
                     store: store,
-                    displayInfo: true,
-                    displayMsg: '显示{0}-{1}条，共{2}条',
-                    beforePageText: '第',
-                    afterPageText: '页/共{0}页',
-                    emptyMsg: '没有数据显示',
+//                    displayInfo: true,
+//                    displayMsg: '显示{0}-{1}条，共{2}条',
+//                    beforePageText: '第',
+//                    afterPageText: '页/共{0}页',
+//                    emptyMsg: '没有数据显示',
                     plugins: new Ext.ux.ProgressBarPager()
                 }
         });
