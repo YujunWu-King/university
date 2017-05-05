@@ -155,14 +155,22 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             for (var i = 0; i < tmpArray.length; i++) {
                 var colName = '00' + (i + 1);
                 colName = 'col' + colName.substr(colName.length - 2);
-
+                
                 var tmpColumn = {
                     text: tmpArray[i][colName],
                     sortable: false,
-                    dataIndex: colName,
-                    flex: 1
+                    dataIndex: colName
                 };
 
+                if(i<=4){
+                	if(i==1){
+                		tmpColumn.width = 100;
+                	}else{
+                		tmpColumn.width = 80;
+                	}                	
+                }else{
+                	tmpColumn.flex = 1;
+                }
                 statisticsGridDataModel['gridColumns'].push(tmpColumn);
                 statisticsGridDataModel['gridFields'].push({
                     name: colName
