@@ -31,7 +31,7 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 	private SqlQuery sqlQuery;
 	
 
-	/*所有考生，默认显示进入的班级批次下的考试*/
+	/*所有考生，默认显示进入的班级批次下的考生*/
 	@Override
 	@SuppressWarnings("unchecked")
 	public String tzQueryList(String strParams,int numLimit,int numStart,String[] errMsg) {
@@ -70,31 +70,49 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 					String pwList = "",reviewStatusDesc = "";
 					//评委数
 					Integer pwNum = 0;
-					//每生评审人数、当前评审轮次
-					sql = "SELECT TZ_MSPY_NUM,TZ_DQPY_LUNC FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+					//每生评审人数
+					Integer mspsNum = 0;
+					//当前评审轮次
+					Integer dqpyLunc = 0;
+					
+					sql = "SELECT 'Y' TZ_IS_EXIST,TZ_MSPY_NUM,TZ_DQPY_LUNC FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 					Map<String, Object> mapRule = sqlQuery.queryForMap(sql, new Object[] {classId,batchId});
-					Integer mspsNum = mapRule.get("TZ_MSPY_NUM") == null ? 2 : Integer.valueOf(mapRule.get("TZ_MSPY_NUM").toString());
-					Integer dqpyLunc = mapRule.get("TZ_DQPY_LUNC") == null ? 0 : Integer.valueOf(mapRule.get("TZ_DQPY_LUNC").toString());
-					
-					
-					sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
-					List<Map<String, Object>> listPw = sqlQuery.queryForList(sql, new Object[] {classId,batchId,appinsId,dqpyLunc});
-					
-					for(Map<String, Object> mapPw : listPw) {
-
-						//String pwOprid = mapPw.get("TZ_PWEI_OPRID")  == null ? "" : mapPw.get("TZ_PWEI_OPRID").toString();
-						String pwDlzhId = mapPw.get("TZ_DLZH_ID") == null ? "" : mapPw.get("TZ_DLZH_ID").toString();
-						String submitFlag = mapPw.get("TZ_SUBMIT_YN") == null ? "" : mapPw.get("TZ_SUBMIT_YN").toString();
+					String strIsExist = mapRule.get("TZ_IS_EXIST") == null ? "" : mapRule.get("TZ_IS_EXIST").toString();
 						
-						if("Y".equals(submitFlag)) {
-							//已评审
-							pwNum++;
+					if(!"Y".equals(strIsExist)) {
+						//没有定义评审规则
+						mspsNum = 2;
+					} else {
+						//定义了评审规则
+						String strMspsNum = mapRule.get("TZ_MSPY_NUM") == null ? "" : mapRule.get("TZ_MSPY_NUM").toString();
+						if(!"".equals(strMspsNum)) {
+							mspsNum = Integer.valueOf(strMspsNum);
 						}
 						
-						if(!"".equals(pwList)) {
-							pwList += "," + pwDlzhId;
-						} else {
-							pwList = pwDlzhId;
+						String strDqpyLunc = mapRule.get("TZ_DQPY_LUNC") == null ? "" : mapRule.get("TZ_DQPY_LUNC").toString();
+						if(!"".equals(strDqpyLunc)) {
+							dqpyLunc = Integer.valueOf(strDqpyLunc);
+						}
+						
+						sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
+						List<Map<String, Object>> listPw = sqlQuery.queryForList(sql, new Object[] {classId,batchId,appinsId,dqpyLunc});
+						
+						for(Map<String, Object> mapPw : listPw) {
+
+							//String pwOprid = mapPw.get("TZ_PWEI_OPRID")  == null ? "" : mapPw.get("TZ_PWEI_OPRID").toString();
+							String pwDlzhId = mapPw.get("TZ_DLZH_ID") == null ? "" : mapPw.get("TZ_DLZH_ID").toString();
+							String submitFlag = mapPw.get("TZ_SUBMIT_YN") == null ? "" : mapPw.get("TZ_SUBMIT_YN").toString();
+							
+							if("Y".equals(submitFlag)) {
+								//已评审
+								pwNum++;
+							}
+							
+							if(!"".equals(pwList)) {
+								pwList += "," + pwDlzhId;
+							} else {
+								pwList = pwDlzhId;
+							}
 						}
 					}
 					

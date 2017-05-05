@@ -175,8 +175,16 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 					//每生评审人数、当前评审轮次
 					sql = "SELECT TZ_MSPY_NUM,TZ_DQPY_LUNC FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 					Map<String, Object> mapRule = sqlQuery.queryForMap(sql, new Object[] {classId,batchId});
-					Integer mspsNum = mapRule.get("TZ_MSPY_NUM") == null ? 0 : Integer.valueOf(mapRule.get("TZ_MSPY_NUM").toString());
-					Integer dqpyLunc = mapRule.get("TZ_DQPY_LUNC") == null ? 0 : Integer.valueOf(mapRule.get("TZ_DQPY_LUNC").toString());
+					String strMspsNum = mapRule.get("TZ_MSPY_NUM") == null ? "" : mapRule.get("TZ_MSPY_NUM").toString();
+					Integer mspsNum = 2;
+					if(!"".equals(strMspsNum) && strMspsNum!=null) {
+						mspsNum = Integer.valueOf(strMspsNum);
+					} 
+					String strDqpyLunc = mapRule.get("TZ_DQPY_LUNC") == null ? "" : mapRule.get("TZ_DQPY_LUNC").toString();
+					Integer dqpyLunc = 0;
+					if(!"".equals(strDqpyLunc) && strDqpyLunc!=null) {
+						dqpyLunc = Integer.valueOf(dqpyLunc);
+					}
 					
 					sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
 					List<Map<String, Object>> listPw = sqlQuery.queryForList(sql, new Object[] {classId,batchId,appinsId,dqpyLunc});
@@ -607,7 +615,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 						
 			String classId = (String) mapParams.get("classId");
 			String batchId = (String) mapParams.get("batchId");
-			String dqpsStatus = (String) mapParams.get("dqpsStatus");
+			//String dqpsStatus = (String) mapParams.get("dqpsStatus");
 			
 			PsTzClpsGzTblKey psTzClpsGzTblKey = new PsTzClpsGzTblKey();
 			psTzClpsGzTblKey.setTzClassId(classId);
@@ -619,7 +627,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 				psTzClpsGzTbl = new PsTzClpsGzTbl();
 				psTzClpsGzTbl.setTzClassId(classId);
 				psTzClpsGzTbl.setTzApplyPcId(batchId);
-				psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
+				//psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
 				psTzClpsGzTbl.setRowAddedDttm(new Date());
 				psTzClpsGzTbl.setRowAddedOprid(currentOprid);
 				psTzClpsGzTbl.setRowLastmantDttm(new Date());

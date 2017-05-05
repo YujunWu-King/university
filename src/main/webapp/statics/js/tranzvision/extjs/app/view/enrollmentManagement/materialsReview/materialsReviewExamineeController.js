@@ -22,67 +22,62 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     },
     //材料评审考生名单-新增
     addExaminee:function(btn) {
-    	var actType = btn.findParentByType("form").findParentByType("panel").actType;
-    	if(actType=="add") {
-    		 Ext.MessageBox.alert('提示', '请先保存数据');
-             return;
-    	} else {
-	        var form = btn.findParentByType("form").getForm();
-	        var classId = form.findField("classId").getValue();
-	        var batchId = form.findField("batchId").getValue();
 
-	        //是否有访问权限
-	        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_ADDKS_STD"];
-	        if( pageResSet == "" || pageResSet == undefined){
-	            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-	            return;
-	        }
-	        //该功能对应的JS类
-	        var className = pageResSet["jsClassName"];
-	        if(className == "" || className == undefined){
-	            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_ADDKS_STD，请检查配置。');
-	            return;
-	        }
-	        var contentPanel, cmp, ViewClass, clsProto;
-	
-	        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-	        contentPanel.body.addCls('kitchensink-example');
-	
-	        if(!Ext.ClassManager.isCreated(className)){
-	            Ext.syncRequire(className);
-	        }
-	        ViewClass = Ext.ClassManager.get(className);
-	        clsProto = ViewClass.prototype;
+        var form = btn.findParentByType("form").getForm();
+        var classId = form.findField("classId").getValue();
+        var batchId = form.findField("batchId").getValue();
 
-	        if (clsProto.themes) {
-	            clsProto.themeInfo = clsProto.themes[themeName];
-	
-	            if (themeName === 'gray') {
-	                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
-	            } else if (themeName !== 'neptune' && themeName !== 'classic') {
-	                if (themeName === 'crisp-touch') {
-	                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
-	                }
-	                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
-	            }
-	
-	            if (!clsProto.themeInfo) {
-	                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
-	                    themeName + '\'. Is this intentional?');
-	            }
-	        }
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_CL_COM"]["TZ_CLPS_ADDKS_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_ADDKS_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
 
-	        cmp = new ViewClass();
-	
-	        cmp.on('afterrender',function(win){
-	            var store = win.child('grid').getStore();
-	            var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_ADDKS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value":"'+classId+'","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value":"'+batchId+'"}}';
-	            store.tzStoreParams = tzStoreParams;
-	            store.load();
-	        });
-	
-	        cmp.show();
-    	}
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+        }
+
+        cmp = new ViewClass();
+
+        cmp.on('afterrender',function(win){
+            var store = win.child('grid').getStore();
+            var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_ADDKS_STD.TZ_CLPS_ADDKS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value":"'+classId+'","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value":"'+batchId+'"}}';
+            store.tzStoreParams = tzStoreParams;
+            store.load();
+        });
+
+        cmp.show();
     },
     //材料评审考生名单-新增考生-查询
     queryExamineeAdd:function(btn) {
@@ -110,22 +105,64 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     //材料评审考生名单-新增考生-确定
     addExamineeEnsure:function(btn) {
         var grid = btn.findParentByType("panel").child("grid");
-        var selectRecords = grid.getSelectionModel().getSelection();
 
+        var selectRecords = grid.getSelectionModel().getSelection();
         var selectLength = selectRecords.length;
 
         if(selectLength==0) {
             Ext.Msg.alert("提示","您没有选中任何记录");
             return;
         } else {
+
             var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
+                actType = activeTab.actType,
                 form = activeTab.down("form").getForm(),
                 targetStore = activeTab.down("grid[name=materialsReviewExamineeGrid]").getStore();
             var classId = form.findField("classId").getValue();
-            var className = form.findField("className").getValue();
+            //var className = form.findField("className").getValue();
             var batchId = form.findField("batchId").getValue();
-            var batchName = form.findField("batchName").getValue();
+            //var batchName = form.findField("batchName").getValue();
+
+
+            var editJson = "";
+
+            if(actType=="add") {
+                var formValues = form.getValues();
+                editJson = '{"typeFlag":"RULE","data":' + Ext.JSON.encode(formValues) + '}';
+            }
+
+            for(var x =0;x<selectLength;x++){
+                selectRecords[x].data.batchId = batchId;
+                if(editJson!="") {
+                    editJson = editJson + ',' + '{"typeFlag":"EXAMINEE","data":' + Ext.JSON.encode(selectRecords[x].data) + '}';
+                } else {
+                    editJson = '{"typeFlag":"EXAMINEE","data":' + Ext.JSON.encode(selectRecords[x].data) + '}';
+                }
+            }
+
+
+            var comParams = '"add":[' + editJson + ']';
+
+            //提交参数
+            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD","OperateType":"U","comParams":{' + comParams + '}}';
+            Ext.tzSubmit(tzParams, function (responseData) {
+                if(actType=="add") {
+                    activeTab.actType = "update";
+                }
+                var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+                targetStore.tzStoreParams = tzStoreParams;
+                targetStore.load();
+                btn.findParentByType("panel").close();
+            }, "添加考生成功", true, this);
+
+
+            /*
             var judgeNumSet = form.findField("judgeNumSet").getValue();
+            if(judgeNumSet!=null) {
+
+            } else {
+                judgeNumSet = 2;
+            }
 
             var isExist = false,
                 newRecord = [];
@@ -152,8 +189,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             targetStore.add(newRecord);
             if(isExist){
                 Ext.Msg.alert("提示","在您所选的记录中，有考生已经存在于名单中");
-            }
-            btn.findParentByType("panel").close();
+            }*/
+
         }
     },
     //材料评审考生名单-新增考生-关闭

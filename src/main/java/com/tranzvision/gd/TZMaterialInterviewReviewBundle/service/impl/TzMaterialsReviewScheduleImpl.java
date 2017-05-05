@@ -604,7 +604,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						} else {
 							tmpWc = strWc;
 						}
-						// 要求评委评审考生数量
+						/*// 要求评委评审考生数量
 						String strTmpSql1 = "SELECT ifnull(TZ_PYKS_XX,0) FROM PS_TZ_CLPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?";
 						Integer intTmp1 = sqlQuery.queryForObject(strTmpSql1, new Object[] { strClassID, strBatchID, strPwOprid }, "Integer");
 						if (intTmp1 == null) {
@@ -615,6 +615,12 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						Integer intTmp2 = sqlQuery.queryForObject(strTmpSql2, new Object[] { strClassID, strBatchID }, "Integer");
 						if (intTmp2 == null) {
 							intTmp2 = 0;
+						}*/
+						//提交数量
+						String strTmpSql01 = "SELECT COUNT(DISTINCT TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLPS_LUNC = ? AND  TZ_SUBMIT_YN = 'Y'";
+						Integer intSubmitCount = sqlQuery.queryForObject(strTmpSql01, new Object[]{strClassID, strBatchID, strPwOprid, intDqpyLunc}, "Integer");
+						if(intSubmitCount==null){
+							intSubmitCount = 0;
 						}
 						// 如果该评委被选中计算平均分布，拼接最后一行数据
 						if (selectPwList.length > 0) {
@@ -623,19 +629,27 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 								if (tmpPwOprid.equals(strPwOprid)) {
 
 									intTotalWc = intTotalWc + Integer.valueOf(strWc);
-									intTotal = intTotal + (intTmp1 * intTmp2);
+									intTotal = intTotal + intSubmitCount;
 									break;
 								}
 							}
 						}
-						strWc = strWc + "/" + (intTmp1 * intTmp2);
+						
+						/*//完成数量
+						String strTmpSql02 = "SELECT COUNT(DISTINCT TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLPS_LUNC = ? AND  TZ_SUBMIT_YN <> 'C'";
+						Integer intCompleteCount = sqlQuery.queryForObject(strTmpSql02, new Object[]{strClassID, strBatchID, strPwOprid, intDqpyLunc}, "Integer");
+						if(intCompleteCount==null){
+							intCompleteCount = 0;
+						}*/
+						strWc = intSubmitCount + "/" + tmpWc;
+						//strWc = strWc + "/" + (intTmp1 * intTmp2);
 						intFzNum = intFzNum + 1;
 						colName = "0" + intFzNum;
 						strFzValue = "col" + this.right(colName, 2);
 						strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, strWc);
 
 						if (intSize == pwList.size()) {
-							strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, intTotalWc + "/" + intTotal);
+							strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, intTotal + "/" + intTotalWc);
 						}
 						// 提交状态
 						String strSubmitZt = "", strSubmitZtDesc = "未提交";
@@ -741,15 +755,16 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 								strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, strDange + "（" + douPercent + "）");
 								if (intSize == pwList.size()) {
 									Integer sInt = sMaps.get(strMFbdzMxId) == null ? 0 : sMaps.get(strMFbdzMxId);
-
 									String stmpPercent = "0";
-									if (sInt == 0 || totalCounts == 0) {
+
+									if (sInt == 0 || intTotal == 0) {
 
 									} else {
-										double sDoubleVe = sInt * 1.0 / totalCounts;
+										double sDoubleVe = sInt * 1.0 / intTotal;
 										double dtmpPercent = sDoubleVe * 100;
 										stmpPercent = df.format(dtmpPercent) + "%";
 									}
+									
 									strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, sInt + "（" + stmpPercent + "）");
 								}
 							}

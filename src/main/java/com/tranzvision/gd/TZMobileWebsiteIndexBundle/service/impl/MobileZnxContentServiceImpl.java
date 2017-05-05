@@ -87,9 +87,9 @@ public class MobileZnxContentServiceImpl extends FrameworkImpl {
 		    	znxTime = msyyMap.get("TZ_SEND_TIME") == null ? "" : (String)msyyMap.get("TZ_SEND_TIME");
 		    	znxText = msyyMap.get("TZ_MSG_TEXT") == null ? "" : (String)msyyMap.get("TZ_MSG_TEXT");
 		    }
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_CONTENT",true,znxSubject,znxTime,znxText);
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_INFO",true,title,znxListUrl,content);
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,menuId,content);
+			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_CONTENT",true,znxSubject,znxTime,znxText);
+			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_INFO",true,title,znxListUrl,content);
+			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,menuId,content);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

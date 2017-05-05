@@ -14,6 +14,7 @@
         'Ext.grid.filters.Filters'
     ],
     bodyPadding:10,
+    scrollable: true,
     constructor: function (obj){
     			this.coluObj = obj.coluObj;
     			this.lineObj = obj.lineObj;
@@ -98,11 +99,14 @@
 
 				// 保持柱状图和线状图宽度一致
 				if (columnWidth > lineWidth) {
-					lineWidth = columnWidth;
+					//lineWidth = columnWidth;
 				} else {
-					columnWidth = lineWidth;
+					//columnWidth = lineWidth;
 				}
-
+				// 对曲线图增加点宽度;
+				lineWidth = lineWidth + (pwNum + 1) * 66; 
+				
+				
 				// ------------------------------------柱状图开始---------------------------
 				// 1、生产柱状图数据
 				for (var i = 0; i < pwArr.length; i++) {

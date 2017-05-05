@@ -123,6 +123,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             title: '图表区',
             collapsible: true,
             collapsed: true,
+            scrollable: true,
             plugins: {
                 ptype: 'maximize'
             },
@@ -155,14 +156,22 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             for (var i = 0; i < tmpArray.length; i++) {
                 var colName = '00' + (i + 1);
                 colName = 'col' + colName.substr(colName.length - 2);
-
+                
                 var tmpColumn = {
                     text: tmpArray[i][colName],
                     sortable: false,
-                    dataIndex: colName,
-                    flex: 1
+                    dataIndex: colName
                 };
 
+                if(i<=4){
+                	if(i==1){
+                		tmpColumn.width = 100;
+                	}else{
+                		tmpColumn.width = 80;
+                	}                	
+                }else{
+                	tmpColumn.flex = 1;
+                }
                 statisticsGridDataModel['gridColumns'].push(tmpColumn);
                 statisticsGridDataModel['gridFields'].push({
                     name: colName
@@ -988,11 +997,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    text: "使用计算结果设置分布标准",
 	                                    tooltip: "使用计算结果设置分布标准",
 	                                    handler:'userCalcuScoreDist'
-	                                }, "-", {
+	                                }/*, "-", {
 	                                    text: "保存评议标准",
 	                                    tooltip: "保存评议标准",
 	                                    handler:'saveEvaStandard'
-	                                }, "-", {
+	                                }*/, "-", {
 	                                    text: "刷新图表",
 	                                    name:"toolbarShowTB",
 	                                    tooltip: "刷新图表",
@@ -1181,10 +1190,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                		lineHeigth = (pwNum + 1) * 20 + 400;
 	                                		// 保持柱状图和线状图宽度一致
 	                                		if (columnWidth > lineWidth) {
-	                                			lineWidth = columnWidth;
+	                                			//lineWidth = columnWidth;
 	                                		} else {
-	                                			columnWidth = lineWidth;
+	                                			//columnWidth = lineWidth;
 	                                		}
+	                                		// 对曲线图增加点宽度;
+	                                		lineWidth = lineWidth + (pwNum + 1) * 66; 
+	                                		
+	                                		
 	                                		// ------------------------------------柱状图开始---------------------------
 	                                		// 1、生产柱状图数据
 	                                		for (var i = 0; i < pwArr.length; i++) {

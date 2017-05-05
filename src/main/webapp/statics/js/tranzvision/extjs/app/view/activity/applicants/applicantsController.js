@@ -562,7 +562,11 @@
              Ext.tzLoad(tzParams,function(respData){
                  var filePath = respData.filePath;
                  //window.open(filePath, "download","status=no,menubar=yes,toolbar=no,location=no");
-                 window.location.href=filePath;
+                 if(filePath == ""){
+                	 Ext.Msg.alert("提示","文件不存在");
+                 }else{
+                	 window.location.href=filePath;
+                 }
              });
         	
         }else{

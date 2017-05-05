@@ -64,6 +64,7 @@ public class TzEventsEnrolledExportEngineCls extends BaseEngine {
 				}
 
 				dataCellKeys.add(new String[] { "bmzt", "报名状态" });
+				dataCellKeys.add(new String[] { "bmDatetime", "报名时间" });
 				dataCellKeys.add(new String[] { "bmqd", "报名渠道" });
 				dataCellKeys.add(new String[] { "qdzt", "签到状态" });
 
@@ -124,18 +125,20 @@ public class TzEventsEnrolledExportEngineCls extends BaseEngine {
 					}
 
 					// 报名渠道、签到状态;
-					sql = "SELECT TZ_NREG_STAT,TZ_ZXBM_LY,TZ_BMCY_ZT,OPRID FROM  PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
+					sql = "SELECT TZ_NREG_STAT,TZ_ZXBM_LY,TZ_BMCY_ZT,OPRID,date_format(TZ_REG_TIME,'%Y-%m-%d %H:%i:%s') as TZ_REG_TIME FROM  PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
 					Map<String, Object> mapqdzt = sqlQuery.queryForMap(sql, new Object[] { actId, bmrid });
 					String strBmqd = "";
 					String strQdzt = "";
 					String strBmzt = "";
 					String oprid = "";
 					String msApplyNo = ""; /*面试申请号*/
+					String regDatetime = "";/*报名时间*/
 					if (mapqdzt != null) {
 						strBmqd = mapqdzt.get("TZ_ZXBM_LY") == null ? "" : String.valueOf(mapqdzt.get("TZ_ZXBM_LY"));
 						strQdzt = mapqdzt.get("TZ_BMCY_ZT") == null ? "" : String.valueOf(mapqdzt.get("TZ_BMCY_ZT"));
 						strBmzt = mapqdzt.get("TZ_NREG_STAT") == null ? "" : String.valueOf(mapqdzt.get("TZ_NREG_STAT"));
 						oprid = mapqdzt.get("OPRID") == null ? "" : String.valueOf(mapqdzt.get("OPRID"));
+						regDatetime = mapqdzt.get("TZ_REG_TIME") == null ? "" : String.valueOf(mapqdzt.get("TZ_REG_TIME"));
 
 						/* 报名渠道、签到状态取转换值配置 */
 						sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_BMR_APPLY_QD' AND TZ_ZHZ_ID=?";
@@ -146,6 +149,7 @@ public class TzEventsEnrolledExportEngineCls extends BaseEngine {
 						strBmzt = sqlQuery.queryForObject(sql, new Object[] { strBmzt }, "String");
 					}
 					mapData.put("bmzt", strBmzt);
+					mapData.put("bmDatetime", regDatetime);
 					mapData.put("bmqd", strBmqd);
 					mapData.put("qdzt", strQdzt);
 					

@@ -90,7 +90,7 @@ function loadEvaluateBatchData(callBackFunction)
 	Ext.Ajax.request({
 		url:window.getBatchListUrl,
 		method:'POST',
-		timeout:30000,
+		timeout:60000,
 		params:{LanguageCd:'ZHS',MaxRowCount:1000,StartRowNumber:1,MoreRowsFlag:'N'},
 		success:function(response)
 		{
@@ -103,7 +103,7 @@ function loadEvaluateBatchData(callBackFunction)
 				if(jsonObject.error_code != '0')
 				{
 					loadSuccess = false;
-					alert('当前资料评审批次数据加载失败：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+					Ext.Msg.alert("提示",'当前材料评审批次数据加载失败：' + jsonObject.error_decription);
 				}
 				else
 				{
@@ -116,11 +116,11 @@ function loadEvaluateBatchData(callBackFunction)
 				loadSuccess = false;
 				if(window.evaluateSystemDebugFlag == 'Y')
 				{
-					alert('当前资料评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+					Ext.Msg.alert("提示",'当前材料评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
 				}
 				else
 				{
-					alert('当前资料评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+					Ext.Msg.alert("提示",'当前材料评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 				}
 			}
 		},
@@ -129,11 +129,11 @@ function loadEvaluateBatchData(callBackFunction)
 			loadSuccess = false;
 			if(window.evaluateSystemDebugFlag == 'Y')
 			{
-				alert('当前资料评审批次数据加载失败，请与系统管理员联系：' + response.responseText);
+				Ext.Msg.alert("提示",'当前材料评审批次数据加载失败，请与系统管理员联系：' + response.responseText);
 			}
 			else
 			{
-				alert('当前资料评审批次数据加载失败，请与系统管理员联系。');
+				Ext.Msg.alert("提示",'当前材料评审批次数据加载失败，请与系统管理员联系。');
 			}
 		}
 	}
@@ -255,7 +255,7 @@ function loadBatchDataById(batchId,callBackFunction)
 		Ext.Ajax.request({
 				url:window.getBatchDataUrl,
 				method:'POST',
-				timeout:30000,
+				timeout:60000,
 				params: {
 									LanguageCd:'ZHS',
 									BaokaoClassID:classid,
@@ -279,7 +279,7 @@ function loadBatchDataById(batchId,callBackFunction)
 						if(jsonObject.error_code != "0")
 						{
 							loadSuccess = false;
-							Ext.Msg.alert("提示",'当前资料评审[' + getBatchNameById(batchId) + ']数据加载失败：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
+							Ext.Msg.alert("提示",'当前材料评审[' + getBatchNameById(batchId) + ']数据加载失败：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
 						}
 						else
 						{
@@ -295,14 +295,12 @@ function loadBatchDataById(batchId,callBackFunction)
 						loadSuccess = false;
 						if(window.evaluateSystemDebugFlag == 'Y')
 						{
-							alert('当前资料评审[' + batchId + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.toString() + ']' + response.responseText);
+							Ext.Msg.alert("提示",'当前材料评审[' + batchId + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.toString() + ']' + response.responseText);
 						}
 						else
 						{
-							alert('当前资料评审[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+							Ext.Msg.alert("提示",'当前材料评审[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 						}
-						//var mytmpWindow = window.open("about:blank");
-						//mytmpWindow.document.body.innerHTML = response.responseText;
 					}
 				},
 				failure:function(response)
@@ -313,11 +311,11 @@ function loadBatchDataById(batchId,callBackFunction)
 					loadSuccess = false;
 					if(window.evaluateSystemDebugFlag == 'Y')
 					{
-						alert('当前资料评审批次[' + batchId + ']数据加载失败，请与系统管理员联系：' + response.responseText);
+						Ext.Msg.alert("提示",'当前材料评审批次[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系：' + response.responseText);
 					}
 					else
 					{
-						alert('当前资料评审批次[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系。');
+						Ext.Msg.alert("提示",'当前材料评审批次[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系。');
 					}
 				}
 			}
@@ -561,7 +559,7 @@ function initializeEvaluatePiciGrid(jsonObject)
 			//装载指定批次数据
 			if(batchId == null || batchId == '' || batchId == 'undefined')
 			{
-				alert('系统错误：无法获取指定评审批次的编号。');
+				Ext.Msg.alert("提示",'系统错误：无法获取指定评审批次的编号。');
 			}
 			else
 			{
@@ -578,7 +576,7 @@ function initializeEvaluatePiciGrid(jsonObject)
 		{
 			if(classId == null || classId == '' || classId == 'undefined' || batchId == null || batchId == '' || batchId == 'undefined')
 			{
-				alert('系统错误：无法获取指定评审批次的编号。');
+				Ext.Msg.alert("提示",'系统错误：无法获取指定评审批次的编号。');
 			}
 			else
 			{

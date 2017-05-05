@@ -1323,16 +1323,16 @@
             var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
 
             Ext.tzLoad(tzParams,function(respData){
+                var examineeGrid = panel.down('grid');
+                var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+                examineeGrid.store.tzStoreParams = tzStoreParams;
+
                 var formData = respData.formData;
                 if(formData!="" && formData!=undefined) {
                     panel.actType="update";
                     formData.className = record.data.className;
                     formData.batchName = record.data.batchName;
                     form.setValues(formData);
-
-                    var examineeGrid = panel.down('grid');
-                    var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
-                    examineeGrid.store.tzStoreParams = tzStoreParams;
                     examineeGrid.store.load();
                 } else {
                     panel.actType="add";

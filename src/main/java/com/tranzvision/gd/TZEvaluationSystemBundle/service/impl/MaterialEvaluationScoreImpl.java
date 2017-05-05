@@ -184,9 +184,6 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 							
 							//更新考生评审得分历史表
 							this.examineeReviewHis(classId, applyBatchId, bmbId, oprid, dqpyLunc,errMsg);
-						
-							//计算排名
-							this.examineeRank(classId,applyBatchId,oprid,orgId,dqpyLunc,errMsg);
 							
 							//更新考生评审得分历史表
 							sql = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='Y'";
@@ -205,6 +202,9 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 								messageCode = jacksonUtil.getString("messageCode");
 								message = jacksonUtil.getString("message");
 							}
+							
+							//计算排名
+							this.examineeRank(classId,applyBatchId,bmbId,oprid,orgId,dqpyLunc,errMsg);
 							
 							if(!"".equals(bmbIdNext)) {
 								bmbId=bmbIdNext;
@@ -480,9 +480,9 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			//左侧考生列表header
 			Map<String, Object> mapHeader = new HashMap<String,Object>();
 			mapHeader.put("col01", "总分");
-			mapHeader.put("ps_ksh_id", "面试申请号");
+			mapHeader.put("ps_msh_id", "面试申请号");
 			mapHeader.put("ps_ksh_cpm", "排名");
-			mapHeader.put("ps_ksh_xh", "面试顺序");
+			//mapHeader.put("ps_ksh_xh", "面试顺序");
 			mapHeader.put("ps_ksh_xm", "姓名");
 			
 			mapRet.put("ksGridHeader", mapHeader);
@@ -724,26 +724,22 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 	/**
 	 * 计算排名
 	 */
-	public String examineeRank(String classId,String applyBatchId,String oprid,String orgId,String dqpyLunc,String[] errMsg) {
+	public String examineeRank(String classId,String applyBatchId,String currentBmbId,String oprid,String orgId,String dqpyLunc,String[] errMsg) {
 		String strRtn = "";
 		
 		try {
 			
-			String sql = "SELECT A.TZ_APP_INS_ID,A.TZ_SCORE_INS_ID,B.TZ_SCORE_MODAL_ID,C.TREE_NAME,D.TREE_NODE,E.TZ_SCORE_NUM";
-			sql = sql + " FROM PSTREENODE D,PS_TZ_CP_PW_KS_TBL A ,PS_TZ_SRMBAINS_TBL B,PS_TZ_RS_MODAL_TBL C,PS_TZ_CJX_TBL E";
-			sql = sql + " WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND B.TZ_SCORE_MODAL_ID=C.TZ_SCORE_MODAL_ID AND D.TREE_NAME=C.TREE_NAME AND D.PARENT_NODE_NUM=0 AND E.TZ_SCORE_INS_ID=A.TZ_SCORE_INS_ID AND E.TZ_SCORE_ITEM_ID=D.TREE_NODE";
-			sql = sql + " AND C.TZ_JG_ID=? AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?";
-			sql = sql + " ORDER BY E.TZ_SCORE_NUM DESC";
-			
+			String sql = tzSQLObject.getSQLText("SQL.TZEvaluationSystemBundle.TzMaterialExamineeRank");		
 			List<Map<String, Object>> listData = sqlQuery.queryForList(sql,new Object[]{orgId,classId,applyBatchId,oprid});
-			
-			Integer rank = 0;
 		
 			for (Map<String, Object> mapData : listData) {
-
-				Long bmbId = Long.valueOf(mapData.get("TZ_APP_INS_ID") == null ? "" : mapData.get("TZ_APP_INS_ID").toString());
-				
-				rank++;
+				Long bmbId = 0L;
+				String strBmbId = mapData.get("TZ_APP_INS_ID") == null ? "" : mapData.get("TZ_APP_INS_ID").toString();
+				if(!"".equals(strBmbId)) {
+					bmbId = Long.valueOf(strBmbId);
+				}
+				 
+				String strRank = mapData.get("RANK") == null ? "" : mapData.get("RANK").toString(); 
 				
 				PsTzCpPwKsTblKey psTzCpPwKsTblKey = new PsTzCpPwKsTblKey();
 				psTzCpPwKsTblKey.setTzClassId(classId);
@@ -757,7 +753,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 					
 				} else {
 					psTzCpPwKsTbl.setTzGuanxLeix("A");
-					psTzCpPwKsTbl.setTzKshPspm(String.valueOf(rank));
+					psTzCpPwKsTbl.setTzKshPspm(strRank);
 					psTzCpPwKsTbl.setRowLastmantDttm(new Date());
 					psTzCpPwKsTbl.setRowLastmantOprid(oprid);
 					psTzCpPwKsTblMapper.updateByPrimaryKeySelective(psTzCpPwKsTbl);
@@ -772,7 +768,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				psTzKsclpslsTblKey.setTzClpsLunc(Short.valueOf(dqpyLunc));
 				
 				PsTzKsclpslsTbl psTzKsclpslsTbl = psTzKsclpslsTblMapper.selectByPrimaryKey(psTzKsclpslsTblKey);
-				
+	
 				if(psTzKsclpslsTbl == null) {
 					psTzKsclpslsTbl = new PsTzKsclpslsTbl();
 					psTzKsclpslsTbl.setTzClassId(classId);
@@ -780,16 +776,19 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 					psTzKsclpslsTbl.setTzAppInsId(Long.valueOf(bmbId));
 					psTzKsclpslsTbl.setTzPweiOprid(oprid);
 					psTzKsclpslsTbl.setTzClpsLunc(Short.valueOf(dqpyLunc));
-					psTzKsclpslsTbl.setTzKshPspm(String.valueOf(rank));
+					psTzKsclpslsTbl.setTzKshPspm(strRank);
 					psTzKsclpslsTbl.setRowAddedDttm(new Date());
 					psTzKsclpslsTbl.setRowAddedOprid(oprid);
 					psTzKsclpslsTbl.setRowLastmantDttm(new Date());
 					psTzKsclpslsTbl.setRowLastmantOprid(oprid);
 					psTzKsclpslsTblMapper.insert(psTzKsclpslsTbl);
 				} else {
-					psTzKsclpslsTbl.setTzKshPspm(String.valueOf(rank));
-					psTzKsclpslsTbl.setRowLastmantDttm(new Date());
-					psTzKsclpslsTbl.setRowLastmantOprid(oprid);
+					psTzKsclpslsTbl.setTzKshPspm(strRank);
+					if(currentBmbId.equals(bmbId)) {
+						//当前打分考生更新评审时间
+						psTzKsclpslsTbl.setRowLastmantDttm(new Date());
+						psTzKsclpslsTbl.setRowLastmantOprid(oprid);
+					}
 					psTzKsclpslsTblMapper.updateByPrimaryKeySelective(psTzKsclpslsTbl);
 				}
 			}
@@ -984,24 +983,14 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 								if(pwksNum>pwksSubNum) {
 									bmbIdNext = "";
 									messageCode = "1";
-									message = "评委有“打分后未提交”的考生";
+									message = "评委有“打分后未提交”的考生。请先提交已经打分的考生，然后再获取新的考生。";
 								} else {
 									if(pwksNum>=pyksNum) {
 										bmbIdNext = "";
 										messageCode = "1";
 										message = "该评委已经达到了评审的上限";
 									} else {
-										sql = "SELECT A.TZ_APP_INS_ID,ROUND(RAND()*9999) SJS FROM PS_TZ_CLPS_KSH_TBL A";
-										sql = sql + " WHERE NOT EXISTS (SELECT 'Y' FROM (SELECT M.TZ_CLASS_ID,M.TZ_APPLY_PC_ID,M.TZ_APP_INS_ID";
-										sql = sql + " FROM (SELECT C.TZ_CLASS_ID,C.TZ_APPLY_PC_ID,C.TZ_APP_INS_ID,COUNT(1) ZDPWS FROM PS_TZ_CP_PW_KS_TBL B,PS_TZ_CLPS_KSH_TBL C";
-										sql = sql + " WHERE C.TZ_CLASS_ID=B.TZ_CLASS_ID AND C.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND C.TZ_APP_INS_ID=B.TZ_APP_INS_ID GROUP BY C.TZ_CLASS_ID,C.TZ_APPLY_PC_ID,C.TZ_APP_INS_ID) M WHERE M.ZDPWS>=?) X";
-										sql = sql + " WHERE X.TZ_CLASS_ID=A.TZ_CLASS_ID AND X.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND X.TZ_APP_INS_ID=A.TZ_APP_INS_ID)";
-										sql = sql + " AND NOT EXISTS (SELECT 'Y' FROM (SELECT D.TZ_CLASS_ID,D.TZ_APPLY_PC_ID,D.TZ_APP_INS_ID FROM PS_TZ_CP_PW_KS_TBL D,PS_TZ_CLPS_PW_TBL E,PS_TZ_CLPS_KSH_TBL F";
-										sql = sql + " WHERE D.TZ_CLASS_ID=F.TZ_CLASS_ID AND D.TZ_APPLY_PC_ID=F.TZ_APPLY_PC_ID AND D.TZ_APP_INS_ID=F.TZ_APP_INS_ID AND D.TZ_CLASS_ID=E.TZ_CLASS_ID AND D.TZ_APPLY_PC_ID=F.TZ_APPLY_PC_ID AND D.TZ_PWEI_OPRID=E.TZ_PWEI_OPRID AND E.TZ_PWZBH=?) Y";
-										sql = sql + " WHERE Y.TZ_CLASS_ID=A.TZ_CLASS_ID AND Y.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND Y.TZ_APP_INS_ID=A.TZ_APP_INS_ID)";
-										sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? ORDER BY SJS";
-										sql = sql + " LIMIT 0,1";
-										
+										sql = tzSQLObject.getSQLText("SQL.TZEvaluationSystemBundle.TzMaterialGetNext");											
 										Map<String, Object> mapNext = sqlQuery.queryForMap(sql,new Object[]{mspyNum,pwzbh,classId,applyBatchId});
 										Long tzAppInsId = Long.valueOf(mapNext.get("TZ_APP_INS_ID") == null ? "" : mapNext.get("TZ_APP_INS_ID").toString());
 										

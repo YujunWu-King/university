@@ -20,6 +20,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpwpslsTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl.XmlToWord;
@@ -62,6 +63,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 	private PsTzCpPwKsTblMapper psTzCpPwKsTblMapper;
 	@Autowired
 	private MaterialEvaluationCls materialEvaluationCls;
+	@Autowired
+	private TZGDObject tzSQLObject;
 	
 	@Override
 	public String tzGetJsonData(String strParams) {
@@ -175,8 +178,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 								new Object[] { strClassId, strBatchId, oprid, strClassId, strBatchId }, "Integer");
 						
 						if(tz_need_eva_num>tz_done_num){
-							String tz_end_date = (String) list.get(i).get("TZ_PYJS_RQ");
-							int tz_days = (Integer) list.get(i).get("TZ_DAYS");
+							String tz_end_date = list.get(i).get("TZ_PYJS_RQ")==null?"未设置":(String)list.get(i).get("TZ_PYJS_RQ");
+							int tz_days =  list.get(i).get("TZ_DAYS")==null?0:(Integer)list.get(i).get("TZ_DAYS");
 							
 							/*评委评审概要信息 */
 							String ps_gaiy_info = new StringBuffer(strClassName).append(" ").append(strBatchName)
@@ -874,16 +877,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 										error_code = "1";
 										error_decription = "该评委已经达到了评审的上限";
 									} else {
-										sql = "SELECT A.TZ_APP_INS_ID,ROUND(RAND()) SJS FROM PS_TZ_CLPS_KSH_TBL A";
-										sql = sql + " WHERE NOT EXISTS (SELECT 'Y' FROM (SELECT M.TZ_CLASS_ID,M.TZ_APPLY_PC_ID,M.TZ_APP_INS_ID";
-										sql = sql + " FROM (SELECT C.TZ_CLASS_ID,C.TZ_APPLY_PC_ID,C.TZ_APP_INS_ID,COUNT(1) ZDPWS FROM PS_TZ_CP_PW_KS_TBL B,PS_TZ_CLPS_KSH_TBL C";
-										sql = sql + " WHERE C.TZ_CLASS_ID=B.TZ_CLASS_ID AND C.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND C.TZ_APP_INS_ID=B.TZ_APP_INS_ID GROUP BY C.TZ_CLASS_ID,C.TZ_APPLY_PC_ID,C.TZ_APP_INS_ID) M WHERE M.ZDPWS>=?) X";
-										sql = sql + " WHERE X.TZ_CLASS_ID=A.TZ_CLASS_ID AND X.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND X.TZ_APP_INS_ID=A.TZ_APP_INS_ID)";
-										sql = sql + " AND NOT EXISTS (SELECT 'Y' FROM (SELECT D.TZ_CLASS_ID,D.TZ_APPLY_PC_ID,D.TZ_APP_INS_ID FROM PS_TZ_CP_PW_KS_TBL D,PS_TZ_CLPS_PW_TBL E,PS_TZ_CLPS_KSH_TBL F";
-										sql = sql + " WHERE D.TZ_CLASS_ID=F.TZ_CLASS_ID AND D.TZ_APPLY_PC_ID=F.TZ_APPLY_PC_ID AND D.TZ_APP_INS_ID=F.TZ_APP_INS_ID AND D.TZ_CLASS_ID=E.TZ_CLASS_ID AND D.TZ_APPLY_PC_ID=F.TZ_APPLY_PC_ID AND D.TZ_PWEI_OPRID=E.TZ_PWEI_OPRID AND E.TZ_PWZBH=?) Y";
-										sql = sql + " WHERE Y.TZ_CLASS_ID=A.TZ_CLASS_ID AND Y.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND Y.TZ_APP_INS_ID=A.TZ_APP_INS_ID)";
-										sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? ORDER BY SJS LIMIT 0,1";
 										
+										sql = tzSQLObject.getSQLText("SQL.TZEvaluationSystemBundle.TzMaterialGetNext");	
 										Map<String, Object> mapNext = sqlQuery.queryForMap(sql,new Object[]{mspyNum,pwzbh,classId,batchId});
 										
 										if(mapNext!=null){

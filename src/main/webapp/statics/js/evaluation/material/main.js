@@ -351,7 +351,7 @@ function initializeExtObjects(jsonObject)
 	}
 	catch(e1)
 	{
-		alert('资料评审初始化错误，请与系统管理员联系：[' + e1 + ']');
+		Ext.Msg.alert("提示",'资料评审初始化错误，请与系统管理员联系：[' + e1 + ']');
 	}
 }
 

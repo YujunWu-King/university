@@ -134,7 +134,7 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 			//css和js
 			jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LIST_JS_CSS",ctxPath,siteId,currentColumnId);
 			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LIST_HTML", columnName,"");
-			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",columnName,ctxPath,jsCss,siteId,menuId,listHtml);
+			listHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",columnName,ctxPath,jsCss,siteId,menuId,listHtml);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			listHtml = "";
@@ -206,14 +206,14 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 					String width = "";
 					if(showImgNum == 2){
 						width = "57%";
-						titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML",artUrl,artTitle,hotAndNewImg,artDate,width );
+						titleLi = titleLi + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML",artUrl,artTitle,hotAndNewImg,artDate,width );
 					}else{
 						if(showImgNum == 1){
 							width = "65%";
-							titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML",artUrl, artTitle,hotAndNewImg,artDate,width );
+							titleLi = titleLi + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML",artUrl, artTitle,hotAndNewImg,artDate,width );
 						}else{
 							width = "73%";
-							titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML", artUrl,artTitle,"",artDate,width);
+							titleLi = titleLi + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LI_HTML", artUrl,artTitle,"",artDate,width);
 						}
 					}
 					resultNum = resultNum +1;
