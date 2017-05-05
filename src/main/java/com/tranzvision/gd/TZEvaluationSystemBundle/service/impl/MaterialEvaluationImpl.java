@@ -21,7 +21,6 @@ import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-import com.tranzvision.gd.util.sql.type.TzSQLObject;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpwpslsTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl.XmlToWord;
@@ -179,8 +178,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 								new Object[] { strClassId, strBatchId, oprid, strClassId, strBatchId }, "Integer");
 						
 						if(tz_need_eva_num>tz_done_num){
-							String tz_end_date = (String) list.get(i).get("TZ_PYJS_RQ");
-							int tz_days = (Integer) list.get(i).get("TZ_DAYS");
+							String tz_end_date = list.get(i).get("TZ_PYJS_RQ")==null?"未设置":(String)list.get(i).get("TZ_PYJS_RQ");
+							int tz_days =  list.get(i).get("TZ_DAYS")==null?0:(Integer)list.get(i).get("TZ_DAYS");
 							
 							/*评委评审概要信息 */
 							String ps_gaiy_info = new StringBuffer(strClassName).append(" ").append(strBatchName)
