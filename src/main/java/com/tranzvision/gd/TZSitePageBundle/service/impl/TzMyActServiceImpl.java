@@ -442,18 +442,53 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 						 */
 
 					}
+					
+					
+					/************************添加报名状态--开始******************************/
+					String regSql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID,TZ_NREG_STAT FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
+					Map<String, Object> mapBM = sqlQuery.queryForMap(regSql, new Object[] { oprid, strArtId });
+					// 是否已注册报名标识
+					String regFlag = "";
+					// 报名人ID
+					String strBmrId = "";
+					//报名状态
+					String applySta = "";
+					if (mapBM != null) {
+						regFlag = mapBM.get("REG_FLAG") == null ? "" : String.valueOf(mapBM.get("REG_FLAG"));
+						strBmrId = mapBM.get("TZ_HD_BMR_ID") == null ? "" : String.valueOf(mapBM.get("TZ_HD_BMR_ID"));
+						applySta = mapBM.get("TZ_NREG_STAT") == null ? "" : String.valueOf(mapBM.get("TZ_NREG_STAT"));
+					}
+					
+					//显示报名状态
+					String statusText = "";
+					switch(applySta){
+					case "1":
+						statusText = "已报名";
+						break;
+					case "4":
+						//等候席位数
+						sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetWaitingNumber");
+						int waitNum = sqlQuery.queryForObject(sql, new Object[]{ strArtId, strBmrId }, "int");
+						statusText = "等候席第"+ waitNum +"位";
+						break;
+					}
+					/************************添加报名状态--结束******************************/
+					
 
 					switch (strType) {
 					case "0":
 
 						if ("Y".equals(strkBmFlg)) {
-							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
-							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
-							if (null != strBmrId && !"".equals(strBmrId)) {
+//							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
+//							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
+							
+							if ("Y".equals(regFlag)) {
 								strResultContent = strResultContent
 										+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
 										+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
 										+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
+								//报名状态
+								strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status\">"+ statusText +"</div>";
 							} else {
 								strResultContent = strResultContent
 										+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdbm_" + strArtId
@@ -466,12 +501,15 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 						break;
 					case "1":
 						if ("Y".equals(strkBmFlg)) {
-							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
-							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
+//							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
+//							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
 							strResultContent = strResultContent
 									+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
 									+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
 									+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
+							
+							//报名状态
+							strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status\">"+ statusText +"</div>";
 						}
 						break;
 					case "2":

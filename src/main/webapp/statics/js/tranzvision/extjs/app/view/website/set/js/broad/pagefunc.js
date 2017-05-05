@@ -729,7 +729,6 @@ function hdbm(artId,ele){
 	var url = urlBegin+'?tzParams={"ComID":"TZ_APPONL_COM","PageID":"TZ_APPREG_STD","OperateType":"HTML","comParams":{"APPLYID":"'+artId+'"}}';
 
 	tz_apply_click_to_signin_action2(url);
-
 }
 /*活动撤销*/
 function hdcx(artId,bmrId,ele){
@@ -821,9 +820,10 @@ function tz_apply_click_to_cancel_reg(tz_apply_action_url){
 			var bmrid=data.comContent.bmrid;
 			if(result == "0"){
 				alert(resultDesc);
+				removebmzt(artid,bmrid);
 			}else{
 				alert(resultDesc);
-				removebmzt(artid,bmrid);
+				//removebmzt(artid,bmrid);
 				parent.tz_close_float_iframe_apply();
 				
 			}
@@ -854,7 +854,7 @@ function tz_close_float_iframe_apply() {
 
 
 function changebmzt(artid,bmrid){
-
+	/*
 	var buttonLabel="撤销";
 	if ($("#lang").val()=="ENG"){
 		buttonLabel="Cancel"
@@ -862,10 +862,12 @@ function changebmzt(artid,bmrid){
 
 	var htmlCont='<a id="hdcx_'+artid+'" href="javascript:void(0);" onclick="hdcx('+artid+','+bmrid+',this)"><div class="bt_blue">'+buttonLabel+'</div></a>';
 	$("#hdbm_"+artid).prop('outerHTML', htmlCont);
+	*/
+	$("#pagecount .now").click();
 } 
 
 function removebmzt(artid,bmrid){
-
+	/*
 	var buttonLabel="报名";
 	if ($("#lang").val()=="ENG"){
 		buttonLabel="Sign Up"
@@ -873,6 +875,8 @@ function removebmzt(artid,bmrid){
 	
 	var htmlCont='<a id="hdbm_'+artid+'" href="javascript:void(0);" onclick="hdbm('+artid+','+bmrid+',this)"><div class="bt_blue">'+buttonLabel+'</div></a>';
 	$("#hdcx_"+artid).prop('outerHTML', htmlCont);
+	*/
+	$("#pagecount .now").click();
 }
 
 
