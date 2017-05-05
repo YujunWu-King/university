@@ -649,7 +649,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 						strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, strWc);
 
 						if (intSize == pwList.size()) {
-							strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, intTotalWc + "/" + intTotal);
+							strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, intTotal + "/" + intTotalWc);
 						}
 						// 提交状态
 						String strSubmitZt = "", strSubmitZtDesc = "未提交";
@@ -757,10 +757,10 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 									Integer sInt = sMaps.get(strMFbdzMxId) == null ? 0 : sMaps.get(strMFbdzMxId);
 									String stmpPercent = "0";
 
-									if (sInt == 0 || intTotal == 0) {
+									if (sInt == 0 || intTotalWc == 0) {
 
 									} else {
-										double sDoubleVe = sInt * 1.0 / intTotal;
+										double sDoubleVe = sInt * 1.0 / intTotalWc;
 										double dtmpPercent = sDoubleVe * 100;
 										stmpPercent = df.format(dtmpPercent) + "%";
 									}
