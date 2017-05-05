@@ -282,7 +282,6 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 				String[] str = arrayList.get(i);
 				String name = str[0];
 				String value = str[1];
-				
 				content = content.replace(name, value);
 			}
 		}
@@ -322,7 +321,7 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 					String itemName = list.get(i).get("TZ_XXX_NAME") == null ? "" : (String)list.get(i).get("TZ_XXX_NAME");
 					String StoreFieldName = list.get(i).get("TZ_FIELD_NAME") == null ? "" : (String)list.get(i).get("TZ_FIELD_NAME");
 					
-					if(itemName == null && !"".equals(itemName) && StoreFieldName == null && !"".equals(StoreFieldName)){
+					if(itemName != null && !"".equals(itemName) && StoreFieldName != null && !"".equals(StoreFieldName)){
 						String selectSql = "SELECT " + StoreFieldName + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
 						String fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[]{strPicId,audCyId},"String");
 						if(fieldValue == null){
