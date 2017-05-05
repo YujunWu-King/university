@@ -988,11 +988,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    text: "使用计算结果设置分布标准",
 	                                    tooltip: "使用计算结果设置分布标准",
 	                                    handler:'userCalcuScoreDist'
-	                                }, "-", {
+	                                }/*, "-", {
 	                                    text: "保存评议标准",
 	                                    tooltip: "保存评议标准",
 	                                    handler:'saveEvaStandard'
-	                                }, "-", {
+	                                }*/, "-", {
 	                                    text: "刷新图表",
 	                                    name:"toolbarShowTB",
 	                                    tooltip: "刷新图表",
