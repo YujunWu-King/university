@@ -113,15 +113,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					columnConfig =
 					{
 						text     : GridHeaderJsonData[ExamineeGridFldName],
-						width    : 90,
-						sortable : true,
-						dataIndex: ExamineeGridFldName
-					};	
-			}else if(ExamineeGridFldName=="ps_ksh_xh") {
-					columnConfig =
-					{
-						text     : GridHeaderJsonData[ExamineeGridFldName],
-						width    : 90,
+						width    : 110,
 						sortable : true,
 						dataIndex: ExamineeGridFldName
 					};
@@ -129,7 +121,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				columnConfig =
 					{
 						text     : GridHeaderJsonData[ExamineeGridFldName],
-						width    : 50,
+						width    : 90,
 						sortable : true,
 						dataIndex: ExamineeGridFldName
 					};
@@ -390,7 +382,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表">新开窗口查看考生材料</a>';
 
 		rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="97px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
-		rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="97px">考生标签：</td><td colspan="4">' + ksinfoJSON.examineeTag + '</td></tr>';
+		if(ksinfoJSON.examineeTag!="" && ksinfoJSON.examineeTag!=null) {
+			rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="97px">考生标签：</td><td colspan="4">' + ksinfoJSON.examineeTag + '</td></tr>';
+		}
 		//【初筛淘汰】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【校友推荐】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【自主创业】
 		rtn_ksinfohtml += '</table>';
 		
@@ -1188,8 +1182,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 													catch(eformsubmit){
 														// unmask window
 														unmaskWindow();
-															
-														alert('保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + eformsubmit + ']');
+
+														var msg = '保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + eformsubmit + ']';
+														Ext.Msg.alert('提示', msg);
 													}
 													
 												}
@@ -1288,7 +1283,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																	// unmask window
 																	unmaskWindow();
 																	
-																	alert('保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
+																	var msg = '保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']';
+																	Ext.Msg.alert('提示', msg);
 																}
 									                        }
 														});
@@ -1374,7 +1370,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 														// unmask window
 														unmaskWindow();
 															
-														alert('保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + eformsubmit + ']');
+														var msg = '保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + eformsubmit + ']';
+														Ext.Msg.alert('提示', msg);
 													}
 												}
 											}
@@ -1871,7 +1868,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		
 		var tmpEvaluatePanel = Ext.create('Ext.panel.Panel',
 										{
-											title: '考生资料评审页面',
+											title: '考生材料评审页面',
 											margin:'0 0 0 0',
 											padding:'10px 0 0 0',
 											layout:'fit',
@@ -1901,7 +1898,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		}
 		catch(e1)
 		{
-			alert('加载考生评审主页面时发生错误：' + e1);
+			var msg = '加载考生评审主页面时发生错误：' + e1;
+			Ext.Msg.alert('提示', msg);
 		}
 		
 		window.evaluatePanel[tmpBatchId] = tmpEvaluatePanel;
@@ -2041,7 +2039,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						
 						if(userpoints.messageCode != '0')
 						{
-							alert('读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误：' + userpoints.message + '[错误码：' + userpoints.messageCode + ']' + response.responseText);
+							var msg ='读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误：' + userpoints.message + '[错误码：' + userpoints.messageCode + ']' + response.responseText;
+							Ext.Msg.alert('提示', msg);
 						}
 						else
 						{
@@ -2088,14 +2087,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					}
 					catch(e1)
 					{
-						alert('读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.message + ']');
-						
+						var msg = '读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.message + ']';
+						Ext.Msg.alert('提示', msg);
 						//unmask window
 						unmaskWindow();
 					}
 				},
 				failure: function(response, opts) {
-					alert('读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据失败，请与系统管理员联系：' + response.responseText);
+					var msg = '读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据失败，请与系统管理员联系：' + response.responseText;
+					Ext.Msg.alert('提示', msg);
 					
 					//unmask window
 					unmaskWindow();
@@ -2137,7 +2137,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						unmaskWindow();
 					}
 					catch(e1){
-						alert('读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
+						var msg = '读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']';
+						Ext.Msg.alert('提示', msg);
 						//var mytmpWindow = window.open("about:blank");
 						//mytmpWindow.document.body.innerHTML = response.responseText;
 						
@@ -2147,7 +2148,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					
 				},
 				failure: function(response, opts) {
-					alert('读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据失败，请与系统管理员联系：' + response.responseText);
+					var msg = '读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据失败，请与系统管理员联系：' + response.responseText;
+					Ext.Msg.alert('提示', msg);
 					//unmask window
 					unmaskWindow();
 				}

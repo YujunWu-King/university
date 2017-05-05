@@ -641,7 +641,7 @@ function getApplicantListColumns(jsonObject,ps_show_deviation)
 	var columnList = [
       {text:"序号",width:50,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_xh"},
       {text:"考生编号",minWidth:80,flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_id",
-       renderer:function(value){return Ext.String.format('<a id="ks_id_{1}" href="JavaScript:void(0)" title="单击此链接进入该考生资料评审主页面。">{0}</a>',value,value);}
+       renderer:function(value){return Ext.String.format('<a id="ks_id_{1}" href="JavaScript:void(0)" title="单击此链接进入该考生材料评审主页面。">{0}</a>',value,value);}
 	  },
 	  {text:'考生姓名',minWidth:80,flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
 	  {text:"上次排名",minWidth:80,flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"},
@@ -686,7 +686,7 @@ function getApplicantListColumns(jsonObject,ps_show_deviation)
 				 		var tmpBtn = Ext.create('Ext.Button',{text:"进行评审",height:20,margin:0,padding:0,width:60,tooltip:'单击此按钮进入该考生评审主页面'});
 				 		var divTmp = $('<div/>');
 				 		
-				 		tmpBtn.setTooltip('单击此按钮进入该考生资料评审主页面。');
+				 		tmpBtn.setTooltip('单击此按钮进入该考生材料评审主页面。');
 				 		divTmp[0].id = Ext.id();
 				 		tmpBtn.render(divTmp[0]);
 				 		
@@ -951,7 +951,7 @@ function createApplicantList(jsonObject)
       tbar: [
       				{
       					text: '获取下一个考生',
-      					tooltip:'单击此按钮获取下一个待评审考生及其相关资料，并进入该考生资料评审主页面。',
+      					tooltip:'单击此按钮获取下一个待评审考生及其相关材料，并进入该考生材料评审主页面。',
       					width:120,
       					pressed: true,
       					handler: function()
@@ -998,7 +998,7 @@ function createApplicantList(jsonObject)
       fbar: [
       				{
       					text: '获取下一个考生',
-      					tooltip:'单击此按钮获取下一个待评审考生及其相关资料，并进入该考生资料评审主页面。',
+      					tooltip:'单击此按钮获取下一个待评审考生及其相关材料，并进入该考生材料评审主页面。',
       					width:120,
       					handler: function()
       									{
@@ -1218,8 +1218,8 @@ function loadApplicantData(applicantObject)
   {
 	  //unmask window
 	  unmaskWindow();
-	  
-	  Ext.Msg.alert("提示",'资料评审系统发生错误：评审班级批次信息丢失。');
+
+	  Ext.Msg.alert("提示",'材料评审系统发生错误：评审班级批次信息丢失。');
   }
 }
 
