@@ -186,7 +186,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		var gradeDiv="";
 		gradeDiv+=dateHtml
 		gradeDiv+='<div name="'+top_id+'_GRADE_DIV" id="'+top_id+'_GRADE_DIV" class="input-list">';
-		gradeDiv+='<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span><span id="'+grade_id+'Label">'+grade_label+'：</span></div> <div class="input-list-text left"><input class="inpu-list-text-enter" style="height:36px;" id="'+grade_id+'" value="'+grade_val+'"/>'
+		gradeDiv+='<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span><span id="'+grade_id+'Label">'+grade_label+'：</span></div> <div class="input-list-text left"><input onkeyup="this.value=this.value.replace(/[^\\d.]/g,\'\')" onafterpaste="this.value=this.value.replace(/[^\\d.]/g,\'\')" class="inpu-list-text-enter" style="height:36px;" id="'+grade_id+'" value="'+grade_val+'"/>'
 		//---------input格式检验:
 		gradeDiv += '<div style="margin-top: -40px; margin-left: 330px">';
 		gradeDiv += '	<div id="' +grade_id + 'Tip" class="onShow" style="margin: 0px; padding: 0px; background: transparent;">';
@@ -198,8 +198,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		return gradeDiv;
 	},
 	//成绩:select
-	getChoseGradeDiv:function(data,top_id,grade_id,grade_val,grade_label,optList){
+	getChoseGradeDiv:function(data,top_id,grade_id,grade_val,grade_label,optList,dateHtml){
 		var gradeDiv="";
+		gradeDiv+=dateHtml;
 		gradeDiv+='<div name="'+top_id+'_GRADE_DIV" id="'+top_id+'_GRADE_DIV" class="input-list">'
 			gradeDiv+='<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span><span >'+grade_label+'：</span></div>'
 			gradeDiv+='<div class="input-list-text left" ><select  style="width:255px;height:36px" id="'+grade_id+'" value="'+grade_val+'">'
@@ -356,16 +357,16 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T9){
 			var optList='<option value="'+MsgSet["EXAM_TEM4"]+'">'+MsgSet["EXAM_TEM4"]+'</option>';
 			optList+=('<option value="'+MsgSet["EXAM_TEM8"]+'">'+MsgSet["EXAM_TEM8"]+'</option>');
-			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//,child.EngLevelGrade.value EXAM_GSCORE
+			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//,child.EngLevelGrade.value EXAM_GSCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T10||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T11){
 			var optList='<option value="'+MsgSet["INTER_A"]+'">'+MsgSet["INTER_A"]+'</option>';
 			optList+=('<option value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
-			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//,child.EngLevelGrade.value EXAM_GSCORE
+			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//,child.EngLevelGrade.value EXAM_GSCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T12){//LEV_C
 			var optList='<option value="'+MsgSet["LEV_A"]+'">'+MsgSet["LEV_A"]+'</option>';
 			optList+=('<option value="'+MsgSet["LEV_B"]+'">'+MsgSet["LEV_B"]+'</option>');
 			optList+=('<option value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
-			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//EXAM_SCORE
+			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//EXAM_SCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13){
 			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],DATE_HTML);
 		}
@@ -391,16 +392,16 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T9){
 			var optList='<option value="'+MsgSet["EXAM_TEM4"]+'">'+MsgSet["EXAM_TEM4"]+'</option>';
 			optList+=('<option value="'+MsgSet["EXAM_TEM8"]+'">'+MsgSet["EXAM_TEM8"]+'</option>');
-			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//,child.EngLevelGrade.value EXAM_GSCORE
+			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//,child.EngLevelGrade.value EXAM_GSCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T10||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T11){
 			var optList='<option value="'+MsgSet["INTER_A"]+'">'+MsgSet["INTER_A"]+'</option>';
 			optList+=('<option value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
-			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//,child.EngLevelGrade.value EXAM_GSCORE
+			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//,child.EngLevelGrade.value EXAM_GSCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T12){//LEV_C
 			var optList='<option value="'+MsgSet["LEV_A"]+'">'+MsgSet["LEV_A"]+'</option>';
 			optList+=('<option value="'+MsgSet["LEV_B"]+'">'+MsgSet["LEV_B"]+'</option>');
 			optList+=('<option value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
-			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList);//EXAM_SCORE
+			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//EXAM_SCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13){
 			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],DATE_HTML);
 		}
@@ -556,6 +557,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				htmlContent += '<div  class="main_inner_content_info_autoheight">';
 				//----------------------------考试种类OPT
 				var OPT_ENG='';
+				OPT_ENG+='<option value=""'+(EXAM_TYPE_DEF==""?'selected="selected"': '')+'>请选择</option>'
 				for(var i in EXAM_TYPE_MAP){
 					OPT_ENG+='<option value="'+EXAM_TYPE_MAP[i]+'"'+(EXAM_TYPE_DEF==EXAM_TYPE_MAP[i]?'selected="selected"': '')+'>'+EXAM_TYPE_MAP[i]+'</option>'
 				}
@@ -708,67 +710,104 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 								//-------------------------清空数据:
 								$(this).blur();
 								//-------------------------
-								for(var i in EXAM_TYPE_MAP){
-									if($(this).val()==EXAM_TYPE_MAP[i]){
-										//切换select时，已经渲染完毕:
-										//如何获取当前项在多行容器中的第几行？
-										var indexx = $(this).closest(".main_inner_content_para").index()
-										child=data.children[indexx];
-										child.EngLevelDate.value="";
-										child.EngLevelGrade.value="";
-										var relatedDiv=data.getRelatedDiv(data,child,EXAM_TYPE_MAP[i],EXAM_TYPE_MAP);
-										
-										var topDiv=$(this).closest(".main_inner_content_info_autoheight");
-										//时间DIV
-										var timeDiv=topDiv.find("#"+data["itemId"]+"_DATE_DIV");
-										//成绩DIV
-										var gradeDiv=topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
-										//上传DIV
-										//上传部位:
-										var upDiv=topDiv.find("#"+data["itemId"]+"UP");
-										if(i=="ENG_LEV_T0"){
-											upDiv.hide();
-										}else{
-											upDiv.show();
+								if($(this).val()!=""){
+								
+									for(var i in EXAM_TYPE_MAP){
+										if($(this).val()==EXAM_TYPE_MAP[i]){
+											//切换select时，已经渲染完毕:
+											//如何获取当前项在多行容器中的第几行？
+											var indexx = $(this).closest(".main_inner_content_para").index()
+											child=data.children[indexx];
+											child.EngLevelDate.value="";
+											child.EngLevelGrade.value="";
+											var relatedDiv=data.getRelatedDiv(data,child,EXAM_TYPE_MAP[i],EXAM_TYPE_MAP);
+											
+											var topDiv=$(this).closest(".main_inner_content_info_autoheight");
+											//时间DIV
+											var timeDiv=topDiv.find("#"+data["itemId"]+"_DATE_DIV");
+											//成绩DIV
+											var gradeDiv=topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
+											//上传DIV
+											//上传部位:
+											var upDiv=topDiv.find("#"+data["itemId"]+"UP");
+											if(i=="ENG_LEV_T0"){
+												upDiv.hide();
+											}else{
+												upDiv.show();
+											}
+											
+											//gradeDiv.after(relatedDiv);
+											//changeSpanLabel(timeDiv.find())
+											gradeDiv.remove();
+											//timeDiv.remove();
+											//SELECT美化：
+											var dateSpan=timeDiv.find(".input-list-info");
+											//清空dateInput中的value：
+											var dateInput=timeDiv.find("#"+data.itemId +child.EngLevelDate.itemId);
+											//console.log("dateInput:");
+											//console.dir(dateInput);
+											dateInput.val("");
+											if(i=="ENG_LEV_T1"||i=="ENG_LEV_T2"||i=="ENG_LEV_T3"||i=="ENG_LEV_T4"||i=="ENG_LEV_T13"){
+												//改变date标签:
+												//1.date标签change
+												timeDiv.show();
+											}else{
+												//隐藏date
+												timeDiv.hide();
+											}
+											var newGradeDiv=data.getChangedGradeDiv(data,child,EXAM_TYPE_MAP[i],EXAM_TYPE_MAP);
+											//替换成绩显示框:
+											gradeDiv.remove();
+											timeDiv.after(newGradeDiv);
+											if(i=="ENG_LEV_T7"||i=="ENG_LEV_T8"||i=="ENG_LEV_T9"||i=="ENG_LEV_T10"||i=="ENG_LEV_T11"||i=="ENG_LEV_T12"){
+												gradeDiv=topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
+												gradeDiv.find("select").chosen({width: "100%"});
+												//文字说明 解析:
+											}
+											//非空验证:
+											if(data.isRequire == "Y"){
+												data.checkInputNotNull($inputBox);
+												var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
+												data.checkInputNotNull($inputBox2);
+											}
+											return false;
 										}
-										
-										//gradeDiv.after(relatedDiv);
-										//changeSpanLabel(timeDiv.find())
-										gradeDiv.remove();
-										//timeDiv.remove();
-										//SELECT美化：
-										var dateSpan=timeDiv.find(".input-list-info");
-										//清空dateInput中的value：
-										var dateInput=timeDiv.find("#"+data.itemId +child.EngLevelDate.itemId);
-										//console.log("dateInput:");
-										//console.dir(dateInput);
-										dateInput.val("");
-										if(i=="ENG_LEV_T1"||i=="ENG_LEV_T2"||i=="ENG_LEV_T3"||i=="ENG_LEV_T4"||i=="ENG_LEV_T13"){
-											//改变date标签:
-											//1.date标签change
-											timeDiv.show();
-										}else{
-											//隐藏date
-											timeDiv.hide();
-										}
-										var newGradeDiv=data.getChangedGradeDiv(data,child,EXAM_TYPE_MAP[i],EXAM_TYPE_MAP);
-										//替换成绩显示框:
-										gradeDiv.remove();
-										timeDiv.after(newGradeDiv);
-										if(i=="ENG_LEV_T7"||i=="ENG_LEV_T8"||i=="ENG_LEV_T9"||i=="ENG_LEV_T10"||i=="ENG_LEV_T11"||i=="ENG_LEV_T12"){
-											gradeDiv=topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
-											gradeDiv.find("select").chosen({width: "100%"});
-											//文字说明 解析:
-										}
-										//非空验证:
-										if(data.isRequire == "Y"){
-											data.checkInputNotNull($inputBox);
-											var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
-											data.checkInputNotNull($inputBox2);
-										}
-										return false;
+										//-------------------------
 									}
-									//-------------------------
+								}else{
+									var indexx = $(this).closest(".main_inner_content_para").index()
+									child=data.children[indexx];
+									child.EngLevelDate.value="";
+									child.EngLevelGrade.value="";
+									var relatedDiv=data.getRelatedDiv(data,child,"",EXAM_TYPE_MAP);
+									
+									var topDiv=$(this).closest(".main_inner_content_info_autoheight");
+									//时间DIV
+									var timeDiv=topDiv.find("#"+data["itemId"]+"_DATE_DIV");
+									//成绩DIV
+									var gradeDiv=topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
+									//上传DIV
+									//上传部位:
+									var upDiv=topDiv.find("#"+data["itemId"]+"UP");
+									upDiv.hide();
+									//gradeDiv.after(relatedDiv);
+									//changeSpanLabel(timeDiv.find())
+									gradeDiv.remove();
+									//timeDiv.remove();
+									//SELECT美化：
+									var dateSpan=timeDiv.find(".input-list-info");
+									//清空dateInput中的value：
+									var dateInput=timeDiv.find("#"+data.itemId +child.EngLevelDate.itemId);
+									//console.log("dateInput:");
+									//console.dir(dateInput);
+									dateInput.val("");
+									timeDiv.hide();
+									/*
+									var newGradeDiv=data.getChangedGradeDiv(data,child,"",EXAM_TYPE_MAP);
+									//替换成绩显示框:
+									timeDiv.after(newGradeDiv);
+									*/
+									return false;
 								}
 							})
 						});
