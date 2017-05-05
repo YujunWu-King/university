@@ -219,7 +219,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		
 		//DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="SurveyBuild.reFocus(\'' + date_id + '\'); title="' +date_name + '">';
 		
-		DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="this.focus()"; title="' +date_name + '">';
+		DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="this.blur()"; title="' +date_name + '">';
 
 		DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" style="position:relative;top:5px;left:-31px;cursor:pointer;">';
 		//DATE_DIV += ' <div class="clear"> </div>';
@@ -332,7 +332,10 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			}
 		}
 		var RELATED_DIV="";
-		var DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
+		var DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName,"N");
+		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T3||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13){
+			DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
+		}
 		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""){
 			RELATED_DIV=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName,"N");
 		}
@@ -343,7 +346,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4){
 			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_ISCORE"],DATE_HTML);
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T5||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T6||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
-			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],"");
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],DATE_HTML);
 		}
 //		else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
 //			var optList='<option value="'+MsgSet["PASS_Y"]+'">'+MsgSet["PASS_Y"]+'</option>';
