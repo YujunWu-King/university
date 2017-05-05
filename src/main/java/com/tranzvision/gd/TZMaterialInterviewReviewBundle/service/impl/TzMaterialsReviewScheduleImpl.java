@@ -755,15 +755,16 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 								strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, strDange + "（" + douPercent + "）");
 								if (intSize == pwList.size()) {
 									Integer sInt = sMaps.get(strMFbdzMxId) == null ? 0 : sMaps.get(strMFbdzMxId);
-
 									String stmpPercent = "0";
-									if (sInt == 0 || totalCounts == 0) {
+
+									if (sInt == 0 || intTotal == 0) {
 
 									} else {
-										double sDoubleVe = sInt * 1.0 / totalCounts;
+										double sDoubleVe = sInt * 1.0 / intTotal;
 										double dtmpPercent = sDoubleVe * 100;
 										stmpPercent = df.format(dtmpPercent) + "%";
 									}
+									
 									strLastGridDataHTML = strLastGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, sInt + "（" + stmpPercent + "）");
 								}
 							}
