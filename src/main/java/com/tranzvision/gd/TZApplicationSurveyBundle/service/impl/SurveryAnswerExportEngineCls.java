@@ -78,7 +78,7 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 				// 数据
 				List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
 				
-				String cyrSql = "select TZ_APP_INS_ID,TZ_DC_WC_STA,PERSON_ID from ps_TZ_DC_INS_T where TZ_DC_WJ_ID=? order by TZ_APP_INS_ID";
+				String cyrSql = "select TZ_APP_INS_ID,TZ_DC_WC_STA,PERSON_ID from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? order by TZ_APP_INS_ID";
 				List<Map<String,Object>> cyrList =  sqlQuery.queryForList(cyrSql, new Object[]{ wjId });
 				//循环所有调查参与人
 				for(Map<String,Object> cyrMap: cyrList){
@@ -131,20 +131,20 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 								String optDescSql = "select B.TZ_XXXKXZ_MS from PS_TZ_DC_CC_T A,PS_TZ_DCWJ_XXKXZ_T B where A.TZ_XXX_BH=B.TZ_XXX_BH  and A.TZ_APP_S_TEXT=B.TZ_XXXKXZ_MC and B.TZ_DC_WJ_ID=? and A.TZ_XXX_BH=? and A.TZ_APP_INS_ID=?";
 								answerS = sqlQuery.queryForObject(optDescSql, new Object[]{ wjId, itemId, wjInsId }, "String");
 							}else{
-								answerSql = "select TZ_APP_S_TEXT from ps_TZ_DC_CC_T where TZ_APP_INS_ID=? and TZ_XXX_BH=?"; 
+								answerSql = "select TZ_APP_S_TEXT from PS_TZ_DC_CC_T where TZ_APP_INS_ID=? and TZ_XXX_BH=?"; 
 								answerS = sqlQuery.queryForObject(answerSql, new Object[]{ wjInsId, itemId }, "String");
 							}
 							mapData.put(itemId, answerS);
 							break;
 						case "L":
 							String answerL = "";
-							answerSql = "select TZ_APP_L_TEXT from ps_TZ_DC_CC_T where TZ_APP_INS_ID=? and TZ_XXX_BH=?"; 
+							answerSql = "select TZ_APP_L_TEXT from PS_TZ_DC_CC_T where TZ_APP_INS_ID=? and TZ_XXX_BH=?"; 
 							answerL = sqlQuery.queryForObject(answerSql, new Object[]{ wjInsId, itemId }, "String");
 							mapData.put(itemId, answerL);
 							break;
 						case "D":
 							String answerD = "";
-							answerSql = "select TZ_APP_S_TEXT,TZ_KXX_QTZ from ps_TZ_DC_DHCC_T where TZ_APP_INS_ID=? and TZ_XXX_BH=? and TZ_IS_CHECKED='Y' order by TZ_XXXKXZ_MC";
+							answerSql = "select TZ_APP_S_TEXT,TZ_KXX_QTZ from PS_TZ_DC_DHCC_T where TZ_APP_INS_ID=? and TZ_XXX_BH=? and TZ_IS_CHECKED='Y' order by TZ_XXXKXZ_MC";
 							List<Map<String,Object>> xztList = sqlQuery.queryForList(answerSql, new Object[]{ wjInsId, itemId });
 							for(Map<String,Object> xztMap: xztList){
 								String value = xztMap.get("TZ_APP_S_TEXT")== null ? "":xztMap.get("TZ_APP_S_TEXT").toString();
@@ -169,7 +169,7 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 								String answerT = "";
 								String subQueId = bgtMap.get("TZ_QU_CODE").toString();
 								
-								String subQueSql = "select group_concat(TZ_OPT_NAME SEPARATOR '，') from ps_TZ_DCDJ_BGT_T A,PS_TZ_DCWJ_BGKXZ_T B where B.TZ_DC_WJ_ID=? and TZ_APP_INS_ID=? and A.TZ_XXX_BH=B.TZ_XXX_BH and A.TZ_XXXKXZ_XXMC=B.TZ_OPT_CODE and B.TZ_XXX_BH=? and TZ_XXXKXZ_WTMC=? and TZ_APP_S_TEXT='Y'";
+								String subQueSql = "select group_concat(TZ_OPT_NAME SEPARATOR '，') from PS_TZ_DCDJ_BGT_T A,PS_TZ_DCWJ_BGKXZ_T B where B.TZ_DC_WJ_ID=? and TZ_APP_INS_ID=? and A.TZ_XXX_BH=B.TZ_XXX_BH and A.TZ_XXXKXZ_XXMC=B.TZ_OPT_CODE and B.TZ_XXX_BH=? and TZ_XXXKXZ_WTMC=? and TZ_APP_S_TEXT='Y'";
 								answerT = sqlQuery.queryForObject(subQueSql, new Object[]{ wjId, wjInsId, itemId, subQueId }, "String");
 								
 								mapData.put(itemId + "-" + subQueId, answerT);
@@ -179,7 +179,6 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 					}
 					dataList.add(mapData);
 				}
-				
 				
 				sql = "select TZ_SYSFILE_NAME from PS_TZ_EXCEL_DATT_T where PROCESSINSTANCE=?";
 				String strUseFileName = sqlQuery.queryForObject(sql, new Object[]{ processinstance }, "String");
@@ -197,6 +196,7 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+			this.logError("系统错误："+e.getMessage());
 		}
 	}
 }
