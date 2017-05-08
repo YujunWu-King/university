@@ -377,7 +377,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		if(ksinfoJSON.interviewApplyId=="undefined") ksinfoJSON.interviewApplyId = "";
 		if(ksinfoJSON.name=="undefined") ksinfoJSON.name = "";
 		
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+ksinfoJSON.bmbId+'"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+ksinfoJSON.bmbId+'","TZ_APP_TPL_ID":"'+ksinfoJSON.clpsBmbTplId+'"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表">新开窗口查看考生材料</a>';
 
@@ -506,7 +506,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		field_parent_id	父节点的name值
 	*/
 	function createParentFieldContainer(field_label,field_level,field_value,field_name,field_parent_id){
-		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 20px 的倍数向右缩进
+		var pdl_value = treenode_pdl_base_value[tmpBatchId] * (field_level-1) + 5; //每个层级以 20px 的倍数向右缩进
 		var thisFieldContainerHeight = 30;
 		field_value = $.trim(field_value);
 		if(field_value=="") field_value = "--";
@@ -515,7 +515,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		}
 		
 		var parentFieldContainer = new Ext.form.FieldContainer({
-				fieldLabel		: '<span class="fontBold" style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
+				fieldLabel		: '<span style="padding-left: '+ pdl_value +'px;font-weight:bold;">'+ field_label +'</span>',
 				combineErrors	: false,
 				labelWidth		: 150,
 				height			: thisFieldContainerHeight,
@@ -556,7 +556,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
     *		bmb_id          报名表ID
  	*/
 	function createLeafPointFieldContainer(field_label,field_level,field_value,field_name,point_begin,point_end,bzsm_content,ckwt_content,ckzl_content,field_parent_id,score_model,bmb_id){
-		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 20px 的倍数向右缩进
+		var pdl_value = treenode_pdl_base_value[tmpBatchId] * (field_level-1) + 5; //每个层级以 20px 的倍数向右缩进
 		var pointbzsm_id = "pointbzsm_"+ field_name + tmpBatchId;  //标准说明的ID
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
 		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
@@ -684,7 +684,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		bmb_id          报名表ID
 	*/
 	function createLeafCommentFieldContainer(field_label,field_level,field_value,field_name,bzsm_content,ckwt_content,ckzl_content,field_pyzs_sx,field_pyzs_xx,score_model,bmb_id){
-		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 20px 的倍数向右缩进
+		var pdl_value = treenode_pdl_base_value[tmpBatchId] * (field_level-1) + 5; //每个层级以 20px 的倍数向右缩进
 		var pointbzsm_id = "pointbzsm_"+ field_name + tmpBatchId;  //标准说明的ID
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
 		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
@@ -773,7 +773,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 										width		: 400,
 										height		: thisFieldContainerHeight
 									},
-									bzsmItem,
+									/*bzsmItem,*/
 									ckwtItem,
 					                ckzlItem
 								  ]
@@ -801,7 +801,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		bmb_id          报名表ID
 	*/
 	function createLeafDropdownFieldContainer(field_label,field_level,field_value,field_name,bzsm_content,ckwt_content,ckzl_content,field_options,score_model,bmb_id){
-		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 40px 的倍数向右缩进
+		var pdl_value = treenode_pdl_base_value[tmpBatchId] * (field_level-1) + 5; //每个层级以 40px 的倍数向右缩进
 		var pointbzsm_id = "pointbzsm_"+ field_name + tmpBatchId;  //标准说明的ID
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
 		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
@@ -1079,7 +1079,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 															url : dfArea_Submit_URL,
 									                        params : {tzParams:tzParams},
 									                        timeout : 60000,
-									                        async : false,
+									                        async : true,
 									                        success : function(response,opts) {
 																//返回值内容
 																var jsonText = response.responseText;
@@ -1221,7 +1221,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 															url : dfArea_Submit_URL,
 									                        params : {tzParams:tzParams},
 									                        timeout : 60000,
-									                        async : false,
+									                        async : true,
 									                        success : function(response,opts) {
 									                            //返回值内容
 									                            var jsonText = response.responseText;
@@ -1426,7 +1426,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			combineErrors	: false,
 			height			: thisFieldContainerHeight,
 			name            : field_name,
-			html            : '<div style="margin:0;width: 300%;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
+			html            : '<div style="margin:0;width: 733px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
 		});
 
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
@@ -1715,7 +1715,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//更新报名表
 		//每个考生一个IFRAME
 		var tmpBatchIdBMBID = tmpBatchId + '_' + userpoints.bmbId;
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'","TZ_APP_TPL_ID":"'+userpoints.clpsBmbTplId+'"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl); 
 		
 		if($('#bmb_iframe_'+tmpBatchIdBMBID)[0]!=null && $('#bmb_iframe_'+tmpBatchIdBMBID)[0]!="undefined"){
@@ -1749,7 +1749,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			}
 			
 			//生成打分区域的底部按钮
-			createSavebuttonConfig();
+			if(item_data!=null && item_data!="") {
+				createSavebuttonConfig();
+			}
+
 			
 			//生成打分区的隐藏域
 			createDfAreaHiddenField(userpoints.classId, userpoints.applyBatchId, userpoints.bmbId);
@@ -1786,9 +1789,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 报名表链接地址，IFRAME用
 	*/
 	var show_BMB_html = "";
-	function createBMBPanel(east_ksbmb_url, df_bmbid){
+	function createBMBPanel(east_ksbmb_url, df_bmbid,clpsBmbTplId){
 		// 采用IFrame方式
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+df_bmbid+'"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+df_bmbid+'","TZ_APP_TPL_ID":"'+clpsBmbTplId+'"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		show_BMB_html = bmb_url;
 	}
@@ -1916,9 +1919,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
 			$('#bmb_iframe_'+tmpBatchIdBMBID).show();
 		}else{
-			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="'+ show_BMB_html +'" frameborder="0" width="100%" height="100%"></iframe>');
+			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="'+ show_BMB_html +'" frameborder="0" width="100%" height="100%" onload="unmaskWindow()"></iframe>');
 		}
-		
+
 	}
 	/***************************************************************************
 	页面参数初始化完成后，展示整个页面-----END
@@ -2044,6 +2047,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						}
 						else
 						{
+							if(userpoints.message!=null && userpoints.message!="") {
+								Ext.Msg.alert('提示', userpoints.message);
+							}
+
 							var batchId = df_batchid;
 							
 							
@@ -2176,7 +2183,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//生成中间图表
 		//createDfAreaCharts();
 		//生成中间考生报名表
-		createBMBPanel("", df_bmbid);
+		createBMBPanel("", df_bmbid,ksjson_data.clpsBmbTplId);
 		//生成页面
 		createDfAreaExtPage(ksjson_data);
 		
