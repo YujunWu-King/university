@@ -31,6 +31,7 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzKsclpslsTblKey;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwkspcTmpT;
 import com.tranzvision.gd.TZScoreModeManagementBundle.service.impl.TzScoreInsCalculationObject;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -68,6 +69,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 	private TzScoreInsCalculationObject tzScoreInsCalculationObject;
 	@Autowired
 	private TZGDObject tzSQLObject;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	
 	
 	@Override
@@ -317,7 +320,14 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			
 			/*当前登录人*/
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-
+			
+			/*自动初筛的成绩项ID*/
+			String strBkxxId = getHardCodePoint.getHardCodePointVal("TZ_CLPS_ZDCS_BKXX_ID");
+			String strZybjId = getHardCodePoint.getHardCodePointVal("TZ_CLPS_ZDCS_ZYBJ_ID");
+			String strYyspId = getHardCodePoint.getHardCodePointVal("TZ_CLPS_ZDCS_XXHDJL_ID");
+			String strXxhdjlId = getHardCodePoint.getHardCodePointVal("TZ_CLPS_ZDCS_YYSP_ID");
+			
+			
 			/*当前考生在当前评委下的成绩单ID*/
 			String sql = "SELECT TZ_SCORE_INS_ID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
 			String scoreInsId = sqlQuery.queryForObject(sql, new Object[]{classId, applyBatchId, bmbId, oprid}, "String");
@@ -384,96 +394,107 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 
 			List<Map<String,Object>> scoreList = sqlQuery.queryForList(sqlScore,new Object[]{scoreTree});
 
-			for (Map<String, Object>mapScore : scoreList) {
+			if(scoreList!=null) {
+				for (Map<String, Object>mapScore : scoreList) {
 				
-				Map<String, Object>mapScoreJson = new HashMap<String,Object>();
-				
-				String scoreItemId = mapScore.get("TREE_NODE") == null ? "" : mapScore.get("TREE_NODE").toString(); 
-				String scoreItemParentId = mapScore.get("PARENT_NODE_NAME") == null ? "" : mapScore.get("PARENT_NODE_NAME").toString();
-				String scoreItemName = mapScore.get("DESCR") == null ? "" : mapScore.get("DESCR").toString();
-				String scoreItemType = mapScore.get("TZ_SCORE_ITEM_TYPE") == null ? "" : mapScore.get("TZ_SCORE_ITEM_TYPE").toString();
-				String scoreItemIsLeaf = mapScore.get("TZ_NO_LEAF") == null ? "Y" : "N";
-				String scoreItemLevel = mapScore.get("TREE_LEVEL_NUM") == null ? "" : mapScore.get("TREE_LEVEL_NUM").toString();
-				String scoreItemValueUpper = mapScore.get("TZ_SCORE_LIMITED") == null ? "" : mapScore.get("TZ_SCORE_LIMITED").toString();
-				String scoreItemValueLower = mapScore.get("TZ_SCORE_LIMITED2") == null ? "" : mapScore.get("TZ_SCORE_LIMITED2").toString();
-				String scoreItemValue = "";
-				String scoreItemCommentUpper = mapScore.get("TZ_SCORE_PY_ZSLIM") == null ? "" : mapScore.get("TZ_SCORE_PY_ZSLIM").toString();
-				String scoreItemCommentLower = mapScore.get("TZ_SCORE_PY_ZSLIM0") == null ? "" : mapScore.get("TZ_SCORE_PY_ZSLIM0").toString();
-				String scoreItemComment = "";
-				String scoreItemXlkId = "";
-				String scoreItemDfsm = mapScore.get("TZ_SCORE_ITEM_DFSM") == null ? "" : mapScore.get("TZ_SCORE_ITEM_DFSM").toString();//标准
-				String scoreItemCkwt = mapScore.get("TZ_SCORE_ITEM_CKWT") == null ? "" : mapScore.get("TZ_SCORE_ITEM_CKWT").toString();//说明
-				String scoreItemCkzl = mapScore.get("TZ_SCORE_CKZL") == null ? "" : mapScore.get("TZ_SCORE_CKZL").toString();//参考资料
-				
-				
-				/*查询成绩项分值和评语值*/
-				String sqlScoreValue = "SELECT TZ_CJX_XLK_XXBH,TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
-				Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemId});
-				if(mapScoreValue==null) {
+					Map<String, Object>mapScoreJson = new HashMap<String,Object>();
 					
-				} else {
-					scoreItemXlkId = mapScoreValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapScoreValue.get("TZ_CJX_XLK_XXBH").toString();
-					scoreItemValue = mapScoreValue.get("TZ_SCORE_NUM") == null ? "" : mapScoreValue.get("TZ_SCORE_NUM").toString();
-					scoreItemComment = mapScoreValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapScoreValue.get("TZ_SCORE_PY_VALUE").toString();
-				}
-				/*如果成绩项类型为“D-下拉框”，则需要去下拉框值*/
-				ArrayList<Map<String, Object>> optionListJson = new ArrayList<Map<String,Object>>();
+					String scoreItemId = mapScore.get("TREE_NODE") == null ? "" : mapScore.get("TREE_NODE").toString(); 
+					String scoreItemParentId = mapScore.get("PARENT_NODE_NAME") == null ? "" : mapScore.get("PARENT_NODE_NAME").toString();
+					String scoreItemName = mapScore.get("DESCR") == null ? "" : mapScore.get("DESCR").toString();
+					String scoreItemType = mapScore.get("TZ_SCORE_ITEM_TYPE") == null ? "" : mapScore.get("TZ_SCORE_ITEM_TYPE").toString();
+					String scoreItemIsLeaf = mapScore.get("TZ_NO_LEAF") == null ? "Y" : "N";
+					String scoreItemLevel = mapScore.get("TREE_LEVEL_NUM") == null ? "" : mapScore.get("TREE_LEVEL_NUM").toString();
+					String scoreItemValueUpper = mapScore.get("TZ_SCORE_LIMITED") == null ? "" : mapScore.get("TZ_SCORE_LIMITED").toString();
+					String scoreItemValueLower = mapScore.get("TZ_SCORE_LIMITED2") == null ? "" : mapScore.get("TZ_SCORE_LIMITED2").toString();
+					String scoreItemValue = "";
+					String scoreItemCommentUpper = mapScore.get("TZ_SCORE_PY_ZSLIM") == null ? "" : mapScore.get("TZ_SCORE_PY_ZSLIM").toString();
+					String scoreItemCommentLower = mapScore.get("TZ_SCORE_PY_ZSLIM0") == null ? "" : mapScore.get("TZ_SCORE_PY_ZSLIM0").toString();
+					String scoreItemComment = "";
+					String scoreItemXlkId = "";
+					String scoreItemDfsm = mapScore.get("TZ_SCORE_ITEM_DFSM") == null ? "" : mapScore.get("TZ_SCORE_ITEM_DFSM").toString();//标准
+					String scoreItemCkwt = mapScore.get("TZ_SCORE_ITEM_CKWT") == null ? "" : mapScore.get("TZ_SCORE_ITEM_CKWT").toString();//说明
+					String scoreItemCkzl = mapScore.get("TZ_SCORE_CKZL") == null ? "" : mapScore.get("TZ_SCORE_CKZL").toString();//参考资料
+					
 				
-				if("D".equals(scoreItemType)) {
-					String optionSql = "SELECT TZ_CJX_XLK_XXBH,TZ_CJX_XLK_XXMC,TZ_CJX_XLK_XXFZ,TZ_CJX_XLK_MRZ";
-					optionSql = optionSql + " FROM PS_TZ_ZJCJXXZX_T";
-					optionSql = optionSql + " WHERE TZ_JG_ID=? AND TREE_NAME=? AND TZ_SCORE_ITEM_ID=?";
+					/*查询成绩项分值和评语值*/
+					String sqlScoreValue = "SELECT TZ_CJX_XLK_XXBH,TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
+					Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemId});
+					if(mapScoreValue==null) {
+						if(scoreItemId.equals(strBkxxId) || scoreItemId.equals(strZybjId) || scoreItemId.equals(strXxhdjlId) || scoreItemId.equals(strYyspId)) {
+							//查询自动初筛的分数
+							String sqlZdcx = "SELECT A.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL A,PS_TZ_CS_KS_TBL B";
+							sqlZdcx += " WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND A.TZ_SCORE_ITEM_ID=? AND B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=? AND B.TZ_APP_INS_ID=?";
+							scoreItemValue = sqlQuery.queryForObject(sqlZdcx, new Object[]{scoreItemId,classId,applyBatchId,bmbId},"String");
+						}
+						
+					} else {
+						scoreItemXlkId = mapScoreValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapScoreValue.get("TZ_CJX_XLK_XXBH").toString();
+						scoreItemValue = mapScoreValue.get("TZ_SCORE_NUM") == null ? "" : mapScoreValue.get("TZ_SCORE_NUM").toString();
+						scoreItemComment = mapScoreValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapScoreValue.get("TZ_SCORE_PY_VALUE").toString();
 					
-					List<Map<String, Object>> optionList = sqlQuery.queryForList(optionSql,new Object[]{jgId,scoreTree,scoreItemId});
+						}
+					/*如果成绩项类型为“D-下拉框”，则需要去下拉框值*/
+					ArrayList<Map<String, Object>> optionListJson = new ArrayList<Map<String,Object>>();
 					
-					for(Map<String, Object> mapOption : optionList) {
-						Map<String, Object> mapOptionJson = new HashMap<String,Object>();
+					if("D".equals(scoreItemType)) {
+						String optionSql = "SELECT TZ_CJX_XLK_XXBH,TZ_CJX_XLK_XXMC,TZ_CJX_XLK_XXFZ,TZ_CJX_XLK_MRZ";
+						optionSql = optionSql + " FROM PS_TZ_ZJCJXXZX_T";
+						optionSql = optionSql + " WHERE TZ_JG_ID=? AND TREE_NAME=? AND TZ_SCORE_ITEM_ID=?";
 						
-						String scoreItemOptionId = mapOption.get("TZ_CJX_XLK_XXBH") == null ? "" : mapOption.get("TZ_CJX_XLK_XXBH").toString();
-						String scoreItemOptionName = mapOption.get("TZ_CJX_XLK_XXMC") == null ? "" : mapOption.get("TZ_CJX_XLK_XXMC").toString();
-						String scoreItemOptionValue = mapOption.get("TZ_CJX_XLK_XXFZ") == null ? "" : mapOption.get("TZ_CJX_XLK_XXFZ").toString();
-						String scoreItemOptionDefault = mapOption.get("TZ_CJX_XLK_MRZ") == null ? "" : mapOption.get("TZ_CJX_XLK_MRZ").toString();
+						List<Map<String, Object>> optionList = sqlQuery.queryForList(optionSql,new Object[]{jgId,scoreTree,scoreItemId});
 						
-						mapOptionJson.put("itemId", scoreItemId);
-						mapOptionJson.put("itemOptionId", scoreItemOptionId);
-						mapOptionJson.put("itemOptionName", scoreItemOptionName);
-						mapOptionJson.put("itemOptionValue", scoreItemOptionValue);
-						mapOptionJson.put("itemOptionDefault", scoreItemOptionDefault);
-						
-						optionListJson.add(mapOptionJson);
-						
-						if(!"".equals(scoreItemXlkId)&&scoreItemXlkId!=null) {
+						for(Map<String, Object> mapOption : optionList) {
+							Map<String, Object> mapOptionJson = new HashMap<String,Object>();
 							
-						} else {
-							if("Y".equals(scoreItemOptionDefault)) {
-								scoreItemXlkId = scoreItemOptionId;
+							String scoreItemOptionId = mapOption.get("TZ_CJX_XLK_XXBH") == null ? "" : mapOption.get("TZ_CJX_XLK_XXBH").toString();
+							String scoreItemOptionName = mapOption.get("TZ_CJX_XLK_XXMC") == null ? "" : mapOption.get("TZ_CJX_XLK_XXMC").toString();
+							String scoreItemOptionValue = mapOption.get("TZ_CJX_XLK_XXFZ") == null ? "" : mapOption.get("TZ_CJX_XLK_XXFZ").toString();
+							String scoreItemOptionDefault = mapOption.get("TZ_CJX_XLK_MRZ") == null ? "" : mapOption.get("TZ_CJX_XLK_MRZ").toString();
+							
+							mapOptionJson.put("itemId", scoreItemId);
+							mapOptionJson.put("itemOptionId", scoreItemOptionId);
+							mapOptionJson.put("itemOptionName", scoreItemOptionName);
+							mapOptionJson.put("itemOptionValue", scoreItemOptionValue);
+							mapOptionJson.put("itemOptionDefault", scoreItemOptionDefault);
+							
+							optionListJson.add(mapOptionJson);
+							
+							if(!"".equals(scoreItemXlkId)&&scoreItemXlkId!=null) {
+								
+							} else {
+								if("Y".equals(scoreItemOptionDefault)) {
+									scoreItemXlkId = scoreItemOptionId;
+								}
 							}
 						}
 					}
+					
+					mapScoreJson.put("itemId", scoreItemId);
+					mapScoreJson.put("itemParentId", scoreItemParentId);
+					mapScoreJson.put("itemName", scoreItemName);
+					mapScoreJson.put("itemType", scoreItemType);
+					mapScoreJson.put("itemIsLeaf", scoreItemIsLeaf);
+					mapScoreJson.put("itemLevel", scoreItemLevel);
+					mapScoreJson.put("itemUpperLimit", scoreItemValueUpper);
+					mapScoreJson.put("itemLowerLimit", scoreItemValueLower);
+					mapScoreJson.put("itemValue", scoreItemValue);
+					mapScoreJson.put("itemCommentUpperLimit", scoreItemCommentUpper);
+					mapScoreJson.put("itemCommentLowerLimit", scoreItemCommentLower);
+					mapScoreJson.put("itemComment", scoreItemComment);
+					mapScoreJson.put("itemXlkId", scoreItemXlkId);
+					mapScoreJson.put("itemOptions", optionListJson);
+					mapScoreJson.put("itemDfsm", scoreItemDfsm);
+					mapScoreJson.put("itemCkwt", scoreItemCkwt);
+					mapScoreJson.put("itemCkzl", scoreItemCkzl);
+					mapScoreJson.put("scoreModelId", scoreModelId);
+					
+					scoreItemJson.add(mapScoreJson);
 				}
-				
-				mapScoreJson.put("itemId", scoreItemId);
-				mapScoreJson.put("itemParentId", scoreItemParentId);
-				mapScoreJson.put("itemName", scoreItemName);
-				mapScoreJson.put("itemType", scoreItemType);
-				mapScoreJson.put("itemIsLeaf", scoreItemIsLeaf);
-				mapScoreJson.put("itemLevel", scoreItemLevel);
-				mapScoreJson.put("itemUpperLimit", scoreItemValueUpper);
-				mapScoreJson.put("itemLowerLimit", scoreItemValueLower);
-				mapScoreJson.put("itemValue", scoreItemValue);
-				mapScoreJson.put("itemCommentUpperLimit", scoreItemCommentUpper);
-				mapScoreJson.put("itemCommentLowerLimit", scoreItemCommentLower);
-				mapScoreJson.put("itemComment", scoreItemComment);
-				mapScoreJson.put("itemXlkId", scoreItemXlkId);
-				mapScoreJson.put("itemOptions", optionListJson);
-				mapScoreJson.put("itemDfsm", scoreItemDfsm);
-				mapScoreJson.put("itemCkwt", scoreItemCkwt);
-				mapScoreJson.put("itemCkzl", scoreItemCkzl);
-				mapScoreJson.put("scoreModelId", scoreModelId);
-				
-				scoreItemJson.add(mapScoreJson);
+			} else {
+				mapRet.put("messageCode", "0");
+				mapRet.put("message", "没有配置成绩模型");
 			}
-			
 			mapRet.put("scoreContent", scoreItemJson);
 			
 			

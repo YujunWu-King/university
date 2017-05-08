@@ -388,30 +388,32 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 Ext.tzLoad(tzParamsNum, function (responseData) {
                     if (responseData.success == true) {
                     } else {
-                    	 Ext.Msg.alert('提示', '评委各组评议人数和不等于考生人数');
+                        Ext.Msg.alert('提示', '评委各组评议人数和不等于考生人数');
                     }
-                    
-                    var tzParams = me.getRuleParams(actType);
-                    Ext.tzSubmit(tzParams, function (responseData) {
-                        if (actType == "add") {
-                            view.actType = "update";
-                        }
-                        if (btn.name == 'onRuleEnsure') {
-                            view.close();
-                        }
-                        judgeStore.reload();
-
-                        /* var judgeNumTotal = 0;
-                         var records = judgeStore.getRange(0,judgeStore.getCount()-1);
-                         for(var i=0;i<records.length;i++) {
-                         judgeNumTotal = parseInt(judgeNumTotal)+parseInt(records[i].data.judgeExamineeNum);
-                         }
-                         var statisticsForm = view.down("form[name=statisticsNumForm]").getForm();
-                         form.findField("judgeNumTotal").setValue(judgeNumTotal);*/
-
-                    }, "", true, this);
-
                 });
+                    
+                var tzParams = me.getRuleParams(actType);
+                Ext.tzSubmit(tzParams, function (responseData) {
+                    judgeStore.reload();
+
+                    if (actType == "add") {
+                        view.actType = "update";
+                    }
+                    if (btn.name == 'onRuleEnsure') {
+                        view.close();
+                    }
+
+
+                    /* var judgeNumTotal = 0;
+                     var records = judgeStore.getRange(0,judgeStore.getCount()-1);
+                     for(var i=0;i<records.length;i++) {
+                     judgeNumTotal = parseInt(judgeNumTotal)+parseInt(records[i].data.judgeExamineeNum);
+                     }
+                     var statisticsForm = view.down("form[name=statisticsNumForm]").getForm();
+                     form.findField("judgeNumTotal").setValue(judgeNumTotal);*/
+
+                }, "", true, this);
+
             }
 
             /*var judgeGroupData = [];

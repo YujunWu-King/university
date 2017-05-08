@@ -174,7 +174,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     				},{
     					text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.judgeTotal","评委总分"),
     					dataIndex:'judgeTotal',
-    					width:120
+    					width:120,
+						hidden:true
     				},{
     					text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.reviewStatusDesc","评审状态"),
     					dataIndex:'reviewStatusDesc',
