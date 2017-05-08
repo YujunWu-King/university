@@ -3708,6 +3708,14 @@ var SurveyBuild = {
         htmlSet += '	<span class="edit_item_label">Right Width：</span>';
         htmlSet += '	<input type="text" maxlength="11" class="medium" onkeyup="SurveyBuild.save0Attr(this,\'rightWidth\')" value="' + data.rightWidth + '">';
         htmlSet += '</legend></fieldset>';
+        
+        htmlSet += '<fieldset><legend>';
+		htmlSet += ' <span class="edit_item_label">展示方式：</span>';
+		htmlSet += ' <select class="edit_boxSize select" onchange="SurveyBuild.save0Attr(this,\'displayType\')">';
+		htmlSet += '	<option ' + (data.hasOwnProperty("displayType") && data.displayType == "V" ? " selected=\'selected\'": "") + ' value="V">纵向菜单</option>';
+		htmlSet += ' 	<option ' + (data.hasOwnProperty("displayType") && data.displayType == "H" ? " selected=\'selected\'": "") + 'value="H">横向菜单</option>';
+		htmlSet += ' </select>';
+		htmlSet += '</legend></fieldset>';
         /*
 		 * 暂时注释 By WRL @2015-10-30 (BUG 1139) htmlSet += '<fieldset><legend>';
 		 * htmlSet += ' <span class="edit_item_label">标签位置：</span>'; htmlSet += '

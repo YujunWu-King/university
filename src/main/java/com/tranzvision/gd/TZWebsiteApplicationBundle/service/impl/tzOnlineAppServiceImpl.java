@@ -166,6 +166,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		String strAppInsState = "";
 		// 报名表使用模版编号
 		String strTplId = "";
+		//版式（横版、竖版）
+		String strDisplayType = "";
 		// 报名表模板类型
 		String strTplType = "";
 		// 报名表模版语言
@@ -555,6 +557,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			strAppOrgId = psTzApptplDyTWithBLOBs.getTzJgId();
 			strTplType = psTzApptplDyTWithBLOBs.getTzUseType();
 			strTplData = psTzApptplDyTWithBLOBs.getTzApptplJsonStr();
+			strDisplayType = psTzApptplDyTWithBLOBs.getTzDisplayType();
 			strLanguage = psTzApptplDyTWithBLOBs.getTzAppTplLan();
 			strAfterSubmitUrl = psTzApptplDyTWithBLOBs.getTzAppTzurl();
 			String showSubmitBtnOnly = psTzApptplDyTWithBLOBs.getTzOnlySubmitBtn();
@@ -720,6 +723,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			if (strTplData == null || "".equals(strTplData)) {
 				strTplData = "''";
+			}
+			if(StringUtils.isBlank(strDisplayType) || StringUtils.equals("V", strDisplayType)){
+				strDisplayType = "";
 			}
 
 			if (strInsData == null || "".equals(strInsData)) {
@@ -896,7 +902,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
 						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
-						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg, classProjectID,strAppInsState);
+						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg, classProjectID,strAppInsState,strDisplayType);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");

@@ -130,11 +130,15 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 			tplData = tplData.replace("\\", "\\\\");
 			String orgId = psTzApptplDyT.getTzJgId();
 			String language = psTzApptplDyT.getTzAppTplLan();
-			
+			//版式（横版、竖版）
+			String strDisplayType = psTzApptplDyT.getTzDisplayType();
 			String contextUrl = request.getContextPath();
 			   
 			//String siteId = sqlQuery.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y'", new Object[] { orgId }, "String");
 			siteId = (siteId == null ? "" : siteId);
+			if(StringUtils.isBlank(strDisplayType) || StringUtils.equals("V", strDisplayType)){
+				strDisplayType = "";
+			}
 			String onlineHead = "";
 			String onlineFoot = "";
 			try {
@@ -184,7 +188,7 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 			String viewHtml = "";
 			try {
 				tplData = tplData.replaceAll("\\$", "~");
-				viewHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_VIEW_HTML",contextUrl,comRegInfo,tplId,"0",tplData,tabHtml,siteId,orgId,menuId,msgSet, onlineHead, onlineFoot, save, submit, next, loading, processing, language,leftWidth,rightWidth);
+				viewHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_VIEW_HTML",contextUrl,comRegInfo,tplId,"0",tplData,tabHtml,siteId,orgId,menuId,msgSet, onlineHead, onlineFoot, save, submit, next, loading, processing, language,leftWidth,rightWidth,strDisplayType);
 				viewHtml = viewHtml.replaceAll("\\~", "\\$");
 			} catch (TzSystemException e) {
 				// TODO Auto-generated catch block

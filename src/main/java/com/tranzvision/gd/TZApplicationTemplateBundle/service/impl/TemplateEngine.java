@@ -152,7 +152,11 @@ public class TemplateEngine {
 				String labelPostion = infoData.get("labelPostion") == null ? ""
 						: String.valueOf(infoData.get("labelPostion"));
 				psTzApptplDyT.setTzAppLabelWz(labelPostion);
-
+				
+				//展示方式
+				String tzDisplayType = infoData.get("displayType") == null ? "V" : String.valueOf(infoData.get("displayType"));
+				psTzApptplDyT.setTzDisplayType(tzDisplayType);
+				
 				// 提示信息方式
 				String showType = infoData.get("showType") == null ? "" : String.valueOf(infoData.get("showType"));
 				psTzApptplDyT.setTzAppTsxxFs(showType);

@@ -71,6 +71,8 @@ public class PsTzApptplDyT {
 
     private String tzPwdType;
 
+    private String tzDisplayType;
+
     public String getTzAppTplId() {
         return tzAppTplId;
     }
@@ -341,5 +343,13 @@ public class PsTzApptplDyT {
 
     public void setTzPwdType(String tzPwdType) {
         this.tzPwdType = tzPwdType == null ? null : tzPwdType.trim();
+    }
+
+    public String getTzDisplayType() {
+        return tzDisplayType;
+    }
+
+    public void setTzDisplayType(String tzDisplayType) {
+        this.tzDisplayType = tzDisplayType == null ? null : tzDisplayType.trim();
     }
 }
