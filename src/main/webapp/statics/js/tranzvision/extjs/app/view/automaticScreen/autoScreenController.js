@@ -431,13 +431,36 @@
 			}
 			var tzParams = Ext.JSON.encode(comParamsObj);
 			
-			Ext.tzLoad(tzParams,function(respData){
-				var formData = respData;
-				form.setValues(formData);
-				
-				csDetailsform.down('tagfield[name=negativeList]').addCls('readOnly-tagfield-cls');
-				csDetailsform.down('tagfield[name=autoLabel]').addCls('readOnly-tagfield-cls');
+			//手工标签
+			var labelTagStore= new KitchenSink.view.common.store.comboxStore({
+	            recname:'TZ_TAG_STORE_V',
+	            condition:{
+	                TZ_JG_ID:{
+	                    value:Ext.tzOrgID,
+	                    operator:'01',
+	                    type:'01'
+	                },
+	                TZ_APP_INS_ID:{
+	                    value: appId,
+	                    operator:'01',
+	                    type:'01'
+	                }
+	            },
+	            result:'TZ_LABEL_ID,TZ_LABEL_NAME'
+	        });
+			labelTagStore.load({
+				callback: function(records, options, success){
+					
+					Ext.tzLoad(tzParams,function(respData){
+						var formData = respData;
+						form.setValues(formData);
+						
+						csDetailsform.down('tagfield[name=negativeList]').addCls('readOnly-tagfield-cls');
+						csDetailsform.down('tagfield[name=autoLabel]').addCls('readOnly-tagfield-cls');
+					});
+				}
 			});
+			csDetailsform.down('tagfield[name=manualLabel]').setStore(labelTagStore);
 		});
 
 		tab = contentPanel.add(cmp);
