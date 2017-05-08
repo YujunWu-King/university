@@ -112,7 +112,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 
 			if (moreRowsFlag == null || "".equals(moreRowsFlag)) {
 				error_code = 1;
-				error_decription = "参数不全";
+				error_decription = "参数不全。";
 			}
 
 			if (maxRowCount == null || "".equals(maxRowCount)) {
@@ -326,15 +326,15 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			if (requestDataType == null || "".equals(requestDataType) || classId == null || "".equals(classId)
 					|| batchId == null || "".equals(batchId)) {
 				error_code = 1;
-				error_decription = "参数不全";
+				error_decription = "参数不全。";
 			} else {
 				if (TZ_ZLPS_SCOR_MD_ID == null || "".equals(TZ_ZLPS_SCOR_MD_ID)) {
 					error_code = 2;
-					error_decription = "当前报考班级没有配置成绩模型";
+					error_decription = "当前报考班级没有配置成绩模型。";
 				} else {
 					if (TREE_NAME == null || "".equals(TREE_NAME)) {
 						error_code = 3;
-						error_decription = "报考班级对应的成绩模型没有配置对应的成绩树";
+						error_decription = "报考班级对应的成绩模型没有配置对应的成绩树。";
 					}
 				}
 			}
@@ -792,7 +792,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 				|| StringUtils.isBlank(oprId)) {
 
 			mapData.put("errorCode", "1");
-			mapData.put("errorMsg", "参数不全");
+			mapData.put("errorMsg", "参数不全。");
 		} else {
 
 			try {
@@ -803,7 +803,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 
 			if ("1".equals(url)) {
 				mapData.put("errorCode", "1");
-				mapData.put("errorMsg", "参数不全");
+				mapData.put("errorMsg", "参数不全。");
 			} else {
 				mapData.put("url", url);
 			}
@@ -836,7 +836,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			if("Y".equals(noPwzFlag)) {
 				bmbIdNext = "";
 				error_code = "1";
-				error_decription = "存在没有被分组的评委";
+				error_decription = "存在没有被分组的评委。";
 			} else {
 				sql = "SELECT A.TZ_PYKS_XX,A.TZ_PWEI_ZHZT,A.TZ_PWZBH,B.TZ_DQPY_ZT,B.TZ_DQPY_LUNC,B.TZ_MSPY_NUM,C.TZ_SUBMIT_YN";
 				sql = sql + ",(SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL E,PS_TZ_CLPS_KSH_TBL F";
@@ -863,19 +863,19 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					if("Y".equals(submitAllFlag)) {
 						bmbIdNext = "";
 						error_code = "1";
-						error_decription = "该轮次已经全部提交了,无法得到下一个考生";
+						error_decription = "该轮次已经全部提交了,无法得到下一个考生。";
 					} else {
 						if("A".equals(dqpyZt)) {
 							if("A".equals(pweiZhzt)) {
 								if(pwksNum>pwksSubNum) {
 									bmbIdNext = "";
 									error_code = "1";
-									error_decription = "评委有“打分后未提交”的考生";
+									error_decription = "评委有“打分后未提交”的考生，请先提交已经打分的考生，然后再获取新的考生。";
 								} else {
 									if(pwksNum>=pyksNum) {
 										bmbIdNext = "";
 										error_code = "1";
-										error_decription = "该评委已经达到了评审的上限";
+										error_decription = "该评委已经达到了评审的上限。";
 									} else {
 										
 										sql = tzSQLObject.getSQLText("SQL.TZEvaluationSystemBundle.TzMaterialGetNext");	
@@ -995,7 +995,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 													} else {
 														bmbIdNext = "";
 														error_code = "1";
-														error_decription = "得到下一个考生失败或者已经没有可评审的考生";
+														error_decription = "得到下一个考生失败或者已经没有可评审的考生。";
 													}	
 												}
 												
@@ -1004,12 +1004,12 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 											} else {
 												bmbIdNext = "";
 												error_code = "1";
-												error_decription = "同步MBA材料评审评委考生关系表失败";	
+												error_decription = "同步MBA材料评审评委考生关系表失败。";	
 											}
 										}else{
 											bmbIdNext = "";
 											error_code = "1";
-											error_decription = "没有可获取的考生";	
+											error_decription = "没有可获取的考生。";	
 										}
 										
 									}
@@ -1017,18 +1017,18 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 							} else {
 								bmbIdNext = "";
 								error_code = "1";
-								error_decription = "评委账号没有被启用";
+								error_decription = "评委账号没有被启用。";
 							}
 						} else {
 							bmbIdNext = "";
 							error_code = "1";
-							error_decription = "当前批次的评审状态不在进行中";
+							error_decription = "当前批次的评审状态不在进行中。";
 						}
 					}
 				}else{
 					bmbIdNext = "";
 					error_code = "1";
-					error_decription = "没有开启评审";
+					error_decription = "没有开启评审。";
 				}
 				
 
@@ -1101,7 +1101,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					 
 					 if("Y".equals(TZ_SUBMIT_YN)){
 						 error_code = "SUBMITTED";
-						 error_decription = "当前评委账号已经提交，不能再提交";
+						 error_decription = "当前评委账号已经提交，不能再提交。";
 					 }else{
 						   //允许评议数量
 						   int TZ_PYKS_XX = 0;
@@ -1120,11 +1120,11 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 									new Object[]{classId,batchId,oprid,TZ_DQPY_LUNC},"String");
 						   
 						   if("Y".equals(submit_zt)){
-							   error_decription = "存在未评审的考生";
+							   error_decription = "存在未评审的考生。";
 							   error_code = "SUBMTALL03";
 						   }else{
 							   if(submitCount<TZ_PYKS_XX){
-								   error_decription = "您当前评审的学生数量未达到要求";
+								   error_decription = "您当前评审的学生数量未达到要求。";
 								   error_code = "SUBMTALL02";
 							   }else{
 								   //校验评审是否符合要求
