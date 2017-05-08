@@ -1457,6 +1457,10 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				// 关闭评审
 				strResponse = this.btnClick(strParams, errMsg);
 				break;
+			case "submitPweiData":
+				//校验是否可以提交评委数据
+				strResponse = this.saveSubmitPwData(strParams, errMsg);
+				break;
 			case "rjd":
 				// 撤销评议数据
 				strResponse = this.removeJudgeData(strParams, errMsg);
@@ -1730,6 +1734,53 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 		return doublePianCha;
 	}
 
+	@SuppressWarnings("unchecked")
+	public String saveSubmitPwData(String strParams, String[] errMsg) {
+		String strResponse = "\"success\"";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+
+		try {
+			String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+
+			jacksonUtil.json2Map(strParams);
+			String strClassID = jacksonUtil.getString("classID");
+			String strBatchID = jacksonUtil.getString("batchID");
+
+			String strContent = "";
+			String strJudgeOpridList = jacksonUtil.getString("pwOpridList");
+			String[] judgeOpridList = strJudgeOpridList.split(";");
+
+			if (judgeOpridList != null && judgeOpridList.length > 0) {
+
+				for (int i = 0; i < judgeOpridList.length; i++) {
+					String strPwOprID = judgeOpridList[i];
+					String strSql1 = "SELECT COUNT(TZ_APP_INS_ID) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID=? AND TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT <> 'C' AND TZ_PSHEN_ZT <> 'Y'";
+					Integer TZ_APP_INS_ID_NUM = sqlQuery.queryForObject(strSql1, new Object[] { strClassID, strBatchID, strPwOprID }, "Integer");
+					if (TZ_APP_INS_ID_NUM != 0) {
+						String strRealName = "";
+						String strSql2 = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+						strRealName = sqlQuery.queryForObject(strSql2, new Object[] { strPwOprID }, "String");
+
+						strResponse = "\"评委 " + strRealName + " 有未提交考生数据，无法提交。\"";
+						return strResponse;
+					}else{
+						//参考原系统，提交数据
+						String strUpdateSql = "UPDATE PS_TZ_MSPWPSJL_TBL SET TZ_SUBMIT_YN='Y' WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID=?";
+						sqlQuery.update(strUpdateSql, new Object[] { strClassID, strBatchID, strPwOprID });
+					}
+				}
+			}
+
+			errMsg[0] = "0";
+
+		} catch (Exception e) {
+			errMsg[0] = "100";
+			errMsg[1] = e.toString();
+		}
+		return strResponse;
+	}
+	
 	public int find(String[] arr, String strValue) {
 		int index = -1;
 		if (arr != null && arr.length > 0) {
