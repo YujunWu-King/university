@@ -338,7 +338,7 @@ public class XmlToWord {
 				// 动态读取评委考生数据 - 开始;
 
 				// 循环评委考生;
-				String pw_ks_sql = "SELECT TZ_APP_INS_ID,TZ_SCORE_INS_ID,TZ_KSH_PSPM FROM PS_TZ_CP_PW_KS_TBL where TZ_CLASS_ID =? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID=? order by TZ_KSH_PSPM";
+				String pw_ks_sql = "SELECT TZ_APP_INS_ID,TZ_SCORE_INS_ID,TZ_KSH_PSPM FROM PS_TZ_CP_PW_KS_TBL where TZ_CLASS_ID =? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID=? order by (TZ_KSH_PSPM+0) asc";
 				List<Map<String, Object>> pw_ks_list = jdbcTemplate.queryForList(pw_ks_sql,
 						new Object[] { TZ_CLASS_ID, TZ_APPLY_PC_ID, arr[i] });
 
@@ -437,10 +437,17 @@ public class XmlToWord {
 								// "C" 为评语项
 								//System.out.println("TZ_SCORE_PY_VALUE=" + TZ_SCORE_PY_VALUE+"=");
 								
-								//处理评议数据中有&的情况;
+								//处理评议数据中有&、<、>的情况;
 								if (TZ_SCORE_PY_VALUE.contains("&")) {
 									TZ_SCORE_PY_VALUE = TZ_SCORE_PY_VALUE.replace("&", "&amp;");
 								}
+								if (TZ_SCORE_PY_VALUE.contains("<")) {
+									TZ_SCORE_PY_VALUE = TZ_SCORE_PY_VALUE.replace("<", "&lt;");
+								}		
+								if (TZ_SCORE_PY_VALUE.contains(">")) {
+									TZ_SCORE_PY_VALUE = TZ_SCORE_PY_VALUE.replace(">", "&gt;");
+								}	
+								
 								
 								pw_ks_bph_html = pw_ks_bph_html + tzGDObject.getHTMLTextForDollar(
 										"HTML.TZMaterialInterviewReviewBundle.TZ_GD_CL_PY_PW_STULIST_TC_HTML",
