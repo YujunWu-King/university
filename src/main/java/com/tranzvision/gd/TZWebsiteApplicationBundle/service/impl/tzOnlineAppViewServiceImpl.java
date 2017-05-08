@@ -308,7 +308,8 @@ public class tzOnlineAppViewServiceImpl {
 				String strUseFileName = "";
 				String strViewFileName = "";
 				String strFileIndex = "";
-				String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
+				String strAccessPath = "";
+				String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE,TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_VW2 "
 						+ "WHERE TZ_APP_INS_ID = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?"; 
 				List<?> appFileList = sqlQuery.queryForList(sqlGetFile, 
 			    		new Object[] { strTplId,strXxxBh,strComLmc });
@@ -318,6 +319,7 @@ public class tzOnlineAppViewServiceImpl {
 					strFileIndex = mapAppFileObj.get("TZ_INDEX") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_INDEX"));
 					strSysFileName = mapAppFileObj.get("ATTACHSYSFILENAME") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHSYSFILENAME"));
 					strUseFileName = mapAppFileObj.get("ATTACHUSERFILE") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHUSERFILE"));
+					strAccessPath = mapAppFileObj.get("TZ_ACCESS_PATH") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_ACCESS_PATH"));
 					if(strXxxMc.length()>17){
 						String suffix = strSysFileName.substring(strSysFileName.lastIndexOf(".") + 1);
 						if("".equals(suffix) || suffix == null){
@@ -335,6 +337,7 @@ public class tzOnlineAppViewServiceImpl {
 					mapAppFileJson.put("fileName", strUseFileName);
 					mapAppFileJson.put("sysFileName", strSysFileName);
 					mapAppFileJson.put("viewFileName", strViewFileName);
+					mapAppFileJson.put("accessPath", strAccessPath);
 					
 					arrAppFileJson.add(mapAppFileJson);
 					
@@ -457,6 +460,7 @@ public class tzOnlineAppViewServiceImpl {
 			String strSysFileName = "";
 			String strUseFileName = "";
 			String strViewFileName = "";
+			String strAccessPath = "";
 			
 			sql = "SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?";
 			strAppTplIdHis = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
@@ -615,7 +619,7 @@ public class tzOnlineAppViewServiceImpl {
 					String strFileIndex = "";
 				    if(strAppxxxChildrenFbh != null){
 				    	
-						String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
+						String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE,TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_VW2 "
 								+ "WHERE TZ_APP_INS_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?"; 
 						
 						Map<String, Object> mapAppFileObj = sqlQuery.queryForMap(sqlGetFile, 
@@ -626,6 +630,7 @@ public class tzOnlineAppViewServiceImpl {
 							strFileIndex = mapAppFileObj.get("TZ_INDEX") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_INDEX"));
 							strSysFileName = mapAppFileObj.get("ATTACHSYSFILENAME") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHSYSFILENAME"));
 							strUseFileName = mapAppFileObj.get("ATTACHUSERFILE") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHUSERFILE"));
+							strAccessPath = mapAppFileObj.get("TZ_ACCESS_PATH") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_ACCESS_PATH"));
 							if(strXxxMc.length()>17){
 								String suffix = strSysFileName.substring(strSysFileName.lastIndexOf(".") + 1);
 								if("".equals(suffix) || suffix == null){
@@ -654,6 +659,7 @@ public class tzOnlineAppViewServiceImpl {
 					mapXxxInfo.put("filename", strUseFileName);
 					mapXxxInfo.put("sysFileName", strSysFileName);
 					mapXxxInfo.put("viewFileName", strViewFileName);
+					mapXxxInfo.put("accessPath", strAccessPath);
 				}
 
 				if(mapAppXxxOptionJson != null){
@@ -1130,7 +1136,8 @@ public class tzOnlineAppViewServiceImpl {
 						String strUseFileName = "";
 						String strViewFileName = "";
 						String strFileIndex = "";
-						String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE FROM PS_TZ_FORM_ATT_VW2 "
+						String strAccessPath = "";
+						String sqlGetFile = "SELECT TZ_XXX_MC,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE,TZ_ACCESS_PATH FROM PS_TZ_FORM_ATT_VW2 "
 								+ "WHERE TZ_APP_INS_ID = ? AND TZ_D_XXX_BH = ? AND TZ_XXX_BH = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?"; 
 						
 						List<?> appFileList = sqlQuery.queryForList(sqlGetFile, 
@@ -1141,6 +1148,7 @@ public class tzOnlineAppViewServiceImpl {
 							strFileIndex = mapAppFileObj.get("TZ_INDEX") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_INDEX"));
 							strSysFileName = mapAppFileObj.get("ATTACHSYSFILENAME") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHSYSFILENAME"));
 							strUseFileName = mapAppFileObj.get("ATTACHUSERFILE") == null ? "" : String.valueOf(mapAppFileObj.get("ATTACHUSERFILE"));
+							strAccessPath = mapAppFileObj.get("TZ_ACCESS_PATH") == null ? "" : String.valueOf(mapAppFileObj.get("TZ_ACCESS_PATH"));
 							if(strXxxMc.length()>17){
 								String suffix = strSysFileName.substring(strSysFileName.lastIndexOf(".") + 1);
 								if("".equals(suffix) || suffix == null){
@@ -1158,6 +1166,7 @@ public class tzOnlineAppViewServiceImpl {
 							mapAppFileJson.put("fileName", strUseFileName);
 							mapAppFileJson.put("sysFileName", strSysFileName);
 							mapAppFileJson.put("viewFileName", strViewFileName);
+							mapAppFileJson.put("accessPath", strAccessPath);
 							
 							arrAppFileJson.add(mapAppFileJson);
 						}
@@ -1168,6 +1177,7 @@ public class tzOnlineAppViewServiceImpl {
 						mapAppFileJson.put("fileName", "");
 						mapAppFileJson.put("sysFileName", "");
 						mapAppFileJson.put("viewFileName", "");
+						mapAppFileJson.put("accessPath", "");
 						
 						arrAppFileJson.add(mapAppFileJson);
 				    }
