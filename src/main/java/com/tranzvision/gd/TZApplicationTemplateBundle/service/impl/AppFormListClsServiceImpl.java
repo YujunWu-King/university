@@ -195,6 +195,7 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 					mapTplDef.put("tpPwdType", "N");
 
 					mapTplDef.put("labelPostion", "UP");
+					mapTplDef.put("displayType", "V");
 					mapTplDef.put("showType", "POP");
 					mapTplDef.put("printTplName", "");
 					mapTplDef.put("targetType", "TOP");
