@@ -2207,14 +2207,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		{
 			content: {
 				// Set the text to an image HTML string with the correct src URL to the loading image you want to use
-				text: dfarea_leaftips_data[1],
+				text: "<div style='width:100%'>"+dfarea_leaftips_data[1]+"</div>",
 				title: {
 					text: dfarea_leaftips_data[2], // Give the tooltip a title using each elements text
-					button: true
+					button: "关闭"
 				}
 			},
 			position: {
-				at: 'top right', // Position the tooltip above the link
+				at: 'top center', // Position the tooltip above the link
 				my: 'bottom right',
 				//viewport: $(window), // Keep the tooltip on-screen at all times
 				viewport:$(".main"),
@@ -2227,9 +2227,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//hide: 'unfocus',
 			hide: false,
 			style: {
-				classes: 'ui-tooltip-wiki ui-tooltip-tipped ui-tooltip-shadow'
+				classes: 'ui-tooltip-wiki ui-tooltip-tipped ui-tooltip-shadow',
 			}
-		});	
+		});
 	}
 
 	
