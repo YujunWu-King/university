@@ -168,6 +168,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		String strTplId = "";
 		//版式（横版、竖版）
 		String strDisplayType = "";
+		// 是否多层菜单
+		boolean isMultilayerMenu = false;
 		// 报名表模板类型
 		String strTplType = "";
 		// 报名表模版语言
@@ -562,6 +564,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			strAfterSubmitUrl = psTzApptplDyTWithBLOBs.getTzAppTzurl();
 			String showSubmitBtnOnly = psTzApptplDyTWithBLOBs.getTzOnlySubmitBtn();
 
+			if(StringUtils.isBlank(strDisplayType) || StringUtils.equals("V", strDisplayType)){
+				strDisplayType = "";
+				isMultilayerMenu = true;
+			}
+			
 			// 信息项Lebal左侧宽度
 			String leftWidth = "";
 			leftWidth = psTzApptplDyTWithBLOBs.getTzLeftWidth() == null ? ""
@@ -608,6 +615,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			// String strXxxMc = "";
 			String strXxxTitle = "";
 			String strDivClass = "";
+			//页签自定义样式
+			String strtabType = "";
 			String strTabs = "";
 			// 父分隔符号的id
 			String strTZ_FPAGE_BH = "";
@@ -620,20 +629,40 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			sql = sql + "WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";
 			listData = sqlQuery.queryForList(sql, new Object[] { numAppInsId, strTplId });
 			mapData = null;
+			System.out.println("是否多层菜单:" + isMultilayerMenu);
 			for (Object objDataTap : listData) {
 				mapData = (Map<String, Object>) objDataTap;
 				strXxxBh = mapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(mapData.get("TZ_XXX_BH"));
 				strXxxTitle = mapData.get("TZ_TITLE") == null ? "" : String.valueOf(mapData.get("TZ_TITLE"));
+				strtabType = mapData.get("TZ_TAPSTYLE") == null ? "" : String.valueOf(mapData.get("TZ_TAPSTYLE"));
 				strTZ_FPAGE_BH = mapData.get("TZ_FPAGE_BH") == null ? "" : String.valueOf(mapData.get("TZ_FPAGE_BH"));
 
 				String strComplete = contextUrl + "/statics/images/appeditor/new/check.png"; // 对号
 				numIndex = numIndex + 1;
 
-				// 默认第一级菜单高亮
-				if (strTZ_FPAGE_BH == null || strTZ_FPAGE_BH.trim().equals("")) {
-					strDivClass = "menu-active-top";
+				if (isMultilayerMenu) {
+					strtabType = "";	//多层菜单页签自定义样式无效
+					// 默认第一级菜单高亮
+					if (strTZ_FPAGE_BH == null || strTZ_FPAGE_BH.trim().equals("")) {
+						strDivClass = "menu-active-top";
+					} else {
+							if (strPageID == null || strPageID.equals("")) {
+								numChild = numChild + 1;
+								// 默认第一页高亮
+								if (numChild == 1) {
+									strDivClass = "menu-active";
+								} else {
+									strDivClass = "";
+								}
+							} else {
+								if (strXxxBh.equals(strPageID)) {
+									strDivClass = "menu-active";
+								} else {
+									strDivClass = "";
+								}
+							}
+					}
 				} else {
-
 					if (strPageID == null || strPageID.equals("")) {
 						numChild = numChild + 1;
 						// 默认第一页高亮
@@ -672,9 +701,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				}
 
 				try {
-					strComplete = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_IMG", strComplete);
+					if(StringUtils.isNotBlank(strComplete)){
+						strComplete = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_IMG", strComplete);
+					}
 					strTabs = strTabs + tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV",
-							strDivClass, strXxxTitle, strComplete, strXxxBh);
+							strDivClass, strXxxTitle, strComplete, strXxxBh,strtabType);
 				} catch (TzSystemException e) {
 					e.printStackTrace();
 					strTabs = "";
@@ -723,9 +754,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			if (strTplData == null || "".equals(strTplData)) {
 				strTplData = "''";
-			}
-			if(StringUtils.isBlank(strDisplayType) || StringUtils.equals("V", strDisplayType)){
-				strDisplayType = "";
 			}
 
 			if (strInsData == null || "".equals(strInsData)) {

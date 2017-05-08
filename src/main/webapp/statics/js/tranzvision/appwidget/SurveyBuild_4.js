@@ -2512,63 +2512,93 @@ var SurveyBuild = {
 				return;
 			}
 		}
-        var a = {},b = true,d = "Page",c = 0,pageno = 1;// 页号从1 开始
-        
-        // 标记 顶层页 真正的页 不是页
-        var topPage=false,Page=false,noPage=false;
-        
-        $("#question-box>li").each(function(f) {
-        	topPage=false,Page=false,noPage=false;
-        	
-            var g = $(this),h = g.attr("data_id"),e = SurveyBuild._items[h]["classname"];
-            
-            if (e !="Page") {
-            	noPage = true;
-            } else {
-            	var variable2 = SurveyBuild._items[h]["fPageId"] || '';
-            	if (variable2 !='') {
-            		Page = true;
-            	} else {
-            		topPage = true;
-            	}
-            }
-            // 顶级的页，不算pageno，固定写死为0
-            if (topPage) {
-            	SurveyBuild._items[h]["pageno"] = 0;
-            } else {
-            	SurveyBuild._items[h]["pageno"] = pageno;
-            }
-            
-            // 遇到不是分页，c累加1，c的作用是 某一页内 控件的统计
-            if (noPage) {
-            	c =c +1;
-            }
-            
-            // modity by caoy 顶级的页，不需要做这个判断
-            if (Page && c == 0) {
-    			SurveyBuild.fail($(this), "第" + pageno + "页不能没有问题", "top");
-    			b = false;
-    			return false
-            } else {
-            	// 遇到Page pageno累加1 c重新计数
-                if (Page) {
-                	pageno = pageno+1;
-                	c = 0;
-                }
-                d = e;
-                /* 如果是多行容器、分组框，那么重新获取其内容（用于多行容器信息项排序） */
-                if ($.inArray(SurveyBuild._items[h].classname, ["DHContainer","LayoutControls"]) != -1) {
-                    var children = {};
-                     $("#q" + SurveyBuild._items[h]["instanceId"] + " > ul > li").each(function(f){
-                        var insId = $(this).attr("data_id");
-                         children[insId] =  SurveyBuild._items[h]["children"][insId];
-                     });
-                    SurveyBuild._items[h]["children"] = children;
-                }
-                a[h] = SurveyBuild._items[h]
-            }
+		
+		var displaytype = this._data.displayType;
+		var a = {},b = true,d = "Page",c = 0,pageno = 1;// 页号从1 开始
+		
+		if(displaytype == "H"){
+			/*横向报名表*/
+	        $("#question-box>li").each(function(f) {
+	            var g = $(this),h = g.attr("data_id"),e = SurveyBuild._items[h]["classname"];
+	            e == "Page" && ++c && ++pageno;
+	            SurveyBuild._items[h]["pageno"] = pageno;
+	            console.log(" -- " + pageno);
+	            if (d == "Page" && e == "Page" && c != 1) {
+	                SurveyBuild.fail($(this), "第" + c + "页不能没有问题", "top");
+	                b = false;
+	                return false
+	            } else {
+	                d = e;
+	                /*如果是多行容器、分组框，那么重新获取其内容（用于多行容器信息项排序）*/
+	                if ($.inArray(SurveyBuild._items[h].classname, ["DHContainer","LayoutControls"]) != -1) {
+	                    var children = {};
+	                     $("#q" + SurveyBuild._items[h]["instanceId"] + " > ul > li").each(function(f){
+	                        var insId = $(this).attr("data_id");
+	                         children[insId] =  SurveyBuild._items[h]["children"][insId];
+	                     });
+	                    SurveyBuild._items[h]["children"] = children;
+	                }
+	                a[h] = SurveyBuild._items[h]
+	            }
+	        });
+		}else{
+			/*纵向报名表*/
+	        // 标记 顶层页 真正的页 不是页
+	        var topPage=false,Page=false,noPage=false;
+	        
+	        $("#question-box>li").each(function(f) {
+	        	topPage=false,Page=false,noPage=false;
+	        	
+	            var g = $(this),h = g.attr("data_id"),e = SurveyBuild._items[h]["classname"];
+	            
+	            if (e !="Page") {
+	            	noPage = true;
+	            } else {
+	            	var variable2 = SurveyBuild._items[h]["fPageId"] || '';
+	            	if (variable2 !='') {
+	            		Page = true;
+	            	} else {
+	            		topPage = true;
+	            	}
+	            }
+	            // 顶级的页，不算pageno，固定写死为0
+	            if (topPage) {
+	            	SurveyBuild._items[h]["pageno"] = 0;
+	            } else {
+	            	SurveyBuild._items[h]["pageno"] = pageno;
+	            }
+	            
+	            // 遇到不是分页，c累加1，c的作用是 某一页内 控件的统计
+	            if (noPage) {
+	            	c =c +1;
+	            }
+	            
+	            // modity by caoy 顶级的页，不需要做这个判断
+	            if (Page && c == 0) {
+	    			SurveyBuild.fail($(this), "第" + pageno + "页不能没有问题", "top");
+	    			b = false;
+	    			return false
+	            } else {
+	            	// 遇到Page pageno累加1 c重新计数
+	                if (Page) {
+	                	pageno = pageno+1;
+	                	c = 0;
+	                }
+	                d = e;
+	                /* 如果是多行容器、分组框，那么重新获取其内容（用于多行容器信息项排序） */
+	                if ($.inArray(SurveyBuild._items[h].classname, ["DHContainer","LayoutControls"]) != -1) {
+	                    var children = {};
+	                     $("#q" + SurveyBuild._items[h]["instanceId"] + " > ul > li").each(function(f){
+	                        var insId = $(this).attr("data_id");
+	                         children[insId] =  SurveyBuild._items[h]["children"][insId];
+	                     });
+	                    SurveyBuild._items[h]["children"] = children;
+	                }
+	                a[h] = SurveyBuild._items[h]
+	            }
 
-        });
+	        });
+		}
 
         SurveyBuild._data['items'] = a;
         var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"U","comParams":{"update":[{"tid":"' + SurveyBuild._tid + '","data":' + $.toJSON(SurveyBuild._data) + '}]}}';
