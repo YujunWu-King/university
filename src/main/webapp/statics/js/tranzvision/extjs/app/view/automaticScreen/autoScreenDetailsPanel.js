@@ -180,8 +180,8 @@
                     valueField: 'TZ_LABEL_ID',
                     displayField: 'TZ_LABEL_NAME',
                     filterPickList:true,
-                    createNewOnEnter: false,
-                    createNewOnBlur: false,
+                    createNewOnEnter: true,
+                    createNewOnBlur: true,
                     queryMode: 'local'
 		        },{
 		        	xtype: 'displayfield',
