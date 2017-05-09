@@ -1779,7 +1779,12 @@
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
             var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
-
+                    var examineeGrid = panel.down('grid');
+                    
+                    var tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+                   // var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-vlue": "' + batchId + '"}}';
+                    examineeGrid.store.tzStoreParams = tzStoreParams;
+                    examineeGrid.store.load();
             Ext.tzLoad(tzParams,function(respData){
                 var formData = respData.formData;
                 if(formData!="" && formData!=undefined) {
@@ -1788,12 +1793,12 @@
                     formData.batchName = record.data.batchName;
                     form.setValues(formData);
 
-                    var examineeGrid = panel.down('grid');
+                    //var examineeGrid = panel.down('grid');
                     
-                    var tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+                   // var tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
                    // var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-vlue": "' + batchId + '"}}';
-                    examineeGrid.store.tzStoreParams = tzStoreParams;
-                    examineeGrid.store.load();
+                   // examineeGrid.store.tzStoreParams = tzStoreParams;
+                   // examineeGrid.store.load();
                 } else {
                     panel.actType="add";
                     form.findField("classId").setValue(classId);

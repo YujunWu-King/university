@@ -290,8 +290,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 						handler: 'deleteCurrResSet'
 					}]
 				}],
-				store: store
-/*bbar: {
+				store: store,
+               bbar: {
                     xtype: 'pagingtoolbar',
                     pageSize: 10,
                     store: store,
@@ -301,7 +301,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
                     afterPageText:"页/共{0}页",
                     emptyMsg: "没有数据显示",
                     plugins: new Ext.ux.ProgressBarPager()
-                }*/
+                }
 
 			}],
 
