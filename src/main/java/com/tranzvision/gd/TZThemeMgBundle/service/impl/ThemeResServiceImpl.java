@@ -138,7 +138,7 @@ public class ThemeResServiceImpl extends FrameworkImpl {
 					String str_zt_mc = (String) infoData.get("themeName");
 					String str_zt_ms = (String) infoData.get("themeDesc");
 					String str_yxx = (String) infoData.get("themeState");
-					
+
 					String sql = "select COUNT(1) from PS_TZ_PT_ZTXX_TBL WHERE TZ_ZT_ID=?";
 					int count = jdbcTemplate.queryForObject(sql, new Object[]{str_zt_id},"Integer");
 					if(count > 0){

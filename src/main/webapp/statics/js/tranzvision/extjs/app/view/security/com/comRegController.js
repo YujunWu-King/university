@@ -1,6 +1,22 @@
 ﻿Ext.define('KitchenSink.view.security.com.comRegController', {
     extend: 'Ext.app.ViewController',
-    alias: 'controller.comReg', 
+    alias: 'controller.comReg',
+
+	//可配置搜索
+	cfgSearchAct: function(btn){
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.TZ_PROCESS_DF_VW',
+			condition:
+			{
+				"TZ_JG_ID": Ext.tzOrgID
+			},
+			callback: function(seachCfg){
+				var store = btn.findParentByType("grid").store;
+				store.tzStoreParams = seachCfg;
+				store.load();
+			}
+		});
+	},
     addComRegInfo: function() {
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AQ_COMREG_COM"]["TZ_AQ_COMREG_STD"];
@@ -168,7 +184,8 @@
 			form.findField("comID").setReadOnly(true);
 			form.findField("comID").setFieldStyle('background:#F4F4F4');
 			//页面注册信息列表
-			var grid = panel.child('grid');
+			var pageGrid = Ext.getCmp('pageRegGrid');
+			var processGrid = Ext.getCmp('processGrid');
 			//参数
 			var tzParams = '{"ComID":"TZ_AQ_COMREG_COM","PageID":"TZ_AQ_COMREG_STD","OperateType":"QF","comParams":{"comID":"'+comID+'"}}';
 			//加载数据
@@ -180,8 +197,10 @@
 				var roleList = responseData.listData;	
 
 				var tzStoreParams = '{"comID":"'+comID+'"}';
-				grid.store.tzStoreParams = tzStoreParams;
-				grid.store.load();						
+				pageGrid.store.tzStoreParams = tzStoreParams;
+				pageGrid.store.load();
+				processGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.TZ_PROCESS_DF_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID+'","TZ_ZCZJ_ID-operator": "01","TZ_ZCZJ_ID-value": "' + comID + '"}}';;
+				processGrid.store.load();
 			});
 			
 		});
@@ -325,7 +344,7 @@
 	},
 	deletePageRegInfos: function(btn){
 	   //页面注册信息列表
-	   var grid = this.getView().child("grid");
+	   var grid = Ext.getCmp('pageRegGrid');
 		//选中行
 	   var selList = grid.getSelectionModel().getSelection();
 	   //选中行长度
@@ -350,7 +369,7 @@
 			var tzParams = this.getComRegInfoParams();
 			var comView = this.getView();
 			//页面注册信息列表
-			var grid = comView.child("grid");
+			var grid = Ext.getCmp('pageRegGrid');
 			//页面注册信息数据
 			var store = grid.getStore();
 			Ext.tzSubmit(tzParams,function(responseData){
@@ -393,7 +412,7 @@
 		}
 		
 		//页面注册信息列表
-		var grid = this.getView().child("grid");
+		var grid = Ext.getCmp('pageRegGrid');
 		//页面注册信息数据
 		var store = grid.getStore();
 		//修改记录
@@ -483,7 +502,7 @@
 		//提交参数
 		var tzParams = '{"ComID":"TZ_AQ_COMREG_COM","PageID":"TZ_AQ_PAGEREG_STD","OperateType":"U","comParams":{"'+win.actType+'":['+Ext.JSON.encode(formParams)+']}}';
 		var tzStoreParams = '{"comID":"'+formParams["comID"]+'"}';
-		var pageGrid = this.getView().child("grid");
+		var pageGrid = Ext.getCmp('pageRegGrid');
 		console.log(pageGrid);
 		Ext.tzSubmit(tzParams,function(resp){
 			win.actType = "update";
