@@ -96,6 +96,9 @@ function loadEvaluateBatchData(callBackFunction)
 			params:{LanguageCd:'ZHS',MaxRowCount:1000,StartRowNumber:1,MoreRowsFlag:'N'},
 			success:function(response)
 			{
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try
@@ -258,6 +261,9 @@ function loadBatchDataById(batchId,callBackFunction)
 					//unmask window
 					unmaskWindow();
 					
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
 					var jsonObject = null;
 					
 					try
@@ -472,6 +478,9 @@ function initializeEvaluatePiciGrid(jsonObject)
 						url		: checkPWAccStateURL,
 						params	: {"LanguageCd":"ZHS","BaokaoClassID":classId,"BaokaoPCID":batchId},
 						success	: function(response){
+							//返回值内容
+		                    var jsonText = response.responseText;
+		                    
 							try
 							{
 								var jsonObject = Ext.util.JSON.decode(jsonText);

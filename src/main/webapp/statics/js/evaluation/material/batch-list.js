@@ -278,6 +278,9 @@ function loadBatchDataById(batchId,callBackFunction)
 					//unmask window
 					unmaskWindow();
 					
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
 					var jsonObject = null;
 					
 					try
@@ -379,6 +382,9 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
     				//unmask window
 					unmaskWindow();
 					
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
     				var jsonObject = null;
     				
     				try

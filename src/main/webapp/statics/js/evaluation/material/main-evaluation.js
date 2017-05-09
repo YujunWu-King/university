@@ -770,7 +770,10 @@ function submitEvaluateBatch(classid,pc_id)
 				{
 					//unmask window
 					unmaskWindow();
-					
+
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
 					var jsonObject = null;
 					
 					try
@@ -853,6 +856,9 @@ function getNextApplicant(jsonObject)
 				//unmask window
 				unmaskWindow();
 				
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try
@@ -1262,6 +1268,9 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 				//unmask window
 				unmaskWindow();
 				
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try
@@ -1522,6 +1531,9 @@ function partRefreshTestFunction(batchId)
 							},
 			success:function(response)
 			{
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try

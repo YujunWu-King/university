@@ -234,6 +234,7 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 									
 				                    //返回值内容
 				                    var jsonText = response.responseText;
+				                    
 				                    try
 				                    {
 				                        var responseJsonObject = Ext.util.JSON.decode(jsonText);
@@ -1192,6 +1193,9 @@ function submitEvaluateBatch(batchId)
 				//unmask window
 				unmaskWindow();
 				
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try
@@ -1393,10 +1397,12 @@ function createApplicantList(jsonObject)
 								},
 								success:function(response)
 								{
-								
 									//unmask window
 									unmaskWindow();
 									
+									//返回值内容
+				                    var jsonText = response.responseText;
+				                    
 									var DeljsonObject = null;
 									
 									try
@@ -1668,6 +1674,9 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 												//unmask window
 												unmaskWindow();
 												
+												//返回值内容
+							                    var jsonText = response.responseText;
+							                    
 												var jsonObject = null;
 												
 												try
@@ -1938,6 +1947,9 @@ function partRefreshTestFunction(batchId)
 															},
 											success:function(response)
 											{
+												//返回值内容
+							                    var jsonText = response.responseText;
+							                    
 												var jsonObject = null;
 												
 												try
