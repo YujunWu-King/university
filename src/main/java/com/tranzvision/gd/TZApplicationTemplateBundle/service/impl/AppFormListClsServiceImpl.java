@@ -751,6 +751,39 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 			mapRet.put("url", url);
 			return jacksonUtil.Map2json(mapRet);
 		}
+		
+		/*报名表对应的已提交的推荐信 */
+		if (StringUtils.equals(oType, "RCMD")) {
+			String insId = jacksonUtil.getString("INSID");
+			
+			String sqlRCMD = "SELECT tjx.TZ_APP_INS_ID,TZ_TJX_APP_INS_ID,TZ_REF_LETTER_ID,tjx.TZ_TJR_ID FROM PS_TZ_KS_TJX_TBL tjx,PS_TZ_APP_INS_T ins WHERE tjx.TZ_TJX_APP_INS_ID = ins.TZ_APP_INS_ID AND tjx.TZ_APP_INS_ID = ? and tjx.TZ_MBA_TJX_YX = 'Y' AND ins.TZ_APP_FORM_STA = 'U' ORDER BY tjx.TZ_TJR_ID";
+			List<?> resultlist = sqlQuery.queryForList(sqlRCMD, new Object[] { insId });
+
+			ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+			for (Object obj : resultlist) {
+				Map<String, Object> result = (Map<String, Object>) obj;
+
+				String tjxInsId = result.get("TZ_TJX_APP_INS_ID") == null ? "" : String.valueOf(result.get("TZ_TJX_APP_INS_ID"));
+				String letterId = result.get("TZ_REF_LETTER_ID") == null ? "" : String.valueOf(result.get("TZ_REF_LETTER_ID"));
+				String tjrId = result.get("TZ_TJR_ID") == null ? "" : String.valueOf(result.get("TZ_TJR_ID"));
+				if(StringUtils.isBlank(tjxInsId) || StringUtils.equals("0", tjxInsId) || StringUtils.isBlank(letterId)){
+					continue;
+				}
+				/**/
+				String mSql = "SELECT (SELECT TZ_APP_TPL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_M_TPL_ID = ins.TZ_APP_TPL_ID LIMIT 0,1) FROM PS_TZ_APP_INS_T ins WHERE ins.TZ_APP_INS_ID = ? limit 0,1";
+				String mtplId = sqlQuery.queryForObject(mSql, new Object[] { tjxInsId }, "String");
+				if(StringUtils.isBlank(mtplId) || StringUtils.equals("0", mtplId)){
+					mtplId = "";
+				}
+				Map<String, Object> mapJson = new HashMap<String, Object>();
+				mapJson.put("tjxInsId", tjxInsId);
+				mapJson.put("letterId", letterId);
+				mapJson.put("tjrId",tjrId);
+				mapJson.put("mtplId", mtplId);
+				listData.add(mapJson);
+			}
+			return jacksonUtil.List2json(listData);
+		}
 		return strRet;
 	}
 
