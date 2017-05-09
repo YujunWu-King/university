@@ -897,7 +897,7 @@ function getNextApplicant(jsonObject)
 	                            tzEObject.baokaoPcID = jsonObject['ps_bkpc_id'];
 	                            tzEObject.baokaoPcName = jsonObject['ps_baok_pc'];
 								tzEObject.applicantName = jsonObject['ps_ksh_xm'];
-	                            tzEObject.applicantInterviewID = jsonObject['ps_ksh_bmbid'];
+	                            tzEObject.applicantInterviewID = jsonObject['ps_msh_id'];
 								tzEObject.applicantBaomingbiaoID = jsonObject['ps_ksh_bmbid'];
 								
 								//获取新的局部数据，并使用局部数据刷新当前页面
