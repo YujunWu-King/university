@@ -125,6 +125,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 							iconCls:'list',
 							glyph:61,
 							menu:[{
+								text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.exportAllExcel","导出查询结果评议数据"),
+    							name:'excel',
+    							handler:'exportAllExcel'
+							},{
 								text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.exportExcel","导出选中考生评议数据"),
     							name:'excel',
     							handler:'exportExcel'

@@ -500,7 +500,8 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
 				psTzClpsGzTbl.setRowLastmantDttm(new Date());
 				psTzClpsGzTbl.setRowLastmantOprid(currentOprid);
-				psTzClpsGzTblMapper.updateByPrimaryKey(psTzClpsGzTbl);
+				//psTzClpsGzTblMapper.updateByPrimaryKey(psTzClpsGzTbl);
+				psTzClpsGzTblMapper.updateByPrimaryKeyWithBLOBs(psTzClpsGzTbl);
 			}
 			
 			

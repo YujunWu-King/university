@@ -574,6 +574,31 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             window.open(fileUrl);
         },"导出考生评议数据成功",true,this);
     },
+    //材料评审考生-更多操作-导出查询考生评议数据
+    exportAllExcel:function(btn) {
+        var grid = this.getView().down("grid[name=materialsReviewExamineeGrid]");
+        var store = grid.getStore();
+        var data = store.getData();
+        var dataLen = data.length;
+        if(dataLen == 0) {
+            Ext.Msg.alert("提示","当前查询无记录");
+            return;
+        }
+
+        var classId = this.getView().classId;
+        var batchId = this.getView().batchID;
+        
+        var totalCount = store.totalCount;
+        
+        var tzStoreParams = store.tzStoreParams;
+
+        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD","OperateType":"tzExportAllExaminee","comParams":{"classId":"' + classId + '","batchId":"' + batchId + '","tzStoreParams":' + Ext.JSON.encode(tzStoreParams) + ',"totalCount":"' + totalCount + '"}}';
+        Ext.tzSubmit(tzParams,function(respDate){
+            var fileUrl = respDate.fileUrl;
+            window.open(fileUrl);
+        },"导出考生评议数据成功",true,this);
+    },
+    
     //材料评审考生-保存
     onExamineeSave:function(btn) {
         var me = this;
