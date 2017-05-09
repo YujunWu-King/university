@@ -64,8 +64,8 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 				c += '<div class="input-list">';
 				c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
 				c += '    <div class="input-list-text left">';
-				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" style="width:46%" name="' + data["itemId"] + children[0]["itemId"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[0]["itemId"] + '\');" value ="' + children[0]["value"] + '"><img id="' + data["itemId"] + children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
-				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "disabled=\"disabled\"": "") + ' style="width:46%;' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "") + '" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[1]["itemId"] + '\');" value="' + children[1]["value"] + '"><img id="' + data["itemId"] + children[1]["itemId"] + '_Btn" style="display:' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "none;": "") + '" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
+				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" style="width:46%" name="' + data["itemId"] + children[0]["itemId"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[0]["itemId"] + '\');" value ="' + children[0]["value"] + '"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data["itemId"] + children[0]["itemId"] + '_Clear" style="right:44px' + (children[0]["value"]  == "" ? ";visibility:hidden;": "") + '"/><img id="' + data["itemId"] + children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon" style="right:43px">';
+				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "disabled=\"disabled\"": "") + ' style="width:46%;' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "") + '" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[1]["itemId"] + '\');" value="' + children[1]["value"] + '"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data["itemId"] + children[1]["itemId"] + '_Clear" style="right:44px' + ((data.todatebz == "Y" && children[2]["value"] == "Y") || children[1]["value"]=="" ? ";visibility:hidden;": "") + '"/><img id="' + data["itemId"] + children[1]["itemId"] + '_Btn" style="right:43px;display:' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "none;": "") + '" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
 				if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
 					c += '<div class="check-box' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? " checkedBox": "") + '"><i>';
 					c += '	<input type="checkbox" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "checked='checked'": "") + 'id="' + data["itemId"] + children[2]["itemId"] + '" name="' + data["itemId"] + children[2]["itemId"] + '"/>';
@@ -148,6 +148,9 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 		var $dateImgStart = $("#" + data["itemId"] + data.children[0]["itemId"] + "_Btn");
 		var $dateImgEnd = $("#" + data["itemId"] + data.children[1]["itemId"] + "_Btn");
 		
+		var $clearImgEnd = $("#" + data["itemId"] + data.children[1]["itemId"] + "_Clear");
+		var $clearImgStart = $("#" + data["itemId"] + data.children[0]["itemId"] + "_Clear");
+		
 		$dateInputStart.datetimepicker({
 			changeMonth: true,
 			changeYear: true,
@@ -158,6 +161,7 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
             onSelect: function(dateText, inst) {
                 $dateInputStart.datetimepicker( "hide" );
                 $dateInputStart.trigger("blur");
+                $clearImgStart.css("visibility","visible");
             }
 		});
 		$dateInputEnd.datetimepicker({
@@ -170,6 +174,7 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
             onSelect: function(dateText, inst) {
                 $dateInputEnd.datetimepicker( "hide" );
                 $dateInputEnd.trigger("blur");
+                $clearImgEnd.css("visibility","visible");
             }
 		});
 		if(!SurveyBuild._readonly){
@@ -180,10 +185,14 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 				if ($(this).find(':checkbox').prop("checked")) {
 					$dateInputEnd.hide();
 					$dateImgEnd.hide();
+					$clearImgEnd.css("visibility","hidden");
 					$dateInputEnd.attr("disabled","disabled").unFormValidator(true);
 				} else {
 					$dateInputEnd.show();
 					$dateImgEnd.show();
+					if ($dateInputEnd.val() !="") {
+						 $clearImgEnd.css("visibility","visible");
+					}
 					$dateInputEnd.removeAttr("disabled").unFormValidator(false);
 				}
 			});
@@ -198,6 +207,18 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
             $dateInputEnd.focus();
         });
 
+		
+		$clearImgStart.click(function(e) {
+			$dateInputStart.val("");
+			$clearImgStart.css("visibility","hidden");
+        });
+		
+		$clearImgEnd.click(function(e) {
+			$dateInputEnd.val("");
+			$clearImgEnd.css("visibility","hidden");
+        });
+		
+		
 		$dateInputStart.formValidator({tipID:data["itemId"] + data.children[0]["itemId"] +'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
 		$dateInputStart.functionValidator({
 			fun: function(val,elem) {

@@ -220,9 +220,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		
 		//DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="SurveyBuild.reFocus(\'' + date_id + '\'); title="' +date_name + '">';
 		
-		DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="this.blur()"; title="' +date_name + '">';
-
-		DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" style="position:relative;top:5px;left:-31px;cursor:pointer;">';
+		DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="this.blur()"; title="' +date_name + '" />';
+		DATE_DIV += '      <img id="' + date_id+ '_Clear" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" style="position:relative;top:5px;left:-61px;cursor:pointer;' + (date_val == "" ? ";visibility:hidden;": "") + '" />';
+		DATE_DIV += '      <img id="' + date_id+ '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" style="position:relative;top:5px;left:-58px;cursor:pointer;" />';
 		//DATE_DIV += ' <div class="clear"> </div>';
 		//---------日期 input格式检验:
 		DATE_DIV += '<div style="margin-top: -40px; margin-left: 330px">';
@@ -407,7 +407,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		}
 		return RELATED_DIV;
 	},
-	bindTimePicker:function($inputBox,$selectBtn){
+	bindTimePicker:function($inputBox,$selectBtn,$clearBtn){
 		
 		$inputBox.each(function(){
 			   var me=$(this);
@@ -422,15 +422,23 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				onSelect:function(dateText, inst){
 					me.datetimepicker("hide");
 					me.trigger("blur");
+					me.next().css("visibility","visible");
 				}
 			  });
 		 });
 		   //日期小图标事件绑定:
 		 $selectBtn.each(function(){
 			   $(this).click(function(){
-				   $(this).prev().focus();
+				   $(this).prev().prev().focus();
 			   })
-		  })
+		  });
+		 
+		 $clearBtn.each(function(){
+			 $(this).click(function(){
+				 $(this).prev().val("");
+				 $(this).css("visibility","hidden");
+			 })
+		 });
 	},
 	checkInputNotNull:function(inputEl){
 		inputEl.formValidator({tipID:(inputEl.attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
@@ -747,6 +755,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 											//console.log("dateInput:");
 											//console.dir(dateInput);
 											dateInput.val("");
+											var dateClear=timeDiv.find("#"+data.itemId +child.EngLevelDate.itemId+"_Clear");
+											dateClear.css("visibility","hidden");
+											
 											if(i=="ENG_LEV_T1"||i=="ENG_LEV_T2"||i=="ENG_LEV_T3"||i=="ENG_LEV_T4"||i=="ENG_LEV_T13"){
 												//改变date标签:
 												//1.date标签change
@@ -798,9 +809,14 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 									var dateSpan=timeDiv.find(".input-list-info");
 									//清空dateInput中的value：
 									var dateInput=timeDiv.find("#"+data.itemId +child.EngLevelDate.itemId);
+									
+									
+									var dateClear=timeDiv.find("#"+data.itemId +child.EngLevelDate.itemId+"_Clear");
+									dateClear.css("visibility","hidden");
 									//console.log("dateInput:");
 									//console.dir(dateInput);
 									dateInput.val("");
+									
 									timeDiv.hide();
 									/*
 									var newGradeDiv=data.getChangedGradeDiv(data,child,"",EXAM_TYPE_MAP);
@@ -816,7 +832,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 						//日期控件处理1.2.3.4.13
 					    var $inputBox = $("#" + data.itemId +child.EngLevelDate.itemId);
 					    var $selectBtn = $("#" + data.itemId +child.EngLevelDate.itemId + "_Btn");
-					    data.bindTimePicker($inputBox,$selectBtn);
+					    
+					    var $clearBtn = $("#" + data.itemId +child.EngLevelDate.itemId + "_Clear");
+					    data.bindTimePicker($inputBox,$selectBtn,$clearBtn);
 						//绑定TimePicker bindTime
 						//data.bindTime(data.itemId +child.EngLevelDate.itemId);
 						//------上传控件验证:
