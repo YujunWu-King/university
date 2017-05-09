@@ -1093,7 +1093,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		//刷新当前考生在本地的缓存数据
 																		updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																		//更新全局缓存，进行局部刷新
-																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID, null, {applicantBaomingbiaoID: form.findField("KSH_BMBID").getValue()}, 'RFH');
+																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID, null, {applicantBaomingbiaoID: form.findField("KSH_BMBID").getValue()}, 'SAV');
 
 																		//若返回报文中有提示信息，则显示该提示信息，否则显示“提交成功！”
 																		if ($.trim(jsonObject.comContent.message) != "") {
@@ -1266,8 +1266,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		}
 
 									                                } else {
-									                                	// unmask window
-																		
+
+																		/*
 																		//刷新打分区
 																		refreshDfAreaFormPanel(jsonObject.comContent);
 																	   
@@ -1275,6 +1275,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																		//更新全局缓存，进行局部刷新
 																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'FAL');
+																		*/
+
+																		// unmask window
 																		unmaskWindow();
 
 																		Ext.Msg.alert('失败',jsonObject.comContent.resultMsg);
@@ -2025,10 +2028,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			
 			//回调指定的函数来显示考生评审页面
 			callBackFunction(tipCount,scrollBackTagId);
-
-
-			//报名表加载完成前不能操作,显示mask窗口
-			maskWindow();
+			
 		}
 		else
 		{

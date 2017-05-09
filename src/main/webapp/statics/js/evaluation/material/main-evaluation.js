@@ -770,27 +770,37 @@ function submitEvaluateBatch(classid,pc_id)
 				{
 					//unmask window
 					unmaskWindow();
-					
+
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
 					var jsonObject = null;
 					
 					try
 					{
-						jsonObject = Ext.JSON.decode(response.responseText).comContent;
+						var jsonObject = Ext.util.JSON.decode(jsonText);
+		                /*判断服务器是否返回了正确的信息*/
+		                if(jsonObject.state.errcode == 1){
+		                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+		                }else{
+		                	jsonObject = jsonObject.comContent;
+							
+							if(jsonObject.error_code != '0')
+							{
+								Ext.Msg.alert("提示",'提交当前评审批次时发生错误：' + jsonObject.error_decription);
+							}
+							else
+							{
+								//局部刷新当前当前评审批次数据
+								//getPartBatchDataByBatchId(batchId,null,{applicantBaomingbiaoID:''},'SUBMTALL','当前评审班级批次[' + getBatchNameById(batchId) + ']提交成功。');
+	                            //更新总体提交状态
+								Ext.Msg.alert("提示","当前评审班级批次提交成功。");
+	                            
+	                            var ps_kslb_submtall_status = "已提交";
+	                            $("#ps_kslb_submtall_"+(jsonObject['ps_class_id']+"_"+jsonObject['ps_bkpc_id'])).html("【"+ps_kslb_submtall_status+"】");
+							}
+		                }
 						
-						if(jsonObject.error_code != '0')
-						{
-							Ext.Msg.alert("提示",'提交当前评审批次时发生错误：' + jsonObject.error_decription);
-						}
-						else
-						{
-							//局部刷新当前当前评审批次数据
-							//getPartBatchDataByBatchId(batchId,null,{applicantBaomingbiaoID:''},'SUBMTALL','当前评审班级批次[' + getBatchNameById(batchId) + ']提交成功。');
-                            //更新总体提交状态
-							Ext.Msg.alert("提示","当前评审班级批次提交成功。");
-                            
-                            var ps_kslb_submtall_status = "已提交";
-                            $("#ps_kslb_submtall_"+(jsonObject['ps_class_id']+"_"+jsonObject['ps_bkpc_id'])).html("【"+ps_kslb_submtall_status+"】");
-						}
 					}
 					catch(e1)
 					{
@@ -846,47 +856,57 @@ function getNextApplicant(jsonObject)
 				//unmask window
 				unmaskWindow();
 				
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try
 				{
-					jsonObject = Ext.JSON.decode(response.responseText).comContent;
-					
-					if(jsonObject.error_code != '0')
-					{
-						Ext.Msg.alert("提示",'获取考生信息时发生错误：' + jsonObject.error_decription );
-					}
-					else
-					{
-						if(window.KSINFO_JSON_DATA == null)
-						{
-							window.KSINFO_JSON_DATA = new Array();
-						}
+					var jsonObject = Ext.util.JSON.decode(jsonText);
+	                /*判断服务器是否返回了正确的信息*/
+	                if(jsonObject.state.errcode == 1){
+	                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+	                }else{
+	                	jsonObject = jsonObject.comContent;
 						
-						var tmpBmbID = jsonObject['ps_ksh_bmbid'];
-						if(KSINFO_JSON_DATA[tmpBmbID] != 'undefined' && KSINFO_JSON_DATA[tmpBmbID]!= null && KSINFO_JSON_DATA[tmpBmbID]!= '')
-						{							
-							Ext.Msg.alert("提示",'获取考生信息时发生错误，请与系统管理员联系：获取到重复的考生信息。');
+						if(jsonObject.error_code != '0')
+						{
+							Ext.Msg.alert("提示",'获取考生信息时发生错误：' + jsonObject.error_decription );
 						}
 						else
 						{
-							KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
+							if(window.KSINFO_JSON_DATA == null)
+							{
+								window.KSINFO_JSON_DATA = new Array();
+							}
 							
-							//加载指定考生评审信息页面并显示
-							var tzEObject = new tzEvaluateObject();
-                            tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-                            tzEObject.baokaoClassName = jsonObject['ps_class_name'];
-                            tzEObject.baokaoPcID = jsonObject['ps_bkpc_id'];
-                            tzEObject.baokaoPcName = jsonObject['ps_baok_pc'];
-							tzEObject.applicantName = jsonObject['ps_ksh_xm'];
-                            tzEObject.applicantInterviewID = jsonObject['ps_ksh_bmbid'];
-							tzEObject.applicantBaomingbiaoID = jsonObject['ps_ksh_bmbid'];
-							
-							//获取新的局部数据，并使用局部数据刷新当前页面
-                            var cls_pc_id = jsonObject['ps_class_id'] +"_" + jsonObject['ps_bkpc_id'];
-							getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
+							var tmpBmbID = jsonObject['ps_ksh_bmbid'];
+							if(KSINFO_JSON_DATA[tmpBmbID] != 'undefined' && KSINFO_JSON_DATA[tmpBmbID]!= null && KSINFO_JSON_DATA[tmpBmbID]!= '')
+							{							
+								Ext.Msg.alert("提示",'获取考生信息时发生错误，请与系统管理员联系：获取到重复的考生信息。');
+							}
+							else
+							{
+								KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
+								
+								//加载指定考生评审信息页面并显示
+								var tzEObject = new tzEvaluateObject();
+	                            tzEObject.baokaoClassID = jsonObject['ps_class_id'];
+	                            tzEObject.baokaoClassName = jsonObject['ps_class_name'];
+	                            tzEObject.baokaoPcID = jsonObject['ps_bkpc_id'];
+	                            tzEObject.baokaoPcName = jsonObject['ps_baok_pc'];
+								tzEObject.applicantName = jsonObject['ps_ksh_xm'];
+	                            tzEObject.applicantInterviewID = jsonObject['ps_msh_id'];
+								tzEObject.applicantBaomingbiaoID = jsonObject['ps_ksh_bmbid'];
+								
+								//获取新的局部数据，并使用局部数据刷新当前页面
+	                            var cls_pc_id = jsonObject['ps_class_id'] +"_" + jsonObject['ps_bkpc_id'];
+								getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
+							}
 						}
-					}
+	                }
+					
 				}
 				catch(e1)
 				{					
@@ -1248,51 +1268,61 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 				//unmask window
 				unmaskWindow();
 				
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try
 				{
-					jsonObject = Ext.JSON.decode(response.responseText).comContent;
-					
-					if(jsonObject.error_code != '0')
-					{					
-						loadSuccess = false;
-						Ext.Msg.alert("提示",'刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription);
-					}
-					else
-					{
-						/*缓存当前局部刷新数据*/
-						window.batchJSONArray[batchId]['ps_gaiy_info'] = jsonObject['ps_gaiy_info'];
-						window.batchJSONArray[batchId]['ps_data_cy'] = jsonObject['ps_data_cy'];
-						window.batchJSONArray[batchId]['ps_data_fb'] = jsonObject['ps_data_fb'];
-						window.batchJSONArray[batchId]['ps_data_kslb'] = jsonObject['ps_data_kslb'];
-						window.batchJSONArray[batchId]['ps_kslb_submtall'] = jsonObject['ps_kslb_submtall'];
+					var jsonObject = Ext.util.JSON.decode(jsonText);
+	                /*判断服务器是否返回了正确的信息*/
+	                if(jsonObject.state.errcode == 1){
+	                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+	                }else{
+	                	jsonObject = jsonObject.comContent;
 						
-						
-						/*获取新的局部数据，并使用局部数据刷新当前批次评审主页面数据*/
-						refreshBatchDataByBatchId(jsonObject,'ps_ksh_bmbid',applicantObject.applicantBaomingbiaoID);
-						
-						//回调指定函数
-						if(operationType == 'NXT')
-						{//因为获取下一个考生而产生的回调，该回调将导致当前页面切换到指定考生资料评审主页面
-							callBackFunction(applicantObject);
+						if(jsonObject.error_code != '0')
+						{					
+							loadSuccess = false;
+							Ext.Msg.alert("提示",'刷新当前评审批次[' + getBatchNameById(batchId) + ']数据时发生错误：' + jsonObject.error_decription);
 						}
 						else
 						{
-							if(operationType == 'RFH') {
-								//保存并获取下一个考生使用，报名表加载完成前不能操作,显示mask窗口
-								maskWindow();
-							} else {
-								//其他暂无操作
+							/*缓存当前局部刷新数据*/
+							window.batchJSONArray[batchId]['ps_gaiy_info'] = jsonObject['ps_gaiy_info'];
+							window.batchJSONArray[batchId]['ps_data_cy'] = jsonObject['ps_data_cy'];
+							window.batchJSONArray[batchId]['ps_data_fb'] = jsonObject['ps_data_fb'];
+							window.batchJSONArray[batchId]['ps_data_kslb'] = jsonObject['ps_data_kslb'];
+							window.batchJSONArray[batchId]['ps_kslb_submtall'] = jsonObject['ps_kslb_submtall'];
+							
+							
+							/*获取新的局部数据，并使用局部数据刷新当前批次评审主页面数据*/
+							refreshBatchDataByBatchId(jsonObject,'ps_ksh_bmbid',applicantObject.applicantBaomingbiaoID);
+							
+							//回调指定函数
+							if(operationType == 'NXT')
+							{//因为获取下一个考生而产生的回调，该回调将导致当前页面切换到指定考生资料评审主页面
+								callBackFunction(applicantObject);
+							}
+							else
+							{
+								if(operationType == 'RFH') {
+									//保存并获取下一个考生使用，报名表加载完成前不能操作,显示mask窗口
+									maskWindow();
+								} else {
+									//其他暂无操作
+								}
+							}
+							
+							if(tipMessage != null && tipMessage != '' && tipMessage != 'undefined')
+							{
+								Ext.Msg.alert("提示",tipMessage);
 							}
 						}
 						
-						
-						if(tipMessage != null && tipMessage != '' && tipMessage != 'undefined')
-						{
-							Ext.Msg.alert("提示",tipMessage);
-						}
-					}
+	                }
+					
 				}
 				catch(e1)
 				{
@@ -1501,13 +1531,23 @@ function partRefreshTestFunction(batchId)
 							},
 			success:function(response)
 			{
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try
 				{
-					jsonObject = Ext.JSON.decode(response.responseText);
+					var jsonObject = Ext.util.JSON.decode(jsonText);
+	                /*判断服务器是否返回了正确的信息*/
+	                if(jsonObject.state.errcode == 1){
+	                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+	                }else{
+	                	jsonObject = jsonObject.comContent;
+						
+						refreshBatchDataByBatchId(jsonObject,null,null);
+	                }
 					
-					refreshBatchDataByBatchId(jsonObject,null,null);
 				}
 				catch(e1)
 				{

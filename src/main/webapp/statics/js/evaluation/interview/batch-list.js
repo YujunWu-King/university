@@ -96,22 +96,32 @@ function loadEvaluateBatchData(callBackFunction)
 			params:{LanguageCd:'ZHS',MaxRowCount:1000,StartRowNumber:1,MoreRowsFlag:'N'},
 			success:function(response)
 			{
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try
 				{
-					jsonObject = Ext.JSON.decode(response.responseText).comContent;
+					var jsonObject = Ext.util.JSON.decode(jsonText);
+	                /*判断服务器是否返回了正确的信息*/
+	                if(jsonObject.state.errcode == 1){
+	                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+	                }else{
+	                	jsonObject = jsonObject.comContent;
+						
+						if(jsonObject.error_code != '0')
+						{
+							loadSuccess = false;
+							Ext.Msg.alert("提示",'当前面试评审批次数据加载失败：' + jsonObject.error_decription);
+						}
+						else
+						{
+							loadSuccess = true;
+							callBackFunction(jsonObject);
+						}
+	                }
 					
-					if(jsonObject.error_code != '0')
-					{
-						loadSuccess = false;
-						Ext.Msg.alert("提示",'当前面试评审批次数据加载失败：' + jsonObject.error_decription);
-					}
-					else
-					{
-						loadSuccess = true;
-						callBackFunction(jsonObject);
-					}
 				}
 				catch(e1)
 				{
@@ -251,24 +261,34 @@ function loadBatchDataById(batchId,callBackFunction)
 					//unmask window
 					unmaskWindow();
 					
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
 					var jsonObject = null;
 					
 					try
 					{
-						jsonObject = Ext.JSON.decode(response.responseText).comContent;
+						var jsonObject = Ext.util.JSON.decode(jsonText);
+		                /*判断服务器是否返回了正确的信息*/
+		                if(jsonObject.state.errcode == 1){
+		                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+		                }else{
+		                	jsonObject = jsonObject.comContent;
+							
+							if(jsonObject.error_code != '0')
+							{
+								loadSuccess = false;
+								Ext.Msg.alert("提示",'当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败' + jsonObject.error_decription);
+							}
+							else
+							{
+								loadSuccess = true;
+								/*将当前请求到的JSON数据缓存到本地*/
+								window.batchJSONArray[batchId] = jsonObject;
+								callBackFunction(batchId,jsonObject);
+							}
+		                }
 						
-						if(jsonObject.error_code != '0')
-						{
-							loadSuccess = false;
-							Ext.Msg.alert("提示",'当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-						}
-						else
-						{
-							loadSuccess = true;
-							/*将当前请求到的JSON数据缓存到本地*/
-							window.batchJSONArray[batchId] = jsonObject;
-							callBackFunction(batchId,jsonObject);
-						}
 					}
 					catch(e1)
 					{
@@ -458,16 +478,25 @@ function initializeEvaluatePiciGrid(jsonObject)
 						url		: checkPWAccStateURL,
 						params	: {"LanguageCd":"ZHS","BaokaoClassID":classId,"BaokaoPCID":batchId},
 						success	: function(response){
+							//返回值内容
+		                    var jsonText = response.responseText;
+		                    
 							try
 							{
-								var tmpJSON = Ext.decode(response.responseText).comContent;
-								if(tmpJSON.status!='B'){
-									loadBatchDataById(cls_batchId,loadBatchDataByIdandShowNextPage);
-								}else{
-									//unmask window
-									unmaskWindow();
-									Ext.Msg.alert("提示","您的账号已暂停使用，请与管理员联系。");
-								}
+								var jsonObject = Ext.util.JSON.decode(jsonText);
+				                /*判断服务器是否返回了正确的信息*/
+				                if(jsonObject.state.errcode == 1){
+				                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+				                }else{
+				                	var tmpJSON = jsonObject.comContent;
+									if(tmpJSON.status!='B'){
+										loadBatchDataById(cls_batchId,loadBatchDataByIdandShowNextPage);
+									}else{
+										//unmask window
+										unmaskWindow();
+										Ext.Msg.alert("提示","您的账号已暂停使用，请与管理员联系。");
+									}
+				                }
 								
 							}
 							catch(e1){

@@ -96,20 +96,28 @@ function loadEvaluateBatchData(callBackFunction)
 		{
 			var jsonObject = null;
 			
+			var jsonText = response.responseText;
+            
 			try
 			{
-				jsonObject = Ext.JSON.decode(response.responseText).comContent;
+				var jsonObject = Ext.util.JSON.decode(jsonText);
+                /*判断服务器是否返回了正确的信息*/
+                if(jsonObject.state.errcode == 1){
+                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+                }else{
+                	jsonObject = jsonObject.comContent;
 
-				if(jsonObject.error_code != '0')
-				{
-					loadSuccess = false;
-					Ext.Msg.alert("提示",'当前材料评审批次数据加载失败：' + jsonObject.error_decription);
-				}
-				else
-				{
-					loadSuccess = true;
-					callBackFunction(jsonObject);
-				}
+    				if(jsonObject.error_code != '0')
+    				{
+    					loadSuccess = false;
+    					Ext.Msg.alert("提示",'当前材料评审批次数据加载失败：' + jsonObject.error_decription);
+    				}
+    				else
+    				{
+    					loadSuccess = true;
+    					callBackFunction(jsonObject);
+    				}
+                }
 			}
 			catch(e1)
 			{
@@ -270,24 +278,34 @@ function loadBatchDataById(batchId,callBackFunction)
 					//unmask window
 					unmaskWindow();
 					
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
 					var jsonObject = null;
 					
 					try
 					{
-						jsonObject = Ext.JSON.decode(response.responseText).comContent;
+						var jsonObject = Ext.util.JSON.decode(jsonText);
+		                /*判断服务器是否返回了正确的信息*/
+		                if(jsonObject.state.errcode == 1){
+		                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+		                }else{
+		                	jsonObject = jsonObject.comContent;
 
-						if(jsonObject.error_code != "0")
-						{
-							loadSuccess = false;
-							Ext.Msg.alert("提示",'当前材料评审[' + getBatchNameById(batchId) + ']数据加载失败：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-						}
-						else
-						{
-							loadSuccess = true;
-							/*将当前请求到的JSON数据缓存到本地*/
-							window.batchJSONArray[batchId] = jsonObject;
-							callBackFunction(batchId,jsonObject);
-						}
+							if(jsonObject.error_code != "0")
+							{
+								loadSuccess = false;
+								Ext.Msg.alert("提示",'当前材料评审[' + getBatchNameById(batchId) + ']数据加载失败：' + jsonObject.error_decription);
+							}
+							else
+							{
+								loadSuccess = true;
+								/*将当前请求到的JSON数据缓存到本地*/
+								window.batchJSONArray[batchId] = jsonObject;
+								callBackFunction(batchId,jsonObject);
+							}
+		                }
+						
 					}
 					catch(e1)
 					{
@@ -364,26 +382,36 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
     				//unmask window
 					unmaskWindow();
 					
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
     				var jsonObject = null;
     				
     				try
     				{
-    					jsonObject = Ext.JSON.decode(response.responseText).comContent;
+    					var jsonObject = Ext.util.JSON.decode(jsonText);
+		                /*判断服务器是否返回了正确的信息*/
+		                if(jsonObject.state.errcode == 1){
+		                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+		                }else{
+		                	jsonObject = jsonObject.comContent;
+	    					
+	    					if(jsonObject.errorCode&&jsonObject.errorCode == '1')
+	    					{
+	    						loadSuccess = false;
+	    						Ext.Msg.alert("提示","生成评审总表失败："+jsonObject.errorMsg);
+	    					}
+	    					else
+	    					{
+	    						url = jsonObject.url;
+	    						if(url){
+	    							window.open(url);
+	    						}else{
+	    							Ext.Msg.alert("提示","生成评审总表失败");
+	    						}
+	    					}
+		                }
     					
-    					if(jsonObject.errorCode&&jsonObject.errorCode == '1')
-    					{
-    						loadSuccess = false;
-    						Ext.Msg.alert("提示","生成评审总表失败："+jsonObject.errorMsg);
-    					}
-    					else
-    					{
-    						url = jsonObject.url;
-    						if(url){
-    							window.open(url);
-    						}else{
-    							Ext.Msg.alert("提示","生成评审总表失败");
-    						}
-    					}
     				}
     				catch(e1)
     				{
