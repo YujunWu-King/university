@@ -1290,7 +1290,7 @@
                     var select = btn.findParentByType("grid").getSelection(),
                         index = btn.findParentByType("grid").getStore().indexOf(select[x]),
                         record = btn.findParentByType("grid").getStore().getAt(index);
-                    record.set('submitYN','Y');                    
+                    record.set('submitYN','Y');
                 }
         	}else{
         		Ext.Msg.alert("提示","在您选择提交数据的评委中，发现有未提交考生数据。");
@@ -1606,7 +1606,7 @@
                         fields:fields
                     })
                 });
-            console.log(newStore.getData());
+            //console.log(newStore.getData());
             cmp.child('grid').setStore(newStore);
             cmp.child('grid').store.load();
             cmp.show();
@@ -2273,22 +2273,12 @@
                 var gridData = statisticsGridDataModel['gridData'];
                 var gridStore = btn.findParentByType("grid").getStore();
                 gridStore.setData(gridData);
-                //btn.findParentByType("grid").getSelectionModel().selectRows(selectedIndex);
-                
-                console.log(selectedIndex);
-                console.log(selectedRecords);
+
                 var getSle = btn.findParentByType("grid").getSelectionModel();
-                /*getSle.select(selectedIndex);
-                getSle.select(selectedRecords);*/
-                
-                /*for(var m=0;m<selectedIndex.length;m++){
+                for(var m=0;m<selectedIndex.length;m++){
                 	var selIndex = selectedIndex[m];
-                	btn.findParentByType("grid").getSelectionModel().selectRows(selIndex);
-                }*/
-                
-                //btn.findParentByType("grid").getSelectionModel().select(selectedRecords,true,true);
-                
-                win.ignoreChanges = false;
+                	getSle.select(selIndex,true);
+                }
             });
         }
     },
@@ -2315,7 +2305,7 @@
 		               {'pw' : '平均',     'pj' : 22} 
 		               ];
 		*/
-		console.log('-------------');
+		//console.log('-------------');
 		//console.log(this.getView().statisticsGrid);
 		//console.log(btn.ownerCt.ownerCt);
         var PWIDs ="";//存放选择的评委;

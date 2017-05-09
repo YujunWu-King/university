@@ -1550,7 +1550,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				} else {
 					psTzMsPsGzTblMapper.insertSelective(psTzMspsGzTbl);
 				}
-				strResponse = "{\"status\":\"A\"}";
+				strResponse = "{\"status\":\"A\",\"isPass\":\"Y\"}";
 				break;
 			case "finishClick":
 				// 关闭本轮评审-参考原系统，无限制规则
@@ -1562,7 +1562,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				} else {
 					psTzMsPsGzTblMapper.insertSelective(psTzMspsGzTbl);
 				}
-				strResponse = "{\"status\":\"B\"}";
+				strResponse = "{\"status\":\"B\",\"isPass\":\"Y\"}";
 				break;
 			}
 			errMsg[0] = "0";
@@ -1596,32 +1596,46 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					// 获取当前评委的OPRID
 					String strSql1 = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
 					String strJudgeID = sqlQuery.queryForObject(strSql1, new Object[] { strJudgeId, strCurrentOrg }, "String");
+
+					// 删除数据之前根据评委的考生更新考生的评委列表表
+					String strListSql1 = "SELECT TZ_APP_INS_ID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?";
+					List<Map<String, Object>> JudgeList = sqlQuery.queryForList(strListSql1, new Object[] { strClassID, strBatchID,strJudgeID });
+					if(JudgeList!=null&&JudgeList.size()>0){
+						for(Object judgeObj:JudgeList){
+							Map<String, Object> result = (Map<String, Object>) judgeObj;
+							String strAppInsId = result.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(result.get("TZ_APP_INS_ID"));
+							
+							String strSql2 = "SELECT TZ_MSPW_LIST FROM PS_TZ_MSPSKSPW_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ?";
+							List<Map<String, Object>> mapList = sqlQuery.queryForList(strSql2, new Object[] { strClassID, strBatchID,strAppInsId });
+							if (mapList != null && mapList.size() > 0) {
+								for (Object pwObj : mapList) {
+									Map<String, Object> judgRresult = (Map<String, Object>) pwObj;
+									String strJudgeList = judgRresult.get("TZ_MSPW_LIST") == null ? "" : String.valueOf(judgRresult.get("TZ_MSPW_LIST"));
+									
+									// 从所有当前班级和批次的考生的评委列表中查找出当前评委并删除
+									if (strJudgeList != null && !"".equals(strJudgeList)) {
+										if (strJudgeList.contains(strJudgeId + ",")) {
+											strJudgeList.replace(strJudgeId + ",", "");
+										} else if (strJudgeList.contains("," + strJudgeId)) {
+											strJudgeList.replace("," + strJudgeId, "");
+										} else {
+											strJudgeList.replace(strJudgeId, "");
+										}
+										String strUpdateSql = "UPDATE PS_TZ_MSPSKSPW_TBL SET TZ_MSPW_LIST=? WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_APP_INS_ID=?";
+										sqlQuery.update(strUpdateSql,new Object[]{strJudgeList,strBatchID,strClassID,strAppInsId});
+									}
+								}
+							}
+						}																
+					}
+					
+					//删除MBA面试评委考生关系表 中的数据
+					String strDeleteSql1 = "DELETE FROM  PS_TZ_MP_PW_KS_TBL  WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?";
+					sqlQuery.update(strDeleteSql1, new Object[] { strClassID,strBatchID, strJudgeID });
+					
 					// 将评委考生记录表中的数据设置为撤销
 					String strUpdateSql1 = "UPDATE PS_TZ_MSPWPSJL_TBL SET TZ_SUBMIT_YN='C' WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_PWEI_OPRID=?";
 					sqlQuery.update(strUpdateSql1, new Object[] { strBatchID, strClassID, strJudgeID });
-
-					// 评委列表
-					String strSql2 = "SELECT TZ_MSPW_LIST,TZ_APP_INS_ID FROM PS_TZ_MSPSKSPW_TBL WHERE TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ?";
-					List<Map<String, Object>> mapList = sqlQuery.queryForList(strSql2, new Object[] { strClassID, strBatchID });
-					if (mapList != null && mapList.size() > 0) {
-						for (Object pwObj : mapList) {
-							Map<String, Object> result = (Map<String, Object>) pwObj;
-							String strJudgeList = result.get("TZ_MSPW_LIST") == null ? "" : String.valueOf(result.get("TZ_MSPW_LIST"));
-							String strAppInsId = result.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(result.get("TZ_APP_INS_ID"));
-							// 从所有当前班级和批次的考生的评委列表中查找出当前评委并删除
-							if (strJudgeList != null && !"".equals(strJudgeList)) {
-								if (strJudgeList.contains(strJudgeId + ",")) {
-									strJudgeList.replace(strJudgeId + ",", "");
-								} else if (strJudgeList.contains("," + strJudgeId)) {
-									strJudgeList.replace("," + strJudgeId, "");
-								} else {
-									strJudgeList.replace(strJudgeId, "");
-								}
-								String strUpdateSql = "UPDATE PS_TZ_MSPSKSPW_TBL SET TZ_MSPW_LIST='" + strJudgeList + "' WHERE TZ_APPLY_PC_ID='" + strBatchID + "' AND TZ_CLASS_ID='" + strClassID + "' AND TZ_APP_INS_ID='" + strAppInsId + "'";
-								sqlQuery.update(strUpdateSql);
-							}
-						}
-					}
 				}
 			}
 			errMsg[0] = "0";
@@ -1663,16 +1677,12 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 		String strSql2 = "SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?";
 		strTreeName = sqlQuery.queryForObject(strSql2, new Object[] { strScoreModalID, strCurrentOrg }, "String");
 
-		String strScoreItemID = "";
-		String strScoreItemSql = "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? and PARENT_NODE_NUM=0";
-		strScoreItemID = sqlQuery.queryForObject(strScoreItemSql, new Object[] { strTreeName }, "String");
-
 		String strTreeNode = "";
 		String strSql3 = "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? AND PARENT_NODE_NUM=0";
 		strTreeNode = sqlQuery.queryForObject(strSql3, new Object[] { strTreeName }, "String");
 
 		int numTotal = 0;
-		String strListSql1 = "SELECT DISTINCT TZ_PWEI_OPRID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ?";
+		String strListSql1 = "SELECT DISTINCT TZ_PWEI_OPRID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? AND TZ_DELETE_ZT<>'Y' AND TZ_PSHEN_ZT<>'C'";
 		List<Map<String, Object>> mapList1 = sqlQuery.queryForList(strListSql1, new Object[] { strBatchID, strAppInsID });
 
 		if (mapList1 != null && mapList1.size() > 0) {
@@ -1691,36 +1701,6 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 						sqlQuery.update(strInsertSql);
 						pw_num = pw_num + 1;
 					}
-					/*
-					 * String strListSql2 =
-					 * "SELECT B.TZ_SCORE_MODAL_ID,A.TZ_SCORE_INS_ID,A.TZ_SCORE_ITEM_ID,A.TZ_SCORE_NUM,TZ_SCORE_PY_VALUE FROM PS_TZ_MP_PW_KS_TBL C JOIN PS_TZ_CJX_TBL A ON A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID JOIN PS_TZ_SRMBAINS_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID WHERE C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=? AND C.TZ_PWEI_OPRID=?"
-					 * ; List<Map<String, Object>> mapList2 =
-					 * sqlQuery.queryForList(strListSql2, new Object[] {
-					 * strClassID, strBatchID, strAppInsID, str_PwOprid }); if
-					 * (mapList2 != null && mapList2.size() > 0) { for (Object
-					 * sObj : mapList2) { Map<String, Object> resultMap =
-					 * (Map<String, Object>) sObj; String strScoreItemId =
-					 * String.valueOf(resultMap.get("TZ_SCORE_ITEM_ID")); String
-					 * strScoreNum = resultMap.get("TZ_SCORE_NUM") == null ? "0"
-					 * : String.valueOf(resultMap.get("TZ_SCORE_NUM")); String
-					 * strScorePyValue =
-					 * String.valueOf(resultMap.get("TZ_SCORE_PY_VALUE"));
-					 * 
-					 * String strMap2Sql =
-					 * "SELECT TZ_ITEM_S_TYPE FROM PS_TZ_CJ_BPH_TBL WHERE TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=?"
-					 * ; String strItemType =
-					 * sqlQuery.queryForObject(strMap2Sql, new Object[] {
-					 * strCurrentOrg, strScoreModalID, strScoreItemId },
-					 * "String"); if ("C".equals(strItemType)) {
-					 * 
-					 * } else {
-					 * 
-					 * } pw_num = pw_num + 1; String strInsertSql =
-					 * "INSERT INTO PS_TZ_PW_KS_PC_TBL VALUES(" + pw_num + ",'"
-					 * + strScoreNum + "')"; sqlQuery.update(strInsertSql); }
-					 * 
-					 * }
-					 */
 				}
 			}
 		}
