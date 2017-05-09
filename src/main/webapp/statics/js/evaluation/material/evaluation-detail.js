@@ -1266,16 +1266,16 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		}
 
 									                                } else {
-									                                	// unmask window
-																		
-																		//刷新打分区
+
+																		/*//刷新打分区
 																		refreshDfAreaFormPanel(jsonObject.comContent);
 																	   
 																		//刷新当前考生在本地的缓存数据
 																		updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																		//更新全局缓存，进行局部刷新
 																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'FAL');
-																		unmaskWindow();
+																		// unmask window
+																		unmaskWindow();*/
 
 																		Ext.Msg.alert('失败',jsonObject.comContent.resultMsg);
 									                                }
