@@ -2028,10 +2028,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			
 			//回调指定的函数来显示考生评审页面
 			callBackFunction(tipCount,scrollBackTagId);
-
-
-			//报名表加载完成前不能操作,显示mask窗口
-			maskWindow();
+			
 		}
 		else
 		{

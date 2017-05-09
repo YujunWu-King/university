@@ -164,7 +164,6 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 功能：创建左侧考生列表的的GridPanel实例
 	* 参数：ksjson_data  从服务器获取的考生的相关JSON数据
 	*/
-	//var dfPageWest_grid;
 	if(window.dfPageWest_grid == null)
 	{
 		window.dfPageWest_grid = {};
@@ -175,9 +174,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		window.dfPageWest_grid_store = {};
 	}
 	function createExamineeGrid(ksjson_data){
-	
-		/*获取当前班级编号、评审批次ID*/
+
+
+		/*获取当前评审班级ID*/
 		var classId = tmpClassId;
+		/*获取当前评审批次ID*/
 		var batchId = tmpBatchId;
 		if(classId == null || batchId == null) return;
 		
@@ -527,31 +528,34 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		field_parent_id	父节点的name值
 	*/
 	function createParentFieldContainer(field_label,field_level,field_value,field_name,field_parent_id){
-		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 40px 的倍数向右缩进
+		var pdl_value = treenode_pdl_base_value[tmpBatchId] * (field_level-1) + 5; //每个层级以 20px 的倍数向右缩进
 		var thisFieldContainerHeight = 30;
 		field_value = $.trim(field_value);
 		if(field_value=="") field_value = "--";
-		if(field_level==0 && field_value != "--") field_value = '<span style="color:red;font-weight:bold;">' + field_value + '</span>'; //若是第一项“总分”，则加粗
-	
+		if(field_level==1 && field_value != "--"){
+			field_value = '<span style="color:red;font-weight:bold;">' + field_value + '</span>'; //若是第一项“总分”，则加粗
+		}
+		
 		var parentFieldContainer = new Ext.form.FieldContainer({
-			fieldLabel		: '<span class="fontBold" style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
-			combineErrors	: false,
-			labelWidth		: 150,
-			height			: thisFieldContainerHeight,
-			defaults		: {hideLabel: true},
-			items			: [{
-				xtype: 'displayfield',
-				name : field_name,
-				value: field_value,
-				listeners: {
-					   change : function(thisfield,newValue,oldValue){
-							   if(field_parent_id!="" && doChangeFieldValue[tmpBatchId]=="Y")
-								   dfAreaPanel[tmpBatchId].getForm().findField(field_parent_id).setValue("--");
-					  }
-				}	
-			}]	
+				fieldLabel		: '<span style="padding-left: '+ pdl_value +'px;font-weight:bold;">'+ field_label +'</span>',
+				combineErrors	: false,
+				labelWidth		: 150,
+				height			: thisFieldContainerHeight,
+				defaults		: {hideLabel: true},
+				items			: [{
+									xtype: 'displayfield',
+									name : field_name,
+									value: field_value,
+									listeners: {
+												   change : function(thisfield,newValue,oldValue){
+														   if(field_parent_id!="" && doChangeFieldValue[tmpBatchId]=="Y")
+															   dfAreaPanel[tmpBatchId].getForm().findField(field_parent_id).setValue("--");
+												  }
+										}
+								  }]
 		});
 		
+									
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
 		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight;
 	}
@@ -573,7 +577,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		field_parent_id	父节点的name值
 	*/
 	function createLeafPointFieldContainer(field_label,field_level,field_value,field_name,point_begin,point_end,bzsm_content,ckwt_content,msff_content,ckzl_content,field_parent_id){
-		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 40px 的倍数向右缩进
+		var pdl_value = treenode_pdl_base_value[tmpBatchId] * (field_level-1) + 5; //每个层级以 20px 的倍数向右缩进
 		var pointbzsm_id = "pointbzsm_"+ field_name + tmpBatchId;  //标准说明的ID
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
 		var pointmsff_id = "pointmsff_"+ field_name + tmpBatchId;  //面试方法的ID
@@ -667,7 +671,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		field_pyzs_xx	评语的限制字数下限
 	*/
 	function createLeafCommentFieldContainer(field_label,field_level,field_value,field_name,bzsm_content,ckwt_content,ckzl_content,field_pyzs_sx,field_pyzs_xx){
-		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 40px 的倍数向右缩进
+		var pdl_value = treenode_pdl_base_value[tmpBatchId] * (field_level-1) + 5; //每个层级以 20px 的倍数向右缩进
 		var pointbzsm_id = "pointbzsm_"+ field_name + tmpBatchId;  //标准说明的ID
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
 		var pointckzl_id = "pointckzl_"+ field_name + tmpBatchId;  //参考资料的ID
@@ -739,7 +743,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		field_options	下拉框值
 	*/
 	function createLeafDropdownFieldContainer(field_label,field_level,field_value,field_name,bzsm_content,ckwt_content,msff_content,ckzl_content,field_options){
-		var pdl_value = treenode_pdl_base_value[tmpBatchId] * field_level; //每个层级以 40px 的倍数向右缩进
+		var pdl_value = treenode_pdl_base_value[tmpBatchId] * (field_level-1) + 5; //每个层级以 40px 的倍数向右缩进
 		var pointbzsm_id = "pointbzsm_"+ field_name + tmpBatchId;  //标准说明的ID
 		var pointckwt_id = "pointckwt_"+ field_name + tmpBatchId;  //参考问题的ID
 		var pointmsff_id = "pointmsff_"+ field_name + tmpBatchId;  //面试方法的ID
@@ -748,7 +752,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var thisFieldContainerHeight = 40;
 		
 		var store = Ext.create("Ext.data.Store",{
-			fields:['optionName','optionValue'],
+			fields:['itemOptionId','itemOptionName'],
 			data:field_options
 		});
 
@@ -776,8 +780,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				value		: field_value,
 				store		: store,
 				autoShow	: true,
-				valueField	: 'optionValue',
-				displayField: 'optionName',
+				valueField	: 'itemOptionId',
+				displayField: 'itemOptionName',
 				queryMode	: 'local',
 				editable	: false,
 				margin		: '0 5 0 0',
@@ -854,27 +858,22 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			items			: [{
 				xtype	: 'hiddenfield',
 				name	: 'LanguageCd',
-				id		: 'LanguageCd',
 				value	: 'ZHS'
 			},{
 				xtype	: 'hiddenfield',
 				name	: 'OperationType',
-				id		: 'OperationType',
 				value	: ''
 			},{
 				xtype	: 'hiddenfield',
 				name	: 'ClassID',
-				id		: 'ClassID',
 				value	: ClassIDval
 			},{
 				xtype	: 'hiddenfield',
 				name	: 'BatchID',
-				id		: 'BatchID',
 				value	: BatchIDval
 			},{
 				xtype	: 'hiddenfield',
 				name	: 'KSH_BMBID',
-				id		: 'KSH_BMBID',
 				value	: KSH_BMBIDval
 			}]
 		});
@@ -981,7 +980,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 										url : dfArea_Submit_URL,
 				                        params : {tzParams:tzParams},
 				                        timeout : 60000,
-				                        async : false,
+				                        async : true,
 				                        success : function(response,opts) {
 				                        	 //返回值内容
 				                            var jsonText = response.responseText;
@@ -1256,7 +1255,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		ksinfoJSON	当前考生的JSON数据
 	*/
 	function createKSinfoFieldContainer(ksinfoJSON){
-		var thisFieldContainerHeight = 50;
+		var thisFieldContainerHeight = 0;
 		
 		var field_name = "ksinfo_" + tmpBatchId;
 		
@@ -1280,7 +1279,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			combineErrors	: false,
 			height			: thisFieldContainerHeight,
 			name            : field_name,
-			html            : '<div style="margin:0;width: 300%;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
+			html            : '<div style="margin:0;width: 733px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
 		});
 
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
@@ -1341,7 +1340,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			newFormField = createLeafCommentFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemComment, node_data.itemId, node_data.itemDfsm, node_data.itemCkwt,node_data.itemCkzl, node_data.itemCommentUpperLimit, node_data.itemCommentLowerLimit);
 		} else {
 			if(node_data.itemType=="D"){ //是否下拉框类型的数据
-				newFormField = createLeafDropdownFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemValue, node_data.itemId, node_data.itemDfsm, node_data.itemCkwt, node_data.itemMsff,node_data.itemCkzl,node_data.itemOptions);
+				newFormField = createLeafDropdownFieldContainer(node_data.itemName, node_data.itemLevel, node_data.itemXlkId, node_data.itemId, node_data.itemDfsm, node_data.itemCkwt, node_data.itemMsff,node_data.itemCkzl,node_data.itemOptions);
 			} else {
 				if(node_data.itemIsLeaf=="N"){
 					//生成非叶子节点
@@ -1524,8 +1523,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//更新报名表
 		//每个考生一个IFRAME
 		var tmpBatchIdBMBID = tmpBatchId + '_' + userpoints.bmbId;
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'"}}';
-		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'","TZ_APP_TPL_ID":"'+userpoints.clpsBmbTplId+'"}}';
+		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl); 
 		
 		if($('#bmb_iframe_'+tmpBatchIdBMBID)[0]!=null && $('#bmb_iframe_'+tmpBatchIdBMBID)[0]!="undefined"){
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
@@ -1597,8 +1596,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	var show_BMB_html = "";
 	function createBMBPanel(east_ksbmb_url, df_bmbid){
 		// 采用IFrame方式
-		
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+df_bmbid+'"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+df_bmbid+'","TZ_APP_TPL_ID":"'+clpsBmbTplId+'"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		show_BMB_html = bmb_url;
 	}
@@ -1686,13 +1684,14 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					{
 						text: '返回批次评审主页面',
 						tooltip:'单击此按钮返回批次评审主页面。',
-						width: 140,
+						width: 150,
 						glyph:'xf04a@FontAwesome',
 						handler: function(item,pressed){showPreviousEvaluatePage(1);},
 						pressed: true
 					},
-					'<b>'+ksinfoJSON['classStartYear'] + ksinfoJSON['className'] + ksinfoJSON['applyBatchName'] +'</b>'
-		);
+					'<b>' + ksinfoJSON['className'] + " " + ksinfoJSON['applyBatchName'] + '</b>'
+				);
+
 		
 		var tmpEvaluatePanel = Ext.create('Ext.panel.Panel',
 				{
@@ -1724,7 +1723,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		}
 		catch(e1)
 		{
-			alert('加载考生评审主页面时发生错误：' + e1);
+			var msg = '加载考生评审主页面时发生错误：' + e1;
+			Ext.Msg.alert('提示', msg);
 		}
 		
 		window.evaluatePanel[tmpBatchId] = tmpEvaluatePanel;
@@ -1852,7 +1852,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			
 			Ext.Ajax.request({
 				url		: dfArea_initLoad_URL,
-				params : {"tzParams":tzParams},
+				params	: {tzParams:tzParams},
 				success	: function(response)
 				{
 					var jsonObject = Ext.decode(response.responseText);
@@ -2013,18 +2013,17 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		{
 			content: {
 				// Set the text to an image HTML string with the correct src URL to the loading image you want to use
-				text: dfarea_leaftips_data[1],
-				
+				text: "<div style='width:100%'>"+dfarea_leaftips_data[1]+"</div>",
 				title: {
 					text: dfarea_leaftips_data[2], // Give the tooltip a title using each elements text
-					button: true
+					button: "关闭"
 				}
 			},
 			position: {
-				at: 'top right', // Position the tooltip above the link
+				at: 'top center', // Position the tooltip above the link
 				my: 'bottom right',
 				//viewport: $(window), // Keep the tooltip on-screen at all times
-				viewport: $("#tz_evaluation_main"),
+				viewport:$(".main"),
 				effect: false // Disable positioning animation
 			},
 			show: {
