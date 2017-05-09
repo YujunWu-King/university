@@ -6,6 +6,7 @@
         'KitchenSink.view.automaticScreen.autoScreenController',
         'KitchenSink.view.automaticScreen.autoTagStore',
         'KitchenSink.view.automaticScreen.fmqdListStore',
+        'KitchenSink.view.automaticScreen.sdbqListStore',
         'KitchenSink.view.automaticScreen.autoTagOrFmListModel'
     ],
     xtype: 'autoScreenDetails',
@@ -32,6 +33,9 @@
 
 		//负面清单store
 		var fmqdStore = new KitchenSink.view.automaticScreen.fmqdListStore(config);
+		
+		//手工标签store
+		var labelTagStore = new KitchenSink.view.automaticScreen.sdbqListStore(config);
 		
     	//初筛结果Store
 		/*
@@ -158,9 +162,11 @@
 		        	xtype: 'tagfield',
 		        	name: 'manualLabel',
 		        	fieldLabel: '手工标签',
-		        	//store:labelTagStore,
-                    valueField: 'TZ_LABEL_ID',
-                    displayField: 'TZ_LABEL_NAME',
+		        	store:labelTagStore,
+//                    valueField: 'TZ_LABEL_ID',
+//                    displayField: 'TZ_LABEL_NAME',
+		        	displayField: 'desc',
+                    valueField: 'id',
                     filterPickList:true,
                     createNewOnEnter: true,
                     createNewOnBlur: true,

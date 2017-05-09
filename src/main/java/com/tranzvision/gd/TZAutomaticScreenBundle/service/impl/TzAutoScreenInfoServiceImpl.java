@@ -161,8 +161,16 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
-			String classId = jacksonUtil.getString("classId");
-			String batchId = jacksonUtil.getString("batchId");
+			String classId = "";
+			if(jacksonUtil.containsKey("classId")){
+				classId = jacksonUtil.getString("classId");
+			}
+			
+			String batchId = "";
+			if(jacksonUtil.containsKey("batchId")){
+				batchId = jacksonUtil.getString("batchId");
+			}
+			
 			String appId = jacksonUtil.getString("appId");
 			String queryType = jacksonUtil.getString("queryType");
 			
@@ -173,31 +181,51 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 			if("KSBQ".equals(queryType)){
 				sql = "select TZ_ZDBQ_ID,(select TZ_BIAOQZ_NAME from PS_TZ_BIAOQZ_BQ_T where TZ_BIAOQ_ID=TZ_ZDBQ_ID limit 1) as TZ_BIAOQZ_NAME from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
 				List<Map<String,Object>> ksbqList = jdbcTemplate.queryForList(sql, new Object[]{ classId,batchId,appId });
-				for(Map<String,Object> ksbqMap : ksbqList){
-					count++;
-					String id = ksbqMap.get("TZ_ZDBQ_ID").toString();
-					String desc = ksbqMap.get("TZ_BIAOQZ_NAME") == null ? id : ksbqMap.get("TZ_BIAOQZ_NAME").toString();
-					
-					bqMap = new HashMap<String, Object>();
-					bqMap.put("id", id);
-					bqMap.put("desc", desc);
-					
-					rootList.add(bqMap);
+				if(ksbqList != null){
+					for(Map<String,Object> ksbqMap : ksbqList){
+						count++;
+						String id = ksbqMap.get("TZ_ZDBQ_ID").toString();
+						String desc = ksbqMap.get("TZ_BIAOQZ_NAME") == null ? id : ksbqMap.get("TZ_BIAOQZ_NAME").toString();
+						
+						bqMap = new HashMap<String, Object>();
+						bqMap.put("id", id);
+						bqMap.put("desc", desc);
+						
+						rootList.add(bqMap);
+					}
 				}
-				
 			}else if("FMQD".equals(queryType)){
 				sql = "select TZ_FMQD_ID,(select TZ_BIAOQZ_NAME from PS_TZ_BIAOQZ_BQ_T where TZ_BIAOQ_ID=TZ_FMQD_ID limit 1) as TZ_BIAOQZ_NAME from PS_TZ_CS_KSFM_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
 				List<Map<String,Object>> fmqdList = jdbcTemplate.queryForList(sql, new Object[]{ classId,batchId,appId });
-				for(Map<String,Object> ksbqMap : fmqdList){
-					count++;
-					String id = ksbqMap.get("TZ_FMQD_ID").toString();
-					String desc = ksbqMap.get("TZ_BIAOQZ_NAME") == null ? id : ksbqMap.get("TZ_BIAOQZ_NAME").toString();
-					
-					bqMap = new HashMap<String, Object>();
-					bqMap.put("id", id);
-					bqMap.put("desc", desc);
-					
-					rootList.add(bqMap);
+				if(fmqdList != null){
+					for(Map<String,Object> ksbqMap : fmqdList){
+						count++;
+						String id = ksbqMap.get("TZ_FMQD_ID").toString();
+						String desc = ksbqMap.get("TZ_BIAOQZ_NAME") == null ? id : ksbqMap.get("TZ_BIAOQZ_NAME").toString();
+						
+						bqMap = new HashMap<String, Object>();
+						bqMap.put("id", id);
+						bqMap.put("desc", desc);
+						
+						rootList.add(bqMap);
+					}
+				}
+			}else if("SDBQ".equals(queryType)){
+				String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				sql = "select TZ_LABEL_ID,TZ_LABEL_NAME from PS_TZ_LABEL_DFN_T where TZ_JG_ID=? and TZ_LABEL_STATUS='Y' union select A.TZ_LABEL_ID,TZ_LABEL_NAME from PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B where TZ_APP_INS_ID=? and A.TZ_LABEL_ID=B.TZ_LABEL_ID and TZ_JG_ID=?";
+				List<Map<String,Object>> sgbqList = jdbcTemplate.queryForList(sql, new Object[]{ orgId,appId,orgId });
+				if(sgbqList != null){
+					for(Map<String,Object> sgbqMap: sgbqList){
+						count++;
+						String id = sgbqMap.get("TZ_LABEL_ID").toString();
+						String desc = sgbqMap.get("TZ_LABEL_NAME") == null ? id : sgbqMap.get("TZ_LABEL_NAME").toString();
+						
+						bqMap = new HashMap<String, Object>();
+						bqMap.put("id", id);
+						bqMap.put("desc", desc);
+						
+						rootList.add(bqMap);
+					}
 				}
 			}
 			

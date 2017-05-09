@@ -431,6 +431,7 @@
 			}
 			var tzParams = Ext.JSON.encode(comParamsObj);
 			
+			/*
 			//手工标签
 			var labelTagStore= new KitchenSink.view.common.store.comboxStore({
 	            recname:'TZ_TAG_STORE_V',
@@ -461,6 +462,15 @@
 				}
 			});
 			csDetailsform.down('tagfield[name=manualLabel]').setStore(labelTagStore);
+			*/
+			
+			Ext.tzLoad(tzParams,function(respData){
+				var formData = respData;
+				form.setValues(formData);
+				
+				csDetailsform.down('tagfield[name=negativeList]').addCls('readOnly-tagfield-cls');
+				csDetailsform.down('tagfield[name=autoLabel]').addCls('readOnly-tagfield-cls');
+			});
 		});
 
 		tab = contentPanel.add(cmp);
