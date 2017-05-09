@@ -178,7 +178,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 					String strDqpyLunc = mapRule.get("TZ_DQPY_LUNC") == null ? "" : mapRule.get("TZ_DQPY_LUNC").toString();
 					Integer dqpyLunc = 0;
 					if (!"".equals(strDqpyLunc) && strDqpyLunc != null) {
-						dqpyLunc = Integer.valueOf(dqpyLunc);
+						dqpyLunc = Integer.valueOf(strDqpyLunc);
 					}
 
 					sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");

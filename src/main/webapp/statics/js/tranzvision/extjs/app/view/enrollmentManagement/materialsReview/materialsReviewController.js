@@ -3261,22 +3261,13 @@
                 var gridData = statisticsGridDataModel['gridData'];
                 var gridStore = btn.findParentByType("grid").getStore();
                 gridStore.setData(gridData);
-                //btn.findParentByType("grid").getSelectionModel().selectRows(selectedIndex);
-                
-                /*console.log(selectedIndex);
-                console.log(selectedRecords);*/
+
                 var getSle = btn.findParentByType("grid").getSelectionModel();
-                /*getSle.select(selectedIndex);
-                getSle.select(selectedRecords);*/
                 
-                /*for(var m=0;m<selectedIndex.length;m++){
+                for(var m=0;m<selectedIndex.length;m++){
                 	var selIndex = selectedIndex[m];
-                	btn.findParentByType("grid").getSelectionModel().selectRows(selIndex);
-                }*/
-                
-                //btn.findParentByType("grid").getSelectionModel().select(selectedRecords,true,true);
-                
-                win.ignoreChanges = false;
+                	getSle.select(selIndex,true);
+                }
             });
         }
     },

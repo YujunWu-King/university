@@ -132,7 +132,18 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPsStudentPanel', {
 						}
 					}
 				}*/],
-				 store:store
+				 store:store,
+				    bbar: {
+                    xtype: 'pagingtoolbar',
+                    pageSize: 10,
+                    store: store,
+                    displayInfo: true,
+                    displayMsg:"显示{0}-{1}条，共{2}条",
+                    beforePageText:"第",
+                    afterPageText:"页/共{0}页",
+                    emptyMsg: "没有数据显示",
+                    plugins: new Ext.ux.ProgressBarPager()
+                }
 
 			}],
 

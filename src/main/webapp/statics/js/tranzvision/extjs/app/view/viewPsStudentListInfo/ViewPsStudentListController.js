@@ -158,8 +158,14 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 
 
 	},
-	onAddMsPsXs: function() {
+	onAddMsPsXs: function(btn) {
 		var me = this;
+		
+		var panel = btn.findParentByType("viewmspsxsList");
+		var form = panel.down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+		console.log("classId+batchId:"+classId+batchId);
 		//是否有访问权限   
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_ADDKS_STD"];
 		if (pageResSet == "" || pageResSet == undefined) {
@@ -187,13 +193,11 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			//操作类型设置为新增
 			win.actType = "add";
 			console.log(win.actType);
-/*	win.on('afterrender', function(window) {
+	win.on('afterrender', function(window) {
 								var attgrid = window.child('grid');
-								attgrid.getStore().tzStoreParams = '{"add":[' + attaList + ']}';
-
+								attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}' ;
 								attgrid.getStore().load();
-
-							})*/
+							})
 			me.getView().add(win);
 			win.show();
 		}
