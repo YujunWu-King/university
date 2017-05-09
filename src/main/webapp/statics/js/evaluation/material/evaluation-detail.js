@@ -1251,6 +1251,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																			unmaskWindow();
 
 																			Ext.Msg.alert('提示', "保存成功！请给下一个考生打分！");
+
 																		} else {
                                                                             //刷新打分区
 																			refreshDfAreaFormPanel(jsonObject.comContent);
@@ -1258,7 +1259,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																			//刷新当前考生在本地的缓存数据
 																			updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																			//更新全局缓存，进行局部刷新
-																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
+																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'FAL');
 																			unmaskWindow();
 
 																			Ext.Msg.alert('失败',jsonObject.comContent.message);
@@ -1273,7 +1274,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																		//刷新当前考生在本地的缓存数据
 																		updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																		//更新全局缓存，进行局部刷新
-																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
+																		getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'FAL');
 																		unmaskWindow();
 
 																		Ext.Msg.alert('失败',jsonObject.comContent.resultMsg);
@@ -1403,7 +1404,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	*		ksinfoJSON	当前考生的JSON数据
 	*/
 	function createKSinfoFieldContainer(ksinfoJSON){
-		var thisFieldContainerHeight = 50;
+		var thisFieldContainerHeight = 0;
 		
 		var field_name = "ksinfo_" + tmpBatchId;
 		
@@ -1723,7 +1724,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			$('#bmb_iframe_'+tmpBatchIdBMBID).show();
 		}else{
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
-			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="' + bmb_url +'" frameborder="0" width="100%" height="100%"></iframe>');
+			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="' + bmb_url +'" frameborder="0" width="100%" height="100%" onload="unmaskWindow()"></iframe>');
 		}
 	}
 
@@ -2024,6 +2025,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			
 			//回调指定的函数来显示考生评审页面
 			callBackFunction(tipCount,scrollBackTagId);
+
+
+			//报名表加载完成前不能操作,显示mask窗口
+			maskWindow();
 		}
 		else
 		{
@@ -2090,6 +2095,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 							
 							//回调指定的函数来显示考生评审页面
 							callBackFunction(tipCount,scrollBackTagId);
+
+
+							//报名表加载完成前不能操作,显示mask窗口
+							maskWindow();
 						}
 					}
 					catch(e1)
@@ -2166,6 +2175,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		}else{
 		
 			KSINFO_JSON_DATA[tmpBatchId][df_bmbid] = userpoints;
+
 		}
 	}
 	
@@ -2234,14 +2244,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//hide: 'unfocus',
 			hide: false,
 			style: {
-				classes: 'ui-tooltip-wiki ui-tooltip-tipped ui-tooltip-shadow',
+				classes: 'ui-tooltip-wiki ui-tooltip-tipped ui-tooltip-shadow'
 			}
 		});
 	}
-
 	
 	//初始化
 	getKSJSONData(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID,evaluateObject.applicantBaomingbiaoID,"create");
 	
 	
 }
+
+

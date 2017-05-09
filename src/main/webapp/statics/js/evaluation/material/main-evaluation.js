@@ -309,7 +309,7 @@ function getDataModelForStatisticsChart(jsonObject)
 
 function createStatisticsChart(jsonObject,chartStore,totalWidth)
 {
-	var retChartObject = null
+	var retChartObject = null;
 	
 	
 	var chartDataModel = getDataModelForStatisticsChart(jsonObject);
@@ -1279,8 +1279,12 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 						}
 						else
 						{
-							//其他暂无操作
-							;
+							if(operationType == 'RFH') {
+								//保存并获取下一个考生使用，报名表加载完成前不能操作,显示mask窗口
+								maskWindow();
+							} else {
+								//其他暂无操作
+							}
 						}
 						
 						
