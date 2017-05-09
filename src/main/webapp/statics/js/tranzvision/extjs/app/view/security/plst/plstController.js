@@ -1,6 +1,22 @@
 ﻿Ext.define('KitchenSink.view.security.plst.plstController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.plstMg',
+
+    //可配置搜索
+    cfgSearchAct: function(btn){
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.TZ_PROCESS_DF_VW',
+            condition:
+            {
+                "TZ_JG_ID": Ext.tzOrgID
+            },
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                store.tzStoreParams = seachCfg;
+                store.load();
+            }
+        });
+    },
     addPermission: function() {
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_AQ_PLST_COM"]["TZ_PLST_INFO_STD"];
@@ -425,7 +441,8 @@
         win.actType = "update";
 
         var form = win.child("form").getForm();
-        var grid = win.child("grid");
+        var pageGrid = Ext.getCmp('pageGrid');
+        var processGrid = Ext.getCmp('processGrid');
 
         form.setValues(
             [
@@ -434,8 +451,11 @@
             ]
         );
         var tzStoreParams = '{"permID":"'+permID+'","comID":"'+comID+'","comName":"'+comName+'"}';
-        grid.store.tzStoreParams = tzStoreParams;
-        grid.store.load();
+
+        pageGrid.store.tzStoreParams = tzStoreParams;
+        pageGrid.store.load();
+        processGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_AQ_COMREG_COM.TZ_AQ_PAGEREG_STD.TZ_PROCESS_DF_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID+'","TZ_ZCZJ_ID-operator": "01","TZ_ZCZJ_ID-value": "' + comID + '"}}';;;
+        processGrid.store.load();
 
         win.show();
     },
@@ -509,7 +529,7 @@
         var win = btn.findParentByType("window");
         //资源信息表单
         var form = win.child("form").getForm();
-        var grid= win.child("grid");
+        var grid= Ext.getCmp('pageGrid');
         if (form.isValid()) {
             /*保存资源信息*/
             var ret=this.savePlstComInfo(win);
@@ -542,7 +562,7 @@
         var comParams = "";
 
         //授权组件页面列表
-        var grid = win.child("grid");
+        var grid = Ext.getCmp('pageGrid');
         //授权组件页面数据
         var store = grid.getStore();
         //授权组件页面新增或者修改记录
