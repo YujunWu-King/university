@@ -144,7 +144,7 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
             return false;
         }
         var formParams = form.getValues();
-        var tzParams = '{"ComID":"TZ_PROCESS_FW_COM","PageID":"TZ_PROCESS_FW_EDIT","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+        var tzParams = '{"ComID":"TZ_PROCESS_FW_COM","PageID":"TZ_PROCESS_FW_EDIT","OperateType":"U","comParams":{"add":['+Ext.JSON.encode(formParams)+']}}';
         Ext.tzSubmit(tzParams,function(response){
             var attrValue=response.attrValue;
             form.setValues({"attrValue":attrValue});

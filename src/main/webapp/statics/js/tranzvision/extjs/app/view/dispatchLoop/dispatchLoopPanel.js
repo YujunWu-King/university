@@ -298,7 +298,7 @@
                     valueField: 'TValue',
                     displayField: 'TSDesc',
                     queryMode: 'remote',
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_DAY_STATUS"),
+                    store: new KitchenSink.view.common.store.appTransStore("TZ_WEEK_STATUS"),
                 }]
             },{
                 style:'margin-top:10px;margin-left:50px',
