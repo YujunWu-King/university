@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>新版报名表</title>  
 	
-	<!--  <link href="page_stylecss" rel="stylesheet" type="text/css" /> -->
+	<!-- <link href="page_stylecss" rel="stylesheet" type="text/css" /> -->
 	<!-- <link rel="stylesheet" href="%bind(:32)/statics/css/appeditor/bootstrap.min2.css" type="text/css" /> -->
 	<link rel="stylesheet" href="%bind(:32)/statics/js/lib/jqueryui/jquery-ui.min.css" type="text/css" />
 	<link rel="stylesheet" href="%bind(:32)/statics/js/lib/timepicker-addon/jquery-ui-timepicker-addon.css" type="text/css" />
@@ -1248,11 +1248,8 @@
 				     });
 				 })
 			function SetCwinHeight(obj) {
+				$(obj).parent().parent().parent().show();
 				var cwin = obj;
-				var ab = 0;
-				//if ($.browser.msie && ($.browser.version == "6.0")) {
-				//	ab = 0;
-				//}
 				if (document.getElementById) {
 					if (cwin && !window.opera) {
 						if (cwin.contentDocument && cwin.contentDocument.body.offsetHeight) {
@@ -1268,6 +1265,7 @@
 						}
 					}
 				}
+				$(obj).parent().parent().parent().hide();
 			}
 	</script>
 	<script type="text/javascript">

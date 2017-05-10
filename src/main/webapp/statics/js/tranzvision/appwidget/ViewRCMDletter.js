@@ -54,7 +54,7 @@ SurveyBuild.extend("ViewRCMDletter", "baseComponent", {
                 c += '</div>';
                 c += '<div class="main_content_box">';
                 c += '	<div class="mainright-box pos-rela">';
-                c += '		<iframe src="' + url + '" width="100%"  height="500" frameborder="0" scrolling="no" onload="SetCwinHeight(this)"></iframe>';
+                c += '		<iframe name="' + tjxInsId + '" src="' + url + '" width="100%"  height="500" frameborder="0" scrolling="no" onload="SetCwinHeight(this)"></iframe>';
                 c += '	</div>';
                 c += '</div>';
             }
