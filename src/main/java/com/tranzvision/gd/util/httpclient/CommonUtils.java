@@ -40,4 +40,21 @@ public class CommonUtils {
 		}
 		return isMobile;
 	}
+	
+	
+	/**
+	 * 判断客户端请求是否是微信内置浏览器
+	 * @param request
+	 * @return
+	 */
+	public static boolean isWeChartBrowser(HttpServletRequest request){
+		boolean isWeChart = false;
+		
+		String sUserAgent = request.getHeader("User-Agent").toLowerCase();
+		if(sUserAgent.indexOf("micromessenger") > -1){
+			isWeChart = true;
+		}
+		
+		return isWeChart;
+	}
 }

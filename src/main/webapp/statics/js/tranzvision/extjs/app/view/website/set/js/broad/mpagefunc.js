@@ -438,6 +438,8 @@ function Login(){
 	
 	var siteid = encodeURI($("#siteid").val());
 	
+	var openid = $("#openid").val();
+
 	//if 
 	var classid = getQueryString("classid");
 	
@@ -453,7 +455,8 @@ function Login(){
 		data:{
 			tzParams:tzParams,
 			language:$("#lang").val(),
-			classIdParams : classid
+			classIdParams : classid,
+			OPENID: openid
 		},
 		dataType:'json',
 		success:function(response){			
