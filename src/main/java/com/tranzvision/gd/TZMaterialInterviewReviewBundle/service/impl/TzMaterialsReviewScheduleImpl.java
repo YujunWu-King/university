@@ -40,6 +40,7 @@ import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.sql.GetSeqNum;
+import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 
 /**
  * 材料评审进度，原TZ_GD_CLPS_PKG:TZ_GD_SCHE_CLS

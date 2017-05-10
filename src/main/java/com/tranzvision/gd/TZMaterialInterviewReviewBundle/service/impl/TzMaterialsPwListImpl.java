@@ -3,6 +3,7 @@ package com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 import java.util.*;
@@ -22,7 +23,9 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
-
+	@Autowired
+	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
+	
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String errMsg[]) {
 
@@ -98,6 +101,7 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 								break;
 							case "C":// 评语
 								// strScorePyValue默认为评语值，无须转换
+								strScorePyValue = this.transChar(strScorePyValue);
 								break;
 							case "D":// 下拉框
 								String xlk_xxbh = strScorePyValue;
@@ -127,5 +131,18 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 			errMsg[1] = e.toString();
 		}
 		return strResponse;
+	}
+	
+	private String transChar(String strValue){
+		String result = strValue;
+		
+		result = tzFilterIllegalCharacter.filterAllIllegalCharacter(result);
+		
+		result = result.replace("\n", "");
+		result = result.replace("\r", "");
+		result = result.replace("\t", "    ");
+		result = result.replace(" ", " ");
+		result = result.replace("\"", "\\" + "\"");
+		return result;
 	}
 }

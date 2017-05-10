@@ -58,7 +58,6 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             //是否存在备注说明，若存在，放在列最后
             var BeiZhuShuoMing=0;
             for (var i = 0; i <=scoreType.length-1 ; i++) {
-            	console.log(scoreType[i]);
                 var flex;
                 var width;
                 //若为说明，则先不加入评分列
@@ -121,7 +120,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         }
 
-        console.log(scoreItems);
+
         Ext.apply(this,{
             items: [{
                 xtype: 'grid',
