@@ -69,9 +69,9 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     hMap.put("serverIP", serverIP);
                     hMap.put("intervalTime", intervalTime);
                     hMap.put("parallelNum", parallelNum);
-                    if("RUN".equals(status) ){
+                    if("RUNNING".equals(status) ){
                         status = "运行中";
-                    }else if ("STOP".equals(status)){
+                    }else if ("STOPPED".equals(status)){
                         status = "已停止";
                     }
                     hMap.put("status", status);
@@ -174,7 +174,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     tzProcessServer.setTzJcfwqMs(processDec);
                     tzProcessServer.setTzRwxhJg(intervalTime);
                     tzProcessServer.setTzZdbxRws(parallelNum);
-                    tzProcessServer.setTzYxzt("STOP");
+                    tzProcessServer.setTzYxzt("STOPPED");
                     tzProcessServer.setTzBeizhu(remark);
 
                     tzProcessServerMapper.insertSelective(tzProcessServer);

@@ -47,8 +47,9 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitor', {
         ]
     }],
     initComponent: function () {
+    	
+    	var statusStore = new KitchenSink.view.common.store.appTransStore("TZ_INSTANCE_STATUS");
         var store = new KitchenSink.view.processDispatchMg.processMonitorStore();
-        var statusStore = new KitchenSink.view.common.store.appTransStore("TZ_INSTANCE_STATUS");
         Ext.apply(this, {
             columns: [{
                 text: '进程实例',

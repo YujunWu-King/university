@@ -50,8 +50,9 @@ Ext.define('KitchenSink.view.processServer.processServerList', {
         ]
     }],
     initComponent: function () {
+    	
+    	var statusStore = new KitchenSink.view.common.store.appTransStore("TZ_PROCESS_STATUS");
         var store = new KitchenSink.view.processServer.processServerStore();
-        var statusStore = new KitchenSink.view.common.store.appTransStore("TZ_PROCESS_STATUS");
         Ext.apply(this, {
             columns: [{
                 text: '进程服务器名称',
@@ -72,7 +73,7 @@ Ext.define('KitchenSink.view.processServer.processServerList', {
                     if(index!=-1){
                         return statusStore.getAt(index).data.TSDesc;
                     }
-                    return record.get('attrTypeDesc');
+                    return "";
                 }
             },{
                 menuDisabled: true,
