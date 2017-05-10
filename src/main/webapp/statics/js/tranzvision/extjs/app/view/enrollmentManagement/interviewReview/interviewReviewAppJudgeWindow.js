@@ -60,7 +60,6 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                 flex:1
             })
         }
-        console.log(columns);
         Ext.apply(this, {
             items: [{
                 xtype: 'grid',

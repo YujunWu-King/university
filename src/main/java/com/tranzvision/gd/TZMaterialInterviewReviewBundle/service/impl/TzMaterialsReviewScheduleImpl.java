@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzCpfbBzhTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzQttjBzhTblMapper;
@@ -75,7 +76,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
-
+	@Autowired
+	private FliterForm fliterForm;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errMsg) {
@@ -891,10 +894,18 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 	public String queryStuList(String strParams, int numLimit, int numStart, String[] errMsg) {
 		String strResponse = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
+		try {			
 			jacksonUtil.json2Map(strParams);
 			String strClassID = jacksonUtil.getString("classID");
 			String strBatchID = jacksonUtil.getString("batchID");
+			
+			//搜索进入
+			String strSearchSQL = "";
+			try{
+				strSearchSQL = jacksonUtil.getString("searchSQL");
+			}catch(Exception tzE){
+				/**/
+			}
 			String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
 			DecimalFormat df = new DecimalFormat("######0.00");
@@ -920,28 +931,29 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 
 			// 报名表编号 姓名 性别 面试资格 评委间偏差 评委信息 评审状态 操作人 平均分;
 			String strAppInsID = "", strName = "", strGender = "", strViewQua = "", strPweiPc = "", strJudgeInfo = "", strJudgeStatus = "", strOprID = "";
-			String strSql1 = "SELECT TZ_APP_INS_ID,TZ_MSHI_ZGFLG,TZ_CLPS_PWJ_PC FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? limit " + numStart + "," + numLimit;
+			String strSql1 = "";
+			String strSql3 = "";
+			if(!"".equals(strSearchSQL)&&strSearchSQL!=null){
+				strSql1 = "SELECT OPRID,TZ_APP_INS_ID,TZ_MSHI_ZGFLG,TZ_CLPS_PWJ_PC FROM PS_TZ_PSKSH_VW WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND OPRID IN (" + strSearchSQL + ") limit " + numStart + "," + numLimit;
+				strSql3 = "SELECT COUNT(1) FROM PS_TZ_PSKSH_VW WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND OPRID IN (" + strSearchSQL + ")";				
+			}else{
+				strSql1 = "SELECT OPRID,TZ_APP_INS_ID,TZ_MSHI_ZGFLG,TZ_CLPS_PWJ_PC FROM PS_TZ_PSKSH_VW WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? limit " + numStart + "," + numLimit;
+				strSql3 = "SELECT COUNT(1) FROM PS_TZ_PSKSH_VW WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			}
 			List<Map<String, Object>> mapList1 = sqlQuery.queryForList(strSql1, new Object[] { strClassID, strBatchID });
 			if (mapList1 != null && mapList1.size() > 0) {
 				for (Object obj1 : mapList1) {
 					Map<String, Object> result = (Map<String, Object>) obj1;
+					strOprID = result.get("OPRID") == null ? "" : String.valueOf(result.get("OPRID"));
 					strAppInsID = result.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(result.get("TZ_APP_INS_ID"));
 					strViewQua = result.get("TZ_MSHI_ZGFLG") == null ? "" : String.valueOf(result.get("TZ_MSHI_ZGFLG"));
 					strPweiPc = result.get("TZ_CLPS_PWJ_PC") == null ? "" : String.valueOf(result.get("TZ_CLPS_PWJ_PC"));
-
-					// 是否实时计算评委偏差-实时计算偏差对评委打分时生效
-					/*String strRealTimeCalFlg = sqlQuery.queryForObject("SELECT TZ_REAL_TIME_PWPC FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?", new Object[] { strClassID, strBatchID }, "String");
-					if ("Y".equals(strRealTimeCalFlg)) {
-						String strDeleteSql = "DELETE FROM PS_TZ_PW_KS_PC_TBL";
-						sqlQuery.update(strDeleteSql);
-						strPweiPc = df.format(this.caluatePianch(strClassID, strBatchID, strAppInsID));
-					}*/
-					String sql2 = "SELECT TZ_APP_INS_ID ,(SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=A.TZ_APP_INS_ID limit 0,1) OPRID, (SELECT TZ_REALNAME FROM PS_TZ_FORM_WRK_T B ,PS_TZ_REG_USER_T C WHERE B.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND B.OPRID = C.OPRID limit 0,1) TZ_REALNAME, (SELECT TZ_GENDER FROM PS_TZ_FORM_WRK_T B ,PS_TZ_REG_USER_T C WHERE B.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND B.OPRID = C.OPRID limit 0,1)TZ_GENDER FROM PS_TZ_CLPS_KSH_TBL A WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
-					List<Map<String, Object>> mapList2 = sqlQuery.queryForList(sql2, new Object[] { strClassID, strBatchID, strAppInsID });
+					
+					String sql2 = "SELECT TZ_REALNAME,TZ_GENDER FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+					List<Map<String, Object>> mapList2 = sqlQuery.queryForList(sql2, new Object[] { strOprID});
 					if (mapList2 != null && mapList2.size() > 0) {
 						for (Object obj2 : mapList2) {
 							Map<String, Object> result2 = (Map<String, Object>) obj2;
-							strOprID = result2.get("OPRID") == null ? "" : String.valueOf(result2.get("OPRID"));
 							strName = result2.get("TZ_REALNAME") == null ? "" : String.valueOf(result2.get("TZ_REALNAME"));
 							strGender = result2.get("TZ_GENDER") == null ? "" : String.valueOf(result2.get("TZ_GENDER"));
 						}
@@ -1022,7 +1034,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 					}
 				}
 			}
-			String strSql3 = "SELECT COUNT(1) FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			
 			String strTotalNum = sqlQuery.queryForObject(strSql3, new Object[] { strClassID, strBatchID }, "String");
 
 			strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_BASE_JSON_HTML", strTotalNum, strResponse);

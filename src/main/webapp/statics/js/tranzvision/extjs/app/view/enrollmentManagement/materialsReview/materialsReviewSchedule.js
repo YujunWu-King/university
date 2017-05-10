@@ -400,6 +400,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         dockedItems = [{
             xtype: "toolbar",
             items: [{
+                text: "查询",
+                tooltip: "查询",
+                handler: "queryStudent"
+            },'-',
+            {
                 text: "计算偏差",
                 tooltip: "计算偏差",
                 handler: "calDeviation"

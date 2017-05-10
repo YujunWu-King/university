@@ -3283,26 +3283,30 @@
     			var form = btn.findParentByType("grid").findParentByType("form");    		
     	    	var eGrid = form.child("grid[name=evaluationStandardGrid]");
     	    	var eStore = eGrid.getStore();
-    	    	//只对第一行比率赋值
+    	    	//对第一行比率赋值
     	    	var record = eStore.getAt(0);
+    	    	//对误差设置默认值
+    			var recordWc = eStore.getAt(1);
     			//动态属性部分赋值
     	    	var j = 1;
     			for(var i=5;i<len;i++){
     				var colName = '00' + i;
                     colName = 'col' + colName.substr(colName.length - 2);
                     var sValue = lastData[colName];
+                    var tValue = 0.30;
                     if(i!=5){
                     	sValue = sValue.substr(sValue.indexOf("（"),sValue.indexOf("）"));
                     	sValue = sValue.replace("（","");
                     	sValue = sValue.replace("）","");
                     	sValue = sValue.replace("%","");
+                    	tValue = 1;
                     }
                     
                     var mxId = Object.getOwnPropertyNames(record.data)[j];
                     record.set(mxId,sValue);
-                    
+                    recordWc.set(mxId,tValue);     
                     j = j + 1;
-    			}
+    			}    			    		
     		}
     	}
     	    	
@@ -3362,5 +3366,36 @@
     			store.setData(responseData);
     		}    		
     	},"",true,this);
+    },
+    queryStudent: function(btn){
+    	var form = btn.findParentByType("form").getForm();
+        var classId = form.findField("classID").getValue();
+        var batchId = form.findField("batchID").getValue();
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW',
+            condition:{
+                TZ_CLASS_ID:classId,
+                TZ_APPLY_PC_ID:batchId
+            },
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
+                var tzParamsObj = {};
+                tzParamsObj.classID = classId;
+                tzParamsObj.batchID = batchId;
+                tzParamsObj.type = "stuList";
+                				
+                var getedSQL="";
+                var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_FILTER_SQL_STD","OperateType":"getQuerySQL","comParams":'+seachCfg+'}';
+				Ext.tzLoadAsync(tzParams,function(responseData){
+					getedSQL = responseData.SQL;	
+				});
+				tzParamsObj.searchSQL = getedSQL; 				
+				
+				store.tzStoreParams = JSON.stringify(tzParamsObj);
+                //store.load();              
+                store.load({params: {start:0,limit:10,page:1}});
+            }
+        });
     }
 });

@@ -64,7 +64,7 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 					}
 					String judgeRealName = sMap.get("TZ_REALNAME") == null ? "" : String.valueOf(sMap.get("TZ_REALNAME"));
 					String judgeInsId = sMap.get("TZ_SCORE_INS_ID") == null ? "" : String.valueOf(sMap.get("TZ_SCORE_INS_ID"));
-					String bphSql = "SELECT TZ_SCORE_ITEM_ID,TZ_XS_MC FROM PS_TZ_CJ_BPH_TBL WHERE TZ_ITEM_S_TYPE = 'A' AND TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=? ORDER BY TZ_PX";
+					String bphSql = "SELECT TZ_SCORE_ITEM_ID,TZ_XS_MC FROM PS_TZ_CJ_BPH_TBL WHERE TZ_ITEM_S_TYPE = 'B' AND TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=? ORDER BY TZ_PX ASC";
 					List<Map<String, Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] { strCurrentOrg, strScoreModalId });
 					if (bphMapList != null && bphMapList.size() > 0) {
 						for (Object bphObj : bphMapList) {
