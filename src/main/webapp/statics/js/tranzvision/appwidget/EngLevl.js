@@ -355,17 +355,44 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 //			RELATED_DIV=this.getChoseGradeDiv(data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_PASS"],optList);//,child.EngLevelGrade.value
 //		}
 		else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T9){
-			var optList='<option value="'+MsgSet["EXAM_TEM4"]+'">'+MsgSet["EXAM_TEM4"]+'</option>';
-			optList+=('<option value="'+MsgSet["EXAM_TEM8"]+'">'+MsgSet["EXAM_TEM8"]+'</option>');
+			var optList="";
+			if(child.EngLevelGrade.value==MsgSet["EXAM_TEM4"]){
+				optList='<option selected="selected" value="'+MsgSet["EXAM_TEM4"]+'">'+MsgSet["EXAM_TEM4"]+'</option>';
+				optList+=('<option  value="'+MsgSet["EXAM_TEM8"]+'">'+MsgSet["EXAM_TEM8"]+'</option>');
+			}
+			else if(child.EngLevelGrade.value==MsgSet["EXAM_TEM8"]){
+				optList='<option  value="'+MsgSet["EXAM_TEM4"]+'">'+MsgSet["EXAM_TEM4"]+'</option>';
+				optList+=('<option selected="selected" value="'+MsgSet["EXAM_TEM8"]+'">'+MsgSet["EXAM_TEM8"]+'</option>');
+			}
 			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//,child.EngLevelGrade.value EXAM_GSCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T10||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T11){
-			var optList='<option value="'+MsgSet["INTER_A"]+'">'+MsgSet["INTER_A"]+'</option>';
-			optList+=('<option value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
+			var optList="";
+			if(child.EngLevelGrade.value==MsgSet["INTER_A"]){
+				optList='<option selected="selected" value="'+MsgSet["INTER_A"]+'">'+MsgSet["INTER_A"]+'</option>';
+				optList+=('<option  value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
+			}
+			else if(child.EngLevelGrade.value==MsgSet["INTER_B"]){
+				optList='<option value="'+MsgSet["INTER_A"]+'">'+MsgSet["INTER_A"]+'</option>';
+				optList+=('<option selected="selected"  value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
+			}
 			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//,child.EngLevelGrade.value EXAM_GSCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T12){//LEV_C
-			var optList='<option value="'+MsgSet["LEV_A"]+'">'+MsgSet["LEV_A"]+'</option>';
-			optList+=('<option value="'+MsgSet["LEV_B"]+'">'+MsgSet["LEV_B"]+'</option>');
-			optList+=('<option value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
+			var optList="";
+			if(child.EngLevelGrade.value==MsgSet["LEV_A"]){
+				optList='<option selected="selected" value="'+MsgSet["LEV_A"]+'">'+MsgSet["LEV_A"]+'</option>';
+				optList+=('<option  value="'+MsgSet["LEV_B"]+'">'+MsgSet["LEV_B"]+'</option>');
+				optList+=('<option  value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
+			}
+			if(child.EngLevelGrade.value==MsgSet["LEV_B"]){
+				optList='<option  value="'+MsgSet["LEV_A"]+'">'+MsgSet["LEV_A"]+'</option>';
+				optList+=('<option  selected="selected" value="'+MsgSet["LEV_B"]+'">'+MsgSet["LEV_B"]+'</option>');
+				optList+=('<option  value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
+			}
+			if(child.EngLevelGrade.value==MsgSet["LEV_C"]){
+				optList='<option  value="'+MsgSet["LEV_A"]+'">'+MsgSet["LEV_A"]+'</option>';
+				optList+=('<option  value="'+MsgSet["LEV_B"]+'">'+MsgSet["LEV_B"]+'</option>');
+				optList+=('<option selected="selected"  value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
+			}
 			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//EXAM_SCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13){
 			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],DATE_HTML);
