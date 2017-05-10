@@ -276,7 +276,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
             TzProcessServer tzProcessServer = new TzProcessServer();
             tzProcessServer.setTzJgId(orgId);
             tzProcessServer.setTzJcfwqMc(processName);
-            tzProcessServer.setTzYxzt("RUN");
+            tzProcessServer.setTzYxzt("RUNNING");
             tzProcessServerMapper.updateByPrimaryKeySelective(tzProcessServer);
             return strRet;
         } else{
@@ -286,7 +286,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
             TzProcessServer tzProcessServer = new TzProcessServer();
             tzProcessServer.setTzJgId(orgId);
             tzProcessServer.setTzJcfwqMc(processName);
-            tzProcessServer.setTzYxzt("STOP");
+            tzProcessServer.setTzYxzt("STOPPED");
             tzProcessServerMapper.updateByPrimaryKeySelective(tzProcessServer);
             return strRet;
         }

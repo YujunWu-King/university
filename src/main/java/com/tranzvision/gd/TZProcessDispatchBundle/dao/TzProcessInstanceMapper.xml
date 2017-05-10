@@ -23,17 +23,17 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZProcessDispatchBundle.model.TzProcessInstanceKey" >
     select 
     <include refid="Base_Column_List" />
-    from tz_jc_shli_t
+    from TZ_JC_SHLI_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZProcessDispatchBundle.model.TzProcessInstanceKey" >
-    delete from tz_jc_shli_t
+    delete from TZ_JC_SHLI_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZProcessDispatchBundle.model.TzProcessInstance" >
-    insert into tz_jc_shli_t (TZ_JG_ID, TZ_JCSL_ID, TZ_YUNX_KZID, 
+    insert into TZ_JC_SHLI_T (TZ_JG_ID, TZ_JCSL_ID, TZ_YUNX_KZID, 
       TZ_DLZH_ID, TZ_JC_MC, TZ_XH_QZBDS, 
       TZ_JCFWQ_MC, TZ_JOB_YXZT, TZ_ZJXTSJ, 
       TZ_QQCJ_DTTM, TZ_JHZX_DTTM, TZ_JCKS_DTTM, 
@@ -45,7 +45,7 @@
       #{tzJcjsDttm,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZProcessDispatchBundle.model.TzProcessInstance" >
-    insert into tz_jc_shli_t
+    insert into TZ_JC_SHLI_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzJgId != null" >
         TZ_JG_ID,
@@ -130,7 +130,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZProcessDispatchBundle.model.TzProcessInstance" >
-    update tz_jc_shli_t
+    update TZ_JC_SHLI_T
     <set >
       <if test="tzYunxKzid != null" >
         TZ_YUNX_KZID = #{tzYunxKzid,jdbcType=VARCHAR},
@@ -170,7 +170,7 @@
       and TZ_JCSL_ID = #{tzJcslId,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZProcessDispatchBundle.model.TzProcessInstance" >
-    update tz_jc_shli_t
+    update TZ_JC_SHLI_T
     set TZ_YUNX_KZID = #{tzYunxKzid,jdbcType=VARCHAR},
       TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
       TZ_JC_MC = #{tzJcMc,jdbcType=VARCHAR},

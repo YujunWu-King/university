@@ -146,7 +146,7 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                 String status = infoData.get("status").toString();
 
                 //判断数据库中同一机构下循环名称是否存在
-                String sql = "select COUNT(1) from tz_xunh_defn_t WHERE TZ_JG_ID = ? and TZ_XH_MC = ?";
+                String sql = "select COUNT(1) from TZ_XUNH_DEFN_T WHERE TZ_JG_ID = ? and TZ_XH_MC = ?";
                 int count = jdbcTemplate.queryForObject(sql, new Object[]{orgId,loopName},"Integer");
                 if(count > 0){
                     errMsg[0] = "1";

@@ -81,17 +81,17 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoopKey" >
     select 
     <include refid="Base_Column_List" />
-    from tz_xunh_defn_t
+    from TZ_XUNH_DEFN_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_XH_MC = #{tzXhMc,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoopKey" >
-    delete from tz_xunh_defn_t
+    delete from TZ_XUNH_DEFN_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_XH_MC = #{tzXhMc,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoop" >
-    insert into tz_xunh_defn_t (TZ_JG_ID, TZ_XH_MC, TZ_XH_MS, 
+    insert into TZ_XUNH_DEFN_T (TZ_JG_ID, TZ_XH_MC, TZ_XH_MS, 
       TZ_EE_BZ, TZ_XH_QZBDS, TZ_ZDYXH_BZ, 
       TZ_XHZD_Y, TZ_XHZD_W, TZ_XHZD_M1, 
       TZ_XHZD_D, TZ_XHZD_H, TZ_XHZD_M2, 
@@ -137,7 +137,7 @@
       #{tzZhxgsj,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoop" >
-    insert into tz_xunh_defn_t
+    insert into TZ_XUNH_DEFN_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzJgId != null" >
         TZ_JG_ID,
@@ -528,7 +528,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoop" >
-    update tz_xunh_defn_t
+    update TZ_XUNH_DEFN_T
     <set >
       <if test="tzXhMs != null" >
         TZ_XH_MS = #{tzXhMs,jdbcType=VARCHAR},
@@ -721,7 +721,7 @@
       and TZ_XH_MC = #{tzXhMc,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoop" >
-    update tz_xunh_defn_t
+    update TZ_XUNH_DEFN_T
     set TZ_XH_MS = #{tzXhMs,jdbcType=VARCHAR},
       TZ_EE_BZ = #{tzEeBz,jdbcType=VARCHAR},
       TZ_XH_QZBDS = #{tzXhQzbds,jdbcType=VARCHAR},

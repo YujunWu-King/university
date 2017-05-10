@@ -21,17 +21,17 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZBatchProcessBundle.model.TzBatchProcessKey" >
     select 
     <include refid="Base_Column_List" />
-    from tz_jinc_dy_t
+    from TZ_JINC_DY_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_JC_MC = #{tzJcMc,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchProcessBundle.model.TzBatchProcessKey" >
-    delete from tz_jinc_dy_t
+    delete from TZ_JINC_DY_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_JC_MC = #{tzJcMc,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZBatchProcessBundle.model.TzBatchProcess" >
-    insert into tz_jinc_dy_t (TZ_JG_ID, TZ_JC_MC, TZ_JC_MS, 
+    insert into TZ_JINC_DY_T (TZ_JG_ID, TZ_JC_MC, TZ_JC_MS, 
       TZ_YXPT_LX, TZ_BEIZHU, TZ_ZCZJ_ID, 
       TZ_JAVA_CLASS, TZ_TJR, TZ_TJSJ, 
       TZ_ZHXGR, TZ_ZHXGSJ)
@@ -41,7 +41,7 @@
       #{tzZhxgr,jdbcType=VARCHAR}, #{tzZhxgsj,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZBatchProcessBundle.model.TzBatchProcess" >
-    insert into tz_jinc_dy_t
+    insert into TZ_JINC_DY_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzJgId != null" >
         TZ_JG_ID,
@@ -114,7 +114,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZBatchProcessBundle.model.TzBatchProcess" >
-    update tz_jinc_dy_t
+    update TZ_JINC_DY_T
     <set >
       <if test="tzJcMs != null" >
         TZ_JC_MS = #{tzJcMs,jdbcType=VARCHAR},
@@ -148,7 +148,7 @@
       and TZ_JC_MC = #{tzJcMc,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZBatchProcessBundle.model.TzBatchProcess" >
-    update tz_jinc_dy_t
+    update TZ_JINC_DY_T
     set TZ_JC_MS = #{tzJcMs,jdbcType=VARCHAR},
       TZ_YXPT_LX = #{tzYxptLx,jdbcType=VARCHAR},
       TZ_BEIZHU = #{tzBeizhu,jdbcType=VARCHAR},

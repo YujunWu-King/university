@@ -163,15 +163,8 @@ Ext.define('KitchenSink.view.processServer.processServerEditWindow', {
             var win = btn.findParentByType("window");
             //页面注册信息表单
             var form = win.child("form").getForm();
-            var gridStore = btn.findParentByType("grid").store;
-            var formParams = form.getValues();
-            if (form.isValid()) {
-                var tzParams = '{"ComID":"TZ_PROCESS_FW_COM","PageID":"TZ_PROCESS_FW_EDIT","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}'
-                Ext.tzSubmit(tzParams,function(){
-                    gridStore.load();
-                    win.close();
-                },"",true,this);
-            };
+            win.doSave(win);
+            win.close()
         }
     }, {
         text: '关闭',
