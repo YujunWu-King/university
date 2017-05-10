@@ -205,7 +205,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			gradeDiv+='<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span><span >'+grade_label+'：</span></div>'
 			gradeDiv+='<div class="input-list-text left" ><select  style="width:255px;height:36px" id="'+grade_id+'" value="'+grade_val+'">'
 			gradeDiv+=optList
-			gradeDiv+='</select></div>'
+			gradeDiv+='</select></div><div class="clear"></div>'
 		gradeDiv+='</div>'
 		return gradeDiv;
 	},
@@ -213,9 +213,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 	getDateDiv:function(data,top_id,date_id,date_val,date_name,date_title,flg){
 		var DATE_DIV='';
 		if(flg!=undefined&&flg=="N"){
-			DATE_DIV += '  <div id="'+top_id+'_DATE_DIV" class="input-list" style="display:none"><span class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+MsgSet["EXAM_TDATE"]+'：</span>';
+			DATE_DIV += '  <div id="'+top_id+'_DATE_DIV" class="input-list" style="display:none"><span class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+date_title+'：</span>';
 		}else{
-			DATE_DIV += '  <div id="'+top_id+'_DATE_DIV" class="input-list" style="display:block"><span class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+MsgSet["EXAM_TDATE"]+'：</span>';
+			DATE_DIV += '  <div id="'+top_id+'_DATE_DIV" class="input-list" style="display:block"><span class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>'+date_title+'：</span>';
 		}
 		
 		//DATE_DIV += '     <div class="input-list-text left"> <input id="' + date_id+ '" name="' + date_name+ '" type="text" value="'  +date_val + '"class="inpu-list-text-enter" style="height:36px" readonly="readonly" onchange="SurveyBuild.reFocus(\'' + date_id + '\'); title="' +date_name + '">';
@@ -237,7 +237,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 	//只读日期:
 	getDateRead:function(data,date_id,date_val,date_name,date_title){
 		var DATE_DIV='';
-		DATE_DIV += '  <div class="input-list" style="display:block"><div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span><span>'+MsgSet["EXAM_TDATE"]+'：</span></div>';
+		DATE_DIV += '  <div class="input-list" style="display:block"><div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span><span>'+date_title+'：</span></div>';
 		
 		DATE_DIV += '     <div class="input-list-text left">';
 		DATE_DIV +=date_val;
@@ -255,19 +255,19 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		//------------------1.2.3.4.13有日期
 		var dateHtml="";
 		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2){
-			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
+			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,MsgSet["EXAM_TDATE"]);
 			label=MsgSet["EXAM_TSCORE"];
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T3){
-			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
+			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,MsgSet["EXAM_TDATE"]);
 			label=MsgSet["EXAM_TOTAL"];
 
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4){
-			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
+			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,MsgSet["EXAM_TDATE"]);
 			label=MsgSet["EXAM_ISCORE"];
 
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T5||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T6||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
-			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
-			label=MsgSet["EXAM_SCORE"];
+			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,"考试日期");
+			label=MsgSet["EXAM_GSCORE"];
 			
 		}
 		//else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
@@ -275,7 +275,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			
 		//}
 		else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T9){
-			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
+			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,"考试日期");
 			label=MsgSet["EXAM_GSCORE"];
 			
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T10||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T11){
@@ -285,8 +285,8 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			label=MsgSet["EXAM_GSCORE"];
 			
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13){
-			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
-			label=MsgSet["EXAM_SCORE"];
+			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,MsgSet["EXAM_TDATE"]);
+			label=MsgSet["EXAM_TSCORE"];
 		}
 		//------------------
 		var ReadDiv="";
@@ -296,11 +296,11 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			ReadDiv+='<div class="input-list-text left">'
 			ReadDiv+=EXAM_TYPE_DEF;
 			ReadDiv+='</div>'	
-			ReadDiv+='<div class="clear"></div>'
+			//ReadDiv+='<div class="clear"></div>'
 			//日期:	
 			ReadDiv+=dateHtml
 			//值:
-			ReadDiv+='<div class="clear"></div>'
+			//ReadDiv+='<div class="clear"></div>'
 			ReadDiv+='<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span><span>'+label+'：</span></div> '
 			ReadDiv+='<div class="input-list-text left">'
 			ReadDiv+=val;
@@ -335,12 +335,15 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			}
 		}
 		var RELATED_DIV="";
-		var DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName,"N");
-		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T3||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T9||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T5||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T6||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
-			DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
+		var DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,MsgSet["EXAM_TDATE"],"N");
+		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T3||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13){
+			DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,MsgSet["EXAM_TDATE"]);
+		}
+		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T9||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T5||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T6||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
+			DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,"考试日期");
 		}
 		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""){
-			RELATED_DIV=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName,"N");
+			RELATED_DIV=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,MsgSet["EXAM_TDATE"],"N");
 		}
 		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2){
 			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_TSCORE"],DATE_HTML);
@@ -349,7 +352,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4){
 			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_ISCORE"],DATE_HTML);
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T5||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T6||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
-			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],DATE_HTML);
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],DATE_HTML);
 		}
 //		else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
 //			var optList='<option value="'+MsgSet["PASS_Y"]+'">'+MsgSet["PASS_Y"]+'</option>';
@@ -397,7 +400,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			}
 			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//EXAM_SCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13){
-			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],DATE_HTML);
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_TSCORE"],DATE_HTML);
 		}
 		return RELATED_DIV;
 	},
@@ -411,7 +414,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4){
 			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_ISCORE"],DATE_HTML);
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T5||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T6||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
-			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],"");
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],"");
 		}
 //		else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
 //			var optList='<option value="'+MsgSet["PASS_Y"]+'">'+MsgSet["PASS_Y"]+'</option>';
@@ -432,7 +435,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			optList+=('<option value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
 			RELATED_DIV=this.getChoseGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_GSCORE"],optList,DATE_HTML);//EXAM_SCORE
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13){
-			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_SCORE"],DATE_HTML);
+			RELATED_DIV=this.getNumGradeDiv(data,data.itemId,data.itemId+child.EngLevelGrade.itemId,child.EngLevelGrade.value,MsgSet["EXAM_TSCORE"],DATE_HTML);
 		}
 		return RELATED_DIV;
 	},
@@ -790,6 +793,13 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 											if(i=="ENG_LEV_T1"||i=="ENG_LEV_T2"||i=="ENG_LEV_T3"||i=="ENG_LEV_T4"||i=="ENG_LEV_T13"||i=="ENG_LEV_T9"||i=="ENG_LEV_T5"||i=="ENG_LEV_T6"||i=="ENG_LEV_T7"||i=="ENG_LEV_T8"){
 												//改变date标签:
 												//1.date标签change
+												var label=timeDiv.find(".input-list-info").html();
+												if(i=="ENG_LEV_T9"||i=="ENG_LEV_T5"||i=="ENG_LEV_T6"||i=="ENG_LEV_T7"||i=="ENG_LEV_T8"){
+													label=label.replace("Test date","考试日期");
+												}else{
+													label=label.replace("考试日期","Test date");
+												}
+												timeDiv.find(".input-list-info").html(label);
 												timeDiv.show();
 											}else{
 												//隐藏date
