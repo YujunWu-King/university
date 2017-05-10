@@ -870,7 +870,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 								if(pwksNum>pwksSubNum) {
 									bmbIdNext = "";
 									error_code = "1";
-									error_decription = "评委有“打分后未提交”的考生，请先提交已经打分的考生，然后再获取新的考生。";
+									error_decription = "请先提交已经打分的考生，然后再获取新的考生。";
 								} else {
 									if(pwksNum>=pyksNum) {
 										bmbIdNext = "";
