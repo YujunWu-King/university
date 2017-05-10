@@ -424,6 +424,21 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 					&& !"".equals(batchId) && batchId != null){
 				/**淘汰后N名考生**/
 				
+				/*1、先将所有非自动初筛淘汰的考生设置成未淘汰*/
+				String setSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzSetNotAutoOutStudents");
+				sqlQuery.update(setSql, new Object[]{ classId, batchId });
+				/*
+				List<Map<String,Object>> setList = sqlQuery.queryForList(setSql, new Object[]{ classId, batchId });
+				if(setList != null){
+					for(Map<String,Object> setMap: setList){
+						String appInsId = setMap.get("TZ_APP_INS_ID") == null ? "":setMap.get("TZ_APP_INS_ID").toString();
+						if(!"".equals(appInsId)){
+							sqlQuery.update("update PS_TZ_CS_KS_TBL set TZ_KSH_CSJG='Y' where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?"
+									, new Object[]{ classId, batchId, appInsId });
+						}
+					}
+				}*/
+				
 				//最后名次
 				String sql = "select max(TZ_KSH_PSPM) from PS_TZ_CS_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?";
 				int lastMc = 0;

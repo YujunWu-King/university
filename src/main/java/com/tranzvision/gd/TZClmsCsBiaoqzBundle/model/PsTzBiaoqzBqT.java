@@ -7,6 +7,8 @@ public class PsTzBiaoqzBqT extends PsTzBiaoqzBqTKey {
 
     private String tzBiaoqzJava;
 
+    private String tzOutFlg;
+
     public String getTzBiaoqzName() {
         return tzBiaoqzName;
     }
@@ -29,5 +31,13 @@ public class PsTzBiaoqzBqT extends PsTzBiaoqzBqTKey {
 
     public void setTzBiaoqzJava(String tzBiaoqzJava) {
         this.tzBiaoqzJava = tzBiaoqzJava == null ? null : tzBiaoqzJava.trim();
+    }
+
+    public String getTzOutFlg() {
+        return tzOutFlg;
+    }
+
+    public void setTzOutFlg(String tzOutFlg) {
+        this.tzOutFlg = tzOutFlg == null ? null : tzOutFlg.trim();
     }
 }
