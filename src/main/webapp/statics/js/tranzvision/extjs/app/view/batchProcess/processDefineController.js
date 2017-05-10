@@ -221,34 +221,74 @@ Ext.define('KitchenSink.view.batchProcess.processDefineController', {
 			}
 		},this);
 	},
-	onProcessWinEnsure: function(btn){
+	
+	onProcessWinSave: function(btn){
+		
 		//获取窗口
 		var win = btn.findParentByType("window");
 		//页面注册信息表单
 		var form = win.child("form").getForm();
-		var gridStore = 	btn.findParentByType("grid").store;
-		var formParams = form.getValues();
+		var tzParams = this.getProcessParams();
+		
+		var gridStore = btn.findParentByType("grid").store;
+		
+		Ext.tzSubmit(tzParams,function(){
+			
+			win.actType = "update";
+			gridStore.load();
+			form.reset();
+		},"",true,this);
+	},
+	
+	onProcessWinEnsure: function(btn){
+		
+		//获取窗口
+		var win = btn.findParentByType("window");
+		//页面注册信息表单
+		var form = win.child("form").getForm();
+		
+		var gridStore = btn.findParentByType("grid").store;
+		
 		if (form.isValid()) {
-			var tzParams = '{"ComID":"TZ_PROCESS_DF_COM","PageID":"TZ_PROCESS_ADD","OperateType":"U","comParams":{"add":['+Ext.JSON.encode(formParams)+']}}'
+			
+			var tzParams = this.getProcessParams();
 			Ext.tzSubmit(tzParams,function(){
 				gridStore.load();
 				win.close();
 			},"",true,this);
 		}
 	},
-	onProcessWinSave: function(btn){
-		//获取窗口
-		var win = btn.findParentByType("window");
-		//页面注册信息表单
-		var form = win.child("form").getForm();
-		var gridStore = btn.findParentByType("grid").store;
+
+	
+	getProcessParams:function(){
+		
+		var form = this.getView().child("form").getForm();
+		//表单数据
 		var formParams = form.getValues();
-		if (form.isValid()) {
-			var tzParams = '{"ComID":"TZ_PROCESS_DF_COM","PageID":"TZ_PROCESS_ADD","OperateType":"U","comParams":{"add":['+Ext.JSON.encode(formParams)+']}}'
-			Ext.tzSubmit(tzParams,function(){
-				gridStore.load();
-				form.reset();
-			},"",true,this);
-		};
-	},
+		//组件信息标志
+		var actType = this.getView().actType;
+		//更新操作参数
+		var comParams = "";
+		
+		//新增
+		if(actType == "add"){
+			comParams = '"add":[{"data":'+Ext.JSON.encode(formParams)+'}]';
+		}
+		//修改json字符串
+		var editJson = "";
+		if(actType == "update"){
+			editJson = '{"data":'+Ext.JSON.encode(formParams)+'}';
+		}
+		if(editJson != ""){
+			if(comParams == ""){
+				comParams = '"update":[' + editJson + "]";
+			}else{
+				comParams = comParams + ',"update":[' + editJson + "]";
+			}
+		}
+		
+		//提交参数
+		var tzParams = '{"ComID":"TZ_PROCESS_DF_COM","PageID":"TZ_PROCESS_ADD","OperateType":"U","comParams":{'+comParams+'}}';
+		return tzParams;
+	}
 });

@@ -118,12 +118,7 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
     buttons: [{
         text: '保存',
         iconCls:"save",
-        handler: function (btn) {
-            //获取窗口
-            var win = btn.findParentByType("window");
-            var form = win.child("form").getForm();
-            win.doSave(win);
-        }
+        handler: 'onProcessServerWinSave'
     }, {
         text: '确定',
         iconCls: "ensure",
@@ -136,20 +131,5 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
             var form = win.child("form").getForm();
             win.close();
         }
-    }],
-    doSave:function(win){
-        //保存
-        var form = win.child("form").getForm();
-        if(!form.isValid()){
-            return false;
-        }
-        var formParams = form.getValues();
-        var tzParams = '{"ComID":"TZ_PROCESS_FW_COM","PageID":"TZ_PROCESS_FW_EDIT","OperateType":"U","comParams":{"add":['+Ext.JSON.encode(formParams)+']}}';
-        Ext.tzSubmit(tzParams,function(response){
-            var attrValue=response.attrValue;
-            form.setValues({"attrValue":attrValue});
-            win.findParentByType("grid").store.reload();
-        },"",true,this);
-
-    }
+    }]
 });

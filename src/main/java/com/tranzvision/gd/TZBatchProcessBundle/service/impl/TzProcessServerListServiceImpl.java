@@ -159,7 +159,6 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 Integer intervalTime = Integer.parseInt(jacksonUtil.getString("intervalTime"));
                 Integer parallelNum = Integer.parseInt(jacksonUtil.getString("parallelNum"));
                 String remark = jacksonUtil.getString("remark") == null?"":jacksonUtil.getString("remark");
-                System.out.println("remark======" + remark);
                 String sql = "SELECT 'Y' FROM TZ_JC_FWQDX_T A WHERE A.TZ_JG_ID=? AND A.TZ_JCFWQ_MC=?";
                 String isExist =  jdbcTemplate.queryForObject(sql, new Object[]{orgId,processName},"String");
                 if("Y".equals(isExist)){

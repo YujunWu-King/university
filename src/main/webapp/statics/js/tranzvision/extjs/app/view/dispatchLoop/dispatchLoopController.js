@@ -317,17 +317,26 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		var comView = this.getView();
 
 		Ext.tzSubmit(tzParams,function(responseData){
+			
+			comView.actType = "update";
 			var contentPanel;
 			contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
 			contentPanel.child("dispatchLoopCon").store.reload();
-			//关闭窗口
-			comView.close();
 		},"",true,this);
 	},
 	//新增窗口确定方法
 	onDispatchLoopInfoEnsure:function (btn) {
-		this.onDispatchLoopInfoSave(btn);
-		this.onDispatchLoopInfoClose(btn)
+		
+		var form = this.getView().child("form").getForm();
+		if (form.isValid()) {
+			//获取组件注册信息参数
+			var tzParams = this.getDispatchLoopInfoParams();
+			var comView = this.getView();
+			Ext.tzSubmit(tzParams,function(responseData){
+				//关闭窗口
+				comView.close();
+			},"",true,this);
+		}
 	},
 
 	onDispatchLoopInfoClose: function(btn){
