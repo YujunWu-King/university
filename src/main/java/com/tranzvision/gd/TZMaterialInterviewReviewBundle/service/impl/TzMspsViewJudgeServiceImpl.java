@@ -211,10 +211,12 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 			String strJudgeListSql = "SELECT A.TZ_PWEI_OPRID,(SELECT B.TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL B WHERE A.TZ_PWEI_OPRID=B.OPRID limit 0,1) TZ_REALNAME,A.TZ_SCORE_INS_ID FROM PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
 			List<Map<String,Object>> judgeInfoUtil = sqlQuery.queryForList(strJudgeListSql, new Object[] {strClassID, strBatchID, strAppInsID});
 			int intTotal = 0;
-			int n = 0;
+			
 			if (judgeInfoUtil != null && judgeInfoUtil.size() > 0)
 			{
 				for(Object sUitl:judgeInfoUtil){
+					int n = 0;
+					
 					String strDyColValue = "";
 					
 					Map<String,Object> sMap = (Map<String,Object>) sUitl;
@@ -225,7 +227,8 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 					
 					List<Map<String,Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] {strCurrentOrg,strScoreModalId});
 					if(bphMapList!=null&&bphMapList.size()>0){
-						for(Object bphObj:bphMapList){
+						for(Object bphObj:bphMapList){						
+							
 							Map<String,Object> bphMap = (Map<String,Object>) bphObj;
 							String strItemId = bphMap.get("TZ_SCORE_ITEM_ID")==null?"":String.valueOf(bphMap.get("TZ_SCORE_ITEM_ID"));
 							String strScoreItemMc = bphMap.get("TZ_XS_MC")==null?"":String.valueOf(bphMap.get("TZ_XS_MC"));
@@ -270,31 +273,7 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 								strDyColValue = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_MSPS_JUSCO_HTML", new String[] {String.valueOf(n), strScorePyValue});
 							}else{
 								strDyColValue = strDyColValue + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_MSPS_JUSCO_HTML", new String[] {String.valueOf(n), strScorePyValue});
-							}
-							
-							/*if ("W".equals(strScoreItemType) || "R".equals(strScoreItemType) || ("Y".equals(strScoreItemType)&&"A".equals(strScoreToScore)))
-							{
-								if ("".equals(strDyColValue)){
-									strDyColValue = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_MSPS_JUSCO_HTML", new String[] {String.valueOf(n), strScoreNum});
-								}else{
-									strDyColValue = strDyColValue + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_MSPS_JUSCO_HTML", new String[] {String.valueOf(n), strScoreNum});
-								}		
-							} 
-							else
-							{
-								if ("X".equals(strScoreItemType))
-								{
-									String xlk_xxbh = strScorePyValue;
-									String strSql4 = "SELECT TZ_CJX_XLK_XXMC FROM PS_TZ_ZJCJXXZX_T WHERE TREE_NAME=? AND TZ_SCORE_ITEM_ID=? AND TZ_CJX_XLK_XXBH=?";
-									strScorePyValue = (String)sqlQuery.queryForObject(strSql4, new Object[] {strTreeName, strScoreItemId, xlk_xxbh}, "String");
-								}
-								if ("".equals(strDyColValue)){
-									strDyColValue = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_MSPS_JUSCO_HTML", new String[] {String.valueOf(n), strScoreNum});
-								}else{
-									strDyColValue = strDyColValue + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_MSPS_JUSCO_HTML", new String[] {String.valueOf(n), strScoreNum});
-								}
-								
-							}*/
+							}							
 							n = n + 1;
 						}
 					}
