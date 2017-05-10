@@ -266,6 +266,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			label=MsgSet["EXAM_ISCORE"];
 
 		}else if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T5||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T6||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
+			dateHtml=this.getDateRead(data,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
 			label=MsgSet["EXAM_SCORE"];
 			
 		}
@@ -335,7 +336,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		}
 		var RELATED_DIV="";
 		var DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName,"N");
-		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T3||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T9){
+		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T1||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T2||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T3||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T4||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T13||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T9||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T5||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T6||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T7||EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T8){
 			DATE_HTML=this.getDateDiv(data,data.itemId,data.itemId +child.EngLevelDate.itemId,child.EngLevelDate.value,data.itemId+child.EngLevelDate.name,child.EngLevelDate.itemName);
 		}
 		if(EXAM_TYPE_DEF==EXAM_TYPE_MAP.ENG_LEV_T0||EXAM_TYPE_DEF==""){
@@ -786,7 +787,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 											var dateClear=timeDiv.find("#"+data.itemId +child.EngLevelDate.itemId+"_Clear");
 											dateClear.css("visibility","hidden");
 											
-											if(i=="ENG_LEV_T1"||i=="ENG_LEV_T2"||i=="ENG_LEV_T3"||i=="ENG_LEV_T4"||i=="ENG_LEV_T13"||i=="ENG_LEV_T9"){
+											if(i=="ENG_LEV_T1"||i=="ENG_LEV_T2"||i=="ENG_LEV_T3"||i=="ENG_LEV_T4"||i=="ENG_LEV_T13"||i=="ENG_LEV_T9"||i=="ENG_LEV_T5"||i=="ENG_LEV_T6"||i=="ENG_LEV_T7"||i=="ENG_LEV_T8"){
 												//改变date标签:
 												//1.date标签change
 												timeDiv.show();
