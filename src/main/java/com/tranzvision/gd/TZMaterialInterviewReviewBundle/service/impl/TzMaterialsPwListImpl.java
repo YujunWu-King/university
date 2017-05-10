@@ -31,7 +31,7 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 		try {
 
 			String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			;
+
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			jacksonUtil.json2Map(strParams);

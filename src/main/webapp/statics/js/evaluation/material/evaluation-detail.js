@@ -1720,7 +1720,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//每个考生一个IFRAME
 		var tmpBatchIdBMBID = tmpBatchId + '_' + userpoints.bmbId;
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'","TZ_APP_TPL_ID":"'+userpoints.clpsBmbTplId+'"}}';
-		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl); 
+		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		if($('#bmb_iframe_'+tmpBatchIdBMBID)[0]!=null && $('#bmb_iframe_'+tmpBatchIdBMBID)[0]!="undefined"){
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
@@ -2028,7 +2028,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			
 			//回调指定的函数来显示考生评审页面
 			callBackFunction(tipCount,scrollBackTagId);
-			
+
 		}
 		else
 		{
