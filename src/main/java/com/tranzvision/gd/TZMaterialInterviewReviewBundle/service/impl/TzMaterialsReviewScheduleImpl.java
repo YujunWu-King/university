@@ -381,6 +381,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 				// 提交评委数据
 				strResponse = this.saveSubmitPwData(strParams, errMsg);
 				break;
+			case "tmpImportData":
+				//临时导入评议数据
+				strResponse = this.tmpImportData();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1886,6 +1889,189 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 		}
 		return strResponse;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public String tmpImportData(){
+		String strClassId = "136";
+		String strBatchId = "65";
+		String strScoreModalId = "TZ_CLPS_MODEL";
+		
+		/*int i = 1;
+		String strListSQL = "SELECT DISTINCT TZ_MSH_ID FROM PS_TZ_CLPS_TMP_T";
+		List<Map<String, Object>> mapList1 = sqlQuery.queryForList(strListSQL);
+		for (Object mapObj : mapList1) {
+			Map<String, Object> result = (Map<String, Object>) mapObj;
+			String strMshId = result.get("TZ_MSH_ID")==null?"":String.valueOf(result.get("TZ_MSH_ID"));
+			String strSQL = "SELECT TZ_APP_INS_ID FROM PS_TZ_CLPS_TMP_T WHERE TZ_MSH_ID=? LIMIT ?,?";
+			String strTmpAppInsId = sqlQuery.queryForObject(strSQL, new Object[]{strMshId,0,1}, "String");
+			
+			
+			String strUpdateSQL = "UPDATE PS_TZ_CLPS_TMP_T SET TZ_APP_INS_ID=? WHERE TZ_MSH_ID=?";
+			sqlQuery.update(strUpdateSQL, new Object[]{strTmpAppInsId,strMshId});
+			System.out.println("-------处理第" + i + "条数据-------，面试申请号：" + strMshId +"，新报名表编号：" + strTmpAppInsId);
+			i = i + 1;
+		}*/
+		String strListSQL = "SELECT TZ_APP_INS_ID, TZ_PWEI_OPRID,TZ_REAL_NAME,TZ_PWEI_NUM, TZ_KSH_PM, TZ_TOTAL, TZ_SCORE1, TZ_SCORE2, TZ_SCORE3, TZ_SCORE4, TZ_SCORE5, TZ_SCORE6, TZ_SCORE7, TZ_SCORE8, TZ_SCORE9, TZ_PY, TZ_GRPX, TZ_KSH_JY, TZ_TSQK FROM PS_TZ_CLPS_TMP_T limit 0,3000";
+		List<Map<String, Object>> mapList1 = sqlQuery.queryForList(strListSQL);
+
+		//评审规则轮次从1开始
+		String strUpdateSQL1 = "UPDATE PS_TZ_CLPS_GZ_TBL SET TZ_DQPY_LUNC=1,TZ_SCPY_LUNC=0 WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+		sqlQuery.update(strUpdateSQL1, new Object[]{strClassId,strBatchId});
+		
+		//删除考生表
+		String strDeleteSQL1 = "DELETE FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+		sqlQuery.update(strDeleteSQL1, new Object[]{strClassId,strBatchId});
+		//删除考生关系表
+		String strDeleteSQL2 = "DELETE FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+		sqlQuery.update(strDeleteSQL2, new Object[]{strClassId,strBatchId});
+		//考生评审历史
+		String strDeleteSQL3 = "DELETE FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+		sqlQuery.update(strDeleteSQL3, new Object[]{strClassId,strBatchId});
+		//考生评审历史
+		String strDeleteSQL4 = "DELETE FROM PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+		sqlQuery.update(strDeleteSQL4, new Object[]{strClassId,strBatchId});	
+		int i=1;
+		if (mapList1 != null && mapList1.size() > 0) {
+			for (Object mapObj : mapList1) {
+				Map<String, Object> result = (Map<String, Object>) mapObj;
+				String strAppInsId = result.get("TZ_APP_INS_ID")==null?"":String.valueOf(result.get("TZ_APP_INS_ID"));
+				String strPweiDLZH = result.get("TZ_PWEI_OPRID")==null?"":String.valueOf(result.get("TZ_PWEI_OPRID"));
+				String strStuRealName = result.get("TZ_REAL_NAME")==null?"":String.valueOf(result.get("TZ_REAL_NAME"));
+				String strKshPm = result.get("TZ_KSH_PM")==null?"0":String.valueOf(result.get("TZ_KSH_PM"));
+				String strTotal = result.get("TZ_TOTAL")==null?"":String.valueOf(result.get("TZ_TOTAL"));
+				String strScore1 = result.get("TZ_SCORE1")==null?"":String.valueOf(result.get("TZ_SCORE1"));
+				String strScore2 = result.get("TZ_SCORE2")==null?"":String.valueOf(result.get("TZ_SCORE2"));
+				String strScore3 = result.get("TZ_SCORE3")==null?"":String.valueOf(result.get("TZ_SCORE3"));
+				String strScore4 = result.get("TZ_SCORE4")==null?"":String.valueOf(result.get("TZ_SCORE4"));
+				String strScore5 = result.get("TZ_SCORE5")==null?"":String.valueOf(result.get("TZ_SCORE5"));
+				String strScore6 = result.get("TZ_SCORE6")==null?"":String.valueOf(result.get("TZ_SCORE6"));
+				String strScore7 = result.get("TZ_SCORE7")==null?"":String.valueOf(result.get("TZ_SCORE7"));
+				String strScore8 = result.get("TZ_SCORE8")==null?"":String.valueOf(result.get("TZ_SCORE8"));
+				String strScore9 = result.get("TZ_SCORE9")==null?"":String.valueOf(result.get("TZ_SCORE9"));
+				String strPy = result.get("TZ_PY")==null?"":String.valueOf(result.get("TZ_PY"));
+				String strGrpx = result.get("TZ_GRPX")==null?"":String.valueOf(result.get("TZ_GRPX"));
+				String strKshJy = result.get("TZ_KSH_JY")==null?"":String.valueOf(result.get("TZ_KSH_JY"));
+				String strTsqk = result.get("TZ_TSQK")==null?"":String.valueOf(result.get("TZ_TSQK"));
+				
+				//评委oprid
+				String strQuerySQL1 = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?";
+				String strPwOprid = sqlQuery.queryForObject(strQuerySQL1, new Object[]{strPweiDLZH}, "String");
+				//插入考生表
+				String strExist = sqlQuery.queryForObject("SELECT'Y' FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?", new Object[]{strClassId,strBatchId,strAppInsId}, "String");
+				if("Y".equals(strExist)){
+					
+				}else{
+					String strInsertSQL1 = "INSERT INTO PS_TZ_CLPS_KSH_TBL(TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID) VALUES(?,?,?)";
+					if(strAppInsId!=null&&!"".equals(strAppInsId)){
+						sqlQuery.update(strInsertSQL1, new Object[]{strClassId,strBatchId,strAppInsId});
+					}
+				}
+				
+				//插入评审历史表
+				String strExist2 = sqlQuery.queryForObject("SELECT'Y' FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=1", new Object[]{strClassId,strBatchId,strAppInsId,strPwOprid}, "String");
+				if("Y".equals(strExist2)){
+					
+				}else{
+					String strInsertSQL2 = "INSERT INTO PS_TZ_KSCLPSLS_TBL(TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID,TZ_PWEI_OPRID,TZ_CLPS_LUNC,TZ_GUANX_LEIX,TZ_KSH_PSPM,TZ_SUBMIT_YN) VALUES(?,?,?,?,?,?,?,?)";
+					if(strAppInsId!=null&&!"".equals(strAppInsId)){
+						sqlQuery.update(strInsertSQL2, new Object[]{strClassId,strBatchId,strAppInsId,strPwOprid,"1","A",strKshPm,"Y"});
+					}
+				}
+				
+				//评审历史记录
+				String strExist3 = sqlQuery.queryForObject("SELECT'Y' FROM PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=1", new Object[]{strClassId,strBatchId,strPwOprid}, "String");
+				if("Y".equals(strExist3)){
+					
+				}else{
+					String strInsertSQL4 = "INSERT INTO PS_TZ_CLPWPSLS_TBL(TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_PWEI_OPRID,TZ_CLPS_LUNC,TZ_SUBMIT_YN) VALUES(?,?,?,?,?)";
+					sqlQuery.update(strInsertSQL4, new Object[]{strClassId,strBatchId,strPwOprid,"1","Y"});
+				}
+											
+				//插入考生评委关系表
+				String strInsertSQL3 = "INSERT INTO PS_TZ_CP_PW_KS_TBL(TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID,TZ_PWEI_OPRID,TZ_GUANX_LEIX,TZ_SCORE_INS_ID,TZ_KSH_PSPM) VALUES(?,?,?,?,?,?,?)";
+				if(strAppInsId!=null&&!"".equals(strAppInsId)){
+					//成绩单编号
+					int scoreInsId = getSeqNum.getSeqNum("TZ_SRMBAINS_TBL", "TZ_SCORE_INS_ID");
+					//成绩单实例表
+					String strInsertSQL31 = "INSERT INTO PS_TZ_SRMBAINS_TBL(TZ_SCORE_INS_ID,TZ_SCORE_MODAL_ID,TZ_SCORE_INS_DATE) VALUES(?,?,?)";
+					sqlQuery.update(strInsertSQL31, new Object[]{scoreInsId,strScoreModalId,"2099-12-31"});
+					//考生关系表
+					sqlQuery.update(strInsertSQL3, new Object[]{strClassId,strBatchId,strAppInsId,strPwOprid,"A",scoreInsId,strKshPm});
+					
+					//成绩单表
+					String strTotalScoreItemID = "Total";//总分
+					String strScoreItemId1 = "XXZB";//显性指标
+					String strScoreItemId2 = "BKXX";//本科学校和学习情况
+					String strScoreItemId3 = "XXHDJL";//英语水平
+					String strScoreItemId4 = "YYSP";//国际化工作背景
+					String strScoreItemId5 = "ZYBJ";//职业背景
+					String strScoreItemId6 = "YXZB";//隐性指标
+					String strScoreItemId7 = "CJDJ";//领导力
+					String strScoreItemId8 = "SWJC";//思维决策
+					String strScoreItemId9 = "TDHZ";//沟通和建立关系的能力
+					
+					String strScoreItemId10 = "PY";//沟通和建立关系的能力
+					String strScoreItemId11 = "GRPX";//个人品行问题
+					String strScoreItemId12 = "KSJY";//给考生的建议
+					String strScoreItemId13 = "TSQKTJ";//特殊情况推荐
+					//成绩实例表
+					String strInsertCJSQL = "INSERT INTO PS_TZ_CJX_TBL(TZ_SCORE_INS_ID,TZ_SCORE_ITEM_ID,TZ_SCORE_NUM,TZ_SCORE_PY_VALUE) VALUES(?,?,?,?)";
+					if(strTotal==null||"".equals(strTotal)){
+						strTotal = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strTotalScoreItemID,strTotal,""});
+					if(strScore1==null||"".equals(strScore1)){
+						strScore1 = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId1,strScore1,""});
+					if(strScore2==null||"".equals(strScore2)){
+						strScore2 = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId2,strScore2,""});
+					if(strScore3==null||"".equals(strScore3)){
+						strScore3 = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId3,strScore3,""});
+					if(strScore4==null||"".equals(strScore4)){
+						strScore4 = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId4,strScore4,""});
+					if(strScore5==null||"".equals(strScore5)){
+						strScore5 = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId5,strScore5,""});
+					if(strScore6==null||"".equals(strScore6)){
+						strScore6 = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId6,strScore6,""});
+					if(strScore7==null||"".equals(strScore7)){
+						strScore7 = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId7,strScore7,""});
+					if(strScore8==null||"".equals(strScore8)){
+						strScore8 = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId8,strScore8,""});
+					if(strScore9==null||"".equals(strScore9)){
+						strScore9 = "0";
+					}
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId9,strScore9,""});
+					
+					//相关评语
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId10,"0",strPy});
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId11,"0",strGrpx});
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId12,"0",strKshJy});
+					sqlQuery.update(strInsertCJSQL, new Object[]{scoreInsId,strScoreItemId13,"0",strTsqk});
+					
+				}
+				System.out.println("-------正在处理第" + i + "条数据，报考人为：" + strStuRealName + "-------");				
+				i = i + 1;
+			}
+		}
+		
+		return "";
+	}
+	
 	@SuppressWarnings("unchecked")
 	public String right(String strValue, int num) {
 		String returnValue = "";
