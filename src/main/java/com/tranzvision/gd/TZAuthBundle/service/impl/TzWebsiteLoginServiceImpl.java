@@ -212,6 +212,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 
 			// 设置语言环境
 			this.switchSysLanguage(request, response, language);
+			
 			// 设置cookie参数
 			tzCookie.addCookie(response, cookieWebOrgId, psTzAqYhxxTblKey.getTzJgId(), 24 * 3600);
 			tzCookie.addCookie(response, cookieWebSiteId, siteid, 24 * 3600);
@@ -461,36 +462,42 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	 * @param request
 	 * @param response
 	 */
-	public String autoLoginByOpenId(HttpServletRequest request, HttpServletResponse response, String siteId, String orgId){
-		String rtnStr = "";
-		//微信浏览器下访问根据openid自动登录
-		Boolean isWeChart = CommonUtils.isWeChartBrowser(request);
-		
-		if(isWeChart){
-			//会话是否有效
-			Boolean bool = gdObjectServiceImpl.isSessionValid(request);
-			Boolean isAnonymous = false;
-			if(bool)
+	public void autoLoginByOpenId(HttpServletRequest request, HttpServletResponse response){
+		String tmpOpenID = "";
+		//会话是否有效
+		Boolean bool = gdObjectServiceImpl.isSessionValid(request);
+		Boolean isAnonymous = false;
+		if(bool)
+		{
+			String tmpCurrentLoginUser = gdObjectServiceImpl.getOPRID(request);
+			if("TZ_GUEST".equals(tmpCurrentLoginUser) == true)
 			{
-				String tmpCurrentLoginUser = gdObjectServiceImpl.getOPRID(request);
-				if("TZ_GUEST".equals(tmpCurrentLoginUser) == true)
-				{
-					isAnonymous = true;
-				}
+				isAnonymous = true;
 			}
-			
-			//用于控制是否将用户重定向到首页的变量
-			Boolean toIndexFlag = false;
-			
-			//会话失效或匿名登录,根据openid查询绑定用户
-			if(bool == false || isAnonymous == true){
-				
+		}
+		
+		//用于控制是否将用户重定向到登录页的变量
+		Boolean logoutFlag = true;
+		
+		//会话失效或匿名登录,根据openid查询绑定用户
+		if(bool == false || isAnonymous == true){
+			//微信浏览器下访问根据openid自动登录
+			Boolean isWeChart = CommonUtils.isWeChartBrowser(request);
+			if(isWeChart){
 				String tmpOpenIDKey = "TZGD_@_!_*_20170420_Tranzvision";
-				String tmpOpenID = tzCookie.getStringCookieVal(request, "TZGD_WECHART_OPENID");
-				
+				tmpOpenID = tzCookie.getStringCookieVal(request, "TZGD_WECHART_OPENID");
 				tmpOpenID = tmpOpenID == null ? "" : DESUtil.decrypt(tmpOpenID,tmpOpenIDKey);
 				
-				if(tmpOpenID == null || "".equals(tmpOpenID)){
+				String classId = request.getParameter("classid");
+				String siteId = request.getParameter("siteId");
+				String orgId = "";
+				if(!"".equals(siteId) && siteId != null){
+					String siteSQL = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+					orgId = sqlQuery.queryForObject(siteSQL, new Object[]{ siteId }, "String");
+				}
+				
+				if((tmpOpenID == null || "".equals(tmpOpenID)) 
+						&& "mIndex".equals(classId) && siteId != null && !"".equals(siteId)){
 					//cookie中不存在openid，重新获取openid
 					String appid = "";//微信公众号appid
 					String secret = "";
@@ -509,13 +516,12 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 					    if (queryString != null) {
 					    	url += "?"+ queryString;
 					    }
-					    System.out.println("url====== "+url);
 					    
 					    if(!"".equals(appid)){
 					    	url = tzWeChartJSSDKSign.getOAuthCodeUrl(appid, url);
-					    	System.out.println("codeUrl====== "+url);
 						    try {
 								response.sendRedirect(url);
+								return;
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
@@ -523,59 +529,77 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 					}else{
 						//通过code获取openid
 						tmpOpenID = tzWeChartJSSDKSign.getOauthAccessOpenId(appid, secret, code);
+						
+						String cookieOpenID = DESUtil.encrypt(tmpOpenID,tmpOpenIDKey);
+						tzCookie.addCookie(response, "TZGD_WECHART_OPENID",cookieOpenID);
 					}
 				}
 				
-				rtnStr = tmpOpenID;
+				//System.out.println("OPENID====== "+tmpOpenID);
+				
 				if(!"".equals(siteId) && !"".equals(orgId) && !"".equals(tmpOpenID)){
 					String tmpUserDlzh = "";
 					String sql = "select TZ_DLZH_ID from PS_TZ_OPENID_TBL where OPENID=? and TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_DEL_FLG='N'";
 					tmpUserDlzh = sqlQuery.queryForObject(sql, new Object[] { tmpOpenID, orgId, siteId }, "String");
-
+	
 					if(tmpUserDlzh != null && !"".equals(tmpUserDlzh)){
-						
+						System.out.println("登录账号====== "+tmpUserDlzh);
 						ArrayList<String> aryErrorMsg = new ArrayList<String>();
-
+	
 						sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? and TZ_JG_ID=?)";
 						String passwordJm = sqlQuery.queryForObject(sql, new Object[]{tmpUserDlzh, orgId},"String");
 						String password = passwordJm == null ? "" : DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
 						
-						
 						Patchca patchca = new Patchca();
 						String tmpTokenValue = patchca.getToken(request);
-						if(tmpTokenValue == null)
-						{
+						if(tmpTokenValue == null){
 							tmpTokenValue = "AbCd";
-							TzSession tmpSession = new TzSession(request);
-							tmpSession.addSession(patchca.getTokenName(),tmpTokenValue);
 						}
-						
+
 						boolean boolResult = doLogin(request, response,orgId, siteId,tmpUserDlzh, password, tmpTokenValue, "ZHS", aryErrorMsg);
 						if(boolResult){
-							toIndexFlag = true;
+							logoutFlag = false;
 						}
 						
 					}
 				}
 			}
+		}else{
+			logoutFlag = false;
+		}
+		
+		//如果自动登录成功，则将用户重定向到首页
+		if(logoutFlag == true){
+			//rootPath;
+			String ctxPath = request.getContextPath();
 			
-			//如果自动登录成功，则将用户重定向到首页
-			if(toIndexFlag == true){
-				//rootPath;
-				String ctxPath = request.getContextPath();
-				
-				String indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId=" + siteId;
-				
-				try{
-					response.sendRedirect(indexUrl);
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
+			//得到登录地址;
+			String loginOutUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
+			
+			if(loginOutUrl == null || "".equals(loginOutUrl))
+			{
+				String tmpSQLText = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+				String loginUrl = sqlQuery.queryForObject(tmpSQLText, new Object[]{"TZ_MBA_BKXT_MURL_LOGIN"},"String");												
+				loginOutUrl = ctxPath + loginUrl;
+			}
+			
+			if(!"".equals(tmpOpenID)){
+				if(loginOutUrl.indexOf("?") > -1){
+					loginOutUrl = loginOutUrl + "&OPENID="+ tmpOpenID;
+				}else{
+					loginOutUrl = loginOutUrl + "?OPENID="+ tmpOpenID;
 				}
 			}
+			
+			try
+			{
+				response.sendRedirect(loginOutUrl);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
-		return rtnStr;
 	}
 	
 	

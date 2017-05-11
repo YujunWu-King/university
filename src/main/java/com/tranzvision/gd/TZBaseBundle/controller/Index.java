@@ -1,6 +1,5 @@
 package com.tranzvision.gd.TZBaseBundle.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +11,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
@@ -20,14 +21,8 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjInitServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.OperateType;
-import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cookie.TzCookie;
-import com.tranzvision.gd.util.encrypt.DESUtil;
-import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.SqlQuery;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/")
@@ -238,8 +233,12 @@ public class Index {
 
 
 		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 begin*/
-		tzWebsiteLoginServiceImpl.autoLoginByCookie(request, response);
-		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 end*/	
+		//tzWebsiteLoginServiceImpl.autoLoginByCookie(request, response);
+		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 end*/
+		
+		/*MBA报考服务系统手机版首页OPENID绑定登录，2017-05-10 -张浪添加-begin-*/
+		tzWebsiteLoginServiceImpl.autoLoginByOpenId(request, response);
+		/*MBA报考服务系统手机版首页OPENID绑定登录，2017-05-10 -张浪添加-end---*/
 		
 		// 操作类型;
 		String strOprType = "";

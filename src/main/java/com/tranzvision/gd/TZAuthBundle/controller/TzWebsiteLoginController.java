@@ -88,9 +88,10 @@ public class TzWebsiteLoginController {
 				String loginHtml = "";
 				Boolean isMobile = CommonUtils.isMobile(request);
 				if (isMobile) {
-					//根据openid自动登录-----张浪---20170509
-					String openid = tzWebsiteLoginServiceImpl.autoLoginByOpenId(request, response, siteid, orgid);
-					
+					String openid = request.getParameter("OPENID");
+					if(openid == null){
+						openid = "";
+					}
 					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid, openid);
 					strRet = loginHtml;
 				} else {
@@ -131,9 +132,10 @@ public class TzWebsiteLoginController {
 				String loginHtml = "";
 				Boolean isMobile = CommonUtils.isMobile(request);
 				if (isMobile) {
-					//根据openid自动登录-----张浪---20170509
-					String openid = tzWebsiteLoginServiceImpl.autoLoginByOpenId(request, response, siteid, orgid);
-					
+					String openid = request.getParameter("OPENID");
+					if(openid == null){
+						openid = "";
+					}
 					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid, openid);
 					strRet = loginHtml;
 				} else {
@@ -353,11 +355,8 @@ public class TzWebsiteLoginController {
 	public String doLogout(HttpServletRequest request, HttpServletResponse response) {
 
 		String orgid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebOrgId);
-
 		String siteid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebSiteId);
-		// System.out.println("orgid:"+orgid);
-		// System.out.println("siteid:"+siteid);
-
+		 
 		tzWebsiteLoginServiceImpl.doLogout(request, response);
 
 		// String ctx = request.getContextPath();
@@ -365,8 +364,8 @@ public class TzWebsiteLoginController {
 		orgid = orgid.toLowerCase();
 
 		String redirect = "redirect:" + "/user/login/" + orgid + "/" + siteid;
-		// System.out.println("redirect:"+redirect);
-
+		System.out.println("redirect:"+redirect);
+		
 		return redirect;
 	}
 
