@@ -372,12 +372,12 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 参数：从服务器获取的考生的相关JSON数据
 	*/
 	function genKSInfoHTML(ksinfoJSON){
-		var rtn_ksinfohtml = '<table border="0" width="100%" style="font-size:12px;">';
+		var rtn_ksinfohtml = '<table border="0" width="100%" height="100%" style="font-size:12px;">';
 		
 		if(ksinfoJSON.interviewApplyId=="undefined") ksinfoJSON.interviewApplyId = "";
 		if(ksinfoJSON.name=="undefined") ksinfoJSON.name = "";
 		
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+ksinfoJSON.bmbId+'","TZ_APP_TPL_ID":"'+ksinfoJSON.clpsBmbTplId+'"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+ksinfoJSON.bmbId+'","TZ_APP_TPL_ID":"'+ksinfoJSON.clpsBmbTplId+'","isReview":"Y"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表">新开窗口查看考生材料</a>';
 
@@ -1428,7 +1428,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 									});*/
 		var parentFieldContainer = new Ext.container.Container({
 			combineErrors	: false,
-			height			: thisFieldContainerHeight,
+			//height			: thisFieldContainerHeight,
+			height          : '100%',
 			name            : field_name,
 			html            : '<div style="margin:0;width: 733px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
 		});
@@ -1719,7 +1720,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//更新报名表
 		//每个考生一个IFRAME
 		var tmpBatchIdBMBID = tmpBatchId + '_' + userpoints.bmbId;
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'","TZ_APP_TPL_ID":"'+userpoints.clpsBmbTplId+'"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+userpoints.bmbId+'","TZ_APP_TPL_ID":"'+userpoints.clpsBmbTplId+'","isReview":"Y"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		if($('#bmb_iframe_'+tmpBatchIdBMBID)[0]!=null && $('#bmb_iframe_'+tmpBatchIdBMBID)[0]!="undefined"){
@@ -1795,7 +1796,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	var show_BMB_html = "";
 	function createBMBPanel(east_ksbmb_url, df_bmbid,clpsBmbTplId){
 		// 采用IFrame方式
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+df_bmbid+'","TZ_APP_TPL_ID":"'+clpsBmbTplId+'"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+df_bmbid+'","TZ_APP_TPL_ID":"'+clpsBmbTplId+'","isReview":"Y"}}';
 		var bmb_url = ContextPath + "/dispatcher" + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		show_BMB_html = bmb_url;
 	}
@@ -2048,8 +2049,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						
 						if(userpoints.messageCode != '0')
 						{
-							var msg ='读取考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据时发生错误';
-							Ext.Msg.alert('提示', msg);
+							var msg ='读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误：' + userpoints.message ;							Ext.Msg.alert('提示', msg);
+                                                        Ext.Msg.alert('提示', msg);
+
+							//unmask window
+							unmaskWindow();
 						}
 						else
 						{

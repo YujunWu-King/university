@@ -344,6 +344,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			if(mapRootBasic == null) {
 				mapRet.put("messageCode", "1");
 				mapRet.put("message", "没有考生信息");
+				strRtn = jacksonUtil.Map2json(mapRet);
 				return strRtn;
 			}
 			
@@ -428,6 +429,12 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 							String sqlZdcx = "SELECT A.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL A,PS_TZ_CS_KS_TBL B";
 							sqlZdcx += " WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND A.TZ_SCORE_ITEM_ID=? AND B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=? AND B.TZ_APP_INS_ID=?";
 							scoreItemValue = sqlQuery.queryForObject(sqlZdcx, new Object[]{scoreItemId,classId,applyBatchId,bmbId},"String");
+							//自动初筛分数小于最低打分，默认最低打分
+							if("".equals(scoreItemValue) || scoreItemValue == null) {
+								scoreItemValue = scoreItemValueLower;
+							} else if(Double.valueOf(scoreItemValue)<Double.valueOf(scoreItemValueLower)) {
+								scoreItemValue = scoreItemValueLower;	
+							}
 						}
 						
 					} else {
@@ -1006,7 +1013,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 								if(pwksNum>pwksSubNum) {
 									bmbIdNext = "";
 									messageCode = "1";
-									message = "评委有“打分后未提交”的考生。请先提交已经打分的考生，然后再获取新的考生。";
+									message = "存在未打分的考生。请先为考生打分，然后再获取新的考生。";
 								} else {
 									if(pwksNum>=pyksNum) {
 										bmbIdNext = "";
