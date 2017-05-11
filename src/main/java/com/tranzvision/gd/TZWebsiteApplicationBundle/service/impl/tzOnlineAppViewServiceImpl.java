@@ -122,7 +122,7 @@ public class tzOnlineAppViewServiceImpl {
 		 String strGetXxxInfoMultipleSql = "SELECT A.TZ_XXX_BH,A.TZ_XXX_SLID,A.TZ_COM_LMC,A.TZ_XXX_MAX_LINE FROM PS_TZ_APP_XXXPZ_T A "
 		 		+ "WHERE TZ_APP_TPL_ID = ? "
 		 		+ "AND EXISTS (SELECT * FROM PS_TZ_TEMP_FIELD_T B WHERE A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID AND A.TZ_XXX_BH = B.TZ_XXX_BH) "
-		 		+ "AND A.TZ_COM_LMC IN ('LayoutControls','DHContainer','workExperience','EduExperience','recommendletter')";
+		 		+ "AND A.TZ_COM_LMC IN ('LayoutControls','DHContainer','workExperience','EduExperience','recommendletter','EngLevl')";
 		 		
 		 List<?> XxxInfoMultipleList = sqlQuery.queryForList(strGetXxxInfoMultipleSql, 
 		    		new Object[] { strTplId });

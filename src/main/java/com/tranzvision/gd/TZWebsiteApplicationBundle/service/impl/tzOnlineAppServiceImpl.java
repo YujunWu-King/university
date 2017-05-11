@@ -202,6 +202,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		// 班级项目ID
 		String classProjectID = "";
+		
+		//是否评审
+		String strIsReview = "N";
 
 		if ("appId".equals(strReferenceId)) {
 			strClassId = request.getParameter("TZ_CLASS_ID");
@@ -212,6 +215,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			strCopyFrom = request.getParameter("APPCOPY");
 			strAttachedTplId = request.getParameter("TZ_APP_TPL_ID");
 			strIsEdit = request.getParameter("isEdit");
+			strIsReview = request.getParameter("isReview");
 			strPageID = request.getParameter("TZ_PAGE_ID");
 			if (strClassId == null) {
 				strClassId = "";
@@ -225,21 +229,34 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			strCopyFrom = String.valueOf(jacksonUtil.getString("APPCOPY"));
 			strAttachedTplId = String.valueOf(jacksonUtil.getString("TZ_APP_TPL_ID"));
 			strIsEdit = String.valueOf(jacksonUtil.getString("isEdit"));
-
+			strIsReview = String.valueOf(jacksonUtil.getString("isReview"));
 			strPageID = String.valueOf(jacksonUtil.getString("TZ_PAGE_ID"));
 
 			if (strClassId == null) {
 				strClassId = "";
 			}
-
 		}
 
 		if (strSiteId == null || strSiteId.equals("null")) {
 			strSiteId = "";
 		}
+		
 		if (strIsEdit == null || strIsEdit.equals("null")) {
 			strIsEdit = "";
 		}
+		
+		if (strIsReview == null || strIsReview.equals("null")) {
+			strIsReview = "";
+		}
+		
+		if(StringUtils.equals("Y", strIsReview)){
+			//评审时隐藏翻页提交按钮
+			strIsReview = "none";
+		}else{
+			strIsReview = "";
+		}
+		
+		
 		if (strPageID == null || strPageID.equals("null")) {
 			strPageID = "";
 		}
@@ -930,7 +947,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
 						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
-						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg, classProjectID,strAppInsState,strDisplayType);
+						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg, classProjectID,strAppInsState,strDisplayType,strIsReview);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");
