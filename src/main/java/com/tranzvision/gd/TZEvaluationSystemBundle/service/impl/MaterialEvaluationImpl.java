@@ -129,12 +129,14 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?",
 					new Object[] { oprid }, "String");
 
-			String sql = "SELECT A.TZ_CLASS_ID  ,B.TZ_CLASS_NAME  ,A.TZ_APPLY_PC_ID  ,TZ_BATCH_NAME ,TZ_PWEI_OPRID  ,D.TZ_DQPY_ZT ,A.TZ_PYKS_XX ,date_format(D.TZ_PYJS_RQ, '%Y-%m-%d') TZ_PYJS_RQ,(to_days(D.TZ_PYJS_RQ)-to_days(now())) TZ_DAYS FROM PS_TZ_CLPS_PW_TBL A   ,PS_TZ_CLASS_INF_T B   ,PS_TZ_CLPS_GZ_TBL D   ,PS_TZ_CLS_BATCH_T E WHERE A.TZ_CLASS_ID = B.TZ_CLASS_ID    AND A.TZ_CLASS_ID = D.TZ_CLASS_ID    AND A.TZ_APPLY_PC_ID = D.TZ_APPLY_PC_ID    AND D.TZ_DQPY_ZT IN('A','B')    AND A.TZ_PWEI_OPRID=?   AND D.TZ_CLASS_ID = E.TZ_CLASS_ID    AND D.TZ_APPLY_PC_ID = E.TZ_BATCH_ID ORDER BY D.TZ_DQPY_ZT ASC, D.TZ_PYKS_RQ DESC,cast(A.TZ_APPLY_PC_ID as SIGNED INTEGER) DESC LIMIT ?,?";
+			String sql = "SELECT A.TZ_CLASS_ID  ,B.TZ_CLASS_NAME  ,A.TZ_APPLY_PC_ID  ,TZ_BATCH_NAME ,D.TZ_DQPY_ZT ,D.TZ_DQPY_LUNC,A.TZ_PYKS_XX ,date_format(D.TZ_PYJS_RQ, '%Y-%m-%d') TZ_PYJS_RQ,date_format(D.TZ_PYJS_SJ, '%H:%I') TZ_PYJS_SJ,(to_days(D.TZ_PYJS_RQ)-to_days(now())) TZ_DAYS FROM PS_TZ_CLPS_PW_TBL A   ,PS_TZ_CLASS_INF_T B   ,PS_TZ_CLPS_GZ_TBL D   ,PS_TZ_CLS_BATCH_T E WHERE A.TZ_CLASS_ID = B.TZ_CLASS_ID    AND A.TZ_CLASS_ID = D.TZ_CLASS_ID    AND A.TZ_APPLY_PC_ID = D.TZ_APPLY_PC_ID    AND D.TZ_DQPY_ZT IN('A','B')    AND A.TZ_PWEI_OPRID=?   AND D.TZ_CLASS_ID = E.TZ_CLASS_ID    AND D.TZ_APPLY_PC_ID = E.TZ_BATCH_ID AND DATE_FORMAT(D.TZ_PYKS_RQ,'%Y') = DATE_FORMAT(NOW(),'%Y') ORDER BY D.TZ_DQPY_ZT ASC, D.TZ_PYKS_RQ DESC,cast(A.TZ_APPLY_PC_ID as SIGNED INTEGER) DESC LIMIT ?,?";
 			List<Map<String, Object>> list = sqlQuery.queryForList(sql,
 					new Object[] { oprid, Integer.parseInt(startRowNumber), Integer.parseInt(maxRowCount) });
 
 			String strClassId = "", strClassName = "", strBatchId = "", strBatchName = "", strEvalationStatus = "",
 					strEvalationStatusDesc = "";
+			
+			int evaluationRound = 1;
 			
 			//列表数据和评委未完成评审提醒数据
 			ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
@@ -149,7 +151,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					strBatchId = (String) list.get(i).get("TZ_APPLY_PC_ID");
 					strBatchName = (String) list.get(i).get("TZ_BATCH_NAME");
 					strEvalationStatus = (String) list.get(i).get("TZ_DQPY_ZT");
-
+					evaluationRound  = list.get(i).get("TZ_DQPY_LUNC")==null?1:(Integer)list.get(i).get("TZ_DQPY_LUNC");
+					
 					if ("A".equals(strEvalationStatus)) {
 						strEvalationStatusDesc = "进行中";
 					}
@@ -170,24 +173,38 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 					
 					//评委未完成评审提醒
 					if("A".equals(strEvalationStatus)){
-						long tz_need_eva_num =  list.get(i).get("TZ_PYKS_XX")!=null?(Long)list.get(i).get("TZ_PYKS_XX"):0;
 						
-						/*完成的数量 */
-						int tz_done_num = sqlQuery.queryForObject(
-								"select count(TZ_APP_INS_ID) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID = ? and TZ_CLPS_LUNC in ( select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?) and TZ_SUBMIT_YN = 'Y'",
-								new Object[] { strClassId, strBatchId, oprid, strClassId, strBatchId }, "Integer");
+						//判断当前评委是否已经提交;
+						 String strSubmitFlag = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_CLPWPSLS_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? and TZ_CLPS_LUNC=?",
+								 new Object[]{strClassId,strBatchId,oprid,evaluationRound}, "String");
 						
-						if(tz_need_eva_num>tz_done_num){
+						if(!"Y".equals(strSubmitFlag)){
+							
+							long tz_need_eva_num =  list.get(i).get("TZ_PYKS_XX")!=null?(Long)list.get(i).get("TZ_PYKS_XX"):0;
+							
+							/*完成的数量 */
+							int tz_done_num = sqlQuery.queryForObject(
+									"select count(TZ_APP_INS_ID) from PS_TZ_KSCLPSLS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID = ? and TZ_CLPS_LUNC in ( select TZ_DQPY_LUNC from PS_TZ_CLPS_GZ_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?) and TZ_SUBMIT_YN = 'Y'",
+									new Object[] { strClassId, strBatchId, oprid, strClassId, strBatchId }, "Integer");
+							
 							String tz_end_date = list.get(i).get("TZ_PYJS_RQ")==null?"未设置":(String)list.get(i).get("TZ_PYJS_RQ");
+							String tz_end_time = list.get(i).get("TZ_PYJS_SJ")==null?"":(String)list.get(i).get("TZ_PYJS_SJ");
+							
 							int tz_days =  list.get(i).get("TZ_DAYS")==null?0:(Integer)list.get(i).get("TZ_DAYS");
 							
 							/*评委评审概要信息 */
-							String ps_gaiy_info = new StringBuffer(strClassName).append(" ").append(strBatchName)
-									.append("，距离评审截止日期 <span style='color:red'>").append(tz_end_date).append("</span>")
-									.append(tz_days>0?"还有":"已过去").append("<span style='color:red'>").append(Math.abs(tz_days))
-									.append("</span>天，您有<span style='color:red'>").append(tz_need_eva_num-tz_done_num).append("</span>位考生未评审。").toString();
+							StringBuffer ps_gaiy_info = new StringBuffer(strClassName).append(" ").append(strBatchName)
+									.append("，距离评审截止时间<span style='color:red'>").append(tz_end_date).append(" ").append(tz_end_time).append("</span>")
+									.append("还有<span style='color:red'>").append(tz_days).append("</span>天。");
 							
-							remindData.add(ps_gaiy_info);
+							if(tz_need_eva_num-tz_done_num>0){
+								ps_gaiy_info.append("您有<span style='color:red'>").append(tz_need_eva_num-tz_done_num).append("</span>位考生未评审。");
+							}else{
+								ps_gaiy_info.append("您还未提交评议数据。");
+							}
+									
+							
+							remindData.add(ps_gaiy_info.toString());
 						}
 						
 					}
@@ -870,7 +887,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 								if(pwksNum>pwksSubNum) {
 									bmbIdNext = "";
 									error_code = "1";
-									error_decription = "请先提交已经打分的考生，然后再获取新的考生。";
+									error_decription = "存在未打分的考生。请先为考生打分，然后再获取新的考生。";
 								} else {
 									if(pwksNum>=pyksNum) {
 										bmbIdNext = "";

@@ -1013,7 +1013,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 															
 															}
 															catch(e1){
-																alert('计算考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]总分时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
+																alert('计算考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]总分时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
 															}
 														},
 														failure: function(form, action) {
@@ -1157,7 +1157,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																// unmask window
 																unmaskWindow();
 																
-																alert('保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
+																alert('保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
 															}
 														   
 														},
@@ -1183,7 +1183,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 														// unmask window
 														unmaskWindow();
 
-														var msg = '保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + eformsubmit + ']';
+														var msg = '保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据时发生错误，请与系统管理员联系。';
 														Ext.Msg.alert('提示', msg);
 													}
 													
@@ -1287,7 +1287,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																	// unmask window
 																	unmaskWindow();
 																	
-																	var msg = '保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']';
+																	var msg = '保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']';
 																	Ext.Msg.alert('提示', msg);
 																}
 									                        }
@@ -1349,7 +1349,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																// unmask window
 																unmaskWindow();
 																
-																alert('保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
+																alert('保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
 															}
 														},
 														failure: function(form, action) {
@@ -1374,7 +1374,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 														// unmask window
 														unmaskWindow();
 															
-														var msg = '保存考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + eformsubmit + ']';
+														var msg = '保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + eformsubmit + ']';
 														Ext.Msg.alert('提示', msg);
 													}
 												}
@@ -2039,6 +2039,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				params	: {tzParams:tzParams},
 				success	: function(response)
 				{
+					unmaskWindow();
 					try
 					{
 						var jsonObject = Ext.decode(response.responseText);
@@ -2047,7 +2048,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						
 						if(userpoints.messageCode != '0')
 						{
-							var msg ='读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误：' + userpoints.message + '[错误码：' + userpoints.messageCode + ']' + response.responseText;
+							var msg ='读取考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据时发生错误';
 							Ext.Msg.alert('提示', msg);
 						}
 						else
@@ -2103,16 +2104,16 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					}
 					catch(e1)
 					{
-						var msg = '读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.message + ']';
+						var msg = '读取考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据时发生错误，请与系统管理员联系';
 						Ext.Msg.alert('提示', msg);
 						//unmask window
 						unmaskWindow();
+						
 					}
 				},
 				failure: function(response, opts) {
-					var msg = '读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据失败，请与系统管理员联系：' + response.responseText;
-					Ext.Msg.alert('提示', msg);
-					
+					var msg = '读取考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据失败，请与系统管理员联系：' + response.responseText;
+					Ext.Msg.alert('提示', msg);	
 					//unmask window
 					unmaskWindow();
 				}
@@ -2153,20 +2154,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						unmaskWindow();
 					}
 					catch(e1){
-						var msg = '读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']';
+						var msg = '读取考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据时发生错误，请与系统管理员联系。';
 						Ext.Msg.alert('提示', msg);
-						//var mytmpWindow = window.open("about:blank");
-						//mytmpWindow.document.body.innerHTML = response.responseText;
-						
-						//unmask window
 						unmaskWindow();
 					}
 					
 				},
 				failure: function(response, opts) {
-					var msg = '读取考生[' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')]数据失败，请与系统管理员联系：' + response.responseText;
+					var msg = '读取考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据失败，请与系统管理员联系：' + response.responseText;
 					Ext.Msg.alert('提示', msg);
-					//unmask window
 					unmaskWindow();
 				}
 				

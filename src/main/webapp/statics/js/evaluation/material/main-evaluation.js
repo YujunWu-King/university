@@ -942,7 +942,11 @@ function createApplicantList(jsonObject)
 {	
 	var store1 = Ext.create('Ext.data.Store', {
       fields: getApplicantListColumnHeaders(jsonObject['ps_data_kslb']['ps_ksh_list_headers']),
-      data: getApplicantListColumnValues(jsonObject['ps_data_kslb']['ps_ksh_list_contents'])
+      data: getApplicantListColumnValues(jsonObject['ps_data_kslb']['ps_ksh_list_contents']),
+      sorters: [{
+          property: 'ps_ksh_dt',
+          direction: 'DESC'  
+      }], 
 	});
   
   var ps_kslb_submtall_status = (jsonObject['ps_kslb_submtall']=="Y")?"已提交":"未提交";

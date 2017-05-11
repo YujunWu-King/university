@@ -15,14 +15,6 @@ function createReturnMenu(parentObject, jsonObject)
   					pressed: true
   				},
 				'<b>'+jsonObject['ps_class_mc'] + " " + jsonObject['ps_baok_pc'] +'</b>'
-				/*
-				{
-  					xtype: "",
-					text: ,
-  					width: 200,
-  					pressed: false
-  				}
-				*/
   			);
 }
 
@@ -81,10 +73,6 @@ function loadEvaluateBatchDataById(batchId,jsonObject)
 function loadEvaluateBatchData(callBackFunction)
 {
 	var loadSuccess = false;
-	
-	/*本地调试代码*/
-	//callBackFunction(jsonEvaluateBatchListDataObject1[0]);
-	//return true;
 	
 	/*服务器联调代码*/
 	Ext.Ajax.request({
@@ -151,43 +139,6 @@ function loadEvaluateBatchData(callBackFunction)
 	return loadSuccess;
 }
 
-/*var jsonEvaluateBatchListDataObject1 = [];
-jsonEvaluateBatchListDataObject1[0] = 
-{
-	"pw_id":"pw01",
-	"pw_name":"黄飞鸿",
-	"MaxRowCount":"10",
-	"StartRowNumber":"1",
-	"MoreRowsFlag":"Y",
-	"TotalRowCount":"20",
-	"data":
-		[
-			{
-				"pc_id":"pc_f_01",
-				"pc_name":"2012年第01批F班", 
-				"pc_zt":"进行中"
-			},
-			{
-				"pc_id":"pc_f_02",
-				"pc_name":"2012年第01批P班", 
-				"pc_zt":"进行中"
-			},
-			{
-				"pc_id":"pc_f_03",
-				"pc_name":"2012年第02批F班", 
-				"pc_zt":"新建"
-			},
-			{
-				"pc_id":"pc_f_04",
-				"pc_name":"2012年第02批P班", 
-				"pc_zt":"已结束"
-			}
-		],
-	"error_code":"0",
-	"error_decription ":""
-}
-*/
-
 function getEvaluateBatchListData(JEBDObject)
 {
 	var ebList = [];
@@ -249,9 +200,6 @@ function initializeGridColumnHeaders()
 
 function loadBatchDataById(batchId,callBackFunction)
 {
-	/*本地调试代码*/
-	//callBackFunction(batchId,jsonEvaluateBatchDataObjectArray1[batchId]);
-	//return;
 	var arr = batchId.split("_");
 	var classid = arr[0];
 	var pcid = arr[1];
@@ -435,40 +383,6 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
     			}
     		}
     	);
-	/*var printStatisticsTips = 	'请注意：打印评审总表时，为避免表格不同列字数不均引起的页数过多的问题，请评委在word中调整一下表格列宽度。<br />'
-								+'以Word2007为例，具体步骤如下：<br />'
-								+'1. 选中表格；<br />'
-								+'2. 点击右键；<br />'
-								+'3. 选择“自动调整->根据内容调整表格”，查看最终排版效果即可。<br />'
-								+'<a href="/tzlib/images/printStatisticsTips1.jpg" target="_blank" title="点击查看大图" style="color:blue;">请点击查看示意图</a><br />'
-								+'点击“是”生成评分总表，点击“否”取消生成。';
-	
-	Ext.Msg.confirm('提示', printStatisticsTips, function(button) {
-		if (button === 'yes') {
-		
-			var fileDownloadUrl = window.printStatisticsTableUrl + '?TZ_CLASS_ID='+ classId +'&TZ_PC_ID=' + batchId;
-
-			try
-			{
-				var iframeObject = $('<iframe></iframe>');
-				var parentObject = $('#mba_evaluate_system_file_downloader');
-				
-				
-				parentObject.empty();
-				parentObject.append(iframeObject);
-				//iframeObject[0].src = fileDownloadUrl;
-                window.open(fileDownloadUrl);
-			}
-			catch(e1)
-			{
-				alert(e1.description);
-			}
-			
-		} else {
-			//Ext.Msg.alert("","点击了取消");
-		}
-	});*/
-	
 }
 
 function initializeEvaluatePiciGrid(jsonObject)
@@ -493,7 +407,6 @@ function initializeEvaluatePiciGrid(jsonObject)
       minHeight:100,
       stateId: 'EvaluateBatchListGrid',
       style:'cursor:default;vertical:middle;',
-      //margin:'auto',
       columns: [
           {
               text     : '报考方向名称',

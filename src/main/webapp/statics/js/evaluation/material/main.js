@@ -447,11 +447,8 @@ function initializeEvaluateSystem(urlObject)
 //显示、隐藏窗体的蒙板层
 function maskWindow(msg){
 	var maskMsg = msg!=undefined&&msg!=""?msg:"数据加载中，请稍候...";
-	
 	Ext.getBody().mask(maskMsg);
-	
 }
-
 
 function unmaskWindow(){
 	Ext.getBody().unmask();
