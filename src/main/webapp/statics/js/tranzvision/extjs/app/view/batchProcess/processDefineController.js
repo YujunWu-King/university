@@ -272,19 +272,12 @@ Ext.define('KitchenSink.view.batchProcess.processDefineController', {
 		
 		//新增
 		if(actType == "add"){
-			comParams = '"add":[{"data":'+Ext.JSON.encode(formParams)+'}]';
+			comParams = '"add":['+ Ext.JSON.encode(formParams)+']';
 		}
 		//修改json字符串
 		var editJson = "";
 		if(actType == "update"){
-			editJson = '{"data":'+Ext.JSON.encode(formParams)+'}';
-		}
-		if(editJson != ""){
-			if(comParams == ""){
-				comParams = '"update":[' + editJson + "]";
-			}else{
-				comParams = comParams + ',"update":[' + editJson + "]";
-			}
+			comParams = '"update":[' + Ext.JSON.encode(formParams) + ']';
 		}
 		
 		//提交参数

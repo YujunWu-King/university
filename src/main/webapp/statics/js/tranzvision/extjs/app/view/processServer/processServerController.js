@@ -70,8 +70,6 @@ Ext.define('KitchenSink.view.processServer.processServerController', {
 		var formParams = form.getValues();
 		//组件信息标志
 		var actType = this.getView().actType;
-		console.log("actType======" + actType)
-		console.log(Ext.JSON.encode(formParams))
 		//更新操作参数
 		var comParams = "";
 		
@@ -82,10 +80,7 @@ Ext.define('KitchenSink.view.processServer.processServerController', {
 		//修改json字符串
 		var editJson = "";
 		if(actType == "update"){
-			editJson = + Ext.JSON.encode(formParams);
-		}
-		if(editJson != ""){
-			comParams = '"update":[' + editJson + ']';
+			comParams = '"update":[' + Ext.JSON.encode(formParams) + ']';
 		}
 		
 		//提交参数
