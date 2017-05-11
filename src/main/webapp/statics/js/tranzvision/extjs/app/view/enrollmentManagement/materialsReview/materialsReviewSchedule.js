@@ -628,7 +628,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             handler: 'reStartReview',
                             width: 150
                         },
-                        {
+                        /*{
                             style: 'margin-left:10px',
                             xtype: 'button',
                             text: '临时导入批次数据',
@@ -638,7 +638,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             setType: 0,
                             handler: 'tmpImportData',
                             width: 150
-                        },
+                        },*/
                         {
                             xtype: 'checkboxfield',
                             fieldLabel: '评委可见统计表',
