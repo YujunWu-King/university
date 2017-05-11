@@ -4,6 +4,8 @@
 package com.tranzvision.gd.TZAuthBundle.service.impl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
@@ -294,7 +296,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 				isAnonymous = true;
 			}
 		}
-		
+
 		//用于控制是否将用户重定向到登录页的变量
 		Boolean logoutFlag = false;
 		
@@ -374,7 +376,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		{
 			logoutFlag = true;
 		}
-		
+
 		//判断是否需要根据免密cookie记录的信息进行自动登录
 		if(logoutFlag == false)
 		{
@@ -467,6 +469,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 	 * @param response
 	 */
 	public void autoLoginByOpenId(HttpServletRequest request, HttpServletResponse response){
+		//System.out.println("---enter login by openid---");
 		String tmpOpenID = "";
 		//会话是否有效
 		Boolean bool = gdObjectServiceImpl.isSessionValid(request);
@@ -521,7 +524,16 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 					    }
 					    
 					    if(!"".equals(appid)){
-					    	url = tzWeChartJSSDKSign.getOAuthCodeUrl(appid, url);
+					    	//url = tzWeChartJSSDKSign.getOAuthCodeUrl(appid, url);
+					    	
+					    	try {
+								url = URLEncoder.encode(url, "utf-8");
+							} catch (UnsupportedEncodingException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+					    	String ctxPath = request.getContextPath();
+					    	url = ctxPath + "/weChart/getCode?appid="+ appid + "&redirect_uri="+ url;
 						    try {
 								response.sendRedirect(url);
 								return;
@@ -592,9 +604,8 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 					loginOutUrl = loginOutUrl + "?OPENID="+ tmpOpenID;
 				}
 			}
-			
-			try
-			{
+			//System.out.println("---to login--->"+loginOutUrl);
+			try{
 				response.sendRedirect(loginOutUrl);
 			}
 			catch (Exception e)
