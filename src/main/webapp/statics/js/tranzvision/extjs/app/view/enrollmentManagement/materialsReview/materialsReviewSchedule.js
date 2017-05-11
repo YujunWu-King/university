@@ -581,7 +581,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             style: 'display:inline-block',
                             readOnly: true,
                             hideLabel: true,
-                            width: '40px'
+                            width: '60px'
                         },
                         {
                             margin: '8px',
@@ -626,6 +626,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             flagType: 'positive',
                             setType: 0,
                             handler: 'reStartReview',
+                            width: 150
+                        },
+                        {
+                            style: 'margin-left:10px',
+                            xtype: 'button',
+                            text: '临时导入批次数据',
+                            defaultColor: '',
+                            name: 'tmpImportData',
+                            flagType: 'positive',
+                            setType: 0,
+                            handler: 'tmpImportData',
                             width: 150
                         },
                         {

@@ -3397,5 +3397,10 @@
                 store.load({params: {start:0,limit:10,page:1}});
             }
         });
+    },
+    tmpImportData:function(btn){
+    	//临时方法，导入评审数据
+    	var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":{"type":"tmpImportData"}}';
+        Ext.tzLoad(tzParams, function (respData) {});
     }
 });
