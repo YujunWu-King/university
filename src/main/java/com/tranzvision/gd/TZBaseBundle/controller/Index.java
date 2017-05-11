@@ -233,12 +233,8 @@ public class Index {
 
 
 		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 begin*/
-		//tzWebsiteLoginServiceImpl.autoLoginByCookie(request, response);
+		tzWebsiteLoginServiceImpl.autoLoginByCookie(request, response);
 		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 end*/
-		
-		/*MBA报考服务系统手机版首页OPENID绑定登录，2017-05-10 -张浪添加-begin-*/
-		tzWebsiteLoginServiceImpl.autoLoginByOpenId(request, response);
-		/*MBA报考服务系统手机版首页OPENID绑定登录，2017-05-10 -张浪添加-end---*/
 		
 		// 操作类型;
 		String strOprType = "";

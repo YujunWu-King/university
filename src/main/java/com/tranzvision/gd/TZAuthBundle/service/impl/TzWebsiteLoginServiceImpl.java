@@ -432,6 +432,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		//如果满足将用户重定向到登录的条件，则将用户重定向到登录页
 		if(logoutFlag == true)
 		{
+			/* 如果cookie登录失败，根据OPENID绑定登录,张浪注释
 			//rootPath;
 			String ctxPath = request.getContextPath();
 			
@@ -453,6 +454,9 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			{
 				e.printStackTrace();
 			}
+			*/
+			
+			this.autoLoginByOpenId(request,response);
 		}
 	}
 	
@@ -475,7 +479,6 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 				isAnonymous = true;
 			}
 		}
-		
 		//用于控制是否将用户重定向到登录页的变量
 		Boolean logoutFlag = true;
 		
@@ -502,8 +505,8 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 					String appid = "";//微信公众号appid
 					String secret = "";
 				    try{
-				    	appid = getHardCodePoint.getHardCodePointVal("TZ_WX_CORPID");
-				    	secret = getHardCodePoint.getHardCodePointVal("TZ_WX_SECRET");
+				    	appid = getHardCodePoint.getHardCodePointVal("TZ_WX_APPID");
+				    	secret = getHardCodePoint.getHardCodePointVal("TZ_WX_APPSECRET");
 				    }catch(Exception e){
 				    	e.printStackTrace();
 				    }
@@ -543,7 +546,6 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 					tmpUserDlzh = sqlQuery.queryForObject(sql, new Object[] { tmpOpenID, orgId, siteId }, "String");
 	
 					if(tmpUserDlzh != null && !"".equals(tmpUserDlzh)){
-						System.out.println("登录账号====== "+tmpUserDlzh);
 						ArrayList<String> aryErrorMsg = new ArrayList<String>();
 	
 						sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? and TZ_JG_ID=?)";
