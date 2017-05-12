@@ -21,8 +21,11 @@ import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMappe
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTblKey;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsGzTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzPwExtTMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsGzTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsGzTblKey;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtT;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -48,6 +51,8 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 	private psTzClpsPwTblMapper psTzClpsPwTblMapper;
 	@Autowired
 	private PsTzClpsGzTblMapper psTzClpsGzTblMapper;
+	@Autowired
+	private PsTzPwExtTMapper psTzPwExtTMapper;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
@@ -592,31 +597,48 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				
 				if(!"".equals(mobile)) {
 					
-				} else {
-					mobile = getHardCodePoint.getHardCodePointVal("TZ_CLPS_PW_PSWD");
+					String password = DESUtil.encrypt(mobile, "TZGD_Tranzvision");
+		
+					Psoprdefn psoprdefn = new Psoprdefn();
+					psoprdefn = psoprdefnMapper.selectByPrimaryKey(String.valueOf(judgeId));
+				
+					if(psoprdefn==null) {
+						psoprdefn = new Psoprdefn();
+						psoprdefn.setOprid(String.valueOf(judgeId));
+						psoprdefn.setOperpswd(password);
+						psoprdefn.setAcctlock(Short.valueOf("0"));
+						psoprdefn.setLastupddttm(new Date());
+						psoprdefn.setLastupdoprid(currentOprid);
+						psoprdefnMapper.insert(psoprdefn);
+					} else {
+						psoprdefn.setOprid(String.valueOf(judgeId));
+						psoprdefn.setOperpswd(password);
+						psoprdefn.setLastupddttm(new Date());
+						psoprdefn.setLastupdoprid(currentOprid);
+						psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);	
+					}
+						
+		
+				
+					//评委初始密码表
+					PsTzPwExtTKey psTzPwExtTKey = new PsTzPwExtTKey();
+					psTzPwExtTKey.setTzJgId(currentOrgId);
+					psTzPwExtTKey.setOprid(String.valueOf(judgeId));
+					
+					PsTzPwExtT psTzPwExtT = psTzPwExtTMapper.selectByPrimaryKey(psTzPwExtTKey);
+					if(psTzPwExtT==null) {
+						psTzPwExtT = new PsTzPwExtT();
+						psTzPwExtT.setTzJgId(currentOrgId);
+						psTzPwExtT.setOprid(String.valueOf(judgeId));
+						psTzPwExtT.setTzCsPassword(mobile);
+						psTzPwExtTMapper.insert(psTzPwExtT);
+					} else {
+						psTzPwExtT.setTzJgId(currentOrgId);
+						psTzPwExtT.setOprid(String.valueOf(judgeId));
+						psTzPwExtT.setTzCsPassword(mobile);
+						psTzPwExtTMapper.updateByPrimaryKeySelective(psTzPwExtT);
+					}	
 				}
-				
-				String password = DESUtil.encrypt(mobile, "TZGD_Tranzvision");
-	
-				Psoprdefn psoprdefn = new Psoprdefn();
-				psoprdefn = psoprdefnMapper.selectByPrimaryKey(String.valueOf(judgeId));
-				
-				if(psoprdefn==null) {
-					psoprdefn = new Psoprdefn();
-					psoprdefn.setOprid(String.valueOf(judgeId));
-					psoprdefn.setOperpswd(password);
-					psoprdefn.setAcctlock(Short.valueOf("0"));
-					psoprdefn.setLastupddttm(new Date());
-					psoprdefn.setLastupdoprid(currentOprid);
-					psoprdefnMapper.insert(psoprdefn);
-				} else {
-					psoprdefn.setOprid(String.valueOf(judgeId));
-					psoprdefn.setOperpswd(password);
-					psoprdefn.setLastupddttm(new Date());
-					psoprdefn.setLastupdoprid(currentOprid);
-					psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);	
-				}
-				
 			}
 			
 		} catch(Exception e) {
@@ -757,7 +779,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			dataCellKeys.add(new String[] {"judgeName","评委姓名"});
 			dataCellKeys.add(new String[] {"judgeGroupDesc","评委组"});
 			dataCellKeys.add(new String[] {"judgeKsNum","需要评审考生人数"});
-			dataCellKeys.add(new String[] {"judgePassword","评委密码"});
+			dataCellKeys.add(new String[] {"judgeCsPassword","初始密码"});
 			
 			//生成数据
 			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
@@ -771,6 +793,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				String judgeGroupDesc = mapJudge.get("TZ_CLPS_GR_NAME") == null ? "" : mapJudge.get("TZ_CLPS_GR_NAME").toString();
 				String judgeKsNum = mapJudge.get("TZ_PYKS_XX") == null ? "" : mapJudge.get("TZ_PYKS_XX").toString();
 				String judgePasswordJm = mapJudge.get("OPERPSWD") == null ? "" : mapJudge.get("OPERPSWD").toString();
+			    String judgeCsPassword = mapJudge.get("TZ_CS_PASSWORD") == null ? "" : mapJudge.get("TZ_CS_PASSWORD").toString();
 				
 				String judgePassword = DESUtil.decrypt(judgePasswordJm, "TZGD_Tranzvision");
 				
@@ -779,7 +802,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				mapData.put("judgeName", judgeName);
 				mapData.put("judgeGroupDesc", judgeGroupDesc);
 				mapData.put("judgeKsNum", judgeKsNum);
-				mapData.put("judgePassword", judgePassword);
+				mapData.put("judgeCsPassword", judgeCsPassword);
 			
 				dataList.add(mapData);
 			}
