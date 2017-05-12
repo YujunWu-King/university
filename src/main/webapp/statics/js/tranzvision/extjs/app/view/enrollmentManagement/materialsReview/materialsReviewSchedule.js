@@ -17,7 +17,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     	'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewScheduleAppsStore'
     ],
     title: '材料评审进度管理',
-    bodyStyle: 'overflow-y:auto;overflow-x:hidden',
+    scrollable: true,
+    //bodyStyle: 'overflow-y:auto;overflow-x:hidden',
+    bodyStyle: 'overflow-y:auto;overflow-x:auto',
     constructor: function(classID, batchID) {
         this.classID = classID;
         this.batchID = batchID;
@@ -657,10 +659,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     xtype: 'tabpanel',
                     frame: true,
                     activeTab: 0,
+                    scrollable: true,
                     plain: false,
                     resizeTabs: true,
                     defaults: {
-                        autoScroll: false
+                        autoScroll: true
                     },
                     listeners: {
                         tabchange: function(tabPanel, newCard, oldCard) {
@@ -1244,7 +1247,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                			xtype : 'chart',
 	                                			id : 'columnChart' + id1,
 	                                			width : columnWidth,
-	                                			height : columnHeight,
+	                                			//height : columnHeight,
+	                                			height : 230,
 	                                			animate : true,// 使用动画
 	                                			store : graphDataStore,
 	                                			shadow : true,// 使用阴影
@@ -1355,7 +1359,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                		var lineChart = Ext.create('Ext.chart.Chart', {
 	                                			xtype : 'chart',
 	                                			style : 'background:#fff',
-	                                			height : lineHeigth,
+	                                			//height : lineHeigth,
+	                                			height : 440,
 	                                			// id: 'linechart',
 	                                			id : 'lineChart' + id2,
 	                                			width : lineWidth,

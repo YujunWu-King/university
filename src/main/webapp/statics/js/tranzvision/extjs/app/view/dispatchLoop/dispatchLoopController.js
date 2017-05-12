@@ -334,6 +334,9 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			var comView = this.getView();
 			Ext.tzSubmit(tzParams,function(responseData){
 				//关闭窗口
+				var contentPanel;
+				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+				contentPanel.child("dispatchLoopCon").store.reload();
 				comView.close();
 			},"",true,this);
 		}
@@ -352,7 +355,7 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		var formParams = form.getValues();
 		//组件信息标志
 		var actType = this.getView().actType;
-
+		console.log("actType======" + actType)
 
 		//年份处理
 		var yearForm = this.getView().down('tabpanel').down('form[name=yearForm]').getForm();

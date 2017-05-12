@@ -139,7 +139,8 @@
 					xtype : 'chart',
 					id : 'columnChart' + id1,
 					width : columnWidth,
-					height : columnHeight,
+					//height : columnHeight,
+					height : 230,
 					animate : true,// 使用动画
 					store : graphDataStore,
 					shadow : true,// 使用阴影
@@ -246,7 +247,8 @@
 				var lineChart = Ext.create('Ext.chart.Chart', {
 					xtype : 'chart',
 					style : 'background:#fff',
-					height : lineHeigth,
+					//height : lineHeigth,
+					height : 440,
 					// id: 'linechart',
 					id : 'lineChart' + id2,
 					width : lineWidth,
