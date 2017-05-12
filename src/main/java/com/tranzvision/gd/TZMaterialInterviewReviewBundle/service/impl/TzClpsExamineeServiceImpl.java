@@ -480,6 +480,15 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 					position = mapExaminee.get("TZ_POSITION") == null ? "" : mapExaminee.get("TZ_POSITION").toString();
 					selfEmployment = mapExaminee.get("TZ_ZZCY_NAME") == null ? "" : mapExaminee.get("TZ_ZZCY_NAME").toString();
 
+					//报考方向拼接批次
+					String strBatchSQL = "SELECT TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";
+					String strBatchName = sqlQuery.queryForObject(strBatchSQL, new Object[]{classId, batchId}, "String");
+					if(strBatchName==null||"".equals(strBatchName)){
+						/*doNothing*/
+					}else{
+						className = className + " " + strBatchName;
+					}
+					
 					// 评委数据
 					sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialPwpyInfo");
 					List<Map<String, Object>> listJudge = sqlQuery.queryForList(sql, new Object[] { classId, batchId, appinsId });
@@ -670,7 +679,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 			String tzStoreParams = jacksonUtil.getString("tzStoreParams");
 			String totalCount = jacksonUtil.getString("totalCount");
 
-			int numStart = 1;
+			int numStart = 0;
 			int numLimit = Integer.valueOf(totalCount);
 			// 排序字段
 			String[][] orderByArr = new String[][] {};
@@ -712,6 +721,14 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 						position = mapExaminee.get("TZ_POSITION") == null ? "" : mapExaminee.get("TZ_POSITION").toString();
 						selfEmployment = mapExaminee.get("TZ_ZZCY_NAME") == null ? "" : mapExaminee.get("TZ_ZZCY_NAME").toString();
 
+						//报考方向拼接批次
+						String strBatchSQL = "SELECT TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";
+						String strBatchName = sqlQuery.queryForObject(strBatchSQL, new Object[]{classId, batchId}, "String");
+						if(strBatchName==null||"".equals(strBatchName)){
+							/*doNothing*/
+						}else{
+							className = className + " " + strBatchName;
+						}
 						// 评委数据
 						sql = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialPwpyInfo");
 						List<Map<String, Object>> listJudge = sqlQuery.queryForList(sql, new Object[] { classId, batchId, appinsId });
