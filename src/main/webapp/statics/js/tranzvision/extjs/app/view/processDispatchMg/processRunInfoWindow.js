@@ -191,7 +191,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processRunInfoWindow', {
             }, {
                 xtype: 'displayfield',
                 value: '查看进程运行日志',
-                style: 'margin-top:50px;margin-left:20px',
+                style: 'margin-top:50px;margin-left:20px;cursor: pointer;color: blue;text-decoration: underline;',
                 width: 100,
                 fieldStyle: 'color:blue;',
                 listeners: {
