@@ -243,7 +243,7 @@ public class tzOnlineAppViewServiceImpl {
 			switch(strXxxCclx){
 			case "S":
 				sqlGetValue = "SELECT TZ_APP_S_TEXT,TZ_APP_L_TEXT FROM PS_TZ_APP_CC_VW2 WHERE TZ_APP_INS_ID = ? AND TZ_XXX_NO = ? AND TZ_COM_LMC = ?";
-				Map<String, Object> MapXxxValue = sqlQuery.queryForMap(sql, new Object[] { numAppInsId,strXxxBh, strComLmc });
+				Map<String, Object> MapXxxValue = sqlQuery.queryForMap(sqlGetValue, new Object[] { numAppInsId,strXxxBh, strComLmc });
 				if(MapXxxValue!=null){
 					strAppXxxValueS = MapXxxValue.get("TZ_APP_S_TEXT") == null ? "" : String.valueOf(MapXxxValue.get("TZ_APP_S_TEXT"));
 					strAppXxxValueL = MapXxxValue.get("TZ_APP_L_TEXT") == null ? "" : String.valueOf(MapXxxValue.get("TZ_APP_L_TEXT"));
