@@ -30,8 +30,9 @@ public class TZAutomaticTagIniScrnServiceImpl extends TZAutomaticTagServiceImpl 
 		try {
 			//int fst_pm;
 			//int lst_pm;
-			String zdbqIniScrnIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_INISCRN_ID'";
-			String zdbqIniScrnId = SqlQuery.queryForObject(zdbqIniScrnIdSql, "String");
+//			String zdbqIniScrnIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_INISCRN_ID'";
+//			String zdbqIniScrnId = SqlQuery.queryForObject(zdbqIniScrnIdSql, "String");
+			String zdbqIniScrnId =labelId;
 			if(zdbqIniScrnId != null && !"".equals(zdbqIniScrnId)){
 				//删除该班级批次下人员的评审后成绩排名后10%,重新计算;
 				SqlQuery.update("delete from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_ZDBQ_ID=?",new Object[]{classId,batchId,zdbqIniScrnId});

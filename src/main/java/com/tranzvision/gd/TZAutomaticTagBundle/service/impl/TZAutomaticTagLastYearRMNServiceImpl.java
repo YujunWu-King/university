@@ -33,8 +33,9 @@ public class TZAutomaticTagLastYearRMNServiceImpl extends TZAutomaticTagServiceI
 	@Override
 	public boolean automaticTagList(String classId, String batchId, String labelId) {
 		try {
-			String zdbqLyrmnIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_LYRMN_ID'";
-			String zdbqLyrmnId = SqlQuery.queryForObject(zdbqLyrmnIdSql, "String");
+//			String zdbqLyrmnIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_LYRMN_ID'";
+//			String zdbqLyrmnId = SqlQuery.queryForObject(zdbqLyrmnIdSql, "String");
+			String zdbqLyrmnId = labelId;
 			String zdbqLyrmnNameSql = "SELECT TZ_BIAOQZ_NAME FROM  PS_TZ_BIAOQZ_BQ_T WHERE TZ_BIAOQ_ID=?";
 			String zdbqLyrmnName = SqlQuery.queryForObject(zdbqLyrmnNameSql,new Object[] { zdbqLyrmnId },  "String");
 			if(zdbqLyrmnId != null && !"".equals(zdbqLyrmnId)){
