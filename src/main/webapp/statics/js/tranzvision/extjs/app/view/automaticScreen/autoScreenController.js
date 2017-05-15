@@ -639,8 +639,6 @@
 			searchSql = panel.getedSQL;
 		}
 		
-		console.log(searchSql);
-		
 		var comParamsObj = {
 			ComID: 'TZ_AUTO_SCREEN_COM',
 			PageID: 'TZ_AUTO_SCREEN_STD',
@@ -657,6 +655,119 @@
 		Ext.tzSubmit(tzParams,function(respDate){
 			grid.getStore().reload();
 		},"设置成功",true,this);
+	},
+	
+	
+	
+	
+	//导出选中考生的自动初筛结果
+	exportSelectedZdcsResult: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var grid = panel.down('grid');
+		var itemColumns = panel.itemColumns;
+		
+		var selList = grid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要导出的考生记录");
+			return;
+		}
+		
+		var appInsIds = [];
+	    for(var i=0;i<checkLen;i++){
+	    	appInsIds.push(selList[i].data.appId);
+		}
+	    var comParamsObj = {
+	    	ComID: "TZ_AUTO_SCREEN_COM",
+			PageID: "TZ_AUTO_SCREEN_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				itemColumns: itemColumns,
+				appInsIds: appInsIds
+			}
+	    };
+	   
+	    var className = 'KitchenSink.view.automaticScreen.export.exportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+       
+        win.show();
+	},
+	
+	//导出搜索结果考生的自动初筛结果
+	exportSearchZdcsResult: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		var itemColumns = panel.itemColumns;
+		
+		//构造搜索sql
+		if((typeof panel.getedSQL) == "undefined"){
+			searchSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_CS_STU_VW WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_BATCH_ID='"+ batchId +"'";
+		}else{
+			searchSql = panel.getedSQL;
+		}
+		
+		var comParamsObj = {
+			ComID: "TZ_AUTO_SCREEN_COM",
+			PageID: "TZ_AUTO_SCREEN_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				itemColumns: itemColumns,
+				searchSql: searchSql
+			}
+		};
+		
+		
+		var className = 'KitchenSink.view.automaticScreen.export.exportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+        
+        win.show();
+	},
+	
+	//查看并下载导出结果
+	downloadExportFile: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		
+		var className = 'KitchenSink.view.automaticScreen.export.exportExcelWindow';
+    	
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	type: 'download'
+        });
+        
+        var tabPanel = win.lookupReference("packageTabPanel");
+        tabPanel.setActiveTab(1);
+        
+        win.show();
 	}
+	
 	
 });
