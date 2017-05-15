@@ -78,7 +78,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 
 	@Autowired
-	private tzOnlineAppViewServiceImpl tzOnlineAppViewServiceImpl;
+	private tzOnlineAppHisServiceImpl tzOnlineAppHisServiceImpl;
 	@Autowired
 	private TemplateEngine templateEngine;
 	@Autowired
@@ -340,7 +340,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						if (strTplId.equals(TZ_APP_M_TPL_ID)) {
 							strTplId = strAttachedTplId;
 							// 根据报名表实例和附属模版编号去获得报名表Json数据
-							strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
+							strInsData = tzOnlineAppHisServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 							strIsAdmin = "Y";
 							strAppFormReadOnly = "Y";
 						}
