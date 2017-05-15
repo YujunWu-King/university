@@ -664,6 +664,8 @@
 	exportSelectedZdcsResult: function(btn){
 		var panel = btn.findParentByType('autoScreen');
 		var grid = panel.down('grid');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
 		var itemColumns = panel.itemColumns;
 		
 		var selList = grid.getSelectionModel().getSelection();
