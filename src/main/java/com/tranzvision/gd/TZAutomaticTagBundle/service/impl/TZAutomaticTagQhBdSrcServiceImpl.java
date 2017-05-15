@@ -33,8 +33,9 @@ public class TZAutomaticTagQhBdSrcServiceImpl extends TZAutomaticTagServiceImpl 
 	public boolean automaticTagList(String classId, String batchId, String labelId) {
 		try {
 			// 标签id：清华（北大）生源-本科教育经历是清华或北大，且有学士学位
-			String zdbqQBSrcIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_QBSRC_ID'";
-			String zdbqQBSrcId = SqlQuery.queryForObject(zdbqQBSrcIdSql, "String");
+//			String zdbqQBSrcIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_QBSRC_ID'";
+//			String zdbqQBSrcId = SqlQuery.queryForObject(zdbqQBSrcIdSql, "String");
+			String zdbqQBSrcId = labelId;
 			if(zdbqQBSrcId != null && !"".equals(zdbqQBSrcId)){
 				//删除该班级批次下人员的清华（北大）生源,重新计算;
 				SqlQuery.update("delete from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_ZDBQ_ID=?",new Object[]{classId,batchId,zdbqQBSrcId});

@@ -188,7 +188,7 @@
 			processIns = respData.processIns;
 		});
 		
-		if(processIns>0 && (status=="RUNNING" || status=="STARTED" || status=="QUENED")){
+		if(processIns>0 && (status=="RUNNING" || status=="STARTED" || status=="QUENED" || status=="SCHEDULED")){
 			Ext.tzBatchProcessDetails({
 				//进程实例ID
 				processIns: processIns,
