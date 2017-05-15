@@ -30,7 +30,7 @@ import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppEngineImpl;
-import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppViewServiceImpl;
+import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppHisServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -65,9 +65,10 @@ public class TzRefMaterialController {
 	private GdObjectServiceImpl gdObjectServiceImpl;
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
-
+	
 	@Autowired
-	private tzOnlineAppViewServiceImpl tzOnlineAppViewServiceImpl;
+	private tzOnlineAppHisServiceImpl tzOnlineAppHisServiceImpl;
+	
 	@Autowired
 	private TemplateEngine templateEngine;
 
@@ -300,7 +301,7 @@ public class TzRefMaterialController {
 						if (strTplId.equals(TZ_APP_M_TPL_ID)) {
 							strTplId = strAttachedTplId;
 							// 根据报名表实例和附属模版编号去获得报名表Json数据
-							strInsData = tzOnlineAppViewServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
+							strInsData = tzOnlineAppHisServiceImpl.getHisAppInfoJson(numAppInsId, strTplId);
 							strIsAdmin = "Y";
 							strAppFormReadOnly = "Y";
 						}
