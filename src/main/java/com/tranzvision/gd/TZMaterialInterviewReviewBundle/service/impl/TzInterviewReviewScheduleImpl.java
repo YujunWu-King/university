@@ -1292,8 +1292,8 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 						return strResponse;
 					}else{
 						//参考原系统，提交数据
-						String strUpdateSql = "UPDATE PS_TZ_MSPWPSJL_TBL SET TZ_SUBMIT_YN='Y' WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID=?";
-						sqlQuery.update(strUpdateSql, new Object[] { strClassID, strBatchID, strPwOprID });
+						//String strUpdateSql = "UPDATE PS_TZ_MSPWPSJL_TBL SET TZ_SUBMIT_YN='Y' WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID=?";
+						//sqlQuery.update(strUpdateSql, new Object[] { strClassID, strBatchID, strPwOprID });
 					}
 				}
 			}
