@@ -33,8 +33,9 @@ public class TZAutomaticTagGMATServiceImpl extends TZAutomaticTagServiceImpl {
 	public boolean automaticTagList(String classId, String batchId, String labelId) {
 		try {
 			//GMAT720+ 标签id hardcode点;
-			String zdbqGMATIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_GMAT_ID'";
-			String zdbqGMATId = SqlQuery.queryForObject(zdbqGMATIdSql, "String");
+//			String zdbqGMATIdSql = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_ZDBQ_GMAT_ID'";
+//			String zdbqGMATId = SqlQuery.queryForObject(zdbqGMATIdSql, "String");
+			String zdbqGMATId =labelId;
 			if(zdbqGMATId != null && !"".equals(zdbqGMATId)){
 				//删除该班级批次下人员的GMAT720+，重新计算 ;
 				SqlQuery.update("delete from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_ZDBQ_ID=?",new Object[]{classId,batchId,zdbqGMATId});
