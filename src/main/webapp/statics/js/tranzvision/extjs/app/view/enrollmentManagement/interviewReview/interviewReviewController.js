@@ -1266,7 +1266,6 @@
     },*/
     submitData : function(btn){
     	var judgeGrid = btn.findParentByType("grid");
-    	var store = judgeGrid.getStore();
         var selection = judgeGrid.getSelectionModel().getSelection();
         if(selection.length == 0){
             Ext.Msg.alert("提示","请选择要操作的记录");
@@ -1292,7 +1291,6 @@
                         index = btn.findParentByType("grid").getStore().indexOf(select[x]),
                         record = btn.findParentByType("grid").getStore().getAt(index);
                     record.set('submitYN','Y');
-                    /*store.load();*/
                 }
         	}else{
         		Ext.Msg.alert("提示","在您选择提交数据的评委中，发现有未提交考生数据。");
@@ -1584,9 +1582,8 @@
         JSONData.oprID = record.data.oprID;        
         var tzStoreParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_APPJUG_STD","OperateType":"QF","comParams":'+Ext.JSON.encode(JSONData)+'}}';
         Ext.tzLoad(tzStoreParams,function(respData){
-            var score = typeof respData.root[0].score === 'object'?respData.root[0].score:Ext.JSON.decode(respData.root[0].score)            		
+            var score = typeof respData.root[0].score === 'object'?respData.root[0].score:Ext.JSON.decode(respData.root[0].score)
             cmp = new ViewClass(score);
-            console.log(score);
             var fields = [{name: 'classID'},
                 {name: 'batchID'},
                 {name: 'judgeRealName'},
@@ -2289,7 +2286,6 @@
     	
     	//先计算标准评分分布（调用于得实的方法）;
     	var bzfbtmp = this.calcuScoreDist(btn);
-    	
     	// 柱状图参数
     	var coluObj = [];
     	// 曲线图参数

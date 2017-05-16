@@ -3,6 +3,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     alias: 'controller.materialsReviewExamineeController',
     //材料评审考生名单-查询
     queryExaminee:function(btn) {
+    	var panel = btn.findParentByType("materialsReviewExaminee");
         var form = btn.findParentByType("form").getForm();
         var classId = form.findField("classId").getValue();
         var batchId = form.findField("batchId").getValue();
@@ -17,6 +18,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
                 store.tzStoreParams = seachCfg;
                 store.load();
+                
+                var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD","OperateType":"getSearchSql","comParams":'+seachCfg+'}';
+				Ext.tzLoad(tzParams,function(responseData){
+					var getedSQL = responseData.searchSql;
+					panel.getedSQL = getedSQL;
+				});
             }
         });
     },
@@ -712,6 +719,119 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         //提交参数
         var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD","OperateType":"U","comParams":{' + comParams + '}}';
         return tzParams;
+    },
+    
+    
+    /**
+     * 导出选中的考生评议数据
+     */
+    exportSelectedExcel: function(btn){
+    	var panel = btn.findParentByType('materialsReviewExaminee');
+		var grid = panel.down('grid');
+		var classId = panel.classId;
+		var batchId = panel.batchID;
+		
+		var selList = grid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要导出的考生记录");
+			return;
+		}
+		
+		var appInsIds = [];
+	    for(var i=0;i<checkLen;i++){
+	    	appInsIds.push(selList[i].data.appinsId);
+		}
+	    var comParamsObj = {
+	    	ComID: "TZ_REVIEW_CL_COM",
+			PageID: "TZ_CLPS_KS_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				appInsIds: appInsIds
+			}
+	    };
+	   
+	    var className = 'KitchenSink.view.enrollmentManagement.materialsReview.export.exportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+       
+        win.show();
+    },
+    
+    /**
+     * 导出搜索结果中考生的评议数据
+     */
+    exportSearchExcel: function(btn){
+    	var panel = btn.findParentByType('materialsReviewExaminee');
+		var classId = panel.classId;
+		var batchId = panel.batchID;
+		
+		//构造搜索sql
+		if((typeof panel.getedSQL) == "undefined"){
+			searchSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_CLPS_KS_VW WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_APPLY_PC_ID='"+ batchId +"'";
+		}else{
+			searchSql = panel.getedSQL;
+		}
+		
+		var comParamsObj = {
+			ComID: "TZ_REVIEW_CL_COM",
+			PageID: "TZ_CLPS_KS_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				searchSql: searchSql
+			}
+		};
+		
+		
+		var className = 'KitchenSink.view.enrollmentManagement.materialsReview.export.exportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+        
+        win.show();
+    },
+    
+    /**
+     * 下载考生评议数据导出结果
+     */
+    downloadHisExcel: function(btn){
+    	var panel = btn.findParentByType('materialsReviewExaminee');
+		var classId = panel.classId;
+		var batchId = panel.batchID;
+		
+		var className = 'KitchenSink.view.enrollmentManagement.materialsReview.export.exportExcelWindow';
+    	
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	type: 'download'
+        });
+        
+        var tabPanel = win.lookupReference("packageTabPanel");
+        tabPanel.setActiveTab(1);
+        
+        win.show();
     }
-
 });
