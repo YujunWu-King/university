@@ -80,7 +80,7 @@
                         },
                         items: [
                             {
-                                title: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.bmrInfoExport","报名人导出"),
+                                title: "考生评议数据导出",
                                 xtype: 'form',
                                 frame:false,
                                 minHeight:150,
@@ -90,7 +90,7 @@
                                 hidden: me.hiddenPage0,
                                 bodyPadding: 10,
                                 buttons: [{
-                                        text:Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.close","关闭"),
+                                        text: "关闭",
                                         iconCls:"close",
                                         handler: function(btn){
                                     		var win = btn.findParentByType('exportExcelWindow');
@@ -101,7 +101,7 @@
                                 items: [
                                     {
                                         xtype: 'label',
-                                        text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.inputPackageName","请输入导出文件名"),
+                                        text: "请输入导出文件名",
                                         style:{
                                         	marginTop: '10px',
                                         	marginBottom: '5px',
@@ -121,7 +121,7 @@
                                             xtype:"button",
                                             width:120,
                                             style:'margin-left:8px',
-                                            text:Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.ensurePackage","确认导出"),
+                                            text: "确认导出",
                                             labelAlign: 'right',
                                             buttonAlign: 'left',
                                             columnWidth:.2,
@@ -131,7 +131,7 @@
                                 ]
                             },
                             {
-                                title: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.packageResult","报名人导出结果"),
+                                title: "考生评议数据导出结果",
                                 xtype: 'grid',
                                 autoHeight: true,
                                 frame:false,
@@ -147,13 +147,13 @@
                                     xtype: "toolbar",
                                     items: [
                                         {
-                                        	text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.query","查询"),  
+                                        	text: "查询",  
                                         	iconCls: "query",
                                         	handler:"exportQuery"		
                                         },
                                         '-',
                                         {
-                                        	text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.delete","删除"),  
+                                        	text: "删除",  
                                         	iconCls: "remove",
                                         	handler:"exportDelete"
                                         }
@@ -165,12 +165,12 @@
                                     items:['->',
                                         {
                                     		minWidth:80,
-                                    		text:Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.save","保存"),
+                                    		text: "保存",
                                     		iconCls:"save",
                                     		handler:'exportGridSave'
                                         },{
                                         	minWidth:80,
-                                        	text:Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.close","关闭"),
+                                        	text: "关闭",
                                         	iconCls:"close",
                                         	handler: function(btn){
                                         		var win = btn.findParentByType('exportExcelWindow');
@@ -180,29 +180,29 @@
                                 }],
                                 
                                 columns: [
-                                    {text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.fileName", "文件名称"),
+                                    {text: "文件名称",
                                         dataIndex: 'fileName',
                                         minWidth:120,
                                         flex:1
                                     },
                                     {
-                                        text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.czPerName", "操作人"),
+                                        text: "操作人",
                                         dataIndex: 'czPerName',
                                         width: 100
                                     },
                                     {
-                                        text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.bgTime", "导出时间"),
+                                        text: "导出时间",
                                         dataIndex: 'bgTime',
                                         width: 160
                                     },
                                     {
-                                        text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.procStaDescr", "状态"),
+                                        text: "状态",
                                         dataIndex: 'procStaDescr',
                                         width: 100
                                     },
                                     {
                                         xtype:'actioncolumn',
-                                        header:Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.download", "下载"),
+                                        header: "下载",
                                         align:'center',
                                         width:60,
                                         items:[{
