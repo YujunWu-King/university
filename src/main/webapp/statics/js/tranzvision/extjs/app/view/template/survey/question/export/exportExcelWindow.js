@@ -16,7 +16,7 @@
     maxHeight: 400,
     resizable:false,
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    y:80,
+    //y:80,
     
     constructor: function(config){
     	this.wjId = config.wjId;
