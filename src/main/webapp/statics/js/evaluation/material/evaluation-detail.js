@@ -500,7 +500,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 功能：创建非叶子节点的实例对象
 	* 参数：
 	*		field_label		节点名称
-	*		field_level		所处层级，整型，0,1,2,3,4...
+	*		field_level		所处层级，整型，1,2,3,4...
 	*		field_value		节点的分值
 	*		field_name		文本输入框的名称
 	*		field_parent_id	父节点的name值
@@ -543,7 +543,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 功能：创建（打分）叶子节点的实例对象，生成 标准说明、参考问题、参考资料 的TIP数组
 	* 参数：
 	*		field_label		节点名称
-	*		field_level		所处层级，整型，0,1,2,3,4...
+	*		field_level		所处层级，整型，1,2,3,4...
 	*		field_value		节点的分值
 	*		field_name		文本输入框的名称
 	*		point_begin		分值下限
@@ -672,7 +672,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 功能：创建（文本类）叶子节点的实例对象，生成 标准说明、参考问题 的TIP数组
 	* 参数：
 	*		field_label		节点名称
-	*		field_level		所处层级，整型，0,1,2,3,4...
+	*		field_level		所处层级，整型，1,2,3,4...
 	*		field_value		节点的值
 	*		field_name		文本输入框的名称
 	*		bzsm_content	标准说明内容
@@ -917,7 +917,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		} else {
 			var ckzl_content_url = ContextPath + "/refMaterial/onload?classId="+tmpClassId+"&batchId="+tmpBatchId+"&appInsId="+bmb_id+"&model="+scoreModel+"&cjxId="+cjxId;
 			//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
-			var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='568'></iframe>";
+			var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='490'></iframe>";
 			var ary3 = new Array(pointckzl_id, ckzl_content, "参考资料");
 			allLeavesNodeDataCkzl[tmpBatchId].push(ary3);
 		}
@@ -1661,7 +1661,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				} else {
 					var ckzl_content_url = ContextPath + "/refMaterial/onload?classId="+tmpClassId+"&batchId="+tmpBatchId+"&appInsId="+bmb_id+"&model="+scoreModel+"&cjxId="+cjxId;
 					//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
-					var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='568'></iframe>";
+					var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='490'></iframe>";
 					var ary3 = new Array(pointckzl_id, ckzl_content, "参考资料");
 					allLeavesNodeDataCkzl[tmpBatchId].push(ary3);
 				}

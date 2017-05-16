@@ -350,7 +350,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			
 			
 			/*当前考生基本信息*/
-			String sqlBasic = "SELECT A.TZ_CLASS_NAME,YEAR(A.TZ_START_DT) TZ_START_YEAR,A.TZ_JG_ID,A.TZ_ZLPS_SCOR_MD_ID,A.TZ_MSCJ_SCOR_MD_ID,A.TZ_APP_MODAL_ID,C.TZ_APP_FORM_STA,B.OPRID,D.TZ_REALNAME,E.TZ_MSSQH,F.TZ_BATCH_NAME";
+			String sqlBasic = "SELECT A.TZ_CLASS_NAME,YEAR(A.TZ_START_DT) TZ_START_YEAR,A.TZ_JG_ID,A.TZ_PS_APP_MODAL_ID,A.TZ_ZLPS_SCOR_MD_ID,A.TZ_MSCJ_SCOR_MD_ID,A.TZ_APP_MODAL_ID,C.TZ_APP_FORM_STA,B.OPRID,D.TZ_REALNAME,E.TZ_MSSQH,F.TZ_BATCH_NAME";
 			sqlBasic = sqlBasic + ",(SELECT G.TREE_NAME FROM PS_TZ_RS_MODAL_TBL G WHERE G.TZ_JG_ID=A.TZ_JG_ID AND G.TZ_SCORE_MODAL_ID=A.TZ_ZLPS_SCOR_MD_ID) TREE_NAME_MATERIAL";
 			sqlBasic = sqlBasic + ",(SELECT G.TREE_NAME FROM PS_TZ_RS_MODAL_TBL G WHERE G.TZ_JG_ID=A.TZ_JG_ID AND G.TZ_SCORE_MODAL_ID=A.TZ_MSCJ_SCOR_MD_ID) TREE_NAME,G.TZ_PRJ_NAME";
 			sqlBasic = sqlBasic + " FROM PS_TZ_REG_USER_T E,PS_TZ_AQ_YHXX_TBL D,PS_TZ_APP_INS_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CLS_BATCH_T F,PS_TZ_CLASS_INF_T A,PS_TZ_PRJ_INF_T G";
@@ -361,6 +361,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			if(mapRootBasic == null) {
 				mapRet.put("messageCode", "1");
 				mapRet.put("message", "没有考生信息");
+				strRtn = jacksonUtil.Map2json(mapRet);
 				return strRtn;
 			}
 			
@@ -371,6 +372,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			String name = mapRootBasic.get("TZ_REALNAME") == null ? "" : mapRootBasic.get("TZ_REALNAME").toString();
 			String interviewApplyId = mapRootBasic.get("TZ_MSSQH") == null ? "" : mapRootBasic.get("TZ_MSSQH").toString();
 			String jgId = mapRootBasic.get("TZ_JG_ID") == null ? "" : mapRootBasic.get("TZ_JG_ID").toString();
+			String psBmbTplId = mapRootBasic.get("TZ_PS_APP_MODAL_ID") == null ? "" : mapRootBasic.get("TZ_PS_APP_MODAL_ID").toString();
 			String scoreModelIdMaterial = mapRootBasic.get("TZ_ZLPS_SCOR_MD_ID") == null ? "" : mapRootBasic.get("TZ_ZLPS_SCOR_MD_ID").toString();
 			String scoreTreeMaterial = mapRootBasic.get("TREE_NAME_MATERIAL") == null ? "" : mapRootBasic.get("TREE_NAME_MATERIAL").toString();
 			String scoreModelId = mapRootBasic.get("TZ_MSCJ_SCOR_MD_ID") == null ? "" : mapRootBasic.get("TZ_MSCJ_SCOR_MD_ID").toString();
@@ -385,6 +387,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			mapRet.put("bmbId", bmbId);
 			mapRet.put("name", name);
 			mapRet.put("interviewApplyId", interviewApplyId);
+			mapRet.put("psBmbTplId", "psBmbTplId");
 
 			
 			//考生标签：显示自动初筛形成的标签&管理员后台手工添加的标签，负面清单标签不显示
@@ -502,7 +505,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			/*成绩项*/
 			ArrayList<Map<String, Object>> scoreItemJson = new ArrayList<Map<String,Object>>();
 			
-			String sqlScore = "SELECT A.TREE_NODE,A.PARENT_NODE_NAME,B.DESCR,B.TZ_SCORE_ITEM_TYPE,(SELECT 'Y' FROM PSTREENODE C WHERE C.TREE_NAME=A.TREE_NAME AND C.TREE_NODE_NUM>A.TREE_NODE_NUM AND C.TREE_NODE_NUM_END<A.TREE_NODE_NUM_END  LIMIT 1) TZ_NO_LEAF,A.TREE_LEVEL_NUM,B.TZ_SCORE_LIMITED,B.TZ_SCORE_LIMITED2,B.TZ_SCORE_PY_ZSLIM,B.TZ_SCORE_PY_ZSLIM0,B.TZ_SCORE_ITEM_DFSM,B.TZ_SCORE_ITEM_CKWT,B.TZ_SCORE_ITEM_MSFF";
+			String sqlScore = "SELECT A.TREE_NODE,A.PARENT_NODE_NAME,B.DESCR,B.TZ_SCORE_ITEM_TYPE,(SELECT 'Y' FROM PSTREENODE C WHERE C.TREE_NAME=A.TREE_NAME AND C.TREE_NODE_NUM>A.TREE_NODE_NUM AND C.TREE_NODE_NUM_END<A.TREE_NODE_NUM_END  LIMIT 1) TZ_NO_LEAF,A.TREE_LEVEL_NUM,B.TZ_SCORE_LIMITED,B.TZ_SCORE_LIMITED2,B.TZ_SCORE_PY_ZSLIM,B.TZ_SCORE_PY_ZSLIM0,B.TZ_SCORE_ITEM_DFSM,B.TZ_SCORE_ITEM_CKWT,B.TZ_SCORE_ITEM_MSFF,B.TZ_SCORE_CKZL";
 			sqlScore = sqlScore + " FROM PSTREENODE A,PS_TZ_MODAL_DT_TBL B";
 			sqlScore = sqlScore + " WHERE A.TREE_NAME=B.TREE_NAME AND A.TREE_NODE=B.TZ_SCORE_ITEM_ID AND A.TREE_NAME=?";
 			sqlScore = sqlScore + " ORDER BY A.TREE_NODE_NUM,A.TREE_NODE_NUM_END DESC";
@@ -525,16 +528,19 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				String scoreItemCommentUpper = mapScore.get("TZ_SCORE_PY_ZSLIM") == null ? "" : mapScore.get("TZ_SCORE_PY_ZSLIM").toString();
 				String scoreItemCommentLower = mapScore.get("TZ_SCORE_PY_ZSLIM0") == null ? "" : mapScore.get("TZ_SCORE_PY_ZSLIM0").toString();
 				String scoreItemComment = "";
+				String scoreItemXlkId = "";
 				String scoreItemDfsm = mapScore.get("TZ_SCORE_ITEM_DFSM") == null ? "" : mapScore.get("TZ_SCORE_ITEM_DFSM").toString();
 				String scoreItemCkwt = mapScore.get("TZ_SCORE_ITEM_CKWT") == null ? "" : mapScore.get("TZ_SCORE_ITEM_CKWT").toString();
 				String scoreItemMsff = mapScore.get("TZ_SCORE_ITEM_MSFF") == null ? "" : mapScore.get("TZ_SCORE_ITEM_MSFF").toString();
+				String scoreItemCkzl = mapScore.get("TZ_SCORE_CKZL") == null ? "" : mapScore.get("TZ_SCORE_CKZL").toString();//参考资料
 				
-				/*查询成绩项分值和评语值*/
-				String sqlScoreValue = "SELECT TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
+				/*查询成绩项分值、评语值、下拉框值*/
+				String sqlScoreValue = "SELECT TZ_CJX_XLK_XXBH,TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
 				Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemId});
 				if(mapScoreValue==null) {
 					
 				} else {
+					scoreItemXlkId = mapScoreValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapScoreValue.get("TZ_CJX_XLK_XXBH").toString();
 					scoreItemValue = mapScoreValue.get("TZ_SCORE_NUM") == null ? "" : mapScoreValue.get("TZ_SCORE_NUM").toString();
 					scoreItemComment = mapScoreValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapScoreValue.get("TZ_SCORE_PY_VALUE").toString();
 				}
@@ -578,10 +584,13 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				mapScoreJson.put("itemCommentUpperLimit", scoreItemCommentUpper);
 				mapScoreJson.put("itemCommentLowerLimit", scoreItemCommentLower);
 				mapScoreJson.put("itemComment", scoreItemComment);
+				mapScoreJson.put("itemXlkId", scoreItemXlkId);
 				mapScoreJson.put("itemOptions", optionListJson);
 				mapScoreJson.put("itemDfsm", scoreItemDfsm);
 				mapScoreJson.put("itemCkwt", scoreItemCkwt);
 				mapScoreJson.put("itemMsff", scoreItemMsff);
+				mapScoreJson.put("itemCkzl", scoreItemCkzl);
+				mapScoreJson.put("scoreModelId", scoreModelId);
 				
 				scoreItemJson.add(mapScoreJson);
 			}
@@ -591,8 +600,8 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			//左侧考生列表header
 			Map<String, Object> mapHeader = new HashMap<String,Object>();
 			mapHeader.put("col01", "总分");
-			mapHeader.put("ps_ksh_id", "面试申请号");
-			mapHeader.put("ps_ksh_ppm", "排名");
+			mapHeader.put("ps_msh_id", "面试申请号");
+			mapHeader.put("ps_ksh_cpm", "排名");
 			mapHeader.put("ps_ksh_xh", "面试顺序");
 			mapHeader.put("ps_ksh_xm", "姓名");
 			
@@ -606,6 +615,8 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			e.printStackTrace();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
+			mapRet.put("messageCode", "1");
+			mapRet.put("message", e.toString());
 		}
 		
 		strRtn = jacksonUtil.Map2json(mapRet);
@@ -642,15 +653,15 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			} else {
 				List<Map<String, Object>> searchList = new ArrayList<>();
 				Integer count = 0;
-				String sql = "SELECT A.OPRID,A.TZ_APP_INS_ID,D.TZ_MSSQH,C.TZ_REALNAME FROM PS_TZ_REG_USER_T D,PS_TZ_AQ_YHXX_V C,PS_TZ_FORM_WRK_T A,PS_TZ_MSPS_KSH_TBL B";
-				sql = sql + " WHERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.OPRID=C.TZ_DLZH_ID AND A.OPRID=D.OPRID AND B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=?";
+				String sql = "SELECT A.OPRID,A.TZ_APP_INS_ID,C.TZ_MSH_ID,C.TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL C,PS_TZ_FORM_WRK_T A,PS_TZ_MSPS_KSH_TBL B";
+				sql = sql + " WHERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.OPRID=C.OPRID AND B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=?";
 				
 				if(!"".equals(searchMsid) && !"".equals(searchName)){
-					sql = sql + " AND D.TZ_MSSQH=? AND C.TZ_REALNAME=?";
+					sql = sql + " AND C.TZ_MSH_ID=? AND C.TZ_REALNAME=?";
 					searchList = sqlQuery.queryForList(sql, new Object[]{classId,applyBatchId,searchMsid,searchName});
 				} else {
 					if(!"".equals(searchMsid)) {
-						sql = sql + " AND D.TZ_MSSQH=?";
+						sql = sql + " AND C.TZ_MSH_ID=?";
 						searchList = sqlQuery.queryForList(sql, new Object[]{classId,applyBatchId,searchMsid});
 					} else {
 						if(!"".equals(searchName)) {
@@ -669,7 +680,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					
 					String oprid = mapSearch.get("OPRID") == null ? "" : mapSearch.get("OPRID").toString();
 					String bmbId = mapSearch.get("TZ_APP_INS_ID") == null ? "" : mapSearch.get("TZ_APP_INS_ID").toString();
-					String mssqh = mapSearch.get("TZ_MSSQH") == null ? "" : mapSearch.get("TZ_MSSQH").toString();
+					String mssqh = mapSearch.get("TZ_MSH_ID") == null ? "" : mapSearch.get("TZ_MSH_ID").toString();
 					String name = mapSearch.get("TZ_REALNAME") == null ? "" : mapSearch.get("TZ_REALNAME").toString();
 					
 					result = "0";
@@ -814,7 +825,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					psTzMpPwKsTbl.setTzMshiKssj(new Date());
 					psTzMpPwKsTbl.setRowLastmantDttm(new Date());
 					psTzMpPwKsTbl.setRowLastmantOprid(oprid);
-					psTzMpPwKsTblMapper.updateByPrimaryKey(psTzMpPwKsTbl);
+					psTzMpPwKsTblMapper.updateByPrimaryKeySelective(psTzMpPwKsTbl);
 				}
 				
 				//面试评审考生评委信息TZ_MSPSKSPW_TBL
@@ -854,11 +865,11 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					psTzMspskspwTbl.setTzMspwList(mspwList);
 					psTzMspskspwTbl.setRowLastmantDttm(new Date());
 					psTzMspskspwTbl.setRowLastmantOprid(oprid);
-					psTzMspskspwTblMapper.updateByPrimaryKey(psTzMspskspwTbl);
+					psTzMspskspwTblMapper.updateByPrimaryKeySelective(psTzMspskspwTbl);
 				}
 				
 				//重新进行排名
-				updateExamineeRank(classId,applyBatchId,oprid);
+				updateExamineeRank(classId,applyBatchId,oprid,bmbId);
 				
 			}
 			
@@ -882,25 +893,28 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 	 *  pwOprid-评委账号
 	 * @return
 	 */
-	public void updateExamineeRank(String classId,String applyBatchId,String pwOprid) {
+	public void updateExamineeRank(String classId,String applyBatchId,String pwOprid,String currentBmbId) {
 
 		try {
-			String sql;
+			/*当前机构*/
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			
-			sql =  "SELECT TMP.TZ_APP_INS_ID,TMP.TZ_TOTAL_SCORE FROM (";
-			sql = sql + "SELECT A.TZ_APP_INS_ID,A.TZ_SCORE_INS_ID,B.TZ_SCORE_MODAL_ID,C.TREE_NAME";
-			sql = sql + ",(SELECT D.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL D WHERE D.TZ_SCORE_INS_ID=A.TZ_SCORE_INS_ID AND D.TZ_SCORE_ITEM_ID=(SELECT E.TREE_NODE FROM PSTREENODE E WHERE E.TREE_NAME=C.TREE_NAME AND E.PARENT_NODE_NUM=0)) TZ_TOTAL_SCORE";
-			sql = sql + " FROM PS_TZ_SRMBAINS_TBL B,PS_TZ_MP_PW_KS_TBL A,PS_TZ_RS_MODAL_TBL C";
-			sql = sql + " WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND B.TZ_SCORE_MODAL_ID=C.TZ_SCORE_MODAL_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=? AND A.TZ_DELETE_ZT='N') TMP ORDER BY TMP.TZ_TOTAL_SCORE DESC";
+			String sql = tzSQLObject.getSQLText("SQL.TZEvaluationSystemBundle.TzInterviewExamineeRank");	
 			
-			List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] {classId,applyBatchId,pwOprid});
-			Integer rank = 0;
+			List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] {orgId,classId,applyBatchId,pwOprid});
 			
 			for(Map<String, Object> mapData : listData) {
 				
-				Long bmbId = Long.valueOf(mapData.get("TZ_APP_INS_ID") == null ? "" : mapData.get("TZ_APP_INS_ID").toString());
-				
-				rank++;
+				Long bmbId = 0L;
+				String strBmbId = mapData.get("TZ_APP_INS_ID") == null ? "" : mapData.get("TZ_APP_INS_ID").toString();
+				if(!"".equals(strBmbId)) {
+					bmbId = Long.valueOf(strBmbId);
+				}
+				 
+				String strRank = mapData.get("RANK") == null ? "" : mapData.get("RANK").toString();
+				if(strRank.indexOf(".")>0) {
+					strRank = strRank.substring(0, strRank.indexOf("."));
+				}
 				
 				PsTzMpPwKsTblKey psTzMpPwKsTblKey = new PsTzMpPwKsTblKey();
 				psTzMpPwKsTblKey.setTzClassId(classId);
@@ -912,10 +926,13 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				if(psTzMpPwKsTbl==null) {
 					
 				} else {
-					psTzMpPwKsTbl.setTzKshPspm(String.valueOf(rank));
-					psTzMpPwKsTbl.setRowLastmantDttm(new Date());
-					psTzMpPwKsTbl.setRowLastmantOprid(pwOprid);
-					psTzMpPwKsTblMapper.updateByPrimaryKey(psTzMpPwKsTbl);
+					psTzMpPwKsTbl.setTzKshPspm(strRank);
+					if(bmbId.equals(currentBmbId)) {
+						//当前打分考生更新评审时间
+						psTzMpPwKsTbl.setRowLastmantDttm(new Date());
+						psTzMpPwKsTbl.setRowLastmantOprid(pwOprid);
+					}
+					psTzMpPwKsTblMapper.updateByPrimaryKeySelective(psTzMpPwKsTbl);
 				}
 			}
 			
