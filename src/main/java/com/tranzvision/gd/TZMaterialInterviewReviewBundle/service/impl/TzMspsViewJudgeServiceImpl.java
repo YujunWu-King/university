@@ -15,6 +15,7 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsGzTblMapper;
 import com.tranzvision.gd.TZMbaPwMspsBundle.dao.psTzMspwpsjlTblMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -41,7 +42,9 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 	private psTzMspwpsjlTblMapper psTzMspwpsjlTblMapper;
 	@Autowired
 	private PsTzMsPsGzTblMapper psTzMsPsGzTblMapper;
-
+	@Autowired
+	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -82,14 +85,16 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 					String judgeOprid = sMap.get("TZ_PWEI_OPRID")==null?"":String.valueOf(sMap.get("TZ_PWEI_OPRID"));
 					String judgeRealName = sMap.get("TZ_REALNAME")==null?"":String.valueOf(sMap.get("TZ_REALNAME"));
 					String judgeInsId = sMap.get("TZ_SCORE_INS_ID")==null?"":String.valueOf(sMap.get("TZ_SCORE_INS_ID"));
-					String bphSql = "SELECT TZ_SCORE_ITEM_ID,TZ_XS_MC FROM PS_TZ_CJ_BPH_TBL WHERE TZ_ITEM_S_TYPE = 'A' AND TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=? ORDER BY TZ_PX";
+					String bphSql = "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? ORDER BY TREE_NODE_NUM ASC";
 					
-					List<Map<String,Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] {strCurrentOrg,strScoreModalId});
+					List<Map<String,Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] {strTreeName});
 					if(bphMapList!=null&&bphMapList.size()>0){
 						for(Object bphObj:bphMapList){
 							Map<String,Object> bphMap = (Map<String,Object>) bphObj;
-							String strItemId = bphMap.get("TZ_SCORE_ITEM_ID")==null?"":String.valueOf(bphMap.get("TZ_SCORE_ITEM_ID"));
-							String strScoreItemMc = bphMap.get("TZ_XS_MC")==null?"":String.valueOf(bphMap.get("TZ_XS_MC"));
+							String strItemId = bphMap.get("TREE_NODE") == null ? "" : String.valueOf(bphMap.get("TREE_NODE"));
+							
+							String strTTmpSQL = "SELECT DESCR FROM PS_TZ_MODAL_DT_TBL WHERE TZ_JG_ID=? AND TREE_NAME=? AND TZ_SCORE_ITEM_ID=?";
+							String strScoreItemMc = sqlQuery.queryForObject(strTTmpSQL,new Object[]{strCurrentOrg,strTreeName,strItemId},"String");
 							
 							String strScoreItemType = "";
 							String strScoreToScore = "";
@@ -120,6 +125,7 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 									break;
 								case "C"://评语
 									//strScorePyValue默认为评语值，无须转换
+									strScorePyValue = this.transChar(strScorePyValue);
 									break;
 								case "D"://下拉框
 									String xlk_xxbh = strScorePyValue;
@@ -131,31 +137,7 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 								strDyColValue = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MSPSSCO_HTML", new String[] {strScorePyValue, strScoreItemMc});
 							}else{
 								strDyColValue = strDyColValue + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MSPSSCO_HTML", new String[] {strScorePyValue, strScoreItemMc});
-							}
-						
-							/*if ("W".equals(strScoreItemType) || "R".equals(strScoreItemType) || ("Y".equals(strScoreItemType)&&"A".equals(strScoreToScore)))
-							{
-								if ("".equals(strDyColValue)){
-									strDyColValue = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MSPSSCO_HTML", new String[] {strScoreNum, strScoreItemMc});
-								}else{
-									strDyColValue = strDyColValue + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MSPSSCO_HTML", new String[] {strScoreNum, strScoreItemMc});
-								}		
-							} 
-							else
-							{
-								if ("X".equals(strScoreItemType))
-								{
-									String xlk_xxbh = strScorePyValue;
-									String strSql4 = "SELECT TZ_CJX_XLK_XXMC FROM PS_TZ_ZJCJXXZX_T WHERE TREE_NAME=? AND TZ_SCORE_ITEM_ID=? AND TZ_CJX_XLK_XXBH=?";
-									strScorePyValue = (String)sqlQuery.queryForObject(strSql4, new Object[] {strTreeName, strScoreItemId, xlk_xxbh}, "String");
-								}
-								if ("".equals(strDyColValue)){
-									strDyColValue = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MSPSSCO_HTML", new String[] {strScoreNum, strScoreItemMc});
-								}else{
-									strDyColValue = strDyColValue + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MSPSSCO_HTML", new String[] {strScoreNum, strScoreItemMc});
-								}
-								
-							}*/
+							}						
 						}
 					}
 					
@@ -177,6 +159,7 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 		{
 			errMsg[0] = "100";
 			errMsg[1] = e.toString();
+			e.printStackTrace();
 		}
 		return strResponse;
 	}
@@ -223,15 +206,17 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 					String judgeOprid = sMap.get("TZ_PWEI_OPRID")==null?"":String.valueOf(sMap.get("TZ_PWEI_OPRID"));
 					String judgeRealName = sMap.get("TZ_REALNAME")==null?"":String.valueOf(sMap.get("TZ_REALNAME"));
 					String judgeInsId = sMap.get("TZ_SCORE_INS_ID")==null?"":String.valueOf(sMap.get("TZ_SCORE_INS_ID"));
-					String bphSql = "SELECT TZ_SCORE_ITEM_ID,TZ_XS_MC FROM PS_TZ_CJ_BPH_TBL WHERE TZ_ITEM_S_TYPE = 'B' AND TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=? ORDER BY TZ_PX ASC";
+					String bphSql = "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? ORDER BY TREE_NODE_NUM ASC";
 					
-					List<Map<String,Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] {strCurrentOrg,strScoreModalId});
+					List<Map<String,Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] {strTreeName});
 					if(bphMapList!=null&&bphMapList.size()>0){
 						for(Object bphObj:bphMapList){						
 							
 							Map<String,Object> bphMap = (Map<String,Object>) bphObj;
-							String strItemId = bphMap.get("TZ_SCORE_ITEM_ID")==null?"":String.valueOf(bphMap.get("TZ_SCORE_ITEM_ID"));
-							String strScoreItemMc = bphMap.get("TZ_XS_MC")==null?"":String.valueOf(bphMap.get("TZ_XS_MC"));
+							String strItemId = bphMap.get("TREE_NODE") == null ? "" : String.valueOf(bphMap.get("TREE_NODE"));
+							
+							String strTTmpSQL = "SELECT DESCR FROM PS_TZ_MODAL_DT_TBL WHERE TZ_JG_ID=? AND TREE_NAME=? AND TZ_SCORE_ITEM_ID=?";
+							String strScoreItemMc = sqlQuery.queryForObject(strTTmpSQL,new Object[]{strCurrentOrg,strTreeName,strItemId},"String");
 							
 							String strScoreItemType = "";
 							String strScoreToScore = "";
@@ -262,6 +247,7 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 									break;
 								case "C"://评语
 									//strScorePyValue默认为评语值，无须转换
+									strScorePyValue = this.transChar(strScorePyValue);
 									break;
 								case "D"://下拉框
 									String xlk_xxbh = strScorePyValue;
@@ -296,6 +282,7 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 		{
 			errMsg[0] = "100";
 			errMsg[1] = e.toString();
+			e.printStackTrace();
 		}
 		return strResponse;
 	}
@@ -411,5 +398,18 @@ public class TzMspsViewJudgeServiceImpl  extends FrameworkImpl  {
 			errMsg[1] = e.toString();
 		}
 		return strResponse;
+	}
+	
+	private String transChar(String strValue){
+		String result = strValue;
+		
+		result = tzFilterIllegalCharacter.filterAllIllegalCharacter(result);
+		
+		result = result.replace("\n", "");
+		result = result.replace("\r", "");
+		result = result.replace("\t", "    ");
+		result = result.replace(" ", " ");
+		result = result.replace("\"", "\\" + "\"");
+		return result;
 	}
 }

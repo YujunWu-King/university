@@ -9,7 +9,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         'KitchenSink.view.enrollmentManagement.interviewReview.interviewReviewAppJudgeStore'
     ],
     title: '查看考生评审得分',
-    width: 600,
+    width: 1000,
     height: 400,
     modal:true,
     layout: {
@@ -37,27 +37,32 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                 text: "评委姓名",
                 dataIndex: 'judgeRealName',
                 align: 'center',
-                flex:1
+                minWidth: 100                
             }, {
                 text: "报名表编号",
                 dataIndex: 'appInsID',
                 align: 'center',
-                flex:1
+                minWidth: 100
             }
             , {
                 text: "考生姓名",
                 dataIndex: 'studentRealName',
                 align: 'center',
-                flex:1
+                minWidth: 100
             }
         ];
         
         for(var x =0;x<this.scoreFields.length;x++){
+        	var minWidth = 100;
+        	if(x>=10){
+        		//评语列
+        		minWidth = 200;
+        	}
             columns.push({
                 text:this.scoreFields[x].name,
                 dataIndex:x,
                 align:'center',
-                flex:1
+                minWidth:minWidth
             })
         }
         Ext.apply(this, {
