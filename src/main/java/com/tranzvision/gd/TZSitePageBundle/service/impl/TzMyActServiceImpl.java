@@ -394,6 +394,11 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 					// "": String.valueOf(mapActivity.get("TZ_APPE_DT"));
 					String timeBmEnd = mapActivity.get("TZ_APPE_TM") == null ? ""
 							: String.valueOf(mapActivity.get("TZ_APPE_TM"));
+					
+					//活动开始时间
+					String actStartTime = mapActivity.get("TZ_START_TM") == null ? ""
+							: String.valueOf(mapActivity.get("TZ_START_TM"));
+					
 
 					String strUrl = dispatcherUrl + "?classid=art_view&operatetype=HTML&siteId=" + strSiteId
 							+ "&columnId=" + strColuId + "&artId=" + strArtId + "&oprate=R";
@@ -410,6 +415,8 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 
 					// 是否可以报名
 					String strkBmFlg = "";
+					//活动是否开始
+					String isActStarted = "";
 					if ("Y".equals(strKqbm)) {
 
 						// 新逻辑
@@ -418,10 +425,18 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 									&& datetimeformat.parse(timeBmEnd).getTime() > dateNow.getTime()) {
 								strkBmFlg = "Y";
 							}
-						}catch(Exception e){
-							
+						}catch(Exception e1){
+							e1.printStackTrace();
 						}
 						
+						//活动是否开始
+						try{
+							if (dateNow.getTime() < datetimeformat.parse(actStartTime).getTime()) {
+								isActStarted = "N";
+							}
+						}catch(Exception e2){
+							e2.printStackTrace();
+						}
 
 						/*
 						 * 老的逻辑 if (dateFormat.parse(dtBmStart).getTime() <
@@ -474,11 +489,12 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 					}
 					/************************添加报名状态--结束******************************/
 					
-
+					String statusClass = "positionRight10";//状态class
+					
 					switch (strType) {
 					case "0":
-
 						if ("Y".equals(strkBmFlg)) {
+							statusClass = "";
 //							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
 //							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
 							
@@ -488,7 +504,7 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 										+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
 										+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
 								//报名状态
-								strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status\">"+ statusText +"</div>";
+								//strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status\">"+ statusText +"</div>";
 							} else {
 								strResultContent = strResultContent
 										+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdbm_" + strArtId
@@ -496,11 +512,26 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 										+ ",this)\"><div class=\"bt_blue\">" + strSignUp + "</div></a></div>";
 							}
 
+						}else if("Y".equals(strKqbm) 
+								&& "Y".equals(regFlag) 
+								&& "N".equals(isActStarted)){
+							statusClass = "";
+							//启动在线报名、且已报名、活动尚未开始，可用撤销
+							strResultContent = strResultContent
+									+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
+									+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
+									+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
 						}
+						
+						/*已报名活动报名状态一直显示*/
+						//报名状态
+						strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status "+statusClass+"\">"+ statusText +"</div>";
 
 						break;
 					case "1":
-						if ("Y".equals(strkBmFlg)) {
+						//报名时间内，或者活动未开始都可以撤销
+						if ("Y".equals(strkBmFlg) || "N".equals(isActStarted)) {
+							statusClass = "";
 //							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
 //							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
 							strResultContent = strResultContent
@@ -509,11 +540,18 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 									+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
 							
 							//报名状态
-							strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status\">"+ statusText +"</div>";
+							//strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status\">"+ statusText +"</div>";
 						}
+						
+						/*已报名活动报名状态一直显示*/
+						//报名状态
+						strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status "+statusClass+"\">"+ statusText +"</div>";
+						
 						break;
 					case "2":
-
+						/*已报名活动报名状态一直显示*/
+						//报名状态
+						strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status "+statusClass+"\">"+ statusText +"</div>";
 						break;
 
 					default:
