@@ -568,7 +568,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			}
 
 			Long TZ_APP_INS_ID;
-			String forthSql = "select TZ_APP_INS_ID ,TZ_SCORE_INS_ID from PS_TZ_CP_PW_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=?";
+			String forthSql = "select TZ_APP_INS_ID ,TZ_SCORE_INS_ID from PS_TZ_CP_PW_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? ORDER BY ROW_ADDED_DTTM ASC";
 			
 			List<Map<String, Object>> applicantsList = sqlQuery.queryForList(forthSql,
 					new Object[] { classId, batchId, oprid });
@@ -1106,7 +1106,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			error_decription = "当前评委账号为暂停状态，不能提交数据。";
 		 }else{
 			//检查是否有排名重复考生
-				String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_CP_PW_KS_TBL a, PS_TZ_CP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID AND a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and a.TZ_PWEI_OPRID=? and a.TZ_CLASS_ID=? AND a.TZ_APPLY_PC_ID=?",
+				String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_CP_PW_KS_TBL a, PS_TZ_CP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID AND a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and a.TZ_PWEI_OPRID=? and a.TZ_CLASS_ID=? AND a.TZ_APPLY_PC_ID=? limit 0,1",
 						 new Object[]{oprid,classId,batchId}, "String");
 				if("Y".equals(have_equal)){
 					error_code = "SORTREPEAT";

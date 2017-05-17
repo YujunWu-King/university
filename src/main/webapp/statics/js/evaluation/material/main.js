@@ -438,6 +438,8 @@ function initializeEvaluateSystem(urlObject)
 	
 	$("#tz_zlps_dfym").width(width);
 	
+	$("#tz_zlps_pclb_a").height("40%");
+	$("#tz_zlps_description").height("60%");
 	
 	//加载当前登录评委的评审批次数据
 	window.setTimeout (function(){loadEvaluateBatchData(initializeExtObjects);},100);
