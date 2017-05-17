@@ -94,7 +94,7 @@ public class EvaluationSystemController {
 			}
 						
 			String contactUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_CONTACT_URL"}, "String");
-			String evaluationDescriptionUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_DESCRIPTION_URL"}, "String");
+			String evaluationDescriptionUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_M_DESCRIPTION_URL"}, "String");
 			indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_METERIAL_EVALUATION_INDEX",request.getContextPath(),orgid,timeOut,userName,contactUrl==null?"javascript:void(0)":contactUrl,evaluationDescriptionUrl==null?"javascript:void(0)":evaluationDescriptionUrl);
 			
 		} catch (TzSystemException e) {
