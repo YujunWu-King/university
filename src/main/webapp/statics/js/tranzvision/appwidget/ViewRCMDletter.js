@@ -31,32 +31,36 @@ SurveyBuild.extend("ViewRCMDletter", "baseComponent", {
                     }
                 });
             }
-            
-            for(var i=0; i<letters.length; i++){
-            	var tzParams = "";
-            	tjxInsId = letters[i].tjxInsId;
-            	letterId=letters[i].letterId;
-            	tjrId = letters[i].tjrId;
-            	/**/
-            	mtplId = letters[i].mtplId;
-            	
-            	if(mtplId == ""){
-            		tzParams = '{"TZ_APP_INS_ID":"' + tjxInsId + '","TZ_REF_LETTER_ID":"' + letterId + '","TZ_MANAGER":"Y"}';
-            	}else{
-            		tzParams = '{"TZ_APP_TPL_ID":"' + mtplId + '","TZ_APP_INS_ID":"' + tjxInsId + '","TZ_REF_LETTER_ID":"' + letterId + '","TZ_MANAGER":"Y"}';
-            	}
-            	
-            	tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":' + tzParams + '}';
-            	url = TzUniversityContextPath + '/dispatcher?tzParams=' + encodeURIComponent(tzParams);
-                
-            	c += '<div class="mainright-title">';
-                c += '	<span class="title-line"></span> ' + MsgSet["REFFER"] + tjrId;
-                c += '</div>';
-                c += '<div class="main_content_box">';
-                c += '	<div class="mainright-box pos-rela">';
-                c += '		<iframe name="' + tjxInsId + '" src="' + url + '" width="100%"  height="500" frameborder="0" scrolling="no" onload="SetCwinHeight(this)"></iframe>';
-                c += '	</div>';
-                c += '</div>';
+            if(letters.length > 0){
+                for(var i=0; i<letters.length; i++){
+                	var tzParams = "";
+                	tjxInsId = letters[i].tjxInsId;
+                	letterId=letters[i].letterId;
+                	tjrId = letters[i].tjrId;
+                	/**/
+                	mtplId = letters[i].mtplId;
+                	
+                	if(mtplId == ""){
+                		tzParams = '{"TZ_APP_INS_ID":"' + tjxInsId + '","TZ_REF_LETTER_ID":"' + letterId + '","TZ_MANAGER":"Y"}';
+                	}else{
+                		tzParams = '{"TZ_APP_TPL_ID":"' + mtplId + '","TZ_APP_INS_ID":"' + tjxInsId + '","TZ_REF_LETTER_ID":"' + letterId + '","TZ_MANAGER":"Y"}';
+                	}
+                	
+                	tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":' + tzParams + '}';
+                	url = TzUniversityContextPath + '/dispatcher?tzParams=' + encodeURIComponent(tzParams);
+                    
+                	c += '<div class="mainright-title">';
+                    c += '	<span class="title-line"></span> ' + MsgSet["REFFER"] + tjrId;
+                    c += '</div>';
+                    c += '<div class="main_content_box">';
+                    c += '	<div class="mainright-box pos-rela">';
+                    c += '		<iframe name="' + tjxInsId + '" src="' + url + '" width="100%"  height="' + data.height + 'px" frameborder="0" scrolling="no"></iframe>';
+                    c += '	</div>';
+                    c += '</div>';
+                    // onload="SetCwinHeight(this)"
+                }
+            }else{
+            	c += '<div class="main_content_box"><div class="mainright-box pos-rela"><center>无推荐信</center></div></div>';
             }
 		} else {
 			c += '<div class="question-answer">';
@@ -68,6 +72,11 @@ SurveyBuild.extend("ViewRCMDletter", "baseComponent", {
 		return c;
 	},
 	_edit: function(data) {
-		return "";
+		e = "";
+		e += '  <div class="edit_item_warp">';
+		e += '      <span class="edit_item_label">高度：</span>';
+		e += '      <input type="text" maxlength="4" class="medium minLen" data_id="' + data.instanceId + '" onkeyup="SurveyBuild.saveAttr(this,\'height\')" value="' + data.height + '" style="width: 170px;"/>&nbsp;px';
+		e += '  </div>';
+		return e;
 	}
 })
