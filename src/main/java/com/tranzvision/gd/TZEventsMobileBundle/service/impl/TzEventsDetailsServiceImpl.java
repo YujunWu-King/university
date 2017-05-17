@@ -353,15 +353,20 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 			
 			// 获取活动显示模式
 			String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventDisplayMode");
-			Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { dateNow, dateNow, dateNow, actId });
+			Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { dateNow, dateNow, dateNow, dateNow, actId });
 			
 			// 是否有效记录
 			String validTD = "";
 			// 是否启用在线报名
 			String strQy_zxbm = "";
+			//活动是否未开始
+			String actNoStart = "";
 			if (mapData != null) {
 				validTD = mapData.get("VALID_TD") == null ? "" : String.valueOf(mapData.get("VALID_TD"));
 				strQy_zxbm = mapData.get("TZ_QY_ZXBM") == null ? "" : String.valueOf(mapData.get("TZ_QY_ZXBM"));
+				
+				//活动是否未开始
+				actNoStart = mapData.get("IS_NOT_START") == null ? "" : String.valueOf(mapData.get("IS_NOT_START"));
 			}
 			
 			// 只有启用在线报名并且在有效报名时间内才显示在线报名条
@@ -382,6 +387,12 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 					strBmrId = mapBM.get("TZ_HD_BMR_ID") == null ? "" : String.valueOf(mapBM.get("TZ_HD_BMR_ID"));
 					applySta = mapBM.get("TZ_NREG_STAT") == null ? "" : String.valueOf(mapBM.get("TZ_NREG_STAT"));
 				}
+				
+				//已报名活动，活动尚未开始，可以撤销报名
+				if("Y".equals(regFlag) && "Y".equals(actNoStart)){
+					validTD = "Y";
+				}
+				
 				
 				//显示报名状态
 				String statusText = "";
