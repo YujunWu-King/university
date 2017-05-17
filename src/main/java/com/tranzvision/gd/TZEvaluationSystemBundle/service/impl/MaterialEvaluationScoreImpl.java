@@ -768,8 +768,11 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				if(!"".equals(strBmbId)) {
 					bmbId = Long.valueOf(strBmbId);
 				}
-				 
-				String strRank = mapData.get("RANK") == null ? "" : mapData.get("RANK").toString(); 
+				
+				String strRank = mapData.get("RANK") == null ? "" : mapData.get("RANK").toString();
+				if(strRank.indexOf(".")>0) {
+					strRank = strRank.substring(0, strRank.indexOf("."));
+				}
 				
 				PsTzCpPwKsTblKey psTzCpPwKsTblKey = new PsTzCpPwKsTblKey();
 				psTzCpPwKsTblKey.setTzClassId(classId);

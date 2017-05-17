@@ -90,6 +90,35 @@ SurveyBuild.extend("University", "baseComponent", {
                         }
                     });
         		}
+        		
+        		
+        		if (children[0]["ccode"] =="") {
+        			params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","search-text":"' +children[0]["value"] + '"}}';
+					$.ajax({
+                        type: "POST",
+                        dataType: "JSON",
+                        data:{
+                            tzParams:params
+                        },
+                        async:false,
+                        url:SurveyBuild.tzGeneralURL,
+                        success: function(f) {
+                        	var data = [];
+							if(f.state.errcode == "0"){
+								data = f.comContent;
+							}
+							if(data.length) {
+								//遍历data，添加到自动完成区
+								$.each(data, function(index,term) {
+									//console.dir(term);
+									if (term.descr == children[0]["value"]) {
+										children[0]["ccode"] = term.country;
+									}
+								});
+							}
+                        }
+                    });
+        		}
 
                 /*c += '<div class="main_inner_content_info_autoheight">';
                 c += '	<div class="main_inner_connent_info_left">';

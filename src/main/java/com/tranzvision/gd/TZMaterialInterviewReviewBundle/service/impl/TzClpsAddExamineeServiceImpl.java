@@ -77,7 +77,10 @@ public class TzClpsAddExamineeServiceImpl extends FrameworkImpl {
 					
 					sql = "SELECT 'Y' TZ_IS_EXIST,TZ_MSPY_NUM,TZ_DQPY_LUNC FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 					Map<String, Object> mapRule = sqlQuery.queryForMap(sql, new Object[] {classId,batchId});
-					String strIsExist = mapRule.get("TZ_IS_EXIST") == null ? "" : mapRule.get("TZ_IS_EXIST").toString();
+					String strIsExist = "";
+					if(mapRule!=null) {
+						strIsExist = mapRule.get("TZ_IS_EXIST") == null ? "" : mapRule.get("TZ_IS_EXIST").toString();
+					}
 						
 					if(!"Y".equals(strIsExist)) {
 						//没有定义评审规则

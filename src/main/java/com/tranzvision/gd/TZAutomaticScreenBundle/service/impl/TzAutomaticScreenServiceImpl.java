@@ -233,11 +233,11 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
 							Map<String,Object> scoreMap = sqlQuery.queryForMap(sql, new Object[]{ scoreInsId, itemId });
 							
-							String scoreNum = "0";
+							String scoreNum = "0.00";
 							String scoreGc = "";
 							
 							if(scoreMap != null){
-								scoreNum = scoreMap.get("TZ_SCORE_NUM") == null? "0" : scoreMap.get("TZ_SCORE_NUM").toString();
+								scoreNum = scoreMap.get("TZ_SCORE_NUM") == null? "0.00" : scoreMap.get("TZ_SCORE_NUM").toString();
 								//打分过程
 								scoreGc = scoreMap.get("TZ_SCORE_DFGC").toString();
 							}

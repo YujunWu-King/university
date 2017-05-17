@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.automaticScreen.export.exportExcelWindow', {
+﻿Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.export.exportExcelWindow', {
     extend: 'Ext.window.Window',
     xtype: 'exportExcelWindow',
 	controller: 'exportExcelController',
@@ -8,7 +8,8 @@
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-        'KitchenSink.view.automaticScreen.export.exportExcelStore',
+        'KitchenSink.view.enrollmentManagement.materialsReview.export.exportExcelStore',
+        'KitchenSink.view.enrollmentManagement.materialsReview.export.exportExcelController'
 	],
     modal:true,//背景遮罩
     header:false,
@@ -37,7 +38,7 @@
     	var batchId = this.batchId;
     	var classBatch = classId+"-"+batchId;
 		
-		var listStore = new KitchenSink.view.automaticScreen.export.exportExcelStore(classBatch);
+		var listStore = new KitchenSink.view.enrollmentManagement.materialsReview.export.exportExcelStore(classBatch);
 		
         Ext.apply(this,{
             items: [{
@@ -79,7 +80,7 @@
                         },
                         items: [
                             {
-                                title: "自动初筛导出",
+                                title: "考生评议数据导出",
                                 xtype: 'form',
                                 frame:false,
                                 minHeight:150,
@@ -130,7 +131,7 @@
                                 ]
                             },
                             {
-                                title: "自动初筛导出结果",
+                                title: "考生评议数据导出结果",
                                 xtype: 'grid',
                                 autoHeight: true,
                                 frame:false,

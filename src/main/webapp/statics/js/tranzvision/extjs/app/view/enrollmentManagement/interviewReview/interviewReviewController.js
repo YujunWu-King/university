@@ -2286,7 +2286,6 @@
     	
     	//先计算标准评分分布（调用于得实的方法）;
     	var bzfbtmp = this.calcuScoreDist(btn);
-    	
     	// 柱状图参数
     	var coluObj = [];
     	// 曲线图参数
