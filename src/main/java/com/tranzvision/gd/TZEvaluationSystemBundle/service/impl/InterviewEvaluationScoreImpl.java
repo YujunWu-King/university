@@ -3,6 +3,7 @@ package com.tranzvision.gd.TZEvaluationSystemBundle.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -196,6 +197,10 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					if("1".equals(messageCode)) {
 						
 					} else {
+						
+						//计算排名
+						this.updateExamineeRank(classId, applyBatchId, oprid, bmbId);
+						
 						//更新考生评审得分历史表
 						sql = "UPDATE PS_TZ_MP_PW_KS_TBL SET TZ_PSHEN_ZT='Y'";
 						sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
@@ -387,7 +392,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			mapRet.put("bmbId", bmbId);
 			mapRet.put("name", name);
 			mapRet.put("interviewApplyId", interviewApplyId);
-			mapRet.put("psBmbTplId", "psBmbTplId");
+			mapRet.put("psBmbTplId", psBmbTplId);
 
 			
 			//考生标签：显示自动初筛形成的标签&管理员后台手工添加的标签，负面清单标签不显示
@@ -412,7 +417,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			String[] ckcjxIdTxtArr = ckcjxIdTxt.split(",");
 			String pyCjxId = getHardCodePoint.getHardCodePointVal("TZ_CLPS_PYCJX_ID");
 			
-			String materialReviewDesc = "<table border='0' width='100%' style='font-size:12px;'>";
+			String materialReviewDesc = "";
 			
 			String sqlClps = "";
 			String ckcjxNumInfo = "",ckcjxTxtInfo = "";
@@ -443,7 +448,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			}
 			
 			if(!"".equals(ckcjxNumInfo)) {
-				materialReviewDesc += "<tr height='25'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td width='626px'>" + ckcjxNumInfo + "</td></tr>";
+				materialReviewDesc += "<tr height='25'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>" + ckcjxNumInfo + "</td></tr>";
 			}
 			
 			//评语类型
@@ -468,36 +473,36 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					String scoreItemNameClps = mapClpsTxt.get("DESCR") == null ? "" : mapClpsTxt.get("DESCR").toString();
 					String scoreValue = mapClpsTxt.get("TZ_SCORE_PY_VALUE") == null ? "": mapClpsTxt.get("TZ_SCORE_PY_VALUE").toString();
 					
-					num++;
-					
-					if(scoreItemIdClps.equals(pyCjxId)) {
-						//评语
-						if(num==1) {
-							ckcjxTxtInfoTmp = "评委"+String.valueOf(num)+"评语："+scoreValue;
+					if(!"".equals(scoreValue)) {
+						num++;
+						
+						if(scoreItemIdClps.equals(pyCjxId)) {
+							//评语
+							if(num==1) {
+								ckcjxTxtInfoTmp = "评委"+String.valueOf(num)+"评语："+scoreValue;
+							} else {
+								ckcjxTxtInfoTmp +="</br>评委"+String.valueOf(num)+"评语："+scoreValue;
+							}
 						} else {
-							ckcjxTxtInfoTmp +="</br>评委"+String.valueOf(num)+"评语："+scoreValue;
-						}
-					} else {
-						if(num==1) {
-							ckcjxTxtInfoTmp = "<div style='float:left;width:90px;'>" + scoreItemNameClps+"：</div><div style='float:left;'>"+scoreValue+"</div><br />";
-						} else {
-							ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
-						}
-					}					
+							if(num==1) {
+								ckcjxTxtInfoTmp = "<div style='float:left;width:90px;'>" + scoreItemNameClps+"：</div><div style='float:left;'>"+scoreValue+"</div><br />";
+							} else {
+								ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
+							}
+						}	
+					}
 				}
 				
 				String trHeight = String.valueOf(num*25);
 				
 				if(!"".equals(ckcjxNumInfo)) {
-					ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td width='626px'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+					ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
 				} else {
-					ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td width='626px'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+					ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
 				}
 				
 				materialReviewDesc += ckcjxTxtInfo;
 			}
-			
-			materialReviewDesc += "</table>";
 			
 			mapRet.put("materialReviewDesc", materialReviewDesc);
 
@@ -598,14 +603,20 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			mapRet.put("scoreContent", scoreItemJson);
 			
 			//左侧考生列表header
-			Map<String, Object> mapHeader = new HashMap<String,Object>();
-			mapHeader.put("col01", "总分");
+			LinkedHashMap<String, Object> mapHeader = new LinkedHashMap<String,Object>();		
 			mapHeader.put("ps_msh_id", "面试申请号");
-			mapHeader.put("ps_ksh_cpm", "排名");
-			mapHeader.put("ps_ksh_xh", "面试顺序");
 			mapHeader.put("ps_ksh_xm", "姓名");
+			mapHeader.put("ps_ksh_xh", "面试顺序");
+			mapHeader.put("ps_ksh_ppm", "排名");
+			mapHeader.put("col01", "总分");
+			
 			
 			mapRet.put("ksGridHeader", mapHeader);
+			
+			
+			//搜索考生区域“查找”按钮使用参数
+			mapRet.put("ps_class_id", classId);
+			mapRet.put("ps_pc_id", applyBatchId);
 
 			
 			mapRet.put("messageCode", messageCode);

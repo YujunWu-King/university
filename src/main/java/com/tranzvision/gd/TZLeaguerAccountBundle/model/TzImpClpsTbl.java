@@ -3,6 +3,8 @@ package com.tranzvision.gd.TZLeaguerAccountBundle.model;
 public class TzImpClpsTbl {
     private Long tzAppInsId;
 
+    private String tzEnterClps;
+
     private String tzResult;
 
     private String tzResultCode;
@@ -13,6 +15,14 @@ public class TzImpClpsTbl {
 
     public void setTzAppInsId(Long tzAppInsId) {
         this.tzAppInsId = tzAppInsId;
+    }
+
+    public String getTzEnterClps() {
+        return tzEnterClps;
+    }
+
+    public void setTzEnterClps(String tzEnterClps) {
+        this.tzEnterClps = tzEnterClps == null ? null : tzEnterClps.trim();
     }
 
     public String getTzResult() {

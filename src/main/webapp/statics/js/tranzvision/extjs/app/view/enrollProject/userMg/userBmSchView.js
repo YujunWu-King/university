@@ -151,6 +151,11 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 						},
 						items : [ {
 							xtype : 'textfield',							
+							fieldLabel : '是否进入材料评审',
+							maxLength:30,
+							name : 'enterClps'							
+						},{
+							xtype : 'textfield',							
 							fieldLabel : '材料评审结果',
 							maxLength:254,
 							name : 'clpsJg'							
