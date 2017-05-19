@@ -172,6 +172,9 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 						result = "1";
 						resultMsg = "评议数据已经提交，不允许对考生数据进行修改";
 					} else {
+						
+						System.out.println("材料评审评委端打分页保存Begin");
+						System.out.println("班级编号："+classId+"-->批次编号："+applyBatchId+"-->报名表编号："+bmbId+"-->评委OPRID："+oprid);
 
 						//保存成绩项
 						String saveScoreItemRtn = this.scoreItemSave(classId,applyBatchId,bmbId,strForm,errMsg);
@@ -179,6 +182,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 						String saveRtnResult = jacksonUtil.getString("result");
 					
 						if("0".equals(saveRtnResult)) {
+							
+							System.out.println("保存成绩项成功");
 
 							//根据配置判断是否实时计算评委间偏差
 							if("Y".equals(realPwpc)) {
@@ -214,11 +219,15 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 							}
 						
 							strRtn = this.getExamineeScoreInfo(classId, applyBatchId, bmbId, messageCode,message,errMsg);
+							
+							
 					
 						} else {
 							result = "1";
 							resultMsg = jacksonUtil.getString("resultMsg");
 						}
+						
+						System.out.println("材料评审评委端打分页保存End");
 					}
 				}
 				
@@ -682,6 +691,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			
 			if(resultMsg!="" && resultMsg!=null) {
 				result = "1";
+				System.out.println("调用保存成绩项的方法前校验发生错误："+resultMsg);
 			} else {
 				//调用保存成绩项方法
 				itemScoreParams = jacksonUtil.Map2json(mapItemsScore);
@@ -710,6 +720,9 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 		String strRtn = "";
 		
 		try {
+			
+			System.out.println("更新考生评审得分历史表Begin");
+			
 			PsTzKsclpslsTblKey psTzKsclpslsTblKey = new PsTzKsclpslsTblKey();
 			psTzKsclpslsTblKey.setTzClassId(classId);
 			psTzKsclpslsTblKey.setTzApplyPcId(applyBatchId);
@@ -733,6 +746,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				psTzKsclpslsTbl.setRowLastmantDttm(new Date());
 				psTzKsclpslsTbl.setRowLastmantOprid(oprid);
 				psTzKsclpslsTblMapper.insert(psTzKsclpslsTbl);
+				System.out.println("新增-考生评审得分历史表");
 			} else {
 				psTzKsclpslsTbl.setTzIsPwFp("Y");
 				psTzKsclpslsTbl.setRowLastmantDttm(new Date());
@@ -741,7 +755,12 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				
 				String sql = "UPDATE PS_TZ_KSCLPSLS_TBL SET TZ_SUBMIT_YN='N' WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND TZ_CLPS_LUNC=? AND TZ_SUBMIT_YN NOT IN ('C','Y')";
 				sqlQuery.update(sql,new Object[]{classId,applyBatchId,bmbId,oprid,dqpyLunc});
+				
+				System.out.println("更新-考生评审得分历史表");
 			}
+			
+			System.out.println("更新考生评审得分历史表End");
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
@@ -758,6 +777,7 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 		String strRtn = "";
 		
 		try {
+			System.out.println("计算排名Begin");
 			
 			String sql = tzSQLObject.getSQLText("SQL.TZEvaluationSystemBundle.TzMaterialExamineeRank");		
 			List<Map<String, Object>> listData = sqlQuery.queryForList(sql,new Object[]{orgId,classId,applyBatchId,oprid});
@@ -825,6 +845,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 					psTzKsclpslsTblMapper.updateByPrimaryKeySelective(psTzKsclpslsTbl);
 				}
 			}
+			
+			System.out.println("计算排名End");
 				
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -842,6 +864,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 		String strRtn = "";
 		
 		try {
+			
+			System.out.println("计算评委间偏差Begin");
 			
 			/*当前机构*/
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
@@ -904,6 +928,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				psTzClpsKshTbl.setRowLastmantOprid(oprid);
 				psTzClpsKshTblMapper.updateByPrimaryKeySelective(psTzClpsKshTbl);
 			}
+			
+			System.out.println("计算评委间偏差End");
 			
 			
 		} catch(Exception e) {
@@ -970,6 +996,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 		String message = "";
 		
 		try {
+			System.out.println("获取下一个考生Begin");
+			
 			String sql;
 			
 			//是否存在没有评委组的评委
@@ -1170,6 +1198,10 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 			mapRet.put("bmbIdNext", bmbIdNext);
 			mapRet.put("messageCode", messageCode);
 			mapRet.put("message", message);
+			
+			System.out.println("获取下一个考生返回数据。下一个考生的报名表实例编号："+bmbIdNext+"-->messageCode："+messageCode+"-->message："+message);
+			
+			System.out.println("获取下一个考生End");
 			
 		} catch(Exception e) {
 			e.printStackTrace();
