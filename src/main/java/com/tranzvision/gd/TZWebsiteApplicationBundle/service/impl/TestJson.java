@@ -469,6 +469,10 @@ public class TestJson {
 		strInsData = java.util.regex.Matcher.quoteReplacement(strInsData);
 		System.out.println(strInsData);
 		System.out.println("--------------------------");
+		
+		String a = "12345@22";
+		
+		System.out.println(a.substring(0, a.indexOf("@")));
 //		JacksonUtil jacksonUtil = new JacksonUtil();
 //		String val = "ABC\\%$\"{}[]=:";
 //		Map<String, Object> jsonObject = new HashMap<String, Object>();
