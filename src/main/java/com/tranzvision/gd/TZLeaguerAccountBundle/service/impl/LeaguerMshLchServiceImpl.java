@@ -250,10 +250,13 @@ public class LeaguerMshLchServiceImpl extends FrameworkImpl{
 				
 				if(appIns != null && !"".equals(appIns)){
 					//材料评审
-					Map< String, Object> clmsMap = jdbcTemplate.queryForMap("SELECT TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+					Map< String, Object> clmsMap = jdbcTemplate.queryForMap("SELECT TZ_ENTER_CLPS,TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
 					if(clmsMap != null){
+						String enterClps = clmsMap.get("TZ_ENTER_CLPS")==null?"":String.valueOf(clmsMap.get("TZ_ENTER_CLPS"));
 						String str1 = clmsMap.get("TZ_RESULT")==null?"":String.valueOf(clmsMap.get("TZ_RESULT"));
 						String str2 = clmsMap.get("TZ_RESULT_CODE")==null?"":String.valueOf(clmsMap.get("TZ_RESULT_CODE"));
+						
+						ksdrMap.put("enterClps", enterClps);
 						ksdrMap.put("clpsJg", str1);
 						ksdrMap.put("sfmsZg", str2);
 					}
@@ -403,11 +406,14 @@ public class LeaguerMshLchServiceImpl extends FrameworkImpl{
 				    				    
 				    String str_clpsJg = map.get("clpsJg")==null?"":String.valueOf(map.get("clpsJg"));
 				    String str_sfmsZg = map.get("sfmsZg")==null?"":String.valueOf(map.get("sfmsZg"));
+				    String str_enterClps = map.get("enterClps")==null?"":String.valueOf(map.get("enterClps"));
+				    
 				    TzImpClpsTbl tzImpClpsTbl = new TzImpClpsTbl();
 				    tzImpClpsTbl.setTzAppInsId(appInsId);
 				    tzImpClpsTbl.setTzResult(str_clpsJg);
 				    tzImpClpsTbl.setTzResultCode(str_sfmsZg);
-					
+				    tzImpClpsTbl.setTzEnterClps(str_enterClps);
+				    
 				    if("Y".equals(strExistsFlg)){
 				    	TzImpClpsTblMapper.updateByPrimaryKeySelective(tzImpClpsTbl);
 				    }else{
