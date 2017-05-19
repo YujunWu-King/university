@@ -18,7 +18,7 @@
 	var ContextPath = "%bind(:1)";
 	var OrgCode = "%bind(:2)";
 	var TimeOut = %bind(:3);
-	var EvaluationDescriptionUrl = %bind(:6);
+	var EvaluationDescriptionUrl = "%bind(:6)";
 </script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/extjs/bootstrap.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/extjs/ext-lang-zh_CN.js"></script>
@@ -100,8 +100,8 @@ $(function(){
 						<td align="center" valign="top">
 							<div id="tz_zlps_pclb" tztype="page" style="background-color:#F4F4EC;z-index:1400;list-style:none;width:100%;float:left;overflow-x:hidden">
 								<table  style="width:100%;height:100%">
-									<tr>
-										<td align="center" valign="top">
+									<tr style="width:100%;height:100%">
+										<td style="width:100%;height:100%" align="center" valign="top">
 											<div id="tz_zlps_pclb_a" style="vertical-align:middle"></div>
 											<div id="tz_zlps_description" style="vertical-align:middle"></div>
 										</td>

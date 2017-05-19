@@ -477,6 +477,7 @@ function initializeEvaluatePiciGrid(jsonObject)
   //评审说明区域
   var descPanel = Ext.create("Ext.panel.Panel",{
 	  title:'评审说明',
+	  header:false,
 	  height:'100%',
 	  renderTo: 'tz_zlps_description',
       contentEl : Ext.DomHelper.append(document.body, {
