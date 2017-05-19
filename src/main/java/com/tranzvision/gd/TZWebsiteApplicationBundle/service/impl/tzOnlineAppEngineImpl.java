@@ -460,12 +460,18 @@ public class tzOnlineAppEngineImpl {
 						// ---3.向推荐信相关表中，加入”推荐信“信息 "PS_TZ_KS_TJX_TBL"
 						// ////System.out.println(letterList.size());
 						Map<String, Object> letterMap = null;
+						System.out.println("有" + letterList.size() + "封推荐信");
 						for (int i = 0; i < letterList.size(); i++) {
 							// ////System.out.println("推荐信读取");
 							letterMap = letterList.get(i);
-
-							String tzRefLetterId = String
-									.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
+							
+							String str_seq1 = String.valueOf((int) (Math.random() * 10000000));
+							String str_seq2 = "00000000000000"
+									+ String.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
+							str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
+							String tzRefLetterId = str_seq1 + str_seq2;
+							//String tzRefLetterId = String
+							//		.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
 							PsTzKsTjxTbl psTzKsTjxTbl = new PsTzKsTjxTbl();
 							psTzKsTjxTbl.setTzRefLetterId(tzRefLetterId);// 主键
 																			// 推荐信ID
@@ -575,37 +581,92 @@ public class tzOnlineAppEngineImpl {
 							String LAST_LETTER_INS_ID = letterMap.get("TZ_TJX_APP_INS_ID") == null ? ""
 									: letterMap.get("TZ_TJX_APP_INS_ID").toString();
 							// 已经确认 只有唯一推荐信实例？TZ_APP_FORM_STA='U'表示已提交
-							final String SQL_LETTER_INS = "SELECT * FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
-							if (!LAST_LETTER_INS_ID.equals("")) {
-								List<Map<String, Object>> letterInsList = sqlQuery.queryForList(SQL_LETTER_INS,
-										new Object[] { LAST_LETTER_INS_ID });
-								if (letterInsList != null) {
-									for (int k = 0; k < letterInsList.size(); k++) {
-										Map<String, Object> letterInsMap = letterInsList.get(k);
-										PsTzAppInsT psTzAppInsT2 = new PsTzAppInsT();
-										psTzAppInsT2.setTzAppInsId(tzTjxAppInsId);// 报名表实例ID
-										// 新生成的
-										psTzAppInsT2.setRowAddedOprid(oprid); // 当前用户ID
-										psTzAppInsT2.setRowLastmantOprid(oprid);
-										psTzAppInsT2.setRowAddedDttm(new Date());
-										psTzAppInsT2.setRowLastmantDttm(new Date());
-										psTzAppInsT2.setTzAppTplId(letterInsMap.get("TZ_APP_TPL_ID").toString());// 历史推荐信模板ID
-										psTzAppInsT2
-												.setTzAppinsJsonStr(letterInsMap.get("TZ_APPINS_JSON_STR").toString());// 历史推荐信字符串信息
-										// 新产生的推荐信ID"已提交"状态的推荐信ID 推入前台
-										String submitState = letterInsMap.get("TZ_APP_FORM_STA") == null ? ""
-												: letterInsMap.get("TZ_APP_FORM_STA").toString();
-										if (submitState.equals("U")) {
-											strRefLetterId = tzRefLetterId;
-										}
-										psTzAppInsT2.setTzAppFormSta(submitState);
-										String tzPwd = letterInsMap.get("TZ_PWD") == null ? ""
-												: letterInsMap.get("TZ_PWD").toString();
-										psTzAppInsT2.setTzPwd(tzPwd);
-										psTzAppInsTMapper.insertSelective(psTzAppInsT2);
-									}
+							psTzAppInsT = null;
+							psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(new Long(LAST_LETTER_INS_ID));
+
+							if (psTzAppInsT != null) {
+								PsTzAppInsT psTzAppInsT2 = new PsTzAppInsT();
+								psTzAppInsT2.setTzAppInsId(tzTjxAppInsId);// 报名表实例ID
+								// 新生成的
+								psTzAppInsT2.setRowAddedOprid(oprid); // 当前用户ID
+								psTzAppInsT2.setRowLastmantOprid(oprid);
+								psTzAppInsT2.setRowAddedDttm(new Date());
+								psTzAppInsT2.setRowLastmantDttm(new Date());
+								psTzAppInsT2.setTzAppTplId(psTzAppInsT.getTzAppTplId());// 历史推荐信模板ID
+								psTzAppInsT2.setTzAppinsJsonStr(psTzAppInsT.getTzAppinsJsonStr());// 历史推荐信字符串信息
+								// 新产生的推荐信ID"已提交"状态的推荐信ID 推入前台
+								String submitState = psTzAppInsT.getTzAppFormSta();
+								if (submitState.equals("U")) {
+									strRefLetterId = tzRefLetterId;
 								}
+								psTzAppInsT2.setTzAppFormSta(submitState);
+								psTzAppInsT2.setTzPwd(psTzAppInsT.getTzPwd());
+								psTzAppInsTMapper.insertSelective(psTzAppInsT2);
+
+								// 增加PS_TZ_APP_CC_T PS_TZ_APP_DHCC_T
+								// PS_TZ_FORM_ATT_T PS_TZ_APP_DHHS_T
+								// PS_TZ_APP_HIDDEN_T
+								final String addTZ_APP_CC_T = "insert into PS_TZ_APP_CC_T select ?,TZ_XXX_BH,TZ_APP_S_TEXT,TZ_KXX_QTZ,TZ_APP_L_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID=?";
+								final String addTZ_APP_DHCC_T = "insert into PS_TZ_APP_DHCC_T select ?,TZ_XXX_BH,TZ_XXXKXZ_MC,TZ_APP_S_TEXT,TZ_KXX_QTZ,TZ_IS_CHECKED from PS_TZ_APP_DHCC_T where TZ_APP_INS_ID=?";
+								final String addTZ_FORM_ATT_T = "insert into PS_TZ_FORM_ATT_T select ?,TZ_XXX_BH,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE,ROW_ADDED_DTTM,ROW_ADDED_OPRID,ROW_LASTMANT_DTTM,ROW_LASTMANT_OPRID,SYNCID,SYNCDTTM,TZ_ACCESS_PATH from PS_TZ_FORM_ATT_T where TZ_APP_INS_ID=?";
+								final String addTZ_APP_DHHS_T = "insert into PS_TZ_APP_DHHS_T select ?,TZ_XXX_BH,TZ_XXX_LINE from PS_TZ_APP_DHHS_T where TZ_APP_INS_ID=?";
+								final String addTZ_APP_HIDDEN_T = "insert into PS_TZ_APP_HIDDEN_T select ?,TZ_XXX_BH,TZ_IS_HIDDEN from PS_TZ_APP_HIDDEN_T where TZ_APP_INS_ID=?";
+								
+								//System.out.println(addTZ_APP_CC_T);
+								//System.out.println(addTZ_APP_DHCC_T);
+								//System.out.println(addTZ_FORM_ATT_T);
+								//System.out.println(addTZ_APP_DHHS_T);
+								//System.out.println(addTZ_APP_HIDDEN_T);
+								System.out.println("tzTjxAppInsId："+tzTjxAppInsId);
+								System.out.println("LAST_LETTER_INS_ID："+LAST_LETTER_INS_ID);
+								
+								sqlQuery.update(addTZ_APP_CC_T, new Object[] { tzTjxAppInsId, LAST_LETTER_INS_ID });
+								sqlQuery.update(addTZ_APP_DHCC_T, new Object[] { tzTjxAppInsId, LAST_LETTER_INS_ID });
+								sqlQuery.update(addTZ_FORM_ATT_T, new Object[] { tzTjxAppInsId, LAST_LETTER_INS_ID });
+								sqlQuery.update(addTZ_APP_DHHS_T, new Object[] { tzTjxAppInsId, LAST_LETTER_INS_ID });
+								sqlQuery.update(addTZ_APP_HIDDEN_T, new Object[] { tzTjxAppInsId, LAST_LETTER_INS_ID });
+
 							}
+
+							// final String SQL_LETTER_INS = "SELECT * FROM
+							// PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+							// if (!LAST_LETTER_INS_ID.equals("")) {
+							// List<Map<String, Object>> letterInsList =
+							// sqlQuery.queryForList(SQL_LETTER_INS,
+							// new Object[] { LAST_LETTER_INS_ID });
+							// if (letterInsList != null) {
+							// for (int k = 0; k < letterInsList.size(); k++) {
+							// Map<String, Object> letterInsMap =
+							// letterInsList.get(k);
+							// PsTzAppInsT psTzAppInsT2 = new PsTzAppInsT();
+							// psTzAppInsT2.setTzAppInsId(tzTjxAppInsId);//
+							// 报名表实例ID
+							// // 新生成的
+							// psTzAppInsT2.setRowAddedOprid(oprid); // 当前用户ID
+							// psTzAppInsT2.setRowLastmantOprid(oprid);
+							// psTzAppInsT2.setRowAddedDttm(new Date());
+							// psTzAppInsT2.setRowLastmantDttm(new Date());
+							// psTzAppInsT2.setTzAppTplId(letterInsMap.get("TZ_APP_TPL_ID").toString());//
+							// 历史推荐信模板ID
+							// psTzAppInsT2
+							// .setTzAppinsJsonStr(letterInsMap.get("TZ_APPINS_JSON_STR").toString());//
+							// 历史推荐信字符串信息
+							// // 新产生的推荐信ID"已提交"状态的推荐信ID 推入前台
+							// String submitState =
+							// letterInsMap.get("TZ_APP_FORM_STA") == null ? ""
+							// : letterInsMap.get("TZ_APP_FORM_STA").toString();
+							// if (submitState.equals("U")) {
+							// strRefLetterId = tzRefLetterId;
+							// }
+							// psTzAppInsT2.setTzAppFormSta(submitState);
+							// String tzPwd = letterInsMap.get("TZ_PWD") == null
+							// ? ""
+							// : letterInsMap.get("TZ_PWD").toString();
+							// psTzAppInsT2.setTzPwd(tzPwd);
+							// psTzAppInsTMapper.insertSelective(psTzAppInsT2);
+							// }
+							// }
+							// }
 
 						}
 						// ---4.将新产生的"报名表实例ID"放入 前端html,即：strAppInsId,
