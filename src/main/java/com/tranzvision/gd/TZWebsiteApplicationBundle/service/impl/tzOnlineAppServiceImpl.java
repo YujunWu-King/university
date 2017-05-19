@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,8 +50,6 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.encrypt.Sha3DesMD5;
-import com.tranzvision.gd.util.httpclient.CommonUtils;
-import com.tranzvision.gd.util.httpclient.HttpClientService;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -66,8 +62,6 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppServiceImpl")
 public class tzOnlineAppServiceImpl extends FrameworkImpl {
-
-	private static final Logger logger = LoggerFactory.getLogger(tzOnlineAppServiceImpl.class);
 	@Autowired
 	private SqlQuery sqlQuery;
 	@Autowired
@@ -211,9 +205,6 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		// 是否评审
 		String strIsReview = "N";
-
-		// 是否是手机登录
-		boolean isMobile = CommonUtils.isMobile(request);
 
 		if ("appId".equals(strReferenceId)) {
 			strClassId = request.getParameter("TZ_CLASS_ID");
@@ -786,16 +777,16 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				strInsData = "''";
 			}
 
-			// 双语化消息集合Json字符串
-			// msgSet 用于双语
-
 			// 获取个人基本信息
-			System.out.println("获取个人基本信息处理Begin");
+			System.out.println("报名表展现获取个人基本信息Begin");
 			time2 = System.currentTimeMillis();
 			String strUserInfoSet = "";
-			strUserInfoSet = tzOnlineAppEngineImpl.getUserInfo(strAppInsId, strTplType);
-			System.out.println("获取个人基本信息处理End,Time=" + (System.currentTimeMillis() - time2));
+			strUserInfoSet = tzOnlineAppEngineImpl.getUserInfo(strAppInsId, strTplType, strSiteId);
 
+			System.out.println("报名表展现获取个人基本信息End,Time=" + (System.currentTimeMillis() - time2));
+
+			// 双语化消息集合Json字符串
+			// msgSet 用于双语
 			System.out.println("报名表展现双语化处理Begin");
 			time2 = System.currentTimeMillis();
 			String strMsgSet = "{}";
@@ -952,19 +943,17 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				System.out.println("报名表展现构造HTML页面Begin");
 				time2 = System.currentTimeMillis();
-
 				str_appform_main_html = tzGdObject.getHTMLTextForDollar(
 						"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML", false, strTzGeneralURL, strComRegInfo,
-						strTplId, strAppInsId, strClassId, strRefLetterId, "", "", strTabs, strSiteId, strAppOrgId,
-						strMenuId, strAppFormReadOnly, strMsgSet, strLanguage, strSave, strNext, strSubmit, strTplType,
-						strLoading, strProcessing, strAfterSubmitUrl, strOnlineHead, strOnlineFoot, strOnlineLeft,
-						strIsAdmin, strMainInnerStyle, strUserInfoSet, strMainStyle, strPrev, strAppInsVersion,
-						contextUrl, leftWidthStyle, rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly,
-						strSubmitConfirmMsg, strIsEdit, strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id,
-						pwdTitleDivId, pwdDivId, pwdDivId2, pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg,
-						strDownErrorMsg, classProjectID, strAppInsState, strDisplayType, strIsReview, strTplData,
-						strInsData);
-
+						strTplId, strAppInsId, strClassId, strRefLetterId, strTplData, strInsData, strTabs, strSiteId,
+						strAppOrgId, strMenuId, strAppFormReadOnly, strMsgSet, strLanguage, strSave, strNext, strSubmit,
+						strTplType, strLoading, strProcessing, strAfterSubmitUrl, strOnlineHead, strOnlineFoot,
+						strOnlineLeft, strIsAdmin, strMainInnerStyle, strUserInfoSet, strMainStyle, strPrev,
+						strAppInsVersion, contextUrl, leftWidthStyle, rightWidthStyle, strLeftStyle, strRightStyle,
+						showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit, strBatchId, strTJXIsPwd, passWordHtml,
+						setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2, pwdError, pwdError2, PWDHTML,
+						strDownLoadPDFMsg, strDownErrorMsg, classProjectID, strAppInsState, strDisplayType, strIsReview,
+						strTplData, strInsData);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");
