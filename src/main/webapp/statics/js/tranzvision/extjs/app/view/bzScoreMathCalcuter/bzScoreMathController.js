@@ -6,7 +6,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathController', {
 		Ext.tzImport({ /*importType 导入类型：A-传Excel；B-粘贴Excel数据*/
 			importType: 'A',
 			/*导入模版编号*/
-		    tplResId:'TZ_PLANBUG_DR_IMP',
+		    tplResId:'TZ_BZCJ_YS_TMP',
 			/*businessHandler  预览导入的数据之后点击下一步执行的函数，根据业务的需求自由编写，columnArray为解析Excel后的标题行数组（如果未勾选首行是标题行columnArray=[]）
 			 * dataArray为解析后的Excel二维数组数据（勾选了首行是标题行则dataArray不包含首行数据；）
 			 */
@@ -242,7 +242,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathController', {
 		Ext.tzImport({ /*importType 导入类型：A-传Excel；B-粘贴Excel数据*/
 			importType: 'A',
 			/*导入模版编号*/
-			tplResId:'TZ_PLANBUG_DR_IMP',
+			tplResId:'TZ_BZCJ_BZ_TMP',
 			/*businessHandler  预览导入的数据之后点击下一步执行的函数，根据业务的需求自由编写，columnArray为解析Excel后的标题行数组（如果未勾选首行是标题行columnArray=[]）
 			 * dataArray为解析后的Excel二维数组数据（勾选了首行是标题行则dataArray不包含首行数据；）
 			 */

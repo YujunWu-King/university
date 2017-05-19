@@ -1313,7 +1313,8 @@ function getPartBatchDataByBatchId(batchId,callBackFunction,applicantObject,oper
 							{
 								if(operationType == 'RFH') {
 									//保存并获取下一个考生使用，报名表加载完成前不能操作,显示mask窗口
-									maskWindow();
+									//maskWindow();
+									//console.log("getPartBatchDataByBatchId-->"+applicantObject.applicantBaomingbiaoID);
 								} else {
 									//其他暂无操作
 								}

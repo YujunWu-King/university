@@ -172,7 +172,7 @@ public class TzRefMaterialController {
 		// 当前人员填写的报名表的版本号
 		String strAppInsVersion = "";
 		// 报名表是否只读标记
-		String strAppFormReadOnly = "";
+		String strAppFormReadOnly = "Y";
 		// 报名人Oprid
 		String strAppOprId = "";
 		// 报名表状态
@@ -289,14 +289,8 @@ public class TzRefMaterialController {
 					/*----查看是否是查看附属模版 Start  ----*/
 					// 主模版的实例ID+附属模版的模版ID
 					if (StringUtils.isNotBlank(strAttachedTplId) && !StringUtils.equals(strAttachedTplId, "null")) {
-						// &&
-						// strAttachedTplId.equals(psTzApptplDyTWithBLOBs.getTzAppMTplId()))
-						// {
 						// 附属模板
 						sql = "SELECT TZ_APP_M_TPL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_TPL_ID=?";
-						// PsTzApptplDyTWithBLOBs attachedPsTzApptplDyTWithBLOBs
-						// =
-						// psTzApptplDyTMapper.selectByPrimaryKey(strAttachedTplId);
 						String TZ_APP_M_TPL_ID = sqlQuery.queryForObject(sql, new Object[] { strAttachedTplId }, "String");
 						if (strTplId.equals(TZ_APP_M_TPL_ID)) {
 							strTplId = strAttachedTplId;
@@ -337,37 +331,6 @@ public class TzRefMaterialController {
 									sql = "select TZ_SITEI_ID from PS_TZ_CLASS_INF_T A,PS_TZ_PROJECT_SITE_T B where A.TZ_CLASS_ID=? AND A.TZ_PRJ_ID = B.TZ_PRJ_ID LIMIT 1";
 									strSiteId = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
 								}
-								/*
-								if ("TZ_GUEST".equals(strAppOprId) || "".equals(strAppOprId)) {
-									// 如果是匿名报名
-									sql = "SELECT TZ_GUEST_APPLY FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ?";
-									strIsGuest = sqlQuery.queryForObject(sql, new Object[] { strClassId }, "String");
-									if (!"Y".equals(strIsGuest)) {
-										strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
-												"TZGD_APPONLINE_MSGSET", "SESSION_INVAILD", strLanguage,
-												"当前会话已失效，请重新登陆。",
-												"The current session is timeout or the current access is invalid,Please relogin.");
-									}
-								} else {
-									if (oprid.equals(strAppOprId)) {
-										// 自己操作自己的报名表
-									} else {
-										// 看是否管理员查看报名表
-										strIsAdmin = "";
-										strIsAdmin = tzOnlineAppEngineImpl.checkAppViewQx(strTplId, oprid, strAppOrgId,
-												strClassId);
-										if ("Y".equals(strIsAdmin)) {
-											// 管理员只读查看
-											strAppFormReadOnly = "Y";
-										} else {
-											// 非法访问
-											strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
-													"TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", strLanguage, "非法操作",
-													"Illegal operation.");
-										}
-									}
-								}
-								*/
 							} else {
 								strMessageError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
 										"TZGD_APPONLINE_MSGSET", "ILLEGAL_OPERATION", strLanguage, "非法操作",
@@ -473,23 +436,18 @@ public class TzRefMaterialController {
 			if (strMenuId == null)
 				strMenuId = "";
 
-			// System.out.println("numAppInsId:"+numAppInsId);
-			// System.out.println("strTplType:"+strTplType);
-			long time2 = System.currentTimeMillis();
-			System.out.println("报名表展现检查推荐信的完成状态Begin");
+
 			if (numAppInsId > 0 && "BMB".equals(strTplType)) {
 				// 检查推荐信的完成状态
 				tzOnlineAppEngineImpl.checkRefletter(numAppInsId, strTplId);
 			}
-			System.out.println("报名表展现检查推荐信的完成状态End,Time=" + (System.currentTimeMillis() - time2));
+			//System.out.println("报名表展现检查推荐信的完成状态End,Time=" + (System.currentTimeMillis() - time2));
 
 			/*---执行页面加载事件-模版级事件开始 ----*/
 			// 目前没有做处理，源代码请看tzOnlineAppServiceImplOld
 			/*---执行页面加载事件-模版级事件结束 ----*/
 
 			/*-----报名表菜单生成Begin--------------*/
-			time2 = System.currentTimeMillis();
-			System.out.println("报名表展现左侧菜单处理Begin");
 			int numIndex = 0;
 			String strXxxBh = "";
 			// String strXxxMc = "";
@@ -576,10 +534,7 @@ public class TzRefMaterialController {
 				strLeftStyle = "display:none";
 				strRightStyle = "margin: 0 auto;float:none";
 			}
-			//System.out.println("报名表展现左侧菜单处理End,Time=" + (System.currentTimeMillis() - time2));
 
-			//System.out.println("报名表展现获取控件信息处理Begin");
-			time2 = System.currentTimeMillis();
 			// 控件信息
 			String strComRegInfo = "";
 			ArrayList<Map<String, Object>> comDfn = templateEngine.getComDfn(strTplId);
@@ -587,8 +542,6 @@ public class TzRefMaterialController {
 			strComRegInfo = strComRegInfo.replace("\\", "\\\\");
 			//System.out.println("报名表展现获取控件信息处理End,Time=" + (System.currentTimeMillis() - time2));
 
-			//System.out.println("报名表展现历史报名表处理Begin");
-			time2 = System.currentTimeMillis();
 			/*-----------最新历史报名表Begin------------- */
 			Map<String, String> m = tzOnlineAppEngineImpl.getHistoryOnlineApp(strAppInsId, strCopyFrom, strAppOprId,
 					strAppOrgId, strTplId, strAppOprId, strClassId, strRefLetterId, strInsData);
@@ -616,7 +569,6 @@ public class TzRefMaterialController {
 			// 双语化消息集合Json字符串
 			// msgSet 用于双语
 			//System.out.println("报名表展现双语化处理Begin");
-			time2 = System.currentTimeMillis();
 			String strMsgSet = "{}";
 			strMsgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_APPONLINE_MSGSET",
 					strLanguage);
@@ -627,7 +579,7 @@ public class TzRefMaterialController {
 			}
 			// 获取个人基本信息
 			String strUserInfoSet = "";
-			strUserInfoSet = tzOnlineAppEngineImpl.getUserInfo(strAppInsId, strTplType);
+			strUserInfoSet = tzOnlineAppEngineImpl.getUserInfo(strAppInsId, strTplType, strSiteId);
 
 			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SAVE",
 					strLanguage, "保存", "Save");
@@ -704,7 +656,6 @@ public class TzRefMaterialController {
 			try {
 
 				//System.out.println("报名表展现密码处理Begin");
-				time2 = System.currentTimeMillis();
 				String passWordHtml = "";
 
 				String setPwdId = "setPwd";
@@ -773,7 +724,6 @@ public class TzRefMaterialController {
 				//System.out.println("报名表展现密码处理End,Time=" + (System.currentTimeMillis() - time2));
 
 				//System.out.println("报名表展现构造HTML页面Begin");
-				time2 = System.currentTimeMillis();
 				str_appform_main_html = tzGdObject.getHTMLText("HTML.TZReferenceMaterialBundle.TZ_REF_APP_FORM_HTML",
 						false, strTzGeneralURL, strComRegInfo, strTplId, strAppInsId, strClassId, strRefLetterId,
 						strTplData, strInsData, strTabs, strSiteId, strAppOrgId, strMenuId, strAppFormReadOnly,
@@ -784,7 +734,7 @@ public class TzRefMaterialController {
 						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
 						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg, classProjectID);
 				//System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
-				time2 = System.currentTimeMillis();
+				//time2 = System.currentTimeMillis();
 				//System.out.println("报名表展现替换HTML页面Begin");
 				str_appform_main_html = siteRepCssServiceImpl.repTitle(str_appform_main_html, strSiteId);
 				str_appform_main_html = siteRepCssServiceImpl.repCss(str_appform_main_html, strSiteId);

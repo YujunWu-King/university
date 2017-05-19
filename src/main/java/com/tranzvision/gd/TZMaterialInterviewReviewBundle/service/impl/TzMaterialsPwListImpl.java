@@ -67,15 +67,13 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 					}
 					String judgeRealName = sMap.get("TZ_REALNAME") == null ? "" : String.valueOf(sMap.get("TZ_REALNAME"));
 					String judgeInsId = sMap.get("TZ_SCORE_INS_ID") == null ? "" : String.valueOf(sMap.get("TZ_SCORE_INS_ID"));
-					String bphSql = "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? ORDER BY TREE_NODE_NUM ASC";
-					List<Map<String, Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] { strTreeName });
+					String bphSql = "SELECT A.TREE_NODE,B.DESCR FROM PSTREENODE A,PS_TZ_MODAL_DT_TBL B WHERE B.TREE_NAME=A.TREE_NAME AND B.TZ_SCORE_ITEM_ID=A.TREE_NODE AND B.TZ_JG_ID=? AND A.TREE_NAME=? ORDER BY A.TREE_NODE_NUM ASC";
+					List<Map<String, Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] { strCurrentOrg,strTreeName });
 					if (bphMapList != null && bphMapList.size() > 0) {
 						for (Object bphObj : bphMapList) {
 							Map<String, Object> bphMap = (Map<String, Object>) bphObj;
 							String strItemId = bphMap.get("TREE_NODE") == null ? "" : String.valueOf(bphMap.get("TREE_NODE"));
-							
-							String strTTmpSQL = "SELECT DESCR FROM PS_TZ_MODAL_DT_TBL WHERE TZ_JG_ID=? AND TREE_NAME=? AND TZ_SCORE_ITEM_ID=?";
-							String strScoreItemMc = sqlQuery.queryForObject(strTTmpSQL,new Object[]{strCurrentOrg,strTreeName,strItemId},"String");							
+							String strScoreItemMc = bphMap.get("DESCR") == null ? "" : String.valueOf(bphMap.get("DESCR"));						
 
 							String strScoreItemType = "";
 							String strScoreToScore = "";

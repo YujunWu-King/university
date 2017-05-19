@@ -609,4 +609,11 @@ Ext.tzSubmit =  function(params,callback,msg,showMask)
     	Ext.Msg.alert("提示","保存失败：请与系统管理员联系。");
     	unmaskWindow();
     }
-} 
+}
+
+
+//报名表加载完成后去掉mask窗口
+function bmbLoaded(bmbId) {
+	unmaskWindow();
+	console.log(bmbId + " bmb area loaded.");
+}

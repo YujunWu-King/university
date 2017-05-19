@@ -52,7 +52,7 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			// 根据报名表ID查询考生职业背景，获取公司性质
 			String GSXZ = ksMap.get("TZ_20TZ_TZ_20_14firm_type");
 			// 根据报名表ID查询考生创业背景
-			//String CYBJ = ksMap.get("TZ_17TZ_TZ_17_4firm_type");
+			// String CYBJ = ksMap.get("TZ_17TZ_TZ_17_4firm_type");
 
 			// 政府机构或事业单位，获取岗位类型
 			String ZWLXori = ksMap.get("TZ_20TZ_TZ_20_14position_type");
@@ -113,7 +113,16 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			String YSQK = ksMap.get("TZ_17TZ_TZ_17_20income_y");
 			int YS = 0;
 			if (YSQK != null && !YSQK.equals("")) {
-				YS = Integer.parseInt(YSQK);
+				// YS = Integer.parseInt(YSQK);
+
+				String cc2 = "";
+				for (int i = 0; i < YSQK.length(); i++) {
+					if (YSQK.charAt(i) >= 48 && YSQK.charAt(i) <= 57) {
+						cc2 += YSQK.charAt(i);
+					}
+				}
+				YS = Integer.parseInt(cc2);
+
 			}
 			// 自有资金
 			String ZYZJ = ksMap.get("TZ_17TZ_TZ_17_20own_money");
@@ -314,23 +323,50 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 						QTGM = "0";
 					}
 
+					// 近12个月收入
 					String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'YS' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=	? and TZ_CSMB_TJ4>?";
 
-					int aa = Integer.parseInt(QTYS);
+					String cc4 = "";
+					for (int i = 0; i < QTYS.length(); i++) {
+						if (QTYS.charAt(i) >= 48 && QTYS.charAt(i) <= 57) {
+							cc4 += QTYS.charAt(i);
+						}
+					}
+					float aa = Float.parseFloat(cc4);
 					int a = (int) (aa);
+
 					String FSCJ = SqlQuery.queryForObject(sql, new Object[] { a, a }, "String");
 					if (FSCJ != null) {
 						Score1 = Float.parseFloat(FSCJ);
 					}
+					// 年纯利润
 					String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'LR' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					int bb = Integer.parseInt(QTLR);
+
+					String cc3 = "";
+					for (int i = 0; i < QTLR.length(); i++) {
+						if (QTLR.charAt(i) >= 48 && QTLR.charAt(i) <= 57) {
+							cc3 += QTLR.charAt(i);
+						}
+					}
+
+					float bb = Float.parseFloat(cc3);
 					int b = (int) (bb);
 					String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] { b, b }, "String");
 					if (FSCJ2 != null) {
 						Score2 = Float.parseFloat(FSCJ2);
 					}
+
+					// 企业规模
 					String sql3 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= 'GM' AND TZ_CSMB_TJ1 = 'QT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-					int cc = Integer.parseInt(QTGM);
+					// int cc = Integer.parseInt(QTGM);
+					String cc2 = "";
+					for (int i = 0; i < QTGM.length(); i++) {
+						if (QTGM.charAt(i) >= 48 && QTGM.charAt(i) <= 57) {
+							cc2 += QTGM.charAt(i);
+						}
+					}
+
+					float cc = Float.parseFloat(cc2);
 					int c = (int) (cc);
 					String FSCJ3 = SqlQuery.queryForObject(sql3, new Object[] { c, c }, "String");
 					if (FSCJ3 != null) {

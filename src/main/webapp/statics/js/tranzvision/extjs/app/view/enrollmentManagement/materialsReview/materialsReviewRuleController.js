@@ -361,9 +361,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             view = me.getView();
         var form = view.child("form").getForm();
         var clpsksNum = form.findField("clpsksNum").getValue();
+        var classId = form.findField("classId").getValue();
+        var batchId = form.findField("batchId").getValue();
 
         var grid = view.down("grid[name=materialJudgeGrid]");
         var judgeStore = grid.getStore();
+        var tzParams = '{"classId":"'+classId+'","batchId":"'+batchId+'"}';
+        judgeStore.tzStoreParams = tzParams;
 
         var actType = view.actType;
 

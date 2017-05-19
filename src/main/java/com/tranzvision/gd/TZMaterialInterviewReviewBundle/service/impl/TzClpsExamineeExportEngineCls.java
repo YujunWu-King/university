@@ -17,6 +17,8 @@ public class TzClpsExamineeExportEngineCls extends BaseEngine {
 	private static String schoolNameXxxId = "";
 	// 最高学历
 	private static String highestRecordXxxId = "";
+	// 最高学历下拉框定义id
+	private static String highestRecordXlkId = "";
 	// 工作所在地
 	private static String companyAddressXxxId = "";
 	// 工作单位
@@ -100,6 +102,7 @@ public class TzClpsExamineeExportEngineCls extends BaseEngine {
 				String hardcodeSql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
 				schoolNameXxxId = sqlQuery.queryForObject(hardcodeSql, new Object[]{ "TZ_BMB_BZKYX_XXX_ID" }, "String");
 				highestRecordXxxId = sqlQuery.queryForObject(hardcodeSql, new Object[]{ "TZ_BMB_ZGXL_XXX_ID" }, "String");
+				highestRecordXlkId = sqlQuery.queryForObject(hardcodeSql, new Object[]{ "TZ_BMB_ZGXL_XLK_ID" }, "String");
 				companyAddressXxxId = sqlQuery.queryForObject(hardcodeSql, new Object[]{ "TZ_BMB_GZSZD_XXX_ID" }, "String");
 				companyNameXxxId = sqlQuery.queryForObject(hardcodeSql, new Object[]{ "TZ_BMB_GZDW_XXX_ID" }, "String");
 				departmentXxxId = sqlQuery.queryForObject(hardcodeSql, new Object[]{ "TZ_BMB_SZBM_XXX_ID" }, "String");
@@ -172,16 +175,17 @@ public class TzClpsExamineeExportEngineCls extends BaseEngine {
 	 */
 	private void tzExportData(SqlQuery sqlQuery,String classId,String batchId,String appinsId,List<String[]> listScoreItemField,List<Map<String, Object>> dataList){
 		
-		String className = "", nationId = "", mssqh = "", name = "", judgeDlzhId = "", judgeNum = "", 
+		String className = "", appModalId = "", nationId = "", mssqh = "", name = "", judgeDlzhId = "", judgeNum = "", 
 			   rank = "", birthday = "", age = "", sex = "", examineeTag = "", schoolName = "", 
-			   highestRecord = "", companyAddress = "", companyName = "", department = "", position = "", selfEmployment = "";
+			   highestRecordId = "", highestRecord = "", companyAddress = "", companyName = "", department = "", position = "", selfEmployment = "";
 		String scoreInsId = "";
 
 		// 考生数据
-		String sql = "SELECT A.TZ_CLASS_NAME,C.NATIONAL_ID,D.TZ_MSH_ID,C.TZ_REALNAME,DATE_FORMAT(C.BIRTHDATE,\"%Y-%m-%d\") BIRTHDATE,(year(now())-year(C.BIRTHDATE)) AGE,(SELECT X.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL X WHERE X.TZ_ZHZ_ID=C.TZ_GENDER AND X.TZ_ZHZJH_ID='TZ_GENDER') TZ_GENDER_DESC FROM PS_TZ_AQ_YHXX_TBL D,PS_TZ_REG_USER_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CLASS_INF_T A WHERE B.OPRID=D.OPRID AND B.OPRID=C.OPRID AND D.TZ_JG_ID=A.TZ_JG_ID AND A.TZ_CLASS_ID=? AND B.TZ_APP_INS_ID=?";
+		String sql = "SELECT A.TZ_CLASS_NAME,A.TZ_APP_MODAL_ID,C.NATIONAL_ID,D.TZ_MSH_ID,C.TZ_REALNAME,DATE_FORMAT(C.BIRTHDATE,\"%Y-%m-%d\") BIRTHDATE,(year(now())-year(C.BIRTHDATE)) AGE,(SELECT X.TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL X WHERE X.TZ_ZHZ_ID=C.TZ_GENDER AND X.TZ_ZHZJH_ID='TZ_GENDER') TZ_GENDER_DESC FROM PS_TZ_AQ_YHXX_TBL D,PS_TZ_REG_USER_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CLASS_INF_T A WHERE B.OPRID=D.OPRID AND B.OPRID=C.OPRID AND D.TZ_JG_ID=A.TZ_JG_ID AND A.TZ_CLASS_ID=? AND B.TZ_APP_INS_ID=?";
 		Map<String, Object> mapExaminee = sqlQuery.queryForMap(sql, new Object[] { classId, appinsId });
 		if (mapExaminee != null) {
 			className = mapExaminee.get("TZ_CLASS_NAME") == null ? "" : mapExaminee.get("TZ_CLASS_NAME").toString();
+			appModalId = mapExaminee.get("TZ_APP_MODAL_ID") == null ? "" : mapExaminee.get("TZ_APP_MODAL_ID").toString();
 			nationId = mapExaminee.get("NATIONAL_ID") == null ? "" : mapExaminee.get("NATIONAL_ID").toString();
 			mssqh = mapExaminee.get("TZ_MSH_ID") == null ? "" : mapExaminee.get("TZ_MSH_ID").toString();
 			name = mapExaminee.get("TZ_REALNAME") == null ? "" : mapExaminee.get("TZ_REALNAME").toString();
@@ -192,12 +196,16 @@ public class TzClpsExamineeExportEngineCls extends BaseEngine {
 			
 			String appSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH=?";
 			schoolName = sqlQuery.queryForObject(appSql, new Object[]{ appinsId, schoolNameXxxId }, "String");
-			highestRecord = sqlQuery.queryForObject(appSql, new Object[]{ appinsId, highestRecordXxxId }, "String");
+			highestRecordId = sqlQuery.queryForObject(appSql, new Object[]{ appinsId, highestRecordXxxId }, "String");
 			companyAddress = sqlQuery.queryForObject(appSql, new Object[]{ appinsId, companyAddressXxxId }, "String");
 			companyName = sqlQuery.queryForObject(appSql, new Object[]{ appinsId, companyNameXxxId }, "String");
 			department = sqlQuery.queryForObject(appSql, new Object[]{ appinsId, departmentXxxId }, "String");
 			position = sqlQuery.queryForObject(appSql, new Object[]{ appinsId, positionXxxId }, "String");
 			selfEmployment = sqlQuery.queryForObject(appSql, new Object[]{ appinsId, selfEmploymentXxxId }, "String");
+			
+			//最高学历描述
+			String highestSql = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=? AND TZ_XXXKXZ_MC=?";
+			highestRecord = sqlQuery.queryForObject(highestSql, new Object[]{ appModalId, highestRecordXlkId, highestRecordId }, "String");
 			
 			//报考方向拼接批次
 			String strBatchSQL = "SELECT TZ_BATCH_NAME FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";

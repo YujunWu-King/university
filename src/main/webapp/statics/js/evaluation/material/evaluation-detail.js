@@ -1232,6 +1232,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 									                                if(jsonObject.comContent.result==undefined || jsonObject.comContent.result == 0) {
 
 																		if(jsonObject.comContent.messageCode == 0) {
+
 																			//更新本地缓存的考生数据
 																			updateKSJSONData(form.findField("ClassID").getValue(),form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), '', true);
 
@@ -1374,7 +1375,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 														// unmask window
 														unmaskWindow();
 															
-														var msg = '保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据，并获取下一个考生时发生错误，请与系统管理员联系：错误的JSON数据[' + eformsubmit + ']';
+														var msg = '保存考生 [' + tmpEvaluateObject.applicantName + '(' + tmpEvaluateObject.applicantInterviewID + ')] 数据，并获取下一个考生时发生错误，请与系统管理员联系：' + eformsubmit ;
 														Ext.Msg.alert('提示', msg);
 													}
 												}
@@ -1728,7 +1729,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			$('#bmb_iframe_'+tmpBatchIdBMBID).show();
 		}else{
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
-			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="' + bmb_url +'" frameborder="0" width="100%" height="100%" onload="unmaskWindow()"></iframe>');
+			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="' + bmb_url +'" frameborder="0" width="100%" height="100%" onload="bmbLoaded('+userpoints.bmbId+')"></iframe>');
 		}
 	}
 
@@ -1924,7 +1925,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
 			$('#bmb_iframe_'+tmpBatchIdBMBID).show();
 		}else{
-			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="'+ show_BMB_html +'" frameborder="0" width="100%" height="100%" onload="unmaskWindow()"></iframe>');
+			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="'+ show_BMB_html +'" frameborder="0" width="100%" height="100%" onload="bmbLoaded(' + ksinfoJSON.bmbId +')"></iframe>');
 		}
 
 	}
@@ -2153,6 +2154,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						
 						//将数据JSON缓存到本地
 						KSINFO_JSON_DATA[tmpBatchId][df_bmbid] = userpoints;
+
+						console.log(KSINFO_JSON_DATA[tmpBatchId][df_bmbid]);
 						
 						//unmask window
 						unmaskWindow();
@@ -2251,7 +2254,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	
 	//初始化
 	getKSJSONData(evaluateObject.baokaoClassID, evaluateObject.baokaoPcID,evaluateObject.applicantBaomingbiaoID,"create");
-	
+
 	
 }
 

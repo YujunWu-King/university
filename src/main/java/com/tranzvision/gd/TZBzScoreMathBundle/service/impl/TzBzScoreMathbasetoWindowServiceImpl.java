@@ -388,6 +388,7 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 			int m = 0;
 			int pwsocre_i = 0;
 			String judge_id = "";
+			String judgeid = "";
 			JacksonUtil jacksonUtil = new JacksonUtil();
 
 			jacksonUtil.json2Map(actData[0]);
@@ -416,7 +417,8 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 
 			// 在数据库中查询 描述 根据 循环生成 表头
 			List<Map<String, Object>> treename = jdbcTemplate.queryForList(
-					TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_TREE_EXCEL_HEADER"), new Object[] { xmid });
+					TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_TREE_EXCEL_HEADER"),
+					new Object[] { Integer.valueOf(xmid), orgid });
 
 			for (int treename_i = 0; treename_i < treename.size(); treename_i++) {
 				Map<String, Object> resultMap = treename.get(treename_i);
@@ -538,9 +540,12 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 							jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_rank"));
 					judge_id = jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_id");
 
+					judgeid = jdbcTemplate.queryForObject("SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? ",
+							new Object[] { judge_id }, "String");
+
 					List<Map<String, Object>> pwsocre = jdbcTemplate.queryForList(
 							TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TzGetpwoneScore"),
-							new Object[] { xmid, judge_id });
+							new Object[] { xmid, judgeid });
 
 					for (pwsocre_i = 0; pwsocre_i < pwsocre.size(); pwsocre_i++) {
 

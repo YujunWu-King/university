@@ -144,7 +144,7 @@ v\:* { behavior: url(#default#VML); }
 	max-width:1050px!important;
 }
 .ui-tooltip-content{
-	max-height:500px!important;
+	max-height:440px!important;
 	overflow-y:auto!important;
 	padding:8px!important;
 }

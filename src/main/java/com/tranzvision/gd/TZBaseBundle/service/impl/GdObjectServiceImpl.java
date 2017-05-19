@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZBaseBundle.service.impl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.GdObjectService;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.Memoryparameter;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.cookie.TzCookie;
@@ -51,12 +53,12 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 * Cookie存储的机构id
 	 */
 	private final static String cookieJgId = "tzmo";
-	
+
 	/**
 	 * Cookie存储的当前访问站点的站点id
 	 */
 	private final static String cookieWebSiteId = "tzws";
-	
+
 	/**
 	 * 记录登录类型，后台 - GLY；前台 - SQR；
 	 */
@@ -65,6 +67,10 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 * 登录地址
 	 */
 	private final static String cookieLoginUrl = "TZGD_LOGIN_URL";
+
+	final String LJ = "@";
+
+	final String TZ_HARDCODE_PNT = "TZGD_BASIC_LANGUAGE";
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -224,7 +230,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 			TzSession tzSession = new TzSession(request);
 			String comid = (String) tzSession.getSession(gbl_CurrentAccessCmpntID);
 			String pageid = (String) tzSession.getSession(gbl_CurrentAccessCPageID);
-			
+
 			String tmpAuthFlag = this.getAPByCPU(request, comid, pageid, this.getOPRID(request));
 			if ("W".equals(tmpAuthFlag) || "R".equals(tmpAuthFlag)) {
 				/* 如果当前用户（理论上应该是匿名访问用户）对当前访问的组件页面有访问权限，则仍然返回会话有效 */
@@ -413,7 +419,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	}
 
 	/**
-	 * 根据指定消息集合号、消息ID、语言代码获取消息文本的方法
+	 * 根据指定消息集合号、消息ID、语言代码获取消息文本的方法 modity by caoy 由读取数据库修改到从内存中读取
 	 * 
 	 * @author SHIHUA
 	 * @param msgSetId
@@ -425,45 +431,87 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 */
 	public String getMessageTextWithLanguageCd(HttpServletRequest request, String msgSetId, String msgId, String langCd,
 			String defaultCNMsg, String defaultENMsg) {
+		// long time2=System.currentTimeMillis();
 		String retMsgText = "";
 		String defaultLang = getSysHardCodeVal.getSysDefaultLanguage();
 		if (null == langCd || "".equals(langCd)) {
 			langCd = getSysHardCodeVal.getSysDefaultLanguage();
 		}
 
-		try {
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String ptOrid = getSysHardCodeVal.getPlatformOrgID();
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String ptOrid = getSysHardCodeVal.getPlatformOrgID();
 
-			if (null != msgSetId && !"".equals(msgSetId) && null != msgId && !"".equals(msgId)) {
-				String sql = tzGDObject.getSQLText("SQL.TZBaseBundle.TzGetMsgText");
-				retMsgText = jdbcTemplate.queryForObject(sql, new Object[] { langCd, msgSetId, orgid, msgId },
-						"String");
-				if (null == retMsgText || "".equals(retMsgText)) {
-					retMsgText = jdbcTemplate.queryForObject(sql, new Object[] { langCd, msgSetId, ptOrid, msgId },
-							"String");
-				}
-			}
+		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where  TZ_HARDCODE_PNT=?";
 
-			if (null == retMsgText || "".equals(retMsgText)) {
-				if (defaultLang.equals(langCd)) {
-					retMsgText = defaultCNMsg;
-				} else {
-					retMsgText = defaultENMsg;
+		String systemLang = jdbcTemplate.queryForObject(sql, new Object[] { TZ_HARDCODE_PNT }, "String");
+
+		// Key:TZ_XXJH_ID@TZ_JG_ID
+		// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
+		if (null != msgSetId && !"".equals(msgSetId) && null != msgId && !"".equals(msgId)) {
+			if (Memoryparameter.messageText.get(msgSetId + LJ + orgid) != null) {
+				retMsgText = Memoryparameter.messageText.get(msgSetId + LJ + orgid).get(msgId + LJ + langCd);
+				if (retMsgText == null || retMsgText.equals("")) {
+					retMsgText = Memoryparameter.messageText.get(msgSetId + LJ + orgid).get(msgId + LJ + systemLang);
 				}
+
 			} else {
+				if (Memoryparameter.messageText.get(msgSetId + LJ + ptOrid) != null) {
+					retMsgText = Memoryparameter.messageText.get(msgSetId + LJ + ptOrid).get(msgId + LJ + langCd);
+					if (retMsgText == null || retMsgText.equals("")) {
+						retMsgText = Memoryparameter.messageText.get(msgSetId + LJ + ptOrid)
+								.get(msgId + LJ + systemLang);
+					}
+				}
 
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			retMsgText = "取数失败！" + e.getMessage();
 		}
+
+		if (null == retMsgText || "".equals(retMsgText)) {
+			if (defaultLang.equals(langCd)) {
+				retMsgText = defaultCNMsg;
+			} else {
+				retMsgText = defaultENMsg;
+			}
+		} else {
+
+		}
+
+		/*
+		 * String retMsgText = ""; String defaultLang =
+		 * getSysHardCodeVal.getSysDefaultLanguage(); if (null == langCd ||
+		 * "".equals(langCd)) { langCd =
+		 * getSysHardCodeVal.getSysDefaultLanguage(); }
+		 * 
+		 * try { String orgid =
+		 * tzLoginServiceImpl.getLoginedManagerOrgid(request); String ptOrid =
+		 * getSysHardCodeVal.getPlatformOrgID();
+		 * 
+		 * if (null != msgSetId && !"".equals(msgSetId) && null != msgId &&
+		 * !"".equals(msgId)) { String sql =
+		 * tzGDObject.getSQLText("SQL.TZBaseBundle.TzGetMsgText"); retMsgText =
+		 * jdbcTemplate.queryForObject(sql, new Object[] { langCd, msgSetId,
+		 * orgid, msgId }, "String"); if (null == retMsgText ||
+		 * "".equals(retMsgText)) { retMsgText =
+		 * jdbcTemplate.queryForObject(sql, new Object[] { langCd, msgSetId,
+		 * ptOrid, msgId }, "String"); } }
+		 * 
+		 * if (null == retMsgText || "".equals(retMsgText)) { if
+		 * (defaultLang.equals(langCd)) { retMsgText = defaultCNMsg; } else {
+		 * retMsgText = defaultENMsg; } } else {
+		 * 
+		 * }
+		 * 
+		 * } catch (Exception e) { e.printStackTrace(); retMsgText = "取数失败！" +
+		 * e.getMessage(); }
+		 */
+
+		// System.out.println("getMessageTextWithLanguageCd:Time=" +
+		// (System.currentTimeMillis() - time2));
 		return retMsgText;
 	}
 
 	/**
-	 * 根据指定的消息集合编号获取消息集合对象的内容，并以JSON字符串的格式返回
+	 * 根据指定的消息集合编号获取消息集合对象的内容，并以JSON字符串的格式返回 modity by caoy 通过内存参数获取
 	 * 
 	 * @author SHIHUA
 	 * @param request
@@ -474,7 +522,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 */
 	public String getMessageSetByLanguageCd(HttpServletRequest request, HttpServletResponse response, String msgSetId,
 			String languageCd) {
-
+		// long time2 = System.currentTimeMillis();
 		String strRet = "";
 
 		try {
@@ -485,21 +533,75 @@ public class GdObjectServiceImpl implements GdObjectService {
 			String loginOrgid = this.getLoginOrgID(request, response);
 			String superOrgid = this.getSuperOrgId(request, response);
 
-			String sql = tzGDObject.getSQLText("SQL.TZBaseBundle.TzFrmwrkLng");
-			List<Map<String, Object>> listLanguages = jdbcTemplate.queryForList(sql,
-					new Object[] { languageCd, msgSetId, loginOrgid, languageCd, msgSetId, superOrgid, languageCd,
-							msgSetId, loginOrgid, languageCd, msgSetId, superOrgid });
+			String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where  TZ_HARDCODE_PNT=?";
 
+			String systemLang = jdbcTemplate.queryForObject(sql, new Object[] { TZ_HARDCODE_PNT }, "String");
+
+			// Key:TZ_XXJH_ID@TZ_JG_ID
+			// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
+			String tmpMsgID = null;
+			String tmpMsgText = null;
 			Map<String, Object> mapJson = new HashMap<String, Object>();
+			if (Memoryparameter.messageText.get(msgSetId + LJ + loginOrgid) != null) {
 
-			for (Map<String, Object> mapData : listLanguages) {
+				Map<String, String> map = Memoryparameter.messageText.get(msgSetId + LJ + loginOrgid);
+				Iterator<Map.Entry<String, String>> iter = map.entrySet().iterator();
+				while (iter.hasNext()) {
+					Map.Entry<String, String> entry = (Map.Entry<String, String>) iter.next();
+					String key = entry.getKey();
+					String val = entry.getValue();
 
-				String tmpMsgID = mapData.get("TZ_MSG_ID") == null ? "" : String.valueOf(mapData.get("TZ_MSG_ID"));
-				String tmpMsgText = mapData.get("TZ_MSG_TEXT") == null ? ""
-						: String.valueOf(mapData.get("TZ_MSG_TEXT"));
+					if (key.endsWith(languageCd)) {
+						tmpMsgID = key.substring(0, key.indexOf("@"));
+						tmpMsgText = val;
+						mapJson.put(tmpMsgID, tmpMsgText);
+					} else if (key.endsWith(systemLang)) {
+						tmpMsgID = key.substring(0, key.indexOf("@"));
+						tmpMsgText = val;
+						mapJson.put(tmpMsgID, tmpMsgText);
+					}
 
-				mapJson.put(tmpMsgID, tmpMsgText);
+				}
 
+			} else {
+				if (Memoryparameter.messageText.get(msgSetId + LJ + superOrgid) != null) {
+					Map<String, String> map = Memoryparameter.messageText.get(msgSetId + LJ + superOrgid);
+					Iterator<Map.Entry<String, String>> iter = map.entrySet().iterator();
+					while (iter.hasNext()) {
+						Map.Entry<String, String> entry = (Map.Entry<String, String>) iter.next();
+						String key = entry.getKey();
+						String val = entry.getValue();
+
+						if (key.endsWith(languageCd)) {
+							tmpMsgID = key.substring(0, key.indexOf(LJ));
+							tmpMsgText = val;
+							mapJson.put(tmpMsgID, tmpMsgText);
+						} else if (key.endsWith(systemLang)) {
+							tmpMsgID = key.substring(0, key.indexOf(LJ));
+							tmpMsgText = val;
+							mapJson.put(tmpMsgID, tmpMsgText);
+						}
+
+					}
+				}
+
+			}
+
+			// 内存中没有数据 ，在从数据库读取
+			if (mapJson.size() <= 0) {
+				sql = tzGDObject.getSQLText("SQL.TZBaseBundle.TzFrmwrkLng");
+				List<Map<String, Object>> listLanguages = jdbcTemplate.queryForList(sql,
+						new Object[] { languageCd, msgSetId, loginOrgid, languageCd, msgSetId, superOrgid, languageCd,
+								msgSetId, loginOrgid, languageCd, msgSetId, superOrgid });
+
+				for (Map<String, Object> mapData : listLanguages) {
+
+					tmpMsgID = mapData.get("TZ_MSG_ID") == null ? "" : String.valueOf(mapData.get("TZ_MSG_ID"));
+					tmpMsgText = mapData.get("TZ_MSG_TEXT") == null ? "" : String.valueOf(mapData.get("TZ_MSG_TEXT"));
+
+					mapJson.put(tmpMsgID, tmpMsgText);
+
+				}
 			}
 
 			Map<String, Object> mapRet = new HashMap<String, Object>();
@@ -511,7 +613,8 @@ public class GdObjectServiceImpl implements GdObjectService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		// System.out.println("getMessageSetByLanguageCd:Time=" +
+		// (System.currentTimeMillis() - time2));
 		return strRet;
 	}
 
@@ -520,99 +623,98 @@ public class GdObjectServiceImpl implements GdObjectService {
 		String strRetContent = "";
 		String tmpLoginURL = "";
 
-		//查看是不是招生网站访问的地址;
+		// 查看是不是招生网站访问的地址;
 		String classid = request.getParameter("classid");
 		String siteId = request.getParameter("siteId");
 		String menuId = request.getParameter("menuId");
-		String tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);;
+		String tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
+		;
 		String tmpLanguageCd = "";
-		tmpLoginURL = tzCookie.getStringCookieVal(request, cookieLoginUrl); 
-		if(tmpLoginURL == null || "".equals(tmpLoginURL)){
-			//是否是手机登录;
+		tmpLoginURL = tzCookie.getStringCookieVal(request, cookieLoginUrl);
+		if (tmpLoginURL == null || "".equals(tmpLoginURL)) {
+			// 是否是手机登录;
 			String userAgent = request.getHeader("User-Agent");
-			if(userAgent != null && !"".equals(userAgent)){
+			if (userAgent != null && !"".equals(userAgent)) {
 				userAgent = userAgent.toUpperCase();
 			}
-			if(userAgent.contains("WINDOWS CE")
-					|| userAgent.contains("IPOD")
-					|| userAgent.contains("SYMBIAN")
-					|| userAgent.contains("IPHONE")
-					|| userAgent.contains("BLACKBERRY")
-					|| userAgent.contains("ANDROID")
-					|| userAgent.contains("WINDOWS PHONE")){
-				tmpLoginURL = jdbcTemplate.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_MOBILE_LOGIN_URL"},"String");
-				if(tmpLoginURL != null && !"".equals(tmpLoginURL)){
+			if (userAgent.contains("WINDOWS CE") || userAgent.contains("IPOD") || userAgent.contains("SYMBIAN")
+					|| userAgent.contains("IPHONE") || userAgent.contains("BLACKBERRY") || userAgent.contains("ANDROID")
+					|| userAgent.contains("WINDOWS PHONE")) {
+				tmpLoginURL = jdbcTemplate.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_MOBILE_LOGIN_URL" }, "String");
+				if (tmpLoginURL != null && !"".equals(tmpLoginURL)) {
 					tmpLoginURL = request.getContextPath() + tmpLoginURL;
 				}
 			}
-			
-			if(tmpLoginURL == null || "".equals(tmpLoginURL)){
-				if("askMenu".equals(classid) && !"".equals(siteId) && !"".equals(menuId)){
-					tmpOrgID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
-					tmpLanguageCd = jdbcTemplate.queryForObject("select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[]{siteId},"String");
-					if(tmpOrgID != null && !"".equals(tmpOrgID)){
-						tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
-					}else{
+
+			if (tmpLoginURL == null || "".equals(tmpLoginURL)) {
+				if ("askMenu".equals(classid) && !"".equals(siteId) && !"".equals(menuId)) {
+					tmpOrgID = jdbcTemplate.queryForObject(
+							"select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[] { siteId },
+							"String");
+					tmpLanguageCd = jdbcTemplate.queryForObject(
+							"select TZ_SITE_LANG from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?", new Object[] { siteId },
+							"String");
+					if (tmpOrgID != null && !"".equals(tmpOrgID)) {
+						tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase() + "/" + siteId;
+					} else {
 						tmpOrgID = "";
 						tmpLoginURL = request.getContextPath() + "/login";
 					}
-				}else{
+				} else {
 					// 得到机构的cookie;
 					tmpOrgID = tzCookie.getStringCookieVal(request, cookieJgId);
 					// 得到语言;
 					tmpLanguageCd = tzCookie.getStringCookieVal(request, cookieLang);
-					//判断是前台登录还是后台登录;
-					String tmpLoginType = tzCookie.getStringCookieVal(request,cookieContextLoginType);
-					//得到访问的siteId;
-					siteId = tzCookie.getStringCookieVal(request,cookieWebSiteId);
-					
-					//查看cookie登录时前台还是后天；
-					if(tmpLoginType != null && !"".equals(tmpLoginType) && tmpOrgID != null && !"".equals(tmpOrgID)){
+					// 判断是前台登录还是后台登录;
+					String tmpLoginType = tzCookie.getStringCookieVal(request, cookieContextLoginType);
+					// 得到访问的siteId;
+					siteId = tzCookie.getStringCookieVal(request, cookieWebSiteId);
+
+					// 查看cookie登录时前台还是后天；
+					if (tmpLoginType != null && !"".equals(tmpLoginType) && tmpOrgID != null && !"".equals(tmpOrgID)) {
 						// 查询机构是不是存在;
 						String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
 						int count = jdbcTemplate.queryForObject(sql, new Object[] { tmpOrgID }, "Integer");
-						if("SQR".equals(tmpLoginType)){
-							tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
-						}else{
+						if ("SQR".equals(tmpLoginType)) {
+							tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase() + "/"
+									+ siteId;
+						} else {
 							if (count > 0) {
 								tmpLoginURL = request.getContextPath() + "/login/" + tmpOrgID.toLowerCase();
 							} else {
 								tmpLoginURL = request.getContextPath() + "/login";
 							}
 						}
-					}else{
+					} else {
 						tmpOrgID = "";
 						tmpLoginURL = request.getContextPath() + "/login";
-					}	
+					}
 				}
 			}
 		}
 
 		/*
-		if (tmpOrgID != null && !"".equals(tmpOrgID)) {
-			// 查询机构是不是存在;
-			String sql = "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)";
-			int count = jdbcTemplate.queryForObject(sql, new Object[] { tmpOrgID }, "Integer");
-			if("SQR".equals(tmpLoginType)){
-				//String siteId = jdbcTemplate.queryForObject("select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE lower(TZ_JG_ID)=lower(?) AND TZ_SITEI_ENABLE='Y' order by TZ_LASTMANT_DTTM desc limit 0,1", new Object[]{tmpOrgID},"String");
-				System.out.println("=============siteid====1==========>"+siteId);
-				if(!"".equals(siteId)){
-					tmpLoginURL = request.getContextPath() + "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId;
-				}
-			}else{
-				if (count > 0) {
-					tmpLoginURL = request.getContextPath() + "/login/" + tmpOrgID.toLowerCase();
-				} else {
-					tmpLoginURL = request.getContextPath() + "/login";
-				}
-			}
-			
-		} else {
-			tmpOrgID = "";
-			tmpLoginURL = request.getContextPath() + "/login";
-		}
-		*/
-		
+		 * if (tmpOrgID != null && !"".equals(tmpOrgID)) { // 查询机构是不是存在; String
+		 * sql =
+		 * "SELECT count(1) FROM PS_TZ_JG_BASE_T WHERE TZ_JG_EFF_STA='Y' AND LOWER(TZ_JG_ID)=LOWER(?)"
+		 * ; int count = jdbcTemplate.queryForObject(sql, new Object[] {
+		 * tmpOrgID }, "Integer"); if("SQR".equals(tmpLoginType)){ //String
+		 * siteId = jdbcTemplate.queryForObject(
+		 * "select TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE lower(TZ_JG_ID)=lower(?) AND TZ_SITEI_ENABLE='Y' order by TZ_LASTMANT_DTTM desc limit 0,1"
+		 * , new Object[]{tmpOrgID},"String");
+		 * System.out.println("=============siteid====1==========>"+siteId);
+		 * if(!"".equals(siteId)){ tmpLoginURL = request.getContextPath() +
+		 * "/user/login/" + tmpOrgID.toLowerCase()+"/"+siteId; } }else{ if
+		 * (count > 0) { tmpLoginURL = request.getContextPath() + "/login/" +
+		 * tmpOrgID.toLowerCase(); } else { tmpLoginURL =
+		 * request.getContextPath() + "/login"; } }
+		 * 
+		 * } else { tmpOrgID = ""; tmpLoginURL = request.getContextPath() +
+		 * "/login"; }
+		 */
+
 		if (tmpLanguageCd != null) {
 			String langSQL = "SELECT COUNT(1) FROM PS_TZ_PT_ZHZXX_TBL WHERE UPPER(TZ_ZHZJH_ID)=UPPER(?) AND TZ_ZHZ_ID=? AND TZ_EFF_DATE<= curdate()";
 

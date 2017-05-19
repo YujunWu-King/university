@@ -3,6 +3,7 @@
  */
 package com.tranzvision.gd.TZMessageSetMgBundle.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMessageSetMgBundle.dao.PsTzPtXxdyTblMapper;
 import com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.Memoryparameter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -30,6 +32,8 @@ public class MessageSetSynchrServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzPtXxdyTblMapper psTzPtXxdyTblMapper;
+
+	final String LJ = "@";
 
 	/**
 	 * 同步资源
@@ -89,6 +93,16 @@ public class MessageSetSynchrServiceImpl extends FrameworkImpl {
 							psTzPtXxdyTbl.setTzMsgDesc(mapObject.get("TZ_MSG_DESC") == null ? ""
 									: String.valueOf(mapObject.get("TZ_MSG_DESC")));
 							psTzPtXxdyTblMapper.insert(psTzPtXxdyTbl);
+
+							String firstKey = tzXxjhId + LJ + tzJgId;
+							String secondKey = tzMsgId + LJ + targetLanage;
+
+							// Key:TZ_XXJH_ID@TZ_JG_ID
+							// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
+							if (Memoryparameter.messageText.get(firstKey) == null) {
+								Memoryparameter.messageText.put(firstKey, new HashMap<String, String>());
+							}
+							Memoryparameter.messageText.get(firstKey).put(secondKey, psTzPtXxdyTbl.getTzMsgText());
 
 						}
 					}

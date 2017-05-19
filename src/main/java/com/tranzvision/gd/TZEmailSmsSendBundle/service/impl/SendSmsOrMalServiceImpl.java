@@ -592,6 +592,7 @@ public class SendSmsOrMalServiceImpl {
 								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
+								continue;
 							} else {
 								emailAddrAdd = mainEmail;
 							}
@@ -608,6 +609,7 @@ public class SendSmsOrMalServiceImpl {
 								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
+								continue;
 							} else {
 								emailAddrAdd = secondEmail;
 							}
@@ -624,6 +626,7 @@ public class SendSmsOrMalServiceImpl {
 								this.writeLsMalData(strRwSlId, mainEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
+								continue;
 							} else {
 								emailAddrAdd = mainEmail;
 							}
@@ -636,6 +639,7 @@ public class SendSmsOrMalServiceImpl {
 								this.writeLsMalData(strRwSlId, secondEmail, "", "", "RPT", strTaskId, prcsinstanceId,audCyId);
 								this.writeLsMalAttchData(strRwSlId, strTaskId);
 								this.deleteTaskAud(strTaskId, audId, audCyId);
+								continue;
 							} else {
 								if (emailAddrAdd == null || "".equals(emailAddrAdd)) {
 									emailAddrAdd = secondEmail;

@@ -623,7 +623,7 @@ public class LcSysvarClass {
 							
 							//如果是材料评审且面试的资格为："有"则显示
 							String msRsl = "";
-							if(i == 0 && "TZ_LCPS".equals(lcName)){
+							if("TZ_RESULT".equals(xxxId) && "TZ_LCPS".equals(lcName)){
 								msRsl = jdbcTemplate.queryForObject("select TZ_RESULT_CODE from TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns},String.class);
 								if("有".equals(msRsl)){
 									xxxValue = xxxValue + "，面试预约请<a href=\"" + rootPath + "/dispatcher?classid=Interview&siteId="+siteId+"\">点击此处</a>";

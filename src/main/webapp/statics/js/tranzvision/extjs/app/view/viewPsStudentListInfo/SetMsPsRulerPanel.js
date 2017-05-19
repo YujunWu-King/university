@@ -335,11 +335,43 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 									store: ''
 								},
 								flex: 1,
-
+								
 								//动态renderer
 								renderer: 'readervalue'
+								
+								
 
-							}],
+							},{
+								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgState", "评委状态"),
+								dataIndex: 'judgState',
+								width: 200,
+								editor: {
+						        xtype: 'combobox',
+						        valueField: 'TValue',
+                                displayField: 'TSDesc',
+                                store: new KitchenSink.view.common.store.appTransStore("TZ_MSPS_PWZT")
+					            },
+					            renderer: function(v) {
+						           if (v == 'A') {
+							       return "正常";
+						          }  else {
+						            	return "不正常";
+						          }
+					          }
+							},{
+					            text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.handle", "操作"),
+					            menuDisabled: true,
+					            sortable: false,
+					            width: 110,
+					            align: 'center',
+					            xtype: 'actioncolumn',
+					            flex: 1,
+					            items: [{
+						          iconCls: 'remove',
+						          tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.delete", "删除"),
+						          handler: 'deleteMsPw'
+					            }]
+				             }],
 							store: store,
 							bbar: {
 								xtype: 'pagingtoolbar',
