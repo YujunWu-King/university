@@ -93,7 +93,8 @@
 			            fieldLabel: '预约开放日期',
 						format: 'Y-m-d',
 						name: 'openDate',
-						style:'margin-right:20px'
+						style:'margin-right:20px',
+						allowBlank: false
 					},{
 						columnWidth: .5,
 						xtype: 'timefield',
@@ -102,7 +103,8 @@
 						editable:false,
 						format:'H:i',
 						name: 'openTime',
-						style:'margin-left:20px'
+						style:'margin-left:20px',
+						allowBlank: false
 					}]
 				},{
 					layout: {
@@ -115,7 +117,8 @@
 			            fieldLabel: '预约关闭日期',
 						format: 'Y-m-d',
 						name: 'closeDate',
-						style:'margin-right:20px'
+						style:'margin-right:20px',
+						allowBlank: false
 					},{
 						columnWidth: .5,
 						xtype: 'timefield',
@@ -124,7 +127,8 @@
 						editable:false,
 						format:'H:i',
 						name: 'closeTime',
-						style:'margin-left:20px'
+						style:'margin-left:20px',
+						allowBlank: false
 					}]
 				},{
 					layout: {
@@ -140,7 +144,8 @@
 						displayField: 'TLDesc',
 						queryMode: 'local',
 						store: msOpenStateStore,
-						style:'margin-right:20px'
+						style:'margin-right:20px',
+						allowBlank: false
 					},{
 						columnWidth: .5,
 						xtype: 'checkbox',
