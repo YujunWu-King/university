@@ -37,24 +37,37 @@ SurveyBuild.extend("ViewRCMDletter", "baseComponent", {
                 	tjxInsId = letters[i].tjxInsId;
                 	letterId=letters[i].letterId;
                 	tjrId = letters[i].tjrId;
-                	/**/
-                	mtplId = letters[i].mtplId;
-                	
-                	if(mtplId == ""){
-                		tzParams = '{"TZ_APP_INS_ID":"' + tjxInsId + '","TZ_REF_LETTER_ID":"' + letterId + '","TZ_MANAGER":"Y"}';
-                	}else{
-                		tzParams = '{"TZ_APP_TPL_ID":"' + mtplId + '","TZ_APP_INS_ID":"' + tjxInsId + '","TZ_REF_LETTER_ID":"' + letterId + '","TZ_MANAGER":"Y"}';
-                	}
-                	
-                	tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":' + tzParams + '}';
-                	url = TzUniversityContextPath + '/dispatcher?tzParams=' + encodeURIComponent(tzParams);
+    				attUserFile = letters[i].attUserFile;
+    				attAccLink = TzUniversityContextPath + letters[i].attAccLink;
+    				tjxType = letters[i].tjxType;
+    				mtplId = letters[i].mtplId;
+    				tjrHTMl = "";
+    				if(tjxType == "S"){
+    					/*上传附件*/
+    					tjrHTMl += '<div class="input-list-upload">';
+    					tjrHTMl += '	<a class="input-list-uploadcon-list-a" target="_blank" href="' + attAccLink + '">' + attUserFile + '</a>';
+    					tjrHTMl += '</div>';
+    					tjrHTMl += '<div class="clear"></div>';
+    				}else{
+    					/*发送邮件*/
+                    	if(mtplId == ""){
+                    		tzParams = '{"TZ_APP_INS_ID":"' + tjxInsId + '","TZ_REF_LETTER_ID":"' + letterId + '","TZ_MANAGER":"Y"}';
+                    	}else{
+                    		tzParams = '{"TZ_APP_TPL_ID":"' + mtplId + '","TZ_APP_INS_ID":"' + tjxInsId + '","TZ_REF_LETTER_ID":"' + letterId + '","TZ_MANAGER":"Y"}';
+                    	}
+                    	tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":' + tzParams + '}';
+                    	url = TzUniversityContextPath + '/dispatcher?tzParams=' + encodeURIComponent(tzParams);
+                    	tjrHTMl = '<iframe name="' + tjxInsId + '" src="' + url + '" width="100%"  height="' + data.height + 'px" frameborder="0" scrolling="no"></iframe>'
+    				}
+    				
+    				
                     
                 	c += '<div class="mainright-title">';
                     c += '	<span class="title-line"></span> ' + MsgSet["REFFER"] + tjrId;
                     c += '</div>';
                     c += '<div class="main_content_box">';
                     c += '	<div class="mainright-box pos-rela">';
-                    c += '		<iframe name="' + tjxInsId + '" src="' + url + '" width="100%"  height="' + data.height + 'px" frameborder="0" scrolling="no"></iframe>';
+                    c += tjrHTMl;
                     c += '	</div>';
                     c += '</div>';
                     // onload="SetCwinHeight(this)"

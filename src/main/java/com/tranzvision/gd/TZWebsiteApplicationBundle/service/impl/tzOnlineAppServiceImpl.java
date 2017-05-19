@@ -882,7 +882,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				String pwdDivId = "setPwdDiv";
 				String pwdDivId2 = "setPwdDiv2";
 				// 推荐信 密码设置控制 add by caoy 2017-1-22 strIsAdmin
-				if ("TJX".equals(strTplType)) {
+				if ("TJX".equals(strTplType) && !StringUtils.equals("Y", strIsAdmin)) {
 
 					if (strTJXIsPwd.equals("Y")) {
 						// 密码如果不存在 需要设置 密码
