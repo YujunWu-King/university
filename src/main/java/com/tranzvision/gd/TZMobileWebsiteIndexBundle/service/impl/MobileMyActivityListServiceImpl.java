@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -33,10 +33,9 @@ public class MobileMyActivityListServiceImpl extends FrameworkImpl {
 	private TZGDObject tzGDObject;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-	@Autowired
-	private ValidateUtil validateUtil;
 	
 	//清华mba招生手机版我已报名的活动列表
+	@SuppressWarnings("unused")
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		//rootPath;
@@ -124,6 +123,7 @@ public class MobileMyActivityListServiceImpl extends FrameworkImpl {
 		return content;
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public String tzOther(String oprType, String strParams, String[] errorMsg) {
 		
@@ -153,20 +153,16 @@ public class MobileMyActivityListServiceImpl extends FrameworkImpl {
 				
 		//当前登录人;
 		String m_curOPRID = tzLoginServiceImpl.getLoginedManagerOprid(request);
-				
+		Date dateNow = new Date();		
 		String content = "";
-		String title = "已报名活动";
 		try {
 			int limit = 10;
 			int startNum = (pagenum - 1) * limit;
-			
-			//css和js
-			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ACTIVITY_JS_CSS",ctxPath);
 
 			//我已报名但未过期的活动数量
 			int actCount = 0;
 			//String actSql = "select A.TZ_ART_ID,B.TZ_HD_BMR_ID,DATE_FORMAT(B.TZ_REG_TIME,'%Y/%m/%d')TZ_REG_TIME,DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d')TZ_START_DT,DATE_FORMAT(A.TZ_START_TM,'%H:%i') TZ_START_TM,DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d')TZ_END_DT,DATE_FORMAT(A.TZ_END_TM,'%H:%i') TZ_END_TM,A.TZ_NACT_NAME,A.TZ_NACT_ADDR from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT in ('1','4') and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=? order by A.TZ_START_DT,A.TZ_START_TM desc limit ?,?";
-			String actSql = "select A.TZ_ART_ID,B.TZ_HD_BMR_ID,DATE_FORMAT(B.TZ_REG_TIME,'%Y/%m/%d')TZ_REG_TIME,DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d')TZ_START_DT,DATE_FORMAT(A.TZ_START_TM,'%H:%i') TZ_START_TM,DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d')TZ_END_DT,DATE_FORMAT(A.TZ_END_TM,'%H:%i') TZ_END_TM,A.TZ_NACT_NAME,A.TZ_NACT_ADDR from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT in ('1','4') AND B.OPRID=? order by A.TZ_START_DT,A.TZ_START_TM desc limit ?,?";
+			String actSql = "select A.TZ_ART_ID,B.TZ_HD_BMR_ID,DATE_FORMAT(B.TZ_REG_TIME,'%Y/%m/%d')TZ_REG_TIME,DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d')TZ_START_DT,DATE_FORMAT(A.TZ_START_TM,'%H:%i') TZ_START_TM,DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d')TZ_END_DT,DATE_FORMAT(A.TZ_END_TM,'%H:%i') TZ_END_TM,A.TZ_NACT_NAME,A.TZ_NACT_ADDR,B.TZ_NREG_STAT from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT in ('1','4') AND B.OPRID=? order by A.TZ_START_DT,A.TZ_START_TM desc limit ?,?";
 			List<Map<String, Object>> list = sqlQuery.queryForList(actSql,new Object[]{m_curOPRID,startNum,limit});
 			if(list!=null && list.size()>0){
 				for(int i=0; i < list.size(); i++){
@@ -189,7 +185,43 @@ public class MobileMyActivityListServiceImpl extends FrameworkImpl {
 					//活动地点
 					String hdAddr =String.valueOf(list.get(i).get("TZ_NACT_ADDR")) ;
 					
-					content = content + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ACTIVITY_DIV",startDate,hdName,startTime + "-" + endTime,hdAddr,artId,hdbmrId);
+					
+					
+					// 获取活动显示模式
+					String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventDisplayMode");
+					Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { dateNow, dateNow, dateNow, dateNow, artId });
+					
+					String cancelBtnDisabledCls = "";//撤销按钮不可点击
+					if (mapData != null) {
+						// 是否有效记录,Y-在报名时间内，B-报名为开始，E-报名已结束
+						String validTD = mapData.get("VALID_TD") == null ? "" : String.valueOf(mapData.get("VALID_TD"));
+						//活动是否未开始
+						String actNoStart = mapData.get("IS_NOT_START") == null ? "" : String.valueOf(mapData.get("IS_NOT_START"));
+						
+						if(!"Y".equals(validTD) && !"Y".equals(actNoStart)){
+							cancelBtnDisabledCls = "btn-disabled";
+						}
+					}
+					
+
+					//报名状态
+					String regSta =String.valueOf(list.get(i).get("TZ_NREG_STAT")) ;
+					//显示报名状态
+					String statusText = "";
+					switch(regSta){
+					case "1":
+						statusText = "已报名";
+						break;
+					case "4":
+						//等候席位数
+						String waitSql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetWaitingNumber");
+						int waitNum = sqlQuery.queryForObject(waitSql, new Object[]{ artId, hdbmrId }, "int");
+						statusText = "等候席第"+ waitNum +"位";
+						break;
+					}
+					
+					
+					content = content + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ACTIVITY_DIV",startDate,hdName,startTime + "-" + endTime,hdAddr,artId,hdbmrId,statusText,cancelBtnDisabledCls);
 					resultNum = resultNum + 1;
 				}
 			}

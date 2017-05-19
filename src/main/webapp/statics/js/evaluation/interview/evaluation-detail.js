@@ -126,7 +126,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						dataIndex: ExamineeGridFldName,
 						renderer : setRealNameClick
 					};
-			}else if(ExamineeGridFldName=="ps_ksh_id"){
+			}else if(ExamineeGridFldName=="ps_msh_id"){
 					columnConfig =
 					{
 						text     : GridHeaderJsonData[ExamineeGridFldName],
@@ -407,9 +407,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="97px">考生标签：</td><td colspan="4">' + ksinfoJSON.examineeTag + '</td></tr>';
 			//【初筛淘汰】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【校友推荐】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【自主创业】
 		}
-		rtn_ksinfohtml += '</table>';
+
 		//材料评审成绩参考
 		rtn_ksinfohtml += ksinfoJSON.materialReviewDesc;
+
+		rtn_ksinfohtml += '</table>';
 
 		//rtn_ksinfohtml += '<table border="0" width="100%" style="font-size:12px;">';
 		//rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px">材料评审成绩参考：</td><td width="626px">'+ ksinfoJSON.materialReviewDesc +'</td></tr>';
@@ -1074,7 +1076,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 生成底部其他按钮
 	*/
 	function createSavebuttonConfig(){
-		var thisFieldContainerHeight = 50;
+		var thisFieldContainerHeight = 150;
 		var allBtn = {
 				xtype: 'fieldcontainer',
 				layout: 'hbox',
@@ -1410,11 +1412,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//height			: thisFieldContainerHeight,
 			height          : '100%',
 			name            : field_name,
-			html            : '<div style="margin:0;width: 733px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
+			html            : '<div style="margin:0;width: 793px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
 		});
 
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
-		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight + 50;
+		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight + 100;
 	} 
 
 
@@ -1463,7 +1465,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 	* 参数： 树节点的JSON数据
 	* 返回： 新生成的树节点的FieldContainer对象
 	*/
-	function createTreeNodeContainer(node_data){
+	function createTreeNodeContainer(node_data,bmb_id){
 		
 		var newFormField;
 		

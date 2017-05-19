@@ -806,6 +806,12 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				Map<String, Object> msgLang = jacksonUtil.getMap(strLanguage);
 				strMsgSet = jacksonUtil.Map2json(msgLang);
 			}
+<<<<<<< HEAD
+=======
+			// 获取个人基本信息
+			String strUserInfoSet = "";
+			strUserInfoSet = tzOnlineAppEngineImpl.getUserInfo(strAppInsId, strTplType,strSiteId);
+>>>>>>> adcb64c9cd6b06bf095a0dc4de0b220fff2e5e9f
 
 			String strSave = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET", "SAVE",
 					strLanguage, "保存", "Save");
@@ -952,6 +958,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 				System.out.println("报名表展现构造HTML页面Begin");
 				time2 = System.currentTimeMillis();
+<<<<<<< HEAD
 				str_appform_main_html = tzGdObject.getHTMLTextForDollar(
 						"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML", false, strTzGeneralURL, strComRegInfo,
 						strTplId, strAppInsId, strClassId, strRefLetterId, "", "", strTabs, strSiteId, strAppOrgId,
@@ -963,6 +970,17 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						pwdTitleDivId, pwdDivId, pwdDivId2, pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg,
 						strDownErrorMsg, classProjectID, strAppInsState, strDisplayType, strIsReview, strTplData,
 						strInsData);
+=======
+				str_appform_main_html = tzGdObject.getHTMLTextForDollar("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML",
+						false, strTzGeneralURL, strComRegInfo, strTplId, strAppInsId, strClassId, strRefLetterId,
+						strTplData, strInsData, strTabs, strSiteId, strAppOrgId, strMenuId, strAppFormReadOnly,
+						strMsgSet, strLanguage, strSave, strNext, strSubmit, strTplType, strLoading, strProcessing,
+						strAfterSubmitUrl, strOnlineHead, strOnlineFoot, strOnlineLeft, strIsAdmin, strMainInnerStyle,
+						strUserInfoSet, strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle,
+						rightWidthStyle, strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit,
+						strBatchId, strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
+						pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg, classProjectID,strAppInsState,strDisplayType,strIsReview,strTplData, strInsData);
+>>>>>>> adcb64c9cd6b06bf095a0dc4de0b220fff2e5e9f
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");

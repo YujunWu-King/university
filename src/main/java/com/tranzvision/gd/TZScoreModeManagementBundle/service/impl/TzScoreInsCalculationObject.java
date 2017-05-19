@@ -111,10 +111,14 @@ public class TzScoreInsCalculationObject {
 		String errorMsg = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
+			
 			//当前机构
 			orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			//
 			oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
+			System.out.println("调用保存成绩项的方法Begin");
+			System.out.println("当前机构："+orgId+"-->当前登录人："+oprId);
 			
 			if(!"".equals(classId) && classId != null 
 					&& !"".equals(batchId) && batchId != null){
@@ -129,9 +133,11 @@ public class TzScoreInsCalculationObject {
 				
 				String pwkshSql = "";//查询成绩单ID
 				if("CL".equals(type)){
+					System.out.println("材料评审评委进行打分");
 					scoreModeId = scoreMdMap.get("TZ_ZLPS_SCOR_MD_ID").toString();
 					pwkshSql = "SELECT TZ_SCORE_INS_ID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
 				}else if("MS".equals(type)){
+					System.out.println("面试评审评委进行打分");
 					scoreModeId = scoreMdMap.get("TZ_MSCJ_SCOR_MD_ID").toString();
 					pwkshSql = "SELECT TZ_SCORE_INS_ID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
 				}
@@ -176,12 +182,15 @@ public class TzScoreInsCalculationObject {
 						updateFlag = "Y";
 					}
 					
+					System.out.println("成绩单实例ID："+tzScoreInsId+"-->更新标志："+updateFlag);
+					
 					//保存打分
 					String rtn = SaveScore();
 					errorCode = rtn;
 					
 					if("0".equals(rtn)){
 						//保存成功
+						System.out.println("保存打分成功后，更新标志："+updateFlag);
 						
 						if("Y".equals(updateFlag)) {
 							//更新材料评审评委考生关系表，卢艳添加，2017-4-11
@@ -189,12 +198,14 @@ public class TzScoreInsCalculationObject {
 								sqlQuery.update("UPDATE PS_TZ_CP_PW_KS_TBL SET TZ_SCORE_INS_ID=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?",
 										new Object[]{tzScoreInsId,classId,batchId,bmbId,oprId});
 								sqlQuery.execute("commit");
+								System.out.println("更新材料评审评委考生关系表。成绩单实例ID："+tzScoreInsId+"-->班级编号："+classId+"-->批次编号："+batchId+"-->报名表实例编号："+bmbId+"-->评委OPRID："+oprId);
 							} else {
 								if("MS".equals(type)){
 									//更新面试评审评委考生关系表，卢艳添加，2017-4-14
 									sqlQuery.update("UPDATE PS_TZ_MP_PW_KS_TBL SET TZ_SCORE_INS_ID=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?",
 											new Object[]{tzScoreInsId,classId,batchId,bmbId,oprId});
 									sqlQuery.execute("commit");
+									System.out.println("更新面试评审评委考生关系表。成绩单实例ID："+tzScoreInsId+"-->班级编号："+classId+"-->批次编号："+batchId+"-->报名表实例编号："+bmbId+"-->评委OPRID："+oprId);
 								}
 							}
 						}
@@ -210,6 +221,10 @@ public class TzScoreInsCalculationObject {
 				errorCode = "-1";
 				errorMsg = "参数错误";
 			}
+			
+			System.out.println("调用保存成绩项的方法返回数据errorCode："+errorCode+"-->errorMsg："+errorMsg);
+			System.out.println("调用保存成绩项的方法End");
+			
 		}catch(Exception e){
 			errorCode = "-1";
 			errorMsg = e.getMessage();
@@ -235,6 +250,8 @@ public class TzScoreInsCalculationObject {
 		int treeNodeNum;
 		String treeNode;
 		try{
+			System.out.println("保存打分Begin");
+			
 			String sql = "SELECT TREE_NODE_NUM,TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? AND PARENT_NODE_NUM=0";
 			Map<String,Object> rootMap = sqlQuery.queryForMap(sql, new Object[]{ treeName });
 			
@@ -262,6 +279,8 @@ public class TzScoreInsCalculationObject {
 					}
 				}
 			}
+			System.out.println("保存打分返回errorCode："+errorCode);
+			System.out.println("保存打分End");
 		}catch(Exception e){
 			errorCode = "-1";
 			e.printStackTrace();
@@ -402,8 +421,13 @@ public class TzScoreInsCalculationObject {
 		String dtFormat = getSysHardCodeVal.getDateFormat();
 		SimpleDateFormat format = new SimpleDateFormat(dtFormat);
 		try{
+			System.out.println("保存打分数据到数据库表Begin");
+			System.out.println("成绩单实例ID："+tzScoreInsId);
+			
 			if(tzScoreInsId == 0){
 				tzScoreInsId = this.creatNewScoreInstanceId();
+				
+				System.out.println("新增-成绩单实例ID："+tzScoreInsId);
 				
 				//psTzSrmbaInsTblMapper
 				
@@ -459,6 +483,9 @@ public class TzScoreInsCalculationObject {
 				
 				psTzCjxTblMapper.insert(psTzCjxTbl);
 			}
+			
+			System.out.println("保存打分数据到数据库表End");
+			
 		}catch(Exception e){
 			boolSave = false;
 			e.printStackTrace();

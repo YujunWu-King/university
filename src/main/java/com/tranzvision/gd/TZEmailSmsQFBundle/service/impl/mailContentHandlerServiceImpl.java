@@ -77,8 +77,8 @@ public class mailContentHandlerServiceImpl {
 					newTransUrl = newTransUrl + "?classid=mailLinkHandler&params=" + link_key;
 					newTransUrl = newTransUrl + "_[邮件群发.听众成员编号占位符]";
 					
-					String strNewLink = strLink.replaceAll(strUrl, newTransUrl);
-					String newMailContent = emailContent.replaceAll(strLink, strNewLink);
+					String strNewLink = strLink.replace(strUrl, newTransUrl);
+					String newMailContent = emailContent.replace(strLink, strNewLink);
 
 					emailContent = this.substituteLinkHref(strPicID, taskId, newMailContent, endIndex);
 				}
