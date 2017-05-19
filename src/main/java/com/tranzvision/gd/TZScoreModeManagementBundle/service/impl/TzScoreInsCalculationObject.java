@@ -447,41 +447,44 @@ public class TzScoreInsCalculationObject {
 				
 			}
 			
-			
-			for(Map<String,Object> itemScoreMap: itemsScoreValListTmp){
-				String itemId = itemScoreMap.get("itemId").toString();
+			if(tzScoreInsId == 0){
 				
-				sqlQuery.update("DELETE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID= ?", new Object[]{ tzScoreInsId,itemId });
-				sqlQuery.execute("commit");
+			} else  {
+				for(Map<String,Object> itemScoreMap: itemsScoreValListTmp){
+					String itemId = itemScoreMap.get("itemId").toString();
+					
+					sqlQuery.update("DELETE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID= ?", new Object[]{ tzScoreInsId,itemId });
+					sqlQuery.execute("commit");
+					
+					PsTzCjxTblKey PsTzCjxTblKey = new PsTzCjxTblKey();
+					PsTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
+					PsTzCjxTblKey.setTzScoreItemId(itemId);
+					PsTzCjxTblWithBLOBs psTzCjxTbl = psTzCjxTblMapper.selectByPrimaryKey(PsTzCjxTblKey);
+					if(psTzCjxTbl == null){
+						psTzCjxTbl = new PsTzCjxTblWithBLOBs();
+						psTzCjxTbl.setTzScoreInsId(tzScoreInsId);
+						psTzCjxTbl.setTzScoreItemId(itemId);
+					}
 				
-				PsTzCjxTblKey PsTzCjxTblKey = new PsTzCjxTblKey();
-				PsTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
-				PsTzCjxTblKey.setTzScoreItemId(itemId);
-				PsTzCjxTblWithBLOBs psTzCjxTbl = psTzCjxTblMapper.selectByPrimaryKey(PsTzCjxTblKey);
-				if(psTzCjxTbl == null){
-					psTzCjxTbl = new PsTzCjxTblWithBLOBs();
-					psTzCjxTbl.setTzScoreInsId(tzScoreInsId);
-					psTzCjxTbl.setTzScoreItemId(itemId);
-				}
+					//分值
+					if(itemScoreMap.containsKey("ScoreVal")){
+						BigDecimal ScoreVal = itemScoreMap.get("ScoreVal") == null? new BigDecimal(0) 
+								: BigDecimal.valueOf(Double.valueOf(itemScoreMap.get("ScoreVal").toString()));
+						psTzCjxTbl.setTzScoreNum(ScoreVal);
+					}
+					//评语值
+					if(itemScoreMap.containsKey("pyVal")){
+						String pyVal = itemScoreMap.get("pyVal").toString();
+						psTzCjxTbl.setTzScorePyValue(pyVal);
+					}
+					//选项编号
+					if(itemScoreMap.containsKey("optId")){
+						String optId = itemScoreMap.get("optId").toString();
+						psTzCjxTbl.setTzCjxXlkXxbh(optId);
+					}
 				
-				//分值
-				if(itemScoreMap.containsKey("ScoreVal")){
-					BigDecimal ScoreVal = itemScoreMap.get("ScoreVal") == null? new BigDecimal(0) 
-							: BigDecimal.valueOf(Double.valueOf(itemScoreMap.get("ScoreVal").toString()));
-					psTzCjxTbl.setTzScoreNum(ScoreVal);
+					psTzCjxTblMapper.insert(psTzCjxTbl);
 				}
-				//评语值
-				if(itemScoreMap.containsKey("pyVal")){
-					String pyVal = itemScoreMap.get("pyVal").toString();
-					psTzCjxTbl.setTzScorePyValue(pyVal);
-				}
-				//选项编号
-				if(itemScoreMap.containsKey("optId")){
-					String optId = itemScoreMap.get("optId").toString();
-					psTzCjxTbl.setTzCjxXlkXxbh(optId);
-				}
-				
-				psTzCjxTblMapper.insert(psTzCjxTbl);
 			}
 			
 			System.out.println("保存打分数据到数据库表End");
