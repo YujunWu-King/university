@@ -1728,7 +1728,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			$('#bmb_iframe_'+tmpBatchIdBMBID).show();
 		}else{
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
-			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="' + bmb_url +'" frameborder="0" width="100%" height="100%" onload="bmbLoaded(userpoints.bmbId)"></iframe>');
+			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="' + bmb_url +'" frameborder="0" width="100%" height="100%" onload="bmbLoaded('+userpoints.bmbId+')"></iframe>');
 		}
 	}
 
@@ -1924,7 +1924,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			$("#bmb_iframe_div_"+tmpBatchId+" iframe").hide();
 			$('#bmb_iframe_'+tmpBatchIdBMBID).show();
 		}else{
-			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="'+ show_BMB_html +'" frameborder="0" width="100%" height="100%" onload="bmbLoaded(userpoints.bmbId)"></iframe>');
+			$("#bmb_iframe_div_"+tmpBatchId).append('<iframe id="bmb_iframe_' + tmpBatchIdBMBID + '" name="bmb_iframe_' + tmpBatchIdBMBID + '" src="'+ show_BMB_html +'" frameborder="0" width="100%" height="100%" onload="bmbLoaded(' + ksinfoJSON.bmbId +')"></iframe>');
 		}
 
 	}
