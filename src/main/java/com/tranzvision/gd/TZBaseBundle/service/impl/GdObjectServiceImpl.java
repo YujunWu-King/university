@@ -431,7 +431,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 */
 	public String getMessageTextWithLanguageCd(HttpServletRequest request, String msgSetId, String msgId, String langCd,
 			String defaultCNMsg, String defaultENMsg) {
-		//long time2=System.currentTimeMillis();
+		// long time2=System.currentTimeMillis();
 		String retMsgText = "";
 		String defaultLang = getSysHardCodeVal.getSysDefaultLanguage();
 		if (null == langCd || "".equals(langCd)) {
@@ -504,14 +504,15 @@ public class GdObjectServiceImpl implements GdObjectService {
 		 * } catch (Exception e) { e.printStackTrace(); retMsgText = "取数失败！" +
 		 * e.getMessage(); }
 		 */
-		
-		//System.out.println("getMessageTextWithLanguageCd:Time=" + (System.currentTimeMillis() - time2));
+
+		// System.out.println("getMessageTextWithLanguageCd:Time=" +
+		// (System.currentTimeMillis() - time2));
 		return retMsgText;
 	}
 
 	/**
-	 * 根据指定的消息集合编号获取消息集合对象的内容，并以JSON字符串的格式返回
-	 * modity by caoy  通过内存参数获取
+	 * 根据指定的消息集合编号获取消息集合对象的内容，并以JSON字符串的格式返回 modity by caoy 通过内存参数获取
+	 * 
 	 * @author SHIHUA
 	 * @param request
 	 * @param response
@@ -521,7 +522,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 	 */
 	public String getMessageSetByLanguageCd(HttpServletRequest request, HttpServletResponse response, String msgSetId,
 			String languageCd) {
-		//long time2 = System.currentTimeMillis();
+		// long time2 = System.currentTimeMillis();
 		String strRet = "";
 
 		try {
@@ -586,27 +587,22 @@ public class GdObjectServiceImpl implements GdObjectService {
 
 			}
 
-			/*
-			 * String sql =
-			 * tzGDObject.getSQLText("SQL.TZBaseBundle.TzFrmwrkLng");
-			 * List<Map<String, Object>> listLanguages =
-			 * jdbcTemplate.queryForList(sql, new Object[] { languageCd,
-			 * msgSetId, loginOrgid, languageCd, msgSetId, superOrgid,
-			 * languageCd, msgSetId, loginOrgid, languageCd, msgSetId,
-			 * superOrgid });
-			 * 
-			 * Map<String, Object> mapJson = new HashMap<String, Object>(); for
-			 * (Map<String, Object> mapData : listLanguages) {
-			 * 
-			 * String tmpMsgID = mapData.get("TZ_MSG_ID") == null ? "" :
-			 * String.valueOf(mapData.get("TZ_MSG_ID")); String tmpMsgText =
-			 * mapData.get("TZ_MSG_TEXT") == null ? "" :
-			 * String.valueOf(mapData.get("TZ_MSG_TEXT"));
-			 * 
-			 * mapJson.put(tmpMsgID, tmpMsgText);
-			 * 
-			 * }
-			 */
+			// 内存中没有数据 ，在从数据库读取
+			if (mapJson.size() <= 0) {
+				sql = tzGDObject.getSQLText("SQL.TZBaseBundle.TzFrmwrkLng");
+				List<Map<String, Object>> listLanguages = jdbcTemplate.queryForList(sql,
+						new Object[] { languageCd, msgSetId, loginOrgid, languageCd, msgSetId, superOrgid, languageCd,
+								msgSetId, loginOrgid, languageCd, msgSetId, superOrgid });
+
+				for (Map<String, Object> mapData : listLanguages) {
+
+					tmpMsgID = mapData.get("TZ_MSG_ID") == null ? "" : String.valueOf(mapData.get("TZ_MSG_ID"));
+					tmpMsgText = mapData.get("TZ_MSG_TEXT") == null ? "" : String.valueOf(mapData.get("TZ_MSG_TEXT"));
+
+					mapJson.put(tmpMsgID, tmpMsgText);
+
+				}
+			}
 
 			Map<String, Object> mapRet = new HashMap<String, Object>();
 			mapRet.put(languageCd, mapJson);
@@ -617,7 +613,8 @@ public class GdObjectServiceImpl implements GdObjectService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//System.out.println("getMessageSetByLanguageCd:Time=" + (System.currentTimeMillis() - time2));
+		// System.out.println("getMessageSetByLanguageCd:Time=" +
+		// (System.currentTimeMillis() - time2));
 		return strRet;
 	}
 

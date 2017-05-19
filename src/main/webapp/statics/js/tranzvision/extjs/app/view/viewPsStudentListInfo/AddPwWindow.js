@@ -141,7 +141,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 
 					},*/ {
 						xtype: 'splitbutton',
-						text: '批量设置录取状态',
+						text: '批量评委组',
 						reference: 'batchsetsplit',
 						iconCls: 'set',
 						menu: ''

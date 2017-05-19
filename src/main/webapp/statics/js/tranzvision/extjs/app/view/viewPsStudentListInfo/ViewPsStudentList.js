@@ -189,6 +189,12 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 						menu: [{
 							text: '导出选中考生评议数据',
 							handler: 'exportSelStuInfom'
+						},{
+							text: '导出选中考生评议数据',
+							handler: 'exportSelStuInfom'
+						},{
+							text: '计算选中考生标准成绩',
+							handler: 'matchStudenSocre'
 						}]
 					}]
 				}],
@@ -207,7 +213,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					dataIndex: 'ksOprId',
 					width: 100
 					
-				}, {
+				}, 
+				{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksNameg", "考生姓名"),
 					dataIndex: 'ksName',
 					width: 100
@@ -237,12 +244,12 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 						}
 					}
 					
-				},/* {
+				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.judgeGroupg", "面试评审组"),
 					dataIndex: 'judgeGroup',
 					width: 110
 				
-				},*/ {
+				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.pcg", "偏差"),
 					dataIndex: 'pc',
 					width: 60
@@ -256,7 +263,27 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 						xtype: 'combobox',
 						valueField: 'TValue',
                         displayField: 'TSDesc',
-                        store: new KitchenSink.view.common.store.appTransStore("TZ_KSLU_ZT")
+                        store: new KitchenSink.view.common.store.appTransStore("TZ_KSLU_ZT"),
+                        checkChange: function() {
+                        	
+                            var me = this,
+                            newVal, oldVal;
+                            if (!me.suspendCheckChange && !me.destroying && !me.destroyed) {
+                            newVal = me.getValue();
+                            oldVal = me.lastValue;
+                
+                          if (me.didValueChange(newVal, oldVal)) {
+                             me.lastValue = newVal;
+                             
+                             me.fireEvent('change', me, newVal, oldVal);
+                             me.onChange(newVal, oldVal);
+                             var selList = me.findParentByType('grid').getSelectionModel().getSelection();
+                             console.log("newVal:"+newVal+"oldVal:"+oldVal+"me.selList;"+ Ext.JSON.encode(selList[0].data));
+                            }
+                           }
+                            
+                        }
+                       
 					},
 					renderer: function(v) {
 						console.log(v);
@@ -268,6 +295,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 							return "不录取";
 						}
 					}
+					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.handle", "操作"),
 					menuDisabled: true,
@@ -326,11 +354,11 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 	onAddClick: function(btn) {
 		// Create a model instance
 		var rec = new KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListModel({
-			classId: '2',
-			batchId: '张三',
-			ksOprId: 0,
-			ksName: '22',
-			mshId: '100',
+			classId: '',
+			batchId: '',
+			ksOprId: null,
+			ksName: '',
+			mshId: '',
 			appInsId: ''
 		});
 

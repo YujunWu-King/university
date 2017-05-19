@@ -68,6 +68,9 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		String judgeList = "";
+
+		String pwsql = "SELECT group_concat(B.TZ_DLZH_ID)  AS TZ_DLZH_ID FROM PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE A.TZ_PWEI_OPRID=B.OPRID  AND A.TZ_CLASS_ID=?  AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? GROUP BY A.TZ_APPLY_PC_ID,A.TZ_CLASS_ID,A.TZ_APP_INS_ID";
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_APP_INS_ID", "ASC" } };
@@ -88,6 +91,9 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("classId", rowList[0]);
 					mapList.put("batchId", rowList[1]);
 					mapList.put("appInsId", rowList[2]);
+					judgeList = sqlQuery.queryForObject(pwsql, new Object[] { rowList[0], rowList[1], rowList[2] },
+							"String");
+					mapList.put("judgeGroup", judgeList);
 					mapList.put("ksOprId", rowList[3]);
 					mapList.put("passState", rowList[4]);
 					mapList.put("ksOprId", rowList[5]);
@@ -298,9 +304,6 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 			String fileDirPath = fileBasePath + eventExcelPath;
 			String strForm = "";
 			String xmid = "";
-			String teamID = "";
-			String sunrank = "";
-			String sunscore = "";
 			String clpszf = "";
 			int judgenum = 0;
 			String[] rowList = null;
@@ -308,14 +311,11 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 			String[] pw_row = null;
 			String[] daterow = null;
 			int daterow_i = 0;
-			String bkzysql = "";
-			String[] bkzyArray = null;
 
 			// 评委面试人数
 			String groupNumsql = "";
 			int groupNum = 0;
 
-			int bkzyArray_i = 0;
 			Map<String, Object> bkzylist = new HashMap<String, Object>();
 
 			int m = 0;
@@ -325,7 +325,9 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 
 			jacksonUtil.json2Map(actData[0]);
 			xmid = jacksonUtil.getString("xmid");
-			teamID = jacksonUtil.getString("teamID");
+			System.out.println("xmid：" + xmid);
+			xmid = jacksonUtil.getString("appInsId");
+			System.out.println("appInsId：" + xmid);
 
 			// 生成数据
 
@@ -345,7 +347,8 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 
 			// 在数据库中查询 描述 根据 循环生成 表头
 			List<Map<String, Object>> treename = sqlQuery.queryForList(
-					TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_TREE_EXCEL_HEADER"), new Object[] { xmid });
+					TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_TREE_EXCEL_HEADER"),
+					new Object[] { xmid, orgid });
 
 			for (int treename_i = 0; treename_i < treename.size(); treename_i++) {
 				Map<String, Object> resultMap = treename.get(treename_i);
@@ -360,7 +363,8 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 			// 得到每个学生做多几个评委 设置表头
 			String mspwnumSQL = "SELECT TZ_MSPY_NUM FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 			System.out.println("classId:" + classId + "batchId:" + batchId);
-			int mspwnum = sqlQuery.queryForObject(mspwnumSQL, new Object[] { classId, batchId }, "Integer");
+			int mspwnum = sqlQuery.queryForObject(mspwnumSQL, new Object[] { classId, batchId }, "Integer") == null ? 0
+					: sqlQuery.queryForObject(mspwnumSQL, new Object[] { classId, batchId }, "Integer");
 			for (int n = 0; n < mspwnum; n++) {
 				dataCellKeys.add(new String[] { "judg_" + (n + 1) + "_id", "评委" + (n + 1) + "账号" });
 				dataCellKeys.add(new String[] { "judg_" + (n + 1) + "_group", "评委" + (n + 1) + "所属组" });
@@ -395,6 +399,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapData = new HashMap<String, Object>();
 				pw_list = new ArrayList<String[]>();
 				strForm = actData[num];
+				System.out.println("strForm:" + strForm);
 				// 解析 json
 				jacksonUtil.json2Map(strForm);
 				xmid = jacksonUtil.getString("appInsId");
@@ -451,8 +456,8 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 
 					// 根据报名表id和品味id 循环得到考生 成绩项得分数
 					List<Map<String, Object>> pwsocre = sqlQuery.queryForList(
-							TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TzGetpwoneScore"),
-							new Object[] { xmid, judge_id });
+							TzGDObject.getSQLText("SQL.TZMbaPwClps.TZ_MSPS_GET_ONE_SCORE"),
+							new Object[] { xmid, judge_id, batchId, classId });
 
 					for (pwsocre_i = 0; pwsocre_i < pwsocre.size(); pwsocre_i++) {
 
