@@ -683,182 +683,185 @@
 	onFormSave:function(btn){
 		var msArrPanel = btn.up('panel');
 		var msArrForm = msArrPanel.child('form');
-		var msArrFormRec = msArrForm.getForm().getValues();
-
-		var msArrFormclassID = msArrFormRec["classID"];
-		var msArrFormbatchId = msArrFormRec["batchID"];
-		var clearAllTimeArr = msArrFormRec["clearAllTimeArr"];
-		if(msArrFormRec["frontView"] == undefined){
-			msArrFormRec["frontView"] = "N";
-		}
 		
-		var msArrGrid = msArrForm.child('grid');
-		var msArrGridAllRecs = msArrGrid.store.getRange();
-		var msArrGridModifiedRecs,msArrGridRemovedRecs;
-		msArrGridModifiedRecs =  msArrGrid.store.getModifiedRecords();
-		msArrGridRemovedRecs= msArrGrid.store.getRemovedRecords();
+		if(msArrForm.isValid()){
+			var msArrFormRec = msArrForm.getForm().getValues();
 
-		var msDate,bjMsStartTime,bjMsEndTime,msGroupId,msGroupSn;
-		var msArrCellEditingPlugin = msArrGrid.getPlugin('msArrCellEditingPlugin');
-		var i,j;
-		var compbjMsStartTime,compbjMsEndTime;
-		
-		//检查
-		for ( i = 0; i < msArrGridAllRecs.length; i++) {
-			msDate = msArrGridAllRecs[i].get("msDate");
-			bjMsStartTime = msArrGridAllRecs[i].get("bjMsStartTime");
-			bjMsEndTime = msArrGridAllRecs[i].get("bjMsEndTime");
-			maxPerson = msArrGridAllRecs[i].get("maxPerson");
+			var msArrFormclassID = msArrFormRec["classID"];
+			var msArrFormbatchId = msArrFormRec["batchID"];
+			var clearAllTimeArr = msArrFormRec["clearAllTimeArr"];
+			if(msArrFormRec["frontView"] == undefined){
+				msArrFormRec["frontView"] = "N";
+			}
 			
-			compbjMsStartTime=new Date("January 01, 1900 "+Ext.util.Format.date(bjMsStartTime, 'H:i')+":00");
-			compbjMsEndTime=new Date("January 01, 1900 "+Ext.util.Format.date(bjMsEndTime, 'H:i')+":00");
-			//面试日期不能为空
-			if(msDate==""||msDate==null){
-				Ext.MessageBox.alert('提示', '面试日期不能为空！',
-					function(e){
-						if(e == "ok"|| e == "OK" || e == "确定"){
-							for ( j = 0; j < msArrGrid.columns.length; j++) {
-								if ("msDate"==msArrGrid.columns[j].dataIndex){
-									msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
-								}
+			var msArrGrid = msArrForm.child('grid');
+			var msArrGridAllRecs = msArrGrid.store.getRange();
+			var msArrGridModifiedRecs,msArrGridRemovedRecs;
+			msArrGridModifiedRecs =  msArrGrid.store.getModifiedRecords();
+			msArrGridRemovedRecs= msArrGrid.store.getRemovedRecords();
 
-							}
-						}
-					}
-				);
-				return;
-			}
-			//最多预约人数不能为空
-			if(maxPerson==""||maxPerson==null||maxPerson==0){
-				Ext.MessageBox.alert('提示', '最多预约人数必须大于0！',
-					function(e){
-						if(e == "ok"|| e == "OK" || e == "确定"){
-							for ( j = 0; j < msArrGrid.columns.length; j++) {
-								if ("maxPerson"==msArrGrid.columns[j].dataIndex){
-									msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
-								}
-							}
-						}
-					}
-				);
-				return;
-			}
-			//开始时间不能为空
-			if(bjMsStartTime==""||bjMsStartTime==null){
-				Ext.MessageBox.alert('提示', '面试开始时间不能为空！',
-					function(e){
-						if(e == "ok"|| e == "OK" || e == "确定"){
-							for ( j = 0; j < msArrGrid.columns.length; j++) {
-								if ("bjMsStartTime"==msArrGrid.columns[j].dataIndex){
-									msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
-								}
-
-							}
-						}
-					}
-				);
-				return;
-			}
-			//结束时间不能为空
-			if(bjMsEndTime==""||bjMsEndTime==null){
-				Ext.MessageBox.alert('提示', '面试结束时间不能为空！',
-					function(e){
-						if(e == "ok"|| e == "OK" || e == "确定"){
-							for ( j = 0; j < msArrGrid.columns.length; j++) {
-								if ("bjMsEndTime"==msArrGrid.columns[j].dataIndex){
-									msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
-								}
-
-							}
-						}
-					}
-				);
-				return;
-			}
-			//开始时间不能大于结束时间
-			if(compbjMsStartTime>compbjMsEndTime){
-				Ext.MessageBox.alert('提示', '面试结束时间不能小于开始时间！',
-					function(e){
-						if(e == "ok"|| e == "OK" || e == "确定"){
-							for ( j = 0; j < msArrGrid.columns.length; j++) {
-								if ("bjMsEndTime"==msArrGrid.columns[j].dataIndex){
-									msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
-								}
-
-							}
-						}
-					}
-				);
-				return;
-			}
-		}
-		
-		var comParams="";
-		//修改记录
-		var msDateTemp,bjMsStartTimeTemp,bjMsEndTimeTemp;
-		var editJson="";
-		for(var i=0;i<msArrGridModifiedRecs.length;i++){
-			msDateTemp=msArrGridModifiedRecs[i].data.msDate;
-			bjMsStartTimeTemp=msArrGridModifiedRecs[i].data.bjMsStartTime;
-			bjMsEndTimeTemp=msArrGridModifiedRecs[i].data.bjMsEndTime;
-			msArrGridModifiedRecs[i].data.msDate=Ext.util.Format.date(msArrGridModifiedRecs[i].data.msDate, 'Y-m-d');
-			msArrGridModifiedRecs[i].data.bjMsStartTime=Ext.util.Format.date(msArrGridModifiedRecs[i].data.bjMsStartTime, 'H:i');
-			msArrGridModifiedRecs[i].data.bjMsEndTime=Ext.util.Format.date(msArrGridModifiedRecs[i].data.bjMsEndTime, 'H:i');
+			var msDate,bjMsStartTime,bjMsEndTime,msGroupId,msGroupSn;
+			var msArrCellEditingPlugin = msArrGrid.getPlugin('msArrCellEditingPlugin');
+			var i,j;
+			var compbjMsStartTime,compbjMsEndTime;
 			
-			if(editJson == ""){
-				editJson = Ext.JSON.encode(msArrGridModifiedRecs[i].data);
+			//检查
+			for ( i = 0; i < msArrGridAllRecs.length; i++) {
+				msDate = msArrGridAllRecs[i].get("msDate");
+				bjMsStartTime = msArrGridAllRecs[i].get("bjMsStartTime");
+				bjMsEndTime = msArrGridAllRecs[i].get("bjMsEndTime");
+				maxPerson = msArrGridAllRecs[i].get("maxPerson");
+				
+				compbjMsStartTime=new Date("January 01, 1900 "+Ext.util.Format.date(bjMsStartTime, 'H:i')+":00");
+				compbjMsEndTime=new Date("January 01, 1900 "+Ext.util.Format.date(bjMsEndTime, 'H:i')+":00");
+				//面试日期不能为空
+				if(msDate==""||msDate==null){
+					Ext.MessageBox.alert('提示', '面试日期不能为空！',
+						function(e){
+							if(e == "ok"|| e == "OK" || e == "确定"){
+								for ( j = 0; j < msArrGrid.columns.length; j++) {
+									if ("msDate"==msArrGrid.columns[j].dataIndex){
+										msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
+									}
+
+								}
+							}
+						}
+					);
+					return;
+				}
+				//最多预约人数不能为空
+				if(maxPerson==""||maxPerson==null||maxPerson==0){
+					Ext.MessageBox.alert('提示', '最多预约人数必须大于0！',
+						function(e){
+							if(e == "ok"|| e == "OK" || e == "确定"){
+								for ( j = 0; j < msArrGrid.columns.length; j++) {
+									if ("maxPerson"==msArrGrid.columns[j].dataIndex){
+										msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
+									}
+								}
+							}
+						}
+					);
+					return;
+				}
+				//开始时间不能为空
+				if(bjMsStartTime==""||bjMsStartTime==null){
+					Ext.MessageBox.alert('提示', '面试开始时间不能为空！',
+						function(e){
+							if(e == "ok"|| e == "OK" || e == "确定"){
+								for ( j = 0; j < msArrGrid.columns.length; j++) {
+									if ("bjMsStartTime"==msArrGrid.columns[j].dataIndex){
+										msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
+									}
+
+								}
+							}
+						}
+					);
+					return;
+				}
+				//结束时间不能为空
+				if(bjMsEndTime==""||bjMsEndTime==null){
+					Ext.MessageBox.alert('提示', '面试结束时间不能为空！',
+						function(e){
+							if(e == "ok"|| e == "OK" || e == "确定"){
+								for ( j = 0; j < msArrGrid.columns.length; j++) {
+									if ("bjMsEndTime"==msArrGrid.columns[j].dataIndex){
+										msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
+									}
+
+								}
+							}
+						}
+					);
+					return;
+				}
+				//开始时间不能大于结束时间
+				if(compbjMsStartTime>compbjMsEndTime){
+					Ext.MessageBox.alert('提示', '面试结束时间不能小于开始时间！',
+						function(e){
+							if(e == "ok"|| e == "OK" || e == "确定"){
+								for ( j = 0; j < msArrGrid.columns.length; j++) {
+									if ("bjMsEndTime"==msArrGrid.columns[j].dataIndex){
+										msArrCellEditingPlugin.startEdit(msArrGridAllRecs[i], msArrGrid.columns[j]);
+									}
+
+								}
+							}
+						}
+					);
+					return;
+				}
+			}
+			
+			var comParams="";
+			//修改记录
+			var msDateTemp,bjMsStartTimeTemp,bjMsEndTimeTemp;
+			var editJson="";
+			for(var i=0;i<msArrGridModifiedRecs.length;i++){
+				msDateTemp=msArrGridModifiedRecs[i].data.msDate;
+				bjMsStartTimeTemp=msArrGridModifiedRecs[i].data.bjMsStartTime;
+				bjMsEndTimeTemp=msArrGridModifiedRecs[i].data.bjMsEndTime;
+				msArrGridModifiedRecs[i].data.msDate=Ext.util.Format.date(msArrGridModifiedRecs[i].data.msDate, 'Y-m-d');
+				msArrGridModifiedRecs[i].data.bjMsStartTime=Ext.util.Format.date(msArrGridModifiedRecs[i].data.bjMsStartTime, 'H:i');
+				msArrGridModifiedRecs[i].data.bjMsEndTime=Ext.util.Format.date(msArrGridModifiedRecs[i].data.bjMsEndTime, 'H:i');
+				
+				if(editJson == ""){
+					editJson = Ext.JSON.encode(msArrGridModifiedRecs[i].data);
+				}else{
+					editJson = editJson + ','+Ext.JSON.encode(msArrGridModifiedRecs[i].data);
+				}
+				
+				msArrGridModifiedRecs[i].data.msDate=msDateTemp;
+				msArrGridModifiedRecs[i].data.bjMsStartTime=bjMsStartTimeTemp;
+				msArrGridModifiedRecs[i].data.bjMsEndTime=bjMsEndTimeTemp;
+			}
+			if(editJson != ""){
+				comParams = '"updaterecs":[' + editJson + "]";
 			}else{
-				editJson = editJson + ','+Ext.JSON.encode(msArrGridModifiedRecs[i].data);
+				comParams = '"updaterecs":[]';
 			}
-			
-			msArrGridModifiedRecs[i].data.msDate=msDateTemp;
-			msArrGridModifiedRecs[i].data.bjMsStartTime=bjMsStartTimeTemp;
-			msArrGridModifiedRecs[i].data.bjMsEndTime=bjMsEndTimeTemp;
-		}
-		if(editJson != ""){
-			comParams = '"updaterecs":[' + editJson + "]";
-		}else{
-			comParams = '"updaterecs":[]';
-		}
 
-		//删除记录
-		var removeJson="";
-		for(var i=0;i<msArrGridRemovedRecs.length;i++){
-			msDateTemp=msArrGridRemovedRecs[i].data.msDate;
-			bjMsStartTimeTemp=msArrGridRemovedRecs[i].data.bjMsStartTime;
-			bjMsEndTimeTemp=msArrGridRemovedRecs[i].data.bjMsEndTime;
-			msArrGridRemovedRecs[i].data.msDate=Ext.util.Format.date(msArrGridRemovedRecs[i].data.msDate, 'Y-m-d');
-			msArrGridRemovedRecs[i].data.bjMsStartTime=Ext.util.Format.date(msArrGridRemovedRecs[i].data.bjMsStartTime, 'H:i');
-			msArrGridRemovedRecs[i].data.bjMsEndTime=Ext.util.Format.date(msArrGridRemovedRecs[i].data.bjMsEndTime, 'H:i');
-			
-			if(removeJson == ""){
-				removeJson = Ext.JSON.encode(msArrGridRemovedRecs[i].data);
+			//删除记录
+			var removeJson="";
+			for(var i=0;i<msArrGridRemovedRecs.length;i++){
+				msDateTemp=msArrGridRemovedRecs[i].data.msDate;
+				bjMsStartTimeTemp=msArrGridRemovedRecs[i].data.bjMsStartTime;
+				bjMsEndTimeTemp=msArrGridRemovedRecs[i].data.bjMsEndTime;
+				msArrGridRemovedRecs[i].data.msDate=Ext.util.Format.date(msArrGridRemovedRecs[i].data.msDate, 'Y-m-d');
+				msArrGridRemovedRecs[i].data.bjMsStartTime=Ext.util.Format.date(msArrGridRemovedRecs[i].data.bjMsStartTime, 'H:i');
+				msArrGridRemovedRecs[i].data.bjMsEndTime=Ext.util.Format.date(msArrGridRemovedRecs[i].data.bjMsEndTime, 'H:i');
+				
+				if(removeJson == ""){
+					removeJson = Ext.JSON.encode(msArrGridRemovedRecs[i].data);
+				}else{
+					removeJson = removeJson + ','+Ext.JSON.encode(msArrGridRemovedRecs[i].data);
+				}
+				msArrGridRemovedRecs[i].data.msDate=msDateTemp;
+				msArrGridRemovedRecs[i].data.bjMsStartTime=bjMsStartTimeTemp;
+				msArrGridRemovedRecs[i].data.bjMsEndTime=bjMsEndTimeTemp;
+			}
+
+			if(removeJson != ""){
+				comParams =comParams+ ',"removerecs":[' + removeJson + "]";
 			}else{
-				removeJson = removeJson + ','+Ext.JSON.encode(msArrGridRemovedRecs[i].data);
+				comParams =comParams+ ',"removerecs":[]';
 			}
-			msArrGridRemovedRecs[i].data.msDate=msDateTemp;
-			msArrGridRemovedRecs[i].data.bjMsStartTime=bjMsStartTimeTemp;
-			msArrGridRemovedRecs[i].data.bjMsEndTime=bjMsEndTimeTemp;
-		}
 
-		if(removeJson != ""){
-			comParams =comParams+ ',"removerecs":[' + removeJson + "]";
-		}else{
-			comParams =comParams+ ',"removerecs":[]';
+			var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"saveMsArrInfo","comParams":{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'","clearAllTimeArr":"'+clearAllTimeArr+'","formData":'+ Ext.JSON.encode(msArrFormRec) +','+comParams+'}}';
+			
+			var formDataSet={classID:msArrFormclassID,batchID:msArrFormbatchId,clearAllTimeArr:""};
+			Ext.tzSubmit(tzParams,function(responseData){
+				//console.log(responseData)
+				if(responseData.result=='success'){
+					msArrForm.getForm().setValues(formDataSet);
+					Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
+					msArrGrid.store.tzStoreParams = Params;
+					msArrGrid.store.reload();
+				};
+			},"",true,this);
 		}
-
-		var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"saveMsArrInfo","comParams":{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'","clearAllTimeArr":"'+clearAllTimeArr+'","formData":'+ Ext.JSON.encode(msArrFormRec) +','+comParams+'}}';
-		
-		var formDataSet={classID:msArrFormclassID,batchID:msArrFormbatchId,clearAllTimeArr:""};
-		Ext.tzSubmit(tzParams,function(responseData){
-			//console.log(responseData)
-			if(responseData.result=='success'){
-				msArrForm.getForm().setValues(formDataSet);
-				Params= '{"classID":"'+msArrFormclassID+'","batchID":"'+msArrFormbatchId+'"}';
-				msArrGrid.store.tzStoreParams = Params;
-				msArrGrid.store.reload();
-			};
-		},"",true,this);
 	},
 	onFormEnsure: function(btn){
 		this.onFormSave(btn);

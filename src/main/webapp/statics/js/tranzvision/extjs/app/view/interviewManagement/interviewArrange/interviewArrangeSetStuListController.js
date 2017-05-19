@@ -54,13 +54,6 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                         arrAddAudience.push(addAudirec);
                         arrAddAudiValue.push(selection[j].data.TZ_AUD_ID);
                     };
-                    var audform = btn.findParentByType('grid').down('form[reference=audienceForm]');
-                    var audStore=audform.down('tagfield[name="audTag"]').getStore();
-                    audStore.add(arrAddAudience);
-                    
-                   // audform.down('tagfield[name="audTag"]').removeListener('change','receverChange');
-                    audform.down('tagfield[name="audTag"]').addValue(arrAddAudiValue);
-                   // audform.down('tagfield[name="audTag"]').addListener('change','receverChange');
                     
                     
                     var setStuListPanel = btn.up('interviewArrangeSetStuList');
@@ -76,20 +69,34 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     
                     var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"tzAddAudience","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+Ext.JSON.encode(arrAddAudiValue)+'}}';
                     Ext.tzSubmit(tzParams,function(){
+                    	//设置听众
+                    	var audform = btn.findParentByType('grid').down('form[reference=audienceForm]');
+                        var audStore=audform.down('tagfield[name="audTag"]').getStore();
+                        //audStore.add(arrAddAudience);
+                        audStore.reload({
+                        	callback: function(records, operation, success){
+                        		audform.down('tagfield[name="audTag"]').addValue(arrAddAudiValue);
+                        		 setStuListPanel.commitChanges(setStuListPanel);
+                        	}
+                        });
+                    	
+                        //加载开始列表
                         Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
                         setStuListGridStore.tzStoreParams = Params;
                         setStuListGridStore.load({
                             callback : function(records, operation, success) {
                                 if (success == success) {
                                     var setStuListGridStoreCount = setStuListGrid.store.getRange().length;
-                                    var setStuListFormRec = {"itwArrInfFormData":{
+                                    var setStuListFormRec = {
                                         "classID":classID,
                                         "className":className,
                                         "batchID":batchID,
                                         "batchName":batchName,
                                         "stuCount":setStuListGridStoreCount
-                                    }};
-                                    setStuListForm.getForm().setValues(setStuListFormRec.itwArrInfFormData);
+                                    };
+                                    setStuListForm.getForm().setValues(setStuListFormRec);
+                                    
+                                    setStuListPanel.commitChanges(setStuListPanel);
                                 }
                             }
                         });

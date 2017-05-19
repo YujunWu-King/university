@@ -15,6 +15,7 @@ import com.tranzvision.gd.TZMessageSetMgBundle.dao.PsTzPtXxdyTblMapper;
 import com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTbl;
 import com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.Memoryparameter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -31,6 +32,8 @@ public class MessageSetDefineServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzPtXxdyTblMapper psTzPtXxdyTblMapper;
+
+	final String LJ = "@";
 
 	/**
 	 * 获取消息定义信息
@@ -126,7 +129,8 @@ public class MessageSetDefineServiceImpl extends FrameworkImpl {
 				String msgDesc = jacksonUtil.getString("msgDesc");
 
 				String sql = "select 'Y' from PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? and TZ_MSG_ID=? and TZ_JG_ID=? and TZ_LANGUAGE_ID=?";
-				String recExists = sqlQuery.queryForObject(sql, new Object[] { msgSetID, msgId, orgId, msgLanage }, "String");
+				String recExists = sqlQuery.queryForObject(sql, new Object[] { msgSetID, msgId, orgId, msgLanage },
+						"String");
 				if (null != recExists) {
 					conflictKeys += comma + "[" + msgSetID + "," + msgId + "," + orgId + "," + msgLanage + "]";
 					comma = ",";
@@ -141,6 +145,16 @@ public class MessageSetDefineServiceImpl extends FrameworkImpl {
 					psTzPtXxdyTbl.setTzMsgKey(keyWord);
 					psTzPtXxdyTbl.setTzMsgDesc(msgDesc);
 					psTzPtXxdyTblMapper.insert(psTzPtXxdyTbl);
+
+					String firstKey = msgSetID + LJ + orgId;
+					String secondKey = msgId + LJ + msgLanage;
+
+					// Key:TZ_XXJH_ID@TZ_JG_ID
+					// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
+					if (Memoryparameter.messageText.get(firstKey) == null) {
+						Memoryparameter.messageText.put(firstKey, new HashMap<String, String>());
+					}
+					Memoryparameter.messageText.get(firstKey).put(secondKey, msgTest);
 				}
 			}
 			if (!"".equals(conflictKeys)) {
@@ -183,7 +197,8 @@ public class MessageSetDefineServiceImpl extends FrameworkImpl {
 				String msgDesc = jacksonUtil.getString("msgDesc");
 
 				String sql = "select 'Y' from PS_TZ_PT_XXDY_TBL WHERE TZ_XXJH_ID=? and TZ_MSG_ID=? and TZ_JG_ID=? and TZ_LANGUAGE_ID=?";
-				String recExists = sqlQuery.queryForObject(sql, new Object[] { msgSetID, msgId, orgId, msgLanage }, "String");
+				String recExists = sqlQuery.queryForObject(sql, new Object[] { msgSetID, msgId, orgId, msgLanage },
+						"String");
 				if (null != recExists) {
 					PsTzPtXxdyTbl psTzPtXxdyTbl = new PsTzPtXxdyTbl();
 					psTzPtXxdyTbl.setTzXxjhId(msgSetID);
@@ -195,6 +210,16 @@ public class MessageSetDefineServiceImpl extends FrameworkImpl {
 					psTzPtXxdyTbl.setTzMsgKey(keyWord);
 					psTzPtXxdyTbl.setTzMsgDesc(msgDesc);
 					psTzPtXxdyTblMapper.updateByPrimaryKeyWithBLOBs(psTzPtXxdyTbl);
+					
+					String firstKey = msgSetID + LJ + orgId;
+					String secondKey = msgId + LJ + msgLanage;
+
+					// Key:TZ_XXJH_ID@TZ_JG_ID
+					// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
+					if (Memoryparameter.messageText.get(firstKey) == null) {
+						Memoryparameter.messageText.put(firstKey, new HashMap<String, String>());
+					}
+					Memoryparameter.messageText.get(firstKey).put(secondKey, msgTest);
 				} else {
 					errorMsg += comma + "[" + msgSetID + "," + msgId + "," + orgId + "," + msgLanage + "]";
 					comma = ",";

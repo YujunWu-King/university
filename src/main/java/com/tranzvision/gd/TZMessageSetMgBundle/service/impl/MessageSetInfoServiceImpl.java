@@ -18,6 +18,7 @@ import com.tranzvision.gd.TZMessageSetMgBundle.dao.PsTzPtXxjhTblMapper;
 import com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxdyTblKey;
 import com.tranzvision.gd.TZMessageSetMgBundle.model.PsTzPtXxjhTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.Memoryparameter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -31,7 +32,7 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private FliterForm fliterForm;
-	
+
 	@Autowired
 	private SqlQuery sqlQuery;
 
@@ -40,6 +41,8 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzPtXxdyTblMapper psTzPtXxdyTblMapper;
+
+	final String LJ = "@";
 
 	/**
 	 * 获取消息集合定义信息
@@ -281,6 +284,15 @@ public class MessageSetInfoServiceImpl extends FrameworkImpl {
 								psTzPtXxdyTblKey.setTzJgId(orgId);
 								psTzPtXxdyTblKey.setTzLanguageId(languageID);
 								psTzPtXxdyTblMapper.deleteByPrimaryKey(psTzPtXxdyTblKey);
+
+								String firstKey = msgSetID + LJ + orgId;
+								String secondKey = messageId + LJ + languageID;
+
+								// Key:TZ_XXJH_ID@TZ_JG_ID
+								// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
+								if (Memoryparameter.messageText.get(firstKey) != null) {
+									Memoryparameter.messageText.get(firstKey).remove(secondKey);
+								}
 
 							}
 

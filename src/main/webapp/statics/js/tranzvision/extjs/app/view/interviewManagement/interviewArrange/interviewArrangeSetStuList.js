@@ -126,7 +126,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                             createNewOnBlur: false,
                             filterPickList: true,
                             queryMode: 'local',
-                            publishes: 'value',
+                            //publishes: 'value',
                             //minWidth:400,
                             //maxWidth:600,
                             width: 600,

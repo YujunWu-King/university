@@ -17,6 +17,7 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.BatchProcessDetailsImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMsArrDceAetMapper;
@@ -26,14 +27,10 @@ import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
-import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 @Service("com.tranzvision.gd.TZInterviewArrangementBundle.service.impl.TzInterviewExpExcelImpl")
 public class TzInterviewExpExcelImpl extends FrameworkImpl{
-	@Autowired
-	private SqlQuery sqlQuery;
-
 	@Autowired
 	private FliterForm fliterForm;
 	
@@ -60,6 +57,9 @@ public class TzInterviewExpExcelImpl extends FrameworkImpl{
 	
 	@Autowired
 	private PsTzMsArrDceAetMapper psTzMsArrDceAetMapper; 
+	
+	@Autowired
+	private BatchProcessDetailsImpl batchProcessDetailsImpl;
 
 
 	@SuppressWarnings("unchecked")
@@ -101,45 +101,7 @@ public class TzInterviewExpExcelImpl extends FrameworkImpl{
 					mapList.put("engineStatus", rowList[6]);
 					
 					String runStatus = rowList[6];
-					String runStatusDesc = "";
-					
-					switch(runStatus){
-						//排队中
-						case "QUENED":
-							runStatusDesc = "排队中";
-							break;
-						//已启动
-						case "STARTED":
-							runStatusDesc = "已启动";
-							break;
-						//正在运行中
-						case "RUNNING":
-							runStatusDesc = "正在运行中";
-							break;
-						//成功完成
-						case "SUCCEEDED":
-							runStatusDesc = "<font color='blue'>成功完成</font>";
-							break;
-						//发生错误
-						case "ERROR":
-							runStatusDesc = "<font color='red'>发生错误</font>";
-							break;
-						//发生严重错误
-						case "FATAL":
-							runStatusDesc = "<font color='red'>发生严重错误</font>";
-							break;
-						//正在停止
-						case "STOPPING":
-							runStatusDesc = "正在停止";
-							break;
-						//已强行终止
-						case "TERMINATED":
-							runStatusDesc = "已强行终止";
-							break;
-							//默认情况
-						default:
-							runStatusDesc = runStatus;
-					}
+					String runStatusDesc = batchProcessDetailsImpl.getBatchProcessStatusDescsr(runStatus);
 
 					mapList.put("runStatusDesc", runStatusDesc);
 					listData.add(mapList);
@@ -225,7 +187,7 @@ public class TzInterviewExpExcelImpl extends FrameworkImpl{
 				tmpEngine.schedule(schdProcessParameters);
 				
 				// 进程id;
-				int processinstance = sqlQuery.queryForObject("SELECT TZ_JCSL_ID FROM TZ_JC_SHLI_T where TZ_YUNX_KZID = ? limit 0,1", new Object[] { runCntlId },"Integer");
+				int processinstance = tmpEngine.getProcessInstanceID();
 				
 				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
 				psTzExcelDrxxT.setProcessinstance(processinstance);
