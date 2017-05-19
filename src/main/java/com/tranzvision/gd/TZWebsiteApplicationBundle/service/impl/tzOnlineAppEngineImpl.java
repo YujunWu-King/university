@@ -363,18 +363,20 @@ public class tzOnlineAppEngineImpl {
 				}
 				if (!"".equals(strPageXxxBh)) {
 					if ("".equals(strMsg)) {
-						/*是否存在未发送推荐信的推荐人信息*/
+						/* 是否存在未发送推荐信的推荐人信息 */
 						String sqlGetRefLetterCount = "SELECT COUNT(*) FROM PS_TZ_KS_TJX_TBL A WHERE ((A.ATTACHSYSFILENAME = '' OR A.ATTACHUSERFILE = ' ') AND NOT EXISTS (SELECT * FROM PS_TZ_APP_INS_T B WHERE A.TZ_TJX_APP_INS_ID = B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA = 'U')) "
 								+ " AND A.TZ_APP_INS_ID = ? AND A.TZ_MBA_TJX_YX = 'Y' AND TZ_REFLETTERTYPE = ''";
-						Integer numRefletter = sqlQuery.queryForObject(sqlGetRefLetterCount, new Object[] { numAppInsId }, "Integer");
+						Integer numRefletter = sqlQuery.queryForObject(sqlGetRefLetterCount,
+								new Object[] { numAppInsId }, "Integer");
 						if (numRefletter > 0) {
 							this.savePageCompleteState(numAppInsId, strPageXxxBh, "N");
-						}else{
+						} else {
 							this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y");
 						}
-						/*如果推荐人信息没有填写*/
+						/* 如果推荐人信息没有填写 */
 						String sqlGetRefLetterCount2 = "SELECT COUNT(*) FROM PS_TZ_KS_TJX_TBL A WHERE A.TZ_APP_INS_ID = ? AND A.TZ_MBA_TJX_YX = 'Y'";
-						Integer numRefletter2 = sqlQuery.queryForObject(sqlGetRefLetterCount2, new Object[] { numAppInsId }, "Integer");
+						Integer numRefletter2 = sqlQuery.queryForObject(sqlGetRefLetterCount2,
+								new Object[] { numAppInsId }, "Integer");
 						if (numRefletter2 == 0) {
 							this.savePageCompleteState(numAppInsId, strPageXxxBh, "B");
 						}
@@ -622,7 +624,7 @@ public class tzOnlineAppEngineImpl {
 		return m;
 	}
 
-	public String getUserInfo(String strAppInsId, String strTplType,String strSiteId) {
+	public String getUserInfo(String strAppInsId, String strTplType, String strSiteId) {
 
 		// 当前登陆人
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -636,7 +638,7 @@ public class tzOnlineAppEngineImpl {
 		// System.out.println("orgid:" + orgid);
 		// System.out.println("oprid:" + oprid);
 		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ID = ? ORDER BY TZ_ORDER";
-		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid,strSiteId });
+		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid, strSiteId });
 		String sql = "";
 		Map<String, Object> mapData = null;
 		for (Object objData : listData) {
@@ -1777,8 +1779,6 @@ public class tzOnlineAppEngineImpl {
 					}
 				}
 			}
-			
-			
 
 			if ("submit".equals(strOtype)) {
 				// 推荐信校验,特殊的例子
@@ -1956,27 +1956,29 @@ public class tzOnlineAppEngineImpl {
 							: Integer.valueOf(String.valueOf(MapXxxBh.get("TZ_PAGE_NO")));
 					if (strPageXxxBh != null && !"".equals(strPageXxxBh)) {
 						this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y");
-						/*处理非必填页面，如果页面非必填，保存时给完成状态设置成"B"*/	
-						String getNoRequiredPageSql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GET_NOREQUIRE_PAGE_SQL");
+						/* 处理非必填页面，如果页面非必填，保存时给完成状态设置成"B" */
+						String getNoRequiredPageSql = tzSQLObject
+								.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GET_NOREQUIRE_PAGE_SQL");
 						int countNoRequired = sqlQuery.queryForObject(getNoRequiredPageSql,
 								new Object[] { strTplId, strPageXxxBh }, "Integer");
-						if(countNoRequired>0){
+						if (countNoRequired > 0) {
 							boolean isWriteNoRequired = this.isWriteNoRequiredPage(numAppInsId, strTplId, numPageNo1);
-							if(isWriteNoRequired){
-							}else{
+							if (isWriteNoRequired) {
+							} else {
 								this.savePageCompleteState(numAppInsId, strPageXxxBh, "B");
 							}
-							if("TZ_35".equals(strPageXxxBh)){
-								/*不是预提交页面，则不用更新页面完成状态为无*/
-								String strPreSubmit = sqlQuery.queryForObject("SELECT TZ_APP_PRE_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?" ,
+							if ("TZ_35".equals(strPageXxxBh)) {
+								/* 不是预提交页面，则不用更新页面完成状态为无 */
+								String strPreSubmit = sqlQuery.queryForObject(
+										"SELECT TZ_APP_PRE_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = ?",
 										new Object[] { numAppInsId }, "String");
-								if("P".equals(strPreSubmit)){
-									/*不是预提交页面，则不用更新页面完成状态为无*/
+								if ("P".equals(strPreSubmit)) {
+									/* 不是预提交页面，则不用更新页面完成状态为无 */
 									this.savePageCompleteState(numAppInsId, strPageXxxBh, "Y");
-								}else{
+								} else {
 									this.savePageCompleteState(numAppInsId, strPageXxxBh, "N");
 								}
-								
+
 							}
 						}
 					}
@@ -1987,12 +1989,13 @@ public class tzOnlineAppEngineImpl {
 
 					String strXxxBh2 = sqlQuery.queryForObject(sqlGetXxxBh,
 							new Object[] { strTplId, "Page", numPageNo2 }, "String");
-					//System.out.println("未完成页面"+numPageNo2+"信息项编号:" + strXxxBh2);
+					// System.out.println("未完成页面"+numPageNo2+"信息项编号:" +
+					// strXxxBh2);
 					if (strXxxBh2 != null && !"".equals(strXxxBh2)) {
 						this.savePageCompleteState(numAppInsId, strXxxBh2, "N");
 					}
 				}
-				/*如果页面是推荐信页面*/
+				/* 如果页面是推荐信页面 */
 				this.checkRefletter(numAppInsId, strTplId);
 
 			}
@@ -2001,16 +2004,16 @@ public class tzOnlineAppEngineImpl {
 		}
 		return returnMsg;
 	}
-	
-	//空页面校验
-	public boolean isWriteNoRequiredPage(Long numAppInsId, String strTplId, Integer numPageNo){
-		
+
+	// 空页面校验
+	public boolean isWriteNoRequiredPage(Long numAppInsId, String strTplId, Integer numPageNo) {
+
 		boolean b_flag = false;
 		String sql;
 		try {
 			sql = tzSQLObject.getSQLText("SQL.TZWebsiteApplicationBundle.TZ_GET_NOREQUIRE_PAGE_XXX_SQL");
-			List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId,numPageNo });
-			
+			List<?> listData = sqlQuery.queryForList(sql, new Object[] { strTplId, numPageNo });
+
 			Map<String, Object> MapData = null;
 			String strXxxBh;
 			String strXxxMc;
@@ -2022,7 +2025,7 @@ public class tzOnlineAppEngineImpl {
 				strXxxMc = MapData.get("TZ_XXX_MC") == null ? "" : String.valueOf(MapData.get("TZ_XXX_MC"));
 				strComMc = MapData.get("TZ_COM_LMC") == null ? "" : String.valueOf(MapData.get("TZ_COM_LMC"));
 				b_flag = this.blankValidator(numAppInsId, strTplId, strXxxBh, strXxxMc, strComMc);
-				if(b_flag){
+				if (b_flag) {
 					break;
 				}
 			}
@@ -2030,7 +2033,7 @@ public class tzOnlineAppEngineImpl {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return b_flag;
 	}
 
@@ -2839,11 +2842,20 @@ public class tzOnlineAppEngineImpl {
 			// System.out.println(uniScholContry + ":" + Contry1 + ":" + Contry2
 			// + ":" + Contry3);
 			// 判断 是否有海外学历
-			if ((ksMap.get("TZ_11luniversitycountry") == null||"".equals(uniScholContry)) ? true
-					: uniScholContry.equals("中国大陆") &&(ksMap.get("TZ_10hdegreeunicountry")== null||"".equals(Contry1))? true
-							: Contry1.equals("中国大陆") && (ksMap.get("TZ_12ouniversitycountry") == null||"".equals(Contry2)) ? true
-									: Contry2.equals("中国大陆") && (ksMap.get("TZ_13ouniver3country") == null||"".equals(Contry3)) ? true
-											: Contry3.equals("中国大陆")) {
+			if ((ksMap.get("TZ_11luniversitycountry") == null
+					|| "".equals(uniScholContry))
+							? true
+							: uniScholContry.equals("中国大陆")
+									&& (ksMap.get("TZ_10hdegreeunicountry") == null || "".equals(Contry1))
+											? true
+											: Contry1.equals("中国大陆")
+													&& (ksMap.get("TZ_12ouniversitycountry") == null
+															|| "".equals(Contry2))
+																	? true
+																	: Contry2.equals("中国大陆") && (ksMap
+																			.get("TZ_13ouniver3country") == null
+																			|| "".equals(Contry3)) ? true
+																					: Contry3.equals("中国大陆")) {
 				isOutLeft = String.valueOf('N');
 			} else {
 				isOutLeft = String.valueOf('Y');
@@ -2863,7 +2875,7 @@ public class tzOnlineAppEngineImpl {
 
 			workProvince = ksMap.get("TZ_20TZ_TZ_20_9");
 
-			workPlace = ksMap.get("TZ_20_TZ_TZ_20_6");
+			workPlace = ksMap.get("TZ_20TZ_TZ_20_6");
 
 			compNautre = ksMap.get("TZ_20TZ_TZ_20_14firm_type");
 
@@ -2988,9 +3000,10 @@ public class tzOnlineAppEngineImpl {
 		}
 
 	}
-	
+
 	// 空校验，填写了信息则直接返回
-	public boolean blankValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc, String strComMc) {
+	public boolean blankValidator(Long numAppInsId, String strTplId, String strXxxBh, String strXxxMc,
+			String strComMc) {
 
 		String strDxxxBh = "";
 
@@ -3001,11 +3014,11 @@ public class tzOnlineAppEngineImpl {
 		String getChildrenSql = "";
 
 		String strXxxValue = "";
-		
+
 		boolean b_flag = false;
 
 		try {
-			
+
 			switch (strComMc) {
 			case "EduExperience":
 				break;
@@ -3055,7 +3068,7 @@ public class tzOnlineAppEngineImpl {
 					} else {
 						if ("".equals(strStartDate) || strStartDate == null || "".equals(strEndDate)
 								|| strEndDate == null) {
-						}else{
+						} else {
 							b_flag = true;
 							break;
 						}
@@ -3083,7 +3096,7 @@ public class tzOnlineAppEngineImpl {
 					Map<String, Object> MapValue = (Map<String, Object>) ObjValue;
 					strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
 					if ("".equals(strXxxValue) || strXxxValue == null) {
-					}else{
+					} else {
 						b_flag = true;
 						break;
 					}
@@ -3111,13 +3124,13 @@ public class tzOnlineAppEngineImpl {
 				break;
 			case "ChooseClass": // 班级选择控件，校验批次是否选择了
 				// String strXxxBh2 = "";
-				//System.out.println("11111");
+				// System.out.println("11111");
 				sql = "select TZ_APP_S_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID =? and TZ_XXX_BH like '%CC_Batch' ";
-				//System.out.println("sql:"+sql);
+				// System.out.println("sql:"+sql);
 				strXxxBh2 = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
-				//System.out.println("strXxxBh2:"+strXxxBh2);
+				// System.out.println("strXxxBh2:"+strXxxBh2);
 				if ("".equals(strXxxBh2) || strXxxBh2 == null) {
-				}else{
+				} else {
 					b_flag = true;
 				}
 				break;
@@ -3132,146 +3145,158 @@ public class tzOnlineAppEngineImpl {
 						strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
 						if ("".equals(strXxxValue) || strXxxValue == null || "N".equals(strXxxValue)) {
 							// 校验失败
-						}else{
+						} else {
 							b_flag = true;
 							break;
 						}
 					}
 				}
 				break;
-			//公司性质后台校验:
+			// 公司性质后台校验:
 			case "FirmType":
-				
-				getChildrenSql="select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
-				//区分"公司性质"和"岗位性质":
-				String opts[]=new String[]{"firm_type","position_type"};
-				//System.out.println(strComMc);
+
+				getChildrenSql = "select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+				// 区分"公司性质"和"岗位性质":
+				String opts[] = new String[] { "firm_type", "position_type" };
+				// System.out.println(strComMc);
 				System.out.println(strXxxBh);
-				//exam_type exam_score exam_date
-				for(String opt:opts){
-					Map<String,Object>valMap=new HashMap<String,Object>();
-					valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt+"%"});
-					if(valMap!=null){
-						strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-						if ("".equals(strXxxValue)||"-1".equals(strXxxValue)) {
-						}else{
+				// exam_type exam_score exam_date
+				for (String opt : opts) {
+					Map<String, Object> valMap = new HashMap<String, Object>();
+					valMap = sqlQuery.queryForMap(getChildrenSql,
+							new Object[] { numAppInsId, "%" + strXxxBh + opt + "%" });
+					if (valMap != null) {
+						strXxxValue = valMap.get("TZ_APP_S_TEXT") == null ? ""
+								: String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if ("".equals(strXxxValue) || "-1".equals(strXxxValue)) {
+						} else {
 							b_flag = true;
 							break;
 						}
 					}
 				}
 				break;
-			//英语水平后台校验		
-			case "EngLevl":	
-				getChildrenSql="select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
-				//附件部分验证:
-				String getAttCount="select COUNT(1) from PS_TZ_FORM_ATT_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
-				//查询行数:
-				sql="SELECT TZ_XXX_LINE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
-				int comNum=sqlQuery.queryForObject(sql, new Object[]{numAppInsId,strXxxBh}, "int");
+			// 英语水平后台校验
+			case "EngLevl":
+				getChildrenSql = "select * from PS_TZ_APP_CC_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+				// 附件部分验证:
+				String getAttCount = "select COUNT(1) from PS_TZ_FORM_ATT_T where TZ_APP_INS_ID=? AND TZ_XXX_BH LIKE ?";
+				// 查询行数:
+				sql = "SELECT TZ_XXX_LINE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
+				int comNum = sqlQuery.queryForObject(sql, new Object[] { numAppInsId, strXxxBh }, "int");
 
-				for(int i=0;i<comNum;i++){
+				for (int i = 0; i < comNum; i++) {
 					Map<String, Object> valMap = new HashMap<String, Object>();// exam_score//exam_date
 					String opt = "exam_type";
 					if (i > 0) {
 						opt = opt + "_" + i;
-					}					
+					}
 					valMap = sqlQuery.queryForMap(getChildrenSql, new Object[] { numAppInsId, "%" + strXxxBh + opt });
-					if(valMap!=null){
-						strXxxValue = valMap.get("TZ_APP_S_TEXT") == null ? "": String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-						if(strXxxValue.equals("无")){
+					if (valMap != null) {
+						strXxxValue = valMap.get("TZ_APP_S_TEXT") == null ? ""
+								: String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if (strXxxValue.equals("无")) {
 							b_flag = true;
 							break;
 						}
 					}
-					opt="exam_upload";
-					if(i>0){
-						opt=opt+"_"+i;
+					opt = "exam_upload";
+					if (i > 0) {
+						opt = opt + "_" + i;
 					}
-					//System.out.println("EngLevl-strXxxBh:"+strXxxBh+opt);
-					int attCount=sqlQuery.queryForObject(getAttCount, new Object[]{numAppInsId,"%"+strXxxBh+opt}, "int");
-				
-					if(attCount==0){	
-					}else{
+					// System.out.println("EngLevl-strXxxBh:"+strXxxBh+opt);
+					int attCount = sqlQuery.queryForObject(getAttCount,
+							new Object[] { numAppInsId, "%" + strXxxBh + opt }, "int");
+
+					if (attCount == 0) {
+					} else {
 						b_flag = true;
 						break;
 					}
-					//input部分验证:
-					
+					// input部分验证:
+
 				}
-				if(b_flag){
+				if (b_flag) {
 					break;
 				}
-				for(int i=0;i<comNum;i++){
-					//日期控件处理1.2.3.4.13含有日期 需要验证日期
-					String hasDateOpt="GRE-GMAT-TOEFL-IELTS-TOEIC（990）";
-					//考试类型 成绩 日期验证:
-					//1.验证成绩类型:
-					Map<String,Object>valMap=new HashMap<String,Object>();//exam_score//exam_date
-					String opt="exam_type";
-					if(i>0){
-						opt=opt+"_"+i;
+				for (int i = 0; i < comNum; i++) {
+					// 日期控件处理1.2.3.4.13含有日期 需要验证日期
+					String hasDateOpt = "GRE-GMAT-TOEFL-IELTS-TOEIC（990）";
+					// 考试类型 成绩 日期验证:
+					// 1.验证成绩类型:
+					Map<String, Object> valMap = new HashMap<String, Object>();// exam_score//exam_date
+					String opt = "exam_type";
+					if (i > 0) {
+						opt = opt + "_" + i;
 					}
-					valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt});
-					if(valMap!=null){
-						strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-						if(strXxxValue.equals("无")){
+					valMap = sqlQuery.queryForMap(getChildrenSql, new Object[] { numAppInsId, "%" + strXxxBh + opt });
+					if (valMap != null) {
+						strXxxValue = valMap.get("TZ_APP_S_TEXT") == null ? ""
+								: String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if (strXxxValue.equals("无")) {
 							continue;
 						}
-						if("".equals(strXxxValue)||"-1".equals(strXxxValue)){
-							
-						}else if(hasDateOpt.contains(strXxxValue)){
-							//验证成绩+日期
-							opt="exam_score";
-							if(i>0){
-								opt=opt+"_"+i;
+						if ("".equals(strXxxValue) || "-1".equals(strXxxValue)) {
+
+						} else if (hasDateOpt.contains(strXxxValue)) {
+							// 验证成绩+日期
+							opt = "exam_score";
+							if (i > 0) {
+								opt = opt + "_" + i;
 							}
-							valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt});
-							if(valMap!=null){
-								strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-								if(strXxxValue.equals("")){
-									
-								}else{
+							valMap = sqlQuery.queryForMap(getChildrenSql,
+									new Object[] { numAppInsId, "%" + strXxxBh + opt });
+							if (valMap != null) {
+								strXxxValue = valMap.get("TZ_APP_S_TEXT") == null ? ""
+										: String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+								if (strXxxValue.equals("")) {
+
+								} else {
 									b_flag = true;
-									//returnMessage = this.getMsg(strXxxMc, "考试成绩必填");
+									// returnMessage = this.getMsg(strXxxMc,
+									// "考试成绩必填");
 									break;
 								}
 							}
-							//验证日期：
-							opt="exam_date";
-							if(i>0){
-								opt=opt+"_"+i;
+							// 验证日期：
+							opt = "exam_date";
+							if (i > 0) {
+								opt = opt + "_" + i;
 							}
-							valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt});
-							if(valMap!=null){
-								strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-								if(strXxxValue.equals("")){
-									
-								}else{
+							valMap = sqlQuery.queryForMap(getChildrenSql,
+									new Object[] { numAppInsId, "%" + strXxxBh + opt });
+							if (valMap != null) {
+								strXxxValue = valMap.get("TZ_APP_S_TEXT") == null ? ""
+										: String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+								if (strXxxValue.equals("")) {
+
+								} else {
 									b_flag = true;
 									break;
 								}
 							}
-							
-						}else{
-							//验证成绩
-							opt="exam_score";
-							if(i>0){
-								opt=opt+"_"+i;
+
+						} else {
+							// 验证成绩
+							opt = "exam_score";
+							if (i > 0) {
+								opt = opt + "_" + i;
 							}
-							valMap=sqlQuery.queryForMap(getChildrenSql,new Object[]{numAppInsId,"%"+strXxxBh+opt});
-							if(valMap!=null){
-								strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
-								if(strXxxValue.equals("")){
-									
-								}else{
+							valMap = sqlQuery.queryForMap(getChildrenSql,
+									new Object[] { numAppInsId, "%" + strXxxBh + opt });
+							if (valMap != null) {
+								strXxxValue = valMap.get("TZ_APP_S_TEXT") == null ? ""
+										: String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+								if (strXxxValue.equals("")) {
+
+								} else {
 									b_flag = true;
 									break;
 								}
 							}
 						}
 					}
-					
+
 				}
 				break;
 			default:
@@ -3283,8 +3308,8 @@ public class tzOnlineAppEngineImpl {
 					Map<String, Object> MapValue = (Map<String, Object>) ObjValue;
 					strXxxValue = MapValue.get("TZ_VALUE") == null ? "" : String.valueOf(MapValue.get("TZ_VALUE"));
 					if ("".equals(strXxxValue) || strXxxValue == null) {
-						
-					}else{
+
+					} else {
 						b_flag = true;
 						break;
 					}
