@@ -622,7 +622,7 @@ public class tzOnlineAppEngineImpl {
 		return m;
 	}
 
-	public String getUserInfo(String strAppInsId, String strTplType) {
+	public String getUserInfo(String strAppInsId, String strTplType,String strSiteId) {
 
 		// 当前登陆人
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -635,8 +635,8 @@ public class tzOnlineAppEngineImpl {
 
 		// System.out.println("orgid:" + orgid);
 		// System.out.println("oprid:" + oprid);
-		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? ORDER BY TZ_ORDER";
-		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid });
+		String sqlGetField = "SELECT TZ_REG_FIELD_ID FROM PS_TZ_REG_FIELD_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ID = ? ORDER BY TZ_ORDER";
+		List<?> listData = sqlQuery.queryForList(sqlGetField, new Object[] { orgid,strSiteId });
 		String sql = "";
 		Map<String, Object> mapData = null;
 		for (Object objData : listData) {
