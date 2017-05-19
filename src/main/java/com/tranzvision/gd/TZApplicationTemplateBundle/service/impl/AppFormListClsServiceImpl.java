@@ -756,29 +756,47 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		if (StringUtils.equals(oType, "RCMD")) {
 			String insId = jacksonUtil.getString("INSID");
 			
-			String sqlRCMD = "SELECT tjx.TZ_APP_INS_ID,TZ_TJX_APP_INS_ID,TZ_REF_LETTER_ID,tjx.TZ_TJR_ID FROM PS_TZ_KS_TJX_TBL tjx,PS_TZ_APP_INS_T ins WHERE tjx.TZ_TJX_APP_INS_ID = ins.TZ_APP_INS_ID AND tjx.TZ_APP_INS_ID = ? and tjx.TZ_MBA_TJX_YX = 'Y' AND ins.TZ_APP_FORM_STA = 'U' ORDER BY tjx.TZ_TJR_ID";
+			String sqlRCMD = "SELECT TJX.TZ_TJX_APP_INS_ID,TJX.TZ_REF_LETTER_ID,TJX.TZ_TJR_ID,TJX.ATTACHSYSFILENAME,TJX.ATTACHUSERFILE,TJX.TZ_ACCESS_PATH ,(SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID = TJX.TZ_TJX_APP_INS_ID LIMIT 0,1) AS TZ_APP_FORM_STA FROM PS_TZ_KS_TJX_TBL TJX WHERE TJX.TZ_APP_INS_ID = ? AND TJX.TZ_MBA_TJX_YX = 'Y' ORDER BY TZ_TJR_ID";
 			List<?> resultlist = sqlQuery.queryForList(sqlRCMD, new Object[] { insId });
-
+			
+			String mSql = "SELECT (SELECT TZ_APP_TPL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_M_TPL_ID = ins.TZ_APP_TPL_ID LIMIT 0,1) FROM PS_TZ_APP_INS_T ins WHERE ins.TZ_APP_INS_ID = ? limit 0,1";
+			
 			ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 			for (Object obj : resultlist) {
 				Map<String, Object> result = (Map<String, Object>) obj;
-
+				String tjxType = "F";		/*发送邮件*/
 				String tjxInsId = result.get("TZ_TJX_APP_INS_ID") == null ? "" : String.valueOf(result.get("TZ_TJX_APP_INS_ID"));
 				String letterId = result.get("TZ_REF_LETTER_ID") == null ? "" : String.valueOf(result.get("TZ_REF_LETTER_ID"));
 				String tjrId = result.get("TZ_TJR_ID") == null ? "" : String.valueOf(result.get("TZ_TJR_ID"));
-				if(StringUtils.isBlank(tjxInsId) || StringUtils.equals("0", tjxInsId) || StringUtils.isBlank(letterId)){
-					continue;
+				
+				String attSysFileName = result.get("ATTACHSYSFILENAME") == null ? "" : String.valueOf(result.get("ATTACHSYSFILENAME"));
+				String attUserFile = result.get("ATTACHUSERFILE") == null ? "" : String.valueOf(result.get("ATTACHUSERFILE"));
+				String attAccPath = result.get("TZ_ACCESS_PATH") == null ? "" : String.valueOf(result.get("TZ_ACCESS_PATH"));
+				String formSta = result.get("TZ_APP_FORM_STA") == null ? "" : String.valueOf(result.get("TZ_APP_FORM_STA"));
+				String mtplId = "";
+				if(StringUtils.isBlank(tjxInsId) || StringUtils.equals("0", tjxInsId)){
+					if(StringUtils.isBlank(attSysFileName) || StringUtils.isBlank(attUserFile) || StringUtils.isBlank(attAccPath)){
+						continue;
+					}
+					tjxType = "S";			/*上传附件*/
+				}else{
+					if(!StringUtils.equals("U", formSta)){
+						continue;
+					}
+					mtplId = sqlQuery.queryForObject(mSql, new Object[] { tjxInsId }, "String");
+					if(StringUtils.isBlank(mtplId) || StringUtils.equals("0", mtplId)){
+						mtplId = "";
+					}
 				}
 				/**/
-				String mSql = "SELECT (SELECT TZ_APP_TPL_ID FROM PS_TZ_APPTPL_DY_T WHERE TZ_APP_M_TPL_ID = ins.TZ_APP_TPL_ID LIMIT 0,1) FROM PS_TZ_APP_INS_T ins WHERE ins.TZ_APP_INS_ID = ? limit 0,1";
-				String mtplId = sqlQuery.queryForObject(mSql, new Object[] { tjxInsId }, "String");
-				if(StringUtils.isBlank(mtplId) || StringUtils.equals("0", mtplId)){
-					mtplId = "";
-				}
 				Map<String, Object> mapJson = new HashMap<String, Object>();
 				mapJson.put("tjxInsId", tjxInsId);
 				mapJson.put("letterId", letterId);
 				mapJson.put("tjrId",tjrId);
+				
+				mapJson.put("attUserFile",attUserFile);
+				mapJson.put("attAccLink",attAccPath + attSysFileName);
+				mapJson.put("tjxType",tjxType);
 				mapJson.put("mtplId", mtplId);
 				listData.add(mapJson);
 			}
