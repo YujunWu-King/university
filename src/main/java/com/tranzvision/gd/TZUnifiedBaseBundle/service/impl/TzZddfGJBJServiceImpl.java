@@ -167,6 +167,10 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 								String dateA = StartDate;
 								cc1.setTime(sdf2.parse(dateA));
 								String dateB = EndDate;
+								if (EndDate == null || EndDate.equals("")) {
+									
+									continue;
+								}
 								cc2.setTime(sdf2.parse(dateB));
 								int d = cc2.get(Calendar.YEAR) - cc1.get(Calendar.YEAR);
 								if ("Y".equals(GJLB)) { // 发达国家
