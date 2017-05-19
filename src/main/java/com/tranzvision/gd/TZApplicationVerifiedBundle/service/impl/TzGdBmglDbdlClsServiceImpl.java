@@ -131,6 +131,9 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 				// 保存数据;
 				String strAppInsIdList = jacksonUtil.getString("strAppId");
 
+				//打包类型
+				String strPackageType = jacksonUtil.getString("packageType");
+				
 				// 打包文件名称;
 				String fileName = jacksonUtil.getString("zldbName");
 				
@@ -366,7 +369,11 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
 					String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
-					BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZGD_DBDL_PROC_01");
+					String strDbProgressName = "TZGD_DBDL_PROC_01";
+					if("B".equals(strPackageType)){
+						strDbProgressName = "TZGD_DBDL_PROC_02";
+					}
+					BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, strDbProgressName);
 					//指定调度作业的相关参数
 					EngineParameters schdProcessParameters = new EngineParameters();
 
