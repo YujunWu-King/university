@@ -129,7 +129,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?",
 					new Object[] { oprid }, "String");
 
-			String sql = "SELECT A.TZ_CLASS_ID  ,B.TZ_CLASS_NAME  ,A.TZ_APPLY_PC_ID  ,TZ_BATCH_NAME ,D.TZ_DQPY_ZT ,D.TZ_DQPY_LUNC,A.TZ_PYKS_XX ,date_format(D.TZ_PYJS_RQ, '%Y-%m-%d') TZ_PYJS_RQ,date_format(D.TZ_PYJS_SJ, '%H:%I') TZ_PYJS_SJ,(to_days(D.TZ_PYJS_RQ)-to_days(now())) TZ_DAYS FROM PS_TZ_CLPS_PW_TBL A   ,PS_TZ_CLASS_INF_T B   ,PS_TZ_CLPS_GZ_TBL D   ,PS_TZ_CLS_BATCH_T E WHERE A.TZ_CLASS_ID = B.TZ_CLASS_ID    AND A.TZ_CLASS_ID = D.TZ_CLASS_ID    AND A.TZ_APPLY_PC_ID = D.TZ_APPLY_PC_ID    AND D.TZ_DQPY_ZT IN('A','B')    AND A.TZ_PWEI_OPRID=?   AND D.TZ_CLASS_ID = E.TZ_CLASS_ID    AND D.TZ_APPLY_PC_ID = E.TZ_BATCH_ID AND DATE_FORMAT(D.TZ_PYKS_RQ,'%Y') = DATE_FORMAT(NOW(),'%Y') ORDER BY D.TZ_DQPY_ZT ASC, D.TZ_PYKS_RQ DESC,cast(A.TZ_APPLY_PC_ID as SIGNED INTEGER) DESC LIMIT ?,?";
+			String sql = "SELECT A.TZ_CLASS_ID  ,B.TZ_CLASS_NAME  ,A.TZ_APPLY_PC_ID  ,TZ_BATCH_NAME ,D.TZ_DQPY_ZT ,D.TZ_DQPY_LUNC,A.TZ_PYKS_XX ,date_format(D.TZ_PYJS_RQ, '%Y-%m-%d') TZ_PYJS_RQ,date_format(D.TZ_PYJS_SJ, '%H:%I') TZ_PYJS_SJ,(to_days(D.TZ_PYJS_RQ)-to_days(now())) TZ_DAYS FROM PS_TZ_CLPS_PW_TBL A   ,PS_TZ_CLASS_INF_T B   ,PS_TZ_CLPS_GZ_TBL D   ,PS_TZ_CLS_BATCH_T E WHERE A.TZ_CLASS_ID = B.TZ_CLASS_ID    AND A.TZ_CLASS_ID = D.TZ_CLASS_ID    AND A.TZ_APPLY_PC_ID = D.TZ_APPLY_PC_ID    AND D.TZ_DQPY_ZT IN('A','B')    AND A.TZ_PWEI_OPRID=?   AND D.TZ_CLASS_ID = E.TZ_CLASS_ID    AND D.TZ_APPLY_PC_ID = E.TZ_BATCH_ID AND DATE_FORMAT(B.TZ_RX_DT,'%Y') > DATE_FORMAT(NOW(),'%Y') ORDER BY D.TZ_DQPY_ZT ASC, D.TZ_PYKS_RQ DESC,cast(A.TZ_APPLY_PC_ID as SIGNED INTEGER) DESC LIMIT ?,?";
 			List<Map<String, Object>> list = sqlQuery.queryForList(sql,
 					new Object[] { oprid, Integer.parseInt(startRowNumber), Integer.parseInt(maxRowCount) });
 
@@ -211,7 +211,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 				}
 			}
 			// 总行数;
-			String totalSql = "select count(*) from PS_TZ_CLPS_PW_TBL a, PS_TZ_CLPS_GZ_TBL b where a.TZ_PWEI_OPRID=? and  a.TZ_CLASS_ID=b.TZ_CLASS_ID and a.TZ_APPLY_PC_ID=b.TZ_APPLY_PC_ID and b.TZ_DQPY_ZT IN('A','B') and a.TZ_CLASS_ID in (select TZ_CLASS_ID from PS_TZ_CLASS_INF_T )";
+			String totalSql = "select count(*) from PS_TZ_CLPS_PW_TBL a, PS_TZ_CLPS_GZ_TBL b where a.TZ_PWEI_OPRID=? and  a.TZ_CLASS_ID=b.TZ_CLASS_ID and a.TZ_APPLY_PC_ID=b.TZ_APPLY_PC_ID and b.TZ_DQPY_ZT IN('A','B') and a.TZ_CLASS_ID in (select TZ_CLASS_ID from PS_TZ_CLASS_INF_T WHERE DATE_FORMAT(TZ_RX_DT,'%Y') > DATE_FORMAT(NOW(),'%Y'))";
 			int totalRowCount = sqlQuery.queryForObject(totalSql, new Object[] { oprid }, "Integer");
 
 			// 是否有更多数据
@@ -568,7 +568,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			}
 
 			Long TZ_APP_INS_ID;
-			String forthSql = "select TZ_APP_INS_ID ,TZ_SCORE_INS_ID from PS_TZ_CP_PW_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=?";
+			String forthSql = "select TZ_APP_INS_ID ,TZ_SCORE_INS_ID from PS_TZ_CP_PW_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? ORDER BY ROW_ADDED_DTTM ASC";
 			
 			List<Map<String, Object>> applicantsList = sqlQuery.queryForList(forthSql,
 					new Object[] { classId, batchId, oprid });
@@ -1106,7 +1106,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 			error_decription = "当前评委账号为暂停状态，不能提交数据。";
 		 }else{
 			//检查是否有排名重复考生
-				String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_CP_PW_KS_TBL a, PS_TZ_CP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID AND a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and a.TZ_PWEI_OPRID=? and a.TZ_CLASS_ID=? AND a.TZ_APPLY_PC_ID=?",
+				String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_CP_PW_KS_TBL a, PS_TZ_CP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID AND a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and a.TZ_PWEI_OPRID=? and a.TZ_CLASS_ID=? AND a.TZ_APPLY_PC_ID=? limit 0,1",
 						 new Object[]{oprid,classId,batchId}, "String");
 				if("Y".equals(have_equal)){
 					error_code = "SORTREPEAT";

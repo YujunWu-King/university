@@ -774,11 +774,9 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 				String attAccPath = result.get("TZ_ACCESS_PATH") == null ? "" : String.valueOf(result.get("TZ_ACCESS_PATH"));
 				String formSta = result.get("TZ_APP_FORM_STA") == null ? "" : String.valueOf(result.get("TZ_APP_FORM_STA"));
 				String mtplId = "";
-				if(StringUtils.isBlank(tjxInsId) || StringUtils.equals("0", tjxInsId)){
-					if(StringUtils.isBlank(attSysFileName) || StringUtils.isBlank(attUserFile) || StringUtils.isBlank(attAccPath)){
-						continue;
-					}
-					tjxType = "S";			/*上传附件*/
+				
+				if(StringUtils.isNotBlank(attSysFileName) && StringUtils.isNotBlank(attUserFile) && StringUtils.isNotBlank(attAccPath)){
+					tjxType = "S";				/*上传附件*/
 				}else{
 					if(!StringUtils.equals("U", formSta)){
 						continue;

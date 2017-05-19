@@ -404,7 +404,8 @@ function initializeEvaluatePiciGrid(jsonObject)
       multiSelect: false,
       columnLines: true,
       width:'100%',
-      minHeight:100,
+      height:'100%',
+      autoScroll: true,
       stateId: 'EvaluateBatchListGrid',
       style:'cursor:default;vertical:middle;',
       columns: [
@@ -472,13 +473,32 @@ function initializeEvaluatePiciGrid(jsonObject)
           enableTextSelection: true
       }
   });
+
+  //评审说明区域
+  var descPanel = Ext.create("Ext.panel.Panel",{
+	  title:'评审说明',
+	  header:false,
+	  height:'100%',
+	  renderTo: 'tz_zlps_description',
+      contentEl : Ext.DomHelper.append(document.body, {
+          bodyBorder : false,
+          tag : 'iframe',
+          style : "border:0px none;scrollbar:true",
+          src : EvaluationDescriptionUrl,
+          height:'100%',
+          width : "100%"
+      })
+  });
   
   //列表渲染完毕之后加载评委提醒信息
   if(jsonObject.remindData!=undefined&&jsonObject.remindData.length>0){
-		 var reminHtml = "尊敬的评委：<br/><br/><span style='margin-left:20px;'>";
-		 reminHtml+=jsonObject.remindData.join("</span><br/><br/><span style='margin-left:20px;'>");
-		 reminHtml+="</span>";
-		 openRemindWindow(reminHtml);
+		 var remindHtml = "尊敬的评委：<br/><br/><span style='margin-left:20px;'>";
+		 remindHtml+=jsonObject.remindData.join("</span><br/><br/><span style='margin-left:20px;'>");
+		 remindHtml+="</span>";
+		 Ext.defer(function(remindHtml){
+			 openRemindWindow(remindHtml);
+		 },100,this,[remindHtml]);
+		 
   }
   
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex){
