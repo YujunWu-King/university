@@ -536,13 +536,19 @@ public class GdObjectServiceImpl implements GdObjectService {
 			String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where  TZ_HARDCODE_PNT=?";
 
 			String systemLang = jdbcTemplate.queryForObject(sql, new Object[] { TZ_HARDCODE_PNT }, "String");
+			
+			System.out.println("loginOrgid:"+loginOrgid);
+			System.out.println("superOrgid:"+superOrgid);
+			System.out.println("languageCd:"+languageCd);
+			System.out.println("systemLang:"+systemLang);
 
 			// Key:TZ_XXJH_ID@TZ_JG_ID
 			// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
 			String tmpMsgID = null;
 			String tmpMsgText = null;
 			Map<String, Object> mapJson = new HashMap<String, Object>();
-			if (Memoryparameter.messageText.get(msgSetId + LJ + loginOrgid) != null) {
+			if (loginOrgid != null && !loginOrgid.equals("")
+					&& Memoryparameter.messageText.get(msgSetId + LJ + loginOrgid) != null) {
 
 				Map<String, String> map = Memoryparameter.messageText.get(msgSetId + LJ + loginOrgid);
 				Iterator<Map.Entry<String, String>> iter = map.entrySet().iterator();
