@@ -40,6 +40,7 @@ import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzOprPhotoTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzOprPhotoT;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
+import com.tranzvision.gd.TZRecommendationBundle.service.impl.TzTjxThanksServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
@@ -101,8 +102,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 	private PsTzRegUserTMapper psTzRegUserTMapper;
 	@Autowired
 	private PsroleuserMapper psroleuserMapper;
-	// @Autowired
-	// private TzTjxThanksServiceImpl tzTjxThanksServiceImpl;
+	@Autowired
+	private TzTjxThanksServiceImpl tzTjxThanksServiceImpl;
 
 	@Autowired
 	private PsTzOprPhotoTMapper psTzOprPhotoTMapper;
@@ -1674,9 +1675,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							if ("TJX".equals(strTplType)) {
 								strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId,
 										strTplType, strBatchId, strPwd, isPwd);
-								// 清华不需要发感谢信
-								// String strSubmitTjxSendEmail =
-								// tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
+							
+								String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
 								// TJX提交 发送站内信
 								tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_TJX_SUBSUC", strAppOprId,
 										strAppOrgId, "推荐信提交发送站内信", "TJXZ", strRefLetterId);
