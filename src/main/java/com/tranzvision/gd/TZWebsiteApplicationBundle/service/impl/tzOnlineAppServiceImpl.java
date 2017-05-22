@@ -826,6 +826,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			String strDownErrorMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"DOWNERR", strLanguage, "请先保存报名表", "Please save the application form。");
+			
+			
+			String BMBTJMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"BMBTJMSG", strLanguage, "报名表已提交", "The application has been submitted");
+			
+			String TJXTJMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+					"TJXTJMsg", strLanguage, "推荐信已提交", "Reference Letter has been submitted");
 
 			System.out.println("报名表展现双语化处理End,Time=" + (System.currentTimeMillis() - time2));
 
@@ -953,7 +960,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						strAppInsVersion, contextUrl, leftWidthStyle, rightWidthStyle, strLeftStyle, strRightStyle,
 						showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit, strBatchId, strTJXIsPwd, passWordHtml,
 						setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2, pwdError, pwdError2, PWDHTML,
-						strDownLoadPDFMsg, strDownErrorMsg, classProjectID, strAppInsState, strDisplayType, strIsReview,
+						strDownLoadPDFMsg, strDownErrorMsg, classProjectID, strAppInsState, strDisplayType, strIsReview,BMBTJMsg,TJXTJMsg,
 						strTplData, strInsData);
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();

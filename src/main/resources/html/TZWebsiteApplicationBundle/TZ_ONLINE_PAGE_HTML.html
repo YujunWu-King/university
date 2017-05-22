@@ -64,8 +64,8 @@
 		var currentPageId = "";
 		var appReadOnly = "%bind(:13)";
 		var showSubmitBtnOnly = "%bind(:37)";//最后页面只显示提交按钮
-		var data = %bind(:57); // 模板的data
-		var dataApp = %bind(:58); //用户保存的data
+		var data = %bind(:59); // 模板的data
+		var dataApp = %bind(:60); //用户保存的data
 		var strTplType = "%bind(:19)"; //模版类型
 		
 		SurveyBuild.appInsVersion = "%bind(:31)"; //当前报名表版本实例
@@ -164,6 +164,7 @@
 						$("#app_save").show();
 						$("#app_submit").show();
 						$("#app_state").show();
+						$("#txj_state").show();
 						if (strTplType=="BMB") {
 							$("#app_download").show();
 						}
@@ -175,6 +176,7 @@
 								$("#app_save").show();
 								$("#app_submit").show();
 								$("#app_state").show();
+								$("#txj_state").show();
 								if (strTplType=="BMB") {
 									$("#app_download").show();
 								}
@@ -184,6 +186,7 @@
 								$("#app_save").show();
 								$("#app_submit").show();
 								$("#app_state").show();
+								$("#txj_state").show();
 								if (strTplType=="BMB") {
 									$("#app_download").show();
 								}
@@ -207,6 +210,7 @@
 								$("#app_save").show();
 								$("#app_submit").hide();
 								$("#app_state").hide();
+								$("#txj_state").hide();
 								$("#app_download").hide();
 								$("#app_prev").hide();
 								$("#app_next").show();
@@ -219,6 +223,7 @@
 								$("#app_save").show();
 								$("#app_submit").hide();
 								$("#app_state").hide();
+								$("#txj_state").hide();
 								$("#app_download").hide();
 								$("#app_prev").show();
 								$("#app_next").show();
@@ -230,6 +235,7 @@
 						$("#app_save").hide();
 						$("#app_submit").hide();
 						$("#app_state").hide();
+						$("#txj_state").hide();
 					}
 					if("%bind(:54)" == "U" && strTplType == "BMB"){
 						$("#app_submit").attr("readOnly","readOnly");
@@ -242,8 +248,21 @@
 							$("#app_submit").hide();
 							$("#app_state").hide();
 						}
+					}else if("%bind(:54)" == "U" && strTplType == "TJX"){
+						console.log("111111");
+						$("#app_submit").attr("readOnly","readOnly");
+						$("#app_submit").attr("disabled","disabled");
+						$("#app_submit_div").css("background-color","#999");
+						if(pageno== pagelen){
+							$("#app_submit").show();
+							$("#txj_state").show();
+						}else{
+							$("#app_submit").hide();
+							$("#txj_state").hide();
+						}
 					}else{
 						$("#app_state").hide();
+						$("#txj_state").hide();
 					}
 					currentPageId = $(this).attr("id");
 					//var tabClass = $("#tabNav").children("div:last-child").attr('class');
@@ -314,6 +333,7 @@
 					$("#app_save").show();
 					$("#app_submit").show();
 					$("#app_state").show();
+					$("#txj_state").show();
 					if (strTplType=="BMB") {
 						$("#app_download").show();
 					}
@@ -325,6 +345,7 @@
 							$("#app_save").show();
 							$("#app_submit").show();
 							$("#app_state").show();
+							$("#txj_state").show();
 							if (strTplType=="BMB") {
 								$("#app_download").show();
 							}
@@ -341,6 +362,7 @@
 							$("#app_save").show();
 							$("#app_submit").show();
 							$("#app_state").show();
+							$("#txj_state").show();
 							if (strTplType=="BMB") {
 								$("#app_download").show();
 							}
@@ -357,6 +379,7 @@
 							$("#app_save").show();
 							$("#app_submit").hide();
 							$("#app_state").hide();
+							$("#txj_state").hide();
 							$("#app_download").hide();
 							$("#app_prev").hide();
 							$("#app_next").show();
@@ -370,6 +393,7 @@
 							$("#app_save").show();
 							$("#app_submit").hide();
 							$("#app_state").hide();
+							$("#txj_state").hide();
 							$("#app_download").hide();
 							$("#app_prev").show();
 							$("#app_next").show();
@@ -380,6 +404,7 @@
 					$("#app_save").hide();
 					$("#app_submit").hide();
 					$("#app_state").hide();
+					$("#txj_state").hide();
 				}
 				if("%bind(:54)" == "U" && strTplType == "BMB"){
 					
@@ -393,8 +418,21 @@
 						$("#app_submit").hide();
 						$("#app_state").hide();
 					}
+				} else if("%bind(:54)" == "U" && strTplType == "TJX"){
+					console.log("111111");
+					$("#app_submit").attr("readOnly","readOnly");
+					$("#app_submit").attr("disabled","disabled");
+					$("#app_submit_div").css("background-color","#999");
+					if(pageno== pagelen){
+						$("#app_submit").show();
+						$("#txj_state").show();
+					}else{
+						$("#app_submit").hide();
+						$("#txj_state").hide();
+					}
 				}else{
 					$("#app_state").hide();
+					$("#txj_state").hide();
 				}
 			
 				
@@ -1524,7 +1562,11 @@
 					</div>
 				</a>
 				<a href="javascript:void(0);" id="app_state" style="color: #E53333;font-size: 16px;display: none">
-					<div style="line-height: 46px;float: left;">报名表已提交</div>
+					<div style="line-height: 46px;float: left;">%bind(:57)</div>
+				</a>
+				
+				<a href="javascript:void(0);" id="txj_state" style="color: #E53333;font-size: 16px;display: none">
+					<div style="line-height: 46px;float: left;">%bind(:58)</div>
 				</a>
 				<script type="text/javascript">
 				</script>
@@ -1591,6 +1633,10 @@
 				if (tplType != "BMB") {
 					$("#app_download").hide();
 					$("#backindex").hide();
+				}
+				
+				if(tplType=="TJX" && appReadOnly == "Y"){
+					$("#txj_state").show();
 				}
 				
 				

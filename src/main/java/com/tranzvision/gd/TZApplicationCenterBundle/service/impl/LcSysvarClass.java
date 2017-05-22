@@ -206,7 +206,7 @@ public class LcSysvarClass {
 						}
 					}
 					
-					tableHtml = tableHtml + "<thead><tr><td colspan=\"3\">推荐人提交推荐信情况</td><td colspan=\"3\">打印PDF报名表</td></tr></thead>";
+					tableHtml = tableHtml + "<thead><tr><td colspan=\"3\">推荐人提交推荐信情况</td><td>报名表提交状态</td><td colspan=\"2\">打印PDF报名表</td></tr></thead>";
 					
 					String tjrqkxx = "";
 					String tjxSql = "select TZ_REFERRER_NAME,TZ_TJX_APP_INS_ID,TZ_REF_LETTER_ID,TZ_REFLETTERTYPE from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and TZ_MBA_TJX_YX='Y' order by TZ_TJR_ID asc";
@@ -245,10 +245,15 @@ public class LcSysvarClass {
 			         }
 					
 					tjrqkxx = "<td colspan=\"3\">" + tjrqkxx + "</td>";
+					//报名表提交状态;
+					String bmbTjStatusDesc = jdbcTemplate.queryForObject("select TZ_ZHZ_DMS from  PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_APPFORM_STATE' AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?", new Object[]{appInsStatus},String.class);
+					if(bmbTjStatusDesc == null){
+						bmbTjStatusDesc = "";
+					}
 					//打印报名表;
 					String applyFormPrint = rootPath + "/PrintPdfServlet?instanceID=" + appIns;
 					//未提交也可以打印;
-					tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
+					tjrqkxx = tjrqkxx +"<td>" + bmbTjStatusDesc + "</td>" + "<td colspan=\"2\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
 					/*
 					if ("U".equals(appInsStatus)) {
 						tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
