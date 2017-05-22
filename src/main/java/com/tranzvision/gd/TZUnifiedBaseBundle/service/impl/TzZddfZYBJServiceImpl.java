@@ -180,7 +180,10 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 				float c = Float.parseFloat(NSR);
 				int c1 = (int) (c);
 				String FSCJ2 = SqlQuery.queryForObject(sql2, new Object[] { c1, c1 }, "String");
-				Score = Float.parseFloat(FSCJ2);
+				if (FSCJ2 != null && !FSCJ2.equals("")) {
+					Score = Float.parseFloat(FSCJ2);
+				}
+
 				MarkRecord = "公司类型：".concat("企业类").concat("|年收入：").concat(NSR).concat("万元");
 
 				// 如果单位性质是创业类，查询报名表中的创业经历
@@ -210,8 +213,11 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 						if ("ANGEL_INVEST".equals(RZ)) {
 							String RZ1 = "C";
 							// 天使轮
+							float TSL=0;
 							String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_ZY_T WHERE TZ_CSMB_TJ2= ? AND TZ_CSMB_TJ1 = 'IT' and TZ_CSMB_TJ3<=? and TZ_CSMB_TJ4>?";
-							float TSL = Float.parseFloat(RZE3);
+							if (RZE3 != null && !RZE3.equals("")) {
+								TSL = Float.parseFloat(RZE3);
+							}							
 							int TSL1 = (int) (TSL);
 							String FSCJ = SqlQuery.queryForObject(sql, new Object[] { RZ1, TSL1, TSL1 }, "String");
 							if (FSCJ != null) {

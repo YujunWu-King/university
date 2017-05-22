@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.itextpdf.text.log.SysoCounter;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCjxTblMapper;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblKey;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs;
@@ -177,12 +178,17 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 
 						String cc4 = "";
 						for (int i = 0; i < WYCJ.length(); i++) {
-							if (WYCJ.charAt(i) >= 48 && WYCJ.charAt(i) <= 57) {
+							if ((WYCJ.charAt(i) >= 48 && WYCJ.charAt(i) <= 57)||(WYCJ.charAt(i)==46)) {
 								cc4 += WYCJ.charAt(i);
 							}
 						}
 
+						if(cc4.equals("")){
+							System.out.println("——————————：" + TZ_APP_ID);
+							continue;
+						}
 						float CJ = Float.parseFloat(cc4);
+						
 						String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK2>=? AND TZ_CSMB_CK3<=?";
 						String FSCJ = SqlQuery.queryForObject(sql, new Object[] { WYLX, CJ, CJ }, "String");
 						if (FSCJ != null && !FSCJ.equals("")) {
@@ -191,10 +197,10 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 								Highest = FSCJF;
 							}
 						}
-						if (TZ_APP_ID.equals("400377")&&WYLX.equals("IELTS")) {
-							System.out.printf("雅思得分%d",FSCJF);
+						if (TZ_APP_ID.equals("400377") && WYLX.equals("IELTS")) {
+							System.out.println("雅思得分" + FSCJF);
 						}
-						
+
 					}
 
 					// 证书类型，查询报名表中的证书等级字段
@@ -208,7 +214,7 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 							Highest = FSCJF;
 						}
 						if (TZ_APP_ID.equals("400377")) {
-							System.out.printf("证书得分%d",FSCJF);
+							System.out.printf("证书得分%d", FSCJF);
 						}
 					}
 				} else {
@@ -217,16 +223,8 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 
 				// 记录打分记录：英语成绩类型：GMAT>=750|其他语种：日语二级|100分
 				if (MarkRecord != null) {
-
-					System.out.println("是这个报名表：" + TZ_APP_ID + "后几条");
-					System.out.println(LX);
-					System.out.println(WYCJori);
 					MarkRecord = MarkRecord + "英语成绩类型：".concat(LX).concat("=").concat(WYCJori) + "|";// .concat("|学位：").concat(XW);
 				} else {
-
-					System.out.println("是这个报名表：" + TZ_APP_ID + "第一条");
-					System.out.println(LX);
-					System.out.println(WYCJori);
 					MarkRecord = "英语成绩类型：".concat(LX).concat("=").concat(WYCJori) + "|";// .concat("|学位：").concat(XW);
 				}
 			}
@@ -305,7 +303,7 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 								if (TZ_APP_ID.equals("400377")) {
 									System.out.println("学校1处打了100分");
 								}
-								
+
 							}
 						}
 					}
@@ -363,7 +361,7 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 					if ("1".equals(Xw)) {
 						Highest = 100;
 						mark = 2;
-						
+
 						if (TZ_APP_ID.equals("400377")) {
 							System.out.println("没填情况学校1处打了100分");
 						}
@@ -389,7 +387,7 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 					if ("1".equals(XW2)) {
 						Highest = 100;
 						mark = 2;
-						
+
 						if (TZ_APP_ID.equals("400377")) {
 							System.out.println("没填情况学校2处打了100分");
 						}
