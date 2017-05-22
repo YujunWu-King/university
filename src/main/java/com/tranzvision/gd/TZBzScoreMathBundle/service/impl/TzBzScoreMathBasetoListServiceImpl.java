@@ -255,7 +255,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 
 						ysfMap = SqlQuery.queryForMap(
 								TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_YSCORE_NUM"),
-								new Object[] { classId, batchId, Integer.valueOf(appinsId), pwOprid, orgid });
+								new Object[] { orgid, classId, batchId, Integer.valueOf(appinsId), pwOprid });
 
 						pwId = ysfMap == null || ysfMap.get("TZ_PWEI_GRPID") == null ? ""
 								: ysfMap.get("TZ_PWEI_GRPID").toString();
