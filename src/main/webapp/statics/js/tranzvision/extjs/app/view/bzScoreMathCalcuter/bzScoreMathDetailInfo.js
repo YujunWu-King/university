@@ -14,6 +14,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
         'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathController',
         'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailStore'
     ],
+    ignoreChangesFlag: true,//让框架程序不要提示用户保存的属性设置
     reference:"bzscoreDelinfo",
     autoScroll:false,
     actType:'add',
@@ -235,7 +236,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                     }],
                     
             buttons:[
-            {
+            /*{
                 text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.save","保存"),
                 handler:'DelinfoSave',
                 iconCls:'save'
@@ -243,7 +244,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                 text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.sure","确定"),
                 handler:'ensureonDelinfoSave',
                 iconCls:'ensure'
-            },{
+            },*/{
                 text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.close","关闭"),
                 iconCls:'close',
                 handler:'DelinfoClose'

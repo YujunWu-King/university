@@ -215,8 +215,9 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 			String pwId = "";
 			String scoreNum = "";
 			String judgeGroup = "";
+			String judgeName = "";
 
-			String pwListsql = "SELECT TZ_PWEI_OPRID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_APPLY_PC_ID =?  AND TZ_CLASS_ID=? AND TZ_APP_INS_ID =?  AND TZ_DELETE_ZT<>'Y' AND TZ_PSHEN_ZT='A'";
+			String pwListsql = "SELECT A.TZ_PWEI_OPRID,B.TZ_DLZH_ID FROM PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE B.OPRID=A.TZ_PWEI_OPRID AND A.TZ_APPLY_PC_ID =?  AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID =? AND A.TZ_DELETE_ZT<>'Y' AND A.TZ_PSHEN_ZT='A'";
 
 			if (jacksonUtil.containsKey("add")) {
 				jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("add");
@@ -244,31 +245,40 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 					ksName = jacksonUtil.getString("ksName");
 					judgeGroup = jacksonUtil.getString("judgeGroup");
 					pwList = SqlQuery.queryForList(pwListsql, new Object[] { batchId, classId, appinsId });
+					System.out.println("pwList:" + pwList.size());
 					for (Map<String, Object> Pwmap : pwList) {
-						pwOprid = Pwmap.get("TZ_PWEI_OPRID").toString();
+						pwOprid = Pwmap == null || Pwmap.get("TZ_PWEI_OPRID") == null ? ""
+								: Pwmap.get("TZ_PWEI_OPRID").toString();
+						judgeName = Pwmap == null || Pwmap.get("TZ_DLZH_ID") == null ? ""
+								: Pwmap.get("TZ_DLZH_ID").toString();
 						System.out.println("pwOprid:" + pwOprid);
 
 						ysfMap = SqlQuery.queryForMap(
 								TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_YSCORE_NUM"),
 								new Object[] { classId, batchId, Integer.valueOf(appinsId), pwOprid, orgid });
-						pwId = ysfMap.get("TZ_PWEI_GRPID").toString();
-						scoreNum = ysfMap.get("TZ_SCORE_NUM").toString();
+
+						pwId = ysfMap == null || ysfMap.get("TZ_PWEI_GRPID") == null ? ""
+								: ysfMap.get("TZ_PWEI_GRPID").toString();
+						scoreNum = ysfMap == null || ysfMap.get("TZ_SCORE_NUM") == null ? ""
+								: ysfMap.get("TZ_SCORE_NUM").toString();
 
 						Map<String, Object> mapList = new HashMap<String, Object>();
 						mapList.put("xmid", appinsId);
 						mapList.put("xmName", ksName);
 						mapList.put("teamID", pwId);
-						mapList.put("judgeUser", judgeGroup);
+						mapList.put("judgeUser", judgeName);
 						mapList.put("rawscore", scoreNum);
 						mapList.put("judgescore", "");
 
 						listdate.add(mapList);
+						System.out.println("listdate:" + listdate.size());
 
 					}
 
 				}
 
 				strRet = jacksonUtil.List2json(listdate);
+				System.out.println("strRet:" + strRet);
 				break;
 
 			}
