@@ -334,7 +334,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 		try {
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] { { "TZ_CLASS_ID", "ASC" } };
+			String[][] orderByArr = new String[][] { { "TZ_PWEI_GRPID", "ASC" } };
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_PWEI_OPRID", "TZ_PWEI_GRPID",
@@ -380,6 +380,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		String judgId = "";
 		String judgGroupId = "";
 		String judgName = "";
+		String judzhxx = "";
 		String pwgroup = "";
 		String pwpwd = "";
 		String pwgroupsql = "SELECT TZ_CLPS_GR_NAME FROM  PS_TZ_MSPS_GR_TBL WHERE TZ_CLPS_GR_ID=?";
@@ -429,6 +430,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapData = new HashMap<String, Object>();
 				strForm = actData[i];
 				jacksonUtil.json2Map(strForm);
+				judzhxx = jacksonUtil.getString("judzhxx");
 				judgId = jacksonUtil.getString("judgId");
 				judgName = jacksonUtil.getString("judgName");
 				judgGroupId = jacksonUtil.getString("judgGroupId");
@@ -437,7 +439,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 				pwpwd = sqlQuery.queryForObject(pwpwdsql, new Object[] { judgId, orgid }, "String");
 
-				mapData.put("pwoprid", judgId);
+				mapData.put("pwoprid", judzhxx);
 				mapData.put("pwname", judgName);
 				mapData.put("pwgroup", pwgroup);
 				mapData.put("pwpassword", pwpwd);
