@@ -186,10 +186,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 						text: '更多操作',
 						iconCls: 'list',
 						glyph: 61,
-						menu: [{
+						menu: [/*{
 							text: '导出选中考生评议数据',
 							handler: 'exportSelStuInfom'
-						},{
+						},*/{
 							text: '导出选中考生评议数据',
 							handler: 'exportSelStuInfom'
 						},{

@@ -285,13 +285,13 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 									tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.adddata", "新增评委"),
 									iconCls: "add",
 									handler: 'addpwInfom'
-								}, "-",
-								{
+								}, "->",
+								/*{
 									text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.edit1", "编辑"),
 									tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.editdata", "编辑"),
 									iconCls: "edit",
 									handler: 'importScore'
-								}, "->",
+								}, "->",*/
 								{
 									xtype: 'splitbutton',
 									text: '更多操作',
