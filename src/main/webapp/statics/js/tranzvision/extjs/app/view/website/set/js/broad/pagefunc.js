@@ -690,7 +690,7 @@ function getPerInfCard(){
 	    		failure: function () {
 				
 			  		alert(response.state.errdesc);
-	    		},
+	    		}
 			});
 
 }
