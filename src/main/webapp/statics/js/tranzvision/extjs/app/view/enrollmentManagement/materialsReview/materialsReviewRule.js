@@ -251,28 +251,37 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 									listeners:{
 										change:function(field,newValue,oldValue,eOpts) {
 											//要求评审人次更新
-											var form = field.findParentByType("materialsReviewRule").down("form[name=statisticsNumForm]").getForm();
-											var clpsksNum = form.findField("clpsksNum").getValue();
+											var statisticsNumForm = field.findParentByType("materialsReviewRule").down("form[name=statisticsNumForm]").getForm();
+											var clpsksNum = statisticsNumForm.findField("clpsksNum").getValue();
 											var reviewNumSet = clpsksNum*parseInt(newValue);
-											form.findField("reviewNumSet").setValue(reviewNumSet);
+											statisticsNumForm.findField("reviewNumSet").setValue(reviewNumSet);
 
 											//所属评委组更新
-											/*var classId = form.findField("classId").getValue();
-											var batchId = form.findField("batchId").getValue();
+											/*if(judgeGroupStore.data.length == newValue) {
 
-											var grid = field.findParentByType("materialsReviewRule").down("grid[name=materialJudgeGrid]");
+											} else {
 
-											var judgeGroupParams =  '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
-												'"OperateType":"tzGetJudgeGroup","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
-											Ext.tzLoad(judgeGroupParams,function(responseData) {
-												var judgeGroupData = responseData.groupData;
+												var classId = field.findParentByType("materialsReviewRule").classId;
+												var batchId = field.findParentByType("materialsReviewRule").batchId;
 
-												judgeGroupStore = Ext.create("Ext.data.Store", {
-													fields: ["TZ_CLPS_GR_ID", "TZ_CLPS_GR_NAME"],
-													data: judgeGroupData
+												var grid = field.findParentByType("materialsReviewRule").down("grid[name=materialJudgeGrid]");
+
+												var judgeGroupParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
+													'"OperateType":"tzGetJudgeGroup","comParams":{"classId":"' + classId + '","batchId":"' + batchId + '","judgeNumSet":"' + newValue + '"}}';
+
+
+												Ext.tzLoad(judgeGroupParams, function (responseData) {
+													var judgeGroupDataNew = responseData.groupData;
+
+													if (grid.columns[4].editor != undefined) {
+														judgeGroupStore = grid.columns[4].editor.store = Ext.create("Ext.data.Store", {
+															fields: ["TZ_CLPS_GR_ID", "TZ_CLPS_GR_NAME"],
+															data: judgeGroupDataNew
+														});
+													}
+
 												});
-											});*/
-
+											}*/
 										}
 									}
 								},{
@@ -385,7 +394,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 										var reviewNumCount = 0;
 										for(var i=0;i<store.getCount();i++) {
 											var record = store.getAt(i);
-											reviewNumCount = reviewNumCount + parseInt(record.get("judgeExamineeNum"));
+											if(record.get("judgeExamineeNum")!=null && record.get("judgeExamineeNum")!="") {
+												reviewNumCount = reviewNumCount + parseInt(record.get("judgeExamineeNum"));
+											}	
 										}
 										//当前选择评委评议总人次
 										form.findField("judgeNumTotal").setValue(reviewNumCount);

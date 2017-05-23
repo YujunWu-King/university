@@ -189,4 +189,56 @@ public class BatchProcessDetailsImpl extends FrameworkImpl{
 		strRet = jacksonUtil.Map2json(mapRet);
 		return strRet;
 	}
+	
+	
+	/**
+	 * 批处理状态描述
+	 * @param status
+	 * @return
+	 */
+	public String getBatchProcessStatusDescsr(String status){
+		String runStatusDesc = "";
+		switch(status){
+			//排队中
+			case "QUENED":
+				runStatusDesc = "排队中";
+				break;
+			case "SCHEDULED":
+				runStatusDesc = "调度中";
+				break;
+			//已启动
+			case "STARTED":
+				runStatusDesc = "已启动";
+				break;
+			//正在运行中
+			case "RUNNING":
+				runStatusDesc = "正在运行中";
+				break;
+			//成功完成
+			case "SUCCEEDED":
+				runStatusDesc = "成功完成";
+				break;
+			//发生错误
+			case "ERROR":
+				runStatusDesc = "发生错误";
+				break;
+			//发生严重错误
+			case "FATAL":
+				runStatusDesc = "发生严重错误";
+				break;
+			//正在停止
+			case "STOPPING":
+				runStatusDesc = "正在停止";
+				break;
+			//已强行终止
+			case "TERMINATED":
+				runStatusDesc = "已强行终止";
+				break;
+				//默认情况
+			default:
+				runStatusDesc = status;
+		}
+		
+		return runStatusDesc;
+	}
 }

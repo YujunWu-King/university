@@ -654,8 +654,8 @@
 					var siteType = form.findField("siteType").getValue();
 				
 					if(siteType=="A" || siteType == "B"){
-						var pubAud = panel.down('fieldset[name=pubAud]');
-						pubAud.setHidden(true);
+						//var pubAud = panel.down('fieldset[name=pubAud]');
+						//pubAud.setHidden(true);
 					}
 					
 					//栏目类型

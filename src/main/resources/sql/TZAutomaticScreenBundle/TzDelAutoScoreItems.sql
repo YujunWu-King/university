@@ -1,0 +1,11 @@
+DELETE FROM PS_TZ_CJX_TBL 
+WHERE
+    EXISTS( SELECT 
+        'x'
+    FROM
+        PS_TZ_CS_KS_TBL
+    
+    WHERE
+        TZ_CLASS_ID = ?
+        AND TZ_APPLY_PC_ID = ?
+        AND TZ_SCORE_INS_ID = PS_TZ_CJX_TBL.TZ_SCORE_INS_ID)

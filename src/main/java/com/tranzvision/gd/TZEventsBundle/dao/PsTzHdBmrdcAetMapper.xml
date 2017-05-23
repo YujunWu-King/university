@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZEventsBundle.dao.PsTzHdBmrdcAetMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet" >
+    <id column="RUN_CNTL_ID" property="runCntlId" jdbcType="VARCHAR" />
+    <result column="TZ_ART_ID" property="tzArtId" jdbcType="VARCHAR" />
+    <result column="TZ_REL_URL" property="tzRelUrl" jdbcType="VARCHAR" />
+    <result column="TZ_JD_URL" property="tzJdUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet" extends="BaseResultMap" >
+    <result column="TZ_PARAMS_STR" property="tzParamsStr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RUN_CNTL_ID, TZ_ART_ID, TZ_REL_URL, TZ_JD_URL
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_PARAMS_STR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_HD_BMRDC_AET
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_HD_BMRDC_AET
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet" >
+    insert into PS_TZ_HD_BMRDC_AET (RUN_CNTL_ID, TZ_ART_ID, TZ_REL_URL, 
+      TZ_JD_URL, TZ_PARAMS_STR)
+    values (#{runCntlId,jdbcType=VARCHAR}, #{tzArtId,jdbcType=VARCHAR}, #{tzRelUrl,jdbcType=VARCHAR}, 
+      #{tzJdUrl,jdbcType=VARCHAR}, #{tzParamsStr,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet" >
+    insert into PS_TZ_HD_BMRDC_AET
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="runCntlId != null" >
+        RUN_CNTL_ID,
+      </if>
+      <if test="tzArtId != null" >
+        TZ_ART_ID,
+      </if>
+      <if test="tzRelUrl != null" >
+        TZ_REL_URL,
+      </if>
+      <if test="tzJdUrl != null" >
+        TZ_JD_URL,
+      </if>
+      <if test="tzParamsStr != null" >
+        TZ_PARAMS_STR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="runCntlId != null" >
+        #{runCntlId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtId != null" >
+        #{tzArtId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRelUrl != null" >
+        #{tzRelUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJdUrl != null" >
+        #{tzJdUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzParamsStr != null" >
+        #{tzParamsStr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet" >
+    update PS_TZ_HD_BMRDC_AET
+    <set >
+      <if test="tzArtId != null" >
+        TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRelUrl != null" >
+        TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJdUrl != null" >
+        TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzParamsStr != null" >
+        TZ_PARAMS_STR = #{tzParamsStr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet" >
+    update PS_TZ_HD_BMRDC_AET
+    set TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR},
+      TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
+      TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR},
+      TZ_PARAMS_STR = #{tzParamsStr,jdbcType=LONGVARCHAR}
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet" >
+    update PS_TZ_HD_BMRDC_AET
+    set TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR},
+      TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
+      TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR}
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+</mapper>

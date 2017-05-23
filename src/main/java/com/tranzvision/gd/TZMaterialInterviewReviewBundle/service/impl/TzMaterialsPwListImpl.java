@@ -3,6 +3,7 @@ package com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 import java.util.*;
@@ -22,7 +23,9 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private HttpServletRequest request;
-
+	@Autowired
+	private TzFilterIllegalCharacter tzFilterIllegalCharacter;
+	
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String errMsg[]) {
 
@@ -31,7 +34,7 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 		try {
 
 			String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			;
+
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 			jacksonUtil.json2Map(strParams);
@@ -64,13 +67,13 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 					}
 					String judgeRealName = sMap.get("TZ_REALNAME") == null ? "" : String.valueOf(sMap.get("TZ_REALNAME"));
 					String judgeInsId = sMap.get("TZ_SCORE_INS_ID") == null ? "" : String.valueOf(sMap.get("TZ_SCORE_INS_ID"));
-					String bphSql = "SELECT TZ_SCORE_ITEM_ID,TZ_XS_MC FROM PS_TZ_CJ_BPH_TBL WHERE TZ_ITEM_S_TYPE = 'A' AND TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=? ORDER BY TZ_PX";
-					List<Map<String, Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] { strCurrentOrg, strScoreModalId });
+					String bphSql = "SELECT A.TREE_NODE,B.DESCR FROM PSTREENODE A,PS_TZ_MODAL_DT_TBL B WHERE B.TREE_NAME=A.TREE_NAME AND B.TZ_SCORE_ITEM_ID=A.TREE_NODE AND B.TZ_JG_ID=? AND A.TREE_NAME=? ORDER BY A.TREE_NODE_NUM ASC";
+					List<Map<String, Object>> bphMapList = sqlQuery.queryForList(bphSql, new Object[] { strCurrentOrg,strTreeName });
 					if (bphMapList != null && bphMapList.size() > 0) {
 						for (Object bphObj : bphMapList) {
 							Map<String, Object> bphMap = (Map<String, Object>) bphObj;
-							String strItemId = bphMap.get("TZ_SCORE_ITEM_ID") == null ? "" : String.valueOf(bphMap.get("TZ_SCORE_ITEM_ID"));
-							String strScoreItemMc = bphMap.get("TZ_XS_MC") == null ? "" : String.valueOf(bphMap.get("TZ_XS_MC"));
+							String strItemId = bphMap.get("TREE_NODE") == null ? "" : String.valueOf(bphMap.get("TREE_NODE"));
+							String strScoreItemMc = bphMap.get("DESCR") == null ? "" : String.valueOf(bphMap.get("DESCR"));						
 
 							String strScoreItemType = "";
 							String strScoreToScore = "";
@@ -98,6 +101,7 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 								break;
 							case "C":// 评语
 								// strScorePyValue默认为评语值，无须转换
+								strScorePyValue = this.transChar(strScorePyValue);
 								break;
 							case "D":// 下拉框
 								String xlk_xxbh = strScorePyValue;
@@ -127,5 +131,18 @@ public class TzMaterialsPwListImpl extends FrameworkImpl {
 			errMsg[1] = e.toString();
 		}
 		return strResponse;
+	}
+	
+	private String transChar(String strValue){
+		String result = strValue;
+		
+		result = tzFilterIllegalCharacter.filterAllIllegalCharacter(result);
+		
+		result = result.replace("\n", "");
+		result = result.replace("\r", "");
+		result = result.replace("\t", "    ");
+		result = result.replace(" ", " ");
+		result = result.replace("\"", "\\" + "\"");
+		return result;
 	}
 }

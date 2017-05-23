@@ -299,7 +299,7 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 								+ "之前您不能在重复给" + email + "邮箱发送邮件。";
 						flag = false;
 					}
-
+					 
 				}
 
 				if (flag) {

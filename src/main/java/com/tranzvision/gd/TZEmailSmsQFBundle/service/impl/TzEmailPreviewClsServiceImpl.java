@@ -111,6 +111,12 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 		// 手动输入邮箱数组;
 		String[] arr_str_input_email = null;
 		if (keyInputEmail != null && !"".equals(keyInputEmail)) {
+			if(keyInputEmail.indexOf("[") == 0){
+				keyInputEmail = keyInputEmail.substring(1,keyInputEmail.length());
+			}
+			if(keyInputEmail.lastIndexOf("]") == (keyInputEmail.length()-1)){
+				keyInputEmail = keyInputEmail.substring(0,keyInputEmail.length()-1);
+			}
 			arr_str_input_email = keyInputEmail.split(",");
 		}
 
@@ -195,6 +201,9 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 		if (viewNum != null && !"".equals(viewNum) && StringUtils.isNumeric(viewNum)) {
 			showNum = Integer.valueOf(viewNum);
 			AddresseeEmail = arr_str_total_email[showNum - 1];
+			if(AddresseeEmail != null){
+				AddresseeEmail = AddresseeEmail.trim();
+			}
 		} else {
 			AddresseeEmail = "";
 		}
@@ -224,7 +233,8 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 						String[] str = arrayList.get(i);
 						String name = str[0];
 						String value = str[1];
-						emailContent = emailContent.replaceAll(name, value);
+						
+						emailContent = emailContent.replace(name, value);
 					}
 				}
 			}
@@ -325,6 +335,12 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 		// 手动输入邮箱数组;
 		String[] arr_str_input_email = {};
 		if (keyInputEmail != null && !"".equals(keyInputEmail)) {
+			if(keyInputEmail.indexOf("[") == 0){
+				keyInputEmail = keyInputEmail.substring(1,keyInputEmail.length());
+			}
+			if(keyInputEmail.lastIndexOf("]") == (keyInputEmail.length()-1)){
+				keyInputEmail = keyInputEmail.substring(0,keyInputEmail.length()-1);
+			}
 			arr_str_input_email = keyInputEmail.split(",");
 		}
 
@@ -397,6 +413,9 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 		if (viewNum != null && !"".equals(viewNum) && StringUtils.isNumeric(viewNum)) {
 			showNum = Integer.valueOf(viewNum);
 			AddresseeEmail = arr_str_total_email[showNum - 1];
+			if(AddresseeEmail != null){
+				AddresseeEmail = AddresseeEmail.trim();
+			}
 		} else {
 			AddresseeEmail = "";
 		}
@@ -421,7 +440,8 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 						String[] str = arrayList.get(i);
 						String name = str[0];
 						String value = str[1];
-						emailContent = emailContent.replaceAll(name, value);
+						
+						emailContent = emailContent.replace(name, value);
 					}
 				}
 			}
@@ -438,7 +458,6 @@ public class TzEmailPreviewClsServiceImpl extends FrameworkImpl {
 						new Object[] { sendPcId }, "String");/* 邮件主题或短信内容存储字段 */
 
 				String str_TZ_AUDCY_ID = "";
-
 				String str_sql = "select TZ_AUDCY_ID  FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND "
 						+ storeFileName + "=?";
 				str_TZ_AUDCY_ID = jdbcTemplate.queryForObject(str_sql, new Object[] { sendPcId, AddresseeEmail },

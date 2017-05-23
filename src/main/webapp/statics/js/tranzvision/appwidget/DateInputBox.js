@@ -22,7 +22,7 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 				SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
 				c += '<div class="input-list">';
 				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left"><input id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '" type="text" class="inpu-list-text-enter"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon" id="' + data.itemId + '_Btn"/></div>';
+				c += '  <div class="input-list-text left"><input id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '" type="text" class="inpu-list-text-enter"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data.itemId + '_Clear" style="right:56px' + (data.value == "" ? ";visibility:hidden;": "") + '"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon" id="' + data.itemId + '_Btn" style="right:51px"/></div>';
 				c += '  <div class="input-list-suffix left">' + (data.suffixUrl != "" ? '<a target="_blank" href="' + data.suffixUrl + '">': '') + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + (data.suffixUrl != "" ? '</a>': '') + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
 				c += '  <div class="clear"></div>';
 				c += '</div>';
@@ -95,6 +95,8 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 	_eventbind: function(data) {
 		var $inputBox = $("#" + data.itemId);
 		var $selectBtn = $("#" + data.itemId + "_Btn");
+		
+		var $clearBtn = $("#" + data.itemId + "_Clear");
 
 		$inputBox.datetimepicker({
 			changeMonth: true,
@@ -106,12 +108,35 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 			onSelect: function(dateText, inst) {
 				$inputBox.datetimepicker("hide");
 				$inputBox.trigger("blur");
+				$clearBtn.css("visibility","visible");
 			}
+			/*showButtonPanel: true,  
+		    beforeShow: function( input ) {  
+		        setTimeout(function() {  
+		          var buttonPane = $( input )  
+		            .datepicker( "widget" )  
+		            .find( ".ui-datepicker-buttonpane" );  
+		            
+		          $( "<button>", {  
+		            text: "清空",  
+		            click: function() {  
+		              //$.datepicker._clearDate( input );  
+		            	$inputBox.val("");
+		            }  
+		          }).appendTo( buttonPane );  
+		        }, 1 );  
+		      } */
 		});
 
 		$selectBtn.click(function(e) {
 			$inputBox.click();
 		});
+		
+		$clearBtn.click(function(e) {
+			$inputBox.val("");
+			$clearBtn.css("visibility","hidden");
+		});
+		
 		$inputBox.formValidator({tipID: data["itemId"] + 'Tip',onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
 		$inputBox.functionValidator({
 			fun: function(val, elem) {

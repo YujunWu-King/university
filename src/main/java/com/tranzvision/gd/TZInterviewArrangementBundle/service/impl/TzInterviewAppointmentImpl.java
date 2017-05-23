@@ -16,11 +16,8 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMsyyKsTblMapper;
-import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMsyySetTblMapper;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTbl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTblKey;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTblKey;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -70,9 +67,6 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsTzMsyyKsTblMapper psTzMsyyKsTblMapper;
-	
-	@Autowired
-	private PsTzMsyySetTblMapper psTzMsyySetTblMapper;
 	
 	
 	@Override
@@ -191,11 +185,9 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 			msPlanTrHtml = msPlanTrHtml+msPlanThHtml;
 			
 			
-			String dtFormat = getSysHardCodeVal.getDateFormat();
 			String tmFormat = getSysHardCodeVal.getTimeHMFormat();
 			String dttmFormat = getSysHardCodeVal.getDateTimeHMFormat();
 			
-			SimpleDateFormat dtSimpleDateFormat = new SimpleDateFormat(dtFormat);
 			SimpleDateFormat tmSimpleDateFormat = new SimpleDateFormat(tmFormat);
 			SimpleDateFormat dttmSimpleDateFormat = new SimpleDateFormat(dttmFormat);
 			
@@ -205,10 +197,10 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 			String tmpClassID = "",tmpBatchID = "";
 			//面试批次设置
 			String showFront = "";
-			String inDateTime = "N";
-			String afterCloseDate = "N";
+			String timeValid = "N";
 			int planCount = 0;
 			String msExplainInfo = "";
+
 			for(Map<String,Object> msPlanMap : msPlanList){
 				String classID = msPlanMap.get("TZ_CLASS_ID") == null? "" : String.valueOf(msPlanMap.get("TZ_CLASS_ID"));
 				String batchID = msPlanMap.get("TZ_BATCH_ID") == null? "" : String.valueOf(msPlanMap.get("TZ_BATCH_ID"));
@@ -224,45 +216,21 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 				
 				//面试批次设置参数
 				if(!tmpClassID.equals(classID) || !tmpBatchID.equals(batchID)){
-					PsTzMsyySetTblKey psTzMsyySetTblKey =  new PsTzMsyySetTblKey();
-					psTzMsyySetTblKey.setTzClassId(classID);
-					psTzMsyySetTblKey.setTzBatchId(batchID);
-					PsTzMsyySetTbl psTzMsyySetTbl = psTzMsyySetTblMapper.selectByPrimaryKey(psTzMsyySetTblKey);
-					if(psTzMsyySetTbl != null){
-						Date openDate = psTzMsyySetTbl.getTzOpenDt();
-						Date openTime = psTzMsyySetTbl.getTzOpenTm();
-						Date closeDate = psTzMsyySetTbl.getTzCloseDt();
-						Date closeTime = psTzMsyySetTbl.getTzCloseTm();
-						showFront = psTzMsyySetTbl.getTzShowFront();
-						msExplainInfo = psTzMsyySetTbl.getTzDescr();
-						
-						String oDate = dtSimpleDateFormat.format(openDate);
-						String cDate = dtSimpleDateFormat.format(closeDate);
-						String oTime = tmSimpleDateFormat.format(openTime);
-						String cTime = tmSimpleDateFormat.format(closeTime);
-						
-						Date openDatetime = dttmSimpleDateFormat.parse(oDate+" "+oTime);
-						Date closeDatetime = dttmSimpleDateFormat.parse(cDate+" "+cTime);
-						
-						if(currDate.after(openDatetime) && currDate.before(closeDatetime) || currDate.equals(openDatetime) || currDate.equals(closeDatetime)){
-							inDateTime = "Y";
-						}else if(currDate.after(closeDatetime)){
-							afterCloseDate = "Y";
-						}
+					
+					String setSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointSet");
+					Map<String,Object> msyySetMap = jdbcTemplate.queryForMap(setSql, new Object[]{ currDate, currDate, currDate, classID, batchID });
+					
+					if(msyySetMap != null){
+						//时间限制，Y-预约时间内，B-预约时间前，A-预约时间后，N-为设置预约
+						timeValid = msyySetMap.get("TZ_TIME_VALID").toString();
+						showFront = msyySetMap.get("TZ_SHOW_FRONT") == null ? "N" : msyySetMap.get("TZ_SHOW_FRONT").toString();
+						msExplainInfo = msyySetMap.get("TZ_DESCR") == null ? "" : msyySetMap.get("TZ_DESCR").toString();
 					}
 				}
 				
-				//预约时间结束后，仍显示在学生前台
-				if("Y".equals(showFront)){
-					if("Y".equals(inDateTime) || "Y".equals(afterCloseDate)){
-					}else{
-						continue;
-					}
-				}else{
-					//只有在有效日期下显示
-					if(!"Y".equals(inDateTime)){
-						continue;
-					}
+				//预约时间结束后，不再前台显示
+				if(("A".equals(timeValid) && !"Y".equals(showFront)) || "N".equals(timeValid)){
+					continue;
 				}
 				
 				String disabledClass = ""; /*按钮是否可用*/
@@ -283,20 +251,21 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 			    sql = "SELECT COUNT(1) FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_MS_PLAN_SEQ=?";
 			    appoCount = jdbcTemplate.queryForObject(sql, new Object[]{ classID, batchID, msPlanSeq }, "int");
 			    
+			    
 			    Date startDatetime = dttmSimpleDateFormat.parse(msDate+" "+msStartTime);
 			    if(currDate.after(startDatetime) || currDate.equals(startDatetime)){
-			    	disabledClass = "btn-disabled full_icon";
+			    	disabledClass = "btn-disabled not-allowed_icon";
 			    }
-			    
-			    if(appoCount>=maxPerson){
-			    	legendClass = "full";
-			    	disabledClass = "btn-disabled full_icon";
-			    }else{
-			    	legendClass = "order_p";
-			    }
-			    
+		    	
 			    if("Y".equals(isAppoFlag)){
-			    	disabledClass = "btn-disabled full_icon";
+			    	disabledClass = "btn-disabled not-allowed_icon";
+			    	
+			    	if(appoCount>=maxPerson){
+				    	legendClass = "full";
+				    	disabledClass = "btn-disabled full_icon";
+				    }else{
+				    	legendClass = "order_p";
+				    }
 			    	
 			    	sql = "SELECT 'Y' FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_MS_PLAN_SEQ=? AND OPRID=?";
 			    	String inCurrPlan = jdbcTemplate.queryForObject(sql, new Object[]{ classID, batchID, msPlanSeq, oprid }, "String");
@@ -315,6 +284,16 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 				    	legendClass = "order_p";
 				    }
 			    }
+		    	
+			    
+			    if("B".equals(timeValid)){
+			    	disabledClass = "btn-disabled not-allowed_icon";
+			    	buttonLabel = "预约未开始";
+			    }else if("A".equals(timeValid)){
+			    	disabledClass = "btn-disabled not-allowed_icon";
+			    	buttonLabel = "预约已结束";
+			    }
+
 			    
 			    tmpClassID = classID;
 			    tmpBatchID = batchID;
@@ -326,9 +305,13 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 			
 			//没有面试预约显示
 			String noAppointmentText = "您暂时没有可预约的面试，如果有面试预约，我们将会邮件通知您。";
+			try{
+				noAppointmentText = getHardCodePoint.getHardCodePointVal("TZ_NO_INTERVIEW_DESCR");
+			}catch(Exception e2){
+				e2.printStackTrace();
+			}
 			
 			if(planCount == 0){
-				//msPlanTrHtml = noAppointmentText;
 				msPlanTrHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_DESCR_HTML",noAppointmentText);
 			}else{
 				msPlanTrHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_TABLE_HTML",msPlanTrHtml,msExplainInfo);

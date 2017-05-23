@@ -14,6 +14,7 @@
         'Ext.grid.filters.Filters'
     ],
     bodyPadding:10,
+    scrollable: true,
     constructor: function (obj){
     			this.coluObj = obj.coluObj;
     			this.lineObj = obj.lineObj;
@@ -98,11 +99,14 @@
 
 				// 保持柱状图和线状图宽度一致
 				if (columnWidth > lineWidth) {
-					lineWidth = columnWidth;
+					//lineWidth = columnWidth;
 				} else {
-					columnWidth = lineWidth;
+					//columnWidth = lineWidth;
 				}
-
+				// 对曲线图增加点宽度;
+				lineWidth = lineWidth + (pwNum + 1) * 66; 
+				
+				
 				// ------------------------------------柱状图开始---------------------------
 				// 1、生产柱状图数据
 				for (var i = 0; i < pwArr.length; i++) {
@@ -135,7 +139,8 @@
 					xtype : 'chart',
 					id : 'columnChart' + id1,
 					width : columnWidth,
-					height : columnHeight,
+					//height : columnHeight,
+					height : 230,
 					animate : true,// 使用动画
 					store : graphDataStore,
 					shadow : true,// 使用阴影
@@ -155,7 +160,7 @@
 					series : [ {
 						type : 'column',
 						axis : 'bottom',
-						style: { width: 100 },
+						style: { width: 50 },
 						xField : 'graphName',
 						yField : 'graphData',// x与y轴的数据声明
 					} ]
@@ -242,7 +247,8 @@
 				var lineChart = Ext.create('Ext.chart.Chart', {
 					xtype : 'chart',
 					style : 'background:#fff',
-					height : lineHeigth,
+					//height : lineHeigth,
+					height : 440,
 					// id: 'linechart',
 					id : 'lineChart' + id2,
 					width : lineWidth,

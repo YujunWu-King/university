@@ -1927,6 +1927,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 
 			works += '<div class="input-list-blank" style="padding-left:6px;" id="Tjxzt_'+i+'">';
 			works += '<div class="input-list-info left"></div>';
+			works += '<div><input type="hidden" id="tjxzt_info_'+i+'" value="'+_zd+'"></div>';
 			works += '<div class="input-list-wz left" id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="blue">'+_tjx_zt+'</span>';
 			/*推荐信链接*/
 			if(SurveyBuild.appManager == "Y"){
@@ -2000,7 +2001,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			//推荐信状态
 			works += '<div class="input-list-blank" id="Tjxzt_'+i+'" style="padding-left:6px;display:none">';
 			works += '<div class="input-list-info left"></div>';
+			works += '<div><input type="hidden" id="tjxzt_info_'+i+'" value="'+_zd+'"></div>';
 			works += '<div class="input-list-wz left" id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="blue">'+_tjx_zt+'</span>';
+			
 			//推荐信链接
 			if(SurveyBuild.appManager == "Y"){
 				if(refLetterUrl!=""){
@@ -2349,6 +2352,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 										$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 										alert(MsgSet["SEND_SC"]);
 										$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["SendEmail"]+"</span>");
+										$("#tjxzt_info_"+(Number(mm)-1)).val("Y");
 										$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).prop("readonly", true);
 										$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).prop("readonly", true);
 										$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).prop("readonly", true);
@@ -2756,13 +2760,20 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			//更换推荐人
 			$("#changeRec_"+(Number(num)-1)).unbind("click");
 			$("#changeRec_"+(Number(num)-1)).click(function(){
-				var confirmValue = confirm(MsgSet["CHANGE_TJX_CONFIRM_MSG"]);
+				var lineno = parseInt($(this).closest(".main_inner_content_para").index());	
+				var m=Number(lineno)+1;
+				var mm = this.id.split("_")[1];
+				var mm=Number(mm)+1;
+				
+				var _tjx_zt_info = $("#tjxzt_info_"+(Number(mm)-1)).val();
+				var confirmValue;
+				if(_tjx_zt_info=="Z"||_tjx_zt_info=="Y"){
+					confirmValue = confirm(MsgSet["CHANGE_TJX_CONFIRM_MSG"]);
+				}else{
+					confirmValue=true;
+				}
 				if(confirmValue==true){
-					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
 					
-					var m=Number(lineno)+1;
-					var mm = this.id.split("_")[1];
-					var mm=Number(mm)+1;
 					var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
 					var rec_gname = $("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).val();
 					var rec_name = $("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).val();
@@ -2830,6 +2841,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 								
 								$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 								$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
+								$("#tjxzt_info_"+(Number(mm)-1)).val("");
 								//$("#tjxzt_desc_"+(Number(rec_num)-1)).html("推荐信状态：未发送");
 								$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).removeAttr("readonly");
 								$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).removeAttr("readonly");

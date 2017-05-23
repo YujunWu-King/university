@@ -100,7 +100,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 				// 获取活动显示模式
 				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventDisplayMode");
-				Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { dateNow, dateNow, dateNow, strApplyId });
+				Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { dateNow, dateNow, dateNow, dateNow, strApplyId });
 
 				// 是否有效记录,Y-在报名时间内，B-报名为开始，E-报名已结束
 				String validTD = "";
@@ -112,7 +112,8 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 				int numActXW = 0;
 				// 若席位数为0，则代表不限制席位数，前台显示为“-”
 				String strActXW = "-";
-
+				//活动是否未开始
+				String actNoStart = "";
 				if (mapData != null) {
 
 					validTD = mapData.get("VALID_TD") == null ? "" : String.valueOf(mapData.get("VALID_TD"));
@@ -123,6 +124,9 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					if (numActXW > 0) {
 						strActXW = String.valueOf(numActXW);
 					}
+				
+					//活动是否未开始
+					actNoStart = mapData.get("IS_NOT_START") == null ? "" : String.valueOf(mapData.get("IS_NOT_START"));
 				}
 
 				// 双语化
@@ -204,9 +208,14 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 						String strUrl = strBaseUrl + URLEncoder.encode(strUrlParams, "UTF-8");
 
-						//按钮显示修改
-						if(!clickEnable && !"".equals(tipMsg)){
-							cancelText = tipMsg;
+						if("Y".equals(actNoStart)){
+							//活动未开始，可以撤销
+							btnDisabledClass = ""; /*撤销按钮可点击*/
+						}else{
+							//按钮显示修改
+							if(!clickEnable && !"".equals(tipMsg)){
+								cancelText = tipMsg;
+							}
 						}
 						
 						//显示报名状态

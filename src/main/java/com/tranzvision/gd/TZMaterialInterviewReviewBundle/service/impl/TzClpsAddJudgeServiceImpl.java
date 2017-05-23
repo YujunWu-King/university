@@ -64,11 +64,62 @@ public class TzClpsAddJudgeServiceImpl extends FrameworkImpl {
 			
 			jacksonUtil.json2Map(strParams);
 			
-			if(jacksonUtil.containsKey("judgeIdSrh") && jacksonUtil.containsKey("judgeNameSrh")) {
-				String judgeIdSrh = (String) jacksonUtil.getString("judgeIdSrh");
-				String judgeNameSrh = (String) jacksonUtil.getString("judgeNameSrh");
+			if(jacksonUtil.containsKey("judgeIdOperator") && jacksonUtil.containsKey("judgeIdValue")
+					&& jacksonUtil.containsKey("judgeNameOperator") && jacksonUtil.containsKey("judgeNameValue")) {
 				
-				sql+= "AND B.TZ_DLZH_ID LIKE '%" + judgeIdSrh + "%' AND B.TZ_REALNAME LIKE '%" + judgeNameSrh + "%'";
+				//评委账号
+				String judgeIdOperator = (String) jacksonUtil.getString("judgeIdOperator");
+				String judgeIdValue = (String) jacksonUtil.getString("judgeIdValue").trim();
+				
+				if(!"".equals(judgeIdValue) && judgeIdValue!=null) {
+					if("07".equals(judgeIdOperator)) {
+						//包含
+						sql+= "AND B.TZ_DLZH_ID LIKE '%" + judgeIdValue + "%'";
+					} else if("10".equals(judgeIdOperator)) {
+						//在......之内
+						String judgeIdValueTmp = "";
+						judgeIdValue = judgeIdValue.replaceAll("，", ",");
+						String[] judgeIdArr = judgeIdValue.split(",");
+
+						int judgeIdArrLen = judgeIdArr.length;
+						if (judgeIdArrLen > 0) {
+							for (int ii = 0; ii < judgeIdArrLen; ii++) {
+								judgeIdValueTmp = judgeIdValueTmp + ",'" + judgeIdArr[ii] + "'";
+							}	
+							judgeIdValueTmp = judgeIdValueTmp.substring(1);
+							judgeIdValueTmp = "(" + judgeIdValueTmp + ")";
+						}
+						
+						sql+= "AND B.TZ_DLZH_ID IN " + judgeIdValueTmp ;
+					}
+				}
+				
+				//评委姓名
+				String judgeNameOperator = (String) jacksonUtil.getString("judgeNameOperator");
+				String judgeNameValue = (String) jacksonUtil.getString("judgeNameValue").trim();
+				
+				if(!"".equals(judgeNameValue) && judgeNameValue!=null) {
+					if("07".equals(judgeNameOperator)) {
+						//包含
+						sql+= "AND B.TZ_REALNAME LIKE '%" + judgeNameValue + "%'";
+					} else if("10".equals(judgeNameOperator)) {
+						//在......之内
+						String judgeNameValueTmp = "";
+						judgeNameValue = judgeNameValue.replaceAll("，", ",");
+						String[] judgeNameArr = judgeNameValue.split(",");
+
+						int judgeNameArrLen = judgeNameArr.length;
+						if (judgeNameArrLen > 0) {
+							for (int ii = 0; ii < judgeNameArrLen; ii++) {
+								judgeNameValueTmp = judgeNameValueTmp + ",'" + judgeNameArr[ii] + "'";
+							}	
+							judgeNameValueTmp = judgeNameValueTmp.substring(1);
+							judgeNameValueTmp = "(" + judgeNameValueTmp + ")";
+						}
+						
+						sql+= "AND B.TZ_REALNAME IN " + judgeNameValueTmp ;
+					}
+				}
 			} 
 
 			List<Map<String, Object>> listClpw = sqlQuery.queryForList(sql,new Object[] {currentOrgId,clpsPwLxId});

@@ -147,7 +147,8 @@ public class TzZnxPreviewClsServiceImpl extends FrameworkImpl {
 						String[] str = arrayList.get(i);
 						String name = str[0];
 						String value = str[1];
-						znxContentHtml = znxContentHtml.replaceAll(name, value);
+						
+						znxContentHtml = znxContentHtml.replace(name, value);
 					}
 				}
 			}

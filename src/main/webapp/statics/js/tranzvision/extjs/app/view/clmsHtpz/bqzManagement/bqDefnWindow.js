@@ -46,6 +46,11 @@
 			fieldLabel: Ext.tzGetResourse("TZ_BIAOQZ_COM.TZ_BIAOQ_DEFN_STD.bqDesc","标签说明"),
 			name: 'bqDesc'
 		}, {
+			xtype: 'checkboxfield',
+			fieldLabel: Ext.tzGetResourse("TZ_BIAOQZ_COM.TZ_BIAOQ_DEFN_STD.csOut","初筛淘汰"),
+			name: 'csOut',
+			inputValue: 'Y'
+		},{
 			xtype: 'textfield',
 			fieldLabel: Ext.tzGetResourse("TZ_BIAOQZ_COM.TZ_BIAOQ_DEFN_STD.java","java类"),
 			name: 'java'

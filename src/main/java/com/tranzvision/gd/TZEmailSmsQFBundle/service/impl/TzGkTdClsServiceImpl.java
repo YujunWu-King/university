@@ -121,12 +121,23 @@ public class TzGkTdClsServiceImpl extends FrameworkImpl {
 					psTzYjqfdjjlTMapper.insert(psTzYjqfdjjlT);
 				}
 				
-				System.out.println("==========邮件群发点击记录表 ===========Start======================>");
-				System.out.println("=================com.tranzvision.gd.TZEmailSmsQFBundle.service.impl.TzGkTdClsServiceImpl==========================>");
-				System.out.println("=====================TODO======================>");
-				System.out.println("====================end=======================>");
-
-				//TODO
+				try {
+					/*
+					String root = request.getContextPath();
+					String hmch = jdbcTemplate.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_EDM_HMCH'", "String");
+					if(hmch == null){
+						hmch = "EDM";
+					}
+					strLinkSite = strLinkSite.replace("&", "%26");
+					strLinkSite = strLinkSite.replace("?", "%3F");
+					
+					strReturn = tzGDObject.getHTMLText("HTML.TZEmailSmsQFBundle.TZ_QF_REDIRECT_HTML",root + "/statics/clueSource/edmRedirect.html?hmch=" + hmch + "&hmpl=" + strDxYjId +  "&redirect=" + strLinkSite);
+					*/
+					strReturn = tzGDObject.getHTMLText("HTML.TZEmailSmsQFBundle.TZ_QF_REDIRECT_HTML",strLinkSite);
+				} catch (TzSystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				//String hmch = GetHardcodePointValue("TZ_EDM_HMCH");
 				//%Response.RedirectURL(EncodeURL("/clueSource/edmRedirect.html?hmch=" | &hmch | "&hmpl=" | &strDxYjId | "&redirect=" | &strLinkSite));
 			}

@@ -20,7 +20,11 @@ SELECT
     END AS VALID_TD,
     TZ_QY_ZXBM,
     TZ_XWS,
-    TZ_XSMS
+    TZ_XSMS,
+    CASE
+        WHEN ? < STR_TO_DATE(CONCAT(TZ_START_DT, ' ', TZ_START_TM) , '%Y-%m-%d %H:%i') THEN 'Y'
+        ELSE 'N' 
+    END AS IS_NOT_START
 FROM
     PS_TZ_ART_HD_TBL
 WHERE

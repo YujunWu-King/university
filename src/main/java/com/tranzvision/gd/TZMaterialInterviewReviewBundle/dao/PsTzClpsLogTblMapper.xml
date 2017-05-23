@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzClpsLogTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzClpsLogTbl" >
+    <id column="TZ_RZLS_NUM" property="tzRzlsNum" jdbcType="VARCHAR" />
+    <result column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <result column="TZ_BATCH_ID" property="tzBatchId" jdbcType="VARCHAR" />
+    <result column="TZ_CLPS_LUNC" property="tzClpsLunc" jdbcType="SMALLINT" />
+    <result column="TZ_OPR_TYPE" property="tzOprType" jdbcType="VARCHAR" />
+    <result column="TZ_OPRID" property="tzOprid" jdbcType="VARCHAR" />
+    <result column="TZ_OPR_DTTM" property="tzOprDttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_RZLS_NUM, TZ_CLASS_ID, TZ_BATCH_ID, TZ_CLPS_LUNC, TZ_OPR_TYPE, TZ_OPRID, TZ_OPR_DTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_CLPS_LOG_TBL
+    where TZ_RZLS_NUM = #{tzRzlsNum,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_CLPS_LOG_TBL
+    where TZ_RZLS_NUM = #{tzRzlsNum,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzClpsLogTbl" >
+    insert into PS_TZ_CLPS_LOG_TBL (TZ_RZLS_NUM, TZ_CLASS_ID, TZ_BATCH_ID, 
+      TZ_CLPS_LUNC, TZ_OPR_TYPE, TZ_OPRID, 
+      TZ_OPR_DTTM)
+    values (#{tzRzlsNum,jdbcType=VARCHAR}, #{tzClassId,jdbcType=VARCHAR}, #{tzBatchId,jdbcType=VARCHAR}, 
+      #{tzClpsLunc,jdbcType=SMALLINT}, #{tzOprType,jdbcType=VARCHAR}, #{tzOprid,jdbcType=VARCHAR}, 
+      #{tzOprDttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzClpsLogTbl" >
+    insert into PS_TZ_CLPS_LOG_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzRzlsNum != null" >
+        TZ_RZLS_NUM,
+      </if>
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzBatchId != null" >
+        TZ_BATCH_ID,
+      </if>
+      <if test="tzClpsLunc != null" >
+        TZ_CLPS_LUNC,
+      </if>
+      <if test="tzOprType != null" >
+        TZ_OPR_TYPE,
+      </if>
+      <if test="tzOprid != null" >
+        TZ_OPRID,
+      </if>
+      <if test="tzOprDttm != null" >
+        TZ_OPR_DTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzRzlsNum != null" >
+        #{tzRzlsNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBatchId != null" >
+        #{tzBatchId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClpsLunc != null" >
+        #{tzClpsLunc,jdbcType=SMALLINT},
+      </if>
+      <if test="tzOprType != null" >
+        #{tzOprType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOprid != null" >
+        #{tzOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOprDttm != null" >
+        #{tzOprDttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzClpsLogTbl" >
+    update PS_TZ_CLPS_LOG_TBL
+    <set >
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBatchId != null" >
+        TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzClpsLunc != null" >
+        TZ_CLPS_LUNC = #{tzClpsLunc,jdbcType=SMALLINT},
+      </if>
+      <if test="tzOprType != null" >
+        TZ_OPR_TYPE = #{tzOprType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOprid != null" >
+        TZ_OPRID = #{tzOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOprDttm != null" >
+        TZ_OPR_DTTM = #{tzOprDttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_RZLS_NUM = #{tzRzlsNum,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzClpsLogTbl" >
+    update PS_TZ_CLPS_LOG_TBL
+    set TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
+      TZ_BATCH_ID = #{tzBatchId,jdbcType=VARCHAR},
+      TZ_CLPS_LUNC = #{tzClpsLunc,jdbcType=SMALLINT},
+      TZ_OPR_TYPE = #{tzOprType,jdbcType=VARCHAR},
+      TZ_OPRID = #{tzOprid,jdbcType=VARCHAR},
+      TZ_OPR_DTTM = #{tzOprDttm,jdbcType=TIMESTAMP}
+    where TZ_RZLS_NUM = #{tzRzlsNum,jdbcType=VARCHAR}
+  </update>
+</mapper>

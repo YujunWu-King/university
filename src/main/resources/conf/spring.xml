@@ -21,4 +21,7 @@
 	<!-- 注册启动管理批处理服务器的bean -->
 	<bean class="com.tranzvision.gd.batch.server.BatchServerStart"/> 
 	
+	<!--  注册内存参数加载 -->
+    <bean class="com.tranzvision.gd.util.base.MemoryStart"/>
+	
 </beans>

@@ -8,9 +8,10 @@
     <result column="TZ_BIAOQZ_NAME" property="tzBiaoqzName" jdbcType="VARCHAR" />
     <result column="TZ_DESC" property="tzDesc" jdbcType="VARCHAR" />
     <result column="TZ_BIAOQZ_JAVA" property="tzBiaoqzJava" jdbcType="VARCHAR" />
+    <result column="TZ_OUT_FLG" property="tzOutFlg" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_BIAOQZ_ID, TZ_JG_ID, TZ_BIAOQ_ID, TZ_BIAOQZ_NAME, TZ_DESC, TZ_BIAOQZ_JAVA
+    TZ_BIAOQZ_ID, TZ_JG_ID, TZ_BIAOQ_ID, TZ_BIAOQZ_NAME, TZ_DESC, TZ_BIAOQZ_JAVA, TZ_OUT_FLG
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqTKey" >
     select 
@@ -28,11 +29,11 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqT" >
     insert into PS_TZ_BIAOQZ_BQ_T (TZ_BIAOQZ_ID, TZ_JG_ID, TZ_BIAOQ_ID, 
-      TZ_BIAOQZ_NAME, TZ_DESC, TZ_BIAOQZ_JAVA
-      )
+      TZ_BIAOQZ_NAME, TZ_DESC, TZ_BIAOQZ_JAVA, 
+      TZ_OUT_FLG)
     values (#{tzBiaoqzId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzBiaoqId,jdbcType=VARCHAR}, 
-      #{tzBiaoqzName,jdbcType=VARCHAR}, #{tzDesc,jdbcType=VARCHAR}, #{tzBiaoqzJava,jdbcType=VARCHAR}
-      )
+      #{tzBiaoqzName,jdbcType=VARCHAR}, #{tzDesc,jdbcType=VARCHAR}, #{tzBiaoqzJava,jdbcType=VARCHAR}, 
+      #{tzOutFlg,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqT" >
     insert into PS_TZ_BIAOQZ_BQ_T
@@ -55,6 +56,9 @@
       <if test="tzBiaoqzJava != null" >
         TZ_BIAOQZ_JAVA,
       </if>
+      <if test="tzOutFlg != null" >
+        TZ_OUT_FLG,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzBiaoqzId != null" >
@@ -75,6 +79,9 @@
       <if test="tzBiaoqzJava != null" >
         #{tzBiaoqzJava,jdbcType=VARCHAR},
       </if>
+      <if test="tzOutFlg != null" >
+        #{tzOutFlg,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZClmsCsBiaoqzBundle.model.PsTzBiaoqzBqT" >
@@ -89,6 +96,9 @@
       <if test="tzBiaoqzJava != null" >
         TZ_BIAOQZ_JAVA = #{tzBiaoqzJava,jdbcType=VARCHAR},
       </if>
+      <if test="tzOutFlg != null" >
+        TZ_OUT_FLG = #{tzOutFlg,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
       and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
@@ -98,7 +108,8 @@
     update PS_TZ_BIAOQZ_BQ_T
     set TZ_BIAOQZ_NAME = #{tzBiaoqzName,jdbcType=VARCHAR},
       TZ_DESC = #{tzDesc,jdbcType=VARCHAR},
-      TZ_BIAOQZ_JAVA = #{tzBiaoqzJava,jdbcType=VARCHAR}
+      TZ_BIAOQZ_JAVA = #{tzBiaoqzJava,jdbcType=VARCHAR},
+      TZ_OUT_FLG = #{tzOutFlg,jdbcType=VARCHAR}
     where TZ_BIAOQZ_ID = #{tzBiaoqzId,jdbcType=VARCHAR}
       and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_BIAOQ_ID = #{tzBiaoqId,jdbcType=VARCHAR}

@@ -15,6 +15,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
         'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageModel'
     ],
     autoScroll:false,
+    ignoreChangesFlag: true,//让框架程序不要提示用户保存的属性设置
     actType:'add',
     id:'bzScoreMathCalcuter_bzscoreBapage',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
@@ -168,7 +169,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
 
                 buttons:[
 
-                    {
+                   /* {
                         text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.save","保存"),
                         handler:'onschoolSave',
                         iconCls:'save'
@@ -176,7 +177,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
                         text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.sure","确定"),
                         handler:'ensureonschoolSave',
                         iconCls:'ensure'
-                    },{
+                    },*/{
                         text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.close","关闭"),
                         iconCls:'close',
                         handler:'onSchoolClose'
@@ -188,11 +189,11 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
         onAddClick: function(btn){
         // Create a model instance
         var rec = new KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageModel({
-            xmid: '2',
-            xmName: '张三',
+            xmid: '',
+            xmName: '',
             teamID: 0,
-            judgeUser: '22',
-            rawscore: '55',
+            judgeUser: '',
+            rawscore: '',
             judgescore:''
         });
         

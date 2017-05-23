@@ -198,7 +198,7 @@ public class TzSmsQfDefClsServiceImpl extends FrameworkImpl {
 						new Object[] { strsmsQfId }, "String");
 				if (strExcEmlField != null && !"".equals(strExcEmlField)) {
 					String strSql = "SELECT " + strExcEmlField
-							+ " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? limit 0,20";
+							+ " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=?";
 					List<Map<String, Object>> excList = jdbcTemplate.queryForList(strSql, new Object[] { strsmsQfId });
 					if (excList != null && excList.size() > 0) {
 						for (int i = 0; i < excList.size(); i++) {

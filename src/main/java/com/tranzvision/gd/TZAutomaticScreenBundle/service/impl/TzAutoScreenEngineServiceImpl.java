@@ -100,7 +100,21 @@ public class TzAutoScreenEngineServiceImpl {
 		// 成绩模型树根节点
 		String rootSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeRootNode");
 		Map<String, Object> rootMap = sqlQuery.queryForMap(rootSql, new Object[] { socreModelId, orgId });
-
+		
+		
+		/****************************自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----开始*****************************/
+		/**
+		 * 1.删除历史打分
+		 * 2、删除未参与本次初筛的历史初筛考生
+		 */
+		String delScoreItemSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzDelAutoScoreItems");
+		sqlQuery.update(delScoreItemSql, new Object[]{ classId, batchId });
+		
+		String delStuScoreInsSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzDelAutoScreenStudents");
+		sqlQuery.update(delStuScoreInsSql, new Object[]{ classId, batchId });
+		/****************************自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----结束*******************************/
+		
+		
 		// 班级批次下参与自动初筛的考生
 		String sql = "select TZ_APP_INS_ID from PS_TZ_CS_STU_VW where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
 		List<Map<String, Object>> appInsList = sqlQuery.queryForList(sql, new Object[] { classId, batchId });

@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZWeChatBundle.service.impl;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -53,6 +54,8 @@ public class TzWeChartJSSDKSign {
 	private final String gz_gettoken_url = "https://api.weixin.qq.com/cgi-bin/token";
 	//公众号获取jsapi_ticket URL
 	private final String gz_getticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
+	//获取opnid
+	private final String gz_getopenid_url = "https://api.weixin.qq.com/sns/oauth2/access_token";
 	
 
 	/**
@@ -369,6 +372,60 @@ public class TzWeChartJSSDKSign {
 
         return ret;
     }
+    
+    
+    /**
+     * 重新获取Code的跳转链接
+     * @param appid
+     * @param url
+     * @return
+     */
+    public String getOAuthCodeUrl(String appid,String url){
+    	
+    	try {
+			url = URLEncoder.encode(url, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	String codeUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+ appid 
+    			+"&redirect_uri="+ url 
+    			+"&response_type=code&scope=snsapi_base&state=1#wechat_redirect";
+    	
+    	return codeUrl;
+    }
+    
+    
+    /**
+     * 获取微信公众号openid
+     * @param appid
+     * @param secret
+     * @param code
+     * @return
+     */
+    public String getOauthAccessOpenId(String appid, String secret, String code){
+    	
+    	String Openid = "";
+        Map<String, Object> paramsMap = new HashMap<String, Object>();
+        paramsMap.put("appid", appid);
+        paramsMap.put("secret", secret);
+        paramsMap.put("code", code);
+        paramsMap.put("grant_type", "authorization_code");
+        
+        HttpClientService HttpClientService = new HttpClientService(gz_getopenid_url,"GET",paramsMap,"UTF-8");
+		String strHttpResult = HttpClientService.sendRequest();
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strHttpResult);
+		
+		if(jacksonUtil.containsKey("openid")){
+			Openid = jacksonUtil.getString("openid").trim();
+		}
+        
+        return Openid;
+    }
+    
     
     
 

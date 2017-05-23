@@ -378,6 +378,8 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				//填写模式
 				htmlContent+='<div class="clear"></div>'
 				var OPT_BTYPE='';
+				/*添加请选择*/
+				OPT_BTYPE+='<option value=""'+(BUSINESS_TYPE_DEF==""?'selected="selected"': '')+'>请选择</option>';
 				for(var k=0;k<BUSINESS_TYPE_GP.length;k++){
 					OPT_BTYPE+='<option value="0'+parseInt(k+1)+'"'+(BUSINESS_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+BUSINESS_TYPE_GP[k]+'</option>';
 				}
@@ -401,7 +403,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 				//----第一次只显示互联网相关div 其他关联div隐藏
 				var NET_DIV=''
 					//初始值设定
-				if(BUSINESS_TYPE_DEF=="01"||BUSINESS_TYPE_DEF==""){
+				if(BUSINESS_TYPE_DEF=="01"){
 					NET_DIV+='<div id="NET_TYPE_SHOW">'
 				}else{
 					NET_DIV+='<div id="NET_TYPE_SHOW" style="display:none">'

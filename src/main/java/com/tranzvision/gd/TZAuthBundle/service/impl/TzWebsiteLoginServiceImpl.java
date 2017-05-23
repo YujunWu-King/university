@@ -3,6 +3,9 @@
  */
 package com.tranzvision.gd.TZAuthBundle.service.impl;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
@@ -19,9 +22,11 @@ import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
 import com.tranzvision.gd.TZAuthBundle.service.TzWebsiteLoginService;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
+import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWeChartJSSDKSign;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.encrypt.DESUtil;
@@ -59,7 +64,16 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
-
+	
+	@Autowired
+	private TzWeChartJSSDKSign tzWeChartJSSDKSign;
+	
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
+	
+	
+	
+	
 	/**
 	 * Session存储的用户信息变量名称
 	 */
@@ -200,6 +214,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 
 			// 设置语言环境
 			this.switchSysLanguage(request, response, language);
+			
 			// 设置cookie参数
 			tzCookie.addCookie(response, cookieWebOrgId, psTzAqYhxxTblKey.getTzJgId(), 24 * 3600);
 			tzCookie.addCookie(response, cookieWebSiteId, siteid, 24 * 3600);
@@ -281,7 +296,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 				isAnonymous = true;
 			}
 		}
-		
+
 		//用于控制是否将用户重定向到登录页的变量
 		Boolean logoutFlag = false;
 		
@@ -361,7 +376,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		{
 			logoutFlag = true;
 		}
-		
+
 		//判断是否需要根据免密cookie记录的信息进行自动登录
 		if(logoutFlag == false)
 		{
@@ -419,6 +434,7 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 		//如果满足将用户重定向到登录的条件，则将用户重定向到登录页
 		if(logoutFlag == true)
 		{
+			/* 如果cookie登录失败，根据OPENID绑定登录,张浪注释
 			//rootPath;
 			String ctxPath = request.getContextPath();
 			
@@ -440,8 +456,166 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			{
 				e.printStackTrace();
 			}
+			*/
+			
+			this.autoLoginByOpenId(request,response);
 		}
 	}
+	
+	
+	/**
+	 * 根据openid自动登录
+	 * @param request
+	 * @param response
+	 */
+	public void autoLoginByOpenId(HttpServletRequest request, HttpServletResponse response){
+		//System.out.println("---enter login by openid---");
+		String tmpOpenID = "";
+		//会话是否有效
+		Boolean bool = gdObjectServiceImpl.isSessionValid(request);
+		Boolean isAnonymous = false;
+		if(bool)
+		{
+			String tmpCurrentLoginUser = gdObjectServiceImpl.getOPRID(request);
+			if("TZ_GUEST".equals(tmpCurrentLoginUser) == true)
+			{
+				isAnonymous = true;
+			}
+		}
+		//用于控制是否将用户重定向到登录页的变量
+		Boolean logoutFlag = true;
+		
+		//会话失效或匿名登录,根据openid查询绑定用户
+		if(bool == false || isAnonymous == true){
+			//微信浏览器下访问根据openid自动登录
+			Boolean isWeChart = CommonUtils.isWeChartBrowser(request);
+			if(isWeChart){
+				String tmpOpenIDKey = "TZGD_@_!_*_20170420_Tranzvision";
+				tmpOpenID = tzCookie.getStringCookieVal(request, "TZGD_WECHART_OPENID");
+				tmpOpenID = tmpOpenID == null ? "" : DESUtil.decrypt(tmpOpenID,tmpOpenIDKey);
+				
+				String classId = request.getParameter("classid");
+				String siteId = request.getParameter("siteId");
+				String orgId = "";
+				if(!"".equals(siteId) && siteId != null){
+					String siteSQL = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+					orgId = sqlQuery.queryForObject(siteSQL, new Object[]{ siteId }, "String");
+				}
+				
+				if((tmpOpenID == null || "".equals(tmpOpenID)) 
+						&& "mIndex".equals(classId) && siteId != null && !"".equals(siteId)){
+					//cookie中不存在openid，重新获取openid
+					String appid = "";//微信公众号appid
+					String secret = "";
+				    try{
+				    	appid = getHardCodePoint.getHardCodePointVal("TZ_WX_APPID");
+				    	secret = getHardCodePoint.getHardCodePointVal("TZ_WX_APPSECRET");
+				    }catch(Exception e){
+				    	e.printStackTrace();
+				    }
+				    
+					String code = request.getParameter("code");
+					if(code == null || "".equals(code)){
+						String url = request.getRequestURL().toString();
+						String queryString = request.getQueryString();
+						
+					    if (queryString != null) {
+					    	url += "?"+ queryString;
+					    }
+					    
+					    if(!"".equals(appid)){
+					    	//url = tzWeChartJSSDKSign.getOAuthCodeUrl(appid, url);
+					    	
+					    	try {
+								url = URLEncoder.encode(url, "utf-8");
+							} catch (UnsupportedEncodingException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+					    	String ctxPath = request.getContextPath();
+					    	url = ctxPath + "/weChart/getCode?appid="+ appid + "&redirect_uri="+ url;
+						    try {
+								response.sendRedirect(url);
+								return;
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+					    }
+					}else{
+						//通过code获取openid
+						tmpOpenID = tzWeChartJSSDKSign.getOauthAccessOpenId(appid, secret, code);
+						
+						String cookieOpenID = DESUtil.encrypt(tmpOpenID,tmpOpenIDKey);
+						tzCookie.addCookie(response, "TZGD_WECHART_OPENID",cookieOpenID);
+					}
+				}
+				
+				//System.out.println("OPENID====== "+tmpOpenID);
+				
+				if(!"".equals(siteId) && !"".equals(orgId) && !"".equals(tmpOpenID)){
+					String tmpUserDlzh = "";
+					String sql = "select TZ_DLZH_ID from PS_TZ_OPENID_TBL where OPENID=? and TZ_JG_ID=? and TZ_SITEI_ID=? and TZ_DEL_FLG='N'";
+					tmpUserDlzh = sqlQuery.queryForObject(sql, new Object[] { tmpOpenID, orgId, siteId }, "String");
+	
+					if(tmpUserDlzh != null && !"".equals(tmpUserDlzh)){
+						ArrayList<String> aryErrorMsg = new ArrayList<String>();
+	
+						sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? and TZ_JG_ID=?)";
+						String passwordJm = sqlQuery.queryForObject(sql, new Object[]{tmpUserDlzh, orgId},"String");
+						String password = passwordJm == null ? "" : DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
+						
+						Patchca patchca = new Patchca();
+						String tmpTokenValue = patchca.getToken(request);
+						if(tmpTokenValue == null){
+							tmpTokenValue = "AbCd";
+						}
+
+						boolean boolResult = doLogin(request, response,orgId, siteId,tmpUserDlzh, password, tmpTokenValue, "ZHS", aryErrorMsg);
+						if(boolResult){
+							logoutFlag = false;
+						}
+						
+					}
+				}
+			}
+		}else{
+			logoutFlag = false;
+		}
+		
+		//如果自动登录成功，则将用户重定向到首页
+		if(logoutFlag == true){
+			//rootPath;
+			String ctxPath = request.getContextPath();
+			
+			//得到登录地址;
+			String loginOutUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
+			
+			if(loginOutUrl == null || "".equals(loginOutUrl))
+			{
+				String tmpSQLText = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+				String loginUrl = sqlQuery.queryForObject(tmpSQLText, new Object[]{"TZ_MBA_BKXT_MURL_LOGIN"},"String");												
+				loginOutUrl = ctxPath + loginUrl;
+			}
+			
+			if(!"".equals(tmpOpenID)){
+				if(loginOutUrl.indexOf("?") > -1){
+					loginOutUrl = loginOutUrl + "&OPENID="+ tmpOpenID;
+				}else{
+					loginOutUrl = loginOutUrl + "?OPENID="+ tmpOpenID;
+				}
+			}
+			//System.out.println("---to login--->"+loginOutUrl);
+			try{
+				response.sendRedirect(loginOutUrl);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
 
 	/*
 	 * (non-Javadoc)

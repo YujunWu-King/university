@@ -27,7 +27,7 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsGzTblMapper;
 
 /**
- * PS_TZ_MSPWPSJL_TBL psTzMspwpsjlTbl 评审进度管理 原 TZ_GD_MSPS_PKG:TZ_GD_PLAN_CLS
+ * 评审进度管理 原 TZ_GD_MSPS_PKG:TZ_GD_PLAN_CLS
  * 
  * @author yuds 时间：2017年3月20日
  */
@@ -96,6 +96,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			String sql10 = "SELECT COUNT(*) FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 			Integer interviewStudents = sqlQuery.queryForObject(sql10, new Object[] { strClassID, strBatchID }, "Integer");
 
+			// 每位考生需要被多少位评委评审
 			String strTotalSql = "SELECT ifnull(TZ_MSPY_NUM,0) FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 			Integer judgeCount = sqlQuery.queryForObject(strTotalSql, new Object[] { strClassID, strBatchID }, "Integer");
 			if (judgeCount == null) {
@@ -106,11 +107,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			String strClpsCountSql = "SELECT COUNT(*) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PSHEN_ZT='Y' AND TZ_DELETE_ZT<>'Y'";
 			String strClpsCount = sqlQuery.queryForObject(strClpsCountSql, new Object[] { strClassID, strBatchID }, "String");
 
-			String strProgress = strClpsCount + "/" + numtotal;
-
-			// 每位考生需要被多少位评委评审
-			String strStuSqlCount = "SELECT ifnull(TZ_MSPY_NUM,0) FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-			Integer intStuC = sqlQuery.queryForObject(strStuSqlCount, new Object[] { strClassID, strBatchID }, "Integer");
+			String strProgress = strClpsCount + "/" + numtotal;			
 
 			Map<String, Object> mapData = new HashMap<String, Object>();
 			mapData.put("classID", strClassID);
@@ -124,7 +121,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			mapData.put("endDateTime", str_endDtime);
 			mapData.put("judgeTJB", str_pwkjTjb);
 			mapData.put("judgeFBT", str_pwkjFbt);
-			mapData.put("judgeCount", intStuC);
+			mapData.put("judgeCount", judgeCount);
 			// 要求评审人次
 			// mapData.put("requiredCount", numtotal);
 			strResponse = jacksonUtil.Map2json(mapData);
@@ -159,7 +156,8 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				/* 传入错误的类型 */
 			}
 		} catch (Exception e) {
-			/* doNothing */
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
 		}
 		return strResponse;
 	}
@@ -219,14 +217,6 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					String strPwIdSql = "SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
 					strJudgeAccountID = sqlQuery.queryForObject(strPwIdSql, new Object[] { strCurrentOrg, strJudgeAccount }, "String");
 
-					/*
-					 * String strSql3 =
-					 * "SELECT TZ_PWZMS FROM PS_TZ_PWZDY_T WHERE TZ_PWZBH=?";
-					 * String strJudgeGroupDesc =
-					 * sqlQuery.queryForObject(strSql3, new Object[] {
-					 * strJudgeGroup }, "String");
-					 */
-
 					if (strResponse != null && !"".equals(strResponse)) {
 						strResponse = strResponse + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MSPS_PWINFO_HTML", strClassID, strBatchID, strJudgeAccountID, strJudgeName, strGroupName, strSubmitYN, strJudgeStatus, strSubmited, strJudgeAccount);
 					} else {
@@ -241,7 +231,6 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_BASE_JSON_HTML", strTotalNum, strResponse);
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			errMsg[0] = "100";
 			errMsg[1] = e.toString();
 		}
@@ -265,10 +254,6 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			String strTreeNameSql = "SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?";
 			strTreeName = sqlQuery.queryForObject(strTreeNameSql, new Object[] { strScoreModalId, strCurrentOrg }, "String");
 
-			String strScoreItemId = "";
-			String strScoreItemSql = "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? and PARENT_NODE_NUM=0";
-			strScoreItemId = sqlQuery.queryForObject(strScoreItemSql, new Object[] { strTreeName }, "String");
-
 			Integer numZfz = 0;
 			String strZfzSql = "SELECT COUNT(*) FROM PS_TZ_MODAL_DT_TBL A,PS_TZ_CJ_BPH_TBL B WHERE A.TREE_NAME=? AND A.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND B.TZ_SCORE_MODAL_ID=? AND A.TZ_SCR_TO_SCORE='Y' AND B.TZ_ITEM_S_TYPE='Y'";
 			numZfz = sqlQuery.queryForObject(strZfzSql, new Object[] { strTreeName, strScoreModalId }, "Integer");
@@ -286,34 +271,30 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					strLqZt = result.get("TZ_LUQU_ZT") == null ? "" : String.valueOf(result.get("TZ_LUQU_ZT"));
 					strPweiPc = result.get("TZ_MSPS_PWJ_PC") == null ? "" : String.valueOf(result.get("TZ_MSPS_PWJ_PC"));
 
-					String sql2 = "SELECT TZ_APP_INS_ID ,(SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=A.TZ_APP_INS_ID limit 0,1) OPRID, (SELECT TZ_REALNAME FROM PS_TZ_FORM_WRK_T B ,PS_TZ_REG_USER_T C WHERE B.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND B.OPRID = C.OPRID limit 0,1) TZ_REALNAME, (SELECT TZ_GENDER FROM PS_TZ_FORM_WRK_T B ,PS_TZ_REG_USER_T C WHERE B.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND B.OPRID = C.OPRID limit 0,1)TZ_GENDER FROM PS_TZ_MSPS_KSH_TBL A WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
-					List<Map<String, Object>> mapList2 = sqlQuery.queryForList(sql2, new Object[] { strClassID, strBatchID, strAppInsID });
-					if (mapList2 != null && mapList2.size() > 0) {
-						for (Object obj2 : mapList2) {
-							Map<String, Object> result2 = (Map<String, Object>) obj2;
-							strOprID = result2.get("OPRID") == null ? "" : String.valueOf(result2.get("OPRID"));
-							strName = result2.get("TZ_REALNAME") == null ? "" : String.valueOf(result2.get("TZ_REALNAME"));
-							strGender = result2.get("TZ_GENDER") == null ? "" : String.valueOf(result2.get("TZ_GENDER"));
-							strGender = sqlQuery.queryForObject(strTransValueSql, new Object[] { "TZ_GENDER", strGender }, "String");
-							if (strGender == null) {
-								strGender = "";
-							}
-						}
+					strOprID = sqlQuery.queryForObject("SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=?", new Object[]{strAppInsID}, "String");
+					Map<String,Object> psnMap =  sqlQuery.queryForMap("SELECT TZ_GENDER,TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?", new Object[]{strOprID});
+					strName = psnMap.get("TZ_REALNAME")==null?"":String.valueOf(psnMap.get("TZ_REALNAME"));
+					strGender = psnMap.get("TZ_GENDER")==null?"":String.valueOf(psnMap.get("TZ_GENDER"));
+					strGender = sqlQuery.queryForObject(strTransValueSql, new Object[] { "TZ_GENDER", strGender }, "String");
+					if (strGender == null) {
+						strGender = "";
 					}
+					
 					String strPwList = "";
-					String sql3 = "SELECT TZ_PWEI_OPRID FROM PS_TZ_MP_PW_KS_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
+					String sql3 = "SELECT TZ_PWEI_OPRID FROM PS_TZ_MP_PW_KS_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT <> 'C'";
 					List<Map<String, Object>> mapList3 = sqlQuery.queryForList(sql3, new Object[] { strClassID, strBatchID, strAppInsID });
 					if (mapList3 != null && mapList3.size() > 0) {
 						for (Object obj2 : mapList3) {
 							Map<String, Object> result3 = (Map<String, Object>) obj2;
 							String strPWeiOprid = result3.get("TZ_PWEI_OPRID") == null ? "" : String.valueOf(result3.get("TZ_PWEI_OPRID"));
-
-							String strPwNameSql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
-							String strJudgeName = sqlQuery.queryForObject(strPwNameSql, new Object[] { strCurrentOrg, strPWeiOprid }, "String");
+							
+							String strTmpSQL = "SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+							String strPwDlzhID = sqlQuery.queryForObject(strTmpSQL, new Object[]{strPWeiOprid}, "String");
+							
 							if (strPwList != null && !"".equals(strPwList)) {
-								strPwList = strPwList + "," + strJudgeName;
+								strPwList = strPwList + "," + strPwDlzhID;
 							} else {
-								strPwList = strJudgeName;
+								strPwList = strPwDlzhID;
 							}
 						}
 					}
@@ -333,7 +314,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					}
 
 					Integer intTotalSub = 0;
-					String strSql4 = "SELECT ifnull(COUNT(*),0) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PSHEN_ZT='Y' AND TZ_DELETE_ZT<>'Y'";
+					String strSql4 = "SELECT ifnull(COUNT(*),0) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PSHEN_ZT<>'C' AND TZ_DELETE_ZT<>'Y'";
 					intTotalSub = sqlQuery.queryForObject(strSql4, new Object[] { strClassID, strBatchID, strAppInsID }, "Integer");
 
 					Integer intMspyNum = 0;
@@ -345,7 +326,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					String strJudgeProgress = "", strStuProgress = "";
 					if (intFlg != 0) {
 						strJudgeStatus = "N";
-						strJudgeProgress = intMspyNum + "/" + intTotalSub;
+						strJudgeProgress = intTotalSub + "/" + intMspyNum;
 						strStuProgress = "未完成" + "(" + strJudgeProgress + ")";
 					} else {
 						strJudgeStatus = "Y";
@@ -365,7 +346,6 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 
 			strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_BASE_JSON_HTML", strTotalNum, strResponse);
 		} catch (Exception e) {
-			e.printStackTrace();
 			errMsg[0] = "100";
 			errMsg[1] = e.toString();
 		}
@@ -374,205 +354,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 
 	@SuppressWarnings("unchecked")
 	public String queryPwDfChartData(String strParams, String[] errMsg) {
-		/*
-		 * String strResponse = "\"failure\""; JacksonUtil jacksonUtil = new
-		 * JacksonUtil(); try { jacksonUtil.json2Map(strParams); String
-		 * strClassID = jacksonUtil.getString("classID"); String strBatchID =
-		 * jacksonUtil.getString("batchID"); String strCurrentOrg =
-		 * tzLoginServiceImpl.getLoginedManagerOrgid(request); String
-		 * strPwDlzhIDs = jacksonUtil.getString("pw_ids");
-		 * 
-		 * String[] strPwZhArray = strPwDlzhIDs.split(","); ArrayList<String>
-		 * strPwOprIDList = new ArrayList<String>();
-		 * 
-		 * String strScoreModalID = ""; String strSql1 =
-		 * "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?"
-		 * ; strScoreModalID = sqlQuery.queryForObject(strSql1, new Object[] {
-		 * strClassID }, "String");
-		 * 
-		 * String strFbdzID = "", strJsfs = "", strTreeName = ""; String strSql2
-		 * =
-		 * "SELECT TZ_M_FBDZ_ID,TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=?"
-		 * ; List<Map<String, Object>> mapList1 = sqlQuery.queryForList(strSql2,
-		 * new Object[] { strClassID }); if (mapList1 != null && mapList1.size()
-		 * > 0) { for (Object obj1 : mapList1) { Map<String, Object> result1 =
-		 * (Map<String, Object>) obj1; strFbdzID = result1.get("TZ_M_FBDZ_ID")
-		 * == null ? "" : String.valueOf(result1.get("TZ_M_FBDZ_ID"));
-		 * strTreeName = result1.get("TREE_NAME") == null ? "" :
-		 * String.valueOf(result1.get("TREE_NAME")); } }
-		 * 
-		 * String strScoreItemID = ""; String strScoreItemSql =
-		 * "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? and PARENT_NODE_NUM=0"
-		 * ; strScoreItemID = sqlQuery.queryForObject(strScoreItemSql, new
-		 * Object[] { strTreeName }, "String");
-		 * 
-		 * String strTreeNode = ""; String strSql3 =
-		 * "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? AND PARENT_NODE_NUM=0"
-		 * ; strTreeNode = sqlQuery.queryForObject(strSql3, new Object[] {
-		 * strTreeName }, "String");
-		 * 
-		 * // 柱状图数据 String strColumnChartHTML = ""; // 图表数据 String
-		 * strChartFieldsHTML = "";
-		 * 
-		 * int intTb = 0; String strPwOprid = "", strPwDlzhID = "", strPwName =
-		 * ""; String strSql4 =
-		 * "SELECT TZ_PWEI_OPRID,(SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=A.TZ_PWEI_OPRID limit 0,1) TZ_DLZH_ID,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL R WHERE R.OPRID=A.TZ_PWEI_OPRID) TZ_REALNAME FROM PS_TZ_CLPS_PW_TBL A WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?"
-		 * ; List<Map<String, Object>> mapList2 = sqlQuery.queryForList(strSql4,
-		 * new Object[] { strClassID, strBatchID }); if (mapList2 != null &&
-		 * mapList2.size() > 0) { for (Object obj2 : mapList2) { Map<String,
-		 * Object> result2 = (Map<String, Object>) obj2; strPwOprid =
-		 * result2.get("TZ_PWEI_OPRID") == null ? "" :
-		 * String.valueOf(result2.get("TZ_PWEI_OPRID")); strPwDlzhID =
-		 * result2.get("TZ_DLZH_ID") == null ? "" :
-		 * String.valueOf(result2.get("TZ_DLZH_ID")); strPwName =
-		 * result2.get("TZ_REALNAME") == null ? "" :
-		 * String.valueOf(result2.get("TZ_REALNAME"));
-		 * 
-		 * if (this.find(strPwZhArray, strPwDlzhID) >= 0) {
-		 * strPwOprIDList.add(strPwOprid); // 总分平均分-待完成 double douPjf = 12.5;
-		 * 
-		 * if (strColumnChartHTML != null && !"".equals(strColumnChartHTML)) {
-		 * strColumnChartHTML = strColumnChartHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "name", strPwName); } else { strColumnChartHTML =
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "name", strPwName); } strColumnChartHTML = strColumnChartHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_NUM_HTML",
-		 * "data1", String.valueOf(douPjf)); strColumnChartHTML =
-		 * strColumnChartHTML + "}";
-		 * 
-		 * // 图表字段 intTb = intTb + 1; if (strChartFieldsHTML != null &&
-		 * !"".equals(strColumnChartHTML)) { strChartFieldsHTML =
-		 * strChartFieldsHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_field", "data" + intTb); } else { strChartFieldsHTML =
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_field", "data" + intTb); } strChartFieldsHTML =
-		 * strChartFieldsHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_name", strPwName); strChartFieldsHTML = strChartFieldsHTML + "}";
-		 * } } } // 添加所有评委总分平均分字段名称 intTb = intTb + 1; if (strChartFieldsHTML !=
-		 * null && !"".equals(strColumnChartHTML)) { strChartFieldsHTML =
-		 * strChartFieldsHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_field", "data" + intTb); } else { strChartFieldsHTML =
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_field", "data" + intTb); } strChartFieldsHTML =
-		 * strChartFieldsHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_name", "标准曲线"); strChartFieldsHTML = strChartFieldsHTML + "}";
-		 * 
-		 * // 根据报考班级和批次取得当前轮次 Integer intDqpyLunc = 0; String strDqpyLuncSql =
-		 * "SELECT ifnull(TZ_DQPY_LUNC,0) FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?"
-		 * ; intDqpyLunc = sqlQuery.queryForObject(strDqpyLuncSql, new Object[]
-		 * { strClassID, strBatchID }, "Integer");
-		 * 
-		 * // 总分平均分-待完成 double douZfPjf = 12.5; String strTotalName = "标准平均分";
-		 * 
-		 * if (strColumnChartHTML != null && !"".equals(strColumnChartHTML)) {
-		 * strColumnChartHTML = strColumnChartHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "name", strTotalName); } else { strColumnChartHTML =
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "name", strTotalName); } strColumnChartHTML = strColumnChartHTML +
-		 * "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_NUM_HTML",
-		 * "data1", String.valueOf(douZfPjf)); strColumnChartHTML =
-		 * strColumnChartHTML + "}";
-		 * 
-		 * // 评委完成评审考生数量 int intWc = 0; String strLineChartHTML = "";
-		 * 
-		 * String strMFbdzMxId = "", strMFbdzMxName = "", strMFbdzMxXX = "",
-		 * strMFbdzMxXxJx = "", strMFbdzMxSx = "", strMFbdzMxSxJx = ""; String
-		 * strFbdzSql =
-		 * "SELECT  TZ_M_FBDZ_MX_ID,TZ_M_FBDZ_MX_NAME,TZ_M_FBDZ_MX_XX,TZ_M_FBDZ_MX_XX_JX,TZ_M_FBDZ_MX_SX_JX,TZ_M_FBDZ_MX_SX  FROM PS_TZ_FBDZ_MX_TBL WHERE TZ_M_FBDZ_ID = ? ORDER BY TZ_M_FBDZ_MX_XH ASC"
-		 * ; List<Map<String, Object>> mapList3 =
-		 * sqlQuery.queryForList(strFbdzSql, new Object[] { strFbdzID }); if
-		 * (mapList3 != null && mapList3.size() > 0) { for (Object obj3 :
-		 * mapList3) { Map<String, Object> result3 = (Map<String, Object>) obj3;
-		 * strPwOprid = result3.get("TZ_M_FBDZ_MX_ID") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_ID")); strMFbdzMxName =
-		 * result3.get("TZ_M_FBDZ_MX_NAME") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_NAME")); strMFbdzMxXX =
-		 * result3.get("TZ_M_FBDZ_MX_XX") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_XX")); strMFbdzMxXxJx =
-		 * result3.get("TZ_M_FBDZ_MX_XX_JX") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_XX_JX")); strMFbdzMxSx =
-		 * result3.get("TZ_M_FBDZ_MX_SX") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_SX")); strMFbdzMxSxJx =
-		 * result3.get("TZ_M_FBDZ_MX_SX_JX") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_SX_JX"));
-		 * 
-		 * if (strLineChartHTML != null && !"".equals(strLineChartHTML)) {
-		 * strLineChartHTML = strLineChartHTML + ",{" + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "fbName", strMFbdzMxName); } else { strLineChartHTML = "{" +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "fbName", strMFbdzMxName); }
-		 * 
-		 * int ii = 0; String strSearchWhere = ""; if (strPwOprIDList.size() >
-		 * 0) { strSearchWhere = " AND ("; for (ii = 0; ii <
-		 * strPwOprIDList.size(); ii++) { String tmpOprid =
-		 * strPwOprIDList.get(ii); if (ii == 0) { strSearchWhere =
-		 * strSearchWhere + " A.TZ_PWEI_OPRID = '" + tmpOprid + "'"; } else {
-		 * strSearchWhere = strSearchWhere + " OR A.TZ_PWEI_OPRID = '" +
-		 * tmpOprid + "'"; }
-		 * 
-		 * String strSql5 =
-		 * "SELECT COUNT(TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_CLPS_LUNC = ? AND  TZ_SUBMIT_YN <> 'C'"
-		 * ; intWc = sqlQuery.queryForObject(strSql5, new Object[] { strClassID,
-		 * strBatchID, tmpOprid, intDqpyLunc }, "int");
-		 * 
-		 * int intDange = 0; String strSql6 =
-		 * "SELECT COUNT(A.TZ_APP_INS_ID) FROM PS_TZ_CP_PW_KS_TBL A ,PS_TZ_CJX_TBL B ,PS_TZ_KSCLPSLS_TBL C  WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID  AND A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND A.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND C.TZ_SUBMIT_YN <> 'C'  AND A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID =? AND B.TZ_SCORE_ITEM_ID = ?  AND C.TZ_CLPS_LUNC = ? AND B.TZ_SCORE_NUM "
-		 * + strMFbdzMxXxJx + strMFbdzMxXX + "AND B.TZ_SCORE_NUM " +
-		 * strMFbdzMxSxJx + strMFbdzMxSx; intDange =
-		 * sqlQuery.queryForObject(strSql6, new Object[] { strClassID,
-		 * strBatchID, strPwOprid, strScoreItemID, intDqpyLunc }, "int"); if
-		 * (intDange == 0 || intWc == 0) { strLineChartHTML = strLineChartHTML +
-		 * "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_NUM_HTML",
-		 * "data" + ii, "0"); } else { DecimalFormat df = new
-		 * DecimalFormat("######0.00"); double tmpDouble = (double) (intDange /
-		 * intWc) * 100; String tmpAveScore = df.format(tmpDouble);
-		 * strLineChartHTML = strLineChartHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_NUM_HTML",
-		 * "data" + ii, tmpAveScore); } } strSearchWhere = strSearchWhere +
-		 * " )"; }
-		 * 
-		 * int intWc2 = 0; String strSql7 =
-		 * "SELECT COUNT(TZ_APP_INS_ID) FROM PS_TZ_KSCLPSLS_TBL A WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_CLPS_LUNC = ? AND  TZ_SUBMIT_YN <> 'C'"
-		 * + strSearchWhere; intWc2 = sqlQuery.queryForObject(strSql7, new
-		 * Object[] { strClassID, strBatchID, intDqpyLunc }, "int"); int
-		 * intDange2 = 0; String strSql8 =
-		 * "SELECT COUNT(A.TZ_APP_INS_ID) FROM PS_TZ_CP_PW_KS_TBL A ,PS_TZ_CJX_TBL B ,PS_TZ_KSCLPSLS_TBL C  WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID  AND A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND A.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND C.TZ_SUBMIT_YN <> 'C'  AND A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ?  AND B.TZ_SCORE_ITEM_ID = ?  AND C.TZ_CLPS_LUNC = ? AND B.TZ_SCORE_NUM  "
-		 * + strMFbdzMxXxJx + strMFbdzMxXX + "AND B.TZ_SCORE_NUM " +
-		 * strMFbdzMxSxJx + strMFbdzMxSx + strSearchWhere; intDange2 =
-		 * sqlQuery.queryForObject(strSql8, new Object[] { strClassID,
-		 * strBatchID, strScoreItemID, intDqpyLunc }, "int"); if (intDange2 == 0
-		 * || intWc2 == 0) { strLineChartHTML = strLineChartHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_NUM_HTML",
-		 * "data" + ii, "0"); } else { DecimalFormat df = new
-		 * DecimalFormat("######0.00"); double tmpDouble = (double) (intDange2 /
-		 * intWc2) * 100; String tmpAveScore = df.format(tmpDouble);
-		 * strLineChartHTML = strLineChartHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_NUM_HTML",
-		 * "data" + ii, tmpAveScore); } strLineChartHTML = strLineChartHTML +
-		 * "}"; } } strResponse = tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_CHART_JSON_HTML",
-		 * strColumnChartHTML, strLineChartHTML, strChartFieldsHTML, strJsfs); }
-		 * catch (Exception e) { e.printStackTrace(); errMsg[0] = "100";
-		 * errMsg[1] = e.toString(); } return strResponse;
-		 */
+		
 		String strResponse = "\"failure\"";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -804,7 +586,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			strPwPjfHtml = ",{\"col05\":\"平均分\"}";
 			intFzNum = intFzNum + 1;
 
-			String strGridColHTML = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_BASE_HTML", strPwPjfHtml);
+			String strGridColHTML = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_MSPS_PW_DF_FBDZ_BASE_HTML", strPwPjfHtml);
 
 			int intFbzbNum = 1;
 			String strGridGoalColHTML = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBZB_BASE_HTML");
@@ -912,7 +694,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 						}
 						// 完成数量
 						String strWc, tmpWc;
-						String strWcNumSql = "SELECT COUNT(*) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? ";
+						String strWcNumSql = "SELECT COUNT(*) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_DELETE_ZT<>'Y' AND TZ_PSHEN_ZT<>'C'";
 						strWc = sqlQuery.queryForObject(strWcNumSql, new Object[] { strClassID, strBatchID, strPwOprid }, "String");
 						if (strWc == null) {
 							strWc = "0";
@@ -927,6 +709,10 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 						String strTmpSql2 = "SELECT ifnull(TZ_MSPY_NUM,0) FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 						Integer intTmp2 = sqlQuery.queryForObject(strTmpSql2, new Object[] { strClassID, strBatchID }, "Integer");
 
+						//已提交数量
+						String strTmpSql3 = "SELECT COUNT(TZ_APP_INS_ID) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID = ? AND TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT = 'Y'";
+						Integer intTmp3 = sqlQuery.queryForObject(strTmpSql3, new Object[] { strClassID, strBatchID, strPwOprid }, "Integer");
+						
 						// 如果该评委被选中计算平均分布，拼接最后一行数据
 						if (selectPwList.length > 0) {
 							for (String sA : selectPwList) {
@@ -934,13 +720,13 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 								if (tmpPwOprid.equals(strPwOprid)) {
 
 									intTotalWc = intTotalWc + Integer.valueOf(strWc);
-									intTotal = intTotal + (intTmp1 * intTmp2);
+									intTotal = intTotal + intTmp3;
 									break;
 								}
 							}
 						}
 
-						strWc = strWc + "/" + (intTmp1 * intTmp2);
+						strWc = strWc + "/" + intTmp3;
 						intFzNum = intFzNum + 1;
 						colName = "0" + intFzNum;
 						strFzValue = "col" + this.right(colName, 2);
@@ -1047,10 +833,10 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 									Integer sInt = sMaps.get(strMFbdzMxId) == null ? 0 : sMaps.get(strMFbdzMxId);
 
 									String stmpPercent = "0";
-									if (sInt == 0 || totalCounts == 0) {
+									if (sInt == 0 || intTotal == 0) {
 
 									} else {
-										double sDoubleVe = sInt * 1.0 / totalCounts;
+										double sDoubleVe = sInt * 1.0 / intTotal;
 										double dtmpPercent = sDoubleVe * 100;
 										stmpPercent = df.format(dtmpPercent) + "%";
 									}
@@ -1093,247 +879,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			System.out.println(e.toString());
 		}
 		return strResponse;
-
-		/*
-		 * String strResponse = "\"failure\"";
-		 * 
-		 * JacksonUtil jacksonUtil = new JacksonUtil();
-		 * 
-		 * try {
-		 * 
-		 * jacksonUtil.json2Map(strParams); String strClassID =
-		 * jacksonUtil.getString("classID"); String strBatchID =
-		 * jacksonUtil.getString("batchID"); String strPwLists = ""; try {
-		 * strPwLists = jacksonUtil.getString("pwIds"); } catch (Exception e) {
-		 * 
-		 * } String strCurrentOrg =
-		 * tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		 * 
-		 * String strScoreModalSql =
-		 * "SELECT TZ_MSCJ_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?"
-		 * ; String strCjModalId = sqlQuery.queryForObject(strScoreModalSql, new
-		 * Object[] { strClassID }, "String");
-		 * 
-		 * String strTreeName = "", strJsfs = "";
-		 * 
-		 * String strTreeNameSql =
-		 * "SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?"
-		 * ; strTreeName = sqlQuery.queryForObject(strTreeNameSql, new Object[]
-		 * { strCjModalId , strCurrentOrg }, "String");
-		 * 
-		 * String strScoreItemId = ""; String strScoreItemSql =
-		 * "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? and PARENT_NODE_NUM=0"
-		 * ; strScoreItemId = sqlQuery.queryForObject(strScoreItemSql, new
-		 * Object[] { strTreeName }, "String");
-		 * 
-		 * String strPwPjfHtml = ""; int intFzNum = 4;
-		 * 
-		 * strPwPjfHtml = ",{\"col05\":\"平均分\"}"; intFzNum = intFzNum + 1;
-		 * 
-		 * String strGridColHTML = tzGdObject .getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_BASE_HTML",
-		 * strPwPjfHtml); int intFbzbNum = 1; String strGridGoalColHTML =
-		 * tzGdObject .getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBZB_BASE_HTML"
-		 * );
-		 * 
-		 * String strBlHtml = "", strWcHtml = ""; String strFbdzId = ""; if
-		 * (strClassID != null && !"".equals(strClassID)) {
-		 * 
-		 * if (strCjModalId != null && !"".equals(strCjModalId)) { String
-		 * strFbdzSql =
-		 * "SELECT TZ_M_FBDZ_ID FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?"
-		 * ; strFbdzId = sqlQuery.queryForObject(strFbdzSql, new Object[] {
-		 * strCjModalId, strCurrentOrg }, "String"); if (strFbdzId != null &&
-		 * !"".equals(strFbdzId)) { String strFbdzMxId = "", strFbdzMxSm = "";
-		 * String strFzdzSql =
-		 * "SELECT TZ_M_FBDZ_MX_ID,TZ_M_FBDZ_MX_SM FROM PS_TZ_FBDZ_MX_TBL WHERE TZ_M_FBDZ_ID=? ORDER BY TZ_M_FBDZ_MX_XH ASC"
-		 * ; List<Map<String, Object>> fzdzList =
-		 * sqlQuery.queryForList(strFzdzSql, new Object[] { strFbdzId }); if
-		 * (fzdzList != null && fzdzList.size() > 0) { for (Object obj1 :
-		 * fzdzList) { Map<String, Object> result1 = (Map<String, Object>) obj1;
-		 * strFbdzMxId = result1.get("TZ_M_FBDZ_MX_ID") == null ? "" :
-		 * String.valueOf(result1.get("TZ_M_FBDZ_MX_ID")); strFbdzMxSm =
-		 * result1.get("TZ_M_FBDZ_MX_SM") == null ? "" :
-		 * String.valueOf(result1.get("TZ_M_FBDZ_MX_SM")); intFzNum = intFzNum +
-		 * 1;
-		 * 
-		 * String colXh = "0" + intFzNum; String strFzStr = "col" +
-		 * this.right(colXh, 2); strGridColHTML = strGridColHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzStr, strFbdzMxSm);
-		 * 
-		 * intFbzbNum = intFbzbNum + 1; colXh = "0" + intFbzbNum; strFzStr =
-		 * "col" + this.right(colXh, 2); strGridGoalColHTML = strGridGoalColHTML
-		 * + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzStr, strFbdzMxSm);
-		 * 
-		 * String strSql1 =
-		 * "SELECT TZ_BZFB_BL,TZ_YXWC_NUM FROM PS_TZ_CPFB_BZH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=? AND TZ_M_FBDZ_ID=? AND TZ_M_FBDZ_MX_ID=?"
-		 * ; List<Map<String, Object>> fbDataList =
-		 * sqlQuery.queryForList(strSql1, new Object[] { strClassID, strBatchID,
-		 * strCjModalId, strScoreItemId, strFbdzId, strFbdzMxId }); String strBl
-		 * = "", strWc = ""; if (fbDataList != null && fbDataList.size() > 0) {
-		 * for (Object objFb : fbDataList) { Map<String, Object> resultFb =
-		 * (Map<String, Object>) objFb; strBl = resultFb.get("TZ_BZFB_BL") ==
-		 * null ? "" : String.valueOf(resultFb.get("TZ_BZFB_BL")); strWc =
-		 * resultFb.get("TZ_YXWC_NUM") == null ? "" :
-		 * String.valueOf(resultFb.get("TZ_YXWC_NUM")); } } strBlHtml =
-		 * strBlHtml + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzStr, strBl); strWcHtml = strWcHtml + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzStr, strBl); } } } }
-		 * 
-		 * String strChartFieldsHTML = ""; String strGridHtml = ""; String
-		 * strGridGoalHtml = ""; String strGridDataHTML = "";
-		 * 
-		 * String strPwOprid = "", strPwDlId = "", strFirstName = ""; String
-		 * strPwSql =
-		 * "SELECT TZ_PWEI_OPRID,(SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=A.TZ_PWEI_OPRID limit 0,1) TZ_DLZH_ID,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL R WHERE R.OPRID=A.TZ_PWEI_OPRID) TZ_REALNAME FROM PS_TZ_MP_PW_KS_TBL A WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?"
-		 * ; List<Map<String, Object>> pwList = sqlQuery.queryForList(strPwSql,
-		 * new Object[] { strClassID, strBatchID }); if (pwList != null &&
-		 * pwList.size() > 0) { int intTb = 0; // 为最后一行做准备 int intSize = 1;
-		 * String strLastGridDataHTML = ""; for (Object obj2 : pwList) {
-		 * Map<String, Object> result2 = (Map<String, Object>) obj2; strPwOprid
-		 * = result2.get("TZ_PWEI_OPRID") == null ? "" :
-		 * String.valueOf(result2.get("TZ_PWEI_OPRID")); strPwDlId =
-		 * result2.get("TZ_DLZH_ID") == null ? "" :
-		 * String.valueOf(result2.get("TZ_DLZH_ID")); strFirstName =
-		 * result2.get("TZ_PWEI_OPRID") == null ? "" :
-		 * String.valueOf(result2.get("TZ_REALNAME"));
-		 * 
-		 * intFzNum = 1; String colName = "0" + intFzNum; String strFzValue =
-		 * "col" + this.right(colName, 2);
-		 * 
-		 * // 登录账号 strGridDataHTML = tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, strPwDlId); if (intSize == pwList.size()) {
-		 * strLastGridDataHTML = tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, ""); } // 评委姓名 intFzNum = intFzNum + 1; colName = "0" +
-		 * intFzNum; strFzValue = "col" + this.right(colName, 2);
-		 * strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, strFirstName); if (intSize == pwList.size()) {
-		 * strLastGridDataHTML = strLastGridDataHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, "评委（" + strPwLists + "）"); } // 完成数量 String strWc = "0";
-		 * String strWcNumSql =
-		 * "SELECT COUNT(*) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?"
-		 * ; strWc = sqlQuery.queryForObject(strWcNumSql, new Object[] {
-		 * strClassID, strBatchID, strPwOprid }, "String"); intFzNum = intFzNum
-		 * + 1; colName = "0" + intFzNum; strFzValue = "col" +
-		 * this.right(colName, 2); strGridDataHTML = strGridDataHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, strWc); if (intSize == pwList.size()) {
-		 * strLastGridDataHTML = strLastGridDataHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, "0"); } // 提交状态 String strSubmitZt = "", strSubmitZtDesc
-		 * = "未提交"; String strSubmitSql =
-		 * "select TZ_SUBMIT_YN from PS_TZ_MSPWPSJL_TBL A where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=?"
-		 * ; strSubmitZt = sqlQuery.queryForObject(strSubmitSql, new Object[] {
-		 * strClassID, strBatchID, strPwOprid }, "String"); if
-		 * ("Y".equals(strSubmitZt)) { strSubmitZtDesc = "已提交"; } intFzNum =
-		 * intFzNum + 1; colName = "0" + intFzNum; strFzValue = "col" +
-		 * this.right(colName, 2); strGridDataHTML = strGridDataHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, strSubmitZtDesc); if (intSize == pwList.size()) {
-		 * strLastGridDataHTML = strLastGridDataHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, "-"); } // 平均分 intFzNum = intFzNum + 1; colName = "0" +
-		 * intFzNum; strFzValue = "col" + this.right(colName, 2);
-		 * strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, "1.20"); if (intSize == pwList.size()) {
-		 * strLastGridDataHTML = strLastGridDataHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, "0"); }
-		 * 
-		 * // 取得分布统计人数 String strMFbdzMxId = "", strMFbdzMxName = "",
-		 * strMFbdzMxXX = "", strMFbdzMxXxJx = "", strMFbdzMxSx = "",
-		 * strMFbdzMxSxJx = ""; String strFbdzSql =
-		 * "SELECT  TZ_M_FBDZ_MX_ID,TZ_M_FBDZ_MX_NAME,TZ_M_FBDZ_MX_XX,TZ_M_FBDZ_MX_XX_JX,TZ_M_FBDZ_MX_SX_JX,TZ_M_FBDZ_MX_SX  FROM PS_TZ_FBDZ_MX_TBL WHERE TZ_M_FBDZ_ID = ? ORDER BY TZ_M_FBDZ_MX_XH ASC"
-		 * ; List<Map<String, Object>> fbdzList =
-		 * sqlQuery.queryForList(strFbdzSql, new Object[] { strFbdzId }); if
-		 * (fbdzList != null && fbdzList.size() > 0) { for (Object obj3 :
-		 * fbdzList) { Map<String, Object> result3 = (Map<String, Object>) obj3;
-		 * strMFbdzMxId = result3.get("TZ_M_FBDZ_MX_ID") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_ID")); strMFbdzMxName =
-		 * result3.get("TZ_M_FBDZ_MX_NAME") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_NAME")); strMFbdzMxXX =
-		 * result3.get("TZ_M_FBDZ_MX_XX") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_XX")); strMFbdzMxXxJx =
-		 * result3.get("TZ_M_FBDZ_MX_XX_JX") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_XX_JX")); strMFbdzMxSx =
-		 * result3.get("TZ_M_FBDZ_MX_SX") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_SX")); strMFbdzMxSxJx =
-		 * result3.get("TZ_M_FBDZ_MX_ID") == null ? "" :
-		 * String.valueOf(result3.get("TZ_M_FBDZ_MX_SX_JX"));
-		 * 
-		 * String strDange = "0";
-		 * 
-		 * intFzNum = intFzNum + 1; colName = "0" + intFzNum; strFzValue = "col"
-		 * + this.right(colName, 2); strGridDataHTML = strGridDataHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, strDange); if (intSize == pwList.size()) {
-		 * strLastGridDataHTML = strLastGridDataHTML + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML",
-		 * strFzValue, "0（0）"); } } } if (strGridHtml != null &&
-		 * !"".equals(strGridHtml)) { strGridHtml = strGridHtml + "," +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DATA_IT_HTML",
-		 * strPwOprid, strGridDataHTML); } else { strGridHtml =
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DATA_IT_HTML",
-		 * strPwOprid, strGridDataHTML); } if (intSize == pwList.size()) {
-		 * strGridHtml = strGridHtml + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DATA_IT_HTML",
-		 * "-", strLastGridDataHTML); } // 图表 intTb = intTb + 1; intSize =
-		 * intSize + 1; if (strChartFieldsHTML != null &&
-		 * !"".equals(strChartFieldsHTML)) { strChartFieldsHTML =
-		 * strChartFieldsHTML + ",{" + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_field", "data" + intTb); } else { strChartFieldsHTML = "{" +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_field", "data" + intTb); } strChartFieldsHTML =
-		 * strChartFieldsHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_name", strFirstName); strChartFieldsHTML = strChartFieldsHTML +
-		 * "}"; } int intAllTb = intTb + 1; if (strChartFieldsHTML != null &&
-		 * !"".equals(strChartFieldsHTML)) { strChartFieldsHTML =
-		 * strChartFieldsHTML + ",{" + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_field", "data" + intAllTb); } else { strChartFieldsHTML = "{" +
-		 * tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_field", "data" + intAllTb); } strChartFieldsHTML =
-		 * strChartFieldsHTML + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMS_PWDFTJ_CHART_ITEM_HTML",
-		 * "pw_name", "标准曲线"); strChartFieldsHTML = strChartFieldsHTML + "}"; }
-		 * strGridGoalHtml = tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_TJ_JSON_HTML",
-		 * "bl", "比率", strBlHtml) + "," + tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_TJ_JSON_HTML",
-		 * "wc", "误差", strWcHtml); ; strResponse = tzGdObject.getHTMLText(
-		 * "HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_JSON_HTML",
-		 * strClassID, strBatchID, strGridColHTML, strGridHtml,
-		 * strChartFieldsHTML, strGridGoalColHTML, strGridGoalHtml, "", ""); } }
-		 * catch (Exception e) { System.out.println(e.toString()); } return
-		 * strResponse;
-		 */
+		
 	}
 
 	@Override
@@ -1457,6 +1003,10 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				// 关闭评审
 				strResponse = this.btnClick(strParams, errMsg);
 				break;
+			case "submitPweiData":
+				//校验是否可以提交评委数据
+				strResponse = this.saveSubmitPwData(strParams, errMsg);
+				break;
 			case "rjd":
 				// 撤销评议数据
 				strResponse = this.removeJudgeData(strParams, errMsg);
@@ -1546,7 +1096,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				} else {
 					psTzMsPsGzTblMapper.insertSelective(psTzMspsGzTbl);
 				}
-				strResponse = "{\"status\":\"A\"}";
+				strResponse = "{\"status\":\"A\",\"isPass\":\"Y\"}";
 				break;
 			case "finishClick":
 				// 关闭本轮评审-参考原系统，无限制规则
@@ -1558,7 +1108,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				} else {
 					psTzMsPsGzTblMapper.insertSelective(psTzMspsGzTbl);
 				}
-				strResponse = "{\"status\":\"B\"}";
+				strResponse = "{\"status\":\"B\",\"isPass\":\"Y\"}";
 				break;
 			}
 			errMsg[0] = "0";
@@ -1592,32 +1142,46 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					// 获取当前评委的OPRID
 					String strSql1 = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?";
 					String strJudgeID = sqlQuery.queryForObject(strSql1, new Object[] { strJudgeId, strCurrentOrg }, "String");
+
+					// 删除数据之前根据评委的考生更新考生的评委列表表
+					String strListSql1 = "SELECT TZ_APP_INS_ID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?";
+					List<Map<String, Object>> JudgeList = sqlQuery.queryForList(strListSql1, new Object[] { strClassID, strBatchID,strJudgeID });
+					if(JudgeList!=null&&JudgeList.size()>0){
+						for(Object judgeObj:JudgeList){
+							Map<String, Object> result = (Map<String, Object>) judgeObj;
+							String strAppInsId = result.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(result.get("TZ_APP_INS_ID"));
+							
+							String strSql2 = "SELECT TZ_MSPW_LIST FROM PS_TZ_MSPSKSPW_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ?";
+							List<Map<String, Object>> mapList = sqlQuery.queryForList(strSql2, new Object[] { strClassID, strBatchID,strAppInsId });
+							if (mapList != null && mapList.size() > 0) {
+								for (Object pwObj : mapList) {
+									Map<String, Object> judgRresult = (Map<String, Object>) pwObj;
+									String strJudgeList = judgRresult.get("TZ_MSPW_LIST") == null ? "" : String.valueOf(judgRresult.get("TZ_MSPW_LIST"));
+									
+									// 从所有当前班级和批次的考生的评委列表中查找出当前评委并删除
+									if (strJudgeList != null && !"".equals(strJudgeList)) {
+										if (strJudgeList.contains(strJudgeId + ",")) {
+											strJudgeList.replace(strJudgeId + ",", "");
+										} else if (strJudgeList.contains("," + strJudgeId)) {
+											strJudgeList.replace("," + strJudgeId, "");
+										} else {
+											strJudgeList.replace(strJudgeId, "");
+										}
+										String strUpdateSql = "UPDATE PS_TZ_MSPSKSPW_TBL SET TZ_MSPW_LIST=? WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_APP_INS_ID=?";
+										sqlQuery.update(strUpdateSql,new Object[]{strJudgeList,strBatchID,strClassID,strAppInsId});
+									}
+								}
+							}
+						}																
+					}
+					
+					//删除MBA面试评委考生关系表 中的数据
+					String strDeleteSql1 = "DELETE FROM  PS_TZ_MP_PW_KS_TBL  WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?";
+					sqlQuery.update(strDeleteSql1, new Object[] { strClassID,strBatchID, strJudgeID });
+					
 					// 将评委考生记录表中的数据设置为撤销
 					String strUpdateSql1 = "UPDATE PS_TZ_MSPWPSJL_TBL SET TZ_SUBMIT_YN='C' WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_PWEI_OPRID=?";
 					sqlQuery.update(strUpdateSql1, new Object[] { strBatchID, strClassID, strJudgeID });
-
-					// 评委列表
-					String strSql2 = "SELECT TZ_MSPW_LIST,TZ_APP_INS_ID FROM PS_TZ_MSPSKSPW_TBL WHERE TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ?";
-					List<Map<String, Object>> mapList = sqlQuery.queryForList(strSql2, new Object[] { strClassID, strBatchID });
-					if (mapList != null && mapList.size() > 0) {
-						for (Object pwObj : mapList) {
-							Map<String, Object> result = (Map<String, Object>) pwObj;
-							String strJudgeList = result.get("TZ_MSPW_LIST") == null ? "" : String.valueOf(result.get("TZ_MSPW_LIST"));
-							String strAppInsId = result.get("TZ_APP_INS_ID") == null ? "" : String.valueOf(result.get("TZ_APP_INS_ID"));
-							// 从所有当前班级和批次的考生的评委列表中查找出当前评委并删除
-							if (strJudgeList != null && !"".equals(strJudgeList)) {
-								if (strJudgeList.contains(strJudgeId + ",")) {
-									strJudgeList.replace(strJudgeId + ",", "");
-								} else if (strJudgeList.contains("," + strJudgeId)) {
-									strJudgeList.replace("," + strJudgeId, "");
-								} else {
-									strJudgeList.replace(strJudgeId, "");
-								}
-								String strUpdateSql = "UPDATE PS_TZ_MSPSKSPW_TBL SET TZ_MSPW_LIST='" + strJudgeList + "' WHERE TZ_APPLY_PC_ID='" + strBatchID + "' AND TZ_CLASS_ID='" + strClassID + "' AND TZ_APP_INS_ID='" + strAppInsId + "'";
-								sqlQuery.update(strUpdateSql);
-							}
-						}
-					}
 				}
 			}
 			errMsg[0] = "0";
@@ -1659,16 +1223,12 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 		String strSql2 = "SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?";
 		strTreeName = sqlQuery.queryForObject(strSql2, new Object[] { strScoreModalID, strCurrentOrg }, "String");
 
-		String strScoreItemID = "";
-		String strScoreItemSql = "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? and PARENT_NODE_NUM=0";
-		strScoreItemID = sqlQuery.queryForObject(strScoreItemSql, new Object[] { strTreeName }, "String");
-
 		String strTreeNode = "";
 		String strSql3 = "SELECT TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? AND PARENT_NODE_NUM=0";
 		strTreeNode = sqlQuery.queryForObject(strSql3, new Object[] { strTreeName }, "String");
 
 		int numTotal = 0;
-		String strListSql1 = "SELECT DISTINCT TZ_PWEI_OPRID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ?";
+		String strListSql1 = "SELECT DISTINCT TZ_PWEI_OPRID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_APPLY_PC_ID = ? AND TZ_APP_INS_ID = ? AND TZ_DELETE_ZT<>'Y' AND TZ_PSHEN_ZT<>'C'";
 		List<Map<String, Object>> mapList1 = sqlQuery.queryForList(strListSql1, new Object[] { strBatchID, strAppInsID });
 
 		if (mapList1 != null && mapList1.size() > 0) {
@@ -1680,43 +1240,13 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				String strMapSql = "SELECT TZ_SUBMIT_YN FROM PS_TZ_MSPWPSJL_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? ";
 				String strSubmitStatus = sqlQuery.queryForObject(strMapSql, new Object[] { strClassID, strBatchID, str_PwOprid }, "String");
 				if (!"C".equals(strSubmitStatus)) {
-					String strSql4 = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL B,PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND A.TZ_SCORE_ITEM_ID=?";
+					String strSql4 = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL B,PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND B.TZ_SCORE_ITEM_ID=?";
 					Integer intScoreNum = sqlQuery.queryForObject(strSql4, new Object[] { strClassID, strBatchID, strAppInsID, str_PwOprid, strTreeNode }, "Integer");
 					if (intScoreNum != null) {
 						String strInsertSql = "INSERT INTO PS_TZ_PW_KS_PC_TBL VALUES(" + pw_num + ",'" + intScoreNum + "')";
 						sqlQuery.update(strInsertSql);
 						pw_num = pw_num + 1;
 					}
-					/*
-					 * String strListSql2 =
-					 * "SELECT B.TZ_SCORE_MODAL_ID,A.TZ_SCORE_INS_ID,A.TZ_SCORE_ITEM_ID,A.TZ_SCORE_NUM,TZ_SCORE_PY_VALUE FROM PS_TZ_MP_PW_KS_TBL C JOIN PS_TZ_CJX_TBL A ON A.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID JOIN PS_TZ_SRMBAINS_TBL B ON A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID WHERE C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=? AND C.TZ_PWEI_OPRID=?"
-					 * ; List<Map<String, Object>> mapList2 =
-					 * sqlQuery.queryForList(strListSql2, new Object[] {
-					 * strClassID, strBatchID, strAppInsID, str_PwOprid }); if
-					 * (mapList2 != null && mapList2.size() > 0) { for (Object
-					 * sObj : mapList2) { Map<String, Object> resultMap =
-					 * (Map<String, Object>) sObj; String strScoreItemId =
-					 * String.valueOf(resultMap.get("TZ_SCORE_ITEM_ID")); String
-					 * strScoreNum = resultMap.get("TZ_SCORE_NUM") == null ? "0"
-					 * : String.valueOf(resultMap.get("TZ_SCORE_NUM")); String
-					 * strScorePyValue =
-					 * String.valueOf(resultMap.get("TZ_SCORE_PY_VALUE"));
-					 * 
-					 * String strMap2Sql =
-					 * "SELECT TZ_ITEM_S_TYPE FROM PS_TZ_CJ_BPH_TBL WHERE TZ_JG_ID=? AND TZ_SCORE_MODAL_ID=? AND TZ_SCORE_ITEM_ID=?"
-					 * ; String strItemType =
-					 * sqlQuery.queryForObject(strMap2Sql, new Object[] {
-					 * strCurrentOrg, strScoreModalID, strScoreItemId },
-					 * "String"); if ("C".equals(strItemType)) {
-					 * 
-					 * } else {
-					 * 
-					 * } pw_num = pw_num + 1; String strInsertSql =
-					 * "INSERT INTO PS_TZ_PW_KS_PC_TBL VALUES(" + pw_num + ",'"
-					 * + strScoreNum + "')"; sqlQuery.update(strInsertSql); }
-					 * 
-					 * }
-					 */
 				}
 			}
 		}
@@ -1730,6 +1260,53 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 		return doublePianCha;
 	}
 
+	@SuppressWarnings("unchecked")
+	public String saveSubmitPwData(String strParams, String[] errMsg) {
+		String strResponse = "\"success\"";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+
+		try {
+			String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+
+			jacksonUtil.json2Map(strParams);
+			String strClassID = jacksonUtil.getString("classID");
+			String strBatchID = jacksonUtil.getString("batchID");
+
+			String strContent = "";
+			String strJudgeOpridList = jacksonUtil.getString("pwOpridList");
+			String[] judgeOpridList = strJudgeOpridList.split(";");
+
+			if (judgeOpridList != null && judgeOpridList.length > 0) {
+
+				for (int i = 0; i < judgeOpridList.length; i++) {
+					String strPwOprID = judgeOpridList[i];
+					String strSql1 = "SELECT COUNT(TZ_APP_INS_ID) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID=? AND TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT <> 'C' AND TZ_PSHEN_ZT <> 'Y'";
+					Integer TZ_APP_INS_ID_NUM = sqlQuery.queryForObject(strSql1, new Object[] { strClassID, strBatchID, strPwOprID }, "Integer");
+					if (TZ_APP_INS_ID_NUM != 0) {
+						String strRealName = "";
+						String strSql2 = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+						strRealName = sqlQuery.queryForObject(strSql2, new Object[] { strPwOprID }, "String");
+
+						strResponse = "\"评委 " + strRealName + " 有未提交考生数据，无法提交。\"";
+						return strResponse;
+					}else{
+						//参考原系统，提交数据
+						//String strUpdateSql = "UPDATE PS_TZ_MSPWPSJL_TBL SET TZ_SUBMIT_YN='Y' WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID= ? AND TZ_PWEI_OPRID=?";
+						//sqlQuery.update(strUpdateSql, new Object[] { strClassID, strBatchID, strPwOprID });
+					}
+				}
+			}
+
+			errMsg[0] = "0";
+
+		} catch (Exception e) {
+			errMsg[0] = "100";
+			errMsg[1] = e.toString();
+		}
+		return strResponse;
+	}
+	
 	public int find(String[] arr, String strValue) {
 		int index = -1;
 		if (arr != null && arr.length > 0) {

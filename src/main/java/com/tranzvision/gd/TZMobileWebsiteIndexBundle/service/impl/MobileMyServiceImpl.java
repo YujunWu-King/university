@@ -10,8 +10,8 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 清华mba招生手机版我的
- * classid:  mMy
+ * 清华mba招生手机版我的 classid: mMy
+ * 
  * @author tang
  *
  */
@@ -28,9 +28,9 @@ public class MobileMyServiceImpl extends FrameworkImpl {
 
 		String indexHtml = "";
 		String title = "我的";
-		
+
 		String ctxPath = request.getContextPath();
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
 		String siteId = "";
@@ -41,20 +41,20 @@ public class MobileMyServiceImpl extends FrameworkImpl {
 		}
 
 		try {
-			//首页
-			String indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId="+siteId;
-			//已报名活动;
-			String myActivityYetUrl = ctxPath + "/dispatcher?classid=myActivity&siteId="+siteId+"&lx=back";
-			//系统站内信;
-			String znxListUrl = ctxPath+"/dispatcher?classid=znxList&siteId="+siteId+"&lx=back";
-			//查看历史报名
-			String lsbmUrl = ctxPath + "/dispatcher?classid=mAppHistory&siteId="+siteId;
-			//申请奖学金;
-			String sqJxjUrlb = ctxPath+"/dispatcher?classid=schlrView&siteId="+siteId+"&oprate=R"; 
-			//账户管理;
-			String accountMngUrl =  ctxPath + "/dispatcher?classid=phZhgl&siteId="+siteId;
-			indexHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_HTML", title, ctxPath,
-					"", siteId, "5", myActivityYetUrl,znxListUrl,sqJxjUrlb,accountMngUrl,lsbmUrl,indexUrl);
+			// 首页
+			String indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId=" + siteId;
+			// 已报名活动;
+			String myActivityYetUrl = ctxPath + "/dispatcher?classid=myActivity&siteId=" + siteId + "&lx=back";
+			// 系统站内信;
+			String znxListUrl = ctxPath + "/dispatcher?classid=znxList&siteId=" + siteId + "&lx=back";
+			// 查看历史报名
+			String lsbmUrl = ctxPath + "/dispatcher?classid=mAppHistory&siteId=" + siteId;
+			// 申请奖学金;
+			String sqJxjUrlb = ctxPath + "/dispatcher?classid=schlrView&siteId=" + siteId + "&oprate=R";
+			// 账户管理;
+			String accountMngUrl = ctxPath + "/dispatcher?classid=phZhgl&siteId=" + siteId;
+			indexHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_HTML", title, ctxPath,
+					"", siteId, "5", myActivityYetUrl, znxListUrl, sqJxjUrlb, accountMngUrl, lsbmUrl, indexUrl);
 		} catch (Exception e) {
 			e.printStackTrace();
 			indexHtml = "";

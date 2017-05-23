@@ -6,6 +6,7 @@
         'KitchenSink.view.automaticScreen.autoScreenController',
         'KitchenSink.view.automaticScreen.autoTagStore',
         'KitchenSink.view.automaticScreen.fmqdListStore',
+        'KitchenSink.view.automaticScreen.sdbqListStore',
         'KitchenSink.view.automaticScreen.autoTagOrFmListModel'
     ],
     xtype: 'autoScreenDetails',
@@ -18,6 +19,7 @@
 		
 		this.tzConfig = config;
 		this.storeReload = config.storeReload;
+
 		this.callParent();	
 	},
 
@@ -32,25 +34,9 @@
 		//负面清单store
 		var fmqdStore = new KitchenSink.view.automaticScreen.fmqdListStore(config);
 		
-		//手工标签
-		var labelTagStore= new KitchenSink.view.common.store.comboxStore({
-            recname:'TZ_TAG_STORE_V',
-            condition:{
-                TZ_JG_ID:{
-                    value:Ext.tzOrgID,
-                    operator:'01',
-                    type:'01'
-                },
-                TZ_APP_INS_ID:{
-                    value: config.appId,
-                    operator:'01',
-                    type:'01'
-                }
-            },
-            result:'TZ_LABEL_ID,TZ_LABEL_NAME'
-        });
-		labelTagStore.load();
-
+		//手工标签store
+		var labelTagStore = new KitchenSink.view.automaticScreen.sdbqListStore(config);
+		
     	//初筛结果Store
 		/*
 		var csStatusStore = Ext.create('Ext.data.Store', {
@@ -177,11 +163,13 @@
 		        	name: 'manualLabel',
 		        	fieldLabel: '手工标签',
 		        	store:labelTagStore,
-                    valueField: 'TZ_LABEL_ID',
-                    displayField: 'TZ_LABEL_NAME',
+//                    valueField: 'TZ_LABEL_ID',
+//                    displayField: 'TZ_LABEL_NAME',
+		        	displayField: 'desc',
+                    valueField: 'id',
                     filterPickList:true,
-                    createNewOnEnter: false,
-                    createNewOnBlur: false,
+                    createNewOnEnter: true,
+                    createNewOnBlur: true,
                     queryMode: 'local'
 		        },{
 		        	xtype: 'displayfield',

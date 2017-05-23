@@ -1,6 +1,7 @@
 var myHdNum = 0;
 
-function revokeActivity(artId, bmrId){
+function revokeActivity(artId, bmrId,el){
+	if($(el).hasClass("btn-disabled")) return;  //不可撤销
 	//隐藏该报名div;
 	var hideDivId = "hd_" + artId + "_" + bmrId;
 	var index;

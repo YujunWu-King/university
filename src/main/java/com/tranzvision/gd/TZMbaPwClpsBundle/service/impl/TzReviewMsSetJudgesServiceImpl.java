@@ -96,6 +96,9 @@ public class TzReviewMsSetJudgesServiceImpl extends FrameworkImpl {
 		Date nowdate = new Date();
 		Long appinsId = (long) 0;
 		String judgeID = "";
+		String judgeName = "";
+		// 评委状态
+		String judgeZt = "";
 		int count = 0;
 		try {
 			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -106,6 +109,9 @@ public class TzReviewMsSetJudgesServiceImpl extends FrameworkImpl {
 			String batchId = jacksonUtil.getString("batchId");
 			jacksonUtil.json2Map(actData[2]);
 			appinsId = Long.valueOf(jacksonUtil.getString("appInsId"));
+			String sql = "SELECT COUNT(1) from PS_TZ_MP_PW_KS_TBL where TZ_PWEI_OPRID=?  and TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
+			String pwztsql = "SELECT TZ_PWEI_ZHZT FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? ";
+
 			for (int i = 3; i < actData.length; i++) {
 				// 表单内容
 				String strForm = actData[i];
@@ -113,11 +119,17 @@ public class TzReviewMsSetJudgesServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strForm);
 
 				judgeID = jacksonUtil.getString("judgeID");
-				String sql = "SELECT COUNT(1) from PS_TZ_MP_PW_KS_TBL where TZ_PWEI_OPRID=?  and TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
+				judgeName = sqlQuery.queryForObject("SELECT TZ_DLZH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?",
+						new Object[] { judgeID }, "String");
 				count = sqlQuery.queryForObject(sql, new Object[] { judgeID, classId, batchId, appinsId }, "Integer");
+
+				judgeZt = sqlQuery.queryForObject(pwztsql, new Object[] { classId, batchId, judgeID }, "String");
+				if (judgeZt == null || "".equals(judgeZt)) {
+					judgeZt = "A"; // 评委状态A：正常 ,B:不正常
+				}
 				if (count > 0) {
 					errMsg[0] = "1";
-					errMsg[1] = "评委:" + judgeID + "已存在，请重新添加！";
+					errMsg[1] = "评委:" + judgeName + "已存在，请重新添加！";
 
 				} else {
 					PsTzMpPwKsTbl psTzMpPwKsTbl = new PsTzMpPwKsTbl();
@@ -127,6 +139,8 @@ public class TzReviewMsSetJudgesServiceImpl extends FrameworkImpl {
 					psTzMpPwKsTbl.setTzPweiOprid(judgeID);
 					psTzMpPwKsTbl.setRowAddedDttm(nowdate);
 					psTzMpPwKsTbl.setRowAddedOprid(Oprid);
+					psTzMpPwKsTbl.setTzPshenZt(judgeZt);
+					psTzMpPwKsTbl.setTzDeleteZt("N");
 					psTzMpPwKsTbl.setRowLastmantDttm(nowdate);
 					psTzMpPwKsTbl.setRowLastmantOprid(Oprid);
 					psTzMpPwKsTblMapper.insertSelective(psTzMpPwKsTbl);

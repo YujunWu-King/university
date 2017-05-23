@@ -435,7 +435,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 		return strRtn;
 	}
 
-	public String getMLoginPublishCode(HttpServletRequest request, String orgid, String siteid){
+	public String getMLoginPublishCode(HttpServletRequest request, String orgid, String siteid, String openid){
 	    String strRtn = "";
 	    try {
 		orgid = orgid.toUpperCase();
@@ -453,7 +453,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			return strRtn;
 		}
 		String ctxPath = request.getContextPath();
-		strRtn = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemMLoginRelease",ctxPath,orgid,siteid);
+		strRtn = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemMLoginRelease",ctxPath,orgid,siteid,openid);
 
 	    } catch (Exception e) {
 		e.printStackTrace();

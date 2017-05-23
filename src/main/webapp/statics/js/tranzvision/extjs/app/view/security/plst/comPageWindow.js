@@ -9,7 +9,8 @@ Ext.define('KitchenSink.view.security.plst.comPageWindow', {
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'KitchenSink.view.security.plst.comPageModel',
-        'KitchenSink.view.security.plst.comPageStore'
+        'KitchenSink.view.security.plst.comPageStore',
+        'KitchenSink.view.security.com.processStore'
     ],
     title: '页面许可权',
     bodyStyle:'overflow-y:hidden;overflow-x:hidden;padding-top:10px',
@@ -64,74 +65,152 @@ Ext.define('KitchenSink.view.security.plst.comPageWindow', {
             fieldStyle:'background:#F4F4F4'
         }]
     },{
-        xtype: 'grid',
-        height: 'auto',
-        title: '页面列表',
-        autoHeight:true,
-        minHeight:120,
-        maxHeight:250,
-        columnLines: true,
-        reference: 'comPageGrid',
-        //style:"margin:10px",
-        store: {
-            type: 'comPageStore'
-        },
-        columns: [{
-            text: '页面ID',
-            dataIndex: 'pageID',
-            width: 230,
-            sortable:false
-        },{
-            text: '页面名称',
-            dataIndex: 'pageName',
-            minWidth: 250,
-            sortable:false,
-            flex:1
-        },{
-            xtype: 'checkcolumn',
-            text: "只读",
-            dataIndex: 'readonly',
-            listeners:{
-                checkchange:function(item, rowIndex, checked, eOpts ){
-                    var store = item.findParentByType("grid").store;
-                    var record = store.getAt(rowIndex);
+        xtype:'tabpanel',
+        items:[{
+            xtype: 'grid',
+            height: 'auto',
+            title: '页面列表',
+            autoHeight:true,
+            minHeight:120,
+            id:'pageGrid',
+            columnLines: true,
+            reference: 'comPageGrid',
+            //style:"margin:10px",
+            store: {
+                type: 'comPageStore'
+            },
+            columns: [{
+                text: '页面ID',
+                dataIndex: 'pageID',
+                width: 230,
+                sortable:false
+            },{
+                text: '页面名称',
+                dataIndex: 'pageName',
+                minWidth: 250,
+                sortable:false,
+                flex:1
+            },{
+                xtype: 'checkcolumn',
+                text: "只读",
+                dataIndex: 'readonly',
+                listeners:{
+                    checkchange:function(item, rowIndex, checked, eOpts ){
+                        var store = item.findParentByType("grid").store;
+                        var record = store.getAt(rowIndex);
 
-                    if(checked){
-                        record.set('modify',false);
+                        if(checked){
+                            record.set('modify',false);
+                        }
                     }
-                }
-            },
-            sortable:false,
-            width: 70
-        },{
-            xtype: 'checkcolumn',
-            text: '修改',
-            dataIndex: 'modify',
-            sortable:false,
-            listeners:{
-                checkchange:function(item, rowIndex, checked, eOpts ){
-                    var store = item.findParentByType("grid").store;
-                    var record = store.getAt(rowIndex);
+                },
+                sortable:false,
+                width: 70
+            },{
+                xtype: 'checkcolumn',
+                text: '修改',
+                dataIndex: 'modify',
+                sortable:false,
+                listeners:{
+                    checkchange:function(item, rowIndex, checked, eOpts ){
+                        var store = item.findParentByType("grid").store;
+                        var record = store.getAt(rowIndex);
 
-                    if(checked){
-                        record.set('readonly',false);
+                        if(checked){
+                            record.set('readonly',false);
+                        }
                     }
-                }
+                },
+                width: 70
+            }],
+            bbar: {
+                xtype: 'pagingtoolbar',
+                pageSize: 5,
+                reference: 'rolePlstToolBar',
+                listeners:{
+                    afterrender: function(pbar){
+                        var grid = pbar.findParentByType("grid");
+                        pbar.setStore(grid.store);
+                    }
+                },
+                plugins: new Ext.ux.ProgressBarPager()
+            }
+        },{
+            xtype: 'grid',
+            title: '进程授权列表',
+            id:'processGrid',
+            frame: true,
+            columnLines: true,
+            autoHeight:true,
+            minHeight:120,
+            reference: 'processGrid',
+            style: "margin:10px",
+            multiSelect: true,
+            selModel: {
+                type: 'checkboxmodel'
             },
-            width: 70
-        }],
-        bbar: {
-            xtype: 'pagingtoolbar',
-            pageSize: 5,
-            reference: 'rolePlstToolBar',
-            listeners:{
-                afterrender: function(pbar){
-                    var grid = pbar.findParentByType("grid");
-                    pbar.setStore(grid.store);
-                }
+            viewConfig: {
+                plugins: {
+                    ptype: 'gridviewdragdrop',
+                    containerScroll: true,
+                    dragGroup: this,
+                    dropGroup: this
+                },
             },
-            plugins: new Ext.ux.ProgressBarPager()
-        }
+            columns: [{
+                text: '组件ID',
+                dataIndex: 'comID',
+                hidden: true
+            },{
+                text: '进程名称',
+                dataIndex: 'processName',
+                flex:1
+            },{
+                text: '进程描述',
+                dataIndex: 'processDesc',
+                flex:1
+            },{
+                xtype: 'checkcolumn',
+                text: "调度",
+                dataIndex: 'dispatch',
+                listeners:{
+                    checkchange:function(item, rowIndex, checked, eOpts ){
+                        var store = item.findParentByType("grid").store;
+                        var record = store.getAt(rowIndex);
+
+                        // if(checked){
+                        //     record.set('modify',false);
+                        // }
+                    }
+                },
+                sortable:false,
+                width: 70
+            }
+            ],
+            store: {
+                type: 'processStore'
+            },
+            dockedItems:[{
+                xtype:"toolbar",
+                items:[
+                    {text:"查询",tooltip:"查询数据",iconCls: "query",handler:'cfgSearchAct'},"-",
+                ]
+            }],
+            bbar: {
+                xtype: 'pagingtoolbar',
+                pageSize: 5,
+                /*store: {
+                 type: 'pageStore'
+                 },*/
+                listeners:{
+                    afterrender: function(pbar){
+                        var grid = pbar.findParentByType("grid");
+                        pbar.setStore(grid.store);
+                    }
+                },
+                plugins: new Ext.ux.ProgressBarPager()
+            }
+        }]
     }],
     buttons: [{
         text: '保存',

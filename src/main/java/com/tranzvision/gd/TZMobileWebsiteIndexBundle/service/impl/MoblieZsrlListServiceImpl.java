@@ -75,8 +75,8 @@ public class MoblieZsrlListServiceImpl extends FrameworkImpl{
 			
 			//跳转首页url
 			String indexUrl = ctxPath+"/dispatcher?classid=mIndex&siteId="+siteId;
-			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LIST_HTML", columnName,"",indexUrl);
-			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",columnName,ctxPath,jsCss,siteId,menuId,listHtml);
+			listHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LIST_HTML", columnName,"",indexUrl);
+			listHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",columnName,ctxPath,jsCss,siteId,menuId,listHtml);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			listHtml = "";
@@ -172,7 +172,7 @@ public class MoblieZsrlListServiceImpl extends FrameworkImpl{
 						month = artDateList[1];
 						day = artDateList[2];
 					}
-					titleLi = titleLi + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LI",day,month,artTitle,artUrl,hotAndNewImg);
+					titleLi = titleLi + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZSRL_LI",day,month,artTitle,artUrl,hotAndNewImg);
 					
 					resultNum = resultNum +1;
 				}

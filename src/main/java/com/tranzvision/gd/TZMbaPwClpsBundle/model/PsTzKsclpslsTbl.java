@@ -9,6 +9,8 @@ public class PsTzKsclpslsTbl extends PsTzKsclpslsTblKey {
 
     private String tzSubmitYn;
 
+    private String tzIsPwFp;
+
     private Date rowAddedDttm;
 
     private String rowAddedOprid;
@@ -43,6 +45,14 @@ public class PsTzKsclpslsTbl extends PsTzKsclpslsTblKey {
 
     public void setTzSubmitYn(String tzSubmitYn) {
         this.tzSubmitYn = tzSubmitYn == null ? null : tzSubmitYn.trim();
+    }
+
+    public String getTzIsPwFp() {
+        return tzIsPwFp;
+    }
+
+    public void setTzIsPwFp(String tzIsPwFp) {
+        this.tzIsPwFp = tzIsPwFp == null ? null : tzIsPwFp.trim();
     }
 
     public Date getRowAddedDttm() {

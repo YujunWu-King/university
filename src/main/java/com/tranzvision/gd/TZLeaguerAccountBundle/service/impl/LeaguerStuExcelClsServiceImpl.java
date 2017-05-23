@@ -157,16 +157,23 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 
 					}
 				}
-				String strAppInsIdList = "";
+				String strOprIdList = "";
 				String strAppInsId = "";
 				int dcCount = 0;
 				int i = 0;
 				
 				for(i = 0; i < oprIdArray.size(); i++){
+					if("".equals(strOprIdList)){
+						strOprIdList = oprIdArray.get(i);
+					}else{
+						strOprIdList = strOprIdList + "," + oprIdArray.get(i);
+					}
+					dcCount = dcCount + 1;
+					/*
 					List<Map<String, Object>> list = null;
 					try {
 						System.out.println(oprIdArray.get(i));
-						list = jdbcTemplate.queryForList("SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=?",
+						list = jdbcTemplate.queryForList("SELECT TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?",
 								new Object[] { oprIdArray.get(i) });
 						
 						if (list != null && list.size() > 0) {
@@ -187,7 +194,7 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 
 					} catch (Exception e) {	
 						System.out.println(e.toString());
-					}
+					}*/
 					
 				}
 				
@@ -207,7 +214,7 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				psTzBmbDceT.setRunCntlId(runCntlId);
 				psTzBmbDceT.setTzAppTplId(appFormModalID);
 				psTzBmbDceT.setTzExportTmpId(excelTpl);
-				psTzBmbDceT.setTzAudList(strAppInsIdList);
+				psTzBmbDceT.setTzAudList(strOprIdList);
 				psTzBmbDceT.setTzExcelName(excelName);
 				psTzBmbDceT.setTzRelUrl(expDirPath);
 				psTzBmbDceT.setTzJdUrl(absexpDirPath);
@@ -252,7 +259,7 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
 				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				
-				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_GD_EXCEL_DB");
+				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_GD_EXCEL_DB2");
 				//指定调度作业的相关参数
 				EngineParameters schdProcessParameters = new EngineParameters();
 

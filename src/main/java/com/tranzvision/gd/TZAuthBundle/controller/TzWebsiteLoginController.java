@@ -19,16 +19,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
+import com.tranzvision.gd.TZWeChatBundle.dao.PsTzOpenidTblMapper;
+import com.tranzvision.gd.TZWeChatBundle.model.PsTzOpenidTbl;
+import com.tranzvision.gd.TZWeChatBundle.model.PsTzOpenidTblKey;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteEnrollClsServiceImpl;
 import com.tranzvision.gd.util.base.Global;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cookie.TzCookie;
+import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-import com.tranzvision.gd.util.encrypt.DESUtil;
-import com.tranzvision.gd.util.httpclient.CommonUtils;
 
 /**
  * 机构网站登录前端控制器
@@ -63,6 +66,10 @@ public class TzWebsiteLoginController {
 
 	@Autowired
 	private TzWebsiteServiceImpl tzWebsiteServiceImpl;
+	
+	@Autowired
+	private PsTzOpenidTblMapper psTzOpenidTblMapper;
+	
 
 	@RequestMapping(value = { "/{orgid}/{siteid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
@@ -81,7 +88,11 @@ public class TzWebsiteLoginController {
 				String loginHtml = "";
 				Boolean isMobile = CommonUtils.isMobile(request);
 				if (isMobile) {
-					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid);
+					String openid = request.getParameter("OPENID");
+					if(openid == null){
+						openid = "";
+					}
+					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid, openid);
 					strRet = loginHtml;
 				} else {
 					loginHtml = tzWebsiteServiceImpl.getLoginPublishCode(request, orgid, siteid);
@@ -121,7 +132,11 @@ public class TzWebsiteLoginController {
 				String loginHtml = "";
 				Boolean isMobile = CommonUtils.isMobile(request);
 				if (isMobile) {
-					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid);
+					String openid = request.getParameter("OPENID");
+					if(openid == null){
+						openid = "";
+					}
+					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid, openid);
 					strRet = loginHtml;
 				} else {
 					loginHtml = tzWebsiteServiceImpl.getLoginPublishCode(request, orgid, siteid);
@@ -163,6 +178,8 @@ public class TzWebsiteLoginController {
 
 		String classIdParams = request.getParameter("classIdParams");
 		System.out.println("classIdParams:" + classIdParams);
+		
+		String openid = request.getParameter("OPENID");
 
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 
@@ -194,6 +211,35 @@ public class TzWebsiteLoginController {
 						String errorMsg = aryErrorMsg.get(1);
 						if (boolResult) {
 							jsonMap.put("success", "true");
+							
+							/********************记录openid绑定账户关系*张浪添加***********************/
+							//记录openid绑定账户关系
+							if(!"".equals(openid) && openid != null){
+								PsTzOpenidTblKey psTzOpenidTblKey = new PsTzOpenidTblKey();
+								psTzOpenidTblKey.setOpenid(openid);
+								psTzOpenidTblKey.setTzDlzhId(strUserName);
+								psTzOpenidTblKey.setTzJgId(strOrgId);
+								psTzOpenidTblKey.setTzSiteiId(strSiteId);
+								PsTzOpenidTbl psTzOpenidTbl = psTzOpenidTblMapper.selectByPrimaryKey(psTzOpenidTblKey);
+								if(psTzOpenidTbl != null){
+									psTzOpenidTbl.setTzDelFlg("N");
+									psTzOpenidTblMapper.updateByPrimaryKey(psTzOpenidTbl);
+								}else{
+									psTzOpenidTbl = new PsTzOpenidTbl();
+									psTzOpenidTbl.setOpenid(openid);
+									psTzOpenidTbl.setTzDlzhId(strUserName);
+									psTzOpenidTbl.setTzJgId(strOrgId);
+									psTzOpenidTbl.setTzSiteiId(strSiteId);
+									psTzOpenidTbl.setTzDelFlg("N");
+									psTzOpenidTblMapper.insert(psTzOpenidTbl);
+								}
+								
+								String tmpOpenIDKey = "TZGD_@_!_*_20170420_Tranzvision";
+								openid = DESUtil.encrypt(openid,tmpOpenIDKey);
+								tzCookie.addCookie(response, "TZGD_WECHART_OPENID", openid);
+							}
+							/********************记录openid绑定账户关系*张浪添加***********************/
+							
 						} else {
 							jsonMap.put("success", "false");
 						}
@@ -309,11 +355,8 @@ public class TzWebsiteLoginController {
 	public String doLogout(HttpServletRequest request, HttpServletResponse response) {
 
 		String orgid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebOrgId);
-
 		String siteid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebSiteId);
-		// System.out.println("orgid:"+orgid);
-		// System.out.println("siteid:"+siteid);
-
+		 
 		tzWebsiteLoginServiceImpl.doLogout(request, response);
 
 		// String ctx = request.getContextPath();
@@ -321,8 +364,8 @@ public class TzWebsiteLoginController {
 		orgid = orgid.toLowerCase();
 
 		String redirect = "redirect:" + "/user/login/" + orgid + "/" + siteid;
-		// System.out.println("redirect:"+redirect);
-
+		System.out.println("redirect:"+redirect);
+		
 		return redirect;
 	}
 

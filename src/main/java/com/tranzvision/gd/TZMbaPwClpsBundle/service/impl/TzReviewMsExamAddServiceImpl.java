@@ -143,6 +143,7 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 					psTzMsPsksTbl.setTzClassId(classId);
 					psTzMsPsksTbl.setTzApplyPcId(batchId);
 					psTzMsPsksTbl.setTzAppInsId(appinsId);
+					psTzMsPsksTbl.setTzLuquZt("B");
 					psTzMsPsksTbl.setRowAddedDttm(nowdate);
 					psTzMsPsksTbl.setRowAddedOprid(Oprid);
 					psTzMsPsksTbl.setRowLastmantDttm(nowdate);

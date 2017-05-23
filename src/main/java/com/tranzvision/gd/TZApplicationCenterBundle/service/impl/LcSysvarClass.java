@@ -94,15 +94,21 @@ public class LcSysvarClass {
 
 							span = "<span class=\"fl width_40\">" + TZ_XXX_MC + "</span>";
 							
-							
+							//完成;
 							if ("Y".equals(isComplete)) {
 								/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
 										+ "/statics/css/website/m/images/reg_right.png\"></span>";*/
 								span = span + "<span class=\"fl\">已完成</span>";
 							} else {
-								/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
-										+ "/statics/css/website/m/images/reg_warm.png\"></span>";*/
-								span = span + "<span class=\"fl\">未完成</span>";
+								//无
+								if("B".equals(isComplete)){
+									span = span + "<span class=\"fl\">无</span>";
+								}else{
+									/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
+									+ "/statics/css/website/m/images/reg_warm.png\"></span>";*/
+									span = span + "<span class=\"fl\">未完成</span>";
+								}
+								
 							}
 							
 							content = content +  "<div class=\"overhidden\">" + span + "</div>";
@@ -167,7 +173,9 @@ public class LcSysvarClass {
 							if ("Y".equals(isComplete)) {
 								td1 = "<td><img src=\"" + rootPath
 										+ "/statics/css/website/images/table_check.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">已完成</a></td>";
-							} else {
+							} else if("B".equals(isComplete)){
+								td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">无</a></td>";
+							}else {
 								td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">未完成</a></td>";
 							}
 							if ("".equals(td)) {
@@ -198,7 +206,7 @@ public class LcSysvarClass {
 						}
 					}
 					
-					tableHtml = tableHtml + "<thead><tr><td colspan=\"3\">推荐人提交推荐信情况</td><td colspan=\"3\">打印PDF报名表</td></tr></thead>";
+					tableHtml = tableHtml + "<thead><tr><td colspan=\"3\">推荐人提交推荐信情况</td><td>报名表提交状态</td><td colspan=\"2\">打印PDF报名表</td></tr></thead>";
 					
 					String tjrqkxx = "";
 					String tjxSql = "select TZ_REFERRER_NAME,TZ_TJX_APP_INS_ID,TZ_REF_LETTER_ID,TZ_REFLETTERTYPE from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and TZ_MBA_TJX_YX='Y' order by TZ_TJR_ID asc";
@@ -237,10 +245,15 @@ public class LcSysvarClass {
 			         }
 					
 					tjrqkxx = "<td colspan=\"3\">" + tjrqkxx + "</td>";
+					//报名表提交状态;
+					String bmbTjStatusDesc = jdbcTemplate.queryForObject("select TZ_ZHZ_DMS from  PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_APPFORM_STATE' AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?", new Object[]{appInsStatus},String.class);
+					if(bmbTjStatusDesc == null){
+						bmbTjStatusDesc = "";
+					}
 					//打印报名表;
 					String applyFormPrint = rootPath + "/PrintPdfServlet?instanceID=" + appIns;
 					//未提交也可以打印;
-					tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
+					tjrqkxx = tjrqkxx +"<td>" + bmbTjStatusDesc + "</td>" + "<td colspan=\"2\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
 					/*
 					if ("U".equals(appInsStatus)) {
 						tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
@@ -615,7 +628,7 @@ public class LcSysvarClass {
 							
 							//如果是材料评审且面试的资格为："有"则显示
 							String msRsl = "";
-							if(i == 0 && "TZ_LCPS".equals(lcName)){
+							if("TZ_RESULT".equals(xxxId) && "TZ_LCPS".equals(lcName)){
 								msRsl = jdbcTemplate.queryForObject("select TZ_RESULT_CODE from TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns},String.class);
 								if("有".equals(msRsl)){
 									xxxValue = xxxValue + "，面试预约请<a href=\"" + rootPath + "/dispatcher?classid=Interview&siteId="+siteId+"\">点击此处</a>";

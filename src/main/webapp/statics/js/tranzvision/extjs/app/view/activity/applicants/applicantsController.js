@@ -288,7 +288,7 @@
 	selectOptionHandler: function(value ,metaData ,record ,rowIndex ,colIndex ,store ,view){
 			
 			var colStoreArr = this.getView().colStore;
-			var columnStore = colStoreArr[colIndex-1];
+			var columnStore = colStoreArr[colIndex-2];
 
 			for (var i = 0; i < columnStore.data.items.length; i++) {
 				  if (columnStore.data.items[i].data.transID == value) {
@@ -298,42 +298,6 @@
 				
 	},
 	
-	
-/*********************************************************
-+功能描述：导出选中报名人信息									+
-+开发人：张浪												+
-********************************************************/
-	exportApplyInfo:function(){
-		var jsonData = "";
-		var bmrIds = "";
-		//选中行
-	   var selList = this.getView().getSelectionModel().getSelection();
-	   
-	   //var actId=btn.findParentByType('panel').child('form').getForm().getValues()['activityId'];
-		  
-	   //选中行长度
-	   var checkLen = selList.length;
-	   if(checkLen == 0){
-			Ext.Msg.alert("提示","请选择需要导出的报名人记录");   
-			return;
-	   }
-	   
-	   jsonData = '{"ComID":"TZ_GD_BMRGL_COM","PageID":"TZ_GD_BMRGL_STD","OperateType":"EXPORT","comParams":{"activityId":"'+ selList[0].data.activityId +'","bmrIds":['
-	   
-	   for(var i=0;i<checkLen;i++){
-		   if(i==0){
-			   bmrIds += '"' + selList[i].data.applicantsId + '"';
-		   }else{
-			   bmrIds += ',"' + selList[i].data.applicantsId + '"';
-		   }
-		}
-		jsonData += bmrIds + "]}}";
-		
-		Ext.tzSubmit(jsonData,function(respDate){
-			var fileUrl = respDate.fileUrl;
-			window.location.href=fileUrl;
-		},"导出报名人信息成功",true,this);
-	},
 	
 	/*********************************************************
 	+功能描述：查询											+
@@ -387,23 +351,257 @@
 		this.getView().close();
 	},
 	
+	/*********************************************************
+	+功能描述：导出选中报名人信息									+
+	+开发人：张浪												+
+	********************************************************/
+	exportApplyInfo:function(btn){
+		var appGrid = btn.findParentByType('applicantsMg');
+		var activityId = appGrid.child('form').getForm().getValues()['activityId'];
+		
+		var jsonData = "";
+		var bmrIds = "";
+		//选中行
+	   var selList = this.getView().getSelectionModel().getSelection();
+	   //选中行长度
+	   var checkLen = selList.length;
+	   if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择需要导出的报名人记录");   
+			return;
+	   }
+	   
+	   /*
+	   jsonData = '{"ComID":"TZ_GD_BMRGL_COM","PageID":"TZ_GD_BMRGL_STD","OperateType":"EXPORT","comParams":{"activityId":"'+ selList[0].data.activityId +'","bmrIds":['
+	   
+	   for(var i=0;i<checkLen;i++){
+		   if(i==0){
+			   bmrIds += '"' + selList[i].data.applicantsId + '"';
+		   }else{
+			   bmrIds += ',"' + selList[i].data.applicantsId + '"';
+		   }
+		}
+		jsonData += bmrIds + "]}}";
+		
+		Ext.tzSubmit(jsonData,function(respDate){
+			var fileUrl = respDate.fileUrl;
+			window.location.href=fileUrl;
+		},"导出报名人信息成功",true,this);
+		*/
+	   var bmrIds = [];
+	   for(var i=0;i<checkLen;i++){
+		   bmrIds.push(selList[i].data.applicantsId);
+		}
+	   var comParamsObj = {
+			ComID: "TZ_GD_BMRGL_COM",
+			PageID: "TZ_GD_BMRGL_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				activityId: activityId,
+				bmrIds: bmrIds
+			}
+	   };
+	   
+	   var className = 'KitchenSink.view.activity.applicants.exportExcelWindow';
+       if(!Ext.ClassManager.isCreated(className)){
+           Ext.syncRequire(className);
+       }
+       var ViewClass = Ext.ClassManager.get(className);
+       var win = new ViewClass({
+    	   activityId: activityId,
+       	   expBmr: comParamsObj
+       });
+       
+       win.show();
+	},
+	
 	//导出搜索结果报名人信息
 	exportSearchApplyInfo: function(btn){
 		var appGrid = btn.findParentByType('applicantsMg');
-		var activetyId = appGrid.child('form').getForm().getValues()['activityId'];
+		var activityId = appGrid.child('form').getForm().getValues()['activityId'];
 		var searchSql = "";
 		
 		if((typeof appGrid.getedSQL) == "undefined"){
-			searchSql = "SELECT TZ_HD_BMR_ID FROM PS_TZ_NAUDLIST_T WHERE TZ_ART_ID='"+ activetyId +"' AND TZ_NREG_STAT IN('1','4')";
+			searchSql = "SELECT TZ_HD_BMR_ID FROM PS_TZ_NAUDLIST_T WHERE TZ_ART_ID='"+ activityId +"' AND TZ_NREG_STAT IN('1','4')";
 		}else{
 			searchSql = appGrid.getedSQL;
 		}
 		
+		/*
 		jsonData = '{"ComID":"TZ_GD_BMRGL_COM","PageID":"TZ_GD_BMRGL_STD","OperateType":"EXPORT","comParams":{"activityId":"'+ activetyId +'","searchSql":"'+ searchSql +'"}}';
 		
 		Ext.tzSubmit(jsonData,function(respDate){
 			var fileUrl = respDate.fileUrl;
 			window.location.href=fileUrl;
 		},"导出报名人信息成功",true,this);
-	}
+		*/
+		
+		
+		var comParamsObj = {
+			ComID: "TZ_GD_BMRGL_COM",
+			PageID: "TZ_GD_BMRGL_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				activityId: activityId,
+				searchSql: searchSql
+			}
+		};
+		
+		
+		var className = 'KitchenSink.view.activity.applicants.exportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	activityId: activityId,
+        	expBmr: comParamsObj
+        });
+        
+        win.show();
+	},
+	
+	//下载导出结果
+	downloadExportFile: function(btn){
+		var appGrid = btn.findParentByType('applicantsMg');
+		var activityId = appGrid.child('form').getForm().getValues()['activityId'];
+		
+		var className = 'KitchenSink.view.activity.applicants.exportExcelWindow';
+    	
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	activityId: activityId,
+        	type: 'download'
+        });
+        
+        var tabPanel = win.lookupReference("packageTabPanel");
+        tabPanel.setActiveTab(1);
+        
+        win.show();
+	},
+	
+	ensureExport: function(btn){
+		var win = btn.findParentByType('bmrExportExcelWin');
+		var form = btn.findParentByType('form');
+		var formRec = form.getForm().getValues();
+		
+		if(form.isValid()){
+			var exportObj = win.exportObj;
+			exportObj.comParams.fileName = formRec.FileName;
+			
+			var jsonData = Ext.JSON.encode(exportObj);
+			Ext.tzSubmit(jsonData,function(respDate){
+				var tabPanel = win.lookupReference("packageTabPanel");
+				tabPanel.child('grid').getStore().reload();
+		        tabPanel.setActiveTab(1);
+		        
+			},"导出报名人信息成功",true,this);
+		}
+	},
+	
+	
+	exportQuery: function(btn){
+		var win = btn.findParentByType('bmrExportExcelWin');
+		var activityId = win.activityId;
+		
+		Ext.tzShowCFGSearch({            
+           cfgSrhId: 'TZ_GD_BMRGL_COM.TZ_GD_BMRGL_STD.TZ_HD_BMRDC_V', 
+		   condition:
+            {
+                "TZ_ART_ID": activityId,
+                "TZ_DLZH_ID": TranzvisionMeikecityAdvanced.Boot.loginUserId
+            },   
+           callback: function(seachCfg){
+	        	var searchObj = eval('(' + seachCfg + ')');
+	        	searchObj.type="expHistory";
+	
+	        	seachCfg = Ext.JSON.encode(searchObj);
+
+                var store = btn.findParentByType("grid").store;
+                store.tzStoreParams = seachCfg;
+                store.load();
+            }
+        });   
+	},
+	
+	exportDelete: function(btn){
+        var me=this;
+        var win = btn.findParentByType("window");
+        var tabPanel = win.lookupReference("packageTabPanel");
+        //选中行
+        var selList = tabPanel.child("grid").getSelectionModel().getSelection();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示", "请选择要删除的记录");
+            return;
+        }else{
+            Ext.MessageBox.confirm("确认", "您确定要删除所选记录吗?", function(btnId){
+                if(btnId == 'yes'){
+                    var store = btn.findParentByType('grid').store;
+                    store.remove(selList);
+                }
+            },this);
+        }
+    },
+	
+	downloadFile: function(grid, rowIndex){
+        var store = grid.getStore();
+        var record = store.getAt(rowIndex);
+        var procInsId=record.get("procInsId");
+
+        if(procInsId != ""){
+        	/*
+        	var viewUrl = TzUniversityContextPath+"/admission/exprar/"+procInsId;
+            window.open(viewUrl, "download","status=no,menubar=yes,toolbar=no,location=no");
+            */
+        	 var tzParams = '{"ComID":"TZ_GD_BMRGL_COM","PageID":"TZ_GD_BMRGL_STD","OperateType":"DOWNLOAD","comParams":{"procInsId":"'+ procInsId +'"}}';
+             //保存数据
+             Ext.tzLoad(tzParams,function(respData){
+                 var filePath = respData.filePath;
+                 //window.open(filePath, "download","status=no,menubar=yes,toolbar=no,location=no");
+                 if(filePath == ""){
+                	 Ext.Msg.alert("提示","文件不存在");
+                 }else{
+                	 window.location.href=filePath;
+                 }
+             });
+        	
+        }else{
+            Ext.MessageBox.alert("提示", "找不到附件");
+        }
+    },
+    
+    
+    exportGridSave: function(btn){
+        //组件注册信息列表
+         var grid = btn.findParentByType("grid");
+         //组件注册信息数据
+         var store = grid.getStore();
+         //删除json字符串
+         var removeJson = "";
+         //删除记录
+         var removeRecs = store.getRemovedRecords();
+
+         for(var i=0;i<removeRecs.length;i++){
+             if(removeJson == ""){
+                 removeJson = Ext.JSON.encode(removeRecs[i].data);
+             }else{
+                 removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+             }
+         }
+         var comParams ="";
+         if(removeJson != ""){
+              comParams = '"delete":[' + removeJson + "]";
+         }
+
+         //提交参数
+         var tzParams = '{"ComID":"TZ_GD_BMRGL_COM","PageID":"TZ_GD_BMRGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
+         //保存数据
+         Ext.tzSubmit(tzParams,function(){
+             store.reload();
+         },"",true,this);
+     }
 });

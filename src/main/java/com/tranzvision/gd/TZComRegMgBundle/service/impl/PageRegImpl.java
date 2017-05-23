@@ -1,11 +1,10 @@
 package com.tranzvision.gd.TZComRegMgBundle.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,10 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  */
 @Service("com.tranzvision.gd.TZComRegMgBundle.service.impl.PageRegImpl")
 public class PageRegImpl extends FrameworkImpl {
+
+	@Autowired
+	private FliterForm fliterForm;
+
 	@Autowired
 	private SqlQuery jdbcTemplate;
 	@Autowired
@@ -34,6 +37,52 @@ public class PageRegImpl extends FrameworkImpl {
 	@Autowired
 	private HttpServletRequest request;
 
+
+	/* 根据组件ID查找进程 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
+
+		// 返回值;
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		mapRet.put("root", "[]");
+
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+
+		try {
+			// 排序字段
+			String[][] orderByArr = new String[][] { new String[] { "TZ_JC_MC", "DESC" }};
+
+			// json数据要的结果字段;
+			String[] resultFldArray = { "TZ_JG_ID","TZ_JC_MC","TZ_JC_MS","TZ_YXPT_LX"};
+
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
+
+			if (obj != null && obj.length > 0) {
+
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+				list.forEach(resultArray ->{
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("orgId", resultArray[0]);
+					mapList.put("processName", resultArray[1]);
+					mapList.put("processDesc", resultArray[2]);
+					mapList.put("platformType", resultArray[3]);
+					listData.add(mapList);
+				});
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		return jacksonUtil.Map2json(mapRet);
+
+	}
 	/* 新增组件页面注册信息 */
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {

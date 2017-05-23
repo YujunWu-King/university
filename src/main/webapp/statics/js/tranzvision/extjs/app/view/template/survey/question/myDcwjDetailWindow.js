@@ -84,12 +84,19 @@ Ext.define('KitchenSink.view.template.survey.question.myDcwjDetailWindow', {
                  dataIndex:'order',
                  width:50,
                  hidden:true
-                }, {
+                },{
                     text: '参与调查人IP',
                     dataIndex: 'IPAddress',
                     width: 170
-                },
-                {
+                },{
+                	text: '面试申请号',
+                    dataIndex: 'msSqh',
+                    width: 100
+                },{
+                	text: '姓名',
+                    dataIndex: 'name',
+                    width: 100
+                },{
                     text: '完成状态',
                     dataIndex: 'state',
                     minWidth: 100,
@@ -104,19 +111,21 @@ Ext.define('KitchenSink.view.template.survey.question.myDcwjDetailWindow', {
                 {
                     text: '开始时间',
                     dataIndex: 'ksSj',
-                    minWidth: 170
+                    minWidth: 170,
+                    flex: 1
                 },
                 {
                     text:'结束时间',
                     dataIndex:'jsSj',
-                    minWidth:170
+                    minWidth:170,
+                    flex: 1
                 }, {
                     menuDisabled: true,
                     sortable: false,
+                    width: 100,
                     text: '详细信息',
                     align: 'center',
                     xtype: 'actioncolumn',
-                    flex: 1,
                     items:[
                         {iconCls:'view',tooltip:'详细信息',handler:'viewDetail'}
                     ]

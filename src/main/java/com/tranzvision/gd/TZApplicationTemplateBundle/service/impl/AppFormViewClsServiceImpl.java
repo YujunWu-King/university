@@ -61,37 +61,105 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzGetHtmlContent(String strParams) {
-			JacksonUtil jacksonUtil = new JacksonUtil();
-			jacksonUtil.json2Map(strParams);
-			String tplId = jacksonUtil.getString("TZ_APP_TPL_ID");
-			String siteId = jacksonUtil.getString("SiteID");
-			//String oprId = jacksonUtil.getString("OPRID");
-			
-			// 父分隔符号的id
-			String strTZ_FPAGE_BH = "";
-			/*--- TAB页签  BEGIN ---*/
-			String sql = "SELECT TZ_XXX_BH,TZ_XXX_MC,TZ_TITLE,TZ_TAPSTYLE,TZ_FPAGE_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";
-			List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { tplId });
-			String tabHtml = "";
-			//int i = 0;
-			int numChild = 0;
-			int numIndex = 0;
-			
-			String strDivClass = "";
-			for (Object obj : resultlist) {
-				Map<String, Object> result = (Map<String, Object>) obj;
+		//版式（横版、竖版）
+		String strDisplayType = "";
+		
+		//是否多层菜单
+		boolean isMultilayerMenu = false;
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		
+		String tplId = jacksonUtil.getString("TZ_APP_TPL_ID");
+		String siteId = jacksonUtil.getString("SiteID");
+		//String oprId = jacksonUtil.getString("OPRID");
+		
+	   /*--- 控件信息  BEGIN ---*/
+		ArrayList<Map<String, Object>> comDfn = templateEngine.getComDfn(tplId);
+		String comRegInfo = jacksonUtil.List2json(comDfn);
+	   /*--- 控件信息  END ---*/
+		
+		/*
+		if(StringUtils.isBlank(oprId)){
+			oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		}
+		*/
+		
+		/*模板名称、模板报文JSON、实例数据JSON、*/
+		PsTzApptplDyTWithBLOBs psTzApptplDyT = psTzApptplDyTMapper.selectByPrimaryKey(tplId);
+		String tplData = psTzApptplDyT.getTzApptplJsonStr();
+		tplData = tplData.replace("\\", "\\\\");
+		String orgId = psTzApptplDyT.getTzJgId();
+		String language = psTzApptplDyT.getTzAppTplLan();
+		strDisplayType = psTzApptplDyT.getTzDisplayType();
+		String contextUrl = request.getContextPath();
+		   
+		//String siteId = sqlQuery.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y'", new Object[] { orgId }, "String");
+		siteId = (siteId == null ? "" : siteId);
+		if(StringUtils.isBlank(strDisplayType) || StringUtils.equals("V", strDisplayType)){
+			strDisplayType = "";
+			isMultilayerMenu = true;
+		}
+		String onlineHead = "";
+		String onlineFoot = "";
+		try {
+			onlineHead = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_HEAD_HTML",contextUrl);
+			onlineFoot = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_FOOT_HTML");
+		} catch (TzSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*msgSet 用于双语化*/
+		String msgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_APPONLINE_MSGSET",language);
+		jacksonUtil.json2Map(msgSet);
+		if (jacksonUtil.containsKey(language)) {
+			Map<String, Object> msgLang = jacksonUtil.getMap(language);
+			msgSet = jacksonUtil.Map2json(msgLang);
+		}
 
-				String xxxBh = result.get("TZ_XXX_BH") == null ? "" : String.valueOf(result.get("TZ_XXX_BH"));
-				String xxxTitle = result.get("TZ_TITLE") == null ? "" : String.valueOf(result.get("TZ_TITLE"));
-				String tapStyle = result.get("TZ_TAPSTYLE") == null ? "" : String.valueOf(result.get("TZ_TAPSTYLE"));
-				strTZ_FPAGE_BH = result.get("TZ_FPAGE_BH") == null ? ""
-						: String.valueOf(result.get("TZ_FPAGE_BH"));
-				
-				//String divClass = "";
-				numIndex = numIndex + 1;
-				
+		String sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
+		String menuId = sqlQuery.queryForObject(sql, new Object[] { "TZ_ACCOUNT_MANAGEMENT_" + orgId }, "String");
+		if(StringUtils.isBlank(menuId)){
+			menuId = "";
+		}
+		
+		String leftWidth = "";
+		if(psTzApptplDyT.getTzLeftWidth() != null && psTzApptplDyT.getTzLeftWidth() > 0){
+			leftWidth = String.valueOf(psTzApptplDyT.getTzLeftWidth()) + "px";
+		}
+		
+		String rightWidth = "";
+		if(psTzApptplDyT.getTzRightWidth() != null && psTzApptplDyT.getTzRightWidth() > 0){
+			rightWidth = String.valueOf(psTzApptplDyT.getTzRightWidth()) + "px";
+		}
+
+		/*获取TAB页签HTML*/
+		String tabHtml = "";		//页签内容
+		/*--- TAB页签  BEGIN ---*/
+		String tabSql = "SELECT TZ_XXX_BH,TZ_XXX_MC,TZ_TITLE,TZ_TAPSTYLE,TZ_FPAGE_BH FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";
+		List<?> resultlist = sqlQuery.queryForList(tabSql, new Object[] { tplId });
+		
+		//int i = 0;
+		int numChild = 0;
+		int numIndex = 0;
+		
+		String strDivClass = "";
+		for (Object obj : resultlist) {
+			Map<String, Object> result = (Map<String, Object>) obj;
+
+			String xxxBh = result.get("TZ_XXX_BH") == null ? "" : String.valueOf(result.get("TZ_XXX_BH"));
+			String xxxTitle = result.get("TZ_TITLE") == null ? "" : String.valueOf(result.get("TZ_TITLE"));
+			String tapStyle = result.get("TZ_TAPSTYLE") == null ? "" : String.valueOf(result.get("TZ_TAPSTYLE"));
+			String fpageBh = result.get("TZ_FPAGE_BH") == null ? "" : String.valueOf(result.get("TZ_FPAGE_BH"));
+			
+			//String divClass = "";
+			numIndex = numIndex + 1;
+
+			if (isMultilayerMenu) {
+				tapStyle = "";	//多层菜单页签自定义样式无效
 				// 默认第一级菜单高亮
-				if (strTZ_FPAGE_BH == null || strTZ_FPAGE_BH.trim().equals("")) {
+				if (StringUtils.isBlank(fpageBh)) {
 					strDivClass = "menu-active-top";
 				} else {
 					numChild = numChild + 1;
@@ -102,98 +170,47 @@ public class AppFormViewClsServiceImpl extends FrameworkImpl {
 						strDivClass = "";
 					}
 				}
-
-				try {
-					tabHtml = tabHtml +  tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV", strDivClass,xxxTitle,"",xxxBh);
-				} catch (TzSystemException e) {
-					e.printStackTrace();
+			} else {
+				numChild = numChild + 1;
+				// 默认第一页高亮
+				if (numChild == 1) {
+					strDivClass = "menu-active";
+				} else {
+					strDivClass = "";
 				}
-				//i++;
 			}
 
-		   /*--- TAB页签  END ---*/
-			
-		   /*--- 控件信息  BEGIN ---*/
-			ArrayList<Map<String, Object>> comDfn = templateEngine.getComDfn(tplId);
-			String comRegInfo = jacksonUtil.List2json(comDfn);
-		   /*--- 控件信息  END ---*/
-			
-			/*
-			if(StringUtils.isBlank(oprId)){
-				oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			}
-			*/
-			
-			/*模板名称、模板报文JSON、实例数据JSON、*/
-			PsTzApptplDyTWithBLOBs psTzApptplDyT = psTzApptplDyTMapper.selectByPrimaryKey(tplId);
-			String tplData = psTzApptplDyT.getTzApptplJsonStr();
-			tplData = tplData.replace("\\", "\\\\");
-			String orgId = psTzApptplDyT.getTzJgId();
-			String language = psTzApptplDyT.getTzAppTplLan();
-			
-			String contextUrl = request.getContextPath();
-			   
-			//String siteId = sqlQuery.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_JG_ID = ? AND TZ_SITEI_ENABLE = 'Y'", new Object[] { orgId }, "String");
-			siteId = (siteId == null ? "" : siteId);
-			String onlineHead = "";
-			String onlineFoot = "";
 			try {
-				onlineHead = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_HEAD_HTML",contextUrl);
-				onlineFoot = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_FOOT_HTML");
+				tabHtml = tabHtml +  tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV", strDivClass,xxxTitle,"",xxxBh,tapStyle);
 			} catch (TzSystemException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			//i++;
+		}
 
-			/*msgSet 用于双语化*/
-			String msgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_APPONLINE_MSGSET",language);
-			jacksonUtil.json2Map(msgSet);
-			if (jacksonUtil.containsKey(language)) {
-				Map<String, Object> msgLang = jacksonUtil.getMap(language);
-				msgSet = jacksonUtil.Map2json(msgLang);
-			}
-			
-			
-			String save = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "SAVE", language, "保存", "Save");
-			   
-			String submit = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "SUBMIT", language, "提交", "Submit");
-			   
-			String next = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "NEXT", language, "下一步", "NEXT");
-			
-			/*上传进度条描述*/
-			String loading = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "LOADING", language, "上传中", "Loading");
-			   
-			/*上传进度条描述*/
-			String processing = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "PROCESS", language, "正在处理", "Processing");
-			
-			sql = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT = ? LIMIT 1";
-			String menuId = sqlQuery.queryForObject(sql, new Object[] { "TZ_ACCOUNT_MANAGEMENT_" + orgId }, "String");
-			if(StringUtils.isBlank(menuId)){
-				menuId = "";
-			}
-			
-			String leftWidth = "";
-			if(psTzApptplDyT.getTzLeftWidth() != null && psTzApptplDyT.getTzLeftWidth() > 0){
-				leftWidth = String.valueOf(psTzApptplDyT.getTzLeftWidth()) + "px";
-			}
-			String rightWidth = "";
-			if(psTzApptplDyT.getTzRightWidth() != null && psTzApptplDyT.getTzRightWidth() > 0){
-				rightWidth = String.valueOf(psTzApptplDyT.getTzRightWidth()) + "px";
-			}
-			
-			String viewHtml = "";
-			try {
-				tplData = tplData.replaceAll("\\$", "~");
-				viewHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_VIEW_HTML",contextUrl,comRegInfo,tplId,"0",tplData,tabHtml,siteId,orgId,menuId,msgSet, onlineHead, onlineFoot, save, submit, next, loading, processing, language,leftWidth,rightWidth);
-				viewHtml = viewHtml.replaceAll("\\~", "\\$");
-			} catch (TzSystemException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			viewHtml = siteRepCssServiceImpl.repTitle(viewHtml, siteId);
-			viewHtml = siteRepCssServiceImpl.repCss(viewHtml, siteId);
-			return viewHtml;
+	   /*--- TAB页签  END ---*/
+		
+		/*保持、提交、下一页、上传进度条描述、处理中描述*/
+		String save = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "SAVE", language, "保存", "Save");
+		String submit = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "SUBMIT", language, "提交", "Submit");
+		String next = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "NEXT", language, "下一步", "NEXT");
+		String loading = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "LOADING", language, "上传中", "Loading");
+		String processing = gdObjectServiceImpl.getMessageTextWithLanguageCd(request,"TZGD_APPONLINE_MSGSET", "PROCESS", language, "正在处理", "Processing");
+
+		
+		String viewHtml = "";
+		try {
+			tplData = tplData.replaceAll("\\$", "~");
+			viewHtml = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_ONLINE_VIEW_HTML",contextUrl,comRegInfo,tplId,"0",tplData,tabHtml,siteId,orgId,menuId,msgSet, onlineHead, onlineFoot, save, submit, next, loading, processing, language,leftWidth,rightWidth,strDisplayType);
+			viewHtml = viewHtml.replaceAll("\\~", "\\$");
+		} catch (TzSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		viewHtml = siteRepCssServiceImpl.repTitle(viewHtml, siteId);
+		viewHtml = siteRepCssServiceImpl.repCss(viewHtml, siteId);
+		return viewHtml;
 	}
 	
 	/**

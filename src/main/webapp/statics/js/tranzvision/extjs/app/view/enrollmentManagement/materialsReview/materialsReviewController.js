@@ -2741,6 +2741,9 @@
                 datas.studentInfo.push(thisdata);
             }
         }
+        //增加评议标准修改信息		
+    	this.saveEvaStandard2(btn);
+    	
         var result = {update:[datas]},
             comParams = Ext.JSON.encode(result),
             tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"U","comParams":'+comParams+'}';
@@ -2796,6 +2799,9 @@
                 datas.studentInfo.push(thisdata);
             }
         }
+        //增加评议标准修改信息		
+    	this.saveEvaStandard2(btn);
+    	
         var result = {update:[datas]},
             comParams = Ext.JSON.encode(result);
         tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"U","comParams":'+comParams+'}';
@@ -3255,22 +3261,13 @@
                 var gridData = statisticsGridDataModel['gridData'];
                 var gridStore = btn.findParentByType("grid").getStore();
                 gridStore.setData(gridData);
-                //btn.findParentByType("grid").getSelectionModel().selectRows(selectedIndex);
-                
-                console.log(selectedIndex);
-                console.log(selectedRecords);
+
                 var getSle = btn.findParentByType("grid").getSelectionModel();
-                /*getSle.select(selectedIndex);
-                getSle.select(selectedRecords);*/
                 
-                /*for(var m=0;m<selectedIndex.length;m++){
+                for(var m=0;m<selectedIndex.length;m++){
                 	var selIndex = selectedIndex[m];
-                	btn.findParentByType("grid").getSelectionModel().selectRows(selIndex);
-                }*/
-                
-                //btn.findParentByType("grid").getSelectionModel().select(selectedRecords,true,true);
-                
-                win.ignoreChanges = false;
+                	getSle.select(selIndex,true);
+                }
             });
         }
     },
@@ -3286,29 +3283,60 @@
     			var form = btn.findParentByType("grid").findParentByType("form");    		
     	    	var eGrid = form.child("grid[name=evaluationStandardGrid]");
     	    	var eStore = eGrid.getStore();
-    	    	//只对第一行比率赋值
+    	    	//对第一行比率赋值
     	    	var record = eStore.getAt(0);
+    	    	//对误差设置默认值
+    			var recordWc = eStore.getAt(1);
     			//动态属性部分赋值
     	    	var j = 1;
     			for(var i=5;i<len;i++){
     				var colName = '00' + i;
                     colName = 'col' + colName.substr(colName.length - 2);
                     var sValue = lastData[colName];
+                    var tValue = 0.30;
                     if(i!=5){
                     	sValue = sValue.substr(sValue.indexOf("（"),sValue.indexOf("）"));
                     	sValue = sValue.replace("（","");
                     	sValue = sValue.replace("）","");
                     	sValue = sValue.replace("%","");
+                    	tValue = 1;
                     }
                     
                     var mxId = Object.getOwnPropertyNames(record.data)[j];
                     record.set(mxId,sValue);
-                    
+                    recordWc.set(mxId,tValue);     
                     j = j + 1;
-    			}
+    			}    			    		
     		}
     	}
     	    	
+    },
+    saveEvaStandard2:function(btn){
+    	var view = this.getView();
+        var datas = view.child('form[name=materialsProgressForm]').getValues();
+        
+    	var evaStandGrid = btn.findParentByType('panel').down("grid[name=evaluationStandardGrid]");    	
+    	var evaStandStore = evaStandGrid.getStore();
+    	var evaStandModified = evaStandStore.getModifiedRecords();
+            	
+    	var data = {};
+    	data.type = "savePyData";
+        data.classID = datas.classID;
+        data.batchID = datas.batchID;
+        
+    	if(evaStandModified.length !== 0){
+    		data.pyInfoUpdate = [];
+            for(var x =evaStandModified.length-1;x>=0;x--){
+                var thisdata = evaStandModified[x].data;                
+                data.pyInfoUpdate.push(thisdata);
+            }
+            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":'  + Ext.JSON.encode(data) + '}';
+        	Ext.tzLoadAsync(tzParams,function(responseData){
+        		if(responseData!="success"){
+        			evaStandStore.setData(responseData);
+        		}    		
+        	},"",true,this);
+        }    	
     },
     saveEvaStandard: function(btn){
     	var view = this.getView();
@@ -3331,21 +3359,48 @@
                 data.pyInfoUpdate.push(thisdata);
             }
         }
-    	var win = btn.findParentByType("materialsReviewSchedule");
+    	
     	var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":'  + Ext.JSON.encode(data) + '}';
     	Ext.tzSubmit(tzParams,function(responseData){
     		if(responseData!="success"){
     			store.setData(responseData);
     		}    		
-    	});
-    	win.ignoreChanges = true;
-    	/*Ext.tzLoad(tzParams, function (responseData) {
-    		
-    		if(responseData!="success"){
-    			store.setData(responseData);
-    		}
-    		win.ignoreChanges = false;
-        });*/
-    	
+    	},"",true,this);
+    },
+    queryStudent: function(btn){
+    	var form = btn.findParentByType("form").getForm();
+        var classId = form.findField("classID").getValue();
+        var batchId = form.findField("batchID").getValue();
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW',
+            condition:{
+                TZ_CLASS_ID:classId,
+                TZ_APPLY_PC_ID:batchId
+            },
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
+                var tzParamsObj = {};
+                tzParamsObj.classID = classId;
+                tzParamsObj.batchID = batchId;
+                tzParamsObj.type = "stuList";
+                				
+                var getedSQL="";
+                var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_FILTER_SQL_STD","OperateType":"getQuerySQL","comParams":'+seachCfg+'}';
+				Ext.tzLoadAsync(tzParams,function(responseData){
+					getedSQL = responseData.SQL;	
+				});
+				tzParamsObj.searchSQL = getedSQL; 				
+				
+				store.tzStoreParams = JSON.stringify(tzParamsObj);
+                //store.load();              
+                store.load({params: {start:0,limit:10,page:1}});
+            }
+        });
+    },
+    tmpImportData:function(btn){
+    	//临时方法，导入评审数据
+    	var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":{"type":"tmpImportData"}}';
+        Ext.tzLoad(tzParams, function (respData) {});
     }
 });

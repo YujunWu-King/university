@@ -158,8 +158,14 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 
 
 	},
-	onAddMsPsXs: function() {
+	onAddMsPsXs: function(btn) {
 		var me = this;
+		
+		var panel = btn.findParentByType("viewmspsxsList");
+		var form = panel.down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+		console.log("classId+batchId:"+classId+batchId);
 		//是否有访问权限   
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_ADDKS_STD"];
 		if (pageResSet == "" || pageResSet == undefined) {
@@ -187,13 +193,11 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			//操作类型设置为新增
 			win.actType = "add";
 			console.log(win.actType);
-/*	win.on('afterrender', function(window) {
+	win.on('afterrender', function(window) {
 								var attgrid = window.child('grid');
-								attgrid.getStore().tzStoreParams = '{"add":[' + attaList + ']}';
-
+								attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}' ;
 								attgrid.getStore().load();
-
-							})*/
+							})
 			me.getView().add(win);
 			win.show();
 		}
@@ -286,7 +290,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 	setpwksSave:function(btn){
 		var selksList="";
 		var form = btn.findParentByType("setStuPw").down('form').getForm();
-		
+		var panel = btn.findParentByType("viewmspsxsList");
 		var appInsId = form.findField('appInsId').getValue();
 		var classId = form.findField('classId').getValue();
 		var batchId = form.findField('batchId').getValue();
@@ -312,7 +316,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		console.log(tzParams);
 		Ext.tzSubmit(tzParams, function(responseData) {
 			//刷新查看考生的列表 
-			//panel.down('grid').getStore().reload();
+			panel.down('grid').getStore().reload();
 
 
 		}, "保存成功！", true, this);
@@ -353,7 +357,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 	},
 	//查看考生列表页保存删除
 	onSaveRemoveKs: function(btn) {
-		//院校库变量列表
+	
 
 		var form = btn.findParentByType("viewmspsxsList").down('form').getForm();
 		var grid = btn.findParentByType("viewmspsxsList").down('grid');
@@ -394,9 +398,15 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 	//新加学生页面的可配置搜索
 	//可配置搜索
 	searchksList: function(btn) {
-
+		//var panel = btn.findParentByType("viewmspsxsList");
+		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+        console.log("classId"+classId);
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW',
+			condition:{
+				"TZ_CLASS_ID":classId
+			},
 			callback: function(seachCfg) {
 				var store = btn.findParentByType("grid").store;
 				store.tzStoreParams = seachCfg;
@@ -446,6 +456,101 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		}, "保存成功！", true, this);
 
 
-	}
+	},
+	
+	
+	matchStudenSocre:function(btn){	
+		var selksList = "";
+		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();	
+		var selList = btn.findParentByType('grid').getSelectionModel().getSelection();		
+		//选中行长度
+		var checkLen = selList.length;
+		if (checkLen == 0) {
+			Ext.Msg.alert("提示", "请选择一条要操作的记录");
+			return;
+		} else {
+			for (var i = 0; i < selList.length; i++) {
+				
+				if (selksList == "") {
+					selksList = Ext.JSON.encode(selList[i].data);
+				} else {
+					selksList = selksList + ',' + Ext.JSON.encode(selList[i].data);
+				}
+			}
+		}
+		console.log(selksList);		
+	  Ext.tzSetCompResourses("TZ_BZCJ_SRC_COM");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BZCJ_SRC_COM"]["TZ_BZCJ_YSF_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_BZCJ_YSF_STD，请检查配置。');
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
 
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        ViewClass = Ext.ClassManager.get(className);
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+            }
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
+            }
+            // </debug>
+        }
+        cmp = new ViewClass();
+        cmp.on('afterrender',function(panel){
+        	var grid = panel.child('grid[name=appFormApplicants]');     	
+        	
+        	
+           // var form = panel.child('form').getForm();
+            var tzParams = '{"ComID":"TZ_BZCJ_SRC_COM","PageID":"TZ_BZCJ_YSF_STD","OperateType":"MATHSCORE","comParams":{"add":[' + selksList + ']}}';
+           // var examineeGrid = panel.down('grid');
+                    
+            Ext.tzLoad(tzParams,function(respData){
+            	console.log(respData);
+            	grid.store.loadData(respData);               
+            });
+        });
+        
+        tab = contentPanel.add(cmp);
+        contentPanel.setActiveTab(tab);
+        Ext.resumeLayouts(true);
+        if (cmp.floating) {
+            cmp.show();
+        }
+	},
+	changevalue:function(newValue, oldValue, eOpts){
+		console.log("newValue:"+newValue);
+	
+	
+	}
+    
+	
 });

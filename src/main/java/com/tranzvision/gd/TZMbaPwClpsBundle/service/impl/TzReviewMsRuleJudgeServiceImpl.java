@@ -71,6 +71,7 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 						mapList.put("judzhxx", rowList[3]);
 						mapList.put("judgName", rowList[2]);
 						mapList.put("judgGroupId", "");
+
 					} else {
 
 					}
@@ -91,7 +92,7 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 
 	}
 
-	// 添加考生
+	// 添加评委
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -122,7 +123,8 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
 				if (count > 0) {
 					errMsg[0] = "1";
-					errMsg[1] = "评委:" + judgName + "已存在，不能重新添加！";
+
+					errMsg[1] = "评委:" + judgName + "已经存在于评委列表";
 
 				} else {
 					PsTzMsPsPwTbl psTzMsPsPwTbl = new PsTzMsPsPwTbl();
@@ -130,12 +132,137 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 					psTzMsPsPwTbl.setTzApplyPcId(batchId);
 					psTzMsPsPwTbl.setTzPweiOprid(judgId);
 					psTzMsPsPwTbl.setTzPweiGrpid(judgGroupId);
-					psTzMsPsPwTbl.setTzPweiZhzt("");
+					psTzMsPsPwTbl.setTzPweiZhzt("A");
 					psTzMsPsPwTbl.setRowAddedDttm(nowdate);
 					psTzMsPsPwTbl.setRowAddedOprid(Oprid);
 					psTzMsPsPwTbl.setRowLastmantDttm(nowdate);
 					psTzMsPsPwTbl.setRowLastmantOprid(Oprid);
 					psTzMsPsPwTblMapper.insertSelective(psTzMsPsPwTbl);
+
+				}
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+
+			// TODO: handle exception
+		}
+
+		return null;
+	}
+
+	// 修改评委信息
+	@Override
+	public String tzUpdate(String[] actData, String[] errMsg) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Date nowdate = new Date();
+
+		String judgId = "";
+		String judgGroupId = "";
+		String judgName = "";
+		String judgState = "";
+		String ksName = "";
+		int count = 0;
+		try {
+			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			jacksonUtil.json2Map(actData[0]);
+			String classId = jacksonUtil.getString("classId");
+			jacksonUtil.json2Map(actData[1]);
+			String batchId = jacksonUtil.getString("batchId");
+			for (int i = 2; i < actData.length; i++) {
+				// 表单内容
+				String strForm = actData[i];
+				// 解析 json
+				jacksonUtil.json2Map(strForm);
+				judgId = jacksonUtil.getString("judgId");
+				judgGroupId = jacksonUtil.getString("judgGroupId");
+				judgName = jacksonUtil.getString("judgName");
+				judgState = jacksonUtil.getString("judgState");
+
+				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
+				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
+				if (count > 0) {
+					PsTzMsPsPwTbl psTzMsPsPwTbl = new PsTzMsPsPwTbl();
+					psTzMsPsPwTbl.setTzClassId(classId);
+					psTzMsPsPwTbl.setTzApplyPcId(batchId);
+					psTzMsPsPwTbl.setTzPweiOprid(judgId);
+					psTzMsPsPwTbl.setTzPweiGrpid(judgGroupId);
+					psTzMsPsPwTbl.setTzPweiZhzt(judgState);
+					psTzMsPsPwTbl.setRowLastmantDttm(nowdate);
+					psTzMsPsPwTbl.setRowLastmantOprid(Oprid);
+					psTzMsPsPwTblMapper.updateByPrimaryKeySelective(psTzMsPsPwTbl);
+
+					sqlQuery.update(
+							"UPDATE  PS_TZ_MP_PW_KS_TBL SET  TZ_PSHEN_ZT=? WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_PWEI_OPRID=?",
+							new Object[] { judgState, batchId, classId, judgId });
+
+				} else {
+					errMsg[0] = "1";
+					errMsg[1] = "评委:" + judgName + "不已存在，无法修改！";
+
+				}
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+
+			// TODO: handle exception
+		}
+
+		return null;
+	}
+
+	// 修改评委信息
+	@Override
+	public String tzDelete(String[] actData, String[] errMsg) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Date nowdate = new Date();
+
+		String judgId = "";
+		String judgGroupId = "";
+		String judgName = "";
+		String judgState = "";
+		String ksName = "";
+		int count = 0;
+		try {
+			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			jacksonUtil.json2Map(actData[0]);
+			String classId = jacksonUtil.getString("classId");
+			jacksonUtil.json2Map(actData[1]);
+			String batchId = jacksonUtil.getString("batchId");
+			for (int i = 2; i < actData.length; i++) {
+				// 表单内容
+				String strForm = actData[i];
+				// 解析 json
+				jacksonUtil.json2Map(strForm);
+				judgId = jacksonUtil.getString("judgId");
+				judgGroupId = jacksonUtil.getString("judgGroupId");
+				judgName = jacksonUtil.getString("judgName");
+				judgState = jacksonUtil.getString("judgState");
+
+				System.out.println("classId:" + classId + "batchId:" + batchId + "judgId:" + judgId);
+
+				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
+				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
+				if (count > 0) {
+					PsTzMsPsPwTbl psTzMsPsPwTbl = new PsTzMsPsPwTbl();
+					psTzMsPsPwTbl.setTzClassId(classId);
+					psTzMsPsPwTbl.setTzApplyPcId(batchId);
+					psTzMsPsPwTbl.setTzPweiOprid(judgId);
+					psTzMsPsPwTblMapper.deleteByPrimaryKey(psTzMsPsPwTbl);
+					sqlQuery.update(
+							"UPDATE  PS_TZ_MP_PW_KS_TBL SET  TZ_DELETE_ZT='Y' WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_PWEI_OPRID=?",
+							new Object[] { batchId, classId, judgId });
+
+				} else {
+					errMsg[0] = "1";
+					errMsg[1] = "评委:" + judgName + "不已存在，无法删除！";
 
 				}
 

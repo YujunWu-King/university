@@ -362,7 +362,7 @@ public class InterviewEvaluationCls{
 		return rtn;
 	}
 	
-	//移除考生和评委关系
+	//添加考生和评委关系
 	protected Map<String,Object> addJudgeApplicant(String classId, String batchId, String appInsId, String oprId){
 		
 		Map<String,Object> rtn = new HashMap<String,Object>();
@@ -424,7 +424,7 @@ public class InterviewEvaluationCls{
 			if(numKSPWSX>numKSPW){
 				//判断当前评委是否与评议该考生的其他评委在同一组;
 				String strIsOneGroup = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPS_PW_TBL where TZ_PWEI_GRPID in (select TZ_PWEI_GRPID from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID in (select TZ_PWEI_OPRID from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=? and TZ_DELETE_ZT<>'Y')) and TZ_PWEI_OPRID=? and TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?", 
-						new Object[]{classId,batchId,classId,batchId,appInsId,classId,batchId}, "String");
+						new Object[]{classId,batchId,classId,batchId,appInsId,oprId,classId,batchId}, "String");
 				if(!"Y".equals(strIsOneGroup)){
 					result = false;
 					msg = "您与其他评委不在同一组，无法评议该考生！";

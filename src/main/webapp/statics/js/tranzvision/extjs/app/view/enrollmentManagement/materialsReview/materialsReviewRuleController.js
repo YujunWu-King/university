@@ -125,15 +125,16 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         var classId = form.findField("classId").getValue();
         var batchId = form.findField("batchId").getValue();
+        var judgeNumSet = form.findField("judgeNumSet").getValue();
 
         Ext.syncRequire(className);
         ViewClass = Ext.ClassManager.get(className);
 
         var judgeGroupParams =  '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
-            '"OperateType":"tzGetJudgeGroup","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
+            '"OperateType":"tzGetJudgeGroup","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'","judgeNumSet":"'+judgeNumSet+'"}}';
+
         Ext.tzLoad(judgeGroupParams,function(responseData) {
             var judgeGroupData = responseData.groupData;
-
 
             var win = new ViewClass({
                 judgeGroupData:judgeGroupData
@@ -360,41 +361,64 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             view = me.getView();
         var form = view.child("form").getForm();
         var clpsksNum = form.findField("clpsksNum").getValue();
+        var classId = form.findField("classId").getValue();
+        var batchId = form.findField("batchId").getValue();
 
         var grid = view.down("grid[name=materialJudgeGrid]");
         var judgeStore = grid.getStore();
+        var tzParams = '{"classId":"'+classId+'","batchId":"'+batchId+'"}';
+        judgeStore.tzStoreParams = tzParams;
 
         var actType = view.actType;
 
         if(form.isValid()) {
-            //校验评委各组评议人数合是否等于考生人数
-            var tzParamsNum = me.getCheckNumParams();
-            Ext.tzLoad(tzParamsNum,function(responseData) {
-                if(responseData.success==true) {
-                    var tzParams = me.getRuleParams(actType);
-                    Ext.tzSubmit(tzParams,function(responseData) {
-                        if(actType=="add") {
-                            view.actType="update";
-                        }
-                        if(btn.name=='onRuleEnsure') {
-                            view.close();
-                        }
 
-                        var judgeNumTotal = 0;
-                        var records = judgeStore.getRange(0,judgeStore.getCount()-1);
-                        for(var i=0;i<records.length;i++) {
-                            judgeNumTotal = parseInt(judgeNumTotal)+parseInt(records[i].data.judgeExamineeNum);
-                        }
-                        var statisticsForm = view.down("form[name=statisticsNumForm]").getForm();
-                        form.findField("judgeNumTotal").setValue(judgeNumTotal);
-
-                    },"",true,this);
-                } else {
-                    Ext.Msg.alert('提示','评委各组评议人数和不等于考生人数');
-                    return ;
+            var saveFlag = true;
+            for(var i=0;i<judgeStore.getCount();i++) {
+                var judgeGroup = judgeStore.getAt(i).get("judgeGroup");
+                if(judgeGroup=="" || judgeGroup==null) {
+                    saveFlag=false;
+                    break;
                 }
+            }
 
-            });
+            if(saveFlag==false) {
+                Ext.Msg.alert('提示', '请给评委设置评委组');
+                return;
+            } else {
+
+                //校验评委各组评议人数合是否等于考生人数
+                var tzParamsNum = me.getCheckNumParams();
+                Ext.tzLoad(tzParamsNum, function (responseData) {
+                    if (responseData.success == true) {
+                    } else {
+                        Ext.Msg.alert('提示', '评委各组评议人数和不等于考生人数');
+                    }
+                });
+                    
+                var tzParams = me.getRuleParams(actType);
+                Ext.tzSubmit(tzParams, function (responseData) {
+                    judgeStore.reload();
+
+                    if (actType == "add") {
+                        view.actType = "update";
+                    }
+                    if (btn.name == 'onRuleEnsure') {
+                        view.close();
+                    }
+
+
+                    /* var judgeNumTotal = 0;
+                     var records = judgeStore.getRange(0,judgeStore.getCount()-1);
+                     for(var i=0;i<records.length;i++) {
+                     judgeNumTotal = parseInt(judgeNumTotal)+parseInt(records[i].data.judgeExamineeNum);
+                     }
+                     var statisticsForm = view.down("form[name=statisticsNumForm]").getForm();
+                     form.findField("judgeNumTotal").setValue(judgeNumTotal);*/
+
+                }, "", true, this);
+
+            }
 
             /*var judgeGroupData = [];
 
@@ -550,6 +574,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 
         var form = view.child("form").getForm();
         var formValues = form.getValues();
+        if(form.findField("judgeNumSet").disabled==true) {
+        	formValues.judgeNumSet = form.findField("judgeNumSet").getValue();
+        }
         //formValues.startTime = form.findField("startTime").getValue();
         //formValues.endTime = form.findField("endTime").getValue();
 
@@ -562,35 +589,36 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         var store = grid.getStore();
         var editRecs = store.getModifiedRecords();
         for(var i=0;i<editRecs.length;i++) {
-            editJson = editJson + ',' + '{"typeFlag":"JUDGE","data":' + Ext.JSON.encode(editRecs[i].data) + '}'
+            editJson = editJson + ',' + '{"typeFlag":"JUDGE","data":' + Ext.JSON.encode(editRecs[i].data) + '}';
         }
 
-        if(actType=="add") {
-            comParams = '"add":['+editJson+']';
+        if (actType == "add") {
+            comParams = '"add":[' + editJson + ']';
         } else {
-            comParams = '"update":['+editJson+']';
+            comParams = '"update":[' + editJson + ']';
         }
 
-        var removeJson="";
+        var removeJson = "";
         var removeRecs = store.getRemovedRecords();
-        for(var i=0;i<removeRecs.length;i++) {
-            if(removeJson=="") {
+        for (var i = 0; i < removeRecs.length; i++) {
+            if (removeJson == "") {
                 removeJson = Ext.JSON.encode(removeRecs[i].data);
             } else {
-                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+                removeJson = removeJson + ',' + Ext.JSON.encode(removeRecs[i].data);
             }
         }
 
-        if(removeJson!="") {
-            if(comParams == ""){
+        if (removeJson != "") {
+            if (comParams == "") {
                 comParams = '"delete":[' + removeJson + "]";
-            }else{
+            } else {
                 comParams = comParams + ',"delete":[' + removeJson + "]";
             }
         }
 
         //提交参数
-        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD","OperateType":"U","comParams":{' + comParams + '}}';
+
         return tzParams;
 
     },

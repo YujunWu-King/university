@@ -8,7 +8,9 @@
         'Ext.ux.ProgressBarPager',
         'tranzvision.extension.grid.column.Link',
         'KitchenSink.view.automaticScreen.autoScreenStore',
-        'KitchenSink.view.automaticScreen.autoScreenController'
+        'KitchenSink.view.automaticScreen.autoScreenController',
+        'KitchenSink.view.automaticScreen.export.exportExcelWindow',
+        'KitchenSink.view.automaticScreen.export.exportExcelController'
     ],
     xtype: 'autoScreen',
 	controller: 'autoScreenController',
@@ -27,7 +29,7 @@
 	
 	constructor: function(config){
 		var className,
-			itemColumns;
+			itemColumns = [];
 		this.paramsConfig = config;
 		this.classId = config.classId;
 		this.batchId = config.batchId;
@@ -303,7 +305,16 @@
 	    						iconCls:  'list',
 	    						glyph: 61,
 	    						menu:[{
-	    							text:'查看自动初筛进程运行详情',iconCls:"view",handler:'showBatchProcessInfo'
+	    							text:'查看自动初筛进程运行详情',iconCls:"view",handler:'showBatchProcessInfo',
+	    						},{
+	    							text: '导出自动初筛结果',iconCls:"excel",
+	    							menu:[{
+	    								text:'导出选中考生的自动初筛结果',handler:'exportSelectedZdcsResult',
+	    							},{
+	    								text:'导出搜索结果考生的自动初筛结果',handler:'exportSearchZdcsResult'
+	    							}]
+	    						},{
+	    							text:'查看并下载导出结果',iconCls:"download", handler:'downloadExportFile'
 	    						}]
 	    					}
 	    				]
@@ -318,7 +329,7 @@
 	    			columns: columns,
 	    			bbar: {
 	    				xtype: 'pagingtoolbar',
-	    				pageSize: 100,
+	    				pageSize: 50,
 	    				listeners:{
 	    					afterrender: function(pbar){
 	    						var grid = pbar.findParentByType("grid");

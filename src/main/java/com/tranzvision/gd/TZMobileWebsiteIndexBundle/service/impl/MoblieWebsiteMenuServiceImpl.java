@@ -75,7 +75,7 @@ public class MoblieWebsiteMenuServiceImpl extends FrameworkImpl{
 		
 		String menuHtml = "";
 		try {
-			menuHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_MENU_HTML",classOn[0],classOn[1],classOn[2],classOn[3],classOn[4],url[0],url[1],url[2],url[3],url[4]);
+			menuHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_MENU_HTML",classOn[0],classOn[1],classOn[2],classOn[3],classOn[4],url[0],url[1],url[2],url[3],url[4]);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

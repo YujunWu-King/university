@@ -1648,7 +1648,43 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         Ext.tzSubmit(tzParams,function(){
             //store.reload();
         },msg,true,this);
-    }
+    },
+    
+    //导出调查数据
+    exportAnswerToExcel: function(grid, rowIndex, colIndex){
+    	var record = grid.getStore().getAt(rowIndex);
+    	var wjId = record.get("TZ_DC_WJ_ID");
+    	
+    	var className = 'KitchenSink.view.template.survey.question.export.exportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	wjId: wjId
+        });
+        
+        win.show();
+    },
+    
+    
+    //查看下载导出结果
+	downloadExportFile: function(btn){
+		var className = 'KitchenSink.view.template.survey.question.export.exportExcelWindow';
+    	
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	type: 'download'
+        });
+        
+        var tabPanel = win.lookupReference("packageTabPanel");
+        tabPanel.setActiveTab(1);
+        
+        win.show();
+	}
 
 });
 

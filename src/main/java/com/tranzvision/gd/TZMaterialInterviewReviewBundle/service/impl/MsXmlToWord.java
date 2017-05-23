@@ -308,24 +308,24 @@ public class MsXmlToWord {
 				String[] pcpwarr = { class_pc, DQDATE, TZ_CLPS_GR_NAME, TZ_PW_ZH};
 				
 				String pc_pw_html = tzGDObject
-						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_PCINFO_HTML", pcpwarr);
+						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_PCINFO_HTML", pcpwarr);
 				// 2、获取班级批次、评委信息下面的空行;
-				String kh_html = tzGDObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_KH_HTML");
+				String kh_html = tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_KH_HTML");
 
 				// 3 、拼装grid
 				// 3、1、获取grid 列头 的列宽度组 （面试序号、面试申请号、姓名、排名）-固定项;
 				String pw_msxh_lk_html = tzGDObject
-						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "1000");
+						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "1000");
 				String pw_mssqh_lk_html = tzGDObject
-						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "1242");
+						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "1242");
 				String pw_name_lk_html = tzGDObject
-						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "993");
+						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "993");
 				String pw_pm_lk_html = tzGDObject
-						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "708");
+						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", "708");
 				// 获取grid 列头 的列宽度组 （动态扁平化）;;
 				String dt_bph_lk_html = "";
 				for (int j = 0; j < tz_cjbph_list.size(); j++) {
-					dt_bph_lk_html = dt_bph_lk_html + tzGDObject.getHTMLText(
+					dt_bph_lk_html = dt_bph_lk_html + tzGDObject.getHTMLTextForDollar(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_LK_HTML", bph_lk + "");
 				}
 				//列宽由：面试序号+面试申请号+姓名+排名+动态项 组成
@@ -333,31 +333,31 @@ public class MsXmlToWord {
 
 				// 3、2、获取grid 列头 （面试序号、面试申请号、姓名、排名）-固定项;
 				String pw_msxh_html = tzGDObject
-						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "面试序号");
+						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "面试序号");
 				String pw_mssqh_html = tzGDObject
-						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "面试申请号");
+						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "面试申请号");
 				String pw_name_html = tzGDObject
-						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "姓名");
+						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "姓名");
 				String pw_pm_html = tzGDObject
-						.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "排名");
+						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "排名");
 				// 获取grid 列头 （动态添加列头处）;
 				String dt_bph_html = "";
 				for (Object cjbphObj : tz_cjbph_list) {
 					Map<String, Object> cjbphResult = (Map<String, Object>) cjbphObj;
 					String TZ_XS_MC = cjbphResult.get("TZ_XS_MC") == null ? ""
 							: String.valueOf(cjbphResult.get("TZ_XS_MC"));
-					dt_bph_html = dt_bph_html + tzGDObject.getHTMLText(
+					dt_bph_html = dt_bph_html + tzGDObject.getHTMLTextForDollar(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", TZ_XS_MC);
 				}
 				//列：面试序号+面试申请号+姓名+排名+动态项 组成
 				String grid_head_tcs = pw_msxh_html + pw_mssqh_html + pw_name_html + pw_pm_html + dt_bph_html;
-				String grid_head_tr = tzGDObject.getHTMLText(
+				String grid_head_tr = tzGDObject.getHTMLTextForDollar(
 						"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TR_HTML", grid_head_tcs);
 
 				// 动态读取评委考生数据 - 开始;
 
 				// 循环评委考生;
-				String pw_ks_sql = "SELECT TZ_APP_INS_ID,TZ_SCORE_INS_ID,TZ_KSH_PSPM FROM PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID =? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID=? order by TZ_KSH_PSPM";
+				String pw_ks_sql = "SELECT TZ_APP_INS_ID,TZ_SCORE_INS_ID,TZ_KSH_PSPM FROM PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID =? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID=? order by (TZ_KSH_PSPM+0) asc";
 				List<Map<String, Object>> pw_ks_list = jdbcTemplate.queryForList(pw_ks_sql,
 						new Object[] { TZ_CLASS_ID, TZ_APPLY_PC_ID, arr[i] });
 
@@ -403,16 +403,16 @@ public class MsXmlToWord {
 					}
 					//面试序号
 					String pw_ks_xh_str = pw_ks_xh_map.get(TZ_APP_INS_ID).toString();
-					String pw_ks_msxh_html = tzGDObject.getHTMLText(
+					String pw_ks_msxh_html = tzGDObject.getHTMLTextForDollar(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", pw_ks_xh_str);	
 					//面试申请号
-					String pw_ks_mssqh_html = tzGDObject.getHTMLText(
+					String pw_ks_mssqh_html = tzGDObject.getHTMLTextForDollar(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", ksMssqh);
 					//姓名
-					String pw_ks_name_html = tzGDObject.getHTMLText(
+					String pw_ks_name_html = tzGDObject.getHTMLTextForDollar(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", ksName);
 					//排名
-					String pw_ks_pm_html = tzGDObject.getHTMLText(
+					String pw_ks_pm_html = tzGDObject.getHTMLTextForDollar(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", TZ_KSH_PSPM);
 
 					// b、获取gird的动态项（扁平化配置的项）
@@ -453,23 +453,36 @@ public class MsXmlToWord {
 							// 评语项和打分项分别处理
 							if (StringUtils.equals(TZ_SCORE_ITEM_TYPE, "C")) {
 								// "C" 为评语项
-								pw_ks_bph_html = pw_ks_bph_html + tzGDObject.getHTMLText(
+								
+								//处理评议数据中有&、<、>的情况;
+								if (TZ_SCORE_PY_VALUE.contains("&")) {
+									TZ_SCORE_PY_VALUE = TZ_SCORE_PY_VALUE.replace("&", "&amp;");
+								}
+								if (TZ_SCORE_PY_VALUE.contains("<")) {
+									TZ_SCORE_PY_VALUE = TZ_SCORE_PY_VALUE.replace("<", "&lt;");
+								}		
+								if (TZ_SCORE_PY_VALUE.contains(">")) {
+									TZ_SCORE_PY_VALUE = TZ_SCORE_PY_VALUE.replace(">", "&gt;");
+								}	
+								
+								
+								pw_ks_bph_html = pw_ks_bph_html + tzGDObject.getHTMLTextForDollar(
 										"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML",
 										TZ_SCORE_PY_VALUE);
 							} else {
-								pw_ks_bph_html = pw_ks_bph_html + tzGDObject.getHTMLText(
+								pw_ks_bph_html = pw_ks_bph_html + tzGDObject.getHTMLTextForDollar(
 										"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML",
 										TZ_SCORE_NUM);
 							}
 						} else {
-							pw_ks_bph_html = pw_ks_bph_html + tzGDObject.getHTMLText(
+							pw_ks_bph_html = pw_ks_bph_html + tzGDObject.getHTMLTextForDollar(
 									"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TC_HTML", "-");
 						}
 
 					}
 
 					// 此处需要添加动态列 （所有列：面试序号+面试申请号+姓名+排名+动态项）
-					grid_pwks_tr = tzGDObject.getHTMLText(
+					grid_pwks_tr = tzGDObject.getHTMLTextForDollar(
 							"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_TR_HTML",
 							pw_ks_msxh_html + pw_ks_mssqh_html + pw_ks_name_html + pw_ks_pm_html + pw_ks_bph_html);
 					grid_pwks_trs = grid_pwks_trs + grid_pwks_tr;
@@ -485,14 +498,14 @@ public class MsXmlToWord {
 				/**
 				 * grid_head_lks :需要动态获取 grid_head_tr :需要动态获取
 				 */
-				html_pwgrids = tzGDObject.getHTMLText(
+				html_pwgrids = tzGDObject.getHTMLTextForDollar(
 						"HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_STULIST_HTML", grid_head_lks, grid_trs);
 
 				// 拼装单个评委串（批次信息 + 空行 + 考生列表grid）
 				html_pw = pc_pw_html + kh_html + html_pwgrids;
 
 				// 如果一个评委完成，另起一页
-				String html_fy = tzGDObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_FY_HTML");
+				String html_fy = tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_FY_HTML");
 				if (pw_num == 1) {
 					// 只有一个评委时不需要加另起一页;
 				} else {
@@ -508,7 +521,7 @@ public class MsXmlToWord {
 			}
 
 			// 获取拼装的字符串
-			html = tzGDObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_HTML", html_pws);
+			html = tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_HTML", html_pws);
 		}
 
 		return html;

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatBundle.dao.PsTzOpenidTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatBundle.model.PsTzOpenidTbl" >
+    <id column="OPENID" property="openid" jdbcType="VARCHAR" />
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_SITEI_ID" property="tzSiteiId" jdbcType="VARCHAR" />
+    <id column="TZ_DLZH_ID" property="tzDlzhId" jdbcType="VARCHAR" />
+    <result column="TZ_DEL_FLG" property="tzDelFlg" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    OPENID, TZ_JG_ID, TZ_SITEI_ID, TZ_DLZH_ID, TZ_DEL_FLG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzOpenidTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_OPENID_TBL
+    where OPENID = #{openid,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzOpenidTblKey" >
+    delete from PS_TZ_OPENID_TBL
+    where OPENID = #{openid,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzOpenidTbl" >
+    insert into PS_TZ_OPENID_TBL (OPENID, TZ_JG_ID, TZ_SITEI_ID, 
+      TZ_DLZH_ID, TZ_DEL_FLG)
+    values (#{openid,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzSiteiId,jdbcType=VARCHAR}, 
+      #{tzDlzhId,jdbcType=VARCHAR}, #{tzDelFlg,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzOpenidTbl" >
+    insert into PS_TZ_OPENID_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="openid != null" >
+        OPENID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzSiteiId != null" >
+        TZ_SITEI_ID,
+      </if>
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID,
+      </if>
+      <if test="tzDelFlg != null" >
+        TZ_DEL_FLG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSiteiId != null" >
+        #{tzSiteiId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId != null" >
+        #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDelFlg != null" >
+        #{tzDelFlg,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzOpenidTbl" >
+    update PS_TZ_OPENID_TBL
+    <set >
+      <if test="tzDelFlg != null" >
+        TZ_DEL_FLG = #{tzDelFlg,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where OPENID = #{openid,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzOpenidTbl" >
+    update PS_TZ_OPENID_TBL
+    set TZ_DEL_FLG = #{tzDelFlg,jdbcType=VARCHAR}
+    where OPENID = #{openid,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_SITEI_ID = #{tzSiteiId,jdbcType=VARCHAR}
+      and TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -30,8 +30,8 @@
 <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/kitchensink/theme-simple/resources/KitchenSink-all.css"/>
 <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-theme-simple/build/resources/ext-theme-simple-all.css"/>
 
-<script type="text/javascript" charset="UTF-8" src="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts-debug.js"></script>
-<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts-all-debug.scss"/>
+<script type="text/javascript" charset="UTF-8" src="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts.js"></script>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/resources/ext-charts-all.css"/>
 
 <script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/evaluation-detail.js" charset="utf-8"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/batch-list.js" charset="utf-8"></script>
@@ -64,18 +64,6 @@ Ext.onReady(function(){
 		
 		initializeEvaluateSystem(urlObject);
 	}
-	/*var urlObject = {};
-						
-		urlObject['getBatchListUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_ReadPSPCList?languageCd=ZHS';
-		urlObject['getBatchDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_ReadPWMPData?languageCd=ZHS';
-		urlObject['getNextApplicantUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS';
-		urlObject['getApplicantDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_ReadKSHEvaluateData?languageCd=ZHS';
-		urlObject['submitApplicantDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS';
-		urlObject['printStatisticsTableUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_MSPRT.TZ_DYPFZB.FieldFormula.IScript_Printreport';
-		urlObject['getAddDelOneKsDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_SearchKSHData?languageCd=ZHS';
-		urlObject['checkPWAccStateURL'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_CheckPWState?languageCd=ZHS';
-		initializeEvaluateSystem(urlObject);
-	*/
 })
 $(function(){
 	$("#tz_evaluation_main").height(Ext.getBody().getHeight()-58-37);
@@ -89,11 +77,12 @@ $(function(){
   <div class="main" style="height:100%">
   	<div class="top_main">
            <ul>
-           	<li class="fa fa-user">&nbsp;欢迎%bind(:4)登录清华经管学院MBA面试评审系统</li>
+           	<li><span class="fa fa-user"></span>&nbsp;欢迎%bind(:4)登录清华经管学院MBA面试评审系统</li>
            	<li style="float:right;">
-           		<a class="fa fa-home" style="margin-right:5px;color:white;" href="javascript:topMenuHomePage()">&nbsp;首页</a>
-           		<a class="fa fa-edit" style="margin-left:5px;margin-right:5px;color:white;" href="javascript:changePassword()">&nbsp;修改密码</a>
-           		<a class="fa fa-sign-out" style="margin-left:5px;color:white;" href="../logout?type=interview">&nbsp;退出</a>
+           		<a style="margin-right:5px;color:white;" href="javascript:topMenuHomePage()"><span class="fa fa-home"></span>&nbsp;首页</a>
+           		<a style="margin-left:5px;margin-right:5px;color:white;" href="%bind(:5)" target="_blank"><span class="fa fa-phone"></span>&nbsp;联系方式</a>
+           		<a style="margin-left:5px;margin-right:5px;color:white;" href="javascript:changePassword()"><span class="fa fa-edit"></span>&nbsp;修改密码</a>
+           		<a style="margin-left:5px;color:white;" href="../logout?type=interview"><span class="fa fa-sign-out"></span>&nbsp;退出</a>
            	</li>
            </ul>           
 	</div>

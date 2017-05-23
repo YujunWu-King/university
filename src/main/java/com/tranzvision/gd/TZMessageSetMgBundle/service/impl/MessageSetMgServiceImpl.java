@@ -3,8 +3,10 @@
  */
 package com.tranzvision.gd.TZMessageSetMgBundle.service.impl;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.Memoryparameter;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -26,10 +29,12 @@ public class MessageSetMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private FliterForm fliterForm;
-	
+
 	@Autowired
 	private SqlQuery sqlQuery;
-	
+
+	final String LJ = "@";
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
@@ -72,12 +77,12 @@ public class MessageSetMgServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
-	
+
 	@Override
 	public String tzDelete(String[] actData, String[] errMsg) {
 		// 返回值;
@@ -105,6 +110,23 @@ public class MessageSetMgServiceImpl extends FrameworkImpl {
 					// 删除转换值信息;
 					sqlQuery.update("delete from PS_TZ_PT_XXDY_TBL where TZ_XXJH_ID=?", new Object[] { msgSetID });
 
+					Map<String, Map<String, String>> map = Memoryparameter.messageText;
+					Iterator<Map.Entry<String, Map<String, String>>> iter = map.entrySet().iterator();
+					List<String> keyList = new ArrayList<String>();
+					while (iter.hasNext()) {
+						Map.Entry<String, Map<String, String>> entry = (Map.Entry<String, Map<String, String>>) iter
+								.next();
+
+						keyList.add(entry.getKey());
+					}
+					String key = null;
+					for (Object objDataTap : keyList) {
+						key = (String) objDataTap;
+						if (key.startsWith(msgSetID)) {
+							Memoryparameter.messageText.remove(key);
+						}
+					}
+
 				}
 			}
 		} catch (Exception e) {
@@ -116,7 +138,5 @@ public class MessageSetMgServiceImpl extends FrameworkImpl {
 
 		return strRet;
 	}
-	
-	
 
 }
