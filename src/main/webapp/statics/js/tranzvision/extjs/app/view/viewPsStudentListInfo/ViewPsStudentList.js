@@ -233,18 +233,18 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.mshIdg", "面试申请号"),
 					dataIndex: 'mshId',
-					width: 110,
-					flex: 1
+					width: 150,
+					//flex: 1
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.appInsIdg", "报名表编号"),
 					dataIndex: 'appInsId',
-					width: 130
+					width: 150
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.genderg", "性别"),
 					dataIndex: 'gender',
-					width: 70,
+					width: 150,
 					renderer: function(v) {
 						if (v == 'M') {
 							return "男";
@@ -256,18 +256,18 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.judgeGroup", "面试组"),
 					dataIndex: 'judgeGroupName',
-					width: 110
+					width: 150
 				
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.pcg", "偏差"),
 					dataIndex: 'pc',
-					width: 60
+					width: 150
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.passStateg", "录取状态"),
 					dataIndex: 'passState',
 					name:'passState',
-					width: 100,
+					width: 150,
 /*					editor: {
 						xtype: 'combobox',
 						valueField: 'TValue',
