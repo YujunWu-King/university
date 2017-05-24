@@ -290,7 +290,7 @@ public class InterviewEvaluationCls{
 				new Object[]{classId,batchId,oprId}, "String");
 		if("Y".equals(if_TZ_SUBMIT_YN)){
 			result = false;
-			msg = "评议数据已经提交，不允许对考生数据进行修改";
+			msg = "评议数据已经提交，不允许对考生数据进行修改。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
 			return rtn;
@@ -301,7 +301,7 @@ public class InterviewEvaluationCls{
 				new Object[]{classId,batchId,oprId}, "String");
 		if("B".equals(if_TZ_PWZH_YN)){
 			result = false;
-			msg = "您的账号暂时无法评议该批次，请与管理员联系";
+			msg = "您的账号暂时无法评议该批次，请与管理员联系。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
 			return rtn;
@@ -375,7 +375,7 @@ public class InterviewEvaluationCls{
 				new Object[]{classId,batchId,oprId}, "String");
 		if("Y".equals(if_TZ_SUBMIT_YN)){
 			result = false;
-			msg = "评议数据已经提交，不允许新增考生评议数据";
+			msg = "评议数据已经提交，不允许新增考生评议数据。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
 			return rtn;
@@ -386,7 +386,7 @@ public class InterviewEvaluationCls{
 				new Object[]{classId,batchId,oprId}, "String");
 		if("B".equals(if_TZ_PWZH_YN)){
 			result = false;
-			msg = "您的账号暂时无法评议该批次，请与管理员联系";
+			msg = "您的账号暂时无法评议该批次，请与管理员联系。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
 			return rtn;
