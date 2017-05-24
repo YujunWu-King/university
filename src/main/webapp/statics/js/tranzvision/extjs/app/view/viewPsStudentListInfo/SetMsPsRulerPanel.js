@@ -131,7 +131,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							format: 'Y-m-d',
 							name: 'StartDate',
 							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false
+							//allowBlank: false
 
 
 						}]
@@ -143,7 +143,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							format: 'H:i',
 							name: 'StartTime',
 							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false,
+							//allowBlank: false,
 							value: "08:30"
 
 
@@ -162,7 +162,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							format: 'Y-m-d',
 							name: 'EndDate',
 							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false
+							//allowBlank: false
 
 
 						}]
@@ -174,7 +174,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							format: 'H:i',
 							name: 'EndTime',
 							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false,
+							//allowBlank: false,
 							value: "08:30"
 
 
