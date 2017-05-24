@@ -432,7 +432,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
              var comParamspw= '{"typeFlag":"PWTEAMNUM","data":{"classId":'+classId+',"batchId":'+batchId+',"kspwnum":'+kspwnum+',"pwTeamnum":'+pwTeamnum+'}}';
 
             for(var i=0;i<editRecs.length;i++) {
-               comParamspw = comParamspw + ',' + '{"typeFlag":"JUDGE","classId":137,"batchId":64,"data":' + Ext.JSON.encode(editRecs[i].data) + '}';
+               comParamspw = comParamspw + ',' + '{"typeFlag":"JUDGE","classId":'+classId+',"batchId":'+batchId+',"data":' + Ext.JSON.encode(editRecs[i].data) + '}';
             }
             var tzParamspw = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"U","comParams":{"add":['+comParamspw+']}}';
    

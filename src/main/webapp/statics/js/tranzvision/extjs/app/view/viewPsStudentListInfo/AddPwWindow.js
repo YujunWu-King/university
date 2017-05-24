@@ -154,8 +154,17 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 					width: 150,
 					editor: {
 						allowBlank: false
+					},
+					hidden:true
+				},
+				{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_JUDGES_STD.judgId", "评委账号"),
+					dataIndex: 'judzhxx',
+					width: 150,
+					editor: {
+						allowBlank: false
 					}
-				}, {
+				},{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_JUDGES_STD.judgName", "评委姓名"),
 					dataIndex: 'judgName',
 					width: 150,
@@ -228,10 +237,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 						return;
 					} else {
 						for (var i = 0; i < checkLen; i++) {
-							if (selection[i].data.judgGroupId == "") {
+							/*if (selection[i].data.judgGroupId == "") {
 									Ext.Msg.alert("提示", "请为" + selection[i].data.judgName + "评委设置分组");
 									return;
-								}else{
+								}else{*/
 								if (selksList == "") {
 			
 									selksList = Ext.JSON.encode(selection[i].data);
@@ -242,8 +251,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 								}
 								}							
 							}
-
-						}
+/*
+						}*/
 						var form=btn.findParentByType('setmspsruler').down('form').getForm();
 						var gridlist=btn.findParentByType('setmspsruler').down('grid[reference=pwlistgrid]');
 					    var classId = form.findField('classId').getValue();
@@ -258,7 +267,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 		               	gridlist.getStore().reload();
 
 		                }, "添加成功!", true, this)
-						 
+						gridlist.getStore().reload();
 
 
 					//修改密码信息表单

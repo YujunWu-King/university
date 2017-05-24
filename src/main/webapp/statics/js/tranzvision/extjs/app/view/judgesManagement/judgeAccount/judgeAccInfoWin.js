@@ -128,7 +128,7 @@
                     fieldLabel: "手机",
                     name: 'judgePhoneNumber',
                     regex: /^[1]\d{10}$/,
-                    allowBlank: false                    
+                    // allowBlank: false                    
                 },{
                     xtype: 'textfield',
                     vtype:'email',

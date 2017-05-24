@@ -2240,6 +2240,6 @@ var SurveyBuild = {
         $ul.html(imgHtmls);
         var $li = $($ul.children("li")[index]);
         $li.children("a").click();
-    },
+    }
 };
 var MsgSet = {};

@@ -123,7 +123,8 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
 				if (count > 0) {
 					errMsg[0] = "1";
-					errMsg[1] = "评委:" + judgName + "已存在，不能重新添加！";
+
+					errMsg[1] = "评委:" + judgName + "已经存在于评委列表";
 
 				} else {
 					PsTzMsPsPwTbl psTzMsPsPwTbl = new PsTzMsPsPwTbl();
