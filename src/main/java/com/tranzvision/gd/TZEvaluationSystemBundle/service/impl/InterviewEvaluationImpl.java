@@ -212,7 +212,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 
 			if (moreRowsFlag == null || "".equals(moreRowsFlag)) {
 				error_code = 1;
-				error_decription = "参数不全";
+				error_decription = "参数不全。";
 			}
 
 			if (maxRowCount == null || "".equals(maxRowCount)) {
@@ -369,15 +369,15 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			if (requestDataType == null || "".equals(requestDataType) || classId == null || "".equals(classId)
 					|| batchId == null || "".equals(batchId)) {
 				error_code = 1;
-				error_decription = "参数不全";
+				error_decription = "参数不全。";
 			} else {
 				if (TZ_MSPS_SCOR_MD_ID == null || "".equals(TZ_MSPS_SCOR_MD_ID)) {
 					error_code = 2;
-					error_decription = "当前报考班级没有配置成绩模型";
+					error_decription = "当前报考班级没有配置成绩模型。";
 				} else {
 					if (TREE_NAME == null || "".equals(TREE_NAME)) {
 						error_code = 3;
-						error_decription = "报考班级对应的成绩模型没有配置对应的成绩树";
+						error_decription = "报考班级对应的成绩模型没有配置对应的成绩树。";
 					}
 				}
 			}
@@ -752,7 +752,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		
 		if("B".equals(TZ_PWEI_ZHZT)){
 			error_code = "JUDGE_PAUSE";
-			error_decription = "当前评委账号为暂停状态";
+			error_decription = "当前评委账号为暂停状态。";
 		}else{
 			 //判断当前评委是否已经提交;
 			 String TZ_SUBMIT_YN = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ?",
@@ -760,15 +760,15 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			 
 			 if("Y".equals(TZ_SUBMIT_YN)){
 				 error_code = "SUBMITTED";
-				 error_decription = "当前评委账号已经提交，不能再提交";
+				 error_decription = "当前评委账号已经提交，不能再提交。";
 			 }else{
 				 //判断当前批次总体评审状态，若为“关闭”，则不能再打分;
 				 String if_TZ_DQPY_ZT = sqlQuery.queryForObject("select TZ_DQPY_ZT from PS_TZ_MSPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?",
-						 new Object[]{classId,batchId,oprid}, "String");
+						 new Object[]{classId,batchId}, "String");
 				 
 				 if("B".equals(if_TZ_DQPY_ZT)){
 					 error_code = "EVALUATION_CLOSED";
-					 error_decription = "该批次的评审已关闭";
+					 error_decription = "该批次的评审已关闭，无法提交数据。";
 				 }else{
 					   
 					   /*所有考生的提交状态都是“已提交”*/
@@ -776,7 +776,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 								new Object[]{classId,batchId,oprid},"String");
 					   
 					   if("Y".equals(submit_zt)){
-						   error_decription = "存在未评审的考生";
+						   error_decription = "存在未评审的考生，无法提交数据。";
 						   error_code = "SUBMTALL03";
 					   }else{
 						   String mspwpsjlExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN<>'Y'", 

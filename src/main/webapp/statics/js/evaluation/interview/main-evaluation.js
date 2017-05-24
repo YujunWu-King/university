@@ -281,14 +281,14 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 												}
 												
 											}else{												
-												Ext.Msg.alert('失败', jsonObject.comContent.error_decription);
+												Ext.Msg.alert('提示', responseJsonObject.comContent.error_decription);
 											}
 				                        }
 				                    }
 				                    catch(e)
 				                    {
 				                    	console&&console.error(e);
-				                        Ext.Msg.alert("提示","进行评审失败！请重试！多次失败请联系管理员！");
+				                        Ext.Msg.alert("提示","进行评审失败！请重试,多次失败请联系管理员！");
 				                    }
 				                },
 				                failure: function(response, opts)

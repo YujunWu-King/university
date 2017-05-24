@@ -69,8 +69,13 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String judgeList = "";
+		String judgeGroupName = "";
 
-		String pwsql = "SELECT group_concat(B.TZ_DLZH_ID)  AS TZ_DLZH_ID FROM PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE A.TZ_PWEI_OPRID=B.OPRID  AND A.TZ_CLASS_ID=?  AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? GROUP BY A.TZ_APPLY_PC_ID,A.TZ_CLASS_ID,A.TZ_APP_INS_ID";
+		// String pwsql = "SELECT group_concat(B.TZ_DLZH_ID) AS TZ_DLZH_ID FROM
+		// PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE
+		// A.TZ_PWEI_OPRID=B.OPRID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=?
+		// AND A.TZ_APP_INS_ID=? GROUP BY
+		// A.TZ_APPLY_PC_ID,A.TZ_CLASS_ID,A.TZ_APP_INS_ID";
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_APP_INS_ID", "ASC" } };
@@ -91,8 +96,12 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("classId", rowList[0]);
 					mapList.put("batchId", rowList[1]);
 					mapList.put("appInsId", rowList[2]);
-					judgeList = sqlQuery.queryForObject(pwsql, new Object[] { rowList[0], rowList[1], rowList[2] },
-							"String");
+					/*
+					 * judgeList = sqlQuery.queryForObject(pwsql, new Object[] {
+					 * rowList[0], rowList[1], rowList[2] }, "String");
+					 */
+					judgeGroupName = sqlQuery.queryForObject(TzGDObject.getSQLText("SQL.TZMbaPwClps.TZ_MSPS_KS_JUGROP"),
+							new Object[] { rowList[1], rowList[0], rowList[2] }, "String");
 					mapList.put("judgeGroup", judgeList);
 					mapList.put("ksOprId", rowList[3]);
 					mapList.put("passState", rowList[4]);
@@ -100,6 +109,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("ksName", rowList[6]);
 					mapList.put("gender", rowList[7]);
 					mapList.put("mshId", rowList[8]);
+					mapList.put("judgeGroupName", judgeGroupName);
 					listData.add(mapList);
 				}
 

@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
+import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
@@ -28,6 +30,7 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsPwTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -60,6 +63,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 	private TZGDObject tzSQLObject;
 	@Autowired
 	private PsTzMsPsPwTblMapper psTzMsPsPwTblMapper;
+	@Autowired
+	private PsoprdefnMapper PsoprdefnMapper;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -482,14 +487,17 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		String strForm = "";
 		String judgId = "";
 		int count = 0;
+		int count1 = 0;
 		int max = 9999;
 		int min = 1000;
 		String newpawd = "";
+		Date nowtime = new Date();
 
 		String oldpwdisY = "SELECT COUNT(1) FROM PS_TZ_PW_EXT_T WHERE TZ_JG_ID=? AND OPRID=?";
 		try {
 			Random random = new Random();
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			List<Map<String, Object>> jsonArray = null;
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			String[] actData = null;
@@ -518,6 +526,24 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				psTzPwExtTbl.setOprid(judgId);
 				psTzPwExtTbl.setTzCsPassword(newpawd);
 
+				Psoprdefn Psoprdefn = new Psoprdefn();
+				Psoprdefn.setOprid(judgId);
+				Psoprdefn.setOperpswd(DESUtil.encrypt(newpawd, "TZGD_Tranzvision"));
+				Psoprdefn.setLastupddttm(nowtime);
+				Psoprdefn.setLastupdoprid(oprid);
+				Psoprdefn.setAcctlock(Short.valueOf("0"));
+				// PsoprdefnMapper
+
+				count1 = sqlQuery.queryForObject("SELECT COUNT(1) FROM PSOPRDEFN WHERE OPRID=?",
+						new Object[] { judgId }, "Integer");
+				if (count1 > 0) {
+
+					PsoprdefnMapper.updateByPrimaryKey(Psoprdefn);
+
+				} else {
+					PsoprdefnMapper.insertSelective(Psoprdefn);
+
+				}
 				count = sqlQuery.queryForObject(oldpwdisY, new Object[] { orgid, judgId }, "Integer");
 				if (count > 0) {
 

@@ -305,7 +305,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 		//搜索条件
 
 		//交互参数
-		store.tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_JUDGES_STD.TZ_MSJU_REL_VW","condition":{"OPRID-operator": "07","OPRID-value": "' + formParams.judgeID + '","TZ_REALNAME-operator": "07","TZ_REALNAME-value": "' + formParams.judgeName + '","TZ_JG_ID-operator": "07","TZ_JG_ID-value": "' + Ext.tzOrgID + '"}}';
+		store.tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_JUDGES_STD.TZ_MSJU_REL_VW","condition":{"TZ_DLZH_ID-operator": "07","TZ_DLZH_ID-value": "' + formParams.judgeID + '","TZ_REALNAME-operator": "07","TZ_REALNAME-value": "' + formParams.judgeName + '","TZ_JG_ID-operator": "07","TZ_JG_ID-value": "' + Ext.tzOrgID + '"}}';
 		store.load();
 	},
 	
