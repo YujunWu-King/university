@@ -193,7 +193,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 						text: '更多操作',
 						iconCls: 'list',
 						glyph: 61,
-						menu: [{
+						menu: /*[{
 							text: '导入面试考生',
 							handler: 'importMsStuInfom'
 						},{
@@ -203,6 +203,24 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 							text: '计算选中考生标准成绩',
 							handler: 'matchStudenSocre'
 						}]
+						*/
+						   [{
+							text:Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.exportExcel","导出考生评议数据"),
+    						iconCls: 'excel',
+    						menu:[{
+    								text:Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.exportSelectedExcel","导出选中考生评议数据"),
+        							handler:'exportSelectedExcel'
+    							},{
+    								text:Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.exportSearchExcel","导出查询结果考生评议数据"),
+        							handler:'exportSearchExcel'
+    							}]
+							},{
+								text:Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.download","查看历史导出并下载"),
+								iconCls:'download',
+    							handler:'downloadHisExcel'
+							}]
+						
+						
 					}]
 				}],
 				columns: [{
