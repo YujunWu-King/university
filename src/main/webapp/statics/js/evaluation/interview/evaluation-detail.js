@@ -1801,15 +1801,15 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				items: dfPageWest_KsSearch[tmpBatchId],
 				listeners:{
 					collapse: function(p){
-						//调整浮动窗口位置
+						//调整浮动窗口位置---zhanglang
 						TZShowTipsWin.autoFixPosition();
 					},
 					expand: function(p){
-						//调整浮动窗口位置
+						//调整浮动窗口位置---zhanglang
 						TZShowTipsWin.autoFixPosition();
 					},
 					resize: function(p, width, height, oldWidth, oldHeight){
-						//调整浮动窗口位置
+						//调整浮动窗口位置---zhanglang
 						TZShowTipsWin.autoFixPosition();
 					}
 				}
@@ -1857,7 +1857,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						Ext.fly("tz_evaluation_main").setScrollTop(0);
 					},
 					resize: function(p, width, height, oldWidth, oldHeight){
-						TZShowTipsWin.autoFixPosition(); //调整浮动窗口位置
+						TZShowTipsWin.autoFixPosition(); //调整浮动窗口位置---zhanglang
 					}
 				}
 			}, {
@@ -2033,6 +2033,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//------ highlight the selected row 
 			highlightSelectedRowInApplicantList();
 			
+			//--切换考生后，刷新浮动框的位置---zhanglang
+			TZShowTipsWin.autoFixPosition();
 			
 			//回调指定的函数来显示考生评审页面
 			callBackFunction(tipCount,scrollBackTagId);
@@ -2102,6 +2104,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						//------ highlight the selected row 
 						highlightSelectedRowInApplicantList();
 						
+						//--切换考生后，刷新浮动框的位置---zhanglang
+						TZShowTipsWin.autoFixPosition();
 						
 						//回调指定的函数来显示考生评审页面
 						callBackFunction(tipCount,scrollBackTagId);
