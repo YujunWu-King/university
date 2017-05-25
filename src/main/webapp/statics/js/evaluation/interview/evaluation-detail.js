@@ -146,7 +146,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				columnConfig =
 					{
 						text     : GridHeaderJsonData[ExamineeGridFldName],
-						width    : 50,
+						width    : 60,
 						sortable : true,
 						dataIndex: ExamineeGridFldName
 					};
@@ -258,7 +258,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 
 
 				//点击姓名列
-				if(colIndex==0) {
+				if(colIndex==1) {
 					// mask window
 					maskWindow();
 
