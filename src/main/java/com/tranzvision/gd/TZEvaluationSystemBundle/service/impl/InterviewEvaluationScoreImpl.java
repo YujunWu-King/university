@@ -495,14 +495,17 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				
 				String trHeight = String.valueOf(num*25);
 				
-				if(!"".equals(ckcjxNumInfo)) {
-					ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
-				} else {
-					ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+				if(!"".equals(ckcjxTxtInfoTmp)) {
+					if(!"".equals(ckcjxNumInfo)) {
+						ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+					} else {
+						ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+					}
 				}
-				
-				materialReviewDesc += ckcjxTxtInfo;
+
 			}
+			
+			materialReviewDesc += ckcjxTxtInfo;
 			
 			mapRet.put("materialReviewDesc", materialReviewDesc);
 

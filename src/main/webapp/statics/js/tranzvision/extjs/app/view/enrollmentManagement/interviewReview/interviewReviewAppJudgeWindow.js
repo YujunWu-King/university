@@ -57,13 +57,23 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         	if(x>=10){
         		//评语列
         		minWidth = 200;
-        	}
-            columns.push({
-                text:this.scoreFields[x].name,
-                dataIndex:x,
-                align:'center',
-                minWidth:minWidth
-            })
+        		columns.push({
+                    text:this.scoreFields[x].name,
+                    dataIndex:x,
+                    align:'center',
+                    minWidth:minWidth,
+                    renderer: function (v, metaData) {
+                        return "<span title='"+v+"'>"+v+"</span>";
+                    }
+                })
+        	}else{
+        		columns.push({
+                    text:this.scoreFields[x].name,
+                    dataIndex:x,
+                    align:'center',
+                    minWidth:minWidth
+                })
+        	}            
         }
         Ext.apply(this, {
             items: [{

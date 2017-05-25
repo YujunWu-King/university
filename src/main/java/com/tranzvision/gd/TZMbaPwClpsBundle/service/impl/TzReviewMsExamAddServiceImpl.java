@@ -183,6 +183,8 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 		Date nowdate = new Date();
 		Long appinsId = (long) 0;
 		String ksName = "";
+		String ksNameList = "";
+		String appinsIdList = "";
 		int count = 0;
 		int count1 = 0;
 		try {
@@ -204,8 +206,7 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 					String sql = "SELECT COUNT(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
 					count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appinsId }, "Integer");
 					if (count > 0) {
-						errMsg[0] = "1";
-						errMsg[1] = "考生:" + ksName + "已经在考生列表，不能重复添加！";
+						ksNameList = ksNameList + ksName + ",";
 
 					} else {
 						PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
@@ -221,10 +222,23 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 					}
 
 				} else {
-					errMsg[0] = "1";
-					errMsg[1] = "报名表编号" + appinsId + "不存在，导入失败！";
+					appinsIdList = appinsIdList + appinsId + ",";
+
 				}
 
+			}
+
+			if (!"".equals(ksNameList) && "".equals(appinsIdList)) {
+				errMsg[0] = "1";
+				errMsg[1] = "考生:" + ksNameList + "已经在考生列表，不能重复添加！";
+			}
+			if (!"".equals(appinsIdList) && "".equals(ksNameList)) {
+				errMsg[0] = "1";
+				errMsg[1] = "报名表编号" + appinsId + "不存在，导入失败！";
+			}
+			if (!"".equals(appinsIdList) && !"".equals(ksNameList)) {
+				errMsg[0] = "1";
+				errMsg[1] = "报名表编号" + appinsId + "不存在，导入失败！" + "考生:" + ksNameList + "已经在考生列表，不能重复添加！";
 			}
 
 		} catch (Exception e) {
