@@ -1849,6 +1849,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				listeners:{
 					collapse:function(){
 						Ext.fly("tz_evaluation_main").setScrollTop(0);
+					},
+					resize: function(p, width, height, oldWidth, oldHeight){
+						TZShowTipsWin.autoFixPosition(); //调整浮动窗口位置
 					}
 				}
 			}, {

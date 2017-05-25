@@ -146,7 +146,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				columnConfig =
 					{
 						text     : GridHeaderJsonData[ExamineeGridFldName],
-						width    : 50,
+						width    : 60,
 						sortable : true,
 						dataIndex: ExamineeGridFldName
 					};
@@ -258,7 +258,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 
 
 				//点击姓名列
-				if(colIndex==0) {
+				if(colIndex==1) {
 					// mask window
 					maskWindow();
 
@@ -1798,7 +1798,21 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				split: true,
 				width: '100%',
 				//height:152,
-				items: dfPageWest_KsSearch[tmpBatchId]
+				items: dfPageWest_KsSearch[tmpBatchId],
+				listeners:{
+					collapse: function(p){
+						//调整浮动窗口位置
+						TZShowTipsWin.autoFixPosition();
+					},
+					expand: function(p){
+						//调整浮动窗口位置
+						TZShowTipsWin.autoFixPosition();
+					},
+					resize: function(p, width, height, oldWidth, oldHeight){
+						//调整浮动窗口位置
+						TZShowTipsWin.autoFixPosition();
+					}
+				}
 			},
 			{
 				region: 'west',
@@ -1841,6 +1855,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				listeners:{
 					collapse:function(){
 						Ext.fly("tz_evaluation_main").setScrollTop(0);
+					},
+					resize: function(p, width, height, oldWidth, oldHeight){
+						TZShowTipsWin.autoFixPosition(); //调整浮动窗口位置
 					}
 				}
 			}, {
@@ -2260,7 +2277,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					}
 				},
 				position: {
-					target: $("#all .main")
+					target: $("#tz_evaluation_main")
 				}
 			});
 		}catch(ex){
