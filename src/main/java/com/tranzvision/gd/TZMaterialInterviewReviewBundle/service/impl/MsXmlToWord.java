@@ -278,7 +278,7 @@ public class MsXmlToWord {
 				}
 				
 				// 处理每个评委考生的面试序号;
-				String pw_ks_xh_sql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?";
+				String pw_ks_xh_sql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?  order by ROW_ADDED_DTTM";
 				List<Map<String, Object>> pw_ks_xh_list = jdbcTemplate.queryForList(pw_ks_xh_sql,new Object[] {TZ_CLASS_ID,TZ_APPLY_PC_ID,arr[i]});
 				Map<String, Object> pw_ks_xh_map =new HashMap();
 				
