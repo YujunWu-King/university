@@ -341,7 +341,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					}
 				}
 			}
-			String strSql3 = "SELECT ifnull(COUNT(1),0) FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			String strSql3 = "SELECT ifnull(COUNT(1),0) FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 			String strTotalNum = sqlQuery.queryForObject(strSql3, new Object[] { strClassID, strBatchID }, "String");
 
 			strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_BASE_JSON_HTML", strTotalNum, strResponse);
