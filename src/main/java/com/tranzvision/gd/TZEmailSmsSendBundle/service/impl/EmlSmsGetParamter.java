@@ -1003,4 +1003,45 @@ public class EmlSmsGetParamter {
 			return "";
 		}
 	}
+	
+	//得到推荐信重置密码URL
+	public String getTjxPwdUrl(String[] paramters) {
+		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+			String sql = "SELECT TZ_BMB_ID,OPRID,TZ_HUOD_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+			String audId = paramters[0];
+			String audCyId = paramters[1];
+			System.out.println("audId:"+audId);
+			System.out.println("audCyId:"+audCyId);
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { audId, audCyId });
+
+			String str_oprid = "", str_bmb_id = "", TZ_HUOD_ID = "";
+			if (map != null) {
+				str_bmb_id = (String) map.get("TZ_BMB_ID");
+				str_oprid = (String) map.get("OPRID");
+				TZ_HUOD_ID = (String) map.get("TZ_HUOD_ID");
+				
+				System.out.println("str_bmb_id:"+str_bmb_id);
+				System.out.println("str_oprid:"+str_oprid);
+				System.out.println("TZ_HUOD_ID:"+TZ_HUOD_ID);
+				
+				String str_ref_id = jdbcTemplate.queryForObject(
+						"SELECT TZ_REF_LETTER_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID=? AND TZ_MBA_TJX_YX='Y' AND TZ_TJR_ID=? AND OPRID=?",
+						new Object[] { Long.parseLong(str_bmb_id), TZ_HUOD_ID, str_oprid }, String.class);
+				HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+						.getRequest();
+				String serv = "http://" + request.getServerName() + ":" + request.getServerPort()
+						+ request.getContextPath();
+				String strTzUrl = serv + "/dispatcher";
+				String str_url = strTzUrl + "?classid=resetTjxPass&letterId=" + str_ref_id;
+				return str_url;
+			} else {
+				return "链接生产失败，请联系管理员";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
 }

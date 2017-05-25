@@ -1248,6 +1248,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																			//更新全局缓存，进行局部刷新
 																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
 
+																			//调整浮动窗口位置---zhanglang
+																			TZShowTipsWin.autoFixPosition();
+																			
 																			// unmask window
 																			unmaskWindow();
 
@@ -1261,6 +1264,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																			updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																			//更新全局缓存，进行局部刷新
 																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'FAL');
+																			
+																			//调整浮动窗口位置---zhanglang
+																			TZShowTipsWin.autoFixPosition();
+																			
 																			unmaskWindow();
 
 																			Ext.Msg.alert('失败',jsonObject.comContent.message);
@@ -1849,6 +1856,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				listeners:{
 					collapse:function(){
 						Ext.fly("tz_evaluation_main").setScrollTop(0);
+					},
+					resize: function(p, width, height, oldWidth, oldHeight){
+						TZShowTipsWin.autoFixPosition(); //调整浮动窗口位置
 					}
 				}
 			}, {
@@ -2028,6 +2038,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//------ highlight the selected row 
 			highlightSelectedRowInApplicantList();
 			
+			//--切换考生后，刷新浮动框的位置---zhanglang
+			TZShowTipsWin.autoFixPosition();
 			
 			//回调指定的函数来显示考生评审页面
 			callBackFunction(tipCount,scrollBackTagId);
@@ -2099,6 +2111,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 							//------ highlight the selected row 
 							highlightSelectedRowInApplicantList();
 							
+							//--切换考生后，刷新浮动框的位置---zhanglang
+							TZShowTipsWin.autoFixPosition();
 							
 							//回调指定的函数来显示考生评审页面
 							callBackFunction(tipCount,scrollBackTagId);

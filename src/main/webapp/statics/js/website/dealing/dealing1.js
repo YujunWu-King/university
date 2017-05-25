@@ -7,6 +7,8 @@ $(document).ready(function(){
 		
 
 		$("#forgetPassV").on("click",function(){
+			$("#forgetPassV").css("color","gray");
+			$("#forgetPassV").attr("onclick","return false;");
 			//alert("忘记密码");
 			//alert($("#cssPath").val());
 			var letterId=SurveyBuild.refLetterId;
@@ -21,7 +23,11 @@ $(document).ready(function(){
 				success: function(f) {
 					console.dir(f);
 					if(f.comContent.success=="0"){
-						alert("邮件已发送到您邮箱，请注意查收！");
+						alert(MsgSet["TJXPWDOK"]);
+					} else {
+						$("#forgetPassV").removeAttr("onclick");
+						$("#forgetPassV").css("color","red");
+						alert(MsgSet["TJXPWDERROR"]);
 					}
 				}
 			});

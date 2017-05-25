@@ -278,7 +278,7 @@ public class MsXmlToWord {
 				}
 				
 				// 处理每个评委考生的面试序号;
-				String pw_ks_xh_sql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?";
+				String pw_ks_xh_sql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?  order by ROW_ADDED_DTTM";
 				List<Map<String, Object>> pw_ks_xh_list = jdbcTemplate.queryForList(pw_ks_xh_sql,new Object[] {TZ_CLASS_ID,TZ_APPLY_PC_ID,arr[i]});
 				Map<String, Object> pw_ks_xh_map =new HashMap();
 				
@@ -357,7 +357,7 @@ public class MsXmlToWord {
 				// 动态读取评委考生数据 - 开始;
 
 				// 循环评委考生;
-				String pw_ks_sql = "SELECT TZ_APP_INS_ID,TZ_SCORE_INS_ID,TZ_KSH_PSPM FROM PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID =? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID=? order by (TZ_KSH_PSPM+0) asc";
+				String pw_ks_sql = "SELECT TZ_APP_INS_ID,TZ_SCORE_INS_ID,TZ_KSH_PSPM FROM PS_TZ_MP_PW_KS_TBL where  TZ_DELETE_ZT <> 'Y' AND  TZ_CLASS_ID =? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID=? order by (TZ_KSH_PSPM+0) asc";
 				List<Map<String, Object>> pw_ks_list = jdbcTemplate.queryForList(pw_ks_sql,
 						new Object[] { TZ_CLASS_ID, TZ_APPLY_PC_ID, arr[i] });
 

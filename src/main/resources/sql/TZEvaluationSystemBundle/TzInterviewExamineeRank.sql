@@ -4,14 +4,13 @@ SELECT TMP.TZ_APP_INS_ID,
 	   TMP.TREE_NAME,
 	   TMP.TREE_NODE,
 	   TMP.TZ_SCORE_NUM,
-	   CASE
-	   	WHEN @rowtotal = TMP.TZ_SCORE_NUM 
-	   	THEN @rownum
-		WHEN @rowtotal := TMP.TZ_SCORE_NUM 
-		THEN @rownum :=@rownum + 1
-		WHEN @rowtotal = 0 
-		THEN @rownum :=@rownum + 1
-	   END AS RANK
+	   @rownum := @rownum + 1 AS num_tmp,
+	   @incrnum := CASE
+        WHEN @rowtotal = TMP.TZ_SCORE_NUM THEN
+            @incrnum
+        WHEN @rowtotal := TMP.TZ_SCORE_NUM THEN
+            @rownum
+        END AS RANK
 FROM
 (SELECT A.TZ_APP_INS_ID,
 		A.TZ_SCORE_INS_ID,
@@ -37,4 +36,4 @@ FROM
 	AND A.TZ_DELETE_ZT='N'
 	ORDER BY E.TZ_SCORE_NUM DESC
 ) TMP,
-(SELECT @rownum := 0 ,@rowtotal := NULL) RANK
+(SELECT @rownum := 0 ,@rowtotal := NULL,@incrnum := 0) RANK
