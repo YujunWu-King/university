@@ -753,10 +753,10 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 						intFzNum = intFzNum + 1;
 						colName = "0" + intFzNum;
 						strFzValue = "col" + this.right(colName, 2);
-						String strAveSql = "SELECT ifnull(SUM( B.TZ_SCORE_NUM),0) FROM PS_TZ_MP_PW_KS_TBL A,PS_TZ_CJX_TBL B ,PS_TZ_MSPWPSJL_TBL C WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND A.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND C.TZ_SUBMIT_YN <> 'C'  AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND B.TZ_SCORE_ITEM_ID = ? ";
-						Integer sumScore = sqlQuery.queryForObject(strAveSql, new Object[] { strBatchID, strPwOprid, "Total" }, "Integer");
+						String strAveSql = "SELECT ifnull(SUM( B.TZ_SCORE_NUM),0) FROM PS_TZ_MP_PW_KS_TBL A,PS_TZ_CJX_TBL B ,PS_TZ_MSPWPSJL_TBL C WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND C.TZ_SUBMIT_YN <> 'C' AND A.TZ_DELETE_ZT<>'Y'  AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND B.TZ_SCORE_ITEM_ID = ? ";
+						Double sumScore = sqlQuery.queryForObject(strAveSql, new Object[] { strClassID,strBatchID, strPwOprid, "Total" }, "Double");
 						if (sumScore == null) {
-							sumScore = 0;
+							sumScore = 0.00;
 						}
 						DecimalFormat df = new DecimalFormat("######0.00");
 						String tmpPjf2 = "";
@@ -764,7 +764,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 							tmpPjf2 = "0";
 						} else {
 							int sI = Integer.valueOf(tmpWc);
-							Double tmoD = Double.valueOf(sumScore) / Double.valueOf(sI);
+							Double tmoD = sumScore / Double.valueOf(sI);
 							tmpPjf2 = df.format(tmoD);
 						}
 
@@ -798,11 +798,11 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 								strMFbdzMxSx = result3.get("TZ_M_FBDZ_MX_SX") == null ? "" : String.valueOf(result3.get("TZ_M_FBDZ_MX_SX"));
 								strMFbdzMxSxJx = result3.get("TZ_M_FBDZ_MX_ID") == null ? "" : String.valueOf(result3.get("TZ_M_FBDZ_MX_SX_JX"));
 
-								String tmpTotalSql = "SELECT ifnull(COUNT(A.TZ_APP_INS_ID),0) FROM PS_TZ_MP_PW_KS_TBL A ,PS_TZ_CJX_TBL B ,PS_TZ_MSPWPSJL_TBL C  WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID  AND A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND C.TZ_SUBMIT_YN <> 'C'  AND A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID =? AND B.TZ_SCORE_ITEM_ID = ?";
+								String tmpTotalSql = "SELECT ifnull(COUNT(A.TZ_APP_INS_ID),0) FROM PS_TZ_MP_PW_KS_TBL A ,PS_TZ_CJX_TBL B ,PS_TZ_MSPWPSJL_TBL C  WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID  AND A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND C.TZ_SUBMIT_YN <> 'C' AND A.TZ_DELETE_ZT<>'Y'  AND A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID =? AND B.TZ_SCORE_ITEM_ID = ?";
 								Integer tmpTotal = sqlQuery.queryForObject(tmpTotalSql, new Object[] { strClassID, strBatchID, strPwOprid, strScoreItemId }, "Integer");
 
 								String strDange = "0";
-								String numDangeSql = "SELECT ifnull(COUNT(A.TZ_APP_INS_ID),0) FROM PS_TZ_MP_PW_KS_TBL A ,PS_TZ_CJX_TBL B ,PS_TZ_MSPWPSJL_TBL C  WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID  AND A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND C.TZ_SUBMIT_YN <> 'C'  AND A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID =? AND B.TZ_SCORE_ITEM_ID = ? AND B.TZ_SCORE_NUM " + strMFbdzMxXxJx + strMFbdzMxXX + "AND B.TZ_SCORE_NUM " + strMFbdzMxSxJx + strMFbdzMxSx;
+								String numDangeSql = "SELECT ifnull(COUNT(A.TZ_APP_INS_ID),0) FROM PS_TZ_MP_PW_KS_TBL A ,PS_TZ_CJX_TBL B ,PS_TZ_MSPWPSJL_TBL C  WHERE A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID  AND A.TZ_CLASS_ID = C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID = C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID = C.TZ_PWEI_OPRID AND C.TZ_SUBMIT_YN <> 'C' AND A.TZ_DELETE_ZT<>'Y' AND A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID =? AND B.TZ_SCORE_ITEM_ID = ? AND B.TZ_SCORE_NUM " + strMFbdzMxXxJx + strMFbdzMxXX + "AND B.TZ_SCORE_NUM " + strMFbdzMxSxJx + strMFbdzMxSx;
 
 								strDange = sqlQuery.queryForObject(numDangeSql, new Object[] { strClassID, strBatchID, strPwOprid, strScoreItemId }, "String");
 
@@ -1240,7 +1240,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 				String strMapSql = "SELECT TZ_SUBMIT_YN FROM PS_TZ_MSPWPSJL_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? ";
 				String strSubmitStatus = sqlQuery.queryForObject(strMapSql, new Object[] { strClassID, strBatchID, str_PwOprid }, "String");
 				if (!"C".equals(strSubmitStatus)) {
-					String strSql4 = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL B,PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND B.TZ_SCORE_ITEM_ID=?";
+					String strSql4 = "SELECT B.TZ_SCORE_NUM FROM PS_TZ_CJX_TBL B,PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=? AND B.TZ_SCORE_ITEM_ID=? AND A.TZ_DELETE_ZT<>'Y'";
 					Integer intScoreNum = sqlQuery.queryForObject(strSql4, new Object[] { strClassID, strBatchID, strAppInsID, str_PwOprid, strTreeNode }, "Integer");
 					if (intScoreNum != null) {
 						String strInsertSql = "INSERT INTO PS_TZ_PW_KS_PC_TBL VALUES(" + pw_num + ",'" + intScoreNum + "')";
