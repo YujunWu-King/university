@@ -563,8 +563,13 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			},
 			callback: function(seachCfg) {
 				var store = btn.findParentByType("grid").store;
-				store.tzStoreParams = seachCfg;
+				store.tzStoreParams = seachCfg;				
 				store.load();
+				var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_KS_STD","OperateType":"getSearchSql","comParams":'+seachCfg+'}';
+				Ext.tzLoad(tzParams,function(responseData){
+					var getedSQL = responseData.searchSql;
+					panel.getedSQL = getedSQL;
+				});
 			}
 		});
 	},
@@ -680,6 +685,136 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			var win=btn.findParentByType("importPsStu");
 			win.close();
 		
-	}
+	},
+	   /**
+     * 导出选中的考生评议数据
+     */
+    exportSelectedExcel: function(btn){
+    	var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+    	
+    	//var panel = btn.findParentByType('materialsReviewExaminee');
+		var grid = btn.findParentByType("grid");
+		//var classId = panel.classId;
+		//var batchId = panel.batchID;
+		
+		var selList = grid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要导出的考生记录");
+			return;
+		}
+		
+		var appInsIds = [];
+	    for(var i=0;i<checkLen;i++){
+	    	appInsIds.push(selList[i].data.appInsId);
+		}
+	    var comParamsObj = {
+	    	ComID: "TZ_REVIEW_MS_COM",
+			PageID: "TZ_MSPS_KS_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				appInsIds: appInsIds
+			}
+	    };
+	   
+	    var className = 'KitchenSink.view.viewPsStudentListInfo.export.msexportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+       
+        win.show();
+    },
+    
+    /**
+     * 导出搜索结果中考生的评议数据
+     */
+    exportSearchExcel: function(btn){
+    	var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+    	var panel=btn.findParentByType('viewmspsxsList');
+    	//var panel = btn.findParentByType('materialsReviewExaminee');
+		var grid = btn.findParentByType("grid");
+		//var classId = panel.classId;
+	//	var batchId = panel.batchID;
+		
+
+		
+		//构造搜索sql
+		if((typeof panel.getedSQL) == "undefined"){
+			searchSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_MSPS_KS_VW WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_APPLY_PC_ID='"+ batchId +"'";
+		}else{
+			searchSql = panel.getedSQL;
+		}
+		
+		var comParamsObj = {
+			ComID: "TZ_REVIEW_MS_COM",
+			PageID: "TZ_MSPS_KS_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				searchSql: searchSql
+			}
+		};
+		
+		
+		var className = 'KitchenSink.view.viewPsStudentListInfo.export.msexportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+        
+        win.show();
+    },
+    
+    /**
+     * 下载考生评议数据导出结果
+     */
+    downloadHisExcel: function(btn){
+    	var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+    	
+    	//var panel = btn.findParentByType('materialsReviewExaminee');
+		//var grid = btn.findParentByType("grid");
+		//var classId = panel.classId;
+    	//var panel = btn.findParentByType('materialsReviewExaminee');
+	//	var classId = panel.classId;
+		//var batchId = panel.batchID;
+		
+		var className = 'KitchenSink.view.viewPsStudentListInfo.export.msexportExcelWindow';
+    	
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	type: 'download'
+        });
+        
+        var tabPanel = win.lookupReference("packageTabPanel");
+        tabPanel.setActiveTab(1);
+        
+        win.show();
+    }
 	
 });
