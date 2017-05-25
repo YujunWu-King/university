@@ -1087,6 +1087,9 @@
             judgeFormValue = btn.findParentByType('panel').down("form[name=judgeFormInfo]").getForm().findField('judgeCount').value,
             stuGrid = btn.findParentByType('panel').down("grid[name=interviewStudentGrid]"),
             stuModified = stuGrid.getStore().getModifiedRecords();
+        
+        var panel = btn.findParentByType('panel');
+        
         //删除不需要想后台传输的数据
         delete datas.batchName;
         delete datas.className;
@@ -1132,92 +1135,40 @@
                 datas.studentInfo.push(thisdata);
             }
         }
+        var btName = btn.name;
         var result = {update:[datas]},
             comParams = Ext.JSON.encode(result),
             tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD","OperateType":"U","comParams":'+comParams+'}';
         Ext.tzSubmit(tzParams,function(responseData) {
-            //更新FORM表单中的数据
-            var classID = btn.findParentByType('panel').child('form').getForm().findField('classID').getValue(),
-                batchID = btn.findParentByType('panel').child('form').getForm().findField('batchID').getValue();
-            var tzParams ='{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD",' +
-                '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
-            Ext.tzLoad(tzParams,function(respData){
-                respData.className = btn.findParentByType('panel').child('form').getForm().findField('className').getValue();
-                respData.batchName = btn.findParentByType('panel').child('form').getForm().findField('batchName').getValue();
-                form.getForm().setValues(respData);
-                //根据加载的数据勾选复选框
-                if(respData.judgeTJB === 'Y'){
-                    form.getForm().findField('judgeTJB').setValue(true);
-                }
-                if(respData.judgeFBT === 'Y'){
-                    form.getForm().findField('judgeFBT').setValue(true);
-                }
-            });
-            //更新grid中的数据
-            grid.store.reload();
-            stuGrid.store.reload();
+        	if(btName=="save"){
+        		//更新FORM表单中的数据
+                var classID = btn.findParentByType('panel').child('form').getForm().findField('classID').getValue(),
+                    batchID = btn.findParentByType('panel').child('form').getForm().findField('batchID').getValue();
+                var tzParams ='{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD",' +
+                    '"OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+                Ext.tzLoad(tzParams,function(respData){
+                    respData.className = btn.findParentByType('panel').child('form').getForm().findField('className').getValue();
+                    respData.batchName = btn.findParentByType('panel').child('form').getForm().findField('batchName').getValue();
+                    form.getForm().setValues(respData);
+                    //根据加载的数据勾选复选框
+                    if(respData.judgeTJB === 'Y'){
+                        form.getForm().findField('judgeTJB').setValue(true);
+                    }
+                    if(respData.judgeFBT === 'Y'){
+                        form.getForm().findField('judgeFBT').setValue(true);
+                    }
+                });
+                //更新grid中的数据
+                grid.store.reload();
+                stuGrid.store.reload();
+        	}else if(btName=="ensure"){        		
+                panel.close();
+        	}
+            
         },"",true,this);
     },
     onScheduleEnsure : function(btn){
-        var form = btn.findParentByType('panel').child('form'),
-            datas = form.getForm().getValues(),
-            grid = btn.findParentByType('panel').down("grid[name=interviewJudgeGrid]"),
-            modified = grid.getStore().getModifiedRecords(),
-            judgeFormValue = btn.findParentByType('panel').down("form[name=judgeFormInfo]").getForm().findField('judgeCount').value,
-            stuGrid = btn.findParentByType('panel').down("grid[name=interviewStudentGrid]"),
-            stuModified = stuGrid.getStore().getModifiedRecords();
-
-        //删除不需要想后台传输的数据
-        delete datas.batchName;
-        delete datas.className;
-        delete datas.totalStudents;
-        delete datas.interviewStudents;
-        delete datas.materialStudents;
-        delete datas.progress;
-        delete datas.reviewCount;//每位考生被多少位评委审批
-        //数字文本框中的数字
-        if(judgeFormValue){
-            datas.judgesCount = judgeFormValue.toString();
-        }
-        //获取复选框中的选中状态
-        if(!datas.judgeFBT){
-            datas.judgeFBT = 'off';
-        }
-        if(!datas.judgeTJB){
-            datas.judgeTJB = 'off';
-        }
-        //获取启动和关闭按钮的点击状态
-        datas.buttonStartClicked = form.down('button[name=startup]').setType.toString();
-        datas.buttonEndClicked = form.down('button[name=finish]').setType.toString();
-        //评委信息grid的修改项
-        if(modified.length !== 0){
-            datas.judgeInfoUpdate = [];
-            for(var x =modified.length-1;x>=0;x--){
-                var thisdata = modified[x].data;
-                //删除不需要的数据
-                delete thisdata.id;
-                delete thisdata.classID;
-                delete thisdata.batchID;
-                datas.judgeInfoUpdate.push(thisdata);
-            }
-        }
-        //获取考生表单中更新了的评委间偏差信息
-        if(stuModified.length !==0){
-            datas.studentInfo = [];
-            for(var x = stuModified.length-1;x>=0;x--){
-                var thisdata = {};
-                thisdata.pweiPC = stuModified.judgePC;
-                thisdata.appInsId = stuModified.insID;
-                datas.studentInfo.push(thisdata);
-            }
-        }
-        var result = {update:[datas]},
-            comParams = Ext.JSON.encode(result),
-            tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD","OperateType":"U","comParams":'+comParams+'}';
-        Ext.tzSubmit(tzParams,function(responseData) {
-            var panel = btn.findParentByType('panel');
-            panel.close();
-        },"",true,this);
+    	this.onScheduleSave(btn);        
     },
     onScheduleClose : function(btn){
         var panel = btn.findParentByType('panel');
