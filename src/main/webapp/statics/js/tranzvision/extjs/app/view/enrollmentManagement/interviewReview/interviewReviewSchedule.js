@@ -720,14 +720,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
     },
     buttons: [{
         text: '保存',
+        name:"save",
         iconCls:"save",
         handler: 'onScheduleSave'
     }, {
         text: '确定',
+        name:'ensure',
         iconCls:"ensure",
         handler: 'onScheduleEnsure'
     }, {
         text: '关闭',
+        name:'close',
         iconCls:"close",
         handler: 'onScheduleClose'
     }]

@@ -16,9 +16,14 @@ var TZShowTipsWin = {
 		var target = showData.position.target;
 		var scrollTop = target.scrollTop();
 		
+		var addTop = 20;
+		if(target.length > 0 && target[0].id == "tz_evaluation_main"){
+			addTop = -20;
+		}
+		
 		var obj = $("#"+ins);
 		var offset = obj.offset();
-        var top = offset.top + scrollTop + 20;
+        var top = offset.top + scrollTop + addTop;
         var left = offset.left;
         var wid=$(window).width();
         var right = wid-left-20;
@@ -89,5 +94,33 @@ var TZShowTipsWin = {
 	
 	close: function(id){
 		$("#"+id).remove();
+	},
+	
+	autoFixPosition: function(){
+		var data = this._data;
+		$.each(data, function(id,insObj){
+			var tipsObj = $("#pop-"+id);
+			if(tipsObj.length > 0){
+				var target = insObj.position.target;
+				var scrollTop = target.scrollTop();
+
+				var obj = $("#"+id);
+				if(obj.length > 0){
+					var addTop = 20;
+					if(target.length > 0 && target[0].id == "tz_evaluation_main"){
+						addTop = -20;
+					}
+					
+					var offset = obj.offset();
+			        var top = offset.top + scrollTop + addTop;
+			        var left = offset.left;
+			        var wid=$(window).width();
+			        var right = wid-left-20;
+			        
+			        $("#pop-"+id).css("top",top);
+			        $("#pop-"+id).css("right",right);
+				}
+			}
+		});
 	}
 }

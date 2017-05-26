@@ -103,6 +103,7 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 		String judgName = "";
 
 		String ksName = "";
+		String jugeNameList = "";
 		int count = 0;
 		try {
 			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -122,9 +123,7 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
 				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
 				if (count > 0) {
-					errMsg[0] = "1";
-
-					errMsg[1] = "评委:" + judgName + "已经存在于评委列表";
+					jugeNameList = jugeNameList + judgName + ",";
 
 				} else {
 					PsTzMsPsPwTbl psTzMsPsPwTbl = new PsTzMsPsPwTbl();
@@ -140,6 +139,12 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 					psTzMsPsPwTblMapper.insertSelective(psTzMsPsPwTbl);
 
 				}
+
+			}
+			if (!"".equals(jugeNameList)) {
+				errMsg[0] = "1";
+
+				errMsg[1] = "评委:" + jugeNameList + "已经存在于评委列表";
 
 			}
 

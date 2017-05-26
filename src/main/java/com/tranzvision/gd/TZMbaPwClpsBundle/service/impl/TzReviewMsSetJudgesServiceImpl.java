@@ -70,6 +70,8 @@ public class TzReviewMsSetJudgesServiceImpl extends FrameworkImpl {
 					mapList.put("judgeGroup", rowList[4]);
 					mapList.put("judgeName", rowList[5]);
 					mapList.put("judgzhxx", rowList[6]);
+					mapList.put("className", rowList[7]);
+					mapList.put("batchName", rowList[8]);
 
 					lisdata.add(mapList);
 				}
