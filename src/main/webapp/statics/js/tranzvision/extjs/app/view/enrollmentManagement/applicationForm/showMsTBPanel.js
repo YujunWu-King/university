@@ -160,6 +160,14 @@
 					series : [ {
 						type : 'column',
 						axis : 'bottom',
+                        label: {
+                            display: 'insideEnd',
+                            'text-anchor': 'middle',
+                              field: 'graphData',
+                              renderer: Ext.util.Format.numberRenderer('0.00'),
+                              //orientation: 'vertical',控制数字横着还是竖着
+                              color: '#333'
+                        },
 						style: { width: 50 },
 						xField : 'graphName',
 						yField : 'graphData',// x与y轴的数据声明
@@ -205,7 +213,7 @@
 						},
 						tips : {
 							trackMouse : true,
-							width : 300,
+							width : 430,
 							height : 28,
 							renderer : function(storeItem, item) {
 								this.setTitle('评委：' + item.series.yField
