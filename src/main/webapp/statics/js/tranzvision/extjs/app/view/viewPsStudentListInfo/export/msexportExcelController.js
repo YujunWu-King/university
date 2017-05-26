@@ -118,11 +118,11 @@
          }
          var comParams ="";
          if(removeJson != ""){
-              comParams = '"data":[' + removeJson + "]";
+              comParams = '"delete":[{"type":"delExpExcel","data":[' + removeJson + "]}]";
          }
 
          //提交参数
-         var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_KS_STD","OperateType":"delExpExcel","comParams":{'+comParams+'}}';
+         var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD","OperateType":"U","comParams":{'+comParams+'}}';
          //保存数据
          Ext.tzSubmit(tzParams,function(){
              store.reload();

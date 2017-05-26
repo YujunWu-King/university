@@ -312,22 +312,22 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							columns: [{
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgId", "评委账号"),
 								dataIndex: 'judgId',
-								width: 200,
+								width: 180,
 								hidden:true
 							},{
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgzh", "评委账号"),
 								dataIndex: 'judzhxx',
-								width: 200
+								width: 180
 							}, {
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgName", "评委姓名"),
 								dataIndex: 'judgName',
-								width: 200
+								width: 180
 							}, {
 
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgGroupId", "所属评委组"),
 								dataIndex: 'judgGroupId',
 								name: 'judgGroup',
-								width: 150,
+								width: 130,
 								editor: {
 									xtype: 'combobox',
 									valueField: 'TZ_CLPS_GR_ID',
@@ -344,7 +344,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							},{
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgState", "评委状态"),
 								dataIndex: 'judgState',
-								width: 200,
+								width: 180,
 								editor: {
 						        xtype: 'combobox',
 						        valueField: 'TValue',
@@ -355,7 +355,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 						           if (v == 'A') {
 							       return "正常";
 						          }  else {
-						            	return "不正常";
+						            	return "暂停";
 						          }
 					          }
 							},{

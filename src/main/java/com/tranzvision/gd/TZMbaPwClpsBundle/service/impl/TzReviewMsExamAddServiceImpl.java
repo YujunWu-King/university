@@ -187,42 +187,65 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 		String appinsIdList = "";
 		int count = 0;
 		int count1 = 0;
+
 		try {
 			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			jacksonUtil.json2Map(actData[0]);
 			String classId = jacksonUtil.getString("classId");
 			jacksonUtil.json2Map(actData[1]);
 			String batchId = jacksonUtil.getString("batchId");
+
 			for (int i = 2; i < actData.length; i++) {
 				// 表单内容
 				String strForm = actData[i];
 				// 解析 json
 				jacksonUtil.json2Map(strForm);
-				appinsId = Long.valueOf(jacksonUtil.getString("appInsId"));
-				String sql1 = "SELECT  COUNT(1) FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
-				ksName = jacksonUtil.getString("ksName");
-				count1 = sqlQuery.queryForObject(sql1, new Object[] { appinsId }, "Integer");
-				if (count1 > 0) {
-					String sql = "SELECT COUNT(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
-					count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appinsId }, "Integer");
-					if (count > 0) {
-						ksNameList = ksNameList + ksName + ",";
+				String[] a = new String[2];
 
-					} else {
-						PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
-						psTzMsPsksTbl.setTzClassId(classId);
-						psTzMsPsksTbl.setTzApplyPcId(batchId);
-						psTzMsPsksTbl.setTzAppInsId(appinsId);
-						psTzMsPsksTbl.setTzLuquZt("B");
-						psTzMsPsksTbl.setRowAddedDttm(nowdate);
-						psTzMsPsksTbl.setRowAddedOprid(Oprid);
-						psTzMsPsksTbl.setRowLastmantDttm(nowdate);
-						psTzMsPsksTbl.setRowLastmantOprid(Oprid);
-						psTzMsPsksTblMapper.insertSelective(psTzMsPsksTbl);
+				if (jacksonUtil.containsKey("id")) {
+
+					a = jacksonUtil.getString("id").split("-");
+
+				}
+				if (jacksonUtil.containsKey("appInsId") && !"".equals(jacksonUtil.getString("appInsId"))) {
+					try {
+						appinsId = Long.valueOf(jacksonUtil.getString("appInsId"));
+						String sql1 = "SELECT  COUNT(1) FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+						ksName = jacksonUtil.getString("ksName");
+						count1 = sqlQuery.queryForObject(sql1, new Object[] { appinsId }, "Integer");
+						if (count1 > 0) {
+							String sql = "SELECT COUNT(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
+							count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appinsId },
+									"Integer");
+							if (count > 0) {
+								ksNameList = ksNameList + "第" + a[1] + 1 + "行的：" + ksName + ",";
+
+							} else {
+								PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
+								psTzMsPsksTbl.setTzClassId(classId);
+								psTzMsPsksTbl.setTzApplyPcId(batchId);
+								psTzMsPsksTbl.setTzAppInsId(appinsId);
+								psTzMsPsksTbl.setTzLuquZt("B");
+								psTzMsPsksTbl.setRowAddedDttm(nowdate);
+								psTzMsPsksTbl.setRowAddedOprid(Oprid);
+								psTzMsPsksTbl.setRowLastmantDttm(nowdate);
+								psTzMsPsksTbl.setRowLastmantOprid(Oprid);
+								psTzMsPsksTblMapper.insertSelective(psTzMsPsksTbl);
+							}
+
+						} else {
+							appinsIdList = appinsIdList + "第" + a[1] + "行的：" + appinsId + ",";
+
+						}
+
+					} catch (Exception e) {
+						e.printStackTrace();
+						appinsIdList = appinsIdList + "第" + a[1] + "行的：" + appinsId + ",";
 					}
 
 				} else {
-					appinsIdList = appinsIdList + appinsId + ",";
+
+					appinsIdList = appinsIdList + "第" + a[1] + "行的：" + appinsId + ",";
 
 				}
 
@@ -234,11 +257,11 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 			}
 			if (!"".equals(appinsIdList) && "".equals(ksNameList)) {
 				errMsg[0] = "1";
-				errMsg[1] = "报名表编号" + appinsId + "不存在，导入失败！";
+				errMsg[1] = "报名表编号" + appinsIdList + "不存在，导入失败！";
 			}
 			if (!"".equals(appinsIdList) && !"".equals(ksNameList)) {
 				errMsg[0] = "1";
-				errMsg[1] = "报名表编号" + appinsId + "不存在，导入失败！" + "考生:" + ksNameList + "已经在考生列表，不能重复添加！";
+				errMsg[1] = "报名表编号" + appinsIdList + "不存在，导入失败！" + "考生:" + ksNameList + "已经在考生列表，不能重复添加！";
 			}
 
 		} catch (Exception e) {

@@ -31,6 +31,8 @@ public class TzReviewMsExportEngineCls extends BaseEngine {
 	private static String positionXxxId = "";
 	// 自主创业全称
 	private static String selfEmploymentXxxId = "";
+	// 工龄
+	private static String WORK_ON_YEAR_XXX_ID = "";
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -128,6 +130,8 @@ public class TzReviewMsExportEngineCls extends BaseEngine {
 				positionXxxId = sqlQuery.queryForObject(hardcodeSql, new Object[] { "TZ_BMB_GZZW_XXX_ID" }, "String");
 				selfEmploymentXxxId = sqlQuery.queryForObject(hardcodeSql, new Object[] { "TZ_BMB_ZZCYQC_XXX_ID" },
 						"String");
+				WORK_ON_YEAR_XXX_ID = sqlQuery.queryForObject(hardcodeSql, new Object[] { "TZ_BMB_GZGN_XXX_ID" },
+						"String");
 
 				/******************************
 				 * 2、考生信息数据---开始
@@ -201,7 +205,7 @@ public class TzReviewMsExportEngineCls extends BaseEngine {
 		String className = "", appModalId = "", nationId = "", mssqh = "", name = "", judgeDlzhId = "", judgeNum = "",
 				rank = "", birthday = "", age = "", sex = "", examineeTag = "", schoolName = "", highestRecordId = "",
 				highestRecord = "", companyAddress = "", companyName = "", department = "", position = "",
-				selfEmployment = "", clpszf = "", jugeId = "", judggroupName = "";
+				selfEmployment = "", clpszf = "", jugeId = "", judggroupName = "", gzage = "";
 		String scoreInsId = "";
 
 		// 考生数据
@@ -226,7 +230,7 @@ public class TzReviewMsExportEngineCls extends BaseEngine {
 			department = sqlQuery.queryForObject(appSql, new Object[] { appinsId, departmentXxxId }, "String");
 			position = sqlQuery.queryForObject(appSql, new Object[] { appinsId, positionXxxId }, "String");
 			selfEmployment = sqlQuery.queryForObject(appSql, new Object[] { appinsId, selfEmploymentXxxId }, "String");
-
+			gzage = sqlQuery.queryForObject(appSql, new Object[] { appinsId, WORK_ON_YEAR_XXX_ID }, "String");
 			// 最高学历描述
 			String highestSql = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=? AND TZ_XXXKXZ_MC=?";
 			highestRecord = sqlQuery.queryForObject(highestSql,
@@ -338,6 +342,7 @@ public class TzReviewMsExportEngineCls extends BaseEngine {
 				mapData.put("department", department);
 				mapData.put("position", position);
 				mapData.put("selfEmployment", selfEmployment);
+				mapData.put("gzage", gzage);
 
 				/*
 				 * mapData.put("zpm", this.checksunRank(sunscorelist, 9999999 -

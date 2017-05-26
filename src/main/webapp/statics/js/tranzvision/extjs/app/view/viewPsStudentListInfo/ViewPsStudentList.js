@@ -205,6 +205,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 						}]
 						*/
 						   [{
+							text: '导入面试考生',
+							iconCls: 'excel',
+							handler: 'importMsStuInfom'
+						},{
 							text:Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.exportExcel","导出考生评议数据"),
     						iconCls: 'excel',
     						menu:[{
@@ -245,19 +249,19 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 				{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksNameg", "考生姓名"),
 					dataIndex: 'ksName',
-					width: 150
+					width: 130
 					
 				}, {
 
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.mshIdg", "面试申请号"),
 					dataIndex: 'mshId',
-					width: 150,
+					width: 130,
 					//flex: 1
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.appInsIdg", "报名表编号"),
 					dataIndex: 'appInsId',
-					width: 150
+					width: 130
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.genderg", "性别"),
@@ -274,18 +278,18 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.judgeGroup", "面试组"),
 					dataIndex: 'judgeGroupName',
-					width: 150
+					width: 130
 				
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.pcg", "偏差"),
 					dataIndex: 'pc',
-					width: 150
+					width: 130
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.passStateg", "录取状态"),
 					dataIndex: 'passState',
 					name:'passState',
-					width: 150,
+					width: 130,
 /*					editor: {
 						xtype: 'combobox',
 						valueField: 'TValue',

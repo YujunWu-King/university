@@ -484,6 +484,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	 * @return
 	 */
 
+	@SuppressWarnings("unchecked")
 	private String delExpExcel(String strParams, String[] errorMsg) {
 		String strRet = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -492,7 +493,9 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 
 			if (delData != null && delData.size() > 0) {
 				for (Map<String, Object> delMap : delData) {
+
 					String strProcInsId = delMap.get("procInsId") == null ? "" : delMap.get("procInsId").toString();
+					System.out.println("strProcInsId：" + strProcInsId);
 					if (!"".equals(strProcInsId) && strProcInsId != null) {
 						int procInsId = Integer.parseInt(strProcInsId);
 

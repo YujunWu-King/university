@@ -20,7 +20,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ImportksInfoWindow', {
 	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_DRKS_STD.addks", "导入考生列表"),
 	frame: true,
 	height: 500,
-	width:380,
+	width:420,
 
 	initComponent: function() {
 		var store=new KitchenSink.view.viewPsStudentListInfo.ImportksInfoWindowStore();
