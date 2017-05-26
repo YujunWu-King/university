@@ -1042,8 +1042,7 @@ function getApplicantListColumns(jsonObject)
 	      {text:"面试申请号",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_msh_id",
 				renderer:function(value){return Ext.String.format('<a id="msh_id_{1}" href="JavaScript:void(0)" title="单击此链接进入该考生面试评审主页面。">{0}</a>',value,value);}
 			},
-		  {text:'考生姓名',flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
-		  {text:"考生排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"}
+		  {text:'考生姓名',flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"}
 		];
 	
 	//动态列

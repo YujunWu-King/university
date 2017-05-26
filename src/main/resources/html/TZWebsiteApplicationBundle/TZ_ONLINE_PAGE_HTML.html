@@ -43,7 +43,7 @@
 	<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/jquery.form.js"></script>
 	<script type="text/javascript" src="%bind(:32)/statics/js/lib/jquery/json.js"></script>
 	<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/Answer.js"></script>
-	<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/util/checkExplorer.js" charset="utf-8"></script>
+	<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/util/checkExplorer1.js" charset="utf-8"></script>
 	<script type="text/javascript" src="%bind(:32)/statics/js/lib/jqueryui/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/baseComponent.js"></script>
 	<script type="text/javascript" src="%bind(:32)/statics/js/tranzvision/appwidget/ValidationRules.js"></script>
@@ -89,6 +89,10 @@
 		}
 			
 		$(document).ready(function() {
+			if("none" == "%bind(:56)"){
+				/*bind(56) == none 表示当前是材料评审*/
+				document.title="清华大学经济管理学院MBA申请表"
+			}
 			//点击菜单的动作 如果是顶级层，则不做动作
 			$(".regmain-menu ul li[class!='menu-active-top']").click(function(){
 
@@ -1643,7 +1647,7 @@
 				
 				
 				
-				checkExplorer($("#lang").val());
+				checkExplorer1($("#lang").val());
 				
 				
 				processing();
