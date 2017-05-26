@@ -1821,7 +1821,7 @@
             cmp.show();
         }
     },
-    /*材料评审--材料评审考生名单*/
+    /*面试评审--面试评审考生名单*/
     viewInterviewStuApplicants:function(grid,rowIndex){
         Ext.tzSetCompResourses("TZ_REVIEW_MS_COM");
         //是否有访问权限
@@ -1833,7 +1833,7 @@
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_KS_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSPS_KS_STD，请检查配置。');
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;

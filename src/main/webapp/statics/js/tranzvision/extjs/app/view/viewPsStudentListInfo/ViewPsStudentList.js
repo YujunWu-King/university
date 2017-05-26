@@ -252,19 +252,19 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 				{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksNameg", "考生姓名"),
 					dataIndex: 'ksName',
-					width: 130
+					width: 160
 					
 				}, {
 
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.mshIdg", "面试申请号"),
 					dataIndex: 'mshId',
-					width: 130,
+					width: 160,
 					//flex: 1
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.appInsIdg", "报名表编号"),
 					dataIndex: 'appInsId',
-					width: 130
+					width: 160
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.genderg", "性别"),
@@ -281,18 +281,18 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.judgeGroup", "面试组"),
 					dataIndex: 'judgeGroupName',
-					width: 130
+					width: 160
 				
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.pcg", "偏差"),
 					dataIndex: 'pc',
-					width: 130
+					width: 120
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.passStateg", "录取状态"),
 					dataIndex: 'passState',
 					name:'passState',
-					width: 130,
+					width: 160,
 /*					editor: {
 						xtype: 'combobox',
 						valueField: 'TValue',
@@ -306,8 +306,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 							return "条件录取";
 						} else if (v == 'B') {
 							return "等候";
-						} else {
+						} else  if(v == 'C'){
 							return "不录取";
+						}else{
+						    return " ";
 						}
 					}
 					
