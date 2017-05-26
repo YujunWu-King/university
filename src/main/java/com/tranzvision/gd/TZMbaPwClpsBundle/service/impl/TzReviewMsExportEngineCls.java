@@ -108,8 +108,8 @@ public class TzReviewMsExportEngineCls extends BaseEngine {
 				dataCellKeys.add(new String[] { "gzage", "工龄" });
 				dataCellKeys.add(new String[] { "department", "所在部门" });
 				dataCellKeys.add(new String[] { "position", "工作职位" });
-				dataCellKeys.add(new String[] { "selfEmployment ", "自主创业全称" });
-				dataCellKeys.add(new String[] { "clpsyszf ", "材料评审总分" });
+				dataCellKeys.add(new String[] { "selfEmployment", "自主创业全称" });
+				dataCellKeys.add(new String[] { "clpsyszf", "材料评审总分" });
 
 				/******************************
 				 * 1、生成标题行---结束

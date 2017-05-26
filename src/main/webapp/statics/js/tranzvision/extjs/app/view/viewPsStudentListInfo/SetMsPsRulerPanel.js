@@ -312,16 +312,16 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							columns: [{
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgId", "评委账号"),
 								dataIndex: 'judgId',
-								width: 180,
+								width: 200,
 								hidden:true
 							},{
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgzh", "评委账号"),
 								dataIndex: 'judzhxx',
-								width: 180
+								width: 200
 							}, {
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgName", "评委姓名"),
 								dataIndex: 'judgName',
-								width: 180
+								width: 200
 							}, {
 
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgGroupId", "所属评委组"),
@@ -344,7 +344,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							},{
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgState", "评委状态"),
 								dataIndex: 'judgState',
-								width: 180,
+								width: 200,
 								editor: {
 						        xtype: 'combobox',
 						        valueField: 'TValue',

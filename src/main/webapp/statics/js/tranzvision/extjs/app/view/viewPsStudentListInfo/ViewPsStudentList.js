@@ -222,7 +222,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 								text:Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.download","查看历史导出并下载"),
 								iconCls:'download',
     							handler:'downloadHisExcel'
-							}]
+							},{
+							text: '计算选中考生标准成绩',
+							handler: 'matchStudenSocre'
+						     }]
 						
 						
 					}]
