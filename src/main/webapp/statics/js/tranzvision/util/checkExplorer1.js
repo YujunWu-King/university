@@ -3,7 +3,8 @@ function checkExplorer1(language){
 	var checkBZ = false;
 	var explorer = window.navigator.userAgent ;
 	
-	//ie 
+	//ie
+	console.log()
 	if ("ActiveXObject" in window) {
 		if (navigator.userAgent.indexOf("MSIE 6.0") >= 0 || navigator.userAgent.indexOf("MSIE 7.0") >= 0 || navigator.userAgent.indexOf("MSIE 8.0") >= 0 || navigator.userAgent.indexOf("MSIE 9.0") >= 0) {			
 			
@@ -58,18 +59,7 @@ function checkExplorer1(language){
 	borwer_tip = borwer_tip + '</div>';
 	
 	if(!checkBZ){
-		var index = layer.open({
-		  type: 1,
-		  title: false,
-		  closeBtn: 0,
-		  area: ['660px', '330px'],
-		  shadeClose: true,
-		  skin: 'yourclass',
-		  content: borwer_tip
-		});
-		$("#browser_tip_popup_button").on("click","",function(){
-			layer.close(index);
-		})
+		window.location.href="/statics/js/tranzvision/util/tip.html";
 	}
 }
 
