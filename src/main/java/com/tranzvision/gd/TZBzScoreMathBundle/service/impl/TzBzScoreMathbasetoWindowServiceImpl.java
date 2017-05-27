@@ -658,117 +658,112 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 						}
 
 					}
+				}
+				try {
+					// 考生数据
+					String sqlinfo = TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_STU_INFOSQL");
+					Map<String, Object> mapExaminee = jdbcTemplate.queryForMap(sqlinfo, new Object[] { classId, xmid });
+					if (mapExaminee != null) {
+						appModalId = mapExaminee.get("TZ_APP_MODAL_ID") == null ? ""
+								: mapExaminee.get("TZ_APP_MODAL_ID").toString();
+						nationId = mapExaminee.get("NATIONAL_ID") == null ? ""
+								: mapExaminee.get("NATIONAL_ID").toString();
+						mssqh = mapExaminee.get("TZ_MSH_ID") == null ? "" : mapExaminee.get("TZ_MSH_ID").toString();
+						name = mapExaminee.get("TZ_REALNAME") == null ? "" : mapExaminee.get("TZ_REALNAME").toString();
+						birthday = mapExaminee.get("BIRTHDATE") == null ? "" : mapExaminee.get("BIRTHDATE").toString();
+						age = mapExaminee.get("AGE") == null ? "" : mapExaminee.get("AGE").toString();
+						sex = mapExaminee.get("TZ_GENDER_DESC") == null ? ""
+								: mapExaminee.get("TZ_GENDER_DESC").toString();
 
-					try {
-						// 考生数据
-						String sqlinfo = TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_STU_INFOSQL");
-						Map<String, Object> mapExaminee = jdbcTemplate.queryForMap(sqlinfo,
-								new Object[] { classId, xmid });
-						if (mapExaminee != null) {
-							appModalId = mapExaminee.get("TZ_APP_MODAL_ID") == null ? ""
-									: mapExaminee.get("TZ_APP_MODAL_ID").toString();
-							nationId = mapExaminee.get("NATIONAL_ID") == null ? ""
-									: mapExaminee.get("NATIONAL_ID").toString();
-							mssqh = mapExaminee.get("TZ_MSH_ID") == null ? "" : mapExaminee.get("TZ_MSH_ID").toString();
-							name = mapExaminee.get("TZ_REALNAME") == null ? ""
-									: mapExaminee.get("TZ_REALNAME").toString();
-							birthday = mapExaminee.get("BIRTHDATE") == null ? ""
-									: mapExaminee.get("BIRTHDATE").toString();
-							age = mapExaminee.get("AGE") == null ? "" : mapExaminee.get("AGE").toString();
-							sex = mapExaminee.get("TZ_GENDER_DESC") == null ? ""
-									: mapExaminee.get("TZ_GENDER_DESC").toString();
+						String appSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH=?";
+						schoolName = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, schoolNameXxxId },
+								"String");
+						highestRecordId = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, highestRecordXxxId },
+								"String");
+						companyAddress = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, companyAddressXxxId },
+								"String");
+						companyName = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, companyNameXxxId },
+								"String");
+						department = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, departmentXxxId },
+								"String");
+						position = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, positionXxxId }, "String");
+						selfEmployment = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, selfEmploymentXxxId },
+								"String");
+						gzage = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, WORK_ON_YEAR_XXX_ID },
+								"String");
+						// 最高学历描述
+						String highestSql = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=? AND TZ_XXXKXZ_MC=?";
+						highestRecord = jdbcTemplate.queryForObject(highestSql,
+								new Object[] { appModalId, highestRecordXlkId, highestRecordId }, "String");
 
-							String appSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? AND TZ_XXX_BH=?";
-							schoolName = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, schoolNameXxxId },
-									"String");
-							highestRecordId = jdbcTemplate.queryForObject(appSql,
-									new Object[] { xmid, highestRecordXxxId }, "String");
-							companyAddress = jdbcTemplate.queryForObject(appSql,
-									new Object[] { xmid, companyAddressXxxId }, "String");
-							companyName = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, companyNameXxxId },
-									"String");
-							department = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, departmentXxxId },
-									"String");
-							position = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, positionXxxId },
-									"String");
-							selfEmployment = jdbcTemplate.queryForObject(appSql,
-									new Object[] { xmid, selfEmploymentXxxId }, "String");
-							gzage = jdbcTemplate.queryForObject(appSql, new Object[] { xmid, WORK_ON_YEAR_XXX_ID },
-									"String");
-							// 最高学历描述
-							String highestSql = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=? AND TZ_XXXKXZ_MC=?";
-							highestRecord = jdbcTemplate.queryForObject(highestSql,
-									new Object[] { appModalId, highestRecordXlkId, highestRecordId }, "String");
+						// 报考方向拼接批次
+						// 查出报名志愿 班级名加批次名
+						bkzysql = "SELECT CONCAT(B.TZ_CLASS_NAME,C.TZ_BATCH_NAME) AS A FROM PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B,PS_TZ_CLS_BATCH_T C WHERE B.TZ_CLASS_ID=A.TZ_CLASS_ID AND C.TZ_CLASS_ID=A.TZ_CLASS_ID AND  C.TZ_BATCH_ID=A.TZ_BATCH_ID AND TZ_APP_INS_ID=? ";
+						bkzyName = jdbcTemplate.queryForObject(bkzysql, new Object[] { xmid }, "String");
 
-							// 报考方向拼接批次
-							// 查出报名志愿 班级名加批次名
-							bkzysql = "SELECT CONCAT(B.TZ_CLASS_NAME,C.TZ_BATCH_NAME) AS A FROM PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B,PS_TZ_CLS_BATCH_T C WHERE B.TZ_CLASS_ID=A.TZ_CLASS_ID AND C.TZ_CLASS_ID=A.TZ_CLASS_ID AND  C.TZ_BATCH_ID=A.TZ_BATCH_ID AND TZ_APP_INS_ID=? ";
-							bkzyName = jdbcTemplate.queryForObject(bkzysql, new Object[] { xmid }, "String");
+						mapData.put("bkzy", bkzyName);
 
-							mapData.put("bkzy", bkzyName);
-
-							// 材料评审总分
-							try {
-								clpszf = jdbcTemplate.queryForObject(
-										TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TzGetClpSumScore"),
-										new Object[] { xmid }, "String");
-							} catch (TzSystemException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-
-							mapData.put("mssqid", mssqh);
-							mapData.put("sex", sex);
-							// System.out.println("性别：" +
-							// (daterow[0].equals("M") ? "男"
-							// : "女"));
-							// System.out.println(daterow[0]);
-							mapData.put("name", name);
-							// System.out.println(daterow[1]);
-							mapData.put("zjid", nationId);
-							// System.out.println(daterow[2]);
-							mapData.put("bkzkyx", schoolName);
-
-							mapData.put("birthday", birthday);
-							// System.out.println("出生日期：" + daterow[4]);
-							mapData.put("drxsln", age);
-
-							mapData.put("zgxl", highestRecord);
-							mapData.put("gzdw", companyName);
-							mapData.put("gzzw", position);
-							mapData.put("gzbm", department);
-							mapData.put("gzbm", gzage);
-							mapData.put("zhcyqc", selfEmployment);
+						// 材料评审总分
+						try {
+							clpszf = jdbcTemplate.queryForObject(
+									TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TzGetClpSumScore"),
+									new Object[] { xmid }, "String");
+						} catch (TzSystemException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
 
-					} catch (Exception e) {
-						e.printStackTrace();
-						errorMsg[0] = "1";
-						errorMsg[1] = "导出失败。" + e.getMessage();
-						// TODO: handle exception
+						mapData.put("mssqid", mssqh);
+						mapData.put("sex", sex);
+						// System.out.println("性别：" +
+						// (daterow[0].equals("M") ? "男"
+						// : "女"));
+						// System.out.println(daterow[0]);
+						mapData.put("name", name);
+						// System.out.println(daterow[1]);
+						mapData.put("zjid", nationId);
+						// System.out.println(daterow[2]);
+						mapData.put("bkzkyx", schoolName);
+
+						mapData.put("birthday", birthday);
+						// System.out.println("出生日期：" + daterow[4]);
+						mapData.put("drxsln", age);
+
+						mapData.put("zgxl", highestRecord);
+						mapData.put("gzdw", companyName);
+						mapData.put("gzzw", position);
+						mapData.put("gzbm", department);
+						mapData.put("gzbm", gzage);
+						mapData.put("zhcyqc", selfEmployment);
 					}
 
-					dataList.add(mapData);
+				} catch (Exception e) {
+					e.printStackTrace();
+					errorMsg[0] = "1";
+					errorMsg[1] = "导出失败。" + e.getMessage();
+					// TODO: handle exception
 				}
 
-				// 生成本次导出的文件名
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-				Random random = new Random();
-				int max = 999999999;
-				int min = 100000000;
-				String fileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
-						+ String.valueOf(random.nextInt(max) % (max - min + 1) + min) + ".xlsx";
+				dataList.add(mapData);
+			}
 
-				ExcelHandle excelHandle = new ExcelHandle(request, fileDirPath, orgid, "apply");
-				boolean rst = excelHandle.export2Excel(fileName, dataCellKeys, dataList);
-				if (rst) {
-					// System.out.println("---------生成的excel文件路径----------");
-					strRet = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-							+ request.getContextPath() + excelHandle.getExportExcelPath();
-					// System.out.println(strRet);
-				} else {
-					System.out.println("导出失败！");
-				}
+			// 生成本次导出的文件名
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+			Random random = new Random();
+			int max = 999999999;
+			int min = 100000000;
+			String fileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
+					+ String.valueOf(random.nextInt(max) % (max - min + 1) + min) + ".xlsx";
+
+			ExcelHandle excelHandle = new ExcelHandle(request, fileDirPath, orgid, "apply");
+			boolean rst = excelHandle.export2Excel(fileName, dataCellKeys, dataList);
+			if (rst) {
+				// System.out.println("---------生成的excel文件路径----------");
+				strRet = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+						+ request.getContextPath() + excelHandle.getExportExcelPath();
+				// System.out.println(strRet);
+			} else {
+				System.out.println("导出失败！");
 			}
 
 		} catch (Exception e) {

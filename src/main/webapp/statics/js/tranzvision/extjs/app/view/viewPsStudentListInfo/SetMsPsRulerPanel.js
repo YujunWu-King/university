@@ -375,7 +375,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							store: store,
 							bbar: {
 								xtype: 'pagingtoolbar',
-								pageSize: 10,
+								pageSize: 100,
 								store: store,
 								displayInfo: true,
 								displayMsg: "显示{0}-{1}条，共{2}条",

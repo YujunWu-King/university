@@ -143,7 +143,14 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapList = new HashMap<String, Object>();
 				mapList.put("xmid", rowList[0]);
 				mapList.put("xmName", rowList[1]);
-				mapList.put("teamID", rowList[2]);
+				try {
+					mapList.put("teamID", rowList[2]);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					mapList.put("teamID", "");
+				}
+
 				//
 				for (i_two = 1; i_two <= (rowList.length - 3); i_two++) {
 					System.out.println(3 * i_two + ";" + rowList.length);

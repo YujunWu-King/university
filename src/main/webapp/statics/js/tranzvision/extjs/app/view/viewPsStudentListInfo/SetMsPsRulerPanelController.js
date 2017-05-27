@@ -399,20 +399,66 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 		}, "设置成功!", true, this)
 		
 	},
-	   //确定按钮
+/*	   
     ensurepwinfromSave:function(btn){
     var form = this.getView().child("form").getForm();
+    
+    
 
         if (form.isValid()) {
+        	
             //获得表单信息
             var tzParams = this.getResSetInfoParams();
             var comView = this.getView();
+            
+            
             Ext.tzSubmit(tzParams,function(responseData){
+            	
+            	
+            	
 
                 comView.close();
             },"",true,this);
         }
-},
+},*/
+	//确定按钮
+ensurepwinfromSave:function(btn){
+		var form = this.getView().child("form").getForm();
+		var comView = this.getView();
+		
+        if (form.isValid()) {
+            //获得表单信息
+        	
+        	//保存评委数，和组数
+            var classId=form.findField('classId').getValue();
+            var batchId=form.findField('batchId').getValue();
+            var grid=btn.findParentByType('panel').down('grid');
+            var kspwnum=grid.down('numberfield[name=ksRevedpwnum]').getValue();
+            var pwTeamnum=grid.down('numberfield[name=countTeamnum]').getValue();
+            var tzParams = this.getResSetInfoParams();
+            var store = grid.getStore();
+            var editRecs = store.getModifiedRecords();
+             var comParamspw= '{"typeFlag":"PWTEAMNUM","data":{"classId":'+classId+',"batchId":'+batchId+',"kspwnum":'+kspwnum+',"pwTeamnum":'+pwTeamnum+'}}';
+
+            for(var i=0;i<editRecs.length;i++) {
+               comParamspw = comParamspw + ',' + '{"typeFlag":"JUDGE","classId":'+classId+',"batchId":'+batchId+',"data":' + Ext.JSON.encode(editRecs[i].data) + '}';
+            }
+            var tzParamspw = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"U","comParams":{"add":['+comParamspw+']}}';
+   
+            var num=btn.findParentByType('panel').down('grid');
+            var comView = this.getView();
+            Ext.tzSubmit(tzParams,function(responseData){
+            	
+            	Ext.tzLoad(tzParamspw,function(responseData){
+            	
+            	});
+            	
+                comView.actType = "update";
+                comView.close();
+            },"",true,this);
+        }
+		
+	},
 	 
 	onpwinfodescSave:function(btn){
 		var form = this.getView().child("form").getForm();
