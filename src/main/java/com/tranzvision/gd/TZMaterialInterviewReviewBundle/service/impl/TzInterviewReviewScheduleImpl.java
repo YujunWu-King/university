@@ -772,7 +772,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 							tmpPjf2 = df.format(tmoD);
 						}
 
-						if (strPwLists != null && strPwLists.indexOf(strPwDlId) >= 0) {
+						if (strPwLists != null && this.find(selectPwList, strPwDlId) >= 0) {
 							aveScoreTotal = aveScoreTotal + Double.valueOf(tmpPjf2);
 						}
 
@@ -825,7 +825,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 									douPercent = df.format(tmpPercent) + "%";
 								}
 
-								if (strPwLists != null && strPwLists.indexOf(strPwDlId) >= 0) {
+								if (strPwLists != null && this.find(selectPwList, strPwDlId)>=0) {
 									Integer tmpInt = sMaps.get(strMFbdzMxId) == null ? 0 : sMaps.get(strMFbdzMxId);
 									tmpInt = tmpInt + Integer.valueOf(strDange);
 
