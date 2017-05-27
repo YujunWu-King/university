@@ -316,11 +316,15 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					Integer intTotalSub = 0;
 					String strSql4 = "SELECT ifnull(COUNT(*),0) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PSHEN_ZT<>'C' AND TZ_DELETE_ZT<>'Y'";
 					intTotalSub = sqlQuery.queryForObject(strSql4, new Object[] { strClassID, strBatchID, strAppInsID }, "Integer");
-
+					if(intTotalSub==null){
+						intTotalSub = 0;
+					}
 					Integer intMspyNum = 0;
 					String strSql5 = "SELECT ifnull(TZ_MSPY_NUM,0) FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 					intMspyNum = sqlQuery.queryForObject(strSql5, new Object[] { strClassID, strBatchID }, "Integer");
-
+					if(intMspyNum==null){
+						intMspyNum = 0;
+					}
 					Integer intFlg = intTotalSub - intMspyNum;
 
 					String strJudgeProgress = "", strStuProgress = "";
