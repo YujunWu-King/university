@@ -48,7 +48,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 
 			}
 		}
-		console.log(selksList);
+		//console.log(selksList);
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_KS_STD","OperateType":"EXPORT","comParams":{"export":[' + selksList + '],"classId":' + classId + ',"batchId":' + batchId + '}}';
 		Ext.tzSubmit(tzParams, function(respDate) {
 			var fileUrl = respDate.fileUrl;
@@ -103,7 +103,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			store.commitChanges();
 
 		}
-		console.log(selksList);
+		//console.log(selksList);
 		comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},' + selksList + '';
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_KS_STD","OperateType":"U","comParams":{"update":[' + comparams + ']}}';
 		Ext.tzSubmit(tzParams, function() {
@@ -146,7 +146,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 				}
 			}
 		}
-		console.log(attaList);
+		//console.log(attaList);
 		return attaList;
 
 	},
@@ -165,7 +165,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		var form = panel.down('form').getForm();
 		var classId = form.findField('classId').getValue();
 		var batchId = form.findField('batchId').getValue();
-		console.log("classId+batchId:"+classId+batchId);
+		//console.log("classId+batchId:"+classId+batchId);
 		//是否有访问权限   
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_ADDKS_STD"];
 		if (pageResSet == "" || pageResSet == undefined) {
@@ -192,7 +192,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			win = new ViewClass();
 			//操作类型设置为新增
 			win.actType = "add";
-			console.log(win.actType);
+			//console.log(win.actType);
 	win.on('afterrender', function(window) {
 								var attgrid = window.child('grid');
 								attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}' ;
@@ -234,7 +234,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			win = new ViewClass();
 			//操作类型设置为新增
 			win.actType = "add";
-			console.log(win.actType);
+			//console.log(win.actType);
 			win.on('afterrender', function(window) {
 				var attgrid = window.child('grid');
 			var form=window.down('form[reference=cbaform]').getForm();
@@ -310,10 +310,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 				}
 			}
 		}
-		//console.log(selksList);
+		////console.log(selksList);
 		comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},{"appInsId":'+appInsId+'},' + selksList + '';
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SETPW_STD","OperateType":"U","comParams":{"add":[' + comparams + ']}}';
-		console.log(tzParams);
+		//console.log(tzParams);
 		Ext.tzSubmit(tzParams, function(responseData) {
 			//刷新查看考生的列表 
 			panel.down('grid').getStore().reload();
@@ -401,7 +401,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		//var panel = btn.findParentByType("viewmspsxsList");
 		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
 		var classId = form.findField('classId').getValue();
-        console.log("classId"+classId);
+        //console.log("classId"+classId);
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW',
 			condition:{
@@ -446,10 +446,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 				}
 			}
 		}
-		//console.log(selksList);
+		////console.log(selksList);
 		comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},' + selksList + '';
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_ADDKS_STD","OperateType":"U","comParams":{"add":[' + comparams + ']}}';
-		console.log(tzParams);
+		//console.log(tzParams);
 		Ext.tzSubmit(tzParams, function(responseData) {
 			//刷新查看考生的列表 
 			panel.down('grid').getStore().reload();
@@ -483,7 +483,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 				}
 			}
 		}
-		console.log(selksList);		
+		//console.log(selksList);		
 	  Ext.tzSetCompResourses("TZ_BZCJ_SRC_COM");
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BZCJ_SRC_COM"]["TZ_BZCJ_YSF_STD"];
@@ -537,7 +537,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
            // var examineeGrid = panel.down('grid');
                     
             Ext.tzLoad(tzParams,function(respData){
-            	console.log(respData);
+            	//console.log(respData);
             	grid.store.loadData(respData);               
             });
         });
@@ -554,7 +554,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
 		var classId = form.findField('classId').getValue();
 		var batchId = form.findField('batchId').getValue();
-        console.log("classId："+classId+"batchId:"+batchId);
+        //console.log("classId："+classId+"batchId:"+batchId);
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW',
 			condition:{
@@ -620,13 +620,18 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
                 }
 
                 var windowgrid=win.child('grid');
-
+                var newdateArry=[];
                 if(dataArray.length>0){
                     for(var i=0;i<dataArray.length;i++){
-                        dataArray[i][5]="-1";
+                    	var newdate=[];
+                       newdate.push(dataArray[i][0]);
+                       newdate.push(dataArray[i][1]); 
+                       newdateArry.push(newdate);
                     }
                 }
-                windowgrid.store.loadData(dataArray);
+                
+                
+                windowgrid.store.loadData(newdateArry);
 
                 var winform = win.child("form").getForm();
                 var strtmp = "共 ";
@@ -636,7 +641,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
                 winform.setValues(formpara);
                 win.show();
 				
-				console.log(dataArray);
+				//console.log(dataArray);
 			
 			}
 		});
@@ -644,8 +649,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 	addksDrSave: function(btn) {
 		//得到上一级页面
 		var selksList = "";
-		
-		var panel = Ext.getCmp("viewmspsxsList_mspsview");
+		var mainContent=Ext.getCmp('tranzvision-framework-content-panel');
+		var panel = mainContent.child("panel[reference=viewmspsxsList_mspsview]");
 		var win=btn.findParentByType("importPsStu");
 		var grid = btn.findParentByType("importPsStu").down('grid');
 		var form = win.down('form').getForm();
@@ -667,10 +672,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 				}
 			}
 		}
-		//console.log(selksList);
+		////console.log(selksList);
 		comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},' + selksList + '';
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_ADDKS_STD","OperateType":"U","comParams":{"add":[' + comparams + ']}}';
-		console.log(tzParams);
+		//console.log(tzParams);
 		Ext.tzSubmit(tzParams, function(responseData) {
 			//刷新查看考生的列表 
 			panel.down('grid').getStore().reload();

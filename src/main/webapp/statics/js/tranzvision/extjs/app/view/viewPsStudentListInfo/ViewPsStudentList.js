@@ -15,7 +15,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 	           ],
 	autoScroll: false,
 	actType: 'add',
-	id:"viewmspsxsList_mspsview",
+	reference:"viewmspsxsList_mspsview",
 	bodyStyle: 'overflow-y:auto;overflow-x:hidden',
 	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.MSPSKSMD", "面试评审考生名单"),
 	frame: true,
@@ -301,7 +301,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
                        
 					},*/
 					renderer: function(v) {
-						console.log(v);
+						//console.log(v);
 						if (v == 'A') {
 							return "条件录取";
 						} else if (v == 'B') {

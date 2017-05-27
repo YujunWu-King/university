@@ -34,8 +34,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 			var formData = responseData.judggroup;
 			var groupid = formData.substring(0, formData.indexOf("|"));
 			var groupname = formData.substring(formData.indexOf("|") + 1, formData.length + 1);
-			console.log(groupid);
-			console.log(groupname);
+			//console.log(groupid);
+			//console.log(groupname);
 			groupidarray = groupid.split(",");
 			groupnamearray = groupname.split(",");
 		});
@@ -262,7 +262,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 
 					    var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_JUDGES_STD","OperateType":"U","comParams":{"add":[' + comparams + ']}}';
 					
-					    console.log(tzParams);
+					    //console.log(tzParams);
 		                Ext.tzSubmit(tzParams, function() {
 		               	gridlist.getStore().reload();
 

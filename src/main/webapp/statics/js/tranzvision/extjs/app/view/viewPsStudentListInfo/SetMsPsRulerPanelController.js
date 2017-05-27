@@ -117,7 +117,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 			win = new ViewClass();
 			//操作类型设置为新增
 			win.actType = "add";
-			console.log(win.actType);
+			//console.log(win.actType);
 			me.getView().add(win);
 			win.on('afterrender', function(window) {
 				var splitbut = window.down('splitbutton[reference=batchsetsplit]');
@@ -127,8 +127,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 					var formData = responseData.judggroup;
 					var groupid = formData.substring(0, formData.indexOf("|"));
 					var groupname = formData.substring(formData.indexOf("|") + 1, formData.length + 1);
-					console.log(groupid);
-					console.log(groupname);
+					//console.log(groupid);
+					//console.log(groupname);
 					var groupidarray = groupid.split(",");
 					var groupnamearray = groupname.split(",");
 					for (i = 0; i < groupnamearray.length; i++) {
@@ -156,7 +156,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 					window.down('grid').columns[2].editor.store = states;
 				}
 
-					console.log(menuItems);
+					//console.log(menuItems);
 					splitbut.setMenu(menuItems, true);
 
 				});
@@ -170,7 +170,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 	//添加评委menu动态方法。
 	Batchsetuppwteam: function(btn) {
 		var strvalue = btn.getValue();
-		console.log(strvalue);
+		//console.log(strvalue);
 		var attaList = "";
 		var m = 0;
 		var store = btn.findParentByType('grid').getStore();
@@ -195,8 +195,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 		var groupidarray = [];
 		var groupnamearray = [];
 
-		console.log("new:" + newTab.name);
-		console.log("old:" + oldTab.name);
+		//console.log("new:" + newTab.name);
+		//console.log("old:" + oldTab.name);
 		if (newTab.title == "面试评委") {
 			var gridstore = newTab.down('grid').getStore();
 			var form = tabs.findParentByType('setmspsruler').down('form').getForm();
@@ -278,14 +278,14 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 				return false;
 			}
 		} else {
-			console.log("不是grid");
+			//console.log("不是grid");
 
 
 		}
 
 	},
 	readervalue: function(v) {
-		console.log(v);
+		//console.log(v);
 		var groupidarray = [];
 		var groupnamearray = [];
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"JUDGROUPALL","comParams":{}}';
@@ -514,7 +514,7 @@ ensurepwinfromSave:function(btn){
        
         //提交参数
         var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        console.log(tzParams);
+        //console.log(tzParams);
         return tzParams;
     },
 	    onPwinfoClose:function(){
