@@ -2,7 +2,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     extend: 'Ext.data.Store',
     alias: 'store.materialsReviewScheduleAppsStore',
     model: 'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewScheduleAppsModel',
-    pageSize:10,
+    pageSize:200,
     autoLoad:false,
     comID: 'TZ_REVIEW_CL_COM',
     pageID: 'TZ_CLPS_SCHE_STD',
