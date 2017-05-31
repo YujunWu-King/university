@@ -913,8 +913,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 
 			DecimalFormat df = new DecimalFormat("######0.00");
 
-			String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
-			String strScoreModalId = sqlQuery.queryForObject(strScoreModalSql, new Object[] { strClassID }, "String");
+			String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID,TZ_PS_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
+			String strScoreModalId = "",strPsAppmodalId="";
+			Map<String,Object> sqlMap = sqlQuery.queryForMap(strScoreModalSql, new Object[] { strClassID });
+			if(sqlMap!=null){
+				strScoreModalId = sqlMap.get("TZ_ZLPS_SCOR_MD_ID")==null?"":String.valueOf(sqlMap.get("TZ_ZLPS_SCOR_MD_ID"));
+				strPsAppmodalId = sqlMap.get("TZ_PS_APP_MODAL_ID")==null?"":String.valueOf(sqlMap.get("TZ_PS_APP_MODAL_ID"));
+			}
 
 			String strTreeName = "";
 			String strTreeNameSql = "SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?";
@@ -1031,9 +1036,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 					}
 
 					if (!"".equals(strResponse) && strResponse != null) {
-						strResponse = strResponse + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_KSINFO_HTML", strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress, strViewQua, strAveScore, strStuProgress, strClassID, strBatchID, strOprID);
+						strResponse = strResponse + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_KSINFO_HTML", strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress, strViewQua, strAveScore, strStuProgress, strClassID, strBatchID, strOprID,strPsAppmodalId);
 					} else {
-						strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_KSINFO_HTML", strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress, strViewQua, String.valueOf(strAveScore), strStuProgress, strClassID, strBatchID, strOprID);
+						strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_KSINFO_HTML", strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress, strViewQua, String.valueOf(strAveScore), strStuProgress, strClassID, strBatchID, strOprID,strPsAppmodalId);
 					}
 				}
 			}

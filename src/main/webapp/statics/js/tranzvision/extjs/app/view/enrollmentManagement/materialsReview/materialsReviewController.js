@@ -2899,12 +2899,12 @@
 		
 		var classID = record.get("classID");
 		var oprID = record.get("oprID");
-		var appInsID = record.get("insID");	
+		var appInsID = record.get("insID");
+		var clpsBmbTplId = record.get("clpsBmbTplId");
         
 		if (appInsID != "") {
-			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"' + appInsID + '","OPRID":"' + oprID + '"}}';
-			var viewUrl = Ext.tzGetGeneralURL() + "?tzParams="
-					+ encodeURIComponent(tzParams);
+			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"' + appInsID + '","OPRID":"' + oprID + '","TZ_APP_TPL_ID":"' + clpsBmbTplId + '","isReview":"Y"}}';
+			var viewUrl = Ext.tzGetGeneralURL() + "?tzParams="	+ encodeURIComponent(tzParams);
 			var mask;
 			var win = new Ext.Window(
 					{
@@ -2952,16 +2952,7 @@
 					})
 			win.show();
 		} else {
-			Ext.MessageBox
-					.alert(
-							Ext
-									.tzGetResourse(
-											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt",
-											"提示"),
-							Ext
-									.tzGetResourse(
-											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm",
-											"找不到该报名人的报名表"));
+			Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
 		}
 	},
     revokeData : function(btn){

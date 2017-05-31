@@ -324,6 +324,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             minWidth: 100
         },
         {
+        	text:"报名表模板ID",
+        	dataIndex:'clpsBmbTplId',
+        	hidden:true
+        },
+        {
             text: "姓名",
             dataIndex: 'name',
             align: 'center',

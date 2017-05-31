@@ -2076,11 +2076,11 @@
 		var classID = record.get("classID");
 		var oprID = record.get("oprID");
 		var appInsID = record.get("insID");	
-        
+		var clpsBmbTplId = record.get("clpsBmbTplId");
+		
 		if (appInsID != "") {
-			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"' + appInsID + '","OPRID":"' + oprID + '"}}';
-			var viewUrl = Ext.tzGetGeneralURL() + "?tzParams="
-					+ encodeURIComponent(tzParams);
+			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"' + appInsID + '","OPRID":"' + oprID + '","TZ_APP_TPL_ID":"' + clpsBmbTplId + '","isReview":"Y"}}';
+			var viewUrl = Ext.tzGetGeneralURL() + "?tzParams="	+ encodeURIComponent(tzParams);
 			var mask;
 			var win = new Ext.Window(
 					{
