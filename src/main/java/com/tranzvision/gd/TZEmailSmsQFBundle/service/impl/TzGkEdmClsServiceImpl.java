@@ -14,19 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
-import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTxLjAetMapper;
-import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxyjQfDyTMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzDxyjqfTblMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.dao.PsTzYjqftxrzTMapper;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTxLjAet;
-import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjQfDyTWithBLOBs;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzDxyjqfTbl;
 import com.tranzvision.gd.TZEmailSmsQFBundle.model.PsTzYjqftxrzT;
-import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzEmlTaskAet;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -57,12 +52,6 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsTzDxyjqfTblMapper psTzDxyjqfTblMapper;
-	
-	@Autowired
-	private analysisBounceServiceImpl analysisBounceServiceImpl;
-	
-	@Autowired
-	private PsprcsrqstMapper psprcsrqstMapper;
 
 	@Autowired
 	private TZGDObject tZGDObject;
@@ -395,6 +384,9 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 
 	}
 	
+	/**
+	 * 运行退信引擎
+	 */
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		Map<String, Object> map = new HashMap<>();
@@ -405,22 +397,12 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(formData);
 			String dxyjQfpcID = jacksonUtil.getString("emailID");
 			
-			int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
+			//int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 			// 生成运行控制ID
 			SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 			String s_dtm = datetimeFormate.format(new Date());
 			String runCntlId = "TX_" + s_dtm + "_" + getSeqNum.getSeqNum("PSPRCSRQST", "RUN_ID");
-			String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			
-			Psprcsrqst psprcsrqst = new Psprcsrqst();
-			psprcsrqst.setPrcsinstance(processInstance);
-			psprcsrqst.setRunId(runCntlId);
-			psprcsrqst.setOprid(currentOprid);
-			psprcsrqst.setRundttm(new Date());
-			psprcsrqst.setRunstatus("5");
-			psprcsrqstMapper.insert(psprcsrqst);
-			
-			PsTxLjAet psTxLjAet = new PsTxLjAet();
 			
 			String portalUrlSql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_LOG_URL'";
 			String TZ_PORTAL_URL = jdbcTemplate.queryForObject(portalUrlSql, "String");
@@ -437,21 +419,12 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 				tF.mkdirs();
 			}
 			
-			psTxLjAet.setPrcsinstance(processInstance);
-			psTxLjAet.setTzAbsltUrl(dirPath);
-			psTxLjAet.setTzRelUrl(TZ_PORTAL_URL + "linkfiles/mailLog/");
-			psTxLjAetMapper.insert(psTxLjAet);
+			
 			
 			PsTzDxyjqfTbl psTzDxyjqfTbl = new PsTzDxyjqfTbl();
 			psTzDxyjqfTbl.setRunCntlId(runCntlId);
 			psTzDxyjqfTbl.setTzMlsmQfpcId(dxyjQfpcID);
 			psTzDxyjqfTblMapper.insert(psTzDxyjqfTbl);
-			
-			PsTzYjqftxrzT psTzYjqftxrzT = new PsTzYjqftxrzT();
-			psTzYjqftxrzT.setTzMlsmQfpcId(dxyjQfpcID);
-			psTzYjqftxrzT.setPrcsinstance(processInstance);
-			psTzYjqftxrzT.setTzTxaeDttm(new Date());
-			psTzYjqftxrzTMapper.insert(psTzYjqftxrzT);
 
 			try {
 				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
@@ -470,22 +443,26 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 
 				// 调度作业
 				tmpEngine.schedule(schdProcessParameters);
+				
+				int processInstance = tmpEngine.getProcessInstanceID();
+				
+				PsTxLjAet psTxLjAet = new PsTxLjAet();
+				psTxLjAet.setPrcsinstance(processInstance);
+				psTxLjAet.setTzAbsltUrl(dirPath);
+				psTxLjAet.setTzRelUrl(TZ_PORTAL_URL + "linkfiles/mailLog/");
+				psTxLjAetMapper.insert(psTxLjAet);
+				
+				PsTzYjqftxrzT psTzYjqftxrzT = new PsTzYjqftxrzT();
+				psTzYjqftxrzT.setTzMlsmQfpcId(dxyjQfpcID);
+				psTzYjqftxrzT.setPrcsinstance(processInstance);
+				psTzYjqftxrzT.setTzTxaeDttm(new Date());
+				psTzYjqftxrzTMapper.insert(psTzYjqftxrzT);
+				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-			/*
-			
-			String sql = "SELECT TZ_EML_SMS_TASK_ID,TZ_EMLSERV_ID FROM PS_TZ_DXYJFSRW_TBL WHERE TZ_MLSM_QFPC_ID=?";
-			List<Map<String , Object>> list = jdbcTemplate.queryForList(sql, new Object[]{dxyjQfpcID});
-			if(list != null && list.size() > 0){
-				for(int j = 0; j < list.size(); j++){
-					String mailServId = (String)list.get(j).get("TZ_EMLSERV_ID");
-					analysisBounceServiceImpl.analysisBounceByMailServId(dxyjQfpcID, mailServId, processInstance);
-				}
-			}
-			*/
 			map.replace("TZ_MLSM_QFPC_ID", dxyjQfpcID);
 		}
 		return jacksonUtil.Map2json(map);

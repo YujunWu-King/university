@@ -188,8 +188,8 @@ public class TzGkTdClsServiceImpl extends FrameworkImpl {
 		
 		fileUrl = jdbcTemplate.queryForObject("select TZ_FILE_PATH from PS_TZ_YJQFTXRZ_T where TZ_MLSM_QFPC_ID=? and PRCSINSTANCE=?", new Object[]{emailQfpcId,AEId},"String");
 		if(fileUrl != null && !"".equals(fileUrl)){
-			String RUNSTATUS = jdbcTemplate.queryForObject("SELECT PSQ.RUNSTATUS FROM PSPRCSRQST PSQ WHERE PSQ.PRCSINSTANCE=?", new Object[]{AEId},"String");
-			if("9".equals(RUNSTATUS)){
+			String RUNSTATUS = jdbcTemplate.queryForObject("SELECT TZ_JOB_YXZT FROM TZ_JC_SHLI_T WHERE TZ_JCSL_ID=?", new Object[]{AEId},"String");
+			if("SUCCEEDED".equals(RUNSTATUS)){
 				returnMap.put("fileUrl", fileUrl);
 			}else{
 				errMsg[0] = "1";

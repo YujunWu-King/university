@@ -51,6 +51,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("usrname", "");
 		returnJsonMap.put("usrpwd", "");
 		returnJsonMap.put("desc", "");
+		returnJsonMap.put("popImapAddr", "");
 		
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -80,6 +81,8 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 				String usrpwd = jacksonUtil.getString("usrpwd");
 				// 描述;
 				String desc = jacksonUtil.getString("desc");
+				//POP3/IMAP服务器
+				String popImapAddr = jacksonUtil.getString("popImapAddr");
 
 				// 检查邮箱定义是否重复;
 				int rptNum = 0;
@@ -113,6 +116,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 						psTzEmlsDefTbl.setTzUsrName(usrname);
 						psTzEmlsDefTbl.setTzUsrPwd(usrpwd);
 						psTzEmlsDefTbl.setTzDescr254(desc);
+						psTzEmlsDefTbl.setTzPopImapAddr(popImapAddr);
 
 						psTzEmlsDefTbl.setRowAddedDttm(new Date());
 						psTzEmlsDefTbl.setRowAddedOprid(oprid);
@@ -130,6 +134,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 							returnJsonMap.replace("usrname", usrname);
 							returnJsonMap.replace("usrpwd", usrpwd);
 							returnJsonMap.replace("desc", desc);
+							returnJsonMap.replace("popImapAddr", popImapAddr);
 						} else {
 							errMsg[0] = "1";
 							errMsg[1] = "站点信息保存失败";
@@ -161,6 +166,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 		returnJsonMap.put("usrname", "");
 		returnJsonMap.put("usrpwd", "");
 		returnJsonMap.put("desc", "");
+		returnJsonMap.put("popImapAddr", "");
 
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -191,6 +197,8 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 				String usrpwd = jacksonUtil.getString("usrpwd");
 				// 描述;
 				String desc = jacksonUtil.getString("desc");
+				//POP3/IMAP服务器
+				String popImapAddr = jacksonUtil.getString("popImapAddr");
 
 				int defaultNum = 0;
 				if ("Y".equals(isdefault)) {
@@ -214,6 +222,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 					psTzEmlsDefTbl.setTzUsrName(usrname);
 					psTzEmlsDefTbl.setTzUsrPwd(usrpwd);
 					psTzEmlsDefTbl.setTzDescr254(desc);
+					psTzEmlsDefTbl.setTzPopImapAddr(popImapAddr);
 					psTzEmlsDefTbl.setRowLastmantDttm(new Date());
 					psTzEmlsDefTbl.setRowLastmantOprid(oprid);
 					int i = psTzEmlsDefTblMapper.updateByPrimaryKeySelective(psTzEmlsDefTbl);
@@ -228,6 +237,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 						returnJsonMap.replace("usrname", usrname);
 						returnJsonMap.replace("usrpwd", usrpwd);
 						returnJsonMap.replace("desc", desc);
+						returnJsonMap.replace("popImapAddr", popImapAddr);
 					} else {
 						errMsg[0] = "1";
 						errMsg[1] = "站点信息保存失败";
@@ -268,7 +278,7 @@ public class EmailParameterInfoServiceImpl extends FrameworkImpl {
 				returnJsonMap.put("usrname", psTzEmlsDefTbl.getTzUsrName());
 				returnJsonMap.put("usrpwd", psTzEmlsDefTbl.getTzUsrPwd());
 				returnJsonMap.put("desc", psTzEmlsDefTbl.getTzDescr254());
-
+				returnJsonMap.put("popImapAddr", psTzEmlsDefTbl.getTzPopImapAddr());
 			} else {
 				errMsg[0] = "1";
 				errMsg[1] = "参数不正确！";

@@ -49,6 +49,8 @@ public class TzGkViewpersonClsServiceImpl extends FrameworkImpl {
 			int startNum = Integer.valueOf(start);
 			int limitNum = Integer.valueOf(limit);
 			
+			String sql = "SELECT count(1) FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID IN (SELECT TZ_AUDIENCE_ID FROM PS_TZ_DXYJFSRW_TBL A WHERE A.TZ_MLSM_QFPC_ID=?)";
+			count = jdbcTemplate.queryForObject(sql, new Object[]{ emailID }, "int");
 			
 			String strRealName = "", strEmail = "",strMobile="";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(
@@ -64,7 +66,7 @@ public class TzGkViewpersonClsServiceImpl extends FrameworkImpl {
 					map1.put("personEmail",strEmail);
 					map1.put("personMobile", strMobile);
 					returnList.add(map1);
-					count = count + 1;
+					//count = count + 1;
 				}
 			}
 			/*
