@@ -762,23 +762,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
         }
         cmp=new ViewClass();
         cmp.on('afterrender',function(panel){
-            //  console.log(panel);
-            //组件注册表单信息;
             var form = panel.child('form').getForm();
-            //var grid=panel.child('grid');
 			var grid=panel.down('grid');
             //参数
             var tzParams = '{"ComID":"TZ_GK_EDM_COM","PageID":"TZ_GK_EDM_STD","OperateType":"QF","comParams":{"emailID":"'+emailID +'"}}';
-            //加载数据
-            /*Ext.tzLoad(tzParams,function(responseData){
-                //组件注册信息数据
-                var formData = responseData.formData;
-                form.setValues(formData);
-                panel.htmlContent=formData.emailContent;
-                var tzStoreParams = '{"emailID":"'+emailID+'"}';
-                grid.store.tzStoreParams = tzStoreParams;
-                grid.store.load();
-            });*/
             Ext.tzLoadAsync(tzParams,function(responseData){
                 var formData = responseData.formData;
                 form.setValues(formData);
@@ -786,7 +773,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
                 var tzStoreParams = '{"emailID":"'+emailID+'"}';
                 grid.store.tzStoreParams = tzStoreParams;
                 grid.store.load();
-				
+
 				//加载漏斗图
 				var funnel = panel.down('component[name=funnelPic]');
 				var dispalyFunnel = responseData.dispalyFunnel;
@@ -800,7 +787,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
 						chart: {
 							type: 'funnel',
 							marginRight: 100,
-							height:380,
+							height:300,
 							//renderTo: 'funnelPicContainer',
 							renderTo:funnel.getEl().dom
 						},
@@ -838,9 +825,22 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
 						},
 						series: [{
 							name: '数量',
-							data: data
+							data: data, //刷新时重新加载
 						}]
 					});
+					
+					//刷新时重新加载漏斗图数据
+					grid.store.addListener("refresh", function(){
+	                	Ext.tzLoad(tzParams,function(respData){
+	                		var funenlData = respData.funenlDate;
+	    					var data1 = [];
+	    					for(var i=0;i<funenlData.length;i++){
+	    						data1.push([funenlData[i]["name"],funenlData[i]["count"]]);	
+	    					}
+	    					
+	    					chart.series[0].setData(data1);
+	                	});
+	                });
 				}else{
 					funnel.hidden = true;
 					grid.columnWidth = 1;	
