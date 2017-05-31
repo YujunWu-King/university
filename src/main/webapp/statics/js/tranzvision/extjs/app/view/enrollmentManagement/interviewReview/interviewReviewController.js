@@ -1351,7 +1351,7 @@
                 scope: this,
                 callback: function (records, operation, success) {
                     /*for (var x = records.length - 1; x >= 0; x--) {*/
-                	if(records > 0){
+                	if(records.length > 0){
                 		for(var x = 0 ; x < records.length; x ++) {
                             var viewRecord = grid.getView().getRow(x).querySelector(".tz_lzh_interviewReview_app");
                             (function (thisrecord,col) {

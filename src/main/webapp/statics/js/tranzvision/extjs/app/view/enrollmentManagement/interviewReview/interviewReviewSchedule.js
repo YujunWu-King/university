@@ -386,7 +386,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                 items:[
                                     //使用layout form嵌套以避免IE中出现错位的BUG
                                     {
-                                        columnWidth:.2,
+                                        columnWidth:.25,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -395,7 +395,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                             readOnly:true
                                         }]
                                     }, {
-                                        columnWidth:.2,
+                                        columnWidth:.25,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -405,7 +405,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                         }]
                                     }, 
                                     {
-                                        columnWidth:.1,
+                                        columnWidth:.2,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -416,7 +416,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                         }]
                                     },
                                     {
-                                        columnWidth:.15,
+                                        columnWidth:.2,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
