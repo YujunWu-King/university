@@ -37,10 +37,10 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.EDM.EDMSetInfo', {
                              var jsonText = response.responseText;
                              var jsonObject = Ext.util.JSON.decode(jsonText);
                              var status=jsonObject.comContent.runStatus;
-                             if (status==""||status=="1" || status=="2"||status=="3"||status=="8"||status=="9") {
-                                 t.down('button[reference=runTxYqBtn]').setDisabled(false);
+                             if (status=="QUENED" || status=="SCHEDULED"||status=="STARTED"||status=="RUNNING") {
+                                 t.down('button[reference=runTxYqBtn]').setDisabled(true);
                              } else {
-                                t.down('button[reference=runTxYqBtn]').setDisabled(true);
+                                t.down('button[reference=runTxYqBtn]').setDisabled(false);
                              }
                         }
                         });

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZBaseBundle.service.impl.BatchProcessDetailsImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -23,8 +24,12 @@ public class TzGkTxrqClsServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private SqlQuery jdbcTemplate;
+	
+	@Autowired
+	private BatchProcessDetailsImpl batchProcessDetailsImpl;
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
@@ -35,7 +40,7 @@ public class TzGkTxrqClsServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		// 排序字段如果没有不要赋值
-		String[][] orderByArr = new String[][] {};
+		String[][] orderByArr = new String[][] {new String[]{"TZ_EDM_TIME","DESC"}};
 
 		// json数据要的结果字段;
 		String[] resultFldArray = {"TZ_EDM_TIME", "PRCSINSTANCE", "RUNSTATUS" };
@@ -51,6 +56,11 @@ public class TzGkTxrqClsServiceImpl extends FrameworkImpl {
 				mapList.put("txAETime", rowList[0]);
 				mapList.put("AEId", rowList[1]);
 				mapList.put("AEState", rowList[2]);
+				String status = rowList[2];
+				String statusDesc = batchProcessDetailsImpl.getBatchProcessStatusDescsr(status);
+				
+				mapList.put("ProStaDesc", statusDesc);
+				
 				listData.add(mapList);
 			}
 			mapRet.replace("total", obj[0]);
@@ -69,7 +79,7 @@ public class TzGkTxrqClsServiceImpl extends FrameworkImpl {
 		String RUNSTATUS = "";
 		try{
 			int PRCSINSTANCE = jdbcTemplate.queryForObject("select PRCSINSTANCE from PS_TZ_YJQFTXRZ_T where TZ_TXAE_DTTM in(select max(TZ_TXAE_DTTM) from PS_TZ_YJQFTXRZ_T where TZ_MLSM_QFPC_ID=?)", new Object[]{strEmailID},"Integer");
-			RUNSTATUS = jdbcTemplate.queryForObject("select RUNSTATUS from PSPRCSRQST where PRCSINSTANCE=?", new Object[]{PRCSINSTANCE},"String");
+			RUNSTATUS = jdbcTemplate.queryForObject("select TZ_JOB_YXZT from TZ_JC_SHLI_T where TZ_JCSL_ID=?", new Object[]{PRCSINSTANCE},"String");
 		}catch(Exception e){
 			RUNSTATUS = "";
 		}

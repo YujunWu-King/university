@@ -15,6 +15,8 @@ public class PsTzEmlsDefTbl {
 
     private String tzSmtpAddr;
 
+    private String tzPopImapAddr;
+
     private String tzEmlAlias;
 
     private String tzUsrName;
@@ -81,6 +83,14 @@ public class PsTzEmlsDefTbl {
 
     public void setTzSmtpAddr(String tzSmtpAddr) {
         this.tzSmtpAddr = tzSmtpAddr == null ? null : tzSmtpAddr.trim();
+    }
+
+    public String getTzPopImapAddr() {
+        return tzPopImapAddr;
+    }
+
+    public void setTzPopImapAddr(String tzPopImapAddr) {
+        this.tzPopImapAddr = tzPopImapAddr == null ? null : tzPopImapAddr.trim();
     }
 
     public String getTzEmlAlias() {

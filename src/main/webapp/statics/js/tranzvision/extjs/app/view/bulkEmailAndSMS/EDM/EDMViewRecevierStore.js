@@ -4,7 +4,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.EDM.EDMViewRecevierStore', {
     model: 'KitchenSink.view.bulkEmailAndSMS.EDM.EDMViewRecevierModel',
     comID: 'TZ_GK_EDM_COM',
     pageID:'TZ_EDM_VIEWRY_STD',
-    pageSize: 10,
+    pageSize: 50,
     autoLoad: true,
     tzStoreParams:  '{"emailID":" "}',
     proxy: Ext.tzListProxy()

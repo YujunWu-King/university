@@ -20,13 +20,7 @@ public class EmailTxEngineCls extends BaseEngine {
 			// 运行id;
 			String runControlId = this.getRunControlID();
 			// 进程id;
-			int processinstance = jdbcTemplate.queryForObject(
-					"SELECT PRCSINSTANCE FROM PSPRCSRQST where RUN_ID = ? limit 0,1", new Object[] { runControlId },
-					"Integer");
-
-			jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
-					new Object[] { "7", processinstance });
-			jdbcTemplate.execute("commit");
+			int processinstance = this.getProcessInstanceID();
 			try{	
 				String qfpcId = jdbcTemplate.queryForObject("select TZ_MLSM_QFPC_ID from PS_TZ_DXYJQF_TBL WHERE RUN_CNTL_ID=?", new Object[]{runControlId},"String");
 				if(qfpcId != null && !"".equals(qfpcId)){
@@ -39,11 +33,8 @@ public class EmailTxEngineCls extends BaseEngine {
 						}
 					}
 				}
-				jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
-						new Object[] { "9", processinstance });
 			}catch(Exception e){
-				jdbcTemplate.update("UPDATE PSPRCSRQST SET RUNSTATUS=? WHERE PRCSINSTANCE=?",
-						new Object[] { "10", processinstance });
+				this.logError("系统错误："+e.getMessage());
 			}
 	}
 }
