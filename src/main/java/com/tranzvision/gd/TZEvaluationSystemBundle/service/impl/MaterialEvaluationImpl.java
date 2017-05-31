@@ -614,17 +614,25 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 						String pc = sqlQuery.queryForObject(
 								"select TZ_CLPS_PWJ_PC from PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?",
 								new Object[] { classId, batchId, TZ_APP_INS_ID}, "String");
+						if(pc!=null){
+							//判断偏差的正负情况：评议总分最大的评委不是当前评委，偏差为负数（总共两位评委）
+							String maxTotalScoreJudge = sqlQuery.queryForObject("SELECT TZ_PWEI_OPRID FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CJX_TBL B WHERE A.TZ_APP_INS_ID = ? AND A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND lower(B.TZ_SCORE_ITEM_ID)='total' ORDER BY TZ_SCORE_NUM DESC LIMIT 0,1", new Object[]{TZ_APP_INS_ID}, "String");
+							if(maxTotalScoreJudge!=null&&!oprid.equals(maxTotalScoreJudge)){
+								pc = "-"+pc;
+							}
+						}
+						
 						//其他评委是否已经复评
 						String re_evaluation = sqlQuery.queryForObject(
 								"SELECT 'Y' FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID<>? AND TZ_CLPS_LUNC=? AND TZ_SUBMIT_YN='Y' AND TZ_IS_PW_FP='Y' limit 0,1",
 								new Object[] { classId, batchId, TZ_APP_INS_ID,oprid,TZ_DQPY_LUNC}, "String");
-						
+
 						if("Y".equals(re_evaluation)){
 							re_evaluation = "是";
 						}else{
 							re_evaluation = "否";
 						}
-						         
+
 						// 评审时间;
 						String pssj = "";
 						Map<String, Object> map2 = sqlQuery.queryForMap(
