@@ -839,7 +839,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkMgrController', 
 	    					}
 	    					
 	    					chart.series[0].setData(data1);
-	                	});
+	                	},grid);
 	                });
 				}else{
 					funnel.hidden = true;
