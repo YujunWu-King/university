@@ -837,10 +837,10 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 									Integer sInt = sMaps.get(strMFbdzMxId) == null ? 0 : sMaps.get(strMFbdzMxId);
 
 									String stmpPercent = "0";
-									if (sInt == 0 || intTotal == 0) {
+									if (sInt == 0 || intTotalWc == 0) {
 
 									} else {
-										double sDoubleVe = sInt * 1.0 / intTotal;
+										double sDoubleVe = sInt * 1.0 / intTotalWc;
 										double dtmpPercent = sDoubleVe * 100;
 										stmpPercent = df.format(dtmpPercent) + "%";
 									}
