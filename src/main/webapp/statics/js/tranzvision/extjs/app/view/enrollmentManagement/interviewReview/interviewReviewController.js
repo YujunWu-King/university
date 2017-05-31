@@ -1299,7 +1299,7 @@
         }
     },
     calculate : function(btn){
-        var select = btn.findParentByType("grid").getSelectionModel().getSelection(),
+        /*var select = btn.findParentByType("grid").getSelectionModel().getSelection(),
             classID = btn.findParentByType("grid").findParentByType("form").getValues().classID,
             batchID = btn.findParentByType("grid").findParentByType("form").getValues().batchID,
             datas={};
@@ -1327,7 +1327,19 @@
                     }
                 }
             });
-        }
+        }*/
+    	var classID = btn.findParentByType("grid").findParentByType("form").getValues().classID,
+        	batchID = btn.findParentByType("grid").findParentByType("form").getValues().batchID,
+        	datas={};
+    	datas.type = 'calculate';
+        datas.classID = classID;
+        datas.batchID = batchID;
+        var store = btn.findParentByType("grid").getStore();
+        
+        var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD","OperateType":"CA","comParams":' + Ext.JSON.encode(datas) + '}';
+        Ext.tzLoad(tzParams, function (responseData) {
+        	store.load();
+        });
     },
     stuListActive : function(grid){
         var stuListStore = grid.getStore(),

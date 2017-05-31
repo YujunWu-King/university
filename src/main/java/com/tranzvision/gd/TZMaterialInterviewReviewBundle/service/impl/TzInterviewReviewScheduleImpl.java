@@ -1046,13 +1046,15 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			String strBatchID = jacksonUtil.getString("batchID");
 
 			String strContent = "";
-			List<?> listAppID = jacksonUtil.getList("appID");
-
+			//计算所有考生偏差
+			//List<?> listAppID = jacksonUtil.getList("appID");
+			String strAllKshSQL = "SELECT TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			List<Map<String,Object>> listAppID = sqlQuery.queryForList(strAllKshSQL, new Object[]{strClassID,strBatchID});
 			if (listAppID != null && listAppID.size() > 0) {
 
 				for (Object pwObj : listAppID) {
-					ArrayList<String> mapScore = new ArrayList();
-					String strAppInsID = String.valueOf(pwObj);
+					Map<String, Object> resultMap = (Map<String, Object>) pwObj;
+					String strAppInsID = resultMap.get("TZ_APP_INS_ID")==null?"":String.valueOf(resultMap.get("TZ_APP_INS_ID"));
 
 					String strDeleteSql = "DELETE FROM PS_TZ_PW_KS_PC_TBL";
 					sqlQuery.update(strDeleteSql);
@@ -1061,11 +1063,15 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 
 					DecimalFormat df = new DecimalFormat("######0.00");
 					String tmpAveScore = df.format(doublePianCha);
-					if ("".equals(strContent)) {
+					//保存到表中
+					String strUpdateSQL = "UPDATE PS_TZ_MSPS_KSH_TBL SET TZ_MSPS_PWJ_PC=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
+					sqlQuery.update(strUpdateSQL, new Object[]{tmpAveScore,strClassID, strBatchID, strAppInsID});
+					
+					/*if ("".equals(strContent)) {
 						strContent = "{\"appInsID\":\"" + strAppInsID + "\",\"standardDeviation\":\"" + tmpAveScore + "\"}";
 					} else {
 						strContent = strContent + ",{\"appInsID\":\"" + strAppInsID + "\",\"standardDeviation\":\"" + tmpAveScore + "\"}";
-					}
+					}*/
 				}
 			}
 

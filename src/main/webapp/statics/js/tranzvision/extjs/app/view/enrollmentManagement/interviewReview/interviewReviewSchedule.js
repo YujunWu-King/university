@@ -44,7 +44,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         dockedItemBtn = {
                 xtype: "toolbar",
                 items: [
-                    {text: "计算标准差", tooltip: "计算标准差", handler: "calculate"}
+                    {text: "计算所有考生标准差", tooltip: "计算所有考生标准差", handler: "calculate"}
                 ]
             };
             columnsItems = [
