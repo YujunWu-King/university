@@ -3041,7 +3041,7 @@
         }
     },
     calDeviation : function(btn){
-        var select = btn.findParentByType("grid").getSelection(),
+        /*var select = btn.findParentByType("grid").getSelection(),
             classID = btn.findParentByType("grid").findParentByType("form").getValues().classID,
             batchID = btn.findParentByType("grid").findParentByType("form").getValues().batchID,
             datas={};
@@ -3068,7 +3068,19 @@
                     }
                 }
             });
-        }
+        }*/
+    	var classID = btn.findParentByType("grid").findParentByType("form").getValues().classID,
+        	batchID = btn.findParentByType("grid").findParentByType("form").getValues().batchID,
+        	datas={};
+    	datas.type = 'calculate';
+        datas.classID = classID;
+        datas.batchID = batchID;
+        
+        var store = btn.findParentByType("grid").getStore();
+        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"CA","comParams":' + Ext.JSON.encode(datas) + '}';
+        Ext.tzLoad(tzParams, function (responseData) {
+        	store.load();
+        });
     },
     stuListActive : function(grid){
         var stuListStore = grid.getStore(),
