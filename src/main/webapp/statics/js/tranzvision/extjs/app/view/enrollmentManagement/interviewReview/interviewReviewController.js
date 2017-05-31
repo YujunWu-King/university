@@ -1351,31 +1351,33 @@
                 scope: this,
                 callback: function (records, operation, success) {
                     /*for (var x = records.length - 1; x >= 0; x--) {*/
-                	for(var x = 0 ; x < records.length; x ++) {
-                        var viewRecord = grid.getView().getRow(x).querySelector(".tz_lzh_interviewReview_app");
-                        (function (thisrecord,col) {
-                            if (col && !col.onclick) {
-                                //为没有注册事件的链接注册事件
-                                if(col.addEventListener) {
-                                    col.addEventListener('click', function (e) {
-                                        //阻止事件向上冒泡
-                                        e.stopPropagation();
-                                        //打开评委页面
-                                        self.viewJudgeReviewInfo(thisrecord);
-                                    }, false);
-                                }else{
-                                    //兼容IE
-                                    col.attachEvent("onclick",function(){
-                                        e= window.event;
-                                        //阻止事件向上冒泡
-                                        e.stopPropagation();
-                                        //打开评委页面
-                                        self.viewJudgeReviewInfo(thisrecord);
-                                    });
+                	if(records > 0){
+                		for(var x = 0 ; x < records.length; x ++) {
+                            var viewRecord = grid.getView().getRow(x).querySelector(".tz_lzh_interviewReview_app");
+                            (function (thisrecord,col) {
+                                if (col && !col.onclick) {
+                                    //为没有注册事件的链接注册事件
+                                    if(col.addEventListener) {
+                                        col.addEventListener('click', function (e) {
+                                            //阻止事件向上冒泡
+                                            e.stopPropagation();
+                                            //打开评委页面
+                                            self.viewJudgeReviewInfo(thisrecord);
+                                        }, false);
+                                    }else{
+                                        //兼容IE
+                                        col.attachEvent("onclick",function(){
+                                            e= window.event;
+                                            //阻止事件向上冒泡
+                                            e.stopPropagation();
+                                            //打开评委页面
+                                            self.viewJudgeReviewInfo(thisrecord);
+                                        });
+                                    }
                                 }
-                            }
-                        })(records[x],viewRecord);
-                    }
+                            })(records[x],viewRecord);
+                        }
+                	}                	
                 }
             });
         }else{
