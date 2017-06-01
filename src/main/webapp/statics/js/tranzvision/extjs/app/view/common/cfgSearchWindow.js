@@ -258,10 +258,9 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 
                                     try{
                                         var TZ_ZHZJH_ID = store.condition.TZ_ZHZJH_ID;
-                                    }catch(e){
+                                        if(TZ_ZHZJH_ID==undefined){
                                         
-
-                                        var fldName = comboName.replace("-value", "");
+                                        	var fldName = comboName.replace("-value", "");
                                         var downTableDefaultFld = formData[fldName].promptTableDefaultFld;
 
                                         Ext.Array.forEach( downTableDefaultFld, function(defFld){
@@ -279,9 +278,14 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                                             delete combo.lastQuery;
                                             downConditionStr = "{"+downConditionStr+"}";
                                         }
-
                                         var tzStoreParams = '{"OperateType":"COMBOX","recname":"'+store.recname+'","condition":'+downConditionStr+',"result":"'+store.result+'"}';
                                         store.tzStoreParams = tzStoreParams;
+                                        	
+                                      }
+                                        
+                                        
+                                    }catch(e){
+                                                                             
                                     }
                                 },
                                 specialkey: function (textfield, e) {
