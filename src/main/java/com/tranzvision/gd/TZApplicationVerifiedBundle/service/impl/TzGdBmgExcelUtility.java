@@ -371,4 +371,61 @@ public class TzGdBmgExcelUtility {
 		}
 		return strBmrSchoolType;	
 	}
+	
+	/*获取报名人手机*/
+	public String getBmrPhone(String strAppInsId ,String strOprId,String strAppTplId) throws Exception
+	{
+		String strBmrPhone = "";
+		if("".equals(strAppInsId)){
+			if("".equals(strOprId)){
+				strBmrPhone = "";
+			}else{
+				strBmrPhone = jdbcTemplate.queryForObject("SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL "
+						+ " WHERE TZ_LYDX_ID = ? AND TZ_LXFS_LY = 'ZCYH' LIMIT 0,1",new Object[]{strOprId},String.class);
+				
+				if(strBmrPhone==null){
+					strBmrPhone = "";
+				}
+			}
+		}else{
+			Long appInsId = Long.parseLong(strAppInsId);
+			
+			strBmrPhone = jdbcTemplate.queryForObject("SELECT TZ_ZY_SJ FROM PS_TZ_FORM_WRK_T A,PS_TZ_LXFSINFO_TBL B "
+					+ " WHERE A.TZ_APP_INS_ID = ? AND A.OPRID = B.TZ_LYDX_ID AND B.TZ_LXFS_LY = 'ZCYH' LIMIT 0,1",new Object[]{appInsId},String.class);
+			
+			if(strBmrPhone==null){
+				strBmrPhone = "";
+			}
+		}
+		return strBmrPhone;
+	}
+	
+	/*获取报名人邮箱*/
+	public String getBmrEmail(String strAppInsId ,String strOprId,String strAppTplId) throws Exception
+	{
+		String strBmrEmail = "";
+		if("".equals(strAppInsId)){
+			if("".equals(strOprId)){
+				strBmrEmail = "";
+			}else{
+				strBmrEmail = jdbcTemplate.queryForObject("SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL "
+						+ " WHERE TZ_LYDX_ID = ? AND TZ_LXFS_LY = 'ZCYH' LIMIT 0,1",new Object[]{strOprId},String.class);
+				
+				if(strBmrEmail==null){
+					strBmrEmail = "";
+				}
+			}
+		}else{
+			Long appInsId = Long.parseLong(strAppInsId);
+			
+			strBmrEmail = jdbcTemplate.queryForObject("SELECT TZ_ZY_EMAIL FROM PS_TZ_FORM_WRK_T A,PS_TZ_LXFSINFO_TBL B "
+					+ " WHERE A.TZ_APP_INS_ID = ? AND A.OPRID = B.TZ_LYDX_ID AND B.TZ_LXFS_LY = 'ZCYH' LIMIT 0,1",new Object[]{appInsId},String.class);
+			
+			if(strBmrEmail==null){
+				strBmrEmail = "";
+			}
+		}
+		return strBmrEmail;
+	}
+	
 }
