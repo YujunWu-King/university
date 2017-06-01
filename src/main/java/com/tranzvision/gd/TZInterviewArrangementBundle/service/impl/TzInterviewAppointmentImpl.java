@@ -128,7 +128,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 				contentStr = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_TABLE_HTML");
 			}
 			*/
-			interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_MAIN_HTML",  strCssDir, "在线预约", ZSGL_URL,str_jg_id, strSiteId,request.getContextPath());
+			interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_MAIN_HTML",  strCssDir, "面试预约", ZSGL_URL,str_jg_id, strSiteId,request.getContextPath());
 			interviewAppointHtml = siteRepCssServiceImpl.repTitle(interviewAppointHtml, strSiteId);
 			interviewAppointHtml=siteRepCssServiceImpl.repCss(interviewAppointHtml, strSiteId);
 			
