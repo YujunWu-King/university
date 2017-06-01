@@ -8,6 +8,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchMgList', {
         'Ext.ux.ProgressBarPager',
         'tranzvision.extension.grid.column.Link',
         'KitchenSink.view.processDispatchMg.processDispatchController',
+        'KitchenSink.view.processServer.processServerStore',
         'KitchenSink.view.processDispatchMg.processDispatchStore'
     ],
     xtype: 'processDispatchCon',
@@ -48,11 +49,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchMgList', {
 
         Ext.apply(this, {
             columns: [{
-                text: '进程服务器名称',
+                text: '进程名称',
                 dataIndex: 'processName',
                 flex: 1
             }, {
-                text: '进程服务器描述',
+                text: '进程描述',
                 sortable: true,
                 dataIndex: 'processDesc',
                 flex: 1
