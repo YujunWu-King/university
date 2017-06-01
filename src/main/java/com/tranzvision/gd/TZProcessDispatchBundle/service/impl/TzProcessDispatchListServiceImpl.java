@@ -78,7 +78,7 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
             String[][] orderByArr = new String[][] { new String[] { "TZ_JC_MC", "DESC"  }};
 
             // json数据要的结果字段;
-            String[] resultFldArray = { "TZ_JC_MC","TZ_JC_MS","TZ_YXPT_LX"};
+            String[] resultFldArray = { "TZ_JC_MC","TZ_JC_MS","TZ_YXPT_LX","TZ_JG_ID"};
 
             // 可配置搜索通用函数;
             Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -90,6 +90,7 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                     Map<String, Object> mapList = new HashMap<String, Object>();
                     mapList.put("processName", resultArray[0]);
                     mapList.put("processDesc", resultArray[1]);
+                    mapList.put("orgId", resultArray[3]);
                     listData.add(mapList);
                 });
                 mapRet.replace("total", obj[0]);

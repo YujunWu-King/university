@@ -49,6 +49,10 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchMgList', {
 
         Ext.apply(this, {
             columns: [{
+                text: '所属机构',
+                dataIndex: 'orgId',
+                flex: 1
+            },{
                 text: '进程名称',
                 dataIndex: 'processName',
                 flex: 1
