@@ -126,6 +126,7 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 String runCntlId = jacksonUtil.getString("runCntlId") == null?"":jacksonUtil.getString("runCntlId");
                 String cycleExpression = jacksonUtil.getString("cycleExpression") == null?"":jacksonUtil.getString("cycleExpression");
 
+                //日期类型存储
                 Date runStartDate = new Date();
                 if(jacksonUtil.getString("runDate") != null && jacksonUtil.getString("runTime") != null){
                     String dateTime = jacksonUtil.getString("runDate") + jacksonUtil.getString("runTime");
