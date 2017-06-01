@@ -172,16 +172,20 @@
 				async:false,
 				data:{"tzParams": strComParams},
 				success: function(resp){
-					var data = resp.comContent;
-					var result = data.result;
-					var resultDesc = data.resultDesc;
-					if(result == "3" || result == "4"){ 
-						alert(resultDesc);
-						history.back(); 
+					if(resp.state.errcode == "1"){
+						alert(resp.state.errdesc);
 					}else{
-						alert(resultDesc);
-						generateRegCode();
-						$("#tz_regCode").val("");
+						var data = resp.comContent;
+						var result = data.result;
+						var resultDesc = data.resultDesc;
+						if(result == "3" || result == "4"){ 
+							alert(resultDesc);
+							history.back(); 
+						}else{
+							alert(resultDesc);
+							generateRegCode();
+							$("#tz_regCode").val("");
+						}	
 					}
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown){
