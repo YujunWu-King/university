@@ -250,7 +250,7 @@ public class InterviewEvaluationCls{
 		   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID= ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? and TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT = 'Y'",
 		   		new Object[] { classId, batchId ,oprid}, "Integer");
 		int wc_num_total = sqlQuery.queryForObject(
-		   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID= ? and TZ_APPLY_PC_ID = ? and TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT = 'Y'",
+		   		"select count(TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID= ? and TZ_APPLY_PC_ID = ? and TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT = 'Y'",
 		   		new Object[] { classId, batchId}, "Integer");
 		
 		//分布对照明细id;

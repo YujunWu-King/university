@@ -196,7 +196,7 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 			xtype		: 'button',
 			hidden		: false,
 			text		: '进行评审',
-			width		: 100,
+			width		: 90,
 			//height		: 25,
 			margin		: '10 10 10 0',
 			handler 	: function() {
