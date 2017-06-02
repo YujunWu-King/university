@@ -487,7 +487,8 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 							if(num==1) {
 								ckcjxTxtInfoTmp = "<div style='float:left;width:90px;'>" + scoreItemNameClps+"：</div><div style='float:left;'>"+scoreValue+"</div><br />";
 							} else {
-								ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
+								//ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
+								ckcjxTxtInfoTmp += "<div>" + scoreValue + "</div>";
 							}
 						}	
 					}
@@ -497,9 +498,9 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				
 				if(!"".equals(ckcjxTxtInfoTmp)) {
 					if(!"".equals(ckcjxNumInfo)) {
-						ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+						ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4' style='word-wrap:break-word;word-break:break-all;'>"+ ckcjxTxtInfoTmp +"</td></tr>";
 					} else {
-						ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+						ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
 					}
 				}
 
