@@ -1764,6 +1764,9 @@
 
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
+            
+            
+            var pwgridform = panel.down("form[name=pwlbgrid]").getForm();
              var kspwnum=panel.down('grid').down('numberfield[name=ksRevedpwnum]');
              var pwTeamnum=panel.down('grid').down('numberfield[name=countTeamnum]');
              
@@ -1778,8 +1781,11 @@
                 if(formData!="" && formData!=undefined) {
                     panel.actType="update";
                     form.setValues(formData);
-                    kspwnum.setValue(formData.kspwnum);
-                    pwTeamnum.setValue(formData.pwTeamnum);
+                    
+                    
+                   // pwgridform.findField("ksRevedpwnum").
+                  //  kspwnum.setValue(formData.kspwnum);
+                  //  pwTeamnum.setValue(formData.pwTeamnum);
                     
                     
 

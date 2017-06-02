@@ -401,20 +401,21 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		//var panel = btn.findParentByType("viewmspsxsList");
 		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
 		var classId = form.findField('classId').getValue();
-		var batchname="第一批次";
+		var batchId = form.findField('batchId').getValue();
+		//var batchname="第一批次";
         //console.log("classId"+classId);
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW',
 			condition:{
 				"TZ_CLASS_ID":classId,
-				"TZ_BATCH_NAME":batchname
+				"TZ_APPLY_PC_ID":batchId
 			},
 			callback: function(seachCfg) {
 				var seachCfgjson=Ext.JSON.decode(seachCfg)
 	
-				if (seachCfgjson.condition["TZ_BATCH_NAME-value"]==""){
+				if (seachCfgjson.condition["TZ_APPLY_PC_ID-value"]==""){
 					
-				   seachCfgjson.condition["TZ_BATCH_NAME-value"]="第一批次";
+				   seachCfgjson.condition["TZ_APPLY_PC_ID-value"]=batchId;
 				}
 				seachCfgjson=Ext.encode(seachCfgjson)
 				//console.log(seachCfgjson);
