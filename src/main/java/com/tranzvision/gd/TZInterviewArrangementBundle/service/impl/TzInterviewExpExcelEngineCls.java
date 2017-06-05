@@ -398,7 +398,7 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 			SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 			String sDttm = datetimeFormate.format(dt);
 
-			String strUseFileName = "MSARR_"+sDttm + "_" + processinstance + "." + "xlsx";
+			String strUseFileName = "MSARR_"+sDttm + "_" + processinstance + "." + "xlsx"; 
 			
 			ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
 			boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
