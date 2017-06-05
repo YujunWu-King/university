@@ -1,5 +1,6 @@
 package com.tranzvision.gd.util.mailer;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 
 import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPMessage;
 import com.sun.mail.pop3.POP3Folder;
 
 
@@ -300,13 +302,32 @@ public class TranzReceiveOneMail {
         return subject;   
     }   
     
+    
+    private Object getContent(Message email) throws IOException, MessagingException{
+    	try {
+            return email.getContent();
+        } catch (MessagingException e) {
+            // handling the bug
+            if (email instanceof MimeMessage && "Unable to load BODYSTRUCTURE".equalsIgnoreCase(e.getMessage())) {
+            	IMAPMessage imapMessage = (IMAPMessage) email;  
+            	MimeMessage cmsg = new MimeMessage((MimeMessage) imapMessage);
+            	return cmsg.getContent();
+            } else {
+                throw e;
+            }
+        }
+    }
+    
+    
     /**
      * 邮件内容，包含。eml附件
      */
     public void analysisMailContent() throws Exception {   
         try {    
         	MimeMessage mime = mimeMessage;
-            Object o = mime.getContent();   
+           // Object o = mime.getContent();   
+            Object o = getContent(mime);
+            
             if(o instanceof Multipart) {  
                 Multipart multipart = (Multipart) o ;   
                 reMultipart(multipart);  
@@ -317,10 +338,10 @@ public class TranzReceiveOneMail {
             	String mType = mime.getContentType().toLowerCase();
                 if(mType.startsWith("text/plain") || mType.startsWith("text/html")){
                 	if("Y".equals(isAnalysisEml)){
-                		bodyAttText.append((String)mimeMessage.getContent());
+                		bodyAttText.append((String)mime.getContent());
     				}else{
-    					bodytext.append((String)mimeMessage.getContent());
-    					bodyAttText.append((String)mimeMessage.getContent());
+    					bodytext.append((String)mime.getContent());
+    					bodyAttText.append((String)mime.getContent());
     				}
                 }
             }  
@@ -331,7 +352,9 @@ public class TranzReceiveOneMail {
     
     public void analysisMailContent(MimeMessage mime) throws Exception {   
         try {    
-            Object o = mime.getContent();   
+           // Object o = mime.getContent();
+        	Object o = getContent(mime);
+        	
             if(o instanceof Multipart) {  
                 Multipart multipart = (Multipart) o ;  
                 reMultipart(multipart);  
@@ -342,10 +365,13 @@ public class TranzReceiveOneMail {
                 String mType = mime.getContentType().toLowerCase();
                 if(mType.startsWith("text/plain") || mType.startsWith("text/html")){
                 	if("Y".equals(isAnalysisEml)){
-                		bodyAttText.append((String)mimeMessage.getContent());
+                		String content = (String) mime.getContent();
+                    	String emailContent = new String(content.getBytes("iso-8859-1"),"GBK");
+                    	
+                		bodyAttText.append(emailContent);
     				}else{
-    					bodytext.append((String)mimeMessage.getContent());
-    					bodyAttText.append((String)mimeMessage.getContent());
+    					bodytext.append((String)mime.getContent());
+    					bodyAttText.append((String)mime.getContent());
     				}
                 }
             }  
@@ -393,7 +419,23 @@ public class TranzReceiveOneMail {
 				 		bodytext.append((String)part.getContent());
 			            bodyAttText.append((String)part.getContent());
 				 	}
-	         } 
+	         }else if(part.isMimeType("message/rfc822")){
+	        	 	String fileName = part.getFileName();
+		 		    String strFileNmae = "";
+		 		    if(fileName != null){
+		 		    	strFileNmae = MimeUtility.decodeText(part.getFileName()); //MimeUtility.decodeText解决附件名乱码问题  
+		 		    }
+	
+		 		    if(strFileNmae.toLowerCase().endsWith(".eml")){
+		 		    	//解析。eml附件
+		 			    InputStream in = part.getInputStream();// 打开附件的输入流  
+		 	            MimeMessage msg = new MimeMessage(session,in);
+		 	            
+		 	            isAnalysisEml = "Y";
+		 			    //重新读取附件内容
+		 	            analysisMailContent(msg);
+		 		    }	 
+	         }
 		}  
 	}  
 
@@ -527,11 +569,11 @@ public class TranzReceiveOneMail {
      */  
     public static void main(String args[]) throws Exception {  
     	TranzReceiveOneMail mail = new TranzReceiveOneMail(); 
-    	
-    	mail.setMailHost("smtp.sina.com");
-    	mail.setPopHost("pop3.sina.com");
-    	mail.setUserName("love_zhanglang@sina.com");
-        mail.setUserPwd("zl20091917");
+        
+        mail.setMailHost("smtp.exmail.qq.com");
+    	mail.setPopHost("imap.exmail.qq.com");
+    	mail.setUserName("mis@snai.edu.cn");
+        mail.setUserPwd("xxxxx");
         
         int mailCount;
         boolean isConnect = mail.connectServer();

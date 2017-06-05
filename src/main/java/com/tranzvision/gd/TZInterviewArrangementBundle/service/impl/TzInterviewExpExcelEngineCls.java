@@ -41,7 +41,7 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			jacksonUtil.json2Map(expParams);
 			
-			String excelName = jacksonUtil.getString("excelName");
+			//String excelName = jacksonUtil.getString("excelName");
 			String expTmpId = jacksonUtil.getString("excelTpl");//导出模板
 			String appFormModalID = jacksonUtil.getString("appFormModalID");//报名表模板
 			String classID = jacksonUtil.getString("classID");
@@ -398,7 +398,7 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 			SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 			String sDttm = datetimeFormate.format(dt);
 
-			String strUseFileName = "MSARR_"+sDttm + "_" + excelName + "." + "xlsx";
+			String strUseFileName = "MSARR_"+sDttm + "_" + processinstance + "." + "xlsx";
 			
 			ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
 			boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
