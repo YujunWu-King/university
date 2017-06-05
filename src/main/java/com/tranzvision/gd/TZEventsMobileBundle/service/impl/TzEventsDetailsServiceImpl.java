@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -351,6 +352,24 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 			
 			String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 			
+			//活动听众判断
+			boolean isInAud = false;
+			String audSql = "select TZ_AUD_ID from PS_TZ_ART_AUDIENCE_T where TZ_ART_ID=? and exists(select 'X' from PS_TZ_ART_REC_TBL where TZ_ART_ID=PS_TZ_ART_AUDIENCE_T.TZ_ART_ID and TZ_PROJECT_LIMIT='B')";
+			List<Map<String,Object>> audList = sqlQuery.queryForList(audSql, new Object[]{ actId });
+			if(audList != null && audList.size() > 0){
+				for(Map<String,Object> audMap: audList){
+					String audId = audMap.get("TZ_AUD_ID") == null ? "" : audMap.get("TZ_AUD_ID").toString();
+					String inAudSql = "select 'Y' from PS_TZ_AUD_LIST_T where TZ_AUD_ID=? and TZ_DXZT<>'N' and OPRID=? limit 1";
+					String inAud = sqlQuery.queryForObject(inAudSql, new Object[]{ audId, oprid }, "String");
+					if("Y".equals(inAud)){
+						isInAud = true;
+					}
+				}
+			}else{
+				isInAud = true;
+			}
+			
+			
 			// 获取活动显示模式
 			String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventDisplayMode");
 			Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] { dateNow, dateNow, dateNow, dateNow, actId });
@@ -369,8 +388,8 @@ public class TzEventsDetailsServiceImpl extends FrameworkImpl{
 				actNoStart = mapData.get("IS_NOT_START") == null ? "" : String.valueOf(mapData.get("IS_NOT_START"));
 			}
 			
-			// 只有启用在线报名并且在有效报名时间内才显示在线报名条
-			if ("Y".equals(strQy_zxbm)) {
+			// 只有启用在线报名才显示在线报名条,如果设置听众当前人在听众内显示报名条
+			if ("Y".equals(strQy_zxbm) && isInAud) {
 				rtnMap.replace("diaplayAppBar","Y");
 				
 				sql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID,TZ_NREG_STAT FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";

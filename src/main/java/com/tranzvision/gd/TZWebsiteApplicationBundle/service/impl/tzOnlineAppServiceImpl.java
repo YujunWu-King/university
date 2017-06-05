@@ -942,10 +942,13 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						"TJXSETPWD", strLanguage, "访问密码", "Access password");
 				String strSubmit2 = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 						"CONFIRM", strLanguage, "确认", "Confirm");
+				
+				String forgetPass = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+						"FOGETPASS", strLanguage, "忘记密码", "forget your password");
 
 				// 构建密码输入框
 				String PWDHTML = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false,
-						Pwdname, strSubmit2, contextUrl);
+						Pwdname, strSubmit2, contextUrl,forgetPass);
 
 				System.out.println("报名表展现密码处理End,Time=" + (System.currentTimeMillis() - time2));
 

@@ -29,7 +29,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.EDM.EDMViewReceiverWin', {
             store: {
                 type: 'EDMViewRecevierStore'
             },
-            columns: [
+            columns: [{
+            		text: '序号',
+            		xtype: 'rownumberer',
+            		width: 50,
+            		align: 'left'
+            	},
                 {
                     text: '收件人姓名',
                     dataIndex: 'personName',
@@ -48,7 +53,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.EDM.EDMViewReceiverWin', {
             ],
             bbar: {
                 xtype: 'pagingtoolbar',
-                pageSize: 10,
+                pageSize: 50,
                 listeners:{
                     afterrender: function(pbar){
                         var grid = pbar.findParentByType("grid");

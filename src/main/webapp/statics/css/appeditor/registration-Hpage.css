@@ -900,7 +900,7 @@ url("chrome://browser/content/history/history-panel.xul")
 	line-height: 24px;
     border: 1px solid #dadbdd;
     border-radius: 5px;
-    width: 97%;
+    width: 95%;
     font-size: 16px;
     color: #333;
     padding: 12px;

@@ -324,6 +324,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             minWidth: 100
         },
         {
+        	text:"报名表模板ID",
+        	dataIndex:'clpsBmbTplId',
+        	hidden:true
+        },
+        {
             text: "姓名",
             dataIndex: 'name',
             align: 'center',
@@ -407,8 +412,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 handler: "queryStudent"
             },'-',
             {
-                text: "计算偏差",
-                tooltip: "计算偏差",
+                text: "计算所有考生评委偏差",
+                tooltip: "计算所有考生评委偏差",
                 handler: "calDeviation"
             },'-',
             {

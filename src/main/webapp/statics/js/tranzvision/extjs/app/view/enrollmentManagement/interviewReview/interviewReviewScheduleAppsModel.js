@@ -8,6 +8,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         {name:'judgePC'},
         {name:'judgeInfo'},
         {name:'judgeStatus'},
-        {name:'status'}
+        {name:'status'},
+        {name:'clpsBmbTplId'}
     ]
 });

@@ -44,7 +44,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         dockedItemBtn = {
                 xtype: "toolbar",
                 items: [
-                    {text: "计算标准差", tooltip: "计算标准差", handler: "calculate"}
+                    {text: "计算所有考生标准差", tooltip: "计算所有考生标准差", handler: "calculate"}
                 ]
             };
             columnsItems = [
@@ -53,6 +53,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                     dataIndex: 'insID',
                     align:'center',
                     minWidth: 150
+                },
+                {
+                	text:"报名表模板ID",
+                	dataIndex:'clpsBmbTplId',
+                	hidden:true
                 },
                 {
                     header: "姓名",
@@ -381,7 +386,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                 items:[
                                     //使用layout form嵌套以避免IE中出现错位的BUG
                                     {
-                                        columnWidth:.2,
+                                        columnWidth:.25,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -390,7 +395,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                             readOnly:true
                                         }]
                                     }, {
-                                        columnWidth:.2,
+                                        columnWidth:.25,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -400,7 +405,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                         }]
                                     }, 
                                     {
-                                        columnWidth:.1,
+                                        columnWidth:.2,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -411,7 +416,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                         }]
                                     },
                                     {
-                                        columnWidth:.15,
+                                        columnWidth:.2,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -720,14 +725,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
     },
     buttons: [{
         text: '保存',
+        name:"save",
         iconCls:"save",
         handler: 'onScheduleSave'
     }, {
         text: '确定',
+        name:'ensure',
         iconCls:"ensure",
         handler: 'onScheduleEnsure'
     }, {
         text: '关闭',
+        name:'close',
         iconCls:"close",
         handler: 'onScheduleClose'
     }]

@@ -143,7 +143,14 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapList = new HashMap<String, Object>();
 				mapList.put("xmid", rowList[0]);
 				mapList.put("xmName", rowList[1]);
-				mapList.put("teamID", rowList[2]);
+				try {
+					mapList.put("teamID", rowList[2]);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					mapList.put("teamID", "");
+				}
+
 				//
 				for (i_two = 1; i_two <= (rowList.length - 3); i_two++) {
 					System.out.println(3 * i_two + ";" + rowList.length);
@@ -217,7 +224,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 			String judgeGroup = "";
 			String judgeName = "";
 
-			String pwListsql = "SELECT A.TZ_PWEI_OPRID,B.TZ_DLZH_ID FROM PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE B.OPRID=A.TZ_PWEI_OPRID AND A.TZ_APPLY_PC_ID =?  AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID =? AND A.TZ_DELETE_ZT<>'Y' AND A.TZ_PSHEN_ZT='A'";
+			String pwListsql = "SELECT A.TZ_PWEI_OPRID,B.TZ_DLZH_ID FROM PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE B.OPRID=A.TZ_PWEI_OPRID AND A.TZ_APPLY_PC_ID =?  AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID =? AND A.TZ_DELETE_ZT<>'Y' AND A.TZ_PSHEN_ZT='Y'";
 
 			if (jacksonUtil.containsKey("add")) {
 				jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("add");
@@ -246,32 +253,46 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 					judgeGroup = jacksonUtil.getString("judgeGroup");
 					pwList = SqlQuery.queryForList(pwListsql, new Object[] { batchId, classId, appinsId });
 					System.out.println("pwList:" + pwList.size());
-					for (Map<String, Object> Pwmap : pwList) {
-						pwOprid = Pwmap == null || Pwmap.get("TZ_PWEI_OPRID") == null ? ""
-								: Pwmap.get("TZ_PWEI_OPRID").toString();
-						judgeName = Pwmap == null || Pwmap.get("TZ_DLZH_ID") == null ? ""
-								: Pwmap.get("TZ_DLZH_ID").toString();
-						System.out.println("pwOprid:" + pwOprid);
+					if (pwList.size() > 0) {
+						for (Map<String, Object> Pwmap : pwList) {
+							pwOprid = Pwmap == null || Pwmap.get("TZ_PWEI_OPRID") == null ? ""
+									: Pwmap.get("TZ_PWEI_OPRID").toString();
+							judgeName = Pwmap == null || Pwmap.get("TZ_DLZH_ID") == null ? ""
+									: Pwmap.get("TZ_DLZH_ID").toString();
+							System.out.println("pwOprid:" + pwOprid);
 
-						ysfMap = SqlQuery.queryForMap(
-								TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_YSCORE_NUM"),
-								new Object[] { orgid, classId, batchId, Integer.valueOf(appinsId), pwOprid });
+							ysfMap = SqlQuery.queryForMap(
+									TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_YSCORE_NUM"),
+									new Object[] { orgid, classId, batchId, Integer.valueOf(appinsId), pwOprid });
 
-						pwId = ysfMap == null || ysfMap.get("TZ_PWEI_GRPID") == null ? ""
-								: ysfMap.get("TZ_PWEI_GRPID").toString();
-						scoreNum = ysfMap == null || ysfMap.get("TZ_SCORE_NUM") == null ? ""
-								: ysfMap.get("TZ_SCORE_NUM").toString();
+							pwId = ysfMap == null || ysfMap.get("TZ_PWEI_GRPID") == null ? ""
+									: ysfMap.get("TZ_PWEI_GRPID").toString();
+							scoreNum = ysfMap == null || ysfMap.get("TZ_SCORE_NUM") == null ? ""
+									: ysfMap.get("TZ_SCORE_NUM").toString();
 
+							Map<String, Object> mapList = new HashMap<String, Object>();
+							mapList.put("xmid", appinsId);
+							mapList.put("xmName", ksName);
+							mapList.put("teamID", pwId);
+							mapList.put("judgeUser", judgeName);
+							mapList.put("rawscore", scoreNum);
+							mapList.put("judgescore", "");
+
+							listdate.add(mapList);
+							System.out.println("listdate:" + listdate.size());
+
+						}
+
+					} else {
 						Map<String, Object> mapList = new HashMap<String, Object>();
 						mapList.put("xmid", appinsId);
 						mapList.put("xmName", ksName);
-						mapList.put("teamID", pwId);
-						mapList.put("judgeUser", judgeName);
-						mapList.put("rawscore", scoreNum);
+						mapList.put("teamID", "");
+						mapList.put("judgeUser", "");
+						mapList.put("rawscore", "");
 						mapList.put("judgescore", "");
 
 						listdate.add(mapList);
-						System.out.println("listdate:" + listdate.size());
 
 					}
 

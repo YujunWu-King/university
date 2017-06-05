@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="format-detection" content="telephone=no">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0;"/>
-<title>在线预约</title>
+<title>面试预约</title>
 <link href="%bind(:1)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
 <script>
 	var TzUniversityContextPath="%bind(:1)";
@@ -18,7 +18,7 @@
 	   <div class="bg">
 	     <!-- 头部 -->
 	   	 <div class="topbar">
-	   	    在线预约 <a  href="javascript:history.back();"><i></i></a>
+	   	    面试预约 <a  href="javascript:history.back();"><i></i></a>
 	   	 </div>
 	   	 <div class="order_sm">
 	   	 <!-- 文字说明 -->
@@ -71,7 +71,7 @@
 			success:function(data){
 				var errcode = data.state.errcode;
 				var errMsg = data.state.errdesc;
-				if(errcode == 0){
+				if(errcode == 0 || errcode == 2){
 					var _html =  data.comContent.appoHtml;
 					$("#tz-interview-appointment-List").html(_html);
 				}

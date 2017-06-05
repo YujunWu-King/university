@@ -6,6 +6,7 @@ package com.tranzvision.gd.TZEventsBundle.service.impl;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -148,8 +149,28 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 				String serverError = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPLICATION_MSG",
 						"MSG07", tzSiteLang, "服务端请求发生错误。", "Server Request Error");
 
+				
+				
+				//活动听众判断
+				boolean isInAud = false;
+				String audSql = "select TZ_AUD_ID from PS_TZ_ART_AUDIENCE_T where TZ_ART_ID=? and exists(select 'X' from PS_TZ_ART_REC_TBL where TZ_ART_ID=PS_TZ_ART_AUDIENCE_T.TZ_ART_ID and TZ_PROJECT_LIMIT='B')";
+				List<Map<String,Object>> audList = sqlQuery.queryForList(audSql, new Object[]{ strApplyId });
+				if(audList != null && audList.size() > 0){
+					for(Map<String,Object> audMap: audList){
+						String audId = audMap.get("TZ_AUD_ID") == null ? "" : audMap.get("TZ_AUD_ID").toString();
+						String inAudSql = "select 'Y' from PS_TZ_AUD_LIST_T where TZ_AUD_ID=? and TZ_DXZT<>'N' and OPRID=? limit 1";
+						String inAud = sqlQuery.queryForObject(inAudSql, new Object[]{ audId, oprid }, "String");
+						if("Y".equals(inAud)){
+							isInAud = true;
+						}
+					}
+				}else{
+					isInAud = true;
+				}
+				
+				
 				// 只有启用在线报名并且在有效报名时间内才显示在线报名条
-				if ("Y".equals(strQy_zxbm)) {
+				if ("Y".equals(strQy_zxbm) && isInAud) {
 					//报名时间限制，只有在报名时间内才可报名，否则按钮不可点击
 					 boolean clickEnable;
 					 String tipMsg = "";

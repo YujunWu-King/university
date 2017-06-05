@@ -917,7 +917,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		} else {
 			var ckzl_content_url = ContextPath + "/refMaterial/onload?classId="+tmpClassId+"&batchId="+tmpBatchId+"&appInsId="+bmb_id+"&model="+scoreModel+"&cjxId="+cjxId;
 			//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
-			var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='490'></iframe>";
+			var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='552'></iframe>";
 			var ary3 = new Array(pointckzl_id, ckzl_content, "参考资料");
 			allLeavesNodeDataCkzl[tmpBatchId].push(ary3);
 		}
@@ -1248,6 +1248,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																			//更新全局缓存，进行局部刷新
 																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'RFH');
 
+																			//调整浮动窗口位置---zhanglang
+																			TZShowTipsWin.autoFixPosition();
+																			
 																			// unmask window
 																			unmaskWindow();
 
@@ -1261,6 +1264,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 																			updateKSJSONData(form.findField("ClassID").getValue(), form.findField("BatchID").getValue(), form.findField("KSH_BMBID").getValue(), jsonObject.comContent, false);
 																			//更新全局缓存，进行局部刷新
 																			getPartBatchDataByBatchId(evaluateObject.baokaoClassID+"_"+evaluateObject.baokaoPcID,null,{applicantBaomingbiaoID:form.findField("KSH_BMBID").getValue()},'FAL');
+																			
+																			//调整浮动窗口位置---zhanglang
+																			TZShowTipsWin.autoFixPosition();
+																			
 																			unmaskWindow();
 
 																			Ext.Msg.alert('失败',jsonObject.comContent.message);
@@ -1662,7 +1669,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				} else {
 					var ckzl_content_url = ContextPath + "/refMaterial/onload?classId="+tmpClassId+"&batchId="+tmpBatchId+"&appInsId="+bmb_id+"&model="+scoreModel+"&cjxId="+cjxId;
 					//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
-					var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='490'></iframe>";
+					var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='552'></iframe>";
 					var ary3 = new Array(pointckzl_id, ckzl_content, "参考资料");
 					allLeavesNodeDataCkzl[tmpBatchId].push(ary3);
 				}
@@ -1676,7 +1683,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		for(var li=0;li<allLeavesNodeDataCkzl[tmpBatchId].length;li++) {
 			var dfarea_leaftips_data_ckzl = allLeavesNodeDataCkzl[tmpBatchId][li];
 
-			createQTips(dfarea_leaftips_data_ckzl);
+			//createQTips(dfarea_leaftips_data_ckzl);
+			tzCreateTips(dfarea_leaftips_data_ckzl);
 		}
 		
 		//更新隐藏域中的值
@@ -1848,6 +1856,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				listeners:{
 					collapse:function(){
 						Ext.fly("tz_evaluation_main").setScrollTop(0);
+					},
+					resize: function(p, width, height, oldWidth, oldHeight){
+						TZShowTipsWin.autoFixPosition(); //调整浮动窗口位置
 					}
 				}
 			}, {
@@ -2027,6 +2038,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//------ highlight the selected row 
 			highlightSelectedRowInApplicantList();
 			
+			//--切换考生后，刷新浮动框的位置---zhanglang
+			TZShowTipsWin.autoFixPosition();
 			
 			//回调指定的函数来显示考生评审页面
 			callBackFunction(tipCount,scrollBackTagId);
@@ -2098,6 +2111,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 							//------ highlight the selected row 
 							highlightSelectedRowInApplicantList();
 							
+							//--切换考生后，刷新浮动框的位置---zhanglang
+							TZShowTipsWin.autoFixPosition();
 							
 							//回调指定的函数来显示考生评审页面
 							callBackFunction(tipCount,scrollBackTagId);
@@ -2210,14 +2225,16 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		for(var li=0;li<allLeavesNodeData[tmpBatchId].length;li++){
 			var dfarea_leaftips_data = allLeavesNodeData[tmpBatchId][li];
 			
-			createQTips(dfarea_leaftips_data);
+			//createQTips(dfarea_leaftips_data);
+			tzCreateTips(dfarea_leaftips_data);
 		}
 
 		//给所有叶子节点增加参考资料TIPS
 		for(var li2=0;li2<allLeavesNodeDataCkzl[tmpBatchId].length;li2++) {
 			var dfarea_leaftips_data_ckzl = allLeavesNodeDataCkzl[tmpBatchId][li2];
 
-			createQTips(dfarea_leaftips_data_ckzl);
+			//createQTips(dfarea_leaftips_data_ckzl);
+			tzCreateTips(dfarea_leaftips_data_ckzl);
 		}
 	}
 	
@@ -2250,6 +2267,37 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				classes: 'ui-tooltip-wiki ui-tooltip-tipped ui-tooltip-shadow'
 			}
 		});
+	}
+	
+	/**
+	 * 显示标准、说明、参考资料(新)
+	 * 张浪
+	 * 2017-05-23
+	 */
+	function tzCreateTips(dfarea_leaftips_data){
+		try{
+			TZShowTipsWin.init({
+				type: "1",
+				id: dfarea_leaftips_data[0],
+				title: dfarea_leaftips_data[2],
+				content: {
+					text: dfarea_leaftips_data[1],
+					okBtn: {
+						text: '确定',
+						callback: function(){
+							//alert("bingo");
+						}
+					},
+					cancelBtn: {
+						text: '取消'
+					}
+				},
+				position: {
+					target: $("#all .main")
+				}
+			});
+		}catch(ex){
+		}
 	}
 	
 	//初始化

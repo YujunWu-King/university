@@ -236,7 +236,7 @@ public class TzRecord
 		}
 		
 		//准备插入新纪录
-		String insertSQLText = "INSERT INTO " + tableName + "(" + colList + ") VALUES(" + valList + ")";
+		String insertSQLText = "INSERT IGNORE INTO " + tableName + "(" + colList + ") VALUES(" + valList + ")";
 		try
 		{
 			sqlExecuteObject.sqlExec(insertSQLText,new SqlParams(values));

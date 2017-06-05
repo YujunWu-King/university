@@ -48,7 +48,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 
 			}
 		}
-		console.log(selksList);
+		//console.log(selksList);
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_KS_STD","OperateType":"EXPORT","comParams":{"export":[' + selksList + '],"classId":' + classId + ',"batchId":' + batchId + '}}';
 		Ext.tzSubmit(tzParams, function(respDate) {
 			var fileUrl = respDate.fileUrl;
@@ -103,7 +103,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			store.commitChanges();
 
 		}
-		console.log(selksList);
+		//console.log(selksList);
 		comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},' + selksList + '';
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_KS_STD","OperateType":"U","comParams":{"update":[' + comparams + ']}}';
 		Ext.tzSubmit(tzParams, function() {
@@ -146,7 +146,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 				}
 			}
 		}
-		console.log(attaList);
+		//console.log(attaList);
 		return attaList;
 
 	},
@@ -165,7 +165,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		var form = panel.down('form').getForm();
 		var classId = form.findField('classId').getValue();
 		var batchId = form.findField('batchId').getValue();
-		console.log("classId+batchId:"+classId+batchId);
+		//console.log("classId+batchId:"+classId+batchId);
 		//是否有访问权限   
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_ADDKS_STD"];
 		if (pageResSet == "" || pageResSet == undefined) {
@@ -192,7 +192,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			win = new ViewClass();
 			//操作类型设置为新增
 			win.actType = "add";
-			console.log(win.actType);
+			//console.log(win.actType);
 	win.on('afterrender', function(window) {
 								var attgrid = window.child('grid');
 								attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}' ;
@@ -234,7 +234,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			win = new ViewClass();
 			//操作类型设置为新增
 			win.actType = "add";
-			console.log(win.actType);
+			//console.log(win.actType);
 			win.on('afterrender', function(window) {
 				var attgrid = window.child('grid');
 			var form=window.down('form[reference=cbaform]').getForm();
@@ -310,10 +310,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 				}
 			}
 		}
-		//console.log(selksList);
+		////console.log(selksList);
 		comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},{"appInsId":'+appInsId+'},' + selksList + '';
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SETPW_STD","OperateType":"U","comParams":{"add":[' + comparams + ']}}';
-		console.log(tzParams);
+		//console.log(tzParams);
 		Ext.tzSubmit(tzParams, function(responseData) {
 			//刷新查看考生的列表 
 			panel.down('grid').getStore().reload();
@@ -401,15 +401,26 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		//var panel = btn.findParentByType("viewmspsxsList");
 		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
 		var classId = form.findField('classId').getValue();
-        console.log("classId"+classId);
+		var batchId = form.findField('batchId').getValue();
+		//var batchname="第一批次";
+        //console.log("classId"+classId);
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW',
 			condition:{
-				"TZ_CLASS_ID":classId
+				"TZ_CLASS_ID":classId,
+				"TZ_APPLY_PC_ID":batchId
 			},
 			callback: function(seachCfg) {
+				var seachCfgjson=Ext.JSON.decode(seachCfg)
+	
+				if (seachCfgjson.condition["TZ_APPLY_PC_ID-value"]==""){
+					
+				   seachCfgjson.condition["TZ_APPLY_PC_ID-value"]=batchId;
+				}
+				seachCfgjson=Ext.encode(seachCfgjson)
+				//console.log(seachCfgjson);
 				var store = btn.findParentByType("grid").store;
-				store.tzStoreParams = seachCfg;
+				store.tzStoreParams = seachCfgjson;
 				store.load();
 			}
 		});
@@ -424,6 +435,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		//得到上一级页面
 		var selksList = "";
 		var panel = btn.findParentByType("viewmspsxsList");
+		var win=btn.findParentByType("addPsStu");
 		var grid = btn.findParentByType("addPsStu").down('grid');
 		var form = panel.down('form').getForm();
 		var classId = form.findField('classId').getValue();
@@ -444,18 +456,19 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 				}
 			}
 		}
-		//console.log(selksList);
+		////console.log(selksList);
 		comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},' + selksList + '';
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_ADDKS_STD","OperateType":"U","comParams":{"add":[' + comparams + ']}}';
-		console.log(tzParams);
+		//console.log(tzParams);
 		Ext.tzSubmit(tzParams, function(responseData) {
 			//刷新查看考生的列表 
 			panel.down('grid').getStore().reload();
 
 
 		}, "保存成功！", true, this);
-
-
+		//刷新查看考生的列表 
+		panel.down('grid').getStore().reload();
+         win.close();
 	},
 	
 	
@@ -480,7 +493,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 				}
 			}
 		}
-		console.log(selksList);		
+		//console.log(selksList);		
 	  Ext.tzSetCompResourses("TZ_BZCJ_SRC_COM");
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BZCJ_SRC_COM"]["TZ_BZCJ_YSF_STD"];
@@ -534,7 +547,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
            // var examineeGrid = panel.down('grid');
                     
             Ext.tzLoad(tzParams,function(respData){
-            	console.log(respData);
+            	//console.log(respData);
             	grid.store.loadData(respData);               
             });
         });
@@ -546,11 +559,277 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
             cmp.show();
         }
 	},
-	changevalue:function(newValue, oldValue, eOpts){
-		console.log("newValue:"+newValue);
+	searchMsksList: function(btn) {
+		var panel = btn.findParentByType("viewmspsxsList");
+		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+        //console.log("classId："+classId+"batchId:"+batchId);
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW',
+			condition:{
+				"TZ_CLASS_ID":classId,
+				"TZ_APPLY_PC_ID":batchId
+			},
+			callback: function(seachCfg) {
+				var store = btn.findParentByType("grid").store;
+				store.tzStoreParams = seachCfg;				
+				store.load();
+				var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_KS_STD","OperateType":"getSearchSql","comParams":'+seachCfg+'}';
+				Ext.tzLoad(tzParams,function(responseData){
+					var getedSQL = responseData.searchSql;
+					panel.getedSQL = getedSQL;
+				});
+			}
+		});
+	},
+	ensureonRemoveKs:function(btn) {
+		this.onSaveRemoveKs(btn);
+				//关闭窗口
+		var comView = btn.findParentByType("viewmspsxsList");
+		comView.close();
 	
 	
-	}
+	},
+    importMsStuInfom: function(btn) {
+    	var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+		var store = btn.findParentByType("grid").store;
+		Ext.tzImport({ /*importType 导入类型：A-传Excel；B-粘贴Excel数据*/
+			importType: 'A',
+			/*导入模版编号*/
+			tplResId: 'TZ_MSPS_ADKS_TMP',
+			/*businessHandler  预览导入的数据之后点击下一步执行的函数，根据业务的需求自由编写，columnArray为解析Excel后的标题行数组（如果未勾选首行是标题行columnArray=[]）
+			 * dataArray为解析后的Excel二维数组数据（勾选了首行是标题行则dataArray不包含首行数据；）
+			 */
+			businessHandler: function(columnArray, dataArray) {
+				//是否有访问权限
+                var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_REVIEW_MS_COM"]["TZ_MSPS_DRKS_STD"];
+                if( pageResSet == "" || pageResSet == undefined){
+                    Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+                    return;
+                }
+
+                //该功能对应的JS类
+                var className = pageResSet["jsClassName"];
+                if(className == "" || className == undefined){
+                    Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSPS_DRKS_STD，请检查配置。');
+                    return;
+                }
+
+                var win = this.lookupReference('importPsStu');
+
+                if (!win) {
+                    //className = 'KitchenSink.view.activity.applyOptionsWindow';
+                    Ext.syncRequire(className);
+                    ViewClass = Ext.ClassManager.get(className);
+                    //新建类
+                    win = new ViewClass();
+                    //this.getView().add(win);
+                }
+
+                var windowgrid=win.child('grid');
+                var newdateArry=[];
+                if(dataArray.length>0){
+                    for(var i=0;i<dataArray.length;i++){
+                    	var newdate=[];
+                       newdate.push(dataArray[i][0]);
+                       newdate.push(dataArray[i][1]); 
+                       newdateArry.push(newdate);
+                    }
+                }
+                
+                
+                windowgrid.store.loadData(newdateArry);
+
+                var winform = win.child("form").getForm();
+                var strtmp = "共 ";
+                strtmp = strtmp+"<span style='color:red;font-size: 22px'>"+dataArray.length+"</span>";
+                strtmp = strtmp+" 条数据";
+                var formpara={classId:classId,batchId:batchId,ImpRecsCount:strtmp};
+                winform.setValues(formpara);
+                win.show();
+				
+				//console.log(dataArray);
+			
+			}
+		});
+	},
+	addksDrSave: function(btn) {
+		//得到上一级页面
+		var selksList = "";
+		var mainContent=Ext.getCmp('tranzvision-framework-content-panel');
+		var panel = mainContent.child("panel[reference=viewmspsxsList_mspsview]");
+		var win=btn.findParentByType("importPsStu");
+		var grid = btn.findParentByType("importPsStu").down('grid');
+		var form = win.down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+		var selList = grid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+		if (checkLen == 0) {
+			Ext.Msg.alert("提示", "请选择需要导入的学生");
+			return;
+		} else {
+			// var appinsId = selList[0].get("appInsId");       
+			for (var i = 0; i < selList.length; i++) {
+				if (selksList == "") {
+					selksList = Ext.JSON.encode(selList[i].data);
+				} else {
+					selksList = selksList + ',' + Ext.JSON.encode(selList[i].data);
+				}
+			}
+		}
+		////console.log(selksList);
+		comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},' + selksList + '';
+		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_ADDKS_STD","OperateType":"U","comParams":{"add":[' + comparams + ']}}';
+		//console.log(tzParams);
+		Ext.tzSubmit(tzParams, function(responseData) {
+			//刷新查看考生的列表 
+			panel.down('grid').getStore().reload();
+
+           win.close();
+		}, "导入成功！", true, this);
+		//刷新查看考生的列表 
+		panel.down('grid').getStore().reload();
+        
+	},
+	addksDrClose:function(btn){
+			var win=btn.findParentByType("importPsStu");
+			win.close();
+		
+	},
+	   /**
+     * 导出选中的考生评议数据
+     */
+    exportSelectedExcel: function(btn){
+    	var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+    	
+    	//var panel = btn.findParentByType('materialsReviewExaminee');
+		var grid = btn.findParentByType("grid");
+		//var classId = panel.classId;
+		//var batchId = panel.batchID;
+		
+		var selList = grid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要导出的考生记录");
+			return;
+		}
+		
+		var appInsIds = [];
+	    for(var i=0;i<checkLen;i++){
+	    	appInsIds.push(selList[i].data.appInsId);
+		}
+	    var comParamsObj = {
+	    	ComID: "TZ_REVIEW_MS_COM",
+			PageID: "TZ_MSPS_KS_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				appInsIds: appInsIds
+			}
+	    };
+	   
+	    var className = 'KitchenSink.view.viewPsStudentListInfo.export.msexportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+       
+        win.show();
+    },
     
+    /**
+     * 导出搜索结果中考生的评议数据
+     */
+    exportSearchExcel: function(btn){
+    	var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+    	var panel=btn.findParentByType('viewmspsxsList');
+    	//var panel = btn.findParentByType('materialsReviewExaminee');
+		var grid = btn.findParentByType("grid");
+		//var classId = panel.classId;
+	//	var batchId = panel.batchID;
+		
+
+		
+		//构造搜索sql
+		if((typeof panel.getedSQL) == "undefined"){
+			searchSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_MSPS_KS_VW WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_APPLY_PC_ID='"+ batchId +"'";
+		}else{
+			searchSql = panel.getedSQL;
+		}
+		
+		var comParamsObj = {
+			ComID: "TZ_REVIEW_MS_COM",
+			PageID: "TZ_MSPS_KS_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				searchSql: searchSql
+			}
+		};
+		
+		
+		var className = 'KitchenSink.view.viewPsStudentListInfo.export.msexportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+        
+        win.show();
+    },
+    
+    /**
+     * 下载考生评议数据导出结果
+     */
+    downloadHisExcel: function(btn){
+    	var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
+    	
+    	//var panel = btn.findParentByType('materialsReviewExaminee');
+		//var grid = btn.findParentByType("grid");
+		//var classId = panel.classId;
+    	//var panel = btn.findParentByType('materialsReviewExaminee');
+	//	var classId = panel.classId;
+		//var batchId = panel.batchID;
+		
+		var className = 'KitchenSink.view.viewPsStudentListInfo.export.msexportExcelWindow';
+    	
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	type: 'download'
+        });
+        
+        var tabPanel = win.lookupReference("packageTabPanel");
+        tabPanel.setActiveTab(1);
+        
+        win.show();
+    }
 	
 });

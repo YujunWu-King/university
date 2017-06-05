@@ -1509,7 +1509,6 @@
         var classID = record.get('classID');
         var batchID = record.get('batchID');
         cmp = new ViewClass(classID,batchID,transValue);
-//console.log("1");
         cmp.on('afterrender',function(panel){            
                 var judgeStore =panel.down('tabpanel').child("form[name=judgeFormInfo]").child('grid[name=interviewJudgeGrid]').store,
                     judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
@@ -1760,10 +1759,11 @@
             classId:classId,
             batchId:batchId
         });
-        console.log(classId+":"+batchId);
-
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
+            
+            
+            var pwgridform = panel.down("form[name=pwlbgrid]").getForm();
              var kspwnum=panel.down('grid').down('numberfield[name=ksRevedpwnum]');
              var pwTeamnum=panel.down('grid').down('numberfield[name=countTeamnum]');
              
@@ -1778,8 +1778,11 @@
                 if(formData!="" && formData!=undefined) {
                     panel.actType="update";
                     form.setValues(formData);
-                    kspwnum.setValue(formData.kspwnum);
-                    pwTeamnum.setValue(formData.pwTeamnum);
+                    
+                    
+                   // pwgridform.findField("ksRevedpwnum").
+                  //  kspwnum.setValue(formData.kspwnum);
+                  //  pwTeamnum.setValue(formData.pwTeamnum);
                     
                     
 
@@ -1821,7 +1824,7 @@
             cmp.show();
         }
     },
-    /*材料评审--材料评审考生名单*/
+    /*面试评审--面试评审考生名单*/
     viewInterviewStuApplicants:function(grid,rowIndex){
         Ext.tzSetCompResourses("TZ_REVIEW_MS_COM");
         //是否有访问权限
@@ -1833,7 +1836,7 @@
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_KS_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSPS_KS_STD，请检查配置。');
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;
@@ -1905,13 +1908,15 @@
                    // examineeGrid.store.load();
                 } else {
                     panel.actType="add";
-                    form.findField("classId").setValue(classId);
+                    
+                    form.setValues({classId:classId,className:className,batchId:batchId,batchName:batchName,ksNum:applicantsNumber,reviewClpsKsNum:0,reviewKsNum:0});
+               /*     form.findField("classId").setValue(classId);
                     form.findField("className").setValue(className);
                     form.findField("batchId").setValue(batchId);
                     form.findField("batchName").setValue(batchName);
                     form.findField("ksNum").setValue(applicantsNumber);
                     form.findField("reviewClpsKsNum").setValue(0);
-                    form.findField("reviewKsNum").setValue(0);
+                    form.findField("reviewKsNum").setValue(0);*/
                 }
             });
         });

@@ -108,10 +108,10 @@ public class InterviewEvaluationCls{
 	}
 	
 	//平均分计算（包括：单个评委和多个评委的情况）;
-	protected double calculateAverage(String classId,String batchId,String oprid,String scoreItemId,int error_code,String error_decription){
+	protected double calculateAverage(String classId,String batchId,String[] oprids,String scoreItemId,int error_code,String error_decription){
 		   
 		   //参数验证
-		   if(oprid==null||"".equals(oprid)){
+		   if(oprids==null||oprids.length==0){
 			   error_code = 1;
 			   error_decription = "评委不能为空！";
 		   }		   
@@ -136,47 +136,89 @@ public class InterviewEvaluationCls{
 		   
 		   //计算平均分
 		   double pjf = 0;
-
-		   //某个报考班级批次下：单个评委在某个成绩项的总分;
-		   double dgpw_all_num = 0;
-		   //某个报考方向下：单个评委完成的数量;
-		   int dgpw_wc_num = 0;
-
-		   String str_dgpw_all_num = sqlQuery.queryForObject(
-			   		"select sum( b.TZ_SCORE_NUM) from PS_TZ_MP_PW_KS_TBL a,PS_TZ_CJX_TBL b where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  and a.TZ_CLASS_ID = ? and a.TZ_APPLY_PC_ID=? and a.TZ_PWEI_OPRID = ? and b.TZ_SCORE_ITEM_ID = ? AND a.TZ_DELETE_ZT <> 'Y' AND a.TZ_PSHEN_ZT = 'Y'",
-			   		new Object[] { classId, batchId ,oprid,scoreItemId }, "String");		   
-		   if(str_dgpw_all_num!=null&&!"".equals(str_dgpw_all_num)){
-			   dgpw_all_num = Double.parseDouble(str_dgpw_all_num);
-		   }
 		   
-		   //完成数量
-		   String str_dgpw_wc_num = sqlQuery.queryForObject(
-			   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? and TZ_PWEI_OPRID = ?  AND TZ_DELETE_ZT <> 'Y' and  TZ_PSHEN_ZT = 'Y'",
-			   		new Object[] { classId, batchId ,oprid }, "String");		   
-		   if(str_dgpw_wc_num!=null&&!"".equals(str_dgpw_wc_num)){
-			   dgpw_wc_num = Integer.parseInt(str_dgpw_wc_num);
-		   }
+		   //单个评委
+		   if(oprids.length==1){
+			   //某个报考班级批次下：单个评委在某个成绩项的总分;
+			   double dgpw_all_num = 0;
+			   //某个报考方向下：单个评委完成的数量;
+			   int dgpw_wc_num = 0;
 
-		   if(dgpw_all_num==0||dgpw_wc_num==0){
-			   pjf = 0;
+			   String str_dgpw_all_num = sqlQuery.queryForObject(
+				   		"select sum( b.TZ_SCORE_NUM) from PS_TZ_MP_PW_KS_TBL a,PS_TZ_CJX_TBL b where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  and a.TZ_CLASS_ID = ? and a.TZ_APPLY_PC_ID=? and a.TZ_PWEI_OPRID = ? and b.TZ_SCORE_ITEM_ID = ? AND a.TZ_DELETE_ZT <> 'Y' AND a.TZ_PSHEN_ZT = 'Y'",
+				   		new Object[] { classId, batchId ,oprids[0],scoreItemId }, "String");		   
+			   if(str_dgpw_all_num!=null&&!"".equals(str_dgpw_all_num)){
+				   dgpw_all_num = Double.parseDouble(str_dgpw_all_num);
+			   }
+			   
+			   //完成数量
+			   String str_dgpw_wc_num = sqlQuery.queryForObject(
+				   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? and TZ_PWEI_OPRID = ?  AND TZ_DELETE_ZT <> 'Y' and  TZ_PSHEN_ZT = 'Y'",
+				   		new Object[] { classId, batchId ,oprids[0] }, "String");		   
+			   if(str_dgpw_wc_num!=null&&!"".equals(str_dgpw_wc_num)){
+				   dgpw_wc_num = Integer.parseInt(str_dgpw_wc_num);
+			   }
+
+			   if(dgpw_all_num==0||dgpw_wc_num==0){
+				   pjf = 0;
+			   }else{
+				   pjf = dgpw_all_num / dgpw_wc_num;
+			   }
+
 		   }else{
-			   pjf = dgpw_all_num / dgpw_wc_num;
+			   //多个评委
+			   
+			   //多个评委总分和完成总数
+			   double more_dgpw_all_num = 0;
+			   int more_dgpw_wc_num = 0;
+			   
+			   for(int i=0;i<oprids.length;i++){
+				 //某个报考班级批次下：单个评委在某个成绩项的总分;
+				   double dgpw_all_num = 0;
+				   //某个报考方向下：单个评委完成的数量;
+				   int dgpw_wc_num = 0;
+
+				   String str_dgpw_all_num = sqlQuery.queryForObject(
+					   		"select sum( b.TZ_SCORE_NUM) from PS_TZ_MP_PW_KS_TBL a,PS_TZ_CJX_TBL b where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  and a.TZ_CLASS_ID = ? and a.TZ_APPLY_PC_ID=? and a.TZ_PWEI_OPRID = ? and b.TZ_SCORE_ITEM_ID = ? AND a.TZ_DELETE_ZT <> 'Y' AND a.TZ_PSHEN_ZT = 'Y'",
+					   		new Object[] { classId, batchId ,oprids[i],scoreItemId }, "String");		   
+				   if(str_dgpw_all_num!=null&&!"".equals(str_dgpw_all_num)){
+					   dgpw_all_num = Double.parseDouble(str_dgpw_all_num);
+				   }
+				   
+				   //完成数量
+				   String str_dgpw_wc_num = sqlQuery.queryForObject(
+					   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? and TZ_PWEI_OPRID = ?  AND TZ_DELETE_ZT <> 'Y' and  TZ_PSHEN_ZT = 'Y'",
+					   		new Object[] { classId, batchId ,oprids[i] }, "String");		   
+				   if(str_dgpw_wc_num!=null&&!"".equals(str_dgpw_wc_num)){
+					   dgpw_wc_num = Integer.parseInt(str_dgpw_wc_num);
+				   }
+
+				   more_dgpw_all_num = more_dgpw_all_num + dgpw_all_num;
+				   more_dgpw_wc_num=more_dgpw_wc_num + dgpw_wc_num;
+			   }
+			   
+			   if(more_dgpw_all_num==0||more_dgpw_wc_num==0){
+				   pjf = 0;
+			   }else{
+				   pjf = more_dgpw_all_num / more_dgpw_wc_num;
+			   }
+			   
 		   }
 
 		   //取2位小数;
 		   pjf = (double)Math.round(pjf*100)/100;
-
+		   
 		   return pjf;
 	}
 	
-	//某个报考班级批次下：某个评委：某个成绩项的指标项的计算;
+	//某个报考班级批次下：单个评委、多个评委，某个成绩项的指标项的计算;
 	protected List<Map<String,Object>> getScoreItemEvaluationData(String classId,String batchId,String oprid,String scoreItemId,int error_code,String error_decription){
 
 	   //参数验证
 	   if(oprid==null||"".equals(oprid)){
 		   error_code = 1;
 		   error_decription = "评委不能为空！";
-	   }		   
+	   }
 	   if(classId==null||"".equals(classId)){
 		   error_code = 1;
 		   error_decription = "报考班级不能为空！";
@@ -203,14 +245,13 @@ public class InterviewEvaluationCls{
 		   		new Object[] { TZ_SCORE_MODAL_ID}, "String");
 
 
-		//完成数量;
-		int wc_num = 0;
-		String str_wc_num = sqlQuery.queryForObject(
-		   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID= ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? and  TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT = 'Y'",
-		   		new Object[] { classId, batchId ,oprid}, "String");		   
-		if(str_wc_num!=null&&!"".equals(str_wc_num)){
-		   wc_num = Integer.parseInt(str_wc_num);
-		}
+		//完成数量：单个评委和多个评委;
+		int wc_num = sqlQuery.queryForObject(
+		   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID= ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? and TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT = 'Y'",
+		   		new Object[] { classId, batchId ,oprid}, "Integer");
+		int wc_num_total = sqlQuery.queryForObject(
+		   		"select count(TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID= ? and TZ_APPLY_PC_ID = ? and TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT = 'Y'",
+		   		new Object[] { classId, batchId}, "Integer");
 		
 		//分布对照明细id;
 		String TZ_M_FBDZ_MX_ID = "";
@@ -241,19 +282,14 @@ public class InterviewEvaluationCls{
 				Map<String,Object> fbdzmxMap = new HashMap<String,Object>();
 				
 				//分项个数
-				int num_dange = 0;
-				String str_num_dange = sqlQuery.queryForObject(
+				int num_dange = sqlQuery.queryForObject(
 				   		new StringBuffer("select count(distinct a.TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL a ,PS_TZ_CJX_TBL b where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  AND ")
 				   		.append("a.TZ_DELETE_ZT <> 'Y' AND a.TZ_PSHEN_ZT = 'Y'  and  a.TZ_CLASS_ID = ? ")
 				   		.append("and a.TZ_APPLY_PC_ID= ? and a.TZ_PWEI_OPRID = ? and b.TZ_SCORE_ITEM_ID = ? ")
 				   		.append("and b.TZ_SCORE_NUM ").append(TZ_M_FBDZ_MX_XX_JX).append(TZ_M_FBDZ_MX_XX)
 				   		.append(" and b.TZ_SCORE_NUM ").append(TZ_M_FBDZ_MX_SX_JX).append(TZ_M_FBDZ_MX_SX).toString(),
-				   		new Object[] { classId, batchId ,oprid ,scoreItemId}, "String");		
+				   		new Object[] { classId, batchId ,oprid ,scoreItemId}, "Integer");
 				
-			   if(str_num_dange!=null&&!"".equals(str_num_dange)){
-				   num_dange = Integer.parseInt(str_num_dange);
-			   }
-				  
 			   //分布对照明细id;
 			   fbdzmxMap.put("mx_id", TZ_M_FBDZ_MX_ID);
 				  
@@ -270,13 +306,32 @@ public class InterviewEvaluationCls{
 				   fbdzmxMap.put("num_rate", (double)Math.round((double)num_dange/wc_num*100*100)/100);
 			   }
 
+			   /*评委总体数据*/
+			   int num_dange_total = sqlQuery.queryForObject(
+				   		new StringBuffer("select count(distinct a.TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL a ,PS_TZ_CJX_TBL b where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  AND ")
+				   		.append("a.TZ_DELETE_ZT <> 'Y' AND a.TZ_PSHEN_ZT = 'Y'  and  a.TZ_CLASS_ID = ? ")
+				   		.append("and a.TZ_APPLY_PC_ID= ? and b.TZ_SCORE_ITEM_ID = ? ")
+				   		.append("and b.TZ_SCORE_NUM ").append(TZ_M_FBDZ_MX_XX_JX).append(TZ_M_FBDZ_MX_XX)
+				   		.append(" and b.TZ_SCORE_NUM ").append(TZ_M_FBDZ_MX_SX_JX).append(TZ_M_FBDZ_MX_SX).toString(),
+				   		new Object[] { classId, batchId ,scoreItemId}, "Integer");
+			   
+			   //分布区间的个数;
+			   fbdzmxMap.put("num_dange_total", num_dange_total);
+			   
+			   //分布区间的比率;
+			   if(num_dange_total==0||wc_num_total==0){
+				   fbdzmxMap.put("num_rate_total", (double)0);
+			   }else{
+				   fbdzmxMap.put("num_rate_total", (double)Math.round((double)num_dange_total/wc_num_total*100*100)/100);
+			   }
+				   
 			   retList.add(fbdzmxMap);
 			}
 		}
 
 		return retList;
 	}
-	
+		
 	//移除考生和评委关系
 	protected Map<String,Object> removeJudgeApplicant(String classId, String batchId, String appInsId, String oprId){
 		
@@ -290,7 +345,7 @@ public class InterviewEvaluationCls{
 				new Object[]{classId,batchId,oprId}, "String");
 		if("Y".equals(if_TZ_SUBMIT_YN)){
 			result = false;
-			msg = "评议数据已经提交，不允许对考生数据进行修改";
+			msg = "评议数据已经提交，不允许对考生数据进行修改。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
 			return rtn;
@@ -301,7 +356,7 @@ public class InterviewEvaluationCls{
 				new Object[]{classId,batchId,oprId}, "String");
 		if("B".equals(if_TZ_PWZH_YN)){
 			result = false;
-			msg = "您的账号暂时无法评议该批次，请与管理员联系";
+			msg = "您的账号暂时无法评议该批次，请与管理员联系。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
 			return rtn;
@@ -375,7 +430,7 @@ public class InterviewEvaluationCls{
 				new Object[]{classId,batchId,oprId}, "String");
 		if("Y".equals(if_TZ_SUBMIT_YN)){
 			result = false;
-			msg = "评议数据已经提交，不允许新增考生评议数据";
+			msg = "评议数据已经提交，不允许新增考生评议数据。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
 			return rtn;
@@ -386,7 +441,7 @@ public class InterviewEvaluationCls{
 				new Object[]{classId,batchId,oprId}, "String");
 		if("B".equals(if_TZ_PWZH_YN)){
 			result = false;
-			msg = "您的账号暂时无法评议该批次，请与管理员联系";
+			msg = "您的账号暂时无法评议该批次，请与管理员联系。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
 			return rtn;

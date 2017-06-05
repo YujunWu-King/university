@@ -146,7 +146,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				columnConfig =
 					{
 						text     : GridHeaderJsonData[ExamineeGridFldName],
-						width    : 50,
+						width    : 60,
 						sortable : true,
 						dataIndex: ExamineeGridFldName
 					};
@@ -258,7 +258,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 
 
 				//点击姓名列
-				if(colIndex==0) {
+				if(colIndex==1) {
 					// mask window
 					maskWindow();
 
@@ -402,9 +402,10 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表"><span style="color:blue;">新开窗口看考生材料</span></a>';
 
-		rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="97px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
+		//rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
+		rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td>'+ three_btn_html +'</td></tr>';
 		if(ksinfoJSON.examineeTag!="" && ksinfoJSON.examineeTag!=null) {
-			rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="97px">考生标签：</td><td colspan="4">' + ksinfoJSON.examineeTag + '</td></tr>';
+			rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px">考生标签：</td><td colspan="4">' + ksinfoJSON.examineeTag + '</td></tr>';
 			//【初筛淘汰】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【校友推荐】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【自主创业】
 		}
 
@@ -962,7 +963,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		} else {
 			var ckzl_content_url = ContextPath + "/refMaterial/onload?classId="+tmpClassId+"&batchId="+tmpBatchId+"&appInsId="+bmb_id+"&model="+scoreModel+"&cjxId="+cjxId;
 			//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
-			var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='490'></iframe>";
+			var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='552'></iframe>";
 			var ary4 = new Array(pointckzl_id, ckzl_content, "参考资料");
 			allLeavesNodeDataCkzl[tmpBatchId].push(ary4);
 		}
@@ -1412,7 +1413,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//height			: thisFieldContainerHeight,
 			height          : '100%',
 			name            : field_name,
-			html            : '<div style="margin:0;width: 793px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
+			html            : '<div style="margin:0;width: 873px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
 		});
 
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
@@ -1575,7 +1576,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				} else {
 					var ckzl_content_url = ContextPath + "/refMaterial/onload?classId="+tmpClassId+"&batchId="+tmpBatchId+"&appInsId="+bmb_id+"&model="+scoreModel+"&cjxId="+cjxId;
 					//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
-					var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='490'></iframe>";
+					var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='552'></iframe>";
 					var ary3 = new Array(pointckzl_id, ckzl_content, "参考资料");
 					allLeavesNodeDataCkzl[tmpBatchId].push(ary3);
 				}
@@ -1589,7 +1590,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		for(var li=0;li<allLeavesNodeDataCkzl[tmpBatchId].length;li++) {
 			var dfarea_leaftips_data_ckzl = allLeavesNodeDataCkzl[tmpBatchId][li];
 
-			createQTips(dfarea_leaftips_data_ckzl);
+			//createQTips(dfarea_leaftips_data_ckzl);
+			tzCreateTips(dfarea_leaftips_data_ckzl);
 		}
 
 			
@@ -1797,7 +1799,21 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				split: true,
 				width: '100%',
 				//height:152,
-				items: dfPageWest_KsSearch[tmpBatchId]
+				items: dfPageWest_KsSearch[tmpBatchId],
+				listeners:{
+					collapse: function(p){
+						//调整浮动窗口位置---zhanglang
+						TZShowTipsWin.autoFixPosition();
+					},
+					expand: function(p){
+						//调整浮动窗口位置---zhanglang
+						TZShowTipsWin.autoFixPosition();
+					},
+					resize: function(p, width, height, oldWidth, oldHeight){
+						//调整浮动窗口位置---zhanglang
+						TZShowTipsWin.autoFixPosition();
+					}
+				}
 			},
 			{
 				region: 'west',
@@ -1840,6 +1856,9 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				listeners:{
 					collapse:function(){
 						Ext.fly("tz_evaluation_main").setScrollTop(0);
+					},
+					resize: function(p, width, height, oldWidth, oldHeight){
+						TZShowTipsWin.autoFixPosition(); //调整浮动窗口位置---zhanglang
 					}
 				}
 			}, {
@@ -2015,6 +2034,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//------ highlight the selected row 
 			highlightSelectedRowInApplicantList();
 			
+			//--切换考生后，刷新浮动框的位置---zhanglang
+			TZShowTipsWin.autoFixPosition();
 			
 			//回调指定的函数来显示考生评审页面
 			callBackFunction(tipCount,scrollBackTagId);
@@ -2084,6 +2105,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 						//------ highlight the selected row 
 						highlightSelectedRowInApplicantList();
 						
+						//--切换考生后，刷新浮动框的位置---zhanglang
+						TZShowTipsWin.autoFixPosition();
 						
 						//回调指定的函数来显示考生评审页面
 						callBackFunction(tipCount,scrollBackTagId);
@@ -2187,14 +2210,16 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		//给所有叶子节点增加TIPS
 		for(var li=0;li<allLeavesNodeData[tmpBatchId].length;li++){
 			var dfarea_leaftips_data = allLeavesNodeData[tmpBatchId][li];	
-			createQTips(dfarea_leaftips_data);
+			//createQTips(dfarea_leaftips_data);
+			tzCreateTips(dfarea_leaftips_data);
 		}
 
 		//给所有叶子节点增加参考资料TIPS
 		for(var li2=0;li2<allLeavesNodeDataCkzl[tmpBatchId].length;li2++) {
 			var dfarea_leaftips_data_ckzl = allLeavesNodeDataCkzl[tmpBatchId][li2];
 
-			createQTips(dfarea_leaftips_data_ckzl);
+			//createQTips(dfarea_leaftips_data_ckzl);
+			tzCreateTips(dfarea_leaftips_data_ckzl);
 		}
 	}
 
@@ -2230,6 +2255,38 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 				classes: 'ui-tooltip-wiki ui-tooltip-tipped ui-tooltip-shadow'
 			}
 		});	
+	}
+	
+	
+	/**
+	 * 显示标准、说明、参考资料(新)
+	 * 张浪
+	 * 2017-05-23
+	 */
+	function tzCreateTips(dfarea_leaftips_data){
+		try{
+			TZShowTipsWin.init({
+				type: "1",
+				id: dfarea_leaftips_data[0],
+				title: dfarea_leaftips_data[2],
+				content: {
+					text: dfarea_leaftips_data[1],
+					okBtn: {
+						text: '确定',
+						callback: function(){
+							//alert("bingo");
+						}
+					},
+					cancelBtn: {
+						text: '取消'
+					}
+				},
+				position: {
+					target: $("#all .main")
+				}
+			});
+		}catch(ex){
+		}
 	}
 	
 	

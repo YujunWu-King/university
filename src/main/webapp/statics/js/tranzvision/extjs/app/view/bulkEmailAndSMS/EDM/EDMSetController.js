@@ -550,7 +550,8 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.EDM.EDMSetController', {
         var record = store.getAt(rowIndex);
         var AEId=record.get("AEId");
         var emailId=grid.findParentByType("window").yjqfId;
-        if(AEId!=""&&emailId!=""){
+        
+        if(AEId!="" && emailId!=""){
             var tzParams='{"ComID":"TZ_GK_EDM_COM","PageID":"TZ_EDM_TD_STD","OperateType":"QF","comParams":{"yjqfId":"'+emailId+'","AEId":"'+AEId+'"}}';
             Ext.tzLoad(tzParams,function(responseData){
                 if(responseData.fileUrl){

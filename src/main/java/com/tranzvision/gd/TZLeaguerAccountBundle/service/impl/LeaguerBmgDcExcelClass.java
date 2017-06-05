@@ -124,7 +124,7 @@ public class LeaguerBmgDcExcelClass {
 					String sqlGetBmbIns = "";
 					if("TZ_MBA_DC_ALL".equals(excelTpl)){
 						/*只导出最新的报名数据*/
-						sqlGetBmbIns = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC LIMIT 0,1";
+						sqlGetBmbIns = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID = ? ORDER BY ROW_ADDED_DTTM DESC LIMIT 0,1";
 					}else{
 						/*导出全部的报名数据*/
 						sqlGetBmbIns = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID = ?";

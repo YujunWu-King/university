@@ -19,7 +19,6 @@
     title:'退信引擎运行状态',
     yjqfId:'',
     initComponent: function(){
-		var processingStatus = new KitchenSink.view.common.store.appTransStore("TZ_AE_STATUS");
 		var listStore = new KitchenSink.view.bulkEmailAndSMS.EDM.EDMTxStore();
         Ext.apply(this,{
             items: [ {
@@ -52,54 +51,25 @@
                     },
                     {
                         text:"运行状态",
-                        dataIndex: 'AEState',
+                        dataIndex: 'ProStaDesc',
                         width: 200,
-                        renderer:function(v) {
-                            if (v == '1') {
-                                return "取消";
-                            } else if (v == '10') {
-                                return "未完成";
-                            }else if(v=='2'){
-                                return "删除";
-                            }else if(v=='3'){
-                                return "错误";
-                            }else if(v=='4'){
-                             return "搁置";
-                            }else if (v == '5') {
-                                return "已排队";
-                            }else if(v=='6'){
-                                return "已启动";
-                            }else if(v=='7'){
-                                return "正在处理";
-                            }else if(v=='8'){
-                                return '已取消';
-                            }else if(v=='9'){
-                               return '成功';
-                            }
-                        }
-                    },
-                       /* renderer:function(v){
-                            if(v){
-                               var rec = processingStatus.find('TValue',v,0,false,true,false);
-                                console.log(v,rec);
-                               if(rec>-1){
-                                return processingStatus.getAt(rec).get("TSDesc");
-                                }else{
-                                    return "";
-                                }
-                            }else{
-                                return "";
-                            }
-                        }*/
-                    {
+                    },{
                         xtype:'actioncolumn',
                         text:"下载日志",
                         flex:1,
                         items:[
                             {
-                                iconCls:'download',
+                                iconCls:' download',
                                 sortable:false,
-                                handler: "downloadTzRz"
+                                handler: "downloadTzRz",
+                                isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
+									var AEState = record.get('AEState');
+									if(AEState == "SUCCEEDED"){
+										return false;
+									}else{
+										return true;
+									}
+								}
                             }
                         ]
                     }

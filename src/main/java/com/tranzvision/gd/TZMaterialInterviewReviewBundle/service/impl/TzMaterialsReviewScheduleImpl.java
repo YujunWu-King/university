@@ -691,13 +691,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 							tmpPjf2 = df.format(tmoD);
 						}
 
-						if (strPwLists != null && strPwLists.indexOf(strPwDlId) >= 0) {
+						if (strPwLists != null && this.find(selectPwList, strPwDlId) >= 0) {
 							aveScoreTotal = aveScoreTotal + Double.valueOf(tmpPjf2);
 						}
 
 						strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, tmpPjf2);
 						if (intSize == pwList.size()) {
-
+							
 							if (selectPwList.length > 0) {
 								saveScore = aveScoreTotal / selectPwList.length;
 							}
@@ -752,7 +752,7 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 									douPercent = df.format(tmpPercent) + "%";
 								}
 
-								if (strPwLists != null && strPwLists.indexOf(strPwDlId) >= 0) {
+								if (strPwLists != null && this.find(selectPwList, strPwDlId) >= 0) {
 									Integer tmpInt = sMaps.get(strMFbdzMxId) == null ? 0 : sMaps.get(strMFbdzMxId);
 									tmpInt = tmpInt + Integer.valueOf(strDange);
 
@@ -762,12 +762,11 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 								strGridDataHTML = strGridDataHTML + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_CLMSPS_PW_DF_FBDZ_ITEM_HTML", strFzValue, strDange + "（" + douPercent + "）");
 								if (intSize == pwList.size()) {
 									Integer sInt = sMaps.get(strMFbdzMxId) == null ? 0 : sMaps.get(strMFbdzMxId);
-									String stmpPercent = "0";
-
-									if (sInt == 0 || intTotal == 0) {
+									String stmpPercent = "0";									
+									if (sInt == 0 || intTotalWc == 0) {
 
 									} else {
-										double sDoubleVe = sInt * 1.0 / intTotal;
+										double sDoubleVe = sInt * 1.0 / intTotalWc;
 										double dtmpPercent = sDoubleVe * 100;
 										stmpPercent = df.format(dtmpPercent) + "%";
 									}
@@ -914,8 +913,13 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 
 			DecimalFormat df = new DecimalFormat("######0.00");
 
-			String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
-			String strScoreModalId = sqlQuery.queryForObject(strScoreModalSql, new Object[] { strClassID }, "String");
+			String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID,TZ_PS_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
+			String strScoreModalId = "",strPsAppmodalId="";
+			Map<String,Object> sqlMap = sqlQuery.queryForMap(strScoreModalSql, new Object[] { strClassID });
+			if(sqlMap!=null){
+				strScoreModalId = sqlMap.get("TZ_ZLPS_SCOR_MD_ID")==null?"":String.valueOf(sqlMap.get("TZ_ZLPS_SCOR_MD_ID"));
+				strPsAppmodalId = sqlMap.get("TZ_PS_APP_MODAL_ID")==null?"":String.valueOf(sqlMap.get("TZ_PS_APP_MODAL_ID"));
+			}
 
 			String strTreeName = "";
 			String strTreeNameSql = "SELECT TREE_NAME FROM PS_TZ_RS_MODAL_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=?";
@@ -1032,9 +1036,9 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 					}
 
 					if (!"".equals(strResponse) && strResponse != null) {
-						strResponse = strResponse + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_KSINFO_HTML", strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress, strViewQua, strAveScore, strStuProgress, strClassID, strBatchID, strOprID);
+						strResponse = strResponse + "," + tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_KSINFO_HTML", strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress, strViewQua, strAveScore, strStuProgress, strClassID, strBatchID, strOprID,strPsAppmodalId);
 					} else {
-						strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_KSINFO_HTML", strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress, strViewQua, String.valueOf(strAveScore), strStuProgress, strClassID, strBatchID, strOprID);
+						strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_CLPS_KSINFO_HTML", strAppInsID, strName, strGender, strPweiPc, strPwList, strStuProgress, strViewQua, String.valueOf(strAveScore), strStuProgress, strClassID, strBatchID, strOprID,strPsAppmodalId);
 					}
 				}
 			}
@@ -1472,13 +1476,15 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 			String strBatchID = jacksonUtil.getString("batchID");
 
 			String strContent = "";
-			List<?> listAppID = jacksonUtil.getList("appID");
-
+			//计算所有考生偏差
+			//List<?> listAppID = jacksonUtil.getList("appID");
+			String strAllKshSQL = "SELECT TZ_APP_INS_ID FROM PS_TZ_CLPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			List<Map<String,Object>> listAppID = sqlQuery.queryForList(strAllKshSQL, new Object[]{strClassID,strBatchID});
 			if (listAppID != null && listAppID.size() > 0) {
 
 				for (Object pwObj : listAppID) {
-					ArrayList<String> mapScore = new ArrayList();
-					String strAppInsID = String.valueOf(pwObj);
+					Map<String, Object> resultMap = (Map<String, Object>) pwObj;
+					String strAppInsID = resultMap.get("TZ_APP_INS_ID")==null?"":String.valueOf(resultMap.get("TZ_APP_INS_ID"));
 
 					String strDeleteSql = "DELETE FROM PS_TZ_PW_KS_PC_TBL";
 					sqlQuery.update(strDeleteSql);
@@ -1487,11 +1493,14 @@ public class TzMaterialsReviewScheduleImpl extends FrameworkImpl {
 
 					DecimalFormat df = new DecimalFormat("######0.00");
 					String tmpAveScore = df.format(doublePianCha);
-					if ("".equals(strContent)) {
+					//保存到表中
+					String strUpdateSQL = "UPDATE PS_TZ_CLPS_KSH_TBL SET TZ_CLPS_PWJ_PC=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
+					sqlQuery.update(strUpdateSQL, new Object[]{tmpAveScore,strClassID, strBatchID, strAppInsID});
+					/*if ("".equals(strContent)) {
 						strContent = "{\"appInsID\":\"" + strAppInsID + "\",\"standardDeviation\":\"" + tmpAveScore + "\"}";
 					} else {
 						strContent = strContent + ",{\"appInsID\":\"" + strAppInsID + "\",\"standardDeviation\":\"" + tmpAveScore + "\"}";
-					}
+					}*/
 				}
 			}
 

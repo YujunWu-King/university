@@ -9,7 +9,7 @@
 <meta http-equiv="expires" content="0">
 <title>清华大学经济管理学院MBA面试评审系统</title>
 <style>
-	html,body{height:100%;overflow:hidden}
+	html,body{height:100%;overflow:hidden} 
 </style>
 <!--link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/evaluation/style.css" /-->
 <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/evaluation/default.css" />
@@ -33,6 +33,7 @@
 <script type="text/javascript" charset="UTF-8" src="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts.js"></script>
 <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/resources/ext-charts-all.css"/>
 
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/tzShowTips.js" charset="utf-8"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/evaluation-detail.js" charset="utf-8"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/batch-list.js" charset="utf-8"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/main-evaluation.js" charset="utf-8"></script>
@@ -66,7 +67,8 @@ Ext.onReady(function(){
 	}
 })
 $(function(){
-	$("#tz_evaluation_main").height(Ext.getBody().getHeight()-58-37);
+	$("#tz_msps_loading").height(Ext.getBody().getHeight()-58-37);
+	$("#tz_msps_pclb").height(Ext.getBody().getHeight()-58-37);
 	$("#tz_msps_container").width(Ext.getBody().getWidth()*3);
 });
 </script>
@@ -87,20 +89,20 @@ $(function(){
            </ul>           
 	</div>
   		<!-- evaluation main start -->
-		<div id="tz_evaluation_main" style="height:auto;overflow-x:hidden;margin:0px;position:relative">
+		<div id="tz_evaluation_main" style="overflow-x:hidden;margin:0px;position:relative">
 			<div id="tz_msps_loading" style="height:auto;width:100%;overflow:hidden;z-index:1600;background-color:#F4F4EC;position:absolute;bottom:40px;">
 				<div style="margin:auto; width:100%;height: 100%; text-align:center;line-height:500px;font-size:25px;font-family:Microsoft Yahei;">	
 					<p>欢迎登录清华经管学院MBA面试评审系统，数据加载中，请稍候……</p>
 				</div>
 			</div>
-			<div id="tz_msps_container" style="width: 5050px;height:100%;min-height:500px;position:relative;overflow:hidden">
-				<table width="100%" height="100%" style="background-color:#F4F4EC">
-					<tr>
-						<td align="center" valign="top">
-							<div id="tz_msps_pclb" tztype="page" style="background-color:#F4F4EC;z-index:1400;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
-								<table width="100%" height="100%">
-									<tr>
-										<td align="center" valign="top">
+			<div id="tz_msps_container" style="width: 5050px;height:100%;position:relative;overflow:hidden">
+				<table style="background-color:#F4F4EC;width:100%;height:100%">
+					<tr style="width:100%;height:100%"">
+						<td align="center" valign="top" style="width:100%;height:100%"">
+							<div id="tz_msps_pclb" tztype="page" style="background-color:#F4F4EC;z-index:1400;list-style:none;width:100%;float:left;overflow-x:hidden">
+								<table style="width:100%;height:100%">
+									<tr style="width:100%;height:100%">
+										<td align="center" valign="top" style="width:100%;height:100%">
 											<div id="tz_msps_pclb_a" style="vertical-align:middle"></div>
 										</td>
 									</tr>
@@ -108,7 +110,7 @@ $(function(){
 							</div>
 						</td>
 						<td align="center" valign="top">
-							<div id="tz_msps_zym" tztype="page" style="background-color:#F4F4EC;z-index:1200;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+							<div id="tz_msps_zym" tztype="page" style="background-color:#F4F4EC;z-index:1200;list-style:none;width:100%;float:left;overflow-x:hidden">
 								<table width="100%">
 									<tr>
 										<td>
@@ -123,7 +125,7 @@ $(function(){
 							</div>
 						</td>
 						<td align="center" valign="top">
-							<div id="tz_msps_dfym" tztype="page" style="background-color:#F4F4EC;z-index:1000;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+							<div id="tz_msps_dfym" tztype="page" style="background-color:#F4F4EC;z-index:1000;list-style:none;width:100%;float:left;overflow-x:hidden">
 								<table width="100%">
 									<tr>
 										<td>
@@ -138,12 +140,12 @@ $(function(){
 			</div>
 		</div>
 		<!-- evaluation main end -->
+		<div class="clear"></div>
+		<!-- foot start -->
+		<div id="footarea" class="footer assdiv" style="background-color:#fff;/*position:absolute;bottom:0;left:0*/">
+	  	<p>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</p>
+	    </div>
   </div>
 	<!-- content end --> 
-	<div class="clear"></div>
-	<!-- foot start -->
-	<div id="footarea" class="footer assdiv" style="background-color:#fff;position:absolute;bottom:0;left:0">
-  	<p>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</p>
-    </div>
 </div></body>
 </html>

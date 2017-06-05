@@ -196,7 +196,7 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 			xtype		: 'button',
 			hidden		: false,
 			text		: '进行评审',
-			width		: 100,
+			width		: 90,
 			//height		: 25,
 			margin		: '10 10 10 0',
 			handler 	: function() {
@@ -281,14 +281,14 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 												}
 												
 											}else{												
-												Ext.Msg.alert('失败', jsonObject.comContent.error_decription);
+												Ext.Msg.alert('提示', responseJsonObject.comContent.error_decription);
 											}
 				                        }
 				                    }
 				                    catch(e)
 				                    {
 				                    	console&&console.error(e);
-				                        Ext.Msg.alert("提示","进行评审失败！请重试！多次失败请联系管理员！");
+				                        Ext.Msg.alert("提示","进行评审失败！请重试,多次失败请联系管理员！");
 				                    }
 				                },
 				                failure: function(response, opts)
@@ -383,13 +383,13 @@ function getDataModelForPJFTJGrid(jsonObject)
 				}
 				
 				var tmpColumn = {
-              						text     : tmpArray[i]['ps_sub_col'][j][subColName],
-              						width    : 400,
-              						sortable : false,
-              						resizable: true,
-									hidden	 : hidden_sub_col,
-              						dataIndex: colName + '_' + subColName
-              					};
+					text     : tmpArray[i]['ps_sub_col'][j][subColName],
+					width    : 400,
+					sortable : false,
+					resizable: true,
+					hidden	 : hidden_sub_col,
+					dataIndex: colName + '_' + subColName
+				};
 				
 				tmpObject['columns'].push(tmpColumn);
 				statisticsGridDataModel['gridFields'].push({name:colName + '_' + subColName});
@@ -506,6 +506,7 @@ function getDataForFenbuGrid(jsonObject)
 			tmpArray[6] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_sjfb_rshu'];
 			tmpArray[7] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_sjfb_wcrs'];
 			tmpArray[8] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_sjfb_fhyq'];
+			tmpArray[9] = jsonObject['ps_data_fb'][i]['ps_fszb_fbsj'][j]['ps_ztfb_bilv'];
 			
 			ebList[counter] = tmpArray;
 			counter ++;
@@ -526,7 +527,7 @@ function createFenbuGrid(jsonObject,doHidePanel)
 	var myData = getDataForFenbuGrid(jsonObject);
 	
 	var store = Ext.create('Ext.data.ArrayStore', {
-      fields: [{name:'zb_mc'},{name:'zb_fb_mc'},{name:'ps_bj_fblv'},{name:'ps_bj_fbrs'},{name:'ps_bj_fbwc'},{name:'ps_sj_fblv'},{name:'ps_sj_fbrs'},{name:'ps_sj_fbwc'},{name:'ps_sj_valid'}],
+      fields: [{name:'zb_mc'},{name:'zb_fb_mc'},{name:'ps_bj_fblv'},{name:'ps_bj_fbrs'},{name:'ps_bj_fbwc'},{name:'ps_sj_fblv'},{name:'ps_sj_fbrs'},{name:'ps_sj_fbwc'},{name:'ps_sj_valid'},{name:'ps_zt_fblv'}],
       groupField: 'zb_mc',
       sorters: ['zb_fb_mc','ps_bj_fblv','ps_bj_fbrs','ps_bj_fbwc','ps_sj_fblv','ps_sj_fbrs','ps_sj_fbwc','ps_sj_valid'],
       data: myData
@@ -562,7 +563,7 @@ function createFenbuGrid(jsonObject,doHidePanel)
               sortable : false,
               resizable: false,
               dataIndex: 'zb_fb_mc'
-          },
+          },/*
           {
               text     : '标准分布比率',
               width    : 80,
@@ -586,11 +587,12 @@ function createFenbuGrid(jsonObject,doHidePanel)
               resizable: false,
 			  hidden   : true,
               dataIndex: 'ps_bj_fbwc'
-          },
+          },*/
           {
               text     : '您目前评分分布比率',
               //width    : 130,
 			  width    : 330,
+			  flex     : 1,
               sortable : false,
               resizable: false,
               dataIndex: 'ps_sj_fblv'
@@ -599,6 +601,7 @@ function createFenbuGrid(jsonObject,doHidePanel)
               text     : '您目前评分分布人数',
               //width    : 130,
 			  width    : 330,
+			  flex     : 1,
               sortable : false,
               resizable: false,
               dataIndex: 'ps_sj_fbrs'
@@ -610,6 +613,15 @@ function createFenbuGrid(jsonObject,doHidePanel)
               resizable: false,
 			  hidden   : true,
               dataIndex: 'ps_sj_fbwc'
+          },
+          {
+              text     : '评委总体分布比率',
+              width    : 130,
+              flex     : 1,
+              sortable : false,
+              resizable: false,
+			  hidden   : false,
+              dataIndex: 'ps_zt_fblv'
           },
           {
               text     : '是否符合要求',
@@ -799,7 +811,7 @@ function createStatisticsChart(jsonObject,chartStore,totalWidth,doHidePanel)
 							layout:'fit',
                             hidden : hiddenGrid,
 							collapsible:true,
-							collapsed:true,
+							collapsed:false,
 							height: 400,
 							width: totalWidth,
 							items: fsChart2
@@ -826,19 +838,20 @@ function getSubDataForFenbuChart(chartDataArray)
 		var tmpNumber1 = 0;
 		var tmpNumber2 = 0;
 		
-		var ps_bzfb_bilv = chartDataArray[i]['ps_bzfb_bilv'];
-		ps_bzfb_bilv = ps_bzfb_bilv!=undefined?ps_bzfb_bilv.replace("%",""):0;
-		
 		var ps_sjfb_bilv = chartDataArray[i]['ps_sjfb_bilv'];
 		ps_sjfb_bilv = ps_sjfb_bilv!=undefined?ps_sjfb_bilv.replace("%",""):0;
 		
-		if(Ext.isNumeric(ps_bzfb_bilv) == true)
-		{
-			tmpNumber1 = 1.0 * ps_bzfb_bilv;
-		}
+		var ps_ztfb_bilv = chartDataArray[i]['ps_ztfb_bilv'];
+		ps_ztfb_bilv = ps_ztfb_bilv!=undefined?ps_ztfb_bilv.replace("%",""):0;
+		
 		if(Ext.isNumeric(ps_sjfb_bilv) == true)
 		{
-			tmpNumber2 = 1.0 * ps_sjfb_bilv;
+			tmpNumber1 = 1.0 * ps_sjfb_bilv;
+		}
+		
+		if(Ext.isNumeric(ps_ztfb_bilv) == true)
+		{
+			tmpNumber2 = 1.0 * ps_ztfb_bilv;
 		}
 		
 		data.push({name:chartDataArray[i]['ps_fb_mc'],data1:tmpNumber1,data2:tmpNumber2});
@@ -854,7 +867,7 @@ function createSubStatisticsCharts(chartDataArray,chartStore,boolHidePanel)
 	{
 		store1 = Ext.create('Ext.data.JsonStore',
 				{
-					fields: ['name', 'data1','data2'],
+					fields: ['name','data1','data2'],
 					data: getSubDataForFenbuChart(chartDataArray['ps_fszb_fbsj'])
 				});
 	}
@@ -872,13 +885,13 @@ function createSubStatisticsCharts(chartDataArray,chartStore,boolHidePanel)
 				xField: 'name',
 				yField: 'data1',
 				markerConfig: {type: 'cross',size: 4,radius: 4,'stroke-width': 0},
-				title: '标准分布曲线',
+				title: '我的评分分布曲线',
 				tips: {
 								trackMouse: true,
 								width: 180,
 								renderer: function(storeItem, item)
 													{
-														this.setTitle('分布区间[' + storeItem.get('name') + ']<br>标准分布比率: ' + Ext.util.Format.number(storeItem.get('data1'),'000.00'));
+														this.setTitle('分布区间[' + storeItem.get('name') + ']<br>分布比率: ' + Ext.util.Format.number(storeItem.get('data1'),'000.00'));
 													}
 							}
 			};
@@ -890,7 +903,7 @@ function createSubStatisticsCharts(chartDataArray,chartStore,boolHidePanel)
 			xField: 'name',
 			yField: 'data2',
 			markerConfig: {type: 'circle',size: 4,radius: 4,'stroke-width': 0},
-			title: '分布曲线',
+			title: '评委总体分布曲线',
 			tips: {
 							trackMouse: true,
 							width: 180,
@@ -907,11 +920,11 @@ function createSubStatisticsCharts(chartDataArray,chartStore,boolHidePanel)
 	{
 		for(var i=0;i<chartDataArray['ps_cht_flds'].length;i++)
 		{
-			if(chartDataArray['ps_cht_flds'][i] == 'ps_bzfb_bilv')
+			if(chartDataArray['ps_cht_flds'][i] == 'ps_sjfb_bilv')
 			{
 				seriesArray.push(series1);
 			}
-			else if(chartDataArray['ps_cht_flds'][i] == 'ps_sjfb_bilv')
+			else if(chartDataArray['ps_cht_flds'][i] == 'ps_ztfb_bilv')
 			{
 				seriesArray.push(series2);
 			}
@@ -970,7 +983,6 @@ function createSubStatisticsCharts(chartDataArray,chartStore,boolHidePanel)
 
 function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth,doHidePanel)
 {
-	
 	var boolHidePanel = true;
 	if(doHidePanel=='Y'){
 		boolHidePanel = false;
@@ -996,7 +1008,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth,doHidePane
 			chartArray.push(tmpChart);
 		}
 	}
-	
+
 	var chartPanel = null;
 	if(chartArray.length > 0)
 	{
@@ -1007,7 +1019,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth,doHidePane
 				bodyPadding:5,
 				padding:0,
 				collapsible:true,
-				collapsed:true,
+				collapsed:false,
 				//layout: {type: 'table',columns: chartArray.length},
 				defaults: {frame:true, width:totalWidth/*totalWidth/chartArray.length - 2*/, height: 480},
 				width: "100%",
@@ -1025,7 +1037,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth,doHidePane
 
 function getApplicantListColumnHeaders(jsonObject)
 {
-	var clHeader = ["ps_ksh_xh","ps_ksh_id","ps_msh_id","ps_ksh_bmbid","ps_ksh_xm","ps_ksh_ppm","ps_ksh_zt","ps_ksh_dt"];
+	var clHeader = ["ps_ksh_xh","ps_ksh_id","ps_msh_id","ps_ksh_bmbid","ps_ksh_xm","ps_ksh_ppm","ps_ksh_zt","ps_ksh_dt",'ps_ksh_school','ps_ksh_company'];
 	
 	for(itm in jsonObject)
 	{
@@ -1042,8 +1054,7 @@ function getApplicantListColumns(jsonObject)
 	      {text:"面试申请号",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_msh_id",
 				renderer:function(value){return Ext.String.format('<a id="msh_id_{1}" href="JavaScript:void(0)" title="单击此链接进入该考生面试评审主页面。">{0}</a>',value,value);}
 			},
-		  {text:'考生姓名',flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
-		  {text:"考生排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"}
+		  {text:'考生姓名',flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"}
 		];
 	
 	//动态列
@@ -1055,6 +1066,8 @@ function getApplicantListColumns(jsonObject)
         }});
 	}
 	
+	columnList.push({text:"本科院校",width:150,align:'left',sortable:false,resizable:false,dataIndex:"ps_ksh_school"});
+	columnList.push({text:"工作单位",width:150,align:'left',sortable:false,resizable:false,dataIndex:"ps_ksh_company"});
 	columnList.push({text:"评议状态",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
 	columnList.push({text:"评审时间",flex:1,minWidth:140,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_dt"});
 	
@@ -1544,7 +1557,7 @@ function createStatisticsArea(batchId,jsonObject)
 			 {
 				title:'评审统计信息区',
 				collapsible:true,
-				collapsed:true,
+				collapsed:false,
 				margin:'0 0 2 0',
 				bodyPadding:15,
 				layout: {
@@ -1616,7 +1629,9 @@ function initializeMainEvaluatePage(batchId,jsonObject)
 	
 	mainPageFrame.on("resize",function(t,width,height){
 		t.suspendEvent("resize");
-		if(Ext.fly("tz_evaluation_main").getHeight()<height){
+		var mainEl = $(".main")[0];
+		//判断是否有滚动条
+		if(height>Ext.getBody().getHeight()-$(".top_main").height()-$(".footer").height()){
 			t.setWidth(Ext.getBody().getWidth()-17);
 		}else{
 			t.setWidth(Ext.getBody().getWidth());

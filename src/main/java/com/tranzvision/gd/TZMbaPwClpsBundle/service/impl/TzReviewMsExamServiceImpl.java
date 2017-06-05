@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZMbaPwClpsBundle.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,15 +15,22 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzZdcsDcAetMapper;
+import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzZdcsDcAet;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsksTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsksTbl;
-import com.tranzvision.gd.util.Calendar.DateUtil;
+import com.tranzvision.gd.batch.engine.base.BaseEngine;
+import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
-import com.tranzvision.gd.util.poi.excel.ExcelHandle;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -49,6 +56,14 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
 	private TZGDObject TzGDObject;
+	@Autowired
+	private GetSeqNum GetSeqNum;
+	@Autowired
+	private PsTzZdcsDcAetMapper psTzZdcsDcAetMapper;
+	@Autowired
+	private PsTzExcelDrxxTMapper psTzExcelDrxxTMapper;
+	@Autowired
+	private PsTzExcelDattTMapper psTzExcelDattTMapper;
 
 	/***
 	 * 
@@ -69,8 +84,13 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String judgeList = "";
+		String judgeGroupName = "";
 
-		String pwsql = "SELECT group_concat(B.TZ_DLZH_ID)  AS TZ_DLZH_ID FROM PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE A.TZ_PWEI_OPRID=B.OPRID  AND A.TZ_CLASS_ID=?  AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? GROUP BY A.TZ_APPLY_PC_ID,A.TZ_CLASS_ID,A.TZ_APP_INS_ID";
+		// String pwsql = "SELECT group_concat(B.TZ_DLZH_ID) AS TZ_DLZH_ID FROM
+		// PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE
+		// A.TZ_PWEI_OPRID=B.OPRID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=?
+		// AND A.TZ_APP_INS_ID=? GROUP BY
+		// A.TZ_APPLY_PC_ID,A.TZ_CLASS_ID,A.TZ_APP_INS_ID";
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_APP_INS_ID", "ASC" } };
@@ -91,8 +111,12 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("classId", rowList[0]);
 					mapList.put("batchId", rowList[1]);
 					mapList.put("appInsId", rowList[2]);
-					judgeList = sqlQuery.queryForObject(pwsql, new Object[] { rowList[0], rowList[1], rowList[2] },
-							"String");
+					/*
+					 * judgeList = sqlQuery.queryForObject(pwsql, new Object[] {
+					 * rowList[0], rowList[1], rowList[2] }, "String");
+					 */
+					judgeGroupName = sqlQuery.queryForObject(TzGDObject.getSQLText("SQL.TZMbaPwClps.TZ_MSPS_KS_JUGROP"),
+							new Object[] { rowList[1], rowList[0], rowList[2] }, "String");
 					mapList.put("judgeGroup", judgeList);
 					mapList.put("ksOprId", rowList[3]);
 					mapList.put("passState", rowList[4]);
@@ -100,6 +124,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("ksName", rowList[6]);
 					mapList.put("gender", rowList[7]);
 					mapList.put("mshId", rowList[8]);
+					mapList.put("judgeGroupName", judgeGroupName);
 					listData.add(mapList);
 				}
 
@@ -123,6 +148,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 		Long appinsId = (long) 0;
 		String ksName = "";
 		int count = 0;
+
 		try {
 			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			jacksonUtil.json2Map(actData[0]);
@@ -229,42 +255,22 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzOther(String strType, String strParams, String[] errorMsg) {
 		String strRet = "";
-		Map<String, Object> mapRet = new HashMap<String, Object>();
-		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-			jacksonUtil.json2Map(strParams);
-
-			String[] actData = null;
-			// 操作数据;
-			// JSONArray jsonArray = null;
-			List<Map<String, Object>> jsonArray = null;
-			int num1 = 0;
-
-			if (jacksonUtil.containsKey("export")) {
-				jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("export");
-				// System.out.println(jacksonUtil.Map2json(jsonArray));
-				if (jsonArray != null && jsonArray.size() > 0) {
-					actData = new String[jsonArray.size()];
-					for (num1 = 0; num1 < jsonArray.size(); num1++) {
-						actData[num1] = jacksonUtil.Map2json(jsonArray.get(num1));
-						System.out.println(actData[num1]);
-					}
-
-				}
-			}
-			String classId = jacksonUtil.containsKey("classId") ? jacksonUtil.getString("classId") : null;
-			String batchId = jacksonUtil.containsKey("batchId") ? jacksonUtil.getString("batchId") : null;
 
 			switch (strType) {
 			case "EXPORT":
-				String filepath = this.exportstudeninfo(actData, classId, batchId, errorMsg);
-
-				mapRet.put("fileUrl", filepath);
-
-				strRet = jacksonUtil.Map2json(mapRet);
+				strRet = this.tzExportExcelFile(strParams, errorMsg);
+				break;
+			case "DOWNLOAD":
+				strRet = this.tzDownloadExpFile(strParams, errorMsg);
+				break;
+			case "getSearchSql":
+				strRet = this.tzGetSearchSql(strParams, errorMsg);
+				break;
+			case "delExpExcel":
+				strRet = this.delExpExcel(strParams, errorMsg);
 
 				break;
-
 			}
 
 		} catch (Exception e) {
@@ -275,284 +281,6 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 		}
 
 		return strRet;
-	}
-
-	/**
-	 * 导出面试学生信息
-	 * 
-	 * @param actData
-	 * @param errorMsg
-	 * @return
-	 */
-	public String exportstudeninfo(String[] actData, String classId, String batchId, String[] errorMsg) {
-
-		String strRet = "";
-
-		try {
-
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-
-			// 获取文件存储路径
-			String fileBasePath = getSysHardCodeVal.getDownloadPath();
-			DateUtil dateUtil = new DateUtil();
-
-			// 活动报名信息excel存储路径
-			String eventExcelPath = "/events/xlsx";
-
-			// 完整的存储路径
-			String fileDirPath = fileBasePath + eventExcelPath;
-			String strForm = "";
-			String xmid = "";
-			String clpszf = "";
-			int judgenum = 0;
-			String[] rowList = null;
-			String[] pw_rowList = null;
-			String[] pw_row = null;
-			String[] daterow = null;
-			int daterow_i = 0;
-
-			// 评委面试人数
-			String groupNumsql = "";
-			int groupNum = 0;
-
-			Map<String, Object> bkzylist = new HashMap<String, Object>();
-
-			int m = 0;
-			int pwsocre_i = 0;
-			String judge_id = "";
-			JacksonUtil jacksonUtil = new JacksonUtil();
-
-			jacksonUtil.json2Map(actData[0]);
-			xmid = jacksonUtil.getString("xmid");
-			System.out.println("xmid：" + xmid);
-			xmid = jacksonUtil.getString("appInsId");
-			System.out.println("appInsId：" + xmid);
-
-			// 生成数据
-
-			// 表头
-			List<String[]> dataCellKeys = new ArrayList<String[]>();
-			ArrayList<String[]> list = new ArrayList<String[]>();
-			ArrayList<String[]> pw_list = null;
-
-			dataCellKeys.add(new String[] { "zjid", "证件号" });
-			dataCellKeys.add(new String[] { "mssqid", "面试申请号" });
-			dataCellKeys.add(new String[] { "name", "姓名" });
-			dataCellKeys.add(new String[] { "bkzy", "报考志愿" });
-			// dataCellKeys.add(new String[] { "zpm", "总排名" });
-			dataCellKeys.add(new String[] { "clpsyszf", "材料评审原始总分" });
-			dataCellKeys.add(new String[] { "csrq", "出身日期" });
-			dataCellKeys.add(new String[] { "drxsln", "年龄" });
-
-			// 在数据库中查询 描述 根据 循环生成 表头
-			List<Map<String, Object>> treename = sqlQuery.queryForList(
-					TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_TREE_EXCEL_HEADER"),
-					new Object[] { xmid, orgid });
-
-			for (int treename_i = 0; treename_i < treename.size(); treename_i++) {
-				Map<String, Object> resultMap = treename.get(treename_i);
-				rowList = new String[2];
-				int j = 0;
-				for (Object value : resultMap.values()) {
-					rowList[j] = value.toString();
-					j++;
-				}
-				list.add(rowList);
-			}
-			// 得到每个学生做多几个评委 设置表头
-			String mspwnumSQL = "SELECT TZ_MSPY_NUM FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-			System.out.println("classId:" + classId + "batchId:" + batchId);
-			int mspwnum = sqlQuery.queryForObject(mspwnumSQL, new Object[] { classId, batchId }, "Integer") == null ? 0
-					: sqlQuery.queryForObject(mspwnumSQL, new Object[] { classId, batchId }, "Integer");
-			for (int n = 0; n < mspwnum; n++) {
-				dataCellKeys.add(new String[] { "judg_" + (n + 1) + "_id", "评委" + (n + 1) + "账号" });
-				dataCellKeys.add(new String[] { "judg_" + (n + 1) + "_group", "评委" + (n + 1) + "所属组" });
-
-				dataCellKeys.add(new String[] { "judg_" + (n + 1) + "_num", "评委" + (n + 1) + "评审人数" });
-				dataCellKeys.add(new String[] { "judg_" + (n + 1) + "_rank", "评委" + (n + 1) + "考生评审排名" });
-
-				for (int i = 0; i < list.size(); i++) {
-					String[] row = list.get(i);
-					dataCellKeys.add(new String[] { "num" + (n + 1) + row[0], "评委" + (n + 1) + row[1] });
-
-				}
-
-			}
-			dataCellKeys.add(new String[] { "sex", "性别" });
-			dataCellKeys.add(new String[] { "bkzkyx", "本/专科院校" });
-			dataCellKeys.add(new String[] { "zgxl", "最高学历" });
-			dataCellKeys.add(new String[] { "gzage", "工龄" });
-			dataCellKeys.add(new String[] { "gzdw", "工作单位" });
-			dataCellKeys.add(new String[] { "gzszd", "工作所在地" });
-			dataCellKeys.add(new String[] { "gzbm", "工作部门" });
-			dataCellKeys.add(new String[] { "gzzw", "工作职位" });
-			dataCellKeys.add(new String[] { "zhcyqc", "自主创业全称" });
-
-			// 数据
-			List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
-
-			Float[] sunscorelist = new Float[actData.length];
-
-			for (int num = 0; num < actData.length; num++) {
-				// 表单内容
-				Map<String, Object> mapData = new HashMap<String, Object>();
-				pw_list = new ArrayList<String[]>();
-				strForm = actData[num];
-				System.out.println("strForm:" + strForm);
-				// 解析 json
-				jacksonUtil.json2Map(strForm);
-				xmid = jacksonUtil.getString("appInsId");
-				System.out.println("这边的" + xmid);
-
-				mapData.put("mssqid", xmid);
-
-				// 查出报名志愿
-
-				mapData.put("bkzy", classId + batchId);
-
-				clpszf = sqlQuery.queryForObject(TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TzGetClpSumScore"),
-						new Object[] { xmid }, "String");
-
-				/*
-				 * mapData.put("zpm", this.checksunRank(sunscorelist, 9999999 -
-				 * Float.valueOf(sunrank) * 100000 + Float.valueOf(clpszf)));
-				 */
-				mapData.put("clpsyszf", clpszf);
-
-				List<Map<String, Object>> pwsteam = sqlQuery.queryForList(
-						TzGDObject.getSQLText("SQL.TZMbaPwClps.TZ_KSMSPS_JUGZHU"),
-						new Object[] { batchId, xmid, classId });
-				// 判断考生的评委数和设置的评委数的大小
-				// 若大于设置的就去设置的大小
-				// 若小于则取pwsteam.size();
-				if (pwsteam.size() > mspwnum) {
-					judgenum = mspwnum;
-
-				} else {
-					judgenum = pwsteam.size();
-				}
-
-				for (m = 0; m < judgenum; m++) {
-					Map<String, Object> pwsteamMap = pwsteam.get(m);
-
-					// 评委ID
-					judge_id = pwsteamMap.get("TZ_PWEI_OPRID") == null ? ""
-							: pwsteamMap.get("TZ_PWEI_OPRID").toString();
-					mapData.put("judg_" + (m + 1) + "_id", judge_id);
-					// 评委组名称
-					mapData.put("judg_" + (m + 1) + "_group", pwsteamMap.get("TZ_CLPS_GR_NAME") == null ? ""
-							: pwsteamMap.get("TZ_CLPS_GR_NAME").toString());
-					// 评委审批人数
-					if (!judge_id.equals("")) {
-						groupNumsql = "SELECT COUNT(1) FROM PS_TZ_MP_PW_KS_TBL  WHERE TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=?";
-						groupNum = sqlQuery.queryForObject(groupNumsql, new Object[] { classId, batchId, judge_id },
-								"Integer");
-						mapData.put("judg_" + (m + 1) + "_num", groupNum);
-					}
-					// 评审排名
-					mapData.put("judg_" + (m + 1) + "_rank",
-							pwsteamMap.get("TZ_KSH_PSPM") == null ? "" : pwsteamMap.get("TZ_KSH_PSPM").toString());
-
-					// 根据报名表id和品味id 循环得到考生 成绩项得分数
-					List<Map<String, Object>> pwsocre = sqlQuery.queryForList(
-							TzGDObject.getSQLText("SQL.TZMbaPwClps.TZ_MSPS_GET_ONE_SCORE"),
-							new Object[] { xmid, judge_id, batchId, classId });
-
-					for (pwsocre_i = 0; pwsocre_i < pwsocre.size(); pwsocre_i++) {
-
-						Map<String, Object> pwscoreMap = pwsocre.get(pwsocre_i);
-
-						pw_rowList = new String[13];
-						int j = 0;
-						for (Object value : pwscoreMap.values()) {
-							pw_rowList[j] = value.toString();
-							j++;
-						}
-						pw_list.add(pw_rowList);
-					}
-
-					for (int i = 0; i < pw_list.size(); i++) {
-						pw_row = pw_list.get(i);
-						mapData.put("num" + (m + 1) + pw_row[1], pw_row[0]);
-
-					}
-
-				}
-
-				try {
-					Map<String, Object> studentInfo = sqlQuery.queryForMap(
-							TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TzGetStudentInfo"), new Object[] { xmid });
-
-					daterow_i = 0;
-					daterow = new String[9];
-					for (Entry<String, Object> entry : studentInfo.entrySet()) {
-
-						daterow[daterow_i] = entry.getValue() == null ? null : entry.getValue().toString();
-
-						daterow_i++;
-
-					}
-
-					mapData.put("sex", daterow[0].equals("M") ? "男" : "女");
-					// System.out.println("性别：" + (daterow[0].equals("M") ? "男"
-					// : "女"));
-
-					// System.out.println(daterow[0]);
-					mapData.put("name", daterow[1]);
-
-					// System.out.println(daterow[1]);
-					mapData.put("zjid", daterow[2]);
-
-					// System.out.println(daterow[2]);
-					mapData.put("bkzkyx", daterow[3]);
-
-					mapData.put("csrq", daterow[4]);
-					// System.out.println("出生日期：" + daterow[4]);
-					mapData.put("drxsln", daterow[4] == null ? null : this.getAge(DateUtil.parse(daterow[4])));
-
-					mapData.put("zgxl", daterow[5]);
-					mapData.put("gzdw", daterow[6]);
-					mapData.put("gzzw", daterow[7]);
-					mapData.put("gzbm", daterow[8]);
-
-				} catch (Exception e) {
-					e.printStackTrace();
-					errorMsg[0] = "1";
-					errorMsg[1] = "导出失败。" + e.getMessage();
-					// TODO: handle exception
-				}
-
-				dataList.add(mapData);
-			}
-
-			// 生成本次导出的文件名
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-			Random random = new Random();
-			int max = 999999999;
-			int min = 100000000;
-			String fileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
-					+ String.valueOf(random.nextInt(max) % (max - min + 1) + min) + ".xlsx";
-
-			ExcelHandle excelHandle = new ExcelHandle(request, fileDirPath, orgid, "apply");
-			boolean rst = excelHandle.export2Excel(fileName, dataCellKeys, dataList);
-			if (rst) {
-				// System.out.println("---------生成的excel文件路径----------");
-				strRet = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-						+ request.getContextPath() + excelHandle.getExportExcelPath();
-				// System.out.println(strRet);
-			} else {
-				System.out.println("导出失败！");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			errorMsg[0] = "1";
-			errorMsg[1] = "导出失败。" + e.getMessage();
-		}
-
-		return strRet;
-
 	}
 
 	// 根据生日计算年纪
@@ -575,6 +303,239 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 			}
 		}
 		return age;
+	}
+
+	/**
+	 * 导出考生评议数据
+	 * 
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String tzExportExcelFile(String strParams, String[] errorMsg) {
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+
+			// 班级ID
+			String classId = jacksonUtil.getString("classId");
+			String batchId = jacksonUtil.getString("batchId");
+			String fileName = jacksonUtil.getString("fileName");
+
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String downloadPath = getSysHardCodeVal.getDownloadPath();
+
+			// excel存储路径
+			String eventExcelPath = "/material/xlsx";
+
+			// 完整的存储路径
+			String expDirPath = downloadPath + eventExcelPath + "/" + getDateNow();
+			String absexpDirPath = request.getServletContext().getRealPath(expDirPath);
+
+			/* 生成运行控制ID */
+			SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+			String s_dt = dateFormate.format(new Date());
+			String runCntlId = "MSPSKS" + s_dt + "_" + GetSeqNum.getSeqNum("TZ_REVIEW_CL_COM", "CLPSKS_EXPORT");
+
+			// 与自动初筛导出共用参数表
+			PsTzZdcsDcAet psTzZdcsDcAet = new PsTzZdcsDcAet();
+			psTzZdcsDcAet.setRunCntlId(runCntlId);
+			psTzZdcsDcAet.setTzClassId(classId);
+			psTzZdcsDcAet.setTzBatchId(batchId);
+			psTzZdcsDcAet.setTzRelUrl(expDirPath);
+			psTzZdcsDcAet.setTzJdUrl(absexpDirPath);
+			psTzZdcsDcAet.setTzParamsStr(strParams);
+			psTzZdcsDcAetMapper.insert(psTzZdcsDcAet);
+
+			String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+			String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+
+			BaseEngine tmpEngine = TzGDObject.createEngineProcess(currentOrgId, "TZ_MSPSKS_EXP_PROC");
+			// 指定调度作业的相关参数
+			EngineParameters schdProcessParameters = new EngineParameters();
+
+			schdProcessParameters.setBatchServer("");
+			schdProcessParameters.setCycleExpression("");
+			schdProcessParameters.setLoginUserAccount(currentAccountId);
+			schdProcessParameters.setPlanExcuteDateTime(new Date());
+			schdProcessParameters.setRunControlId(runCntlId);
+
+			// 调度作业
+			tmpEngine.schedule(schdProcessParameters);
+
+			// 进程实例id;
+			int processinstance = tmpEngine.getProcessInstanceID();
+
+			PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
+			psTzExcelDrxxT.setProcessinstance(processinstance);
+			psTzExcelDrxxT.setTzComId("TZ_REVIEW_MS_COM");
+			psTzExcelDrxxT.setTzPageId("TZ_MSPS_KS_STD");
+			// 存放班级ID-批次ID
+			psTzExcelDrxxT.setTzDrLxbh(classId + "-" + batchId);
+			psTzExcelDrxxT.setTzDrTaskDesc(fileName);
+			psTzExcelDrxxT.setTzStartDtt(new Date());
+			psTzExcelDrxxT.setOprid(oprid);
+			psTzExcelDrxxT.setTzIsViewAtt("Y");
+			psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
+
+			// 生成本次导出的文件名
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+			Random random = new Random();
+			int max = 999999999;
+			int min = 100000000;
+			String sysFileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
+					+ String.valueOf(random.nextInt(max) % (max - min + 1) + min) + ".xlsx";
+
+			PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
+			psTzExcelDattT.setProcessinstance(processinstance);
+			psTzExcelDattT.setTzSysfileName(sysFileName);
+			psTzExcelDattT.setTzFileName(fileName);
+			psTzExcelDattT.setTzCfLj("A");
+			psTzExcelDattT.setTzFjRecName("");
+			psTzExcelDattT.setTzFwqFwlj("");
+			psTzExcelDattTMapper.insert(psTzExcelDattT);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "导出失败。" + e.getMessage();
+		}
+
+		return strRet;
+	}
+
+	/**
+	 * 下载导出文件
+	 * 
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String tzDownloadExpFile(String strParams, String[] errorMsg) {
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("filePath", "");
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			// 下载导出excel
+			String filePath = "";
+			String strProcInsId = jacksonUtil.getString("procInsId");
+			if (!"".equals(strProcInsId) && strProcInsId != null) {
+				int procInsId = Integer.parseInt(strProcInsId);
+
+				PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(procInsId);
+				if (psTzExcelDattT != null) {
+					filePath = psTzExcelDattT.getTzFwqFwlj();
+					if (!"".equals(filePath) && filePath != null) {
+						filePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+								+ request.getContextPath() + filePath;
+					}
+				}
+			}
+			mapRet.put("filePath", filePath);
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "系统错误。" + e.getMessage();
+		}
+
+		return jacksonUtil.Map2json(mapRet);
+	}
+
+	/**
+	 * 可配置搜索sql
+	 * 
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String tzGetSearchSql(String strParams, String[] errorMsg) {
+		String strRet = "";
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+		rtnMap.put("searchSql", "");
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			/* 可配置搜索查询语句 */
+			String[] resultFldArray = { "TZ_APP_INS_ID" };
+
+			String[][] orderByArr = null;
+
+			String searchSql = fliterForm.getQuerySQL(resultFldArray, orderByArr, strParams, errorMsg);
+
+			rtnMap.replace("searchSql", searchSql);
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = e.getMessage();
+		}
+
+		strRet = jacksonUtil.Map2json(rtnMap);
+		return strRet;
+	}
+
+	/**
+	 * 删除 excel
+	 * 
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+
+	@SuppressWarnings("unchecked")
+	private String delExpExcel(String strParams, String[] errorMsg) {
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			List<Map<String, Object>> delData = (List<Map<String, Object>>) jacksonUtil.getList("data");
+
+			if (delData != null && delData.size() > 0) {
+				for (Map<String, Object> delMap : delData) {
+
+					String strProcInsId = delMap.get("procInsId") == null ? "" : delMap.get("procInsId").toString();
+					System.out.println("strProcInsId：" + strProcInsId);
+					if (!"".equals(strProcInsId) && strProcInsId != null) {
+						int procInsId = Integer.parseInt(strProcInsId);
+
+						PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(procInsId);
+						if (psTzExcelDattT != null) {
+							String filePath = psTzExcelDattT.getTzFwqFwlj();
+							if (!"".equals(filePath) && filePath != null) {
+								filePath = request.getServletContext().getRealPath(filePath);
+
+								File file = new File(filePath);
+								if (file.exists() && file.isFile()) {
+									file.delete();
+								}
+							}
+						}
+						psTzExcelDrxxTMapper.deleteByPrimaryKey(procInsId);
+						psTzExcelDattTMapper.deleteByPrimaryKey(procInsId);
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			errorMsg[0] = "1";
+			errorMsg[1] = e.getMessage();
+		}
+		return strRet;
+
+	}
+
+	/**
+	 * 创建日期目录名
+	 * 
+	 * @return
+	 */
+	private String getDateNow() {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(1);
+		int month = cal.get(2) + 1;
+		int day = cal.get(5);
+		return (new StringBuilder()).append(year).append(month).append(day).toString();
 	}
 
 }

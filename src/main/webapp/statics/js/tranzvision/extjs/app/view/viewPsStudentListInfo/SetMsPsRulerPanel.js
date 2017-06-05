@@ -130,8 +130,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.startDate", "开始日期"),
 							format: 'Y-m-d',
 							name: 'StartDate',
-							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false
+							//afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
+							//allowBlank: false
 
 
 						}]
@@ -142,8 +142,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.startTime", "时间"),
 							format: 'H:i',
 							name: 'StartTime',
-							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false,
+							//afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
+							//allowBlank: false,
 							value: "08:30"
 
 
@@ -161,8 +161,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.end Date", "结束日期"),
 							format: 'Y-m-d',
 							name: 'EndDate',
-							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false
+							//afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
+							//allowBlank: false
 
 
 						}]
@@ -173,8 +173,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.end Time", "时间"),
 							format: 'H:i',
 							name: 'EndTime',
-							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false,
+							//afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
+							//allowBlank: false,
 							value: "08:30"
 
 
@@ -327,7 +327,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgGroupId", "所属评委组"),
 								dataIndex: 'judgGroupId',
 								name: 'judgGroup',
-								width: 150,
+								width: 130,
 								editor: {
 									xtype: 'combobox',
 									valueField: 'TZ_CLPS_GR_ID',
@@ -355,7 +355,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 						           if (v == 'A') {
 							       return "正常";
 						          }  else {
-						            	return "不正常";
+						            	return "暂停";
 						          }
 					          }
 							},{
@@ -375,7 +375,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							store: store,
 							bbar: {
 								xtype: 'pagingtoolbar',
-								pageSize: 10,
+								pageSize: 100,
 								store: store,
 								displayInfo: true,
 								displayMsg: "显示{0}-{1}条，共{2}条",

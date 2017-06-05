@@ -212,7 +212,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 
 			if (moreRowsFlag == null || "".equals(moreRowsFlag)) {
 				error_code = 1;
-				error_decription = "参数不全";
+				error_decription = "参数不全。";
 			}
 
 			if (maxRowCount == null || "".equals(maxRowCount)) {
@@ -369,15 +369,15 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			if (requestDataType == null || "".equals(requestDataType) || classId == null || "".equals(classId)
 					|| batchId == null || "".equals(batchId)) {
 				error_code = 1;
-				error_decription = "参数不全";
+				error_decription = "参数不全。";
 			} else {
 				if (TZ_MSPS_SCOR_MD_ID == null || "".equals(TZ_MSPS_SCOR_MD_ID)) {
 					error_code = 2;
-					error_decription = "当前报考班级没有配置成绩模型";
+					error_decription = "当前报考班级没有配置成绩模型。";
 				} else {
 					if (TREE_NAME == null || "".equals(TREE_NAME)) {
 						error_code = 3;
-						error_decription = "报考班级对应的成绩模型没有配置对应的成绩树";
+						error_decription = "报考班级对应的成绩模型没有配置对应的成绩树。";
 					}
 				}
 			}
@@ -406,13 +406,20 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			secondPwdfTh1.put("col01", "指标名称");
 			secondPwdfTh1.put("ps_cht_flg", "N");
 			secondPwdfTh1.put("ps_grp_flg", "N");
+			secondPwdfThList.add(secondPwdfTh1);
+			
 			Map<String, Object> secondPwdfTh2 = new HashMap<String, Object>();
-			secondPwdfTh2.put("col02", "评分平均分");
+			secondPwdfTh2.put("col02", "我的评分平均分");
 			secondPwdfTh2.put("ps_cht_flg", "Y");
 			secondPwdfTh2.put("ps_grp_flg", "N");
-			
-			secondPwdfThList.add(secondPwdfTh1);
 			secondPwdfThList.add(secondPwdfTh2);
+			
+			secondPwdfTh2 = new HashMap<String, Object>();
+			secondPwdfTh2.put("col03", "评委总体平均分");
+			secondPwdfTh2.put("ps_cht_flg", "Y");
+			secondPwdfTh2.put("ps_grp_flg", "N");
+			secondPwdfThList.add(secondPwdfTh2);
+			
 			
 			// 总分成绩项
 			TZ_SCORE_ITEM_ID = sqlQuery.queryForObject(
@@ -422,22 +429,37 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			// 计算平均分
 			double pjf = 0;
 			
-			pjf = applicationCls.calculateAverage(classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
-			 
+			pjf = applicationCls.calculateAverage(classId, batchId, new String[]{oprid}, TZ_SCORE_ITEM_ID, error_code, error_decription);
+
 			List<Map<String,Object>> sjfzRowList= new ArrayList<Map<String,Object>>();
 			Map<String, Object> sjfzRow1 = new HashMap<String, Object>();
-			sjfzRow1.put("col01", "总分");			
+			sjfzRow1.put("col01", "总分");
 			Map<String, Object> sjfzRow2 = new HashMap<String, Object>();
-			sjfzRow2.put("col02", pjf);			
+			sjfzRow2.put("col02", pjf);
 			sjfzRowList.add(sjfzRow1);
 			sjfzRowList.add(sjfzRow2);
 			
-			Map<String,Object> second_total_map = new HashMap<String, Object>();			
+			//总体平均分
+			List<Map<String,Object>> judgeList = sqlQuery.queryForList("select TZ_PWEI_OPRID from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? and TZ_PWEI_ZHZT<>'B'", 
+					new Object[]{classId,batchId});
+			if(judgeList!=null){
+				String[] oprids = new String[judgeList.size()];
+				for(int i=0;i<judgeList.size();i++){
+					oprids[i] = (String)judgeList.get(i).get("TZ_PWEI_OPRID");
+				}
+				
+				double all_pjf = applicationCls.calculateAverage(classId, batchId, oprids, TZ_SCORE_ITEM_ID, error_code, error_decription);
+				Map<String, Object> sjfzRow3 = new HashMap<String, Object>();
+				sjfzRow3.put("col03", all_pjf);
+				sjfzRowList.add(sjfzRow3);
+			}
+			
+			Map<String,Object> second_total_map = new HashMap<String, Object>();
 			second_total_map.put("ps_tjzb_btmc", secondPwdfThList);
 			second_total_map.put("ps_tjzb_mxsj", sjfzRowList);
 			
 			if("Y".equals(str_jsfs)){
-				 ps_gaiy_info = ps_gaiy_info + "平均分：" + pjf;	
+				 ps_gaiy_info = ps_gaiy_info + "平均分：" + pjf;
 			}
 				   
 			/* 第3部分 当前评委打分分布统计信息 */
@@ -457,6 +479,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 					fbsjrowItem.put("ps_fb_mc", FBMS);
 					fbsjrowItem.put("ps_sjfb_bilv", (Double)evaluationDataList.get(i).get("num_rate")+"%");
 					fbsjrowItem.put("ps_sjfb_rshu", (Integer)evaluationDataList.get(i).get("num_dange"));
+					fbsjrowItem.put("ps_ztfb_bilv", (Double)evaluationDataList.get(i).get("num_rate_total")+"%");
 					
 					fbsjrow.add(fbsjrowItem);
 				}
@@ -472,6 +495,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			thdFbMap.put("ps_fszb_mc", DESCR2);
 			List<String> ps_cht_flds= new ArrayList<String>();
 			ps_cht_flds.add("ps_sjfb_bilv");
+			ps_cht_flds.add("ps_ztfb_bilv");
 			thdFbMap.put("ps_cht_flds", ps_cht_flds);
 			thdFbMap.put("ps_fszb_fbsj", fbsjrow);
 			thdFbList.add(thdFbMap);
@@ -524,16 +548,18 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						String ksbh = "";
 						ksbh = String.valueOf(TZ_APP_INS_ID);
 
-						// 考生姓名、面试申请号;
-						String first_name = "",msh_id = "";
+						// 考生姓名、面试申请号,本科院校，工作单位;
+						String first_name = "",msh_id = "",ksh_school = "",ksh_company = "";
 						Map<String, Object> map3 = sqlQuery.queryForMap(
-								"select B.TZ_MSH_ID,B.TZ_REALNAME from PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B where A.OPRID = B.OPRID and A.TZ_APP_INS_ID=? AND B.TZ_RYLX='ZCYH' LIMIT 0,1",
+								"select B.TZ_MSH_ID,B.TZ_REALNAME,TZ_SCH_CNAME,TZ_COMPANY_NAME from PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B,PS_TZ_REG_USER_T C where A.OPRID = B.OPRID and A.OPRID=C.OPRID and A.TZ_APP_INS_ID=? AND B.TZ_RYLX='ZCYH' LIMIT 0,1",
 								new Object[] { TZ_APP_INS_ID });
-						if (map3 != null) {
+						if (map1 != null) {
 							first_name = (String) map3.get("TZ_REALNAME");
 							msh_id = (String) map3.get("TZ_MSH_ID");
+							ksh_school = (String) map3.get("TZ_SCH_CNAME");
+							ksh_company = (String) map3.get("TZ_COMPANY_NAME");
 						}
-
+						
 						//组内排名;
 						String TZ_KSH_PSPM2 = "";
 						// 评议状态;
@@ -544,7 +570,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						BigInteger cjdId = null;
 						
 						Map<String, Object> map4 = sqlQuery.queryForMap(
-								"select A.TZ_KSH_PSPM,date_format(A.ROW_LASTMANT_DTTM, '%Y-%m-%d %H:%i') ROW_LASTMANT_DTTM ,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_PSHEN_ZT' AND TZ_ZHZ_ID=A.TZ_PSHEN_ZT AND TZ_EFF_STATUS='A') AS TZ_PSHEN_ZT,TZ_SCORE_INS_ID from PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_CLASS_ID=? and A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?",
+								"select A.TZ_KSH_PSPM,date_format(A.ROW_LASTMANT_DTTM, '%Y-%m-%d %H:%i') ROW_LASTMANT_DTTM ,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_SUBMIT_YN' AND TZ_ZHZ_ID=A.TZ_PSHEN_ZT AND TZ_EFF_STATUS='A') AS TZ_PSHEN_ZT,TZ_SCORE_INS_ID from PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_CLASS_ID=? and A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?",
 								new Object[] { classId, batchId, TZ_APP_INS_ID, oprid });
 						if (map4 != null) {
 							TZ_KSH_PSPM2 = (String) map4.get("TZ_KSH_PSPM");
@@ -627,6 +653,8 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				        dyRowValueItem.put("ps_ksh_zt",pyZt);
 				        dyRowValueItem.put("ps_ksh_dt",pssj);				      
 				        dyRowValueItem.put("ps_row_id", ksbh);
+				        dyRowValueItem.put("ps_ksh_school",ksh_school);
+				        dyRowValueItem.put("ps_ksh_company",ksh_company);
 				        
 						//KS_MOREN_PX 为空时按排名排序，否则按面试顺序排序;
 						if(KS_MOREN_PX==null||"".equals(KS_MOREN_PX)){
@@ -752,7 +780,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		
 		if("B".equals(TZ_PWEI_ZHZT)){
 			error_code = "JUDGE_PAUSE";
-			error_decription = "当前评委账号为暂停状态";
+			error_decription = "当前评委账号为暂停状态。";
 		}else{
 			 //判断当前评委是否已经提交;
 			 String TZ_SUBMIT_YN = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ?",
@@ -760,15 +788,15 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			 
 			 if("Y".equals(TZ_SUBMIT_YN)){
 				 error_code = "SUBMITTED";
-				 error_decription = "当前评委账号已经提交，不能再提交";
+				 error_decription = "当前评委账号已经提交，不能再提交。";
 			 }else{
 				 //判断当前批次总体评审状态，若为“关闭”，则不能再打分;
 				 String if_TZ_DQPY_ZT = sqlQuery.queryForObject("select TZ_DQPY_ZT from PS_TZ_MSPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?",
-						 new Object[]{classId,batchId,oprid}, "String");
+						 new Object[]{classId,batchId}, "String");
 				 
 				 if("B".equals(if_TZ_DQPY_ZT)){
 					 error_code = "EVALUATION_CLOSED";
-					 error_decription = "该批次的评审已关闭";
+					 error_decription = "该批次的评审已关闭，无法提交数据。";
 				 }else{
 					   
 					   /*所有考生的提交状态都是“已提交”*/
@@ -776,7 +804,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 								new Object[]{classId,batchId,oprid},"String");
 					   
 					   if("Y".equals(submit_zt)){
-						   error_decription = "存在未评审的考生";
+						   error_decription = "存在未评审的考生，无法提交数据。";
 						   error_code = "SUBMTALL03";
 					   }else{
 						   String mspwpsjlExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN<>'Y'", 
