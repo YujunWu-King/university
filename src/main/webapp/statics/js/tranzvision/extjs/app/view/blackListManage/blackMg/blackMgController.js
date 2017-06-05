@@ -67,8 +67,8 @@
                     }
                 },
                 srhConFields:{
-                    OPRID:{
-                        desc:'用户编号',
+                	TZ_MSSQH:{
+                        desc:'面试申请号',
                         operator:'07',
                         type:'01'
                     },
@@ -80,11 +80,14 @@
                 }
             },
             srhresult:{
-                OPRID: '编号',
-                TZ_REALNAME: '姓名'
+            	OPRID: '用户编号',
+            	TZ_REALNAME: '姓名',
+            	TZ_MSSQH: '面试申请号'
+                
             },
             multiselect: false,
             callback: function(selection){
+            	console.log(selection[0].data)
                 var oprid=selection[0].data.OPRID;
 //                console.log(oprid);
                     var tzParams = '{"ComID":"TZ_BLACK_LIST_COM","PageID":"TZ_BLACK_ADD_STD","OperateType":"U","comParams":{"update":[{"OPRID":"'+oprid+'"}]}}';
