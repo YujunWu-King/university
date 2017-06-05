@@ -1509,7 +1509,6 @@
         var classID = record.get('classID');
         var batchID = record.get('batchID');
         cmp = new ViewClass(classID,batchID,transValue);
-//console.log("1");
         cmp.on('afterrender',function(panel){            
                 var judgeStore =panel.down('tabpanel').child("form[name=judgeFormInfo]").child('grid[name=interviewJudgeGrid]').store,
                     judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
@@ -1760,8 +1759,6 @@
             classId:classId,
             batchId:batchId
         });
-        console.log(classId+":"+batchId);
-
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
             
@@ -1911,13 +1908,15 @@
                    // examineeGrid.store.load();
                 } else {
                     panel.actType="add";
-                    form.findField("classId").setValue(classId);
+                    
+                    form.setValues({classId:classId,className:className,batchId:batchId,batchName:batchName,ksNum:applicantsNumber,reviewClpsKsNum:0,reviewKsNum:0});
+               /*     form.findField("classId").setValue(classId);
                     form.findField("className").setValue(className);
                     form.findField("batchId").setValue(batchId);
                     form.findField("batchName").setValue(batchName);
                     form.findField("ksNum").setValue(applicantsNumber);
                     form.findField("reviewClpsKsNum").setValue(0);
-                    form.findField("reviewKsNum").setValue(0);
+                    form.findField("reviewKsNum").setValue(0);*/
                 }
             });
         });

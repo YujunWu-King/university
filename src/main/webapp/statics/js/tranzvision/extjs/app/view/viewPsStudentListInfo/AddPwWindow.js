@@ -237,10 +237,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 						return;
 					} else {
 						for (var i = 0; i < checkLen; i++) {
-							/*if (selection[i].data.judgGroupId == "") {
-									Ext.Msg.alert("提示", "请为" + selection[i].data.judgName + "评委设置分组");
-									return;
-								}else{*/
+					
 								if (selksList == "") {
 			
 									selksList = Ext.JSON.encode(selection[i].data);
@@ -267,7 +264,6 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 		               	gridlist.getStore().reload();
 
 		                }, "添加成功!", true, this)
-						gridlist.getStore().reload();
 
 
 					//修改密码信息表单
