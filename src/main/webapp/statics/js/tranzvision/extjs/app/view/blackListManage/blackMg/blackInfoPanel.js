@@ -15,7 +15,7 @@
         }
     },
     actType: '',
-    title: '会员用户信息',
+    title: '黑名单信息',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     items: [{
         xtype: 'form',
@@ -57,7 +57,8 @@
                     readOnly:true,
                     fieldLabel: '用户编号',
                     name: 'OPRID',
-                    fieldStyle:'background:#F4F4F4'
+                    fieldStyle:'background:#F4F4F4',
+                    hidden:true
                 },{
                     xtype: 'textfield',
                     fieldLabel: '面试申请号',
