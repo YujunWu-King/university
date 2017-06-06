@@ -230,7 +230,7 @@
 				                    success:function(html){
 				                        if(html.comContent.success == "Y"){
 				 							window.parent.$("#photo").attr("src", "%bind(:20)"+html.comContent.url);					
-											window.SurveyBuild && window.parent.$("#photo").parent().parent().find('input[type="hidden"]').val(html.comContent.url);
+											window.parent.SurveyBuild && window.parent.$("#photo").parent().parent().find('input[type="hidden"]').val(html.comContent.url);
 											//做如下修改 以适用分组框 modity by caoy
 											//layer.close(layer.index);
 											$("#loading").fadeOut();

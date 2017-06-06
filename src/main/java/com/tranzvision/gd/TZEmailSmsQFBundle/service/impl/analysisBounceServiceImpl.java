@@ -177,7 +177,7 @@ public class analysisBounceServiceImpl  {
 			                		 txMode = (String)txmap.get("TZ_TX_SSLX");
 			                		 txDesc = (String)txmap.get("TZ_TX_DESC");
 			                		 
-			                		 String matchType = "",matchKey="";
+			                		 String matchType = "",matchKey="",matchKeyLower="";
 			                		 boolean satisfy = false;
 			                		 
 			                		 List<Map<String, Object>> list2 = jdbcTemplate.queryForList("SELECT TZ_TX_PPLX,TZ_TXITEM_KEY FROM PS_TZ_TX_LBTJGX_T A,PS_TZ_TX_RULE_TBL B WHERE A.TZ_TX_TYPE_ID=? AND A.TZ_TX_RULE_ID=B.TZ_TX_RULE_ID",new Object[]{txTypeId});
@@ -185,11 +185,12 @@ public class analysisBounceServiceImpl  {
 			                			 for(int h=0;h<list2.size();h++){
 			                				 matchType = (String)list2.get(h).get("TZ_TX_PPLX");
 			                				 matchKey = (String)list2.get(h).get("TZ_TXITEM_KEY");
+			                				 matchKeyLower = matchKey.toLowerCase();
 			                				
 			                				 /*邮件地址匹配*/
 			                				 if("ADD".equals(matchType)){
-			                					 String add = mail.getFrom();
-			                					 if(add.indexOf(matchKey) >= 0){
+			                					 String add = mail.getFrom().toLowerCase();
+			                					 if(add.indexOf(matchKeyLower) >= 0){
 			                						 satisfy = true;
 			                						 fw.write("邮箱地址匹配成功，匹配关键词：" + matchKey + "\r\n"); 
 			                					 }else{
@@ -198,8 +199,8 @@ public class analysisBounceServiceImpl  {
 			                				 }
 			                				 /*邮件主题匹配*/
 			                				 if("SUB".equals(matchType)){
-			                					 String sub = mail.getSubject();
-			                					 if(sub.indexOf(matchKey) >= 0){
+			                					 String sub = mail.getSubject().toLowerCase();
+			                					 if(sub.indexOf(matchKeyLower) >= 0){
 			                						 satisfy = true;
 			                						 fw.write("邮箱主题匹配成功，匹配关键词：" + matchKey + "\r\n"); 
 			                					 }else{
@@ -208,8 +209,8 @@ public class analysisBounceServiceImpl  {
 			                				 }
 			                				 /*邮件内容匹配*/
 			                				 if("CON".equals(matchType)){
-			                					 String con = mail.getBodyText();
-			                					 if(con.indexOf(matchKey) >= 0){
+			                					 String con = mail.getBodyText().toLowerCase();
+			                					 if(con.indexOf(matchKeyLower) >= 0){
 			                						 satisfy = true;
 			                						 fw.write("邮箱内容匹配成功，匹配关键词：" + matchKey + "\r\n"); 
 			                					 }else{

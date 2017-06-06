@@ -4,6 +4,8 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -372,7 +374,22 @@ public class TzGkEdmClsServiceImpl extends FrameworkImpl {
 			map6.put("name", "退信数");
 			map6.put("count", txCount);
 			strFunnelDateArr.add(map6);
+			
+			
+			// 漏斗图按数量倒序排序
+			Collections.sort(strFunnelDateArr, new Comparator<Object>() {
+				@SuppressWarnings("unchecked")
+				@Override
+				public int compare(Object o1, Object o2) {
+					Map<String, Object> map1 = (Map<String, Object>) o1;
+					Map<String, Object> map2 = (Map<String, Object>) o2;
 
+					int count1 = (int) map1.get("count");
+					int count2 = (int) map2.get("count");
+
+					return -(new Float(count1).compareTo(new Float(count2)));
+				}
+			});
 		}
 
 		Map<String, Object> returnMap = new HashMap<>();
