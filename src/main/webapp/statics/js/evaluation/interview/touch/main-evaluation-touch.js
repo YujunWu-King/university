@@ -62,41 +62,34 @@ function useJson(varjsonData){
 		$("#submtall_flag").html("未提交");
 	}
 
-
-		//考生列表
-		var collist="";
-		var ksheadArray=jsonObject['ps_data_kslb']['ps_ksh_list_headers'];
-
 	
-		for(var i=0;i<ksheadArray.length-9;i++)
-		{
-			var colname='00'+(i+1);
-			colname='col'+colname.substr(colname.length-2);
+	//考生列表
+	var collist="";
+	var ksheadObject=jsonObject['ps_data_kslb']['ps_ksh_list_headers'];
+
+	for(var i in ksheadObject) {
+		collist+='<th>'+ksheadObject[i]+'</th>';
+    }
 	
-			collist+='<th>'+ksheadArray[i+5][colname]+'</th>';
-		}
+	var ksbodyArray=jsonObject['ps_data_kslb']['ps_ksh_list_contents'];
 
-		var ksbodyArray=jsonObject['ps_data_kslb']['ps_ksh_list_contents'];
+	var detallist="";
+	for (var i=0;i<ksbodyArray.length;i++){		
+		var concollist="";
+		for(var j in ksheadObject) {
+			concollist+="<td class='alt'>"+(ksbodyArray[i][j]||"")+'</td>';
+	    }
+		
+		var btnps="<td class='alt'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='"+"test?classId="+ClassId+"&batchId="+BatchId+"&TZ_APP_INS_ID="+ksbodyArray[i]['ps_ksh_bmbid']+"' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>评审</span></span></a></td>";
+		var btnyc="<td class='alt'><a data-icon='delete' data-mini='true' data-inline='true' data-role='button' id='favrecipelink' href='javascript:void(0);' onclick=toycks('"+ksbodyArray[i]['ps_ksh_xm']+"','"+ksbodyArray[i]['ps_ksh_bmbid']+"'); data-corners='true' data-shadow='true' data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-btn-up-c ui-shadow ui-icon-delete ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>移除</span></span></a></td>";
 
-		var detallist="";
-		for (var i=0;i<ksbodyArray.length;i++){		
-			var concollist="";
-			for(var j=0;j<ksbodyArray[i]['ps_row_cnt'].length-9;j++)
-			{
-				var concolname='00'+(j+1);
-				concolname='col'+concolname.substr(concolname.length-2);
-				concollist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][j+5][concolname]+'</td>';
-			}
-			var btnps="<td class='alt'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='"+"http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_MSTC.TZ_MS_PS_TC_FIELD.FieldFormula.Iscript_jquery_mobile_mstc?TZ_APPLY_DIRC_ID=1005&TZ_APP_INS_ID="+ksbodyArray[i]['ps_row_cnt'][2]['ps_ksh_bmbid']+"' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='c' class='ui-btn ui-shadow ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>评审</span><span class='ui-icon ui-icon-arrow-r ui-icon-shadow'>&nbsp;</span></span></a></td>";
-			var btnyc="<td class='alt'><a data-icon='delete' data-mini='true' data-inline='true' data-role='button' id='favrecipelink' href='javascript:void(0);' onclick=toycks('"+ksbodyArray[i]['ps_row_cnt'][3]['ps_ksh_xm']+"','"+ksbodyArray[i]['ps_row_cnt'][2]['ps_ksh_bmbid']+"'); data-corners='true' data-shadow='true' data-iconshadow='true' data-wrapperels='span' data-theme='c' class='ui-btn ui-btn-up-c ui-shadow ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>移除</span><span class='ui-icon ui-icon-delete ui-icon-shadow'>&nbsp;</span></span></a></td>";
+		detallist+="<tr id='"+ksbodyArray[i]['ps_ksh_id']+"'><td  class='alt'>"+ksbodyArray[i]['ps_ksh_xh']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_msh_id']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>"+concollist+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_school']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_company']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_zt']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_dt']+"</td>"+btnps+btnyc+"</tr>"
 
-			detallist+="<tr id='"+ksbodyArray[i]['ps_row_cnt'][1]['ps_ksh_id']+"'><td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][0]['ps_ksh_xh']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][1]['ps_ksh_id']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][3]['ps_ksh_xm']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][4]['ps_ksh_ppm']+"</td>"+concollist+"<td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-4]['ps_ksh_bkyx']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-3]['ps_ksh_gzdw']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-2]['ps_ksh_zt']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-1]['ps_ksh_dt']+"</td>"+btnps+btnyc+"</tr>"
-	
 	}
 
 	
-	 var examerinfolist="<th scope='col'  style='text-align:center;'>"+ksheadArray[0].ps_ksh_xh+"</th><th scope='col'  style='text-align:center;'>"+ksheadArray[1].ps_ksh_id+"</th><th scope='col'  style='text-align:center;'>"+ksheadArray[3].ps_ksh_xm+"</th><th scope='col'  style='text-align:center;'>"+ksheadArray[4].ps_ksh_ppm+"</th>";
-  	 var headbutton="<th  scope='col'  style='text-align:center;'>"+ksheadArray[ksheadArray.length-4].ps_ksh_bkyx+"</th><th scope='col'  style='text-align:center;'>"+ksheadArray[ksheadArray.length-3].ps_ksh_gzdw+"</th>"+"<th  scope='col'  style='text-align:center;'>"+ksheadArray[ksheadArray.length-2].ps_ksh_zt+"</th>"+"<th  scope='col'  style='text-align:center;'>"+ksheadArray[ksheadArray.length-1].ps_ksh_dt+"</th>"+"<th scope='col'  style='text-align:center;'>"+"评审"+"</th><th scope='col'  style='text-align:center;'>"+"移除"+"</th>";
+	 var examerinfolist="<th scope='col'  style='text-align:center;'>"+"面试顺序"+"</th><th scope='col'  style='text-align:center;'>"+"面试申请号"+"</th><th scope='col'  style='text-align:center;'>"+"考生姓名"+"</th>";
+  	 var headbutton="<th  scope='col'  style='text-align:center;'>"+"本科院校"+"</th><th scope='col'  style='text-align:center;'>"+"工作单位"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评议状态"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评审时间"+"</th>"+"<th scope='col'  style='text-align:center;'>"+"评审"+"</th><th scope='col'  style='text-align:center;'>"+"移除"+"</th>";
 	 examerinfolist="<table  id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'><tr>"+examerinfolist+collist+headbutton+'</tr>'+detallist+'</table>';
 
 	 $("#examerinfo").html(examerinfolist);
