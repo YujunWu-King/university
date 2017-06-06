@@ -318,56 +318,63 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 							errorMsg[1] = "撤销预约失败";
 						}
 					}else{
-						String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
-						Map<String,Object> numMap = jdbcTemplate.queryForMap(numSql, new Object[]{ classId, pcId, planId });
-						if(numMap != null){
-							int msYyLimit = Integer.parseInt(numMap.get("TZ_MSYY_COUNT").toString());
-							int msYyCount = Integer.parseInt(numMap.get("TZ_YY_COUNT").toString());
-							
-							if(msYyLimit > msYyCount){
-								psTzMsyyKsTbl = new PsTzMsyyKsTbl();
-								psTzMsyyKsTbl.setTzClassId(classId);
-								psTzMsyyKsTbl.setTzBatchId(pcId);
-								psTzMsyyKsTbl.setTzMsPlanSeq(planId);
-								psTzMsyyKsTbl.setOprid(oprid);
-								psTzMsyyKsTbl.setRowAddedOprid(oprid);
-								psTzMsyyKsTbl.setRowAddedDttm(new Date());
-								psTzMsyyKsTbl.setRowLastmantOprid(oprid);
-								psTzMsyyKsTbl.setRowLastmantDttm(new Date());
-								int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
-								if(rtn > 0){
-									errorMsg[0] = "0";
-									errorMsg[1] = "预约成功";
-									
-									//预约成功后发送站内信
-									try{
-										sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
-										String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
-										//面试预约成功站内信模板
-										String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CG_ZNX_TMP");
-										//当前机构
-										String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+						String otherSql = "select 'Y' from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and OPRID=? limit 1";
+						String existsOther = jdbcTemplate.queryForObject(otherSql, new Object[]{ classId, pcId, oprid }, "String");
+						if("Y".equals(existsOther)){
+							errorMsg[0] = "2";
+							errorMsg[1] = "预约失败,你已预约其他报到时间的面试";
+						}else{
+							String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
+							Map<String,Object> numMap = jdbcTemplate.queryForMap(numSql, new Object[]{ classId, pcId, planId });
+							if(numMap != null){
+								int msYyLimit = Integer.parseInt(numMap.get("TZ_MSYY_COUNT").toString());
+								int msYyCount = Integer.parseInt(numMap.get("TZ_YY_COUNT").toString());
+								
+								if(msYyLimit > msYyCount){
+									psTzMsyyKsTbl = new PsTzMsyyKsTbl();
+									psTzMsyyKsTbl.setTzClassId(classId);
+									psTzMsyyKsTbl.setTzBatchId(pcId);
+									psTzMsyyKsTbl.setTzMsPlanSeq(planId);
+									psTzMsyyKsTbl.setOprid(oprid);
+									psTzMsyyKsTbl.setRowAddedOprid(oprid);
+									psTzMsyyKsTbl.setRowAddedDttm(new Date());
+									psTzMsyyKsTbl.setRowLastmantOprid(oprid);
+									psTzMsyyKsTbl.setRowLastmantDttm(new Date());
+									int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
+									if(rtn > 0){
+										errorMsg[0] = "0";
+										errorMsg[1] = "预约成功";
 										
-										//创建邮件任务实例
-										String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
-										// 创建邮件发送听众
-										String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约成功站内信通知", "JSRW");
-										//添加听众成员
-										boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", pcId, oprid, classId, planId, "");
-										if(bl){
-											sendSmsOrMalServiceImpl.send(taskId, "");
+										//预约成功后发送站内信
+										try{
+											sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+											String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
+											//面试预约成功站内信模板
+											String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CG_ZNX_TMP");
+											//当前机构
+											String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+											
+											//创建邮件任务实例
+											String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
+											// 创建邮件发送听众
+											String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约成功站内信通知", "JSRW");
+											//添加听众成员
+											boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", pcId, oprid, classId, planId, "");
+											if(bl){
+												sendSmsOrMalServiceImpl.send(taskId, "");
+											}
+										}catch(NullPointerException nullEx){
+											//没有配置邮件模板
+											nullEx.printStackTrace();
 										}
-									}catch(NullPointerException nullEx){
-										//没有配置邮件模板
-										nullEx.printStackTrace();
+									}else{
+										errorMsg[0] = "1";
+										errorMsg[1] = "预约失败";
 									}
 								}else{
-									errorMsg[0] = "1";
-									errorMsg[1] = "预约失败";
+									errorMsg[0] = "2";
+									errorMsg[1] = "预约失败，该报到时间预约人数已满，请预约其他报到时间";
 								}
-							}else{
-								errorMsg[0] = "2";
-								errorMsg[1] = "预约失败，该报到时间预约人数已满，请预约其他报到时间";
 							}
 						}
 					}
