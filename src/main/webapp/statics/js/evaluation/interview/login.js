@@ -12,6 +12,8 @@ $(function(){
 
 		var yzm = encodeURI($("#yzm").val());
 		
+		var device = encodeURI($("input[name='device']:checked").val());
+		
 		if($.trim(userName)==""){
 			$("#errormsg").children("span").html("请输入帐号！");
 			$("#errormsg").show();
@@ -42,6 +44,7 @@ $(function(){
 				userName:userName,
 				password:password,
 				yzm:yzm,
+				device:device,
 				type:'interview'
 			},
 			dataType:'json',

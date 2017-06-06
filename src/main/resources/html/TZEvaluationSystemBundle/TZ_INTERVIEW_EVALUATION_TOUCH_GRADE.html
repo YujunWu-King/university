@@ -1,0 +1,103 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<title>清华大学经济管理学院MBA面试评审系统</title>
+	<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile.flatui.min.css" />	
+	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
+	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+
+<script  type="text/javascript">
+	var ContextPath = "%bind(:1)";
+	var OrgCode = "%bind(:2)";
+	var TimeOut = %bind(:3);
+	function goMainpage(){
+		window.open('http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_MCPS.TZ_MSPC_TC.FieldFormula.Iscript_SelectPage','_self');
+	}
+
+</script>
+
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="c">
+
+	<div data-role="header" data-theme="a">
+
+		<div style="text-align:center; padding-top:12px; float:left" class="r-action" id="tz_welcome">
+		
+		</div>
+
+		<div style="text-align:right; " class="r-action">
+
+			<a href="index" id="favrecipelink" data-role="button" data-inline="true" data-icon="home">首页</a>
+
+			<a href="/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_PW_XGMM.TZ_PW_XGMM.FieldFormula.Iscript_ResetPw" target="_blank" id="gotocomment" data-role="button" data-inline="true" data-icon="star" >修改密码</a>
+
+			<a href="../../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-icon="delete">退出</a>
+
+		</div>
+	</div><!-- /header -->
+
+	<div data-role="content" data-theme="a" style="padding:0">	
+		<div class="content-primary">
+<br>
+<br>
+	<ul data-role="listview" id="list" data-inset="true">
+
+	</ul>
+<br>
+<br>
+<br>
+<br>
+			</div><!--/content-primary -->		
+	</div><!-- /content -->
+	
+	<div data-role="footer" data-theme="a">
+		<h4>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</h4>
+	</div><!-- /footer -->
+	
+</div><!-- /page -->
+
+
+<script>
+		var baseUrl = ContextPath+"/dispatcher?classid=interview&OperateType=EJSON";
+		$.getJSON(
+		baseUrl + "&type=list&MaxRowCount=200&&MoreRowsFlag=Y",
+        function(data){
+			var checked = true;
+		  	if(data&&data.state&&data.state.errcode=="1"){
+				alert(data.state.errdesc);
+				checked=false;
+		  	}
+		  	if(checked&&data&&data.comContent&&data.comContent.error_code!=0){
+				alert(data.comContent.error_decription);
+				checked=false;
+		  	}
+		  	
+		  	if(checked){
+		  		var lilist="";
+		  		$.each(data.comContent.data, function(i,item){
+		           	
+					lilist+=
+				        '<li class="ui-last-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">批次名称：'
+				        +item.class_name+" "+item.pc_name
+				        +"<p class='ui-li-desc' style='font-size:0.9em'>状态："
+						+item.pc_zt
+						+"</p>"
+				        +'</a></li>';
+		        });
+					
+				  $("#list").html(lilist);
+		  	}
+		  
+		  $("#tz_welcome").html("&nbsp;&nbsp;欢迎%bind(:4)评委登录清华经管MBA面试评审系统");
+
+        });
+</script>
+
+</body>
+</html>

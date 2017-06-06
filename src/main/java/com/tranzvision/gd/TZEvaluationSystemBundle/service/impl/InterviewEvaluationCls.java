@@ -308,7 +308,7 @@ public class InterviewEvaluationCls{
 
 			   /*评委总体数据*/
 			   int num_dange_total = sqlQuery.queryForObject(
-				   		new StringBuffer("select count(distinct a.TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL a ,PS_TZ_CJX_TBL b where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  AND ")
+				   		new StringBuffer("select count(a.TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL a ,PS_TZ_CJX_TBL b where a.TZ_SCORE_INS_ID = b.TZ_SCORE_INS_ID  AND ")
 				   		.append("a.TZ_DELETE_ZT <> 'Y' AND a.TZ_PSHEN_ZT = 'Y'  and  a.TZ_CLASS_ID = ? ")
 				   		.append("and a.TZ_APPLY_PC_ID= ? and b.TZ_SCORE_ITEM_ID = ? ")
 				   		.append("and b.TZ_SCORE_NUM ").append(TZ_M_FBDZ_MX_XX_JX).append(TZ_M_FBDZ_MX_XX)
