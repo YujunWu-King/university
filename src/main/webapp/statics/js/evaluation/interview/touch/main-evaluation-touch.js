@@ -113,8 +113,8 @@ function useJson(varjsonData){
 			if(ksdfArray[i]['ps_grp_flg']=='Y'){
 				var headnum=0;
 				   for(var j=0;j<ksdfArray[i]['ps_sub_col'].length;j++){
-						
-	
+
+
 						if(ksdfArray[i]['ps_sub_col'][j]['ps_cht_flg']=='Y'){
 							headnum+=1;
 							var subcolname='00'+(j+1);
@@ -136,8 +136,6 @@ function useJson(varjsonData){
 		}
 		
 		var bodyline="";
-		for(var i=0;i<ksdfinfoArray.length;i++){
-
 			var bodyele="";
 			for(var j=0;j<ksdfArray.length;j++){
 				var colname='00'+(j+1);
@@ -150,20 +148,19 @@ function useJson(varjsonData){
 							var subcolname='00'+(k+1);
 							subcolname='sub_col'+subcolname.substr(subcolname.length-2);
 
-							bodyele+="<td class='alt'>"+ksdfinfoArray[i][colname][subcolname]+"</td>";
+							bodyele+="<td class='alt'>"+ksdfinfoArray[j][colname][subcolname]+"</td>";
 						}
 
 					}
 				}
 				else{
-					bodyele="<td class='alt'>"+ksdfinfoArray[i][colname]+"</td>";
+					console.log(ksdfinfoArray,j,colname)
+					bodyele+="<td class='alt'>"+ksdfinfoArray[j][colname]+"</td>";					
 				}
 		
 			}
 
 			bodyline+="<tr>"+bodyele+"</tr>";
-
-		}
 		
 		headall="<tr scope='col'  style='text-align:center;'>"+headline1+"</tr>"+"<tr scope='col'  style='text-align:center;'>"+headline2+"</tr>";
 		statable1="<table id='mytable'  cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'> "+headall+bodyline+"</table>";
@@ -183,10 +180,10 @@ function useJson(varjsonData){
 			
 			for(var j=0;j<fszbArray[i]['ps_fszb_fbsj'].length;j++){
 
-			dffbbody+="<tr><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_fb_mc']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_sjfb_bilv']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_sjfb_rshu']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_pwzt_bilv']+"</td></tr>";
+			dffbbody+="<tr><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_fb_mc']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_sjfb_bilv']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_sjfb_rshu']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_ztfb_bilv']+"</td></tr>";
 
 			}
-		dffbtable="<table id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'>"+"<thead><h4>"+fszbArray[i]['ps_fszb_mc']+"</h4></thead>"+dffbhead+dffbbody+"</table>";
+		dffbtable="<table id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'>"+"<thead><h4 style='margin:10px 0'>"+fszbArray[i]['ps_fszb_mc']+"</h4></thead>"+dffbhead+dffbbody+"</table>";
 
 		dffbscroll+="<div style='width:100%'><div>"+"</div><div>"+dffbtable+"</div></div>";
 	}
@@ -302,7 +299,7 @@ function useJson(varjsonData){
 				}
 					for(var ztpjfi = 0; ztpjfi < lineArray[i]['ps_fszb_fbsj'].length ; ztpjfi++ )
 					{
-						y2AxisArr_line.push(parseFloat(lineArray[i]['ps_fszb_fbsj'][ztpjfi]['ps_pwzt_bilv']));
+						y2AxisArr_line.push(parseFloat(lineArray[i]['ps_fszb_fbsj'][ztpjfi]['ps_ztfb_bilv']));
 							
 					}
 			
