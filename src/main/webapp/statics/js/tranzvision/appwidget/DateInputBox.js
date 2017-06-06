@@ -9,24 +9,45 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 	_getHtml: function(data, previewmode) {
 		var c = "";
 		if (previewmode) {
-			if (SurveyBuild._readonly) {
-				//只读模式
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left">' + data.value + '</div>';
-				c += '  <div class="input-list-suffix left"></div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-			} else {
-				//填写模式
-				SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left"><input id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '" type="text" class="inpu-list-text-enter"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data.itemId + '_Clear" style="right:56px' + (data.value == "" ? ";visibility:hidden;": "") + '"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon" id="' + data.itemId + '_Btn" style="right:51px"/></div>';
-				c += '  <div class="input-list-suffix left">' + (data.suffixUrl != "" ? '<a target="_blank" href="' + data.suffixUrl + '">': '') + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + (data.suffixUrl != "" ? '</a>': '') + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-			}
+			 if(SurveyBuild.accessType == "P"){
+				 if (SurveyBuild._readonly) {
+						//只读模式
+					 	c += '<div class="item">';
+						c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+						c += '	<div class="text-box">'+ data.value +'</div>';
+						c += '  <p style="color:#666;font-size:0.56rem;"></p>';
+						c += '</div>';
+					} else {
+						//填写模式
+						SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+						c += '<div class="item">';
+						c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+						c += '	<div class="text-box">';
+						c += '		<input type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '" />';';
+						c += '	</div>';
+						c += '  <p style="color:#666;font-size:0.56rem;"></p>';
+						c += '</div>';
+					}
+			 }else{
+				 if (SurveyBuild._readonly) {
+						//只读模式
+						c += '<div class="input-list">';
+						c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+						c += '  <div class="input-list-text left">' + data.value + '</div>';
+						c += '  <div class="input-list-suffix left"></div>';
+						c += '  <div class="clear"></div>';
+						c += '</div>';
+					} else {
+						//填写模式
+						SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+						c += '<div class="input-list">';
+						c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+						c += '  <div class="input-list-text left"><input id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '" type="text" class="inpu-list-text-enter"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data.itemId + '_Clear" style="right:56px' + (data.value == "" ? ";visibility:hidden;": "") + '"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon" id="' + data.itemId + '_Btn" style="right:51px"/></div>';
+						c += '  <div class="input-list-suffix left">' + (data.suffixUrl != "" ? '<a target="_blank" href="' + data.suffixUrl + '">': '') + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + (data.suffixUrl != "" ? '</a>': '') + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+						c += '  <div class="clear"></div>';
+						c += '</div>';
+					} 
+			 }
 		} else {
 			c += '<div class="question-answer">';
 			c += '  <div class="format ">';
