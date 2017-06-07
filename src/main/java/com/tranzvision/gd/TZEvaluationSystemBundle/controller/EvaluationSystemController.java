@@ -178,11 +178,14 @@ public class EvaluationSystemController {
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[]{oprid}, "String");
+			String contactUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_CONTACT_URL"}, "String");
 			
 			String page = request.getParameter("page");
-			if("batch".equals(page)){
+			if("batch".equals(page)||"evaluation".equals(page)){
 				String classId = request.getParameter("classId");
 				String batchId = request.getParameter("batchId");
+				String appInsId = request.getParameter("appInsId");
+				
 				String className = "",batchName="";
 				
 				Map<String,Object> map = sqlQuery.queryForMap("select A.TZ_CLASS_NAME,B.TZ_BATCH_NAME from PS_TZ_CLASS_INF_T A ,PS_TZ_CLS_BATCH_T B where A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_CLASS_ID=? AND B.TZ_BATCH_ID = ?", 
@@ -191,13 +194,13 @@ public class EvaluationSystemController {
 					className = (String)map.get("TZ_CLASS_NAME");
 					batchName = (String)map.get("TZ_BATCH_NAME");
 				}
-				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName);
-			}else if("grade".equals(page)){
 				
+				indexHtml = "batch".equals(page)?
+						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl)
+						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl);
 			}else{
-				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName);
+				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName,contactUrl);
 			}
-			
 			
 		} catch (TzSystemException e) {
 			e.printStackTrace();
