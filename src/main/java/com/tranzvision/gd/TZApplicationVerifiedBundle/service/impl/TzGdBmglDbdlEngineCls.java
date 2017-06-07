@@ -136,6 +136,9 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 				String relName = jdbcTemplate.queryForObject(
 						"SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?", new Object[] { OPRID }, "String");
 				
+				String strMshId = jdbcTemplate.queryForObject(
+						"SELECT TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = ?", new Object[] { OPRID }, "String");
+				
 				String pdfType = jdbcTemplate.queryForObject(" select TZ_PDF_TYPE from PS_TZ_APP_INS_T a,PS_TZ_APPTPL_DY_T b where a.TZ_APP_TPL_ID=b.TZ_APP_TPL_ID and a.TZ_APP_INS_ID=?", new Object[]{Long.parseLong(appInsID)},"String");
 				
 				if (relName != null && !"".equals(relName)) {
@@ -145,7 +148,8 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 				}
 
 				//String tFile = request.getServletContext().getRealPath(fjlj + "/" + appInsID + "_" + relName);
-				String tFile = fjlj + appInsID + "_" + relName;
+				//String tFile = fjlj + appInsID + "_" + relName;
+				String tFile = fjlj + strMshId + "_" + relName;
 				File tF = new File(tFile);
 				if (!tF.exists()) {
 					tF.mkdirs();
@@ -155,11 +159,13 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 				// appFormExportClsServiceImpl.generatePdf(ID+ "/" + appInsID+"_"+relName, relName + "_报名表.pdf", appInsID,"A");
 				if("HPDF".equals(pdfType)){
 					if("/".equals(File.separator)){
-						appFormExportCls.generatePdf(ID + "/" + appInsID + "_" + relName, relName + "_报名表.pdf", appInsID, "A");
+						//appFormExportCls.generatePdf(ID + "/" + appInsID + "_" + relName, relName + "_报名表.pdf", appInsID, "A");
+						appFormExportCls.generatePdf(ID + "/" + strMshId + "_" + relName, relName + "_报名表.pdf", appInsID, "A");
 					}
 					
 					if("\\".equals(File.separator)){
-						appFormExportCls.generatePdf(ID + "\\" + appInsID + "_" + relName, relName + "_报名表.pdf", appInsID, "A");
+						//appFormExportCls.generatePdf(ID + "\\" + appInsID + "_" + relName, relName + "_报名表.pdf", appInsID, "A");
+						appFormExportCls.generatePdf(ID + "\\" + strMshId + "_" + relName, relName + "_报名表.pdf", appInsID, "A");
 					}
 					
 				}
@@ -251,11 +257,13 @@ public class TzGdBmglDbdlEngineCls extends BaseEngine {
 						// appFormExportClsServiceImpl.generatePdf(ID+ "/" +appInsID+"_"+relName, relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID),"B");
 						if("HPDF".equals(tjxPdfType)){
 							if("/".equals(File.separator)){
-								appFormExportCls.generatePdf(ID + "/" + appInsID + "_" + relName,relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID), "B");
+								//appFormExportCls.generatePdf(ID + "/" + appInsID + "_" + relName,relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID), "B");
+								appFormExportCls.generatePdf(ID + "/" + strMshId + "_" + relName,relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID), "B");
 							}
 							
 							if("\\".equals(File.separator)){
-								appFormExportCls.generatePdf(ID + "\\" + appInsID + "_" + relName,relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID), "B");
+								//appFormExportCls.generatePdf(ID + "\\" + appInsID + "_" + relName,relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID), "B");
+								appFormExportCls.generatePdf(ID + "\\" + strMshId + "_" + relName,relName + "_" + tzReferrer + "_推荐信.pdf", String.valueOf(TZ_TJX_APP_INS_ID), "B");
 							}
 							
 						}
