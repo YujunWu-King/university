@@ -1,7 +1,7 @@
 var baseUrl = ContextPath+"/dispatcher?classid=interview&OperateType=EJSON";
 
 $(document).ready(function() {
-
+	showLoader()
 	/****解析json数据***/
 	$.getJSON(baseUrl+'&type=data&BaokaoClassID='+ClassId+'&BaokaoPCID='+BatchId+'&RequestDataType=A&MaxRowCount=200',function (data) { 
 
@@ -9,7 +9,7 @@ $(document).ready(function() {
 		var jsonObject = data.comContent; 
 
    		useJson(jsonObject);
-	
+   		hideLoader();
 	});  
 
 }); 
@@ -18,16 +18,28 @@ function goMainpage(){
 	window.open('index','_self');
 }
 
+//显示加载器
+function showLoader() {  
+    $.mobile.loading('show', {  
+        text: '加载中，请稍候...', //加载器中显示的文字    
+        textVisible: true, //是否显示文字    
+        theme: 'a',        //加载器主题样式 
+        textonly: false,   //是否只显示文字    
+        html: ""           //要显示的html内容，如图片等    
+    });  
+}  
+//隐藏加载器
+function hideLoader() {  
+    $.mobile.loading('hide');  
+}  
 function refreshKslist(){
 
 		$.getJSON(
-		
-		"http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MBAMS_PS.FieldFormula.IScript_ReadPWMPData?languageCd=ZHS&BaokaoFXID=1005&RequestDataType=S&MaxRowCount=200",
-        function(data){
-	//	var jsonObject=data;
-		useJson(data);
-
-        });
+				baseUrl+'&type=data&BaokaoClassID='+ClassId+'&BaokaoPCID='+BatchId+'&RequestDataType=S&MaxRowCount=200',
+				function(data){
+					var jsonObject = data.comContent; 
+					useJson(jsonObject);
+				});
 
 }
 
@@ -77,13 +89,13 @@ function useJson(varjsonData){
 	for (var i=0;i<ksbodyArray.length;i++){		
 		var concollist="";
 		for(var j in ksheadObject) {
-			concollist+="<td class='alt'>"+(ksbodyArray[i][j]||"")+'</td>';
+			concollist+="<td class='alt' >"+(ksbodyArray[i][j]||"")+'</td>';
 	    }
 		
-		var btnps="<td class='alt'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='"+"test?classId="+ClassId+"&batchId="+BatchId+"&TZ_APP_INS_ID="+ksbodyArray[i]['ps_ksh_bmbid']+"' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>评审</span></span></a></td>";
+		var btnps="<td class='alt'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='"+"index?page=evaluation&classId="+ClassId+"&batchId="+BatchId+"&appInsId="+ksbodyArray[i]['ps_ksh_bmbid']+"' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>评审</span></span></a></td>";
 		var btnyc="<td class='alt'><a data-icon='delete' data-mini='true' data-inline='true' data-role='button' id='favrecipelink' href='javascript:void(0);' onclick=toycks('"+ksbodyArray[i]['ps_ksh_xm']+"','"+ksbodyArray[i]['ps_ksh_bmbid']+"'); data-corners='true' data-shadow='true' data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-btn-up-c ui-shadow ui-icon-delete ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>移除</span></span></a></td>";
 
-		detallist+="<tr id='"+ksbodyArray[i]['ps_ksh_id']+"'><td  class='alt'>"+ksbodyArray[i]['ps_ksh_xh']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_msh_id']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>"+concollist+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_school']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_company']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_zt']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_dt']+"</td>"+btnps+btnyc+"</tr>"
+		detallist+="<tr id='"+ksbodyArray[i]['ps_ksh_id']+"'><td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xh']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_msh_id']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>"+concollist+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_school']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_company']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_zt']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_dt']+"</td>"+btnps+btnyc+"</tr>"
 
 	}
 
@@ -154,7 +166,6 @@ function useJson(varjsonData){
 					}
 				}
 				else{
-					console.log(ksdfinfoArray,j,colname)
 					bodyele+="<td class='alt'>"+ksdfinfoArray[j][colname]+"</td>";					
 				}
 		
@@ -179,8 +190,8 @@ function useJson(varjsonData){
 			dffbhead="<tr><th scope='col'  style='text-align:center;'>分布名称</th><th scope='col'  style='text-align:center;'>我目前评分分布比率</th><th scope='col'  style='text-align:center;'>我目前评分分布人数</th><th scope='col'  style='text-align:center;'>评委总体分布比率</th></tr>"
 			
 			for(var j=0;j<fszbArray[i]['ps_fszb_fbsj'].length;j++){
-
-			dffbbody+="<tr><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_fb_mc']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_sjfb_bilv']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_sjfb_rshu']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_ztfb_bilv']+"</td></tr>";
+				
+				dffbbody+="<tr><td class='alt' style='border-left: 1px solid #c1dad7;'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_fb_mc']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_sjfb_bilv']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_sjfb_rshu']+"</td><td class='alt'>"+fszbArray[i]['ps_fszb_fbsj'][j]['ps_ztfb_bilv']+"</td></tr>";
 
 			}
 		dffbtable="<table id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'>"+"<thead><h4 style='margin:10px 0'>"+fszbArray[i]['ps_fszb_mc']+"</h4></thead>"+dffbhead+dffbbody+"</table>";
@@ -236,30 +247,29 @@ function useJson(varjsonData){
 
 					}
 				}
+			}else{
+				yAxisArrName.push(tmpArray[i][colName]);
+				if(tmpArray[i]['ps_cht_flg'] == 'Y')
+				{
+					varArr.push(colName);
+					legendArr.push(tmpArray[i][colName]);
+				}
+				
 			}
 		}
 
 		tmpArray = jsonObject['ps_data_cy']['ps_tjzb_mxsj'];
 		for(var i=0;i<tmpArray.length;i++)
 		{
-
-			for(itm in tmpArray[i])
+			var colName = '00' + (i + 1);
+			colName = 'col' + colName.substr(colName.length - 2);
+			if(varArr.includes(colName))
 			{
-				if(Object.prototype.toString.call(tmpArray[i][itm]) == '[object Object]')
-				{
-				//	alert("item:"+itm+"; value:"+tmpArray[i][itm][varArr[0]]);
-					for( var j in varArr){
-						yAxisArr.push(parseFloat(tmpArray[i][itm][varArr[j]]));
-					}	
-		
-					
-				}else{
-				    	//alert(tmpArray[i][itm]);
-					xAxisArr.push(tmpArray[i][itm]);
-				}
+				yAxisArr.push(parseFloat(tmpArray[i][colName]));
+			}else{
+				xAxisArr.push(tmpArray[i][colName]);
 			}
 		}
-
 
 		/****曲线图****/
 		var lineArray = jsonObject['ps_data_fb'];
@@ -307,12 +317,17 @@ function useJson(varjsonData){
 
 		
 			var linechar = new Highcharts.Chart({
+				credits: {
+				     enabled: false
+				},
 				chart: {
 					renderTo: divId2,
 					defaultSeriesType: 'spline',
+					borderColor:'#ddd',
+					borderWidth:1,
 					marginRight: 20,
 					marginBottom: 55,
-					width:900
+					width:920
 				},
 				title: {
 					text: '',
@@ -390,12 +405,17 @@ function useJson(varjsonData){
 			}
 
 			var char2 = new Highcharts.Chart({
+				credits: {
+				     enabled: false
+				},
 				chart: {
 					renderTo: divId,
 					defaultSeriesType: 'column',
+					borderColor:'#ddd',
+					borderWidth:1,
 					marginRight: 20,
 					marginBottom: 55,
-					width:900
+					width:920
 				},
 
 				title: {
@@ -502,24 +522,23 @@ function getForm2(){
 	//移除考生;
 	function ycks(){
 	var bmbid=document.getElementById("tz_hide_bmbid").value;
-	var ycksurl="http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MBAMS_PS.FieldFormula.IScript_SearchKSHData?languageCd=ZHS&BaokaoFXID=1005&OperationType=Del&KSH_BMBID="+bmbid;
-
+	
 	$.ajax({
   		type: 'POST',
-  		url: ycksurl,
-  		data: {"BaokaoFXID":"1005","OperationType":"Del"},
-  		success: function(data) {
-
- 		if (data.error_code=="0"){
-			alert("移除成功");
-refreshKslist();
-				}
-			else{
-			alert(data.error_decription);
-				}
-        },
-  		dataType: "json"
-	}); 
+  		url: baseUrl+"&type=remove",
+  		data: {"BaokaoClassID":ClassId,"BaokaoPCID":BatchId,"KSH_BMBID":bmbid},
+  		success: function(response) {
+  			var data = response.comContent;
+	 		if (data.error_code=="0"){
+				alert("移除成功");
+				refreshKslist();
+					}
+				else{
+				alert(data.error_decription);
+					}
+	        },
+	  		dataType: "json"
+		}); 
 
 	}
 
@@ -542,18 +561,20 @@ refreshKslist();
 		
 		$.ajax({
 	  		type: 'POST',
-	  		url: "http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MBAMS_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS&BaokaoFXID=1005&OperationType=SUBMTALL",
-	  		data: {},
-	  		success: function(data) {
-
+	  		url: baseUrl+"&type=submit",
+	  		data: {"BaokaoClassID":ClassId,"BaokaoPCID":BatchId},
+	  		success: function(response) {
+	  			var data = response.comContent;
 		 		if (data.error_code=="0"){
 					alert("提交成功");
 					refreshKslist();
 				}else{
 					alert(data.error_decription);
-					for (var i =0 ;i<data.error_cfksid.length;i++){
-											$('#'+(data.error_cfksid)[i].ps_ksh_id).children('td').css({color:'red'})
-					};
+					if(data.error_cfksid!=undefined){
+						for (var i =0 ;i<data.error_cfksid.length;i++){
+							$('#'+(data.error_cfksid)[i].ps_ksh_id).children('td').css({color:'red'})
+						};
+					}
 				}
 	        },
 	  		dataType: "json"
@@ -572,22 +593,19 @@ refreshKslist();
 	
 	$.ajax({
   		type: 'POST',
-  		url: "http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MBAMS_PS.FieldFormula.IScript_SearchKSHData?languageCd=ZHS",
-  		data: {"KSH_SEARCH_MSID":searchid,"KSH_SEARCH_NAME":searchname,"BaokaoFXID":"1005","OperationType":"Search"},
-  		success: function(data) {
- 		if (data.error_code=="0"){
+  		url: baseUrl+"&type=search",
+  		data: {"KSH_SEARCH_MSID":searchid,"KSH_SEARCH_NAME":searchname,"BaokaoClassID":ClassId,"BaokaoPCID":BatchId},
+  		success: function(response) {
+  			var data = response.comContent;
+  			if (data.error_code=="0"){
 
-		  $("#searchnotice").html("<b>查询结果：</b>考生申请号【"+data.ps_ksh_msid+"】，姓名【"+data.ps_ksh_xm+"】");
-			document.getElementById("tz_search_bmbid").value=data.ps_ksh_bmbid;
-
-
-				}
-		else {
-		  $("#searchnotice").html(data.error_decription);
-			alert(data.error_decription);
-			document.getElementById("tz_search_bmbid").value="";
-
-				}
+  				$("#searchnotice").html("<b>查询结果：</b>考生申请号【"+data.ps_ksh_msid+"】，姓名【"+data.ps_ksh_xm+"】");
+  				document.getElementById("tz_search_bmbid").value=data.ps_ksh_bmbid;
+			}else {
+				$("#searchnotice").html(data.error_decription);
+				alert(data.error_decription);
+				document.getElementById("tz_search_bmbid").value="";
+			}
         },
   		dataType: "json"
 	}); 
@@ -605,21 +623,22 @@ refreshKslist();
 	var ksh_bmbid=document.getElementById("tz_search_bmbid").value;
 
 	if (ksh_bmbid!=""){
-	var translink="http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_MSTC.TZ_MS_PS_TC_FIELD.FieldFormula.Iscript_jquery_mobile_mstc?TZ_APPLY_DIRC_ID=1005&TZ_APP_INS_ID="+ksh_bmbid;
+	var translink="index?page=evaluation&classId="+ClassId+"&batchId="+BatchId+"&appInsId="+ksh_bmbid;
 			$.ajax({
 		  		type: 'POST',
-		  		url: "http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MBAMS_PS.FieldFormula.IScript_SearchKSHData?languageCd=ZHS",
-		  		data: {"KSH_BMBID":ksh_bmbid,"BaokaoFXID":"1005","OperationType":"Add"},
-		  		success: function(data) {
-		 		if (data.error_code=="0"|| data.error_code =="2"||data.error_decription=="2"){
-
-				 window.open(translink,'_self');
-						}
-					else{
-						alert(data.error_decription);
-						}
-		        },
-		  		dataType: "json"
+		  		url: baseUrl+"&type=add",
+		  		data: {"KSH_BMBID":ksh_bmbid,"BaokaoClassID":ClassId,"BaokaoPCID":BatchId},
+		  		success: function(response) {
+		  			var data = response.comContent;
+			 		if (data.error_code=="0"|| data.error_code =="2"||data.error_decription=="2"){
+	
+					 window.open(translink,'_self');
+							}
+						else{
+							alert(data.error_decription);
+							}
+			        },
+			        dataType: "json"
 			}); 
 
 		}

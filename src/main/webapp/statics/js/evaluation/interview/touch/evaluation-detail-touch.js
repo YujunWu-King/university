@@ -188,7 +188,7 @@ function tz_ks_bmb_menu(ks_id){
 		
 		var bmbArea = "";
 		bmbArea += '<div id="'+ div_tmp +'" style="width:auto; height:auto">';
-		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>";
+		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>';
 		
 		$("#div2").append(bmbArea); 
 		
@@ -293,7 +293,7 @@ function tz_ks_bmb(ks){
 		
 		var bmbArea = "";
 		bmbArea += '<div id="'+ div_tmp +'" style="width:auto; height:auto">';
-		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>";
+		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>';
 		
 		$("#div2").append(bmbArea); 
 		
@@ -564,7 +564,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 							document.getElementById("ps_clpscj_ck").innerHTML = materialReviewDesc;
 							
 							//用于cache数据
-							bmb_cache_id = "ks_search_tz_app_ins_id@@@" + KSH_BMBID + "###ks_new_w_bmb@@@" + href:bmb_url + "###ks_dfq_ms_id@@@" + interviewApplyId + "###ks_dfq_ms_name@@@" + name + "###sx_ksbq@@@" + examineeTag + "###ps_clpscj_ck@@@" + materialReviewDesc;
+							bmb_cache_id = "ks_search_tz_app_ins_id@@@" + KSH_BMBID + "###ks_new_w_bmb@@@" + bmb_url + "###ks_dfq_ms_id@@@" + interviewApplyId + "###ks_dfq_ms_name@@@" + name + "###sx_ksbq@@@" + examineeTag + "###ps_clpscj_ck@@@" + materialReviewDesc;
 				        
 							//li 列表项目 
 							var cjx_lis=""; 　　　

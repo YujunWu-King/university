@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"> 
 <title>清华大学经济管理学员MBA面试评审系统</title> 
-	<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.css" />
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
@@ -68,7 +68,7 @@ th {
 			</div>		
 			<div style="text-align:right; " class="r-action">			
 				<a href="javascript:void(0);" onclick="goMainpage()" id="favrecipelink" data-role="button" data-theme="b" data-inline="true" data-icon="home">首页</a>		
-
+				<!-- a href="%bind(:8)" target="_blank" id="favrecipelink" data-role="button" data-theme="b" data-inline="true" data-icon="info">联系方式</a-->
 				<a href="/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_PW_XGMM.TZ_PW_XGMM.FieldFormula.Iscript_ResetPw" data-theme="b" target="_blank" id="gotocomment" data-role="button" data-inline="true" data-icon="star" >修改密码</a>			
 				<a href="../../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-theme="b" data-icon="delete">退出</a>		
 			</div>
@@ -78,14 +78,14 @@ th {
 		<div data-role="collapsible" data-collapsed="false" style="background:#fff" data-theme="a" data-content-theme="a" class="con-tag smallerr">
 			<h3>搜索考生</h3>
 
-				<table border="0">
+				<table style="border:0;">
 				<tr>
 					<td><input type="search" name="searchfor1" id="searchfor1" value=""  placeholder="请输入面试申请号" data-mini="true" data-inline="true" /></td>
-					<td>或<input type="hidden" id="tz_search_msid" name="tz_search_msid" value="" ></td>
+					<td>或<input type="hidden" id="tz_search_bmbid" name="tz_search_bmbid" value="" ></td>
 					<td><input type="search" name="searchfor2" id="searchfor2" value=""  placeholder="请输入考生姓名" data-mini="true" /></td>
 				</tr>
 				<tr>
-					<td colspan="3">&nbsp;&nbsp;<span id="searchnotice">请输入考生面试申请号或姓名进行查找</span></td>
+					<td colspan="3">&nbsp;<span id="searchnotice">请输入考生面试申请号或姓名进行查找</span></td>
 				</tr>
 				</table>
 

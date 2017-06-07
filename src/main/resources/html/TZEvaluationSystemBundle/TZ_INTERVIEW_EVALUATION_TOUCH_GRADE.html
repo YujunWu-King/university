@@ -1,103 +1,274 @@
 <!DOCTYPE html> 
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1"> 
-	<title>清华大学经济管理学院MBA面试评审系统</title>
-	<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile.flatui.min.css" />	
-	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
-	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<title>清华大学经济管理学员MBA面试评审系统</title> 
 
-<script  type="text/javascript">
-	var ContextPath = "%bind(:1)";
-	var OrgCode = "%bind(:2)";
-	var TimeOut = %bind(:3);
-	function goMainpage(){
-		window.open('http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_MCPS.TZ_MSPC_TC.FieldFormula.Iscript_SelectPage','_self');
+<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.css" />
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+
+<script type="text/javascript">
+
+	var dfq_arr ;//取数组
+
+	var sf_qk_fjd = "Y" ;//全局变量是否情况父节点
+
+	$(document).ready(function(){
+
+	});
+
+    /**返回当前显示的IFrame ID 给报名表页面，用于IFrame高度自适应**/
+	function getIFrameID(){
+		return iframe_tmp_id;
 	}
-
 </script>
 
-</head> 
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/touch/evaluation-detail-touch.js"></script>
 
+<style type="text/css">
+caption {
+	padding: 0 0 0 0;
+	font: italic 12px "trebuchet ms", verdana, arial, helvetica, sans-serif;
+	text-align: right;
+}
+th {
+	font: bold 12px "trebuchet ms", verdana, arial, helvetica, sans-serif;
+	color: #4f6b72;
+	border-right: 1px solid #c1dad7;
+	border-bottom: 1px solid #c1dad7;
+	border-top: 1px solid #c1dad7;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 6px 6px 6px 12px;
+	background: #cae8ea ;
+}
+
+.alt {
+	border-right: 1px solid #c1dad7;
+	border-bottom: 1px solid #c1dad7;
+	background: #fff;
+	font-size:12px;
+	padding: 6px 6px 6px 12px;
+	color: #4f6b72;
+
+}
+.page-loading {
+  width: 100%;
+  z-index: 200;
+  height: 100%;
+  background-color: #EEE;
+  position: fixed;
+  left :0px;
+  top :0px;
+  opacity :0.5;
+}
+</style>
+
+</head> 
 <body> 
 
-<div data-role="page" data-theme="c">
+<div data-role="page" class="type-interior">
 
-	<div data-role="header" data-theme="a">
 
-		<div style="text-align:center; padding-top:12px; float:left" class="r-action" id="tz_welcome">
-		
+
+	<div data-role="header" data-theme="b">
+
+		<div style="text-align:center;  float:left" class="r-action">
+			<a href="javascript:void(0);" id="ks_back_link" onclick="ks_back();"  data-role="button" data-inline="true" data-icon="back">返回</a>&nbsp;&nbsp;欢迎SZC评委登录MBA面试评审系统 2013 第四批次国际项目(I班)
 		</div>
-
 		<div style="text-align:right; " class="r-action">
-
-			<a href="index" id="favrecipelink" data-role="button" data-inline="true" data-icon="home">首页</a>
-
+			<a href="javascript:void(0);" id="ks_first_page_link"  onclick="ks_first_page();"  data-role="button" data-inline="true" data-icon="home">首页</a>
 			<a href="/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_PW_XGMM.TZ_PW_XGMM.FieldFormula.Iscript_ResetPw" target="_blank" id="gotocomment" data-role="button" data-inline="true" data-icon="star" >修改密码</a>
-
-			<a href="../../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-icon="delete">退出</a>
-
+			<a href="javascript:void(0);"  id="ks_esc_link"  onclick="ks_esc();"  data-rel="dialog" data-transition="slidedown" data-role="button" data-inline="true" data-icon="delete">退出</a>
 		</div>
 	</div><!-- /header -->
 
-	<div data-role="content" data-theme="a" style="padding:0">	
-		<div class="content-primary">
-<br>
-<br>
-	<ul data-role="listview" id="list" data-inset="true">
+	<div data-role="content">
+		<div data-role="collapsible" data-collapsed="false" data-theme="b" data-content-theme="d" class="con-tag smallerr">
+			<h3>搜索考生</h3>
 
-	</ul>
-<br>
-<br>
-<br>
-<br>
-			</div><!--/content-primary -->		
+				<table border="0">
+					<tr >
+						<td><input type="search" name="ks_serch_msid" id="ks_serch_msid" value=""  placeholder="请输入考生申请号" data-mini="true" data-inline="true" /></td>
+						<td>或</td>
+						<td><input type="search" name="ks_serch_name" id="ks_serch_name" value="唐1"  placeholder="请输入考生姓名" data-mini="true" /></td>
+						<td><input id="ks_serch_tz_app_ins_id" name="ks_serch_tz_app_ins_id" value="100005729" type="hidden"/></td>
+						<td><input id="ks_serch_TZ_APPLY_DIRC_ID" name="ks_serch_TZ_APPLY_DIRC_ID" value="1005" type="hidden"/></td>
+						<td><input id="ks_iframe_str_id" name="ks_iframe_str_id" value="bmb_iframe_1005_100005729" type="hidden"/></td>
+						<td><input id="ks_ture_id" name="ks_ture_id" value="Y"  type="hidden"/></td>
+						<td><input id="ks_show_tz_app_ins_id" name="ks_show_tz_app_ins_id" value="100005729" type="hidden"/></td>
+					</tr>
+					<tr>
+						<td colspan="3"><div id="ks_look_back_info">&nbsp;&nbsp;请输入考生申请号或姓名进行搜索</div></td>
+					</tr>
+				</table>				  <a href="javascript:void(0);" id="ks_serch_look" name="ks_serch_look" onclick="ks_look();"   data-role="button" data-inline="true" data-mini="true" data-icon="search">查 找</a>
+				  <a href="javascript:void(0);" id="ks_serch_pingsheng"  name="ks_serch_pingsheng"  onclick="ks_pingsheng();" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r">进行评审</a>
+
+		</div>	
+	
+
+		<div id="container" >
+			
+					<tr><td>
+				  	<div data-role="navbar">
+						<ul>
+							<li><a href="#" onclick="show1();"   data-ajax="false"  id = "ks_list" name = "ks_list" >考生列表</a></li>
+							<li><a href="#" onclick="show2();"  class="ui-btn-active ui-state-persist"  data-ajax="false"  id = "ks_bmb" name = "ks_bmb" >报名表</a></li>
+							<li><a href="#" onclick="show3();" data-ajax="false"   id = "ks_dfq" name = "ks_dfq" >打分区</a></li>
+						</ul>
+				   </div>
+		
+
+				<div id="div1" style="display:none">
+
+
+					<div id="ks_list_head" name="ks_list_head" style="display:block"></div>	 
+								
+					
+
+					<script type="text/javascript">
+
+						function ks_list(){
+
+							//活动考生列表
+						        var TZ_APPLY_DIRC_ID = document.getElementById("ks_serch_TZ_APPLY_DIRC_ID").value;
+
+						        var url="http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MBAMS_PS.FieldFormula.IScript_ReadPWMPData?languageCd=ZHS&RequestDataType=A&MaxRowCount=200&BaokaoFXID="+TZ_APPLY_DIRC_ID;
+
+						        $.getJSON(　　　　 //使用getJSON方法取得JSON数据 
+							        url, 
+							        function(data){ //处理数据 data指向的是返回来的JSON数据 
+
+
+											var jsonObject = data; 
+
+											//考生列表
+											var collist="";
+											var ksheadArray=jsonObject['ps_data_kslb']['ps_ksh_list_headers'];
+
+											for(var i=0;i<ksheadArray.length-9;i++)
+											{
+												var colname='00'+(i+1);
+												colname='col'+colname.substr(colname.length-2);
+
+												collist+='<th>'+ksheadArray[i+5][colname]+'</th>';
+											}
+
+											var ksbodyArray=jsonObject['ps_data_kslb']['ps_ksh_list_contents'];
+
+											var detallist="";
+											for (var i=0;i<ksbodyArray.length;i++){		
+												var concollist="";
+												for(var j=0;j<ksbodyArray[i]['ps_row_cnt'].length-9;j++)
+												{
+													var concolname='00'+(j+1);
+													concolname='col'+concolname.substr(concolname.length-2);
+													concollist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][j+5][concolname]+'</td>';
+												}
+
+												detallist+="<tr><td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][0]['ps_ksh_xh']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][1]['ps_ksh_id']+"</td><td  class='alt'><a href='javascript:void(0);' onclick='tz_ks_bmb(this);' id='"+ksbodyArray[i]['ps_row_cnt'][2]['ps_ksh_bmbid']+"'>"+ksbodyArray[i]['ps_row_cnt'][2]['ps_ksh_bmbid']+"</a></td><td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][3]['ps_ksh_xm']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][4]['ps_ksh_ppm']+"</td>"+concollist+"<td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-4]['ps_ksh_bkyx']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-3]['ps_ksh_gzdw']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-2]['ps_ksh_zt']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-1]['ps_ksh_dt']+"</td></tr>"
+											}
+
+
+										 	var examerinfolist="<th scope='col'  style='text-align:center;'>"+ksheadArray[0].ps_ksh_xh+"</th><th scope='col'  style='text-align:center;'>"+ksheadArray[1].ps_ksh_id+"</th><th scope='col'  style='text-align:center;'>"+ksheadArray[2].ps_ksh_bmbid+"</th><th scope='col'  style='text-align:center;'>"+ksheadArray[3].ps_ksh_xm+"</th><th scope='col'  style='text-align:center;'>"+ksheadArray[4].ps_ksh_ppm+"</th>";
+									  	    var headbutton="<th  scope='col'  style='text-align:center;'>"+ksheadArray[ksheadArray.length-4].ps_ksh_bkyx+"</th><th scope='col'  style='text-align:center;'>"+ksheadArray[ksheadArray.length-3].ps_ksh_gzdw+"</th>"+"<th  scope='col'  style='text-align:center;'>"+ksheadArray[ksheadArray.length-2].ps_ksh_zt+"</th>"+"<th  scope='col'  style='text-align:center;'>"+ksheadArray[ksheadArray.length-1].ps_ksh_dt+"</th>";
+										 	examerinfolist="<table  id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'><tr>"+examerinfolist+collist+headbutton+'</tr>'+detallist+'</table>';
+
+										    // $("#examerinfo").html(examerinfolist);
+
+											$("#ks_list_head").html("");
+              								$("#ks_list_head").append(examerinfolist); 
+
+
+							        } 
+						        );
+
+							//活动考生列表结束
+						}
+
+					</script> 
+
+
+
+			    </div>
+
+
+
+			    <div id="div3" style="display:none; background-color:#CDCDCD">
+
+
+				<div id="TZ_dialog"  data-role="popup"   class="ui-content" style="max-width:1000px"  data-theme="c" data-overlay-theme="a" >
+						<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">关闭</a>
+						<p><div id="TZ_dialog2">I'm in a dialog</div></p>
+				</div>
+
+
+
+
+				<!--用于保存考生成绩项的id-->
+
+				<input  name="tz_cjx_ids" id="tz_cjx_ids" value=""  type="hidden"/> 
+
+					<form id="ks_dfq_form" >	
+							<p>
+								<table>
+								   <tr>
+								      <td>
+										<b>面试申请号：<span  id="ks_dfq_ms_id"  name="ks_dfq_ms_id" >-</span></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+								      </td>
+								      <td>
+											   <b>姓名：<span  id="ks_dfq_ms_name"  name="ks_dfq_ms_name" >-</span></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+								      </td>
+								      <td>
+											<a href="#" data-role="none" rel="external" id="ks_new_w_bmb" name="ks_new_w_bmb" target="_blank" class="ui-link">新开窗口看考生材料</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+
+								      </td>
+								      <td>
+											<a href="#TZ_dialog" data-rel="popup"  data-role="none"   class="ui-link" >补充提示信息</a>
+								      </td>
+								   </tr>
+								</table>
+							</p>
+
+							<p>
+									&nbsp;<b>材料评审成绩参考：<span  id="ps_clpscj_pjf"  name="ps_clpscj_pjf" >-</span></b> 
+									<table width="100%">
+										 	<div id="ks_dfq_cjx" name="ks_dfq_cjx" style="display:block"></div>
+											<tr>
+												<td colspan='2'>&nbsp;&nbsp;&nbsp;&nbsp;
+													<a href="javascript:void(0);" id="ks_save_bt" name="ks_save_bt" onclick="ks_save();"  data-role="button" data-inline="true" data-mini="true" data-icon="check">保 存</a>													<a href="javascript:void(0);"  id="ks_back_bt" name="ks_back_bt"   onclick="ks_back();"  data-role="button" data-inline="true" data-mini="true" data-icon="back">返回评审界面</a>
+												</td>											</tr>
+
+									</table>
+							 </p>
+					   </form>		  
+			    </div>
+
+				<div id="div2" width="100%" style="display:block">
+
+ 					<script type="text/javascript">
+	var iframe_tmp_id = "bmb_iframe_1005_100005729";
+</script>
+<div id="div_bmb_iframe_1005_100005729" style="width:auto; height:auto" ><iframe id="bmb_iframe_1005_100005729" width="100%" height="100%" frameborder="0" src="http://crmtst.sem.tsinghua.edu.cn:8000/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_TZ_AFORM.TZ_ALLFORM_ISCRIPT.FieldFormula.Iscript_AppForm_Dispatcher?PERSON_ID=37688&TZ_APP_MODAL_ID=87&TZ_APP_FORM_TYPE=IN&TZ_APP_INS_ID=100005729&TZ_APP_MODAL_NUM=1&TZ_APPLY_DIRC_ID=1005" name="bmb_iframe_1005_100005729"></div>
+
+		       </div>
+
+
+
+
+
+		</div>
+
 	</div><!-- /content -->
 	
-	<div data-role="footer" data-theme="a">
-		<h4>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</h4>
+	<div data-role="footer" data-theme="b">
+		<h4>@版权所有：清华大学经管学院</h4>
 	</div><!-- /footer -->
 	
 </div><!-- /page -->
-
-
-<script>
-		var baseUrl = ContextPath+"/dispatcher?classid=interview&OperateType=EJSON";
-		$.getJSON(
-		baseUrl + "&type=list&MaxRowCount=200&&MoreRowsFlag=Y",
-        function(data){
-			var checked = true;
-		  	if(data&&data.state&&data.state.errcode=="1"){
-				alert(data.state.errdesc);
-				checked=false;
-		  	}
-		  	if(checked&&data&&data.comContent&&data.comContent.error_code!=0){
-				alert(data.comContent.error_decription);
-				checked=false;
-		  	}
-		  	
-		  	if(checked){
-		  		var lilist="";
-		  		$.each(data.comContent.data, function(i,item){
-		           	
-					lilist+=
-				        '<li class="ui-last-child"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-carat-r">批次名称：'
-				        +item.class_name+" "+item.pc_name
-				        +"<p class='ui-li-desc' style='font-size:0.9em'>状态："
-						+item.pc_zt
-						+"</p>"
-				        +'</a></li>';
-		        });
-					
-				  $("#list").html(lilist);
-		  	}
-		  
-		  $("#tz_welcome").html("&nbsp;&nbsp;欢迎%bind(:4)评委登录清华经管MBA面试评审系统");
-
-        });
-</script>
-
 </body>
 </html>
