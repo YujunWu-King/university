@@ -42,59 +42,11 @@ public class TzInterviewAppoStuAddImpl extends FrameworkImpl{
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-			/*
-			jacksonUtil.json2Map(strParams);
-			String classID = jacksonUtil.getString("classID");
-			String batchID = jacksonUtil.getString("batchID");
-			
-			int start = Integer.parseInt(request.getParameter("start"));
-			int limit = Integer.parseInt(request.getParameter("limit"));
-
-			if(null != classID && !"".equals(classID) && null != batchID && !"".equals(batchID)){
-				//查询面试安排总数
-				String sql = "SELECT COUNT(*) FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-				int total = jdbcTemplate.queryForObject(sql, new Object[]{classID, batchID}, "int");
-
-				ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
-				if (total > 0) {
-					sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? ORDER BY TZ_APP_INS_ID LIMIT ?,?";
-					List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql, new Object[]{classID, batchID, start, limit});
-
-					for(Map<String,Object> mapData : listData){
-						Map<String,Object> mapJson = new HashMap<String,Object>();
-						//报名表实例ID
-						String appIns = String.valueOf(mapData.get("TZ_APP_INS_ID"));
-						
-						String oprid = "";
-						sql = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND TZ_APP_INS_ID=?";
-						oprid = jdbcTemplate.queryForObject(sql, new Object[]{ classID, appIns }, "String");
-						
-						String name = "";
-						sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
-						name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
-						
-						mapJson.put("appId", appIns);
-						mapJson.put("classID", classID);
-						mapJson.put("batchID", batchID);
-						mapJson.put("oprid", oprid);
-						mapJson.put("stuName", name);
-						mapJson.put("city", "");
-						mapJson.put("country", "");
-						
-						
-						listJson.add(mapJson);
-					}
-					mapRet.replace("total", total);
-					mapRet.replace("root", listJson);
-				}
-			}
-			*/
-			
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL","TZ_MOBILE"};
+			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL","TZ_MOBILE","TZ_MSH_ID","TZ_KSH_CSJG"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -115,6 +67,8 @@ public class TzInterviewAppoStuAddImpl extends FrameworkImpl{
 					mapList.put("stuName", rowList[4]);
 					mapList.put("email", rowList[5]);
 					mapList.put("mobile", rowList[6]);
+					mapList.put("msApplyID", rowList[7]);
+					mapList.put("csResult", rowList[8]);//初筛结果
 
 					listData.add(mapList);
 				}

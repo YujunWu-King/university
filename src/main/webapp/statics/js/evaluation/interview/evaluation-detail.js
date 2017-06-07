@@ -555,7 +555,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var parentFieldContainer = new Ext.form.FieldContainer({
 				fieldLabel		: '<span style="padding-left: '+ pdl_value +'px;font-weight:bold;">'+ field_label +'</span>',
 				combineErrors	: false,
-				labelWidth		: 150,
+				//labelWidth		: 150,
+				labelStyle		: 'width:150px!important;padding-right:10px!important;',
 				height			: thisFieldContainerHeight,
 				defaults		: {hideLabel: true},
 				items			: [{
@@ -686,7 +687,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			combineErrors	: false,
 			layout			: 'hbox',
 			height			: thisFieldContainerHeight,
-			labelWidth		: 200,
+			//labelWidth		: 200,
+			labelStyle		: 'width:200px!important;padding-right:10px!important;',
 			defaults		: {hideLabel: true},
 			items			: [{
 				xtype		: 'numberfield',
@@ -779,7 +781,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			fieldLabel		: '<span style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
 			combineErrors	: false,
 			layout			: 'hbox',
-			labelWidth		: 200,
+			//labelWidth		: 200,
+			labelStyle		: 'width:200px!important;padding-right:10px!important;',
 			defaults		: {hideLabel: true},
 			items			: [{
 				xtype     	: 'textareafield',
@@ -907,7 +910,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			fieldLabel		: '<span style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
 			combineErrors	: false,
 			layout			: 'hbox',
-			labelWidth		: 200,
+			//labelWidth		: 200,
+			labelStyle		: 'width:200px!important;padding-right:10px!important;',
 			defaults		: {hideLabel: true},
 			items			: [{
 				xtype     	: 'combobox',
@@ -1413,11 +1417,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//height			: thisFieldContainerHeight,
 			height          : '100%',
 			name            : field_name,
-			html            : '<div style="margin:0;width: 873px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
+			html            : '<div style="margin:0;width: 739px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
 		});
 
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
-		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight + 100;
+		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight + 200;
 	} 
 
 
