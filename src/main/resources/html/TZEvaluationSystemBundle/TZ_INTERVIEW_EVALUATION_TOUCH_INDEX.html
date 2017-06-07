@@ -30,9 +30,28 @@
 
 			<a href="#" id="favrecipelink" data-role="button" data-inline="true" data-icon="home">首页</a>
 			<!--a href="%bind(:4)" target="_blank" id="favrecipelink" data-role="button" data-theme="b" data-inline="true" data-icon="info">联系方式</a-->
-			<a href="/psc/CRMTST/EMPLOYEE/CRM/s/WEBLIB_PW_XGMM.TZ_PW_XGMM.FieldFormula.Iscript_ResetPw" target="_blank" id="gotocomment" data-role="button" data-inline="true" data-icon="star" >修改密码</a>
+			<a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-inline="true" data-icon="star" >修改密码</a>
 			<a href="../../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-icon="delete">退出</a>
 
+			<div data-role="popup" id="modifyPswdPopup" data-position-to="window" data-dismissible="false" data-overlay-theme="b" style="min-width:333px;" class="ui-content">
+				<a href="#" data-rel="back" id="closeModify" class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">关闭</a>
+				<form method="post" id="modifyForm" data-ajax="false">
+					<div>
+						<div data-role="header">
+							<h3>修改密码</h3>
+						</div>
+						<div class="ui-field-contain">
+							<label for="oldPswd">原密码:</label>
+							<input type="password" name="oldPswd" id="oldPswd">
+							<label for="newPswd">新密码:</label>
+							<input type="password" name="newPswd" id="newPswd">
+							<label for="confirmPswd">确认新密码:</label>
+							<input type="password" name="confirmPswd" id="confirmPswd">
+						</div>
+						<input type="button" data-inline="true" id="ensureModify" value="确定">
+					</div>
+				</form>
+			</div>
 		</div>
 	</div><!-- /header -->
 
@@ -91,6 +110,63 @@
 		  $("#tz_welcome").html("&nbsp;&nbsp;欢迎%bind(:3)评委登录清华经管MBA面试评审系统");
 
         });
+
+		//修改密码-确定
+		$("#ensureModify").click(function() {
+			//旧密码
+			var oldPassword = $("#oldPswd").val();
+			//新密码
+			var newPassword = $("#newPswd").val();
+			//确认新密码
+			var confirmPassword = $("#confirmPswd").val();
+
+			var bl = true;
+			if(oldPassword!="" && newPassword!="" && confirmPassword!="") {
+				//密码
+				if(newPassword != confirmPassword){
+					alert("两次密码输入不一致。");
+					bl =  false;
+				} else {
+					//新旧密码不能相同
+					if(oldPassword == newPassword) {
+						alert("新旧密码不能相同。");
+						bl =  false;
+					} else {
+						bl =  true;
+					}
+				}
+			} else {
+				alert("请填写所有信息项。");
+				bl =  false;
+			}
+
+
+			if(bl) {
+				var formParams= '{"oldPwd":"'+oldPassword+'","newPwd":"'+newPassword+'","comfirmPwd":"'+confirmPassword+'"}';
+				var tzParams = '{"ComID":"TZ_GD_XGPWD_COM","PageID":"TZ_GD_XGPWD_STD","OperateType":"U","comParams":{"update":['+formParams+']}}';
+				var modiftyUrl = ContextPath+"/dispatcher";
+				$.ajax({
+					type: 'POST',
+					dataType: "json",
+					url: modiftyUrl,
+					data: {"tzParams":tzParams},
+					success: function(data) {
+						var errcode = data.state.errcode;
+						if(errcode!="0"){
+							alert(data.state.errdesc);
+						} else {
+							$("#oldPswd").val("");
+							$("#newPswd").val("");
+							$("#confirmPswd").val("");
+
+							alert("密码修改成功！");
+
+							$("#closeModify").trigger("click");
+						}
+					}
+				});
+			}
+		});
 </script>
 
 </body>
