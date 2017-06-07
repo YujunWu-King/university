@@ -186,18 +186,19 @@ public class EvaluationSystemController {
 				String batchId = request.getParameter("batchId");
 				String appInsId = request.getParameter("appInsId");
 				
-				String className = "",batchName="";
+				String appTplId = "",className = "",batchName="";
 				
-				Map<String,Object> map = sqlQuery.queryForMap("select A.TZ_CLASS_NAME,B.TZ_BATCH_NAME from PS_TZ_CLASS_INF_T A ,PS_TZ_CLS_BATCH_T B where A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_CLASS_ID=? AND B.TZ_BATCH_ID = ?", 
+				Map<String,Object> map = sqlQuery.queryForMap("select A.TZ_CLASS_NAME,B.TZ_BATCH_NAME,A.TZ_PS_APP_MODAL_ID from PS_TZ_CLASS_INF_T A ,PS_TZ_CLS_BATCH_T B where A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_CLASS_ID=? AND B.TZ_BATCH_ID = ?", 
 						new Object[]{classId,batchId});
 				if(map!=null){
 					className = (String)map.get("TZ_CLASS_NAME");
 					batchName = (String)map.get("TZ_BATCH_NAME");
+					appTplId = (String)map.get("TZ_PS_APP_MODAL_ID");
 				}
 				
 				indexHtml = "batch".equals(page)?
 						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl)
-						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl);
+						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId);
 			}else{
 				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName,contactUrl);
 			}

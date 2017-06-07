@@ -1060,19 +1060,19 @@ function tz_save_cache(){
 
 //返回评审界面开始
 function ks_back(){
-   window.open(tzMspsPwTouchBackToKspsUrl,'_self');
+   window.open("index?page=batch&classId="+ClassId+"&batchId="+BatchId,'_self');
 }
 //返回评审界面结束
 
 //返回首页开始
 function ks_first_page(){
-   window.open(tzMspsPwTouchBackToHomeUrl,'_self');
+   window.open("index",'_self');
 }
 //返回首页结束
 
 //退出开始
 function ks_esc(){
-   window.open(tzMspsPwTouchLogoutUrl,'_self');
+   window.open('../../logout?type=interview','_self');
 }
 //退出结束
 
