@@ -226,20 +226,12 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 	public String tzOther(String operateType,String strParams,String[] errMsg) {
 		String strRet = "";
 		
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		jacksonUtil.json2Map(strParams);
-		
-		String typeFlag = jacksonUtil.getString("typeFlag");
-		String formData = jacksonUtil.getString("data");
-		
 		try {
 			if("tzSearchExaminee".equals(operateType)) {
-				if("SEARCH".equals(typeFlag)) {
-					strRet = searchExaminee(formData);
-				}
-				if("ADD".equals(typeFlag)) {
-					strRet = addExamineeForJudge(formData);
-				}
+				strRet = searchExaminee(strParams);
+			}
+			if("tzAddExaminee".equals(operateType)) {
+				strRet = addExamineeForJudge(strParams);
 			}
 			
 		} catch (Exception e) {
@@ -709,7 +701,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					
 				}
 				
-				if("0".equals(count)) {
+				if(count<1) {
 					result = "1";
 					resultMsg = "未查找到相关考生信息";
 				} else {
@@ -740,8 +732,10 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 	 */
 	public String addExamineeForJudge(String strParams) {
 		String strRet = "";
-		JacksonUtil jacksonUtil = new JacksonUtil();
 		Map<String, Object> mapRet = new HashMap<>();
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
 		
 		String result = "0";
 		String resultMsg = "";
@@ -897,6 +891,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			e.printStackTrace();
 		}
 		
+		strRet = jacksonUtil.Map2json(mapRet);
 		return strRet;
 	}
 	
