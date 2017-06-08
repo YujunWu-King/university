@@ -97,7 +97,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "TZ_MSPS_PWJ_PC",
-					"TZ_LUQU_ZT", "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_MSH_ID" };
+					"TZ_LUQU_ZT", "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_MSH_ID","TZ_CLPS_GR_NAME" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -115,8 +115,8 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					 * judgeList = sqlQuery.queryForObject(pwsql, new Object[] {
 					 * rowList[0], rowList[1], rowList[2] }, "String");
 					 */
-					judgeGroupName = sqlQuery.queryForObject(TzGDObject.getSQLText("SQL.TZMbaPwClps.TZ_MSPS_KS_JUGROP"),
-							new Object[] { rowList[1], rowList[0], rowList[2] }, "String");
+				 /*	judgeGroupName = sqlQuery.queryForObject(TzGDObject.getSQLText("SQL.TZMbaPwClps.TZ_MSPS_KS_JUGROP"),
+							new Object[] { rowList[1], rowList[0], rowList[2] }, "String");*/
 					mapList.put("judgeGroup", judgeList);
 					mapList.put("ksOprId", rowList[3]);
 					mapList.put("passState", rowList[4]);
@@ -124,7 +124,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("ksName", rowList[6]);
 					mapList.put("gender", rowList[7]);
 					mapList.put("mshId", rowList[8]);
-					mapList.put("judgeGroupName", judgeGroupName);
+					mapList.put("judgeGroupName", rowList[9]);
 					listData.add(mapList);
 				}
 

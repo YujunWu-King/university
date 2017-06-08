@@ -261,10 +261,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 					
 					    //console.log(tzParams);
 		                Ext.tzSubmit(tzParams, function() {
-		               	gridlist.getStore().reload();
+		                   	
 
 		                }, "添加成功!", true, this)
-
+                          gridlist.getStore().reload();
 
 					//修改密码信息表单
 					var form = win.child("form").getForm();

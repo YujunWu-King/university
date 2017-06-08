@@ -24,7 +24,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 			var buttonHeight = 42; /*button height plus panel body padding*/
 			var formHeight = 30;
 			var formPadding = 20;
-			var grid = panel.child('grid[name=appFormApplicants]');
+			var grid = panel.child('grid[name=appseastudentInfo]');
 			grid.setHeight(height - formHeight - buttonHeight - formPadding);
 		}
 	},
@@ -125,7 +125,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 				xtype: 'grid',
 				title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksmgrid", "考生名单"),
 				columnLines: true,
-				name: 'appFormApplicants',
+				name: 'appseastudentInfo',
 				style: "margin:0px",
 				selModel: {
 					type: 'checkboxmodel'
