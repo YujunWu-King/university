@@ -3397,7 +3397,7 @@
 				
 				store.tzStoreParams = JSON.stringify(tzParamsObj);
                 //store.load();              
-                store.load({params: {start:0,limit:10,page:1}});
+                store.load({params: {start:0,limit:50,page:1}});
             }
         });
     },
