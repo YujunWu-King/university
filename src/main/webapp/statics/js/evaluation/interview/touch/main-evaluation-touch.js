@@ -100,7 +100,7 @@ function useJson(varjsonData){
 	}
 
 	
-	 var examerinfolist="<th scope='col'  style='text-align:center;'>"+"面试顺序"+"</th><th scope='col'  style='text-align:center;'>"+"面试申请号"+"</th><th scope='col'  style='text-align:center;'>"+"考生姓名"+"</th>";
+	 var examerinfolist="<th scope='col'  style='text-align:center;'>"+"面试顺序"+"</th><th scope='col'  style='text-align:center;'>"+"申请号"+"</th><th scope='col'  style='text-align:center;'>"+"姓名"+"</th>";
   	 var headbutton="<th  scope='col'  style='text-align:center;'>"+"本科院校"+"</th><th scope='col'  style='text-align:center;'>"+"工作单位"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评议状态"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评审时间"+"</th>"+"<th scope='col'  style='text-align:center;'>"+"评审"+"</th><th scope='col'  style='text-align:center;'>"+"移除"+"</th>";
 	 examerinfolist="<table  id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'><tr>"+examerinfolist+collist+headbutton+'</tr>'+detallist+'</table>';
 

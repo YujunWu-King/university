@@ -331,7 +331,52 @@ public class InterviewEvaluationCls{
 
 		return retList;
 	}
+	
+	//计算同组单个考生某个成绩项评委平均分
+	protected double calculateGroupAverage(String classId,String batchId,String oprid,String scoreItemId,long appInsId,int error_code,String error_decription){
 		
+	   //参数验证
+	   if(oprid==null||"".equals(oprid)){
+		   error_code = 1;
+		   error_decription = "评委不能为空！";
+	   }
+	   if(classId==null||"".equals(classId)){
+		   error_code = 1;
+		   error_decription = "报考班级不能为空！";
+	   }
+	   if(batchId==null||"".equals(batchId)){
+		   error_code = 1;
+		   error_decription = "报考批次不能为空！";
+	   }
+	   if(scoreItemId==null||"".equals(scoreItemId)){
+		   error_code = 1;
+		   error_decription = "成绩项不能为空！";
+	   }
+	   if(appInsId==0){
+		   error_code = 1;
+		   error_decription = "报名表不能为空！";
+	   }
+		   
+		double average = 0;
+		
+		Map<String, Object> map = sqlQuery.queryForMap(
+				"select SUM(TZ_SCORE_NUM) SUM_SCORE,COUNT(TZ_SCORE_NUM) COUNT_SCORE from PS_TZ_MP_PW_KS_TBL A,PS_TZ_CJX_TBL B where A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID and A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? and B.TZ_SCORE_ITEM_ID =?  AND A.TZ_DELETE_ZT <> 'Y' AND A.TZ_PSHEN_ZT = 'Y' AND TZ_PWEI_OPRID IN (SELECT distinct TZ_PWEI_OPRID FROM PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_GRPID =(SELECT TZ_PWEI_GRPID FROM PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?)) AND TZ_APP_INS_ID=?",
+				new Object[] { classId, batchId,scoreItemId,classId, batchId,classId, batchId,oprid,appInsId});
+		
+		if(map!=null){
+			double sum_score = map.get("SUM_SCORE")==null?0:((BigDecimal )map.get("SUM_SCORE")).doubleValue();
+			long count_score = (Long)map.get("COUNT_SCORE");
+			
+			if(sum_score==0||count_score==0){
+				average = 0;
+			}else{
+				average = (double)Math.round(sum_score/count_score*100)/100;
+			}
+		}
+		
+		return average;
+	}
+	
 	//移除考生和评委关系
 	protected Map<String,Object> removeJudgeApplicant(String classId, String batchId, String appInsId, String oprId){
 		

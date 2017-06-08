@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"> 
 <title>清华大学经济管理学院MBA面试评审系统</title>
 
-<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-sem.css" />
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
@@ -38,25 +38,24 @@ caption {
 	text-align: right;
 }
 th {
-	font: bold 12px "trebuchet ms", verdana, arial, helvetica, sans-serif;
-	color: #4f6b72;
-	border-right: 1px solid #c1dad7;
-	border-bottom: 1px solid #c1dad7;
-	border-top: 1px solid #c1dad7;
+	font: bold 13px "trebuchet ms", verdana, arial, helvetica, sans-serif;
+	color: #333;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 	letter-spacing: 2px;
 	text-transform: uppercase;
 	text-align: left;
 	padding: 6px 6px 6px 12px;
-	background: #cae8ea ;
+	background: #eee ;
 }
 
 .alt {
-	border-right: 1px solid #c1dad7;
-	border-bottom: 1px solid #c1dad7;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
 	background: #fff;
-	font-size:12px;
+	font-size:13px;
 	padding: 6px 6px 6px 12px;
-	color: #4f6b72;
+	color: #333;
 
 }
 .page-loading {
@@ -76,19 +75,38 @@ th {
 
 <div data-role="page" class="type-interior">
 
-
-
 	<div data-role="header" data-theme="b">
 
 		<div style="text-align:center;  float:left" class="r-action">
-			<a href="javascript:void(0);" id="ks_back_link" onclick="ks_back();"  data-role="button" data-inline="true" data-icon="back">返回</a>
+			<a href="javascript:void(0);" id="ks_back_link" onclick="ks_back();" data-theme="a"  data-role="button" data-inline="true" data-icon="back">返回</a>
 			&nbsp;欢迎%bind(:3)评委登录MBA面试评审系统&nbsp;%bind(:7) %bind(:8)
 		</div>
 		<div style="text-align:right; " class="r-action">
-			<a href="javascript:void(0);" id="ks_first_page_link"  onclick="ks_first_page();"  data-role="button" data-inline="true" data-icon="home">首页</a>
-			<a href="javascript:void(0);" target="_blank" id="gotocomment" data-role="button" data-inline="true" data-icon="star" >修改密码</a>
-			<a href="../../logout?type=interview"  id="ks_esc_link" data-rel="dialog" data-transition="slidedown" data-role="button" data-inline="true" data-icon="delete">退出</a>
+			<a href="javascript:void(0);" id="ks_first_page_link"  onclick="ks_first_page();" data-theme="a" data-role="button" data-inline="true" data-icon="home">首页</a>
+			<a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-inline="true" data-theme="a" data-icon="star" >修改密码</a>
+			<a href="../../logout?type=interview"  id="ks_esc_link" data-rel="dialog" data-theme="a" data-transition="slidedown" data-role="button" data-inline="true" data-icon="delete">退出</a>
 		</div>
+		<div data-role="popup" id="modifyPswdPopup" data-position-to="window" data-dismissible="false" data-overlay-theme="b" style="min-width:350px;">
+				<a href="#" data-rel="back" id="closeModify" class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">关闭</a>
+				<form method="post" id="modifyForm" data-ajax="false">
+					<div>
+						<div data-role="header" role="banner" data-theme="b">
+							<h3>修改密码</h3>
+						</div>
+						<div class="ui-field-contain" style="margin:10px 15px">
+							<label for="oldPswd">原密码:</label>
+							<input type="password" name="oldPswd" id="oldPswd">
+							<label for="newPswd" style="margin-top:5px;">新密码:</label>
+							<input type="password" name="newPswd" id="newPswd">
+							<label for="confirmPswd" style="margin-top:5px;">确认新密码:</label>
+							<input type="password" name="confirmPswd" id="confirmPswd">
+						</div>
+						<div align="center">
+						<a href="javascript:void(0);" data-role="button" data-inline="true" id="ensureModify">&nbsp;&nbsp;确定&nbsp;&nbsp;</a> 
+						</div>					
+					</div>
+				</form>
+			</div>
 	</div><!-- /header -->
 
 	<div data-role="content">
@@ -225,5 +243,63 @@ th {
 	</div><!-- /footer -->
 	
 </div><!-- /page -->
+<script type="text/javascript">
+		//修改密码-确定
+		$("#ensureModify").click(function() {
+			//旧密码
+			var oldPassword = $("#oldPswd").val();
+			//新密码
+			var newPassword = $("#newPswd").val();
+			//确认新密码
+			var confirmPassword = $("#confirmPswd").val();
+
+			var bl = true;
+			if(oldPassword!="" && newPassword!="" && confirmPassword!="") {
+				//密码
+				if(newPassword != confirmPassword){
+					alert("两次密码输入不一致。");
+					bl =  false;
+				} else {
+					//新旧密码不能相同
+					if(oldPassword == newPassword) {
+						alert("新旧密码不能相同。");
+						bl =  false;
+					} else {
+						bl =  true;
+					}
+				}
+			} else {
+				alert("请填写所有信息项。");
+				bl =  false;
+			}
+
+
+			if(bl) {
+				var formParams= '{"oldPwd":"'+oldPassword+'","newPwd":"'+newPassword+'","comfirmPwd":"'+confirmPassword+'"}';
+				var tzParams = '{"ComID":"TZ_GD_XGPWD_COM","PageID":"TZ_GD_XGPWD_STD","OperateType":"U","comParams":{"update":['+formParams+']}}';
+				var modiftyUrl = ContextPath+"/dispatcher";
+				$.ajax({
+					type: 'POST',
+					dataType: "json",
+					url: modiftyUrl,
+					data: {"tzParams":tzParams},
+					success: function(data) {
+						var errcode = data.state.errcode;
+						if(errcode!="0"){
+							alert(data.state.errdesc);
+						} else {
+							$("#oldPswd").val("");
+							$("#newPswd").val("");
+							$("#confirmPswd").val("");
+
+							alert("密码修改成功！");
+
+							$("#closeModify").trigger("click");
+						}
+					}
+				});
+			}
+		});
+</script>
 </body>
 </html>

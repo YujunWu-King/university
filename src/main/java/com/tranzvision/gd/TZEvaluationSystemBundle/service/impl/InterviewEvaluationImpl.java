@@ -502,24 +502,28 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			
 			/* 第4部分 当前评委已评审考生统计信息 */
 			Map<String,Object> dyColThMap= new HashMap<String,Object>();			
-			String TZ_XS_MC2 = "";
+			String TZ_XS_MC2 = "",SCORE_ITEM_TYPE = "";
 			int dyColNum2 = 0;
 
-			String sql1 = "select TZ_SCORE_ITEM_ID,TZ_XS_MC from PS_TZ_CJ_BPH_TBL where TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=? AND TZ_ITEM_S_TYPE = 'A' order by TZ_PX";
-			List<Map<String, Object>> scoreModalList = sqlQuery.queryForList(sql1, new Object[] { TZ_MSPS_SCOR_MD_ID ,orgid});
+			String sql1 = "select A.TZ_SCORE_ITEM_ID,A.TZ_XS_MC,B.TZ_SCORE_ITEM_TYPE from PS_TZ_CJ_BPH_TBL A,PS_TZ_MODAL_DT_TBL B where A.TZ_SCORE_ITEM_ID = B.TZ_SCORE_ITEM_ID AND B.TREE_NAME=? AND A.TZ_SCORE_MODAL_ID=? AND A.TZ_JG_ID=? AND A.TZ_ITEM_S_TYPE = 'A' order by A.TZ_PX";
+			List<Map<String, Object>> scoreModalList = sqlQuery.queryForList(sql1, new Object[] { TREE_NAME,TZ_MSPS_SCOR_MD_ID ,orgid});
 
 			if (scoreModalList != null) {
 				for (int i = 0; i < scoreModalList.size(); i++) {
 					TZ_XS_MC2 = (String) scoreModalList.get(i).get("TZ_XS_MC");
-
+					SCORE_ITEM_TYPE = (String) scoreModalList.get(i).get("TZ_SCORE_ITEM_TYPE");
+							
 					dyColNum2 = dyColNum2 + 1;
 					String strDyColNum2 = "0" + dyColNum2;
-					
 					dyColThMap.put("col"+strDyColNum2.substring(strDyColNum2.length() - 2), TZ_XS_MC2);
+					
+					//A,B分数录入项和汇总项需要计算与其他评委差异
+					if("A".equals(SCORE_ITEM_TYPE)||"B".equals(SCORE_ITEM_TYPE)){
+						dyColNum2 = dyColNum2 + 1;
+						strDyColNum2 = "0" + dyColNum2;
+						dyColThMap.put("col"+strDyColNum2.substring(strDyColNum2.length() - 2), "与其它评委差异");
+					}
 				}
-			}			
-			if("Y".equals(str_jsfs)){
-				dyColThMap.put("ps_ksh_ppm", "排名");
 			}
 			
 			Long TZ_APP_INS_ID;
@@ -626,6 +630,17 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 										||("D".equals(TZ_SCORE_ITEM_TYPE)&&"Y".equals(TZ_SCR_TO_SCORE))) {
 									//成绩录入项、成绩汇总项、下拉框且转换为分值   取分数，否则取评语;
 							        dyRowValueItem.put("col"+strDyColNum,String.valueOf(TZ_SCORE_NUM));
+							        
+							        //成绩录入项、成绩汇总项计算与其它评委差异
+							        if("A".equals(TZ_SCORE_ITEM_TYPE)||"B".equals(TZ_SCORE_ITEM_TYPE)){
+										dyColNum = dyColNum + 1;
+										strDyColNum = "0" + dyColNum;
+										
+										double average = applicationCls.calculateGroupAverage(classId,batchId,oprid,TZ_SCORE_ITEM_ID3,TZ_APP_INS_ID,error_code,error_decription);
+										double difference =(double)Math.round((TZ_SCORE_NUM-average)*100)/100 ;
+										
+										dyRowValueItem.put("col"+strDyColNum.substring(strDyColNum.length() - 2), String.valueOf(difference));
+									}
 								} else {
 									if ("D".equals(TZ_SCORE_ITEM_TYPE)) {
 										// 如果是下拉框，需要取得下拉框名称，此处存的是下拉框编号;

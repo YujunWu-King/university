@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 	<title>清华大学经济管理学院MBA面试评审系统</title>
-	<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.css" />	
+	<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-sem.css" />
 	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
 	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
@@ -28,27 +28,29 @@
 
 		<div style="text-align:right; " class="r-action">
 
-			<a href="#" id="favrecipelink" data-role="button" data-inline="true" data-icon="home">首页</a>
+			<a href="#" id="favrecipelink" data-role="button" data-inline="true" data-icon="home" data-theme="a">首页</a>
 			<!--a href="%bind(:4)" target="_blank" id="favrecipelink" data-role="button" data-theme="b" data-inline="true" data-icon="info">联系方式</a-->
-			<a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-inline="true" data-icon="star" >修改密码</a>
-			<a href="../../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-icon="delete">退出</a>
+			<a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-theme="a" data-inline="true" data-icon="star" >修改密码</a>
+			<a href="../../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-theme="a" data-icon="delete">退出</a>
 
-			<div data-role="popup" id="modifyPswdPopup" data-position-to="window" data-dismissible="false" data-overlay-theme="b" style="min-width:333px;" class="ui-content">
+			<div data-role="popup" id="modifyPswdPopup" data-position-to="window" data-dismissible="false" data-theme="a" data-overlay-theme="a" style="min-width:350px;">
 				<a href="#" data-rel="back" id="closeModify" class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">关闭</a>
 				<form method="post" id="modifyForm" data-ajax="false">
 					<div>
-						<div data-role="header">
+						<div data-role="header" role="banner" data-theme="b">
 							<h3>修改密码</h3>
 						</div>
-						<div class="ui-field-contain">
+						<div class="ui-field-contain" style="margin:10px 15px">
 							<label for="oldPswd">原密码:</label>
 							<input type="password" name="oldPswd" id="oldPswd">
-							<label for="newPswd">新密码:</label>
+							<label for="newPswd" style="margin-top:5px;">新密码:</label>
 							<input type="password" name="newPswd" id="newPswd">
-							<label for="confirmPswd">确认新密码:</label>
+							<label for="confirmPswd" style="margin-top:5px;">确认新密码:</label>
 							<input type="password" name="confirmPswd" id="confirmPswd">
 						</div>
-						<input type="button" data-inline="true" id="ensureModify" value="确定">
+						<div align="center">
+						<a href="javascript:void(0);" data-role="button" data-inline="true" id="ensureModify">&nbsp;&nbsp;确定&nbsp;&nbsp;</a> 
+						</div>					
 					</div>
 				</form>
 			</div>
