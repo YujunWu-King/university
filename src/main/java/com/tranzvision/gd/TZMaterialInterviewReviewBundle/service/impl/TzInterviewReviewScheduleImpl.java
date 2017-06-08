@@ -245,6 +245,15 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			String strClassID = jacksonUtil.getString("classID");
 			String strBatchID = jacksonUtil.getString("batchID");
+			
+			//搜索进入
+			String strSearchSQL = "";
+			try{
+				strSearchSQL = jacksonUtil.getString("searchSQL");
+			}catch(Exception tzE){
+				/**/
+			}
+			
 			String strCurrentOrg = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
 			String strScoreModalSql = "SELECT TZ_ZLPS_SCOR_MD_ID,TZ_PS_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
@@ -265,7 +274,16 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 
 			// 报名表编号 姓名 性别 面试资格 评委间偏差 评委信息 评审状态 操作人 平均分;
 			String strAppInsID = "", strName = "", strGender = "", strViewQua = "", strPweiPc = "", strJudgeInfo = "", strJudgeStatus = "", strOprID = "", strLqZt = "";
-			String strSql1 = "SELECT TZ_APP_INS_ID,TZ_MSPS_PWJ_PC,TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? limit " + numStart + "," + numLimit;
+			String strSql1 = "";
+			String strSql2 = "";
+			if(!"".equals(strSearchSQL)&&strSearchSQL!=null){
+				strSql1 = "SELECT TZ_APP_INS_ID,TZ_MSPS_PWJ_PC,TZ_LUQU_ZT FROM PS_TZ_MSPSKSH_VW WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND OPRID IN (" + strSearchSQL + ") limit " + numStart + "," + numLimit;
+				strSql2 = "SELECT COUNT(1) FROM PS_TZ_MSPSKSH_VW WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND OPRID IN (" + strSearchSQL + ")";		
+			}else{
+				strSql1 = "SELECT TZ_APP_INS_ID,TZ_MSPS_PWJ_PC,TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? limit " + numStart + "," + numLimit;
+				strSql2 = "SELECT COUNT(1) FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			}
+			
 
 			List<Map<String, Object>> mapList1 = sqlQuery.queryForList(strSql1, new Object[] { strClassID, strBatchID });
 			if (mapList1 != null && mapList1.size() > 0) {
@@ -350,8 +368,9 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					}
 				}
 			}
-			String strSql3 = "SELECT ifnull(COUNT(1),0) FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-			String strTotalNum = sqlQuery.queryForObject(strSql3, new Object[] { strClassID, strBatchID }, "String");
+			/*String strSql3 = "SELECT ifnull(COUNT(1),0) FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			String strTotalNum = sqlQuery.queryForObject(strSql3, new Object[] { strClassID, strBatchID }, "String");*/
+			String strTotalNum = sqlQuery.queryForObject(strSql2, new Object[] { strClassID, strBatchID }, "String");
 
 			strResponse = tzGdObject.getHTMLText("HTML.TZMaterialInterviewReviewBundle.TZ_GD_BASE_JSON_HTML", strTotalNum, strResponse);
 		} catch (Exception e) {
