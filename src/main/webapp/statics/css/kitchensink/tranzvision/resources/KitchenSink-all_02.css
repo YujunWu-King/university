@@ -37,6 +37,8 @@
 .prev{background: url(images/icons/toolbar/previous.png) no-repeat center center}
 .refresh{background: url(images/icons/toolbar/refresh.png) no-repeat center center}
 .skype{background: url(images/icons/toolbar/skype.png) no-repeat center center}
+.details{background: url(images/icons/toolbar/details.png) no-repeat center center}
+.export{background: url(images/icons/toolbar/export.png) no-repeat center center}
 
 /*tabbar menu*/
 .tab_close{background: url(images/icons/toolbar/tab_close.png) no-repeat center center}
