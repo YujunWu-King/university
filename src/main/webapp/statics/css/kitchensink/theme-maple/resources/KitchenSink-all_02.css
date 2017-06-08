@@ -50,6 +50,8 @@
 .link{background: url(images/icons/toolbar/link.png) no-repeat center center}
 .favorite{background: url(images/icons/toolbar/favorite.png) no-repeat center center}
 .application_view_list{background: url(images/icons/fam/application_view_list.png) no-repeat center center}
+.details{background: url(images/icons/toolbar/details.png) no-repeat center center}
+.export{background: url(images/icons/toolbar/export.png) no-repeat center center}
 
 /*lack*/
 .sync{background: url(images/icons/toolbar/sync.png) no-repeat center center}
