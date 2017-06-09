@@ -218,7 +218,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 								iconCls:'download',
     							handler:'downloadHisExcel'
 							},{
-							text: '计算选中考生标准成绩',
+							text: '计算搜索结果中考生标准成绩',
 							handler: 'matchStudenSocre'
 						     }]
 						
