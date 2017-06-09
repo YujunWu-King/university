@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -67,6 +69,11 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsTzMsyyKsTblMapper psTzMsyyKsTblMapper;
+	
+	//用于同步面试预约过程的信号变量，避免同一个服务内部对数据库资源的竞争
+	private static Semaphore appointmentLock = new Semaphore(1,true);
+	//用于控制访问量的信号变量，避免考生面试预约过度竞争对服务器造成过大压力
+	private static Semaphore appointmentLockCounter = new Semaphore(10,true);
 	
 	
 	@Override
@@ -398,47 +405,76 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 						if("Y".equals(existsOther)){
 							errorMsg[0] = "1";
 							errorMsg[1] = "预约失败,你已预约其他报到时间的面试";
-						}else{
-							//锁表
-							mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");
-							try{
-								String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
-								Map<String,Object> numMap = jdbcTemplate.queryForMap(numSql, new Object[]{ classId, pcId, planId });
-								if(numMap != null){
-									int msYyLimit = Integer.parseInt(numMap.get("TZ_MSYY_COUNT").toString());
-									int msYyCount = Integer.parseInt(numMap.get("TZ_YY_COUNT").toString());
+						}
+						else
+						{
+							try
+							{
+								//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
+								if(appointmentLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+								{
+									throw new Exception("系统忙，请稍候再试。");
+								}
+							
+								//线程间同步，防止同一个应用服务内的预约竞争，减少数据库服务器加锁的压力
+								appointmentLock.acquire();
+								
+								try
+								{
+									//对指定记录进行加锁
+									mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");
 									
-									if(msYyLimit > msYyCount){
-										psTzMsyyKsTbl = new PsTzMsyyKsTbl();
-										psTzMsyyKsTbl.setTzClassId(classId);
-										psTzMsyyKsTbl.setTzBatchId(pcId);
-										psTzMsyyKsTbl.setTzMsPlanSeq(planId);
-										psTzMsyyKsTbl.setOprid(oprid);
-										psTzMsyyKsTbl.setRowAddedOprid(oprid);
-										psTzMsyyKsTbl.setRowAddedDttm(new Date());
-										psTzMsyyKsTbl.setRowLastmantOprid(oprid);
-										psTzMsyyKsTbl.setRowLastmantDttm(new Date());
-										int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
-										if(rtn > 0){
-											errorMsg[0] = "0";
-											errorMsg[1] = "预约成功";
+									String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
+									Map<String,Object> numMap = jdbcTemplate.queryForMap(numSql, new Object[]{ classId, pcId, planId });
+									if(numMap != null){
+										int msYyLimit = Integer.parseInt(numMap.get("TZ_MSYY_COUNT").toString());
+										int msYyCount = Integer.parseInt(numMap.get("TZ_YY_COUNT").toString());
+										
+										if(msYyLimit > msYyCount){
+											psTzMsyyKsTbl = new PsTzMsyyKsTbl();
+											psTzMsyyKsTbl.setTzClassId(classId);
+											psTzMsyyKsTbl.setTzBatchId(pcId);
+											psTzMsyyKsTbl.setTzMsPlanSeq(planId);
+											psTzMsyyKsTbl.setOprid(oprid);
+											psTzMsyyKsTbl.setRowAddedOprid(oprid);
+											psTzMsyyKsTbl.setRowAddedDttm(new Date());
+											psTzMsyyKsTbl.setRowLastmantOprid(oprid);
+											psTzMsyyKsTbl.setRowLastmantDttm(new Date());
+											int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
+											if(rtn > 0){
+												errorMsg[0] = "0";
+												errorMsg[1] = "预约成功";
+											}else{
+												errorMsg[0] = "1";
+												errorMsg[1] = "预约失败";
+											}
 										}else{
 											errorMsg[0] = "1";
-											errorMsg[1] = "预约失败";
+											errorMsg[1] = "预约失败，该报到时间预约人数已满，请预约其他报到时间";
 										}
-									}else{
-										errorMsg[0] = "1";
-										errorMsg[1] = "预约失败，该报到时间预约人数已满，请预约其他报到时间";
 									}
+									//对指定记录进行解锁
+									mySqlLockService.unlockRow(jdbcTemplate);
 								}
-								// 解锁
-								mySqlLockService.unlockRow(jdbcTemplate);
-							}catch(Exception ee){
-								ee.printStackTrace();
+								catch(Exception ee)
+								{
+									ee.printStackTrace();
+									errorMsg[0] = "1";
+									errorMsg[1] = "预约失败，失败原因："+ee.getMessage();
+									//回滚
+									mySqlLockService.rollback(jdbcTemplate);
+								}
+								finally
+								{
+									appointmentLock.release();
+									appointmentLockCounter.release();
+								}
+							}
+							catch(Exception e)
+							{
+								e.printStackTrace();
 								errorMsg[0] = "1";
-								errorMsg[1] = "预约失败，失败原因："+ee.getMessage();
-								//回滚
-								mySqlLockService.rollback(jdbcTemplate);
+								errorMsg[1] = "系统忙，请稍候再试。";
 							}
 						}
 						
