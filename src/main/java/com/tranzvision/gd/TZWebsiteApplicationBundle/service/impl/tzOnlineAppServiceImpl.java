@@ -51,6 +51,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.encrypt.Sha3DesMD5;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -276,6 +277,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 		// 报名表实例
 		PsTzAppInsT psTzAppInsT = null;
+
+		// 客户端是否移动设备访问
+		boolean isMobile = CommonUtils.isMobile(request);
+
+		// 推荐信，只有PC模式
+		if (strRefLetterId != null && !strRefLetterId.trim().equals("")) {
+			isMobile = false;
+		}
+		System.out.println("是否手机模式:" + isMobile);
 
 		// 报名表模版
 		PsTzApptplDyTWithBLOBs psTzApptplDyTWithBLOBs = null;
@@ -627,41 +637,223 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			/*-----报名表菜单生成Begin--------------*/
 			time2 = System.currentTimeMillis();
 			System.out.println("报名表展现左侧菜单处理Begin");
-			int numIndex = 0;
-			String strXxxBh = "";
-			// String strXxxMc = "";
-			String strXxxTitle = "";
-			String strDivClass = "";
-			// 页签自定义样式
-			String strtabType = "";
+
+			// PC版本处理
 			String strTabs = "";
-			// 父分隔符号的id
-			String strTZ_FPAGE_BH = "";
+			String strTabsAll = "";
+			String strLeftStyle = "";
+			String strRightStyle = "";
+			if (isMobile) {
+				// 手机版本的菜单,手机只显示二级菜单
+				int numIndex = 0;
+				String strXxxBh = "";
+				// String strXxxMc = "";
+				String strXxxTitle = "";
+				String strDivClass = "";
+				// 页签自定义样式
+				String strtabType = "";
 
-			int numChild = 0;
+				// 父分隔符号的id
+				String strTZ_FPAGE_BH = "";
 
-			sql = "SELECT A.TZ_XXX_BH,A.TZ_XXX_MC,A.TZ_TITLE,A.TZ_TAPSTYLE,A.TZ_FPAGE_BH,B.TZ_HAS_COMPLETE ";
-			sql = sql
-					+ "FROM PS_TZ_APP_XXXPZ_T A LEFT JOIN PS_TZ_APP_COMP_TBL B ON B.TZ_APP_INS_ID=? AND A.TZ_XXX_BH=B.TZ_XXX_BH ";
-			sql = sql + "WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";
-			listData = sqlQuery.queryForList(sql, new Object[] { numAppInsId, strTplId });
-			mapData = null;
-			System.out.println("是否多层菜单:" + isMultilayerMenu);
-			for (Object objDataTap : listData) {
-				mapData = (Map<String, Object>) objDataTap;
-				strXxxBh = mapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(mapData.get("TZ_XXX_BH"));
-				strXxxTitle = mapData.get("TZ_TITLE") == null ? "" : String.valueOf(mapData.get("TZ_TITLE"));
-				strtabType = mapData.get("TZ_TAPSTYLE") == null ? "" : String.valueOf(mapData.get("TZ_TAPSTYLE"));
-				strTZ_FPAGE_BH = mapData.get("TZ_FPAGE_BH") == null ? "" : String.valueOf(mapData.get("TZ_FPAGE_BH"));
+				int numChild = 0;
+
+				sql = "SELECT A.TZ_XXX_BH,A.TZ_XXX_MC,A.TZ_TITLE,A.TZ_TAPSTYLE,A.TZ_FPAGE_BH,B.TZ_HAS_COMPLETE ";
+				sql = sql
+						+ "FROM PS_TZ_APP_XXXPZ_T A LEFT JOIN PS_TZ_APP_COMP_TBL B ON B.TZ_APP_INS_ID=? AND A.TZ_XXX_BH=B.TZ_XXX_BH ";
+				sql = sql + "WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";
+				listData = sqlQuery.queryForList(sql, new Object[] { numAppInsId, strTplId });
+				mapData = null;
+
+				int index = -1;
+				int size = listData.size();
+
+				System.out.println("是否多层菜单:" + isMultilayerMenu);
+				String strComplete = "";
+				// String lastMenu = "";
+				// int index = 0;
+				List<String> name = new ArrayList<String>();
+				for (Object objDataTap : listData) {
+					mapData = (Map<String, Object>) objDataTap;
+					strXxxBh = mapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(mapData.get("TZ_XXX_BH"));
+					strXxxTitle = mapData.get("TZ_TITLE") == null ? "" : String.valueOf(mapData.get("TZ_TITLE"));
+					strtabType = mapData.get("TZ_TAPSTYLE") == null ? "" : String.valueOf(mapData.get("TZ_TAPSTYLE"));
+					strTZ_FPAGE_BH = mapData.get("TZ_FPAGE_BH") == null ? ""
+							: String.valueOf(mapData.get("TZ_FPAGE_BH"));
+
+					// 对号
+
+					numIndex = numIndex + 1;
+
+					if (isMultilayerMenu) {
+						// 多层菜单 不显示顶级的菜单
+						if (strTZ_FPAGE_BH == null || strTZ_FPAGE_BH.trim().equals("")) {
+						} else {
+							index = index + 1;
+							name.add(strXxxTitle);
+							if (strPageID == null || strPageID.equals("")) {
+								numChild = numChild + 1;
+								// 默认第一页高亮
+								if (numChild == 1) {
+									strDivClass = "active";
+								} else {
+									strDivClass = "";
+								}
+							} else {
+								if (strXxxBh.equals(strPageID)) {
+									strDivClass = "active";
+								} else {
+									strDivClass = "";
+								}
+							}
+						}
+						strtabType = ""; // 多层菜单页签自定义样式无效
+					} else {
+						index = index + 1;
+						name.add(strXxxTitle);
+						if (strPageID == null || strPageID.equals("")) {
+							numChild = numChild + 1;
+							// 默认第一页高亮
+							if (numChild == 1) {
+								strDivClass = "active";
+							} else {
+								strDivClass = "";
+							}
+						} else {
+							if (strXxxBh.equals(strPageID)) {
+								strDivClass = "active";
+							} else {
+								strDivClass = "";
+							}
+						}
+					}
+
+					if ("Y".equals(strIsAdmin)) {
+						strComplete = "";
+						// 如果是管理员查看，不需要显示对号
+					} else {
+						String strPageComplete = "";
+						if (numAppInsId > 0) {
+							strPageComplete = mapData.get("TZ_HAS_COMPLETE") == null ? ""
+									: String.valueOf(mapData.get("TZ_HAS_COMPLETE"));
+							if (strPageComplete != null && "Y".equals(strPageComplete)) {
+								// 已经完成的显示对号
+							} else {
+								// 未完成时,不显示对号
+								strComplete = "";
+							}
+						} else {
+							// 实例不存在时,不显示对号
+							strComplete = "";
+						}
+					}
+
+					if ((isMultilayerMenu && strTZ_FPAGE_BH != null && !strTZ_FPAGE_BH.trim().equals(""))
+							|| !isMultilayerMenu) {
+						try {
+							if (StringUtils.isNotBlank(strComplete)) {
+								strComplete = "<i class=\"complete\"></i>";
+							}
+
+							strTabs = strTabs
+									+ tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV_PHONE2",
+											strDivClass, String.valueOf(index), strXxxBh, strXxxTitle, strComplete);
+						} catch (TzSystemException e) {
+							e.printStackTrace();
+							strTabs = "";
+						}
+					}
+				}
+
+				try {
+					strTabs = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV_PHONE", strTabs);
+				} catch (TzSystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				index = 0;
+				size = name.size();
+				StringBuffer sb = new StringBuffer();
+				for (Object objDataTap : name) {
+					strXxxTitle = (String) objDataTap;
+					sb.append(" <li index=" + index + ">");
+					sb.append(strXxxTitle);
+					sb.append("</li>");
+					index = index + 1;
+				}
+				try {
+					strTabsAll = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV_PHONE3",
+							sb.toString());
+				} catch (TzSystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				/*-----报名表菜单生成End--------------*/
+
+				/* 如果页码大于1 则显示左侧，否则不显示左侧 */
+
+				if (numIndex <= 1) {
+					strLeftStyle = "display:none";
+					strRightStyle = "margin: 0 auto;float:none";
+				}
+
+			} else {
+				int numIndex = 0;
+				String strXxxBh = "";
+				// String strXxxMc = "";
+				String strXxxTitle = "";
+				String strDivClass = "";
+				// 页签自定义样式
+				String strtabType = "";
+
+				// 父分隔符号的id
+				String strTZ_FPAGE_BH = "";
+
+				int numChild = 0;
+
+				sql = "SELECT A.TZ_XXX_BH,A.TZ_XXX_MC,A.TZ_TITLE,A.TZ_TAPSTYLE,A.TZ_FPAGE_BH,B.TZ_HAS_COMPLETE ";
+				sql = sql
+						+ "FROM PS_TZ_APP_XXXPZ_T A LEFT JOIN PS_TZ_APP_COMP_TBL B ON B.TZ_APP_INS_ID=? AND A.TZ_XXX_BH=B.TZ_XXX_BH ";
+				sql = sql + "WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? ORDER BY TZ_ORDER ASC";
+				listData = sqlQuery.queryForList(sql, new Object[] { numAppInsId, strTplId });
+				mapData = null;
 
 				String strComplete = contextUrl + "/statics/images/appeditor/new/check.png"; // 对号
-				numIndex = numIndex + 1;
+				System.out.println("是否多层菜单:" + isMultilayerMenu);
+				for (Object objDataTap : listData) {
+					mapData = (Map<String, Object>) objDataTap;
+					strXxxBh = mapData.get("TZ_XXX_BH") == null ? "" : String.valueOf(mapData.get("TZ_XXX_BH"));
+					strXxxTitle = mapData.get("TZ_TITLE") == null ? "" : String.valueOf(mapData.get("TZ_TITLE"));
+					strtabType = mapData.get("TZ_TAPSTYLE") == null ? "" : String.valueOf(mapData.get("TZ_TAPSTYLE"));
+					strTZ_FPAGE_BH = mapData.get("TZ_FPAGE_BH") == null ? ""
+							: String.valueOf(mapData.get("TZ_FPAGE_BH"));
 
-				if (isMultilayerMenu) {
-					strtabType = ""; // 多层菜单页签自定义样式无效
-					// 默认第一级菜单高亮
-					if (strTZ_FPAGE_BH == null || strTZ_FPAGE_BH.trim().equals("")) {
-						strDivClass = "menu-active-top";
+					numIndex = numIndex + 1;
+
+					if (isMultilayerMenu) {
+						strtabType = ""; // 多层菜单页签自定义样式无效
+						// 默认第一级菜单高亮
+						if (strTZ_FPAGE_BH == null || strTZ_FPAGE_BH.trim().equals("")) {
+							strDivClass = "menu-active-top";
+						} else {
+							if (strPageID == null || strPageID.equals("")) {
+								numChild = numChild + 1;
+								// 默认第一页高亮
+								if (numChild == 1) {
+									strDivClass = "menu-active";
+								} else {
+									strDivClass = "";
+								}
+							} else {
+								if (strXxxBh.equals(strPageID)) {
+									strDivClass = "menu-active";
+								} else {
+									strDivClass = "";
+								}
+							}
+						}
 					} else {
 						if (strPageID == null || strPageID.equals("")) {
 							numChild = numChild + 1;
@@ -679,65 +871,49 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							}
 						}
 					}
-				} else {
-					if (strPageID == null || strPageID.equals("")) {
-						numChild = numChild + 1;
-						// 默认第一页高亮
-						if (numChild == 1) {
-							strDivClass = "menu-active";
-						} else {
-							strDivClass = "";
-						}
-					} else {
-						if (strXxxBh.equals(strPageID)) {
-							strDivClass = "menu-active";
-						} else {
-							strDivClass = "";
-						}
-					}
-				}
 
-				if ("Y".equals(strIsAdmin)) {
-					strComplete = "";
-					// 如果是管理员查看，不需要显示对号
-				} else {
-					String strPageComplete = "";
-					if (numAppInsId > 0) {
-						strPageComplete = mapData.get("TZ_HAS_COMPLETE") == null ? ""
-								: String.valueOf(mapData.get("TZ_HAS_COMPLETE"));
-						if (strPageComplete != null && "Y".equals(strPageComplete)) {
-							// 已经完成的显示对号
+					if ("Y".equals(strIsAdmin)) {
+						strComplete = "";
+						// 如果是管理员查看，不需要显示对号
+					} else {
+						String strPageComplete = "";
+						if (numAppInsId > 0) {
+							strPageComplete = mapData.get("TZ_HAS_COMPLETE") == null ? ""
+									: String.valueOf(mapData.get("TZ_HAS_COMPLETE"));
+							if (strPageComplete != null && "Y".equals(strPageComplete)) {
+								// 已经完成的显示对号
+							} else {
+								// 未完成时,不显示对号
+								strComplete = "";
+							}
 						} else {
-							// 未完成时,不显示对号
+							// 实例不存在时,不显示对号
 							strComplete = "";
 						}
-					} else {
-						// 实例不存在时,不显示对号
-						strComplete = "";
+					}
+
+					try {
+						if (StringUtils.isNotBlank(strComplete)) {
+							strComplete = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_IMG",
+									strComplete);
+						}
+						strTabs = strTabs + tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV",
+								strDivClass, strXxxTitle, strComplete, strXxxBh, strtabType);
+					} catch (TzSystemException e) {
+						e.printStackTrace();
+						strTabs = "";
 					}
 				}
+				/*-----报名表菜单生成End--------------*/
 
-				try {
-					if (StringUtils.isNotBlank(strComplete)) {
-						strComplete = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_IMG",
-								strComplete);
-					}
-					strTabs = strTabs + tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV",
-							strDivClass, strXxxTitle, strComplete, strXxxBh, strtabType);
-				} catch (TzSystemException e) {
-					e.printStackTrace();
-					strTabs = "";
+				/* 如果页码大于1 则显示左侧，否则不显示左侧 */
+
+				if (numIndex <= 1) {
+					strLeftStyle = "display:none";
+					strRightStyle = "margin: 0 auto;float:none";
 				}
 			}
-			/*-----报名表菜单生成End--------------*/
 
-			/* 如果页码大于1 则显示左侧，否则不显示左侧 */
-			String strLeftStyle = "";
-			String strRightStyle = "";
-			if (numIndex <= 1) {
-				strLeftStyle = "display:none";
-				strRightStyle = "margin: 0 auto;float:none";
-			}
 			System.out.println("报名表展现左侧菜单处理End,Time=" + (System.currentTimeMillis() - time2));
 
 			System.out.println("报名表展现获取控件信息处理Begin");
@@ -826,11 +1002,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 			String strDownErrorMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"DOWNERR", strLanguage, "请先保存报名表", "Please save the application form。");
-			
-			
+
 			String BMBTJMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"BMBTJMSG", strLanguage, "报名表已提交", "The application has been submitted");
-			
+
 			String TJXTJMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"TJXTJMsg", strLanguage, "推荐信已提交", "Reference Letter has been submitted");
 
@@ -942,29 +1117,42 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						"TJXSETPWD", strLanguage, "访问密码", "Access password");
 				String strSubmit2 = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 						"CONFIRM", strLanguage, "确认", "Confirm");
-				
+
 				String forgetPass = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 						"FOGETPASS", strLanguage, "忘记密码", "forget your password");
 
 				// 构建密码输入框
 				String PWDHTML = tzGdObject.getHTMLText("HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PWD_HTML", false,
-						Pwdname, strSubmit2, contextUrl,forgetPass);
+						Pwdname, strSubmit2, contextUrl, forgetPass);
 
 				System.out.println("报名表展现密码处理End,Time=" + (System.currentTimeMillis() - time2));
 
 				System.out.println("报名表展现构造HTML页面Begin");
 				time2 = System.currentTimeMillis();
-				str_appform_main_html = tzGdObject.getHTMLTextForDollar(
-						"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML", false, strTzGeneralURL, strComRegInfo,
-						strTplId, strAppInsId, strClassId, strRefLetterId, strTplData, strInsData, strTabs, strSiteId,
-						strAppOrgId, strMenuId, strAppFormReadOnly, strMsgSet, strLanguage, strSave, strNext, strSubmit,
-						strTplType, strLoading, strProcessing, strAfterSubmitUrl, strOnlineHead, strOnlineFoot,
-						strOnlineLeft, strIsAdmin, strMainInnerStyle, strUserInfoSet, strMainStyle, strPrev,
-						strAppInsVersion, contextUrl, leftWidthStyle, rightWidthStyle, strLeftStyle, strRightStyle,
-						showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit, strBatchId, strTJXIsPwd, passWordHtml,
-						setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2, pwdError, pwdError2, PWDHTML,
-						strDownLoadPDFMsg, strDownErrorMsg, classProjectID, strAppInsState, strDisplayType, strIsReview,BMBTJMsg,TJXTJMsg,
-						strTplData, strInsData);
+
+				if (isMobile) {
+
+					str_appform_main_html = tzGdObject.getHTMLTextForDollar(
+							"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML_PHONE", true, contextUrl,
+							strTzGeneralURL, strClassId, strLanguage, strIsAdmin, strTplId, strAppInsId,
+							strAppFormReadOnly, showSubmitBtnOnly, strTplType, strAppInsVersion, strIsEdit,
+							strProcessing, strAppInsState, strSubmitConfirmMsg, strAfterSubmitUrl, strSiteId,
+							strAppOrgId, strLoading, strProcessing, strPrev, strSave, strSubmit, strNext, BMBTJMsg,
+							strMenuId, strBatchId, classProjectID, strTabs, strTabsAll, strUserInfoSet, strMsgSet,
+							strComRegInfo, strTplData, strInsData);
+				} else {
+					str_appform_main_html = tzGdObject.getHTMLTextForDollar(
+							"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML", false, strTzGeneralURL,
+							strComRegInfo, strTplId, strAppInsId, strClassId, strRefLetterId, strTplData, strInsData,
+							strTabs, strSiteId, strAppOrgId, strMenuId, strAppFormReadOnly, strMsgSet, strLanguage,
+							strSave, strNext, strSubmit, strTplType, strLoading, strProcessing, strAfterSubmitUrl,
+							strOnlineHead, strOnlineFoot, strOnlineLeft, strIsAdmin, strMainInnerStyle, strUserInfoSet,
+							strMainStyle, strPrev, strAppInsVersion, contextUrl, leftWidthStyle, rightWidthStyle,
+							strLeftStyle, strRightStyle, showSubmitBtnOnly, strSubmitConfirmMsg, strIsEdit, strBatchId,
+							strTJXIsPwd, passWordHtml, setPwdId, setPwd2Id, pwdTitleDivId, pwdDivId, pwdDivId2,
+							pwdError, pwdError2, PWDHTML, strDownLoadPDFMsg, strDownErrorMsg, classProjectID,
+							strAppInsState, strDisplayType, strIsReview, BMBTJMsg, TJXTJMsg, strTplData, strInsData);
+				}
 				System.out.println("报名表展现构造HTML页面End,Time=" + (System.currentTimeMillis() - time2));
 				time2 = System.currentTimeMillis();
 				System.out.println("报名表展现替换HTML页面Begin");
@@ -1685,7 +1873,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							if ("TJX".equals(strTplType)) {
 								strMsg = tzOnlineAppEngineImpl.submitAppForm(numAppInsId, strClassId, strAppOprId,
 										strTplType, strBatchId, strPwd, isPwd);
-							
+
 								String strSubmitTjxSendEmail = tzTjxThanksServiceImpl.sendTJX_Thanks(numAppInsId);
 								// TJX提交 发送站内信
 								tzOnlineAppEngineImpl.sendSiteEmail(numAppInsId, "TZ_TJX_SUBSUC", strAppOprId,
