@@ -164,7 +164,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 			String appState=sqlQuery.queryForObject(sql3, new Object[] { classId, batchId }, "String");
 			System.out.println("appState:"+appState);
 			if ("A".equals(appState)) {
-				errMsg[0] = "0";
+				errMsg[0] = "1";
 				errMsg[1] = "当前批次：评审进行中，不能删除考生!";		
 			}else{
 				for (int i = 2; i < actData.length; i++) {
