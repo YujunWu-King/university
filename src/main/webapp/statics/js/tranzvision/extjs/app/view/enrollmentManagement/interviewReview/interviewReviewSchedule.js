@@ -121,6 +121,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                         } else {
                             return "";
                         }
+                    },
+                    listeners: {
+                        click: 'viewJudge'
                     }
                 },
                 {

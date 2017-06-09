@@ -1344,13 +1344,19 @@
     stuListActive : function(grid){
         var stuListStore = grid.getStore(),
             classID = grid.findParentByType("form").getValues().classID,
+            batchID = grid.findParentByType("form").getValues().batchID;
+
+        stuListStore.load();
+    },
+    /*stuListActive : function(grid){
+        var stuListStore = grid.getStore(),
+            classID = grid.findParentByType("form").getValues().classID,
             batchID = grid.findParentByType("form").getValues().batchID,
             self = this;
         if(!stuListStore.isLoaded()) {
             stuListStore.load({
                 scope: this,
                 callback: function (records, operation, success) {
-                    /*for (var x = records.length - 1; x >= 0; x--) {*/
                 	if(records.length > 0){
                 		for(var x = 0 ; x < records.length; x ++) {
                             var viewRecord = grid.getView().getRow(x).querySelector(".tz_lzh_interviewReview_app");
@@ -1412,7 +1418,7 @@
             });
             
         }
-    },
+    },*/
     addApplicantEnsure : function(btn,event){
         //由于新增弹出窗口会使当前页面不能操作，弹出窗口对应的tab即是当前活动的Tab
         var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
@@ -1493,6 +1499,12 @@
                 }
             }
         })
+    },
+    viewJudge:function(grid,record,rowIndex){
+    	var store = grid.getStore();
+    	var _record = store.getAt(rowIndex);
+    	
+    	this.viewJudgeReviewInfo(_record);
     },
     //查看评委评分信息
     viewJudgeReviewInfo:function(record){
