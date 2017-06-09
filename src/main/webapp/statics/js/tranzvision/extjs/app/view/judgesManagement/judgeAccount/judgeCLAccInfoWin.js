@@ -151,6 +151,7 @@
 	        			// maxLength: 170,
 	        			name: 'roleName',
 	        			editable: false,
+	        			value:'TZ_CLPS',
 	                    triggers: {
 	                        search: {
 	                            cls: 'x-form-search-trigger',
@@ -163,6 +164,7 @@
 	                    hideLabel: true,
 	                    // fieldLabel: "角色描述",
 	                    name: 'roleNameDesc',
+	                    value:'材料评委'
 	                    //readOnly:true,
 	                    //fieldStyle:'background:#F4F4F4'
 	                }]
