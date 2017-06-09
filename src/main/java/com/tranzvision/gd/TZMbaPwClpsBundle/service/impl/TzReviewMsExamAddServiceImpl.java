@@ -41,6 +41,9 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private TZGDObject tzSQLObject;
+	
+	
+	
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -180,6 +183,7 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		Map<String, Object> mapRet = new HashMap<String, Object>();
 		Date nowdate = new Date();
 		Long appinsId = (long) 0;
 		String ksName = "";
@@ -187,6 +191,7 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 		String appinsIdList = "";
 		int count = 0;
 		int count1 = 0;
+	    String strReturn="";
 
 		try {
 			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -218,7 +223,7 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 							count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appinsId },
 									"Integer");
 							if (count > 0) {
-								ksNameList = ksNameList + "第" + a[1] + 1 + "行的：" + ksName + ",";
+								ksNameList = ksNameList + "第" + a[1] + "行的：" + ksName + ",";
 
 							} else {
 								PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
@@ -252,16 +257,15 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 			}
 
 			if (!"".equals(ksNameList) && "".equals(appinsIdList)) {
-				errMsg[0] = "1";
-				errMsg[1] = "考生:" + ksNameList + "已经在考生列表，不能重复添加！";
+				strReturn= "考生:" + ksNameList + "已经在考生列表，不能重复添加！";
 			}
 			if (!"".equals(appinsIdList) && "".equals(ksNameList)) {
-				errMsg[0] = "1";
-				errMsg[1] = "报名表编号" + appinsIdList + "不存在，导入失败！";
+				
+				strReturn = "报名表编号" + appinsIdList + "不存在，导入失败！";
 			}
 			if (!"".equals(appinsIdList) && !"".equals(ksNameList)) {
-				errMsg[0] = "1";
-				errMsg[1] = "报名表编号" + appinsIdList + "不存在，导入失败！" + "考生:" + ksNameList + "已经在考生列表，不能重复添加！";
+				
+				strReturn = "报名表编号" + appinsIdList + "不存在，导入失败！" + "考生:" + ksNameList + "已经在考生列表，不能重复添加！";
 			}
 
 		} catch (Exception e) {
@@ -272,7 +276,10 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 			// TODO: handle exception
 		}
 
-		return null;
+		
+		mapRet.put("strReturn", strReturn);
+	
+		return jacksonUtil.Map2json(mapRet);
 	}
 
 }

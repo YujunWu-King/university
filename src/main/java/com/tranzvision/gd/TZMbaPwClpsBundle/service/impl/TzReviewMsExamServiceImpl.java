@@ -26,6 +26,8 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsksTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsksTbl;
+import com.tranzvision.gd.TZMbaPwMspsBundle.dao.PsTzMpPwKsTblMapper;
+import com.tranzvision.gd.TZMbaPwMspsBundle.model.PsTzMpPwKsTblKey;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -64,6 +66,8 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	private PsTzExcelDrxxTMapper psTzExcelDrxxTMapper;
 	@Autowired
 	private PsTzExcelDattTMapper psTzExcelDattTMapper;
+	@Autowired
+	private PsTzMpPwKsTblMapper psTzMpPwKsTblMapper;
 
 	/***
 	 * 
@@ -155,28 +159,53 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 			String classId = jacksonUtil.getString("classId");
 			jacksonUtil.json2Map(actData[1]);
 			String batchId = jacksonUtil.getString("batchId");
-			for (int i = 2; i < actData.length; i++) {
-				// 表单内容
-				String strForm = actData[i];
-				// 解析 json
-				jacksonUtil.json2Map(strForm);
-				appinsId = Long.valueOf(jacksonUtil.getString("appInsId"));
-				ksName = jacksonUtil.getString("ksName");
-				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
-				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appinsId }, "Integer");
-				if (count > 0) {
-					PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
-					psTzMsPsksTbl.setTzClassId(classId);
-					psTzMsPsksTbl.setTzApplyPcId(batchId);
-					psTzMsPsksTbl.setTzAppInsId(appinsId);
+			String sql3="SELECT  TZ_DQPY_ZT FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			
+			String appState=sqlQuery.queryForObject(sql3, new Object[] { classId, batchId }, "String");
+			System.out.println("appState:"+appState);
+			if ("A".equals(appState)) {
+				errMsg[0] = "0";
+				errMsg[1] = "当前批次：评审进行中，不能删除考生!";		
+			}else{
+				for (int i = 2; i < actData.length; i++) {
+					// 表单内容
+					String strForm = actData[i];
+					// 解析 json
+					jacksonUtil.json2Map(strForm);
+					appinsId = Long.valueOf(jacksonUtil.getString("appInsId"));
+					ksName = jacksonUtil.getString("ksName");
+					String sql = "SELECT COUNT(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
+					count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appinsId }, "Integer");
+					if (count > 0) {
+						PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
+						psTzMsPsksTbl.setTzClassId(classId);
+						psTzMsPsksTbl.setTzApplyPcId(batchId);
+						psTzMsPsksTbl.setTzAppInsId(appinsId);
 
-					psTzMsPsksTblMapper.deleteByPrimaryKey(psTzMsPsksTbl);
+						psTzMsPsksTblMapper.deleteByPrimaryKey(psTzMsPsksTbl);
 
-				} else {
+					} else {
+
+					}
+					
+					String sql1 = "SELECT COUNT(1) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
+					int count1 = sqlQuery.queryForObject(sql1, new Object[] { classId, batchId, appinsId }, "Integer");
+					if (count1 > 0) {
+						
+						PsTzMpPwKsTblKey  PsTzMpPwKsTblKey=new PsTzMpPwKsTblKey();
+						PsTzMpPwKsTblKey.setTzAppInsId(appinsId);
+						PsTzMpPwKsTblKey.setTzClassId(classId);
+						PsTzMpPwKsTblKey.setTzApplyPcId(batchId);
+		
+						psTzMpPwKsTblMapper.deleteByPrimaryKey(PsTzMpPwKsTblKey);
+
+					} else {
+
+					}
 
 				}
-
 			}
+		
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -459,7 +488,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			/* 可配置搜索查询语句 */
-			String[] resultFldArray = { "TZ_APP_INS_ID" };
+			String[] resultFldArray = { "TZ_CLASS_ID","TZ_APPLY_PC_ID","TZ_APP_INS_ID","OPRID","TZ_REALNAME","TZ_CLPS_GR_NAME" };
 
 			String[][] orderByArr = null;
 

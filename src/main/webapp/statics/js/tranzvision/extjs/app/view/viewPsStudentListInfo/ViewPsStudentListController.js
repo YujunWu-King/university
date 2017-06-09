@@ -463,8 +463,11 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		Ext.tzSubmit(tzParams, function(responseData) {
 			//刷新查看考生的列表 
 			panel.down('grid').getStore().reload();
-
-
+         if(responseData.strReturn!=""){
+        	 Ext.Msg.alert("提示", responseData.strReturn);
+         }
+         
+        
 		}, "保存成功！", true, this);
 		//刷新查看考生的列表 
 		panel.down('grid').getStore().reload();
@@ -477,22 +480,19 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
 		var classId = form.findField('classId').getValue();
 		var batchId = form.findField('batchId').getValue();	
-		var selList = btn.findParentByType('grid').getSelectionModel().getSelection();		
-		//选中行长度
-		var checkLen = selList.length;
-		if (checkLen == 0) {
-			Ext.Msg.alert("提示", "请选择一条要操作的记录");
-			return;
-		} else {
-			for (var i = 0; i < selList.length; i++) {
-				
-				if (selksList == "") {
-					selksList = Ext.JSON.encode(selList[i].data);
-				} else {
-					selksList = selksList + ',' + Ext.JSON.encode(selList[i].data);
-				}
-			}
+	    var panel=btn.findParentByType('viewmspsxsList');
+
+		
+		
+		if((typeof panel.getedSQL) == "undefined"){
+			searchSql = "SELECT TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID,OPRID,TZ_REALNAME,TZ_CLPS_GR_NAME  FROM PS_TZ_MSPS_KS_VW WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_APPLY_PC_ID='"+ batchId +"'";
+		}else{
+			searchSql = panel.getedSQL;
 		}
+		
+		searchSql=Ext.JSON.encode(searchSql);
+		
+		
 		//console.log(selksList);		
 	  Ext.tzSetCompResourses("TZ_BZCJ_SRC_COM");
         //是否有访问权限
@@ -543,9 +543,9 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
         	
         	
            // var form = panel.child('form').getForm();
-            var tzParams = '{"ComID":"TZ_BZCJ_SRC_COM","PageID":"TZ_BZCJ_YSF_STD","OperateType":"MATHSCORE","comParams":{"add":[' + selksList + ']}}';
+            var tzParams = '{"ComID":"TZ_BZCJ_SRC_COM","PageID":"TZ_BZCJ_YSF_STD","OperateType":"MATHSCORE","comParams":{"add":[{"searchSql":'+searchSql+'}]}}';
            // var examineeGrid = panel.down('grid');
-                    
+                    //console.log(tzParams);
             Ext.tzLoad(tzParams,function(respData){
             	//console.log(respData);
             	grid.store.loadData(respData);               

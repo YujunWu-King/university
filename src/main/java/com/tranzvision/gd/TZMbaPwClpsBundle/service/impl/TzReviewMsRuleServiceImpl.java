@@ -339,7 +339,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 		try {
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] { { "TZ_PWEI_GRPID", "ASC" },{"TZ_DLZH_ID", "ASC"} };
+			String[][] orderByArr = new String[][] { { "CAST(TZ_PWEI_GRPID AS UNSIGNED INTEGER)", "ASC" },{"TZ_DLZH_ID", "ASC"} };
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_PWEI_OPRID", "TZ_PWEI_GRPID",
