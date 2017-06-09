@@ -616,7 +616,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			bzsmItem = {
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				value		: '<span style="cursor:pointer;" id="'+pointbzsm_id+'">标准</span>',
+				value		: '<span style="cursor:pointer;color:blue;" id="'+pointbzsm_id+'">标准</span>',
 				width		: 60
 			}
 		} else {
@@ -634,7 +634,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			ckwtItem = {
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
+				value		: '<span style="cursor:pointer;color:blue;" id="'+pointckwt_id+'">说明</span>',
 				width		: 60
 			}
 		} else {
@@ -652,7 +652,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			msffItem = {
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				value		: '<span style="cursor:pointer;" id="'+pointmsff_id+'">面试方法</span>',
+				value		: '<span style="cursor:pointer;color:blue;" id="'+pointmsff_id+'">面试方法</span>',
 				width		: 90
 			}
 		} else {
@@ -670,7 +670,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			ckzlItem = {
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				value		: '<span style="cursor:pointer;" id="'+pointckzl_id+'">参考资料</span>',
+				value		: '<span style="cursor:pointer;color:blue;" id="'+pointckzl_id+'">参考资料</span>',
 				width		: 90
 			}
 		} else {
@@ -765,7 +765,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			ckwtItem = {
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
+				value		: '<span style="cursor:pointer;color:blue;" id="'+pointckwt_id+'">说明</span>',
 				width		: 60
 			}
 		} else {
@@ -839,7 +839,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			bzItem = {
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				value		: '<span style="cursor:pointer;" id="'+pointbzsm_id+'">标准</span>',
+				value		: '<span style="cursor:pointer;color:blue;" id="'+pointbzsm_id+'">标准</span>',
 				width		: 60
 			}
 		} else {
@@ -857,7 +857,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			ckwtItem = {
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				value		: '<span style="cursor:pointer;" id="'+pointckwt_id+'">说明</span>',
+				value		: '<span style="cursor:pointer;color:blue;" id="'+pointckwt_id+'">说明</span>',
 				width		: 60
 			}
 		} else {
@@ -875,7 +875,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			msffItem={
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				value		: '<span style="cursor:pointer;" id="'+pointmsff_id+'">面试方法</span>',
+				value		: '<span style="cursor:pointer;color:blue;" id="'+pointmsff_id+'">面试方法</span>',
 				width		: 90
 			}
 		} else {
@@ -893,7 +893,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			ckzlItem={
 				xtype		: 'displayfield',
 				fieldStyle	: 'text-align:right;',
-				value		: '<span style="cursor:pointer;" id="'+pointckzl_id+'">参考资料</span>',
+				value		: '<span style="cursor:pointer;color:blue;" id="'+pointckzl_id+'">参考资料</span>',
 				width		: 90
 			}
 		} else {
