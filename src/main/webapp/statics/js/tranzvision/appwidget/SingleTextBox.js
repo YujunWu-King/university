@@ -10,36 +10,61 @@ SurveyBuild.extend("SingleTextBox", "baseComponent", {
 		var c = "";
 
 		if (previewmode) {
-			if (SurveyBuild._readonly) {
-				//只读模式
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left">' + data.value + '</div>';
-				c += '  <div class="input-list-suffix left"></div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-			} else {
-				//填写模式
-				SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-				var regular = "";
-				if (data.preg && SurveyBuild._preg.hasOwnProperty(data.preg)) {
-					regular = SurveyBuild._preg[data.preg]["regExp"];
-				}
-
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '"/></div>';
-				c += '  <div class="input-list-suffix left">' + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "") + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-
-				if ($.trim(data.onShowMessage) != "") {
-					c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
-					c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
-					c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
-					c += '	<div class="input-list-suffix-blank left"></div>';
-					c += '	<div class="clear"></div>';
+			if(SurveyBuild.accessType == "M"){
+				if (SurveyBuild._readonly) {
+					//只读模式
+					c += '<div class="item">';
+					c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '"/></div>';
+					c += '<p style="color:#666;font-size:0.56rem;"></p>';
 					c += '</div>';
+				} else {
+					//填写模式
+					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+					var regular = "";
+					if (data.preg && SurveyBuild._preg.hasOwnProperty(data.preg)) {
+						regular = SurveyBuild._preg[data.preg]["regExp"];
+					}
+					c += '<div class="item">';
+					c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '"/></div>';
+					if ($.trim(data.onShowMessage) != "") {
+						c += '<p style="color:#666;font-size:0.56rem;">' + data.onShowMessage + '</p>';
+					}
+					c += '</div>';
+					}
+				}else{
+				if (SurveyBuild._readonly) {
+					//只读模式
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '  <div class="input-list-text left">' + data.value + '</div>';
+					c += '  <div class="input-list-suffix left"></div>';
+					c += '  <div class="clear"></div>';
+					c += '</div>';
+				} else {
+					//填写模式
+					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+					var regular = "";
+					if (data.preg && SurveyBuild._preg.hasOwnProperty(data.preg)) {
+						regular = SurveyBuild._preg[data.preg]["regExp"];
+					}
+
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '  <div class="input-list-text left"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '"/></div>';
+					c += '  <div class="input-list-suffix left">' + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "") + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '  <div class="clear"></div>';
+					c += '</div>';
+
+					if ($.trim(data.onShowMessage) != "") {
+						c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
+						c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
+						c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
+						c += '	<div class="input-list-suffix-blank left"></div>';
+						c += '	<div class="clear"></div>';
+						c += '</div>';
+					}
 				}
 			}
 		} else {
