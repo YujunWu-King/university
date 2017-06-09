@@ -415,7 +415,7 @@ function initializeEvaluatePiciGrid(jsonObject)
           },
           {
               text     : '进行评审',
-              width    : 106,
+              width    : 100,
               sortable : false,
               resizable: false,
               dataIndex: 'Evaluate',
@@ -428,7 +428,7 @@ function initializeEvaluatePiciGrid(jsonObject)
 				 		divTmp[0].id = Ext.id();
 				 		tmpBtn.render(divTmp[0]);
 				 		
-				 		divTmp.find('span').css({'vertical-align':'middle','margin-left':'6px','margin-right':'6px'});
+				 		divTmp.find('span').css({'vertical-align':'middle','margin-left':'1px','margin-right':'1px'});
 				 		
 				 		return divTmp[0].outerHTML;
 				 }

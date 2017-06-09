@@ -1071,8 +1071,8 @@ function getApplicantListColumns(jsonObject)
 	}
 	
 	columnList.push({text:"排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"});
-	columnList.push({text:"本科院校",width:150,align:'left',sortable:false,resizable:false,dataIndex:"ps_ksh_school"});
-	columnList.push({text:"工作单位",width:150,align:'left',sortable:false,resizable:false,dataIndex:"ps_ksh_company"});
+	columnList.push({text:"本科院校",width:150,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_school"});
+	columnList.push({text:"工作单位",width:150,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_company"});
 	columnList.push({text:"评议状态",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});
 	columnList.push({text:"评审时间",flex:1,minWidth:140,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_dt"});
 	
@@ -1291,7 +1291,7 @@ function createApplicantList(jsonObject)
       scroll:true,
       width:"100%",
       columns: getApplicantListColumns(jsonObject['ps_data_kslb']['ps_ksh_list_headers']),
-      title: '当前已归属您的评审考生列表',
+      title: '当前已归属您的评审考生列表（点击列标题可以对相应列进行排序）',
       viewConfig: {
           stripeRows: true,
           enableTextSelection: true,
@@ -1400,6 +1400,8 @@ function createApplicantList(jsonObject)
 							
 							maskWindow();
 							
+							var classId = jsonObject['ps_class_id'];
+							var batchId = jsonObject['ps_pc_id'];
 							/* Normally we would submit the form to the server here and handle the response... */
 							Ext.Ajax.request(
 							{
@@ -1409,8 +1411,8 @@ function createApplicantList(jsonObject)
 								params: {
 									LanguageCd:'ZHS',
 									type:'remove',
-                                    BaokaoClassID:jsonObject['ps_class_id'],
-                                    BaokaoPCID:jsonObject['ps_pc_id'],
+                                    BaokaoClassID:classId,
+                                    BaokaoPCID:batchId,
 									KSH_BMBID:rec.get('ps_ksh_bmbid')
 								},
 								success:function(response)
@@ -1435,7 +1437,7 @@ function createApplicantList(jsonObject)
 
 											if(DeljsonObject.error_code=="0"){
 												//移除成功，刷新局部数据
-												var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_pc_id'];
+												var cls_pc_id = classId + "_" + batchId;
 												getPartBatchDataByBatchId(cls_pc_id,null,{applicantBaomingbiaoID:rec.get('ps_ksh_bmbid')},'RFH');
 												
 												Ext.Msg.alert('提示', '移除成功！');
@@ -1562,7 +1564,7 @@ function createStatisticsArea(batchId,jsonObject)
 			 {
 				title:'评审统计信息区',
 				collapsible:true,
-				collapsed:false,
+				collapsed:true,
 				margin:'0 0 2 0',
 				bodyPadding:15,
 				layout: {
