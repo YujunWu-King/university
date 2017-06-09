@@ -220,6 +220,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 			String pwOprid = "";
 			String ksName = "";
 			String pwId = "";
+			String pwName="";
 			String scoreNum = "";
 			String judgeGroup = "";
 			String judgeName = "";
@@ -249,7 +250,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 						String searchSql = jacksonUtil.getString("searchSql");
 						System.out.println("searchSql:"+searchSql);
 						List<Map<String, Object>> appInsList = SqlQuery.queryForList(searchSql);
-
+						String sql="";
 						for (Map<String, Object> appInsMap : appInsList) {
 							appinsId = appInsMap.get("TZ_APP_INS_ID") == null ? ""
 									: appInsMap.get("TZ_APP_INS_ID").toString();
@@ -281,11 +282,12 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 												: ysfMap.get("TZ_PWEI_GRPID").toString();
 										scoreNum = ysfMap == null || ysfMap.get("TZ_SCORE_NUM") == null ? ""
 												: ysfMap.get("TZ_SCORE_NUM").toString();
-
+										sql="SELECT TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_JG_ID=? AND TZ_CLPS_GR_ID=?";
+										pwName=SqlQuery.queryForObject(sql, new Object[]{orgid,pwId}, "String");
 										Map<String, Object> mapList = new HashMap<String, Object>();
 										mapList.put("xmid", appinsId);
 										mapList.put("xmName", ksName);
-										mapList.put("teamID", pwId);
+										mapList.put("teamID", pwName);
 										mapList.put("judgeUser", judgeName);
 										mapList.put("rawscore", scoreNum);
 										mapList.put("judgescore", "");
@@ -299,7 +301,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 									Map<String, Object> mapList = new HashMap<String, Object>();
 									mapList.put("xmid", appinsId);
 									mapList.put("xmName", ksName);
-									mapList.put("teamID", "");
+									mapList.put("teamID", judgeGroup);
 									mapList.put("judgeUser", "");
 									mapList.put("rawscore", "");
 									mapList.put("judgescore", "");
