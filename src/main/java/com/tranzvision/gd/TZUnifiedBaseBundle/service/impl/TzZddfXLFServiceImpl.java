@@ -75,20 +75,27 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 
 			// 判断学校1是否为国外学校
 			String uniScholContry = ksMap.get("TZ_11luniversitycountry");
-			if ("中国大陆".equals(uniScholContry) || "中国".equals(uniScholContry)) {
-			} else {
-
-				// 如果是外国学校，截取（前的内容
-				if (XX.indexOf("(") > 0) {
-					XX = XX.substring(0, XX.indexOf("("));
-				} else {
-					XX = "邓莱里文艺理工学院";
+			if (uniScholContry == null || uniScholContry.equals("")) {
+				if (XX != null && !XX.equals("")) {
+					String sql = "SELECT COUNTRY FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
+					String coun1 = SqlQuery.queryForObject(sql, new Object[] { XX }, "String");
+					if (coun1 != null && !coun1.equals("")) {
+						if (coun1.equals("CHN")) {
+						} else {
+							// 如果是外国学校，截取（前的内容
+							if (XX.indexOf("(") > 0) {
+								XX = XX.substring(0, XX.indexOf("("));
+							} else {
+								XX = "邓莱里文艺理工学院";
+							}
+						}
+					}
 				}
 			}
 
 			// 判断学校2是否为国外学校
 			String ScholContry2 = ksMap.get("TZ_12ouniversitycountry");
-			if (ScholContry2 != null && !ScholContry2.equals("")) {
+		/*	if (ScholContry2 != null && !ScholContry2.equals("")) {
 				if ("中国大陆".equals(ScholContry2) || "中国".equals(ScholContry2)) {
 				} else {
 
@@ -99,10 +106,29 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 						XX2 = "邓莱里文艺理工学院";
 					}
 				}
+			}*/
+			
+			if (ScholContry2 == null || ScholContry2.equals("")) {
+				if (XX2 != null && !XX2.equals("")) {
+					String sql = "SELECT COUNTRY FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
+					String coun1 = SqlQuery.queryForObject(sql, new Object[] { XX2 }, "String");
+					if (coun1 != null && !coun1.equals("")) {
+						if (coun1.equals("CHN")) {
+						} else {
+							// 如果是外国学校，截取（前的内容
+							if (XX2.indexOf("(") > 0) {
+								XX2 = XX2.substring(0, XX2.indexOf("("));
+							} else {
+								XX2 = "邓莱里文艺理工学院";
+							}
+						}
+					}
+				}
 			}
+			
 			// 判断学校3是否为国外学校
 			String ScholContry3 = ksMap.get("TZ_13ouniver3country");
-			if (ScholContry3 != null && !ScholContry3.equals("")) {
+			/*if (ScholContry3 != null && !ScholContry3.equals("")) {
 				if ("中国大陆".equals(ScholContry3) || "中国".equals(ScholContry3)) {
 				} else {
 
@@ -113,7 +139,26 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 						XX3 = "邓莱里文艺理工学院";
 					}
 				}
+			}*/
+			
+			if (ScholContry3 == null || ScholContry3.equals("")) {
+				if (XX3 != null && !XX3.equals("")) {
+					String sql = "SELECT COUNTRY FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
+					String coun1 = SqlQuery.queryForObject(sql, new Object[] { XX3 }, "String");
+					if (coun1 != null && !coun1.equals("")) {
+						if (coun1.equals("CHN")) {
+						} else {
+							// 如果是外国学校，截取（前的内容
+							if (XX3.indexOf("(") > 0) {
+								XX3 = XX3.substring(0, XX3.indexOf("("));
+							} else {
+								XX3 = "邓莱里文艺理工学院";
+							}
+						}
+					}
+				}
 			}
+			
 
 			// 根据考生学校ID查询所属学校类型
 			String sql = "SELECT TZ_SCHOOL_TYPE FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
@@ -301,8 +346,6 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				XXType3 = "其他学校";
 			}
 
-
-
 			// 学历
 			// 数据库：1是本科，2自考本科 3成教本科 4专升本
 			// 传入参数：1是本科 2自考本科 3成教本科 4专升本
@@ -391,7 +434,6 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
 				String StrScore = SqlQuery.queryForObject(SearchSql, new Object[] { XXLX, XWF, XLF }, "String");
 				float Score1 = Float.parseFloat(StrScore);
-
 
 				if (XXLX2 != null && !XXLX2.equals("") && XL2.equals("1") && XLF2 != "0" && XWF2 != null
 						&& !XWF2.equals("")) {
