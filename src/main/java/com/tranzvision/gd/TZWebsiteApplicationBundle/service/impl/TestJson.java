@@ -443,36 +443,70 @@ public class TestJson {
 		//ts.Detail(json, new Long(9999));
 		//String str = "123ABC456";
 		//String strInsData =  "时间：2016年03月-至今 \n职位：大中国区翻新仪器业务经理\n工作职责：负责安捷伦大中国区官方翻新仪器业务\n工作业绩：FY16销售额$800K, FY17上半年$1.2M\n汇报关系：全球翻新仪器市场经理\n下属人数：0\n时间：2014年11月-2016年3月\n职位：政府项目经理\n工作职责：负责政府大项目招投标\n工作业绩：年销售额15M\n汇报关系：政府大客户团队经理\n下属人数：0\n时间：2009年5月-2014年11月\n职位：核磁共振销售，核磁共振销售经理，研究产品销售经理\n工作职责：负责核磁共振产品销售\n工作业绩：个人5-6M，团队20M。\n汇报关系：大中国区生命科学高级经理\n下属人数：4\n";
-		String strInsData ="\\$$$\\\"!@#%^&*()+_-|/?";
-		System.out.println(strInsData);
-		System.out.println("--------------------------");
-		//Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
-		//Matcher mc = CRLF.matcher(strInsData);
-		//if (mc.find()) {
-		//	strInsData = mc.replaceAll("\\\\n");
-		//}
-		//strInsData = strInsData.replace("\\", "\\\\");
-		//strInsData = strInsData.replace("$", "\\$");
+//		String strInsData ="\\$$$\\\"!@#%^&*()+_-|/?";
+//		System.out.println(strInsData);
+//		System.out.println("--------------------------");
+//		//Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)");
+//		//Matcher mc = CRLF.matcher(strInsData);
+//		//if (mc.find()) {
+//		//	strInsData = mc.replaceAll("\\\\n");
+//		//}
+//		//strInsData = strInsData.replace("\\", "\\\\");
+//		//strInsData = strInsData.replace("$", "\\$");
+//		
+//		//System.out.println(strInsData);
+//		//System.out.println("--------------------------");
+//		//if (strInsData.contains("\\")) {
+//			// val = val.replace("\\", "\\\\");
+//		//}
+//		//if (strInsData.contains("$")) {
+//		strInsData = java.util.regex.Matcher.quoteReplacement(strInsData);
+//			// val = val.replace("$", "\\$");
+//		//}
+//
+//		System.out.println(strInsData);
+//		System.out.println("--------------------------");
+//		strInsData = java.util.regex.Matcher.quoteReplacement(strInsData);
+//		System.out.println(strInsData);
+//		System.out.println("--------------------------");
+//		
+//		String a = "12345@22";
+//		
+//		System.out.println(a.substring(0, a.indexOf("@")));
 		
-		//System.out.println(strInsData);
-		//System.out.println("--------------------------");
-		//if (strInsData.contains("\\")) {
-			// val = val.replace("\\", "\\\\");
-		//}
-		//if (strInsData.contains("$")) {
-		strInsData = java.util.regex.Matcher.quoteReplacement(strInsData);
-			// val = val.replace("$", "\\$");
-		//}
-
-		System.out.println(strInsData);
-		System.out.println("--------------------------");
-		strInsData = java.util.regex.Matcher.quoteReplacement(strInsData);
-		System.out.println(strInsData);
-		System.out.println("--------------------------");
 		
-		String a = "12345@22";
-		
-		System.out.println(a.substring(0, a.indexOf("@")));
+		List<String> name = new ArrayList<String>();
+		name.add("报名须知");
+		name.add("个人信息");
+		name.add("工作单位");
+		name.add("工作背景");
+		name.add("教育背景");
+		name.add("推荐信");
+		name.add("其他");
+		name.add("AA");
+		name.add("BB");
+		int index = 0;
+		int size  = name.size();
+		StringBuffer sb = new StringBuffer();
+		String strXxxTitle="";
+		for (Object objDataTap : name) {
+			strXxxTitle = (String) objDataTap;
+			index = index + 1;
+			if (index == 1) {
+				sb.append("<tr>");
+			}
+			sb.append("<td>");
+			sb.append(strXxxTitle);
+			sb.append("/<td>");
+			if (index%3 ==0 && index!=size) {
+				sb.append("</tr>");
+				sb.append("<tr>");
+			}
+			if (index == size) {
+				sb.append("</tr>");
+			}
+		}
+		System.out.println(sb.toString());
 //		JacksonUtil jacksonUtil = new JacksonUtil();
 //		String val = "ABC\\%$\"{}[]=:";
 //		Map<String, Object> jsonObject = new HashMap<String, Object>();
