@@ -1,0 +1,305 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<title>清华大学经济管理学院MBA面试评审系统</title>
+
+<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-sem.css" />
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+
+<script type="text/javascript">
+	var ContextPath = "%bind(:1)";
+	var OrgCode = "%bind(:2)";
+	var ClassId = "%bind(:4)";
+	var BatchId = "%bind(:5)";
+	var AppInsId = "%bind(:6)";
+	var AppTplId = "%bind(:10)";
+	var scoreUrl = "%bind(:1)/dispatcher";
+	
+	var dfq_arr ;//取数组
+
+	var sf_qk_fjd = "Y" ;//全局变量是否情况父节点
+
+    /**返回当前显示的IFrame ID 给报名表页面，用于IFrame高度自适应**/
+	function getIFrameID(){
+		return iframe_tmp_id;
+	}
+</script>
+
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/touch/evaluation-detail-touch.js"></script>
+
+<style type="text/css">
+caption {
+	padding: 0 0 0 0;
+	font: italic 12px "trebuchet ms", verdana, arial, helvetica, sans-serif;
+	text-align: right;
+}
+th {
+	font: bold 13px "trebuchet ms", verdana, arial, helvetica, sans-serif;
+	color: #333;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 6px 6px 6px 12px;
+	background: #eee ;
+}
+
+.alt {
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	background: #fff;
+	font-size:13px;
+	padding: 6px 6px 6px 12px;
+	color: #333;
+
+}
+.page-loading {
+  width: 100%;
+  z-index: 200;
+  height: 100%;
+  background-color: #EEE;
+  position: fixed;
+  left :0px;
+  top :0px;
+  opacity :0.5;
+}
+</style>
+
+</head> 
+<body> 
+
+<div data-role="page" class="type-interior">
+
+	<div data-role="header" data-theme="b">
+
+		<div style="text-align:center;  float:left" class="r-action">
+			<a href="javascript:void(0);" id="ks_back_link" onclick="ks_back();" data-theme="a"  data-role="button" data-inline="true" data-icon="back">返回</a>
+			&nbsp;欢迎%bind(:3)评委登录MBA面试评审系统&nbsp;%bind(:7) %bind(:8)
+		</div>
+		<div style="text-align:right; " class="r-action">
+			<a href="javascript:void(0);" id="ks_first_page_link"  onclick="ks_first_page();" data-theme="a" data-role="button" data-inline="true" data-icon="home">首页</a>
+			<a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-inline="true" data-theme="a" data-icon="star" >修改密码</a>
+			<a href="../../logout?type=interview"  id="ks_esc_link" data-rel="dialog" data-theme="a" data-transition="slidedown" data-role="button" data-inline="true" data-icon="delete">退出</a>
+		</div>
+		<div data-role="popup" id="modifyPswdPopup" data-position-to="window" data-dismissible="false" data-overlay-theme="b" style="min-width:350px;">
+				<a href="#" data-rel="back" id="closeModify" class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">关闭</a>
+				<form method="post" id="modifyForm" data-ajax="false">
+					<div>
+						<div data-role="header" role="banner" data-theme="b">
+							<h3>修改密码</h3>
+						</div>
+						<div class="ui-field-contain" style="margin:10px 15px">
+							<label for="oldPswd">原密码:</label>
+							<input type="password" name="oldPswd" id="oldPswd">
+							<label for="newPswd" style="margin-top:5px;">新密码:</label>
+							<input type="password" name="newPswd" id="newPswd">
+							<label for="confirmPswd" style="margin-top:5px;">确认新密码:</label>
+							<input type="password" name="confirmPswd" id="confirmPswd">
+						</div>
+						<div align="center">
+						<a href="javascript:void(0);" data-role="button" data-inline="true" id="ensureModify">&nbsp;&nbsp;确定&nbsp;&nbsp;</a> 
+						</div>					
+					</div>
+				</form>
+			</div>
+	</div><!-- /header -->
+
+	<div data-role="content">
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="a" class="con-tag smallerr">
+			<h3>搜索考生</h3>
+
+				<table style="border:0">
+					<tr >
+						<td><input type="search" name="ks_search_msid" id="ks_search_msid" value=""  placeholder="请输入考生申请号" data-mini="true" data-inline="true" /></td>
+						<td>或</td>
+						<td><input type="search" name="ks_search_name" id="ks_search_name" value=""  placeholder="请输入考生姓名" data-mini="true" /></td>
+						<td><input id="ks_search_tz_app_ins_id" name="ks_search_tz_app_ins_id" value="" type="hidden"/></td>
+						<td><input id="ks_iframe_str_id" name="ks_iframe_str_id" value="" type="hidden"/></td>
+						<td><input id="ks_show_dfq" name="ks_show_dfq" value="Y"  type="hidden"/></td>
+						<td><input id="ks_show_tz_app_ins_id" name="ks_show_tz_app_ins_id" value="" type="hidden"/></td>
+					</tr>
+					<tr>
+						<td colspan="3"><div id="ks_look_back_info">请输入考生申请号或姓名进行搜索</div></td>
+					</tr>
+				</table>				  
+				<a href="javascript:void(0);" id="ks_search_look"  onclick="ks_look();"   data-role="button" data-inline="true" data-mini="true" data-icon="search">查 找</a>
+				<a href="javascript:void(0);" id="ks_search_pingsheng"  onclick="ks_pingsheng();" data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r">进行评审</a>
+
+		</div>	
+	
+
+		<div id="container" >
+			
+				  	<div data-role="navbar">
+						<ul>
+							<li><a href="#" onclick="show1();"   data-ajax="false"  id = "ks_list">考生列表</a></li>
+							<li><a href="#" onclick="show2();"  class="ui-btn-active ui-state-persist"  data-ajax="false"  id = "ks_bmb">报名表</a></li>
+							<li><a href="#" onclick="show3();" data-ajax="false"   id = "ks_dfq">打分区</a></li>
+						</ul>
+				   </div>
+		
+
+				<div id="div1" style="display:none">
+
+
+				<div id="ks_list_head" style="display:block"></div>
+
+			    </div>
+
+
+
+			    <div id="div3" style="display:none; background-color:#CDCDCD">
+
+
+				<div id="TZ_dialog"  data-role="popup"   class="ui-content" style="max-width:1000px"  data-theme="c" data-overlay-theme="a" >
+						<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">关闭</a>
+						<p><div id="TZ_dialog2">I'm in a dialog</div></p>
+				</div>
+
+				<!--用于保存考生成绩项的id-->
+
+				<input  name="tz_cjx_ids" id="tz_cjx_ids" value=""  type="hidden"/> 
+
+					<form id="ks_dfq_form" >	
+							<p>
+								<table width="70%">
+								   <tr>
+								      <td>
+										<b>面试申请号：<span  id="ks_dfq_ms_id" >-</span></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								      </td>
+								      <td>
+											<b>姓名：<span  id="ks_dfq_ms_name">-</span></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								      </td>
+								      <td>
+											<a href="#" data-role="none" rel="external" id="ks_new_w_bmb" target="_blank" class="ui-link">新开窗口看考生材料</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+								      </td>
+								     <!-- <td>
+											<a href="#TZ_dialog" data-rel="popup"  data-role="none"   class="ui-link" >补充提示信息</a>
+								      </td>-->
+								   </tr>
+
+								</table>
+							</p>
+							<p>
+								<div id="div_sx_ksbq">
+									<b>考生标签：<span  id="ps_sx_ksbq">-</span></b>
+									<div id="ks_sx_ksbq" style="display:block"></div>
+								</div>
+							</p>
+							<p>
+									<b><span  id="ps_clpscj_ck"></span></b>
+									<table width="100%">
+										<div id="ks_dfq_cjx" name="ks_dfq_cjx" style="display:block"></div>
+											<tr>
+												<td colspan='2'>&nbsp;&nbsp;&nbsp;&nbsp;
+													<a href="javascript:void(0);" id="ks_save_bt" onclick="ks_save();"  data-role="button" data-inline="true" data-mini="true" data-icon="check">保 存</a>												
+													<a href="javascript:void(0);"  id="ks_back_bt" onclick="ks_back();"  data-role="button" data-inline="true" data-mini="true" data-icon="back">返回评审界面</a>
+												</td>
+											</tr>
+									</table>
+							 </p>
+					   </form>		  
+			    </div>
+
+				<div id="div2" style="display:block;width:100%">
+
+ 				<script type="text/javascript">
+ 					$(function(){
+ 						var iframe_tmp_id = "bmb_iframe_"+ClassId+"_"+BatchId+"_"+AppInsId;
+						var viewAppFormUrl = ContextPath+"/dispatcher?tzParams="+
+							encodeURI(JSON.stringify({
+								"ComID":"TZ_ONLINE_REG_COM",
+								"PageID":"TZ_ONLINE_APP_STD",
+								"OperateType":"HTML",
+								"comParams":{"TZ_APP_INS_ID":AppInsId,"TZ_APP_TPL_ID":AppTplId,"isReview":"Y"}
+								}
+							))
+						document.getElementById(iframe_tmp_id).src=viewAppFormUrl;
+ 					})
+				</script>
+					<div id="div_bmb_iframe_%bind(:4)_%bind(:5)_%bind(:6)" style="width:auto; height:auto" >
+						<iframe id="bmb_iframe_%bind(:4)_%bind(:5)_%bind(:6)" style="width:100%;height:100%;border:0;" src="" name="bmb_iframe_%bind(:4)_%bind(:5)_%bind(:6)">
+						</iframe>
+					</div>
+
+		       </div>
+
+
+
+
+
+		</div>
+
+	</div><!-- /content -->
+	
+	<div data-role="footer" data-theme="b" >
+		<h4>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</h4>
+	</div><!-- /footer -->
+	
+</div><!-- /page -->
+<script type="text/javascript">
+		//修改密码-确定
+		$("#ensureModify").click(function() {
+			//旧密码
+			var oldPassword = $("#oldPswd").val();
+			//新密码
+			var newPassword = $("#newPswd").val();
+			//确认新密码
+			var confirmPassword = $("#confirmPswd").val();
+
+			var bl = true;
+			if(oldPassword!="" && newPassword!="" && confirmPassword!="") {
+				//密码
+				if(newPassword != confirmPassword){
+					alert("两次密码输入不一致。");
+					bl =  false;
+				} else {
+					//新旧密码不能相同
+					if(oldPassword == newPassword) {
+						alert("新旧密码不能相同。");
+						bl =  false;
+					} else {
+						bl =  true;
+					}
+				}
+			} else {
+				alert("请填写所有信息项。");
+				bl =  false;
+			}
+
+
+			if(bl) {
+				var formParams= '{"oldPwd":"'+oldPassword+'","newPwd":"'+newPassword+'","comfirmPwd":"'+confirmPassword+'"}';
+				var tzParams = '{"ComID":"TZ_GD_XGPWD_COM","PageID":"TZ_GD_XGPWD_STD","OperateType":"U","comParams":{"update":['+formParams+']}}';
+				var modiftyUrl = ContextPath+"/dispatcher";
+				$.ajax({
+					type: 'POST',
+					dataType: "json",
+					url: modiftyUrl,
+					data: {"tzParams":tzParams},
+					success: function(data) {
+						var errcode = data.state.errcode;
+						if(errcode!="0"){
+							alert(data.state.errdesc);
+						} else {
+							$("#oldPswd").val("");
+							$("#newPswd").val("");
+							$("#confirmPswd").val("");
+
+							alert("密码修改成功！");
+
+							$("#closeModify").trigger("click");
+						}
+					}
+				});
+			}
+		});
+</script>
+</body>
+</html>

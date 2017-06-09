@@ -196,7 +196,7 @@ function createMainPageSearchKSPanel(jsonObject, isFromDfPanel){
 			xtype		: 'button',
 			hidden		: false,
 			text		: '进行评审',
-			width		: 100,
+			width		: 90,
 			//height		: 25,
 			margin		: '10 10 10 0',
 			handler 	: function() {
@@ -1058,14 +1058,19 @@ function getApplicantListColumns(jsonObject)
 		];
 	
 	//动态列
+	var i = 0;
 	for(itm in jsonObject)
 	{
-		columnList.push({text:jsonObject[itm],flex:1,align:'left',sortable:true,resizable:true,dataIndex:itm, renderer: function (v, metaData) {
+		i++;
+		var colName = '00' + i;
+        colName = 'col' + colName.substr(colName.length - 2);
+		columnList.push({text:jsonObject[colName],flex:1,align:'left',sortable:true,resizable:true,dataIndex:colName, renderer: function (v, metaData) {
             var resultHTML=Ext.util.Format.htmlEncode(v)
             return resultHTML;
         }});
 	}
 	
+	columnList.push({text:"排名",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"});
 	columnList.push({text:"本科院校",width:150,align:'left',sortable:false,resizable:false,dataIndex:"ps_ksh_school"});
 	columnList.push({text:"工作单位",width:150,align:'left',sortable:false,resizable:false,dataIndex:"ps_ksh_company"});
 	columnList.push({text:"评议状态",flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_zt"});

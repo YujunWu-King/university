@@ -138,14 +138,15 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				
 				String sql;
 				
-				sql = "SELECT A.TZ_SUBMIT_YN,B.TZ_PWEI_ZHZT,C.TZ_DQPY_ZT FROM PS_TZ_MSPS_PW_TBL B,PS_TZ_MSPWPSJL_TBL A,PS_TZ_MSPS_GZ_TBL C";
-				sql = sql + " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID=B.TZ_PWEI_OPRID AND A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID";
-				sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?";
-				
-				Map<String, Object> mapBasic = sqlQuery.queryForMap(sql,new Object[]{classId,applyBatchId,oprid});
-				String submitAllFlag = mapBasic.get("TZ_SUBMIT_YN") == null ? "" : mapBasic.get("TZ_SUBMIT_YN").toString();
-				String pweiZhzt = mapBasic.get("TZ_PWEI_ZHZT") == null ? "" : mapBasic.get("TZ_PWEI_ZHZT").toString();
-				String dqpyZt = mapBasic.get("TZ_DQPY_ZT") == null ? "" : mapBasic.get("TZ_DQPY_ZT").toString();
+			    sql = "SELECT A.TZ_SUBMIT_YN FROM PS_TZ_MSPWPSJL_TBL A WHERE A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?";
+			    String submitAllFlag = sqlQuery.queryForObject(sql, new Object[]{classId,applyBatchId,oprid},"String");
+			    
+			    sql = "SELECT B.TZ_PWEI_ZHZT FROM PS_TZ_MSPS_PW_TBL B WHERE B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=? AND B.TZ_PWEI_OPRID=?";
+			    String pweiZhzt = sqlQuery.queryForObject(sql, new Object[]{classId,applyBatchId,oprid},"String");
+			    
+			    sql = "SELECT C.TZ_DQPY_ZT FROM PS_TZ_MSPS_GZ_TBL C WHERE C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=?";
+			    String dqpyZt = sqlQuery.queryForObject(sql, new Object[]{classId,applyBatchId},"String");
+			    
 				
 				if("Y".equals(submitAllFlag)) {
 					messageCode = "1";
@@ -225,20 +226,12 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 	public String tzOther(String operateType,String strParams,String[] errMsg) {
 		String strRet = "";
 		
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		jacksonUtil.json2Map(strParams);
-		
-		String typeFlag = jacksonUtil.getString("typeFlag");
-		String formData = jacksonUtil.getString("data");
-		
 		try {
 			if("tzSearchExaminee".equals(operateType)) {
-				if("SEARCH".equals(typeFlag)) {
-					strRet = searchExaminee(formData);
-				}
-				if("ADD".equals(typeFlag)) {
-					strRet = addExamineeForJudge(formData);
-				}
+				strRet = searchExaminee(strParams);
+			}
+			if("tzAddExaminee".equals(operateType)) {
+				strRet = addExamineeForJudge(strParams);
 			}
 			
 		} catch (Exception e) {
@@ -355,11 +348,11 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			
 			
 			/*当前考生基本信息*/
-			String sqlBasic = "SELECT A.TZ_CLASS_NAME,YEAR(A.TZ_START_DT) TZ_START_YEAR,A.TZ_JG_ID,A.TZ_PS_APP_MODAL_ID,A.TZ_ZLPS_SCOR_MD_ID,A.TZ_MSCJ_SCOR_MD_ID,A.TZ_APP_MODAL_ID,C.TZ_APP_FORM_STA,B.OPRID,D.TZ_REALNAME,E.TZ_MSSQH,F.TZ_BATCH_NAME";
+			String sqlBasic = "SELECT A.TZ_CLASS_NAME,YEAR(A.TZ_START_DT) TZ_START_YEAR,A.TZ_JG_ID,A.TZ_PS_APP_MODAL_ID,A.TZ_ZLPS_SCOR_MD_ID,A.TZ_MSCJ_SCOR_MD_ID,A.TZ_APP_MODAL_ID,C.TZ_APP_FORM_STA,B.OPRID,D.TZ_REALNAME,D.TZ_MSH_ID,F.TZ_BATCH_NAME";
 			sqlBasic = sqlBasic + ",(SELECT G.TREE_NAME FROM PS_TZ_RS_MODAL_TBL G WHERE G.TZ_JG_ID=A.TZ_JG_ID AND G.TZ_SCORE_MODAL_ID=A.TZ_ZLPS_SCOR_MD_ID) TREE_NAME_MATERIAL";
 			sqlBasic = sqlBasic + ",(SELECT G.TREE_NAME FROM PS_TZ_RS_MODAL_TBL G WHERE G.TZ_JG_ID=A.TZ_JG_ID AND G.TZ_SCORE_MODAL_ID=A.TZ_MSCJ_SCOR_MD_ID) TREE_NAME,G.TZ_PRJ_NAME";
-			sqlBasic = sqlBasic + " FROM PS_TZ_REG_USER_T E,PS_TZ_AQ_YHXX_TBL D,PS_TZ_APP_INS_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CLS_BATCH_T F,PS_TZ_CLASS_INF_T A,PS_TZ_PRJ_INF_T G";
-			sqlBasic = sqlBasic + " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND B.OPRID=D.OPRID AND B.OPRID=E.OPRID AND A.TZ_PRJ_ID = G.TZ_PRJ_ID AND A.TZ_CLASS_ID=? AND A.TZ_CLASS_ID = F.TZ_CLASS_ID AND F.TZ_BATCH_ID=? AND B.TZ_APP_INS_ID=?";
+			sqlBasic = sqlBasic + " FROM PS_TZ_AQ_YHXX_TBL D,PS_TZ_APP_INS_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CLS_BATCH_T F,PS_TZ_CLASS_INF_T A,PS_TZ_PRJ_INF_T G";
+			sqlBasic = sqlBasic + " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND B.OPRID=D.OPRID AND A.TZ_PRJ_ID = G.TZ_PRJ_ID AND A.TZ_CLASS_ID=? AND A.TZ_CLASS_ID = F.TZ_CLASS_ID AND F.TZ_BATCH_ID=? AND B.TZ_APP_INS_ID=?";
 
 			Map<String, Object> mapRootBasic = sqlQuery.queryForMap(sqlBasic,new Object[] { classId, applyBatchId, bmbId});
 			
@@ -375,7 +368,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			String applyBatchName = mapRootBasic.get("TZ_BATCH_NAME") == null ? "" : mapRootBasic.get("TZ_BATCH_NAME").toString();
 			String prgName = mapRootBasic.get("TZ_PRJ_NAME") == null ? "" : mapRootBasic.get("TZ_PRJ_NAME").toString();
 			String name = mapRootBasic.get("TZ_REALNAME") == null ? "" : mapRootBasic.get("TZ_REALNAME").toString();
-			String interviewApplyId = mapRootBasic.get("TZ_MSSQH") == null ? "" : mapRootBasic.get("TZ_MSSQH").toString();
+			String interviewApplyId = mapRootBasic.get("TZ_MSH_ID") == null ? "" : mapRootBasic.get("TZ_MSH_ID").toString();
 			String jgId = mapRootBasic.get("TZ_JG_ID") == null ? "" : mapRootBasic.get("TZ_JG_ID").toString();
 			String psBmbTplId = mapRootBasic.get("TZ_PS_APP_MODAL_ID") == null ? "" : mapRootBasic.get("TZ_PS_APP_MODAL_ID").toString();
 			String scoreModelIdMaterial = mapRootBasic.get("TZ_ZLPS_SCOR_MD_ID") == null ? "" : mapRootBasic.get("TZ_ZLPS_SCOR_MD_ID").toString();
@@ -487,7 +480,8 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 							if(num==1) {
 								ckcjxTxtInfoTmp = "<div style='float:left;width:90px;'>" + scoreItemNameClps+"：</div><div style='float:left;'>"+scoreValue+"</div><br />";
 							} else {
-								ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
+								//ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
+								ckcjxTxtInfoTmp += "<div>" + scoreValue + "</div>";
 							}
 						}	
 					}
@@ -497,9 +491,9 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				
 				if(!"".equals(ckcjxTxtInfoTmp)) {
 					if(!"".equals(ckcjxNumInfo)) {
-						ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+						ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4' style='word-wrap:break-word;word-break:break-all;'>"+ ckcjxTxtInfoTmp +"</td></tr>";
 					} else {
-						ckcjxTxtInfo = "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+						ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
 					}
 				}
 
@@ -707,7 +701,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					
 				}
 				
-				if("0".equals(count)) {
+				if(count<1) {
 					result = "1";
 					resultMsg = "未查找到相关考生信息";
 				} else {
@@ -738,8 +732,10 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 	 */
 	public String addExamineeForJudge(String strParams) {
 		String strRet = "";
-		JacksonUtil jacksonUtil = new JacksonUtil();
 		Map<String, Object> mapRet = new HashMap<>();
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
 		
 		String result = "0";
 		String resultMsg = "";
@@ -754,11 +750,12 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			
 			String sql ;
 			
-			sql = "SELECT A.TZ_DQPY_ZT,A.TZ_MSPY_NUM,B.TZ_PWEI_ZHZT,C.TZ_SUBMIT_YN";
+			sql = "SELECT A.TZ_DQPY_ZT,A.TZ_MSPY_NUM,B.TZ_PWEI_ZHZT";
+			sql = sql + ",(SELECT C.TZ_SUBMIT_YN FROM PS_TZ_MSPWPSJL_TBL C WHERE C.TZ_CLASS_ID=A.TZ_CLASS_ID AND C.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND C.TZ_PWEI_OPRID=B.TZ_PWEI_OPRID) TZ_SUBMIT_YN";
 			sql = sql + ",(SELECT 'Y' FROM PS_TZ_MP_PW_KS_TBL D WHERE D.TZ_CLASS_ID=A.TZ_CLASS_ID AND D.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND D.TZ_PWEI_OPRID=B.TZ_PWEI_OPRID AND D.TZ_APP_INS_ID=? AND D.TZ_DELETE_ZT='N') TZ_IS_PWKS";
 			sql = sql + ",(SELECT COUNT(1) FROM PS_TZ_MP_PW_KS_TBL D WHERE D.TZ_CLASS_ID=A.TZ_CLASS_ID AND D.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND D.TZ_APP_INS_ID=? AND D.TZ_DELETE_ZT='N') TZ_KSDPW_NUM";
-			sql = sql + " FROM PS_TZ_MSPWPSJL_TBL C,PS_TZ_MSPS_PW_TBL B,PS_TZ_MSPS_GZ_TBL A";
-			sql = sql + " WHERE C.TZ_CLASS_ID=B.TZ_CLASS_ID AND C.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND C.TZ_PWEI_OPRID=B.TZ_PWEI_OPRID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
+			sql = sql + " FROM PS_TZ_MSPS_PW_TBL B,PS_TZ_MSPS_GZ_TBL A";
+			sql = sql + " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
 			sql = sql + " AND B.TZ_PWEI_OPRID=? AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=?";
 			
 			Map<String, Object> mapBasic = sqlQuery.queryForMap(sql,new Object[]{bmbId,bmbId,oprid,classId,applyBatchId});
@@ -894,6 +891,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			e.printStackTrace();
 		}
 		
+		strRet = jacksonUtil.Map2json(mapRet);
 		return strRet;
 	}
 	

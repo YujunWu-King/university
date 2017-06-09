@@ -806,7 +806,6 @@
 	        			}
 	        			var tzParams2 = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_LIST_STD","OperateType":"U","comParams":{'+comParamsOPRID+'}}';
 	        		
-	        			
 	        			Ext.tzSubmit(tzParams2,function(resp){
 	        				
 	        			},"",true,this,AudID);

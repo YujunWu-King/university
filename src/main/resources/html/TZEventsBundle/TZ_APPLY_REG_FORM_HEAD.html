@@ -353,16 +353,20 @@ body, button, input, select, textarea {
 				async:false,
 				data:{"tzParams":strComParams},
 				success : function(data) {
-					var result = data.comContent.result;
-					var resultDesc = data.comContent.resultDesc;
-					var artid = data.comContent.artid;
-					var bmrid = data.comContent.bmrid;
-					if (result == "1" || result == "2") {
-						alert(resultDesc);
-					} else {
-						alert(resultDesc);
-						parent.changebmzt(artid, bmrid); 
-						parent.tz_close_float_iframe_apply();
+					if(data.state.errcode == "1"){
+						alert(data.state.errdesc);
+					}else{
+						var result = data.comContent.result;
+						var resultDesc = data.comContent.resultDesc;
+						var artid = data.comContent.artid;
+						var bmrid = data.comContent.bmrid;
+						if (result == "1" || result == "2") {
+							alert(resultDesc);
+						} else {
+							alert(resultDesc);
+							parent.changebmzt(artid, bmrid); 
+							parent.tz_close_float_iframe_apply();
+						}	
 					}
 				},
 				error : function(XMLHttpRequest, textStatus, errorThrown) {  

@@ -24,7 +24,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 			var buttonHeight = 42; /*button height plus panel body padding*/
 			var formHeight = 30;
 			var formPadding = 20;
-			var grid = panel.child('grid[name=appFormApplicants]');
+			var grid = panel.child('grid[name=appseastudentInfo]');
 			grid.setHeight(height - formHeight - buttonHeight - formPadding);
 		}
 	},
@@ -61,7 +61,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					allowBlank: false,
 					fieldStyle:'background:#F4F4F4',
     				readOnly:true
-					//value: '105'
+
 
 				}, {
 					xtype: 'textfield',
@@ -71,16 +71,16 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					allowBlank: false,
 					fieldStyle:'background:#F4F4F4',
     				readOnly:true
-					//value: '2'
+
 
 				},{
 					xtype: 'textfield',
-					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
+					//fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
 					labelWidth: 110,
 					name: 'classId',
-					allowBlank: false,
-					fieldStyle:'background:#F4F4F4',
-    				readOnly:true,
+					//allowBlank: false,
+					//fieldStyle:'background:#F4F4F4',
+    				//readOnly:true,
     				hidden:true
 
 				}, {
@@ -88,9 +88,9 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.batchId", "批次编号"),
 					labelWidth: 110,
 					name: 'batchId',
-					allowBlank: false,
-					fieldStyle:'background:#F4F4F4',
-    				readOnly:true,
+					//allowBlank: false,
+					//fieldStyle:'background:#F4F4F4',
+    				//readOnly:true,
     				hidden:true
 
 				}, {
@@ -125,7 +125,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 				xtype: 'grid',
 				title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksmgrid", "考生名单"),
 				columnLines: true,
-				name: 'appFormApplicants',
+				name: 'appseastudentInfo',
 				style: "margin:0px",
 				selModel: {
 					type: 'checkboxmodel'
@@ -154,12 +154,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 						iconCls: "add",
 						handler: 'onAddMsPsXs'
 					}, "-",
-					/*{
-						text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.add", "新增"),
-						tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.adddata", "新增"),
-						iconCls: "add",
-						handler: this.onAddClick
-					}, "-",*/
+			
 					{
 						text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.delete", "删除"),
 						tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.editdata", "删除"),
@@ -223,7 +218,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 								iconCls:'download',
     							handler:'downloadHisExcel'
 							},{
-							text: '计算选中考生标准成绩',
+							text: '计算搜索结果中考生标准成绩',
 							handler: 'matchStudenSocre'
 						     }]
 						
@@ -231,21 +226,21 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					}]
 				}],
 				columns: [{
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
+					//text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
 					dataIndex: 'classId',
-					width: 100,
+					//width: 100,
 					hidden:true
 					
 				}, {
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.batchIdg", "批次编号"),
+					//text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.batchIdg", "批次编号"),
 					dataIndex: 'batchId',
 					width: 100,
 					hidden:true
 					
 				}, {
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksOprIdg", "考生编号"),
+					//text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksOprIdg", "考生编号"),
 					dataIndex: 'ksOprId',
-					width: 100,
+					//width: 100,
 					hidden:true
 					
 				}, 
@@ -258,7 +253,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.mshIdg", "面试申请号"),
 					dataIndex: 'mshId',
-					width: 160,
+					width: 160
 					//flex: 1
 					
 				}, {
@@ -367,21 +362,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 		});
 		this.callParent();
 	},
-	onAddClick: function(btn) {
-		// Create a model instance
-		var rec = new KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListModel({
-			classId: '',
-			batchId: '',
-			ksOprId: null,
-			ksName: '',
-			mshId: '',
-			appInsId: ''
-		});
-
-		hbfsAllRecs = btn.findParentByType("grid[reference=mspsksGrid]").store.getRange();
-		btn.findParentByType("grid[reference=mspsksGrid]").getStore().insert(hbfsAllRecs.length, rec);
-		// this.cellEditing.startEdit(rec, 0);
-	},
+	
 	onRemoveClick: function(grid, rowIndex) {
 		grid.getStore().removeAt(rowIndex);
 	}

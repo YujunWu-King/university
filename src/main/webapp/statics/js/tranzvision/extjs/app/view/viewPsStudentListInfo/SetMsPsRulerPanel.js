@@ -4,7 +4,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 	controller: 'setrulercontroller',
 	actType: 'add',
 	requires: ['Ext.data.*', 'Ext.grid.*', 'Ext.util.*', 'Ext.toolbar.Paging', 'Ext.ux.ProgressBarPager', 'KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController', 'Ext.selection.CellModel', 'KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelStore', 'KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelModel'],
-	autoScroll: false,
+	/*autoScroll: false,*/
 	actType: 'add',
 	bodyStyle: 'overflow-y:auto;overflow-x:hidden',
 	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.MSPSKSMD", "设置面试规则"),
@@ -194,9 +194,6 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 					activeTab: 0,
 					plain: false,
 					resizeTabs: true,
-					defaults: {
-						autoScroll: false
-					},
 					listeners: {
 						beforetabchange: 'beforeOnTabchange'
 					},
@@ -223,11 +220,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 						title: "面试评委",
 						xtype: 'form',
 						name: 'pwlbgrid',
-						layout: {
-							type: 'vbox',
-							align: 'stretch'
-						},
-						height: 285,
+				        minHeight: 285,
+				        autoHeight:true,
 						style: 'border:0',
 						items: [{
 							xtype: 'grid',
@@ -235,7 +229,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							style: "margin:8px",
 							name: 'adprjgrid',
 							layout: 'fit',
-							minHeight: 275,
+							minHeight: 200,
+							autoHeight:true,
 							plugins: {
 								ptype: 'cellediting'
 							},
@@ -372,19 +367,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 						          handler: 'deleteMsPw'
 					            }]
 				             }],
-							store: store,
-							bbar: {
-								xtype: 'pagingtoolbar',
-								pageSize: 100,
-								store: store,
-								displayInfo: true,
-								displayMsg: "显示{0}-{1}条，共{2}条",
-								beforePageText: "第",
-								afterPageText: "页/共{0}页",
-								emptyMsg: "没有数据显示",
-								plugins: new Ext.ux.ProgressBarPager()
-							}
-
+							store: store,		
 						}]
 					}]
 				}]

@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
     alias: 'store.interviewStuViewAddStore',
     model: 'KitchenSink.view.interviewManagement.interviewArrange.interviewStuViewModel',
 	autoLoad: true,
-    pageSize: 10,
+    pageSize: 50,
     comID: 'TZ_MS_ARR_MG_COM',
     pageID: 'TZ_MSYY_ADD_STD',
     tzStoreParams: '',

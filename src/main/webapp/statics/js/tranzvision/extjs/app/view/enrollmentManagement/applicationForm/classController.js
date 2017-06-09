@@ -1509,7 +1509,6 @@
         var classID = record.get('classID');
         var batchID = record.get('batchID');
         cmp = new ViewClass(classID,batchID,transValue);
-//console.log("1");
         cmp.on('afterrender',function(panel){            
                 var judgeStore =panel.down('tabpanel').child("form[name=judgeFormInfo]").child('grid[name=interviewJudgeGrid]').store,
                     judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
@@ -1760,10 +1759,11 @@
             classId:classId,
             batchId:batchId
         });
-        console.log(classId+":"+batchId);
-
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
+            
+            
+            var pwgridform = panel.down("form[name=pwlbgrid]").getForm();
              var kspwnum=panel.down('grid').down('numberfield[name=ksRevedpwnum]');
              var pwTeamnum=panel.down('grid').down('numberfield[name=countTeamnum]');
              
@@ -1778,8 +1778,11 @@
                 if(formData!="" && formData!=undefined) {
                     panel.actType="update";
                     form.setValues(formData);
-                    kspwnum.setValue(formData.kspwnum);
-                    pwTeamnum.setValue(formData.pwTeamnum);
+                    
+                    
+                   // pwgridform.findField("ksRevedpwnum").
+                  //  kspwnum.setValue(formData.kspwnum);
+                  //  pwTeamnum.setValue(formData.pwTeamnum);
                     
                     
 
@@ -1810,6 +1813,8 @@
 
             });
         });
+        
+        
 
         tab = contentPanel.add(cmp);
 
@@ -1885,33 +1890,22 @@
             var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
                     var examineeGrid = panel.down('grid');
                     
-                    var tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
-                   // var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-vlue": "' + batchId + '"}}';
+                    var tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';                
                     examineeGrid.store.tzStoreParams = tzStoreParams;
-                    examineeGrid.store.load();
+                    
             Ext.tzLoad(tzParams,function(respData){
                 var formData = respData.formData;
                 if(formData!="" && formData!=undefined) {
                     panel.actType="update";
-                    formData.className = record.data.className;
-                    formData.batchName = record.data.batchName;
+                    formData.className = className;
+                    formData.batchName = batchName;
                     form.setValues(formData);
-
-                    //var examineeGrid = panel.down('grid');
-                    
-                   // var tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
-                   // var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-vlue": "' + batchId + '"}}';
-                   // examineeGrid.store.tzStoreParams = tzStoreParams;
-                   // examineeGrid.store.load();
+                    examineeGrid.store.load();
+                 
                 } else {
                     panel.actType="add";
-                    form.findField("classId").setValue(classId);
-                    form.findField("className").setValue(className);
-                    form.findField("batchId").setValue(batchId);
-                    form.findField("batchName").setValue(batchName);
-                    form.findField("ksNum").setValue(applicantsNumber);
-                    form.findField("reviewClpsKsNum").setValue(0);
-                    form.findField("reviewKsNum").setValue(0);
+                    
+                    form.setValues({classId:classId,className:className,batchId:batchId,batchName:batchName,ksNum:applicantsNumber,reviewClpsKsNum:0,reviewKsNum:0});
                 }
             });
         });

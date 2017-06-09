@@ -402,7 +402,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		
 		var three_btn_html = '<a href="'+bmb_url+'" target="_blank" title="打开在线报名表"><span style="color:blue;">新开窗口看考生材料</span></a>';
 
-		rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
+		//rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td width="412px">'+ three_btn_html +'</td></tr>';
+		rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px">面试申请号：</td><td width="126px">'+ ksinfoJSON.interviewApplyId +'</td><td width="48px" style="font-weight:bold;">姓名：</td><td align="left" width="120px">'+ ksinfoJSON.name +'</td><td>'+ three_btn_html +'</td></tr>';
 		if(ksinfoJSON.examineeTag!="" && ksinfoJSON.examineeTag!=null) {
 			rtn_ksinfohtml += '<tr height="30"><td style="font-weight:bold;" width="127px">考生标签：</td><td colspan="4">' + ksinfoJSON.examineeTag + '</td></tr>';
 			//【初筛淘汰】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【校友推荐】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;【自主创业】
@@ -554,7 +555,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 		var parentFieldContainer = new Ext.form.FieldContainer({
 				fieldLabel		: '<span style="padding-left: '+ pdl_value +'px;font-weight:bold;">'+ field_label +'</span>',
 				combineErrors	: false,
-				labelWidth		: 150,
+				//labelWidth		: 150,
+				labelStyle		: 'width:150px!important;padding-right:10px!important;',
 				height			: thisFieldContainerHeight,
 				defaults		: {hideLabel: true},
 				items			: [{
@@ -685,7 +687,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			combineErrors	: false,
 			layout			: 'hbox',
 			height			: thisFieldContainerHeight,
-			labelWidth		: 200,
+			//labelWidth		: 200,
+			labelStyle		: 'width:200px!important;padding-right:10px!important;',
 			defaults		: {hideLabel: true},
 			items			: [{
 				xtype		: 'numberfield',
@@ -778,7 +781,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			fieldLabel		: '<span style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
 			combineErrors	: false,
 			layout			: 'hbox',
-			labelWidth		: 200,
+			//labelWidth		: 200,
+			labelStyle		: 'width:200px!important;padding-right:10px!important;',
 			defaults		: {hideLabel: true},
 			items			: [{
 				xtype     	: 'textareafield',
@@ -906,7 +910,8 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			fieldLabel		: '<span style="padding-left: '+ pdl_value +'px">'+ field_label +'</span>',
 			combineErrors	: false,
 			layout			: 'hbox',
-			labelWidth		: 200,
+			//labelWidth		: 200,
+			labelStyle		: 'width:200px!important;padding-right:10px!important;',
 			defaults		: {hideLabel: true},
 			items			: [{
 				xtype     	: 'combobox',
@@ -1412,11 +1417,11 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 			//height			: thisFieldContainerHeight,
 			height          : '100%',
 			name            : field_name,
-			html            : '<div style="margin:0;width: 793px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
+			html            : '<div style="margin:0;width: 739px;" id="show_ksinfo_div_'+tmpBatchId+'">'+show_ksinfohtml+'</div>'
 		});
 
 		allDfAreaFormPanelFieldContainer_config[tmpBatchId].push(parentFieldContainer);
-		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight + 100;
+		dfArea_Height[tmpBatchId] = dfArea_Height[tmpBatchId] + thisFieldContainerHeight + 200;
 	} 
 
 
@@ -2281,7 +2286,7 @@ function displayApplicantEvaluatePage(evaluateObject,callBackFunction,tipCount,s
 					}
 				},
 				position: {
-					target: $("#tz_evaluation_main")
+					target: $("#all .main")
 				}
 			});
 		}catch(ex){

@@ -44,6 +44,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         dockedItemBtn = {
                 xtype: "toolbar",
                 items: [
+                    {text: "查询", tooltip: "查询", handler: "searchMsksList"},"-",
                     {text: "计算所有考生标准差", tooltip: "计算所有考生标准差", handler: "calculate"}
                 ]
             };
@@ -120,6 +121,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                         } else {
                             return "";
                         }
+                    },
+                    listeners: {
+                        click: 'viewJudge'
                     }
                 },
                 {

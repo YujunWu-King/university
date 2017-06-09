@@ -459,109 +459,125 @@ public class TzMyActServiceImpl extends FrameworkImpl {
 					}
 					
 					
-					/************************添加报名状态--开始******************************/
-					String regSql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID,TZ_NREG_STAT FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
-					Map<String, Object> mapBM = sqlQuery.queryForMap(regSql, new Object[] { oprid, strArtId });
-					// 是否已注册报名标识
-					String regFlag = "";
-					// 报名人ID
-					String strBmrId = "";
-					//报名状态
-					String applySta = "";
-					if (mapBM != null) {
-						regFlag = mapBM.get("REG_FLAG") == null ? "" : String.valueOf(mapBM.get("REG_FLAG"));
-						strBmrId = mapBM.get("TZ_HD_BMR_ID") == null ? "" : String.valueOf(mapBM.get("TZ_HD_BMR_ID"));
-						applySta = mapBM.get("TZ_NREG_STAT") == null ? "" : String.valueOf(mapBM.get("TZ_NREG_STAT"));
+					//活动听众判断,不在听众内的人员不显示报名按钮和报名状态
+					boolean isInAud = false;
+					String audSql = "select TZ_AUD_ID from PS_TZ_ART_AUDIENCE_T where TZ_ART_ID=? and exists(select 'X' from PS_TZ_ART_REC_TBL where TZ_ART_ID=PS_TZ_ART_AUDIENCE_T.TZ_ART_ID and TZ_PROJECT_LIMIT='B')";
+					List<Map<String,Object>> audList = sqlQuery.queryForList(audSql, new Object[]{ strArtId });
+					if(audList != null && audList.size() > 0){
+						for(Map<String,Object> audMap: audList){
+							String audId = audMap.get("TZ_AUD_ID") == null ? "" : audMap.get("TZ_AUD_ID").toString();
+							String inAudSql = "select 'Y' from PS_TZ_AUD_LIST_T where TZ_AUD_ID=? and TZ_DXZT<>'N' and OPRID=? limit 1";
+							String inAud = sqlQuery.queryForObject(inAudSql, new Object[]{ audId, oprid }, "String");
+							if("Y".equals(inAud)){
+								isInAud = true;
+							}
+						}
+					}else{
+						isInAud = true;
 					}
 					
-					//显示报名状态
-					String statusText = "";
-					switch(applySta){
-					case "1":
-						statusText = "已报名";
-						break;
-					case "4":
-						//等候席位数
-						sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetWaitingNumber");
-						int waitNum = sqlQuery.queryForObject(sql, new Object[]{ strArtId, strBmrId }, "int");
-						statusText = "等候席第"+ waitNum +"位";
-						break;
-					}
-					/************************添加报名状态--结束******************************/
-					
-					String statusClass = "positionRight10";//状态class
-					
-					switch (strType) {
-					case "0":
-						if ("Y".equals(strkBmFlg)) {
-							statusClass = "";
-//							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
-//							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
-							
-							if ("Y".equals(regFlag)) {
+					if(isInAud){ //只有在听众内才显示报名撤销按钮及报名状态
+						/************************添加报名状态--开始******************************/
+						String regSql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID,TZ_NREG_STAT FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
+						Map<String, Object> mapBM = sqlQuery.queryForMap(regSql, new Object[] { oprid, strArtId });
+						// 是否已注册报名标识
+						String regFlag = "";
+						// 报名人ID
+						String strBmrId = "";
+						//报名状态
+						String applySta = "";
+						if (mapBM != null) {
+							regFlag = mapBM.get("REG_FLAG") == null ? "" : String.valueOf(mapBM.get("REG_FLAG"));
+							strBmrId = mapBM.get("TZ_HD_BMR_ID") == null ? "" : String.valueOf(mapBM.get("TZ_HD_BMR_ID"));
+							applySta = mapBM.get("TZ_NREG_STAT") == null ? "" : String.valueOf(mapBM.get("TZ_NREG_STAT"));
+						}
+						
+						//显示报名状态
+						String statusText = "";
+						switch(applySta){
+						case "1":
+							statusText = "已报名";
+							break;
+						case "4":
+							//等候席位数
+							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetWaitingNumber");
+							int waitNum = sqlQuery.queryForObject(sql, new Object[]{ strArtId, strBmrId }, "int");
+							statusText = "等候席第"+ waitNum +"位";
+							break;
+						}
+						/************************添加报名状态--结束******************************/
+						
+						String statusClass = "positionRight10";//状态class
+						
+						switch (strType) {
+						case "0":
+							if ("Y".equals(strkBmFlg)) {
+								statusClass = "";
+//								sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
+//								String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
+								
+								if ("Y".equals(regFlag)) {
+									strResultContent = strResultContent
+											+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
+											+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
+											+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
+									//报名状态
+									//strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status\">"+ statusText +"</div>";
+								} else {
+									strResultContent = strResultContent
+											+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdbm_" + strArtId
+											+ "\" href=\"javascript:void(0);\" onclick=\"hdbm(" + strArtId
+											+ ",this)\"><div class=\"bt_blue\">" + strSignUp + "</div></a></div>";
+								}
+
+							}else if("Y".equals(strKqbm) 
+									&& "Y".equals(regFlag) 
+									&& "N".equals(isActStarted)){
+								statusClass = "";
+								//启动在线报名、且已报名、活动尚未开始，可用撤销
 								strResultContent = strResultContent
 										+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
 										+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
 										+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
+							}
+							
+							/*已报名活动报名状态一直显示*/
+							//报名状态
+							strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status "+statusClass+"\">"+ statusText +"</div>";
+
+							break;
+						case "1":
+							//报名时间内，或者活动未开始都可以撤销
+							if ("Y".equals(strkBmFlg) || "N".equals(isActStarted)) {
+								statusClass = "";
+//								sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
+//								String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
+								strResultContent = strResultContent
+										+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
+										+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
+										+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
+								
 								//报名状态
 								//strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status\">"+ statusText +"</div>";
-							} else {
-								strResultContent = strResultContent
-										+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdbm_" + strArtId
-										+ "\" href=\"javascript:void(0);\" onclick=\"hdbm(" + strArtId
-										+ ",this)\"><div class=\"bt_blue\">" + strSignUp + "</div></a></div>";
 							}
-
-						}else if("Y".equals(strKqbm) 
-								&& "Y".equals(regFlag) 
-								&& "N".equals(isActStarted)){
-							statusClass = "";
-							//启动在线报名、且已报名、活动尚未开始，可用撤销
-							strResultContent = strResultContent
-									+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
-									+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
-									+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
-						}
-						
-						/*已报名活动报名状态一直显示*/
-						//报名状态
-						strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status "+statusClass+"\">"+ statusText +"</div>";
-
-						break;
-					case "1":
-						//报名时间内，或者活动未开始都可以撤销
-						if ("Y".equals(strkBmFlg) || "N".equals(isActStarted)) {
-							statusClass = "";
-//							sql = tzGDObject.getSQLText("SQL.TZSitePageBundle.TzSiteHDBmrId");
-//							String strBmrId = sqlQuery.queryForObject(sql, new Object[] { strArtId, oprid }, "String");
-							strResultContent = strResultContent
-									+ "<div class=\"main_mid_activity_list_button\"><a id=\"hdcx_" + strArtId
-									+ "\" href=\"javascript:void(0);\" onclick=\"hdcx(" + strArtId + "," + strBmrId
-									+ ",this)\"><div class=\"bt_blue\">" + strCancel + "</div></a></div>";
 							
+							/*已报名活动报名状态一直显示*/
 							//报名状态
-							//strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status\">"+ statusText +"</div>";
+							strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status "+statusClass+"\">"+ statusText +"</div>";
+							
+							break;
+						case "2":
+							/*已报名活动报名状态一直显示*/
+							//报名状态
+							strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status "+statusClass+"\">"+ statusText +"</div>";
+							break;
+
+						default:
+							break;
 						}
-						
-						/*已报名活动报名状态一直显示*/
-						//报名状态
-						strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status "+statusClass+"\">"+ statusText +"</div>";
-						
-						break;
-					case "2":
-						/*已报名活动报名状态一直显示*/
-						//报名状态
-						strResultContent = strResultContent + "<div class=\"main_mid_activity_list_status "+statusClass+"\">"+ statusText +"</div>";
-						break;
-
-					default:
-
-						break;
-
 					}
 
 					strResultContent = strResultContent + "</div>";
-
 				}
 			}
 

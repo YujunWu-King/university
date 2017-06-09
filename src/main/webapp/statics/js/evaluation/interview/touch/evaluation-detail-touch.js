@@ -9,7 +9,7 @@ function show1(){
 
 //报名表显示
 function show2(){
-    var SHOW_KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
+    var SHOW_KSH_BMBID = AppInsId;
 	
     if (SHOW_KSH_BMBID ==""){
 		$("#div1").attr({style:"display:none"});
@@ -28,9 +28,9 @@ function show2(){
 
 //打分区显示
 function show3(){
-    var TZ_CLASS_ID = document.getElementById("ks_search_TZ_CLASS_ID").value;
-	var TZ_APPLY_PC_ID = document.getElementById("ks_search_TZ_APPLY_PC_ID").value;
-    var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
+    var TZ_CLASS_ID = ClassId;
+	var TZ_APPLY_PC_ID = BatchId;
+    var KSH_BMBID = AppInsId;
 
 	if (KSH_BMBID ==""){
 			alert("请先选择考生！");
@@ -50,28 +50,24 @@ function show3(){
 //活动考生列表开始
 function ks_list(){
 
-	//----------------------------------------------需要看前一个页面返回的json数据
-	var TZ_CLASS_ID = document.getElementById("ks_search_TZ_CLASS_ID").value;
-    var TZ_APPLY_PC_ID = document.getElementById("ks_search_TZ_APPLY_PC_ID").value;
+	var TZ_CLASS_ID = ClassId;
+    var TZ_APPLY_PC_ID = BatchId;
 
-    //-----------------------------------------------前一个页面取数url
-    //var url="%bind(:14)&BaokaoFXID="+TZ_APPLY_PC_ID;
+	var baseUrl = ContextPath+"/dispatcher?classid=interview&OperateType=EJSON";
+
+	var url = baseUrl+'&type=data&BaokaoClassID='+ClassId+'&BaokaoPCID='+BatchId+'&RequestDataType=S&MaxRowCount=200';
     
   	//使用getJSON方法取得JSON数据
     $.getJSON(
     		url, 
 	        function(data){ //处理数据 data指向的是返回来的JSON数据
-    			var jsonObject = data; 
+    			var jsonObject = data.comContent;
 
 				//考生列表
 				var collist="";
-				var ksheadArray=jsonObject['ps_data_kslb']['ps_ksh_list_headers'];
-				for(var i=0;i<ksheadArray.length-9;i++)
-				{
-					var colname='00'+(i+1);
-					colname='col'+colname.substr(colname.length-2);
-
-					collist+='<th>'+ksheadArray[i+5][colname]+'</th>';
+				var ksheadObject=jsonObject['ps_data_kslb']['ps_ksh_list_headers'];
+				for(var i in ksheadObject) {
+					collist+='<th>'+ksheadObject[i]+'</th>';
 				}
 				
 				
@@ -79,48 +75,42 @@ function ks_list(){
 				var ksbodyArray=jsonObject['ps_data_kslb']['ps_ksh_list_contents'];
 				for (var i=0;i<ksbodyArray.length;i++){		
 					var concollist="";
-					for(var j=0;j<ksbodyArray[i]['ps_row_cnt'].length-9;j++)
-					{
-						var concolname='00'+(j+1);
-						concolname='col'+concolname.substr(concolname.length-2);
-						concollist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][j+5][concolname]+'</td>';
+					for(var j in ksheadObject) {
+						concollist+="<td class='alt' >"+(ksbodyArray[i][j]||"")+'</td>';
 					}
 
 					detallist+="<tr>";
-					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][0]['ps_ksh_xh']+"</td>";
-					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][1]['ps_ksh_id']+"</td>";
-					detallist+="<td class='alt'><a href='javascript:void(0);' onclick='tz_ks_bmb(this);' id='"+ksbodyArray[i]['ps_row_cnt'][2]['ps_ksh_bmbid']+"'>"+ksbodyArray[i]['ps_row_cnt'][2]['ps_ksh_bmbid']+"</a></td>";
-					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][3]['ps_ksh_xm']+"</td>";
-					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][4]['ps_ksh_ppm']+"</td>";
+					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_ksh_xh']+"</td>";
+					detallist+="<td class='alt'><a href='javascript:void(0);' onclick='tz_ks_bmb("+ksbodyArray[i]['ps_ksh_bmbid']+");'>"+ksbodyArray[i]['ps_msh_id']+"</a></td>";
+					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>";
 					detallist+=concollist;
-					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-4]['ps_ksh_bkyx']+"</td>";
-					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-3]['ps_ksh_gzdw']+"</td>";
-					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-2]['ps_ksh_zt']+"</td>";
-					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_row_cnt'][ksbodyArray[i]['ps_row_cnt'].length-1]['ps_ksh_dt']+"</td>";
+					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_ksh_school']+"</td>";
+					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_ksh_company']+"</td>";
+					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_ksh_zt']+"</td>";
+					detallist+="<td class='alt'>"+ksbodyArray[i]['ps_ksh_dt']+"</td>";
 					detallist+="</tr>";
 				}
 				
-				var examerinfolist="";
-				examerinfolist+="<th scope='col' style='text-align:center;'>"+ksheadArray[0].ps_ksh_xh+"</th>";
-				examerinfolist+="<th scope='col' style='text-align:center;'>"+ksheadArray[1].ps_ksh_id+"</th>";
-				examerinfolist+="<th scope='col' style='text-align:center;'>"+ksheadArray[2].ps_ksh_bmbid+"</th>";
-				examerinfolist+="<th scope='col' style='text-align:center;'>"+ksheadArray[3].ps_ksh_xm+"</th>";
-				examerinfolist+="<th scope='col' style='text-align:center;'>"+ksheadArray[4].ps_ksh_ppm+"</th>";
-				
+
+				var examerinfoHeader="";
+				examerinfoHeader+="<th scope='col' style='text-align:center;'>面试顺序</th>";
+				examerinfoHeader+="<th scope='col' style='text-align:center;'>面试申请号</th>";
+				examerinfoHeader+="<th scope='col' style='text-align:center;'>考生姓名</th>";
 				var headbutton="";
-		  	    headbutton+="<th scope='col' style='text-align:center;'>"+ksheadArray[ksheadArray.length-4].ps_ksh_bkyx+"</th>";
-		  	  	headbutton+="<th scope='col' style='text-align:center;'>"+ksheadArray[ksheadArray.length-3].ps_ksh_gzdw+"</th>";
-		  	  	headbutton+="<th scope='col' style='text-align:center;'>"+ksheadArray[ksheadArray.length-2].ps_ksh_zt+"</th>";
-		  	  	headbutton+="<th scope='col' style='text-align:center;'>"+ksheadArray[ksheadArray.length-1].ps_ksh_dt+"</th>";
-		  	  	
+		  	    headbutton+="<th scope='col' style='text-align:center;'>本科院校</th>";
+		  	  	headbutton+="<th scope='col' style='text-align:center;'>工作单位</th>";
+		  	  	headbutton+="<th scope='col' style='text-align:center;'>评议状态</th>";
+		  	  	headbutton+="<th scope='col' style='text-align:center;'>评审时间</th>";
+
+				var examerinfolist="";
 			 	examerinfolist="<table id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'>";
-			 	examerinfolist+="<tr>"+examerinfolist+collist+headbutton+"</tr>";
+			 	examerinfolist+="<tr>"+examerinfoHeader+collist+headbutton+"</tr>";
 			 	examerinfolist+=detallist+'</table>';
 
 			    // $("#examerinfo").html(examerinfolist);
 
 				$("#ks_list_head").html("");
-					$("#ks_list_head").append(examerinfolist); 
+				$("#ks_list_head").append(examerinfolist);
 				
     		}
     		);
@@ -133,11 +123,13 @@ function tz_ks_bmb_menu(ks_id){
 	document.getElementById("ks_search_tz_app_ins_id").value = ks_id;
 	document.getElementById("ks_show_tz_app_ins_id").value = ks_id;
 
+	//班级编号
+	var TZ_CLASS_ID = ClassId;
     //申请批次编号
-    var TZ_APPLY_PC_ID = document.getElementById("ks_search_TZ_APPLY_PC_ID").value;
+    var TZ_APPLY_PC_ID = BatchId;
 
     //当前考生报名表iframe编号
-    iframe_tmp_id = "bmb_iframe_" +TZ_APPLY_PC_ID + "_" + ks_id;
+    iframe_tmp_id = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + ks_id;
 
     //已经存在的考生报名表iframe编号串
     var ks_iframe_str_id = $("#ks_iframe_str_id").val();
@@ -177,18 +169,18 @@ function tz_ks_bmb_menu(ks_id){
 	} else {
 		
 		//iframe 的id 串
-		var iframe_tmp = "bmb_iframe_" +TZ_APPLY_PC_ID + "_" + ks_id;
+		var iframe_tmp = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + ks_id;
 		var div_tmp = "div_" + iframe_tmp;
 
 		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + iframe_tmp); 
 
 		var bmb_url = "";
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'"}}';
-		bmb_url = commonUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
+		bmb_url = scoreUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		var bmbArea = "";
 		bmbArea += '<div id="'+ div_tmp +'" style="width:auto; height:auto">';
-		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>";
+		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>';
 		
 		$("#div2").append(bmbArea); 
 		
@@ -226,8 +218,7 @@ function tz_ks_bmb_menu(ks_id){
 //非超链接路径显示报名表结束(点击页签)
 
 //显示考生的报名表开始
-//-----------------------------------------------根据前一个页面返回的数据进行修改
-function tz_ks_bmb(ks){
+function tz_ks_bmb(bmbId){
 	document.getElementById("ks_search_msid").value = "";
     document.getElementById("ks_search_name").value = "";
 
@@ -236,14 +227,18 @@ function tz_ks_bmb(ks){
 
 
 	//每次点击考生的时候，把当前的考生报名表id 给赋值 
-	document.getElementById("ks_search_tz_app_ins_id").value = ks.id;
-	document.getElementById("ks_show_tz_app_ins_id").value = ks.id;
+	document.getElementById("ks_search_tz_app_ins_id").value = bmbId;
+	document.getElementById("ks_show_tz_app_ins_id").value = bmbId;
 
+	//班级编号
+	var TZ_CLASS_ID = ClassId;
     //申请批次编号
-    var TZ_APPLY_PC_ID = document.getElementById("ks_search_TZ_APPLY_PC_ID").value;
+    var TZ_APPLY_PC_ID = BatchId;
+
+	AppInsId = bmbId;
 
     //当前考生报名表iframe编号
-    iframe_tmp_id = "bmb_iframe_" +TZ_APPLY_PC_ID + "_" + ks.id;
+    iframe_tmp_id = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmbId;
 
     //已经存在的考生报名表iframe编号串
     var ks_iframe_str_id = $("#ks_iframe_str_id").val();
@@ -282,18 +277,18 @@ function tz_ks_bmb(ks){
 		}
 	} else {
 		//iframe 的id 串
-		var iframe_tmp = "bmb_iframe_" +TZ_APPLY_PC_ID + "_" + ks.id;
+		var iframe_tmp = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmbId;
 		var div_tmp = "div_" + iframe_tmp;
 		
 		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + iframe_tmp); 
 		
 		var bmb_url = "";
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'"}}';
-		bmb_url = commonUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
+		bmb_url = scoreUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		var bmbArea = "";
 		bmbArea += '<div id="'+ div_tmp +'" style="width:auto; height:auto">';
-		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>";
+		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>';
 		
 		$("#div2").append(bmbArea); 
 		
@@ -337,78 +332,80 @@ function ks_look(){
 	//记录此考生可以显示打分区
     document.getElementById("ks_show_dfq").value = "N";
 
-	var TZ_CLASS_ID = document.getElementById("ks_search_TZ_CLASS_ID").value;
-    var TZ_APPLY_PC_ID = document.getElementById("ks_search_TZ_APPLY_PC_ID").value;
+	var TZ_CLASS_ID = ClassId;
+    var TZ_APPLY_PC_ID = BatchId;
     var ks_search_msid = document.getElementById("ks_search_msid").value;
     var ks_search_name = document.getElementById("ks_search_name").value;
-    
-    var searchKSData = '{"CLASSID":"'+TZ_CLASS_ID+'","APPLY_BATCHID":"'+TZ_APPLY_PC_ID+'","KSH_SEARCH_MSID":"'+ks_search_msid+'","KSH_SEARCH_NAME":"'+ks_search_name+'"}';
-	var editJson = '{"typeFlag":"SEARCH","data":'+searchKSData+'}'
-    var tzParams = '{"ComID":"TZ_PW_MSPS_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"tzSearchExaminee","comParams":{'+editJson+'}}';
-    
-    $.ajax({
-  		type: 'post',
-  		dataType: 'json',
-		async:false,
-  		url: commonUrl,
-  		data: {"tzParams":tzParams},
-  		success: function(data) {
-  			var comContent = data.comContent;
-  			var result = comContent.result;
-  			var resultMsg = comContent.resultMsg;
-  			
-  			if(result=="0") {
-  				var searchedOprid = comContent.oprid;
-  				var searchedBmbId = comContent.bmbId;
-  				var searchedMssqh = comContent.mssqh;
-  				var searchedName = comContent.name;
-  				
-  				document.getElementById("ks_search_tz_app_ins_id").value = searchedBmbId;
-				document.getElementById("ks_show_tz_app_ins_id").value = searchedBmbId;
-				document.getElementById("ks_look_back_info").innerHTML = "您搜索的考生面试编号为：【"+searchedMssqh+"】，姓名为：【"+searchedName+"】";
-  			} else {
-  				document.getElementById("ks_look_back_info").innerHTML = resultMsg;
-				document.getElementById("ks_search_tz_app_ins_id").value = "";
-  				alert(resultMsg);
-  			}
-  			
-  			/*
-			var arr = msg.split("|");
 
-			if (arr[0] == "Y"){
-				document.getElementById("ks_search_tz_app_ins_id").value = arr[1];
-				document.getElementById("ks_show_tz_app_ins_id").value = arr[1];
-				document.getElementById("ks_look_back_info").innerHTML = "您搜索的考生面试编号为：【"+arr[6]+"】，姓名为：【"+arr[3]+"】";
-			}else{
-				document.getElementById("ks_look_back_info").innerHTML = msg;
-				document.getElementById("ks_search_tz_app_ins_id").value = "";
-				alert(msg);
+	if (ks_search_msid!="" || ks_search_name!="") {
+		var searchKSData = '{"CLASSID":"' + TZ_CLASS_ID + '","APPLY_BATCHID":"' + TZ_APPLY_PC_ID + '","KSH_SEARCH_MSID":"' + ks_search_msid + '","KSH_SEARCH_NAME":"' + ks_search_name + '"}';
+		var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"tzSearchExaminee","comParams":' + searchKSData + '}';
+
+		$.ajax({
+			type: 'post',
+			dataType: 'json',
+			async: false,
+			url: scoreUrl,
+			data: {"tzParams": tzParams},
+			success: function (data) {
+				var comContent = data.comContent;
+				var result = comContent.result;
+				var resultMsg = comContent.resultMsg;
+
+				if (result == "0") {
+					var searchedOprid = comContent.oprid;
+					var searchedBmbId = comContent.bmbId;
+					var searchedMssqh = comContent.mssqh;
+					var searchedName = comContent.name;
+
+					document.getElementById("ks_search_tz_app_ins_id").value = searchedBmbId;
+					document.getElementById("ks_show_tz_app_ins_id").value = searchedBmbId;
+					document.getElementById("ks_look_back_info").innerHTML = "您搜索的考生面试编号为：【" + searchedMssqh + "】，姓名为：【" + searchedName + "】";
+				} else {
+					document.getElementById("ks_look_back_info").innerHTML = resultMsg;
+					document.getElementById("ks_search_tz_app_ins_id").value = "";
+					alert(resultMsg);
+				}
+
+				/*
+				 var arr = msg.split("|");
+
+				 if (arr[0] == "Y"){
+				 document.getElementById("ks_search_tz_app_ins_id").value = arr[1];
+				 document.getElementById("ks_show_tz_app_ins_id").value = arr[1];
+				 document.getElementById("ks_look_back_info").innerHTML = "您搜索的考生面试编号为：【"+arr[6]+"】，姓名为：【"+arr[3]+"】";
+				 }else{
+				 document.getElementById("ks_look_back_info").innerHTML = msg;
+				 document.getElementById("ks_search_tz_app_ins_id").value = "";
+				 alert(msg);
+				 }
+				 */
 			}
-			*/
-        }
-	}); 
+		});
+	} else {
+		alert("申请号或姓名至少输入一项！");
+	}
 
 }
 //查找考生结束
 
 //进行评审开始
 function ks_pingsheng(){
-	var TZ_CLASS_ID = document.getElementById("ks_search_TZ_CLASS_ID").value;
-	var TZ_APPLY_PC_ID = document.getElementById("ks_search_TZ_APPLY_PC_ID").value;
-    var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
+	var TZ_CLASS_ID = ClassId;
+	var TZ_APPLY_PC_ID = BatchId;
+    var KSH_BMBID = AppInsId;
 	if (KSH_BMBID == ""){
 		alert("请选择考生！");
 	}else{
 		
 		var searchKSData = '{"CLASSID":"'+TZ_CLASS_ID+'","APPLY_BATCHID":"'+TZ_APPLY_PC_ID+'","KSH_BMBID":"'+KSH_BMBID+'"}';
-		var editJson = '{"typeFlag":"ADD","data":'+searchKSData+'}'
-        var tzParams = '{"ComID":"TZ_PW_MSPS_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"tzSearchExaminee","comParams":{'+editJson+'}}';
+        var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"tzAddExaminee","comParams":'+searchKSData+'}';
 		
 		$.ajax({
 	  		type: 'post',
 	  		dataType: 'json',
 			async:false,
-	  		url: commonUrl,
+	  		url: scoreUrl,
 	  		data: {"tzParams":tzParams},
 	  		success: function(data) {
 	  			var comContent = data.comContent;
@@ -533,8 +530,8 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 			var bmb_cache_id = "";
 
         	//var url="%bind(:11)&BaokaoFXID="+TZ_APPLY_PC_ID+"&KSH_BMBID="+KSH_BMBID;
-        	var tzParams = '{"ComID":"TZ_PW_MSPS_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+TZ_CLASS_ID+'","applyBatchId":"'+TZ_APPLY_PC_ID+'","bmbId":"'+KSH_BMBID+'"}}';
-        	var url = commonUrl + "?tzParams="+tzParams;
+        	var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+TZ_CLASS_ID+'","applyBatchId":"'+TZ_APPLY_PC_ID+'","bmbId":"'+KSH_BMBID+'"}}';
+        	var url = scoreUrl + "?tzParams="+tzParams;
         
         	//使用getJSON方法取得JSON数据 
        		$.getJSON(　　　　
@@ -552,19 +549,25 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 		        			var materialReviewDesc = comContent.materialReviewDesc;
 		        			
 		        			//报名表链接
-			        		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'"}}';
-			        		var bmb_url = commonUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
+			        		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
+			        		var bmb_url = scoreUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 			        			
 			        		//新开窗口显示报名表信息
 							$("#ks_new_w_bmb").attr({href:bmb_url});
 			        		
 							document.getElementById("ks_dfq_ms_id").innerHTML = interviewApplyId;
 							document.getElementById("ks_dfq_ms_name").innerHTML = name;
-							document.getElementById("sx_ksbq").innerHTML = examineeTag;
+							if(examineeTag!=""&&examineeTag!=null){
+								document.getElementById("ks_sx_ksbq").innerHTML = examineeTag;
+								document.getElementById("div_sx_ksbq").style.display="block";
+							} else {
+								document.getElementById("div_sx_ksbq").style.display="none";
+							}
+
 							document.getElementById("ps_clpscj_ck").innerHTML = materialReviewDesc;
 							
 							//用于cache数据
-							bmb_cache_id = "ks_search_tz_app_ins_id@@@" + KSH_BMBID + "###ks_new_w_bmb@@@" + href:bmb_url + "###ks_dfq_ms_id@@@" + interviewApplyId + "###ks_dfq_ms_name@@@" + name + "###sx_ksbq@@@" + examineeTag + "###ps_clpscj_ck@@@" + materialReviewDesc;
+							bmb_cache_id = "ks_search_tz_app_ins_id@@@" + KSH_BMBID + "###ks_new_w_bmb@@@" + bmb_url + "###ks_dfq_ms_id@@@" + interviewApplyId + "###ks_dfq_ms_name@@@" + name + "###sx_ksbq@@@" + examineeTag + "###ps_clpscj_ck@@@" + materialReviewDesc;
 				        
 							//li 列表项目 
 							var cjx_lis=""; 　　　
@@ -828,9 +831,9 @@ function ks_save(){
 	if (tz_pysjx_failure == "Y"){
 		alert(tz_save_show_info);
 	}else {
-		var TZ_CLASS_ID = document.getElementById("ks_search_TZ_CLASS_ID").value;
-		var TZ_APPLY_PC_ID = document.getElementById("ks_search_TZ_APPLY_PC_ID").value;
-        var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
+		var TZ_CLASS_ID = ClassId;
+		var TZ_APPLY_PC_ID = BatchId;
+        var KSH_BMBID = AppInsId;
         var cjx_ids_tmp = document.getElementById("tz_cjx_ids").value;
 
       	//参数准备
@@ -846,39 +849,41 @@ function ks_save(){
 				tz_canshu_str = '"'+ dange_arr[0] +'":"'+ $("#"+dange_arr[0]).val() +'"';
 			}
 		}
-		var saveData = '{"classId":"'+TZ_CLASS_ID+'","applyBatchId":"'+TZ_APPLY_PC_ID+'","bmbId":"'+KSH_BMBID+'","type":"SBM",'+ tz_canshu_str +'}';
+		var saveData = '{"ClassID":"'+TZ_CLASS_ID+'","BatchID":"'+TZ_APPLY_PC_ID+'","KSH_BMBID":"'+KSH_BMBID+'","OperationType":"SBM",'+ tz_canshu_str +'}';
 		
 		var comParams = "";
 		comParams = '"update":['+saveData+']';
 		
-		var tzParams = '{"ComID":"TZ_PW_MSPS_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
+		var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
 		
 		$.ajax({
 	  		type: 'POST',
 	  		dataType: 'json',
 			async:false,
-	  		url: commonUrl,
+	  		url: scoreUrl,
 	  		data: {"tzParams":tzParams},
 	  		beforeSend : function(xhr){
-				$.mobile.showPageLoadingMsg();	
+				//$.mobile.showPageLoadingMsg();
 				if($('.page-loading').length ==0){
 				var dv =	$('<div/>',{class : 'page-loading'})
 			    $(document.body).append(dv);
 				}
 				$('.page-loading').show();
 			},
-	  		success: function(msg) {
-				if(msg.error_code =="0"){
+	  		success: function(data) {
+				var comContent = data.comContent;
+				var messageCode = comContent.messageCode;
+				if(messageCode =="0"){
 					tz_save_cache();
 
 					ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID);
 					alert("保存成功！");
 				}else{
-					alert(msg.error_decription);
+					alert(comContent.message);
 				}
 	        },
 			complete : function(){
-				$.mobile.hidePageLoadingMsg()
+				//$.mobile.hidePageLoadingMsg()
 				$('.page-loading').hide();
 			}
 		});
@@ -1037,7 +1042,7 @@ function TZ_GetLength (str) {
 
 //处理cache开始
 function tz_save_cache(){
-	var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
+	var KSH_BMBID = AppInsId;
 
 	//把原先的删除
 	var del_i = 9999;
@@ -1060,19 +1065,19 @@ function tz_save_cache(){
 
 //返回评审界面开始
 function ks_back(){
-   window.open(tzMspsPwTouchBackToKspsUrl,'_self');
+   window.open("index?page=batch&classId="+ClassId+"&batchId="+BatchId,'_self');
 }
 //返回评审界面结束
 
 //返回首页开始
 function ks_first_page(){
-   window.open(tzMspsPwTouchBackToHomeUrl,'_self');
+   window.open("index",'_self');
 }
 //返回首页结束
 
 //退出开始
 function ks_esc(){
-   window.open(tzMspsPwTouchLogoutUrl,'_self');
+   window.open('../../logout?type=interview','_self');
 }
 //退出结束
 

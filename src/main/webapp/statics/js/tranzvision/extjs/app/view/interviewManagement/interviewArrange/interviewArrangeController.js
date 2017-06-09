@@ -1062,5 +1062,163 @@
 			form.reset();
 			win.show();
 		});
+	},
+	
+	//导出面试安排计划
+	exportMsPlan: function(btn){
+		var msArrGrid = btn.findParentByType("grid");
+		var selList = msArrGrid.getSelectionModel().getSelection();
+		
+		var itwArrInfRec = msArrGrid.up('form').getForm().getFieldValues();
+		var classID = itwArrInfRec["classID"];
+		var batchID = itwArrInfRec["batchID"];
+
+		if(selList.length<1) {
+			Ext.MessageBox.alert("提示", "您没有选中任何记录");
+			return;
+		};
+		
+		var expArr = [];
+		for(var i=0; i<selList.length; i++){
+			expArr.push(selList[i].data);
+		}
+		var tzParamsObj = {
+        		ComID: "TZ_MS_ARR_MG_COM",
+        		PageID: "TZ_MS_CAL_ARR_STD",
+        		OperateType: "exportMsPlan",
+        		comParams:{
+        			classID: classID,
+        			batchID: batchID,
+        			exportData: expArr
+        		}
+        	};
+        var tzParams = Ext.JSON.encode(tzParamsObj);
+		Ext.tzLoad(tzParams,function(respData){
+			var fileUrl = respData.fileUrl;
+			if(fileUrl != ""){
+				window.open(fileUrl, "download","status=no,menubar=yes,toolbar=no,location=no");
+			}else{
+				Ext.Msg.alert("提示","下载失败，文件不存在");
+			}
+		});
+	},
+	
+	//导入面试安排计划
+	importMsPlan: function(btn){
+		var msArrGrid = btn.findParentByType("grid");
+		var itwArrInfRec = msArrGrid.up('form').getForm().getFieldValues();
+		var classID = itwArrInfRec["classID"];
+		var batchID = itwArrInfRec["batchID"];
+		
+		var className = "KitchenSink.view.interviewManagement.interviewArrange.importMsPlanWin";
+		if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+		ViewClass = Ext.ClassManager.get(className);
+		
+		var win = new ViewClass({
+			classID: classID,
+			batchID: batchID,
+			callback: function(){
+				msArrGrid.getStore().reload();
+			}
+		});
+		win.show();
+	},
+	
+	/**
+	 * 下载导入模板
+	 */
+	downloadMsPlanTmp: function(btn){
+		var win = btn.findParentByType('importMsPlanWin');
+		var classID = win.classID;
+		var batchID = win.batchID;
+		
+		var expArr = [];
+		var tzParamsObj = {
+        		ComID: "TZ_MS_ARR_MG_COM",
+        		PageID: "TZ_MS_CAL_ARR_STD",
+        		OperateType: "exportMsPlan",
+        		comParams:{
+        			classID: classID,
+        			batchID: batchID,
+        			exportData: expArr
+        		}
+        	};
+        var tzParams = Ext.JSON.encode(tzParamsObj);
+		Ext.tzLoad(tzParams,function(respData){
+			var fileUrl = respData.fileUrl;
+			if(fileUrl != ""){
+				window.open(fileUrl, "download","status=no,menubar=yes,toolbar=no,location=no");
+			}else{
+				Ext.Msg.alert("提示","下载失败，文件不存在");
+			}
+		});
+	},
+	
+	/**
+	 * 确定导入
+	 */
+	onEnsureImportMsPlan: function(btn){
+		var win = btn.findParentByType('importMsPlanWin');
+		var form = win.child('form').getForm();
+
+		if(form.isValid()){
+			var classID = win.classID;
+			var batchID = win.batchID;
+			
+			var filePath = 'tmpFileUpLoad';
+            var updateUrl = TzUniversityContextPath + '/UpdServlet?filePath='+filePath;
+
+            form.submit({
+                url: updateUrl,
+                waitMsg: '正在上传Excel...',
+                success: function (form, action) {
+                    var sysFileName = action.result.msg.sysFileName;
+                    var path = action.result.msg.accessPath;
+                    
+                    /*后台解析Excsel*/
+                    Ext.MessageBox.show({
+                        msg: '解析数据中，请稍候...',
+                        progress: true,
+                        progressText:'解析中...',
+                        width: 300,
+                        wait: {
+                            interval: 50
+                        }
+                    });
+                    
+                    var tzParamsObj = {
+                    		ComID: "TZ_MS_ARR_MG_COM",
+                    		PageID: "TZ_MS_CAL_ARR_STD",
+                    		OperateType: "importMsPlan",
+                    		comParams:{
+                    			classID: classID,
+                    			batchID: batchID,
+                    			path: path,
+                    			sysFileName: sysFileName
+                    		}
+                    	};
+                    var tzParams = Ext.JSON.encode(tzParamsObj);
+                    
+                    Ext.tzLoad(tzParams,function(respData){
+                    	Ext.MessageBox.hide();
+                    	
+                        if(respData.result == 'success'){
+                        	win.close();
+                        	win.GridReload();
+                        	
+                        	if(respData.message != ""){
+                        		Ext.Msg.alert("提示",respData.message);
+                        	}
+                        }
+                    });
+                },
+                failure: function (form, action) {
+                    Ext.MessageBox.alert("错误", "文件上传失败");
+                    return false;
+                }
+            });
+		}
 	}
 });

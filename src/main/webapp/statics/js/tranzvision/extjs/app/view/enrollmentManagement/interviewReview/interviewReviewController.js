@@ -1344,13 +1344,19 @@
     stuListActive : function(grid){
         var stuListStore = grid.getStore(),
             classID = grid.findParentByType("form").getValues().classID,
+            batchID = grid.findParentByType("form").getValues().batchID;
+
+        stuListStore.load();
+    },
+    /*stuListActive : function(grid){
+        var stuListStore = grid.getStore(),
+            classID = grid.findParentByType("form").getValues().classID,
             batchID = grid.findParentByType("form").getValues().batchID,
             self = this;
         if(!stuListStore.isLoaded()) {
             stuListStore.load({
                 scope: this,
                 callback: function (records, operation, success) {
-                    /*for (var x = records.length - 1; x >= 0; x--) {*/
                 	if(records.length > 0){
                 		for(var x = 0 ; x < records.length; x ++) {
                             var viewRecord = grid.getView().getRow(x).querySelector(".tz_lzh_interviewReview_app");
@@ -1412,7 +1418,7 @@
             });
             
         }
-    },
+    },*/
     addApplicantEnsure : function(btn,event){
         //由于新增弹出窗口会使当前页面不能操作，弹出窗口对应的tab即是当前活动的Tab
         var activeTab = Ext.getCmp('tranzvision-framework-content-panel').getActiveTab(),
@@ -1493,6 +1499,12 @@
                 }
             }
         })
+    },
+    viewJudge:function(grid,record,rowIndex){
+    	var store = grid.getStore();
+    	var _record = store.getAt(rowIndex);
+    	
+    	this.viewJudgeReviewInfo(_record);
     },
     //查看评委评分信息
     viewJudgeReviewInfo:function(record){
@@ -2420,6 +2432,38 @@
         if (cmp.floating) {
             cmp.show();
         }
-    }
+    },
+    searchMsksList: function(btn) {
+    	var form = btn.findParentByType("form").getForm();
+        var classId = form.findField("classID").getValue();
+        var batchId = form.findField("batchID").getValue();
+        //console.log("classId："+classId+"batchId:"+batchId);
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW',
+			condition:{
+				"TZ_CLASS_ID":classId,
+				"TZ_APPLY_PC_ID":batchId
+			},
+			callback: function(seachCfg) {
+				var store = btn.findParentByType("grid").store;
+                btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
+                var tzParamsObj = {};
+                tzParamsObj.classID = classId;
+                tzParamsObj.batchID = batchId;
+                tzParamsObj.type = "stuList";
+                				
+                var getedSQL="";
+                var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_FILTER_SQL_STD","OperateType":"getQuerySQL","comParams":'+seachCfg+'}';
+				Ext.tzLoadAsync(tzParams,function(responseData){
+					getedSQL = responseData.SQL;	
+				});
+				tzParamsObj.searchSQL = getedSQL; 				
+				
+				store.tzStoreParams = JSON.stringify(tzParamsObj);
+                //store.load();              
+                store.load({params: {start:0,limit:50,page:1}});
+			}
+		});
+	},
 
 });

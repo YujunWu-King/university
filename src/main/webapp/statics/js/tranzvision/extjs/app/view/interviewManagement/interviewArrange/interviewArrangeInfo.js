@@ -11,7 +11,8 @@
         'KitchenSink.view.interviewManagement.interviewArrange.interviewAudienceStore',
         'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeModel',
 		'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeStore',
-		'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeController'
+		'KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeController',
+		'KitchenSink.view.interviewManagement.interviewArrange.importMsPlanWin'
 	],
     title: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.panelTitle",'面试日程安排'),
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
@@ -202,15 +203,27 @@
 										text:"导出选中记录到Excel",
 										iconCls:"excel",
 										menu:[{
-		                                    text: '导出选中记录到Excel',
+		                                    text: '导出选中记录预约结果到Excel',
 		                                    iconCls:"excel",
 		                                    name:'exportExcel',
 		                                    handler:'exportToExcel'
 			                            },{
-	                                        text: "查看导出结果并下载",
+	                                        text: "查看导出预约结果并下载",
 	                                        iconCls:"download",
 	                                        name:'downloadExcel',
 	                                        handler:'exportToExcel'
+			                            }]
+									},{
+										text:"面试日程安排导入导出",
+										iconCls:"import",
+										menu:[{
+		                                    text: '导入面试日程安排',
+		                                    iconCls:"import",
+		                                    handler:'importMsPlan'
+			                            },{
+	                                        text: "导出选中面试日程安排",
+	                                        iconCls:"export",
+	                                        handler:'exportMsPlan'
 			                            }]
 									}]
 							}

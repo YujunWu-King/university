@@ -15,7 +15,41 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchController', {
             }
         });
     },
+    //放大镜搜索ComID
+    pmtSearchCycleTmp: function(btn){
+        var form = btn.findParentByType("window").child("form").getForm();
+        Ext.tzShowPromptSearch({
+            recname: 'TZ_XUNH_DEFN_T',
+            searchDesc: '搜索循环信息',
+            maxRow:20,
+            condition:{
+                presetFields:{
 
+                },
+                srhConFields:{
+                    TZ_XH_MC:{
+                        desc:'循环名称',
+                        operator:'07',
+                        type:'01'
+                    },
+                    TZ_XH_QZBDS:{
+                        desc:'循环表达式',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+                TZ_XH_MC: '循环名称',
+                TZ_XH_QZBDS: '循环表达式'
+            },
+            multiselect: false,
+            callback: function(selection){
+                form.findField("cycleExpression").setValue(selection[0].data.TZ_XH_QZBDS);
+                //form.findField("ComIDName").setValue(selection[0].data.TZ_COM_MC);
+            }
+        });
+    },
     viewProcessMonitor: function () {
 
         //选中行
@@ -234,10 +268,40 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchController', {
         this.getView().close();
     },
     openProcessBL:function (view, rowIndex) {
-
+        var user = (Ext.tzOrgID.toLowerCase()).replace(/(\w)/,function(v){return v.toUpperCase()});
         var store = view.findParentByType("grid").store;
         var selRec = store.getAt(rowIndex);
         var processName = selRec.get("processName");
-        console.log("processName======" + processName)
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_JC_DISPATCH_COM"]["TZ_DISPATCH_INFO"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_DISPATCH_INFO，请检查配置。');
+            return;
+        }
+        var win = this.lookupReference('processDispatchWindow');
+
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            var form = win.child('form').getForm();
+            this.getView().add(win);
+        }
+        var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_DISPATCH_INFO","OperateType":"QF","comParams":{"user":"'+user+'","processName":"'+processName+'"}}';
+        Ext.tzLoad(tzParams,function(responseData){
+            var formData = responseData.formData;
+            form.setValues(formData);
+        });
+
+        //操作类型设置为更新
+        win.actType = "update";
+        win.show();
     }
 });

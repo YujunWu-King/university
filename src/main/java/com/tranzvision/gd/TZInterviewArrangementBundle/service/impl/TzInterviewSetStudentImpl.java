@@ -75,14 +75,17 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 			if(null != classID && !"".equals(classID) && null != batchID && !"".equals(batchID)){
 				//面试安排学生列表store
 				if("STULIST".equals(type)){
+					int start = Integer.parseInt(request.getParameter("start"));
+					int limit = Integer.parseInt(request.getParameter("limit"));
+					
 					//查询面试安排总数
 					String sql = "SELECT COUNT(*) FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APPLY_PC_ID IN (SELECT TZ_BATCH_ID FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=?)";
 					int total = jdbcTemplate.queryForObject(sql, new Object[]{classID, batchID, classID}, "int");
 	
 					ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
 					if (total > 0) {
-						sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APPLY_PC_ID IN (SELECT TZ_BATCH_ID FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=?)";
-						List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql, new Object[]{classID, batchID, classID});
+						sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APPLY_PC_ID IN (SELECT TZ_BATCH_ID FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=?) order by TZ_APP_INS_ID LIMIT ? , ?";
+						List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql, new Object[]{classID, batchID, classID, start, limit});
 	
 						for(Map<String,Object> mapData : listData){
 							Map<String,Object> mapJson = new HashMap<String,Object>();
@@ -131,10 +134,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 							
 							mapJson.put("mobile", mobile);
 							mapJson.put("email", email);
-							/*
-							mapJson.put("city", "");//城市，取值待定
-							mapJson.put("country", "");//国家，取值待定
-							*/
+
 							mapJson.put("label", strLabel);
 							mapJson.put("interviewAppId", interviewAppId);
 							

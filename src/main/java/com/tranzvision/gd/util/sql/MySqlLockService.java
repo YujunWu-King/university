@@ -41,4 +41,9 @@ public class MySqlLockService {
 
 	}
 
+	public void rollback(SqlQuery sqlQuery){
+
+		sqlQuery.execute("rollback");
+		
+	}
 }

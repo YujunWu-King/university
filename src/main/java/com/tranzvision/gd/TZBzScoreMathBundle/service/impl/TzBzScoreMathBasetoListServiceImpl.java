@@ -244,57 +244,83 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 				for (int num = 0; num < actData.length; num++) {
 					String strParam = actData[num];
 					jacksonUtil.json2Map(strParam);
-					classId = jacksonUtil.getString("classId");
+					
+					if (jacksonUtil.containsKey("searchSql")) {
+						String searchSql = jacksonUtil.getString("searchSql");
+						System.out.println("searchSql:"+searchSql);
+						List<Map<String, Object>> appInsList = SqlQuery.queryForList(searchSql);
+
+						for (Map<String, Object> appInsMap : appInsList) {
+							appinsId = appInsMap.get("TZ_APP_INS_ID") == null ? ""
+									: appInsMap.get("TZ_APP_INS_ID").toString();
+							 classId = appInsMap.get("TZ_CLASS_ID") == null ? ""
+									: appInsMap.get("TZ_CLASS_ID").toString();
+							 batchId = appInsMap.get("TZ_APPLY_PC_ID") == null ? ""
+									: appInsMap.get("TZ_APPLY_PC_ID").toString();
+							 ksOprId = appInsMap.get("OPRID") == null ? ""
+									: appInsMap.get("OPRID").toString();
+							 ksName = appInsMap.get("TZ_REALNAME") == null ? ""
+									: appInsMap.get("TZ_REALNAME").toString();
+							 judgeGroup = appInsMap.get("TZ_CLPS_GR_NAME") == null ? ""
+									: appInsMap.get("TZ_CLPS_GR_NAME").toString();
+						    	pwList = SqlQuery.queryForList(pwListsql, new Object[] { batchId, classId, appinsId });
+							 	System.out.println("pwList:" + pwList.size());
+								if (pwList.size() > 0) {
+									for (Map<String, Object> Pwmap : pwList) {
+										pwOprid = Pwmap == null || Pwmap.get("TZ_PWEI_OPRID") == null ? ""
+												: Pwmap.get("TZ_PWEI_OPRID").toString();
+										judgeName = Pwmap == null || Pwmap.get("TZ_DLZH_ID") == null ? ""
+												: Pwmap.get("TZ_DLZH_ID").toString();
+										System.out.println("pwOprid:" + pwOprid);
+
+										ysfMap = SqlQuery.queryForMap(
+												TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_YSCORE_NUM"),
+												new Object[] { orgid, classId, batchId, Integer.valueOf(appinsId), pwOprid });
+
+										pwId = ysfMap == null || ysfMap.get("TZ_PWEI_GRPID") == null ? ""
+												: ysfMap.get("TZ_PWEI_GRPID").toString();
+										scoreNum = ysfMap == null || ysfMap.get("TZ_SCORE_NUM") == null ? ""
+												: ysfMap.get("TZ_SCORE_NUM").toString();
+
+										Map<String, Object> mapList = new HashMap<String, Object>();
+										mapList.put("xmid", appinsId);
+										mapList.put("xmName", ksName);
+										mapList.put("teamID", pwId);
+										mapList.put("judgeUser", judgeName);
+										mapList.put("rawscore", scoreNum);
+										mapList.put("judgescore", "");
+
+										listdate.add(mapList);
+										System.out.println("listdate:" + listdate.size());
+
+									}
+
+								} else {
+									Map<String, Object> mapList = new HashMap<String, Object>();
+									mapList.put("xmid", appinsId);
+									mapList.put("xmName", ksName);
+									mapList.put("teamID", "");
+									mapList.put("judgeUser", "");
+									mapList.put("rawscore", "");
+									mapList.put("judgescore", "");
+
+									listdate.add(mapList);
+
+								}
+
+						}
+					}
+					
+					
+					
+				/*	classId = jacksonUtil.getString("classId");
 					appinsId = jacksonUtil.getString("appInsId");
 					System.out.println("appinsId:" + appinsId);
 					batchId = jacksonUtil.getString("batchId");
 					ksOprId = jacksonUtil.getString("ksOprId");
 					ksName = jacksonUtil.getString("ksName");
-					judgeGroup = jacksonUtil.getString("judgeGroup");
-					pwList = SqlQuery.queryForList(pwListsql, new Object[] { batchId, classId, appinsId });
-					System.out.println("pwList:" + pwList.size());
-					if (pwList.size() > 0) {
-						for (Map<String, Object> Pwmap : pwList) {
-							pwOprid = Pwmap == null || Pwmap.get("TZ_PWEI_OPRID") == null ? ""
-									: Pwmap.get("TZ_PWEI_OPRID").toString();
-							judgeName = Pwmap == null || Pwmap.get("TZ_DLZH_ID") == null ? ""
-									: Pwmap.get("TZ_DLZH_ID").toString();
-							System.out.println("pwOprid:" + pwOprid);
-
-							ysfMap = SqlQuery.queryForMap(
-									TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_YSCORE_NUM"),
-									new Object[] { orgid, classId, batchId, Integer.valueOf(appinsId), pwOprid });
-
-							pwId = ysfMap == null || ysfMap.get("TZ_PWEI_GRPID") == null ? ""
-									: ysfMap.get("TZ_PWEI_GRPID").toString();
-							scoreNum = ysfMap == null || ysfMap.get("TZ_SCORE_NUM") == null ? ""
-									: ysfMap.get("TZ_SCORE_NUM").toString();
-
-							Map<String, Object> mapList = new HashMap<String, Object>();
-							mapList.put("xmid", appinsId);
-							mapList.put("xmName", ksName);
-							mapList.put("teamID", pwId);
-							mapList.put("judgeUser", judgeName);
-							mapList.put("rawscore", scoreNum);
-							mapList.put("judgescore", "");
-
-							listdate.add(mapList);
-							System.out.println("listdate:" + listdate.size());
-
-						}
-
-					} else {
-						Map<String, Object> mapList = new HashMap<String, Object>();
-						mapList.put("xmid", appinsId);
-						mapList.put("xmName", ksName);
-						mapList.put("teamID", "");
-						mapList.put("judgeUser", "");
-						mapList.put("rawscore", "");
-						mapList.put("judgescore", "");
-
-						listdate.add(mapList);
-
-					}
+					judgeGroup = jacksonUtil.getString("judgeGroup");*/
+		
 
 				}
 

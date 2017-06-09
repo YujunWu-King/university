@@ -71,6 +71,7 @@ public class EvaluationSystemController {
 		return loginHtml;
 	}
 	
+	
 	@RequestMapping(value = { "/material/index" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String materialEvaluationIndex(HttpServletRequest request, HttpServletResponse response) {
@@ -104,6 +105,7 @@ public class EvaluationSystemController {
 		return indexHtml;
 	}
 	
+	
 	@RequestMapping(value = { "/interview/{orgid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String interviewEvaluationLogin(HttpServletRequest request, HttpServletResponse response,
@@ -131,6 +133,7 @@ public class EvaluationSystemController {
 		}
 		return loginHtml;
 	}
+	
 	
 	@RequestMapping(value = { "/interview/index" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
@@ -164,6 +167,49 @@ public class EvaluationSystemController {
 		}
 		return indexHtml;
 	}
+	
+	
+	@RequestMapping(value = { "/interview/t/index" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String interviewEvaluationTouchIndex(HttpServletRequest request, HttpServletResponse response) {
+
+		String indexHtml = "";
+		try {
+			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[]{oprid}, "String");
+			String contactUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_CONTACT_URL"}, "String");
+			
+			String page = request.getParameter("page");
+			if("batch".equals(page)||"evaluation".equals(page)){
+				String classId = request.getParameter("classId");
+				String batchId = request.getParameter("batchId");
+				String appInsId = request.getParameter("appInsId");
+				
+				String appTplId = "",className = "",batchName="";
+				
+				Map<String,Object> map = sqlQuery.queryForMap("select A.TZ_CLASS_NAME,B.TZ_BATCH_NAME,A.TZ_PS_APP_MODAL_ID from PS_TZ_CLASS_INF_T A ,PS_TZ_CLS_BATCH_T B where A.TZ_CLASS_ID = B.TZ_CLASS_ID AND A.TZ_CLASS_ID=? AND B.TZ_BATCH_ID = ?", 
+						new Object[]{classId,batchId});
+				if(map!=null){
+					className = (String)map.get("TZ_CLASS_NAME");
+					batchName = (String)map.get("TZ_BATCH_NAME");
+					appTplId = (String)map.get("TZ_PS_APP_MODAL_ID");
+				}
+				
+				indexHtml = "batch".equals(page)?
+						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl)
+						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId);
+			}else{
+				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName,contactUrl);
+			}
+			
+		} catch (TzSystemException e) {
+			e.printStackTrace();
+			indexHtml = e.toString();
+		}
+		return indexHtml;
+	}
+	
 	@RequestMapping(value = { "/login" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response) {
@@ -176,6 +222,7 @@ public class EvaluationSystemController {
 		String code = request.getParameter("yzm");
 		String type = request.getParameter("type");
 		String judgeType = "interview".equals(type)?"1":"2";
+		String device = request.getParameter("device");
 		
 		ArrayList<String> aryErrorMsg = new ArrayList<String>();
 
@@ -197,10 +244,16 @@ public class EvaluationSystemController {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);
 		jsonMap.put("error", errorMsg);
-		jsonMap.put("indexUrl", "/evaluation/"+type+"/index");
+		if("interview".equals(type)&&"pad".equals(device)){
+			jsonMap.put("indexUrl", "/evaluation/interview/t/index");
+		}else{
+			jsonMap.put("indexUrl", "/evaluation/"+type+"/index");
+		}
+		
 
 		return jacksonUtil.Map2json(jsonMap);
 	}
+	
 	
 	@RequestMapping(value = { "/logout" })
 	public String doLogout(HttpServletRequest request, HttpServletResponse response) {

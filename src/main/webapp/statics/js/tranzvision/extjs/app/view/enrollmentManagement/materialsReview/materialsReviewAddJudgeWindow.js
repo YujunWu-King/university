@@ -235,7 +235,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     store: store,
                     bbar: {
                         xtype: 'pagingtoolbar',
-                        pageSize: 10,
+                        pageSize: 500,
                         listeners: {
                             afterrender: function (pbar) {
                                 var grid = pbar.findParentByType("grid");

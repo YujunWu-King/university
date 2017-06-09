@@ -147,8 +147,10 @@ public class AudMgImpl extends FrameworkImpl {
 
 					int count = jdbcTemplate.queryForObject(isExistSql, new Object[] { strAudId, strOprId }, "Integer");
 
+					System.out.println(count);
 					if (count == 1) {
 						bl = true;
+						continue;
 					} else {
 
 						System.out.println(strOprId);

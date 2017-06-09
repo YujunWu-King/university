@@ -58,6 +58,11 @@ public class LcSysvarClass {
 			} else {
 				isPublish = "N";
 			}
+			//报名表提交状态;
+			String bmbTjStatusDesc = jdbcTemplate.queryForObject("select TZ_ZHZ_DMS from  PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_APPFORM_STATE' AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?", new Object[]{appInsStatus},String.class);
+			if(bmbTjStatusDesc == null){
+				bmbTjStatusDesc = "";
+			}
 			
 			// 报名表链接;
 			String applyFromUrl = rootPath + "/dispatcher?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + siteId + "&TZ_PAGE_ID=" ;
@@ -91,25 +96,30 @@ public class LcSysvarClass {
 							} catch (Exception e1) {
 								isComplete = "";
 							}
-
-							span = "<span class=\"fl width_40\">" + TZ_XXX_MC + "</span>";
-							
-							//完成;
-							if ("Y".equals(isComplete)) {
-								/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
-										+ "/statics/css/website/m/images/reg_right.png\"></span>";*/
-								span = span + "<span class=\"fl\">已完成</span>";
-							} else {
-								//无
-								if("B".equals(isComplete)){
-									span = span + "<span class=\"fl\">无</span>";
-								}else{
-									/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
-									+ "/statics/css/website/m/images/reg_warm.png\"></span>";*/
-									span = span + "<span class=\"fl\">未完成</span>";
-								}
+							if(i ==  list.size() -1){
+								span = "<span class=\"fl width_40\">报名表提交状态</span><span class=\"fl\">"+bmbTjStatusDesc+"</span>";
 								
+							}else{
+								span = "<span class=\"fl width_40\">" + TZ_XXX_MC + "</span>";
+								
+								//完成;
+								if ("Y".equals(isComplete)) {
+									/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
+											+ "/statics/css/website/m/images/reg_right.png\"></span>";*/
+									span = span + "<span class=\"fl\">已完成</span>";
+								} else {
+									//无
+									if("B".equals(isComplete)){
+										span = span + "<span class=\"fl\">无</span>";
+									}else{
+										/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
+										+ "/statics/css/website/m/images/reg_warm.png\"></span>";*/
+										span = span + "<span class=\"fl\">未完成</span>";
+									}
+									
+								}
 							}
+							
 							
 							content = content +  "<div class=\"overhidden\">" + span + "</div>";
 							
@@ -143,13 +153,33 @@ public class LcSysvarClass {
 							count = count + 1;
 							TZ_XXX_BH = (String) list.get(i).get("TZ_XXX_BH");
 							TZ_XXX_MC = (String) list.get(i).get("TZ_XXX_MC");
-							String isComplete = "";
-							try {
-								isComplete = jdbcTemplate.queryForObject(
-										"SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?",
-										String.class, new Object[] { appIns, TZ_XXX_BH });
-							} catch (Exception e1) {
-								isComplete = "";
+							String td1 = "";
+							if(count == totalnum){
+								//最后一列不显示报名表的正式提交列, 直接显示报名表的状态;
+								TZ_XXX_MC = "报名表提交状态";
+								// 已经提交;
+								td1 = "<td>" + bmbTjStatusDesc + "</td>";
+							}else{
+								String isComplete = "";
+								try {
+									isComplete = jdbcTemplate.queryForObject(
+											"SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?",
+											String.class, new Object[] { appIns, TZ_XXX_BH });
+								} catch (Exception e1) {
+									isComplete = "";
+								}
+								
+	
+								//每页对应额链接;
+								String everyApplyFromUrl = applyFromUrl + TZ_XXX_BH;
+								if ("Y".equals(isComplete)) {
+									td1 = "<td><img src=\"" + rootPath
+											+ "/statics/css/website/images/table_check.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">已完成</a></td>";
+								} else if("B".equals(isComplete)){
+									td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">无</a></td>";
+								}else {
+									td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">未完成</a></td>";
+								}
 							}
 							if ("".equals(th)) {
 								if(i < TABLE_COLUM_NUM){
@@ -165,18 +195,6 @@ public class LcSysvarClass {
 									th = th + "<td>" + TZ_XXX_MC + "</td>";
 								}
 								
-							}
-
-							String td1 = "";
-							//每页对应额链接;
-							String everyApplyFromUrl = applyFromUrl + TZ_XXX_BH;
-							if ("Y".equals(isComplete)) {
-								td1 = "<td><img src=\"" + rootPath
-										+ "/statics/css/website/images/table_check.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">已完成</a></td>";
-							} else if("B".equals(isComplete)){
-								td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">无</a></td>";
-							}else {
-								td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">未完成</a></td>";
 							}
 							if ("".equals(td)) {
 								td = td1;
@@ -206,7 +224,7 @@ public class LcSysvarClass {
 						}
 					}
 					
-					tableHtml = tableHtml + "<thead><tr><td colspan=\"3\">推荐人提交推荐信情况</td><td>报名表提交状态</td><td colspan=\"2\">打印PDF报名表</td></tr></thead>";
+					tableHtml = tableHtml + "<thead><tr><td colspan=\"3\">推荐人提交推荐信情况</td><td colspan=\"3\">打印PDF报名表</td></tr></thead>";
 					
 					String tjrqkxx = "";
 					String tjxSql = "select TZ_REFERRER_NAME,TZ_TJX_APP_INS_ID,TZ_REF_LETTER_ID,TZ_REFLETTERTYPE from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and TZ_MBA_TJX_YX='Y' order by TZ_TJR_ID asc";
@@ -245,15 +263,11 @@ public class LcSysvarClass {
 			         }
 					
 					tjrqkxx = "<td colspan=\"3\">" + tjrqkxx + "</td>";
-					//报名表提交状态;
-					String bmbTjStatusDesc = jdbcTemplate.queryForObject("select TZ_ZHZ_DMS from  PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_APPFORM_STATE' AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?", new Object[]{appInsStatus},String.class);
-					if(bmbTjStatusDesc == null){
-						bmbTjStatusDesc = "";
-					}
+					
 					//打印报名表;
 					String applyFormPrint = rootPath + "/PrintPdfServlet?instanceID=" + appIns;
 					//未提交也可以打印;
-					tjrqkxx = tjrqkxx +"<td>" + bmbTjStatusDesc + "</td>" + "<td colspan=\"2\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
+					tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
 					/*
 					if ("U".equals(appInsStatus)) {
 						tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";

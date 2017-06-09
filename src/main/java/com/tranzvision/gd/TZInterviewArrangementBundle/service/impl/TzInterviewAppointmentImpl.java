@@ -128,7 +128,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 				contentStr = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_TABLE_HTML");
 			}
 			*/
-			interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_MAIN_HTML",  strCssDir, "在线预约", ZSGL_URL,str_jg_id, strSiteId,request.getContextPath());
+			interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_GD_MS_APPOINT_MAIN_HTML",  strCssDir, "面试预约", ZSGL_URL,str_jg_id, strSiteId,request.getContextPath());
 			interviewAppointHtml = siteRepCssServiceImpl.repTitle(interviewAppointHtml, strSiteId);
 			interviewAppointHtml=siteRepCssServiceImpl.repCss(interviewAppointHtml, strSiteId);
 			
@@ -353,8 +353,6 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 				String isInAppoPlan = jdbcTemplate.queryForObject(sql, new Object[]{classId,pcId,appInsId}, "String");
 				
 				if("Y".equals(isInAppoPlan)){
-					mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");
-					
 					PsTzMsyyKsTblKey psTzMsyyKsTblKey = new PsTzMsyyKsTblKey();
 					psTzMsyyKsTblKey.setTzClassId(classId);
 					psTzMsyyKsTblKey.setTzBatchId(pcId);
@@ -395,20 +393,57 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 							errorMsg[1] = "撤销预约失败";
 						}
 					}else{
-						psTzMsyyKsTbl = new PsTzMsyyKsTbl();
-						psTzMsyyKsTbl.setTzClassId(classId);
-						psTzMsyyKsTbl.setTzBatchId(pcId);
-						psTzMsyyKsTbl.setTzMsPlanSeq(planId);
-						psTzMsyyKsTbl.setOprid(oprid);
-						psTzMsyyKsTbl.setRowAddedOprid(oprid);
-						psTzMsyyKsTbl.setRowAddedDttm(new Date());
-						psTzMsyyKsTbl.setRowLastmantOprid(oprid);
-						psTzMsyyKsTbl.setRowLastmantDttm(new Date());
-						int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
-						if(rtn != 0){
-							errorMsg[0] = "0";
-							errorMsg[1] = "预约成功";
-							
+						String otherSql = "select 'Y' from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and OPRID=? limit 1";
+						String existsOther = jdbcTemplate.queryForObject(otherSql, new Object[]{ classId, pcId, oprid }, "String");
+						if("Y".equals(existsOther)){
+							errorMsg[0] = "1";
+							errorMsg[1] = "预约失败,你已预约其他报到时间的面试";
+						}else{
+							//锁表
+							mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");
+							try{
+								String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
+								Map<String,Object> numMap = jdbcTemplate.queryForMap(numSql, new Object[]{ classId, pcId, planId });
+								if(numMap != null){
+									int msYyLimit = Integer.parseInt(numMap.get("TZ_MSYY_COUNT").toString());
+									int msYyCount = Integer.parseInt(numMap.get("TZ_YY_COUNT").toString());
+									
+									if(msYyLimit > msYyCount){
+										psTzMsyyKsTbl = new PsTzMsyyKsTbl();
+										psTzMsyyKsTbl.setTzClassId(classId);
+										psTzMsyyKsTbl.setTzBatchId(pcId);
+										psTzMsyyKsTbl.setTzMsPlanSeq(planId);
+										psTzMsyyKsTbl.setOprid(oprid);
+										psTzMsyyKsTbl.setRowAddedOprid(oprid);
+										psTzMsyyKsTbl.setRowAddedDttm(new Date());
+										psTzMsyyKsTbl.setRowLastmantOprid(oprid);
+										psTzMsyyKsTbl.setRowLastmantDttm(new Date());
+										int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
+										if(rtn > 0){
+											errorMsg[0] = "0";
+											errorMsg[1] = "预约成功";
+										}else{
+											errorMsg[0] = "1";
+											errorMsg[1] = "预约失败";
+										}
+									}else{
+										errorMsg[0] = "1";
+										errorMsg[1] = "预约失败，该报到时间预约人数已满，请预约其他报到时间";
+									}
+								}
+								// 解锁
+								mySqlLockService.unlockRow(jdbcTemplate);
+							}catch(Exception ee){
+								ee.printStackTrace();
+								errorMsg[0] = "1";
+								errorMsg[1] = "预约失败，失败原因："+ee.getMessage();
+								//回滚
+								mySqlLockService.rollback(jdbcTemplate);
+							}
+						}
+						
+						//面试预约成功，发送成功通知站内信
+						if("0".equals(errorMsg[0])){
 							//预约成功后发送站内信
 							try{
 								sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
@@ -431,14 +466,8 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 								//没有配置邮件模板
 								nullEx.printStackTrace();
 							}
-						}else{
-							errorMsg[0] = "1";
-							errorMsg[1] = "预约失败";
 						}
 					}
-					
-					// 解锁
-					mySqlLockService.unlockRow(jdbcTemplate);
 				}else{
 					errorMsg[0] = "1";
 					errorMsg[1] = "抱歉，您尚未安排本批次面试，预约失败！";
