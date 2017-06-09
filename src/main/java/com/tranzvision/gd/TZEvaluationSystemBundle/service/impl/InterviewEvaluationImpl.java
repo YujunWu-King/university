@@ -822,27 +822,35 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						   error_decription = "存在未评审的考生，无法提交数据。";
 						   error_code = "SUBMTALL03";
 					   }else{
-						   String mspwpsjlExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN<>'Y'", 
-						   			new Object[]{classId,batchId,oprid},"String");
-						   
-						   psTzMspwpsjlTbl psTzMspwpsjlTbl = new psTzMspwpsjlTbl();
-						   psTzMspwpsjlTbl.setTzClassId(classId);
-						   psTzMspwpsjlTbl.setTzApplyPcId(batchId);
-						   psTzMspwpsjlTbl.setTzPweiOprid(oprid);
-						   psTzMspwpsjlTbl.setTzSubmitYn("Y");
-						   psTzMspwpsjlTbl.setRowLastmantOprid(oprid);
-						   psTzMspwpsjlTbl.setRowLastmantDttm(new Date());
-						    
-							if("Y".equals(mspwpsjlExist)){
-								psTzMspwpsjlTblMapper.updateByPrimaryKeySelective(psTzMspwpsjlTbl);
-							}else{
-								psTzMspwpsjlTbl.setRowAddedOprid(oprid);
-								psTzMspwpsjlTbl.setRowAddedDttm(new Date());
-								psTzMspwpsjlTblMapper.insertSelective(psTzMspwpsjlTbl);
-							}
-							
-							error_decription = "";;
-							error_code = "0";
+						   /*检查是否有重复排名考生*/
+						   String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_MP_PW_KS_TBL a, PS_TZ_MP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID and a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and b.TZ_CLASS_ID=? and b.TZ_APPLY_PC_ID=? and b.TZ_PWEI_OPRID=? and b.TZ_DELETE_ZT<>'Y' and a.TZ_DELETE_ZT<>'Y' limit 0,1", 
+										new Object[]{classId,batchId,oprid},"String");
+						   if("Y".equals(have_equal)){
+							   error_decription = "发现排名重复考生，无法提交数据。";
+							   error_code = "SUBMTALL04";
+						   }else{
+							   String mspwpsjlExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN<>'Y'", 
+							   			new Object[]{classId,batchId,oprid},"String");
+							   
+							   psTzMspwpsjlTbl psTzMspwpsjlTbl = new psTzMspwpsjlTbl();
+							   psTzMspwpsjlTbl.setTzClassId(classId);
+							   psTzMspwpsjlTbl.setTzApplyPcId(batchId);
+							   psTzMspwpsjlTbl.setTzPweiOprid(oprid);
+							   psTzMspwpsjlTbl.setTzSubmitYn("Y");
+							   psTzMspwpsjlTbl.setRowLastmantOprid(oprid);
+							   psTzMspwpsjlTbl.setRowLastmantDttm(new Date());
+							    
+								if("Y".equals(mspwpsjlExist)){
+									psTzMspwpsjlTblMapper.updateByPrimaryKeySelective(psTzMspwpsjlTbl);
+								}else{
+									psTzMspwpsjlTbl.setRowAddedOprid(oprid);
+									psTzMspwpsjlTbl.setRowAddedDttm(new Date());
+									psTzMspwpsjlTblMapper.insertSelective(psTzMspwpsjlTbl);
+								}
+								
+								error_decription = "";;
+								error_code = "0";
+						   }
 					   } 
 				 }
 				 
