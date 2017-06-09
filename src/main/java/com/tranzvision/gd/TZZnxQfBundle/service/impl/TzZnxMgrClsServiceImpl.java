@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 站内信群发群发管理
@@ -20,6 +21,9 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 public class TzZnxMgrClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
+	
+	@Autowired
+	private SqlQuery sqlQuery;
 	
 	/* 加载邮件群发批次列表 */
 	@Override
@@ -55,6 +59,17 @@ public class TzZnxMgrClsServiceImpl extends FrameworkImpl {
 				mapList.put("crePer", rowList[3]);
 				mapList.put("creDt", rowList[4]);
 				mapList.put("orgId", rowList[5]);
+				
+				String readFlag = "0/0";
+				String sql = "select sum(TZ_ZNX_STATUS='Y') as TZ_READ_NUM,sum(TZ_ZNX_STATUS='N') as TZ_UNREAD_NUM from PS_TZ_ZNX_REC_T A where exists(select 'X' from PS_TZ_ZNX_MSG_T where TZ_ZNX_MSGID=A.TZ_ZNX_MSGID and TZ_MLSM_QFPC_ID=?)";
+				Map<String,Object> readMap = sqlQuery.queryForMap(sql, new Object[]{ rowList[0] });
+				if(readMap != null){
+					String readNum = readMap.get("TZ_READ_NUM")==null ? "0" : readMap.get("TZ_READ_NUM").toString();
+					String unReadNum = readMap.get("TZ_UNREAD_NUM")==null ? "0" : readMap.get("TZ_UNREAD_NUM").toString();
+					readFlag = readNum + "/" + unReadNum;
+				}
+				mapList.put("readFlag", readFlag);
+				
 				listData.add(mapList);
 			}
 			mapRet.replace("total", obj[0]);

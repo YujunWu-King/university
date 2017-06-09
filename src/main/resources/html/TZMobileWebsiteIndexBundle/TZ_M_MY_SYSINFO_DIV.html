@@ -1,12 +1,18 @@
-<div class="new_znx" style="background:#FFFFFF">
-	   	   <a href="%bind(:1)" class="viewZnxContent" mailid="%bind(:2)">
-	   	       <div class="newz_left">
-	   	       	    <p class="%bind(:3)">%bind(:4)</p>
-	   	       	    <div class="time_left" style="margin-bottom:2%;">
-		   	 			<i></i>
-		   	 			<span >%bind(:5)</span>
-	   	 		    </div>
-	   	       </div>
-	   	        <i class="arrow" style="margin:2.5% 0 2.5% 0;"></i>
-	   	   </a>
+<div class="new_znx line-wrapper" style="background:#FFFFFF">
+	<div class="line-scroll-wrapper">
+	 	   <!-- <a href="%bind(:1)" class="viewZnxContent" mailid="%bind(:2)"> -->
+	 	   <div onclick="showZnxDetails(this,'%bind(:2)')" class="viewZnxContent line-normal-wrapper">
+	 	       <div class="newz_left">
+	 	       	    <p class="%bind(:3)">%bind(:4)</p>
+	 	       	    <div class="time_left" style="margin-bottom:2%;">
+	  	 			<i></i>
+	  	 			<span >%bind(:5)</span>
+	 	 		    </div>
+	 	       </div>
+	 	        <i class="arrow" style="margin:2.5% 0 2.5% 0;"></i>
+	 	   </div>
+	 	   <div class="line-btn-delete">
+	 	   		<button onclick="deleteZnx(this,'%bind(:2)')">删除</button>
+	 	   </div>
+ 	</div>
 </div>

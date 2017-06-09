@@ -77,9 +77,9 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 			if ("back".equals(lx)) {
 				indexUrl = "javascript:history.back(-1);";
 			}
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_LIST", title, indexUrl, "");
-			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", title, ctxPath,
-					jsCss, siteId, menuId, content);
+			//content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_LIST", title, indexUrl, "");
+			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZNX_LIST_HTML", title, ctxPath,
+					jsCss, siteId, menuId, title, indexUrl, content);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

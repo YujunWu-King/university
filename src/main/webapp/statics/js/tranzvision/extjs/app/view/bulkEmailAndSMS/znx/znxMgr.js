@@ -62,6 +62,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgr', {
                     {
                         text:Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_GL_STD.emlQfDesc","群发任务名称") ,
                         dataIndex: 'znxQfDesc',
+                        minWidth:160,
                         flex:1
                     }/*,{
                         text:Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_GL_STD.dept","所属部门"),
@@ -70,7 +71,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.znx.znxMgr', {
                     }*/,{
                         text:Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_GL_STD.emlSubj","站内信标题"),
                         dataIndex: 'znxSubj',
+                        minWidth:160,
                         flex:1
+                    },{
+                        text:Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_GL_STD.readFlag","已读/未读"),
+                        dataIndex: 'readFlag',
+                        width:120
                     },{
                         text:Ext.tzGetResourse("TZ_ZNX_GL_COM.TZ_ZNX_GL_STD.crePer","创建人") ,
                         dataIndex: 'crePer',

@@ -16,6 +16,7 @@ a,a:hover{text-decoration: none;display: block;}
 .dis_none{display: none;}
 .img-responsive{display: block;max-width: 100%;height: auto;width: 100%;}
 .viewport-adaptive{width: 100%;min-width: 320px;max-width:750px;margin: 0 auto;height: auto;}
+.viewport-adaptive2{width: 100%;min-width: 320px;max-width:750px;margin: 0 auto;height: auto;}
 .bg{width:100%;position:relative;background-color:#e4e4e4;height:auto;}
 .top{position:relative;}
 .logout{display:block;position:absolute;font-size:0.5rem;color:#2d5c9f;bottom:0.4rem;right: 0.2rem;}
@@ -357,6 +358,13 @@ select{appearance:none;-moz-appearance:none;-webkit-appearance:none;border:none;
 .newz_left{width:77%;float:left;margin-left: 3%;}
 .new_znx a p{font-size:0.6rem;color:#333;margin:3% 0 1% 0;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .newz_read{color:#999 !important;}
+
+.line-wrapper { width: 100%; height: 64px; overflow: hidden; font-size: 28px; border-bottom: 1px solid #ddd; }
+.line-scroll-wrapper { white-space: nowrap; height: 64px; clear: both; }
+.line-btn-delete { float: left; width: 80px; height: 64px; }
+.line-btn-delete button { width: 100%; height: 100%; background: red; border: none; font-size: 14px; color: #fff; }
+.line-normal-wrapper { display: inline-block; float: left;}
+.line-normal-wrapper.viewZnxContent p{font-size: 0.6rem;color: #333;margin: 3% 0 1% 0;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; }
 
 /*忘记密码*/
 

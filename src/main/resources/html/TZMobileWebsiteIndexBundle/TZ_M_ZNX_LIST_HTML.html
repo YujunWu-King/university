@@ -1,0 +1,81 @@
+<!doctype html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0;"/>
+<title>%bind(:1)</title>
+<!-- 需要引入的css和js  -->
+<link href="%bind(:2)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="%bind(:2)/statics/js/website/m/jquery-1.8.3.min.js"></script>
+
+<script type="text/javascript">
+var TzUniversityContextPath = "%bind(:2)";
+var siteId = "%bind(:4)";
+</script>
+%bind(:3)
+<script type="text/javascript">
+
+	//验证用户是否已成功登录过并未安全退出，则可直接显示登录页面，卢艳添加，2017-4-17
+	//var verifyFlag = verifyUser("%bind(:4)","%bind(:7)");
+
+	$(document).ready(function(){
+	
+		//if(verifyFlag) {
+	
+			var tzParams = '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_WEB_MENU_STD","OperateType":"HTML","comParams":{"siteId":"' + %bind(:4) +'","menuId":"' + %bind(:5) + '"}}';
+			$.ajax({
+				type:"POST",
+				url: TzUniversityContextPath+"/dispatcher",
+				data:{
+					tzParams:tzParams
+				},
+				success:function(response){
+					try{
+						if(response.indexOf("当前会话已超时") >=0){
+							window.location.href= TzUniversityContextPath + "/user/login/sem/%bind(:4)";
+							return ;
+						}
+					}catch(err){
+					}
+					$('.footer-nav').prop('innerHTML', response);
+				},
+				failure: function () {
+				  	
+				} 
+			});
+		//}
+	});
+</script>
+
+</head>
+<body>
+	<div class="viewport-adaptive" >
+	   <!-- 主体内容 -->
+	   <div class="bg">
+			<!-- 头部 -->
+			<div class="topbar">
+			 %bind(:6) <a href="%bind(:7)"><i></i></a>
+			</div>
+		   	<div id="tz-viewport-contents">
+		   		<div id="tz-znx-list-container">%bind(:8)</div>
+		   	</div> 
+		</div>
+	</div>
+	<div class="viewport-adaptive2" id="tz-details-container" style="display: none;">
+	   	<!-- 详细内容 -->
+	   	<div class="bg2"> 
+			<div class="topbar"> 
+				站内信详情 <a href="javascript:void(0);" onclick="backToZnxList(this)"><i></i></a>
+			</div>
+			<div id="tz-details-contents" msgId=""></div>
+		</div>
+	</div>
+	<!-- 底部菜单 -->
+	<div class="footer-wrap mt10">
+	  <nav class="footer-nav">
+		  
+	  </nav>
+	</div>
+</body>
+</html>
