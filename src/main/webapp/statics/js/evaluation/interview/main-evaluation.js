@@ -1037,7 +1037,7 @@ function createStatisticsCharts(jsonObject,chartStoreArray,totalWidth,doHidePane
 
 function getApplicantListColumnHeaders(jsonObject)
 {
-	var clHeader = [{name:"ps_ksh_xh",type:"number"},"ps_ksh_id","ps_msh_id","ps_ksh_bmbid","ps_ksh_xm",{"ps_ksh_ppm",type:"number"},"ps_ksh_zt","ps_ksh_dt",'ps_ksh_school','ps_ksh_company'];
+	var clHeader = [{name:"ps_ksh_xh",type:"number"},"ps_ksh_id","ps_msh_id","ps_ksh_bmbid","ps_ksh_xm",{name:"ps_ksh_ppm",type:"number"},"ps_ksh_zt","ps_ksh_dt",'ps_ksh_school','ps_ksh_company'];
 	
 	for(itm in jsonObject)
 	{
