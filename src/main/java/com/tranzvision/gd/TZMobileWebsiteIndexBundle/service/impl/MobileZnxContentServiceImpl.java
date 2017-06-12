@@ -79,7 +79,7 @@ public class MobileZnxContentServiceImpl extends FrameworkImpl {
 			String znxSubject = "";
 			String znxText = "";
 			String znxTime = "";
-		    String znxSql = "SELECT TZ_MSG_SUBJECT,TZ_MSG_TEXT,DATE_FORMAT(ROW_ADDED_DTTM,'%Y-%m-%d %k:%i')TZ_SEND_TIME FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_MSGID =? AND TZ_ZNX_RECID=?";
+		    String znxSql = "SELECT TZ_MSG_SUBJECT,TZ_MSG_TEXT,DATE_FORMAT(ROW_ADDED_DTTM,'%Y-%m-%d %k:%i:%s')TZ_SEND_TIME FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_MSGID =? AND TZ_ZNX_RECID=?";
 		    Map<String, Object> msyyMap  = jdbcTemplate.queryForMap(znxSql,new Object[] { znxMsgId, m_curOPRID });
 		    if(msyyMap != null){
 		    	znxSubject = msyyMap.get("TZ_MSG_SUBJECT") == null ? "" : (String)msyyMap.get("TZ_MSG_SUBJECT");

@@ -15,7 +15,7 @@ function getZnxList(siteid,pagenum){
             domClass   : 'dropload-down',  
             domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',  
             domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',  
-            domNoData  : '<div class="dropload-noData">已全部加载</div>'  
+            domNoData  : '<div class="dropload-noData">数据已全部加载</div>'  
         },  
 		loadUpFn: function(me){
 			pagenum = 1;
