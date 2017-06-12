@@ -1,4 +1,6 @@
 var dropObj;
+var lastMsgId;
+var tzScrollTop;
 
 function getZnxList(siteid,pagenum){	
 	$('#tz-viewport-contents').dropload({
@@ -13,7 +15,7 @@ function getZnxList(siteid,pagenum){
             domClass   : 'dropload-down',  
             domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',  
             domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',  
-            domNoData  : '<div class="dropload-noData">站内信已全部加载</div>'  
+            domNoData  : '<div class="dropload-noData">已全部加载</div>'  
         },  
 		loadUpFn: function(me){
 			pagenum = 1;
@@ -21,13 +23,14 @@ function getZnxList(siteid,pagenum){
 			$.ajax({
 				type: 'GET',
 				data:{
-					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"LOADZNX","comParams":{"siteId": "'+ siteid + '","pagenum": '+pagenum+'}}'
+					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"LOADZNX","comParams":{"siteId": "'+ siteid + '","pagenum": '+pagenum+',"lastMsgId":"'+lastMsgId+'"}}'
 				},
 				url: TzUniversityContextPath+"/dispatcher",
 				dataType: 'json',
 				success: function(result) {	
 					pagenum = pagenum + 1;
 					var resultNum = result.comContent.resultNum;
+					lastMsgId = result.comContent.lastMsgId;
 					if(resultNum > 0){
 						// 插入数据到页面，放到最后面
 	                	$('#tz-znx-list-container').html(result.comContent.result);
@@ -35,8 +38,9 @@ function getZnxList(siteid,pagenum){
 	                	initZnxListStyle();
 	                	
 	                	// 每次数据插入，必须重置
-	                    me.resetload();
+	                	me.resetload();
 	                    me.unlock();
+	                    me.noData(false);
 					}
 				},
 				error: function(xhr, type) {
@@ -50,13 +54,14 @@ function getZnxList(siteid,pagenum){
 			$.ajax({
 				type: 'GET',
 				data:{
-					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"LOADZNX","comParams":{"siteId": "'+ siteid + '","pagenum": '+pagenum+'}}'
+					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"LOADZNX","comParams":{"siteId": "'+ siteid + '","pagenum": '+pagenum+',"lastMsgId":"'+lastMsgId+'"}}'
 				},
 				url: TzUniversityContextPath+"/dispatcher",
 				dataType: 'json',
 				success: function(result) {	
 					pagenum=pagenum+1;
 					var resultNum = result.comContent.resultNum;
+					lastMsgId = result.comContent.lastMsgId;
 					if(resultNum > 0){
 						// 插入数据到页面，放到最后面
 	                	$('#tz-znx-list-container').append(result.comContent.result);
@@ -94,7 +99,7 @@ function getZnxList(siteid,pagenum){
 						 // 锁定
 						me.lock();
                         // 无数据
-                        me.noData(0);
+                        me.noData(true);
 					}
 					
 					// 每次数据插入，必须重置
@@ -111,6 +116,7 @@ function getZnxList(siteid,pagenum){
 
 
 function showZnxDetails(el,znxMsgId){
+	tzScrollTop = $(document).scrollTop();
 	var contentsEl = $("#tz-details-contents");
 	if(contentsEl.attr("msgId") == znxMsgId){
 		$("#tz-details-container").css("display","block");
@@ -149,6 +155,9 @@ function showZnxDetails(el,znxMsgId){
 function backToZnxList(el){
 	$("#tz-details-container").css("display","none");
 	$(".viewport-adaptive").css("display","block");
+	if(tzScrollTop>0){
+		$(document).scrollTop(tzScrollTop);
+	}
 }
 
 

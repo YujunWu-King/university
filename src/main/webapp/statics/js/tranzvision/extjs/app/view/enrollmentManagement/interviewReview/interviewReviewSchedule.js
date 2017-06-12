@@ -568,9 +568,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                                         "-",
                                                         {text: "设置提交状态为未提交", tooltip: "设置提交状态为未提交", handler: "setNoSubmit"},
                                                         "-",
-                                                        {text: "撤销面试数据", tooltip: "撤销面试数据", handler: "revokeData"},
+                                                        {text: "刷新", tooltip: "刷新", handler: "refreshPw"},
                                                         "-",
-                                                        {text: "打印评分总表",tooltip: "打印评分总表" , handler: "printPFZB"}
+                                                        {text: "打印评分总表",tooltip: "打印评分总表" , handler: "printPFZB"},
+                                                        "->",
+                                                        {text: "撤销面试数据", tooltip: "撤销面试数据", handler: "revokeData"},
 
                                                     ]
                                                 }

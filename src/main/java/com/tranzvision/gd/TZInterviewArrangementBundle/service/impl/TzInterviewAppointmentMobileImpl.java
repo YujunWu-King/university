@@ -251,7 +251,12 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 	}
 	
 	
-	
+	/**
+	 * 该方法弃用，改用PC版确认面试预约方法
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
 	private String tzConfirmAppointment(String strParams, String[] errorMsg){
 		String strRet = "";
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
