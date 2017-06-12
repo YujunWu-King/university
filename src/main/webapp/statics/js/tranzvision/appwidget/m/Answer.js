@@ -449,7 +449,6 @@ var SurveyBuild = {
             }
             $("#main_list").append(_c);
 
-
             //控件绑定事件(固定多行容器存在问题)
            
             var _eventbind = data._eventbind;
