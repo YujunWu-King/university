@@ -583,7 +583,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 			errMsg[1] = "您不属于任何机构，不能修改附加字段定义！";
 			return strRet;
 		}
-		System.out.println(actData);
+		//System.out.println(actData);
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
