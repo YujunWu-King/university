@@ -1,5 +1,6 @@
 var dropObj;
 var lastMsgId;
+var tzScrollTop;
 
 function getZnxList(siteid,pagenum){	
 	$('#tz-viewport-contents').dropload({
@@ -115,7 +116,7 @@ function getZnxList(siteid,pagenum){
 
 
 function showZnxDetails(el,znxMsgId){
-	console.log(document.documentElement.scrollTop);
+	tzScrollTop = $(document).scrollTop();
 	var contentsEl = $("#tz-details-contents");
 	if(contentsEl.attr("msgId") == znxMsgId){
 		$("#tz-details-container").css("display","block");
@@ -154,6 +155,9 @@ function showZnxDetails(el,znxMsgId){
 function backToZnxList(el){
 	$("#tz-details-container").css("display","none");
 	$(".viewport-adaptive").css("display","block");
+	if(tzScrollTop>0){
+		$(document).scrollTop(tzScrollTop);
+	}
 }
 
 
