@@ -439,16 +439,15 @@ var SurveyBuild = {
 						this.ArrShift(data.children[i],d);
 					}
                 }
-                _c = $("<div class='dhcontainer page" + data.pageno + "' data-instancid='" + data.instanceId + "'>" + _c + "</div>").find(".main_content_box").prepend(_co).parents('.dhcontainer');
+                _c = $("<div class='dhcontainer page" + data.pageno + " all_style' data-instancid='" + data.instanceId + "'>" + _c + "</div>").find(".main_content_box").prepend(_co).parents('.dhcontainer');
             } else if (data["fixedContainer"] && data["fixedContainer"] == "Y") {
                 //固定多行控件
-                _c = "<div class='dhcontainer page" + data.pageno + "' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
+                _c = "<div class='dhcontainer page" + data.pageno + " all_style' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
             } else {
                 //单行控件
-                _c = "<div class='page" + data.pageno + "' style='display:block;' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
+                _c = "<div class='page" + data.pageno + " all_style' style='display:block;' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";
             }
             $("#main_list").append(_c);
-
 
             //控件绑定事件(固定多行容器存在问题)
            
