@@ -8,28 +8,57 @@ SurveyBuild.extend("PreButtom", "baseComponent", {
 	title: "预提交",
 	_getHtml: function(data, previewmode) {
 		 var c = "";
+		 /*
+		 <div class="btn1">
+         c += '<div class="btn-pre">'+ MsgSet["PRE"]+ '&nbsp;&nbsp;';
+         
+         <img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/btn-save.png" />
+         
+         <li>下一步<img src="images/next.png"></li>
+         </div>
+         
+         
+          <div class="btn">
+	     	 <div class="btn_left">保存<img src="images/save.png"></div>
+	     	 <div class="btn_right">下一步<img src="images/next.png"></div>
+	     </div>         
+		 */
 		if (previewmode) {
-			if(SurveyBuild._readonly!=true){
-				c += '<div class="operation-btn" style="margin: 20px auto;">';
-				c += '<a href="#" id="app_preButtom">';
-				c += '<div class="btn-pre">'+ MsgSet["PRE"]+ '&nbsp;&nbsp;';
-				c += '<span class="operation-btn-icon">';
-				c += '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/btn-save.png" />';
-				c += '</span>';
-				c += '</div>';
-				c += '</a>';
-				c += '</div>';
-			} else {
-				c += '<div class="operation-btn" style="margin: 20px auto;">';
-				//c += '<a href="#" id="app_preButtom">';
-				c += '<div class="btn-pre">'+ MsgSet["PRE"]+ '&nbsp;&nbsp;';
-				c += '<span class="operation-btn-icon">';
-				c += '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/btn-save.png" />';
-				c += '</span>';
-				c += '</div>';
-				//c += '</a>';
-				c += '</div>';
+			
+			if(SurveyBuild.accessType == "M"){
+				if(SurveyBuild._readonly!=true){
+			         c += '<div class="btn1">';
+		        	 c += 	'<li>'+MsgSet["PRE"]+'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/btn-save.png"></li>';
+		        	 c += '</div>'
+		         } else {
+		        	 c += '<div class="btn1">';
+		        	 c += 	'<li>'+MsgSet["PRE"]+'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/btn-save.png"></li>';
+		        	 c += '</div>'
+				}
+			}else{
+				if(SurveyBuild._readonly!=true){
+					c += '<div class="operation-btn" style="margin: 20px auto;">';
+					c += '<a href="#" id="app_preButtom">';
+					c += '<div class="btn-pre">'+ MsgSet["PRE"]+ '&nbsp;&nbsp;';
+					c += '<span class="operation-btn-icon">';
+					c += '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/btn-save.png" />';
+					c += '</span>';
+					c += '</div>';
+					c += '</a>';
+					c += '</div>';
+				} else {
+					c += '<div class="operation-btn" style="margin: 20px auto;">';
+					//c += '<a href="#" id="app_preButtom">';
+					c += '<div class="btn-pre">'+ MsgSet["PRE"]+ '&nbsp;&nbsp;';
+					c += '<span class="operation-btn-icon">';
+					c += '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/btn-save.png" />';
+					c += '</span>';
+					c += '</div>';
+					//c += '</a>';
+					c += '</div>';
+				}
 			}
+			
 		} else {
 			c += '<span class="edu_item_label" style="width:150px;">'+MsgSet["PRE"]+'：</span><button class="btn btn-small"><i class="icon-upload-alt"></i>'+MsgSet["PRE"]+'</button>';
 		}

@@ -33,121 +33,254 @@ SurveyBuild.extend("University", "baseComponent", {
 		
         if (previewmode) {
         	
-            if(SurveyBuild._readonly){
-                //只读模式
+        	if(SurveyBuild.accessType == "M"){
+        		 if(SurveyBuild._readonly){
+                     //只读模式
 
-                /*c += '<div class="main_inner_content_info_autoheight cLH">';
-                c += '  <div class="main_inner_connent_info_left">';
-                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '  </div>';
-                c += '  <div class="main_inner_content_info_right" >';
-                c += '      <span style="' + (children[0]["value"] ? "line-height:25px;" : "") + '">' + children[0]["value"] + (children[0]["value"] ? "<br>" : "") + children[1]["value"] + '</span>';
-                c += '  </div>';
-                c += '</div>' */
-                	
-                	
-                c += '<div class="input-list">';
-                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-                c += '  <div class="input-list-text left"><span style="line-height:24px">' + children[0]["value"] + '<br>' + children[1]["value"] + '</span></div>';
-                c += '	<div class="input-list-suffix left"></div>';
-                c += '	<div class="clear"></div>';
-                c += '</div>';	
-                	
-            }else{
-                //填写模式
-                SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
-                
-                
-              //modity by caoy 增加对于默认值的处理
-        		var defaulCountry = data.defaultval;
-        		//console.log("111"+defaulCountry);
-        		
-        		if (SurveyBuild.appInsId == "0"  && defaulCountry != undefined  && defaulCountry.length > 0) {
-        			params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","search-text":"' +defaulCountry + '"}}';
-					$.ajax({
-                        type: "POST",
-                        dataType: "JSON",
-                        data:{
-                            tzParams:params
-                        },
-                        async:false,
-                        url:SurveyBuild.tzGeneralURL,
-                        success: function(f) {
-                        	var data = [];
-							if(f.state.errcode == "0"){
-								data = f.comContent;
-							}
-							if(data.length) {
-								//遍历data，添加到自动完成区
-								$.each(data, function(index,term) {
-									//console.dir(term);
-									if (term.descr == defaulCountry || defaulCountry.indexOf("%BIND") > 0) {
-										children[0]["value"] = term.descr;
-										children[0]["ccode"] = term.country;
+                     /*c += '<div class="main_inner_content_info_autoheight cLH">';
+                     c += '  <div class="main_inner_connent_info_left">';
+                     c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
+                     c += '  </div>';
+                     c += '  <div class="main_inner_content_info_right" >';
+                     c += '      <span style="' + (children[0]["value"] ? "line-height:25px;" : "") + '">' + children[0]["value"] + (children[0]["value"] ? "<br>" : "") + children[1]["value"] + '</span>';
+                     c += '  </div>';
+                     c += '</div>' */
+                     	
+                   /*  	
+                     c += '<div class="input-list">';
+                     c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                     c += '  <div class="input-list-text left"><span style="line-height:24px">' + children[0]["value"] + '<br>' + children[1]["value"] + '</span></div>';
+                     c += '	<div class="input-list-suffix left"></div>';
+                     c += '	<div class="clear"></div>';
+                     c += '</div>';	
+                     */
+                     
+                    c += '<div class="item">';
+     				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+     				c += '	  <div class="text-box">';
+
+     				c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + children[0]["value"]  + '"></a>';
+     				c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + children[1]["value"]  + '"></a>';
+     				c += '    </div>';
+     				c += '</div>';
+     				
+                     
+                     	
+                 }else{
+                     //填写模式
+                     SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
+                     
+                     
+                   //modity by caoy 增加对于默认值的处理
+             		var defaulCountry = data.defaultval;
+             		//console.log("111"+defaulCountry);
+             		
+             		if (SurveyBuild.appInsId == "0"  && defaulCountry != undefined  && defaulCountry.length > 0) {
+             			params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","search-text":"' +defaulCountry + '"}}';
+     					$.ajax({
+                             type: "POST",
+                             dataType: "JSON",
+                             data:{
+                                 tzParams:params
+                             },
+                             async:false,
+                             url:SurveyBuild.tzGeneralURL,
+                             success: function(f) {
+                             	var data = [];
+     							if(f.state.errcode == "0"){
+     								data = f.comContent;
+     							}
+     							if(data.length) {
+     								//遍历data，添加到自动完成区
+     								$.each(data, function(index,term) {
+     									//console.dir(term);
+     									if (term.descr == defaulCountry || defaulCountry.indexOf("%BIND") > 0) {
+     										children[0]["value"] = term.descr;
+     										children[0]["ccode"] = term.country;
+     									}
+     								});
+     							}
+                             }
+                         });
+             		}
+             		
+             		
+             		if (children[0]["ccode"] =="") {
+             			params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","search-text":"' +children[0]["value"] + '"}}';
+     					$.ajax({
+                             type: "POST",
+                             dataType: "JSON",
+                             data:{
+                                 tzParams:params
+                             },
+                             async:false,
+                             url:SurveyBuild.tzGeneralURL,
+                             success: function(f) {
+                             	var data = [];
+     							if(f.state.errcode == "0"){
+     								data = f.comContent;
+     							}
+     							if(data.length) {
+     								//遍历data，添加到自动完成区
+     								$.each(data, function(index,term) {
+     									//console.dir(term);
+     									if (term.descr == children[0]["value"]) {
+     										children[0]["ccode"] = term.country;
+     									}
+     								});
+     							}
+                             }
+                         });
+             		}
+
+                     /*c += '<div class="main_inner_content_info_autoheight">';
+                     c += '	<div class="main_inner_connent_info_left">';
+                     c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
+                     c += '	</div>';
+                     c += '	<div class="main_inner_content_info_right">';
+                     c += '		<input type="text" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="input_63px" name="' + data["itemId"] + children[0]["itemId"] + '">';
+                     c += '		<input type="text" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="input_180px" name="' + data["itemId"] + children[1]["itemId"] + '">';
+                     c += '		<div style="margin-top:-40px;margin-left:256px">';
+                     c += '			<div id="' + data["itemId"] + data.children[0]["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%;" class="onCorrect">';
+                     c += '              <div class="onCorrect">&nbsp;</div>';
+                     c += '			</div>';
+                     c += '		</div>';
+                     c += '	</div>';
+                     c += '</div>'; */
+                     
+                     c += '<div class="input-list">';
+                     c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                     c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
+                     c += '    	<input type="text" class="inpu-list-text-enter" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
+                     c += '	</div>';
+                     c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
+                     c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+                     c += '	</div>';
+                     c += '	<div class="input-list-suffix left"><div id="' + data["itemId"]  + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+                     c += '	<div class="clear"></div>';
+                     c += '</div>';
+
+                 }
+			}else{
+				 if(SurveyBuild._readonly){
+		                //只读模式
+
+		                /*c += '<div class="main_inner_content_info_autoheight cLH">';
+		                c += '  <div class="main_inner_connent_info_left">';
+		                c += '      <span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
+		                c += '  </div>';
+		                c += '  <div class="main_inner_content_info_right" >';
+		                c += '      <span style="' + (children[0]["value"] ? "line-height:25px;" : "") + '">' + children[0]["value"] + (children[0]["value"] ? "<br>" : "") + children[1]["value"] + '</span>';
+		                c += '  </div>';
+		                c += '</div>' */
+		                	
+		                	
+		                c += '<div class="input-list">';
+		                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+		                c += '  <div class="input-list-text left"><span style="line-height:24px">' + children[0]["value"] + '<br>' + children[1]["value"] + '</span></div>';
+		                c += '	<div class="input-list-suffix left"></div>';
+		                c += '	<div class="clear"></div>';
+		                c += '</div>';	
+		                	
+		            }else{
+		                //填写模式
+		                SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
+		                
+		                
+		              //modity by caoy 增加对于默认值的处理
+		        		var defaulCountry = data.defaultval;
+		        		//console.log("111"+defaulCountry);
+		        		
+		        		if (SurveyBuild.appInsId == "0"  && defaulCountry != undefined  && defaulCountry.length > 0) {
+		        			params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","search-text":"' +defaulCountry + '"}}';
+							$.ajax({
+		                        type: "POST",
+		                        dataType: "JSON",
+		                        data:{
+		                            tzParams:params
+		                        },
+		                        async:false,
+		                        url:SurveyBuild.tzGeneralURL,
+		                        success: function(f) {
+		                        	var data = [];
+									if(f.state.errcode == "0"){
+										data = f.comContent;
 									}
-								});
-							}
-                        }
-                    });
-        		}
-        		
-        		
-        		if (children[0]["ccode"] =="") {
-        			params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","search-text":"' +children[0]["value"] + '"}}';
-					$.ajax({
-                        type: "POST",
-                        dataType: "JSON",
-                        data:{
-                            tzParams:params
-                        },
-                        async:false,
-                        url:SurveyBuild.tzGeneralURL,
-                        success: function(f) {
-                        	var data = [];
-							if(f.state.errcode == "0"){
-								data = f.comContent;
-							}
-							if(data.length) {
-								//遍历data，添加到自动完成区
-								$.each(data, function(index,term) {
-									//console.dir(term);
-									if (term.descr == children[0]["value"]) {
-										children[0]["ccode"] = term.country;
+									if(data.length) {
+										//遍历data，添加到自动完成区
+										$.each(data, function(index,term) {
+											//console.dir(term);
+											if (term.descr == defaulCountry || defaulCountry.indexOf("%BIND") > 0) {
+												children[0]["value"] = term.descr;
+												children[0]["ccode"] = term.country;
+											}
+										});
 									}
-								});
-							}
-                        }
-                    });
-        		}
+		                        }
+		                    });
+		        		}
+		        		
+		        		
+		        		if (children[0]["ccode"] =="") {
+		        			params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","search-text":"' +children[0]["value"] + '"}}';
+							$.ajax({
+		                        type: "POST",
+		                        dataType: "JSON",
+		                        data:{
+		                            tzParams:params
+		                        },
+		                        async:false,
+		                        url:SurveyBuild.tzGeneralURL,
+		                        success: function(f) {
+		                        	var data = [];
+									if(f.state.errcode == "0"){
+										data = f.comContent;
+									}
+									if(data.length) {
+										//遍历data，添加到自动完成区
+										$.each(data, function(index,term) {
+											//console.dir(term);
+											if (term.descr == children[0]["value"]) {
+												children[0]["ccode"] = term.country;
+											}
+										});
+									}
+		                        }
+		                    });
+		        		}
 
-                /*c += '<div class="main_inner_content_info_autoheight">';
-                c += '	<div class="main_inner_connent_info_left">';
-                c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                c += '	</div>';
-                c += '	<div class="main_inner_content_info_right">';
-                c += '		<input type="text" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="input_63px" name="' + data["itemId"] + children[0]["itemId"] + '">';
-                c += '		<input type="text" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="input_180px" name="' + data["itemId"] + children[1]["itemId"] + '">';
-                c += '		<div style="margin-top:-40px;margin-left:256px">';
-                c += '			<div id="' + data["itemId"] + data.children[0]["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%;" class="onCorrect">';
-                c += '              <div class="onCorrect">&nbsp;</div>';
-                c += '			</div>';
-                c += '		</div>';
-                c += '	</div>';
-                c += '</div>'; */
-                
-                c += '<div class="input-list">';
-                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-                c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
-                c += '    	<input type="text" class="inpu-list-text-enter" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
-                c += '	</div>';
-                c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
-                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
-                c += '	</div>';
-                c += '	<div class="input-list-suffix left"><div id="' + data["itemId"]  + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
-                c += '	<div class="clear"></div>';
-                c += '</div>';
+		                /*c += '<div class="main_inner_content_info_autoheight">';
+		                c += '	<div class="main_inner_connent_info_left">';
+		                c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
+		                c += '	</div>';
+		                c += '	<div class="main_inner_content_info_right">';
+		                c += '		<input type="text" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="input_63px" name="' + data["itemId"] + children[0]["itemId"] + '">';
+		                c += '		<input type="text" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="input_180px" name="' + data["itemId"] + children[1]["itemId"] + '">';
+		                c += '		<div style="margin-top:-40px;margin-left:256px">';
+		                c += '			<div id="' + data["itemId"] + data.children[0]["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%;" class="onCorrect">';
+		                c += '              <div class="onCorrect">&nbsp;</div>';
+		                c += '			</div>';
+		                c += '		</div>';
+		                c += '	</div>';
+		                c += '</div>'; */
+		                
+		                c += '<div class="input-list">';
+		                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+		                c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
+		                c += '    	<input type="text" class="inpu-list-text-enter" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
+		                c += '	</div>';
+		                c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
+		                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+		                c += '	</div>';
+		                c += '	<div class="input-list-suffix left"><div id="' + data["itemId"]  + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+		                c += '	<div class="clear"></div>';
+		                c += '</div>';
 
-            }
+		            }
+			}
+        	
+        	
+           
         } else {
             c += '<div class="question-answer">';
             c += '  <b style="min-width: 80px" class="read-select">国家</b>';
