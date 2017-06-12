@@ -374,25 +374,25 @@ public class LeaguerBmgDcExcelClass {
 		
 								}else{
 									//根据classid去获取对应的appclass类，并获取类的返回值
-									if("TZ_MBA_DC_ALL".equals(excelTpl) || "TZ_MBA_DC_BMB".equals(excelTpl)){
-										String strGetClsInfo = "SELECT TZ_APPCLS_NAME,TZ_APPCLS_PATH,TZ_APPCLS_METHOD FROM PS_TZ_APPCLS_TBL WHERE TZ_APPCLS_ID = ?";
-										Map<String, Object> mapClsInfo = jdbcTemplate.queryForMap(strGetClsInfo,new Object[] {  strAppclsId });
-										if(mapClsInfo != null){
-											try{
-												String strAppClsName = "",strAppClsPath = "",strAppClsMethod = "";
-												strAppClsName = (String)mapClsInfo.get("TZ_APPCLS_NAME");
-												strAppClsPath = (String)mapClsInfo.get("TZ_APPCLS_PATH");
-												strAppClsMethod = (String)mapClsInfo.get("TZ_APPCLS_METHOD");
-												Object myMethod = Class.forName(strAppClsPath + "." + strAppClsName).newInstance();  
-										        //获得这个类中名叫say的参数为Integer的方法  
-										        Method method = myMethod.getClass().getMethod(strAppClsMethod, String.class,String.class, String.class);  
-										        //调用这个方法，12是参数，String与之类似  
-										        strAppFormFieldValues = (String) method.invoke(myMethod, appInsId,arrOprID[i],appFormModalID);
-											}catch (Exception e) {
-												e.printStackTrace();
-											} 
-										}
+									
+									String strGetClsInfo = "SELECT TZ_APPCLS_NAME,TZ_APPCLS_PATH,TZ_APPCLS_METHOD FROM PS_TZ_APPCLS_TBL WHERE TZ_APPCLS_ID = ?";
+									Map<String, Object> mapClsInfo = jdbcTemplate.queryForMap(strGetClsInfo,new Object[] {  strAppclsId });
+									if(mapClsInfo != null){
+										try{
+											String strAppClsName = "",strAppClsPath = "",strAppClsMethod = "";
+											strAppClsName = (String)mapClsInfo.get("TZ_APPCLS_NAME");
+											strAppClsPath = (String)mapClsInfo.get("TZ_APPCLS_PATH");
+											strAppClsMethod = (String)mapClsInfo.get("TZ_APPCLS_METHOD");
+											Object myMethod = Class.forName(strAppClsPath + "." + strAppClsName).newInstance();  
+									        //获得这个类中名叫say的参数为Integer的方法  
+									        Method method = myMethod.getClass().getMethod(strAppClsMethod, String.class,String.class, String.class);  
+									        //调用这个方法，12是参数，String与之类似  
+									        strAppFormFieldValues = (String) method.invoke(myMethod, appInsId,arrOprID[i],appFormModalID);
+										}catch (Exception e) {
+											e.printStackTrace();
+										} 
 									}
+									
 								}
 								// arr_data.add(strAppFormFieldValues);
 								colum = colum + 1;
