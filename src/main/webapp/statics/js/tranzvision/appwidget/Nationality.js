@@ -49,7 +49,7 @@ SurveyBuild.extend("Nationality", "baseComponent", {
     				c += '	  <div class="text-box">';
 //    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
 //    				c += '	 	<a href="pop_county.html"><input type="text" class="text1"  name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
-    				c += '		<a>						  <input type="text" id="m' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择院校国家" /></a>';
+    				c += '		<a>						  <input type="text" id="m' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择国家" value="' + data.value + '" ccode=""></a>';
     				
     				c += '    </div>';
     				c += '</div>';
@@ -128,16 +128,17 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 			var $selectBtn = $("#m" + data.itemId + "_Btn");
 			var siteId=$("#siteId").val();
 			
-//			var $inputBoxTEST=$("#TEST");
+
 //			$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country"),$("#TZ_SCH_CNAME"),$("#TZ_LEN_PROID")],function(i,el){
 			$.each([$inputBox, $selectBtn],function(i, el) {
 				el.focus(function(){
 		        document.activeElement.blur();
 		       })
 		     });
-/*			$.each([$inputBoxTEST],function(i, el) {
+			/*var $inputBoxTEST=$("#TEST");
+			$.each([$inputBoxTEST],function(i, el) {
 				el.click(function(e) { 
-					console.log("click");
+//					console.log("click");
 					console.log($("#m" + data.itemId).val());
 					
 		       })
