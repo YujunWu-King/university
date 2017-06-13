@@ -175,7 +175,7 @@ function tz_ks_bmb_menu(ks_id){
 		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + iframe_tmp); 
 
 		var bmb_url = "";
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+ks_id+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
 		bmb_url = scoreUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		var bmbArea = "";
@@ -507,8 +507,8 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 							document.getElementById("ks_dfq_ms_id").innerHTML = dfq_gr_cjx_arr_tmp[1];
 						}else if(dfq_gr_cjx_arr_tmp[0] == "ks_dfq_ms_name"){
 							document.getElementById("ks_dfq_ms_name").innerHTML = dfq_gr_cjx_arr_tmp[1];
-						}else if(dfq_gr_cjx_arr_tmp[0] == "sx_ksbq"){
-							document.getElementById("sx_ksbq").innerHTML = dfq_gr_cjx_arr_tmp[1];
+						}else if(dfq_gr_cjx_arr_tmp[0] == "ps_sx_ksbq"){
+							document.getElementById("ps_sx_ksbq").innerHTML = dfq_gr_cjx_arr_tmp[1];
 						}else if(dfq_gr_cjx_arr_tmp[0] == "ps_clpscj_ck"){
 							document.getElementById("ps_clpscj_ck").innerHTML = dfq_gr_cjx_arr_tmp[1];
 						}else if(dfq_gr_cjx_arr_tmp[0] == "ks_new_w_bmb"){
@@ -558,7 +558,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 							document.getElementById("ks_dfq_ms_id").innerHTML = interviewApplyId;
 							document.getElementById("ks_dfq_ms_name").innerHTML = name;
 							if(examineeTag!=""&&examineeTag!=null){
-								document.getElementById("ks_sx_ksbq").innerHTML = examineeTag;
+								document.getElementById("ps_sx_ksbq").innerHTML = examineeTag;
 								document.getElementById("div_sx_ksbq").style.display="block";
 							} else {
 								document.getElementById("div_sx_ksbq").style.display="none";
@@ -594,16 +594,16 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 			 					cjx_lis +=  "<div data-role='fieldcontain' class='ui-field-contain ui-body ui-br'> ";
 			 					
 			 					//根据层次缩进
-			 					var paddingLeft = v.itemLevel*40;
-			 					cjx_lis += "<td><label for='"+  v.itemId +"' style='width:200px;padding-left:'"+ paddingLeft +"px;' class='ui-input-text ui-slider' id='"+ v.itemId +"-label'>" + v.itemName + "</label></td>";
+			 					var paddingLeft = v.itemLevel*15;
+			 					cjx_lis += "<td style='vertical-align:middle;'><label for='"+  v.itemId +"' style='width:200px;padding-left:"+ paddingLeft +"px;' class='' id='"+ v.itemId +"-label'>" + v.itemName + "</label></td>";
 								
 			 					//根据是否只读展现不同的形式
 								if (v.itemType =="A") {
 									//数字成绩汇总项
-									cjx_lis += 	"<td><input type='text'style='width: 100px; height: 20px; background:#FFFF99' readonly='true'  class='ui-input-text ui-body-c ui-corner-all ui-shadow-inset ui-slider-input' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemValue  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "' /></td>";
+									cjx_lis += 	"<td><div style='width:55px;'><input type='text' style='width: 55px; height: 20px; background:#ddd' readonly='true' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemValue  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "' /></div></td>";
 								}else if (v.itemType =="B"){
 									//数字成绩录入项
-									cjx_lis += 	"<td width='410px'><input type='number' onchange='tz_parent_id_tmp(this);' style='width: 100px; height: 20px;' class='ui-input-text ui-body-c ui-corner-all ui-shadow-inset ui-slider-input' data-highlight='true' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemValue  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "' /></td>";
+									cjx_lis += 	"<td width='410px'><input type='range' onchange='tz_parent_id_tmp(this);' style='width: 55px; height: 20px;' data-highlight='true' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemValue  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "' /></td>";
 								}else if (v.itemType =="C"){
 									//评语
 									//解决页面中换行出现反斜杠n 的情况
@@ -624,7 +624,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 									newstr = newstr.replace("\\n","\n");
 									newstr = newstr.replace("\\n","\n");
 	
-	 								cjx_lis += 	"<td><textarea  style='width: 500px; margin: 8px 0px; height: 66px; ' rows='10' class='ui-input-text ui-body-c ui-corner-all ui-shadow-inset' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemComment  +  "' min='" + v.itemCommentLowerLimit  +  "' max='" + v.itemCommentUpperLimit  +  "'>"+newstr+"</textarea></td>";
+	 								cjx_lis += 	"<td><textarea  style='width: 450px; margin: 8px 0px; height: 66px;margin-right:15px;' rows='10' class='ui-input-text ui-body-c ui-corner-all ui-shadow-inset' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemComment  +  "' min='" + v.itemCommentLowerLimit  +  "' max='" + v.itemCommentUpperLimit  +  "'>"+newstr+"</textarea></td>";
 								} else if (v.itemType=="D") {
 									//下拉框
 									cjx_lis += "<td width='410px'><select class='ui-input-text ui-body-c ui-corner-all ui-shadow-inset ui-slider-input' name='" +  v.itemId + "' id='" +  v.itemId + "'>";
@@ -644,21 +644,21 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 								//在节点为叶子节点时，评议类和数据类区别提示
 								if(v.itemIsLeaf =="Y"){
 									if(v.itemType =="B" || v.itemType =="D"){
-										cjx_lis += "<td>(" + v.itemLowerLimit + "-" + v.itemUpperLimit + ")</td>";
-										cjx_lis += "<td width='30px'></td>";
-										cjx_lis += "<td><a  href='#w_bz_"+v.itemId+"'  data-rel='popup' class='ui-link'>标准</a><div  data-role='popup'  id='w_bz_"+v.itemId+"'  class='ui-content' style='max-width:1000px, max-height:1500px' data-theme='c' data-overlay-theme='a'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemDfsm+"</p></div></td>";
-										cjx_lis += "<td width='30px'></td>";
-										cjx_lis += "<td><a  href='#w_sm_"+v.itemId+"'  data-rel='popup' class='ui-link'>说明</a><div   data-role='popup'   id='w_sm_"+v.itemId+"' class='ui-content' style='max-width:1000px, max-height:1500px' data-theme='c' data-overlay-theme='a'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemCkwt+"</p></div></td>";
-										cjx_lis += "<td width='30px'></td>";
-										cjx_lis += "<td><a  href='#w_ms_"+v.itemId+"'  data-rel='popup' class='ui-link'>面试方法</a><div  data-role='popup'  id='w_ms_"+v.itemId+"'  class='ui-content' style='max-width:1000px, max-height:1500px' data-theme='c' data-overlay-theme='a'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemMsff+"</p></div></td>";
+										cjx_lis += "<td style='vertical-align:middle;'>(" + v.itemLowerLimit + "-" + v.itemUpperLimit + ")</td>";
+										cjx_lis += "<td width='15px'></td>";
+										cjx_lis += "<td style='vertical-align:middle;'><a  href='#w_bz_"+v.itemId+"'  data-rel='popup' class='ui-link'>标准</a><div  data-role='popup'  id='w_bz_"+v.itemId+"'  class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemDfsm+"</p></div></td>";
+										cjx_lis += "<td width='15px'></td>";
+										cjx_lis += "<td style='vertical-align:middle;'><a  href='#w_sm_"+v.itemId+"'  data-rel='popup' class='ui-link'>说明</a><div   data-role='popup'   id='w_sm_"+v.itemId+"' class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemCkwt+"</p></div></td>";
+										cjx_lis += "<td width='15px'></td>";
+										cjx_lis += "<td style='vertical-align:middle;'><a  href='#w_ms_"+v.itemId+"'  data-rel='popup' class='ui-link'>面试方法</a><div  data-role='popup'  id='w_ms_"+v.itemId+"'  class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemMsff+"</p></div></td>";
 									
 									} else if(v.itemType="C") {
-										cjx_lis += "<td>(" + v.itemCommentLowerLimit + "-" + v.itemCommentUpperLimit + ")</td>";
-										cjx_lis += "<td width='30px'></td>";
+										cjx_lis += "<td style='vertical-align:middle;'>(" + v.itemCommentLowerLimit + "-" + v.itemCommentUpperLimit + ")</td>";
+										cjx_lis += "<td width='15px'></td>";
 										cjx_lis += "<td></td>";
-										cjx_lis += "<td width='30px'></td>";
-										cjx_lis += "<td><a href='#c_sm_"+v.itemId+"' data-rel='popup' class='ui-link'>说明</a><div  data-role='popup'  id='c_sm_"+v.itemId+"' class='ui-content' style='max-width:1000px, max-height:1500px' data-theme='c' data-overlay-theme='a'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemCkwt+"</p></div></td>";
-										cjx_lis += "<td width='30px'></td>";
+										cjx_lis += "<td width='15px'></td>";
+										cjx_lis += "<td style='vertical-align:middle;'><a href='#c_sm_"+v.itemId+"' data-rel='popup' class='ui-link'>说明</a><div  data-role='popup'  id='c_sm_"+v.itemId+"' class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemCkwt+"</p></div></td>";
+										cjx_lis += "<td width='15px'></td>";
 										cjx_lis += "<td></td>";
 									}
 								} else {
@@ -674,7 +674,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 							
 							$("#ks_dfq_cjx").append(cjx_lis).trigger("create"); 
 							
-							$('input[type="number"]').slider();
+							$('input[type="range"]').slider();
 							
 							dfq_arr.push(bmb_cache_id); 
 	
