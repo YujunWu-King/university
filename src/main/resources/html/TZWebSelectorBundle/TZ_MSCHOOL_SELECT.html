@@ -51,6 +51,7 @@ var tzGeneralURL = "%bind(:1)";
 					'dataType':'json', //返回数据类型
 					'type':'POST', //请求类型
 					'success':function(f){
+						console.log(f);
 						var data = [];
 						if(f.state.errcode == "0"){
 							data = f.comContent;
