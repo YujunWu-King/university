@@ -9,7 +9,7 @@ function show1(){
 
 //报名表显示
 function show2(){
-    var SHOW_KSH_BMBID = AppInsId;
+    var SHOW_KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
 	
     if (SHOW_KSH_BMBID ==""){
 		$("#div1").attr({style:"display:none"});
@@ -30,7 +30,7 @@ function show2(){
 function show3(){
     var TZ_CLASS_ID = ClassId;
 	var TZ_APPLY_PC_ID = BatchId;
-    var KSH_BMBID = AppInsId;
+    var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
 
 	if (KSH_BMBID ==""){
 			alert("请先选择考生！");
@@ -238,8 +238,6 @@ function tz_ks_bmb(bmbId){
     //申请批次编号
     var TZ_APPLY_PC_ID = BatchId;
 
-	AppInsId = bmbId;
-
     //当前考生报名表iframe编号
     iframe_tmp_id = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmbId;
 
@@ -396,7 +394,7 @@ function ks_look(){
 function ks_pingsheng(){
 	var TZ_CLASS_ID = ClassId;
 	var TZ_APPLY_PC_ID = BatchId;
-    var KSH_BMBID = AppInsId;
+    var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
 	if (KSH_BMBID == ""){
 		alert("请选择考生！");
 	}else{
@@ -415,7 +413,7 @@ function ks_pingsheng(){
 	  			var result = comContent.result;
 	  			var resultMsg = comContent.resultMsg;
 	  			
-	  			if(result=="0") {
+	  			if(result=="0" || result=="2") {
 	  				//记录此考生可以显示打分区
 			        document.getElementById("ks_show_dfq").value = "Y";
 	  				
@@ -861,7 +859,7 @@ function ks_save(){
 	}else {
 		var TZ_CLASS_ID = ClassId;
 		var TZ_APPLY_PC_ID = BatchId;
-        var KSH_BMBID = AppInsId;
+        var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
         var cjx_ids_tmp = document.getElementById("tz_cjx_ids").value;
 
       	//参数准备
@@ -1069,7 +1067,7 @@ function TZ_GetLength (str) {
 
 //处理cache开始
 function tz_save_cache(){
-	var KSH_BMBID = AppInsId;
+	var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
 
 	//把原先的删除
 	var del_i = 9999;
