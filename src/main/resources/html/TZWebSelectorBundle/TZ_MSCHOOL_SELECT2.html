@@ -21,13 +21,19 @@ var tzGeneralURL = "%bind(:1)";
 			for(i=0;i<menu.length;i++){
 		   		menu[i].className=i==n?"now2":""; 
 			} */
-			var countryCode=$("#TZ_SCH_COUNTRY",window.parent.document).val();
+			var clickId = $("#ParamCon").val();
+// 			console.log(clickId);
+// 			var countryCode=$("#TZ_SCH_COUNTRY",window.parent.document).val();
+
+			clickId=clickId.replace(/sch/, "cou");
+			console.log(clickId);
+			var countryCode=$("#"+clickId,window.parent.document).val();
 // 			console.log("countryCode===="+countryCode);
-			var $CountryCode = $("#TZ_SCH_CNAME_Country",window.parent.document).attr("ccode");
+			var $CountryCode = $("#"+clickId,window.parent.document).attr("ccode");
 			if($CountryCode==""){
 				$CountryCode="CHN";
 			}
-			var title = $("#TZ_SCH_CNAME_Country",window.parent.document).val();
+			var title = $("#"+clickId,window.parent.document).val();
 // 			console.log("title===="+title);
 			if($CountryCode==undefined||$CountryCode==null){
 // 				$CountryCode = ""; 
@@ -105,9 +111,9 @@ var tzGeneralURL = "%bind(:1)";
 				var clickId = $("#ParamCon").val();
 				$("#" + clickId).val(otherSchool);
 				$("#" + clickId).html(otherSchool);
-				$("#" + clickId).css("color","#333");
+// 				$("#" + clickId).css("color","#333");
 				$("#TZ_SCH_CNAME_1").html(otherSchool);
-				$("#TZ_SCH_CNAME_1").css("color","#333");
+// 				$("#TZ_SCH_CNAME_1").css("color","#333");
 				/* //关闭窗口
 				closePop(); */
 				//返回窗口
@@ -134,10 +140,10 @@ var tzGeneralURL = "%bind(:1)";
 			
 			
 			$("#TZ_SCH_CNAME").val(school);
-			$("#TZ_SCH_CNAME").css("color","#333");
+// 			$("#TZ_SCH_CNAME").css("color","#333");
 			console.log(school);
 			$("#" + clickId).html(school);
-			$("#" + clickId).css("color","#333");
+// 			$("#" + clickId).css("color","#333");
 			/* //关闭窗口
 			closePop(); */
 			//返回
@@ -188,7 +194,7 @@ var tzGeneralURL = "%bind(:1)";
 
 	   <div class="bg1">
 	     <!-- 头部 -->
-	     <div class="topbar">
+	     <div class="topbar_prov">
 	   	    院校选择 <a  href="javascript:void(0)" class="return_r" onclick="returnResi()"><i></i></a>
 	   	 </div>
 	   
@@ -198,7 +204,7 @@ var tzGeneralURL = "%bind(:1)";
 </div>
 <div class="pop_search">
 	<input type="text" name="search-text" id="search-text"
-		style="width: 88%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
+		style="width: 88%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;float:left;">
 	<a href="javascript:void(0)" id="search" onclick="findData()"><i></i></a>
 </div>
 <div class="provice_show" id="provice_show" style="display:none;" ><ul class="chose_list" >

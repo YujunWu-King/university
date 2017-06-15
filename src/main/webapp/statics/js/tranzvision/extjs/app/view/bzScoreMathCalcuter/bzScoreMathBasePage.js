@@ -17,7 +17,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
     autoScroll:false,
     ignoreChangesFlag: true,//让框架程序不要提示用户保存的属性设置
     actType:'add',
-    id:'bzScoreMathCalcuter_bzscoreBapage',
+    reference:'bzScoreMathCalcuter_bzscoreBapage',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
     title:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.ScoreMath","标准成绩计算器"),
     frame:true,
@@ -136,9 +136,12 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
                              	text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.judgescore","当前评委下考生成绩排名") ,
                                 dataIndex: 'judgescore',
                                 width: 170,
+                                hidden:true,
                                 editor: {
                                    allowBlank: false
-                                }
+                                },
+                           
+                             
                              },
                               {
                               text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.handle","操作") ,
