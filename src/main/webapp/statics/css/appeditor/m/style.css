@@ -29,10 +29,7 @@ a,a:hover{text-decoration: none;display: block;}
 }
 .re_his{display: block;height:2rem;width:12%;position:absolute;background:url(../../../images/appeditor/m/return.png)no-repeat center center;background-size:30%;left: 0;top:0;}
 .topbar{position:fixed;top:0;width:100%;max-width:750px;height:2rem;background:#fff;border-bottom:1px solid #ddd;color:#8f5dbf;font-size:0.64rem;line-height:2rem;text-align:center;z-index:150;}
-<<<<<<< HEAD
 .topbar i{display: block;height:2rem;width:12%;position:absolute;background:url(../../../images/appeditor/m/home.png)no-repeat center center;background-size:50%;left: 0;top:0;}
-=======
-.topbar i{display: block;height:2rem;width:12%;position:absolute;background:url(../images/home.png)no-repeat center center;background-size:50%;left: 0;top:0;}
 .topbar2 i{display: block;height:2rem;width:12%;position:absolute;background:url(/university/statics/images/appeditor/m/return.png)no-repeat center center;background-size:30%;left: 0;top:0;}
 .school_pop{display:block;width:100%;height:auto;margin:3% auto;background-color:#fff;border-radius:0.3rem;}
 .pop_search{width:94%;margin:2% auto;overflow:hidden;}
@@ -47,7 +44,6 @@ a,a:hover{text-decoration: none;display: block;}
 
 
 
->>>>>>> c9551249f7d319eb81cfa085e31c2840b5ab4313
 .drop{z-index:1000;display: block;height:2rem;width:2rem;background-color:#fff;position:fixed;top:0;right:0;border-left:1px solid #ddd;}
 .top-nav em{display: block;height:2rem;width:100%;background:url(../../../images/appeditor/m/toggle.png)no-repeat center center;background-size:45%;}
 .se_tit{color:#8f5dbf;font-size:0.64rem;border-left:2px solid #8f5dbf;width:94%;margin:2.6rem auto 0.6rem;line-height:0.6rem;padding-left:5px;}
