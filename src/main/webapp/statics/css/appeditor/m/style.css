@@ -56,7 +56,7 @@ a,a:hover{text-decoration: none;display: block;}
 .btn_right{vertical-align:middle;width:47%;float:right;font-size:0.56rem;margin-right:2%;background-color:#8f5dbf;padding:8px 0;text-align:center;color:#fff;border-radius:5px;}
 .btn img{display:inline-block;vertical-align:middle;max-width:10%;height: auto;width: 100%;}
 /*index2*/
-.item{width:94%;height:auto;margin:5px auto 10px;}
+.item{width:100%;height:auto;margin:5px auto 10px;}
 .item p{color: #333;font-size: 0.66rem;margin-bottom:10px;}
 .item span{color:#8f5dbf;font-size: 0.6rem;}
 /*.photo{display:inline-block;}*/
@@ -211,7 +211,7 @@ form{background-color:#fff;}
 .slide_ul li{padding:10px 0;width:33%;border-right:1px solid #dedede;;border-bottom:1px solid #dedede;float:left;text-align:center;color:#666;font-size:0.6rem;}
 .slide_ul li:nth-child(3){border-right:none;}
 .slide_ul li:nth-child(6){border-right:none;}
-all_style{width:94%;margin:0 auto;}
+.all_style{width:94%;margin:0 auto;}
 .others{width:60%!important;border:1px solid #ddd!important;border-radius:5px;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;margin-left:5px;}
 .chose_list{width:100%;margin:2% auto;font-size:0.54rem;color:#666;overflow:hidden;}
 .chose_list li{float:left;padding:2% 5%;}
