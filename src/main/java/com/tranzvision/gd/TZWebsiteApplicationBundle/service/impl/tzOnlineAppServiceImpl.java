@@ -1138,7 +1138,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							strAppFormReadOnly, showSubmitBtnOnly, strTplType, strAppInsVersion, strIsEdit,
 							strProcessing, strAppInsState, strSubmitConfirmMsg, strAfterSubmitUrl, strSiteId,
 							strAppOrgId, strLoading, strProcessing, strPrev, strSave, strSubmit, strNext, BMBTJMsg,
-							strMenuId, strBatchId, classProjectID, strTabs, strTabsAll, strUserInfoSet, strMsgSet,
+							strMenuId, strBatchId, classProjectID, strTabs, strTabsAll,strAppInsVersion, strUserInfoSet, strMsgSet,
 							strComRegInfo, strTplData, strInsData);
 				} else {
 					str_appform_main_html = tzGdObject.getHTMLTextForDollar(

@@ -48,8 +48,8 @@
 	
 	
 	<script type="text/javascript">
-		MsgSet = %bind(:32);
-		UserInfoSet = %bind(:31);
+		MsgSet = %bind(:33);
+		UserInfoSet = %bind(:32);
 		SurveyBuild.tzGeneralURL = "%bind(:2)"; //统一接口
 		SurveyBuild.accessType = "M";	
 		//SurveyBuild.refLetterId = "%bind(:6)"; //推荐信编号
@@ -62,11 +62,11 @@
 		var currentPageId = "";
 		var appReadOnly = "%bind(:8)";
 		var showSubmitBtnOnly = "%bind(:9)";//最后页面只显示提交按钮
-		var data = %bind(:34); // 模板的data
-		var dataApp = %bind(:35); //用户保存的data
+		var data = %bind(:35); // 模板的data
+		var dataApp = %bind(:36); //用户保存的data
 		var strTplType = "%bind(:17)"; //模版类型
 		
-		SurveyBuild.appInsVersion = "%bind(:18)"; //当前报名表版本实例
+		SurveyBuild.appInsVersion = "%bind(:31)"; //当前报名表版本实例
 		var isEdit = "%bind(:12)";		// 是否管理员查看
 		if (appReadOnly == "Y") {
 			SurveyBuild._readonly = true;
@@ -75,7 +75,7 @@
 		}
 	
 		var _process = "%bind(:13)…";
-		var componentData = %bind(:33); //组件列表,报名表数据
+		var componentData = %bind(:34); //组件列表,报名表数据
 		if (componentData) {
 			SurveyBuild["_componentConfig"] = componentData;
 			$.each(componentData,
@@ -96,15 +96,10 @@
 					var pagelen = $(".swiper-wrapper li").length;
 					console.log("pagelen:"+pagelen);
 					
-					//$(".page" + pageno).show();
-					//$(".page" + pageno).removeClass("dis_none");
 					$(".page" + pageno).show();
 					
-					//var pagelen = $(".regmain-menu ul li").length;
 					for(var i =1;i<= pagelen ;i++){
 						if(i!=pageno) {
-							//s$(".page"+i).hide();
-							//$(".page" + i).addClass("dis_none");
 							$(".page"+i).hide();
 						}
 					}
@@ -193,11 +188,9 @@
 			/*页签切换  modity by caoy*/
 			function tabChange(op) {
 				//页签跳过顶级层
-				var pageno = $(this).index();
-				console.log(pageno);
-				var pagelen = $(".swiper-wrapper li").length;
-				console.log(pagelen);
+				var pageno = $("#" + currentPageId).index();
 
+				console.log(pageno);
 				
 				if (op == "next") {
 					pageno = pageno + 1;
@@ -205,91 +198,22 @@
 				if (op == "prev") {
 					pageno = pageno - 1;
 				}
-
-				$("#page" + pageno).removeClass("dis_none");
-
-				for(var i =1;i<= pagelen ;i++){
-					i != pageno && 	$("#page"+i).addClass("dis_none");
-				}
-										
-				if (op == "next") {
-					currentPageId = $("#" + currentPageId).next().attr("id");
-				}
-				if (op == "prev") {							
-					currentPageId = $("#" + currentPageId).prev().attr("id");
-				}
-								
-				
-				if(pagelen==0){
-					$("#app_save").show();
-					$("#app_submit").show();
-					$("#app_state").show();
-					$("#app_prev").hide();
-					$("#app_next").hide();
-				}else{
-					if (pageno == pagelen) {
-						if (pageno == 1) {
-							$("#app_save").show();
-							$("#app_submit").show();
-							$("#app_state").show();
-							$("#app_prev").hide();
-							$("#app_next").hide();
-						} else {
-							
-							$("#app_save").show();
-							$("#app_submit").show();
-							$("#app_state").show();
-							$("#app_prev").show();
-							$("#app_next").hide();
-							if(showSubmitBtnOnly == "Y"){
-								$("#app_save").hide();
-								$("#app_prev").hide();
-								$("#app_next").hide();
-							}
-						}
-					} else {
-						if (pageno == 1) {
-							$("#app_save").show();
-							$("#app_submit").hide();
-							$("#app_state").hide();
-							$("#app_prev").hide();
-							$("#app_next").show();
-						} else {
-							$("#app_save").show();
-							$("#app_submit").hide();
-							$("#app_state").hide();
-							$("#app_prev").show();
-							$("#app_next").show();
-						}
+	
+				$.each($(".swiper-wrapper li"),function(i,el){
+					var index = $(this).attr('index');
+					if (pageno == index) {
+						$(this).click();
 					}
-				}
-				if (appReadOnly == "Y") {
-					$("#app_save").hide();
-					$("#app_submit").hide();
-					$("#app_state").hide();
-				}
-				if("%bind(:14)" == "U" && strTplType == "BMB"){
-					
-					$("#app_submit").attr("readOnly","readOnly");
-					$("#app_submit").attr("disabled","disabled");
-					
-					if(pageno== pagelen){
-						$("#app_submit").show();
-						$("#app_state").show();
-					}else{
-						$("#app_submit").hide();
-						$("#app_state").hide();
-					}
-				}else{
-					$("#app_state").hide();
-				}	
+				});
 			}
 			
 			function setPageComplete(object){
 				$.each(object,
 					function(i, pageTab) {
 						if (pageTab.completeState == "Y") {
-							$("#" + pageTab.pageId).append("<i class=\"complete\"></i>");
+							if ($("#" + pageTab.pageId).find(".complete").size() ==0) {
+								$("#" + pageTab.pageId).append("<i class=\"complete\"></i>");
+							}
 						} else {
 							$("#" + pageTab.pageId+" .complete").remove();
 						}
@@ -373,7 +297,7 @@
 
 					
 					var _a = getData();
-					var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"CONFIRMSUBMIT","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+					var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"CONFIRMSUBMIT","TZ_REF_LETTER_ID":"","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:4)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 					$.ajax({
 						type: "POST",
 						url: SurveyBuild.tzGeneralURL,
@@ -435,7 +359,7 @@
 				
 				var isPwd="N";
 				
-				var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+				var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:12)","TZ_REF_LETTER_ID":"","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:4)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 				$.ajax({
 					type: "POST",
 					url: SurveyBuild.tzGeneralURL,
@@ -452,7 +376,9 @@
 							/*设置样式*/
 							/*设置页面完成状态*/
 							if (f.comContent.code == "0") { 
-								$("#" + currentPageId).append("<i class=\"complete\"></i>");
+								if ($("#" + currentPageId).find(".complete").size() ==0) {
+									$("#" + currentPageId).append("<i class=\"complete\"></i>");
+								}
 							} else {
 								$("#" + currentPageId+" .complete").remove();
 							}
@@ -496,7 +422,7 @@
 					
 					var isPwd="N";
 					
-					var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+					var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:12)","TZ_REF_LETTER_ID":"","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:4)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 					$.ajax({
 						type: "POST",
 						url: SurveyBuild.tzGeneralURL,
@@ -511,7 +437,9 @@
 								SurveyBuild.classId = classId;
 								
 								if (f.comContent.code == "0") { 
-									$("#" + currentPageId).append("<i class=\"complete\"></i>");
+									if ($("#" + currentPageId).find(".complete").size() ==0) {
+										$("#" + currentPageId).append("<i class=\"complete\"></i>");
+									}
 								} else {
 									$("#" + currentPageId+" .complete").remove();
 								}
@@ -554,7 +482,7 @@
 					var batchId = $("#BatchId").val();
 					var isPwd="N";
 
-					var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+					var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:12)","TZ_REF_LETTER_ID":"","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:4)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 					$.ajax({
 						type: "POST",
 						url: SurveyBuild.tzGeneralURL,
@@ -569,7 +497,9 @@
 								SurveyBuild.classId = classId;
 								
 								if (f.comContent.code == "0") { 
-									$("#" + currentPageId).append("<i class=\"complete\"></i>");
+									if ($("#" + currentPageId).find(".complete").size() ==0) {
+										$("#" + currentPageId).append("<i class=\"complete\"></i>");
+									}
 								} else {
 									$("#" + currentPageId+" .complete").remove();
 								}
@@ -598,7 +528,7 @@
 				var isPwd="N";
 				
 				var _a = getData();
-				var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SUBMIT","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+				var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SUBMIT","isEdit":"%bind(:12)","TZ_REF_LETTER_ID":"","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:4)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 				$.ajax({
 					type: "POST",
 					url: SurveyBuild.tzGeneralURL,
@@ -617,9 +547,9 @@
 								noteing(MsgSet.SUBMIT_SUCCEED);
 								SurveyBuild.saveTjx_fj();
 								/*提交报名表 开始*/
-								var tplType = "%bind(:19)";
+								var tplType = "%bind(:10)";
 								var isadmin = "%bind(:5)";
-								var isEdit = "%bind(:39)";
+								var isEdit = "%bind(:12)";
 								if(isadmin == "Y" && isEdit == "Y") {
 								
 								}else{
@@ -631,7 +561,7 @@
 										$('#app_submit').hide();
 										if (isadmin == "") {
 											/*跳转*/
-											var tzurl = "%bind(:22)";
+											var tzurl = "%bind(:16)";
 											if (tzurl != "") {
 												window.location.href = tzurl;
 											//推荐信不需要刷新
@@ -674,7 +604,7 @@
 				
 				var isPwd="N";
 				
-				var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"PRE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+				var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"PRE","isEdit":"%bind(:12)","TZ_REF_LETTER_ID":"","PASSWORD":"","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:4)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 				$.ajax({
 					type: "POST",
 					url: SurveyBuild.tzGeneralURL,
@@ -689,7 +619,9 @@
 							SurveyBuild.classId = classId;
 							console.log(f.comContent.code);
 							if (f.comContent.code == "0") { 
-								$("#" + currentPageId).append("<i class=\"complete\"></i>");
+								if ($("#" + currentPageId).find(".complete").size() ==0) {
+									$("#" + currentPageId).append("<i class=\"complete\"></i>");
+								}
 								layer.closeAll();
 								noteing(MsgSet.PRE_SUCCEED);
 								//SurveyBuild.saveTjx_fj();
