@@ -1,6 +1,6 @@
 
 Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
-    extend: 'Ext.window.Window',
+    extend: 'Ext.panel.Panel',
     xtype: 'bzscoreDelinfo',
     controller: 'zsbfjgMgController',
     actType:'add',
@@ -16,15 +16,24 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
     ],
     ignoreChangesFlag: true,//让框架程序不要提示用户保存的属性设置
     reference:"bzscoreDelinfo",
-    autoScroll:false,
+    //autoScroll:false,
     actType:'add',
-    id:'bzscoreDelinfo_Delinfo',
+    reference:'bzscoreDelinfo_Delinfo',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
     title:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.ScoreMath","标准成绩计算器"),
     frame:true,
-    height:500,
+    height:600,
     width:1000,
     //初始化传值
+    listeners:{
+        resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
+            var buttonHeight = 42;/*button height plus panel body padding*/
+            var formHeight = 30;  
+            var formPadding = 60;
+            var grid = panel.child('grid[name=afterBzscoreGrid]');
+            grid.setHeight( height- formHeight -buttonHeight-formPadding);
+        }
+    },
     constructor: function (config) {
         this.coulumdt = config.coulumdt;
         this.callParent();
@@ -141,6 +150,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                                    
                                     
         Ext.apply(this,{
+        	
 
                 items: [
                     {
@@ -189,9 +199,10 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                                     type: 'checkboxmodel'
                                 },
                                 plugins: [this.cellEditing],
-                                layout: 'fit',
-                                minHeight: 340,
+                               // layout: 'fit',
+                                minHeight: 300,
                                 frame: true,
+                                name:'afterBzscoreGrid',
                                 reference:'afterBzscoreGrid',
                                 dockedItems: [{
                                     xtype: "toolbar",
@@ -211,11 +222,23 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                                             tooltip: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.checkpersonid", "检查人员识别编号时候合法"),
                                             handler: 'checkPerson'
                                         }, "-",
+                                        
                                         {
-                                            text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo", "查看考生面试信息"),
-                                            tooltip: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo", "查看考生面试信息"),
-                                            handler: 'exportStudentInform'
-                                        }
+                							text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo", "查看考生面试信息"),
+                    						
+                    						menu:[{
+                    							   text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo1", "查看考生面试信息"),
+                    							   tooltip: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo1", "查看考生面试信息"),
+                                                   handler: 'exportStudentInform',
+                                                   iconCls: 'excel',
+                    							},{
+                    								text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.download","查看历史导出并下载"),
+                    								tooltip:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.download","查看历史导出并下载"),
+                    								iconCls:'download',
+                        							handler:'downloadHisExcel'
+                        								                   					
+                    							}]
+                							}
 
                                     ]
                                 }],

@@ -26,8 +26,10 @@ SurveyBuild.extend("PreButtom", "baseComponent", {
 		if (previewmode) {
 			
 			if(SurveyBuild.accessType == "M"){
+//				console.log(SurveyBuild.accessType);
 				if(SurveyBuild._readonly!=true){
-			         c += '<div class="btn1">';
+			         c += '<div class="btn1" id="app_preButtom">';
+			          
 		        	 c += 	'<li>'+MsgSet["PRE"]+'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/btn-save.png"></li>';
 		        	 c += '</div>'
 		         } else {
@@ -64,7 +66,18 @@ SurveyBuild.extend("PreButtom", "baseComponent", {
 		}
 
 		return c;
-	}
+	},
+	 _eventbind: function(data) {
+		 if(SurveyBuild.accessType == "M"){
+			 var $inputBox = $("#app_preButtom");
+			 
+			 $.each([$inputBox],function(i, el) {
+					el.click(function(e) { 
+						console.log("test");
+					});
+				});
+		 	}
+	    }
 
 
 

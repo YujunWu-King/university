@@ -51,7 +51,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 		// JSONArray jsonArray = null;
 		List<Map<String, Object>> jsonArray = null;
 		int num1 = 0;
-		System.out.println(jacksonUtil.containsKey("add"));
+		//System.out.println(jacksonUtil.containsKey("add"));
 		if (jacksonUtil.containsKey("add")) {
 			jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("add");
 			// System.out.println(jacksonUtil.Map2json(jsonArray));
@@ -59,7 +59,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 				actData = new String[jsonArray.size()];
 				for (num1 = 0; num1 < jsonArray.size(); num1++) {
 					actData[num1] = jacksonUtil.Map2json(jsonArray.get(num1));
-					System.out.println(actData[num1]);
+					//System.out.println(actData[num1]);
 				}
 
 			}
@@ -90,7 +90,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 			for (num = 0; num < actData.length; num++) {
 				// 提交信息
 				String strForm = actData[num];
-				System.out.println(strForm);
+				//System.out.println(strForm);
 				jacksonUtil.json2Map(strForm);
 				// 主题 ID;
 
@@ -147,13 +147,13 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 					mapList.put("teamID", rowList[2]);
 
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 					mapList.put("teamID", "");
 				}
 
 				//
 				for (i_two = 1; i_two <= (rowList.length - 3); i_two++) {
-					System.out.println(3 * i_two + ";" + rowList.length);
+					//System.out.println(3 * i_two + ";" + rowList.length);
 
 					if (3 * i_two >= rowList.length) {
 						mapList.put("judge_" + String.valueOf(i_two) + "_id", null);
@@ -234,7 +234,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 					actData = new String[jsonArray.size()];
 					for (num1 = 0; num1 < jsonArray.size(); num1++) {
 						actData[num1] = jacksonUtil.Map2json(jsonArray.get(num1));
-						System.out.println(actData[num1]);
+						//System.out.println(actData[num1]);
 					}
 
 				}
@@ -265,14 +265,14 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 							 judgeGroup = appInsMap.get("TZ_CLPS_GR_NAME") == null ? ""
 									: appInsMap.get("TZ_CLPS_GR_NAME").toString();
 						    	pwList = SqlQuery.queryForList(pwListsql, new Object[] { batchId, classId, appinsId });
-							 	System.out.println("pwList:" + pwList.size());
+							 	//System.out.println("pwList:" + pwList.size());
 								if (pwList.size() > 0) {
 									for (Map<String, Object> Pwmap : pwList) {
 										pwOprid = Pwmap == null || Pwmap.get("TZ_PWEI_OPRID") == null ? ""
 												: Pwmap.get("TZ_PWEI_OPRID").toString();
 										judgeName = Pwmap == null || Pwmap.get("TZ_DLZH_ID") == null ? ""
 												: Pwmap.get("TZ_DLZH_ID").toString();
-										System.out.println("pwOprid:" + pwOprid);
+										//System.out.println("pwOprid:" + pwOprid);
 
 										ysfMap = SqlQuery.queryForMap(
 												TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_YSCORE_NUM"),
@@ -293,7 +293,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 										mapList.put("judgescore", "");
 
 										listdate.add(mapList);
-										System.out.println("listdate:" + listdate.size());
+										//System.out.println("listdate:" + listdate.size());
 
 									}
 
@@ -327,7 +327,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 				}
 
 				strRet = jacksonUtil.List2json(listdate);
-				System.out.println("strRet:" + strRet);
+				//System.out.println("strRet:" + strRet);
 				break;
 
 			}
