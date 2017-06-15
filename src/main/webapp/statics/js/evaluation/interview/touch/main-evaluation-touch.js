@@ -78,9 +78,13 @@ function useJson(varjsonData){
 	//考生列表
 	var collist="";
 	var ksheadObject=jsonObject['ps_data_kslb']['ps_ksh_list_headers'];
-
+	
+	var m = 0;
 	for(var i in ksheadObject) {
-		collist+='<th>'+ksheadObject[i]+'</th>';
+		m++;
+		var colName = '00' + m;
+		colName = 'col' + colName.substr(colName.length - 2);
+		collist+='<th>'+ksheadObject[colName]+'</th>';
     }
 	
 	var ksbodyArray=jsonObject['ps_data_kslb']['ps_ksh_list_contents'];
@@ -88,20 +92,25 @@ function useJson(varjsonData){
 	var detallist="";
 	for (var i=0;i<ksbodyArray.length;i++){		
 		var concollist="";
+		
+		var n = 0;
 		for(var j in ksheadObject) {
-			concollist+="<td class='alt' >"+(ksbodyArray[i][j]||"")+'</td>';
+			n++;
+			var colName = '00' + n;
+			colName = 'col' + colName.substr(colName.length - 2);
+			concollist+="<td class='alt' >"+(ksbodyArray[i][colName]||"")+'</td>';
 	    }
 		
-		var btnps="<td class='alt'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='"+"index?page=evaluation&classId="+ClassId+"&batchId="+BatchId+"&appInsId="+ksbodyArray[i]['ps_ksh_bmbid']+"' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>评审</span></span></a></td>";
-		var btnyc="<td class='alt'><a data-icon='delete' data-mini='true' data-inline='true' data-role='button' id='favrecipelink' href='javascript:void(0);' onclick=toycks('"+ksbodyArray[i]['ps_ksh_xm']+"','"+ksbodyArray[i]['ps_ksh_bmbid']+"'); data-corners='true' data-shadow='true' data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-btn-up-c ui-shadow ui-icon-delete ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>移除</span></span></a></td>";
+		var btnps="<td class='alt' style='padding:0'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='"+"index?page=evaluation&classId="+ClassId+"&batchId="+BatchId+"&appInsId="+ksbodyArray[i]['ps_ksh_bmbid']+"' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>评审</span></span></a></td>";
+		var btnyc="<td class='alt' style='padding:0'><a data-icon='delete' data-mini='true' data-inline='true' data-role='button' id='favrecipelink' href='javascript:void(0);' onclick=toycks('"+ksbodyArray[i]['ps_ksh_xm']+"','"+ksbodyArray[i]['ps_ksh_bmbid']+"'); data-corners='true' data-shadow='true' data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-btn-up-c ui-shadow ui-icon-delete ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>移除</span></span></a></td>";
 
-		detallist+="<tr id='"+ksbodyArray[i]['ps_ksh_id']+"'><td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xh']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_msh_id']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>"+concollist+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_school']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_company']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_zt']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_dt']+"</td>"+btnps+btnyc+"</tr>"
+		detallist+="<tr id='"+ksbodyArray[i]['ps_ksh_id']+"'><td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xh']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_msh_id']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>"+concollist+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_ppm']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_school']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_company']+"</td>"+"<td  class='alt'>"+(ksbodyArray[i]['ps_ksh_zt']||"")+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_dt']+"</td>"+btnps+btnyc+"</tr>"
 
 	}
 
 	
-	 var examerinfolist="<th scope='col'  style='text-align:center;'>"+"面试顺序"+"</th><th scope='col'  style='text-align:center;'>"+"申请号"+"</th><th scope='col'  style='text-align:center;'>"+"姓名"+"</th>";
-  	 var headbutton="<th  scope='col'  style='text-align:center;'>"+"本科院校"+"</th><th scope='col'  style='text-align:center;'>"+"工作单位"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评议状态"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评审时间"+"</th>"+"<th scope='col'  style='text-align:center;'>"+"评审"+"</th><th scope='col'  style='text-align:center;'>"+"移除"+"</th>";
+	 var examerinfolist="<th scope='col'  style='text-align:center;'>"+"面试顺序"+"</th><th scope='col' style='text-align:center;'>"+"申请号"+"</th><th scope='col'  style='text-align:center;'>"+"姓名"+"</th>";
+  	 var headbutton="<th  scope='col'  style='text-align:center;'>"+"排名"+"</th><th  scope='col'  style='text-align:center;'>"+"本科院校"+"</th><th scope='col' style='text-align:center;width:80px'>"+"工作单位"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评议状态"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评审时间"+"</th>"+"<th scope='col'  style='text-align:center;'>"+"评审"+"</th><th scope='col'  style='text-align:center;'>"+"移除"+"</th>";
 	 examerinfolist="<table  id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'><tr>"+examerinfolist+collist+headbutton+'</tr>'+detallist+'</table>';
 
 	 $("#examerinfo").html(examerinfolist);
