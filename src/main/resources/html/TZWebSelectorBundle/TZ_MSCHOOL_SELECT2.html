@@ -22,10 +22,15 @@ var tzGeneralURL = "%bind(:1)";
 		   		menu[i].className=i==n?"now2":""; 
 			} */
 			var countryCode=$("#TZ_SCH_COUNTRY",window.parent.document).val();
+// 			console.log("countryCode===="+countryCode);
 			var $CountryCode = $("#TZ_SCH_CNAME_Country",window.parent.document).attr("ccode");
+			if($CountryCode==""){
+				$CountryCode="CHN";
+			}
 			var title = $("#TZ_SCH_CNAME_Country",window.parent.document).val();
+// 			console.log("title===="+title);
 			if($CountryCode==undefined||$CountryCode==null){
-				$CountryCode = ""; 
+// 				$CountryCode = ""; 
 			}
  			if($CountryCode=="CHN"||countryCode=="CHN"){
 				$("#provice_show").css("display","block");
@@ -79,16 +84,16 @@ var tzGeneralURL = "%bind(:1)";
         
 		function returnResi(){
 			//关闭窗口后一定要清空该项
-			$("#searchSchool").empty();
-			$("#searchSchool").fadeOut("slow");
+			$("#searchCountry").empty();
+			$("#searchCountry").fadeOut("slow");
 	       // $("#new_school").fadeOut("slow");
 	       $("#body").css("position","relative");
-           $("#before").fadeIn("slow");
+           $("#MainDiv").fadeIn("slow");
 		}
 	
 		function closePop(){
 			$(".shade").hide();
-			$("#searchSchool").empty();
+			$("#searchCountry").empty();
 			$("#body").css("position","relative");
 		}
 		
@@ -125,7 +130,7 @@ var tzGeneralURL = "%bind(:1)";
 			//设置返回值
 			var clickId = $("#ParamCon").val();
 			$("#" + clickId).val(school);
-			console.log(clickId);
+ 			console.log(clickId);
 			
 			
 			$("#TZ_SCH_CNAME").val(school);
@@ -149,7 +154,8 @@ var tzGeneralURL = "%bind(:1)";
 			
 		function findData(){			
 			var searchText = $("#search-text").val();
-			tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOLNAME","search-text":"' + searchText + '"}}';
+			console.log(searchText);
+			tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_SCHOOL_STD2","OperateType":"EJSON","comParams":{"OType":"BYSCHOOLNAME","search-text":"' + searchText + '"}}';
 						
 			$.ajax({
 				'url':tzGeneralURL, //服务器的地址

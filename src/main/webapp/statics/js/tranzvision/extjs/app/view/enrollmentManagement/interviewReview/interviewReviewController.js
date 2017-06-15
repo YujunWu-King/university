@@ -1215,6 +1215,12 @@
             }
         }
     },*/
+    //刷新评委数据
+    refreshPw : function(btn){
+    	var judgeGrid = btn.findParentByType("grid");
+    	
+    	judgeGrid.getStore().reload();
+    },
     submitData : function(btn){
     	var judgeGrid = btn.findParentByType("grid");
         var selection = judgeGrid.getSelectionModel().getSelection();

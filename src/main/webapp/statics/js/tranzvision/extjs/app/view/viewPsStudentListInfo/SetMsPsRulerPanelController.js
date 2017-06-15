@@ -393,10 +393,17 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 			}
 		}
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"RESETPWD","comParams":{"export":[' + selksList + ']}}';
-		Ext.tzSubmit(tzParams, function(respDate) {
-
-
-		}, "设置成功!", true, this)
+		
+		Ext.MessageBox.confirm('确认', '您确定要重置所选评委密码吗?', function(btnId) {
+			if (btnId == 'yes') {
+		   Ext.tzSubmit(tzParams,function(responseData){
+            	      	            	
+          
+            },"设置成功",true,this);
+								
+			}
+		}, this);
+		
 		
 	},
 /*	   

@@ -29,7 +29,25 @@ a,a:hover{text-decoration: none;display: block;}
 }
 .re_his{display: block;height:2rem;width:12%;position:absolute;background:url(../../../images/appeditor/m/return.png)no-repeat center center;background-size:30%;left: 0;top:0;}
 .topbar{position:fixed;top:0;width:100%;max-width:750px;height:2rem;background:#fff;border-bottom:1px solid #ddd;color:#8f5dbf;font-size:0.64rem;line-height:2rem;text-align:center;z-index:150;}
+<<<<<<< HEAD
 .topbar i{display: block;height:2rem;width:12%;position:absolute;background:url(../../../images/appeditor/m/home.png)no-repeat center center;background-size:50%;left: 0;top:0;}
+=======
+.topbar i{display: block;height:2rem;width:12%;position:absolute;background:url(../images/home.png)no-repeat center center;background-size:50%;left: 0;top:0;}
+.topbar2 i{display: block;height:2rem;width:12%;position:absolute;background:url(/university/statics/images/appeditor/m/return.png)no-repeat center center;background-size:30%;left: 0;top:0;}
+.school_pop{display:block;width:100%;height:auto;margin:3% auto;background-color:#fff;border-radius:0.3rem;}
+.pop_search{width:94%;margin:2% auto;overflow:hidden;}
+.pop_search i{/*margin-top:2%;*/float:right;display:block;width:1.5rem;height:1.5rem;background:url(/university/statics/images/appeditor/m/pop_se.png)no-repeat center center;background-color:#8f5dbf;border-radius:5px;background-size:70%;}
+.pop_chose{width:94%;margin:4% auto;font-size:0.6rem;color:#333;border-bottom:1px solid #ddd;padding-bottom: 2%;}
+.country_pop{display:block;width:100%;height:auto;background-color:#fff;border-radius:0.3rem;margin:3% auto;}
+.chose_list{width:94%;margin:2% auto;font-size:0.54rem;color:#666;overflow:hidden;}
+.pop_tit{width:94%;height:auto;margin:2% auto;font-size:0.6rem;color:#8f5dbf;overflow:hidden;}
+.topbar_prov{position: relative;width:100%;height:2.2rem;background:url(/university/statics/images/appeditor/m/top_bar.png)no-repeat 0 0;background-size:100%;font-size:0.6rem;line-height:2.2rem;text-align: center;color:#2d5c9f;}
+.topbar_prov i{display: block;height:2.2rem;width:10%;position:absolute;background:url(/university/statics/images/appeditor/m/return.png)no-repeat center center;background-size:30%;left: 0;top:0;}
+
+
+
+
+>>>>>>> c9551249f7d319eb81cfa085e31c2840b5ab4313
 .drop{z-index:1000;display: block;height:2rem;width:2rem;background-color:#fff;position:fixed;top:0;right:0;border-left:1px solid #ddd;}
 .top-nav em{display: block;height:2rem;width:100%;background:url(../../../images/appeditor/m/toggle.png)no-repeat center center;background-size:45%;}
 .se_tit{color:#8f5dbf;font-size:0.64rem;border-left:2px solid #8f5dbf;width:94%;margin:2.6rem auto 0.6rem;line-height:0.6rem;padding-left:5px;}
@@ -204,7 +222,7 @@ all_style{width:94%;margin:0 auto;}
 .chose_list li{float:left;padding:2% 5%;}
 .chose_on{color:#8f5dbf;}
 .pop_others{display:none;}
-.pop_chose{width:100%;margin:4% auto;font-size:0.6rem;color:#333;border-bottom:1px solid #ddd;padding-bottom: 2%;}
+.pop_chose{width:94%;margin:4% auto;font-size:0.6rem;color:#333;border-bottom:1px solid #ddd;padding-bottom: 2%;}
 .country_list{width:100%;margin:2% auto;font-size:0.54rem;color:#666;height:190px;overflow-y:auto;}
 .country_list li{padding:2% 0 2% 5%;}
 .invest{width:40%!important;border:1px solid #ddd!important;border-radius:5px;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;margin-left:5px;margin-right:15px;}

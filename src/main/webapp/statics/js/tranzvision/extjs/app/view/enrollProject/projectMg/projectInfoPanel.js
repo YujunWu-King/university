@@ -210,53 +210,73 @@
 				style:'margin-left:5px',
 				name: 'smtDtName'	
 			}]
-        },/*20170118-ZXW*/{
-			layout: {
-				type: 'column'
-			},
-			items:[{
-				columnWidth:.4,
-				xtype: 'textfield',
-				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.clps_cj_modal","材料评审成绩模型"),
-				name: 'clps_cj_modal',
-				editable: false,
-				triggers: {
-					search: {
-						cls: 'x-form-search-trigger',
-						handler: "choiceScoreModal"
-					}
-				}
-			},{
-				columnWidth:.6,
-				xtype: 'displayfield',
-				hideLabel: true,
-				name: 'clps_cj_modal_desc',
-				style:'margin-left:8px'
-			}]
-		},{
-			layout: {
-				type: 'column'
-			},
-			items:[{
-				columnWidth:.4,
-				xtype: 'textfield',
-				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.msps_cj_modal","面试评审成绩模型"),
-				name: 'msps_cj_modal',
-				editable: false,
-				triggers: {
-					search: {
-						cls: 'x-form-search-trigger',
-						handler: "choiceScoreModal"
-					}
-				}
-			},{
-				columnWidth:.6,
-				xtype: 'displayfield',
-				hideLabel: true,
-				name: 'msps_cj_modal_desc',
-				style:'margin-left:8px'
-			}]
-		},{
+        },/*20170118-ZXW*/
+        {
+        	xtype: 'fieldset',
+        	margin: '0 0 0 -10',
+        	//bodyPadding: 10,
+        	
+        	
+        	items:[{
+        	       
+    			layout: {
+    				type: 'column'
+    			},
+    			bodyPadding: '0,0,0,10',
+    			items:[{
+    				columnWidth:.4,
+    				xtype: 'textfield',
+    				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.clps_cj_modal","材料评审成绩模型"),
+    				name: 'clps_cj_modal',
+    				editable: false,
+    				triggers: {
+    					search: {
+    						cls: 'x-form-search-trigger',
+    						handler: "choiceScoreModal"
+    					}
+    				}
+    			},{
+    				columnWidth:.6,
+    				xtype: 'displayfield',
+    				hideLabel: true,
+    				name: 'clps_cj_modal_desc',
+    				style:'margin-left:8px'
+    			}]
+    		},{
+    			layout: {
+    				type: 'column'
+    			},
+    			
+    			items:[{
+    				columnWidth:.4,
+    				xtype: 'textfield',
+    				fieldLabel: Ext.tzGetResourse("TZ_PRJ_PROMG_COM.TZ_PRJ_PROINFO_STD.msps_cj_modal","面试评审成绩模型"),
+    				name: 'msps_cj_modal',
+    				editable: false,
+    				triggers: {
+    					search: {
+    						cls: 'x-form-search-trigger',
+    						handler: "choiceScoreModal"
+    					}
+    				}
+    			},{
+    				columnWidth:.6,
+    				xtype: 'displayfield',
+    				hideLabel: true,
+    				name: 'msps_cj_modal_desc',
+    				style:'margin-left:8px'
+    			}]
+    		},{
+                xtype:'label',
+                text:'请注意：务必设置和相应项目一致的模型，请勿随意改动!',
+                cls: 'lable_1',
+                style:"margin:0px"
+             }
+    		]
+        	
+        }
+        
+          ,{
 			layout: {
 				type: 'column'
 			},

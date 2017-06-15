@@ -61,12 +61,12 @@
 	function onConfirmAppointment(el, classId, pcId, planId){
 		if($(el).hasClass("btn-enabled")) return;
 
-		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_M_MSYY_STD","OperateType":"tzConfirmAppointment","comParams":{"classId":"'+ classId +'","pcId":"'+ pcId +'","planId":"'+ planId +'"}}';
+		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzConfirmAppointment","comParams":{"classId":"'+ classId +'","pcId":"'+ pcId +'","planId":"'+ planId +'"}}';
 		$.ajax({
 			type:"post",
 			dataType:"json",
-			async:false, 
-			data: {"tzParams" : tzParams },				
+			async:false,
+			data: {"tzParams" : tzParams , "type": "M"},				
 			url:url,
 			success:function(data){
 				var errcode = data.state.errcode;

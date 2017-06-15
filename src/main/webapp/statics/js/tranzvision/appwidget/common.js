@@ -11,7 +11,9 @@ function loading(obj)
 }
 function loaded(obj)
 {
+if (typeof(obj) != "undefined"){
 	obj.find(".loading").remove();
+}
 }
 function noteing(str,t)
 {

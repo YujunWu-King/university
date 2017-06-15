@@ -70,6 +70,9 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzMsyyKsTblMapper psTzMsyyKsTblMapper;
 	
+	@Autowired
+	private TzInterviewAppointmentMobileImpl tzInterviewAppointmentMobileImpl;
+	
 	//用于同步面试预约过程的信号变量，避免同一个服务内部对数据库资源的竞争
 	private static Semaphore appointmentLock = new Semaphore(1,true);
 	//用于控制访问量的信号变量，避免考生面试预约过度竞争对服务器造成过大压力
@@ -335,7 +338,12 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 	}
 	
 	
-	
+	/**
+	 * 面试预约确认
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
 	private String tzConfirmAppointment(String strParams, String[] errorMsg){
 		String strRet = "";
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
@@ -343,6 +351,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		String Type = request.getParameter("type");
 		try {
 			jacksonUtil.json2Map(strParams);
 			
@@ -503,6 +512,13 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 								nullEx.printStackTrace();
 							}
 						}
+					}
+					
+					if("M".equals(Type)){
+						Map<String,Object> appoMap = tzInterviewAppointmentMobileImpl.tzGetAppointmentHtml();
+						//在线预约list
+						String appoHtml = appoMap.get("appoHtml").toString();
+						rtnMap.replace("appoHtml", appoHtml);
 					}
 				}else{
 					errorMsg[0] = "1";

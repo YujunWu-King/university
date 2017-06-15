@@ -1,4 +1,6 @@
 var dropObj;
+var lastMsgId;
+var tzScrollTop;
 
 function getZnxList(siteid,pagenum){	
 	$('#tz-viewport-contents').dropload({
@@ -13,7 +15,7 @@ function getZnxList(siteid,pagenum){
             domClass   : 'dropload-down',  
             domRefresh : '<div class="dropload-refresh">↑上拉加载更多</div>',  
             domLoad    : '<div class="dropload-load"><span class="loading"></span>加载中...</div>',  
-            domNoData  : '<div class="dropload-noData">站内信已全部加载</div>'  
+            domNoData  : '<div class="dropload-noData">数据已全部加载</div>'  
         },  
 		loadUpFn: function(me){
 			pagenum = 1;
@@ -21,13 +23,14 @@ function getZnxList(siteid,pagenum){
 			$.ajax({
 				type: 'GET',
 				data:{
-					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"LOADZNX","comParams":{"siteId": "'+ siteid + '","pagenum": '+pagenum+'}}'
+					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"LOADZNX","comParams":{"siteId": "'+ siteid + '","pagenum": '+pagenum+',"lastMsgId":"'+lastMsgId+'"}}'
 				},
 				url: TzUniversityContextPath+"/dispatcher",
 				dataType: 'json',
 				success: function(result) {	
 					pagenum = pagenum + 1;
 					var resultNum = result.comContent.resultNum;
+					lastMsgId = result.comContent.lastMsgId;
 					if(resultNum > 0){
 						// 插入数据到页面，放到最后面
 	                	$('#tz-znx-list-container').html(result.comContent.result);
@@ -35,8 +38,9 @@ function getZnxList(siteid,pagenum){
 	                	initZnxListStyle();
 	                	
 	                	// 每次数据插入，必须重置
-	                    me.resetload();
+	                	me.resetload();
 	                    me.unlock();
+	                    me.noData(false);
 					}
 				},
 				error: function(xhr, type) {
@@ -50,32 +54,18 @@ function getZnxList(siteid,pagenum){
 			$.ajax({
 				type: 'GET',
 				data:{
-					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"LOADZNX","comParams":{"siteId": "'+ siteid + '","pagenum": '+pagenum+'}}'
+					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"LOADZNX","comParams":{"siteId": "'+ siteid + '","pagenum": '+pagenum+',"lastMsgId":"'+lastMsgId+'"}}'
 				},
 				url: TzUniversityContextPath+"/dispatcher",
 				dataType: 'json',
 				success: function(result) {	
 					pagenum=pagenum+1;
 					var resultNum = result.comContent.resultNum;
+					lastMsgId = result.comContent.lastMsgId;
 					if(resultNum > 0){
 						// 插入数据到页面，放到最后面
 	                	$('#tz-znx-list-container').append(result.comContent.result);
 	                	/*
-	                	$(".slide").click(function(){
-	                        $(this).children('i').toggleClass('slide_up');
-	                        $(this).prev().toggleClass('slide_wz');
-	                        var mailId = ($(this).attr("mailid"));
-	                        var updateRecords = [{"mailId":mailId}];
-	                        $.ajax({
-	            				type: 'GET',
-	            				url: TzUniversityContextPath+"/dispatcher",
-	            				data:{
-	            					"tzParams": '{"ComID":"TZ_M_WEB_INDEX_COM","PageID":"TZ_M_SYSINFO_STD","OperateType":"U","comParams":{"update": '+ JSON.stringify(updateRecords) + '}}'
-	            				}
-	                        });
-	                    });
-	                  
-	                	
 	                	$(".viewZnxContent").click(function(){
 	                        var mailId = ($(this).attr("mailid"));
 	                        var updateRecords = [{"mailId":mailId}];
@@ -94,7 +84,7 @@ function getZnxList(siteid,pagenum){
 						 // 锁定
 						me.lock();
                         // 无数据
-                        me.noData(0);
+                        me.noData(true);
 					}
 					
 					// 每次数据插入，必须重置
@@ -111,10 +101,13 @@ function getZnxList(siteid,pagenum){
 
 
 function showZnxDetails(el,znxMsgId){
+	tzScrollTop = $(document).scrollTop();
 	var contentsEl = $("#tz-details-contents");
 	if(contentsEl.attr("msgId") == znxMsgId){
 		$("#tz-details-container").css("display","block");
 		$(".viewport-adaptive").css("display","none");
+		
+		$(document).scrollTop(0);
 	}else{
 		$.ajax({
 			type: 'GET',
@@ -135,6 +128,8 @@ function showZnxDetails(el,znxMsgId){
 					contentsEl.attr("msgId", znxMsgId);
 					$("#tz-details-container").css("display","block");
 					$(".viewport-adaptive").css("display","none");
+					
+					$(document).scrollTop(0);
 				}else{
 					alert(result.state.errdesc);
 				}
@@ -149,6 +144,11 @@ function showZnxDetails(el,znxMsgId){
 function backToZnxList(el){
 	$("#tz-details-container").css("display","none");
 	$(".viewport-adaptive").css("display","block");
+	if(tzScrollTop>0){
+		$(document).scrollTop(tzScrollTop);
+	}
+	
+	initZnxListStyle();
 }
 
 
@@ -234,12 +234,12 @@ function initZnxListStyle(){
                 lastLeftObj = null; // 清空上一个左滑的对象
             }
             var diffX = e.changedTouches[0].pageX - lastXForMobile;
-            if (diffX < -150) {
+            if (diffX < -50) {
                 $(pressedObj).animate({marginLeft:"-80px"}, 500); // 左滑
                 lastLeftObj && lastLeftObj != pressedObj && 
                     $(lastLeftObj).animate({marginLeft:"0"}, 500); // 已经左滑状态的按钮右滑
                 lastLeftObj = pressedObj; // 记录上一个左滑的对象
-            } else if (diffX > 150) {
+            } else if (diffX > 50) {
               if (pressedObj == lastLeftObj) {
                 $(pressedObj).animate({marginLeft:"0"}, 500); // 右滑
                 lastLeftObj = null; // 清空上一个左滑的对象
@@ -261,12 +261,12 @@ function initZnxListStyle(){
                 lastLeftObj = null; // 清空上一个左滑的对象
             }
             var diffX = e.clientX - lastX;
-            if (diffX < -150) {
+            if (diffX < -50) {
                 $(pressedObj).animate({marginLeft:"-80px"}, 500); // 左滑
                 lastLeftObj && lastLeftObj != pressedObj && 
                     $(lastLeftObj).animate({marginLeft:"0"}, 500); // 已经左滑状态的按钮右滑
                 lastLeftObj = pressedObj; // 记录上一个左滑的对象
-            } else if (diffX > 150) {
+            } else if (diffX > 50) {
               if (pressedObj == lastLeftObj) {
                 $(pressedObj).animate({marginLeft:"0"}, 500); // 右滑
                 lastLeftObj = null; // 清空上一个左滑的对象

@@ -5,7 +5,7 @@ function checkExplorer(language){
 	
 	//ie 
 	if ("ActiveXObject" in window) {
-		if (navigator.userAgent.indexOf("MSIE 6.0") >= 0 || navigator.userAgent.indexOf("MSIE 7.0") >= 0 || navigator.userAgent.indexOf("MSIE 8.0") >= 0 || navigator.userAgent.indexOf("MSIE 9.0") >= 0) {			
+		if (navigator.userAgent.indexOf("MSIE 6.0") >= 0 || navigator.userAgent.indexOf("MSIE 7.0") >= 0 || navigator.userAgent.indexOf("MSIE 8.0") >= 0 || navigator.userAgent.indexOf("MSIE 9.0") >= 0 || navigator.userAgent.indexOf("MSIE 10.0") >= 0) {			
 			
 		}else{
 			if(document.documentMode){

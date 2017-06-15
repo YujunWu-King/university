@@ -93,6 +93,7 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 
 		Map<String, Object> returnMap = new HashMap<>();
 		returnMap.put("resultNum", 0);
+		returnMap.put("lastMsgId", "");
 		returnMap.put("result", "");
 		int resultNum = 0;
 
@@ -101,8 +102,10 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 		jacksonUtil.json2Map(strParams);
 		String siteId = "";
 		int pagenum = 0;
+		String lastMsgId = "";
 		if (jacksonUtil.containsKey("siteId")) {
 			siteId = jacksonUtil.getString("siteId");
+			lastMsgId = jacksonUtil.getString("lastMsgId");
 			try {
 				pagenum = jacksonUtil.getInt("pagenum");
 			} catch (Exception e) {
@@ -121,11 +124,19 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 		String content = "";
 		try {
 			int limit = 10;
-			int startNum = (pagenum - 1) * limit;
+			//int startNum = (pagenum - 1) * limit;
 
-			String znxSql = "SELECT A.TZ_ZNX_MSGID,A.TZ_ZNX_STATUS,DATE_FORMAT(B.ROW_ADDED_DTTM,'%Y-%m-%d %k:%i')TZ_SEND_TIME,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = B.TZ_ZNX_SENDID)TZ_ZNX_SENDNAME,B.TZ_MSG_SUBJECT,A.TZ_MSG_TEXT FROM PS_TZ_ZNX_REC_T A,PS_TZ_ZNX_MSG_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND A.TZ_REC_DELSTATUS <> 'Y' AND A.TZ_ZNX_RECID = ? ORDER BY B.ROW_ADDED_DTTM DESC LIMIT ?,?";
-			List<Map<String, Object>> list = sqlQuery.queryForList(znxSql,
-					new Object[] { m_curOPRID, startNum, limit });
+			//String znxSql = "SELECT A.TZ_ZNX_MSGID,A.TZ_ZNX_STATUS,DATE_FORMAT(B.ROW_ADDED_DTTM,'%Y-%m-%d %k:%i')TZ_SEND_TIME,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = B.TZ_ZNX_SENDID)TZ_ZNX_SENDNAME,B.TZ_MSG_SUBJECT,A.TZ_MSG_TEXT FROM PS_TZ_ZNX_REC_T A,PS_TZ_ZNX_MSG_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND A.TZ_REC_DELSTATUS <> 'Y' AND A.TZ_ZNX_RECID = ? ORDER BY B.ROW_ADDED_DTTM DESC LIMIT ?,?";
+			String znxSql = "SELECT A.TZ_ZNX_MSGID,A.TZ_ZNX_STATUS,DATE_FORMAT(B.ROW_ADDED_DTTM,'%Y-%m-%d %k:%i:%s')TZ_SEND_TIME,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = B.TZ_ZNX_SENDID)TZ_ZNX_SENDNAME,B.TZ_MSG_SUBJECT,A.TZ_MSG_TEXT FROM PS_TZ_ZNX_REC_T A,PS_TZ_ZNX_MSG_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND A.TZ_REC_DELSTATUS <> 'Y' AND A.TZ_ZNX_RECID = ? ORDER BY B.ROW_ADDED_DTTM DESC LIMIT ?";
+			String znxSql2 = "SELECT A.TZ_ZNX_MSGID,A.TZ_ZNX_STATUS,DATE_FORMAT(B.ROW_ADDED_DTTM,'%Y-%m-%d %k:%i:%s')TZ_SEND_TIME,(SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID = B.TZ_ZNX_SENDID)TZ_ZNX_SENDNAME,B.TZ_MSG_SUBJECT,A.TZ_MSG_TEXT FROM PS_TZ_ZNX_REC_T A,PS_TZ_ZNX_MSG_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND A.TZ_REC_DELSTATUS <> 'Y' AND A.TZ_ZNX_RECID = ? and convert(A.TZ_ZNX_MSGID,SIGNED) < convert(?,SIGNED) ORDER BY B.ROW_ADDED_DTTM DESC LIMIT ?";
+			
+			List<Map<String, Object>> list = null;
+			if(pagenum == 1){
+				list = sqlQuery.queryForList(znxSql,new Object[] { m_curOPRID, limit });
+			}else{
+				list = sqlQuery.queryForList(znxSql2,new Object[] { m_curOPRID, lastMsgId, limit });
+			}
+			 
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					// 消息id;
@@ -133,13 +144,13 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 					// 发送时间;
 					String sendTime = String.valueOf(list.get(i).get("TZ_SEND_TIME"));
 					// 发件人姓名
-					String sendName = String.valueOf(list.get(i).get("TZ_ZNX_SENDNAME"));
+					//String sendName = String.valueOf(list.get(i).get("TZ_ZNX_SENDNAME"));
 					// 消息查看状态;
 					String znxStatus = String.valueOf(list.get(i).get("TZ_ZNX_STATUS"));
 					// 消息主题
 					String znxSubject = String.valueOf(list.get(i).get("TZ_MSG_SUBJECT"));
 					// 消息内容
-					String msgText = String.valueOf(list.get(i).get("TZ_MSG_TEXT"));
+					//String msgText = String.valueOf(list.get(i).get("TZ_MSG_TEXT"));
 					String znxStyle = "";
 					// znxStatus:N-未读
 					if ("N".equals(znxStatus)) {
@@ -152,6 +163,10 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 					content = content
 							+ tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_SYSINFO_DIV",
 									viewZnxUrl, znxMsgId, znxStyle, znxSubject, sendTime);
+					
+					if(i == list.size()-1){
+						returnMap.replace("lastMsgId", znxMsgId);
+					}
 					resultNum = resultNum + 1;
 				}
 			}

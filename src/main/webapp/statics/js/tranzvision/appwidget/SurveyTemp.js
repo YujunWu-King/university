@@ -1042,7 +1042,7 @@ var SurveyBuild = {
             minHeight: 482,
             beforeShow: function() {
                 window.editor = KindEditor.create("#" + b, {
-                    items: ["source", "fontname", "fontsize", "|", "forecolor", "hilitecolor", "bold", "italic", "underline", "strikethrough", "removeformat", "|", "justifyleft", "justifycenter", "justifyright", "insertorderedlist", "insertunorderedlist", "|", "emoticons", "image", "multiimage", "flash", "link", "wordpaste"],
+                    items: ["source", "fontname", "fontsize", "|", "forecolor", "hilitecolor", "bold", "italic", "underline", "strikethrough", "removeformat", "|", "justifyleft", "justifycenter", "justifyright", "insertorderedlist", "insertunorderedlist", "|", "emoticons", "image", "link", "wordpaste"],
                     width: "1000px",
                     height: "480px",
                     allowFileManager: true,
