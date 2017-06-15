@@ -118,8 +118,32 @@ a{text-decoration: none;}
 				$("#" + pageid, window.parent.document).val(classid);
 				$("#ClassId", window.parent.document).val(classid);
 				//window.parent.SurveyBuild.classId=classid;
-				
+				$("#BatchId", window.parent.document).val("");
 				$("#"+pageid+"_SPAN", window.parent.document).html($("input[name='%bind(:7)']:checked").parent("label").text());
+				
+				
+				//重置班级和批次的文字说明				
+				var _a = window.parent.SurveyBuild["_items"];
+				$.each(_a,function(i, item) {
+					if (item.hasOwnProperty("children")) {
+						$.each(item["children"],
+								function(y, rec) {
+									$.each(rec,function(instanceid, children) {
+										if (children.classname == "ChooseClass") {
+											children["children"]["bmrBatch"]["wzsm"]="";
+											children["children"]["bmrClass"]["wzsm"]=$("input[name='%bind(:7)']:checked").parent("label").text();
+										}
+									});
+								})						
+					} else {
+						//简单控件
+						if (item.classname == "ChooseClass") {
+							item["children"]["bmrBatch"]["wzsm"]="";
+							item["children"]["bmrClass"]["wzsm"]=$("input[name='%bind(:7)']:checked").parent("label").text();
+						}
+					}
+
+				});
 				
 				//重置批次选择的下拉列表
 				//$("#" + linkId, window.parent.document).empty();
