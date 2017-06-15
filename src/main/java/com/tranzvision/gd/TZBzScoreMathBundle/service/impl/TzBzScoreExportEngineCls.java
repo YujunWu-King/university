@@ -470,7 +470,7 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 						mapData.put("gzdw", companyName);
 						mapData.put("gzzw", position);
 						mapData.put("gzbm", department);
-						mapData.put("gzbm", gzage);
+						mapData.put("gzage", gzage);
 						mapData.put("zhcyqc", selfEmployment);
 					}
 					
