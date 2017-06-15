@@ -343,7 +343,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathController', {
 	//	var classId = panel.classId;
 		//var batchId = panel.batchID;
 		
-		var className = 'KitchenSink.view.viewPsStudentListInfo.export.msexportExcelWindow';
+		var className = 'KitchenSink.view.bzScoreMathCalcuter.export.msexportExcelWindow';
     	
         if(!Ext.ClassManager.isCreated(className)){
             Ext.syncRequire(className);
