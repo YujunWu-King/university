@@ -152,9 +152,10 @@ SurveyBuild.extend("University", "baseComponent", {
                      c += '	  <p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
                      c += '		 <div class="text-box">';
                      c += '    		<input type="hidden" id="TZ_SCH_COUNTRY" name="TZ_SCH_BMB_COUNTRY" value="CHN"> ';
-                     c += '			<input type="text" id="TZ_SCH_CNAME_Country" name="' + data.itemId + '" placeholder="请选择院校国家" value="' + children[0]["value"] + '"  ccode="">';
+//                     c += '			<input type="text" id="TZ_SCH_CNAME_Country" name="' + data.itemId + '" placeholder="请选择院校国家" value="' + children[0]["value"] + '"  ccode="">';
+                     c += '			<input type="text" id="cou_' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择院校国家" value="' + children[0]["value"] + '"  ccode="">';
                      c += '		 </div>';
-                     c += '      <div class="text-box">';
+                     c += '      <div class="text-box" style="margin-top: 3px;">';
                      c += '			<input type="text" id="sch_' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择院校" value="' + children[1]["value"] + '">';
                      c += '		 </div>	';
                      c += '</div>';
@@ -319,8 +320,8 @@ SurveyBuild.extend("University", "baseComponent", {
     	if(SurveyBuild.accessType == "M"){
     		
     		
-//			var $inputBox = $("#cou_" + data.itemId);
-    		var $inputBox = $("#TZ_SCH_CNAME_Country");
+			var $inputBox = $("#cou_" + data.itemId);
+//    		var $inputBox = $("#TZ_SCH_CNAME_Country");
 			var siteId=$("#siteId").val();
 			
 			$.each([$inputBox],function(i, el) {
