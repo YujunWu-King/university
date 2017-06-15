@@ -738,6 +738,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 									: String.valueOf(mapData.get("TZ_HAS_COMPLETE"));
 							if (strPageComplete != null && "Y".equals(strPageComplete)) {
 								// 已经完成的显示对号
+								strComplete = "Y";
 							} else {
 								// 未完成时,不显示对号
 								strComplete = "";
@@ -754,6 +755,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							if (StringUtils.isNotBlank(strComplete)) {
 								strComplete = "<i class=\"complete\"></i>";
 							}
+							//System.out.println("strComplete:" + strComplete);
 
 							strTabs = strTabs
 									+ tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV_PHONE2",
@@ -820,7 +822,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				listData = sqlQuery.queryForList(sql, new Object[] { numAppInsId, strTplId });
 				mapData = null;
 
-				String strComplete = contextUrl + "/statics/images/appeditor/new/check.png"; // 对号
+				String strComplete = ""; // 对号
 				System.out.println("是否多层菜单:" + isMultilayerMenu);
 				for (Object objDataTap : listData) {
 					mapData = (Map<String, Object>) objDataTap;
@@ -829,6 +831,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					strtabType = mapData.get("TZ_TAPSTYLE") == null ? "" : String.valueOf(mapData.get("TZ_TAPSTYLE"));
 					strTZ_FPAGE_BH = mapData.get("TZ_FPAGE_BH") == null ? ""
 							: String.valueOf(mapData.get("TZ_FPAGE_BH"));
+
+					strComplete = contextUrl + "/statics/images/appeditor/new/check.png"; // 对号
 
 					numIndex = numIndex + 1;
 
@@ -893,10 +897,11 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					}
 
 					try {
-						if (StringUtils.isNotBlank(strComplete)) {
+						if (StringUtils.equals("V", strDisplayType) || strDisplayType.equals("")) {
 							strComplete = tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_IMG",
 									strComplete);
 						}
+						//System.out.println("strComplete:" + strComplete);
 						strTabs = strTabs + tzGdObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_TABS_DIV",
 								strDivClass, strXxxTitle, strComplete, strXxxBh, strtabType);
 					} catch (TzSystemException e) {
@@ -1138,8 +1143,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							strAppFormReadOnly, showSubmitBtnOnly, strTplType, strAppInsVersion, strIsEdit,
 							strProcessing, strAppInsState, strSubmitConfirmMsg, strAfterSubmitUrl, strSiteId,
 							strAppOrgId, strLoading, strProcessing, strPrev, strSave, strSubmit, strNext, BMBTJMsg,
-							strMenuId, strBatchId, classProjectID, strTabs, strTabsAll,strAppInsVersion, strUserInfoSet, strMsgSet,
-							strComRegInfo, strTplData, strInsData);
+							strMenuId, strBatchId, classProjectID, strTabs, strTabsAll, strAppInsVersion,
+							strUserInfoSet, strMsgSet, strComRegInfo, strTplData, strInsData);
 				} else {
 					str_appform_main_html = tzGdObject.getHTMLTextForDollar(
 							"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_PAGE_HTML", false, strTzGeneralURL,
