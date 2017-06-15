@@ -47,7 +47,7 @@ function show3(){
 	}
 }
 
-//活动考生列表开始
+//考生列表开始
 function ks_list(){
 
 	var TZ_CLASS_ID = ClassId;
@@ -115,13 +115,13 @@ function ks_list(){
     		}
     		);
 }
-//活动考生列表结束
+//考生列表结束
 
 //非超链接路径显示报名表开始(点击页签)
-function tz_ks_bmb_menu(ks_id){
+function tz_ks_bmb_menu(bmb_id){
 	//每次点击考生的时候，把当前的考生报名表id给赋值 
-	document.getElementById("ks_search_tz_app_ins_id").value = ks_id;
-	document.getElementById("ks_show_tz_app_ins_id").value = ks_id;
+	document.getElementById("ks_search_tz_app_ins_id").value = bmb_id;
+	document.getElementById("ks_show_tz_app_ins_id").value = bmb_id;
 
 	//班级编号
 	var TZ_CLASS_ID = ClassId;
@@ -129,7 +129,7 @@ function tz_ks_bmb_menu(ks_id){
     var TZ_APPLY_PC_ID = BatchId;
 
     //当前考生报名表iframe编号
-    iframe_tmp_id = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + ks_id;
+    iframe_tmp_id = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmb_id;
 
     //已经存在的考生报名表iframe编号串
     var ks_iframe_str_id = $("#ks_iframe_str_id").val();
@@ -155,6 +155,8 @@ function tz_ks_bmb_menu(ks_id){
 		$("#ks_list").attr({class:"ui-btn ui-btn-inline ui-btn-up-c"});
 		$("#ks_bmb").removeAttr("class");
 		$("#ks_bmb").attr({class:"ui-btn ui-btn-inline ui-btn-up-c ui-btn-active"});
+		$("#ks_dfq").removeAttr("class");
+		$("#ks_dfq").attr({class:"ui-btn ui-btn-inline ui-btn-up-c"});
 
 		for (var k=0 ; k< arr.length ; k++){
 			var ifr_tmp_k = arr[k];
@@ -169,13 +171,13 @@ function tz_ks_bmb_menu(ks_id){
 	} else {
 		
 		//iframe 的id 串
-		var iframe_tmp = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + ks_id;
+		var iframe_tmp = "=bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmb_id;
 		var div_tmp = "div_" + iframe_tmp;
 
 		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + iframe_tmp); 
 
 		var bmb_url = "";
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+ks_id+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmb_id+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
 		bmb_url = scoreUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		var bmbArea = "";
@@ -188,8 +190,9 @@ function tz_ks_bmb_menu(ks_id){
 		$("#ks_list").attr({class:"ui-btn ui-btn-inline ui-btn-up-c"});
 		$("#ks_bmb").removeAttr("class");
 		$("#ks_bmb").attr({class:"ui-btn ui-btn-inline ui-btn-up-c ui-btn-active"});
+		$("#ks_dfq").removeAttr("class");
+		$("#ks_dfq").attr({class:"ui-btn ui-btn-inline ui-btn-up-c"});
 
-		show2();
 		
 		/*
 		$.ajax({
@@ -217,7 +220,7 @@ function tz_ks_bmb_menu(ks_id){
 }
 //非超链接路径显示报名表结束(点击页签)
 
-//显示考生的报名表开始
+//考生列表点击面试申请号显示报名表开始
 function tz_ks_bmb(bmbId){
 	document.getElementById("ks_search_msid").value = "";
     document.getElementById("ks_search_name").value = "";
@@ -277,13 +280,13 @@ function tz_ks_bmb(bmbId){
 		}
 	} else {
 		//iframe 的id 串
-		var iframe_tmp = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmbId;
+		var iframe_tmp = "=bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmbId;
 		var div_tmp = "div_" + iframe_tmp;
 		
 		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + iframe_tmp); 
 		
 		var bmb_url = "";
-		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'"}}';
+		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
 		bmb_url = scoreUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		var bmbArea = "";
@@ -325,7 +328,7 @@ function tz_ks_bmb(bmbId){
 		*/
 	}
 }
-//显示考生的报名表结束
+//考生列表点击面试申请号显示报名表开始
 
 //查找考生开始
 function ks_look(){
@@ -546,7 +549,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 		        			var name = comContent.name;
 		        			var interviewApplyId = comContent.interviewApplyId;
 		        			var examineeTag = comContent.examineeTag;
-		        			var materialReviewDesc = comContent.materialReviewDesc;
+		        			var materialReviewDescPad = comContent.materialReviewDescPad;
 		        			
 		        			//报名表链接
 			        		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
@@ -564,10 +567,10 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 								document.getElementById("div_sx_ksbq").style.display="none";
 							}
 
-							document.getElementById("ps_clpscj_ck").innerHTML = materialReviewDesc;
+							document.getElementById("ps_clpscj_ck").innerHTML = materialReviewDescPad;
 							
 							//用于cache数据
-							bmb_cache_id = "ks_search_tz_app_ins_id@@@" + KSH_BMBID + "###ks_new_w_bmb@@@" + bmb_url + "###ks_dfq_ms_id@@@" + interviewApplyId + "###ks_dfq_ms_name@@@" + name + "###sx_ksbq@@@" + examineeTag + "###ps_clpscj_ck@@@" + materialReviewDesc;
+							bmb_cache_id = "ks_search_tz_app_ins_id@@@" + KSH_BMBID + "###ks_new_w_bmb@@@" + bmb_url + "###ks_dfq_ms_id@@@" + interviewApplyId + "###ks_dfq_ms_name@@@" + name + "###ps_sx_ksbq@@@" + examineeTag + "###ps_clpscj_ck@@@" + materialReviewDescPad;
 				        
 							//li 列表项目 
 							var cjx_lis=""; 　　　
@@ -595,7 +598,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 			 					
 			 					//根据层次缩进
 			 					var paddingLeft = v.itemLevel*15;
-			 					cjx_lis += "<td style='vertical-align:middle;'><label for='"+  v.itemId +"' style='width:200px;padding-left:"+ paddingLeft +"px;' class='' id='"+ v.itemId +"-label'>" + v.itemName + "</label></td>";
+			 					cjx_lis += "<td style='vertical-align:middle;'><label for='"+  v.itemId +"' style='width:180px;padding-left:"+ paddingLeft +"px;' class='' id='"+ v.itemId +"-label'>" + v.itemName + "</label></td>";
 								
 			 					//根据是否只读展现不同的形式
 								if (v.itemType =="A") {
@@ -646,18 +649,43 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 									if(v.itemType =="B" || v.itemType =="D"){
 										cjx_lis += "<td style='vertical-align:middle;'>(" + v.itemLowerLimit + "-" + v.itemUpperLimit + ")</td>";
 										cjx_lis += "<td width='15px'></td>";
-										cjx_lis += "<td style='vertical-align:middle;'><a  href='#w_bz_"+v.itemId+"'  data-rel='popup' class='ui-link'>标准</a><div  data-role='popup'  id='w_bz_"+v.itemId+"'  class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemDfsm+"</p></div></td>";
+
+										cjx_lis += "<td style='vertical-align:middle;'>";
+										if(v.itemDfsm!="" && v.itemDfsm!=null) {
+											cjx_lis += "<a href='#w_bz_"+v.itemId+"'  data-rel='popup' class='ui-link'>标准</a><div  data-role='popup'  id='w_bz_"+v.itemId+"'  class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemDfsm+"</p></div>";
+										}
+										cjx_lis += "</td>";
 										cjx_lis += "<td width='15px'></td>";
-										cjx_lis += "<td style='vertical-align:middle;'><a  href='#w_sm_"+v.itemId+"'  data-rel='popup' class='ui-link'>说明</a><div   data-role='popup'   id='w_sm_"+v.itemId+"' class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemCkwt+"</p></div></td>";
+										cjx_lis += "<td style='vertical-align:middle;'>";
+										if(v.itemCkwt!="" && v.itemCkwt!=null) {
+											cjx_lis += "<a  href='#w_sm_"+v.itemId+"'  data-rel='popup' class='ui-link'>说明</a><div   data-role='popup'   id='w_sm_"+v.itemId+"' class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemCkwt+"</p></div>";
+										}
+										cjx_lis += "</td>";
+									    cjx_lis += "<td width='15px'></td>";
+										cjx_lis += "<td style='vertical-align:middle;'>";
+										if(v.itemMsff!="" && v.itemMsff!=null) {
+											cjx_lis += "<a  href='#w_ms_" + v.itemId + "'  data-rel='popup' class='ui-link'>面试方法</a><div  data-role='popup'  id='w_ms_" + v.itemId + "'  class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>" + v.itemMsff + "</p></div>";
+										}
+										cjx_lis += "</td>";
 										cjx_lis += "<td width='15px'></td>";
-										cjx_lis += "<td style='vertical-align:middle;'><a  href='#w_ms_"+v.itemId+"'  data-rel='popup' class='ui-link'>面试方法</a><div  data-role='popup'  id='w_ms_"+v.itemId+"'  class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemMsff+"</p></div></td>";
-									
+										cjx_lis += "<td style='vertical-align:middle;'>";
+										if(v.itemCkzl!="" && v.itemCkzl!=null) {
+											var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=" + TZ_CLASS_ID + "&batchId=" + TZ_APPLY_PC_ID + "&appInsId=" + bmbId + "&model="+ v.scoreModelId + "&cjxId=" + v.itemId;
+											//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
+											var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='552'></iframe>";
+											cjx_lis += "<a  href='#w_ck_" + v.itemId + "'  data-rel='popup' class='ui-link'>参考资料</a><div  data-role='popup'  id='w_ck_" + v.itemId + "'  class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>" + ckzl_content + "</p></div>";
+										}
+										cjx_lis += "</td>";
 									} else if(v.itemType="C") {
 										cjx_lis += "<td style='vertical-align:middle;'>(" + v.itemCommentLowerLimit + "-" + v.itemCommentUpperLimit + ")</td>";
 										cjx_lis += "<td width='15px'></td>";
 										cjx_lis += "<td></td>";
 										cjx_lis += "<td width='15px'></td>";
-										cjx_lis += "<td style='vertical-align:middle;'><a href='#c_sm_"+v.itemId+"' data-rel='popup' class='ui-link'>说明</a><div  data-role='popup'  id='c_sm_"+v.itemId+"' class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemCkwt+"</p></div></td>";
+										cjx_lis += "<td style='vertical-align:middle;'>" ;
+										if(v.itemCkwt!="" && v.itemCkwt!=null) {
+											cjx_lis += "<a href='#c_sm_" + v.itemId + "' data-rel='popup' class='ui-link'>说明</a><div  data-role='popup'  id='c_sm_" + v.itemId + "' class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>" + v.itemCkwt + "</p></div>";
+										}
+										cjx_lis += "</td>";
 										cjx_lis += "<td width='15px'></td>";
 										cjx_lis += "<td></td>";
 									}
@@ -855,7 +883,10 @@ function ks_save(){
 		comParams = '"update":['+saveData+']';
 		
 		var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
-		
+
+		showLoaderThis();
+		$("#ks_save_bt").attr("onclick", "");
+
 		$.ajax({
 	  		type: 'POST',
 	  		dataType: 'json',
@@ -863,12 +894,8 @@ function ks_save(){
 	  		url: scoreUrl,
 	  		data: {"tzParams":tzParams},
 	  		beforeSend : function(xhr){
-				//$.mobile.showPageLoadingMsg();
-				if($('.page-loading').length ==0){
-				var dv =	$('<div/>',{class : 'page-loading'})
-			    $(document.body).append(dv);
-				}
-				$('.page-loading').show();
+				//showLoaderThis();
+				//$("#ks_save_bt").attr('disabled',true);
 			},
 	  		success: function(data) {
 				var comContent = data.comContent;
@@ -883,8 +910,8 @@ function ks_save(){
 				}
 	        },
 			complete : function(){
-				//$.mobile.hidePageLoadingMsg()
-				$('.page-loading').hide();
+				hideLoaderThis();
+				$("#ks_save_bt").attr("onclick", "ks_save();");
 			}
 		});
 		
@@ -1081,4 +1108,23 @@ function ks_esc(){
 }
 //退出结束
 
+
+//显示加载器开始
+function showLoaderThis() {
+	$.mobile.loading('show', {
+		text: '加载中，请稍候...', //加载器中显示的文字
+		textVisible: true, //是否显示文字
+		theme: 'a',        //加载器主题样式
+		textonly: false,   //是否只显示文字
+		html: ""           //要显示的html内容，如图片等
+	});
+}
+//显示加载器结束
+
+
+//隐藏加载器开始
+function hideLoaderThis() {
+	$.mobile.loading('hide');
+}
+//隐藏加载器结束
 

@@ -411,9 +411,11 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			String pyCjxId = getHardCodePoint.getHardCodePointVal("TZ_CLPS_PYCJX_ID");
 			
 			String materialReviewDesc = "";
+			//PAD版使用
+			String materialReviewDescPad = "<table width='100%'><tbody>";
 			
 			String sqlClps = "";
-			String ckcjxNumInfo = "",ckcjxTxtInfo = "";
+			String ckcjxNumInfo = "",ckcjxTxtInfo = "",ckcjxNumInfoPad = "";
 			
 			//数字成绩录入项
 			sqlClps = "SELECT M.TZ_SCORE_ITEM_ID,M.AVG_NUM,N.DESCR";
@@ -442,6 +444,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			
 			if(!"".equals(ckcjxNumInfo)) {
 				materialReviewDesc += "<tr height='25'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>" + ckcjxNumInfo + "</td></tr>";
+				materialReviewDescPad +="<tr><td width='155px;'>材料评审成绩参考：</td><td>" + ckcjxNumInfo + "</td></tr>";
 			}
 			
 			//评语类型
@@ -492,16 +495,20 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				if(!"".equals(ckcjxTxtInfoTmp)) {
 					if(!"".equals(ckcjxNumInfo)) {
 						ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4' style='word-wrap:break-word;word-break:break-all;'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+						ckcjxNumInfoPad += "<tr><td></td><td>" + ckcjxTxtInfoTmp + "</td></tr>";
 					} else {
 						ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+						ckcjxNumInfoPad +="<tr><td width='155px;'>材料评审成绩参考：</td><td>" + ckcjxTxtInfoTmp + "</td></tr>";
 					}
 				}
 
 			}
 			
 			materialReviewDesc += ckcjxTxtInfo;
+			materialReviewDescPad += ckcjxNumInfoPad + "</tbody></table>";
 			
 			mapRet.put("materialReviewDesc", materialReviewDesc);
+			mapRet.put("materialReviewDescPad", materialReviewDescPad);
 
 		
 			/*成绩项*/

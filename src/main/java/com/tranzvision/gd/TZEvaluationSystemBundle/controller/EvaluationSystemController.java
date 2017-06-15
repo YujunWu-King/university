@@ -196,9 +196,20 @@ public class EvaluationSystemController {
 					appTplId = (String)map.get("TZ_PS_APP_MODAL_ID");
 				}
 				
+				/* 当前考生的姓名和面试申请号，卢艳添加，2017-6-15 begin */
+				String  mssqh = "", examineeName = "";
+				Map<String, Object> mapKs = sqlQuery.queryForMap("SELECT B.TZ_REALNAME,B.TZ_MSH_ID FROM PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B WHERE A.OPRID=B.OPRID AND A.TZ_APP_INS_ID=?", new Object[]{appInsId});
+				if(mapKs!=null) {
+					mssqh = (String) mapKs.get("TZ_MSH_ID");
+					examineeName = (String) mapKs.get("TZ_REALNAME");
+				}
+				
+				String ksIframeId = "bmb_iframe_" + classId + "_" + batchId + "_" + appInsId;
+				/* 当前考生的姓名和面试申请号，卢艳添加，2017-6-15 begin */
+				
 				indexHtml = "batch".equals(page)?
 						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl)
-						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId);
+						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId,mssqh,examineeName,ksIframeId);
 			}else{
 				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName,contactUrl);
 			}
