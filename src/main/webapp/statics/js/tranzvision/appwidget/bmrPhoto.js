@@ -369,8 +369,8 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
 
     		
     	}else{
-        var $photoBox = $("#photo" + data.itemId);
-        var up;
+    		var $photoBox = $("#photo" + data.itemId);
+    		var up;
         $photoBox.click(function(e) {
             var photoUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
             var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_UP_PHOTO_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '"}}';
