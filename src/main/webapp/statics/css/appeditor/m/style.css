@@ -24,6 +24,10 @@ a,a:hover{text-decoration: none;display: block;}
   visibility: visible;
   opacity: 1;
 }
+.input-line{
+	border-bottom: dashed 1px #dadbdd;
+	padding-bottom:15px;
+}
 .cd-top.cd-fade-out {
   opacity:1;
 }
