@@ -1253,25 +1253,11 @@ var SurveyBuild = {
 														_children.push(_fc);
 													}
 													if (className == "imagesUpload"){
-								        				c += '<div class="input-list-uploadcon-list">';
-								        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.viewImageSet(this,"' + instanceId + '") file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
-								        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
-														c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-								        				c += '	<div class="clear"></div>';
-								        				c += '</div>';
-													} else {
-							        	   				c += '<div class="input-list-uploadcon-list">';
-							        	   				c += '	<div class="input-list-uploadcon-listl left">';
-							        	   				c += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index = "' + rstObj.index + '">' + rstObj.viewFileName + '</a>';
-							        	   				if(sysfileSuffix == "pdf" && isOnlineShow == "Y"){
-							        	   					c += '<div class="input-list-uploadcon-list-pdf" onclick="SurveyBuild.PDFpreview(this,\'' + instanceId + '\')" file-index = "' + rstObj.index + '">&nbsp;&nbsp;<img src="' + TzUniversityContextPath + '/statics/images/appeditor/preview.png" title="' + MsgSet["PDF_VIEW"] + '"/>&nbsp;</div>';
-							        	   				}
-							        	   				c += '	</div>';
-							        	   				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\"' + instanceId + '\")">' + MsgSet["DEL"] + '</button></div>';*/
-														c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-							        	   				c += '	<div class="clear"></div>';
-							        	   				c += '</div>';
+														c += '<li class="fileLi"><span><a  onclick=SurveyBuild.viewImageSet(this,"' + instanceId + '") file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+									        			
+													} else {c += '<li class="fileLi"><span><a  onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
 													}
+													$("#"+itemId+"_AttList").css("display","block");
 													$("#"+itemId+"_AttList").append(c);
 												}else{
 													/*
@@ -1298,25 +1284,11 @@ var SurveyBuild = {
 													_children[0].accessPath = obj.msg.accessPath;
 													_children[0].viewFileName = rstObj.viewFileName;
 													if (className == "imagesUpload"){
-								        				c += '<div class="input-list-uploadcon-list">';
-								        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.viewImageSet(this,"' + instanceId + '") file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
-								        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
-														c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-								        				c += '	<div class="clear"></div>';
-								        				c += '</div>';
+														c += '<li class="fileLi"><span><a  onclick=SurveyBuild.viewImageSet(this,"' + instanceId + '") file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';													
 													} else {
-							        	   				c += '<div class="input-list-uploadcon-list">';
-							        	   				c += '	<div class="input-list-uploadcon-listl left">';
-							        	   				c += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index = "' + rstObj.index + '">' + rstObj.viewFileName + '</a>';
-							        	   				if(sysfileSuffix == "pdf" && isOnlineShow == "Y"){
-							        	   					c += '<div class="input-list-uploadcon-list-pdf" onclick="SurveyBuild.PDFpreview(this,\'' + instanceId + '\')" file-index = "' + rstObj.index + '">&nbsp;&nbsp;<img src="' + TzUniversityContextPath + '/statics/images/appeditor/preview.png" title="' + MsgSet["PDF_VIEW"] + '"/>&nbsp;</div>';
-							        	   				}
-							        	   				c += '	</div>';
-							        	   				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\"' + instanceId + '\")">' + MsgSet["DEL"] + '</button></div>';*/
-														c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-							        	   				c += '	<div class="clear"></div>';
-							        	   				c += '</div>';
+														c += '<li class="fileLi"><span><a  onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
 													}
+													$("#"+itemId+"_AttList").css("display","block");
 													$("#"+itemId+"_AttList").html(c);
 												}
 												//提示隐藏
@@ -1526,49 +1498,36 @@ var SurveyBuild = {
         var $isDhContainer = $(el).closest(".dhcontainer");
         if ($isDhContainer.length == 0){
             data = SurveyBuild._items[instanceId];
-        } else {
-            var dhIns = $isDhContainer.attr("data-instancid");
+        } else {           
+        	var dhIns = $isDhContainer.attr("data-instancid");
             var index = $(el).closest(".mainright-box").index();
             data = SurveyBuild._items[dhIns].children[index][instanceId];
         }
         var itemId = data.itemId;
         var _children = data.children;
-        //var $del = $(el);
-        //var orderby = $del.prev("a").attr("file-index");
-        //var index = $(el).parent("li").index();
 
         var multiFlag = data.allowMultiAtta;//是否允许多附件上传
 		var Require = data.isRequire;//必填
-        var liNum = $(el).parents(".input-list-uploadcon-list").index();
+        var liNum = $(el).parents(".fileLi").index();
         if (_children.length > 1){
             _children.splice(liNum, 1);
+        	var liNum2=liNum-1;
+        	if(_children.length<1){
+        		$("#"+itemId+"_AttList").css("display","none");
+        		$("#"+itemId+"_AttList" +" li:eq("+ liNum2+")").remove();
+        	}else{
+        		$("#"+itemId+"_AttList" +" li:eq("+ liNum2+")").remove();
+        	}
         } else {
+        	$("#"+itemId+"_AttList").css("display","none");
+        	liNum=liNum-1;
+        	$("#"+itemId+"_AttList" +" li:eq("+ liNum+")").remove();
             _children[0].fileName = "";
             _children[0].sysFileName = "";
             _children[0].orderby = "";
 			_children[0].accessPath = "";
 			_children[0].viewFileName = "";
-			
-			if(Require == "Y"){
-				var $errorTip = $("#"+itemId+"Tip");
-				$errorTip.removeClass().addClass("onError");
-				$errorTip.children("div").removeClass().addClass("onError");	
-				$errorTip.children("div").attr("tips",MsgSet["FILE_UPL_REQUIRE"]);
-			}
         }
-        if(multiFlag == "Y"){
-        	$(el).parents(".input-list-uploadcon-list").remove();
-        }else{
-        	$(el).parents(".input-list-uploadcon-list").remove();
-        }
-//        else {
-//            $("#"+itemId+"_A").text("");
-//            var $delEl = $("#"+itemId+"_A").next(".main_inner_file_del");
-//            $delEl.css("display","none");
-//			
-//			var $pdfReader = $("#"+itemId+"_A").closest("li").children(".main_inner_pdf_reader");
-//			if($pdfReader) $pdfReader.remove();
-//        }
     },
 
     //教育经历扫描件上传

@@ -33,6 +33,25 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
     _getHtml: function(data, previewmode) {
         var c = "",children = data.children;
         if (previewmode) {
+        	if(SurveyBuild.accessType == "M"){
+			 if (SurveyBuild._readonly) {
+					//只读模式
+				 	c += '<div class="item">';
+					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '	<div class="text-box"><input type="text" class="text1" value="' + children[0]["value"] + (children[0]["value"]?"-":"") + children[1]["value"] + '" readonly="" disabled=""></div>';
+					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
+					c += '</div>';
+				} else {
+					//填写模式
+					c += '<div class="item">';
+					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '	<div class="text-box">';
+					c += '		<input type="text" class="text1" id="date' + data.itemId + '" name="' + data.itemId + '" value="' + children[0]["value"] + (children[0]["value"]?"-":"") + children[1]["value"] + '" title="' + data.itemName + '" />';
+					c += '	</div>';
+					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
+					c += '</div>';
+				}
+        	}else{
             if(SurveyBuild._readonly){
                 //只读模式
                 c += '<div class="input-list">';
@@ -68,6 +87,9 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
             	c += '    <div class="clear"></div>';
             	c += '</div>';
             }
+
+    		
+        	}
         } else {
             c += '<div class="question-answer">';
             c += '  <div class="format ">'
@@ -104,6 +126,16 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
         return e;
     },
     _eventbind: function(data) {
+    	if(SurveyBuild.accessType == "M"){
+    		 var calendar = new LCalendar();
+    		    calendar.init({
+    		        'trigger': '#date' + data.itemId, //标签id
+    		        'type': 'ym', //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+    		        'minDate': data.minYear + "-01", //最小日期
+    		        'maxDate':data.maxYear + "-12"
+    		    });
+    	}
+    	
         var $year = $("#" + data["itemId"] + data.children[0]["itemId"]);
         var $month = $("#" + data["itemId"] + data.children[1]["itemId"]);
 
