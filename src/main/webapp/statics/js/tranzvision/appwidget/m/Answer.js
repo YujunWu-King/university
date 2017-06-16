@@ -439,7 +439,7 @@ var SurveyBuild = {
 						this.ArrShift(data.children[i],d);
 					}
                 }
-                _c = $("<div class='dhcontainer page" + data.pageno + " all_style' data-instancid='" + data.instanceId + "'>" + _c + "</div>").find(".main_content_box").prepend(_co).parents('.dhcontainer');
+                _c = $("<div class='dhcontainer page" + data.pageno + " all_style' data-instancid='" + data.instanceId + "'>" + _c + "</div>").find(".index_body").prepend(_co).parents('.dhcontainer');
             } else if (data["fixedContainer"] && data["fixedContainer"] == "Y") {
                 //固定多行控件
                 _c = "<div class='dhcontainer page" + data.pageno + " all_style' data-instancid='" + data.instanceId + "'>" + (_c || "") + "</div>";

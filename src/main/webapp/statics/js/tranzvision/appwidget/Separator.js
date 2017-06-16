@@ -9,7 +9,10 @@ SurveyBuild.extend("Separator", "baseComponent", {
 	_getHtml: function(data, previewmode) {
 		var c = '';
 		if (previewmode) {
-			c = '<div class="input-list input-line"></div>';
+
+				c = '<div class="input-list input-line"></div>';
+
+			
 		} else {
 			c = '<div class="question-title"><hr style="border:1px dotted #9f9f9f;border-bottom:0;border-right:0;border-left:0;width:778px;margin-left:4px;"></div>';
 		}
