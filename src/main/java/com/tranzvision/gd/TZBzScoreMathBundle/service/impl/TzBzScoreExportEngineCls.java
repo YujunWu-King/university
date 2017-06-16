@@ -186,11 +186,10 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 			dataCellKeys.add(new String[] { "bkzy", "报考志愿" });
 			dataCellKeys.add(new String[] { "zpm", "总排名" });
 			dataCellKeys.add(new String[] { "msz", "面试组" });
-			dataCellKeys.add(new String[] { "zlpm", "面内排名组" });
-			dataCellKeys.add(new String[] { "msz", "面试组" });
+			dataCellKeys.add(new String[] { "zlpm", "评委标准分和组内排序" });
 			dataCellKeys.add(new String[] { "bzzf", "标准总分" });
 			dataCellKeys.add(new String[] { "clpsyszf", "材料评审原始总分" });
-			dataCellKeys.add(new String[] { "birthday", "出身日期" });
+			dataCellKeys.add(new String[] { "birthday", "出生日期" });
 			dataCellKeys.add(new String[] { "drxsln", "到入学时年龄" });
 
 			// 成绩项
