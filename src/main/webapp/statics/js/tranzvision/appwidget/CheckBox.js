@@ -10,17 +10,27 @@ SurveyBuild.extend("CheckBox", "baseComponent", {
         var c = "",e = "";
         if (previewmode) {
 			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-			c += '<div class=" input-list input-radiobox">';
-			c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span></div>';
-			c += '    <div class="margart15 input-list-textwrap left">';
-			c += '    	 <ul>';
-			c += '    	 	<li><div class="check-box ' + (data.value == "Y" ? "checkedBox": "") + '"><i><input type="checkbox" name="check-box" ' + (data.value == "Y" ? "checked='checked'": "") + ' instanceId="' + data.instanceId + '" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '"></i></div>' + data.title + '</li>';
-			c += '            <div class="clear"></div>';
-			c += '         </ul>';
-			c += '    </div>';
-			c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
-			c += '    <div class="clear"></div>';
-			c += '</div>';
+			if(SurveyBuild.accessType == "M"){
+				c += '<div class="item" data-instancid="' + data.instanceId + '">';
+				c += '<div class="check-box">';
+				c += '	<ul>';
+				c += '		<li class="check-box ' + (data.value == "Y" ? "checkedBox": "") + '"><input type="checkbox" class="checkbox"  '+ (data.value == "Y" ? "checked='checked'": "") + ' instanceId="' + data.instanceId + '" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '"><label for="' + data.itemId + '">'+data.title+' </label></li>';
+				c += '	</ul>';
+				c += '</div>';
+				c += '</div>';
+			}else{
+				c += '<div class=" input-list input-radiobox">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span></div>';
+				c += '    <div class="margart15 input-list-textwrap left">';
+				c += '    	 <ul>';
+				c += '    	 	<li><div class="check-box ' + (data.value == "Y" ? "checkedBox": "") + '"><i><input type="checkbox" name="check-box" ' + (data.value == "Y" ? "checked='checked'": "") + ' instanceId="' + data.instanceId + '" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '"></i></div>' + data.title + '</li>';
+				c += '            <div class="clear"></div>';
+				c += '         </ul>';
+				c += '    </div>';
+				c += '    <div class="input-list-suffix left"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
+			}
         } else {
             c = '<div class="question-answer"><ul class="format">' + e + '</ul></div>'
             c += '<div class="question-answer">';
@@ -61,7 +71,6 @@ SurveyBuild.extend("CheckBox", "baseComponent", {
 		$.fn.toggleCheckbox = function () {
 			this.prop('checked', !this.prop('checked'));
 		}
-
 		if(!SurveyBuild._readonly){
 			$inputBox.parents(".check-box").on('click', function () {
 			    $(this).find(':checkbox').toggleCheckbox();
@@ -75,8 +84,7 @@ SurveyBuild.extend("CheckBox", "baseComponent", {
 				}
 			});
 		}
-
-        var ReqErrorMsg = "&nbsp;";
+		var ReqErrorMsg = "&nbsp;";
         var allowEmpty = true;
         if (ValidationRules) {
             $.each(data["rules"],function(classname, classObj) {

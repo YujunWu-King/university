@@ -30,56 +30,97 @@ SurveyBuild.extend("Select", "baseComponent", {
 		e = "";
 
 		if (previewmode) {
-			if (SurveyBuild._readonly) {
-				//只读模式
-				 var valDesc = "";
-                e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
-                for (var i in data.option) {
-                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
-                }
-				for (var i in data.option) {
-					if (data.value == data["option"][i]["code"]) {
-						valDesc = data["option"][i]["txt"];
+			if(SurveyBuild.accessType == "M"){
+				if (SurveyBuild._readonly) {
+					//只读模式
+					
+	                e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+	                for (var i in data.option) {
+	                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
+	                }
+		            c += '<div class="item">';
+		            c += '	<p>'+data.title+'<span>'+ (data.isRequire == "Y" ? "*": "") +'</span></p>';
+		            c += '	<div class="text-box">';
+		            c +='		<select name="' + data.itemId + '" class="select1" id="' + data.itemId + '"  title="' + data.itemName + '" disabled>';
+		            c +=			e;
+		            c +='		</select>';
+		            c += '	</div>';
+		            if ($.trim(data.onShowMessage) != "") {
+					c += '	<p style="color:#666;font-size:0.56rem;">' + data.onShowMessage + '</p>';
+					}
+		            c += '</div>';
+				}else{
+					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+
+	                e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+	                for (var i in data.option) {
+	                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
+	                }
+	                c += '<div class="item">';
+		            c += '	<p>'+data.title+'<span>'+ (data.isRequire == "Y" ? "*": "") +'</span></p>';
+		            c += '	<div class="text-box">' ;
+		            c +='		<select name="' + data.itemId + '" class="select1" id="' + data.itemId + '"  title="' + data.itemName + '">';
+		            c +=			e;
+		            c +='		</select>';
+		            c += '	</div>';
+		            if ($.trim(data.onShowMessage) != "") {
+					c += '	<p style="color:#666;font-size:0.56rem;">' + data.onShowMessage + '</p>';
+					}
+		            c += '</div>';
+				}
+			}else{
+				if (SurveyBuild._readonly) {
+					//只读模式
+					 var valDesc = "";
+	                e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+	                for (var i in data.option) {
+	                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
+	                }
+					for (var i in data.option) {
+						if (data.value == data["option"][i]["code"]) {
+							valDesc = data["option"][i]["txt"];
+						}
+					}
+	                /*c += '<select name="' + data.itemId + '" id="' + data.itemId + '" style="width:100%;display:none;" title="' + data.itemName + '">';
+	                c +=  e;
+	                c += '</select>';  */
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '  <div class="input-list-text left">' + valDesc ;
+					c += '  <input id="' + data.itemId + '" type="hidden" name="" value="" readonly="" disabled="">';
+					c += '  </div>';
+					c += '  <div class="input-list-suffix left"></div>';
+					c += '  <div class="clear"></div>';
+					c += '</div>';
+				} else {
+					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+
+	                e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+	                for (var i in data.option) {
+	                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
+	                }
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left input-edu-select">';
+	                c += '          <select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';
+	                c +=                    e;
+	                c += '          </select>';
+					c += '    </div>';
+					c += '    <div class="input-list-suffix left">' + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
+
+					if ($.trim(data.onShowMessage) != "") {
+						c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
+						c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
+						c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
+						c += '	<div class="input-list-suffix-blank left"></div>';
+						c += '	<div class="clear"></div>';
+						c += '</div>';
 					}
 				}
-                /*c += '<select name="' + data.itemId + '" id="' + data.itemId + '" style="width:100%;display:none;" title="' + data.itemName + '">';
-                c +=  e;
-                c += '</select>';  */
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left">' + valDesc ;
-				c += '  <input id="' + data.itemId + '" type="hidden" name="" value="" readonly="" disabled="">';
-				c += '  </div>';
-				c += '  <div class="input-list-suffix left"></div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-			} else {
-				SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-
-                e = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
-                for (var i in data.option) {
-                    e += '<option ' + (data.value == data["option"][i]["code"] ? "selected='selected'": "") + 'value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
-                }
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '    <div class="input-list-text left input-edu-select">';
-                c += '          <select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';
-                c +=                    e;
-                c += '          </select>';
-				c += '    </div>';
-				c += '    <div class="input-list-suffix left">' + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-				c += '    <div class="clear"></div>';
-				c += '</div>';
-
-				if ($.trim(data.onShowMessage) != "") {
-					c += '<div class="input-list-blank" id="' + data.itemId + 'msg">';
-					c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
-					c += '	<div class="input-list-wz left"><span class="blue">' + data.onShowMessage + '</span></div>';
-					c += '	<div class="input-list-suffix-blank left"></div>';
-					c += '	<div class="clear"></div>';
-					c += '</div>';
-				}
 			}
+			
 		} else {
 			for (var i in data.option) {
 				e += '<li id="o' + i + '">' + data["option"][i]["txt"] + '</li>';

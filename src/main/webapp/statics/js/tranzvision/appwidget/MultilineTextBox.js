@@ -31,26 +31,37 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 
 			data.boxSize = (data.boxSize?data.boxSize:"3");
 			data.format = (data.format?data.format:"U");
-			if(data.format == "L"){
-				c += '<div class="input-list-wrap">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '<br><div style="line-height:46px;color:#0070c6" id="' + data.itemId + 'Size"></div><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-				c += '    	<div class="input-list-textinput left"><textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea></div>';
-				c += '    <div class="clear"></div>';
-				c += '</div>';
+			if(SurveyBuild.accessType == "M"){
+				c += '<div class="item">';
+				c += '	<p>'+ data.title +'<span>' + (data.isRequire == "Y" ? "*": "") +' </span></p>';
+				c += '	<div class="text-box" style="height: auto;">';
+				c += ' 		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '"class="textarea1" ' + (data.isReadOnly == "Y" ? 'disabled="true"': '') + '>'+data.value+'</textarea>';
+				c += '	</div>';
+				c += '	<p style="color:#666;font-size:0.56rem;" id="p'+data.itemId+'" ></p>';
+				c += '</div>';	
 			}else{
-				c += '<div class="input-list-wrap">';
-				c += '	<div class="input-list-otherinfo">';
-				c += '		<p><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '&nbsp;&nbsp;<div style="padding-top:5px;color:#0070c6" id="' + data.itemId + 'Size"></div></p>';
-				//c += '		<p class="input-list-otherinfoEN">' + data.wzsm + '</p>';
-				c += '	</div>';
-				c += '	<div class="input-list-othertext">';
-				c += '		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea>';
-				c += '  <div class="input-list-suffix left" style="width: 100%;"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-				c += '	</div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-			}
+				if(data.format == "L"){
+					c += '<div class="input-list-wrap">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '<br><div style="line-height:46px;color:#0070c6" id="' + data.itemId + 'Size"></div><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '    	<div class="input-list-textinput left"><textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
+				}else{
+					c += '<div class="input-list-wrap">';
+					c += '	<div class="input-list-otherinfo">';
+					c += '		<p><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '&nbsp;&nbsp;<div style="padding-top:5px;color:#0070c6" id="' + data.itemId + 'Size"></div></p>';
+					//c += '		<p class="input-list-otherinfoEN">' + data.wzsm + '</p>';
+					c += '	</div>';
+					c += '	<div class="input-list-othertext">';
+					c += '		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '" class="inpu-list-text-otherenter boxSize' + data.boxSize + '">' + data.value + '</textarea>';
+					c += '  <div class="input-list-suffix left" style="width: 100%;"><div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '	</div>';
+					c += '  <div class="clear"></div>';
+					c += '</div>';
+				}
 
+			}
+			
 		} else {
 			c =  '<div class="question-answer">';
 			c += '	<div class="format ' + (data["rows"] ? "rows" + data.rows: "4") + '">';
@@ -245,13 +256,10 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			errorMsg = MsgSet["REQUIRE"];
 		}
 		$inputBox.keyup(function(){
-			//if (data.wzsm =="" || data.wzsm== undefined) {
-			//	data.wzsm="";
-			//}
 			var len = $inputBox.val().length;
 			if (len != 0){
-				//$("#" + data.itemId + "Size").text("已输入"+len+"字");
 				$("#" + data.itemId + "Size").text(MsgSet["INPUTED"]+" "+len+" "+MsgSet["WORD"]);
+				$("#p" + data.itemId).text(MsgSet["INPUTED"]+" "+len+" "+MsgSet["WORD"]);
 			}
 		});
 		

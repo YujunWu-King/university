@@ -37,56 +37,79 @@ SurveyBuild.extend("Radio", "baseComponent", {
 
 		if (previewmode) {
 			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-			
-			for (var i in data.option) {
-				if(SurveyBuild.appInsId == "0"){
-					if(data["option"][i]["code"] == data["value"]){
-						data["option"][i]["checked"] = "Y";
+			if(SurveyBuild.accessType == "M"){
+				for (var i in data.option) {
+					if(SurveyBuild.appInsId == "0"){
+						if(data["option"][i]["code"] == data["value"]){
+							data["option"][i]["checked"] = "Y";
+						}
 					}
+					  e += '<li>';
+					  e += '	<input type="radio" name="' + data.itemId + '" class="radio radio-btn"' +'id="radio-' + data["option"][i]["code"] + '"  value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + '>';
+				      e += '	<label for="radio-' + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
+				      e += '</li>';
 				}
-				e += '<li>';
-				e += '	<div class="radio-btn ' + (data["option"][i]["checked"] == "Y" ? "checkedRadio": "") + '"><i><input type="radio" name="' + data.itemId + '" instanceId="' + i + '" id="o' + data.itemId + data["option"][i]["code"] + '" value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' class="' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '"/></i></div>';
-				e += data["option"][i]["txt"];
-				if (data["option"][i]["other"] == "Y" && data["option"][i]["checked"] == "Y"){
-				    if(SurveyBuild._readonly){
-				        //只读模式
-				        e += '<input type="text" disabled=true class="inputother" value="' + data["option"][i]["othervalue"] + '">';
-				    }else{
-				        //编辑模式
-				        e += '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="inputother" value="' + data["option"][i]["othervalue"] + '">';
-				    }
-				}
-				e += '</li>';
-			}
-			data.format = (data.format?data.format:"S");
-			if(data.format == "H"){
-				c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '		<div class="margart8 input-list-text left Custom-radio">';
-				c += '			<ul id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
-				c += '		</div>';
-				c += '		<div class="input-list-suffix left">';
-				if(!SurveyBuild._readonly){
-					c += '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div>';
-				}
-				c += '		</div>';
-				c += '		<div class="clear"></div>';
-				c += '</div>';
-			}else{
-				c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '	<div class="margart8 input-list-textwrap left">';
-				c += '		<ul id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
-				c += '	</div>';
-				c += '	<div class="input-list-suffix left">';
-				if(!SurveyBuild._readonly){
-					c += '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div>';
+				data.format = (data.format?data.format:"S");
+				c += '<div class="item" data-instancid="' + data.instanceId + '">';
+				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+				if(data.format == "H"){
+				c += '	<ul class="sex" id="' + data.itemId + '">'+e+'</ul>';
+				}else{
+				c += '	<ul class="company" id="' + data.itemId + '">'+e+'</ul>';
 				}
 				c += '</div>';
-				c += '	<div class="clear"></div>';
-				c += '</div>';
-			}
+				}else{
+				for (var i in data.option) {
+					if(SurveyBuild.appInsId == "0"){
+						if(data["option"][i]["code"] == data["value"]){
+							data["option"][i]["checked"] = "Y";
+						}
+					}
+					e += '<li>';
+					e += '	<div class="radio-btn ' + (data["option"][i]["checked"] == "Y" ? "checkedRadio": "") + '"><i><input type="radio" name="' + data.itemId + '" instanceId="' + i + '" id="o' + data.itemId + data["option"][i]["code"] + '" value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' class="' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '"/></i></div>';
+					e += data["option"][i]["txt"];
+					if (data["option"][i]["other"] == "Y" && data["option"][i]["checked"] == "Y"){
+					    if(SurveyBuild._readonly){
+					        //只读模式
+					        e += '<input type="text" disabled=true class="inputother" value="' + data["option"][i]["othervalue"] + '">';
+					    }else{
+					        //编辑模式
+					        e += '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="inputother" value="' + data["option"][i]["othervalue"] + '">';
+					    }
+					}
+					e += '</li>';
+				}
+				data.format = (data.format?data.format:"S");
+				if(data.format == "H"){
+					c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '		<div class="margart8 input-list-text left Custom-radio">';
+					c += '			<ul id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
+					c += '		</div>';
+					c += '		<div class="input-list-suffix left">';
+					if(!SurveyBuild._readonly){
+						c += '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div>';
+					}
+					c += '		</div>';
+					c += '		<div class="clear"></div>';
+					c += '</div>';
+				}else{
+					c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '	<div class="margart8 input-list-textwrap left">';
+					c += '		<ul id="' + data.itemId + '">' + e + '<div class="clear"></div></ul>';
+					c += '	</div>';
+					c += '	<div class="input-list-suffix left">';
+					if(!SurveyBuild._readonly){
+						c += '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div>';
+					}
+					c += '</div>';
+					c += '	<div class="clear"></div>';
+					c += '</div>';
+				}
 
+			}
+			
 		} else {
 			for (var i in data.option) {
 				e += '<li class="read-radio" id="o' + i + '">';
