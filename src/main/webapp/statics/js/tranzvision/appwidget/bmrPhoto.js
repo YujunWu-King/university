@@ -38,33 +38,58 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                     }
                 });
             }
-            if(SurveyBuild._readonly) {
-            	c += '<div class="input-list">';
-            	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-            	c += '  <div class="input-list-text left headshot">';
-            	c += '		<div class="headshot-pic">';
-            	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-            	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" />';
-            	c += '		</div>';
-            	c += '	</div>';
-            	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-            	c += '	<div class="clear"></div><br>';
-            	c += '</div>';
-            } else {
-            	c += '<div class="input-list">';
-            	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-            	c += '  <div class="input-list-text left headshot">';
-            	c += '		<div class="headshot-pic">';
-            	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-            	c += '			<a id="photo' + data.itemId + '" style="cursor: pointer;"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" /></a>';
-            	c += '		</div>';
-            	c += '	</div>';
-            	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-            	c += '	<div class="clear"></div><br>';
-            	c += '</div>';
-            	c += '<input type="hidden" value="" name="mbaSqphoto" id="mbaSqphoto">';
-            }
-        } else {
+            if(SurveyBuild.accessType == "M"){
+            	  if(SurveyBuild._readonly) {
+                   	c += '<div class="input-list">';
+                  	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                  	c += '  <div class="input-list-text left headshot">';
+                  	c += '		<div class="headshot-pic">';
+                  	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+                  	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" />';
+                  	c += '		</div>';
+                  	c += '	</div>';
+                  	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+                  	c += '	<div class="clear"></div><br>';
+                  	c += '</div>';
+                  } else {
+                  	c += '<div class="item">';
+                  	c += ' 	<p>'+data.title+'<span>*</span></p>';
+                  	c += '  <a class="photo" id="photox"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/m/bjphoto.jpg": TzUniversityContextPath + data.value) + '"/></a>';
+                  	c +='</div>';
+                  	c += '<article class="htmleaf-container">';
+                    c += '</article>';
+                  	}
+                }
+            else{
+                    if(SurveyBuild._readonly) {
+                 	c += '<div class="input-list">';
+                	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                	c += '  <div class="input-list-text left headshot">';
+                	c += '		<div class="headshot-pic">';
+                	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+                	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" />';
+                	c += '		</div>';
+                	c += '	</div>';
+                	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+                	c += '	<div class="clear"></div><br>';
+                	c += '</div>';
+                } else {
+                	c += '<div class="input-list">';
+                	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                	c += '  <div class="input-list-text left headshot">';
+                	c += '		<div class="headshot-pic">';
+                	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+                	c += '			<a id="photo' + data.itemId + '" style="cursor: pointer;"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" /></a>';
+                	c += '		</div>';
+                	c += '	</div>';
+                	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+                	c += '	<div class="clear"></div><br>';
+                	c += '</div>';
+                	c += '<input type="hidden" value="" name="mbaSqphoto" id="mbaSqphoto">';
+                 }
+            } 
+        }
+         else {
             c += '<div class="question-answer">';
             c += '	<div class="format">';
             c += '		<img src="' + TzUniversityContextPath + '/statics/images/appeditor/bjphoto.jpg" width="120" height="165" />';
@@ -137,6 +162,213 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
         return e;
     },
     _eventbind: function(data) {
+    	if(SurveyBuild.accessType == "M"){
+
+    		var wid=$(window).width()*0.9
+    		// alert(wid);
+    		var obUrl = ''
+    		//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+    		$("#clipArea").photoClip({
+    			width:wid,
+    			height:wid,
+    			file: "#file",
+    			view: "#view",
+    			ok: "#clipBtn",
+    			loadStart: function() {
+    				console.log("照片读取中");
+    			},
+    			loadComplete: function() {
+    				console.log("照片读取完成");
+    			},
+    			clipFinish: function(dataURL) {
+    				console.log(dataURL);
+    			}
+    		});
+
+
+    		$(function(){
+    		$("#photox").click(function(){
+    		$(".htmleaf-container").show();
+    		})
+    			$("#clipBtn").click(function(){
+    				$("#photox").empty();
+    				$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
+    				$(".htmleaf-container").hide();
+    			})
+    		});
+
+
+    		$(function(){
+    			jQuery.divselect = function(divselectid,inputselectid) {
+    				var inputselect = $(inputselectid);
+    				$(divselectid+" small").click(function(){
+    					$("#divselect ul").toggle();
+    					$(".mask").show();
+    				});
+    				$(divselectid+" ul li a").click(function(){
+    					var txt = $(this).text();
+    					$(divselectid+" small").html(txt);
+    					var value = $(this).attr("selectid");
+    					inputselect.val(value);
+    					$(divselectid+" ul").hide();
+    					$(".mask").hide();
+    					$("#divselect small").css("color","#333")
+    				});
+    			};
+    			$.divselect("#divselect","#inputselect");
+    		});
+
+
+    		$(function(){
+    			jQuery.divselectx = function(divselectxid,inputselectxid) {
+    				var inputselectx = $(inputselectxid);
+    				$(divselectxid+" small").click(function(){
+    					$("#divselectx ul").toggle();
+    					$(".mask").show();
+    				});
+    				$(divselectxid+" ul li a").click(function(){
+    					var txt = $(this).text();
+    					$(divselectxid+" small").html(txt);
+    					var value = $(this).attr("selectidx");
+    					inputselectx.val(value);
+    					$(divselectxid+" ul").hide();
+    					$(".mask").hide();
+    					$("#divselectx small").css("color","#333")
+    				});
+    			};
+    			$.divselectx("#divselectx","#inputselectx");
+    		});
+
+
+    		$(function(){
+    			jQuery.divselecty = function(divselectyid,inputselectyid) {
+    				var inputselecty = $(inputselectyid);
+    				$(divselectyid+" small").click(function(){
+    					$("#divselecty ul").toggle();
+    					$(".mask").show();
+    				});
+    				$(divselectyid+" ul li a").click(function(){
+    					var txt = $(this).text();
+    					$(divselectyid+" small").html(txt);
+    					var value = $(this).attr("selectyid");
+    					inputselecty.val(value);
+    					$(divselectyid+" ul").hide();
+    					$(".mask").hide();
+    					$("#divselecty small").css("color","#333")
+    				});
+    			};
+    			$.divselecty("#divselecty","#inputselecty");
+    		});
+
+
+    		$(function(){
+    		   $(".mask").click(function(){
+    			   $(".mask").hide();
+    			   $(".all").hide();
+    		   })
+    			$(".right input").blur(function () {
+    				if ($.trim($(this).val()) == '') {
+    					$(this).addClass("place").html();
+    				}
+    				else {
+    					$(this).removeClass("place");
+    				}
+    			})
+    		});
+
+
+    		$("#file0").change(function(){
+    			var objUrl = getObjectURL(this.files[0]) ;
+    			 obUrl = objUrl;
+    			console.log("objUrl = "+objUrl) ;
+    			if (objUrl) {
+    				$("#img0").attr("src", objUrl).show();
+    			}
+    			else{
+    				$("#img0").hide();
+    			}
+    		}) ;
+    		function qd(){
+    		   var objUrl = getObjectURL(this.files[0]) ;
+    		   obUrl = objUrl;
+    		   console.log("objUrl = "+objUrl) ;
+    		   if (objUrl) {
+    			   $("#img0").attr("src", objUrl).show();
+    		   }
+    		   else{
+    			   $("#img0").hide();
+    		   }
+    		}
+    		function getObjectURL(file) {
+    			var url = null ;
+    			if (window.createObjectURL!=undefined) { // basic
+    				url = window.createObjectURL(file) ;
+    			} else if (window.URL!=undefined) { // mozilla(firefox)
+    				url = window.URL.createObjectURL(file) ;
+    			} else if (window.webkitURL!=undefined) { // webkit or chrome
+    				url = window.webkitURL.createObjectURL(file) ;
+    			}
+    			return url ;
+    		}
+
+
+    		var subUrl = "";
+    		$(function (){
+    			$(".file-3").bind('change',function(){
+    				subUrl = $(this).val()
+    				$(".yulan").show();
+    				$(".file-3").val("");
+    			});
+
+    			$(".file-3").each(function(){
+    				if($(this).val()==""){
+    					$(this).parents(".uploader").find(".filename").val("营业执照");
+    				}
+    			});
+    		$(".btn-3").click(function(){
+    		$("#img-1").attr("src", obUrl);
+    		$(".yulan").hide();
+    		$(".file-3").parents(".uploader").find(".filename").val(subUrl);
+    		})
+    			$(".btn-2").click(function(){
+    				$(".yulan").hide();
+    			})
+
+    		});
+
+
+    		function setImagePreview(){
+    			var preview, img_txt, localImag, file_head = document.getElementById("file_head"),
+    					picture = file_head.value;
+    			if (!picture.match(/.jpg|.gif|.png|.bmp/i)) return alert("您上传的图片格式不正确，请重新选择！"),
+    					!1;
+    			if (preview = document.getElementById("preview"), file_head.files && file_head.files[0]) preview.style.display = "block",
+    					preview.style.width = "63px",
+    					preview.style.height = "63px",
+    					preview.src = window.navigator.userAgent.indexOf("Chrome") >= 1 || window.navigator.userAgent.indexOf("Safari") >= 1 ? window.webkitURL.createObjectURL(file_head.files[0]) : window.URL.createObjectURL(file_head.files[0]);
+    			else {
+    				file_head.select(),
+    						file_head.blur(),
+    						img_txt = document.selection.createRange().text,
+    						localImag = document.getElementById("localImag"),
+    						localImag.style.width = "63px",
+    						localImag.style.height = "63px";
+    				try {
+    					localImag.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)",
+    							localImag.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = img_txt
+    				} catch(f) {
+    					return alert("您上传的图片格式不正确，请重新选择！"),
+    							!1
+    				}
+    				preview.style.display = "none",
+    						document.selection.empty()
+    			}
+    			return document.getElementById("DivUp").style.display = "block",
+    					!0
+    		}
+
+    		
+    	}else{
         var $photoBox = $("#photo" + data.itemId);
         var up;
         $photoBox.click(function(e) {
@@ -157,6 +389,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                     src: photoUrl
                 }
             });
-        });
-    }
+          });
+    	}
+     }
 });

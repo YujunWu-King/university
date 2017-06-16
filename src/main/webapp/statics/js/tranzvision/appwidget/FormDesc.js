@@ -12,13 +12,18 @@ SurveyBuild.extend("FormDesc", "baseComponent", {
 	_getHtml: function(data, previewmode) {
 		var c = '';
 		if (previewmode) {
-			//c += '<div id="' + data.itemId + '">' + data.title + '</div>';
-			c +='<div class="readme" id="' + data.itemId + '">'
-			c +=' <div class="form_sm" ><img class="tips" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/tips2.png">'+MsgSet["FORM_DES"]+'</div>';
-            c +=' <div class="form_input" id="' + data.itemId + '_DIV">';
-            c +=  data.title;
-             c +=' </div>';
-             c +='</div>';
+			 if(SurveyBuild.accessType == "M"){
+				 
+			 }else{
+				//c += '<div id="' + data.itemId + '">' + data.title + '</div>';
+				c +='<div class="readme" id="' + data.itemId + '">'
+				c +=' <div class="form_sm" ><img class="tips" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/tips2.png">'+MsgSet["FORM_DES"]+'</div>';
+	            c +=' <div class="form_input" id="' + data.itemId + '_DIV">';
+	            c +=  data.title;
+	            c +=' </div>';
+	            c +='</div>';
+				 
+			 }
 		} else {
 			c += '<div class="question-answer"></div>';
 		}

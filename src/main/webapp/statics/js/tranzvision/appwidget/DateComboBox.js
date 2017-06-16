@@ -39,49 +39,91 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 
 		var c = "",children = data.children;
 		if (previewmode) {
-			if(SurveyBuild._readonly){
-				//只读模式
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '    <div class="input-list-text left">';
-
-				c += '<span style="width:49%">' + children[0]["value"] + '</span>';
-				if(data.hasOwnProperty("todatebz") && data.todatebz == "Y" && children[2]["value"] == "Y"){
-					c += '<span style="">&nbsp;~&nbsp;' + MsgSet["TODATE"] + '</span>';
+			SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P1");
+			SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
+			if(SurveyBuild.accessType == "M"){
+				if(SurveyBuild._readonly){
+					c += '<div class="item">';
+					c += '	<p>' + data.title + '<span>' + (data.isRequire == "Y" ? "*": "") + '</span></p >';
+					c += '	<div class="overhidden">';
+					c += '		<div class="text-box fl" style="width:30%;">';
+					c += '      	<input type="text" class="text1"  value="' + children[0]["value"] + '">';
+					c += '      </div>';
+					c += '       <span class="fl" style="line-height:1.5rem;color:#999;">---</span>';
+					if(data.hasOwnProperty("todatebz") && data.todatebz == "Y" && children[2]["value"] == "Y"){
+						c += '       <div class="text-box fl" style="width:30%; display:none">';
+						c += '           <input type="text" class="text1">';
+						c += '       </div>';
+						c += '       <label >' + MsgSet["TODATE"] + '  </label>';
+					}else{
+						c += '       <div class="text-box fl" style="width:30%;">';
+						c += '           <input type="text" class="text1" value=" '+children[1]["value"]+'">';
+						c += '       </div>';
+					}
+					c += '   </div>';
+					c += '</div>';
 				}else{
-					c += '&nbsp;~&nbsp;<span style="width: 49%;">' + children[1]["value"] + '</span>';
+					c += '<div class="item">';
+					c += '	<p>' + data.title + '<span>' + (data.isRequire == "Y" ? "*": "") + '</span></p >';
+					c += '	<div class="overhidden">';
+					c += '		<div class="text-box fl" style="width:30%;">';
+					c += '      	<input type="text" class="text1"  readonly="readonly" name="' + data["itemId"] + children[0]["itemId"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[0]["itemId"] + '\');" value ="' + children[0]["value"] + '">';
+					c += '      </div>';
+					c += '       <span class="fl" id="span'+data["itemId"] + children[0]["itemId"]+'"style="line-height:1.5rem;color:#999;">---</span>';
+					c += '       <div class="text-box fl" style="width:30%;">';
+					c += '           <input type="text" class="text1" readonly="readonly"' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "disabled=\"disabled\"": "") + ' value=" '+children[1]["value"]+'" style="' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "") + '" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[1]["itemId"] + '\');" >';
+					c += '       </div>';
+					if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
+						c += '       <input type="checkbox" class="checkbox" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "checked='checked'": "") + ' id="' + data["itemId"] + children[2]["itemId"] + '" value=" '+children[1]["value"]+'"name="' + data["itemId"] + children[2]["itemId"] + '" style="margin-left:20px;"><label for="' + data["itemId"] + children[2]["itemId"] + '">' + MsgSet["TODATE"] + '  </label>';
+					}
+					c += '   </div>';
+					c += '</div>';
 				}
-
-				c += '    </div>';
-				c += '    <div class="input-list-suffix left"></div>';
-				c += '    <div class="clear"></div>';
-				c += '</div>';
 			}else{
-				//填写模式
-				SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P1");
-				SurveyBuild.appInsId == "0" && this._getDefaultVal(data,"P2");
-					
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '    <div class="input-list-text left">';
-				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" style="width:46%" name="' + data["itemId"] + children[0]["itemId"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[0]["itemId"] + '\');" value ="' + children[0]["value"] + '"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data["itemId"] + children[0]["itemId"] + '_Clear" style="right:44px' + (children[0]["value"]  == "" ? ";visibility:hidden;": "") + '"/><img id="' + data["itemId"] + children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon" style="right:43px">';
-				c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "disabled=\"disabled\"": "") + ' style="width:46%;' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "") + '" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[1]["itemId"] + '\');" value="' + children[1]["value"] + '"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data["itemId"] + children[1]["itemId"] + '_Clear" style="right:44px' + ((data.todatebz == "Y" && children[2]["value"] == "Y") || children[1]["value"]=="" ? ";visibility:hidden;": "") + '"/><img id="' + data["itemId"] + children[1]["itemId"] + '_Btn" style="right:43px;display:' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "none;": "") + '" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
-				if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
-					c += '<div class="check-box' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? " checkedBox": "") + '"><i>';
-					c += '	<input type="checkbox" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "checked='checked'": "") + 'id="' + data["itemId"] + children[2]["itemId"] + '" name="' + data["itemId"] + children[2]["itemId"] + '"/>';
-					c += '</i></div>';
-					c += (data.todatebz == "Y" ? MsgSet["TODATE"]: "");
-					c += '<div id="' + data["itemId"] + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow"></div></div>';
-				}
-				c += '    </div>';
-				c += '    <div class="input-list-suffix left">';
-				if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
+				if(SurveyBuild._readonly){
+					//只读模式
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left">';
+
+					c += '<span style="width:49%">' + children[0]["value"] + '</span>';
+					if(data.hasOwnProperty("todatebz") && data.todatebz == "Y" && children[2]["value"] == "Y"){
+						c += '<span style="">&nbsp;~&nbsp;' + MsgSet["TODATE"] + '</span>';
+					}else{
+						c += '&nbsp;~&nbsp;<span style="width: 49%;">' + children[1]["value"] + '</span>';
+					}
+
+					c += '    </div>';
+					c += '    <div class="input-list-suffix left"></div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
 				}else{
-					c += '<div id="' + data["itemId"] + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow"></div></div>';
+					//填写模式
+					
+						
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '    <div class="input-list-text left">';
+					c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" style="width:46%" name="' + data["itemId"] + children[0]["itemId"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[0]["itemId"] + '\');" value ="' + children[0]["value"] + '"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data["itemId"] + children[0]["itemId"] + '_Clear" style="right:44px' + (children[0]["value"]  == "" ? ";visibility:hidden;": "") + '"/><img id="' + data["itemId"] + children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon" style="right:43px">';
+					c += '    	<input type="text" class="inpu-list-text-enter" readonly="readonly" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "disabled=\"disabled\"": "") + ' style="width:46%;' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "") + '" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[1]["itemId"] + '\');" value="' + children[1]["value"] + '"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data["itemId"] + children[1]["itemId"] + '_Clear" style="right:44px' + ((data.todatebz == "Y" && children[2]["value"] == "Y") || children[1]["value"]=="" ? ";visibility:hidden;": "") + '"/><img id="' + data["itemId"] + children[1]["itemId"] + '_Btn" style="right:43px;display:' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "none;": "") + '" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon">';
+					if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
+						c += '<div class="check-box' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? " checkedBox": "") + '"><i>';
+						c += '	<input type="checkbox" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "checked='checked'": "") + 'id="' + data["itemId"] + children[2]["itemId"] + '" name="' + data["itemId"] + children[2]["itemId"] + '"/>';
+						c += '</i></div>';
+						c += (data.todatebz == "Y" ? MsgSet["TODATE"]: "");
+						c += '<div id="' + data["itemId"] + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow"></div></div>';
+					}
+					c += '    </div>';
+					c += '    <div class="input-list-suffix left">';
+					if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
+					}else{
+						c += '<div id="' + data["itemId"] + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow"></div></div>';
+					}
+					c += '	  </div>';
+					c += '    <div class="clear"></div>';
+					c += '</div>';
 				}
-				c += '	  </div>';
-				c += '    <div class="clear"></div>';
-				c += '</div>';
+				
 			}
 		} else {
 			c += '<div class="question-answer"><div class="format ">';
@@ -142,7 +184,7 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 		var $dateInputStart = $("#" + data["itemId"] + data.children[0]["itemId"]);
 		var $dateInputEnd = $("#" + data["itemId"] + data.children[1]["itemId"]);
 		var $todayCheckbox = $("#" + data["itemId"] + data.children[2]["itemId"]);
-		
+		var $todaySpan = $("#span" + data["itemId"] + data.children[0]["itemId"]);
 		var $checkboxDev = $todayCheckbox.closest(".check-box");
 
 		var $dateImgStart = $("#" + data["itemId"] + data.children[0]["itemId"] + "_Btn");
@@ -151,6 +193,7 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 		var $clearImgEnd = $("#" + data["itemId"] + data.children[1]["itemId"] + "_Clear");
 		var $clearImgStart = $("#" + data["itemId"] + data.children[0]["itemId"] + "_Clear");
 		
+		if(SurveyBuild.accessType == "P"){
 		$dateInputStart.datetimepicker({
 			changeMonth: true,
 			changeYear: true,
@@ -164,19 +207,65 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
                 $clearImgStart.css("visibility","visible");
             }
 		});
-		$dateInputEnd.datetimepicker({
-			changeMonth: true,
-			changeYear: true,
-			showTimepicker: false,
-			yearRange: data.minYear + ":" + data.maxYear,
-            maxDate: new Date(data.maxYear + "-12-31"),
-			dateFormat: data.dateformate,
-            onSelect: function(dateText, inst) {
-                $dateInputEnd.datetimepicker( "hide" );
-                $dateInputEnd.trigger("blur");
-                $clearImgEnd.css("visibility","visible");
-            }
-		});
+		
+			$dateInputEnd.datetimepicker({
+				changeMonth: true,
+				changeYear: true,
+				showTimepicker: false,
+				yearRange: data.minYear + ":" + data.maxYear,
+	            maxDate: new Date(data.maxYear + "-12-31"),
+				dateFormat: data.dateformate,
+	            onSelect: function(dateText, inst) {
+	                $dateInputEnd.datetimepicker( "hide" );
+	                $dateInputEnd.trigger("blur");
+	                $clearImgEnd.css("visibility","visible");
+	            }
+			});
+		}else if(SurveyBuild.accessType == "M"){
+
+			//M手机
+			var $type;
+			switch(data.dateformate)
+			{
+			case 'yy/mm':
+				  $type= "ym";
+				  break;
+			case 'yy-mm':
+				  $type= "ym";
+				  break;
+			default:
+				 $type= "date";
+			}
+			 var calendarStart = new LCalendar();
+			 calendarStart.init({
+			        'trigger': "#" + data["itemId"] + data.children[0]["itemId"], //标签id
+			        'type': $type, //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+			        'minDate': data.minYear + "-01-01", //最小日期
+			        'maxDate':data.maxYear + "-12-31"
+			    });
+		    var calendarEnd = new LCalendar();
+		    calendarEnd.init({
+		        'trigger': "#" + data["itemId"] + data.children[1]["itemId"], //标签id
+		        'type': $type, //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+		        'minDate': data.minYear + "-01-01", //最小日期
+		        'maxDate':data.maxYear + "-12-31"
+		    });
+		    if(!SurveyBuild._readonly){
+			    $todayCheckbox.click(function(){
+			    	$(this).find(':checkbox').toggleCheckbox();
+			    	if ($todayCheckbox.prop("checked")) {
+			    		$dateInputEnd.parent(".text-box").hide();
+			    		$todaySpan.hide();
+			    		$dateInputEnd.attr("disabled","disabled").unFormValidator(true);
+			    	}else{
+			    		$dateInputEnd.parent(".text-box").show();
+			    		$todaySpan.show();
+			    		$dateInputEnd.removeAttr("disabled").unFormValidator(false);
+			    	}
+			    });
+		    }
+		}
+		
 		if(!SurveyBuild._readonly){
 			$checkboxDev.click(function(){
 			    $(this).find(':checkbox').toggleCheckbox();
