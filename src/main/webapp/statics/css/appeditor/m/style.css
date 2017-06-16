@@ -28,6 +28,10 @@ a,a:hover{text-decoration: none;display: block;}
 	border-bottom: dashed 1px #dadbdd;
 	padding-bottom:15px;
 }
+.input-list{
+	margin-top:15px;
+	white-space: nowrap;
+}
 .cd-top.cd-fade-out {
   opacity:1;
 }
