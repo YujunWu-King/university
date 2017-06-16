@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZBzScoreMathBundle.service.impl;
 
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -284,9 +285,14 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 				sunrank = jacksonUtil.getString("judge_sunrank");
 				sunscore = jacksonUtil.getString("judge_sunscore");
 
+				
+				DecimalFormat df = new DecimalFormat("#.0000");
+				
 				mapData.put("msz", teamID);
 				mapData.put("zlpm", sunrank);
-				mapData.put("bzzf", sunscore);
+				mapData.put("bzzf", df.format(Double.valueOf(sunscore)));
+				
+				
 
 				// 材料评审总分
 				clpszf = jdbcTemplate.queryForObject(tzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TzGetClpSumScore"),

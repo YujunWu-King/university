@@ -128,6 +128,16 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 			String teamID = "";
 			String strForm = "";
 			String strForm_a = "";
+			String  fg=",";
+			String key_pw = "";
+			String value_pw = "";
+			String value_pw_1 = "";
+			String find_key = "";
+			String[] bb = null;
+			
+			Map<String, String> map_pw = new HashMap<String, String>();
+			
+
 
 			String[][] judge_id = new String[Integer.valueOf(coulumdt)][5];
 			String[][] judge_id_a = new String[Integer.valueOf(coulumdt)][5];
@@ -142,7 +152,10 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 			for (int num_1 = 0; num_1 < actData.length; num_1++) {
 				strForm_a = actData[num_1];
 				jacksonUtil.json2Map(strForm_a);
-				sunfloat = (float) 0.00;
+				sunfloat = (float) 0.0000;
+				xmid = jacksonUtil.getString("xmid");
+				xmName = jacksonUtil.getString("xmName");
+				teamID = jacksonUtil.getString("teamID");
 				for (cou_j = 0; cou_j < Integer.valueOf(coulumdt); cou_j++) {
 					if (jacksonUtil.getString("judge_" + String.valueOf(cou_j + 1) + "_id") == null) {
 
@@ -170,7 +183,21 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 
 					}
 				}
+				
+				key_pw = teamID ;
+				value_pw = "9999999999999" + fg + String.valueOf(sunfloat);
+				value_pw_1 = String.valueOf(sunfloat);
+				if (map_pw.get(key_pw) == null) {
+					map_pw.put(key_pw, value_pw);
+
+				} else {
+					map_pw.replace(key_pw, map_pw.get(key_pw).toString() + fg + value_pw_1);
+
+				}
 				sunscorelist[num_1] = sunfloat;
+				
+				
+				
 
 			}
 
@@ -187,6 +214,7 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 				mapList.put("xmid", xmid);
 				mapList.put("xmName", xmName);
 				mapList.put("teamID", teamID);
+				bb = map_pw.get(teamID).split(",");
 
 				for (con_i = 0; con_i < Integer.valueOf(coulumdt); con_i++) {
 					if (jacksonUtil.getString("judge_" + String.valueOf(con_i + 1) + "_id") == null) {
@@ -235,8 +263,9 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 					}
 
 				}
+				
 				mapList.put("judge_sunscore", sunfloat);
-				mapList.put("judge_sunrank", this.checksunRank(sunscorelist, sunfloat));
+				mapList.put("judge_sunrank", this.checkpeRank(bb, String.valueOf(sunfloat)));
 				listData.add(mapList);
 			}
 
@@ -379,6 +408,28 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 			j++;
 		}
 		return String.valueOf(j);
+
+	}
+	
+	
+	/***
+	 * 对字符串数组进行转换再排名 返回 排名
+	 * 
+	 * @param arrs
+	 * @param score
+	 * @return
+	 */
+	public String checkpeRank(String[] arrs, String score) {
+		float[] ints = new float[arrs.length];
+		for (int i = 0; i < arrs.length; i++) {
+			ints[i] = Float.parseFloat(arrs[i]);
+		}
+		Arrays.sort(ints);
+		int j = 2;
+		while (!Float.valueOf(score).equals(ints[ints.length - j])) {
+			j++;
+		}
+		return String.valueOf(j - 1);
 
 	}
 
