@@ -158,13 +158,24 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		var c = "";
 		var opt = "",x = "";
 		if (previewmode) {
-			var htmlContent = this._getContentHtml(data);
+			var htmlContent;
 
-			c += '<div class="main_inner_content_top"></div>';
-			c += '<div class="main_inner_content">';
-			c += htmlContent;
-			c += '</div>';
-			c += '<div class="main_inner_content_foot"><div class="clear"></div></div>';
+			//手机
+			if(SurveyBuild.accessType == "M"){
+
+				htmlContent = this._getContentHtmlP(data);
+				c += htmlContent;
+			}else{
+
+				htmlContent = this._getContentHtml(data);
+
+				c += '<div class="main_inner_content_top"></div>';
+				c += '<div class="main_inner_content">';
+				c += htmlContent;
+				c += '</div>';
+				c += '<div class="main_inner_content_foot"><div class="clear"></div></div>';
+
+			}
 
 		} else {
 			var htmlDisplay = '';
@@ -612,6 +623,313 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 			htmlContent+="</div>";
 		return htmlContent;
 	},
+
+	_getContentHtmlP: function(data) {
+		var child=data["children"][0];
+		if (child == undefined) {
+			child=data["children"];
+		}
+
+		//公司类型json数据
+		var BUSINESS_TYPE_GP=[
+			"互联网类",//01
+			"家族企业",//02
+			"其他"     //03
+		];
+		var htmlContent="";
+
+		//--创业类型初始值
+		var BUSINESS_TYPE_DEF=child.WorkExper1.value;
+		//--融资情况初始值
+		var FINANCING_DEL=child.WorkExper2.value;
+
+		//1.创业类型
+		if (SurveyBuild._readonly) {
+			//只读模式(放入已选择创业类型)
+
+			var btypeDesc='';
+			for(var k=0;k<BUSINESS_TYPE_GP.length;k++){
+				if(BUSINESS_TYPE_DEF=="0"+parseInt(k+1)){
+					btypeDesc=BUSINESS_TYPE_GP[k];
+				}
+			}
+
+			types += '<div class="item">';
+			types += '<p>'+ child.WorkExper1.itemName + '</p>';
+			types += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + btypeDesc + '"/></div>';
+			types += '</div>';
+
+			//-----------------------------融资
+			var NET_DIV='';
+			var finDesc='';
+			var incomeYDesc='';
+			var peopleDesc='';
+			var ownMoneyDesc='';
+			var familyMoney='';
+			if(BUSINESS_TYPE_DEF=="01"||BUSINESS_TYPE_DEF==""){
+				NET_DIV+='<div id="NET_TYPE_SHOW" >'
+				incomeYDesc=child.WorkExper3.value+MsgSet["ONE_MILLION"];
+				peopleDesc=child.WorkExper4.value+ ["PEOPLES"];
+				if(FINANCING_DEL=="B_FINANCING"){
+					finDesc=MsgSet["B_FINANCING"]+child.WorkExper2_1.value+MsgSet["ONE_MILLION"];
+				}else if(FINANCING_DEL=="A_FINANCING"){
+					finDesc=MsgSet["A_FINANCING"]+child.WorkExper2_2.value+MsgSet["ONE_MILLION"];
+					ownMoneyDesc=child.WorkExper3.value+MsgSet["ONE_MILLION"];
+					familyMoney=child.WorkExper3.value+MsgSet["ONE_MILLION"];
+				}else if(FINANCING_DEL=="ANGEL_INVEST"){
+					finDesc=MsgSet["ANGEL_INVEST"]+child.WorkExper2_3.value+MsgSet["ONE_MILLION"];
+				}else if(FINANCING_DEL=="NO_FINANCING"){
+					finDesc=MsgSet["NO_FINANCING"];
+				}else if(FINANCING_DEL=="NEW_CREATE"){
+					finDesc=MsgSet["NEW_CREATE"];
+				}
+			}else{
+				NET_DIV+='<div id="NET_TYPE_SHOW" style="display:none">'
+			}
+
+			//融资标题
+			NET_DIV += '<div class="item">';
+			NET_DIV += '<p>'+ MsgSet["FINANCING"] + '</p>';
+
+			//融资radio(已选择变为input输入框)
+			NET_DIV += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + finDesc + '"/></div>';
+			NET_DIV += '</div>';
+
+			//最近一年企业收入
+			NET_DIV += '<div class="item">';
+			NET_DIV += '<p>'+ MsgSet["INCOME"] + '</p>';
+			NET_DIV += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + incomeYDesc + '"/></div>';
+			NET_DIV += '</div>';
+
+			//用户数
+			NET_DIV += '<div class="item">';
+			NET_DIV += '<p>'+ MsgSet["USER_NUM"] + '</p>';
+			NET_DIV += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + peopleDesc + '"/></div>';
+			NET_DIV += '</div>';
+			NET_DIV+='</div>';
+
+			//-----------------------------家族企业
+			var FAM_DIV='';
+			var ownMoneyDesc='';
+			var familyMoneyDesc='';
+			if(BUSINESS_TYPE_DEF=="02"){
+				FAM_DIV+='<div id="FAMILY_TYPE_SHOW">'
+				ownMoneyDesc=child.WorkExper5.value+MsgSet["ONE_MILLION"];
+				familyMoneyDesc=child.WorkExper6.value+MsgSet["ONE_MILLION"];
+			}else{
+				FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;">'
+			}
+
+			//自有资金
+			FAM_DIV += '<div class="item">';
+			FAM_DIV += '<p>'+ MsgSet["OWN_MONEY"] + '</p>';
+			FAM_DIV += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + ownMoneyDesc + '"/></div>';
+			FAM_DIV += '</div>';
+
+			//家族企业资产
+			FAM_DIV += '<div class="item">';
+			FAM_DIV += '<p>'+ MsgSet["FAMILY_MONEY"] + '</p>';
+			FAM_DIV += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + familyMoneyDesc + '"/></div>';
+			FAM_DIV += '</div>';
+			FAM_DIV += '</div>';
+
+			//-----------------------------其他
+			var OTH_DIV='';
+			var incomeODesc='';
+			var yearIncomeDesc='';
+			var firmScaleDesc='';
+			if(BUSINESS_TYPE_DEF=="03"){
+				OTH_DIV+='<div id="OTHER_TYPE_SHOW">'
+				incomeODesc=child.WorkExper7.value+MsgSet["ONE_MILLION"];
+				yearIncomeDesc=	child.WorkExper8.value+MsgSet["ONE_MILLION"];
+				firmScaleDesc=	child.WorkExper9.value+MsgSet["PEOPLES"];
+			}else{
+				OTH_DIV+='<div id="OTHER_TYPE_SHOW" style="display:none;">'
+			}
+
+			//最近一年企业收入
+			OTH_DIV += '<div class="item">';
+			OTH_DIV += '<p>'+ MsgSet["INCOME"] + '</p>';
+			OTH_DIV += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + incomeODesc + '"/></div>';
+			OTH_DIV += '</div>';
+
+			//年纯利润
+			OTH_DIV += '<div class="item">';
+			OTH_DIV += '<p>'+ MsgSet["YEAR_PROFIT"] + '</p>';
+			OTH_DIV += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + yearIncomeDesc + '"/></div>';
+			OTH_DIV += '</div>';
+
+			//企业规模
+			OTH_DIV += '<div class="item">';
+			OTH_DIV += '<p>'+ MsgSet["FIRM_SCALE"] + '</p>';
+			OTH_DIV += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + firmScaleDesc + '"/></div>';
+			OTH_DIV += '</div>';
+			OTH_DIV += '</div>';
+
+			htmlContent += NET_DIV;
+			htmlContent += FAM_DIV;
+			htmlContent += OTH_DIV
+		}else{
+			//填写模式
+			var OPT_BTYPE='';
+
+			//添加请选择从下拉框
+			OPT_BTYPE+='<option value=""'+(BUSINESS_TYPE_DEF==""?'selected="selected"': '')+'>请选择</option>';
+			for(var k=0;k<BUSINESS_TYPE_GP.length;k++){
+				OPT_BTYPE+='<option value="0'+parseInt(k+1)+'"'+(BUSINESS_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+BUSINESS_TYPE_GP[k]+'</option>';
+			}
+
+			//放入创业类型中
+			htmlContent += '<div class="item">';
+			htmlContent += '<p>'+ child.WorkExper1.itemName + '</p>';
+			htmlContent += '<div class="text-box">';
+			htmlContent += '<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="select1" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
+			htmlContent += OPT_BTYPE;
+			htmlContent += '</select>';
+			htmlContent += '<div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip">';
+			htmlContent += '</div>';
+			htmlContent += '</div>';
+			htmlContent += '</div>';
+
+			//-----------------------------融资情况(第一次只显示互联网相关div 其他关联div隐藏)
+			var NET_DIV='';
+			if(BUSINESS_TYPE_DEF=="01"){
+				NET_DIV+='<div id="NET_TYPE_SHOW">'
+			}else{
+				NET_DIV+='<div id="NET_TYPE_SHOW" style="display:none">'
+			}
+
+			//融资标题
+			NET_DIV += '<div class="item">';
+			NET_DIV += '<p>'+ MsgSet["FINANCING"] + '</p>';
+
+			//融资radio
+			NET_DIV += '<div class="item">';
+			NET_DIV += '<ul class="company">';
+
+			NET_DIV += '<li id="B">';//B轮
+			NET_DIV += '<input type="radio" name="financing" class="radio" id="FB">';
+			NET_DIV += '<label id="fb">'+ MsgSet["B_FINANCING"] + '</label>';
+			NET_DIV += '<input type="text" class="invest" id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" name="finance" hidden="true">';
+			NET_DIV += '<label id="financing_b" style="display: none">'+ MsgSet["ONE_MILLION"]+ '</label>';
+			NET_DIV += '</li>';
+
+			NET_DIV += '<li id="A">';//A轮
+			NET_DIV += '<input type="radio" name="financing" class="radio" id="FA">';
+			NET_DIV += '<label id="fa">'+ MsgSet["A_FINANCING"] + '</label>';
+			NET_DIV += '<input type="text" class="invest" id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'" name="finance"  hidden="true">';
+			NET_DIV += '<label id="financing_a"  style="display: none">'+ MsgSet["ONE_MILLION"]+ '</label>';
+			NET_DIV += '</li>';
+
+			NET_DIV += '<li id="V">';//天使投资
+			NET_DIV += '<input type="radio" name="financing" class="radio" id="AV">';
+			NET_DIV += '<label id="fv">'+ MsgSet["ANGEL_INVEST"] + '</label>';
+			NET_DIV += '<input type="text" class="invest" id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'" name="finance" hidden="true">';
+			NET_DIV += '<label id="financing_v" style="display: none">'+ MsgSet["ONE_MILLION"]+ '</label>';
+			NET_DIV += '</li>';
+
+			NET_DIV += '<li id="O">';//尚未获得投资
+			NET_DIV += '<input type="radio" name="financing" class="radio" id="other">';
+			NET_DIV += '<label id="fo">'+ MsgSet["NO_FINANCING"] + '</label>';
+			NET_DIV += '</li>';
+
+			NET_DIV += '<li id="O">';//初创
+			NET_DIV += '<input type="radio" name="financing" class="radio" id="other">';
+			NET_DIV += '<label id="fo">'+ MsgSet["NEW_CREATE"] + '</label>';
+			NET_DIV += '</li>';
+			NET_DIV += '</ul>';
+			NET_DIV += '</div>';
+
+			//收入
+			NET_DIV += '<div class="item">';
+			NET_DIV += '<p>' + MsgSet["INCOME"] + '</p>';
+			NET_DIV += '<div class="overhidden"><div class="text-box fl" style="width:70%;">';
+			NET_DIV += '<input type="text" class="text1" id="'+data["itemId"] + child.WorkExper3.itemId+'" value="'+child.WorkExper3.value+'"></div>';
+			NET_DIV += '<label style="line-height:1.5rem;margin-left:10px;font-size:0.48rem;color:#999;">'+ MsgSet["ONE_MILLION"] + '</label>';
+			NET_DIV += '</div>';
+			NET_DIV += '</div>';
+
+			//用户数
+			NET_DIV += '<div class="item">';
+			NET_DIV += '<p>' + MsgSet["USER_NUM"] + '</p>';
+			NET_DIV += '<div class="overhidden"><div class="text-box fl" style="width:70%;">';
+			NET_DIV += '<input type="text" class="text1" id="'+data["itemId"] + child.WorkExper4.itemId+'" value="'+child.WorkExper4.value+'"></div>';
+			NET_DIV += '<label style="line-height:1.5rem;margin-left:10px;font-size:0.48rem;color:#999;">'+ MsgSet["PEOPLES"] + '</label>';
+			NET_DIV += '</div>';
+			NET_DIV += '</div>';
+			NET_DIV += '</div>';
+			NET_DIV += '</div>';
+
+			//-----------------------------家族企业
+			var FAM_DIV='';
+			if(BUSINESS_TYPE_DEF=="02"){
+				FAM_DIV+='<div id="FAMILY_TYPE_SHOW">'
+			}else{
+				FAM_DIV+='<div id="FAMILY_TYPE_SHOW" style="display:none;">'
+			}
+
+			//自有资金
+			FAM_DIV += '<div class="item">';
+			FAM_DIV += '<p>' + MsgSet["OWN_MONEY"] + '</p>';
+			FAM_DIV += '<div class="overhidden"><div class="text-box fl" style="width:70%;">';
+			FAM_DIV += '<input type="text" class="text1" id="'+ data["itemId"] + child.WorkExper5.itemId + '" value="'+child.WorkExper5.value+'"></div>';
+			FAM_DIV += '<label style="line-height:1.5rem;margin-left:10px;font-size:0.48rem;color:#999;">'+ MsgSet["ONE_MILLION"] + '</label>';
+			FAM_DIV += '</div>';
+			FAM_DIV += '</div>';
+
+
+			//家族企业资产
+			FAM_DIV += '<div class="item">';
+			FAM_DIV += '<p>' + MsgSet["FAMILY_MONEY"] + '</p>';
+			FAM_DIV += '<div class="overhidden"><div class="text-box fl" style="width:70%;">';
+			FAM_DIV += '<input type="text" class="text1" id="'+ data["itemId"] + child.WorkExper6.itemId + '" value="'+child.WorkExper6.value+'"></div>';
+			FAM_DIV += '<label style="line-height:1.5rem;margin-left:10px;font-size:0.48rem;color:#999;">'+ MsgSet["ONE_MILLION"] + '</label>';
+			FAM_DIV += '</div>';
+			FAM_DIV += '</div>';
+			FAM_DIV += '</div>';
+
+			//-----------------------------其他
+			var OTH_DIV='';
+			if(BUSINESS_TYPE_DEF=="03"){
+				OTH_DIV+='<div id="OTHER_TYPE_SHOW">'
+			}else{
+				OTH_DIV+='<div id="OTHER_TYPE_SHOW" style="display:none;">'
+			}
+
+			//12个月收入
+			OTH_DIV += '<div class="item">';
+			OTH_DIV += '<p>' + MsgSet["INCOME"] + '</p>';
+			OTH_DIV += '<div class="overhidden"><div class="text-box fl" style="width:70%;">';
+			OTH_DIV += '<input type="text" class="text1" id="'+ data["itemId"] + child.WorkExper7.itemId + '" value="'+child.WorkExper7.value+'"></div>';
+			OTH_DIV += '<label style="line-height:1.5rem;margin-left:10px;font-size:0.48rem;color:#999;">'+ MsgSet["ONE_MILLION"] + '</label>';
+			OTH_DIV += '</div>';
+			OTH_DIV += '</div>';
+
+			//年纯利润
+			OTH_DIV += '<div class="item">';
+			OTH_DIV += '<p>' + MsgSet["YEAR_PROFIT"] + '</p>';
+			OTH_DIV += '<div class="overhidden"><div class="text-box fl" style="width:70%;">';
+			OTH_DIV += '<input type="text" class="text1" id="'+ data["itemId"] + child.WorkExper8.itemId + '" value="'+child.WorkExper8.value+'"></div>';
+			OTH_DIV += '<label style="line-height:1.5rem;margin-left:10px;font-size:0.48rem;color:#999;">'+ MsgSet["ONE_MILLION"] + '</label>';
+			OTH_DIV += '</div>';
+			OTH_DIV += '</div>';
+
+			//企业规模
+			OTH_DIV += '<div class="item">';
+			OTH_DIV += '<p>' + MsgSet["FIRM_SCALE"] + '</p>';
+			OTH_DIV += '<div class="overhidden"><div class="text-box fl" style="width:70%;">';
+			OTH_DIV += '<input type="text" class="text1" id="'+ data["itemId"] + child.WorkExper9.itemId + '" value="'+child.WorkExper9.value+'"></div>';
+			OTH_DIV += '<label style="line-height:1.5rem;margin-left:10px;font-size:0.48rem;color:#999;">'+ MsgSet["PEOPLES"] + '</label>';
+			OTH_DIV += '</div>';
+			OTH_DIV += '</div>';
+
+			htmlContent += NET_DIV;
+			htmlContent += FAM_DIV;
+			htmlContent += OTH_DIV
+		}
+		return htmlContent
+	},
+
 	_eventbind: function(data) {
 		//-----根据"创业类型"下拉框 显示和隐藏"类型关联div"
 		var child = data["children"][0];
@@ -621,89 +939,228 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//var child = data["children"];
 		var $btype_select = $("#" +data["itemId"] + child.WorkExper1.itemId);
 		//--------------------------input-list sliblings("#NET_TYPE_SHOW")
-		$btype_select.each(function(){
-			$(this).change(function(){
-				var btypeVal=$(this).val();
-				//关联DIV元素：
-				var netDiv=$(this).parents(".input-list").siblings("#NET_TYPE_SHOW");
-				var familyDiv=$(this).parents(".input-list").siblings("#FAMILY_TYPE_SHOW");
-				var otherDiv=$(this).parents(".input-list").siblings("#OTHER_TYPE_SHOW");
-				
-				if(btypeVal=="01"){
-					netDiv.css("display","block");
-					//清空除开"互联网"之外的数据
-					familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
-					familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
-					
-					otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
-					otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
-					otherDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
-					//---------------------
-				}else{
-					netDiv.css("display","none");
-				}
-				if(btypeVal=="02"){
-					familyDiv.css("display","block");
-					//清空除开"家族企业"之外的数据
-					netDiv.find("#"+data["itemId"] + child.WorkExper2.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper3.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper4.itemId).val("");
-					
-					otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
-					otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
-					otherDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
-					//清除"互联网"下的radio选择和隐藏后缀
-					netDiv.find("#FB").find("div[name='financingB']").find(".left").find(".radio-btn").removeClass("checkedRadio");
-					netDiv.find("#FB").find("div[name='financingB']").find(".right").css("display","none");
-					netDiv.find("#FB").find(".input-list-suffix").css("display","none");
-					
-					netDiv.find("#FA").find("div[name='financingA']").find(".left").find(".radio-btn").removeClass("checkedRadio");
-					netDiv.find("#FA").find("div[name='financingA']").find(".right").css("display","none");
-					netDiv.find("#FA").find(".input-list-suffix").css("display","none");
-					
-					netDiv.find("#FAN").find("div[name='financingAn']").find(".left").find(".radio-btn").removeClass("checkedRadio");
-					netDiv.find("#FAN").find("div[name='financingAn']").find(".right").css("display","none");
-					netDiv.find("#FAN").find(".input-list-suffix").css("display","none");
-					
-					
-				}else{
-					familyDiv.css("display","none");
-				}
-				if(btypeVal=="03"){
-					otherDiv.css("display","block");
-					//清除除开"其他"之外所有数据
-					netDiv.find("#"+data["itemId"] + child.WorkExper2.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper3.itemId).val("");
-					netDiv.find("#"+data["itemId"] + child.WorkExper4.itemId).val("");
-					
-					familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
-					familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
-					
-					//清除"互联网"下的radio选择和隐藏后缀
-					netDiv.find("#FB").find("div[name='financingB']").find(".left").find(".radio-btn").removeClass("checkedRadio");
-					netDiv.find("#FB").find("div[name='financingB']").find(".right").css("display","none");
-					netDiv.find("#FB").find(".input-list-suffix").css("display","none");
-					
-					netDiv.find("#FA").find("div[name='financingA']").find(".left").find(".radio-btn").removeClass("checkedRadio");
-					netDiv.find("#FA").find("div[name='financingA']").find(".right").css("display","none");
-					netDiv.find("#FA").find(".input-list-suffix").css("display","none");
-					
-					netDiv.find("#FAN").find("div[name='financingAn']").find(".left").find(".radio-btn").removeClass("checkedRadio");
-					netDiv.find("#FAN").find("div[name='financingAn']").find(".right").css("display","none");
-					netDiv.find("#FAN").find(".input-list-suffix").css("display","none");
-					
-				}else{
-					otherDiv.css("display","none");
-					//
-				}
+
+		if(SurveyBuild.accessType == "M"){
+
+			//手机版修改
+			$btype_select.each(function(){
+				$(this).change(function(){
+
+					var btypeVal=$(this).val();
+					//关联DIV元素：
+					var netDiv=$(this).parents(".item").siblings("#NET_TYPE_SHOW");
+					var familyDiv=$(this).parents(".item").siblings("#FAMILY_TYPE_SHOW");
+					var otherDiv=$(this).parents(".item").siblings("#OTHER_TYPE_SHOW");
+					if(btypeVal=="01"){
+
+						netDiv.css("display","block");
+
+						//清空已填写数据(家族企业和其他)
+						familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
+						familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
+
+						otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
+						otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
+						otherDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
+					}else{
+						netDiv.css("display","none");
+
+					}
+					if(btypeVal=="02"){
+						familyDiv.css("display","block");
+
+						//初始化互联网选项
+						netDiv.find("#"+data["itemId"] + child.WorkExper2.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper3.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper4.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).hide();
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).hide();
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).hide();
+						netDiv.find("#financing_a").hide();
+						netDiv.find("#financing_b").hide();
+						netDiv.find("#financing_v").hide();
+
+						otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
+						otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
+						otherDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
+
+					}else{
+						familyDiv.css("display","none");
+					}
+					if(btypeVal=="03"){
+						otherDiv.css("display","block");
+
+						//初始化互联网选项
+						netDiv.find("#"+data["itemId"] + child.WorkExper2.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper3.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper4.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).hide();
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).hide();
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).hide();
+						netDiv.find("#financing_a").hide();
+						netDiv.find("#financing_b").hide();
+						netDiv.find("#financing_v").hide();
+						netDiv.find("#fb").removeAttr("checked");
+
+						familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
+						familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
+
+
+					}else{
+						otherDiv.css("display","none");
+					}
+				});
 			});
-		});
+
+			//----"互联网"类型下，radio的切换处理
+			var radioEl;
+			if($(".radio[name='financing']")!=undefined){
+				radioEl=$(".radio[name='financing']");
+
+				radioEl.click(function(){
+
+					var commonId = $(this).attr("id");
+					if(commonId == "FB"){//将A.V隐藏
+
+						$(this).siblings("#financing_b").show();
+						$(this).siblings(".invest").show();
+						$(this).parent("#B").siblings("#A").find("input[name='finance']").val("");
+						$(this).parent("#B").siblings("#V").find("input[name='finance']").val("");
+						$(this).parent("#B").siblings("#A").find("input[name='finance']").hide();
+						$(this).parent("#B").siblings("#V").find("input[name='finance']").hide();
+						$(this).parent("#B").siblings("#A").children("#financing_a").hide();
+						$(this).parent("#B").siblings("#V").children("#financing_v").hide()
+
+					}else if(commonId == "FA"){//将B.V隐藏
+
+						$(this).siblings("#financing_a").show();
+						$(this).siblings(".invest").show();
+						$(this).parent("#A").siblings("#B").find("input[name='finance']").val("");
+						$(this).parent("#A").siblings("#V").find("input[name='finance']").val("");
+						$(this).parent("#A").siblings("#B").find("input[name='finance']").hide();
+						$(this).parent("#A").siblings("#V").find("input[name='finance']").hide();
+						$(this).parent("#A").siblings("#B").children("#financing_b").hide();
+						$(this).parent("#A").siblings("#V").children("#financing_v").hide()
+
+					}else if(commonId == "AV"){//将A.B隐藏
+
+						$(this).siblings("#financing_v").show();
+						$(this).siblings(".invest").show();
+						$(this).parent("#V").siblings("#A").find("input[name='finance']").val("");
+						$(this).parent("#V").siblings("#B").find("input[name='finance']").val("");
+						$(this).parent("#V").siblings("#B").find("input[name='finance']").hide();
+						$(this).parent("#V").siblings("#A").find("input[name='finance']").hide();
+						$(this).parent("#V").siblings("#B").children("#financing_b").hide();
+						$(this).parent("#V").siblings("#A").children("#financing_a").hide()
+					}else{//没有输入值，将A.B.V隐藏
+
+						$(this).parent("#O").siblings("#A").find("input[name='finance']").val("");
+						$(this).parent("#O").siblings("#B").find("input[name='finance']").val("");
+						$(this).parent("#O").siblings("#V").find("input[name='finance']").val("");
+						$(this).parent("#O").siblings("#A").find("input[name='finance']").hide();
+						$(this).parent("#O").siblings("#B").find("input[name='finance']").hide();
+						$(this).parent("#O").siblings("#V").find("input[name='finance']").hide();
+						$(this).parent("#O").siblings("#B").children("#financing_b").hide();
+						$(this).parent("#O").siblings("#V").children("#financing_v").hide();
+						$(this).parent("#O").siblings("#A").children("#financing_a").hide()
+					}
+
+				});
+			}
+		}else{
+
+			//PC相关修改
+			$btype_select.each(function(){
+				$(this).change(function(){
+					var btypeVal=$(this).val();
+					//关联DIV元素：
+					var netDiv=$(this).parents(".input-list").siblings("#NET_TYPE_SHOW");
+					var familyDiv=$(this).parents(".input-list").siblings("#FAMILY_TYPE_SHOW");
+					var otherDiv=$(this).parents(".input-list").siblings("#OTHER_TYPE_SHOW");
+
+					if(btypeVal=="01"){
+						netDiv.css("display","block");
+						//清空除开"互联网"之外的数据
+						familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
+						familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
+
+						otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
+						otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
+						otherDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
+						//---------------------
+					}else{
+						netDiv.css("display","none");
+					}
+					if(btypeVal=="02"){
+						familyDiv.css("display","block");
+						//清空除开"家族企业"之外的数据
+						netDiv.find("#"+data["itemId"] + child.WorkExper2.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper3.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper4.itemId).val("");
+
+						otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
+						otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
+						otherDiv.find("#"+data["itemId"] + child.WorkExper9.itemId).val("");
+						//清除"互联网"下的radio选择和隐藏后缀
+						netDiv.find("#FB").find("div[name='financingB']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+						netDiv.find("#FB").find("div[name='financingB']").find(".right").css("display","none");
+						netDiv.find("#FB").find(".input-list-suffix").css("display","none");
+
+						netDiv.find("#FA").find("div[name='financingA']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+						netDiv.find("#FA").find("div[name='financingA']").find(".right").css("display","none");
+						netDiv.find("#FA").find(".input-list-suffix").css("display","none");
+
+						netDiv.find("#FAN").find("div[name='financingAn']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+						netDiv.find("#FAN").find("div[name='financingAn']").find(".right").css("display","none");
+						netDiv.find("#FAN").find(".input-list-suffix").css("display","none");
+
+
+					}else{
+						familyDiv.css("display","none");
+					}
+					if(btypeVal=="03"){
+						otherDiv.css("display","block");
+						//清除除开"其他"之外所有数据
+						netDiv.find("#"+data["itemId"] + child.WorkExper2.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_1.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_2.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper2_3.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper3.itemId).val("");
+						netDiv.find("#"+data["itemId"] + child.WorkExper4.itemId).val("");
+
+						familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
+						familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
+
+						//清除"互联网"下的radio选择和隐藏后缀
+						netDiv.find("#FB").find("div[name='financingB']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+						netDiv.find("#FB").find("div[name='financingB']").find(".right").css("display","none");
+						netDiv.find("#FB").find(".input-list-suffix").css("display","none");
+
+						netDiv.find("#FA").find("div[name='financingA']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+						netDiv.find("#FA").find("div[name='financingA']").find(".right").css("display","none");
+						netDiv.find("#FA").find(".input-list-suffix").css("display","none");
+
+						netDiv.find("#FAN").find("div[name='financingAn']").find(".left").find(".radio-btn").removeClass("checkedRadio");
+						netDiv.find("#FAN").find("div[name='financingAn']").find(".right").css("display","none");
+						netDiv.find("#FAN").find(".input-list-suffix").css("display","none");
+
+					}else{
+						otherDiv.css("display","none");
+						//
+					}
+				});
+			});
+		}
+
 		//----"互联网"类型下，radio的切换处理
 		var radioEl;
 		if($(".radio-btn[name='radioInput']")!=undefined){
@@ -775,6 +1232,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 					ang_financing_i.val("");
 				}
 				//-----------将raido中的数据放入radioGroup下的隐藏input中
+
 				var radioValInput=$(this).parents(".right").find("div[name='radioData']").find("#"+data["itemId"] + child.WorkExper2.itemId);
 				radioValInput.val(financingTypeVal);
 			});

@@ -1,0 +1,92 @@
+
+<style type="text/css">
+	.bm_dire{margin-top:2rem; }
+	.bm_dire{line-height: 2rem;margin-left:10px;}
+</style>
+
+<script type="text/javascript">
+
+	//确定并且改变批次
+	function changeClass() {
+
+		var TzUniversityContextPath = "%bind(:10)";
+		var classid = $('input[name="%bind(:7)"]:checked').val();
+
+		if (classid == null) {
+			alert("%bind(:8)");
+			return;
+
+		} else {
+
+			var aaa = classid.split("--");
+			classid = aaa[0];
+
+			var pageid = "%bind(:2)";
+			var linkId = "%bind(:9)";
+			$("#" + pageid, window.parent.document).val(classid);
+			$("#ClassId", window.parent.document).val(classid);
+
+			$("#"+pageid+"_SPAN", window.parent.document).val($("input[name='%bind(:7)']:checked").next().text());
+
+			var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"BATCH","CLASSID":"'
+					+ classid + '"}}';
+			var option = {};
+			$.ajax({
+				type : "get",
+				dataType : "JSON",
+				data : {
+					tzParams : params
+				},
+				async : false,
+				url : TzUniversityContextPath,
+				success : function(f) {
+					if (f.state.errcode == "0") {
+						option = f.comContent;
+					}
+				}
+			});
+
+			var FIRM_TYPE="<option value=''>"
+					+ window.parent.MsgSet["PLEASE_SELECT"]
+					+ "</option>";
+
+
+			for ( var i in option) {
+				FIRM_TYPE = FIRM_TYPE +"<option value='"+ option[i]["code"]+ "'>"+ option[i]["txt"] + "</option>";
+			}
+			$("#" + linkId, window.parent.document).html(FIRM_TYPE);
+			window.parent.$("#" + linkId).trigger("chosen:updated");
+
+			closeThis();
+
+		}
+	};
+
+	//取消&返回
+	function closeThis() {
+
+		//关闭窗口后一定要清空该项
+		$("#searchCountry").empty();
+		$("#searchCountry").fadeOut("slow");
+		$("#body").css("position","relative");
+		$("#MainDiv").fadeIn("slow");
+	}
+
+</script>
+<div class="bg1">
+
+	<div class="topbar" style="background: url(/statics/images/appeditor/m/top_bar.png)no-repeat center center;background-size: 100%;">%bind(:4) <a  href="javascript:void(0)" class="return_r" onclick="closeThis();"><i style="background: url(/statics/images/appeditor/m/return.png)no-repeat center center;background-size: 30%;"></i></a>
+	</div>
+
+	<ul class="bm_dire">
+		%bind(:1)
+	</ul>
+
+	<div class="btn">
+		<a href="#" class="btn_right" onclick="closeThis();">%bind(:6)</a>
+		<a href="#" class="btn_left" onclick="changeClass();" >%bind(:5)</a>
+	</div>
+
+
+</div>
+
