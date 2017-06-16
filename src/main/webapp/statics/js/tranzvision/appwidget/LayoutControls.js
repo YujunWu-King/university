@@ -9,7 +9,7 @@ SurveyBuild.extend("LayoutControls","baseComponent",{
 	    var c = "",children = data.children;
 	    if(previewmode){
 	    	if(SurveyBuild.accessType == "M"){
-	    		c += '<div class="se_tit">';
+	    		c += '<div class="se_tit1">';
 		    	c +=  data.title;
 		    	c += '</div>';
 		    	c += '<div class="index_body">';
