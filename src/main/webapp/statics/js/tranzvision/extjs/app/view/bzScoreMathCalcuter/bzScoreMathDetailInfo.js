@@ -11,8 +11,10 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'Ext.selection.CellModel',
+        'Ext.grid.plugin.BufferedRenderer', 
         'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathController',
-        'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailStore'
+        'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailStore',
+        'Ext.grid.plugin.CellEditing'
     ],
     ignoreChangesFlag: true,//让框架程序不要提示用户保存的属性设置
     reference:"bzscoreDelinfo",
@@ -25,23 +27,23 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
     height:600,
     width:1000,
     //初始化传值
-    listeners:{
+ /*   listeners:{
         resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
-            var buttonHeight = 42;/*button height plus panel body padding*/
+            var buttonHeight = 42;button height plus panel body padding
             var formHeight = 30;  
             var formPadding = 60;
             var grid = panel.child('grid[name=afterBzscoreGrid]');
             grid.setHeight( height- formHeight -buttonHeight-formPadding);
         }
-    },
+    },*/
     constructor: function (config) {
         this.coulumdt = config.coulumdt;
         this.callParent();
     },
     initComponent:function(){
-    	this.cellEditing = new Ext.grid.plugin.CellEditing({
+    	/*this.cellEditing = new Ext.grid.plugin.CellEditing({
             clicksToEdit: 1
-        });
+        });*/
     	var store=new KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailStore();
     	var coulumdt=this.coulumdt;
     	var coulum_num=[];
@@ -198,12 +200,23 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                                 selModel: {
                                     type: 'checkboxmodel'
                                 },
-                                plugins: [this.cellEditing],
+                                plugins: [                                          
+                                        	     {
+                                        	        ptype: 'cellediting',
+                                        	        clicksToEdit: 1
+                                        	    },{
+                                                    ptype:'bufferedrenderer'
+                                                }
+                                         
+                                ],
+                           
+                                          
                                // layout: 'fit',
-                                minHeight: 300,
+                                height: 450,
                                 frame: true,
                                 name:'afterBzscoreGrid',
                                 reference:'afterBzscoreGrid',
+                                
                                 dockedItems: [{
                                     xtype: "toolbar",
                                     items: [

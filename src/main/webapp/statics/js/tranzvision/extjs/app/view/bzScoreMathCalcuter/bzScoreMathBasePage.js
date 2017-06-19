@@ -12,7 +12,9 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
         'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathController',
         'Ext.selection.CellModel',
         'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageStore',
-        'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageModel'
+        'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageModel',
+        'Ext.grid.plugin.CellEditing',
+        'Ext.grid.plugin.BufferedRenderer'
     ],
     autoScroll:false,
     ignoreChangesFlag: true,//让框架程序不要提示用户保存的属性设置
@@ -21,19 +23,19 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
     title:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.ScoreMath","标准成绩计算器"),
     frame:true,
-    listeners:{
+   /* listeners:{
         resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
-            var buttonHeight = 42;/*button height plus panel body padding*/
+            var buttonHeight = 42;button height plus panel body padding
             var formHeight = 30;
             var formPadding = 20;
             var grid = panel.child('grid[name=appFormApplicants]');
             grid.setHeight( height- formHeight -buttonHeight-formPadding);
         }
-    },
+    },*/
     initComponent:function(){
-    	this.cellEditing = new Ext.grid.plugin.CellEditing({
+    	/*this.cellEditing = new Ext.grid.plugin.CellEditing({
             clicksToEdit: 1
-        });
+        });*/
         var store= new KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageStore();
         
     	
@@ -74,7 +76,15 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
                   viewConfig : {
                     enableTextSelection:true
                   },
-                  plugins: [this.cellEditing],
+                  plugins: [                                          
+                   	     {
+                   	        ptype: 'cellediting',
+                   	        clicksToEdit: 1
+                   	    },{
+                               ptype:'bufferedrenderer'
+                           }
+                    
+                    ],
                   header:false,
                   
                  // layout:'fit',

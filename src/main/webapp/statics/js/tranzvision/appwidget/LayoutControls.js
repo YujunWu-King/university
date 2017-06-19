@@ -8,12 +8,21 @@ SurveyBuild.extend("LayoutControls","baseComponent",{
   	_getHtml : function(data,previewmode){
 	    var c = "",children = data.children;
 	    if(previewmode){
+	    	if(SurveyBuild.accessType == "M"){
+	    		c += '<div class="se_tit1">';
+		    	c +=  data.title;
+		    	c += '</div>';
+		    	c += '<div class="index_body">';
+		    	
+		    	c += '</div>';
+	    	} else {
 	    	c += '<div class="mainright-title">';
 	    	c += '	<span class="title-line"></span>' + data.title;
 	    	c += '</div>';
 	    	c += '<div class="main_content_box">';
 	    	
 	    	c += '</div>';
+	    	}
 	    }else{
 	    	c = '<ul class="DHContainer DHSort" data-dhbz="Y" style="min-height:150px;"></ul>';
 	    }
