@@ -1,13 +1,11 @@
 package com.tranzvision.gd.TZBzScoreMathBundle.service.impl;
 
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
@@ -70,8 +68,8 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 				List<String[]> dataCellKeys = new ArrayList<String[]>();
 
 				jacksonUtil.json2Map(strParams);
-				
-				//System.out.println("strParams1="+strParams);
+
+				// System.out.println("strParams1="+strParams);
 				String[] actData = null;
 				// 操作数据;
 				// JSONArray jsonArray = null;
@@ -92,10 +90,9 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 				}
 				String coulumdt = jacksonUtil.containsKey("coulumdt") ? jacksonUtil.getString("coulumdt") : null;
 
-				
-				this.exportstudeninfo(actData, Integer.valueOf(coulumdt),tzGDObject,jdbcTemplate,excelHandle,runControlId,processinstance);
+				this.exportstudeninfo(actData, Integer.valueOf(coulumdt), tzGDObject, jdbcTemplate, excelHandle,
+						runControlId, processinstance);
 
-				
 			} else {
 				this.logError("获取批处理参数失败");
 			}
@@ -112,7 +109,8 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 	 * @param errorMsg
 	 * @return
 	 */
-	private void exportstudeninfo(String[] actData, Integer coulumdt, TZGDObject tzGDObject, SqlQuery jdbcTemplate,ExcelHandle2 excelHandle,String runControlId,int processinstance) {
+	private void exportstudeninfo(String[] actData, Integer coulumdt, TZGDObject tzGDObject, SqlQuery jdbcTemplate,
+			ExcelHandle2 excelHandle, String runControlId, int processinstance) {
 
 		try {
 
@@ -138,9 +136,7 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 					schoolName = "", highestRecordId = "", companyAddress = "", companyName = "", department = "",
 					position = "", selfEmployment = "", gzage = "", highestRecord = "";
 
-		
 			// DateUtil dateUtil = new DateUtil();
-
 
 			String strForm = "";
 			String xmid = "";
@@ -154,10 +150,10 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 			String sunrank = "";
 			String sunscore = "";
 			String clpszf = "";
-	
-			
-			List<Map<String, Object>> listInfor=null;
-	
+			String teamsunrank = "";
+
+			List<Map<String, Object>> listInfor = null;
+
 			String bkzysql = "";
 			// 报考志愿名 班级名加批次名
 			String bkzyName = "";
@@ -200,7 +196,6 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 			String sql = "SELECT C.TZ_SCORE_ITEM_ID,C.DESCR,C.TZ_SCORE_ITEM_TYPE FROM PSTREENODE D,PS_TZ_CLASS_INF_T A,PS_TZ_MODAL_DT_TBL C,PS_TZ_RS_MODAL_TBL B WHERE D.TREE_NAME=B.TREE_NAME AND D.TREE_NODE=C.TZ_SCORE_ITEM_ID AND B.TZ_JG_ID=C.TZ_JG_ID AND B.TREE_NAME=C.TREE_NAME AND A.TZ_MSCJ_SCOR_MD_ID=B.TZ_SCORE_MODAL_ID AND B.TZ_JG_ID=A.TZ_JG_ID AND A.TZ_CLASS_ID=? ORDER BY D.TREE_NODE_NUM";
 			List<Map<String, Object>> listScoreItem = jdbcTemplate.queryForList(sql, new Object[] { classId });
 
-			
 			for (int n = 0; n < coulumdt; n++) {
 				dataCellKeys.add(new String[] { "judg_" + (n + 1) + "_id", "评委" + (n + 1) + "账号" });
 				dataCellKeys.add(new String[] { "judg_" + (n + 1) + "_zscore", "评委" + (n + 1) + "标准总分" });
@@ -253,6 +248,7 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 
 				teamID = jacksonUtil.getString("teamID");
 				sunrank = jacksonUtil.getString("judge_sunrank");
+				teamsunrank = jacksonUtil.getString("judge_teamsunrank");
 
 				classBatchMap = jdbcTemplate.queryForMap(
 						"SELECT TZ_BATCH_ID,TZ_CLASS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=?",
@@ -271,8 +267,9 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 			}
 
 			for (int num = 0; num < actData.length; num++) {
-				//long starttime = System.currentTimeMillis();
-				//System.out.println("成绩项开始时间导出：" + System.currentTimeMillis());
+				// long starttime = System.currentTimeMillis();
+				// System.out.println("成绩项开始时间导出：" +
+				// System.currentTimeMillis());
 				// 表单内容
 				Map<String, Object> mapData = new HashMap<String, Object>();
 				pw_list = new ArrayList<String[]>();
@@ -284,15 +281,13 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 				teamID = jacksonUtil.getString("teamID");
 				sunrank = jacksonUtil.getString("judge_sunrank");
 				sunscore = jacksonUtil.getString("judge_sunscore");
+				teamsunrank = jacksonUtil.getString("judge_teamsunrank");
 
-				
 				DecimalFormat df = new DecimalFormat("#.0000");
-				
+
 				mapData.put("msz", teamID);
-				mapData.put("zlpm", sunrank);
+				mapData.put("zlpm", teamsunrank);
 				mapData.put("bzzf", df.format(Double.valueOf(sunscore)));
-				
-				
 
 				// 材料评审总分
 				clpszf = jdbcTemplate.queryForObject(tzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TzGetClpSumScore"),
@@ -312,10 +307,20 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 
 					mapData.put("judg_" + (m + 1) + "_id",
 							jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_id"));
-					mapData.put("judg_" + (m + 1) + "_zscore",
-							jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_zscore"));
+
+					if (jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_zscore") == null
+							|| "".equals(jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_zscore"))) {
+						mapData.put("judg_" + (m + 1) + "_zscore",
+								jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_zscore"));
+					} else {
+
+						mapData.put("judg_" + (m + 1) + "_zscore", df.format(
+								Double.valueOf(jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_zscore"))));
+					}
+
 					mapData.put("judg_" + (m + 1) + "_num",
 							jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_num"));
+
 					mapData.put("judg_" + (m + 1) + "_rank",
 							jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_rank"));
 					judge_id = jacksonUtil.getString("judge_" + String.valueOf(m + 1) + "_id");
@@ -329,28 +334,29 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					scoreInsId = jdbcTemplate.queryForObject(sql, new Object[]{batchId,xmid,classId,judge_id}, "String");
-							
-							
+					scoreInsId = jdbcTemplate.queryForObject(sql, new Object[] { batchId, xmid, classId, judge_id },
+							"String");
 
 					// 成绩项分数
-					List<Map<String, Object>> listScore = jdbcTemplate.queryForList("SELECT TZ_CJX_XLK_XXBH,TZ_SCORE_PY_VALUE,TZ_SCORE_NUM,TZ_SCORE_ITEM_ID FROM PS_TZ_CJX_TBL  WHERE TZ_SCORE_INS_ID=?", new Object[] { scoreInsId });
+					List<Map<String, Object>> listScore = jdbcTemplate.queryForList(
+							"SELECT TZ_CJX_XLK_XXBH,TZ_SCORE_PY_VALUE,TZ_SCORE_NUM,TZ_SCORE_ITEM_ID FROM PS_TZ_CJX_TBL  WHERE TZ_SCORE_INS_ID=?",
+							new Object[] { scoreInsId });
 					Map<String, Object> listScoreMap = new HashMap<String, Object>();
 					for (Map<String, Object> map : listScore) {
 						listScoreMap.put(
-								 map.get("TZ_SCORE_ITEM_ID") == null ? ""
-										: "D-" +map.get("TZ_SCORE_ITEM_ID").toString(),
+								map.get("TZ_SCORE_ITEM_ID") == null ? ""
+										: "D-" + map.get("TZ_SCORE_ITEM_ID").toString(),
 								map.get("TZ_CJX_XLK_XXBH") == null ? "" : map.get("TZ_CJX_XLK_XXBH").toString());
 						listScoreMap.put(
-								 map.get("TZ_SCORE_ITEM_ID") == null ? ""
-										: "C-" +map.get("TZ_SCORE_ITEM_ID").toString(),
+								map.get("TZ_SCORE_ITEM_ID") == null ? ""
+										: "C-" + map.get("TZ_SCORE_ITEM_ID").toString(),
 								map.get("TZ_SCORE_PY_VALUE") == null ? "" : map.get("TZ_SCORE_PY_VALUE").toString());
 						listScoreMap.put(
-								 map.get("TZ_SCORE_ITEM_ID") == null ? ""
-										: "E-" +map.get("TZ_SCORE_ITEM_ID").toString(),
+								map.get("TZ_SCORE_ITEM_ID") == null ? ""
+										: "E-" + map.get("TZ_SCORE_ITEM_ID").toString(),
 								map.get("TZ_SCORE_NUM") == null ? "" : map.get("TZ_SCORE_NUM").toString());
 					}
-										
+
 					// SELECT TZ_SCORE_NUM FROM PS_TZ_CJX_TBL WHERE
 					// TZ_SCORE_INS_ID=?
 
@@ -361,21 +367,22 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 						String scoreValue = "";
 						if ("D".equals(scoreItemType)) {
 							// 下拉框
-							scoreValue = listScoreMap.get("D-" + scoreItemId)==null?"":listScoreMap.get("D-" + scoreItemId).toString();
-							
+							scoreValue = listScoreMap.get("D-" + scoreItemId) == null ? ""
+									: listScoreMap.get("D-" + scoreItemId).toString();
+
 						} else {
 							if ("C".equals(scoreItemType)) {
 								// 评语
-								scoreValue = listScoreMap.get("C-" + scoreItemId)==null?"":listScoreMap.get("C-" + scoreItemId).toString();
-								
+								scoreValue = listScoreMap.get("C-" + scoreItemId) == null ? ""
+										: listScoreMap.get("C-" + scoreItemId).toString();
 
 							} else {
-								scoreValue = listScoreMap.get("E-" + scoreItemId)==null?"":listScoreMap.get("E-" + scoreItemId).toString();
-								
+								scoreValue = listScoreMap.get("E-" + scoreItemId) == null ? ""
+										: listScoreMap.get("E-" + scoreItemId).toString();
+
 							}
 						}
 
-					
 						if ("D".equals(scoreItemType)) {
 							sql = "SELECT A.TZ_CJX_XLK_XXMC FROM PS_TZ_ZJCJXXZX_T A,PS_TZ_RS_MODAL_TBL B,PS_TZ_CLASS_INF_T C ";
 							sql += " WHERE C.TZ_ZLPS_SCOR_MD_ID=B.TZ_SCORE_MODAL_ID AND A.TZ_JG_ID=B.TZ_JG_ID AND A.TREE_NAME=B.TREE_NAME";
@@ -391,12 +398,13 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 					// System.out.println("time01="+(System.currentTimeMillis()-starttime));
 				}
 				try {
-					long starttime1=System.currentTimeMillis();
-											
+					long starttime1 = System.currentTimeMillis();
+
 					// 考生数据
 					String sqlinfo = tzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_STU_INFOSQL");
 					Map<String, Object> mapExaminee = jdbcTemplate.queryForMap(sqlinfo, new Object[] { classId, xmid });
-					//System.out.println("个了信息time=" + (System.currentTimeMillis() - starttime1));
+					// System.out.println("个了信息time=" +
+					// (System.currentTimeMillis() - starttime1));
 					if (mapExaminee != null) {
 						appModalId = mapExaminee.get("TZ_APP_MODAL_ID") == null ? ""
 								: mapExaminee.get("TZ_APP_MODAL_ID").toString();
@@ -408,34 +416,40 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 						age = mapExaminee.get("AGE") == null ? "" : mapExaminee.get("AGE").toString();
 						sex = mapExaminee.get("TZ_GENDER_DESC") == null ? ""
 								: mapExaminee.get("TZ_GENDER_DESC").toString();
-						
+
 						String appSql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID=? ";
 						listInfor = jdbcTemplate.queryForList(appSql, new Object[] { xmid });
 						Map<String, Object> listInfoMap = new HashMap<String, Object>();
 						for (Map<String, Object> map : listInfor) {
-							listInfoMap.put(
-									 map.get("TZ_XXX_BH") == null ? ""
-											: map.get("TZ_XXX_BH").toString(),
+							listInfoMap.put(map.get("TZ_XXX_BH") == null ? "" : map.get("TZ_XXX_BH").toString(),
 									map.get("TZ_APP_S_TEXT") == null ? "" : map.get("TZ_APP_S_TEXT").toString());
-						
+
 						}
-						
-						schoolName =listInfoMap.get(schoolNameXxxId)==null?"":listInfoMap.get(schoolNameXxxId).toString();
-																	
-						highestRecordId =listInfoMap.get(highestRecordXxxId)==null?"":listInfoMap.get(highestRecordXxxId).toString();
-							
-						companyAddress = listInfoMap.get(companyAddressXxxId)==null?"":listInfoMap.get(companyAddressXxxId).toString();
-								
-						companyName = listInfoMap.get(companyNameXxxId)==null?"":listInfoMap.get(companyNameXxxId).toString();
-								
-						department = listInfoMap.get(departmentXxxId)==null?"":listInfoMap.get(departmentXxxId).toString();
-								
-						position =listInfoMap.get(positionXxxId)==null?"":listInfoMap.get(positionXxxId).toString();
-				
-						selfEmployment = listInfoMap.get(selfEmploymentXxxId)==null?"":listInfoMap.get(selfEmploymentXxxId).toString();
-								
-						gzage = listInfoMap.get(WORK_ON_YEAR_XXX_ID)==null?"":listInfoMap.get(WORK_ON_YEAR_XXX_ID).toString();
-							
+
+						schoolName = listInfoMap.get(schoolNameXxxId) == null ? ""
+								: listInfoMap.get(schoolNameXxxId).toString();
+
+						highestRecordId = listInfoMap.get(highestRecordXxxId) == null ? ""
+								: listInfoMap.get(highestRecordXxxId).toString();
+
+						companyAddress = listInfoMap.get(companyAddressXxxId) == null ? ""
+								: listInfoMap.get(companyAddressXxxId).toString();
+
+						companyName = listInfoMap.get(companyNameXxxId) == null ? ""
+								: listInfoMap.get(companyNameXxxId).toString();
+
+						department = listInfoMap.get(departmentXxxId) == null ? ""
+								: listInfoMap.get(departmentXxxId).toString();
+
+						position = listInfoMap.get(positionXxxId) == null ? ""
+								: listInfoMap.get(positionXxxId).toString();
+
+						selfEmployment = listInfoMap.get(selfEmploymentXxxId) == null ? ""
+								: listInfoMap.get(selfEmploymentXxxId).toString();
+
+						gzage = listInfoMap.get(WORK_ON_YEAR_XXX_ID) == null ? ""
+								: listInfoMap.get(WORK_ON_YEAR_XXX_ID).toString();
+
 						// 最高学历描述
 						String highestSql = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID=? AND TZ_XXX_BH=? AND TZ_XXXKXZ_MC=?";
 						highestRecord = jdbcTemplate.queryForObject(highestSql,
@@ -460,15 +474,15 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 
 						mapData.put("mssqid", mssqh);
 						mapData.put("sex", sex);
-					
+
 						mapData.put("name", name);
-						
+
 						mapData.put("zjid", nationId);
-						
+
 						mapData.put("bkzkyx", schoolName);
 
 						mapData.put("birthday", birthday);
-						
+
 						mapData.put("drxsln", age);
 
 						mapData.put("zgxl", highestRecord);
@@ -478,19 +492,15 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 						mapData.put("gzage", gzage);
 						mapData.put("zhcyqc", selfEmployment);
 					}
-					
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					
+
 				}
-				
-				
 
 				dataList.add(mapData);
 			}
-			
-			
+
 			sql = "select TZ_SYSFILE_NAME from PS_TZ_EXCEL_DATT_T where PROCESSINSTANCE=?";
 			String strUseFileName = jdbcTemplate.queryForObject(sql, new Object[] { processinstance }, "String");
 
@@ -501,34 +511,35 @@ public class TzBzScoreExportEngineCls extends BaseEngine {
 					jdbcTemplate.update("update  PS_TZ_EXCEL_DATT_T set TZ_FWQ_FWLJ = ? where PROCESSINSTANCE=?",
 							new Object[] { urlExcel, processinstance });
 				} catch (Exception e2) {
-					
+
 					e2.printStackTrace();
 				}
 			}
-	
-		}catch (TzSystemException e) {
+
+		} catch (TzSystemException e) {
 			e.printStackTrace();
 			this.logError("系统错误，" + e.getMessage());
 			// TODO Auto-generated catch block
-			
+
 		}
 
 	}
-		/***
-		 * 返回 排名
-		 * 
-		 * @param arrs
-		 * @param score
-		 * @return
-		 */
-		public String checksunRank(Float[] arrs, Float score) {
 
-			Arrays.sort(arrs);
-			int j = 1;
-			while (!score.equals(arrs[arrs.length - j])) {
-				j++;
-			}
-			return String.valueOf(j);
+	/***
+	 * 返回 排名
+	 * 
+	 * @param arrs
+	 * @param score
+	 * @return
+	 */
+	public String checksunRank(Float[] arrs, Float score) {
 
+		Arrays.sort(arrs);
+		int j = 1;
+		while (!score.equals(arrs[arrs.length - j])) {
+			j++;
 		}
+		return String.valueOf(j);
+
+	}
 }
