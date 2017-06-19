@@ -14,7 +14,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
         var c = "";
 
         if (previewmode) {
-            if(SurveyBuild.appInsId == "0"){
+            /*if(SurveyBuild.appInsId == "0"){
                 var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"KSPHOTO"}}';
                 $.ajax({
                     type: "get",
@@ -37,7 +37,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                         }
                     }
                 });
-            }
+            }*/
             if(SurveyBuild.accessType == "M"){
             	  if(SurveyBuild._readonly) {
                    	c += '<div class="input-list">';
@@ -74,6 +74,30 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                 	c += '	<div class="clear"></div><br>';
                 	c += '</div>';
                 } else {
+                	if(SurveyBuild.appInsId == "0"){
+                        var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"KSPHOTO"}}';
+                        $.ajax({
+                            type: "get",
+                            dataType: "JSON",
+                            data: {
+                                tzParams: params
+                            },
+                            async: false,
+                            url: SurveyBuild.tzGeneralURL,
+                            success: function(f) {
+                                if (f.state.errcode == "0") {
+                                    var val = f.comContent.photo;
+                                    if (val && val.length > 1) {
+                                        data.value = val;
+                                        data["sysFileName"] = f.comContent.sysFileName;
+                                        data["filename"] = f.comContent.filename;
+                                        data["imaPath"] = f.comContent.imaPath;
+                                        data["path"] = f.comContent.path;
+                                    }
+                                }
+                            }
+                        });
+                    }
                 	c += '<div class="input-list">';
                 	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
                 	c += '  <div class="input-list-text left headshot">';
@@ -335,7 +359,66 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
     			})
 
     		});
+    		
 
+
+	           /* $("#clipBtn").click(function(){
+	                var imgUrl=$(".photo img").attr('src');
+	            	
+	            
+					if($("#sysfilename").val() != ""){
+					    loading();
+				        $("#crop_form").ajaxSubmit({
+				            dataType:"json",
+							data:{
+								"imaPath":imgUrl
+							},
+				            success: function(msg) {
+				              	//var data="sysFileName=" + msg.name + "&filename=" + filename + "&imaPath=" + imaPath + "&path=" + path;
+			          			var fileStrJson = {"sysFileName": msg.name , "filename": filename, "imaPath": imaPath, "path": path};
+					  			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"PHOTO","comParams":' + JSON.stringify( fileStrJson ) + '}';
+			
+				                $.ajax({
+				                    type:"POST",
+				                    url:"%bind(:1)",
+									dataType:"json",
+				                    data: {"tzParams" : tzParams },	
+				                    beforeSend:function() {
+				                        $(function(){
+				                            $("#loading").fadeIn();
+				                        });
+				                    },
+				                    success:function(html){
+				                        if(html.comContent.success == "Y"){
+				 							window.parent.$("#photo").attr("src", "%bind(:20)"+html.comContent.url);					
+											window.parent.SurveyBuild && window.parent.$("#photo").parent().parent().find('input[type="hidden"]').val(html.comContent.url);
+											//做如下修改 以适用分组框 modity by caoy
+											//layer.close(layer.index);
+											$("#loading").fadeOut();
+											closeThis();
+				                        }else{
+				                        	 //closeThis();
+											 alert("%bind(:12)");
+											 //layer.close(layer.index);
+											 $("#loading").fadeOut();
+										}
+				                    },
+						            error:function(xhr){
+						                btn.html(xhr.responseText);
+						                $("#loading").fadeOut();
+										//layer.close(layer.index);
+						            }
+				                })
+				            },
+				            error:function(xhr){
+				                btn.html(xhr.responseText);
+								layer.close(layer.index);
+				            }
+				        });
+					}else{
+						alert("%bind(:13)");
+					}
+			    });*/
 
     		function setImagePreview(){
     			var preview, img_txt, localImag, file_head = document.getElementById("file_head"),
