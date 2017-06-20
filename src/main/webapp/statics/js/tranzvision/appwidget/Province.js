@@ -49,15 +49,11 @@ SurveyBuild.extend("Province", "baseComponent", {
 	    				c += '	  <div class="text-box">';
 //	    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>'; 
 //	    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
-	    				c += '		<a>						<input type="text" id="m' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择省份" value="' + data.value + '"></a>';
+	    				c += '		<a>						<input type="text" id="' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择省份" value="' + data.value + '"></a>';
 	    				
 	    				c += '    </div>';
 	    				c += '</div>';
-	    				
-					
-					
-					
-				}
+	   				}
 			}else{
 				if(SurveyBuild._readonly){
 					//只读模式
@@ -123,8 +119,8 @@ SurveyBuild.extend("Province", "baseComponent", {
 		if(SurveyBuild.accessType == "M"){
 			//顾贤达    2017年6月12日 11:15:18 手机版TEST
 			
-			var $inputBox = $("#m" + data.itemId);
-			var $selectBtn = $("#m" + data.itemId + "_Btn");
+			var $inputBox = $("#" + data.itemId);
+			var $selectBtn = $("#" + data.itemId + "_Btn");
 			var siteId=$("#siteId").val();
 			/*文本框和图标选择*/
 			$.each([$inputBox,$selectBtn],function(i,el){

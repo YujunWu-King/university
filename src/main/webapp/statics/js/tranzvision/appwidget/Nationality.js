@@ -49,7 +49,8 @@ SurveyBuild.extend("Nationality", "baseComponent", {
     				c += '	  <div class="text-box">';
 //    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
 //    				c += '	 	<a href="pop_county.html"><input type="text" class="text1"  name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
-    				c += '		<a>						  <input type="text" id="m' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择国家" value="' + data.value + '" ccode=""></a>';
+    				c += '		<a>						  <input type="text" id="' + data.itemId + '" name="' + data.itemId + '"  value="' + data.value + '" placeholder="请选择国家" ccode=""></a>';
+//    				c += '		<a>						  <input type="text" id="m' + data.itemId + '" name="' + data.itemId + '"  value="' + data.value + '" placeholder="请选择国家" ccode=""></a>';
     				
     				c += '    </div>';
     				c += '</div>';
@@ -124,8 +125,11 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 		if(SurveyBuild.accessType == "M"){
 			//顾贤达    2017年6月12日 11:15:18 手机版TEST
 			
-			var $inputBox = $("#m" + data.itemId);
-			var $selectBtn = $("#m" + data.itemId + "_Btn");
+//			var $inputBox = $("#m" + data.itemId);
+//			var $selectBtn = $("#m" + data.itemId + "_Btn");
+//			
+			var $inputBox = $("#" + data.itemId);
+			var $selectBtn = $("#" + data.itemId + "_Btn");
 			var siteId=$("#siteId").val();
 			
 
@@ -171,7 +175,7 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 		                     loaded ();
 						}
 					});
-					console.log($("#m" + data.itemId).value);
+					console.log($("#" + data.itemId).val());
 				});
 			});
 			
