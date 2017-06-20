@@ -875,14 +875,16 @@ var SurveyBuild = {
             }
         });
     },
-	
-	addTjx: function(btnEl, instanceId) {
-        var dhid = $(btnEl).closest(".dhcontainer").attr("data-instancid");
 
-        var maxLines = this._items[instanceId]["maxLines"], me = this;
+    addTjx: function(btnEl, instanceId) {
+
+
+        var dhid = $(btnEl).closest(".dhcontainer").attr("data-instancid");
+        var maxLines = this._items[instanceId]["maxLines"];
+        var me = this;
         var isFixedCon = this._items[instanceId].fixedContainer;    //是否为固定多行容器
         var _children = this._items[instanceId]["children"], _fc = cloneObj(_children[0]);
-		
+
         var suffix = this._items[dhid]["linesNo"].shift();
 
         //初始化多行容器的行信息data
@@ -891,36 +893,36 @@ var SurveyBuild = {
 
             if (obj.isSingleLine == "Y") {
                 $.each(obj.children,function(i, ch) {
-                    ch["value"] = "";
-                    //ch["itemId"] += "_" + _children.length;
+
+                    ch["value"] = ""
                     ch["itemId"] += "_" + suffix;
-					if(ch.hasOwnProperty("isHidden")){
-						ch["isHidden"] = "N";
-					}
+                    if(ch.hasOwnProperty("isHidden")){
+                        ch["isHidden"] = "N";
+                    }
                 });
             }else{
-                //_fc[ins]["itemId"] += "_" + _children.length;
+
                 _fc[ins]["itemId"] += "_" + suffix;
-				if(obj.hasOwnProperty("isHidden")){
-					obj["isHidden"] = "N";
-				}
-				//附件上传,清空附件信息
-				if (_fc[ins]["classname"]=="refLetterFile"){
-					_fc[ins]["filename"] = "";
-					_fc[ins]["sysFileName"] = "";
-					_fc[ins]["orderby"] = "";
-					_fc[ins]["accessPath"] = "";
-					_fc[ins]["viewFileName"] = "";
-				}else if("imagesUpload"==_fc[ins]["classname"]){
-					_fc[ins]["filename"] = "";
-					_fc[ins]["sysFileName"] = "";
-					_fc[ins]["orderby"] = "";
-					_fc[ins]["accessPath"] = "";
-					_fc[ins]["viewFileName"] = "";
-					if(_fc[ins].hasOwnProperty("children")){
-						_fc[ins]["children"]=[{"itemId":"attachment_Upload","itemName":"图片上传","title":"图片上传","orderby":"","fileName":"","sysFileName":"","accessPath":"","viewFileName":""}]
-					}
-				}
+                if(obj.hasOwnProperty("isHidden")){
+                    obj["isHidden"] = "N";
+                }
+                //附件上传,清空附件信息
+                if (_fc[ins]["classname"]=="refLetterFile"){
+                    _fc[ins]["filename"] = "";
+                    _fc[ins]["sysFileName"] = "";
+                    _fc[ins]["orderby"] = "";
+                    _fc[ins]["accessPath"] = "";
+                    _fc[ins]["viewFileName"] = "";
+                }else if("imagesUpload"==_fc[ins]["classname"]){
+                    _fc[ins]["filename"] = "";
+                    _fc[ins]["sysFileName"] = "";
+                    _fc[ins]["orderby"] = "";
+                    _fc[ins]["accessPath"] = "";
+                    _fc[ins]["viewFileName"] = "";
+                    if(_fc[ins].hasOwnProperty("children")){
+                        _fc[ins]["children"]=[{"itemId":"attachment_Upload","itemName":"图片上传","title":"图片上传","orderby":"","fileName":"","sysFileName":"","accessPath":"","viewFileName":""}]
+                    }
+                }
             }
             if (!isFixedCon || isFixedCon != "Y"){
                 _fc[ins] = new me.comClass[obj.classname](obj);
@@ -935,41 +937,22 @@ var SurveyBuild = {
         });
 
         _children.push(_fc);
+
         if (isFixedCon && isFixedCon == "Y"){
-            //处理固定多行容器
-			var objOneTjx = $(this._items[instanceId]._getHtmlOne(this._items[instanceId],_children.length));
-            objOneTjx.insertBefore($(btnEl).parents(".addNext"));
-			/*行信息中的Select格式化*/
-            var selectObj = objOneTjx.find("select");
-            $.each(selectObj,function(i,sObj){
-                $("#" + $(sObj).attr("id")).chosen();
-            });
-            /*行信息中的Select格式化
-            var selectObj = $(this._items[instanceId]._getHtml(this._items[instanceId],true)).find("select");
-            $.each(selectObj,function(i,sObj){
-                $("#" + $(sObj).attr("id")).chosen();
-            });*/
+
+            var objOneTjx = $(this._items[instanceId]._getHtmlTwo(this._items[instanceId],_children.length));
+            objOneTjx.insertBefore($(btnEl).parents(".clear"));
+
             if (this._items[instanceId]._eventbind && typeof this._items[instanceId]._eventbind == "function") {
                 this._items[instanceId]._eventbind(this._items[instanceId]);
             }
         } else {
-            // $(this._addOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".main_inner_content_info"));
-			//this.ArrShift(_children[_children.length - 1],dhid);
+
             $(this._addOneRec(_children, _children.length - 1)).animate({height: 'hide',opacity: 'hide'},'slow',function() {
                 $(SurveyBuild._addOneRec(_children, _children.length - 1)).insertBefore($(btnEl).parents(".addNext"));
             });
 
-            /*行信息中的Select格式化*/
-            var selectObj = $(this._addOneRec(_children, _children.length - 1)).find("select");
-            $.each(selectObj,function(i,sObj){
-                $("#" + $(sObj).attr("id")).chosen();
-            });
         }
-		
-		/*新增一行动态效果*/
-		var $newRow = $(btnEl).parents(".addNext").prev(".main_inner_content_para");
-
-		$("html,body").animate({scrollTop: $newRow.offset().top}, 1000);
 
         //行数等于最大行数时，隐藏“Add One +”按钮
         if (_children.length >= maxLines) {
@@ -977,11 +960,11 @@ var SurveyBuild = {
         }
 
         /*子信息项事件绑定*/
-		
+
         $.each(_children[_children.length - 1],function(d, obj) {
-			
+
             if (obj._eventbind && typeof obj._eventbind == "function") {
-				
+
                 obj._eventbind(obj);
             }
         });
@@ -1083,22 +1066,22 @@ var SurveyBuild = {
     },
     //删除英语水平
     deleteEngLev: function(el) {
-        //if (confirm("是否删除该条信息？")) {
-		
-        var index = $(el).closest(".main_inner_content_para").index();
-        //console.log("index:"+index);
+
+        var index = $(el).closest(".next_record").index();
         var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
+
         if (index > 0) {
-            $(el).closest(".main_inner_content_para").animate({height: 'hide',opacity: 'hide'},'slow',function() {
-                    $(el).closest(".main_inner_content_para").remove();
+            $(el).closest(".next_record").animate({height: 'hide',opacity: 'hide'},'slow',function() {
+                $(el).closest(".next_record").remove();
             });
-            $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".main_inner_content_para").eq(index - 1).offset().top},1000);
-			//console.log($(el).closest(".dhcontainer"));
-			//console.log($(el).closest(".dhcontainer").find(".main_inner_content_info_add"));
-            $(el).closest(".main_inner_content").find(".addNext").find(".main_inner_content_info_add ").show();
-			this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
+            $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".next_record").eq(index - 1).offset().top},1000);
+
+            //显示添加下一条(最大个数下)
+
+            $(el).closest(".next_record").next(".clear").find(".add_next").show();
+            this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
             SurveyBuild._items[instanceId]["children"].splice(index, 1);
-			
+
         } else {
             var chs = SurveyBuild._items[instanceId];
             $.each(chs.children[0],function(instanceId, obj) {
@@ -1114,15 +1097,13 @@ var SurveyBuild = {
                 }
             })
         }
-        //delete SurveyBuild._items[instanceId]["children"][index];
-		//console.log($(el).closest(".mainright-box").siblings(".mainright-box"));
-        //}
-		var paraObject = $(el).closest(".main_inner_content_para").siblings(".main_inner_content_para");
-		$.each(paraObject,function(i,paraObj){
-			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["ENG_LEV"] + ' ' +(i+1));
-		})
-		
-		
+
+//		var paraObject = $(el).closest(".main_inner_content_para").siblings(".main_inner_content_para");
+//		$.each(paraObject,function(i,paraObj){
+//			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["ENG_LEV"] + ' ' +(i+1));
+//		})
+
+
     },
     /*==================================================
      +功能描述：报名表图片、附件控件上传
