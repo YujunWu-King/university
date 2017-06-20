@@ -56,6 +56,8 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 			    c +='<p style="color:#666;font-size:0.56rem;margin-top:5px;display:' + (SurveyBuild._readonly?'none':'block') +' ">'+msg+'</p>';
 			    c +='<p style="color:#666;font-size:0.56rem;">'+data.onShowMessage+'</p>';
 			    c +='</div>';
+			    
+			    
 			    if(children[0].viewFileName==""){
 			    	c += ' <div class="upload_list" id="'+data.itemId+'_AttList" style="display:none">';
 					c += '<p style="display:' + (SurveyBuild._readonly?'none':'') +'">'+ MsgSet["UP_FILE_LIST"] +'</p>';
@@ -66,19 +68,18 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 				    	if(data.allowMultiAtta == "Y"){
 			        		for(var i=0; i<children.length; i++){
 			        			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-			        				c += '<li class="fileLi"><span><a  onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+			        				c += '<li class="fileLi"><span><a  id="img_'+data.itemedId+'" onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
 			        			}
 			        		}
 			        	}else{
 			        		for(var i=0; i<children.length; i++){
 			        			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-			        				c += '<li class="fileLi"><span><a  onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';		        				
+			        				c += '<li class="fileLi"><span><a id="img_'+data.itemedId+'" onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';		        				
 			        			}
 			        		}
 			        	}
 				 c += '</div>';
 			    }
-			    
 			}else{
 				c += '<div class="input-list-blank margart15">';
 	        	c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';           
@@ -187,6 +188,7 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
         return e;
     },
     _validatorAttr: function(data) {
+    	
 		var _result = true;
 		var $edit_attaType = $("#question-edit .edit_attaType");
 		if(data.fileType != ""){
@@ -226,6 +228,9 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 	
 	
 	_eventbind: function(data) {
+		if(SurveyBuild.accessType == "M"){
+			
+		}
 		var $fileInput = $("#" + data.itemId);
 		var $uplBtn = $fileInput.prev(".bt_blue");
 		

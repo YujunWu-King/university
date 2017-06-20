@@ -22,14 +22,15 @@ var tzGeneralURL = "%bind(:1)";
 		   		menu[i].className=i==n?"now2":""; 
 			} */
 			var clickId = $("#ParamCon").val();
-// 			console.log(clickId);
+ 			console.log(clickId);
 // 			var countryCode=$("#TZ_SCH_COUNTRY",window.parent.document).val();
 
-			clickId=clickId.replace(/sch/, "cou");
+			clickId=clickId.replace(/sch/, "country");
 			console.log(clickId);
 			var countryCode=$("#"+clickId,window.parent.document).val();
-// 			console.log("countryCode===="+countryCode);
+//  			console.log("countryCode===="+countryCode);
 			var $CountryCode = $("#"+clickId,window.parent.document).attr("ccode");
+			console.log("countryCode===="+$CountryCode);
 			if($CountryCode==""){
 				$CountryCode="CHN";
 			}

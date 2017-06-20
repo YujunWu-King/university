@@ -511,7 +511,7 @@ var SurveyBuild = {
         
         //清华特有的改动
         var ProjectId = $("#ProjectId").val(); 
-		console.log(ProjectId);
+//		console.log(ProjectId);
 		if (ProjectId =="PRJ_57") {		
 		} else {
 			$("#TZ_TZ_3_4").hide(); 

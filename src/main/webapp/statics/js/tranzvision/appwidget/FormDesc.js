@@ -13,6 +13,14 @@ SurveyBuild.extend("FormDesc", "baseComponent", {
 		var c = '';
 		if (previewmode) {
 			 if(SurveyBuild.accessType == "M"){
+				 c +='<div class="readme" id="' + data.itemId + '">';
+				 c +=' <div class="form_sm" ><img class="mtips" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/tips2.png">'+MsgSet["FORM_DES"]+'</div>';
+				 c +='</div>';
+				 c +='<div class="shade" style="display:none"></div>';
+				 c +='<img class="pop_close" id="' + data.itemId + '_img" style="display:none" src="' + TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
+				 c +='<div class="pop_body" style="display:none" id="' + data.itemId + '_body">';
+				 c +=	'<div class="pop_inner" id="' + data.itemId + '_DIV"></div>';
+				 c +='</div>';
 				 
 			 }else{
 				//c += '<div id="' + data.itemId + '">' + data.title + '</div>';
@@ -41,24 +49,49 @@ SurveyBuild.extend("FormDesc", "baseComponent", {
 		return e;
 	},
 	_eventbind: function(data) {
-		 $(".form_input").hide();
-		var desc = $("#" + data["itemId"]);
-		desc.hover(
-				function () {
-				    $(this).children(".form_sm").css("background-color","#0070c6");
-				    $(this).children(".form_sm").css("color","#fff");
-				    $(this).children(".form_input").css("display","block");
-				    //$(this).css("background-color","#0070c6");
-				    //$(this).css("color","#fff");
-				    //$("#" + data["itemId"]+"_DIV").css("display","block");
-				  },
-				  function () {
-				    $(this).children(".form_sm").css("background-color","transparent");
-				    $(this).children(".form_sm").css("color","#000");
-				    $(this).children(".form_input").css("display","none");
-					  //$(this).css("background-color","#fff");
-					  //  $(this).css("color","#000");
-					  //  $("#" + data["itemId"]+"_DIV").css("display","none");
-				  });
+		if(SurveyBuild.accessType == "M"){
+			$(".shade").hide();
+			$(".pop_close").hide();
+			$(".pop_body").hide();
+				function initStyles(id) {
+				 var allHeight=$(window).height();
+				     var popheight=$("#"+id).height();
+				     $("#"+id).css("top",allHeight/2-popheight/2-10+"px");
+				     $(".pop_close").css("top",allHeight/2-popheight/2-20+"px");
+				}	
+			var desc = $("#" + data["itemId"]);
+			desc.click(function(){
+				$(".shade").show();
+				$("#"+data["itemId"]+"_img").show();
+				$("#"+data["itemId"]+"_body").show();
+				$(".pop_inner").html(data.title);
+				initStyles(data["itemId"] + "_body");
+			});
+			$(".pop_close").click(function(){ 
+				$(".pop_body").hide();
+				$(".shade").hide();
+				$(".pop_close").hide();
+				$(".pop_inner").html("");
+			});
+		}else{
+			$(".form_input").hide();
+			var desc = $("#" + data["itemId"]);
+			desc.hover(
+					function () {
+					    $(this).children(".form_sm").css("background-color","#0070c6");
+					    $(this).children(".form_sm").css("color","#fff");
+					    $(this).children(".form_input").css("display","block");
+					    
+					  },
+					  function () {
+					    $(this).children(".form_sm").css("background-color","transparent");
+					    $(this).children(".form_sm").css("color","#000");
+					    $(this).children(".form_input").css("display","none");
+						  //$(this).css("background-color","#fff");
+						  //  $(this).css("color","#000");
+						  //  $("#" + data["itemId"]+"_DIV").css("display","none");
+					  });
+		}
+		 
 	},
 })
