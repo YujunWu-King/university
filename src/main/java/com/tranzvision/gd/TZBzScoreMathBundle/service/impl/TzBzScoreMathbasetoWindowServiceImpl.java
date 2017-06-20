@@ -264,8 +264,9 @@ public class TzBzScoreMathbasetoWindowServiceImpl extends FrameworkImpl {
 
 				}
 				
-				mapList.put("judge_sunscore", sunfloat);
-				mapList.put("judge_sunrank", this.checkpeRank(bb, String.valueOf(sunfloat)));
+				mapList.put("judge_sunscore", sunfloat);											
+				mapList.put("judge_sunrank",this.checksunRank(sunscorelist, sunfloat));	
+				mapList.put("judge_teamsunrank", this.checkpeRank(bb, String.valueOf(sunfloat)));
 				listData.add(mapList);
 			}
 

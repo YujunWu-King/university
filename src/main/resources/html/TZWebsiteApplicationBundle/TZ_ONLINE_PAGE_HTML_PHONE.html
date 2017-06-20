@@ -41,7 +41,7 @@
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryui/jquery-ui.min.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/appwidget/baseComponent.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/appwidget/ValidationRules.js"></script>
-<script type="text/javascript" src="%bind(:1)/statics/js/lib/formvalidator/formValidator.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/formvalidator/formValidatorM.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/chosen.jquery.js"></script>
 
 
@@ -90,11 +90,11 @@
 			
 			$.each([$(".swiper-wrapper li"),$(".nav ul li")],function(i,el){
 				el.click(function(e) {
-					console.log("-------");
+// 					console.log("-------");
 					var pageno = $(this).index()+1;
-					console.log("pageno:"+pageno);
+// 					console.log("pageno:"+pageno);
 					var pagelen = $(".swiper-wrapper li").length;
-					console.log("pagelen:"+pagelen);
+// 					console.log("pagelen:"+pagelen);
 					
 					$(".page" + pageno).show();
 					
@@ -181,7 +181,7 @@
 						});
 					}
 					
-					console.log("currentPageId:"+currentPageId);
+// 					console.log("currentPageId:"+currentPageId);
 				});
 			});
 			
@@ -222,14 +222,13 @@
 			
 			function getData() {
 				var _a = SurveyBuild["_items"];
-	
+
 				var _setValue = function(obj, id) {
 					if ($("#" + id).length > 0) {
 						obj["value"] = SurveyBuild._getAttrVal($("#" + id).get(0));;
-	
 					}
 					//单选、多选 其他值
-					if (obj.classname == "Check" || obj.classname == "Radio") {
+					if (obj.classname == "Check" || obj.classname == "Radio") {						
 						var $other = $("#main_list div[data-instancid='" + obj["instanceId"] + "'] .sur_other_box");
 						if ($other.length > 0) {
 							obj.option[$other.attr('instanceId')]["othervalue"] = "";		
@@ -240,8 +239,10 @@
 	
 				$.each(_a,function(i, item) {
 					if (item.hasOwnProperty("children")) {
+// 						console.log(item.itemId);
 						//包含子元素
 						if (item.isDoubleLine == "Y") {
+							console.log("isDoubleLine");
 							if (item.fixedContainer == "Y") {
 								//固定多行容器
 								$.each(item["children"],
@@ -271,15 +272,21 @@
 								})
 							}
 						} else if (item.isSingleLine == "Y") {
+							
 							//普通组合控件、日期组合框、通讯地址等
 							$.each(item["children"],
+									
 							function(y, rec) {
+									console.log(rec);
+									console.log(item["itemId"] + rec.itemId);
 								_setValue(rec, item["itemId"] + rec.itemId);
 							})
 						}
 					} else {
 						//简单控件
+// 						console.log(item.itemId);
 						_setValue(item, item.itemId);
+						
 					}
 				});
 				return _a;
@@ -356,6 +363,7 @@
 				var classId = $("#ClassId").val();
 				var batchId = $("#BatchId").val();
 
+// 				console.log("TEST");
 				
 				var isPwd="N";
 				
@@ -643,13 +651,17 @@
 
 	<script type="text/javascript">
 		function getData() {
+			
 			var _a = SurveyBuild["_items"];
 	
+			console.log(_a);
+			
 			var _setValue = function(obj, id) {
 				if ($("#" + id).length > 0) {
 					obj["value"] = SurveyBuild._getAttrVal($("#" + id).get(0));;
 	
 				}
+				
 				//单选、多选 其他值
 				if (obj.classname == "Check" || obj.classname == "Radio") {
 					var $other = $("#main_list div[data-instancid='" + obj["instanceId"] + "'] .sur_other_box");

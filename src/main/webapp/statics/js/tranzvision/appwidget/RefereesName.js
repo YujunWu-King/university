@@ -28,7 +28,7 @@ SurveyBuild.extend("RefereesName", "baseComponent", {
             });
           
             if(SurveyBuild.accessType == "M"){
-          	  c += '<div class="item">';
+          	    c += '<div class="item">';
                 c += '    <p>'+data.title+'<span>*</span></p>';
                 c += '    <div class="text-box"><input type="text" class="text1" id="' + data.itemId + '"  name="' + data.itemId + '" value = "' + data.value + '" /></div>';
                 c += '</div>';

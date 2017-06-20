@@ -16,7 +16,8 @@ SurveyBuild.extend("bmrMobileNum", "baseComponent", {
 		if(SurveyBuild.accessType == "M"){
 	          	    c += '<div class="item">';
 	                c += '    <p>'+data.title+'<span>*</span></p>';
-	                c += '    <div class="text-box"><input type="text" class="text1" id="' + data.itemId + '"  name="' + data.itemId + '" value = "' + data.value + '" /><p style="color:#666;font-size:0.56rem;">e.g +86-10-62769369</p></div>';
+	                c += '    <div class="text-box"><input type="text" class="text1" id="' + data.itemId + '"  name="' + data.itemId + '" value = "' + data.value + '" /></div>';
+	                c +='<p style="color:#666;font-size:0.56rem;">e.g +86-10-62769369</p>';
 	                c += '</div>';
 	               
 	        	}

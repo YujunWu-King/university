@@ -124,11 +124,19 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                                         renderer: Ext.util.Format.numberRenderer('0.0000')
                                     },{
                                         text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.judge_sunrank"+i, "评委标准分数和组内排名"),
-                                        dataIndex: 'judge_sunrank',
+                                        dataIndex: 'judge_teamsunrank',
                                         editor: {
                                            allowBlank: false
                                         },                                        
                                         width: 180
+                                    },{
+                                        text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.judge_sunrank"+i, "评委标准分数和组内排名"),
+                                        dataIndex: 'judge_sunrank',
+                                        editor: {
+                                           allowBlank: false
+                                        },                                        
+                                        width: 180,
+                                        hidden:true
                                     },{
                                         text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.handle", "操作"),
                                         menuDisabled: true,

@@ -133,30 +133,34 @@ SurveyBuild.extend("University", "baseComponent", {
                          });
              		}
 
-                     /*c += '<div class="main_inner_content_info_autoheight">';
-                     c += '	<div class="main_inner_connent_info_left">';
-                     c += '		<span class="reg_title_star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title;
-                     c += '	</div>';
-                     c += '	<div class="main_inner_content_info_right">';
-                     c += '		<input type="text" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" class="input_63px" name="' + data["itemId"] + children[0]["itemId"] + '">';
-                     c += '		<input type="text" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="input_180px" name="' + data["itemId"] + children[1]["itemId"] + '">';
-                     c += '		<div style="margin-top:-40px;margin-left:256px">';
-                     c += '			<div id="' + data["itemId"] + data.children[0]["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: transparent none repeat scroll 0% 0%;" class="onCorrect">';
-                     c += '              <div class="onCorrect">&nbsp;</div>';
-                     c += '			</div>';
-                     c += '		</div>';
-                     c += '	</div>';
-                     c += '</div>'; */
-                     
+/*
+             		c += '<div class="input-list">';
+	                c += '	<div class="input-list-info left"><span class="red">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+	                c += '	<div class="input-list-textdate left input-date-select" style="width:12.5%">';
+	                c += '    	<input type="text" class="inpu-list-text-enter" ccode="'+ children[0]["ccode"] +'" title="' + MsgSet["CY"] + '" value="' + children[0]["value"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '"><img id="' + data["itemId"] + data.children[0]["itemId"] + '_Btn" src="' + TzUniversityContextPath + '/statics/images/appeditor/new/location.png" class="input-icon" />';
+	                c += '	</div>';
+	                c += '	<div class="input-list-textdate left input-date-select" style="width: 21%; margin: 0 15px 0 0;">';
+	                c += '    	<input type="text" class="inpu-list-text-enter" title="' + MsgSet["sch"] + '" value="' + children[1]["value"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+	                c += '	</div>';
+	                c += '	<div class="input-list-suffix left"><div id="' + data["itemId"]  + children[0]["itemId"] + 'Tip" class="onShow"><div class="onShow">&nbsp;</div></div></div>';
+	                c += '	<div class="clear"></div>';
+	                c += '</div>';
+                     */
+             		
+             		
                      c += '<div class="item">';
                      c += '	  <p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
                      c += '		 <div class="text-box">';
                      c += '    		<input type="hidden" id="TZ_SCH_COUNTRY" name="TZ_SCH_BMB_COUNTRY" value="CHN"> ';
 //                     c += '			<input type="text" id="TZ_SCH_CNAME_Country" name="' + data.itemId + '" placeholder="请选择院校国家" value="' + children[0]["value"] + '"  ccode="">';
-                     c += '			<input type="text" id="cou_' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择院校国家" value="' + children[0]["value"] + '"  ccode="">';
+                     c += '			<input type="text" id="' + data["itemId"] + children[0]["itemId"] + '" name="' + data["itemId"] + children[0]["itemId"] + '" placeholder="请选择院校国家" value="' + children[0]["value"] + '"  ccode="'+ children[0]["ccode"] +'">';
+//                     c += '			<input type="text" id="cou_' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择院校国家" value="' + children[0]["value"] + '"  ccode="">';
+                     
                      c += '		 </div>';
                      c += '      <div class="text-box" style="margin-top: 3px;">';
-                     c += '			<input type="text" id="sch_' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择院校" value="' + children[1]["value"] + '">';
+                     c += '			<input type="text" id="' + data["itemId"] + children[1]["itemId"] + '" name="' + data["itemId"] + children[1]["itemId"] + '" placeholder="请选择院校" value="' + children[1]["value"] + '">';
+//                     c += '			<input type="text" id="sch_' + data.itemId + '" name="' + data.itemId + '" placeholder="请选择院校" value="' + children[1]["value"] + '">';
+                     
                      c += '		 </div>	';
                      c += '</div>';
 
@@ -319,8 +323,13 @@ SurveyBuild.extend("University", "baseComponent", {
     	
     	if(SurveyBuild.accessType == "M"){
     		
+    		var nation = $("#" + data["itemId"] + data.children[0]["itemId"]).val();
     		
-			var $inputBox = $("#cou_" + data.itemId);
+    		console.log($("#" + data["itemId"] + data.children[0]["itemId"]));
+    		console.log($("#" + data["itemId"] + data.children[1]["itemId"]));
+  	        
+//			var $inputBox = $("#cou_" + data.itemId);
+  	        var $inputBox = $("#" + data["itemId"] + data.children[0]["itemId"]);
 //    		var $inputBox = $("#TZ_SCH_CNAME_Country");
 			var siteId=$("#siteId").val();
 			
@@ -355,7 +364,9 @@ SurveyBuild.extend("University", "baseComponent", {
 				});
 			});
 			
-			var $schoolBox = $("#sch_" + data.itemId);
+//			var $schoolBox = $("#sch_" + data.itemId);
+			var $schoolBox = $("#" + data["itemId"] + data.children[1]["itemId"]);
+			
 			$.each([$schoolBox],function(i, el) {
 				el.focus(function(){
 		        document.activeElement.blur();
