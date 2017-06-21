@@ -143,8 +143,8 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					psTzAqYhxxTbl.setTzJgId(orgID);
 					psTzAqYhxxTbl.setOprid(oprID);
 					psTzAqYhxxTbl.setTzRealname(judgeName);
-					psTzAqYhxxTbl.setTzEmail(judgeEmail);
-					psTzAqYhxxTbl.setTzMobile(judgePhoneNumber);
+//					psTzAqYhxxTbl.setTzEmail(judgeEmail);
+//					psTzAqYhxxTbl.setTzMobile(judgePhoneNumber);
 					psTzAqYhxxTbl.setTzRylx(tzRylx);;
 					psTzAqYhxxTbl.setTzJihuoZt(tzJihuoZt);
 					psTzAqYhxxTbl.setTzZhceDt(new Date());
@@ -446,10 +446,10 @@ public class JudgesAccClServiceImpl extends FrameworkImpl {
 					String originOpridSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_DLZH_ID=?";
 					oprID = jdbcTemplate.queryForObject(originOpridSql,
 								new Object[] { orgID, accountNo }, "String");
-					
-					String updateOprdSql = "update PS_TZ_AQ_YHXX_TBL set TZ_DLZH_ID=?, TZ_REALNAME = ?,TZ_RYLX = ?, TZ_EMAIL  = ?,TZ_MOBILE = ?,ROW_LASTMANT_DTTM = curdate(),ROW_LASTMANT_OPRID = ? where OPRID=?";
+					// 2017-6-21 xzx add PS_TZ_AQ_YHXX_TBL表中是绑定的手机和邮箱不用
+					String updateOprdSql = "update PS_TZ_AQ_YHXX_TBL set TZ_DLZH_ID=?, TZ_REALNAME = ?,TZ_RYLX = ?,ROW_LASTMANT_DTTM = curdate(),ROW_LASTMANT_OPRID = ? where OPRID=?";
 					String updateOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-					jdbcTemplate.update(updateOprdSql, new Object[]{accountNo,judgeName, tzRylx,judgeEmail, judgePhoneNumber,updateOprid, oprID});
+					jdbcTemplate.update(updateOprdSql, new Object[]{accountNo,judgeName, tzRylx,updateOprid, oprID});
 
 					/*short userTypeNum;
 					if ("Y".equals(userType) || "on".equals(userType)) {
