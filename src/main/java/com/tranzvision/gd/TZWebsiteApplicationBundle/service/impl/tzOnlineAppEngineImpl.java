@@ -464,14 +464,15 @@ public class tzOnlineAppEngineImpl {
 						for (int i = 0; i < letterList.size(); i++) {
 							// ////System.out.println("推荐信读取");
 							letterMap = letterList.get(i);
-							
+
 							String str_seq1 = String.valueOf((int) (Math.random() * 10000000));
 							String str_seq2 = "00000000000000"
 									+ String.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
 							str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
 							String tzRefLetterId = str_seq1 + str_seq2;
-							//String tzRefLetterId = String
-							//		.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
+							// String tzRefLetterId = String
+							// .valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL",
+							// "TZ_REF_LETTER_ID"));
 							PsTzKsTjxTbl psTzKsTjxTbl = new PsTzKsTjxTbl();
 							psTzKsTjxTbl.setTzRefLetterId(tzRefLetterId);// 主键
 																			// 推荐信ID
@@ -581,8 +582,13 @@ public class tzOnlineAppEngineImpl {
 							String LAST_LETTER_INS_ID = letterMap.get("TZ_TJX_APP_INS_ID") == null ? ""
 									: letterMap.get("TZ_TJX_APP_INS_ID").toString();
 							// 已经确认 只有唯一推荐信实例？TZ_APP_FORM_STA='U'表示已提交
+							System.out.println("tzTjxAppInsId：" + tzTjxAppInsId);
+							System.out.println("LAST_LETTER_INS_ID：" + LAST_LETTER_INS_ID);
 							psTzAppInsT = null;
-							psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(new Long(LAST_LETTER_INS_ID));
+
+							if (LAST_LETTER_INS_ID != null && !LAST_LETTER_INS_ID.equals("")) {
+								psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(new Long(LAST_LETTER_INS_ID));
+							}
 
 							if (psTzAppInsT != null) {
 								PsTzAppInsT psTzAppInsT2 = new PsTzAppInsT();
@@ -611,15 +617,13 @@ public class tzOnlineAppEngineImpl {
 								final String addTZ_FORM_ATT_T = "insert into PS_TZ_FORM_ATT_T select ?,TZ_XXX_BH,TZ_INDEX,ATTACHSYSFILENAME,ATTACHUSERFILE,ROW_ADDED_DTTM,ROW_ADDED_OPRID,ROW_LASTMANT_DTTM,ROW_LASTMANT_OPRID,SYNCID,SYNCDTTM,TZ_ACCESS_PATH from PS_TZ_FORM_ATT_T where TZ_APP_INS_ID=?";
 								final String addTZ_APP_DHHS_T = "insert into PS_TZ_APP_DHHS_T select ?,TZ_XXX_BH,TZ_XXX_LINE from PS_TZ_APP_DHHS_T where TZ_APP_INS_ID=?";
 								final String addTZ_APP_HIDDEN_T = "insert into PS_TZ_APP_HIDDEN_T select ?,TZ_XXX_BH,TZ_IS_HIDDEN from PS_TZ_APP_HIDDEN_T where TZ_APP_INS_ID=?";
-								
-								//System.out.println(addTZ_APP_CC_T);
-								//System.out.println(addTZ_APP_DHCC_T);
-								//System.out.println(addTZ_FORM_ATT_T);
-								//System.out.println(addTZ_APP_DHHS_T);
-								//System.out.println(addTZ_APP_HIDDEN_T);
-								System.out.println("tzTjxAppInsId："+tzTjxAppInsId);
-								System.out.println("LAST_LETTER_INS_ID："+LAST_LETTER_INS_ID);
-								
+
+								// System.out.println(addTZ_APP_CC_T);
+								// System.out.println(addTZ_APP_DHCC_T);
+								// System.out.println(addTZ_FORM_ATT_T);
+								// System.out.println(addTZ_APP_DHHS_T);
+								// System.out.println(addTZ_APP_HIDDEN_T);
+
 								sqlQuery.update(addTZ_APP_CC_T, new Object[] { tzTjxAppInsId, LAST_LETTER_INS_ID });
 								sqlQuery.update(addTZ_APP_DHCC_T, new Object[] { tzTjxAppInsId, LAST_LETTER_INS_ID });
 								sqlQuery.update(addTZ_FORM_ATT_T, new Object[] { tzTjxAppInsId, LAST_LETTER_INS_ID });
