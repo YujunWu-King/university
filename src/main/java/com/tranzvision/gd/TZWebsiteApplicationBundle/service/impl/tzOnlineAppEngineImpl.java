@@ -888,6 +888,10 @@ public class tzOnlineAppEngineImpl {
 			}
 
 			if ("BMB".equals(strTplType)) {
+
+				// 创建报名表的时候，需要将考生的是否允许继续申请状态设置成否
+				sql = "update PS_TZ_REG_USER_T set TZ_ALLOW_APPLY = 'N' where OPRID=?";
+				sqlQuery.update(sql, new Object[] { strAppOprId });
 				int count = 0;
 				// 如果是 变更班级，那么
 				if (chageClass) {
