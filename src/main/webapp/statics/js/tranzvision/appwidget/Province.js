@@ -46,6 +46,7 @@ SurveyBuild.extend("Province", "baseComponent", {
 					
 					  	c += '<div class="item">';
 	    				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+	    				c += '	<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';			
 	    				c += '	  <div class="text-box">';
 //	    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>'; 
 //	    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
@@ -125,24 +126,6 @@ SurveyBuild.extend("Province", "baseComponent", {
 			/*文本框和图标选择*/
 			$.each([$inputBox,$selectBtn],function(i,el){
 				var prov;
-				/*el.click(function(e) {
-					var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-					var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_PROVINCE_STD2","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","TZ_PROV_ID":"' + data.itemId + '","siteId":"' + siteId + '"}}';
-					provinceUrl = provinceUrl + window.escape(params);
-		
-					prov = $.layer({
-						type: 2,
-						title: false,
-						fix: false,
-						closeBtn: false,
-						shadeClose: false,
-						shade : [0.3 , '#000' , true],
-						border : [3 , 0.3 , '#000', true],
-						offset: ['100px',''],
-						area: ['588px','300px'],
-						iframe: {src: provinceUrl}
-					});
-				});*/
 				el.click(function(e) { 
 					$.each([$inputBox, $selectBtn],function(i, el) {
 		              document.activeElement.blur();

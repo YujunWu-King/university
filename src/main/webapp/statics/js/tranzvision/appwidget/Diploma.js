@@ -59,6 +59,7 @@ SurveyBuild.extend("Diploma", "baseComponent", {
                     
     				c += '<div class="item">';
     				c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+    				c += '<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';			
     				c += '<div class="text-box">';
     				
 //                  c += '          <select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';
