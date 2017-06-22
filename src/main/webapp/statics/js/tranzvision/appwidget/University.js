@@ -58,8 +58,10 @@ SurveyBuild.extend("University", "baseComponent", {
                     c += '<div class="item">';
      				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
      				c += '	  <div class="text-box">';
-
      				c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + children[0]["value"]  + '"></a>';
+     				c += '    </div>';
+     				
+     				c += '	  <div class="text-box">';
      				c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + children[1]["value"]  + '"></a>';
      				c += '    </div>';
      				c += '</div>';
