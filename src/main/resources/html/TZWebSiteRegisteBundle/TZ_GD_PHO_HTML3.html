@@ -45,7 +45,7 @@ $("#clipArea").photoClip({
 
 $(function(){
 $("#clipBtn").click(function(){
-	     var imaPath="";
+	     var imaPath="",path="",sysFileName="",filename="",imaPath1="";
 		$("#photox").empty();
 		$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
 		$(".htmleaf-container").hide();
@@ -59,6 +59,8 @@ $("#clipBtn").click(function(){
 				
 				//console.log(msg);
 				imaPath=msg.msg.accessPath+msg.msg.sysFileName;
+				sysFileName=msg.msg.sysFileName;
+				filename=msg.msg.filename;
 				console.log("imaPath"+imaPath);
 			    var filename=$("#photox img").attr("src");
 				var filedate=filename.split(',');
@@ -77,12 +79,25 @@ $("#clipBtn").click(function(){
 			    data: {"tzParams" : tzParams },	
 			    success:function(html){
 			    	
+			    	var fileStrJson = {"sysFileName": sysFileName , "filename": filename, "imaPath": imaPath, "path": path};
+		  			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"PHOTO","comParams":' + JSON.stringify( fileStrJson ) + '}';
+
+	                $.ajax({
+	                    type:"POST",
+	                    url:TzUniversityContextPath + "/dispatcher?",
+						dataType:"json",
+	                    data: {"tzParams" : tzParams },	
+	                    success:function(html){
+	                    	}
+	                    })
+			    	
 			    }
 			})
 		   }
 	     })
-	
-  })
+	     
+	     
+
 });
 
 
