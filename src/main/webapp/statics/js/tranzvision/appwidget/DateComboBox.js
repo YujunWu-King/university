@@ -66,6 +66,7 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 					c += '<div class="item">';
 					c += '	<p>' + data.title + '<span>' + (data.isRequire == "Y" ? "*": "") + '</span></p >';
 					c += '	<div class="overhidden">';
+					c += '  <div id="' + data.itemId  + children[0]["itemId"]+ 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 					c += '		<div class="text-box fl" style="width:30%;">';
 					c += '      	<input type="text" class="text1"  readonly="readonly" name="' + data["itemId"] + children[0]["itemId"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[0]["itemId"] + '\');" value ="' + children[0]["value"] + '">';
 					c += '      </div>';
