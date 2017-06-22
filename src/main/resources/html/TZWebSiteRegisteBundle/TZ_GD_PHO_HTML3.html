@@ -47,7 +47,16 @@ $("#clipBtn").click(function(){
 		$("#photox").empty();
 		$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
 		$(".htmleaf-container").hide();
+		
+		$("#myupload").ajaxSubmit({
+			dataType:  "json",
+			success: function(msg) {
+				
+				console.log(msg);
+			
+					}
 	})
+  })
 });
 
 
@@ -283,21 +292,19 @@ function setImagePreview() {
 			<div class="foot-use">
 				<div class="uploader1 blue">
 					<input type="button" name="file" class="button" value="打开">
+					<img id="tempimg" dynsrc="" style="display:none" />
+					<!--form id="myupload" action="/ImaUploadServlet?sysfilename=" method="post" enctype="multipart/form-data"-->
+					<form id="myupload"
+						action="TzUniversityContextPath + "/dispatcher"/UpdWebServlet?filePath=zhglPhoto" method="post"
+						enctype="multipart/form-data">
+						<input class="fileupload2" type="file" name="websitefile" id="fileupload" style="position:absolute"/>
+					</form>
 					<input id="file" type="file" onchange="javascript:setImagePreview();" accept="image/*" multiple  />
 				</div>
 
 				<button id="clipBtn">截取</button>
 			</div>
-			<form id="crop_form" method="post" action="%bind(:20)/ImaScalingServlet">
-				<!--通过生成尺寸和旋转角度 后台获取尺寸和旋转角度再进行裁剪-->
-				<input id="sysfilename" type="hidden" name="sysfilename" value="">
-				<input id="x1" type="hidden" name="x1" value="">
-				<input id="y1" type="hidden" name="y1" value="">
-				<input id="x2" type="hidden" name="x2" value="">
-				<input id="y2" type="hidden" name="y2" value="">
-				<input id="h" type="hidden" name="h" value="">
-				<input id="w" type="hidden" name="w" value="">
-			</form>
+
 			<div id="view" style="background-color: rgb(102, 102, 102); background-repeat: no-repeat; background-position: center center; background-size: contain;"></div>
 	    </article>
 	</body>
