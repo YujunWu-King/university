@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="%bind(:20)/statics/css/appeditor/m/LCalendar.css">
 <link rel="stylesheet" href="%bind(:20)/statics/css/appeditor/m/rest.css">
 <script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.form.js"></script>
 <link rel="stylesheet" href="%bind(:20)/statics/css/appeditor/m/swiper.min.css">
 <script type="text/javascript" src="%bind(:20)/statics/js/tranzvision/appwidget/m/rem.js"></script>
 <script type="text/javascript" src="%bind(:20)/statics/js/tranzvision/appwidget/m/common.js"></script>
@@ -36,7 +37,7 @@ $("#clipArea").photoClip({
 		console.log("照片读取完成");
 	},
 	clipFinish: function(dataURL) {
-		console.log(dataURL);
+		//console.log(dataURL);
 	}
 });
 
@@ -44,18 +45,43 @@ $("#clipArea").photoClip({
 
 $(function(){
 $("#clipBtn").click(function(){
+	     var imaPath="";
 		$("#photox").empty();
 		$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
 		$(".htmleaf-container").hide();
+		var obj_file = document.getElementById("file");
+		console.log(obj_file.value);
+		
 		
 		$("#myupload").ajaxSubmit({
 			dataType:  "json",
 			success: function(msg) {
 				
-				console.log(msg);
-			
-					}
-	})
+				//console.log(msg);
+				imaPath=msg.msg.accessPath+msg.msg.sysFileName;
+				console.log("imaPath"+imaPath);
+			    var filename=$("#photox img").attr("src");
+				var filedate=filename.split(',');
+				//console.log("filedate[1]"+filedate[1]);
+		        
+		        
+		  // console.log(filename);
+			    var fileStrJson = { "imageDate": filedate[1], "imaPath": imaPath};
+			  
+			    var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_MUP_PHOTO_STD","OperateType":"QF","comParams":' + JSON.stringify( fileStrJson ) + '}';
+			   // console.log("tzParams"+tzParams);
+			$.ajax({
+			    type:"POST",
+			    url:TzUniversityContextPath + "/dispatcher",
+				dataType:"json",
+			    data: {"tzParams" : tzParams },	
+			    success:function(html){
+			    	
+			    }
+			})
+		   }
+	     })
+	
   })
 });
 
@@ -295,17 +321,21 @@ function setImagePreview() {
 					<img id="tempimg" dynsrc="" style="display:none" />
 					<!--form id="myupload" action="/ImaUploadServlet?sysfilename=" method="post" enctype="multipart/form-data"-->
 					<form id="myupload"
-						action="TzUniversityContextPath + "/dispatcher"/UpdWebServlet?filePath=zhglPhoto" method="post"
+						action="UpdWebServlet?filePath=zhglPhoto" method="post"
 						enctype="multipart/form-data">
-						<input class="fileupload2" type="file" name="websitefile" id="fileupload" style="position:absolute"/>
+						<!-- <input class="fileupload2" type="file" name="websitefile" id="fileupload" style="position:absolute"/> -->
+					
+					    <!-- <input id="file" type="file" onchange="javascript:setImagePreview();" accept="image/*" multiple  /> -->
+					
+					<input id="file" name="websitefile" type="file"   />
 					</form>
-					<input id="file" type="file" onchange="javascript:setImagePreview();" accept="image/*" multiple  />
 				</div>
 
 				<button id="clipBtn">截取</button>
 			</div>
-
+            
 			<div id="view" style="background-color: rgb(102, 102, 102); background-repeat: no-repeat; background-position: center center; background-size: contain;"></div>
+			
 	    </article>
 	</body>
 </html>
