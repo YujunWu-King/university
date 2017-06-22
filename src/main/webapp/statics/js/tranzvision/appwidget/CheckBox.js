@@ -12,7 +12,8 @@ SurveyBuild.extend("CheckBox", "baseComponent", {
 			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
 			if(SurveyBuild.accessType == "M"){
 				c += '<div class="item" data-instancid="' + data.instanceId + '">';
-				c += '<div class="check-box">';
+				c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+				c += '<div class="check-box ">';
 				c += '	<ul>';
 				c += '		<li class="check-box ' + (data.value == "Y" ? "checkedBox": "") + '"><input type="checkbox" class="checkbox"  '+ (data.value == "Y" ? "checked='checked'": "") + ' instanceId="' + data.instanceId + '" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '"><label for="' + data.itemId + '">'+data.title+' </label></li>';
 				c += '	</ul>';

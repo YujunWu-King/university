@@ -48,6 +48,7 @@ SurveyBuild.extend("Check", "baseComponent", {
 				}
 				c += '<div class="item" data-instancid="' + data.instanceId + '">';
 				c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+				c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				c += '	<div class="check-box">';
 				c += '		<ul>' + e +'</ul>';
 				c += '	</div>';

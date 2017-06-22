@@ -52,6 +52,7 @@ SurveyBuild.extend("Radio", "baseComponent", {
 				data.format = (data.format?data.format:"S");
 				c += '<div class="item" data-instancid="' + data.instanceId + '">';
 				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+				c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				if(data.format == "H"){
 				c += '	<ul class="sex" id="' + data.itemId + '">'+e+'</ul>';
 				}else{

@@ -105,12 +105,12 @@ $.formValidator =
 	//modity by caoy
 	setTipState : function(elem,showclass,showmsg)
 	{
-		//console.log("ERROR TIP");
-		//console.log("showclass:"+showclass);
-		//console.log("showmsg:"+showmsg);
+//		console.log("ERROR TIP");
+//		console.log("showclass:"+showclass);
+//		console.log("showmsg:"+showmsg);
 		var initConfig = $("body").data(elem.validatorGroup);
-		//console.log(elem.validatorGroup);
-		//console.log(initConfig.mode);
+//		console.log(elem.validatorGroup);
+//		console.log(initConfig.mode);
 		if(initConfig.mode == "SingleTip")
 		{
 			//显示和保存提示信息
@@ -120,7 +120,7 @@ $.formValidator =
 		}
 		else
 		{
-			//console.log(elem.settings[0].tipID);
+//			console.log(elem.settings[0].tipID);
 			var tip = $("#"+elem.settings[0].tipID);
 			
 			
