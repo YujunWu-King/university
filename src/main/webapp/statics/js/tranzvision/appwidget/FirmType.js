@@ -351,6 +351,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//--------------------------------将公司类型值放入下拉框
 			types += '<div class="item">';
 			types += '<p>'+ child.WorkExper1.itemName +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+			types += '<div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 			types += '<div class="text-box">';
 			types += '<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="select1" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
 			types += '<option value="">' +MsgSet["PLEASE_SELECT"]+'</option>';
@@ -409,6 +410,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//将值放入职位类型的下拉框
 			types += '<div class="item">';
 			types += '<p>'+ child.WorkExper2.itemName +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+			types += '<div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 			types += '<div class="text-box">';
 			types += '<select id="' + data["itemId"] + child.WorkExper2.itemId + '" class="select1" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
 			types += OPT_POSITION;
@@ -494,23 +496,25 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		});
 		 //所有select非空验证:WorkExper1 WorkExper2
 		if(data.isRequire == "Y"){
-			//console.log("必填校验");
+
 			var select_id_gp=["WorkExper1","WorkExper2"];
 			for(var j=0;j<select_id_gp.length;j++){
-				 var EngLevelOpt=""+select_id_gp[j];
-				   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
-				   $selectEl.each(function(){
-					   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-						$(this).functionValidator({
-							fun:function(val,el){
-								if(val==""){
-									return "此项必选";
-								}else{
-									return true;
-								}
-							}	
-						}); 
-				   });
+				var EngLevelOpt=""+select_id_gp[j];
+				var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
+				$selectEl.each(function(){
+
+					$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+					$(this).functionValidator({
+						fun:function(val,el){
+
+							if(val==""){
+								return "此项必选";
+							}else{
+								return true;
+							}
+						}
+					});
+				});
 			}
 		}
 	

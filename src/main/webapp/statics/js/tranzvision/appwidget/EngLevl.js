@@ -991,13 +991,6 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 		}
 
-
-		//存在两条及以上添加删除按钮
-//		if(index > 1 && !SurveyBuild._readonly){
-//
-//			htmlContent += '<div onclick="SurveyBuild.deleteEngLev(this);" class="btn_delete">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
-//		}
-
 		return htmlContent;
 	},
 
