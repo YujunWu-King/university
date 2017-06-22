@@ -110,6 +110,9 @@ input[type="checkbox"], input[type="radio"] {
 .check-box ul li label{display:inline-block;font-size:0.58rem;line-height:0.7rem;color:#666;vertical-align: middle;}
 .company  li{margin:5px auto 10px;}
 .company  li label{display:inline-block;font-size:0.58rem;line-height:0.7rem;color:#666;vertical-align: middle;}
+.tjx{overflow: hidden;}
+.tjx  li{width:50%;float: left;text-align: center;}
+.tjx  li label{display:inline-block;font-size:0.58rem;line-height:0.7rem;color:#666;vertical-align: middle;}
 .text2{vertical-align: middle;border-radius:5px;display:inline-block;box-sizing:border-box;width:80%!important;border:1px solid #ddd!important;}
 textarea{border:none;font-size:0.6rem;line-height:1rem;width:100%;background-color:transparent;min-height:4rem;text-indent: 8px;padding-top: 3px; color: #666;}
 .next_record{width:100%;border-top:10px solid #f1f1f1;}

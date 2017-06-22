@@ -379,10 +379,18 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 
 				//非只读模式、添加下一条
-//                if(SurveyBuild._readonly != true){
-//
-//                    c += '<div>张三</div>';
-//                }
+                if(SurveyBuild._readonly != true){
+                	
+                	if(len<data.maxLines){
+                		
+                		c += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')">' + MsgSet["ADD_ONE"] + '</div>';
+                	}else{
+                		
+                		c += '<div class="clear" style="display: none"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div>';
+                	}
+                	
+                	c += '</div>';
+                }
 
 			}else{
 				
@@ -2274,24 +2282,22 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		}
 		
 		works += '<div id="main_inner_content_para' + i + '" class="next_record">';
-		works += '<div class="se_tit1">' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
 		
 		//非只读模式
-		if(SurveyBuild._readonly!=true){
+		if(SurveyBuild._readonly != true){
 			if(rownum > data.defaultLines){
 				
-				//目前还看不懂？？？
 				if(deleteFlag == true){
 					
-					works += '<div onclick="SurveyBuild.deleteEngLev(this);" class="btn_delete" id="tjx_delete_' + i + '">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
+					works += '<div onclick="SurveyBuild.deleteTjx(this);" class="btn_delete" id="tjx_delete_' + i + '">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
 				}else{
 					
-					works += '<div onclick="SurveyBuild.deleteEngLev(this);" class="btn_delete" id="tjx_delete_' + i + '" style="display:none">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
+					works += '<div onclick="SurveyBuild.deleteTjx(this);" class="btn_delete" id="tjx_delete_' + i + '" style="display:none">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
 
 				}
 			}
 		}
-		
+		works += '<div class="se_tit1">' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
 		var _readOnlyRadio = "N";
 		if(SurveyBuild._readonly||_zd=="Y"||_zd=="Z"){
 			_readOnlyRadio = "Y";
@@ -2301,46 +2307,17 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		var tjxEditMode = false;
 		
 		//称呼
-        if(tjxEditMode){
-            //只读模式
-            var desc = "";
-            for (var i101 in child[i].recommend_18.option) {
-                if (child[i].recommend_18.value == "Ms.") {
-                    child[i].recommend_18.value = "MS";
-                } else if (child[i].recommend_18.value == "Mr.") {
-                    child[i].recommend_18.value = "MR";
-                } else if (child[i].recommend_18.value == "Professor") {
-                    child[i].recommend_18.value = "PF";
-                } else if (child[i].recommend_18.value == "Director") {
-                    child[i].recommend_18.value = "DT";
-                } else if (child[i].recommend_18.value == "None-blank") {
-                    child[i].recommend_18.value = "NB";
-                }
-                if(child[i].recommend_18.value == child[i].recommend_18["option"][i101]["code"]){
-                    desc = child[i].recommend_18["option"][i101]["txt"];
-                }
-            }
-            works += '<div class="input-list" ' + (child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'") + '>';
-            works += '  <div class="input-list-info-readonly left">' + '<span class="red">*</span>' + child[i].recommend_18["itemName"] + '：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + desc + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>'
-        }else {
-        	
-            //编辑模式
-        	works += '<div class="w_96">';
-        	works += '<div class="item" '+(child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_18["itemName"] + '<span>*</span></p>';
-        	works += '<div id="' + data.itemId + child[i].recommend_18["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
-        	works += '<div class="text-box">';
-        	works += '<select name="' + data.itemId + child[i].recommend_18["itemId"] + '" class="select1" id="' + data.itemId + child[i].recommend_18["itemId"] + '" title="' + child[i].recommend_18["title"] + '">';
-            works += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
-            for (var i101 in child[i].recommend_18.option) {
+        works += '<div class="w_96">';
+        works += '<div class="item" '+(child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_18["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<select name="' + data.itemId + child[i].recommend_18["itemId"] + '" class="select1" id="' + data.itemId + child[i].recommend_18["itemId"] + '" title="' + child[i].recommend_18["title"] + '">';
+        works += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+        for (var i101 in child[i].recommend_18.option) {
 
-                if (child[i].recommend_18.value == "Ms.") {
-                    child[i].recommend_18.value = "MS";
-                } else if (child[i].recommend_18.value == "Mr.") {
+        	if (child[i].recommend_18.value == "Ms.") {
+        		child[i].recommend_18.value = "MS";
+        	} else if (child[i].recommend_18.value == "Mr.") {
                     child[i].recommend_18.value = "MR";
                 } else if (child[i].recommend_18.value == "Professor") {
                     child[i].recommend_18.value = "PF";
@@ -2352,343 +2329,154 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 
                 works += '<option ' + (child[i].recommend_18.value == child[i].recommend_18["option"][i101]["code"] ? "selected='selected'" : "") + 'value="' + child[i].recommend_18["option"][i101]["code"] + '">' + child[i].recommend_18["option"][i101]["txt"] + '</option>';
             }
-            works += '</select>';
-            works += '</div>';
-            works += '</div>';
+        works += '</select>';
+        works += '</div>';
+        works += '</div>';
 			
-			if(child[i].recommend_18["useby"] == "Y"){
+        if(child[i].recommend_18["useby"] == "Y"){
 			works += '<div style="color: #0070c6;margin-bottom: 20px;margin-top: 10px;font-size:0.56rem;">';
 			works += MsgSet["None-blank"];
 			works += '</div>';
-			}
-        }
+		}
 		
 		//姓氏
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_1["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_1["itemName"] +'：</div>';
-            works += '<div class="input-list-wz-readonly left">' + child[i].recommend_1["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item">';
-        	works += '<p>' + child[i].recommend_1["itemName"] + '<span>*</span></p>';
-        	works += '<div id="' + data.itemId + child[i].recommend_1["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item">';
+        works += '<p>' + child[i].recommend_1["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_1["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
         //名字
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_17["itemName"] +'：</div>';
-            works += '<div class="input-list-wz-readonly left">' + child[i].recommend_17["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_17["itemName"] + '<span>*</span></p>';
-        	works += '<div id="' + data.itemId + child[i].recommend_17["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_17["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_17["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
         //单位
-        if(tjxEditMode){
-            works += '<div class="input-list" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_2["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-        	works += '<div class="item">';
-        	works += '<p>' + child[i].recommend_2["itemName"] + '<span>*</span></p>';
-        	works += '<div id="' + data.itemId + child[i].recommend_2["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item">';
+        works += '<p>' + child[i].recommend_2["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_2["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
 		//职务
-        if(tjxEditMode){
-            works += '<div class="input-list" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_2["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-        	works += '<div class="item">';
-        	works += '<p>' + child[i].recommend_3["itemName"] + '<span>*</span></p>';
-        	works += '<div id="' + data.itemId + child[i].recommend_1["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item">';
+        works += '<p>' + child[i].recommend_3["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_1["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
         //手机
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_4["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">';
-            works += (child[i].recommend_16["value"] ? "(" : "") + child[i].recommend_16["value"] + (child[i].recommend_16["value"] ? ")&nbsp;" : "") + child[i].recommend_4["value"];
-            works += '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item"  '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_4["itemName"] + '<span>*</span></p>';
-        	works += '<div id="' + data.itemId + child[i].recommend_4["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item"  '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_4["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_4["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
 		//邮箱
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_5["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_5["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_5["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_5["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
 		//性别
-        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<div class="item" '+(child[i].recommend_15["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
         works += '<p>' + child[i].recommend_15["itemName"] + '<span>*</span></p>';
         works += '<ul class="sex">';
         works += '<li>';
-        works += '<input type="radio" name="square-radio" class="radio" id="radio-3">';
-        works += '<label for="radio-3">' + MsgSet["SEX_M"] + '</label>';
+        works += '<input type="radio" name="square-radio" class="radio" id="MAN">';
+        works += '<label for="MAN">' + MsgSet["SEX_M"] + '</label>';
         works += '</li>';
         works += '<li>';
-        works += '<input type="radio" name="square-radio" class="radio" id="radio-3">';
-        works += '<label for="radio-3">' + MsgSet["SEX_F"] + '</label>';
+        works += '<input type="radio" name="square-radio" class="radio" id="WOMAN">';
+        works += '<label for="WOMAN">' + MsgSet["SEX_F"] + '</label>';
         works += '</li>';
         works += '</ul>';
         works += '</div>';
 		
 		//申请人关系
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_6["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_6["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_6["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_6["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_6["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
 		//备用字段一
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_10["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_10["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_10["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_10["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
 
 		//备用字段二
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_11["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_11["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_11["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_11["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
 
 		//备用字段三
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_12["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_12["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_12["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_12["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
 
 		//备用字段四
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_13["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_13["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_13["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_13["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
 
 		//备用字段五
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_14["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_14["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_14["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_14["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
         //备用字段六
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_19["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_19["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_19["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_19["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_19["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
         //备用字段七
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_20["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_20["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_20["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_20["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_20["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
         //备用字段八
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_21["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_21["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_21["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_21["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_21["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
 
         //备用字段九
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_22["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_22["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_22["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_22["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_22["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
         //备用字段十
-        if(tjxEditMode){
-            //只读模式
-            works += '<div class="input-list" '+(child[i].recommend_23["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-            works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_23["itemName"] +'：</div>';
-            works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_23["value"] + '</div>';
-			works += '	<div class="input-list-suffix left"></div>';
-			works += '	<div class="clear"></div>';
-            works += '</div>';
-        }else{
-            //编辑模式
-        	works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
-        	works += '<p>' + child[i].recommend_23["itemName"] + '<span>*</span></p>';
-        	works += '<div class="text-box">';
-        	works += '<input  type="text" class="text1">';
-        	works += '</div></div>';
-
-        }
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_23["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
         
 		//推荐信语言
 		if (_qy_zhs=="Y"&&_qy_eng=="Y")
@@ -2710,11 +2498,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 	        works += '<p>' + child[i].recommend_7["itemName"] + '<span>*</span></p>';
 	        works += '<ul class="sex">';
 	        works += '<li>';
-	        works += '<input type="radio" name="square-radio" class="radio" id="radio-3">';
-	        works += '<label for="radio-3">' + MsgSet["LANGUAGE_C"] + '</label>';
+	        works += '<input type="radio" name="square-radio" class="radio" id="CHINESE">';
+	        works += '<label for="FILL">' + MsgSet["LANGUAGE_C"] + '</label>';
 	        works += '</li>';
 	        works += '<li>';
-	        works += '<input type="radio" name="square-radio" class="radio" id="radio-3">';
+	        works += '<input type="radio" name="square-radio" class="radio" id="ENGLISH">';
 	        works += '<label for="radio-3">' + MsgSet["LANGUAGE_E"] + '</label>';
 	        works += '</li>';
 	        works += '</ul>';
@@ -2746,9 +2534,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		// itemLx=L  2个都可以
 		if (data.itemLx=="L"){
 			
-//			works += '<div class="input-list">';
-//			works += '<div class="input-list-info left">'+ child[i].recommend_8["itemName"] +'：</div>';
-//			works += '<div class="margart8 input-list-textwrap left">';
 	        works += '<div class="item">';
 	        works += '<p>' + child[i].recommend_8["itemName"] + '<span>*</span></p>';
 			
@@ -2772,35 +2557,18 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				child[i].recommend_8["value"] = "S";
 			}
 			
-	        works += '<ul class="company">';
+	        works += '<ul class="tjx">';
 	        works += '<li>';
-	        works += '<input type="radio" name="square-radio" class="radio" id="radio-3">';
-	        works += '<label for="radio-3">' + MsgSet["Send_mail"] + '</label>';
+	        works += '<input type="radio" name="square-radio" class="radio" id="FILL">';
+	        works += '<label for="FILL">' + MsgSet["Send_mail"] + '</label>';
 	        works += '</li>';
 	        works += '<li>';
-	        works += '<input type="radio" name="square-radio" class="radio" id="radio-3">';
-	        works += '<label for="radio-3">' + MsgSet["Upload"] + '</label>';
+	        works += '<input type="radio" name="square-radio" class="radio" id="UPLOAD">';
+	        works += '<label for="UPLOAD">' + MsgSet["Upload"] + '</label>';
 	        works += '</li>';
 	        works += '</ul>';
-//			works += '	<ul>'; 
-//			works += '	<li>'; 
-//			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
-//			works += '<i><input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S"></i>';
-//			works += '</div><span style="margin-left:3px;">' + MsgSet["Send_mail"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
-//			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U">';
-//			works += '<i><input ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" ></i>';
-//			works += '</div><span style="margin-left:3px;">' + MsgSet["Upload"] + '</sapn>';
-//			works += '	</li>';
-//			works += '<div class="clear"></div></ul>';
-//			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="' + child[i].recommend_8["value"] + '">';
-//			works += '</div>';
-//			works += '<div class="input-list-suffix left">';
-//			works += '	<div id="' + data.itemId + child[i].recommend_8["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
-//			works += '		<div class="onShow">&nbsp;</div>';
-//			works += '	</div>';
-//			works += '</div>';
-//			works += '<div class="clear"></div>';
 			works += '</div>';
+			
 		}
 		// 如果 设置 itemLx=F  发送邮件
 		else if(data.itemLx == "F"){
@@ -2819,7 +2587,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		if ((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S"){
 		
 			works += '<div class="item" id="Tjxfj_show_'+i+'">';
-			if(SurveyBuild._readonly!=true){
+			if(SurveyBuild._readonly != true){
 				
 				works += '<p>'+ child[i].recommend_9["itemName"] + '</p>';
 				works += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
@@ -2833,12 +2601,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '</div>';
 				works += '</div>';
 				works += '</div>';
-//				works += '	<div class="input-list-info left">'+ child[i].recommend_9["itemName"] +'：</div>';
-//				works += '	<div class="input-list-texttemplate left">';
-//				works += '		<div class="filebtn">';
-//				works += '			<div class="template-btn"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-//				works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="filebtn-orgtext" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:125px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
-//				works += '		</div>';
 			}else{
 				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
 				works += '	<div class="input-list-text left">';
@@ -2865,11 +2627,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					works += '<i onclick="onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')" style="background:url(/statics/images/appeditor/m/de.png) no-repeat center center"></i></li>';
 					works += '</div>';
 				 
-//					works += '<div class="input-list-uploadcon-list">';
-//					works += '	<div class="input-list-uploadcon-listl left">';
-//					works += '			<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
-//					works += '	</div>';
-//					works += '	<div class="input-list-uploadcon-listr left" style="display: block;line-height:46px;" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 				}else{
 					works += '<div class="input-list-uploadcon-list">';
 					works += '	<div class="input-list-uploadcon-listl left">';
@@ -2939,102 +2696,51 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		//发送邮件 -开始
 		if ((data.itemLx=="L"&&child[i].recommend_8["value"]!="U")||data.itemLx=="F"){
-			if(SurveyBuild.appManager != "Y"){
 
 				/*更换推荐人一直显示*/
 				if(SurveyBuild._readonly){
 					works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
+					works += '</div>';
 				}else{
 					
-					console.log("_zd====" + _zd)
-					_zd = "Y";
+					_zd="Y";
 					if(_zd!="Y"&&_zd!="Z"){
 						
-						works += '<div id="sendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
-						works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
-						works += '</div>';
-						
-						//重新发送  ，如果没有发送，那么显示
-						works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
-						works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+						//发送
+						works += '<div id="sendEmailS_'+i+'" style="width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="sendEmail_'+i+'">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 						
 						//发送给自己
-						works += '<div id="sendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
-						works += '<div id="sendEmailToMe_'+i+'" class="" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
-						works += '</div>';
-						
-						//重新发送给自己
-						works += '<div id="reSendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
-						works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '<div id="sendEmailToMeS_'+i+'" style="width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 						
 					}else{
 						
-						works += '<div id="sendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
-						works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
-						works += '</div>';
-						
 						//重新发送  ，如果没有发送，那么显示
-						works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
-						works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
-						works += '</div>';
-						
-						//发送给自己
-						works += '<div id="sendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
-						works += '<div id="sendEmailToMe_'+i+'" class="" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '<div id="reSendEmailS_'+i+'" style="width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="reSendEmail_'+i+'">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 						
 						//重新发送给自己
-						works += '<div id="reSendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
-						works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '<div id="reSendEmailToMeS_'+i+'" style="width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 						
-						works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
-						works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+						works += '<div id="changeRecS_'+i+'" style="width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div id="changeRec_'+i+'">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 					}
 				}
-			
+				
 				works += '<div class="clear"></div>';
-			}
 			//推荐信状态
 
-			works += '<p class="finish">' + MsgSet["ReLeSt"] + '：<span>' + _tjx_zt + '</span></p>';
-//			works += '<div class="input-list-blank" style="padding-left:6px;" id="Tjxzt_'+i+'">';
-//			works += '<div class="input-list-info left"></div>';
-//			works += '<div><input type="hidden" id="tjxzt_info_'+i+'" value="'+_zd+'"></div>';
-//			works += '<div class="input-list-wz left" id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="blue">'+_tjx_zt+'</span>';
-			
-			/*推荐信链接*/
-			if(SurveyBuild.appManager == "Y"){
-				if(refLetterUrl!=""){
-					works += '&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#0088cc;text-decoration:underline;cursor:pointer" onclick=viewUrl("'+refLetterUrl+'")>'+MsgSet["VIEWREFLETTER"] + '</a>';
-				}else{
-					if(_refFileUrl!=""){
-						//图片格式
-						var refPicType = ['BMP','JPG','JPEG','PNG','GIF'];
-						var refFileSuffix = (_refFileName.substring(_refFileName.lastIndexOf(".") + 1)).toUpperCase();
-						if (refPicType.indexOf(refFileSuffix) != -1){
-							//上传的推荐信文件是图片
-							works += '&nbsp;&nbsp;<a style="color:#0088cc;text-decoration:underline;cursor:pointer" onclick=viewRefImg("'+_refFileUrl+'")>'+MsgSet["VIEWREFLETTER"] + '</a>';
-						}else{
-							if (refFileSuffix == 'PDF'){
-								works += '&nbsp;&nbsp;<a href="javascript:void(0);" style="color:#0088cc;text-decoration:underline;cursor:pointer" onclick=viewRefPdf("'+_refFileUrl+'")>'+MsgSet["VIEWREFLETTER"] + '</a>';
-							}else{
-								works += '&nbsp;&nbsp;<a href="'+_refFileUrl+'" style="color:#0088cc;text-decoration:underline;cursor:pointer">'+MsgSet["VIEWREFLETTER"] + '</a>';
-							}
-						}
-					}
-				}
-			}	
-			works += '</div>';
-			works += '<div class="input-list-suffix left"></div>';
-			works += '<div class="clear"></div>';
-			works += '</div>';		
-		}else{
+			works += '<p class="finish" style="margin-top: 15px">' + MsgSet["ReLeSt"] + '：<span>' + _tjx_zt + '</span></p>';
 			
 		}
+        works += '</div>';
         works += '</div>';
         return works;
     },

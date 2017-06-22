@@ -82,7 +82,7 @@ if(dataApp){
 				$.each(obj["children"],function(i,perChildren){
 					$.each(perChildren,function(j,perXxx){
 						var itemId0 = perXxx["itemId"];		
-						
+
 						if(i> 0)
 						{	//设置itemId;
 								if(perXxx.hasOwnProperty("isSingleLine"))
@@ -99,10 +99,10 @@ if(dataApp){
 								
 						}
 
-						
-						if(recApp["children"][i][j]){	
-							
-							
+
+						if(recApp["children"][i][j]){
+
+
 							if(perXxx.isSingleLine  == "Y"){
 								$.each(perXxx["children"],function(z,signlePerXxx){	
 									var itemId1 = signlePerXxx["itemId"];	
@@ -208,7 +208,7 @@ if(dataApp){
 								}
 							}  
 							//------------
-							else{	
+							else{
 								if( recApp["children"][i][j]["value"]){
 									perXxx["value"] = SurveyBuild.htmlCharReplace(recApp["children"][i][j]["value"]);
 								}
