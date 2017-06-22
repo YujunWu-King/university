@@ -645,7 +645,21 @@ function getApplicantListColumns(jsonObject,ps_show_deviation)
 	  },
 	  {text:'考生姓名',minWidth:80,flex:1,align:'left',sortable:true,resizable:true,dataIndex:"ps_ksh_xm"},
 	  {text:"上次排名",minWidth:80,flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_ppm"},
-	  {text:"本次排名",minWidth:80,flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_cpm"},
+	  {text:"本次排名",minWidth:80,flex:1,align:'left',sortable:true,resizable:false,dataIndex:"ps_ksh_cpm",
+		  renderer:function(v,m,r,ri,ci,s){
+			  var rankRepeat = false;
+			  Ext.each(s.getRange(),function(record,i){
+				  if(record.get("ps_ksh_cpm")==v&&r!=record){
+					  rankRepeat = true;
+					  return false;
+				  }
+			  });
+			  if(rankRepeat){
+				  return "<span style='color:red'>"+v+"</span>";
+			  }else{
+				  return v;
+			  }
+		  }},
 	];
 	
 	//动态列：先进行排序
@@ -942,13 +956,13 @@ function createApplicantList(jsonObject)
 {	
 	var store1 = Ext.create('Ext.data.Store', {
       fields: getApplicantListColumnHeaders(jsonObject['ps_data_kslb']['ps_ksh_list_headers']),
-      data: getApplicantListColumnValues(jsonObject['ps_data_kslb']['ps_ksh_list_contents'])/*,
+      data: getApplicantListColumnValues(jsonObject['ps_data_kslb']['ps_ksh_list_contents']),
       sorters: [{
-          property: 'ps_ksh_dt',
-          direction: 'ASC'  
-      }],*/
+          property: 'ps_ksh_cpm',
+          direction: 'ASC'
+      }]
 	});
-  
+	
   var ps_kslb_submtall_status = (jsonObject['ps_kslb_submtall']=="Y")?"已提交":"未提交";
   
   var grid = Ext.create('Ext.grid.Panel', {
@@ -965,7 +979,7 @@ function createApplicantList(jsonObject)
       minHeight:200,
       style:"overflow-x:auto",
       columns: getApplicantListColumns(jsonObject['ps_data_kslb']['ps_ksh_list_headers'],jsonObject["ps_show_deviation"]),
-      title: '当前已归属您的评审考生列表',
+      title: '当前已归属您的评审考生列表（点击列标题可以对相应列进行排序）',
       viewConfig: {
           stripeRows: true,
           enableTextSelection: true,
