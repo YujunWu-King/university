@@ -43,6 +43,7 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
         	if(SurveyBuild.accessType == "M"){
         		c += '<div class="item">';
 				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+				c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
                 c += ' 	<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
                 c += '		<div class="handle">';
                 c += '   		<div class="ncsc-upload-btn">';
@@ -67,13 +68,13 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
 			    	if(data.allowMultiAtta == "Y"){
 	        	   		for(var i = 0; i < children.length; i++){
 	        	   			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-		        				c += '<li class="fileLi"><span><a  onclick=SurveyBuild.downLoadFile(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center""></i></li>';
+		        				c += '<li class="fileLi"><span><a  file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center""></i></li>';
 	        	   			}
 	        	   		}
 			    	}else{
 			    		for(var i=0; i<children.length; i++){
 		        			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-        				c += '<li class="fileLi"><span><a  onclick=SurveyBuild.downLoadFile(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center""></i></li>';
+        				c += '<li class="fileLi"><span><a  file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center""></i></li>';
 		        			}
 			    		}
 			    	}
@@ -209,6 +210,9 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
     },
 	
 	_eventbind: function(data) {
+		if(SurveyBuild.accessType == "M"){
+			
+		}
 		var $fileInput = $("#" + data.itemId);
 		var $uplBtn = $fileInput.prev(".bt_blue");
 

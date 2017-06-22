@@ -311,6 +311,7 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 		$dateInputStart.formValidator({tipID:data["itemId"] + data.children[0]["itemId"] +'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
 		$dateInputStart.functionValidator({
 			fun: function(val,elem) {
+				
 				//执行高级设置中的自定义规则
 				/*********************************************\
 				 ** 注意：自定义规则中不要使用formValidator **
