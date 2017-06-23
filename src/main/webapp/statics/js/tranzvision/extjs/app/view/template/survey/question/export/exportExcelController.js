@@ -7,12 +7,13 @@
 		var win = btn.findParentByType('exportExcelWindow');
 		var form = btn.findParentByType('form');
 		var formRec = form.getForm().getValues();
-		
+
 		if(form.isValid()){
 			var wjId = win.wjId;
+			var exportType = formRec.exportType;
 			var fileName = formRec.FileName;
 			
-			var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJGL_STD","OperateType":"EXPORT","comParams":{"wjId":"'+ wjId +'","fileName":"'+ fileName +'"}}';
+			var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJGL_STD","OperateType":"EXPORT","comParams":{"wjId":"'+ wjId +'","fileName":"'+ fileName +'","exportType":"'+exportType+'"}}';
 			Ext.tzSubmit(tzParams,function(respDate){
 				var tabPanel = win.lookupReference("packageTabPanel");
 				tabPanel.child('grid').getStore().reload();

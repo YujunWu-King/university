@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjattchTMapper;
-import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjattchT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -40,6 +39,7 @@ public class SurveryImageUploadImpl extends FrameworkImpl {
 	/**
 	 * JAVA不需要把文件存进数据库，不过需要把路径存进数据库
 	 */
+	@SuppressWarnings("unused")
 	@Override
 	public String tzGetJsonData(String strParams) {
 
@@ -137,6 +137,8 @@ public class SurveryImageUploadImpl extends FrameworkImpl {
 		// strResult = "success";
 		// strRsltDesc = "上传成功！";
 		// }
+		
+		
 		try {
 			if (StringUtils.isBlank(maxOrder)) {
 				numMaxIndex = "1";
@@ -147,6 +149,7 @@ public class SurveryImageUploadImpl extends FrameworkImpl {
 			e.printStackTrace();
 		}
 
+		/*无需重命名，直接显示上传的文件名
 		if (strItemName.length() > 15) {
 			strItemNameCut = strItemName.substring(0, 15) + "...";
 		} else {
@@ -165,14 +168,16 @@ public class SurveryImageUploadImpl extends FrameworkImpl {
 		}
 
 		viewFileName = strItemNameCut + strMaxIndex + "." + fileSuffix;
-
+		*/
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("result", "success");
 		mapRet.put("resultDesc", "上传成功！");
-		mapRet.put("fileName", re_fileName);
+		//mapRet.put("fileName", re_fileName);
+		mapRet.put("fileName", filename);
 		mapRet.put("sysFileName", sysFileName);
 		mapRet.put("index", numMaxIndex);
-		mapRet.put("viewFileName", viewFileName);
+//		mapRet.put("viewFileName", viewFileName);
+		mapRet.put("viewFileName", filename);
 
 		return jsonUtil.Map2json(mapRet);
 

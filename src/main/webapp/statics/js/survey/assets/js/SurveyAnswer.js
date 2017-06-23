@@ -491,6 +491,16 @@ var SurveyBuild = {
 				alert(MsgSet["FILE_COUNT"])
 				return;
 			}
+			
+			//禁止上传相同文件
+			for(var i=0;i<_children.length;i++){
+				if(filename == _children[i].fileName){
+					//alert("文件已存在，请勿重复上传！");
+					alert(MsgSet["FILE_REPT"]);
+					return;	
+				}
+			}
+			
 			var date = new Date();
 			var m = (date.getMonth()+1).toString().length == 1 ? "0"+(date.getMonth()+1).toString() : (date.getMonth()+1).toString();
 			var d = date.getDate().toString().length == 1 ? "0"+date.getDate().toString() : date.getDate().toString();
