@@ -184,41 +184,59 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						strDbProgressName = "TZGD_DBDL_PROC_02";
 					}
 					BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, strDbProgressName);
+					
+					//指定调度作业的相关参数
+					EngineParameters schdProcessParameters = new EngineParameters();
+
+					schdProcessParameters.setBatchServer("");
+					schdProcessParameters.setCycleExpression("");
+					schdProcessParameters.setLoginUserAccount(currentAccountId);
+					schdProcessParameters.setPlanExcuteDateTime(new Date());
+					schdProcessParameters.setRunControlId(runCntlId);
+					
+					//调度作业
+					tmpEngine.schedule(schdProcessParameters);
 
 					//processInstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
 					processInstance=tmpEngine.getProcessInstanceID();
-					processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
-					PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
-					psTzExcelDrxxT.setProcessinstance(processInstance);
-					psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");
-					psTzExcelDrxxT.setTzPageId("TZ_BMGL_DBDL_STD");
-					psTzExcelDrxxT.setTzDrLxbh("1");
-					psTzExcelDrxxT.setTzDrTaskDesc(fileName);
-
-					psTzExcelDrxxT.setTzStartDtt(new Date());
-					psTzExcelDrxxT.setTzDrTotalNum(appids.length);
-					psTzExcelDrxxT.setOprid(currentOprid);
-					psTzExcelDrxxT.setTzIsViewAtt("Y");
-					psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
-
 					
+					if(processInstance>0){
+						PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
+						psTzExcelDrxxT.setProcessinstance(processInstance);
+						psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");
+						psTzExcelDrxxT.setTzPageId("TZ_BMGL_DBDL_STD");
+						psTzExcelDrxxT.setTzDrLxbh("1");
+						psTzExcelDrxxT.setTzDrTaskDesc(fileName);
 
-					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
-					psTzExcelDattT.setProcessinstance(processInstance);
-					psTzExcelDattT.setTzSysfileName("");
-					psTzExcelDattT.setTzFileName(fileName);
-					psTzExcelDattT.setTzCfLj("A");
-					psTzExcelDattT.setTzFjRecName("TZ_APPFATTACH_T");
-					psTzExcelDattT.setTzFwqFwlj("");
-					psTzExcelDattTMapper.insert(psTzExcelDattT);
+						psTzExcelDrxxT.setTzStartDtt(new Date());
+						psTzExcelDrxxT.setTzDrTotalNum(appids.length);
+						psTzExcelDrxxT.setOprid(currentOprid);
+						psTzExcelDrxxT.setTzIsViewAtt("Y");
+						psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
+
+						
+
+						PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
+						psTzExcelDattT.setProcessinstance(processInstance);
+						psTzExcelDattT.setTzSysfileName("");
+						psTzExcelDattT.setTzFileName(fileName);
+						psTzExcelDattT.setTzCfLj("A");
+						psTzExcelDattT.setTzFjRecName("TZ_APPFATTACH_T");
+						psTzExcelDattT.setTzFwqFwlj("");
+						psTzExcelDattTMapper.insert(psTzExcelDattT);
+						
+						Psprcsrqst psprcsrqst = new Psprcsrqst();
+						psprcsrqst.setPrcsinstance(processInstance);
+						psprcsrqst.setRunId(runCntlId);
+						psprcsrqst.setOprid(currentOprid);
+						psprcsrqst.setRundttm(new Date());
+						psprcsrqst.setRunstatus("5");
+						psprcsrqstMapper.insert(psprcsrqst);
+						
+						
+					}
 					
-					Psprcsrqst psprcsrqst = new Psprcsrqst();
-					psprcsrqst.setPrcsinstance(processInstance);
-					psprcsrqst.setRunId(runCntlId);
-					psprcsrqst.setOprid(currentOprid);
-					psprcsrqst.setRundttm(new Date());
-					psprcsrqst.setRunstatus("5");
-					psprcsrqstMapper.insert(psprcsrqst);
+					
 
 					/*
 					for (int i = 0; i < appids.length; i++) {
@@ -376,17 +394,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					}
 					*/
 					
-					//指定调度作业的相关参数
-					EngineParameters schdProcessParameters = new EngineParameters();
-
-					schdProcessParameters.setBatchServer("");
-					schdProcessParameters.setCycleExpression("");
-					schdProcessParameters.setLoginUserAccount(currentAccountId);
-					schdProcessParameters.setPlanExcuteDateTime(new Date());
-					schdProcessParameters.setRunControlId(runCntlId);
 					
-					//调度作业
-					tmpEngine.schedule(schdProcessParameters);
 					
 				}
 

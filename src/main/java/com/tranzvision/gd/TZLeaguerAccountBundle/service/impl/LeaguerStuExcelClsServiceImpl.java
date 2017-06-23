@@ -227,42 +227,7 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				
 				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_GD_EXCEL_DB2");
 				
-				processinstance=tmpEngine.getProcessInstanceID();
-				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
-				psTzExcelDrxxT.setProcessinstance(processinstance);
-				psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");
-				psTzExcelDrxxT.setTzPageId("TZ_EXP_EXCEL_STD");
-				psTzExcelDrxxT.setTzDrLxbh("1");
-				psTzExcelDrxxT.setTzDrTaskDesc(excelName); 
-				psTzExcelDrxxT.setTzStartDtt(new Date());
-				psTzExcelDrxxT.setTzDrTotalNum(dcCount);
-				psTzExcelDrxxT.setOprid(oprid);
-				psTzExcelDrxxT.setTzIsViewAtt("Y");
-				psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
 				
-				int numSeq = getSeqNum.getSeqNum("TZ_GD_DCE_AE", "TZ_EXCEL_ID");
-				String strExcelID = oprid + "_" + s_dt + "_" + String.valueOf(numSeq);
-				PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
-				psTzExcelDattT.setProcessinstance(processinstance);
-				psTzExcelDattT.setTzSysfileName(strExcelID);
-				psTzExcelDattT.setTzFileName(excelName);
-				psTzExcelDattT.setTzCfLj("A");
-				psTzExcelDattT.setTzFjRecName("TZ_APP_CC_T");
-				psTzExcelDattT.setTzFwqFwlj(""); 
-				psTzExcelDattTMapper.insert(psTzExcelDattT);
-
-				Psprcsrqst psprcsrqst = new Psprcsrqst();
-				psprcsrqst.setPrcsinstance(processinstance);
-				psprcsrqst.setRunId(runCntlId);
-				psprcsrqst.setOprid(oprid);
-				psprcsrqst.setRundttm(new Date());
-				psprcsrqst.setRunstatus("5");
-				psprcsrqstMapper.insert(psprcsrqst);
-				
-				//TzGdBmgDcExcelClass tzGdBmgDcExcelClass = new TzGdBmgDcExcelClass();
-				//tzGdBmgDcExcelClass.tzGdDcBmbExcel(runCntlId);
-				//this.tzGdDceAe(runCntlId, processinstance,expDirPath,absexpDirPath);
-
 				//指定调度作业的相关参数
 				EngineParameters schdProcessParameters = new EngineParameters();
 
@@ -274,6 +239,52 @@ public class LeaguerStuExcelClsServiceImpl extends FrameworkImpl {
 				
 				//调度作业
 				tmpEngine.schedule(schdProcessParameters);
+				
+				processinstance=tmpEngine.getProcessInstanceID();
+				//如果调度失败不插入表
+				if(processinstance>0){
+					PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
+					psTzExcelDrxxT.setProcessinstance(processinstance);
+					psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");
+					psTzExcelDrxxT.setTzPageId("TZ_EXP_EXCEL_STD");
+					psTzExcelDrxxT.setTzDrLxbh("1");
+					psTzExcelDrxxT.setTzDrTaskDesc(excelName); 
+					psTzExcelDrxxT.setTzStartDtt(new Date());
+					psTzExcelDrxxT.setTzDrTotalNum(dcCount);
+					psTzExcelDrxxT.setOprid(oprid);
+					psTzExcelDrxxT.setTzIsViewAtt("Y");
+					psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
+					
+					
+					int numSeq = getSeqNum.getSeqNum("TZ_GD_DCE_AE", "TZ_EXCEL_ID");
+					String strExcelID = oprid + "_" + s_dt + "_" + String.valueOf(numSeq);
+					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
+					psTzExcelDattT.setProcessinstance(processinstance);
+					psTzExcelDattT.setTzSysfileName(strExcelID);
+					psTzExcelDattT.setTzFileName(excelName);
+					psTzExcelDattT.setTzCfLj("A");
+					psTzExcelDattT.setTzFjRecName("TZ_APP_CC_T");
+					psTzExcelDattT.setTzFwqFwlj(""); 
+					psTzExcelDattTMapper.insert(psTzExcelDattT);
+
+					Psprcsrqst psprcsrqst = new Psprcsrqst();
+					psprcsrqst.setPrcsinstance(processinstance);
+					psprcsrqst.setRunId(runCntlId);
+					psprcsrqst.setOprid(oprid);
+					psprcsrqst.setRundttm(new Date());
+					psprcsrqst.setRunstatus("5");
+					psprcsrqstMapper.insert(psprcsrqst);
+					
+				}
+				
+				
+				
+				
+				//TzGdBmgDcExcelClass tzGdBmgDcExcelClass = new TzGdBmgDcExcelClass();
+				//tzGdBmgDcExcelClass.tzGdDcBmbExcel(runCntlId);
+				//this.tzGdDceAe(runCntlId, processinstance,expDirPath,absexpDirPath);
+
+				
 			}
 
 		} catch (Exception e) {

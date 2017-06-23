@@ -647,27 +647,30 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 				// 进程id;
 				//int processinstance = sqlQuery.queryForObject("SELECT TZ_JCSL_ID FROM TZ_JC_SHLI_T where TZ_YUNX_KZID = ? limit 0,1", new Object[] { runCntlId },"Integer");
 				int processinstance = tmpEngine.getProcessInstanceID();
-				
-				PsTzCsJcTKey psTzCsJcTKey = new PsTzCsJcTKey();
-				psTzCsJcTKey.setTzClassId(classId);
-				psTzCsJcTKey.setTzApplyPcId(batchId);
-				PsTzCsJcT psTzCsJcT = psTzCsJcTMapper.selectByPrimaryKey(psTzCsJcTKey);
-				if(psTzCsJcT != null){
-					psTzCsJcT.setPrcsinstance(processinstance);
-					psTzCsJcTMapper.updateByPrimaryKey(psTzCsJcT);
-				}else{
-					psTzCsJcT = new PsTzCsJcT();
-					psTzCsJcT.setTzClassId(classId);
-					psTzCsJcT.setTzApplyPcId(batchId);
-					psTzCsJcT.setPrcsinstance(processinstance);
-					psTzCsJcTMapper.insert(psTzCsJcT);
+				if(processinstance>0){
+					PsTzCsJcTKey psTzCsJcTKey = new PsTzCsJcTKey();
+					psTzCsJcTKey.setTzClassId(classId);
+					psTzCsJcTKey.setTzApplyPcId(batchId);
+					PsTzCsJcT psTzCsJcT = psTzCsJcTMapper.selectByPrimaryKey(psTzCsJcTKey);
+					if(psTzCsJcT != null){
+						psTzCsJcT.setPrcsinstance(processinstance);
+						psTzCsJcTMapper.updateByPrimaryKey(psTzCsJcT);
+					}else{
+						psTzCsJcT = new PsTzCsJcT();
+						psTzCsJcT.setTzClassId(classId);
+						psTzCsJcT.setTzApplyPcId(batchId);
+						psTzCsJcT.setPrcsinstance(processinstance);
+						psTzCsJcTMapper.insert(psTzCsJcT);
+					}
+					
+					PsTzCsLsjcTKey psTzCsLsjcTKey = new PsTzCsLsjcTKey();
+					psTzCsLsjcTKey.setTzClassId(classId);
+					psTzCsLsjcTKey.setTzApplyPcId(batchId);
+					psTzCsLsjcTKey.setPrcsinstance(processinstance);
+					psTzCsLsjcTMapper.insert(psTzCsLsjcTKey);
+					
 				}
 				
-				PsTzCsLsjcTKey psTzCsLsjcTKey = new PsTzCsLsjcTKey();
-				psTzCsLsjcTKey.setTzClassId(classId);
-				psTzCsLsjcTKey.setTzApplyPcId(batchId);
-				psTzCsLsjcTKey.setPrcsinstance(processinstance);
-				psTzCsLsjcTMapper.insert(psTzCsLsjcTKey);
 				
 				rtnMap.replace("processIns", processinstance);
 			}
