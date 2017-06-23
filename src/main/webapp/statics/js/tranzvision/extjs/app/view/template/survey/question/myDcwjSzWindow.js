@@ -1,4 +1,4 @@
-﻿Ext.define('KitchenSink.view.template.survey.question.myDcwjSzWindow', {
+﻿﻿Ext.define('KitchenSink.view.template.survey.question.myDcwjSzWindow', {
     extend: 'Ext.panel.Panel',
     xtype: 'myDcwjSzWindow',
     reference: 'myDcwjSzWindow',
@@ -285,7 +285,8 @@
                      defaults: {
                          anchor: '100%'
                      },
-                     items:[{
+                     items:[
+                     /*{
                          xtype: 'radiogroup',
                          fieldLabel: '答题规则',
                          msgTarget: 'side',
@@ -316,6 +317,19 @@
                              inputValue: '2',
                              columnWidth: 1
                          }]
+                     }*/{				
+                         xtype: 'checkboxfield',
+                         fieldLabel: '答题规则',
+                         name: 'TZ_DC_WJ_DTGZ',
+                         boxLabel:'只要还在调查期间内，就可以修改已提交调查问卷的答案',
+                         hideLabel:false,
+							inputValue:'2',
+                         uncheckedValue:'0',
+                         ignoreChangesFlag:true,
+							allowBlank:false,
+                         afterLabelTextTpl: [
+                             '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                         ]
                      },{  xtype: 'radiogroup',
                          fieldLabel: '采集规则',
                          allowBlank: false,

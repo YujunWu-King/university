@@ -26,7 +26,8 @@
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/baseComponent.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/formvalidator/ValidationRules.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/formvalidator/formValidator.js"></script>
-		<script type="text/javascript" src="%bind(:21)/statics/js/tranzvision/util/layer.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/layer.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.pack.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox-thumbs.js"></script>
 		<style>
@@ -67,6 +68,7 @@
 			SurveyBuild._logic = %bind(:11);			//控制逻辑
 			MsgSet = %bind(:12);						//双语化消息集合
 			SurveyBuild.subState = "%bind(:19)";		//问卷提交状态
+			SurveyBuild.readonly = "%bind(:22)";		//问卷实例是否只读
 			$.datepicker.setDefaults($.datepicker.regional['%bind(:16)']);	//日期双语化
 	    	$.datepicker._gotoToday = function (id) {
                 $(id).datepicker('setDate', new Date()).datepicker('hide').blur();
@@ -235,7 +237,7 @@
 	<script type="text/javascript">
 		function processing(){								
 			var loadi = layer.load("加载中...");
-			layer.area(loadi,"top:200px");
+			//layer.area(loadi,"top:200px");
 		}
 		//获取参与者答题内容
 		function getData(){
@@ -263,7 +265,7 @@
 		$("#app_submit").click(function(){
 			var isValid = $.formValidator.pageIsValid();
 			if(isValid){
-				 SaveSurvey("SUBMIT");
+				SaveSurvey("SUBMIT");
 			}else{
 				scrollTop();
 			}
@@ -271,7 +273,8 @@
 		/*保存在线调查*/
 		function SaveSurvey(cType){
 			processing();
-			if(SurveyBuild.subState == 'S'){
+			/*if(SurveyBuild.subState == 'S'){*/
+			if(SurveyBuild.readonly == 'Y'){
 				if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
 					$(".pagebtn1").hide();
 				}else{
@@ -302,6 +305,7 @@
 					if (f.state.errcode == "0") {
 						SurveyBuild.appInsId = f.comContent.insid;
 						SurveyBuild.subState = f.comContent.subState;
+						SurveyBuild.readonly = f.comContent.readonly;
 						if (f.comContent.code == "0") {
 							if (cType == "SUBMIT"){
 								noteing(MsgSet.SAVE_SUCCEED);
@@ -468,7 +472,8 @@
 				$(".pagebtn2").hide();
 			}
 			/*已提交只读*/
-			if(SurveyBuild.subState == "S"){
+			/*if(SurveyBuild.subState == "S"){*/
+			if(SurveyBuild.readonly == "Y"){
 				$("form input").prop("readonly", "readonly");
 				$("form select").prop("readonly", "readonly");
 				$("form textarea").prop("readonly", "readonly");
