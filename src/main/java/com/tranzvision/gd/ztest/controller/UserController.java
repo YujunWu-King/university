@@ -1,5 +1,11 @@
 package com.tranzvision.gd.ztest.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -11,11 +17,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.tranzvision.gd.ztest.model.User;
 import com.tranzvision.gd.ztest.service.UserService;
+import com.tranzvision.gd.ztest.service.impl.TestThreadServiceImpl;
 
 import org.springframework.ui.ModelMap;
 
 import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.sql.SqlParams;
+import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.type.*;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
@@ -23,6 +31,8 @@ import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 @Controller
 @RequestMapping("/testuser")
 public class UserController {
+	@Autowired
+	private SqlQuery sqlQuery;
 	
 	@Autowired
 	private UserService userService;
@@ -32,6 +42,8 @@ public class UserController {
 	
 	@Autowired
 	private ApplicationContext acx;
+	
+	public static Integer intg = new Integer(1); 
 	
 	@Autowired
 	private GetCookieSessionProps getCookieSessionProps;
@@ -157,5 +169,38 @@ public class UserController {
 		
     	return "ztest/get";
     }
+	
+	@RequestMapping("testThread")
+	public void testThread(HttpServletRequest request, HttpServletResponse response){
+		String test = request.getParameter("test");
+		for(int i = 0; i < 15; i++){
+			Thread thread = new TestThreadServiceImpl();
+			
+			thread.start();
+//			synchronized (test) {
+//				try {
+//					Thread.sleep(2000);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+//				System.out.println(i + "=====>" + df.format(new Date()));// new Date()为获取当前系统时间
+//			}
+//			String tblName = "TEST_TABLE";
+//			String fldName = "LOCK_ROWNUM";
+//			sqlQuery.execute("LOCK TABLE PS_TZ_SEQNUM_T write");
+//			String sql = "update PS_TZ_SEQNUM_T set TZ_SEQNUM=TZ_SEQNUM+1 where TZ_TABLE_NAME = ? and TZ_COL_NAME = ?";
+//			sqlQuery.update(sql, new Object[] { tblName, fldName });
+//			try {
+//				System.out.println("===================>"+i);
+//				Thread.sleep(2000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			sqlQuery.execute("UNLOCK TABLES");
+		}
+	}
 	
 }
