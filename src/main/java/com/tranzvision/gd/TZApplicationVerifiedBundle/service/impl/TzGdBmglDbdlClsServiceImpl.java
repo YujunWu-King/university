@@ -176,8 +176,17 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 					psTzBmbDceTMapper.insert(psTzBmbDceT);
 					
 					String[] appids = strAppInsIdList.split(";");
+					String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+					String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+
+					String strDbProgressName = "TZGD_DBDL_PROC_01";
+					if("B".equals(strPackageType)){
+						strDbProgressName = "TZGD_DBDL_PROC_02";
+					}
+					BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, strDbProgressName);
 
 					//processInstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
+					processInstance=tmpEngine.getProcessInstanceID();
 					processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 					PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
 					psTzExcelDrxxT.setProcessinstance(processInstance);
@@ -366,14 +375,7 @@ public class TzGdBmglDbdlClsServiceImpl extends FrameworkImpl {
 						psTzExcelDattTMapper.updateByPrimaryKey(psTzExcelDattT2);
 					}
 					*/
-					String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-					String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-
-					String strDbProgressName = "TZGD_DBDL_PROC_01";
-					if("B".equals(strPackageType)){
-						strDbProgressName = "TZGD_DBDL_PROC_02";
-					}
-					BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, strDbProgressName);
+					
 					//指定调度作业的相关参数
 					EngineParameters schdProcessParameters = new EngineParameters();
 
