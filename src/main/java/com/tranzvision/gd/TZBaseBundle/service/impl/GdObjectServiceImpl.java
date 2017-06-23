@@ -448,7 +448,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 		// Key:TZ_XXJH_ID@TZ_JG_ID
 		// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
 		if (null != msgSetId && !"".equals(msgSetId) && null != msgId && !"".equals(msgId)) {
-			if (Memoryparameter.messageText.get(msgSetId + LJ + orgid) != null) {
+			if (orgid != null && !orgid.equals("") && Memoryparameter.messageText.get(msgSetId + LJ + orgid) != null) {
 				retMsgText = Memoryparameter.messageText.get(msgSetId + LJ + orgid).get(msgId + LJ + langCd);
 				if (retMsgText == null || retMsgText.equals("")) {
 					retMsgText = Memoryparameter.messageText.get(msgSetId + LJ + orgid).get(msgId + LJ + systemLang);
@@ -536,11 +536,11 @@ public class GdObjectServiceImpl implements GdObjectService {
 			String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where  TZ_HARDCODE_PNT=?";
 
 			String systemLang = jdbcTemplate.queryForObject(sql, new Object[] { TZ_HARDCODE_PNT }, "String");
-			
-			System.out.println("loginOrgid:"+loginOrgid);
-			System.out.println("superOrgid:"+superOrgid);
-			System.out.println("languageCd:"+languageCd);
-			System.out.println("systemLang:"+systemLang);
+
+			System.out.println("loginOrgid:" + loginOrgid);
+			System.out.println("superOrgid:" + superOrgid);
+			System.out.println("languageCd:" + languageCd);
+			System.out.println("systemLang:" + systemLang);
 
 			// Key:TZ_XXJH_ID@TZ_JG_ID
 			// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
