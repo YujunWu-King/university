@@ -32,6 +32,7 @@ SurveyBuild.extend("DigitalTextBox", "baseComponent", {
 					var regular = "^(-?\\d+)(\\.\\d+)?$";
 					c += '<div class="item">';
 					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '	<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 					c += '	<div class="text-box">';
 					c += '		<input type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '" />';
 					c += '  </div>';

@@ -107,7 +107,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				if(len<data.maxLines){
 					htmlContent += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')">' + MsgSet["ADD_ONE"] + '</div>';
 				}else{
-					htmlContent += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div>';
+					htmlContent += '<div class="clear" style="display: none"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div>';
 				}
 				htmlContent += '</div>';
 				c += htmlContent;

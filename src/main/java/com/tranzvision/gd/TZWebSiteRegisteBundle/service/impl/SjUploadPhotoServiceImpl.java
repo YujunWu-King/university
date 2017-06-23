@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sun.mail.util.BASE64DecoderStream;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzOprPhotoTMapper;
@@ -21,6 +24,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import sun.misc.BASE64Decoder;
 
 /**
  * 复制原有UploadPhotoServiceImpl功能，符合清华风格
@@ -258,5 +262,49 @@ public class SjUploadPhotoServiceImpl extends FrameworkImpl {
 			}
 		}
 	}
+	
+	
+	/****
+	 * 
+	 * 通过图片流来保存图片到服务器
+	 * 
+	 */
+	@Override
+	public String tzQuery(String strParams, String[] errMsg)   {
+		// TODO Auto-generated method stub
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		
+		String base64ImgData=jacksonUtil.getString("imageDate");
+		
+		
+		String filePath=request.getServletContext().getRealPath(jacksonUtil.getString("imaPath"));
+		
+		
+		
+		try {
+			this.convertBase64DataToImage(base64ImgData,filePath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	/****
+	 * 处理base64的图片数据流
+	 * @param base64ImgData//64位的图片
+	 * @param filePath//保存的路径
+	 * @throws IOException
+	 */
+	
+     private void convertBase64DataToImage(String base64ImgData,String filePath) throws IOException { 
+    	
+        BASE64Decoder d = new BASE64Decoder();  
+        byte[] bs = d.decodeBuffer(base64ImgData);  
+        FileOutputStream os = new FileOutputStream(filePath);  
+        os.write(bs);  
+        os.close();  
+    }  
 
 }

@@ -128,8 +128,8 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 					**************/
 				PsTzSiteiColuT psTzSiteiColuT = new PsTzSiteiColuT();
 				String SqlMeLev=("SELECT TZ_COLU_LEVEL FROM PS_TZ_SITEI_COLU_T WHERE TZ_COLU_ID=?");
-			    String mylm_level=jdbcTemplate.queryForObject(SqlMeLev,new Object[]{lm_id}, "String");
-			    if (mylm_level!="0") {
+			    int mylm_level=jdbcTemplate.queryForObject(SqlMeLev,new Object[]{lm_id}, "Integer");
+			    if (mylm_level!=0) {
 			    	psTzSiteiColuT.setTzColuLevel(1);
 			    	String SqlLev=("SELECT COUNT(1) FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
 					String SqlFlm=("SELECT TZ_COLU_ID FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? AND TZ_COLU_LEVEL=0");
@@ -155,7 +155,7 @@ public class OrgSiteColumnServiceImpl extends FrameworkImpl {
 				psTzSiteiColuT.setTzArtTypeId(lm_nrlx);
 				psTzSiteiColuT.setTzContTemp(lm_nrmb);
 				psTzSiteiColuT.setTzColuState(lm_yxzt);
-				int i = psTzSiteiColuTMapper.updateByPrimaryKey(psTzSiteiColuT);
+				int i = psTzSiteiColuTMapper.updateByPrimaryKeySelective(psTzSiteiColuT);
 				if(i > 0){
 					returnJsonMap.replace("lm_id", lm_id);
 				}else{

@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="%bind(:20)/statics/css/appeditor/m/LCalendar.css">
 <link rel="stylesheet" href="%bind(:20)/statics/css/appeditor/m/rest.css">
 <script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.form.js"></script>
 <link rel="stylesheet" href="%bind(:20)/statics/css/appeditor/m/swiper.min.css">
 <script type="text/javascript" src="%bind(:20)/statics/js/tranzvision/appwidget/m/rem.js"></script>
 <script type="text/javascript" src="%bind(:20)/statics/js/tranzvision/appwidget/m/common.js"></script>
@@ -30,34 +31,80 @@ $("#clipArea").photoClip({
 	view: "#view",
 	ok: "#clipBtn",
 	loadStart: function() {
-		console.log("照片读取中");
+		//console.log("照片读取中");
 	},
 	loadComplete: function() {
-		console.log("照片读取完成");
+		//console.log("照片读取完成");
 	},
 	clipFinish: function(dataURL) {
-		console.log(dataURL);
+		//console.log(dataURL);
 	}
 });
 
 
 
 $(function(){
-$("#clipBtn").click(function(){
-		$("#photox").empty();
-		$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
-		$(".htmleaf-container").hide();
-		
-		$("#myupload").ajaxSubmit({
-			dataType:  "json",
-			success: function(msg) {
-				
-				console.log(msg);
+	$("#clipBtn").click(function(){
+		     var imaPath="",path="",sysFileName="",filename="",imaPath1="";
+			$("#photox").empty();
+			$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
+			$(".htmleaf-container").hide();
+			var obj_file = document.getElementById("file");
 			
-					}
-	})
-  })
-});
+			
+			//1.先保存原始上传的图片到服务器
+			//2.再根据插件截图后的图片流替换服务器上原有的图片
+			//3.再保存截取后的图片如今名称到数据库
+			
+			//1.先保存原始上传的图片到服务器
+			$("#myupload").ajaxSubmit({
+				dataType:  "json",
+				success: function(msg) {
+					
+					
+					imaPath=msg.msg.accessPath+msg.msg.sysFileName;
+					imaPath1=msg.msg.accessPath;
+					sysFileName=msg.msg.sysFileName;
+					filename=msg.msg.filename;
+					
+				    var filedate=$("#photox img").attr("src");
+					 filedate=filedate.split(',');
+					
+			        
+			        
+			 
+				    var fileStrJson = { "imageDate": filedate[1], "imaPath": imaPath};
+				  
+				    var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_MUP_PHOTO_STD","OperateType":"QF","comParams":' + JSON.stringify( fileStrJson ) + '}';
+				  
+				   //2.再根据插件截图后的图片流替换服务器上原有的图片
+				$.ajax({
+				    type:"POST",
+				    url:TzUniversityContextPath + "/dispatcher",
+					dataType:"json",
+				    data: {"tzParams" : tzParams },	
+				    success:function(html){
+				    	
+				    	var fileStrJson = {"sysFileName": sysFileName , "filename": filename, "imaPath": imaPath1, "path": path};
+			  			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"PHOTO","comParams":' + JSON.stringify( fileStrJson ) + '}';
+			  		//3.再保存截取后的图片如今名称到数据库
+		                $.ajax({
+		                    type:"POST",
+		                    url:TzUniversityContextPath + "/dispatcher?",
+							dataType:"json",
+		                    data: {"tzParams" : tzParams },	
+		                    success:function(html){
+		                    	
+		                    	}
+		                    })
+				    	
+				        }
+				    })
+			       }
+		      })
+	      })
+
+	});
 
 
 $(function(){
@@ -197,115 +244,36 @@ $(".file-3").parents(".uploader").find(".filename").val(subUrl);
 	})
 
 });
-</script>
-<script>
-function setImagePreview() {
-	var preview, img_txt, localImag, file_head = document.getElementById("file_head"),
-			picture = file_head.value;
-	if (!picture.match(/.jpg|.gif|.png|.bmp/i)) return alert("您上传的图片格式不正确，请重新选择！"),
-			!1;
-	if (preview = document.getElementById("preview"), file_head.files && file_head.files[0]) preview.style.display = "block",
-			preview.style.width = "63px",
-			preview.style.height = "63px",
-			preview.src = window.navigator.userAgent.indexOf("Chrome") >= 1 || window.navigator.userAgent.indexOf("Safari") >= 1 ? window.webkitURL.createObjectURL(file_head.files[0]) : window.URL.createObjectURL(file_head.files[0]);
-	else {
-		file_head.select(),
-				file_head.blur(),
-				img_txt = document.selection.createRange().text,
-				localImag = document.getElementById("localImag"),
-				localImag.style.width = "63px",
-				localImag.style.height = "63px";
-		try {
-			localImag.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)",
-					localImag.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = img_txt
-		} catch(f) {
-			return alert("您上传的图片格式不正确，请重新选择！"),
-					!1
-		}
-		preview.style.display = "none",
-				document.selection.empty()
-	}
-	return document.getElementById("DivUp").style.display = "block",
-			!0
+//返回
+function PhoneBack(obj){
+	$(".htmleaf-container").hide();
 }
-
-
-/*$("#clipBtn").click(function(){
-		if($("#sysfilename").val() != ""){
-		    loading();
-	        $("#crop_form").ajaxSubmit({
-	            dataType:"json",
-				data:{
-					"imaPath":imaPath
-				},
-	            success: function(msg) {
-	              	//var data="sysFileName=" + msg.name + "&filename=" + filename + "&imaPath=" + imaPath + "&path=" + path;
-          			var fileStrJson = {"sysFileName": msg.name , "filename": filename, "imaPath": imaPath, "path": path};
-		  			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"PHOTO","comParams":' + JSON.stringify( fileStrJson ) + '}';
-
-	                $.ajax({
-	                    type:"POST",
-	                    url:TzUniversityContextPath + "/dispatcher",
-						dataType:"json",
-	                    data: {"tzParams" : tzParams },	
-	                    beforeSend:function() {
-	                        $(function(){
-	                            $("#loading").fadeIn();
-	                        });
-	                    },
-	                    success:function(html){
-	                        if(html.comContent.success == "Y"){
-	 							window.parent.$("#photox").attr("src", "%bind(:20)"+html.comContent.url);					
-								window.SurveyBuild && window.parent.$("#photox").parent().parent().find('input[type="hidden"]').val(html.comContent.url);
-	                            
-								//layer.close(layer.index);
-								$("#loading").fadeOut();
-								closeThis();
-	                        }else{
-	                        	 //closeThis();
-								 alert("%bind(:12)");
-								 //layer.close(layer.index);
-								 $("#loading").fadeOut();
-							}
-	                    },
-			            error:function(xhr){
-			                btn.html(xhr.responseText);
-			                $("#loading").fadeOut();
-							//layer.close(layer.index);
-			            }
-	                })
-	            },
-	            error:function(xhr){
-	                btn.html(xhr.responseText);
-					layer.close(layer.index);
-	            }
-	        });
-		}else{
-			alert("%bind(:13)");
-		}
-    });*/
 </script>
+
 </head>
 	<body>
    <article class="htmleaf-container" style="display: block;">
-		  <div id="clipArea" style="user-select: none; overflow: hidden; position: relative;"></div>
+		  <div id="clipArea" style="user-select: none; overflow: hidden; position: relative;">
+		  <div style="position: absolute;top: 10px;left: 10px;z-index: 100000;color: #fff;" onclick="PhoneBack(this)">返回</div></div>
 			<div class="foot-use">
 				<div class="uploader1 blue">
-					<input type="button" name="file" class="button" value="打开">
+					<input type="button" name="file" class="button" value="打开"/>
 					<img id="tempimg" dynsrc="" style="display:none" />
-					<!--form id="myupload" action="/ImaUploadServlet?sysfilename=" method="post" enctype="multipart/form-data"-->
+					<!-- 用 Servlet提交表单-->
 					<form id="myupload"
-						action="TzUniversityContextPath + "/dispatcher"/UpdWebServlet?filePath=zhglPhoto" method="post"
+						action="UpdWebServlet?filePath=zhglPhoto" method="post"
 						enctype="multipart/form-data">
-						<input class="fileupload2" type="file" name="websitefile" id="fileupload" style="position:absolute"/>
+				
+					<input id="file" name="websitefile" type="file"   />
 					</form>
-					<input id="file" type="file" onchange="javascript:setImagePreview();" accept="image/*" multiple  />
 				</div>
 
 				<button id="clipBtn">截取</button>
+				
 			</div>
-
+            
 			<div id="view" style="background-color: rgb(102, 102, 102); background-repeat: no-repeat; background-position: center center; background-size: contain;"></div>
+			
 	    </article>
 	</body>
 </html>

@@ -1423,11 +1423,11 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzRegUserT.setTzComment20(strTZ_COMMENT20);
 				psTzRegUserT.setRowLastmantDttm(new Date());
 				psTzRegUserT.setRowLastmantOprid(oprid);
-
-				// 是否生产面试申请号;
-				if (strTZ_MSSQH != null && "CREATE".equals(strTZ_MSSQH)) {
-					psTzRegUserT.setTzMssqh(tzMshId);
-				}
+				// 黑名单用户及允许继续申请
+				psTzRegUserT.setTzBlackName("N");
+				psTzRegUserT.setTzAllowApply("Y");
+				// 始终产生面试申请号
+				psTzRegUserT.setTzMssqh(tzMshId);			
 
 				psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
 

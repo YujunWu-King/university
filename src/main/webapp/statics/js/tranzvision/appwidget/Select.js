@@ -58,6 +58,7 @@ SurveyBuild.extend("Select", "baseComponent", {
 	                }
 	                c += '<div class="item">';
 		            c += '	<p>'+data.title+'<span>'+ (data.isRequire == "Y" ? "*": "") +'</span></p>';
+		            c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 		            c += '	<div class="text-box">' ;
 		            c +='		<select name="' + data.itemId + '" class="select1" id="' + data.itemId + '"  title="' + data.itemName + '">';
 		            c +=			e;

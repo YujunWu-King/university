@@ -34,6 +34,7 @@ SurveyBuild.extend("MultilineTextBox", "baseComponent", {
 			if(SurveyBuild.accessType == "M"){
 				c += '<div class="item">';
 				c += '	<p>'+ data.title +'<span>' + (data.isRequire == "Y" ? "*": "") +' </span></p>';
+				c += '	 <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				c += '	<div class="text-box" style="height: auto;">';
 				c += ' 		<textarea data-regular="' + regular + '" title="' + data.itemName + '" id="' + data.itemId + '" name="' + data.itemId + '"class="textarea1" ' + (data.isReadOnly == "Y" ? 'disabled="true"': '') + '>'+data.value+'</textarea>';
 				c += '	</div>';

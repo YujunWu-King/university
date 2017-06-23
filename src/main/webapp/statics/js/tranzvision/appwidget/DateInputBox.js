@@ -15,15 +15,17 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 						//只读模式
 					 	c += '<div class="item">';
 						c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-						c += '	<div class="text-box"><input type="text" class="text1" value="'+data.value+'" readonly="" disabled=""></div>';
+						
+						c += '	<div class="text-box"><input type="text" class="text1"  value="'+data.value+'" readonly="" disabled=""></div>';
 						c += '  <p style="color:#666;font-size:0.56rem;"></p>';
 						c += '</div>';
 					} else {
 						//填写模式
 						c += '<div class="item">';
 						c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+						c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 						c += '	<div class="text-box">';
-						c += '		<input type="text" class="text1" id="date' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" />';
+						c += '		<input type="text" class="text1"readonly="readonly" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" />';
 						c += '	</div>';
 						c += '  <p style="color:#666;font-size:0.56rem;"></p>';
 						c += '</div>';
@@ -133,7 +135,7 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 		}
 		 var calendar = new LCalendar();
 		    calendar.init({
-		        'trigger': '#date' + data.itemId, //标签id
+		        'trigger': '#' + data.itemId, //标签id
 		        'type': $type, //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
 		        'minDate': data.minYear + "-01-01", //最小日期
 		        'maxDate':data.maxYear + "-12-31"

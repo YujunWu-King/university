@@ -1095,7 +1095,7 @@ function openRqQrcode(appIns){
 	      shade : [0.3 , '#000' , true],
 	      border : [3 , 0.3 , '#000', true],
 	      offset: ['20%',''],
-	      area: ['215px','250px'],
+	      area: ['215px','280px'],
 	  	 content: rqQrcodeUrl
 	 });
 	

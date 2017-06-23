@@ -360,24 +360,24 @@
     checkBoxAction: function(checkbox,checked){
         var form =this.lookupReference('wjdcSzInfoForm').getForm();
         //答题规则
-        var dtgz=form.findField("dtgz");
+        //var dtgz=form.findField("dtgz");
         //数据采集规则
         var sjcjgz=form.findField("sjcjgz");
         //听众列表
         var audList=form.findField("AudList");
-        if(checked){ //如果选中，就隐藏掉,不显示
-           dtgz.items.items[2].setHidden(true);
+       if(checked){ //如果选中，就隐藏掉,不显示
+           //dtgz.items.items[2].setHidden(true);
            sjcjgz.items.items[3].setHidden(true);
             if(sjcjgz.getValue().TZ_DC_WJ_IPGZ=="3")
             {
                 sjcjgz.setValue({TZ_DC_WJ_IPGZ:2});
             }
-            audList.setVisible(false);
+           audList.setVisible(false);
        } else{
             sjcjgz.setValue({TZ_DC_WJ_IPGZ:3});
-            dtgz.items.items[2].setHidden(false);
+            //dtgz.items.items[2].setHidden(false);
             sjcjgz.items.items[3].setHidden(false);
-            audList.setVisible(true);
+           audList.setVisible(true);
         }
     },
     /*问卷调查密码，默认隐藏，如果勾选，就表示需要密码，密码框显示*/

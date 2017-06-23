@@ -11,7 +11,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzKsTjxTblMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.sql.GetSeqNum;
-import com.tranzvision.gd.util.sql.MySqlLockService;
+//import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -34,10 +34,12 @@ public class TzTjxClsServiceImpl {
 	private CreateTaskServiceImpl createTaskServiceImpl;
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
-	@Autowired
-	private MySqlLockService mySqlLockService;
+//	@Autowired
+//	private MySqlLockService mySqlLockService;
 
 	public String tjxId;
+	
+	public static final Object obj = new Object();
 
 	// 保存推荐信信息;
 	public String saveTJX(long numAppinsId, String strOprid, String strTjrId, String strEmail, String strTjxType,
@@ -60,113 +62,116 @@ public class TzTjxClsServiceImpl {
 			strRtn = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_APPONLINE_MSGSET", "REF_E_DIF",
 					str_language, "", "");
 		} else {
-			mySqlLockService.lockRow(jdbcTemplate,"TZ_KS_TJX_TBL");
-			strTjxId = jdbcTemplate.queryForObject(
-					"select TZ_REF_LETTER_ID from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and OPRID=?  and TZ_TJR_ID=? and TZ_MBA_TJX_YX='Y' limit 0,1",
-					new Object[] { numAppinsId, strOprid, strTjrId }, "String");
-			;
-			if ((strTjxId == null || "".equals(strTjxId)) && "N".equals(str_tjx_valid)) {
-				b_flag = false;
-			}
-
-			if (b_flag) {
-				if (strTjxId == null || "".equals(strTjxId)) {
-					String str_seq1 = String.valueOf((int) (Math.random() * 10000000));
-					String str_seq2 = "00000000000000"
-							+ String.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
-					str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
-					strTjxId = str_seq1 + str_seq2;
+//			mySqlLockService.lockRow(jdbcTemplate,"TZ_KS_TJX_TBL");
+			synchronized (obj) {
+				strTjxId = jdbcTemplate.queryForObject(
+						"select TZ_REF_LETTER_ID from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and OPRID=?  and TZ_TJR_ID=? and TZ_MBA_TJX_YX='Y' limit 0,1",
+						new Object[] { numAppinsId, strOprid, strTjrId }, "String");
+				
+				if ((strTjxId == null || "".equals(strTjxId)) && "N".equals(str_tjx_valid)) {
+					b_flag = false;
 				}
-				this.tjxId = strTjxId;
-				PsTzKsTjxTbl psTzKsTjxTbl = psTzKsTjxTblMapper.selectByPrimaryKey(strTjxId);
-				if (psTzKsTjxTbl == null) {
-					psTzKsTjxTbl = new PsTzKsTjxTbl();
-					psTzKsTjxTbl.setTzRefLetterId(strTjxId);
-					psTzKsTjxTbl.setTzAppInsId(numAppinsId);
-					psTzKsTjxTbl.setOprid(strOprid);
-					psTzKsTjxTbl.setTzTjxType(strTjxType);
-					psTzKsTjxTbl.setTzTjrId(strTjrId);
-					psTzKsTjxTbl.setTzMbaTjxYx(str_tjx_valid);
-					psTzKsTjxTbl.setTzTjxTitle(strTitle);
-					psTzKsTjxTbl.setTzReferrerGname(strGname);
-					psTzKsTjxTbl.setTzReferrerName(strName);
-					psTzKsTjxTbl.setTzCompCname(strCompany);
-					psTzKsTjxTbl.setTzPosition(strPosition);
-					psTzKsTjxTbl.setTzEmail(strEmail);
-					psTzKsTjxTbl.setTzPhoneArea(strPhone_area);
-					psTzKsTjxTbl.setTzPhone(strPhone_no);
-					psTzKsTjxTbl.setTzGender(strGender);
-					psTzKsTjxTbl.setTzReflettertype(str_refLetterType);
 
-					psTzKsTjxTbl.setTzTjxYl1(strAdd1);
-					psTzKsTjxTbl.setTzTjxYl2(strAdd2);
-					psTzKsTjxTbl.setTzTjxYl3(strAdd3);
-					psTzKsTjxTbl.setTzTjxYl4(strAdd4);
-					psTzKsTjxTbl.setTzTjxYl5(strAdd5);
-					psTzKsTjxTbl.setTzTjxYl6(strAdd6);
-					psTzKsTjxTbl.setTzTjxYl7(strAdd7);
-					psTzKsTjxTbl.setTzTjxYl8(strAdd8);
-					psTzKsTjxTbl.setTzTjxYl9(strAdd9);
-					psTzKsTjxTbl.setTzTjxYl10(strAdd10);
-					psTzKsTjxTbl.setTzTjrGx(strTjrgx);
-
-					psTzKsTjxTbl.setAttachsysfilename(str_sysfilename);
-					psTzKsTjxTbl.setAttachuserfile(str_filename);
-					psTzKsTjxTbl.setTzAccessPath(accessPath);
-					psTzKsTjxTbl.setTzAttAUrl(attAUrl);
-
-					psTzKsTjxTbl.setRowAddedDttm(new Date());
-					psTzKsTjxTbl.setRowAddedOprid(strOprid);
-					psTzKsTjxTbl.setRowLastmantDttm(new Date());
-					psTzKsTjxTbl.setRowLastmantOprid(strOprid);
-					psTzKsTjxTblMapper.insert(psTzKsTjxTbl);
-				} else {
-					psTzKsTjxTbl = new PsTzKsTjxTbl();
-					psTzKsTjxTbl.setTzRefLetterId(strTjxId);
-					psTzKsTjxTbl.setTzAppInsId(numAppinsId);
-					psTzKsTjxTbl.setOprid(strOprid);
-					if(!"".equals(strTjxType)){
+				if (b_flag) {
+					if (strTjxId == null || "".equals(strTjxId)) {
+						String str_seq1 = String.valueOf((int) (Math.random() * 10000000));
+						String str_seq2 = "00000000000000"
+								+ String.valueOf(getSeqNum.getSeqNum("TZ_KS_TJX_TBL", "TZ_REF_LETTER_ID"));
+						str_seq2 = str_seq2.substring(str_seq2.length() - 15, str_seq2.length());
+						strTjxId = str_seq1 + str_seq2;
+					}
+					this.tjxId = strTjxId;
+					PsTzKsTjxTbl psTzKsTjxTbl = psTzKsTjxTblMapper.selectByPrimaryKey(strTjxId);
+					if (psTzKsTjxTbl == null) {
+						psTzKsTjxTbl = new PsTzKsTjxTbl();
+						psTzKsTjxTbl.setTzRefLetterId(strTjxId);
+						psTzKsTjxTbl.setTzAppInsId(numAppinsId);
+						psTzKsTjxTbl.setOprid(strOprid);
 						psTzKsTjxTbl.setTzTjxType(strTjxType);
-					}
-					psTzKsTjxTbl.setTzTjrId(strTjrId);
-					psTzKsTjxTbl.setTzMbaTjxYx(str_tjx_valid);
-					psTzKsTjxTbl.setTzTjxTitle(strTitle);
-					psTzKsTjxTbl.setTzReferrerGname(strGname);
-					psTzKsTjxTbl.setTzReferrerName(strName);
-					psTzKsTjxTbl.setTzCompCname(strCompany);
-					psTzKsTjxTbl.setTzPosition(strPosition);
-					psTzKsTjxTbl.setTzEmail(strEmail);
-					psTzKsTjxTbl.setTzPhoneArea(strPhone_area);
-					psTzKsTjxTbl.setTzPhone(strPhone_no);
-					psTzKsTjxTbl.setTzGender(strGender);
-					if(!"".equals(str_refLetterType)){
+						psTzKsTjxTbl.setTzTjrId(strTjrId);
+						psTzKsTjxTbl.setTzMbaTjxYx(str_tjx_valid);
+						psTzKsTjxTbl.setTzTjxTitle(strTitle);
+						psTzKsTjxTbl.setTzReferrerGname(strGname);
+						psTzKsTjxTbl.setTzReferrerName(strName);
+						psTzKsTjxTbl.setTzCompCname(strCompany);
+						psTzKsTjxTbl.setTzPosition(strPosition);
+						psTzKsTjxTbl.setTzEmail(strEmail);
+						psTzKsTjxTbl.setTzPhoneArea(strPhone_area);
+						psTzKsTjxTbl.setTzPhone(strPhone_no);
+						psTzKsTjxTbl.setTzGender(strGender);
 						psTzKsTjxTbl.setTzReflettertype(str_refLetterType);
+
+						psTzKsTjxTbl.setTzTjxYl1(strAdd1);
+						psTzKsTjxTbl.setTzTjxYl2(strAdd2);
+						psTzKsTjxTbl.setTzTjxYl3(strAdd3);
+						psTzKsTjxTbl.setTzTjxYl4(strAdd4);
+						psTzKsTjxTbl.setTzTjxYl5(strAdd5);
+						psTzKsTjxTbl.setTzTjxYl6(strAdd6);
+						psTzKsTjxTbl.setTzTjxYl7(strAdd7);
+						psTzKsTjxTbl.setTzTjxYl8(strAdd8);
+						psTzKsTjxTbl.setTzTjxYl9(strAdd9);
+						psTzKsTjxTbl.setTzTjxYl10(strAdd10);
+						psTzKsTjxTbl.setTzTjrGx(strTjrgx);
+
+						psTzKsTjxTbl.setAttachsysfilename(str_sysfilename);
+						psTzKsTjxTbl.setAttachuserfile(str_filename);
+						psTzKsTjxTbl.setTzAccessPath(accessPath);
+						psTzKsTjxTbl.setTzAttAUrl(attAUrl);
+
+						psTzKsTjxTbl.setRowAddedDttm(new Date());
+						psTzKsTjxTbl.setRowAddedOprid(strOprid);
+						psTzKsTjxTbl.setRowLastmantDttm(new Date());
+						psTzKsTjxTbl.setRowLastmantOprid(strOprid);
+						psTzKsTjxTblMapper.insert(psTzKsTjxTbl);
+					} else {
+						psTzKsTjxTbl = new PsTzKsTjxTbl();
+						psTzKsTjxTbl.setTzRefLetterId(strTjxId);
+						psTzKsTjxTbl.setTzAppInsId(numAppinsId);
+						psTzKsTjxTbl.setOprid(strOprid);
+						if(!"".equals(strTjxType)){
+							psTzKsTjxTbl.setTzTjxType(strTjxType);
+						}
+						psTzKsTjxTbl.setTzTjrId(strTjrId);
+						psTzKsTjxTbl.setTzMbaTjxYx(str_tjx_valid);
+						psTzKsTjxTbl.setTzTjxTitle(strTitle);
+						psTzKsTjxTbl.setTzReferrerGname(strGname);
+						psTzKsTjxTbl.setTzReferrerName(strName);
+						psTzKsTjxTbl.setTzCompCname(strCompany);
+						psTzKsTjxTbl.setTzPosition(strPosition);
+						psTzKsTjxTbl.setTzEmail(strEmail);
+						psTzKsTjxTbl.setTzPhoneArea(strPhone_area);
+						psTzKsTjxTbl.setTzPhone(strPhone_no);
+						psTzKsTjxTbl.setTzGender(strGender);
+						if(!"".equals(str_refLetterType)){
+							psTzKsTjxTbl.setTzReflettertype(str_refLetterType);
+						}
+
+						psTzKsTjxTbl.setTzTjxYl1(strAdd1);
+						psTzKsTjxTbl.setTzTjxYl2(strAdd2);
+						psTzKsTjxTbl.setTzTjxYl3(strAdd3);
+						psTzKsTjxTbl.setTzTjxYl4(strAdd4);
+						psTzKsTjxTbl.setTzTjxYl5(strAdd5);
+						psTzKsTjxTbl.setTzTjxYl6(strAdd6);
+						psTzKsTjxTbl.setTzTjxYl7(strAdd7);
+						psTzKsTjxTbl.setTzTjxYl8(strAdd8);
+						psTzKsTjxTbl.setTzTjxYl9(strAdd9);
+						psTzKsTjxTbl.setTzTjxYl10(strAdd10);
+
+						psTzKsTjxTbl.setTzTjrGx(strTjrgx);
+
+						psTzKsTjxTbl.setAttachsysfilename(str_sysfilename);
+						psTzKsTjxTbl.setAttachuserfile(str_filename);
+						psTzKsTjxTbl.setTzAccessPath(accessPath);
+						psTzKsTjxTbl.setTzAttAUrl(attAUrl);
+
+						psTzKsTjxTbl.setRowLastmantDttm(new Date());
+						psTzKsTjxTbl.setRowLastmantOprid(strOprid);
+						psTzKsTjxTblMapper.updateByPrimaryKeySelective(psTzKsTjxTbl);
 					}
-
-					psTzKsTjxTbl.setTzTjxYl1(strAdd1);
-					psTzKsTjxTbl.setTzTjxYl2(strAdd2);
-					psTzKsTjxTbl.setTzTjxYl3(strAdd3);
-					psTzKsTjxTbl.setTzTjxYl4(strAdd4);
-					psTzKsTjxTbl.setTzTjxYl5(strAdd5);
-					psTzKsTjxTbl.setTzTjxYl6(strAdd6);
-					psTzKsTjxTbl.setTzTjxYl7(strAdd7);
-					psTzKsTjxTbl.setTzTjxYl8(strAdd8);
-					psTzKsTjxTbl.setTzTjxYl9(strAdd9);
-					psTzKsTjxTbl.setTzTjxYl10(strAdd10);
-
-					psTzKsTjxTbl.setTzTjrGx(strTjrgx);
-
-					psTzKsTjxTbl.setAttachsysfilename(str_sysfilename);
-					psTzKsTjxTbl.setAttachuserfile(str_filename);
-					psTzKsTjxTbl.setTzAccessPath(accessPath);
-					psTzKsTjxTbl.setTzAttAUrl(attAUrl);
-
-					psTzKsTjxTbl.setRowLastmantDttm(new Date());
-					psTzKsTjxTbl.setRowLastmantOprid(strOprid);
-					psTzKsTjxTblMapper.updateByPrimaryKeySelective(psTzKsTjxTbl);
 				}
 			}
-			mySqlLockService.unlockRow(jdbcTemplate);
+			
+			//mySqlLockService.unlockRow(jdbcTemplate);
 			strRtn = "SUCCESS";
 		}
 

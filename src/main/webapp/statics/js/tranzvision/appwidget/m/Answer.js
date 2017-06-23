@@ -1234,9 +1234,11 @@ var SurveyBuild = {
 														_children.push(_fc);
 													}
 													if (className == "imagesUpload"){
-														c += '<li class="fileLi"><span><a  onclick=SurveyBuild.viewImageSet(this,"' + instanceId + '") file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+														var i=_children.length-1;
+														//console.log("i:"+i);
+														c += '<li class="fileLi"><span><a id="img_'+data.itemId+'_'+i+'"  file-index="' + rstObj.index + '" onclick="SurveyBuild.viewImageSet(this,\'' + data.instanceId + '\',\'' + i + '\')">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
 									        			
-													} else {c += '<li class="fileLi"><span><a  onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
+													} else {c += '<li class="fileLi"><span><a   file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
 													}
 													$("#"+itemId+"_AttList").css("display","block");
 													$("#"+itemId+"_AttList").append(c);
@@ -1265,9 +1267,10 @@ var SurveyBuild = {
 													_children[0].accessPath = obj.msg.accessPath;
 													_children[0].viewFileName = rstObj.viewFileName;
 													if (className == "imagesUpload"){
-														c += '<li class="fileLi"><span><a  onclick=SurveyBuild.viewImageSet(this,"' + instanceId + '") file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';													
+														//console.log("i:"+i);
+														c += '<li class="fileLi"><span><a  id="img_'+data.itemId+'" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';													
 													} else {
-														c += '<li class="fileLi"><span><a  onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
+														c += '<li class="fileLi"><span><a   file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
 													}
 													$("#"+itemId+"_AttList").css("display","block");
 													$("#"+itemId+"_AttList").html(c);
@@ -1448,8 +1451,30 @@ var SurveyBuild = {
 		});
 	},
     /*报名表图片查看*/
-    viewImageSet: function(el, instanceId) {
-        var appInsId = SurveyBuild.appInsId; //报名表实例ID
+    viewImageSet: function(el, instanceId,indexx) {
+    	//var appInsId = SurveyBuild.appInsId; //报名表实例ID
+        var data;
+        var $isDhContainer = $(el).closest(".dhcontainer");
+        if ($isDhContainer.length == 0) {
+            data = SurveyBuild._items[instanceId];
+        } else {
+            var dhIns = $isDhContainer.attr("data-instancid");
+            var index = $(el).closest(".mainright-box").index();
+            data = SurveyBuild._items[dhIns].children[index][instanceId];
+        }
+		var srcPath=TzUniversityContextPath + data.children[indexx].accessPath + data.children[indexx].sysFileName;
+		
+		$("#img_"+data.itemId).attr("src",srcPath);
+		$("#shade_"+data.itemId).show();
+		$("#body_"+data.itemId).show();
+		$("#close_"+data.itemId).show()
+		$("#close_"+data.itemId).click(function(){
+			$("#shade_"+data.itemId).hide();
+			$("#body_"+data.itemId).hide();
+			$("#close_"+data.itemId).hide();
+			$("#img_"+data.itemId).attr("src","");
+		});
+        /*var appInsId = SurveyBuild.appInsId; //报名表实例ID
         var data;
         var $isDhContainer = $(el).closest(".dhcontainer");
         if ($isDhContainer.length == 0) {
@@ -1470,7 +1495,7 @@ var SurveyBuild = {
         var $ul = $("#fancybox-main").children("ul");
         $ul.html(imgHtmls);
         var $li = $($ul.children("li")[index]);
-        $li.children("a").click();
+        $li.children("a").click(); */
     },
     /*报名表附件删除*/
     deleteFile: function(el,instanceId){
