@@ -169,9 +169,25 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				psTzBmbDceT.setTzRelUrl(expDirPath);
 				psTzBmbDceT.setTzJdUrl(absexpDirPath);
 				psTzBmbDceTMapper.insert(psTzBmbDceT);
+				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				
+				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_GD_EXCEL_DB");
+				
+				//指定调度作业的相关参数
+				EngineParameters schdProcessParameters = new EngineParameters();
+
+				schdProcessParameters.setBatchServer("");
+				schdProcessParameters.setCycleExpression("");
+				schdProcessParameters.setLoginUserAccount(currentAccountId);
+				schdProcessParameters.setPlanExcuteDateTime(new Date());
+				schdProcessParameters.setRunControlId(runCntlId);
+				
+				//调度作业
+				tmpEngine.schedule(schdProcessParameters);
 				//processinstance = getSeqNum.getSeqNum("TZ_EXCEL_DRXX_T", "PROCESSINSTANCE");
-				processinstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
+				//processinstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
+				processinstance=tmpEngine.getProcessInstanceID();
 				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
 				psTzExcelDrxxT.setProcessinstance(processinstance);
 				psTzExcelDrxxT.setTzComId("TZ_BMGL_BMBSH_COM");
@@ -207,21 +223,8 @@ public class TzGdBmglExcelClsServiceImpl extends FrameworkImpl {
 				//tzGdBmgDcExcelClass.tzGdDcBmbExcel(runCntlId);
 				//this.tzGdDceAe(runCntlId, processinstance,expDirPath,absexpDirPath);
 				
-				String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-				
-				BaseEngine tmpEngine = tZGDObject.createEngineProcess(currentOrgId, "TZ_GD_EXCEL_DB");
-				//指定调度作业的相关参数
-				EngineParameters schdProcessParameters = new EngineParameters();
 
-				schdProcessParameters.setBatchServer("");
-				schdProcessParameters.setCycleExpression("");
-				schdProcessParameters.setLoginUserAccount(currentAccountId);
-				schdProcessParameters.setPlanExcuteDateTime(new Date());
-				schdProcessParameters.setRunControlId(runCntlId);
 				
-				//调度作业
-				tmpEngine.schedule(schdProcessParameters);
 				
 			}
 		} catch (Exception e) {

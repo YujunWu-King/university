@@ -188,23 +188,29 @@ public class TzInterviewExpExcelImpl extends FrameworkImpl{
 				
 				// 进程id;
 				int processinstance = tmpEngine.getProcessInstanceID();
+				if(processinstance>0){
+					
+					PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
+					psTzExcelDrxxT.setProcessinstance(processinstance);
+					psTzExcelDrxxT.setTzComId("TZ_MS_ARR_MG_COM");
+					psTzExcelDrxxT.setTzPageId("TZ_MS_ARR_EXP_STD");
+					psTzExcelDrxxT.setTzDrLxbh("1");
+					psTzExcelDrxxT.setTzDrTaskDesc(excelName);
+					psTzExcelDrxxT.setTzStartDtt(new Date());
+					psTzExcelDrxxT.setOprid(oprid);
+					psTzExcelDrxxT.setTzIsViewAtt("Y");
+					psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
+					
+					
+					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
+					psTzExcelDattT.setProcessinstance(processinstance);
+					psTzExcelDattT.setTzCfLj("A");
+					psTzExcelDattTMapper.insert(psTzExcelDattT);
+					
+										
+				}
 				
-				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
-				psTzExcelDrxxT.setProcessinstance(processinstance);
-				psTzExcelDrxxT.setTzComId("TZ_MS_ARR_MG_COM");
-				psTzExcelDrxxT.setTzPageId("TZ_MS_ARR_EXP_STD");
-				psTzExcelDrxxT.setTzDrLxbh("1");
-				psTzExcelDrxxT.setTzDrTaskDesc(excelName);
-				psTzExcelDrxxT.setTzStartDtt(new Date());
-				psTzExcelDrxxT.setOprid(oprid);
-				psTzExcelDrxxT.setTzIsViewAtt("Y");
-				psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
 				
-				
-				PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
-				psTzExcelDattT.setProcessinstance(processinstance);
-				psTzExcelDattT.setTzCfLj("A");
-				psTzExcelDattTMapper.insert(psTzExcelDattT);
 			}
 			rtnMap.replace("result", "success");
 		} catch (Exception e) {

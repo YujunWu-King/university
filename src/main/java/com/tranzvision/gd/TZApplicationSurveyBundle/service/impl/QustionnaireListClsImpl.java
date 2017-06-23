@@ -541,33 +541,34 @@ public class QustionnaireListClsImpl extends FrameworkImpl{
 				
 				// 进程实例id;
 				int processinstance = tmpEngine.getProcessInstanceID();
-				
-				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
-				psTzExcelDrxxT.setProcessinstance(processinstance);
-				psTzExcelDrxxT.setTzComId("TZ_ZXDC_WJGL_COM");
-				psTzExcelDrxxT.setTzPageId("TZ_ZXDC_WJGL_STD");
-				//存放活动ID
-				psTzExcelDrxxT.setTzDrLxbh(wjId);
-				psTzExcelDrxxT.setTzDrTaskDesc(fileName); 
-				psTzExcelDrxxT.setTzStartDtt(new Date());
-				psTzExcelDrxxT.setOprid(oprid);
-				psTzExcelDrxxT.setTzIsViewAtt("Y");
-				psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
-				
-				
-				// 生成本次导出的文件名
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-				String sysFileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
-						+ processinstance + fileSuffix;
-				
-				PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
-				psTzExcelDattT.setProcessinstance(processinstance);
-				psTzExcelDattT.setTzSysfileName(sysFileName);
-				psTzExcelDattT.setTzFileName(fileName);
-				psTzExcelDattT.setTzCfLj("A");
-				psTzExcelDattT.setTzFjRecName("");
-				psTzExcelDattT.setTzFwqFwlj(""); 
-				psTzExcelDattTMapper.insert(psTzExcelDattT);
+				if(processinstance>0){
+					PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
+					psTzExcelDrxxT.setProcessinstance(processinstance);
+					psTzExcelDrxxT.setTzComId("TZ_ZXDC_WJGL_COM");
+					psTzExcelDrxxT.setTzPageId("TZ_ZXDC_WJGL_STD");
+					//存放活动ID
+					psTzExcelDrxxT.setTzDrLxbh(wjId);
+					psTzExcelDrxxT.setTzDrTaskDesc(fileName); 
+					psTzExcelDrxxT.setTzStartDtt(new Date());
+					psTzExcelDrxxT.setOprid(oprid);
+					psTzExcelDrxxT.setTzIsViewAtt("Y");
+					psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
+					
+					
+					// 生成本次导出的文件名
+					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+					String sysFileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
+							+ processinstance + fileSuffix;
+					
+					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
+					psTzExcelDattT.setProcessinstance(processinstance);
+					psTzExcelDattT.setTzSysfileName(sysFileName);
+					psTzExcelDattT.setTzFileName(fileName);
+					psTzExcelDattT.setTzCfLj("A");
+					psTzExcelDattT.setTzFjRecName("");
+					psTzExcelDattT.setTzFwqFwlj(""); 
+					psTzExcelDattTMapper.insert(psTzExcelDattT);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -395,35 +395,41 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 
 			// 进程实例id;
 			int processinstance = tmpEngine.getProcessInstanceID();
+			if(processinstance>0){
+				
+				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
+				psTzExcelDrxxT.setProcessinstance(processinstance);
+				psTzExcelDrxxT.setTzComId("TZ_REVIEW_MS_COM");
+				psTzExcelDrxxT.setTzPageId("TZ_MSPS_KS_STD");
+				// 存放班级ID-批次ID
+				psTzExcelDrxxT.setTzDrLxbh(classId + "-" + batchId);
+				psTzExcelDrxxT.setTzDrTaskDesc(fileName);
+				psTzExcelDrxxT.setTzStartDtt(new Date());
+				psTzExcelDrxxT.setOprid(oprid);
+				psTzExcelDrxxT.setTzIsViewAtt("Y");
+				psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
 
-			PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
-			psTzExcelDrxxT.setProcessinstance(processinstance);
-			psTzExcelDrxxT.setTzComId("TZ_REVIEW_MS_COM");
-			psTzExcelDrxxT.setTzPageId("TZ_MSPS_KS_STD");
-			// 存放班级ID-批次ID
-			psTzExcelDrxxT.setTzDrLxbh(classId + "-" + batchId);
-			psTzExcelDrxxT.setTzDrTaskDesc(fileName);
-			psTzExcelDrxxT.setTzStartDtt(new Date());
-			psTzExcelDrxxT.setOprid(oprid);
-			psTzExcelDrxxT.setTzIsViewAtt("Y");
-			psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
+				// 生成本次导出的文件名
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+				Random random = new Random();
+				int max = 999999999;
+				int min = 100000000;
+				String sysFileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
+						+ String.valueOf(random.nextInt(max) % (max - min + 1) + min) + ".xlsx";
 
-			// 生成本次导出的文件名
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-			Random random = new Random();
-			int max = 999999999;
-			int min = 100000000;
-			String sysFileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
-					+ String.valueOf(random.nextInt(max) % (max - min + 1) + min) + ".xlsx";
+				PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
+				psTzExcelDattT.setProcessinstance(processinstance);
+				psTzExcelDattT.setTzSysfileName(sysFileName);
+				psTzExcelDattT.setTzFileName(fileName);
+				psTzExcelDattT.setTzCfLj("A");
+				psTzExcelDattT.setTzFjRecName("");
+				psTzExcelDattT.setTzFwqFwlj("");
+				psTzExcelDattTMapper.insert(psTzExcelDattT);
+				
+				
+			}
 
-			PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
-			psTzExcelDattT.setProcessinstance(processinstance);
-			psTzExcelDattT.setTzSysfileName(sysFileName);
-			psTzExcelDattT.setTzFileName(fileName);
-			psTzExcelDattT.setTzCfLj("A");
-			psTzExcelDattT.setTzFjRecName("");
-			psTzExcelDattT.setTzFwqFwlj("");
-			psTzExcelDattTMapper.insert(psTzExcelDattT);
+
 
 		} catch (Exception e) {
 			e.printStackTrace();

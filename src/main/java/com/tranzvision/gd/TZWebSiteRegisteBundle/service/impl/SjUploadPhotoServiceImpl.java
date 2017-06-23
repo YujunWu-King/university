@@ -264,7 +264,11 @@ public class SjUploadPhotoServiceImpl extends FrameworkImpl {
 	}
 	
 	
-	
+	/****
+	 * 
+	 * 通过图片流来保存图片到服务器
+	 * 
+	 */
 	@Override
 	public String tzQuery(String strParams, String[] errMsg)   {
 		// TODO Auto-generated method stub
@@ -276,7 +280,7 @@ public class SjUploadPhotoServiceImpl extends FrameworkImpl {
 		
 		
 		String filePath=request.getServletContext().getRealPath(jacksonUtil.getString("imaPath"));
-		System.out.println("base64ImgData+filePath:"+base64ImgData+"filePath"+filePath);
+		
 		
 		
 		try {
@@ -287,7 +291,12 @@ public class SjUploadPhotoServiceImpl extends FrameworkImpl {
 		}
 		return null;
 	}
-	
+	/****
+	 * 处理base64的图片数据流
+	 * @param base64ImgData//64位的图片
+	 * @param filePath//保存的路径
+	 * @throws IOException
+	 */
 	
      private void convertBase64DataToImage(String base64ImgData,String filePath) throws IOException { 
     	
