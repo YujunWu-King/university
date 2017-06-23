@@ -539,8 +539,8 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 		        	url, 
 		        	function(data){ //处理数据 data指向的是返回来的JSON数据 
 		        		var comContent = data.comContent;
-		        		var messageCode = comContent.messageCode;
-		        		var message = comContent.message;
+		        		var messageCode = comContent&&comContent.messageCode||"1";
+		        		var message = comContent&&comContent.message||"获取考生数据时发生错误，请与系统管理员联系。";
 		        		
 		        		if(messageCode=="0") {
 		        			var bmbId = comContent.bmbId;
@@ -588,7 +588,30 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 									//评语类型
 									bmb_cache_id = bmb_cache_id + "###" +v.itemId + "@@@" + v.itemComment;
 								} else {
-									bmb_cache_id = bmb_cache_id + "###" +v.itemId + "@@@" + v.itemValue;
+									if(v.itemType=="D") {
+										//下拉框类型
+										bmb_cache_id = bmb_cache_id + "###" +v.itemId + "@@@" + v.itemValue;
+									} else {
+										//数字类型
+										var itemValueTmp =  v.itemValue;
+										if(v.itemValue!="") {
+
+										} else {
+											if(v.itemIsLeaf=="Y") {
+												//非叶子节点
+												itemValueTmp = "--";
+											} else {
+												//叶子节点
+												if(v.itemLowerLimit<0) {
+													itemValueTmp = 0;
+												} else {
+													itemValueTmp = v.itemLowerLimit;
+												}
+											}
+										}
+										bmb_cache_id = bmb_cache_id + "###" +v.itemId + "@@@" + itemValueTmp;
+
+									}
 								}
 								
 								cjx_lis += "<tr>";
@@ -596,15 +619,26 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 			 					
 			 					//根据层次缩进
 			 					var paddingLeft = v.itemLevel*15;
-			 					cjx_lis += "<td style='vertical-align:middle;'><label for='"+  v.itemId +"' style='width:180px;padding-left:"+ paddingLeft +"px;' class='' id='"+ v.itemId +"-label'>" + v.itemName + "</label></td>";
+			 					cjx_lis += "<td style='vertical-align:middle;'><label for='"+  v.itemId +"' style='width:160px;padding-left:"+ paddingLeft +"px;' class='' id='"+ v.itemId +"-label'>" + v.itemName + "</label></td>";
 								
 			 					//根据是否只读展现不同的形式
+								var valueTmp = v.itemValue;
 								if (v.itemType =="A") {
 									//数字成绩汇总项
-									cjx_lis += 	"<td><div style='width:55px;'><input type='text' style='width: 55px; height: 20px; background:#ddd' readonly='true' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemValue  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "' /></div></td>";
+									if(v.itemValue=="") {
+										valueTmp = "--";
+									}
+									cjx_lis += 	"<td><div style='width:55px;'><input type='text' style='width: 55px; height: 20px; background:#ddd' readonly='true' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + valueTmp  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "' /></div></td>";
 								}else if (v.itemType =="B"){
 									//数字成绩录入项
-									cjx_lis += 	"<td width='410px'><input type='range' onchange='tz_parent_id_tmp(this);' style='width: 55px; height: 20px;' data-highlight='true' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemValue  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "' /></td>";
+									if(v.itemValue=="") {
+										if(v.itemLowerLimit<0) {
+											valueTmp = 0;
+										} else {
+											valueTmp = v.itemLowerLimit;
+										}
+									}
+									cjx_lis += 	"<td width='360px'><input type='range' onchange='tz_parent_id_tmp(this);' style='width: 55px; height: 20px;' data-highlight='true' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + valueTmp  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "' /></td>";
 								}else if (v.itemType =="C"){
 									//评语
 									//解决页面中换行出现反斜杠n 的情况
@@ -625,10 +659,10 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 									newstr = newstr.replace("\\n","\n");
 									newstr = newstr.replace("\\n","\n");
 	
-	 								cjx_lis += 	"<td><textarea  style='width: 450px; margin: 8px 0px; height: 66px;margin-right:15px;' rows='10' class='ui-input-text ui-body-c ui-corner-all ui-shadow-inset' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemComment  +  "' min='" + v.itemCommentLowerLimit  +  "' max='" + v.itemCommentUpperLimit  +  "'>"+newstr+"</textarea></td>";
+	 								cjx_lis += 	"<td><textarea  style='width: 370px; margin: 8px 0px; height: 66px;margin-right:15px;' rows='10' class='ui-input-text ui-body-c ui-corner-all ui-shadow-inset' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + v.itemComment  +  "' min='" + v.itemCommentLowerLimit  +  "' max='" + v.itemCommentUpperLimit  +  "'>"+newstr+"</textarea></td>";
 								} else if (v.itemType=="D") {
 									//下拉框
-									cjx_lis += "<td width='410px'><select class='ui-input-text ui-body-c ui-corner-all ui-shadow-inset ui-slider-input' name='" +  v.itemId + "' id='" +  v.itemId + "'>";
+									cjx_lis += "<td width='360px'><select class='ui-input-text ui-body-c ui-corner-all ui-shadow-inset ui-slider-input' name='" +  v.itemId + "' id='" +  v.itemId + "'>";
 									$.each(comContent.scoreContent.itemOptions, function(k1, v1) {
 										if(v1.itemOptionValue==v.itemValue) {
 											cjx_lis += "<option value='"+ v.itemOptionValue +"' selected>" + v.itemOptionName + "</option>";
@@ -656,7 +690,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 										cjx_lis += "<td width='15px'></td>";
 										cjx_lis += "<td style='vertical-align:middle;'>";
 										if(v.itemCkwt!="" && v.itemCkwt!=null) {
-											cjx_lis += "<a  href='#w_sm_"+v.itemId+"'  data-rel='popup' class='ui-link'>说明</a><div   data-role='popup'   id='w_sm_"+v.itemId+"' class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemCkwt+"</p></div>";
+											cjx_lis += "<a  href='#w_sm_"+v.itemId+"'  data-rel='popup' class='ui-link'>说明</a><div   data-role='popup'  id='w_sm_"+v.itemId+"' class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>"+v.itemCkwt+"</p></div>";
 										}
 										cjx_lis += "</td>";
 									    cjx_lis += "<td width='15px'></td>";
@@ -670,7 +704,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 										if(v.itemCkzl!="" && v.itemCkzl!=null) {
 											var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=" + TZ_CLASS_ID + "&batchId=" + TZ_APPLY_PC_ID + "&appInsId=" + bmbId + "&model="+ v.scoreModelId + "&cjxId=" + v.itemId;
 											//var ckzl_content_url = ContextPath + "/refMaterial/onload?classId=122&batchId=47&appInsId=200001&model=TZ_CLPS_MODEL&cjxId=XXHDJL";
-											var ckzl_content = "<iframe src='"+ ckzl_content_url +"' frameborder='0' width='820' height='552'></iframe>";
+											var ckzl_content = "<div style='width:820px;height:552px;-webkit-overflow-scrolling:touch; overflow: scroll;'><iframe src='"+ ckzl_content_url +"' frameborder='0' width='100%' height='100%'></iframe></div>";
 											cjx_lis += "<a  href='#w_ck_" + v.itemId + "'  data-rel='popup' class='ui-link'>参考资料</a><div  data-role='popup'  id='w_ck_" + v.itemId + "'  class='ui-content' style='max-width:1000px, max-height:500px' data-theme='a' data-overlay-theme='b'><a href='#' data-rel='back' data-role='button' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'>关闭</a><p>" + ckzl_content + "</p></div>";
 										}
 										cjx_lis += "</td>";
@@ -852,66 +886,75 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 
 //保存功能开始
 function ks_save(){
-	ks_check_pysj();
-	
-	if (tz_pysjx_failure == "Y"){
-		alert(tz_save_show_info);
-	}else {
-		var TZ_CLASS_ID = ClassId;
-		var TZ_APPLY_PC_ID = BatchId;
-        var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
-        var cjx_ids_tmp = document.getElementById("tz_cjx_ids").value;
 
-      	//参数准备
-		var tz_canshu_str = "";	
+	if(callSaveFunc) {
+		callSaveFunc = false;
 
-		var arr = cjx_ids_tmp.split(";");
-		for (var i=0 ; i< arr.length ; i++){
-			var dange_cjx_id = arr[i];
-			var dange_arr = dange_cjx_id.split(",");
-			if(tz_canshu_str!="") {
-				tz_canshu_str += ',"'+ dange_arr[0] +'":"'+ $("#"+dange_arr[0]).val() +'"';
-			} else {
-				tz_canshu_str = '"'+ dange_arr[0] +'":"'+ $("#"+dange_arr[0]).val() +'"';
-			}
-		}
-		var saveData = '{"ClassID":"'+TZ_CLASS_ID+'","BatchID":"'+TZ_APPLY_PC_ID+'","KSH_BMBID":"'+KSH_BMBID+'","OperationType":"SBM",'+ tz_canshu_str +'}';
-		
-		var comParams = "";
-		comParams = '"update":['+saveData+']';
-		
-		var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
+		ks_check_pysj();
 
-		showLoaderThis();
-		$("#ks_save_bt").attr("onclick", "");
+		if (tz_pysjx_failure == "Y"){
+			alert(tz_save_show_info);
+		}else {
+			var TZ_CLASS_ID = ClassId;
+			var TZ_APPLY_PC_ID = BatchId;
+			var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
+			var cjx_ids_tmp = document.getElementById("tz_cjx_ids").value;
 
-		$.ajax({
-	  		type: 'POST',
-	  		dataType: 'json',
-			async:false,
-	  		url: scoreUrl,
-	  		data: {"tzParams":tzParams},
-	  		beforeSend : function(xhr){
-				//showLoaderThis();
-				//$("#ks_save_bt").attr('disabled',true);
-			},
-	  		success: function(data) {
-				var comContent = data.comContent;
-				var messageCode = comContent.messageCode;
-				if(messageCode =="0"){
-					tz_save_cache();
+			//参数准备
+			var tz_canshu_str = "";
 
-					ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID);
-					alert("保存成功！");
-				}else{
-					alert(comContent.message);
+			var arr = cjx_ids_tmp.split(";");
+			for (var i=0 ; i< arr.length ; i++){
+				var dange_cjx_id = arr[i];
+				var dange_arr = dange_cjx_id.split(",");
+				if(tz_canshu_str!="") {
+					tz_canshu_str += ',"'+ dange_arr[0] +'":"'+ $("#"+dange_arr[0]).val() +'"';
+				} else {
+					tz_canshu_str = '"'+ dange_arr[0] +'":"'+ $("#"+dange_arr[0]).val() +'"';
 				}
-	        },
-			complete : function(){
-				hideLoaderThis();
-				$("#ks_save_bt").attr("onclick", "ks_save();");
 			}
-		});
+			var saveData = '{"ClassID":"'+TZ_CLASS_ID+'","BatchID":"'+TZ_APPLY_PC_ID+'","KSH_BMBID":"'+KSH_BMBID+'","OperationType":"SBM",'+ tz_canshu_str +'}';
+
+			var comParams = "";
+			comParams = '"update":['+saveData+']';
+
+			var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
+
+			showLoaderThis();
+			//$("#ks_save_bt").attr("onclick", "");
+
+
+			$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				async: false,
+				url: scoreUrl,
+				data: {"tzParams": tzParams},
+				/*beforeSend: function (xhr) {
+					showLoaderThis();
+				},*/
+				success: function (data) {
+					hideLoaderThis();
+					var comContent = data.comContent;
+					var messageCode = comContent.messageCode;
+					if (messageCode == "0") {
+						tz_save_cache();
+
+						ks_show_df_info(TZ_CLASS_ID, TZ_APPLY_PC_ID, KSH_BMBID);
+						alert("保存成功！");
+					} else {
+						alert(comContent.message);
+					}
+					callSaveFunc=true;
+				},
+				/*complete: function () {
+					hideLoaderThis();
+					$("#ks_save_bt").attr("onclick", "ks_save();");
+					callSaveFunc=true;
+				}*/
+			});
+		}
+
 		
 		/*
 		//参数准备

@@ -23,6 +23,8 @@
 
 	var sf_qk_fjd = "Y" ;//全局变量是否情况父节点
 
+	var callSaveFunc = true; //调用保存按钮方法标志
+
     /**返回当前显示的IFrame ID 给报名表页面，用于IFrame高度自适应**/
 	function getIFrameID(){
 		return iframe_tmp_id;
@@ -79,7 +81,7 @@ th {
 
 		<div style="text-align:center;  float:left" class="r-action">
 			<a href="javascript:void(0);" id="ks_back_link" onclick="ks_back();" data-theme="a"  data-role="button" data-inline="true" data-icon="back">返回</a>
-			&nbsp;欢迎%bind(:3)评委登录MBA面试评审系统&nbsp;%bind(:7) %bind(:8)
+			&nbsp;欢迎%bind(:3)登录清华经管MBA面试评审系统&nbsp;%bind(:7) %bind(:8)
 		</div>
 		<div style="text-align:right; " class="r-action">
 			<a href="javascript:void(0);" id="ks_first_page_link"  onclick="ks_first_page();" data-theme="a" data-role="button" data-inline="true" data-icon="home">首页</a>

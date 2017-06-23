@@ -45,7 +45,8 @@ SurveyBuild.extend("Degree", "baseComponent", {
     				 c += '<div class="item">';
                      c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 //     				c += '  <div class="input-list-text left">' + valDesc + '</div>';	
-     				c += '  <div class="text-box">' + valDesc + '</div>';
+     				c += '	<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + valDesc + '" title="' + data.itemName + '/>' + valDesc + '</div>'; 
+//     				c += '  <div class="text-box">' + valDesc + '</div>';
      				c += '  <div class="input-list-suffix left"></div>';
      				c += '  <div class="clear"></div>';
      				c += '</div>';
@@ -61,6 +62,7 @@ SurveyBuild.extend("Degree", "baseComponent", {
                     
                     c += '<div class="item">';
     				c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+    				c += '<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';			
     				c += '<div class="text-box">';
     				
 //                  c += '          <select name="' + data.itemId + '" class="chosen-select" id="' + data.itemId + '" style="width:100%;" title="' + data.itemName + '">';

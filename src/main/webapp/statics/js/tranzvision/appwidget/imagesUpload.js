@@ -41,7 +41,9 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
         	}
 			if(SurveyBuild.accessType == "M"){
 				c += '<div class="item">';
+				
 				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+				c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
                 c += ' 	<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
                 c += '		<div class="handle">';
                 c += '   		<div class="ncsc-upload-btn">';
@@ -61,25 +63,30 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 			    if(children[0].viewFileName==""){
 			    	c += ' <div class="upload_list" id="'+data.itemId+'_AttList" style="display:none">';
 					c += '<p style="display:' + (SurveyBuild._readonly?'none':'') +'">'+ MsgSet["UP_FILE_LIST"] +'</p>';
-					 c += '</div>';
+					c += '</div>';
 			    }else{
 			    	c += ' <div class="upload_list" id="'+data.itemId+'_AttList" style="display:' + (children.length < 1 ? 'none':'block') + '">';
 					c += '<p style="display:' + (SurveyBuild._readonly?'none':'') +'">'+ MsgSet["UP_FILE_LIST"] +'</p>';
 				    	if(data.allowMultiAtta == "Y"){
 			        		for(var i=0; i<children.length; i++){
 			        			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-			        				c += '<li class="fileLi"><span><a  id="img_'+data.itemedId+'" onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+			        				c += '<li class="fileLi"><span><a id="img_'+data.itemId+'_'+i+'" onclick="SurveyBuild.viewImageSet(this,\'' + data.instanceId + '\',\'' + i + '\')" index="'+i+'" file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
 			        			}
 			        		}
 			        	}else{
 			        		for(var i=0; i<children.length; i++){
 			        			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-			        				c += '<li class="fileLi"><span><a id="img_'+data.itemedId+'" onclick=SurveyBuild.viewImageSet(this,"' + data.instanceId + '") file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';		        				
+			        				c += '<li class="fileLi"><span><a id="img_'+data.itemId+'_'+i+'"   onclick="SurveyBuild.viewImageSet(this,\'' + data.instanceId + '\',\'' + i + '\')" file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';		        				
 			        			}
 			        		}
 			        	}
 				 c += '</div>';
 			    }
+			    c += '<div class="img_shade" id ="shade_'+data.itemId+'"></div>';
+			    c += '<img class="img_pop_close" id ="close_'+data.itemId+'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
+			    c += '<div class="img_pop_body" id ="body_'+data.itemId+'">'  ;
+			    c += ' <img src="" id ="img_'+data.itemId+'">';
+			    c += '</div>';
 			}else{
 				c += '<div class="input-list-blank margart15">';
 	        	c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';           
@@ -229,8 +236,25 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 	
 	_eventbind: function(data) {
 		if(SurveyBuild.accessType == "M"){
-			
-		}
+			$("#shade_"+data.itemId).hide();
+			$("#body_"+data.itemId).hide();
+			$("#close_"+data.itemId).hide();
+			$(window).load(function(){
+				  initStyles();
+				});
+				$(window).resize(function(){
+				  initStyles();
+				});
+//
+				function initStyles() {
+				 var allHeight=$(window).height();
+				     var popheight=$("#body_"+data.itemId).height();
+				     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
+				     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
+				     console.log(popheight);	console.log(allHeight);
+				}	
+				
+}
 		var $fileInput = $("#" + data.itemId);
 		var $uplBtn = $fileInput.prev(".bt_blue");
 		

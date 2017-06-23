@@ -46,6 +46,7 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 
 				  	c += '<div class="item">';
     				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+    				c += '	<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';			
     				c += '	  <div class="text-box">';
 //    				c += '	 	<a href="pop_city.html"><input type="text" class="text1"  id="' + data.itemId + '" name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
 //    				c += '	 	<a href="pop_county.html"><input type="text" class="text1"  name="' + data.itemId + '" title="' + data.itemName + '" value="' + data.value + '"></a>';
@@ -178,6 +179,45 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 					console.log($("#" + data.itemId).val());
 				});
 			});
+			
+			$inputBox.formValidator({tipID: data["itemId"] + 'Tip',onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
+			$inputBox.functionValidator({
+				fun: function(val, elem) {
+					//执行高级设置中的自定义规则
+					/*********************************************\
+					 ** 注意：自定义规则中不要使用formValidator **
+					\*********************************************/
+					var _result = true;
+					if (ValidationRules) {
+						$.each(data["rules"],
+						function(classname, classObj) {
+							if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+								var _ruleClass = ValidationRules[classname];
+								if (_ruleClass && _ruleClass._Validator) {
+									_result = _ruleClass._Validator(data["itemId"], classObj["messages"]);
+									if (_result !== true) {
+										return false;
+									}
+								}
+							}
+						});
+						if (_result !== true) {
+							return _result;
+						}
+					}
+				}
+			});
+			/*关联项*/
+			if(data.linkItems){
+				var $linkitems = $("#" + data.linkItems);
+				if($linkitems && $linkitems.length > 0){
+					$inputBox.change(function(e) {
+						$linkitems.val($inputBox.val());
+						$linkitems.trigger("change");
+						$linkitems.trigger("blur");
+					});
+				}
+			}
 			
 		}else{
 			

@@ -81,15 +81,8 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 				 }else{
 					 e += '<a href="#" style="display: inline;margin-left: 30px;" id="'+data["itemId"]+child.bmrClass.itemId+'_Btnselect">'+MsgSet["CHAGE_CLASS"]+'</a></p>';
 				 }
-				 e += '</div>';
 				 e += '<div class="text-box"><input type="text" class="text1" readonly="true" id="' + data["itemId"] + child.bmrClass.itemId + '_SPAN" value="' + child.bmrClass.wzsm + '"/></div>';
-
-				 /*
-				 此处是否需要去掉？
-				  */
-				 e += '<p style="color:#666;font-size:0.56rem;"></p>';
 				 e += '</div>';
-
 				 e += '<input id="' +data["itemId"]+child.bmrClass.itemId + '" type="hidden" name="' + child.bmrClass.itemId + '" value="' + child.bmrClass.value + '">';
 
 				 if(SurveyBuild._readonly){
@@ -98,7 +91,6 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 					 e += '<div class="item">';
 					 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
 					 e += '</p><div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + child.bmrBatch.wzsm + '"/></div>';
-					 e += '<p style="color:#666;font-size:0.56rem;"></p>';
 					 e += '</div>';
 				 }else{
 
@@ -128,6 +120,7 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 					 }
 					 e += '<div class="item">';
 					 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					 e += '<div id="' + data["itemId"]+child.bmrBatch.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 					 e += '<div class="text-box">';
 					 e += '<select name="' + child.bmrBatch.itemId + '" class="select1" id="' + data["itemId"]+child.bmrBatch.itemId + '" title="' + child.bmrBatch.itemName + '">';
 					 e += opP;
@@ -327,18 +320,17 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
             	child.bmrBatch.wzsm = "";
             }
         });
-		
-		
+
 		$obj.formValidator({tipID:(data["itemId"] +child.bmrBatch.itemId+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 		$obj.functionValidator({
 			fun:function(val,el){
-				if (data.isRequire == "Y"){
-					if ($("#BatchId").val().length>0) {
-						return 	true;
-					} else {
+
+					if (val=="") {
 						return MsgSet["REQUIRE"];
+						
+					} else {
+						return 	true;
 					}
-				}
 			}	
 		});
 		

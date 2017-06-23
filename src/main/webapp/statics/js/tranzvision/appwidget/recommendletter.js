@@ -377,6 +377,21 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						data["linesNo"].shift(); 
 					}
 				}
+
+				//非只读模式、添加下一条
+                if(SurveyBuild._readonly != true){
+                	
+                	if(len<data.maxLines){
+                		
+                		c += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')">' + MsgSet["ADD_ONE"] + '</div>';
+                	}else{
+                		
+                		c += '<div class="clear" style="display: none"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div>';
+                	}
+                	
+                	c += '</div>';
+                }
+
 			}else{
 				
 				for(var i=1;i<=showLines;i++){
@@ -387,23 +402,23 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						data["linesNo"].shift(); 
 					}
 				}
-			}
-			
-			/*添加 (添加下一条) 按钮*/
-			if(SurveyBuild._readonly!=true){
-				len = data.children.length;
-				c += '<div class="input-list-blank addNext">';
-				if(len<data.maxLines){
-					c += '<div class="input-list-suffix-blank right input-btn">'
-					c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
-					c += '</div>';
-				}else{
-					c += '<div class="input-list-suffix-blank right input-btn" style="padding-right:15px;">'
-					c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
-					c += '</div>';
-				}
-				c +='<div class="clear"></div>';
-				c += '</div>';
+
+                /*添加 (添加下一条) 按钮*/
+                if(SurveyBuild._readonly != true){
+                    len = data.children.length;
+                    c += '<div class="input-list-blank addNext">';
+                    if(len<data.maxLines){
+                        c += '<div class="input-list-suffix-blank right input-btn">'
+                        c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
+                        c += '</div>';
+                    }else{
+                        c += '<div class="input-list-suffix-blank right input-btn" style="padding-right:15px;">'
+                        c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
+                        c += '</div>';
+                    }
+                    c +='<div class="clear"></div>';
+                    c += '</div>';
+                }
 			}
 			
         } else {
@@ -2010,7 +2025,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		}
 		//发送邮件 -结束
 		
-		
 		/*保存推荐信信息*/
 		works += '<div style="display:none">';
 		works += '<div id="saveRec_'+i+'" class="bt_blue" style="width:125px">保存</div><a href="#" class="alpha"></a>';
@@ -2029,7 +2043,706 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
     //手机
     _getHtmlTwo: function(data,rownum,showtype){
     	
+		if (SurveyBuild.appInsId=="0"&&data.children.length<data.defaultLines){
+			SurveyBuild.showTjx(this,data.instanceId);
+			
+		}else if (data.children.length<data.defaultLines){
+			SurveyBuild.showTjx(this,data.instanceId);
+		}
+		
+		/*已填写的数据的行数*/
+		var len = data.children.length;
+		var works = "",child = [];
+		child = data.children;
+		var i=rownum-1;
+		
+		//加载推荐信称呼(AppFormListClsServiceImpl)
+		var tjxTitleParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"TZ_APP_REF_TITLE","LANG":"'+SurveyBuild.BMB_LANG+'"}}';
+            $.ajax({
+                type: "get",
+                dataType: "JSON",
+                data:{
+                    tzParams:tjxTitleParams
+                },
+                async:false,
+                url:SurveyBuild.tzGeneralURL,
+                success: function(f) {
+                    if(f.state.errcode == "0"){
+                        child[i].recommend_18.option = f.comContent;
+                    }
+                }
+            });
+            
+    	/*推荐信序号*/
+    	var _tjrXh;
+    	_tjrXh = child[i].recommend_99["value"];
+    	if(_tjrXh == ""){	
+    		if(showtype=='QUERY'){
+    			
+    			_tjrXh = rownum;
+    			child[i].recommend_99["value"] = rownum;
+    			data.tjxMaxLinesXh = child[len-1].recommend_99["value"];
+    		}else{
+    			child[i].recommend_99["value"] = parseInt(data.tjxMaxLinesXh) + 1;
+    			data.tjxMaxLinesXh = child[i].recommend_99["value"];
+    			_tjrXh = data.tjxMaxLinesXh;
+    		}
+    		
+    	}else{
+    		
+    		data.tjxMaxLinesXh = child[len-1].recommend_99["value"];
+    	}
     	
+    	
+    	//集中定义推荐信请求字段
+		var deleteFlag = true;
+		var tz_app_ins_id=SurveyBuild.appInsId;
+		var _class_id=SurveyBuild.classId;
+		var tz_app_tpl_id = SurveyBuild.appTplId;
+		var _tjx_zt="";
+		var _qy_zhs="";
+		var _qy_eng="";
+		var _refAppInsId = "";
+		var _refLetterId = "";  
+		var _refAppTplId = "";
+		var _refFileName = "";
+		var _refFileUrl = "";
+		var _ref_recommend_1 = "";
+		var _ref_recommend_2 = "";
+		var _ref_recommend_3 = "";
+		var _ref_recommend_4 = "";
+		var _ref_recommend_5 = "";
+		var _ref_recommend_6 = "";
+		var _ref_recommend_7 = "";
+		var _ref_recommend_8 = "";
+		var _ref_recommend_9 = "";
+		var _ref_recommend_10 = "";
+		var _ref_recommend_11 = "";
+		var _ref_recommend_12 = "";
+		var _ref_recommend_13 = "";
+		var _ref_recommend_14 = "";
+		var _ref_recommend_15 = "";
+		var _ref_recommend_16= "";
+		var _ref_recommend_17 = "";
+		var _ref_recommend_18 = "";
+		var _ref_recommend_19 = "";
+		var _ref_recommend_20 = "";
+		var _ref_recommend_21 = "";
+		var _ref_recommend_22 = "";
+		var _ref_recommend_23 = "";
+		
+		//请求推荐信息(TzIscriptClsServiceImpl)
+		var params = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"EJSON","comParams":{"APP_INS_ID":"'+tz_app_ins_id+'","rownum":"'+_tjrXh+'","class_id":"'+_class_id+'","TZ_APP_TPL_ID":"'+tz_app_tpl_id+'"}}';
+		$.ajax({
+			type: "get",
+			dataType: "JSON",
+			data:{
+				tzParams:params
+			},
+			async:false,
+			url:SurveyBuild.tzGeneralURL,
+			success: function(f) {
+				if(f.state.errcode == "0"){
+					_tjx_zt = f.comContent.TJX_ZT;
+					_qy_zhs = f.comContent.zhs_qy;
+					_qy_eng = f.comContent.eng_qy;
+					_refAppInsId = f.comContent.tjxAppInsID;
+					_refLetterId = f.comContent.refLetterId;
+					_refAppTplId = f.comContent.refAppTplId;
+					_refFileName = f.comContent.refFileName;
+					_refFileUrl = f.comContent.refFileUrl;
+					_ref_recommend_18 = f.comContent.recommend_18;
+					_ref_recommend_1 = f.comContent.recommend_1;
+					_ref_recommend_17 = f.comContent.recommend_17;
+					_ref_recommend_2 = f.comContent.recommend_2;
+					_ref_recommend_3 = f.comContent.recommend_3;
+					_ref_recommend_15 = f.comContent.recommend_15;
+					_ref_recommend_16 = f.comContent.recommend_16;
+					_ref_recommend_4 = f.comContent.recommend_4;
+					_ref_recommend_5 = f.comContent.recommend_5;
+					_ref_recommend_6 = f.comContent.recommend_6;
+					_ref_recommend_10 = f.comContent.recommend_10;
+					_ref_recommend_11 = f.comContent.recommend_11;
+					_ref_recommend_12 = f.comContent.recommend_12;
+					_ref_recommend_13 = f.comContent.recommend_13;
+					_ref_recommend_14 = f.comContent.recommend_14;
+					_ref_recommend_19 = f.comContent.recommend_19;
+					_ref_recommend_20 = f.comContent.recommend_20;
+					_ref_recommend_21 = f.comContent.recommend_21;
+					_ref_recommend_22 = f.comContent.recommend_22;
+					_ref_recommend_23 = f.comContent.recommend_23;
+				}
+			}
+		});
+		
+		var refLetterUrl = "";
+		if(SurveyBuild.appManager == "Y")
+		{
+			if(_refAppInsId!="0"&&_refAppInsId!=""&&_refLetterId!="0"&&_refLetterId!=""){
+				refLetterUrl = SurveyBuild.tzGeneralURL + "?classid=appId&TZ_APP_INS_ID="+_refAppInsId+"&TZ_REF_LETTER_ID="+_refLetterId+"&TZ_APP_TPL_ID="+_refAppTplId+"&TZ_MANAGER=Y";
+			}
+		}
+		if (child[i].recommend_8["value"]=="U")
+		{
+			_tjx_zt="未发送";
+		}
+		if(_refFileUrl!="")
+		{
+			//_tjx_zt="已完成";
+		}
+		var _zd="";
+		if (_tjx_zt=="已完成"){
+			_tjx_zt=MsgSet["Completed"];
+			_zd="Z";
+			deleteFlag = false;
+		}
+		if (_tjx_zt=="已发送"){
+			_tjx_zt=MsgSet["SendEmail"];
+			_zd="Y";
+			deleteFlag = false;
+		}
+		if (_tjx_zt=="未发送"){
+			_tjx_zt=MsgSet["Unsent"];
+		}
+		if(isEdit == "Y"){
+			_zd="N";
+		}
+		
+		/*推荐信信息从推荐人表中获取*/
+		/*称呼*/
+		if(_ref_recommend_18!=""){
+			child[i].recommend_18.value = _ref_recommend_18;
+		}
+		/*name*/
+		if(_ref_recommend_1!=""){
+			child[i].recommend_1.value = _ref_recommend_1;
+		}
+		/*gname*/
+		if(_ref_recommend_17!=""){
+			child[i].recommend_17.value = _ref_recommend_17;
+		}
+		/*公司*/
+		if(_ref_recommend_2!=""){
+			child[i].recommend_2.value = _ref_recommend_2;
+		}
+		/*职务*/
+		if(_ref_recommend_3!=""){
+			child[i].recommend_3.value = _ref_recommend_3;
+		}
+		/*性别*/
+		if(_ref_recommend_15!=""){
+			child[i].recommend_15.value = _ref_recommend_15;
+		}
+		/*区号*/
+		if(_ref_recommend_16!=""){
+			child[i].recommend_16.value = _ref_recommend_16;
+		}
+		/*手机*/
+		if(_ref_recommend_4!=""){
+			child[i].recommend_4.value = _ref_recommend_4;
+		}
+		/*邮箱*/
+		if(_ref_recommend_5!=""){
+			child[i].recommend_5.value = _ref_recommend_5;
+		}
+		/*关系*/
+		if(_ref_recommend_6!=""){
+			child[i].recommend_6.value = _ref_recommend_6;
+		}
+		/*备用*/
+		if(_ref_recommend_10!=""){
+			child[i].recommend_10.value = _ref_recommend_10;
+		}
+		if(_ref_recommend_11!=""){
+			child[i].recommend_11.value = _ref_recommend_11;
+		}
+		if(_ref_recommend_12!=""){
+			child[i].recommend_12.value = _ref_recommend_12;
+		}
+		if(_ref_recommend_13!=""){
+			child[i].recommend_13.value = _ref_recommend_13;
+		}
+		if(_ref_recommend_14!=""){
+			child[i].recommend_14.value = _ref_recommend_14;
+		}
+		if(_ref_recommend_19!=""){
+			child[i].recommend_19.value = _ref_recommend_19;
+		}
+		if(_ref_recommend_20!=""){
+			child[i].recommend_20.value = _ref_recommend_20;
+		}
+		if(_ref_recommend_21!=""){
+			child[i].recommend_21.value = _ref_recommend_21;
+		}
+		if(_ref_recommend_22!=""){
+			child[i].recommend_22.value = _ref_recommend_22;
+		}
+		if(_ref_recommend_23!=""){
+			child[i].recommend_23.value = _ref_recommend_23;
+		}
+		
+		works += '<div id="main_inner_content_para' + i + '" class="next_record">';
+		
+		//非只读模式
+		if(SurveyBuild._readonly != true){
+			if(rownum > data.defaultLines){
+				
+				if(deleteFlag == true){
+					
+					works += '<div onclick="SurveyBuild.deleteTjx(this);" class="btn_delete" id="tjx_delete_' + i + '">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
+				}else{
+					
+					works += '<div onclick="SurveyBuild.deleteTjx(this);" class="btn_delete" id="tjx_delete_' + i + '" style="display:none">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
+
+				}
+			}
+		}
+		works += '<div class="se_tit1">' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
+		var _readOnlyRadio = "N";
+		if(SurveyBuild._readonly||_zd=="Y"||_zd=="Z"){
+			_readOnlyRadio = "Y";
+		}
+		
+		/*任何情况下都可以修改推荐信*/	
+		var tjxEditMode = false;
+		
+		//称呼
+        works += '<div class="w_96">';
+        works += '<div class="item" '+(child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_18["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<select name="' + data.itemId + child[i].recommend_18["itemId"] + '" class="select1" id="' + data.itemId + child[i].recommend_18["itemId"] + '" title="' + child[i].recommend_18["title"] + '">';
+        works += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+        for (var i101 in child[i].recommend_18.option) {
+
+        	if (child[i].recommend_18.value == "Ms.") {
+        		child[i].recommend_18.value = "MS";
+        	} else if (child[i].recommend_18.value == "Mr.") {
+                    child[i].recommend_18.value = "MR";
+                } else if (child[i].recommend_18.value == "Professor") {
+                    child[i].recommend_18.value = "PF";
+                } else if (child[i].recommend_18.value == "Director") {
+                    child[i].recommend_18.value = "DT";
+                } else if (child[i].recommend_18.value == "None-blank") {
+                    child[i].recommend_18.value = "NB";
+                }
+
+                works += '<option ' + (child[i].recommend_18.value == child[i].recommend_18["option"][i101]["code"] ? "selected='selected'" : "") + 'value="' + child[i].recommend_18["option"][i101]["code"] + '">' + child[i].recommend_18["option"][i101]["txt"] + '</option>';
+            }
+        works += '</select>';
+        works += '</div>';
+        works += '</div>';
+			
+        if(child[i].recommend_18["useby"] == "Y"){
+			works += '<div style="color: #0070c6;margin-bottom: 20px;margin-top: 10px;font-size:0.56rem;">';
+			works += MsgSet["None-blank"];
+			works += '</div>';
+		}
+		
+		//姓氏
+        works += '<div class="item">';
+        works += '<p>' + child[i].recommend_1["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_1["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+        //名字
+        works += '<div class="item" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_17["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_17["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+        //单位
+        works += '<div class="item">';
+        works += '<p>' + child[i].recommend_2["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_2["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+		//职务
+        works += '<div class="item">';
+        works += '<p>' + child[i].recommend_3["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_1["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+        //手机
+        works += '<div class="item"  '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_4["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_4["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+		//邮箱
+        works += '<div class="item" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_5["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+		//性别
+        works += '<div class="item" '+(child[i].recommend_15["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_15["itemName"] + '<span>*</span></p>';
+        works += '<ul class="sex">';
+        works += '<li>';
+        works += '<input type="radio" name="square-radio" class="radio" id="MAN">';
+        works += '<label for="MAN">' + MsgSet["SEX_M"] + '</label>';
+        works += '</li>';
+        works += '<li>';
+        works += '<input type="radio" name="square-radio" class="radio" id="WOMAN">';
+        works += '<label for="WOMAN">' + MsgSet["SEX_F"] + '</label>';
+        works += '</li>';
+        works += '</ul>';
+        works += '</div>';
+		
+		//申请人关系
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_6["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+		//备用字段一
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_10["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+
+		//备用字段二
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_11["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+
+		//备用字段三
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_12["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+
+		//备用字段四
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_13["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+
+		//备用字段五
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_14["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+        //备用字段六
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_19["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+        //备用字段七
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_20["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+        //备用字段八
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_21["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+
+        //备用字段九
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_22["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+        //备用字段十
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_23["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" class="text1">';
+        works += '</div></div>';
+        
+		//推荐信语言
+		if (_qy_zhs=="Y"&&_qy_eng=="Y")
+		{
+			var tjx_language = "";
+			if(child[i].recommend_7["option"]["ZHS"]["checked"]=="Y")
+			{
+				tjx_language = "C";
+			}else if(child[i].recommend_7["option"]["ENG"]["checked"]=="Y")
+			{
+				tjx_language = "E";
+			}else
+			{
+				tjx_language = "C";
+				child[i].recommend_7["option"]["ZHS"]["checked"]="Y";
+				child[i].recommend_7["option"]["ENG"]["checked"]="N"
+			}
+	        works += '<div class="item">';
+	        works += '<p>' + child[i].recommend_7["itemName"] + '<span>*</span></p>';
+	        works += '<ul class="sex">';
+	        works += '<li>';
+	        works += '<input type="radio" name="square-radio" class="radio" id="CHINESE">';
+	        works += '<label for="FILL">' + MsgSet["LANGUAGE_C"] + '</label>';
+	        works += '</li>';
+	        works += '<li>';
+	        works += '<input type="radio" name="square-radio" class="radio" id="ENGLISH">';
+	        works += '<label for="radio-3">' + MsgSet["LANGUAGE_E"] + '</label>';
+	        works += '</li>';
+	        works += '</ul>';
+	        works += '</div>';
+	        
+		}else if (_qy_zhs=="Y"&&_qy_eng!="Y")
+		{
+			child[i].recommend_7["option"]["ZHS"]["checked"] = "Y";
+			child[i].recommend_7["option"]["ENG"]["checked"] = "N";
+			works += '<div class="input-list" style="display:none">';
+			works += '<div class="input-list-info left">'+ child[i].recommend_7["itemName"] +'：</div>';
+			works += '<div class="input-list-text left">';
+			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="C">';
+			works += '</div>';
+			works += '</div>';
+		}else if (_qy_zhs!="Y"&&_qy_eng=="Y")
+		{
+			child[i].recommend_7["option"]["ZHS"]["checked"] = "N";
+			child[i].recommend_7["option"]["ENG"]["checked"] = "Y";
+			works += '<div class="input-list" style="display:none">';
+			works += '<div class="input-list-info left">'+ child[i].recommend_7["itemName"] +'：</div>';
+			works += '<div class="input-list-text left">';
+			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="E">';
+			works += '</div>';
+			works += '</div>';
+		}
+		
+		//推荐信类型
+		// itemLx=L  2个都可以
+		if (data.itemLx=="L"){
+			
+	        works += '<div class="item">';
+	        works += '<p>' + child[i].recommend_8["itemName"] + '<span>*</span></p>';
+			
+			//如果发送邮件被选择了  recommend_8.value =S 
+			if(child[i].recommend_8["option"]["SEND"]["checked"] == "Y"){
+				child[i].recommend_8["option"]["SEND"]["checked"] = "Y";
+				child[i].recommend_8["option"]["UPLOAD"]["checked"] = "N";
+				child[i].recommend_8["value"] = "S";
+			}
+			//如果 上传附件被选择了   recommend_8.value =U
+			else if(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y")
+			{
+				child[i].recommend_8["option"]["SEND"]["checked"] = "N";
+				child[i].recommend_8["option"]["UPLOAD"]["checked"] = "Y";
+				child[i].recommend_8["value"] = "U";
+			}
+			//默认 发送邮件
+			else{
+				child[i].recommend_8["option"]["SEND"]["checked"] = "Y";
+				child[i].recommend_8["option"]["UPLOAD"]["checked"] = "N";
+				child[i].recommend_8["value"] = "S";
+			}
+			
+	        works += '<ul class="tjx">';
+	        works += '<li>';
+	        works += '<input type="radio" name="square-radio" class="radio" id="FILL">';
+	        works += '<label for="FILL">' + MsgSet["Send_mail"] + '</label>';
+	        works += '</li>';
+	        works += '<li>';
+	        works += '<input type="radio" name="square-radio" class="radio" id="UPLOAD">';
+	        works += '<label for="UPLOAD">' + MsgSet["Upload"] + '</label>';
+	        works += '</li>';
+	        works += '</ul>';
+			works += '</div>';
+			
+		}
+		// 如果 设置 itemLx=F  发送邮件
+		else if(data.itemLx == "F"){
+			child[i].recommend_8["option"]["SEND"]["checked"] = "Y";
+			child[i].recommend_8["option"]["UPLOAD"]["checked"] = "N";
+            works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="S">';
+        }
+		// 如果 itemLx=S  上传附件
+		else{
+			child[i].recommend_8["option"]["SEND"]["checked"] = "N";
+			child[i].recommend_8["option"]["UPLOAD"]["checked"] = "Y";
+            works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="U">';
+        }
+		
+		//上传附件
+		if ((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S"){
+		
+			works += '<div class="item" id="Tjxfj_show_'+i+'">';
+			if(SurveyBuild._readonly != true){
+				
+				works += '<p>'+ child[i].recommend_9["itemName"] + '</p>';
+				works += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
+				works += '<div class="handle">';
+				works += '<div class="ncsc-upload-btn">';
+				works += '<a href="#" class="ncsc-upload-btn-a">';
+				works += '<span class="ncsc-upload-btn-span">';
+				works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')"  ></span>';
+				works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
+				works += '</a>';
+				works += '</div>';
+				works += '</div>';
+				works += '</div>';
+			}else{
+				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
+				works += '	<div class="input-list-text left">';
+			}
+
+			works += '</div>';
+
+			/*附件显示 开始*/
+			if(SurveyBuild._readonly != true){
+				
+				works += ' <div class="upload_list" id="'+data.itemId+'_AttList">';
+				
+			}else{
+				
+				works += '<div id="'+data.itemId+i+'_AttList">';
+			}
+			if (child[i].recommend_9["viewFileName"]!="")
+			{
+				if(SurveyBuild._readonly!=true){
+					
+					works += '<div class="upload_list">';
+					works += '<li class="fileLi"><span>';
+					works += '<a onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a></span>';
+					works += '<i onclick="onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')" style="background:url(/statics/images/appeditor/m/de.png) no-repeat center center"></i></li>';
+					works += '</div>';
+				 
+				}else{
+					works += '<div class="input-list-uploadcon-list">';
+					works += '	<div class="input-list-uploadcon-listl left">';
+					works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+					works += '</div>';
+					works += '</div>';
+				}
+			}
+			works += '</div>';
+			
+			/*附件显示 结束*/
+			works += '	</div>';
+			works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
+			works += '	<div class="clear"></div>';
+			works += '</div>';
+		}else{
+			//代码不在网页上显示出来
+			works += '<div class="input-list-blank" style="display:none" id="Tjxfj_show_'+i+'">';
+			if(SurveyBuild._readonly!=true){
+				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
+				works += '	<div class="input-list-texttemplate left">';
+				works += '		<div class="filebtn">';
+				works += '			<div class="template-btn"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
+				works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="filebtn-orgtext" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:125px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
+				works += '		</div>';
+			}else{
+				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
+				works += '	<div class="input-list-text left">';
+			}
+			works += '<div class="input-list-suffix left">';
+			works += '</div>';
+
+			/*附件显示 开始*/
+			if(SurveyBuild._readonly!=true){
+				works += '		<div id="'+data.itemId+i+'_AttList" class="input-list-upload-con">';
+			}else{
+				works += '		<div id="'+data.itemId+i+'_AttList">';
+			}
+			if (child[i].recommend_9["viewFileName"]!="")
+			{
+				if(SurveyBuild._readonly!=true){
+
+					works += '<div class="input-list-uploadcon-list">';
+					works += '	<div class="input-list-uploadcon-listl left">';
+					works += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+					works += '	</div>';
+					works += '	<div class="input-list-uploadcon-listr left" style="display: block;line-height:46px;" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
+					works += '</div>';
+				}else{
+					works += '<div class="input-list-uploadcon-list">';
+					works += '	<div class="input-list-uploadcon-listl left">';
+					works += '			<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+					works += '	</div>';
+					works += '</div>';
+				}
+			}
+			works += '	<div class="clear"></div>';
+			works += '		</div>';
+			
+			/*附件显示 结束*/
+			works += '	</div>';
+			works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
+			works += '	<div class="clear"></div>';
+			works += '</div>';
+		}
+		//上传附件-结束
+		
+		//发送邮件 -开始
+		if ((data.itemLx=="L"&&child[i].recommend_8["value"]!="U")||data.itemLx=="F"){
+
+				/*更换推荐人一直显示*/
+				if(SurveyBuild._readonly){
+					works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
+					works += '</div>';
+				}else{
+					
+					_zd="Y";
+					if(_zd!="Y"&&_zd!="Z"){
+						
+						//发送
+						works += '<div id="sendEmailS_'+i+'" style="width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="sendEmail_'+i+'">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+						//发送给自己
+						works += '<div id="sendEmailToMeS_'+i+'" style="width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+					}else{
+						
+						//重新发送  ，如果没有发送，那么显示
+						works += '<div id="reSendEmailS_'+i+'" style="width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="reSendEmail_'+i+'">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+						//重新发送给自己
+						works += '<div id="reSendEmailToMeS_'+i+'" style="width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+						works += '<div id="changeRecS_'+i+'" style="width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div id="changeRec_'+i+'">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+					}
+				}
+				
+				works += '<div class="clear"></div>';
+			//推荐信状态
+
+			works += '<p class="finish" style="margin-top: 15px">' + MsgSet["ReLeSt"] + '：<span>' + _tjx_zt + '</span></p>';
+			
+		}
+        works += '</div>';
+        works += '</div>';
+        return works;
     },
     _eventbind: function(data) {
 		

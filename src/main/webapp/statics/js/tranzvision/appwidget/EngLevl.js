@@ -107,7 +107,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				if(len<data.maxLines){
 					htmlContent += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')">' + MsgSet["ADD_ONE"] + '</div>';
 				}else{
-					htmlContent += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div>';
+					htmlContent += '<div class="clear" style="display: none"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div>';
 				}
 				htmlContent += '</div>';
 				c += htmlContent;
@@ -990,13 +990,6 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			htmlContent += '</div>';
 
 		}
-
-
-		//存在两条及以上添加删除按钮
-//		if(index > 1 && !SurveyBuild._readonly){
-//
-//			htmlContent += '<div onclick="SurveyBuild.deleteEngLev(this);" class="btn_delete">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
-//		}
 
 		return htmlContent;
 	},

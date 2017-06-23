@@ -58,8 +58,10 @@ SurveyBuild.extend("University", "baseComponent", {
                     c += '<div class="item">';
      				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
      				c += '	  <div class="text-box">';
-
      				c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + children[0]["value"]  + '"></a>';
+     				c += '    </div>';
+     				
+     				c += '	  <div class="text-box">';
      				c += '	 	<a><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" value="' + children[1]["value"]  + '"></a>';
      				c += '    </div>';
      				c += '</div>';
@@ -150,6 +152,7 @@ SurveyBuild.extend("University", "baseComponent", {
              		
                      c += '<div class="item">';
                      c += '	  <p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+                     c += '		<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';			
                      c += '		 <div class="text-box">';
                      c += '    		<input type="hidden" id="TZ_SCH_COUNTRY" name="TZ_SCH_BMB_COUNTRY" value="CHN"> ';
 //                     c += '			<input type="text" id="TZ_SCH_CNAME_Country" name="' + data.itemId + '" placeholder="请选择院校国家" value="' + children[0]["value"] + '"  ccode="">';
@@ -399,6 +402,70 @@ SurveyBuild.extend("University", "baseComponent", {
 				});
 		       });
 			});
+			
+			var national = $("#" + data["itemId"] + data.children[0]["itemId"]);
+	        var sch = $("#" + data["itemId"] + data.children[1]["itemId"]);
+			
+			national.formValidator({tipID:(data["itemId"] + data.children[0]["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+	        sch.formValidator({tipID:(data["itemId"] + data.children[0]["itemId"] + 'Tip'),onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+
+	        national.functionValidator({
+	            fun:function(val,elem){
+
+	                //执行高级设置中的自定义规则
+	                /*********************************************\
+	                 ** 注意：自定义规则中不要使用formValidator **
+	                 \*********************************************/
+	                var _result = true;
+	                if (ValidationRules) {
+	                    $.each(data["rules"],function(classname, classObj) {
+	                        //单选钮不需要在高级规则中的必选判断
+	                        if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+	                            var _ruleClass = ValidationRules[classname];
+	                            if (_ruleClass && _ruleClass._Validator) {
+	                                _result = _ruleClass._Validator(data["itemId"], classObj["messages"]);
+	                                if(_result !== true){
+	                                    return false;
+	                                }
+	                            }
+	                        }
+	                    });
+	                    if(_result !== true){
+	                        return _result;
+	                    }
+	                }
+//	                return _result;
+	            }
+	        });
+	        sch.functionValidator({
+	            fun:function(val,elem){
+
+	                //执行高级设置中的自定义规则
+	                /*********************************************\
+	                 ** 注意：自定义规则中不要使用formValidator **
+	                 \*********************************************/
+	                var _result = true;
+	                if (ValidationRules) {
+	                    $.each(data["rules"],function(classname, classObj) {
+	                        //单选钮不需要在高级规则中的必选判断
+	                        if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+	                            var _ruleClass = ValidationRules[classname];
+	                            if (_ruleClass && _ruleClass._Validator) {
+	                                _result = _ruleClass._Validator(data["itemId"], classObj["messages"]);
+	                                if(_result !== true){
+	                                    return false;
+	                                }
+	                            }
+	                        }
+	                    });
+	                    if(_result !== true){
+	                        return _result;
+	                    }
+	                }
+//	                return _result;
+	            }
+	        });
+			
     	}else{
 
 	        var national = $("#" + data["itemId"] + data.children[0]["itemId"]);

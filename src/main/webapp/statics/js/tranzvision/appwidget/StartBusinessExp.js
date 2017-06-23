@@ -809,33 +809,33 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 
 			NET_DIV += '<li id="B">';//B轮
 			NET_DIV += '<input type="radio" name="financing" class="radio" id="FB">';
-			NET_DIV += '<label id="fb">'+ MsgSet["B_FINANCING"] + '</label>';
+			NET_DIV += '<label id="fb" for="FB">'+ MsgSet["B_FINANCING"] + '</label>';
 			NET_DIV += '<input type="text" class="invest" id="'+data["itemId"] + child.WorkExper2_1.itemId+'" value="'+child.WorkExper2_1.value+'" name="finance" hidden="true">';
 			NET_DIV += '<label id="financing_b" style="display: none">'+ MsgSet["ONE_MILLION"]+ '</label>';
 			NET_DIV += '</li>';
 
 			NET_DIV += '<li id="A">';//A轮
 			NET_DIV += '<input type="radio" name="financing" class="radio" id="FA">';
-			NET_DIV += '<label id="fa">'+ MsgSet["A_FINANCING"] + '</label>';
+			NET_DIV += '<label id="fa" for="FA">'+ MsgSet["A_FINANCING"] + '</label>';
 			NET_DIV += '<input type="text" class="invest" id="'+data["itemId"] + child.WorkExper2_2.itemId+'" value="'+child.WorkExper2_2.value+'" name="finance"  hidden="true">';
 			NET_DIV += '<label id="financing_a"  style="display: none">'+ MsgSet["ONE_MILLION"]+ '</label>';
 			NET_DIV += '</li>';
 
 			NET_DIV += '<li id="V">';//天使投资
 			NET_DIV += '<input type="radio" name="financing" class="radio" id="AV">';
-			NET_DIV += '<label id="fv">'+ MsgSet["ANGEL_INVEST"] + '</label>';
+			NET_DIV += '<label id="fv" for="AV">'+ MsgSet["ANGEL_INVEST"] + '</label>';
 			NET_DIV += '<input type="text" class="invest" id="'+data["itemId"] + child.WorkExper2_3.itemId+'" value="'+child.WorkExper2_3.value+'" name="finance" hidden="true">';
 			NET_DIV += '<label id="financing_v" style="display: none">'+ MsgSet["ONE_MILLION"]+ '</label>';
 			NET_DIV += '</li>';
 
 			NET_DIV += '<li id="O">';//尚未获得投资
 			NET_DIV += '<input type="radio" name="financing" class="radio" id="other">';
-			NET_DIV += '<label id="fo">'+ MsgSet["NO_FINANCING"] + '</label>';
+			NET_DIV += '<label id="fo" for="other">'+ MsgSet["NO_FINANCING"] + '</label>';
 			NET_DIV += '</li>';
 
 			NET_DIV += '<li id="O">';//初创
-			NET_DIV += '<input type="radio" name="financing" class="radio" id="other">';
-			NET_DIV += '<label id="fo">'+ MsgSet["NEW_CREATE"] + '</label>';
+			NET_DIV += '<input type="radio" name="financing" class="radio" id="other1">';
+			NET_DIV += '<label id="fo" for="other1">'+ MsgSet["NEW_CREATE"] + '</label>';
 			NET_DIV += '</li>';
 			NET_DIV += '</ul>';
 			NET_DIV += '</div>';
@@ -982,6 +982,11 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						netDiv.find("#financing_a").hide();
 						netDiv.find("#financing_b").hide();
 						netDiv.find("#financing_v").hide();
+						netDiv.find("#FB").removeAttr("checked");
+						netDiv.find("#FA").removeAttr("checked");
+						netDiv.find("#AV").removeAttr("checked");
+						netDiv.find("#other").removeAttr("checked");
+						netDiv.find("#other1").removeAttr("checked");
 
 						otherDiv.find("#"+data["itemId"] + child.WorkExper7.itemId).val("");
 						otherDiv.find("#"+data["itemId"] + child.WorkExper8.itemId).val("");
@@ -1006,7 +1011,11 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 						netDiv.find("#financing_a").hide();
 						netDiv.find("#financing_b").hide();
 						netDiv.find("#financing_v").hide();
-						netDiv.find("#fb").removeAttr("checked");
+						netDiv.find("#FB").removeAttr("checked");
+						netDiv.find("#FA").removeAttr("checked");
+						netDiv.find("#AV").removeAttr("checked");
+						netDiv.find("#other").removeAttr("checked");
+						netDiv.find("#other1").removeAttr("checked");
 
 						familyDiv.find("#"+data["itemId"] + child.WorkExper5.itemId).val("");
 						familyDiv.find("#"+data["itemId"] + child.WorkExper6.itemId).val("");
