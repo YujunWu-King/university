@@ -66,12 +66,13 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 					c += '<div class="item">';
 					c += '	<p>' + data.title + '<span>' + (data.isRequire == "Y" ? "*": "") + '</span></p >';
 					c += '	<div class="overhidden">';
+					c += '  <div id="' + data.itemId  + children[0]["itemId"]+ 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 					c += '		<div class="text-box fl" style="width:30%;">';
 					c += '      	<input type="text" class="text1"  readonly="readonly" name="' + data["itemId"] + children[0]["itemId"] + '" id="' + data["itemId"] + children[0]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[0]["itemId"] + '\');" value ="' + children[0]["value"] + '">';
 					c += '      </div>';
-					c += '       <span class="fl" id="span'+data["itemId"] + children[0]["itemId"]+'"style="line-height:1.5rem;color:#999;">---</span>';
-					c += '       <div class="text-box fl" style="width:30%;">';
-					c += '           <input type="text" class="text1" readonly="readonly"' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "disabled=\"disabled\"": "") + ' value=" '+children[1]["value"]+'" style="' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none;": "") + '" name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[1]["itemId"] + '\');" >';
+					c += '       <span class="fl" id="span'+data["itemId"] + children[0]["itemId"]+'"style="line-height:1.5rem;color:#999;' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none": "") + '">---</span>';
+					c += '       <div class="text-box fl" style="width:30%;' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "display:none": "") + '">';
+					c += '           <input type="text" class="text1" readonly="readonly"' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "disabled=\"disabled\"": "") + ' value=" '+children[1]["value"]+'"  name="' + data["itemId"] + children[1]["itemId"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" onchange="SurveyBuild.reFocus(\'' + data["itemId"] + children[1]["itemId"] + '\');" >';
 					c += '       </div>';
 					if(data.hasOwnProperty("todatebz") && data.todatebz == "Y"){
 						c += '       <input type="checkbox" class="checkbox" ' + (data.todatebz == "Y" && children[2]["value"] == "Y" ? "checked='checked'": "") + ' id="' + data["itemId"] + children[2]["itemId"] + '" value=" '+children[1]["value"]+'"name="' + data["itemId"] + children[2]["itemId"] + '" style="margin-left:20px;"><label for="' + data["itemId"] + children[2]["itemId"] + '">' + MsgSet["TODATE"] + '  </label>';

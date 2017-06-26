@@ -1364,7 +1364,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
                 }
                 for(j=0;j<selection.length;j++){
                     var TagModel=new KitchenSink.view.template.survey.question.tagModel();
-                    var audName = selection[j].data.TZ_AUD_NAME;
+                    var audName = selection[j].data.TZ_AUD_NAM;
                     var audId=selection[j].data.TZ_AUD_ID;
                     TagModel.set('tagId',audId);
                     TagModel.set('tagName',audName);

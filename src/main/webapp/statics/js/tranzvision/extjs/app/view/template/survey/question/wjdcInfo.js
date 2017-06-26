@@ -128,7 +128,7 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcInfo', {
                          {iconCls: 'preview',tooltip: '预览',handler:'previewWjdc'},
                         {iconCls: 'set',tooltip: '设置',handler:'setWjdc'},
                         {iconCls:'import',tooltip:'逻辑',handler:'onLogicalSet'},
-                        {iconCls:'view',tooltip:'调查详情',handler:'detailOnWjdc'},
+                        {iconCls:'details',tooltip:'调查详情',handler:'detailOnWjdc'},
 //						{iconCls:' share',tooltip:'分享',handler:'onShareWjdc',
 //							isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
 //                                if(record.get('TZ_DC_WJ_FB')=='0'){

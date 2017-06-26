@@ -41,7 +41,6 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
         	}
 			if(SurveyBuild.accessType == "M"){
 				c += '<div class="item">';
-				
 				c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 				c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
                 c += ' 	<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
@@ -51,7 +50,7 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 			    c += '					<span class="ncsc-upload-btn-span">'; 
 			    c +=' 						<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" data-instancid="' + data.instanceId + '" id="'+ data.itemId + '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')"  ></span>';
 			    c +='   				<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/upload.png'+'"></div>';
-			    c +='      			</a>';  
+			    c +='      			</a>';  	
 			    c +='         	</div>';
 			    c +='       </div>';
 			    c +='   </div>';
@@ -85,13 +84,12 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 			    c += '<div class="img_shade" id ="shade_'+data.itemId+'"></div>';
 			    c += '<img class="img_pop_close" id ="close_'+data.itemId+'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
 			    c += '<div class="img_pop_body" id ="body_'+data.itemId+'">'  ;
-			    c += ' <img src="" id ="img_'+data.itemId+'">';
+			    c += ' <img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" id ="img_'+data.itemId+'">';
 			    c += '</div>';
 			}else{
 				c += '<div class="input-list-blank margart15">';
 	        	c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';           
 	        	c += '	<div class="input-list-texttemplate left" style="display:' + (SurveyBuild._readonly?'none':'block') + '">';
-	        	/*c += '		<div>' + data.onShowMessage + '</div>';*/
 	        	c += '		<div class="filebtn left">';
 	        	c += '			<div class="filebtn-org"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
 	        	c += '			<input data-instancid="' + data.instanceId + '" id="'+ data.itemId + '" name="'+ data.itemId + '" title="' + data.itemName + '" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')" type="file" class="filebtn-orgtext" >';
@@ -245,13 +243,13 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 				$(window).resize(function(){
 				  initStyles();
 				});
-//
+
 				function initStyles() {
-				 var allHeight=$(window).height();
-				     var popheight=$("#body_"+data.itemId).height();
-				     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
-				     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
-				     console.log(popheight);	console.log(allHeight);
+//				 var allHeight=$(window).height();
+//				     var popheight=$("#body_"+data.itemId).height();
+//				     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
+//				     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
+//				     console.log(popheight);	console.log(allHeight);
 				}	
 				
 }

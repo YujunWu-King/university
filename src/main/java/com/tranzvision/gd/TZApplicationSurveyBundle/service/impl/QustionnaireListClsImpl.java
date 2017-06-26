@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -487,15 +486,23 @@ public class QustionnaireListClsImpl extends FrameworkImpl{
 				
 			}else if("EXPORT".equals(strType)){
 				//确认导出
-
 				String wjId = jacksonUtil.getString("wjId");
 				String fileName = jacksonUtil.getString("fileName");
+				String exportType = jacksonUtil.getString("exportType");
 				
 				String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 				String downloadPath = getSysHardCodeVal.getDownloadPath();
 				
 				// 调查问卷导出excel存储路径
-				String eventExcelPath = "/survey/xlsx";
+				String eventExcelPath;
+				String fileSuffix = ".xlsx";
+				if("B".equals(exportType)){ //导出Excel
+					eventExcelPath = "/survey/packrar";
+					fileSuffix = ".rar";
+				}else{ //附件打包下载
+					eventExcelPath = "/survey/xlsx";
+					fileSuffix = ".xlsx";
+				}
 				
 				// 完整的存储路径
 				String expDirPath = downloadPath + eventExcelPath + "/" + getDateNow();
@@ -512,6 +519,7 @@ public class QustionnaireListClsImpl extends FrameworkImpl{
 				psTzDcwjDcAet.setTzDcWjId(wjId);
 				psTzDcwjDcAet.setTzRelUrl(expDirPath);
 				psTzDcwjDcAet.setTzJdUrl(absexpDirPath);
+				psTzDcwjDcAet.setTzDcType(exportType);
 				psTzDcwjDcAetMapper.insert(psTzDcwjDcAet);
 				
 				
@@ -549,11 +557,8 @@ public class QustionnaireListClsImpl extends FrameworkImpl{
 					
 					// 生成本次导出的文件名
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-					Random random = new Random();
-					int max = 999999999;
-					int min = 100000000;
 					String sysFileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
-							+ String.valueOf(random.nextInt(max) % (max - min + 1) + min) + ".xlsx";
+							+ processinstance + fileSuffix;
 					
 					PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
 					psTzExcelDattT.setProcessinstance(processinstance);
@@ -563,10 +568,7 @@ public class QustionnaireListClsImpl extends FrameworkImpl{
 					psTzExcelDattT.setTzFjRecName("");
 					psTzExcelDattT.setTzFwqFwlj(""); 
 					psTzExcelDattTMapper.insert(psTzExcelDattT);
-					
-					
 				}
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

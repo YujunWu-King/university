@@ -38,7 +38,7 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
 					//只读模式
 				 	c += '<div class="item">';
 					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-					c += '	<div class="text-box"><input type="text" class="text1" value="' + children[0]["value"] + (children[0]["value"]?"-":"") + children[1]["value"] + '" readonly="" disabled=""></div>';
+					c += '	<div class="text-box"><input type="text" class="text1" value="' + children[0]["value"]  + '" readonly="" disabled=""></div>';
 					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
 					c += '</div>';
 				} else {
@@ -47,7 +47,8 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
 					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 					c += '  <div id="' + data.itemId + data.children[0]["itemId"]+  'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 					c += '	<div class="text-box">';
-					c += '		<input type="text" class="text1" readonly="readonly" id="' + data.itemId + data.children[0]["itemId"]+ '" name="' + data.itemId + '" value="' + children[0]["value"] + (children[0]["value"]?"-":"") + children[1]["value"] + '" title="' + data.itemName + '" />';
+					c += '		<input type="text" class="text1" readonly="readonly" id="' + data.itemId + data.children[0]["itemId"]+ '" name="' + data.itemId + '" value="' + children[0]["value"]   + '" title="' + data.itemName + '" />';
+					c += '		<input type="text" class="text1" readonly="readonly" disabled="true" id="' + data.itemId + data.children[1]["itemId"]+ '" name="' + data.itemId + '" value="' + children[0]["value"]   + '" title="' + data.itemName + '" style="display:none"/>';
 					c += '	</div>';
 					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
 					c += '</div>';
@@ -135,10 +136,10 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
     		        'minDate': data.minYear + "-01", //最小日期
     		        'maxDate':data.maxYear + "-12"
     		    });
+    		    
     	}
-    		var $year = $("#" + data["itemId"] + data.children[0]["itemId"]);
-            var $month = $("#" + data["itemId"] + data.children[1]["itemId"]);
-
+    		
+    	var $year = $("#" + data["itemId"] + data.children[0]["itemId"]);
             $year.formValidator({tipID:data["itemId"]+ data.children[0]["itemId"] + 'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
             $year.functionValidator({
                 fun: function(val,elem) {
@@ -165,33 +166,37 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
                     }
                 }
             });
+		if(SurveyBuild.accessType == "P"){
 
-            $month.formValidator({tipID:data["itemId"] + data.children[0]["itemId"] +'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
-            $month.functionValidator({
-                fun: function(val,elem) {
-                    //执行高级设置中的自定规则
-                    /*********************************************\
-                     ** 注意：自定义规则中不要使用formValidator **
-                     \*********************************************/
-                    var _result = true;
-                    if (ValidationRules) {
-                        $.each(data["rules"],function(classname, classObj) {
-                            if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
-                                var _ruleClass = ValidationRules[classname];
-                                if (_ruleClass && _ruleClass._Validator) {
-                                    _result = _ruleClass._Validator(data["itemId"] + data.children[1]["itemId"], classObj["messages"], data);
-                                    if(_result !== true){
-                                        return false;
-                                    }
-                                }
-                            }
-                        });
-                        if(_result !== true){
-                            return _result;
-                        }
-                    }
-                }
-            })
+	        var $month = $("#" + data["itemId"] + data.children[1]["itemId"]);
+			$month.formValidator({tipID:data["itemId"] + data.children[0]["itemId"] +'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+		    $month.functionValidator({
+		        fun: function(val,elem) {
+		            //执行高级设置中的自定规则
+		            /*********************************************\
+		             ** 注意：自定义规则中不要使用formValidator **
+		             \*********************************************/
+		            var _result = true;
+		            if (ValidationRules) {
+		                $.each(data["rules"],function(classname, classObj) {
+		                    if ($.inArray(classname, SurveyBuild._baseRules) == -1 && data["rules"][classname]["isEnable"] == "Y") {
+		                        var _ruleClass = ValidationRules[classname];
+		                        if (_ruleClass && _ruleClass._Validator) {
+		                            _result = _ruleClass._Validator(data["itemId"] + data.children[1]["itemId"], classObj["messages"], data);
+		                            if(_result !== true){
+		                                return false;
+		                            }
+		                        }
+		                    }
+		                });
+		                if(_result !== true){
+		                    return _result;
+		                }
+		            }
+		        }
+		    })
+		}else{}
+            
     },
     _validatorAttr: function(data) {
         var msg;

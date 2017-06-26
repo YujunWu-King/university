@@ -35,7 +35,7 @@ SurveyBuild.extend("Check", "baseComponent", {
 			if(SurveyBuild.accessType == "M"){
 				for (var i in data.option) {
 					e += '<li class="check-box">';
-					e += '<input type="checkbox" class="checkbox "  name="' + data.itemId + '"  instanceId="' + i + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"]+'" id="checkbox'+data["option"][i]["code"] +'" >';
+					e += '<input type="checkbox" class="checkbox ' + (data["option"][i]["other"] == "Y" ? "sur_other_box" : "") + '"  name="' + data.itemId + '"  instanceId="' + i + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"]+'" id="checkbox'+data["option"][i]["code"] +'" >';
 					e += '<label for="checkbox'+data["option"][i]["code"] +'">'+data["option"][i]["txt"]+'</label>' ;
 					 if (data["option"][i]["other"] == "Y"){
 				        if(SurveyBuild._readonly){

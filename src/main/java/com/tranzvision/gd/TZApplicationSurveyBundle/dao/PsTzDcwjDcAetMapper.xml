@@ -6,9 +6,10 @@
     <result column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
     <result column="TZ_REL_URL" property="tzRelUrl" jdbcType="VARCHAR" />
     <result column="TZ_JD_URL" property="tzJdUrl" jdbcType="VARCHAR" />
+    <result column="TZ_DC_TYPE" property="tzDcType" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    RUN_CNTL_ID, TZ_DC_WJ_ID, TZ_REL_URL, TZ_JD_URL
+    RUN_CNTL_ID, TZ_DC_WJ_ID, TZ_REL_URL, TZ_JD_URL, TZ_DC_TYPE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -22,9 +23,9 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcwjDcAet" >
     insert into PS_TZ_DCWJ_DC_AET (RUN_CNTL_ID, TZ_DC_WJ_ID, TZ_REL_URL, 
-      TZ_JD_URL)
+      TZ_JD_URL, TZ_DC_TYPE)
     values (#{runCntlId,jdbcType=VARCHAR}, #{tzDcWjId,jdbcType=VARCHAR}, #{tzRelUrl,jdbcType=VARCHAR}, 
-      #{tzJdUrl,jdbcType=VARCHAR})
+      #{tzJdUrl,jdbcType=VARCHAR}, #{tzDcType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcwjDcAet" >
     insert into PS_TZ_DCWJ_DC_AET
@@ -41,6 +42,9 @@
       <if test="tzJdUrl != null" >
         TZ_JD_URL,
       </if>
+      <if test="tzDcType != null" >
+        TZ_DC_TYPE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="runCntlId != null" >
@@ -54,6 +58,9 @@
       </if>
       <if test="tzJdUrl != null" >
         #{tzJdUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcType != null" >
+        #{tzDcType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -69,6 +76,9 @@
       <if test="tzJdUrl != null" >
         TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR},
       </if>
+      <if test="tzDcType != null" >
+        TZ_DC_TYPE = #{tzDcType,jdbcType=VARCHAR},
+      </if>
     </set>
     where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
   </update>
@@ -76,7 +86,8 @@
     update PS_TZ_DCWJ_DC_AET
     set TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
       TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
-      TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR}
+      TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR},
+      TZ_DC_TYPE = #{tzDcType,jdbcType=VARCHAR}
     where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
   </update>
 </mapper>

@@ -244,6 +244,6 @@ form{background-color:#fff;margin-top: 10px;}
 .pop_inner{position:relative;width:94%;margin:20px auto;}
 .pop_close{display: none;max-width:8%;height: auto;width: 100%;position:fixed;right:2%;z-index:14400;}
 .img_shade{display:block;width: 100%; height: 100%; position:fixed; top:0; left: 0; background-color: #000; opacity: 0.6; filter: alpha(opacity=60); -ms-filter: "alpha(opacity=60)"; z-index: 1350;}
-.img_pop_body{position:absolute;top:20%;left:50%;margin-left:-45%;width:90%;height:auto;z-index: 1400;padding-bottom:20px;overflow:auto;}
-.img_pop_close{display: block;max-width:8%;height: auto;width: 100%;position:absolute;right:2%;z-index:14400;}
+.img_pop_body{position:fixed;top:20%;left:50%;margin-left:-45%;width:90%;height:auto;z-index: 1400;padding-bottom:20px;overflow:auto;}
+.img_pop_close{display: block;max-width:8%;height: auto;width: 100%;position:fixed;right:2%;z-index:14400;}
 .img_pop_body img{width:100%;height:auto;margin:0 auto;}
