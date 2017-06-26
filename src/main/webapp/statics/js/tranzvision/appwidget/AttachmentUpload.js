@@ -56,7 +56,6 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
 			    c +='       </div>';
 			    c +='   </div>';
 			    c +='<p style="color:#666;font-size:0.56rem;margin-top:5px;display:' + (SurveyBuild._readonly?'none':'block') +' ">'+msg+'</p>';
-			   
 			    c +='</div>';
 			    if(children[0].viewFileName==""){
 			    	c += ' <div class="upload_list" id="'+data.itemId+'_AttList" style="display:none">';
@@ -68,18 +67,23 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
 			    	if(data.allowMultiAtta == "Y"){
 	        	   		for(var i = 0; i < children.length; i++){
 	        	   			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-		        				c += '<li class="fileLi"><span><a  file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center""></i></li>';
+		        				c += '<li class="fileLi"><span><a id="img_'+data.itemId+'_'+i+'"   onclick="SurveyBuild.viewImageSet(this,\'' + data.instanceId + '\',\'' + i + '\')" file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center""></i></li>';
 	        	   			}
 	        	   		}
 			    	}else{
 			    		for(var i=0; i<children.length; i++){
 		        			if (children[i].viewFileName != "" && children[i].sysFileName != ""){
-        				c += '<li class="fileLi"><span><a  file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center""></i></li>';
+        				c += '<li class="fileLi"><span><a  id="img_'+data.itemId+'_'+i+'"   onclick="SurveyBuild.viewImageSet(this,\'' + data.instanceId + '\',\'' + i + '\')" file-index="' + children[i].orderby + '">'+ children[i].viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + data.instanceId + '\')" style="display: ' + (SurveyBuild._readonly?'none':'block') + ';background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center""></i></li>';
 		        			}
 			    		}
 			    	}
 			    	c +='</div>';	
 			    }	
+			    c += '<div class="img_shade" id ="shade_'+data.itemId+'" style="display:none"></div>';
+			    c += '<img class="img_pop_close" style="display:none"id ="close_'+data.itemId+'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
+			    c += '<div class="img_pop_body" style="display:none" id ="body_'+data.itemId+'">'  ;
+			    c += ' <img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/" id ="img_'+data.itemId+'">';
+			    c += '</div>';
         	}else{
         		
             	c += '<div class="input-list-blank margart15" id="upload_' + data.itemId + '">';

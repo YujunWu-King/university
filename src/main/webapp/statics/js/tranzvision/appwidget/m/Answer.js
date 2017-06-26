@@ -1235,12 +1235,13 @@ var SurveyBuild = {
 														_fc["viewFileName"] = rstObj.viewFileName;
 														_children.push(_fc);
 													}
+													var i=_children.length-1;
 													if (className == "imagesUpload"){
-														var i=_children.length-1;
+														
 														//console.log("i:"+i);
 														c += '<li class="fileLi"><span><a id="img_'+data.itemId+'_'+i+'"  file-index="' + rstObj.index + '" onclick="SurveyBuild.viewImageSet(this,\'' + data.instanceId + '\',\'' + i + '\')">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
 									        			
-													} else {c += '<li class="fileLi"><span><a   file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
+													} else {c += '<li class="fileLi"><span><a   id="img_'+data.itemId+'_'+i+'"   onclick="SurveyBuild.viewImageSet(this,\'' + data.instanceId + '\',\'' + i + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
 													}
 													$("#"+itemId+"_AttList").css("display","block");
 													$("#"+itemId+"_AttList").append(c);
@@ -1268,11 +1269,12 @@ var SurveyBuild = {
 													_children[0].orderby = rstObj.index;
 													_children[0].accessPath = obj.msg.accessPath;
 													_children[0].viewFileName = rstObj.viewFileName;
+													var i=_children.length-1;
 													if (className == "imagesUpload"){
-														//console.log("i:"+i);
-														c += '<li class="fileLi"><span><a  id="img_'+data.itemId+'" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';													
+														
+														c += '<li class="fileLi"><span><a  id="img_'+data.itemId+'" onclick="SurveyBuild.viewImageSet(this,\'' + data.instanceId + '\',\'' + i + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';													
 													} else {
-														c += '<li class="fileLi"><span><a   file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
+														c += '<li class="fileLi"><span><a  id="img_'+data.itemId+'_'+i+'"   onclick="SurveyBuild.viewImageSet(this,\'' + data.instanceId + '\',\'' + i + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';								        			
 													}
 													$("#"+itemId+"_AttList").css("display","block");
 													$("#"+itemId+"_AttList").html(c);
@@ -1465,28 +1467,30 @@ var SurveyBuild = {
             var index = $(el).closest(".mainright-box").index();
             data = SurveyBuild._items[dhIns].children[index][instanceId];
         }
-        
-		var srcPath=TzUniversityContextPath + data.children[indexx].accessPath + data.children[indexx].sysFileName;
+        var name = data.children[indexx].viewFileName;
+        var array = name.split(".");
+        var hzhui = array[array.length-1];
+        if(hzhui=="jpeg"||hzhui=="png"||hzhui=="jpg"||hzhui=="gif"||hzhui=="JPEG"||hzhui=="PNG"||hzhui=="JPG"||hzhui=="GIF"){
+        	var srcPath=TzUniversityContextPath + data.children[indexx].accessPath + data.children[indexx].sysFileName;
+    		
+    		$("#img_"+data.itemId).attr("src",srcPath);
+    		$("#shade_"+data.itemId).show();
+    		$("#body_"+data.itemId).show(function(){
+    			var allHeight=$(window).height();
+    		     var popheight=$("#body_"+data.itemId).height();
+    		     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
+    		     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
+    		     $("#close_"+data.itemId).show()
+    		});
+    		
+    		$("#close_"+data.itemId).click(function(){
+    			$("#shade_"+data.itemId).hide();
+    			$("#body_"+data.itemId).hide();
+    			$("#close_"+data.itemId).hide();
+    			$("#img_"+data.itemId).attr("src",srcPath);
+    		});
+        }
 		
-		$("#img_"+data.itemId).attr("src",srcPath);
-		console.log($("#img_"+data.itemId).height());
-		
-	     
-		$("#shade_"+data.itemId).show();
-		$("#body_"+data.itemId).show(function(){
-			var allHeight=$(window).height();
-		     var popheight=$("#body_"+data.itemId).height();
-		     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
-		     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
-		     $("#close_"+data.itemId).show()
-		});
-		
-		$("#close_"+data.itemId).click(function(){
-			$("#shade_"+data.itemId).hide();
-			$("#body_"+data.itemId).hide();
-			$("#close_"+data.itemId).hide();
-			$("#img_"+data.itemId).attr("src",srcPath);
-		});
         /*var appInsId = SurveyBuild.appInsId; //报名表实例ID
         var data;
         var $isDhContainer = $(el).closest(".dhcontainer");
