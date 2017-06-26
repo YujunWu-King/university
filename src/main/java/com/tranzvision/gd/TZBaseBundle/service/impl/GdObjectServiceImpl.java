@@ -447,6 +447,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 
 		// Key:TZ_XXJH_ID@TZ_JG_ID
 		// value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
+		
 		if (null != msgSetId && !"".equals(msgSetId) && null != msgId && !"".equals(msgId)) {
 			if (orgid != null && !orgid.equals("") && Memoryparameter.messageText.get(msgSetId + LJ + orgid) != null) {
 				retMsgText = Memoryparameter.messageText.get(msgSetId + LJ + orgid).get(msgId + LJ + langCd);
