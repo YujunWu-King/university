@@ -44,9 +44,16 @@ SurveyBuild.extend("Radio", "baseComponent", {
 							data["option"][i]["checked"] = "Y";
 						}
 					}
-					  e += '<li>';
-					  e += '	<input type="radio" name="' + data.itemId + '" class="radio radio-btn"' +'id="radio-' + data["option"][i]["code"] + '"  value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + '>';
-				      e += '	<label for="radio-' + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
+					  e += '<li >';
+					  e += '	<input type="radio" instanceId="' + i + '" name="' + data.itemId + '" class="radio ' + (data["option"][i]["other"] == "Y" ? "sur_other_box": "") + '" id="o' + data.itemId + data["option"][i]["code"] + '"  value="' + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + '>';
+				      e += '	<label for="o' + data.itemId + data["option"][i]["code"] + '">'+ data["option"][i]["txt"]+'</label>';
+				      if (data["option"][i]["other"] == "Y" &&data.format != "H"){
+					        if(SurveyBuild._readonly){
+					        	e += '<input type="text" class="others" disabled=true value="' + data.othervalue + '" >';
+					        }else{
+					        	e += '<input type="text" class="others" style="display:'+(data["option"][i]["checked"] == "Y" ? "inline": "none")+'" value="' + data.othervalue + '" id="other' + data.itemId + '"  name="other' + data.itemId + '">';
+					        }
+						}
 				      e += '</li>';
 				}
 				data.format = (data.format?data.format:"S");
@@ -200,55 +207,109 @@ SurveyBuild.extend("Radio", "baseComponent", {
 	},
 	_eventbind: function(data) {
 		var $inputBox = $(":radio[name='" + data.itemId + "']");
-		$inputBox.parents(".radio-btn").on('click', function () {
-			
-			$inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
-		    var _this = $(this),block = _this.parent().parent();
-		    block.find('input:radio').prop('checked', false);
-		    block.find(".radio-btn").removeClass('checkedRadio');
-		    _this.addClass('checkedRadio');
-		    _this.find('input:radio').prop('checked', true);
+		if(SurveyBuild.accessType == "M"){
+			$inputBox.on('click', function () {
+				
+				$inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
+			    var _this = $(this),block = _this.parent().parent();
+			    var a=block.find('input:radio');
+			    block.find('input:radio').prop('checked', false);
+			    block.find(".radio-btn").removeClass('checkedRadio');
+			    _this.addClass('checkedRadio');
+			    var b=_this.find('input:radio');
+			    _this.prop('checked', true);
 
-			var meid = _this.find(':radio').attr("instanceId");
-			for (var j in data.option) {
-				data.option[j]["checked"] = "N";
-			}
-
-			data.option[meid]["checked"] = "Y";
-			if (data.option[meid]["other"] == "Y") {
-				$("#other" + data.itemId).remove();
-				var o = '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="inputother" value="' + data.othervalue + '">';
-				$(this).closest('li').append(o);
-				$("#other" + data.itemId).keyup(function() {
-					data.othervalue = $(this).val();
-					data.option[meid]["othervalue"] = $(this).val();
-					
-					/*关联项*/
-					if(data.linkItems){
-						var $targetObj = $("#other" + data.linkItems);
-						if($targetObj && $targetObj.length > 0){
-							$targetObj.val(data.othervalue);
-						}
-					}
-				});
-			} else {
-				data.othervalue = "";
-				data.option[meid]["othervalue"] = "";
-				$("#other" + data.itemId).remove();
-			}
-			
-			/*关联项*/
-			if(data.linkItems){
-				var $targetObj = $("#o" + data.linkItems + data["option"][meid]["code"]);
-				if($targetObj && $targetObj.length > 0){
-					$targetObj.parents(".radio-btn").trigger("click");
-					$targetObj.parents(".radio-btn").trigger("blur");
-					$("#other" + data.linkItems).val($("#other" + data.itemId).val());
-					$("#other" + data.linkItems).trigger("keyup");
+				var meid = _this.attr("instanceId");
+				for (var j in data.option) {
+					data.option[j]["checked"] = "N";
 				}
-			}
-			
-		});
+				data.option[meid]["checked"] = "Y";
+				if (data.option[meid]["other"] == "Y"&&data.format != "H") {
+						$("#other" + data.itemId).remove();
+						var o = '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="others" value="' + data.othervalue + '">';
+						$(this).closest('li').append(o);
+					
+					$("#other" + data.itemId).keyup(function() {
+						data.othervalue = $(this).val();
+						data.option[meid]["othervalue"] = $(this).val();
+						
+						/*关联项*/
+						if(data.linkItems){
+							var $targetObj = $("#other" + data.linkItems);
+							if($targetObj && $targetObj.length > 0){
+								$targetObj.val(data.othervalue);
+							}
+						}
+					});
+				} else {
+					data.othervalue = "";
+					data.option[meid]["othervalue"] = "";
+					$("#other" + data.itemId).remove();
+				}
+				
+				/*关联项*/
+				if(data.linkItems){
+					var $targetObj = $("#o" + data.linkItems + data["option"][meid]["code"]);
+					if($targetObj && $targetObj.length > 0){
+						$targetObj.parents(".radio-btn").trigger("click");
+						$targetObj.parents(".radio-btn").trigger("blur");
+						$("#other" + data.linkItems).val($("#other" + data.itemId).val());
+						$("#other" + data.linkItems).trigger("keyup");
+					}
+				}
+				
+			});
+		}else{
+			$inputBox.parents(".radio-btn").on('click', function () {
+				
+				$inputBox.formValidator({tipID: (data["itemId"] + 'Tip'),onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
+			    var _this = $(this),block = _this.parent().parent();
+			    block.find('input:radio').prop('checked', false);
+			    block.find(".radio-btn").removeClass('checkedRadio');
+			    _this.addClass('checkedRadio');
+			    _this.find('input:radio').prop('checked', true);
+
+				var meid = _this.find(':radio').attr("instanceId");
+				for (var j in data.option) {
+					data.option[j]["checked"] = "N";
+				}
+				data.option[meid]["checked"] = "Y";
+				if (data.option[meid]["other"] == "Y") {
+					$("#other" + data.itemId).remove();
+					var o = '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="inputother" value="' + data.othervalue + '">';
+					$(this).closest('li').append(o);
+					$("#other" + data.itemId).keyup(function() {
+						data.othervalue = $(this).val();
+						data.option[meid]["othervalue"] = $(this).val();
+						
+						/*关联项*/
+						if(data.linkItems){
+							var $targetObj = $("#other" + data.linkItems);
+							if($targetObj && $targetObj.length > 0){
+								$targetObj.val(data.othervalue);
+							}
+						}
+					});
+				} else {
+					data.othervalue = "";
+					data.option[meid]["othervalue"] = "";
+					$("#other" + data.itemId).remove();
+				}
+				
+				/*关联项*/
+				if(data.linkItems){
+					var $targetObj = $("#o" + data.linkItems + data["option"][meid]["code"]);
+					if($targetObj && $targetObj.length > 0){
+						$targetObj.parents(".radio-btn").trigger("click");
+						$targetObj.parents(".radio-btn").trigger("blur");
+						$("#other" + data.linkItems).val($("#other" + data.itemId).val());
+						$("#other" + data.linkItems).trigger("keyup");
+					}
+				}
+				
+			});
+		}
+		
 		if(SurveyBuild._readonly){
 			$inputBox.parents(".radio-btn").unbind("click");
 		}
