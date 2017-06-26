@@ -66,7 +66,7 @@ public class TzNegativeApplyNumberServiceImpl extends TzNegativeListBundleServic
 						PsTzCsKsFmT.setTzClassId(classId);
 						PsTzCsKsFmT.setTzApplyPcId(batchId);
 						PsTzCsKsFmT.setTzFmqdId(fmqdId);
-						PsTzCsKsFmT.setTzFmqdName("申请次数大于3次");
+						PsTzCsKsFmT.setTzFmqdName("申请次数大于等于3次");
 						have_one = SqlQuery.queryForObject(
 								"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
 								new Object[] { classId, batchId, Long.valueOf(appinsId), fmqdId }, "Integer");

@@ -1,8 +1,8 @@
 /**
- * 根据OPRID查询时候存在报考的年份的次数大于三
+ * 根据OPRID查询时候存在报考的年份的次数大于等于三 :根据入学年份判断 相同算一次
  * COUNT
  */
-SELECT COUNT(DISTINCT A.TZ_APP_INS_ID) CNT
+SELECT COUNT(DISTINCT YEAR(B.TZ_START_DT)) AS CNT
    FROM PS_TZ_FORM_WRK_T A,
         PS_TZ_CLASS_INF_T B
    WHERE A.OPRID = ?
