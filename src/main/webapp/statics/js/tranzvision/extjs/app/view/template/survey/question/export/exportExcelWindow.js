@@ -16,6 +16,7 @@
     maxHeight: 400,
     resizable:false,
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
+    ignoreChangesFlag: true,
     //y:80,
     
     constructor: function(config){
@@ -47,6 +48,7 @@
 
                 fieldDefaults: {
                     msgTarget: 'side',
+                    labelWidth: 100,
                     labelStyle: 'font-weight:bold'
                 },
 
@@ -58,7 +60,7 @@
                         frame: false,
                         header:false,
                         width: 650,
-                        minHeight: 200,
+                        minHeight: 150,
                         maxHeight: 400,
                         resizeTabs: true,
                         defaults: {
@@ -92,8 +94,28 @@
                                     	}
                                 }],
 
-                                items: [
-                                    {
+                                items: [{
+                                        xtype      : 'fieldcontainer',
+                                        fieldLabel : '导出类型',
+                                        defaultType: 'radiofield',
+                                        margin: '10 0 10 0',
+                                        defaults: {
+                                            flex: 1
+                                        },
+                                        layout: 'hbox',
+                                        items: [
+                                            {
+                                                boxLabel  : '导出调查结果Excel',
+                                                name      : 'exportType',
+                                                inputValue: 'A',
+                                                value 	  : true
+                                            }, {
+                                                boxLabel  : '附件打包下载',
+                                                name      : 'exportType',
+                                                inputValue: 'B'
+                                            }
+                                        ]
+                                	},/*{
                                         xtype: 'label',
                                         text: "请输入导出文件名",
                                         style:{
@@ -101,19 +123,21 @@
                                         	marginBottom: '5px',
                                         	display: 'block'
                                         }
-                                    },
+                                    },*/
                                     {
                                         layout:{
                                             type:'column'
                                         },
+                                        margin: '10 0 10 0',
                                         items:[{
                                             xtype: 'textfield',
                                             name: 'FileName',
+                                            fieldLabel: '导出文件名',
                                             allowBlank: false,
                                             columnWidth:.8
                                         },{
                                             xtype:"button",
-                                            width:120,
+                                            width:100,
                                             style:'margin-left:8px',
                                             text:"确认导出",
                                             labelAlign: 'right',

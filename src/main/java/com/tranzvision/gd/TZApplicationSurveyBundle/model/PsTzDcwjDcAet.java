@@ -9,6 +9,8 @@ public class PsTzDcwjDcAet {
 
     private String tzJdUrl;
 
+    private String tzDcType;
+
     public String getRunCntlId() {
         return runCntlId;
     }
@@ -39,5 +41,13 @@ public class PsTzDcwjDcAet {
 
     public void setTzJdUrl(String tzJdUrl) {
         this.tzJdUrl = tzJdUrl == null ? null : tzJdUrl.trim();
+    }
+
+    public String getTzDcType() {
+        return tzDcType;
+    }
+
+    public void setTzDcType(String tzDcType) {
+        this.tzDcType = tzDcType == null ? null : tzDcType.trim();
     }
 }

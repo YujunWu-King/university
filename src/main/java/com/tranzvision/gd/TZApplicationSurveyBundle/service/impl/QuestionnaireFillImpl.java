@@ -331,13 +331,26 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 			/* 当前问卷的提交状态 */
 			strSubState = "A";
-
+			String readonly = "N";
 			strSubState = jdbcTemplate.queryForObject(
 					"SELECT TZ_APP_SUB_STA FROM PS_TZ_DC_INS_T WHERE TZ_APP_INS_ID = ?", new Object[] { surveyInsId },
 					"String");
+			PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = psTzDcWjDyTMapper.selectByPrimaryKey(surveyID);
+			if (psTzDcWjDyTWithBLOBs == null) {
+				String strDtgz = psTzDcWjDyTWithBLOBs.getTzDcWjDtgz();
+				
+				if(StringUtils.equals("S", strSubState)){
+					if(StringUtils.equals("2", strDtgz)){
+						readonly = "N";
+					}else{
+						readonly = "Y";
+					}
+				}
+			}
+
 			// {"code":"%BIND(:1)","msg":"%bind(:2)","insid":"%bind(:3)","subState":"%bind(:4)","jump":"%bind(:5)"}
 			strRet = "{\"code\":\"" + successFlag + "\",\"msg\":\"" + strMsg + "\",\"insid\":\"" + surveyInsId
-					+ "\",\"subState\":\"" + strSubState + "\",\"jump\":\"" + isJump + "\"}";
+					+ "\",\"subState\":\"" + strSubState + "\",\"readonly\":\"" + readonly + "\",\"jump\":\"" + isJump + "\"}";
 		}
 		return strRet;
 	}
@@ -679,9 +692,24 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 			/* 当前问卷的提交状态 */
 			String strSubState = "A";
+			String readonly = "N";
 			strSubState = jdbcTemplate.queryForObject(
 					"SELECT TZ_APP_SUB_STA FROM PS_TZ_DC_INS_T WHERE TZ_APP_INS_ID = ?", new Object[] { surveyInsId },
 					"String");
+			String strDtgz = psTzDcWjDyTWithBLOBs.getTzDcWjDtgz();
+			if(StringUtils.equals("S", strSubState)){
+				if(StringUtils.equals("2", strDtgz)){
+		            boolean boolStatus = surveryRulesImpl.checkSurveryStatus(psTzDcWjDyTWithBLOBs, language);
+		            boolean boolDate = surveryRulesImpl.checkSurveryDate(psTzDcWjDyTWithBLOBs, language);
+		            if(boolStatus && boolDate){
+		            	readonly = "N";
+		            }else{
+		            	readonly = "Y";
+		            }
+				}else{
+					readonly = "Y";
+				}
+			}
 			try {
 				/* 是否为测试问卷 */
 				String isTestSurvey = jdbcTemplate.queryForObject(
@@ -695,12 +723,12 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_M_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
-							submit, language, strPre, strNext, strSubState, uniqueNum, path);
+							submit, language, strPre, strNext, strSubState, uniqueNum, path,readonly);
 				} else {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
-							submit, language, strPre, strNext, strSubState, uniqueNum, path);
+							submit, language, strPre, strNext, strSubState, uniqueNum, path,readonly);
 				}
 
 				strReturn = strReturn.replaceAll("\\~", "\\$");

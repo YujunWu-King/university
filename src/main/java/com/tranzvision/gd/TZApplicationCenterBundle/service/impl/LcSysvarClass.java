@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
@@ -351,9 +352,23 @@ public class LcSysvarClass {
 
 				if ("LQ".equals(tzLuquSta)){
 					if("Y".equals(isMobile)){
-						QrcodeHtml = "<div class=\"overhidden\" onclick='openRqQrcode(\""+appIns+"\")'><i class=\"add_icon\"></i><span class=\"fl\" style=\"color:#666;\">查看电子版条件录取通知书</span></div>";
+						Map<String, Object> jgOpridMap = null;
+						try{
+							jgOpridMap = jdbcTemplate.queryForMap("select A.OPRID,B.TZ_JG_ID from PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_CLASS_ID=B.TZ_CLASS_ID", new Object[]{appIns});
+						}catch(DataAccessException dae){
+							jgOpridMap = null;
+						}
+						
+//						QrcodeHtml = "<div class=\"overhidden\" onclick='openRqQrcode(\""+appIns+"\")'><i class=\"add_icon\"></i><span class=\"fl\" style=\"color:#666;\">查看电子版条件录取通知书</span></div>";
+						String jgId = "",oprid = "";
+						if(jgOpridMap != null){
+							oprid = jgOpridMap.get("OPRID") == null ? "" : String.valueOf(jgOpridMap.get("OPRID"));
+							jgId = jgOpridMap.get("TZ_JG_ID") == null ? "" : String.valueOf(jgOpridMap.get("TZ_JG_ID"));
+						}
+						String lqUrl = rootPath + "/admission/" +jgId+"/" + siteId + "/" + oprid + "/" + appIns;
+						QrcodeHtml = "<div class=\"overhidden\"><a href=\""+lqUrl+"\" target=\"_blank\"><i class=\"add_icon\"></i><span class=\"fl\" style=\"color:#666;\">查看电子版条件录取通知书</span></a></div>";
 					}else{
-						QrcodeHtml = "<div class=\"overhidden\"><a onclick='openRqQrcode(\""+appIns+"\")' href=\"javascript:void(0);\"><img class=\"fl table_ck\" src=\"" + rootPath + "/statics/css/website/images/table_search.png\"></a><p>查看电子版条件录取通知书</p></div>";
+						QrcodeHtml = "<div class=\"overhidden\"><a onclick='openRqQrcode(\""+appIns+"\")' href=\"javascript:void(0);\"><img class=\"fl table_ck\" src=\"" + rootPath + "/statics/css/website/images/table_search.png\" />查看电子版条件录取通知书</a></div>";
 					}
 					
 				}
