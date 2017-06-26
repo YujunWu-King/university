@@ -36,7 +36,7 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 			Map<String,Object> dattMap = sqlQuery.queryForMap(dattSql, new Object[]{ processinstance });
 			if(dattMap != null){
 				strUseFileName = dattMap.get("TZ_SYSFILE_NAME").toString();
-				atrFileName = dattMap.get("TZ_FILE_NAME").toString();
+				atrFileName = dattMap.get("TZ_FILE_NAME").toString().replaceAll(" ", "_");
 			}
 			
 			//导出参数
@@ -51,7 +51,7 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 				if("B".equals(exportType)){
 					//附件打包下载
 					ZipUtil zipUtil = new ZipUtil();
-					String zipFolder = atrFileName + "_" + wjId;
+					String zipFolder = atrFileName + wjId + processinstance;
 					String zipPath = "";
 					
 					String relLj = expDirPath;
@@ -169,6 +169,7 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 					}
 					
 				}else{
+					//导出调查结果Excel
 					ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
 					List<String[]> dataCellKeys = new ArrayList<String[]>();
 					List<String[]> listDataFields = new ArrayList<String[]>();
