@@ -1469,18 +1469,23 @@ var SurveyBuild = {
 		var srcPath=TzUniversityContextPath + data.children[indexx].accessPath + data.children[indexx].sysFileName;
 		
 		$("#img_"+data.itemId).attr("src",srcPath);
-		var allHeight=$(window).height();
-	     var popheight=$("#body_"+data.itemId).height();
-	     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
-	     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
+		console.log($("#img_"+data.itemId).height());
+		
+	     
 		$("#shade_"+data.itemId).show();
-		$("#body_"+data.itemId).show();
-		$("#close_"+data.itemId).show()
+		$("#body_"+data.itemId).show(function(){
+			var allHeight=$(window).height();
+		     var popheight=$("#body_"+data.itemId).height();
+		     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
+		     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
+		     $("#close_"+data.itemId).show()
+		});
+		
 		$("#close_"+data.itemId).click(function(){
 			$("#shade_"+data.itemId).hide();
 			$("#body_"+data.itemId).hide();
 			$("#close_"+data.itemId).hide();
-			$("#img_"+data.itemId).attr("src","");
+			$("#img_"+data.itemId).attr("src",srcPath);
 		});
         /*var appInsId = SurveyBuild.appInsId; //报名表实例ID
         var data;

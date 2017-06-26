@@ -84,7 +84,7 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 			    c += '<div class="img_shade" id ="shade_'+data.itemId+'"></div>';
 			    c += '<img class="img_pop_close" id ="close_'+data.itemId+'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
 			    c += '<div class="img_pop_body" id ="body_'+data.itemId+'">'  ;
-			    c += ' <img src="" id ="img_'+data.itemId+'">';
+			    c += ' <img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" id ="img_'+data.itemId+'">';
 			    c += '</div>';
 			}else{
 				c += '<div class="input-list-blank margart15">';
