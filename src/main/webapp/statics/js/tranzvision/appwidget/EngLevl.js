@@ -456,8 +456,23 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		}
 		return RELATED_DIV;
 	},
+
+	bindTimePickerM:function (dateIdGroup) {
+
+		dateIdGroup.each(function(){
+
+			var calendar = new LCalendar();
+			calendar.init({
+				'trigger': '#' + $(this).attr('id'), //标签id
+				'type': "date", //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+				'minDate': "1960-01-01", //最小日期
+				'maxDate':"2030-12-31"
+			});
+		})
+	},
+
 	bindTimePicker:function($inputBox,$selectBtn,$clearBtn){
-		
+
 		$inputBox.each(function(){
 			   var me=$(this);
 			  $(this).datetimepicker({
@@ -803,39 +818,38 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			htmlContent += OPT_ENG;
 			htmlContent += '</select>';
 			htmlContent += '</div>';
-
 			//---------------------不同英语水平切换div
 			if(EXAM_TYPE_DEF == "GRE" || EXAM_TYPE_DEF == "GMAT" || EXAM_TYPE_DEF == "TOEFL" || EXAM_TYPE_DEF == "TOEIC（990）"){//GRE、GMAT、TOEFL、TOEIC（990）
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input  type="text" class="text1" readonly="true" id="date' + data.itemId + '"/></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input  type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="true" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
 				htmlContent += '</div>';
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" class="text1"/></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" class="text1" value="'  + child.EngLevelGrade.value + '" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
 				htmlContent += '</div>';
 
 			}else if(EXAM_TYPE_DEF=="IELTS"){//雅思
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" class="text1" readonly="true" id="date' + data.itemId + '"/></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
 				htmlContent += '</div>';
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_ISCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" class="text1"/></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" value="'  + child.EngLevelGrade.value + '" class="text1" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
 				htmlContent += '</div>';
 
 			}else if(EXAM_TYPE_DEF == "英语六级（710分制）" || EXAM_TYPE_DEF == "英语四级（710分制）" || EXAM_TYPE_DEF == "英语六级（100分制）" || EXAM_TYPE_DEF == "英语四级（100分制）"){
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ "考试日期" +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" class="text1" readonly="true" id="date' + data.itemId + '"/></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
 				htmlContent += '</div>';
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" class="text1"/></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" value="'  + child.EngLevelGrade.value + '" class="text1" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
 				htmlContent += '</div>';
 
 			}else if(EXAM_TYPE_DEF=="专业英语"){//专业四六级
@@ -852,13 +866,13 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ "考试日期" +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" class="text1" readonly="true" id="date' + data.itemId + '" /></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '" /></div>';
 				htmlContent += '</div>';
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'SELECT">';
-				htmlContent += '<select class="select1">';
+				htmlContent += '<select class="select1" id="' + data.itemId+child.EngLevelGrade.itemId + '">';
 				htmlContent += optList;
 				htmlContent += '</div>';
 				htmlContent += '</select></div>';
@@ -879,7 +893,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV">';
-				htmlContent += '<select class="select1">';
+				htmlContent += '<select class="select1" id="' + data.itemId+child.EngLevelGrade.itemId + '">';
 				htmlContent += optList;
 				htmlContent += '</div>';
 				htmlContent += '</select></div>';
@@ -908,7 +922,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV">';
-				htmlContent += '<select class="select1">';
+				htmlContent += '<select class="select1" id="' + data.itemId+child.EngLevelGrade.itemId + '">';
 				htmlContent += optList;
 				htmlContent += '</div>';
 				htmlContent += '</select></div>';
@@ -916,11 +930,11 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item" style="display: none">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input  type="text" class="text1" readonly="true" id="date' + data.itemId + '"/></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input  type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
 				htmlContent += '</div>';
 				htmlContent += '<div class="item" style="display: none">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
-				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" class="text1"/></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" value="'  + child.EngLevelGrade.value + '" class="text1" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
 				htmlContent += '</div>';
 			}
 
@@ -969,7 +983,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 			}else{
 
-				htmlContent += '<div class="item" id="'+data.itemId+'UP" style="display: none">';
+				htmlContent += '<div class="item" id="'+data.itemId+'UP">';
 				htmlContent += '<p>'+ MsgSet["SCORE_UP"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 				htmlContent += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
 				htmlContent += '<div class="handle">';
@@ -1024,18 +1038,29 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		if(SurveyBuild.accessType == "M"){
 
 			//日期
-			var calendar = new LCalendar();
-			calendar.init({
-				'trigger': '#date' + data.itemId, //标签id
-				'type': "date", //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
-				'minDate': "1960-01-01", //最小日期
-				'maxDate':"2030-12-31"
-			});
+			if(len == 2){
+
+				var calendar = new LCalendar();
+				calendar.init({
+					'trigger': '#' + data.itemId +children[1].EngLevelDate.itemId, //标签id
+					'type': "date", //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+					'minDate': "1960-01-01", //最小日期
+					'maxDate':"2030-12-31"
+				});
+			}
 
 			//存在多个英语水平时进行循环
 			for(var j=0;j<len;j++){
 
 				var child=children[j];
+				var calendar = new LCalendar();
+				calendar.init({
+					'trigger': '#' + data.itemId + child.EngLevelDate.itemId, //标签id
+					'type': "date", //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+					'minDate': "1960-01-01", //最小日期
+					'maxDate':"2030-12-31"
+				});
+
 				type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
 				type_select.each(function(index){
 
@@ -1069,6 +1094,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 									gradeDiv.find(".text1").val("");
 
 									if(i == "ENG_LEV_T0"){
+
 										upDiv.hide();
 									}else{
 										upDiv.show();
@@ -1077,7 +1103,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 									if(i=="ENG_LEV_T1"||i=="ENG_LEV_T2"||i=="ENG_LEV_T3"||i=="ENG_LEV_T4"||i=="ENG_LEV_T13"||i=="ENG_LEV_T5"||i=="ENG_LEV_T6"||i=="ENG_LEV_T7"||i=="ENG_LEV_T8"){
 
 										//将成绩改为文本框
-										var textDiv = '<input id="'+data.itemId+'_GRADE_DIV" type="text" class="text1">'
+										var textDiv = '<input type="text" value="'  + child.EngLevelGrade.value + '"  class="text1" id="' + data.itemId +child.EngLevelGrade.itemId + '">';
 										timeDiv.parent(".item").show();
 										gradeDiv.parent(".item").show();
 										gradeDiv.html(textDiv);
@@ -1101,7 +1127,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 									}else if(i=="ENG_LEV_T9"){//专业四级
 
-										var optList1 = '<select class="select1" id="'+data.itemId+'SELECT">';
+										var optList1 = '<select class="select1" id="' + data.itemId +child.EngLevelGrade.itemId + '">';
 										optList1 += '<option  value="'+MsgSet["EXAM_TEM4"]+'">'+MsgSet["EXAM_TEM4"]+'</option>';
 										optList1 += ('<option value="'+MsgSet["EXAM_TEM8"]+'">'+MsgSet["EXAM_TEM8"]+'</option>');
 										optList1 += '</select>';
@@ -1113,7 +1139,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 									}else if(i=="ENG_LEV_T10" || i=="ENG_LEV_T11"){//中高级
 
-										var optList = '<select class="select1" id="'+data.itemId+'SELECT">';
+										var optList = '<select class="select1" id="' + data.itemId +child.EngLevelGrade.itemId + '">';
 										optList += '<option value="'+MsgSet["INTER_A"]+'">'+MsgSet["INTER_A"]+'</option>';
 										optList += ('<option  value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
 										optList += '</select>';
@@ -1125,7 +1151,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 									}else if(i=="ENG_LEV_T12"){//BEC
 
-										var optList2 = '<select class="select1" id="'+data.itemId+'SELECT">';
+										var optList2 = '<select class="select1" id="' + data.itemId +child.EngLevelGrade.itemId + '">';
 										optList2 += '<option value="' + MsgSet["LEV_A"] + '">'+MsgSet["LEV_A"] + '</option>';
 										optList2 += ('<option  value="' + MsgSet["LEV_B"] + '">'+MsgSet["LEV_B"] + '</option>');
 										optList2 += ('<option  value="' + MsgSet["LEV_C"] + '">'+MsgSet["LEV_C"] + '</option>');
@@ -1145,11 +1171,33 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 								}
 							}
+						}else{
+
+							//大div
+							var topDiv=$(this).closest(".w_96");
+
+							//日期、成绩、上传
+							var timeDiv = topDiv.find("#"+data["itemId"]+"_DATE_DIV");
+							var gradeDiv = topDiv.find("#"+data["itemId"]+"_GRADE_DIV");
+							var upDiv = topDiv.find("#"+data["itemId"]+"UP");
+
+							//清空日期和成绩
+							timeDiv.find(".text1").val("");
+							gradeDiv.find(".text1").val("");
+
+							//隐藏日期、成绩、上传
+							timeDiv.parent(".item").hide();
+							gradeDiv.parent(".item").hide();
+							upDiv.hide();
 						}
 
 					})
 				})
 			}
+
+			// var dateId = $("#" + data.itemId +child.EngLevelDate.itemId);
+			// data.bindTimePickerM(dateId);
+
 		}else{
 
 			//为所有的select注册事件
