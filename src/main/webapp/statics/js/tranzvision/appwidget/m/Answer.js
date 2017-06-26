@@ -1473,7 +1473,6 @@ var SurveyBuild = {
 	     var popheight=$("#body_"+data.itemId).height();
 	     $("#body_"+data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
 	     $("#close_"+data.itemId).css("top",allHeight/2-popheight/2-20+"px");
-	     console.log(popheight);	console.log(allHeight);
 		$("#shade_"+data.itemId).show();
 		$("#body_"+data.itemId).show();
 		$("#close_"+data.itemId).show()
