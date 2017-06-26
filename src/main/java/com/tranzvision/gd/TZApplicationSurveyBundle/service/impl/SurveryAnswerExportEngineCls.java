@@ -51,7 +51,7 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 				if("B".equals(exportType)){
 					//附件打包下载
 					ZipUtil zipUtil = new ZipUtil();
-					String zipFolder = atrFileName + "_" + processinstance;
+					String zipFolder = atrFileName + "_" + wjId;
 					String zipPath = "";
 					
 					String relLj = expDirPath;
@@ -89,7 +89,9 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 							
 							String wjInsFolder = "";
 							String ryInfo = "";
-							if(!"".equals(oprid)){
+							if("".equals(oprid) || "TZ_GUEST".equals(oprid)){
+								ryInfo = "匿名用户";
+							}else{
 								String rySql = "select TZ_MSH_ID,TZ_REALNAME from PS_TZ_AQ_YHXX_TBL where OPRID=?";
 								Map<String,Object> ryMap = sqlQuery.queryForMap(rySql, new Object[]{ oprid });
 								if(ryMap != null){
@@ -108,8 +110,6 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 										}
 									}
 								}
-							}else{
-								ryInfo = "匿名用户";
 							}
 							wjInsFolder = appInsId + "_" + ryInfo;
 							
@@ -158,6 +158,8 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 						sourcePathArr.add(zipPath);
 						zipUtil.createZip(sourcePathArr, tarLj + strUseFileName);
 						
+						//打包完成后删除文件
+						zipUtil.deleteDir(tF);
 						try {
 							sqlQuery.update("update  PS_TZ_EXCEL_DATT_T set TZ_FWQ_FWLJ = ? where PROCESSINSTANCE=?",
 									new Object[] { (relLj + strUseFileName), processinstance });
@@ -221,11 +223,14 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 						
 						if(!"".equals(cyrOprid)){
 							//非匿名调查，导出姓名和面试申请号
-							sql = "select TZ_MSSQH from PS_TZ_REG_USER_T where OPRID=?";
-							String msSqh = sqlQuery.queryForObject(sql, new Object[]{ cyrOprid }, "String");
-							sql = "select TZ_REALNAME from PS_TZ_AQ_YHXX_TBL where OPRID=? limit 1";
-							String name = sqlQuery.queryForObject(sql, new Object[]{ cyrOprid }, "String");
-							
+							String msSqh = "";
+							String name = "";
+							sql = "select TZ_REALNAME,TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=? limit 1";
+							Map<String,Object> yhxxMap = sqlQuery.queryForMap(sql, new Object[]{ cyrOprid });
+							if(yhxxMap != null){
+								name = yhxxMap.get("TZ_REALNAME") == null ? "" : yhxxMap.get("TZ_REALNAME").toString();
+								msSqh = yhxxMap.get("TZ_MSH_ID") == null ? "" : yhxxMap.get("TZ_MSH_ID").toString();
+							}
 							mapData.put("tz-name-20170504", name);
 							mapData.put("tz-mssqh-20170504", msSqh);
 						}else{
