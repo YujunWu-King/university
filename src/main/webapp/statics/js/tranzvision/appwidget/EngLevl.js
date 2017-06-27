@@ -103,13 +103,16 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 					var tempHtmlP = this._getHtmlTwo(data,i);
 					htmlContent += tempHtmlP;
 				}
-				
-				if(len<data.maxLines){
-					htmlContent += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')">' + MsgSet["ADD_ONE"] + '</div>';
-				}else{
-					htmlContent += '<div class="clear" style="display: none"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div>';
+				if(!SurveyBuild._readonly){
+					
+					if(len<data.maxLines){
+						htmlContent += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')">' + MsgSet["ADD_ONE"] + '</div>';
+						htmlContent += '</div>';
+					}else{
+						htmlContent += '<div class="clear" style="display: none"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div>';
+						htmlContent += '</div>';
+					}
 				}
-				htmlContent += '</div>';
 				c += htmlContent;
 			}else{
 
@@ -804,7 +807,56 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		//只读模式
 		if(SurveyBuild._readonly){
 
-			htmlContent += '</div></div>';
+			//考试名称
+			htmlContent += '<div class="text-box"><input  type="text" value="' + child.EngLevelType.value + '" class="text1" readonly="true" id="' + data["itemId"] + child.EngLevelType.itemId + '"/></div>';
+			htmlContent += '</div>';
+
+			//-------------不同英语水平对应的readonly值
+			if(EXAM_TYPE_DEF == "GRE" || EXAM_TYPE_DEF == "GMAT" || EXAM_TYPE_DEF == "TOEFL" || EXAM_TYPE_DEF == "TOEIC（990）"){//GRE、GMAT、TOEFL、TOEIC（990）
+				
+				htmlContent += '<div class="item">';
+				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input  type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="true" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
+				htmlContent += '</div>';
+				htmlContent += '<div class="item">';
+				htmlContent += '<p>'+ MsgSet["EXAM_TSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" class="text1" readonly="true" value="'  + child.EngLevelGrade.value + '" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
+				htmlContent += '</div>';
+				
+			}else if(EXAM_TYPE_DEF=="IELTS"){//雅思
+				
+				htmlContent += '<div class="item">';
+				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input  type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="true" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
+				htmlContent += '</div>';
+				htmlContent += '<div class="item">';
+				htmlContent += '<p>'+ MsgSet["EXAM_ISCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" class="text1" value="'  + child.EngLevelGrade.value + '" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
+				htmlContent += '</div>';
+				
+			}else if(EXAM_TYPE_DEF == "英语六级（710分制）" || EXAM_TYPE_DEF == "英语四级（710分制）" || EXAM_TYPE_DEF == "英语六级（100分制）" || EXAM_TYPE_DEF == "英语四级（100分制）" || EXAM_TYPE_DEF == "专业英语"){//专业四六级、四六级
+				
+				htmlContent += '<div class="item">';
+				htmlContent += '<p>'+ "考试日期" +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
+				htmlContent += '</div>';
+				htmlContent += '<div class="item">';
+				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" value="'  + child.EngLevelGrade.value + '" class="text1" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
+				htmlContent += '</div>';
+				
+			}else if(EXAM_TYPE_DEF == "高级口译" || EXAM_TYPE_DEF == "中级口译" || EXAM_TYPE_DEF == "BEC"){//中高级口译、BEC
+				
+				htmlContent += '<div class="item">';
+				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" value="'  + child.EngLevelGrade.value + '" class="text1" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
+				htmlContent += '</div>';
+			}
+
+			//附件
+
+			htmlContent += '</div>';
+			
 		}else{
 
 			//填写模式
@@ -990,7 +1042,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				htmlContent += '<div class="ncsc-upload-btn">';
 				htmlContent += '<a href="#" class="ncsc-upload-btn-a">';
 				htmlContent += '<span class="ncsc-upload-btn-span">';
-				htmlContent += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')"  ></span>';
+				htmlContent += '<input type="file" id="'+child.EngLevelUp.itemId+ '" hidefocus="true" size="1" class="input-file" name="goods_image" onchange="SurveyBuild.engUploadAttachment(this,\''+ data.instanceId +'\',\''+ child.EngLevelUp.instanceId +'\')"  ></span>';
 				htmlContent += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
 				htmlContent += '</a>';
 				htmlContent += '</div>';
@@ -998,6 +1050,55 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				htmlContent += '</div>';
 				htmlContent += '<p style="color:#666;font-size:0.56rem;margin-top:5px;display:' + (SurveyBuild._readonly?'none':'block') +' ">'+ msg + '</p>';
 				htmlContent += '</div>';
+
+
+				var childrenAttr=child.EngLevelUp.children;
+				if(child.EngLevelUp.allowMultiAtta == "Y"){
+
+					for(var index=0; index<childrenAttr.length; index++){
+
+						if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
+
+							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
+							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
+							htmlContent += '<li class="fileLi">';
+							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+							htmlContent += childrenAttr[index].viewFileName +'</a></span>';
+							htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
+							htmlContent += '</i></li>';
+							htmlContent += '</div>';
+						}else{
+
+							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:none">';
+							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
+							htmlContent += '<li class="fileLi">';
+							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+							htmlContent += childrenAttr[index].viewFileName +'</a></span>';
+							htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
+							htmlContent += '</i></li>';
+							htmlContent += '</div>';
+						}
+					}
+
+				}else{
+
+					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
+					htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
+					htmlContent += '<li class="fileLi">';
+					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+					htmlContent += childrenAttr[index].viewFileName +'</a></span>';
+					htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
+					htmlContent += '</i></li>';
+					htmlContent += '</div>';
+
+				}
+
+				htmlContent += '<div class="img_shade" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
+				htmlContent += '<img class="img_pop_close" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
+				htmlContent += '<div class="img_pop_body" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
+				htmlContent += ' <img src="" id ="img_'+ child.EngLevelUp.itemId +'">';
+				htmlContent += '</div>';
+
 			}
 
 			htmlContent += '</div>';
@@ -1053,6 +1154,11 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			for(var j=0;j<len;j++){
 
 				var child=children[j];
+				
+				//隐藏图片显示
+				$("#shade_"+ child.EngLevelUp.itemId).hide();
+				$("#body_"+ child.EngLevelUp.itemId).hide();
+				$("#close_"+ child.EngLevelUp.itemId).hide();
 				var calendar = new LCalendar();
 				calendar.init({
 					'trigger': '#' + data.itemId + child.EngLevelDate.itemId, //标签id

@@ -1910,290 +1910,225 @@ var SurveyBuild = {
         }
 	},
 	//--------原版本图片上传:还原方法->>
-	   engUploadAttachment: function(el,instanceId,engIntanceId){
-		    //根据当前的句柄，获取id后坠
-	        var appInsId = SurveyBuild.appInsId;//报名表实例ID
-			var refLetterId = SurveyBuild.refLetterId;//推荐信编号
-	        var data;
-			var index = "";
-	        var $isDhContainer = $(el).closest(".dhcontainer");
-	        if ($isDhContainer.length == 0){
-	            data = SurveyBuild._items[instanceId];
-	        } else {
-	            var dhIns = $isDhContainer.attr("data-instancid");
-	            index = $(el).closest(".main_inner_content_para").index();
+    engUploadAttachment: function(el,instanceId,engIntanceId){
+        //根据当前的句柄，获取id后坠
+        var appInsId = SurveyBuild.appInsId;//报名表实例ID
+        var refLetterId = SurveyBuild.refLetterId;//推荐信编号
+        var data;
+        var index = "";
+        var $isDhContainer = $(el).closest(".dhcontainer");
+        if ($isDhContainer.length == 0){
+            data = SurveyBuild._items[instanceId];
+        } else {
+            var dhIns = $isDhContainer.attr("data-instancid");
+            index = $(el).closest(".next_record").index();
+            data = SurveyBuild._items[dhIns].children[index][engIntanceId];
+        }
+        var itemId = data.itemId;
+        var itemName = data.itemName;
+        var className = data.classname;
+        var multiFlag = data.allowMultiAtta;
+        var isOnlineShow = data.isOnlineShow;//PDF在线预览
+        var _children = data["children"];
+        var path = $("#"+itemId).val();
+        if(path){
+            //文件名
 
+            filename = path.substring(path.lastIndexOf("\\") + 1,path.length);
+            //文件后缀
 
-	            data = SurveyBuild._items[dhIns].children[index][engIntanceId];
-	        }
-	        var itemId = data.itemId;
-	        var itemName = data.itemName;
-	        var className = data.classname;
-	        var multiFlag = data.allowMultiAtta;
-			var isOnlineShow = data.isOnlineShow;//PDF在线预览
-	        var _children = data["children"];
-	        var path = $("#"+itemId).val();
-			if(path){
-				//文件名
+            var sysfileSuffix = (filename.substring(filename.lastIndexOf(".") + 1)).toLowerCase();
+            var allowFileType = $.trim(data.fileType);
+            var allowSize = data.fileSize;
+            //允许上传的文件类型
 
-				filename = path.substring(path.lastIndexOf("\\") + 1,path.length);
-				//文件后缀
+            var typeArr = allowFileType.split(",");
+            var isAllow = false;
+            if (sysfileSuffix && allowFileType != "" && typeArr.length > 0){
+                for(var i=0; i<typeArr.length; i++){
+                    if(sysfileSuffix == typeArr[i].toLowerCase()){
+                        isAllow = true;
+                        break;
+                    }}
+                if(!isAllow){
+                    var formatMsg = MsgSet["FILETYPE"].replace("【TZ_FILE_TYPE】",allowFileType);
+                    //formatMsg = formatMsg.substring(0,formatMsg.length-1);
+                    alert(formatMsg+"!");
+                    return;
+                }
+            }
+            //最多只能上传10个附件
 
-				var sysfileSuffix = (filename.substring(filename.lastIndexOf(".") + 1)).toLowerCase();
-				var allowFileType = $.trim(data.fileType);
-				var allowSize = data.fileSize;
-				//允许上传的文件类型
+            if(_children.length >= 10){
+                alert(MsgSet["FILE_COUNT"])
+                return;
+            }
 
-				var typeArr = allowFileType.split(",");
-				var isAllow = false;
-				if (sysfileSuffix && allowFileType != "" && typeArr.length > 0){
-					for(var i=0; i<typeArr.length; i++){
-						if(sysfileSuffix == typeArr[i].toLowerCase()){
-							isAllow = true;
-							break;
-						}}
-					if(!isAllow){
-						var formatMsg = MsgSet["FILETYPE"].replace("【TZ_FILE_TYPE】",allowFileType);
-						//formatMsg = formatMsg.substring(0,formatMsg.length-1);
-						alert(formatMsg+"!");
-						return;	
-					}
-				}
-				//最多只能上传10个附件
+            try{
+                loading();/*上传进度条*/
 
-				if(_children.length >= 10){
-					alert(MsgSet["FILE_COUNT"])
-					return;
-				}
+                var $form = document.getElementById("main_list");
+                $form.encoding = "multipart/form-data";
+                var tzParam = "?filePath=appFormAttachment&keyName=" + $(el).attr("name") + "&" + Math.random();
+                $form.action = TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam;
+                $("#main_list").ajaxSubmit({
+                    dataType:'json',
+                    type:'POST',
+                    url:TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam,
+                    success: function(obj) {
+                        if(obj.success){
+                            //清空file控件的Value
 
-				try{
-					loading();/*上传进度条*/
+                            if(isIE = navigator.userAgent.indexOf("MSIE")!=-1) { //IE浏览器
+                                var file = $("#"+itemId);
+                                file.after(file.clone().val(""));
+                                file.remove();
 
-					var $form = document.getElementById("main_list");
-					$form.encoding = "multipart/form-data";
-					var tzParam = "?filePath=appFormAttachment&keyName=" + $(el).attr("name") + "&" + Math.random();
-					$form.action = TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam;
-					$("#main_list").ajaxSubmit({
-						dataType:'json',
-						type:'POST',
-						url:TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam,
-						success: function(obj) {
-							if(obj.success){
-								//清空file控件的Value
+                                var $fileInput = $("#"+itemId);
+                                var $uplBtn = $fileInput.prev(".bt_blue");
+                                $fileInput.mousemove(function(e){
+                                    $uplBtn.css("opacity","0.8");
+                                });
+                                $fileInput.mouseout(function(e) {
+                                    $uplBtn.css("opacity","1");
+                                });
+                            } else {//非IE浏览器
 
-								if(isIE = navigator.userAgent.indexOf("MSIE")!=-1) { //IE浏览器
-									var file = $("#"+itemId); 
-									file.after(file.clone().val("")); 
-									file.remove(); 
-									
-									var $fileInput = $("#"+itemId);
-									var $uplBtn = $fileInput.prev(".bt_blue");
-									$fileInput.mousemove(function(e){
-										$uplBtn.css("opacity","0.8");	
-									});
-									$fileInput.mouseout(function(e) {
-										$uplBtn.css("opacity","1");
-									});
-								} else {//非IE浏览器
+                                $("#"+itemId).val("");
+                            }
 
-									$("#"+itemId).val("");	
-								}
-								
-								var fileSize = obj.msg.size;
-								fileSize = fileSize.substring(0,fileSize.length-1);
-								if(allowSize !="" && fileSize/1024 > allowSize){
-									layer.close(layer.index);/*关闭上传进度条*/
-									alert(MsgSet["FILE_SIZE_CRL"].replace("【TZ_FILE_SIZE】",allowSize));
-								} else {
-									this.is_edit = true;
-									var maxOrderBy;
-									if (multiFlag == "Y"){
-										maxOrderBy = _children[_children.length-1].orderby;//已存在最大顺序编号
-									} else {
-										maxOrderBy = 0;
-									}
-									//上传成功后将文件存储到数据库
+                            var fileSize = obj.msg.size;
+                            fileSize = fileSize.substring(0,fileSize.length-1);
+                            if(allowSize !="" && fileSize/1024 > allowSize){
+                                layer.close(layer.index);/*关闭上传进度条*/
+                                alert(MsgSet["FILE_SIZE_CRL"].replace("【TZ_FILE_SIZE】",allowSize));
+                            } else {
+                                this.is_edit = true;
+                                var maxOrderBy;
+                                if (multiFlag == "Y"){
+                                    maxOrderBy = _children[_children.length-1].orderby;//已存在最大顺序编号
+                                } else {
+                                    maxOrderBy = 0;
+                                }
+                                //上传成功后将文件存储到数据库
 
-									var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
-									var param = '{"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","maxOrderBy":"'+maxOrderBy+'","dhIndex":"'+index+'","refLetterId":"'+refLetterId+'"}}';
-									$.ajax({
-										type: "post",
-										url: _Url + encodeURIComponent(param), 									
-										dataType: "json",
-										async: false,
-										success: function(rst){
-											var state = rst.state;
-											var rstObj = rst.comContent;
-											if(state.errcode == 0){
-												if(rstObj.result="success"){
-													var c = "";
-													if(multiFlag == "Y"){
-														if (_children.length == 1 && _children[0].fileName == ""){
-															_children[0].fileName = rstObj.fileName;
-															_children[0].sysFileName = rstObj.sysFileName;
-															_children[0].orderby = rstObj.index;
-															_children[0].accessPath = obj.msg.accessPath;
-															_children[0].viewFileName = rstObj.viewFileName;
-														} else {
-															_fc = cloneObj(_children[0]);
-															_fc["itemId"] += "_"+rstObj.index;
-															_fc["itemName"] += "_"+rstObj.index;
-															_fc["fileName"] = rstObj.fileName;
-															_fc["sysFileName"] = rstObj.sysFileName;
-															_fc["orderby"] = rstObj.index;
-															_fc["accessPath"] = obj.msg.accessPath;
-															_fc["viewFileName"] = rstObj.viewFileName;
-															_children.push(_fc);
-														}
-														if (className == "imagesUpload"){
-									        				c += '<div class="input-list-uploadcon-list">';
-									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
-									        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
-															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-									        				c += '	<div class="clear"></div>';
-									        				c += '</div>';
-														} else {
-								        	   				c += '<div class="input-list-uploadcon-list">';
-								        	   				c += '	<div class="input-list-uploadcon-listl left">';
+                                var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
+                                var param = '{"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","maxOrderBy":"'+maxOrderBy+'","dhIndex":"'+index+'","refLetterId":"'+refLetterId+'"}}';
+                                $.ajax({
+                                    type: "post",
+                                    url: _Url + encodeURIComponent(param),
+                                    dataType: "json",
+                                    async: false,
+                                    success: function(rst){
+                                        var state = rst.state;
+                                        var rstObj = rst.comContent;
+                                        if(state.errcode == 0){
+                                            if(rstObj.result="success"){
+                                                var c = "";
+                                                if(multiFlag == "Y"){
+                                                    if (_children.length == 1 && _children[0].fileName == ""){
+                                                        _children[0].fileName = rstObj.fileName;
+                                                        _children[0].sysFileName = rstObj.sysFileName;
+                                                        _children[0].orderby = rstObj.index;
+                                                        _children[0].accessPath = obj.msg.accessPath;
+                                                        _children[0].viewFileName = rstObj.viewFileName;
+                                                    } else {
+                                                        _fc = cloneObj(_children[0]);
+                                                        _fc["itemId"] += "_"+rstObj.index;
+                                                        _fc["itemName"] += "_"+rstObj.index;
+                                                        _fc["fileName"] = rstObj.fileName;
+                                                        _fc["sysFileName"] = rstObj.sysFileName;
+                                                        _fc["orderby"] = rstObj.index;
+                                                        _fc["accessPath"] = obj.msg.accessPath;
+                                                        _fc["viewFileName"] = rstObj.viewFileName;
+                                                        _children.push(_fc);
+                                                    }
+                                                    if (className == "imagesUpload"){
+                                                        c += '<li class="fileLi"><span><a  id="img_'+data.itemId+'" onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+                                                    } else {
+                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'" onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"  file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+                                                    }
+                                                    $("#"+itemId+"_AttList").css("display","block");
+                                                    $("#"+itemId+"_AttList").html(c);
+                                                }else{
+                                                    if (className == "imagesUpload"){
+                                                        //console.log("i:"+i);
+                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'" onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+                                                    } else {
+                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'" onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"  file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+                                                    }
+                                                    $("#"+itemId+"_AttList").css("display","block");
+                                                    $("#"+itemId+"_AttList").html(c);
+                                                }
+                                                //提示隐藏
+                                                var $errorTip = $("#"+itemId+"Tip");
+                                                if ($errorTip.hasClass("onError")){
+                                                    $errorTip.removeClass().addClass("onCorrect");
+                                                    $errorTip.children("div").removeClass().addClass("onCorrect");
+                                                    $errorTip.children("div").attr("tips","");
+                                                }
 
-								        	   				c += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index = "' + rstObj.index + '">' + rstObj.viewFileName + '</a>';
-								        	   				if(sysfileSuffix == "pdf" && isOnlineShow == "Y"){
-								        	   					c += '<div class="input-list-uploadcon-list-pdf" onclick="SurveyBuild.PDFpreview(this,\'' + instanceId + '\')" file-index = "' + rstObj.index + '">&nbsp;&nbsp;<img src="' + TzUniversityContextPath + '/statics/images/appeditor/preview.png" title="' + MsgSet["PDF_VIEW"] + '"/>&nbsp;</div>';
-								        	   				}
-								        	   				c += '	</div>';
-								        	   				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\"' + instanceId + '\")">' + MsgSet["DEL"] + '</button></div>';*/
-															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-								        	   				c += '	<div class="clear"></div>';
-								        	   				c += '</div>';
-														}
-														$("#"+itemId+"_AttList").append(c);
-													}else{
-														/*
-														if (_children.length == 1 && _children[0].fileName == ""){
-															_children[0].fileName = rstObj.fileName;
-															_children[0].sysFileName = rstObj.sysFileName;
-															_children[0].orderby = rstObj.index;
-															_children[0].accessPath = obj.msg.accessPath;
-															_children[0].viewFileName = rstObj.viewFileName;
-														} else {
-															_fc = cloneObj(_children[0]);
-															_fc["itemId"] += "_"+rstObj.index;
-															_fc["itemName"] += "_"+rstObj.index;
-															_fc["fileName"] = rstObj.fileName;
-															_fc["sysFileName"] = rstObj.sysFileName;
-															_fc["orderby"] = rstObj.index;
-															_fc["accessPath"] = obj.msg.accessPath;
-
-															_fc["viewFileName"] = rstObj.viewFileName;
-															_children.push(_fc);
-														}*/
-														_children[0].fileName = rstObj.fileName;
-														_children[0].sysFileName = rstObj.sysFileName;
-														_children[0].orderby = rstObj.index;
-														_children[0].accessPath = obj.msg.accessPath;
-														_children[0].viewFileName = rstObj.viewFileName;
-														if (className == "imagesUpload"){
-									        				c += '<div class="input-list-uploadcon-list">';
-									        				c += '	<div class="input-list-uploadcon-listl left"><a class="input-list-uploadcon-list-a" onclick=SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\') file-index="' + rstObj.index + '">' + rstObj.viewFileName + '</a></div>';
-									        				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')">' + MsgSet["DEL"] + '</button></div>';*/
-															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\',\'' + index + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-									        				c += '	<div class="clear"></div>';
-									        				c += '</div>';
-														} else {
-								        	   				c += '<div class="input-list-uploadcon-list">';
-								        	   				c += '	<div class="input-list-uploadcon-listl left">';
-								        	   				c += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.downLoadFile(this,"' + instanceId + '") file-index = "' + rstObj.index + '">' + rstObj.viewFileName + '</a>';
-								        	   				if(sysfileSuffix == "pdf" && isOnlineShow == "Y"){
-								        	   					c += '<div class="input-list-uploadcon-list-pdf" onclick="SurveyBuild.PDFpreview(this,\'' + instanceId + '\')" file-index = "' + rstObj.index + '">&nbsp;&nbsp;<img src="' + TzUniversityContextPath + '/statics/images/appeditor/preview.png" title="' + MsgSet["PDF_VIEW"] + '"/>&nbsp;</div>';
-								        	   				}
-								        	   				c += '	</div>';
-								        	   				/*c += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick="SurveyBuild.deleteFile(this,\"' + instanceId + '\")">' + MsgSet["DEL"] + '</button></div>';*/
-															c += '<div class="input-list-uploadcon-listr left" style="display: inline-block;line-height:46px;" onclick="SurveyBuild.deleteFile(this,\'' + instanceId + '\')"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-								        	   				c += '	<div class="clear"></div>';
-								        	   				c += '</div>';
-
-
-
-														}
-														$("#"+itemId+"_AttList").html(c);
-
-
-
-
-
-													}
-													//提示隐藏
-
-													var $errorTip = $("#"+itemId+"Tip");
-													if ($errorTip.hasClass("onError")){
-														$errorTip.removeClass().addClass("onCorrect");
-														$errorTip.children("div").removeClass().addClass("onCorrect");	
-														$errorTip.children("div").attr("tips","");
-													}
-												}else{
-													alert(rst.resultDesc);
-												}
-											}else{
-												alert(state.errdesc);
-											}
-										}
-									})
-									layer.close(layer.index);/*关闭上传进度条*/
-								}
-							}else{
-								noteing(MsgSet["FILE_UPL_FAILED"], 2);
-								layer.close(layer.index);/*关闭上传进度条*/
-							}
-						}
-					});
-				}catch(e){
-					alert(e);
-				}
-			} 
-	    },
+                                            }else{
+                                                alert(rst.resultDesc);
+                                            }
+                                        }else{
+                                            alert(state.errdesc);
+                                        }
+                                    }
+                                })
+                                layer.close(layer.index);/*关闭上传进度条*/
+                            }
+                        }else{
+                            noteing(MsgSet["FILE_UPL_FAILED"], 2);
+                            layer.close(layer.index);/*关闭上传进度条*/
+                        }
+                    }
+                });
+            }catch(e){
+                alert(e);
+            }
+        }
+    },
     //------------------------------->>
     oldDeleteFile: function(el,instanceId,comInstanceId){
-    	//alert("delete");
-    	 var appInsId = SurveyBuild.appInsId;//报名表实例ID
-         var data;
-         var $isDhContainer = $(el).closest(".dhcontainer");
-         if ($isDhContainer.length == 0){
-             data = SurveyBuild._items[instanceId];
-         } else {
-             var dhIns = $isDhContainer.attr("data-instancid");
-             var index = $(el).closest(".main_inner_content_para").index();
-             data = SurveyBuild._items[dhIns].children[index][comInstanceId];
-         }
-         var itemId = data.itemId;
-         var _children = data.children;
-         //var $del = $(el);
-         //var orderby = $del.prev("a").attr("file-index");
-         //var index = $(el).parent("li").index();
 
-         var multiFlag = data.allowMultiAtta;//是否允许多附件上传
- 		var Require = data.isRequire;//必填
-         var liNum = $(el).parents(".input-list-uploadcon-list").index();
-         if (_children.length > 1){
-             _children.splice(liNum, 1);
-         } else {
-             _children[0].fileName = "";
-             _children[0].sysFileName = "";
-             _children[0].orderby = "";
- 			_children[0].accessPath = "";
- 			_children[0].viewFileName = "";
- 			
- 			if(Require == "Y"){
- 				var $errorTip = $("#"+itemId+"Tip");
- 				$errorTip.removeClass().addClass("onError");
- 				$errorTip.children("div").removeClass().addClass("onError");	
- 				$errorTip.children("div").attr("tips",MsgSet["FILE_UPL_REQUIRE"]);
- 			}
-         }
-         if(multiFlag == "Y"){
-         	$(el).parents(".input-list-uploadcon-list").remove();
-         }else{
-         	$(el).parents(".input-list-uploadcon-list").remove();
-         }
+        var appInsId = SurveyBuild.appInsId;//报名表实例ID
+        var data;
+        var $isDhContainer = $(el).closest(".dhcontainer");
+        if ($isDhContainer.length == 0){
+            data = SurveyBuild._items[instanceId];
+        } else {
+            var dhIns = $isDhContainer.attr("data-instancid");
+            var index = $(el).closest(".next_record").index();
+            data = SurveyBuild._items[dhIns].children[index][comInstanceId];
+        }
+        var itemId = data.itemId;
+        var _children = data.children;
+        var multiFlag = data.allowMultiAtta;//是否允许多附件上传
+        var Require = data.isRequire;//必填
+        var liNum = $(el).parents(".fileLi").index();
+        if (_children.length > 1){
+
+            _children.splice(liNum, 1);
+            var liNum2=liNum-1;
+            if(_children.length<1){
+                $("#"+itemId+"_AttList").css("display","none");
+                $("#"+itemId+"_AttList" +" li:eq("+ liNum2+")").remove();
+            }else{
+                $("#"+itemId+"_AttList" +" li:eq("+ liNum2+")").remove();
+            }
+
+        } else {
+
+            $("#"+itemId+"_AttList").css("display","none");
+            liNum=liNum-1;
+            $("#"+itemId+"_AttList" +" li:eq("+ liNum+")").remove();
+            _children[0].fileName = "";
+            _children[0].sysFileName = "";
+            _children[0].orderby = "";
+            _children[0].accessPath = "";
+            _children[0].viewFileName = "";
+        }
 
     },
     //----------------------
@@ -2205,22 +2140,33 @@ var SurveyBuild = {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
-            var index = $(el).closest(".main_inner_content_para").index();
+            var index = $(el).closest(".next_record").index();
 
             data = SurveyBuild._items[dhIns].children[index][comInstanceId];
         }
-        var _children = data.children;
-        var index = $(el).parents(".input-list-uploadcon-list").index();
+        var name = data.children[index].viewFileName;
+        var array = name.split(".");
+        var hzhui = array[array.length-1];
+        if(hzhui=="jpeg"||hzhui=="png"||hzhui=="jpg"||hzhui=="gif"||hzhui=="JPEG"||hzhui=="PNG"||hzhui=="JPG"||hzhui=="GIF"){
+        	var srcPath=TzUniversityContextPath + data.children[index].accessPath + data.children[index].sysFileName;
 
-        var imgHtmls = "";
-        for (var i = 0; i < _children.length; i++) {
-            imgHtmls += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _children[i].sysFileName + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
+    		$("#img_"+data.itemId).attr("src",srcPath);
+    		$("#shade_"+data.itemId).show();
+    		$("#body_"+data.itemId).show(function(){
+    			var allHeight=$(window).height();
+    		     var popheight=$("#body_"+data.itemId).height();
+    		     $("#body_" + data.itemId).css("top",allHeight/2-popheight/2-10+"px");	
+    		     $("#close_" + data.itemId).css("top",allHeight/2-popheight/2-20+"px");
+    		     $("#close_" + data.itemId).show()
+    		});
+    		
+    		$("#close_" + data.itemId).click(function(){
+    			$("#shade_" + data.itemId).hide();
+    			$("#body_" + data.itemId).hide();
+    			$("#close_" + data.itemId).hide();
+    			$("#img_" + data.itemId).attr("src",srcPath);
+    		});
         }
-
-        var $ul = $("#fancybox-main").children("ul");
-        $ul.html(imgHtmls);
-        var $li = $($ul.children("li")[index]);
-        $li.children("a").click();
     }
 };
 var MsgSet = {};
