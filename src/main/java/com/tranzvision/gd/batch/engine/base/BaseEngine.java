@@ -102,18 +102,18 @@ public class BaseEngine extends BaseJob implements Runnable
 		canStartThread = false;
 		
 		//开始事务
-		TransactionStatus status = getTransaction();
+		//TransactionStatus status = getTransaction();
 		
 		//执行Job进程的主要业务逻辑
 		try
 		{
 			OnExecute();
 			
-			commit(status);
+			//commit(status);
 		}
 		catch(Exception e)
 		{
-			rollback(status);
+			//rollback(status);
 			
 			//将运行状态由“RUNNING”更新为“ERROR”
 			updateStatus("ERROR");
