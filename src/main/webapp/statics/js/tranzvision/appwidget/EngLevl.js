@@ -1151,34 +1151,28 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		//手机版切换
 		if(SurveyBuild.accessType == "M"){
 
-			//日期
-			if(len == 2){
-
-				var calendar = new LCalendar();
-				calendar.init({
-					'trigger': '#' + data.itemId +children[1].EngLevelDate.itemId, //标签id
-					'type': "date", //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
-					'minDate': "1960-01-01", //最小日期
-					'maxDate':"2030-12-31"
-				});
-			}
+            var calendar = new LCalendar();
 
 			//存在多个英语水平时进行循环
 			for(var j=0;j<len;j++){
 
-				var child=children[j];
-				
+
+			    //防止日期出现多层遮罩,但是在保存之后只有最后一个可以生效，是否有首次加载状态进行判断
+                // if(j == len - 1){
+
+                    calendar.init({
+                        'trigger': '#' + data.itemId + children[j].EngLevelDate.itemId, //标签id
+                        'type': "date", //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+                        'minDate': "1960-01-01", //最小日期
+                        'maxDate':"2030-12-31"
+                    });
+                // }
+
+                var child=children[j];
 				//隐藏图片显示
 				$("#shade_"+ child.EngLevelUp.itemId).hide();
 				$("#body_"+ child.EngLevelUp.itemId).hide();
 				$("#close_"+ child.EngLevelUp.itemId).hide();
-				var calendar = new LCalendar();
-				calendar.init({
-					'trigger': '#' + data.itemId + child.EngLevelDate.itemId, //标签id
-					'type': "date", //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
-					'minDate': "1960-01-01", //最小日期
-					'maxDate':"2030-12-31"
-				});
 
 				type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
 				type_select.each(function(index){
@@ -1218,6 +1212,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 									}else{
 										upDiv.show();
 									}
+
 									//改变date,成绩标签
 									if(i=="ENG_LEV_T1"||i=="ENG_LEV_T2"||i=="ENG_LEV_T3"||i=="ENG_LEV_T4"||i=="ENG_LEV_T13"||i=="ENG_LEV_T5"||i=="ENG_LEV_T6"||i=="ENG_LEV_T7"||i=="ENG_LEV_T8"){
 
@@ -1229,18 +1224,18 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 										if(i=="ENG_LEV_T5"||i=="ENG_LEV_T6"||i=="ENG_LEV_T7"||i=="ENG_LEV_T8"){
 
-											timeDiv.prev("p").html("考试日期<span>*</span>");
-											gradeDiv.prev("p").html("总分(成绩)<span>*</span>");
+											timeDiv.siblings("p").html("考试日期<span>*</span>");
+											gradeDiv.siblings("p").html("总分(成绩)<span>*</span>");
 
 										}else{
-											timeDiv.prev("p").html("Test date<span>*</span>");
+											timeDiv.siblings("p").html("Test date<span>*</span>");
 
 											if(i=="ENG_LEV_T4"){//雅思
-												gradeDiv.prev("p").html("Overall Band Score<span>*</span>");
+												gradeDiv.siblings("p").html("Overall Band Score<span>*</span>");
 											}else{
 
 												//GRE、GMAT、TOEFL、TOEIC（990）
-												gradeDiv.prev("p").html("Total(Score)<span>*</span>");
+												gradeDiv.siblings("p").html("Total(Score)<span>*</span>");
 											}
 										}
 
@@ -1263,7 +1258,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 										optList += ('<option  value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
 										optList += '</select>';
 
-										gradeDiv.prev("p").html("总分(成绩)<span>*</span>");
+										gradeDiv.siblings("p").html("总分(成绩)<span>*</span>");
 										timeDiv.parent(".item").hide();
 										gradeDiv.parent(".item").show();
 										gradeDiv.html(optList);
@@ -1276,7 +1271,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 										optList2 += ('<option  value="' + MsgSet["LEV_C"] + '">'+MsgSet["LEV_C"] + '</option>');
 										optList2 += '</select>';
 
-										gradeDiv.prev("p").html("总分(成绩)<span>*</span>");
+										gradeDiv.siblings("p").html("总分(成绩)<span>*</span>");
 										timeDiv.parent(".item").hide();
 										gradeDiv.parent(".item").show();
 										gradeDiv.html(optList2);
@@ -1289,35 +1284,6 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 									}
 
 								}
-								
-								//日期.成绩非空验证:
-								var $inputBox1 = $("#" + data.itemId +child.EngLevelDate.itemId);
-								var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
-								
-								$inputBox1.formValidator({tipID:(data.itemId +child.EngLevelGrade.itemId + 'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-								$inputBox1.functionValidator({
-									fun:function(val,el){
-
-											if (val=="") {
-												return MsgSet["REQUIRE"];
-												
-											} else {
-												return 	true;
-											}
-									}	
-								});
-								$inputBox2.formValidator({tipID:(data.itemId +child.EngLevelGrade.itemId + 'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-								$inputBox2.functionValidator({
-									fun:function(val,el){
-
-											if (val=="") {
-												return MsgSet["REQUIRE"];
-												
-											} else {
-												return 	true;
-											}
-									}	
-								});
 							}
 						}else{
 
@@ -1341,7 +1307,14 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 					})
 				})
-				
+
+                //日期.成绩非空验证:
+                if(data.isRequire == "Y"){
+                    var $inputBox1 = $("#" + data.itemId +child.EngLevelDate.itemId);
+                    var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
+                    data.checkInputNotNull($inputBox1);
+                    data.checkInputNotNull($inputBox2);
+                }
 			}
 
 		}else{
