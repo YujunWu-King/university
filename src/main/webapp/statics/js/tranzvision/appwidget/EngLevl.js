@@ -870,15 +870,18 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			htmlContent += OPT_ENG;
 			htmlContent += '</select>';
 			htmlContent += '</div>';
+			
 			//---------------------不同英语水平切换div
 			if(EXAM_TYPE_DEF == "GRE" || EXAM_TYPE_DEF == "GMAT" || EXAM_TYPE_DEF == "TOEFL" || EXAM_TYPE_DEF == "TOEIC（990）"){//GRE、GMAT、TOEFL、TOEIC（990）
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelDate.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input  type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="true" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
 				htmlContent += '</div>';
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelGrade.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" class="text1" value="'  + child.EngLevelGrade.value + '" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
 				htmlContent += '</div>';
 
@@ -886,10 +889,12 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelDate.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
 				htmlContent += '</div>';
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_ISCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelGrade.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" value="'  + child.EngLevelGrade.value + '" class="text1" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
 				htmlContent += '</div>';
 
@@ -897,10 +902,12 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ "考试日期" +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelDate.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
 				htmlContent += '</div>';
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelGrade.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" value="'  + child.EngLevelGrade.value + '" class="text1" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
 				htmlContent += '</div>';
 
@@ -918,11 +925,13 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ "考试日期" +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelDate.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '" /></div>';
 				htmlContent += '</div>';
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelGrade.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'SELECT">';
 				htmlContent += '<select class="select1" id="' + data.itemId+child.EngLevelGrade.itemId + '">';
 				htmlContent += optList;
@@ -944,6 +953,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelGrade.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV">';
 				htmlContent += '<select class="select1" id="' + data.itemId+child.EngLevelGrade.itemId + '">';
 				htmlContent += optList;
@@ -973,6 +983,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelGrade.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV">';
 				htmlContent += '<select class="select1" id="' + data.itemId+child.EngLevelGrade.itemId + '">';
 				htmlContent += optList;
@@ -982,10 +993,12 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item" style="display: none">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelDate.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input  type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
 				htmlContent += '</div>';
 				htmlContent += '<div class="item" style="display: none">';
 				htmlContent += '<p>'+ MsgSet["EXAM_TSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelGrade.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" id="'+data.itemId+'_GRADE_DIV"><input type="text" value="'  + child.EngLevelGrade.value + '" class="text1" id="' + data.itemId+child.EngLevelGrade.itemId + '"/></div>';
 				htmlContent += '</div>';
 			}
@@ -1182,7 +1195,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 								if($(this).val()==EXAM_TYPE_MAP[i]){
 
 									var indexp = $(this).closest(".next_record").index()
-									child=data.children[indexp];
+									child = data.children[indexp];
 									child.EngLevelDate.value="";
 									child.EngLevelGrade.value="";
 
@@ -1276,6 +1289,35 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 									}
 
 								}
+								
+								//日期.成绩非空验证:
+								var $inputBox1 = $("#" + data.itemId +child.EngLevelDate.itemId);
+								var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
+								
+								$inputBox1.formValidator({tipID:(data.itemId +child.EngLevelGrade.itemId + 'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+								$inputBox1.functionValidator({
+									fun:function(val,el){
+
+											if (val=="") {
+												return MsgSet["REQUIRE"];
+												
+											} else {
+												return 	true;
+											}
+									}	
+								});
+								$inputBox2.formValidator({tipID:(data.itemId +child.EngLevelGrade.itemId + 'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+								$inputBox2.functionValidator({
+									fun:function(val,el){
+
+											if (val=="") {
+												return MsgSet["REQUIRE"];
+												
+											} else {
+												return 	true;
+											}
+									}	
+								});
 							}
 						}else{
 
@@ -1299,10 +1341,8 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 					})
 				})
+				
 			}
-
-			// var dateId = $("#" + data.itemId +child.EngLevelDate.itemId);
-			// data.bindTimePickerM(dateId);
 
 		}else{
 

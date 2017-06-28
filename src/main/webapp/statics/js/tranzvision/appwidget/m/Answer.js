@@ -956,6 +956,10 @@ var SurveyBuild = {
 
         }
 
+        /*新增一行动态效果*/
+        var $newRow = $(btnEl).parents(".clear").prev(".next_record");
+        $("html,body").animate({scrollTop: $newRow.offset().top}, 1000);
+
         //行数等于最大行数时，隐藏“Add One +”按钮
         if (_children.length >= maxLines) {
             $(btnEl).hide();
@@ -1026,22 +1030,25 @@ var SurveyBuild = {
         //}
     },
 	deleteTjx: function(el) {
-        //if (confirm("是否删除该条信息？")) {
-		
-        var index = $(el).closest(".main_inner_content_para").index();
+
+        var index = $(el).closest(".next_record").index();
         var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
         if (index > 0) {
-            $(el).closest(".main_inner_content_para").animate({height: 'hide',opacity: 'hide'},'slow',function() {
-                    $(el).closest(".main_inner_content_para").remove();
+
+            $(el).closest(".next_record").animate({height: 'hide',opacity: 'hide'},'slow',function() {
+                $(el).closest(".next_record").remove();
             });
-            $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".main_inner_content_para").eq(index - 1).offset().top},1000);
-			//console.log($(el).closest(".dhcontainer"));
-			//console.log($(el).closest(".dhcontainer").find(".main_inner_content_info_add"));
-            $(el).closest(".dhcontainer").find(".input-addbtn").show();
-			this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
+            $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".next_record").eq(index - 1).offset().top},1000);
+
+            //显示添加下一条(最大个数下)
+
+            $(el).closest(".next_record").siblings(".clear").find(".add_next").show();
+            console.log($(el).closest(".next_record").siblings(".clear").find(".add_next").text())
+            this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
             SurveyBuild._items[instanceId]["children"].splice(index, 1);
-			
+            
         } else {
+
             var chs = SurveyBuild._items[instanceId];
             $.each(chs.children[0],function(instanceId, obj) {
                 var $el = $("#" + obj.itemId);
@@ -1056,12 +1063,11 @@ var SurveyBuild = {
                 }
             })
         }
-        //delete SurveyBuild._items[instanceId]["children"][index];
-		//console.log($(el).closest(".mainright-box").siblings(".mainright-box"));
-        //}
-		var paraObject = $(el).closest(".main_inner_content_para").siblings(".main_inner_content_para");
+        
+        //删除推荐信后将推荐信标题重新排序
+		var paraObject = $(el).closest(".next_record").siblings(".next_record");
 		$.each(paraObject,function(i,paraObj){
-			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["REFFER"] + ' ' +(i+1)+ ' :' + SurveyBuild._items[instanceId].title);
+			$(paraObj).find(".se_tit1").html(MsgSet["REFFER"] + ' ' +(i+1)+ ' :' + SurveyBuild._items[instanceId].title);
 		})
 		
 		
@@ -1080,7 +1086,7 @@ var SurveyBuild = {
 
             //显示添加下一条(最大个数下)
 
-            $(el).closest(".next_record").next(".clear").find(".add_next").show();
+            $(el).closest(".next_record").siblings(".clear").find(".add_next").show();
             this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
             SurveyBuild._items[instanceId]["children"].splice(index, 1);
 
@@ -1100,10 +1106,11 @@ var SurveyBuild = {
             })
         }
 
-//		var paraObject = $(el).closest(".main_inner_content_para").siblings(".main_inner_content_para");
-//		$.each(paraObject,function(i,paraObj){
-//			$(paraObj).find(".mainright-title").html("<span class='title-line'></span>" + MsgSet["ENG_LEV"] + ' ' +(i+1));
-//		})
+        //删除英语水平后将英语水平标题重新排序
+		var paraObject = $(el).closest(".next_record").siblings(".next_record");
+		$.each(paraObject,function(i,paraObj){
+			$(paraObj).find(".se_tit1").html(MsgSet["ENG_LEV"] + ' ' +(i+1));
+		})
 
 
     },
