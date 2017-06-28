@@ -379,17 +379,16 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 
 				//非只读模式、添加下一条
-                if(SurveyBuild._readonly != true){
-                	
+                if(!SurveyBuild._readonly){
+
                 	if(len<data.maxLines){
-                		
-                		c += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')">' + MsgSet["ADD_ONE"] + '</div>';
+
+                		c += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')">' + MsgSet["ADD_ONE"] + '</div></div>';
                 	}else{
-                		
-                		c += '<div class="clear" style="display: none"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div>';
+
+                		c += '<div class="clear" style="display: none"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div></div>';
                 	}
-                	
-                	c += '</div>';
+
                 }
 
 			}else{
@@ -2584,116 +2583,69 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         }
 		
 		//上传附件
-		if ((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S"){
+		 if ((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S"){
+        
+		 	works += '<div class="item" id="Tjxfj_show_'+i+'">';
+		 	if(SurveyBuild._readonly != true){
 		
-			works += '<div class="item" id="Tjxfj_show_'+i+'">';
-			if(SurveyBuild._readonly != true){
-				
-				works += '<p>'+ child[i].recommend_9["itemName"] + '</p>';
-				works += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
-				works += '<div class="handle">';
-				works += '<div class="ncsc-upload-btn">';
-				works += '<a href="#" class="ncsc-upload-btn-a">';
-				works += '<span class="ncsc-upload-btn-span">';
-				works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')"  ></span>';
-				works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
-				works += '</a>';
-				works += '</div>';
-				works += '</div>';
-				works += '</div>';
-			}else{
-				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
-				works += '	<div class="input-list-text left">';
-			}
-
-			works += '</div>';
-
-			/*附件显示 开始*/
-			if(SurveyBuild._readonly != true){
-				
-				works += ' <div class="upload_list" id="'+data.itemId+'_AttList">';
-				
-			}else{
-				
-				works += '<div id="'+data.itemId+i+'_AttList">';
-			}
-			if (child[i].recommend_9["viewFileName"]!="")
-			{
-				if(SurveyBuild._readonly!=true){
-					
-					works += '<div class="upload_list">';
-					works += '<li class="fileLi"><span>';
-					works += '<a onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a></span>';
-					works += '<i onclick="onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')" style="background:url(/statics/images/appeditor/m/de.png) no-repeat center center"></i></li>';
-					works += '</div>';
-				 
-				}else{
-					works += '<div class="input-list-uploadcon-list">';
-					works += '	<div class="input-list-uploadcon-listl left">';
-					works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
-					works += '</div>';
-					works += '</div>';
-				}
-			}
-			works += '</div>';
-			
-			/*附件显示 结束*/
-			works += '	</div>';
-			works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
-			works += '	<div class="clear"></div>';
-			works += '</div>';
-		}else{
-			//代码不在网页上显示出来
-			works += '<div class="input-list-blank" style="display:none" id="Tjxfj_show_'+i+'">';
-			if(SurveyBuild._readonly!=true){
-				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
-				works += '	<div class="input-list-texttemplate left">';
-				works += '		<div class="filebtn">';
-				works += '			<div class="template-btn"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png" />&nbsp;&nbsp;' + MsgSet["UPLOAD_BTN_MSG"] + '</div>';
-				works += '			<input id="'+data.itemId+child[i].recommend_9["itemId"]+'File" class="filebtn-orgtext" type="file" name="'+data.itemId+child[i].recommend_9["itemId"]+'File" style="width:125px;" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')>';
-				works += '		</div>';
-			}else{
-				works += '	<div class="input-list-info left">'+child[i].recommend_9["itemName"]+'：</div>';
-				works += '	<div class="input-list-text left">';
-			}
-			works += '<div class="input-list-suffix left">';
-			works += '</div>';
-
-			/*附件显示 开始*/
-			if(SurveyBuild._readonly!=true){
-				works += '		<div id="'+data.itemId+i+'_AttList" class="input-list-upload-con">';
-			}else{
-				works += '		<div id="'+data.itemId+i+'_AttList">';
-			}
-			if (child[i].recommend_9["viewFileName"]!="")
-			{
-				if(SurveyBuild._readonly!=true){
-
-					works += '<div class="input-list-uploadcon-list">';
-					works += '	<div class="input-list-uploadcon-listl left">';
-					works += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
-					works += '	</div>';
-					works += '	<div class="input-list-uploadcon-listr left" style="display: block;line-height:46px;" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-					works += '</div>';
-				}else{
-					works += '<div class="input-list-uploadcon-list">';
-					works += '	<div class="input-list-uploadcon-listl left">';
-					works += '			<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
-					works += '	</div>';
-					works += '</div>';
-				}
-			}
-			works += '	<div class="clear"></div>';
-			works += '		</div>';
-			
-			/*附件显示 结束*/
-			works += '	</div>';
-			works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
-			works += '	<div class="clear"></div>';
-			works += '</div>';
-		}
+		 		works += '<p>'+ child[i].recommend_9["itemName"] + '<span>*</span></p>';
+		 		works += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
+		 		works += '<div class="handle">';
+		 		works += '<div class="ncsc-upload-btn">';
+		 		works += '<a href="#" class="ncsc-upload-btn-a">';
+		 		works += '<span class="ncsc-upload-btn-span">';
+		 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')"  ></span>';
+		 		works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
+		 		works += '</a>';
+		 		works += '</div>';
+		 		works += '</div>';
+		 		works += '</div>';
+		 	}else{
+		 		
+		 	}
+        
+		 	works += '</div>';
+        
+		 	/*附件显示 开始*/
+//		 	if(SurveyBuild._readonly != true){
+//		
+//		 		works += ' <div class="upload_list" id="'+data.itemId+'_AttList">';
+//		
+//		 	}else{
+//		
+//		 		works += '<div id="'+data.itemId+i+'_AttList">';
+//		 	}
+//		 	if (child[i].recommend_9["viewFileName"]!="")
+//		 	{
+//		 		if(SurveyBuild._readonly!=true){
+//		
+//		 			works += '<div class="upload_list">';
+//		 			works += '<li class="fileLi"><span>';
+//		 			works += '<a onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a></span>';
+//		 			works += '<i onclick="onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')" style="background:url(/statics/images/appeditor/m/de.png) no-repeat center center"></i></li>';
+//		 			works += '</div>';
+//		
+//		 		}else{
+//		 			works += '<div class="input-list-uploadcon-list">';
+//		 			works += '	<div class="input-list-uploadcon-listl left">';
+//		 			works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+//		 			works += '</div>';
+//		 			works += '</div>';
+//		 		}
+//		 	}
+//		 	works += '</div>';
+//		
+//		 	/*附件显示 结束*/
+//		 	works += '	</div>';
+//		 	works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
+//		 	works += '	<div class="clear"></div>';
+//		 	works += '</div>';
+//		 	
+		 }else{
+        
+		 }
 		//上传附件-结束
-		
+
 		//发送邮件 -开始
 		if ((data.itemLx=="L"&&child[i].recommend_8["value"]!="U")||data.itemLx=="F"){
 
