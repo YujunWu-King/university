@@ -114,6 +114,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			String strViewJdLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "7","查看进度", "查看进度");
 			
 			String strAppHisLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "8","查看历史报名", "查看历史报名");
+			String strViewBmbDesc = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "ckbm","查看报名表", "查看报名表");
 			//title;
 			String title = "清华MBA招生";
 			//css和js
@@ -341,7 +342,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 					
 					
 				}
-				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className + msPcName,stepHtml,strViewJdLabel,viewJdUrl,strAppHisLabel,viewAppHisUrl,applyFromUrl,"报名表");
+				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className + msPcName,stepHtml,strViewBmbDesc,applyFromUrl,strAppHisLabel,viewAppHisUrl,viewJdUrl);
 			}else{
 				//有开通的班级；
 				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_NO_ZSJD_HTML");

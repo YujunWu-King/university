@@ -1884,9 +1884,19 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
+				//灰色的发送邮件
+				works += '<div id="sendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Send"]+'</div>';
+				works += '</div>';
+				
 				//重新发送  ，如果没有发送，那么显示
 				works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
 				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				
+				//灰色的重新发送邮件
+				works += '<div id="reSendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Resend"]+'</div>';
 				works += '</div>';
 				
 				//发送给自己
@@ -1894,9 +1904,19 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div id="sendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
+				//灰色的发送给自己
+				works += '<div id="sendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["SendToMe"]+'</div>';
+				works += '</div>';
+				
 				//重新发送给自己
 				works += '<div id="reSendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
 				works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				
+				//灰色的重新发送给自己
+				works += '<div id="reSendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["ResendToMe"]+'</div>';
 				works += '</div>';
 				
 				/*更换推荐人一直显示*/
@@ -1907,6 +1927,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 				
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				
+				works += '<div id="changeRecH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["RepRecom"]+'</div>';
 				works += '</div>';
 			
 				works += '<div class="input-list-suffix left"></div>';
@@ -1956,19 +1980,36 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div id="sendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
 				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
+				//灰色的发送邮件
+				works += '<div id="sendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Send"]+'</div>';
+				works += '</div>';
 				//重新发送
 				works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
 				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				//灰色的重新发送邮件
+				works += '<div id="reSendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Resend"]+'</div>';
 				works += '</div>';
 				
 				//发送给自己
 				works += '<div id="sendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
 				works += '<div id="sendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
+				//灰色的发送给自己
+				works += '<div id="sendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["SendToMe"]+'</div>';
+				works += '</div>';
 				
 				//重新发送给自己
 				works += '<div id="reSendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
 				works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				
+				//灰色的重新发送给自己
+				works += '<div id="reSendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["ResendToMe"]+'</div>';
 				works += '</div>';
 				
 				//更换推荐人
@@ -1982,6 +2023,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				
 				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z") ?"display:none":"")+'">';
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				
+				//灰色的更换推荐人
+				works += '<div id="changeRecH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["RepRecom"]+'</div>';
 				works += '</div>';
 			
 				works += '</div>';
@@ -2936,6 +2982,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						} else {
 							sendFlag= "N";  //发送给自己
 						}
+						$("#sendEmailH_"+(Number(mm)-1)).css("display","block");
+						$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
+						$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","block");
+						$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
 
 						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 						if(_tz_app_ins_id == "0"){
@@ -2952,6 +3002,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 										$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
 										$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
 										$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										
+										$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
 										
 										$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 										alert(MsgSet["SEND_SC"]);
@@ -2994,6 +3047,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 										$("#tjx_delete_"+(Number(mm)-1)).hide();
 										$("#app_save").click();
 									}else {
+										$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
 										alert(result.comContent);
 									}
 								}
@@ -3019,6 +3076,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			
 				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
 				var m=Number(lineno)+1;
+				var mm = this.id.split("_")[1];
+				var mm=Number(mm)+1;
 				var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
 				var rec_gname = $("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).val();
 				var rec_name = $("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).val();
@@ -3092,6 +3151,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				} else {
 					sendFlag= "N";  //发送给自己
 				}
+				$("#reSendEmailH_"+(Number(mm)-1)).css("display","block");
+				$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
+				$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","block");
+				$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+				$("#changeRecH_"+(Number(mm)-1)).css("display","block");
+				$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 
 				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 				
@@ -3101,9 +3166,20 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					dataType: "json",
 					success: function(result){
 						if (result.comContent=="SUCCESS"){
+							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+							$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+							$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 							alert(MsgSet["SEND_SC"]);
 							$("#app_save").click();
 						}else {
+							$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+							$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+							$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 							alert(result.comContent);
 						}
 					}
@@ -3378,6 +3454,13 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
 					var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"CHANGE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'"}}';
 					var _email_tx = $("#yincang_tx").val();
+					
+					$("#reSendEmailH_"+(Number(mm)-1)).css("display","block");
+					$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
+					$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","block");
+					$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+					$("#changeRecH_"+(Number(mm)-1)).css("display","block");
+					$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 
 					$.ajax({
 						type: "post",
@@ -3387,9 +3470,11 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 							if (result.comContent=="SUCCESS"){
 								$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
 								$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
+								$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
 								
 								$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
 								$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+								$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
 								
 								$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 								$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
@@ -3453,6 +3538,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 								$("#tjx_delete_"+(Number(mm)-1)).show();
 								$("#app_save").click();
 							}else {
+								$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+								$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+								$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+								$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+								$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+								$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 								alert(result.comContent);
 							}
 						}
