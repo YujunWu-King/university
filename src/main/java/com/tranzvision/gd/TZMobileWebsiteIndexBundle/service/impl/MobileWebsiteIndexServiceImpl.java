@@ -241,6 +241,8 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 						"select count(1) from PS_TZ_CLS_BMLC_T where TZ_CLASS_ID=?", new Object[] { classId },
 						"Integer");
 				String stepHtml = "";
+				//报名表Url;
+				String applyFromUrl = ctxPath + "/dispatcher?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + siteId;
 				
 				if(bmlcTotalNum > 0){
 
@@ -339,7 +341,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 					
 					
 				}
-				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className + msPcName,stepHtml,strViewJdLabel,viewJdUrl,strAppHisLabel,viewAppHisUrl);
+				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className + msPcName,stepHtml,strViewJdLabel,viewJdUrl,strAppHisLabel,viewAppHisUrl,applyFromUrl,"报名表");
 			}else{
 				//有开通的班级；
 				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_NO_ZSJD_HTML");
