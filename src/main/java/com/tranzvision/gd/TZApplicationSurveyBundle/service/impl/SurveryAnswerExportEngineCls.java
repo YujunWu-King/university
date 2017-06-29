@@ -119,13 +119,15 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 								insF.mkdirs();
 							}
 							
+							Map<String,Integer> userFileCountMap = new HashMap<String,Integer>();
+							
 							//查询问卷实例下所有附件并复制到打包目录下
 							String attSql = "SELECT TZ_XXX_BH,TZ_INDEX, ATTACHSYSFILENAME, ATTACHUSERFILE,TZ_ATT_P_URL FROM PS_TZ_DC_WJATT_T A,PS_TZ_DC_WJATTCH_T B where TZ_APP_INS_ID=? and A.ATTACHSYSFILENAME=B.TZ_ATTACHSYSFILENA";
 							List<Map<String,Object>> attaList = sqlQuery.queryForList(attSql, new Object[]{ appInsId });
 							if(attaList != null && attaList.size() > 0){
 								for(Map<String,Object> attaMap : attaList){
-									String itemId = attaMap.get("TZ_XXX_BH").toString();
-									String index = attaMap.get("TZ_INDEX").toString();
+									//String itemId = attaMap.get("TZ_XXX_BH").toString();
+									//String index = attaMap.get("TZ_INDEX").toString();
 									String attaSystemFileName = attaMap.get("ATTACHSYSFILENAME").toString();
 									String attaUserFileName = attaMap.get("ATTACHUSERFILE").toString();
 									String path = attaMap.get("TZ_ATT_P_URL").toString();
@@ -146,8 +148,11 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 										}
 									}
 									
+									//重新命名文件，防止文件名冲突，如果有相同文件名在文件名后加(1)、(2)、(3)....
+									attaUserFileName = this.renameFile(userFileCountMap, attaUserFileName);
+									
 									//防止文件名相同，文件名前加上信息项编号
-									attaUserFileName = itemId + "_" + index + "_" + attaUserFileName;
+									//attaUserFileName = itemId + "_" + index + "_" + attaUserFileName;
 									//复制文件至打包目录
 									zipUtil.fileChannelCopy(path, InsPath + (File.separator) + attaUserFileName);
 								}
@@ -333,5 +338,34 @@ public class SurveryAnswerExportEngineCls extends BaseEngine{
 			e.printStackTrace();
 			this.logError("系统错误："+e.getMessage());
 		}
+	}
+	
+	
+	/**
+	 * 重新命名文件名，防止同名文件冲突
+	 * @param fileMap
+	 * @param fileName
+	 * @return
+	 */
+	@SuppressWarnings("null")
+	private String renameFile(Map<String,Integer> fileMap,String fileName){
+		if(fileMap != null){
+			if(fileMap.get(fileName) == null){
+				fileMap.put(fileName, 1);
+			}else{
+				int index = fileMap.get(fileName);
+				fileMap.replace(fileName, index+1);
+				
+				int lastIndex = fileName.lastIndexOf(".");
+				if(lastIndex > 0){
+					fileName = fileName.substring(0,lastIndex) 
+							+ "("+ index +")" 
+							+ fileName.substring(lastIndex,fileName.length());
+				}
+			}
+		}else{
+			fileMap.put(fileName, 1);
+		}
+		return fileName;
 	}
 }
