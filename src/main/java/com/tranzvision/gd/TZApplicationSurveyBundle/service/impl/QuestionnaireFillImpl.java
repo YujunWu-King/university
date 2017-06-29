@@ -575,6 +575,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					language, "上一页", "Pre");
 			String strNext = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_NEXT",
 					language, "下一页", "Next");
+			String strSurveySubmit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_SUBMIT", language, "问卷已提交！", "The questionnaire has been submitted! ");
 
 			try {
 				if (isMobile) {
@@ -723,12 +724,12 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_M_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
-							submit, language, strPre, strNext, strSubState, uniqueNum, path,readonly);
+							submit, language, strPre, strNext, strSubState, uniqueNum, path,readonly,strSurveySubmit);
 				} else {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
-							submit, language, strPre, strNext, strSubState, uniqueNum, path,readonly);
+							submit, language, strPre, strNext, strSubState, uniqueNum, path,readonly,strSurveySubmit);
 				}
 
 				strReturn = strReturn.replaceAll("\\~", "\\$");

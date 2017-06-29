@@ -154,11 +154,12 @@
 					<a href="#" onclick="javascript:nextPage()"><div class="pagebtn2" style="display:none;">%bind(:18) ></div></a>
 					<div class="clear"></div>
 				</div>
-				<div id="fancybox-main" style="display: none"><ul></ul></div>
+				<p class="submitdesc" style="display:none;" id="desc_submit">%bind(:23)</p>
 				<div class="submit" style="display:none;" id="app_submit">
 					%bind(:15)&nbsp;&nbsp;
 					<span class="sendbtn"><img src="%bind(:21)/statics/js/onlineSurvey/images/m/gou.png" /></span>
 				</div>
+				<div id="fancybox-main" style="display: none"><ul></ul></div>
 			</div>
 			<!-- 卷尾 -->
 			<div class="fotter">%bind(:2)</div>
@@ -452,6 +453,7 @@
 			//提交按钮是否每页都显示
 			//if(commitRule == "0"){
 				SurveyBuild.curPageNo == SurveyBuild.maxPage ? $(".submit").show():$(".submit").hide();
+				SurveyBuild.curPageNo == SurveyBuild.maxPage && SurveyBuild.subState == "S" ? $(".submitdesc").show():$(".submitdesc").hide();
 			//}else{
 			//	$(".submit").show();
 			//}
