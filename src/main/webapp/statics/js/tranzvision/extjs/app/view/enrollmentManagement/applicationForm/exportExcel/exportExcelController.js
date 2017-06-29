@@ -10,11 +10,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.exportExcel.ex
             var excelTpl = form.getValues()['excelTpl'];
             var excelName = form.getValues()['excelName']
             if(win.selList&&win.selList.length>0){
-                var applicantsList = new Array();
-                for(var i=0;i<win.selList.length;i++){
-                   applicantsList.push(win.selList[i].get('appInsID'));
-                }
-                this.doExportExcelAction(win,applicantsList,appFormModalID,excelTpl,excelName);
+                this.doExportExcelAction(win,win.selList,appFormModalID,excelTpl,excelName);
             }else{
                 Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.noApplicantsSelected","没有选中任何考生，无法导出Excel"));
             }

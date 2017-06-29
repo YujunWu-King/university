@@ -89,6 +89,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                 var condition = me.condition;
 
                 var fieldValue = "";
+				
                 for(var defaultFieldName in condition) {
                     if(fieldName ==defaultFieldName ){
                         fieldValue = condition[defaultFieldName];
@@ -161,7 +162,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                             format: 'H:i',
                             hideEmptyLabel: true,
                             hidden: fldHidden,
-                            value: fieldValue,
+                            //value: fieldValue,
                             readOnly: fldReadOnly,
                             name: fieldName+'-value',
                             listeners: {
@@ -248,7 +249,6 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                             hidden: fldHidden,
                             listeners:{
                                 beforequery: function (query) {
-                                	  
                                     var downConditionStr = "";
                                     var combo = query.combo;
                                     var store = combo.store;
@@ -258,35 +258,32 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 
                                     try{
                                         var TZ_ZHZJH_ID = store.condition.TZ_ZHZJH_ID;
-                                        if(TZ_ZHZJH_ID==undefined){
-                                        
-                                        	var fldName = comboName.replace("-value", "");
-                                        var downTableDefaultFld = formData[fldName].promptTableDefaultFld;
+										if(TZ_ZHZJH_ID == undefined){
+											var fldName = comboName.replace("-value", "");
+											var downTableDefaultFld = formData[fldName].promptTableDefaultFld;
+											
+											Ext.Array.forEach( downTableDefaultFld, function(defFld){
+												
+												var fldVal = form.findField(defFld["TZ_FILTER_GL_FLD"]+"-value").getValue();
+												if(downConditionStr ==""){
+													downConditionStr ='"'+defFld["TZ_FILTER_GL_FLD"]+'":{"value": "'+fldVal+'", "operator":"01","type": "01"	}';
+												}else{
+													downConditionStr =downConditionStr+',"'+defFld["TZ_FILTER_GL_FLD"]+'":{"value": "'+fldVal+'", "operator":"01","type": "01"	}';
+												}
+											});
 
-                                        Ext.Array.forEach( downTableDefaultFld, function(defFld){
-                                            var fldVal = form.findField(defFld["TZ_FILTER_GL_FLD"]+"-value").getValue();
-                                            if(downConditionStr ==""){
-                                                downConditionStr ='"'+defFld["TZ_FILTER_GL_FLD"]+'":{"value": "'+fldVal+'", "operator":"01","type": "01"	}';
-                                            }else{
-                                                downConditionStr =downConditionStr+',"'+defFld["TZ_FILTER_GL_FLD"]+'":{"value": "'+fldVal+'", "operator":"01","type": "01"	}';
-                                            }
-                                        });
+											if(downConditionStr ==""){
+												downConditionStr="{}";
+											}else{
+												delete combo.lastQuery;
+												downConditionStr = "{"+downConditionStr+"}";
+											}
 
-                                        if(downConditionStr ==""){
-                                            downConditionStr="{}";
-                                        }else{
-                                            delete combo.lastQuery;
-                                            downConditionStr = "{"+downConditionStr+"}";
-                                        }
-                                        var tzStoreParams = '{"OperateType":"COMBOX","recname":"'+store.recname+'","condition":'+downConditionStr+',"result":"'+store.result+'"}';
-                                        store.tzStoreParams = tzStoreParams;
-                                        	
-                                      }
-                                        
-                                        
-                                    }catch(e){
-                                                                             
-                                    }
+											var tzStoreParams = '{"OperateType":"COMBOX","recname":"'+store.recname+'","condition":'+downConditionStr+',"result":"'+store.result+'"}';
+											store.tzStoreParams = tzStoreParams;
+										}
+									}catch(e){
+									}
                                 },
                                 specialkey: function (textfield, e) {
                                     if (e.getKey() == Ext.EventObject.ENTER) {
@@ -299,7 +296,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                                     var opreteFieldName = comboName.replace("-value", "-operator");
                                     var opreteFieldValue = form.findField(opreteFieldName).getValue();
                                     
-                                    if(opreteFieldValue == '10'){
+                                    if(opreteFieldValue == '10'||opreteFieldValue == '13'){
                                 	  	//combo.multiSelect = true;
                                 	  }else{
                                 	  	//combo.multiSelect = false;
@@ -349,6 +346,8 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                         case '11':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00098");
                             break;
                         case '12':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00099");
+                            break;
+                        case '13':item.transDesc = TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00102");
                             break;
                     }
                 });
@@ -405,7 +404,69 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                     },typeField]
                 }
                 conItems.push(fieldItem);
-            }
+            };
+			/*
+			var dataSetItem = {
+				xtype: 'fieldset',
+				layout: {
+					type: 'vbox',
+					align: 'stretch'
+				},
+				name:"dataSet",
+				title: "数据集查询",
+                bodyPadding: 5,
+				items:[{
+					xtype: 'checkboxfield',
+					boxLabel: '<span style="font-weight:bold;">所有听众</span>',
+					margin: '0 0 5 120',
+					hideLabel: true,
+					inputvalue:'true',
+					name: 'fldHide'
+				},{
+					xtype: 'checkboxfield',
+					boxLabel: '<span style="font-weight:bold;">学院听众</span>',
+					margin: '0 0 5 120',
+					hideLabel: true,
+					inputvalue:'true',
+					name: 'fldHide'
+				}]
+			};
+			conItems.push(dataSetItem);
+			*/
+			var dataSetItems = [];
+			var formDataSet = responseData.formDataSet;
+			if(formDataSet.length>0){
+				console.log(formDataSet);
+				for(var dataSet_i=0;dataSet_i<formDataSet.length;dataSet_i++){
+					var defaultChecked = false;
+					if(formDataSet[dataSet_i]["TZ_FLTDST_DEFAULT"] == "on"){
+						defaultChecked = true;
+					}
+					var dataSetItem = {
+						xtype: 'checkboxfield',
+						boxLabel: '<span style="font-weight:bold;">' + formDataSet[dataSet_i]["TZ_FLTDST_DESC"]+ '</span>',
+						margin: '0 0 5 120',
+						hideLabel: true,
+						inputvalue:'Y',
+						checked: defaultChecked,
+						name: formDataSet[dataSet_i]["TZ_FLTDST_ORDER"] + "-dataset"
+					}
+					dataSetItems.push(dataSetItem);
+				};
+				
+				var dataSet= {
+					xtype: 'fieldset',
+					layout: {
+						type: 'vbox',
+						align: 'stretch'
+					},
+					name:"dataSet",
+					title: '<span style="color:#66B3FF;">数据集查询</span>',
+					bodyPadding: 5,
+					items:dataSetItems
+				};
+				conItems.push(dataSet);
+			}
         });
 
         Ext.apply(this,{
@@ -495,6 +556,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
             var formParams = form.getValues();
 
             var cfgSrhId = this.cfgSrhId;
+			console.log(formParams);
 
             var tzSearchParams = '{"cfgSrhId":"'+cfgSrhId+'","condition":'+Ext.encode(formParams)+'}';
 

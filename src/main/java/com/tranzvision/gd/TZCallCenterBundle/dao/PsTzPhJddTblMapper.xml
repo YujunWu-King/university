@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZCallCenterBundle.dao.PsTzPhJddTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZCallCenterBundle.model.PsTzPhJddTbl" >
+    <id column="TZ_XH" property="tzXh" jdbcType="VARCHAR" />
+    <result column="TZ_PHONE" property="tzPhone" jdbcType="VARCHAR" />
+    <result column="TZ_DLZH_ID" property="tzDlzhId" jdbcType="VARCHAR" />
+    <result column="TZ_OPRID" property="tzOprid" jdbcType="VARCHAR" />
+    <result column="TZ_CALL_TYPE" property="tzCallType" jdbcType="VARCHAR" />
+    <result column="TZ_CALL_DTIME" property="tzCallDtime" jdbcType="TIMESTAMP" />
+    <result column="TZ_CALL_GDTIME" property="tzCallGdtime" jdbcType="TIMESTAMP" />
+    <result column="TZ_DEALWITH_ZT" property="tzDealwithZt" jdbcType="VARCHAR" />
+    <result column="TZ_DESCR" property="tzDescr" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_XH, TZ_PHONE, TZ_DLZH_ID, TZ_OPRID, TZ_CALL_TYPE, TZ_CALL_DTIME, TZ_CALL_GDTIME, 
+    TZ_DEALWITH_ZT, TZ_DESCR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_PH_JDD_TBL
+    where TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_PH_JDD_TBL
+    where TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZCallCenterBundle.model.PsTzPhJddTbl" >
+    insert into PS_TZ_PH_JDD_TBL (TZ_XH, TZ_PHONE, TZ_DLZH_ID, 
+      TZ_OPRID, TZ_CALL_TYPE, TZ_CALL_DTIME, 
+      TZ_CALL_GDTIME, TZ_DEALWITH_ZT, TZ_DESCR
+      )
+    values (#{tzXh,jdbcType=VARCHAR}, #{tzPhone,jdbcType=VARCHAR}, #{tzDlzhId,jdbcType=VARCHAR}, 
+      #{tzOprid,jdbcType=VARCHAR}, #{tzCallType,jdbcType=VARCHAR}, #{tzCallDtime,jdbcType=TIMESTAMP}, 
+      #{tzCallGdtime,jdbcType=TIMESTAMP}, #{tzDealwithZt,jdbcType=VARCHAR}, #{tzDescr,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZCallCenterBundle.model.PsTzPhJddTbl" >
+    insert into PS_TZ_PH_JDD_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzXh != null" >
+        TZ_XH,
+      </if>
+      <if test="tzPhone != null" >
+        TZ_PHONE,
+      </if>
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID,
+      </if>
+      <if test="tzOprid != null" >
+        TZ_OPRID,
+      </if>
+      <if test="tzCallType != null" >
+        TZ_CALL_TYPE,
+      </if>
+      <if test="tzCallDtime != null" >
+        TZ_CALL_DTIME,
+      </if>
+      <if test="tzCallGdtime != null" >
+        TZ_CALL_GDTIME,
+      </if>
+      <if test="tzDealwithZt != null" >
+        TZ_DEALWITH_ZT,
+      </if>
+      <if test="tzDescr != null" >
+        TZ_DESCR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzXh != null" >
+        #{tzXh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhone != null" >
+        #{tzPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId != null" >
+        #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOprid != null" >
+        #{tzOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCallType != null" >
+        #{tzCallType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCallDtime != null" >
+        #{tzCallDtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzCallGdtime != null" >
+        #{tzCallGdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzDealwithZt != null" >
+        #{tzDealwithZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr != null" >
+        #{tzDescr,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZCallCenterBundle.model.PsTzPhJddTbl" >
+    update PS_TZ_PH_JDD_TBL
+    <set >
+      <if test="tzPhone != null" >
+        TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId != null" >
+        TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOprid != null" >
+        TZ_OPRID = #{tzOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCallType != null" >
+        TZ_CALL_TYPE = #{tzCallType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCallDtime != null" >
+        TZ_CALL_DTIME = #{tzCallDtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzCallGdtime != null" >
+        TZ_CALL_GDTIME = #{tzCallGdtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzDealwithZt != null" >
+        TZ_DEALWITH_ZT = #{tzDealwithZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr != null" >
+        TZ_DESCR = #{tzDescr,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZCallCenterBundle.model.PsTzPhJddTbl" >
+    update PS_TZ_PH_JDD_TBL
+    set TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
+      TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR},
+      TZ_OPRID = #{tzOprid,jdbcType=VARCHAR},
+      TZ_CALL_TYPE = #{tzCallType,jdbcType=VARCHAR},
+      TZ_CALL_DTIME = #{tzCallDtime,jdbcType=TIMESTAMP},
+      TZ_CALL_GDTIME = #{tzCallGdtime,jdbcType=TIMESTAMP},
+      TZ_DEALWITH_ZT = #{tzDealwithZt,jdbcType=VARCHAR},
+      TZ_DESCR = #{tzDescr,jdbcType=VARCHAR}
+    where TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </update>
+</mapper>

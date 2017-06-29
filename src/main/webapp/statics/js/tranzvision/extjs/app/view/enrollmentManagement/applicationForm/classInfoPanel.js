@@ -156,6 +156,11 @@
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportExcel","导出Excel"),
                                 glyph:'xf1c3@FontAwesome',
                                 menu:[{
+                                    text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportSearchResults","导出搜索结果人员信息到Excel"),
+                                    glyph:'xf1c3@FontAwesome',
+                                    name:'exportSearch',
+                                    handler:'exportExcelOrDownload'
+                                },{
                                     text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportApplicantsInfo","导出选中人员信息到Excel"),
                                     glyph:'xf1c3@FontAwesome',
                                     name:'exportExcel',

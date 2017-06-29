@@ -864,14 +864,40 @@
     /*导出到Excel or 下载导出结果*/
     exportExcelOrDownload:function(btn){
         var btnName = btn.name;
-        var selList = btn.findParentByType("grid").getSelectionModel().getSelection();
+		var selList = [];
+		
+		//导出选中的人员信息到Excel
         if(btnName=='exportExcel'){
-            if(selList.length<1) {
+			var selection = btn.findParentByType("grid").getSelectionModel().getSelection();
+            if(selection.length<1) {
                 Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing","您没有选中任何记录"));
                 return;
-            };
+            }else{
+				Ext.each(selection,function(item,index){
+					selList.push(item.get("appInsID"));
+				})
+			};
         }
-
+		
+		//导出搜索的人员信息到Excel
+        if(btnName=='exportSearch'){
+			var store = btn.findParentByType("grid").getStore();
+            if(store.totalCount<1) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.noRecordsNeedsExport","没有需要导出的数据！"));
+                return;
+            }else{				
+				var classId = this.getView().classID;
+				var batchId = this.getView().batchID;
+				
+				var tzStoreParams = store.tzStoreParams;
+				var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"tzExportAll","comParams":{"classId":"' + classId + '","batchId":"' + batchId + '","tzStoreParams":' + Ext.JSON.encode(tzStoreParams) + ',"totalCount":"' + store.totalCount + '"}}';
+				Ext.tzLoadAsync(tzParams,function(responseData){
+					selList = responseData.result&&responseData.result.split(";");
+				});
+			};
+        }
+		
+		
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_EXP_EXCEL_STD"];
         if( pageResSet == "" || pageResSet == undefined){
@@ -888,7 +914,7 @@
 
         var win = this.lookupReference('exportExcelForm');
         if (!win) {
-            Ext.syncRequire(className);
+            Ext.syncRequire(className); 
             ViewClass = Ext.ClassManager.get(className);
             //新建类
             var modalID =btn.findParentByType('auditClassInfo').child('form').getForm().findField('modalID').getValue();
@@ -897,6 +923,7 @@
         };
         win.selList=selList;
 
+		//
         if(btnName=='downloadExcel'){
             var tabPanel = win.lookupReference("exportExcelTabPanel");
             tabPanel.setActiveTab(1);
