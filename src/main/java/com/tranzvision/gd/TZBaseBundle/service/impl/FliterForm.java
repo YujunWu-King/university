@@ -1,14 +1,19 @@
 package com.tranzvision.gd.TZBaseBundle.service.impl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -21,11 +26,16 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class FliterForm extends FrameworkImpl {
 	@Autowired
 	private SqlQuery jdbcTemplate;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 	
 	/* 获取组件注册信息 */
 	public String tzQuery(String strParams, String[] errorMsg) {
 		// 返回值;
 		String strRet = "{}";
+		String strRetDataSet = "{}";
 
 		try {
 			JacksonUtil jacksonUtil = new JacksonUtil();
@@ -76,8 +86,12 @@ public class FliterForm extends FrameworkImpl {
 			Map<String, Object> map = null;
 			try {
 				map = jdbcTemplate.queryForMap(sql, new Object[] { comId, pageId, viewName });
-				isExist = (String) map.get("Exist");
-				TZ_ADVANCE_MODEL = (String) map.get("TZ_ADVANCE_MODEL");
+				System.out.println(map);
+				if (map!=null) {
+					isExist = (String) map.get("Exist");
+					TZ_ADVANCE_MODEL = (String) map.get("TZ_ADVANCE_MODEL");
+				}
+				
 				//TZ_RESULT_MAX_NUM = (long) map.get("TZ_RESULT_MAX_NUM");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -289,20 +303,45 @@ public class FliterForm extends FrameworkImpl {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 			if (!"".equals(fldJson)) {
 				fldJson = fldJson.substring(1);
 			}
 
 			strRet = "{" + fldJson + "}";
+			/*数据集*/
+			
+			ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+			String strFltDstOrder,strFltDstFld,strFltDstSrchRec,strFltDstDesc,strFltDstDefault;
+			String cfgDataSetSql = "SELECT TZ_FLTDST_ORDER,TZ_FLTDST_FLD,TZ_FLTDST_SRCH_REC,TZ_FLTDST_DESC,TZ_FLTDST_DEFAULT from PS_TZ_FLTDST_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? AND TZ_FLTDST_STATUS = 'Y' order by TZ_FLTDST_ORDER";
+			List<Map<String, Object>> listDateSet = jdbcTemplate.queryForList(cfgDataSetSql,
+					new Object[] { comId, pageId, viewName });
+			if(listDateSet!=null && listDateSet.size()>0){
+				for (Map<String, Object> mapDataSet : listDateSet) {
+					strFltDstOrder = mapDataSet.get("TZ_FLTDST_ORDER") == null ? "" : String.valueOf(mapDataSet.get("TZ_FLTDST_ORDER"));
+					strFltDstFld = mapDataSet.get("TZ_FLTDST_FLD") == null ? "" : String.valueOf(mapDataSet.get("TZ_FLTDST_FLD"));
+					strFltDstSrchRec = mapDataSet.get("TZ_FLTDST_SRCH_REC") == null ? "" : String.valueOf(mapDataSet.get("TZ_FLTDST_SRCH_REC"));
+					strFltDstDesc = mapDataSet.get("TZ_FLTDST_DESC") == null ? "" : String.valueOf(mapDataSet.get("TZ_FLTDST_DESC"));
+					strFltDstDefault = mapDataSet.get("TZ_FLTDST_DEFAULT") == null ? "" : String.valueOf(mapDataSet.get("TZ_FLTDST_DEFAULT"));
+					Map<String, Object> mapDataRet = new HashMap<String, Object>();
+					mapDataRet.put("TZ_FLTDST_ORDER", strFltDstOrder);
+					mapDataRet.put("TZ_FLTDST_FLD", strFltDstFld);
+					mapDataRet.put("TZ_FLTDST_SRCH_REC", strFltDstSrchRec);
+					mapDataRet.put("TZ_FLTDST_DESC", strFltDstDesc);
+					mapDataRet.put("TZ_FLTDST_DEFAULT", strFltDstDefault);
+					listData.add(mapDataRet);
+				}
+				strRetDataSet =  jacksonUtil.List2json(listData);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 		}
-
-		strRet = "{\"formData\":" + strRet + "}";
+		
+		//mapRet.put("root", listData);
+		
+		strRet = "{\"formData\":" + strRet + ",\"formDataSet\":" + strRetDataSet + "}";
 		return strRet;
 	}
 
@@ -440,7 +479,8 @@ public class FliterForm extends FrameworkImpl {
 
 			String sqlWhere = "";
 			String sqlDeepQuery="";
-			
+			String sqlDataSet="";
+			boolean dataSetFlag = false; 
 			// 搜索条件;
 			if (jacksonUtil.containsKey("condition")) {
 
@@ -497,8 +537,8 @@ public class FliterForm extends FrameworkImpl {
 									fldValue = (String) conditionJson.get(fldKey);
 								}
 							} else {
-								fldValue = (String) conditionJson.get(fldKey);
-								
+//								fldValue = (String) conditionJson.get(fldKey);
+								fldValue = conditionJson.get(fldKey).toString();
 							}
 							
 							if (fldValue == null) {
@@ -545,14 +585,9 @@ public class FliterForm extends FrameworkImpl {
 							if("Y".equals(strDqFlg)){
 								//是DeepQuery字段,拼装DeepQuery查询SQL;;
 								
-								String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=? limit 1";
+								String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=?";
 								String strDeepQueryFlgType = jdbcTemplate.queryForObject(strDeepQueryFldTypeSql, new Object[] {strDqView,fieldName }, "String");
-								
-								if(!"".equals(strDeepQueryFlgType) && strDeepQueryFlgType != null){
-									strDeepQueryFlgType = strDeepQueryFlgType.toUpperCase();
-								}
-								
-								
+
 								if (intTypeString.contains(strDeepQueryFlgType)) {
 									// 数字;
 									value = fldValue;
@@ -647,6 +682,7 @@ public class FliterForm extends FrameworkImpl {
 									sqlDeepQuery = sqlDeepQuery + fieldName + " LIKE " + value;
 									break;
 								case 10:
+									//在......之内
 									fldValue = fldValue.replaceAll(" ", ",");
 									fldValue = fldValue.trim();
 									String[] inArr = fldValue.split(",");
@@ -690,7 +726,31 @@ public class FliterForm extends FrameworkImpl {
 									 ***/
 									sqlDeepQuery = sqlDeepQuery + fieldName + " IS NOT NULL";
 									break;
+								case 13:
+									// 不在......之内
+									fldValue = fldValue.replaceAll(" ", ",");
+									fldValue = fldValue.trim();
+									String[] notArr = fldValue.split(",");
 
+									int notArrLen = notArr.length;
+									if (notArrLen > 0) {
+										value = "";
+										if ("Y".equals(isChar)) {
+											for (int ii = 0; ii < notArrLen; ii++) {
+												value = value + ",'" + notArr[ii] + "'";
+											}
+
+										} else {
+											for (int ii = 0; ii < notArrLen; ii++) {
+												value = value + "," + notArr[ii];
+											}
+										}
+										value = value.substring(1);
+										value = "(" + value + ")";
+									}
+
+									sqlDeepQuery = sqlDeepQuery + fieldName + " NOT IN " + value;
+									break;
 								default:
 									sqlDeepQuery = sqlDeepQuery + fieldName + "=" + value;
 									break;
@@ -799,6 +859,7 @@ public class FliterForm extends FrameworkImpl {
 										sqlWhere = sqlWhere + fieldName + " LIKE " + value;
 										break;
 									case 10:
+										// 在......之内
 										fldValue = fldValue.replaceAll(" ", ",");
 										fldValue = fldValue.trim();
 										String[] inArr = fldValue.split(",");
@@ -842,7 +903,31 @@ public class FliterForm extends FrameworkImpl {
 										 ***/
 										sqlWhere = sqlWhere + fieldName + " IS NOT NULL";
 										break;
+									case 13:
+										// 不在......之内
+										fldValue = fldValue.replaceAll(" ", ",");
+										fldValue = fldValue.trim();
+										String[] notArr = fldValue.split(",");
 
+										int notArrLen = notArr.length;
+										if (notArrLen > 0) {
+											value = "";
+											if ("Y".equals(isChar)) {
+												for (int ii = 0; ii < notArrLen; ii++) {
+													value = value + ",'" + notArr[ii] + "'";
+												}
+
+											} else {
+												for (int ii = 0; ii < notArrLen; ii++) {
+													value = value + "," + notArr[ii];
+												}
+											}
+											value = value.substring(1);
+											value = "(" + value + ")";
+										}
+
+										sqlWhere = sqlWhere + fieldName + " NOT IN " + value;
+										break;
 									default:
 										sqlWhere = sqlWhere + fieldName + "=" + value;
 										break;
@@ -855,11 +940,285 @@ public class FliterForm extends FrameworkImpl {
 									
 								}
 								
-							}
-							
-							
+							}	
 						}
+						
+						/**/
+						/*拼接数据集开始*/
+						if (key.indexOf("-dataset") > 0) {
+							//sqlWhere = sqlWhere + " AND EXISTS";
+							try{
+								dataSetFlag = true;
+								String DataSetFieldValue = key.replaceAll("-dataset", "");
+								Map<String, Object> dataSetFieldMap = new HashMap<String, Object>();
+								String dateSetField,dateSetSrchRec;
+								dataSetFieldMap = jdbcTemplate.queryForMap("SELECT TZ_FLTDST_FLD,TZ_FLTDST_SRCH_REC FROM PS_TZ_FLTDST_FLD_T WHERE TZ_COM_ID= ? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME= ? AND TZ_FLTDST_ORDER = ? LIMIT 0,1", 
+										new Object[] { comId,pageId,recname,Integer.parseInt(DataSetFieldValue) });
+								if(dataSetFieldMap!=null){
+									
+									dateSetField = dataSetFieldMap.get("TZ_FLTDST_FLD").toString();
+									dateSetSrchRec = dataSetFieldMap.get("TZ_FLTDST_SRCH_REC").toString();
+									String dataSetWhere = "";
+									dataSetWhere = dataSetWhere + "(EXISTS (";
+									dataSetWhere = dataSetWhere + " SELECT 'Y' FROM " + dateSetSrchRec + " ";
+									dataSetWhere = dataSetWhere + "WHERE " + dateSetSrchRec + "." + dateSetField + "=" + tableName + "." + dateSetField;
+									
+									//ArrayList<String> dataSetCondList = new ArrayList<String>();
+									String dataSetCondSql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN "
+											+ "FROM PS_TZ_FLTDST_CON_T "
+											+ "WHERE TZ_COM_ID= ? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME= ? AND TZ_FLTDST_ORDER = ? "
+											+ "ORDER BY TZ_FLTDST_C_ORDER";
+									List<Map<String, Object>> dataSetCondList = jdbcTemplate.queryForList(dataSetCondSql,
+											new Object[] { comId,pageId,recname,Integer.parseInt(DataSetFieldValue) });
+									if (dataSetCondList != null && dataSetCondList.size()>0) {
+										String strDataSetFldTypeSql="SELECT UPPER(DATA_TYPE) from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=?";
+										String strDataSetFlgType = jdbcTemplate.queryForObject(strDataSetFldTypeSql, new Object[] {dateSetSrchRec,dateSetField }, "String");
+
+										for (int i = 0; i < dataSetCondList.size(); i++) {
+											String strDstAndOr =  dataSetCondList.get(i).get("TZ_FLTDST_AND_OR") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_AND_OR"));
+											String strLeftParen = dataSetCondList.get(i).get("TZ_FLTDST_L_PAREN") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_L_PAREN"));
+											String strDstCondFld = dataSetCondList.get(i).get("TZ_FLTDST_CON_FLD") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_CON_FLD"));
+											String strDstOperator= dataSetCondList.get(i).get("TZ_FLTDST_OPERATOR") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_OPERATOR"));
+											String strDstCondValueType = dataSetCondList.get(i).get("TZ_FLTDST_FLD_V_T") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_FLD_V_T"));
+											String strDstCondFldValue = dataSetCondList.get(i).get("TZ_FLTDST_FLD_VAL") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_FLD_VAL"));
+											String strRightParen = dataSetCondList.get(i).get("TZ_FLTDST_R_PAREN") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_R_PAREN"));
+											if(i==0){
+												dataSetWhere = dataSetWhere + " AND ";
+											}
+											/*AND和OR*/
+											if(!"".equals(strDstAndOr)){
+												dataSetWhere = dataSetWhere + strDstAndOr + " ";
+											}
+											/*左括号*/
+											if(!"".equals(strLeftParen)){
+												dataSetWhere = dataSetWhere + strLeftParen + " ";
+											}
+											/*条件字段*/
+											if(!"".equals(strDstCondFld)){
+												dataSetWhere = dataSetWhere + dateSetSrchRec + "." +strDstCondFld + " ";
+											}
+											/*字段取值*/
+											String strDstCondValue = "";
+											if("A".equals(strDstCondValueType)){
+												strDstCondValue = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+											}else if("B".equals(strDstCondValueType)){
+												String formatType = "";
+												if ("DATE".equals(strDataSetFldTypeSql)){
+													formatType = "yyyy-MM-dd";
+												}else if ("TIME".equals(strDataSetFldTypeSql)) {
+													formatType = "HH:mm:ss";
+												}else {
+													formatType = "yyyy-MM-dd HH:mm:ss";
+												}
+												DateFormat formatDate = new SimpleDateFormat(formatType);
+												strDstCondValue = formatDate.format(new Date());
+											}else{
+												strDstCondValue = strDstCondFldValue;
+											}
+
+											if (intTypeString.contains(strDataSetFldTypeSql)) {
+												// 数字;
+											} else if ("DATE".equals(strDataSetFldTypeSql)) {
+												// 是否是日期;
+												strDstCondValue = " str_to_date('" + strDstCondValue + "','%Y-%m-%d')";
+											} else if ("TIME".equals(strDataSetFldTypeSql)) {
+												// 是否是时间;
+												strDstCondValue = " str_to_date('" + strDstCondValue + "','%H:%i')";
+											} else if ("DATETIME".equals(strDataSetFldTypeSql) || "TIMESTAMP".equals(strDataSetFlgType)) {
+												// 是否日期时间;
+												strDstCondValue = " str_to_date('" + strDstCondValue + "','%Y-%m-%d %H:%i')";
+											} else {
+												// 字符串;
+												strDstCondValue = "'" + strDstCondValue + "'";
+											}
+											
+											/*操作符*/
+											switch (strDstOperator) {
+												case "01":
+													dataSetWhere = dataSetWhere + "= " + strDstCondValue + " ";
+													break;
+												case "02":
+													dataSetWhere = dataSetWhere + "<> " + strDstCondValue + " ";
+													break;
+												case "03":
+													dataSetWhere = dataSetWhere + "> " + strDstCondValue + " ";
+													break;
+												case "04":
+													dataSetWhere = dataSetWhere + ">= " + strDstCondValue + " ";
+													break;
+												case "05":
+													dataSetWhere = dataSetWhere + "< " + strDstCondValue + " ";
+													break;
+												case "06":
+													dataSetWhere = dataSetWhere + "<= " + strDstCondValue + " ";
+													break;
+												case "07":
+													dataSetWhere = dataSetWhere + " LIKE " + strDstCondValue + " ";
+													break;
+												default:
+													dataSetWhere = dataSetWhere + "= " + strDstCondValue + " ";
+													break;
+											}
+											/*右括号*/
+											if(!"".equals(strRightParen)){
+												dataSetWhere = dataSetWhere + strRightParen + " ";
+											}
+										}
+									}
+									if(!"".equals(dataSetWhere)){
+										dataSetWhere = dataSetWhere + "))";
+										if(!"".equals(sqlDataSet)){
+											sqlDataSet = sqlDataSet + " OR " + dataSetWhere;
+										}else{
+											sqlDataSet = sqlDataSet + " " + dataSetWhere;
+										}
+										
+									}
+									//System.out.println("Hello:"+dataSetWhere);
+									//System.out.println("World:"+sqlDataSet);
+								}
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+						}
+						/*拼接数据集结束*/
 					}
+				}
+			}
+			
+			
+			/*如果是默认进入，则执行默认的搜索条件*/
+			if(!dataSetFlag){
+				try{
+					String DataSetFieldValue = "";
+					Map<String, Object> dataSetFieldMap = new HashMap<String, Object>();
+					String dateSetField,dateSetSrchRec;
+					dataSetFieldMap = jdbcTemplate.queryForMap("SELECT TZ_FLTDST_ORDER,TZ_FLTDST_FLD,TZ_FLTDST_SRCH_REC FROM PS_TZ_FLTDST_FLD_T WHERE TZ_COM_ID= ? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME= ? AND TZ_FLTDST_DEFAULT = ? LIMIT 0,1", 
+							new Object[] { comId,pageId,recname,"on" });
+					if(dataSetFieldMap!=null){
+						DataSetFieldValue = dataSetFieldMap.get("TZ_FLTDST_ORDER").toString();
+						dateSetField = dataSetFieldMap.get("TZ_FLTDST_FLD").toString();
+						dateSetSrchRec = dataSetFieldMap.get("TZ_FLTDST_SRCH_REC").toString();
+						String dataSetWhere = "";
+						dataSetWhere = dataSetWhere + "(EXISTS (";
+						dataSetWhere = dataSetWhere + " SELECT 'Y' FROM " + dateSetSrchRec + " ";
+						dataSetWhere = dataSetWhere + "WHERE " + dateSetSrchRec + "." + dateSetField + "=" + tableName + "." + dateSetField;
+						
+						//ArrayList<String> dataSetCondList = new ArrayList<String>();
+						String dataSetCondSql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN "
+								+ "FROM PS_TZ_FLTDST_CON_T "
+								+ "WHERE TZ_COM_ID= ? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME= ? AND TZ_FLTDST_ORDER = ? "
+								+ "ORDER BY TZ_FLTDST_C_ORDER";
+						List<Map<String, Object>> dataSetCondList = jdbcTemplate.queryForList(dataSetCondSql,
+								new Object[] { comId,pageId,recname,Integer.parseInt(DataSetFieldValue) });
+						if (dataSetCondList != null && dataSetCondList.size()>0) {
+							String strDataSetFldTypeSql="SELECT UPPER(DATA_TYPE) from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=?";
+							String strDataSetFlgType = jdbcTemplate.queryForObject(strDataSetFldTypeSql, new Object[] {dateSetSrchRec,dateSetField }, "String");
+	
+							for (int i = 0; i < dataSetCondList.size(); i++) {
+								String strDstAndOr =  dataSetCondList.get(i).get("TZ_FLTDST_AND_OR") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_AND_OR"));
+								String strLeftParen = dataSetCondList.get(i).get("TZ_FLTDST_L_PAREN") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_L_PAREN"));
+								String strDstCondFld = dataSetCondList.get(i).get("TZ_FLTDST_CON_FLD") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_CON_FLD"));
+								String strDstOperator= dataSetCondList.get(i).get("TZ_FLTDST_OPERATOR") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_OPERATOR"));
+								String strDstCondValueType = dataSetCondList.get(i).get("TZ_FLTDST_FLD_V_T") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_FLD_V_T"));
+								String strDstCondFldValue = dataSetCondList.get(i).get("TZ_FLTDST_FLD_VAL") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_FLD_VAL"));
+								String strRightParen = dataSetCondList.get(i).get("TZ_FLTDST_R_PAREN") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_R_PAREN"));
+								if(i==0){
+									dataSetWhere = dataSetWhere + " AND ";
+								}
+								/*AND和OR*/
+								if(!"".equals(strDstAndOr)){
+									dataSetWhere = dataSetWhere + strDstAndOr + " ";
+								}
+								/*左括号*/
+								if(!"".equals(strLeftParen)){
+									dataSetWhere = dataSetWhere + strLeftParen + " ";
+								}
+								/*条件字段*/
+								if(!"".equals(strDstCondFld)){
+									dataSetWhere = dataSetWhere + dateSetSrchRec + "." +strDstCondFld + " ";
+								}
+								/*字段取值*/
+								String strDstCondValue = "";
+								if("A".equals(strDstCondValueType)){
+									strDstCondValue = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+								}else if("B".equals(strDstCondValueType)){
+									String formatType = "";
+									if ("DATE".equals(strDataSetFldTypeSql)){
+										formatType = "yyyy-MM-dd";
+									}else if ("TIME".equals(strDataSetFldTypeSql)) {
+										formatType = "HH:mm:ss";
+									}else {
+										formatType = "yyyy-MM-dd HH:mm:ss";
+									}
+									DateFormat formatDate = new SimpleDateFormat(formatType);
+									strDstCondValue = formatDate.format(new Date());
+								}else{
+									strDstCondValue = strDstCondFldValue;
+								}
+	
+								if (intTypeString.contains(strDataSetFldTypeSql)) {
+									// 数字;
+								} else if ("DATE".equals(strDataSetFldTypeSql)) {
+									// 是否是日期;
+									strDstCondValue = " str_to_date('" + strDstCondValue + "','%Y-%m-%d')";
+								} else if ("TIME".equals(strDataSetFldTypeSql)) {
+									// 是否是时间;
+									strDstCondValue = " str_to_date('" + strDstCondValue + "','%H:%i')";
+								} else if ("DATETIME".equals(strDataSetFldTypeSql) || "TIMESTAMP".equals(strDataSetFlgType)) {
+									// 是否日期时间;
+									strDstCondValue = " str_to_date('" + strDstCondValue + "','%Y-%m-%d %H:%i')";
+								} else {
+									// 字符串;
+									strDstCondValue = "'" + strDstCondValue + "'";
+								}
+								
+								/*操作符*/
+								switch (strDstOperator) {
+									case "01":
+										dataSetWhere = dataSetWhere + "= " + strDstCondValue + " ";
+										break;
+									case "02":
+										dataSetWhere = dataSetWhere + "<> " + strDstCondValue + " ";
+										break;
+									case "03":
+										dataSetWhere = dataSetWhere + "> " + strDstCondValue + " ";
+										break;
+									case "04":
+										dataSetWhere = dataSetWhere + ">= " + strDstCondValue + " ";
+										break;
+									case "05":
+										dataSetWhere = dataSetWhere + "< " + strDstCondValue + " ";
+										break;
+									case "06":
+										dataSetWhere = dataSetWhere + "<= " + strDstCondValue + " ";
+										break;
+									case "07":
+										dataSetWhere = dataSetWhere + " LIKE " + strDstCondValue + " ";
+										break;
+									default:
+										dataSetWhere = dataSetWhere + "= " + strDstCondValue + " ";
+										break;
+								}
+								/*右括号*/
+								if(!"".equals(strRightParen)){
+									dataSetWhere = dataSetWhere + strRightParen + " ";
+								}
+							}
+						}
+						if(!"".equals(dataSetWhere)){
+							dataSetWhere = dataSetWhere + "))";
+							if(!"".equals(sqlDataSet)){
+								sqlDataSet = sqlDataSet + " OR " + dataSetWhere;
+							}else{
+								sqlDataSet = sqlDataSet + " " + dataSetWhere;
+							}
+						}
+						//System.out.println("Hello:"+dataSetWhere);
+						//System.out.println("World:"+sqlDataSet);
+					}
+				}catch(Exception e){
+					e.printStackTrace();
 				}
 			}
 			
@@ -887,7 +1246,15 @@ public class FliterForm extends FrameworkImpl {
 				}
 			}
 			
-			
+			if("".equals(sqlWhere)){
+				if(!"".equals(sqlDataSet)){
+					sqlWhere=" WHERE " + "(" + sqlDataSet + ")";
+				}
+			}else{
+				if(!"".equals(sqlDataSet)){
+					sqlWhere=sqlWhere+" AND" + "(" + sqlDataSet + ")";
+				}
+			}
 			
 			// 得到总条数;
 			String totalSQL = "SELECT COUNT(1) FROM " + tableName + sqlWhere;
@@ -916,8 +1283,6 @@ public class FliterForm extends FrameworkImpl {
 			} else {
 				sqlList = "SELECT " + result + " FROM " + tableName + sqlWhere + orderby + " limit ?,?";
 			}
-			
-		
 
 			try {
 				List<Map<String, Object>> resultlist = null;
@@ -1504,13 +1869,9 @@ public class FliterForm extends FrameworkImpl {
 							if("Y".equals(strDqFlg)){
 								//是DeepQuery字段,拼装DeepQuery查询SQL;;
 								
-								String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=? limit 1";
+								String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=?";
 								String strDeepQueryFlgType = jdbcTemplate.queryForObject(strDeepQueryFldTypeSql, new Object[] {strDqView,fieldName }, "String");
-								
-								if(!"".equals(strDeepQueryFlgType) && strDeepQueryFlgType != null){
-									strDeepQueryFlgType = strDeepQueryFlgType.toUpperCase();
-								}
-								
+
 								if (intTypeString.contains(strDeepQueryFlgType)) {
 									// 数字;
 									value = fldValue;
@@ -1605,6 +1966,7 @@ public class FliterForm extends FrameworkImpl {
 									sqlDeepQuery = sqlDeepQuery + fieldName + " LIKE " + value;
 									break;
 								case 10:
+									// 在......之内
 									fldValue = fldValue.replaceAll(" ", ",");
 									fldValue = fldValue.trim();
 									String[] inArr = fldValue.split(",");
@@ -1648,7 +2010,31 @@ public class FliterForm extends FrameworkImpl {
 									 ***/
 									sqlDeepQuery = sqlDeepQuery + fieldName + " IS NOT NULL";
 									break;
+								case 13:
+									// 不在......之内
+									fldValue = fldValue.replaceAll(" ", ",");
+									fldValue = fldValue.trim();
+									String[] notArr = fldValue.split(",");
 
+									int notArrLen = notArr.length;
+									if (notArrLen > 0) {
+										value = "";
+										if ("Y".equals(isChar)) {
+											for (int ii = 0; ii < notArrLen; ii++) {
+												value = value + ",'" + notArr[ii] + "'";
+											}
+
+										} else {
+											for (int ii = 0; ii < notArrLen; ii++) {
+												value = value + "," + notArr[ii];
+											}
+										}
+										value = value.substring(1);
+										value = "(" + value + ")";
+									}
+
+									sqlDeepQuery = sqlDeepQuery + fieldName + " NOT IN " + value;
+									break;
 								default:
 									sqlDeepQuery = sqlDeepQuery + fieldName + "=" + value;
 									break;
@@ -1757,6 +2143,7 @@ public class FliterForm extends FrameworkImpl {
 										sqlWhere = sqlWhere + fieldName + " LIKE " + value;
 										break;
 									case 10:
+										// 在......之内
 										fldValue = fldValue.replaceAll(" ", ",");
 										fldValue = fldValue.trim();
 										String[] inArr = fldValue.split(",");
@@ -1800,7 +2187,31 @@ public class FliterForm extends FrameworkImpl {
 										 ***/
 										sqlWhere = sqlWhere + fieldName + " IS NOT NULL";
 										break;
-	
+									case 13:
+										// 不在......之内
+										fldValue = fldValue.replaceAll(" ", ",");
+										fldValue = fldValue.trim();
+										String[] notArr = fldValue.split(",");
+
+										int notArrLen = notArr.length;
+										if (notArrLen > 0) {
+											value = "";
+											if ("Y".equals(isChar)) {
+												for (int ii = 0; ii < notArrLen; ii++) {
+													value = value + ",'" + notArr[ii] + "'";
+												}
+
+											} else {
+												for (int ii = 0; ii < notArrLen; ii++) {
+													value = value + "," + notArr[ii];
+												}
+											}
+											value = value.substring(1);
+											value = "(" + value + ")";
+										}
+
+										sqlWhere = sqlWhere + fieldName + " NOT IN " + value;
+										break;
 									default:
 										sqlWhere = sqlWhere + fieldName + "=" + value;
 										break;
