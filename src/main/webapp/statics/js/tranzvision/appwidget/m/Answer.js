@@ -512,7 +512,7 @@ var SurveyBuild = {
         
         //清华特有的改动
         var ProjectId = $("#ProjectId").val(); 
-		console.log(ProjectId);
+		//console.log(ProjectId);
 		if (ProjectId =="PRJ_57") {		
 		} else {
 			$("#TZ_TZ_3_4").hide(); 
@@ -1030,6 +1030,7 @@ var SurveyBuild = {
         //}
     },
 	deleteTjx: function(el) {
+
 
         var index = $(el).closest(".next_record").index();
         var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
@@ -1805,12 +1806,13 @@ var SurveyBuild = {
 		}*/
 		
 		var _this = $(el),block = $(el).parent().parent();
+		
 		var readOnly = $(el).attr("readonlyflag");
 		if(readOnly!="Y"){
-			block.find('input:radio').attr('checked', false);
-			block.find(".radio-btn").removeClass('checkedRadio');
-			_this.addClass('checkedRadio');
-			_this.find('input:radio').attr('checked', true);
+			//block.find('input:radio').attr('checked', false);
+			//block.find(".radio-btn").removeClass('checkedRadio');
+			//_this.addClass('checkedRadio');
+			//_this.find('input:radio').attr('checked', true);
 		}
 	},
     reFocus:function(id){
