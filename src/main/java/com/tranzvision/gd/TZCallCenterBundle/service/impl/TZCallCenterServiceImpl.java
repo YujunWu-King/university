@@ -306,7 +306,7 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				String strPhone = jacksonUtil.getString("phone");
 				String strType = jacksonUtil.getString("type");
 				String strCallXh = jacksonUtil.getString("callXh");
-				String sql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_MOBILE=? limit 0,1";
+				String sql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_RYLX='ZCYH' AND TZ_MOBILE=? limit 0,1";
 				strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
 				if(strOprid==null||"".equals(strOprid)){
 					sql = "SELECT TZ_LYDX_ID FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_ZY_SJ=? limit 0,1";

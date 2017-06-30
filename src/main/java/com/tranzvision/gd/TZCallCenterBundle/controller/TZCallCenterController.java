@@ -128,7 +128,8 @@ public class TZCallCenterController {
 			psTzPhJddTbl.setTzPhone(strTel);
 			psTzPhJddTbl.setTzCallType(strType);
 			psTzPhJddTbl.setTzCallDtime(new Date());
-			psTzPhJddTbl.setTzDlzhId(tmpUserDlzh);
+			psTzPhJddTbl.setTzDlzhId(strUserId);
+			psTzPhJddTbl.setTzDealwithZt("A");
 			psTzPhJddTblMapper.insert(psTzPhJddTbl);
 			
 			String domain = getCookieProps.getCookieDomain();
