@@ -1,4 +1,7 @@
-﻿function createMainPageHeader(jsonObject)
+﻿//记录“获取下一考生”按钮可以点击的标志
+var getNextFlag = true;
+
+function createMainPageHeader(jsonObject)
 {
 	//创建评委评审主页面页头区
 	
@@ -851,105 +854,109 @@ function submitEvaluateBatch(classid,pc_id)
 /*获取下一个考生的方法*/
 function getNextApplicant(jsonObject)
 {
-	//mask window
-	maskWindow();
-	
-	Ext.Ajax.request(
-		{
-			url:window.getNextApplicantUrl,
-			method:'POST',
-			timeout:30000,
-			params: {
-				LanguageCd:'ZHS',
-				OperationType:'NXT',
-				BaokaoClassID:jsonObject['ps_class_id'],
-                BaokaoPCID:jsonObject['ps_bkpc_id']
-			},
-			success:function(response)
+
+	if(getNextFlag) {
+		getNextFlag = false;
+
+		//mask window
+		maskWindow();
+
+		Ext.Ajax.request(
 			{
-				//unmask window
-				unmaskWindow();
-				
-				//返回值内容
-                var jsonText = response.responseText;
-                
-				var jsonObject = null;
-				
-				try
-				{
-					var jsonObject = Ext.util.JSON.decode(jsonText);
-	                /*判断服务器是否返回了正确的信息*/
-	                if(jsonObject.state.errcode == 1){
-	                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
-	                }else{
-	                	jsonObject = jsonObject.comContent;
-						
-						if(jsonObject.error_code != '0')
-						{
-							Ext.Msg.alert("提示",'获取考生信息时发生错误：' + jsonObject.error_decription );
+				url: window.getNextApplicantUrl,
+				method: 'POST',
+				timeout: 30000,
+				params: {
+					LanguageCd: 'ZHS',
+					OperationType: 'NXT',
+					BaokaoClassID: jsonObject['ps_class_id'],
+					BaokaoPCID: jsonObject['ps_bkpc_id']
+				},
+				success: function (response) {
+
+					//unmask window
+					unmaskWindow();
+
+					//返回值内容
+					var jsonText = response.responseText;
+
+					var jsonObject = null;
+
+					try {
+						var jsonObject = Ext.util.JSON.decode(jsonText);
+						/*判断服务器是否返回了正确的信息*/
+						if (jsonObject.state.errcode == 1) {
+							Ext.Msg.alert("提示", jsonObject.state.timeout == true ? "您当前登录已超时或者已经退出，请重新登录！" : jsonObject.state.errdesc);
+						} else {
+							jsonObject = jsonObject.comContent;
+
+							if (jsonObject.error_code != '0') {
+								Ext.Msg.alert("提示", '获取考生信息时发生错误：' + jsonObject.error_decription);
+							}
+							else {
+								if (window.KSINFO_JSON_DATA == null) {
+									window.KSINFO_JSON_DATA = new Array();
+								}
+
+								var tmpBmbID = jsonObject['ps_ksh_bmbid'];
+								if (KSINFO_JSON_DATA[tmpBmbID] != 'undefined' && KSINFO_JSON_DATA[tmpBmbID] != null && KSINFO_JSON_DATA[tmpBmbID] != '') {
+									Ext.Msg.alert("提示", '获取考生信息时发生错误，请与系统管理员联系：获取到重复的考生信息。');
+								}
+								else {
+
+									maskWindow();
+
+									KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
+
+									//加载指定考生评审信息页面并显示
+									var tzEObject = new tzEvaluateObject();
+									tzEObject.baokaoClassID = jsonObject['ps_class_id'];
+									tzEObject.baokaoClassName = jsonObject['ps_class_name'];
+									tzEObject.baokaoPcID = jsonObject['ps_bkpc_id'];
+									tzEObject.baokaoPcName = jsonObject['ps_baok_pc'];
+									tzEObject.applicantName = jsonObject['ps_ksh_xm'];
+									tzEObject.applicantInterviewID = jsonObject['ps_msh_id'];
+									tzEObject.applicantBaomingbiaoID = jsonObject['ps_ksh_bmbid'];
+
+									//获取新的局部数据，并使用局部数据刷新当前页面
+									var cls_pc_id = jsonObject['ps_class_id'] + "_" + jsonObject['ps_bkpc_id'];
+									getPartBatchDataByBatchId(cls_pc_id, loadApplicantData, tzEObject, 'NXT');
+
+								}
+							}
 						}
-						else
-						{
-							if(window.KSINFO_JSON_DATA == null)
-							{
-								window.KSINFO_JSON_DATA = new Array();
-							}
-							
-							var tmpBmbID = jsonObject['ps_ksh_bmbid'];
-							if(KSINFO_JSON_DATA[tmpBmbID] != 'undefined' && KSINFO_JSON_DATA[tmpBmbID]!= null && KSINFO_JSON_DATA[tmpBmbID]!= '')
-							{							
-								Ext.Msg.alert("提示",'获取考生信息时发生错误，请与系统管理员联系：获取到重复的考生信息。');
-							}
-							else
-							{
-								KSINFO_JSON_DATA[tmpBmbID] = jsonObject;
-								
-								//加载指定考生评审信息页面并显示
-								var tzEObject = new tzEvaluateObject();
-	                            tzEObject.baokaoClassID = jsonObject['ps_class_id'];
-	                            tzEObject.baokaoClassName = jsonObject['ps_class_name'];
-	                            tzEObject.baokaoPcID = jsonObject['ps_bkpc_id'];
-	                            tzEObject.baokaoPcName = jsonObject['ps_baok_pc'];
-								tzEObject.applicantName = jsonObject['ps_ksh_xm'];
-	                            tzEObject.applicantInterviewID = jsonObject['ps_msh_id'];
-								tzEObject.applicantBaomingbiaoID = jsonObject['ps_ksh_bmbid'];
-								
-								//获取新的局部数据，并使用局部数据刷新当前页面
-	                            var cls_pc_id = jsonObject['ps_class_id'] +"_" + jsonObject['ps_bkpc_id'];
-								getPartBatchDataByBatchId(cls_pc_id,loadApplicantData,tzEObject,'NXT');
-							}
+
+					}
+					catch (e1) {
+						if (window.evaluateSystemDebugFlag == 'Y') {
+							Ext.Msg.alert("提示", '获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
 						}
-	                }
-					
-				}
-				catch(e1)
-				{					
-					if(window.evaluateSystemDebugFlag == 'Y')
-					{
-						Ext.Msg.alert("提示",'获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+						else {
+							Ext.Msg.alert("提示", '获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+						}
 					}
-					else
-					{
-						Ext.Msg.alert("提示",'获取考生信息时发生错误，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+
+					getNextFlag = true;
+
+				},
+				failure: function (response) {
+
+					getNextFlag = true;
+
+					//unmask window
+					unmaskWindow();
+
+					if (window.evaluateSystemDebugFlag == 'Y') {
+						Ext.Msg.alert("提示", '获取考生信息失败，请与系统管理员联系：' + response.responseText);
 					}
-				}
-			},
-			failure:function(response)
-			{
-				//unmask window
-				unmaskWindow();
-					
-				if(window.evaluateSystemDebugFlag == 'Y')
-				{
-					Ext.Msg.alert("提示",'获取考生信息失败，请与系统管理员联系：' + response.responseText);
-				}
-				else
-				{
-					Ext.Msg.alert("提示",'获取考生信息失败，请与系统管理员联系。');
+					else {
+						Ext.Msg.alert("提示", '获取考生信息失败，请与系统管理员联系。');
+					}
+
 				}
 			}
-		}
-	);
+		);
+	}
 }
 
 function createApplicantList(jsonObject)
