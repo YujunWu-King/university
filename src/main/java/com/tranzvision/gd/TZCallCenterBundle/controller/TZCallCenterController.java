@@ -1,7 +1,10 @@
 package com.tranzvision.gd.TZCallCenterBundle.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,24 +75,55 @@ public class TZCallCenterController {
 		
 		try {
 			
-			String currentDlzhId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+			Calendar c = new GregorianCalendar();
+			c.set(1970, 0, 1, 0, 0, 0);		
+			Date beginDTime = c.getTime();
 			
+			String currentDlzhId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
 			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
 
 			String strUPDRRECID = request.getParameter("UPDRRECID");
-			strUPDRRECID="367B31D97D80FF93";
+			//不使用加密，使用base64位编码
+			//String tmpUserDlzh = DESUtil.decrypt(strUPDRRECID, "TZGDSSOFLG");
+			String tmpUserDlzh = new String(org.apache.commons.codec.binary.Base64.decodeBase64(strUPDRRECID));
+			//System.out.println("原数据：" + strUPDRRECID + "，解析数据为：" + tmpUserDlzh);
+			String strUserId = "";
+			Date loginEndDTime = null;
+			//VB中加密用户名组成为：USERID + "|" + 时间戳
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try{
+				int pos = tmpUserDlzh.indexOf("|");
+				
+				if(pos>0){
+					strUserId = tmpUserDlzh.substring(0, pos);
+					pos = pos + 1;
+					String strTimeStap = tmpUserDlzh.substring(pos, tmpUserDlzh.length());
+					
+					int time = Integer.valueOf(strTimeStap);
+					//当前加密结果，在时间戳20分钟内有效
+					time = time + 20 * 60;
+					loginEndDTime = addSecond(beginDTime, time);
+				}
+			}catch(Exception e){
+				/**/
+			}
 			
-			String tmpUserDlzh = DESUtil.decrypt(strUPDRRECID, "TZGDSSOFLG");
-			
+			//System.out.println("用户名：" + strUserId);
+			//System.out.println("登录有效截止时间：" + sdf.format(loginEndDTime));
 			String strTel = request.getParameter("tel");
 			String strType = request.getParameter("type");		
-			
-			System.out.println("----------------------------");
-			System.out.println(strTel + "--->" + strType);
-			System.out.println(request);
+			if(strType==null||"".equals(strType)){
+				strType = "A";
+			}
 			//来电接听后，将基本信息写入接待单表中;
 			PsTzPhJddTbl psTzPhJddTbl = new PsTzPhJddTbl();
 			String strSemNum = String.valueOf(getSeqNum.getSeqNum("TZ_PH_JDD_TBL", "TZ_XH"));
+			String strExistFlg = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_PH_JDD_TBL WHERE TZ_XH=?", new Object[]{strSemNum}, "String");
+			while ("Y".equals(strExistFlg)){
+				strSemNum = String.valueOf(getSeqNum.getSeqNum("TZ_PH_JDD_TBL", "TZ_XH"));
+				strExistFlg = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_PH_JDD_TBL WHERE TZ_XH=?", new Object[]{strSemNum}, "String");
+			}
+			
 			psTzPhJddTbl.setTzXh(strSemNum);
 			psTzPhJddTbl.setTzPhone(strTel);
 			psTzPhJddTbl.setTzCallType(strType);
@@ -114,25 +148,30 @@ public class TZCallCenterController {
 			
 			boolean boolLogin = false;
 			
-			if("".equals(currentDlzhId)||"TZ_GUEST".equals(currentDlzhId)){				
-				
-				String tmpSQLText = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?)";
-				String passwordJm = sqlQuery.queryForObject(tmpSQLText, new Object[]{tmpUserDlzh,orgid},"String");
-				String password = passwordJm == null ? "" : DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
-				if(!"".equals(password)){
-					
-					ArrayList<String> aryErrorMsg = new ArrayList<String>();
-					
-					boolean boolAutoLogin = tzCallCenterLoginServiceImpl.doLogin(request, response, orgid, tmpUserDlzh, password, "", aryErrorMsg);
-					
-					if(boolAutoLogin){
+			Date currentDTime = new Date();
+			
+			if("".equals(currentDlzhId)||"TZ_GUEST".equals(currentDlzhId)||"Admin".equals(currentDlzhId)){				
+				if("".equals(strUserId)||loginEndDTime.before(currentDTime)){
+					boolLogin = true;
+				}else{
+					String tmpSQLText = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=? AND TZ_JG_ID=?)";
+					String passwordJm = sqlQuery.queryForObject(tmpSQLText, new Object[]{strUserId,orgid},"String");
+					String password = passwordJm == null ? "" : DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
+					if(!"".equals(password)){
 						
+						ArrayList<String> aryErrorMsg = new ArrayList<String>();
+						
+						boolean boolAutoLogin = tzCallCenterLoginServiceImpl.doLogin(request, response, orgid, strUserId, password, "", aryErrorMsg);
+						
+						if(boolAutoLogin){
+
+						}else{
+							boolLogin = true;
+						}
 					}else{
 						boolLogin = true;
-					}
-				}else{
-					boolLogin = true;
-				}				
+					}	
+				}						
 			}
 			
 			if(boolLogin) {
@@ -140,8 +179,7 @@ public class TZCallCenterController {
 			}
 			
 			try
-			{
-				//Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + strUrl);				
+			{		
 				response.sendRedirect(strUrl);
 			}
 			catch (Exception e)
@@ -153,5 +191,12 @@ public class TZCallCenterController {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public static Date addSecond(Date date, int seconds) { 
+		Calendar calendar = Calendar.getInstance(); 
+		calendar.setTime(date); 
+		calendar.add(Calendar.SECOND, seconds); 
+		return calendar.getTime(); 
 	}
 }

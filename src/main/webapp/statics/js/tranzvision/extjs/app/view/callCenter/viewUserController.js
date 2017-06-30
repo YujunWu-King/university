@@ -210,7 +210,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"INVALID","comParams":{"OPRID":"' + oprId + '","callXh":"' + callXh + '"}}';
 		 Ext.tzSubmit(tzParams,function(response){
 			 if(response.success=="true"){
-				 form.down("displayfield[name=bmrLockStatus]").setValue("锁定");
+				 form.down("displayfield[name=bmrLockStatus]").setValue("已锁定");
 			 }			 
 		 });
 	 },
@@ -219,8 +219,8 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 var formValues = form.getValues();
 		 var oprId = formValues.oprId;
 		 var callXh = formValues.receiveId;
-		 var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"ADDBALCK","comParams":{"OPRID":"' + oprId + '","callXh":"' + callXh + '"}}';
-		 Ext.tzSubmit(tzParams,function(response){
+		 var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"ADDBLACK","comParams":{"OPRID":"' + oprId + '","callXh":"' + callXh + '"}}';
+		 Ext.tzSubmit(tzParams,function(response){			 
 			 if(response.success=="true"){
 				 form.down("displayfield[name=bmrBlackList]").setValue("是");
 			 }
@@ -358,10 +358,12 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 				var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"GETUSER","comParams":{"phone":"' + phone + '","type":"' + type + '","callXh":"' + callXh + '"}}';
 				var oprid = "";
 				var historyCount;
+				var actCount;
 				
 				Ext.tzLoadAsync(tzParams,function(response){
 					oprid = response.OPRID;
 					historyCount = response.viewHistoryCall;
+					actCount = response.bmrBmActCount;
 				});
 				
 				
@@ -387,6 +389,10 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 				var buttonT = panel.child('form').down("button[name=historyCount]");
 				buttonT.setText('<span style="text-decoration:underline;color:blue;">查看历史来电记录（' + historyCount + '）</span>');
 				
+				//参与的活动数
+				buttonT = panel.child('form').down("button[name=bmrBmActCount]");
+				buttonT.setText('<span style="text-decoration:underline;color:blue;">' + actCount + '</span>');
+				
 				if(oprid==null||oprid==""||oprid==undefined){
 					/*禁用按钮*/
 					me.disabledButton(_this,true);
@@ -395,7 +401,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 					var tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_USER_STD.TZ_USER_CALL1_VW","condition":{"OPRID-operator": "01","OPRID-value": "'+ oprid+'"}}';
 
 					store.tzStoreParams = tzStoreParams;
-					store.load();
+					store.load();									
 				}
 			});
 			
@@ -481,5 +487,79 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			 form.down("button[name=invalidAccount]").removeCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=addBlackList]").removeCls('x-item-disabled x-btn-disabled');
 		 }
+	 },
+	 
+	 sendSms: function(btn){
+		 var form = this.getView().lookupReference("userForm");		
+		 var formValues = form.getValues();
+		 console.log(formValues);
+		 var callXh = formValues.receiveId;
+		 var phone = formValues.phoneNum;
+		 var smsModel = formValues.smsModel;
+		 var oprId = formValues.oprId;
+		 
+		 var comParams = '"oprId":"' + oprId + '","phone":"' + phone + '"'; 
+			 
+		 var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"tzSendMessage","comParams":{'+comParams+'}}';
+	        Ext.tzLoad(tzParams,function(responseData){
+	            Ext.tzSendSms({
+	                //发送的短信模板;
+	                "SmsTmpName": [smsModel],
+	                //发送的听众;
+	                "audienceId": responseData.audienceId
+	            })
+	        });
+		 
+	 },
+	 
+	 viewHistoryAct:function(btn){
+		 Ext.tzSetCompResourses("TZ_CALLCR_USER_COM");
+		 
+		 var form = this.getView().lookupReference("userForm");
+		 var callXh = form.down("textfield[name=receiveId]").getValue();
+		 var phone = form.down("textfield[name=phoneNum]").getValue();
+		 var name = form.down("displayfield[name=bmrName]").getValue();
+		 var gender = form.down("displayfield[name=bmrGender]").getValue();
+ 		 //是否有访问权限
+	     var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CALLCR_USER_COM"]["TZ_CALLC_ACT_STD"];
+	     if( pageResSet == "" || pageResSet == undefined){
+	         Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+	         return;
+	     }
+	     //该功能对应的JS类
+	     var className = pageResSet["jsClassName"];
+	     if(className == "" || className == undefined){
+	         Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CALLC_ACT_STD，请检查配置。');
+	         return;
+	     }
+
+	     var win = this.lookupReference('viewHisBmActWindow');
+
+	     if (!win) {
+	    	 Ext.syncRequire(className);
+	         ViewClass = Ext.ClassManager.get(className);
+	         //新建类
+	         win = new ViewClass();
+	         this.getView().add(win);
+	     }
+
+	      //操作类型设置为更新
+	      win.actType = "update";
+
+	      var form = win.child("form").getForm();
+	      var pageGrid = Ext.getCmp('historyActGrid');
+
+	      form.setValues(
+	            [
+	                {id:'callPhone', value:phone},
+	                {id:'bmrName', value:name},
+	                {id:'bmrGender',value:gender}
+	            ]
+	        );
+	        
+	        pageGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_ACT_STD.TZ_CCALL_HD_VW","condition":{"TZ_ZY_SJ-operator": "01","TZ_ZY_SJ-value": "'+ phone+'","TZ_JG_ID-operator":"01","TZ_JG_ID-value":"' + Ext.tzOrgID + '"}}';
+	        pageGrid.store.load();
+
+	        win.show();
 	 }
 });

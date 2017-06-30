@@ -240,6 +240,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 				},{
 					xtype : 'fieldset',
 					title : '报名人信息',
+					style : 'padding-top:5px;padding-bottom:10px;',
 					layout : {
 						type : 'vbox',
 						align : 'stretch'
@@ -384,7 +385,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 								xtype : 'displayfield',
 								fieldLabel : '报考方向及面试批次',
 								name : 'bmrBkProject'	
-							},{
+							},/*{
 								xtype : 'displayfield',
 								fieldLabel : '参与活动数',
 								name : 'bmrBmActCount',
@@ -395,6 +396,31 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 										return '<a href="javascript:void(0)">' + v + '</a>'
 									}
 								}
+							}*/{
+								layout : {
+									type : 'column'
+								},
+								items:[
+									{
+										xtype:'label',
+										style:'font-weight:bold;',
+										width:128,
+										text:'参与的活动数:'
+									},{
+						        		xtype:'button',
+										textAlign: 'left',
+										text:'<span style="color:black;">0</span>',
+										name:'bmrBmActCount',
+										border:false,
+										width: 160,
+										style:{
+											background: 'white',
+											paddingTop: '0px',
+											boxShadow:'none'
+										},
+										handler: 'viewHistoryAct'
+						        	}
+								]
 							}]
 						}]
 					}]
@@ -437,7 +463,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                         {
                             style: 'margin-left:10px',
                             xtype: 'button',
-                            text: '修改密码',
+                            text: '重置密码',
                             defaultColor: '',
                             name: 'updatePsw',
                             flagType: 'positive',
@@ -448,7 +474,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                         {
                             style: 'margin-left:10px',
                             xtype: 'button',
-                            text: '失效当前账号',
+                            text: '锁定当前账号',
                             defaultColor: '',
                             name: 'invalidAccount',
                             flagType: 'positive',

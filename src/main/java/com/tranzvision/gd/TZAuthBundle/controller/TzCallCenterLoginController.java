@@ -67,6 +67,9 @@ public class TzCallCenterLoginController {
 				String strName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?", new Object[]{userId}, "String");
 				jsonMap.put("name", strName);
 				
+				String strOprid = sqlQuery.queryForObject("SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?", new Object[]{userId}, "String");
+				jsonMap.put("oprid", strOprid);
+				
 				String strKey = DESUtil.encrypt(userId, "TZGDSSOFLG");
 				
 				jsonMap.put("desc", strKey);
@@ -74,11 +77,7 @@ public class TzCallCenterLoginController {
 			}else{
 				jsonMap.put("code", "1");
 				jsonMap.put("desc", errorMsg);
-			}
-			
-			
-			jsonMap.put("oprid", userId);
-						
+			}					
 			
 		} catch (Exception e) {
 			jsonMap.put("code", "1");

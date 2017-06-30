@@ -31,17 +31,24 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 		var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"GETUSER","comParams":{"phone":"' + phone + '","type":"' + type + '","callXh":"' + callXh + '"}}';
 		var oprid = "";
 		var historyCount;
+		var bmrBmActCount;
 		
 		Ext.tzLoadAsync(tzParams,function(response){
 			oprid = response.OPRID;
 			historyCount = response.viewHistoryCall;
+			bmrBmActCount = response.bmrBmActCount;
 		});
 		var button = "";
 		var buttonHidden = true;
-		if(historyCount==null||historyCount==''){
+		if(historyCount==null||historyCount==''||historyCount==undefined){
 			historyCount = "0";
 		}
+		if(bmrBmActCount==null||bmrBmActCount==''||bmrBmActCount==undefined){
+			bmrBmActCount = "0"
+		}
 		button = '<span style="text-decoration:underline;color:blue;">查看历史来电记录（' + historyCount + '）</span>';
+		
+		var bmActButtonText = '<span style="text-decoration:underline;color:blue;">' + bmrBmActCount + '</span>';
 		
 		var userAppListStore = new KitchenSink.view.callCenter.userAppListStore();
 		var formData;		
@@ -61,6 +68,19 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 			
 			buttonDisabled = false;
 		}		
+		
+		//短信模板
+		var smsVarData;
+	
+		var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"SMSMODEL","comParams":{"ORGID":"' + Ext.tzOrgID + '"}}';
+		Ext.tzLoadAsync(tzParams,function(response){
+			smsVarData = response.root;
+		});
+		
+		var smsVarStore = Ext.create('Ext.data.Store', {
+		    fields: ['smsId', 'smsName'],
+		    data : smsVarData
+		});
 		
 		var applicantColumns = [{
             text: "序号",
@@ -285,6 +305,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 				},{
 					xtype : 'fieldset',
 					title : '报名人信息',
+					style : 'padding-top:5px;padding-bottom:10px;',
 					layout : {
 						type : 'vbox',
 						align : 'stretch'
@@ -430,7 +451,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 								xtype : 'displayfield',
 								fieldLabel : '报考方向及面试批次',
 								name : 'bmrBkProject'	
-							},{
+							},/*{
 								xtype : 'displayfield',
 								fieldLabel : '参与活动数',
 								name : 'bmrBmActCount',
@@ -441,6 +462,31 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 										return '<a href="javascript:void(0)">' + v + '</a>'
 									}
 								}
+							}*/{
+								layout : {
+									type : 'column'
+								},
+								items:[
+									{
+										xtype:'label',
+										style:'font-weight:bold;',
+										width:128,
+										text:'参与的活动数:'
+									},{
+						        		xtype:'button',
+										textAlign: 'left',
+										text:bmActButtonText,
+										name:'bmrBmActCount',
+										border:false,
+										width: 160,
+										style:{
+											background: 'white',
+											paddingTop: '0px',
+											boxShadow:'none'
+										},
+										handler: 'viewHistoryAct'
+						        	}
+								]
 							}]
 						}]
 					}]
@@ -484,7 +530,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                         {
                             style: 'margin-left:10px',
                             xtype: 'button',
-                            text: '修改密码',
+                            text: '重置密码',
                             defaultColor: '',
                             disabled:buttonDisabled,
                             name: 'updatePsw',
@@ -496,7 +542,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                         {
                             style: 'margin-left:10px',
                             xtype: 'button',
-                            text: '失效当前账号',
+                            text: '锁定当前账号',
                             defaultColor: '',
                             name: 'invalidAccount',
                             disabled:buttonDisabled,
@@ -648,9 +694,9 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 	    						name:'smsModel',
 	    						width:'70%',
 	    						fieldLabel : '短信模板',
-	    						valueField: 'TValue',
-	    				        displayField: 'TSDesc',
-	    				        store: new KitchenSink.view.common.store.appTransStore("TZ_RXDH_DW_ZT"),
+	    						valueField: 'smsId',
+	    				        displayField: 'smsName',
+	    				        store: smsVarStore,
 	    				        queryMode: 'local'
 	                        },
 	                        {

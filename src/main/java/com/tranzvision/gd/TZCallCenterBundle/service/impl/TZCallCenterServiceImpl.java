@@ -5,13 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -31,6 +35,15 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 	
 	@Autowired
 	private PsoprdefnMapper psoprdefnMapper;
+	
+	@Autowired
+	private CreateTaskServiceImpl createTaskServiceImpl;
+	
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	
+	@Autowired
+	private HttpServletRequest request;
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -260,7 +273,16 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 			}
 			returnMap.put("bmrBkProject", strBmBatchInfo);
 			//历史来电记录
-			returnMap.put("viewHistoryCall", "2");
+			String sql = "SELECT COUNT(1) FROM PS_TZ_PH_JDD_TBL WHERE TZ_PHONE=? AND TZ_XH<>?";
+			String callCount = sqlQuery.queryForObject(sql, new Object[]{strPhone,strCallXh}, "String");
+			returnMap.put("viewHistoryCall", callCount);
+			//报名活动数
+			String strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=?";
+			Integer actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strPhone}, "Integer");
+			if(actCount==null){
+				actCount = 0;
+			}
+			returnMap.put("bmrBmActCount", String.valueOf(actCount));
 			
 		}catch(Exception e){
 			errMsg[0] = "1";
@@ -287,7 +309,7 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				String sql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_MOBILE=? limit 0,1";
 				strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
 				if(strOprid==null||"".equals(strOprid)){
-					sql = "SELECT TZ_LYDX_ID FROM PS_TZ_LXFSINFO_TBL WHERE TZ_ZY_SJ=? limit 0,1";
+					sql = "SELECT TZ_LYDX_ID FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_ZY_SJ=? limit 0,1";
 					strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
 					if(strOprid==null){
 						strOprid = "";
@@ -298,6 +320,14 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				sql = "SELECT COUNT(1) FROM PS_TZ_PH_JDD_TBL WHERE TZ_PHONE=? AND TZ_XH<>?";
 				String callCount = sqlQuery.queryForObject(sql, new Object[]{strPhone,strCallXh}, "String");
 				returnMap.put("viewHistoryCall", callCount);
+				
+				//报名活动数
+				String strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=?";
+				Integer actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strPhone}, "Integer");
+				if(actCount==null){
+					actCount = 0;
+				}
+				returnMap.put("bmrBmActCount", String.valueOf(actCount));
 				
 				return jacksonUtil.Map2json(returnMap);
 			}
@@ -436,6 +466,34 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				mapRet.replace("total", stMap.size());
 				mapRet.replace("root", listData);
 				return jacksonUtil.Map2json(mapRet);
+			}
+			
+			if("tzSendMessage".equals(oprType)){
+				Map<String, Object> mapRet = new HashMap<String, Object>();
+				
+				String strCallPhone = jacksonUtil.getString("phone");
+				String strOprId = jacksonUtil.getString("oprId");
+				//当前机构
+				String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				//创建短信发送听众
+				String crtAudi = createTaskServiceImpl.createAudience("",currentOrgId,"电话盒子接待单短信发送", "CCLL");
+				
+				if (!"".equals(crtAudi)) {
+					String name="";
+					String email = "";
+					if(strOprId!=null&&!"".equals(strOprId)){
+						String sql = "SELECT TZ_REALNAME,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
+						Map<String, Object> mapData = sqlQuery.queryForMap(sql,new Object[]{currentOrgId,strOprId});
+						if(mapData!=null) {
+							name = mapData.get("TZ_REALNAME") == null ? "" : mapData.get("TZ_REALNAME").toString();
+							email = mapData.get("TZ_EMAIL") == null ? "" : mapData.get("TZ_EMAIL").toString();
+						}
+					}
+					createTaskServiceImpl.addAudCy(crtAudi,name, "", strCallPhone, "", email, "", "", strOprId, "","", "");
+					
+					mapRet.put("audienceId", crtAudi);
+					return jacksonUtil.Map2json(mapRet);
+				}
 			}
 			
 		}catch(Exception e){
