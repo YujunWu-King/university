@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZWebSiteStationLetterBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -36,8 +36,8 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
-	@Autowired
-	private FliterForm fliterForm;
+//	@Autowired
+//	private FliterForm fliterForm;
 
 	/****** 站内信 ********/
 	@Override
@@ -96,7 +96,7 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 			
 			// 展示页面;
 			znxCenterHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_HTML",
-					true,request.getContextPath(),language, dispatcher,oprid,strCssDir,String.valueOf(unreadCount), str_jg_id, strSiteId);
+					true,request.getContextPath(),dispatcher,language,oprid,strCssDir,String.valueOf(unreadCount), str_jg_id, strSiteId);
 
 			znxCenterHtml = siteRepCssServiceImpl.repTitle(znxCenterHtml, strSiteId);
 			znxCenterHtml = siteRepCssServiceImpl.repCss(znxCenterHtml, strSiteId);
@@ -110,17 +110,15 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 	
 	//站内信列表
 	@Override
-	@SuppressWarnings("unchecked")
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
 
 		// 返回值;
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
-		
-		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-		mapRet.put("root", listData);
+		mapRet.put("root", new ArrayList<Map<String, Object>>());
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
+			/* 
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "ROW_ADDED_DTTM", "DESC" } };
 
@@ -149,7 +147,36 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 				mapRet.replace("root", listData);
 
 			}
+			*/
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			jacksonUtil.json2Map(comParams);
+			String searchText = jacksonUtil.getString("searchText");
+			searchText = "%"+ searchText +"%";
 
+			//查询总数
+			String totalSql = "SELECT count(B.TZ_ZNX_MSGID) FROM PS_TZ_ZNX_MSG_T A JOIN PS_TZ_ZNX_REC_T B ON (A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID) WHERE B.TZ_REC_DELSTATUS <> 'Y' and TZ_ZNX_RECID=? AND TZ_MSG_SUBJECT LIKE ?";
+			int total = jdbcTemplate.queryForObject(totalSql, new Object[]{ oprid, searchText }, "int");
+			
+			ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
+			if (total > 0) {
+				String sql = "SELECT A.TZ_ZNX_MSGID,B.TZ_ZNX_STATUS,A.TZ_MSG_SUBJECT,DATE_FORMAT(A.ROW_ADDED_DTTM, '%Y-%m-%d %H:%i:%s') AS ROW_ADDED_DTTM FROM PS_TZ_ZNX_MSG_T A JOIN PS_TZ_ZNX_REC_T B ON (A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID) WHERE B.TZ_REC_DELSTATUS <> 'Y' AND TZ_ZNX_RECID=? AND TZ_MSG_SUBJECT LIKE ? ORDER BY A.ROW_ADDED_DTTM DESC , CONVERT( A.TZ_ZNX_MSGID , SIGNED) DESC LIMIT ? , ?";
+				List<Map<String,Object>> znxList = jdbcTemplate.queryForList(sql, new Object[]{ oprid, searchText, numStart, numLimit });
+				if(znxList != null && znxList.size()>0){
+					for(Map<String,Object> znxMap : znxList){
+						Map<String,Object> mapJson = new HashMap<String,Object>();
+						mapJson.put("stationMailId", znxMap.get("TZ_ZNX_MSGID"));
+						mapJson.put("znxStatus", znxMap.get("TZ_ZNX_STATUS"));
+						mapJson.put("sendName", "");
+						mapJson.put("stationMailTitle", znxMap.get("TZ_MSG_SUBJECT"));
+						mapJson.put("stationMailReceived", znxMap.get("ROW_ADDED_DTTM"));
+						
+						listJson.add(mapJson);
+					}
+				}
+			}
+			
+			mapRet.replace("total", total);
+			mapRet.replace("root", listJson);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
