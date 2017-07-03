@@ -38,19 +38,42 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
 					//只读模式
 				 	c += '<div class="item">';
 					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-					c += '	<div class="text-box"><input type="text" class="text1" value="' + children[0]["value"]  + '" readonly="" disabled=""></div>';
+					c += '	<div class="overhidden">';
+					c += '		<div class="text-box fl" style="width:30%;">';
+					c += '      	<input type="text" class="text1"  value="' + children[0]["value"] + '" disabled="disabled">';
+					c += '      </div>';
+					c += '       <span class="fl" style="line-height:1.5rem;color:#999;">-</span>';
+					c += '       <div class="text-box fl" style="width:30%;">';
+					c += '           <input type="text" class="text1" value=" '+children[1]["value"]+'" disabled="disabled">';
+					c += '       </div>';
+					c += '   </div>';
 					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
 					c += '</div>';
 				} else {
 					//填写模式
 					c += '<div class="item">';
 					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '	<div class="overhidden">';
 					c += '  <div id="' + data.itemId + data.children[0]["itemId"]+  'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
-					c += '	<div class="text-box">';
-					c += '		<input type="text" class="text1" readonly="readonly" id="' + data.itemId + data.children[0]["itemId"]+ '" name="' + data.itemId + '" value="' + children[0]["value"]   + '" title="' + data.itemName + '" />';
-					c += '		<input type="text" class="text1" readonly="readonly" disabled="true" id="' + data.itemId + data.children[1]["itemId"]+ '" name="' + data.itemId + '" value="' + children[0]["value"]   + '" title="' + data.itemName + '" style="display:none"/>';
-					c += '	</div>';
+					c += '		<div class="text-box fl" style="width:30%;">';
+					c += '			<select style="width:100%;" name="' + data["itemId"] + children[0]["itemId"] + '" value="' + children[0]["value"] + '" class="chosen-select" id="' + data["itemId"] + children[0]["itemId"] + '" title="' + children[0]["itemName"] + '">';
+		            c += '			<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+		                for (var i in children[0]["option"]) {
+		            c += '<option ' + (children[0].value == children[0]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[0]["option"][i]["code"] + '">' + children[0]["option"][i]["txt"] + '</option>';
+		                }
+		            c += '			</select>';
+		            c += '      </div>';
+					c += '       <span class="fl" style="line-height:1.5rem;color:#999;">-</span>';
+					c += '       <div class="text-box fl" style="width:30%;">';
+					c += '			<select style="width:100%;" title="' + children[1]["itemName"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="chosen-select" value="' + children[1]["value"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
+	                c += '			<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+	                for (var i in children[1]["option"]) {
+	                    c += '<option ' + (children[1].value == children[1]["option"][i]["code"] ? "selected='selected'": "") + 'value="' + children[1]["option"][i]["code"] + '">' + children[1]["option"][i]["code"] + '</option>';
+	                }
+	                c += '			</select>';
+	                c += '       </div>';
 					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
+					c += '</div>';
 					c += '</div>';
 				}
         	}else{
@@ -128,16 +151,7 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
         return e;
     },
     _eventbind: function(data) {
-    	if(SurveyBuild.accessType == "M"){
-    		 var calendar = new LCalendar();
-    		    calendar.init({
-    		        'trigger': '#' + data.itemId+ data.children[0]["itemId"], //标签id
-    		        'type': 'ym', //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
-    		        'minDate': data.minYear + "-01", //最小日期
-    		        'maxDate':data.maxYear + "-12"
-    		    });
-    		    
-    	}
+    	
     		
     	var $year = $("#" + data["itemId"] + data.children[0]["itemId"]);
             $year.formValidator({tipID:data["itemId"]+ data.children[0]["itemId"] + 'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
