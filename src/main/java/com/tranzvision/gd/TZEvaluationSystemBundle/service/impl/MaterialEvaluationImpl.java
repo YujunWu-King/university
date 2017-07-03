@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,9 +20,9 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
-import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.sql.type.TzRecord;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpwpslsTblMapper;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpwpslsTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.service.impl.XmlToWord;
@@ -52,8 +54,6 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 	@Autowired
 	private XmlToWord xmlToWord;
 	@Autowired
-	private MySqlLockService mySqlLockService;
-	@Autowired
 	private psTzClpwpslsTblMapper psTzClpspwlsTblMapper;
 	@Autowired
 	private PsTzKsclpslsTblMapper psTzKsclpslsTblMapper;
@@ -65,6 +65,12 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 	private MaterialEvaluationCls materialEvaluationCls;
 	@Autowired
 	private TZGDObject tzSQLObject;
+	
+	//用于同步评委抽取考生的信号变量，避免同一个服务内部对数据库资源的竞争
+	private static Semaphore nextLock = new Semaphore(1,true);
+	//用于控制访问量的信号变量，避免评委同时抽取考生对服务器造成过大压力
+	private static Semaphore nextLockCounter = new Semaphore(10,true);
+		
 	
 	@Override
 	public String tzGetJsonData(String strParams) {
@@ -863,200 +869,249 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 				error_code = "1";
 				error_decription = "存在没有被分组的评委。";
 			} else {
-				sql = "SELECT A.TZ_PYKS_XX,A.TZ_PWEI_ZHZT,A.TZ_PWZBH,B.TZ_DQPY_ZT,B.TZ_DQPY_LUNC,B.TZ_MSPY_NUM,C.TZ_SUBMIT_YN";
-				sql = sql + ",(SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL E,PS_TZ_CLPS_KSH_TBL F";
-				sql = sql + " WHERE E.TZ_CLASS_ID=F.TZ_CLASS_ID AND E.TZ_APPLY_PC_ID=F.TZ_APPLY_PC_ID AND E.TZ_APP_INS_ID=F.TZ_APP_INS_ID AND E.TZ_CLASS_ID=A.TZ_CLASS_ID AND E.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND E.TZ_PWEI_OPRID=A.TZ_PWEI_OPRID) TZ_PWKS_NUM";
-				sql = sql + ",(SELECT COUNT(distinct G.TZ_APP_INS_ID ) FROM PS_TZ_CP_PW_KS_TBL E,PS_TZ_KSCLPSLS_TBL G";
-				sql = sql + " WHERE E.TZ_CLASS_ID=G.TZ_CLASS_ID AND E.TZ_APPLY_PC_ID=G.TZ_APPLY_PC_ID AND E.TZ_APP_INS_ID=G.TZ_APP_INS_ID AND E.TZ_CLASS_ID=A.TZ_CLASS_ID AND E.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND G.TZ_PWEI_OPRID=A.TZ_PWEI_OPRID AND G.TZ_CLPS_LUNC=B.TZ_DQPY_LUNC AND G.TZ_SUBMIT_YN='Y') TZ_PWKS_SUB_NUM";
-				sql = sql + " FROM PS_TZ_CLPS_PW_TBL A INNER JOIN PS_TZ_CLPS_GZ_TBL B ON(A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID)";
-				sql = sql + " LEFT JOIN PS_TZ_CLPWPSLS_TBL C ON(C.TZ_CLASS_ID=A.TZ_CLASS_ID AND C.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND C.TZ_PWEI_OPRID=A.TZ_PWEI_OPRID AND C.TZ_CLPS_LUNC=B.TZ_DQPY_LUNC)";
-				sql = sql + " WHERE A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?";
+				
+				//同一个应用服务内只允许10次评委抽取考生排队，否则报系统忙，请稍候再试。
+				if(nextLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+				{
+					throw new Exception("系统忙，请稍候再试。");
+				}
+			
+				//线程间同步，防止同一个应用服务内的抽取竞争，减少数据库服务器加锁的压力
+				nextLock.acquire();
+				
+				try {
+								
+					sql = "SELECT A.TZ_PYKS_XX,A.TZ_PWEI_ZHZT,A.TZ_PWZBH,B.TZ_DQPY_ZT,B.TZ_DQPY_LUNC,B.TZ_MSPY_NUM,C.TZ_SUBMIT_YN";
+					sql = sql + ",(SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL E,PS_TZ_CLPS_KSH_TBL F";
+					sql = sql + " WHERE E.TZ_CLASS_ID=F.TZ_CLASS_ID AND E.TZ_APPLY_PC_ID=F.TZ_APPLY_PC_ID AND E.TZ_APP_INS_ID=F.TZ_APP_INS_ID AND E.TZ_CLASS_ID=A.TZ_CLASS_ID AND E.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND E.TZ_PWEI_OPRID=A.TZ_PWEI_OPRID) TZ_PWKS_NUM";
+					sql = sql + ",(SELECT COUNT(distinct G.TZ_APP_INS_ID ) FROM PS_TZ_CP_PW_KS_TBL E,PS_TZ_KSCLPSLS_TBL G";
+					sql = sql + " WHERE E.TZ_CLASS_ID=G.TZ_CLASS_ID AND E.TZ_APPLY_PC_ID=G.TZ_APPLY_PC_ID AND E.TZ_APP_INS_ID=G.TZ_APP_INS_ID AND E.TZ_CLASS_ID=A.TZ_CLASS_ID AND E.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND G.TZ_PWEI_OPRID=A.TZ_PWEI_OPRID AND G.TZ_CLPS_LUNC=B.TZ_DQPY_LUNC AND G.TZ_SUBMIT_YN='Y') TZ_PWKS_SUB_NUM";
+					sql = sql + " FROM PS_TZ_CLPS_PW_TBL A INNER JOIN PS_TZ_CLPS_GZ_TBL B ON(A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID)";
+					sql = sql + " LEFT JOIN PS_TZ_CLPWPSLS_TBL C ON(C.TZ_CLASS_ID=A.TZ_CLASS_ID AND C.TZ_APPLY_PC_ID=A.TZ_APPLY_PC_ID AND C.TZ_PWEI_OPRID=A.TZ_PWEI_OPRID AND C.TZ_CLPS_LUNC=B.TZ_DQPY_LUNC)";
+					sql = sql + " WHERE A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=?";
+	
+					Map<String, Object> mapData = sqlQuery.queryForMap(sql,new Object[]{classId,batchId,oprid});
 
-				Map<String, Object> mapData = sqlQuery.queryForMap(sql,new Object[]{classId,batchId,oprid});
-
-				if(mapData!=null){
-					Integer pyksNum = mapData.get("TZ_PYKS_XX") == null ? 0 : Integer.valueOf(mapData.get("TZ_PYKS_XX").toString());
-					String pweiZhzt = mapData.get("TZ_PWEI_ZHZT") == null ? "" : mapData.get("TZ_PWEI_ZHZT").toString();
-					String pwzbh = mapData.get("TZ_PWZBH") == null ? "" : mapData.get("TZ_PWZBH").toString();
-					String dqpyZt = mapData.get("TZ_DQPY_ZT") == null ? "" : mapData.get("TZ_DQPY_ZT").toString();
-					Short dqpyLunc = mapData.get("TZ_DQPY_LUNC") == null ? 1 : Short.valueOf(mapData.get("TZ_DQPY_LUNC").toString());
-					Integer mspyNum = mapData.get("TZ_MSPY_NUM") == null ? 0 : Integer.valueOf(mapData.get("TZ_MSPY_NUM").toString());
-					String submitAllFlag = mapData.get("TZ_SUBMIT_YN") == null ? "" : mapData.get("TZ_SUBMIT_YN").toString();
-					Integer pwksNum = mapData.get("TZ_PWKS_NUM") == null ? 0 : Integer.valueOf(mapData.get("TZ_PWKS_NUM").toString());
-					Integer pwksSubNum= mapData.get("TZ_PWKS_SUB_NUM") == null ? 0 : Integer.valueOf(mapData.get("TZ_PWKS_SUB_NUM").toString());
-					
-					if("Y".equals(submitAllFlag)) {
-						bmbIdNext = "";
-						error_code = "1";
-						error_decription = "该轮次已经全部提交了,无法得到下一个考生。";
-					} else {
-						if("A".equals(dqpyZt)) {
-							if("A".equals(pweiZhzt)) {
-								if(pwksNum>pwksSubNum) {
-									bmbIdNext = "";
-									error_code = "1";
-									error_decription = "存在未打分的考生。请先为考生打分，然后再获取新的考生。";
-								} else {
-									if(pwksNum>=pyksNum) {
+					if(mapData!=null){
+						Integer pyksNum = mapData.get("TZ_PYKS_XX") == null ? 0 : Integer.valueOf(mapData.get("TZ_PYKS_XX").toString());
+						String pweiZhzt = mapData.get("TZ_PWEI_ZHZT") == null ? "" : mapData.get("TZ_PWEI_ZHZT").toString();
+						String pwzbh = mapData.get("TZ_PWZBH") == null ? "" : mapData.get("TZ_PWZBH").toString();
+						String dqpyZt = mapData.get("TZ_DQPY_ZT") == null ? "" : mapData.get("TZ_DQPY_ZT").toString();
+						Short dqpyLunc = mapData.get("TZ_DQPY_LUNC") == null ? 1 : Short.valueOf(mapData.get("TZ_DQPY_LUNC").toString());
+						Integer mspyNum = mapData.get("TZ_MSPY_NUM") == null ? 0 : Integer.valueOf(mapData.get("TZ_MSPY_NUM").toString());
+						String submitAllFlag = mapData.get("TZ_SUBMIT_YN") == null ? "" : mapData.get("TZ_SUBMIT_YN").toString();
+						Integer pwksNum = mapData.get("TZ_PWKS_NUM") == null ? 0 : Integer.valueOf(mapData.get("TZ_PWKS_NUM").toString());
+						Integer pwksSubNum= mapData.get("TZ_PWKS_SUB_NUM") == null ? 0 : Integer.valueOf(mapData.get("TZ_PWKS_SUB_NUM").toString());
+						
+						if("Y".equals(submitAllFlag)) {
+							bmbIdNext = "";
+							error_code = "1";
+							error_decription = "该轮次已经全部提交了,无法得到下一个考生。";
+						} else {
+							if("A".equals(dqpyZt)) {
+								if("A".equals(pweiZhzt)) {
+									if(pwksNum>pwksSubNum) {
 										bmbIdNext = "";
 										error_code = "1";
-										error_decription = "该评委已经达到了评审的上限。";
+										error_decription = "存在未打分的考生。请先为考生打分，然后再获取新的考生。";
 									} else {
-										
-										sql = tzSQLObject.getSQLText("SQL.TZEvaluationSystemBundle.TzMaterialGetNext");	
-										Map<String, Object> mapNext = sqlQuery.queryForMap(sql,new Object[]{mspyNum,pwzbh,classId,batchId});
-										
-										if(mapNext!=null){
-											Long tzAppInsId = Long.valueOf(mapNext.get("TZ_APP_INS_ID") == null ? "" : mapNext.get("TZ_APP_INS_ID").toString());
-											
-											if(tzAppInsId>0) {
-												//锁表PS_TZ_CLPS_KSH_TBL
-												mySqlLockService.lockRow(sqlQuery, "TZ_CLPS_KSH_TBL");
-												
-												//再次查看有没有超过上限
-												sql = "SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
-												Integer kspwNum = sqlQuery.queryForObject(sql, new Object[]{classId,batchId,tzAppInsId},"Integer");
-												
-												//再次查看有没有被自己抽取过
-												sql = "SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?";
-												String myKsFlag = sqlQuery.queryForObject(sql, new Object[]{classId,batchId,tzAppInsId,oprid}, "String");
-												
-												//再次查看有没有被同组人抽取过
-												sql = "SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B,PS_TZ_CLPS_PW_TBL C WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=C.TZ_PWEI_OPRID";
-												sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND C.TZ_PWZBH=?";
-												String tzpwFlag = sqlQuery.queryForObject(sql, new Object[]{classId,batchId,tzAppInsId,pwzbh}, "String");
-												
-												if(kspwNum>=mspyNum || "Y".equals(myKsFlag) || "Y".equals(tzpwFlag)) {
-													
-												} else {
-													//材料评审评委考生关系表
-													int insertRow;
-													
-													PsTzCpPwKsTbl psTzCpPwKsTbl = new PsTzCpPwKsTbl();
-													psTzCpPwKsTbl.setTzClassId(classId);
-													psTzCpPwKsTbl.setTzApplyPcId(batchId);
-													psTzCpPwKsTbl.setTzAppInsId(tzAppInsId);
-													psTzCpPwKsTbl.setTzPweiOprid(oprid);
-													psTzCpPwKsTbl.setTzGuanxLeix("A");
-													psTzCpPwKsTbl.setRowAddedDttm(new Date());
-													psTzCpPwKsTbl.setRowAddedOprid(oprid);
-													psTzCpPwKsTbl.setRowLastmantDttm(new Date());
-													psTzCpPwKsTbl.setRowLastmantOprid(oprid);
-													insertRow = psTzCpPwKsTblMapper.insert(psTzCpPwKsTbl);
-
-													if(insertRow == 1) {
-														//材料评审考生评审得分历史
-														PsTzKsclpslsTblKey psTzKsclpslsTblKey = new PsTzKsclpslsTblKey();
-														psTzKsclpslsTblKey.setTzClassId(classId);
-														psTzKsclpslsTblKey.setTzApplyPcId(batchId);
-														psTzKsclpslsTblKey.setTzAppInsId(tzAppInsId);
-														psTzKsclpslsTblKey.setTzPweiOprid(oprid);
-														psTzKsclpslsTblKey.setTzClpsLunc(dqpyLunc);
-														
-														PsTzKsclpslsTbl psTzKsclpslsTbl = psTzKsclpslsTblMapper.selectByPrimaryKey(psTzKsclpslsTblKey);
-														
-														if(psTzKsclpslsTbl==null) {
-															psTzKsclpslsTbl = new PsTzKsclpslsTbl();
-															psTzKsclpslsTbl.setTzClassId(classId);
-															psTzKsclpslsTbl.setTzApplyPcId(batchId);
-															psTzKsclpslsTbl.setTzAppInsId(tzAppInsId);
-															psTzKsclpslsTbl.setTzPweiOprid(oprid);
-															psTzKsclpslsTbl.setTzClpsLunc(dqpyLunc);
-															psTzKsclpslsTbl.setTzGuanxLeix("A");
-															psTzKsclpslsTbl.setTzSubmitYn("U");
-															psTzKsclpslsTbl.setRowAddedDttm(new Date());
-															psTzKsclpslsTbl.setRowAddedOprid(oprid);
-															psTzKsclpslsTbl.setRowLastmantDttm(new Date());
-															psTzKsclpslsTbl.setRowLastmantOprid(oprid);
-															psTzKsclpslsTblMapper.insert(psTzKsclpslsTbl);
-														} else {
-															psTzKsclpslsTbl.setTzKshPspm("");
-															psTzKsclpslsTbl.setTzSubmitYn("U");
-															psTzKsclpslsTbl.setRowLastmantDttm(new Date());
-															psTzKsclpslsTbl.setRowLastmantOprid(oprid);
-															psTzKsclpslsTblMapper.updateByPrimaryKey(psTzKsclpslsTbl);
-														}
-														
-														//材料评审考生评委信息
-														
-														sql = "SELECT TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID,group_concat(TZ_PWEI_OPRID SEPARATOR',') AS TZ_PW_LIST FROM PS_TZ_CP_PW_KS_TBL";
-														sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? GROUP BY TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID";
-
-														Map<String, Object> mapKsPwList = sqlQuery.queryForMap(sql,new Object[]{classId,batchId,tzAppInsId});
-														String ksPwList = mapKsPwList.get("TZ_PW_LIST") == null ? "" : mapKsPwList.get("TZ_PW_LIST").toString();
-																
-														
-														PsTzClpskspwTblKey psTzClpskspwTblKey = new PsTzClpskspwTblKey();
-														psTzClpskspwTblKey.setTzClassId(classId);
-														psTzClpskspwTblKey.setTzApplyPcId(batchId);
-														psTzClpskspwTblKey.setTzAppInsId(tzAppInsId);
-														psTzClpskspwTblKey.setTzClpsLunc(dqpyLunc);
-														
-														PsTzClpskspwTbl psTzClpskspwTbl = psTzClpskspwTblMapper.selectByPrimaryKey(psTzClpskspwTblKey);
-														
-														if(psTzClpskspwTbl==null) {
-															psTzClpskspwTbl = new PsTzClpskspwTbl();
-															psTzClpskspwTbl.setTzClassId(classId);
-															psTzClpskspwTbl.setTzApplyPcId(batchId);
-															psTzClpskspwTbl.setTzAppInsId(tzAppInsId);
-															psTzClpskspwTbl.setTzClpsLunc(dqpyLunc);
-															psTzClpskspwTbl.setTzClpwList(ksPwList);
-															psTzClpskspwTbl.setRowAddedDttm(new Date());
-															psTzClpskspwTbl.setRowAddedOprid(oprid);
-															psTzClpskspwTbl.setRowLastmantDttm(new Date());
-															psTzClpskspwTbl.setRowLastmantOprid(oprid);
-															psTzClpskspwTblMapper.insert(psTzClpskspwTbl);
-														} else {
-															psTzClpskspwTbl.setTzClpwList(ksPwList);
-															psTzClpskspwTbl.setRowLastmantDttm(new Date());
-															psTzClpskspwTbl.setRowLastmantOprid(oprid);
-															psTzClpskspwTblMapper.updateByPrimaryKey(psTzClpskspwTbl);
-														}
-														
-														bmbIdNext = String.valueOf(tzAppInsId);
-														error_code = "0";
-														error_decription = "";
-								
-													} else {
-														bmbIdNext = "";
-														error_code = "1";
-														error_decription = "得到下一个考生失败或者已经没有可评审的考生。";
-													}	
-												}
-												
-												//解锁
-												mySqlLockService.unlockRow(sqlQuery);
-											} else {
-												bmbIdNext = "";
-												error_code = "1";
-												error_decription = "同步MBA材料评审评委考生关系表失败。";	
-											}
-										}else{
+										if(pwksNum>=pyksNum) {
 											bmbIdNext = "";
 											error_code = "1";
-											error_decription = "没有可获取的考生。";	
-										}
+											error_decription = "该评委已经达到了评审的上限。";
+										} else {
 										
+											sql = tzSQLObject.getSQLText("SQL.TZEvaluationSystemBundle.TzMaterialGetNext");	
+											Map<String, Object> mapNext = sqlQuery.queryForMap(sql,new Object[]{mspyNum,pwzbh,classId,batchId});
+											
+											if(mapNext!=null){
+												Long tzAppInsId = Long.valueOf(mapNext.get("TZ_APP_INS_ID") == null ? "" : mapNext.get("TZ_APP_INS_ID").toString());
+												
+												if(tzAppInsId>0) {
+													try {
+														
+														TzRecord lockRecord = tzSQLObject.createRecord("PS_TZ_CLPS_LOCK_T");
+														lockRecord.setColumnValue("TZ_CLASS_ID", classId);
+														lockRecord.setColumnValue("TZ_APPLY_PC_ID", batchId);
+														lockRecord.setColumnValue("TZ_APP_INS_ID", tzAppInsId);
+														lockRecord.setColumnValue("TZ_PWZBH", pwzbh);
+														lockRecord.setColumnValue("TZ_PWEI_OPRID", oprid);
+													
+														if(lockRecord.insert()==false) {
+															bmbIdNext = "";
+															error_code = "1";
+															error_decription = "获取下一个考生失败，请重新抽取。";
+														} else {
+												
+															//再次查看有没有超过上限
+															sql = "SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
+															Integer kspwNum = sqlQuery.queryForObject(sql, new Object[]{classId,batchId,tzAppInsId},"Integer");
+															
+															//再次查看有没有被自己抽取过
+															sql = "SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?";
+															String myKsFlag = sqlQuery.queryForObject(sql, new Object[]{classId,batchId,tzAppInsId,oprid}, "String");
+															
+															//再次查看有没有被同组人抽取过
+															sql = "SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B,PS_TZ_CLPS_PW_TBL C WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=C.TZ_PWEI_OPRID";
+															sql = sql + " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND C.TZ_PWZBH=?";
+															String tzpwFlag = sqlQuery.queryForObject(sql, new Object[]{classId,batchId,tzAppInsId,pwzbh}, "String");
+															
+															if(kspwNum>=mspyNum) {
+																bmbIdNext = "";
+																error_code = "1";
+																error_decription = "该评委已经达到了评审的上限。";
+															} else if("Y".equals(myKsFlag)) {
+																bmbIdNext = "";
+																error_code = "1";
+																error_decription = "该考生已经被抽取。";
+															} else if("Y".equals(tzpwFlag)) {
+																bmbIdNext = "";
+																error_code = "1";
+																error_decription = "该考生已经被同组的其他评委抽取。";
+															}  else {
+																//材料评审评委考生关系表
+																int insertRow;
+													
+																PsTzCpPwKsTbl psTzCpPwKsTbl = new PsTzCpPwKsTbl();
+																psTzCpPwKsTbl.setTzClassId(classId);
+																psTzCpPwKsTbl.setTzApplyPcId(batchId);
+																psTzCpPwKsTbl.setTzAppInsId(tzAppInsId);
+																psTzCpPwKsTbl.setTzPweiOprid(oprid);
+																psTzCpPwKsTbl.setTzGuanxLeix("A");
+																psTzCpPwKsTbl.setRowAddedDttm(new Date());
+																psTzCpPwKsTbl.setRowAddedOprid(oprid);
+																psTzCpPwKsTbl.setRowLastmantDttm(new Date());
+																psTzCpPwKsTbl.setRowLastmantOprid(oprid);
+																insertRow = psTzCpPwKsTblMapper.insert(psTzCpPwKsTbl);
+			
+																if(insertRow == 1) {
+																	//材料评审考生评审得分历史
+																	PsTzKsclpslsTblKey psTzKsclpslsTblKey = new PsTzKsclpslsTblKey();
+																	psTzKsclpslsTblKey.setTzClassId(classId);
+																	psTzKsclpslsTblKey.setTzApplyPcId(batchId);
+																	psTzKsclpslsTblKey.setTzAppInsId(tzAppInsId);
+																	psTzKsclpslsTblKey.setTzPweiOprid(oprid);
+																	psTzKsclpslsTblKey.setTzClpsLunc(dqpyLunc);
+																	
+																	PsTzKsclpslsTbl psTzKsclpslsTbl = psTzKsclpslsTblMapper.selectByPrimaryKey(psTzKsclpslsTblKey);
+																	
+																	if(psTzKsclpslsTbl==null) {
+																		psTzKsclpslsTbl = new PsTzKsclpslsTbl();
+																		psTzKsclpslsTbl.setTzClassId(classId);
+																		psTzKsclpslsTbl.setTzApplyPcId(batchId);
+																		psTzKsclpslsTbl.setTzAppInsId(tzAppInsId);
+																		psTzKsclpslsTbl.setTzPweiOprid(oprid);
+																		psTzKsclpslsTbl.setTzClpsLunc(dqpyLunc);
+																		psTzKsclpslsTbl.setTzGuanxLeix("A");
+																		psTzKsclpslsTbl.setTzSubmitYn("U");
+																		psTzKsclpslsTbl.setRowAddedDttm(new Date());
+																		psTzKsclpslsTbl.setRowAddedOprid(oprid);
+																		psTzKsclpslsTbl.setRowLastmantDttm(new Date());
+																		psTzKsclpslsTbl.setRowLastmantOprid(oprid);
+																		psTzKsclpslsTblMapper.insert(psTzKsclpslsTbl);
+																	} else {
+																		psTzKsclpslsTbl.setTzKshPspm("");
+																		psTzKsclpslsTbl.setTzSubmitYn("U");
+																		psTzKsclpslsTbl.setRowLastmantDttm(new Date());
+																		psTzKsclpslsTbl.setRowLastmantOprid(oprid);
+																		psTzKsclpslsTblMapper.updateByPrimaryKey(psTzKsclpslsTbl);
+																	}
+														
+																	//材料评审考生评委信息
+																	
+																	sql = "SELECT TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID,group_concat(TZ_PWEI_OPRID SEPARATOR',') AS TZ_PW_LIST FROM PS_TZ_CP_PW_KS_TBL";
+																	sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? GROUP BY TZ_CLASS_ID,TZ_APPLY_PC_ID,TZ_APP_INS_ID";
+			
+																	Map<String, Object> mapKsPwList = sqlQuery.queryForMap(sql,new Object[]{classId,batchId,tzAppInsId});
+																	String ksPwList = mapKsPwList.get("TZ_PW_LIST") == null ? "" : mapKsPwList.get("TZ_PW_LIST").toString();
+																			
+																	
+																	PsTzClpskspwTblKey psTzClpskspwTblKey = new PsTzClpskspwTblKey();
+																	psTzClpskspwTblKey.setTzClassId(classId);
+																	psTzClpskspwTblKey.setTzApplyPcId(batchId);
+																	psTzClpskspwTblKey.setTzAppInsId(tzAppInsId);
+																	psTzClpskspwTblKey.setTzClpsLunc(dqpyLunc);
+														
+																	PsTzClpskspwTbl psTzClpskspwTbl = psTzClpskspwTblMapper.selectByPrimaryKey(psTzClpskspwTblKey);
+																	
+																	if(psTzClpskspwTbl==null) {
+																		psTzClpskspwTbl = new PsTzClpskspwTbl();
+																		psTzClpskspwTbl.setTzClassId(classId);
+																		psTzClpskspwTbl.setTzApplyPcId(batchId);
+																		psTzClpskspwTbl.setTzAppInsId(tzAppInsId);
+																		psTzClpskspwTbl.setTzClpsLunc(dqpyLunc);
+																		psTzClpskspwTbl.setTzClpwList(ksPwList);
+																		psTzClpskspwTbl.setRowAddedDttm(new Date());
+																		psTzClpskspwTbl.setRowAddedOprid(oprid);
+																		psTzClpskspwTbl.setRowLastmantDttm(new Date());
+																		psTzClpskspwTbl.setRowLastmantOprid(oprid);
+																		psTzClpskspwTblMapper.insert(psTzClpskspwTbl);
+																	} else {
+																		psTzClpskspwTbl.setTzClpwList(ksPwList);
+																		psTzClpskspwTbl.setRowLastmantDttm(new Date());
+																		psTzClpskspwTbl.setRowLastmantOprid(oprid);
+																		psTzClpskspwTblMapper.updateByPrimaryKey(psTzClpskspwTbl);
+																	}
+														
+																	bmbIdNext = String.valueOf(tzAppInsId);
+																	error_code = "0";
+																	error_decription = "";
+											
+																} else {
+																	bmbIdNext = "";
+																	error_code = "1";
+																	error_decription = "同步MBA材料评审评委考生关系表失败。";	
+																}	
+															}
+														}
+															
+														sqlQuery.update("DELETE FROM PS_TZ_CLPS_LOCK_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWZBH=?",new Object[]{classId,batchId,tzAppInsId,pwzbh});
+								
+														
+													} catch(Exception e) {
+														bmbIdNext = "";
+														error_code = "1";
+														error_decription = "获取下一个考生失败，请重新抽取。";
+													}
+													
+												} else {
+													bmbIdNext = "";
+													error_code = "1";
+													error_decription = "获取下一个考生失败或者已经没有可评审的考生。";
+												}
+											}else{
+												bmbIdNext = "";
+												error_code = "1";
+												error_decription = "没有可获取的考生。";	
+											}
+											
+										}
 									}
+								} else {
+									bmbIdNext = "";
+									error_code = "1";
+									error_decription = "评委账号没有被启用。";
 								}
 							} else {
 								bmbIdNext = "";
 								error_code = "1";
-								error_decription = "评委账号没有被启用。";
+								error_decription = "当前批次的评审状态不在进行中。";
 							}
-						} else {
-							bmbIdNext = "";
-							error_code = "1";
-							error_decription = "当前批次的评审状态不在进行中。";
 						}
+					}else{
+						bmbIdNext = "";
+						error_code = "1";
+						error_decription = "没有开启评审。";
 					}
-				}else{
+				} catch(Exception e) {
 					bmbIdNext = "";
 					error_code = "1";
-					error_decription = "没有开启评审。";
+					error_decription = e.toString();
+				} finally {
+					nextLock.release();
+					nextLockCounter.release();
 				}
 				
-
 			}
 			
 			// 考生姓名;
