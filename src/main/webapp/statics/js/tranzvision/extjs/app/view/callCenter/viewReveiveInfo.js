@@ -229,13 +229,23 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 					xtype : 'fieldset',
 					title : '电话控制区',
 					layout : {
-						type : 'vbox',
+						type : 'column',
 						align : 'stretch'
+					},
+					fieldDefaults: {
+						msgTarget: 'side',
+						labelWidth: 130,
+						labelStyle: 'font-weight:bold'
 					},
 					items : [ {
 						xtype : 'displayfield',
 						fieldLabel : '来电时间',
 						name : 'callDTime'
+					},{
+						xtype : 'displayfield',
+						style :'margin-left:80px',
+						fieldLabel : '接听人',
+						name : 'staffName'
 					}]
 				},{
 					xtype : 'fieldset',
@@ -463,7 +473,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                         {
                             style: 'margin-left:10px',
                             xtype: 'button',
-                            text: '重置密码',
+                            text: '修改密码',
                             defaultColor: '',
                             name: 'updatePsw',
                             flagType: 'positive',
@@ -492,7 +502,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                             setType: 0,
                             handler: 'addBlackList',
                             width: 100
-                        },
+                        }/*,
                         {
                             style: 'margin-left:10px',
                             xtype: 'button',
@@ -503,7 +513,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                             setType: 0,
                             handler: 'saveInfo',
                             width: 100
-                        }]
+                        }*/]
                     }]
 				},{
 					xtype : 'fieldset',
@@ -511,21 +521,33 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 					layout : {
 						type : 'column'
 					},
+					fieldDefaults: {
+						labelWidth: 100
+					},
 					style:'padding-bottom:10px',
 					items : [ {
 						xtype : 'textfield',
 						fieldLabel : '姓名',
+						width:260,
 						name : 'searchName'
 					}, {
 						xtype : 'textfield',
-						fieldLabel : '手机',
+						fieldLabel : '注册手机',
+						width:260,
 						style:'margin-left:10px',
 						name : 'searchPhone'
 					}, {
 						xtype : 'textfield',
-						fieldLabel : '邮箱',
+						fieldLabel : '注册邮箱',
+						width:260,
 						style:'margin-left:10px',
 						name : 'searchEmail'
+					},{
+						xtype : 'textfield',
+						fieldLabel : '面试申请号',
+						width:260,
+						style:'margin-left:10px',
+						name : 'searchMshId'
 					},{
                         style: 'margin-left:10px',
                         xtype: 'button',
@@ -648,6 +670,10 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 		this.callParent();
 	},
     buttons: [{
+		text: '保存',
+		iconCls:"save",
+		handler: 'saveInfo'
+		},{
 			text: '关闭',
 			iconCls:"close",
 			handler: 'onClose'
@@ -668,9 +694,8 @@ function DelCookie(name){
     var me = this;
     var myDate=new Date();
     myDate.setTime(-1000);//设置时间
-    var domain = "." + window.location.host.split(":")[0];
-
+    var domain = window.location.host.split(":")[0];
+    
     var cookie = name + "=;path=/;domain=" + domain + ";expires=" + myDate.toGMTString();
-
     document.cookie = cookie;
 }

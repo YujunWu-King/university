@@ -99,6 +99,11 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				mapList.put("appCreateDtime", rowList[6]);
 				mapList.put("appBmStatus", rowList[7]);
 				
+				String strTplId = sqlQuery.queryForObject("SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?", new Object[]{rowList[5]}, "String");
+				if(strTplId==null){
+					strTplId = "";
+				}
+				mapList.put("clpsBmbTplId", strTplId);
 				//第二个grid
 				String strSQl = "SELECT TZ_ENTER_CLPS,TZ_RESULT FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?";
 				Map<String, Object> SMAP = sqlQuery.queryForMap(strSQl, new Object[]{rowList[5]});
@@ -176,7 +181,7 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 			String strTransSQL = "SELECT TZ_ZHZ_DMS  FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?";
 			
 			//来电时间和主叫号码
-			String strSQL1 = "SELECT TZ_CALL_TYPE,TZ_PHONE,TZ_CALL_DTIME,TZ_DEALWITH_ZT,TZ_DESCR FROM PS_TZ_PH_JDD_TBL WHERE TZ_XH=?";
+			String strSQL1 = "SELECT TZ_CALL_TYPE,TZ_PHONE,date_format(TZ_CALL_DTIME,'%Y-%m-%d %H:%i') TZ_CALL_DTIME,TZ_DEALWITH_ZT,TZ_DESCR,TZ_DLZH_ID FROM PS_TZ_PH_JDD_TBL WHERE TZ_XH=?";
 			Map<String, Object> return1 = sqlQuery.queryForMap(strSQL1, new Object[]{strCallXh});
 			if(return1!=null&&return1.size()>0){
 				String strPar1 = return1.get("TZ_CALL_TYPE")==null?"":String.valueOf(return1.get("TZ_CALL_TYPE"));
@@ -184,6 +189,7 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				String strPar3 = return1.get("TZ_CALL_DTIME")==null?"":String.valueOf(return1.get("TZ_CALL_DTIME"));
 				String strPar4 = return1.get("TZ_DEALWITH_ZT")==null?"":String.valueOf(return1.get("TZ_DEALWITH_ZT"));
 				String strPar5 = return1.get("TZ_DESCR")==null?"":String.valueOf(return1.get("TZ_DESCR"));
+				String strPar6 = return1.get("TZ_DLZH_ID")==null?"":String.valueOf(return1.get("TZ_DLZH_ID"));
 				returnMap.put("phoneNum", strPar2);
 				//来电号码拼接归属地信息
 				String strAreaDesc = "";
@@ -215,6 +221,8 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				returnMap.put("callDTime", strPar3);
 				returnMap.put("dealwithZT", strPar4);
 				returnMap.put("callDesc", strPar5);
+				String strStaffName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?", new Object[]{strPar6}, "String");
+				returnMap.put("staffName", strStaffName);
 			}
 			
 			String strSQL2 = "SELECT TZ_REALNAME,TZ_GENDER,BIRTHDATE,TZ_BLACK_NAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
@@ -335,23 +343,37 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				String strPhone = jacksonUtil.getString("phone");
 				String strEmail = jacksonUtil.getString("email");
 				String strName = jacksonUtil.getString("name");
+				String strMshId = jacksonUtil.getString("mshId");
 				
-				String sql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE 1=1";
+				String sql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL";
+				String countSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL";
+				
+				String strWhere = " WHERE 1=1";
 				if(strPhone!=null&&!"".equals(strPhone)){
-					sql = sql + " AND TZ_MOBILE LIKE '%" + strPhone + "%'";
+					strWhere = strWhere + " AND TZ_MOBILE LIKE '%" + strPhone + "%'";					
 				}
 				
 				if(strEmail!=null&&!"".equals(strEmail)){
-					sql = sql + " AND TZ_EMAIL LIKE '%" + strEmail + "%'";
+					strWhere = strWhere + " AND TZ_EMAIL LIKE '%" + strEmail + "%'";
 				}
 				
 				if(strName!=null&&!"".equals(strName)){
-					sql = sql + " AND TZ_REALNAME LIKE '%" + strName + "%'";
+					strWhere = strWhere + " AND TZ_REALNAME LIKE '%" + strName + "%'";
 				}
-				sql = sql + " limit 0,1";
 				
+				if(strMshId!=null&&!"".equals(strMshId)){
+					strWhere = strWhere + " AND TZ_MSH_ID LIKE '%" + strMshId + "%'";
+				}
+				
+				sql = sql + strWhere + " limit 0,1";
+				countSQL = countSQL + strWhere;
 				strOprid = sqlQuery.queryForObject(sql, new Object[]{}, "String");
-				returnMap.put("OPRID", strOprid);			
+				Integer count = sqlQuery.queryForObject(countSQL, new Object[]{}, "Integer");
+				if(count==null){
+					count = 0;
+				}
+				returnMap.put("PSNCOUNT", count);
+				returnMap.put("OPRID", strOprid);
 				
 				return jacksonUtil.Map2json(returnMap);
 			}
@@ -373,9 +395,9 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 			//修改密码
 			if("UPDATEPSW".equals(oprType)){
 				strOprid = jacksonUtil.getString("OPRID");
-				if(strOprid!=null&&!"".equals(strOprid)){
-					String strUpdateSQL = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_JIHUO_ZT = 'Y' WHERE OPRID=?";
-					String password = "123456";
+				if(strOprid!=null&&!"".equals(strOprid)){					
+					String password = jacksonUtil.getString("password");
+					
 					String tmpPassword = DESUtil.encrypt(password,"TZGD_Tranzvision");
 					
 					Psoprdefn psoprdefn = new Psoprdefn();
@@ -427,18 +449,34 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 			}
 			//保存接待单信息
 			if("SAVEINFO".equals(oprType)){
+				strOprid = jacksonUtil.getString("OPRID");
 				String strCallXh = jacksonUtil.getString("callXh");
 				String strCallDesc = jacksonUtil.getString("callDesc");
 				String strDealwithZT = jacksonUtil.getString("dealwithZT");
 				if(strCallXh!=null&&!"".equals(strCallXh)){
-					String strUpdateSQL = "UPDATE PS_TZ_PH_JDD_TBL SET TZ_DEALWITH_ZT=?,TZ_DESCR=? WHERE TZ_XH=?";
-					int success = sqlQuery.update(strUpdateSQL, new Object[]{strDealwithZT,strCallDesc,strCallXh});
+					String strUpdateSQL = "UPDATE PS_TZ_PH_JDD_TBL SET TZ_DEALWITH_ZT=?,TZ_DESCR=?,TZ_OPRID=? WHERE TZ_XH=?";
+					int success = sqlQuery.update(strUpdateSQL, new Object[]{strDealwithZT,strCallDesc,strOprid,strCallXh});
 					if(success > 0){
+						//修改报名表提交状态
+						List<?> mRecords = jacksonUtil.getList("mRecords");
+						if(mRecords.size()>0){
+							for (Object obj : mRecords) {
+
+								Map<String, Object> mapFormData = (Map<String, Object>) obj;
+								String str_app_ins_id = mapFormData.get("appInsId")==null?"":String.valueOf(mapFormData.get("appInsId"));
+								String str_app_status = mapFormData.get("appBmStatus")==null?"":String.valueOf(mapFormData.get("appBmStatus"));
+								if(str_app_ins_id!=null&&!"".equals(str_app_ins_id)){
+									strUpdateSQL = "UPDATE PS_TZ_APP_INS_T SET TZ_APP_FORM_STA=? WHERE TZ_APP_INS_ID=?";
+									success = sqlQuery.update(strUpdateSQL, new Object[]{str_app_status,str_app_ins_id});
+								}
+							}
+						}
 						returnMap.put("success", "true");
 					}else{
 						errorMsg[0] = "1";
 						errorMsg[1] = "保存信息失败";
-					}
+					}					
+					
 				}
 			}
 			

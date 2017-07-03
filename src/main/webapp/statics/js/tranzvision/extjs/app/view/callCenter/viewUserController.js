@@ -121,9 +121,9 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		var store = grid.getStore();
 		var record = store.getAt(rowIndex);
 		
-		var classID = record.get("classID");
-		var oprID = record.get("oprID");
-		var appInsID = record.get("insID");
+		var classID = record.get("classId");
+		var oprID = record.get("oprid");
+		var appInsID = record.get("appInsId");
 		var clpsBmbTplId = record.get("clpsBmbTplId");
         
 		if (appInsID != "") {
@@ -183,6 +183,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 this.getView().close();
 	 },
 	 activeAccount:function(btn){
+		 //this.saveInfo(btn);
 		 var form = this.getView().lookupReference("userForm");		
 		 var formValues = form.getValues();
 		 var oprId = formValues.oprId;
@@ -194,15 +195,30 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			 }
 		 });
 	 },
-	 updatePsw:function(btn){
-		 var form = this.getView().lookupReference("userForm");		
+	 confirmUpdatePsw:function(btn){
+		 //this.saveInfo(btn);
+		 //var form = this.getView().lookupReference("updatePswWindow");
+		 //获取窗口
+		 var win = btn.findParentByType("window");
+		 //重置密码信息表单
+		 var form = win.child("form").getForm();
+			
+		 if (!form.isValid()) {//表单校验未通过
+			return false;
+		 }
 		 var formValues = form.getValues();
 		 var oprId = formValues.oprId;
 		 var callXh = formValues.receiveId;
-		 var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"UPDATEPSW","comParams":{"OPRID":"' + oprId + '","callXh":"' + callXh + '"}}';
-		 Ext.tzSubmit(tzParams,function(response){});
+		 var password = formValues.password;
+		 
+		 var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"UPDATEPSW","comParams":{"OPRID":"' + oprId + '","callXh":"' + callXh + '","password":"' + password + '"}}';
+		 Ext.tzSubmit(tzParams,function(response){
+			 win.close();
+		 });
+		 
 	 },
 	 invalidAccount:function(btn){
+		 //this.saveInfo(btn);
 		 var form = this.getView().lookupReference("userForm");		
 		 var formValues = form.getValues();
 		 var oprId = formValues.oprId;
@@ -215,6 +231,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 });
 	 },
 	 addBlackList:function(btn){
+		 //this.saveInfo(btn);
 		 var form = this.getView().lookupReference("userForm");		
 		 var formValues = form.getValues();
 		 var oprId = formValues.oprId;
@@ -231,10 +248,19 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 var formValues = form.getValues();
 		 console.log(formValues);
 		 
+		 var grid = form.child("grid[name=bmInfoList]");
+		 var store = grid.getStore();
+		 var modiRecords = store.getModifiedRecords();
+		 var mRecords=[];
+		 for(var i=0;i<modiRecords.length;i++){
+			 console.log(modiRecords[i]);
+			 mRecords.push(modiRecords[i].data);
+	     }
+		 
 		 var oprId = formValues.oprId;
 		 var callXh = formValues.receiveId;
 		 var dealwithZT = formValues.dealwithZT;
-		 var callDesc = formValues.callDesc;
+		 var callDesc = formValues.callDesc;		 
 		 var tzParams = {
 		     ComID:"TZ_CALLCR_USER_COM",
 		     PageID:"TZ_CALLC_USER_STD",
@@ -243,11 +269,16 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		    	 OPRID:oprId,
 		    	 callXh:callXh,
 		    	 dealwithZT:dealwithZT,
-		    	 callDesc:callDesc
+		    	 callDesc:callDesc,
+		    	 mRecords:mRecords
 		     }
 		 }
 		 //var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"SAVEINFO","comParams":{"OPRID":"' + oprId + '","callXh":"' + callXh + '","dealwithZT":"' + dealwithZT + '","callDesc":"' + Ext.JSON.encode(callDesc) + '"}}';
-		 Ext.tzSubmit(Ext.JSON.encode(tzParams),function(response){ }); 
+		 Ext.tzSubmit(Ext.JSON.encode(tzParams),function(response){
+			 if(modiRecords.length>0){
+				 store.reload();
+			 }
+		 }); 
 	 },
 	 search:function(){
 		 var me = this;
@@ -258,29 +289,37 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 var searchName = formValues.searchName;
 		 var searchPhone = formValues.searchPhone;
 		 var searchEmail = formValues.searchEmail;
-		 if(searchName!=""||searchPhone!=""||searchEmail!=""){
-			 var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"SEARCHUSER","comParams":{"phone":"' + searchPhone + '","email":"' + searchEmail + '","callXh":"' + callXh + '","name":"' + searchName + '"}}';
+		 var searchMshId = formValues.searchMshId;
+		 
+		 if(searchName!=""||searchPhone!=""||searchEmail!=""||searchMshId!=""){
+			 var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"SEARCHUSER","comParams":{"phone":"' + searchPhone + '","email":"' + searchEmail + '","callXh":"' + callXh + '","name":"' + searchName + '","mshId":"' + searchMshId + '"}}';
 			 Ext.tzLoadAsync(tzParams,function(response){
 				oprid = response.OPRID;
-				historyCount = response.viewHistoryCall;
-				if(oprid!=null&&oprid!=undefined&&oprid!=""){
-					tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"QF","comParams":{"OPRID":"' + oprid + '","callXh":"' + callXh + '","phone":"' + searchPhone +'","type":""}}';
-					var formData;
-					Ext.tzLoadAsync(tzParams,function(response){
-						//formData = response;
-						form.getForm().setValues(response);						
-					});	
-					var Grid = form.down("grid[name=bmInfoList]");
-					var store = Grid.getStore();
-					var tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_USER_STD.TZ_USER_CALL1_VW","condition":{"OPRID-operator": "01","OPRID-value": "'+ oprid+'"}}';
-
-					store.tzStoreParams = tzStoreParams;
-					store.load();
-					//将按钮恢复点击
-					me.disabledButton(form,false);
+				var count = response.PSNCOUNT;
+				if(count>1){
+					Ext.MessageBox.alert("提示","搜索到多个考生，请增加搜索条件");
 				}else{
-					Ext.MessageBox.alert("提示","搜索不到考生信息");
+					//historyCount = response.viewHistoryCall;
+					if(oprid!=null&&oprid!=undefined&&oprid!=""){
+						tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"QF","comParams":{"OPRID":"' + oprid + '","callXh":"' + callXh + '","phone":"' + searchPhone +'","type":""}}';
+						var formData;
+						Ext.tzLoadAsync(tzParams,function(response){
+							//formData = response;
+							form.getForm().setValues(response);						
+						});	
+						var Grid = form.down("grid[name=bmInfoList]");
+						var store = Grid.getStore();
+						var tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_USER_STD.TZ_USER_CALL1_VW","condition":{"OPRID-operator": "01","OPRID-value": "'+ oprid+'"}}';
+
+						store.tzStoreParams = tzStoreParams;
+						store.load();
+						//将按钮恢复点击
+						me.disabledButton(form,false);
+					}else{
+						Ext.MessageBox.alert("提示","搜索不到考生信息");
+					}
 				}
+				
 			 });
 		 }else{
 			 Ext.MessageBox.alert("提示","请输入搜索条件，搜索考生");
@@ -303,7 +342,10 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 	var phone = record.data.callPhone;
 		 	var type = record.data.callType;
 		 	var callXh = record.data.receiveId;
-		 	console.log(record.data);
+		 	var oprid = record.data.callOprid;
+		 	var historyCount = record.data.viewHistoryCall;
+			var actCount = record.data.bmrBmActCount;
+			
 		 	//是否有访问权限
 		 	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CALLCR_USER_COM"]["TZ_CALLC_USER_STD"];
 		 	if( pageResSet == "" || pageResSet == undefined){
@@ -355,7 +397,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			
 			cmp.on('afterrender',function(panel){
 				//用户账号信息表单
-				var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"GETUSER","comParams":{"phone":"' + phone + '","type":"' + type + '","callXh":"' + callXh + '"}}';
+				/*var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"GETUSER","comParams":{"phone":"' + phone + '","type":"' + type + '","callXh":"' + callXh + '"}}';
 				var oprid = "";
 				var historyCount;
 				var actCount;
@@ -364,7 +406,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 					oprid = response.OPRID;
 					historyCount = response.viewHistoryCall;
 					actCount = response.bmrBmActCount;
-				});
+				});*/
 				
 				
 				var _this = panel.child('form');
@@ -373,7 +415,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 				var Grid = _this.down("grid[name=bmInfoList]");
 				
 				
-				tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"QF","comParams":{"OPRID":"' + oprid + '","type":"' + type + '","callXh":"' + callXh + '","phone":"' + phone +'"}}';
+				var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"QF","comParams":{"OPRID":"' + oprid + '","type":"' + type + '","callXh":"' + callXh + '","phone":"' + phone +'"}}';
 				
 				Ext.tzLoadAsync(tzParams,function(responseData){
 					//系统变量信息数据
@@ -559,6 +601,55 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 	        
 	        pageGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_ACT_STD.TZ_CCALL_HD_VW","condition":{"TZ_ZY_SJ-operator": "01","TZ_ZY_SJ-value": "'+ phone+'","TZ_JG_ID-operator":"01","TZ_JG_ID-value":"' + Ext.tzOrgID + '"}}';
 	        pageGrid.store.load();
+
+	        win.show();
+	 },
+	 updatePsw:function(btn){
+		 Ext.tzSetCompResourses("TZ_CALLCR_USER_COM");
+		 
+		 var form = this.getView().lookupReference("userForm");
+		 var oprid = form.down("textfield[name=oprId]").getValue();
+		 var callXh = form.down("textfield[name=receiveId]").getValue();
+		 var phone = form.down("textfield[name=phoneNum]").getValue();
+		 var name = form.down("displayfield[name=bmrName]").getValue();
+		 var gender = form.down("displayfield[name=bmrGender]").getValue();
+ 		 //是否有访问权限
+	     var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CALLCR_USER_COM"]["TZ_CALLC_UPW_STD"];
+	     if( pageResSet == "" || pageResSet == undefined){
+	         Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+	         return;
+	     }
+	     //该功能对应的JS类
+	     var className = pageResSet["jsClassName"];
+	     if(className == "" || className == undefined){
+	         Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CALLC_UPW_STD，请检查配置。');
+	         return;
+	     }
+
+	     var win = this.lookupReference('updatePswWindow');
+
+	     if (!win) {
+	    	 Ext.syncRequire(className);
+	         ViewClass = Ext.ClassManager.get(className);
+	         //新建类
+	         win = new ViewClass();
+	         this.getView().add(win);
+	     }
+
+	      //操作类型设置为更新
+	      win.actType = "update";
+
+	      var form = win.child("form").getForm();
+	      console.log(oprid,callXh);
+	      form.setValues(
+	            [
+	            	{id:'receiveId',value:callXh},
+	            	{id:'oprId',value:oprid},
+	                {id:'callPhone', value:phone},
+	                {id:'bmrName', value:name},
+	                {id:'bmrGender',value:gender}
+	            ]
+	        );
 
 	        win.show();
 	 }

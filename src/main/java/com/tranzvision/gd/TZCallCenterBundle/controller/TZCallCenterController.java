@@ -91,6 +91,7 @@ public class TZCallCenterController {
 			Date loginEndDTime = null;
 			//VB中加密用户名组成为：USERID + "|" + 时间戳
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			
 			try{
 				int pos = tmpUserDlzh.indexOf("|");
 				
@@ -107,9 +108,9 @@ public class TZCallCenterController {
 			}catch(Exception e){
 				/**/
 			}
-			
-			//System.out.println("用户名：" + strUserId);
-			//System.out.println("登录有效截止时间：" + sdf.format(loginEndDTime));
+			System.out.println("原用户名：" + tmpUserDlzh);
+			System.out.println("用户名：" + strUserId);
+			System.out.println("登录有效截止时间：" + sdf.format(loginEndDTime));
 			String strTel = request.getParameter("tel");
 			String strType = request.getParameter("type");		
 			if(strType==null||"".equals(strType)){

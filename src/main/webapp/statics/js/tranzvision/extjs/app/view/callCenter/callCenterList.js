@@ -67,6 +67,21 @@
                 dataIndex: 'callDTime',
                 width: 150
             },{
+				text: '姓名',
+                sortable: true,				
+                dataIndex: 'callName',
+                width: 150
+            },{
+				text: '面试申请号',
+                sortable: true,				
+                dataIndex: 'callMshId',
+                width: 150
+            },{
+				text: '接听人',
+                sortable: true,				
+                dataIndex: 'jtPsnName',
+                width: 150
+            },{
 				text: '处理状态',
                 sortable: true,				
                 dataIndex: 'dealWithZT',
