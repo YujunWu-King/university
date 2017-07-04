@@ -222,8 +222,36 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 	                $clearImgEnd.css("visibility","visible");
 	            }
 			});
+			if(!SurveyBuild._readonly){
+				$checkboxDev.click(function(){
+				    $(this).find(':checkbox').toggleCheckbox();
+				    $(this).toggleClass('checkedBox');
+				    
+					if ($(this).find(':checkbox').prop("checked")) {
+						$dateInputEnd.hide();
+						$dateImgEnd.hide();
+						$clearImgEnd.css("visibility","hidden");
+						$dateInputEnd.attr("disabled","disabled").unFormValidator(true);
+					} else {
+						$dateInputEnd.show();
+						$dateImgEnd.show();
+						if ($dateInputEnd.val() !="") {
+							 $clearImgEnd.css("visibility","visible");
+						}
+						$dateInputEnd.removeAttr("disabled").unFormValidator(false);
+					}
+				});
+			}
+			$clearImgStart.click(function(e) {
+				$dateInputStart.val("");
+				$clearImgStart.css("visibility","hidden");
+	        });
+			
+			$clearImgEnd.click(function(e) {
+				$dateInputEnd.val("");
+				$clearImgEnd.css("visibility","hidden");
+	        });
 		}else if(SurveyBuild.accessType == "M"){
-
 			//M手机
 			var $type;
 			switch(data.dateformate)
@@ -262,30 +290,13 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
 			    		$dateInputEnd.parent(".text-box").show();
 			    		$todaySpan.show();
 			    		$dateInputEnd.removeAttr("disabled").unFormValidator(false);
+			    		
+				    	if($dateInputEnd.val()!=""&&$dateInputStart.val()!=""){
+				    		$dateInputStart.unFormValidator(true);
+				    	}
 			    	}
 			    });
 		    }
-		}
-		
-		if(!SurveyBuild._readonly){
-			$checkboxDev.click(function(){
-			    $(this).find(':checkbox').toggleCheckbox();
-			    $(this).toggleClass('checkedBox');
-			    
-				if ($(this).find(':checkbox').prop("checked")) {
-					$dateInputEnd.hide();
-					$dateImgEnd.hide();
-					$clearImgEnd.css("visibility","hidden");
-					$dateInputEnd.attr("disabled","disabled").unFormValidator(true);
-				} else {
-					$dateInputEnd.show();
-					$dateImgEnd.show();
-					if ($dateInputEnd.val() !="") {
-						 $clearImgEnd.css("visibility","visible");
-					}
-					$dateInputEnd.removeAttr("disabled").unFormValidator(false);
-				}
-			});
 		}
 
 		
@@ -298,15 +309,7 @@ SurveyBuild.extend("DateComboBox", "baseComponent", {
         });
 
 		
-		$clearImgStart.click(function(e) {
-			$dateInputStart.val("");
-			$clearImgStart.css("visibility","hidden");
-        });
 		
-		$clearImgEnd.click(function(e) {
-			$dateInputEnd.val("");
-			$clearImgEnd.css("visibility","hidden");
-        });
 		
 		
 		$dateInputStart.formValidator({tipID:data["itemId"] + data.children[0]["itemId"] +'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
