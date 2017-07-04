@@ -296,12 +296,15 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 
 					strOprID = sqlQuery.queryForObject("SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=?", new Object[]{strAppInsID}, "String");
 					Map<String,Object> psnMap =  sqlQuery.queryForMap("SELECT TZ_GENDER,TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?", new Object[]{strOprID});
-					strName = psnMap.get("TZ_REALNAME")==null?"":String.valueOf(psnMap.get("TZ_REALNAME"));
-					strGender = psnMap.get("TZ_GENDER")==null?"":String.valueOf(psnMap.get("TZ_GENDER"));
-					strGender = sqlQuery.queryForObject(strTransValueSql, new Object[] { "TZ_GENDER", strGender }, "String");
-					if (strGender == null) {
-						strGender = "";
+					if(psnMap!=null){
+						strName = psnMap.get("TZ_REALNAME")==null?"":String.valueOf(psnMap.get("TZ_REALNAME"));
+						strGender = psnMap.get("TZ_GENDER")==null?"":String.valueOf(psnMap.get("TZ_GENDER"));
+						strGender = sqlQuery.queryForObject(strTransValueSql, new Object[] { "TZ_GENDER", strGender }, "String");
+						if (strGender == null) {
+							strGender = "";
+						}
 					}
+					
 					
 					String strPwList = "";
 					String sql3 = "SELECT TZ_PWEI_OPRID FROM PS_TZ_MP_PW_KS_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_DELETE_ZT <> 'Y' AND TZ_PSHEN_ZT <> 'C'";
@@ -379,7 +382,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			errMsg[0] = "100";
 			errMsg[1] = e.toString();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return strResponse;
 	}
