@@ -20,12 +20,12 @@
 
 			var aaa = classid.split("--");
 			classid = aaa[0];
-
+			var projectID=aaa[1];
 			var pageid = "%bind(:2)";
 			var linkId = "%bind(:9)";
 			$("#" + pageid, window.parent.document).val(classid);
 			$("#ClassId", window.parent.document).val(classid);
-
+			$("#BatchId", window.parent.document).val("");
 			$("#"+pageid+"_SPAN", window.parent.document).val($("input[name='%bind(:7)']:checked").next().text());
 
 			var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"BATCH","CLASSID":"'
@@ -56,7 +56,13 @@
 			}
 			$("#" + linkId, window.parent.document).html(FIRM_TYPE);
 			window.parent.$("#" + linkId).trigger("chosen:updated");
-
+			if (projectID =="PRJ_57") {
+				$("#TZ_TZ_3_4", window.parent.document).show();
+				$("#TZ_TZ_3_3", window.parent.document).parent().parent().show();
+			} else {
+				$("#TZ_TZ_3_4", window.parent.document).hide();
+				$("#TZ_TZ_3_3", window.parent.document).parent().parent().hide();
+			}
 			closeThis();
 
 		}

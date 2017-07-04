@@ -1355,9 +1355,6 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
                 }
 			}
 
-			//上传校验
-			var $fileInput = $("#" + data.itemId +child.EngLevelUp.itemId);
-			console.log("$fileInput====" + $fileInput)
 		}else{
 
 			//为所有的select注册事件
