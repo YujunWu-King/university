@@ -1,28 +1,9 @@
-<!DOCTYPE html>
-<html data-dpr="1" style="font-size: 23.4375px;">
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta charset="utf-8">
-<meta name="format-detection" content="telephone=no">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0">
-<title></title>
-<link href="%bind(:20)/statics/css/appeditor/m/style.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="%bind(:20)/statics/css/appeditor/m/LCalendar.css">
-<link rel="stylesheet" href="%bind(:20)/statics/css/appeditor/m/rest.css">
-<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="%bind(:20)/statics/js/lib/jquery/jquery.form.js"></script>
-<link rel="stylesheet" href="%bind(:20)/statics/css/appeditor/m/swiper.min.css">
-<script type="text/javascript" src="%bind(:20)/statics/js/tranzvision/appwidget/m/rem.js"></script>
-<script type="text/javascript" src="%bind(:20)/statics/js/tranzvision/appwidget/m/common.js"></script>
-<script src="%bind(:20)/statics/js/tranzvision/appwidget/m/swiper.min.js"></script>
-<script src="%bind(:20)/statics/js/tranzvision/appwidget/m/LCalendar.js"></script> 
-<script src="%bind(:20)/statics/js/tranzvision/appwidget/m/iscroll-zoom.js"></script>
-<script src="%bind(:20)/statics/js/tranzvision/appwidget/m/hammer.js"></script>
-<script src="%bind(:20)/statics/js/tranzvision/appwidget/m/jquery.photoClip.js"></script>
+
 <script>
 var wid=$(window).width()*0.9
 // alert(wid);
 var obUrl = ''
+
 //document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 $("#clipArea").photoClip({
 	width:wid,
@@ -46,8 +27,9 @@ $("#clipArea").photoClip({
 $(function(){
 	$("#clipBtn").click(function(){
 		     var imaPath="",path="",sysFileName="",filename="",imaPath1="";
-			$("#photox").empty();
-			$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
+			//$("#photox").empty();
+			//$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
+			
 			$(".htmleaf-container").hide();
 			var obj_file = document.getElementById("file");
 			
@@ -67,7 +49,7 @@ $(function(){
 					sysFileName=msg.msg.sysFileName;
 					filename=msg.msg.filename;
 					
-				    var filedate=$("#photox img").attr("src");
+				    var filedate=imgsource;
 					 filedate=filedate.split(',');
 					
 			        
@@ -86,6 +68,7 @@ $(function(){
 				    success:function(html){
 				    	
 				    	var fileStrJson = {"sysFileName": sysFileName , "filename": filename, "imaPath": imaPath1, "path": path};
+				    	console.log("imaPath1:"+imaPath1+"/"+sysFileName);
 			  			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"PHOTO","comParams":' + JSON.stringify( fileStrJson ) + '}';
 			  		//3.再保存截取后的图片如今名称到数据库
 		                $.ajax({
@@ -94,7 +77,13 @@ $(function(){
 							dataType:"json",
 		                    data: {"tzParams" : tzParams },	
 		                    success:function(html){
+		                    	//imaPath1='/university'+imaPath1;
+		                    	$("#searchCountry").html('');
 		                    	
+		                    	$("#photox").attr('src',imaPath1+sysFileName);
+		                    	var _iItem = $("#photox",window.top.document).parent().siblings("input");
+		                    	_iItem.val(imaPath1+sysFileName);
+		                    	$('#view').attr('src',"");
 		                    	}
 		                    })
 				    	
@@ -246,13 +235,14 @@ $(".file-3").parents(".uploader").find(".filename").val(subUrl);
 });
 //返回
 function PhoneBack(obj){
-	$(".htmleaf-container").hide();
+	$("#searchCountry").html('');
+	$("#searchCountry").hide();
 }
 </script>
 
-</head>
-	<body>
-   <article class="htmleaf-container" style="display: block;">
+
+
+	<article class="htmleaf-container" style="display: block;">
 		  <div id="clipArea" style="user-select: none; overflow: hidden; position: relative;">
 		  <div style="position: absolute;top: 10px;left: 10px;z-index: 100000;color: #fff;" onclick="PhoneBack(this)">返回</div></div>
 			<div class="foot-use">
@@ -275,5 +265,3 @@ function PhoneBack(obj){
 			<div id="view" style="background-color: rgb(102, 102, 102); background-repeat: no-repeat; background-position: center center; background-size: contain;"></div>
 			
 	    </article>
-	</body>
-</html>

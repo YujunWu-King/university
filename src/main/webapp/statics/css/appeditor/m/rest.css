@@ -414,6 +414,7 @@ width: 54%;
     cursor: pointer;
     border: solid 1px #ddd;
     opacity: 0;
+    background-color:#18b4ed;
 }
 input[type=button]::-moz-focus-inner {
     padding: 0;
