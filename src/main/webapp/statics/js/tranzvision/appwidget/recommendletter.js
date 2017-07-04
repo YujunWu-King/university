@@ -2368,7 +2368,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		var tjxEditMode = false;
 		
 		//称呼
-        works += '<div class="w_96">';
+        //works += '<div class="w_96">';
+		works += '<div class="index_body" style="margin-top: 25px;">';
+		works += '<div class="mainright-box pos-rela">';
+		
         works += '<div class="item" '+(child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
         works += '<p>' + child[i].recommend_18["itemName"] + '<span>*</span></p>';
         works += '<div class="text-box">';
@@ -2906,6 +2909,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		}
 		
         works += '</div>';
+        works += '</div>';
+        
         works += '</div>';
         return works;
     },
