@@ -429,10 +429,11 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 								//线程间同步，防止同一个应用服务内的预约竞争，减少数据库服务器加锁的压力
 								appointmentLock.acquire();
 								
+								boolean isLocked = false;
 								try
 								{
 									//对指定记录进行加锁
-//									mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");锁表无效
+									//mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");锁表无效
 									
 									//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
 									try
@@ -445,6 +446,8 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 										
 										if(lockRecord.insert() == false){
 											throw new TzException("系统忙，请稍候再试。");
+										}else{
+											isLocked = true;
 										}
 									}
 									catch(Exception e)
@@ -495,10 +498,11 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 								}
 								finally
 								{
-									//预约完成后删除插入PS_TZ_MSYY_LOCK_TBL中的数据
-									jdbcTemplate.update("delete from PS_TZ_MSYY_LOCK_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and TZ_MS_PLAN_SEQ=?"
-											, new Object[]{ classId, pcId, planId });
-									
+									if(isLocked){
+										//预约完成后删除插入PS_TZ_MSYY_LOCK_TBL中的数据
+										jdbcTemplate.update("delete from PS_TZ_MSYY_LOCK_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and TZ_MS_PLAN_SEQ=?"
+												, new Object[]{ classId, pcId, planId });
+									}
 									//释放信号量
 									appointmentLock.release();
 									appointmentLockCounter.release();
