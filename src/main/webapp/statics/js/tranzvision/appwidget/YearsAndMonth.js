@@ -42,7 +42,7 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
 					c += '		<div class="text-box fl" style="width:30%;">';
 					c += '      	<input type="text" class="text1"  value="' + children[0]["value"] + '" disabled="disabled">';
 					c += '      </div>';
-					c += '       <span class="fl" style="line-height:1.5rem;color:#999;">-</span>';
+					//c += '       <span class="fl" style="line-height:1.5rem;color:#999;"> —— </span>';
 					c += '       <div class="text-box fl" style="width:30%;">';
 					c += '           <input type="text" class="text1" value=" '+children[1]["value"]+'" disabled="disabled">';
 					c += '       </div>';
@@ -63,8 +63,8 @@ SurveyBuild.extend("YearsAndMonth", "baseComponent", {
 		                }
 		            c += '			</select>';
 		            c += '      </div>';
-					c += '       <span class="fl" style="line-height:1.5rem;color:#999;">-</span>';
-					c += '       <div class="text-box fl" style="width:30%;">';
+					//c += '       <span class="fl" style="width:20px"></span>';
+					c += '       <div class="text-box fl" style="width:30%;margin-left: 5%;">';
 					c += '			<select style="width:100%;" title="' + children[1]["itemName"] + '" id="' + data["itemId"] + children[1]["itemId"] + '" class="chosen-select" value="' + children[1]["value"] + '" name="' + data["itemId"] + children[1]["itemId"] + '">';
 	                c += '			<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
 	                for (var i in children[1]["option"]) {
