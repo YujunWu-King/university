@@ -348,7 +348,10 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 					if(intMspyNum==null){
 						intMspyNum = 0;
 					}
-					Integer intFlg = intTotalSub - intMspyNum;
+					Integer intFlg = null;
+					if(intTotalSub!=null&&intMspyNum!=null){
+						intFlg = intTotalSub - intMspyNum;
+					}					
 
 					String strJudgeProgress = "", strStuProgress = "";
 					if (intFlg != 0) {
@@ -376,6 +379,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			errMsg[0] = "100";
 			errMsg[1] = e.toString();
+			e.printStackTrace();
 		}
 		return strResponse;
 	}
@@ -905,6 +909,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			}
 		} catch (Exception e) {
 			System.out.println(e.toString());
+			e.printStackTrace();
 		}
 		return strResponse;
 		
@@ -1099,6 +1104,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			errMsg[0] = "100";
 			errMsg[1] = e.toString();
+			e.printStackTrace();
 		}
 		return strResponse;
 	}
@@ -1150,6 +1156,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 			System.out.println(e.toString());
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
+			e.printStackTrace();
 		}
 		return strResponse;
 	}
@@ -1222,6 +1229,7 @@ public class TzInterviewReviewScheduleImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			errMsg[0] = "100";
 			errMsg[1] = e.toString();
+			e.printStackTrace();
 		}
 		return strResponse;
 	}
