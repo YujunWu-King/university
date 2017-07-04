@@ -12,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
+
+import org.mozilla.javascript.IdFunctionCall;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -1073,7 +1075,9 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 												Long tzAppInsId = Long.valueOf(mapNext.get("TZ_APP_INS_ID") == null ? "" : mapNext.get("TZ_APP_INS_ID").toString());
 											
 												if(tzAppInsId>0) {
-												
+													
+													String lockFlag = "";
+																									
 													try {
 														
 														TzRecord lockRecord = tzSQLObject.createRecord("PS_TZ_CLPS_LOCK_T");
@@ -1088,6 +1092,8 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 															messageCode = "1";
 															message = "获取下一个考生失败，请重新抽取。";
 														} else {
+															
+															lockFlag="Y";
 																								
 															//再次查看有没有超过上限
 															sql = "SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
@@ -1209,15 +1215,17 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 																	message = "同步MBA材料评审评委考生关系表失败。";	
 																}	
 															}
-														}
-														
-														sqlQuery.update("DELETE FROM PS_TZ_CLPS_LOCK_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWZBH=?",new Object[]{classId,applyBatchId,tzAppInsId,pwzbh});
-														
-														
+														}				
+								
 													} catch(Exception e) {
 														bmbIdNext = "";
 														messageCode = "1";
 														message = "获取下一个考生失败，请重新抽取。";
+													} finally {
+														//如果锁表成功，则删除数据，没成功，则有可能是其他人正在执行，不要删除别人的数据
+														if("Y".equals(lockFlag)) {
+															sqlQuery.update("DELETE FROM PS_TZ_CLPS_LOCK_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWZBH=?",new Object[]{classId,applyBatchId,tzAppInsId,pwzbh});
+														}
 													}
 												
 												} else {

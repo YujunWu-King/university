@@ -928,6 +928,7 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 												Long tzAppInsId = Long.valueOf(mapNext.get("TZ_APP_INS_ID") == null ? "" : mapNext.get("TZ_APP_INS_ID").toString());
 												
 												if(tzAppInsId>0) {
+													String lockFlag="";
 													try {
 														
 														TzRecord lockRecord = tzSQLObject.createRecord("PS_TZ_CLPS_LOCK_T");
@@ -942,7 +943,8 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 															error_code = "1";
 															error_decription = "获取下一个考生失败，请重新抽取。";
 														} else {
-												
+															lockFlag="Y";
+															
 															//再次查看有没有超过上限
 															sql = "SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL A,PS_TZ_CLPS_KSH_TBL B WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=?";
 															Integer kspwNum = sqlQuery.queryForObject(sql, new Object[]{classId,batchId,tzAppInsId},"Integer");
@@ -1064,14 +1066,16 @@ public class MaterialEvaluationImpl extends FrameworkImpl {
 																}	
 															}
 														}
-															
-														sqlQuery.update("DELETE FROM PS_TZ_CLPS_LOCK_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWZBH=?",new Object[]{classId,batchId,tzAppInsId,pwzbh});
-								
-														
+	
 													} catch(Exception e) {
 														bmbIdNext = "";
 														error_code = "1";
 														error_decription = "获取下一个考生失败，请重新抽取。";
+													} finally {
+														//如果锁表成功，则删除数据，没成功，则有可能是其他人正在执行，不要删除别人的数据
+														if("Y".equals(lockFlag)) {
+															sqlQuery.update("DELETE FROM PS_TZ_CLPS_LOCK_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWZBH=?",new Object[]{classId,batchId,tzAppInsId,pwzbh});
+														}
 													}
 													
 												} else {
