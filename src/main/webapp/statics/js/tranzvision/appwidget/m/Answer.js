@@ -700,8 +700,9 @@ var SurveyBuild = {
     _addOneRec: function(children, i ,j) {
         var _co = "",del = ""; //容器行信息、容器行删除按钮,添加下一行
         //容器中行删除按钮源码
-        del += '<div class="btn-addcon"><a href="javascript:void(0);" onclick="SurveyBuild.deleteFun(this);"><div class="input-delbtn">删除&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div></a></div>';
-
+        //del += '<div class="btn-addcon"><a href="javascript:void(0);" onclick="SurveyBuild.deleteFun(this);"><div class="input-delbtn">删除&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-delete.png"></span></div></a></div>';
+        
+        del +='<div class="clear"><div onclick="SurveyBuild.deleteFun(this);" class="btn_delete" id="tjx_delete_1">删除<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div></div>';
         /*容器行信息 begin*/
         _co += '<div class="mainright-box pos-rela" ' + (i > 0 ? 'style="margin-top:15px;"':'') + '>';
 
@@ -1007,7 +1008,7 @@ var SurveyBuild = {
                     $(el).closest(".mainright-box").remove();
             });
             $("html,body").animate({scrollTop: $(el).closest(".dhcontainer").find(".mainright-box").eq(index - 1).offset().top},1000);
-            $(el).closest(".dhcontainer").find(".input-addbtn").show();
+            $(el).closest(".dhcontainer").find(".add_next").show();
 			this.ArrPush(SurveyBuild._items[instanceId]["children"][index],instanceId);
             SurveyBuild._items[instanceId]["children"].splice(index, 1);
         } else {

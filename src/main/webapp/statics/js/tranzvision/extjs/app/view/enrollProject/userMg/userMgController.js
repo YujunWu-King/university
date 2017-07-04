@@ -68,7 +68,8 @@
 			cfgSrhId: 'TZ_UM_USERMG_COM.TZ_UM_USERMG_STD.TZ_REG_USE2_V',
 			condition:
             {
-                "TZ_JG_ID": Ext.tzOrgID
+                "TZ_JG_ID": Ext.tzOrgID,
+                "TZ_IS_CMPL":"Y"
             }, 
 			callback: function(seachCfg){
 				var store = btn.findParentByType("grid").store;

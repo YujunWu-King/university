@@ -17,6 +17,27 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 	_getHtml: function(data, previewmode) {
 		var c = "", children = data.children;
 		if (previewmode) {
+			if(SurveyBuild.accessType == "M"){
+				c += '<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '">';
+				
+		    	c += '<div class="se_tit1">';
+		    	c +=  data.title;
+		    	c += '</div>';
+		    	
+		    	c += '<div class="workbg">' + data.wzsm + '</div>';
+		    	c += '<div class="index_body">';
+
+		        //c += '	<div class="addNext">';
+		        //c += '	    <div class="input-list-suffix-blank right input-btn" style="width:17%">';
+
+		        c += '			<div class="addNext clear"><div onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');" class="add_next">' + MsgSet["ADD_ONE"] + '</div>';
+		        c += '		</div>';
+		        c += '		</div>';
+		        //c += '	</div>';	    	
+		    	//c += '</div>';
+				
+				
+			} else {
 			c += '<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '">';
 			
 	    	c += '<div class="mainright-title">';
@@ -35,6 +56,7 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 	        c += '		<div class="clear"></div>';
 	        c += '	</div>';	    	
 	    	c += '</div>';
+			}
 		} else {
 			c = '<ul class="DHContainer DHSort" data-dhbz="Y" style="min-height:150px;"></ul>';
 		}
