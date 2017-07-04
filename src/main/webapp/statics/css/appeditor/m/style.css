@@ -20,6 +20,15 @@ a,a:hover{text-decoration: none;display: block;}
 .topbar{position: relative;width:100%;height:2.2rem;background:#b1193b;font-size:0.6rem;line-height:2.2rem;text-align: center;color:#fff;}
 .cd-top{opacity:0;}
 .cd-top img{display: block;max-width: 10%;height: auto;width: 100%;position:fixed;bottom:80px;right:5px;}
+
+.pos-rela {
+    position: relative;
+}
+.mainright-box {
+    padding: 15px;
+    background: #fcfcfc;
+    border: 1px solid #dadbdd;
+}
 .cd-top.cd-is-visible {
   visibility: visible;
   opacity: 1;
