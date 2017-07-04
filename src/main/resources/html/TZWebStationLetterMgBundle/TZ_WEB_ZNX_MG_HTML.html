@@ -14,6 +14,7 @@
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/layer/layer.js"></script>
 <link href="%bind(:5)" rel="stylesheet" type="text/css">
 <script type="text/javascript">
+	var znxSewachText = "";
 	$.format = function (source, params) { 
 		if (arguments.length == 1) 
 		return function () { 
@@ -96,11 +97,15 @@
 						}
 		            });
 	            }
+	          
+	          $(".search_input").val("");
+	          searchValue = "";
 	          loadStationMails(1,0,"");
         });
    	 	//搜索
    		$(".search_icon").click(function(event){
    			var searchValue = $(".search_input").val();
+   			znxSewachText = searchValue;
    			loadStationMails(1,0,searchValue);
    		});
    		
@@ -205,7 +210,7 @@
    	function loadPage(page){
    		$(".table_style tbody").html("");
    		var start = (page-1)*15;
-   		loadStationMails(page,start,"");
+   		loadStationMails(page,start,znxSewachText);
    	}
 </script>
 

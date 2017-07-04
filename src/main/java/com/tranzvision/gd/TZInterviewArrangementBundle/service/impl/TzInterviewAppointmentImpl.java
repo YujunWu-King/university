@@ -23,11 +23,12 @@ import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTblKey;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
-import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.sql.type.TzRecord;
 
 /**
  * 面试预约-前台预约
@@ -55,8 +56,8 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
 	
-	@Autowired
-	private MySqlLockService mySqlLockService;
+//	@Autowired
+//	private MySqlLockService mySqlLockService;
 	
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
@@ -431,7 +432,26 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 								try
 								{
 									//对指定记录进行加锁
-									mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");
+//									mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");锁表无效
+									
+									//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
+									try
+									{
+										TzRecord lockRecord = tzGDObject.createRecord("PS_TZ_MSYY_LOCK_TBL");
+										lockRecord.setColumnValue("TZ_CLASS_ID", classId);
+										lockRecord.setColumnValue("TZ_BATCH_ID", pcId);
+										lockRecord.setColumnValue("TZ_MS_PLAN_SEQ", planId);
+										lockRecord.setColumnValue("OPRID", oprid);
+										
+										if(lockRecord.insert() == false){
+											throw new TzException("系统忙，请稍候再试。");
+										}
+									}
+									catch(Exception e)
+									{
+										 throw new TzException("系统忙，请稍候再试。");
+									}
+									
 									
 									String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
 									Map<String,Object> numMap = jdbcTemplate.queryForMap(numSql, new Object[]{ classId, pcId, planId });
@@ -463,18 +483,23 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 										}
 									}
 									//对指定记录进行解锁
-									mySqlLockService.unlockRow(jdbcTemplate);
+									//mySqlLockService.unlockRow(jdbcTemplate);
 								}
 								catch(Exception ee)
 								{
 									ee.printStackTrace();
 									errorMsg[0] = "1";
-									errorMsg[1] = "预约失败，失败原因："+ee.getMessage();
+									errorMsg[1] = "预约失败，"+ee.getMessage();
 									//回滚
-									mySqlLockService.rollback(jdbcTemplate);
+									//mySqlLockService.rollback(jdbcTemplate);
 								}
 								finally
 								{
+									//预约完成后删除插入PS_TZ_MSYY_LOCK_TBL中的数据
+									jdbcTemplate.update("delete from PS_TZ_MSYY_LOCK_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and TZ_MS_PLAN_SEQ=?"
+											, new Object[]{ classId, pcId, planId });
+									
+									//释放信号量
 									appointmentLock.release();
 									appointmentLockCounter.release();
 								}
