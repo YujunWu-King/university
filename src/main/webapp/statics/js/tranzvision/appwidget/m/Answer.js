@@ -1923,9 +1923,11 @@ var SurveyBuild = {
         //根据当前的句柄，获取id后坠
         var appInsId = SurveyBuild.appInsId;//报名表实例ID
         var refLetterId = SurveyBuild.refLetterId;//推荐信编号
-        var data;
+        var data = "32";
         var index = "";
         var $isDhContainer = $(el).closest(".dhcontainer");
+        data = SurveyBuild._items[instanceId];
+
         if ($isDhContainer.length == 0){
             data = SurveyBuild._items[instanceId];
         } else {
@@ -1933,6 +1935,7 @@ var SurveyBuild = {
             index = $(el).closest(".next_record").index();
             data = SurveyBuild._items[dhIns].children[index][engIntanceId];
         }
+
         var itemId = data.itemId;
         var itemName = data.itemName;
         var className = data.classname;
@@ -1940,9 +1943,9 @@ var SurveyBuild = {
         var isOnlineShow = data.isOnlineShow;//PDF在线预览
         var _children = data["children"];
         var path = $("#"+itemId).val();
+
         if(path){
             //文件名
-
             filename = path.substring(path.lastIndexOf("\\") + 1,path.length);
             //文件后缀
 
@@ -2052,19 +2055,23 @@ var SurveyBuild = {
                                                         _fc["viewFileName"] = rstObj.viewFileName;
                                                         _children.push(_fc);
                                                     }
+
+                                                    var i=_children.length-1;
+
                                                     if (className == "imagesUpload"){
-                                                        c += '<li class="fileLi"><span><a  id="img_'+data.itemId+'" onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'_'+i+'"  onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
                                                     } else {
-                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'" onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"  file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'_'+i+'"  onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"  file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
                                                     }
+
                                                     $("#"+itemId+"_AttList").css("display","block");
-                                                    $("#"+itemId+"_AttList").html(c);
+                                                    $("#"+itemId+"_AttList").append(c);
                                                 }else{
                                                     if (className == "imagesUpload"){
                                                         //console.log("i:"+i);
-                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'" onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'_'+i+'"  onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" file-index="' + rstObj.index + '">'+ rstObj.viewFileName + '</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
                                                     } else {
-                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'" onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"  file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
+                                                        c += '<li class="fileLi"><span><a id="img_'+data.itemId+'_'+i+'"  onclick="SurveyBuild.engViewImageSet(this,\'' + instanceId + '\',\'' + engIntanceId + '\')"  file-index="' + rstObj.index + '">'+ rstObj.viewFileName+'</a></span><i  onclick="SurveyBuild.oldDeleteFile(this,\'' + instanceId + '\',\'' + engIntanceId + '\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center"></i></li>';
                                                     }
                                                     $("#"+itemId+"_AttList").css("display","block");
                                                     $("#"+itemId+"_AttList").html(c);
