@@ -951,6 +951,11 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 					optList += ('<option selected="selected"  value="'+MsgSet["INTER_B"]+'">'+MsgSet["INTER_B"]+'</option>');
 				}
 
+				htmlContent += '<div class="item" style="display: none">';
+				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelDate.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
+				htmlContent += '</div>';
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
 				htmlContent += '<div id="' + data.itemId+child.EngLevelGrade.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
@@ -981,6 +986,11 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 					optList += ('<option selected="selected"  value="'+MsgSet["LEV_C"]+'">'+MsgSet["LEV_C"]+'</option>');
 				}
 
+				htmlContent += '<div class="item" style="display: none">';
+				htmlContent += '<p>'+ MsgSet["EXAM_TDATE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+				htmlContent += '<div id="' + data.itemId+child.EngLevelDate.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+				htmlContent += '<div class="text-box" id="'+data.itemId+'_DATE_DIV"><input type="text" value="'  + child.EngLevelDate.value + '" class="text1" readonly="readonly" id="' + data.itemId +child.EngLevelDate.itemId + '"/></div>';
+				htmlContent += '</div>';
 				htmlContent += '<div class="item">';
 				htmlContent += '<p>'+ MsgSet["EXAM_GSCORE"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
 				htmlContent += '<div id="' + data.itemId+child.EngLevelGrade.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
