@@ -1019,11 +1019,15 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 				//同一个应用服务内只允许10次评委抽取考生排队，否则报系统忙，请稍候再试。
 				if(nextLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
 				{
-					throw new Exception("系统忙，请稍候再试。");
-				}
+					System.out.println("评委"+ oprid + "线程启动，超过最大次数，不能抽取");
+					bmbIdNext = "";
+					messageCode = "1";
+					message = "系统忙，请稍候再试。";
+				} else {
 			
 				//线程间同步，防止同一个应用服务内的抽取竞争，减少数据库服务器加锁的压力
 				nextLock.acquire();
+				System.out.println("评委"+ oprid + "线程启动，进行抽取");
 				
 				try {
 					sql = "SELECT A.TZ_PYKS_XX,A.TZ_PWEI_ZHZT,A.TZ_PWZBH,B.TZ_DQPY_ZT,B.TZ_DQPY_LUNC,B.TZ_MSPY_NUM";
@@ -1258,9 +1262,12 @@ public class MaterialEvaluationScoreImpl extends FrameworkImpl{
 					messageCode = "1";
 					message = e.toString();
 				} finally {
+					System.out.println("评委"+ oprid + "线程结束，抽取考生报名表编号："+bmbIdNext);
 					nextLock.release();
 					nextLockCounter.release();
+					System.out.println("信号量当前可用许可数："+nextLock.availablePermits());
 				}
+			}
 			}
 			
 			mapRet.put("bmbIdNext", bmbIdNext);
