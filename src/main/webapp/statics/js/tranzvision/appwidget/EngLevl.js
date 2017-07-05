@@ -1067,7 +1067,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
 							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 							htmlContent += '<li class="fileLi">';
-							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 							htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 							htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 							htmlContent += '</i></li>';
@@ -1085,7 +1085,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
 					htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 					htmlContent += '<li class="fileLi">';
-					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 					htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 					htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 					htmlContent += '</i></li>';
@@ -1128,7 +1128,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
 							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 							htmlContent += '<li class="fileLi">';
-							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 							htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 							htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 							htmlContent += '</i></li>';
@@ -1146,7 +1146,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
 					htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 					htmlContent += '<li class="fileLi">';
-					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 					htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 					htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 					htmlContent += '</i></li>';
