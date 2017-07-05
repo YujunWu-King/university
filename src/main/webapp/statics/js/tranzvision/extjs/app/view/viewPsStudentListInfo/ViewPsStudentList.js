@@ -297,12 +297,16 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					},*/
 					renderer: function(v) {
 						//console.log(v);
-						if (v == 'A') {
-							return "条件录取";
+						if (v == 'LQ') {
+							return "录取";
 						} else if (v == 'B') {
 							return "等候";
-						} else  if(v == 'C'){
-							return "不录取";
+						} else  if(v == 'DD'){
+							return "待定";
+						}else  if(v == 'JJ'){
+							return "拒绝";
+						}else  if(v == 'DB'){
+							return "递补";
 						}else{
 						    return " ";
 						}

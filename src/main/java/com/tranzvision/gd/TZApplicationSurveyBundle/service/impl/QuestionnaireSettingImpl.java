@@ -84,7 +84,9 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		    TZ_DC_WJ_FB=sruvyDataMap.get("TZ_DC_WJ_FB")==null?"0":sruvyDataMap.get("TZ_DC_WJ_FB").toString();
 		    
 		    if(TZ_DC_WJ_FB.equals("1")&&wjId!=null)
-		    	sruvyDataMap.replace("TZ_DC_WJ_URL", request.getContextPath()+"/dispatcher?classid=surveyapp&SURVEY_WJ_ID="+wjId);
+//		    	sruvyDataMap.replace("TZ_DC_WJ_URL", request.getContextPath()+"/dispatcher?classid=surveyapp&SURVEY_WJ_ID="+wjId);
+		    	sruvyDataMap.replace("TZ_DC_WJ_URL", request.getContextPath()+"/s?SURVEY_WJ_ID="+wjId);
+			   
 		    //主要数据存储字符串
 		    TZ_APPTPL_JSON_STR=sruvyDataMap.get("sruvyDataMap")==null?"":sruvyDataMap.get("sruvyDataMap").toString();
 		    //问卷标题

@@ -125,14 +125,17 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	/* 问卷保存 */
 
 	/*******************************************************************************************************************************
-	 * 说明：问卷提交 功能逻辑说明: 1、如果是记名问卷，那么检查是否登陆，如果没有登陆，则提示错误
-	 * 2、看是否传入了报名表实例编号，如果传入了编号，则继续操作4，如果没有传入报名表编号，则操作6 3
-	 * 根据报名表编号和班级编号查询报名人，如果查询到报名人，继续操作5，否则，提示错误
-	 * 4、看报名人和当前登陆人是否一致，如果一致，在检查当前登陆人当前班级的的管理人员，如果是，则继续操作，否则，提示错误 5、创建报名表编号，继续操作
+	 * 说明：问卷提交 功能逻辑说明: 
+	 * 1、如果是记名问卷，那么检查是否登陆，如果没有登陆，则提示错误
+	 * 2、看是否传入了报名表实例编号，如果传入了编号，则继续操作4，如果没有传入报名表编号，则操作6 
+	 * 3、根据报名表编号和班级编号查询报名人，如果查询到报名人，继续操作5，否则，提示错误
+	 * 4、看报名人和当前登陆人是否一致，如果一致，在检查当前登陆人当前班级的的管理人员，如果是，则继续操作，否则，提示错误
+	 * 5、创建报名表编号，继续操作
 	 * 6、根据传入的事件类型进行保存或者提交操作
 	 *******************************************************************************************************************************/
 	@Override
 	public String tzUpdate(String[] actData, String[] errMsg) {
+		System.out.println("running tzUpdate");
 		JacksonUtil jsonUtil = new JacksonUtil();
 		String successFlag = "0";
 		String strMsg = "";
@@ -411,7 +414,9 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			surveyInsId = request.getParameter("SURVEY_INS_ID");
 			fromIntro = request.getParameter("F");
 			uniqueNum = request.getParameter("unique");
+			
 		} else {
+			System.out.println("going here?");
 			if (jsonUtil.containsKey("SURVEY_WJ_ID")) {
 				surveyID = jsonUtil.getString("SURVEY_WJ_ID");
 			}
@@ -759,6 +764,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 	@Override
 	public String tzGetJsonData(String strParams) {
+		System.out.println("running tzGetJsonData");
 
 		String result = "{}";
 		String successFlag = "0";
@@ -884,6 +890,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 * @return
 	 */
 	private boolean delSurveyIns(String surveyInsId) {
+		System.out.println("running delSurveyIns");
+		
 		try {
 			if (surveyInsId != null && !surveyInsId.equals("")) {
 				/* 在线调查答卷存储表 */
@@ -911,6 +919,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 * @param surveyInsId
 	 */
 	private void saveSLTypeIns(Map<String, Object> jsonXxxMap, String surveyInsId) {
+		System.out.println("running saveSLTypeIns");
+		
 		PsTzDcCcT psTzDcCcT = new PsTzDcCcT();
 		psTzDcCcT.setTzAppInsId(Long.valueOf(surveyInsId));
 		psTzDcCcT.setTzXxxBh(jsonXxxMap.get("itemId") == null ? null : jsonXxxMap.get("itemId").toString());
@@ -941,6 +951,9 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 * @param surveyInsId
 	 */
 	private void saveDTypeIns(Map<String, Object> jsonXxxMap, String surveyInsId) {
+		System.out.println("running saveDTypeIns");
+		
+		
 		PsTzDcDhccT psTzDcDhccT = null;
 
 		if (jsonXxxMap.containsKey("option") && jsonXxxMap.get("option") != null) {
@@ -981,6 +994,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 * @param surveyInsId
 	 */
 	private void saveTableTypeIns(Map<String, Object> jsonXxxMap, String surveyInsId) {
+		System.out.println("running saveTableTypeIns");
+		
 		PsTzDcdjBgtT psTzDcdjBgtT = null;
 
 		if (jsonXxxMap.containsKey("child") && jsonXxxMap.get("child") != null) {
@@ -1017,6 +1032,9 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 */
 	private void saveAttrTypeIns(Map<String, Object> jsonXxxMap, String surveyInsId, String Oprid,
 			HttpServletRequest request) {
+		
+		System.out.println("running saveAttrTypeIns");
+		
 		PsTzDcWjattT psTzDcWjattT = null;
 		PsTzDcWjattchT psTzDcWjattchT = null;
 
@@ -1100,6 +1118,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 	private String checkFiledValid(String surveyID, String surveyInsId) {
 
+		System.out.println("running checkFiledValid");
+		
 		String str_msg = "";
 
 		/* 信息项编号 */

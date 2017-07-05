@@ -54,11 +54,9 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                   } else {
                   	c += '<div class="item">';
                   	c += ' 	<p>'+data.title+'<span>*</span></p>';
-                  	c += '  <a class="photo" id="photox"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/m/bjphoto.jpg": TzUniversityContextPath + data.value) + '"/></a>';
-                  	c +='</div>';
-                    c +='<div class="gephoto" style="display:none">';
-                    c +='</div>';
-                   
+                  	c += '	<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+                  	c += '  <a class="photo" id="photo' + data.itemId + '"><img id="photox" src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/m/bjphoto.jpg": TzUniversityContextPath + data.value) + '"/></a>';
+                  	c +='</div>';                                  
                   	}
                 }
             else{
@@ -164,7 +162,8 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
     },
     _eventbind: function(data) {
     	if(SurveyBuild.accessType == "M"){
-    		$("#photox").click(function(){
+    		var $photoBox = $("#photo" + data.itemId);
+    		$photoBox.click(function(){
     			var tzparam = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_MUP_PHOTO_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '"}}';
                 $.ajax({
     				type: "post",
@@ -175,12 +174,15 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
     				url: TzUniversityContextPath + "/dispatcher",
     				dataType: "html",
     				success: function(result){
-    				
-                        $(".gephoto").html("");
-    					$(".gephoto").html(result);
-//    					$("#MainDiv").hide();
-    					$(".gephoto").show();
+    					$("#searchCountry").html("");
+						$("#searchCountry").html(result);
+						
+						$("#searchCountry").fadeIn("slow");
+						loaded();
+    					
     				}
+						
+    				
         		})
         		
     			
