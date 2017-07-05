@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -37,8 +36,6 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
 	private SiteRepCssServiceImpl siteRepCssServiceImpl;
-	@Autowired
-	private FliterForm fliterForm;
 
 	/****** 站内信详情 ********/
 	@Override
@@ -55,6 +52,15 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 			String strOperate = "";
 			strSiteId = request.getParameter("siteId");
 			strMailId = request.getParameter("mailId");
+			
+			String page = request.getParameter("page");
+			String searchText = request.getParameter("searchText");
+			
+			String likeSearch = "%%";
+			if(!"".equals(searchText) && searchText != null){
+				likeSearch = "%"+ searchText +"%";
+			}
+			
 			if (jacksonUtil.containsKey("operate")) {
 				strOperate = jacksonUtil.getString("operate");
 			}
@@ -62,17 +68,16 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 				strOperate = request.getParameter("operate");
 			}
 			
+			String nextSQL = tzGDObject.getSQLText("SQL.TZWebStationLetterMgBundle.TzNextStationLetter");
+			String prevSQL = tzGDObject.getSQLText("SQL.TZWebStationLetterMgBundle.TzPrevStationLetter");
+			
 			if(strOperate!=null&&!"".equals(strOperate)){
 				switch(strOperate){
 				case "next":
-					//String nextSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID <? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
-					String nextSQL = "SELECT TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_RECID = ? AND TZ_ZNX_MSGID>? ORDER BY TZ_ZNX_MSGID ASC limit 1";
-					strMailId = jdbcTemplate.queryForObject(nextSQL, new Object[]{oprid,strMailId},"String");
+					strMailId = jdbcTemplate.queryForObject(nextSQL, new Object[]{oprid,strMailId,likeSearch},"String");
 					break;
 				case "prev":
-					//String prevSQL = "SELECT B.TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_T A,PS_TZ_ZNX_REC_T B WHERE A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID AND B.TZ_ZNX_RECID=? AND A.TZ_ZNX_MSGID >? AND B.TZ_REC_DELSTATUS='N' ORDER BY A.TZ_ZNX_MSGID ASC limit 1";
-					String prevSQL = "SELECT TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_RECID = ? AND TZ_ZNX_MSGID<? limit 1";
-					strMailId = jdbcTemplate.queryForObject(prevSQL, new Object[]{oprid,strMailId},"String");
+					strMailId = jdbcTemplate.queryForObject(prevSQL, new Object[]{oprid,strMailId,likeSearch},"String");
 					break;
 				}
 			}
@@ -116,50 +121,49 @@ public class StationLetterInfoServiceImpl extends FrameworkImpl {
 					language, "下一个", "下一个");
 			// 通用链接;
 			String dispatcher = request.getContextPath() + "/dispatcher";
-			String znxRecId = "";
 			String znxSendName = "";
 			String znxSubject = "";
 			String znxAddTime = "";
 			String znxText = "";
-			String znxInfoSQL = "select TZ_ZNX_RECID,TZ_ZNX_SENDNAME,TZ_MSG_SUBJECT,ROW_ADDED_DTTM,TZ_MSG_TEXT from PS_TZ_ZNX_MSG_VW where TZ_ZNX_MSGID=? and TZ_ZNX_RECID=?";
+			String znxStatus = "";
+			
+			//String znxInfoSQL = "select TZ_ZNX_RECID,TZ_ZNX_SENDNAME,TZ_MSG_SUBJECT,ROW_ADDED_DTTM,TZ_MSG_TEXT from PS_TZ_ZNX_MSG_VW where TZ_ZNX_MSGID=? and TZ_ZNX_RECID=?";
+			
+			String znxInfoSQL = tzGDObject.getSQLText("SQL.TZWebStationLetterMgBundle.TzStationLetterInfo");
 			Map<String, Object> znxInfoMap = jdbcTemplate.queryForMap(znxInfoSQL, new Object[] { strMailId,oprid });
 			if (znxInfoMap != null){
-				znxRecId = (String) znxInfoMap.get("TZ_ZNX_RECID");
-				znxSendName = (String) znxInfoMap.get("TZ_ZNX_SENDNAME");
 				znxSubject = (String) znxInfoMap.get("TZ_MSG_SUBJECT");
-				znxAddTime = (String) znxInfoMap.get("ROW_ADDED_DTTM").toString();
+				znxAddTime = (String) znxInfoMap.get("ROW_ADDED_DTTM");
 				znxText = (String) znxInfoMap.get("TZ_MSG_TEXT");
+				znxStatus = (String) znxInfoMap.get("TZ_ZNX_STATUS");
 			}
-			String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
-			String znxStatus = jdbcTemplate.queryForObject(znxStatusSql, new Object[] { strMailId,oprid},"String");
-			znxStatus = znxStatus == null ?"":znxStatus;
+
 			if (znxStatus.equals("N")){
 				String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
 				jdbcTemplate.update(updateStatusSql,new Object[]{strMailId,oprid});
 			}
+			
 			//当前站内信的下一条站内信ID;
-			String nextMailSQL = "SELECT TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_RECID = ? AND TZ_ZNX_MSGID>? ORDER BY TZ_ZNX_MSGID ASC limit 1";
 			String nextMailId ="";
-			nextMailId = jdbcTemplate.queryForObject(nextMailSQL, new Object[]{oprid,strMailId},"String");
+			nextMailId = jdbcTemplate.queryForObject(nextSQL, new Object[]{oprid,strMailId,likeSearch},"String");
 			//当前站内信的上一条站内信ID;
-			String prevMailSQL = "SELECT TZ_ZNX_MSGID FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_RECID = ? AND TZ_ZNX_MSGID<? limit 1";
 			String prevMailId ="";
-			prevMailId = jdbcTemplate.queryForObject(prevMailSQL, new Object[]{oprid,strMailId},"String");
+			prevMailId = jdbcTemplate.queryForObject(prevSQL, new Object[]{oprid,strMailId,likeSearch},"String");
+			
 			//站内信内容
 			String znxInfoHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_INFO_CONTENT",
 					true,request.getContextPath(),znxContent,znxNext,znxPrev,znxReturn,znxSendName,znxSubject,znxAddTime,znxText,strMailId,str_skin_id,nextMailId,prevMailId);
 			// 展示页面;
 			znxCenterHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_VIEW_HTML",
-					true,request.getContextPath(), dispatcher,strCssDir,znxInfoHtml, str_jg_id, strSiteId);
+					true,request.getContextPath(), dispatcher,strCssDir,znxInfoHtml, str_jg_id, strSiteId,page,searchText);
 
 			znxCenterHtml = siteRepCssServiceImpl.repTitle(znxCenterHtml, strSiteId);
 			znxCenterHtml = siteRepCssServiceImpl.repCss(znxCenterHtml, strSiteId);
 			
-			return znxCenterHtml;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "";
+		return znxCenterHtml;
 	}
 
 }

@@ -6,15 +6,14 @@
 <script type="text/javascript">
 	var TzUniversityContextPath = "%bind(:1)";
 	var dispatcher = "%bind(:2)";
-	var language = "%bind(:3)";
-	var oprid = "%bind(:4)";
+	var _page = "%bind(:3)";
 </script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/tranzvision/extjs/app/view/website/set/js/broad/pagefunc.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/layer/layer.js"></script>
 <link href="%bind(:5)" rel="stylesheet" type="text/css">
 <script type="text/javascript">
-	var znxSewachText = "";
+	var znxSeachText = "%bind(:4)";
 	$.format = function (source, params) { 
 		if (arguments.length == 1) 
 		return function () { 
@@ -61,6 +60,12 @@
    }
    
    	$(document).ready(function(){
+   		var initPage = 1,initStart = 0;
+   		if(_page != ""){
+   			initPage = parseInt(_page);
+   			initStart = (initPage-1)*15;
+   		}
+   		
    		$(".check-box").click(function(){
             $(this).toggleClass('trSelected');
         });
@@ -105,12 +110,16 @@
    	 	//搜索
    		$(".search_icon").click(function(event){
    			var searchValue = $(".search_input").val();
-   			znxSewachText = searchValue;
-   			loadStationMails(1,0,searchValue);
+   			znxSeachText = searchValue;
+   			if(searchValue != ""){
+   				loadStationMails(1,0,searchValue);	
+   			}else{
+   				window.location.href = "%bind(:1)/dispatcher?classid=znxGl&siteId=%bind(:8)";
+   			}
    		});
    		
    		//初始加载站内信列表
-   		loadStationMails(1,0,"");
+   		loadStationMails(initPage,initStart,znxSeachText);
    	});
    	
    	function loadStationMails(page,start,search){
@@ -184,7 +193,8 @@
 							'<td><div class="check-box"> <i class="ico-check" id="checkAll" mailid={1}></i></div></td>',
 							'<td>{2}</td>',
 							'<td style="display:none">{3}</td>',
-							'<td class="ex_left"><a href="%bind(:1)/dispatcher?classid=webZnxInfo&siteId=%bind(:8)&mailId={1}" style="{6}">{4}</a></td>',
+							//'<td class="ex_left"><a href="%bind(:1)/dispatcher?classid=webZnxInfo&siteId=%bind(:8)&mailId={1}" style="{6}">{4}</a></td>',
+							'<td class="ex_left"><a href="javascript:void(0);" onclick=showZnxDetails("%bind(:8)","{1}","'+ page +'") style="{6}">{4}</a></td>',
 							'<td>{5}</td>',
 							'</tr>'
 						];
@@ -210,7 +220,23 @@
    	function loadPage(page){
    		$(".table_style tbody").html("");
    		var start = (page-1)*15;
-   		loadStationMails(page,start,znxSewachText);
+   		loadStationMails(page,start,znxSeachText);
+		/*
+   		var search = "";
+   		if(znxSeachText != ""){
+   			search = "&searchText=" + znxSeachText;
+   		} 
+   		window.location.href = "%bind(:1)/dispatcher?classid=znxGl&siteId=%bind(:8)&page="+ page + search;
+   		*/
+   	}
+   	
+   	function showZnxDetails(siteId,msgId,page){
+   		layer.load(2);//loading
+   		var search = "";
+   		if(znxSeachText != ""){ 
+   			search = "&searchText=" + encodeURIComponent(znxSeachText);
+   		}
+   		window.location.href = "%bind(:1)/dispatcher?classid=webZnxInfo&siteId="+ siteId +"&mailId="+ msgId +"&page="+ page + search;
    	}
 </script>
 
@@ -254,7 +280,7 @@
                  		<span>删除</span>
                  	</a>
                  	<div class="table_search">
-                 		<input type="text" class="search_input">
+                 		<input type="text" class="search_input" value="%bind(:4)" />
                  		<a class="search_icon"></a>
                  	</div>
            </div>
