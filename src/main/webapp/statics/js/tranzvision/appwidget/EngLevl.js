@@ -800,7 +800,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 		
 		//外语水平标题
 		htmlContent += '<div class="se_tit1">' + MsgSet["ENG_LEV"]  +index+ ' :</div>';
-		htmlContent += '<div class="w_96">';
+		//htmlContent += '<div class="w_96">';
+		htmlContent += '<div class="index_body" style="margin-top: 25px;">';
+		htmlContent += '<div class="mainright-box pos-rela">';
 		htmlContent += '<div class="item">';
 		htmlContent += '<p>' + child.EngLevelType.itemName + '<span>*</span></p>';
 
@@ -1162,6 +1164,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 			}
 
+			htmlContent += '</div>';
 			htmlContent += '</div>';
 			htmlContent += '</div>';
 
