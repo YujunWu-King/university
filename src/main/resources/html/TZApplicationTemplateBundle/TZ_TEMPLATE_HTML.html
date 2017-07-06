@@ -163,8 +163,12 @@
 				
 				
 				$(".tabNav_child").css("display","none");
-			      $(".tabNav").click(function(){
-			         $(this).children(".tabNav_child").slideToggle(800);
+				$(".tabNav").mouseover(function(){
+			         $(this).parent("").find(".tabNav_child").hide();
+			         $(this).children(".tabNav_child").slideToggle();
+			      });
+			      $(".tabNav").mouseout(function(){
+			         $(this).parent("").find(".tabNav_child").hide();
 			      });
 
 			});			
