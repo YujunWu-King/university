@@ -2,12 +2,7 @@ package com.tranzvision.gd.TZApplicationCenterBundle.service.impl;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWxJSSDKSign;
-import javax.servlet.http.HttpServletRequest;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
-import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.base.GetSpringBeanUtil;
-import java.util.Map;
 
 /**
  * 
