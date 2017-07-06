@@ -1205,16 +1205,13 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			for(var j=0;j<len;j++){
 
 
-			    //防止日期出现多层遮罩,但是在保存之后只有最后一个可以生效，是否有首次加载状态进行判断
-                // if(j == len - 1){
-
+			    //已经在日期插件中进行修改
                     calendar.init({
                         'trigger': '#' + data.itemId + children[j].EngLevelDate.itemId, //标签id
                         'type': "date", //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
                         'minDate': "1960-01-01", //最小日期
                         'maxDate':"2030-12-31"
                     });
-                // }
 
                 var child=children[j];
 				//隐藏图片显示
@@ -1375,7 +1372,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 							if (data.isRequire == "Y"){
 								//如果该div中上传附件数量>1,则不显示提示,如果=1可能是"只有一个节点数据为空"要提示
 								var child=children[me.attr("len")];
-								if (child["EngLevelUp"].children.length == 1){
+								if (child["EngLevelUp"].children.length > 1){
 									return 	true;
 								} else if (child["EngLevelUp"].children.length == 1 && child["EngLevelUp"].children[0].fileName != ""){
 									return true;
