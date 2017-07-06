@@ -82,7 +82,7 @@ public class TzEventsSignLoginController {
 				String signature = "";
 				
 				String url;
-				if("".equals(request.getQueryString())){
+				if("".equals(request.getQueryString()) || request.getQueryString() == null){
 					url = request.getRequestURL().toString();
 				}else{
 					url = request.getRequestURL().toString()+"?"+request.getQueryString();
