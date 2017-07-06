@@ -1029,7 +1029,8 @@ $.fn.formValidator = function(cs)
 				tipDiv.css(setting_temp.tipCss);
 				setting.relativeID = relativeID ;
 			}
-			tipDiv.css("margin","0px").css("padding","0px").css("background","transparent");
+			//tipDiv.css("margin","0px").css("padding","0px").css("background","transparent");
+			tipDiv.css("padding","0px").css("background","transparent");
 		}else if(initConfig.mode == "SingleTip"){
 			jqobj.showTooltips();
 		}
