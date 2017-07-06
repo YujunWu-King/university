@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZWeChatBundle.dao.PsTzWxGzhcsTMapper;
 import com.tranzvision.gd.TZWeChatBundle.model.PsTzWxGzhcsT;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
+import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.httpclient.HttpClientService;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -41,21 +41,18 @@ public class TzWeChartJSSDKSign {
 	private GetSysHardCodeVal getSysHardCodeVal;
 	
 	@Autowired
-	private GetHardCodePoint getHardCodePoint;
-	
-	@Autowired
 	private PsTzWxGzhcsTMapper psTzWxGzhcsTMapper;
 	
 	//企业号获取access_token URL
-	private final String qy_gettoken_url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken";
+	private static final String qy_gettoken_url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken";
 	//企业号获取jsapi_ticket URL
-	private final String qy_getticket_url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket";
+	private static final String qy_getticket_url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket";
 	//公众号获取access_token URL
-	private final String gz_gettoken_url = "https://api.weixin.qq.com/cgi-bin/token";
+	private static final String gz_gettoken_url = "https://api.weixin.qq.com/cgi-bin/token";
 	//公众号获取jsapi_ticket URL
-	private final String gz_getticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
+	private static final String gz_getticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
 	//获取opnid
-	private final String gz_getopenid_url = "https://api.weixin.qq.com/sns/oauth2/access_token";
+	private static final String gz_getopenid_url = "https://api.weixin.qq.com/sns/oauth2/access_token";
 	
 
 	/**
@@ -104,33 +101,17 @@ public class TzWeChartJSSDKSign {
 			}
 			if(getWxTokenFlag){
 				/*通过微信接口获取token*/
-				String getTokenUrl;
+				String getTokenUrl = "";
 				Map<String, Object> paramsMap = new HashMap<String, Object>();
 				if("QY".equals(wxType)){
 					 /*企业号*/
-					try{
-						getTokenUrl = getHardCodePoint.getHardCodePointVal("TZ_WXQYH_GETTOKEN_URL");
-					}catch(Exception e){
-						e.printStackTrace();
-						getTokenUrl = "";
-					}
-					if("".equals(getTokenUrl) || getTokenUrl == null){
-						getTokenUrl = qy_gettoken_url;
-					}
+					getTokenUrl = qy_gettoken_url;
 					
 					paramsMap.put("corpid", appId);
 					paramsMap.put("corpsecret", secret);
 				}else{
 					 /*公众号*/
-					try{
-						getTokenUrl = getHardCodePoint.getHardCodePointVal("TZ_WXGZH_GETTOKEN_URL");
-					}catch(Exception e){
-						e.printStackTrace();
-						getTokenUrl = "";
-					}
-					if("".equals(getTokenUrl) || getTokenUrl == null){
-						getTokenUrl = gz_gettoken_url;
-					}
+					getTokenUrl = gz_gettoken_url;
 					
 					paramsMap.put("grant_type", "client_credential");
 					paramsMap.put("appid", appId);
@@ -142,20 +123,25 @@ public class TzWeChartJSSDKSign {
 				String strHttpResult = HttpClientService.sendRequest();
 				JacksonUtil jacksonUtil = new JacksonUtil();
 				jacksonUtil.json2Map(strHttpResult);
-				strAccessToken = jacksonUtil.getString("access_token").trim();
-				strExpires_in = jacksonUtil.getString("expires_in").trim();
-				/*插入数据或者更新微信参数信息表*/
-				PsTzWxGzhcsT psTzWxGzhcsT = new PsTzWxGzhcsT();
-				psTzWxGzhcsT.setTzWxAppid(appId);
-				psTzWxGzhcsT.setTzAppsecret(secret);
-				psTzWxGzhcsT.setTzAccessToken(strAccessToken);
-				psTzWxGzhcsT.setTzUpdateDttm(new Date());
-				psTzWxGzhcsT.setTzTokenYxq(Integer.parseInt(strExpires_in));
 				
-				if (dataMap != null) {
-					psTzWxGzhcsTMapper.updateByPrimaryKeySelective(psTzWxGzhcsT);
-				}else{
-					psTzWxGzhcsTMapper.insertSelective(psTzWxGzhcsT);
+				if(jacksonUtil.containsKey("access_token")){
+					strAccessToken = jacksonUtil.getString("access_token").trim();
+					strExpires_in = jacksonUtil.getString("expires_in").trim();
+					/*插入数据或者更新微信参数信息表*/
+					PsTzWxGzhcsT psTzWxGzhcsT = new PsTzWxGzhcsT();
+					psTzWxGzhcsT.setTzWxAppid(appId);
+					psTzWxGzhcsT.setTzAppsecret(secret);
+					psTzWxGzhcsT.setTzAccessToken(strAccessToken);
+					psTzWxGzhcsT.setTzUpdateDttm(new Date());
+					psTzWxGzhcsT.setTzTokenYxq(Integer.parseInt(strExpires_in));
+					
+					if (dataMap != null) {
+						psTzWxGzhcsTMapper.updateByPrimaryKeySelective(psTzWxGzhcsT);
+					}else{
+						psTzWxGzhcsTMapper.insertSelective(psTzWxGzhcsT);
+					}
+				}else if(jacksonUtil.containsKey("errcode")){
+					throw new TzException("获取access_token失败："+jacksonUtil.getString("errmsg"));
 				}
 			}
 			
@@ -217,32 +203,16 @@ public class TzWeChartJSSDKSign {
 			if(getWxTicketFlag){
 				/*通过微信接口获取ticket*/
 				strAccessToken = this.getAccessToken(appId, secret, wxType);
-				String getTicketUrl;
+				String getTicketUrl = "";
 				Map<String, Object> paramsMap = new HashMap<String, Object>();
 				if("QY".equals(wxType)){
 					 /*企业号*/
-					try{
-						getTicketUrl = getHardCodePoint.getHardCodePointVal("TZ_WXQYH_JSAPI_TICKET_URL");
-					}catch(Exception e){
-						e.printStackTrace();
-						getTicketUrl = "";
-					}
-					if("".equals(getTicketUrl) || getTicketUrl == null){
-						getTicketUrl = qy_getticket_url;
-					}
+					getTicketUrl = qy_getticket_url;
 					
 					paramsMap.put("access_token", strAccessToken);
 				}else{
 					 /*公众号*/
-					try{
-						getTicketUrl = getHardCodePoint.getHardCodePointVal("TZ_WXGZH_JSAPI_TICKET_URL");
-					}catch(Exception e){
-						e.printStackTrace();
-						getTicketUrl = "";
-					}
-					if("".equals(getTicketUrl) || getTicketUrl == null){
-						getTicketUrl = gz_getticket_url;
-					}
+					getTicketUrl = gz_getticket_url;
 					
 					paramsMap.put("access_token", strAccessToken);
 					paramsMap.put("type", "jsapi");
@@ -270,6 +240,8 @@ public class TzWeChartJSSDKSign {
 					if (ret == 0) {
 						psTzWxGzhcsTMapper.insertSelective(psTzWxGzhcsT);
 					}
+				}else{
+					throw new TzException("获取jsapi_ticket失败："+jacksonUtil.getString("errmsg"));
 				}
 			}
 		} catch (Exception e) {

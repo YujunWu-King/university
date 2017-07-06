@@ -78,7 +78,7 @@ public class TzEventsSignLoginController {
 						contextPath,orgId);
 			}else{
 				String nonceStr = "";
-				String timestamp = "";
+				String timestamp = "0";
 				String signature = "";
 				
 				String url;
@@ -88,16 +88,22 @@ public class TzEventsSignLoginController {
 					url = request.getRequestURL().toString()+"?"+request.getQueryString();
 				}
 			
-				String corpid = getHardCodePoint.getHardCodePointVal("TZ_WX_CORPID");
-				String corpsecret = getHardCodePoint.getHardCodePointVal("TZ_WX_SECRET");
-				
-				
-				Map<String,String> signMap = tzWeChartJSSDKSign.sign(corpid, corpsecret, "QY", url);
-				if(signMap != null){
-					nonceStr = signMap.get("nonceStr");
-					timestamp = signMap.get("timestamp");
-					signature = signMap.get("signature");
+				String corpid = "";
+				String corpsecret = "";
+				try {
+					corpid = getHardCodePoint.getHardCodePointVal("TZ_WX_CORPID");
+					corpsecret = getHardCodePoint.getHardCodePointVal("TZ_WX_SECRET");
+
+					Map<String,String> signMap = tzWeChartJSSDKSign.sign(corpid, corpsecret, "QY", url);
+					if(signMap != null){
+						nonceStr = signMap.get("nonceStr");
+						timestamp = signMap.get("timestamp");
+						signature = signMap.get("signature");
+					}
+				} catch (NullPointerException nullE) {
+					nullE.printStackTrace();
 				}
+
 				//构造签到url参数
 				Map<String,Object> tzQdParamsMap = new HashMap<String,Object>();
 				tzQdParamsMap.put("ComID", "TZ_HD_SIGN_COM");
