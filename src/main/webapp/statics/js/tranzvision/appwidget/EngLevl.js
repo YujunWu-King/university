@@ -61,7 +61,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			"sysFileName": "",
 			"path": "",
 			"accessPath": "",
-			"fileType": "jpg,png,jpeg",//允许上传类型
+			"fileType": "jpg,png,jpeg,pdf",//允许上传类型
 		    "fileSize": "1",//允许上传大小
 		    "isAllowTailoring":"N",   //是否允许裁剪
 		    "tailoringStandard":"",   //裁剪类型
