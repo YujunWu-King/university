@@ -868,9 +868,11 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 			for(var i in EXAM_TYPE_MAP){
 				OPT_ENG+='<option value="'+EXAM_TYPE_MAP[i]+'"'+(EXAM_TYPE_DEF==EXAM_TYPE_MAP[i]?'selected="selected"': '')+'>'+EXAM_TYPE_MAP[i]+'</option>'
 			}
+			htmlContent += '<div class="text-box">';
 			htmlContent += '<select id="' + data["itemId"] + child.EngLevelType.itemId + '" class="select1" title="' + child.EngLevelType.itemName + '" value="' + child.EngLevelType["value"] + '" name="' + data["itemId"] + child.EngLevelType.itemId + '">';
 			htmlContent += OPT_ENG;
 			htmlContent += '</select>';
+			htmlContent += '</div>';
 			htmlContent += '</div>';
 			
 			//---------------------不同英语水平切换div
