@@ -1338,7 +1338,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 						}else{
 
 							//大div
-							var topDiv=$(this).closest(".w_96");
+							var topDiv=$(this).closest(".index_body");
 
 							//日期、成绩、上传
 							var timeDiv = topDiv.find("#"+data["itemId"]+"_DATE_DIV");
