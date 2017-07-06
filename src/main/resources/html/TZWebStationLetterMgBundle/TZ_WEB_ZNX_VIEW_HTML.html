@@ -15,6 +15,8 @@
 
 <script type="text/javascript">
 	var urlBegin = "%bind(:2)";
+	var page = "%bind(:7)";
+	var searchText = "%bind(:8)";
 
 	function classSelectCancle() {
 		$(".Shade").hide();
@@ -22,18 +24,23 @@
 	}
 	
 	$(document).ready(function(){
+		var urlParams = "&page="+ page;
+		if(searchText != ""){
+			urlParams = urlParams + "&searchText=" + encodeURIComponent(searchText);
+		}
+
 		//返回
 		$(".return_icon").click(function(){
 			//history.back();
-			location.href=urlBegin+"/?classid=znxGl&siteId=%bind(:6)";
-			
+			location.href=urlBegin+"/?classid=znxGl&siteId=%bind(:6)"+urlParams;
 		});
+		
 		//上一个
 		$(".prev_icon").click(function(event){
 			var prevmailid = $(this).attr("prevmailid");
 			if (prevmailid != ""){
 				var mailid = $(this).attr("mailid"); 
-				location.href=urlBegin+"/?classid=webZnxInfo&siteId=%bind(:6)&mailId="+mailid+"&operate=prev";
+				location.href=urlBegin+"/?classid=webZnxInfo&siteId=%bind(:6)&mailId="+mailid+"&operate=prev"+urlParams;
 			}else{
 				alert("没有上一个站内信!");
 			}
@@ -43,7 +50,7 @@
 			var nextmailid = $(this).attr("nextmailid");
 			if (nextmailid != ""){
 				var mailid = $(this).attr("mailid"); 
-				location.href=urlBegin+"/?classid=webZnxInfo&siteId=%bind(:6)&mailId="+mailid+"&operate=next";
+				location.href=urlBegin+"/?classid=webZnxInfo&siteId=%bind(:6)&mailId="+mailid+"&operate=next"+urlParams;
 			}else{
 				alert("没有下一个站内信！");
 			}

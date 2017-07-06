@@ -58,6 +58,9 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 				strSiteId = request.getParameter("siteId");
 			}
 
+			String page = request.getParameter("page");
+			String searchText = request.getParameter("searchText");
+			
 			// 根据siteid得到机构id;
 			String str_jg_id = "";
 			// language;
@@ -86,9 +89,6 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 			}
 			// 通用链接;
 			String dispatcher = request.getContextPath() + "/dispatcher";
-
-			String znxCenterList = "";
-			
 			//未读站内信数量;
 			int unreadCount =0;
 			String unreadCountSql = "select count(*) from PS_TZ_ZNX_REC_T where TZ_ZNX_RECID = ? and TZ_REC_DELSTATUS = 'N' and TZ_ZNX_STATUS <>'Y'";
@@ -96,7 +96,7 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 			
 			// 展示页面;
 			znxCenterHtml = tzGDObject.getHTMLText("HTML.TZWebStationLetterMgBundle.TZ_WEB_ZNX_MG_HTML",
-					true,request.getContextPath(),dispatcher,language,oprid,strCssDir,String.valueOf(unreadCount), str_jg_id, strSiteId);
+					true,request.getContextPath(),dispatcher,page,searchText,strCssDir,String.valueOf(unreadCount), str_jg_id, strSiteId);
 
 			znxCenterHtml = siteRepCssServiceImpl.repTitle(znxCenterHtml, strSiteId);
 			znxCenterHtml = siteRepCssServiceImpl.repCss(znxCenterHtml, strSiteId);

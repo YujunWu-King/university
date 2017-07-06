@@ -836,8 +836,8 @@ var SurveyBuild = {
 		var $newRow = $(btnEl).parents(".addNext").prev(".mainright-box");
 		$("html,body").animate({scrollTop: $newRow.offset().top}, 1000);
 
-        //行数等于最大行数时，隐藏“Add One +”按钮
-        if (_children.length == maxLines) {
+        //行数大于等于最大行数时，隐藏“Add One +”按钮
+        if (_children.length >= maxLines) {
             $(btnEl).hide();
         }
 
