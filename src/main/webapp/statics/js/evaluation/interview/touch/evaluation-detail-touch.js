@@ -1,3 +1,23 @@
+//显示加载器开始
+function showLoaderThis() {
+	$.mobile.loading('show', {
+		text: '加载中，请稍候...', //加载器中显示的文字
+		textVisible: true, //是否显示文字
+		theme: 'a',        //加载器主题样式
+		textonly: false,   //是否只显示文字
+		html: ""           //要显示的html内容，如图片等
+	});
+}
+//显示加载器结束
+
+
+//隐藏加载器开始
+function hideLoaderThis() {
+	$.mobile.loading('hide');
+}
+//隐藏加载器结束
+
+
 //考生列表显示
 function show1(){
 	$("#div1").attr({style:"display:block"});
@@ -888,11 +908,18 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 function ks_save(){
 
 	if(callSaveFunc) {
+
+		//setTimeout('showLoaderThis()', 1000);
+		showLoaderThis();
+
 		callSaveFunc = false;
 
 		ks_check_pysj();
 
 		if (tz_pysjx_failure == "Y"){
+			callSaveFunc=true;
+			//setTimeout('hideLoaderThis()', 2000);
+			hideLoaderThis();
 			alert(tz_save_show_info);
 		}else {
 			var TZ_CLASS_ID = ClassId;
@@ -920,20 +947,18 @@ function ks_save(){
 
 			var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"U","comParams":{'+comParams+'}}';
 
-			showLoaderThis();
+
 			//$("#ks_save_bt").attr("onclick", "");
 
 
 			$.ajax({
 				type: 'POST',
 				dataType: 'json',
-				async: false,
+				//async: false,
 				url: scoreUrl,
 				data: {"tzParams": tzParams},
-				/*beforeSend: function (xhr) {
-					showLoaderThis();
-				},*/
 				success: function (data) {
+					//setTimeout('hideLoaderThis()', 2000);
 					hideLoaderThis();
 					var comContent = data.comContent;
 					var messageCode = comContent.messageCode;
@@ -945,13 +970,8 @@ function ks_save(){
 					} else {
 						alert(comContent.message);
 					}
-					callSaveFunc=true;
-				},
-				/*complete: function () {
-					hideLoaderThis();
-					$("#ks_save_bt").attr("onclick", "ks_save();");
-					callSaveFunc=true;
-				}*/
+                    callSaveFunc=true;
+				}
 			});
 		}
 
@@ -1150,22 +1170,5 @@ function ks_esc(){
 //退出结束
 
 
-//显示加载器开始
-function showLoaderThis() {
-	$.mobile.loading('show', {
-		text: '加载中，请稍候...', //加载器中显示的文字
-		textVisible: true, //是否显示文字
-		theme: 'a',        //加载器主题样式
-		textonly: false,   //是否只显示文字
-		html: ""           //要显示的html内容，如图片等
-	});
-}
-//显示加载器结束
 
-
-//隐藏加载器开始
-function hideLoaderThis() {
-	$.mobile.loading('hide');
-}
-//隐藏加载器结束
 
