@@ -1042,7 +1042,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item" id="'+data.itemId+'UP" style="display: none">';
 				htmlContent += '<p>'+ MsgSet["SCORE_UP"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-				htmlContent += '<div id="' + data.itemId+child.EngLevelUp.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+				htmlContent += '<div id="' +child.EngLevelUp.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
 				htmlContent += '<div class="handle">';
 				htmlContent += '<div class="ncsc-upload-btn">';
@@ -1067,7 +1067,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
 							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 							htmlContent += '<li class="fileLi">';
-							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 							htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 							htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 							htmlContent += '</i></li>';
@@ -1085,7 +1085,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
 					htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 					htmlContent += '<li class="fileLi">';
-					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 					htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 					htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 					htmlContent += '</i></li>';
@@ -1103,7 +1103,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				htmlContent += '<div class="item" id="'+data.itemId+'UP">';
 				htmlContent += '<p>'+ MsgSet["SCORE_UP"] +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-				htmlContent += '<div id="' + data.itemId+child.EngLevelUp.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+				htmlContent += '<div id="'+child.EngLevelUp.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
 				htmlContent += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
 				htmlContent += '<div class="handle">';
 				htmlContent += '<div class="ncsc-upload-btn">';
@@ -1128,7 +1128,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
 							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 							htmlContent += '<li class="fileLi">';
-							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 							htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 							htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 							htmlContent += '</i></li>';
@@ -1146,7 +1146,7 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
 					htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 					htmlContent += '<li class="fileLi">';
-					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,"' + data.instanceId + '","'+ child.EngLevelUp.instanceId +'")" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
+					htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 					htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 					htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 					htmlContent += '</i></li>';
@@ -1356,10 +1356,42 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 					})
 				})
 
+				var $inputBox3 = $("#"+child["EngLevelUp"].itemId);
+				$inputBox3.each(function(k){
+					$(this).mouseover(function(e){
+						$(this).prev().css("opacity","0.8");
+					});
+					$(this).attr("len",j);
+					$(this).mouseout(function(e) {
+						$(this).prev().css("opacity","1");
+					});
+
+					$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+					var me=$(this);
+					$(this).functionValidator({
+						fun:function(val,el){
+							//必须上传
+
+							if (data.isRequire == "Y"){
+								//如果该div中上传附件数量>1,则不显示提示,如果=1可能是"只有一个节点数据为空"要提示
+								var child=children[me.attr("len")];
+								if (child["EngLevelUp"].children.length == 1){
+									return 	true;
+								} else if (child["EngLevelUp"].children.length == 1 && child["EngLevelUp"].children[0].fileName != ""){
+									return true;
+								} else {
+									return MsgSet["FILE_UPL_REQUIRE"];
+									//return "length:"+child["EngLevelUp"].children.length+"name:"+child["EngLevelUp"].children[0].fileName;
+								}
+							}
+						}
+					});
+				});
                 //日期.成绩非空验证:
                 if(data.isRequire == "Y"){
                     var $inputBox1 = $("#" + data.itemId +child.EngLevelDate.itemId);
                     var $inputBox2 = $("#" + data.itemId +child.EngLevelGrade.itemId);
+
                     data.checkInputNotNull($inputBox1);
                     data.checkInputNotNull($inputBox2);
                 }

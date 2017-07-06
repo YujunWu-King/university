@@ -2153,6 +2153,7 @@ var SurveyBuild = {
         var appInsId = SurveyBuild.appInsId; //报名表实例ID
         //var data;
         var $isDhContainer = $(el).closest(".dhcontainer");
+        console.log("$isDhContainer" + $isDhContainer.length)
         if ($isDhContainer.length == 0) {
             data = SurveyBuild._items[instanceId];
         } else {
@@ -2161,11 +2162,13 @@ var SurveyBuild = {
 
             data = SurveyBuild._items[dhIns].children[index][comInstanceId];
         }
-        var name = data.children[index].viewFileName;
+
+        console.dir(data.children[0])
+        var name = data.children[0].viewFileName;
         var array = name.split(".");
         var hzhui = array[array.length-1];
         if(hzhui=="jpeg"||hzhui=="png"||hzhui=="jpg"||hzhui=="gif"||hzhui=="JPEG"||hzhui=="PNG"||hzhui=="JPG"||hzhui=="GIF"){
-        	var srcPath=TzUniversityContextPath + data.children[index].accessPath + data.children[index].sysFileName;
+        	var srcPath=TzUniversityContextPath + data.children[0].accessPath + data.children[0].sysFileName;
 
     		$("#img_"+data.itemId).attr("src",srcPath);
     		$("#shade_"+data.itemId).show();
