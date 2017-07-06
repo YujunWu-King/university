@@ -160,6 +160,16 @@
  				$("#tabs").tabs();
 			 	$("#question-type-box").accordion({heightStyle: "content"});
 				SurveyBuild.init("%bind(:3)");
+				
+				
+				$(".tabNav_child").css("display","none");
+				$(".tabNav").mouseover(function(){
+			         $(this).parent("").find(".tabNav_child").hide();
+			         $(this).children(".tabNav_child").slideToggle();
+			      });
+			      $(".tabNav").mouseout(function(){
+			         $(this).parent("").find(".tabNav_child").hide();
+			      });
 
 			});			
 

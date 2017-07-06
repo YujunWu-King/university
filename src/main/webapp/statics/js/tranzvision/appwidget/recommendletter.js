@@ -2463,7 +2463,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
         works += '</div>';
         
         works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_15["itemId"] + '_F">';
-        works += '<li>';
+        works += '<li style="margin-left:0;">';
         works += '<input type="radio" name="' + data.itemId + child[i].recommend_15["itemId"] +'" '+(child[i].recommend_15["option"]["WOMAN"]["checked"] == "Y" ? "checked='checked'": "")+' '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' class="radio" value="F">';
         works += '<label for="WOMAN">' + MsgSet["SEX_F"] + '</label>';
         works += '</li>';
@@ -2576,7 +2576,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 	        works += '</li>';
 	        works += '</div>';
 	        works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_7["itemId"] + '_E">';
-	        works += '<li>';
+	        works += '<li style="margin-left:0;">';
 	        works += '<input type="radio"  name="' + data.itemId + child[i].recommend_7["itemId"] +'" '+ (child[i].recommend_7["option"]["ENG"]["checked"] == "Y" ? "checked='checked'": "")+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' class="radio" value="E">';
 	        works += '<label for="radio-3">' + MsgSet["LANGUAGE_E"] + '</label>';
 	        works += '</li>';
