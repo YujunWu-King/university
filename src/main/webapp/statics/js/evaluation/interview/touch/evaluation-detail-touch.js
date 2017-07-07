@@ -1088,7 +1088,9 @@ function ks_check_pysj(){
 				var tmp_len = 0;
 				tmp_cjx_value = document.getElementById(arr_tz_cjx_ids_2[0]).value;
 
-				tmp_len = TZ_GetLength (tmp_cjx_value);
+				//为了和后台一致，取字符的长度，中文字母数字等都算一个
+				//tmp_len = TZ_GetLength (tmp_cjx_value);
+				tmp_len = tmp_cjx_value.length;
 
 				if (tmp_len < arr_tz_cjx_ids_2[3]){
 					tz_save_show_info = arr_tz_cjx_ids_2[5] + "：字数范围不正确！";

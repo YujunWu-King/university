@@ -260,6 +260,8 @@ public class TzScoreInsCalculationObject {
 				treeNode = rootMap.get("TREE_NODE").toString();
 				//初始化
 				itemsScoreValListTmp = new ArrayList<Map<String,Object>>();
+				//调用方法前，把错误信息清空，否则一旦有错误信息，将会一直存在，卢艳添加，2017-7-7
+				errorMsg = "";
 				//遍历成绩模型树
 				Float rootScoreAmount = this.TraverseTree(treeNodeNum, treeNode);
 				
@@ -363,7 +365,7 @@ public class TzScoreInsCalculationObject {
 							if(boolVaild){
 								itemScoreMapTmp.put("pyVal", itemVal);
 							}else{
-								errorMsg = errorMsg + "【"+itemDesc+"】评语超出指定字数，请重新填写！";
+								errorMsg = errorMsg + "【"+itemDesc+"】评语字数范围不正确，请重新填写！";
 							}
 							break;
 						case "D":	//下拉框

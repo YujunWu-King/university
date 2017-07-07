@@ -1039,12 +1039,12 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				} else {
 					if("C".equals(scoreItemType)) {
 						//评语
-						//if(scoreItemValue.length()>scoreItemCommentLower && scoreItemValue.length()<scoreItemCommentUpper) {
-							//scoreValid2="Y";
-						//}
-						if(scoreItemValue.length()<scoreItemCommentUpper) {
+						if(scoreItemValue.length()>=scoreItemCommentLower && scoreItemValue.length()<=scoreItemCommentUpper) {
 							scoreValid2="Y";
-						} 
+						}
+						/*if(scoreItemValue.length()<=scoreItemCommentUpper) {
+							scoreValid2="Y";
+						} */
 					} 
 				}
 				
@@ -1053,7 +1053,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 						//成绩校验成功
 					} else {
 						//成绩校验失败
-						resultMsg = resultMsg + "【" + scoreItemName + "】分数填写错误，请重新填写！<br>";
+						resultMsg = resultMsg + "【" + scoreItemName + "】分数填写错误，请重新填写！";
 					}
 				}
 				
@@ -1062,7 +1062,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 						//评语校验成功
 					} else {
 						//评语校验失败
-						resultMsg = resultMsg + "【" + scoreItemName + "】评语超出指定字数，请重新填写！<br>";
+						resultMsg = resultMsg + "【" + scoreItemName + "】评语字数范围不正确，请重新填写！";
 					}
 				}
 				
