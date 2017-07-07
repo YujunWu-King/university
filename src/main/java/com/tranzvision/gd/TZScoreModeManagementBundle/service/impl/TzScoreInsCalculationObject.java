@@ -266,6 +266,7 @@ public class TzScoreInsCalculationObject {
 				if(!"".equals(errorMsg) && errorMsg != null){
 					//有错误信息，保存失败
 					errorCode = "-1";
+					System.out.println("保存打分错误信息："+errorMsg);
 				} else {
 					/**
 					 * 保存打分数据到成绩项实例表PS_TZ_CJX_TBL，数据存放在itemsScoreValListTmp
