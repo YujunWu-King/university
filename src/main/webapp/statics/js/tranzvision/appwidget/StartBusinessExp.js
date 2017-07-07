@@ -646,7 +646,7 @@ SurveyBuild.extend("StartBusinessExp", "baseComponent", {
 		//1.创业类型
 		if (SurveyBuild._readonly) {
 			//只读模式(放入已选择创业类型)
-
+			var types = "";
 			var btypeDesc='';
 			for(var k=0;k<BUSINESS_TYPE_GP.length;k++){
 				if(BUSINESS_TYPE_DEF=="0"+parseInt(k+1)){
