@@ -52,7 +52,6 @@ public class TzEventsBmrListServiceImpl extends FrameworkImpl{
 			String ZSGL_URL = contextPath + "/dispatcher";
 			
 			String str_hd_title = "";
-			String str_img_path = "";
 			String str_ul_html = "";
 			String str_bmr_li_html = "";
 			String str_bmr_xq_url = "";
@@ -84,6 +83,7 @@ public class TzEventsBmrListServiceImpl extends FrameworkImpl{
 					String bmrOprid = bmrMap.get("OPRID") == null ? "" : bmrMap.get("OPRID").toString();
 					
 					// 头像地址;
+					String str_img_path = "";
 					String imageUrlSQL = "SELECT B.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A , PS_TZ_OPR_PHOTO_T B WHERE A.OPRID=? AND A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA";
 					Map<String , Object> imgMap = sqlQuery.queryForMap(imageUrlSQL,new Object[]{bmrOprid});
 					if(imgMap != null){
@@ -188,7 +188,6 @@ public class TzEventsBmrListServiceImpl extends FrameworkImpl{
 			// 通用链接;
 			String ZSGL_URL = contextPath + "/dispatcher";
 			
-			String str_img_path = "";
 			String str_bmr_li_html = "";
 			String str_bmr_xq_url = "";
 			
@@ -219,6 +218,7 @@ public class TzEventsBmrListServiceImpl extends FrameworkImpl{
 					String bmrOprid = bmrMap.get("OPRID") == null ? "" : bmrMap.get("OPRID").toString();
 					
 					// 头像地址;
+					String str_img_path = "";
 					String imageUrlSQL = "SELECT B.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A , PS_TZ_OPR_PHOTO_T B WHERE A.OPRID=? AND A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA";
 					Map<String , Object> imgMap = sqlQuery.queryForMap(imageUrlSQL,new Object[]{bmrOprid});
 					if(imgMap != null){
