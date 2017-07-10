@@ -2703,7 +2703,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		 		works += '<div class="ncsc-upload-btn">';
 		 		works += '<a href="#" class="ncsc-upload-btn-a">';
 		 		works += '<span class="ncsc-upload-btn-span">';
-		 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')"  ></span>';
+		 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')></span>';
 		 		works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
 		 		works += '</a>';
 		 		works += '</div>';
@@ -2716,40 +2716,39 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		 	works += '</div>';
         
 		 	/*附件显示 开始*/
-//		 	if(SurveyBuild._readonly != true){
-//		
-//		 		works += ' <div class="upload_list" id="'+data.itemId+'_AttList">';
-//		
-//		 	}else{
-//		
-//		 		works += '<div id="'+data.itemId+i+'_AttList">';
-//		 	}
-//		 	if (child[i].recommend_9["viewFileName"]!="")
-//		 	{
-//		 		if(SurveyBuild._readonly!=true){
-//		
-//		 			works += '<div class="upload_list">';
-//		 			works += '<li class="fileLi"><span>';
-//		 			works += '<a onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a></span>';
-//		 			works += '<i onclick="onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')" style="background:url(/statics/images/appeditor/m/de.png) no-repeat center center"></i></li>';
-//		 			works += '</div>';
-//		
-//		 		}else{
-//		 			works += '<div class="input-list-uploadcon-list">';
-//		 			works += '	<div class="input-list-uploadcon-listl left">';
-//		 			works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
-//		 			works += '</div>';
-//		 			works += '</div>';
-//		 		}
-//		 	}
-//		 	works += '</div>';
-//		
-//		 	/*附件显示 结束*/
-//		 	works += '	</div>';
-//		 	works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
-//		 	works += '	<div class="clear"></div>';
-//		 	works += '</div>';
-//		 	
+		 	if(SurveyBuild._readonly != true){
+		
+	 		works += ' <div class="upload_list"  id="'+data.itemId+i+'_AttList">';
+			 	}else{
+	
+	 		works += '<div id="'+data.itemId+i+'_AttList">';
+		 	}
+		 	if (child[i].recommend_9["viewFileName"]!="")
+		 	{
+		 		if(SurveyBuild._readonly!=true){
+		
+		 			works += '<div class="upload_list">';
+	 			works += '<li class="fileLi"><span>';
+		 			works += '<a onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a></span>';
+		 			works += '<i onclick="onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')" style="background:url(/statics/images/appeditor/m/de.png) no-repeat center center"></i></li>';
+ 	 			works += '</div>';
+		
+		 		}else{
+		 			works += '<div class="input-list-uploadcon-list">';
+		 			works += '	<div class="input-list-uploadcon-listl left">';
+		 			works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+		 			works += '</div>';
+		 			works += '</div>';
+		 		}
+		 	}
+		 	works += '</div>';
+		
+		 	/*附件显示 结束*/
+		 	works += '	</div>';
+		 	works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
+		 	works += '	<div class="clear"></div>';
+		 	works += '</div>';
+		 	
 		 }else{
 			 
 			 works += '<div class="item" style="display:none" id="Tjxfj_show_'+i+'">';
@@ -2761,7 +2760,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			 		works += '<div class="ncsc-upload-btn">';
 			 		works += '<a href="#" class="ncsc-upload-btn-a">';
 			 		works += '<span class="ncsc-upload-btn-span">';
-			 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange="SurveyBuild.uploadAttachment(this,\''+ data.instanceId +'\')"  ></span>';
+			 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+') ></span>';
 			 		works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
 			 		works += '</a>';
 			 		works += '</div>';

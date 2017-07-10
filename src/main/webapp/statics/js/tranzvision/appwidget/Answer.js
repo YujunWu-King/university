@@ -1794,7 +1794,17 @@ var SurveyBuild = {
 	Tjxdelete: function(el,cins,num){
 		var appInsId = SurveyBuild.appInsId;//报名表实例ID
 		var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
-		var indexJson = parseInt($(el).closest(".main_inner_content_para").index());
+		var indexJson ="";
+	
+		//修改判断判断是否是手机版
+    	if(SurveyBuild.accessType=='M'){
+    		indexJson=parseInt($(el).closest(".next_record").index());
+    		
+    	}else{
+    		indexJson=parseInt($(el).closest(".main_inner_content_para").index());
+    		
+    	}
+		
 		var data = SurveyBuild._items[instanceId];
 		var index = num;
 		var child = data.children[indexJson];

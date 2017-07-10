@@ -27,8 +27,9 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 import sun.misc.BASE64Decoder;
 
 /**
- * 复制原有UploadPhotoServiceImpl功能，符合清华风格
- * @author yuds 上传照片 PS:TZ_GD_USERMG_PKG:TZ_UPLOAD_PHOTO
+ * 手机版上传照片
+ * @author tzhjl
+ *
  */
 @Service("com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.SjUploadPhotoServiceImpl")
 public class SjUploadPhotoServiceImpl extends FrameworkImpl {

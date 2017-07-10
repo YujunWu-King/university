@@ -1625,7 +1625,10 @@ var SurveyBuild = {
 		var appInsId = SurveyBuild.appInsId;
 		/***当删除行之后，num值就不正确了，需要动态的回去当前行数***/
 		var index = num;
-		var indexJson = parseInt($(el).closest(".main_inner_content_para").index());
+		var indexJson ="";
+		
+        indexJson=parseInt($(el).closest(".main_inner_content_para").index());
+    			
 		//console.log(num2+"--"+num)
 		var child = data.children[indexJson];
 		//生成日期
