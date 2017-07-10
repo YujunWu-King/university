@@ -1635,7 +1635,17 @@ var SurveyBuild = {
 		var appInsId = SurveyBuild.appInsId;
 		/***当删除行之后，num值就不正确了，需要动态的回去当前行数***/
 		var index = num;
-		var indexJson = parseInt($(el).closest(".main_inner_content_para").index());
+		var indexJson ="";
+		//修改判断判断是否是手机版
+    	if(SurveyBuild.accessType=='M'){
+    		indexJson=parseInt($(el).closest(".next_record").index());
+    		
+    	}else{
+    		indexJson=parseInt($(el).closest(".main_inner_content_para").index());
+    		
+    	}
+			
+			
 		//console.log(num2+"--"+num)
 		var child = data.children[indexJson];
 		//生成日期
@@ -1700,7 +1710,7 @@ var SurveyBuild = {
 							var maxOrderBy = 0;
 							$.ajax({
 								type: "post",
-								url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+data.itemId+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":""}}',
+								url: encodeURI(SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+data.itemId+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":""}}'),
 								dataType: "json",
 								async: false,
 								success: function(rst){
