@@ -33,6 +33,9 @@ import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author LiGang 2015/10/30
  */
@@ -54,9 +57,95 @@ public class TZGDObject {
 	private HTMLObjectManager htmlObjectManager;
 
 	private String basePath = "";
+	
+	//用于将同一个服务上的并行访问串行化的信号灯映射变量
+	private static HashMap<String,Semaphore> semaphoreMap = new HashMap<String, Semaphore>();
+	//用于将用于将同一个服务上的并行访问串行化的信号灯变量
+	private static Semaphore sequenceSemaphore = new Semaphore(1,true);
 
-	public TZGDObject() {
+	public TZGDObject()
+	{
 		;
+	}
+	
+	/**
+	 * 获取调用者信息的方法
+	 */
+	private String getCallerName()
+	{
+		String callerName = "";
+		
+		
+		StackTraceElement tmpstack[] = Thread.currentThread().getStackTrace();
+		boolean findFlag = false;
+		for(StackTraceElement stackitem:tmpstack)
+		{   
+			if((stackitem.getClassName().indexOf(getClass().getName())) >= 0)
+			{
+				findFlag = true;
+			}
+			else if(findFlag == true)
+			{
+				callerName = stackitem.getClassName() + "." + stackitem.getMethodName();
+				break;
+			}
+		}
+		
+		
+		return callerName;
+	}
+	
+	/**
+	 * 获取信号灯变量的方法
+	 */
+	public Map.Entry<String,Semaphore> getSemaphore(String semaphoreName)
+	{
+		Semaphore tmpSemaphore = null;
+		
+		
+		String tmpSemaphoreName = getCallerName() + "-" + semaphoreName;
+		System.out.println("successfully get the traffic light variable name[Thread ID : " + Thread.currentThread().getId() + "]: " + tmpSemaphoreName);
+		
+		if(semaphoreMap.containsKey(tmpSemaphoreName) == true)
+		{
+			tmpSemaphore = semaphoreMap.get(tmpSemaphoreName);
+		}
+		else
+		{
+			try
+			{
+				//获取信号灯，同步线程
+				if(sequenceSemaphore.tryAcquire(100, TimeUnit.MILLISECONDS) == false)
+				{
+					return null;
+				}
+			}
+			catch(Exception e)
+			{
+				return null;
+			}
+			
+			//再次判断一下指定的信号灯是否已创建
+			if(semaphoreMap.containsKey(tmpSemaphoreName) == true)
+			{
+				tmpSemaphore = semaphoreMap.get(tmpSemaphoreName);
+			}
+			else
+			{
+				tmpSemaphore = new Semaphore(1,true);
+				semaphoreMap.put(tmpSemaphoreName,tmpSemaphore);
+			}
+			
+			//释放信号灯
+			sequenceSemaphore.release();
+		}
+		
+		
+		HashMap<String,Semaphore> tmpHashMap = new HashMap<String,Semaphore>();
+		tmpHashMap.put(tmpSemaphoreName,tmpSemaphore);
+		
+		
+		return tmpHashMap.entrySet().iterator().next();
 	}
 
 	public String getWebAppRootPath() {
