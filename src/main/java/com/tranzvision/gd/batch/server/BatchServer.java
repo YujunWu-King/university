@@ -394,8 +394,26 @@ public class BatchServer extends BaseJob
 		//将两个小时内都没有心跳的Job进程的状态更新为"DEAD";
 		try
 		{
+			/*张浪注释，2017-07-12，为防止死锁，改用根据主键逐条更新
 			String sqlText = getSQLText("SQL.TZBatchServer.TzUpdateDeadJobStatus");
 			sqlExec(sqlText,new SqlParams(organizationID));
+			*/
+			TzSQLObject tmpSQLObject = createSQLObject(getSQLText("SQL.TZBatchServer.TzGetAllDeadJobs"),organizationID);
+			
+			TzRecord tmpRecord = new TzRecord();
+			while(tmpSQLObject.fetch(tmpRecord) == true)
+			{
+				long jicInsID = 0;
+				try{
+					jicInsID = tmpRecord.getTzLong("TZ_JCSL_ID").getValue();
+					
+					String sqlText = getSQLText("SQL.TZBatchServer.TzUpdateDeadJobStatus");
+					sqlExec(sqlText,new SqlParams(organizationID,jicInsID));
+				}catch(Exception e){
+					e.printStackTrace();
+					warn("failed to update the status of the dead job processes["+jicInsID+"] from \"STARTED\",\"RUNNING\" or \"STOPPING\" to \"DEAD\".\n" + e.toString());
+				}
+			}
 		}
 		catch(Exception e)
 		{

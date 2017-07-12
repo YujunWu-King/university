@@ -75,7 +75,8 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 	private TzInterviewAppointmentMobileImpl tzInterviewAppointmentMobileImpl;
 	
 	//用于同步面试预约过程的信号变量，避免同一个服务内部对数据库资源的竞争
-	private static Semaphore appointmentLock = new Semaphore(1,true);
+	//private static Semaphore appointmentLock = new Semaphore(1,true);
+	
 	//用于控制访问量的信号变量，避免考生面试预约过度竞争对服务器造成过大压力
 	private static Semaphore appointmentLockCounter = new Semaphore(10,true);
 	
@@ -85,7 +86,6 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 		String interviewAppointHtml = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
-		//String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			jacksonUtil.json2Map(strParams);
 			
@@ -426,15 +426,26 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 									throw new Exception("系统忙，请稍候再试。");
 								}
 							
-								//线程间同步，防止同一个应用服务内的预约竞争，减少数据库服务器加锁的压力
-								appointmentLock.acquire();
+								Semaphore tmpSemaphore = null;
+								//获取当前序列对应的信号灯
+								Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore(classId + "-" + pcId + "-" +planId);
 								
+								//System.out.println("信号灯===>"+tmpSemaphoreObject.toString());
+								if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
+								{
+									//如果返回的信号灯为空，报系统忙，请稍后再试
+									throw new Exception("系统忙，请稍候再试。");
+								}else{
+									tmpSemaphore = tmpSemaphoreObject.getValue();
+									
+									//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
+									tmpSemaphore.acquire();
+								}
+
+								//Thread.sleep(15000);用于测试
 								boolean isLocked = false;
 								try
-								{
-									//对指定记录进行加锁
-									//mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");锁表无效
-									
+								{	
 									//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
 									try
 									{
@@ -485,16 +496,12 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 											errorMsg[1] = "预约失败，该报到时间预约人数已满，请预约其他报到时间";
 										}
 									}
-									//对指定记录进行解锁
-									//mySqlLockService.unlockRow(jdbcTemplate);
 								}
 								catch(Exception ee)
 								{
 									ee.printStackTrace();
 									errorMsg[0] = "1";
 									errorMsg[1] = "预约失败，"+ee.getMessage();
-									//回滚
-									//mySqlLockService.rollback(jdbcTemplate);
 								}
 								finally
 								{
@@ -504,7 +511,10 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 												, new Object[]{ classId, pcId, planId });
 									}
 									//释放信号量
-									appointmentLock.release();
+									if(tmpSemaphore != null){
+										tmpSemaphore.release();
+									}
+									
 									appointmentLockCounter.release();
 								}
 							}
