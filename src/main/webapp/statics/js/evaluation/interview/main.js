@@ -349,6 +349,9 @@ function initializeEvaluateSystem(urlObject)
 	$("#tz_msps_dfym").width(width);
 	//$("#tz_msps_dfym").height(480);
 	
+	$("#tz_msps_pclb_a").height("40%");
+	$("#tz_msps_description").height("60%");
+	
 	if(Ext.isIE == true)
 	{
 		$("#tz_msps_container").height(480);

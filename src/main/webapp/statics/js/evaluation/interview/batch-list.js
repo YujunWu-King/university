@@ -443,6 +443,21 @@ function initializeEvaluatePiciGrid(jsonObject)
       }
   });
   
+  //评审说明区域
+  var descPanel = Ext.create("Ext.panel.Panel",{
+	  title:'评审说明',
+	  header:false,
+	  height:'100%',
+	  renderTo: 'tz_msps_description',
+      contentEl : Ext.DomHelper.append(document.body, {
+          bodyBorder : false,
+          tag : 'iframe',
+          style : "border:0px none;scrollbar:true",
+          src : EvaluationDescriptionUrl,
+          height:'100%',
+          width : "100%"
+      })
+  });
   
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex)
 		{
