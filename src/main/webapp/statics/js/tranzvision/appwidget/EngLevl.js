@@ -1125,26 +1125,22 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				var childrenAttr=child.EngLevelUp.children;
 				if(child.EngLevelUp.allowMultiAtta == "Y"){
 
+					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
+					htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 					for(var index=0; index<childrenAttr.length; index++){
 
 						if (childrenAttr[index].viewFileName != "" && childrenAttr[index].sysFileName != ""){
 
-							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';
-							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
 							htmlContent += '<li class="fileLi">';
 							htmlContent += '<span><a id="img_'+ child.EngLevelUp.itemId +'_'+index+'" onclick="SurveyBuild.engViewImageSet(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId +'\')" index="'+ index +'" file-index="' + childrenAttr[index].orderby + '">';
 							htmlContent += childrenAttr[index].viewFileName +'</a></span>';
 							htmlContent += '<i onclick="SurveyBuild.oldDeleteFile(this,\'' + data.instanceId + '\',\''+ child.EngLevelUp.instanceId+'\',\''+ j +'\')" style="background:url(' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png'+') no-repeat center center">';
 							htmlContent += '</i></li>';
-							htmlContent += '</div>';
-						}else{
-
-							htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:none">';
-							htmlContent += '<p>'+ MsgSet["UP_FILE_LIST"] +'</p>';
-							htmlContent += '</div>';
+							
 						}
 					}
-
+					htmlContent += '</div>';
+					
 				}else{
 
 					htmlContent += ' <div class="upload_list" id="' + child.EngLevelUp.itemId + '_AttList" style="display:' + (childrenAttr.length < 1 ? 'none':'block') + '">';

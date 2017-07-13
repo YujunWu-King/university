@@ -2156,22 +2156,22 @@ var SurveyBuild = {
         var appInsId = SurveyBuild.appInsId; //报名表实例ID
         //var data;
         var $isDhContainer = $(el).closest(".dhcontainer");
-        console.log("$isDhContainer" + $isDhContainer.length)
+       
         if ($isDhContainer.length == 0) {
             data = SurveyBuild._items[instanceId];
         } else {
             var dhIns = $isDhContainer.attr("data-instancid");
-            var index = $(el).closest(".next_record").index();
-
-            data = SurveyBuild._items[dhIns].children[index][comInstanceId];
+            var index = $(el).closest(".fileLi").index();
+            data = SurveyBuild._items[dhIns].children[0][comInstanceId];
         }
 
-        console.dir(data.children[0])
+        var indexx = index - 1;
+        var _children = data.children;
         var name = data.children[0].viewFileName;
         var array = name.split(".");
         var hzhui = array[array.length-1];
         if(hzhui=="jpeg"||hzhui=="png"||hzhui=="jpg"||hzhui=="gif"||hzhui=="JPEG"||hzhui=="PNG"||hzhui=="JPG"||hzhui=="GIF"){
-        	var srcPath=TzUniversityContextPath + data.children[0].accessPath + data.children[0].sysFileName;
+        	var srcPath=TzUniversityContextPath + data.children[indexx].accessPath + data.children[indexx].sysFileName;
 
     		$("#img_"+data.itemId).attr("src",srcPath);
     		$("#shade_"+data.itemId).show();
