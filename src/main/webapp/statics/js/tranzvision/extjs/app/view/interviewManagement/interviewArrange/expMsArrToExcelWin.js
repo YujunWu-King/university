@@ -81,7 +81,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.expMsArrToExce
                         header:false,
                         width: 650,
                         minHeight: 200,
-                        maxHeight: 400,
+                        maxHeight: 380,
                         resizeTabs: true,
                         defaults: {
                             autoScroll: false
