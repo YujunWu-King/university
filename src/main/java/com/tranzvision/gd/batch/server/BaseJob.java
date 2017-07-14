@@ -3,26 +3,23 @@
  */
 package com.tranzvision.gd.batch.server;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
-import org.apache.log4j.FileAppender;
-
 import java.io.File;
 
 import org.apache.log4j.DailyRollingFileAppender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.log4j.RollingFileAppender;
-
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.TransactionStatus;
 
-import com.tranzvision.gd.util.sql.SqlParams;
-import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.sql.SqlParams;
+import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.sql.type.TzRecord;
 import com.tranzvision.gd.util.sql.type.TzSQLData;
 import com.tranzvision.gd.util.sql.type.TzSQLObject;

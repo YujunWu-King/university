@@ -667,4 +667,8 @@ public class TZGDObject {
 
 		return tmpEngineProcess;
 	}
+	
+	public JdbcTemplate getJdbcTemplate(){
+		return jdbcTemplate;
+	}
 }

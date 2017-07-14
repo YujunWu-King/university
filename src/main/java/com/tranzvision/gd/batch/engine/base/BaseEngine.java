@@ -3,25 +3,28 @@
  */
 package com.tranzvision.gd.batch.engine.base;
 
-import org.springframework.transaction.TransactionStatus;
-
 import static org.quartz.CronScheduleBuilder.cronSchedule;
-import org.quartz.TriggerUtils;
-import org.quartz.JobExecutionException;
-import org.quartz.impl.triggers.CronTriggerImpl;
-import org.quartz.spi.OperableTrigger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.Semaphore;
+
+import org.quartz.JobExecutionException;
+import org.quartz.TriggerUtils;
+import org.quartz.impl.triggers.CronTriggerImpl;
+import org.quartz.spi.OperableTrigger;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.tranzvision.gd.batch.server.BaseJob;
 import com.tranzvision.gd.util.base.TzException;
+import com.tranzvision.gd.util.sql.SqlParams;
+import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.sql.type.TzInt;
 import com.tranzvision.gd.util.sql.type.TzRecord;
 import com.tranzvision.gd.util.sql.type.TzString;
-import com.tranzvision.gd.util.sql.type.TzInt;
-import com.tranzvision.gd.util.sql.SqlParams;
 
 /**
  * @author LiGang
@@ -731,7 +734,7 @@ public class BaseEngine extends BaseJob implements Runnable
 		Integer tmpProcessInstanceId = 0;
 		
 		//开始事务
-		TransactionStatus status = getTransaction();
+		//TransactionStatus status = getTransaction();
 		
 		try
 		{
@@ -752,20 +755,63 @@ public class BaseEngine extends BaseJob implements Runnable
 				}
 			}
 			
-			//先锁定当前机构对应的进程实例种子记录
-			sqlExec("UPDATE TZ_JCSL_IDZZ_T SET TZ_JCSL_IDSEED=TZ_JCSL_IDSEED + 1 WHERE TZ_JG_ID=?",new SqlParams(orgId));
+//			//先锁定当前机构对应的进程实例种子记录
+//			sqlExec("UPDATE TZ_JCSL_IDZZ_T SET TZ_JCSL_IDSEED=TZ_JCSL_IDSEED + 1 WHERE TZ_JG_ID=?",new SqlParams(orgId));
+//			
+//			//获取当前机构的进程实例种子号
+//			TzInt tmpId = new TzInt();
+//			sqlText = "SELECT TZ_JCSL_IDSEED FROM TZ_JCSL_IDZZ_T WHERE TZ_JG_ID=?";
+//			sqlExec(sqlText,new SqlParams(orgId),tmpId);
+//			tmpProcessInstanceId = tmpId.getValue();
 			
-			//获取当前机构的进程实例种子号
-			TzInt tmpId = new TzInt();
-			sqlText = "SELECT TZ_JCSL_IDSEED FROM TZ_JCSL_IDZZ_T WHERE TZ_JG_ID=?";
-			sqlExec(sqlText,new SqlParams(orgId),tmpId);
-			tmpProcessInstanceId = tmpId.getValue();
 			
-			commit(status);
+			/**********************************张浪添加，2017-07-13，开始**************************************/
+			TZGDObject tzGDObject = this.getTZGDObject();
+			JdbcTemplate jdbcTemplate = tzGDObject.getJdbcTemplate();
+			//获取当前机构对应的信号灯
+			Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore("getNewProcessInstanceId-" + orgId);
+			if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
+			{
+				//如果返回的信号灯为空，获取进程实例编号失败
+				throw new TzException("system is busy.");
+			}
+			Semaphore tmpSemaphore = tmpSemaphoreObject.getValue();
+			
+			try
+			{
+				//通过获取的信号灯将获取下一个序列值的并行访问串行化执行
+				tmpSemaphore.acquire();
+				
+				//获取当前序列的值
+				int tmpInstanceId = 0;
+				String sql = "SELECT TZ_JCSL_IDSEED FROM TZ_JCSL_IDZZ_T WHERE TZ_JG_ID = ?";
+				tmpInstanceId = jdbcTemplate.queryForObject(sql, new Object[]{orgId }, Integer.class);
+				
+				
+				//更新当前序列的值
+				int updateFlag = 0;
+				sql = "UPDATE TZ_JCSL_IDZZ_T SET TZ_JCSL_IDSEED=TZ_JCSL_IDSEED+1 WHERE TZ_JG_ID = ? AND TZ_JCSL_IDSEED <= ?";
+				updateFlag = jdbcTemplate.update(sql, new Object[] { orgId, tmpInstanceId});
+				
+				if(updateFlag >= 1){
+					tmpProcessInstanceId = tmpInstanceId + 1;
+				}
+			}
+			catch(Exception e)
+			{
+				throw e;
+			}
+			finally 
+			{
+				tmpSemaphore.release();
+			}
+			/**********************************张浪添加，2017-07-13，结束**************************************/
+			
+			//commit(status);
 		}
 		catch(Exception e)
 		{
-			rollback(status);
+			//rollback(status);
 			throw new TzException("can't get a new process instance ID for the specified process job.\n" + e.toString());
 		}
 		

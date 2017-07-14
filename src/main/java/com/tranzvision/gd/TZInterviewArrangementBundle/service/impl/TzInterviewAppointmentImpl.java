@@ -427,25 +427,23 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 								}
 							
 								Semaphore tmpSemaphore = null;
-								//获取当前序列对应的信号灯
-								Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore(classId + "-" + pcId + "-" +planId);
-								
-								//System.out.println("信号灯===>"+tmpSemaphoreObject.toString());
-								if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
-								{
-									//如果返回的信号灯为空，报系统忙，请稍后再试
-									throw new Exception("系统忙，请稍候再试。");
-								}else{
-									tmpSemaphore = tmpSemaphoreObject.getValue();
-									
-									//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
-									tmpSemaphore.acquire();
-								}
-
-								//Thread.sleep(15000);用于测试
 								boolean isLocked = false;
 								try
 								{	
+									//获取当前面试时间段对应的信号灯
+									Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore(classId + "-" + pcId + "-" +planId);
+									
+									if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
+									{
+										//如果返回的信号灯为空，报系统忙，请稍后再试
+										throw new Exception("系统忙，请稍候再试。");
+									}else{
+										tmpSemaphore = tmpSemaphoreObject.getValue();
+										
+										//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
+										tmpSemaphore.acquire();
+									}
+									
 									//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
 									try
 									{

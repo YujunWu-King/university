@@ -195,7 +195,8 @@ public class BatchServerManager extends BaseJob
 						{
 							if(tmpBSStatus.equals("RUNNING") == true)
 							{
-								warn("the batch server[" + tmpOrgId + "." + tmpBSName + "] has no heartbeat in latest two hours and it will be restarted.");
+								//warn("the batch server[" + tmpOrgId + "." + tmpBSName + "] has no heartbeat in latest two hours and it will be restarted.");
+								warn("the batch server[" + tmpOrgId + "." + tmpBSName + "] has no heartbeat in latest half hour and it will be restarted.");
 							}
 							
 							//构建调度任务
@@ -211,7 +212,7 @@ public class BatchServerManager extends BaseJob
 							//将当前TZGDObject对应的Bean实例传递给调度任务对象
 							jobDetail.getJobDataMap().put(TZGDOBJECT_BEAN_KEY, getTZGDObject());
 							info("the batch server manager succeeded in setting the TZGDObject object for the job of the batch server[" + tmpOrgId + "." + tmpBSName + "].");
-							
+
 							//为Job上下文设置当前组织机构ID
 							jobDetail.getJobDataMap().put(BATCH_SERVER_ORGANIZATION_ID, tmpOrgId);
 							
