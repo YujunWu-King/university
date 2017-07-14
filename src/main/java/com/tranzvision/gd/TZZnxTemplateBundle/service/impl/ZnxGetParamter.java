@@ -4,7 +4,10 @@ import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.tranzvision.gd.TZEventsBundle.service.impl.TzEventsGetEticketCodeServiceImpl;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
+import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.qrcode.CreateQRCode;
 
 /**
  * PS类: TZ_GD_COM_EMLSMS_APP:emlSmsGetParamter
@@ -247,4 +250,114 @@ public class ZnxGetParamter {
 			}
 			return msyyDescr;
 		}
+		
+		 /****
+		  * 签到码二维码
+		  * @param paramters
+		  * @return  
+		  */
+		public String  getActCheckCodeImage(String[] paramters){
+			String qrCodeUrl="";
+			try {
+				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+				String audId = paramters[0];
+				String audCyId = paramters[1];
+				String strHuoId="";
+				String strBmbId="";
+				String strHdqDm="";
+				String getHdsql="SELECT TZ_HUOD_ID,TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+				Map<String, Object> map  = jdbcTemplate.queryForMap(getHdsql,new Object[] { audId, audCyId });
+				if (map!=null) {
+					 strHuoId=map.get("TZ_HUOD_ID")==null?"":map.get("TZ_HUOD_ID").toString();
+					 strBmbId=map.get("TZ_BMB_ID")==null?"":map.get("TZ_BMB_ID").toString();
+						
+				}
+				String getHdIdsql="SELECT TZ_HD_QDM FROM PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
+				strHdqDm=jdbcTemplate.queryForObject(getHdIdsql, new Object[]{strHuoId,strBmbId}, String.class);
+				
+				TzEventsGetEticketCodeServiceImpl getTicket=new TzEventsGetEticketCodeServiceImpl();
+						
+				qrCodeUrl=getTicket.getHdTicketCode(strHuoId, strHdqDm);
+				System.out.println("qrCodeUrl===="+qrCodeUrl);
+				 qrCodeUrl = "<img src='" + qrCodeUrl + "' />";
+			 } catch (Exception e) {
+				e.printStackTrace();
+			}
+			return qrCodeUrl;
+			
+		}
+		
+		/***
+		 * 签到码
+		 * @param paramters
+		 * @return
+		 */
+		public String  getActCheckCode(String[] paramters){
+			String qrCode="";
+			try {
+				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+				String audId = paramters[0];
+				String audCyId = paramters[1];
+				String strHuoId="";
+				String strBmbId="";
+				String strHdqDm="";
+				String getHdsql="SELECT TZ_HUOD_ID,TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+				Map<String, Object> map  = jdbcTemplate.queryForMap(getHdsql,new Object[] { audId, audCyId });
+				if (map!=null) {
+					 strHuoId=map.get("TZ_HUOD_ID")==null?"":map.get("TZ_HUOD_ID").toString();
+					 strBmbId=map.get("TZ_BMB_ID")==null?"":map.get("TZ_BMB_ID").toString();
+						
+				}
+				String getHdIdsql="SELECT TZ_HD_QDM FROM PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
+				strHdqDm=jdbcTemplate.queryForObject(getHdIdsql, new Object[]{strHuoId,strBmbId}, String.class);
+				
+				qrCode=strHdqDm;				
+
+			 } catch (Exception e) {
+				e.printStackTrace();
+			}
+			return qrCode;
+			
+		}
+		/**
+		 * 获得短信签到的活动ID和签到码字符串;
+		 * @param paramters
+		 * @return
+		 */
+		
+		public String  getActIdAndQdm(String[] paramters){
+			String strReture="";
+			String qrCode="";
+			try {
+				GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+				String audId = paramters[0];
+				String audCyId = paramters[1];
+				String strHuoId="";
+				String strBmbId="";
+				String strHdqDm="";
+				System.out.println("audId"+audId+"audCyId"+audCyId);
+				String getHdsql="SELECT TZ_HUOD_ID,TZ_BMB_ID FROM PS_TZ_AUDCYUAN_T WHERE TZ_AUDIENCE_ID=? AND  TZ_AUDCY_ID=?";
+				Map<String, Object> map  = jdbcTemplate.queryForMap(getHdsql,new Object[] { audId, audCyId });
+				if (map!=null) {
+					 strHuoId=map.get("TZ_HUOD_ID")==null?"":map.get("TZ_HUOD_ID").toString();
+					 strBmbId=map.get("TZ_BMB_ID")==null?"":map.get("TZ_BMB_ID").toString();
+						
+				}
+				String getHdIdsql="SELECT TZ_HD_QDM FROM PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
+				strHdqDm=jdbcTemplate.queryForObject(getHdIdsql, new Object[]{strHuoId,strBmbId}, String.class);
+				//加密
+				qrCode=DESUtil.encrypt(strHdqDm, "HD_TRANZVISION");
+
+				qrCode=qrCode.replace("%", "%25").replace("+", "%2B").replace("#", "%23").replace("&", "%26");
+				strReture=strHuoId+"_"+qrCode;
+			 } catch (Exception e) {
+				e.printStackTrace();
+			} 
+			return strReture;
+			
+		}
+		
 }

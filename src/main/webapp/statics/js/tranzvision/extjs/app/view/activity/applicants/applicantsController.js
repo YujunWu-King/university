@@ -1,7 +1,10 @@
 ﻿Ext.define('KitchenSink.view.activity.applicants.applicantsController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.applicantsMg', 
-	
+	requires: [
+	   		'KitchenSink.view.activity.applicants.sendTicketsFormWin'
+	   		
+	   	],
 	closeWin: function(btn){
 		//关闭窗口
 		//var win = this.lookupReference('setStatusWindow')
@@ -603,5 +606,34 @@
          Ext.tzSubmit(tzParams,function(){
              store.reload();
          },"",true,this);
-     }
+     },
+ 	/*********************************************************
+	 +功能描述：弹出发送电子门票窗口									+
+	 +开发人：张浪												+
+	 ********************************************************/
+	showSendTicketsWindow: function(btn){
+		var actId=btn.findParentByType('applicantsMg').child('form').getForm().getValues()['activityId'];
+		//选中行
+		var selList = this.getView().getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+		/*如果没有选择，默认发送所有“已报名”的记录
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择需要发送电子门票的报名人记录");
+			return;
+		}
+		*/
+		/*
+		var win = this.lookupReference('sendTicketsFormWindow');
+		if (!win) {*/
+			win = new KitchenSink.view.activity.applicants.sendTicketsFormWin();
+			this.getView().add(win);
+		//}
+		win.recArray = selList;
+		win.checkLen = checkLen;
+		win.actId = actId;
+		//console.log(checkLen);
+		win.show();
+	},
+
 });

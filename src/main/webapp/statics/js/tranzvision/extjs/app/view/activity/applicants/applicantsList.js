@@ -57,6 +57,8 @@
 					text:'发送函件',
 					handler:'showSendWindow'
 				},{
+					text:'发送电子门票',handler:'showSendTicketsWindow'
+				},{
 					text:'批量更改参与状态',handler:"showSetStatusWindow"
 				},{
 					text: '导出活动报名人信息',
