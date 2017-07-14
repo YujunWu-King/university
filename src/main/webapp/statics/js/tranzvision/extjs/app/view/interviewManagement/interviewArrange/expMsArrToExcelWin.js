@@ -18,9 +18,10 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.expMsArrToExce
     minHeight: 150,
     maxHeight: 400,
     ignoreChangesFlag:true,
-    bodyStyle:'overflow-y:auto;overflow-x:hidden',
+    //bodyStyle:'overflow-y:auto;overflow-x:hidden',
     selList:[],
     modalID:'',
+    y:100,
     constructor:function(modalID){
         this.modalID = modalID;
         this.callParent();
