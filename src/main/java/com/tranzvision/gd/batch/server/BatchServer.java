@@ -464,10 +464,10 @@ public class BatchServer extends BaseJob
 			
 			if(deadJobList != null && deadJobList.size() > 0){
 				for(Map<String,Object> deadJobMap : deadJobList){
-					String jicInsID = "";
+					long jicInsID = 0;
 					int updateFlag = 0;
 					try{
-						jicInsID = (String) deadJobMap.get("TZ_JCSL_ID");
+						jicInsID = (long) deadJobMap.get("TZ_JCSL_ID");
 						
 						String sqlText = getSQLText("SQL.TZBatchServer.TzUpdateDeadJobStatus");
 						updateFlag = jdbcTemplate.update(sqlText, new Object[]{ organizationID, jicInsID });

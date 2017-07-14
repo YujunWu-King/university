@@ -94,7 +94,11 @@ public class BatchProcessDetailsImpl extends FrameworkImpl{
 						case "TERMINATED":
 							runStatusDesc = "已强行终止";
 							break;
-							//默认情况
+						//退出
+						case "DEAD":
+							runStatusDesc = "退出";
+							break;
+						//默认情况
 						default:
 							runStatusDesc = runStatus;
 					}
@@ -234,7 +238,11 @@ public class BatchProcessDetailsImpl extends FrameworkImpl{
 			case "TERMINATED":
 				runStatusDesc = "已强行终止";
 				break;
-				//默认情况
+			//退出
+			case "DEAD":
+				runStatusDesc = "退出";
+				break;
+			//默认情况
 			default:
 				runStatusDesc = status;
 		}
