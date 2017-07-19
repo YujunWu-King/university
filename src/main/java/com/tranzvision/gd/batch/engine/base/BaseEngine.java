@@ -729,6 +729,42 @@ public class BaseEngine extends BaseJob implements Runnable
 		}
 	}
 	
+	/**
+	 * 尝试获取实例编号
+	 * @param orgId
+	 * @return
+	 */
+	final private Integer pGetNewProcessInstanceId(String orgId){
+		int instanceId = 0;
+		try{
+			JdbcTemplate jdbcTemplate = this.getTZGDObject().getJdbcTemplate();
+
+			int tmpInstanceId = 0;
+			String sql = "SELECT TZ_JCSL_IDSEED FROM TZ_JCSL_IDZZ_T WHERE TZ_JG_ID = ?";
+			tmpInstanceId = jdbcTemplate.queryForObject(sql, new Object[]{orgId }, Integer.class);
+
+			//更新当前实例ID的值
+			int updateFlag = 0;
+			sql = "UPDATE TZ_JCSL_IDZZ_T SET TZ_JCSL_IDSEED=TZ_JCSL_IDSEED+1 WHERE TZ_JG_ID = ? AND TZ_JCSL_IDSEED <= ?";
+			updateFlag = jdbcTemplate.update(sql, new Object[] { orgId, tmpInstanceId});
+			
+			if(updateFlag >= 1){
+				instanceId = tmpInstanceId + 1;
+			}
+		}catch(Exception e){
+			return 0;
+		}
+		
+		return instanceId;
+	}
+	
+	
+	/**
+	 * 获取进程实例编号
+	 * @param orgId
+	 * @return
+	 * @throws TzException
+	 */
 	final private Integer getNewProcessInstanceId(String orgId) throws TzException
 	{
 		Integer tmpProcessInstanceId = 0;
@@ -767,7 +803,6 @@ public class BaseEngine extends BaseJob implements Runnable
 			
 			/**********************************张浪添加，2017-07-13，开始**************************************/
 			TZGDObject tzGDObject = this.getTZGDObject();
-			JdbcTemplate jdbcTemplate = tzGDObject.getJdbcTemplate();
 			//获取当前机构对应的信号灯
 			Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore("getNewProcessInstanceId-" + orgId);
 			if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
@@ -780,21 +815,27 @@ public class BaseEngine extends BaseJob implements Runnable
 			try
 			{
 				//通过获取的信号灯将获取下一个序列值的并行访问串行化执行
-				tmpSemaphore.acquire();
+				tmpSemaphore.acquireUninterruptibly();
 				
-				//获取当前序列的值
-				int tmpInstanceId = 0;
-				String sql = "SELECT TZ_JCSL_IDSEED FROM TZ_JCSL_IDZZ_T WHERE TZ_JG_ID = ?";
-				tmpInstanceId = jdbcTemplate.queryForObject(sql, new Object[]{orgId }, Integer.class);
+				//最多尝试20次获取实例ID
+				int counter = 0;
+				while(tmpProcessInstanceId <= 0)
+				{
+					//获取下一个实例ID，并计数
+					tmpProcessInstanceId = this.pGetNewProcessInstanceId(orgId);
+					counter ++;
+					
+					//如果超过20次都没有成功获得下一个序列号，则宣告失败并返回0
+					if(counter >= 20)
+					{
+						break;
+					}
+				}
 				
-				
-				//更新当前序列的值
-				int updateFlag = 0;
-				sql = "UPDATE TZ_JCSL_IDZZ_T SET TZ_JCSL_IDSEED=TZ_JCSL_IDSEED+1 WHERE TZ_JG_ID = ? AND TZ_JCSL_IDSEED <= ?";
-				updateFlag = jdbcTemplate.update(sql, new Object[] { orgId, tmpInstanceId});
-				
-				if(updateFlag >= 1){
-					tmpProcessInstanceId = tmpInstanceId + 1;
+				//如果尝试20次还没有获得下一个实例，则抛出异常，获取实例ID失败
+				if(tmpProcessInstanceId <= 0)
+				{
+					throw new Exception("Failed to get a new process instance ID.");
 				}
 			}
 			catch(Exception e)

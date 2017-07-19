@@ -229,7 +229,7 @@ public class BatchServer extends BaseJob
 			}else{
 				tmpSemaphore = tmpSemaphoreObject.getValue();
 				//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
-				tmpSemaphore.acquire();
+				tmpSemaphore.acquireUninterruptibly();
 			}
 			/****************************************张浪添加，20170714，结束*******************************************/
 			//读取配置信息

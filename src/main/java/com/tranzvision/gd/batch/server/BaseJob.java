@@ -297,12 +297,13 @@ public class BaseJob implements Job
 				
 				tmpLogger.addAppender(appender);
 				
-				logger = tmpLogger;
+//				logger = tmpLogger;
 			}
+			logger = tmpLogger;
 		}
 		catch(Exception e)
 		{
-			;
+			return false;
 		}
 		
 		return true;
