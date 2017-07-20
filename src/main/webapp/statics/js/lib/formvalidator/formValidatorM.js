@@ -121,6 +121,7 @@ $.formValidator =
 		else
 		{
 //			console.log(elem.settings[0].tipID);
+			if(typeof(elem.settings)!="undefined"){ 
 			var tip = $("#"+elem.settings[0].tipID);
 			
 			
@@ -179,6 +180,7 @@ $.formValidator =
 			//	if(onCorrectClass!="" && showclass == "onCorrect"){jqobj.removeClass().addClass(onCorrectClass)};
 			//	if(onErrorClass!="" && showclass == "onError"){jqobj.removeClass().addClass(onErrorClass)};
 			//}
+			}
 		}
 	},
 		

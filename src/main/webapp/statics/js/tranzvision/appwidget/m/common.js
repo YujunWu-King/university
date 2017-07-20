@@ -6,9 +6,9 @@ $(document).ready(function(){
      //tab(".bg  .slide_ul   ",".bg .tabNote","","mousedown");
      var swiper = new Swiper('.swiper-container', {
         pagination: '.swiper-pagination',
-        slidesPerView: 3,
+        slidesPerView: 'auto',
         paginationClickable: true,
-        spaceBetween:0
+        spaceBetween:20
     });
 
     //返回顶部

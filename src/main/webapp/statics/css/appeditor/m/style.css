@@ -1003,7 +1003,7 @@ select {
 	top: 0;
 	z-index: 999;
 	max-width: 750px;
-	width: 90%;
+	width: 88%;
 }
 
 .top-nav .swiper-wrapper {
@@ -1023,6 +1023,7 @@ select {
 	color: #333;
 	line-height: 2rem;
 	display: inline-block;
+	padding:0 15px;
 }
 
 .swiper-slide a:hover {
