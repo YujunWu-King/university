@@ -428,7 +428,7 @@ public class TzRegMbaKsServiceImpl extends FrameworkImpl {
 					if(strTZ_MSSQH != null && "CREATE".equals(strTZ_MSSQH)){
 						Calendar a = Calendar.getInstance();
 						String year = String.valueOf(a.get(Calendar.YEAR));//得到年
-						String sjNum = "0000"+ String.valueOf(getSeqNum.getSeqNumOracle("TZ_REG_USER_T", "TZ_MSSQH"+year));
+						String sjNum = "0000"+ String.valueOf(getSeqNum.getSeqNum("TZ_REG_USER_T", "TZ_MSSQH"+year));
 						String mssqh = year + sjNum.substring(sjNum.length()-4,sjNum.length());
 						psTzRegUserT.setTzMssqh(mssqh);
 					}
