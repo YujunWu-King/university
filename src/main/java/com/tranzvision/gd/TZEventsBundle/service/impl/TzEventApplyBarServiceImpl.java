@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,10 +25,11 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceI
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
-import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.sql.type.TzRecord;
 
 /**
  * 显示在线报名条，原PS：TZ_APPONLINE_PKG:AppbarDisplay
@@ -54,9 +57,6 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzNaudlistTMapper psTzNaudlistTMapper;
-
-	@Autowired
-	private MySqlLockService mySqlLockService;
 	
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
@@ -66,6 +66,10 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
+	
+	//用于控制访问量的信号变量，避免活动报名席位数过度竞争对服务器造成过大压力
+	private static Semaphore registrationLockCounter = new Semaphore(10,true);
+	
 
 	/**
 	 * 显示在线报名条
@@ -77,7 +81,6 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 	public String tzGetHtmlContent(String strParams) {
 
 		String strRet = "";
-
 		try {
 
 			Date dateNow = new Date();
@@ -357,8 +360,6 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 		String strApplyId = jacksonUtil.getString("APPLYID");
 		try {
 			// 显示报名条
-			System.out.println("strApplyId:" + strApplyId);
-			System.out.println("oprType:" + oprType);
 			if ("eventBarShow".equals(oprType)) {
 				if (null != strApplyId && !"".equals(strApplyId)) {
 					Date dateNow = new Date();
@@ -413,7 +414,6 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("strRet:" + jacksonUtil.Map2json(mapRet));
 		return jacksonUtil.Map2json(mapRet);
 	}
 
@@ -471,13 +471,15 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 				psTzNaudlistT.setTzNregStat("3");
 				int updNum = psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
 				if (updNum > 0) {
-
+					errorCode = "0";
+					errorMsg = cancelSuccess;
+					
 					String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 					String orgId = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
 					
 					//撤销报名成功站内信
 					try{
-						sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+						sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
 						String name = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "String");
 						//报名成功成功站内信模板
 						String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CX_ZNX_TMP");
@@ -495,41 +497,103 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 						nullEx.printStackTrace();
 					}
 					
-					// 报名最早的状态为“等待”的报名人
-					sql = "select TZ_HD_BMR_ID,OPRID from PS_TZ_NAUDLIST_T where TZ_ART_ID=? and TZ_NREG_STAT='4' order by TZ_REG_TIME limit 0,1";
-					String waitBmr = "";
-					String waitOprid = "";
-					Map<String,Object> bmrInfoMap = sqlQuery.queryForMap(sql, new Object[]{ strAPPLYID });
-					if(bmrInfoMap != null){
-						waitBmr = bmrInfoMap.get("TZ_HD_BMR_ID").toString();
-						waitOprid = bmrInfoMap.get("OPRID").toString();
-					}
-					
-					if (null != waitBmr && !"".equals(waitBmr) && "1".equals(strRegStatus)) {
-						// 若撤销报名的人是已报名状态，则撤销成功后自动进补
-						// 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数
-						mySqlLockService.lockRow(sqlQuery, "TZ_NAUDLIST_T");
-
-						// 活动席位数
-						sql = "select TZ_XWS from PS_TZ_ART_HD_TBL where TZ_ART_ID=?";
-						int numXW = sqlQuery.queryForObject(sql, new Object[] { strAPPLYID }, "int");
-
-						// 已报名人数
-						sql = "select count(1) from PS_TZ_NAUDLIST_T where TZ_ART_ID=? and TZ_NREG_STAT='1'";
-						int numYbm = sqlQuery.queryForObject(sql, new Object[] { strAPPLYID }, "int");
-
-						if (numYbm < numXW) {
-							// 将等待的报名人设置为已报名
-							psTzNaudlistT = new PsTzNaudlistT();
-							psTzNaudlistT.setTzArtId(strAPPLYID);
-							psTzNaudlistT.setTzHdBmrId(waitBmr);
-							psTzNaudlistT.setTzNregStat("1");
-							psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
+					//如果撤销的报名人为已报名，将报名最早的等候报名人设置为已报名
+					try{
+						// 报名最早的状态为“等待”的报名人
+						sql = "select TZ_HD_BMR_ID,OPRID from PS_TZ_NAUDLIST_T where TZ_ART_ID=? and TZ_NREG_STAT='4' order by TZ_REG_TIME limit 0,1";
+						String waitBmr = "";
+						String waitOprid = "";
+						Map<String,Object> bmrInfoMap = sqlQuery.queryForMap(sql, new Object[]{ strAPPLYID });
+						if(bmrInfoMap != null){
+							waitBmr = bmrInfoMap.get("TZ_HD_BMR_ID").toString();
+							waitOprid = bmrInfoMap.get("OPRID").toString();
+						}
+						
+						if (null != waitBmr && !"".equals(waitBmr) && "1".equals(strRegStatus)) {
+							boolean sendBmZnx = false;
+							// 若撤销报名的人是已报名状态，则撤销成功后自动进补
+							// 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数
+							//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
+							if(registrationLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+							{
+								throw new Exception("系统忙，请稍候再试。");
+							}
 							
-							if(waitOprid != null && !"".equals(waitOprid)){
+							Semaphore tmpSemaphore = null;
+							boolean isLocked = false;
+							try{
+								//获取当前面试时间段对应的信号灯
+								Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore("com.tranzvision.gd.TZEventsBundle.service.impl.TzEventApplyFormServiceImpl-20170717", strAPPLYID);
+								
+								if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
+								{
+									//如果返回的信号灯为空，报系统忙，请稍后再试
+									throw new Exception("系统忙，请稍候再试。");
+								}else{
+									tmpSemaphore = tmpSemaphoreObject.getValue();
+									
+									//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
+									tmpSemaphore.acquire();
+								}
+								
+								//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
+								try
+								{
+									TzRecord lockRecord = tzGDObject.createRecord("PS_TZ_HDBM_LOCK_TBL");
+									lockRecord.setColumnValue("TZ_HD_ID", strAPPLYID);
+									lockRecord.setColumnValue("TZ_HD_BMR_ID", waitBmr);
+									lockRecord.setColumnValue("OPRID", waitOprid);
+									
+									if(lockRecord.insert() == false){
+										throw new TzException("系统忙，请稍候再试。");
+									}else{
+										isLocked = true;
+									}
+								}
+								catch(Exception e)
+								{
+									 throw new TzException("系统忙，请稍候再试。");
+								}
+							
+								// 活动席位数
+								sql = "select TZ_XWS from PS_TZ_ART_HD_TBL where TZ_ART_ID=?";
+								int numXW = sqlQuery.queryForObject(sql, new Object[] { strAPPLYID }, "int");
+		
+								// 已报名人数
+								sql = "select count(1) from PS_TZ_NAUDLIST_T where TZ_ART_ID=? and TZ_NREG_STAT='1'";
+								int numYbm = sqlQuery.queryForObject(sql, new Object[] { strAPPLYID }, "int");
+		
+								if (numYbm < numXW) {
+									// 将等待的报名人设置为已报名
+									psTzNaudlistT = new PsTzNaudlistT();
+									psTzNaudlistT.setTzArtId(strAPPLYID);
+									psTzNaudlistT.setTzHdBmrId(waitBmr);
+									psTzNaudlistT.setTzNregStat("1");
+									psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
+									
+									if(waitOprid != null && !"".equals(waitOprid)){
+										sendBmZnx = true;
+									}
+								}
+							}catch(Exception e){
+								throw e;
+							}finally {
+								if(isLocked){
+									//报名完成后删除插入PS_TZ_HDBM_LOCK_TBL中的数据
+									sqlQuery.update("delete from PS_TZ_HDBM_LOCK_TBL where TZ_HD_ID=?", new Object[]{ strAPPLYID });
+								}
+								
+								if(tmpSemaphore != null){
+									tmpSemaphore.release();
+								}
+								
+								registrationLockCounter.release();
+							}
+
+							if(sendBmZnx){
 								//活动报名成功站内信
 								try{
-									sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+									sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
 									String name = sqlQuery.queryForObject(sql, new Object[]{ waitOprid }, "String");
 									//报名成功成功站内信模板
 									String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CG_ZNX_TMP");
@@ -548,12 +612,9 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 								}
 							}
 						}
-
-						// 解锁
-						mySqlLockService.unlockRow(sqlQuery);
+					}catch(Exception e){
+						e.printStackTrace();
 					}
-					errorCode = "0";
-					errorMsg = cancelSuccess;
 				} else {
 					errorCode = "1";
 					errorMsg = cancelFailed;

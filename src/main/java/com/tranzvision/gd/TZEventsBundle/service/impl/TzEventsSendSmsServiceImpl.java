@@ -90,7 +90,7 @@ public class TzEventsSendSmsServiceImpl extends FrameworkImpl {
 					}
 
 					createTaskServiceImpl.addAudCy(crtAudi,strName, "", mainPhone, cyPhone, mainEmail, cyEmail, wxh, oprid, "",
-							strActivityId, "");
+							strActivityId, bmrId);
 				}
 
 				Map<String, Object> mapRet = new HashMap<String, Object>();

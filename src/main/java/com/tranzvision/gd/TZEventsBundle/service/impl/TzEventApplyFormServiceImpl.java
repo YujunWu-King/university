@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,13 +26,14 @@ import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzLxfsinfoTbl;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.sql.GetSeqNum;
-import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.sql.type.TzRecord;
 
 /**
  * 报名注册页面显示，信息项根据活动配置动态显示，原PS：TZ_APPONLINE_PKG:AppRegAndSubmint
@@ -59,9 +62,6 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 	private GdObjectServiceImpl gdObjectServiceImpl;
 
 	@Autowired
-	private MySqlLockService mySqlLockService;
-
-	@Autowired
 	private GetSeqNum getSeqNum;
 
 	@Autowired
@@ -81,6 +81,10 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private SendSmsOrMalServiceImpl sendSmsOrMalServiceImpl;
+	
+	//用于控制访问量的信号变量，避免活动报名席位数过度竞争对服务器造成过大压力
+	private static Semaphore registrationLockCounter = new Semaphore(10,true);
+	
 
 	/**
 	 * 显示在线报名注册页面
@@ -295,6 +299,15 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 			// 是否重复报名，根据姓名和手机查重
 			String isRept = "";
 			String reptDesc = "";
+			String regFrom = "";//报名来源，B-网上报名,A-手机报名
+			
+			//M-手机活动报名，否则为PC活动报名
+			String form = request.getParameter("FORM");
+			if("M".equals(form)){
+				regFrom = "A";
+			}else{
+				regFrom = "B";
+			}
 
 			// 双语化
 			String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetSiteLang");
@@ -413,164 +426,217 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 						}
 	
 						/* 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数 */
-						mySqlLockService.lockRow(sqlQuery, "TZ_NAUDLIST_T");
-	
-						// 已报名数
-						sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAppliedNum");
-						int num_apply = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
-	
-						// 活动报名表
-						PsTzNaudlistT psTzNaudlistT = new PsTzNaudlistT();
-						psTzNaudlistT.setTzArtId(strApplyId);
-						psTzNaudlistT.setTzHdBmrId(strBmrId);
-						psTzNaudlistT.setTzCyrName(str_bmr_name);
-						psTzNaudlistT.setTzRegTime(new Date());
-						// 报名来源为:网上报名
-						psTzNaudlistT.setTzZxbmLy("B");
-						psTzNaudlistT.setOprid(oprid);
-	
-						// 联系方式表
-						PsTzLxfsinfoTbl psTzLxfsinfoTbl = new PsTzLxfsinfoTbl();
-						psTzLxfsinfoTbl.setTzLxfsLy("HDBM");
-						psTzLxfsinfoTbl.setTzLydxId(strBmrId);
-	
-						sql = "select TZ_ZXBM_XXX_ID from PS_TZ_ZXBM_XXX_T where TZ_ART_ID = ? order by TZ_PX_XH";
-						List<Map<String, Object>> listItems = sqlQuery.queryForList(sql, new Object[] { strApplyId });
-	
-						for (Map<String, Object> mapItem : listItems) {
-							String str_field_id = mapItem.get("TZ_ZXBM_XXX_ID") == null ? ""
-									: String.valueOf(mapItem.get("TZ_ZXBM_XXX_ID"));
-							if ("".equals(str_field_id)) {
-								continue;
-							}
-							// 报名人联系信息存储在联系方式表TZ_LXFSINFO_TBL中，其他字段写入报名表中
-							String strXXXVal = jacksonUtil.getString(str_field_id);
-							switch (str_field_id) {
-							case "TZ_ZY_SJ":
-								psTzLxfsinfoTbl.setTzZySj(strXXXVal);
-								break;
-							case "TZ_ZY_EMAIL":
-								psTzLxfsinfoTbl.setTzZyEmail(strXXXVal);
-								break;
-	
-							case "TZ_CYR_NAME":
-								psTzNaudlistT.setTzCyrName(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_001":
-								psTzNaudlistT.setTzZxbmXxx001(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_002":
-								psTzNaudlistT.setTzZxbmXxx002(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_003":
-								psTzNaudlistT.setTzZxbmXxx003(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_004":
-								psTzNaudlistT.setTzZxbmXxx004(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_005":
-								psTzNaudlistT.setTzZxbmXxx005(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_006":
-								psTzNaudlistT.setTzZxbmXxx006(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_007":
-								psTzNaudlistT.setTzZxbmXxx007(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_008":
-								psTzNaudlistT.setTzZxbmXxx008(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_009":
-								psTzNaudlistT.setTzZxbmXxx009(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_010":
-								psTzNaudlistT.setTzZxbmXxx010(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_011":
-								psTzNaudlistT.setTzZxbmXxx011(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_012":
-								psTzNaudlistT.setTzZxbmXxx012(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_013":
-								psTzNaudlistT.setTzZxbmXxx013(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_014":
-								psTzNaudlistT.setTzZxbmXxx014(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_015":
-								psTzNaudlistT.setTzZxbmXxx015(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_016":
-								psTzNaudlistT.setTzZxbmXxx016(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_017":
-								psTzNaudlistT.setTzZxbmXxx017(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_018":
-								psTzNaudlistT.setTzZxbmXxx018(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_019":
-								psTzNaudlistT.setTzZxbmXxx019(strXXXVal);
-								break;
-							case "TZ_ZXBM_XXX_020":
-								psTzNaudlistT.setTzZxbmXxx020(strXXXVal);
-								break;
-							}
-	
+						//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
+						if(registrationLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+						{
+							throw new Exception("系统忙，请稍候再试。");
 						}
-	
-						// 生成活动签到码
-						String act_qd_id = tzEventActCodeServiceImpl.generateActCode(strApplyId,
-								psTzLxfsinfoTbl.getTzZySj());
-						psTzNaudlistT.setTzHdQdm(act_qd_id);
-	
-						/* 席位数为0表示不限制人数 */
-						if (num_seats == 0 || num_seats > num_apply) {
-							// 报名成功
-							psTzNaudlistT.setTzNregStat("1");
-							strResult = "3";
-							strResultMsg = applySuccess;
+						
+						Semaphore tmpSemaphore = null;
+						boolean isLocked = false;
+						try{
+							//获取当前面试时间段对应的信号灯
+							Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore("com.tranzvision.gd.TZEventsBundle.service.impl.TzEventApplyFormServiceImpl-20170717", strApplyId);
 							
-							//发送报名成功站内信
-							try{
-								sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
-								String name = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "String");
-								//报名成功成功站内信模板
-								String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CG_ZNX_TMP");
-								//当前机构
-								String jgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+							if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
+							{
+								//如果返回的信号灯为空，报系统忙，请稍后再试
+								throw new Exception("系统忙，请稍候再试。");
+							}else{
+								tmpSemaphore = tmpSemaphoreObject.getValue();
 								
-								//创建邮件任务实例
-								String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
-								// 创建邮件发送听众
-								String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"活动报名成功站内信通知", "JSRW");
-								//添加听众成员
-								boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", "", oprid, "", strApplyId, "");
-								if(bl){
-									sendSmsOrMalServiceImpl.send(taskId, "");
-								}
-							}catch(NullPointerException nullEx){
-								//没有配置邮件模板
-								nullEx.printStackTrace();
+								//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
+								tmpSemaphore.acquire();
 							}
-						} else {
-							// 等待队列
-							psTzNaudlistT.setTzNregStat("4");
-							strResult = "4";
-							strResultMsg = waitingStatus;
+							
+							//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
+							try
+							{
+								TzRecord lockRecord = tzGDObject.createRecord("PS_TZ_HDBM_LOCK_TBL");
+								lockRecord.setColumnValue("TZ_HD_ID", strApplyId);
+								lockRecord.setColumnValue("TZ_HD_BMR_ID", strBmrId);
+								lockRecord.setColumnValue("OPRID", oprid);
+								
+								if(lockRecord.insert() == false){
+									throw new TzException("系统忙，请稍候再试。");
+								}else{
+									isLocked = true;
+								}
+							}
+							catch(Exception e)
+							{
+								 throw new TzException("系统忙，请稍候再试。");
+							}
+							
+							// 已报名数
+							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAppliedNum");
+							int num_apply = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
+		
+							// 活动报名表
+							PsTzNaudlistT psTzNaudlistT = new PsTzNaudlistT();
+							psTzNaudlistT.setTzArtId(strApplyId);
+							psTzNaudlistT.setTzHdBmrId(strBmrId);
+							psTzNaudlistT.setTzCyrName(str_bmr_name);
+							psTzNaudlistT.setTzRegTime(new Date());
+							// 报名来源为:B-网上报名,A-手机报名
+							psTzNaudlistT.setTzZxbmLy(regFrom);
+							psTzNaudlistT.setOprid(oprid);
+		
+							// 联系方式表
+							PsTzLxfsinfoTbl psTzLxfsinfoTbl = new PsTzLxfsinfoTbl();
+							psTzLxfsinfoTbl.setTzLxfsLy("HDBM");
+							psTzLxfsinfoTbl.setTzLydxId(strBmrId);
+		
+							sql = "select TZ_ZXBM_XXX_ID from PS_TZ_ZXBM_XXX_T where TZ_ART_ID = ? order by TZ_PX_XH";
+							List<Map<String, Object>> listItems = sqlQuery.queryForList(sql, new Object[] { strApplyId });
+		
+							for (Map<String, Object> mapItem : listItems) {
+								String str_field_id = mapItem.get("TZ_ZXBM_XXX_ID") == null ? ""
+										: String.valueOf(mapItem.get("TZ_ZXBM_XXX_ID"));
+								if ("".equals(str_field_id)) {
+									continue;
+								}
+								// 报名人联系信息存储在联系方式表TZ_LXFSINFO_TBL中，其他字段写入报名表中
+								String strXXXVal = jacksonUtil.getString(str_field_id);
+								switch (str_field_id) {
+								case "TZ_ZY_SJ":
+									psTzLxfsinfoTbl.setTzZySj(strXXXVal);
+									break;
+								case "TZ_ZY_EMAIL":
+									psTzLxfsinfoTbl.setTzZyEmail(strXXXVal);
+									break;
+		
+								case "TZ_CYR_NAME":
+									psTzNaudlistT.setTzCyrName(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_001":
+									psTzNaudlistT.setTzZxbmXxx001(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_002":
+									psTzNaudlistT.setTzZxbmXxx002(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_003":
+									psTzNaudlistT.setTzZxbmXxx003(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_004":
+									psTzNaudlistT.setTzZxbmXxx004(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_005":
+									psTzNaudlistT.setTzZxbmXxx005(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_006":
+									psTzNaudlistT.setTzZxbmXxx006(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_007":
+									psTzNaudlistT.setTzZxbmXxx007(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_008":
+									psTzNaudlistT.setTzZxbmXxx008(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_009":
+									psTzNaudlistT.setTzZxbmXxx009(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_010":
+									psTzNaudlistT.setTzZxbmXxx010(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_011":
+									psTzNaudlistT.setTzZxbmXxx011(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_012":
+									psTzNaudlistT.setTzZxbmXxx012(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_013":
+									psTzNaudlistT.setTzZxbmXxx013(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_014":
+									psTzNaudlistT.setTzZxbmXxx014(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_015":
+									psTzNaudlistT.setTzZxbmXxx015(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_016":
+									psTzNaudlistT.setTzZxbmXxx016(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_017":
+									psTzNaudlistT.setTzZxbmXxx017(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_018":
+									psTzNaudlistT.setTzZxbmXxx018(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_019":
+									psTzNaudlistT.setTzZxbmXxx019(strXXXVal);
+									break;
+								case "TZ_ZXBM_XXX_020":
+									psTzNaudlistT.setTzZxbmXxx020(strXXXVal);
+									break;
+								}
+							}
+		
+							// 生成活动签到码
+							String act_qd_id = tzEventActCodeServiceImpl.generateActCode(strApplyId,psTzLxfsinfoTbl.getTzZySj());
+							psTzNaudlistT.setTzHdQdm(act_qd_id);
+		
+							/* 席位数为0表示不限制人数 */
+							if (num_seats == 0 || num_seats > num_apply) {
+								// 报名成功
+								psTzNaudlistT.setTzNregStat("1");
+								strResult = "3";
+								strResultMsg = applySuccess;
+							} else {
+								// 等待队列
+								psTzNaudlistT.setTzNregStat("4");
+								strResult = "4";
+								strResultMsg = waitingStatus;
+							}
+		
+							if (createOrupdate == 0) {
+								psTzNaudlistTMapper.insertSelective(psTzNaudlistT);
+								psTzLxfsinfoTblMapper.insertSelective(psTzLxfsinfoTbl);
+							} else {
+								psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
+								psTzLxfsinfoTblMapper.updateByPrimaryKeySelective(psTzLxfsinfoTbl);
+							}
+						}catch(Exception e){
+							strResult = "1";
+							strResultMsg = "系统忙，请稍候再试。";
+						}finally {
+							if(isLocked){
+								//报名完成后删除插入PS_TZ_HDBM_LOCK_TBL中的数据
+								sqlQuery.update("delete from PS_TZ_HDBM_LOCK_TBL where TZ_HD_ID=?", new Object[]{ strApplyId });
+							}
+							
+							if(tmpSemaphore != null){
+								tmpSemaphore.release();
+							}
+							
+							registrationLockCounter.release();
 						}
-	
-						if (createOrupdate == 0) {
-							psTzNaudlistTMapper.insertSelective(psTzNaudlistT);
-							psTzLxfsinfoTblMapper.insertSelective(psTzLxfsinfoTbl);
-						} else {
-							psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
-							psTzLxfsinfoTblMapper.updateByPrimaryKeySelective(psTzLxfsinfoTbl);
+					}
+					
+					//报名成功发送站内信
+					if("3".equals(strResult)){
+						//发送报名成功站内信
+						try{
+							sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+							String name = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "String");
+							//报名成功成功站内信模板
+							String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CG_ZNX_TMP");
+							//当前机构
+							String jgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+							
+							//创建邮件任务实例
+							String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
+							// 创建邮件发送听众
+							String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"活动报名成功站内信通知", "JSRW");
+							//添加听众成员
+							boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", "", oprid, "", strApplyId, "");
+							if(bl){
+								sendSmsOrMalServiceImpl.send(taskId, "");
+							}
+						}catch(NullPointerException nullEx){
+							//没有配置邮件模板
+							nullEx.printStackTrace();
 						}
-	
-						// 解锁
-						mySqlLockService.unlockRow(sqlQuery);
 					}
 				}else{
 					//不在听众内，报名失败
@@ -594,7 +660,6 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 		strRet = jacksonUtil.Map2json(mapRet);
 
 		return strRet;
-
 	}
 
 }

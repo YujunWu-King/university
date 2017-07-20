@@ -17,7 +17,7 @@ FROM
      AND (   (    A.TZ_JHZX_DTTM<=NOW()
               AND (A.TZ_JCFWQ_MC=? OR A.TZ_JCFWQ_MC IS NULL OR A.TZ_JCFWQ_MC='')
              )
-          OR (    A.TZ_JHZX_DTTM<=SUBTIME(NOW(),'00:30:00')
+          OR (    A.TZ_JHZX_DTTM<=SUBTIME(NOW(),'00:15:00')
               AND A.TZ_JCFWQ_MC<>?
              )
          )

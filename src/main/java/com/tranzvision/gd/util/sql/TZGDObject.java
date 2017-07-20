@@ -147,6 +147,63 @@ public class TZGDObject {
 		
 		return tmpHashMap.entrySet().iterator().next();
 	}
+	
+	
+	/**
+	 * 获取信号灯变量的方法,用于在两个不同的地方对同一个信号灯变量的控制，且调用该方法的参数相同
+	 * @author 张浪
+	 * @param semaphoreKey
+	 * @param semaphoreName
+	 * @return
+	 */
+	public Map.Entry<String,Semaphore> getSemaphore(String semaphoreKey,String semaphoreName)
+	{
+		Semaphore tmpSemaphore = null;
+				
+		String tmpSemaphoreName = "MULTI_" + semaphoreKey + "-" + semaphoreName;
+
+		if(semaphoreMap.containsKey(tmpSemaphoreName) == true)
+		{
+			tmpSemaphore = semaphoreMap.get(tmpSemaphoreName);
+		}
+		else
+		{
+			try
+			{
+				//获取信号灯，同步线程
+				if(sequenceSemaphore.tryAcquire(100, TimeUnit.MILLISECONDS) == false)
+				{
+					return null;
+				}
+			}
+			catch(Exception e)
+			{
+				return null;
+			}
+			
+			//再次判断一下指定的信号灯是否已创建
+			if(semaphoreMap.containsKey(tmpSemaphoreName) == true)
+			{
+				tmpSemaphore = semaphoreMap.get(tmpSemaphoreName);
+			}
+			else
+			{
+				tmpSemaphore = new Semaphore(1,true);
+				semaphoreMap.put(tmpSemaphoreName,tmpSemaphore);
+			}
+			
+			//释放信号灯
+			sequenceSemaphore.release();
+		}
+		
+		
+		HashMap<String,Semaphore> tmpHashMap = new HashMap<String,Semaphore>();
+		tmpHashMap.put(tmpSemaphoreName,tmpSemaphore);
+		
+		
+		return tmpHashMap.entrySet().iterator().next();
+	}
+
 
 	public String getWebAppRootPath() {
 		if (basePath == null || basePath.trim().equals("") == true) {
@@ -666,5 +723,9 @@ public class TZGDObject {
 		}
 
 		return tmpEngineProcess;
+	}
+	
+	public JdbcTemplate getJdbcTemplate(){
+		return jdbcTemplate;
 	}
 }
