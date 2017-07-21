@@ -447,7 +447,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 							try
 							{
 								//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
-								if(appointmentLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+								if(appointmentLockCounter.getQueueLength() >= 10 || appointmentLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
 								{
 									throw new Exception("系统忙，请稍候再试。");
 								}
