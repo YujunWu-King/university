@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZStuCertificateBundle.dao.PsTzCertInfoTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZStuCertificateBundle.model.PsTzCertInfoTbl" >
+    <id column="TZ_SEQNUM" property="tzSeqnum" jdbcType="DECIMAL" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_CERT_TYPE_ID" property="tzCertTypeId" jdbcType="VARCHAR" />
+    <result column="TZ_CERT_TMPL_ID" property="tzCertTmplId" jdbcType="VARCHAR" />
+    <result column="OPRID" property="oprid" jdbcType="CHAR" />
+    <result column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <result column="TZ_REALNAME" property="tzRealname" jdbcType="VARCHAR" />
+    <result column="TZ_ENG_NAME" property="tzEngName" jdbcType="VARCHAR" />
+    <result column="TZ_GENDER" property="tzGender" jdbcType="VARCHAR" />
+    <result column="NATIONAL_ID_TYPE" property="nationalIdType" jdbcType="VARCHAR" />
+    <result column="NATIONAL_ID" property="nationalId" jdbcType="VARCHAR" />
+    <result column="TZ_EMAIL" property="tzEmail" jdbcType="VARCHAR" />
+    <result column="TZ_MOBILE_PHONE" property="tzMobilePhone" jdbcType="VARCHAR" />
+    <result column="TZ_ZHSH_ID" property="tzZhshId" jdbcType="VARCHAR" />
+    <result column="TZ_ZHSH_SDAT" property="tzZhshSdat" jdbcType="DATE" />
+    <result column="TZ_ZHSH_EDAT" property="tzZhshEdat" jdbcType="DATE" />
+    <result column="TZ_COMMENT1" property="tzComment1" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT2" property="tzComment2" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT3" property="tzComment3" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT4" property="tzComment4" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT5" property="tzComment5" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT6" property="tzComment6" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT7" property="tzComment7" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT8" property="tzComment8" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT9" property="tzComment9" jdbcType="VARCHAR" />
+    <result column="TZ_COMMENT10" property="tzComment10" jdbcType="VARCHAR" />
+    <result column="TZ_BF_STATUS" property="tzBfStatus" jdbcType="VARCHAR" />
+    <result column="TZ_ZHSH_DESC" property="tzZhshDesc" jdbcType="VARCHAR" />
+    <result column="TZ_BF_RQ" property="tzBfRq" jdbcType="DATE" />
+    <result column="TZ_EXPRQ" property="tzExprq" jdbcType="DATE" />
+    <result column="TZ_ZHDX_REASON_ID" property="tzZhdxReasonId" jdbcType="VARCHAR" />
+    <result column="TZ_DX_DEMO" property="tzDxDemo" jdbcType="VARCHAR" />
+    <result column="TZ_BF_LSH" property="tzBfLsh" jdbcType="DECIMAL" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SEQNUM, TZ_JG_ID, TZ_CERT_TYPE_ID, TZ_CERT_TMPL_ID, OPRID, TZ_CLASS_ID, TZ_REALNAME, 
+    TZ_ENG_NAME, TZ_GENDER, NATIONAL_ID_TYPE, NATIONAL_ID, TZ_EMAIL, TZ_MOBILE_PHONE, 
+    TZ_ZHSH_ID, TZ_ZHSH_SDAT, TZ_ZHSH_EDAT, TZ_COMMENT1, TZ_COMMENT2, TZ_COMMENT3, TZ_COMMENT4, 
+    TZ_COMMENT5, TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, TZ_COMMENT9, TZ_COMMENT10, TZ_BF_STATUS, 
+    TZ_ZHSH_DESC, TZ_BF_RQ, TZ_EXPRQ, TZ_ZHDX_REASON_ID, TZ_DX_DEMO, TZ_BF_LSH, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_CERT_INFO_TBL
+    where TZ_SEQNUM = #{tzSeqnum,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from PS_TZ_CERT_INFO_TBL
+    where TZ_SEQNUM = #{tzSeqnum,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZStuCertificateBundle.model.PsTzCertInfoTbl" >
+    insert into PS_TZ_CERT_INFO_TBL (TZ_SEQNUM, TZ_JG_ID, TZ_CERT_TYPE_ID, 
+      TZ_CERT_TMPL_ID, OPRID, TZ_CLASS_ID, 
+      TZ_REALNAME, TZ_ENG_NAME, TZ_GENDER, 
+      NATIONAL_ID_TYPE, NATIONAL_ID, TZ_EMAIL, 
+      TZ_MOBILE_PHONE, TZ_ZHSH_ID, TZ_ZHSH_SDAT, 
+      TZ_ZHSH_EDAT, TZ_COMMENT1, TZ_COMMENT2, 
+      TZ_COMMENT3, TZ_COMMENT4, TZ_COMMENT5, 
+      TZ_COMMENT6, TZ_COMMENT7, TZ_COMMENT8, 
+      TZ_COMMENT9, TZ_COMMENT10, TZ_BF_STATUS, 
+      TZ_ZHSH_DESC, TZ_BF_RQ, TZ_EXPRQ, 
+      TZ_ZHDX_REASON_ID, TZ_DX_DEMO, TZ_BF_LSH, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID)
+    values (#{tzSeqnum,jdbcType=DECIMAL}, #{tzJgId,jdbcType=VARCHAR}, #{tzCertTypeId,jdbcType=VARCHAR}, 
+      #{tzCertTmplId,jdbcType=VARCHAR}, #{oprid,jdbcType=CHAR}, #{tzClassId,jdbcType=VARCHAR}, 
+      #{tzRealname,jdbcType=VARCHAR}, #{tzEngName,jdbcType=VARCHAR}, #{tzGender,jdbcType=VARCHAR}, 
+      #{nationalIdType,jdbcType=VARCHAR}, #{nationalId,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, 
+      #{tzMobilePhone,jdbcType=VARCHAR}, #{tzZhshId,jdbcType=VARCHAR}, #{tzZhshSdat,jdbcType=DATE}, 
+      #{tzZhshEdat,jdbcType=DATE}, #{tzComment1,jdbcType=VARCHAR}, #{tzComment2,jdbcType=VARCHAR}, 
+      #{tzComment3,jdbcType=VARCHAR}, #{tzComment4,jdbcType=VARCHAR}, #{tzComment5,jdbcType=VARCHAR}, 
+      #{tzComment6,jdbcType=VARCHAR}, #{tzComment7,jdbcType=VARCHAR}, #{tzComment8,jdbcType=VARCHAR}, 
+      #{tzComment9,jdbcType=VARCHAR}, #{tzComment10,jdbcType=VARCHAR}, #{tzBfStatus,jdbcType=VARCHAR}, 
+      #{tzZhshDesc,jdbcType=VARCHAR}, #{tzBfRq,jdbcType=DATE}, #{tzExprq,jdbcType=DATE}, 
+      #{tzZhdxReasonId,jdbcType=VARCHAR}, #{tzDxDemo,jdbcType=VARCHAR}, #{tzBfLsh,jdbcType=DECIMAL}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZStuCertificateBundle.model.PsTzCertInfoTbl" >
+    insert into PS_TZ_CERT_INFO_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSeqnum != null" >
+        TZ_SEQNUM,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzCertTypeId != null" >
+        TZ_CERT_TYPE_ID,
+      </if>
+      <if test="tzCertTmplId != null" >
+        TZ_CERT_TMPL_ID,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzRealname != null" >
+        TZ_REALNAME,
+      </if>
+      <if test="tzEngName != null" >
+        TZ_ENG_NAME,
+      </if>
+      <if test="tzGender != null" >
+        TZ_GENDER,
+      </if>
+      <if test="nationalIdType != null" >
+        NATIONAL_ID_TYPE,
+      </if>
+      <if test="nationalId != null" >
+        NATIONAL_ID,
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL,
+      </if>
+      <if test="tzMobilePhone != null" >
+        TZ_MOBILE_PHONE,
+      </if>
+      <if test="tzZhshId != null" >
+        TZ_ZHSH_ID,
+      </if>
+      <if test="tzZhshSdat != null" >
+        TZ_ZHSH_SDAT,
+      </if>
+      <if test="tzZhshEdat != null" >
+        TZ_ZHSH_EDAT,
+      </if>
+      <if test="tzComment1 != null" >
+        TZ_COMMENT1,
+      </if>
+      <if test="tzComment2 != null" >
+        TZ_COMMENT2,
+      </if>
+      <if test="tzComment3 != null" >
+        TZ_COMMENT3,
+      </if>
+      <if test="tzComment4 != null" >
+        TZ_COMMENT4,
+      </if>
+      <if test="tzComment5 != null" >
+        TZ_COMMENT5,
+      </if>
+      <if test="tzComment6 != null" >
+        TZ_COMMENT6,
+      </if>
+      <if test="tzComment7 != null" >
+        TZ_COMMENT7,
+      </if>
+      <if test="tzComment8 != null" >
+        TZ_COMMENT8,
+      </if>
+      <if test="tzComment9 != null" >
+        TZ_COMMENT9,
+      </if>
+      <if test="tzComment10 != null" >
+        TZ_COMMENT10,
+      </if>
+      <if test="tzBfStatus != null" >
+        TZ_BF_STATUS,
+      </if>
+      <if test="tzZhshDesc != null" >
+        TZ_ZHSH_DESC,
+      </if>
+      <if test="tzBfRq != null" >
+        TZ_BF_RQ,
+      </if>
+      <if test="tzExprq != null" >
+        TZ_EXPRQ,
+      </if>
+      <if test="tzZhdxReasonId != null" >
+        TZ_ZHDX_REASON_ID,
+      </if>
+      <if test="tzDxDemo != null" >
+        TZ_DX_DEMO,
+      </if>
+      <if test="tzBfLsh != null" >
+        TZ_BF_LSH,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSeqnum != null" >
+        #{tzSeqnum,jdbcType=DECIMAL},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCertTypeId != null" >
+        #{tzCertTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCertTmplId != null" >
+        #{tzCertTmplId,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=CHAR},
+      </if>
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRealname != null" >
+        #{tzRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEngName != null" >
+        #{tzEngName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGender != null" >
+        #{tzGender,jdbcType=VARCHAR},
+      </if>
+      <if test="nationalIdType != null" >
+        #{nationalIdType,jdbcType=VARCHAR},
+      </if>
+      <if test="nationalId != null" >
+        #{nationalId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMobilePhone != null" >
+        #{tzMobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhshId != null" >
+        #{tzZhshId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhshSdat != null" >
+        #{tzZhshSdat,jdbcType=DATE},
+      </if>
+      <if test="tzZhshEdat != null" >
+        #{tzZhshEdat,jdbcType=DATE},
+      </if>
+      <if test="tzComment1 != null" >
+        #{tzComment1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment2 != null" >
+        #{tzComment2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment3 != null" >
+        #{tzComment3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment4 != null" >
+        #{tzComment4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment5 != null" >
+        #{tzComment5,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment6 != null" >
+        #{tzComment6,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment7 != null" >
+        #{tzComment7,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment8 != null" >
+        #{tzComment8,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment9 != null" >
+        #{tzComment9,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment10 != null" >
+        #{tzComment10,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBfStatus != null" >
+        #{tzBfStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhshDesc != null" >
+        #{tzZhshDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBfRq != null" >
+        #{tzBfRq,jdbcType=DATE},
+      </if>
+      <if test="tzExprq != null" >
+        #{tzExprq,jdbcType=DATE},
+      </if>
+      <if test="tzZhdxReasonId != null" >
+        #{tzZhdxReasonId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDxDemo != null" >
+        #{tzDxDemo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBfLsh != null" >
+        #{tzBfLsh,jdbcType=DECIMAL},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZStuCertificateBundle.model.PsTzCertInfoTbl" >
+    update PS_TZ_CERT_INFO_TBL
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCertTypeId != null" >
+        TZ_CERT_TYPE_ID = #{tzCertTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCertTmplId != null" >
+        TZ_CERT_TMPL_ID = #{tzCertTmplId,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=CHAR},
+      </if>
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRealname != null" >
+        TZ_REALNAME = #{tzRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEngName != null" >
+        TZ_ENG_NAME = #{tzEngName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGender != null" >
+        TZ_GENDER = #{tzGender,jdbcType=VARCHAR},
+      </if>
+      <if test="nationalIdType != null" >
+        NATIONAL_ID_TYPE = #{nationalIdType,jdbcType=VARCHAR},
+      </if>
+      <if test="nationalId != null" >
+        NATIONAL_ID = #{nationalId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMobilePhone != null" >
+        TZ_MOBILE_PHONE = #{tzMobilePhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhshId != null" >
+        TZ_ZHSH_ID = #{tzZhshId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhshSdat != null" >
+        TZ_ZHSH_SDAT = #{tzZhshSdat,jdbcType=DATE},
+      </if>
+      <if test="tzZhshEdat != null" >
+        TZ_ZHSH_EDAT = #{tzZhshEdat,jdbcType=DATE},
+      </if>
+      <if test="tzComment1 != null" >
+        TZ_COMMENT1 = #{tzComment1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment2 != null" >
+        TZ_COMMENT2 = #{tzComment2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment3 != null" >
+        TZ_COMMENT3 = #{tzComment3,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment4 != null" >
+        TZ_COMMENT4 = #{tzComment4,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment5 != null" >
+        TZ_COMMENT5 = #{tzComment5,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment6 != null" >
+        TZ_COMMENT6 = #{tzComment6,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment7 != null" >
+        TZ_COMMENT7 = #{tzComment7,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment8 != null" >
+        TZ_COMMENT8 = #{tzComment8,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment9 != null" >
+        TZ_COMMENT9 = #{tzComment9,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComment10 != null" >
+        TZ_COMMENT10 = #{tzComment10,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBfStatus != null" >
+        TZ_BF_STATUS = #{tzBfStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZhshDesc != null" >
+        TZ_ZHSH_DESC = #{tzZhshDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBfRq != null" >
+        TZ_BF_RQ = #{tzBfRq,jdbcType=DATE},
+      </if>
+      <if test="tzExprq != null" >
+        TZ_EXPRQ = #{tzExprq,jdbcType=DATE},
+      </if>
+      <if test="tzZhdxReasonId != null" >
+        TZ_ZHDX_REASON_ID = #{tzZhdxReasonId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDxDemo != null" >
+        TZ_DX_DEMO = #{tzDxDemo,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBfLsh != null" >
+        TZ_BF_LSH = #{tzBfLsh,jdbcType=DECIMAL},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SEQNUM = #{tzSeqnum,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZStuCertificateBundle.model.PsTzCertInfoTbl" >
+    update PS_TZ_CERT_INFO_TBL
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_CERT_TYPE_ID = #{tzCertTypeId,jdbcType=VARCHAR},
+      TZ_CERT_TMPL_ID = #{tzCertTmplId,jdbcType=VARCHAR},
+      OPRID = #{oprid,jdbcType=CHAR},
+      TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR},
+      TZ_REALNAME = #{tzRealname,jdbcType=VARCHAR},
+      TZ_ENG_NAME = #{tzEngName,jdbcType=VARCHAR},
+      TZ_GENDER = #{tzGender,jdbcType=VARCHAR},
+      NATIONAL_ID_TYPE = #{nationalIdType,jdbcType=VARCHAR},
+      NATIONAL_ID = #{nationalId,jdbcType=VARCHAR},
+      TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      TZ_MOBILE_PHONE = #{tzMobilePhone,jdbcType=VARCHAR},
+      TZ_ZHSH_ID = #{tzZhshId,jdbcType=VARCHAR},
+      TZ_ZHSH_SDAT = #{tzZhshSdat,jdbcType=DATE},
+      TZ_ZHSH_EDAT = #{tzZhshEdat,jdbcType=DATE},
+      TZ_COMMENT1 = #{tzComment1,jdbcType=VARCHAR},
+      TZ_COMMENT2 = #{tzComment2,jdbcType=VARCHAR},
+      TZ_COMMENT3 = #{tzComment3,jdbcType=VARCHAR},
+      TZ_COMMENT4 = #{tzComment4,jdbcType=VARCHAR},
+      TZ_COMMENT5 = #{tzComment5,jdbcType=VARCHAR},
+      TZ_COMMENT6 = #{tzComment6,jdbcType=VARCHAR},
+      TZ_COMMENT7 = #{tzComment7,jdbcType=VARCHAR},
+      TZ_COMMENT8 = #{tzComment8,jdbcType=VARCHAR},
+      TZ_COMMENT9 = #{tzComment9,jdbcType=VARCHAR},
+      TZ_COMMENT10 = #{tzComment10,jdbcType=VARCHAR},
+      TZ_BF_STATUS = #{tzBfStatus,jdbcType=VARCHAR},
+      TZ_ZHSH_DESC = #{tzZhshDesc,jdbcType=VARCHAR},
+      TZ_BF_RQ = #{tzBfRq,jdbcType=DATE},
+      TZ_EXPRQ = #{tzExprq,jdbcType=DATE},
+      TZ_ZHDX_REASON_ID = #{tzZhdxReasonId,jdbcType=VARCHAR},
+      TZ_DX_DEMO = #{tzDxDemo,jdbcType=VARCHAR},
+      TZ_BF_LSH = #{tzBfLsh,jdbcType=DECIMAL},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_SEQNUM = #{tzSeqnum,jdbcType=DECIMAL}
+  </update>
+</mapper>
