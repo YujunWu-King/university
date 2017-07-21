@@ -284,12 +284,13 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 var me = this;
 		 var form = this.getView().lookupReference("userForm");		
 		 var formValues = form.getValues();
-		 console.log(formValues);
+		 
 		 var callXh = formValues.receiveId;
 		 var searchName = formValues.searchName;
 		 var searchPhone = formValues.searchPhone;
 		 var searchEmail = formValues.searchEmail;
 		 var searchMshId = formValues.searchMshId;
+		 var callPhone = formValues.phoneNum;
 		 
 		 if(searchName!=""||searchPhone!=""||searchEmail!=""||searchMshId!=""){
 			 var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"SEARCHUSER","comParams":{"phone":"' + searchPhone + '","email":"' + searchEmail + '","callXh":"' + callXh + '","name":"' + searchName + '","mshId":"' + searchMshId + '"}}';
@@ -301,11 +302,21 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 				}else{
 					//historyCount = response.viewHistoryCall;
 					if(oprid!=null&&oprid!=undefined&&oprid!=""){
-						tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"QF","comParams":{"OPRID":"' + oprid + '","callXh":"' + callXh + '","phone":"' + searchPhone +'","type":""}}';
+						tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"QF","comParams":{"OPRID":"' + oprid + '","callXh":"' + callXh + '","phone":"' + callPhone +'","type":""}}';
 						var formData;
 						Ext.tzLoadAsync(tzParams,function(response){
 							//formData = response;
-							form.getForm().setValues(response);						
+							form.getForm().setValues(response);
+							if(response.titleImageUrl){
+								form.down('image[name=titileImage]').setSrc(TzUniversityContextPath + response.titleImageUrl);	
+							}else{
+								form.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/images/tranzvision/mrtx02.jpg");
+							}
+							if(response.bmrBmActCount){								
+								form.down("button[name=bmrBmActCount]").setText('<span style="text-decoration:underline;color:blue;">' + response.bmrBmActCount + '</span>');
+							}else{
+								form.down("button[name=bmrBmActCount]").setText('<span style="text-decoration:underline;color:blue;">0</span>');
+							}
 						});	
 						var Grid = form.down("grid[name=bmInfoList]");
 						var store = Grid.getStore();
@@ -413,8 +424,8 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 				
 				var form = _this.getForm();
 				var Grid = _this.down("grid[name=bmInfoList]");
-				
-				
+				var buttonT = panel.child('form').down("button[name=historyCount]");
+				var buttonAct = panel.child('form').down("button[name=bmrBmActCount]");
 				var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"QF","comParams":{"OPRID":"' + oprid + '","type":"' + type + '","callXh":"' + callXh + '","phone":"' + phone +'"}}';
 				
 				Ext.tzLoadAsync(tzParams,function(responseData){
@@ -426,14 +437,18 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 					}else{
 						_this.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/images/tranzvision/mrtx02.jpg");
 					}
-				});
-				
-				var buttonT = panel.child('form').down("button[name=historyCount]");
-				buttonT.setText('<span style="text-decoration:underline;color:blue;">查看历史来电记录（' + historyCount + '）</span>');
-				
-				//参与的活动数
-				buttonT = panel.child('form').down("button[name=bmrBmActCount]");
-				buttonT.setText('<span style="text-decoration:underline;color:blue;">' + actCount + '</span>');
+					if(responseData.viewHistoryCall){
+						buttonT.setText('<span style="text-decoration:underline;color:blue;">查看历史来电记录（' + responseData.viewHistoryCall + '）</span>');
+					}else{						
+						buttonT.setText('<span style="text-decoration:underline;color:blue;">查看历史来电记录（0）</span>');
+					}
+					//参与的活动数
+					if(responseData.bmrBmActCount){
+						buttonAct.setText('<span style="text-decoration:underline;color:blue;">' + responseData.bmrBmActCount + '</span>');
+					}else{
+						buttonAct.setText('<span style="text-decoration:underline;color:blue;">0</span>');
+					}
+				});							
 				
 				if(oprid==null||oprid==""||oprid==undefined){
 					/*禁用按钮*/
@@ -562,6 +577,8 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 var phone = form.down("textfield[name=phoneNum]").getValue();
 		 var name = form.down("displayfield[name=bmrName]").getValue();
 		 var gender = form.down("displayfield[name=bmrGender]").getValue();
+		 var oprId = form.down("textfield[name=oprId]").getValue();
+		 
  		 //是否有访问权限
 	     var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_CALLCR_USER_COM"]["TZ_CALLC_ACT_STD"];
 	     if( pageResSet == "" || pageResSet == undefined){
@@ -599,7 +616,8 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 	            ]
 	        );
 	        
-	        pageGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_ACT_STD.TZ_CCALL_HD_VW","condition":{"TZ_ZY_SJ-operator": "01","TZ_ZY_SJ-value": "'+ phone+'","TZ_JG_ID-operator":"01","TZ_JG_ID-value":"' + Ext.tzOrgID + '"}}';
+	        //pageGrid.store.tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_ACT_STD.TZ_CCALL_HD_VW","condition":{"TZ_ZY_SJ-operator": "01","TZ_ZY_SJ-value": "'+ phone+'","TZ_JG_ID-operator":"01","TZ_JG_ID-value":"' + Ext.tzOrgID + '"}}';
+	      pageGrid.store.tzStoreParams = '{"TZ_JG_ID":"' + Ext.tzOrgID + '","TZ_ZY_SJ":"' + phone + '","oprId":"' + oprId + '"}'
 	        pageGrid.store.load();
 
 	        win.show();

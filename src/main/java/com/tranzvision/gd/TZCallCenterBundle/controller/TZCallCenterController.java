@@ -31,6 +31,8 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzCallCenterLoginServiceImpl;
 import com.tranzvision.gd.TZCallCenterBundle.dao.PsTzPhJddTblMapper;
 import com.tranzvision.gd.TZCallCenterBundle.model.PsTzPhJddTbl;
+//import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZCallCenterBundle.service.impl.TZCallCenterServiceImpl;
 
 /**
  * 电话盒子弹屏链接
@@ -67,6 +69,9 @@ public class TZCallCenterController {
 	
 	@Autowired
 	private GetCookieSessionProps getCookieProps;
+	
+	@Autowired
+	private TZCallCenterServiceImpl tzCallCenterServiceImpl;
 	
 	@RequestMapping(value = { "/{orgid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
@@ -108,9 +113,9 @@ public class TZCallCenterController {
 			}catch(Exception e){
 				/**/
 			}
-			System.out.println("原用户名：" + tmpUserDlzh);
-			System.out.println("用户名：" + strUserId);
-			System.out.println("登录有效截止时间：" + sdf.format(loginEndDTime));
+//			System.out.println("原用户名：" + tmpUserDlzh);
+//			System.out.println("用户名：" + strUserId);
+//			System.out.println("登录有效截止时间：" + sdf.format(loginEndDTime));
 			String strTel = request.getParameter("tel");
 			String strType = request.getParameter("type");		
 			if(strType==null||"".equals(strType)){
@@ -128,6 +133,10 @@ public class TZCallCenterController {
 			psTzPhJddTbl.setTzXh(strSemNum);
 			psTzPhJddTbl.setTzPhone(strTel);
 			psTzPhJddTbl.setTzCallType(strType);
+			String strOprId = tzCallCenterServiceImpl.findOprID(strSemNum, strTel);
+			if(strOprId!=null&&!"".equals(strOprId)){
+				psTzPhJddTbl.setTzOprid(strOprId);
+			}
 			psTzPhJddTbl.setTzCallDtime(new Date());
 			psTzPhJddTbl.setTzDlzhId(strUserId);
 			psTzPhJddTbl.setTzDealwithZt("A");
@@ -139,6 +148,7 @@ public class TZCallCenterController {
 			tzCookie.addCookie(response, "callCenterXh", strSemNum,36000,domain,cookiePath,false,false);
 			tzCookie.addCookie(response, "callCenterPhone", strTel,36000,domain,cookiePath,false,false);
 			tzCookie.addCookie(response, "callCenterType", strType,36000,domain,cookiePath,false,false);
+			tzCookie.addCookie(response, "callCenterOprid", strOprId,36000,domain,cookiePath,false,false);
 			
 			String strUrl = request.getContextPath() + "/index";
 			

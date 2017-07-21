@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,12 +21,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tranzvision.gd.util.base.AnalysisSysVar;
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
+import com.tranzvision.gd.TZStuCertificateBundle.dao.PsTzCertOprLogMapper;
+import com.tranzvision.gd.TZStuCertificateBundle.model.PsTzCertOprLog;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.dao.PsTzUserregMbTMapper;
 import com.tranzvision.gd.TZLeaguerDataItemBundle.model.PsTzUserregMbT;
 
@@ -55,11 +61,19 @@ public class TzAppAdmissionController {
 	private PsTzUserregMbTMapper psTzUserregMbTMapper;
 	@Autowired
 	private TzWeChartJSSDKSign tzWeChartJSSDKSign;
+	@Autowired
+	PsTzCertOprLogMapper psTzCertOprLogMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
 	@Autowired
 	private HttpServletRequest request;
+	@Autowired
+	private TzCookie tzCookie;
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	// 生成录取通知书html
 	@RequestMapping(value = { "/{orgid}/{siteid}/{oprid}/{tzAppInsID}" }, produces = "text/html;charset=UTF-8")
@@ -188,6 +202,82 @@ public class TzAppAdmissionController {
 				jsonMap.put("nonceStr", signMap.get("nonceStr"));
 				jsonMap.put("signature", signMap.get("signature"));
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			jsonMap.replace("result", "failure");
+		}
+		return jacksonUtil.Map2json(jsonMap);
+	}
+	
+	
+	/***
+	 * 查看录取通知书
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "logCount", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String logCount(HttpServletRequest request, HttpServletResponse response) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Map<String, Object> jsonMap = new HashMap<String, Object>();
+		jsonMap.put("result", "");
+		try {
+			
+			boolean writeLogFlag = false;
+			
+			
+			String opType = request.getParameter("opType");
+			
+			String appInsId = request.getParameter("appInsId");
+			
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
+			// 【0】查询录取状态
+			String tzGetKshSql = "SELECT TZ_LUQU_ZT,TZ_CLASS_ID FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=? LIMIT 0,1";
+			Map<String, Object> tzGetKshMap = sqlQuery1.queryForMap(tzGetKshSql, new Object[] { appInsId });
+			
+			String opridZs = sqlQuery1.queryForObject("SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID = ? LIMIT 0,1",
+					new Object[] { appInsId },"String");
+			
+			String tzLuquSta = "";
+			String tzClassId = "";
+			
+			if(tzGetKshMap!=null){
+				
+				tzLuquSta = tzGetKshMap.get("TZ_LUQU_ZT")==null?"":String.valueOf(tzGetKshMap.get("TZ_LUQU_ZT"));
+				tzClassId = tzGetKshMap.get("TZ_CLASS_ID")==null?"":String.valueOf(tzGetKshMap.get("TZ_CLASS_ID"));
+				String strJgId = sqlQuery1.queryForObject("SELECT TZ_JG_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID = ? LIMIT 0,1",
+						new Object[] { tzClassId },"String");
+				
+				/*统计查看次数；页面加载判断是否有该证书对应的cookie(cookieBitCertView)，如果有，不计数；否则创建cookie，并计数.转发后需要重新刷新页面*/
+				String cookieBitCertViewName = "cookieBitCertView" + appInsId;
+				String cookieBitCertView = tzCookie.getStringCookieVal(request, cookieBitCertViewName);
+				if("".equals(cookieBitCertView) || cookieBitCertView == null || "ZF".equals(opType)){
+					writeLogFlag = true;
+				}
+				
+				if("LQ".equals(tzLuquSta) && writeLogFlag){
+					
+					tzCookie.addCookie(response, cookieBitCertViewName, "Y");
+					PsTzCertOprLog psTzCertOprLog = new PsTzCertOprLog();
+					int numZslsh = getSeqNum.getSeqNum("PS_TZ_CERT_OPR_LOG", "TZ_CERT_LSH");
+					
+					psTzCertOprLog.setTzCertLsh((long)numZslsh);
+					psTzCertOprLog.setTzJgId(strJgId);
+					psTzCertOprLog.setTzCzType(opType);
+					psTzCertOprLog.setOprid(opridZs);
+					psTzCertOprLog.setTzCertTypeId("004");
+					psTzCertOprLog.setTzZhshId(appInsId);
+					psTzCertOprLog.setRowAddedOprid(oprid);
+					psTzCertOprLog.setRowAddedDttm(new Date());
+					psTzCertOprLog.setRowLastmantOprid(oprid);
+					psTzCertOprLog.setRowLastmantDttm(new Date());
+					psTzCertOprLogMapper.insertSelective(psTzCertOprLog);
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			jsonMap.replace("result", "failure");

@@ -23,6 +23,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 		var callXh = getCookie("callCenterXh");
 		var phone = getCookie("callCenterPhone");
 		var type = getCookie("callCenterType");	
+		
 		//为避免查询无关人员，如果无phone
 		if(phone==null||phone==undefined||phone==""){
 			phone = "999999999999999";
@@ -242,6 +243,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 		DelCookie("callCenterXh");
 		DelCookie("callCenterType");
 		DelCookie("callCenterPhone");
+		DelCookie("callCenterOprid");
 		
 		Ext.apply(this,{
 			items: [{
@@ -589,34 +591,35 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 					xtype : 'fieldset',
 					title : '搜索',
 					layout : {
-						type : 'column'
+						type : 'column',
+						align: 'stretch'
 					},
 					fieldDefaults: {
-						labelWidth: 100
+						labelWidth: 80
 					},
-					style:'padding-bottom:10px',
+					style:'padding-bottom:10px;',
 					items : [ {
 						xtype : 'textfield',
 						fieldLabel : '姓名',
-						width:260,
+						columnWidth: .2,
 						name : 'searchName'
 					}, {
 						xtype : 'textfield',
 						fieldLabel : '注册手机',
-						width:260,
 						style:'margin-left:10px',
+						columnWidth: .2,
 						name : 'searchPhone'
 					}, {
 						xtype : 'textfield',
 						fieldLabel : '注册邮箱',
-						width:260,
 						style:'margin-left:10px',
+						columnWidth: .25,
 						name : 'searchEmail'
 					},{
 						xtype : 'textfield',
-						fieldLabel : '面试申请号',
-						width:260,
+						fieldLabel : '面试申请号',	
 						style:'margin-left:10px',
+						columnWidth: .2,
 						name : 'searchMshId'
 					},{
                         style: 'margin-left:10px',
@@ -627,7 +630,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                         flagType: 'positive',
                         setType: 0,
                         handler: 'search',
-                        width: 100
+                        columnWidth: .15
                     }]
 				},{
                     xtype: 'grid',
@@ -635,6 +638,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                     minHeight: 100,
                     name: 'bmInfoList',
                     reference: 'bmInfoList',
+                    scrollable:false,
                     columnLines: true,
                     autoHeight: true,
                     plugins: [{
@@ -654,6 +658,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                 },{
                     xtype: 'grid',
                     title: '面试资格',
+                    scrollable:false,
                     minHeight: 100,
                     style:"margin-top:15px",
                     name: 'materialsGrid',
@@ -681,6 +686,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                     style:"margin-top:15px",
                     name: 'interviewGrid',
                     reference: 'interviewGrid',
+                    scrollable:false,
                     columnLines: true,
                     autoHeight: true,                        
                     plugins: [{

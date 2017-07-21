@@ -49,43 +49,44 @@
 			store.load();
 		}		
 		
-        Ext.apply(this, {
+        Ext.apply(this, {        	
             columns: [{ 
                 //text: '系统变量ID',
 				text: '系统编号',
-				draggable:false,//姓名不可拖动
+				draggable:false,
+				hidden:true,
                 dataIndex: 'receiveId',
 				width: 100
             },{
 				text: '来电号码',
                 sortable: true,				
                 dataIndex: 'callPhone',
-                width: 150
+                width: 120
             },{
 				text: '来电时间',
                 sortable: true,				
                 dataIndex: 'callDTime',
-                width: 150
+                width: 140
             },{
 				text: '姓名',
                 sortable: true,				
                 dataIndex: 'callName',
-                width: 150
+                width: 100
             },{
 				text: '面试申请号',
                 sortable: true,				
                 dataIndex: 'callMshId',
-                width: 150
+                width: 100
             },{
 				text: '接听人',
                 sortable: true,				
                 dataIndex: 'jtPsnName',
-                width: 150
+                width: 100
             },{
 				text: '处理状态',
                 sortable: true,				
                 dataIndex: 'dealWithZT',
-                width: 150,
+                width: 120,
                 renderer:function(value){
                     if(value=='A'){
                         return '无需处理';
@@ -115,6 +116,7 @@
 			   ]
             }],
 			store:store,
+			scrollable:'y',
             bbar: {
                 xtype: 'pagingtoolbar',
                 pageSize: 10,
