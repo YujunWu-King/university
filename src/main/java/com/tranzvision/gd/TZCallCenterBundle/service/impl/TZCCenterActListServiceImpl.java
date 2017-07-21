@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZCallCenterBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,58 @@ public class TZCCenterActListServiceImpl  extends FrameworkImpl {
 		mapRet.put("total", 0);
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
-		JacksonUtil jacksonUtil = new JacksonUtil();
+		JacksonUtil jacksonUtil = new JacksonUtil();			
 		
-		String strTransSQL = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?";
+		jacksonUtil.json2Map(comParams);
+		String strOrgId = jacksonUtil.getString("TZ_JG_ID");
+		String strPhone = jacksonUtil.getString("TZ_ZY_SJ");
+		String strOprid = jacksonUtil.getString("oprId");
 		
-		// 排序字段如果没有不要赋值
+		String strActListSQL = "SELECT OPRID,TZ_ZY_SJ,TZ_ART_ID,TZ_NACT_NAME,date_format(TZ_START_DT,'%Y-%m-%d') TZ_START_DT,date_format(TZ_START_TM,'%H:%i') TZ_START_TM,date_format(TZ_END_DT,'%Y-%m-%d') TZ_END_DT,date_format(TZ_END_TM,'%H:%i') TZ_END_TM,TZ_NACT_ADDR FROM PS_TZ_CCALL_HD_VW";
+		String strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_CCALL_HD_VW";
+		String strWhere = " WHERE TZ_JG_ID='" + strOrgId + "'";
+		if(strOprid!=null&&!"".equals(strOprid)&&!"null".equals(strOprid)){
+			strWhere = strWhere + " AND (OPRID='" + strOprid + "' OR TZ_ZY_SJ='" + strPhone + "')";
+		}else{
+			strWhere = strWhere + " AND TZ_ZY_SJ='" + strPhone + "'";
+		}
+		strActListSQL = strActListSQL + strWhere + " limit " + numStart + "," + numLimit;
+		strActCountSQL = strActCountSQL + strWhere;
+		
+		List<?> actList = sqlQuery.queryForList(strActListSQL,new Object[]{});
+		if(actList!=null&&actList.size()>0){
+			for(Object sObj:actList){
+				Map<String,Object> actMap = (Map<String, Object>) sObj;
+				Map<String, Object> mapList = new HashMap<String, Object>();
+				String strPar1 = actMap.get("OPRID")==null?"":String.valueOf(actMap.get("OPRID"));
+				String strPar2 = actMap.get("TZ_ZY_SJ")==null?"":String.valueOf(actMap.get("TZ_ZY_SJ"));
+				String strPar3 = actMap.get("TZ_ART_ID")==null?"":String.valueOf(actMap.get("TZ_ART_ID"));
+				String strPar4 = actMap.get("TZ_NACT_NAME")==null?"":String.valueOf(actMap.get("TZ_NACT_NAME"));
+				String strPar5 = actMap.get("TZ_START_DT")==null?"":String.valueOf(actMap.get("TZ_START_DT"));
+				String strPar6 = actMap.get("TZ_START_TM")==null?"":String.valueOf(actMap.get("TZ_START_TM"));
+				String strPar7 = actMap.get("TZ_END_DT")==null?"":String.valueOf(actMap.get("TZ_END_DT"));
+				String strPar8 = actMap.get("TZ_END_TM")==null?"":String.valueOf(actMap.get("TZ_END_TM"));
+				String strPar9 = actMap.get("TZ_NACT_ADDR")==null?"":String.valueOf(actMap.get("TZ_NACT_ADDR"));
+				
+				mapList.put("oprid", strPar1);
+				mapList.put("artId", strPar3);
+				mapList.put("artName", strPar4);
+				mapList.put("startDt",strPar5);
+				mapList.put("startTime", strPar6);
+				mapList.put("endDt", strPar7);
+				mapList.put("endTime", strPar8);
+				mapList.put("artAddr", strPar9);
+				
+				listData.add(mapList);
+			}
+			Integer count = sqlQuery.queryForObject(strActCountSQL, new Object[]{}, "Integer");
+			if(count==null){
+				count = 0;
+			}
+			mapRet.replace("total", count);
+			mapRet.replace("root", listData);
+		}
+		/*// 排序字段如果没有不要赋值
 		String[][] orderByArr = new String[][] { { "TZ_END_DT", "DESC" } };
 
 		// json数据要的结果字段;
@@ -67,7 +115,7 @@ public class TZCCenterActListServiceImpl  extends FrameworkImpl {
 			
 			mapRet.replace("total", obj[0]);
 			mapRet.replace("root", listData);
-		}
+		}*/
 
 		return jacksonUtil.Map2json(mapRet);
 	}
