@@ -443,7 +443,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 								throw e;
 							}
 							
-							Thread.sleep(5000);
+							
 							try
 							{
 								//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
@@ -494,7 +494,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 										 throw new TzException("系统忙，请稍候再试。");
 									}
 									
-									Thread.sleep(5000);
+									
 									String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
 									Map<String,Object> numMap = jdbcTemplate.queryForMap(numSql, new Object[]{ classId, pcId, planId });
 									if(numMap != null){
