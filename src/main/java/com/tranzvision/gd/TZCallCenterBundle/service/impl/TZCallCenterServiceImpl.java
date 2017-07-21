@@ -285,12 +285,20 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 			String sql = "SELECT COUNT(1) FROM PS_TZ_PH_JDD_TBL WHERE TZ_PHONE=? AND TZ_XH<>?";
 			String callCount = sqlQuery.queryForObject(sql, new Object[]{strPhone,strCallXh}, "String");
 			returnMap.put("viewHistoryCall", callCount);
-			//报名活动数
-			String strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=?";
-			Integer actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strPhone}, "Integer");
+			//报名活动数			
+			String strActCountSQL = "";
+			Integer actCount = 0;
+			if(strOprid!=null&&!"".equals(strOprid)){
+				strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE OPRID=? OR TZ_ZY_SJ=?";
+				actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strOprid,strPhone}, "Integer");					
+			}else{
+				strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=?";
+				actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strPhone}, "Integer");
+			}
 			if(actCount==null){
 				actCount = 0;
 			}
+			
 			returnMap.put("bmrBmActCount", String.valueOf(actCount));
 			
 		}catch(Exception e){
@@ -332,12 +340,20 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 				String callCount = sqlQuery.queryForObject(sql, new Object[]{strPhone,strCallXh}, "String");
 				returnMap.put("viewHistoryCall", callCount);
 				
-				//报名活动数
-				String strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=?";
-				Integer actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strPhone}, "Integer");
+				//报名活动数				
+				String strActCountSQL = "";
+				Integer actCount = 0;
+				if(strOprid!=null&&!"".equals(strOprid)){
+					strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE OPRID=? OR TZ_ZY_SJ=?";
+					actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strOprid,strPhone}, "Integer");					
+				}else{
+					strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=?";
+					actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strPhone}, "Integer");
+				}
 				if(actCount==null){
 					actCount = 0;
 				}
+				
 				returnMap.put("bmrBmActCount", String.valueOf(actCount));
 				
 				return jacksonUtil.Map2json(returnMap);
