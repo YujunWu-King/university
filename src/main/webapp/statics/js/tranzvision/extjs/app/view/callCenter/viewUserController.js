@@ -284,7 +284,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 var me = this;
 		 var form = this.getView().lookupReference("userForm");		
 		 var formValues = form.getValues();
-		 console.log(formValues);
+		 
 		 var callXh = formValues.receiveId;
 		 var searchName = formValues.searchName;
 		 var searchPhone = formValues.searchPhone;
@@ -305,7 +305,12 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 						var formData;
 						Ext.tzLoadAsync(tzParams,function(response){
 							//formData = response;
-							form.getForm().setValues(response);						
+							form.getForm().setValues(response);
+							if(response.titleImageUrl){
+								form.down('image[name=titileImage]').setSrc(TzUniversityContextPath + response.titleImageUrl);	
+							}else{
+								form.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/images/tranzvision/mrtx02.jpg");
+							}
 						});	
 						var Grid = form.down("grid[name=bmInfoList]");
 						var store = Grid.getStore();

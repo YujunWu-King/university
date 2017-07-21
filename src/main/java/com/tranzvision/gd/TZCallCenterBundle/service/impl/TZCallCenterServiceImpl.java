@@ -25,7 +25,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  * @author yuds
  */
 @Service("com.tranzvision.gd.TZCallCenterBundle.service.Impl.TZCallCenterServiceImpl")
-public class TZCallCenterServiceImpl  extends FrameworkImpl {
+public class TZCallCenterServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery sqlQuery;
@@ -154,8 +154,9 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 			//人员OPRID
 			returnMap.put("oprId", strOprid);
 			//注册状态
-			if("".equals(strOprid)||strOprid==null){
-				returnMap.put("registerStatus", "未注册");
+			TZCallCenterServiceImpl  callCenterService = new TZCallCenterServiceImpl(); 
+			if("".equals(strOprid)||strOprid==null||"null".equals(strOprid)){
+				returnMap.put("registerStatus", "未注册");				
 			}else{
 				returnMap.put("registerStatus", "已注册");
 			}
@@ -308,29 +309,26 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
+			TZCallCenterServiceImpl  callCenterService = new TZCallCenterServiceImpl(); 
 			jacksonUtil.json2Map(strParams);
 			// 获取来电人员的OPRID
 			if ("GETUSER".equals(oprType)) {
 				String strPhone = jacksonUtil.getString("phone");
 				String strType = jacksonUtil.getString("type");
 				String strCallXh = jacksonUtil.getString("callXh");
-				String sql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_RYLX='ZCYH' AND TZ_MOBILE=? limit 0,1";
-				strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+				
+				String tmpSQL = "SELECT TZ_OPRID FROM PS_TZ_PH_JDD_TBL WHERE TZ_XH=?";				
+				strOprid = sqlQuery.queryForObject(tmpSQL, new Object[]{strCallXh}, "String");
 				if(strOprid==null||"".equals(strOprid)){
-					sql = "SELECT TZ_LYDX_ID FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_ZY_SJ=? limit 0,1";
-					strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
-					if(strOprid==null||"".equals(strOprid)){
-						//查找上一次接待单涉及的人员						
-						sql = "SELECT TZ_OPRID FROM PS_TZ_PH_JDD_TBL WHERE TZ_PHONE=? AND TZ_XH<>? ORDER BY TZ_CALL_DTIME DESC limit 0,1";
-						strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone,strCallXh}, "String");
-						if(strOprid==null){
-							strOprid = "";
-						}						
+					strOprid = callCenterService.findOprID(strCallXh, strPhone);
+					if(strOprid!=null&&!"".equals(strOprid)){
+						tmpSQL = "UPDATE PS_TZ_PH_JDD_TBL SET TZ_OPRID=? WHERE TZ_XH=?";
+						sqlQuery.update(tmpSQL, new Object[]{strOprid,strCallXh});
 					}
 				}
 				returnMap.put("OPRID", strOprid);
 				//历史来电数量
-				sql = "SELECT COUNT(1) FROM PS_TZ_PH_JDD_TBL WHERE TZ_PHONE=? AND TZ_XH<>?";
+				String sql = "SELECT COUNT(1) FROM PS_TZ_PH_JDD_TBL WHERE TZ_PHONE=? AND TZ_XH<>?";
 				String callCount = sqlQuery.queryForObject(sql, new Object[]{strPhone,strCallXh}, "String");
 				returnMap.put("viewHistoryCall", callCount);
 				
@@ -349,11 +347,12 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				String strEmail = jacksonUtil.getString("email");
 				String strName = jacksonUtil.getString("name");
 				String strMshId = jacksonUtil.getString("mshId");
+				String strXh = jacksonUtil.getString("callXh");
 				
 				String sql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL";
 				String countSQL = "SELECT COUNT(1) FROM PS_TZ_AQ_YHXX_TBL";
 				
-				String strWhere = " WHERE 1=1";
+				String strWhere = " WHERE TZ_RYLX='ZCYH'";
 				if(strPhone!=null&&!"".equals(strPhone)){
 					strWhere = strWhere + " AND TZ_MOBILE LIKE '%" + strPhone + "%'";					
 				}
@@ -379,7 +378,10 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 				}
 				returnMap.put("PSNCOUNT", count);
 				returnMap.put("OPRID", strOprid);
-				
+				if(count==1&&strOprid!=null&&!"".equals(strOprid)){
+					sql = "UPDATE PS_TZ_PH_JDD_TBL SET TZ_OPRID=? WHERE TZ_XH=?";
+					sqlQuery.update(sql, new Object[]{strOprid,strXh});
+				}
 				return jacksonUtil.Map2json(returnMap);
 			}
 			//激活账号
@@ -562,5 +564,29 @@ public class TZCallCenterServiceImpl  extends FrameworkImpl {
 		}
 		
 		return str;
+	}
+	
+	//根据手机号码查找oprid
+	public String findOprID(String strCallXh,String strPhone){
+		String strOprid = "";
+		String sql = "SELECT P.OPRID FROM PSOPRDEFN P,PS_TZ_AQ_YHXX_TBL Q WHERE P.OPRID=Q.OPRID AND Q.TZ_RYLX='ZCYH' AND P.ACCTLOCK='0' AND TZ_MOBILE=? limit 0,1";
+		strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+		if(strOprid==null||"".equals(strOprid)){
+			sql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_RYLX='ZCYH' AND TZ_MOBILE=? limit 0,1";
+			strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+			if(strOprid==null||"".equals(strOprid)){
+				sql = "SELECT TZ_LYDX_ID FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_ZY_SJ=? limit 0,1";
+				strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+				if(strOprid==null||"".equals(strOprid)){
+					//查找上一次接待单涉及的人员						
+					sql = "SELECT TZ_OPRID FROM PS_TZ_PH_JDD_TBL WHERE TZ_PHONE=? AND TZ_XH<>? ORDER BY TZ_CALL_DTIME DESC limit 0,1";
+					strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone,strCallXh}, "String");
+					if(strOprid==null){
+						strOprid = "";
+					}						
+				}
+			}
+		}
+		return strOprid;
 	}
 }
