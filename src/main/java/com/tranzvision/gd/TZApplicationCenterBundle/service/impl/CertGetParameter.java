@@ -19,7 +19,7 @@ public class CertGetParameter {
 		try {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
-			String CertLogoSql = "SELECT CONCAT(A.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA) FROM PS_TZ_CERTIMAGE_TBL A,PS_TZ_CERTTMPL_TBL B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND B.TZ_JG_ID=? AND B.TZ_CERT_TMPL_ID=(SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID)";
+			String CertLogoSql = "SELECT CONCAT(A.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA) FROM PS_TZ_CERTIMAGE_TBL A,PS_TZ_CERTTMPL_TBL B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND B.TZ_JG_ID=? AND B.TZ_CERT_TMPL_ID=(SELECT B.TZ_CERT_TMPL_ID FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID LIMIT 0,1)";
 
 			String jgId = paramters[0];
 			String siteId = paramters[1];
@@ -50,7 +50,7 @@ public class CertGetParameter {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
-			String CertImgSql = "SELECT CONCAT(B.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA) FROM PS_TZ_OPR_PHT_GL_T A,PS_TZ_OPR_PHOTO_T B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND A.OPRID=?";
+			String CertImgSql = "SELECT CONCAT(B.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA) FROM PS_TZ_OPR_PHT_GL_T A,PS_TZ_OPR_PHOTO_T B WHERE A.TZ_ATTACHSYSFILENA=B.TZ_ATTACHSYSFILENA AND A.OPRID=? LIMIT 0,1";
 
 			String jgId = paramters[0];
 			String siteId = paramters[1];
@@ -72,7 +72,7 @@ public class CertGetParameter {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
-			String CertNameSql = "SELECT B.TZ_REALNAME from PS_TZ_APP_INS_T A,PS_TZ_REG_USER_T B WHERE A.TZ_APP_INS_ID = ? AND B.OPRID=A.ROW_ADDED_OPRID";
+			String CertNameSql = "SELECT B.TZ_REALNAME from PS_TZ_APP_INS_T A,PS_TZ_REG_USER_T B WHERE A.TZ_APP_INS_ID = ? AND B.OPRID=A.ROW_ADDED_OPRID LIMIT 0,1";
 
 			String jgId = paramters[0];
 			String siteId = paramters[1];
@@ -94,7 +94,7 @@ public class CertGetParameter {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
-			String CertYearSql = "SELECT YEAR(A.TZ_START_DT) from PS_TZ_CLASS_INF_T A,PS_TZ_FORM_WRK_T B WHERE B.TZ_APP_INS_ID=? AND A.TZ_CLASS_ID=B.TZ_CLASS_ID";
+			String CertYearSql = "SELECT YEAR(A.TZ_START_DT) from PS_TZ_CLASS_INF_T A,PS_TZ_FORM_WRK_T B WHERE B.TZ_APP_INS_ID=? AND A.TZ_CLASS_ID=B.TZ_CLASS_ID LIMIT 0,1";
 
 			String jgId = paramters[0];
 			String siteId = paramters[1];
@@ -116,7 +116,8 @@ public class CertGetParameter {
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 
-			String PrgNameSql = "SELECT B.TZ_PRJ_NAME FROM PS_TZ_APP_INS_T A,PS_TZ_PRJ_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_APP_TPL_ID=B.TZ_APP_MODAL_ID";
+			String PrgNameSql = "SELECT C.TZ_PRJ_NAME from PS_TZ_CLASS_INF_T A,PS_TZ_FORM_WRK_T B ,PS_TZ_PRJ_INF_T C WHERE B.TZ_APP_INS_ID=? AND A.TZ_CLASS_ID=B.TZ_CLASS_ID "
+					+ "AND A.TZ_PRJ_ID = C.TZ_PRJ_ID LIMIT 0,1";
 
 			String jgId = paramters[0];
 			String siteId = paramters[1];
@@ -142,6 +143,17 @@ public class CertGetParameter {
 			String WxCorpid = jdbcTemplate.queryForObject(WxCorpidSql, String.class, new Object[] { "TZ_WX_CORPID" });
 			return WxCorpid;
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+	
+	// 报名表实例编号;
+	public String getAppInsId(String[] paramters) {
+		try {
+			String appIns = paramters[3];
+			return appIns;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "";
