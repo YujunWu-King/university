@@ -311,6 +311,11 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 							}else{
 								form.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/images/tranzvision/mrtx02.jpg");
 							}
+							if(response.bmrBmActCount){								
+								form.down("button[name=bmrBmActCount]").setText('<span style="text-decoration:underline;color:blue;">' + response.bmrBmActCount + '</span>');
+							}else{
+								form.down("button[name=bmrBmActCount]").setText('<span style="text-decoration:underline;color:blue;">0</span>');
+							}
 						});	
 						var Grid = form.down("grid[name=bmInfoList]");
 						var store = Grid.getStore();

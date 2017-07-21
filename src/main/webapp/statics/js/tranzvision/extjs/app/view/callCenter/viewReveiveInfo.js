@@ -419,7 +419,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 									},{
 						        		xtype:'button',
 										textAlign: 'left',
-										text:'<span style="color:black;">0</span>',
+										text:'<span style="text-decoration:underline;color:blue;">0</span>',
 										name:'bmrBmActCount',
 										border:false,
 										width: 160,
