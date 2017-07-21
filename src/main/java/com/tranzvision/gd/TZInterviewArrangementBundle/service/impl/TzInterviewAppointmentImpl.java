@@ -385,7 +385,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 							
 							//撤销成功后发送站内信
 							try{
-								sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+								sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
 								String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
 								//面试预约成功站内信模板
 								String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CX_ZNX_TMP");
@@ -418,6 +418,32 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 						}
 						else
 						{
+							//防止同一台服务器上同一个人同时预约多个同一批次下的多个面试时间段
+							Semaphore semaphore = null;
+							boolean hasOprSemaphore = false;
+							try{
+								//获取当前面试批次下预约人对应的信号灯
+								Map.Entry<String,Semaphore> semaphoreObject = tzGDObject.getSemaphore(classId + "-" + pcId + "-" +oprid);
+								
+								if(semaphoreObject == null || semaphoreObject.getKey() == null || semaphoreObject.getValue() == null)
+								{
+									//如果返回的信号灯为空，报系统忙，请稍后再试
+									throw new Exception("系统忙，请稍候再试。");
+								}else{
+									semaphore = semaphoreObject.getValue();
+									if(semaphore.getQueueLength() >= 1 || semaphore.tryAcquire() == false)
+									{
+										throw new Exception("抱歉，您已预约，请耐心等待预约结果。");
+									}
+									
+									//获取面试人员信号灯，预约完成后需要释放
+									hasOprSemaphore = true;
+								}
+							}catch(Exception e){
+								throw e;
+							}
+							
+							Thread.sleep(5000);
 							try
 							{
 								//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
@@ -428,6 +454,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 							
 								Semaphore tmpSemaphore = null;
 								boolean isLocked = false;
+								boolean hasPlanSemaphore = false;
 								try
 								{	
 									//获取当前面试时间段对应的信号灯
@@ -442,6 +469,9 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 										
 										//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
 										tmpSemaphore.acquire();
+										
+										//获取面试时间安排许可，预约完成后需要释放
+										hasPlanSemaphore = true;
 									}
 									
 									//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
@@ -464,7 +494,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 										 throw new TzException("系统忙，请稍候再试。");
 									}
 									
-									
+									Thread.sleep(5000);
 									String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
 									Map<String,Object> numMap = jdbcTemplate.queryForMap(numSql, new Object[]{ classId, pcId, planId });
 									if(numMap != null){
@@ -509,7 +539,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 												, new Object[]{ classId, pcId, planId });
 									}
 									//释放信号量
-									if(tmpSemaphore != null){
+									if(hasPlanSemaphore){
 										tmpSemaphore.release();
 									}
 									
@@ -522,13 +552,19 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 								errorMsg[0] = "1";
 								errorMsg[1] = "系统忙，请稍候再试。";
 							}
+							finally
+							{
+								if(hasOprSemaphore){
+									semaphore.release();
+								}
+							}
 						}
 						
 						//面试预约成功，发送成功通知站内信
 						if("0".equals(errorMsg[0])){
 							//预约成功后发送站内信
 							try{
-								sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+								sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
 								String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
 								//面试预约成功站内信模板
 								String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CG_ZNX_TMP");
@@ -568,7 +604,7 @@ public class TzInterviewAppointmentImpl extends FrameworkImpl {
 		}catch(Exception e){
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[1] = "操作异常。"+e.getMessage();
+			errorMsg[1] = e.getMessage();
 		}
 		strRet = jacksonUtil.Map2json(rtnMap);
 		return strRet;
