@@ -472,7 +472,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 					items:dataSetItems
 				};
 				
-				if (isDisplay) {
+				if (isDisplay=="Y") {
 					conItems.push(dataSet);
 				}
 				
