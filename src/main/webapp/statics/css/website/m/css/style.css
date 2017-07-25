@@ -397,5 +397,8 @@ select{appearance:none;-moz-appearance:none;-webkit-appearance:none;border:none;
 	
 }
 
+.sq-btn{width:90%;margin:10px auto;height:auto;padding: 10px 0;background-color:#8f5dbf;border-radius: 5px;text-align:center;}
+.sq-btn img{display:inline-block;max-width:5%;width:100%;height:auto;vertical-align: middle;}
+.sq-btn span{color:#fff;display:inline-block;vertical-align: middle;font-size:0.6rem;}
 
 

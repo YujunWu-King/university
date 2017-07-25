@@ -201,152 +201,194 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			/*招生进度*/
 			String xmjdHtml = "";
-			//是否开通了班级;
-			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
-			int totalNum = sqlQuery.queryForObject(totalSQL, new Object[] { siteId,orgId }, "Integer");
-			//是否报名;
-			String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID,TZ_BATCH_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1";
-			long TZ_APP_INS_ID = 0;
-			String classId = "";
-			String msPcId = "";
-			String msPcName = "";
-			Map<String, Object> classAndBmbMap = new HashMap<String, Object>();
-			try{
-				classAndBmbMap = sqlQuery.queryForMap(appinsSQL,new Object[] { m_curOPRID,siteId,orgId  });
-				if(classAndBmbMap != null){
-					TZ_APP_INS_ID = Long.parseLong(String.valueOf(classAndBmbMap.get("TZ_APP_INS_ID")));
-					classId = String.valueOf(classAndBmbMap.get("TZ_CLASS_ID"));
-					msPcId = String.valueOf(classAndBmbMap.get("TZ_BATCH_ID"));
-					if(classId != null && !"".equals(classId) && msPcId != null && !"".equals(msPcId)){
-						msPcName = sqlQuery.queryForObject("select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?", new Object[]{classId,msPcId},"String");
-						if(msPcName == null){
-							msPcName = "";
+			
+			//添加逻辑：只有不在黑名单中且可以申请报名的,如果有没报名的班级则直接显示在线报名;
+			//1:是否允许报名,"N"表示不允许报名;
+			String isAllowedApp = "";
+			//需要查询考生允许报名表 ；
+			isAllowedApp = sqlQuery.queryForObject("select TZ_ALLOW_APPLY from PS_TZ_REG_USER_T where OPRID=?", new Object[]{m_curOPRID},"String");
+			//黑名单
+			String isBlack = sqlQuery.queryForObject("select TZ_BLACK_NAME from PS_TZ_REG_USER_T where OPRID=?", new Object[]{m_curOPRID},"String");
+			//报考方向选择链接;
+			String bkfxUrl =  ctxPath + "/dispatcher?classid=ChosBatch&siteId=" + siteId;
+			//是否已经显示报名中心内容申请按钮;
+			boolean isShowApply = false;
+			if(!"Y".equals(isBlack) && "Y".equals(isAllowedApp)){
+				//是否有没报名的班级;
+				String isNoBmClassSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND TZ_CLASS_ID NOT IN (select TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=?)";
+				int hasNoBmNum = sqlQuery.queryForObject(isNoBmClassSQL, new Object[] { siteId,orgId,m_curOPRID }, "Integer");
+				if(hasNoBmNum > 0){
+					/*
+					int hasBmTotal = sqlQuery.queryForObject("select count(1) from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN  (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?)  AND TZ_JG_ID=?)",new Object[] { m_curOPRID,siteId,orgId  },"Integer");
+					//有没有历史报名;
+					if(hasBmTotal > 0){
+						String hisUrl = ctxPath + "/dispatcher?classid=applyHis&siteId="+siteId;
+						
+					}else{
+						
+					}*/
+					//是否报名;
+					String appinsSQL = "select count(1) from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?)";
+					int zxbmHis =  sqlQuery.queryForObject(appinsSQL,new Object[]{m_curOPRID,siteId,orgId},"Integer");
+					if(zxbmHis > 0){
+						xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_APPLY_HTML",ctxPath,bkfxUrl,strAppHisLabel,viewAppHisUrl);
+					}else{
+						xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_APPLY_NO_HIS_HTML",ctxPath,bkfxUrl);
+					}
+					
+					isShowApply = true;
+				}
+			}
+			
+			if(isShowApply == false ){
+				//是否开通了班级;
+				String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
+				int totalNum = sqlQuery.queryForObject(totalSQL, new Object[] { siteId,orgId }, "Integer");
+				//是否报名;
+				String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID,TZ_BATCH_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1";
+				long TZ_APP_INS_ID = 0;
+				String classId = "";
+				String msPcId = "";
+				String msPcName = "";
+				Map<String, Object> classAndBmbMap = new HashMap<String, Object>();
+				try{
+					classAndBmbMap = sqlQuery.queryForMap(appinsSQL,new Object[] { m_curOPRID,siteId,orgId  });
+					if(classAndBmbMap != null){
+						TZ_APP_INS_ID = Long.parseLong(String.valueOf(classAndBmbMap.get("TZ_APP_INS_ID")));
+						classId = String.valueOf(classAndBmbMap.get("TZ_CLASS_ID"));
+						msPcId = String.valueOf(classAndBmbMap.get("TZ_BATCH_ID"));
+						if(classId != null && !"".equals(classId) && msPcId != null && !"".equals(msPcId)){
+							msPcName = sqlQuery.queryForObject("select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?", new Object[]{classId,msPcId},"String");
+							if(msPcName == null){
+								msPcName = "";
+							}
 						}
 					}
+				}catch(NullPointerException nullException){
+					TZ_APP_INS_ID = 0;
+					classId = "";
 				}
-			}catch(NullPointerException nullException){
-				TZ_APP_INS_ID = 0;
-				classId = "";
-			}
-			if(classId == null){
-				classId = "";
-			}
-	
-			//已经报名
-			if(TZ_APP_INS_ID > 0 && !"".equals(classId)){
-				//班级名称；
-				String className = sqlQuery.queryForObject("select TZ_CLASS_NAME from PS_TZ_CLASS_INF_T where TZ_CLASS_ID =?",new Object[]{classId},"String");
-				
-				// 报名流程模型实例是否存在;
-				int bmlcTotalNum = sqlQuery.queryForObject(
-						"select count(1) from PS_TZ_CLS_BMLC_T where TZ_CLASS_ID=?", new Object[] { classId },
-						"Integer");
-				String stepHtml = "";
-				//报名表Url;
-				String applyFromUrl = ctxPath + "/dispatcher?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + siteId;
-				
-				if(bmlcTotalNum > 0){
-
-					String bmlcSql = "select a.TZ_APPPRO_ID,a.TZ_APPPRO_NAME,b.TZ_APPPRO_HF_BH,b.TZ_APPPRO_RST from PS_TZ_CLS_BMLC_T a left join (select * from PS_TZ_APPPRO_RST_T where TZ_APP_INS_ID=? and TZ_CLASS_ID=?) b on a.TZ_APPPRO_ID=b.TZ_APPPRO_ID where a.TZ_CLASS_ID=? order by a.TZ_SORT_NUM asc";
-					List<Map<String, Object>> bmlcList = sqlQuery.queryForList(bmlcSql,
-							new Object[] { TZ_APP_INS_ID, classId, classId });
-					int step = 0;
+				if(classId == null){
+					classId = "";
+				}
+		
+				//已经报名
+				if(TZ_APP_INS_ID > 0 && !"".equals(classId)){
+					//班级名称；
+					String className = sqlQuery.queryForObject("select TZ_CLASS_NAME from PS_TZ_CLASS_INF_T where TZ_CLASS_ID =?",new Object[]{classId},"String");
 					
-					//未发布的一个流程紫色，后面的灰色;
-					boolean lcZsBl = false;
-					//上个流程是不是发布了;
-					boolean sgIsFb = false;
-					if (bmlcList != null && bmlcList.size() > 0) {
-						for (int j = 0; j < bmlcList.size(); j++) {
-							step = step + 1;
-							//是否发布;
-							String isFb = "";
-							
-							String TZ_APPPRO_ID = (String) bmlcList.get(j).get("TZ_APPPRO_ID");
-							String TZ_APPPRO_NAME = (String) bmlcList.get(j).get("TZ_APPPRO_NAME");
-							String TZ_APPPRO_HF_BH = (String) bmlcList.get(j).get("TZ_APPPRO_HF_BH");
-							String TZ_APPPRO_RST = (String) bmlcList.get(j).get("TZ_APPPRO_RST");
-							if(TZ_APPPRO_NAME == null){
-								TZ_APPPRO_NAME = "";
-							}
-							if(TZ_APPPRO_HF_BH == null){
-								TZ_APPPRO_HF_BH = "";
-							}
-							if(TZ_APPPRO_RST == null){
-								TZ_APPPRO_RST = "";
-							}
-							
-							//没有发布回复短语则统一取默认的
-							if (TZ_APPPRO_HF_BH == null || "".equals(TZ_APPPRO_HF_BH)) {
-								TZ_APPPRO_RST = sqlQuery.queryForObject(
-										"select TZ_APPPRO_CONTENT from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=? and TZ_WFB_DEFALT_BZ='on'",
-										new Object[] { classId, TZ_APPPRO_ID }, "String");
+					// 报名流程模型实例是否存在;
+					int bmlcTotalNum = sqlQuery.queryForObject(
+							"select count(1) from PS_TZ_CLS_BMLC_T where TZ_CLASS_ID=?", new Object[] { classId },
+							"Integer");
+					String stepHtml = "";
+					//报名表Url;
+					String applyFromUrl = ctxPath + "/dispatcher?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + siteId;
+					
+					if(bmlcTotalNum > 0){
+
+						String bmlcSql = "select a.TZ_APPPRO_ID,a.TZ_APPPRO_NAME,b.TZ_APPPRO_HF_BH,b.TZ_APPPRO_RST from PS_TZ_CLS_BMLC_T a left join (select * from PS_TZ_APPPRO_RST_T where TZ_APP_INS_ID=? and TZ_CLASS_ID=?) b on a.TZ_APPPRO_ID=b.TZ_APPPRO_ID where a.TZ_CLASS_ID=? order by a.TZ_SORT_NUM asc";
+						List<Map<String, Object>> bmlcList = sqlQuery.queryForList(bmlcSql,
+								new Object[] { TZ_APP_INS_ID, classId, classId });
+						int step = 0;
+						
+						//未发布的一个流程紫色，后面的灰色;
+						boolean lcZsBl = false;
+						//上个流程是不是发布了;
+						boolean sgIsFb = false;
+						if (bmlcList != null && bmlcList.size() > 0) {
+							for (int j = 0; j < bmlcList.size(); j++) {
+								step = step + 1;
+								//是否发布;
+								String isFb = "";
+								
+								String TZ_APPPRO_ID = (String) bmlcList.get(j).get("TZ_APPPRO_ID");
+								String TZ_APPPRO_NAME = (String) bmlcList.get(j).get("TZ_APPPRO_NAME");
+								String TZ_APPPRO_HF_BH = (String) bmlcList.get(j).get("TZ_APPPRO_HF_BH");
+								String TZ_APPPRO_RST = (String) bmlcList.get(j).get("TZ_APPPRO_RST");
+								if(TZ_APPPRO_NAME == null){
+									TZ_APPPRO_NAME = "";
+								}
+								if(TZ_APPPRO_HF_BH == null){
+									TZ_APPPRO_HF_BH = "";
+								}
 								if(TZ_APPPRO_RST == null){
 									TZ_APPPRO_RST = "";
 								}
-							}
+								
+								//没有发布回复短语则统一取默认的
+								if (TZ_APPPRO_HF_BH == null || "".equals(TZ_APPPRO_HF_BH)) {
+									TZ_APPPRO_RST = sqlQuery.queryForObject(
+											"select TZ_APPPRO_CONTENT from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=? and TZ_WFB_DEFALT_BZ='on'",
+											new Object[] { classId, TZ_APPPRO_ID }, "String");
+									if(TZ_APPPRO_RST == null){
+										TZ_APPPRO_RST = "";
+									}
+								}
+								
 							
-						
-							if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
-								String type = "A";
-								//解析系统变量;
-								String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , ctxPath, TZ_APPPRO_RST,"Y",siteId);
+								if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
+									String type = "A";
+									//解析系统变量;
+									String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , ctxPath, TZ_APPPRO_RST,"Y",siteId);
 
-								isFb = result[0];
-								TZ_APPPRO_RST = result[1];
-							}
+									isFb = result[0];
+									TZ_APPPRO_RST = result[1];
+								}
 
-							String stepLi = "";
-							String styleClassName = "",stepNum = "";
-							String styleLine = "";
-							if("Y".equals(isFb)){
-								//流程打勾样式
-								styleClassName = " step_ed";
-								stepNum = "";
-							}else{
-								//未发布的一个流程紫色，或则前面的流程是发布的;
-								if(lcZsBl == false || sgIsFb == true){
-									styleClassName = " step_ing";
-									stepNum = String.valueOf(step);
-									lcZsBl = true;
+								String stepLi = "";
+								String styleClassName = "",stepNum = "";
+								String styleLine = "";
+								if("Y".equals(isFb)){
+									//流程打勾样式
+									styleClassName = " step_ed";
+									stepNum = "";
 								}else{
-									styleClassName = "";
-									stepNum = String.valueOf(step);
+									//未发布的一个流程紫色，或则前面的流程是发布的;
+									if(lcZsBl == false || sgIsFb == true){
+										styleClassName = " step_ing";
+										stepNum = String.valueOf(step);
+										lcZsBl = true;
+									}else{
+										styleClassName = "";
+										stepNum = String.valueOf(step);
+									}
+									
+								}
+								
+								if(sgIsFb == true){
+									styleLine = " step_lined";
+								}else{
+									styleLine = "";
+								}
+								
+								if(step == 1){
+									stepLi = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APPCENTER_LC_SETP1",styleClassName,stepNum,TZ_APPPRO_NAME);
+								}else{
+									stepLi = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APPCENTER_LC_SETP",styleClassName,stepNum,TZ_APPPRO_NAME,styleLine);
+								}
+								
+								stepHtml = stepHtml + stepLi;
+								
+								
+								if("Y".equals(isFb)){
+									sgIsFb = true;
+								}else{
+									sgIsFb = false;
 								}
 								
 							}
-							
-							if(sgIsFb == true){
-								styleLine = " step_lined";
-							}else{
-								styleLine = "";
-							}
-							
-							if(step == 1){
-								stepLi = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APPCENTER_LC_SETP1",styleClassName,stepNum,TZ_APPPRO_NAME);
-							}else{
-								stepLi = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APPCENTER_LC_SETP",styleClassName,stepNum,TZ_APPPRO_NAME,styleLine);
-							}
-							
-							stepHtml = stepHtml + stepLi;
-							
-							
-							if("Y".equals(isFb)){
-								sgIsFb = true;
-							}else{
-								sgIsFb = false;
-							}
-							
 						}
+						
+						
 					}
-					
-					
+					xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className + msPcName,stepHtml,strViewBmbDesc,applyFromUrl,strAppHisLabel,viewAppHisUrl,viewJdUrl);
+				}else{
+					//不可报名；
+					xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_NO_ZSJD_HTML");
 				}
-				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className + msPcName,stepHtml,strViewBmbDesc,applyFromUrl,strAppHisLabel,viewAppHisUrl,viewJdUrl);
-			}else{
-				//有开通的班级；
-				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_NO_ZSJD_HTML");
 			}
+			
 
 			//招生活动,报考通知;
 			//取栏目id;
