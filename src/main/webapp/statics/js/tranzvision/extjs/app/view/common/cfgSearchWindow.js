@@ -23,7 +23,10 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 
     initComponent: function(){
         var me = this;
-
+       
+        var userID=TranzvisionMeikecityAdvanced.Boot.loginUserId;
+        console.log(userID);
+        
 				Ext.apply(Ext.form.field.VTypes, {  
 				  promptVildate:  function(value,field) {  
 					  var flag = false;  
@@ -48,7 +51,8 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 				  promptVildateText: TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00100")/*输入的值不存在*/
 				});
 				
-				var tzParams = '{"ComID":"TZ_COMMON_CFG_COM","PageID":"TZ_COMMON_CFG_STD","OperateType":"QF","comParams":{"cfgSrhId":"'+this.cfgSrhId+'"}}';
+				var tzParams = '{"ComID":"TZ_COMMON_CFG_COM","PageID":"TZ_COMMON_CFG_STD","OperateType":"QF","comParams":{"cfgSrhId":"'+this.cfgSrhId+'","currentUser":"'+userID+'"}}';
+//				var tzParams = '{"ComID":"TZ_COMMON_CFG_COM","PageID":"TZ_COMMON_CFG_STD","OperateType":"QF","comParams":{"cfgSrhId":"'+this.cfgSrhId+'"}}';
 
         //搜索条件
         var conItems = [];
@@ -435,6 +439,8 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 			*/
 			var dataSetItems = [];
 			var formDataSet = responseData.formDataSet;
+			var isDisplay = responseData.isDisplay;
+			console.log(isDisplay);
 			if(formDataSet.length>0){
 				console.log(formDataSet);
 				for(var dataSet_i=0;dataSet_i<formDataSet.length;dataSet_i++){
@@ -465,7 +471,12 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 					bodyPadding: 5,
 					items:dataSetItems
 				};
-				conItems.push(dataSet);
+				
+				if (isDisplay) {
+					conItems.push(dataSet);
+				}
+				
+				
 			}
         });
 

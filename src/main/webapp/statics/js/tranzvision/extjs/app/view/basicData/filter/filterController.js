@@ -374,10 +374,7 @@
 				var formData = responseData.formData;
 				form.setValues(formData);
 				//页面注册信息列表数据
-				var roleList = responseData.listData;	
-
-				
-				//grid.store.load();						
+				var roleList = responseData.listData;		
 			});
 			var queryID;
 

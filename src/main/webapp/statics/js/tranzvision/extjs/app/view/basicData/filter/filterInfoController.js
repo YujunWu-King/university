@@ -611,10 +611,26 @@
                 
             });
 
-            var grid = panel.down('grid[name=filterCondGrid]');
-			var tzStoreParams = '{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","fieldOrder":"'+fieldOrder+'"}';
-            grid.store.tzStoreParams = tzStoreParams;
-            grid.store.load();
+//            var grid = panel.down('grid[name=filterCondGrid]');
+//			var tzStoreParams = '{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","fieldOrder":"'+fieldOrder+'"}';
+//            grid.store.tzStoreParams = tzStoreParams;
+//            grid.store.load();
+            
+            var queryID;
+
+			queryID = "1";
+			var grid1 = panel.down('grid[name=filterCondGrid]');
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","fieldOrder":"'+fieldOrder+'"}';
+			grid1.store.tzStoreParams = tzStoreParams1;
+			//grid1.store.load();
+			
+			queryID = "2";
+			var grid2 = panel.down('grid[name=filterRoleGrid]');
+			var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'","fieldOrder":"'+fieldOrder+'"}';
+			grid2.store.tzStoreParams = tzStoreParams2;
+            
+            
+            
         });
 
         tab = contentPanel.add(cmp);
@@ -655,4 +671,5 @@
 			}												  
 		},this);
     }
+    
 });
