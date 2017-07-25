@@ -109,6 +109,8 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	                            return false;
 	                        }
 	                        
+	                        var outOfRangeFlag = false;
+	                        
 	                        dataWithColumns = responseData;
 	                        var firstLineTitle_1 = me.down('checkboxfield[name=firstLineTitle_1]').getValue();
 	                        for(var i = 0;i<dataWithColumns.length;i++){
@@ -120,7 +122,10 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
                             	});
                             	dataWithColumns[i] = dataTmp;
                             	
-	                            if(dataArray.length==1000)break;/*超过1000行的数据不展示*/
+	                            if(dataArray.length==1500){
+	                            	outOfRangeFlag = true;
+	                            	break;/*超过1500行的数据不展示*/
+	                            }
 	                            columnsLength = (columnsLength==undefined?dataWithColumns[i].length:((columnsLength<dataWithColumns[i].length)?dataWithColumns[i].length:columnsLength));
 	
 	                            if(i==0&&firstLineTitle_1/*首行为标题行*/){
@@ -150,6 +155,15 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	                        displayRowCount.setText(Ext.String.format(displayRowCount.defaultTextMsg, firstLineTitle_1&&dataWithColumns.length==1?0:1,dataArray.length,firstLineTitle_1?dataWithColumns.length-1:dataWithColumns.length));
 	
 	                        Ext.MessageBox.hide();
+	                        
+	                        if(outOfRangeFlag){
+	                        	Ext.Msg.show({
+	                        		title:'提示',
+	                        		msg: '您导入的数据超过了1500条，为了不影响页面展示和数据保存的效率，<br/>超过的部分不予显示和导入。',
+	                        		buttons: Ext.Msg.OK,
+	                        		icon: Ext.Msg.INFO
+	                        	});
+                        	}
 	                    });
 	
 	                },
@@ -183,7 +197,7 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	        var firstLineTitle_2 = me.down('checkboxfield[name=firstLineTitle_2]').getValue(),
 	            columnsData = excelText.split("\n");//获取每行数据
 	
-	        var displayCount,allCount;
+	        var displayCount,allCount,outOfRangeFlag = false;
 	        for(var i = 0;i<columnsData.length;i++){
 	            if(columnsData[i].replace(/(^\s*)|(\s*$)/g, "")=="") continue;
 	
@@ -197,7 +211,7 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	            }else{
 	                dataArray.push(columnData);
 	
-	                if(dataArray.length<=1000){
+	                if(dataArray.length<=1500){
 	                    var jsonData = ""
 	                    for(var j=0;j<columnData.length;j++){
 	                        var encodeColumnData = Ext.JSON.encode(columnData[j].replace(/</g,'&lt').replace(/>/g,'&gt'));
@@ -208,9 +222,21 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	                        }
 	                    }
 	                    data.push(Ext.JSON.decode("{"+jsonData+"}"));
+	                }else{
+	                	outOfRangeFlag = true;
+	                	break;
 	                }
 	            }
 	        }
+	        
+	        if(outOfRangeFlag){
+	        	Ext.Msg.show({
+            		title:'提示',
+            		msg: '您导入的数据超过了1500条，为了不影响页面展示和数据保存的效率，<br/>超过的部分不予显示和导入。',
+            		buttons: Ext.Msg.OK,
+            		icon: Ext.Msg.INFO
+            	});
+        	}
 	        
 	        me.dataArray=dataArray;
 	        me.columnsLength = columnsLength;
