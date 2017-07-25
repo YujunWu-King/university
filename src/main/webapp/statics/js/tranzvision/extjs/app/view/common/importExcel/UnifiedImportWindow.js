@@ -117,7 +117,7 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportWindow', {
                         },{
                             xtype:'tbtext',
                             itemId: 'msgTip',
-                            text :'<span style="color:#b11b3b;font-weight: bold">提示：</span>为避免页面显示过慢，最多提供20列*1000行的数据供预览',
+                            text :'<span style="color:#b11b3b;font-weight: bold">提示：</span>为避免页面显示过慢，最多提供20列*1500行的数据供预览',
                             hidden:true
                         },
                         '->',
