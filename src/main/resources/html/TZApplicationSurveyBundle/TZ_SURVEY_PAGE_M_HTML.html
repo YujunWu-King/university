@@ -4,23 +4,25 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 		<title>%bind(:13)</title>
-		<link href="%bind(:21)/statics/js/onlineSurvey/css/m/public.css" rel="stylesheet" type="text/css" />
-		<link href="%bind(:21)/statics/js/onlineSurvey/css/m/index.css" rel="stylesheet" type="text/css" />
-        <link href="%bind(:21)/statics/js/survey/assets/libs/jqueryui/css/jquery-ui-1.10.4.min.css" rel="stylesheet"/>
-		<link rel="stylesheet" href="%bind(:21)/statics/js/onlineSurvey/formvalidator/m/themes/Custom/style/style.css" />
-		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/unitegallery/css/unite-gallery.css" type="text/css"/>
+		<link rel="stylesheet" href="%bind(:21)/statics/js/onlineSurvey/css/m/LCalendar.css"/>
+		<link href="%bind(:21)/statics/js/onlineSurvey/css/m/mobile.css" rel="stylesheet" type="text/css"/>
+
 		<script type="text/javascript">
 			var TzUniversityContextPath = "%bind(:21)";
 		</script>
-		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/jquery.min.js"></script>
+		
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/js/m/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/js/m/rem.js"></script>
+		<script src="%bind(:21)/statics/js/onlineSurvey/js/m/LCalendar.js"></script>
+		<!-- <script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/jquery.min.js"></script> -->
 		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/browser.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/common.js"></script>
 
-		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/Survey.js"></script>
+		<!-- <script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/Survey.js"></script>-->
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/jquery.form.js"></script> 
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/json.js"></script>
-		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/SurveyAnswer.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/m/SurveyAnswer.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/unitegallery/js/unitegallery.min.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/unitegallery/js/ug-theme-tilesgrid.js"></script>
 
@@ -28,8 +30,9 @@
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/baseComponent.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/formvalidator/m/ValidationRules.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/formvalidator/m/formValidator.js"></script>
-		<script type="text/javascript" src="%bind(:21)/statics/js/tranzvision/util/layer.js"></script>
-		<style>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/layer.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
+		<!--  <style>
 			.noteing{font-weight:700;text-align:center;font-size:14px;font-weight:700;position:fixed;display:none;z-index:10000;cursor:pointer;}
 			.noteing .alert{padding:8px 20px;}
 			.alert{ padding: 8px 35px 8px 10px;text-shadow: none;-webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);-moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);background-color: #f9edbe;border: 1px solid #f0c36d;-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;color: #333333;}
@@ -47,7 +50,7 @@
 			.alert-block p+p{margin-top:5px;}
 			.alert-danger,.alert-error{border-color: #d59595;color: #b94a48;}
 			.alert-success,.alert-danger,.alert-error,.alert-info{text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);}
-		</style>
+		</style> -->
 		<script type="text/javascript">
 			SurveyBuild.tzGeneralURL = "%bind(:3)";		//统一接口
 			SurveyBuild.accessType = "M";				//访问类型
@@ -100,34 +103,54 @@
 	</head>
 
 	<body>
-		<div class="container">
+		<div class="viewport-adaptive">
+			 <div class="bg">
 			<!-- 不显示调试模式提醒 
 			<div class="top">
 				%bind(:14)
 				<div class="clear"></div>
 			</div>
-			 -->
 			<!-- 卷头 -->
-			<div class="uploadlogo">%bind(:1)</div>
-
-			<div class="maincon">
-				<form method="post" name="main_list" id="main_list"></form>
-				<div class="maincon-page">
-					<a href="#" onclick="javascript:prePage()"><div class="pagebtn1" style="display:none;">< %bind(:17)</div></a>
-					<a href="#" onclick="javascript:nextPage()"><div class="pagebtn2" style="display:none;">%bind(:18) ></div></a>
-					<div class="clear"></div>
+			<div class="title">%bind(:13)</div>
+			<div class="main_body">
+				<!-- 卷首内容 -->
+	    		<div class="top_inner">%bind(:1)</div>
+	    		<div class="question">
+				<form method="post" name="main_list" id="main_list">
+				</form>
 				</div>
+				
+				
+	    		<div class="btn">
+	    			<a href="#" class="btn_left" onclick="javascript:prePage()" style="display:none;">%bind(:17)</a>
+	    			<a href="#" class="btn_right" onclick="javascript:nextPage()" style="display:none;">%bind(:18)</a>
+	    		</div>
 				<div id="unite_gallery_box" style="display: none"></div>
 				<p class="submitdesc" style="display:none;" id="desc_submit">%bind(:23)</p>
-				<div class="submit" style="display:none;" id="app_submit">
-					%bind(:15)&nbsp;&nbsp;
-					<span class="sendbtn"><img src="%bind(:21)/statics/js/onlineSurvey/images/m/gou.png" /></span>
-				</div>
+				
+				<div class="btn_tj"  style="display:none;" id="app_submit">%bind(:15)</div>
 			</div>
 			<!-- 卷尾 -->
-			<div class="fotter">%bind(:2)</div>
+			<div class="footer">%bind(:2)</div>
+			</div>
 		</div>
 		<input type="hidden" id="unique" name="unique" value="%bind(:20)"/>
+		<!-- 透明层 -->
+		<div class="shade"></div>
+		<!-- 弹窗内容 -->
+		<div class="pop_body">
+			<p class="pop_tit">密码</p>
+			<div class="pop_list">
+			<p>请输入密码：</p>
+			<div class="text_box1">
+				<input type="password" name="" placeholder="" id="pwd"/>
+			</div>
+		</div>
+		<div class="pop_btn">
+			<div class="pop_btn_left">取消</div>
+			<div class="pop_btn_right">确定</div>
+		</div>
+	</div>
 	</body>
 	<script type="text/javascript">
 
@@ -242,7 +265,7 @@
 	<script type="text/javascript">
 		function processing(){
 			var loadi = layer.load("加载中...");
-			layer.area(loadi,"top:200px");
+			//layer.area(loadi,"top:200px");
 		}
 		//获取参与者答题内容
 		function getData(){
@@ -281,15 +304,15 @@
 			/*if(SurveyBuild.subState == 'S'){*/
 			if(SurveyBuild.readonly == 'Y'){
 				if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
-					$(".pagebtn1").hide();
+					$(".btn_left").hide();
 				}else{
-					$(".pagebtn1").show();
+					$(".btn_left").show();
 				}
 
 				if(SurveyBuild.curPageNo == SurveyBuild.maxPage){
-					$(".pagebtn2").hide();
+					$(".btn_right").hide();
 				}else{
-					$(".pagebtn2").show();
+					$(".btn_right").show();
 				}
 				SurveyBuild._load();
 				return false;
@@ -319,15 +342,15 @@
 							}else{
 								/*处理翻页数据加载*/
 								if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
-									$(".pagebtn1").hide();
+									$(".btn_left").hide();
 								}else{
-									$(".pagebtn1").show();
+									$(".btn_left").show();
 								}
 
 								if(SurveyBuild.curPageNo == SurveyBuild.maxPage){
-									$(".pagebtn2").hide();
+									$(".btn_right").hide();
 								}else{
-									$(".pagebtn2").show();
+									$(".btn_right").show();
 								}
 								SurveyBuild._load();
 								layer.closeAll();
@@ -397,38 +420,9 @@
 				SurveyBuild._load();
 				refreshTip();
 			}else{
-				layer.prompt(
-					{
-				    	title: '输入问卷密码，并确认',
-				    	formType: 1,
-						closeBtn: false
-					},
-					function(pass){
-						var tzPassParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"EJSON","comParams":{"EType":"PASSWORD","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"' + SurveyBuild.appInsId + '","PASSWORD":"' + pass + '"}}';
-			            $.ajax({
-			                type: "POST",
-							url:SurveyBuild.tzGeneralURL,
-			                data: {
-								tzParams:tzPassParams
-			                },
-			                dataType: "JSON",
-			                success: function(f) {
-								if (f.state.errcode == "0") {
-									if(f.comContent.code && f.comContent.code == "0"){
-										layer.closeAll();
-										SurveyBuild._load();
-										refreshTip();
-									}else{
-										alert(f.comContent.msg);
-									}
-
-								}else{
-									alert("系统错误！");
-								}
-			                }
-			            });
-					}
-				);
+				$(".shade").show();
+				$(".pop_body").show();
+				$(".pop_btn_left").hide();
 			}
 		}else{
 			processing();
@@ -442,7 +436,7 @@
 		function refreshTip(){
 			//提交按钮是否每页都显示
 			//if(commitRule == "0"){
-				SurveyBuild.curPageNo == SurveyBuild.maxPage ? $(".submit").show():$(".submit").hide();
+				SurveyBuild.curPageNo == SurveyBuild.maxPage ? $(".btn_tj").show():$(".btn_tj").hide();
 				SurveyBuild.curPageNo == SurveyBuild.maxPage && SurveyBuild.subState == "S" ? $(".submitdesc").show():$(".submitdesc").hide();
 			//}else{
 			//	$(".submit").show();
@@ -450,18 +444,18 @@
 
 			if(SurveyBuild.maxPage > 1){
 				if(SurveyBuild.curPageNo < SurveyBuild.maxPage){
-					$(".pagebtn2").show();
+					$(".btn_right").show();
 				}else{
-					$(".pagebtn2").hide();
+					$(".btn_right").hide();
 				}
 				if(SurveyBuild.curPageNo > 1){
-						$(".pagebtn1").show();
+						$(".btn_left").show();
 				}else{
-					$(".pagebtn1").hide();
+					$(".btn_left").hide();
 				}
 			}else{
-				$(".pagebtn1").hide();
-				$(".pagebtn2").hide();
+				$(".btn_left").hide();
+				$(".btn_right").hide();
 			}
 			/*已提交只读*/
 			/*if(SurveyBuild.subState == "S"){*/
@@ -474,8 +468,56 @@
 				$("form textarea").prop("disabled", true);
 				$(".fileinput-button input").prop("disabled", true);
 				$(".img_del").hide();
-				$(".submit").hide();
+				$(".btn_tj").hide();
 			}
+		}
+			
+		$(".pop_btn_left").click(function () {
+	    	$(".shade").hide();
+	    	$(".pop_body").hide();
+		});
+		$(".pop_btn_right").click(function () {
+			var pass = $("#pwd").val();
+			var tzPassParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"EJSON","comParams":{"EType":"PASSWORD","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"' + SurveyBuild.appInsId + '","PASSWORD":"' + pass + '"}}';
+	    	$.ajax({
+	        	type: "POST",
+	        	url:SurveyBuild.tzGeneralURL,
+	        	data: {
+					tzParams:tzPassParams
+	        	},
+	        	dataType: "JSON",
+	        	success: function(f) {
+					if (f.state.errcode == "0") {
+						if(f.comContent.code && f.comContent.code == "0"){
+							$(".shade").hide();
+					    	$(".pop_body").hide();
+							layer.closeAll();
+							SurveyBuild._load();
+							refreshTip();
+						}else{
+							alert(f.comContent.msg);
+						}
+
+					}else{
+						alert("系统错误！");
+					}
+	        	}
+	    	});
+		});
+		$(window).load(function(){
+	 
+	  		initStyles();
+		});
+
+		$(window).resize(function(){
+	 
+	  		initStyles();
+		});
+
+		function initStyles() {
+	    	var allHeight=$(window).height();
+	     	var popheight=$(".pop_body").height();
+	     	$(".pop_body").css("top",allHeight/2-popheight/2-10+"px");
 		}
 	</script>
 </html>

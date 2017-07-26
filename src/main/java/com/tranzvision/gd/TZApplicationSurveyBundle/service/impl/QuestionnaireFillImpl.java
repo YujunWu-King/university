@@ -55,7 +55,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
  */
 @Service("com.tranzvision.gd.TZApplicationSurveyBundle.service.impl.QuestionnaireFillImpl")
 public class QuestionnaireFillImpl extends FrameworkImpl {
-	private static final Logger logger = LoggerFactory.getLogger(HttpClientService.class);
+	private static final Logger logger = LoggerFactory.getLogger(QuestionnaireFillImpl.class);
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -125,12 +125,10 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	/* 问卷保存 */
 
 	/*******************************************************************************************************************************
-	 * 说明：问卷提交 功能逻辑说明: 
-	 * 1、如果是记名问卷，那么检查是否登陆，如果没有登陆，则提示错误
-	 * 2、看是否传入了报名表实例编号，如果传入了编号，则继续操作4，如果没有传入报名表编号，则操作6 
+	 * 说明：问卷提交 功能逻辑说明: 1、如果是记名问卷，那么检查是否登陆，如果没有登陆，则提示错误
+	 * 2、看是否传入了报名表实例编号，如果传入了编号，则继续操作4，如果没有传入报名表编号，则操作6
 	 * 3、根据报名表编号和班级编号查询报名人，如果查询到报名人，继续操作5，否则，提示错误
-	 * 4、看报名人和当前登陆人是否一致，如果一致，在检查当前登陆人当前班级的的管理人员，如果是，则继续操作，否则，提示错误
-	 * 5、创建报名表编号，继续操作
+	 * 4、看报名人和当前登陆人是否一致，如果一致，在检查当前登陆人当前班级的的管理人员，如果是，则继续操作，否则，提示错误 5、创建报名表编号，继续操作
 	 * 6、根据传入的事件类型进行保存或者提交操作
 	 *******************************************************************************************************************************/
 	@Override
@@ -341,11 +339,11 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = psTzDcWjDyTMapper.selectByPrimaryKey(surveyID);
 			if (psTzDcWjDyTWithBLOBs == null) {
 				String strDtgz = psTzDcWjDyTWithBLOBs.getTzDcWjDtgz();
-				
-				if(StringUtils.equals("S", strSubState)){
-					if(StringUtils.equals("2", strDtgz)){
+
+				if (StringUtils.equals("S", strSubState)) {
+					if (StringUtils.equals("2", strDtgz)) {
 						readonly = "N";
-					}else{
+					} else {
 						readonly = "Y";
 					}
 				}
@@ -353,7 +351,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 			// {"code":"%BIND(:1)","msg":"%bind(:2)","insid":"%bind(:3)","subState":"%bind(:4)","jump":"%bind(:5)"}
 			strRet = "{\"code\":\"" + successFlag + "\",\"msg\":\"" + strMsg + "\",\"insid\":\"" + surveyInsId
-					+ "\",\"subState\":\"" + strSubState + "\",\"readonly\":\"" + readonly + "\",\"jump\":\"" + isJump + "\"}";
+					+ "\",\"subState\":\"" + strSubState + "\",\"readonly\":\"" + readonly + "\",\"jump\":\"" + isJump
+					+ "\"}";
 		}
 		return strRet;
 	}
@@ -406,7 +405,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 		/* 调查问卷应用编号 */
 		String classId = request.getParameter("classid");
-		/*是否存在合法实例编号*/
+		/* 是否存在合法实例编号 */
 		boolean isHasIns = false;
 		/* 从参数中获取问卷编号、实例编号 */
 		if (classId != null && !classId.equals("")) {
@@ -414,9 +413,9 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			surveyInsId = request.getParameter("SURVEY_INS_ID");
 			fromIntro = request.getParameter("F");
 			uniqueNum = request.getParameter("unique");
-			
+
 		} else {
-			System.out.println("going here?");
+			// System.out.println("going here?");
 			if (jsonUtil.containsKey("SURVEY_WJ_ID")) {
 				surveyID = jsonUtil.getString("SURVEY_WJ_ID");
 			}
@@ -431,19 +430,23 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			}
 		}
 
+		logger.info("surveyID=" + surveyID);
+		logger.info("surveyInsId=" + surveyInsId);
+		logger.info("fromIntro=" + fromIntro);
+		logger.info("uniqueNum=" + uniqueNum);
 		if (StringUtils.isNotBlank(surveyInsId) && Integer.parseInt(surveyInsId) > 0) {
 			isHasIns = true;
 		}
-		
+
 		/* 1.验证实例编号是否为null */
-		logger.info("--- 1.验证实例编号是否为null ---");
+		logger.info("--- 1.验证问卷编号是否为null ---");
 		if (StringUtils.isBlank(surveyID)) {
 			successFlag = "1";
 			strMsg = "The Survey Id is empty!";
 		}
 
 		/* 2.验证问卷编号是否合法 */
-		logger.info("--- 2.验证问卷编号是否合法 ---");
+		logger.info("--- 2.验证问卷是否存在 ---");
 		PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = new PsTzDcWjDyTWithBLOBs();
 		if (successFlag.equals("0")) {
 			psTzDcWjDyTWithBLOBs = psTzDcWjDyTMapper.selectByPrimaryKey(surveyID);
@@ -478,7 +481,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 		/* 4.实例编号、实例唯一随机数是否为null */
 		logger.info("---4.实例编号、实例唯一随机数是否为null ---");
-		logger.info(" ----- 问卷实例编号:" + surveyInsId + "            --------------实例唯一随机数Befro2: " + uniqueNum);
+
 		if (successFlag.equals("0")) {
 			if (StringUtils.isBlank(surveyInsId) && StringUtils.isBlank(uniqueNum)) {
 				String isTrue = "N";
@@ -511,8 +514,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 				try {
 					response.sendRedirect(url);
+					return null;
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -580,7 +583,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					language, "上一页", "Pre");
 			String strNext = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_NEXT",
 					language, "下一页", "Next");
-			String strSurveySubmit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_SUBMIT", language, "问卷已提交！", "The questionnaire has been submitted! ");
+			String strSurveySubmit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET",
+					"SURVEY_SUBMIT", language, "问卷已提交！", "The questionnaire has been submitted! ");
 
 			try {
 				if (isMobile) {
@@ -590,6 +594,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					strModeDesc = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_MODE_HTML",
 							survey_mode, survey_mode_desc, path);
 				}
+				logger.info("GO TZ_SURVEY_MODE_M_HTML OR TZ_SURVEY_MODE_HTML");
 			} catch (TzSystemException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -625,10 +630,10 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 								isPassAuth, surveyID, path);
 					}
 
-					logger.info("返回到TZ_SURVEY_INTRO_HTML 或TZ_SURVEY_INTRO_M_HTML");
+					logger.info("RETURN TZ_SURVEY_INTRO_HTML OR TZ_SURVEY_INTRO_M_HTML");
 					logger.info("surveyID:" + surveyID);
 					logger.info("surveyInsId:" + surveyInsId);
-					// logger.info("uniqueNum:"+uniqueNum);
+					logger.info("uniqueNum:" + uniqueNum);
 					return strHtml;
 				}
 			} catch (TzSystemException e) {
@@ -638,7 +643,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 			/* 文件报文数据、问卷实例报文数据 */
 			String surveyData = psTzDcWjDyTWithBLOBs.getTzApptplJsonStr();
-			logger.info("surveyData:" + surveyData);
+			// logger.info("surveyData:" + surveyData);
 			surveyData = surveyData.replace("\\", "\\\\");
 			surveyData = surveyData.replaceAll("\\$", "~");
 			String surveyInsData = null;
@@ -656,7 +661,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			logger.info("surveyInsData:" + surveyInsData);
+			// logger.info("surveyInsData:" + surveyInsData);
 			surveyInsData = surveyInsData.replace("\\", "\\\\");
 			surveyInsData = surveyInsData.replaceAll("\\$", "~");
 
@@ -669,7 +674,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			ArrayList<Map<String, Object>> comDfn = questionnaireEditorEngineImpl.getComDfn(surveyID);
 			String strComRegInfo = jsonUtil.List2json(comDfn);
 
-			logger.info("strComRegInfo:" + strComRegInfo);
+			// logger.info("strComRegInfo:" + strComRegInfo);
 			/* 控制逻辑 */
 			try {
 				if (surveyInsId != null && !surveyInsId.equals("") && Integer.parseInt(surveyInsId) > 0) {
@@ -683,7 +688,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			logger.info("surveyLogic:" + surveyLogic);
+			// logger.info("surveyLogic:" + surveyLogic);
 			/* 调查问卷消息集合 */
 			String str_MsgSet = gdObjectServiceImpl.getMessageSetByLanguageCd(request, response, "TZGD_SURVEY_MSGSET",
 					language);
@@ -694,7 +699,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				Map<String, Object> msgLang = jsonUtil.getMap(language);
 				str_MsgSet = jsonUtil.Map2json(msgLang);
 			}
-			logger.info("str_MsgSet:" + str_MsgSet);
+			// logger.info("str_MsgSet:" + str_MsgSet);
 
 			/* 当前问卷的提交状态 */
 			String strSubState = "A";
@@ -703,16 +708,16 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					"SELECT TZ_APP_SUB_STA FROM PS_TZ_DC_INS_T WHERE TZ_APP_INS_ID = ?", new Object[] { surveyInsId },
 					"String");
 			String strDtgz = psTzDcWjDyTWithBLOBs.getTzDcWjDtgz();
-			if(StringUtils.equals("S", strSubState)){
-				if(StringUtils.equals("2", strDtgz)){
-		            boolean boolStatus = surveryRulesImpl.checkSurveryStatus(psTzDcWjDyTWithBLOBs, language);
-		            boolean boolDate = surveryRulesImpl.checkSurveryDate(psTzDcWjDyTWithBLOBs, language);
-		            if(boolStatus && boolDate){
-		            	readonly = "N";
-		            }else{
-		            	readonly = "Y";
-		            }
-				}else{
+			if (StringUtils.equals("S", strSubState)) {
+				if (StringUtils.equals("2", strDtgz)) {
+					boolean boolStatus = surveryRulesImpl.checkSurveryStatus(psTzDcWjDyTWithBLOBs, language);
+					boolean boolDate = surveryRulesImpl.checkSurveryDate(psTzDcWjDyTWithBLOBs, language);
+					if (boolStatus && boolDate) {
+						readonly = "N";
+					} else {
+						readonly = "Y";
+					}
+				} else {
 					readonly = "Y";
 				}
 			}
@@ -729,16 +734,16 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_M_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
-							submit, language, strPre, strNext, strSubState, uniqueNum, path,readonly,strSurveySubmit);
+							submit, language, strPre, strNext, strSubState, uniqueNum, path, readonly, strSurveySubmit);
 				} else {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
-							submit, language, strPre, strNext, strSubState, uniqueNum, path,readonly,strSurveySubmit);
+							submit, language, strPre, strNext, strSubState, uniqueNum, path, readonly, strSurveySubmit);
 				}
 
 				strReturn = strReturn.replaceAll("\\~", "\\$");
-				logger.info("返回到TZ_SURVEY_PAGE_HTML 或TZ_SURVEY_PAGE_M_HTML");
+				logger.info("RETURN TZ_SURVEY_PAGE_HTML OR TZ_SURVEY_PAGE_M_HTML");
 				logger.info("surveyID:" + surveyID);
 				logger.info("surveyInsId:" + surveyInsId);
 				logger.info("uniqueNum:" + uniqueNum);
@@ -755,6 +760,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_ERROR_HTML", header,
 							strMsg, footer, path);
 				}
+				logger.info("RETURN TZ_SURVEY_ERROR_M_HTML OR TZ_SURVEY_ERROR_HTML");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -891,7 +897,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 */
 	private boolean delSurveyIns(String surveyInsId) {
 		System.out.println("running delSurveyIns");
-		
+
 		try {
 			if (surveyInsId != null && !surveyInsId.equals("")) {
 				/* 在线调查答卷存储表 */
@@ -920,7 +926,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 */
 	private void saveSLTypeIns(Map<String, Object> jsonXxxMap, String surveyInsId) {
 		System.out.println("running saveSLTypeIns");
-		
+
 		PsTzDcCcT psTzDcCcT = new PsTzDcCcT();
 		psTzDcCcT.setTzAppInsId(Long.valueOf(surveyInsId));
 		psTzDcCcT.setTzXxxBh(jsonXxxMap.get("itemId") == null ? null : jsonXxxMap.get("itemId").toString());
@@ -952,8 +958,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 */
 	private void saveDTypeIns(Map<String, Object> jsonXxxMap, String surveyInsId) {
 		System.out.println("running saveDTypeIns");
-		
-		
+
 		PsTzDcDhccT psTzDcDhccT = null;
 
 		if (jsonXxxMap.containsKey("option") && jsonXxxMap.get("option") != null) {
@@ -995,7 +1000,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 */
 	private void saveTableTypeIns(Map<String, Object> jsonXxxMap, String surveyInsId) {
 		System.out.println("running saveTableTypeIns");
-		
+
 		PsTzDcdjBgtT psTzDcdjBgtT = null;
 
 		if (jsonXxxMap.containsKey("child") && jsonXxxMap.get("child") != null) {
@@ -1032,9 +1037,9 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	 */
 	private void saveAttrTypeIns(Map<String, Object> jsonXxxMap, String surveyInsId, String Oprid,
 			HttpServletRequest request) {
-		
+
 		System.out.println("running saveAttrTypeIns");
-		
+
 		PsTzDcWjattT psTzDcWjattT = null;
 		PsTzDcWjattchT psTzDcWjattchT = null;
 
@@ -1119,7 +1124,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	private String checkFiledValid(String surveyID, String surveyInsId) {
 
 		System.out.println("running checkFiledValid");
-		
+
 		String str_msg = "";
 
 		/* 信息项编号 */

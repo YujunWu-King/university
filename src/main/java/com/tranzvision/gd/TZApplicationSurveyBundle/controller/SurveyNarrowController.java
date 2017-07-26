@@ -36,7 +36,7 @@ public class SurveyNarrowController {
 		String strRetContent = "";
 
 		// 错误信息
-		String[] errorMsg = { "0", "" };
+		//String[] errorMsg = { "0", "" };
 		
 		String tplId2=request.getParameter("SURVEY_WJ_ID");
 		
@@ -88,7 +88,7 @@ public class SurveyNarrowController {
 		}
 */
 		
-		System.out.println("strComContent====="+strRetContent);
+		//System.out.println("strComContent====="+strRetContent);
 		return strRetContent;
 	}
 	
