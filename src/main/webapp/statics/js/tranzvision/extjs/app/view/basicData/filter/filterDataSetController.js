@@ -309,12 +309,19 @@
         var editJson = "";
         var editfldJson="";
         //资源信息列表
-		var grid = this.getView().child('grid');
-        //资源信息数据
-        var store = grid.getStore();
+//		var grid = this.getView().child('grid');
+//        //资源信息数据
+//        var store = grid.getStore();
+        
+        var tabpanel = this.getView().child("tabpanel");
+		var grid1 = tabpanel.down('grid[name=filterCondGrid]');
+		var grid2 = tabpanel.down('grid[name=filterRoleGrid]');
+		var store1 = grid1.getStore();
+		var store2 = grid2.getStore();
+        
         
         //列表中修改的记录
-		var mfRecs = store.getModifiedRecords(); 
+		var mfRecs = store1.getModifiedRecords(); 
 		for(var i=0;i<mfRecs.length;i++){
 			if(editfldJson == ""){
 				editfldJson = Ext.JSON.encode(mfRecs[i].data);
@@ -337,7 +344,7 @@
         //删除json字符串
         var removeJson = "";
         //删除记录
-        var removeRecs = store.getRemovedRecords();
+        var removeRecs = store1.getRemovedRecords();
         for(var i=0;i<removeRecs.length;i++){
             if(removeJson == ""){
                 removeJson = Ext.JSON.encode(removeRecs[i].data);
@@ -345,13 +352,36 @@
                 removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
             }
     	}
-        if(removeJson != ""){
-            if(comParams == ""){
-                comParams = '"delete":[' + removeJson + "]";
+        
+        
+        var removeJsonRole = "";
+        var removeRoles = store2.getRemovedRecords();
+        for(var i=0;i<removeRoles.length;i++){
+            if(removeJsonRole == ""){
+            	removeJsonRole = Ext.JSON.encode(removeRoles[i].data);
             }else{
-                comParams = comParams + ',"delete":[' + removeJson + "]";
+            	removeJsonRole = removeJsonRole + ','+Ext.JSON.encode(removeRoles[i].data);
+            }
+    	}
+        var removeJsonData = '{"typeFlag":"Condition","removeList":[' + removeJson + ']}';
+		removeJsonData = removeJsonData + "," + '{"typeFlag":"Roles","removeList":[' + removeJsonRole + ']}';
+		console.log(removeJsonData);
+        
+//        if(removeJson != ""){
+//            if(comParams == ""){
+//                comParams = '"delete":[' + removeJson + "]";
+//            }else{
+//                comParams = comParams + ',"delete":[' + removeJson + "]";
+//            }
+//        }
+		if(removeJsonData != ""){
+            if(comParams == ""){
+                comParams = '"delete":[' + removeJsonData + "]";
+            }else{
+                comParams = comParams + ',"delete":[' + removeJsonData + "]";
             }
         }
+        
         //提交参数
         var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FLDDST_FLD_STD","OperateType":"U","comParams":{'+comParams+'}}';
         return tzParams;
@@ -498,4 +528,127 @@
 		var win = btn.findParentByType("window");
 		win.close();
 	},
+    
+    
+    addRole:function(btn){
+	        var arrAddRoleValue=[];
+	        
+	        var form = this.getView().child("form").getForm();
+    		var formParams = form.getValues();
+    		var CompID = formParams['ComID'];
+    		var PageID = formParams['PageID'];
+       	 	var ViewMc = formParams['ViewMc'];
+	        
+       	 	
+       	 	var tabpanel = this.getView().child("tabpanel");
+    	 	var grid = tabpanel.down('grid[name=filterRoleGrid]');
+			var store = grid.getStore();
+       	 	
+	        
+    	 Ext.tzShowPromptSearch({
+	            recname: 'PSROLEDEFN_VW',
+	            searchDesc: '新增数据集角色',
+	            condition:{
+//	                presetFields:{
+//	                	TZ_JG_ID:{
+//	                        value: Ext.tzOrgID,
+//	                        type: '01'
+//	                    }
+//	                },
+	                srhConFields:{
+	                	ROLENAME:{
+	                        desc:'角色名称',
+	                        operator:'07',
+	                        type:'01'
+	                    },
+	                    DESCR:{
+	                        desc:'描述',
+	                        operator:'07',
+	                        type:'01'
+	                    }
+	                }
+	            },
+	            srhresult:{
+	            	ROLENAME:'角色名称',
+	            	DESCR: '描述'
+	            },
+	            multiselect: true,
+	            callback: function(selection){
+	                if (selection.length>0){
+	                    for(j=0;j<selection.length;j++){
+	                    	arrAddRoleValue.push(selection[j].data.ROLENAME);	                       
+	                    };
+	                    
+	      
+	            		var roleId = arrAddRoleValue;
+	            		RoleID =roleId;
+	            		
+	            		var roleNum=arrAddRoleValue.length;
+	            		
+	        			var oprIDJson = "";
+	        			oprIDJson = '{"CompID":"' + CompID + '","PageID":"' + PageID + '","ViewMc":"' + ViewMc + '","roleNum":"' + roleNum + '","RoleID":"' + RoleID + '"}';
+
+	        			
+	        			var comParamsOPRID = "";
+	        			if(oprIDJson != ""){
+	        				comParamsOPRID = '"add":[' + oprIDJson + "]";
+	        			}
+	        			var tzParams2 = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FLDDST_CON_STD","OperateType":"U","comParams":{'+comParamsOPRID+'}}';
+	        			console.log(tzParams2);
+	        		
+	        				            		
+//	        			Ext.tzSubmit(tzParams2,function(responseData){
+//	                        if(store.isLoaded()){
+//	                            store.reload();
+//	                        }
+//	        			},"",true,this);
+	        			
+	        			Ext.tzSubmit(tzParams2,function(resp){
+	        				 if(store.isLoaded()){
+		                            store.reload();
+		                        }
+	        			},"",true,this,RoleID);
+	        			
+	            		
+	                }
+	            }
+	        
+    	 })
+    },
+    
+    
+//    deleteConds: function(btn){
+    deleteRole: function(btn){
+        //资源信息列表
+    	var tabpanel = this.getView().child("tabpanel");
+	 	var grid = tabpanel.down('grid[name=filterRoleGrid]');
+		console.log(grid);
+        //选中行
+        var selList = grid.getSelectionModel().getSelection();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","请选择要删除的记录");
+            return;
+        }else{
+            Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+                if(btnId == 'yes'){
+                    var store = grid.store;
+                    store.remove(selList);
+                }
+            },this);
+        }
+    },
+    
+//    deleteCond: function(view, rowIndex){
+    deleteSelectedRole: function(view, rowIndex){
+    	Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+			if(btnId == 'yes'){					   
+			   var store = view.findParentByType("grid").store;
+			   store.removeAt(rowIndex);
+			}												  
+		},this);
+    },
+	
+	
 });

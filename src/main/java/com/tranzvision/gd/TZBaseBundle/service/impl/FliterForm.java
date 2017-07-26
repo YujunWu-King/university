@@ -36,6 +36,7 @@ public class FliterForm extends FrameworkImpl {
 		// 返回值;
 		String strRet = "{}";
 		String strRetDataSet = "{}";
+		String isDisplay="N";
 
 		try {
 			JacksonUtil jacksonUtil = new JacksonUtil();
@@ -43,8 +44,11 @@ public class FliterForm extends FrameworkImpl {
 			// String cfgSrhId = CLASSJson.getString("cfgSrhId");
 			jacksonUtil.json2Map(strParams);
 			String cfgSrhId = "";
+			String currentUser = "";
 			try{
 				cfgSrhId = jacksonUtil.getString("cfgSrhId");
+				currentUser=jacksonUtil.getString("currentUser");
+				System.out.println("currentUser========"+currentUser);
 			}catch(Exception e){
 				errorMsg[0] = "1";
 				errorMsg[1] = "未获取对应的可配置搜索，请与管理员联系";
@@ -310,6 +314,34 @@ public class FliterForm extends FrameworkImpl {
 			strRet = "{" + fldJson + "}";
 			/*数据集*/
 			
+			String strDataSetRole;
+			String roleOprId;
+			String roleExisted;
+			
+			String RoleOprIdSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID=?";
+			roleOprId = jdbcTemplate.queryForObject(RoleOprIdSql, new Object[] { currentUser }, "String");
+			
+			
+			String DataSetRoleSql = "SELECT * FROM PSROLEUSER WHERE ROLEUSER=?";
+			List<Map<String, Object>> listDateSetRole = jdbcTemplate.queryForList(DataSetRoleSql,new Object[] {roleOprId});
+			if(listDateSetRole!=null && listDateSetRole.size()>0){
+				for (Map<String, Object> mapDataSetRole : listDateSetRole) {
+					strDataSetRole = mapDataSetRole.get("ROLENAME") == null ? "" : String.valueOf(mapDataSetRole.get("ROLENAME"));
+					
+					String isRoleExistSql = "SELECT * FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+					List<Map<String, Object>> isRoleExist = jdbcTemplate.queryForList(isRoleExistSql,new Object[] { comId, pageId, viewName });
+					if(isRoleExist!=null && isRoleExist.size()>0){
+						for (Map<String, Object> mapIsRoleExist : isRoleExist) {
+							roleExisted = mapIsRoleExist.get("ROLENAME") == null ? "" : String.valueOf(mapIsRoleExist.get("ROLENAME"));
+							System.out.println(strDataSetRole+"========"+roleExisted);
+							if (roleExisted.equals(strDataSetRole)) {
+								isDisplay="Y";
+							}
+						}						
+					}
+				}
+			}
+						
 			ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 			String strFltDstOrder,strFltDstFld,strFltDstSrchRec,strFltDstDesc,strFltDstDefault;
 			String cfgDataSetSql = "SELECT TZ_FLTDST_ORDER,TZ_FLTDST_FLD,TZ_FLTDST_SRCH_REC,TZ_FLTDST_DESC,TZ_FLTDST_DEFAULT from PS_TZ_FLTDST_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? AND TZ_FLTDST_STATUS = 'Y' order by TZ_FLTDST_ORDER";
@@ -341,7 +373,7 @@ public class FliterForm extends FrameworkImpl {
 		
 		//mapRet.put("root", listData);
 		
-		strRet = "{\"formData\":" + strRet + ",\"formDataSet\":" + strRetDataSet + "}";
+		strRet = "{\"formData\":" + strRet + ",\"formDataSet\":" + strRetDataSet +",\"isDisplay\":\"" + isDisplay + "\"}";
 		return strRet;
 	}
 

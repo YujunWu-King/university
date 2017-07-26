@@ -1,29 +1,20 @@
 package com.tranzvision.gd.TZConfigurableSearchMgBundle.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFilterDfnTMapper;
-import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFilterFldTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFltDstConTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFltDstFldTMapper;
-import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnT;
-import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnTKey;
-import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldT;
-import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldTKey;
-import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfT;
-import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfTKey;
+import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFltdstRoleTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConTKey;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstFldT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstFldTKey;
+import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltdstRoleT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -39,6 +30,9 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzFltDstConTMapper psTzFltDstConTMapper;
+	
+	@Autowired
+	private PsTzFltdstRoleTMapper psTzFltdstRoleTMapper;
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -235,4 +229,81 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
+	
+	@Override
+	public String tzAdd(String[] actData, String[] errMsg) {
+		String strRet = "{}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			int num = 0;
+
+			for (num = 0; num < actData.length; num++) {
+				
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
+				if (jacksonUtil.containsKey("CompID")&&jacksonUtil.containsKey("PageID")&&jacksonUtil.containsKey("ViewMc")&&jacksonUtil.containsKey("RoleID")) {
+					
+					String strCompID = jacksonUtil.getString("CompID");
+					String strPageID = jacksonUtil.getString("PageID");
+					String strViewID = jacksonUtil.getString("ViewMc");
+					String strRoleIDAll = jacksonUtil.getString("RoleID");
+					
+					String[] strRoleID=strRoleIDAll.split(",");
+					
+					
+					for (int i = 0; i < strRoleID.length; i++) {
+						String isExistSql = "SELECT count(1) FROM PS_TZ_FLTDST_ROLE_T WHERE TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and ROLENAME=?";
+						int count = jdbcTemplate.queryForObject(isExistSql, new Object[] { strCompID, strPageID, strViewID , strRoleID[i]}, "Integer");
+
+						if (count == 1) {
+							continue;
+						} else {
+							String strRoleNameSql = "SELECT DESCR FROM PSROLEDEFN_VW where ROLENAME=?";
+							String strRoleName = jdbcTemplate.queryForObject(strRoleNameSql, new Object[] { strRoleID[i]}, "String");
+							
+							String num_max = "";
+							int num_max_num = 0;
+							String sqlGetMaxNum = "select TZ_FLTDST_ORDER from PS_TZ_FLTDST_ROLE_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME=? ORDER BY TZ_FLTDST_ORDER DESC LIMIT 0,1";
+							num_max = jdbcTemplate.queryForObject(sqlGetMaxNum, new Object[] { strCompID, strPageID, strViewID },
+									"String");
+							if(num_max==null||"".equals(num_max)){
+								num_max_num = 1;
+							}else{
+								num_max_num = Integer.parseInt(num_max) + 1;
+							}
+							
+							PsTzFltdstRoleT psTzFltdstRoleT = new PsTzFltdstRoleT();
+
+							psTzFltdstRoleT.setTzComId(strCompID);
+							psTzFltdstRoleT.setTzPageId(strPageID);
+							psTzFltdstRoleT.setTzViewName(strViewID);
+							psTzFltdstRoleT.setTzFltdstOrder(num_max_num);
+							psTzFltdstRoleT.setRolename(strRoleID[i]);
+							psTzFltdstRoleT.setDescr(strRoleName);
+
+							int k = psTzFltdstRoleTMapper.insert(psTzFltdstRoleT);
+
+							if (k > 0) {
+							} else {
+								errMsg[0] = "1";
+								errMsg[1] = "信息保存失败";
+							}
+						}
+						
+					}
+					
+
+	
+				} else {
+					errMsg[0] = "1";
+					errMsg[1] = "参数错误";
+				}
+			}
+		} catch (Exception e) {
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return strRet;
+	}
+	
 }

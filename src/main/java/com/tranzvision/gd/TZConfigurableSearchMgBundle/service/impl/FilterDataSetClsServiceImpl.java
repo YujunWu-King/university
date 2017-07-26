@@ -14,6 +14,7 @@ import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFilterDfnTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFilterFldTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFltDstConTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFltDstFldTMapper;
+import com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFltdstRoleTMapper;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterDfnTKey;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldT;
@@ -24,6 +25,7 @@ import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConTKey;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstFldT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstFldTKey;
+import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltdstRoleT;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -39,6 +41,10 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private PsTzFltDstConTMapper psTzFltDstConTMapper;
+	
+	@Autowired
+	private PsTzFltdstRoleTMapper psTzFltdstRoleTMapper;
+	
 
 	@Autowired
 	private SqlQuery jdbcTemplate;
@@ -112,53 +118,93 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 			String str_com_id = jacksonUtil.getString("ComID");
 			String str_page_id = jacksonUtil.getString("PageID");
 			String str_view_name = jacksonUtil.getString("ViewMc");
+			String queryID = jacksonUtil.getString("queryID");
 			String strFieldOrder = jacksonUtil.getString("fieldOrder");
 			int numFieldOrder = Integer.parseInt(strFieldOrder);
 			int total = 0;
 			
-			// 查询总数;
-			String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FLTDST_CON_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
-			total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name },
-					"Integer");
+			if ("1".equals(queryID)) {
+				// 查询总数;
+				String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FLTDST_CON_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+				total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name },
+						"Integer");
 
-			String sql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN FROM PS_TZ_FLTDST_CON_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? AND TZ_FLTDST_ORDER = ? order by TZ_FLTDST_C_ORDER asc limit ?,?";
-			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
-					new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder, numStart, numLimit });
-			if (list != null && list.size()>0) {
-				for (int i = 0; i < list.size(); i++) {
-					String strOrderCond =  String.valueOf(list.get(i).get("TZ_FLTDST_C_ORDER"));
-					String strDstAndOr = (String) list.get(i).get("TZ_FLTDST_AND_OR");
-					String strLeftParen = (String) list.get(i).get("TZ_FLTDST_L_PAREN");
-					String strDstCondFld = (String) list.get(i).get("TZ_FLTDST_CON_FLD");
-					String strDstOperator= (String) list.get(i).get("TZ_FLTDST_OPERATOR");
-					String strDstCondValueType = (String) list.get(i).get("TZ_FLTDST_FLD_V_T");
-					String strDstCondFldValue = (String) list.get(i).get("TZ_FLTDST_FLD_VAL");
-					String strRightParen = (String) list.get(i).get("TZ_FLTDST_R_PAREN");
+				String sql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN FROM PS_TZ_FLTDST_CON_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? AND TZ_FLTDST_ORDER = ? order by TZ_FLTDST_C_ORDER asc limit ?,?";
+				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
+						new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder, numStart, numLimit });
+				if (list != null && list.size()>0) {
+					for (int i = 0; i < list.size(); i++) {
+						String strOrderCond =  String.valueOf(list.get(i).get("TZ_FLTDST_C_ORDER"));
+						String strDstAndOr = (String) list.get(i).get("TZ_FLTDST_AND_OR");
+						String strLeftParen = (String) list.get(i).get("TZ_FLTDST_L_PAREN");
+						String strDstCondFld = (String) list.get(i).get("TZ_FLTDST_CON_FLD");
+						String strDstOperator= (String) list.get(i).get("TZ_FLTDST_OPERATOR");
+						String strDstCondValueType = (String) list.get(i).get("TZ_FLTDST_FLD_V_T");
+						String strDstCondFldValue = (String) list.get(i).get("TZ_FLTDST_FLD_VAL");
+						String strRightParen = (String) list.get(i).get("TZ_FLTDST_R_PAREN");
+						
+											
+						String strDstOperatorDesc = jdbcTemplate.queryForObject("SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_FLTDST_OPERATOR' AND TZ_ZHZ_ID = ? AND TZ_EFF_STATUS='A' limit 0,1", 
+								new Object[]{strDstOperator},"String");
+						
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("ComID", str_com_id);
+						map.put("PageID", str_page_id);
+						map.put("ViewMc", str_view_name);
+						map.put("fieldOrder", strFieldOrder);
+						map.put("orderCond", strOrderCond);
+						map.put("dstAndOr", strDstAndOr);
+						map.put("leftParen", strLeftParen);
+						map.put("dstCondFld", strDstCondFld);
+						map.put("dstOperator", strDstOperator);
+						map.put("dstOperatorDesc", strDstOperatorDesc);
+						map.put("dstCondValueType", strDstCondValueType);
+						map.put("dstCondFldValue", strDstCondFldValue);
+						map.put("rightParen", strRightParen);
+						listData.add(map);
+					}
 					
-										
-					String strDstOperatorDesc = jdbcTemplate.queryForObject("SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_FLTDST_OPERATOR' AND TZ_ZHZ_ID = ? AND TZ_EFF_STATUS='A' limit 0,1", 
-							new Object[]{strDstOperator},"String");
-					
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("ComID", str_com_id);
-					map.put("PageID", str_page_id);
-					map.put("ViewMc", str_view_name);
-					map.put("fieldOrder", strFieldOrder);
-					map.put("orderCond", strOrderCond);
-					map.put("dstAndOr", strDstAndOr);
-					map.put("leftParen", strLeftParen);
-					map.put("dstCondFld", strDstCondFld);
-					map.put("dstOperator", strDstOperator);
-					map.put("dstOperatorDesc", strDstOperatorDesc);
-					map.put("dstCondValueType", strDstCondValueType);
-					map.put("dstCondFldValue", strDstCondFldValue);
-					map.put("rightParen", strRightParen);
-					listData.add(map);
+					mapRet.replace("total",total);
+					mapRet.replace("root", listData);
 				}
-				
-				mapRet.replace("total",total);
-				mapRet.replace("root", listData);
 			}
+			
+			if ("2".equals(queryID)) {
+				// 查询总数;
+				String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+				
+				total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name },
+						"Integer");
+
+				String sql = "SELECT * FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+				
+				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
+						new Object[] { str_com_id, str_page_id, str_view_name});
+				if (list != null && list.size()>0) {
+					for (int i = 0; i < list.size(); i++) {
+						
+						String strRoleOrder = String.valueOf(list.get(i).get("TZ_FLTDST_ORDER"));
+						String strRoleName = (String) list.get(i).get("ROLENAME");
+						String strRoleDesc = (String) list.get(i).get("DESCR");
+						
+						
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("ComID", str_com_id);
+						map.put("PageID", str_page_id);
+						map.put("ViewID", str_view_name);
+						map.put("orderNum", strRoleOrder);
+						map.put("roleID", strRoleName);
+						map.put("roleDesc", strRoleDesc);
+						
+						listData.add(map);
+					}
+					
+					mapRet.replace("total",total);
+					mapRet.replace("root", listData);
+				}
+			}
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -342,19 +388,67 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 				String strForm = actData[num];
 				// 将字符串转换成json;
 				jacksonUtil.json2Map(strForm);
+				
+				String strFlag = jacksonUtil.getString("typeFlag");
 				// 信息内容;
-				String str_com_id = jacksonUtil.getString("ComID");
-				String str_page_id = jacksonUtil.getString("PageID");
-				String str_view_name = jacksonUtil.getString("ViewMc");
-				String strFieldOrder = jacksonUtil.getString("fieldOrder");
-				String strCondOrder =  jacksonUtil.getString("orderCond");
-				PsTzFltDstConTKey psTzFltDstConTKey = new PsTzFltDstConTKey();
-				psTzFltDstConTKey.setTzComId(str_com_id);
-				psTzFltDstConTKey.setTzPageId(str_page_id);
-				psTzFltDstConTKey.setTzViewName(str_view_name);
-				psTzFltDstConTKey.setTzFltdstOrder(Integer.valueOf(strFieldOrder));
-				psTzFltDstConTKey.setTzFltdstCOrder(Integer.valueOf(strCondOrder));
-				psTzFltDstConTMapper.deleteByPrimaryKey(psTzFltDstConTKey);
+				if ("Condition".equals(strFlag)) {
+					if (jacksonUtil.containsKey("removeList")) {
+						List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("removeList");
+						if(jsonArray != null && jsonArray.size()>0){
+							for (int j = 0; j < jsonArray.size(); j++) {
+								Map<String, Object> Json2 = jsonArray.get(j);
+								
+								// 信息内容;
+								String str_com_id = (String) Json2.get("ComID");
+								String str_page_id = (String) Json2.get("PageID");
+								String str_view_name = (String) Json2.get("ViewMc");
+								String strFieldOrder = (String) Json2.get("fieldOrder");
+								String strCondOrder =  (String) Json2.get("orderCond");
+								PsTzFltDstConTKey psTzFltDstConTKey = new PsTzFltDstConTKey();
+								psTzFltDstConTKey.setTzComId(str_com_id);
+								psTzFltDstConTKey.setTzPageId(str_page_id);
+								psTzFltDstConTKey.setTzViewName(str_view_name);
+								psTzFltDstConTKey.setTzFltdstOrder(Integer.valueOf(strFieldOrder));
+								psTzFltDstConTKey.setTzFltdstCOrder(Integer.valueOf(strCondOrder));
+								psTzFltDstConTMapper.deleteByPrimaryKey(psTzFltDstConTKey);
+							}
+						}
+					}
+				}
+				
+				if ("Roles".equals(strFlag)) {
+					if (jacksonUtil.containsKey("removeList")) {
+						List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("removeList");
+						if(jsonArray != null && jsonArray.size()>0){
+							for (int j = 0; j < jsonArray.size(); j++) {
+								Map<String, Object> Json2 = jsonArray.get(j);
+								
+								// 信息内容;
+								String str_com_id = (String) Json2.get("ComID");
+								String str_page_id = (String) Json2.get("PageID");
+								String str_view_name = (String) Json2.get("ViewID");
+								String strOrderNum = (String) Json2.get("orderNum");
+								String strRoleID =  (String) Json2.get("roleID");
+								String strRoleDesc =  (String) Json2.get("roleDesc");
+
+								System.out.println("strRoleDesc======"+strRoleDesc);
+								
+								PsTzFltdstRoleT psTzFltdstRoleT=new PsTzFltdstRoleT();
+								psTzFltdstRoleT.setTzComId(str_com_id);
+								psTzFltdstRoleT.setTzPageId(str_page_id);
+								psTzFltdstRoleT.setTzViewName(str_view_name);
+								psTzFltdstRoleT.setTzFltdstOrder(Integer.valueOf(strOrderNum));
+								psTzFltdstRoleT.setRolename(strRoleID);
+								psTzFltdstRoleT.setDescr(strRoleDesc);
+								
+								psTzFltdstRoleTMapper.deleteByPrimaryKey(psTzFltdstRoleT);
+							}
+						}
+					}
+				}
+				
+				
+				
 			
 			}
 		} catch (Exception e) {
