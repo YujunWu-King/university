@@ -411,6 +411,7 @@
 
 		//提交参数
         var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FLDDST_CON_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        console.log(tzParams);
 		if (form.isValid()) {
 			//获取组件注册信息参数
 

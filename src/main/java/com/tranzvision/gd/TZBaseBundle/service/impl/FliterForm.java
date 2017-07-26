@@ -996,7 +996,7 @@ public class FliterForm extends FrameworkImpl {
 									dataSetWhere = dataSetWhere + "WHERE " + dateSetSrchRec + "." + dateSetField + "=" + tableName + "." + dateSetField;
 									
 									//ArrayList<String> dataSetCondList = new ArrayList<String>();
-									String dataSetCondSql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN "
+									String dataSetCondSql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN,TZ_NO_UPORLOW "
 											+ "FROM PS_TZ_FLTDST_CON_T "
 											+ "WHERE TZ_COM_ID= ? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME= ? AND TZ_FLTDST_ORDER = ? "
 											+ "ORDER BY TZ_FLTDST_C_ORDER";
@@ -1014,6 +1014,7 @@ public class FliterForm extends FrameworkImpl {
 											String strDstCondValueType = dataSetCondList.get(i).get("TZ_FLTDST_FLD_V_T") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_FLD_V_T"));
 											String strDstCondFldValue = dataSetCondList.get(i).get("TZ_FLTDST_FLD_VAL") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_FLD_VAL"));
 											String strRightParen = dataSetCondList.get(i).get("TZ_FLTDST_R_PAREN") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_R_PAREN"));
+											String strUpOrLow = dataSetCondList.get(i).get("TZ_NO_UPORLOW") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_NO_UPORLOW"));
 											if(i==0){
 												dataSetWhere = dataSetWhere + " AND ";
 											}
@@ -1061,7 +1062,12 @@ public class FliterForm extends FrameworkImpl {
 												strDstCondValue = " str_to_date('" + strDstCondValue + "','%Y-%m-%d %H:%i')";
 											} else {
 												// 字符串;
-												strDstCondValue = "'" + strDstCondValue + "'";
+												if ("A".equals(strUpOrLow)) {
+													strDstCondValue = "'" + strDstCondValue.toUpperCase() + "'";
+//													System.out.println("大写吧====="+strDstCondValue);
+												}else {
+													strDstCondValue = "'" + strDstCondValue + "'";
+												}												
 											}
 											
 											/*操作符*/
@@ -1137,7 +1143,7 @@ public class FliterForm extends FrameworkImpl {
 						dataSetWhere = dataSetWhere + "WHERE " + dateSetSrchRec + "." + dateSetField + "=" + tableName + "." + dateSetField;
 						
 						//ArrayList<String> dataSetCondList = new ArrayList<String>();
-						String dataSetCondSql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN "
+						String dataSetCondSql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN,TZ_NO_UPORLOW "
 								+ "FROM PS_TZ_FLTDST_CON_T "
 								+ "WHERE TZ_COM_ID= ? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME= ? AND TZ_FLTDST_ORDER = ? "
 								+ "ORDER BY TZ_FLTDST_C_ORDER";
@@ -1155,6 +1161,7 @@ public class FliterForm extends FrameworkImpl {
 								String strDstCondValueType = dataSetCondList.get(i).get("TZ_FLTDST_FLD_V_T") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_FLD_V_T"));
 								String strDstCondFldValue = dataSetCondList.get(i).get("TZ_FLTDST_FLD_VAL") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_FLD_VAL"));
 								String strRightParen = dataSetCondList.get(i).get("TZ_FLTDST_R_PAREN") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_FLTDST_R_PAREN"));
+								String strUpOrLow = dataSetCondList.get(i).get("TZ_NO_UPORLOW") == null ? "" : String.valueOf(dataSetCondList.get(i).get("TZ_NO_UPORLOW"));
 								if(i==0){
 									dataSetWhere = dataSetWhere + " AND ";
 								}
@@ -1186,7 +1193,12 @@ public class FliterForm extends FrameworkImpl {
 									DateFormat formatDate = new SimpleDateFormat(formatType);
 									strDstCondValue = formatDate.format(new Date());
 								}else{
-									strDstCondValue = strDstCondFldValue;
+									// 字符串;
+									if ("A".equals(strUpOrLow)) {
+										strDstCondValue = strDstCondFldValue.toUpperCase();
+									}else {
+										strDstCondValue = strDstCondFldValue;
+									}
 								}
 	
 								if (intTypeString.contains(strDataSetFldTypeSql)) {

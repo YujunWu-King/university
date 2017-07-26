@@ -15,6 +15,8 @@ public class PsTzFltDstConT extends PsTzFltDstConTKey {
 
     private String tzFltdstRParen;
 
+    private String tzNoUporlow;
+
     public String getTzFltdstAndOr() {
         return tzFltdstAndOr;
     }
@@ -69,5 +71,13 @@ public class PsTzFltDstConT extends PsTzFltDstConTKey {
 
     public void setTzFltdstRParen(String tzFltdstRParen) {
         this.tzFltdstRParen = tzFltdstRParen == null ? null : tzFltdstRParen.trim();
+    }
+
+    public String getTzNoUporlow() {
+        return tzNoUporlow;
+    }
+
+    public void setTzNoUporlow(String tzNoUporlow) {
+        this.tzNoUporlow = tzNoUporlow == null ? null : tzNoUporlow.trim();
     }
 }

@@ -80,6 +80,7 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 				String strDstCondValueType = psTzFltDstConT.getTzFltdstFldVT() == null ? "" : psTzFltDstConT.getTzFltdstFldVT();
 				String strDstCondFldValue = psTzFltDstConT.getTzFltdstFldVal() == null ? "" : psTzFltDstConT.getTzFltdstFldVal();
 				String strRightParen = psTzFltDstConT.getTzFltdstRParen() == null ? "" : psTzFltDstConT.getTzFltdstRParen();
+				String strUpOrLow = psTzFltDstConT.getTzNoUporlow() == null ? "" : psTzFltDstConT.getTzNoUporlow();
 				
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("ComID", str_com_id);
@@ -96,6 +97,7 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 				map.put("dstCondValueType", strDstCondValueType);
 				map.put("dstCondFldValue", strDstCondFldValue);
 				map.put("rightParen", strRightParen);
+				map.put("fltFldNoUpperLower", strUpOrLow);
 
 				returnJsonMap.replace("formData", map);
 			}else{
@@ -149,6 +151,7 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 				String strDstCondValueType = (String) Json.get("dstCondValueType");
 				String strDstCondFldValue = (String) Json.get("dstCondFldValue");
 				String strRightParen = (String) Json.get("rightParen");
+				String strUpOrLowCase = (String) Json.get("fltFldNoUpperLower");
 
 				String num_max = "";
 				int num_max_num = 0;
@@ -176,6 +179,8 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 					psTzFltDstConT.setTzFltdstFldVal(strDstCondFldValue);
 					psTzFltDstConT.setTzFltdstFldVT(strDstCondValueType);
 					psTzFltDstConT.setTzFltdstRParen(strRightParen);
+					psTzFltDstConT.setTzNoUporlow(strUpOrLowCase);
+										
 					
 					int i = psTzFltDstConTMapper.insert(psTzFltDstConT);
 					
@@ -204,6 +209,7 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 					psTzFltDstConT.setTzFltdstFldVal(strDstCondFldValue);
 					psTzFltDstConT.setTzFltdstFldVT(strDstCondValueType);
 					psTzFltDstConT.setTzFltdstRParen(strRightParen);
+					psTzFltDstConT.setTzNoUporlow(strUpOrLowCase);
 					
 					int i = psTzFltDstConTMapper.updateByPrimaryKeySelective(psTzFltDstConT);
 					

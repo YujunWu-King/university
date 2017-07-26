@@ -14,11 +14,12 @@
     <result column="TZ_FLTDST_FLD_V_T" property="tzFltdstFldVT" jdbcType="VARCHAR" />
     <result column="TZ_FLTDST_FLD_VAL" property="tzFltdstFldVal" jdbcType="VARCHAR" />
     <result column="TZ_FLTDST_R_PAREN" property="tzFltdstRParen" jdbcType="VARCHAR" />
+    <result column="TZ_NO_UPORLOW" property="tzNoUporlow" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, TZ_FLTDST_ORDER, TZ_FLTDST_C_ORDER, TZ_FLTDST_AND_OR, 
     TZ_FLTDST_L_PAREN, TZ_FLTDST_CON_FLD, TZ_FLTDST_OPERATOR, TZ_FLTDST_FLD_V_T, TZ_FLTDST_FLD_VAL, 
-    TZ_FLTDST_R_PAREN
+    TZ_FLTDST_R_PAREN, TZ_NO_UPORLOW
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConTKey" >
     select 
@@ -42,13 +43,13 @@
     insert into PS_TZ_FLTDST_CON_T (TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, 
       TZ_FLTDST_ORDER, TZ_FLTDST_C_ORDER, TZ_FLTDST_AND_OR, 
       TZ_FLTDST_L_PAREN, TZ_FLTDST_CON_FLD, TZ_FLTDST_OPERATOR, 
-      TZ_FLTDST_FLD_V_T, TZ_FLTDST_FLD_VAL, TZ_FLTDST_R_PAREN
-      )
+      TZ_FLTDST_FLD_V_T, TZ_FLTDST_FLD_VAL, TZ_FLTDST_R_PAREN, 
+      TZ_NO_UPORLOW)
     values (#{tzComId,jdbcType=VARCHAR}, #{tzPageId,jdbcType=VARCHAR}, #{tzViewName,jdbcType=VARCHAR}, 
       #{tzFltdstOrder,jdbcType=INTEGER}, #{tzFltdstCOrder,jdbcType=INTEGER}, #{tzFltdstAndOr,jdbcType=VARCHAR}, 
       #{tzFltdstLParen,jdbcType=VARCHAR}, #{tzFltdstConFld,jdbcType=VARCHAR}, #{tzFltdstOperator,jdbcType=VARCHAR}, 
-      #{tzFltdstFldVT,jdbcType=VARCHAR}, #{tzFltdstFldVal,jdbcType=VARCHAR}, #{tzFltdstRParen,jdbcType=VARCHAR}
-      )
+      #{tzFltdstFldVT,jdbcType=VARCHAR}, #{tzFltdstFldVal,jdbcType=VARCHAR}, #{tzFltdstRParen,jdbcType=VARCHAR}, 
+      #{tzNoUporlow,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConT" >
     insert into PS_TZ_FLTDST_CON_T
@@ -89,6 +90,9 @@
       <if test="tzFltdstRParen != null" >
         TZ_FLTDST_R_PAREN,
       </if>
+      <if test="tzNoUporlow != null" >
+        TZ_NO_UPORLOW,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzComId != null" >
@@ -127,6 +131,9 @@
       <if test="tzFltdstRParen != null" >
         #{tzFltdstRParen,jdbcType=VARCHAR},
       </if>
+      <if test="tzNoUporlow != null" >
+        #{tzNoUporlow,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConT" >
@@ -153,6 +160,9 @@
       <if test="tzFltdstRParen != null" >
         TZ_FLTDST_R_PAREN = #{tzFltdstRParen,jdbcType=VARCHAR},
       </if>
+      <if test="tzNoUporlow != null" >
+        TZ_NO_UPORLOW = #{tzNoUporlow,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
       and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
@@ -168,7 +178,8 @@
       TZ_FLTDST_OPERATOR = #{tzFltdstOperator,jdbcType=VARCHAR},
       TZ_FLTDST_FLD_V_T = #{tzFltdstFldVT,jdbcType=VARCHAR},
       TZ_FLTDST_FLD_VAL = #{tzFltdstFldVal,jdbcType=VARCHAR},
-      TZ_FLTDST_R_PAREN = #{tzFltdstRParen,jdbcType=VARCHAR}
+      TZ_FLTDST_R_PAREN = #{tzFltdstRParen,jdbcType=VARCHAR},
+      TZ_NO_UPORLOW = #{tzNoUporlow,jdbcType=VARCHAR}
     where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
       and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
       and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
