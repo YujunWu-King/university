@@ -7,7 +7,7 @@ var obUrl = ''
 //document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 $("#clipArea").photoClip({
 	width:wid,
-	height:wid,
+	height:wid*1.25,
 	file: "#file",
 	view: "#view",
 	ok: "#clipBtn",
@@ -30,7 +30,7 @@ $(function(){
 			//$("#photox").empty();
 			//$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
 			
-			$(".htmleaf-container").hide();
+			
 			var obj_file = document.getElementById("file");
 			
 			
@@ -43,7 +43,7 @@ $(function(){
 				dataType:  "json",
 				success: function(msg) {
 					
-					
+					layer.load('正在处理...');
 					imaPath=msg.msg.accessPath+msg.msg.sysFileName;
 					imaPath1=msg.msg.accessPath;
 					sysFileName=msg.msg.sysFileName;
@@ -84,6 +84,8 @@ $(function(){
 		                    	var _iItem = $("#photox",window.top.document).parent().siblings("input");
 		                    	_iItem.val(imaPath1+sysFileName);
 		                    	$('#view').attr('src',"");
+		                    	layer.closeAll();
+		                    	$(".htmleaf-container").hide();
 		                    	}
 		                    })
 				    	
@@ -245,6 +247,7 @@ function PhoneBack(obj){
 	<article class="htmleaf-container" style="display: block;">
 		  <div id="clipArea" style="user-select: none; overflow: hidden; position: relative;">
 		  <div style="position: absolute;top: 10px;left: 10px;z-index: 100000;color: #fff;" onclick="PhoneBack(this)">返回</div></div>
+		  <div style="position: absolute;bottom: 100px;left: 10px;z-index: 100000;color: #fff;">提示：支持手势旋转缩放裁图。</div></div>
 			<div class="foot-use">
 				<div class="uploader1 blue">
 					<input type="button" name="file" class="button" value="打开"/>

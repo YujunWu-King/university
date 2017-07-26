@@ -1627,8 +1627,14 @@ var SurveyBuild = {
 		var index = num;
 		var indexJson ="";
 		
-        indexJson=parseInt($(el).closest(".main_inner_content_para").index());
-    			
+		//修改判断判断是否是手机版
+    	if(SurveyBuild.accessType=='M'){
+    		indexJson=parseInt($(el).closest(".next_record").index());
+    		
+    	}else{
+    		indexJson=parseInt($(el).closest(".main_inner_content_para").index());
+    		
+    	}		
 		//console.log(num2+"--"+num)
 		var child = data.children[indexJson];
 		//生成日期

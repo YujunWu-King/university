@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZEventsBundle.controller;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -68,7 +69,7 @@ public class TzEventCancelTickeController {
 	
 	@RequestMapping(value = "ticket", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String dispatcher(HttpServletRequest request, HttpServletResponse response){
+	public void ticket(HttpServletRequest request, HttpServletResponse response){
 		    String strRet="";
 		try {
 			String strparameter=request.getParameter("HD");
@@ -89,7 +90,14 @@ public class TzEventCancelTickeController {
 			e.printStackTrace();
 			strRet=e.toString();
 		}
-		return strRet;
+		
+		try {
+			response.sendRedirect(strRet);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 			
 		
 	}
