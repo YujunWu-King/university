@@ -7,6 +7,5 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     pageID: 'TZ_CLPS_ADDKS_STD',
     tzStoreParams:'',
     pageSize:5000,
-    proxy: Ext.tzListProxy(),
-    sorters: {property: 'mssqh', direction: 'ASC'}
+    proxy: Ext.tzListProxy()
 });

@@ -109,7 +109,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             var labels = "";
                             var val = values.negativeList;
                             if(val.trim() != ""){
-                                var labelArr = val.split("|");
+                                var labelArr = val.split(",");
                                 for(var i=0;i<labelArr.length;i++){
                                     labels = labels
                                         + '<span style="margin:0px 2px;padding:3px 5px;background:#CCC7C7;border-radius:5px;">'
@@ -131,7 +131,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             var labels = "";
                             var val = values.autoLabel;
                             if(val.trim() != ""){
-                                var labelArr = val.split("|");
+                                var labelArr = val.split(",");
                                 for(var i=0;i<labelArr.length;i++){
                                     labels = labels
                                         + '<span style="margin:0px 2px;padding:3px 5px;background:#CCC7C7;border-radius:5px;">'
@@ -153,7 +153,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             var labels = "";
                             var val = values.manualLabel;
                             if(val.trim() != ""){
-                                var labelArr = val.split("|");
+                                var labelArr = val.split(",");
                                 for(var i=0;i<labelArr.length;i++){
                                     labels = labels
                                         + '<span style="margin:0px 2px;padding: 3px 5px;background:#CCC7C7;border-radius:5px;">'
