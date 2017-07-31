@@ -1,38 +1,33 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-		<title>%bind(:6)</title>
-		<link href="%bind(:8)/statics/js/onlineSurvey/css/m/public.css" rel="stylesheet" type="text/css" />
-		<link href="%bind(:8)/statics/js/onlineSurvey/css/m/index.css" rel="stylesheet" type="text/css" />
-		<script>
-			var jumpTime = %bind(:5);
-			if(parseInt(jumpTime) > 0) {
-				jumpTime = jumpTime * 1000;
-						setTimeout(function () {location.href = "%bind(:4)";},jumpTime);
-			}
-		</script>
-	</head>
-	<body>
-		<div class="container">
-			<!-- 
-			<div class="top">
-				%bind(:7)
-				<div class="clear"></div>
-			</div>
-			 -->
-			<div class="uploadlogo">
-				%bind(:1)
-			</div>
-
-			<div class="maincon">
-				%bind(:2)
-			</div>
-
-			<div class="fotter">
-				%bind(:3)
-			</div>
-		</div>
-	</body>
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0;"/>
+<title>我刚刚参与了【%bind(:6)】</title>
+<link rel="stylesheet" href="%bind(:8)/statics/js/onlineSurvey/css/m/LCalendar.css">
+<link rel="stylesheet" href="%bind(:8)/statics/js/onlineSurvey/css/m/mobile.css" type="text/css">
+<script type="text/javascript" src="%bind(:8)/statics/js/onlineSurvey/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="%bind(:8)/statics/js/onlineSurvey/js/rem.js"></script>
+<script src="%bind(:8)/statics/js/onlineSurvey/js/LCalendar.js"></script>
+</head>
+<body>
+	<div class="viewport-adaptive">
+	    <div class="bg">
+	    	<div class="title">%bind(:6)</div>
+	    	<div class="main_body">
+	    		<!-- 卷首内容 -->
+	    		<div class="submit">
+	    			您的答卷已经提交，感谢您的参与！
+	    		</div>
+	    		
+	    		<!-- 卷尾内容 -->
+	    		<div class="footer1">
+	    			北京创景咨询提供技术支持
+	    		</div>
+	    	</div>
+	    </div>
+	</div>
+</body>
 </html>
