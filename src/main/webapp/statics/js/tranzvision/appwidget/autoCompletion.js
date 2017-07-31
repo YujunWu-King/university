@@ -49,14 +49,15 @@ SurveyBuild.extend("autoCompletion", "baseComponent", {
                 c += '</div>';
             }else{
                 c += '<div class="listcon">';
-                c += '	<div class="question">';
-                c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
-                c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '      	<div class="onShow"></div>';
-                c += '  	</div>';
+                c += '	<div class="list_q">';
+                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
                 c += '	</div>';
-                c += '	<div class="answer">';
-                c += '		<input id="' + data.itemId + '" onchange="SurveyBuild.handleInput(this);" onkeyup="SurveyBuild.handleInput(this); " name="' + data.itemId + '" class="inputtext" data-regular="' + regular + '" value="' + data.value + '">';
+                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
+                c += '	</div>';
+                c += '	<div class="text_box1">';
+                c += '		<input type="text" id="' + data.itemId + '" onchange="SurveyBuild.handleInput(this);" onkeyup="SurveyBuild.handleInput(this); " name="' + data.itemId + '" class="inputtext" data-regular="' + regular + '" value="' + data.value + '">';
                 c += '	</div>';
                 c += '</div>';
             }

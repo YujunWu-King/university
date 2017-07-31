@@ -1,18 +1,3 @@
-/**
- * LCalendar移动端日期时间选择控件
- * 
- * version:1.7.1
- * 
- * author:黄磊
- * 
- * git:https://github.com/xfhxbb/LCalendar
- * 
- * Copyright 2016
- * 
- * Licensed under MIT
- * 
- * 最近修改于： 2016-6-12 17:22:20
- */
 window.LCalendar = (function() {
     var MobileCalendar = function() {
         this.gearDate;
@@ -27,10 +12,7 @@ window.LCalendar = (function() {
         init: function(params) {
             this.type = params.type;
             this.trigger = document.querySelector(params.trigger);
-            
-            //console.dir(this.trigger);
-            
-            if (this.trigger!=null && this.trigger.getAttribute("data-lcalendar") != null) {
+            if (this.trigger.getAttribute("data-lcalendar") != null) {
                 var arr = this.trigger.getAttribute("data-lcalendar").split(',');
                 var minArr = arr[0].split('-');
                 this.minY = ~~minArr[0];
@@ -691,9 +673,11 @@ window.LCalendar = (function() {
             //取消
             function closeMobileCalendar(e) {
                 e.preventDefault();
+                // $(".red").html( _self.trigger.value);
                 var evt;
                 try {
                     evt = new CustomEvent('input');
+
                 } catch (e) {
                     //兼容旧浏览器(注意：该方法已从最新的web标准中删除)
                     evt = document.createEvent('Event');
@@ -748,14 +732,12 @@ window.LCalendar = (function() {
                 _self.trigger.value = (time_hh.length < 2 ? "0" : "") + time_hh + (time_mm.length < 2 ? ":0" : ":") + time_mm;
                 closeMobileCalendar(e);
             }
-            if (_self.trigger !=null) {
             _self.trigger.addEventListener('click', {
                 "ym": popupYM,
                 "date": popupDate,
                 "datetime": popupDateTime,
                 "time": popupTime
             }[type]);
-        }
         }
     }
     return MobileCalendar;

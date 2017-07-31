@@ -28,17 +28,17 @@ SurveyBuild.extend("autoComplete", "baseComponent", {
     _getHtml: function(data, previewmode) {
         var c = "";
         if (previewmode) {
-        	if(SurveyBuild.accessType == "P"){
+        	if(SurveyBuild.accessType == "M"){
         		if(SurveyBuild._readonly){
         			c += '<div class="item">';
 					c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-					c += '<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '"/></div>';
+					c += '<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" /></div>';
 					c += '<p style="color:#666;font-size:0.56rem;"></p>';
 					c += '</div>';
         		}else{
         			c += '<div class="item">';
 					c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-					c += '<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '"/></div>';
+					c += '<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" /></div>';
 					c += '<p style="color:#666;font-size:0.56rem;"></p>';
 					c += '</div>';
         		}

@@ -29,11 +29,8 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 
 		        //c += '	<div class="addNext">';
 		        //c += '	    <div class="input-list-suffix-blank right input-btn" style="width:17%">';
-		    	if (children.length<data.maxLines) {
+
 		        c += '			<div class="addNext clear"><div onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');" class="add_next">' + MsgSet["ADD_ONE"] + '</div>';
-		    	} else {
-		        	c += '	<div class="addNext clear" style="display:none;"><div onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');" class="add_next">' + MsgSet["ADD_ONE"] + '</div>';
-		        }
 		        c += '		</div>';
 		        c += '		</div>';
 		        //c += '	</div>';	    	
@@ -54,11 +51,7 @@ SurveyBuild.extend("DHContainer", "baseComponent", {
 			/*
 	        c += '	    	<div onclick="SurveyBuild.saveApp(this);" class="input-savebtn">' + MsgSet["SAVE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-save.png" /></span></div>';
 			*/
-	        if (children.length<data.maxLines) {
 	        c += '			<div onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');" class="input-addbtn">' + MsgSet["ADD_ONE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
-	        } else {
-	        	c += '			<div style="display:none;" onclick="SurveyBuild.showDiv(this,\'' + data.instanceId + '\');" class="input-addbtn">' + MsgSet["ADD_ONE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
-	        }
 	        c += '		</div>';
 	        c += '		<div class="clear"></div>';
 	        c += '	</div>';	    	

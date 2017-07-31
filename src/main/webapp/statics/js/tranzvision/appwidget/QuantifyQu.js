@@ -37,36 +37,34 @@ SurveyBuild.extend("QuantifyQu", "baseComponent", {
                     e += '<option ' + (data.value == data["option"][i]["code"] || data["option"][i]["defaultval"] == "Y" ? "selected='selected'": "") + ' value="' + data["option"][i]["code"] + '" style="height:30px;">' + data["option"][i]["txt"] + '</option>';
                 }
                 c += '<div class="listcon">';
-                c += '	<div class="question">';
-                c += '      <span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
-                c += '      <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '          <div class="onShow"></div>';
-                c += '       </div>';
-                c += '  </div>';
-                c += '	<div class="answer">';
-                c += '		<div class="dropbox">';
-                c += '			<select class="dropbox-con" name="' + data.itemId + '" id="' + data.itemId + '">' + e + '</select>';
-                c += '		</div>';
+                c += '	<div class="list_q">';
+                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
                 c += '	</div>';
+                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
+                c += '	</div>';
+                c += '	<div class="text_box">';
+                c += '  	<select class="select_pros" name="' + data.itemId + '" id="' + data.itemId + '">'+e+' </select>';
+		        c += '	</div>';
                 c += '</div>';
             }else{
-                e += '<option style="height:30px;color:rgb(102,102,102);"  value="">'+MsgSet["PLEASE_CHOOSE"]+'</option>';
+                e += '<option >'+MsgSet["PLEASE_CHOOSE"]+'</option>';
                 for (var i in data.option) {
-                    e += '<option ' + (data.value == data["option"][i]["code"]  || data["option"][i]["defaultval"] == "Y"? "selected='selected'": "") + ' value="' + data["option"][i]["code"] + '" style="height:30px;color:rgb(102,102,102);">' + data["option"][i]["txt"] + '</option>';
+                    e += '<option ' + (data.value == data["option"][i]["code"]  || data["option"][i]["defaultval"] == "Y"? "selected='selected'": "") + ' value="' + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</option>';
                 }
 
                 c += '<div class="listcon">';
-                c += '	<div class="question">';
-                c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
-                c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '      	<div class="onShow"></div>';
-                c += '  	</div>';
+                c += '	<div class="list_q">';
+                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
                 c += '	</div>';
-                c += '	<div class="dropbox-answer">';
-                c += '		<div class="dropbox">';
-                c += '			<select class="dropbox-con" name="' + data.itemId + '" id="' + data.itemId + '">' + e + '</select>';
-                c += '		</div>';
+                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
                 c += '	</div>';
+                c += '	<div class="text_box">';
+                c += '  	<select class="select_pros" name="' + data.itemId + '" id="' + data.itemId + '">'+e+' </select>';
+		        c += '	</div>';
                 c += '</div>';
             }
         } else {

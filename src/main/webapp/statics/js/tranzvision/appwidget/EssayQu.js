@@ -17,34 +17,30 @@ SurveyBuild.extend("EssayQu", "baseComponent", {
 
             if(SurveyBuild.accessType == "P"){
                 c += '<div class="listcon">';
-                c += '	<div class="question">';
-                c += '      <span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
-                c += '     <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '         <div class="onShow"></div>';
-                c += '      </div>';
-                c += '  </div>';
-                c += '	<div class="answer">';
-                c += '		<ul>';
-                c += '			<li>';
-                c += '				<textarea id="' + data.itemId + '" onchange="SurveyBuild.handleInput(this);" onkeyup="SurveyBuild.handleInput(this); " class="textcon">' + data.value + '</textarea>';
-                c += '			</li>';
-                c += '		</ul>';
+                c += '	<div class="list_q">';
+                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+                c += '	</div>';
+                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
+                c += '	</div>';
+                c += '	<div class="text-box3">';
+                c += '				<textarea id="' + data.itemId + '" onchange="SurveyBuild.handleInput(this);" onkeyup="SurveyBuild.handleInput(this); " class="textcon">' + data.value + '</textarea>'; 
                 c += '	</div>';
                 c += '</div>';
             }else{
-                c += '<div class="listcon">';
-                c += '	<div class="question">';
-                c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
-                c += '  	<div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '      	<div class="onShow"></div>';
-                c += '  	</div>';
-                c += '	</div>';
-                c += '	<div class="answer-textcon">';
-                c += '		<ul>';
-                c += '			<li><textarea id="' + data.itemId + '" onchange="SurveyBuild.handleInput(this);" onkeyup="SurveyBuild.handleInput(this); " class="textcon">' + data.value + '</textarea></li>';
-                c += '		</ul>';
-                c += '	</div>';
-                c += '</div>';
+            	 c += '<div class="listcon">';
+                 c += '	<div class="list_q">';
+                 c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
+                 c += '	</div>';
+                 c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                 c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                 c += '		<span></span>';
+                 c += '	</div>';
+                 c += '	<div class="text_box1">';
+                 c += '				<textarea id="' + data.itemId + '" onchange="SurveyBuild.handleInput(this);" onkeyup="SurveyBuild.handleInput(this); " class="textcon">' + data.value + '</textarea>'; 
+                 c += '	</div>';
+                 c += '</div>';
             }
         } else {
             c =  '<div class="question-answer">';

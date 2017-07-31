@@ -559,13 +559,13 @@ var SurveyBuild = {
 										if(state.errcode == 0){
 											if(rstObj.result="success"){
 												if(SurveyBuild.accessType == "P" && className == "ImgUpload"){
-													c = '<li><a onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="img_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="'+TzUniversityContextPath+'/statics/js/onlineSurvey/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div></li>';
+													c = '<li><a onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'"><p>'+rstObj.viewFileName+'</p></a><img src="'+TzUniversityContextPath+'/statics/js/onlineSurvey/images/m/det.png" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\") title="'+MsgSet["DEL"]+'"></li>';
 												} else  if(SurveyBuild.accessType == "M" && className == "ImgUpload"){
-													c = '<li><a onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><img src="'+TzUniversityContextPath+'/statics/js/onlineSurvey/images/del.png" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\") title="'+MsgSet["DEL"]+'"></li>';
+													c = '<li><a onclick=SurveyBuild.viewImageSet(this,\"'+instanceId+'\") file-index="'+rstObj.index+'"><p>'+rstObj.viewFileName+'</p></a><img src="'+TzUniversityContextPath+'/statics/js/onlineSurvey/images/m/det.png" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\") title="'+MsgSet["DEL"]+'"></li>';
 												}else if(SurveyBuild.accessType == "P" && className == "AttachUpload"){
-                                                   c = '<li><a onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><div class="img_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="'+TzUniversityContextPath+'/statics/js/onlineSurvey/images/del.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div></li>';
+                                                   c = '<li><a onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'"><p>'+rstObj.viewFileName+'</p></a><div class="img_del" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\")><img width="15" height="15" src="'+TzUniversityContextPath+'/statics/js/onlineSurvey/images/det.png" title="'+MsgSet["DEL"]+'">&nbsp;'+MsgSet["DEL"]+'</div></li>';
                                                 }else{
-                                                    c = '<li><a onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'">'+rstObj.viewFileName+'</a><img  src="'+TzUniversityContextPath+'/statics/js/onlineSurvey/images/del.png" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\") title="'+MsgSet["DEL"]+'"></li>';
+                                                    c = '<li><a onclick=SurveyBuild.downLoadFile(this,\"'+instanceId+'\") file-index="'+rstObj.index+'"><p>'+rstObj.viewFileName+'</p></a><img  src="'+TzUniversityContextPath+'/statics/js/onlineSurvey/images/m/det.png" onclick=SurveyBuild.deleteFile(this,\"'+instanceId+'\") title="'+MsgSet["DEL"]+'"></li>';
                                                 }
 												if(multiFlag == "Y"){
 													if (_children.length == 1 && _children[0].fileName == ""){
@@ -585,8 +585,9 @@ var SurveyBuild = {
 														_fc["viewFileName"] = rstObj.viewFileName;
 														_children.push(_fc);
 													}
-
-													$("#"+itemId +"_attList").children("ul").append(c);
+												
+													$("#"+itemId +"_attList").append(c);
+													$("#"+itemId +"_attList").css("display","");
 												}else{
 													_children[0].fileName = rstObj.fileName;
 													_children[0].sysFileName = rstObj.sysFileName;
@@ -594,7 +595,8 @@ var SurveyBuild = {
 													_children[0].accessPath = obj.msg.accessPath;
 													_children[0].viewFileName = rstObj.viewFileName;
 	
-													$("#"+itemId +"_attList").children("ul").html(c);
+													$("#"+itemId +"_attList").html(c);
+													$("#"+itemId +"_attList").css("display","");
 												}
 												
 												if(SurveyBuild.accessType == "P"){
