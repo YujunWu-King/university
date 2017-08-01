@@ -3,6 +3,14 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>%bind(:13)</title> 
+		
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/js/My97DatePicker/WdatePicker.js"></script>
+
+		<link href="%bind(:21)/statics/js/onlineSurvey/css/pc.css" rel="stylesheet" type="text/css" />
+	
+		
+		
 		<link href="%bind(:21)/statics/js/onlineSurvey/css/public.css" rel="stylesheet" type="text/css" />
 		<link href="%bind(:21)/statics/js/onlineSurvey/css/index.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="%bind(:21)/statics/js/onlineSurvey/formvalidator/themes/Default/style/style.css" />
@@ -12,7 +20,7 @@
 		<script type="text/javascript">
 			var TzUniversityContextPath = "%bind(:21)";
 		</script>
-		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/jquery.min.js"></script>
+<!-- 		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/jquery.min.js"></script> -->
 		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/browser.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/common.js"></script>
@@ -138,31 +146,33 @@
 
 	<body>
 		<div class="container">
-			<!-- 不显示调试模式提醒 
-			<div class="top">
-				%bind(:14)
-				<div class="clear"></div>
-			</div>
-			 -->
-			<!-- 卷头 -->
-			<div class="uploadlogo">%bind(:1)</div>
-
-			<div class="maincon">
-				<form method="post" name="main_list" id="main_list"></form>
-				<div class="maincon-page">
-					<a href="#" onclick="javascript:prePage()"><div class="pagebtn1" style="display:none;">< %bind(:17)</div></a>
-					<a href="#" onclick="javascript:nextPage()"><div class="pagebtn2" style="display:none;">%bind(:18) ></div></a>
-					<div class="clear"></div>
-				</div>
-				<p class="submitdesc" style="display:none;" id="desc_submit">%bind(:23)</p>
-				<div class="submit" style="display:none;" id="app_submit">
-					%bind(:15)&nbsp;&nbsp;
-					<span class="sendbtn"><img src="%bind(:21)/statics/js/onlineSurvey/images/m/gou.png" /></span>
-				</div>
-				<div id="fancybox-main" style="display: none"><ul></ul></div>
-			</div>
-			<!-- 卷尾 -->
-			<div class="fotter">%bind(:2)</div>
+			<div class="bg">
+				<div class="title">%bind(:13)</div>
+					<div class="main_body">
+								<!-- 卷头 -->
+								<div class="top_inner">%bind(:1)</div>
+					
+								<div class="question">
+									<form method="post" name="main_list" id="main_list"></form>
+									<div class="maincon-page">
+										<a href="#" onclick="javascript:prePage()"><div class="pagebtn1" style="display:none;">< %bind(:17)</div></a>
+										<a href="#" onclick="javascript:nextPage()"><div class="pagebtn2" style="display:none;">%bind(:18) ></div></a>
+										<div class="clear"></div>
+									</div>
+									<p class="submitdesc" style="display:none;" id="desc_submit">%bind(:23)</p>
+									<div class="submit" style="display:none;" id="app_submit">
+										%bind(:15)&nbsp;&nbsp;
+										<span class="sendbtn"><img src="%bind(:21)/statics/js/onlineSurvey/images/m/gou.png" /></span>
+									</div>
+									<div id="fancybox-main" style="display: none"><ul></ul></div>
+								</div>
+								<!-- 卷尾 -->
+								<div class="fotter">%bind(:2)</div>
+								<div class="footer">
+					    			北京创景咨询提供技术支持
+					    		</div>
+				 </div>
+			 </div>
 		</div>
 		<input type="hidden" id="unique" name="unique" value="%bind(:20)"/>
 		<div id="flowtips" style="padding:5px;border-radius:3px;position:absolute;display:none;word-break:break-all;max-width:150px;background-color:#FF893A;border:1px solid;border-color:#FF0000;"></div>
@@ -546,5 +556,23 @@
 				$boxWrap.css('top',top)
 			}
 		}
+		
+		 $(".img_list li img").click(function(){
+	          var Len=$(".img_list li").size();
+	          if (Len>1) {
+	            $(this).parent().remove();
+	          } else {
+	            $(this).parents(".img_list").remove();
+	          }
+	     });
+	    //文件上传删除
+	    $(".finder_list li img").click(function(){
+	          var Len=$(".finder_list li").size();
+	          if (Len>1) {
+	            $(this).parent().remove();
+	          } else {
+	            $(this).parents(".finder_list").remove();
+	          }
+	     });
 	</script>
 </html>
