@@ -29,6 +29,7 @@ SurveyBuild.extend("SingleTextBox", "baseComponent", {
 					c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
 					c += '<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';					
 					c += '<div class="text-box"><input ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + ' type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '"/></div>';
+					c += '<p  class="mSuffix" style="color:#666;font-size:0.56rem;">' + (data["suffix"] ? data.suffix:" ") + '</p>';
 					if ($.trim(data.onShowMessage) != "") {
 						c += '<p style="color:#666;font-size:0.56rem;">' + data.onShowMessage + '</p>';
 					}

@@ -45,9 +45,6 @@ SurveyBuild.extend("Select", "baseComponent", {
 		            c +=			e;
 		            c +='		</select>';
 		            c += '	</div>';
-		            if ($.trim(data.onShowMessage) != "") {
-					c += '	<p style="color:#666;font-size:0.56rem;">' + data.onShowMessage + '</p>';
-					}
 		            c += '</div>';
 				}else{
 					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
@@ -64,6 +61,7 @@ SurveyBuild.extend("Select", "baseComponent", {
 		            c +=			e;
 		            c +='		</select>';
 		            c += '	</div>';
+		            c += '	<p  class="mSuffix" style="color:#666;font-size:0.56rem;">' +(data["suffix"] ? data.suffix:" ") + '</p>';
 		            if ($.trim(data.onShowMessage) != "") {
 					c += '	<p style="color:#666;font-size:0.56rem;">' + data.onShowMessage + '</p>';
 					}

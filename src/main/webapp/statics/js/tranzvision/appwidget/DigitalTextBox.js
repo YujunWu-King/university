@@ -36,6 +36,7 @@ SurveyBuild.extend("DigitalTextBox", "baseComponent", {
 					c += '	<div class="text-box">';
 					c += '		<input type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '" />';
 					c += '  </div>';
+					c += '<p class="mSuffix" style="color:#666;font-size:0.56rem;">' + (data["suffix"] ? data.suffix:" ") + '</p>';
 					if ($.trim(data.onShowMessage) != "") {
 						c += '  <p style="color:#666;font-size:0.56rem;">'+data.onShowMessage+'</p>';
 					}

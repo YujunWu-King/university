@@ -56,6 +56,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                   	c += ' 	<p>'+data.title+'<span>*</span></p>';
                   	c += '	<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
                   	c += '  <a class="photo" id="photo' + data.itemId + '"><img id="photox" src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/m/bjphoto.jpg": TzUniversityContextPath + data.value) + '"/></a>';
+                  	c+='<p class="mSuffix" style="color:#666;font-size:0.56rem;">'+(data["suffix"]? data.suffix:" ")+'</p>';
                   	c +='</div>';                                  
                   	}
                 }

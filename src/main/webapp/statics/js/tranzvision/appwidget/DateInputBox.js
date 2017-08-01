@@ -27,7 +27,7 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 						c += '	<div class="text-box">';
 						c += '		<input type="text" class="text1"readonly="readonly" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" />';
 						c += '	</div>';
-						c += '  <p style="color:#666;font-size:0.56rem;"></p>';
+						c += '  <p class="mSuffix" style="color:#666;font-size:0.56rem;">'+(data.suffixUrl != "" ?'<a target="_blank" href="'+ data.suffixUrl + '">': '')+ (data["suffix"] ? data.suffix :"")+(data.suffixUrl != "" ? '</a>': '')+'</p>';
 						c += '</div>';
 					}
 			 }else{

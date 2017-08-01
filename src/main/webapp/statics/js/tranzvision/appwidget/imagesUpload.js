@@ -54,8 +54,10 @@ SurveyBuild.extend("imagesUpload", "baseComponent", {
 			    c +='         	</div>';
 			    c +='       </div>';
 			    c +='   </div>';
+			    c +='<p class="mSuffix" style="color:#666;font-size:0.56rem;display:' + (SurveyBuild._readonly?'none':'block') +' ">'+ (data.suffixUrl != "" ? "<a href='" + data.suffixUrl + "'>" : "") + (data.suffix != "" ? data.suffix : "") + (data.suffixUrl != "" ? "</a>" : "") +'</p>';
 			    c +='<p style="color:#666;font-size:0.56rem;margin-top:5px;display:' + (SurveyBuild._readonly?'none':'block') +' ">'+msg+'</p>';
-			    c +='<p style="color:#666;font-size:0.56rem;">'+data.onShowMessage+'</p>';
+			   
+			    c +='<p style="color:#666;font-size:0.56rem;display:' + (SurveyBuild._readonly?'none':'block') +' ">'+data.onShowMessage+'</p>';
 			    c +='</div>';
 			    
 			    
