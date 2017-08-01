@@ -1,37 +1,41 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>%bind(:6)</title>
-		<link href="%bind(:8)/statics/js/onlineSurvey/css/public.css" rel="stylesheet" type="text/css" />
-		<link href="%bind(:8)/statics/js/onlineSurvey/css/index.css" rel="stylesheet" type="text/css" />
-		<script>
-			var jumpTime = %bind(:5);
-			if(parseInt(jumpTime) > 0) {
-				jumpTime = jumpTime * 1000;
-						setTimeout(function () {location.href = "%bind(:4)";},jumpTime);
-			}
-		</script>
-	</head>
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<title>我刚刚参与了【%bind(:6)】</title>
+<link href="%bind(:8)/statics/js/onlineSurvey/css/m/pc.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="%bind(:8)/statics/js/onlineSurvey/js/jquery-1.8.3.min.js"></script>
+</head>
+<body>
+	<div class="container">
+	    <div class="bg pos_re">
+	    	<div class="title">%bind(:6)</div>
+	    	<div class="main_body">
+	    		<!-- 卷首内容 -->
+	    		<div class="top_inner">
+	    			您的答卷已经提交，感谢您的参与！
+	    		</div>
+	    		<!-- 文字 -->
+	    		<div class="main_font">
+	    			 <p>亲爱的朋友：</p>
+	    			 <p class="text_2">感谢您在百忙之中接受本次调查！</p>
+	    			 <p class="text_2">对您填写的信息，我们将严格遵守《统计法》予以保密，所得调查数据仅用于科学研究需要。请根据您的实际情况放心填写。</p>
+	    			 <p class="text_2">再次对您表示感谢！</p>
+	    		</div>
+	    		
+	    		<!-- 卷尾内容 -->
+	    		<div class="footer1">
+	    			北京创景咨询提供技术支持
+	    		</div>
+	    	</div>
+	    </div>
+	</div>
+<script type="text/javascript">
+	 var height=document.body.clientHeight; 
 
-	<body>
-		<div class="container">
-			<!-- 
-			<div class="top">
-				%bind(:7)
-				<div class="clear"></div>
-			</div>
- 			-->
-			<div class="uploadlogo">
-				%bind(:1)
-			</div>
-
-			<div class="maincon">
-				%bind(:2)
-			</div>
-			<div class="fotter">
-				%bind(:3)
-			</div>
-		</div>
-	</body>
+	 $(".bg").css("height",height+"px")
+</script>
+</body>
 </html>

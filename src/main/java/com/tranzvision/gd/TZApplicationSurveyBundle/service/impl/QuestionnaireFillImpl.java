@@ -512,12 +512,12 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				url = url + "&unique=" + uniqueNum;
 				logger.info("   --- 请求URL     " + url);
 
-				try {
+			/*	try {
 					response.sendRedirect(url);
 					return null;
 				} catch (IOException e) {
 					e.printStackTrace();
-				}
+				}*/
 			}
 		}
 
