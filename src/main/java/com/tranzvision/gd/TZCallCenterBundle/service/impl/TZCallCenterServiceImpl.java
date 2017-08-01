@@ -586,17 +586,34 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 	public String findOprID(String strCallXh,String strPhone){
 		String strOprid = "";
 		String sql = "SELECT P.OPRID FROM PSOPRDEFN P,PS_TZ_AQ_YHXX_TBL Q WHERE P.OPRID=Q.OPRID AND Q.TZ_RYLX='ZCYH' AND P.ACCTLOCK='0' AND TZ_MOBILE=? limit 0,1";
-		strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+		try{
+			strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+		}catch(Exception e){
+			/*无结果时会抛出异常*/
+			strOprid = "";
+		}
 		if(strOprid==null||"".equals(strOprid)){
 			sql = "SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_RYLX='ZCYH' AND TZ_MOBILE=? limit 0,1";
-			strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+			try{
+				strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+			}catch(Exception e){
+				/*无结果时会报错*/
+			}
 			if(strOprid==null||"".equals(strOprid)){
 				sql = "SELECT TZ_LYDX_ID FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_ZY_SJ=? limit 0,1";
-				strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+				try{
+					strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone}, "String");
+				}catch(Exception e){
+					/*无结果时会报错*/
+				}
 				if(strOprid==null||"".equals(strOprid)){
 					//查找上一次接待单涉及的人员						
 					sql = "SELECT TZ_OPRID FROM PS_TZ_PH_JDD_TBL WHERE TZ_PHONE=? AND TZ_XH<>? ORDER BY TZ_CALL_DTIME DESC limit 0,1";
-					strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone,strCallXh}, "String");
+					try{
+						strOprid = sqlQuery.queryForObject(sql, new Object[]{strPhone,strCallXh}, "String");
+					}catch(Exception e){
+						/*无结果时会报错*/
+					}
 					if(strOprid==null){
 						strOprid = "";
 					}						

@@ -33,7 +33,7 @@
 			dock:"bottom",
 			ui:"footer",
 			items:['->',
-                {minWidth:80,text:"关闭",iconCls:"close",handler:"onCloseRemoveData"}
+                {minWidth:80,text:"关闭",iconCls:"close",handler:"onClose"}
             ]
 		}
 	],
