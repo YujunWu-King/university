@@ -49,6 +49,7 @@ public class TZCCenterActListServiceImpl  extends FrameworkImpl {
 		}else{
 			strWhere = strWhere + " AND TZ_ZY_SJ='" + strPhone + "'";
 		}
+		strWhere = strWhere + " AND TZ_NREG_STAT='1'";
 		strActListSQL = strActListSQL + strWhere + " limit " + numStart + "," + numLimit;
 		strActCountSQL = strActCountSQL + strWhere;
 		

@@ -71,7 +71,7 @@ public class TZCallCenterListServiceImpl  extends FrameworkImpl {
 				mapList.put("viewHistoryCall", callCount);
 				
 				//报名活动数
-				String strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=?";
+				String strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=? AND TZ_NREG_STAT='1'";
 				Integer actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{rowList[2]}, "Integer");
 				if(actCount==null){
 					actCount = 0;
