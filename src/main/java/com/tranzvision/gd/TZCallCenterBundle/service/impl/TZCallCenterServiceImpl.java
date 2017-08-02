@@ -244,7 +244,7 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 				returnMap.put("bmrBlackList", strPar4);
 			}
 			
-			String strSQL3 = "SELECT TZ_EMAIL,TZ_JIHUO_ZT,TZ_ZHCE_DT,TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+			String strSQL3 = "SELECT TZ_EMAIL,TZ_JIHUO_ZT,date_format(TZ_ZHCE_DT,'%Y-%m-%d %H:%i') TZ_ZHCE_DT,TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 			Map<String, Object> return3 = sqlQuery.queryForMap(strSQL3, new Object[]{strOprid});
 			if(return3!=null&&return3.size()>0){
 				String strPar1 = return3.get("TZ_EMAIL")==null?"":String.valueOf(return3.get("TZ_EMAIL"));
@@ -289,10 +289,10 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 			String strActCountSQL = "";
 			Integer actCount = 0;
 			if(strOprid!=null&&!"".equals(strOprid)){
-				strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE OPRID=? OR TZ_ZY_SJ=?";
+				strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE OPRID=? OR TZ_ZY_SJ=? AND TZ_NREG_STAT='1'";
 				actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strOprid,strPhone}, "Integer");					
 			}else{
-				strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=?";
+				strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=? AND TZ_NREG_STAT='1'";
 				actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strPhone}, "Integer");
 			}
 			if(actCount==null){
@@ -344,10 +344,10 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 				String strActCountSQL = "";
 				Integer actCount = 0;
 				if(strOprid!=null&&!"".equals(strOprid)){
-					strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE OPRID=? OR TZ_ZY_SJ=?";
+					strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE OPRID=? OR TZ_ZY_SJ=? AND TZ_NREG_STAT='1'";
 					actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strOprid,strPhone}, "Integer");					
 				}else{
-					strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=?";
+					strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=? AND TZ_NREG_STAT='1'";
 					actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strPhone}, "Integer");
 				}
 				if(actCount==null){
