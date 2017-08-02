@@ -84,6 +84,9 @@ $(function(){
 		                    	var _iItem = $("#photox",window.top.document).parent().siblings("input");
 		                    	_iItem.val(imaPath1+sysFileName);
 		                    	$('#view').attr('src',"");
+		                    	//保存报名表
+								console.log("SAVA BMB");
+								window.parent.$("#app_save").click();
 		                    	layer.closeAll();
 		                    	$(".htmleaf-container").hide();
 		                    	}
