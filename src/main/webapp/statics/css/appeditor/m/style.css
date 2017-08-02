@@ -1301,3 +1301,16 @@ form {
 	height: auto;
 	margin: 0 auto;
 }
+
+.boxSize1{
+	max-height: 96px;
+	height: 96px;
+}
+.boxSize2{
+	max-height: 192px;
+	height: 192px;
+}
+.boxSize3{
+	max-height: 288px;
+	height: 288px;
+}
