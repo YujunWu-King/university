@@ -289,7 +289,7 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 			String strActCountSQL = "";
 			Integer actCount = 0;
 			if(strOprid!=null&&!"".equals(strOprid)){
-				strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE OPRID=? OR TZ_ZY_SJ=? AND TZ_NREG_STAT='1'";
+				strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE ( OPRID=? OR TZ_ZY_SJ=? ) AND TZ_NREG_STAT='1'";
 				actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strOprid,strPhone}, "Integer");					
 			}else{
 				strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=? AND TZ_NREG_STAT='1'";
@@ -344,7 +344,7 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 				String strActCountSQL = "";
 				Integer actCount = 0;
 				if(strOprid!=null&&!"".equals(strOprid)){
-					strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE OPRID=? OR TZ_ZY_SJ=? AND TZ_NREG_STAT='1'";
+					strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE ( OPRID=? OR TZ_ZY_SJ=? ) AND TZ_NREG_STAT='1'";
 					actCount = sqlQuery.queryForObject(strActCountSQL, new Object[]{strOprid,strPhone}, "Integer");					
 				}else{
 					strActCountSQL = "SELECT COUNT(1) FROM PS_TZ_NAUDLIST_G_V WHERE TZ_ZY_SJ=? AND TZ_NREG_STAT='1'";
