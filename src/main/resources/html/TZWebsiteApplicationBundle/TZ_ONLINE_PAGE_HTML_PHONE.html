@@ -318,7 +318,11 @@
 								SurveyBuild.classId = classId;
 								if (f.comContent.code == "0") {
 									layer.closeAll();
-									noteing(MsgSet.SUBMIT_SUCCEED);
+									//noteing(MsgSet.SUBMIT_SUCCEED);
+									layer.msg(MsgSet.SAVE_SUCCEED, 2, {
+							    		type: 9,
+							    		shade: false
+									});
 									/*提交报名表 开始*/
 									appReadOnly = "Y";
 									pageReadOnly();
@@ -573,7 +577,11 @@
 							
 							if (f.comContent.code == "0") {
 								layer.closeAll();
-								noteing(MsgSet.SUBMIT_SUCCEED);
+								//noteing(MsgSet.SUBMIT_SUCCEED);
+								layer.msg(MsgSet.SAVE_SUCCEED, 2, {
+								    type: 9,
+								    shade: false
+								});
 								SurveyBuild.saveTjx_fj();
 								/*提交报名表 开始*/
 								var tplType = "%bind(:10)";
@@ -655,7 +663,11 @@
 									$("#" + currentPageId).append("<i class=\"complete\"></i>");
 								}
 								layer.closeAll();
-								noteing(MsgSet.PRE_SUCCEED);
+								//noteing(MsgSet.PRE_SUCCEED);
+								layer.msg(MsgSet.PRE_SUCCEED, 2, {
+								    type: 9,
+								    shade: false
+								});
 								//SurveyBuild.saveTjx_fj();
 							}else{
 								$("#" + currentPageId+" .complete").remove();
@@ -664,7 +676,11 @@
 							}
 						} else {
 							layer.closeAll();
-							noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+							//noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+							layer.msg(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2, {
+							    type: 8,
+							    shade: false
+							});
 						}
 					}
 				});
