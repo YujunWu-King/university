@@ -455,6 +455,8 @@ public class tzOnlineAppEngineImpl {
 						psTzFormWrkT.setRowAddedDttm(new Date());
 						psTzFormWrkT.setRowLastmantDttm(new Date());
 						psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
+						String sql = "update PS_TZ_REG_USER_T SET TZ_ALLOW_APPLY='N' where OPRID =?";
+						sqlQuery.update(sql, new Object[] {oprid});
 						// ////System.out.println("将班级和报名表关系数据 存入 ");
 
 						// ---3.向推荐信相关表中，加入”推荐信“信息 "PS_TZ_KS_TJX_TBL"
