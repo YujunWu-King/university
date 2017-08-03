@@ -102,6 +102,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 				for(var i=1;i<=showLines;i++){
 					var tempHtmlP = this._getHtmlTwo(data,i);
 					htmlContent += tempHtmlP;
+                    if(i>1){
+                        data["linesNo"].shift();
+                    }
 				}
 				if(!SurveyBuild._readonly){
 					
