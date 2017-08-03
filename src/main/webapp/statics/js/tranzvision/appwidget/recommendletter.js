@@ -2798,7 +2798,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						
 						//发送给自己
 						works += '<div id="sendEmailToMeS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"":"display:none")+';width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
-						works += '<div >'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 						
 						//发送给自己灰色
