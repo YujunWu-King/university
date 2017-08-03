@@ -618,13 +618,24 @@ public class ApplicationCenterServicerImpl extends FrameworkImpl {
 		Map<String, Object> returnMap = new HashMap<>();
 		returnMap.put("HaveHisApplyForm", "false");
 		returnMap.put("HaveHCBJ", "false");
+		returnMap.put("Apply", "false");
+		String m_curOPRID = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
 		try {
 			jacksonUtil.json2Map(strParams);
 			String classId = jacksonUtil.getString("classId");
 			String siteid = jacksonUtil.getString("siteid");
-
+			
+			//1:是否允许报名,"N"表示不允许报名;
+			String isAllowedApp = "";
+			//需要查询考生允许报名表 ；
+			isAllowedApp = jdbcTemplate.queryForObject("select TZ_ALLOW_APPLY from PS_TZ_REG_USER_T where OPRID=?", new Object[]{m_curOPRID},"String");
+			//黑名单
+			String isBlack = jdbcTemplate.queryForObject("select TZ_BLACK_NAME from PS_TZ_REG_USER_T where OPRID=?", new Object[]{m_curOPRID},"String");
+			if(!"Y".equals(isBlack) && "Y".equals(isAllowedApp)){
+				returnMap.replace("Apply", "true");
+			}
 			// 根据班级编号查询机构;
 			String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			String jgId = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?",

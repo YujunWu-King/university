@@ -145,27 +145,37 @@ function checkHisApply(classId,languageCd){
 				success:function(response){
 					  var HaveHisApplyForm = response.comContent.HaveHisApplyForm;
 					  var HaveHCBJ=response.comContent.HaveHCBJ;
-					  if(HaveHCBJ=="true"){
-						if(languageCd == "ENG"){
-							alert("Our system has detected existing registration information from an application you previously started, and you are not allowed to  the application for other programs related.");
-						}else{
-							alert("系统检测到您已经申请了一个项目，不允许再申请相关的其他项目。");
-						}
+					  var Apply = response.comContent.Apply;
+					  if(Apply == "true"){
+						  if(HaveHCBJ=="true"){
+								if(languageCd == "ENG"){
+									alert("Our system has detected existing registration information from an application you previously started, and you are not allowed to  the application for other programs related.");
+								}else{
+									alert("系统检测到您已经申请了一个项目，不允许再申请相关的其他项目。");
+								}
+							  }else{
+								if(HaveHisApplyForm == "true"){
+									if(languageCd == "ENG"){
+								  	confirmValue = confirm("Our system has detected existing registration information from an application you previously started. Would you like to copy your previously entered application information into the new application form?");
+								  }else{
+								  	confirmValue = confirm("系统检测到您曾经报过名，是否从过往报名表中带入历史数据？");
+								  }
+								}
+								 
+								if(confirmValue==true){
+									location.href =urlBegin+'?classid=appId&APPCOPY=Y&TZ_CLASS_ID='+classId+'&SITE_ID='+siteid;
+								}else{
+									location.href =urlBegin+'?classid=appId&TZ_CLASS_ID='+classId+'&SITE_ID='+siteid;
+								} 
+							}
 					  }else{
-						if(HaveHisApplyForm == "true"){
-							if(languageCd == "ENG"){
-						  	confirmValue = confirm("Our system has detected existing registration information from an application you previously started. Would you like to copy your previously entered application information into the new application form?");
-						  }else{
-						  	confirmValue = confirm("系统检测到您曾经报过名，是否从过往报名表中带入历史数据？");
-						  }
-						}
-						 
-						if(confirmValue==true){
-							location.href =urlBegin+'?classid=appId&APPCOPY=Y&TZ_CLASS_ID='+classId+'&SITE_ID='+siteid;
-						}else{
-							location.href =urlBegin+'?classid=appId&TZ_CLASS_ID='+classId+'&SITE_ID='+siteid;
-						} 
-					}
+						  if (languageCd == "ENG") {
+								alert("不能连续申请不同的班级。返回报名表可以更换报考班级.");
+						 } else {
+								alert("不能连续申请不同的班级。返回报名表可以更换报考班级.");
+						 }
+					  }
+					  
 				}   
 			});
 

@@ -83,7 +83,7 @@ public class MobileWebsiteAppStatusServiceImpl extends FrameworkImpl {
 			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
 			int totalNum = sqlQuery.queryForObject(totalSQL, new Object[] { siteId,orgId }, "Integer");
 			//是否报名;
-			String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID,DATE_FORMAT(ROW_LASTMANT_DTTM,'%Y-%m-%d') ROW_LASTMANT_DTTM from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1";
+			String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID,DATE_FORMAT(ROW_LASTMANT_DTTM,'%Y-%m-%d') ROW_LASTMANT_DT from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1";
 			long TZ_APP_INS_ID = 0;
 			String classId = "";
 			Map<String, Object> classAndBmbMap = new HashMap<String, Object>();
@@ -92,7 +92,7 @@ public class MobileWebsiteAppStatusServiceImpl extends FrameworkImpl {
 				if(classAndBmbMap != null){
 					TZ_APP_INS_ID = Long.parseLong(String.valueOf(classAndBmbMap.get("TZ_APP_INS_ID")));
 					classId = String.valueOf(classAndBmbMap.get("TZ_CLASS_ID"));
-					submitTimeDesc = submitTimeDesc + String.valueOf(classAndBmbMap.get("ROW_LASTMANT_DTTM"));
+					submitTimeDesc = submitTimeDesc + String.valueOf(classAndBmbMap.get("ROW_LASTMANT_DT"));
 				}
 			}catch(NullPointerException nullException){
 				TZ_APP_INS_ID = 0;
@@ -166,13 +166,13 @@ public class MobileWebsiteAppStatusServiceImpl extends FrameworkImpl {
 							}
 
 							if("Y".equals(isFb)){
-								xmjdHtml = xmjdHtml + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","ed","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST," circled","");
+								xmjdHtml = xmjdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","ed","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST," circled","");
 							}else{
 								//如果是未发布且第一步直接紫色
 								if(step == 1 || sgIsFb){
-									xmjdHtml = xmjdHtml + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST," circling",String.valueOf(step));
+									xmjdHtml = xmjdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST," circling",String.valueOf(step));
 								}else{
-									xmjdHtml = xmjdHtml + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST,"",String.valueOf(step));
+									xmjdHtml = xmjdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST,"",String.valueOf(step));
 								}
 								
 							
@@ -188,13 +188,13 @@ public class MobileWebsiteAppStatusServiceImpl extends FrameworkImpl {
 						}
 					} 
 				}
-				content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_HTML",title,className,submitTimeDesc,xmjdHtml);
+				content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_HTML",title,className,submitTimeDesc,xmjdHtml);
 			}else{
 				//手机版暂不开通申请
-				 content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_NO_APP_HTML",ctxPath);
+				 content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_NO_APP_HTML",ctxPath);
 			}
 			
-			html = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"3",content);
+			html = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"3",content);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			html = "";

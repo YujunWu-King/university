@@ -192,16 +192,16 @@ public class Class2HistoryServiceImpl extends FrameworkImpl {
 								}
 								
 								if("Y".equals(isFb)){
-									jdHtml = jdHtml + tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_JD_FB",TZ_APPPRO_NAME,TZ_APPPRO_RST);
+									jdHtml = jdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_JD_FB",TZ_APPPRO_NAME,TZ_APPPRO_RST);
 								}else{
 									//如果是未发布且第一步直接紫色
 									if(step == 1){
-										jdHtml = jdHtml + tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_JD_ING",TZ_APPPRO_NAME,String.valueOf(step),TZ_APPPRO_RST);
+										jdHtml = jdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_JD_ING",TZ_APPPRO_NAME,String.valueOf(step),TZ_APPPRO_RST);
 									}else{
 										if(sgIsFb){
-											jdHtml = jdHtml + tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_JD_ING",TZ_APPPRO_NAME,String.valueOf(step),TZ_APPPRO_RST);
+											jdHtml = jdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_JD_ING",TZ_APPPRO_NAME,String.valueOf(step),TZ_APPPRO_RST);
 										}else{
-											jdHtml = jdHtml + tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_JD",TZ_APPPRO_NAME,String.valueOf(step),TZ_APPPRO_RST);
+											jdHtml = jdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_JD",TZ_APPPRO_NAME,String.valueOf(step),TZ_APPPRO_RST);
 										}
 									}
 									
@@ -218,26 +218,26 @@ public class Class2HistoryServiceImpl extends FrameworkImpl {
 							}
 						}
 						
-						recordList = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST",className,submitDate,viewBmbDesc,viewLcInfoDesc,applyFromUrl);
-						recordListBody = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_BODY",jdHtml);
+						recordList = tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST",className,submitDate,viewBmbDesc,viewLcInfoDesc,applyFromUrl);
+						recordListBody = tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_BODY",jdHtml);
 					}else{
 						//没有流程;
-						recordList = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_NOLC",className,submitDate,viewBmbDesc,viewLcInfoDesc,applyFromUrl);
+						recordList = tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_LIST_NOLC",className,submitDate,viewBmbDesc,viewLcInfoDesc,applyFromUrl);
 						recordListBody = "";
 					}
 					listBody = listBody + recordList + recordListBody;
 				}
 			}else{
 				//没有历史报名记录;
-				listBody = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_NO",noHistoryDesc);
+				listBody = tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_NO",noHistoryDesc);
 			}
 			
 			// 历史记录;
-			applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_CONTENT",
+			applicationCenterHtml = tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_CLASS2_HISTORY_CONTENT",
 					historyDesc, listBody);
 
 			// 展示页面;
-			applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_CLASS2_HISTORY_HTML",
+			applicationCenterHtml = tzGDObject.getHTMLTextForDollar("HTML.TZApplicationCenterBundle.TZ_GD_CLASS2_HISTORY_HTML",
 					request.getContextPath(), ZSGL_URL, strCssDir, applicationCenterHtml, str_jg_id, strSiteId);
 
 			applicationCenterHtml = siteRepCssServiceImpl.repTitle(applicationCenterHtml, strSiteId);

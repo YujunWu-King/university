@@ -60,9 +60,12 @@ public class LcSysvarClass {
 				isPublish = "N";
 			}
 			//报名表提交状态;
-			String bmbTjStatusDesc = jdbcTemplate.queryForObject("select TZ_ZHZ_DMS from  PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_APPFORM_STATE' AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?", new Object[]{appInsStatus},String.class);
-			if(bmbTjStatusDesc == null){
-				bmbTjStatusDesc = "";
+			String bmbTjStatusDesc = "";
+			if(appInsStatus != null && !"".equals(appInsStatus)){
+				bmbTjStatusDesc = jdbcTemplate.queryForObject("select TZ_ZHZ_DMS from  PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_APPFORM_STATE' AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?", new Object[]{appInsStatus},String.class);
+				if(bmbTjStatusDesc == null){
+					bmbTjStatusDesc = "";
+				}
 			}
 			
 			// 报名表链接;

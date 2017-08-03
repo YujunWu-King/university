@@ -162,13 +162,13 @@ public class MobileAppHistoryServiceImpl extends FrameworkImpl {
 									}
 
 									if("Y".equals(isFb)){
-										xmjdHtml = xmjdHtml + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","ed","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST," circled","");
+										xmjdHtml = xmjdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","ed","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST," circled","");
 									}else{
 										//如果是未发布且第一步直接紫色
 										if(step == 1 || sgIsFb){
-											xmjdHtml = xmjdHtml + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST," circling",String.valueOf(step));
+											xmjdHtml = xmjdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST," circling",String.valueOf(step));
 										}else{
-											xmjdHtml = xmjdHtml + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST,"",String.valueOf(step));
+											xmjdHtml = xmjdHtml + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_APP_STATUS_INNER_DIV","","阶段"+jdInfo[step-1]+":"+TZ_APPPRO_NAME,TZ_APPPRO_RST,"",String.valueOf(step));
 										}
 									}
 									
@@ -183,13 +183,13 @@ public class MobileAppHistoryServiceImpl extends FrameworkImpl {
 							} 
 						}
 						
-						content = content + tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HISTORY_APP_STATUS_LI",className,submitTimeDesc,xmjdHtml);
+						content = content + tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_HISTORY_APP_STATUS_LI",className,submitTimeDesc,xmjdHtml);
 					}
 				}
 			}
 			
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HISTORY_APP_STATUS_HTML",title,content);
-			html = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content);
+			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_HISTORY_APP_STATUS_HTML",title,content);
+			html = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			html = "";
