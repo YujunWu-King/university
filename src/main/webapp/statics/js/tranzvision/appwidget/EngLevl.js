@@ -1097,9 +1097,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				}
 
-				htmlContent += '<div class="img_shade" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
-				htmlContent += '<img class="img_pop_close" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
-				htmlContent += '<div class="img_pop_body" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
+				htmlContent += '<div class="img_shade" style="display: none" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
+				htmlContent += '<img class="img_pop_close" style="display: none" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
+				htmlContent += '<div class="img_pop_body" style="display: none" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
 				htmlContent += ' <img src="" id ="img_'+ child.EngLevelUp.itemId +'">';
 				htmlContent += '</div>';
 
@@ -1154,9 +1154,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
 				}
 
-				htmlContent += '<div class="img_shade" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
-				htmlContent += '<img class="img_pop_close" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
-				htmlContent += '<div class="img_pop_body" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
+				htmlContent += '<div class="img_shade" style="display: none" id ="shade_'+ child.EngLevelUp.itemId +'"></div>';
+				htmlContent += '<img class="img_pop_close" style="display: none" id ="close_'+ child.EngLevelUp.itemId +'" src="'+ TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
+				htmlContent += '<div class="img_pop_body" style="display: none" id ="body_'+ child.EngLevelUp.itemId +'">'  ;
 				htmlContent += ' <img src="" id ="img_'+ child.EngLevelUp.itemId +'">';
 				htmlContent += '</div>';
 
@@ -1216,9 +1216,9 @@ SurveyBuild.extend("EngLevl", "baseComponent", {
 
                 var child=children[j];
 				//隐藏图片显示
-				$("#shade_"+ child.EngLevelUp.itemId).hide();
-				$("#body_"+ child.EngLevelUp.itemId).hide();
-				$("#close_"+ child.EngLevelUp.itemId).hide();
+				// $("#shade_"+ child.EngLevelUp.itemId).hide();
+				// $("#body_"+ child.EngLevelUp.itemId).hide();
+				// $("#close_"+ child.EngLevelUp.itemId).hide();
 
 				type_select=$("#"+ data["itemId"] + child.EngLevelType.itemId);
 				type_select.each(function(index){
