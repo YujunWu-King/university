@@ -3388,6 +3388,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					dataType: "json",
 					success: function(result){
 						if (result.comContent=="SUCCESS"){
+							$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
 							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
 							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
 							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
@@ -3721,6 +3722,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 								$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
 								$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
 								
+								$("#changeRecH_"+(Number(mm)-1)).css("display","none");
 								$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 								$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
 								$("#tjxzt_info_"+(Number(mm)-1)).val("");
@@ -3783,10 +3785,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 								$("#tjx_delete_"+(Number(mm)-1)).show();
 								$("#app_save").click();
 							}else {
-								$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
-								$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
-								$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
-								$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+								//$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+								//$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+								//$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+								//$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
 								$("#changeRecH_"+(Number(mm)-1)).css("display","none");
 								$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 								alert(result.comContent);
