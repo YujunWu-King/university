@@ -45,7 +45,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                   	c += '  <div class="input-list-text left headshot">';
                   	c += '		<div class="headshot-pic">';
                   	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-                  	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" />';
+                  	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" hiegth="100%" width="100%"/>';
                   	c += '		</div>';
                   	c += '	</div>';
                   	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
