@@ -20,8 +20,7 @@ SurveyBuild.extend("FormDesc", "baseComponent", {
 				 c +='<img class="pop_close" id="' + data.itemId + '_img" style="display:none" src="' + TzUniversityContextPath + '/statics/images/appeditor/m/rl_btn.png'+'">';
 				 c +='<div class="pop_body" style="display:none" id="' + data.itemId + '_body">';
 				 c +=	'<div class="pop_inner" id="' + data.itemId + '_DIV"></div>';
-				 c +='</div>';
-				 
+				 c +='</div>';				 
 			 }else{
 				//c += '<div id="' + data.itemId + '">' + data.title + '</div>';
 				c +='<div class="readme" id="' + data.itemId + '">'
@@ -57,21 +56,27 @@ SurveyBuild.extend("FormDesc", "baseComponent", {
 				 var allHeight=$(window).height();
 				     var popheight=$("#"+id).height();
 				     $("#"+id).css("top",allHeight/2-popheight/2-10+"px");
+//				     $(".pop_inner").css("padding-bottom",allHeight/2-popheight/2-10+"-25px");
 				     $(".pop_close").css("top",allHeight/2-popheight/2-20+"px");
 				}	
 			var desc = $("#" + data["itemId"]);
+			var myscroll;
 			desc.click(function(){
 				$(".shade").show();
 				$("#"+data["itemId"]+"_img").show();
 				$("#"+data["itemId"]+"_body").show();
-				$(".pop_inner").html(data.title);
+				$(".pop_inner").html(data.title+"<br/>");
 				initStyles(data["itemId"] + "_body");
+				myscroll = new iScroll(data["itemId"] + "_body",{hideScrollbar:false});
+				myscroll.refresh();
 			});
 			$(".pop_close").click(function(){ 
 				$(".pop_body").hide();
 				$(".shade").hide();
 				$(".pop_close").hide();
 				$(".pop_inner").html("");
+				myscroll.destroy();
+				myscroll = null;
 			});
 		}else{
 			$(".form_input").hide();
