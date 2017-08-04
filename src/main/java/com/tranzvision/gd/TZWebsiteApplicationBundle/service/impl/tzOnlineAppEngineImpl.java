@@ -456,7 +456,7 @@ public class tzOnlineAppEngineImpl {
 						psTzFormWrkT.setRowLastmantDttm(new Date());
 						psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
 						String sql = "update PS_TZ_REG_USER_T SET TZ_ALLOW_APPLY='N' where OPRID =?";
-						sqlQuery.update(sql, new Object[] {oprid});
+						sqlQuery.update(sql, new Object[] { oprid });
 						// ////System.out.println("将班级和报名表关系数据 存入 ");
 
 						// ---3.向推荐信相关表中，加入”推荐信“信息 "PS_TZ_KS_TJX_TBL"
@@ -604,7 +604,7 @@ public class tzOnlineAppEngineImpl {
 								psTzAppInsT2.setTzAppinsJsonStr(psTzAppInsT.getTzAppinsJsonStr());// 历史推荐信字符串信息
 								// 新产生的推荐信ID"已提交"状态的推荐信ID 推入前台
 								String submitState = psTzAppInsT.getTzAppFormSta();
-								if (submitState.equals("U")) {
+								if (submitState != null && submitState.equals("U")) {
 									strRefLetterId = tzRefLetterId;
 								}
 								psTzAppInsT2.setTzAppFormSta(submitState);
