@@ -304,7 +304,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 							xtype : "image",
 							src : "",
 							height : 193,
-							width : 140,
+							width : 'auto',
 							name : "titileImage"
 						}, 
 						{

@@ -246,25 +246,48 @@ function PhoneBack(obj){
 </script>
 
 
+<style type="text/css"> 
+#phonecutImage img{
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 15%;
+    height: auto;
+    width: 100%;
+}
+#phonecutImage li{
+    vertical-align: middle;
+    font-size: 0.66rem;
+    margin: -1px 1% 0 1.75%;
+    padding: 6px 0;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+}
+</style> 
 
 	<article class="htmleaf-container" style="display: block;">
 		  <div id="clipArea" style="user-select: none; overflow: hidden; position: relative;">
-		  <div style="position: absolute;top: 10px;left: 10px;z-index: 100000;color: #fff;" onclick="PhoneBack(this)">返回</div></div>
-		  <div style="position: absolute;bottom: 100px;left: 10px;z-index: 100000;color: #fff;">提示：支持手势旋转缩放裁图。</div></div>
-			<div class="foot-use">
-				<div class="uploader1 blue">
-					<input type="button" name="file" class="button" value="打开"/>
-					<img id="tempimg" dynsrc="" style="display:none" />
+		  <div style="position: absolute;top: 10px;left: 10px;z-index: 100000;color: #fff;font-size: 0.6rem;" onclick="PhoneBack(this)"><img style="display: inline-block;vertical-align: middle;max-width: 15%;height: auto;width: 100%;" src="/statics/images/appeditor/new/phoneback.png">返回报名表</div></div>
+		  <div style="position: absolute;bottom: 15%;left: 25%;right:25%;z-index: 100000;color: #fff;font-size: 0.56rem;">支持手势旋转缩放裁图</div></div>
+			<div id="phonecutImage" style="width: 100%;height: auto;margin: 10px auto 0;overflow: hidden;background-color: #fff;padding: 11px 0;">
+				<div class="uploader1 blue" >
+				<li style="width: 80%;float: left;background-color: #8f5dbf;" >
+	            <img src="/statics/images/appeditor/new/phoneselect.png">选择图片<li>
+					<!-- <input type="button" name="file" class="button" value="打开"/>
+					<img id="tempimg" dynsrc="" style="display:none" /> -->
 					<!-- 用 Servlet提交表单-->
 					<form id="myupload"
 						action="UpdWebServlet?filePath=zhglPhoto" method="post"
 						enctype="multipart/form-data">
 				
-					<input id="file" name="websitefile" type="file"   />
+					<input id="file" name="websitefile" type="file"   style="width: 80%;float: left;background-color: #8f5dbf;"  />
 					</form>
 				</div>
 
-				<button id="clipBtn">截取</button>
+<li  id="clipBtn"  style=";width: 40%;float: right;background-color: #ff7b05;" >
+	<img src="/statics/images/appeditor/new/cutback.png">截取并返回<li>			
+	
+	<!--  <button id="clipBtn">截取</button>-->
 				
 			</div>
             

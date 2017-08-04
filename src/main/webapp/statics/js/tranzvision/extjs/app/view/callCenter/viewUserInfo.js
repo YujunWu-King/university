@@ -372,7 +372,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 							xtype : "image",
 							src : "",
 							height : 193,
-							width : 140,
+							width : 'auto',
 							name : "titileImage"
 						}, 
 						{
