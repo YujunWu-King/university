@@ -21,9 +21,7 @@ SurveyBuild.extend("FormDesc", "baseComponent", {
 				 c +='<div class="pop_body" style="display:none" id="' + data.itemId + '_body">';
 				 c +=	'<div class="pop_inner" id="' + data.itemId + '_DIV"></div>';
 				 c +='</div>';
-				 c +='<script type="text/javascript">';
-				 c +='var myScroll = new iScroll(data["itemId"]+"_body");';
-				 c +='</script>';
+				 
 			 }else{
 				//c += '<div id="' + data.itemId + '">' + data.title + '</div>';
 				c +='<div class="readme" id="' + data.itemId + '">'

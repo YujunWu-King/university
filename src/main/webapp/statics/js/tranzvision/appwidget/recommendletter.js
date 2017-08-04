@@ -2798,7 +2798,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						
 						//发送给自己
 						works += '<div id="sendEmailToMeS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"":"display:none")+';width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
-						works += '<div >'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
 						works += '</div>';
 						
 						//发送给自己灰色
@@ -3388,6 +3388,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					dataType: "json",
 					success: function(result){
 						if (result.comContent=="SUCCESS"){
+							$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
 							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
 							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
 							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
@@ -3721,6 +3722,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 								$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
 								$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
 								
+								$("#changeRecH_"+(Number(mm)-1)).css("display","none");
 								$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 								$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
 								$("#tjxzt_info_"+(Number(mm)-1)).val("");
@@ -3783,10 +3785,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 								$("#tjx_delete_"+(Number(mm)-1)).show();
 								$("#app_save").click();
 							}else {
-								$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
-								$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
-								$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
-								$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+								//$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+								//$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+								//$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+								//$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
 								$("#changeRecH_"+(Number(mm)-1)).css("display","none");
 								$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 								alert(result.comContent);
