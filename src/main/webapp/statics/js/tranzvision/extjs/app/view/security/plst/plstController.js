@@ -491,7 +491,7 @@
         var tzParams = '{"ComID":"TZ_AQ_PLST_COM","PageID":"TZ_PLST_COM_STD","OperateType":"QF","comParams":{"permID":"'+permID+'","comID":"'+comID+'","comName":"'+comName+'"}';
 
         var form = win.child("form").getForm();
-        var grid = win.child("grid");
+        var grid = Ext.getCmp('pageGrid');
 
         form.setValues(
             [
@@ -599,7 +599,7 @@
         //提交参数
         var panel = win.findParentByType("panel");
         var permForm = panel.child("form").getForm();
-        var pageGrid = panel.child("grid");
+        var pageGrid = Ext.getCmp('pageGrid');
         if(gridEditJson!=""){
             Ext.tzSubmit(tzParams,function(){
                 if(actType=="add"){
