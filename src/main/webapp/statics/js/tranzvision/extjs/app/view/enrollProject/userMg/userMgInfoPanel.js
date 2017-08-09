@@ -610,10 +610,12 @@
 } ],
 buttons : [ {
     text : '保存',
+    name: 'save',
     iconCls : "save",
     handler : 'onFormSave'
 }, {
     text : '确定',
+    name: 'ensure',
     iconCls : "ensure",
     handler : 'onFormEnsure'
 }, {
