@@ -97,6 +97,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				String str_sex = "",str_name="",str_acctlook="";
 				//邮箱、手机,skype;
 				String str_email = "", str_phone= "", str_skype="";
+				String strBindEmailFlg="";
+				String strBindPhoneFlg="";
 				//账号激活状态、创建日期时间;
 				String str_jihuozt = "" , str_zc_time = "";
 				ArrayList<Map<String, Object>> arraylist = new ArrayList<>();
@@ -129,12 +131,15 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					//-----------------
 					
 					//绑定手机和邮箱
-					String bindPhoneAndEmailSQL = "SELECT TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?";
+					String bindPhoneAndEmailSQL = "SELECT TZ_EMAIL,TZ_MOBILE,TZ_YXBD_BZ,TZ_SJBD_BZ FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?";
 					Map<String, Object> phoneAndEmailMap = jdbcTemplate.queryForMap(bindPhoneAndEmailSQL,new Object[]{str_oprid});
+					
 					if(phoneAndEmailMap!=null){
 						str_email = phoneAndEmailMap.get("TZ_EMAIL")==null?"":String.valueOf(phoneAndEmailMap.get("TZ_EMAIL"));
 						str_phone = phoneAndEmailMap.get("TZ_MOBILE")==null?"":String.valueOf(phoneAndEmailMap.get("TZ_MOBILE"));
-					}													
+						strBindEmailFlg = phoneAndEmailMap.get("TZ_YXBD_BZ")==null?"":String.valueOf(phoneAndEmailMap.get("TZ_YXBD_BZ"));
+						strBindPhoneFlg = phoneAndEmailMap.get("TZ_SJBD_BZ")==null?"":String.valueOf(phoneAndEmailMap.get("TZ_SJBD_BZ"));
+					}
 					
 					String accoutztSQL = "select TZ_JIHUO_ZT, date_format(TZ_ZHCE_DT, '%Y-%m-%d %H:%i:%s') TZ_ZHCE_DT,TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=?";
 					Map<String, Object> accoutztMap = jdbcTemplate.queryForMap(accoutztSQL,new Object[]{str_oprid});
@@ -360,6 +365,16 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				jsonMap2.put("userSex",str_sex );
 				jsonMap2.put("userEmail",str_email );
 				jsonMap2.put("userPhone",str_phone);
+				boolean tmpBindPhoneFlg = false;
+				if("Y".equals(strBindPhoneFlg)){
+					tmpBindPhoneFlg = true;
+				}
+				jsonMap2.put("bindPhoneFlg",tmpBindPhoneFlg);
+				boolean tmpBindEmailFlg = false;
+				if("Y".equals(strBindEmailFlg)){
+					tmpBindEmailFlg = true;
+				}
+				jsonMap2.put("bindEmailFlg",tmpBindEmailFlg);
 				jsonMap2.put("jihuoZt",str_jihuozt );
 				jsonMap2.put("acctlock",str_acctlook );
 				jsonMap2.put("zcTime",str_zc_time);
@@ -454,7 +469,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    String strJjlxrPhone = (String) map.get("jjlxrPhone");
 				    
 				    //20170425,yuds,申请用户信息修改
-				    
+				    String bindEmailFlg = (String) map.get("bindEmailFlg");
+				    String bindPhoneFlg = (String) map.get("bindPhoneFlg");
 				    //用户信息表
 				    String strUserOrgSQL = "SELECT TZ_JG_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 				    String strUserOrg = jdbcTemplate.queryForObject(strUserOrgSQL, new Object[]{strOprId}, "String");
@@ -477,10 +493,10 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    			
 				    			return strRet;
 				    		}else{
-				    			psTzAqYhxxTbl.setTzYxbdBz("Y");
+				    			psTzAqYhxxTbl.setTzYxbdBz(bindEmailFlg);
 				    		}
 				    	}else{
-				    		psTzAqYhxxTbl.setTzYxbdBz("N");
+				    		psTzAqYhxxTbl.setTzYxbdBz(bindEmailFlg);
 				    	}
 				    	psTzAqYhxxTbl.setTzEmail(strUserEmail);
 				    }
@@ -497,10 +513,10 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    			
 				    			return strRet;
 				    		}else{
-				    			psTzAqYhxxTbl.setTzSjbdBz("Y");
+				    			psTzAqYhxxTbl.setTzSjbdBz(bindPhoneFlg);
 				    		}
 				    	}else{
-				    		psTzAqYhxxTbl.setTzSjbdBz("N");
+				    		psTzAqYhxxTbl.setTzSjbdBz(bindPhoneFlg);
 				    	}
 				    	psTzAqYhxxTbl.setTzMobile(strUserPhone);
 				    }
