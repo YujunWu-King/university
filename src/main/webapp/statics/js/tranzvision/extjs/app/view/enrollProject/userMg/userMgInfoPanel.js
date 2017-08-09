@@ -87,11 +87,25 @@
                         xtype : 'textfield',
                         fieldLabel : '绑定邮箱',
                         name : 'userEmail'
+                    },
+                    {
+                        xtype : 'checkboxfield',
+                        fieldLabel : '邮箱绑定标志',
+                        inputValue:'Y',
+                        uncheckedValue:'N',
+                        name : 'bindEmailFlg'
                     }, 
                     {
                         xtype : 'textfield',
                         fieldLabel : '绑定手机',
                         name : 'userPhone'
+                    },                    
+                    {
+                        xtype : 'checkboxfield',
+                        fieldLabel : '手机绑定标志',
+                        inputValue:'Y',
+                        uncheckedValue:'N',
+                        name : 'bindPhoneFlg'
                     },
                     {
                         xtype : 'combo',
