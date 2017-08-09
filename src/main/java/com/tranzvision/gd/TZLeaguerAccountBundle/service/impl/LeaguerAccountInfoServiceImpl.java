@@ -521,7 +521,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    	psTzAqYhxxTbl.setTzMobile(strUserPhone);
 				    }
 				    
-				    if("".equals(strUserEmail)&&"".equals(strUserPhone)){
+				    if((!"".equals(strUserEmail)&&"Y".equals(bindEmailFlg))||(!"".equals(strUserPhone)&&"Y".equals(bindPhoneFlg))){
+				    	
+				    }else{
 				    	returnJsonMap.replace("OPRID", strOprId);
 		    			strRet = jacksonUtil.Map2json(returnJsonMap);
 		    			errMsg[0] = "1";
@@ -529,6 +531,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 		    			
 		    			return strRet;
 				    }
+				    
 				    if(strJihuoZt!=null){
 				    	psTzAqYhxxTbl.setTzJihuoZt(strJihuoZt);
 				    }
