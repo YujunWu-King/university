@@ -597,7 +597,9 @@
 			},this);   
 	   }
 	},
-	saveDataInfo: function(){
+	saveDataInfo: function(btn){
+		
+		var btnName = btn.name;
 		
 		var win =this.getView();
 
@@ -624,8 +626,10 @@
 		//提交参数
 		var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"U","comParams":{"'+win.actType+'":[{"data":'+Ext.JSON.encode(formParams)+'}]}}';
 		
-		Ext.tzSubmit(tzParams,function(){
-
+		Ext.tzSubmit(tzParams,function(response){
+			if(btnName=="ensure"){
+				win.close();
+			}
 	    },"",true,this);
 	},
 	
@@ -654,13 +658,13 @@
     onFormClose: function(){
 		this.getView().close();
 	},
-	onFormSave:function(){
-		this.saveDataInfo();
+	onFormSave:function(btn){
+		this.saveDataInfo(btn);
 	},
-	onFormEnsure:function(){
-		this.saveDataInfo();
+	onFormEnsure:function(btn){
+		this.saveDataInfo(btn);
 	
-		this.getView().close();
+		//this.getView().close();
 		
 		 
 	},
