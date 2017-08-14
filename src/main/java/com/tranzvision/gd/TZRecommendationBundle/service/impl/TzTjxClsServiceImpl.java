@@ -63,7 +63,7 @@ public class TzTjxClsServiceImpl {
 					str_language, "", "");
 		} else {
 //			mySqlLockService.lockRow(jdbcTemplate,"TZ_KS_TJX_TBL");
-			synchronized (obj) {
+			//synchronized (obj) {
 				strTjxId = jdbcTemplate.queryForObject(
 						"select TZ_REF_LETTER_ID from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and OPRID=?  and TZ_TJR_ID=? and TZ_MBA_TJX_YX='Y' limit 0,1",
 						new Object[] { numAppinsId, strOprid, strTjrId }, "String");
@@ -169,7 +169,7 @@ public class TzTjxClsServiceImpl {
 						psTzKsTjxTblMapper.updateByPrimaryKeySelective(psTzKsTjxTbl);
 					}
 				}
-			}
+			//}
 			
 			//mySqlLockService.unlockRow(jdbcTemplate);
 			strRtn = "SUCCESS";
