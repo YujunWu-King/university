@@ -154,7 +154,7 @@ public class TzEventsEnrolledExportEngineCls extends BaseEngine {
 					mapData.put("qdzt", strQdzt);
 					
 					if(!"".equals(oprid)){
-						sql = "SELECT TZ_MSSQH FROM PS_TZ_REG_USER_T WHERE OPRID=? LIMIT 1";
+						sql = "SELECT TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? LIMIT 1";
 						msApplyNo = sqlQuery.queryForObject(sql, new Object[] { oprid }, "String");
 					}
 					mapData.put("msApplyNo", msApplyNo);
