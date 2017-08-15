@@ -3,6 +3,7 @@ package com.tranzvision.gd.TZRecommendationBundle.service.impl;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -349,10 +350,22 @@ public class TzIscriptClsServiceImpl extends FrameworkImpl {
 			}
 
 			if ("DELETE".equals(operateType)) {
+				/*
 				jdbcTemplate.update("DELETE FROM PS_TZ_KS_TJX_TBL  WHERE TZ_APP_INS_ID = ? AND TZ_MBA_TJX_YX = 'N'",
 						new Object[] { numAppinsId });
 				jdbcTemplate.update("DELETE FROM PS_TZ_KS_TJX_TBL  WHERE TZ_APP_INS_ID = ? AND (TZ_REFLETTERTYPE = 'U' OR TZ_REFLETTERTYPE = '')",
 						new Object[] { numAppinsId });
+						*/
+				// 删除无效的推荐信;
+				String getRefLetterSQL = "SELECT TZ_REF_LETTER_ID FROM PS_TZ_KS_TJX_TBL WHERE TZ_APP_INS_ID = ? AND (TZ_MBA_TJX_YX = 'N' OR TZ_REFLETTERTYPE = 'U' OR TZ_REFLETTERTYPE = '')";
+				List<Map<String, Object>> getRefLetterList = jdbcTemplate.queryForList(getRefLetterSQL, new Object[] { numAppinsId });
+				if (getRefLetterList != null && getRefLetterList.size() > 0) {
+					for (int j = 0; j < getRefLetterList.size(); j++) {
+						String strRefLetterId = (String) getRefLetterList.get(j).get("TZ_REF_LETTER_ID");
+						jdbcTemplate.update("DELETE FROM PS_TZ_KS_TJX_TBL  WHERE TZ_REF_LETTER_ID = ?",
+								new Object[] { strRefLetterId });
+					}
+				}
 			}
 
 			if ("SAVE".equals(operateType)) {
