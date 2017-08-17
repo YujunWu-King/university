@@ -25,7 +25,9 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
         var me = this;
        
         var userID=TranzvisionMeikecityAdvanced.Boot.loginUserId;
+        var jgID=Ext.tzOrgID;
         console.log(userID);
+        console.log(jgID);
         
 				Ext.apply(Ext.form.field.VTypes, {  
 				  promptVildate:  function(value,field) {  
@@ -51,7 +53,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
 				  promptVildateText: TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00100")/*输入的值不存在*/
 				});
 				
-				var tzParams = '{"ComID":"TZ_COMMON_CFG_COM","PageID":"TZ_COMMON_CFG_STD","OperateType":"QF","comParams":{"cfgSrhId":"'+this.cfgSrhId+'","currentUser":"'+userID+'"}}';
+				var tzParams = '{"ComID":"TZ_COMMON_CFG_COM","PageID":"TZ_COMMON_CFG_STD","OperateType":"QF","comParams":{"cfgSrhId":"'+this.cfgSrhId+'","currentUser":"'+userID+'","currentrOganization":"'+jgID+'"}}';
 //				var tzParams = '{"ComID":"TZ_COMMON_CFG_COM","PageID":"TZ_COMMON_CFG_STD","OperateType":"QF","comParams":{"cfgSrhId":"'+this.cfgSrhId+'"}}';
 
         //搜索条件

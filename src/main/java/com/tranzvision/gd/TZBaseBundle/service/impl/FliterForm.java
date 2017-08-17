@@ -45,9 +45,11 @@ public class FliterForm extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			String cfgSrhId = "";
 			String currentUser = "";
+			String currentrOganization = "";
 			try{
 				cfgSrhId = jacksonUtil.getString("cfgSrhId");
 				currentUser=jacksonUtil.getString("currentUser");
+				currentrOganization=jacksonUtil.getString("currentrOganization");
 				System.out.println("currentUser========"+currentUser);
 			}catch(Exception e){
 				errorMsg[0] = "1";
@@ -318,9 +320,9 @@ public class FliterForm extends FrameworkImpl {
 			String roleOprId;
 			String roleExisted;
 			
-			String RoleOprIdSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID=?";
-			roleOprId = jdbcTemplate.queryForObject(RoleOprIdSql, new Object[] { currentUser }, "String");
-			
+			String RoleOprIdSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID=? and TZ_JG_ID=?";
+			roleOprId = jdbcTemplate.queryForObject(RoleOprIdSql, new Object[] { currentUser,currentrOganization }, "String");
+			System.out.println("roleOprId======"+roleOprId);
 			
 			String DataSetRoleSql = "SELECT * FROM PSROLEUSER WHERE ROLEUSER=?";
 			List<Map<String, Object>> listDateSetRole = jdbcTemplate.queryForList(DataSetRoleSql,new Object[] {roleOprId});
