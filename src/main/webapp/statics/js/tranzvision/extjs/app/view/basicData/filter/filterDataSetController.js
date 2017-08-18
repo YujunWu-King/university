@@ -539,7 +539,7 @@
     		var CompID = formParams['ComID'];
     		var PageID = formParams['PageID'];
        	 	var ViewMc = formParams['ViewMc'];
-	        
+       	 	var fieldOrder = formParams['fieldOrder'];
        	 	
        	 	var tabpanel = this.getView().child("tabpanel");
     	 	var grid = tabpanel.down('grid[name=filterRoleGrid]');
@@ -587,7 +587,7 @@
 	            		var roleNum=arrAddRoleValue.length;
 	            		
 	        			var oprIDJson = "";
-	        			oprIDJson = '{"CompID":"' + CompID + '","PageID":"' + PageID + '","ViewMc":"' + ViewMc + '","roleNum":"' + roleNum + '","RoleID":"' + RoleID + '"}';
+	        			oprIDJson = '{"CompID":"' + CompID + '","PageID":"' + PageID + '","ViewMc":"' + ViewMc + '","fieldOrder":"' + fieldOrder + '","RoleID":"' + RoleID + '"}';
 
 	        			
 	        			var comParamsOPRID = "";
