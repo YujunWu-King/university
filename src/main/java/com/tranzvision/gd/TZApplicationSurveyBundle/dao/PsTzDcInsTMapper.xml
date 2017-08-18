@@ -11,6 +11,9 @@
     <result column="TZ_DC_INS_MAC" property="tzDcInsMac" jdbcType="VARCHAR" />
     <result column="PERSON_ID" property="personId" jdbcType="VARCHAR" />
     <result column="TZ_UNIQUE_NUM" property="tzUniqueNum" jdbcType="VARCHAR" />
+    <result column="OPEN_ID" property="openId" jdbcType="VARCHAR" />
+    <result column="TZ_NICK_NAME" property="tzNickName" jdbcType="VARCHAR" />
+    <result column="TZ_PHOTO_PATH" property="tzPhotoPath" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
@@ -23,8 +26,8 @@
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_APP_INS_ID, TZ_DC_WJ_ID, TZ_DC_WC_STA, TZ_APP_SUB_STA, TZ_DC_INS_FROM, TZ_DC_INS_IP, 
-    TZ_DC_INS_MAC, PERSON_ID, TZ_UNIQUE_NUM, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
-    ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    TZ_DC_INS_MAC, PERSON_ID, TZ_UNIQUE_NUM, OPEN_ID, TZ_NICK_NAME, TZ_PHOTO_PATH, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <sql id="Blob_Column_List" >
     TZ_APPINS_JSON_STR
@@ -45,12 +48,14 @@
     insert into PS_TZ_DC_INS_T (TZ_APP_INS_ID, TZ_DC_WJ_ID, TZ_DC_WC_STA, 
       TZ_APP_SUB_STA, TZ_DC_INS_FROM, TZ_DC_INS_IP, 
       TZ_DC_INS_MAC, PERSON_ID, TZ_UNIQUE_NUM, 
+      OPEN_ID, TZ_NICK_NAME, TZ_PHOTO_PATH, 
       ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
       ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
       TZ_APPINS_JSON_STR)
     values (#{tzAppInsId,jdbcType=BIGINT}, #{tzDcWjId,jdbcType=VARCHAR}, #{tzDcWcSta,jdbcType=VARCHAR}, 
       #{tzAppSubSta,jdbcType=VARCHAR}, #{tzDcInsFrom,jdbcType=VARCHAR}, #{tzDcInsIp,jdbcType=VARCHAR}, 
       #{tzDcInsMac,jdbcType=VARCHAR}, #{personId,jdbcType=VARCHAR}, #{tzUniqueNum,jdbcType=VARCHAR}, 
+      #{openId,jdbcType=VARCHAR}, #{tzNickName,jdbcType=VARCHAR}, #{tzPhotoPath,jdbcType=VARCHAR}, 
       #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
       #{tzAppinsJsonStr,jdbcType=LONGVARCHAR})
@@ -84,6 +89,15 @@
       </if>
       <if test="tzUniqueNum != null" >
         TZ_UNIQUE_NUM,
+      </if>
+      <if test="openId != null" >
+        OPEN_ID,
+      </if>
+      <if test="tzNickName != null" >
+        TZ_NICK_NAME,
+      </if>
+      <if test="tzPhotoPath != null" >
+        TZ_PHOTO_PATH,
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM,
@@ -135,6 +149,15 @@
       <if test="tzUniqueNum != null" >
         #{tzUniqueNum,jdbcType=VARCHAR},
       </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNickName != null" >
+        #{tzNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhotoPath != null" >
+        #{tzPhotoPath,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -185,6 +208,15 @@
       <if test="tzUniqueNum != null" >
         TZ_UNIQUE_NUM = #{tzUniqueNum,jdbcType=VARCHAR},
       </if>
+      <if test="openId != null" >
+        OPEN_ID = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNickName != null" >
+        TZ_NICK_NAME = #{tzNickName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhotoPath != null" >
+        TZ_PHOTO_PATH = #{tzPhotoPath,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -219,6 +251,9 @@
       TZ_DC_INS_MAC = #{tzDcInsMac,jdbcType=VARCHAR},
       PERSON_ID = #{personId,jdbcType=VARCHAR},
       TZ_UNIQUE_NUM = #{tzUniqueNum,jdbcType=VARCHAR},
+      OPEN_ID = #{openId,jdbcType=VARCHAR},
+      TZ_NICK_NAME = #{tzNickName,jdbcType=VARCHAR},
+      TZ_PHOTO_PATH = #{tzPhotoPath,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
@@ -238,6 +273,9 @@
       TZ_DC_INS_MAC = #{tzDcInsMac,jdbcType=VARCHAR},
       PERSON_ID = #{personId,jdbcType=VARCHAR},
       TZ_UNIQUE_NUM = #{tzUniqueNum,jdbcType=VARCHAR},
+      OPEN_ID = #{openId,jdbcType=VARCHAR},
+      TZ_NICK_NAME = #{tzNickName,jdbcType=VARCHAR},
+      TZ_PHOTO_PATH = #{tzPhotoPath,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},

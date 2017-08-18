@@ -35,6 +35,7 @@
     <result column="TZ_DC_WJ_TZDZ" property="tzDcWjTzdz" jdbcType="VARCHAR" />
     <result column="TZ_DC_WJ_TLSJ" property="tzDcWjTlsj" jdbcType="VARCHAR" />
     <result column="SETID" property="setid" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_WX" property="tzDcWjWx" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs" extends="BaseResultMap" >
     <result column="TZ_DC_JTNR" property="tzDcJtnr" jdbcType="LONGVARCHAR" />
@@ -49,7 +50,7 @@
     TZ_DC_WJ_PC_URL, TZ_DC_WJ_MB_URL, TZ_DC_WJ_DLZT, TZ_DC_WJ_DTGZ, TZ_DC_WJ_IPGZ, TZ_DC_WJ_JSGZ, 
     TZ_DC_WJ_NM, TZ_DC_WJ_NEEDPWD, TZ_DC_WJ_PWD, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
     ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_DC_WJ_URL, TZ_DC_WJ_QYQD, TZ_DC_WJ_SFTZ, 
-    TZ_DC_WJ_TZDZ, TZ_DC_WJ_TLSJ, SETID
+    TZ_DC_WJ_TZDZ, TZ_DC_WJ_TLSJ, SETID, TZ_DC_WJ_WX
   </sql>
   <sql id="Blob_Column_List" >
     TZ_DC_JTNR, TZ_DC_JWNR, TZ_APPTPL_JSON_STR, TZ_DC_WJ_QDNR, TZ_DC_WJ_JGNR
@@ -78,8 +79,9 @@
       ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
       TZ_DC_WJ_URL, TZ_DC_WJ_QYQD, TZ_DC_WJ_SFTZ, 
       TZ_DC_WJ_TZDZ, TZ_DC_WJ_TLSJ, SETID, 
-      TZ_DC_JTNR, TZ_DC_JWNR, TZ_APPTPL_JSON_STR, 
-      TZ_DC_WJ_QDNR, TZ_DC_WJ_JGNR)
+      TZ_DC_WJ_WX, TZ_DC_JTNR, TZ_DC_JWNR, 
+      TZ_APPTPL_JSON_STR, TZ_DC_WJ_QDNR, TZ_DC_WJ_JGNR
+      )
     values (#{tzDcWjId,jdbcType=VARCHAR}, #{tzAppTplId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
       #{tzDcWjbt,jdbcType=VARCHAR}, #{tzAppTplLx,jdbcType=VARCHAR}, #{tzAppTplLan,jdbcType=VARCHAR}, 
       #{tzDcWjZt,jdbcType=VARCHAR}, #{tzDcWjFb,jdbcType=VARCHAR}, #{tzDcWjKsrq,jdbcType=DATE}, 
@@ -91,8 +93,9 @@
       #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
       #{tzDcWjUrl,jdbcType=VARCHAR}, #{tzDcWjQyqd,jdbcType=VARCHAR}, #{tzDcWjSftz,jdbcType=VARCHAR}, 
       #{tzDcWjTzdz,jdbcType=VARCHAR}, #{tzDcWjTlsj,jdbcType=VARCHAR}, #{setid,jdbcType=VARCHAR}, 
-      #{tzDcJtnr,jdbcType=LONGVARCHAR}, #{tzDcJwnr,jdbcType=LONGVARCHAR}, #{tzApptplJsonStr,jdbcType=LONGVARCHAR}, 
-      #{tzDcWjQdnr,jdbcType=LONGVARCHAR}, #{tzDcWjJgnr,jdbcType=LONGVARCHAR})
+      #{tzDcWjWx,jdbcType=VARCHAR}, #{tzDcJtnr,jdbcType=LONGVARCHAR}, #{tzDcJwnr,jdbcType=LONGVARCHAR}, 
+      #{tzApptplJsonStr,jdbcType=LONGVARCHAR}, #{tzDcWjQdnr,jdbcType=LONGVARCHAR}, #{tzDcWjJgnr,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs" >
     insert into PS_TZ_DC_WJ_DY_T
@@ -195,6 +198,9 @@
       </if>
       <if test="setid != null" >
         SETID,
+      </if>
+      <if test="tzDcWjWx != null" >
+        TZ_DC_WJ_WX,
       </if>
       <if test="tzDcJtnr != null" >
         TZ_DC_JTNR,
@@ -312,6 +318,9 @@
       <if test="setid != null" >
         #{setid,jdbcType=VARCHAR},
       </if>
+      <if test="tzDcWjWx != null" >
+        #{tzDcWjWx,jdbcType=VARCHAR},
+      </if>
       <if test="tzDcJtnr != null" >
         #{tzDcJtnr,jdbcType=LONGVARCHAR},
       </if>
@@ -428,6 +437,9 @@
       <if test="setid != null" >
         SETID = #{setid,jdbcType=VARCHAR},
       </if>
+      <if test="tzDcWjWx != null" >
+        TZ_DC_WJ_WX = #{tzDcWjWx,jdbcType=VARCHAR},
+      </if>
       <if test="tzDcJtnr != null" >
         TZ_DC_JTNR = #{tzDcJtnr,jdbcType=LONGVARCHAR},
       </if>
@@ -480,6 +492,7 @@
       TZ_DC_WJ_TZDZ = #{tzDcWjTzdz,jdbcType=VARCHAR},
       TZ_DC_WJ_TLSJ = #{tzDcWjTlsj,jdbcType=VARCHAR},
       SETID = #{setid,jdbcType=VARCHAR},
+      TZ_DC_WJ_WX = #{tzDcWjWx,jdbcType=VARCHAR},
       TZ_DC_JTNR = #{tzDcJtnr,jdbcType=LONGVARCHAR},
       TZ_DC_JWNR = #{tzDcJwnr,jdbcType=LONGVARCHAR},
       TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
@@ -520,7 +533,8 @@
       TZ_DC_WJ_SFTZ = #{tzDcWjSftz,jdbcType=VARCHAR},
       TZ_DC_WJ_TZDZ = #{tzDcWjTzdz,jdbcType=VARCHAR},
       TZ_DC_WJ_TLSJ = #{tzDcWjTlsj,jdbcType=VARCHAR},
-      SETID = #{setid,jdbcType=VARCHAR}
+      SETID = #{setid,jdbcType=VARCHAR},
+      TZ_DC_WJ_WX = #{tzDcWjWx,jdbcType=VARCHAR}
     where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
   </update>
 </mapper>

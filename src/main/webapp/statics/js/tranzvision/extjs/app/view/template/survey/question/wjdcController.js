@@ -2,7 +2,8 @@
     extend: 'Ext.app.ViewController',
     alias: 'controller.wjdcController',
     requires: [
-        'KitchenSink.view.template.survey.question.tagModel'
+        'KitchenSink.view.template.survey.question.tagModel',
+        'KitchenSink.view.template.survey.question.wjdcAppclsModel'
     ],
 
     /*查询调查问卷*/
@@ -253,9 +254,10 @@
         cmp.actType = "update";
         cmp.parentGridStore = store;
         cmp.on('afterrender',function(panel){
-          //  console.log(panel);
             //组件注册表单信息;
             var form = panel.child('form').getForm();
+            var grid=panel.child('form').down("grid");
+            var store=grid.getStore();
             //参数
             var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"QF","comParams":{"wjId":"'+wjId+'"}}';
             //加载数据
@@ -288,8 +290,10 @@
                     i++;
                 }
                 form.findField("AudList").setValue(oprIdArray);
-            
-       
+                grid.tzAppClsTypeStore=new  KitchenSink.view.common.store.appTransStore("TZ_APP_CLS_TYPE");
+                store.tzStoreParams='{"wjId":"' + form.findField("TZ_DC_WJ_ID").getValue() + '"}';
+                store.load();
+               
             });
 
         });
@@ -1229,33 +1233,101 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
     onFormSave:function(btn){
         var panel = btn.findParentByType("panel");
         var form = this.getView().child("form").getForm();
-       // console.log(this.getView());
+        var grid= this.getView().child("form").down("grid");
+        var store=grid.getStore();
         if(!form.isValid() ){
             return false;
         }
         var formParams = form.getValues();
         
-        console.log("formParams:"+Ext.JSON.encode(formParams));
-        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+        //console.log("formParams:"+Ext.JSON.encode(formParams));
+        //var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+        var tzParams=this.getOrgInfoParams(btn);
         Ext.tzSubmit(tzParams,function(response){
             /*修改页面ID值*/
-            form.setValues({"TZ_DC_WJ_ID":response.wjId});
+            //form.setValues({"TZ_DC_WJ_ID":response.wjId});
+            store.tzStoreParams='{"wjId":"' + form.findField("TZ_DC_WJ_ID").getValue() + '"}';
+            store.load();
 			if(panel.parentGridStore!=null&&panel.parentGridStore!=""){
 				panel.parentGridStore.reload();
 			}
         },"",true,this);
     },
+    getOrgInfoParams: function(btn){
+        //报名流程信息表单
+        var form = this.getView().child("form").getForm();
+        var panel = btn.findParentByType("panel");
+        
+        //机构信息标志
+        var actType = this.getView().actType;
+        //更新操作参数
+        var comParams = "";
+       
+        //修改json字符串
+        var editJson = "";
+        if(actType == "update"){
+            editJson = '{"typeFlag":"FORM","data":'+Ext.JSON.encode(form.getValues())+'}';
+        }
+
+        //机构管理员信息列表
+        var grid=this.getView().child("form").down("grid");
+  
+        //机构管理员信息数据
+        var store = grid.getStore();
+        //修改记录
+        var mfRecs = store.getModifiedRecords();
+        for(var i=0;i<mfRecs.length;i++){
+            if(editJson == ""){
+                editJson = '{"typeFlag":"GRID","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }else{
+                editJson = editJson + ',{"typeFlag":"GRID","data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+            }
+        }
+        if(editJson != ""){
+            if(comParams == ""){
+                comParams = '"update":[' + editJson + "]";
+            }else{
+                comParams = comParams + ',"update":[' + editJson + "]";
+            }
+        }
+        //删除json字符串
+        var removeJson = "";
+        //删除记录
+        var removeRecs = store.getRemovedRecords();
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        if(removeJson != ""){
+            if(comParams == ""){
+                comParams = '"delete":[' + removeJson + "]";
+            }else{
+                comParams = comParams + ',"delete":[' + removeJson + "]";
+            }
+        }
+        //提交参数
+        var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        return tzParams;
+    },
     //问卷设置确定
    onFormEnsure:function(btn){
        var panel = btn.findParentByType("panel");
        var form =this.getView().child("form").getForm();
+       var grid= this.getView().child("form").down("grid");
+       var store=grid.getStore();
        if(!form.isValid()){
            return false;
        }
-       var formParams = form.getValues();
-       var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+       //var formParams = form.getValues();
+       //var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_WJSZ_STD","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
+       var tzParams=this.getOrgInfoParams(btn);
        Ext.tzSubmit(tzParams,function(response){
-           form.setValues({"TZ_DC_WJ_ID":response.wjId});
+           //form.setValues({"TZ_DC_WJ_ID":response.wjId});
+           store.tzStoreParams='{"wjId":"' + form.findField("TZ_DC_WJ_ID").getValue() + '"}';
+           store.load();
 		   if(panel.parentGridStore!=""&&panel.parentGridStore!=null)
 		   {
 				panel.parentGridStore.reload();
@@ -1684,6 +1756,90 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         tabPanel.setActiveTab(1);
         
         win.show();
+	},
+	chooseAppCls:function(btn){
+		var searchDesc,modal,modal_desc;
+        searchDesc="应用程序类选择";
+        modal="TZ_APPCLS_ID";
+        modal_desc="TZ_DESCR100"; 
+		
+        var grid = btn.findParentByType("grid");
+        var len=grid.getStore().getCount();
+        var record = grid.getSelectionModel().getSelection()[0];
+		
+        var form=grid.findParentByType("panel").getForm();
+        var wjId=form.findField("TZ_DC_WJ_ID").getValue();
+        Ext.tzShowPromptSearch({
+            recname: 'TZ_APPCLS_TBL',
+            searchDesc: searchDesc,
+            maxRow:20,
+            condition:{
+                presetFields:{
+                    
+                },
+                srhConFields:{
+                	TZ_APPCLS_ID:{
+                        desc:'应用程序类ID',
+                        operator:'01',
+                        type:'01'
+                    },
+                    TZ_DESCR100:{
+                        desc:'应用程序类名称',
+                        operator:'07',
+                        type:'01'
+                    }
+                }
+            },
+            srhresult:{
+            	TZ_APPCLS_ID: '应用程序类ID',
+                TZ_DESCR100: '应用程序类名称'
+            },
+            multiselect: false, 
+            callback: function(selection){
+            	record.set("wjId",wjId);
+                record.set("tzAppclsID",selection[0].data.TZ_APPCLS_ID);
+                record.set("tzAppclsName",selection[0].data.TZ_DESCR100);
+              
+            }
+        });
+	},
+	//问卷事件新增
+	addWjdcAppcls:function(btn){
+		var store = btn.findParentByType("grid").store;
+	    var dropBoxSetCellediting = btn.findParentByType("grid").getPlugin('dropBoxSetCellediting');
+	    var rowCount = store.getCount();
+        store.insert(rowCount,new KitchenSink.view.template.survey.question.wjdcAppclsModel());
+        dropBoxSetCellediting.startEditByPosition({
+            row: rowCount,
+            column: 1
+        }); 
+	},
+	deleteWjdcAppcls:function(btn){
+		 //选中行
+        var selList =  btn.findParentByType("grid").getSelectionModel().getSelection();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","请选择要删除的记录");
+            return;
+        }else{
+            Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+                if(btnId == 'yes'){
+                    var resSetStore =  btn.findParentByType("grid").store;
+                    resSetStore.remove(selList);
+                }
+            },this);
+        }
+	},
+	delCurRowWjAppcls:function(view,rowIndex){
+		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?',
+	            function(btnId) {
+	                if (btnId == 'yes') {
+	                    var store = view.findParentByType("grid").store;
+	                    store.removeAt(rowIndex);
+	                }
+	            }, 
+	            this); 
 	}
 
 });

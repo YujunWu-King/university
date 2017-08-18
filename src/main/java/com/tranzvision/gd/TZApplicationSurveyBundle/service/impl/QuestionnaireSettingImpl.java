@@ -1,12 +1,10 @@
 package com.tranzvision.gd.TZApplicationSurveyBundle.service.impl;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,34 +12,105 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjAppclsTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjDyTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzSureyAudTMapper;
+import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjAppclsT;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzSureyAudT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZThemeMgBundle.model.PsTzPtZtxxTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Service("com.tranzvision.gd.TZApplicationSurveyBundle.service.impl.QuestionnaireSettingImpl")
 public class QuestionnaireSettingImpl extends FrameworkImpl{
 	@Autowired
 	private SqlQuery jdbcTemplate;
-
+	@Autowired
+	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsTzDcWjDyTMapper psTzDcWjDyTMapper;
-	
+	@Autowired
+	private PsTzDcWjAppclsTMapper psTzDcWjAppclsTMapper;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
-	
 	@Autowired
 	private HttpServletRequest request;
-	
 	@Autowired
 	private PsTzSureyAudTMapper PsTzSureyAudTMapper;
-	@SuppressWarnings("unchecked")
+	
+	@Override
+	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
+		// 返回值;
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		mapRet.put("root", "");
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(comParams);
+
+		String wjId = jacksonUtil.getString("wjId");
+		ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
+		try {
+			int total = 0;
+			// 查询总数;
+			
+			String totalSQL = "SELECT COUNT(1) FROM PS_TZ_DC_WJ_APPCLS_T WHERE TZ_DC_WJ_ID=?";
+			total = jdbcTemplate.queryForObject(totalSQL, new Object[] { wjId },"Integer");
+			String sql = "SELECT TZ_SEQNUM,TZ_APPCLS_ID,TZ_APPCLS_TYPE,TZ_QY_STATUS FROM PS_TZ_DC_WJ_APPCLS_T WHERE TZ_DC_WJ_ID=? LIMIT ?,?";
+			List<?> listData = jdbcTemplate.queryForList(sql, new Object[] {wjId,numStart,numLimit });
+			for (Object objData : listData) {
+
+				Map<String, Object> mapData = (Map<String, Object>) objData;
+				int TZ_SEQNUM=0;
+				String TZ_APPCLS_ID = "";
+				String TZ_APPCLS_TYPE = "";
+				String TZ_QY_STATUS="";
+				String TZ_APPCLS_TYPE_DESC="";
+				Boolean tzIfUse=false;
+				TZ_SEQNUM=Integer.valueOf(String.valueOf(mapData.get("TZ_SEQNUM")));
+				if(mapData.get("TZ_APPCLS_ID")!=null){
+					TZ_APPCLS_ID = String.valueOf(mapData.get("TZ_APPCLS_ID"));
+				}
+				if(mapData.get("TZ_APPCLS_TYPE")!=null){
+					TZ_APPCLS_TYPE = String.valueOf(mapData.get("TZ_APPCLS_TYPE"));
+					TZ_APPCLS_TYPE_DESC=jdbcTemplate.queryForObject("select TZ_ZHZ_CMS from PS_TZ_PT_ZHZXX_TBL where TZ_ZHZJH_ID='TZ_APP_CLS_TYPE' AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'", new Object[]{TZ_APPCLS_TYPE}, "String");
+				}
+				
+				TZ_QY_STATUS = String.valueOf(mapData.get("TZ_QY_STATUS"));
+				if("Y".equals(TZ_QY_STATUS)){
+					tzIfUse=true;
+				}
+	            String TZ_APPCLS_NAME="";
+	            if(null!=TZ_APPCLS_ID&&!"".equals(TZ_APPCLS_ID)){
+	              TZ_APPCLS_NAME=jdbcTemplate.queryForObject("select TZ_DESCR100 from PS_TZ_APPCLS_TBL where TZ_APPCLS_ID=?", new Object[]{TZ_APPCLS_ID}, "String");
+	            }
+				Map<String, Object> mapJson = new HashMap<String, Object>();
+				mapJson.put("tzSeqNum", TZ_SEQNUM);
+				mapJson.put("wjId", wjId);
+				mapJson.put("tzAppclsID", TZ_APPCLS_ID);
+				mapJson.put("tzAppclsName", TZ_APPCLS_NAME);
+				mapJson.put("tzAppclsType", TZ_APPCLS_TYPE);
+				mapJson.put("tzAppclsTypeDesc", TZ_APPCLS_TYPE_DESC);
+				mapJson.put("tzIfUse", tzIfUse);
+			
+				listJson.add(mapJson);
+				mapRet.replace("total",total);
+			}
+			mapRet.replace("root", listJson);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = e.toString();
+		}
+		return jacksonUtil.Map2json(mapRet);
+	}
+
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
 			String strComContent="{}";
@@ -63,9 +132,9 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 			String jgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			
 		    String TZ_APP_TPL_ID, TZ_DC_WJBT, TZ_DC_WJ_ZT, TZ_DC_WJ_FB, TZ_APPTPL_JSON_STR, TZ_APP_TPL_MC;
-		    String TZ_DC_WJ_KSRQ, TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, TZ_DC_WJ_JSSJ, TZ_DC_WJ_PC_URL, TZ_DC_WJ_MB_URL, TZ_DC_WJ_DLZT, TZ_DC_WJ_DTGZ, TZ_DC_WJ_IPGZ, TZ_DC_WJ_JSGZ, TZ_DC_WJ_NM, TZ_DC_WJ_NEEDPWD, TZ_DC_WJ_PWD, TZ_DC_JTNR, TZ_DC_JWNR, TZ_DC_WJ_URL, TZ_DC_WJ_QYQD, TZ_DC_WJ_QDNR, TZ_DC_WJ_JGNR, TZ_DC_WJ_SFTZ, TZ_DC_WJ_TZDZ, TZ_DC_WJ_TLSJ, TZ_APP_TPL_LAN;
+		    String TZ_DC_WJ_KSRQ, TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, TZ_DC_WJ_JSSJ, TZ_DC_WJ_PC_URL, TZ_DC_WJ_MB_URL, TZ_DC_WJ_DLZT, TZ_DC_WJ_DTGZ, TZ_DC_WJ_IPGZ, TZ_DC_WJ_JSGZ, TZ_DC_WJ_NM, TZ_DC_WJ_NEEDPWD, TZ_DC_WJ_PWD, TZ_DC_JTNR, TZ_DC_JWNR, TZ_DC_WJ_URL, TZ_DC_WJ_QYQD, TZ_DC_WJ_QDNR, TZ_DC_WJ_JGNR, TZ_DC_WJ_SFTZ, TZ_DC_WJ_TZDZ, TZ_DC_WJ_TLSJ, TZ_APP_TPL_LAN,TZ_DC_WJ_WX;
 		    //从问卷表中查询所有数据
-		    String getSurvyInfoSQL="SELECT TZ_DC_WJ_ID,TZ_APP_TPL_ID,TZ_DC_WJBT,TZ_DC_WJ_ZT,TZ_DC_WJ_FB,date_format(TZ_DC_WJ_KSRQ,'%Y-%m-%d') TZ_DC_WJ_KSRQ,date_format(TZ_DC_WJ_KSSJ,'%H:%i:%s') TZ_DC_WJ_KSSJ,date_format(TZ_DC_WJ_JSRQ,'%Y-%m-%d') TZ_DC_WJ_JSRQ,date_format(TZ_DC_WJ_JSSJ,'%H:%i:%s') TZ_DC_WJ_JSSJ,TZ_DC_WJ_PC_URL,TZ_DC_WJ_MB_URL,TZ_DC_WJ_DLZT,TZ_DC_WJ_DTGZ,TZ_DC_WJ_IPGZ,TZ_DC_WJ_JSGZ,TZ_DC_WJ_NM,TZ_DC_WJ_NEEDPWD,TZ_DC_WJ_PWD,TZ_APPTPL_JSON_STR,TZ_DC_JTNR,TZ_DC_JWNR,TZ_DC_WJ_URL,TZ_DC_WJ_QYQD,TZ_DC_WJ_QDNR,TZ_DC_WJ_JGNR,TZ_DC_WJ_SFTZ,TZ_DC_WJ_TZDZ,TZ_DC_WJ_TLSJ,TZ_APP_TPL_LAN FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID=? and TZ_JG_ID=?";
+		    String getSurvyInfoSQL="SELECT TZ_DC_WJ_ID,TZ_APP_TPL_ID,TZ_DC_WJBT,TZ_DC_WJ_ZT,TZ_DC_WJ_FB,date_format(TZ_DC_WJ_KSRQ,'%Y-%m-%d') TZ_DC_WJ_KSRQ,date_format(TZ_DC_WJ_KSSJ,'%H:%i:%s') TZ_DC_WJ_KSSJ,date_format(TZ_DC_WJ_JSRQ,'%Y-%m-%d') TZ_DC_WJ_JSRQ,date_format(TZ_DC_WJ_JSSJ,'%H:%i:%s') TZ_DC_WJ_JSSJ,TZ_DC_WJ_PC_URL,TZ_DC_WJ_MB_URL,TZ_DC_WJ_DLZT,TZ_DC_WJ_DTGZ,TZ_DC_WJ_IPGZ,TZ_DC_WJ_JSGZ,TZ_DC_WJ_NM,TZ_DC_WJ_NEEDPWD,TZ_DC_WJ_PWD,TZ_APPTPL_JSON_STR,TZ_DC_JTNR,TZ_DC_JWNR,TZ_DC_WJ_URL,TZ_DC_WJ_QYQD,TZ_DC_WJ_QDNR,TZ_DC_WJ_JGNR,TZ_DC_WJ_SFTZ,TZ_DC_WJ_TZDZ,TZ_DC_WJ_TLSJ,TZ_APP_TPL_LAN,TZ_DC_WJ_WX FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID=? and TZ_JG_ID=?";
 		   
 		    Map<String,Object>sruvyDataMap=new HashMap<String,Object>();
 		    sruvyDataMap=jdbcTemplate.queryForMap(getSurvyInfoSQL, new Object[]{wjId,jgId});
@@ -105,6 +174,8 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		    	TZ_DC_WJ_IPGZ="3";
 		    //完成规则
 		    TZ_DC_WJ_JSGZ=sruvyDataMap.get("TZ_DC_WJ_JSGZ")==null?"1":sruvyDataMap.get("TZ_DC_WJ_JSGZ").toString();
+		    //微信
+		    TZ_DC_WJ_WX=sruvyDataMap.get("TZ_DC_WJ_WX")==null?"N":sruvyDataMap.get("TZ_DC_WJ_WX").toString();
 		    //听众列表 听众不唯一？
 		    String strAudID,strAudName;
 		    
@@ -246,6 +317,8 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 	/*更新信息*/
 	@SuppressWarnings("unchecked")
 	private String tzUpdateFattrInfo(String strForm,String[] errMsg){
+		
+		
 		System.out.println("==设置====tzUpdateFattrInfo执行");
 		//System.out.println("strForm:"+strForm);
 		PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs=new PsTzDcWjDyTWithBLOBs();
@@ -255,7 +328,11 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		//将String数据转换成Map
 		JacksonUtil jacksonUtil=new JacksonUtil();
 		jacksonUtil.json2Map(strForm);
-		Map<String,Object>dataMap=jacksonUtil.getMap();
+		
+		String typeFlag = jacksonUtil.getString("typeFlag");
+		Map<String, Object> dataMap = jacksonUtil.getMap("data");
+	if("FORM".equals(typeFlag)){
+		
 		//主键不做非空判断 为空则数据错误
 		// 问卷ID
 		String TZ_DC_WJ_ID=null;
@@ -389,6 +466,7 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		    	psTzDcWjDyTWithBLOBs.setTzDcWjZt(TZ_DC_WJ_ZT);
 		    	}
 		}
+		
 	 //----------------------------------------------------------------------------
 		}
 		catch(Exception e){
@@ -475,11 +553,16 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 			psTzDcWjDyTWithBLOBs.setTzDcWjTzdz(TZ_DC_WJ_TZDZ);
 		}
 		//停留时间
-		
 		if(dataMap.containsKey("TZ_DC_WJ_TLSJ")&&dataMap.get("TZ_DC_WJ_TLSJ")!=null){
 			String TZ_DC_WJ_TLSJ=dataMap.get("TZ_DC_WJ_TLSJ").toString();
 			
 			psTzDcWjDyTWithBLOBs.setTzDcWjTlsj(TZ_DC_WJ_TLSJ);
+		}
+		//获取微信授权
+		if(dataMap.containsKey("TZ_DC_WJ_WX")&&dataMap.get("TZ_DC_WJ_WX")!=null){
+			String TZ_DC_WJ_WX=dataMap.get("TZ_DC_WJ_WX").toString();
+			
+			psTzDcWjDyTWithBLOBs.setTzDcWjWx(TZ_DC_WJ_WX);
 		}
 		//听众列表 将听众ID分离成为一个字符串数组
 		
@@ -508,12 +591,57 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		/*去重判断*/ //听众列表 座位ID是什么鬼？
 		//String isRepeatedSQL="SELECT 'Y' FROM PS_TZ_DC_WJ_DY_T WHERE TZ_JG_ID=? AND TZ_DC_WJBT=? AND TZ_DC_WJ_ID=? AND SETID=?";     
 		//List result=jdbcTemplate.queryForList(isRepeatedSQL, new Object[]{jgId,TZ_DC_WJBT,TZ_DC_WJ_ID,tmpSetID}) ;  
-		
-		
-		
-			
+	
 		//保存数据 选择性      
 		psTzDcWjDyTMapper.updateByPrimaryKeySelective(psTzDcWjDyTWithBLOBs);
+	   }else if("GRID".equals(typeFlag)){
+	       String strSeqNum=String.valueOf(dataMap.get("tzSeqNum"));
+		   String wjId = String.valueOf(dataMap.get("wjId"));
+		   String tzAppclsID = String.valueOf(dataMap.get("tzAppclsID"));
+		   String tzAppclsType = String.valueOf(dataMap.get("tzAppclsType"));
+		   Boolean tzIfUse =Boolean.parseBoolean(String.valueOf(dataMap.get("tzIfUse")));
+		   if(dataMap.get("wjId")!=null){
+			   if(dataMap.get("tzSeqNum")!=null){
+				   PsTzDcWjAppclsT PsTzDcWjAppclsT=new PsTzDcWjAppclsT();
+				   PsTzDcWjAppclsT.setTzSeqnum(Integer.valueOf(strSeqNum));
+				   if(wjId!=null){
+					   PsTzDcWjAppclsT.setTzDcWjId(wjId);
+				   }
+				   if(dataMap.get("tzAppclsID")!=null){
+					   PsTzDcWjAppclsT.setTzAppclsId(tzAppclsID);
+				   }
+				   if(dataMap.get("tzAppclsType")!=null){
+					   PsTzDcWjAppclsT.setTzAppclsType(tzAppclsType);
+				   }
+				   if(tzIfUse){
+					   PsTzDcWjAppclsT.setTzQyStatus("Y");
+				   }else{
+					   PsTzDcWjAppclsT.setTzQyStatus("N");
+				   }
+				   
+				   psTzDcWjAppclsTMapper.updateByPrimaryKeySelective(PsTzDcWjAppclsT);
+			   }else{
+				   int tzSeqNum=getSeqNum.getSeqNum("TZ_DC_WJ_APPCLS_T", "TZ_SEQNUM");
+				   PsTzDcWjAppclsT PsTzDcWjAppclsT=new PsTzDcWjAppclsT();
+				   PsTzDcWjAppclsT.setTzSeqnum(tzSeqNum);
+				   if(wjId!=null){
+					   PsTzDcWjAppclsT.setTzDcWjId(wjId);
+				   }
+				   if(dataMap.get("tzAppclsID")!=null){
+					   PsTzDcWjAppclsT.setTzAppclsId(tzAppclsID);
+				   }
+				   if(dataMap.get("tzAppclsType")!=null){
+					   PsTzDcWjAppclsT.setTzAppclsType(tzAppclsType);
+				   }
+				   if(tzIfUse){
+					   PsTzDcWjAppclsT.setTzQyStatus("Y");
+				   }else{
+					   PsTzDcWjAppclsT.setTzQyStatus("N");
+				   }
+				   psTzDcWjAppclsTMapper.insert(PsTzDcWjAppclsT);
+			   }
+		  }
+	  }
 		return new JacksonUtil().Map2json(dataMap);
 	}
 
@@ -560,6 +688,35 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		}
 		}
 		return null;
+	}
+	
+	@Override
+	@Transactional
+	public String tzDelete(String[] actData, String[] errMsg) {
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+
+			int dataLength = actData.length;
+			for (int num = 0; num < dataLength; num++) {
+				// 表单内容
+				String strForm = actData[num];
+				// 解析json
+				jacksonUtil.json2Map(strForm);
+				int tzSeqNum=Integer.valueOf(jacksonUtil.getString("tzSeqNum"));
+				
+				if (tzSeqNum>0 ) {
+					 PsTzDcWjAppclsT PsTzDcWjAppclsT=new PsTzDcWjAppclsT();
+					 PsTzDcWjAppclsT.setTzSeqnum(tzSeqNum);
+					 psTzDcWjAppclsTMapper.deleteByPrimaryKey(tzSeqNum);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		return "{\"delete\":\"true\"}";
 	}
 	
 }
