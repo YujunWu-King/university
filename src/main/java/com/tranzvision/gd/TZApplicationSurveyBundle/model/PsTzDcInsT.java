@@ -21,6 +21,12 @@ public class PsTzDcInsT {
 
     private String tzUniqueNum;
 
+    private String openId;
+
+    private String tzNickName;
+
+    private String tzPhotoPath;
+
     private Date rowAddedDttm;
 
     private String rowAddedOprid;
@@ -105,6 +111,30 @@ public class PsTzDcInsT {
 
     public void setTzUniqueNum(String tzUniqueNum) {
         this.tzUniqueNum = tzUniqueNum == null ? null : tzUniqueNum.trim();
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId == null ? null : openId.trim();
+    }
+
+    public String getTzNickName() {
+        return tzNickName;
+    }
+
+    public void setTzNickName(String tzNickName) {
+        this.tzNickName = tzNickName == null ? null : tzNickName.trim();
+    }
+
+    public String getTzPhotoPath() {
+        return tzPhotoPath;
+    }
+
+    public void setTzPhotoPath(String tzPhotoPath) {
+        this.tzPhotoPath = tzPhotoPath == null ? null : tzPhotoPath.trim();
     }
 
     public Date getRowAddedDttm() {

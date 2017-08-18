@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjDyTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyT" >
+    <id column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TPL_ID" property="tzAppTplId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJBT" property="tzDcWjbt" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TPL_LX" property="tzAppTplLx" jdbcType="VARCHAR" />
+    <result column="TZ_APP_TPL_LAN" property="tzAppTplLan" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_ZT" property="tzDcWjZt" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_FB" property="tzDcWjFb" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_KSRQ" property="tzDcWjKsrq" jdbcType="DATE" />
+    <result column="TZ_DC_WJ_KSSJ" property="tzDcWjKssj" jdbcType="TIME" />
+    <result column="TZ_DC_WJ_JSRQ" property="tzDcWjJsrq" jdbcType="DATE" />
+    <result column="TZ_DC_WJ_JSSJ" property="tzDcWjJssj" jdbcType="TIME" />
+    <result column="TZ_DC_WJ_PC_URL" property="tzDcWjPcUrl" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_MB_URL" property="tzDcWjMbUrl" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_DLZT" property="tzDcWjDlzt" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_DTGZ" property="tzDcWjDtgz" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_IPGZ" property="tzDcWjIpgz" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_JSGZ" property="tzDcWjJsgz" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_NM" property="tzDcWjNm" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_NEEDPWD" property="tzDcWjNeedpwd" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_PWD" property="tzDcWjPwd" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_DC_WJ_URL" property="tzDcWjUrl" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_QYQD" property="tzDcWjQyqd" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_SFTZ" property="tzDcWjSftz" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_TZDZ" property="tzDcWjTzdz" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_TLSJ" property="tzDcWjTlsj" jdbcType="VARCHAR" />
+    <result column="SETID" property="setid" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_WX" property="tzDcWjWx" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_DC_JTNR" property="tzDcJtnr" jdbcType="LONGVARCHAR" />
+    <result column="TZ_DC_JWNR" property="tzDcJwnr" jdbcType="LONGVARCHAR" />
+    <result column="TZ_APPTPL_JSON_STR" property="tzApptplJsonStr" jdbcType="LONGVARCHAR" />
+    <result column="TZ_DC_WJ_QDNR" property="tzDcWjQdnr" jdbcType="LONGVARCHAR" />
+    <result column="TZ_DC_WJ_JGNR" property="tzDcWjJgnr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_DC_WJ_ID, TZ_APP_TPL_ID, TZ_JG_ID, TZ_DC_WJBT, TZ_APP_TPL_LX, TZ_APP_TPL_LAN, 
+    TZ_DC_WJ_ZT, TZ_DC_WJ_FB, TZ_DC_WJ_KSRQ, TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, TZ_DC_WJ_JSSJ, 
+    TZ_DC_WJ_PC_URL, TZ_DC_WJ_MB_URL, TZ_DC_WJ_DLZT, TZ_DC_WJ_DTGZ, TZ_DC_WJ_IPGZ, TZ_DC_WJ_JSGZ, 
+    TZ_DC_WJ_NM, TZ_DC_WJ_NEEDPWD, TZ_DC_WJ_PWD, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+    ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_DC_WJ_URL, TZ_DC_WJ_QYQD, TZ_DC_WJ_SFTZ, 
+    TZ_DC_WJ_TZDZ, TZ_DC_WJ_TLSJ, SETID, TZ_DC_WJ_WX
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_DC_JTNR, TZ_DC_JWNR, TZ_APPTPL_JSON_STR, TZ_DC_WJ_QDNR, TZ_DC_WJ_JGNR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_DC_WJ_DY_T
+    where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_DC_WJ_DY_T
+    where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs" >
+    insert into PS_TZ_DC_WJ_DY_T (TZ_DC_WJ_ID, TZ_APP_TPL_ID, TZ_JG_ID, 
+      TZ_DC_WJBT, TZ_APP_TPL_LX, TZ_APP_TPL_LAN, 
+      TZ_DC_WJ_ZT, TZ_DC_WJ_FB, TZ_DC_WJ_KSRQ, 
+      TZ_DC_WJ_KSSJ, TZ_DC_WJ_JSRQ, TZ_DC_WJ_JSSJ, 
+      TZ_DC_WJ_PC_URL, TZ_DC_WJ_MB_URL, TZ_DC_WJ_DLZT, 
+      TZ_DC_WJ_DTGZ, TZ_DC_WJ_IPGZ, TZ_DC_WJ_JSGZ, 
+      TZ_DC_WJ_NM, TZ_DC_WJ_NEEDPWD, TZ_DC_WJ_PWD, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, 
+      TZ_DC_WJ_URL, TZ_DC_WJ_QYQD, TZ_DC_WJ_SFTZ, 
+      TZ_DC_WJ_TZDZ, TZ_DC_WJ_TLSJ, SETID, 
+      TZ_DC_WJ_WX, TZ_DC_JTNR, TZ_DC_JWNR, 
+      TZ_APPTPL_JSON_STR, TZ_DC_WJ_QDNR, TZ_DC_WJ_JGNR
+      )
+    values (#{tzDcWjId,jdbcType=VARCHAR}, #{tzAppTplId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, 
+      #{tzDcWjbt,jdbcType=VARCHAR}, #{tzAppTplLx,jdbcType=VARCHAR}, #{tzAppTplLan,jdbcType=VARCHAR}, 
+      #{tzDcWjZt,jdbcType=VARCHAR}, #{tzDcWjFb,jdbcType=VARCHAR}, #{tzDcWjKsrq,jdbcType=DATE}, 
+      #{tzDcWjKssj,jdbcType=TIME}, #{tzDcWjJsrq,jdbcType=DATE}, #{tzDcWjJssj,jdbcType=TIME}, 
+      #{tzDcWjPcUrl,jdbcType=VARCHAR}, #{tzDcWjMbUrl,jdbcType=VARCHAR}, #{tzDcWjDlzt,jdbcType=VARCHAR}, 
+      #{tzDcWjDtgz,jdbcType=VARCHAR}, #{tzDcWjIpgz,jdbcType=VARCHAR}, #{tzDcWjJsgz,jdbcType=VARCHAR}, 
+      #{tzDcWjNm,jdbcType=VARCHAR}, #{tzDcWjNeedpwd,jdbcType=VARCHAR}, #{tzDcWjPwd,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, 
+      #{tzDcWjUrl,jdbcType=VARCHAR}, #{tzDcWjQyqd,jdbcType=VARCHAR}, #{tzDcWjSftz,jdbcType=VARCHAR}, 
+      #{tzDcWjTzdz,jdbcType=VARCHAR}, #{tzDcWjTlsj,jdbcType=VARCHAR}, #{setid,jdbcType=VARCHAR}, 
+      #{tzDcWjWx,jdbcType=VARCHAR}, #{tzDcJtnr,jdbcType=LONGVARCHAR}, #{tzDcJwnr,jdbcType=LONGVARCHAR}, 
+      #{tzApptplJsonStr,jdbcType=LONGVARCHAR}, #{tzDcWjQdnr,jdbcType=LONGVARCHAR}, #{tzDcWjJgnr,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs" >
+    insert into PS_TZ_DC_WJ_DY_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID,
+      </if>
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzDcWjbt != null" >
+        TZ_DC_WJBT,
+      </if>
+      <if test="tzAppTplLx != null" >
+        TZ_APP_TPL_LX,
+      </if>
+      <if test="tzAppTplLan != null" >
+        TZ_APP_TPL_LAN,
+      </if>
+      <if test="tzDcWjZt != null" >
+        TZ_DC_WJ_ZT,
+      </if>
+      <if test="tzDcWjFb != null" >
+        TZ_DC_WJ_FB,
+      </if>
+      <if test="tzDcWjKsrq != null" >
+        TZ_DC_WJ_KSRQ,
+      </if>
+      <if test="tzDcWjKssj != null" >
+        TZ_DC_WJ_KSSJ,
+      </if>
+      <if test="tzDcWjJsrq != null" >
+        TZ_DC_WJ_JSRQ,
+      </if>
+      <if test="tzDcWjJssj != null" >
+        TZ_DC_WJ_JSSJ,
+      </if>
+      <if test="tzDcWjPcUrl != null" >
+        TZ_DC_WJ_PC_URL,
+      </if>
+      <if test="tzDcWjMbUrl != null" >
+        TZ_DC_WJ_MB_URL,
+      </if>
+      <if test="tzDcWjDlzt != null" >
+        TZ_DC_WJ_DLZT,
+      </if>
+      <if test="tzDcWjDtgz != null" >
+        TZ_DC_WJ_DTGZ,
+      </if>
+      <if test="tzDcWjIpgz != null" >
+        TZ_DC_WJ_IPGZ,
+      </if>
+      <if test="tzDcWjJsgz != null" >
+        TZ_DC_WJ_JSGZ,
+      </if>
+      <if test="tzDcWjNm != null" >
+        TZ_DC_WJ_NM,
+      </if>
+      <if test="tzDcWjNeedpwd != null" >
+        TZ_DC_WJ_NEEDPWD,
+      </if>
+      <if test="tzDcWjPwd != null" >
+        TZ_DC_WJ_PWD,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+      <if test="tzDcWjUrl != null" >
+        TZ_DC_WJ_URL,
+      </if>
+      <if test="tzDcWjQyqd != null" >
+        TZ_DC_WJ_QYQD,
+      </if>
+      <if test="tzDcWjSftz != null" >
+        TZ_DC_WJ_SFTZ,
+      </if>
+      <if test="tzDcWjTzdz != null" >
+        TZ_DC_WJ_TZDZ,
+      </if>
+      <if test="tzDcWjTlsj != null" >
+        TZ_DC_WJ_TLSJ,
+      </if>
+      <if test="setid != null" >
+        SETID,
+      </if>
+      <if test="tzDcWjWx != null" >
+        TZ_DC_WJ_WX,
+      </if>
+      <if test="tzDcJtnr != null" >
+        TZ_DC_JTNR,
+      </if>
+      <if test="tzDcJwnr != null" >
+        TZ_DC_JWNR,
+      </if>
+      <if test="tzApptplJsonStr != null" >
+        TZ_APPTPL_JSON_STR,
+      </if>
+      <if test="tzDcWjQdnr != null" >
+        TZ_DC_WJ_QDNR,
+      </if>
+      <if test="tzDcWjJgnr != null" >
+        TZ_DC_WJ_JGNR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzDcWjId != null" >
+        #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplId != null" >
+        #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjbt != null" >
+        #{tzDcWjbt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplLx != null" >
+        #{tzAppTplLx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplLan != null" >
+        #{tzAppTplLan,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjZt != null" >
+        #{tzDcWjZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjFb != null" >
+        #{tzDcWjFb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjKsrq != null" >
+        #{tzDcWjKsrq,jdbcType=DATE},
+      </if>
+      <if test="tzDcWjKssj != null" >
+        #{tzDcWjKssj,jdbcType=TIME},
+      </if>
+      <if test="tzDcWjJsrq != null" >
+        #{tzDcWjJsrq,jdbcType=DATE},
+      </if>
+      <if test="tzDcWjJssj != null" >
+        #{tzDcWjJssj,jdbcType=TIME},
+      </if>
+      <if test="tzDcWjPcUrl != null" >
+        #{tzDcWjPcUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjMbUrl != null" >
+        #{tzDcWjMbUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjDlzt != null" >
+        #{tzDcWjDlzt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjDtgz != null" >
+        #{tzDcWjDtgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjIpgz != null" >
+        #{tzDcWjIpgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjJsgz != null" >
+        #{tzDcWjJsgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjNm != null" >
+        #{tzDcWjNm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjNeedpwd != null" >
+        #{tzDcWjNeedpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjPwd != null" >
+        #{tzDcWjPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzDcWjUrl != null" >
+        #{tzDcWjUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjQyqd != null" >
+        #{tzDcWjQyqd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjSftz != null" >
+        #{tzDcWjSftz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjTzdz != null" >
+        #{tzDcWjTzdz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjTlsj != null" >
+        #{tzDcWjTlsj,jdbcType=VARCHAR},
+      </if>
+      <if test="setid != null" >
+        #{setid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjWx != null" >
+        #{tzDcWjWx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcJtnr != null" >
+        #{tzDcJtnr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzDcJwnr != null" >
+        #{tzDcJwnr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzApptplJsonStr != null" >
+        #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzDcWjQdnr != null" >
+        #{tzDcWjQdnr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzDcWjJgnr != null" >
+        #{tzDcWjJgnr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs" >
+    update PS_TZ_DC_WJ_DY_T
+    <set >
+      <if test="tzAppTplId != null" >
+        TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjbt != null" >
+        TZ_DC_WJBT = #{tzDcWjbt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplLx != null" >
+        TZ_APP_TPL_LX = #{tzAppTplLx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppTplLan != null" >
+        TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjZt != null" >
+        TZ_DC_WJ_ZT = #{tzDcWjZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjFb != null" >
+        TZ_DC_WJ_FB = #{tzDcWjFb,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjKsrq != null" >
+        TZ_DC_WJ_KSRQ = #{tzDcWjKsrq,jdbcType=DATE},
+      </if>
+      <if test="tzDcWjKssj != null" >
+        TZ_DC_WJ_KSSJ = #{tzDcWjKssj,jdbcType=TIME},
+      </if>
+      <if test="tzDcWjJsrq != null" >
+        TZ_DC_WJ_JSRQ = #{tzDcWjJsrq,jdbcType=DATE},
+      </if>
+      <if test="tzDcWjJssj != null" >
+        TZ_DC_WJ_JSSJ = #{tzDcWjJssj,jdbcType=TIME},
+      </if>
+      <if test="tzDcWjPcUrl != null" >
+        TZ_DC_WJ_PC_URL = #{tzDcWjPcUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjMbUrl != null" >
+        TZ_DC_WJ_MB_URL = #{tzDcWjMbUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjDlzt != null" >
+        TZ_DC_WJ_DLZT = #{tzDcWjDlzt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjDtgz != null" >
+        TZ_DC_WJ_DTGZ = #{tzDcWjDtgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjIpgz != null" >
+        TZ_DC_WJ_IPGZ = #{tzDcWjIpgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjJsgz != null" >
+        TZ_DC_WJ_JSGZ = #{tzDcWjJsgz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjNm != null" >
+        TZ_DC_WJ_NM = #{tzDcWjNm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjNeedpwd != null" >
+        TZ_DC_WJ_NEEDPWD = #{tzDcWjNeedpwd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjPwd != null" >
+        TZ_DC_WJ_PWD = #{tzDcWjPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzDcWjUrl != null" >
+        TZ_DC_WJ_URL = #{tzDcWjUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjQyqd != null" >
+        TZ_DC_WJ_QYQD = #{tzDcWjQyqd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjSftz != null" >
+        TZ_DC_WJ_SFTZ = #{tzDcWjSftz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjTzdz != null" >
+        TZ_DC_WJ_TZDZ = #{tzDcWjTzdz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjTlsj != null" >
+        TZ_DC_WJ_TLSJ = #{tzDcWjTlsj,jdbcType=VARCHAR},
+      </if>
+      <if test="setid != null" >
+        SETID = #{setid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjWx != null" >
+        TZ_DC_WJ_WX = #{tzDcWjWx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcJtnr != null" >
+        TZ_DC_JTNR = #{tzDcJtnr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzDcJwnr != null" >
+        TZ_DC_JWNR = #{tzDcJwnr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzApptplJsonStr != null" >
+        TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzDcWjQdnr != null" >
+        TZ_DC_WJ_QDNR = #{tzDcWjQdnr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzDcWjJgnr != null" >
+        TZ_DC_WJ_JGNR = #{tzDcWjJgnr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs" >
+    update PS_TZ_DC_WJ_DY_T
+    set TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_DC_WJBT = #{tzDcWjbt,jdbcType=VARCHAR},
+      TZ_APP_TPL_LX = #{tzAppTplLx,jdbcType=VARCHAR},
+      TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},
+      TZ_DC_WJ_ZT = #{tzDcWjZt,jdbcType=VARCHAR},
+      TZ_DC_WJ_FB = #{tzDcWjFb,jdbcType=VARCHAR},
+      TZ_DC_WJ_KSRQ = #{tzDcWjKsrq,jdbcType=DATE},
+      TZ_DC_WJ_KSSJ = #{tzDcWjKssj,jdbcType=TIME},
+      TZ_DC_WJ_JSRQ = #{tzDcWjJsrq,jdbcType=DATE},
+      TZ_DC_WJ_JSSJ = #{tzDcWjJssj,jdbcType=TIME},
+      TZ_DC_WJ_PC_URL = #{tzDcWjPcUrl,jdbcType=VARCHAR},
+      TZ_DC_WJ_MB_URL = #{tzDcWjMbUrl,jdbcType=VARCHAR},
+      TZ_DC_WJ_DLZT = #{tzDcWjDlzt,jdbcType=VARCHAR},
+      TZ_DC_WJ_DTGZ = #{tzDcWjDtgz,jdbcType=VARCHAR},
+      TZ_DC_WJ_IPGZ = #{tzDcWjIpgz,jdbcType=VARCHAR},
+      TZ_DC_WJ_JSGZ = #{tzDcWjJsgz,jdbcType=VARCHAR},
+      TZ_DC_WJ_NM = #{tzDcWjNm,jdbcType=VARCHAR},
+      TZ_DC_WJ_NEEDPWD = #{tzDcWjNeedpwd,jdbcType=VARCHAR},
+      TZ_DC_WJ_PWD = #{tzDcWjPwd,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_DC_WJ_URL = #{tzDcWjUrl,jdbcType=VARCHAR},
+      TZ_DC_WJ_QYQD = #{tzDcWjQyqd,jdbcType=VARCHAR},
+      TZ_DC_WJ_SFTZ = #{tzDcWjSftz,jdbcType=VARCHAR},
+      TZ_DC_WJ_TZDZ = #{tzDcWjTzdz,jdbcType=VARCHAR},
+      TZ_DC_WJ_TLSJ = #{tzDcWjTlsj,jdbcType=VARCHAR},
+      SETID = #{setid,jdbcType=VARCHAR},
+      TZ_DC_WJ_WX = #{tzDcWjWx,jdbcType=VARCHAR},
+      TZ_DC_JTNR = #{tzDcJtnr,jdbcType=LONGVARCHAR},
+      TZ_DC_JWNR = #{tzDcJwnr,jdbcType=LONGVARCHAR},
+      TZ_APPTPL_JSON_STR = #{tzApptplJsonStr,jdbcType=LONGVARCHAR},
+      TZ_DC_WJ_QDNR = #{tzDcWjQdnr,jdbcType=LONGVARCHAR},
+      TZ_DC_WJ_JGNR = #{tzDcWjJgnr,jdbcType=LONGVARCHAR}
+    where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyT" >
+    update PS_TZ_DC_WJ_DY_T
+    set TZ_APP_TPL_ID = #{tzAppTplId,jdbcType=VARCHAR},
+      TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_DC_WJBT = #{tzDcWjbt,jdbcType=VARCHAR},
+      TZ_APP_TPL_LX = #{tzAppTplLx,jdbcType=VARCHAR},
+      TZ_APP_TPL_LAN = #{tzAppTplLan,jdbcType=VARCHAR},
+      TZ_DC_WJ_ZT = #{tzDcWjZt,jdbcType=VARCHAR},
+      TZ_DC_WJ_FB = #{tzDcWjFb,jdbcType=VARCHAR},
+      TZ_DC_WJ_KSRQ = #{tzDcWjKsrq,jdbcType=DATE},
+      TZ_DC_WJ_KSSJ = #{tzDcWjKssj,jdbcType=TIME},
+      TZ_DC_WJ_JSRQ = #{tzDcWjJsrq,jdbcType=DATE},
+      TZ_DC_WJ_JSSJ = #{tzDcWjJssj,jdbcType=TIME},
+      TZ_DC_WJ_PC_URL = #{tzDcWjPcUrl,jdbcType=VARCHAR},
+      TZ_DC_WJ_MB_URL = #{tzDcWjMbUrl,jdbcType=VARCHAR},
+      TZ_DC_WJ_DLZT = #{tzDcWjDlzt,jdbcType=VARCHAR},
+      TZ_DC_WJ_DTGZ = #{tzDcWjDtgz,jdbcType=VARCHAR},
+      TZ_DC_WJ_IPGZ = #{tzDcWjIpgz,jdbcType=VARCHAR},
+      TZ_DC_WJ_JSGZ = #{tzDcWjJsgz,jdbcType=VARCHAR},
+      TZ_DC_WJ_NM = #{tzDcWjNm,jdbcType=VARCHAR},
+      TZ_DC_WJ_NEEDPWD = #{tzDcWjNeedpwd,jdbcType=VARCHAR},
+      TZ_DC_WJ_PWD = #{tzDcWjPwd,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_DC_WJ_URL = #{tzDcWjUrl,jdbcType=VARCHAR},
+      TZ_DC_WJ_QYQD = #{tzDcWjQyqd,jdbcType=VARCHAR},
+      TZ_DC_WJ_SFTZ = #{tzDcWjSftz,jdbcType=VARCHAR},
+      TZ_DC_WJ_TZDZ = #{tzDcWjTzdz,jdbcType=VARCHAR},
+      TZ_DC_WJ_TLSJ = #{tzDcWjTlsj,jdbcType=VARCHAR},
+      SETID = #{setid,jdbcType=VARCHAR},
+      TZ_DC_WJ_WX = #{tzDcWjWx,jdbcType=VARCHAR}
+    where TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -7,6 +7,8 @@ Ext.define('KitchenSink.view.template.survey.question.wjdcDetailModel', {
         {name: 'IPAddress'},
         {name: 'state'},
         {name:'ksSj'},
-        {name: 'jsSj'}
+        {name: 'jsSj'},
+        {name: 'openId'},
+        {name: 'nickName'}
     ]
 });

@@ -468,11 +468,11 @@ public class QustionnaireMNGClsImpl extends FrameworkImpl{
 			
 			List<Map<String,Object>>resultList=new ArrayList<Map<String,Object>>();
 			if(numLimit==0&&numStart==0){
-				final String SQL1="select TZ_APP_INS_ID,TZ_DC_INS_IP,TZ_DC_WC_STA,date_format(ROW_ADDED_DTTM,'%Y-%m-%d %H:%i:%s') KSSJ,date_format(ROW_LASTMANT_DTTM,'%Y-%m-%d %H:%i:%s') JSSJ,(select TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=PERSON_ID limit 1) as TZ_MSSQH,(select TZ_REALNAME from PS_TZ_AQ_YHXX_TBL where OPRID=PERSON_ID limit 1) as TZ_REALNAME from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? order by ROW_ADDED_DTTM desc";
+				final String SQL1="select TZ_APP_INS_ID,TZ_DC_INS_IP,TZ_DC_WC_STA,date_format(ROW_ADDED_DTTM,'%Y-%m-%d %H:%i:%s') KSSJ,date_format(ROW_LASTMANT_DTTM,'%Y-%m-%d %H:%i:%s') JSSJ,(select TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=PERSON_ID limit 1) as TZ_MSSQH,(select TZ_REALNAME from PS_TZ_AQ_YHXX_TBL where OPRID=PERSON_ID limit 1) as TZ_REALNAME,OPEN_ID,TZ_NICK_NAME from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? order by ROW_ADDED_DTTM desc";
 				resultList=jdbcTemplate.queryForList(SQL1);
 			}
 			else{
-				final String SQL2="SELECT TZ_APP_INS_ID,TZ_DC_INS_IP,TZ_DC_WC_STA, date_format(ROW_ADDED_DTTM,'%Y-%m-%d %H:%i:%s') KSSJ,date_format(ROW_LASTMANT_DTTM,'%Y-%m-%d %H:%i:%s') JSSJ,(select TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=A.PERSON_ID limit 1) as TZ_MSSQH,(select TZ_REALNAME from PS_TZ_AQ_YHXX_TBL where OPRID=A.PERSON_ID limit 1) as TZ_REALNAME FROM PS_TZ_DC_INS_T A WHERE A.TZ_DC_WJ_ID=? limit ?,?";
+				final String SQL2="SELECT TZ_APP_INS_ID,TZ_DC_INS_IP,TZ_DC_WC_STA, date_format(ROW_ADDED_DTTM,'%Y-%m-%d %H:%i:%s') KSSJ,date_format(ROW_LASTMANT_DTTM,'%Y-%m-%d %H:%i:%s') JSSJ,(select TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=A.PERSON_ID limit 1) as TZ_MSSQH,(select TZ_REALNAME from PS_TZ_AQ_YHXX_TBL where OPRID=A.PERSON_ID limit 1) as TZ_REALNAME,OPEN_ID,TZ_NICK_NAME FROM PS_TZ_DC_INS_T A WHERE A.TZ_DC_WJ_ID=? limit ?,?";
 				resultList=jdbcTemplate.queryForList(SQL2, new Object[]{wjId,numStart, numLimit});
 			}
 			
@@ -496,7 +496,9 @@ public class QustionnaireMNGClsImpl extends FrameworkImpl{
 					//面试申请号、姓名
 					String msSqh = resultMap.get("TZ_MSSQH")==null? "" :resultMap.get("TZ_MSSQH").toString();
 					String name = resultMap.get("TZ_REALNAME")==null? "" :resultMap.get("TZ_REALNAME").toString();
-				
+				    //OPEN_Id,昵称
+					String openId=resultMap.get("OPEN_ID")==null? "" :resultMap.get("OPEN_ID").toString();
+					String tzNickName=resultMap.get("TZ_NICK_NAME")==null? "" :resultMap.get("TZ_NICK_NAME").toString();
 					infoMap.put("order",i+1);
 					infoMap.put("wjInsId",insId);
 					infoMap.put("wjId", wjId);
@@ -507,6 +509,9 @@ public class QustionnaireMNGClsImpl extends FrameworkImpl{
 					
 					infoMap.put("msSqh", msSqh);
 					infoMap.put("name", name);
+					
+					infoMap.put("openId", openId);
+					infoMap.put("nickName", tzNickName);
 					
 					infoList.add(infoMap);
 				}
