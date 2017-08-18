@@ -319,25 +319,34 @@ public class FliterForm extends FrameworkImpl {
 			String strDataSetRole;
 			String roleOprId;
 			String roleExisted;
+			String distinctNum;
 			
 			String RoleOprIdSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID=? and TZ_JG_ID=?";
 			roleOprId = jdbcTemplate.queryForObject(RoleOprIdSql, new Object[] { currentUser,currentrOganization }, "String");
-			System.out.println("roleOprId======"+roleOprId);
 			
+			String uniqueList="";
 			String DataSetRoleSql = "SELECT * FROM PSROLEUSER WHERE ROLEUSER=?";
 			List<Map<String, Object>> listDateSetRole = jdbcTemplate.queryForList(DataSetRoleSql,new Object[] {roleOprId});
 			if(listDateSetRole!=null && listDateSetRole.size()>0){
 				for (Map<String, Object> mapDataSetRole : listDateSetRole) {
 					strDataSetRole = mapDataSetRole.get("ROLENAME") == null ? "" : String.valueOf(mapDataSetRole.get("ROLENAME"));
+//					System.out.println("登陆用户的角色有==="+strDataSetRole);
 					
 					String isRoleExistSql = "SELECT * FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
 					List<Map<String, Object>> isRoleExist = jdbcTemplate.queryForList(isRoleExistSql,new Object[] { comId, pageId, viewName });
 					if(isRoleExist!=null && isRoleExist.size()>0){
 						for (Map<String, Object> mapIsRoleExist : isRoleExist) {
 							roleExisted = mapIsRoleExist.get("ROLENAME") == null ? "" : String.valueOf(mapIsRoleExist.get("ROLENAME"));
-							System.out.println(strDataSetRole+"========"+roleExisted);
+							distinctNum = mapIsRoleExist.get("TZ_FLTDST_ORDER") == null ? "" : String.valueOf(mapIsRoleExist.get("TZ_FLTDST_ORDER"));
+//							System.out.println("数据集的角色有==="+roleExisted);
 							if (roleExisted.equals(strDataSetRole)) {
 								isDisplay="Y";
+								if (uniqueList.length()==0) {
+									uniqueList=distinctNum;
+								}else{
+									uniqueList=uniqueList.concat(";").concat(distinctNum);
+								}
+//								System.out.println("特征值为"+uniqueList);
 							}
 						}						
 					}
@@ -346,7 +355,25 @@ public class FliterForm extends FrameworkImpl {
 						
 			ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 			String strFltDstOrder,strFltDstFld,strFltDstSrchRec,strFltDstDesc,strFltDstDefault;
-			String cfgDataSetSql = "SELECT TZ_FLTDST_ORDER,TZ_FLTDST_FLD,TZ_FLTDST_SRCH_REC,TZ_FLTDST_DESC,TZ_FLTDST_DEFAULT from PS_TZ_FLTDST_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? AND TZ_FLTDST_STATUS = 'Y' order by TZ_FLTDST_ORDER";
+			
+			String[] uniqueListNum=uniqueList.split(";");
+			String orderCondition="";
+			if (uniqueList.contains(";")) {
+				for (int i = 0; i < uniqueListNum.length; i++) {
+					//  and (TZ_FLTDST_ORDER ='1' or TZ_FLTDST_ORDER ='3')
+					if (i == 0) {
+						orderCondition = "and (TZ_FLTDST_ORDER ='" + uniqueListNum[0] + "' ";
+					} else {
+						orderCondition = orderCondition.concat("or TZ_FLTDST_ORDER ='" + uniqueListNum[i] + "' ");
+					}
+				}
+				orderCondition = orderCondition.concat(")");
+			}else{
+				orderCondition="and (TZ_FLTDST_ORDER ='"+uniqueList+"')";
+			}
+			
+			
+			String cfgDataSetSql = "SELECT TZ_FLTDST_ORDER,TZ_FLTDST_FLD,TZ_FLTDST_SRCH_REC,TZ_FLTDST_DESC,TZ_FLTDST_DEFAULT from PS_TZ_FLTDST_FLD_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? AND TZ_FLTDST_STATUS = 'Y' "+orderCondition+" order by TZ_FLTDST_ORDER";
 			List<Map<String, Object>> listDateSet = jdbcTemplate.queryForList(cfgDataSetSql,
 					new Object[] { comId, pageId, viewName });
 			if(listDateSet!=null && listDateSet.size()>0){
