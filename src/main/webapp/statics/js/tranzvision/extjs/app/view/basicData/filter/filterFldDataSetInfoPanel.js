@@ -219,7 +219,8 @@
 			columns: [{
 				text: '序号',
 				dataIndex: 'orderNum',
-				width: 70
+				width: 300,
+				hidden:true
 			},{
 				text: '角色名称',
 				dataIndex: 'roleID',

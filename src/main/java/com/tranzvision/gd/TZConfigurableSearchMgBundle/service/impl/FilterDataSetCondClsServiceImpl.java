@@ -253,7 +253,8 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 					String strPageID = jacksonUtil.getString("PageID");
 					String strViewID = jacksonUtil.getString("ViewMc");
 					String strRoleIDAll = jacksonUtil.getString("RoleID");
-					
+					String strFieldOrder = jacksonUtil.getString("fieldOrder");
+					int fieldOrder=Integer.valueOf(strFieldOrder);
 					String[] strRoleID=strRoleIDAll.split(",");
 					
 					
@@ -283,7 +284,7 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 							psTzFltdstRoleT.setTzComId(strCompID);
 							psTzFltdstRoleT.setTzPageId(strPageID);
 							psTzFltdstRoleT.setTzViewName(strViewID);
-							psTzFltdstRoleT.setTzFltdstOrder(num_max_num);
+							psTzFltdstRoleT.setTzFltdstOrder(fieldOrder);
 							psTzFltdstRoleT.setRolename(strRoleID[i]);
 							psTzFltdstRoleT.setDescr(strRoleName);
 

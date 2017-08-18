@@ -171,19 +171,17 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 			
 			if ("2".equals(queryID)) {
 				// 查询总数;
-				String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+				String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FLTDST_ORDER=?";
 				
-				total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name },
+				total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder },
 						"Integer");
 
-				String sql = "SELECT * FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+				String sql = "SELECT * FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FLTDST_ORDER=?";
 				
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
-						new Object[] { str_com_id, str_page_id, str_view_name});
+						new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder});
 				if (list != null && list.size()>0) {
 					for (int i = 0; i < list.size(); i++) {
-						
-						String strRoleOrder = String.valueOf(list.get(i).get("TZ_FLTDST_ORDER"));
 						String strRoleName = (String) list.get(i).get("ROLENAME");
 						String strRoleDesc = (String) list.get(i).get("DESCR");
 						
@@ -192,10 +190,9 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 						map.put("ComID", str_com_id);
 						map.put("PageID", str_page_id);
 						map.put("ViewID", str_view_name);
-						map.put("orderNum", strRoleOrder);
 						map.put("roleID", strRoleName);
 						map.put("roleDesc", strRoleDesc);
-						
+						map.put("orderNum", numFieldOrder);
 						listData.add(map);
 					}
 					
@@ -427,7 +424,7 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 								String str_com_id = (String) Json2.get("ComID");
 								String str_page_id = (String) Json2.get("PageID");
 								String str_view_name = (String) Json2.get("ViewID");
-								String strOrderNum = (String) Json2.get("orderNum");
+								int strOrderNum = (int) Json2.get("orderNum");
 								String strRoleID =  (String) Json2.get("roleID");
 								String strRoleDesc =  (String) Json2.get("roleDesc");
 
