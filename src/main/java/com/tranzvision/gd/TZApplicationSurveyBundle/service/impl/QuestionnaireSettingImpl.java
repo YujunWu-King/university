@@ -72,8 +72,13 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 				String TZ_QY_STATUS="";
 				Boolean tzIfUse=false;
 				TZ_SEQNUM=Integer.valueOf(String.valueOf(mapData.get("TZ_SEQNUM")));
-				TZ_APPCLS_ID = String.valueOf(mapData.get("TZ_APPCLS_ID"));
-				TZ_APPCLS_TYPE = String.valueOf(mapData.get("TZ_APPCLS_TYPE"));
+				if(mapData.get("TZ_APPCLS_ID")!=null){
+					TZ_APPCLS_ID = String.valueOf(mapData.get("TZ_APPCLS_ID"));
+				}
+				if(mapData.get("TZ_APPCLS_TYPE")!=null){
+					TZ_APPCLS_TYPE = String.valueOf(mapData.get("TZ_APPCLS_TYPE"));
+				}
+				
 				TZ_QY_STATUS = String.valueOf(mapData.get("TZ_QY_STATUS"));
 				if("Y".equals(TZ_QY_STATUS)){
 					tzIfUse=true;
@@ -592,46 +597,47 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		   String tzAppclsID = String.valueOf(dataMap.get("tzAppclsID"));
 		   String tzAppclsType = String.valueOf(dataMap.get("tzAppclsType"));
 		   Boolean tzIfUse =Boolean.parseBoolean(String.valueOf(dataMap.get("tzIfUse")));
-		   if(dataMap.get("tzSeqNum")!=null){
-			   PsTzDcWjAppclsT PsTzDcWjAppclsT=new PsTzDcWjAppclsT();
-			   PsTzDcWjAppclsT.setTzSeqnum(Integer.valueOf(strSeqNum));
-			   if(wjId!=null){
-				   PsTzDcWjAppclsT.setTzDcWjId(wjId);
-			   }
-			   if(tzAppclsID!=null){
-				   PsTzDcWjAppclsT.setTzAppclsId(tzAppclsID);
-			   }
-			   if(tzAppclsType!=null){
-				   PsTzDcWjAppclsT.setTzAppclsType(tzAppclsType);
-			   }
-			   if(tzIfUse){
-				   PsTzDcWjAppclsT.setTzQyStatus("Y");
+		   if(dataMap.get("wjId")!=null){
+			   if(dataMap.get("tzSeqNum")!=null){
+				   PsTzDcWjAppclsT PsTzDcWjAppclsT=new PsTzDcWjAppclsT();
+				   PsTzDcWjAppclsT.setTzSeqnum(Integer.valueOf(strSeqNum));
+				   if(wjId!=null){
+					   PsTzDcWjAppclsT.setTzDcWjId(wjId);
+				   }
+				   if(dataMap.get("tzAppclsID")!=null){
+					   PsTzDcWjAppclsT.setTzAppclsId(tzAppclsID);
+				   }
+				   if(dataMap.get("tzAppclsType")!=null){
+					   PsTzDcWjAppclsT.setTzAppclsType(tzAppclsType);
+				   }
+				   if(tzIfUse){
+					   PsTzDcWjAppclsT.setTzQyStatus("Y");
+				   }else{
+					   PsTzDcWjAppclsT.setTzQyStatus("N");
+				   }
+				   
+				   psTzDcWjAppclsTMapper.updateByPrimaryKeySelective(PsTzDcWjAppclsT);
 			   }else{
-				   PsTzDcWjAppclsT.setTzQyStatus("N");
+				   int tzSeqNum=getSeqNum.getSeqNum("TZ_DC_WJ_APPCLS_T", "TZ_SEQNUM");
+				   PsTzDcWjAppclsT PsTzDcWjAppclsT=new PsTzDcWjAppclsT();
+				   PsTzDcWjAppclsT.setTzSeqnum(tzSeqNum);
+				   if(wjId!=null){
+					   PsTzDcWjAppclsT.setTzDcWjId(wjId);
+				   }
+				   if(dataMap.get("tzAppclsID")!=null){
+					   PsTzDcWjAppclsT.setTzAppclsId(tzAppclsID);
+				   }
+				   if(dataMap.get("tzAppclsType")!=null){
+					   PsTzDcWjAppclsT.setTzAppclsType(tzAppclsType);
+				   }
+				   if(tzIfUse){
+					   PsTzDcWjAppclsT.setTzQyStatus("Y");
+				   }else{
+					   PsTzDcWjAppclsT.setTzQyStatus("N");
+				   }
+				   psTzDcWjAppclsTMapper.insert(PsTzDcWjAppclsT);
 			   }
-			   
-			   psTzDcWjAppclsTMapper.updateByPrimaryKeySelective(PsTzDcWjAppclsT);
-		   }else{
-			   int tzSeqNum=getSeqNum.getSeqNum("TZ_DC_WJ_APPCLS_T", "TZ_SEQNUM");
-			   PsTzDcWjAppclsT PsTzDcWjAppclsT=new PsTzDcWjAppclsT();
-			   PsTzDcWjAppclsT.setTzSeqnum(tzSeqNum);
-			   if(wjId!=null){
-				   PsTzDcWjAppclsT.setTzDcWjId(wjId);
-			   }
-			   if(tzAppclsID!=null){
-				   PsTzDcWjAppclsT.setTzAppclsId(tzAppclsID);
-			   }
-			   if(tzAppclsType!=null){
-				   PsTzDcWjAppclsT.setTzAppclsType(tzAppclsType);
-			   }
-			   if(tzIfUse){
-				   PsTzDcWjAppclsT.setTzQyStatus("Y");
-			   }else{
-				   PsTzDcWjAppclsT.setTzQyStatus("N");
-			   }
-			   psTzDcWjAppclsTMapper.insert(PsTzDcWjAppclsT);
-		   }
-		   
+		  }
 	  }
 		return new JacksonUtil().Map2json(dataMap);
 	}
