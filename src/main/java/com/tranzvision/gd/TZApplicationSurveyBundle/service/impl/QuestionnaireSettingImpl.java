@@ -70,6 +70,7 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 				String TZ_APPCLS_ID = "";
 				String TZ_APPCLS_TYPE = "";
 				String TZ_QY_STATUS="";
+				String TZ_APPCLS_TYPE_DESC="";
 				Boolean tzIfUse=false;
 				TZ_SEQNUM=Integer.valueOf(String.valueOf(mapData.get("TZ_SEQNUM")));
 				if(mapData.get("TZ_APPCLS_ID")!=null){
@@ -77,6 +78,7 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 				}
 				if(mapData.get("TZ_APPCLS_TYPE")!=null){
 					TZ_APPCLS_TYPE = String.valueOf(mapData.get("TZ_APPCLS_TYPE"));
+					TZ_APPCLS_TYPE_DESC=jdbcTemplate.queryForObject("select TZ_ZHZ_CMS from PS_TZ_PT_ZHZXX_TBL where TZ_ZHZJH_ID='TZ_APP_CLS_TYPE' AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS='A'", new Object[]{TZ_APPCLS_TYPE}, "String");
 				}
 				
 				TZ_QY_STATUS = String.valueOf(mapData.get("TZ_QY_STATUS"));
@@ -93,6 +95,7 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 				mapJson.put("tzAppclsID", TZ_APPCLS_ID);
 				mapJson.put("tzAppclsName", TZ_APPCLS_NAME);
 				mapJson.put("tzAppclsType", TZ_APPCLS_TYPE);
+				mapJson.put("tzAppclsTypeDesc", TZ_APPCLS_TYPE_DESC);
 				mapJson.put("tzIfUse", tzIfUse);
 			
 				listJson.add(mapJson);

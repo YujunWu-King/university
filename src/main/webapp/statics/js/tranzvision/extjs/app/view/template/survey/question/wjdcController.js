@@ -290,9 +290,10 @@
                     i++;
                 }
                 form.findField("AudList").setValue(oprIdArray);
+                grid.tzAppClsTypeStore=new  KitchenSink.view.common.store.appTransStore("TZ_APP_CLS_TYPE");
                 store.tzStoreParams='{"wjId":"' + form.findField("TZ_DC_WJ_ID").getValue() + '"}';
                 store.load();
-       
+               
             });
 
         });

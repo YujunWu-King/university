@@ -13,7 +13,7 @@
     parentGridStore:"",
 
      initComponent:function(){
-    	var tzAppClsTypeStore=new  KitchenSink.view.common.store.appTransStore("TZ_APP_CLS_TYPE");
+
      	var tagStore1 = new Ext.data.Store({
             fields:['tagName','tagId'],
             data:[]
@@ -501,6 +501,7 @@
                              frame: true,
                              columnLines: true,
                              style:"margin:10px",
+                             tzAppClsTypeStore:'',
                             /* selModel: {
                                  type: 'checkboxmodel'
                              },*/
@@ -536,6 +537,11 @@
                                  dataIndex: 'tzAppclsName',
                                  width: 250
                              },{
+       						  text:'',
+    						  width:10,   
+    						  dataIndex:'tzAppclsTypeDesc',   
+    						  hidden:true
+    					    },{
                                  text: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.tzAppclsType", "事件类型"),
                                  dataIndex: 'tzAppclsType',
                                  width: 150,
@@ -551,11 +557,11 @@
                                     
                                  },
                                  renderer: function(value,metadata,record){ 
-     								var index = tzAppClsTypeStore.find('TValue',value);   
+     								var index = this.tzAppClsTypeStore.find('TValue',value);   
      								if(index!=-1){   
-     									   return tzAppClsTypeStore.getAt(index).data.TSDesc;   
+     									   return this.tzAppClsTypeStore.getAt(index).data.TSDesc;   
      								}   
-     								return record.get("tzAppclsType");   
+     								return record.get("tzAppclsTypeDesc");   
      						    }
                              },{
                                  text: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.tzIfUse", "是否启用"),
