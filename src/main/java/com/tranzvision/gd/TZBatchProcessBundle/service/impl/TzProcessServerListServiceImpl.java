@@ -156,7 +156,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 String serverIP = jacksonUtil.getString("serverIP");
                 String processName = jacksonUtil.getString("processName");
                 String processDec = jacksonUtil.getString("processDesc");
-                Integer intervalTime = Integer.parseInt(jacksonUtil.getString("intervalTime"));
+                Integer intervalTime = jacksonUtil.getString("intervalTime")==null?0:Integer.parseInt(jacksonUtil.getString("intervalTime"));
                 Integer parallelNum = Integer.parseInt(jacksonUtil.getString("parallelNum"));
                 String remark = jacksonUtil.getString("remark") == null?"":jacksonUtil.getString("remark");
                 String sql = "SELECT 'Y' FROM TZ_JC_FWQDX_T A WHERE A.TZ_JG_ID=? AND A.TZ_JCFWQ_MC=?";

@@ -17,7 +17,6 @@ Ext.define('KitchenSink.view.batchProcess.processDefineEditWindow', {
     minWidth: 200,
     minHeight: 100,
     layout: 'fit',
-    resizable: true,
     modal: true,
     actType: 'add',
 

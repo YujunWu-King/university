@@ -11,11 +11,10 @@ Ext.define('KitchenSink.view.processDispatchMg.processLogsPanel', {
     ],
     title: '进程运行日志',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    actType: 'add',//默认新增
     items:[{
         xtype: 'grid',
         frame: true,
-        autoHeight:true,
+        height: 500,
         columnLines: true,
         selModel: {
             type: 'checkboxmodel'

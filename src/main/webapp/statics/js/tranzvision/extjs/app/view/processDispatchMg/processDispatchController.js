@@ -195,7 +195,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchController', {
 
             this.getView().add(win);
         }
-        var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_INSTANCE_INFO","OperateType":"QF","comParams":{"processInstance":"' + processInstance + '"}}';
+        var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_INSTANCE_INFO","OperateType":"QF","comParams":{"processInstance":"'+ processInstance + '","orgId":"' + Ext.tzOrgID + '"}}';
         // 加载数据
         Ext.tzLoad(tzParams, function (responseData) {
             var formData = responseData.formData;
@@ -209,10 +209,21 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchController', {
         var selRec = store.getAt(rowIndex);
         var orgId = selRec.get("orgId");
         var processInstance = selRec.get("processInstance");
-        var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_MONITOR_LIST","OperateType":"startProcess","comParams":{"orgId":"'+orgId+'","processInstance":"'+ processInstance +'"}}';
+        var processServerName = selRec.get("processServerName");
+        var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_MONITOR_LIST","OperateType":"startProcess","comParams":{"orgId":"'+orgId+ '","processServerName":"' + processServerName +'","processInstance":"'+ processInstance +'"}}';
         Ext.tzLoad(tzParams,function(responseData){
-            store.reload();
-            Ext.MessageBox.alert("提示", "进程实例已启动！");
+
+        	if(responseData.status == "failed"){
+        		
+        		store.reload();
+        		Ext.MessageBox.alert("提示", "进程服务器未启动，启动失败！");
+        	}else{
+        		
+        		store.reload();
+        		Ext.MessageBox.alert("提示", "进程实例已启动！");
+        	}
+            
+            
         });
     },
     stopInstanceBL:function (view,rowIndex) {
@@ -268,7 +279,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchController', {
         this.getView().close();
     },
     openProcessBL:function (view, rowIndex) {
-        var user = (Ext.tzOrgID.toLowerCase()).replace(/(\w)/,function(v){return v.toUpperCase()});
+        var user = Ext.tzOrgID.toUpperCase();
         var store = view.findParentByType("grid").store;
         var selRec = store.getAt(rowIndex);
         var processName = selRec.get("processName");

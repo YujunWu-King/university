@@ -44,13 +44,15 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
 
                 // 进程实例ID;
                 String processInstance = jacksonUtil.getString("processInstance");
+                String orgId = jacksonUtil.getString("orgId");
 
                 String processName = "",processDesc = "", platFormType = "",runConId = "",loop = "",runServer = "",status = "",requestTime = "",runStartTime = "",processStartTime = "",processEndTime = "";
 
-                String sql = "SELECT DISTINCT B.TZ_YXPT_LX,B.TZ_JC_MC,B.TZ_JC_MS,A.TZ_YUNX_KZID,A.TZ_JCFWQ_MC,A.TZ_XH_QZBDS," +
-                        "A.TZ_JOB_YXZT,A.TZ_QQCJ_DTTM,A.TZ_JHZX_DTTM,A.TZ_JCKS_DTTM,A.TZ_JCJS_DTTM FROM TZ_JC_SHLI_T A JOIN TZ_JINC_DY_T B " +
-                        "ON A.TZ_JC_MC=B.TZ_JC_MC WHERE A.TZ_JCSL_ID=?";
-                Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { processInstance});
+                String sql = "SELECT A.TZ_JC_MC,A.TZ_YUNX_KZID,A.TZ_JCFWQ_MC,A.TZ_XH_QZBDS,A.TZ_JOB_YXZT,A.TZ_QQCJ_DTTM,A.TZ_JHZX_DTTM,A.TZ_JCKS_DTTM," +
+                        "A.TZ_JCJS_DTTM,(SELECT B.TZ_JC_MS FROM TZ_JINC_DY_T B WHERE B.TZ_JC_MC = A.TZ_JC_MC AND B.TZ_JG_ID=?) AS TZ_JC_MS, " +
+                		"(SELECT B.TZ_YXPT_LX FROM TZ_JINC_DY_T B WHERE B.TZ_JC_MC = A.TZ_JC_MC AND B.TZ_JG_ID=?) AS TZ_YXPT_LX "+
+                        "FROM TZ_JC_SHLI_T A WHERE A.TZ_JCSL_ID =?";
+                Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { orgId,orgId,processInstance});
                 if (map != null) {
                     platFormType = map.get("TZ_YXPT_LX") == null?"":map.get("TZ_YXPT_LX").toString();
                     processName = map.get("TZ_JC_MC") == null?"":map.get("TZ_JC_MC").toString();
@@ -177,13 +179,27 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
 
             jacksonUtil.json2Map(comParams);
             String orgId = jacksonUtil.getString("orgId");
-            Integer processInstance = Integer.parseInt(jacksonUtil.getString("processInstance"));
-            TzProcessInstance tzProcessInstance = new TzProcessInstance();
-            tzProcessInstance.setTzJgId(orgId);
-            tzProcessInstance.setTzJcslId(processInstance);
-            tzProcessInstance.setTzJobYxzt("SUCCEEDED");
-            tzProcessInstanceMapper.updateByPrimaryKeySelective(tzProcessInstance);
-            return strRet;
+            String processServerName = jacksonUtil.getString("processServerName");
+            
+            String processSql = "SELECT TZ_YXZT FROM TZ_JC_FWQDX_T WHERE TZ_JG_ID = ? AND TZ_JCFWQ_MC = ?";
+            Map<String,Object> processMap = jdbcTemplate.queryForMap(processSql, new String[] {orgId,processServerName});
+            
+            if(processMap != null && "RUNNING".equals(String.valueOf(processMap.get("TZ_YXZT")))) {
+            	
+            	Integer processInstance = Integer.parseInt(jacksonUtil.getString("processInstance"));
+                TzProcessInstance tzProcessInstance = new TzProcessInstance();
+                tzProcessInstance.setTzJgId(orgId);
+                tzProcessInstance.setTzJcslId(processInstance);
+                tzProcessInstance.setTzJobYxzt("SUCCEEDED");
+                tzProcessInstanceMapper.updateByPrimaryKeySelective(tzProcessInstance);
+                return strRet;
+            }else {
+            	
+            	return "{\"status\":\"failed\"}";
+            }
+            
+            
+            
         } else{
             jacksonUtil.json2Map(comParams);
             String orgId = jacksonUtil.getString("orgId");
