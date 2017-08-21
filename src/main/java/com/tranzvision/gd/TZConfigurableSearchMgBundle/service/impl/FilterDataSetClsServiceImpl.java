@@ -112,96 +112,99 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
 		try {
-
 			// 将字符串转换成json;
 			jacksonUtil.json2Map(comParams);
-			String str_com_id = jacksonUtil.getString("ComID");
-			String str_page_id = jacksonUtil.getString("PageID");
-			String str_view_name = jacksonUtil.getString("ViewMc");
-			String queryID = jacksonUtil.getString("queryID");
-			String strFieldOrder = jacksonUtil.getString("fieldOrder");
-			int numFieldOrder = Integer.parseInt(strFieldOrder);
-			int total = 0;
-			
-			if ("1".equals(queryID)) {
-				// 查询总数;
-				String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FLTDST_CON_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
-				total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name },
-						"Integer");
-
-				String sql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN FROM PS_TZ_FLTDST_CON_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? AND TZ_FLTDST_ORDER = ? order by TZ_FLTDST_C_ORDER asc limit ?,?";
-				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
-						new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder, numStart, numLimit });
-				if (list != null && list.size()>0) {
-					for (int i = 0; i < list.size(); i++) {
-						String strOrderCond =  String.valueOf(list.get(i).get("TZ_FLTDST_C_ORDER"));
-						String strDstAndOr = (String) list.get(i).get("TZ_FLTDST_AND_OR");
-						String strLeftParen = (String) list.get(i).get("TZ_FLTDST_L_PAREN");
-						String strDstCondFld = (String) list.get(i).get("TZ_FLTDST_CON_FLD");
-						String strDstOperator= (String) list.get(i).get("TZ_FLTDST_OPERATOR");
-						String strDstCondValueType = (String) list.get(i).get("TZ_FLTDST_FLD_V_T");
-						String strDstCondFldValue = (String) list.get(i).get("TZ_FLTDST_FLD_VAL");
-						String strRightParen = (String) list.get(i).get("TZ_FLTDST_R_PAREN");
+			if(jacksonUtil.containsKey("ComID") && 
+					jacksonUtil.containsKey("PageID") &&
+					jacksonUtil.containsKey("ViewMc") &&
+					jacksonUtil.containsKey("queryID") &&
+					jacksonUtil.containsKey("fieldOrder")){
+				String str_com_id = jacksonUtil.getString("ComID");
+				String str_page_id = jacksonUtil.getString("PageID");
+				String str_view_name = jacksonUtil.getString("ViewMc");
+				String queryID = jacksonUtil.getString("queryID");
+				String strFieldOrder = jacksonUtil.getString("fieldOrder");
+				int numFieldOrder = Integer.parseInt(strFieldOrder);
+				int total = 0;
+				
+				if ("1".equals(queryID)) {
+					// 查询总数;
+					String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FLTDST_CON_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
+					total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name },
+							"Integer");
+	
+					String sql = "SELECT TZ_FLTDST_C_ORDER,TZ_FLTDST_AND_OR,TZ_FLTDST_L_PAREN,TZ_FLTDST_CON_FLD,TZ_FLTDST_OPERATOR,TZ_FLTDST_FLD_V_T,TZ_FLTDST_FLD_VAL,TZ_FLTDST_R_PAREN FROM PS_TZ_FLTDST_CON_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? AND TZ_FLTDST_ORDER = ? order by TZ_FLTDST_C_ORDER asc limit ?,?";
+					List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
+							new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder, numStart, numLimit });
+					if (list != null && list.size()>0) {
+						for (int i = 0; i < list.size(); i++) {
+							String strOrderCond =  String.valueOf(list.get(i).get("TZ_FLTDST_C_ORDER"));
+							String strDstAndOr = (String) list.get(i).get("TZ_FLTDST_AND_OR");
+							String strLeftParen = (String) list.get(i).get("TZ_FLTDST_L_PAREN");
+							String strDstCondFld = (String) list.get(i).get("TZ_FLTDST_CON_FLD");
+							String strDstOperator= (String) list.get(i).get("TZ_FLTDST_OPERATOR");
+							String strDstCondValueType = (String) list.get(i).get("TZ_FLTDST_FLD_V_T");
+							String strDstCondFldValue = (String) list.get(i).get("TZ_FLTDST_FLD_VAL");
+							String strRightParen = (String) list.get(i).get("TZ_FLTDST_R_PAREN");
+							
+												
+							String strDstOperatorDesc = jdbcTemplate.queryForObject("SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_FLTDST_OPERATOR' AND TZ_ZHZ_ID = ? AND TZ_EFF_STATUS='A' limit 0,1", 
+									new Object[]{strDstOperator},"String");
+							
+							Map<String, Object> map = new HashMap<String, Object>();
+							map.put("ComID", str_com_id);
+							map.put("PageID", str_page_id);
+							map.put("ViewMc", str_view_name);
+							map.put("fieldOrder", strFieldOrder);
+							map.put("orderCond", strOrderCond);
+							map.put("dstAndOr", strDstAndOr);
+							map.put("leftParen", strLeftParen);
+							map.put("dstCondFld", strDstCondFld);
+							map.put("dstOperator", strDstOperator);
+							map.put("dstOperatorDesc", strDstOperatorDesc);
+							map.put("dstCondValueType", strDstCondValueType);
+							map.put("dstCondFldValue", strDstCondFldValue);
+							map.put("rightParen", strRightParen);
+							listData.add(map);
+						}
 						
-											
-						String strDstOperatorDesc = jdbcTemplate.queryForObject("SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_FLTDST_OPERATOR' AND TZ_ZHZ_ID = ? AND TZ_EFF_STATUS='A' limit 0,1", 
-								new Object[]{strDstOperator},"String");
-						
-						Map<String, Object> map = new HashMap<String, Object>();
-						map.put("ComID", str_com_id);
-						map.put("PageID", str_page_id);
-						map.put("ViewMc", str_view_name);
-						map.put("fieldOrder", strFieldOrder);
-						map.put("orderCond", strOrderCond);
-						map.put("dstAndOr", strDstAndOr);
-						map.put("leftParen", strLeftParen);
-						map.put("dstCondFld", strDstCondFld);
-						map.put("dstOperator", strDstOperator);
-						map.put("dstOperatorDesc", strDstOperatorDesc);
-						map.put("dstCondValueType", strDstCondValueType);
-						map.put("dstCondFldValue", strDstCondFldValue);
-						map.put("rightParen", strRightParen);
-						listData.add(map);
+						mapRet.replace("total",total);
+						mapRet.replace("root", listData);
 					}
+				}
+				
+				if ("2".equals(queryID)) {
+					// 查询总数;
+					String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FLTDST_ORDER=?";
 					
-					mapRet.replace("total",total);
-					mapRet.replace("root", listData);
+					total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder },
+							"Integer");
+	
+					String sql = "SELECT * FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FLTDST_ORDER=?";
+					
+					List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
+							new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder});
+					if (list != null && list.size()>0) {
+						for (int i = 0; i < list.size(); i++) {
+							String strRoleName = (String) list.get(i).get("ROLENAME");
+							String strRoleDesc = (String) list.get(i).get("DESCR");
+							
+							
+							Map<String, Object> map = new HashMap<String, Object>();
+							map.put("ComID", str_com_id);
+							map.put("PageID", str_page_id);
+							map.put("ViewID", str_view_name);
+							map.put("roleID", strRoleName);
+							map.put("roleDesc", strRoleDesc);
+							map.put("orderNum", numFieldOrder);
+							listData.add(map);
+						}
+						
+						mapRet.replace("total",total);
+						mapRet.replace("root", listData);
+					}
 				}
 			}
-			
-			if ("2".equals(queryID)) {
-				// 查询总数;
-				String totalSQL = "SELECT COUNT('Y') FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FLTDST_ORDER=?";
-				
-				total = jdbcTemplate.queryForObject(totalSQL, new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder },
-						"Integer");
-
-				String sql = "SELECT * FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and TZ_FLTDST_ORDER=?";
-				
-				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql,
-						new Object[] { str_com_id, str_page_id, str_view_name,numFieldOrder});
-				if (list != null && list.size()>0) {
-					for (int i = 0; i < list.size(); i++) {
-						String strRoleName = (String) list.get(i).get("ROLENAME");
-						String strRoleDesc = (String) list.get(i).get("DESCR");
-						
-						
-						Map<String, Object> map = new HashMap<String, Object>();
-						map.put("ComID", str_com_id);
-						map.put("PageID", str_page_id);
-						map.put("ViewID", str_view_name);
-						map.put("roleID", strRoleName);
-						map.put("roleDesc", strRoleDesc);
-						map.put("orderNum", numFieldOrder);
-						listData.add(map);
-					}
-					
-					mapRet.replace("total",total);
-					mapRet.replace("root", listData);
-				}
-			}
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -253,6 +256,7 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 						strDefault = "";
 					}
 
+					/*
 					String isExist = "";
 					String sql = "select 'Y' from PS_TZ_FLTDST_FLD_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME=? AND TZ_FLTDST_FLD = ?";
 					isExist = jdbcTemplate.queryForObject(sql, new Object[] { str_com_id, str_page_id, str_view_name,strFltdstFld },
@@ -262,44 +266,45 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 						errMsg[1] = "试图添加的值已存在，请指定新值。";
 						return strRet;
 					} else {
-						String num_max = "";
-						int num_max_num = 0;
-						String sqlGetMaxNum = "select TZ_FLTDST_ORDER from PS_TZ_FLTDST_FLD_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME=? ORDER BY TZ_FLTDST_ORDER DESC LIMIT 0,1";
-						num_max = jdbcTemplate.queryForObject(sqlGetMaxNum, new Object[] { str_com_id, str_page_id, str_view_name },
-								"String");
-						if(num_max==null||"".equals(num_max)){
-							num_max_num = 1;
-						}else{
-							num_max_num = Integer.parseInt(num_max) + 1;
-						}
-					
-						PsTzFltDstFldT psTzFltDstFldT = new PsTzFltDstFldT();
-						psTzFltDstFldT.setTzComId(str_com_id);
-						psTzFltDstFldT.setTzPageId(str_page_id);
-						psTzFltDstFldT.setTzViewName(str_view_name);
-						psTzFltDstFldT.setTzFltdstOrder(num_max_num);
-						psTzFltDstFldT.setTzFltdstFld(strFltdstFld);
-						psTzFltDstFldT.setTzFltdstSrchRec(strFltdstSrchRec);
-						psTzFltDstFldT.setTzFltdstDesc(strFltdstDesc);
-						psTzFltDstFldT.setTzFltdstStatus(strValidStatus);
-						psTzFltDstFldT.setTzFltdstDefault(strDefault);
-						int i = psTzFltDstFldTMapper.insert(psTzFltDstFldT);
-						
-						if (i > 0) {
-							returnJsonMap.replace("ComID", str_com_id);
-							returnJsonMap.replace("PageID", str_page_id);
-							returnJsonMap.replace("ViewMc", str_view_name);
-							returnJsonMap.replace("fieldOrder", num_max_num);
-							returnJsonMap.replace("dataSetFld", strFltdstFld);
-							returnJsonMap.replace("searchRec", strFltdstSrchRec);
-							returnJsonMap.replace("fldDstDesc", strFltdstDesc);
-							returnJsonMap.replace("fldDstStatus", strValidStatus);
-							returnJsonMap.replace("fldDstDefault", strDefault);
-						} else {
-							errMsg[0] = "1";
-							errMsg[1] = "数据保存失败";
-						}
+					}*/
+					String num_max = "";
+					int num_max_num = 0;
+					String sqlGetMaxNum = "select TZ_FLTDST_ORDER from PS_TZ_FLTDST_FLD_T WHERE TZ_COM_ID=? AND TZ_PAGE_ID=? AND TZ_VIEW_NAME=? ORDER BY TZ_FLTDST_ORDER DESC LIMIT 0,1";
+					num_max = jdbcTemplate.queryForObject(sqlGetMaxNum, new Object[] { str_com_id, str_page_id, str_view_name },
+							"String");
+					if(num_max==null||"".equals(num_max)){
+						num_max_num = 1;
+					}else{
+						num_max_num = Integer.parseInt(num_max) + 1;
 					}
+				
+					PsTzFltDstFldT psTzFltDstFldT = new PsTzFltDstFldT();
+					psTzFltDstFldT.setTzComId(str_com_id);
+					psTzFltDstFldT.setTzPageId(str_page_id);
+					psTzFltDstFldT.setTzViewName(str_view_name);
+					psTzFltDstFldT.setTzFltdstOrder(num_max_num);
+					psTzFltDstFldT.setTzFltdstFld(strFltdstFld);
+					psTzFltDstFldT.setTzFltdstSrchRec(strFltdstSrchRec);
+					psTzFltDstFldT.setTzFltdstDesc(strFltdstDesc);
+					psTzFltDstFldT.setTzFltdstStatus(strValidStatus);
+					psTzFltDstFldT.setTzFltdstDefault(strDefault);
+					int i = psTzFltDstFldTMapper.insert(psTzFltDstFldT);
+					
+					if (i > 0) {
+						returnJsonMap.replace("ComID", str_com_id);
+						returnJsonMap.replace("PageID", str_page_id);
+						returnJsonMap.replace("ViewMc", str_view_name);
+						returnJsonMap.replace("fieldOrder", num_max_num);
+						returnJsonMap.replace("dataSetFld", strFltdstFld);
+						returnJsonMap.replace("searchRec", strFltdstSrchRec);
+						returnJsonMap.replace("fldDstDesc", strFltdstDesc);
+						returnJsonMap.replace("fldDstStatus", strValidStatus);
+						returnJsonMap.replace("fldDstDefault", strDefault);
+					} else {
+						errMsg[0] = "1";
+						errMsg[1] = "数据保存失败";
+					}
+					
 				}
 			}
 		} catch (Exception e) {
@@ -315,6 +320,16 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 	/* 修改可配置定义信息 */
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "";
+		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
+		returnJsonMap.put("ComID", "");
+		returnJsonMap.put("PageID", "");
+		returnJsonMap.put("ViewMc", "");
+		returnJsonMap.put("fieldOrder", "");
+		returnJsonMap.put("dataSetFld", "");
+		returnJsonMap.put("searchRec", "");
+		returnJsonMap.put("fldDstDesc", "");
+		returnJsonMap.put("fldDstStatus", "");
+		returnJsonMap.put("fldDstDefault", "");
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			int num = 0;
@@ -359,6 +374,20 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 					psTzFltDstFldT.setTzFltdstStatus(strValidStatus);
 					psTzFltDstFldT.setTzFltdstDefault(strDefault);
 					int i = psTzFltDstFldTMapper.updateByPrimaryKeySelective(psTzFltDstFldT);
+					if (i > 0) {
+						returnJsonMap.replace("ComID", str_com_id);
+						returnJsonMap.replace("PageID", str_page_id);
+						returnJsonMap.replace("ViewMc", str_view_name);
+						returnJsonMap.replace("fieldOrder", num_max_num);
+						returnJsonMap.replace("dataSetFld", strFltdstFld);
+						returnJsonMap.replace("searchRec", strFltdstSrchRec);
+						returnJsonMap.replace("fldDstDesc", strFltdstDesc);
+						returnJsonMap.replace("fldDstStatus", strValidStatus);
+						returnJsonMap.replace("fldDstDefault", strDefault);
+					} else {
+						errMsg[0] = "1";
+						errMsg[1] = "数据保存失败";
+					}
 				}
 
 				if (jacksonUtil.containsKey("updateList")) {
@@ -370,6 +399,7 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
+		strRet = jacksonUtil.Map2json(returnJsonMap);
 		return strRet;
 	}
 
@@ -444,9 +474,6 @@ public class FilterDataSetClsServiceImpl extends FrameworkImpl {
 					}
 				}
 				
-				
-				
-			
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -321,8 +321,12 @@ public class FliterForm extends FrameworkImpl {
 			String roleExisted;
 			String distinctNum;
 			
+			
 			String RoleOprIdSql = "SELECT OPRID from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID=? and TZ_JG_ID=?";
+			System.out.println("currentUser是什么？？？"+currentUser);
+			System.out.println("currentrOganization是什么？？？"+currentrOganization);
 			roleOprId = jdbcTemplate.queryForObject(RoleOprIdSql, new Object[] { currentUser,currentrOganization }, "String");
+			System.out.println("是什么？？？"+roleOprId);
 			
 			String uniqueList="";
 			String DataSetRoleSql = "SELECT * FROM PSROLEUSER WHERE ROLEUSER=?";
@@ -330,7 +334,7 @@ public class FliterForm extends FrameworkImpl {
 			if(listDateSetRole!=null && listDateSetRole.size()>0){
 				for (Map<String, Object> mapDataSetRole : listDateSetRole) {
 					strDataSetRole = mapDataSetRole.get("ROLENAME") == null ? "" : String.valueOf(mapDataSetRole.get("ROLENAME"));
-//					System.out.println("登陆用户的角色有==="+strDataSetRole);
+					System.out.println("登陆用户的角色有==="+strDataSetRole);
 					
 					String isRoleExistSql = "SELECT * FROM PS_TZ_FLTDST_ROLE_T where TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=?";
 					List<Map<String, Object>> isRoleExist = jdbcTemplate.queryForList(isRoleExistSql,new Object[] { comId, pageId, viewName });
@@ -338,7 +342,7 @@ public class FliterForm extends FrameworkImpl {
 						for (Map<String, Object> mapIsRoleExist : isRoleExist) {
 							roleExisted = mapIsRoleExist.get("ROLENAME") == null ? "" : String.valueOf(mapIsRoleExist.get("ROLENAME"));
 							distinctNum = mapIsRoleExist.get("TZ_FLTDST_ORDER") == null ? "" : String.valueOf(mapIsRoleExist.get("TZ_FLTDST_ORDER"));
-//							System.out.println("数据集的角色有==="+roleExisted);
+							System.out.println("数据集的角色有==="+roleExisted);
 							if (roleExisted.equals(strDataSetRole)) {
 								isDisplay="Y";
 								if (uniqueList.length()==0) {
@@ -1062,7 +1066,7 @@ public class FliterForm extends FrameworkImpl {
 											/*字段取值*/
 											String strDstCondValue = "";
 											if("A".equals(strDstCondValueType)){
-												strDstCondValue = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+												strDstCondValue = tzLoginServiceImpl.getLoginedManagerOprid(request);
 											}else if("B".equals(strDstCondValueType)){
 												String formatType = "";
 												if ("DATE".equals(strDataSetFldTypeSql)){
@@ -1209,7 +1213,7 @@ public class FliterForm extends FrameworkImpl {
 								/*字段取值*/
 								String strDstCondValue = "";
 								if("A".equals(strDstCondValueType)){
-									strDstCondValue = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+									strDstCondValue = tzLoginServiceImpl.getLoginedManagerOprid(request);
 								}else if("B".equals(strDstCondValueType)){
 									String formatType = "";
 									if ("DATE".equals(strDataSetFldTypeSql)){

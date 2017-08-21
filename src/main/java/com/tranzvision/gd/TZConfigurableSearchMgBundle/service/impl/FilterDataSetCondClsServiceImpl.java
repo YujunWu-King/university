@@ -259,8 +259,8 @@ public class FilterDataSetCondClsServiceImpl extends FrameworkImpl {
 					
 					
 					for (int i = 0; i < strRoleID.length; i++) {
-						String isExistSql = "SELECT count(1) FROM PS_TZ_FLTDST_ROLE_T WHERE TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and ROLENAME=?";
-						int count = jdbcTemplate.queryForObject(isExistSql, new Object[] { strCompID, strPageID, strViewID , strRoleID[i]}, "Integer");
+						String isExistSql = "SELECT count(1) FROM PS_TZ_FLTDST_ROLE_T WHERE TZ_COM_ID=? and TZ_PAGE_ID=? and TZ_VIEW_NAME=? and ROLENAME=? and TZ_FLTDST_ORDER=?";
+						int count = jdbcTemplate.queryForObject(isExistSql, new Object[] { strCompID, strPageID, strViewID , strRoleID[i],strFieldOrder}, "Integer");
 
 						if (count == 1) {
 							continue;

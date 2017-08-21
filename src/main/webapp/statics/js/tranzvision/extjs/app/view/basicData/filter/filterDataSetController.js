@@ -344,43 +344,45 @@
         //删除json字符串
         var removeJson = "";
         //删除记录
-        var removeRecs = store1.getRemovedRecords();
-        for(var i=0;i<removeRecs.length;i++){
-            if(removeJson == ""){
-                removeJson = Ext.JSON.encode(removeRecs[i].data);
-            }else{
-                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
-            }
-    	}
-        
-        
-        var removeJsonRole = "";
-        var removeRoles = store2.getRemovedRecords();
-        for(var i=0;i<removeRoles.length;i++){
-            if(removeJsonRole == ""){
-            	removeJsonRole = Ext.JSON.encode(removeRoles[i].data);
-            }else{
-            	removeJsonRole = removeJsonRole + ','+Ext.JSON.encode(removeRoles[i].data);
-            }
-    	}
-        var removeJsonData = '{"typeFlag":"Condition","removeList":[' + removeJson + ']}';
-		removeJsonData = removeJsonData + "," + '{"typeFlag":"Roles","removeList":[' + removeJsonRole + ']}';
-		console.log(removeJsonData);
-        
-//        if(removeJson != ""){
-//            if(comParams == ""){
-//                comParams = '"delete":[' + removeJson + "]";
-//            }else{
-//                comParams = comParams + ',"delete":[' + removeJson + "]";
-//            }
-//        }
-		if(removeJsonData != ""){
-            if(comParams == ""){
-                comParams = '"delete":[' + removeJsonData + "]";
-            }else{
-                comParams = comParams + ',"delete":[' + removeJsonData + "]";
-            }
+		if(actType == "update"){
+			var removeRecs = store1.getRemovedRecords();
+			for(var i=0;i<removeRecs.length;i++){
+				if(removeJson == ""){
+					removeJson = Ext.JSON.encode(removeRecs[i].data);
+				}else{
+					removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+				}
+			}
+			
+			
+			var removeJsonRole = "";
+			var removeRoles = store2.getRemovedRecords();
+			for(var i=0;i<removeRoles.length;i++){
+				if(removeJsonRole == ""){
+					removeJsonRole = Ext.JSON.encode(removeRoles[i].data);
+				}else{
+					removeJsonRole = removeJsonRole + ','+Ext.JSON.encode(removeRoles[i].data);
+				}
+			}
+			var removeJsonData = '{"typeFlag":"Condition","removeList":[' + removeJson + ']}';
+			removeJsonData = removeJsonData + "," + '{"typeFlag":"Roles","removeList":[' + removeJsonRole + ']}';
+			console.log(removeJsonData);
+			
+	//        if(removeJson != ""){
+	//            if(comParams == ""){
+	//                comParams = '"delete":[' + removeJson + "]";
+	//            }else{
+	//                comParams = comParams + ',"delete":[' + removeJson + "]";
+	//            }
+	//        }
+			if(removeJsonData != ""){
+				if(comParams == ""){
+					comParams = '"delete":[' + removeJsonData + "]";
+				}else{
+					comParams = comParams + ',"delete":[' + removeJsonData + "]";
+				}
         }
+		}
         
         //提交参数
         var tzParams = '{"ComID":"TZ_GD_FILTER_COM","PageID":"TZ_FLDDST_FLD_STD","OperateType":"U","comParams":{'+comParams+'}}';
