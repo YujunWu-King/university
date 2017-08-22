@@ -58,11 +58,11 @@
        // LoadWelcome("%bind(:4)","%bind(:5)","");
   		LoadLeftArea("%bind(:4)","%bind(:5)","");//加载常用链接和二维码
         
-		onChangTimeZone("");
+  		onLoadInterviewAppointmentHtml();
     });
 	
-	function onChangTimeZone(timeZone){
-		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzGetAppointmentHtml","comParams":{"timeZone":"'+ timeZone +'"}}';
+	function onLoadInterviewAppointmentHtml(){
+		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzGetAppointmentHtml","comParams":{}}';
 		$.ajax({
 			type:"post",
 			dataType:"json",
@@ -77,10 +77,10 @@
 	}
 		
 	/*确认面试预约*/
-	function onConfirmAppointment(el, classId, pcId, planId){
+	function onConfirmAppointment(el, msKey){
 		if($(el).hasClass("btn-disabled")) return;
 
-		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzConfirmAppointment","comParams":{"classId":"'+ classId +'","pcId":"'+ pcId +'","planId":"'+ planId +'","timezone":""}}';
+		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzConfirmAppointment","comParams":{"msKey":"'+ msKey +'"}}';
 		$.ajax({
 			type:"post",
 			dataType:"json",
@@ -90,9 +90,8 @@
 			success:function(data){
 				var errcode = data.state.errcode;
 				var errMsg = data.state.errdesc;
-				
-				var timezone = $("#interviewtimezone").val();
-				onChangTimeZone(timezone);
+
+				onLoadInterviewAppointmentHtml();
 				alert(errMsg);
 			},
 			error: function(XMLHttpRequest,errorMsg){

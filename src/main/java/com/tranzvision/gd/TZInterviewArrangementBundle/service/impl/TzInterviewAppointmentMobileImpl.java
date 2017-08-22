@@ -21,6 +21,7 @@ import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -133,6 +134,7 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			Date currDate = new Date();//当前时间
+			String tmpPwdKey = "TZGD_@_!_*_Interview_20170818_Tranzvision";
 			
 			String msPlanListHtml = "";
 			String contextPath = request.getContextPath();
@@ -150,6 +152,8 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			int planCount = 0;
 			String msExplainInfo = "";
 			for(Map<String,Object> msPlanMap : msPlanList){
+				String submitType = "Y"; //按钮提交事件，Y：预约，N：撤销预约
+				
 				String classID = msPlanMap.get("TZ_CLASS_ID") == null? "" : String.valueOf(msPlanMap.get("TZ_CLASS_ID"));
 				String batchID = msPlanMap.get("TZ_BATCH_ID") == null? "" : String.valueOf(msPlanMap.get("TZ_BATCH_ID"));
 				String msPlanSeq = msPlanMap.get("TZ_MS_PLAN_SEQ") == null? "" : String.valueOf(msPlanMap.get("TZ_MS_PLAN_SEQ"));
@@ -208,6 +212,7 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			    	if("Y".equals(inCurrPlan)){
 			    		listType = "2";
 			    		buttonLabel = "已预约／撤销预约";
+			    		submitType = "N";
 			    	}
 			    }else{
 			    	//当前学生尚未预约
@@ -231,8 +236,9 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			    planCount++;
 			    msStartTime = dttmSimpleDateFormat.format(startDatetime);
 			    String countSta = String.valueOf(appoCount)+"/"+String.valueOf(maxPerson);
+			    String msKey = DESUtil.encrypt(classID + "==" + batchID + "==" + msPlanSeq +"==" + submitType, tmpPwdKey);
 			    
-			    msPlanListHtml = msPlanListHtml + tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_LIST_HTML"+listType,contextPath,msStartTime,location,descr,countSta,classID, batchID, msPlanSeq,buttonLabel);
+			    msPlanListHtml = msPlanListHtml + tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_LIST_HTML"+listType,contextPath,msStartTime,location,descr,countSta,msKey,buttonLabel);
 			}
 			
 			//没有面试预约显示

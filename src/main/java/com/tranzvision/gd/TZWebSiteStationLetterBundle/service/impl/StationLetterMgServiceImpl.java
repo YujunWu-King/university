@@ -15,6 +15,7 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.SiteRepCssServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -149,7 +150,9 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 			}
 			*/
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String tmpPwdKey = "TZGD_@_!_*_StationLetter_20170821_Tranzvision";
 			jacksonUtil.json2Map(comParams);
+			
 			String searchText = jacksonUtil.getString("searchText");
 			searchText = "%"+ searchText +"%";
 
@@ -164,7 +167,11 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 				if(znxList != null && znxList.size()>0){
 					for(Map<String,Object> znxMap : znxList){
 						Map<String,Object> mapJson = new HashMap<String,Object>();
-						mapJson.put("stationMailId", znxMap.get("TZ_ZNX_MSGID"));
+						
+						String stationMailId = znxMap.get("TZ_ZNX_MSGID").toString();
+						stationMailId = DESUtil.encrypt(stationMailId + "==" + stationMailId, tmpPwdKey);
+						
+						mapJson.put("stationMailId", stationMailId);
 						mapJson.put("znxStatus", znxMap.get("TZ_ZNX_STATUS"));
 						mapJson.put("sendName", "");
 						mapJson.put("stationMailTitle", znxMap.get("TZ_MSG_SUBJECT"));
@@ -190,28 +197,62 @@ public class StationLetterMgServiceImpl extends FrameworkImpl {
 	@Override
 	public String tzUpdate(String[] znxData, String[] errMsg) {
 		// 返回值;
-		String strRet = "{}";
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("result", "success");
+		mapRet.put("message", "删除成功");
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		String strStationMailId = "";
+		String tmpPwdKey = "TZGD_@_!_*_StationLetter_20170821_Tranzvision";
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		// 若参数为空，直接返回;
 		if (znxData == null || znxData.length == 0) {
-			return strRet;
+			mapRet.replace("result", "error");
+			mapRet.replace("message", "删除失败，参数为空");
+			
+			return jacksonUtil.Map2json(mapRet);
 		}
-		JacksonUtil jacksonUtil = new JacksonUtil();
+
 		try {
 			int num = 0;
+			int notDelCount = 0;
 			for (num = 0; num < znxData.length; num++) {
 				jacksonUtil.json2Map(znxData[num]);				
-				strStationMailId = jacksonUtil.getString("mailId");
+				String encryptMailId = jacksonUtil.getString("mailId");
+				
+				try{
+					encryptMailId = DESUtil.decrypt(encryptMailId, tmpPwdKey);
+					if(encryptMailId == null){
+						throw new Exception("站内信不存在");
+					}
+					
+					String mailIdArr[] = encryptMailId.split("==");
+					if(mailIdArr.length != 2 && mailIdArr[0] != mailIdArr[1]){
+						throw new Exception("站内信不存在");
+					}else{
+						strStationMailId = mailIdArr[0];
+					}
+				}catch(Exception ee){
+					notDelCount ++;
+					continue;
+				}
+
 				String comPageSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_REC_DELSTATUS = 'Y' WHERE TZ_ZNX_MSGID = ? AND TZ_ZNX_RECID = ?";
-				jdbcTemplate.update(comPageSql,new Object[]{strStationMailId,oprid});		
+				int rtn = jdbcTemplate.update(comPageSql,new Object[]{strStationMailId,oprid});
+				if(rtn <= 0){
+					notDelCount ++;
+				}
+			}
+			
+			if(notDelCount > 0){
+				mapRet.replace("result", "error");
+				mapRet.replace("message", notDelCount + "条站内信删除失败。");
 			}
 		} catch (Exception e) {
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
-			return strRet;
 		}
 
-		return strRet;
+		return jacksonUtil.Map2json(mapRet);
 	}
 }

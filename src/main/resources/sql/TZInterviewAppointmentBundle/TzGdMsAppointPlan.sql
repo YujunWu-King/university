@@ -34,5 +34,9 @@ WHERE
         WHERE
             TZ_CLASS_ID = C.TZ_CLASS_ID
                 AND TZ_BATCH_ID = C.TZ_BATCH_ID
-                AND TZ_OPEN_STA = 'Y')
+                AND TZ_OPEN_STA = 'Y' 
+                AND IF(NOW() > STR_TO_DATE(CONCAT(TZ_CLOSE_DT, ' ', TZ_CLOSE_TM),
+                        '%Y-%m-%d %H:%i'),
+                TZ_SHOW_FRONT = 'Y',
+                TRUE))
 ORDER BY TZ_CLASS_ID,TZ_MS_DATE,TZ_START_TM
