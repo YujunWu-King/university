@@ -2237,6 +2237,7 @@ var SurveyBuild = {
     },
     //----------------------
     engViewImageSet: function(el, instanceId,comInstanceId) {
+    
         var appInsId = SurveyBuild.appInsId; //报名表实例ID
         //var data;
         var $isDhContainer = $(el).closest(".dhcontainer");
@@ -2249,11 +2250,23 @@ var SurveyBuild = {
             data = SurveyBuild._items[dhIns].children[index][comInstanceId];
         }
         var _children = data.children;
+        var sysFileName,accessPath;
         var index = $(el).parents(".input-list-uploadcon-list").index();
 
         var imgHtmls = "";
         for (var i = 0; i < _children.length; i++) {
-            imgHtmls += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _children[i].sysFileName + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
+        	_sysFilename = _children[i].sysFileName;
+        	accessPath = _children[i].accessPath;
+        	_fileSuffix = (_sysFilename.substring(_sysFilename.lastIndexOf(".") + 1)).toUpperCase();
+        	if(_fileSuffix == "PDF"){
+        		
+        		imgHtmls = TzUniversityContextPath + accessPath + sysFileName;
+        	}else{
+        		
+                imgHtmls += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _children[i].sysFileName + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
+
+        	}
+            
         }
 
         var $ul = $("#fancybox-main").children("ul");
