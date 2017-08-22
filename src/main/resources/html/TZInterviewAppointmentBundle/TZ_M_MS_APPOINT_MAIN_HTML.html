@@ -69,6 +69,8 @@
 			data: {"tzParams" : tzParams , "type": "M"},				
 			url:url,
 			success:function(data){
+				var errcode = data.state.errcode;
+				var errMsg = data.state.errdesc;
 				var _html =  data.comContent.appoHtml;
 				if(_html != ""){
 					$("#tz-interview-appointment-List").html(_html);
