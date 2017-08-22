@@ -3,7 +3,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta charset="utf-8">
 <meta name="format-detection" content="telephone=no">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0;"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
 <title>面试预约</title>
 <link href="%bind(:1)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
 <script>
@@ -58,10 +58,10 @@
 	
 		
 	/*确认面试预约*/
-	function onConfirmAppointment(el, classId, pcId, planId){
+	function onConfirmAppointment(el, msKey){
 		if($(el).hasClass("btn-enabled")) return;
 
-		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzConfirmAppointment","comParams":{"classId":"'+ classId +'","pcId":"'+ pcId +'","planId":"'+ planId +'"}}';
+		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzConfirmAppointment","comParams":{"msKey":"'+ msKey +'"}}';
 		$.ajax({
 			type:"post",
 			dataType:"json",
@@ -69,10 +69,8 @@
 			data: {"tzParams" : tzParams , "type": "M"},				
 			url:url,
 			success:function(data){
-				var errcode = data.state.errcode;
-				var errMsg = data.state.errdesc;
-				if(errcode == 0 || errcode == 2){
-					var _html =  data.comContent.appoHtml;
+				var _html =  data.comContent.appoHtml;
+				if(_html != ""){
 					$("#tz-interview-appointment-List").html(_html);
 				}
 				alert(errMsg);

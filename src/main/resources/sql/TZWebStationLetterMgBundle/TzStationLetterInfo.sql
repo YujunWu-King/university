@@ -8,5 +8,6 @@ FROM
         JOIN
     PS_TZ_ZNX_REC_T B ON (A.TZ_ZNX_MSGID = B.TZ_ZNX_MSGID
         AND B.TZ_REC_DELSTATUS <> 'Y')
-        AND A.TZ_ZNX_MSGID = ?
+WHERE
+    A.TZ_ZNX_MSGID = ?
         AND TZ_ZNX_RECID = ?
