@@ -12,6 +12,7 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -33,7 +34,7 @@ public class MobileZnxContentServiceImpl extends FrameworkImpl {
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	
-	//清华mba招生手机版系统消息内容
+	//清华mba招生手机版系统消息内容，弃用
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		//rootPath;
@@ -125,8 +126,10 @@ public class MobileZnxContentServiceImpl extends FrameworkImpl {
 	 */
 	private String tzGetZnxDetailsHtml(String strParams, String[] errorMsg){
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		rtnMap.put("result", "success");
 		rtnMap.put("znxDetailsHtml", "");
 		
+		String tmpPwdKey = "TZGD_@_!_*_StationLetter_20170821_Tranzvision";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			//当前登录人;
@@ -139,6 +142,22 @@ public class MobileZnxContentServiceImpl extends FrameworkImpl {
 			}else{
 				znxMsgId = request.getParameter("znxMsgId");
 			}
+
+			try{
+				String encryptMailId = DESUtil.decrypt(znxMsgId, tmpPwdKey);
+				if(encryptMailId == null){
+					throw new Exception();
+				}
+				
+				String mailIdArr[] = encryptMailId.split("==");
+				if(mailIdArr.length != 2 && mailIdArr[0] != mailIdArr[1]){
+					throw new Exception();
+				}else{
+					znxMsgId = mailIdArr[0];
+				}
+			}catch(Exception ee){
+				throw new Exception("站内信不存在");
+			}
 			
 			String znxDetailsHtml = "";
 			String znxSubject = "";
@@ -150,22 +169,24 @@ public class MobileZnxContentServiceImpl extends FrameworkImpl {
 		    	znxSubject = msyyMap.get("TZ_MSG_SUBJECT") == null ? "" : (String)msyyMap.get("TZ_MSG_SUBJECT");
 		    	znxTime = msyyMap.get("TZ_SEND_TIME") == null ? "" : (String)msyyMap.get("TZ_SEND_TIME");
 		    	znxText = msyyMap.get("TZ_MSG_TEXT") == null ? "" : (String)msyyMap.get("TZ_MSG_TEXT");
+		    	
+		    	znxDetailsHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_CONTENT",true,znxSubject,znxTime,znxText);
+			    rtnMap.replace("znxDetailsHtml", znxDetailsHtml);
+			    
+			    //更新站内信阅读状态
+			    String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
+				String znxStatus = sqlQuery.queryForObject(znxStatusSql, new Object[] { znxMsgId, m_curOPRID }, "String");
+				znxStatus = znxStatus == null ? "" : znxStatus;
+				if ("N".equals(znxStatus)) {
+					String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
+					jdbcTemplate.update(updateStatusSql, new Object[] { znxMsgId, m_curOPRID });
+				}
+		    }else{
+		    	rtnMap.put("result", "站内信不存在");
 		    }
-			
-		    znxDetailsHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_CONTENT",true,znxSubject,znxTime,znxText);
-		    rtnMap.replace("znxDetailsHtml", znxDetailsHtml);
-		    
-		    //更新站内信阅读状态
-		    String znxStatusSql = "select TZ_ZNX_STATUS from PS_TZ_ZNX_REC_T WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
-			String znxStatus = sqlQuery.queryForObject(znxStatusSql, new Object[] { znxMsgId, m_curOPRID }, "String");
-			znxStatus = znxStatus == null ? "" : znxStatus;
-			if ("N".equals(znxStatus)) {
-				String updateStatusSql = "UPDATE PS_TZ_ZNX_REC_T SET TZ_ZNX_STATUS = 'Y' WHERE TZ_ZNX_MSGID = ? and TZ_ZNX_RECID=?";
-				jdbcTemplate.update(updateStatusSql, new Object[] { znxMsgId, m_curOPRID });
-			}
 		} catch (Exception e) {
 			errorMsg[0] = "1";
-			errorMsg[0] = "系统错误："+e.getMessage();
+			errorMsg[1] = e.getMessage();
 			e.printStackTrace();
 		}
 

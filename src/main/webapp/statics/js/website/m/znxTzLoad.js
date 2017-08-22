@@ -116,22 +116,27 @@ function showZnxDetails(el,znxMsgId){
 			},
 			url: TzUniversityContextPath+"/dispatcher",
 			dataType: 'json',
-			success: function(result) {	
-				var resultNum = result.state.errcode;
+			success: function(respData) {	
+				var resultNum = respData.state.errcode;
+				var result = respData.comContent.result;
 				if(resultNum == "0"){
-					//设置为已读
-					var znxTitle = $(el).find(".newz_left p:first");
-					if(!znxTitle.hasClass("newz_read")) znxTitle.addClass("newz_read");
-					
-					var detailsHtml = result.comContent.znxDetailsHtml;
-					contentsEl.html(detailsHtml);
-					contentsEl.attr("msgId", znxMsgId);
-					$("#tz-details-container").css("display","block");
-					$(".viewport-adaptive").css("display","none");
-					
-					$(document).scrollTop(0);
+					if(result == "success"){
+						//设置为已读
+						var znxTitle = $(el).find(".newz_left p:first");
+						if(!znxTitle.hasClass("newz_read")) znxTitle.addClass("newz_read");
+						
+						var detailsHtml = respData.comContent.znxDetailsHtml;
+						contentsEl.html(detailsHtml);
+						contentsEl.attr("msgId", znxMsgId);
+						$("#tz-details-container").css("display","block");
+						$(".viewport-adaptive").css("display","none");
+						
+						$(document).scrollTop(0);
+					}else{
+						alert(result);
+					}
 				}else{
-					alert(result.state.errdesc);
+					alert(respData.state.errdesc);
 				}
 			},
 			error: function(xhr, type) {
@@ -163,16 +168,20 @@ function deleteZnx(el, znxMsgId){
 		url: TzUniversityContextPath+"/dispatcher",
 		dataType: 'json',
 		async: false,
-		success: function(result) {	
-			var resultNum = result.state.errcode;
+		success: function(respData) {	
+			var resultNum = respData.state.errcode;
 			if(resultNum == "0"){
-				$removeEl.slideUp("slow", function() {
-					$removeEl.remove();
+				if(respData.comContent.result == "success"){
+					$removeEl.slideUp("slow", function() {
+						$removeEl.remove();
 
-					dropObj.resetload();
-			    });
+						dropObj.resetload();
+				    });
+				}else{
+					alert("删除失败");
+				}
 			}else{
-				alert("删除失败，"+result.state.errdesc);
+				alert("删除失败，"+respData.state.errdesc);
 			}
 		},
 		error: function(xhr, type) {
