@@ -2252,14 +2252,32 @@ var SurveyBuild = {
         var index = $(el).parents(".input-list-uploadcon-list").index();
 
         var imgHtmls = "";
-        for (var i = 0; i < _children.length; i++) {
-            imgHtmls += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _children[i].sysFileName + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
+        var type = "";
+        var sysFileName = _children[index].sysFileName;
+        var accessPath = _children[index].accessPath;
+        var picType = ['JPG', 'JPEG', 'PNG'];
+        var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
+        if (picType.toString().indexOf(fileSuffix) != -1) {
+        	type = "IMG"; //图片
+            for (var i = 0; i < _children.length; i++) {
+                imgHtmls += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _children[i].sysFileName + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
+            }
+        }else{
+        	type = "PDF"; //PDF
+        	attHtml = TzUniversityContextPath + accessPath + sysFileName;
+        }
+        if (type == "PDF") {
+        	
+        	window.open(attHtml);
+        }else{
+        	
+        	 var $ul = $("#fancybox-main").children("ul");
+             $ul.html(imgHtmls);
+             var $li = $($ul.children("li")[index]);
+             $li.children("a").click();
         }
 
-        var $ul = $("#fancybox-main").children("ul");
-        $ul.html(imgHtmls);
-        var $li = $($ul.children("li")[index]);
-        $li.children("a").click();
+       
     }
 };
 var MsgSet = {};
