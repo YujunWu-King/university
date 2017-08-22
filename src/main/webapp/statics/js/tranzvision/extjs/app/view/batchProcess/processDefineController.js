@@ -231,13 +231,15 @@ Ext.define('KitchenSink.view.batchProcess.processDefineController', {
 		var tzParams = this.getProcessParams();
 		
 		var gridStore = btn.findParentByType("grid").store;
-		
-		Ext.tzSubmit(tzParams,function(){
-			
-			win.actType = "update";
-			gridStore.load();
-			form.reset();
-		},"",true,this);
+		if (form.isValid()) {
+			Ext.tzSubmit(tzParams,function(){
+				
+				win.actType = "update";
+				gridStore.load();
+				form.reset();
+			},"",true,this);
+		}
+
 	},
 	
 	onProcessWinEnsure: function(btn){

@@ -7,7 +7,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitor', {
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'tranzvision.extension.grid.column.Link',
-        'KitchenSink.view.processDispatchMg.processDispatchController',
+        'KitchenSink.view.processDispatchMg.processMonitorController',
         'KitchenSink.view.processDispatchMg.processMonitorStore'
     ],
     controller: 'processDispatchCon',

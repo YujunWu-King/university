@@ -126,15 +126,7 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 String processName = jacksonUtil.getString("processName");
                 String runCntlId = jacksonUtil.getString("runCntlId") == null?"":jacksonUtil.getString("runCntlId");
                 String cycleExpression = jacksonUtil.getString("cycleExpression") == null?"":jacksonUtil.getString("cycleExpression");
-
-                //日期类型存储
-                Date runStartDate = new Date();
-                if(jacksonUtil.getString("runDate") != null && jacksonUtil.getString("runTime") != null){
-                    String dateTime = jacksonUtil.getString("runDate") + jacksonUtil.getString("runTime");
-                    SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
-                    runStartDate = datetimeFormate.parse(dateTime);
-                }
-
+                
                 TzProcessInstance tzProcessInstance = new TzProcessInstance();
                 tzProcessInstance.setTzJgId(orgId);
                 tzProcessInstance.setTzDlzhId(user);
@@ -142,8 +134,37 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 tzProcessInstance.setTzYunxKzid(runCntlId);
                 tzProcessInstance.setTzJcMc(jcName);
                 tzProcessInstance.setTzJcfwqMc(processName);
-                tzProcessInstance.setTzQqcjDttm(runStartDate);
                 tzProcessInstance.setTzXhQzbds(cycleExpression);
+                
+                //日期类型处理
+                Date runStartDate = new Date();
+                String dateTime = "";
+                SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+                
+                if(jacksonUtil.getString("requestDate") != null && jacksonUtil.getString("requestTime") != null){
+                	dateTime = jacksonUtil.getString("requestDate") + jacksonUtil.getString("requestTime");
+                    runStartDate = datetimeFormate.parse(dateTime);
+                    tzProcessInstance.setTzQqcjDttm(runStartDate);
+                }
+                
+                if(jacksonUtil.getString("runDate") != null && jacksonUtil.getString("runTime") != null){
+                    dateTime = jacksonUtil.getString("runDate") + jacksonUtil.getString("runTime");
+                    runStartDate = datetimeFormate.parse(dateTime);
+                    tzProcessInstance.setTzJhzxDttm(runStartDate);
+                }
+                	
+                if(jacksonUtil.getString("processStartDate") != null && jacksonUtil.getString("processStartTime") != null){
+                    dateTime = jacksonUtil.getString("processStartDate") + jacksonUtil.getString("processStartDate");
+                    runStartDate = datetimeFormate.parse(dateTime);
+                    tzProcessInstance.setTzJcksDttm(runStartDate);
+                }
+                
+                if(jacksonUtil.getString("processEndDate") != null && jacksonUtil.getString("processEndTime") != null){
+                    dateTime = jacksonUtil.getString("processEndDate") + jacksonUtil.getString("processEndTime");
+                    runStartDate = datetimeFormate.parse(dateTime);
+                    tzProcessInstance.setTzJcjsDttm(runStartDate);;
+                }
+                
                 tzProcessInstanceMapper.insertSelective(tzProcessInstance);
             }
         }catch(Exception e){

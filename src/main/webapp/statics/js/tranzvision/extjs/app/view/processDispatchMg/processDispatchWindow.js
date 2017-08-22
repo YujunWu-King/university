@@ -91,43 +91,91 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                 emptyText:'任意',
                 allowBlank:true
             },{
-                xtype: 'radio',
-                name:'loopYear',
-                style:'margin-top:30px;margin-left:50px',
-                inputValue:"dateTime",
-                boxLabel: "指定调度日期时间"
+                xtype: 'fieldcontainer',
+                layout: 'column',
+                style:'margin-top:10px;margin-left:50px',
+                items:[{
+                    xtype: 'datefield',
+                    fieldLabel: '请求创建日期',
+                    columnWidth:.5,
+                    name:'requestDate',
+                    format: 'Y-m-d',
+                    labelWidth: 80,
+                    editable: false
+                },{
+                    xtype: 'timefield',
+                    fieldLabel: '请求创建时间',
+                    columnWidth:.5,
+                    name:'requestTime',
+                    format: 'H:i:s',
+                    labelWidth: 80,
+                    editable: false
+                }]
             },{
                 xtype: 'fieldcontainer',
                 layout: 'column',
                 style:'margin-top:10px;margin-left:50px',
                 items:[{
                     xtype: 'datefield',
-                    fieldLabel: '运行日期',
-                    columnWidth:.4,
+                    fieldLabel: '运行开始日期',
+                    columnWidth:.5,
                     name:'runDate',
                     format: 'Y-m-d',
-                    labelWidth: 60,
-                    editable: false,
-                    style:'margin-left:30px'
+                    labelWidth: 80,
+                    editable: false
                 },{
                     xtype: 'timefield',
-                    fieldLabel: '运行时间',
-                    columnWidth:.4,
+                    fieldLabel: '运行开始时间',
+                    columnWidth:.5,
                     name:'runTime',
                     format: 'H:i:s',
-                    labelWidth: 60,
-                    editable: false,
-                    style:'margin-left:40px'
+                    labelWidth: 80,
+                    editable: false
                 }]
             },{
-                xtype: 'radio',
-                name:'loopYear',
-                style:'margin-top:30px;margin-left:50px',
-                inputValue:"dateTime",
-                boxLabel: "指定调度日期时间"
+                xtype: 'fieldcontainer',
+                layout: 'column',
+                style:'margin-top:10px;margin-left:50px',
+                items:[{
+                    xtype: 'datefield',
+                    fieldLabel: '进程开始日期',
+                    columnWidth:.5,
+                    name:'processStartDate',
+                    format: 'Y-m-d',
+                    labelWidth: 80,
+                    editable: false
+                },{
+                    xtype: 'timefield',
+                    fieldLabel: '进程开始时间',
+                    columnWidth:.5,
+                    name:'processStartTime',
+                    format: 'H:i:s',
+                    labelWidth: 80,
+                    editable: false
+                }]
+            },{
+                xtype: 'fieldcontainer',
+                layout: 'column',
+                style:'margin-top:10px;margin-left:50px',
+                items:[{
+                    xtype: 'datefield',
+                    fieldLabel: '进程结束日期',
+                    columnWidth:.5,
+                    name:'processEndDate',
+                    format: 'Y-m-d',
+                    labelWidth: 80,
+                    editable: false
+                },{
+                    xtype: 'timefield',
+                    fieldLabel: '进程结束时间',
+                    columnWidth:.5,
+                    name:'processEndTime',
+                    format: 'H:i:s',
+                    labelWidth: 80,
+                    editable: false
+                }]
             },{
                 bodyStyle:'padding:0 0 10px 0',
-                style:'margin-left:50px',
                 xtype: 'textfield',
                 fieldLabel: '循环',
                 labelWidth: 40,
@@ -139,7 +187,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                         handler: "pmtSearchCycleTmp"
                     }
                 },
-                style:'margin-top:10px;margin-left:80px'
+                style:'margin-top:10px;margin-left:50px'
             }
         ],
     }],

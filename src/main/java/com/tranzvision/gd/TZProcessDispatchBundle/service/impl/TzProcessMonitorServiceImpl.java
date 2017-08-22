@@ -61,10 +61,10 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
                     runServer = map.get("TZ_JCFWQ_MC") == null?"":map.get("TZ_JCFWQ_MC").toString();
                     loop = map.get("TZ_XH_QZBDS") == null?"":map.get("TZ_XH_QZBDS").toString();
                     status = map.get("TZ_JOB_YXZT") == null?"":map.get("TZ_JOB_YXZT").toString();
-                    requestTime = map.get("TZ_QQCJ_DTTM") == null?"":map.get("TZ_QQCJ_DTTM").toString();
-                    runStartTime = map.get("TZ_JHZX_DTTM") == null?"":map.get("TZ_JHZX_DTTM").toString();
-                    processStartTime = map.get("TZ_JCKS_DTTM") == null?"":map.get("TZ_JCKS_DTTM").toString();
-                    processEndTime = map.get("TZ_JCJS_DTTM") == null?"":map.get("TZ_JCJS_DTTM").toString();
+                    requestTime = map.get("TZ_QQCJ_DTTM") == null?"":map.get("TZ_QQCJ_DTTM").toString().substring(0, map.get("TZ_QQCJ_DTTM").toString().length()-2);
+                    runStartTime = map.get("TZ_JHZX_DTTM") == null?"":map.get("TZ_JHZX_DTTM").toString().substring(0, map.get("TZ_JHZX_DTTM").toString().length()-2);
+                    processStartTime = map.get("TZ_JCKS_DTTM") == null?"":map.get("TZ_JCKS_DTTM").toString().substring(0, map.get("TZ_JCKS_DTTM").toString().length()-2);
+                    processEndTime = map.get("TZ_JCJS_DTTM") == null?"":map.get("TZ_JCJS_DTTM").toString().substring(0, map.get("TZ_JCJS_DTTM").toString().length()-2);
                     Map<String, Object> hMap = new HashMap<String,Object>();
 
                     hMap.put("processInstanceId", processInstance);
