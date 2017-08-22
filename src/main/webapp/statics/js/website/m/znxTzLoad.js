@@ -1,5 +1,5 @@
 var dropObj;
-var lastMsgId;
+var lastMsgId="FIRST";
 var tzScrollTop;
 
 function getZnxList(siteid,pagenum){	

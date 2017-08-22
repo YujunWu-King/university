@@ -109,24 +109,22 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 			lastMsgId = jacksonUtil.getString("lastMsgId");
 			try {
 				pagenum = jacksonUtil.getInt("pagenum");
+				
+				if(!"FIRST".equals(lastMsgId)){
+					String encryptMailId = DESUtil.decrypt(lastMsgId, tmpPwdKey);
+					if(encryptMailId == null){
+						throw new Exception("站内信不存在");
+					}
+					
+					String mailIdArr[] = encryptMailId.split("==");
+					if(mailIdArr.length != 2 && mailIdArr[0] != mailIdArr[1]){
+						throw new Exception("站内信不存在");
+					}else{
+						lastMsgId = mailIdArr[0];
+					}
+				}
 			} catch (Exception e) {
 				pagenum = 1;
-			}
-			
-			try{
-				String encryptMailId = DESUtil.decrypt(lastMsgId, tmpPwdKey);
-				if(encryptMailId == null){
-					throw new Exception("站内信不存在");
-				}
-				
-				String mailIdArr[] = encryptMailId.split("==");
-				if(mailIdArr.length != 2 && mailIdArr[0] != mailIdArr[1]){
-					throw new Exception("站内信不存在");
-				}else{
-					lastMsgId = mailIdArr[0];
-				}
-			}catch(Exception ee){
-				ee.printStackTrace();
 			}
 		}
 
