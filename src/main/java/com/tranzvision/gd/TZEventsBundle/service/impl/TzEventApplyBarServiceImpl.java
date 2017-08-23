@@ -93,7 +93,40 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 			String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 
 			if (null != strApplyId && !"".equals(strApplyId)) {
+				String siteId = ""; //站点
+				String chnlId = "";	//栏目
+				if(jacksonUtil.containsKey("siteId")){
+					siteId = jacksonUtil.getString("siteId");
+				}
+				if(jacksonUtil.containsKey("chnlId")){
+					chnlId = jacksonUtil.getString("chnlId");
+				}
+				
+				if(!"".equals(siteId) && !"".equals(chnlId)){
+					// 根据siteId得到机构ID
+					String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+					String jgid = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
+					
+					// 如果用户未登录 直接 跳到登录页面
+					if (oprid == null || oprid.equals("")) {
+						String contextUrl = request.getContextPath();
+						if (!contextUrl.endsWith("/")) {
+							contextUrl = contextUrl + "/";
+						}
+						contextUrl = contextUrl + "user/login/" + jgid + "/" + siteId;
+						String code = "classid=art_view___"+ chnlId +"___" + strApplyId;
+						contextUrl = contextUrl + "?" + code;
+						
+						StringBuffer html = new StringBuffer();
+						html.append("<html><head><title></title></head>");
+						html.append("<script language='javascript'>window.parent.document.location = '");
+						html.append(contextUrl);
+						html.append("'</script></body></html>");
+						return html.toString();
+					}
+				}
 
+				
 				// 已报名人数
 				String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAppliedNum");
 				int numYBM = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
@@ -266,6 +299,8 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					} else {
 
 						mapComParams.put("APPLYID", strApplyId);
+						mapComParams.put("siteId", siteId);
+						mapComParams.put("chnlId", chnlId);
 
 						mapParams.put("ComID", "TZ_APPONL_COM");
 						mapParams.put("PageID", "TZ_APPREG_STD");
@@ -285,8 +320,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 								onlineApplyText, btnDisabledClass);
 
 					}
-					//System.out.println("btnHtml:" + btnHtml);
-					//System.out.println("tzXSMS:" + tzXSMS);
+
 					String strHtml = "";
 					switch (tzXSMS) {
 					case "1":
@@ -343,7 +377,6 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 				}
 
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -476,27 +509,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					
 					String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 					String orgId = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
-					
-					//撤销报名成功站内信
-					try{
-						sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
-						String name = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "String");
-						//报名成功成功站内信模板
-						String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CX_ZNX_TMP");
-						//创建邮件任务实例
-						String taskId = createTaskServiceImpl.createTaskIns(orgId, znxModel, "ZNX", "A");
-						// 创建邮件发送听众
-						String crtAudi = createTaskServiceImpl.createAudience(taskId,orgId,"活动撤销报名成功站内信通知", "JSRW");
-						//添加听众成员
-						boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", "", oprid, "", strAPPLYID, "");
-						if(bl){
-							sendSmsOrMalServiceImpl.send(taskId, "");
-						}
-					}catch(NullPointerException nullEx){
-						//没有配置邮件模板
-						nullEx.printStackTrace();
-					}
-					
+
 					//如果撤销的报名人为已报名，将报名最早的等候报名人设置为已报名
 					try{
 						// 报名最早的状态为“等待”的报名人
@@ -514,13 +527,14 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 							// 若撤销报名的人是已报名状态，则撤销成功后自动进补
 							// 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数
 							//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
-							if(registrationLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+							if(registrationLockCounter.getQueueLength() >= 10 || registrationLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
 							{
 								throw new Exception("系统忙，请稍候再试。");
 							}
 							
 							Semaphore tmpSemaphore = null;
 							boolean isLocked = false;
+							boolean hasTmpSemaphore = false;
 							try{
 								//获取当前面试时间段对应的信号灯
 								Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore("com.tranzvision.gd.TZEventsBundle.service.impl.TzEventApplyFormServiceImpl-20170717", strAPPLYID);
@@ -532,8 +546,10 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 								}else{
 									tmpSemaphore = tmpSemaphoreObject.getValue();
 									
-									//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
+									//获取的信号灯
 									tmpSemaphore.acquire();
+									
+									hasTmpSemaphore = true;
 								}
 								
 								//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
@@ -541,7 +557,6 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 								{
 									TzRecord lockRecord = tzGDObject.createRecord("PS_TZ_HDBM_LOCK_TBL");
 									lockRecord.setColumnValue("TZ_HD_ID", strAPPLYID);
-									lockRecord.setColumnValue("TZ_HD_BMR_ID", waitBmr);
 									lockRecord.setColumnValue("OPRID", waitOprid);
 									
 									if(lockRecord.insert() == false){
@@ -583,7 +598,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 									sqlQuery.update("delete from PS_TZ_HDBM_LOCK_TBL where TZ_HD_ID=?", new Object[]{ strAPPLYID });
 								}
 								
-								if(tmpSemaphore != null){
+								if(hasTmpSemaphore){
 									tmpSemaphore.release();
 								}
 								
@@ -615,13 +630,31 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					}catch(Exception e){
 						e.printStackTrace();
 					}
+					
+					//撤销报名成功站内信
+					try{
+						sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+						String name = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "String");
+						//报名成功成功站内信模板
+						String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CX_ZNX_TMP");
+						//创建邮件任务实例
+						String taskId = createTaskServiceImpl.createTaskIns(orgId, znxModel, "ZNX", "A");
+						// 创建邮件发送听众
+						String crtAudi = createTaskServiceImpl.createAudience(taskId,orgId,"活动撤销报名成功站内信通知", "JSRW");
+						//添加听众成员
+						boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", "", oprid, "", strAPPLYID, "");
+						if(bl){
+							sendSmsOrMalServiceImpl.send(taskId, "");
+						}
+					}catch(NullPointerException nullEx){
+						//没有配置邮件模板
+						nullEx.printStackTrace();
+					}
 				} else {
 					errorCode = "1";
 					errorMsg = cancelFailed;
 				}
-
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorCode = "1";

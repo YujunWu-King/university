@@ -102,11 +102,44 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 
 			// 当前登录人登录账号
 			String userDLZH = tzWebsiteLoginServiceImpl.getLoginedUserDlzhid(request);
-
 			// 当前登录人所属机构
 			String orgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
-			
 			String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+			
+			
+			String siteId = ""; //站点
+			String chnlId = "";	//栏目
+			if(jacksonUtil.containsKey("siteId")){
+				siteId = jacksonUtil.getString("siteId");
+			}
+			if(jacksonUtil.containsKey("chnlId")){
+				chnlId = jacksonUtil.getString("chnlId");
+			}
+			
+			if(!"".equals(siteId) && !"".equals(chnlId)){
+				// 根据siteId得到机构ID
+				String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+				String jgid = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
+				
+				// 如果用户未登录 直接 跳到登录页面
+				if (oprid == null || oprid.equals("")) {
+					String contextUrl = request.getContextPath();
+					if (!contextUrl.endsWith("/")) {
+						contextUrl = contextUrl + "/";
+					}
+					contextUrl = contextUrl + "user/login/" + jgid + "/" + siteId;
+					String code = "classid=art_view___"+ chnlId +"___" + strApplyId;
+					contextUrl = contextUrl + "?" + code;
+					
+					StringBuffer html = new StringBuffer();
+					html.append("<html><head><title></title></head>");
+					html.append("<script language='javascript'>window.parent.document.location = '");
+					html.append(contextUrl);
+					html.append("'</script></body></html>");
+					return html.toString();
+				}
+			}
+			
 
 			// 统一URL
 			String strUrl = request.getContextPath() + "/dispatcher";
@@ -333,318 +366,324 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 				strResult = "1";
 				strResultMsg = authCodeError;
 			} else {
-
 				String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
 
-				//活动听众判断
-				boolean isInAud = false;
-				String audSql = "select TZ_AUD_ID from PS_TZ_ART_AUDIENCE_T where TZ_ART_ID=? and exists(select 'X' from PS_TZ_ART_REC_TBL where TZ_ART_ID=PS_TZ_ART_AUDIENCE_T.TZ_ART_ID and TZ_PROJECT_LIMIT='B')";
-				List<Map<String,Object>> audList = sqlQuery.queryForList(audSql, new Object[]{ strApplyId });
-				if(audList != null && audList.size() > 0){
-					for(Map<String,Object> audMap: audList){
-						String audId = audMap.get("TZ_AUD_ID") == null ? "" : audMap.get("TZ_AUD_ID").toString();
-						String inAudSql = "select 'Y' from PS_TZ_AUD_LIST_T where TZ_AUD_ID=? and TZ_DXZT<>'N' and OPRID=? limit 1";
-						String inAud = sqlQuery.queryForObject(inAudSql, new Object[]{ audId, oprid }, "String");
-						if("Y".equals(inAud)){
-							isInAud = true;
-						}
-					}
+				if(oprid == null || "".equals(oprid)){
+					//未登录
+					strResult = "1";
+					strResultMsg = "报名失败，您尚未登录或登录超时，请重新登录。";
 				}else{
-					isInAud = true;
-				}
-				
-				if(isInAud){
-					String mobileRept = "";
-					String emailRept = "";
-					if ("".equals(oprid)) {
-						// 未登录
-						// 判断是否重复报名
-						sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckNotLoginBmrEmail");
-						isRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email }, "String");
-						if ("Y".equals(isRept)) {
-							reptDesc = emailError;
-						} else if (null != str_bmr_phone && !"".equals(str_bmr_phone)) {
-							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckNotLoginBmrMobile");
-							mobileRept = sqlQuery.queryForObject(sql,
-									new Object[] { strApplyId, str_bmr_phone, str_bmr_email }, "String");
+					//活动听众判断
+					boolean isInAud = false;
+					String audSql = "select TZ_AUD_ID from PS_TZ_ART_AUDIENCE_T where TZ_ART_ID=? and exists(select 'X' from PS_TZ_ART_REC_TBL where TZ_ART_ID=PS_TZ_ART_AUDIENCE_T.TZ_ART_ID and TZ_PROJECT_LIMIT='B')";
+					List<Map<String,Object>> audList = sqlQuery.queryForList(audSql, new Object[]{ strApplyId });
+					if(audList != null && audList.size() > 0){
+						for(Map<String,Object> audMap: audList){
+							String audId = audMap.get("TZ_AUD_ID") == null ? "" : audMap.get("TZ_AUD_ID").toString();
+							String inAudSql = "select 'Y' from PS_TZ_AUD_LIST_T where TZ_AUD_ID=? and TZ_DXZT<>'N' and OPRID=? limit 1";
+							String inAud = sqlQuery.queryForObject(inAudSql, new Object[]{ audId, oprid }, "String");
+							if("Y".equals(inAud)){
+								isInAud = true;
+							}
 						}
-	
-					} else {
-						// 已登录
-						// 判断是否重复报名
-						sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrOprid");
-						isRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, oprid }, "String");
-	
-						if ("Y".equals(isRept)) {
-							reptDesc = applyError;
-						} else {
-	
-							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrEmailByOprid");
-							emailRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email, oprid },
-									"String");
-	
-							if (null != str_bmr_phone && !"".equals(str_bmr_phone)) {
-								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrMobileByOprid");
-								mobileRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_phone, oprid },
-										"String");
-							}
-	
-						}
-	
-					}
-	
-					if ("Y".equals(isRept)) {
-						// 重复报名
-						strResult = "1";
-						strResultMsg = reptDesc;
-					} else if ("Y".equals(emailRept)) {
-						// 邮箱重复
-						strResult = "1";
-						strResultMsg = emailError;
-					} else if ("Y".equals(mobileRept)) {
-						// 手机重复
-						strResult = "1";
-						strResultMsg = mobileError;
-					} else {
-						sql = "select TZ_XWS from PS_TZ_ART_HD_TBL where TZ_ART_ID=?";
-						int num_seats = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
-	
-						// 当前报名人是否曾经报名过，但被撤销报名
-						int createOrupdate = 1;
-						if ("".equals(oprid)) {
-							// 未登录
-							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventNotLoginBmrId");
-							strBmrId = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email }, "String");
-						} else {
-							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventLoginBmrId");
-							strBmrId = sqlQuery.queryForObject(sql, new Object[] { strApplyId, oprid }, "String");
-						}
-	
-						if ("".equals(strBmrId) || null == strBmrId) {
-							strBmrId = String.valueOf(getSeqNum.getSeqNum("TZ_LXFSINFO_TBL", "TZ_LYDX_ID"));
-							createOrupdate = 0;
-						}
-	
-						/* 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数 */
-						//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
-						if(registrationLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
-						{
-							throw new Exception("系统忙，请稍候再试。");
-						}
-						
-						Semaphore tmpSemaphore = null;
-						boolean isLocked = false;
-						try{
-							//获取当前面试时间段对应的信号灯
-							Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore("com.tranzvision.gd.TZEventsBundle.service.impl.TzEventApplyFormServiceImpl-20170717", strApplyId);
-							
-							if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
-							{
-								//如果返回的信号灯为空，报系统忙，请稍后再试
-								throw new Exception("系统忙，请稍候再试。");
-							}else{
-								tmpSemaphore = tmpSemaphoreObject.getValue();
-								
-								//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
-								tmpSemaphore.acquire();
-							}
-							
-							//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
-							try
-							{
-								TzRecord lockRecord = tzGDObject.createRecord("PS_TZ_HDBM_LOCK_TBL");
-								lockRecord.setColumnValue("TZ_HD_ID", strApplyId);
-								lockRecord.setColumnValue("TZ_HD_BMR_ID", strBmrId);
-								lockRecord.setColumnValue("OPRID", oprid);
-								
-								if(lockRecord.insert() == false){
-									throw new TzException("系统忙，请稍候再试。");
-								}else{
-									isLocked = true;
-								}
-							}
-							catch(Exception e)
-							{
-								 throw new TzException("系统忙，请稍候再试。");
-							}
-							
-							// 已报名数
-							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAppliedNum");
-							int num_apply = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
-		
-							// 活动报名表
-							PsTzNaudlistT psTzNaudlistT = new PsTzNaudlistT();
-							psTzNaudlistT.setTzArtId(strApplyId);
-							psTzNaudlistT.setTzHdBmrId(strBmrId);
-							psTzNaudlistT.setTzCyrName(str_bmr_name);
-							psTzNaudlistT.setTzRegTime(new Date());
-							// 报名来源为:B-网上报名,A-手机报名
-							psTzNaudlistT.setTzZxbmLy(regFrom);
-							psTzNaudlistT.setOprid(oprid);
-		
-							// 联系方式表
-							PsTzLxfsinfoTbl psTzLxfsinfoTbl = new PsTzLxfsinfoTbl();
-							psTzLxfsinfoTbl.setTzLxfsLy("HDBM");
-							psTzLxfsinfoTbl.setTzLydxId(strBmrId);
-		
-							sql = "select TZ_ZXBM_XXX_ID from PS_TZ_ZXBM_XXX_T where TZ_ART_ID = ? order by TZ_PX_XH";
-							List<Map<String, Object>> listItems = sqlQuery.queryForList(sql, new Object[] { strApplyId });
-		
-							for (Map<String, Object> mapItem : listItems) {
-								String str_field_id = mapItem.get("TZ_ZXBM_XXX_ID") == null ? ""
-										: String.valueOf(mapItem.get("TZ_ZXBM_XXX_ID"));
-								if ("".equals(str_field_id)) {
-									continue;
-								}
-								// 报名人联系信息存储在联系方式表TZ_LXFSINFO_TBL中，其他字段写入报名表中
-								String strXXXVal = jacksonUtil.getString(str_field_id);
-								switch (str_field_id) {
-								case "TZ_ZY_SJ":
-									psTzLxfsinfoTbl.setTzZySj(strXXXVal);
-									break;
-								case "TZ_ZY_EMAIL":
-									psTzLxfsinfoTbl.setTzZyEmail(strXXXVal);
-									break;
-		
-								case "TZ_CYR_NAME":
-									psTzNaudlistT.setTzCyrName(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_001":
-									psTzNaudlistT.setTzZxbmXxx001(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_002":
-									psTzNaudlistT.setTzZxbmXxx002(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_003":
-									psTzNaudlistT.setTzZxbmXxx003(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_004":
-									psTzNaudlistT.setTzZxbmXxx004(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_005":
-									psTzNaudlistT.setTzZxbmXxx005(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_006":
-									psTzNaudlistT.setTzZxbmXxx006(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_007":
-									psTzNaudlistT.setTzZxbmXxx007(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_008":
-									psTzNaudlistT.setTzZxbmXxx008(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_009":
-									psTzNaudlistT.setTzZxbmXxx009(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_010":
-									psTzNaudlistT.setTzZxbmXxx010(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_011":
-									psTzNaudlistT.setTzZxbmXxx011(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_012":
-									psTzNaudlistT.setTzZxbmXxx012(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_013":
-									psTzNaudlistT.setTzZxbmXxx013(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_014":
-									psTzNaudlistT.setTzZxbmXxx014(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_015":
-									psTzNaudlistT.setTzZxbmXxx015(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_016":
-									psTzNaudlistT.setTzZxbmXxx016(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_017":
-									psTzNaudlistT.setTzZxbmXxx017(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_018":
-									psTzNaudlistT.setTzZxbmXxx018(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_019":
-									psTzNaudlistT.setTzZxbmXxx019(strXXXVal);
-									break;
-								case "TZ_ZXBM_XXX_020":
-									psTzNaudlistT.setTzZxbmXxx020(strXXXVal);
-									break;
-								}
-							}
-		
-							// 生成活动签到码
-							String act_qd_id = tzEventActCodeServiceImpl.generateActCode(strApplyId,psTzLxfsinfoTbl.getTzZySj());
-							psTzNaudlistT.setTzHdQdm(act_qd_id);
-		
-							/* 席位数为0表示不限制人数 */
-							if (num_seats == 0 || num_seats > num_apply) {
-								// 报名成功
-								psTzNaudlistT.setTzNregStat("1");
-								strResult = "3";
-								strResultMsg = applySuccess;
-							} else {
-								// 等待队列
-								psTzNaudlistT.setTzNregStat("4");
-								strResult = "4";
-								strResultMsg = waitingStatus;
-							}
-		
-							if (createOrupdate == 0) {
-								psTzNaudlistTMapper.insertSelective(psTzNaudlistT);
-								psTzLxfsinfoTblMapper.insertSelective(psTzLxfsinfoTbl);
-							} else {
-								psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
-								psTzLxfsinfoTblMapper.updateByPrimaryKeySelective(psTzLxfsinfoTbl);
-							}
-						}catch(Exception e){
-							strResult = "1";
-							strResultMsg = "系统忙，请稍候再试。";
-						}finally {
-							if(isLocked){
-								//报名完成后删除插入PS_TZ_HDBM_LOCK_TBL中的数据
-								sqlQuery.update("delete from PS_TZ_HDBM_LOCK_TBL where TZ_HD_ID=?", new Object[]{ strApplyId });
-							}
-							
-							if(tmpSemaphore != null){
-								tmpSemaphore.release();
-							}
-							
-							registrationLockCounter.release();
-						}
+					}else{
+						isInAud = true;
 					}
 					
-					//报名成功发送站内信
-					if("3".equals(strResult)){
-						//发送报名成功站内信
-						try{
-							sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
-							String name = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "String");
-							//报名成功成功站内信模板
-							String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CG_ZNX_TMP");
-							//当前机构
-							String jgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
-							
-							//创建邮件任务实例
-							String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
-							// 创建邮件发送听众
-							String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"活动报名成功站内信通知", "JSRW");
-							//添加听众成员
-							boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", "", oprid, "", strApplyId, "");
-							if(bl){
-								sendSmsOrMalServiceImpl.send(taskId, "");
+					if(isInAud){
+						String mobileRept = "";
+						String emailRept = "";
+						if ("".equals(oprid)) {
+							// 未登录
+							// 判断是否重复报名
+							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckNotLoginBmrEmail");
+							isRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email }, "String");
+							if ("Y".equals(isRept)) {
+								reptDesc = emailError;
+							} else if (null != str_bmr_phone && !"".equals(str_bmr_phone)) {
+								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckNotLoginBmrMobile");
+								mobileRept = sqlQuery.queryForObject(sql,
+										new Object[] { strApplyId, str_bmr_phone, str_bmr_email }, "String");
 							}
-						}catch(NullPointerException nullEx){
-							//没有配置邮件模板
-							nullEx.printStackTrace();
+		
+						} else {
+							// 已登录
+							// 判断是否重复报名
+							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrOprid");
+							isRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, oprid }, "String");
+		
+							if ("Y".equals(isRept)) {
+								reptDesc = applyError;
+							} else {
+		
+								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrEmailByOprid");
+								emailRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email, oprid },
+										"String");
+		
+								if (null != str_bmr_phone && !"".equals(str_bmr_phone)) {
+									sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrMobileByOprid");
+									mobileRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_phone, oprid },
+											"String");
+								}
+		
+							}
+		
 						}
+		
+						if ("Y".equals(isRept)) {
+							// 重复报名
+							strResult = "1";
+							strResultMsg = reptDesc;
+						} else if ("Y".equals(emailRept)) {
+							// 邮箱重复
+							strResult = "1";
+							strResultMsg = emailError;
+						} else if ("Y".equals(mobileRept)) {
+							// 手机重复
+							strResult = "1";
+							strResultMsg = mobileError;
+						} else {
+							sql = "select TZ_XWS from PS_TZ_ART_HD_TBL where TZ_ART_ID=?";
+							int num_seats = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
+		
+							// 当前报名人是否曾经报名过，但被撤销报名
+							int createOrupdate = 1;
+							if ("".equals(oprid)) {
+								// 未登录
+								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventNotLoginBmrId");
+								strBmrId = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email }, "String");
+							} else {
+								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventLoginBmrId");
+								strBmrId = sqlQuery.queryForObject(sql, new Object[] { strApplyId, oprid }, "String");
+							}
+		
+							if ("".equals(strBmrId) || null == strBmrId) {
+								strBmrId = String.valueOf(getSeqNum.getSeqNum("TZ_LXFSINFO_TBL", "TZ_LYDX_ID"));
+								createOrupdate = 0;
+							}
+		
+							/* 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数 */
+							//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
+							if(registrationLockCounter.getQueueLength() >= 10 || registrationLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+							{
+								throw new Exception("系统忙，请稍候再试。");
+							}
+							
+							Semaphore tmpSemaphore = null;
+							boolean isLocked = false;
+							boolean hasTmpSemaphore = false;
+							try{
+								//获取当前面试时间段对应的信号灯
+								Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore("com.tranzvision.gd.TZEventsBundle.service.impl.TzEventApplyFormServiceImpl-20170717", strApplyId);
+								
+								if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
+								{
+									//如果返回的信号灯为空，报系统忙，请稍后再试
+									throw new Exception("系统忙，请稍候再试。");
+								}else{
+									tmpSemaphore = tmpSemaphoreObject.getValue();
+									
+									//获取的信号灯
+									tmpSemaphore.acquire();
+									
+									hasTmpSemaphore = true;
+								}
+								
+								//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
+								try
+								{
+									TzRecord lockRecord = tzGDObject.createRecord("PS_TZ_HDBM_LOCK_TBL");
+									lockRecord.setColumnValue("TZ_HD_ID", strApplyId);
+									lockRecord.setColumnValue("OPRID", oprid);
+									
+									if(lockRecord.insert() == false){
+										throw new TzException("系统忙，请稍候再试。");
+									}else{
+										isLocked = true;
+									}
+								}
+								catch(Exception e)
+								{
+									 throw new TzException("系统忙，请稍候再试。");
+								}
+								
+								// 已报名数
+								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAppliedNum");
+								int num_apply = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
+			
+								// 活动报名表
+								PsTzNaudlistT psTzNaudlistT = new PsTzNaudlistT();
+								psTzNaudlistT.setTzArtId(strApplyId);
+								psTzNaudlistT.setTzHdBmrId(strBmrId);
+								psTzNaudlistT.setTzCyrName(str_bmr_name);
+								psTzNaudlistT.setTzRegTime(new Date());
+								// 报名来源为:B-网上报名,A-手机报名
+								psTzNaudlistT.setTzZxbmLy(regFrom);
+								psTzNaudlistT.setOprid(oprid);
+			
+								// 联系方式表
+								PsTzLxfsinfoTbl psTzLxfsinfoTbl = new PsTzLxfsinfoTbl();
+								psTzLxfsinfoTbl.setTzLxfsLy("HDBM");
+								psTzLxfsinfoTbl.setTzLydxId(strBmrId);
+			
+								sql = "select TZ_ZXBM_XXX_ID from PS_TZ_ZXBM_XXX_T where TZ_ART_ID = ? order by TZ_PX_XH";
+								List<Map<String, Object>> listItems = sqlQuery.queryForList(sql, new Object[] { strApplyId });
+			
+								for (Map<String, Object> mapItem : listItems) {
+									String str_field_id = mapItem.get("TZ_ZXBM_XXX_ID") == null ? ""
+											: String.valueOf(mapItem.get("TZ_ZXBM_XXX_ID"));
+									if ("".equals(str_field_id)) {
+										continue;
+									}
+									// 报名人联系信息存储在联系方式表TZ_LXFSINFO_TBL中，其他字段写入报名表中
+									String strXXXVal = jacksonUtil.getString(str_field_id);
+									switch (str_field_id) {
+									case "TZ_ZY_SJ":
+										psTzLxfsinfoTbl.setTzZySj(strXXXVal);
+										break;
+									case "TZ_ZY_EMAIL":
+										psTzLxfsinfoTbl.setTzZyEmail(strXXXVal);
+										break;
+			
+									case "TZ_CYR_NAME":
+										psTzNaudlistT.setTzCyrName(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_001":
+										psTzNaudlistT.setTzZxbmXxx001(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_002":
+										psTzNaudlistT.setTzZxbmXxx002(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_003":
+										psTzNaudlistT.setTzZxbmXxx003(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_004":
+										psTzNaudlistT.setTzZxbmXxx004(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_005":
+										psTzNaudlistT.setTzZxbmXxx005(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_006":
+										psTzNaudlistT.setTzZxbmXxx006(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_007":
+										psTzNaudlistT.setTzZxbmXxx007(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_008":
+										psTzNaudlistT.setTzZxbmXxx008(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_009":
+										psTzNaudlistT.setTzZxbmXxx009(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_010":
+										psTzNaudlistT.setTzZxbmXxx010(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_011":
+										psTzNaudlistT.setTzZxbmXxx011(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_012":
+										psTzNaudlistT.setTzZxbmXxx012(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_013":
+										psTzNaudlistT.setTzZxbmXxx013(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_014":
+										psTzNaudlistT.setTzZxbmXxx014(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_015":
+										psTzNaudlistT.setTzZxbmXxx015(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_016":
+										psTzNaudlistT.setTzZxbmXxx016(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_017":
+										psTzNaudlistT.setTzZxbmXxx017(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_018":
+										psTzNaudlistT.setTzZxbmXxx018(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_019":
+										psTzNaudlistT.setTzZxbmXxx019(strXXXVal);
+										break;
+									case "TZ_ZXBM_XXX_020":
+										psTzNaudlistT.setTzZxbmXxx020(strXXXVal);
+										break;
+									}
+								}
+			
+								// 生成活动签到码
+								String act_qd_id = tzEventActCodeServiceImpl.generateActCode(strApplyId,psTzLxfsinfoTbl.getTzZySj());
+								psTzNaudlistT.setTzHdQdm(act_qd_id);
+			
+								/* 席位数为0表示不限制人数 */
+								if (num_seats == 0 || num_seats > num_apply) {
+									// 报名成功
+									psTzNaudlistT.setTzNregStat("1");
+									strResult = "3";
+									strResultMsg = applySuccess;
+								} else {
+									// 等待队列
+									psTzNaudlistT.setTzNregStat("4");
+									strResult = "4";
+									strResultMsg = waitingStatus;
+								}
+			
+								if (createOrupdate == 0) {
+									psTzNaudlistTMapper.insertSelective(psTzNaudlistT);
+									psTzLxfsinfoTblMapper.insertSelective(psTzLxfsinfoTbl);
+								} else {
+									psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
+									psTzLxfsinfoTblMapper.updateByPrimaryKeySelective(psTzLxfsinfoTbl);
+								}
+							}catch(Exception e){
+								strResult = "1";
+								strResultMsg = "系统忙，请稍候再试。";
+							}finally {
+								if(isLocked){
+									//报名完成后删除插入PS_TZ_HDBM_LOCK_TBL中的数据
+									sqlQuery.update("delete from PS_TZ_HDBM_LOCK_TBL where TZ_HD_ID=?", new Object[]{ strApplyId });
+								}
+								
+								if(hasTmpSemaphore){
+									tmpSemaphore.release();
+								}
+								
+								registrationLockCounter.release();
+							}
+						}
+						
+						//报名成功发送站内信
+						if("3".equals(strResult)){
+							//发送报名成功站内信
+							try{
+								sql = "SELECT TZ_REALNAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+								String name = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "String");
+								//报名成功成功站内信模板
+								String znxModel = getHardCodePoint.getHardCodePointVal("TZ_HDBM_CG_ZNX_TMP");
+								//当前机构
+								String jgid = tzWebsiteLoginServiceImpl.getLoginedUserOrgid(request);
+								
+								//创建邮件任务实例
+								String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
+								// 创建邮件发送听众
+								String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"活动报名成功站内信通知", "JSRW");
+								//添加听众成员
+								boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", "", oprid, "", strApplyId, "");
+								if(bl){
+									sendSmsOrMalServiceImpl.send(taskId, "");
+								}
+							}catch(NullPointerException nullEx){
+								//没有配置邮件模板
+								nullEx.printStackTrace();
+							}
+						}
+					}else{
+						//不在听众内，报名失败
+						strResult = "1";
+						strResultMsg = "报名失败！很抱歉，活动尚未对您开放报名。";
 					}
-				}else{
-					//不在听众内，报名失败
-					strResult = "1";
-					strResultMsg = "报名失败！很抱歉，活动尚未对您开放报名。";
 				}
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			strResult = "1";
