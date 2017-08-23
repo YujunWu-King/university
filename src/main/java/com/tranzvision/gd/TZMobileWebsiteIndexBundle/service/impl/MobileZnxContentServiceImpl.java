@@ -163,11 +163,12 @@ public class MobileZnxContentServiceImpl extends FrameworkImpl {
 			String znxSubject = "";
 			String znxText = "";
 			String znxTime = "";
-		    String znxSql = "SELECT TZ_MSG_SUBJECT,TZ_MSG_TEXT,DATE_FORMAT(ROW_ADDED_DTTM,'%Y-%m-%d %k:%i:%s')TZ_SEND_TIME FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_MSGID =? AND TZ_ZNX_RECID=?";
+		    //String znxSql = "SELECT TZ_MSG_SUBJECT,TZ_MSG_TEXT,DATE_FORMAT(ROW_ADDED_DTTM,'%Y-%m-%d %k:%i:%s')TZ_SEND_TIME FROM PS_TZ_ZNX_MSG_VW WHERE TZ_ZNX_MSGID =? AND TZ_ZNX_RECID=?";
+			String znxSql = tzGDObject.getSQLText("SQL.TZWebStationLetterMgBundle.TzStationLetterInfo");
 		    Map<String, Object> msyyMap  = jdbcTemplate.queryForMap(znxSql,new Object[] { znxMsgId, m_curOPRID });
 		    if(msyyMap != null){
 		    	znxSubject = msyyMap.get("TZ_MSG_SUBJECT") == null ? "" : (String)msyyMap.get("TZ_MSG_SUBJECT");
-		    	znxTime = msyyMap.get("TZ_SEND_TIME") == null ? "" : (String)msyyMap.get("TZ_SEND_TIME");
+		    	znxTime = msyyMap.get("ROW_ADDED_DTTM") == null ? "" : (String)msyyMap.get("ROW_ADDED_DTTM");
 		    	znxText = msyyMap.get("TZ_MSG_TEXT") == null ? "" : (String)msyyMap.get("TZ_MSG_TEXT");
 		    	
 		    	znxDetailsHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_CONTENT",true,znxSubject,znxTime,znxText);
