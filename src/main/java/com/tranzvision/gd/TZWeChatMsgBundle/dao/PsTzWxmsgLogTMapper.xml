@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatMsgBundle.dao.PsTzWxmsgLogTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_WX_APPID" property="tzWxAppid" jdbcType="VARCHAR" />
+    <id column="TZ_XH" property="tzXh" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_PSN" property="tzSendPsn" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_DTIME" property="tzSendDtime" jdbcType="TIMESTAMP" />
+    <result column="TZ_SEND_STATE" property="tzSendState" jdbcType="VARCHAR" />
+    <result column="TZ_SENDS_DTIME" property="tzSendsDtime" jdbcType="TIMESTAMP" />
+    <result column="TZ_S_TOTAL" property="tzSTotal" jdbcType="INTEGER" />
+    <result column="TZ_S_FILTER" property="tzSFilter" jdbcType="INTEGER" />
+    <result column="TZ_S_SUCESS" property="tzSSucess" jdbcType="INTEGER" />
+    <result column="TZ_S_FAIL" property="tzSFail" jdbcType="INTEGER" />
+    <result column="TZ_CONTENT" property="tzContent" jdbcType="VARCHAR" />
+    <result column="TZ_MEDIA_ID" property="tzMediaId" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_TYPE" property="tzSendType" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_MODE" property="tzSendMode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_WX_APPID, TZ_XH, TZ_SEND_PSN, TZ_SEND_DTIME, TZ_SEND_STATE, TZ_SENDS_DTIME, 
+    TZ_S_TOTAL, TZ_S_FILTER, TZ_S_SUCESS, TZ_S_FAIL, TZ_CONTENT, TZ_MEDIA_ID, TZ_SEND_TYPE, 
+    TZ_SEND_MODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_WXMSG_LOG_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogTKey" >
+    delete from PS_TZ_WXMSG_LOG_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogT" >
+    insert into PS_TZ_WXMSG_LOG_T (TZ_JG_ID, TZ_WX_APPID, TZ_XH, 
+      TZ_SEND_PSN, TZ_SEND_DTIME, TZ_SEND_STATE, 
+      TZ_SENDS_DTIME, TZ_S_TOTAL, TZ_S_FILTER, 
+      TZ_S_SUCESS, TZ_S_FAIL, TZ_CONTENT, 
+      TZ_MEDIA_ID, TZ_SEND_TYPE, TZ_SEND_MODE
+      )
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, #{tzXh,jdbcType=VARCHAR}, 
+      #{tzSendPsn,jdbcType=VARCHAR}, #{tzSendDtime,jdbcType=TIMESTAMP}, #{tzSendState,jdbcType=VARCHAR}, 
+      #{tzSendsDtime,jdbcType=TIMESTAMP}, #{tzSTotal,jdbcType=INTEGER}, #{tzSFilter,jdbcType=INTEGER}, 
+      #{tzSSucess,jdbcType=INTEGER}, #{tzSFail,jdbcType=INTEGER}, #{tzContent,jdbcType=VARCHAR}, 
+      #{tzMediaId,jdbcType=VARCHAR}, #{tzSendType,jdbcType=VARCHAR}, #{tzSendMode,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogT" >
+    insert into PS_TZ_WXMSG_LOG_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzWxAppid != null" >
+        TZ_WX_APPID,
+      </if>
+      <if test="tzXh != null" >
+        TZ_XH,
+      </if>
+      <if test="tzSendPsn != null" >
+        TZ_SEND_PSN,
+      </if>
+      <if test="tzSendDtime != null" >
+        TZ_SEND_DTIME,
+      </if>
+      <if test="tzSendState != null" >
+        TZ_SEND_STATE,
+      </if>
+      <if test="tzSendsDtime != null" >
+        TZ_SENDS_DTIME,
+      </if>
+      <if test="tzSTotal != null" >
+        TZ_S_TOTAL,
+      </if>
+      <if test="tzSFilter != null" >
+        TZ_S_FILTER,
+      </if>
+      <if test="tzSSucess != null" >
+        TZ_S_SUCESS,
+      </if>
+      <if test="tzSFail != null" >
+        TZ_S_FAIL,
+      </if>
+      <if test="tzContent != null" >
+        TZ_CONTENT,
+      </if>
+      <if test="tzMediaId != null" >
+        TZ_MEDIA_ID,
+      </if>
+      <if test="tzSendType != null" >
+        TZ_SEND_TYPE,
+      </if>
+      <if test="tzSendMode != null" >
+        TZ_SEND_MODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxAppid != null" >
+        #{tzWxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXh != null" >
+        #{tzXh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendPsn != null" >
+        #{tzSendPsn,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendDtime != null" >
+        #{tzSendDtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzSendState != null" >
+        #{tzSendState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendsDtime != null" >
+        #{tzSendsDtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzSTotal != null" >
+        #{tzSTotal,jdbcType=INTEGER},
+      </if>
+      <if test="tzSFilter != null" >
+        #{tzSFilter,jdbcType=INTEGER},
+      </if>
+      <if test="tzSSucess != null" >
+        #{tzSSucess,jdbcType=INTEGER},
+      </if>
+      <if test="tzSFail != null" >
+        #{tzSFail,jdbcType=INTEGER},
+      </if>
+      <if test="tzContent != null" >
+        #{tzContent,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMediaId != null" >
+        #{tzMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendType != null" >
+        #{tzSendType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendMode != null" >
+        #{tzSendMode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogT" >
+    update PS_TZ_WXMSG_LOG_T
+    <set >
+      <if test="tzSendPsn != null" >
+        TZ_SEND_PSN = #{tzSendPsn,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendDtime != null" >
+        TZ_SEND_DTIME = #{tzSendDtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzSendState != null" >
+        TZ_SEND_STATE = #{tzSendState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendsDtime != null" >
+        TZ_SENDS_DTIME = #{tzSendsDtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzSTotal != null" >
+        TZ_S_TOTAL = #{tzSTotal,jdbcType=INTEGER},
+      </if>
+      <if test="tzSFilter != null" >
+        TZ_S_FILTER = #{tzSFilter,jdbcType=INTEGER},
+      </if>
+      <if test="tzSSucess != null" >
+        TZ_S_SUCESS = #{tzSSucess,jdbcType=INTEGER},
+      </if>
+      <if test="tzSFail != null" >
+        TZ_S_FAIL = #{tzSFail,jdbcType=INTEGER},
+      </if>
+      <if test="tzContent != null" >
+        TZ_CONTENT = #{tzContent,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMediaId != null" >
+        TZ_MEDIA_ID = #{tzMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendType != null" >
+        TZ_SEND_TYPE = #{tzSendType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendMode != null" >
+        TZ_SEND_MODE = #{tzSendMode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogT" >
+    update PS_TZ_WXMSG_LOG_T
+    set TZ_SEND_PSN = #{tzSendPsn,jdbcType=VARCHAR},
+      TZ_SEND_DTIME = #{tzSendDtime,jdbcType=TIMESTAMP},
+      TZ_SEND_STATE = #{tzSendState,jdbcType=VARCHAR},
+      TZ_SENDS_DTIME = #{tzSendsDtime,jdbcType=TIMESTAMP},
+      TZ_S_TOTAL = #{tzSTotal,jdbcType=INTEGER},
+      TZ_S_FILTER = #{tzSFilter,jdbcType=INTEGER},
+      TZ_S_SUCESS = #{tzSSucess,jdbcType=INTEGER},
+      TZ_S_FAIL = #{tzSFail,jdbcType=INTEGER},
+      TZ_CONTENT = #{tzContent,jdbcType=VARCHAR},
+      TZ_MEDIA_ID = #{tzMediaId,jdbcType=VARCHAR},
+      TZ_SEND_TYPE = #{tzSendType,jdbcType=VARCHAR},
+      TZ_SEND_MODE = #{tzSendMode,jdbcType=VARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </update>
+</mapper>
