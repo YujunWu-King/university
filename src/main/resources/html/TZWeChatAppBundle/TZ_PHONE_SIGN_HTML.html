@@ -1,0 +1,333 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<!--禁止页面放大-->
+<meta name="format-detection" content="telephone=no"/><!--使设备浏览网页时对数字不启用电话功能-->
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta content="no-cache" http-equiv="Pragma">
+<meta content="no-store, must-revalidate" http-equiv="Cache-Control">
+<meta content="Fri, 14 May 1999 16:00:00 GMT" http-equiv="expires">
+<title>手机签到</title>
+<script src="%bind(:1)/statics/js/lib/prefixfree/prefixfree.min.js" type="text/javascript"></script>
+<script src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="%bind(:1)/statics/js/lib/layer/layer.js" type="text/javascript"></script>
+<link href="%bind(:1)/statics/js/hdqd/css/style.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+	.layui-layer-btn a.layui-layer-btn0 {
+		border-color: #8f5dbf;
+		background-color: #8f5dbf;
+	}
+</style>
+ <style type="text/css">
+          .load{position:fixed;top:50%;left:50%;width:100px;height:100px;margin-left:-50px;z-index:1000;margin-top:-50px;}
+        </style>
+</head>
+<body>
+<div id="allHtml" style="height:100%;">
+	<div class="all">	
+		<header class="bread">
+	        <div>			
+				签到
+			</div>	
+		</header>
+	  	<div class="mini" style="height:100%;">
+			<p>签到前请先开启手机蓝牙和位置服务</p>
+			<button class="btlist" onclick="wxSearchBeacons()" id="sign"><img src="%bind(:1)/statics/js/hdqd/images/ico14.png" width="22" height="22"  alt=""/>签到</button>
+	    	<!-- 设备分组配置  有新设备需要添加时配置启用 配置完毕后注释掉 edit by liujing 2017-7-13
+			<button class="btlist" onclick="wxSearchBeacons2()" >监听设备测试</button>
+			<div class="btlist"><a href="javascript:showInfo()"><img src="%bind(:1)/statics/js/hdqd/images/ico14.png" width="22" height="22"  alt=""/>展示签到信息</a></div>
+	    	<div class="btlist"><a href="javascript:addgroup();"><img src="%bind(:1)/statics/js/hdqd/images/ico14.png" width="22" height="22"  alt=""/>新增分组</a></div>
+	    	<div class="btlist"><a href="javascript:querygroup();"><img src="%bind(:1)/statics/js/hdqd/images/ico14.png" width="22" height="22"  alt=""/>查询分组</a></div>
+			<div class="btlist"><a href="javascript:queryeq();"><img src="%bind(:1)/statics/js/hdqd/images/ico14.png" width="22" height="22"  alt=""/>查询分组详情</a></div>
+			<div class="btlist"><a href="javascript:addeq();"><img src="%bind(:1)/statics/js/hdqd/images/ico14.png" width="22" height="22"  alt=""/>添加设备</a></div>
+	    	-->
+	    </div>
+	    <img class="load" src="%bind(:1)/statics/js/hdqd/images/loading.gif" id="load" style="display: none;">
+	</div>	
+</div>
+
+<div class="footer">Copyright © 2017 清华大学经济管理学院 版权所有</div>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+<script type="text/javascript">
+  wx.config({
+      debug: false,
+      appId: '%bind(:2)',
+      timestamp: %bind(:3),
+      nonceStr: '%bind(:4)',
+      signature: '%bind(:5)', 
+      jsApiList: [
+        'closeWindow',
+        'startSearchBeacons',
+        'stopSearchBeacons',
+        'onSearchBeacons',
+        'getLocation'
+      ]  
+  });
+  wx.ready(function () {
+	    wx.getLocation({  
+	        fail: function (res) {  
+	          alert('未检测到微信定位服务，若已开启请重试！');  
+	        }  
+	      });
+  });
+  </script>
+  <script type="text/javascript">  
+	var accessToken='%bind(:6)';
+	//调用微信查找ibeacons设备
+	var ibeaconMsg="";
+	function wxSearchBeacons(){
+		var msg="";
+		var count = 0;//监听到设备次数
+		ibeaconMsg="";
+		var times;
+	    wx.getLocation({  
+	    	success: function (res) {
+		    		$("#sign").attr({"disabled":"disabled"});
+		    		$("#load").show();
+		    		wx.startSearchBeacons({
+		  			  ticket:"",
+		  			  complete:function(argv){
+		  				  //回调函数
+		  				  msg = argv.errMsg;
+		  				  if(msg=="startSearchBeacons:system unsupported"){
+		  					  $("#load").hide();
+		  					  alert("系统不支持");
+		  					  $("#sign").removeAttr("disabled");
+		  					  return;
+		  				  }else if(msg=="startSearchBeacons:location service disable"){
+		  					  $("#load").hide();
+		  					  alert("地理位置服务未打开");
+		  					  $("#sign").removeAttr("disabled");
+		  					  return;
+		  				  }else if(msg=="startSearchBeacons:bluetooth power off"){
+		  					  $("#load").hide();
+		  					  alert("蓝牙未打开，请先开启蓝牙");
+		  					  $("#sign").removeAttr("disabled");
+		  					  return;
+		  				  }else {
+		  					  //开始监听设备
+		  					  wx.onSearchBeacons({
+		  			 			  complete:function(argv){//监听到设备后进入此方法
+		  			 			  	//回调函数
+		  			 			  	count++;
+		  			 			  	if(count==1){
+		  			 			  		//多监几次设备后 (头几次距离可能没接收到)
+		  			 			  		ibeaconMsg =argv.beacons;
+		  			 					//签到
+		  			 					//把签到参数传入后台
+		  			 					$.ajax({
+		  			 						type: "post",
+		  			 						url: "%bind(:1)/ibeaconSignIn/showInfo",
+		  			 						data:{
+		  			 							data:'{"A":'+JSON.stringify(ibeaconMsg)+'}',
+		  			 							openId:'%bind(:7)',
+		  			 							nickName:'%bind(:8)'
+		  			 						},
+		  			 						dataType: "json",
+		  			 						async: false,
+		  			 						success: function(data){
+		  			 			  				 $("#load").hide();
+		  			 							 $("#sign").removeAttr("disabled");
+		  			 							 alert(data.msg);
+		  			 							 clearTimeout(times);
+		  			 						}
+		  			 					});
+		  			 					//停止查找设备
+		  			 					wx.stopSearchBeacons({
+		  			 						  complete:function(res){
+		  			 						  //回调函数
+		  			 						  }
+		  			 					}); 
+		  			 				}
+		  			 			  },
+			  			        fail: function (res) {  
+			  				  		$("#load").hide();
+			  				        $("#sign").removeAttr("disabled");
+			  				        alert('签到失败，未进入签到区域！');  
+	  			 					//停止查找设备
+	  			 					wx.stopSearchBeacons({
+	  			 						  complete:function(res){
+	  			 						  //回调函数
+	  			 						  }
+	  			 					}); 
+			  			        }  
+		  			 		  });
+		  					  times = setTimeout("signIn()",20000);
+		  				  }
+		  			  },
+  			        fail: function (res) {  
+  				  		$("#load").hide();
+  				        $("#sign").removeAttr("disabled");
+  				        alert('查找设备失败！');  
+	 					//停止查找设备
+	 					wx.stopSearchBeacons({
+	 						  complete:function(res){
+	 						  //回调函数
+	 						  }
+	 					}); 
+  			        }  
+		  		});
+	    	},
+	        fail: function (res) {  
+		         alert('未检测到微信定位服务，若已开启请重试！');  
+		    }
+	      });
+	}
+	function wxSearchBeacons2(){
+		var msg="";
+		var count = 0;//监听到设备次数
+		wx.startSearchBeacons({
+			  ticket:"",
+			  complete:function(argv){
+				  //回调函数
+				  msg = argv.errMsg;
+				  alert(msg);
+				  if(msg=="startSearchBeacons:system unsupported"){
+					  alert("系统不支持");
+					  return;
+				  }else if(msg=="startSearchBeacons:location service disable"){
+					  alert("地理位置服务未打开");
+					  return;
+				  }else if(msg=="startSearchBeacons:bluetooth power off"){
+					  alert("蓝牙未打开，请先开启蓝牙");
+					  return;
+				  }else {
+					  //开始监听设备
+					  wx.onSearchBeacons({
+			 			  complete:function(argv){//监听到设备后进入此方法
+			 			  	//回调函数
+			 			  	count++;
+			 			  	if(count==1){
+			 			  		//多监几次设备后 (头几次距离参数可能没接收到)
+			 			  		alert("监听到设备:"+JSON.stringify(argv.beacons));
+			 					//停止查找设备
+			 					wx.stopSearchBeacons({
+			 						  complete:function(res){
+			 						  //回调函数
+			 						  }
+			 					}); 
+			 				}
+			 			  }
+			 		  });
+				  }
+			  }
+		});
+	}
+	
+	function signIn(){
+		$("#load").hide();
+		$("#sign").removeAttr("disabled");
+		if(ibeaconMsg==""){
+			alert("签到失败!未进入签到区域！");
+		}
+		//停止查找设备
+		wx.stopSearchBeacons({
+			  complete:function(res){
+			  //回调函数
+			  }
+		}); 
+	}
+	
+	
+	function showInfo(){
+		var ibeacons=[{"minor":56155,"rssi":"-80","major":10108,"proximity":"3","accuracy":"8.097801","uuid":"FDA50693-A4E2-4FB1-AFCF-C6EB07647825"}];
+	    alert(JSON.stringify(ibeacons));
+			//把签到参数传入后台
+		$.ajax({
+			type: "post",
+			url: "%bind(:1)/signIn/showInfo",
+			data:{
+				data:'{"A":'+JSON.stringify(ibeacons)+'}',
+			},
+			dataType: "json",
+			async: false,
+			success: function(data){
+				  alert(data.msg);
+			}
+		});
+		
+		
+		
+		
+	}
+	
+	function addgroup(){//添加分组
+		var url="https://api.weixin.qq.com/shakearound/device/group/add?access_token="+accessToken;
+	    var param={
+	    		"group_name":"test"
+	    };
+		$.ajax({
+			type: "post",
+			url: url,
+			data:JSON.stringify(param),
+			dataType: "json",
+			async: false,
+			success: function(data){
+				  alert(JSON.stringify(data));
+			}
+		});   
+	}
+	function querygroup(){//查询分组
+		var url="https://api.weixin.qq.com/shakearound/device/group/getlist?access_token="+accessToken;
+	    var param={
+	    		  "begin": 0,
+	    		  "count": 10
+	    };
+		$.ajax({
+			type: "post",
+			url: url,
+			data:JSON.stringify(param),
+			dataType: "json",
+			async: false,
+			success: function(data){
+				  alert(JSON.stringify(data));
+			}
+		});   
+	}
+	function queryeq(){//查询分组详情
+		var url="https://api.weixin.qq.com/shakearound/device/group/getdetail?access_token="+accessToken;
+	    var param={
+	    		  "group_id":3303713,
+	    		  "begin": 0,
+	    		  "count": 10
+	    };
+		$.ajax({
+			type: "post",
+			url: url,
+			data:JSON.stringify(param),
+			dataType: "json",
+			async: false,
+			success: function(data){
+				  alert(JSON.stringify(data));
+			}
+		});   
+	}
+	function addeq(){//添加设备到分组
+		var url="https://api.weixin.qq.com/shakearound/device/group/adddevice?access_token="+accessToken;
+	    var param={
+	    		 "group_id": 3303713,
+	    		  "device_identifiers":[
+	    		          {
+	    		          "device_id":12397356,	
+	    		          "uuid":"FDA50693-A4E2-4FB1-AFCF-C6EB07647825",	
+	    		          "major":10109,
+	    		          "minor":30154
+	    		          }
+	    		          ]
+	    };
+		$.ajax({
+			type: "post",
+			url: url,
+			data:JSON.stringify(param),
+			dataType: "json",
+			async: false,
+			success: function(data){
+				  alert(JSON.stringify(data));
+			}
+		});   
+	}
+</script>
+</body>
+</html>

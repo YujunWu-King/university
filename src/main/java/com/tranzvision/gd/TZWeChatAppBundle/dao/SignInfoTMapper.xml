@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatAppBundle.dao.SignInfoTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatAppBundle.model.SignInfoT" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="OPENID" property="openid" jdbcType="VARCHAR" />
+    <result column="IBEACON_NAME" property="ibeaconName" jdbcType="VARCHAR" />
+    <result column="SIGN_TIME" property="signTime" jdbcType="TIMESTAMP" />
+    <result column="SIGN_ACCURACY" property="signAccuracy" jdbcType="VARCHAR" />
+    <result column="NICK_NAME" property="nickName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, OPENID, IBEACON_NAME, SIGN_TIME, SIGN_ACCURACY, NICK_NAME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from SIGN_INFO
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from SIGN_INFO
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatAppBundle.model.SignInfoT" >
+    insert into SIGN_INFO (ID, OPENID, IBEACON_NAME, 
+      SIGN_TIME, SIGN_ACCURACY, NICK_NAME
+      )
+    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{ibeaconName,jdbcType=VARCHAR}, 
+      #{signTime,jdbcType=TIMESTAMP}, #{signAccuracy,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatAppBundle.model.SignInfoT" >
+    insert into SIGN_INFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="openid != null" >
+        OPENID,
+      </if>
+      <if test="ibeaconName != null" >
+        IBEACON_NAME,
+      </if>
+      <if test="signTime != null" >
+        SIGN_TIME,
+      </if>
+      <if test="signAccuracy != null" >
+        SIGN_ACCURACY,
+      </if>
+      <if test="nickName != null" >
+        NICK_NAME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="ibeaconName != null" >
+        #{ibeaconName,jdbcType=VARCHAR},
+      </if>
+      <if test="signTime != null" >
+        #{signTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signAccuracy != null" >
+        #{signAccuracy,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatAppBundle.model.SignInfoT" >
+    update SIGN_INFO
+    <set >
+      <if test="openid != null" >
+        OPENID = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="ibeaconName != null" >
+        IBEACON_NAME = #{ibeaconName,jdbcType=VARCHAR},
+      </if>
+      <if test="signTime != null" >
+        SIGN_TIME = #{signTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="signAccuracy != null" >
+        SIGN_ACCURACY = #{signAccuracy,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        NICK_NAME = #{nickName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatAppBundle.model.SignInfoT" >
+    update SIGN_INFO
+    set OPENID = #{openid,jdbcType=VARCHAR},
+      IBEACON_NAME = #{ibeaconName,jdbcType=VARCHAR},
+      SIGN_TIME = #{signTime,jdbcType=TIMESTAMP},
+      SIGN_ACCURACY = #{signAccuracy,jdbcType=VARCHAR},
+      NICK_NAME = #{nickName,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
