@@ -98,8 +98,10 @@
 			   width:60,
                xtype: 'actioncolumn',
 			   items:[
-				  {iconCls: 'edit',tooltip: '编辑',handler:'editSel'},
-			   	  {iconCls: 'remove',tooltip: '删除',handler:'deleteSel'}
+                   {iconCls: 'edit',tooltip: '编辑',handler:'editSel'},
+			   	   {iconCls: 'remove',tooltip: '删除',handler:'deleteSel'},
+                   {iconCls: 'people',tooltip: '用户管理',handler:'userManage'},
+                   {iconCls: 'refresh',tooltip: '全量获取用户',handler:'getUserAll'}
 			   ]
             }],
 			store:store,

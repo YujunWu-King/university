@@ -15,7 +15,8 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
     name:'weChatUserMg',
     title:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.title","微信用户管理"),
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    wxAppId:'1',
+    jgId:'',
+    wxAppId:'',
     columnLines:true,
     multiSelect:true,
     ignoreChangesFlag:true,
@@ -73,74 +74,17 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
     },
     header:false,
     frame:true,
-    dockedItems:[{
-        xtype:'toolbar',
-        items:[{
-            text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.query","查询"),
-            tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.query","查询"),
-            iconCls:'query',
-            handler:'queryUser'
-        },"-",{
-            text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.preQuery","预查询"),
-            tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.preQuery","预查询"),
-            iconCls:'query',
-            menu:[{
-                text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.todayNew","今日新增用户"),
-                handler:'queryTodayNew'
-            },{
-                text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.bind","已绑定用户"),
-                handler:'queryBind'
-            },{
-                text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.typeTag","按类别标签"),
-                menu:[]
-            },{
-                text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.unfollow","已取消关注"),
-                handler:'queryUnfollow'
-            }]
-        },"-",{
-            text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.edit","设置标签"),
-            tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.edit","设置标签"),
-            iconCls:'edit',
-            handler:'setTag'
-        },"->",{
-            xtype:'splitbutton',
-            text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.more","更多操作"),
-            iconCls:'list',
-            glyph:61,
-            menu:[{
-                text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.selectUser1","给选中用户发送普通消息"),
-                handler:'sendMessageForSelect'
-            },{
-                text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.tagUser","按微信标签发送普通消息"),
-                handler:'sendMessageForTag'
-            },{
-                text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.allUser1","给所有用户发送普通消息"),
-                handler:'sendMessageForAll'
-            },{
-                text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.selectUser2","给选中用户发送模板消息"),
-                handler:'sendTplForSelect'
-            },{
-                text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.allUser2","给所有用户发送模板消息"),
-                handler:'sendTplForAll'
-            }]
-        }]
-    },{
-        xtype:'toolbar',
-        dock:'bottom',
-        ui:'footer',
-        items:['->',{
-            minWidth:80,
-            text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.close","关闭"),
-            iconCls:'close',
-            handler:'closeUser'
-        }]
-    }],
+    constructor:function(obj) {
+        Ext.apply(this,obj);
+        this.callParent();
+    },
     initComponent: function () {
         var me = this;
 
         var userMgStore = new KitchenSink.view.weChat.weChatUser.weChatUserMgStore();
 
         //关注日期为当前日期
+        /*
         var nowDate = new Date();
         var year = nowDate.getFullYear();
         var month = "00" + (nowDate.getMonth()+1);
@@ -153,9 +97,72 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+Ext.tzOrgID+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+me.wxAppId+'","TZ_SUBSRIBE_DATE-operator":"01","TZ_SUBSRIBE_DATE-value":"'+nowDateStr+'"}}';
         userMgStore.tzStoreParams = tzStoreParams;
         userMgStore.reload();
+        */
 
 
         Ext.apply(this,{
+            dockedItems:[{
+                xtype:'toolbar',
+                items:[{
+                    text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.query","查询"),
+                    tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.query","查询"),
+                    iconCls:'query',
+                    handler:'queryUser'
+                },"-",{
+                    text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.preQuery","预查询"),
+                    tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.preQuery","预查询"),
+                    iconCls:'query',
+                    menu:[{
+                        text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.todayNew","今日新增用户"),
+                        handler:'queryTodayNew'
+                    },{
+                        text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.bind","已绑定用户"),
+                        handler:'queryBind'
+                    },{
+                        text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.typeTag","按类别标签"),
+                        menu:this.initialData.tagData
+                    },{
+                        text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.unfollow","已取消关注"),
+                        handler:'queryUnfollow'
+                    }]
+                },"-",{
+                    text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.edit","设置标签"),
+                    tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.edit","设置标签"),
+                    iconCls:'edit',
+                    handler:'setTag'
+                },"->",{
+                    xtype:'splitbutton',
+                    text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.more","更多操作"),
+                    iconCls:'list',
+                    glyph:61,
+                    menu:[{
+                        text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.selectUser1","给选中用户发送普通消息"),
+                        handler:'sendMessageForSelect'
+                    },{
+                        text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.tagUser","按微信标签发送普通消息"),
+                        handler:'sendMessageForTag'
+                    },{
+                        text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.allUser1","给所有用户发送普通消息"),
+                        handler:'sendMessageForAll'
+                    },{
+                        text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.selectUser2","给选中用户发送模板消息"),
+                        handler:'sendTplForSelect'
+                    },{
+                        text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.allUser2","给所有用户发送模板消息"),
+                        handler:'sendTplForAll'
+                    }]
+                }]
+            },{
+                xtype:'toolbar',
+                dock:'bottom',
+                ui:'footer',
+                items:['->',{
+                    minWidth:80,
+                    text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.close","关闭"),
+                    iconCls:'close',
+                    handler:'closeUser'
+                }]
+            }],
             columns:[{
                 xtype:'rownumberer',
                 width:30

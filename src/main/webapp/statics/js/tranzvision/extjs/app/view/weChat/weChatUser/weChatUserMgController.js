@@ -3,11 +3,12 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
     alias: 'controller.weChatUserMgController',
     //查询
     queryUser:function(btn) {
+        var jgId = btn.findParentByType("grid").jgId;
         var wxAppId = btn.findParentByType("grid").wxAppId;
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW',
             condition:{
-                TZ_JG_ID:Ext.tzOrgID,
+                TZ_JG_ID:jgId,
                 TZ_WX_APPID:wxAppId
             },
             callback: function(seachCfg){
@@ -31,11 +32,12 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
 
         var grid = btn.findParentByType("grid");
 
+        var jgId = grid.jgId;
         var wxAppId = grid.wxAppId;
 
         var userStore = grid.getStore();
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
-            '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+Ext.tzOrgID+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSRIBE_DATE-operator":"01","TZ_SUBSRIBE_DATE-value":"'+nowDateStr+'"}}';
+            '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSRIBE_DATE-operator":"01","TZ_SUBSRIBE_DATE-value":"'+nowDateStr+'"}}';
         userStore.tzStoreParams = tzStoreParams;
         userStore.reload();
     },
@@ -48,22 +50,34 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
 
         var userStore = grid.getStore();
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
-            '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+Ext.tzOrgID+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_GL_CONTID-operator":"13","TZ_GL_CONTID-value":",NULL"}}';
+            '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_GL_CONTID-operator":"13","TZ_GL_CONTID-value":",NULL"}}';
         userStore.tzStoreParams = tzStoreParams;
         userStore.reload();
     },
     //预查询-按类别标签
+    queryForTag:function(btn) {
+        var grid = btn.findParentByType("grid");
 
+        var jgId = grid.jgId;
+        var wxAppId = grid.wxAppId;
+        var tagId = btn.name;
+
+        var userStore = grid.getStore();
+        var tzStoreParams = '{"OperateType":"tzQueryByTag","jgId":"'+jgId+'","wxAppId":"'+wxAppId+'","tagId":"'+tagId+'"}';
+        userStore.tzStoreParams = tzStoreParams;
+        userStore.reload();
+    },
     //预查询-已取消关注
     queryUnfollow:function(btn) {
         //订阅标识为1
         var grid = btn.findParentByType("grid");
 
+        var jgId = grid.jgId;
         var wxAppId = grid.wxAppId;
 
         var userStore = grid.getStore();
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
-            '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+Ext.tzOrgID+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSCRIBE-operator":"01","TZ_SUBSCRIBE-value":"1"}}';
+            '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSCRIBE-operator":"01","TZ_SUBSCRIBE-value":"1"}}';
         userStore.tzStoreParams = tzStoreParams;
         userStore.reload();
     },
@@ -72,6 +86,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var grid = btn.findParentByType("grid");
         var store = grid.getStore();
 
+        var jgId = grid.jgId;
         var wxAppId = grid.wxAppId;
 
         var selList = grid.getSelectionModel().getSelection();
@@ -139,11 +154,12 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             cmp = new ViewClass();
             cmp.on('afterrender',function(win){
                 var form = win.child("form").getForm();
+                form.findField("jgId").setValue(jgId);
                 form.findField("wxAppId").setValue(wxAppId);
                 form.findField("openIdList").setValue(openIdList);
 
                 var gridStore = win.down("grid").getStore();
-                var tzStoreParams='{"wxAppId":"'+wxAppId+'","openId":"'+openId+'"}';
+                var tzStoreParams='{"jgId":"'+jgId+'","wxAppId":"'+wxAppId+'","openId":"'+openId+'"}';
                 gridStore.tzStoreParams = tzStoreParams;
                 gridStore.load();
             });

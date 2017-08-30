@@ -259,5 +259,140 @@
                 store.load();
             }
         });
-    }
+	},
+	//进入用户管理
+	userManage:function(view,rowIndex) {
+		var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
+		var jgId = selRec.get("orgId");
+		var wxAppId = selRec.get("wxId");
+
+		Ext.tzSetCompResourses("TZ_WX_USER_COM");
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WX_USER_COM"]["TZ_WX_USER_STD"];
+		if (pageResSet == "" || pageResSet == undefined) {
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		var className = pageResSet["jsClassName"];
+		if (className == "" || className == undefined) {
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_WX_USER_STD，请检查配置。');
+			return;
+		}
+
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		var themeName = Ext.themeName;
+
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+		contentPanel.body.addCls('kitchensink-example');
+
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}
+		ViewClass = Ext.ClassManager.get(className.toString());
+		// console.log(className,ViewClass);
+		clsProto = ViewClass.prototype;
+
+		if (clsProto.themes) {
+			clsProto.themeInfo = clsProto.themes[themeName];
+
+			if (themeName === 'gray') {
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+			} else if (themeName !== 'neptune' && themeName !== 'classic') {
+				if (themeName === 'crisp-touch') {
+					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+				}
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+			}
+			// <debug warn>
+			// Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+			if (!clsProto.themeInfo) {
+				Ext.log.warn('Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+					themeName + '\'. Is this intentional?');
+			}
+			// </debug>
+		}
+
+		var render = function(initialData) {
+
+			cmp = new ViewClass({
+				initialData:initialData
+			});
+
+			cmp.on('afterrender', function () {
+				cmp.jgId = jgId;
+				cmp.wxAppId = wxAppId;
+
+				var userMgStore = cmp.getStore();
+
+				//默认显示关注日期为当前日期
+				var nowDate = new Date();
+				var year = nowDate.getFullYear();
+				var month = "00" + (nowDate.getMonth() + 1);
+				month = month.substr(month.length - 2, 2);
+				var day = nowDate.getDate();
+
+				var nowDateStr = year + "-" + month + "-" + day;
+
+				var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
+					'"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"' + jgId + '","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"' + wxAppId + '","TZ_SUBSRIBE_DATE-operator":"01","TZ_SUBSRIBE_DATE-value":"' + nowDateStr + '"}}';
+
+				userMgStore.tzStoreParams = tzStoreParams;
+				userMgStore.load();
+
+			});
+
+			tab = contentPanel.add(cmp);
+
+			contentPanel.setActiveTab(tab);
+
+			Ext.resumeLayouts(true);
+
+			if (cmp.floating) {
+				cmp.show();
+			}
+		};
+
+		var preQueryForTagMenu = [];
+
+		var time = 1;
+		var beforeRender = function() {
+			time--;
+			if(time==0) {
+				render({
+					tagData:preQueryForTagMenu
+				});
+			}
+		}
+
+		//获取当前公众账号下的所有标签信息，用于预查询下的按类别标签查询
+		var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetTag","comParams":{"jgId":"' + jgId + '","wxAppId":"' + wxAppId + '"}}';
+		Ext.tzLoad(tzParams, function (responseData) {
+			var tagList = responseData.tagList;
+			for (var i = 0; i < tagList.length; i++) {
+				var tagId = tagList[i].tagId;
+				var tagName = tagList[i].tagName;
+
+				preQueryForTagMenu.push({
+					text: tagName,
+					name: tagId,
+					handler: 'queryForTag'
+				});
+			}
+
+			beforeRender();
+		});
+	},
+	//全量获取用户
+	getUserAll:function(view,rowIndex) {
+		var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
+		var jgId = selRec.get("orgId");
+		var wxAppId = selRec.get("wxId");
+
+		var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetUserAll","comParams":{"jgId":"' + jgId + '","wxAppId":"' + wxAppId + '"}}';
+
+		Ext.tzSubmit(tzParams,function(responseData){
+
+		},"",true,this);
+	}
 });

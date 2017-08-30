@@ -52,15 +52,13 @@ public class TzWeChatTagServiceImpl extends FrameworkImpl {
 		
 		try {
 			
-			//当前机构
-			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			
 			jacksonUtil.json2Map(strParams);
+			String jgId = jacksonUtil.getString("jgId");
 			String wxAppId = jacksonUtil.getString("wxAppId");
 			String openId = jacksonUtil.getString("openId");
 			
 			String sql = "SELECT TZ_WX_TAG_ID,TZ_WX_TAG_NAME FROM PS_TZ_WX_TAG_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=?";
-			List<Map<String, Object>> listTag = sqlQuery.queryForList(sql,new Object[]{orgId,wxAppId});
+			List<Map<String, Object>> listTag = sqlQuery.queryForList(sql,new Object[]{jgId,wxAppId});
 			
 			for(Map<String, Object> mapTag : listTag) {
 				String tagId = (String) mapTag.get("TZ_WX_TAG_ID");
@@ -69,14 +67,14 @@ public class TzWeChatTagServiceImpl extends FrameworkImpl {
 				Boolean selectFlag = false;
 				if(!"".equals(openId)) {
 					String sqlFlag = "SELECT COUNT(1) FROM PS_TZ_WXUSER_TAG_T WHERE TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_OPEN_ID=? AND TZ_TAG_ID=?";
-					Integer num = sqlQuery.queryForObject(sqlFlag, new Object[]{orgId,wxAppId,openId,tagId},"Integer");
+					Integer num = sqlQuery.queryForObject(sqlFlag, new Object[]{jgId,wxAppId,openId,tagId},"Integer");
 					if(num>0) {
 						selectFlag = true;
 					} 
 				}
 				
 				Map<String,Object> mapList = new HashMap<String,Object>();
-				mapList.put("jgId", orgId);
+				mapList.put("jgId", jgId);
 				mapList.put("wxAppId", wxAppId);
 				mapList.put("tagId", tagId);
 				mapList.put("tagName", tagName);
