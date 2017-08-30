@@ -1,6 +1,5 @@
 package com.tranzvision.gd.TZApplicationSurveyBundle.service.impl;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.httpclient.CommonUtils;
-import com.tranzvision.gd.util.httpclient.HttpClientService;
 import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -73,7 +71,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 	private PsTzDcWjDyTMapper psTzDcWjDyTMapper;
 
 	@Autowired
-	private SqlQuery jdbcTemplate;
+	private SqlQuery sqlQuery;
 
 	@Autowired
 	private GetSeqNum getSeqNum;
@@ -142,9 +140,9 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 
 		String strSubState = "";
 
-		/* 参与调查人员填写数据、当前页码、问卷编号、实例唯一编码 */
-		String strData = null, strPageId = null, surveyID = null, unique = null;
-
+		/* 参与调查人员填写数据、问卷编号、实例唯一编码 */
+		String strData = null, surveyID = null, unique = null, openid = null;
+		int preNextPageNo = 0,curPageNo = 0;
 		/* 实例编号 */
 		String surveyInsId = "";
 
@@ -190,15 +188,37 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			formDataMap = jsonUtil.getMap();
 			surveyID = formDataMap.get("SURVEY_WJ_ID") == null ? null : formDataMap.get("SURVEY_WJ_ID").toString();
 			surveyInsId = formDataMap.get("SURVEY_INS_ID") == null ? null : formDataMap.get("SURVEY_INS_ID").toString();
-			strPageId = formDataMap.get("PAGE_ID") == null ? null : formDataMap.get("PAGE_ID").toString();
+			preNextPageNo = formDataMap.get("pageNo") == null ? 0 : Integer.parseInt(String.valueOf(formDataMap.get("pageNo")));
+
 			dataMap = (Map<String, Object>) formDataMap.get("data");
 			strData = jsonUtil.Map2json(dataMap);
 			// strData = formDataMap.get("data") == null ? null :
 			// formDataMap.get("data").toString();
 			cType = formDataMap.get("TZ_APP_C_TYPE") == null ? null : formDataMap.get("TZ_APP_C_TYPE").toString();
+			openid = formDataMap.get("openid") == null ? null : formDataMap.get("openid").toString();
 			unique = formDataMap.get("unique") == null ? null : formDataMap.get("unique").toString();
-
+			if(StringUtils.equals("PRE", cType)){
+				curPageNo = preNextPageNo + 1;
+			}else if(StringUtils.equals("NEXT", cType)){
+				curPageNo = preNextPageNo - 1;
+			}else{
+				curPageNo = preNextPageNo;
+			}
 			try {
+				if (successFlag.equals("0")) {
+					/*保存前事件*/
+					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "E",paramTypes,params);
+				}
+				if (successFlag.equals("0")) {
+					if (StringUtils.equals("PRE", cType)) {
+						/*上一页事件*/
+						Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
+						Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
+						successFlag = (String)this.getMethod(surveyID, "C",paramTypes,params);
+					}
+				}
 				// 定义为0
 				if (successFlag.equals("0")) {
 
@@ -268,6 +288,14 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 						}
 					}
 				}
+				if (successFlag.equals("0")) {
+					/*保存后事件*/
+					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "F",paramTypes,params);
+				}
+				
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				errMsg[0] = "1";
@@ -275,6 +303,16 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				strMsg = e.toString();
 				successFlag = "1";
 			}
+			
+			if(successFlag.equals("0")){
+				/*提交前事件*/
+				if(StringUtils.equals("SUBMIT", cType)){
+					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "G",paramTypes,params);
+				}
+			}
+			
 			if (successFlag.equals("0")) {
 				try {
 					/*--检查完成规则-- BEGIN*/
@@ -295,7 +333,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					if (cType != null && cType.equals("SUBMIT") && (strMsg == null || strMsg.equals(""))) {
 						// psTzDcInsT.setTzDcWcSta("0");
 						// psTzDcInsT.setTzAppSubSta("S");
-						isJump = jdbcTemplate.queryForObject(
+						isJump = sqlQuery.queryForObject(
 								"SELECT TZ_DC_WJ_SFTZ FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID =?",
 								new Object[] { surveyID }, "String");
 						sql = "update PS_TZ_DC_INS_T set TZ_APPINS_JSON_STR=?,TZ_DC_INS_IP=?,";
@@ -316,7 +354,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					// psTzDcInsT.setRowLastmantOprid(strPersonId);
 					// psTzDcInsTMapper.updateByPrimaryKey(psTzDcInsT);
 
-					int XX = jdbcTemplate.update(sql,
+					int XX = sqlQuery.update(sql,
 							new Object[] { strData, request.getRemoteAddr(), new Date(), strPersonId, surveyInsId });
 					logger.info("Update  PS_TZ_DC_INS_T:" + XX);
 					// }
@@ -329,11 +367,26 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					successFlag = "1";
 				}
 			}
-
+			if(successFlag.equals("0")){
+				/*提交后事件*/
+				if(StringUtils.equals("SUBMIT", cType)){
+					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "H",paramTypes,params);
+				}
+			}
+			if (successFlag.equals("0")) {
+				if (StringUtils.equals("NEXT", cType)) {
+					/*下一页事件*/
+					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "D",paramTypes,params);
+				}
+			}
 			/* 当前问卷的提交状态 */
 			strSubState = "A";
 			String readonly = "N";
-			strSubState = jdbcTemplate.queryForObject(
+			strSubState = sqlQuery.queryForObject(
 					"SELECT TZ_APP_SUB_STA FROM PS_TZ_DC_INS_T WHERE TZ_APP_INS_ID = ?", new Object[] { surveyInsId },
 					"String");
 			PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs = psTzDcWjDyTMapper.selectByPrimaryKey(surveyID);
@@ -485,11 +538,11 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		if (successFlag.equals("0")) {
 			if (StringUtils.isBlank(surveyInsId) && StringUtils.isBlank(uniqueNum)) {
 				String isTrue = "N";
-				isTrue = jdbcTemplate.queryForObject(
+				isTrue = sqlQuery.queryForObject(
 						"SELECT 'Y' FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID = ? AND TZ_DC_WJ_DLZT = 'N' AND TZ_DC_WJ_IPGZ = '3'",
 						new Object[] { surveyID }, "String");
 				if (StringUtils.equals("Y", isTrue)) {
-					Map<String, Object> map = jdbcTemplate.queryForMap(
+					Map<String, Object> map = sqlQuery.queryForMap(
 							"SELECT TZ_APP_INS_ID,TZ_UNIQUE_NUM FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND ROW_ADDED_OPRID = ? ORDER BY ROW_LASTMANT_DTTM DESC limit 0,1",
 							new Object[] { surveyID, strPersonId });
 					if (map != null) {
@@ -549,7 +602,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		/* 7.根据唯一序列号获取实例编号 */
 		if (successFlag.equals("0")) {
 			if (StringUtils.isBlank(surveyInsId)) {
-				surveyInsId = jdbcTemplate.queryForObject(
+				surveyInsId = sqlQuery.queryForObject(
 						"SELECT TZ_APP_INS_ID FROM PS_TZ_DC_INS_T WHERE TZ_UNIQUE_NUM = ?", new Object[] { uniqueNum },
 						"String");
 			}
@@ -649,7 +702,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			String surveyInsData = null;
 			try {
 				if (StringUtils.isNotBlank(surveyInsId) && Integer.parseInt(surveyInsId) > 0) {
-					surveyInsData = jdbcTemplate.queryForObject(
+					surveyInsData = sqlQuery.queryForObject(
 							"SELECT TZ_APPINS_JSON_STR FROM PS_TZ_DC_INS_T WHERE TZ_DC_WJ_ID = ? AND TZ_APP_INS_ID = ?",
 							new Object[] { surveyID, surveyInsId }, "String");
 					if (surveyInsData == null || surveyInsData.equals("")) {
@@ -665,7 +718,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			surveyInsData = surveyInsData.replace("\\", "\\\\");
 			surveyInsData = surveyInsData.replaceAll("\\$", "~");
 
-			int numMaxPage = jdbcTemplate.queryForObject(
+			int numMaxPage = sqlQuery.queryForObject(
 					"SELECT MAX(TZ_PAGE_NO) + 1 FROM PS_TZ_DCWJ_XXXPZ_T WHERE TZ_DC_WJ_ID = ?",
 					new Object[] { surveyID }, "int");
 
@@ -704,7 +757,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			/* 当前问卷的提交状态 */
 			String strSubState = "A";
 			String readonly = "N";
-			strSubState = jdbcTemplate.queryForObject(
+			strSubState = sqlQuery.queryForObject(
 					"SELECT TZ_APP_SUB_STA FROM PS_TZ_DC_INS_T WHERE TZ_APP_INS_ID = ?", new Object[] { surveyInsId },
 					"String");
 			String strDtgz = psTzDcWjDyTWithBLOBs.getTzDcWjDtgz();
@@ -723,23 +776,32 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			}
 			try {
 				/* 是否为测试问卷 */
-				String isTestSurvey = jdbcTemplate.queryForObject(
+				String isTestSurvey = sqlQuery.queryForObject(
 						"SELECT 'Y' FROM PS_TZ_CSWJ_TBL WHERE TZ_DC_WJ_ID = ? limit 0,1", new Object[] { surveyID },
 						"String");
 				if (StringUtils.equals("Y", isTestSurvey)) {
 					submit = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "QUIT", language,
 							"退出/测试其他项目", "Quit");
 				}
+				/*初始化页面事件 begin*/
+				Class[] paramTypes = new Class[]{HttpServletRequest.class,HttpServletResponse.class};
+				Object[] params = new Object[]{request,response};
+				Object initRet = this.getMethod(surveyID, "A",paramTypes,params);
+				if(initRet == null){
+					initRet = "";
+				}
+				/*初始化页面事件 begin*/
+				
 				if (isMobile) {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_M_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
-							submit, language, strPre, strNext, strSubState, uniqueNum, path, readonly, strSurveySubmit);
+							submit, language, strPre, strNext, strSubState, uniqueNum, path, readonly, strSurveySubmit,initRet.toString());
 				} else {
 					strReturn = tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_SURVEY_PAGE_HTML", header,
 							footer, tzGeneralURL, strComRegInfo, surveyID, surveyInsId, surveyData, surveyInsData,
 							String.valueOf(numMaxPage), isPassAuth, surveyLogic, str_MsgSet, strTitle, strModeDesc,
-							submit, language, strPre, strNext, strSubState, uniqueNum, path, readonly, strSurveySubmit);
+							submit, language, strPre, strNext, strSubState, uniqueNum, path, readonly, strSurveySubmit,initRet.toString());
 				}
 
 				strReturn = strReturn.replaceAll("\\~", "\\$");
@@ -841,11 +903,11 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			if (strEType.equals("ISMODIFY")) {
 				/* 答题规则、问卷实例状态 */
 				String strDtRule = null, strSubState = null;
-				strDtRule = jdbcTemplate.queryForObject(
+				strDtRule = sqlQuery.queryForObject(
 						"SELECT TZ_DC_WJ_DTGZ FROM PS_TZ_DC_WJ_DY_T WHERE TZ_DC_WJ_ID = ?", new Object[] { surveyID },
 						"String");
 
-				strSubState = jdbcTemplate.queryForObject(
+				strSubState = sqlQuery.queryForObject(
 						"SELECT TZ_APP_SUB_STA FROM PS_TZ_DC_INS_T WHERE TZ_APP_INS_ID = ?",
 						new Object[] { surveyInsId }, "String");
 				if (strSubState.equals("S")) {
@@ -901,13 +963,13 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		try {
 			if (surveyInsId != null && !surveyInsId.equals("")) {
 				/* 在线调查答卷存储表 */
-				jdbcTemplate.update("DELETE FROM PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID=?", new Object[] { surveyInsId });
+				sqlQuery.update("DELETE FROM PS_TZ_DC_CC_T WHERE TZ_APP_INS_ID=?", new Object[] { surveyInsId });
 				/* 在线调查答卷多选信息项存储表 */
-				jdbcTemplate.update("DELETE FROM PS_TZ_DC_DHCC_T WHERE TZ_APP_INS_ID=?", new Object[] { surveyInsId });
+				sqlQuery.update("DELETE FROM PS_TZ_DC_DHCC_T WHERE TZ_APP_INS_ID=?", new Object[] { surveyInsId });
 				/* 在线调查答卷表格选择题存储表 */
-				jdbcTemplate.update("DELETE FROM PS_TZ_DCDJ_BGT_T WHERE TZ_APP_INS_ID=?", new Object[] { surveyInsId });
+				sqlQuery.update("DELETE FROM PS_TZ_DCDJ_BGT_T WHERE TZ_APP_INS_ID=?", new Object[] { surveyInsId });
 				/* 在线调查答卷附件存储表 */
-				jdbcTemplate.update("DELETE FROM PS_TZ_DC_WJATT_T WHERE TZ_APP_INS_ID=?", new Object[] { surveyInsId });
+				sqlQuery.update("DELETE FROM PS_TZ_DC_WJATT_T WHERE TZ_APP_INS_ID=?", new Object[] { surveyInsId });
 				return true;
 			} else {
 				return false;
@@ -1096,7 +1158,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 						psTzDcWjattTMapper.insert(psTzDcWjattT);
 
 						/* 先查看数据库是否存在 */
-						is_Exists = jdbcTemplate.queryForObject(
+						is_Exists = sqlQuery.queryForObject(
 								"SELECT 'Y' FROM PS_TZ_DC_WJATTCH_T WHERE TZ_ATTACHSYSFILENA = ?",
 								new Object[] { strSysFileName }, "String");
 						if (StringUtils.isEmpty(is_Exists)) {
@@ -1217,7 +1279,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			sql = null;
 		}
 		if (!StringUtils.isEmpty(sql)) {
-			List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql, new Object[] { surveyID });
+			List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { surveyID });
 
 			Map<String, Object> mapData = null;
 			for (Object objData : listData) {
@@ -1369,5 +1431,35 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		}
 
 		return str_msg;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private Object getMethod(String wjid,String eventType,Class[] parameterTypes,Object[] parameter ){
+		if(StringUtils.isBlank(wjid) || StringUtils.isBlank(eventType)){
+			return null;
+		}
+		
+		String strClsInfo = "SELECT TZ_APPCLS_PATH,TZ_APPCLS_NAME,TZ_APPCLS_METHOD FROM PS_TZ_DC_WJ_APPCLS_T appcls,PS_TZ_APPCLS_TBL cls WHERE appcls.TZ_APPCLS_ID = cls.TZ_APPCLS_ID AND appcls.TZ_DC_WJ_ID = ? AND appcls.TZ_APPCLS_TYPE = ? AND appcls.TZ_QY_STATUS = 'Y' LIMIT 0,1";
+		Map<String, Object> mapClsInfo = sqlQuery.queryForMap(strClsInfo,new Object[] {  wjid,eventType });
+		
+		if(mapClsInfo == null){
+			return null;
+		}
+		Object result = null;
+		try{
+			String clsName = "",clsPath = "",clsMethod = "";
+			clsPath = (String)mapClsInfo.get("TZ_APPCLS_PATH");
+			clsName = (String)mapClsInfo.get("TZ_APPCLS_NAME");
+			clsMethod = (String)mapClsInfo.get("TZ_APPCLS_METHOD");
+			
+			Object myClass = Class.forName(clsPath + "." + clsName).newInstance();
+			
+			Method method = myClass.getClass().getMethod(clsMethod, parameterTypes);  
+			result = method.invoke(myClass,parameter);
+		}catch (Exception e) {
+			e.printStackTrace();
+		} 
+
+		return result;
 	}
 }
