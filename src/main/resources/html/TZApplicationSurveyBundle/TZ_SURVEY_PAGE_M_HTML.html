@@ -135,6 +135,7 @@
 			</div>
 		</div>
 		<input type="hidden" id="unique" name="unique" value="%bind(:20)"/>
+		%bind(:24)
 		<!-- 透明层 -->
 		<div class="shade"></div>
 		<!-- 弹窗内容 -->
@@ -321,8 +322,14 @@
 
 			var _a = getData();
 			var _unique = $("#unique").val();
-			var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"' + cType + '","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"'+ appInsId + '","PAGE_ID":"2","unique":"'+ _unique +'","data":' + $.toJSON(_a) + '}]}}';
-            $.ajax({
+			
+			var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"' + cType + '","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"'+ appInsId + '","pageNo":"'+ SurveyBuild.curPageNo + '","unique":"'+ _unique +'"';
+			if($("#OPENID")){
+				tzSaveParams = tzSaveParams + ',"openid":"' + $("#OPENID").val() + '"';
+			}
+			tzSaveParams = tzSaveParams + ',"data":' + $.toJSON(_a) + '}]}}';
+			//var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"' + cType + '","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"'+ appInsId + '","pageNo":"2","unique":"'+ _unique +'","data":' + $.toJSON(_a) + '}]}}';
+			$.ajax({
                 type: "POST",
 				url:SurveyBuild.tzGeneralURL,
                 data: {
@@ -380,17 +387,17 @@
 		//上一页
 		function prePage(){
 			if(SurveyBuild.curPageNo > 1){
-				pageTo(SurveyBuild.curPageNo - 1);
+				pageTo(SurveyBuild.curPageNo - 1,"PRE");
 			}
 		}
 		//下一页
 		function nextPage(){
 			if(SurveyBuild.curPageNo < SurveyBuild.maxPage){
-				pageTo(SurveyBuild.curPageNo + 1);
+				pageTo(SurveyBuild.curPageNo + 1,"NEXT");
 			}
 		}
 		//页面跳转
-		function pageTo(pageno){
+		function pageTo(pageno,cType){
 			if(SurveyBuild.maxPage == 1){
 				//只有一页，禁止跳转
 				return false;
@@ -400,7 +407,7 @@
 				var isValid = $.formValidator.pageIsValid();
 				if(isValid){
 					SurveyBuild.curPageNo = pageno;
-					SaveSurvey("SAVE");
+					SaveSurvey(cType);
 					refreshTip();
 				}else{
 					scrollTop();
