@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatMsgBundle.dao.PsTzWxmsgUserTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgUserT" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_WX_APPID" property="tzWxAppid" jdbcType="VARCHAR" />
+    <id column="TZ_XH" property="tzXh" jdbcType="VARCHAR" />
+    <id column="TZ_XH_ID" property="tzXhId" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_STATE" property="tzSendState" jdbcType="VARCHAR" />
+    <result column="TZ_CONTENT" property="tzContent" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_WX_APPID, TZ_XH, TZ_XH_ID, TZ_SEND_STATE, TZ_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgUserTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_WXMSG_USER_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+      and TZ_XH_ID = #{tzXhId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgUserTKey" >
+    delete from PS_TZ_WXMSG_USER_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+      and TZ_XH_ID = #{tzXhId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgUserT" >
+    insert into PS_TZ_WXMSG_USER_T (TZ_JG_ID, TZ_WX_APPID, TZ_XH, 
+      TZ_XH_ID, TZ_SEND_STATE, TZ_CONTENT
+      )
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, #{tzXh,jdbcType=VARCHAR}, 
+      #{tzXhId,jdbcType=VARCHAR}, #{tzSendState,jdbcType=VARCHAR}, #{tzContent,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgUserT" >
+    insert into PS_TZ_WXMSG_USER_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzWxAppid != null" >
+        TZ_WX_APPID,
+      </if>
+      <if test="tzXh != null" >
+        TZ_XH,
+      </if>
+      <if test="tzXhId != null" >
+        TZ_XH_ID,
+      </if>
+      <if test="tzSendState != null" >
+        TZ_SEND_STATE,
+      </if>
+      <if test="tzContent != null" >
+        TZ_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxAppid != null" >
+        #{tzWxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXh != null" >
+        #{tzXh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXhId != null" >
+        #{tzXhId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSendState != null" >
+        #{tzSendState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContent != null" >
+        #{tzContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgUserT" >
+    update PS_TZ_WXMSG_USER_T
+    <set >
+      <if test="tzSendState != null" >
+        TZ_SEND_STATE = #{tzSendState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzContent != null" >
+        TZ_CONTENT = #{tzContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+      and TZ_XH_ID = #{tzXhId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgUserT" >
+    update PS_TZ_WXMSG_USER_T
+    set TZ_SEND_STATE = #{tzSendState,jdbcType=VARCHAR},
+      TZ_CONTENT = #{tzContent,jdbcType=VARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+      and TZ_XH_ID = #{tzXhId,jdbcType=VARCHAR}
+  </update>
+</mapper>
