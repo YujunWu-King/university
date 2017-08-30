@@ -25,9 +25,11 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
         	sendType="B";
         }
         var tzParams = '{"ComID":"TZ_GD_WXMSG_COM","PageID":"TZ_GD_WXMSG_STD","OperateType":"U","comParams":{"add":[{"sendType":"'+sendType+'","data":'+Ext.JSON.encode(formParams)+'}]}}';
-        Ext.tzSubmit(tzParams,function(response){
+        console.log(tzParams);
+        
+       /* Ext.tzSubmit(tzParams,function(response){
         	form.findField("sendStatus").setValue("Y");
-        },"发送成功",true,this);
+        },"发送成功",true,this);*/
     },
     //关闭微信窗口
     closeWxPanel:function(){
