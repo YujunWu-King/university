@@ -2,7 +2,10 @@ package com.tranzvision.gd.TZWeChatMsgBundle.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,8 +38,65 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzWxmsgUserTMapper psTzWxmsgUserTMapper;
 	
-	
-	
+	@Override
+	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg)  {
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		mapRet.put("root", "[]");
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+
+		String strOrgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		JacksonUtil jacksonUtil=new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		String strWxAppId=jacksonUtil.getString("wxAppId");
+		if(strWxAppId==null||strWxAppId.equals("")){
+			return null;
+		}
+		int count=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_TAG_TBL where TZ_JG_ID=? AND TZ_WX_APPID=?", new Object[]{strOrgId,"1"}, "Integer");	
+		String sqlTag="select TZ_WX_TAG_ID,TZ_WX_TAG_NAME from PS_TZ_WX_TAG_TBL where TZ_JG_ID=? AND TZ_WX_APPID=?";
+	    List<Map<String, Object>>tagList=new ArrayList<Map<String, Object>>();
+	    tagList=sqlQuery.queryForList(sqlTag, new Object[]{strOrgId,"1"});
+		if (tagList != null && tagList.size() > 0) {
+			for (int i = 0; i < tagList.size(); i++) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tagId", tagList.get(i).get("TZ_WX_TAG_ID").toString());
+				map.put("tagName", tagList.get(i).get("TZ_WX_TAG_NAME").toString());
+				listData.add(map);
+			}
+			mapRet.replace("total", count);
+			mapRet.replace("root", listData);
+		}
+		
+		return jacksonUtil.Map2json(mapRet);
+	}
+
+	/*@Override
+	public String tzQuery(String strParams, String[] errMsg) {
+		String strComContent="{}";
+		JacksonUtil jacksonUtil=new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		String strWxAppId=jacksonUtil.getString("wxAppId");
+		String strWxTags=jacksonUtil.getString("weChatTagIDs");
+		if(strWxAppId==null||strWxTags==null||"".equals(strWxAppId)||"".equals(strWxTags)){
+			return strComContent;
+		}
+		String strOrgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String arr[]=strWxTags.split(",");
+		List<String>  tagNameList=new ArrayList<String>();
+	    List<String>  tagIDList=new ArrayList<String>();
+	    Map<String,Object> map=new HashMap<String,Object>();
+		for(int i=0;i<arr.length;i++){
+			String tagId=arr[i];
+			if(!"".equals(tagId)){
+				tagIDList.add(arr[i]);
+				String tagName=sqlQuery.queryForObject("select TZ_WX_TAG_NAME from PS_TZ_WX_TAG_TBL where TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_WX_TAG_ID=?", new Object[]{strOrgId,strWxAppId,tagId}, "String");
+				tagNameList.add(tagName);
+			}
+		}
+		map.put("TagID", tagIDList);
+		map.put("TagName", tagNameList);
+		return jacksonUtil.Map2json(map);
+	}*/
 	@Override
 	public String tzAdd(String[] actData, String[] errMsg) {
 	
@@ -118,9 +178,8 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 			if("B".equals(strSendMode)){
 				String  strWxTagArray[]=strWxTags.substring(1,strWxTags.length()-1).split(",");
 				for(int i=0;i<strWxTagArray.length;i++){
-					String strWxTagName=strWxTagArray[i];
-					String strWxTagId="";
-					strWxTagId=sqlQuery.queryForObject("select TZ_WX_TAG_ID from PS_TZ_WX_TAG_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_WX_TAG_NAME=?", new Object[]{strOrgId,strAppId,strWxTagName}, "String");
+					String strWxTagId=strWxTagArray[i];
+					//strWxTagId=sqlQuery.queryForObject("select TZ_WX_TAG_ID from PS_TZ_WX_TAG_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_WX_TAG_NAME=?", new Object[]{strOrgId,strAppId,strWxTagName}, "String");
 					if(!"".equals(strWxTagId)&strWxTagId!=null){
 						String strUserXh=getSeqNum.getSeqNum("TZ_WXMSG_USER_T", "TZ_XH")+""; 
 						PsTzWxmsgUserT PsTzWxmsgUserT=new PsTzWxmsgUserT();

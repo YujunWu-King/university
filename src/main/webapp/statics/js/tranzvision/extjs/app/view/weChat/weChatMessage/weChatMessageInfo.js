@@ -6,7 +6,9 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
         'Ext.toolbar.Paging',
         'Ext.ux.Ueditor',
         'Ext.ux.ProgressBarPager',
-        'KitchenSink.view.weChat.weChatMessage.weChatMsgController'
+        'KitchenSink.view.weChat.weChatMessage.weChatMsgController',
+        'KitchenSink.view.weChat.weChatMessage.weChatMsgTagModel',
+        'KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore'
     ],
     extend : 'Ext.panel.Panel',
     controller:'weChatMsgController',
@@ -20,56 +22,58 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
     weChatTags:'',
     weChatAppId:'',
     listeners: {
-        beforerender: function(panel){
+        afterrender: function(panel){
         	//发送模式
         	var sendMode=this.sendMode;
-        	var form=panel.down("form").getForm();
-        	//console.log(form);
-        	if(sendMode==''){
+        	var weChatAppId=this.weChatAppId;
+        	if(sendMode==''||weChatAppId==''){
+        		var form=panel.down("form").getForm();
         		//从URL中获取参数信息
         		//var url=window.top.location.href;
-        	   var url="http://localhost:8080/university/index#SEM_A0000001982?appId=111&sendMode=B&openIds=11,22,33&tags=Farscape,Firefly";
-        	   var num=url.indexOf("?") 
-        	   var str=url.substr(num+1);
-        	   var arr=str.split("&"); //各个参数放到数组里
-    		   for(var i=0;i < arr.length;i++){ 
-    		    num=arr[i].indexOf("="); 
-    		    if(num>0){ 
-    		     name=arr[i].substring(0,num);
-    		     value=arr[i].substring(num+1,arr[i].length);
-    		      if(name=="appId"){
-    		    	 this.weChatAppId=value;
-    		    	 form.findField("appId").setValue(value);
-    		      }
-    		      if(name=="sendMode"){
-     		    	 this.sendMode=value;
-     		    	 form.findField("sendMode").setValue(value);
-     		      }
-    		      if(name=="openIds"){
-     		    	 this.openIds=value;
-     		    	 form.findField("openIds").setValue(value);
-     		      }
-    		      if(name=="tags"){
-      		    	this.weChatTags=value;
-      		    	var tagArrays=value.split(",");
-      		    	
-                    form.findField("wechatTag").setValue(tagArrays);
-      		      }
-    		     }
-    		    } 
+        	   //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&openIds=11,22,33&tags=院长推荐";
+               var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1,3";
+               var weChatAppId=GetQueryString(url,"appId");
+               this.weChatAppId=weChatAppId;
+		       form.findField("appId").setValue(weChatAppId);
+		       
+		       var sendMode=GetQueryString(url,"sendMode");
+               this.sendMode=sendMode;
+		       form.findField("sendMode").setValue(sendMode);
+		       
+		       var openIds=GetQueryString(url,"openIds");
+               this.openIds=openIds;
+		       form.findField("openIds").setValue(openIds);
         	}
         	//如果为指定用户，按照标签字段隐藏；如果为按照标签，用户列表字段隐藏。
-        	if(this.sendMode=='A'){
+        	if(sendMode=='A'){
         		form.findField("wechatTag").setVisible(false);
         	}
-        	if(this.sendMode=='B'){
+        	if(sendMode=='B'){
         		form.findField("openIds").setVisible(false);
         	}
-        	//删除按钮隐藏
-            //panel.down("form").items.items[4].down('button[name=chooseScBtn]').setVisible(false);
+        	
         }
     },
     initComponent:function(){
+        var tagStore = new KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore({
+        	listeners:{
+        		load:function(){
+        			var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1,3";
+                    var tags=GetQueryString(url,"tags");
+                    if(tags!=""){
+                    	this.wechatTag=tags;
+                    	Ext.getCmp("wechatTag_20170830").setValue(tags);
+                    }
+        		}
+        	}
+        });
+        var weChatTags=this.weChatTags;
+        //用于非URL的标签初始化
+        if(this.weChatAppId!=""){
+          tagStore.tzStoreParams='{"wxAppId":"' + this.weChatAppId + '"}';
+        }
+        tagStore.load();
+
         Ext.apply(this,{
             items:[{
                 xtype:'form',
@@ -117,24 +121,25 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     xtype:'tagfield',
                     fieldLabel:'按照标签',
                     name:'wechatTag',
-                    anyMatch:true,
+                    store:tagStore,
+                    id:'wechatTag_20170830',
+                    valueField: 'tagId',
+                    displayField: 'tagName',
                     filterPickList: true,
                     createNewOnEnter: true,
-                    createNewOnBlur: false,
+                    createNewOnBlur: true,
                     enableKeyEvents: true,
-                    ignoreChangesFlag:true,
-                    store: {
-                        fields: ['tagId','tagName'],
-                        data: [  {tagId: 0, tagName: 'Battlestar Galactica'},
-                                 {tagId: 1, tagName: 'Doctor Who'},
-                                 {tagId: 2, tagName: 'Farscape'},
-                                 {tagId: 3, tagName: 'Firefly'},
-                                 {tagId: 4, tagName: 'Star Trek'},
-                                 {tagId: 5, tagName: 'Star Wars: Christmas Special'} ]
-                    },
-                    valueField: 'tagId',
-                    displayField: 'tagName'
-
+                    //ignoreChangesFlag:true,
+                    queryMode: 'local',
+                    listeners:
+                    {
+                        'select': function(combo,record,index,eOpts)//加入select监听事件，在输入框中输入字符执行选择后设为空值
+                        {
+                            var me = this;
+                            me.inputEl.dom.value = "";
+                        }
+                    }
+                    
                 },{
                     xtype: 'tabpanel',
                     frame: true,
@@ -172,7 +177,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                        
                         name:'form2',
                         items:[{
-                            columnWidth:.3,
+                            columnWidth:.4,
                             bodyStyle:'padding:10px',
                             layout: {
                                 type: 'vbox',
@@ -195,7 +200,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 bodyStyle:'padding:10px 0 0 0',
                                 xtype: 'form',
                                 items: [{
-                                    columnWidth:.62,
+                                    columnWidth:.46,
                                     xtype: "image",
                                     src: TzUniversityContextPath + "/statics/js/tranzvision/extjs/app/view/template/bmb/images/forms.png",
                                     name: "titileImage",
@@ -206,8 +211,14 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                     xtype: 'button',
                                     name:'deletePicBtn',
                                     hidden:true,
-                                    text: '<span color="#459ae9">删除</span>',
-                                    style:'width:60px;top:170px;border-width:0;box-shadow:none',
+                                    text: '<span style="color:#459ae9;">删除</span>',
+                                    //style:'width:60px;top:170px;border-width:0;box-shadow:none',
+                                    border:false,
+                                    style:{
+            							background: 'white',
+            							boxShadow:'none',
+            							top:'170px'
+            						},
                                     listeners:{ 
                                         click:function(bt, value, eOpts){ 
                                             deleteImage(bt, value, eOpts);
@@ -216,7 +227,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 }]
                             }]
                         },{
-                            columnWidth:.7,
+                            columnWidth:.6,
                             bodyStyle:'padding:10px 10px 10px 30px',
                             layout: {
                                 type: 'vbox',
@@ -236,7 +247,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                         xtype:'form',
                         name:'form3',
                         items:[{
-                            columnWidth:.3,
+                            columnWidth:.4,
                             bodyStyle:'padding:10px',
                             layout: {
                                 type: 'vbox',
@@ -259,7 +270,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 bodyStyle:'padding:10px 0 0 0',
                                 xtype: 'form',
                                 items: [{
-                                    columnWidth:.61,
+                                    columnWidth:.45,
                                     xtype: "image",
                                     src: TzUniversityContextPath + "/statics/js/tranzvision/extjs/app/view/template/bmb/images/forms.png",
                                     name: "twImage",
@@ -273,7 +284,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 bodyStyle:'padding:10px 0 0 0',
                                 xtype: 'form',
                                 items: [
-                                	{   columnWidth:.62,
+                                	{   columnWidth:.45,
                                         xtype:'textarea',
                                         fieldLabel: '图文标题',
                                         name:'twTitle',
@@ -290,8 +301,14 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                     xtype: 'button',
                                     name:'deleteTwBtn',
                                     hidden:true,
-                                    text: '<font color="#459ae9">删除</font>',
-                                    style:'width:60px;top:40px;background-color:white;border:0;outline:none',
+                                    text: '<span style="color:#459ae9;">删除</span>',
+                                    //style:'width:60px;top:40px;background-color:white;border:0;outline:none',
+                                    border:false,
+                                    style:{
+            							background: 'white',
+            							boxShadow:'none',
+            							top:'40px'
+            						},
                                     listeners:{
                                         click:function(bt, value, eOpts){
                                             deleteTw(bt, value, eOpts);
@@ -300,7 +317,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 }]
                             }]
                         },{
-                            columnWidth:.7,
+                            columnWidth:.6,
                             bodyStyle:'padding:10px 10px 10px 30px',
                             layout: {
                                 type: 'vbox',
@@ -417,6 +434,19 @@ function deleteTw(btn){
     tabpanel.down('button[name=chooseTwBtn]').setVisible(true);
     tabpanel.down('image[name=twImage]').setHidden(true);
     tabpanel.down('image[name=twImage]').setSrc("");
+}
+
+function GetQueryString(url,name) {
+	var num=url.indexOf("?") 
+    var str=url.substr(num+1);
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");  
+    var r = str.match(reg); 
+    var context = "";  
+    if (r != null)  
+         context = r[2];  
+    reg = null;  
+    r = null;  
+    return context == null || context == "" || context == "undefined" ? "" : context;  
 }
 
 
