@@ -389,10 +389,10 @@
 		var jgId = selRec.get("orgId");
 		var wxAppId = selRec.get("wxId");
 
-		var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetUserAll","comParams":{"jgId":"' + jgId + '","wxAppId":"' + wxAppId + '"}}';
+		var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetUserAllByAe","comParams":{"jgId":"' + jgId + '","wxAppId":"' + wxAppId + '"}}';
 
 		Ext.tzSubmit(tzParams,function(responseData){
 
-		},"",true,this);
+		},"调用获取用户进程成功",true,this);
 	}
 });

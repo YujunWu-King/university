@@ -38,8 +38,8 @@ public class TzWeChartGetAllEngine extends BaseEngine {
 				
 				String[] errMsg = new String[2];
 				
-				TzWeChatUserMgServiceImpl tzWeChatUserMgServiceImpl = (TzWeChatUserMgServiceImpl) getSpringBeanUtil.getSpringBeanByID("TzWeChatUserMgServiceImpl");
-				tzWeChatUserMgServiceImpl.getUserAllAe(jgId,wxAppId,errMsg);
+				TzWeChatUserMgServiceImpl tzWeChatUserMgServiceImpl = (TzWeChatUserMgServiceImpl) getSpringBeanUtil.getSpringBeanByID("tzWeChatUserMgServiceImpl");
+				tzWeChatUserMgServiceImpl.getUserAllAeInfo(jgId,wxAppId,errMsg);
 			}
 			
 		} catch (Exception e) {
