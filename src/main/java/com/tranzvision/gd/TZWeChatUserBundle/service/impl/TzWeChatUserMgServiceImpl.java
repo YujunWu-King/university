@@ -26,6 +26,7 @@ import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -58,6 +59,8 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 	private PsTzWxTagTblMapper psTzWxTagTblMapper;
 	@Autowired
 	private PsTzWxuserTagTMapper psTzWxuserTagTMapper;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	
 	
 	
@@ -78,6 +81,9 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			
 			if(jacksonUtil.containsKey("condition")) {
+				
+				//默认头像url
+				String userPictureDefault = getHardCodePoint.getHardCodePointVal("TZ_WX_USER_PIC_DEFAULT");
 			
 				//排序字段
 				String[][] orderByArr = new String[][] {};
@@ -96,7 +102,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 						for(int i=0;i<list.size();i++) {
 							String[] rowList = list.get(i);
 							
-							String strUserPicture = "/university/statics/images/appeditor/bjphoto.jpg";
+							String strUserPicture = userPictureDefault;
 							if(rowList[3]!=null && !"".equals(rowList[3])) {
 								strUserPicture = rowList[3];
 							}
@@ -228,6 +234,9 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 		
 		try {
 			
+			//默认头像url
+			String userPictureDefault = getHardCodePoint.getHardCodePointVal("TZ_WX_USER_PIC_DEFAULT");
+			
 			Integer limit = Integer.valueOf(request.getParameter("limit"));
 			Integer start = Integer.valueOf(request.getParameter("start"));
 			
@@ -255,7 +264,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 				String userPicture = mapUser.get("TZ_IMAGE_URL") == null ? "" : mapUser.get("TZ_IMAGE_URL").toString();
 				if(userPicture!=null && !"".equals(userPicture)) {
 				} else {
-					userPicture = "/university/statics/images/appeditor/bjphoto.jpg";
+					userPicture = userPictureDefault;
 				}
 				String nickName = mapUser.get("TZ_NICKNAME") == null ? "" : mapUser.get("TZ_NICKNAME").toString();
 				String followDttm = mapUser.get("TZ_SUBSRIBE_DT") == null ? "" : mapUser.get("TZ_SUBSRIBE_DT").toString();
