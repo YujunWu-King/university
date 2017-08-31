@@ -7,6 +7,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'KitchenSink.view.weChat.weChatUser.weChatUserMgStore',
+        'KitchenSink.view.weChat.weChatUser.weChatUserMgModel',
         'KitchenSink.view.weChat.weChatUser.weChatUserMgController'
     ],
     xtype:'weChatUserMg',
@@ -19,7 +20,6 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
     wxAppId:'',
     columnLines:true,
     multiSelect:true,
-    ignoreChangesFlag:true,
     plugins:[{
         ptype:'rowexpander',
         rowBodyTpl:new Ext.XTemplate(
@@ -46,6 +46,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
             var me = this;
             me.getView().on('expandbody',function(rowNode,record,expandRow,eOpts){
                 if(!record.get("tagInfo")) {
+                    var store = me.store;
                     var tagInfoArr = new Array();
                     var userTagDesc = record.get("userTagDesc");
                     var tagArr = userTagDesc.split(",");
@@ -55,15 +56,18 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
                         tagInfoArr.push(tagObject);
                     }
                     record.set("tagInfo",tagInfoArr);
-
-                    var store = me.store;
-                    if(store.getModifiedRecords().length>0) {
-
-                    } else {
-                        store.commitChanges();
-                    }
+                    store.commitChanges();
                 }
             });
+        },
+        viewready:function(g){
+            //默认展开rowexpander
+            var expander = g.getPlugin();
+            var storeData = g.getStore().data;
+            for(var i=0;i< storeData.length;i++){
+                var record = storeData.items[i];
+                expander.toggleRow(i,record);
+            }
         }
     },
     viewConfig:{
@@ -96,7 +100,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+Ext.tzOrgID+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+me.wxAppId+'","TZ_SUBSRIBE_DATE-operator":"01","TZ_SUBSRIBE_DATE-value":"'+nowDateStr+'"}}';
         userMgStore.tzStoreParams = tzStoreParams;
-        userMgStore.reload();
+        userMgStore.load();
         */
 
 

@@ -111,4 +111,7 @@
 	<!-- 自动初筛bean -->
 	<bean id="tzAutoScreenEngineServiceImpl" class="com.tranzvision.gd.TZAutomaticScreenBundle.service.impl.TzAutoScreenEngineServiceImpl" />
 	
+	<!-- 微信用户管理bean -->
+	<bean id="tzWeChatUserMgServiceImpl" class="com.tranzvision.gd.TZWeChatUserBundle.service.impl.TzWeChatUserMgServiceImpl" />
+	
 </beans>

@@ -17,11 +17,16 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxTagTblMapper;
 import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxUserAetMapper;
+import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxUserTblMapper;
+import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxuserTagTMapper;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserAet;
+import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -48,6 +53,14 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 	private GetSeqNum getSeqNum;
 	@Autowired
 	private PsTzWxUserAetMapper psTzWxUserAetMapper;
+	@Autowired
+	private PsTzWxUserTblMapper psTzWxUserTblMapper;
+	@Autowired
+	private PsTzWxTagTblMapper psTzWxTagTblMapper;
+	@Autowired
+	private PsTzWxuserTagTMapper psTzWxuserTagTMapper;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	
 	
 	
@@ -68,6 +81,9 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			
 			if(jacksonUtil.containsKey("condition")) {
+				
+				//默认头像url
+				String userPictureDefault = getHardCodePoint.getHardCodePointVal("TZ_WX_USER_PIC_DEFAULT");
 			
 				//排序字段
 				String[][] orderByArr = new String[][] {};
@@ -86,7 +102,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 						for(int i=0;i<list.size();i++) {
 							String[] rowList = list.get(i);
 							
-							String strUserPicture = "/university/statics/images/appeditor/bjphoto.jpg";
+							String strUserPicture = userPictureDefault;
 							if(rowList[3]!=null && !"".equals(rowList[3])) {
 								strUserPicture = rowList[3];
 							}
@@ -138,8 +154,12 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 				strRet = getTag(strParams,errMsg);
 			}
 			//执行进程从微信获取全量用户
-			if("tzGetUserAll".equals(operateType)) {
-				strRet = getUserAll(strParams,errMsg);
+			if("tzGetUserAllByAe".equals(operateType)) {
+				strRet = getUserAllByAe(strParams,errMsg);
+			}
+			//获取微信服务号下的所有用户
+			if("tzGetAllUser".equals(operateType)){
+				strRet = getAllUser(strParams,errMsg);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -161,6 +181,8 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 		
 		try {
 			
+			String tagIdList = "";
+			
 			jacksonUtil.json2Map(strParams);
 			
 			String jgId = jacksonUtil.getString("jgId");
@@ -173,6 +195,12 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 				String tagId = (String) mapTag.get("TZ_WX_TAG_ID");
 				String tagName = (String) mapTag.get("TZ_WX_TAG_NAME");
 				
+				if(!"".equals(tagIdList)) {
+					tagIdList = tagIdList + "," + tagId;
+				} else {
+					tagIdList = tagId;
+				}
+				
 				Map<String, Object> mapData = new HashMap<String,Object>();
 				mapData.put("tagId", tagId);
 				mapData.put("tagName", tagName);
@@ -181,6 +209,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 			}
 			
 			mapRet.put("tagList", listData);
+			mapRet.put("tagIdList", tagIdList);
 			strRet = jacksonUtil.Map2json(mapRet);
 			
 		} catch (Exception e) {
@@ -204,6 +233,9 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 		mapRet.put("root", listData);
 		
 		try {
+			
+			//默认头像url
+			String userPictureDefault = getHardCodePoint.getHardCodePointVal("TZ_WX_USER_PIC_DEFAULT");
 			
 			Integer limit = Integer.valueOf(request.getParameter("limit"));
 			Integer start = Integer.valueOf(request.getParameter("start"));
@@ -232,7 +264,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 				String userPicture = mapUser.get("TZ_IMAGE_URL") == null ? "" : mapUser.get("TZ_IMAGE_URL").toString();
 				if(userPicture!=null && !"".equals(userPicture)) {
 				} else {
-					userPicture = "/university/statics/images/appeditor/bjphoto.jpg";
+					userPicture = userPictureDefault;
 				}
 				String nickName = mapUser.get("TZ_NICKNAME") == null ? "" : mapUser.get("TZ_NICKNAME").toString();
 				String followDttm = mapUser.get("TZ_SUBSRIBE_DT") == null ? "" : mapUser.get("TZ_SUBSRIBE_DT").toString();
@@ -281,7 +313,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 	
 	
 	/*执行进程从微信获取全量用户*/
-	public String getUserAll(String strParams,String[] errMsg) {
+	public String getUserAllByAe(String strParams,String[] errMsg) {
 		String strRet = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
@@ -333,10 +365,29 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 	
 	
 	/*AE执行内容*/
-	public String getUserAllAe(String jgId,String wxAppId,String[] errMsg) {
+	public String getUserAllAeInfo(String jgId,String wxAppId,String[] errMsg) {
 		String strRet = "";
 		
 		try {
+			
+			/**调用微信接口获取全量用户
+			 * 
+			 * 
+			 * 
+			 * 
+			 * 
+			 * 
+			 * 
+			 * 
+			 * 
+			 */
+			
+			PsTzWxUserTbl psTzWxUserTbl = new PsTzWxUserTbl();
+			psTzWxUserTbl.setTzJgId(jgId);
+			psTzWxUserTbl.setTzWxAppid(wxAppId);
+			psTzWxUserTbl.setTzOpenId("3");
+			psTzWxUserTbl.setTzNickname("33");
+			psTzWxUserTblMapper.insert(psTzWxUserTbl);
 			
 		} catch (Exception e) {
 			e.toString();
@@ -345,5 +396,46 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 		}
 		
 		return strRet;
+	}
+	
+	
+	/*获取微信服务号下的所有用户*/
+	public String getAllUser(String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try {
+			
+			String openIdList = "";
+			
+			jacksonUtil.json2Map(strParams);
+			
+			String jgId = jacksonUtil.getString("jgId");
+			String wxAppId = jacksonUtil.getString("wxAppId");
+			
+			String sql = "SELECT TZ_OPEN_ID FROM PS_TZ_WX_USER_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=?";
+			List<Map<String, Object>> listUser = sqlQuery.queryForList(sql,new Object[]{jgId,wxAppId});
+			
+			for(Map<String, Object> mapUser : listUser) {
+				String openId = mapUser.get("TZ_OPEN_ID") == null ? "" : mapUser.get("TZ_OPEN_ID").toString();
+				if(!"".equals(openIdList)) {
+					openIdList = openIdList + "," + openId;
+				} else {
+					openIdList = openId;
+				}
+			}
+			
+			mapRet.put("openIdList", openIdList);
+			strRet = jacksonUtil.Map2json(mapRet);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		
+		return strRet;
+		
 	}
 }
