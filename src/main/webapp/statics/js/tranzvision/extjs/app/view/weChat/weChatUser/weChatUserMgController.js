@@ -3,8 +3,10 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
     alias: 'controller.weChatUserMgController',
     //查询
     queryUser:function(btn) {
-        var jgId = btn.findParentByType("grid").jgId;
-        var wxAppId = btn.findParentByType("grid").wxAppId;
+        var grid = btn.findParentByType("grid");
+        var jgId = grid.jgId;
+        var wxAppId = grid.wxAppId;
+
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW',
             condition:{
@@ -15,7 +17,17 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                 var store = btn.findParentByType("grid").store;
                 btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
                 store.tzStoreParams = seachCfg;
-                store.load();
+                store.load({
+                    callback:function() {
+                        //默认展开rowexpander
+                        var expander = grid.getPlugin();
+                        var storeData = store.data;
+                        for(var i=0;i< storeData.length;i++){
+                            var record = storeData.items[i];
+                            expander.toggleRow(i,record);
+                        }
+                    }
+                });
             }
         });
     },
@@ -39,7 +51,17 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSRIBE_DATE-operator":"01","TZ_SUBSRIBE_DATE-value":"'+nowDateStr+'"}}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.reload();
+        userStore.load({
+            callback:function() {
+                //默认展开rowexpander
+                var expander = grid.getPlugin();
+                var storeData = userStore.data;
+                for(var i=0;i< storeData.length;i++){
+                    var record = storeData.items[i];
+                    expander.toggleRow(i,record);
+                }
+            }
+        });
     },
     //预查询-已绑定用户
     queryBind:function(btn) {
@@ -53,7 +75,17 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_GL_CONTID-operator":"13","TZ_GL_CONTID-value":",NULL"}}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.reload();
+        userStore.load({
+            callback:function() {
+                //默认展开rowexpander
+                var expander = grid.getPlugin();
+                var storeData = userStore.data;
+                for(var i=0;i< storeData.length;i++){
+                    var record = storeData.items[i];
+                    expander.toggleRow(i,record);
+                }
+            }
+        });
     },
     //预查询-按类别标签
     queryForTag:function(btn) {
@@ -66,11 +98,21 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var userStore = grid.getStore();
         var tzStoreParams = '{"OperateType":"tzQueryByTag","jgId":"'+jgId+'","wxAppId":"'+wxAppId+'","tagId":"'+tagId+'"}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.reload();
+        userStore.load({
+            callback:function() {
+                //默认展开rowexpander
+                var expander = grid.getPlugin();
+                var storeData = userStore.data;
+                for(var i=0;i< storeData.length;i++){
+                    var record = storeData.items[i];
+                    expander.toggleRow(i,record);
+                }
+            }
+        });
     },
     //预查询-已取消关注
     queryUnfollow:function(btn) {
-        //订阅标识为1
+        //订阅标识为0
         var grid = btn.findParentByType("grid");
 
         var jgId = grid.jgId;
@@ -78,9 +120,19 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
 
         var userStore = grid.getStore();
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
-            '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSCRIBE-operator":"01","TZ_SUBSCRIBE-value":"1"}}';
+            '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSCRIBE-operator":"01","TZ_SUBSCRIBE-value":"0"}}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.reload();
+        userStore.load({
+            callback:function() {
+                //默认展开rowexpander
+                var expander = grid.getPlugin();
+                var storeData = userStore.data;
+                for(var i=0;i< storeData.length;i++){
+                    var record = storeData.items[i];
+                    expander.toggleRow(i,record);
+                }
+            }
+        });
     },
     //设置标签
     setTag:function(btn) {

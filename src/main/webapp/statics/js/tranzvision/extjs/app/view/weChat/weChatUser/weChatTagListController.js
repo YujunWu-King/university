@@ -179,7 +179,17 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
                     view.close();
                 }
                 //刷新用户管理
-                userGridStore.reload();
+                userGridStore.load({
+                    callback:function() {
+                        //默认展开rowexpander
+                        var expander = activeTab.getPlugin();
+                        var storeData = userGridStore.data;
+                        for(var i=0;i< storeData.length;i++){
+                            var record = storeData.items[i];
+                            expander.toggleRow(i,record);
+                        }
+                    }
+                });
 
             },"",true,this);
 

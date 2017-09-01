@@ -13,6 +13,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
     extend : 'Ext.panel.Panel',
     controller:'weChatMsgController',
     autoScroll:false,
+    xtype:'weChatMessageInfo',
     actType:'add',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
     title:'发送微信消息',
@@ -78,6 +79,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
             items:[{
                 xtype:'form',
                 frame:true,
+                name:'msgForm',
                 fieldDefaults: {
                     msgTarget: 'side',
                     labelWidth: 100,
@@ -129,7 +131,6 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     createNewOnEnter: true,
                     createNewOnBlur: true,
                     enableKeyEvents: true,
-                    //ignoreChangesFlag:true,
                     queryMode: 'local',
                     listeners:
                     {
@@ -188,11 +189,12 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 text: '<br><font color="#c0c0c0" size="8">+<br><span style="font-size:18px;">从素材库中选择</span></font>',
                                 name:'chooseScBtn',
                                 style:'background-color:white;border:2px dotted #d9dadc;height:200px;',
-                                listeners:{
+                                /*listeners:{
                                     click:function(bt, value, eOpts){
                                         ChoosePic(bt, value, eOpts);
                                     }
-                                }
+                                }*/
+                                handler:'ChoosePic'
                             },{
                                 layout: {
                                     type: 'column'
@@ -258,11 +260,12 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 text: '<br><font color="#c0c0c0" size="8">+<br><span style="font-size:18px;">从素材库中选择</span></font>',
                                 name:'chooseTwBtn',
                                 style:'background-color:white;border:2px dotted #d9dadc;height:200px;',
-                                listeners:{
+                                handler:'ChooseTw'
+                                /*listeners:{
                                     click:function(bt, value, eOpts){
                                         ChooseTw(bt, value, eOpts);
                                     }
-                                }
+                                }*/
                             },{
                                 layout: {
                                     type: 'column'
@@ -270,7 +273,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 bodyStyle:'padding:10px 0 0 0',
                                 xtype: 'form',
                                 items: [{
-                                    columnWidth:.45,
+                                    columnWidth:.46,
                                     xtype: "image",
                                     src: TzUniversityContextPath + "/statics/js/tranzvision/extjs/app/view/template/bmb/images/forms.png",
                                     name: "twImage",
@@ -284,7 +287,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 bodyStyle:'padding:10px 0 0 0',
                                 xtype: 'form',
                                 items: [
-                                	{   columnWidth:.45,
+                                	{   columnWidth:.46,
                                         xtype:'textarea',
                                         fieldLabel: '图文标题',
                                         name:'twTitle',
@@ -307,7 +310,8 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                     style:{
             							background: 'white',
             							boxShadow:'none',
-            							top:'40px'
+            							bottom:0/*,
+            							top:'40px'*/
             						},
                                     listeners:{
                                         click:function(bt, value, eOpts){
@@ -388,17 +392,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
 
 });
 
-//从素材库中选择图片
-function ChoosePic(btn){
-    btn.setVisible(false);
-    var tabpanel=btn.findParentByType("tabpanel");
-    var from2=tabpanel.down('form[name=form2]').getForm();
-    from2.findField("tpMediaId").setValue("222");
-    tabpanel.down('image[name=titileImage]').setHidden(false);
-    tabpanel.down('button[name=deletePicBtn]').setHidden(false);
-    tabpanel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/js/tranzvision/extjs/app/view/template/bmb/images/forms.png");
 
-}
 //删除图片
 function deleteImage(btn){
 	btn.setHidden(true);
@@ -408,20 +402,6 @@ function deleteImage(btn){
 	tabpanel.down('button[name=chooseScBtn]').setVisible(true);
 	tabpanel.down('image[name=titileImage]').setHidden(true);
 	tabpanel.down('image[name=titileImage]').setSrc("");
-}
-
-//从素材库中选择图文
-function ChooseTw(btn){
-    btn.setVisible(false);
-    var tabpanel=btn.findParentByType("tabpanel");
-    var from3=tabpanel.down('form[name=form3]').getForm();
-    from3.findField("twTitle").setHidden(false);
-    from3.findField("twMediaId").setValue("333");
-    from3.findField("twTitle").setValue("北京创景咨询有限公司是由清华校友和海外人士创建的一家科技公司");
-    tabpanel.down('button[name=deleteTwBtn]').setHidden(false);
-    tabpanel.down('image[name=twImage]').setHidden(false);
-    tabpanel.down('image[name=twImage]').setSrc(TzUniversityContextPath + "/statics/js/tranzvision/extjs/app/view/template/bmb/images/forms.png");
-
 }
 //删除图文
 function deleteTw(btn){
@@ -435,7 +415,7 @@ function deleteTw(btn){
     tabpanel.down('image[name=twImage]').setHidden(true);
     tabpanel.down('image[name=twImage]').setSrc("");
 }
-
+//获取参数
 function GetQueryString(url,name) {
 	var num=url.indexOf("?") 
     var str=url.substr(num+1);
