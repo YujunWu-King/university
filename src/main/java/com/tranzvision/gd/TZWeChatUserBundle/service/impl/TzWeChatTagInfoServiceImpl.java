@@ -18,6 +18,7 @@ import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxTagTblMapper;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxTagTbl;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxTagTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -36,6 +37,8 @@ public class TzWeChatTagInfoServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private PsTzWxTagTblMapper psTzWxTagTblMapper;
+	@Autowired
+	private GetSeqNum getSeqNum;
 	
 	
 	/* 新增 */
@@ -57,8 +60,8 @@ public class TzWeChatTagInfoServiceImpl extends FrameworkImpl {
 				String wxAppId = jacksonUtil.getString("wxAppId");
 				String tagName = jacksonUtil.getString("tagName");
 				
-				//调用接口从微信的获取新增标签的ID
-				String tagId = "";
+				//调用接口从微信的获取新增标签的ID，暂时先自增
+				String tagId = String.valueOf(getSeqNum.getSeqNum("TZ_WX_TAG_TBL", "TZ_WX_TAG_ID"));
 				/*
 				 * 
 				 * 
