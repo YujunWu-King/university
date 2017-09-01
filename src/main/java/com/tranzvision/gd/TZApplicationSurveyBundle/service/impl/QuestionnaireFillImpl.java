@@ -210,6 +210,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
 					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					successFlag = (String)this.getMethod(surveyID, "E",paramTypes,params);
+					if(successFlag == null) successFlag = "0";
 				}
 				if (successFlag.equals("0")) {
 					if (StringUtils.equals("PRE", cType)) {
@@ -217,6 +218,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 						Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
 						Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
 						successFlag = (String)this.getMethod(surveyID, "C",paramTypes,params);
+						if(successFlag == null) successFlag = "0";
 					}
 				}
 				// 定义为0
@@ -293,6 +295,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
 					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					successFlag = (String)this.getMethod(surveyID, "F",paramTypes,params);
+					if(successFlag == null) successFlag = "0";
 				}
 				
 				
@@ -310,6 +313,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
 					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					successFlag = (String)this.getMethod(surveyID, "G",paramTypes,params);
+					if(successFlag == null) successFlag = "0";
 				}
 			}
 			
@@ -373,6 +377,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
 					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					successFlag = (String)this.getMethod(surveyID, "H",paramTypes,params);
+					if(successFlag == null) successFlag = "0";
 				}
 			}
 			if (successFlag.equals("0")) {
@@ -381,6 +386,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
 					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					successFlag = (String)this.getMethod(surveyID, "D",paramTypes,params);
+					if(successFlag == null) successFlag = "0";
 				}
 			}
 			/* 当前问卷的提交状态 */
@@ -784,8 +790,8 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 							"退出/测试其他项目", "Quit");
 				}
 				/*初始化页面事件 begin*/
-				Class[] paramTypes = new Class[]{HttpServletRequest.class,HttpServletResponse.class};
-				Object[] params = new Object[]{request,response};
+				Class[] paramTypes = new Class[]{HttpServletRequest.class,HttpServletResponse.class,String.class};
+				Object[] params = new Object[]{request,response,surveyID};
 				Object initRet = this.getMethod(surveyID, "A",paramTypes,params);
 				if(initRet == null){
 					initRet = "";
