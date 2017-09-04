@@ -303,7 +303,7 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 								tempCount=0;
 							}
 							//下拉框不显示分数
-							if(!strRadioBoxHtml.equals("")){
+							if(!"".equals(strRadioBoxHtml)){
 								strRadioBoxHtml=strRadioBoxHtml+","+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", TZ_XXXKXZ_MS,String.valueOf(countY));
 							}else{
 								strRadioBoxHtml=tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", TZ_XXXKXZ_MS,String.valueOf(countY));
@@ -353,7 +353,7 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 							//TZ_IS_AVG控制是否显示分值,'Y'则显示
 							if(TZ_IS_AVG.equals("Y"))
 							{
-								if(!strRadioBoxHtml.equals("")){
+								if(!"".equals(strRadioBoxHtml)){
 									//strRadioBoxHtml 记录{选项名称+分数,投票数}用于饼状图显示数据
 									strRadioBoxHtml=strRadioBoxHtml+","+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", TZ_XXXKXZ_MS+"("+TZ_XXXKXZ_QZ+"分)",String.valueOf(countY));
 								}else{
@@ -363,7 +363,7 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 								strRadioBoxHtml2=strRadioBoxHtml2+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB3_HTML",  TZ_XXXKXZ_MS+"("+TZ_XXXKXZ_QZ+"分)",String.valueOf(countY),tempCount+"%");
 							}
 							else{
-								if(!strRadioBoxHtml.equals("")){
+								if(!"".equals(strRadioBoxHtml)){
 									strRadioBoxHtml=strRadioBoxHtml+","+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", TZ_XXXKXZ_MS,String.valueOf(countY));
 								}else{
 									strRadioBoxHtml=tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUB_TB2_HTML", TZ_XXXKXZ_MS,String.valueOf(countY));
@@ -408,10 +408,8 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 							completionMap=completionDataList.get(i);
 							
 							TZ_APP_S_TEXT=completionMap.get("TZ_APP_S_TEXT")==null?null:completionMap.get("TZ_APP_S_TEXT").toString();
-							if(!TZ_APP_S_TEXT.equals("")){
-					         
+					        if(!"".equals(TZ_APP_S_TEXT)){
 							strComHtml = strComHtml+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_COM_HTML", TZ_APP_S_TEXT);
-					
 							}
 						}
 						strDivHtml=strDivHtml+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_TXT_HTML", TZ_XXX_QID+ ":"+ TZ_TITLE, type, "", strComHtml);
@@ -431,7 +429,7 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 							essayQuMap=essayQuArraylist.get(i);
 							
 							TZ_APP_L_TEXT=essayQuMap.get("TZ_APP_L_TEXT")==null?null:essayQuMap.get("TZ_APP_L_TEXT").toString();
-							if(!TZ_APP_L_TEXT.equals("")){
+							if(!"".equals(TZ_APP_L_TEXT)){
 								strEassyHtml = strEassyHtml+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_EASSYQU_HTML", TZ_APP_L_TEXT);
 							}
 						}

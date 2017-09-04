@@ -341,7 +341,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     height:'100%',
                     name:'imagesForm', 
                     defaults:{
-                        margin:'20px 0 0 20px'
+                        margin:'20px 0 0 0px'
                     },
                     items:[{
                     	 xtype: 'combo',
