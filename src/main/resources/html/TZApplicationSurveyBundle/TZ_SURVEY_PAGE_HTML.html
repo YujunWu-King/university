@@ -307,7 +307,7 @@
 			var _unique = $("#unique").val();
 			
 			var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"' + cType + '","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"'+ appInsId + '","pageNo":"' + SurveyBuild.curPageNo + '","unique":"'+ _unique +'"';
-			if($("#OPENID")){
+			if($("#OPENID").length > 0){
 				tzSaveParams = tzSaveParams + ',"openid":"' + $("#OPENID").val() + '"';
 			}
 			tzSaveParams = tzSaveParams + ',"data":' + $.toJSON(_a) + '}]}}';

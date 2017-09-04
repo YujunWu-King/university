@@ -207,17 +207,17 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			try {
 				if (successFlag.equals("0")) {
 					/*保存前事件*/
-					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
-					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
-					successFlag = (String)this.getMethod(surveyID, "E",paramTypes,params);
+					Class[] paramTypes = new Class[]{String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "E",paramTypes,params,strMsg);
 					if(successFlag == null) successFlag = "0";
 				}
 				if (successFlag.equals("0")) {
 					if (StringUtils.equals("PRE", cType)) {
 						/*上一页事件*/
-						Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
-						Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
-						successFlag = (String)this.getMethod(surveyID, "C",paramTypes,params);
+						Class[] paramTypes = new Class[]{String.class,String.class,Integer.class,Integer.class,String.class};
+						Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
+						successFlag = (String)this.getMethod(surveyID, "C",paramTypes,params,strMsg);
 						if(successFlag == null) successFlag = "0";
 					}
 				}
@@ -292,9 +292,9 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				}
 				if (successFlag.equals("0")) {
 					/*保存后事件*/
-					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
-					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
-					successFlag = (String)this.getMethod(surveyID, "F",paramTypes,params);
+					Class[] paramTypes = new Class[]{String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "F",paramTypes,params,strMsg);
 					if(successFlag == null) successFlag = "0";
 				}
 				
@@ -310,9 +310,9 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			if(successFlag.equals("0")){
 				/*提交前事件*/
 				if(StringUtils.equals("SUBMIT", cType)){
-					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
-					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
-					successFlag = (String)this.getMethod(surveyID, "G",paramTypes,params);
+					Class[] paramTypes = new Class[]{String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "G",paramTypes,params,strMsg);
 					if(successFlag == null) successFlag = "0";
 				}
 			}
@@ -374,18 +374,18 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			if(successFlag.equals("0")){
 				/*提交后事件*/
 				if(StringUtils.equals("SUBMIT", cType)){
-					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
-					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
-					successFlag = (String)this.getMethod(surveyID, "H",paramTypes,params);
+					Class[] paramTypes = new Class[]{String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "H",paramTypes,params,strMsg);
 					if(successFlag == null) successFlag = "0";
 				}
 			}
 			if (successFlag.equals("0")) {
 				if (StringUtils.equals("NEXT", cType)) {
 					/*下一页事件*/
-					Class[] paramTypes = new Class[]{String.class,String.class,String.class,Integer.class,Integer.class,String.class};
-					Object[] params = new Object[]{strMsg,surveyInsId,openid,curPageNo,preNextPageNo,strData};
-					successFlag = (String)this.getMethod(surveyID, "D",paramTypes,params);
+					Class[] paramTypes = new Class[]{String.class,String.class,Integer.class,Integer.class,String.class};
+					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
+					successFlag = (String)this.getMethod(surveyID, "D",paramTypes,params,strMsg);
 					if(successFlag == null) successFlag = "0";
 				}
 			}
@@ -792,8 +792,12 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				/*初始化页面事件 begin*/
 				Class[] paramTypes = new Class[]{HttpServletRequest.class,HttpServletResponse.class,String.class};
 				Object[] params = new Object[]{request,response,surveyID};
-				Object initRet = this.getMethod(surveyID, "A",paramTypes,params);
-				if(initRet == null){
+				Object initRet = this.getMethod(surveyID, "A",paramTypes,params,strMsg);
+				
+				if(StringUtils.equals("0", (String) initRet)){
+					initRet = strMsg;
+					strMsg = "";
+				}else{
 					initRet = "";
 				}
 				/*初始化页面事件 begin*/
@@ -1439,19 +1443,22 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		return str_msg;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private Object getMethod(String wjid,String eventType,Class[] parameterTypes,Object[] parameter ){
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private Object getMethod(String wjid,String eventType,Class[] parameterTypes,Object[] parameter, String msg){
+		String code = "0";
+		
 		if(StringUtils.isBlank(wjid) || StringUtils.isBlank(eventType)){
-			return null;
+			return code;
 		}
 		
 		String strClsInfo = "SELECT TZ_APPCLS_PATH,TZ_APPCLS_NAME,TZ_APPCLS_METHOD FROM PS_TZ_DC_WJ_APPCLS_T appcls,PS_TZ_APPCLS_TBL cls WHERE appcls.TZ_APPCLS_ID = cls.TZ_APPCLS_ID AND appcls.TZ_DC_WJ_ID = ? AND appcls.TZ_APPCLS_TYPE = ? AND appcls.TZ_QY_STATUS = 'Y' LIMIT 0,1";
 		Map<String, Object> mapClsInfo = sqlQuery.queryForMap(strClsInfo,new Object[] {  wjid,eventType });
 		
 		if(mapClsInfo == null){
-			return null;
+			return code;
 		}
-		Object result = null;
+		Map<String, Object> result = null;
+
 		try{
 			String clsName = "",clsPath = "",clsMethod = "";
 			clsPath = (String)mapClsInfo.get("TZ_APPCLS_PATH");
@@ -1461,11 +1468,16 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			Object myClass = Class.forName(clsPath + "." + clsName).newInstance();
 			
 			Method method = myClass.getClass().getMethod(clsMethod, parameterTypes);  
-			result = method.invoke(myClass,parameter);
+			result = (Map<String, Object>) method.invoke(myClass,parameter);
+			if(result != null){
+				code = result.get("code") == null ? "1" : String.valueOf(result.get("code"));
+				msg = result.get("msg") == null ? "" : String.valueOf(result.get("msg"));
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
+			msg = e.getMessage(); 
 		} 
 
-		return result;
+		return code;
 	}
 }
