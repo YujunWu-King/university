@@ -21,7 +21,8 @@ import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.httpclient.HttpClientService;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.sql.TZGDObject;  
+import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.wechart.TzGetAccessToken;  
 
 /**
  * 微信公众号开发相关
@@ -43,12 +44,16 @@ public class TzWeChartJSSDKSign {
 	@Autowired
 	private PsTzWxGzhcsTMapper psTzWxGzhcsTMapper;
 	
+	@Autowired
+	private TzGetAccessToken tzGetAccessToken;
+	
+	
 	//企业号获取access_token URL
-	private static final String qy_gettoken_url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken";
+//	private static final String qy_gettoken_url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken";
 	//企业号获取jsapi_ticket URL
 	private static final String qy_getticket_url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket";
 	//公众号获取access_token URL
-	private static final String gz_gettoken_url = "https://api.weixin.qq.com/cgi-bin/token";
+//	private static final String gz_gettoken_url = "https://api.weixin.qq.com/cgi-bin/token";
 	//公众号获取jsapi_ticket URL
 	private static final String gz_getticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket";
 	//获取opnid
@@ -61,94 +66,100 @@ public class TzWeChartJSSDKSign {
 	 * @param secret	企业号管理组的凭证密钥 / 公众号应用密钥	
 	 * @param wxType	QY：企业号，GZ：公众号
 	 * @return
+	 * @throws TzException 
 	 */
-	private String getAccessToken(String appId,String secret ,String wxType){
+	private String getAccessToken(String appId,String secret ,String wxType) throws TzException{
     	String strAccessToken = "";
-    	String strExpires_in = "";
-
-    	Date getTokenTime;
-    	String getStrTokenTime = "";
-    	String sqlGetWxInfo;
-    	boolean getWxTokenFlag = false;
-		try {
-			sqlGetWxInfo = tzGdObject.getSQLText("SQL.TZWeChatBundle.TzGetWxGzhCsInfo");
-			Map<String, Object> dataMap = new HashMap<String, Object>();
-			dataMap = sqlQuery.queryForMap(sqlGetWxInfo, new Object[] { appId,secret });
-			if (dataMap != null) {
-				String dtFormat = getSysHardCodeVal.getDateTimeFormat();
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dtFormat);
-				strAccessToken = dataMap.get("TZ_ACCESS_TOKEN") == null ? "" : String.valueOf(dataMap.get("TZ_ACCESS_TOKEN"));
-				strExpires_in = dataMap.get("TZ_TOKEN_YXQ") == null ? "" : String.valueOf(dataMap.get("TZ_TOKEN_YXQ"));
-				getStrTokenTime = dataMap.get("TZ_UPDATE_DTTM") == null ? "" : String.valueOf(dataMap.get("TZ_UPDATE_DTTM"));
-				if(!"".equals(getStrTokenTime) && !"".equals(strAccessToken)){
-					getTokenTime = simpleDateFormat.parse(getStrTokenTime);
-					getTokenTime = new Date(getTokenTime.getTime() +  Integer.parseInt(strExpires_in) * 1000);
-					Date dateNow = new Date();
-					if (getTokenTime.getTime() >= dateNow.getTime()) {
-						/*直接返回token*/
-					}else{
-						/*通过微信接口获取token*/
-						getWxTokenFlag = true;
-					}
-				}else{
-					/*通过微信接口获取token*/
-					getWxTokenFlag = true;
-				}
-				
-			}else{
-				/*通过微信接口获取token*/
-				getWxTokenFlag = true;
-			}
-			if(getWxTokenFlag){
-				/*通过微信接口获取token*/
-				String getTokenUrl = "";
-				Map<String, Object> paramsMap = new HashMap<String, Object>();
-				if("QY".equals(wxType)){
-					 /*企业号*/
-					getTokenUrl = qy_gettoken_url;
-					
-					paramsMap.put("corpid", appId);
-					paramsMap.put("corpsecret", secret);
-				}else{
-					 /*公众号*/
-					getTokenUrl = gz_gettoken_url;
-					
-					paramsMap.put("grant_type", "client_credential");
-					paramsMap.put("appid", appId);
-					paramsMap.put("secret", secret);
-				}
-				
-				/*通过微信接口获取token信息和有效时间*/
-				HttpClientService HttpClientService = new HttpClientService(getTokenUrl,"GET",paramsMap,"UTF-8");
-				String strHttpResult = HttpClientService.sendRequest();
-				JacksonUtil jacksonUtil = new JacksonUtil();
-				jacksonUtil.json2Map(strHttpResult);
-				
-				if(jacksonUtil.containsKey("access_token")){
-					strAccessToken = jacksonUtil.getString("access_token").trim();
-					strExpires_in = jacksonUtil.getString("expires_in").trim();
-					/*插入数据或者更新微信参数信息表*/
-					PsTzWxGzhcsT psTzWxGzhcsT = new PsTzWxGzhcsT();
-					psTzWxGzhcsT.setTzWxAppid(appId);
-					psTzWxGzhcsT.setTzAppsecret(secret);
-					psTzWxGzhcsT.setTzAccessToken(strAccessToken);
-					psTzWxGzhcsT.setTzUpdateDttm(new Date());
-					psTzWxGzhcsT.setTzTokenYxq(Integer.parseInt(strExpires_in));
-					
-					if (dataMap != null) {
-						psTzWxGzhcsTMapper.updateByPrimaryKeySelective(psTzWxGzhcsT);
-					}else{
-						psTzWxGzhcsTMapper.insertSelective(psTzWxGzhcsT);
-					}
-				}else if(jacksonUtil.containsKey("errcode")){
-					throw new TzException("获取access_token失败："+jacksonUtil.getString("errmsg"));
-				}
-			}
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	
+//		张浪注释
+//    	String strExpires_in = "";
+//
+//    	Date getTokenTime;
+//    	String getStrTokenTime = "";
+//    	String sqlGetWxInfo;
+//    	boolean getWxTokenFlag = false;
+//		try {
+//			sqlGetWxInfo = tzGdObject.getSQLText("SQL.TZWeChatBundle.TzGetWxGzhCsInfo");
+//			Map<String, Object> dataMap = new HashMap<String, Object>();
+//			dataMap = sqlQuery.queryForMap(sqlGetWxInfo, new Object[] { appId,secret });
+//			if (dataMap != null) {
+//				String dtFormat = getSysHardCodeVal.getDateTimeFormat();
+//				SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dtFormat);
+//				strAccessToken = dataMap.get("TZ_ACCESS_TOKEN") == null ? "" : String.valueOf(dataMap.get("TZ_ACCESS_TOKEN"));
+//				strExpires_in = dataMap.get("TZ_TOKEN_YXQ") == null ? "" : String.valueOf(dataMap.get("TZ_TOKEN_YXQ"));
+//				getStrTokenTime = dataMap.get("TZ_UPDATE_DTTM") == null ? "" : String.valueOf(dataMap.get("TZ_UPDATE_DTTM"));
+//				if(!"".equals(getStrTokenTime) && !"".equals(strAccessToken)){
+//					getTokenTime = simpleDateFormat.parse(getStrTokenTime);
+//					getTokenTime = new Date(getTokenTime.getTime() +  Integer.parseInt(strExpires_in) * 1000);
+//					Date dateNow = new Date();
+//					if (getTokenTime.getTime() >= dateNow.getTime()) {
+//						/*直接返回token*/
+//					}else{
+//						/*通过微信接口获取token*/
+//						getWxTokenFlag = true;
+//					}
+//				}else{
+//					/*通过微信接口获取token*/
+//					getWxTokenFlag = true;
+//				}
+//				
+//			}else{
+//				/*通过微信接口获取token*/
+//				getWxTokenFlag = true;
+//			}
+//			if(getWxTokenFlag){
+//				/*通过微信接口获取token*/
+//				String getTokenUrl = "";
+//				Map<String, Object> paramsMap = new HashMap<String, Object>();
+//				if("QY".equals(wxType)){
+//					 /*企业号*/
+//					getTokenUrl = qy_gettoken_url;
+//					
+//					paramsMap.put("corpid", appId);
+//					paramsMap.put("corpsecret", secret);
+//				}else{
+//					 /*公众号*/
+//					getTokenUrl = gz_gettoken_url;
+//					
+//					paramsMap.put("grant_type", "client_credential");
+//					paramsMap.put("appid", appId);
+//					paramsMap.put("secret", secret);
+//				}
+//				
+//				/*通过微信接口获取token信息和有效时间*/
+//				HttpClientService HttpClientService = new HttpClientService(getTokenUrl,"GET",paramsMap,"UTF-8");
+//				String strHttpResult = HttpClientService.sendRequest();
+//				JacksonUtil jacksonUtil = new JacksonUtil();
+//				jacksonUtil.json2Map(strHttpResult);
+//				
+//				if(jacksonUtil.containsKey("access_token")){
+//					strAccessToken = jacksonUtil.getString("access_token").trim();
+//					strExpires_in = jacksonUtil.getString("expires_in").trim();
+//					/*插入数据或者更新微信参数信息表*/
+//					PsTzWxGzhcsT psTzWxGzhcsT = new PsTzWxGzhcsT();
+//					psTzWxGzhcsT.setTzWxAppid(appId);
+//					psTzWxGzhcsT.setTzAppsecret(secret);
+//					psTzWxGzhcsT.setTzAccessToken(strAccessToken);
+//					psTzWxGzhcsT.setTzUpdateDttm(new Date());
+//					psTzWxGzhcsT.setTzTokenYxq(Integer.parseInt(strExpires_in));
+//					
+//					if (dataMap != null) {
+//						psTzWxGzhcsTMapper.updateByPrimaryKeySelective(psTzWxGzhcsT);
+//					}else{
+//						psTzWxGzhcsTMapper.insertSelective(psTzWxGzhcsT);
+//					}
+//				}else if(jacksonUtil.containsKey("errcode")){
+//					throw new TzException("获取access_token失败："+jacksonUtil.getString("errmsg"));
+//				}
+//			}
+//			
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		
+		strAccessToken = tzGetAccessToken.getBaseAccessToken(appId, secret, wxType, false);
     	
     	return strAccessToken;
     }

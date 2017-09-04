@@ -7,6 +7,7 @@
     <result column="TZ_WX_SECRET" property="tzWxSecret" jdbcType="VARCHAR" />
     <result column="TZ_WX_NAME" property="tzWxName" jdbcType="VARCHAR" />
     <result column="TZ_FROM_PVALUE" property="tzFromPvalue" jdbcType="VARCHAR" />
+    <result column="TZ_WX_STATE" property="tzWxState" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
@@ -15,7 +16,7 @@
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_JG_ID, TZ_WX_APPID, TZ_WX_SECRET, TZ_WX_NAME, TZ_FROM_PVALUE, ROW_ADDED_DTTM, 
+    TZ_JG_ID, TZ_WX_APPID, TZ_WX_SECRET, TZ_WX_NAME, TZ_FROM_PVALUE, TZ_WX_STATE, ROW_ADDED_DTTM, 
     ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTblKey" >
@@ -32,13 +33,15 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTbl" >
     insert into PS_TZ_WX_APPSE_TBL (TZ_JG_ID, TZ_WX_APPID, TZ_WX_SECRET, 
-      TZ_WX_NAME, TZ_FROM_PVALUE, ROW_ADDED_DTTM, 
-      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM)
+      TZ_WX_NAME, TZ_FROM_PVALUE, TZ_WX_STATE, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+      )
     values (#{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, #{tzWxSecret,jdbcType=VARCHAR}, 
-      #{tzWxName,jdbcType=VARCHAR}, #{tzFromPvalue,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
-      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+      #{tzWxName,jdbcType=VARCHAR}, #{tzFromPvalue,jdbcType=VARCHAR}, #{tzWxState,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTbl" >
     insert into PS_TZ_WX_APPSE_TBL
@@ -57,6 +60,9 @@
       </if>
       <if test="tzFromPvalue != null" >
         TZ_FROM_PVALUE,
+      </if>
+      <if test="tzWxState != null" >
+        TZ_WX_STATE,
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM,
@@ -93,6 +99,9 @@
       <if test="tzFromPvalue != null" >
         #{tzFromPvalue,jdbcType=VARCHAR},
       </if>
+      <if test="tzWxState != null" >
+        #{tzWxState,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -125,6 +134,9 @@
       <if test="tzFromPvalue != null" >
         TZ_FROM_PVALUE = #{tzFromPvalue,jdbcType=VARCHAR},
       </if>
+      <if test="tzWxState != null" >
+        TZ_WX_STATE = #{tzWxState,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -152,6 +164,7 @@
     set TZ_WX_SECRET = #{tzWxSecret,jdbcType=VARCHAR},
       TZ_WX_NAME = #{tzWxName,jdbcType=VARCHAR},
       TZ_FROM_PVALUE = #{tzFromPvalue,jdbcType=VARCHAR},
+      TZ_WX_STATE = #{tzWxState,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},

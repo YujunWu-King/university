@@ -33,6 +33,7 @@ import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxUserTblMapper;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.httpclient.HttpClientService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -280,7 +281,7 @@ public class TzWeChartOAuth2 {
 
 	
 	@SuppressWarnings({ "resource" })
-	public String postJsonData(String url, Map<String,Object> jsonMap, String access_token){
+	public String postJsonData(String url, Map<String,Object> jsonMap, String access_token) throws TzException{
 		 
 		 HttpClient client = new DefaultHttpClient();  
          HttpPost post = new HttpPost(url);
@@ -321,7 +322,7 @@ public class TzWeChartOAuth2 {
              }
          } catch (Exception e) {
              //System.out.println("请求异常");
-             throw new RuntimeException(e);
+             throw new TzException("请求异常："+e.getMessage());
          }
  
          return result;
@@ -349,9 +350,10 @@ public class TzWeChartOAuth2 {
 				appid = wxMap.get("TZ_WX_APPID") == null ? "" : wxMap.get("TZ_WX_APPID").toString();
 				appsecret = wxMap.get("TZ_WX_SECRET") == null ? "" : wxMap.get("TZ_WX_SECRET").toString();
 			}
-			
+			System.out.println("appid:"+appid+",  appsecret:"+appsecret);
 			if(!"".equals(appid) && !"".equals(appsecret)){
 				String code = request.getParameter("code");
+				System.out.println("CODE---------"+code);
 				if(code == null || "".equals(code)){
 					String url = request.getRequestURL().toString();
 					String queryString = request.getQueryString();
@@ -523,25 +525,33 @@ public class TzWeChartOAuth2 {
 				System.out.println(strHttpResult);
 				
 				jacksonUtil.json2Map(strHttpResult);
-				String access_token = jacksonUtil.getString("access_token");
-				
-				Map<String,Object> paramMap = new HashMap<String,Object>();
-				paramMap.put("param", jacksonUtil.Map2json(submitMap));
-				
-				String url = "https://resmedcn--test.cs57.my.salesforce.com/services/apexrest/VerifyWeiXin/";
-				String result = this.postJsonData(url, paramMap, access_token);
-				
-				System.out.println(result);
-				jacksonUtil.json2Map(result);
-				if(jacksonUtil.containsKey("responseType")){
-					String responseType = jacksonUtil.getString("responseType");
-					String message = jacksonUtil.getString("message");
-					resultArr[1] = message;
-					if("success".equals(responseType)){
-						resultArr[0] = "0";
+				if(jacksonUtil.containsKey("access_token")){
+					String access_token = jacksonUtil.getString("access_token");
+					
+					Map<String,Object> paramMap = new HashMap<String,Object>();
+					paramMap.put("param", jacksonUtil.Map2json(submitMap));
+					
+					String url = "https://resmedcn--test.cs57.my.salesforce.com/services/apexrest/VerifyWeiXin/";
+					String result = this.postJsonData(url, paramMap, access_token);
+					
+					System.out.println(result);
+					jacksonUtil.json2Map(result);
+					if(jacksonUtil.containsKey("responseType")){
+						String responseType = jacksonUtil.getString("responseType");
+						String message = jacksonUtil.getString("message");
+						resultArr[1] = message;
+						if("success".equals(responseType)){
+							resultArr[0] = "0";
+						}else{
+							resultArr[0] = "1";
+						}
 					}else{
 						resultArr[0] = "1";
+						resultArr[1] = "提交数据到salesforce失败";
 					}
+				}else{
+					resultArr[0] = "1";
+					resultArr[1] = "获取access_token失败";
 				}
 			}
 		}catch(Exception e){

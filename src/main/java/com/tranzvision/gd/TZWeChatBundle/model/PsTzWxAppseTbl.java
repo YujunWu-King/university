@@ -9,6 +9,7 @@ public class PsTzWxAppseTbl extends PsTzWxAppseTblKey {
 
     private String tzFromPvalue;
 
+    private String tzWxState;
     private Date rowAddedDttm;
 
     private String rowAddedOprid;
@@ -43,6 +44,14 @@ public class PsTzWxAppseTbl extends PsTzWxAppseTblKey {
 
     public void setTzFromPvalue(String tzFromPvalue) {
         this.tzFromPvalue = tzFromPvalue == null ? null : tzFromPvalue.trim();
+    }
+
+    public String getTzWxState() {
+        return tzWxState;
+    }
+
+    public void setTzWxState(String tzWxState) {
+        this.tzWxState = tzWxState == null ? null : tzWxState.trim();
     }
 
     public Date getRowAddedDttm() {
