@@ -408,7 +408,7 @@ public class QuestionnaireAnswerPreview extends FrameworkImpl {
 							completionMap=completionDataList.get(i);
 							
 							TZ_APP_S_TEXT=completionMap.get("TZ_APP_S_TEXT")==null?null:completionMap.get("TZ_APP_S_TEXT").toString();
-					        if(!"".equals(TZ_APP_S_TEXT)){
+					        if(TZ_APP_S_TEXT!=null&&!"".equals(TZ_APP_S_TEXT)){
 							strComHtml = strComHtml+tzGdObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_GD_SUR_COM_HTML", TZ_APP_S_TEXT);
 							}
 						}
