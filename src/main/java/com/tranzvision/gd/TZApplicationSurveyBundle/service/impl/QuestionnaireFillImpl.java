@@ -204,6 +204,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			}else{
 				curPageNo = preNextPageNo;
 			}
+			System.out.println("********************OPENID"+openid);
 			try {
 				if (successFlag.equals("0")) {
 					/*保存前事件*/
@@ -793,7 +794,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				Class[] paramTypes = new Class[]{HttpServletRequest.class,HttpServletResponse.class,String.class};
 				Object[] params = new Object[]{request,response,surveyID};
 				Object initRet = this.getMethod(surveyID, "A",paramTypes,params,strMsg);
-				
+				System.out.println("===============HTML====="+strMsg);
 				if(StringUtils.equals("0", (String) initRet)){
 					initRet = strMsg;
 					strMsg = "";

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWeChartOAuth2;
+import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWxApiObject;
 import com.tranzvision.gd.TZWebSiteInfoBundle.service.impl.ArtContentHtml;
 import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 import com.tranzvision.gd.util.cookie.TzCookie;
@@ -45,6 +46,9 @@ public class GetAutowiredSpringBean {
 	
 	@Autowired
 	private TzWeChartOAuth2 tzWeChartOAuth2;
+	
+	@Autowired
+	private TzWxApiObject tzWxApiObject;
 
 	@Autowired
 	private ApplicationContext ctx;
@@ -60,6 +64,7 @@ public class GetAutowiredSpringBean {
 		// 2017-5-25添加 tzGDObject
 		springBeanMap.put("tzGDObject", tzGDObject);
 		springBeanMap.put("tzWeChartOAuth2", tzWeChartOAuth2);
+		springBeanMap.put("tzWxApiObject", tzWxApiObject);
 	}
 
 	/**
