@@ -53,7 +53,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 		String[][] orderByArr = new String[][] { { "ROW_ADDED_DTTM", "DESC" } };
 
 		// json数据要的结果字段;
-		String[] resultFldArray = { "TZ_JG_ID", "TZ_WX_NAME", "TZ_WX_APPID", "TZ_WX_SECRET","TZ_FROM_PVALUE", "ROW_ADDED_OPRID", "ROW_ADDED_DTTM" };
+		String[] resultFldArray = { "TZ_JG_ID", "TZ_WX_NAME", "TZ_WX_APPID", "TZ_WX_SECRET","TZ_FROM_PVALUE", "ROW_ADDED_OPRID", "ROW_ADDED_DTTM", "TZ_WX_STATE"  };
 
 		// 可配置搜索通用函数;
 		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams,
@@ -71,6 +71,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 				mapList.put("wxParam", rowList[4]);
 				mapList.put("wxAddOprid", rowList[5]);
 				mapList.put("wxAddTime", rowList[6]);
+				mapList.put("wxState", rowList[7]);
 				listData.add(mapList);
 			}
 			mapRet.replace("total", obj[0]);
@@ -105,6 +106,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 					map.put("wxId", psTzWxAppseTbl.getTzWxAppid());
 					map.put("wxSecret", psTzWxAppseTbl.getTzWxSecret());
 					map.put("wxParam", psTzWxAppseTbl.getTzFromPvalue());
+					map.put("wxState", psTzWxAppseTbl.getTzWxState());
 					returnJsonMap.replace("formData", map);
 				} else {
 					errMsg[0] = "1";
@@ -145,6 +147,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 				String weChatId = (String) infoData.get("wxId");
 				String weChatSecret = (String) infoData.get("wxSecret");
 				String weChatParam = (String) infoData.get("wxParam");
+				String weChatState = (String) infoData.get("wxState");
 
 				String sql = "select COUNT(1) from PS_TZ_WX_APPSE_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { orgid, weChatId }, "Integer");
@@ -159,6 +162,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 					psTzWxAppseTbl.setTzWxSecret(weChatSecret);
 					psTzWxAppseTbl.setTzWxName(weChatName);
 					psTzWxAppseTbl.setTzFromPvalue(weChatParam);
+					psTzWxAppseTbl.setTzWxState(weChatState);
 					
 					psTzWxAppseTbl.setRowAddedDttm(new Date());
 					psTzWxAppseTbl.setRowAddedOprid(oprid);
@@ -198,6 +202,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 				String weChatId = (String) infoData.get("wxId");
 				String weChatSecret = (String) infoData.get("wxSecret");
 				String weChatParam = (String) infoData.get("wxParam");
+				String weChatState = (String) infoData.get("wxState");
 
 				String sql = "select COUNT(1) from PS_TZ_WX_APPSE_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { orgid, weChatId }, "Integer");
@@ -208,6 +213,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 					psTzWxAppseTbl.setTzWxSecret(weChatSecret);
 					psTzWxAppseTbl.setTzWxName(weChatName);
 					psTzWxAppseTbl.setTzFromPvalue(weChatParam);
+					psTzWxAppseTbl.setTzWxState(weChatState);
 					
 					psTzWxAppseTbl.setRowLastmantDttm(new Date());
 					psTzWxAppseTbl.setRowLastmantOprid(oprid);

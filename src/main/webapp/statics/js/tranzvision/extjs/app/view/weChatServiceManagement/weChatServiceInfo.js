@@ -33,9 +33,8 @@
             xtype: 'textfield',
 			fieldLabel: Ext.tzGetResourse("TZ_GD_WXSERVICE_COM.TZ_GD_FWHLIST_STD.jgId","机构ID"),
 			name: 'jgId',
-			readOnly:true
-//			hidden: true
-        },*/{
+			hidden: true
+        },*/ {
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse("TZ_GD_WXSERVICE_COM.TZ_GD_FWHLIST_STD.wxName","微信服务号名称"),
 			name: 'wxName',
@@ -59,6 +58,18 @@
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],
 			allowBlank: false
+        }, {
+    		xtype: 'combobox',
+	        fieldLabel: "有效状态",
+	        editable:false,
+	        // emptyText:'请选择',
+	        queryMode: 'remote',
+	    	name: 'wxState',
+	    	valueField: 'TValue',
+    		displayField: 'TSDesc',
+    		store: new KitchenSink.view.common.store.appTransStore("TZ_WX_STATE"),
+    		// allowBlank: false,
+			value:'Y'
         }, {
             xtype: 'textfield',
 			fieldLabel: Ext.tzGetResourse("TZ_GD_WXSERVICE_COM.TZ_GD_FWHLIST_STD.wxParam","指定参数"),
