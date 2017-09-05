@@ -555,7 +555,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						// 考生姓名、面试申请号,本科院校，工作单位;
 						String first_name = "",msh_id = "",ksh_school = "",ksh_company = "";
 						Map<String, Object> map3 = sqlQuery.queryForMap(
-								"select B.TZ_MSH_ID,B.TZ_REALNAME,TZ_SCH_CNAME,TZ_COMPANY_NAME from PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B,PS_TZ_REG_USER_T C where A.OPRID = B.OPRID and A.OPRID=C.OPRID and A.TZ_APP_INS_ID=? AND B.TZ_RYLX='ZCYH' LIMIT 0,1",
+								"select B.TZ_MSH_ID,IFNULL(C.TZ_REALNAME,B.TZ_REALNAME) TZ_REALNAME,TZ_SCH_CNAME,TZ_COMPANY_NAME from PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B,PS_TZ_REG_USER_T C where A.OPRID = B.OPRID and A.OPRID=C.OPRID and A.TZ_APP_INS_ID=? AND B.TZ_RYLX='ZCYH' LIMIT 0,1",
 								new Object[] { TZ_APP_INS_ID });
 						if (map1 != null) {
 							first_name = (String) map3.get("TZ_REALNAME");

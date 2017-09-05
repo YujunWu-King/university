@@ -205,6 +205,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 			}else{
 				curPageNo = preNextPageNo;
 			}
+			System.out.println("********************OPENID"+openid);
 			try {
 				if (successFlag.equals("0")) {
 					/*保存前事件*/
@@ -799,7 +800,6 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				/*初始化页面事件 begin*/
 				Class[] paramTypes = new Class[]{HttpServletRequest.class,HttpServletResponse.class,String.class};
 				Object[] params = new Object[]{request,response,surveyID};
-				
 				Map<String, Object> eventRet = this.getMethod(surveyID, "A",paramTypes,params);
 				String code =  eventRet.get("code") == null ? "0" : eventRet.get("code").toString();
 				String initInput = "";

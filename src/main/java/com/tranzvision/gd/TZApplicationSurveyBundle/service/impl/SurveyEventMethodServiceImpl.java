@@ -31,6 +31,7 @@ public class SurveyEventMethodServiceImpl {
 				TzWeChartOAuth2 tzWeChartOAuth2 = (TzWeChartOAuth2) getSpringBeanUtil.getSpringBeanByID("tzWeChartOAuth2");
 				
 				String resMsg = tzWeChartOAuth2.wxOAuthOnSurveyInit(request, response, surveyID);
+				System.out.println("------初始化："+resMsg);
 				if(StringUtils.isNotBlank(resMsg)){
 					result.put("code", "0");
 					result.put("msg", resMsg);
@@ -60,17 +61,24 @@ public class SurveyEventMethodServiceImpl {
 	 */
 	public Map<String, Object> surveySubmitToSalesforce(String strAppInsId, String openId, Integer currPageId, Integer targetPageId, String jsonParams){
 		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("code", "0");
+		result.put("msg", "");
 		try{
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			TzWeChartOAuth2 tzWeChartOAuth2 = (TzWeChartOAuth2) getSpringBeanUtil.getSpringBeanByID("tzWeChartOAuth2");
+			
+			System.out.println("==================APPINSID:"+strAppInsId);
+			System.out.println("==================OPENID:"+openId);
 
-			String resultArr[] = tzWeChartOAuth2.surveySubmitToSalesforce(strAppInsId, openId);
-			result.put("code", resultArr[0]);
-			result.put("msg", resultArr[1]);
+			if(openId != null && !"".equals(openId)){
+				String resultArr[] = tzWeChartOAuth2.surveySubmitToSalesforce(strAppInsId, openId);
+				result.replace("code", resultArr[0]);
+				result.replace("msg", resultArr[1]);
+			}
 		}catch(Exception e){
 			e.printStackTrace();
-			result.put("code", "1");
-			result.put("msg", e.getMessage());
+			result.replace("code", "1");
+			result.replace("msg", e.getMessage());
 		}
 		
 		return result;
