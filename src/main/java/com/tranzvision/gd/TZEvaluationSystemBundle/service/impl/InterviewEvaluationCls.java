@@ -41,7 +41,7 @@ public class InterviewEvaluationCls{
 		
 		Map<String,Object> rtn = new HashMap<String,Object>();
 		
-		String sqlString = "SELECT A.TZ_APP_INS_ID,B.OPRID,C.TZ_REALNAME,C.TZ_MSH_ID FROM PS_TZ_MSPS_KSH_TBL A,PS_TZ_FORM_WRK_T B,PS_TZ_AQ_YHXX_TBL C where A.TZ_CLASS_ID = B.TZ_CLASS_ID and A.TZ_APP_INS_ID = B.TZ_APP_INS_ID and B.OPRID=C.OPRID";
+		String sqlString = "SELECT A.TZ_APP_INS_ID,B.OPRID,D.TZ_REALNAME,C.TZ_MSH_ID FROM PS_TZ_MSPS_KSH_TBL A,PS_TZ_FORM_WRK_T B,PS_TZ_AQ_YHXX_TBL C,PS_TZ_REG_USER_T D where A.TZ_CLASS_ID = B.TZ_CLASS_ID and A.TZ_APP_INS_ID = B.TZ_APP_INS_ID and B.OPRID=C.OPRID and C.OPRID=D.OPRID";
 		String sqlWhere = "";
 		Object[] searchObj = null;
 
@@ -53,7 +53,7 @@ public class InterviewEvaluationCls{
 		}
 
 		if(srch_msid!=null&&!"".equals(srch_msid)&&srch_name!=null&&!"".equals(srch_name)){
-			sqlWhere = " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND C.TZ_MSH_ID=? AND C.TZ_REALNAME=?";
+			sqlWhere = " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND C.TZ_MSH_ID=? AND D.TZ_REALNAME=?";
 			sqlString = sqlString + sqlWhere;
 			searchObj = new Object[]{classId,batchId,srch_msid,srch_name};
 		}else{
@@ -64,7 +64,7 @@ public class InterviewEvaluationCls{
 			  }
 			  
 			  if(srch_name!=null&&!"".equals(srch_name)){
-				  sqlWhere = " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND C.TZ_REALNAME=?";
+				  sqlWhere = " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND D.TZ_REALNAME=?";
 					sqlString = sqlString + sqlWhere;
 					searchObj = new Object[]{classId,batchId,srch_name};
 			  }
