@@ -212,6 +212,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					Map<String, Object> eventRet = this.getMethod(surveyID, "E",paramTypes,params);
 					successFlag = eventRet.get("code") == null ? "0" : eventRet.get("code").toString();
+					strMsg = eventRet.get("msg") == null ? "" : eventRet.get("msg").toString();
 				}
 				if (successFlag.equals("0")) {
 					if (StringUtils.equals("PRE", cType)) {
@@ -220,6 +221,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 						Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
 						Map<String, Object> eventRet = this.getMethod(surveyID, "C",paramTypes,params);
 						successFlag = eventRet.get("code") == null ? "0" : eventRet.get("code").toString();
+						strMsg = eventRet.get("msg") == null ? "" : eventRet.get("msg").toString();
 					}
 				}
 				// 定义为0
@@ -297,6 +299,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					Map<String, Object> eventRet = this.getMethod(surveyID, "F",paramTypes,params);
 					successFlag = eventRet.get("code") == null ? "0" : eventRet.get("code").toString();
+					strMsg = eventRet.get("msg") == null ? "" : eventRet.get("msg").toString();
 				}
 				
 				
@@ -315,6 +318,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					Map<String, Object> eventRet = this.getMethod(surveyID, "G",paramTypes,params);
 					successFlag = eventRet.get("code") == null ? "0" : eventRet.get("code").toString();
+					strMsg = eventRet.get("msg") == null ? "" : eventRet.get("msg").toString();
 				}
 			}
 			
@@ -379,6 +383,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					Map<String, Object> eventRet = this.getMethod(surveyID, "H",paramTypes,params);
 					successFlag = eventRet.get("code") == null ? "0" : eventRet.get("code").toString();
+					strMsg = eventRet.get("msg") == null ? "" : eventRet.get("msg").toString();
 				}
 			}
 			if (successFlag.equals("0")) {
@@ -388,6 +393,7 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 					Object[] params = new Object[]{surveyInsId,openid,curPageNo,preNextPageNo,strData};
 					Map<String, Object> eventRet = this.getMethod(surveyID, "D",paramTypes,params);
 					successFlag = eventRet.get("code") == null ? "0" : eventRet.get("code").toString();
+					strMsg = eventRet.get("msg") == null ? "" : eventRet.get("msg").toString();
 				}
 			}
 			/* 当前问卷的提交状态 */
