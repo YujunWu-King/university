@@ -30,10 +30,8 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
         	var weChatAppId=form.findField("appId").getValue();
         	//从URL中获取参数信息
         	if(sendMode==''||weChatAppId==''){
-        		//var form=panel.down("form").getForm();
         		var url=window.top.location.href;
-        	   //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&openIds=11,22,33&tags=院长推荐";
-               //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1,3";
+               //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1,2,3";
         	   //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=A&openIds=11,33";
                var weChatAppId=GetQueryString(url,"appId");
                this.weChatAppId=weChatAppId;
@@ -62,8 +60,8 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
         	listeners:{
         		load:function(){
         			var url=window.top.location.href;
-        			//var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1,3";
                     var tags=GetQueryString(url,"tags");
+                    console.log(tags);
                     if(tags!=""){
                     	this.wechatTag=tags;
                     	Ext.getCmp("wechatTag_20170830").setValue(tags);
@@ -71,11 +69,11 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
         		}
         	}
         });
-       /* var weChatTags=this.weChatTags;
-        //用于URL的标签初始化
+        var weChatTags=this.weChatTags;
+        //加载URL模式的store
         if(this.weChatAppId!=""){
           tagStore.tzStoreParams='{"wxAppId":"' + this.weChatAppId + '"}';
-        }*/
+        }
         tagStore.load();
 
         Ext.apply(this,{
@@ -418,20 +416,6 @@ function deleteTw(btn){
     tabpanel.down('image[name=twImage]').setHidden(true);
     tabpanel.down('image[name=twImage]').setSrc("");
 }
-//获取参数
-function GetQueryString(url,name) {
-	var num=url.indexOf("?") 
-    var str=url.substr(num+1);
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");  
-    var r = str.match(reg); 
-    var context = "";  
-    if (r != null)  
-         context = r[2];  
-    reg = null;  
-    r = null;  
-    return context == null || context == "" || context == "undefined" ? "" : context;  
-}
-
 
 
 
