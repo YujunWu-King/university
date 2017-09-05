@@ -121,6 +121,7 @@ public class TzWeChartOAuth2 {
 			/*通过微信接口获取token信息和有效时间*/
 			HttpClientService HttpClientService = new HttpClientService(url,"GET",paramsMap,"UTF-8");
 			String strHttpResult = HttpClientService.sendRequest();
+			System.out.println("通过code换取token返回========>>>>>"+strHttpResult);
 			jacksonUtil.json2Map(strHttpResult);
 			
 			if(jacksonUtil.containsKey("errcode")){
@@ -370,6 +371,7 @@ public class TzWeChartOAuth2 {
 					}
 				}else{
 					Map<String,String> accessTokenMap = this.getOAuthAccessTokenByCode(appid, appsecret, code);
+					System.out.println("TOKEN_MAP======> "+accessTokenMap.toString());
 					if(accessTokenMap != null){
 						String errcode = accessTokenMap.get("errcode");
 						if("0".equals(errcode)){
@@ -443,6 +445,11 @@ public class TzWeChartOAuth2 {
 		try{
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			if(orgId == null || "".equals(orgId)){
+				String jgSql = "select TZ_JG_ID from PS_TZ_DC_WJ_DY_T A where exists(select 'X' from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=A.TZ_DC_WJ_ID and TZ_APP_INS_ID=?)";
+				orgId = sqlQuery.queryForObject(jgSql, new Object[]{ strAppInsId }, "String");
+			}
+			
 			Long appInsId = Long.parseLong(strAppInsId);
 			if(appInsId != null && appInsId > 0){
 				
