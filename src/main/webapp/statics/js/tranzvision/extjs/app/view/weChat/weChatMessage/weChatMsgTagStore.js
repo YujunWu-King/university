@@ -7,11 +7,13 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore', {
     comID: 'TZ_GD_WXMSG_COM',
     pageID: 'TZ_GD_WXMSG_STD',
     tzStoreParams:'{"wxAppId":"'+wxAppId+'"}',
+    //tzStoreParams:'{"wxAppId":""}',
     proxy: Ext.tzListProxy()  
 });
 
 //console.log(window.top.location.href);
-var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1";
+var url=window.top.location.href;
+//var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1";
 var wxAppId=0;
 var num=url.indexOf("?") 
 var str=url.substr(num+1);
