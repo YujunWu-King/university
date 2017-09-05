@@ -137,6 +137,9 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			String userName, String userPwd, String code, String language, ArrayList<String> errorMsg) {
 	    	//20170222，yuds，手机版暂不进行验证码校验
 	    	boolean isMobile = CommonUtils.isMobile(request);
+	    	
+	    	//用于压力测试不进行验证码校验
+	    	//isMobile  = true;
 	    	if(!isMobile){
         		// 校验验证码
         		Patchca patchca = new Patchca();

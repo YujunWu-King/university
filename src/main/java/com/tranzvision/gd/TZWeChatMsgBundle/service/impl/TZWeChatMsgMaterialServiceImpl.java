@@ -38,7 +38,7 @@ public class TZWeChatMsgMaterialServiceImpl extends FrameworkImpl {
 		String strWxAppId=jacksonUtil.getString("wxAppId");
 		//素材类型 TP:图片 TW:图文
 		String strMediaType=jacksonUtil.getString("mediaType");
-		if(strWxAppId==null||strWxAppId.equals("")){
+		if(strWxAppId==null||"".equals(strWxAppId)){
 			return null;
 		}
 		//选择图片素材
