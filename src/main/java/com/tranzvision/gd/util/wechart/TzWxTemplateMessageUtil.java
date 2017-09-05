@@ -32,7 +32,7 @@ public class TzWxTemplateMessageUtil {
        }
 	 * @throws TzException
 	 */
-	public static String senTemplateMessage(String access_token, String opendId, String template_id, List<Map<String,String>> dataList) throws TzException{
+	public static String sendTemplateMessage(String access_token, String opendId, String template_id, List<Map<String,String>> dataList) throws TzException{
 		String returnStr = "";
 		try{
 			if(dataList == null || dataList.size() <=0){
@@ -90,7 +90,7 @@ public class TzWxTemplateMessageUtil {
        }
 	 * @throws TzException
 	 */
-	public static String senTemplateMessage(String access_token, String opendId, String template_id, List<Map<String,String>>dataList, String url) throws TzException{
+	public static String sendTemplateMessage(String access_token, String opendId, String template_id, List<Map<String,String>>dataList, String url) throws TzException{
 		String returnStr = "";
 		try{
 			if(dataList == null || dataList.size() <=0){
@@ -150,7 +150,7 @@ public class TzWxTemplateMessageUtil {
        }
 	 * @throws TzException
 	 */
-	public static String senTemplateMessage(String access_token, String opendId, String template_id, List<Map<String,String>>dataList, String appid, String pagepath) throws TzException{
+	public static String sendTemplateMessage(String access_token, String opendId, String template_id, List<Map<String,String>>dataList, String appid, String pagepath) throws TzException{
 		String returnStr = "";
 		try{
 			if(dataList == null || dataList.size() <=0){

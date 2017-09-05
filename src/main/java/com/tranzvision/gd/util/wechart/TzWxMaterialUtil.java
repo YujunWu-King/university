@@ -161,9 +161,8 @@ public class TzWxMaterialUtil {
 	 * @throws TzException 
 	 * 
 	 */
-	public static Map<String,Object> addOtherMaterial(String accessToken,File file, String type, String title,String introduction) throws TzException {
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		Map<String,Object> returnMap = new HashMap<String,Object>();
+	public static String addOtherMaterial(String accessToken,File file, String type, String title,String introduction) throws TzException {
+		String returnStr = "";
 		try {
 			if(!file.exists()){
 				throw new TzException("素材文件不存在");
@@ -183,16 +182,12 @@ public class TzWxMaterialUtil {
 
 			// 拼装请求地址
 			String uploadMediaUrl = tz_addMaterial_url+"?access_token="+accessToken+"&type="+type;
-
-			String result = TzWxMaterialUtil.connectHttpsByPostForm(uploadMediaUrl, file, videoDescrMap);
-			jacksonUtil.json2Map(result);
-			
-			returnMap = jacksonUtil.getMap();
+			returnStr = TzWxMaterialUtil.connectHttpsByPostForm(uploadMediaUrl, file, videoDescrMap);
 		} catch (Exception e) {
 			throw new TzException(e.getMessage());
 		}
 		
-		return returnMap;
+		return returnStr;
 	}
 	
 	
@@ -203,9 +198,8 @@ public class TzWxMaterialUtil {
 	 * @param file
 	 * @throws TzException 
 	 */
-	public static Map<String,Object> uploadMaterialContentImages(String accessToken,File file) throws TzException{
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		Map<String,Object> returnMap = new HashMap<String,Object>();
+	public static String uploadMaterialContentImages(String accessToken,File file) throws TzException{
+		String returnStr = "";
 		try{
 			if(!file.exists()){
 				throw new TzException("图片文件不存在");
@@ -218,16 +212,12 @@ public class TzWxMaterialUtil {
             
 			//上传图片素材      
 	        String uploadImgUrl = tz_uploadimg_url+"?access_token="+accessToken;  
-	        
-	        String result = TzWxMaterialUtil.connectHttpsByPostForm(uploadImgUrl, file, null);
-	        jacksonUtil.json2Map(result);
-			
-			returnMap = jacksonUtil.getMap();
+	        returnStr = TzWxMaterialUtil.connectHttpsByPostForm(uploadImgUrl, file, null);
 		} catch (Exception e) {
 			throw new TzException(e.getMessage());
 		}
 		
-		return returnMap;
+		return returnStr;
 	}
 	
 	
@@ -278,8 +268,8 @@ public class TzWxMaterialUtil {
 	/**
 	 * 修改永久图文素材
 	 * @param access_token
-	 * @param media_id								//要修改的图文消息的id
-	 * @param index									//要更新的文章在图文消息中的位置（多图文消息时，此字段才有意义），第一篇为0
+	 * @param media_id			要修改的图文消息的id
+	 * @param index				要更新的文章在图文消息中的位置（多图文消息时，此字段才有意义），第一篇为0
 	 * @param articlesMap
 	 * {
 	      "title": TITLE,							//标题
