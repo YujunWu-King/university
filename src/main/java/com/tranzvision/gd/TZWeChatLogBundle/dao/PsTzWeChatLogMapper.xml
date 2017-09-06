@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatLogBundle.dao.PsTzWeChatLogMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatLogBundle.model.PsTzWeChatLogTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_WX_APPID" property="tzAppId" jdbcType="VARCHAR" />
+    <id column="TZ_XH" property="tzXH" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_PSN" property="tzSendPSN" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_DTIME" property="tzSendDTime" jdbcType="TIMESTAMP" />
+    <result column="TZ_SEND_STATE" property="tzSendState" jdbcType="VARCHAR" />
+    <result column="TZ_SENDS_DTIME" property="tzSendSDTime" jdbcType="TIMESTAMP" />
+    <result column="TZ_S_TOTAL" property="tzSTotal" jdbcType="INTEGER" />
+    <result column="TZ_S_FILTER" property="tzSFilter" jdbcType="INTEGER" />
+    <result column="TZ_S_SUCESS" property="tzSSucess" jdbcType="INTEGER" />
+    <result column="TZ_S_FAIL" property="tzSFail" jdbcType="INTEGER" />
+    <result column="TZ_CONTENT" property="tzContent" jdbcType="VARCHAR" />
+    <result column="TZ_MEDIA_ID" property="tzMediaId" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_TYPE" property="tzSendType" jdbcType="VARCHAR" />
+    <result column="TZ_SEND_MODE" property="tzSendMode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_WX_APPID, TZ_XH, TZ_SEND_PSN, TZ_SEND_DTIME, TZ_SEND_STATE, TZ_SENDS_DTIME, 
+    TZ_S_TOTAL, TZ_S_FILTER, TZ_S_SUCESS, TZ_S_FAIL, TZ_CONTENT, TZ_MEDIA_ID, TZ_SEND_TYPE, 
+    TZ_SEND_MODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatLogBundle.model.PsTzWeChatLogTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_WXMSG_LOG_T
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzAppId,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXH,jdbcType=VARCHAR}
+  </select>
+ 
+</mapper>

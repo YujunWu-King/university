@@ -101,7 +101,8 @@
                    {iconCls: 'edit',tooltip: '编辑',handler:'editSel'},
 			   	   {iconCls: 'remove',tooltip: '删除',handler:'deleteSel'},
                    {iconCls: 'people',tooltip: '用户管理',handler:'userManage'},
-                   {iconCls: 'refresh',tooltip: '全量获取用户',handler:'getUserAll'}
+                   {iconCls: 'refresh',tooltip: '全量获取用户',handler:'getUserAll'},
+                   {iconCls: 'preview',tooltip: '查看发送日志',handler:'getLog'}
 			   ]
             }],
 			store:store,
