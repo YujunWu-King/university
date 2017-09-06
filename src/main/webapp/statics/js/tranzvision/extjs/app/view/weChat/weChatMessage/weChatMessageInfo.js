@@ -25,14 +25,14 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
     listeners: {
         afterrender: function(panel){
         	//发送模式
-        	var sendMode=this.sendMode;
-        	var weChatAppId=this.weChatAppId;
+        	var form=panel.down("form").getForm();
+        	var sendMode=form.findField("sendMode").getValue();
+        	var weChatAppId=form.findField("appId").getValue();
+        	//从URL中获取参数信息
         	if(sendMode==''||weChatAppId==''){
-        		var form=panel.down("form").getForm();
-        		//从URL中获取参数信息
-        		//var url=window.top.location.href;
-        	   //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&openIds=11,22,33&tags=院长推荐";
-               var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1,3";
+        		var url=window.top.location.href;
+               //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1,2,3";
+        	   //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=A&openIds=11,33";
                var weChatAppId=GetQueryString(url,"appId");
                this.weChatAppId=weChatAppId;
 		       form.findField("appId").setValue(weChatAppId);
@@ -44,22 +44,28 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
 		       var openIds=GetQueryString(url,"openIds");
                this.openIds=openIds;
 		       form.findField("openIds").setValue(openIds);
+		       
+		       var tags=GetQueryString(url,"tags");
+		       this.wechatTag=tags;
+		       form.findField("wechatTag").setValue(tags);
+		       
+		     //如果为指定用户，按照标签字段隐藏；如果为按照标签，用户列表字段隐藏。
+	        	if(sendMode=='A'){
+	        		form.findField("wechatTag").setVisible(false);
+	        	}
+	        	if(sendMode=='B'){
+	        		form.findField("openIds").setVisible(false);
+	        	}
         	}
-        	//如果为指定用户，按照标签字段隐藏；如果为按照标签，用户列表字段隐藏。
-        	if(sendMode=='A'){
-        		form.findField("wechatTag").setVisible(false);
-        	}
-        	if(sendMode=='B'){
-        		form.findField("openIds").setVisible(false);
-        	}
-        	
         }
     },
     initComponent:function(){
-        var tagStore = new KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore({
+    	var tagStore = new KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore();
+    	/*var tagStore = new KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore({
         	listeners:{
         		load:function(){
-        			var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1,3";
+        			//var url=window.top.location.href;
+        			var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=2";
                     var tags=GetQueryString(url,"tags");
                     if(tags!=""){
                     	this.wechatTag=tags;
@@ -69,10 +75,10 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
         	}
         });
         var weChatTags=this.weChatTags;
-        //用于非URL的标签初始化
+        //加载URL模式的store
         if(this.weChatAppId!=""){
           tagStore.tzStoreParams='{"wxAppId":"' + this.weChatAppId + '"}';
-        }
+        }*/
         tagStore.load();
 
         Ext.apply(this,{
@@ -103,6 +109,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     name: 'sendMode',
                     emptyText: '请选择',
                     mode: "remote",
+                    hidden:true,
                     valueField: 'sendMode',
                     displayField: 'sendModeDesc',
                     store: {
@@ -120,6 +127,17 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     grow:true,
                     name:'openIds'
                 },{
+                	xtype: 'combo',
+                    labelWidth: 100,
+                    fieldLabel: '按照标签',
+                    name: 'wechatTag',
+                    id:'wechatTag_20170830',
+                    mode: "remote",
+                    editable: false,
+                    valueField: 'tagId',
+                    displayField: 'tagName',
+                    store:tagStore
+                },/*{
                     xtype:'tagfield',
                     fieldLabel:'按照标签',
                     name:'wechatTag',
@@ -141,7 +159,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                         }
                     }
                     
-                },{
+                }*/,{
                     xtype: 'tabpanel',
                     frame: true,
                     activeTab: 0,
@@ -341,7 +359,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     height:'100%',
                     name:'imagesForm', 
                     defaults:{
-                        margin:'20px 0 0 20px'
+                        margin:'20px 0 0 0px'
                     },
                     items:[{
                     	 xtype: 'combo',
@@ -415,20 +433,6 @@ function deleteTw(btn){
     tabpanel.down('image[name=twImage]').setHidden(true);
     tabpanel.down('image[name=twImage]').setSrc("");
 }
-//获取参数
-function GetQueryString(url,name) {
-	var num=url.indexOf("?") 
-    var str=url.substr(num+1);
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");  
-    var r = str.match(reg); 
-    var context = "";  
-    if (r != null)  
-         context = r[2];  
-    reg = null;  
-    r = null;  
-    return context == null || context == "" || context == "undefined" ? "" : context;  
-}
-
 
 
 
