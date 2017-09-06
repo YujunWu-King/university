@@ -20,25 +20,27 @@ public class SubscribeEventHandler implements EventsHandlerInterface  {
 
 	@Override
 	public String execute(Map<String, String> reqMap) {
+		
+		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+    	TzWxApiObject tzWxApiObject = (TzWxApiObject) getSpringBeanUtil.getSpringBeanByID("tzWxApiObject");
+    	
+    	SqlQuery sqlQuery = (SqlQuery) getSpringBeanUtil.getSpringBeanByID("sqlQuery");
 		try{
 			String openid=reqMap.get("FromUserName"); //用户openid
 	        String mpid=reqMap.get("ToUserName");   //公众号原始ID
 			
-	        String appID = "wx5bdecf7575803a8d";
-	        String orgId = "SEM";
-	        
-	        System.out.println("-----原始ID:"+mpid+"---->OPNEID:"+openid);
+	        String orgId = "";
+	        String appID = "";
+	        //通过公众号原始ID查询机构和appID
+	        Map<String,Object> wxPzMap = sqlQuery.queryForMap("select TZ_JG_ID,TZ_WX_APPID from PS_TZ_WX_APPSE_TBL where TZ_WX_ORIID=? and TZ_WX_STATE='Y' limit 1", 
+	        		new Object[]{ mpid });
+	        if(wxPzMap != null){
+	        	orgId = wxPzMap.get("TZ_JG_ID") == null ? "" : wxPzMap.get("TZ_JG_ID").toString();
+	        	appID = wxPzMap.get("TZ_WX_APPID") == null ? "" : wxPzMap.get("TZ_WX_APPID").toString();
+	        }
 	        
 	        if(orgId != null && !"".equals(orgId) 
 	        		&& appID != null && !"".equals(appID)){
-	        	
-	        	GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-	        	TzWxApiObject tzWxApiObject = (TzWxApiObject) getSpringBeanUtil.getSpringBeanByID("tzWxApiObject");
-	        	
-	        	SqlQuery sqlQuery = (SqlQuery) getSpringBeanUtil.getSpringBeanByID("sqlQuery");
-	        	
-	        	//TZGDObject tzGDObject = (TZGDObject) getSpringBeanUtil.getSpringBeanByID("tzGDObject");
-	        	
 	        	//获取用户信息
 	        	Map<String,Object> userInfoMap = tzWxApiObject.getUserInfo(orgId, appID, openid, "zh_CN");
 	        	
@@ -55,14 +57,10 @@ public class SubscribeEventHandler implements EventsHandlerInterface  {
 	        		String subscribe_time = userInfoMap.get("subscribe_time").toString();
 	        		String remark = userInfoMap.get("remark").toString();
 	        		
-	        		System.out.println("DATE---------- " + subscribe_time);
-	        		
 	        		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	                long l_subscribe_time = new Long(subscribe_time);
 	                Date subscribe_Date = MessageUtil.long2Date(l_subscribe_time);
 	                String subscribe_Datetime = simpleDateFormat.format(subscribe_Date);
-	                
-	                System.out.println("DATE---------- " + subscribe_Datetime);
 	                
 	                String sql = "select 'Y' from PS_TZ_WX_USER_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_OPEN_ID=?";
 	                String existsFlg = sqlQuery.queryForObject(sql, new Object[]{ orgId, appID, openid }, "String");

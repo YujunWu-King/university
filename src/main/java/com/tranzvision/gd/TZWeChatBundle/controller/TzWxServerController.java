@@ -68,9 +68,9 @@ public class TzWxServerController {
             	 returnStr = MessageDispatcher.processMessage(map); //进入消息处理
              }
              
-             if(returnStr != null && !"".equals(returnStr)){
-            	 response.getWriter().write(returnStr);
-             }
+             if(returnStr == null) returnStr = "";
+             response.getWriter().write(returnStr);
+             
          }catch(Exception e){
              e.printStackTrace();
              logger.error("服务器时间处理失败，"+e.getMessage());

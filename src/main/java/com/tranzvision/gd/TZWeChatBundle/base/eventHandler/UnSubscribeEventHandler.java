@@ -16,15 +16,14 @@ public class UnSubscribeEventHandler implements EventsHandlerInterface  {
 
 	@Override
 	public String execute(Map<String, String> reqMap) {
+		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+    	SqlQuery sqlQuery = (SqlQuery) getSpringBeanUtil.getSpringBeanByID("sqlQuery");
+    	
 		try{
 			String openid=reqMap.get("FromUserName"); //用户openid
 	        //String mpid=reqMap.get("ToUserName");   //公众号原始ID
 			
 	        if(openid != null && !"".equals(openid)){
-	        	
-	        	GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-	        	SqlQuery sqlQuery = (SqlQuery) getSpringBeanUtil.getSpringBeanByID("sqlQuery");
-	        	
 	            String sql = "select TZ_JG_ID,TZ_WX_APPID from PS_TZ_WX_USER_TBL where TZ_OPEN_ID=?";
 	            List<Map<String,Object>> UserList = sqlQuery.queryForList(sql, new Object[]{ openid });
 	            

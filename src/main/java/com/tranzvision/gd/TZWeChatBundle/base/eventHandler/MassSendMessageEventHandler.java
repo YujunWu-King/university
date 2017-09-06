@@ -16,6 +16,9 @@ public class MassSendMessageEventHandler implements EventsHandlerInterface  {
 
 	@Override
 	public String execute(Map<String, String> reqMap) {
+		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+    	SqlQuery sqlQuery = (SqlQuery) getSpringBeanUtil.getSpringBeanByID("sqlQuery");
+    	
 		try{
 			String MsgID = reqMap.get("MsgID"); //消息id
 			int TotalCount = Integer.parseInt(reqMap.get("TotalCount")); 
@@ -24,10 +27,6 @@ public class MassSendMessageEventHandler implements EventsHandlerInterface  {
 			int ErrorCount = Integer.parseInt(reqMap.get("ErrorCount")); 
 			
 	        if(MsgID != null && !"".equals(MsgID)){
-	        	
-	        	GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
-	        	SqlQuery sqlQuery = (SqlQuery) getSpringBeanUtil.getSpringBeanByID("sqlQuery");
-	        	
 	            String sql = "select TZ_JG_ID,TZ_WX_APPID,TZ_XH from PS_TZ_WXMSG_LOG_T where TZ_MSG_ID=?";
 	            List<Map<String,Object>> UserList = sqlQuery.queryForList(sql, new Object[]{ MsgID });
 	            
