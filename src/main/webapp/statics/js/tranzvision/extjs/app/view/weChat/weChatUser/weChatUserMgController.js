@@ -457,6 +457,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         cmp = new ViewClass();
 
         cmp.on('afterrender', function (panel) {
+        	var form = panel.down("form").getForm();
             //发送模式-A按用户B按标签
             cmp.sendMode = sendMode;
             //用户列表
@@ -465,11 +466,19 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             cmp.weChatTags = tagIdList;
             //应用ID
             cmp.weChatAppId = wxAppId;
-
-            var form = panel.down("form").getForm();
+            if(sendMode=='B'){
+            	//重新加载标签store
+            	var tagStore=form.findField("wechatTag").store;
+            	tagStore.tzStoreParams='{"wxAppId":"' + wxAppId + '"}';
+            	tagStore.load({
+            	   callback:function(r,options,success){
+            		   form.findField("wechatTag").setValue(tagIdList); 
+            	   }
+            	});
+            }
             form.findField("sendMode").setValue(sendMode);
             form.findField("openIds").setValue(openIdList);
-            form.findField("wechatTag").setValue(tagIdList);
+           // form.findField("wechatTag").setValue(tagIdList);
             form.findField("appId").setValue(wxAppId);
 
             //如果为指定用户，按照标签字段隐藏；如果为按照标签，用户列表字段隐藏

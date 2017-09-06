@@ -109,7 +109,7 @@
                     xtype: 'combobox',
                     fieldLabel: '起始年份',
                     labelWidth: 60,
-                    name:'startYear',
+                    name:'beginYear',
                     displayField: "Name",
                     emptyText: "-----请选择起始年份-----",
                     editable: false,
@@ -130,6 +130,7 @@
                     fieldLabel: '截止年份',
                     columnWidth:.25,
                     labelWidth: 60,
+                    name:'endYear',
                     emptyText: "-----请选择截止年份-----",
                     editable: false,
                     style:'margin-left:20px',
@@ -173,7 +174,7 @@
                     boxLabel: "指定年份循环间隔"
                 },{
                     xtype: 'textfield',
-                    name:'',
+                    name:'yearLoopInterval',
                     columnWidth:.45,
                     emptyText: "格式：YYYY/N  取值范围：1970-2099  例如：2001/4"
                 }]
@@ -181,6 +182,7 @@
         },{
             xtype:'form',
             style:'margin-top:20px',
+            name:'monthForm',
             title:'月份',
             items:[{
                 xtype: 'radio',
@@ -202,25 +204,56 @@
                     fieldLabel: '起始月份',
                     emptyText: "------请选择起始月份------",
                     editable: false,
+                    name: 'beginMonth',
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    columnWidth:.2,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_MONTH_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  }
+                        ]
+                    })
                 },{
                     xtype: 'combobox',
                     labelWidth: 60,
                     fieldLabel: '截止月份',
+                    name:'endMonth',
                     columnWidth:.25,
                     emptyText: "------请选择截止月份------",
                     editable: false,
                     style:'margin-left:40px',
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_MONTH_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  }
+                        ]
+                    })
                 }]
             },{
                 xtype: 'fieldcontainer',
@@ -234,6 +267,7 @@
                 },{
                     xtype: 'textfield',
                     columnWidth:.45,
+                    name:'monthList',
                     emptyText: "格式：N1,N2,…  取值范围：1-12  例如：1,2,3"
                 }]
             },{
@@ -248,157 +282,19 @@
                 },{
                     xtype: 'textfield',
                     columnWidth:.45,
+                    name:'monthLoopInterval',
                     emptyText: "格式：M/N  取值范围：1-12  例如：5/4"
                 }]
             }]
         },{
             xtype:'form',
             style:'margin-top:20px',
-            title:'周',
-            items:[{
-                xtype: 'radio',
-                name:'loopWeek',
-                style:'margin-left:50px',
-                boxLabel: "按“日-周”模式循环"
-            },{
-                style:'margin-top:10px;margin-left:50px',
-                name:'loopWeek',
-                xtype: 'radio',
-                boxLabel: "不限定，任意日期"
-            },{
-                style:'margin-top:10px;margin-left:50px',
-                xtype: 'fieldcontainer',
-                layout:'column',
-                items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "指定日期范围"
-                },{
-                    xtype: 'combobox',
-                    fieldLabel: '起始日期',
-                    labelWidth: 60,
-                    emptyText: "------请选择起始日期------",
-                    editable: false,
-                    forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    columnWidth:.2,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_WEEK_STATUS"),
-                },{
-                    xtype: 'combobox',
-                    fieldLabel: '截止日期',
-                    labelWidth: 60,
-                    columnWidth:.25,
-                    emptyText: "------请选择截止日期------",
-                    editable: false,
-                    style:'margin-left:40px',
-                    forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_WEEK_STATUS"),
-                }]
-            },{
-                style:'margin-top:10px;margin-left:50px',
-                xtype: 'fieldcontainer',
-                layout:'column',
-                items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "指定日期列表"
-                },{
-                    xtype: 'textfield',
-                    columnWidth:.45,
-                    emptyText: "格式：N1,N2,…  取值范围：1-7  例如：1,2,3"
-                }]
-            },{
-                style:'margin-top:10px;margin-left:50px',
-                xtype: 'fieldcontainer',
-                layout:'column',
-                items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "指定日期循环间隔"
-                },{
-                    xtype: 'textfield',
-                    columnWidth:.45,
-                    emptyText: "格式：D/N  取值范围：1-7  例如：5/4"
-                }]
-            },{
-                xtype: 'radio',
-                name:'loopWeek',
-                style:'margin-top:10px;margin-left:50px',
-                boxLabel: "每周最后一天"
-            },{
-                style:'margin-top:10px;margin-left:50px',
-                xtype: 'fieldcontainer',
-                layout:'column',
-                items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "每周最后一个周几"
-                },{
-                    xtype: 'combobox',
-                    fieldLabel: '指定日期',
-                    labelWidth: 60,
-                    emptyText: "------请选择指定日期------",
-                    editable: false,
-                    forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    columnWidth:.2,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_WEEK_STATUS"),
-                }]
-            },{
-                style:'margin-top:10px;margin-left:50px',
-                xtype: 'fieldcontainer',
-                layout:'column',
-                items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "每月第几个周几"
-                },{
-                    xtype: 'combobox',
-                    fieldLabel: '指定周次',
-                    labelWidth: 60,
-                    emptyText: "------请选择指定周次------",
-                    editable: false,
-                    forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    columnWidth:.2,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_WEEK_STATUS"),
-                },{
-                    xtype: 'combobox',
-                    fieldLabel: '指定日期',
-                    labelWidth: 60,
-                    style:'margin-left:40px',
-                    emptyText: "------请选择指定日期------",
-                    editable: false,
-                    forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    columnWidth:.25,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_WEEK_STATUS"),
-                }]
-            }]
-        },{
-            xtype:'form',
-            style:'margin-top:20px',
-            title:'日',
+            name:'dayForm',
+            title:'日、周',
             items:[{
                 xtype: 'radio',
                 name:'loopDay',
-                style:'margin-left:50px',
+                style:'margin-left:30px',
                 boxLabel: "按“日-月”模式循环"
             },{
                 style:'margin-top:10px;margin-left:50px',
@@ -420,25 +316,56 @@
                     labelWidth: 60,
                     emptyText: "------请选择起始日期------",
                     editable: false,
+                    name:'beginDay1',
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    columnWidth:.2,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_DAY_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  }
+                        ]
+                    })
                 },{
                     xtype: 'combobox',
                     fieldLabel: '截止日期',
                     labelWidth: 60,
                     columnWidth:.25,
                     emptyText: "------请选择截止日期------",
+                    name:'endDay1',
                     editable: false,
                     style:'margin-left:40px',
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_DAY_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  }
+                        ]
+                    })
                 }]
             },{
                 style:'margin-top:10px;margin-left:50px',
@@ -451,6 +378,7 @@
                     boxLabel: "指定日期列表"
                 },{
                     xtype: 'textfield',
+                    name:'day1List',
                     columnWidth:.45,
                     emptyText: "格式：N1,N2,…  取值范围：1-31  例如：1,2,3"
                 }]
@@ -466,6 +394,7 @@
                 },{
                     xtype: 'textfield',
                     columnWidth:.45,
+                    name:'day1LoopInterval',
                     emptyText: "格式：D/N  取值范围：1-31  例如：5/4"
                 }]
             },{
@@ -492,18 +421,223 @@
                     fieldLabel: '指定日期',
                     labelWidth: 60,
                     emptyText: "------请选择起始日期------",
+                    name:'beginDate1',
                     editable: false,
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  }
+                        ]
+                    })
+                }]
+            },{
+                xtype: 'radio',
+                name:'loopWeek',
+                style:'margin-left:30px',
+                boxLabel: "按“日-周”模式循环"
+            },{
+                style:'margin-top:10px;margin-left:50px',
+                name:'loopWeek',
+                xtype: 'radio',
+                boxLabel: "不限定，任意日期"
+            },{
+                style:'margin-top:10px;margin-left:50px',
+                xtype: 'fieldcontainer',
+                layout:'column',
+                items:[{
+                    xtype: 'radio',
+                    name:'loopWeek',
+                    columnWidth:.15,
+                    boxLabel: "指定日期范围"
+                },{
+                    xtype: 'combobox',
+                    fieldLabel: '起始日期',
+                    labelWidth: 60,
+                    emptyText: "------请选择起始日期------",
+                    editable: false,
+                    name:'beginDay2',
+                    forceSelection: true,
                     columnWidth:.2,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_DAY_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: '周一', Value: 1 },
+                            { Name: '周二', Value: 2  },
+                            { Name: '周三', Value: 3  },
+                            { Name: '周四', Value: 4  },
+                            { Name: '周五', Value: 5  },
+                            { Name: '周六', Value: 6  },
+                            { Name: '周日', Value: 7  }
+                        ]
+                    })
+                },{
+                    xtype: 'combobox',
+                    fieldLabel: '截止日期',
+                    labelWidth: 60,
+                    columnWidth:.25,
+                    emptyText: "------请选择截止日期------",
+                    editable: false,
+                    name:'endDay2',
+                    style:'margin-left:40px',
+                    forceSelection: true,
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: '周一', Value: 1 },
+                            { Name: '周二', Value: 2  },
+                            { Name: '周三', Value: 3  },
+                            { Name: '周四', Value: 4  },
+                            { Name: '周五', Value: 5  },
+                            { Name: '周六', Value: 6  },
+                            { Name: '周日', Value: 7  }
+                        ]
+                    })
+                }]
+            },{
+                style:'margin-top:10px;margin-left:50px',
+                xtype: 'fieldcontainer',
+                layout:'column',
+                items:[{
+                    xtype: 'radio',
+                    name:'loopWeek',
+                    columnWidth:.15,
+                    boxLabel: "指定日期列表"
+                },{
+                    xtype: 'textfield',
+                    columnWidth:.45,
+                    name:'day2List',
+                    emptyText: "格式：N1,N2,…  取值范围：1-7  例如：1,2,3"
+                }]
+            },{
+                style:'margin-top:10px;margin-left:50px',
+                xtype: 'fieldcontainer',
+                layout:'column',
+                items:[{
+                    xtype: 'radio',
+                    name:'loopWeek',
+                    columnWidth:.15,
+                    boxLabel: "指定日期循环间隔"
+                },{
+                    xtype: 'textfield',
+                    columnWidth:.45,
+                    name:'day2LoopInterval',
+                    emptyText: "格式：D/N  取值范围：1-7  例如：5/4"
+                }]
+            },{
+                xtype: 'radio',
+                name:'loopWeek',
+                style:'margin-top:10px;margin-left:50px',
+                boxLabel: "每周最后一天"
+            },{
+                style:'margin-top:10px;margin-left:50px',
+                xtype: 'fieldcontainer',
+                layout:'column',
+                items:[{
+                    xtype: 'radio',
+                    name:'loopWeek',
+                    columnWidth:.15,
+                    boxLabel: "每周最后一个周几"
+                },{
+                    xtype: 'combobox',
+                    fieldLabel: '指定日期',
+                    labelWidth: 60,
+                    emptyText: "------请选择指定日期------",
+                    editable: false,
+                    name:'appointedDate1',
+                    forceSelection: true,
+                    columnWidth:.2,
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: '周一', Value: 1 },
+                            { Name: '周二', Value: 2  },
+                            { Name: '周三', Value: 3  },
+                            { Name: '周四', Value: 4  },
+                            { Name: '周五', Value: 5  },
+                            { Name: '周六', Value: 6  },
+                            { Name: '周日', Value: 7  }
+                        ]
+                    })
+                }]
+            },{
+                style:'margin-top:10px;margin-left:50px',
+                xtype: 'fieldcontainer',
+                layout:'column',
+                items:[{
+                    xtype: 'radio',
+                    name:'loopWeek',
+                    columnWidth:.15,
+                    boxLabel: "每月第几个周几"
+                },{
+                    xtype: 'combobox',
+                    fieldLabel: '指定周次',
+                    labelWidth: 60,
+                    emptyText: "------请选择指定周次------",
+                    editable: false,
+                    name:'appointedWeek',
+                    forceSelection: true,
+                    columnWidth:.2,
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: '第一周', Value: 1 },
+                            { Name: '第二周', Value: 2  },
+                            { Name: '第三周', Value: 3  },
+                            { Name: '第四周', Value: 4  }
+                        ]
+                    })
+                },{
+                    xtype: 'combobox',
+                    fieldLabel: '指定日期',
+                    labelWidth: 60,
+                    style:'margin-left:40px',
+                    emptyText: "------请选择指定日期------",
+                    name:'appointedDate2',
+                    editable: false,
+                    forceSelection: true,
+                    columnWidth:.25,
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: '周一', Value: 1 },
+                            { Name: '周二', Value: 2  },
+                            { Name: '周三', Value: 3  },
+                            { Name: '周四', Value: 4  },
+                            { Name: '周五', Value: 5  },
+                            { Name: '周六', Value: 6  },
+                            { Name: '周日', Value: 7  }
+                        ]
+                    })
                 }]
             }]
         },{
             xtype:'form',
             style:'margin-top:20px',
+            name:'hourForm',
             title:'时',
             items:[{
                 xtype: 'radio',
@@ -524,26 +658,82 @@
                     fieldLabel: '起始小时',
                     labelWidth: 60,
                     emptyText: "------请选择起始小时------",
+                    name:'beginHour',
                     editable: false,
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
                     columnWidth:.2,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_HOUR_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13  },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  }
+                        ]
+                    })
                 },{
                     xtype: 'combobox',
                     fieldLabel: '截止小时',
                     labelWidth: 60,
                     columnWidth:.25,
                     emptyText: "------请选择截止小时------",
+                    name:'endHour',
                     editable: false,
                     style:'margin-left:40px',
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_HOUR_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13  },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  }
+                        ]
+                    })
                 }]
             },{
                 style:'margin-top:10px;margin-left:50px',
@@ -557,6 +747,7 @@
                 },{
                     xtype: 'textfield',
                     columnWidth:.45,
+                    name:'hourList',
                     emptyText: "格式：N1,N2,…  取值范围：0-23  例如：1,2,3"
                 }]
             },{
@@ -571,11 +762,13 @@
                 },{
                     xtype: 'textfield',
                     columnWidth:.45,
+                    name:'hourLoopInterval',
                     emptyText: "格式：H/N  取值范围：0-23/1-23  例如：8/4"
                 }]
             }]
         },{
             xtype:'form',
+            name:'minuteForm',
             style:'margin-top:20px',
             title:'分',
             items:[{
@@ -597,26 +790,154 @@
                     fieldLabel: '起始分钟',
                     labelWidth: 60,
                     emptyText: "------请选择起始分钟------",
+                    name:'beginMinute',
                     editable: false,
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
                     columnWidth:.2,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_SECOND_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                        	
+                        	{ Name: 0, Value: 0 },
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13  },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25 },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  },
+                            { Name: 32, Value: 32  },
+                            { Name: 33, Value: 33  },
+                            { Name: 34, Value: 34  },
+                            { Name: 35, Value: 35  },
+                            { Name: 36, Value: 36  },
+                            { Name: 37, Value: 37  },
+                            { Name: 38, Value: 38  },
+                            { Name: 39, Value: 39  },
+                            { Name: 40, Value: 40  },
+                            { Name: 41, Value: 41  },
+                            { Name: 42, Value: 42  },
+                            { Name: 43, Value: 43  },
+                            { Name: 44, Value: 44  },
+                            { Name: 45, Value: 45  },
+                            { Name: 46, Value: 46  },
+                            { Name: 47, Value: 47  },
+                            { Name: 48, Value: 48  },
+                            { Name: 49, Value: 49  },
+                            { Name: 50, Value: 50  },
+                            { Name: 51, Value: 51  },
+                            { Name: 52, Value: 52  },
+                            { Name: 53, Value: 53  },
+                            { Name: 54, Value: 54  },
+                            { Name: 55, Value: 55  },
+                            { Name: 56, Value: 56  },
+                            { Name: 57, Value: 57  },
+                            { Name: 58, Value: 58  },
+                            { Name: 59, Value:59  }
+                        ]
+                    })
                 },{
                     xtype: 'combobox',
                     fieldLabel: '截止分钟',
                     labelWidth: 60,
                     columnWidth:.25,
+                    name:'endMinute',
                     emptyText: "------请选择截止分钟------",
                     editable: false,
                     style:'margin-left:40px',
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_SECOND_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                        	
+                        	{ Name: 0, Value: 0 },
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13  },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25 },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  },
+                            { Name: 32, Value: 32  },
+                            { Name: 33, Value: 33  },
+                            { Name: 34, Value: 34  },
+                            { Name: 35, Value: 35  },
+                            { Name: 36, Value: 36  },
+                            { Name: 37, Value: 37  },
+                            { Name: 38, Value: 38  },
+                            { Name: 39, Value: 39  },
+                            { Name: 40, Value: 40  },
+                            { Name: 41, Value: 41  },
+                            { Name: 42, Value: 42  },
+                            { Name: 43, Value: 43  },
+                            { Name: 44, Value: 44  },
+                            { Name: 45, Value: 45  },
+                            { Name: 46, Value: 46  },
+                            { Name: 47, Value: 47  },
+                            { Name: 48, Value: 48  },
+                            { Name: 49, Value: 49  },
+                            { Name: 50, Value: 50  },
+                            { Name: 51, Value: 51  },
+                            { Name: 52, Value: 52  },
+                            { Name: 53, Value: 53  },
+                            { Name: 54, Value: 54  },
+                            { Name: 55, Value: 55  },
+                            { Name: 56, Value: 56  },
+                            { Name: 57, Value: 57  },
+                            { Name: 58, Value: 58  },
+                            { Name: 59, Value:59  }
+                        ]
+                    })
                 }]
             },{
                 style:'margin-top:10px;margin-left:50px',
@@ -630,6 +951,7 @@
                 },{
                     xtype: 'textfield',
                     columnWidth:.45,
+                    name:'listMinute',
                     emptyText: "格式：N1,N2,…  取值范围：0-59  例如：0,1,2,3"
                 }]
             },{
@@ -644,11 +966,13 @@
                 },{
                     xtype: 'textfield',
                     columnWidth:.45,
+                    name:'minuteLoopInterval',
                     emptyText: "格式：H/N  取值范围：0-59/1-59  例如：8/4"
                 }]
             }]
         },{
             xtype:'form',
+            name:'secondForm',
             style:'margin-top:20px',
             title:'秒',
             items:[{
@@ -669,27 +993,155 @@
                     xtype: 'combobox',
                     fieldLabel: '起始秒',
                     labelWidth: 60,
+                    name:'beginSecond',
                     emptyText: "------请选择起始秒------",
                     editable: false,
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
                     columnWidth:.2,
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_SECOND_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                        	
+                        	{ Name: 0, Value: 0 },
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13  },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25 },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  },
+                            { Name: 32, Value: 32  },
+                            { Name: 33, Value: 33  },
+                            { Name: 34, Value: 34  },
+                            { Name: 35, Value: 35  },
+                            { Name: 36, Value: 36  },
+                            { Name: 37, Value: 37  },
+                            { Name: 38, Value: 38  },
+                            { Name: 39, Value: 39  },
+                            { Name: 40, Value: 40  },
+                            { Name: 41, Value: 41  },
+                            { Name: 42, Value: 42  },
+                            { Name: 43, Value: 43  },
+                            { Name: 44, Value: 44  },
+                            { Name: 45, Value: 45  },
+                            { Name: 46, Value: 46  },
+                            { Name: 47, Value: 47  },
+                            { Name: 48, Value: 48  },
+                            { Name: 49, Value: 49  },
+                            { Name: 50, Value: 50  },
+                            { Name: 51, Value: 51  },
+                            { Name: 52, Value: 52  },
+                            { Name: 53, Value: 53  },
+                            { Name: 54, Value: 54  },
+                            { Name: 55, Value: 55  },
+                            { Name: 56, Value: 56  },
+                            { Name: 57, Value: 57  },
+                            { Name: 58, Value: 58  },
+                            { Name: 59, Value:59  }
+                        ]
+                    })
                 },{
                     xtype: 'combobox',
                     fieldLabel: '截止秒',
                     labelWidth: 60,
                     columnWidth:.25,
+                    name:'endSecond',
                     emptyText: "------请选择截止秒------",
                     editable: false,
                     style:'margin-left:40px',
                     forceSelection: true,
-                    valueField: 'TValue',
-                    displayField: 'TSDesc',
-                    queryMode: 'remote',
-                    store: new KitchenSink.view.common.store.appTransStore("TZ_SECOND_STATUS"),
+                    displayField: "Name",
+                    valueField: "Value",
+                    store:Ext.create("Ext.data.Store", {
+                        fields: ["Name", "Value"],
+                        data: [
+                        	
+                        	{ Name: 0, Value: 0 },
+                            { Name: 1, Value: 1 },
+                            { Name: 2, Value: 2  },
+                            { Name: 3, Value: 3  },
+                            { Name: 4, Value: 4  },
+                            { Name: 5, Value: 5  },
+                            { Name: 6, Value: 6  },
+                            { Name: 7, Value: 7  },
+                            { Name: 8, Value: 8  },
+                            { Name: 9, Value: 9  },
+                            { Name: 10, Value: 10  },
+                            { Name: 11, Value: 11  },
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13  },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25 },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  },
+                            { Name: 32, Value: 32  },
+                            { Name: 33, Value: 33  },
+                            { Name: 34, Value: 34  },
+                            { Name: 35, Value: 35  },
+                            { Name: 36, Value: 36  },
+                            { Name: 37, Value: 37  },
+                            { Name: 38, Value: 38  },
+                            { Name: 39, Value: 39  },
+                            { Name: 40, Value: 40  },
+                            { Name: 41, Value: 41  },
+                            { Name: 42, Value: 42  },
+                            { Name: 43, Value: 43  },
+                            { Name: 44, Value: 44  },
+                            { Name: 45, Value: 45  },
+                            { Name: 46, Value: 46  },
+                            { Name: 47, Value: 47  },
+                            { Name: 48, Value: 48  },
+                            { Name: 49, Value: 49  },
+                            { Name: 50, Value: 50  },
+                            { Name: 51, Value: 51  },
+                            { Name: 52, Value: 52  },
+                            { Name: 53, Value: 53  },
+                            { Name: 54, Value: 54  },
+                            { Name: 55, Value: 55  },
+                            { Name: 56, Value: 56  },
+                            { Name: 57, Value: 57  },
+                            { Name: 58, Value: 58  },
+                            { Name: 59, Value:59  }
+                        ]
+                    })
                 }]
             },{
                 style:'margin-top:10px;margin-left:50px',
@@ -703,6 +1155,7 @@
                 },{
                     xtype: 'textfield',
                     columnWidth:.45,
+                    name:'secondList',
                     emptyText: "格式：N1,N2,…  取值范围：0-59  例如：0,1,2,3"
                 }]
             },{
@@ -717,11 +1170,13 @@
                 },{
                     xtype: 'textfield',
                     columnWidth:.45,
+                    name:'secondLoopInterval',
                     emptyText: "格式：H/N  取值范围：0-59/1-59  例如：8/4"
                 }]
             }]
         },{
             xtype:'form',
+            name:'customForm',
             style:'margin-top:20px',
             title:'高级',
             items:[
@@ -738,12 +1193,14 @@
                         columnWidth:.25,
                         labelWidth:20,
                         fieldLabel: '年',
+                        name:'customYear',
                         emptyText: "空值或1970-2099  通配符：,-*/"
                     },{
                         xtype: 'textfield',
                         columnWidth:.25,
                         style:'margin-left:20px',
                         labelWidth:20,
+                        name:'customMonth',
                         fieldLabel: '月',
                         emptyText: "1-12或者JAN-DEC  通配符：,-*/"
                     },{
@@ -751,6 +1208,7 @@
                         columnWidth:.25,
                         style:'margin-left:20px',
                         labelWidth:20,
+                        name:'customWeek',
                         fieldLabel: '周',
                         emptyText: "1-7或者SUN-SAT  通配符：,-*?/L#"
                     }]
@@ -762,6 +1220,7 @@
                         xtype: 'textfield',
                         columnWidth:.25,
                         labelWidth:20,
+                        name:'customDay',
                         fieldLabel: '日',
                         emptyText: "1-31  通配符：,-*?/LW"
                     },{
@@ -769,6 +1228,7 @@
                         columnWidth:.25,
                         style:'margin-left:20px',
                         labelWidth:20,
+                        name:'customHour',
                         fieldLabel: '时',
                         emptyText: "0-23  通配符：,-*/"
                     },{
@@ -776,6 +1236,7 @@
                         columnWidth:.25,
                         style:'margin-left:20px',
                         labelWidth:20,
+                        name:'customMinute',
                         fieldLabel: '分',
                         emptyText: "0-59  通配符：,-*/"
                     },{
@@ -783,6 +1244,7 @@
                         columnWidth:.25,
                         style:'margin-left:20px',
                         labelWidth:20,
+                        name:'customSecond',
                         fieldLabel: '秒',
                         emptyText: "0-59  通配符：,-*/"
                     }]

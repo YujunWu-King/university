@@ -32,7 +32,7 @@
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/formvalidator/m/formValidator.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/layer.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
-		<!--  <style>
+		<style>
 			.noteing{font-weight:700;text-align:center;font-size:14px;font-weight:700;position:fixed;display:none;z-index:10000;cursor:pointer;}
 			.noteing .alert{padding:8px 20px;}
 			.alert{ padding: 8px 35px 8px 10px;text-shadow: none;-webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);-moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);background-color: #f9edbe;border: 1px solid #f0c36d;-webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px;color: #333333;}
@@ -50,7 +50,7 @@
 			.alert-block p+p{margin-top:5px;}
 			.alert-danger,.alert-error{border-color: #d59595;color: #b94a48;}
 			.alert-success,.alert-danger,.alert-error,.alert-info{text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);}
-		</style> -->
+		</style>
 		<script type="text/javascript">
 			SurveyBuild.tzGeneralURL = "%bind(:3)";		//统一接口
 			SurveyBuild.accessType = "M";				//访问类型
@@ -324,7 +324,7 @@
 			var _unique = $("#unique").val();
 			
 			var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"' + cType + '","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"'+ appInsId + '","pageNo":"'+ SurveyBuild.curPageNo + '","unique":"'+ _unique +'"';
-			if($("#OPENID")){
+			if($("#OPENID").length > 0){
 				tzSaveParams = tzSaveParams + ',"openid":"' + $("#OPENID").val() + '"';
 			}
 			tzSaveParams = tzSaveParams + ',"data":' + $.toJSON(_a) + '}]}}';

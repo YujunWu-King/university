@@ -69,9 +69,9 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     hMap.put("serverIP", serverIP);
                     hMap.put("intervalTime", intervalTime);
                     hMap.put("parallelNum", parallelNum);
-                    if("RUNNING".equals(status) ){
+                    if("STARTING".equals(status) ){
                         status = "运行中";
-                    }else if ("STOPPED".equals(status)){
+                    }else if ("STOPPING".equals(status)){
                         status = "已停止";
                     }
                     hMap.put("status", status);
@@ -174,7 +174,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     tzProcessServer.setTzJcfwqMs(processDec);
                     tzProcessServer.setTzRwxhJg(intervalTime);
                     tzProcessServer.setTzZdbxRws(parallelNum);
-                    tzProcessServer.setTzYxzt("STOPPED");
+                    tzProcessServer.setTzYxzt("STOPPING");
                     tzProcessServer.setTzBeizhu(remark);
 
                     tzProcessServerMapper.insertSelective(tzProcessServer);
@@ -276,7 +276,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
             TzProcessServer tzProcessServer = new TzProcessServer();
             tzProcessServer.setTzJgId(orgId);
             tzProcessServer.setTzJcfwqMc(processName);
-            tzProcessServer.setTzYxzt("RUNNING");
+            tzProcessServer.setTzYxzt("STARTING");
             tzProcessServerMapper.updateByPrimaryKeySelective(tzProcessServer);
             return strRet;
         } else{
@@ -286,7 +286,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
             TzProcessServer tzProcessServer = new TzProcessServer();
             tzProcessServer.setTzJgId(orgId);
             tzProcessServer.setTzJcfwqMc(processName);
-            tzProcessServer.setTzYxzt("STOPPED");
+            tzProcessServer.setTzYxzt("STOPPING");
             tzProcessServerMapper.updateByPrimaryKeySelective(tzProcessServer);
             return strRet;
         }

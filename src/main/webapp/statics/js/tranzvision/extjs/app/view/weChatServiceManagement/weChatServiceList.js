@@ -49,12 +49,12 @@
     initComponent: function () {  
 	   var store = new KitchenSink.view.weChatServiceManagement.weChatServiceStore();
         Ext.apply(this, {
-            columns: [/*{ 
+            columns: [{ 
                 text: '机构ID',
                 dataIndex: 'orgId',
 				width: 100,
 				hidden: true
-            },*/{
+            },{
                 text: '微信服务号名称',
                 sortable: true,
                 dataIndex: 'wxName',
@@ -78,7 +78,12 @@
 				dataIndex: 'wxParam',
                 minWidth: 100,
 				flex:1
-            },{
+            },/*{
+                text: '有效状态',
+                sortable: true,
+				dataIndex: 'wxState',
+                minWidth: 80
+            },*/{
                 text: '添加人',
                 sortable: true,
 				dataIndex: 'wxAddOprid',

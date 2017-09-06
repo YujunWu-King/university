@@ -5,6 +5,7 @@ Ext.define('KitchenSink.view.weChatServiceManagement.weChatServiceModel', {
         {name: 'wxName'},
         {name: 'wxId'},
         {name: 'wxSecret'},
-        {name: 'wxParam'}
+        {name: 'wxParam'},
+        {name: 'wxState'}        
 	]
 });

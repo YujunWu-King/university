@@ -143,6 +143,13 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		cmp.on('afterrender',function(panel){
 			//组件注册表单信息;
 			var form = panel.child('form').getForm();
+			var yearForm = panel.down('tabpanel').down('form[name=yearForm]').getForm();
+			var monthForm = panel.down('tabpanel').down('form[name=monthForm]').getForm();
+			var dayForm = panel.down('tabpanel').down('form[name=dayForm]').getForm();
+			var hourForm = panel.down('tabpanel').down('form[name=hourForm]').getForm();
+			var minuteForm = panel.down('tabpanel').down('form[name=minuteForm]').getForm();
+			var secondForm = panel.down('tabpanel').down('form[name=secondForm]').getForm();
+			var customForm = panel.down('tabpanel').down('form[name=customForm]').getForm();
 			form.findField("orgId").setReadOnly(true);
 			form.findField("loopName").setReadOnly(true);
 
@@ -150,9 +157,18 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			var tzParams = '{"ComID":"TZ_DD_LOOP_COM","PageID":"TZ_DD_LOOP_INFO","OperateType":"QF","comParams":{"orgId":"'+orgId+'","loopName":"'+ loopName +'"}}';
 			//加载数据
 			Ext.tzLoad(tzParams,function(responseData){
+				
 				//组件注册信息数据
 				var formData = responseData.formData;
 				form.setValues(formData);
+				yearForm.setValues(formData);
+				monthForm.setValues(formData);
+				dayForm.setValues(formData);
+				hourForm.setValues(formData);
+				minuteForm.setValues(formData);
+				secondForm.setValues(formData);
+				customForm.setValues(formData);
+			
 			});
 
 		});
@@ -355,32 +371,97 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		var formParams = form.getValues();
 		//组件信息标志
 		var actType = this.getView().actType;
-		console.log("actType======" + actType)
 
+		//集中定义JSON字符串，传递值到后台
+		var params = {"orgId":"","loopName":"","loopDesc":"","status":""
+					,"beginYear":"","endYear":"","yearList":"","yearLoopInterval":""
+					,"beginMonth":"","endMonth":"","monthList":"","monthLoopInterval":""
+					,"beginDay1":"","endDay1":"","day1List":"","day1LoopInterval":"","beginDate1":""
+					,"beginDay2":"","endDay2":"","day2List":"","day2LoopInterval":"","appointedDate1":"","appointedWeek":"","appointedDate2":""
+					,"beginHour":"","endHour":"","hourList":"","hourLoopInterval":""
+					,"beginMinute":"","endMinute":"","minuteList":"","minuteLoopInterval":""
+					,"beginSecond":"","endSecond":"","secondList":"","secondLoopInterval":""
+					,"customYear":"","customMonth":"","customWeek":"","customDay":"","customHour":"","customMinute":"","customSecond":""}
+		
 		//年份处理
-		var yearForm = this.getView().down('tabpanel').down('form[name=yearForm]').getForm();
-		var yearFormValues = yearForm.getValues();
-
-		if(Ext.getCmp("yearOne").checked == true){
-
-		}else if(Ext.getCmp("yearTwo").checked == true){
-
-		}else if(Ext.getCmp("yearThree").checked == true){
-
-		}else{
-
-		};
+		var yearForm = this.getView().down('tabpanel').down('form[name=yearForm]').getForm().getValues();
+		var monthForm = this.getView().down('tabpanel').down('form[name=monthForm]').getForm().getValues();
+		var dayForm = this.getView().down('tabpanel').down('form[name=dayForm]').getForm().getValues();
+		var hourForm = this.getView().down('tabpanel').down('form[name=hourForm]').getForm().getValues();
+		var minuteForm = this.getView().down('tabpanel').down('form[name=minuteForm]').getForm().getValues();
+		var secondForm = this.getView().down('tabpanel').down('form[name=secondForm]').getForm().getValues();
+		var customForm = this.getView().down('tabpanel').down('form[name=customForm]').getForm().getValues();
+		
+		//基本form
+		params.orgId = formParams["orgId"];
+		params.loopName = formParams["loopName"];
+		params.loopDesc = formParams["loopDesc"];
+		params.status = formParams["status"];
+		
+		//年
+		params.beginYear = yearForm["beginYear"];
+		params.endYear = yearForm["endYear"];
+		params.yearList = yearForm["yearList"];
+		params.yearLoopInterval = yearForm["yearLoopInterval"];
+		
+		//月
+		params.beginMonth = monthForm["beginMonth"];
+		params.endMonth = monthForm["endMonth"];
+		params.monthList = monthForm["monthList"];
+		params.monthLoopInterval = monthForm["monthLoopInterval"];
+		
+		//周、日
+		params.beginDay1 = dayForm["beginDay1"];
+		params.endDay1 = dayForm["endDay1"];
+		params.day1List = dayForm["day1List"];
+		params.day1LoopInterval = dayForm["day1LoopInterval"];
+		params.beginDate1 = dayForm["beginDate1"];
+		params.beginDay2 = dayForm["beginDay2"];
+		params.endDay2 = dayForm["endDay2"];
+		params.day2List = dayForm["day2List"];
+		params.day2LoopInterval = dayForm["day2LoopInterval"];
+		params.appointedDate1 = dayForm["appointedDate1"];
+		params.appointedWeek = dayForm["appointedWeek"];
+		params.appointedDate2 = dayForm["appointedDate2"];
+		
+		//时
+		params.beginHour = hourForm["beginHour"];
+		params.endHour = hourForm["endHour"];
+		params.hourList = hourForm["hourList"];
+		params.hourLoopInterval = hourForm["hourLoopInterval"];
+		
+		//分
+		params.beginMinute = minuteForm["beginMinute"];
+		params.endMinute = minuteForm["endMinute"];
+		params.minuteList = minuteForm["minuteList"];
+		params.minuteLoopInterval = minuteForm["minuteLoopInterval"];
+		
+		//秒
+		params.beginSecond = secondForm["beginSecond"];
+		params.endSecond = secondForm["endSecond"];
+		params.secondList = secondForm["secondList"];
+		params.secondLoopInterval = secondForm["secondLoopInterval"];
+		
+		//自定义
+		params.customSecond = customForm["customSecond"];
+		params.customMinute = customForm["customMinute"];
+		params.customHour = customForm["customHour"];
+		params.customDay = customForm["customDay"];
+		params.customWeek = customForm["customWeek"];
+		params.customMonth = customForm["customMonth"];
+		params.customYear = customForm["customYear"];
+		
 		//更新操作参数
 		var comParams = "";
 
 		//新增
 		if(actType == "add"){
-			comParams = '"add":[{"data":'+Ext.JSON.encode(formParams)+'}]';
+			comParams = '"add":[{"data":'+Ext.JSON.encode(params)+'}]';
 		}
 		//修改json字符串
 		var editJson = "";
 		if(actType == "update"){
-			editJson = '{"data":'+Ext.JSON.encode(formParams)+'}';
+			editJson = '{"data":'+Ext.JSON.encode(params)+'}';
 		}
 		if(editJson != ""){
 			if(comParams == ""){

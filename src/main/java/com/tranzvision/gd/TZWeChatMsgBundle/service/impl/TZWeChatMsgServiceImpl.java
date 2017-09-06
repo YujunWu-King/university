@@ -52,10 +52,10 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 		if(strWxAppId==null||strWxAppId.equals("")){
 			return null;
 		}
-		int count=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_TAG_TBL where TZ_JG_ID=? AND TZ_WX_APPID=?", new Object[]{strOrgId,"1"}, "Integer");	
+		int count=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_TAG_TBL where TZ_JG_ID=? AND TZ_WX_APPID=?", new Object[]{strOrgId,strWxAppId}, "Integer");	
 		String sqlTag="select TZ_WX_TAG_ID,TZ_WX_TAG_NAME from PS_TZ_WX_TAG_TBL where TZ_JG_ID=? AND TZ_WX_APPID=?";
 	    List<Map<String, Object>>tagList=new ArrayList<Map<String, Object>>();
-	    tagList=sqlQuery.queryForList(sqlTag, new Object[]{strOrgId,"1"});
+	    tagList=sqlQuery.queryForList(sqlTag, new Object[]{strOrgId,strWxAppId});
 		if (tagList != null && tagList.size() > 0) {
 			for (int i = 0; i < tagList.size(); i++) {
 				Map<String, Object> map = new HashMap<String, Object>();
