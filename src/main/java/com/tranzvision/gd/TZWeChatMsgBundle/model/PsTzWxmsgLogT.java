@@ -27,6 +27,8 @@ public class PsTzWxmsgLogT extends PsTzWxmsgLogTKey {
 
     private String tzSendMode;
 
+    private String tzMsgId;
+
     public String getTzSendPsn() {
         return tzSendPsn;
     }
@@ -121,5 +123,13 @@ public class PsTzWxmsgLogT extends PsTzWxmsgLogTKey {
 
     public void setTzSendMode(String tzSendMode) {
         this.tzSendMode = tzSendMode == null ? null : tzSendMode.trim();
+    }
+
+    public String getTzMsgId() {
+        return tzMsgId;
+    }
+
+    public void setTzMsgId(String tzMsgId) {
+        this.tzMsgId = tzMsgId == null ? null : tzMsgId.trim();
     }
 }

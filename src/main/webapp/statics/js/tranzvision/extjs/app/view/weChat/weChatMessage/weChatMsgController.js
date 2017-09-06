@@ -178,6 +178,20 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
     	if(!form.isValid()){
             return false;
         }
+    	var sendMode=form.findField("sendMode").getValue();
+    	var openIds=form.findField("openIds").getValue();
+    	var wechatTag=form.findField("wechatTag").getValue();
+    	if(sendMode=="A"){
+    		if(openIds==""){
+    			Ext.Msg.alert("提示","用户列表不能为空!");
+        		return false;
+    		}
+    	}else{
+			if(wechatTag==""){
+				Ext.Msg.alert("提示","请先选择标签!");
+        		return false;			
+			 }
+    	}
         var formParams = form.getValues();
         var tabPanel=form.findField("weChatTabPanel");
         var tabPanel=btn.findParentByType("panel").down("form").items.items[4];
@@ -186,14 +200,29 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
         if(activeForm=="form1"){
         	//文字消息
         	sendType="C";
+        	var wordMessage=form.findField("wordMessage").getValue();
+        	if(wordMessage==""){
+        		Ext.Msg.alert("提示","请先输入文字消息!");
+        		return false;
+        	}
         }
         if(activeForm=="form2"){
         	//图片消息
         	sendType="A";
+        	var tpMediaId=form.findField("tpMediaId").getValue();
+        	if(tpMediaId==""){
+        		Ext.Msg.alert("提示","请先选择图片素材!");
+        		return false;
+        	}
         }
         if(activeForm=="form3"){
         	//图文消息
         	sendType="B";
+        	var twMediaId=form.findField("twMediaId").getValue();
+        	if(twMediaId==""){
+        		Ext.Msg.alert("提示","请先选择图文素材!");
+        		return false;
+        	}
         }
         var tzParams = '{"ComID":"TZ_GD_WXMSG_COM","PageID":"TZ_GD_WXMSG_STD","OperateType":"U","comParams":{"add":[{"sendType":"'+sendType+'","data":'+Ext.JSON.encode(formParams)+'}]}}';
         //console.log(tzParams);
@@ -201,13 +230,13 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
         Ext.tzSubmit(tzParams,function(response){
         if(response.errcode==0){
            form.findField("sendStatus").setValue("Y");
-           msg="发送成功";
+           Ext.Msg.alert("提示","发送成功");
         }else{
            form.findField("sendStatus").setValue("N");
-           msg="发送失败";
+           Ext.Msg.alert("提示","发送失败");
          }
         	
-        },msg,true,this);
+        },false,true,this);
     },
     viewSendHis:function(btn){
     	alert("查看发送历史");
