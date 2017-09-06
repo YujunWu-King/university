@@ -12,7 +12,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore', {
 
 //获取参数
 function GetQueryString(url,name) {
-	url="http://localhost:8080/university/index#SEM_A0000001982?appId=111&sendMode=B&tags=1";
+	//url="http://localhost:8080/university/index#SEM_A0000001982?appId=111&sendMode=A&openIds=11,22,33";
 	var num=url.indexOf("?");
     var str=url.substr(num+1);
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");  

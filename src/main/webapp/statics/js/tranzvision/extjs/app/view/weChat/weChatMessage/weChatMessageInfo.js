@@ -30,9 +30,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
         	var weChatAppId=form.findField("appId").getValue();
         	//从URL中获取参数信息
         	if(sendMode==''||weChatAppId==''){
-        		var url=window.top.location.href;
-               //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=1,2,3";
-        	   //var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=A&openIds=11,33";
+        	   var url=window.top.location.href;
                var weChatAppId=GetQueryString(url,"appId");
                this.weChatAppId=weChatAppId;
 		       form.findField("appId").setValue(weChatAppId);
@@ -100,7 +98,8 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                 items: [{
                 	xtype:'hiddenfield',
                 	fieldLabel:'应用ID',
-                	name:'appId'
+                	name:'appId',
+                	allowBlank:false
                 },{
                     xtype: 'combo',
                     labelWidth: 100,
@@ -112,6 +111,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     hidden:true,
                     valueField: 'sendMode',
                     displayField: 'sendModeDesc',
+                    allowBlank:false,
                     store: {
                         fields: ["sendMode", "sendModeDesc"],
                         data: [

@@ -17,11 +17,12 @@
     <result column="TZ_MEDIA_ID" property="tzMediaId" jdbcType="VARCHAR" />
     <result column="TZ_SEND_TYPE" property="tzSendType" jdbcType="VARCHAR" />
     <result column="TZ_SEND_MODE" property="tzSendMode" jdbcType="VARCHAR" />
+    <result column="TZ_MSG_ID" property="tzMsgId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_JG_ID, TZ_WX_APPID, TZ_XH, TZ_SEND_PSN, TZ_SEND_DTIME, TZ_SEND_STATE, TZ_SENDS_DTIME, 
     TZ_S_TOTAL, TZ_S_FILTER, TZ_S_SUCESS, TZ_S_FAIL, TZ_CONTENT, TZ_MEDIA_ID, TZ_SEND_TYPE, 
-    TZ_SEND_MODE
+    TZ_SEND_MODE, TZ_MSG_ID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogTKey" >
     select 
@@ -42,14 +43,14 @@
       TZ_SEND_PSN, TZ_SEND_DTIME, TZ_SEND_STATE, 
       TZ_SENDS_DTIME, TZ_S_TOTAL, TZ_S_FILTER, 
       TZ_S_SUCESS, TZ_S_FAIL, TZ_CONTENT, 
-      TZ_MEDIA_ID, TZ_SEND_TYPE, TZ_SEND_MODE
-      )
+      TZ_MEDIA_ID, TZ_SEND_TYPE, TZ_SEND_MODE, 
+      TZ_MSG_ID)
     values (#{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, #{tzXh,jdbcType=VARCHAR}, 
       #{tzSendPsn,jdbcType=VARCHAR}, #{tzSendDtime,jdbcType=TIMESTAMP}, #{tzSendState,jdbcType=VARCHAR}, 
       #{tzSendsDtime,jdbcType=TIMESTAMP}, #{tzSTotal,jdbcType=INTEGER}, #{tzSFilter,jdbcType=INTEGER}, 
       #{tzSSucess,jdbcType=INTEGER}, #{tzSFail,jdbcType=INTEGER}, #{tzContent,jdbcType=VARCHAR}, 
-      #{tzMediaId,jdbcType=VARCHAR}, #{tzSendType,jdbcType=VARCHAR}, #{tzSendMode,jdbcType=VARCHAR}
-      )
+      #{tzMediaId,jdbcType=VARCHAR}, #{tzSendType,jdbcType=VARCHAR}, #{tzSendMode,jdbcType=VARCHAR}, 
+      #{tzMsgId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogT" >
     insert into PS_TZ_WXMSG_LOG_T
@@ -99,6 +100,9 @@
       <if test="tzSendMode != null" >
         TZ_SEND_MODE,
       </if>
+      <if test="tzMsgId != null" >
+        TZ_MSG_ID,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzJgId != null" >
@@ -146,6 +150,9 @@
       <if test="tzSendMode != null" >
         #{tzSendMode,jdbcType=VARCHAR},
       </if>
+      <if test="tzMsgId != null" >
+        #{tzMsgId,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogT" >
@@ -187,6 +194,9 @@
       <if test="tzSendMode != null" >
         TZ_SEND_MODE = #{tzSendMode,jdbcType=VARCHAR},
       </if>
+      <if test="tzMsgId != null" >
+        TZ_MSG_ID = #{tzMsgId,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
@@ -205,7 +215,8 @@
       TZ_CONTENT = #{tzContent,jdbcType=VARCHAR},
       TZ_MEDIA_ID = #{tzMediaId,jdbcType=VARCHAR},
       TZ_SEND_TYPE = #{tzSendType,jdbcType=VARCHAR},
-      TZ_SEND_MODE = #{tzSendMode,jdbcType=VARCHAR}
+      TZ_SEND_MODE = #{tzSendMode,jdbcType=VARCHAR},
+      TZ_MSG_ID = #{tzMsgId,jdbcType=VARCHAR}
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
       and TZ_XH = #{tzXh,jdbcType=VARCHAR}

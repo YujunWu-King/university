@@ -20,6 +20,7 @@ import com.tranzvision.gd.TZWeChatMsgBundle.dao.PsTzWxmsgLogTMapper;
 import com.tranzvision.gd.TZWeChatMsgBundle.dao.PsTzWxmsgUserTMapper;
 import com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgLogT;
 import com.tranzvision.gd.TZWeChatMsgBundle.model.PsTzWxmsgUserT;
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -135,16 +136,18 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 		    	msgtype="text";
 		    }
 		    
-		    TzWxApiObject TzWxApiObject=new TzWxApiObject();
+		    //TzWxApiObject TzWxApiObject=new TzWxApiObject();
+		    GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+        	TzWxApiObject tzWxApiObject = (TzWxApiObject) getSpringBeanUtil.getSpringBeanByID("tzWxApiObject");
 		    String strMsgId="";
 		    String strSendStatus="N";
 			//strSendMode-A:指定用户,B:按照标签
 			if("A".equals(strSendMode)){
 				String  strOpenArray[]=strOpenIds.split(",");
-				Map<String,Object> map=TzWxApiObject.messageMassSendByOpenid(strOrgId, strAppId, mediaIdOrContent, msgtype, strOpenArray, "", "");
+				Map<String,Object> map=tzWxApiObject.messageMassSendByOpenid(strOrgId, strAppId, mediaIdOrContent, msgtype, strOpenArray, "", "");
 				if("0".equals(map.get("errcode").toString())){
 					strMsgId=map.get("msg_id").toString();
-					Map<String,Object> statusMap=TzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
+					Map<String,Object> statusMap=tzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
 					strSendStatus=statusMap.get("msg_status").toString();
 					if("SEND_SUCCESS".equals(strSendStatus)){
 						strSendStatus="Y";
@@ -171,10 +174,10 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 			//按照标签
 			if("B".equals(strSendMode)){
 					if(!"".equals(strWxTag)){
-						Map<String,Object> map=TzWxApiObject.messageMassSendByTag(strOrgId, strAppId, mediaIdOrContent, msgtype, strWxTag, "", "");
+						Map<String,Object> map=tzWxApiObject.messageMassSendByTag(strOrgId, strAppId, mediaIdOrContent, msgtype, strWxTag, "", "");
 						if("0".equals(map.get("errcode").toString())){
 							strMsgId=map.get("msg_id").toString();
-							Map<String,Object> statusMap=TzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
+							Map<String,Object> statusMap=tzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
 							strSendStatus=statusMap.get("msg_status").toString();
 							if("SEND_SUCCESS".equals(strSendStatus)){
 								strSendStatus="Y";
@@ -204,6 +207,7 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 			PsTzWxmsgLogT.setTzSendMode(strSendMode);
 			PsTzWxmsgLogT.setTzSendType(strSendType);
 			PsTzWxmsgLogT.setTzSendState(strSendStatus);
+			PsTzWxmsgLogT.setTzMsgId(strMsgId);
 			psTzWxmsgLogTMapper.insert(PsTzWxmsgLogT);
 		}
 		returnMap.put("errcode", "0");
