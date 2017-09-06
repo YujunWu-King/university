@@ -59,8 +59,7 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogList', {
         dockedItems:{
             xtype:"toolbar",
             items:[
-                {text:"查询",tooltip:"查询数据",iconCls:"query",handler:'queryPlstCom'},"-",
-                {text:"查看",tooltip:"查看详细信息",iconCls:"view",handler:'getLogInfo'}
+                {text:"查询",tooltip:"查询数据",iconCls:"query",handler:'queryPlstCom'}
             ]
         },
         selModel: {
@@ -86,6 +85,17 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogList', {
         },{
             text: '类型',
             dataIndex: 'sendType',
+            renderer:function(value,metadata,record){
+            	var typeStore = new KitchenSink.view.common.store.appTransStore("TZ_SEND_TYPE");
+				if(value == null || value==""){
+					return "";	
+				}
+				var index = typeStore.find('TValue',value);   
+				if(index!=-1){   
+					   return typeStore.getAt(index).data.TSDesc;   
+				}   
+				return value;     				 
+			}
         },{
 			text: '发送时间',
 			dataIndex: 'sendDTime',
@@ -127,10 +137,10 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogList', {
     buttons: [{
 		text: '确定',
 		iconCls:"ensure",
-		handler: 'onPlstInfoEnsure'
+		handler: 'closeList'
 	}, {
 		text: '关闭',
 		iconCls:"close",
-		handler: 'onPlstInfoClose'
+		handler: 'closeList'
 	}]
 });

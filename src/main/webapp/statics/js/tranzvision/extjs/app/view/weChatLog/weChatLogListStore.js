@@ -2,7 +2,6 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogListStore', {
     extend: 'Ext.data.Store',
     alias: 'store.weChatLogListStore',
     model: 'KitchenSink.view.weChatLog.weChatLogListModel',
-	autoLoad: true,
 	pageSize: 10,
 	comID: 'TZ_GD_WXSERVICE_COM',
 	pageID: 'TZ_GD_LOGLIST_STD',

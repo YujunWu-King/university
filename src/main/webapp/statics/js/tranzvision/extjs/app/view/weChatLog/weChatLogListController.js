@@ -11,7 +11,6 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogListController', {
 		 var orgId = selRec.get("jgId");
 	   	 var wxAppId = selRec.get("appId");
 	   	 var xH = selRec.get("XH");
-	   	 alert(orgId+'jia'+wxAppId+'jia'+xH);
 	     this.getLogInfoById(orgId, wxAppId, xH);
 	     },
 	     
@@ -29,7 +28,7 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogListController', {
             return;
         }
 
-        var win = this.lookupReference('comPageWindow');
+        var win = this.lookupReference('weChatLogInfo');
 
         if (!win) {
             Ext.syncRequire(className);
@@ -43,9 +42,8 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogListController', {
         win.actType = "update";
 
         var form = win.child("form").getForm();
-        var pageGrid = Ext.getCmp('pageGrid');
-        var processGrid = Ext.getCmp('processGrid');
-        var grid = form.child('grid');
+        var grid = win.child('grid');
+        
 //        form.setValues(
 //            [
 //                {id:'comID', value:orgId},
@@ -53,14 +51,31 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogListController', {
 //                {id:'comName', value:xH}
 //            ]
 //        );
-        var tzStoreParams = '{"jgId":"'+orgId+'","appId":"'+wxAppId+'","XH":"'+xH+'"}';
-
-        pageGrid.store.tzStoreParams = tzStoreParams;
-        pageGrid.store.load();
-        grid.store.tzStoreParams = '{"cfgSrhId":"TZ_GD_WXSERVICE_COM.TZ_GD_LOGINFO_STD.TZ_PROCESS_DF_VW","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+ Ext.tzOrgID+'","TZ_ZCZJ_ID-operator": "01","TZ_ZCZJ_ID-value": "' + comID + '"}}';;;
-        grid.store.load();
+//        var tzStoreParams = '{"jgId":"'+orgId+'","appId":"'+wxAppId+'","XH":"'+xH+'"}';
+        var tzParams = '{"ComID":"TZ_GD_WXSERVICE_COM","PageID":"TZ_GD_LOGINFO_STD","OperateType":"QF","comParams":{"orgId":"'+orgId+'","wxAppId":"'+wxAppId+'","XH":"'+xH+'"}}';
+        //加载数据
+        Ext.tzLoad(tzParams,function(responseData){
+        	 //资源集合信息数据
+            var formData = responseData.formData;
+            form.setValues(formData);
+            //资源集合信息列表数据
+            var roleList = responseData.listData;
+            var tzStoreParams = '{"cfgSrhId": "TZ_GD_WXSERVICE_COM.TZ_GD_LOGINFO_STD.TZ_WXMSG_USER_V","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+orgId+'","TZ_WX_APPID-operator": "01","TZ_WX_APPID-value": "'+wxAppId+'","TZ_XH-operator": "01","TZ_XH-value": "'+xH+'"}}';
+            grid.store.tzStoreParams = tzStoreParams;
+            grid.store.load();     
+        });   
 
         win.show();
-	}
+	},
+	 //关闭
+ 	closeList:function(btn){
+ 		this.view.close();
+ 	},
+ 	closeList: function(btn){
+ 		var panel = btn.findParentByType("panel");
+ 		var form = panel.child("form").getForm();
+ 		panel.close();
+ 	},
+	    
     
 });

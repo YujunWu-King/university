@@ -1,39 +1,53 @@
 Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
     extend: 'Ext.window.Window',
     xtype: 'weChatLogInfo',
-//	requires: [
-//	    'Ext.data.*',
-//        'Ext.grid.*',
-//        'Ext.util.*',
-//        'Ext.toolbar.Paging',
-//        'Ext.ux.ProgressBarPager',
-//        'KitchenSink.AdvancedVType',
-//        'KitchenSink.view.weChatLog.weChatLogInfoStore',
-//        'KitchenSink.view.weChatLog.weChatLogListController'
-//	],
+    reference: 'weChatLogInfo',
+	requires: [
+	    'Ext.data.*',
+        'Ext.grid.*',
+        'Ext.util.*',
+        'Ext.toolbar.Paging',
+        'Ext.ux.ProgressBarPager',
+        'KitchenSink.AdvancedVType',
+        'KitchenSink.view.weChatLog.weChatLogInfoModel',
+        'KitchenSink.view.weChatLog.weChatLogInfoStore'
+	],
     title: '微信服务号日志',
-    width: 600,
-    height: 520,
-    minWidth: 300,
-    minHeight: 380,
-    layout: 'fit',
+    bodyStyle:'overflow-y:auto;overflow-x:hidden;padding-top:10px',
+    actType: 'update',
+    width: 650,
+//    y:10,
+//    autoScroll：true,
+    minWidth: 400,
+    minHeight: 400,
+    maxHeight: 600,
     resizable: true,
-    modal: true,
-    closeAction: 'destroy',
-	actType: 'add',
-    controller: 'weChatLogListController',
+    modal:true,
+    listeners:{
+        resize: function(win){
+            win.doLayout();
+        }
+    },
+    viewConfig: {
+        enableTextSelection: true
+    },
     items: [{
         xtype: 'form',
-        reference: 'weChatInfoForm',
-		layout: {
-            type: 'vbox',
-            align: 'stretch'
+        reference: 'weChatLogInfoForm',
+        layout: {
+//            type: 'vbox',
+//            align: 'stretch',
+            type:'table',
+        	columns:2
+        },
+        fieldDefaults: {
+            msgTarget: 'side',
+            labelStyle: 'font-weight:bold'
         },
         border: false,
         bodyPadding: 10,
-		//heigth: 600,
-		bodyStyle:'overflow-y:auto;overflow-x:hidden',
-		
+        bodyStyle:'overflow-y:auto;overflow-x:hidden',
+
         fieldDefaults: {
             msgTarget: 'side',
             labelWidth: 100,
@@ -41,25 +55,31 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
         },
 		
         items: [{
-        	xtype: 'textfield',
+        	xtype: 'combo',
         	fieldLabel: '发送类型',
             name: 'sendTpye',
             readOnly:true,
-            cls:'lanage_1'
+            fieldStyle:'background:#F4F4F4',
+            editable : false,
+            valueField: 'TValue',
+            editable:false,
+            displayField: 'TLDesc',
+            store: new KitchenSink.view.common.store.appTransStore("TZ_SEND_TYPE"),
+            queryMode: 'local'	 
         },
         {
             xtype: 'textfield',
             fieldLabel: '发送人',
             name: 'sendPsn',
             readOnly:true,
-            cls:'lanage_1'
+            fieldStyle:'background:#F4F4F4'
         },
         {
             xtype: 'textfield',
             fieldLabel: '发送时间',
             name: 'sendDTime',
             readOnly:true,
-            cls:'lanage_1'
+            fieldStyle:'background:#F4F4F4'
         },
         {
             xtype: 'textfield',
@@ -104,29 +124,28 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
             cls:'lanage_1'
         },
        {
-            xtype: 'checkboxfield',
+            xtype: 'textfield',
             fieldLabel: '发送内容',
-            name: 'context',
-            hideLabel:true
-        }]
+            name: 'content',
+            readOnly:true,
+            cls:'lanage_1'
+        },
+        {
+            xtype: 'textfield',
+            fieldLabel: '素材编号',
+            name: 'mediaId',
+            readOnly:true,
+            cls:'lanage_1'
+        }
+        ]
     },
         {
 		xtype: 'grid',
-        height:340,
+//        height:340,
         autoHeight:true,
 		title: '群发用户',
 		frame: true,
 		columnLines: true,
-//        dockedItems:{
-//            xtype:"toolbar",
-//            items:[
-//                {text:"查询",tooltip:"查询数据",iconCls:"query",handler:'queryIn'},"-",
-//                {text:"查看",tooltip:"查看详细信息",iconCls:"view",handler:'viewLogInfo'}
-//            ]
-//        },
-//        selModel: {
-//            type: 'checkboxmodel'
-//        },
 		reference: 'weChatLogInfoGrid',
 		style:"margin:10px",
 		store: {
@@ -142,17 +161,8 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
 			dataIndex: 'nickName',
 			minWidth: 200,
 			flex: 1
-		},{
-            menuDisabled: true,
-            sortable: false,
-            align:'center',
-            width:50,
-            xtype: 'actioncolumn',
-            items:[
-                //{iconCls: 'preview',tooltip: '查看',handler:'viewLogInfo'}
-                //,{iconCls: 'remove',tooltip: '删除',handler:'deleteCurrPlstCom'}
-            ]
-        }],
+		}
+		],
 		bbar: {
 			xtype: 'pagingtoolbar',
 			pageSize: 5,
@@ -166,13 +176,19 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
 			plugins: new Ext.ux.ProgressBarPager()
 		}
 	}],
-    buttons: [{
+    buttons: [/*{
 		text: '确定',
 		iconCls:"ensure",
 		handler: 'onLogInfoEnsure'
-	}, {
-		text: '关闭',
-		iconCls:"close",
-		handler: 'onLogInfoClose'
+	},*/ {
+		 text: '关闭',
+	        iconCls:"close",
+	        handler: function(btn){
+	            //获取窗口
+	            var win = btn.findParentByType("window");
+	            var form = win.child("form").getForm();
+	            //关闭窗口
+	            win.close();
+	        }
 	}]
 });

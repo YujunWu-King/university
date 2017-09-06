@@ -81,12 +81,33 @@ public class TzWeChatLogService extends FrameworkImpl{
 				
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 				for (int i = 0; i < list.size(); i++) {
+					
 					String[] rowList = list.get(i);
+					
+					String sendType = "";
+					//System.out.println("result:"+rowList[3]);
+					if (rowList[3].equals("A")) {
+						sendType = "图片消息";
+					} else if (rowList[3].equals("B")){
+						sendType = "图文消息";
+					} else if (rowList[3].equals("C")){
+						sendType = "文字消息";
+					} else if (rowList[3].equals("D")){
+						sendType = "模板消息";
+					}
+					
+//					String sendSate = "";
+//					if (rowList[6]=="A") {
+//						sendSate = "有效";
+//					} else if (rowList[6]=="B") {
+//						sendSate = "无效";
+//					}
+					
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("jgId", rowList[0]);
 					mapList.put("appId", rowList[1]);
 					mapList.put("XH", rowList[2]);
-					mapList.put("sendType", rowList[3]);
+					mapList.put("sendType", sendType);
 					mapList.put("sendDTime", rowList[4]);
 					mapList.put("sendPSN", rowList[5]);
 					mapList.put("sendState", rowList[6]);

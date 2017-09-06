@@ -45,7 +45,7 @@ public class TzWeChatLogInfoServiceImpl extends FrameworkImpl{
 				
 				PsTzWeChatLogTbl psTzWeChatLogTbl =psTzWeChatLogMapper.selectByPrimaryKey(psTzWeChatLogTblKey);
 				if (psTzWeChatLogTbl != null) {
-					Map<String, Object> jsonMap = new HashMap<>();
+					Map<Object, Object> jsonMap = new HashMap<>();
 					jsonMap.put("jgId",strJgID);
 					jsonMap.put("appId", strAppID);
 					jsonMap.put("XH", strXH);
@@ -58,7 +58,7 @@ public class TzWeChatLogInfoServiceImpl extends FrameworkImpl{
 					jsonMap.put("s_fiter", psTzWeChatLogTbl.getTzSFilter());
 					jsonMap.put("s_suceuss", psTzWeChatLogTbl.getTzSSucess());
 					jsonMap.put("s_fail", psTzWeChatLogTbl.getTzSFail());
-//					jsonMap.put("context", strXH);
+					jsonMap.put("content", psTzWeChatLogTbl.getTzContent());
 					returnJsonMap.replace("formData", jsonMap);
 				} else {
 					errMsg[0] = "1";
@@ -77,49 +77,49 @@ public class TzWeChatLogInfoServiceImpl extends FrameworkImpl{
 	}
 	
 	
-//	/*获取授权组件列表*/
-//	@Override
-//	@SuppressWarnings("unchecked")
-//	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
-//		// 返回值;
-//		Map<String, Object> mapRet = new HashMap<String, Object>();
-//		mapRet.put("total", 0);
-//		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-//		mapRet.put("root", listData);
-//		JacksonUtil jacksonUtil = new JacksonUtil();
-//		try {
-//			System.out.println("result:"+comParams);
-//			// 排序字段如果没有不要赋值
-//			String[][] orderByArr = new String[][] { };
-//
-//			// json数据要的结果字段;
-//			String[] resultFldArray = { "TZ_XH","TZ_SEND_TYPE", "TZ_SEND_DTIME", "TZ_SEND_PSN","TZ_SEND_STATE"};
-//
-//			// 可配置搜索通用函数;
-//			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
-//			if (obj != null && obj.length > 0) {
-//				
-//				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
-//				for (int i = 0; i < list.size(); i++) {
-//					String[] rowList = list.get(i);
-//					Map<String, Object> mapList = new HashMap<String, Object>();
-//					mapList.put("XH", rowList[0]);
-//					mapList.put("sendType", rowList[1]);
+	/*获取授权组件列表*/
+	@Override
+	@SuppressWarnings("unchecked")
+	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
+		// 返回值;
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			System.out.println("result:"+comParams);
+			// 排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][] { };
+
+			// json数据要的结果字段;
+			String[] resultFldArray = { "TZ_XH_ID","TZ_XH_NAME"};
+
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
+			if (obj != null && obj.length > 0) {
+				
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+				for (int i = 0; i < list.size(); i++) {
+					String[] rowList = list.get(i);
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("openId", rowList[0]);
+					mapList.put("nickName", rowList[1]);
 //					mapList.put("sendDTime", rowList[2]);
 //					mapList.put("sendPSN", rowList[3]);
 //					mapList.put("sendState", rowList[4]);
-//
-//					listData.add(mapList);
-//				}
-//
-//				mapRet.replace("total", obj[0]);
-//				mapRet.replace("root", listData);
-//
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return jacksonUtil.Map2json(mapRet);
-//	}
+
+					listData.add(mapList);
+				}
+
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jacksonUtil.Map2json(mapRet);
+	}
 	
 }
