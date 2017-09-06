@@ -196,11 +196,18 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
         	sendType="B";
         }
         var tzParams = '{"ComID":"TZ_GD_WXMSG_COM","PageID":"TZ_GD_WXMSG_STD","OperateType":"U","comParams":{"add":[{"sendType":"'+sendType+'","data":'+Ext.JSON.encode(formParams)+'}]}}';
-        console.log(tzParams);
-        
-       /* Ext.tzSubmit(tzParams,function(response){
-        	form.findField("sendStatus").setValue("Y");
-        },"发送成功",true,this);*/
+        //console.log(tzParams);
+        var msg="";
+        Ext.tzSubmit(tzParams,function(response){
+        if(response.errcode==0){
+           form.findField("sendStatus").setValue("Y");
+           msg="发送成功";
+        }else{
+           form.findField("sendStatus").setValue("N");
+           msg="发送失败";
+         }
+        	
+        },msg,true,this);
     },
     viewSendHis:function(btn){
     	alert("查看发送历史");
