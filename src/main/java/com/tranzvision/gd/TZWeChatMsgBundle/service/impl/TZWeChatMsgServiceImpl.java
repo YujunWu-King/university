@@ -163,7 +163,7 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 					PsTzWxmsgUserT.setTzJgId(strOrgId);
 					PsTzWxmsgUserT.setTzXh(strUserXh);
 					PsTzWxmsgUserT.setTzXhId(openId);
-					//psTzWxmsgUserTMapper.insert(PsTzWxmsgUserT);
+					psTzWxmsgUserTMapper.insert(PsTzWxmsgUserT);
 				  }
 				}
 				
@@ -190,7 +190,7 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 						PsTzWxmsgUserT.setTzJgId(strOrgId);
 						PsTzWxmsgUserT.setTzXh(strUserXh);
 						PsTzWxmsgUserT.setTzXhId(strWxTag);
-						//psTzWxmsgUserTMapper.insert(PsTzWxmsgUserT);
+						psTzWxmsgUserTMapper.insert(PsTzWxmsgUserT);
 					}
 				
 			}
@@ -204,7 +204,7 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 			PsTzWxmsgLogT.setTzSendMode(strSendMode);
 			PsTzWxmsgLogT.setTzSendType(strSendType);
 			PsTzWxmsgLogT.setTzSendState(strSendStatus);
-			//psTzWxmsgLogTMapper.insert(PsTzWxmsgLogT);
+			psTzWxmsgLogTMapper.insert(PsTzWxmsgLogT);
 		}
 		returnMap.put("errcode", "0");
 		returnMap.put("errmsg", "微信消息发送成功");
