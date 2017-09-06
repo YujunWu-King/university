@@ -78,12 +78,12 @@
 				dataIndex: 'wxParam',
                 minWidth: 100,
 				flex:1
-            },/*{
+            },{
                 text: '有效状态',
                 sortable: true,
 				dataIndex: 'wxState',
                 minWidth: 80
-            },*/{
+            },{
                 text: '添加人',
                 sortable: true,
 				dataIndex: 'wxAddOprid',

@@ -5,6 +5,8 @@ import java.util.Date;
 public class PsTzWxAppseTbl extends PsTzWxAppseTblKey {
     private String tzWxSecret;
 
+    private String tzWxOriid;
+
     private String tzWxName;
 
     private String tzFromPvalue;
@@ -28,6 +30,14 @@ public class PsTzWxAppseTbl extends PsTzWxAppseTblKey {
 
     public void setTzWxSecret(String tzWxSecret) {
         this.tzWxSecret = tzWxSecret == null ? null : tzWxSecret.trim();
+    }
+
+    public String getTzWxOriid() {
+        return tzWxOriid;
+    }
+
+    public void setTzWxOriid(String tzWxOriid) {
+        this.tzWxOriid = tzWxOriid == null ? null : tzWxOriid.trim();
     }
 
     public String getTzWxName() {

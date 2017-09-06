@@ -59,6 +59,10 @@
             ],
 			allowBlank: false
         }, {
+            xtype: 'textfield',
+			fieldLabel: Ext.tzGetResourse("TZ_GD_WXSERVICE_COM.TZ_GD_FWHLIST_STD.wxOriId","原始ID"),
+			name: 'wxOriId',
+        }, {
     		xtype: 'combobox',
 	        fieldLabel: "有效状态",
 	        editable:false,
