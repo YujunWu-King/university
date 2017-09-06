@@ -45,6 +45,10 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                this.openIds=openIds;
 		       form.findField("openIds").setValue(openIds);
 		       
+		       var tags=GetQueryString(url,"tags");
+		       this.wechatTag=tags;
+		       form.findField("wechatTag").setValue(tags);
+		       
 		     //如果为指定用户，按照标签字段隐藏；如果为按照标签，用户列表字段隐藏。
 	        	if(sendMode=='A'){
 	        		form.findField("wechatTag").setVisible(false);
@@ -56,12 +60,13 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
         }
     },
     initComponent:function(){
-        var tagStore = new KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore({
+    	var tagStore = new KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore();
+    	/*var tagStore = new KitchenSink.view.weChat.weChatMessage.weChatMsgTagStore({
         	listeners:{
         		load:function(){
-        			var url=window.top.location.href;
+        			//var url=window.top.location.href;
+        			var url="http://localhost:8080/university/index#SEM_A0000001982?appId=1&sendMode=B&tags=2";
                     var tags=GetQueryString(url,"tags");
-                    console.log(tags);
                     if(tags!=""){
                     	this.wechatTag=tags;
                     	Ext.getCmp("wechatTag_20170830").setValue(tags);
@@ -73,7 +78,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
         //加载URL模式的store
         if(this.weChatAppId!=""){
           tagStore.tzStoreParams='{"wxAppId":"' + this.weChatAppId + '"}';
-        }
+        }*/
         tagStore.load();
 
         Ext.apply(this,{
@@ -104,6 +109,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     name: 'sendMode',
                     emptyText: '请选择',
                     mode: "remote",
+                    hidden:true,
                     valueField: 'sendMode',
                     displayField: 'sendModeDesc',
                     store: {
@@ -121,6 +127,17 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     grow:true,
                     name:'openIds'
                 },{
+                	xtype: 'combo',
+                    labelWidth: 100,
+                    fieldLabel: '按照标签',
+                    name: 'wechatTag',
+                    id:'wechatTag_20170830',
+                    mode: "remote",
+                    editable: false,
+                    valueField: 'tagId',
+                    displayField: 'tagName',
+                    store:tagStore
+                },/*{
                     xtype:'tagfield',
                     fieldLabel:'按照标签',
                     name:'wechatTag',
@@ -142,7 +159,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                         }
                     }
                     
-                },{
+                }*/,{
                     xtype: 'tabpanel',
                     frame: true,
                     activeTab: 0,
