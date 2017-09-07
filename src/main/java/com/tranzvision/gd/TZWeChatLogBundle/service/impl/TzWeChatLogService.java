@@ -9,16 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZPermissionDefnBundle.model.PsClassDefn;
-import com.tranzvision.gd.TZWeChatLogBundle.dao.PsTzWeChatLogMapper;
-import com.tranzvision.gd.TZWeChatLogBundle.model.PsTzWeChatLogTbl;
-import com.tranzvision.gd.TZWeChatLogBundle.model.PsTzWeChatLogTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 
 @Service("com.tranzvision.gd.TZWeChatLogBundle.service.impl.TzWeChatLogService")
 public class TzWeChatLogService extends FrameworkImpl{
-	@Autowired
-	private PsTzWeChatLogMapper psTzWeChatLogMapper;
 	@Autowired
 	private FliterForm fliterForm;
 	/* 获取微信服务号定义信息 */

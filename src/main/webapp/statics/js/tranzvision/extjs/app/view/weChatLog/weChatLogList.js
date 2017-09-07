@@ -35,7 +35,7 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogList', {
 		
         items: [{
             xtype: 'textfield',
-            fieldLabel: '机构ID',
+            fieldLabel: '机构',
 			name: 'jgId',
             vtype:'toUppercase',
             maxLength: 30,
@@ -45,7 +45,7 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogList', {
             allowBlank: false
         }, {
             xtype: 'textfield',
-            fieldLabel: '服务号ID',
+            fieldLabel: '服务号',
 			name: 'appId'
         }]
     },
@@ -59,7 +59,7 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogList', {
         dockedItems:{
             xtype:"toolbar",
             items:[
-                {text:"查询",tooltip:"查询数据",iconCls:"query",handler:'queryPlstCom'}
+                {text:"查询",tooltip:"查询数据",iconCls:"query",handler:'query'}
             ]
         },
         selModel: {
