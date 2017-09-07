@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZWeChatUserBundle.service.impl;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,17 +13,24 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.http.protocol.HTTP;
 import org.dom4j.tree.BaseElement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.StreamingHttpOutputMessage;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWxApiObject;
 import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxTagTblMapper;
 import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxUserAetMapper;
 import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxUserTblMapper;
 import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxuserTagTMapper;
+import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxTagTbl;
+import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxTagTblKey;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserAet;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl;
+import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTblKey;
+import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxuserTagT;
+import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxuserTagTKey;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -61,6 +69,8 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 	private PsTzWxuserTagTMapper psTzWxuserTagTMapper;
 	@Autowired
 	private GetHardCodePoint getHardCodePoint;
+	@Autowired
+	private TzWxApiObject tzWxApiObject;
 	
 	
 	
@@ -319,10 +329,14 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 		
 		try {
 			
+			//当前登录人OPRID
+			String currentOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
 			jacksonUtil.json2Map(strParams);
 			String jgId = jacksonUtil.getString("jgId");
 			String wxAppId = jacksonUtil.getString("wxAppId");
 			
+
 			/*生成运行控制ID*/
 			SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMddHHmmss");
 			String s_dt = dateFormate.format(new Date());
@@ -333,13 +347,15 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 			psTzWxUserAet.setRunCntlId(runCntlId);
 			psTzWxUserAet.setTzJgId(jgId);
 			psTzWxUserAet.setTzWxAppid(wxAppId);
+			psTzWxUserAet.setOprid(currentOprid);
 			psTzWxUserAetMapper.insert(psTzWxUserAet);
-			
+
 			
 			//当前机构
 			String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			//当前登录账号
 			String currentDlzhId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+
 			
 			BaseEngine tmpEngine = tzGdObject.createEngineProcess(currentOrgId, "TZ_WX_USER_PROC");
 			
@@ -350,9 +366,11 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 			schdProcessParameters.setLoginUserAccount(currentDlzhId);
 			schdProcessParameters.setPlanExcuteDateTime(new Date());
 			schdProcessParameters.setRunControlId(runCntlId);
+
 			
 			/*调度作业*/
 			tmpEngine.schedule(schdProcessParameters);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -365,32 +383,206 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 	
 	
 	/*AE执行内容*/
-	public String getUserAllAeInfo(String jgId,String wxAppId,String[] errMsg) {
+	public String getUserAllAeInfo(String jgId,String wxAppId,String oprid,String[] errMsg) {
 		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Map<String, Object> mapRet = new HashMap<String,Object>();
 		
 		try {
 			
-			/**调用微信接口获取全量用户
-			 * 
-			 * 
-			 * 
-			 * 
-			 * 
-			 * 
-			 * 
-			 * 
-			 * 
-			 */
+			String errcode = "",errmsg = "";
 			
-			PsTzWxUserTbl psTzWxUserTbl = new PsTzWxUserTbl();
-			psTzWxUserTbl.setTzJgId(jgId);
-			psTzWxUserTbl.setTzWxAppid(wxAppId);
-			psTzWxUserTbl.setTzOpenId("3");
-			psTzWxUserTbl.setTzNickname("33");
-			psTzWxUserTblMapper.insert(psTzWxUserTbl);
+			/*调用微信接口*/
 			
+			/*获取标签*/
+			Map<String, Object> mapTagList = new HashMap<String,Object>();
+			List<Map<String, Object>> listTags = new ArrayList<Map<String,Object>>();
+			String tagId = "", tagName = "";
+			Integer tagCount = 0;
+			mapTagList = tzWxApiObject.getAllTags(jgId,wxAppId);
+			
+			if(mapTagList.containsKey("errcode")) {
+				//发生错误
+				errcode = mapTagList.get("errcode") == null ? "" : mapTagList.get("errcode").toString();
+				errmsg = mapTagList.get("errmsg") == null ? "" : mapTagList.get("errmsg").toString();
+			} else {
+				listTags = (ArrayList<Map<String,Object>>) mapTagList.get("tags");
+				for(Map<String, Object> mapTags : listTags) {
+					tagId = mapTags.get("id") == null ? "" : mapTags.get("id").toString();
+					tagName = mapTags.get("name") == null ? "" : mapTags.get("name").toString();
+					tagCount = mapRet.get("count") == null ? 0 :Integer.valueOf(mapRet.get("count").toString());
+					
+					PsTzWxTagTblKey psTzWxTagTblKey = new PsTzWxTagTblKey();
+					psTzWxTagTblKey.setTzJgId(jgId);
+					psTzWxTagTblKey.setTzWxAppid(wxAppId);
+					psTzWxTagTblKey.setTzWxTagId(tagId);
+					
+					PsTzWxTagTbl psTzWxTagTbl = psTzWxTagTblMapper.selectByPrimaryKey(psTzWxTagTblKey);
+					if(psTzWxTagTbl==null) {
+						psTzWxTagTbl = new PsTzWxTagTbl();
+						psTzWxTagTbl.setTzJgId(jgId);
+						psTzWxTagTbl.setTzWxAppid(wxAppId);
+						psTzWxTagTbl.setTzWxTagId(tagId);
+						psTzWxTagTbl.setTzWxTagName(tagName);
+						psTzWxTagTbl.setRowAddedDttm(new Date());
+						psTzWxTagTbl.setRowAddedOprid(oprid);
+						psTzWxTagTbl.setRowLastmantDttm(new Date());
+						psTzWxTagTbl.setRowLastmantOprid(oprid);
+						psTzWxTagTblMapper.insert(psTzWxTagTbl);
+					} else {
+						psTzWxTagTbl.setTzWxTagName(tagName);
+						psTzWxTagTbl.setRowLastmantDttm(new Date());
+						psTzWxTagTbl.setRowLastmantOprid(oprid);
+						psTzWxTagTblMapper.updateByPrimaryKeySelective(psTzWxTagTbl);
+					}
+				}
+			}
+			
+			
+			/*获取用户列表*/
+			Map<String, Object> mapUserList = new HashMap<String,Object>();
+			Integer total = 0, count = 0;
+			Map<String, Object> mapData = new HashMap<String,Object>();
+			List<String> listOpenid = new ArrayList<String>();
+			String next_openid = "";
+			
+			mapUserList = tzWxApiObject.getUserList(jgId,wxAppId,"");
+			
+			if(mapUserList.containsKey("errcode")) {
+				//发生错误
+				errcode = mapUserList.get("errcode") == null ? "" : mapUserList.get("errcode").toString();
+				errmsg = mapUserList.get("errmsg") == null ? "" : mapUserList.get("errmsg").toString();
+			} else {
+				total = mapUserList.get("total") ==null ? 0 : Integer.valueOf(mapUserList.get("total").toString());
+				count = mapUserList.get("count") ==null ? 0 : Integer.valueOf(mapUserList.get("count").toString());
+				mapData = (Map<String, Object>) mapUserList.get("data");
+				listOpenid = (ArrayList<String>) mapData.get("openid");
+				next_openid = mapUserList.get("next_openid") == null ? "" : mapUserList.get("next_openid").toString();
+				
+				
+				while("10000".equals(count) && !"".equals(next_openid)) {
+					mapUserList = tzWxApiObject.getUserList(jgId,wxAppId,"");
+					
+					if(mapUserList.containsKey("errcode")) {
+						//发生错误
+						errcode = mapUserList.get("errcode") == null ? "" : mapUserList.get("errcode").toString();
+						errmsg = mapUserList.get("errmsg") == null ? "" : mapUserList.get("errmsg").toString();
+					} else {
+						total = mapUserList.get("total") ==null ? 0 : Integer.valueOf(mapUserList.get("total").toString());
+						count = mapUserList.get("count") ==null ? 0 : Integer.valueOf(mapUserList.get("count").toString());
+						mapData = (Map<String, Object>) mapUserList.get("data");
+						listOpenid = (ArrayList<String>) mapData.get("openid");
+						next_openid = mapUserList.get("next_openid") == null ? "" : mapUserList.get("next_openid").toString();	
+					}
+				}	
+			}
+			
+			if(listOpenid.size()>0) {
+				/*获取用户信息*/
+				Map<String, Object> mapUserInfo = new HashMap<String,Object>();
+				String subscribe = "", openid = "", nickname = "", sex = "", language = "", city = "", province = "", country = "",
+						headimgurl = "", subscribe_time_number = "", unionid = "", remark = "", groupid = "";
+				Date subscribe_time;
+				List<Integer> tagid_list = new ArrayList<Integer>();
+				
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				
+				for(String openidTmp : listOpenid) {
+					mapUserInfo =  tzWxApiObject.getUserInfo(jgId,wxAppId,openidTmp,"zh_CN");
+					
+					if(mapUserInfo.containsKey("errcode")) {
+						//发生错误
+						errcode = mapUserInfo.get("errcode") == null ? "" : mapUserInfo.get("errcode").toString();
+						errmsg = mapUserInfo.get("errmsg") == null ? "" : mapUserInfo.get("errmsg").toString();
+					} else {
+						//订阅标识，0为未订阅，拉取不到其他信息
+						subscribe = mapUserInfo.get("subscribe") == null ? "" : mapUserInfo.get("subscribe").toString(); 
+						openid = mapUserInfo.get("openid") == null ? "" : mapUserInfo.get("openid").toString(); 
+						nickname = mapUserInfo.get("nickname") == null ? "" : mapUserInfo.get("nickname").toString(); 
+						//1男性2女性0未知
+						sex = mapUserInfo.get("sex") == null ? "" : mapUserInfo.get("sex").toString();  
+						language = mapUserInfo.get("language") == null ? "" : mapUserInfo.get("language").toString(); 
+						city = mapUserInfo.get("city") == null ? "" : mapUserInfo.get("city").toString(); 
+						province = mapUserInfo.get("province") == null ? "" : mapUserInfo.get("province").toString(); 
+						country = mapUserInfo.get("country") == null ? "" : mapUserInfo.get("country").toString(); 
+						headimgurl = mapUserInfo.get("headimgurl") == null ? "" : mapUserInfo.get("headimgurl").toString(); 
+						//时间戳
+						subscribe_time_number = mapUserInfo.get("subscribe_time") == null ? "" : mapUserInfo.get("subscribe_time").toString(); 
+						unionid = mapUserInfo.get("unionid") == null ? "" : mapUserInfo.get("unionid").toString(); 
+						remark = mapUserInfo.get("remark") == null ? "" : mapUserInfo.get("remark").toString(); 
+						groupid = mapUserInfo.get("groupid") == null ? "" : mapUserInfo.get("groupid").toString(); 
+						tagid_list = (ArrayList<Integer>) mapUserInfo.get("tagid_list");
+						
+						//时间戳转为时间
+						Long subscribe_time_long = new Long(subscribe_time_number+"000");
+						String subscribe_time_string = simpleDateFormat.format(new Date(subscribe_time_long));
+						subscribe_time = simpleDateFormat.parse(subscribe_time_string);
+						
+						PsTzWxUserTblKey psTzWxUserTblKey = new PsTzWxUserTblKey();
+						psTzWxUserTblKey.setTzJgId(jgId);
+						psTzWxUserTblKey.setTzWxAppid(wxAppId);
+						psTzWxUserTblKey.setTzOpenId(openid);
+						
+						PsTzWxUserTbl psTzWxUserTbl = psTzWxUserTblMapper.selectByPrimaryKey(psTzWxUserTblKey);
+						
+						if(psTzWxUserTbl==null) {
+							psTzWxUserTbl = new PsTzWxUserTbl();
+							psTzWxUserTbl.setTzJgId(jgId);
+							psTzWxUserTbl.setTzWxAppid(wxAppId);
+							psTzWxUserTbl.setTzOpenId(openid);
+							psTzWxUserTbl.setTzSubscribe(subscribe);
+							psTzWxUserTbl.setTzNickname(nickname);
+							psTzWxUserTbl.setTzSex(sex);
+							psTzWxUserTbl.setTzLanguage(language);
+							psTzWxUserTbl.setTzCity(city);
+							psTzWxUserTbl.setTzProvince(province);
+							psTzWxUserTbl.setTzCountry(country);
+							psTzWxUserTbl.setTzImageUrl(headimgurl);
+							psTzWxUserTbl.setTzSubsribeDt(subscribe_time);
+							psTzWxUserTbl.setTzRemark(remark);
+							psTzWxUserTblMapper.insert(psTzWxUserTbl);
+						} else {
+							psTzWxUserTbl.setTzSubscribe(subscribe);
+							psTzWxUserTbl.setTzNickname(nickname);
+							psTzWxUserTbl.setTzSex(sex);
+							psTzWxUserTbl.setTzLanguage(language);
+							psTzWxUserTbl.setTzCity(city);
+							psTzWxUserTbl.setTzProvince(province);
+							psTzWxUserTbl.setTzCountry(country);
+							psTzWxUserTbl.setTzImageUrl(headimgurl);
+							psTzWxUserTbl.setTzSubsribeDt(subscribe_time);
+							psTzWxUserTbl.setTzRemark(remark);
+							psTzWxUserTblMapper.updateByPrimaryKeySelective(psTzWxUserTbl);
+						}
+						
+						//增加用户和标签关系表
+						for(Integer tagidTmp : tagid_list) {
+							PsTzWxuserTagTKey psTzWxuserTagTKey = new PsTzWxuserTagTKey();
+							psTzWxuserTagTKey.setTzJgId(jgId);
+							psTzWxuserTagTKey.setTzWxAppid(wxAppId);
+							psTzWxuserTagTKey.setTzOpenId(openid);
+							psTzWxuserTagTKey.setTzTagId(String.valueOf(tagidTmp));
+							
+							PsTzWxuserTagT psTzWxuserTagT = psTzWxuserTagTMapper.selectByPrimaryKey(psTzWxuserTagTKey);
+							
+							if(psTzWxuserTagT==null) {
+								psTzWxuserTagT = new PsTzWxuserTagT();
+								psTzWxuserTagT.setTzJgId(jgId);
+								psTzWxuserTagT.setTzWxAppid(wxAppId);
+								psTzWxuserTagT.setTzOpenId(openid);
+								psTzWxuserTagT.setTzTagId(String.valueOf(tagidTmp));
+								psTzWxuserTagT.setRowAddedDttm(new Date());
+								psTzWxuserTagT.setRowAddedOprid(oprid);
+								psTzWxuserTagT.setRowLastmantDttm(new Date());
+								psTzWxuserTagT.setRowLastmantOprid(oprid);
+								psTzWxuserTagTMapper.insert(psTzWxuserTagT);
+							}
+						}
+					}
+				}
+			} 
+						
 		} catch (Exception e) {
-			e.toString();
 			errMsg[0] = "1";
 			errMsg[1] = e.toString();
 		}
@@ -402,7 +594,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 	/*获取微信服务号下的所有用户*/
 	public String getAllUser(String strParams,String[] errMsg) {
 		String strRet = "";
-		Map<String, Object> mapRet = new HashMap<String,Object>();
+		Map<String, Object> mapRet = new HashMap<String,Object>(); 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
 		try {

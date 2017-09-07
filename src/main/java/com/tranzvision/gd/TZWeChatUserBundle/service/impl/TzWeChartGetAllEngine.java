@@ -8,7 +8,7 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
- * 从微信端获取全量用户
+ * 从微信端获取全量用户、标签等
  * @author LuYan 2017-8-30
  *
  */
@@ -30,16 +30,17 @@ public class TzWeChartGetAllEngine extends BaseEngine {
 		
 		try {
 			
-			String sql = "SELECT TZ_JG_ID,TZ_WX_APPID FROM PS_TZ_WX_USER_AET WHERE RUN_CNTL_ID=?";
+			String sql = "SELECT TZ_JG_ID,TZ_WX_APPID,OPRID FROM PS_TZ_WX_USER_AET WHERE RUN_CNTL_ID=?";
 			Map<String, Object> mapData = sqlQuery.queryForMap(sql,new Object[]{runControlId});
 			if(mapData!=null) {
 				String jgId = (String) mapData.get("TZ_JG_ID");
 				String wxAppId = (String) mapData.get("TZ_WX_APPID");
+				String oprid = (String) mapData.get("OPRID");
 				
 				String[] errMsg = new String[2];
 				
 				TzWeChatUserMgServiceImpl tzWeChatUserMgServiceImpl = (TzWeChatUserMgServiceImpl) getSpringBeanUtil.getSpringBeanByID("tzWeChatUserMgServiceImpl");
-				tzWeChatUserMgServiceImpl.getUserAllAeInfo(jgId,wxAppId,errMsg);
+				tzWeChatUserMgServiceImpl.getUserAllAeInfo(jgId,wxAppId,oprid,errMsg);
 			}
 			
 		} catch (Exception e) {

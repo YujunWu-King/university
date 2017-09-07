@@ -16,10 +16,15 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagInfoController', {
                 var comParams = '"delete":['+formJson+']';
                 var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_TAGXX_STD","OperateType":"U","comParams":{'+comParams+'}}';
                 Ext.tzSubmit(tzParams,function(responseData) {
-                    view.ignoreChangesFlag = true;
-                    view.close();
-                    //刷新标签列表页面
-                    listWin.down("grid").getStore().load();
+                    if(responseData.errcode!="0" && responseData.errmsg!="") {
+                        Ext.MessageBox.alert("提示",responseData.errmsg);
+                        return;
+                    } else {
+                        view.ignoreChangesFlag = true;
+                        view.close();
+                        //刷新标签列表页面
+                        listWin.down("grid").getStore().load();
+                    }
                 },"",true,this);
             }
         });
@@ -45,14 +50,19 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagInfoController', {
             }
             var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_TAGXX_STD","OperateType":"U","comParams":{'+comParams+'}}';
             Ext.tzSubmit(tzParams,function(responseData) {
-                if(actType=="add") {
-                    view.actType="update";
+                if(responseData.errcode!="0" && responseData.errmsg!="") {
+                    Ext.MessageBox.alert("提示",responseData.errmsg);
+                    return;
+                } else {
+                    if (actType == "add") {
+                        view.actType = "update";
+                    }
+                    if (btn.name == "ensureTagInfoBtn") {
+                        view.close();
+                    }
+                    //刷新标签列表页面
+                    listWin.down("grid").getStore().load();
                 }
-                if(btn.name=="ensureTagInfoBtn") {
-                    view.close();
-                }
-                //刷新标签列表页面
-                listWin.down("grid").getStore().load();
             },"",true,this);
         }
     },

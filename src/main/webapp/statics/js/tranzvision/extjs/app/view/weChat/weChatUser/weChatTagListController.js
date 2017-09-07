@@ -175,21 +175,41 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
             var comParams = '"update":['+Ext.JSON.encode(editParams)+']';
             var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_TAG_STD","OperateType":"U","comParams":{'+comParams+'}}';
             Ext.tzSubmit(tzParams,function(responseData) {
-                if(btn.name=="ensureTagBtn") {
-                    view.close();
-                }
-                //刷新用户管理
-                userGridStore.load({
-                    callback:function() {
-                        //默认展开rowexpander
-                        var expander = activeTab.getPlugin();
-                        var storeData = userGridStore.data;
-                        for(var i=0;i< storeData.length;i++){
-                            var record = storeData.items[i];
-                            expander.toggleRow(i,record);
+                var errcodeUnTag = responseData.errcodeUnTag;
+                var errmsgUnTag = responseData.errmsgUnTag;
+                var errcodeTag = responseData.errcodeTag;
+                var errmsgTag = responseData.errmsgTag;
+                if((errcodeUnTag!="0" && errmsgUnTag!="")||(errcodeTag!="0" && errmsgTag!="")) {
+                    var errmsg = "";
+                    if(errcodeUnTag!="0" && errmsgUnTag!="") {
+                        errmsg = errcodeUnTag;
+                    }
+                    if(errcodeTag!="0" && errmsgTag!="") {
+                        if(errmsg!="") {
+                            errmsg = errmsg + ";" + errmsgTag;
+                        } else {
+                            errmsg = errmsgTag;
                         }
                     }
-                });
+                    Ext.MessageBox.alert("提示",errmsg);
+                    return;
+                } else {
+                    if (btn.name == "ensureTagBtn") {
+                        view.close();
+                    }
+                    //刷新用户管理
+                    userGridStore.load({
+                        callback: function () {
+                            //默认展开rowexpander
+                            var expander = activeTab.getPlugin();
+                            var storeData = userGridStore.data;
+                            for (var i = 0; i < storeData.length; i++) {
+                                var record = storeData.items[i];
+                                expander.toggleRow(i, record);
+                            }
+                        }
+                    });
+                }
 
             },"",true,this);
 

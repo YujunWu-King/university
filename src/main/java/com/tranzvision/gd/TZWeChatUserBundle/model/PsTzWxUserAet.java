@@ -7,6 +7,8 @@ public class PsTzWxUserAet {
 
     private String tzWxAppid;
 
+    private String oprid;
+
     public String getRunCntlId() {
         return runCntlId;
     }
@@ -29,5 +31,13 @@ public class PsTzWxUserAet {
 
     public void setTzWxAppid(String tzWxAppid) {
         this.tzWxAppid = tzWxAppid == null ? null : tzWxAppid.trim();
+    }
+
+    public String getOprid() {
+        return oprid;
+    }
+
+    public void setOprid(String oprid) {
+        this.oprid = oprid == null ? null : oprid.trim();
     }
 }
