@@ -1,4 +1,4 @@
-Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
+Ext.define('KitchenSink.view.weChatLog.weChatLogInfoMould', {
     extend: 'Ext.window.Window',
     xtype: 'weChatLogInfo',
     reference: 'weChatLogInfo',
@@ -72,47 +72,43 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
             fieldLabel: '发送人',
             name: 'sendPsn',
             readOnly:true,
-            columnWidth: 2,
             fieldStyle:'background:#F4F4F4'
         },
         {
-            xtype: 'datefield',
+            xtype: 'textfield',
             fieldLabel: '发送时间',
             name: 'sendDTime',
             readOnly:true,
-            fieldStyle:'background:#F4F4F4', 
-//            format: 'Y-m-d',S
-            //value: fieldValue,
+            fieldStyle:'background:#F4F4F4'
         },
-        {
-            xtype: 'textfield',
-            fieldLabel: '发送状态',
-            name: 'sendState',
-            readOnly:true,
-            cls:'lanage_1'
-        },
-        {
-        	xtype: 'textfield',
-            fieldLabel: '成功时间',
-            name: 's_DT',
-            readOnly:true,
-            fieldStyle:'background:#F4F4F4', 
-            //format: 'Y-m-d'
-        },
-        {
-            xtype: 'textfield',
-            fieldLabel: '发送总数',
-            name: 's_total',
-            readOnly:true,
-            cls:'lanage_1'
-        },
-        {
-            xtype: 'textfield',
-            fieldLabel: '过滤数',
-            name: 's_fiter',
-            readOnly:true,
-            cls:'lanage_1'
-        },
+//        {
+//            xtype: 'textfield',
+//            fieldLabel: '发送状态',
+//            name: 'sendState',
+//            readOnly:true,
+//            cls:'lanage_1'
+//        },
+//        {
+//            xtype: 'textfield',
+//            fieldLabel: '成功时间',
+//            name: 's_DT',
+//            readOnly:true,
+//            cls:'lanage_1'
+//        },
+//        {
+//            xtype: 'textfield',
+//            fieldLabel: '发送总数',
+//            name: 's_total',
+//            readOnly:true,
+//            cls:'lanage_1'
+//        },
+//        {
+//            xtype: 'textfield',
+//            fieldLabel: '过滤数',
+//            name: 's_fiter',
+//            readOnly:true,
+//            cls:'lanage_1'
+//        },
         {
             xtype: 'textfield',
             fieldLabel: '成功数',
@@ -127,20 +123,20 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
             readOnly:true,
             cls:'lanage_1'
         },
-       {
-            xtype: 'textfield',
-            fieldLabel: '发送内容',
-            name: 'content',
-            readOnly:true,
-            cls:'lanage_1'
-        },
-        {
-            xtype: 'textfield',
-            fieldLabel: '素材编号',
-            name: 'mediaId',
-            readOnly:true,
-            cls:'lanage_1'
-        }
+//       {
+//            xtype: 'textfield',
+//            fieldLabel: '发送内容',
+//            name: 'content',
+//            readOnly:true,
+//            cls:'lanage_1'
+//        },
+//        {
+//            xtype: 'textfield',
+//            fieldLabel: '素材编号',
+//            name: 'mediaId',
+//            readOnly:true,
+//            cls:'lanage_1'
+//        }
         ]
     },
         {
@@ -158,12 +154,22 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
 		columns: [{
 			text: 'open_id',
 			dataIndex: 'openId',
-			minWidth: 250,
+			minWidth: 100,
 			flex: 1
 		},{
 			text: '昵称',
 			dataIndex: 'nickName',
+			minWidth: 50,
+			flex: 1
+		},{
+			text: '消息内容',
+			dataIndex: 'sendState',
 			minWidth: 200,
+			flex: 1
+		},{
+			text: '发送状态',
+			dataIndex: 'content',
+			minWidth: 50,
 			flex: 1
 		}
 		],
