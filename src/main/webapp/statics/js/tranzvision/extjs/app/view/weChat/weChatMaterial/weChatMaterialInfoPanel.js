@@ -1,5 +1,5 @@
 ﻿Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialInfoPanel', {
-    extend: 'Ext.grid.Panel',
+    extend: 'Ext.panel.Panel',
     requires: [
         'Ext.data.*',
         'Ext.grid.*',
@@ -7,23 +7,16 @@
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'KitchenSink.view.weChat.weChatMaterial.weChatMaterialController',
-       // 'tranzvision.extension.grid.Exporter'
-
+        'KitchenSink.view.weChat.weChatMaterial.materialStore'
     ],
     xtype: 'weChatMaterialInfoPanel',
     controller: 'weChatMaterialController',
     reference:'weChatMaterialInfoPanel',
-	selModel: {
-       	type: 'checkboxmodel'
-    },
-    columnLines: true,
-
     style:"margin:8px",
-    multiSelect: true,
     title: '素材管理',
     viewConfig: {
         enableTextSelection: true
-     },
+    },
     header:false,
     frame: true,
     dockedItems:[{
@@ -31,9 +24,9 @@
         dock:"bottom",
         ui:"footer",
         items:['->',
-               {minWidth:80,text:"关闭",iconCls:"close",handler:"materialWindowClose"},
-               {minWidth:80,text:"确定",iconCls:"ensure",handler:"materialWindowEnsure"},
-               {minWidth:80,text:"保存",iconCls:"save",handler:"materialWindowSave"}
+            {minWidth:80,text:"保存",iconCls:"save",handler:"materialWindowSave"},
+            {minWidth:80,text:"确定",iconCls:"ensure",handler:"materialWindowEnsure"},
+            {minWidth:80,text:"关闭",iconCls:"close",handler:"materialWindowClose"}
         ]
     },{
         xtype:"toolbar",
@@ -45,57 +38,45 @@
             {text:'删除',tooltip:'删除',iconCls:"remove",handler:'deleteMaterial'}
         ]
     }],
-	 items:[{
-		 xtype:'dataview',
-     	tpl : new Ext.XTemplate(
- 				'<div align="center">',
- 				'<tpl for=".">',
- 				'<div class="dataana-nav">',
- 				'<img src="{src}" />', '<br/><span>{text}</span>',
- 				'</div>',
- 				'</tpl>',
- 				'</div>'),
-		store : Ext.create('Ext.data.Store', {
-			fields : ['src', 'text', 'card'],
-			data : [{
-					src : 'webapp/statics/images/tranzvision/bj.png',
-					text : '1',
-					card : 0
-				}, {
-					src : 'webapp/statics/images/tranzvision/bj.png',
-					text : '2',
-					card : 1
-				}, {
-					src : 'webapp/statics/images/tranzvision/bj.png',
-					text : '3',
-					card : 2
-				}, {
-					src : 'webapp/statics/images/tranzvision/bj.png',
-					text : '4',
-					card : 3
-				}, {
-					src : 'webapp/statics/images/tranzvision/bj.png',
-					text : '5',
-					card : 4
-				}
-			]
-		})
-	}],
     initComponent: function () {
-//        var store = new KitchenSink.view.signIn.signStore();
-        Ext.apply(this, {
-        bbar: {
-            xtype: 'pagingtoolbar',
-            pageSize: 30,
-//          store: store,
-            displayInfo: true,
-            displayMsg: '显示{0}-{1}条，共{2}条',
-            beforePageText: '第',
-            afterPageText: '页/共{0}页',
-            emptyMsg: '没有数据显示',
-            plugins: new Ext.ux.ProgressBarPager()}
-        });
+        var materialStore = new KitchenSink.view.weChat.weChatMaterial.materialStore();
+        me = this;
+        this.items = [
+            {
+                xtype : 'panel',
+                layout:'fit',
+                items:[
+                    {
+                        name: 'picView',
+                        xtype:'dataview',
+                        store: materialStore,
+                        tpl:[
+                            '<tpl for=".">',
+                            '<div class="thumb-wrap" style="width:144px;"id="{index}">',
+                                '<div style="width:130px;height:130px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
+                            '</div>',
+                            '<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
+                            '<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',
+                            '</div>',
+                            '</tpl>',
+                            '<div class="x-clear"></div>'
+                        ],
+                        itemSelector: 'div.thumb-wrap',
+                        emptyText: 'No images available',
+                        style:{
+                            background:'white'
+                        }
+                    }],
+                bbar: {
+                    xtype: 'pagingtoolbar',
+                    pageSize: 10,
+                    store: materialStore
+                }
+            }
+
+        ];
         this.callParent();
     }
 });
+
 

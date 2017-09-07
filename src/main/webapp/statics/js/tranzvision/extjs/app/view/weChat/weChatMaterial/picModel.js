@@ -5,9 +5,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.picModel', {
         {name: 'name'},
         {name: 'bzInfo'},
         {name: 'status'},
-        {name: 'addTime'},
-        {name: 'addMan'},
-        {name: 'editTime'},
-        {name: 'editMan'}
+        {name: 'tbTime'},
+        {name: 'editTime'}
 	]
 });

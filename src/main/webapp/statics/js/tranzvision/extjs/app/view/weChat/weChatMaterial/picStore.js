@@ -3,9 +3,8 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.picStore',{
     alias: 'store.picStore',
     model: 'KitchenSink.view.weChat.weChatMaterial.picModel',
     autoLoad:false,
-    comID: '',
-    pageID: '',
-    tzStoreParams:'',
-    pageSize:1000,
+    comID: 'TZ_WX_SCGL_COM',
+    pageID: 'TZ_WX_TPSC_STD',
+   // tzStoreParams:'',
     proxy: Ext.tzListProxy()
 });

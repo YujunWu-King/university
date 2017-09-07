@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatMaterialBundle.dao.PsTzWxTwlTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxTwlTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_WX_APPID" property="tzWxAppid" jdbcType="VARCHAR" />
+    <id column="TZ_XH" property="tzXh" jdbcType="VARCHAR" />
+    <id column="TZ_SEQNUM" property="tzSeqnum" jdbcType="VARCHAR" />
+    <result column="TZ_TW_TITLE" property="tzTwTitle" jdbcType="VARCHAR" />
+    <result column="TZ_TW_DESCR" property="tzTwDescr" jdbcType="VARCHAR" />
+    <result column="TZ_AUTHOR" property="tzAuthor" jdbcType="VARCHAR" />
+    <result column="TZ_HEAD_IMAGE" property="tzHeadImage" jdbcType="VARCHAR" />
+    <result column="TZ_SHCPIC_FLG" property="tzShcpicFlg" jdbcType="VARCHAR" />
+    <result column="TZ_ART_URL" property="tzArtUrl" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxTwlTbl" extends="BaseResultMap" >
+    <result column="TZ_CONTENT" property="tzContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_WX_APPID, TZ_XH, TZ_SEQNUM, TZ_TW_TITLE, TZ_TW_DESCR, TZ_AUTHOR, TZ_HEAD_IMAGE, 
+    TZ_SHCPIC_FLG, TZ_ART_URL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+    SYNCID, SYNCDTTM
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxTwlTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_WX_TWL_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+      and TZ_SEQNUM = #{tzSeqnum,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxTwlTblKey" >
+    delete from PS_TZ_WX_TWL_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+      and TZ_SEQNUM = #{tzSeqnum,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxTwlTbl" >
+    insert into PS_TZ_WX_TWL_TBL (TZ_JG_ID, TZ_WX_APPID, TZ_XH, 
+      TZ_SEQNUM, TZ_TW_TITLE, TZ_TW_DESCR, 
+      TZ_AUTHOR, TZ_HEAD_IMAGE, TZ_SHCPIC_FLG, 
+      TZ_ART_URL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
+      SYNCDTTM, TZ_CONTENT)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, #{tzXh,jdbcType=VARCHAR}, 
+      #{tzSeqnum,jdbcType=VARCHAR}, #{tzTwTitle,jdbcType=VARCHAR}, #{tzTwDescr,jdbcType=VARCHAR}, 
+      #{tzAuthor,jdbcType=VARCHAR}, #{tzHeadImage,jdbcType=VARCHAR}, #{tzShcpicFlg,jdbcType=VARCHAR}, 
+      #{tzArtUrl,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
+      #{syncdttm,jdbcType=TIMESTAMP}, #{tzContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxTwlTbl" >
+    insert into PS_TZ_WX_TWL_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzWxAppid != null" >
+        TZ_WX_APPID,
+      </if>
+      <if test="tzXh != null" >
+        TZ_XH,
+      </if>
+      <if test="tzSeqnum != null" >
+        TZ_SEQNUM,
+      </if>
+      <if test="tzTwTitle != null" >
+        TZ_TW_TITLE,
+      </if>
+      <if test="tzTwDescr != null" >
+        TZ_TW_DESCR,
+      </if>
+      <if test="tzAuthor != null" >
+        TZ_AUTHOR,
+      </if>
+      <if test="tzHeadImage != null" >
+        TZ_HEAD_IMAGE,
+      </if>
+      <if test="tzShcpicFlg != null" >
+        TZ_SHCPIC_FLG,
+      </if>
+      <if test="tzArtUrl != null" >
+        TZ_ART_URL,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+      <if test="tzContent != null" >
+        TZ_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxAppid != null" >
+        #{tzWxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXh != null" >
+        #{tzXh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSeqnum != null" >
+        #{tzSeqnum,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTwTitle != null" >
+        #{tzTwTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTwDescr != null" >
+        #{tzTwDescr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAuthor != null" >
+        #{tzAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHeadImage != null" >
+        #{tzHeadImage,jdbcType=VARCHAR},
+      </if>
+      <if test="tzShcpicFlg != null" >
+        #{tzShcpicFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtUrl != null" >
+        #{tzArtUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzContent != null" >
+        #{tzContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxTwlTbl" >
+    update PS_TZ_WX_TWL_TBL
+    <set >
+      <if test="tzTwTitle != null" >
+        TZ_TW_TITLE = #{tzTwTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTwDescr != null" >
+        TZ_TW_DESCR = #{tzTwDescr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAuthor != null" >
+        TZ_AUTHOR = #{tzAuthor,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHeadImage != null" >
+        TZ_HEAD_IMAGE = #{tzHeadImage,jdbcType=VARCHAR},
+      </if>
+      <if test="tzShcpicFlg != null" >
+        TZ_SHCPIC_FLG = #{tzShcpicFlg,jdbcType=VARCHAR},
+      </if>
+      <if test="tzArtUrl != null" >
+        TZ_ART_URL = #{tzArtUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzContent != null" >
+        TZ_CONTENT = #{tzContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+      and TZ_SEQNUM = #{tzSeqnum,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxTwlTbl" >
+    update PS_TZ_WX_TWL_TBL
+    set TZ_TW_TITLE = #{tzTwTitle,jdbcType=VARCHAR},
+      TZ_TW_DESCR = #{tzTwDescr,jdbcType=VARCHAR},
+      TZ_AUTHOR = #{tzAuthor,jdbcType=VARCHAR},
+      TZ_HEAD_IMAGE = #{tzHeadImage,jdbcType=VARCHAR},
+      TZ_SHCPIC_FLG = #{tzShcpicFlg,jdbcType=VARCHAR},
+      TZ_ART_URL = #{tzArtUrl,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_CONTENT = #{tzContent,jdbcType=LONGVARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+      and TZ_SEQNUM = #{tzSeqnum,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxTwlTbl" >
+    update PS_TZ_WX_TWL_TBL
+    set TZ_TW_TITLE = #{tzTwTitle,jdbcType=VARCHAR},
+      TZ_TW_DESCR = #{tzTwDescr,jdbcType=VARCHAR},
+      TZ_AUTHOR = #{tzAuthor,jdbcType=VARCHAR},
+      TZ_HEAD_IMAGE = #{tzHeadImage,jdbcType=VARCHAR},
+      TZ_SHCPIC_FLG = #{tzShcpicFlg,jdbcType=VARCHAR},
+      TZ_ART_URL = #{tzArtUrl,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+      and TZ_SEQNUM = #{tzSeqnum,jdbcType=VARCHAR}
+  </update>
+</mapper>
