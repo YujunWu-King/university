@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZWeChatUserBundle.service.impl;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWxApiObject;
 import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxuserTagTMapper;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxTagTbl;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxTagTblKey;
@@ -38,6 +41,8 @@ public class TzWeChatTagServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private PsTzWxuserTagTMapper psTzWxuserTagTMapper;
+	@Autowired
+	private TzWxApiObject tzWxApiObject;
 	
 	@Override
 	@SuppressWarnings({"unchecked","unused"})
@@ -102,11 +107,14 @@ public class TzWeChatTagServiceImpl extends FrameworkImpl {
 	@SuppressWarnings("unused")
 	public String tzUpdate(String[] actData, String[] errMsg) {
 		String strRet = "{}";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		try {
 			//当前登录人
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
+			String errcodeUnTag = "", errmsgUnTag = "", errcodeTag = "", errmsgTag = "";
 
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -123,27 +131,39 @@ public class TzWeChatTagServiceImpl extends FrameworkImpl {
 				String[] selectTagIdArr = selectTagIdTmp.split(",");
 				String[] NoSelectTagIdArr = NoSelectTagIdTmp.split(",");
 				
+				List openIdListUnTag = new ArrayList<>();
+				String openIdWhere = "";
+				
 				for(String openId : openIdArr) {
+					openIdListUnTag.add(openId);
 					
-					for(String NoSelectTagId :  NoSelectTagIdArr) {
-						//删除用户标签关系表
-						String sql = "DELETE FROM PS_TZ_WXUSER_TAG_T WHERE TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_OPEN_ID=? AND TZ_TAG_ID=?";
-						sqlQuery.update(sql,new Object[]{jgId,wxAppId,openId,NoSelectTagId});
-						
-						//调用接口同步微信端
-						/*
-						 * 
-						 * 
-						 * 
-						 * 
-						 * 
-						 * 
-						 * 
-						 * 
-						 */
+					if(!"".equals(openIdWhere)) {
+						openIdWhere = openIdWhere + "," + "'" + openId + "'";
+					} else {
+						openIdWhere = "'" + openId + "'";
 					}
+				}
+						
+				
+				for(String NoSelectTagId :  NoSelectTagIdArr) {
+					//删除用户标签关系表
+					String sql = "DELETE FROM PS_TZ_WXUSER_TAG_T WHERE TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_OPEN_ID IN (" + openIdWhere + ") AND TZ_TAG_ID=?";
+					sqlQuery.update(sql,new Object[]{jgId,wxAppId,NoSelectTagId});
 					
-					for(String selectTagId : selectTagIdArr) {
+					/*调用微信接口*/
+					
+					/*为用户取消标签*/
+					Map<String, Object> mapUnTag = tzWxApiObject.batchUnTagging(jgId, wxAppId, NoSelectTagId, openIdListUnTag);
+					errcodeUnTag = mapUnTag.get("errcode") == null ? "" : mapUnTag.get("errcode").toString();
+					errmsgUnTag = mapUnTag.get("errmsg") == null ? "" : mapUnTag.get("errmsg").toString();
+				}
+				
+				for(String selectTagId : selectTagIdArr) {
+					
+					List openIdListTag = new ArrayList<>();
+				
+					for(String openId : openIdArr) {	
+					
 						PsTzWxuserTagTKey psTzWxuserTagTKey= new PsTzWxuserTagTKey();
 						psTzWxuserTagTKey.setTzJgId(jgId);
 						psTzWxuserTagTKey.setTzWxAppid(wxAppId);
@@ -163,20 +183,25 @@ public class TzWeChatTagServiceImpl extends FrameworkImpl {
 							psTzWxuserTagT.setRowLastmantOprid(oprid);
 							psTzWxuserTagTMapper.insertSelective(psTzWxuserTagT);
 							
-							//调用接口同步微信端
-							/*
-							 * 
-							 * 
-							 * 
-							 * 
-							 * 
-							 * 
-							 * 
-							 * 
-							 */
+							openIdListTag.add(openId);
 						}
 					}
+					
+					/*调用微信接口*/
+					
+					/*为用户打标签*/
+					Map<String, Object> mapTag = tzWxApiObject.batchTagging(jgId, wxAppId, selectTagId, openIdListTag);
+					errcodeTag = mapTag.get("errcode") == null ? "" : mapTag.get("errcode").toString();
+					errmsgTag = mapTag.get("errmsg") == null ? "" : mapTag.get("errmsg").toString();
 				}
+				
+				mapRet.put("errcodeUnTag", errcodeUnTag);
+				mapRet.put("errmsgUnTag", errmsgUnTag);
+				mapRet.put("errcodeTag", errcodeTag);
+				mapRet.put("errmsgTag", errmsgTag);
+				
+				strRet = jacksonUtil.Map2json(mapRet);
+				
 			}
 
 		} catch (Exception e) {
