@@ -184,6 +184,7 @@ public class TzWxApiObject {
 					try {
 						String result = TzWxUserUtil.getUserInfo(access_token, openid, lang);
 						jacksonUtil.json2Map(result);
+						
 						returnMap = jacksonUtil.getMap();
 					} catch (TzException e) {
 						e.printStackTrace();

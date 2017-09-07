@@ -99,6 +99,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                 	xtype:'hiddenfield',
                 	fieldLabel:'应用ID',
                 	name:'appId',
+                	ignoreChangesFlag:true,
                 	allowBlank:false
                 },{
                     xtype: 'combo',
@@ -112,6 +113,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     valueField: 'sendMode',
                     displayField: 'sendModeDesc',
                     allowBlank:false,
+                    ignoreChangesFlag:true,
                     store: {
                         fields: ["sendMode", "sendModeDesc"],
                         data: [
@@ -125,7 +127,8 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     xtype:'textareafield',
                     fieldLabel: "用户列表",
                     grow:true,
-                    name:'openIds'
+                    name:'openIds',
+                    ignoreChangesFlag:true
                 },{
                 	xtype: 'combo',
                     labelWidth: 100,
@@ -136,7 +139,8 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     editable: false,
                     valueField: 'tagId',
                     displayField: 'tagName',
-                    store:tagStore
+                    store:tagStore,
+                    ignoreChangesFlag:true
                 },/*{
                     xtype:'tagfield',
                     fieldLabel:'按照标签',
