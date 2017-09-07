@@ -30,25 +30,29 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 		
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 
-		String strOrgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		//String strOrgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		JacksonUtil jacksonUtil=new JacksonUtil();
 		jacksonUtil.json2Map(strParams);
-		/*String strWxAppId=jacksonUtil.getString("wxAppId");
-		//素材类型 TP:图片 TW:图文
-		String strMediaType=jacksonUtil.getString("mediaType");
-		if(strWxAppId==null||"".equals(strWxAppId)){
+		String strWxAppId=jacksonUtil.getString("wxAppId");
+		String strOrgId=jacksonUtil.getString("jgId");
+		if("".equals(strWxAppId)||"".equals(strOrgId)){
 			return null;
-		}*/
-		int count=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? ", new Object[]{strOrgId}, "Integer");
-		List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_WX_APPID,TZ_XH,TZ_SC_NAME,TZ_MEDIA_ID,TZ_IMAGE_PATH,TZ_MEDIA_TYPE FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=?  LIMIT ?,?", new Object[]{strOrgId,numStart,numLimit});
+		}
+		int count=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=?", new Object[]{strOrgId,strWxAppId}, "Integer");
+		List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_SC_NAME,TZ_MEDIA_ID,TZ_IMAGE_PATH,TZ_MEDIA_TYPE FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
 		if(list!=null &&list.size()>0){
 			for(int i=0;i<list.size();i++){
 				Map<String,Object> map=new HashMap<String,Object>();
-				map.put("appId",list.get(i).get("TZ_WX_APPID").toString());
+				String mediaId="";
+				if(list.get(i).get("TZ_MEDIA_ID")!=null){
+					mediaId=list.get(i).get("TZ_MEDIA_ID").toString();
+				};
 				map.put("index", Integer.valueOf(list.get(i).get("TZ_XH").toString()));
-				map.put("mediaId", list.get(i).get("TZ_MEDIA_ID").toString());
-				map.put("caption", "图片"+list.get(i).get("TZ_SC_NAME").toString());
+				map.put("mediaId", mediaId);
+				map.put("caption", "图片:"+list.get(i).get("TZ_SC_NAME").toString());
+				
 				String strMediaType=list.get(i).get("TZ_MEDIA_TYPE").toString();
+				map.put("type", strMediaType);
 				//图片素材
 				if("A".equals(strMediaType)){
 					map.put("src", list.get(i).get("TZ_IMAGE_PATH").toString());

@@ -19,6 +19,8 @@
     },
     header:false,
     frame: true,
+    jgId:'',
+    wxAppId:'',
     dockedItems:[{
         xtype:"toolbar",
         dock:"bottom",
@@ -52,8 +54,8 @@
                         store: materialStore,
                         tpl:[
                             '<tpl for=".">',
-                            '<div class="thumb-wrap" style="width:144px;"id="{index}">',
-                                '<div style="width:130px;height:130px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
+                            '<div class="thumb-wrap" id="{index}">',
+                                '<div style="width:130px;height:113px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
                             '</div>',
                             '<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
                             '<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',

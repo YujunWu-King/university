@@ -9,6 +9,9 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
 
    //新增图片素材
 	addPic:function(btn){
+        var panel=btn.findParentByType("weChatMaterialInfoPanel");
+        var wxAppId=panel.wxAppId;
+        var jgId=panel.jgId;
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WX_SCGL_COM"]["TZ_WX_TPSC_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
@@ -50,10 +53,9 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         cmp.actType = "add";
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
-            //var formButton =panel.child('form');
-           // var btndeletePdf=formButton.down('button[name=deletePdf]');
-          //  btndeletePdf.hide();
-        });
+            form.findField("wxAppId").setValue(wxAppId);
+            form.findField("jgId").setValue(jgId);
+        }); 
         var tab = contentPanel.add(cmp);
         contentPanel.setActiveTab(tab);
         Ext.resumeLayouts(true);
@@ -113,7 +115,78 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
 	},
 	
 	//修改素材
-	editMaterial:function(){},
+	editMaterial:function(btn){
+        var panel=btn.findParentByType("weChatMaterialInfoPanel");
+        var picDataView=btn.findParentByType("panel").down("dataview[name=picView]");
+        var selList =  picDataView.getSelectionModel().getSelection();
+        if(selList.length==0){
+            Ext.Msg.alert("提示","请先选择一个素材");
+        }else{
+            var jgId=panel.jgId;
+            var wxAppId=panel.wxAppId;
+            var tzSeq=selList[0].data.index;
+            var mediaType=selList[0].data.type;
+            //图片素材
+            if(mediaType=='A'){
+                var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WX_SCGL_COM"]["TZ_WX_TPSC_STD"];
+                if( pageResSet == "" || pageResSet == undefined){
+                    Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+                    return;
+                }
+                //该功能对应的JS类
+                var className = pageResSet["jsClassName"];
+                if(className == "" || className == undefined){
+                    Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_WX_TPSC_STD，请检查配置。');
+                    return;
+                }
+
+                var contentPanel,cmp, className, ViewClass, clsProto;
+                var themeName = Ext.themeName;
+
+                contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+                contentPanel.body.addCls('kitchensink-example');
+                if(!Ext.ClassManager.isCreated(className)){
+                    Ext.syncRequire(className);
+                }
+                ViewClass = Ext.ClassManager.get(className);
+                clsProto = ViewClass.prototype;
+                if (clsProto.themes) {
+                    clsProto.themeInfo = clsProto.themes[themeName];
+                    if (themeName === 'gray') {
+                        clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+                    } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                        if (themeName === 'crisp-touch') {
+                            clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                        }
+                        clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+                    }
+                    if (!clsProto.themeInfo) {
+                        Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                            themeName + '\'. Is this intentional?');
+                    }
+                }
+                cmp=new ViewClass();
+                cmp.actType = "update";
+                cmp.on('afterrender',function(panel){  
+                	var form = panel.child('form').getForm();
+                    var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_TPSC_STD","OperateType":"QF","comParams":{"jgId":"'+jgId+'","wxAppId":"'+wxAppId+'","tzSeq":"'+tzSeq+'"}}';
+                    //加载数据
+                    Ext.tzLoad(tzParams,function(responseData){
+                    	form.setValues(responseData.formData);
+                    	path=responseData.formData.filePath;
+                    	panel.down("image[name=titileImage]").setSrc(TzUniversityContextPath+path);
+                    });
+
+                });
+                var tab = contentPanel.add(cmp);
+                contentPanel.setActiveTab(tab);
+                Ext.resumeLayouts(true);
+                if (cmp.floating) {
+                    cmp.show();
+                }
+            }
+        }
+    },
 	
 	//删除素材
 	deleteMaterial:function(){
@@ -136,16 +209,83 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
 	},
 	
 	//图片素材发布
-	pIssue:function(){},
+	pIssue:function(btn){
+		var form=btn.findParentByType("panel").down("form").getForm();
+		var tzSeq=form.findField("tzSeq").getValue();
+        if(tzSeq==""){
+        	Ext.Msg.alert("提示","请保存图片素材后再发布");
+            return false;
+        }
+ 
+        var formParams = form.getValues();
+        var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_TPSC_STD","OperateType":"U","comParams":{"update":[{"type":"publish","data":'+Ext.JSON.encode(formParams)+'}]}}';
+        Ext.tzSubmit(tzParams,function(response){
+           var status=response.status;
+           var tbTime=response.tbTime;
+           if(tzSeq>0){
+        	   form.findField("status").setValue(status);
+        	   form.findField("tbTime").setValue(tbTime);
+           }
+        },"",true,this);
+	},
 	
 	//图片素材撤销发布
-	pRevoke:function(){},
+	pRevoke:function(btn){
+		
+	},
 	
 	//图片素材保存
-	pSave:function(){},
-	
+	pSave:function(btn){
+        var form=btn.findParentByType("panel").down("form").getForm();
+        if(!form.isValid()){
+            return false;
+        }
+       
+        var filePath=form.findField("filePath").getValue();
+        if(filePath==""){
+        	Ext.Msg.alert("提示","请先上传图片");
+        	return false;
+        }
+        var formParams = form.getValues();
+        var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_TPSC_STD","OperateType":"U","comParams":{"add":['+Ext.JSON.encode(formParams)+']}}';
+        Ext.tzSubmit(tzParams,function(response){
+           var tzSeq=response.tzSeq;
+           var lastUpdateTime=response.lastUpdateTime;
+           if(tzSeq>0){
+        	   form.findField("tzSeq").setValue(tzSeq);
+        	   form.findField("editTime").setValue(lastUpdateTime);
+           }
+        },"",true,this);
+    },
 	//图片素材确定
-	pEnsure:function(){},
+	pEnsure:function(btn){
+        var form=btn.findParentByType("panel").down("form").getForm();
+        if(!form.isValid()){
+            return false;
+        }
+
+        var filePath=form.findField("filePath").getValue();
+        if(filePath==""){
+            Ext.Msg.alert("提示","请先上传图片");
+            return false;
+        }
+        var formParams = form.getValues();
+        var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_TPSC_STD","OperateType":"U","comParams":{"add":['+Ext.JSON.encode(formParams)+']}}';
+        
+       /* var dataview= this.getView().down("dateview[name=picView]");
+        var tzStoreParams = '{"wxAppId":"'+form.findField("wxAppId").getValue()+'","jgId":"'+form.findField("jgId").getValue()+'"}';
+        dataView.store.tzStoreParams = tzStoreParams;
+        dataView.store.load();*/
+        Ext.tzSubmit(tzParams,function(response){
+            var tzSeq=response.tzSeq;
+            var lastUpdateTime=response.lastUpdateTime;
+            if(tzSeq>0){
+                form.findField("tzSeq").setValue(tzSeq);
+                form.findField("editTime").setValue(lastUpdateTime);
+                btn.findParentByType("panel").close();
+            }
+        },"",true,this);
+    },
 	
 	//图片素材关闭
 	pClose:function(){
@@ -153,7 +293,9 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
 	},
 	
 	//图文素材发布
-	pwIssue:function(){},
+	pwIssue:function(){
+		
+	},
 	
 	//图文素材撤销发布
 	pwRevoke:function(){},

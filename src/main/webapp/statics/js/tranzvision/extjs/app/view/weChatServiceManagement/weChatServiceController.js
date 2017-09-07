@@ -482,5 +482,79 @@
 		        if (cmp.floating) {
 		            cmp.show();
 		        }
+	},
+	//素材管理
+	materialManage:function(view,rowIndex){
+		var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
+		var jgId = selRec.get("orgId");
+		var wxAppId = selRec.get("wxId");
+
+		Ext.tzSetCompResourses("TZ_WX_SCGL_COM");
+		//是否有访问权限
+		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WX_SCGL_COM"]["TZ_WX_SCGL_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		//该功能对应的JS类
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_WX_SCGL_STD，请检查配置。');
+			return;
+		}
+		
+		var contentPanel,cmp, className, ViewClass, clsProto;
+		var themeName = Ext.themeName;
+		
+		contentPanel = Ext.getCmp('tranzvision-framework-content-panel');			
+		contentPanel.body.addCls('kitchensink-example');
+		if(!Ext.ClassManager.isCreated(className)){
+			Ext.syncRequire(className);
+		}	
+		ViewClass = Ext.ClassManager.get(className);
+		clsProto = ViewClass.prototype;
+		
+		if (clsProto.themes) {
+			clsProto.themeInfo = clsProto.themes[themeName];
+
+			if (themeName === 'gray') {
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+			} else if (themeName !== 'neptune' && themeName !== 'classic') {
+				if (themeName === 'crisp-touch') {
+					clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+				}
+				clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
+			}
+			if (!clsProto.themeInfo) {
+				Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+					themeName + '\'. Is this intentional?');
+			}
+		}
+		   cmp = new ViewClass();
+	        //操作类型设置为更新
+	        cmp.actType = "update";
+
+	        cmp.on('afterrender',function(panel){
+	            //许可权表单信息;
+                cmp.wxAppId=wxAppId;
+                cmp.jgId=jgId;
+	            //授权组件列表
+	            var dataView = panel.down("dataview[name=picView]");
+                var tzStoreParams = '{"wxAppId":"'+wxAppId+'","jgId":"'+jgId+'"}';
+                dataView.store.tzStoreParams = tzStoreParams;
+                dataView.store.load();
+
+	        });
+
+	        tab = contentPanel.add(cmp);
+
+	        contentPanel.setActiveTab(tab);
+
+	        Ext.resumeLayouts(true);
+
+	        if (cmp.floating) {
+	            cmp.show();
+	        }
 	}
 });
