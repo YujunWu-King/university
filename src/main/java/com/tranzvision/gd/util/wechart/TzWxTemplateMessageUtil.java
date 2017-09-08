@@ -64,8 +64,10 @@ public class TzWxTemplateMessageUtil {
 			
 			String sendTmpMessageUrl = tz_sendTmpMessage_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(sendTmpMessageUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(sendTmpMessageUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(sendTmpMessageUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -123,8 +125,10 @@ public class TzWxTemplateMessageUtil {
 			
 			String sendTmpMessageUrl = tz_sendTmpMessage_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(sendTmpMessageUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(sendTmpMessageUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(sendTmpMessageUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -188,8 +192,10 @@ public class TzWxTemplateMessageUtil {
 
 			String sendTmpMessageUrl = tz_sendTmpMessage_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(sendTmpMessageUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(sendTmpMessageUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(sendTmpMessageUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}

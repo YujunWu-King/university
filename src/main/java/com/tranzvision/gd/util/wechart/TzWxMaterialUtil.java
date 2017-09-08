@@ -255,8 +255,10 @@ public class TzWxMaterialUtil {
 			
 			String materialAddNewsUrl = tz_materialAddNews_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(materialAddNewsUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(materialAddNewsUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(materialAddNewsUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -300,8 +302,10 @@ public class TzWxMaterialUtil {
 			
 			String materialUpdateNewsUrl = tz_materialUpdateNews_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(materialUpdateNewsUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(materialUpdateNewsUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(materialUpdateNewsUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -332,8 +336,10 @@ public class TzWxMaterialUtil {
 			
 			String deleteMaterialUrl = tz_deleteMaterial_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(deleteMaterialUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(deleteMaterialUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(deleteMaterialUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -403,8 +409,10 @@ public class TzWxMaterialUtil {
 			
 			String batchGetMaterialUrl = tz_batchGetMaterial_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(batchGetMaterialUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(batchGetMaterialUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(batchGetMaterialUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -455,8 +463,10 @@ public class TzWxMaterialUtil {
 			
 			String getMaterialUrl = tz_getMaterial_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(getMaterialUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(getMaterialUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(getMaterialUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
