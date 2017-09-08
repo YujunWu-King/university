@@ -60,7 +60,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
                 }
             });
         },
-        viewready:function(g){
+        /*viewready:function(g){
             //默认展开rowexpander
             var expander = g.getPlugin();
             var storeData = g.getStore().data;
@@ -68,7 +68,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
                 var record = storeData.items[i];
                 expander.toggleRow(i,record);
             }
-        }
+        }*/
     },
     viewConfig:{
         enableTextSelection:true

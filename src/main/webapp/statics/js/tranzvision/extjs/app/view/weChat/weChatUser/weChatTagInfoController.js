@@ -16,7 +16,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagInfoController', {
                 var comParams = '"delete":['+formJson+']';
                 var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_TAGXX_STD","OperateType":"U","comParams":{'+comParams+'}}';
                 Ext.tzSubmit(tzParams,function(responseData) {
-                    if(responseData.errcode!="0" && responseData.errmsg!="") {
+                    if(responseData.errcode!="0" && responseData.errmsg!="ok") {
                         Ext.MessageBox.alert("提示",responseData.errmsg);
                         return;
                     } else {
@@ -50,7 +50,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagInfoController', {
             }
             var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_TAGXX_STD","OperateType":"U","comParams":{'+comParams+'}}';
             Ext.tzSubmit(tzParams,function(responseData) {
-                if(responseData.errcode!="0" && responseData.errmsg!="") {
+                if(responseData.errcode!="0" && responseData.errmsg!="ok") {
                     Ext.MessageBox.alert("提示",responseData.errmsg);
                     return;
                 } else {

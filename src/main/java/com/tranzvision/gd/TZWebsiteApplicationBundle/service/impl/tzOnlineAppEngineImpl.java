@@ -3064,6 +3064,11 @@ public class tzOnlineAppEngineImpl {
 			} else {
 				psTzAppKsInExtTblMapper.insertSelective(psTzAppKsInExtTbl);
 			}
+			
+			//同步注册信息表 PS_TZ_AQ_YHXX_TBL;
+			
+		String updateSql="UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_REALNAME=? WHERE OPRID=? AND TZ_JG_ID='SEM' AND TZ_DLZH_ID=?"; 
+			sqlQuery.update(updateSql,new Object[] { name,strAppOprId,strAppOprId });
 
 		} catch (Exception e) {
 			e.printStackTrace();

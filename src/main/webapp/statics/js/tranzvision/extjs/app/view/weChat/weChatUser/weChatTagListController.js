@@ -179,12 +179,12 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
                 var errmsgUnTag = responseData.errmsgUnTag;
                 var errcodeTag = responseData.errcodeTag;
                 var errmsgTag = responseData.errmsgTag;
-                if((errcodeUnTag!="0" && errmsgUnTag!="")||(errcodeTag!="0" && errmsgTag!="")) {
+                if((errcodeUnTag!="0" && errmsgUnTag!="ok")||(errcodeTag!="0" && errmsgTag!="ok")) {
                     var errmsg = "";
-                    if(errcodeUnTag!="0" && errmsgUnTag!="") {
+                    if(errcodeUnTag!="0" && errmsgUnTag!="ok") {
                         errmsg = errcodeUnTag;
                     }
-                    if(errcodeTag!="0" && errmsgTag!="") {
+                    if(errcodeTag!="0" && errmsgTag!="ok") {
                         if(errmsg!="") {
                             errmsg = errmsg + ";" + errmsgTag;
                         } else {
@@ -198,7 +198,8 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
                         view.close();
                     }
                     //刷新用户管理
-                    userGridStore.load({
+                    userGridStore.load();
+                    /*userGridStore.load({
                         callback: function () {
                             //默认展开rowexpander
                             var expander = activeTab.getPlugin();
@@ -208,7 +209,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
                                 expander.toggleRow(i, record);
                             }
                         }
-                    });
+                    });*/
                 }
 
             },"",true,this);
