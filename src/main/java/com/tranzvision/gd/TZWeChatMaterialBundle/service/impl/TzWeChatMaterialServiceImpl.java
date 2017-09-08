@@ -7,28 +7,69 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZWeChatMaterialBundle.service.impl.TzWeChatMaterialServiceImpl")
 public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
+	
 	@Autowired
 	private SqlQuery sqlQuery;
 	@Autowired
-	private HttpServletRequest request;
-	@Autowired
-	private TzLoginServiceImpl tzLoginServiceImpl;
+	private FliterForm fliterForm;
+	
 	@Override
-	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg)  {
-		Map<String, Object> mapRet = new HashMap<String, Object>();
-		mapRet.put("total", 0);
-		mapRet.put("root", "[]");
+	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg)  {
+		// 返回值;
+				Map<String, Object> mapRet = new HashMap<String, Object>();
+				mapRet.put("total", 0);
+				ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+				mapRet.put("root", listData);
+				JacksonUtil jacksonUtil = new JacksonUtil();
+				try {
+					// 排序字段如果没有不要赋值
+					String[][] orderByArr = new String[][] {};
+
+					// json数据要的结果字段;
+					String[] resultFldArray = { "TZ_JG_ID", "TZ_WX_APPID", "TZ_XH","TZ_SC_NAME","TZ_IMAGE_PATH","TZ_MEDIA_ID","TZ_MEDIA_TYPE" };
+
+					// 可配置搜索通用函数;
+					Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
+
+					if (obj != null && obj.length > 0) {
+						ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+
+						for (int i = 0; i < list.size(); i++) {
+							String[] rowList = list.get(i);
+							Map<String, Object> mapList = new HashMap<String, Object>();
+
+							mapList.put("jgId", rowList[0]);
+							mapList.put("wxAppId", rowList[1]);
+							mapList.put("index", rowList[2]);
+							mapList.put("caption", "图片："+rowList[3]);
+							mapList.put("src", rowList[4]);
+							mapList.put("mediaId", rowList[5]);
+							mapList.put("mediaType", rowList[6]);
+							listData.add(mapList);
+						}
+
+						mapRet.replace("total", obj[0]);
+						mapRet.replace("root", listData);
+
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return jacksonUtil.Map2json(mapRet);
 		
-		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		/*ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 
 		//String strOrgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		JacksonUtil jacksonUtil=new JacksonUtil();
@@ -47,12 +88,14 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 				if(list.get(i).get("TZ_MEDIA_ID")!=null){
 					mediaId=list.get(i).get("TZ_MEDIA_ID").toString();
 				};
+				map.put("jgId", strOrgId);
+				map.put("wxAppId", strWxAppId);
 				map.put("index", Integer.valueOf(list.get(i).get("TZ_XH").toString()));
 				map.put("mediaId", mediaId);
 				map.put("caption", "图片:"+list.get(i).get("TZ_SC_NAME").toString());
 				
 				String strMediaType=list.get(i).get("TZ_MEDIA_TYPE").toString();
-				map.put("type", strMediaType);
+				map.put("mediaType", strMediaType);
 				//图片素材
 				if("A".equals(strMediaType)){
 					map.put("src", list.get(i).get("TZ_IMAGE_PATH").toString());
@@ -67,7 +110,73 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 			mapRet.replace("total", count);
 			mapRet.replace("root", listData);
 			return jacksonUtil.Map2json(mapRet);
+		}*/
+		
+		
+	}
+	
+	/* 删除 */
+	@Override
+	@Transactional
+	public String tzDelete(String[] actData, String[] errMsg) {
+		// 返回值;
+		String strRet = "{}";
+
+		if (actData.length == 0) {
+			return strRet;
 		}
-		return null;
+
+		int dataLength = actData.length;
+		for (int num = 0; num < dataLength; num++) {
+			// 表单内容
+			String strForm = actData[num];
+			JacksonUtil jacksonUtil = new JacksonUtil();
+			jacksonUtil.json2Map(strForm);
+			String jgId = jacksonUtil.getString("jgId");
+			String wxAppId=jacksonUtil.getString("wxAppId");
+			String tzSeq=jacksonUtil.getString("index");
+			String mediaId=jacksonUtil.getString("mediaId");
+            String mediaType=jacksonUtil.getString("mediaType");
+			if (!StringUtils.isBlank(jgId)&&!StringUtils.isBlank(wxAppId)&&!StringUtils.isBlank(tzSeq)) {
+				this.deleteScInfo(jgId,wxAppId,tzSeq,mediaId,mediaType, errMsg);
+			}
+		}
+		return strRet;
+	}
+
+	private void deleteScInfo(String jgId, String wxAppId, String tzSeq,String mediaId,String mediaType, String[] errMsg) {
+		try {
+			// 删除指定控件id的控件信息
+			Object[] args = new Object[] { jgId,wxAppId,tzSeq };
+			String tpSql = "DELETE FROM  PS_TZ_WX_MEDIA_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_XH=?";
+			String twSql="DELETE FROM PS_TZ_WX_TWL_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_XH=?";
+			int i=0,j=0 ;
+			//图片素材
+			if("A".equals(mediaType)){
+				i=sqlQuery.update(tpSql, args);
+			}
+			//图文素材
+			if("B".equals(mediaType)){
+				i=sqlQuery.update(tpSql, args);
+				j=sqlQuery.update(twSql,args);
+			}
+		
+			if (i <= 0) {
+				errMsg[0] = "1";
+				errMsg[1] = "删除图片素材失败！";
+			} else {
+				if("B".equals(mediaType)&&j<=0){
+					errMsg[0] = "1";
+					errMsg[1] = "删除图文素材失败！";
+				}else{
+					errMsg[0] = "0";
+					//从微信端永久删除素材
+				}
+				
+			}
+		} catch (Exception e) {
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
 	}
 }
