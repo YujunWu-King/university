@@ -34,12 +34,14 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.picInfoPanel', {
             fieldLabel: '应用ID',
             name: 'wxAppId',
             allowBlank:false,
+            ignoreChangesFlag:true,
             hidden:true
         },{
             xtype: 'textfield',
             fieldLabel: '机构ID',
             name: 'jgId',
             allowBlank:false,
+            ignoreChangesFlag:true,
             hidden:true
         },{
         	xtype: 'textfield',

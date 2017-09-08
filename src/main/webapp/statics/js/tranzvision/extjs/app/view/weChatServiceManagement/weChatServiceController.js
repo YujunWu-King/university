@@ -541,7 +541,9 @@
                 cmp.jgId=jgId;
 	            //授权组件列表
 	            var dataView = panel.down("dataview[name=picView]");
-                var tzStoreParams = '{"wxAppId":"'+wxAppId+'","jgId":"'+jgId+'"}';
+                //var tzStoreParams = '{"wxAppId":"'+wxAppId+'","jgId":"'+jgId+'"}';
+	            var tzStoreParams = '{"cfgSrhId": "TZ_WX_SCGL_COM.TZ_WX_SCGL_STD.TZ_WX_MEDIA_VW",' +
+				'"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"' + jgId + '","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"' + wxAppId + '"}}';
                 dataView.store.tzStoreParams = tzStoreParams;
                 dataView.store.load();
 

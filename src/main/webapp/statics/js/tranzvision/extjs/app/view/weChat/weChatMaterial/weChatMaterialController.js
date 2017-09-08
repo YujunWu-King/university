@@ -2,7 +2,82 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.weChatMaterialController',
     
-    //关闭微信窗口
+    //查询素材
+    queryMaterial:function(btn){
+    	var panel=btn.findParentByType("weChatMaterialInfoPanel");
+    	var jgId=panel.jgId;
+    	var wxAppId=panel.wxAppId;
+    	Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_WX_SCGL_COM.TZ_WX_SCGL_STD.TZ_WX_MEDIA_VW', //这里面的组件页面视图需要换成自己的
+            condition:
+            {
+                "TZ_JG_ID":jgId,
+                "TZ_WX_APPID":wxAppId
+            },
+            callback: function(seachCfg){
+        	    var picDataView=btn.findParentByType("panel").down("dataview[name=picView]");
+                var store = picDataView.store;
+                store.tzStoreParams = seachCfg;
+                store.load();
+            }
+        });
+    },
+    //素材窗口保存
+    materialWindowSave:function(btn){
+    	var panel=btn.findParentByType("weChatMaterialInfoPanel");
+	    var picDataView=btn.findParentByType("panel").down("dataview[name=picView]");
+        var wxAppId=panel.wxAppId;
+        var jgId=panel.jgId;
+        var store=picDataView.store;
+        var removeJson = "";
+        var removeRecs = store.getRemovedRecords();
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        comParams = '"delete":[' + removeJson + "]";
+        /*if(removeJson != ""){
+            comParams = '"delete":[' + removeJson + "]";
+        }*/
+        
+        var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_SCGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        Ext.tzSubmit(tzParams,function(){
+        	 var tzStoreParams = '{"cfgSrhId": "TZ_WX_SCGL_COM.TZ_WX_SCGL_STD.TZ_WX_MEDIA_VW",' +
+				'"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"' + jgId + '","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"' + wxAppId + '"}}';
+             store.tzStoreParams = tzStoreParams;
+             store.load();
+        },"",true,this);
+    },
+    //素材窗口确定
+    materialWindowEnsure:function(btn){
+    	var panel=btn.findParentByType("weChatMaterialInfoPanel");
+	    var picDataView=btn.findParentByType("panel").down("dataview[name=picView]");
+       
+        var store=picDataView.store;
+        var removeJson = "";
+        var removeRecs = store.getRemovedRecords();
+        for(var i=0;i<removeRecs.length;i++){
+            if(removeJson == ""){
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            }else{
+                removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        if(removeJson != ""){
+            comParams = '"delete":[' + removeJson + "]";
+        }else{
+        	panel.close();
+            return;
+        }
+        var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_SCGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
+        Ext.tzSubmit(tzParams,function(){
+        	panel.close();
+        },"",true,this);
+    },
+    //关闭素材窗口
     materialWindowClose:function(){
      this.getView().close();
     },
@@ -64,10 +139,12 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         }
     },
 	//新增图文素材
-	addPicAndWord:function(){
-
+	addPicAndWord:function(btn){
+		var panel=btn.findParentByType("weChatMaterialInfoPanel");
+        var wxAppId=panel.wxAppId;
+        var jgId=panel.jgId;
         //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet[""][""];
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WX_SCGL_COM"]["TZ_WX_TWSC_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -75,7 +152,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_WX_TWSC_STD，请检查配置。');
             return;
         }
 
@@ -85,7 +162,6 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
         contentPanel.body.addCls('kitchensink-example');
 
-        //className = 'KitchenSink.view.basicData.resData.resource.resourceSetInfoPanel';
         if(!Ext.ClassManager.isCreated(className)){
             Ext.syncRequire(className);
         }
@@ -93,14 +169,11 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         clsProto = ViewClass.prototype;
 
 
-        cmp = new ViewClass();
-        cmp.actType="add";
-        
-//        cmp.on('afterrender',function(panel){
-//			var form = panel.child('form').getForm();
-//			form.findField('orgaID').setValue('NEXT');
-//		});
-
+        cmp = new ViewClass({
+        	wxAppId: wxAppId,
+        	jgId: jgId,
+        	actType : "add"
+        });
 
         tab = contentPanel.add(cmp);
 
@@ -125,7 +198,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
             var jgId=panel.jgId;
             var wxAppId=panel.wxAppId;
             var tzSeq=selList[0].data.index;
-            var mediaType=selList[0].data.type;
+            var mediaType=selList[0].data.mediaType;
             //图片素材
             if(mediaType=='A'){
                 var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WX_SCGL_COM"]["TZ_WX_TPSC_STD"];
@@ -189,9 +262,11 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
     },
 	
 	//删除素材
-	deleteMaterial:function(){
+	deleteMaterial:function(btn){
         //选中行
-        var selList = this.getView().getSelectionModel().getSelection();
+		var panel=btn.findParentByType("weChatMaterialInfoPanel");
+	    var picDataView=btn.findParentByType("panel").down("dataview[name=picView]");
+	    var selList =  picDataView.getSelectionModel().getSelection();
         //选中行长度
         var checkLen = selList.length;
         if(checkLen == 0){
@@ -200,8 +275,8 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         }else{
             Ext.MessageBox.confirm('确认', '您确定要删除所选素材吗?', function(btnId){
                 if(btnId == 'yes'){
-                    var resSetStore = this.getView().store;
-                    resSetStore.remove(selList);
+                    var store = picDataView.store;
+                    store.remove(selList);
                 }
             },this);
         }
