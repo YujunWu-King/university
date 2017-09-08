@@ -2,19 +2,15 @@ package com.tranzvision.gd.TZWeChatMaterialBundle.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWxApiObject;
+import com.tranzvision.gd.util.base.GetSpringBeanUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZWeChatMaterialBundle.service.impl.TzWeChatMaterialServiceImpl")
@@ -135,22 +131,34 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 			String jgId = jacksonUtil.getString("jgId");
 			String wxAppId=jacksonUtil.getString("wxAppId");
 			String tzSeq=jacksonUtil.getString("index");
-			String mediaId=jacksonUtil.getString("mediaId");
             String mediaType=jacksonUtil.getString("mediaType");
 			if (!StringUtils.isBlank(jgId)&&!StringUtils.isBlank(wxAppId)&&!StringUtils.isBlank(tzSeq)) {
-				this.deleteScInfo(jgId,wxAppId,tzSeq,mediaId,mediaType, errMsg);
+				this.deleteScInfo(jgId,wxAppId,tzSeq,mediaType, errMsg);
 			}
 		}
 		return strRet;
 	}
 
-	private void deleteScInfo(String jgId, String wxAppId, String tzSeq,String mediaId,String mediaType, String[] errMsg) {
+	private void deleteScInfo(String jgId, String wxAppId, String tzSeq,String mediaType, String[] errMsg) {
 		try {
+			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+	        TzWxApiObject tzWxApiObject = (TzWxApiObject) getSpringBeanUtil.getSpringBeanByID("tzWxApiObject");
+	        
 			// 删除指定控件id的控件信息
 			Object[] args = new Object[] { jgId,wxAppId,tzSeq };
 			String tpSql = "DELETE FROM  PS_TZ_WX_MEDIA_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_XH=?";
 			String twSql="DELETE FROM PS_TZ_WX_TWL_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_XH=?";
 			int i=0,j=0 ;
+			String mediaId=sqlQuery.queryForObject("select TZ_MEDIA_ID from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_XH=?", new Object[]{jgId,wxAppId,tzSeq}, "String");
+			if(mediaId!=null&&!"".equals(mediaId)){
+				//从微信短删除永久素材
+				Map<String,Object> map=tzWxApiObject.deleteMaterial(jgId, wxAppId, mediaId);
+				if(!"0".equals(map.get("errcode").toString())){
+					errMsg[0] = "1";
+					errMsg[1] = "删除素材失败！";
+				}
+				
+			}
 			//图片素材
 			if("A".equals(mediaType)){
 				i=sqlQuery.update(tpSql, args);
@@ -168,11 +176,7 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 				if("B".equals(mediaType)&&j<=0){
 					errMsg[0] = "1";
 					errMsg[1] = "删除图文素材失败！";
-				}else{
-					errMsg[0] = "0";
-					//从微信端永久删除素材
 				}
-				
 			}
 		} catch (Exception e) {
 			errMsg[0] = "1";

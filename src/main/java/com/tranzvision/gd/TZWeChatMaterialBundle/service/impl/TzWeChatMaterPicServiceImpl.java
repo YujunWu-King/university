@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZWeChatMaterialBundle.service.impl;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,12 +49,14 @@ public class TzWeChatMaterPicServiceImpl extends FrameworkImpl {
 			String tzSeq=jacksonUtil.getString("tzSeq").toString();
 			Map<String,Object> map=sqlQuery.queryForMap("select TZ_MEDIA_ID,TZ_SC_NAME,TZ_SC_REMARK,TZ_PUB_STATE,TZ_IMAGE_PATH,date_format(ROW_LASTMANT_DTTM,'%Y-%m-%d %H:%i:%s') ROW_LASTMANT_DTTM,date_format(TZ_SYNC_DTIME,'%Y-%m-%d %H:%i:%s') TZ_SYNC_DTIME,TZ_PUB_STATE from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_XH=?;", new Object[]{jgId,wxAppId,tzSeq});
 			Map<String, Object> jsonMap2 = new HashMap<String, Object>();
+			String status=map.get("TZ_PUB_STATE").toString();
 			jsonMap2.put("jgId",jgId);
 			jsonMap2.put("wxAppId", wxAppId);
 			jsonMap2.put("tzSeq", tzSeq);
 			jsonMap2.put("filePath", map.get("TZ_IMAGE_PATH").toString());
 			jsonMap2.put("name", map.get("TZ_SC_NAME").toString());
-			jsonMap2.put("status", map.get("TZ_PUB_STATE").toString());
+			
+			jsonMap2.put("status", status);
 			
 			if(map.get("TZ_MEDIA_ID")!=null){
 				jsonMap2.put("mediaId", map.get("TZ_MEDIA_ID").toString());
@@ -65,7 +68,11 @@ public class TzWeChatMaterPicServiceImpl extends FrameworkImpl {
 				jsonMap2.put("editTime", map.get("ROW_LASTMANT_DTTM").toString());
 			}
 			if(map.get("TZ_SYNC_DTIME")!=null){
-				jsonMap2.put("tbTime", map.get("TZ_SYNC_DTIME").toString());
+				if("N".equals(status)){
+					jsonMap2.put("tbTime", "");
+				}else{
+					jsonMap2.put("tbTime", map.get("TZ_SYNC_DTIME").toString());
+				}
 			}
 			returnJsonMap.replace("formData", jsonMap2);	
 		}catch(Exception e){
@@ -88,6 +95,7 @@ public class TzWeChatMaterPicServiceImpl extends FrameworkImpl {
 			String scName=jacksonUtil.getString("name");
 			String filepath=jacksonUtil.getString("filePath");
 			String bz=jacksonUtil.getString("bz");
+			String status=jacksonUtil.getString("status");
 			String userId=tzLoginServiceImpl.getLoginedManagerOprid(request);
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -109,7 +117,7 @@ public class TzWeChatMaterPicServiceImpl extends FrameworkImpl {
 				PsTzWxMediaTbl.setTzScName(scName);
 				PsTzWxMediaTbl.setTzScRemark(bz);
 				PsTzWxMediaTbl.setTzImagePath(filepath);
-				PsTzWxMediaTbl.setTzPubState("N");
+				PsTzWxMediaTbl.setTzPubState(status);
 				
 				PsTzWxMediaTbl.setRowAddedDttm(nowTime);
 				PsTzWxMediaTbl.setRowAddedOprid(userId);
@@ -126,7 +134,7 @@ public class TzWeChatMaterPicServiceImpl extends FrameworkImpl {
 				PsTzWxMediaTbl.setTzScName(scName);
 				PsTzWxMediaTbl.setTzScRemark(bz);
 				PsTzWxMediaTbl.setTzImagePath(filepath);
-				PsTzWxMediaTbl.setTzPubState("N");
+				PsTzWxMediaTbl.setTzPubState(status);
 				
 				PsTzWxMediaTbl.setRowLastmantDttm(nowTime);
 				PsTzWxMediaTbl.setRowLastmantOprid(userId);
@@ -151,7 +159,7 @@ public class TzWeChatMaterPicServiceImpl extends FrameworkImpl {
 			Map<String, Object> dataMap = jacksonUtil.getMap("data");
 			String jgId=dataMap.get("jgId").toString();
 			String wxAppId=dataMap.get("wxAppId").toString();
-			String tzSeq=dataMap.get("wxAppId").toString();
+			String tzSeq=dataMap.get("tzSeq").toString();
 			String filepath=dataMap.get("filePath").toString();
 			String mediaId="";
 			String url="";
@@ -170,7 +178,20 @@ public class TzWeChatMaterPicServiceImpl extends FrameworkImpl {
 	        TzWxApiObject tzWxApiObject = (TzWxApiObject) getSpringBeanUtil.getSpringBeanByID("tzWxApiObject");
 	        //发布
 	        if("publish".equals(type)){
-	        	File file = new File(filepath);
+	        	filepath=filepath.substring(1);
+	        	String realpath="";
+				try {
+					realpath = this.getClass().getClassLoader().getResource("../../"+filepath).toURI().getPath();
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+				}
+	        	File file = new File(realpath);
+	            if (!file.exists()) 
+	            {   
+	            	errMsg[0]="1";
+	   				errMsg[1]="发布失败";
+	            }
+	          
 	        	Map<String,Object> map=tzWxApiObject.addOtherMaterial(jgId, wxAppId, file, "image", "", "");
     	       if(map.get("media_id")!=null){
     	    	   mediaId=map.get("media_id").toString();
@@ -180,45 +201,54 @@ public class TzWeChatMaterPicServiceImpl extends FrameworkImpl {
     	    	   url=map.get("url").toString();
 	        	} 
     	       
-  			   
-  			    PsTzWxMediaTbl PsTzWxMediaTbl=new PsTzWxMediaTbl();
-  			    PsTzWxMediaTbl.setTzJgId(jgId);
-				PsTzWxMediaTbl.setTzWxAppid(wxAppId);
-				PsTzWxMediaTbl.setTzXh(tzSeq);
-	
-				PsTzWxMediaTbl.setTzPubState(fbStatus);
-				PsTzWxMediaTbl.setTzMediaId(mediaId);
-				PsTzWxMediaTbl.setTzMediaUrl(url);
-				
-				PsTzWxMediaTbl.setRowLastmantDttm(nowTime);
-				PsTzWxMediaTbl.setRowLastmantOprid(userId);
-				psTzWxMediaTblMapper.updateByPrimaryKeySelective(PsTzWxMediaTbl);
-				returnMap.put("status", fbStatus);
-				returnMap.put("tbTime", nowTime);
+  			    if(!"".equals(mediaId)){
+	  			    PsTzWxMediaTbl PsTzWxMediaTbl=new PsTzWxMediaTbl();
+	  			    PsTzWxMediaTbl.setTzJgId(jgId);
+					PsTzWxMediaTbl.setTzWxAppid(wxAppId);
+					PsTzWxMediaTbl.setTzXh(tzSeq);
+		
+					PsTzWxMediaTbl.setTzPubState(fbStatus);
+					PsTzWxMediaTbl.setTzMediaId(mediaId);
+					PsTzWxMediaTbl.setTzMediaUrl(url);
+					PsTzWxMediaTbl.setTzSyncDtime(nowTime);
+					//PsTzWxMediaTbl.setRowLastmantDttm(nowTime);
+					//PsTzWxMediaTbl.setRowLastmantOprid(userId);
+					psTzWxMediaTblMapper.updateByPrimaryKeySelective(PsTzWxMediaTbl);
+					returnMap.put("status", fbStatus);
+					returnMap.put("tbTime", nowTimeStr);
+					
+  			    }
 	        }
 	        
 	        //撤销发布
 			 if("revoke".equals(type)){
 				    mediaId=sqlQuery.queryForObject("select TZ_MEDIA_ID from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? AND TZ_WX_APPID=? AND TZ_XH=?", new Object[]{jgId,wxAppId,tzSeq}, "String");
-				    
-				    //从微信端删除素材
-				    tzWxApiObject.deleteMaterial(jgId, wxAppId, mediaId);
-				    PsTzWxMediaTbl PsTzWxMediaTbl=new PsTzWxMediaTbl();
-	  			    PsTzWxMediaTbl.setTzJgId(jgId);
-					PsTzWxMediaTbl.setTzWxAppid(wxAppId);
-					PsTzWxMediaTbl.setTzXh(tzSeq);
-		
-					PsTzWxMediaTbl.setTzPubState("N");
-					PsTzWxMediaTbl.setTzMediaId("");
-					PsTzWxMediaTbl.setTzMediaUrl("");
-					
-					PsTzWxMediaTbl.setRowLastmantDttm(nowTime);
-					PsTzWxMediaTbl.setRowLastmantOprid(userId);
-					psTzWxMediaTblMapper.updateByPrimaryKeySelective(PsTzWxMediaTbl);
-					returnMap.put("status", "N");
+				    if(!"".equals(mediaId)){
+				    	//从微信端删除素材
+					    Map<String,Object> map=tzWxApiObject.deleteMaterial(jgId, wxAppId, mediaId);
+					    if("0".equals(map.get("errcode").toString())){
+					    	PsTzWxMediaTbl PsTzWxMediaTbl=new PsTzWxMediaTbl();
+			  			    PsTzWxMediaTbl.setTzJgId(jgId);
+							PsTzWxMediaTbl.setTzWxAppid(wxAppId);
+							PsTzWxMediaTbl.setTzXh(tzSeq);
+				
+							PsTzWxMediaTbl.setTzPubState("N");
+							PsTzWxMediaTbl.setTzMediaId("");
+							PsTzWxMediaTbl.setTzMediaUrl("");
+							PsTzWxMediaTbl.setTzSyncDtime((java.sql.Date)null);
+							//PsTzWxMediaTbl.setRowLastmantDttm(nowTime);
+							//PsTzWxMediaTbl.setRowLastmantOprid(userId);
+							//psTzWxMediaTblMapper.updateByPrimaryKeySelective(PsTzWxMediaTbl);
+							returnMap.put("status", "N");
+							returnMap.put("tbTime", "");
+					    }else{
+					    	errMsg[0]="1";
+			   				errMsg[1]="撤销发布失败";
+					    }
+				    }
 			 }
 		}
 		
-		return "";
+		return jacksonUtil.Map2json(returnMap);
 	}
 }

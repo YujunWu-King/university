@@ -47,6 +47,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.picInfoPanel', {
         	xtype: 'textfield',
             fieldLabel: '素材序号',
             name: 'tzSeq',
+            ignoreChangesFlag:true,
             hidden:true
         },{
         	xtype: 'textfield',
@@ -162,6 +163,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.picInfoPanel', {
              fieldLabel: '发布状态',
              name: 'status',
              mode: "remote",
+            ignoreChangesFlag:true,
              preSubTpl: [
                             '<div id="{cmpId}-triggerWrap" data-ref="triggerWrap" style="border:0" class="{triggerWrapCls} {triggerWrapCls}-{ui}">',
                                 '<div id={cmpId}-inputWrap data-ref="inputWrap" class="{inputWrapCls} {inputWrapCls}-{ui}">'
