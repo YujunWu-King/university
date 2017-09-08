@@ -30,7 +30,7 @@ Ext.define('KitchenSink.view.navigation.Tree', {
     initComponent: function() {
         var me = this,
             lastFilterValue;
-
+        
         me.columns = [{
             xtype: 'treecolumn',
             flex: 1,
@@ -47,6 +47,11 @@ Ext.define('KitchenSink.view.navigation.Tree', {
             }
         }];
 
+        var pathName = window.location.pathname;    	
+    	if(pathName.substring(pathName.lastIndexOf("/"))=="/cindex"){
+    		me.header = false;
+    	}
+    	
         Ext.apply(me, {
             store: Ext.StoreMgr.get('navigation'),
             dockedItems : [
