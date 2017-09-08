@@ -14,7 +14,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
     title: '素材管理',
     //height:400,
     minHeight:250,
-    width: 824,
+    width: 1000,
     materialType:'',
     wxAppId:'',
     tabpanel:{},
@@ -34,8 +34,8 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
                     store: mediaPicStore,
                     tpl:[
                         '<tpl for=".">',
-                        '<div class="thumb-wrap" style="width:144px;"id="{index}">',
-                            '<div style="width:130px;height:130px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
+                        '<div class="thumb-wrap" id="{index}">',
+                            '<div style="width:160px;height:113px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
                         '</div>',
                         '<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
                         '<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',
@@ -46,9 +46,9 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
                     itemSelector: 'div.thumb-wrap',
                     emptyText: 'No images available',
                     style:{
-                        background:'white'
+                        background:'white',
                         //border:'1px solid #000000',
-                        //padding:'0 15px 25px 0'
+                        padding:'0 15px 25px 0'
                     }
                 }],
                 bbar: {
