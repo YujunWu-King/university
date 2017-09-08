@@ -349,12 +349,29 @@ Ext.define('KitchenSink.controller.Global', {
             var tmpCmpTab = contentPanel.getComponent(id);
             var tab;
             if(tmpCmpTab==null){
-                cmp = new ViewClass();
+            	
+            	//访问cindex只显示主内容区域的第一个页签不允许关闭，同时隐藏“关闭”，“确定”等按钮
+            	var pathName = window.location.pathname;
+            	if(contentPanel.getActiveTab()==undefined&&pathName.substring(pathName.lastIndexOf("/"))=="/cindex"){
+            		cmp = new ViewClass({
+            			closable:false
+            		});
+            		
+            		var ensureBtn = cmp.down("button[iconCls=ensure]"),
+            			closeBtn = cmp.down("button[iconCls=close]");
+            		if(ensureBtn!=undefined)ensureBtn.close();
+            		if(closeBtn!=undefined)closeBtn.close();
+            		
+              	}else{
+              		cmp = new ViewClass();
+              	}
+                
                 cmp.currentNodeId = id;
                 cmp.itemId = id;
 
                 tab = contentPanel.add(cmp);
                 tab.on(Ext.tzTabOn(tab,cmp,cmp,me));
+                
             }else{
                 tab = cmp = tmpCmpTab;
             }
@@ -422,11 +439,19 @@ Ext.define('KitchenSink.controller.Global', {
           var subMenuPanel = null;
           if (!thumbnails.ownerCt)
           {
+        	//访问cindex只显示主内容区域
+        	var subMenuPanelHidden = false;
+        	var pathName = window.location.pathname;    	
+          	if(tmpId !== 'all'&&node.isLeaf() == true&&pathName.substring(pathName.lastIndexOf("/"))=="/cindex"){
+          		subMenuPanelHidden = true;
+          	}
+          	
             subMenuPanel = new Ext.panel.Panel({
               items:	[thumbnails],
               id :"tranzvision-framework-subMenu-panel",
               title:TranzvisionMeikecityAdvanced.Boot.languagePackage['tz-frmwrk-lang-00010'],
-              closable:false
+              closable:false,
+              hidden:subMenuPanelHidden
             });
             subMenuPanel.currentNodeId = tmpId;
 
