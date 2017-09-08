@@ -17,6 +17,8 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                 var store = btn.findParentByType("grid").store;
                 btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
                 store.tzStoreParams = seachCfg;
+                store.load();
+                /*
                 store.load({
                     callback:function() {
                         //默认展开rowexpander
@@ -28,6 +30,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                         }
                     }
                 });
+                */
             }
         });
     },
@@ -51,7 +54,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSRIBE_DATE-operator":"01","TZ_SUBSRIBE_DATE-value":"'+nowDateStr+'"}}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.load({
+        userStore.currentPage=1;
+        userStore.load();
+        /*userStore.load({
             callback:function() {
                 //默认展开rowexpander
                 var expander = grid.getPlugin();
@@ -61,7 +66,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     expander.toggleRow(i,record);
                 }
             }
-        });
+        });*/
     },
     //预查询-已绑定用户
     queryBind:function(btn) {
@@ -75,7 +80,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_GL_CONTID-operator":"13","TZ_GL_CONTID-value":",NULL"}}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.load({
+        userStore.currentPage=1;
+        userStore.load();
+        /*userStore.load({
             callback:function() {
                 //默认展开rowexpander
                 var expander = grid.getPlugin();
@@ -85,7 +92,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     expander.toggleRow(i,record);
                 }
             }
-        });
+        });*/
     },
     //预查询-按类别标签
     queryForTag:function(btn) {
@@ -98,7 +105,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var userStore = grid.getStore();
         var tzStoreParams = '{"OperateType":"tzQueryByTag","jgId":"'+jgId+'","wxAppId":"'+wxAppId+'","tagId":"'+tagId+'"}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.load({
+        userStore.currentPage=1;
+        userStore.load();
+        /*userStore.load({
             callback:function() {
                 //默认展开rowexpander
                 var expander = grid.getPlugin();
@@ -108,7 +117,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     expander.toggleRow(i,record);
                 }
             }
-        });
+        });*/
     },
     //预查询-已取消关注
     queryUnfollow:function(btn) {
@@ -122,7 +131,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSCRIBE-operator":"01","TZ_SUBSCRIBE-value":"0"}}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.load({
+        userStore.currentPage=1;
+        userStore.load();
+        /*userStore.load({
             callback:function() {
                 //默认展开rowexpander
                 var expander = grid.getPlugin();
@@ -132,7 +143,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     expander.toggleRow(i,record);
                 }
             }
-        });
+        });*/
     },
     //设置标签
     setTag:function(btn) {
