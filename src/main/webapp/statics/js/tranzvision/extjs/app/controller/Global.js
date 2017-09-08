@@ -359,8 +359,8 @@ Ext.define('KitchenSink.controller.Global', {
             		
             		var ensureBtn = cmp.down("button[iconCls=ensure]"),
             			closeBtn = cmp.down("button[iconCls=close]");
-            		if(ensureBtn!=undefined)ensureBtn.close();
-            		if(closeBtn!=undefined)closeBtn.close();
+            		if(ensureBtn!=undefined)ensureBtn.hide();
+            		if(closeBtn!=undefined)closeBtn.hide();
             		
               	}else{
               		cmp = new ViewClass();
