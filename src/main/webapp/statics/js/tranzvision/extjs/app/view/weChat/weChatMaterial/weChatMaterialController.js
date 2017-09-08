@@ -139,10 +139,12 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         }
     },
 	//新增图文素材
-	addPicAndWord:function(){
-
+	addPicAndWord:function(btn){
+		var panel=btn.findParentByType("weChatMaterialInfoPanel");
+        var wxAppId=panel.wxAppId;
+        var jgId=panel.jgId;
         //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet[""][""];
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WX_SCGL_COM"]["TZ_WX_TWSC_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -150,7 +152,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_WX_TWSC_STD，请检查配置。');
             return;
         }
 
@@ -160,7 +162,6 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
         contentPanel.body.addCls('kitchensink-example');
 
-        //className = 'KitchenSink.view.basicData.resData.resource.resourceSetInfoPanel';
         if(!Ext.ClassManager.isCreated(className)){
             Ext.syncRequire(className);
         }
@@ -168,14 +169,11 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         clsProto = ViewClass.prototype;
 
 
-        cmp = new ViewClass();
-        cmp.actType="add";
-        
-//        cmp.on('afterrender',function(panel){
-//			var form = panel.child('form').getForm();
-//			form.findField('orgaID').setValue('NEXT');
-//		});
-
+        cmp = new ViewClass({
+        	wxAppId: wxAppId,
+        	jgId: jgId,
+        	actType : "add"
+        });
 
         tab = contentPanel.add(cmp);
 
