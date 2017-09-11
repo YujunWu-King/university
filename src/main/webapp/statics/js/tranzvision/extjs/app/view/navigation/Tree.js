@@ -46,9 +46,8 @@ Ext.define('KitchenSink.view.navigation.Tree', {
                 return value;
             }
         }];
-
-        var pathName = window.location.pathname;    	
-    	if(pathName.substring(pathName.lastIndexOf("/"))=="/cindex"){
+ 	
+    	if(me.getQueryString("model")=="content"){
     		me.header = false;
     	}
     	
@@ -175,5 +174,14 @@ Ext.define('KitchenSink.view.navigation.Tree', {
             new RegExp( '('+search+')', "gi" ),
             "<span style='color: red;'><b>$1</b></span>"
         );
-    }
+    },
+    
+	getQueryString:function(name) {
+	    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+	    var r = window.location.search.substr(1).match(reg);
+	    if (r != null) {
+	        return decodeURI(r[2]);
+	    }
+	    return null;
+	}
 });

@@ -493,12 +493,16 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
 											/*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
-											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-												if(optional=="ok"){											
-													var org=Ext.tzOrgID.toLowerCase();
-													window.location.href= TzUniversityContextPath+"/login/"+org;
-												}
-											});
+                                        	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        	}else{
+												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+													if(optional=="ok"){											
+														var org=Ext.tzOrgID.toLowerCase();
+														window.location.href= TzUniversityContextPath+"/login/"+org;
+													}
+												});
+                                        	}
                                         }
                                     }
                                     catch(e2)
@@ -607,12 +611,17 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             /*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
-											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-												if(optional=="ok"){											
-													var org=Ext.tzOrgID.toLowerCase();
-													window.location.href= TzUniversityContextPath + "/login/"+org;
-												}
-											});
+                                        	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        	}else{
+                                        		Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+													if(optional=="ok"){											
+														var org=Ext.tzOrgID.toLowerCase();
+														window.location.href= TzUniversityContextPath + "/login/"+org;
+													}
+                                        		});
+                                        	}
+											
                                         }
                                     }
                                     catch(e2)
@@ -705,12 +714,16 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             /*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
-											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-												if(optional=="ok"){											
-													var org=Ext.tzOrgID.toLowerCase();
-													window.location.href=TzUniversityContextPath+"/login/"+org;
-												}
-											});
+                                        	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        	}else{
+												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+													if(optional=="ok"){											
+														var org=Ext.tzOrgID.toLowerCase();
+														window.location.href=TzUniversityContextPath+"/login/"+org;
+													}
+												});
+                                        	}
                                         }
                                     }
                                     catch(e2)
@@ -821,12 +834,16 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             /*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
-											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-												if(optional=="ok"){											
-													var org=Ext.tzOrgID.toLowerCase();
-													window.location.href=TzUniversityContextPath+"/login/"+org;
-												}
-											});
+                                        	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        	}else{
+												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+													if(optional=="ok"){											
+														var org=Ext.tzOrgID.toLowerCase();
+														window.location.href=TzUniversityContextPath+"/login/"+org;
+													}
+												});
+                                        	}
                                         }
                                     }
                                     catch(e2)
@@ -1001,12 +1018,16 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             /*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
-											Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-												if(optional=="ok"){											
-													var org=Ext.tzOrgID.toLowerCase();
-													window.location.href=TzUniversityContextPath+"/login/"+org;
-												}
-											});
+                                        	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        	}else{
+												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+													if(optional=="ok"){											
+														var org=Ext.tzOrgID.toLowerCase();
+														window.location.href=TzUniversityContextPath+"/login/"+org;
+													}
+												});
+                                        	}
                                         }
                                     }
                                     catch(e2)
@@ -1339,12 +1360,17 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                             {
                                                 /*var win = new tranzvision.view.window.ReloginWindow();
 												win.show();*/
-												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-													if(optional=="ok"){											
-														var org=Ext.tzOrgID.toLowerCase();
-														window.location.href=TzUniversityContextPath+"/login/"+org;
-													}
-												});
+                                            	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
+                                            		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                            	}else{
+                                            		Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+    													if(optional=="ok"){											
+    														var org=Ext.tzOrgID.toLowerCase();
+    														window.location.href=TzUniversityContextPath+"/login/"+org;
+    													}
+    												});
+                                            	}
+												
                                             }
                                         }
                                         catch(e2)
@@ -1444,7 +1470,16 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
             var ViewClass = Ext.ClassManager.get(className);
             var win = new ViewClass(configuration);
             win.show();
-        }
+        },
+        
+    	getQueryString:function(name) {
+    	    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+    	    var r = window.location.search.substr(1).match(reg);
+    	    if (r != null) {
+    	        return decodeURI(r[2]);
+    	    }
+    	    return null;
+    	}
     };
 
     return boot;
@@ -2747,12 +2782,17 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                             {
 												/*var win = new tranzvision.view.window.ReloginWindow();
 												win.show();*/
-												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-													if(optional=="ok"){	
-														var org=Ext.tzOrgID.toLowerCase();
-														window.location.href=TzUniversityContextPath+"/login/"+org;
-													}
-												});
+                                            	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
+                                            		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                            	}else{
+                                            		Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
+    													if(optional=="ok"){	
+    														var org=Ext.tzOrgID.toLowerCase();
+    														window.location.href=TzUniversityContextPath+"/login/"+org;
+    													}
+    												});
+                                            	}
+												
                                             }
                                         }
                                         catch(e2)

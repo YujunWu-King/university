@@ -103,6 +103,8 @@ Ext.define('KitchenSink.view.main.Main', {
     stateId: 'tranzvision-framework-kitchensink-viewport',
 
     initComponent: function() {
+    	var me = this;
+    	
     	var items = [{
             region: 'center',
             xtype: 'contentPanel',
@@ -112,9 +114,8 @@ Ext.define('KitchenSink.view.main.Main', {
                 reference: 'breadcrumb>'
             }]
         }];
-    	
-    	var pathName = window.location.pathname;    	
-    	if(pathName.substring(pathName.lastIndexOf("/"))=="/cindex"){
+    		
+    	if(me.getQueryString("model")=="content"){
     		this.isContentIndex = true;
     		items.push({
                 region: 'north',
@@ -139,5 +140,14 @@ Ext.define('KitchenSink.view.main.Main', {
 
     getState: function() {
         return this.getController().getState();
-    }
+    },
+    
+	getQueryString:function(name) {
+	    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+	    var r = window.location.search.substr(1).match(reg);
+	    if (r != null) {
+	        return decodeURI(r[2]);
+	    }
+	    return null;
+	}
 });

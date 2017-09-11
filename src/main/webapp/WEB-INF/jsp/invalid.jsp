@@ -60,6 +60,20 @@
 	 	background-color:#eee;
 	 }
     </style>
+    <script type="text/javascript">
+		var getQueryString = function(name) {
+		    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+		    var r = window.location.search.substr(1).match(reg);
+		    if (r != null) {
+		        return decodeURI(r[2]);
+		    }
+		    return null;
+		};
+		
+		if(getQueryString("mode")=="no-inquire"){
+			window.location.href = "<%= (String)(request.getAttribute("tmpLoginURL")) %>";
+		}
+    </script>
   </head>
   <body>
     <table height="100%" width="100%" border="0" align="center" id="tranzvision_mkc_advanced_default_table">

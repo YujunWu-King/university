@@ -53,7 +53,7 @@ public class Index {
 	
 	Logger logger = Logger.getLogger(this.getClass());
 
-	@RequestMapping(value = {"index","cindex"})
+	@RequestMapping(value = {"index"})
 	public String index(HttpServletRequest request, HttpServletResponse response) {
 		// 获取当前提交的主题编号;
 		String tmpSubmitThemeID = request.getParameter("theme");
