@@ -493,12 +493,12 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
 											/*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
+                                        	var org=Ext.tzOrgID.toLowerCase();
                                         	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
-                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org+"?mode=no-inquire";
                                         	}else{
 												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-													if(optional=="ok"){											
-														var org=Ext.tzOrgID.toLowerCase();
+													if(optional=="ok"){
 														window.location.href= TzUniversityContextPath+"/login/"+org;
 													}
 												});
@@ -611,12 +611,12 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             /*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
+                                        	var org=Ext.tzOrgID.toLowerCase();
                                         	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
-                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org+"?mode=no-inquire";
                                         	}else{
                                         		Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-													if(optional=="ok"){											
-														var org=Ext.tzOrgID.toLowerCase();
+													if(optional=="ok"){
 														window.location.href= TzUniversityContextPath + "/login/"+org;
 													}
                                         		});
@@ -714,12 +714,12 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             /*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
+                                        	var org=Ext.tzOrgID.toLowerCase();
                                         	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
-                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org+"?mode=no-inquire";
                                         	}else{
 												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-													if(optional=="ok"){											
-														var org=Ext.tzOrgID.toLowerCase();
+													if(optional=="ok"){
 														window.location.href=TzUniversityContextPath+"/login/"+org;
 													}
 												});
@@ -834,12 +834,12 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             /*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
+                                        	var org=Ext.tzOrgID.toLowerCase();
                                         	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
-                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org+"?mode=no-inquire";
                                         	}else{
 												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-													if(optional=="ok"){											
-														var org=Ext.tzOrgID.toLowerCase();
+													if(optional=="ok"){
 														window.location.href=TzUniversityContextPath+"/login/"+org;
 													}
 												});
@@ -1018,12 +1018,12 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                         {
                                             /*var win = new tranzvision.view.window.ReloginWindow();
 											win.show();*/
+                                        	var org=Ext.tzOrgID.toLowerCase();
                                         	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
-                                        		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                        		window.location.href=TzUniversityContextPath+"/login/"+org+"?mode=no-inquire";
                                         	}else{
 												Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-													if(optional=="ok"){											
-														var org=Ext.tzOrgID.toLowerCase();
+													if(optional=="ok"){
 														window.location.href=TzUniversityContextPath+"/login/"+org;
 													}
 												});
@@ -1360,12 +1360,12 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                             {
                                                 /*var win = new tranzvision.view.window.ReloginWindow();
 												win.show();*/
+                                            	var org=Ext.tzOrgID.toLowerCase();
                                             	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
-                                            		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                            		window.location.href=TzUniversityContextPath+"/login/"+org+"?mode=no-inquire";
                                             	}else{
                                             		Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-    													if(optional=="ok"){											
-    														var org=Ext.tzOrgID.toLowerCase();
+    													if(optional=="ok"){
     														window.location.href=TzUniversityContextPath+"/login/"+org;
     													}
     												});
@@ -2782,12 +2782,12 @@ TranzvisionMeikecityAdvanced.Boot = TranzvisionMeikecityAdvanced.Boot || (functi
                                             {
 												/*var win = new tranzvision.view.window.ReloginWindow();
 												win.show();*/
+                                            	var org=Ext.tzOrgID.toLowerCase();
                                             	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"){
-                                            		window.location.href=TzUniversityContextPath+"/login/"+org;
+                                            		window.location.href=TzUniversityContextPath+"/login/"+org+"?mode=no-inquire";
                                             	}else{
                                             		Ext.Msg.alert(TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00021"),TranzvisionMeikecityAdvanced.Boot.getMessage("TZGD_FWINIT_00101"),function(optional){
-    													if(optional=="ok"){	
-    														var org=Ext.tzOrgID.toLowerCase();
+    													if(optional=="ok"){
     														window.location.href=TzUniversityContextPath+"/login/"+org;
     													}
     												});

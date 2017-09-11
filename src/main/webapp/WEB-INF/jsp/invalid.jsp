@@ -71,7 +71,7 @@
 		};
 		
 		if(getQueryString("mode")=="no-inquire"){
-			window.location.href = "<%= (String)(request.getAttribute("tmpLoginURL")) %>";
+			window.location.href = '<%= (String)(request.getAttribute("tmpLoginURL")) %>'+'?mode=no-inquire';
 		}
     </script>
   </head>

@@ -301,7 +301,7 @@ Ext.define('KitchenSink.view.ThemeSwitcher', function() {
 						Ext.MessageBox.confirm('确认', '您确定要退出系统吗?', function(btnId){
 							if(btnId == 'yes'){
 
-								window.location = TzUniversityContextPath + "/login/logout";
+								window.location = TzUniversityContextPath + "/login/logout"+(TranzvisionMeikecityAdvanced.Boot.getQueryString("mode")=="no-inquire"?"?mode=no-inquire":"");
 								
 								/*
 								//提交参数

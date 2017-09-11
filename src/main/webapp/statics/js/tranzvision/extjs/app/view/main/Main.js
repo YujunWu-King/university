@@ -115,7 +115,7 @@ Ext.define('KitchenSink.view.main.Main', {
             }]
         }];
     		
-    	if(me.getQueryString("model")=="content"){
+    	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("model")=="content"){
     		this.isContentIndex = true;
     		items.push({
                 region: 'north',
@@ -140,14 +140,5 @@ Ext.define('KitchenSink.view.main.Main', {
 
     getState: function() {
         return this.getController().getState();
-    },
-    
-	getQueryString:function(name) {
-	    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-	    var r = window.location.search.substr(1).match(reg);
-	    if (r != null) {
-	        return decodeURI(r[2]);
-	    }
-	    return null;
-	}
+    }
 });

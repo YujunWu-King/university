@@ -83,6 +83,15 @@ body {
 		jgHidden = true;
 	}
 
+	function getQueryString(name) {
+	    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+	    var r = window.location.search.substr(1).match(reg);
+	    if (r != null) {
+	        return decodeURI(r[2]);
+	    }
+	    return null;
+	}
+	
 	function BindEnter(obj)
 
 	{
@@ -168,7 +177,7 @@ body {
 											"userName").getValue());
 
 									window.location.href = "${contextPath}"
-											+ responseText.indexUrl;
+											+ responseText.indexUrl+(getQueryString("mode")=="no-inquire"?"?mode=no-inquire":"");
 
 								} else {
 
@@ -724,7 +733,7 @@ body {
 																							orgId);
 																			
 																			window.location.href = "${contextPath}"
-																					+ responseText.indexUrl;
+																					+ responseText.indexUrl+(getQueryString("mode")=="no-inquire"?"?mode=no-inquire":"");
 																			
 																		} else {
 																			Ext.getBody().unmask();

@@ -47,7 +47,7 @@ Ext.define('KitchenSink.view.navigation.Tree', {
             }
         }];
  	
-    	if(me.getQueryString("model")=="content"){
+    	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("model")=="content"){
     		me.header = false;
     	}
     	
@@ -174,14 +174,5 @@ Ext.define('KitchenSink.view.navigation.Tree', {
             new RegExp( '('+search+')', "gi" ),
             "<span style='color: red;'><b>$1</b></span>"
         );
-    },
-    
-	getQueryString:function(name) {
-	    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-	    var r = window.location.search.substr(1).match(reg);
-	    if (r != null) {
-	        return decodeURI(r[2]);
-	    }
-	    return null;
-	}
+    }
 });
