@@ -15,7 +15,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
     title: '进程调度',
     reference: 'processDispatchWindow',
     id:'runDispatchWin',
-    width: 600,
+    width: 700,
     height: 400,
     minWidth: 200,
     minHeight: 100,

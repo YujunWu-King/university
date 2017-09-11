@@ -139,11 +139,13 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 //日期类型处理
                 Date runStartDate = new Date();
                 String dateTime = "";
-                SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+                SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
                 
                 if(jacksonUtil.getString("requestDate") != null && jacksonUtil.getString("requestTime") != null){
                 	dateTime = jacksonUtil.getString("requestDate") + jacksonUtil.getString("requestTime");
                     runStartDate = datetimeFormate.parse(dateTime);
+                    System.out.println("dateTime======" + dateTime);
+                    System.out.println("runStartDate=======" +runStartDate);
                     tzProcessInstance.setTzQqcjDttm(runStartDate);
                 }
                 
@@ -154,7 +156,7 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 }
                 	
                 if(jacksonUtil.getString("processStartDate") != null && jacksonUtil.getString("processStartTime") != null){
-                    dateTime = jacksonUtil.getString("processStartDate") + jacksonUtil.getString("processStartDate");
+                    dateTime = jacksonUtil.getString("processStartDate") + jacksonUtil.getString("processStartTime");
                     runStartDate = datetimeFormate.parse(dateTime);
                     tzProcessInstance.setTzJcksDttm(runStartDate);
                 }
