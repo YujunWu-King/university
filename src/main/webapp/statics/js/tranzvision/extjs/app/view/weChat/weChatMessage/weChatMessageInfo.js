@@ -134,7 +134,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     labelWidth: 100,
                     fieldLabel: '按照标签',
                     name: 'wechatTag',
-                    id:'wechatTag_20170830',
+                    //id:'wechatTag_20170830',
                     mode: "remote",
                     editable: false,
                     valueField: 'tagId',

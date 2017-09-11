@@ -66,12 +66,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
                 removeJson = removeJson + ','+Ext.JSON.encode(removeRecs[i].data);
             }
         }
-        if(removeJson != ""){
-            comParams = '"delete":[' + removeJson + "]";
-        }else{
-        	panel.close();
-            return;
-        }
+        comParams = '"delete":[' + removeJson + "]";
         var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_SCGL_STD","OperateType":"U","comParams":{'+comParams+'}}';
         Ext.tzSubmit(tzParams,function(){
         	panel.close();
@@ -128,6 +123,10 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         cmp.actType = "add";
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
+            var publishBtn=panel.down("button[name=publishBtn]");
+            var revokeBtn=panel.down("button[name=revokeBtn]");
+            publishBtn.setDisabled(false);
+            revokeBtn.setDisabled(true);
             form.findField("wxAppId").setValue(wxAppId);
             form.findField("jgId").setValue(jgId);
         }); 
@@ -246,7 +245,17 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
                     //加载数据
                     Ext.tzLoad(tzParams,function(responseData){
                     	form.setValues(responseData.formData);
-                    	path=responseData.formData.filePath;
+                    	var  path=responseData.formData.filePath;
+                        var status=responseData.formData.status;
+                        var publishBtn=panel.down("button[name=publishBtn]");
+                        var revokeBtn=panel.down("button[name=revokeBtn]");
+                        if(status=="Y"){
+                            publishBtn.setDisabled(true);
+                            revokeBtn.setDisabled(false);
+                        }else{
+                            publishBtn.setDisabled(false);
+                            revokeBtn.setDisabled(true);
+                        }
                     	panel.down("image[name=titileImage]").setSrc(TzUniversityContextPath+path);
                     });
 
@@ -285,28 +294,48 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
 	
 	//图片素材发布
 	pIssue:function(btn){
-		var form=btn.findParentByType("panel").down("form").getForm();
+        var panel=btn.findParentByType("panel");
+		var form=panel.down("form").getForm();
+        var publishBtn=panel.down("button[name=publishBtn]");
+        var revokeBtn=panel.down("button[name=revokeBtn]");
 		var tzSeq=form.findField("tzSeq").getValue();
         if(tzSeq==""){
         	Ext.Msg.alert("提示","请保存图片素材后再发布");
             return false;
         }
- 
         var formParams = form.getValues();
         var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_TPSC_STD","OperateType":"U","comParams":{"update":[{"type":"publish","data":'+Ext.JSON.encode(formParams)+'}]}}';
         Ext.tzSubmit(tzParams,function(response){
            var status=response.status;
            var tbTime=response.tbTime;
-           if(tzSeq>0){
-        	   form.findField("status").setValue(status);
-        	   form.findField("tbTime").setValue(tbTime);
-           }
-        },"",true,this);
+            form.findField("status").setValue(status);
+        	form.findField("tbTime").setValue(tbTime);
+            publishBtn.setDisabled(true);
+            revokeBtn.setDisabled(false);
+        },"发布成功",true,this);
 	},
 	
 	//图片素材撤销发布
 	pRevoke:function(btn){
-		
+        var panel=btn.findParentByType("panel");
+        var form=panel.down("form").getForm();
+        var publishBtn=panel.down("button[name=publishBtn]");
+        var revokeBtn=panel.down("button[name=revokeBtn]");
+        /*var tzSeq=form.findField("tzSeq").getValue();
+        if(tzSeq==""){
+            Ext.Msg.alert("提示","请保存图片素材后再发布");
+            return false;
+        }*/
+        var formParams = form.getValues();
+        var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_TPSC_STD","OperateType":"U","comParams":{"update":[{"type":"revoke","data":'+Ext.JSON.encode(formParams)+'}]}}';
+        Ext.tzSubmit(tzParams,function(response){
+        	var status=response.status;
+            var tbTime=response.tbTime;
+            form.findField("status").setValue(status);
+         	form.findField("tbTime").setValue(tbTime);
+            publishBtn.setDisabled(false);
+            revokeBtn.setDisabled(true);
+        },"撤销发布成功",true,this);
 	},
 	
 	//图片素材保存
@@ -335,6 +364,11 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
 	//图片素材确定
 	pEnsure:function(btn){
         var form=btn.findParentByType("panel").down("form").getForm();
+        var jgId=form.findField("jgId").getValue();
+        var wxAppId=form.findField("wxAppId").getValue();
+        //console.log(btn.findParentByType("panel").findParentByType("weChatMaterialInfoPanel"));
+        //console.log(Ext.ComponentQuery.query("panel[reference=weChatMaterialInfoPanel]")[0]);
+        //console.log(Ext.ComponentQuery.query("panel[reference=weChatMaterialInfoPanel]")[0].down('dataview[]'));
         if(!form.isValid()){
             return false;
         }
@@ -346,17 +380,19 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.weChatMaterialController', {
         }
         var formParams = form.getValues();
         var tzParams = '{"ComID":"TZ_WX_SCGL_COM","PageID":"TZ_WX_TPSC_STD","OperateType":"U","comParams":{"add":['+Ext.JSON.encode(formParams)+']}}';
-        
-       /* var dataview= this.getView().down("dateview[name=picView]");
-        var tzStoreParams = '{"wxAppId":"'+form.findField("wxAppId").getValue()+'","jgId":"'+form.findField("jgId").getValue()+'"}';
-        dataView.store.tzStoreParams = tzStoreParams;
-        dataView.store.load();*/
+
         Ext.tzSubmit(tzParams,function(response){
             var tzSeq=response.tzSeq;
             var lastUpdateTime=response.lastUpdateTime;
             if(tzSeq>0){
                 form.findField("tzSeq").setValue(tzSeq);
                 form.findField("editTime").setValue(lastUpdateTime);
+                var weChatMaterialInfoPanel=Ext.ComponentQuery.query("panel[reference=weChatMaterialInfoPanel]");
+                var dataview=weChatMaterialInfoPanel[0].down("dataview[name=picView]");
+                var tzStoreParams = '{"cfgSrhId": "TZ_WX_SCGL_COM.TZ_WX_SCGL_STD.TZ_WX_MEDIA_VW",' +
+                    '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"' + jgId + '","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"' + wxAppId + '"}}';
+                dataview.store.tzStoreParams = tzStoreParams;
+                dataview.store.load();
                 btn.findParentByType("panel").close();
             }
         },"",true,this);

@@ -48,8 +48,12 @@ public class TZWeChatMsgMaterialServiceImpl extends FrameworkImpl {
 			if(list!=null &&list.size()>0){
 				for(int i=0;i<list.size();i++){
 					Map<String,Object> map=new HashMap<String,Object>();
+					String mediaId="";
+					if(list.get(i).get("TZ_MEDIA_ID")!=null){
+						mediaId=list.get(i).get("TZ_MEDIA_ID").toString();
+					}
 					map.put("index", Integer.valueOf(list.get(i).get("TZ_XH").toString()));
-					map.put("mediaId", list.get(i).get("TZ_MEDIA_ID").toString());
+					map.put("mediaId", mediaId);
 					map.put("src", list.get(i).get("TZ_IMAGE_PATH").toString());
 					map.put("caption", list.get(i).get("TZ_SC_NAME").toString());
 					listData.add(map);
@@ -67,7 +71,10 @@ public class TZWeChatMsgMaterialServiceImpl extends FrameworkImpl {
 				for(int i=0;i<list.size();i++){
 					Map<String,Object> map=new HashMap<String,Object>();
 					String strXh=list.get(i).get("TZ_XH").toString();
-					String strMediaId=list.get(i).get("TZ_MEDIA_ID").toString();
+					String strMediaId="";
+					if(list.get(i).get("TZ_MEDIA_ID")!=null){
+						strMediaId=list.get(i).get("TZ_MEDIA_ID").toString();
+					}
 					String imageUrl=sqlQuery.queryForObject("select TZ_HEAD_IMAGE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_XH=? and TZ_SHCPIC_FLG='Y'", new Object[]{strOrgId,strWxAppId,strXh}, "String");
 					String caption= sqlQuery.queryForObject("select TZ_TW_TITLE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_XH=? and TZ_SHCPIC_FLG='Y'", new Object[]{strOrgId,strWxAppId,strXh}, "String");
 					map.put("index",Integer.valueOf(strXh));
