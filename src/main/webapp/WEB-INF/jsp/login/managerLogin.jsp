@@ -82,15 +82,6 @@ body {
 	if (locationOrgId != "") {
 		jgHidden = true;
 	}
-
-	function getQueryString(name) {
-	    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
-	    var r = window.location.search.substr(1).match(reg);
-	    if (r != null) {
-	        return decodeURI(r[2]);
-	    }
-	    return null;
-	}
 	
 	function BindEnter(obj)
 
@@ -175,9 +166,8 @@ body {
 
 									cpr.set("userName", form.findField(
 											"userName").getValue());
-
-									window.location.href = "${contextPath}"
-											+ responseText.indexUrl+(getQueryString("mode")=="no-inquire"?"?mode=no-inquire":"");
+									
+									window.location.href = "${contextPath}" + responseText.indexUrl +window.location.search;
 
 								} else {
 
@@ -733,7 +723,7 @@ body {
 																							orgId);
 																			
 																			window.location.href = "${contextPath}"
-																					+ responseText.indexUrl+(getQueryString("mode")=="no-inquire"?"?mode=no-inquire":"");
+																					+ responseText.indexUrl+window.location.href = "${contextPath}" + responseText.indexUrl +window.location.search;
 																			
 																		} else {
 																			Ext.getBody().unmask();
