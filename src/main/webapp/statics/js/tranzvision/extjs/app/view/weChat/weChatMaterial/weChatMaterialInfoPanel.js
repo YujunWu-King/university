@@ -69,7 +69,7 @@
                         style:{
                         	//background:'#eee',
                         	background:'white',
-				    		border:'1px solid #000000',
+				    		border:'1px solid white',
 				    		padding:'0 15px 25px 0'
                         },
                         listeners:{
