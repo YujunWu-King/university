@@ -262,7 +262,7 @@ public class TzLoginController {
 			orgid = orgid.toLowerCase();
 		}
 
-		String redirect = "redirect:" + "/login/" + orgid+"?"+request.getQueryString();
+		String redirect = "redirect:" + "/login/" + orgid+(request.getQueryString()!=null?("?"+request.getQueryString()):"");
 
 		return redirect;
 	}
