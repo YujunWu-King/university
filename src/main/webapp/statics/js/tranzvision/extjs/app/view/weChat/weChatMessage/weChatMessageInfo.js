@@ -187,7 +187,8 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                             xtype: 'textareafield',
                             grow:true,
                             name: 'wordMessage',
-                            minHeight:200,
+                            height:200,
+                            //minHeight:200,
                             hideLable:true
 
                         }]
