@@ -15,9 +15,6 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
     //height:400,
     minHeight:250,
     width: 1000,
-    materialType:'',
-    wxAppId:'',
-    tabpanel:{},
     modal:true,
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     initComponent: function() {
@@ -62,8 +59,11 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
         ];
         this.callParent();
     },
-    constructor:function(tabpanel){
-        this.tabpanel=tabpanel;
+    constructor:function(config){
+        this.materialType = config.materialType;
+        this.wxAppId = config.wxAppId;
+        this.callbackFun = config.callback;
+        
         this.callParent();
     },
     buttons: [{

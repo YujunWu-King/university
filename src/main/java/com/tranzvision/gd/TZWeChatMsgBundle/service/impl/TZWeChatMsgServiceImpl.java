@@ -127,16 +127,15 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 		    if("B".equals(strSendType)){
 		    	PsTzWxmsgLogT.setTzMediaId(strTwMediaId);
 		    	PsTzWxmsgLogT.setTzContent(strTwTitle);
-		    	strTpMediaId=strTwMediaId;
+		    	mediaIdOrContent=strTwMediaId;
 		    	msgtype="mpnews";
 		    }
 		    if("C".equals(strSendType)){
 		    	PsTzWxmsgLogT.setTzContent(strWordMsg);
-		    	strTwMediaId=strWordMsg;
+		    	mediaIdOrContent=strWordMsg;
 		    	msgtype="text";
 		    }
-		    
-		    //TzWxApiObject TzWxApiObject=new TzWxApiObject();
+		  
 		    GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
         	TzWxApiObject tzWxApiObject = (TzWxApiObject) getSpringBeanUtil.getSpringBeanByID("tzWxApiObject");
 		    String strMsgId="";
@@ -147,11 +146,12 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 				Map<String,Object> map=tzWxApiObject.messageMassSendByOpenid(strOrgId, strAppId, mediaIdOrContent, msgtype, strOpenArray, "", "");
 				if("0".equals(map.get("errcode").toString())){
 					strMsgId=map.get("msg_id").toString();
-					Map<String,Object> statusMap=tzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
+					strSendStatus="Y";
+					/*Map<String,Object> statusMap=tzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
 					strSendStatus=statusMap.get("msg_status").toString();
 					if("SEND_SUCCESS".equals(strSendStatus)){
 						strSendStatus="Y";
-					}
+					}*/
 				}else{
 					returnMap.put("errcode", "-1");
 					returnMap.put("errmsg", "指定用户消息发送失败！");
@@ -177,11 +177,12 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 						Map<String,Object> map=tzWxApiObject.messageMassSendByTag(strOrgId, strAppId, mediaIdOrContent, msgtype, strWxTag, "", "");
 						if("0".equals(map.get("errcode").toString())){
 							strMsgId=map.get("msg_id").toString();
-							Map<String,Object> statusMap=tzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
+							strSendStatus="Y";
+							/*Map<String,Object> statusMap=tzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
 							strSendStatus=statusMap.get("msg_status").toString();
 							if("SEND_SUCCESS".equals(strSendStatus)){
 								strSendStatus="Y";
-							}
+							}*/
 						}else{
 							returnMap.put("errcode", "-1");
 							returnMap.put("errmsg", "指定用户消息发送失败！");
@@ -204,6 +205,7 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 			PsTzWxmsgLogT.setTzXh(StrXh);
 			PsTzWxmsgLogT.setTzSendPsn(userId);
 			PsTzWxmsgLogT.setTzSendDtime(nowTime);
+			PsTzWxmsgLogT.setTzSendsDtime(nowTime);
 			PsTzWxmsgLogT.setTzSendMode(strSendMode);
 			PsTzWxmsgLogT.setTzSendType(strSendType);
 			PsTzWxmsgLogT.setTzSendState(strSendStatus);

@@ -30,30 +30,27 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
         }
         ViewClass = Ext.ClassManager.get(className);
         clsProto = ViewClass.prototype;
-        if (clsProto.themes) {
-            clsProto.themeInfo = clsProto.themes[themeName];
-            if (themeName === 'gray') {
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
-            } else if (themeName !== 'neptune' && themeName !== 'classic') {
-                if (themeName === 'crisp-touch') {
-                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
-                }
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
-            }
-            // <debug warn>
-            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
-            if (!clsProto.themeInfo) {
-                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
-                    themeName + '\'. Is this intentional?');
-            }
-        }
+        
         var win=this.lookupReference('weChatMsgScWindow');
         if (!win) {
             Ext.syncRequire(className);
             ViewClass = Ext.ClassManager.get(className);
-            win = new ViewClass(tabpanel);
-            win.materialType='TuPian';
-            win.wxAppId=wxAppdId;
+            win = new ViewClass({
+            	materialType: 'TuPian',
+            	wxAppId: wxAppdId,
+            	callback: function(rec){
+            		var medidId = rec.get("mediaId");
+         	        var src= rec.get("src");
+         	        var caption= rec.get("caption");
+            		 
+            		var from2=tabpanel.down('form[name=form2]').getForm();
+    	        	from2.findField("tpMediaId").setValue(medidId);
+    	        	tabpanel.down('image[name=titileImage]').setHidden(false);
+    	        	tabpanel.down('button[name=deletePicBtn]').setHidden(false);
+    	        	tabpanel.down('button[name=chooseScBtn]').setHidden(true);
+    	        	tabpanel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + src);
+            	}
+            });
             this.getView().add(win);
         }
        win.on('afterrender',function(panel){
@@ -62,12 +59,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
            picDataView.store.tzStoreParams = tzStoreParams;
            picDataView.store.load();
        });
-        win.show(); 
-        //from2.findField("tpMediaId").setValue("222");
-       // tabpanel.down('image[name=titileImage]').setHidden(false);
-        //tabpanel.down('button[name=deletePicBtn]').setHidden(false);
-       // tabpanel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/js/tranzvision/extjs/app/view/template/bmb/images/forms.png");
-
+       win.show(); 
     },
     //从素材库中选择图文
     ChooseTw:function(btn){
@@ -97,30 +89,29 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
         }
         ViewClass = Ext.ClassManager.get(className);
         clsProto = ViewClass.prototype;
-        if (clsProto.themes) {
-            clsProto.themeInfo = clsProto.themes[themeName];
-            if (themeName === 'gray') {
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
-            } else if (themeName !== 'neptune' && themeName !== 'classic') {
-                if (themeName === 'crisp-touch') {
-                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
-                }
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
-            }
-            // <debug warn>
-            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
-            if (!clsProto.themeInfo) {
-                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
-                    themeName + '\'. Is this intentional?');
-            }
-        }
+       
         var win=this.lookupReference('weChatMsgScWindow');
         if (!win) {
             Ext.syncRequire(className);
             ViewClass = Ext.ClassManager.get(className);
-            win = new ViewClass(tabpanel);
-            win.materialType='TuWen';
-            win.wxAppId=wxAppdId;
+            win = new ViewClass({
+            	materialType: 'TuWen',
+            	wxAppId: wxAppdId,
+            	callback: function(rec){
+            		var medidId = rec.get("mediaId");
+         	        var src= rec.get("src");
+         	        var caption= rec.get("caption");
+            		 
+         	        var from3=tabpanel.down('form[name=form3]').getForm();
+		            from3.findField("twTitle").setHidden(false);
+		            from3.findField("twMediaId").setValue(medidId);
+		            from3.findField("twTitle").setValue(caption);
+		            tabpanel.down('button[name=deleteTwBtn]').setHidden(false);
+		            tabpanel.down('button[name=chooseTwBtn]').setHidden(true);
+		            tabpanel.down('image[name=twImage]').setHidden(false);
+		            tabpanel.down('image[name=twImage]').setSrc(TzUniversityContextPath +src);
+            	}
+            });
             this.getView().add(win);
         }
         win.on('afterrender',function(panel){
@@ -135,41 +126,19 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
     chooseScEnsure:function(btn){
         var win=btn.findParentByType("window");
         var materialType=win.materialType;
-        var tabpanel=win.tabpanel;
+        //var tabpanel=win.tabpanel;
         var picDataView = win.down('dataview[name=picView]');
         //获的选择的图片
         var selList =  picDataView.getSelectionModel().getSelection();
         if(selList.length==0){
         	Ext.Msg.alert("提示","请先选择一个素材");
         }else{
-	        var medidId=selList[0].data.mediaId;
-	        var src=selList[0].data.src;
-	        var caption=selList[0].data.caption;
-	        //选择图片
-	        if(materialType=="TuPian"){
-	        	var from2=tabpanel.down('form[name=form2]').getForm();
-	        	from2.findField("tpMediaId").setValue(medidId);
-	        	tabpanel.down('image[name=titileImage]').setHidden(false);
-	        	tabpanel.down('button[name=deletePicBtn]').setHidden(false);
-	        	tabpanel.down('button[name=chooseScBtn]').setHidden(true);
-	        	tabpanel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + src);
-	        	win.close();
-	        }else{
-		        //选择图文
-		        if(materialType=="TuWen"){
-		            var from3=tabpanel.down('form[name=form3]').getForm();
-		            from3.findField("twTitle").setHidden(false);
-		            from3.findField("twMediaId").setValue(medidId);
-		            from3.findField("twTitle").setValue(caption);
-		            tabpanel.down('button[name=deleteTwBtn]').setHidden(false);
-		            tabpanel.down('button[name=chooseTwBtn]').setHidden(true);
-		            tabpanel.down('image[name=twImage]').setHidden(false);
-		            tabpanel.down('image[name=twImage]').setSrc(TzUniversityContextPath +src);
-		            win.close();
-		        }else{
-		        	win.close();
-		        }
-	        }
+        	var selRec = selList[0];
+        	var callbackFun = win.callbackFun;
+        	if(typeof callbackFun === "function"){
+        		callbackFun(selRec);
+        	}
+        	win.close();
         }
     },
     //发送微信消息

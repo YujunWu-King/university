@@ -7,7 +7,8 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.materialModel', {
         {name:'caption', type:'string'},
         {name:'mediaId', type:'string'},
         {name:'mediaType',type:'string'},
-        { name:'src', type:'string' }
+        {name:'src', type:'string' },
+        {name:'state',type:'string'}
         
     ]
 });

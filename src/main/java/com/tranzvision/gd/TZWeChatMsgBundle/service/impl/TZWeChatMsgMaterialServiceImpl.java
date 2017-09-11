@@ -43,8 +43,8 @@ public class TZWeChatMsgMaterialServiceImpl extends FrameworkImpl {
 		}
 		//选择图片素材
 		if("TP".equals(strMediaType)){
-			int countPic=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_TYPE='A'", new Object[]{strOrgId,strWxAppId}, "Integer");
-		    List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_SC_NAME,TZ_MEDIA_ID,TZ_IMAGE_PATH FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? AND TZ_MEDIA_TYPE='A' LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
+			int countPic=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_TYPE='A' and TZ_PUB_STATE='Y'", new Object[]{strOrgId,strWxAppId}, "Integer");
+		    List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_SC_NAME,TZ_MEDIA_ID,TZ_IMAGE_PATH FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? AND TZ_MEDIA_TYPE='A' and TZ_PUB_STATE='Y' LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
 			if(list!=null &&list.size()>0){
 				for(int i=0;i<list.size();i++){
 					Map<String,Object> map=new HashMap<String,Object>();
@@ -65,8 +65,8 @@ public class TZWeChatMsgMaterialServiceImpl extends FrameworkImpl {
 		}
 		//选择图文素材
 		if("TW".equals(strMediaType)){
-			int countTw=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_TYPE='B'", new Object[]{strOrgId,strWxAppId}, "Integer");
-		    List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_MEDIA_ID FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? AND TZ_MEDIA_TYPE='B' LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
+			int countTw=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_TYPE='B' and  TZ_PUB_STATE='Y'", new Object[]{strOrgId,strWxAppId}, "Integer");
+		    List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_MEDIA_ID FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? AND TZ_MEDIA_TYPE='B' and TZ_PUB_STATE='Y' LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
 			if(list!=null &&list.size()>0){
 				for(int i=0;i<list.size();i++){
 					Map<String,Object> map=new HashMap<String,Object>();

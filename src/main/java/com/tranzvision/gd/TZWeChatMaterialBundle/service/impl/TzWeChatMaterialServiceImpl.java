@@ -3,10 +3,14 @@ package com.tranzvision.gd.TZWeChatMaterialBundle.service.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWxApiObject;
@@ -20,94 +24,99 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 	private SqlQuery sqlQuery;
 	@Autowired
 	private FliterForm fliterForm;
+	@Autowired
+	private HttpServletRequest request;
 	
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg)  {
 		// 返回值;
-				Map<String, Object> mapRet = new HashMap<String, Object>();
-				mapRet.put("total", 0);
-				ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-				mapRet.put("root", listData);
-				JacksonUtil jacksonUtil = new JacksonUtil();
-				try {
-					// 排序字段如果没有不要赋值
-					String[][] orderByArr = new String[][] {};
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("total", 0);
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
+		mapRet.put("root", listData);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			// 排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][] {};
 
-					// json数据要的结果字段;
-					String[] resultFldArray = { "TZ_JG_ID", "TZ_WX_APPID", "TZ_XH","TZ_SC_NAME","TZ_IMAGE_PATH","TZ_MEDIA_ID","TZ_MEDIA_TYPE" };
+			// json数据要的结果字段;
+			String[] resultFldArray = { "TZ_JG_ID", "TZ_WX_APPID", "TZ_XH", "TZ_SC_NAME", "TZ_IMAGE_PATH",
+					"TZ_MEDIA_ID", "TZ_MEDIA_TYPE", "TZ_PUB_STATE" };
 
-					// 可配置搜索通用函数;
-					Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
+            String cxtPath=request.getContextPath();
+			if (obj != null && obj.length > 0) {
+				@SuppressWarnings("unchecked")
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 
-					if (obj != null && obj.length > 0) {
-						ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+				for (int i = 0; i < list.size(); i++) {
+					String[] rowList = list.get(i);
+					Map<String, Object> mapList = new HashMap<String, Object>();
 
-						for (int i = 0; i < list.size(); i++) {
-							String[] rowList = list.get(i);
-							Map<String, Object> mapList = new HashMap<String, Object>();
-
-							mapList.put("jgId", rowList[0]);
-							mapList.put("wxAppId", rowList[1]);
-							mapList.put("index", rowList[2]);
-							mapList.put("caption", "图片："+rowList[3]);
-							mapList.put("src", rowList[4]);
-							mapList.put("mediaId", rowList[5]);
-							mapList.put("mediaType", rowList[6]);
-							listData.add(mapList);
-						}
-
-						mapRet.replace("total", obj[0]);
-						mapRet.replace("root", listData);
-
+					String strPicName = ""; 
+					if ("Y".equals(rowList[7])) {
+						strPicName =  "[已发布]"+"图片：" + rowList[3];
+					} else {
+						strPicName =  "[未发布]"+"图片：" + rowList[3];
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
+					mapList.put("jgId", rowList[0]);
+					mapList.put("wxAppId", rowList[1]);
+					mapList.put("index", rowList[2]);
+					mapList.put("caption", strPicName);
+					mapList.put("src", rowList[4]);
+					mapList.put("mediaId", rowList[5]);
+					mapList.put("mediaType", rowList[6]);
+					mapList.put("state", rowList[7]);
+					listData.add(mapList);
 				}
-				return jacksonUtil.Map2json(mapRet);
-		
-		/*ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 
-		//String strOrgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		JacksonUtil jacksonUtil=new JacksonUtil();
-		jacksonUtil.json2Map(strParams);
-		String strWxAppId=jacksonUtil.getString("wxAppId");
-		String strOrgId=jacksonUtil.getString("jgId");
-		if("".equals(strWxAppId)||"".equals(strOrgId)){
-			return null;
-		}
-		int count=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=?", new Object[]{strOrgId,strWxAppId}, "Integer");
-		List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_SC_NAME,TZ_MEDIA_ID,TZ_IMAGE_PATH,TZ_MEDIA_TYPE FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
-		if(list!=null &&list.size()>0){
-			for(int i=0;i<list.size();i++){
-				Map<String,Object> map=new HashMap<String,Object>();
-				String mediaId="";
-				if(list.get(i).get("TZ_MEDIA_ID")!=null){
-					mediaId=list.get(i).get("TZ_MEDIA_ID").toString();
-				};
-				map.put("jgId", strOrgId);
-				map.put("wxAppId", strWxAppId);
-				map.put("index", Integer.valueOf(list.get(i).get("TZ_XH").toString()));
-				map.put("mediaId", mediaId);
-				map.put("caption", "图片:"+list.get(i).get("TZ_SC_NAME").toString());
-				
-				String strMediaType=list.get(i).get("TZ_MEDIA_TYPE").toString();
-				map.put("mediaType", strMediaType);
-				//图片素材
-				if("A".equals(strMediaType)){
-					map.put("src", list.get(i).get("TZ_IMAGE_PATH").toString());
-				}
-				//图文素材
-				if("B".equals(strMediaType)){
-					String imageUrl=sqlQuery.queryForObject("select TZ_HEAD_IMAGE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=?  and TZ_XH=? and TZ_SHCPIC_FLG='Y'", new Object[]{strOrgId,list.get(i).get("TZ_XH").toString()}, "String");
-					map.put("src", imageUrl);
-				}
-				listData.add(map);
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
+
 			}
-			mapRet.replace("total", count);
-			mapRet.replace("root", listData);
-			return jacksonUtil.Map2json(mapRet);
-		}*/
-		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return jacksonUtil.Map2json(mapRet);
+
+		/*
+		 * ArrayList<Map<String, Object>> listData = new ArrayList<Map<String,
+		 * Object>>();
+		 * 
+		 * //String strOrgId=tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		 * JacksonUtil jacksonUtil=new JacksonUtil();
+		 * jacksonUtil.json2Map(strParams); String
+		 * strWxAppId=jacksonUtil.getString("wxAppId"); String
+		 * strOrgId=jacksonUtil.getString("jgId");
+		 * if("".equals(strWxAppId)||"".equals(strOrgId)){ return null; } int
+		 * count=sqlQuery.queryForObject(
+		 * "select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=?"
+		 * , new Object[]{strOrgId,strWxAppId}, "Integer");
+		 * List<Map<String,Object>> list=sqlQuery.queryForList(
+		 * "select TZ_XH,TZ_SC_NAME,TZ_MEDIA_ID,TZ_IMAGE_PATH,TZ_MEDIA_TYPE FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? LIMIT ?,?"
+		 * , new Object[]{strOrgId,strWxAppId,numStart,numLimit}); if(list!=null
+		 * &&list.size()>0){ for(int i=0;i<list.size();i++){ Map<String,Object>
+		 * map=new HashMap<String,Object>(); String mediaId="";
+		 * if(list.get(i).get("TZ_MEDIA_ID")!=null){
+		 * mediaId=list.get(i).get("TZ_MEDIA_ID").toString(); }; map.put("jgId",
+		 * strOrgId); map.put("wxAppId", strWxAppId); map.put("index",
+		 * Integer.valueOf(list.get(i).get("TZ_XH").toString()));
+		 * map.put("mediaId", mediaId); map.put("caption",
+		 * "图片:"+list.get(i).get("TZ_SC_NAME").toString());
+		 * 
+		 * String strMediaType=list.get(i).get("TZ_MEDIA_TYPE").toString();
+		 * map.put("mediaType", strMediaType); //图片素材
+		 * if("A".equals(strMediaType)){ map.put("src",
+		 * list.get(i).get("TZ_IMAGE_PATH").toString()); } //图文素材
+		 * if("B".equals(strMediaType)){ String
+		 * imageUrl=sqlQuery.queryForObject(
+		 * "select TZ_HEAD_IMAGE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=?  and TZ_XH=? and TZ_SHCPIC_FLG='Y'"
+		 * , new Object[]{strOrgId,list.get(i).get("TZ_XH").toString()},
+		 * "String"); map.put("src", imageUrl); } listData.add(map); }
+		 * mapRet.replace("total", count); mapRet.replace("root", listData);
+		 * return jacksonUtil.Map2json(mapRet); }
+		 */
 		
 	}
 	
