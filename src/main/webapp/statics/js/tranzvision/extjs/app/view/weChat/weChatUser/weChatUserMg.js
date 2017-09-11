@@ -232,11 +232,6 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
                     iconCls: 'view',
                     sortable:false,
                     handler: 'viewClue'
-                },{
-                    tooltip: Ext.tzGetResourse("TZ_HDBM_GL_COM.TZ_HDBM_GL_STD.sms", "发送微信普通消息"),
-                    iconCls: 'sms',
-                    sortable:false,
-                    handler: 'sendMessageForOne'
                 }]
             }],
             store:userMgStore,

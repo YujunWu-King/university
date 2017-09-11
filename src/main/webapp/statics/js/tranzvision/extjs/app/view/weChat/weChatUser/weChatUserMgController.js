@@ -245,17 +245,22 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.noSelectTip","您没有选中任何记录"));
             return;
         } else {
-            var openIdList = "";
-            for(var i=0;i<checkLen;i++) {
-                var openIdTmp = selList[i].data.openId;
-                if(openIdList == "") {
-                    openIdList = openIdTmp;
-                } else {
-                    openIdList = openIdList + "," + openIdTmp;
+            if(checkLen==1) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip","至少需要选中两个用户"));
+                return;
+            } else {
+                var openIdList = "";
+                for (var i = 0; i < checkLen; i++) {
+                    var openIdTmp = selList[i].data.openId;
+                    if (openIdList == "") {
+                        openIdList = openIdTmp;
+                    } else {
+                        openIdList = openIdList + "," + openIdTmp;
+                    }
                 }
-            }
 
-            me.sendMessageForUser("A",openIdList,"",wxAppId);
+                me.sendMessageForUser("A", openIdList, "", wxAppId);
+            }
         }
     },
     //更多操作-按微信标签发送普通消息
@@ -283,9 +288,15 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
 
         var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetAllUser",comParams:{"jgId":"'+jgId+'","wxAppId":"'+wxAppId+'"}}';
         Ext.tzLoad(tzParams,function(responseData){
-            var openIdList = responseData.openIdList;
+            var openIdNum = responseData.openIdNum;
+            if(openIdNum<2) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip2","至少需要两个用户"));
+                return;
+            } else {
+                var openIdList = responseData.openIdList;
+                me.sendMessageForUser("A", openIdList, "", wxAppId);
+            }
 
-            me.sendMessageForUser("A",openIdList,"",wxAppId);
         });
     },
     //更多操作-给选中用户发送模板消息
@@ -299,17 +310,22 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.noSelectTip","您没有选中任何记录"));
             return;
         } else {
-            var openIdList = "";
-            for(var i=0;i<checkLen;i++) {
-                var openIdTmp = selList[i].data.openId;
-                if(openIdList == "") {
-                    openIdList = openIdTmp;
-                } else {
-                    openIdList = openIdList + "," + openIdTmp;
+            if(checkLen==1) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip","至少需要选中两个用户"));
+                return;
+            } else {
+                var openIdList = "";
+                for (var i = 0; i < checkLen; i++) {
+                    var openIdTmp = selList[i].data.openId;
+                    if (openIdList == "") {
+                        openIdList = openIdTmp;
+                    } else {
+                        openIdList = openIdList + "," + openIdTmp;
+                    }
                 }
-            }
 
-            this.sendTplForUser(openIdList);
+                this.sendTplForUser(openIdList);
+            }
         }
     },
     //更多操作-给所有用户发送模板消息
@@ -321,9 +337,14 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
 
         var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetAllUser",comParams:{"jgId":"'+jgId+'","wxAppId":"'+wxAppId+'"}}';
         Ext.tzLoad(tzParams,function(responseData){
-            var openIdList = responseData.openIdList;
-
-            this.sendTplForUser(openIdList);
+            var openIdNum = responseData.openIdNum;
+            if(openIdNum<2) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip2","至少需要两个用户"));
+                return;
+            } else {
+                var openIdList = responseData.openIdList;
+                this.sendTplForUser(openIdList);
+            }
         });
     },
     //操作列-设置标签
@@ -399,21 +420,6 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
     viewClue:function() {
 
     },
-    //操作列-发送微信普通消息
-    sendMessageForOne:function(btn,rowIndex) {
-        var me = this,
-            view = me.getView();
-
-        var store = view.getStore();
-
-        var jgId = view.jgId;
-        var wxAppId = view.wxAppId;
-
-        var openId = store.getAt(rowIndex).data.openId;
-
-        me.sendMessageForUser("A",openId,"",wxAppId);
-
-    },
     //关闭
     closeUser:function() {
         this.getView().close();
@@ -483,7 +489,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             	tagStore.tzStoreParams='{"wxAppId":"' + wxAppId + '"}';
             	tagStore.load({
             	   callback:function(r,options,success){
-            		   form.findField("wechatTag").setValue(tagIdList); 
+            		   //form.findField("wechatTag").setValue(tagIdList);
             	   }
             	});
             }

@@ -599,6 +599,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 		
 		try {
 			
+			Integer openIdNum = 0;
 			String openIdList = "";
 			
 			jacksonUtil.json2Map(strParams);
@@ -610,6 +611,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 			List<Map<String, Object>> listUser = sqlQuery.queryForList(sql,new Object[]{jgId,wxAppId});
 			
 			for(Map<String, Object> mapUser : listUser) {
+				openIdNum++;
 				String openId = mapUser.get("TZ_OPEN_ID") == null ? "" : mapUser.get("TZ_OPEN_ID").toString();
 				if(!"".equals(openIdList)) {
 					openIdList = openIdList + "," + openId;
@@ -618,6 +620,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 				}
 			}
 			
+			mapRet.put("openIdNum", openIdNum);
 			mapRet.put("openIdList", openIdList);
 			strRet = jacksonUtil.Map2json(mapRet);
 			
