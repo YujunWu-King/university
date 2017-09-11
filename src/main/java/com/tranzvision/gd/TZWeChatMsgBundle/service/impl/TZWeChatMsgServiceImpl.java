@@ -205,6 +205,7 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 			PsTzWxmsgLogT.setTzXh(StrXh);
 			PsTzWxmsgLogT.setTzSendPsn(userId);
 			PsTzWxmsgLogT.setTzSendDtime(nowTime);
+			PsTzWxmsgLogT.setTzSendsDtime(nowTime);
 			PsTzWxmsgLogT.setTzSendMode(strSendMode);
 			PsTzWxmsgLogT.setTzSendType(strSendType);
 			PsTzWxmsgLogT.setTzSendState(strSendStatus);
