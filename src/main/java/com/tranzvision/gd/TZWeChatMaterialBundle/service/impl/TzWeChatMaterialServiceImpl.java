@@ -55,10 +55,16 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 					Map<String, Object> mapList = new HashMap<String, Object>();
 
 					String strPicName = ""; 
+					String flag="";
+					if("A".equals(rowList[6])){
+						flag="图片:";
+					}else{
+						flag="图文:";
+					}
 					if ("Y".equals(rowList[7])) {
-						strPicName =  "[已发布]"+"图片：" + rowList[3];
+						strPicName =  "[已发布]"+flag + rowList[3];
 					} else {
-						strPicName =  "[未发布]"+"图片：" + rowList[3];
+						strPicName =  "[未发布]"+flag + rowList[3];
 					}
 					mapList.put("jgId", rowList[0]);
 					mapList.put("wxAppId", rowList[1]);
