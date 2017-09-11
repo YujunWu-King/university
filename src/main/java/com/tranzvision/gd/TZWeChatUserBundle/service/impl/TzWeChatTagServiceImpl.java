@@ -154,8 +154,8 @@ public class TzWeChatTagServiceImpl extends FrameworkImpl {
 					
 					/*为用户取消标签*/
 					Map<String, Object> mapUnTag = tzWxApiObject.batchUnTagging(jgId, wxAppId, NoSelectTagId, openIdListUnTag);
-					errcodeUnTag = mapUnTag.get("errcode") == null ? "" : mapUnTag.get("errcode").toString();
-					errmsgUnTag = mapUnTag.get("errmsg") == null ? "" : mapUnTag.get("errmsg").toString();
+					errcodeUnTag = mapUnTag.get("errcode") == null ? "-1" : mapUnTag.get("errcode").toString();
+					errmsgUnTag = mapUnTag.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapUnTag.get("errmsg").toString();
 				}
 				
 				for(String selectTagId : selectTagIdArr) {
@@ -191,8 +191,8 @@ public class TzWeChatTagServiceImpl extends FrameworkImpl {
 					
 					/*为用户打标签*/
 					Map<String, Object> mapTag = tzWxApiObject.batchTagging(jgId, wxAppId, selectTagId, openIdListTag);
-					errcodeTag = mapTag.get("errcode") == null ? "" : mapTag.get("errcode").toString();
-					errmsgTag = mapTag.get("errmsg") == null ? "" : mapTag.get("errmsg").toString();
+					errcodeTag = mapTag.get("errcode") == null ? "-1" : mapTag.get("errcode").toString();
+					errmsgTag = mapTag.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapTag.get("errmsg").toString();
 				}
 				
 				mapRet.put("errcodeUnTag", errcodeUnTag);

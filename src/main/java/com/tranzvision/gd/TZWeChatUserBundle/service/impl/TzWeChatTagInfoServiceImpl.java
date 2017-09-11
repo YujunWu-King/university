@@ -74,8 +74,8 @@ public class TzWeChatTagInfoServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapCreateTag = tzWxApiObject.createTag(jgId, wxAppId, tagName);
 				
 				if(mapCreateTag.containsKey("errcode")) {
-					errcode = mapCreateTag.get("errcode") == null ? "" : mapCreateTag.get("errcode").toString();
-					errmsg = mapCreateTag.get("errmsg") == null ? "" : mapCreateTag.get("errmsg").toString();
+					errcode = mapCreateTag.get("errcode") == null ? "-1" : mapCreateTag.get("errcode").toString();
+					errmsg = mapCreateTag.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapCreateTag.get("errmsg").toString();
 				} else {
 					Map<String, Object> mapTag = (Map<String, Object>) mapCreateTag.get("tag");
 					if(mapTag!=null) {
@@ -154,9 +154,15 @@ public class TzWeChatTagInfoServiceImpl extends FrameworkImpl {
 					
 					/*编辑标签*/
 					Map<String, Object> mapEditTag = tzWxApiObject.editTagNameByTagID(jgId, wxAppId, tagId, tagName);
-					errcode = mapEditTag.get("errcode") == null ? "" : mapEditTag.get("errcode").toString();
-					errmsg = mapEditTag.get("errmsg") == null ? "" : mapEditTag.get("errmsg").toString();
+					errcode = mapEditTag.get("errcode") == null ? "-1" : mapEditTag.get("errcode").toString();
+					errmsg = mapEditTag.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapEditTag.get("errmsg").toString();
+					
+					if("0".equals(errcode)) {
+						errcode = "";
+						errmsg = "";
+					}
 				}
+				
 				
 				mapRet.put("errcode", errcode);
 				mapRet.put("errmsg", errmsg);
@@ -214,8 +220,8 @@ public class TzWeChatTagInfoServiceImpl extends FrameworkImpl {
 				
 				/*删除标签*/
 				Map<String, Object> mapDeleteTag = tzWxApiObject.deleteTagByTagID(jgId, wxAppId, tagId);
-				errcode = mapDeleteTag.get("errcode") == null ? "" : mapDeleteTag.get("errcode").toString();
-				errmsg = mapDeleteTag.get("errmsg") == null ? "" : mapDeleteTag.get("errmsg").toString();
+				errcode = mapDeleteTag.get("errcode") == null ? "-1" : mapDeleteTag.get("errcode").toString();
+				errmsg = mapDeleteTag.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapDeleteTag.get("errmsg").toString();
 				
 				
 				mapRet.put("errcode", errcode);

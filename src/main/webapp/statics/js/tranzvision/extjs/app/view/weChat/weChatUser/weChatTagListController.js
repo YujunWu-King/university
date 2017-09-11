@@ -73,6 +73,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
         var tagId = selRec.get("tagId");
         var tagName = selRec.get("tagName");
 
+        //系统标签ID
+        var systemTagId = Ext.tzGetHardcodeValue("TZ_WX_SYSTEM_TAG_ID");
+
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WX_USER_COM"]["TZ_WX_TAGXX_STD"];
         if(pageResSet=="" || pageResSet==undefined) {
@@ -122,6 +125,11 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
             form.findField('wxAppId').setValue(wxAppId);
             form.findField('tagId').setValue(tagId);
             form.findField('tagName').setValue(tagName);
+
+            //系统标签ID编辑时删除按钮不可见
+            if(tagId==systemTagId) {
+                cmp.down("toolbar").child("button").setHidden(true);
+            }
         });
 
         cmp.show();
