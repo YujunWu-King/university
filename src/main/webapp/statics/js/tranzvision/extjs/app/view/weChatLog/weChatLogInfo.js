@@ -18,8 +18,8 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
     width: 650,
 //    y:10,
 //    autoScroll：true,
-    minWidth: 400,
-    minHeight: 400,
+    minWidth: 650,
+    minHeight: 300,
     maxHeight: 600,
     resizable: true,
     modal:true,
@@ -38,7 +38,7 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
 //            type: 'vbox',
 //            align: 'stretch',
             type:'table',
-        	columns:2
+        	columns:2,
         },
         fieldDefaults: {
             msgTarget: 'side',
@@ -47,12 +47,6 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
         border: false,
         bodyPadding: 10,
         bodyStyle:'overflow-y:auto;overflow-x:hidden',
-
-        fieldDefaults: {
-            msgTarget: 'side',
-            labelWidth: 100,
-            labelStyle: 'font-weight:bold'
-        },
 		
         items: [{
         	xtype: 'combo',
@@ -65,84 +59,97 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
             editable:false,
             displayField: 'TLDesc',
             store: new KitchenSink.view.common.store.appTransStore("TZ_SEND_TYPE"),
-            queryMode: 'local'	 
+            queryMode: 'local',
+            colspan: 2
         },
         {
-            xtype: 'textfield',
+            xtype: 'displayfield',
             fieldLabel: '发送人',
             name: 'sendPsn',
             readOnly:true,
-            columnWidth: 2,
-            fieldStyle:'background:#F4F4F4'
+            columnWidth: 1,
+            width: 300,
         },
         {
-            xtype: 'datefield',
+            xtype: 'displayfield',
             fieldLabel: '发送时间',
             name: 'sendDTime',
             readOnly:true,
-            fieldStyle:'background:#F4F4F4', 
-//            format: 'Y-m-d',S
-            //value: fieldValue,
+            columnWidth: 1,
+            width: 300,
         },
         {
-            xtype: 'textfield',
+            xtype: 'displayfield',
             fieldLabel: '发送状态',
             name: 'sendState',
             readOnly:true,
-            cls:'lanage_1'
+            columnWidth: 1,
+            width: 300,
         },
         {
-        	xtype: 'textfield',
+        	xtype: 'displayfield',
             fieldLabel: '成功时间',
             name: 's_DT',
             readOnly:true,
-            fieldStyle:'background:#F4F4F4', 
+            columnWidth: 1,
+            width: 300,
             //format: 'Y-m-d'
         },
         {
-            xtype: 'textfield',
+            xtype: 'displayfield',
             fieldLabel: '发送总数',
             name: 's_total',
             readOnly:true,
-            cls:'lanage_1'
+            columnWidth: 1,
+            width: 300,
         },
         {
-            xtype: 'textfield',
+        	columnWidth: 0.5,
+            xtype: 'displayfield',
             fieldLabel: '过滤数',
             name: 's_fiter',
-            readOnly:true,
-            cls:'lanage_1'
+            readOnly:true,  
+            columnWidth: 1,
+            width: 300,
         },
         {
-            xtype: 'textfield',
+        	columnWidth: 0.5,
+            xtype: 'displayfield',
             fieldLabel: '成功数',
             name: 's_suceuss',
             readOnly:true,
-            cls:'lanage_1'
+            columnWidth: 1,
+            width: 300,
+
         },
         {
-            xtype: 'textfield',
+        	columnWidth: 0.5,
+            xtype: 'displayfield',
             fieldLabel: '失败数',
             name: 's_fail',
             readOnly:true,
-            cls:'lanage_1'
+            columnWidth: 1,
+            width: 300,
         },
        {
-            xtype: 'textfield',
+            xtype: 'textarea',
             fieldLabel: '发送内容',
             name: 'content',
             readOnly:true,
-            cls:'lanage_1'
+            width: 600,
+            colspan: 2,
         },
         {
-            xtype: 'textfield',
+            xtype: 'displayfield',
             fieldLabel: '素材编号',
             name: 'mediaId',
             readOnly:true,
-            cls:'lanage_1'
+            colspan: 2,
+
         }
         ]
     },
+    
         {
 		xtype: 'grid',
 //        height:340,

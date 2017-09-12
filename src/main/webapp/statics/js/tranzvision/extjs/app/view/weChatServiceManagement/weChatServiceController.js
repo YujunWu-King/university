@@ -466,7 +466,7 @@
 		                //资源集合信息列表数据
 		                var roleList = responseData.listData;
 
-		                var tzStoreParams = '{"cfgSrhId": "TZ_GD_WXSERVICE_COM.TZ_GD_LOGLIST_STD.TZ_WXMSG_LOG_T","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+orgId+'","TZ_WX_APPID-operator": "01","TZ_WX_APPID-value": "'+wxAppId+'"}}';
+		                var tzStoreParams = '{"cfgSrhId": "TZ_GD_WXSERVICE_COM.TZ_GD_LOGLIST_STD.TZ_WXMSG_LOG_V","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+orgId+'","TZ_WX_APPID-operator": "01","TZ_WX_APPID-value": "'+wxAppId+'"}}';
 		                grid.store.tzStoreParams = tzStoreParams;
 		                grid.store.load();     
 		            });   
