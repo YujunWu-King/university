@@ -14,7 +14,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
     title: '素材管理',
     //height:400,
     minHeight:250,
-    width: 1000,
+    width: 1100,
     modal:true,
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     initComponent: function() {
@@ -38,7 +38,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
                     tpl:[
                         '<tpl for=".">',
                         '<div class="thumb-wrap pic" id="{index}">',
-                            '<div style="width:100%;height:100%;background:url('+ TzUniversityContextPath +'{src});background-size: 110%;background-position: center center;background-repeat: no-repeat;position: relative;">',
+                            '<div style="width:100%;height:100%;background:url('+ TzUniversityContextPath +'{src});background-size: 150%;background-position: center center;background-repeat: no-repeat;position: relative;">',
                                '<div class="thumb-wrap-title">',
               		              '<tpl ><span>{caption}</span></tpl>',
               	              '</div>',
@@ -48,18 +48,19 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
                         '<div class="x-clear"></div>'
                     ],
                     itemSelector: 'div.thumb-wrap',
+                    selectedItemCls:'current-item',
                     emptyText: 'No images available',
                     style:{
                          background:'white',
                         //border:'1px solid #000000',
                         padding:'0 15px 25px 0'
                     }
+                   
                 }],
                 bbar: {
                     xtype: 'pagingtoolbar',
                     pageSize: 10,
-                    store: mediaPicStore/*,
-                     plugins: new Ext.ux.ProgressBarPager()*/
+                    store: mediaPicStore
                 }
             }
 
