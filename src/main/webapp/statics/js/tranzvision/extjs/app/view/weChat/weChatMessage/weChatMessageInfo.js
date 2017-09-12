@@ -128,7 +128,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     }
                 },{
                     xtype:'textareafield',
-                    fieldLabel: "用户列表",
+                    fieldLabel: "昵称",
                     grow:true,
                     name:'nickNames',
                     height:135,
