@@ -31,6 +31,8 @@ public class PsTzWxUserTbl extends PsTzWxUserTblKey {
 
     private String tzSalesleadName;
 
+    private String tzGjFlag;
+
     public String getTzSubscribe() {
         return tzSubscribe;
     }
@@ -141,5 +143,13 @@ public class PsTzWxUserTbl extends PsTzWxUserTblKey {
 
     public void setTzSalesleadName(String tzSalesleadName) {
         this.tzSalesleadName = tzSalesleadName == null ? null : tzSalesleadName.trim();
+    }
+
+    public String getTzGjFlag() {
+        return tzGjFlag;
+    }
+
+    public void setTzGjFlag(String tzGjFlag) {
+        this.tzGjFlag = tzGjFlag == null ? null : tzGjFlag.trim();
     }
 }

@@ -5,9 +5,10 @@
     <id column="RUN_CNTL_ID" property="runCntlId" jdbcType="VARCHAR" />
     <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <result column="TZ_WX_APPID" property="tzWxAppid" jdbcType="VARCHAR" />
+    <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    RUN_CNTL_ID, TZ_JG_ID, TZ_WX_APPID
+    RUN_CNTL_ID, TZ_JG_ID, TZ_WX_APPID, OPRID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -20,10 +21,10 @@
     where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserAet" >
-    insert into PS_TZ_WX_USER_AET (RUN_CNTL_ID, TZ_JG_ID, TZ_WX_APPID
-      )
-    values (#{runCntlId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}
-      )
+    insert into PS_TZ_WX_USER_AET (RUN_CNTL_ID, TZ_JG_ID, TZ_WX_APPID, 
+      OPRID)
+    values (#{runCntlId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, 
+      #{oprid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserAet" >
     insert into PS_TZ_WX_USER_AET
@@ -37,6 +38,9 @@
       <if test="tzWxAppid != null" >
         TZ_WX_APPID,
       </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="runCntlId != null" >
@@ -47,6 +51,9 @@
       </if>
       <if test="tzWxAppid != null" >
         #{tzWxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -59,13 +66,17 @@
       <if test="tzWxAppid != null" >
         TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR},
       </if>
+      <if test="oprid != null" >
+        OPRID = #{oprid,jdbcType=VARCHAR},
+      </if>
     </set>
     where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserAet" >
     update PS_TZ_WX_USER_AET
     set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
-      TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR},
+      OPRID = #{oprid,jdbcType=VARCHAR}
     where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
   </update>
 </mapper>

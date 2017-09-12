@@ -22,7 +22,19 @@
 
     /* 初始化tab标签 */
     function initTabs(){
+    	var customFlg = editor.getOpt('customFlg'); //如果图文素材上传，隐藏上传视频
         var tabs = $G('tabHeads').children;
+        
+        if(customFlg){
+        	//删除上传视频,微信素材不允许本地上传，张浪修改
+        	for (var i = 0; i < tabs.length; i++) {
+        		bodyId = tabs[i].getAttribute('data-content-id');
+        		if(bodyId == "upload"){
+        			tabs[i].remove();
+        		}
+        	}
+        }
+        
         for (var i = 0; i < tabs.length; i++) {
             domUtils.on(tabs[i], "click", function (e) {
                 var j, bodyId, target = e.target || e.srcElement;

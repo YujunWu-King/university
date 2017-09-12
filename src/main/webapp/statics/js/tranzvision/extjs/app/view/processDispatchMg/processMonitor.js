@@ -10,7 +10,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitor', {
         'KitchenSink.view.processDispatchMg.processMonitorController',
         'KitchenSink.view.processDispatchMg.processMonitorStore'
     ],
-    controller: 'processDispatchCon',
+    controller: 'processMonitorCon',
     reference: 'jcMonitorGrid',
     columnLines: true,
     selModel: {

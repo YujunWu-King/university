@@ -73,6 +73,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
         var tagId = selRec.get("tagId");
         var tagName = selRec.get("tagName");
 
+        //系统标签ID
+        var systemTagId = Ext.tzGetHardcodeValue("TZ_WX_SYSTEM_TAG_ID");
+
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_WX_USER_COM"]["TZ_WX_TAGXX_STD"];
         if(pageResSet=="" || pageResSet==undefined) {
@@ -118,10 +121,24 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
 
         cmp.on('afterrender',function(){
             var form = cmp.child('form').getForm();
-            form.findField('jgId').setValue(jgId);
+            /*form.findField('jgId').setValue(jgId);
             form.findField('wxAppId').setValue(wxAppId);
             form.findField('tagId').setValue(tagId);
-            form.findField('tagName').setValue(tagName);
+            form.findField('tagName').setValue(tagName);*/
+            //使用下面这种方式赋值，没做任何修改点击关闭按钮，不会提示警告信息要求保存
+            form.setValues({
+                jgId:jgId,
+                wxAppId:wxAppId,
+                tagId:tagId,
+                tagName:tagName
+            });
+
+            //系统标签ID编辑时删除按钮不可见
+            if(tagId==systemTagId) {
+                cmp.down("toolbar").child("button").setHidden(true);
+            }
+
+
         });
 
         cmp.show();
@@ -175,21 +192,42 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
             var comParams = '"update":['+Ext.JSON.encode(editParams)+']';
             var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_TAG_STD","OperateType":"U","comParams":{'+comParams+'}}';
             Ext.tzSubmit(tzParams,function(responseData) {
-                if(btn.name=="ensureTagBtn") {
-                    view.close();
-                }
-                //刷新用户管理
-                userGridStore.load({
-                    callback:function() {
-                        //默认展开rowexpander
-                        var expander = activeTab.getPlugin();
-                        var storeData = userGridStore.data;
-                        for(var i=0;i< storeData.length;i++){
-                            var record = storeData.items[i];
-                            expander.toggleRow(i,record);
+                var errcodeUnTag = responseData.errcodeUnTag;
+                var errmsgUnTag = responseData.errmsgUnTag;
+                var errcodeTag = responseData.errcodeTag;
+                var errmsgTag = responseData.errmsgTag;
+                if((errcodeUnTag!="0" && errmsgUnTag!="ok")||(errcodeTag!="0" && errmsgTag!="ok")) {
+                    var errmsg = "";
+                    if(errcodeUnTag!="0" && errmsgUnTag!="ok") {
+                        errmsg = errcodeUnTag;
+                    }
+                    if(errcodeTag!="0" && errmsgTag!="ok") {
+                        if(errmsg!="") {
+                            errmsg = errmsg + ";" + errmsgTag;
+                        } else {
+                            errmsg = errmsgTag;
                         }
                     }
-                });
+                    Ext.MessageBox.alert("提示",errmsg);
+                    return;
+                } else {
+                    if (btn.name == "ensureTagBtn") {
+                        view.close();
+                    }
+                    //刷新用户管理
+                    userGridStore.load();
+                    /*userGridStore.load({
+                        callback: function () {
+                            //默认展开rowexpander
+                            var expander = activeTab.getPlugin();
+                            var storeData = userGridStore.data;
+                            for (var i = 0; i < storeData.length; i++) {
+                                var record = storeData.items[i];
+                                expander.toggleRow(i, record);
+                            }
+                        }
+                    });*/
+                }
 
             },"",true,this);
 

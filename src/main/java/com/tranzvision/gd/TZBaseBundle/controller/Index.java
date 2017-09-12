@@ -53,9 +53,8 @@ public class Index {
 	
 	Logger logger = Logger.getLogger(this.getClass());
 
-	@RequestMapping(value = "index")
+	@RequestMapping(value = {"index"})
 	public String index(HttpServletRequest request, HttpServletResponse response) {
-		
 		// 获取当前提交的主题编号;
 		String tmpSubmitThemeID = request.getParameter("theme");
 		// 获取当前提交语言环境代码;
@@ -101,7 +100,7 @@ public class Index {
 					gdKjComService.getUserGxhLanguage(request, response));
 
 			request.setAttribute("tz_gdcp_loginStyle_20150612184830", gdKjComService.getLogoStyle(request, response));
-
+			
 			return "index";
 		} else {
 			String tmpLoginURL = "";

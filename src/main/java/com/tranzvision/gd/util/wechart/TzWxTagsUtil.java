@@ -57,8 +57,10 @@ public class TzWxTagsUtil {
 			
 			String createTagUrl = tz_createTag_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(createTagUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(createTagUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(createTagUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -110,8 +112,10 @@ public class TzWxTagsUtil {
 			
 			String updateTagUrl = tz_updateTag_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(updateTagUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(updateTagUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(updateTagUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -139,8 +143,10 @@ public class TzWxTagsUtil {
 			
 			String deleteTagUrl = tz_deleteTag_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(deleteTagUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(deleteTagUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(deleteTagUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -206,8 +212,11 @@ public class TzWxTagsUtil {
 			
 			String batchtaggingUrl = tz_batchtagging_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(batchtaggingUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(batchtaggingUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(batchtaggingUrl, paramsMap);
+			
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -241,8 +250,10 @@ public class TzWxTagsUtil {
 			
 			String batchUntaggingUrl = tz_batchUntagging_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(batchUntaggingUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(batchUntaggingUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(batchUntaggingUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -268,8 +279,10 @@ public class TzWxTagsUtil {
 			
 			String getUserTagsUrl = tz_getUserTags_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(getUserTagsUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(getUserTagsUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(getUserTagsUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}

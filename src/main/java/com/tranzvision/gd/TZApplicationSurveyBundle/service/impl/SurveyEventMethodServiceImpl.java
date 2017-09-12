@@ -66,9 +66,6 @@ public class SurveyEventMethodServiceImpl {
 		try{
 			GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 			TzWeChartOAuth2 tzWeChartOAuth2 = (TzWeChartOAuth2) getSpringBeanUtil.getSpringBeanByID("tzWeChartOAuth2");
-			
-			System.out.println("==================APPINSID:"+strAppInsId);
-			System.out.println("==================OPENID:"+openId);
 
 			if(openId != null && !"".equals(openId)){
 				String resultArr[] = tzWeChartOAuth2.surveySubmitToSalesforce(strAppInsId, openId);

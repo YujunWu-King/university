@@ -19,6 +19,8 @@
     },
     header:false,
     frame: true,
+    jgId:'',
+    wxAppId:'',
     dockedItems:[{
         xtype:"toolbar",
         dock:"bottom",
@@ -31,7 +33,7 @@
     },{
         xtype:"toolbar",
         items:[
-            {text:"查询",tooltip:'查询',iconCls:"query",handler:'query'},'-',
+            {text:"查询",tooltip:'查询',iconCls:"query",handler:'queryMaterial'},'-',
             {text:"新增图片素材",tooltip:'新增图片素材',iconCls:"add",handler:'addPic'},'-',
             {text:"新增图文素材",tooltip:'新增图文素材',iconCls:"add",handler:'addPicAndWord'},'-',
             {text:"编辑",tooltip:'编辑',iconCls:"edit",handler:'editMaterial'},'-',
@@ -44,7 +46,8 @@
         this.items = [
             {
                 xtype : 'panel',
-                layout:'fit',
+                //layout:'fit',
+                autoHeight:true,
                 items:[
                     {
                         name: 'picView',
@@ -52,11 +55,11 @@
                         store: materialStore,
                         tpl:[
                             '<tpl for=".">',
-                            '<div class="thumb-wrap" style="width:144px;"id="{index}">',
-                                '<div style="width:130px;height:130px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
+                            '<div class="thumb-wrap" id="{index}">',
+                                '<div style="width:160px;height:113px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
                             '</div>',
-                            '<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
-                            '<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',
+                            '<tpl if="caption.length &gt; 14"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
+                            '<tpl if="caption.length <= 14"><span>{caption}</span></tpl>',
                             '</div>',
                             '</tpl>',
                             '<div class="x-clear"></div>'
@@ -64,7 +67,15 @@
                         itemSelector: 'div.thumb-wrap',
                         emptyText: 'No images available',
                         style:{
-                            background:'white'
+                        	//background:'#eee',
+                        	background:'white',
+				    		border:'1px solid white',
+				    		padding:'0 15px 25px 0'
+                        },
+                        listeners:{
+                        	itemclick:function(v, record, item, index, e, eOpts) {
+				    			//console.log(v,item);
+					    	}
                         }
                     }],
                 bbar: {
