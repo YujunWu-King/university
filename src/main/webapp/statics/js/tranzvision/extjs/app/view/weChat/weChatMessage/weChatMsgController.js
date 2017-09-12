@@ -36,7 +36,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
             Ext.syncRequire(className);
             ViewClass = Ext.ClassManager.get(className);
             win = new ViewClass({
-            	materialType: 'TuPian',
+            	materialType: 'TP',
             	wxAppId: wxAppdId,
             	callback: function(rec){
             		var medidId = rec.get("mediaId");
@@ -53,12 +53,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
             });
             this.getView().add(win);
         }
-       win.on('afterrender',function(panel){
-           var picDataView = panel.down('dataview[name=picView]');
-           var tzStoreParams = '{"wxAppId":"'+wxAppdId+'","mediaType":"TP"}';
-           picDataView.store.tzStoreParams = tzStoreParams;
-           picDataView.store.load();
-       });
+
        win.show(); 
     },
     //从素材库中选择图文
@@ -95,7 +90,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
             Ext.syncRequire(className);
             ViewClass = Ext.ClassManager.get(className);
             win = new ViewClass({
-            	materialType: 'TuWen',
+            	materialType: 'TW',
             	wxAppId: wxAppdId,
             	callback: function(rec){
             		var medidId = rec.get("mediaId");
@@ -114,12 +109,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
             });
             this.getView().add(win);
         }
-        win.on('afterrender',function(panel){
-            var picDataView = panel.down('dataview[name=picView]');
-            var tzStoreParams = '{"wxAppId":"'+wxAppdId+'","mediaType":"TW"}';
-            picDataView.store.tzStoreParams = tzStoreParams;
-            picDataView.store.load();
-        });
+
         win.show();
     },
     //确定

@@ -18,7 +18,13 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
     modal:true,
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
     initComponent: function() {
-    	var mediaPicStore = new KitchenSink.view.weChat.weChatMessage.mediaPicStore();
+    	var materialType = this.materialType;
+        var wxAppId = this.wxAppId;
+        
+    	var mediaPicStore = new KitchenSink.view.weChat.weChatMessage.mediaPicStore({
+    		materialType: materialType,
+    		wxAppId: wxAppId
+    	});
         me = this;
         this.items = [
             {

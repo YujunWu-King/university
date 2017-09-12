@@ -43,6 +43,10 @@ Ext.define('Ext.ux.Ueditor',{
         				'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', '|', 'preview'
                          ]
                 ];
+            
+            var elementPathEnabled = true;
+            //图文素材自定义标记
+            var customFlg = false;
             if(me.model){
             	var model = me.model;
             	if(model == "simple"){
@@ -51,7 +55,7 @@ Ext.define('Ext.ux.Ueditor',{
                         'bold', 'italic', 'underline', '|', 'forecolor', 'backcolor', 'insertorderedlist',
         				'insertunorderedlist',  '|', 'fontfamily', 'fontsize', '|', 'horizontal', 
         				'|','indent', '|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'link', 'unlink',  '|' , 'preview'   
-                ]];
+        				]];
             	}
             	
             	if(model == "normal"){
@@ -60,7 +64,21 @@ Ext.define('Ext.ux.Ueditor',{
                         'bold', 'italic', 'underline', '|', 'forecolor', 'backcolor', 'insertorderedlist',
         				'insertunorderedlist',  '|', 'fontfamily', 'fontsize', '|', 'horizontal', '|','insertimage', 'attachment',
         				'|','indent', '|','justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'link', 'unlink',  '|' , 'preview'   
-                ]];
+        				]];
+            	}
+            	
+            	//图文素材编辑器
+            	if(model == "newsMaterial"){
+            		 toolbars = [[
+                        'source', 'preview', '|','undo', 'redo', '|', 'fontfamily', 'fontsize', '|', 
+                        'removeformat', 'formatmatch', 'link', 'unlink', '|', 'imagenone','imageleft','imageright','imagecenter'
+                     ],[
+                    	 'insertvideo', '|', 'bold', 'italic', 'underline', 'strikethrough', 'forecolor', 'backcolor','|', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|',
+     					 'insertunorderedlist','insertorderedlist','|', 'inserttable','deletetable','mergeright','mergedown','insertcol','insertrow'
+     				 ]];
+            		 
+            		 elementPathEnabled = false;
+            		 customFlg = true;
             	}
             }
             
@@ -70,7 +88,7 @@ Ext.define('Ext.ux.Ueditor',{
             	zIndex = me.zIndex;
             }
 
-            config = {initialFrameWidth: width, initialFrameHeight: height, zIndex: zIndex, toolbars: toolbars};
+            config = {initialFrameWidth: width, initialFrameHeight: height, zIndex: zIndex, toolbars: toolbars, elementPathEnabled: elementPathEnabled, customFlg: customFlg};
             
             me.ueditorInstance = UE.getEditor(id, config);
             me.ueditorInstance.ready(function () {
@@ -87,12 +105,19 @@ Ext.define('Ext.ux.Ueditor',{
                 me.ueditorInstance.addListener('contentChange', function () {
                     me.fireEvent('change', me);
                 });
+                
+                //张浪添加
+                var panelXtype = me.panelXtype;
+                if(panelXtype){
+                	var panel = me.findParentByType(panelXtype);
+                	me.ueditorInstance.rootPanel = panel;
+                }
 
-                //var panelXtype = me.panelXtype;
-                //if(panelXtype){
-                //	var panel = me.findParentByType(panelXtype);
-                //	panel.commitChanges(panel);
-                //}
+//                var panelXtype = me.panelXtype;
+//                if(panelXtype){
+//                	var panel = me.findParentByType(panelXtype);
+//                	panel.commitChanges(panel);
+//                }
             });
         });
     },

@@ -46,9 +46,8 @@ Ext.define('KitchenSink.view.navigation.Tree', {
                 return value;
             }
         }];
-
-        var pathName = window.location.pathname;    	
-    	if(pathName.substring(pathName.lastIndexOf("/"))=="/cindex"){
+ 	
+    	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("model")=="content"){
     		me.header = false;
     	}
     	

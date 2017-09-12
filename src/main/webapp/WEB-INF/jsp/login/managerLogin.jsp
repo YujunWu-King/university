@@ -82,7 +82,7 @@ body {
 	if (locationOrgId != "") {
 		jgHidden = true;
 	}
-
+	
 	function BindEnter(obj)
 
 	{
@@ -166,9 +166,8 @@ body {
 
 									cpr.set("userName", form.findField(
 											"userName").getValue());
-
-									window.location.href = "${contextPath}"
-											+ responseText.indexUrl;
+									
+									window.location.href = "${contextPath}" + responseText.indexUrl +window.location.search;
 
 								} else {
 
@@ -692,20 +691,12 @@ body {
 									                  	
 														Ext.Ajax
 																.request({
-
 																	async : false,
-
 																	url : '${contextPath}/login/dologin',
-
 																	params : {
-
-																		"tzParams" : Ext.JSON
-																				.encode(tzLoginParams)
-
+																		"tzParams" : Ext.JSON.encode(tzLoginParams)
 																	},
-
-																	success : function(
-																			response) {
+																	success : function(response) {
 
 																		var responseText = eval("("
 																				+ response.responseText
@@ -713,18 +704,11 @@ body {
 
 																		if (responseText.success == "success") {
 
-																			cp
-																					.set(
-																							"userName",
-																							userName);
+																			cp.set("userName",userName);
 
-																			cp
-																					.set(
-																							"orgId",
-																							orgId);
+																			cp.set("orgId",orgId);
 																			
-																			window.location.href = "${contextPath}"
-																					+ responseText.indexUrl;
+																			window.location.href = "${contextPath}" + responseText.indexUrl +window.location.search;
 																			
 																		} else {
 																			Ext.getBody().unmask();

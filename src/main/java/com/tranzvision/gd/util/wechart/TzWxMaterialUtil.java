@@ -15,7 +15,6 @@ import java.util.Map;
 
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzException;
-import com.tranzvision.gd.util.httpclient.HttpClientService;
 
 /**
  * 微信素材相关操作API

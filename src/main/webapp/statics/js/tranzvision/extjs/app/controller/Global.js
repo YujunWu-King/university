@@ -350,9 +350,8 @@ Ext.define('KitchenSink.controller.Global', {
             var tab;
             if(tmpCmpTab==null){
             	
-            	//访问cindex只显示主内容区域的第一个页签不允许关闭，同时隐藏“关闭”，“确定”等按钮
-            	var pathName = window.location.pathname;
-            	if(contentPanel.getActiveTab()==undefined&&pathName.substring(pathName.lastIndexOf("/"))=="/cindex"){
+            	//访问index,content模式只显示主内容区域的第一个页签不允许关闭，同时隐藏“关闭”，“确定”等按钮
+            	if(contentPanel.getActiveTab()==undefined&&TranzvisionMeikecityAdvanced.Boot.getQueryString("model")=="content"){
             		cmp = new ViewClass({
             			closable:false
             		});
@@ -440,9 +439,8 @@ Ext.define('KitchenSink.controller.Global', {
           if (!thumbnails.ownerCt)
           {
         	//访问cindex只显示主内容区域
-        	var subMenuPanelHidden = false;
-        	var pathName = window.location.pathname;    	
-          	if(tmpId !== 'all'&&node.isLeaf() == true&&pathName.substring(pathName.lastIndexOf("/"))=="/cindex"){
+        	var subMenuPanelHidden = false;  	
+          	if(tmpId !== 'all'&&node.isLeaf() == true&&TranzvisionMeikecityAdvanced.Boot.getQueryString("model")=="content"){
           		subMenuPanelHidden = true;
           	}
           	

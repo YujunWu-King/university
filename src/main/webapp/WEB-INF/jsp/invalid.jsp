@@ -60,6 +60,9 @@
 	 	background-color:#eee;
 	 }
     </style>
+    <script type="text/javascript">
+		window.location.href = '<%= (String)(request.getAttribute("tmpLoginURL")) %>'+window.location.search;
+    </script>
   </head>
   <body>
     <table height="100%" width="100%" border="0" align="center" id="tranzvision_mkc_advanced_default_table">
