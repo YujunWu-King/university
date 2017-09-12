@@ -246,3 +246,25 @@
 .thumb-list3 .skinImg .btn .preVBtn{
 	background:url("../../images/website/decorate/preview.png") no-repeat;
 }
+
+.thumb-wrap.pic{
+	height:160px;
+	width:18.5%;
+	padding:3px;
+	
+}
+.thumb-wrap-title{
+	position: absolute;
+    max-height: 34px;
+    bottom: 3px;
+    padding: 0px 4px;
+    overflow: hidden;
+    margin: 0 0px;
+    color: #fff;
+    background: rgba(0,0,0,0.4);
+    font-size: 12px;
+}
+
+.thumb-wrap.pic.item-selected{
+	border: 2px solid #5ac28d;
+}

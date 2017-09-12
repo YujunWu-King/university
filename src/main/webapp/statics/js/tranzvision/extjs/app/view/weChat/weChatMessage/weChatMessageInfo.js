@@ -106,15 +106,13 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     xtype:'hiddenfield',
                     fieldLabel:'用户列表',
                     name:'openIds',
-                    ignoreChangesFlag:true,
-                    allowBlank:false
+                    ignoreChangesFlag:true
                 },{
                     xtype: 'combo',
                     labelWidth: 100,
                     editable: false,
                     fieldLabel: '发送模式',
                     name: 'sendMode',
-                    emptyText: '请选择',
                     mode: "remote",
                     hidden:true,
                     valueField: 'sendMode',
@@ -127,14 +125,14 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                             {sendMode: "A", sendModeDesc: "指定用户"},
                             {sendMode: "B", sendModeDesc: "按照标签"}
                         ]
-                    },
-                    readOnly:true,
-                    style: 'background:none; border-right: 0px solid;border-top: 0px solid;border-left: 0px solid;border-bottom: #000000 0px solid;'
+                    }
                 },{
                     xtype:'textareafield',
                     fieldLabel: "用户列表",
                     grow:true,
                     name:'nickNames',
+                    height:135,
+                    readOnly:true,
                     ignoreChangesFlag:true
                 },{
                 	xtype: 'combo',

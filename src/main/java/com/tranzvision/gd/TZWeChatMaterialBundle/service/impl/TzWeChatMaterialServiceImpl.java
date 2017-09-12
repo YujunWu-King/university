@@ -37,15 +37,14 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] {};
+			String[][] orderByArr = new String[][] {{"TZ_XH","DESC"}};
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_JG_ID", "TZ_WX_APPID", "TZ_XH", "TZ_SC_NAME", "TZ_IMAGE_PATH",
-					"TZ_MEDIA_ID", "TZ_MEDIA_TYPE", "TZ_PUB_STATE" };
+					"TZ_MEDIA_ID", "TZ_MEDIA_TYPE", "TZ_PUB_STATE" ,"TZ_PUB_IMG"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
-            String cxtPath=request.getContextPath();
 			if (obj != null && obj.length > 0) {
 				@SuppressWarnings("unchecked")
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
@@ -56,15 +55,16 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 
 					String strPicName = ""; 
 					String flag="";
+			
 					if("A".equals(rowList[6])){
 						flag="图片:";
 					}else{
 						flag="图文:";
 					}
 					if ("Y".equals(rowList[7])) {
-						strPicName =  "[已发布]"+flag + rowList[3];
+						strPicName = flag + rowList[3];
 					} else {
-						strPicName =  "[未发布]"+flag + rowList[3];
+						strPicName = flag + rowList[3];
 					}
 					mapList.put("jgId", rowList[0]);
 					mapList.put("wxAppId", rowList[1]);
@@ -74,6 +74,7 @@ public class TzWeChatMaterialServiceImpl extends FrameworkImpl {
 					mapList.put("mediaId", rowList[5]);
 					mapList.put("mediaType", rowList[6]);
 					mapList.put("state", rowList[7]);
+					mapList.put("publishFlag", rowList[8]);
 					listData.add(mapList);
 				}
 

@@ -199,9 +199,10 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 			PsTzWxmsgLogT.setTzSendState(strSendStatus);
 			PsTzWxmsgLogT.setTzMsgId(strMsgId);
 			psTzWxmsgLogTMapper.insert(PsTzWxmsgLogT);
+			returnMap.put("xuhao", StrXh);
+			returnMap.put("errcode", "0");
+			returnMap.put("errmsg", "微信消息发送成功");
 		}
-		returnMap.put("errcode", "0");
-		returnMap.put("errmsg", "微信消息发送成功");
 	    return jacksonUtil.Map2json(returnMap);
 	}
 }

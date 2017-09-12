@@ -47,7 +47,8 @@
             {
                 xtype : 'panel',
                 //layout:'fit',
-                autoHeight:true,
+                height:420,
+                //autoHeight:true,
                 items:[
                     {
                         name: 'picView',
@@ -55,16 +56,19 @@
                         store: materialStore,
                         tpl:[
                             '<tpl for=".">',
-                            '<div class="thumb-wrap" id="{index}">',
-                                '<div style="width:160px;height:113px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
-                            '</div>',
-                            '<tpl if="caption.length &gt; 14"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
-                            '<tpl if="caption.length <= 14"><span>{caption}</span></tpl>',
+                            '<div class="thumb-wrap pic"  id="{index}">',
+                                '<div style="width:100%;height:100%;background:url('+ TzUniversityContextPath +'{src});background-size: 110%;background-position: center center;background-repeat: no-repeat;position: relative;">',
+                                  '<div class="thumb-wrap-title">',
+                      		        '<img src="'+TzUniversityContextPath+'{publishFlag}" style="width:12px;height:12px;margin-right: 5px;position: relative;top: 2px;">',
+                      		        '<tpl ><span>{caption}</span></tpl>',
+                      	          '</div>',
+                                '</div>',
                             '</div>',
                             '</tpl>',
                             '<div class="x-clear"></div>'
                         ],
                         itemSelector: 'div.thumb-wrap',
+                        //selectedItemCls:'thumb-wrap pic item-selected'
                         emptyText: 'No images available',
                         style:{
                         	//background:'#eee',
@@ -74,7 +78,8 @@
                         },
                         listeners:{
                         	itemclick:function(v, record, item, index, e, eOpts) {
-				    			//console.log(v,item);
+                        		//console.log(item);
+                        		//item.style.border="2px solid #5ac28d";
 					    	}
                         }
                     }],
