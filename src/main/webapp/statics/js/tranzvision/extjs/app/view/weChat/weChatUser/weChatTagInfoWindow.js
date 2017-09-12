@@ -30,15 +30,18 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagInfoWindow',{
                 items:[{
                     xtype:'textfield',
                     name:'jgId',
-                    hidden:true
+                    hidden:true,
+                    ignoreChangesFlag: true
                 },{
                     xtype:'textfield',
                     name:'wxAppId',
-                    hidden:true
+                    hidden:true,
+                    ignoreChangesFlag: true
                 },{
                     xtype:'textfield',
                     name:'tagId',
-                    hidden:true
+                    hidden:true,
+                    ignoreChangesFlag: true
                 },{
                     xtype: 'textfield',
                     fieldLabel: Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_TAGXX_STD.tagName","标签名称"),

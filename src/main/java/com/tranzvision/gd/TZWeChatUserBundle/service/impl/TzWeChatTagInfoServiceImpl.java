@@ -11,11 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZAdvertisementTmplBundle.service.impl.tzAdvertisementTmplInfoMg;
-import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsKshTblKey;
 import com.tranzvision.gd.TZWeChatBundle.service.impl.TzWxApiObject;
 import com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxTagTblMapper;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxTagTbl;
@@ -57,7 +54,7 @@ public class TzWeChatTagInfoServiceImpl extends FrameworkImpl {
 			//当前登录人
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			
-			String errcode = "",  errmsg = "";
+			String errcode = "0",  errmsg = "ok";
 
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -126,7 +123,7 @@ public class TzWeChatTagInfoServiceImpl extends FrameworkImpl {
 			//当前登录人
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
-			String errcode = "",  errmsg = "";
+			String errcode = "0",  errmsg = "ok";
 			
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {
@@ -155,14 +152,8 @@ public class TzWeChatTagInfoServiceImpl extends FrameworkImpl {
 					/*编辑标签*/
 					Map<String, Object> mapEditTag = tzWxApiObject.editTagNameByTagID(jgId, wxAppId, tagId, tagName);
 					errcode = mapEditTag.get("errcode") == null ? "-1" : mapEditTag.get("errcode").toString();
-					errmsg = mapEditTag.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapEditTag.get("errmsg").toString();
-					
-					if("0".equals(errcode)) {
-						errcode = "";
-						errmsg = "";
-					}
-				}
-				
+					errmsg = mapEditTag.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapEditTag.get("errmsg").toString();	
+				}	
 				
 				mapRet.put("errcode", errcode);
 				mapRet.put("errmsg", errmsg);
@@ -193,7 +184,7 @@ public class TzWeChatTagInfoServiceImpl extends FrameworkImpl {
 				return strRet;
 			}
 			
-			String errcode = "",  errmsg = "";
+			String errcode = "0",  errmsg = "ok";
 
 			int num = 0;
 			for (num = 0; num < actData.length; num++) {

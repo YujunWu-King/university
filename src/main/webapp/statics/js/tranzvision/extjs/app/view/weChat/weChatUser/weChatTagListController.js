@@ -121,15 +121,24 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatTagListController', {
 
         cmp.on('afterrender',function(){
             var form = cmp.child('form').getForm();
-            form.findField('jgId').setValue(jgId);
+            /*form.findField('jgId').setValue(jgId);
             form.findField('wxAppId').setValue(wxAppId);
             form.findField('tagId').setValue(tagId);
-            form.findField('tagName').setValue(tagName);
+            form.findField('tagName').setValue(tagName);*/
+            //使用下面这种方式赋值，没做任何修改点击关闭按钮，不会提示警告信息要求保存
+            form.setValues({
+                jgId:jgId,
+                wxAppId:wxAppId,
+                tagId:tagId,
+                tagName:tagName
+            });
 
             //系统标签ID编辑时删除按钮不可见
             if(tagId==systemTagId) {
                 cmp.down("toolbar").child("button").setHidden(true);
             }
+
+
         });
 
         cmp.show();

@@ -134,6 +134,11 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
                     tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.edit","设置标签"),
                     iconCls:'edit',
                     handler:'setTag'
+                },"-",{
+                    text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.refresh","全量获取用户"),
+                    tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.refresh","全量获取用户"),
+                    iconCls:'refresh',
+                    handler:'getAllUser'
                 },"->",{
                     xtype:'splitbutton',
                     text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.more","更多操作"),

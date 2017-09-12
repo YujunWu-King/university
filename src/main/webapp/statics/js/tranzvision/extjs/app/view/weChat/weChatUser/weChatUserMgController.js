@@ -230,6 +230,20 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             cmp.show();
         }
     },
+    //全量获取用户
+    getAllUser:function(btn) {
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+
+        var jgId = grid.jgId;
+        var wxAppId = grid.wxAppId;
+
+        var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetUserAllByAe","comParams":{"jgId":"' + jgId + '","wxAppId":"' + wxAppId + '"}}';
+
+        Ext.tzSubmit(tzParams,function(responseData){
+
+        },"调用获取用户进程成功",true,this);
+    },
     //更多操作-给选中用户发送普通消息
     sendMessageForSelect:function(btn) {
         var me = this;

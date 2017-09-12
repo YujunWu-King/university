@@ -390,7 +390,7 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 		
 		try {
 			
-			String errcode = "",errmsg = "";
+			String errcode = "0",errmsg = "ok";
 			
 			/*调用微信接口*/
 			
@@ -403,8 +403,8 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 			
 			if(mapTagList.containsKey("errcode")) {
 				//发生错误
-				errcode = mapTagList.get("errcode") == null ? "" : mapTagList.get("errcode").toString();
-				errmsg = mapTagList.get("errmsg") == null ? "" : mapTagList.get("errmsg").toString();
+				errcode = mapTagList.get("errcode") == null ? "-1" : mapTagList.get("errcode").toString();
+				errmsg = mapTagList.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapTagList.get("errmsg").toString();
 			} else {
 				listTags = (ArrayList<Map<String,Object>>) mapTagList.get("tags");
 				for(Map<String, Object> mapTags : listTags) {
@@ -450,8 +450,8 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 			
 			if(mapUserList.containsKey("errcode")) {
 				//发生错误
-				errcode = mapUserList.get("errcode") == null ? "" : mapUserList.get("errcode").toString();
-				errmsg = mapUserList.get("errmsg") == null ? "" : mapUserList.get("errmsg").toString();
+				errcode = mapUserList.get("errcode") == null ? "-1" : mapUserList.get("errcode").toString();
+				errmsg = mapUserList.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapUserList.get("errmsg").toString();
 			} else {
 				total = mapUserList.get("total") ==null ? 0 : Integer.valueOf(mapUserList.get("total").toString());
 				count = mapUserList.get("count") ==null ? 0 : Integer.valueOf(mapUserList.get("count").toString());
@@ -465,8 +465,8 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 					
 					if(mapUserList.containsKey("errcode")) {
 						//发生错误
-						errcode = mapUserList.get("errcode") == null ? "" : mapUserList.get("errcode").toString();
-						errmsg = mapUserList.get("errmsg") == null ? "" : mapUserList.get("errmsg").toString();
+						errcode = mapUserList.get("errcode") == null ? "-1" : mapUserList.get("errcode").toString();
+						errmsg = mapUserList.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapUserList.get("errmsg").toString();
 					} else {
 						total = mapUserList.get("total") ==null ? 0 : Integer.valueOf(mapUserList.get("total").toString());
 						count = mapUserList.get("count") ==null ? 0 : Integer.valueOf(mapUserList.get("count").toString());
@@ -492,8 +492,8 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 					
 					if(mapUserInfo.containsKey("errcode")) {
 						//发生错误
-						errcode = mapUserInfo.get("errcode") == null ? "" : mapUserInfo.get("errcode").toString();
-						errmsg = mapUserInfo.get("errmsg") == null ? "" : mapUserInfo.get("errmsg").toString();
+						errcode = mapUserInfo.get("errcode") == null ? "-1" : mapUserInfo.get("errcode").toString();
+						errmsg = mapUserInfo.get("errmsg") == null ? "发生错误，请与系统管理员联系。" : mapUserInfo.get("errmsg").toString();
 					} else {
 						//订阅标识，0为未订阅，拉取不到其他信息
 						subscribe = mapUserInfo.get("subscribe") == null ? "" : mapUserInfo.get("subscribe").toString(); 
