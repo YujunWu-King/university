@@ -422,7 +422,7 @@ public class TzWxNewsMaterialServiceImpl extends FrameworkImpl {
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
 		rtnMap.put("materialID", "");
 		rtnMap.put("mediaId", "");
-		rtnMap.put("publishSta", "");
+		rtnMap.put("publishSta", "N");
 		
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -480,6 +480,25 @@ public class TzWxNewsMaterialServiceImpl extends FrameworkImpl {
 							break;
 						}
 						index++;
+					}
+					
+					if(!"1".equals(errorMsg[0])){
+						//发布成功，更新发布状态
+						PsTzWxMediaTblKey psTzWxMediaTblKey = new PsTzWxMediaTblKey();
+						psTzWxMediaTblKey.setTzJgId(jgId);
+						psTzWxMediaTblKey.setTzWxAppid(wxAppId);
+						psTzWxMediaTblKey.setTzXh(materialID);
+						PsTzWxMediaTbl PsTzWxMediaTbl = psTzWxMediaTblMapper.selectByPrimaryKey(psTzWxMediaTblKey);
+						if(PsTzWxMediaTbl != null){
+							PsTzWxMediaTbl.setTzPubState("Y");
+							PsTzWxMediaTbl.setTzMediaId(mediaId);
+							
+							PsTzWxMediaTbl.setRowLastmantDttm(new Date());
+							PsTzWxMediaTbl.setRowLastmantOprid(oprid);
+							psTzWxMediaTblMapper.updateByPrimaryKey(PsTzWxMediaTbl);
+							
+							rtnMap.replace("publishSta", "Y");
+						}
 					}
 				}
 			}

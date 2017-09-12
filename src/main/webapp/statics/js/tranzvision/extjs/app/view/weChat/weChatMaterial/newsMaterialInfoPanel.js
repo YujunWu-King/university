@@ -40,7 +40,6 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
 			var articesViewStore = articesView.getStore();
 			if(actType == "add"){
 				var r = Ext.create('KitchenSink.view.weChat.weChatMaterial.newsArticlesModel', {
-					xh : "",
 			        title : "",
 			        thumb_media_id : "",
 			        thumb_img_url : "",
@@ -55,6 +54,8 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
 				});
 				articesViewStore.insert(0, r);
 				
+				
+				
 				panel.currentRecord = articesViewStore.getAt(0);
 				//articesView.updateLayout();
 				panel.updateLayout();
@@ -66,15 +67,12 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
                  	form.setValues(responseData.formData);
 
 	                var publishSta=responseData.formData.publishSta;
-	                var publishBtn=panel.down("button[name=publishBtn]");
 	                var revokeBtn=panel.down("button[name=revokeBtn]");
 	                var addArticesBtn = panel.down("button[name=addArticesBtn]");
 	                if(publishSta == "Y"){
-	                    //publishBtn.setDisabled(true);
 	                    revokeBtn.setDisabled(false);
 	                    addArticesBtn.setHidden(true)
 	                }else{
-	                    //publishBtn.setDisabled(false);
 	                    revokeBtn.setDisabled(true);
 	                    addArticesBtn.setHidden(false)
 	                }
@@ -212,7 +210,6 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
                             	var articesViewStore = articesView.getStore();
                             	var count = articesViewStore.getCount();
                 				var r = Ext.create('KitchenSink.view.weChat.weChatMaterial.newsArticlesModel', {
-                					xh : "",
                 			        title : "",
                 			        thumb_media_id : "",
                 			        thumb_img_url : "",
@@ -396,6 +393,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
 		text: '撤销发布',
 		iconCls:"revoke",
 		name: 'revokeBtn',
+		disabled: true,
 		handler: 'revokeFromWx'
 	},{
 		text: '保存',
