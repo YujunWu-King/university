@@ -58,8 +58,8 @@
                             '<div class="thumb-wrap" id="{index}">',
                                 '<div style="width:160px;height:113px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
                             '</div>',
-                            '<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
-                            '<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',
+                            '<tpl if="caption.length &gt; 14"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
+                            '<tpl if="caption.length <= 14"><span>{caption}</span></tpl>',
                             '</div>',
                             '</tpl>',
                             '<div class="x-clear"></div>'

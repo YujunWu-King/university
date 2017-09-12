@@ -81,10 +81,12 @@ public class TZWeChatMsgMaterialServiceImpl extends FrameworkImpl {
 					if(list.get(i).get("TZ_MEDIA_ID")!=null){
 						strMediaId=list.get(i).get("TZ_MEDIA_ID").toString();
 					}
-					if(list.get(i).get("TZ_MEDIA_URL")!=null){
+					/*if(list.get(i).get("TZ_MEDIA_URL")!=null){
 						strMediaUrl=list.get(i).get("TZ_MEDIA_URL").toString();
-					}
-					String imageUrl=sqlQuery.queryForObject("select TZ_HEAD_IMAGE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_XH=? and TZ_SHCPIC_FLG='Y'", new Object[]{strOrgId,strWxAppId,strXh}, "String");
+					}*/
+					String strHeadImage=sqlQuery.queryForObject("select TZ_HEAD_IMAGE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_XH=? and TZ_SHCPIC_FLG='Y'", new Object[]{strOrgId,strWxAppId,strXh}, "String");
+					String imageUrl=sqlQuery.queryForObject("select TZ_IMAGE_PATH from PS_TZ_WX_MEDIA_TBL  where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_ID=?", new Object[]{strOrgId,strWxAppId,strHeadImage}, "String");
+				     strMediaUrl=sqlQuery.queryForObject("select TZ_MEDIA_URL from PS_TZ_WX_MEDIA_TBL  where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_ID=?", new Object[]{strOrgId,strWxAppId,strHeadImage}, "String");
 					String caption= sqlQuery.queryForObject("select TZ_TW_TITLE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_XH=? and TZ_SHCPIC_FLG='Y'", new Object[]{strOrgId,strWxAppId,strXh}, "String");
 					map.put("index",Integer.valueOf(strXh));
 					map.put("mediaId", strMediaId);

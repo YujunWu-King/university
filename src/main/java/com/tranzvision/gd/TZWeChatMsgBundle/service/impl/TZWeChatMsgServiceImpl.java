@@ -126,7 +126,7 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 		    }
 		    if("B".equals(strSendType)){
 		    	PsTzWxmsgLogT.setTzMediaId(strTwMediaId);
-		    	PsTzWxmsgLogT.setTzContent(strTwTitle);
+		    	//PsTzWxmsgLogT.setTzContent(strTwTitle);
 		    	mediaIdOrContent=strTwMediaId;
 		    	msgtype="mpnews";
 		    }
@@ -135,7 +135,9 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 		    	mediaIdOrContent=strWordMsg;
 		    	msgtype="text";
 		    }
-		  
+		    //发送微信消息——序号
+		    String StrXh=getSeqNum.getSeqNum("TZ_WXMSG_LOG_T", "TZ_XH")+"";
+		    
 		    GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
         	TzWxApiObject tzWxApiObject = (TzWxApiObject) getSpringBeanUtil.getSpringBeanByID("tzWxApiObject");
 		    String strMsgId="";
@@ -147,11 +149,6 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 				if("0".equals(map.get("errcode").toString())){
 					strMsgId=map.get("msg_id").toString();
 					strSendStatus="Y";
-					/*Map<String,Object> statusMap=tzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
-					strSendStatus=statusMap.get("msg_status").toString();
-					if("SEND_SUCCESS".equals(strSendStatus)){
-						strSendStatus="Y";
-					}*/
 				}else{
 					returnMap.put("errcode", "-1");
 					returnMap.put("errmsg", "指定用户消息发送失败！");
@@ -160,16 +157,14 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 				for(int i=0;i<strOpenArray.length;i++){
 					String openId=strOpenArray[i];
 					if(!"".equals(openId)){
-					String strUserXh=getSeqNum.getSeqNum("TZ_WXMSG_USER_T", "TZ_XH")+""; 
 					PsTzWxmsgUserT PsTzWxmsgUserT=new PsTzWxmsgUserT();
 					PsTzWxmsgUserT.setTzWxAppid(strAppId);
 					PsTzWxmsgUserT.setTzJgId(strOrgId);
-					PsTzWxmsgUserT.setTzXh(strUserXh);
+					PsTzWxmsgUserT.setTzXh(StrXh);
 					PsTzWxmsgUserT.setTzXhId(openId);
 					psTzWxmsgUserTMapper.insert(PsTzWxmsgUserT);
 				  }
 				}
-				
 			}
 			//按照标签
 			if("B".equals(strSendMode)){
@@ -178,28 +173,21 @@ public class TZWeChatMsgServiceImpl extends FrameworkImpl {
 						if("0".equals(map.get("errcode").toString())){
 							strMsgId=map.get("msg_id").toString();
 							strSendStatus="Y";
-							/*Map<String,Object> statusMap=tzWxApiObject.getMassSendStatus(strOrgId, strAppId, strMsgId);
-							strSendStatus=statusMap.get("msg_status").toString();
-							if("SEND_SUCCESS".equals(strSendStatus)){
-								strSendStatus="Y";
-							}*/
 						}else{
 							returnMap.put("errcode", "-1");
 							returnMap.put("errmsg", "指定用户消息发送失败！");
 							return jacksonUtil.Map2json(map);
 						}
-						String strUserXh=getSeqNum.getSeqNum("TZ_WXMSG_USER_T", "TZ_XH")+""; 
 						PsTzWxmsgUserT PsTzWxmsgUserT=new PsTzWxmsgUserT();
 						PsTzWxmsgUserT.setTzWxAppid(strAppId);
 						PsTzWxmsgUserT.setTzJgId(strOrgId);
-						PsTzWxmsgUserT.setTzXh(strUserXh);
+						PsTzWxmsgUserT.setTzXh(StrXh);
 						PsTzWxmsgUserT.setTzXhId(strWxTag);
 						psTzWxmsgUserTMapper.insert(PsTzWxmsgUserT);
 					}
 				
 			}
 			//微信消息发送日志
-			String StrXh=getSeqNum.getSeqNum("TZ_WXMSG_LOG_T", "TZ_XH")+"";
 			PsTzWxmsgLogT.setTzWxAppid(strAppId);
 			PsTzWxmsgLogT.setTzJgId(strOrgId);
 			PsTzWxmsgLogT.setTzXh(StrXh);
