@@ -67,16 +67,10 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogListController', {
 
         var form = win.child("form").getForm();
         var grid = win.child('grid');
-        
-//        form.setValues(
-//            [
-//                {id:'comID', value:orgId},
-//                {id:'comName', value:wxAppId},
-//                {id:'comName', value:xH}
-//            ]
-//        );
-//        var tzStoreParams = '{"jgId":"'+orgId+'","appId":"'+wxAppId+'","XH":"'+xH+'"}';
-        
+        if(sendType=='文字消息'){
+        	form.findField("mediaId").hide();
+        }
+
         var tzParams = '{"ComID":"TZ_GD_WXSERVICE_COM","PageID":"TZ_GD_LOGINFO_STD","OperateType":"QF","comParams":{"orgId":"'+orgId+'","wxAppId":"'+wxAppId+'","XH":"'+xH+'"}}';
         if(sendType=='模板消息'){
         	tzParams = '{"ComID":"TZ_GD_WXSERVICE_COM","PageID":"TZ_GD_LOGINFOM_STD","OperateType":"QF","comParams":{"orgId":"'+orgId+'","wxAppId":"'+wxAppId+'","XH":"'+xH+'"}}';
@@ -91,6 +85,9 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogListController', {
             var tzStoreParams = '{"cfgSrhId": "TZ_GD_WXSERVICE_COM.TZ_GD_LOGINFO_STD.TZ_WXMSG_USER_V","condition":{"TZ_JG_ID-operator": "01","TZ_JG_ID-value": "'+orgId+'","TZ_WX_APPID-operator": "01","TZ_WX_APPID-value": "'+wxAppId+'","TZ_XH-operator": "01","TZ_XH-value": "'+xH+'"}}';
             grid.store.tzStoreParams = tzStoreParams;
             grid.store.load();     
+            
+//        	var  path=tzStoreParams.formData.filePath;
+//        	panel.down("image[name=titileImage]").setSrc(TzUniversityContextPath+path);
         });   
 
         win.show();
