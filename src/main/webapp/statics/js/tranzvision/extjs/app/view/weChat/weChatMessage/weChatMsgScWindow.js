@@ -37,11 +37,12 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
                     store: mediaPicStore,
                     tpl:[
                         '<tpl for=".">',
-                        '<div class="thumb-wrap" id="{index}">',
-                            '<div style="width:160px;height:113px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
-                        '</div>',
-                        '<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
-                        '<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',
+                        '<div class="thumb-wrap pic" id="{index}">',
+                            '<div style="width:100%;height:100%;background:url('+ TzUniversityContextPath +'{src});background-size: 110%;background-position: center center;background-repeat: no-repeat;position: relative;">',
+                               '<div class="thumb-wrap-title">',
+              		              '<tpl ><span>{caption}</span></tpl>',
+              	              '</div>',
+                            '</div>',
                         '</div>',
                         '</tpl>',
                         '<div class="x-clear"></div>'
@@ -49,7 +50,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
                     itemSelector: 'div.thumb-wrap',
                     emptyText: 'No images available',
                     style:{
-                        background:'white',
+                         background:'white',
                         //border:'1px solid #000000',
                         padding:'0 15px 25px 0'
                     }

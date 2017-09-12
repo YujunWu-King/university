@@ -600,14 +600,14 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 		try {
 			
 			Integer openIdNum = 0;
-			String openIdList = "";
+			String openIdList = "" , nickNameList = "";
 			
 			jacksonUtil.json2Map(strParams);
 			
 			String jgId = jacksonUtil.getString("jgId");
 			String wxAppId = jacksonUtil.getString("wxAppId");
 			
-			String sql = "SELECT TZ_OPEN_ID FROM PS_TZ_WX_USER_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=?";
+			String sql = "SELECT TZ_OPEN_ID,TZ_NICKNAME FROM PS_TZ_WX_USER_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=?";
 			List<Map<String, Object>> listUser = sqlQuery.queryForList(sql,new Object[]{jgId,wxAppId});
 			
 			for(Map<String, Object> mapUser : listUser) {
@@ -618,10 +618,17 @@ public class TzWeChatUserMgServiceImpl extends FrameworkImpl {
 				} else {
 					openIdList = openId;
 				}
+				String nickName = mapUser.get("TZ_NICKNAME") == null ? "" : mapUser.get("TZ_NICKNAME").toString();
+				if(!"".equals(nickNameList)) {
+					nickNameList = nickNameList + "," + nickName;
+				} else {
+					nickNameList = nickName;
+				}
 			}
 			
 			mapRet.put("openIdNum", openIdNum);
 			mapRet.put("openIdList", openIdList);
+			mapRet.put("nickNameList", nickNameList);
 			strRet = jacksonUtil.Map2json(mapRet);
 			
 		} catch (Exception e) {

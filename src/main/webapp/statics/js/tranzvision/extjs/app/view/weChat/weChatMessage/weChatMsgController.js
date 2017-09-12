@@ -152,8 +152,8 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
 			 }
     	}
         var formParams = form.getValues();
-        var tabPanel=form.findField("weChatTabPanel");
-        var tabPanel=btn.findParentByType("panel").down("form").items.items[4];
+       // var tabPanel=form.findField("weChatTabPanel");
+        var tabPanel=btn.findParentByType("panel").down("form").items.items[5];
         var activeForm=tabPanel.getActiveTab().config.name;
         var sendType="";
         if(activeForm=="form1"){
@@ -184,10 +184,10 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
         	}
         }
         var tzParams = '{"ComID":"TZ_GD_WXMSG_COM","PageID":"TZ_GD_WXMSG_STD","OperateType":"U","comParams":{"add":[{"sendType":"'+sendType+'","data":'+Ext.JSON.encode(formParams)+'}]}}';
-        //console.log(tzParams);
         var msg="";
         Ext.tzSubmit(tzParams,function(response){
         if(response.errcode==0){
+           var xuhao=response.xuhao;
            form.findField("sendStatus").setValue("Y");
            Ext.Msg.alert("提示","发送成功");
         }else{

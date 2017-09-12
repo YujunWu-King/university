@@ -263,7 +263,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                 Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip","至少需要选中两个用户"));
                 return;
             } else {
-                var openIdList = "";
+                var openIdList = "",nickNameList = "";
                 for (var i = 0; i < checkLen; i++) {
                     var openIdTmp = selList[i].data.openId;
                     if (openIdList == "") {
@@ -271,9 +271,16 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     } else {
                         openIdList = openIdList + "," + openIdTmp;
                     }
+
+                    var nickNameTmp = selList[i].data.nickName;
+                    if (nickNameList == "") {
+                        nickNameList = nickNameTmp;
+                    } else {
+                        nickNameList = nickNameList + "," + nickNameTmp;
+                    }
                 }
 
-                me.sendMessageForUser("A", openIdList, "", wxAppId);
+                me.sendMessageForUser("A", openIdList, nickNameList, "", wxAppId);
             }
         }
     },
@@ -289,7 +296,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         Ext.tzLoad(tzParams, function (responseData) {
             var tagIdList = responseData.tagIdList;
 
-            me.sendMessageForUser("B","",tagIdList,wxAppId);
+            me.sendMessageForUser("B","","",tagIdList,wxAppId);
         });
     },
     //更多操作-给所有用户发送普通消息
@@ -308,7 +315,8 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                 return;
             } else {
                 var openIdList = responseData.openIdList;
-                me.sendMessageForUser("A", openIdList, "", wxAppId);
+                var nickNameList = responseData.nickNameList;
+                me.sendMessageForUser("A", openIdList, nickNameList, "", wxAppId);
             }
 
         });
@@ -328,7 +336,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                 Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip","至少需要选中两个用户"));
                 return;
             } else {
-                var openIdList = "";
+                var openIdList = "", nickNameList = "";
                 for (var i = 0; i < checkLen; i++) {
                     var openIdTmp = selList[i].data.openId;
                     if (openIdList == "") {
@@ -336,9 +344,16 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     } else {
                         openIdList = openIdList + "," + openIdTmp;
                     }
+
+                    var nickNameTmp = selList[i].data.nickName;
+                    if(nickNameList == "") {
+                        nickNameList = nickNameTmp;
+                    } else {
+                        nickNameList = nickNameList + "," + nickNameTmp;
+                    }
                 }
 
-                this.sendTplForUser(openIdList);
+                this.sendTplForUser(openIdList,nickNameList);
             }
         }
     },
@@ -357,7 +372,8 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                 return;
             } else {
                 var openIdList = responseData.openIdList;
-                this.sendTplForUser(openIdList);
+                var nickNameList = responseData.nickNameList;
+                this.sendTplForUser(openIdList,nickNameList);
             }
         });
     },
@@ -439,7 +455,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         this.getView().close();
     },
     //给用户发送普通消息
-    sendMessageForUser:function(sendMode,openIdList,tagIdList,wxAppId) {
+    sendMessageForUser:function(sendMode,openIdList,nickNameList,tagIdList,wxAppId) {
         Ext.tzSetCompResourses("TZ_GD_WXMSG_COM");
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_WXMSG_COM"]["TZ_GD_WXMSG_STD"];
         if (pageResSet == "" || pageResSet == undefined) {
@@ -493,6 +509,8 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             cmp.sendMode = sendMode;
             //用户列表
             cmp.openIds = openIdList;
+            //用户昵称
+            cmp.nickNames = nickNameList;
             //标签
             cmp.weChatTags = tagIdList;
             //应用ID
@@ -509,16 +527,17 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             }
             form.findField("sendMode").setValue(sendMode);
             form.findField("openIds").setValue(openIdList);
+            form.findField("nickNames").setValue(nickNameList);
            // form.findField("wechatTag").setValue(tagIdList);
             form.findField("appId").setValue(wxAppId);
 
             //如果为指定用户，按照标签字段隐藏；如果为按照标签，用户列表字段隐藏
             if(sendMode=='A'){
-                form.findField("openIds").setVisible(true);
+                form.findField("nickNames").setVisible(true);
                 form.findField("wechatTag").setVisible(false);
             }
             if(sendMode=='B'){
-                form.findField("openIds").setVisible(false);
+                form.findField("nickNames").setVisible(false);
                 form.findField("wechatTag").setVisible(true);
             }
         });
@@ -534,7 +553,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         }
     },
     //给用户发送普通消息
-    sendTplForUser:function(openIdList) {
+    sendTplForUser:function(openIdList,nickNameList) {
         /*****************************************************************/
         /*打开发送模板消息窗口页面*/
     }
