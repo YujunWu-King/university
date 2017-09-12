@@ -265,6 +265,6 @@
     font-size: 12px;
 }
 
-.thumb-wrap.pic.item-selected{
-	border: 2px solid #5ac28d;
-}
+.thumb-wrap.pic.current-item{
+	border: 2px solid #3892d3;
+} 

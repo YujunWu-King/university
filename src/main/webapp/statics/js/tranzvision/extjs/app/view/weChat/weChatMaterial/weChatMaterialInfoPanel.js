@@ -47,7 +47,7 @@
             {
                 xtype : 'panel',
                 //layout:'fit',
-                height:420,
+                height:400,
                 //autoHeight:true,
                 items:[
                     {
@@ -56,8 +56,8 @@
                         store: materialStore,
                         tpl:[
                             '<tpl for=".">',
-                            '<div class="thumb-wrap pic"  id="{index}">',
-                                '<div style="width:100%;height:100%;background:url('+ TzUniversityContextPath +'{src});background-size: 110%;background-position: center center;background-repeat: no-repeat;position: relative;">',
+                            '<div class="thumb-wrap pic "  id="{index}">',
+                                '<div style="width:100%;height:100%;background:url('+ TzUniversityContextPath +'{src});background-size: 150%;background-position: center center;background-repeat: no-repeat;position: relative;">',
                                   '<div class="thumb-wrap-title">',
                       		        '<img src="'+TzUniversityContextPath+'{publishFlag}" style="width:12px;height:12px;margin-right: 5px;position: relative;top: 2px;">',
                       		        '<tpl ><span>{caption}</span></tpl>',
@@ -68,18 +68,20 @@
                             '<div class="x-clear"></div>'
                         ],
                         itemSelector: 'div.thumb-wrap',
-                        //selectedItemCls:'thumb-wrap pic item-selected'
+                        selectedItemCls:'current-item',
                         emptyText: 'No images available',
                         style:{
-                        	//background:'#eee',
                         	background:'white',
 				    		border:'1px solid white',
 				    		padding:'0 15px 25px 0'
                         },
                         listeners:{
                         	itemclick:function(v, record, item, index, e, eOpts) {
-                        		//console.log(item);
-                        		//item.style.border="2px solid #5ac28d";
+                        		/*var store=v.getStore();
+                        		store.each(function(rec) {   
+                        		       rec.set("isSelected","N");
+                        			});  
+                        		record.set("isSelected","Y");*/
 					    	}
                         }
                     }],
