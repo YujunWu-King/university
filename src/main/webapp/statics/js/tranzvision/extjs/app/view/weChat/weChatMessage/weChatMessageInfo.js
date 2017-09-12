@@ -20,6 +20,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
     frame:true,
     sendMode:'',
     openIds:'',
+    nickNames:'',
     weChatTags:'',
     weChatAppId:'',
     listeners: {
@@ -102,6 +103,12 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                 	ignoreChangesFlag:true,
                 	allowBlank:false
                 },{
+                    xtype:'hiddenfield',
+                    fieldLabel:'用户列表',
+                    name:'openIds',
+                    ignoreChangesFlag:true,
+                    allowBlank:false
+                },{
                     xtype: 'combo',
                     labelWidth: 100,
                     editable: false,
@@ -127,7 +134,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     xtype:'textareafield',
                     fieldLabel: "用户列表",
                     grow:true,
-                    name:'openIds',
+                    name:'nickNames',
                     ignoreChangesFlag:true
                 },{
                 	xtype: 'combo',
@@ -168,7 +175,6 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                     frame: true,
                     activeTab: 0,
                     plain: false,
-                    id:'weChatTabPanel',
                     name:'weChatTabPanel',
                     resizeTabs: true,
                     defaults: {
