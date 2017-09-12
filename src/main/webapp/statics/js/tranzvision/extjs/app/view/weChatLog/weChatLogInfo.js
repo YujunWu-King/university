@@ -145,10 +145,16 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
             name: 'mediaId',
             readOnly:true,
             colspan: 2,
-
         }
         ]
     },
+//    {
+//        xtype: "image",
+//        src: ""	,
+//        name: "titileImage",
+//        height:186, 
+//        style:'margin-left:105px;'
+//    },
     
         {
 		xtype: 'grid',

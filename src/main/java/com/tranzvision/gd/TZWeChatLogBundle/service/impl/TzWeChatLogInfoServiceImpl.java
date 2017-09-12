@@ -64,7 +64,7 @@ public class TzWeChatLogInfoServiceImpl extends FrameworkImpl{
 					List<Map<String,Object>> listMediaId=sqlQuery.queryForList(" SELECT TZ_MEDIA_ID,TZ_IMAGE_PATH,TZ_MEDIA_URL FROM PS_TZ_WX_MEDIA_TBL WHERE TZ_JG_ID =? AND TZ_WX_APPID=? AND TZ_XH=? AND TZ_MEDIA_ID=? ", new Object[]{strJgID,strAppID,strXH,psTzWxmsgLogT.getTzMediaId()});
 					String sendMediaId = "";
 					if(listMediaId!=null &&listMediaId.size()>0){
-						sendMediaId=listMediaId.get(0).get("TZ_MEDIA_ID").toString();
+						sendMediaId=listMediaId.get(0).get("TZ_MEDIA_URL").toString();
 						System.out.println(sendMediaId);
 					}
 					
