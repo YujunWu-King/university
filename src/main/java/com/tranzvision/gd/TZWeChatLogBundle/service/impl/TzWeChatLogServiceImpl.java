@@ -11,8 +11,9 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 
-@Service("com.tranzvision.gd.TZWeChatLogBundle.service.impl.TzWeChatLogService")
-public class TzWeChatLogService extends FrameworkImpl{
+@Service("com.tranzvision.gd.TZWeChatLogBundle.service.impl.TzWeChatLogServiceImpl")
+public class TzWeChatLogServiceImpl extends FrameworkImpl{
+	
 	@Autowired
 	private FliterForm fliterForm;
 	/* 获取微信服务号定义信息 */
@@ -27,7 +28,7 @@ public class TzWeChatLogService extends FrameworkImpl{
 			if (jacksonUtil.containsKey("orgId")) {
 				// 类方法ID;
 				String strJgID = jacksonUtil.getString("orgId");
-				String strAppID=jacksonUtil.getString("wxAppId");
+				String strAppID= jacksonUtil.getString("wxAppId");
 
 				if (strJgID != null && strAppID != null) {
 					Map<String, Object> jsonMap = new HashMap<>();
@@ -90,12 +91,12 @@ public class TzWeChatLogService extends FrameworkImpl{
 						sendType = "模板消息";
 					}
 					
-//					String sendSate = "";
-//					if (rowList[6]=="A") {
-//						sendSate = "有效";
-//					} else if (rowList[6]=="B") {
-//						sendSate = "无效";
-//					}
+					String sendSate = "";
+					if (rowList[6].equals("Y")) {
+						sendSate = "成功";
+					} else {
+						sendSate = "不成功";
+					}
 					
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("jgId", rowList[0]);
@@ -104,7 +105,7 @@ public class TzWeChatLogService extends FrameworkImpl{
 					mapList.put("sendType", sendType);
 					mapList.put("sendDTime", rowList[4]);
 					mapList.put("sendPSN", rowList[5]);
-					mapList.put("sendState", rowList[6]);
+					mapList.put("sendState", sendSate);
 
 					listData.add(mapList);
 				}

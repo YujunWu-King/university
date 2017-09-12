@@ -65,18 +65,18 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
             editable:false,
             displayField: 'TLDesc',
             store: new KitchenSink.view.common.store.appTransStore("TZ_SEND_TYPE"),
-            queryMode: 'local'	 
+            queryMode: 'local',
+            colspan: 2
         },
         {
             xtype: 'textfield',
             fieldLabel: '发送人',
             name: 'sendPsn',
             readOnly:true,
-            columnWidth: 2,
             fieldStyle:'background:#F4F4F4'
         },
         {
-            xtype: 'datefield',
+            xtype: 'textfield',
             fieldLabel: '发送时间',
             name: 'sendDTime',
             readOnly:true,
@@ -97,6 +97,7 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
             name: 's_DT',
             readOnly:true,
             fieldStyle:'background:#F4F4F4', 
+            cls:'lanage_1'
             //format: 'Y-m-d'
         },
         {
@@ -128,21 +129,32 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
             cls:'lanage_1'
         },
        {
-            xtype: 'textfield',
+            xtype: 'textarea',
             fieldLabel: '发送内容',
             name: 'content',
             readOnly:true,
-            cls:'lanage_1'
+            cls:'lanage_1',
+            colspan: 2,
         },
         {
             xtype: 'textfield',
             fieldLabel: '素材编号',
             name: 'mediaId',
             readOnly:true,
-            cls:'lanage_1'
+            cls:'lanage_1',
+            colspan: 2,
+
         }
         ]
     },
+    {
+    	columnWidth:.46,
+        xtype: "image",
+        src: ,
+        name: "Image",
+        height:186
+    }
+    ，
         {
 		xtype: 'grid',
 //        height:340,
