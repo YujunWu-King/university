@@ -160,7 +160,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitorController', {
         	if(responseData.status == "failed"){
         		
         		store.reload();
-        		Ext.MessageBox.alert("提示", "进程服务器未启动，启动失败！");
+        		Ext.MessageBox.alert("提示", "启动失败，进程服务器未启动！");
+        	}else if(responseData.status == "startfailed"){
+        		
+        		store.reload();
+        		Ext.MessageBox.alert("提示", "启动失败，进程状态不处于可启动状态！");
         	}else{
         		
         		store.reload();
@@ -178,8 +182,17 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitorController', {
         var processInstance = selRec.get("processInstance");
         var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_MONITOR_LIST","OperateType":"stopProcess","comParams":{"orgId":"'+orgId+'","processInstance":"'+ processInstance +'"}}';
         Ext.tzLoad(tzParams,function(responseData){
-            store.reload();
-            Ext.MessageBox.alert("提示", "进程实例已停止！");
+        	
+        	if(responseData.status == "failed"){
+        		
+        		store.reload();
+                Ext.MessageBox.alert("提示", "停止失败，进程状态不处于可停止状态！")
+        	}else{
+        		
+                store.reload();
+                Ext.MessageBox.alert("提示", "进程实例已停止！")
+        	}
+
         });
     },
     deleteInstanceBL:function (view, rowIndex) {
@@ -210,8 +223,16 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitorController', {
         //提交参数
         var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_MONITOR_LIST","OperateType":"U","comParams":{'+comParams+'}}';
         //保存数据
-        Ext.tzSubmit(tzParams,function(){
-            store.reload();
+        Ext.tzSubmit(tzParams,function(responseData){
+            
+            if(responseData.status == "failed"){
+            	
+            	store.reload();
+            	Ext.MessageBox.alert("提示", "存在不可删除的实例！")
+            	
+            }else{
+            	
+            }
         },"",true,this);
     },
     ensureProcessInstance:function (btn) {

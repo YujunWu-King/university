@@ -67,14 +67,7 @@ Ext.define('KitchenSink.view.processServer.processServerList', {
                 text: '运行状态',
                 sortable: true,
                 dataIndex: 'runningStatus',
-                flex: 1,
-                renderer: function(value,metadata,record){
-                    var index = statusStore.find('TValue',value);
-                    if(index!=-1){
-                        return statusStore.getAt(index).data.TSDesc;
-                    }
-                    return "";
-                }
+                flex: 1
             },{
                 menuDisabled: true,
                 sortable: false,

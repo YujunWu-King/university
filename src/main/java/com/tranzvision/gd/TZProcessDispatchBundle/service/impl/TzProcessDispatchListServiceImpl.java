@@ -1,20 +1,26 @@
 package com.tranzvision.gd.TZProcessDispatchBundle.service.impl;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZBatchProcessBundle.model.TzProcessServer;
 import com.tranzvision.gd.TZProcessDispatchBundle.dao.TzProcessInstanceMapper;
 import com.tranzvision.gd.TZProcessDispatchBundle.model.TzProcessInstance;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
+import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by WangDi on 2017/4/7.
@@ -30,6 +36,12 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
     private GetSeqNum getSeqNum;
     @Autowired
     private TzProcessInstanceMapper tzProcessInstanceMapper;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private TZGDObject tzSQLObject;
 
     // 进程实例信息查询
     public String tzQuery(String strParams, String[] errMsg) {
@@ -144,8 +156,6 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 if(jacksonUtil.getString("requestDate") != null && jacksonUtil.getString("requestTime") != null){
                 	dateTime = jacksonUtil.getString("requestDate") + jacksonUtil.getString("requestTime");
                     runStartDate = datetimeFormate.parse(dateTime);
-                    System.out.println("dateTime======" + dateTime);
-                    System.out.println("runStartDate=======" +runStartDate);
                     tzProcessInstance.setTzQqcjDttm(runStartDate);
                 }
                 
@@ -168,6 +178,17 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 }
                 
                 tzProcessInstanceMapper.insertSelective(tzProcessInstance);
+        		String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+				BaseEngine tmpEngine = tzSQLObject.createEngineProcess(orgId, "TZGD_DR_POST_AE");
+		    	EngineParameters schdProcessParameters = new EngineParameters();
+		    	schdProcessParameters.setBatchServer("");
+		    	schdProcessParameters.setCycleExpression("");
+		    	schdProcessParameters.setLoginUserAccount(currentAccountId);		
+		    	Date currentDT = new Date();
+		    	schdProcessParameters.setPlanExcuteDateTime(currentDT);
+		    	schdProcessParameters.setRunControlId(runCntlId);
+		    	//调度作业
+		    	tmpEngine.schedule(schdProcessParameters);
             }
         }catch(Exception e){
             e.printStackTrace();
