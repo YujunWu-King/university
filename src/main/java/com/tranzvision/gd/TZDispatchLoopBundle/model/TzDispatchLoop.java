@@ -127,6 +127,20 @@ public class TzDispatchLoop extends TzDispatchLoopKey {
 
     private Date tzZhxgsj;
 
+    private String tzYearCheck;
+
+    private String tzMonthCheck;
+
+    private String tzDay1Check;
+
+    private String tzDay2Check;
+
+    private String tzHourCheck;
+
+    private String tzMinuteCheck;
+
+    private String tzSecondCheck;
+
     public String getTzXhMs() {
         return tzXhMs;
     }
@@ -621,5 +635,61 @@ public class TzDispatchLoop extends TzDispatchLoopKey {
 
     public void setTzZhxgsj(Date tzZhxgsj) {
         this.tzZhxgsj = tzZhxgsj;
+    }
+
+    public String getTzYearCheck() {
+        return tzYearCheck;
+    }
+
+    public void setTzYearCheck(String tzYearCheck) {
+        this.tzYearCheck = tzYearCheck == null ? null : tzYearCheck.trim();
+    }
+
+    public String getTzMonthCheck() {
+        return tzMonthCheck;
+    }
+
+    public void setTzMonthCheck(String tzMonthCheck) {
+        this.tzMonthCheck = tzMonthCheck == null ? null : tzMonthCheck.trim();
+    }
+
+    public String getTzDay1Check() {
+        return tzDay1Check;
+    }
+
+    public void setTzDay1Check(String tzDay1Check) {
+        this.tzDay1Check = tzDay1Check == null ? null : tzDay1Check.trim();
+    }
+
+    public String getTzDay2Check() {
+        return tzDay2Check;
+    }
+
+    public void setTzDay2Check(String tzDay2Check) {
+        this.tzDay2Check = tzDay2Check == null ? null : tzDay2Check.trim();
+    }
+
+    public String getTzHourCheck() {
+        return tzHourCheck;
+    }
+
+    public void setTzHourCheck(String tzHourCheck) {
+        this.tzHourCheck = tzHourCheck == null ? null : tzHourCheck.trim();
+    }
+
+    public String getTzMinuteCheck() {
+        return tzMinuteCheck;
+    }
+
+    public void setTzMinuteCheck(String tzMinuteCheck) {
+        this.tzMinuteCheck = tzMinuteCheck == null ? null : tzMinuteCheck.trim();
+    }
+
+    public String getTzSecondCheck() {
+        return tzSecondCheck;
+    }
+
+    public void setTzSecondCheck(String tzSecondCheck) {
+        this.tzSecondCheck = tzSecondCheck == null ? null : tzSecondCheck.trim();
     }
 }

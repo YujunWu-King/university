@@ -69,11 +69,6 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     hMap.put("serverIP", serverIP);
                     hMap.put("intervalTime", intervalTime);
                     hMap.put("parallelNum", parallelNum);
-                    if("STARTING".equals(status) ){
-                        status = "运行中";
-                    }else if ("STOPPING".equals(status)){
-                        status = "已停止";
-                    }
                     hMap.put("status", status);
                     hMap.put("remark", remark);
                     returnJsonMap.replace("formData", hMap);

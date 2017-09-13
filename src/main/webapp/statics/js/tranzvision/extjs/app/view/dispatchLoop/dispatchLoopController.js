@@ -381,9 +381,10 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 					,"beginHour":"","endHour":"","hourList":"","hourLoopInterval":""
 					,"beginMinute":"","endMinute":"","minuteList":"","minuteLoopInterval":""
 					,"beginSecond":"","endSecond":"","secondList":"","secondLoopInterval":""
-					,"customYear":"","customMonth":"","customWeek":"","customDay":"","customHour":"","customMinute":"","customSecond":""}
+					,"customYear":"","customMonth":"","customWeek":"","customDay":"","customHour":"","customMinute":"","customSecond":""
+					,"yearCheck":"","monthCheck":"","day1Check":"","day2Check":"","hourCheck":"","minuteCheck":"","secondCheck":""}
 		
-		//年份处理
+		//集中获取表单
 		var yearForm = this.getView().down('tabpanel').down('form[name=yearForm]').getForm().getValues();
 		var monthForm = this.getView().down('tabpanel').down('form[name=monthForm]').getForm().getValues();
 		var dayForm = this.getView().down('tabpanel').down('form[name=dayForm]').getForm().getValues();
@@ -391,6 +392,101 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		var minuteForm = this.getView().down('tabpanel').down('form[name=minuteForm]').getForm().getValues();
 		var secondForm = this.getView().down('tabpanel').down('form[name=secondForm]').getForm().getValues();
 		var customForm = this.getView().down('tabpanel').down('form[name=customForm]').getForm().getValues();
+		
+		//集中定义value值
+		var yearCheck;
+		var monthCheck;
+		var day1Check;
+		var day2Check;
+		var hourCheck;
+		var minuteCheck;
+		var secondCheck;
+		
+		
+		//分别获取每个check的input值
+		var yearType = Ext.getCmp('loopYear').items;
+		var yearValue =  this.getView().down('tabpanel').down('form[name=yearForm]').getForm().findField("loopYear").getGroupValue(); 
+		for (var i=0; i<yearType.length;i++){
+			if (yearType.get(i).inputValue == yearValue){
+				yearCheck = yearType.get(i).inputValue;
+				
+				if(yearCheck == undefined){
+					params.yearCheck = "";
+				}else{
+					params.yearCheck = yearCheck;
+				}
+				
+			  }
+		}
+
+		var monthType = Ext.getCmp('loopMonth').items;
+		var monthValue =  this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("loopMonth").getGroupValue(); 
+		for (var i=0; i<monthType.length;i++){
+			if (monthType.get(i).inputValue == monthValue){
+				monthCheck = monthType.get(i).inputValue;
+				if(monthCheck == undefined){
+					params.monthCheck = "";
+				}else{
+					params.monthCheck = monthCheck
+				}
+				
+			  }
+		}
+		
+		var dayType = Ext.getCmp('loopDay').items;
+		var dayValue =  this.getView().down('tabpanel').down('form[name=dayForm]').getForm().findField("loopDay").getGroupValue(); 
+		for (var i=0; i<dayType.length;i++){
+			if (dayType.get(i).inputValue == dayValue){
+				day1Check = dayType.get(i).inputValue;
+				
+				if(day1Check == undefined){
+					params.day1Check = "";
+				}else{
+					params.day1Check = day1Check
+				}
+			  }
+		}
+		
+		var hourType = Ext.getCmp('loopHour').items;
+		var hourValue =  this.getView().down('tabpanel').down('form[name=hourForm]').getForm().findField("loopHour").getGroupValue(); 
+		for (var i=0; i<monthType.length;i++){
+			if (hourType.get(i).inputValue == hourValue){
+				hourCheck = hourType.get(i).inputValue;
+				
+				if(hourCheck == undefined){
+					params.hourCheck = "";
+				}else{
+					params.hourCheck = hourCheck
+				}
+			  }
+		}
+		
+		var minuteType = Ext.getCmp('loopMinute').items;
+		var minuteValue =  this.getView().down('tabpanel').down('form[name=minuteForm]').getForm().findField("loopMin").getGroupValue(); 
+		for (var i=0; i<minuteType.length;i++){
+			if (minuteType.get(i).inputValue == minuteValue){
+				minuteCheck = minuteType.get(i).inputValue;
+				
+				if(minuteCheck == undefined){
+					params.minuteCheck = "";
+				}else{
+					params.minuteCheck = minuteCheck
+				}
+			  }
+		}
+		
+		var secondType = Ext.getCmp('loopSecond').items;
+		var secondValue =  this.getView().down('tabpanel').down('form[name=secondForm]').getForm().findField("loopSecond").getGroupValue(); 
+		for (var i=0; i<secondType.length;i++){
+			if (secondType.get(i).inputValue == secondValue){
+				secondCheck = secondType.get(i).inputValue;
+				if(secondCheck == undefined){
+					params.secondCheck = "";
+				}else{
+					params.secondCheck = secondCheck
+				}
+			  }
+		}
 		
 		//基本form
 		params.orgId = formParams["orgId"];
@@ -433,6 +529,7 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		//分
 		params.beginMinute = minuteForm["beginMinute"];
 		params.endMinute = minuteForm["endMinute"];
+		console.log("beginMinute======" + params.endMinute)
 		params.minuteList = minuteForm["minuteList"];
 		params.minuteLoopInterval = minuteForm["minuteLoopInterval"];
 		

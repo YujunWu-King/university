@@ -86,26 +86,52 @@
             style:'margin-top:20px',
             xtype:'form',
             name:'yearForm',
+            id:'loopYear',
             title:'年份',
             items:[{
+            	xtype: 'textfield',
+            	name:'yearCheck',
+            	hidden:true,
+                listeners:{
+                	
+                	change:function(){
+                		
+                		var yearCheck = this.up('form[name=yearForm]').getForm().findField('yearCheck').getValue();
+                		
+                		if(yearCheck == '1'){
+                			Ext.getCmp('yearOne').setValue(true)
+                		}
+                		if(yearCheck == '2'){
+                			Ext.getCmp('yearTwo').setValue(true)
+                		}
+                		if(yearCheck == '3'){
+                			Ext.getCmp('yearThree').setValue(true)
+                		}
+                		if(yearCheck == '4'){
+                			Ext.getCmp('yearFour').setValue(true)
+                		}
+                		
+                	}
+                }
+            },{
                 xtype: 'radio',
                 id:'yearOne',
                 name:'loopYear',
-                checked:true,
+                inputValue: '1',
                 style:'margin-left:50px',
-                inputValue:"limitYear",
                 boxLabel: "不限定，任意年份"
             },{
+            	xtype: 'radio',
+                name:'loopYear',
+                id:'yearTwo',
+                style:'margin-top:20px;margin-left:50px',
+                inputValue: '2',
+                boxLabel: "指定年份范围"
+            },{
                 xtype: 'fieldcontainer',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:10px;margin-left:100px',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopYear',
-                    id:'yearTwo',
-                    columnWidth:.15,
-                    boxLabel: "指定年份范围"
-                },{
                     xtype: 'combobox',
                     fieldLabel: '起始年份',
                     labelWidth: 60,
@@ -148,31 +174,33 @@
                     })
                 }]
             },{
+                xtype: 'radio',
+                id:'yearThree',
+                name:'loopYear',
+                inputValue: '3',
+                style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定年份列表"
+            },{
                 xtype: 'fieldcontainer',
                 layout:'column',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:10px;margin-left:100px',
                 items:[{
-                    xtype: 'radio',
-                    id:'yearThree',
-                    name:'loopYear',
-                    columnWidth:.15,
-                    boxLabel: "指定年份列表"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'yearList',
                     emptyText: "格式：YYYY,…  取值范围：1970-2099  例如：2001,2002"
                 }]
             },{
+                xtype: 'radio',
+                name:'loopYear',
+                inputValue: '4',
+                style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定年份循环间隔"
+            },{
                 xtype: 'fieldcontainer',
                 layout:'column',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:10px;margin-left:100px',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopYear',
-                    columnWidth:.15,
-                    boxLabel: "指定年份循环间隔"
-                },{
                     xtype: 'textfield',
                     name:'yearLoopInterval',
                     columnWidth:.45,
@@ -183,22 +211,52 @@
             xtype:'form',
             style:'margin-top:20px',
             name:'monthForm',
+            id:'loopMonth',
             title:'月份',
             items:[{
+            	xtype: 'textfield',
+            	name:'monthCheck',
+            	hidden:true,
+                listeners:{
+                	
+                	change:function(){
+                		
+                		var monthCheck = this.up('form[name=monthForm]').getForm().findField('monthCheck').getValue();
+                		
+                		if(monthCheck == '1'){
+                			Ext.getCmp('monthOne').setValue(true)
+                		}
+                		if(monthCheck == '2'){
+                			Ext.getCmp('monthTwo').setValue(true)
+                		}
+                		if(monthCheck == '3'){
+                			Ext.getCmp('monthThree').setValue(true)
+                		}
+                		if(monthCheck == '4'){
+                			Ext.getCmp('monthFour').setValue(true)
+                		}
+                		
+                	}
+                }
+            },{
                 xtype: 'radio',
                 name:'loopMonth',
+                inputValue: '1',
+                id:'monthOne',
                 style:'margin-left:50px',
                 boxLabel: "不限定，任意月份"
             },{
+                xtype: 'radio',
+                name:'loopMonth',
+                inputValue: '2',
+                id:'monthTwo',
+                style:'margin-top:20px;margin-left:50px',
+                boxLabel: "指定月份范围"
+            },{
                 xtype: 'fieldcontainer',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:10px;margin-left:100px',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopMonth',
-                    columnWidth:.15,
-                    boxLabel: "指定月份范围"
-                },{
                     xtype: 'combobox',
                     labelWidth: 60,
                     fieldLabel: '起始月份',
@@ -256,30 +314,34 @@
                     })
                 }]
             },{
+                xtype: 'radio',
+                name:'loopMonth',
+                inputValue: '3',
+                id:'monthThree',
+                style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定月份列表"
+            },{
                 xtype: 'fieldcontainer',
                 layout:'column',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:10px;margin-left:100px',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopMonth',
-                    columnWidth:.15,
-                    boxLabel: "指定月份列表"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'monthList',
                     emptyText: "格式：N1,N2,…  取值范围：1-12  例如：1,2,3"
                 }]
             },{
-                xtype: 'fieldcontainer',
+                xtype: 'radio',
+                name:'loopMonth',
+                id:'monthFour',
+                inputValue: '4',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定月份循环间隔"
+            },{
+                xtype: 'fieldcontainer',
+                style:'margin-top:10px;margin-left:100px',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopMonth',
-                    columnWidth:.15,
-                    boxLabel: "指定月份循环间隔"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'monthLoopInterval',
@@ -290,27 +352,103 @@
             xtype:'form',
             style:'margin-top:20px',
             name:'dayForm',
+            id:'loopDay',
             title:'日、周',
             items:[{
+            	
+            	xtype: 'textfield',
+            	name:'day1Check',
+            	hidden:true,
+                listeners:{
+                	
+                	change:function(){
+                		
+                		var dayCheck = this.up('form[name=dayForm]').getForm().findField('day1Check').getValue();
+
+                		if(dayCheck == '1'){
+                			Ext.getCmp('dayOne').setValue(true);
+                			Ext.getCmp('dayMonthOne').setValue(true)
+                		}
+                		if(dayCheck == '2'){
+                			Ext.getCmp('dayTwo').setValue(true);
+                			Ext.getCmp('dayMonthOne').setValue(true)
+                		}
+                		if(dayCheck == '3'){
+                			Ext.getCmp('dayThree').setValue(true);
+                			Ext.getCmp('dayMonthOne').setValue(true)
+                		}
+                		if(dayCheck == '4'){
+                			Ext.getCmp('dayFour').setValue(true);
+                			Ext.getCmp('dayMonthOne').setValue(true)
+                		}
+                		if(dayCheck == '5'){
+                			Ext.getCmp('dayFive').setValue(true);
+                			Ext.getCmp('dayMonthOne').setValue(true)
+                		}
+                		if(dayCheck == '6'){
+                			Ext.getCmp('daySix').setValue(true);
+                			Ext.getCmp('dayMonthOne').setValue(true)
+                		}
+                		if(dayCheck == '7'){
+                			Ext.getCmp('daySeven').setValue(true);
+                			Ext.getCmp('dayMonthOne').setValue(true)
+                		}
+                		if(dayCheck == '8'){
+                			Ext.getCmp('weekOne').setValue(true);
+                			Ext.getCmp('dayMonthTwo').setValue(true)
+                		}
+                		if(dayCheck == '9'){
+                			Ext.getCmp('weekTwo').setValue(true);
+                			Ext.getCmp('dayMonthTwo').setValue(true)
+                		}
+                		if(dayCheck == '10'){
+                			Ext.getCmp('weekThree').setValue(true);
+                			Ext.getCmp('dayMonthTwo').setValue(true)
+                		}
+                		if(dayCheck == '11'){
+                			Ext.getCmp('weekFour').setValue(true);
+                			Ext.getCmp('dayMonthTwo').setValue(true)
+                		}
+                		if(dayCheck == '12'){
+                			Ext.getCmp('weekFive').setValue(true);
+                			Ext.getCmp('dayMonthTwo').setValue(true)
+                		}
+                		if(dayCheck == '13'){
+                			Ext.getCmp('weekSix').setValue(true);
+                			Ext.getCmp('dayMonthTwo').setValue(true)
+                		}
+                		if(dayCheck == '14'){
+                			Ext.getCmp('weekSeven').setValue(true);
+                			Ext.getCmp('dayMonthTwo').setValue(true)
+                		}
+                		
+                	}
+                }
+            },{
                 xtype: 'radio',
-                name:'loopDay',
+                name:'dayMonth',
+                id:'dayMonthOne',
                 style:'margin-left:30px',
-                boxLabel: "按“日-月”模式循环"
+                boxLabel: "按“日-周”模式循环"
             },{
                 style:'margin-top:10px;margin-left:50px',
                 xtype: 'radio',
+                inputValue: '1',
+                id:'dayOne',
                 name:'loopDay',
                 boxLabel: "不限定，任意日期"
             },{
+                xtype: 'radio',
+                name:'loopDay',
+                inputValue: '2',
+                id:'dayTwo',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定日期范围"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopDay',
-                    columnWidth:.15,
-                    boxLabel: "指定日期范围"
-                },{
                     xtype: 'combobox',
                     fieldLabel: '起始日期',
                     labelWidth: 60,
@@ -368,30 +506,34 @@
                     })
                 }]
             },{
+                xtype: 'radio',
+                name:'loopDay',
+                inputValue: '3',
+                id:'dayThree',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定日期列表"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopDay',
-                    columnWidth:.15,
-                    boxLabel: "指定日期列表"
-                },{
                     xtype: 'textfield',
                     name:'day1List',
                     columnWidth:.45,
                     emptyText: "格式：N1,N2,…  取值范围：1-31  例如：1,2,3"
                 }]
             },{
+                xtype: 'radio',
+                name:'loopDay',
+                inputValue: '4',
+                id:'dayFour',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定日期循环间隔"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopDay',
-                    columnWidth:.15,
-                    boxLabel: "指定日期循环间隔"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'day1LoopInterval',
@@ -400,23 +542,29 @@
             },{
                 xtype: 'radio',
                 name:'loopDay',
+                inputValue: '5',
+                id:'dayFive',
                 style:'margin-top:10px;margin-left:50px',
                 boxLabel: "每月最后一天"
             },{
                 xtype: 'radio',
                 name:'loopDay',
+                inputValue: '6',
+                id:'daySix',
                 style:'margin-top:10px;margin-left:50px',
                 boxLabel: "每月最后一个工作日"
             },{
+                xtype: 'radio',
+                name:'loopDay',
+                inputValue: '7',
+                id:'daySeven',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "离指定日期最近的一个工作日"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopDay',
-                    columnWidth:.15,
-                    boxLabel: "离指定日期最近的一个工作日"
-                },{
                     xtype: 'combobox',
                     fieldLabel: '指定日期',
                     labelWidth: 60,
@@ -446,24 +594,29 @@
                 }]
             },{
                 xtype: 'radio',
-                name:'loopWeek',
+                name:'dayMonth',
+                id:'dayMonthTwo',
                 style:'margin-left:30px',
                 boxLabel: "按“日-周”模式循环"
             },{
                 style:'margin-top:10px;margin-left:50px',
-                name:'loopWeek',
+                name:'loopDay',
+                id:'weekOne',
                 xtype: 'radio',
+                inputValue: '8',
                 boxLabel: "不限定，任意日期"
             },{
+                xtype: 'radio',
+                name:'loopDay',
+                inputValue: '9',
+                id:'weekTwo',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定日期范围"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "指定日期范围"
-                },{
                     xtype: 'combobox',
                     fieldLabel: '起始日期',
                     labelWidth: 60,
@@ -512,30 +665,34 @@
                     })
                 }]
             },{
+                xtype: 'radio',
+                name:'loopDay',
+                inputValue: '10',
+                id:'weekThree',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定日期列表"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "指定日期列表"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'day2List',
                     emptyText: "格式：N1,N2,…  取值范围：1-7  例如：1,2,3"
                 }]
             },{
+                xtype: 'radio',
+                name:'loopDay',
+                inputValue: '11',
+                id:'weekFour',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定日期循环间隔"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "指定日期循环间隔"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'day2LoopInterval',
@@ -543,19 +700,23 @@
                 }]
             },{
                 xtype: 'radio',
-                name:'loopWeek',
+                name:'loopDay',
+                inputValue: '12',
+                id:'weekFive',
                 style:'margin-top:10px;margin-left:50px',
                 boxLabel: "每周最后一天"
             },{
+                xtype: 'radio',
+                name:'loopDay',
+                inputValue: '13',
+                id:'weekSix',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "每周最后一个周几"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "每周最后一个周几"
-                },{
                     xtype: 'combobox',
                     fieldLabel: '指定日期',
                     labelWidth: 60,
@@ -580,15 +741,17 @@
                     })
                 }]
             },{
+                xtype: 'radio',
+                name:'loopDay',
+                inputValue: '14',
+                id:'weekSeven',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "每月第几个周几"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopWeek',
-                    columnWidth:.15,
-                    boxLabel: "每月第几个周几"
-                },{
                     xtype: 'combobox',
                     fieldLabel: '指定周次',
                     labelWidth: 60,
@@ -637,23 +800,53 @@
         },{
             xtype:'form',
             style:'margin-top:20px',
+            id:'loopHour',
             name:'hourForm',
             title:'时',
             items:[{
+            	xtype: 'textfield',
+            	name:'hourCheck',
+            	hidden:true,
+                listeners:{
+                	
+                	change:function(){
+                		
+                		var hourCheck = this.up('form[name=hourForm]').getForm().findField('hourCheck').getValue();
+                		
+                		if(hourCheck == '1'){
+                			Ext.getCmp('hourOne').setValue(true)
+                		}
+                		if(hourCheck == '2'){
+                			Ext.getCmp('hourTwo').setValue(true)
+                		}
+                		if(hourCheck == '3'){
+                			Ext.getCmp('hourThree').setValue(true)
+                		}
+                		if(hourCheck == '4'){
+                			Ext.getCmp('hourFour').setValue(true)
+                		}
+                		
+                	}
+                }
+            },{
                 xtype: 'radio',
                 name:'loopHour',
+                inputValue: '1',
+                id:'hourOne',
                 style:'margin-left:50px',
                 boxLabel: "不限定，任意小时"
             },{
-                xtype: 'fieldcontainer',
+                xtype: 'radio',
+                name:'loopHour',
+                inputValue: '2',
+                id:'hourTwo',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定小时范围"
+            },{
+                xtype: 'fieldcontainer',
+                style:'margin-top:20px;margin-left:100px',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopHour',
-                    columnWidth:.15,
-                    boxLabel: "指定小时范围"
-                },{
                     xtype: 'combobox',
                     fieldLabel: '起始小时',
                     labelWidth: 60,
@@ -736,30 +929,34 @@
                     })
                 }]
             },{
+                xtype: 'radio',
+                name:'loopHour',
+                id:'hourThree',
+                inputValue: '3',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定小时列表"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopHour',
-                    columnWidth:.15,
-                    boxLabel: "指定小时列表"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'hourList',
                     emptyText: "格式：N1,N2,…  取值范围：0-23  例如：1,2,3"
                 }]
             },{
+                xtype: 'radio',
+                name:'loopHour',
+                id:'hourFour',
+                inputValue: '4',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定小时循环间隔"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopHour',
-                    columnWidth:.15,
-                    boxLabel: "指定小时循环间隔"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'hourLoopInterval',
@@ -769,23 +966,53 @@
         },{
             xtype:'form',
             name:'minuteForm',
+            id:'loopMinute',
             style:'margin-top:20px',
             title:'分',
             items:[{
+            	xtype: 'textfield',
+            	name:'minuteCheck',
+            	hidden:true,
+                listeners:{
+                	
+                	change:function(){
+                		
+                		var minuteCheck = this.up('form[name=minuteForm]').getForm().findField('minuteCheck').getValue();
+                		
+                		if(minuteCheck == '1'){
+                			Ext.getCmp('minuteOne').setValue(true)
+                		}
+                		if(minuteCheck == '2'){
+                			Ext.getCmp('minuteTwo').setValue(true)
+                		}
+                		if(minuteCheck == '3'){
+                			Ext.getCmp('minuteThree').setValue(true)
+                		}
+                		if(minuteCheck == '4'){
+                			Ext.getCmp('minuteFour').setValue(true)
+                		}
+                		
+                	}
+                }
+            },{
                 xtype: 'radio',
                 name:'loopMin',
+                inputValue: '1',
+                id:'minuteOne',
                 style:'margin-left:50px',
                 boxLabel: "不限定，任意分钟"
             },{
+                xtype: 'radio',
+                name:'loopMin',
+                inputValue: '2',
+                id:'minuteTwo',
+                style:'margin-top:20px;margin-left:50px',
+                boxLabel: "指定分钟范围"
+            },{
                 xtype: 'fieldcontainer',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:10px;margin-left:100px',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopMin',
-                    columnWidth:.15,
-                    boxLabel: "指定分钟范围"
-                },{
                     xtype: 'combobox',
                     fieldLabel: '起始分钟',
                     labelWidth: 60,
@@ -940,30 +1167,34 @@
                     })
                 }]
             },{
+                xtype: 'radio',
+                name:'loopMin',
+                inputValue: '3',
+                id:'minuteThree',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定分钟列表"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopMin',
-                    columnWidth:.15,
-                    boxLabel: "指定分钟列表"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'listMinute',
                     emptyText: "格式：N1,N2,…  取值范围：0-59  例如：0,1,2,3"
                 }]
             },{
+                xtype: 'radio',
+                name:'loopMin',
+                inputValue: '4',
+                id:'minuteFour',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定分钟循环间隔"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopMin',
-                    columnWidth:.15,
-                    boxLabel: "指定分钟循环间隔"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'minuteLoopInterval',
@@ -973,23 +1204,53 @@
         },{
             xtype:'form',
             name:'secondForm',
+            id:'loopSecond',
             style:'margin-top:20px',
             title:'秒',
             items:[{
+            	xtype: 'textfield',
+            	name:'secondCheck',
+            	hidden:true,
+                listeners:{
+                	
+                	change:function(){
+                		
+                		var secondCheck = this.up('form[name=secondForm]').getForm().findField('secondCheck').getValue();
+                		
+                		if(secondCheck == '1'){
+                			Ext.getCmp('secondOne').setValue(true)
+                		}
+                		if(secondCheck == '2'){
+                			Ext.getCmp('secondTwo').setValue(true)
+                		}
+                		if(secondCheck == '3'){
+                			Ext.getCmp('secondThree').setValue(true)
+                		}
+                		if(secondCheck == '4'){
+                			Ext.getCmp('secondFour').setValue(true)
+                		}
+                		
+                	}
+                }
+            },{
                 xtype: 'radio',
                 name:'loopSecond',
+                inputValue: '1',
+                id:'secondOne',
                 style:'margin-left:50px',
                 boxLabel: "不限定，任意秒"
             },{
+                xtype: 'radio',
+                name:'loopSecond',
+                inputValue: '2',
+                id:'secondTwo',
+                style:'margin-top:20px;margin-left:50px',
+                boxLabel: "指定秒范围"
+            },{
                 xtype: 'fieldcontainer',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:10px;margin-left:100px',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopSecond',
-                    columnWidth:.15,
-                    boxLabel: "指定秒范围"
-                },{
                     xtype: 'combobox',
                     fieldLabel: '起始秒',
                     labelWidth: 60,
@@ -1144,30 +1405,34 @@
                     })
                 }]
             },{
+                xtype: 'radio',
+                name:'loopSecond',
+                inputValue: '3',
+                id:'secondThree',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定秒列表"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopSecond',
-                    columnWidth:.15,
-                    boxLabel: "指定秒列表"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'secondList',
                     emptyText: "格式：N1,N2,…  取值范围：0-59  例如：0,1,2,3"
                 }]
             },{
+                xtype: 'radio',
+                name:'loopSecond',
+                inputValue: '4',
+                id:'secondFour',
                 style:'margin-top:10px;margin-left:50px',
+                boxLabel: "指定秒循环间隔"
+            },{
+                style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
                 layout:'column',
                 items:[{
-                    xtype: 'radio',
-                    name:'loopSecond',
-                    columnWidth:.15,
-                    boxLabel: "指定秒循环间隔"
-                },{
                     xtype: 'textfield',
                     columnWidth:.45,
                     name:'secondLoopInterval',
@@ -1183,6 +1448,8 @@
                 {
                     xtype: 'checkboxfield',
                     style:'margin-left:50px',
+                    id:'customCheck',
+                    name:'customCheck',
                     boxLabel: "自定义循环期间"
                 },{
                     style:'margin-top:10px;margin-left:100px',

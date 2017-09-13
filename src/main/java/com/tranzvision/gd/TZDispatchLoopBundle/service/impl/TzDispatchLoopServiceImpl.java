@@ -118,6 +118,15 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                     map.put("customMinute", tzDispatchLoop.getTzXhzdM2());
                     map.put("customSecond", tzDispatchLoop.getTzXhzdS());
                     
+                    //check和radio
+                    map.put("yearCheck", tzDispatchLoop.getTzYearCheck());
+                    map.put("monthCheck", tzDispatchLoop.getTzMonthCheck());
+                    map.put("day1Check", tzDispatchLoop.getTzDay1Check());
+                    map.put("day2Check", tzDispatchLoop.getTzDay2Check());
+                    map.put("hourCheck", tzDispatchLoop.getTzHourCheck());
+                    map.put("minuteCheck", tzDispatchLoop.getTzMinuteCheck());
+                    map.put("secondCheck", tzDispatchLoop.getTzSecondCheck());
+                    
                     returnJsonMap.replace("formData", map);
                 } else {
                     errMsg[0] = "1";
@@ -336,6 +345,15 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                     tzDispatchLoop.setTzXhzdM2(tzXhzdM2);
                     tzDispatchLoop.setTzXhzdS(tzXhzdS);
                     
+                    //radio和check
+                    tzDispatchLoop.setTzYearCheck(infoData.get("yearCheck").toString());
+                    tzDispatchLoop.setTzMonthCheck(infoData.get("monthCheck").toString());
+                    tzDispatchLoop.setTzDay1Check(infoData.get("day1Check").toString());
+                    tzDispatchLoop.setTzDay2Check(infoData.get("day2Check").toString());
+                    tzDispatchLoop.setTzHourCheck(infoData.get("hourCheck").toString());
+                    tzDispatchLoop.setTzMinuteCheck(infoData.get("minuteCheck").toString());
+                    tzDispatchLoop.setTzSecondCheck(infoData.get("secondCheck").toString());
+                    
                     tzDispatchLoopMapper.insertSelective(tzDispatchLoop);
                 }
 
@@ -485,6 +503,15 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                 tzDispatchLoop.setTzXhzdH(tzXhzdH);
                 tzDispatchLoop.setTzXhzdM2(tzXhzdM2);
                 tzDispatchLoop.setTzXhzdS(tzXhzdS);
+                
+                //radio和check
+                tzDispatchLoop.setTzYearCheck(infoData.get("yearCheck").toString());
+                tzDispatchLoop.setTzMonthCheck(infoData.get("monthCheck").toString());
+                tzDispatchLoop.setTzDay1Check(infoData.get("day1Check").toString());
+                tzDispatchLoop.setTzDay2Check(infoData.get("day2Check").toString());
+                tzDispatchLoop.setTzHourCheck(infoData.get("hourCheck").toString());
+                tzDispatchLoop.setTzMinuteCheck(infoData.get("minuteCheck").toString());
+                tzDispatchLoop.setTzSecondCheck(infoData.get("secondCheck").toString());
                 
                 tzDispatchLoopMapper.updateByPrimaryKeySelective(tzDispatchLoop);
             }

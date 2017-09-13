@@ -114,11 +114,6 @@ Ext.define('KitchenSink.view.processServer.processServerEditWindow', {
                 fieldLabel: '备注信息',
                 name: 'remark'
             },
-            // {
-            //     xtype:"displayfield" ,
-            //     fieldLabel:"运行状态" ,
-            //     name:'status'
-            // }
             {
                xtype:'fieldcontainer',
                layout:'hbox',
