@@ -15,8 +15,16 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
     //height:400,
     minHeight:250,
     width: 1100,
+    x:10,
+    y:10,
     modal:true,
-    bodyStyle:'overflow-y:auto;overflow-x:hidden',
+    resizable: true,
+    listeners:{
+        resize: function(win){
+            win.doLayout();
+        }
+    },
+    bodyStyle:'overflow-y:auto;overflow-x:hidden;padding-top:3px',
     initComponent: function() {
     	var materialType = this.materialType;
         var wxAppId = this.wxAppId;
@@ -51,9 +59,9 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
                     selectedItemCls:'current-item',
                     emptyText: 'No images available',
                     style:{
-                         background:'white',
+                         background:'white'
                         //border:'1px solid #000000',
-                        padding:'0 15px 25px 0'
+                        //padding:'0 15px 25px 0'
                     }
                    
                 }],
