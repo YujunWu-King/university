@@ -108,6 +108,26 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                 ],
                 allowBlank:false
             },{
+                xtype: 'fieldcontainer',
+                layout:'hbox',
+                items:[
+                	{
+                		xtype: 'datefield',
+                        fieldLabel: '最近心跳日期',
+                        format : 'Y-m-d',
+                        name: 'palpitationDate'
+                	},
+                	{
+                		xtype: 'timefield',
+                        fieldLabel: '最近心跳时间',
+                        style:'margin-left:60px',
+                        labelWidth: 100,
+                        format : 'H:i:s',
+                        name: 'palpitationTime'
+                	}
+                ]
+
+            },{
                 xtype: 'textarea',
                 fieldLabel: '备注信息',
                 name: 'remark'

@@ -402,6 +402,14 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		var minuteCheck;
 		var secondCheck;
 		
+		if(Ext.getCmp("customCheck").checked){
+			
+			params.day2Check = '1';
+		}else{
+			
+			params.day2Check = '0';
+		}
+		
 		
 		//分别获取每个check的input值
 		var yearType = Ext.getCmp('loopYear').items;
@@ -529,7 +537,6 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		//分
 		params.beginMinute = minuteForm["beginMinute"];
 		params.endMinute = minuteForm["endMinute"];
-		console.log("beginMinute======" + params.endMinute)
 		params.minuteList = minuteForm["minuteList"];
 		params.minuteLoopInterval = minuteForm["minuteLoopInterval"];
 		

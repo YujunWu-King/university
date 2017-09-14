@@ -429,7 +429,7 @@
                 name:'dayMonth',
                 id:'dayMonthOne',
                 style:'margin-left:30px',
-                boxLabel: "按“日-周”模式循环"
+                boxLabel: "按“日-月”模式循环"
             },{
                 style:'margin-top:10px;margin-left:50px',
                 xtype: 'radio',
@@ -1445,6 +1445,22 @@
             style:'margin-top:20px',
             title:'高级',
             items:[
+            	{   xtype: 'textfield',
+                	name:'day2Check',
+                	hidden:true,
+                    listeners:{
+                    	
+                    	change:function(){
+
+                    		var secondCheck = this.up('form[name=customForm]').getForm().findField('day2Check').getValue();
+                    		
+                    		if(secondCheck == '1'){
+                    			Ext.getCmp('customCheck').setValue(true)
+                    		}
+                    		
+                    	}
+                    }
+            	},
                 {
                     xtype: 'checkboxfield',
                     style:'margin-left:50px',

@@ -94,8 +94,8 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                     //时
                     map.put("beginHour", tzDispatchLoop.getTzHQsxs());
                     map.put("endHour", tzDispatchLoop.getTzHJzxs());
-                    map.put("monthList", tzDispatchLoop.getTzHLbqz());
-                    map.put("monthLoopInterval", tzDispatchLoop.getTzHXhqz());
+                    map.put("hourList", tzDispatchLoop.getTzHLbqz());
+                    map.put("hourLoopInterval", tzDispatchLoop.getTzHXhqz());
                     
                     //分
                     map.put("beginMinute", tzDispatchLoop.getTzM2Qsfz());
