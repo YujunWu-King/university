@@ -10,7 +10,7 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 	"isDownLoad": "N", //是否导出
 	
 	_getHtml: function(data, previewmode) {
-		var c = "";
+		var c = '';
 		if (previewmode) {
 			if(SurveyBuild.accessType == "M"){
 				c += '<div class="item">';
@@ -34,5 +34,5 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 		e += '</div>';
 
 		return e;
-	},
+	}
 })
