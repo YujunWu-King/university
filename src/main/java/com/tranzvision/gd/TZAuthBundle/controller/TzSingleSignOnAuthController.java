@@ -1,6 +1,5 @@
 package com.tranzvision.gd.TZAuthBundle.controller;
 
-import java.security.MessageDigest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,11 +102,8 @@ public class TzSingleSignOnAuthController {
 			}
 			
 			//加密验证
-			String strBeforeEncryption = strApplicationId+strAppSecret+strUserName+strTicket;
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] encryptionBytes = strBeforeEncryption.getBytes();
-			byte[] digestBytes = md.digest(encryptionBytes);
-			String strEncryption = TzSingleSignOnAuthServiceImpl.bytes2Hex(digestBytes);
+			String strSource = strApplicationId+strAppSecret+strUserName+strTicket;
+			String strEncryption = TzSingleSignOnAuthServiceImpl.encrypt("SHA256", strSource);
 			if(!strEncryption.equals(strAccessToken)){
 				request.setAttribute(strSsoAuthCode,TZ_AUTH_FAILURE);
 				return strErrorForward;

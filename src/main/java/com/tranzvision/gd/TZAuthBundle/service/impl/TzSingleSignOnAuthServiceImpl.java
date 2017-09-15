@@ -3,6 +3,9 @@
  */
 package com.tranzvision.gd.TZAuthBundle.service.impl;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,6 +67,21 @@ public class TzSingleSignOnAuthServiceImpl {
 	 * 记录登录类型，后台 - GLY；前台 - SQR；
 	 */
 	public final String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
+	
+	public static String encrypt(String encryptName,String srcString){
+        MessageDigest messageDigest;
+        String encodeStr = "";
+        try {
+            messageDigest = MessageDigest.getInstance(encryptName);
+            messageDigest.update(srcString.getBytes("UTF-8"));
+            encodeStr = bytes2Hex(messageDigest.digest());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} 
+        return encodeStr;
+    }
 
 	/**
 	 * 二进制转十六进制
