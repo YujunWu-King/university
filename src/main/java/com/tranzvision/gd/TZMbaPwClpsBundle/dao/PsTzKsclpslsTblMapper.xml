@@ -10,6 +10,7 @@
     <result column="TZ_GUANX_LEIX" property="tzGuanxLeix" jdbcType="VARCHAR" />
     <result column="TZ_KSH_PSPM" property="tzKshPspm" jdbcType="VARCHAR" />
     <result column="TZ_SUBMIT_YN" property="tzSubmitYn" jdbcType="VARCHAR" />
+    <result column="TZ_IS_PW_FP" property="tzIsPwFp" jdbcType="VARCHAR" />
     <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
     <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
     <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
@@ -19,8 +20,8 @@
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, TZ_PWEI_OPRID, TZ_CLPS_LUNC, TZ_GUANX_LEIX, 
-    TZ_KSH_PSPM, TZ_SUBMIT_YN, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-    SYNCID, SYNCDTTM
+    TZ_KSH_PSPM, TZ_SUBMIT_YN, TZ_IS_PW_FP, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+    ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzKsclpslsTblKey" >
     select 
@@ -43,14 +44,16 @@
   <insert id="insert" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzKsclpslsTbl" >
     insert into PS_TZ_KSCLPSLS_TBL (TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_APP_INS_ID, 
       TZ_PWEI_OPRID, TZ_CLPS_LUNC, TZ_GUANX_LEIX, 
-      TZ_KSH_PSPM, TZ_SUBMIT_YN, ROW_ADDED_DTTM, 
-      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM)
+      TZ_KSH_PSPM, TZ_SUBMIT_YN, TZ_IS_PW_FP, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+      )
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, 
       #{tzPweiOprid,jdbcType=VARCHAR}, #{tzClpsLunc,jdbcType=SMALLINT}, #{tzGuanxLeix,jdbcType=VARCHAR}, 
-      #{tzKshPspm,jdbcType=VARCHAR}, #{tzSubmitYn,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
-      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+      #{tzKshPspm,jdbcType=VARCHAR}, #{tzSubmitYn,jdbcType=VARCHAR}, #{tzIsPwFp,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzKsclpslsTbl" >
     insert into PS_TZ_KSCLPSLS_TBL
@@ -78,6 +81,9 @@
       </if>
       <if test="tzSubmitYn != null" >
         TZ_SUBMIT_YN,
+      </if>
+      <if test="tzIsPwFp != null" >
+        TZ_IS_PW_FP,
       </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM,
@@ -123,6 +129,9 @@
       <if test="tzSubmitYn != null" >
         #{tzSubmitYn,jdbcType=VARCHAR},
       </if>
+      <if test="tzIsPwFp != null" >
+        #{tzIsPwFp,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -155,6 +164,9 @@
       <if test="tzSubmitYn != null" >
         TZ_SUBMIT_YN = #{tzSubmitYn,jdbcType=VARCHAR},
       </if>
+      <if test="tzIsPwFp != null" >
+        TZ_IS_PW_FP = #{tzIsPwFp,jdbcType=VARCHAR},
+      </if>
       <if test="rowAddedDttm != null" >
         ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       </if>
@@ -185,6 +197,7 @@
     set TZ_GUANX_LEIX = #{tzGuanxLeix,jdbcType=VARCHAR},
       TZ_KSH_PSPM = #{tzKshPspm,jdbcType=VARCHAR},
       TZ_SUBMIT_YN = #{tzSubmitYn,jdbcType=VARCHAR},
+      TZ_IS_PW_FP = #{tzIsPwFp,jdbcType=VARCHAR},
       ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
       ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},

@@ -3,8 +3,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta charset="utf-8">
 <meta name="format-detection" content="telephone=no">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0;"/>
-<title>在线预约</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0"/>
+<title>面试预约</title>
 <link href="%bind(:1)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
 <script>
 	var TzUniversityContextPath="%bind(:1)";
@@ -18,7 +18,7 @@
 	   <div class="bg">
 	     <!-- 头部 -->
 	   	 <div class="topbar">
-	   	    在线预约 <a  href="javascript:history.back();"><i></i></a>
+	   	    面试预约 <a  href="javascript:history.back();"><i></i></a>
 	   	 </div>
 	   	 <div class="order_sm">
 	   	 <!-- 文字说明 -->
@@ -58,21 +58,21 @@
 	
 		
 	/*确认面试预约*/
-	function onConfirmAppointment(el, classId, pcId, planId){
+	function onConfirmAppointment(el, msKey){
 		if($(el).hasClass("btn-enabled")) return;
 
-		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_M_MSYY_STD","OperateType":"tzConfirmAppointment","comParams":{"classId":"'+ classId +'","pcId":"'+ pcId +'","planId":"'+ planId +'"}}';
+		var tzParams = '{"ComID":"TZ_MS_APPOINT_COM","PageID":"TZ_MS_APPOINT_STD","OperateType":"tzConfirmAppointment","comParams":{"msKey":"'+ msKey +'"}}';
 		$.ajax({
 			type:"post",
 			dataType:"json",
-			async:false, 
-			data: {"tzParams" : tzParams },				
+			async:false,
+			data: {"tzParams" : tzParams , "type": "M"},				
 			url:url,
 			success:function(data){
 				var errcode = data.state.errcode;
 				var errMsg = data.state.errdesc;
-				if(errcode == 0){
-					var _html =  data.comContent.appoHtml;
+				var _html =  data.comContent.appoHtml;
+				if(_html != ""){
 					$("#tz-interview-appointment-List").html(_html);
 				}
 				alert(errMsg);

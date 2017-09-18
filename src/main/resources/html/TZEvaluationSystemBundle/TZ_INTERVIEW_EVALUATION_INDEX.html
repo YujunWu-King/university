@@ -9,7 +9,7 @@
 <meta http-equiv="expires" content="0">
 <title>清华大学经济管理学院MBA面试评审系统</title>
 <style>
-	html,body{height:100%;overflow:hidden}
+	html,body{height:100%;overflow:hidden} 
 </style>
 <!--link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/evaluation/style.css" /-->
 <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/evaluation/default.css" />
@@ -18,6 +18,7 @@
 	var ContextPath = "%bind(:1)";
 	var OrgCode = "%bind(:2)";
 	var TimeOut = %bind(:3);
+	var EvaluationDescriptionUrl = "%bind(:6)";
 </script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/extjs/bootstrap.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/lib/extjs/ext-lang-zh_CN.js"></script>
@@ -30,9 +31,10 @@
 <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/css/kitchensink/theme-simple/resources/KitchenSink-all.css"/>
 <link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-theme-simple/build/resources/ext-theme-simple-all.css"/>
 
-<script type="text/javascript" charset="UTF-8" src="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts-debug.js"></script>
-<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts-all-debug.scss"/>
+<script type="text/javascript" charset="UTF-8" src="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/ext-charts.js"></script>
+<link rel="stylesheet" type="text/css" href="%bind(:1)/statics/js/lib/extjs/packages/ext-charts/build/resources/ext-charts-all.css"/>
 
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/tzShowTips.js" charset="utf-8"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/evaluation-detail.js" charset="utf-8"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/batch-list.js" charset="utf-8"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/main-evaluation.js" charset="utf-8"></script>
@@ -64,21 +66,10 @@ Ext.onReady(function(){
 		
 		initializeEvaluateSystem(urlObject);
 	}
-	/*var urlObject = {};
-						
-		urlObject['getBatchListUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_ReadPSPCList?languageCd=ZHS';
-		urlObject['getBatchDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_ReadPWMPData?languageCd=ZHS';
-		urlObject['getNextApplicantUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS';
-		urlObject['getApplicantDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_ReadKSHEvaluateData?languageCd=ZHS';
-		urlObject['submitApplicantDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_SubmitKSHEvaluateData?languageCd=ZHS';
-		urlObject['printStatisticsTableUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_MSPRT.TZ_DYPFZB.FieldFormula.IScript_Printreport';
-		urlObject['getAddDelOneKsDataUrl'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_SearchKSHData?languageCd=ZHS';
-		urlObject['checkPWAccStateURL'] = '/psc/ALTZDEV/EMPLOYEE/CRM/s/WEBLIB_TZ_PSXT.TZ_MS_PS.FieldFormula.IScript_CheckPWState?languageCd=ZHS';
-		initializeEvaluateSystem(urlObject);
-	*/
 })
 $(function(){
-	$("#tz_evaluation_main").height(Ext.getBody().getHeight()-58-37);
+	$("#tz_msps_loading").height(Ext.getBody().getHeight()-58-37);
+	$("#tz_msps_pclb").height(Ext.getBody().getHeight()-58-37);
 	$("#tz_msps_container").width(Ext.getBody().getWidth()*3);
 });
 </script>
@@ -89,37 +80,39 @@ $(function(){
   <div class="main" style="height:100%">
   	<div class="top_main">
            <ul>
-           	<li class="fa fa-user">&nbsp;欢迎%bind(:4)登录清华经管学院MBA面试评审系统</li>
+           	<li><span class="fa fa-user"></span>&nbsp;欢迎%bind(:4)登录清华经管学院MBA面试评审系统</li>
            	<li style="float:right;">
-           		<a class="fa fa-home" style="margin-right:5px;color:white;" href="javascript:topMenuHomePage()">&nbsp;首页</a>
-           		<a class="fa fa-edit" style="margin-left:5px;margin-right:5px;color:white;" href="javascript:changePassword()">&nbsp;修改密码</a>
-           		<a class="fa fa-sign-out" style="margin-left:5px;color:white;" href="../logout?type=interview">&nbsp;退出</a>
+           		<a style="margin-right:5px;color:white;" href="javascript:topMenuHomePage()"><span class="fa fa-home"></span>&nbsp;首页</a>
+           		<a style="margin-left:5px;margin-right:5px;color:white;" href="%bind(:5)" target="_blank"><span class="fa fa-phone"></span>&nbsp;联系方式</a>
+           		<a style="margin-left:5px;margin-right:5px;color:white;" href="javascript:changePassword()"><span class="fa fa-edit"></span>&nbsp;修改密码</a>
+           		<a style="margin-left:5px;color:white;" href="../logout?type=interview"><span class="fa fa-sign-out"></span>&nbsp;退出</a>
            	</li>
            </ul>           
 	</div>
   		<!-- evaluation main start -->
-		<div id="tz_evaluation_main" style="height:auto;overflow-x:hidden;margin:0px;position:relative">
+		<div id="tz_evaluation_main" style="overflow-x:hidden;margin:0px;position:relative">
 			<div id="tz_msps_loading" style="height:auto;width:100%;overflow:hidden;z-index:1600;background-color:#F4F4EC;position:absolute;bottom:40px;">
 				<div style="margin:auto; width:100%;height: 100%; text-align:center;line-height:500px;font-size:25px;font-family:Microsoft Yahei;">	
 					<p>欢迎登录清华经管学院MBA面试评审系统，数据加载中，请稍候……</p>
 				</div>
 			</div>
-			<div id="tz_msps_container" style="width: 5050px;height:100%;min-height:500px;position:relative;overflow:hidden">
-				<table width="100%" height="100%" style="background-color:#F4F4EC">
-					<tr>
-						<td align="center" valign="top">
-							<div id="tz_msps_pclb" tztype="page" style="background-color:#F4F4EC;z-index:1400;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
-								<table width="100%" height="100%">
-									<tr>
-										<td align="center" valign="top">
+			<div id="tz_msps_container" style="width: 5050px;height:100%;position:relative;overflow:hidden">
+				<table style="background-color:#F4F4EC;width:100%;height:100%">
+					<tr style="width:100%;height:100%"">
+						<td align="center" valign="top" style="width:100%;height:100%"">
+							<div id="tz_msps_pclb" tztype="page" style="background-color:#F4F4EC;z-index:1400;list-style:none;width:100%;float:left;overflow-x:hidden">
+								<table style="width:100%;height:100%">
+									<tr style="width:100%;height:100%">
+										<td align="center" valign="top" style="width:100%;height:100%">
 											<div id="tz_msps_pclb_a" style="vertical-align:middle"></div>
+											<div id="tz_msps_description" style="vertical-align:middle;"></div>
 										</td>
 									</tr>
 								</table>
 							</div>
 						</td>
 						<td align="center" valign="top">
-							<div id="tz_msps_zym" tztype="page" style="background-color:#F4F4EC;z-index:1200;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+							<div id="tz_msps_zym" tztype="page" style="background-color:#F4F4EC;z-index:1200;list-style:none;width:100%;float:left;overflow-x:hidden">
 								<table width="100%">
 									<tr>
 										<td>
@@ -134,7 +127,7 @@ $(function(){
 							</div>
 						</td>
 						<td align="center" valign="top">
-							<div id="tz_msps_dfym" tztype="page" style="background-color:#F4F4EC;z-index:1000;list-style:none;width:100%;min-height:480px;float:left;overflow-x:hidden">
+							<div id="tz_msps_dfym" tztype="page" style="background-color:#F4F4EC;z-index:1000;list-style:none;width:100%;float:left;overflow-x:hidden">
 								<table width="100%">
 									<tr>
 										<td>
@@ -149,12 +142,12 @@ $(function(){
 			</div>
 		</div>
 		<!-- evaluation main end -->
+		<div class="clear"></div>
+		<!-- foot start -->
+		<div id="footarea" class="footer assdiv" style="background-color:#fff;/*position:absolute;bottom:0;left:0*/">
+	  	<p>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</p>
+	    </div>
   </div>
 	<!-- content end --> 
-	<div class="clear"></div>
-	<!-- foot start -->
-	<div id="footarea" class="footer assdiv" style="background-color:#fff;position:absolute;bottom:0;left:0">
-  	<p>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</p>
-    </div>
 </div></body>
 </html>

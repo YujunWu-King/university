@@ -1674,14 +1674,21 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 				int actCount = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM PS_TZ_ART_HD_TBL "
 						+ " WHERE TZ_ART_ID = ?",
 						new Object[] { this.instanceArtId }, "Integer");
+				String strActName = jdbcTemplate.queryForObject("SELECT TZ_ART_TITLE FROM PS_TZ_ART_REC_TBL "
+						+ " WHERE TZ_ART_ID = ? LIMIT 0,1",
+						new Object[] { this.instanceArtId }, "String");
 				
 				if (actCount == 0) {
-					String strActName = jdbcTemplate.queryForObject("SELECT TZ_ART_TITLE FROM PS_TZ_ART_REC_TBL "
-							+ " WHERE TZ_ART_ID = ? LIMIT 0,1",
-							new Object[] { this.instanceArtId }, "String");
+					
+					String dtFormat = getSysHardCodeVal.getDateTimeHMFormat();
+					SimpleDateFormat dtSimpleDateFormat = new SimpleDateFormat(dtFormat);
+					Date startDttm = dtSimpleDateFormat.parse("1900-01-01 08:30");
+					Date endDttm = dtSimpleDateFormat.parse("1900-01-01 17:30");
 					PsTzArtHdTbl psTzArtHdTbl = new PsTzArtHdTbl();
 					psTzArtHdTbl.setTzArtId(this.instanceArtId);
 					psTzArtHdTbl.setTzNactName(strActName);
+					psTzArtHdTbl.setTzStartTm(startDttm);
+					psTzArtHdTbl.setTzEndTm(endDttm);
 					psTzArtHdTblMapper.insert(psTzArtHdTbl);
 					
 					/*报名表预留信息项*/
@@ -1738,6 +1745,12 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 					psTzZxbmXxxET.setTzZxbmXxxName("Email");
 					psTzZxbmXxxETMapper.insert(psTzZxbmXxxET);
 					
+				}else{
+					
+					PsTzArtHdTbl psTzArtHdTbl = new PsTzArtHdTbl();
+					psTzArtHdTbl.setTzArtId(this.instanceArtId);
+					psTzArtHdTbl.setTzNactName(strActName);
+					psTzArtHdTblMapper.updateByPrimaryKeySelective(psTzArtHdTbl);
 				}
 			}
 			

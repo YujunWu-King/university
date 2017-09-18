@@ -19,7 +19,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPsStudentPanel', {
 	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.addks", "新增考生"),
 	frame: true,
 	height: 400,
-	width: 800,
+	width:1000,
 
 	initComponent: function() {
 		var store=new KitchenSink.view.viewPsStudentListInfo.AddPsStudentPanelStore();
@@ -84,26 +84,55 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPsStudentPanel', {
 					dataIndex: 'mshId',
 					width: 100
 					
+					
 
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.classId", "班级编号"),
 					dataIndex: 'classId',
-					width: 90
+					width: 90,
+					hidden:true
 					
 				},{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.batchIdg", "批次编号"),
 					dataIndex: 'batchId',
+					width: 90,
+					hidden:true
+					
+				},
+				{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.className", "班级"),
+					dataIndex: 'className',
+					width: 240
+					
+				},{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.batchName", "批次"),
+					dataIndex: 'batchName',
 					width: 90
 					
+				},
+					
+					{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.judgesList", "评委组"),
+					dataIndex: 'pwList',
+					width: 150
+					
+					
+				},
+					{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.MasreState", "评审状态"),
+					dataIndex: 'reviewStatusDesc',
+					flex: 1
 				},{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.judges", "评委"),
 					dataIndex: 'judges',
-					width: 90
+					width: 90,
+					hidden:true
 					
 				},{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.judgeStatus", "评审状态"),
 					dataIndex: 'judgeStatus',
-					width: 90
+					width: 90,
+					hidden:true
 					
 				}/* {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.judgeGroupg", "面试评审组"),
@@ -132,14 +161,25 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPsStudentPanel', {
 						}
 					}
 				}*/],
-				 store:store
+				 store:store,
+				    bbar: {
+                    xtype: 'pagingtoolbar',
+                    pageSize: 2000,
+                    store: store,
+                    displayInfo: true,
+                    displayMsg:"显示{0}-{1}条，共{2}条",
+                    beforePageText:"第",
+                    afterPageText:"页/共{0}页",
+                    emptyMsg: "没有数据显示",
+                    plugins: new Ext.ux.ProgressBarPager()
+                }
 
 			}],
 
 			buttons: [{
-				text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.save", "保存"),
+				text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.sure", "确定"),
 				handler: 'addksSave',
-				iconCls: 'save'
+				iconCls: 'ensure'
 			},  {
 				text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.close", "关闭"),
 				iconCls: 'close',

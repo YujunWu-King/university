@@ -19,7 +19,8 @@
     title : '考生信息',
     bodyStyle : 'overflow-y:auto;overflow-x:hidden',
 
-    items : [ {
+    items : [ 
+    {
         xtype : 'form',
         reference : 'userMgForm',
         name:'userMgForm',
@@ -36,7 +37,8 @@
             labelWidth : 110,
             labelStyle : 'font-weight:bold'
         },
-        items : [ {
+        items : [ 
+        {
             layout : {
                 type : 'column'
             },
@@ -47,16 +49,15 @@
                 height : 300,
                 width : 217,
                 name : "titileImage"
-
             },
-                {
-                    columnWidth : .8,
-                    bodyStyle : 'padding-left:30px',
-                    layout : {
-                        type : 'vbox',
-                        align : 'stretch'
-                    },
-                    items : [ {
+            {
+                columnWidth : .8,
+                bodyStyle : 'padding-left:30px',
+                layout : {
+                	type : 'vbox',
+                    align : 'stretch'
+                },
+                items : [ {
                         xtype : 'textfield',
                         readOnly : true,
                         fieldLabel : '用户编号',
@@ -71,79 +72,66 @@
                     }, {
                         xtype : 'textfield',
                         fieldLabel : '姓名',
-                        readOnly : true,
-                        name : 'userName',
-                        fieldStyle : 'background:#F4F4F4'
+                        name : 'userName'
                     }, {
-                        xtype : 'textfield',
-                        fieldLabel : '性别',
-                        readOnly : true,
+                        xtype : 'combo',
+                        fieldLabel : '性别',          
                         name : 'userSex',
-                        fieldStyle : 'background:#F4F4F4'
-                    }, {
+                        valueField: 'TValue',
+                        editable:false,
+                        displayField: 'TLDesc',
+                        store: new KitchenSink.view.common.store.appTransStore("TZ_GENDER"),
+                        queryMode: 'local'
+                    }, 
+                    {
                         xtype : 'textfield',
-                        fieldLabel : '邮箱',
-                        readOnly : true,
-                        name : 'userEmail',
-                        fieldStyle : 'background:#F4F4F4'
-                    }, {
-                        xtype : 'textfield',
-                        fieldLabel : '手机',
-                        readOnly : true,
-                        name : 'userPhone',
-                        fieldStyle : 'background:#F4F4F4'
+                        fieldLabel : '绑定邮箱',
+                        name : 'userEmail'
                     },
-                        {
-                            xtype : 'combo',
-                            fieldLabel : '账号激活状态',
-                            name : 'jihuoZt',
-                            emptyText : '请选择',
-                            queryMode : 'remote',
-                            editable : false,
-                            valueField : 'TZ_ZHZ_ID',
-                            displayField : 'TZ_ZHZ_DMS',
-                            store : new KitchenSink.view.common.store.comboxStore({
-                                recname : 'TZ_PT_ZHZXX_TBL',
-                                condition : {
-                                    TZ_ZHZJH_ID : {
-                                        value : "TZ_JIHUO_ZT",
-                                        operator : "01",
-                                        type : "01"
-                                    },
-                                    TZ_EFF_STATUS : {
-                                        value : "A",
-                                        operator : "01",
-                                        type : "01"
-                                    }
-                                },
-                                result : 'TZ_ZHZ_ID,TZ_ZHZ_DMS'
-                            })
-                        },
-                        {
+                    {
+                        xtype : 'checkboxfield',
+                        fieldLabel : '邮箱绑定标志',
+                        inputValue:'Y',
+                        uncheckedValue:'N',
+                        name : 'bindEmailFlg'
+                    }, 
+                    {
+                        xtype : 'textfield',
+                        fieldLabel : '绑定手机',
+                        name : 'userPhone'
+                    },                    
+                    {
+                        xtype : 'checkboxfield',
+                        fieldLabel : '手机绑定标志',
+                        inputValue:'Y',
+                        uncheckedValue:'N',
+                        name : 'bindPhoneFlg'
+                    },
+                    {
+                        xtype : 'combo',
+                        fieldLabel : '账号激活状态',
+                        name : 'jihuoZt',
+                        emptyText : '请选择',
+                        //queryMode : 'remote',
+                        editable : false,
+                        valueField: 'TValue',
+                        editable:false,
+                        displayField: 'TLDesc',
+                        store: new KitchenSink.view.common.store.appTransStore("TZ_JIHUO_ZT"),
+                        queryMode: 'local'
+                    },
+                    {
                             xtype : 'combo',
                             fieldLabel : '账号锁定状态',
                             name : 'acctlock',
                             emptyText : '请选择',
-                            queryMode : 'remote',
+                            //queryMode : 'remote',
                             editable : false,
-                            valueField : 'TZ_ZHZ_ID',
-                            displayField : 'TZ_ZHZ_DMS',
-                            store : new KitchenSink.view.common.store.comboxStore({
-                                recname : 'TZ_PT_ZHZXX_TBL',
-                                condition : {
-                                    TZ_ZHZJH_ID : {
-                                        value : "ACCTLOCK",
-                                        operator : "01",
-                                        type : "01"
-                                    },
-                                    TZ_EFF_STATUS : {
-                                        value : "A",
-                                        operator : "01",
-                                        type : "01"
-                                    }
-                                },
-                                result : 'TZ_ZHZ_ID,TZ_ZHZ_DMS'
-                            })
+                            valueField: 'TValue',
+                            editable:false,
+                            displayField: 'TLDesc',
+                            store: new KitchenSink.view.common.store.appTransStore("ACCTLOCK"),
+                            queryMode: 'local'
                         }, {
                             xtype : 'textfield',
                             fieldLabel : '创建日期时间',
@@ -239,51 +227,35 @@
                         fieldDefaults : {
                             msgTarget : 'side',
                             labelWidth : 120,
-                            readOnly:true,
-                            fieldStyle : 'background:#F4F4F4',
                             labelStyle : 'font-weight:bold'
                         },
                         items : [
-                            {
+                            /*{
                                 xtype : 'textfield',
                                 fieldLabel : '考生编号',
-                                readOnly:true,
-                                fieldStyle : 'background:#F4F4F4',
                                 name : 'kshNo'
-                            },
+                            },*/
                             {
                                 xtype : 'datefield',
                                 fieldLabel : '出生日期',
                                 name : 'birthdate',
-                                readOnly:true,
-                                fieldStyle : 'background:#F4F4F4',
                                 columnWidth: 1,
                                 hideEmptyLabel: true,
-
                                 format: 'Y-m-d'
                             },
                             {
                                 xtype : 'textfield',
                                 fieldLabel : '联系电话',
-                                name : 'zyPhone',
+                                name : 'zyPhone'
                             },
-                            /*{
-                                xtype : 'combobox',
-                                fieldLabel : '证件类型',
-                                name : 'nationType',
-                                readOnly:true,
-                                fieldStyle : 'background:#F4F4F4',
-                                editable:false,
-                                valueField: 'TValue',
-                                displayField: 'TLDesc',
-                                store: new KitchenSink.view.common.store.appTransStore("TZ_NATION_ID_TYPE"),
-                                queryMode: 'local',
-                            },*/
+                            {
+                                xtype : 'textfield',
+                                fieldLabel : '联系邮箱',
+                                name : 'zyEmail'
+                            },
                             {
                                 xtype : 'textfield',
                                 fieldLabel : '证件号码',
-                                readOnly:true,
-                                fieldStyle : 'background:#F4F4F4',
                                 name : 'nationId',
                             },
                             {
@@ -297,18 +269,8 @@
                                     fieldLabel: '常驻州省',
                                     name: 'lenProvince',
                                     editable:false,
-                                    readOnly:true,
-                                    fieldStyle : 'background:#F4F4F4',
                                     allowBlank: true,
-                                    style:'margin-bottom:4.5px',
-                                    promptValidation:{
-                                        recName:'PS_STATE_TBL',
-                                        presetFields:{
-                                        },
-                                        valueOfResult:'descr',
-                                        displayOfResult:'descr',
-                                        errorMsg:''
-                                    },
+                                    style:'margin-bottom:4.5px',                                    
                                     triggers: {
                                         search: {
                                             cls: 'x-form-search-trigger',
@@ -321,8 +283,6 @@
                                 xtype : 'combobox',
                                 fieldLabel : '是否有海外学历',
                                 editable:false,
-                                readOnly:true,
-                                fieldStyle : 'background:#F4F4F4',
                                 valueField: 'TValue',
                                 displayField: 'TLDesc',
                                 store: new KitchenSink.view.common.store.appTransStore("TZ_SF_SALE"),
@@ -330,39 +290,31 @@
                             },
                             {
                                 xtype : 'combobox',
-                                fieldLabel : '申请的专业',
+                                fieldLabel : '意向报考志愿',
                                 name : 'appMajor',
-                                readOnly:true,
-                                fieldStyle : 'background:#F4F4F4',
                                 valueField: 'TValue',
                                 editable:false,
                                 displayField: 'TLDesc',
                                 store: new KitchenSink.view.common.store.appTransStore("TZ_MBAX_ZHUANY"),
-                                queryMode: 'local',
+                                queryMode: 'local'
                             },
                             {
                                 xtype : 'textfield',
                                 fieldLabel : '紧急联系人',
-                                readOnly:true,
-                                fieldStyle : 'background:#F4F4F4',
-                                name : 'jjlxr',
+                                name : 'jjlxr'
                             },
                             {
                                 xtype : 'combobox',
                                 fieldLabel : '紧急联系人性别',
                                 editable:false,
-                                readOnly:true,
-                                fieldStyle : 'background:#F4F4F4',
                                 valueField: 'TValue',
                                 displayField: 'TLDesc',
-                                store: new KitchenSink.view.common.store.appTransStore("TZ_GENDER"),
+                                store: new KitchenSink.view.common.store.appTransStore("TZ_JJLXR_GENDER"),
                                 name : 'jjlxrSex',
                             },
                             {
                                 xtype : 'textfield',
                                 fieldLabel : '紧急联系人电话',
-                                readOnly:true,
-                                fieldStyle : 'background:#F4F4F4',
                                 name : 'jjlxrPhone'
                             }
                         ]
@@ -622,13 +574,14 @@
 		                    },
 		                    width:'10%',
 		                    renderer:function(value,metadata,record){
-		                        console.log(value);
 		                        if(value=="U"){
 		                            return "已提交";
 		                        }else if(value=="OUT"){
 		                            return "撤销";
 		                        }else if(value=="BACK"){
 		                            return "退回修改";
+		                        }else if(value=="P"){
+		                        	return "预提交"
 		                        }else{
 		                            return "新建";
 		                        }
@@ -657,10 +610,12 @@
 } ],
 buttons : [ {
     text : '保存',
+    name: 'save',
     iconCls : "save",
     handler : 'onFormSave'
 }, {
     text : '确定',
+    name: 'ensure',
     iconCls : "ensure",
     handler : 'onFormEnsure'
 }, {

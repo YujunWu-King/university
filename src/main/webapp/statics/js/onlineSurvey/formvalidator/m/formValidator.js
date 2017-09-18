@@ -114,6 +114,7 @@ $.formValidator =
 		}
 		else
 		{
+			//console.log(elem.settings[0].tipID);
 			var tip = $("#"+elem.settings[0].tipID);
 			//panli modify
 			//var html = showclass == "onShow" ? onShowHtml : (showclass == "onFocus" ? onFocusHtml : (showclass == "onCorrect" ? onCorrectHtml : onErrorHtml));
@@ -142,22 +143,29 @@ $.formValidator =
 					}
 					showmsg = passwordStrengthText[level<=0?0:level - 1];
 				}
-				html = html.replace(/\$class\$/g, showclass).replace(/\$data\$/g, showmsg);
-				if(showclass!=""){
-					tip.html(html).removeClass().addClass(showclass).show();
-				}else{
-					tip.html(html).show();
+//				html = html.replace(/\$class\$/g, showclass).replace(/\$data\$/g, showmsg);
+//				if(showclass!=""){
+//					tip.html(html).removeClass().addClass(showclass).show();
+//				}else{
+//					tip.html(html).show();
+//				}
+
+				if(showclass=="onError"){
+					tip.show();
+					tip.children("span").text(showmsg);
+				} else {
+					tip.hide();
 				}
 			}
-			var stype = elem.type;
-			if(stype == "password" || stype == "text" || stype == "file")
-			{
-				jqobj = $(elem);
-				if(onShowClass!="" && showclass == "onShow"){jqobj.removeClass().addClass(onShowClass)};
-				if(onFocusClass!="" && showclass == "onFocus"){jqobj.removeClass().addClass(onFocusClass)};
-				if(onCorrectClass!="" && showclass == "onCorrect"){jqobj.removeClass().addClass(onCorrectClass)};
-				if(onErrorClass!="" && showclass == "onError"){jqobj.removeClass().addClass(onErrorClass)};
-			}
+//			var stype = elem.type;
+//			if(stype == "password" || stype == "text" || stype == "file")
+//			{
+//				jqobj = $(elem);
+//				if(onShowClass!="" && showclass == "onShow"){jqobj.removeClass().addClass(onShowClass)};
+//				if(onFocusClass!="" && showclass == "onFocus"){jqobj.removeClass().addClass(onFocusClass)};
+//				if(onCorrectClass!="" && showclass == "onCorrect"){jqobj.removeClass().addClass(onCorrectClass)};
+//				if(onErrorClass!="" && showclass == "onError"){jqobj.removeClass().addClass(onErrorClass)};
+//			}
 		}
 	},
 		
@@ -188,6 +196,7 @@ $.formValidator =
 		var setting = returnObj.setting;//正确:setting[0],错误:对应的setting[i]
 		var showmsg = "",showclass = "";
 		var intiConfig = $("body").data(elem.validatorGroup);
+		
 		if (!isValid)
 		{		
 			showclass = "onError";

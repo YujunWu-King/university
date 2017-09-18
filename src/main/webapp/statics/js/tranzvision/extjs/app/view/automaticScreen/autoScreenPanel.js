@@ -8,10 +8,13 @@
         'Ext.ux.ProgressBarPager',
         'tranzvision.extension.grid.column.Link',
         'KitchenSink.view.automaticScreen.autoScreenStore',
-        'KitchenSink.view.automaticScreen.autoScreenController'
+        'KitchenSink.view.automaticScreen.autoScreenController',
+        'KitchenSink.view.automaticScreen.export.exportExcelWindow',
+        'KitchenSink.view.automaticScreen.export.exportExcelController'
     ],
     xtype: 'autoScreen',
 	controller: 'autoScreenController',
+	//multiColumnSort: true,
 	
 	title: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoScreen","自动初筛"),
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
@@ -20,16 +23,18 @@
 		resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
 			var buttonHeight = 36;
 			var grid = panel.child('form').child('grid');
-			if(grid) grid.setHeight( height-buttonHeight- 52);
+			if(grid) grid.setHeight( height-buttonHeight- 80);
 		}
 	},
 	
 	constructor: function(config){
 		var className,
-			itemColumns;
+			itemColumns = [];
 		this.paramsConfig = config;
 		this.classId = config.classId;
 		this.batchId = config.batchId;
+		this.batchName = config.batchName;
+		className = config.className;
 		
 		var tzParams ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreColumns","comParams":{"classId":"'+ config.classId +'"}}';
 		Ext.tzLoadAsync(tzParams,function(respData){
@@ -52,19 +57,27 @@
     	
     	//定义grid的columns
     	var columns = [{
-			xtype:'rownumberer'
-		},{ 
+			xtype:'rownumberer',
+			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.order","序号"),
+			width:40
+		}/*,{ 
 			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.appId","报名表编号"),
 			dataIndex: 'appId',
 			width:90
+		}*/,{ 
+			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.msApplyId","面试申请号"),
+			dataIndex: 'msApplyId',
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
+			width:100
 		},{ 
 			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.name","姓名"),
 			dataIndex: 'name',
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			width:90
-		},{ 
-			text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.msApplyId","面试申请号"),
-			dataIndex: 'msApplyId',
-			width:100
 		}]
     	
     	//成绩项分值列
@@ -84,6 +97,9 @@
     			text: descr,
 				dataIndex: itemColumns[i].columnId,
 				width:colWidth,
+				menuDisabled: true,
+				sortable: false,
+				hideable:false,
 				items:[{
 					getText: function(v, meta, rec) {
 						return v;
@@ -96,15 +112,20 @@
     	columns.push({
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.total","总分"),
 			dataIndex: 'total',
-			width:80
+			width:80,
+			hideable:false
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.ranking","排名"),
 			dataIndex: 'ranking',
-			width:80
+			width:80,
+			hideable:false
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.negativeList","负面清单"),
 			dataIndex: 'negativeList',
 			minWidth:200,
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			xtype: 'templatecolumn',
 			tpl: Ext.create('Ext.XTemplate','{[this.labels(values)]}',{
 				labels: function(values){
@@ -127,6 +148,9 @@
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoLabel","自动标签"),
 			dataIndex: 'autoLabel',
 			minWidth:200,
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			xtype: 'templatecolumn',
 			tpl: Ext.create('Ext.XTemplate','{[this.labels(values)]}',{
 				labels: function(values){
@@ -149,6 +173,9 @@
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.manualLabel","手工标签"),
 			dataIndex: 'manualLabel',
 			minWidth:200,
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			xtype: 'templatecolumn',
 			tpl: Ext.create('Ext.XTemplate','{[this.labels(values)]}',{
 				labels: function(values){
@@ -171,10 +198,14 @@
     		xtype:'checkcolumn',
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.status","是否淘汰"),
 			dataIndex: 'status',
+			menuDisabled: true,
+			sortable: false,
+			hideable:false,
 			width:80
     	},{
 			menuDisabled: true,
 			sortable: false,
+			hideable:false,
 			width:60,
 			xtype: 'actioncolumn',
 			align: 'center',
@@ -221,10 +252,17 @@
 		        },{
 		        	xtype: 'textfield',
 					name: 'className',
-					fieldLabel: '班级',
+					fieldLabel: '报考方向',
 					readOnly: true,
 					cls: 'lanage_1',
 					value: this.className
+		        },{
+		        	xtype: 'textfield',
+					name: 'batchName',
+					fieldLabel: '申请批次',
+					readOnly: true,
+					cls: 'lanage_1',
+					value: this.batchName
 		        },{
 		        	xtype:'grid',
 		        	
@@ -246,12 +284,18 @@
 	    					{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set",handler:"runAutoScreenEngine"},"-",
 	    					{
 	    						xtype:'button',
-	    						text:'批量设置进入材料评审状态',
+	    						text:'设置淘汰状态',
 	    						iconCls:  'set',
 	    						menu:[{
-	    							text:'进入材料评审',iconCls:"check",handler:'setScreenPass'
+	    							text:'将所选考生设置为淘汰',handler:'setScreenNoPass'
 	    						},{
-	    							text:'淘汰',iconCls:"close",handler:'setScreenNoPass'
+	    							text:'将所选考生取消淘汰',handler:'setScreenPass'
+	    						},{
+	    							text:'将查询结果所有考生设置为淘汰',handler:'setSearchScreenNoPass'
+	    						},{
+	    							text:'将查询结果所有考生取消淘汰',handler:'setSearchScreenPass'
+	    						},{
+	    							text:'根据名次批量淘汰',handler:'setWeedOutByRank'
 	    						}]
 	    					},
 	    					'->',
@@ -261,9 +305,16 @@
 	    						iconCls:  'list',
 	    						glyph: 61,
 	    						menu:[{
-	    							text:'查看自动初筛进程运行详情',iconCls:"view",handler:'showBatchProcessInfo'
+	    							text:'查看自动初筛进程运行详情',iconCls:"view",handler:'showBatchProcessInfo',
 	    						},{
-	    							text:'根据名次批量淘汰',iconCls:"set",handler:'setWeedOutByRank'
+	    							text: '导出自动初筛结果',iconCls:"excel",
+	    							menu:[{
+	    								text:'导出选中考生的自动初筛结果',handler:'exportSelectedZdcsResult',
+	    							},{
+	    								text:'导出搜索结果考生的自动初筛结果',handler:'exportSearchZdcsResult'
+	    							}]
+	    						},{
+	    							text:'查看并下载导出结果',iconCls:"download", handler:'downloadExportFile'
 	    						}]
 	    					}
 	    				]
@@ -278,7 +329,7 @@
 	    			columns: columns,
 	    			bbar: {
 	    				xtype: 'pagingtoolbar',
-	    				pageSize: 10,
+	    				pageSize: 50,
 	    				listeners:{
 	    					afterrender: function(pbar){
 	    						var grid = pbar.findParentByType("grid");

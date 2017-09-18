@@ -1,0 +1,175 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<title>清华大学经济管理学院MBA面试评审系统</title>
+	<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-sem.css" />
+	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
+	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+
+<script  type="text/javascript">
+	var ContextPath = "%bind(:1)";
+	var OrgCode = "%bind(:2)";
+</script>
+
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="a">
+
+	<div data-role="header" data-theme="b">
+
+		<div style="text-align:center; padding-top:12px; float:left" class="r-action" id="tz_welcome">
+		
+		</div>
+
+		<div style="text-align:right; " class="r-action">
+
+			<a href="#" id="favrecipelink" data-role="button" data-inline="true" data-icon="home" data-theme="a">首页</a>
+			<!--a href="%bind(:4)" target="_blank" id="favrecipelink" data-role="button" data-theme="b" data-inline="true" data-icon="info">联系方式</a-->
+			<a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-theme="a" data-inline="true" data-icon="star" >修改密码</a>
+			<a href="../../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-theme="a" data-icon="delete">退出</a>
+
+			<div data-role="popup" id="modifyPswdPopup" data-position-to="window" data-dismissible="false" data-theme="a" data-overlay-theme="a" style="min-width:350px;">
+				<a href="#" data-rel="back" id="closeModify" class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">关闭</a>
+				<form method="post" id="modifyForm" data-ajax="false">
+					<div>
+						<div data-role="header" role="banner" data-theme="b">
+							<h3>修改密码</h3>
+						</div>
+						<div class="ui-field-contain" style="margin:10px 15px">
+							<label for="oldPswd">原密码:</label>
+							<input type="password" name="oldPswd" id="oldPswd">
+							<label for="newPswd" style="margin-top:5px;">新密码:</label>
+							<input type="password" name="newPswd" id="newPswd">
+							<label for="confirmPswd" style="margin-top:5px;">确认新密码:</label>
+							<input type="password" name="confirmPswd" id="confirmPswd">
+						</div>
+						<div align="center">
+						<a href="javascript:void(0);" data-role="button" data-inline="true" id="ensureModify">&nbsp;&nbsp;确定&nbsp;&nbsp;</a> 
+						</div>					
+					</div>
+				</form>
+			</div>
+		</div>
+	</div><!-- /header -->
+
+	<div data-role="content" data-theme="a" style="padding:0">	
+		<div class="content-primary">
+<br>
+<br>
+	<ul data-role="listview" id="list" data-inset="true">
+
+	</ul>
+<br>
+<br>
+<br>
+<br>
+			</div><!--/content-primary -->		
+	</div><!-- /content -->
+	
+	<div data-role="footer" data-theme="b">
+		<h4>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</h4>
+	</div><!-- /footer -->
+	
+</div><!-- /page -->
+
+
+<script>
+		var baseUrl = ContextPath+"/dispatcher?classid=interview&OperateType=EJSON";
+		$.getJSON(
+		baseUrl + "&type=list&MaxRowCount=200&&MoreRowsFlag=Y",
+        function(data){
+			var checked = true;
+		  	if(data&&data.state&&data.state.errcode=="1"){
+				alert(data.state.errdesc);
+				checked=false;
+		  	}
+		  	if(checked&&data&&data.comContent&&data.comContent.error_code!=0){
+				alert(data.comContent.error_decription);
+				checked=false;
+		  	}
+		  	
+		  	if(checked){
+		  		var lilist="";
+		  		$.each(data.comContent.data, function(i,item){
+		           	
+					lilist+=
+				        '<li class="ui-last-child"><a href="?page=batch&classId='+item.class_id+'&batchId='+item.pc_id+'" class="ui-btn ui-btn-icon-right ui-icon-carat-r" data-ajax="false" class="ui-link-inherit">批次名称：'
+				        +item.class_name+" "+item.pc_name
+				        +"<p class='ui-li-desc' style='font-size:0.9em'>状态："
+						+item.pc_zt
+						+"</p>"
+				        +'</a></li>';
+		        });
+					
+				  $("#list").html(lilist);
+		  	}
+		  
+		  $("#tz_welcome").html("&nbsp;&nbsp;欢迎%bind(:3)登录清华经管MBA面试评审系统");
+
+        });
+
+		//修改密码-确定
+		$("#ensureModify").click(function() {
+			//旧密码
+			var oldPassword = $("#oldPswd").val();
+			//新密码
+			var newPassword = $("#newPswd").val();
+			//确认新密码
+			var confirmPassword = $("#confirmPswd").val();
+
+			var bl = true;
+			if(oldPassword!="" && newPassword!="" && confirmPassword!="") {
+				//密码
+				if(newPassword != confirmPassword){
+					alert("两次密码输入不一致。");
+					bl =  false;
+				} else {
+					//新旧密码不能相同
+					if(oldPassword == newPassword) {
+						alert("新旧密码不能相同。");
+						bl =  false;
+					} else {
+						bl =  true;
+					}
+				}
+			} else {
+				alert("请填写所有信息项。");
+				bl =  false;
+			}
+
+
+			if(bl) {
+				var formParams= '{"oldPwd":"'+oldPassword+'","newPwd":"'+newPassword+'","comfirmPwd":"'+confirmPassword+'"}';
+				var tzParams = '{"ComID":"TZ_GD_XGPWD_COM","PageID":"TZ_GD_XGPWD_STD","OperateType":"U","comParams":{"update":['+formParams+']}}';
+				var modiftyUrl = ContextPath+"/dispatcher";
+				$.ajax({
+					type: 'POST',
+					dataType: "json",
+					url: modiftyUrl,
+					data: {"tzParams":tzParams},
+					success: function(data) {
+						var errcode = data.state.errcode;
+						if(errcode!="0"){
+							alert(data.state.errdesc);
+						} else {
+							$("#oldPswd").val("");
+							$("#newPswd").val("");
+							$("#confirmPswd").val("");
+
+							alert("密码修改成功！");
+
+							$("#closeModify").trigger("click");
+						}
+					}
+				});
+			}
+		});
+</script>
+
+</body>
+</html>

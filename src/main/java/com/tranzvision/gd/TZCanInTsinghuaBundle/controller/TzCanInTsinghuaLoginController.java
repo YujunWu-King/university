@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZCanInTsinghuaBundle.service.impl.TzCanInTsinghuaClsServiceImpl;
-import com.tranzvision.gd.TZCanInTsinghuaBundle.service.impl.TzRegMbaKsServiceImpl;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
@@ -81,6 +80,12 @@ public class TzCanInTsinghuaLoginController {
 		String loginHtml = "";
 		String wjid = request.getParameter("surveyid");
 		String pageno = request.getParameter("pageno");
+//		String referer = request.getHeader("referer");
+//		if(StringUtils.contains(referer, "SURVEY_INS_ID")){
+//			String[] params = StringUtils.split(referer,",");
+//			String[] insId = StringUtils.split(params[params.length - 1],":");
+//			System.out.println(insId[1]);
+//		}
 		
 		if(StringUtils.isBlank(pageno)){
 			pageno = "1";

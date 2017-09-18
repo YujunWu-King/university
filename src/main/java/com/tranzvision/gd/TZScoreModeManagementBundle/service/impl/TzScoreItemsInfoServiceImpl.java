@@ -110,10 +110,10 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 				String scoringRules = psTzModalDtTbl.getTzZdcsgzId() == null ? "" : psTzModalDtTbl.getTzZdcsgzId();
 				/*参考资料*/
 				String refDataSet = psTzModalDtTbl.getTzScoreCkzl() == null ? "" : psTzModalDtTbl.getTzScoreCkzl();
-				/*参考问题*/
-				String standard = psTzModalDtTbl.getTzScoreItemCkwt() == null ? "" : psTzModalDtTbl.getTzScoreItemCkwt();
-				/*打分说明*/
-				String descr = psTzModalDtTbl.getTzScoreItemDfsm() == null ? "" : psTzModalDtTbl.getTzScoreItemDfsm();
+				/*参考问题--说明*/
+				String  descr = psTzModalDtTbl.getTzScoreItemCkwt() == null ? "" : psTzModalDtTbl.getTzScoreItemCkwt();
+				/*打分说明--标准*/
+				String standard = psTzModalDtTbl.getTzScoreItemDfsm() == null ? "" : psTzModalDtTbl.getTzScoreItemDfsm();
 				/*面试方法*/
 				String interviewMethod = psTzModalDtTbl.getTzScoreItemMsff() == null ? "" : psTzModalDtTbl.getTzScoreItemMsff();
 				
@@ -140,11 +140,18 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 				mapRet.put("autoScreen", autoScreen);
 				mapRet.put("scoringRules", scoringRules);
 				
+				String refDataDescr = "";
+				if(!"".equals(refDataSet) && refDataSet != null){
+					String ckzlSql = "select TZ_CKZL_NAME from PS_TZ_CKZL_T where TZ_JG_ID=? and TZ_CKZL_ID=?";
+					refDataDescr = sqlQuery.queryForObject(ckzlSql, new Object[]{ orgId,refDataSet }, "String");
+				}
+				
 				mapRet.put("refDataSet", refDataSet);
+				mapRet.put("refDataDescr", refDataDescr);
+				
 				mapRet.put("standard", standard);
 				mapRet.put("descr", descr);
 				mapRet.put("interviewMethod", interviewMethod);
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -283,8 +290,10 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 					String scoringRules = formDate.get("scoringRules").toString();
 					
 					String refDataSet = formDate.get("refDataSet").toString();
-					String standard = formDate.get("standard").toString();
-					String descr = formDate.get("descr").toString();
+					//说明
+					String descr = formDate.get("standard").toString();
+					//标准
+					String standard = formDate.get("descr").toString();
 					String interviewMethod = formDate.get("interviewMethod").toString();
 					
 					
@@ -451,8 +460,9 @@ public class TzScoreItemsInfoServiceImpl extends FrameworkImpl{
 					String scoringRules = formDate.get("scoringRules").toString();
 					
 					String refDataSet = formDate.get("refDataSet").toString();
-					String standard = formDate.get("standard").toString();
-					String descr = formDate.get("descr").toString();
+					
+					String descr = formDate.get("standard").toString();
+					String standard = formDate.get("descr").toString();
 					String interviewMethod = formDate.get("interviewMethod").toString();
 					
 					

@@ -21,6 +21,102 @@ KindEditor.plugin('image', function(K) {
 		fillDescAfterUploadImage = K.undef(self.fillDescAfterUploadImage, false),
 		lang = self.lang(name + '.');
 
+	upload = function(){
+		$("[name='imgFile']").click();
+	}
+	/*上传图片、附件*/
+    uploadAtt = function(el){
+		var allowFileType = "jpg,png,jpeg";
+		var allowSize = "2";
+		
+        var path = $(el).val();
+		if(path){
+			//文件名
+			filename = path.substring(path.lastIndexOf("\\") + 1,path.length);
+			//文件后缀
+			var sysfileSuffix = (filename.substring(filename.lastIndexOf(".") + 1)).toLowerCase();
+			//允许上传的文件类型
+			var typeArr = allowFileType.split(",");
+			var isAllow = false;
+			if (sysfileSuffix && allowFileType != "" && typeArr.length > 0){
+				for(var i=0; i<typeArr.length; i++){
+					if(sysfileSuffix == typeArr[i].toLowerCase()){
+						isAllow = true;
+						break;
+					}}
+				if(!isAllow){
+					var formatMsg = MsgSet["FILETYPE"].replace("【TZ_FILE_TYPE】",allowFileType);
+					alert(formatMsg+"!");
+					//清空file控件的Value
+					if(isIE = navigator.userAgent.indexOf("MSIE")!=-1) { //IE浏览器
+						var file = $(el); 
+						file.after(file.clone().val("")); 
+						file.remove(); 
+						
+						var $fileInput = $(el);
+						var $uplBtn = $fileInput.prev(".bt_blue");
+						$fileInput.mousemove(function(e){
+							$uplBtn.css("opacity","0.8");	
+						});
+						$fileInput.mouseout(function(e) {
+							$uplBtn.css("opacity","1");
+						});
+					} else {//非IE浏览器
+						$(el).val("");	
+					}
+					return;	
+				}
+			}
+
+			try{
+				var $form = document.getElementById("picLoad");
+				$form.encoding = "multipart/form-data";
+				var tzParam = "?filePath=tplAttachment&keyName=" + $(el).attr("name") + "&" + Math.random();
+				$form.action = TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam;
+				$("#picLoad").ajaxSubmit({
+					dataType:'json',
+					type:'POST',
+					url:TzUniversityContextPath + "/SingleUpdWebServlet" + tzParam,
+					success: function(obj) {
+						if(obj.success){
+							//清空file控件的Value
+							if(isIE = navigator.userAgent.indexOf("MSIE")!=-1) { //IE浏览器
+								var file = $(el); 
+								file.after(file.clone().val("")); 
+								file.remove(); 
+								
+								var $fileInput = $(el);
+								var $uplBtn = $fileInput.prev(".bt_blue");
+								$fileInput.mousemove(function(e){
+									$uplBtn.css("opacity","0.8");	
+								});
+								$fileInput.mouseout(function(e) {
+									$uplBtn.css("opacity","1");
+								});
+							} else {//非IE浏览器
+								$(el).val("");	
+							}
+							
+							var fileSize = obj.msg.size;
+							fileSize = fileSize.substring(0,fileSize.length-1);
+							if(allowSize !="" && fileSize/1024 > allowSize){
+								layer.close(layer.index);/*关闭上传进度条*/
+								alert(MsgSet["FILE_SIZE_CRL"].replace("【TZ_FILE_SIZE】",allowSize));
+							} else {
+								//上传成功后将文件存储到数据库
+								var accessPath = TzUniversityContextPath + obj.msg.accessPath + obj.msg.sysFileName;
+								$("#accesspath").val(accessPath);
+							}
+						}else{
+							alert(MsgSet["FILE_UPL_FAILED"]);
+						}
+					}
+				});
+			}catch(e){
+				alert(e);
+			}
+		} 
+    };
 	self.plugin.imageDialog = function(options) {
 		var imageUrl = options.imageUrl,
 			imageWidth = K.undef(options.imageWidth, ''),
@@ -91,12 +187,13 @@ KindEditor.plugin('image', function(K) {
 			
 			
 			
-			'<form class="ke-upload-area ke-form" method="post" enctype="multipart/form-data" target="' + target + '" action="http://static.lediaocha.com">',
+			'<form id="picLoad" class="ke-upload-area ke-form" method="post" enctype="multipart/form-data" target="' + target + '" action="">',
 			'<div class="ke-dialog-row">',
 			hiddenElements.join(''),
 			'<label style="width:60px;">' + lang.localUrl + '</label>',
 			'<input type="text" name="localUrl" class="ke-input-text" tabindex="-1" style="width:200px;" readonly="true" /> &nbsp;',
-			'<input type="button" class="ke-upload-button" value="' + lang.upload + '" />',
+			'<input type="button" class="ke-upload-button" value="' + lang.upload + '"/>',
+        	'<input type="hidden" id="accesspath" value=""/>',
 			'</div>',
 			'</form>',
 			
@@ -119,72 +216,16 @@ KindEditor.plugin('image', function(K) {
 			yesBtn : {
 				name : self.lang('yes'),
 				click : function(e) {
-					// Bugfix: http://code.google.com/p/kindeditor/issues/detail?id=319
-					if (dialog.isLoading) {
-						return;
-					}
-					// insert local image
-					if (showLocal && showRemote && tabs && tabs.selectedIndex === 1 || !showRemote) {
-						var uploadtxt = uploadbutton.fileBox.val();
-						var ext=uploadtxt.substr(uploadtxt.lastIndexOf('.') + 1).toLowerCase();
-						if (uploadtxt == '') {
-							alert(self.lang('pleaseSelectFile'));
-							return;
-						}else if("gif,jpg,jpeg,png,bmp".indexOf(ext) == -1){
-							alert("上传文件扩展名是不允许的扩展名。\n只允许gif,jpg,jpeg,png,bmp");
-							return;
-						}
-						var d = new Date();
-						var dyear = d.getFullYear();
-						var dmonth = d.getMonth() + 1;
-						dmonth = dmonth < 10 ? "0"+dmonth : dmonth;
-						var dday = d.getDate();
-						dday = dday < 10 ? "0"+dday : dday;
-						var dhour = d.getHours();
-						dhour = dhour < 10 ? "0"+dhour : dhour;
-						var dmin = d.getMinutes();
-						dmin = dmin < 10 ? "0"+dmin : dmin;
-						var dsec = d.getSeconds();
-						dsec = dsec < 10 ? "0"+dsec : dsec;
-						var mrand=parseInt(Math.random()*(9999-1000+1)+1000,10);
-						$("input[name='key']").val(extraParams.key+dyear+dmonth+dday+dhour+dmin+dsec+mrand+"."+ext);
-						$("input[name='success_action_redirect']").val(extraParams.success_action_redirect+dyear+dmonth+dday+dhour+dmin+dsec+mrand+"."+ext+"&oldimg="+uploadtxt);
-						$("input[name='policy']").val(OSS.policy);
-						$("input[name='signature']").val(OSS.signature);
-						$("input[name='content-Type']").val(OSS.getContentType(ext));
-						dialog.showLoading(self.lang('uploadLoading'));
-						uploadbutton.submit();
-						localUrlBox.val('');
-						return;
-					}
-					// insert remote image
-					var url = K.trim(urlBox.val()),
-						width = widthBox.val(),
-						height = heightBox.val(),
-						title = titleBox.val(),
-						align = '';
-					alignBox.each(function() {
-						if (this.checked) {
-							align = this.value;
-							return false;
-						}
-					});
-					if (url == 'http://' || K.invalidUrl(url)) {
-						alert(self.lang('invalidUrl'));
-						urlBox[0].focus();
-						return;
-					}
-					if (!/^\d*$/.test(width)) {
-						alert(self.lang('invalidWidth'));
-						widthBox[0].focus();
-						return;
-					}
-					if (!/^\d*$/.test(height)) {
-						alert(self.lang('invalidHeight'));
-						heightBox[0].focus();
-						return;
-					}
-					clickFn.call(self, url, title, width, height, 0, align);
+		        	var filename = localUrlBox.val();
+		        	var accesspath = $("#accesspath").val();
+		        	if(filename == '' || accesspath == ''){
+		        		alert(self.lang('pleaseSelectFile'));
+		        	}else{
+		        		self.insertHtml('<img src="' + accesspath + '" border="0" alt="" />').focus();
+		        		localUrlBox.val('');
+		        		$("#accesspath").val('');
+		        		self.hideDialog();
+		        	}
 				}
 			},
 			beforeRemove : function() {

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjAppclsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjAppclsT" >
+    <id column="TZ_SEQNUM" property="tzSeqnum" jdbcType="INTEGER" />
+    <result column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
+    <result column="TZ_APPCLS_ID" property="tzAppclsId" jdbcType="VARCHAR" />
+    <result column="TZ_APPCLS_TYPE" property="tzAppclsType" jdbcType="VARCHAR" />
+    <result column="TZ_QY_STATUS" property="tzQyStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_SEQNUM, TZ_DC_WJ_ID, TZ_APPCLS_ID, TZ_APPCLS_TYPE, TZ_QY_STATUS
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_DC_WJ_APPCLS_T
+    where TZ_SEQNUM = #{tzSeqnum,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from PS_TZ_DC_WJ_APPCLS_T
+    where TZ_SEQNUM = #{tzSeqnum,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjAppclsT" >
+    insert into PS_TZ_DC_WJ_APPCLS_T (TZ_SEQNUM, TZ_DC_WJ_ID, TZ_APPCLS_ID, 
+      TZ_APPCLS_TYPE, TZ_QY_STATUS)
+    values (#{tzSeqnum,jdbcType=INTEGER}, #{tzDcWjId,jdbcType=VARCHAR}, #{tzAppclsId,jdbcType=VARCHAR}, 
+      #{tzAppclsType,jdbcType=VARCHAR}, #{tzQyStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjAppclsT" >
+    insert into PS_TZ_DC_WJ_APPCLS_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzSeqnum != null" >
+        TZ_SEQNUM,
+      </if>
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID,
+      </if>
+      <if test="tzAppclsId != null" >
+        TZ_APPCLS_ID,
+      </if>
+      <if test="tzAppclsType != null" >
+        TZ_APPCLS_TYPE,
+      </if>
+      <if test="tzQyStatus != null" >
+        TZ_QY_STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzSeqnum != null" >
+        #{tzSeqnum,jdbcType=INTEGER},
+      </if>
+      <if test="tzDcWjId != null" >
+        #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppclsId != null" >
+        #{tzAppclsId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppclsType != null" >
+        #{tzAppclsType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQyStatus != null" >
+        #{tzQyStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjAppclsT" >
+    update PS_TZ_DC_WJ_APPCLS_T
+    <set >
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppclsId != null" >
+        TZ_APPCLS_ID = #{tzAppclsId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppclsType != null" >
+        TZ_APPCLS_TYPE = #{tzAppclsType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzQyStatus != null" >
+        TZ_QY_STATUS = #{tzQyStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_SEQNUM = #{tzSeqnum,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjAppclsT" >
+    update PS_TZ_DC_WJ_APPCLS_T
+    set TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      TZ_APPCLS_ID = #{tzAppclsId,jdbcType=VARCHAR},
+      TZ_APPCLS_TYPE = #{tzAppclsType,jdbcType=VARCHAR},
+      TZ_QY_STATUS = #{tzQyStatus,jdbcType=VARCHAR}
+    where TZ_SEQNUM = #{tzSeqnum,jdbcType=INTEGER}
+  </update>
+</mapper>

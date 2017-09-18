@@ -11,5 +11,9 @@ Ext.define('KitchenSink.view.basicData.filter.filterInfoModel', {
         {name: 'promptTab'},
         {name: 'promptFld'},
         {name: 'orderNum'},
+        {name: 'deepQueryFlgDesc'},
+        {name: 'deepQueryFlg'},
+        {name: 'deepQueryView'},
+        {name: 'deepQueryFld'}
     ]
 });

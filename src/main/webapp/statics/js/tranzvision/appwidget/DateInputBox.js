@@ -9,24 +9,46 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 	_getHtml: function(data, previewmode) {
 		var c = "";
 		if (previewmode) {
-			if (SurveyBuild._readonly) {
-				//只读模式
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left">' + data.value + '</div>';
-				c += '  <div class="input-list-suffix left"></div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-			} else {
-				//填写模式
-				SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left"><input id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '" type="text" class="inpu-list-text-enter"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon" id="' + data.itemId + '_Btn"/></div>';
-				c += '  <div class="input-list-suffix left">' + (data.suffixUrl != "" ? '<a target="_blank" href="' + data.suffixUrl + '">': '') + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + (data.suffixUrl != "" ? '</a>': '') + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-			}
+			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+			 if(SurveyBuild.accessType == "M"){
+				 if (SurveyBuild._readonly) {
+						//只读模式
+					 	c += '<div class="item">';
+						c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+						
+						c += '	<div class="text-box"><input type="text" class="text1"  value="'+data.value+'" readonly="" disabled=""></div>';
+						c += '  <p style="color:#666;font-size:0.56rem;"></p>';
+						c += '</div>';
+					} else {
+						//填写模式
+						c += '<div class="item">';
+						c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+						c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+						c += '	<div class="text-box">';
+						c += '		<input type="text" class="text1"readonly="readonly" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" />';
+						c += '	</div>';
+						c += '  <p class="mSuffix" style="color:#666;font-size:0.56rem;">'+(data.suffixUrl != "" ?'<a target="_blank" href="'+ data.suffixUrl + '">': '')+ (data["suffix"] ? data.suffix :"")+(data.suffixUrl != "" ? '</a>': '')+'</p>';
+						c += '</div>';
+					}
+			 }else{
+				 if (SurveyBuild._readonly) {
+						//只读模式
+						c += '<div class="input-list">';
+						c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+						c += '  <div class="input-list-text left">' + data.value + '</div>';
+						c += '  <div class="input-list-suffix left"></div>';
+						c += '  <div class="clear"></div>';
+						c += '</div>';
+					} else {
+						//填写模式
+						c += '<div class="input-list">';
+						c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+						c += '  <div class="input-list-text left"><input id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" readonly="readonly" onclick="this.focus()" title="' + data.itemName + '" type="text" class="inpu-list-text-enter"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/close.png" class="input-icon" id="' + data.itemId + '_Clear" style="right:56px' + (data.value == "" ? ";visibility:hidden;": "") + '"/><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/calendar.png" class="input-icon" id="' + data.itemId + '_Btn" style="right:51px"/></div>';
+						c += '  <div class="input-list-suffix left">' + (data.suffixUrl != "" ? '<a target="_blank" href="' + data.suffixUrl + '">': '') + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + (data.suffixUrl != "" ? '</a>': '') + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+						c += '  <div class="clear"></div>';
+						c += '</div>';
+					} 
+			 }
 		} else {
 			c += '<div class="question-answer">';
 			c += '  <div class="format ">';
@@ -95,7 +117,30 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 	_eventbind: function(data) {
 		var $inputBox = $("#" + data.itemId);
 		var $selectBtn = $("#" + data.itemId + "_Btn");
-
+		
+		var $clearBtn = $("#" + data.itemId + "_Clear");
+	if(SurveyBuild.accessType == "M"){
+		//M手机
+		var $type;
+		switch(data.dateformate)
+		{
+		case 'yy/mm':
+			  $type= "ym";
+			  break;
+		case 'yy-mm':
+			  $type= "ym";
+			  break;
+		default:
+			 $type= "date";
+		}
+		 var calendar = new LCalendar();
+		    calendar.init({
+		        'trigger': '#' + data.itemId, //标签id
+		        'type': $type, //date 调出日期选择 datetime 调出日期时间选择 time 调出时间选择 ym 调出年月选择,
+		        'minDate': data.minYear + "-01-01", //最小日期
+		        'maxDate':data.maxYear + "-12-31"
+		    });
+	}else{
 		$inputBox.datetimepicker({
 			changeMonth: true,
 			changeYear: true,
@@ -106,12 +151,35 @@ SurveyBuild.extend("DateInputBox", "SingleTextBox", {
 			onSelect: function(dateText, inst) {
 				$inputBox.datetimepicker("hide");
 				$inputBox.trigger("blur");
+				$clearBtn.css("visibility","visible");
 			}
+			/*showButtonPanel: true,  
+		    beforeShow: function( input ) {  
+		        setTimeout(function() {  
+		          var buttonPane = $( input )  
+		            .datepicker( "widget" )  
+		            .find( ".ui-datepicker-buttonpane" );  
+		            
+		          $( "<button>", {  
+		            text: "清空",  
+		            click: function() {  
+		              //$.datepicker._clearDate( input );  
+		            	$inputBox.val("");
+		            }  
+		          }).appendTo( buttonPane );  
+		        }, 1 );  
+		      } */
 		});
-
+		 }
 		$selectBtn.click(function(e) {
 			$inputBox.click();
 		});
+		
+		$clearBtn.click(function(e) {
+			$inputBox.val("");
+			$clearBtn.css("visibility","hidden");
+		});
+		
 		$inputBox.formValidator({tipID: data["itemId"] + 'Tip',onShow: "",onFocus: "&nbsp;",onCorrect: "&nbsp;"});
 		$inputBox.functionValidator({
 			fun: function(val, elem) {

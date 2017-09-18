@@ -51,11 +51,11 @@ public class TzNegativeApplyNumberServiceImpl extends TzNegativeListBundleServic
 			if (opridlist != null && opridlist.size() > 0) {
 				for (int i = 0; i < opridlist.size(); i++) {
 					oprid = opridlist.get(i).get("OPRID").toString();
-					System.out.println(oprid);
+					// System.out.println(oprid);
 					havenumber = SqlQuery.queryForObject(
 							TzSQLObject.getSQLText("SQL.TZNegativeListInfeBundle.TzNegativeOverthree"),
-							new Object[] { oprid }, "Integer");
-					if (havenumber != null && havenumber > 3) {
+							new Object[] { oprid, classId }, "Integer");
+					if (havenumber != null && havenumber >= 3) {
 						String sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
 						Integer appinsId = SqlQuery.queryForObject(sql, new Object[] { oprid, classId }, "Integer");
 						PsTzCsKsFmT PsTzCsKsFmT = new PsTzCsKsFmT();
@@ -66,11 +66,12 @@ public class TzNegativeApplyNumberServiceImpl extends TzNegativeListBundleServic
 						PsTzCsKsFmT.setTzClassId(classId);
 						PsTzCsKsFmT.setTzApplyPcId(batchId);
 						PsTzCsKsFmT.setTzFmqdId(fmqdId);
-						PsTzCsKsFmT.setTzFmqdName("申请次数大于3次");
+						PsTzCsKsFmT.setTzFmqdName("申请次数大于等于3次");
 						have_one = SqlQuery.queryForObject(
 								"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
 								new Object[] { classId, batchId, Long.valueOf(appinsId), fmqdId }, "Integer");
 						if (have_one > 0) {
+							PsTzCsKsFmTMapper.updateByPrimaryKeySelective(PsTzCsKsFmT);
 
 						} else {
 							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);

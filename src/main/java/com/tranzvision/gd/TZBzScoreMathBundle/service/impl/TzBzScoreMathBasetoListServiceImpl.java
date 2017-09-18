@@ -6,13 +6,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
+import com.tranzvision.gd.util.sql.TZGDObject;
 
 @Service("com.tranzvision.gd.TZBzScoreMathBundle.service.impl.TzBzScoreMathBasetoListServiceImpl")
 public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
+	@Autowired
+	private SqlQuery SqlQuery;
+	@Autowired
+	private TZGDObject TzGDObject;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	@Autowired
+	private HttpServletRequest request;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -37,7 +51,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 		// JSONArray jsonArray = null;
 		List<Map<String, Object>> jsonArray = null;
 		int num1 = 0;
-		System.out.println(jacksonUtil.containsKey("add"));
+		//System.out.println(jacksonUtil.containsKey("add"));
 		if (jacksonUtil.containsKey("add")) {
 			jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("add");
 			// System.out.println(jacksonUtil.Map2json(jsonArray));
@@ -45,7 +59,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 				actData = new String[jsonArray.size()];
 				for (num1 = 0; num1 < jsonArray.size(); num1++) {
 					actData[num1] = jacksonUtil.Map2json(jsonArray.get(num1));
-					System.out.println(actData[num1]);
+					//System.out.println(actData[num1]);
 				}
 
 			}
@@ -76,7 +90,7 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 			for (num = 0; num < actData.length; num++) {
 				// 提交信息
 				String strForm = actData[num];
-				System.out.println(strForm);
+				//System.out.println(strForm);
 				jacksonUtil.json2Map(strForm);
 				// 主题 ID;
 
@@ -129,10 +143,17 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapList = new HashMap<String, Object>();
 				mapList.put("xmid", rowList[0]);
 				mapList.put("xmName", rowList[1]);
-				mapList.put("teamID", rowList[2]);
+				try {
+					mapList.put("teamID", rowList[2]);
+
+				} catch (Exception e) {
+					//e.printStackTrace();
+					mapList.put("teamID", "");
+				}
+
 				//
 				for (i_two = 1; i_two <= (rowList.length - 3); i_two++) {
-					System.out.println(3 * i_two + ";" + rowList.length);
+					//System.out.println(3 * i_two + ";" + rowList.length);
 
 					if (3 * i_two >= rowList.length) {
 						mapList.put("judge_" + String.valueOf(i_two) + "_id", null);
@@ -168,6 +189,157 @@ public class TzBzScoreMathBasetoListServiceImpl extends FrameworkImpl {
 		mapRet.replace("root", listData);
 		return jacksonUtil.Map2json(mapRet);
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public String tzOther(String strType, String strParams, String[] errorMsg) {
+		String strRet = "";
+
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		List<Map<String, Object>> pwList = new ArrayList<Map<String, Object>>();
+		ArrayList<Map<String, Object>> listdate = new ArrayList<Map<String, Object>>();
+
+		Map<String, Object> ysfMap = null;
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+
+			String[] actData = null;
+			// 操作数据;
+			// JSONArray jsonArray = null;
+			List<Map<String, Object>> jsonArray = null;
+
+			int num1 = 0;
+
+			String classId = "";
+			String appinsId = "";
+			String ksOprId = "";
+			String batchId = "";
+			String pwOprid = "";
+			String ksName = "";
+			String pwId = "";
+			String pwName="";
+			String scoreNum = "";
+			String judgeGroup = "";
+			String judgeName = "";
+
+			String pwListsql = "SELECT A.TZ_PWEI_OPRID,B.TZ_DLZH_ID FROM PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE B.OPRID=A.TZ_PWEI_OPRID AND A.TZ_APPLY_PC_ID =?  AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID =? AND A.TZ_DELETE_ZT<>'Y' AND A.TZ_PSHEN_ZT='Y'";
+
+			if (jacksonUtil.containsKey("add")) {
+				jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("add");
+				// System.out.println(jacksonUtil.Map2json(jsonArray));
+				if (jsonArray != null && jsonArray.size() > 0) {
+					actData = new String[jsonArray.size()];
+					for (num1 = 0; num1 < jsonArray.size(); num1++) {
+						actData[num1] = jacksonUtil.Map2json(jsonArray.get(num1));
+						//System.out.println(actData[num1]);
+					}
+
+				}
+			}
+
+			switch (strType) {
+			case "MATHSCORE":
+				for (int num = 0; num < actData.length; num++) {
+					String strParam = actData[num];
+					jacksonUtil.json2Map(strParam);
+					
+					if (jacksonUtil.containsKey("searchSql")) {
+						String searchSql = jacksonUtil.getString("searchSql");
+						System.out.println("searchSql:"+searchSql);
+						List<Map<String, Object>> appInsList = SqlQuery.queryForList(searchSql);
+						String sql="";
+						for (Map<String, Object> appInsMap : appInsList) {
+							appinsId = appInsMap.get("TZ_APP_INS_ID") == null ? ""
+									: appInsMap.get("TZ_APP_INS_ID").toString();
+							 classId = appInsMap.get("TZ_CLASS_ID") == null ? ""
+									: appInsMap.get("TZ_CLASS_ID").toString();
+							 batchId = appInsMap.get("TZ_APPLY_PC_ID") == null ? ""
+									: appInsMap.get("TZ_APPLY_PC_ID").toString();
+							 ksOprId = appInsMap.get("OPRID") == null ? ""
+									: appInsMap.get("OPRID").toString();
+							 ksName = appInsMap.get("TZ_REALNAME") == null ? ""
+									: appInsMap.get("TZ_REALNAME").toString();
+							 judgeGroup = appInsMap.get("TZ_CLPS_GR_NAME") == null ? ""
+									: appInsMap.get("TZ_CLPS_GR_NAME").toString();
+						    	pwList = SqlQuery.queryForList(pwListsql, new Object[] { batchId, classId, appinsId });
+							 	//System.out.println("pwList:" + pwList.size());
+								if (pwList.size() > 0) {
+									for (Map<String, Object> Pwmap : pwList) {
+										pwOprid = Pwmap == null || Pwmap.get("TZ_PWEI_OPRID") == null ? ""
+												: Pwmap.get("TZ_PWEI_OPRID").toString();
+										judgeName = Pwmap == null || Pwmap.get("TZ_DLZH_ID") == null ? ""
+												: Pwmap.get("TZ_DLZH_ID").toString();
+										//System.out.println("pwOprid:" + pwOprid);
+
+										ysfMap = SqlQuery.queryForMap(
+												TzGDObject.getSQLText("SQL.TZBzScoreMathBundle.TZ_MSPS_YSCORE_NUM"),
+												new Object[] { orgid, classId, batchId, Integer.valueOf(appinsId), pwOprid });
+
+										pwId = ysfMap == null || ysfMap.get("TZ_PWEI_GRPID") == null ? ""
+												: ysfMap.get("TZ_PWEI_GRPID").toString();
+										scoreNum = ysfMap == null || ysfMap.get("TZ_SCORE_NUM") == null ? ""
+												: ysfMap.get("TZ_SCORE_NUM").toString();
+										sql="SELECT TZ_CLPS_GR_NAME FROM PS_TZ_MSPS_GR_TBL WHERE TZ_JG_ID=? AND TZ_CLPS_GR_ID=?";
+										pwName=SqlQuery.queryForObject(sql, new Object[]{orgid,pwId}, "String");
+										Map<String, Object> mapList = new HashMap<String, Object>();
+										mapList.put("xmid", appinsId);
+										mapList.put("xmName", ksName);
+										mapList.put("teamID", pwName);
+										mapList.put("judgeUser", judgeName);
+										mapList.put("rawscore", scoreNum);
+										mapList.put("judgescore", "");
+
+										listdate.add(mapList);
+										//System.out.println("listdate:" + listdate.size());
+
+									}
+
+								} else {
+									Map<String, Object> mapList = new HashMap<String, Object>();
+									mapList.put("xmid", appinsId);
+									mapList.put("xmName", ksName);
+									mapList.put("teamID", judgeGroup);
+									mapList.put("judgeUser", "");
+									mapList.put("rawscore", "");
+									mapList.put("judgescore", "");
+
+									listdate.add(mapList);
+
+								}
+
+						}
+					}
+					
+					
+					
+				/*	classId = jacksonUtil.getString("classId");
+					appinsId = jacksonUtil.getString("appInsId");
+					System.out.println("appinsId:" + appinsId);
+					batchId = jacksonUtil.getString("batchId");
+					ksOprId = jacksonUtil.getString("ksOprId");
+					ksName = jacksonUtil.getString("ksName");
+					judgeGroup = jacksonUtil.getString("judgeGroup");*/
+		
+
+				}
+
+				strRet = jacksonUtil.List2json(listdate);
+				//System.out.println("strRet:" + strRet);
+				break;
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "操作异常。" + e.getMessage();
+			// TODO: handle exception
+		}
+
+		return strRet;
 	}
 
 	/***

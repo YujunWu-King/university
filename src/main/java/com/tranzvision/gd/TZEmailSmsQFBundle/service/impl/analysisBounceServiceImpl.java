@@ -9,8 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,11 +40,11 @@ public class analysisBounceServiceImpl  {
 	@Autowired
 	private PsTzYjqftxrzTMapper psTzYjqftxrzTMapper;
 	
-	@Autowired
-	private HttpServletRequest request;
-	
 	public void analysisBounceByMailServId(String strPicId,String mailServId,int prcsInsId){
-		String  TZ_EML_ADDR100 = "",TZ_CHS_SNAME="",TZ_SMTP_ADDR="",TZ_USR_NAME="",TZ_USR_PWD="";
+		String TZ_SMTP_ADDR="";
+		String TZ_USR_NAME="";
+		String TZ_USR_PWD="";
+		String TZ_POP_IMAP_ADDR = "";
 
 		TranzReceiveOneMail mail;
 
@@ -65,40 +63,11 @@ public class analysisBounceServiceImpl  {
 			}
 			String dirPath = (String)urlMap.get("TZ_ABSLT_URL");
 			String relPath = (String)urlMap.get("TZ_REL_URL");
-			/*
-			String portalUrlSql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_LOG_URL'";
-			String TZ_PORTAL_URL = jdbcTemplate.queryForObject(portalUrlSql, "String");
-			if(TZ_PORTAL_URL != null && !"".equals(TZ_PORTAL_URL)){
-				if(TZ_PORTAL_URL.indexOf("/") != (TZ_PORTAL_URL.length()-1)){
-					TZ_PORTAL_URL = TZ_PORTAL_URL + "/";
-				}
-			}
-			
-			
-			String s_dtm = datetimeFormate.format(new Date());
-			String fileName = getRandomObj.getRandomString(10) + "_" + s_dtm;
-			String dirPath = TZ_PORTAL_URL + "linkfiles/mailLog";
-			
-			dirPath = request.getServletContext().getRealPath(dirPath);
-			File tF = new File(dirPath);
-			if (!tF.exists()) {
-				tF.mkdirs();
-			}
-			*/
+
 			String s_dtm = datetimeFormate.format(new Date());
 			String fileName = getRandomObj.getRandomString(10) + "_" + s_dtm;
 			
 			String strFileFullName = "";
-			
-			//查看当前路径是以什么分割的;
-			/*
-			if("/".equals(File.separator)){
-				strFileFullName = dirPath + "/" + fileName + ".log";
-			}
-			if("\\".equals(File.separator)){
-				strFileFullName = dirPath + "\\" + fileName + ".log";
-			}
-			*/
 			strFileFullName = dirPath + fileName + ".log";
 			System.out.println("----->"+strFileFullName);
 			
@@ -124,17 +93,18 @@ public class analysisBounceServiceImpl  {
 				return;
 			}
 			
-			Map<String,Object> map = jdbcTemplate.queryForMap("SELECT TZ_EML_ADDR100,TZ_CHS_SNAME,TZ_SMTP_ADDR,TZ_USR_NAME,TZ_USR_PWD FROM PS_TZ_EMLS_DEF_TBL WHERE TZ_EMLSERV_ID=?",new Object[]{mailServId});
+			Map<String,Object> map = jdbcTemplate.queryForMap("SELECT TZ_SMTP_ADDR,TZ_USR_NAME,TZ_USR_PWD,TZ_POP_IMAP_ADDR FROM PS_TZ_EMLS_DEF_TBL WHERE TZ_EMLSERV_ID=?",new Object[]{mailServId});
 			if(map != null){
-				TZ_EML_ADDR100 = (String)map.get("TZ_EML_ADDR100");
-				TZ_CHS_SNAME = (String)map.get("TZ_CHS_SNAME");
 				TZ_SMTP_ADDR = (String)map.get("TZ_SMTP_ADDR");
 				TZ_USR_NAME = (String)map.get("TZ_USR_NAME");
 				TZ_USR_PWD = (String)map.get("TZ_USR_PWD");
+				TZ_POP_IMAP_ADDR = map.get("TZ_POP_IMAP_ADDR") == null ? "":(String)map.get("TZ_POP_IMAP_ADDR");
 			}
 			
 			String TZ_POP3_ARR = "";
-			if(TZ_SMTP_ADDR != null && !"".equals(TZ_SMTP_ADDR) ){
+			if(!"".equals(TZ_POP_IMAP_ADDR) && TZ_POP_IMAP_ADDR != null){
+				TZ_POP3_ARR = TZ_POP_IMAP_ADDR;
+			}else if(TZ_SMTP_ADDR != null && !"".equals(TZ_SMTP_ADDR) ){
 				TZ_POP3_ARR = TZ_SMTP_ADDR.toLowerCase().replaceAll("smtp", "pop3");
 			}
 			
@@ -151,14 +121,14 @@ public class analysisBounceServiceImpl  {
 		    fw.write("POP3：" + TZ_POP3_ARR + "\r\n");  
 		    
 		    if(isconnect){
-		    	
 		    	String currentDateTimeStr = sdf.format(new Date());
-		    	fw.write("链接邮件服务器成功，邮件服务器地址为：" + TZ_USR_NAME + "---" + currentDateTimeStr);
+		    	fw.write("链接邮件服务器成功，邮件服务器地址为：" + TZ_USR_NAME + "---" + currentDateTimeStr + "\r\n");
 		    	count = mail.openFolder();
 		    	if (count > 0){
 		    		for(i = count - 1 ; i >= 0; i--){
 		    			mail.Getmail(i);
 		    			mail.analysisMailContent(); /*解析邮件内容*/
+		    			
 		    			String sendDateStr = mail.getSentDate();  
 		    			Date sendDatetime = sdf.parse(sendDateStr);
 		    			if(sendDatetime.before(rwBeginDt)){
@@ -171,21 +141,25 @@ public class analysisBounceServiceImpl  {
 			             String bodyPicID = ""; /*短信邮件群发批次*/
 			             String bounceAddr = ""; /*退信邮箱*/
 			             String content = mail.getBodyText();
-			             int pcFlagIndex = content.indexOf("【TRANZVISION_YJQF_PC_ID_BZ】");
+			             
+			             //追加.eml附件内容的邮件内容，有些退信邮件中原邮件是eml附件
+			             String contentWitheml = mail.getBodyWithEmlText();
+			             
+			             int pcFlagIndex = contentWitheml.indexOf("【TRANZVISION_YJQF_PC_ID_BZ】");
 			             int sIndex,eIndex;
 			             if(pcFlagIndex >=0){
-			            	 sIndex = content.indexOf("【",pcFlagIndex + 1);
-			            	 eIndex = content.indexOf("】",sIndex);
+			            	 sIndex = contentWitheml.indexOf("【",pcFlagIndex + 1);
+			            	 eIndex = contentWitheml.indexOf("】",sIndex);
 			            	 /*邮件正文中隐藏的群发批次ID*/
-			            	 bodyPicID = content.substring(sIndex + 1, eIndex);
+			            	 bodyPicID = contentWitheml.substring(sIndex + 1, eIndex);
 			            	 //解密;
 			            	 bodyPicID = DESUtil.decrypt(bodyPicID, "Tranzvision_Mail");
 			            	 
 			            	 /*解析收件箱*/
 			                 int sMailPosi, eMailPosi;
-			                 sMailPosi = content.indexOf("【",eIndex);
-			                 eMailPosi = content.indexOf("】",sMailPosi);
-			                 bounceAddr = content.substring(sMailPosi + 1,eMailPosi);
+			                 sMailPosi = contentWitheml.indexOf("【",eIndex);
+			                 eMailPosi = contentWitheml.indexOf("】",sMailPosi);
+			                 bounceAddr = contentWitheml.substring(sMailPosi + 1,eMailPosi);
 			                 //解密;
 			                 bounceAddr = DESUtil.decrypt(bounceAddr, "Tranzvision_Mail");
 			                 
@@ -203,7 +177,7 @@ public class analysisBounceServiceImpl  {
 			                		 txMode = (String)txmap.get("TZ_TX_SSLX");
 			                		 txDesc = (String)txmap.get("TZ_TX_DESC");
 			                		 
-			                		 String matchType = "",matchKey="";
+			                		 String matchType = "",matchKey="",matchKeyLower="";
 			                		 boolean satisfy = false;
 			                		 
 			                		 List<Map<String, Object>> list2 = jdbcTemplate.queryForList("SELECT TZ_TX_PPLX,TZ_TXITEM_KEY FROM PS_TZ_TX_LBTJGX_T A,PS_TZ_TX_RULE_TBL B WHERE A.TZ_TX_TYPE_ID=? AND A.TZ_TX_RULE_ID=B.TZ_TX_RULE_ID",new Object[]{txTypeId});
@@ -211,11 +185,12 @@ public class analysisBounceServiceImpl  {
 			                			 for(int h=0;h<list2.size();h++){
 			                				 matchType = (String)list2.get(h).get("TZ_TX_PPLX");
 			                				 matchKey = (String)list2.get(h).get("TZ_TXITEM_KEY");
+			                				 matchKeyLower = matchKey.toLowerCase();
 			                				
 			                				 /*邮件地址匹配*/
 			                				 if("ADD".equals(matchType)){
-			                					 String add = mail.getFrom();
-			                					 if(add.indexOf(matchKey) >= 0){
+			                					 String add = mail.getFrom().toLowerCase();
+			                					 if(add.indexOf(matchKeyLower) >= 0){
 			                						 satisfy = true;
 			                						 fw.write("邮箱地址匹配成功，匹配关键词：" + matchKey + "\r\n"); 
 			                					 }else{
@@ -224,8 +199,8 @@ public class analysisBounceServiceImpl  {
 			                				 }
 			                				 /*邮件主题匹配*/
 			                				 if("SUB".equals(matchType)){
-			                					 String con = mail.getSubject();
-			                					 if(con.indexOf(matchKey) >= 0){
+			                					 String sub = mail.getSubject().toLowerCase();
+			                					 if(sub.indexOf(matchKeyLower) >= 0){
 			                						 satisfy = true;
 			                						 fw.write("邮箱主题匹配成功，匹配关键词：" + matchKey + "\r\n"); 
 			                					 }else{
@@ -234,8 +209,8 @@ public class analysisBounceServiceImpl  {
 			                				 }
 			                				 /*邮件内容匹配*/
 			                				 if("CON".equals(matchType)){
-			                					 String sub = mail.getBodyText();
-			                					 if(sub.indexOf(matchKey) >= 0){
+			                					 String con = mail.getBodyText().toLowerCase();
+			                					 if(con.indexOf(matchKeyLower) >= 0){
 			                						 satisfy = true;
 			                						 fw.write("邮箱内容匹配成功，匹配关键词：" + matchKey + "\r\n"); 
 			                					 }else{
@@ -251,17 +226,22 @@ public class analysisBounceServiceImpl  {
 			                		 if(satisfy){
 			                			 /*匹配成功*/
 					                     String messageId = mail.getMessageId();
-					                     fw.write("匹配成功，邮箱唯一标识：" + messageId + "\r\n"); 
+					                     String UID = mail.getMailUID(); //邮件唯一标识
+					                     if("".equals(UID) || UID == null){
+					                    	 UID = messageId;
+					                     }
+					                     
+					                     fw.write("匹配成功，邮箱唯一标识：" + UID + "\r\n"); 
 					                     /*是否已经解析过*/
 					                     int isAnalysis = 0; 
 					                     /*是否为同一个人*/
 					                     int isSameAddr = 0; 
-					                     isAnalysis = jdbcTemplate.queryForObject("SELECT count(1) FROM PS_TZ_YJQFTXJL_T WHERE TZ_TX_MSG_ID=?", new Object[]{messageId},"Integer");
+					                     isAnalysis = jdbcTemplate.queryForObject("SELECT count(1) FROM PS_TZ_YJQFTXJL_T WHERE TZ_TX_MSG_ID=?", new Object[]{UID},"Integer");
 					                     isSameAddr = jdbcTemplate.queryForObject("SELECT count(1) FROM PS_TZ_YJQFTXJL_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_EMAIL=?", new Object[]{strPicId,bounceAddr},"Integer"); 
 					                     if(isAnalysis == 0 && isSameAddr== 0){
 					                    	 PsTzYjqftxjlT psTzYjqftxjlT = new PsTzYjqftxjlT();
 					                    	 psTzYjqftxjlT.setTzMlsmQfpcId(strPicId);
-					                    	 psTzYjqftxjlT.setTzTxMsgId(messageId);
+					                    	 psTzYjqftxjlT.setTzTxMsgId(UID);
 					                    	 psTzYjqftxjlT.setTzEmail(bounceAddr);
 					                    	 psTzYjqftxjlT.setTzTxType(txMode);
 					                    	 psTzYjqftxjlT.setTzTxDttm(sendDatetime);
@@ -275,7 +255,7 @@ public class analysisBounceServiceImpl  {
 					                    		 fw.write("===================================================================================\r\n"); 
 					                    		 fw.write("【邮件地址】：" + mail.getFrom() + "\r\n"); 
 					                    		 fw.write("【邮件主题】：" + mail.getSubject() + "\r\n"); 
-					                    		 fw.write("【邮件内容】：" + mail.getBodyText() + "\r\n"); 
+					                    		 fw.write("【邮件内容】：" + mail.getBodyWithEmlText() + "\r\n"); 
 					                    		 bounceCount = bounceCount + 1;
 					                    		 delMailIndexArr.add(i);
 					                    	 }

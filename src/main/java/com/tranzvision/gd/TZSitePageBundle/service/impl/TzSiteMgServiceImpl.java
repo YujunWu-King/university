@@ -1643,7 +1643,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				strSaveContent = siteRepCssServiceImpl.repResetContextPath(strSaveContent);
 				strSaveContent = siteRepCssServiceImpl.repResetSkinsImgPath(strSaveContent, strSkinId);
 				
-				String strSavedHtml = tzGDObject.getHTMLText("HTML."+sitePageBundle+".SiteLoginSaveTpl", strSaveContent);
+				String strSavedHtml = tzGDObject.getHTMLTextForDollar("HTML."+sitePageBundle+".SiteLoginSaveTpl", strSaveContent);
 				strSavedHtml = siteRepCssServiceImpl.repTitle(strSavedHtml, strSiteId);
 				strSavedHtml = siteRepCssServiceImpl.repWelcome(strSavedHtml, "");
 				strSavedHtml = siteRepCssServiceImpl.repSiteid(strSavedHtml, strSiteId);
@@ -1652,7 +1652,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 				psTzSiteiDefnTWithBLOBs.setTzLonginSavecode(strSavedHtml);
 
 				// 生成预览代码
-				String strPreviewHtml = tzGDObject.getHTMLText("HTML."+sitePageBundle+".SiteLoginReleaseTpl",
+				String strPreviewHtml = tzGDObject.getHTMLTextForDollar("HTML."+sitePageBundle+".SiteLoginReleaseTpl",
 						strPreviewContent);
 
 				strPreviewHtml = siteRepCssServiceImpl.repContextPath(strPreviewHtml);
@@ -1719,14 +1719,14 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strSavedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteSaveTpl", strSaveContent);
+				String strSavedContent = tzGDObject.getHTMLTextForDollar("HTML.TZSitePageBundle.SiteSaveTpl", strSaveContent);
 				strSavedContent = siteRepCssServiceImpl.repWelcome(strSavedContent, "");
 				strSavedContent = siteRepCssServiceImpl.repSiteid(strSavedContent, strSiteId);
 				strSavedContent = siteRepCssServiceImpl.repJgid(strSavedContent, orgid);
 				strSavedContent = siteRepCssServiceImpl.repLang(strSavedContent, siteLang);
 				psTzSiteiDefnTWithBLOBs.setTzEnrollSavecode(strSavedContent);
 
-				String strPreviewContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl",
+				String strPreviewContent = tzGDObject.getHTMLTextForDollar("HTML.TZSitePageBundle.SiteReleaseTpl",
 						strSaveContent);
 				strPreviewContent = siteRepCssServiceImpl.repWelcome(strPreviewContent, "");
 				strPreviewContent = siteRepCssServiceImpl.repSdkbar(strPreviewContent, "");
@@ -1786,7 +1786,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					sitePageBundle="TZSitePageBundle";
 				}
 				
-				String strReleasedHtml = tzGDObject.getHTMLText("HTML." + sitePageBundle +".SiteIndexReleaseTpl",
+				String strReleasedHtml = tzGDObject.getHTMLTextForDollar("HTML." + sitePageBundle +".SiteIndexReleaseTpl",
 						strReleaseContent);
 
 				String ctxPath = request.getContextPath();
@@ -1868,7 +1868,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 					sitePageBundle="TZSitePageBundle";
 				}
 				
-				String strReleaseHtml = tzGDObject.getHTMLText("HTML."+sitePageBundle+".SiteLoginReleaseTpl",
+				String strReleaseHtml = tzGDObject.getHTMLTextForDollar("HTML."+sitePageBundle+".SiteLoginReleaseTpl",
 						strReleaseContent);
 
 				String ctxPath = request.getContextPath();
@@ -1943,7 +1943,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 				PsTzSiteiDefnTWithBLOBs psTzSiteiDefnTWithBLOBs = new PsTzSiteiDefnTWithBLOBs();
 
-				String strReleasedContent = tzGDObject.getHTMLText("HTML.TZSitePageBundle.SiteReleaseTpl",
+				String strReleasedContent = tzGDObject.getHTMLTextForDollar("HTML.TZSitePageBundle.SiteReleaseTpl",
 						strReleaseContent);
 				strReleasedContent = siteRepCssServiceImpl.repTitle(strReleasedContent, strSiteId);
 				// strReleasedContent =
@@ -2047,7 +2047,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception(e.getMessage());
+			//throw new Exception(e.getMessage());
 		}
 
 		return strRet;
@@ -2087,7 +2087,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception(e.getMessage());
+			//throw new Exception(e.getMessage());
 		}
 
 		return strRet;
@@ -2133,7 +2133,7 @@ public class TzSiteMgServiceImpl extends FrameworkImpl {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception(e.getMessage());
+			//throw new Exception(e.getMessage());
 		}
 
 		return strRet;

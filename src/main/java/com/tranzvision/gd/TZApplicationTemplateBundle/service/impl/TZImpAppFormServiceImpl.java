@@ -3,7 +3,10 @@ package com.tranzvision.gd.TZApplicationTemplateBundle.service.impl;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +100,7 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		if (maxInsId != null && maxInsId > numAppInsId) {
 			numAppInsId = maxInsId;
 		}
-
+		Pattern CRLF = Pattern.compile("(\r\n|\r|\n|\n\r)"); 
 		String sql = "SELECT * FROM PS_TZ_APPINS_TBL WHERE cast(TZ_APP_INS_ID as unsigned int) >= ? AND cast(TZ_APP_INS_ID as unsigned int) < ? order by cast(TZ_APP_INS_ID as unsigned int)";
 		List<?> resultlist = sqlQuery.queryForList(sql, new Object[] { min, max });
 		for (Object obj : resultlist) {
@@ -111,7 +114,18 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 			String attrText1 = result.get("TEXTAREA_1") == null ? "" : String.valueOf(result.get("TEXTAREA_1"));
 			String attrText2 = result.get("TEXTAREA_2") == null ? "" : String.valueOf(result.get("TEXTAREA_2"));
 			String attrText3 = result.get("TEXTAREA_3") == null ? "" : String.valueOf(result.get("TEXTAREA_3"));
-
+//			Matcher m = CRLF.matcher(attrText1);
+//			if(m.find()){
+//				attrText1 = m.replaceAll("\\\\n");
+//			}
+//			Matcher m2 = CRLF.matcher(attrText2);
+//			if(m2.find()){
+//				attrText2 = m2.replaceAll("\\\\n");
+//			}
+//			Matcher m3 = CRLF.matcher(attrText3);
+//			if(m3.find()){
+//				attrText3 = m3.replaceAll("\\\\n");
+//			}
 			/*---检查考生是否存在 Begin ---*/
 			String isHasOpr = "SELECT 'Y' FROM PS_TZ_REG_USER_T WHERE OPRID = ? LIMIT 0,1";
 			String isHas = sqlQuery.queryForObject(isHasOpr, new Object[] { attrOprid }, "String");
@@ -566,4 +580,126 @@ public class TZImpAppFormServiceImpl extends FrameworkImpl {
 		return msg;
 	}
 
+	public String createAppForm(String clsid, String[] oprids) {
+		String[] errMsg = { "0", "" };
+		String retMsg = "";
+		
+		String tplJson = "";
+		if (StringUtils.isBlank(tplJson)) {
+			try {
+				/* 初始化模板文件内容，是通过模板报文将其中的children改成[]后生成的，可通过模板报文、实例报文对比修改 */
+				tplJson = tzGDObject.getHTMLText("HTML.TZApplicationTemplateBundle.TZ_APPTPL_JSON_STR_INIT_HTML");
+				tplJson = tzGDObject.getText(tplJson, "", "", "");
+			} catch (TzSystemException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		String maxSql = "SELECT MAX(cast(TZ_APP_INS_ID as unsigned int)) + 1 FROM PS_TZ_APP_INS_T WHERE cast(TZ_APP_INS_ID as unsigned int) < 400000";
+		Long maxInsId = sqlQuery.queryForObject(maxSql, new Object[] {}, "long");
+		
+		Date dateNow = new Date();
+		String strTplId = "147";
+		for (String oprid : oprids) {
+			/*---检查考生是否存在 Begin ---*/
+			String isHasOpr = "SELECT 'Y' FROM PS_TZ_REG_USER_T WHERE OPRID = ? LIMIT 0,1";
+			String isHas = sqlQuery.queryForObject(isHasOpr, new Object[] { oprid }, "String");
+			if (!StringUtils.equals("Y", isHas)) {
+				retMsg = retMsg + "<br>" + oprid + "(" + maxInsId + ")   ----->    考生不存在";
+				continue;
+			}
+			/*---检查考生是否存在 END	---*/
+			
+			/*---创建报名表实例 Begin ---*/
+			PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
+			psTzAppInsT.setTzAppInsId(maxInsId);
+			psTzAppInsT.setTzAppTplId(strTplId);
+			psTzAppInsT.setTzAppInsVersion("");
+			psTzAppInsT.setTzAppFormSta("S");
+			psTzAppInsT.setTzAppinsJsonStr(tplJson);
+			psTzAppInsT.setRowAddedOprid(oprid);
+			psTzAppInsT.setRowAddedDttm(dateNow);
+			psTzAppInsT.setRowLastmantOprid(oprid);
+			psTzAppInsT.setRowLastmantDttm(dateNow);
+			int insSize = psTzAppInsTMapper.insert(psTzAppInsT);
+			if (insSize < 1) {
+				logger.info("---报名表实例创建失败 ---InsId: " + maxInsId + "    TPL: " + strTplId + "  OprId: " + oprid);
+				retMsg = retMsg + "<br>" + "---报名表实例创建失败 ---InsId: " + maxInsId + "    TPL: " + strTplId
+						+ "  OprId: " + oprid;
+				continue;
+			} else {
+				/*---创建报名表存储表  Begin ---*/
+				PsTzAppCcT psTzAppCcT = new PsTzAppCcT();
+				psTzAppCcT.setTzAppInsId(maxInsId);
+				psTzAppCcT.setTzXxxBh("TZ_26TZ_TZ_26_1");
+				psTzAppCcT.setTzAppLText("");
+				psTzAppCcTMapper.insert(psTzAppCcT);
+
+				PsTzAppCcT psTzAppCcT1 = new PsTzAppCcT();
+				psTzAppCcT1.setTzAppInsId(maxInsId);
+				psTzAppCcT1.setTzXxxBh("TZ_26TZ_TZ_26_2");
+				psTzAppCcT1.setTzAppLText("");
+				psTzAppCcTMapper.insert(psTzAppCcT1);
+
+				PsTzAppCcT psTzAppCcT2 = new PsTzAppCcT();
+				psTzAppCcT2.setTzAppInsId(maxInsId);
+				psTzAppCcT2.setTzXxxBh("TZ_26TZ_TZ_26_3");
+				psTzAppCcT2.setTzAppLText("");
+				psTzAppCcTMapper.insert(psTzAppCcT2);
+
+				PsTzAppCcT psTzAppCcT3 = new PsTzAppCcT();
+				psTzAppCcT3.setTzAppInsId(maxInsId);
+				psTzAppCcT3.setTzXxxBh("TZ_26TZ_TZ_26_4");
+				psTzAppCcT3.setTzAppLText("");
+				psTzAppCcTMapper.insert(psTzAppCcT3);
+				/*---创建报名表存储表 End   ---*/
+
+				/*---创建报名表PS_TZ_APP_DHHS_T Begin ---*/
+				PsTzAppDhhsT psTzAppDhhsT = new PsTzAppDhhsT();
+				psTzAppDhhsT.setTzAppInsId(maxInsId);
+				psTzAppDhhsT.setTzXxxBh("TZ_26");
+				psTzAppDhhsT.setTzXxxLine((short) 4);
+				psTzAppDhhsTMapper.insert(psTzAppDhhsT);
+				/*---创建报名表PS_TZ_APP_DHHS_T End   ---*/
+
+				/*---创建报名表工作表 Begin ---*/
+				int count = 0;
+				String wksql = "SELECT COUNT(1) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";
+				count = sqlQuery.queryForObject(wksql, new Object[] { clsid, oprid }, "Integer");
+				if (count > 0) {
+					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
+					psTzFormWrkT.setTzClassId(clsid);
+					psTzFormWrkT.setOprid(oprid);
+					psTzFormWrkT.setTzAppInsId(maxInsId);
+					psTzFormWrkT.setRowLastmantOprid(oprid);
+					psTzFormWrkT.setRowLastmantDttm(dateNow);
+					psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
+					logger.info( "---更新工作表---" + oprid + "   ----clsid：---" + clsid + "    ---->InsId：" + maxInsId);
+				} else {
+					PsTzFormWrkT psTzFormWrkT = new PsTzFormWrkT();
+					psTzFormWrkT.setTzClassId(clsid);
+					psTzFormWrkT.setOprid(oprid);
+					psTzFormWrkT.setTzAppInsId(maxInsId);
+					psTzFormWrkT.setRowAddedOprid(oprid);
+					psTzFormWrkT.setRowAddedDttm(dateNow);
+					psTzFormWrkT.setRowLastmantOprid(oprid);
+					psTzFormWrkT.setRowLastmantDttm(dateNow);
+					int inswksize = psTzFormWrkTMapper.insert(psTzFormWrkT);
+					if (inswksize < 1) {
+						logger.info("---插入工作表失败---" + oprid + "   ----clsid：---" + clsid + "    ---->InsId："
+								+ maxInsId);
+						retMsg = retMsg + "<br>" + "---插入工作表失败---" + oprid + "   ----clsid：---" + clsid
+								+ "    ---->InsId：" + maxInsId;
+						continue;
+					}else{
+						logger.info("---OK---" + oprid + "   ----clsid：---" + clsid + "    ---->InsId："
+								+ maxInsId);
+					}
+				}
+				/*---创建报名表工作表 End   ---*/
+			}
+			maxInsId ++;
+		}
+		return retMsg;
+	}
 }

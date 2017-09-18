@@ -38,33 +38,58 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                     }
                 });
             }
-            if(SurveyBuild._readonly) {
-            	c += '<div class="input-list">';
-            	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-            	c += '  <div class="input-list-text left headshot">';
-            	c += '		<div class="headshot-pic">';
-            	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-            	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" />';
-            	c += '		</div>';
-            	c += '	</div>';
-            	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-            	c += '	<div class="clear"></div><br>';
-            	c += '</div>';
-            } else {
-            	c += '<div class="input-list">';
-            	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-            	c += '  <div class="input-list-text left headshot">';
-            	c += '		<div class="headshot-pic">';
-            	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
-            	c += '			<a id="photo' + data.itemId + '" style="cursor: pointer;"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" /></a>';
-            	c += '		</div>';
-            	c += '	</div>';
-            	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-            	c += '	<div class="clear"></div><br>';
-            	c += '</div>';
-            	c += '<input type="hidden" value="" name="mbaSqphoto" id="mbaSqphoto">';
-            }
-        } else {
+            if(SurveyBuild.accessType == "M"){
+            	  if(SurveyBuild._readonly) {
+                   	c += '<div class="input-list">';
+                  	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                  	c += '  <div class="input-list-text left headshot">';
+                  	c += '		<div class="headshot-pic">';
+                  	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+                  	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" hiegth="100%" width="100%"/>';
+                  	c += '		</div>';
+                  	c += '	</div>';
+                  	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+                  	c += '	<div class="clear"></div><br>';
+                  	c += '</div>';
+                  } else {
+                  	c += '<div class="item">';
+                  	c += ' 	<p>'+data.title+'<span>*</span></p>';
+                  	c += '	<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+                  	c += '  <a class="photo" id="photo' + data.itemId + '"><img id="photox" src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/m/bjphoto.jpg": TzUniversityContextPath + data.value) + '"/></a>';
+                  	c+='<p class="mSuffix" style="color:#666;font-size:0.56rem;">'+(data["suffix"]? data.suffix:" ")+'</p>';
+                  	c +='</div>';                                  
+                  	}
+                }
+            else{
+                    if(SurveyBuild._readonly) {
+                 	c += '<div class="input-list">';
+                	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                	c += '  <div class="input-list-text left headshot">';
+                	c += '		<div class="headshot-pic">';
+                	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+                	c += '			<img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" />';
+                	c += '		</div>';
+                	c += '	</div>';
+                	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+                	c += '	<div class="clear"></div><br>';
+                	c += '</div>';
+                } else {
+                    c += '<div class="input-list">';
+                	c += ' 	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+                	c += '  <div class="input-list-text left headshot">';
+                	c += '		<div class="headshot-pic">';
+                	c += '			<input id="' + data.itemId + '" type="hidden" name="' + data.itemId + '" value = "' + TzUniversityContextPath + data.value + '" data-id="' + data.instanceId + '">';
+                	c += '			<a id="photo' + data.itemId + '" style="cursor: pointer;"><img src="' + (data.value.length < 1 ? TzUniversityContextPath + "/statics/images/appeditor/bjphoto.jpg": TzUniversityContextPath + data.value) + '" id="photo" /></a>';
+                	c += '		</div>';
+                	c += '	</div>';
+                	c += '	<div class="left headshot-info">' + data.suffix + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+                	c += '	<div class="clear"></div><br>';
+                	c += '</div>';
+                	c += '<input type="hidden" value="" name="mbaSqphoto" id="mbaSqphoto">';
+                 }
+            } 
+        }
+         else {
             c += '<div class="question-answer">';
             c += '	<div class="format">';
             c += '		<img src="' + TzUniversityContextPath + '/statics/images/appeditor/bjphoto.jpg" width="120" height="165" />';
@@ -137,8 +162,39 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
         return e;
     },
     _eventbind: function(data) {
-        var $photoBox = $("#photo" + data.itemId);
-        var up;
+    	if(SurveyBuild.accessType == "M"){
+    		var $photoBox = $("#photo" + data.itemId);
+    		$photoBox.click(function(){
+    			var tzparam = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_MUP_PHOTO_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '"}}';
+                $.ajax({
+    				type: "post",
+    				async :false,
+    				data:{
+    					tzParams:tzparam
+    				},
+    				url: TzUniversityContextPath + "/dispatcher",
+    				dataType: "html",
+    				success: function(result){
+    					$("#searchCountry").html("");
+						$("#searchCountry").html(result);
+						
+						$("#searchCountry").fadeIn("slow");
+						loaded();
+    					
+    				}
+						
+    				
+        		})
+        		
+    			
+    		});
+    		
+
+    	
+    		
+    	}else{
+    		var $photoBox = $("#photo" + data.itemId);
+    		var up;
         $photoBox.click(function(e) {
             var photoUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
             var params = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_UP_PHOTO_STD","OperateType":"HTML","comParams":{"TPLID":"' + templId + '","siteId":"' + $("#siteId").val() + '"}}';
@@ -157,6 +213,7 @@ SurveyBuild.extend("bmrPhoto", "baseComponent", {
                     src: photoUrl
                 }
             });
-        });
-    }
+          });
+    	}
+     }
 });

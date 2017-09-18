@@ -164,24 +164,28 @@
 			strParam = strParam.substr(0,strParam.length-1);
 			strParam = strParam + "}";
 			
-			var strComParams = "{\"ComID\":\"TZ_HD_MOBILE_COM\",\"PageID\":\"TZ_HD_APPFORM_STD\",\"OperateType\":\"EJSON\",\"comParams\":"+ strParam + "}";
+			var strComParams = "{\"ComID\":\"TZ_APPONL_COM\",\"PageID\":\"TZ_APPREG_STD\",\"OperateType\":\"EJSON\",\"comParams\":"+ strParam + "}";
 			$.ajax({
 				type : "POST",
 				url : applyURL,
 				dataType:"json",
 				async:false,
-				data:{"tzParams": strComParams},
+				data:{"tzParams": strComParams, "FORM": "M"},
 				success: function(resp){
-					var data = resp.comContent;
-					var result = data.result;
-					var resultDesc = data.resultDesc;
-					if(result == "3" || result == "4"){ 
-						alert(resultDesc);
-						history.back(); 
+					if(resp.state.errcode == "1"){
+						alert(resp.state.errdesc);
 					}else{
-						alert(resultDesc);
-						generateRegCode();
-						$("#tz_regCode").val("");
+						var data = resp.comContent;
+						var result = data.result;
+						var resultDesc = data.resultDesc;
+						if(result == "3" || result == "4"){ 
+							alert(resultDesc);
+							history.back(); 
+						}else{
+							alert(resultDesc);
+							generateRegCode();
+							$("#tz_regCode").val("");
+						}	
 					}
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown){

@@ -34,8 +34,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 			var formData = responseData.judggroup;
 			var groupid = formData.substring(0, formData.indexOf("|"));
 			var groupname = formData.substring(formData.indexOf("|") + 1, formData.length + 1);
-			console.log(groupid);
-			console.log(groupname);
+			//console.log(groupid);
+			//console.log(groupname);
 			groupidarray = groupid.split(",");
 			groupnamearray = groupname.split(",");
 		});
@@ -141,7 +141,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 
 					},*/ {
 						xtype: 'splitbutton',
-						text: '批量设置录取状态',
+						text: '批量评委组',
 						reference: 'batchsetsplit',
 						iconCls: 'set',
 						menu: ''
@@ -154,8 +154,17 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 					width: 150,
 					editor: {
 						allowBlank: false
+					},
+					hidden:true
+				},
+				{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_JUDGES_STD.judgId", "评委账号"),
+					dataIndex: 'judzhxx',
+					width: 150,
+					editor: {
+						allowBlank: false
 					}
-				}, {
+				},{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_JUDGES_STD.judgName", "评委姓名"),
 					dataIndex: 'judgName',
 					width: 150,
@@ -228,10 +237,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 						return;
 					} else {
 						for (var i = 0; i < checkLen; i++) {
-							if (selection[i].data.judgGroupId == "") {
-									Ext.Msg.alert("提示", "请为" + selection[i].data.judgName + "评委设置分组");
-									return;
-								}else{
+					
 								if (selksList == "") {
 			
 									selksList = Ext.JSON.encode(selection[i].data);
@@ -242,8 +248,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 								}
 								}							
 							}
-
-						}
+/*
+						}*/
 						var form=btn.findParentByType('setmspsruler').down('form').getForm();
 						var gridlist=btn.findParentByType('setmspsruler').down('grid[reference=pwlistgrid]');
 					    var classId = form.findField('classId').getValue();
@@ -253,13 +259,12 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 
 					    var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_JUDGES_STD","OperateType":"U","comParams":{"add":[' + comparams + ']}}';
 					
-					    console.log(tzParams);
+					    //console.log(tzParams);
 		                Ext.tzSubmit(tzParams, function() {
-		               	gridlist.getStore().reload();
+		                   	
 
 		                }, "添加成功!", true, this)
-						 
-
+                          gridlist.getStore().reload();
 
 					//修改密码信息表单
 					var form = win.child("form").getForm();
@@ -296,7 +301,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPwWindow', {
 		//搜索条件
 
 		//交互参数
-		store.tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_JUDGES_STD.TZ_MSJU_REL_VW","condition":{"OPRID-operator": "07","OPRID-value": "' + formParams.judgeID + '","TZ_REALNAME-operator": "07","TZ_REALNAME-value": "' + formParams.judgeName + '","TZ_JG_ID-operator": "07","TZ_JG_ID-value": "' + Ext.tzOrgID + '"}}';
+		store.tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_JUDGES_STD.TZ_MSJU_REL_VW","condition":{"TZ_DLZH_ID-operator": "07","TZ_DLZH_ID-value": "' + formParams.judgeID + '","TZ_REALNAME-operator": "07","TZ_REALNAME-value": "' + formParams.judgeName + '","TZ_JG_ID-operator": "07","TZ_JG_ID-value": "' + Ext.tzOrgID + '"}}';
 		store.load();
 	},
 	

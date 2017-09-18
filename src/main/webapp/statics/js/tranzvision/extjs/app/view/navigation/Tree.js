@@ -30,7 +30,7 @@ Ext.define('KitchenSink.view.navigation.Tree', {
     initComponent: function() {
         var me = this,
             lastFilterValue;
-
+        
         me.columns = [{
             xtype: 'treecolumn',
             flex: 1,
@@ -46,7 +46,11 @@ Ext.define('KitchenSink.view.navigation.Tree', {
                 return value;
             }
         }];
-
+ 	
+    	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("model")=="content"){
+    		me.header = false;
+    	}
+    	
         Ext.apply(me, {
             store: Ext.StoreMgr.get('navigation'),
             dockedItems : [

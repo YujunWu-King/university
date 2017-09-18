@@ -381,7 +381,7 @@ public class RegisteServiceImpl {
 		// explorerHtml = explorerHtml.replaceAll("\\$", "\\\\\\$");
 
 		String strReleasContent1 = doctypeHtml + "<html>"
-			+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,
+			+ tzGdObject.getHTMLTextForDollar("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,
 				request.getContextPath())
 			+ strReleasContent + "</html>";
 
@@ -455,7 +455,7 @@ public class RegisteServiceImpl {
 		// explorerHtml = explorerHtml.replaceAll("\\$", "\\\\\\$");
 
 		strReleasContent = doctypeHtml + "<html>"
-			+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,
+			+ tzGdObject.getHTMLTextForDollar("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,
 				request.getContextPath())
 			+ strReleasContent + "</html>";
 		strReleasContent = objRep.repTitle(strReleasContent, strSiteId);
@@ -844,7 +844,7 @@ public class RegisteServiceImpl {
 		// explorerHtml = explorerHtml.replaceAll("\\$", "\\\\\\$");
 
 		String strReleasContent1 = doctypeHtml + "<html>"
-			+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,
+			+ tzGdObject.getHTMLTextForDollar("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,
 				request.getContextPath())
 			+ strReleasContent + "</html>";
 
@@ -926,7 +926,7 @@ public class RegisteServiceImpl {
 		// explorerHtml = explorerHtml.replaceAll("\\$", "\\\\\\$");
 
 		strReleasContent = doctypeHtml + "<html>"
-			+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,
+			+ tzGdObject.getHTMLTextForDollar("HTML.TZWebSiteRegisteBundle.TZ_REALEAS_HEAD_HTML", explorerHtml,
 				request.getContextPath())
 			+ strReleasContent + "</html>";
 		strReleasContent = objRep.repTitle(strReleasContent, strSiteId);

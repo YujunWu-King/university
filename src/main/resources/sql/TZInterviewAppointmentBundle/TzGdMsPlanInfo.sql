@@ -1,0 +1,20 @@
+SELECT 
+    DATE_FORMAT(TZ_MS_DATE, '%Y-%m-%d') AS TZ_MS_DATE,
+    DATE_FORMAT(TZ_START_TM, '%H:%i') AS TZ_START_TM,
+    DATE_FORMAT(TZ_END_TM, '%H:%i') AS TZ_END_TM,
+    TZ_MSYY_COUNT,
+    TZ_MS_LOCATION,
+    TZ_MS_ARR_DEMO,
+    (SELECT 
+            COUNT(1)
+        FROM
+            PS_TZ_MSYY_KS_TBL
+        WHERE
+            TZ_CLASS_ID = A.TZ_CLASS_ID
+                AND TZ_BATCH_ID = A.TZ_BATCH_ID
+                AND TZ_MS_PLAN_SEQ = A.TZ_MS_PLAN_SEQ) AS TZ_YY_COUNT
+FROM
+    PS_TZ_MSSJ_ARR_TBL A
+WHERE
+    TZ_CLASS_ID = ? AND TZ_BATCH_ID = ?
+        AND TZ_MS_PLAN_SEQ = ?

@@ -1,21 +1,27 @@
 package com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZApplicationCenterBundle.service.impl.AnalysisLcResult;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
 import com.tranzvision.gd.TZWebSiteUtilBundle.service.impl.ValidateUtil;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cookie.TzCookie;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -32,6 +38,8 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
+	private HttpServletResponse response;
+	@Autowired
 	private TZGDObject tzGDObject;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
@@ -39,6 +47,12 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 	private ValidateUtil validateUtil;
 	@Autowired
 	private TzCookie tzCookie;
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
+	@Autowired
+	private GdObjectServiceImpl gdObjectServiceImpl;
 	
 
 	/*手机版招生网站首页*/
@@ -87,6 +101,8 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 				loginOutUrl = ctxPath + "/user/login/" + orgId.toLowerCase() + "/" + siteId;
 			}
 			
+			
+			
 			//个人维护信息双语
 			String strModifyLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "1","修改", "Modify");
 			String strMshXhLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "2","申请号", "Application number");
@@ -98,6 +114,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			String strViewJdLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "7","查看进度", "查看进度");
 			
 			String strAppHisLabel = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "8","查看历史报名", "查看历史报名");
+			String strViewBmbDesc = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE", "ckbm","查看报名表", "查看报名表");
 			//title;
 			String title = "清华MBA招生";
 			//css和js
@@ -163,16 +180,20 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			//我已报名但未过期的活动数量
 			int actCount = 0;
-			String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT = '1' and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
+			String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT in ('1','4') and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
 			actCount = sqlQuery.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
 			String strActCount = "";
 			//System.out.println("strActCount=" + strActCount);
 			if(MsgCount > 0){
-				strMsgCount = "<div class=\"circle\"><span class=\"circle_span\">" + MsgCount + "</span></div>";
+				strMsgCount = "<div id=\"msgCount\" class=\"circle\"><span class=\"circle_span\" id=\"msgCountNum\">" + MsgCount + "</span></div>";
+			}else{
+				strMsgCount = "<div id=\"msgCount\" class=\"circle\" style=\"display:none\"><span class=\"circle_span\" id=\"msgCountNum\">" + MsgCount + "</span></div>";
 			}
 			
 			if(actCount > 0){
-				strActCount = "<div class=\"circle\"><span class=\"circle_span\">" + actCount + "</span></div>";
+				strActCount = "<div id=\"actCount\" class=\"circle\"><span class=\"circle_span\" id=\"actCountNum\">" + actCount + "</span></div>";
+			}else{
+				strActCount = "<div id=\"actCount\" class=\"circle\" style=\"display:none\"><span class=\"circle_span\" id=\"actCountNum\">" + actCount + "</span></div>";
 			}
 			
 			String personHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_GRXX_INFO_HTML",strModifyLabel,strRegEmailLabel,strMshXhLabel,strCityLabel,strSiteMsgLabel,strMyActLabel,strPhoto,strName,strRegEmail,strApplicationNum,strCity,strMsgCount,strActCount,accountMngUrl,znxListUrl,myActivityYetUrl);
@@ -180,150 +201,194 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			/*招生进度*/
 			String xmjdHtml = "";
-			//是否开通了班级;
-			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
-			int totalNum = sqlQuery.queryForObject(totalSQL, new Object[] { siteId,orgId }, "Integer");
-			//是否报名;
-			String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID,TZ_BATCH_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1";
-			long TZ_APP_INS_ID = 0;
-			String classId = "";
-			String msPcId = "";
-			String msPcName = "";
-			Map<String, Object> classAndBmbMap = new HashMap<String, Object>();
-			try{
-				classAndBmbMap = sqlQuery.queryForMap(appinsSQL,new Object[] { m_curOPRID,siteId,orgId  });
-				if(classAndBmbMap != null){
-					TZ_APP_INS_ID = Long.parseLong(String.valueOf(classAndBmbMap.get("TZ_APP_INS_ID")));
-					classId = String.valueOf(classAndBmbMap.get("TZ_CLASS_ID"));
-					msPcId = String.valueOf(classAndBmbMap.get("TZ_BATCH_ID"));
-					if(classId != null && !"".equals(classId) && msPcId != null && !"".equals(msPcId)){
-						msPcName = sqlQuery.queryForObject("select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?", new Object[]{classId,msPcId},"String");
-						if(msPcName == null){
-							msPcName = "";
+			
+			//添加逻辑：只有不在黑名单中且可以申请报名的,如果有没报名的班级则直接显示在线报名;
+			//1:是否允许报名,"N"表示不允许报名;
+			String isAllowedApp = "";
+			//需要查询考生允许报名表 ；
+			isAllowedApp = sqlQuery.queryForObject("select TZ_ALLOW_APPLY from PS_TZ_REG_USER_T where OPRID=?", new Object[]{m_curOPRID},"String");
+			//黑名单
+			String isBlack = sqlQuery.queryForObject("select TZ_BLACK_NAME from PS_TZ_REG_USER_T where OPRID=?", new Object[]{m_curOPRID},"String");
+			//报考方向选择链接;
+			String bkfxUrl =  ctxPath + "/dispatcher?classid=ChosBatch&siteId=" + siteId;
+			//是否已经显示报名中心内容申请按钮;
+			boolean isShowApply = false;
+			if(!"Y".equals(isBlack) && "Y".equals(isAllowedApp)){
+				//是否有没报名的班级;
+				String isNoBmClassSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND TZ_CLASS_ID NOT IN (select TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=?)";
+				int hasNoBmNum = sqlQuery.queryForObject(isNoBmClassSQL, new Object[] { siteId,orgId,m_curOPRID }, "Integer");
+				if(hasNoBmNum > 0){
+					/*
+					int hasBmTotal = sqlQuery.queryForObject("select count(1) from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN  (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?)  AND TZ_JG_ID=?)",new Object[] { m_curOPRID,siteId,orgId  },"Integer");
+					//有没有历史报名;
+					if(hasBmTotal > 0){
+						String hisUrl = ctxPath + "/dispatcher?classid=applyHis&siteId="+siteId;
+						
+					}else{
+						
+					}*/
+					//是否报名;
+					String appinsSQL = "select count(1) from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?)";
+					int zxbmHis =  sqlQuery.queryForObject(appinsSQL,new Object[]{m_curOPRID,siteId,orgId},"Integer");
+					if(zxbmHis > 0){
+						xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_APPLY_HTML",ctxPath,bkfxUrl,strAppHisLabel,viewAppHisUrl);
+					}else{
+						xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_APPLY_NO_HIS_HTML",ctxPath,bkfxUrl);
+					}
+					
+					isShowApply = true;
+				}
+			}
+			
+			if(isShowApply == false ){
+				//是否开通了班级;
+				String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
+				int totalNum = sqlQuery.queryForObject(totalSQL, new Object[] { siteId,orgId }, "Integer");
+				//是否报名;
+				String appinsSQL = "select TZ_APP_INS_ID,TZ_CLASS_ID,TZ_BATCH_ID from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=?) order by ROW_LASTMANT_DTTM desc limit 0,1";
+				long TZ_APP_INS_ID = 0;
+				String classId = "";
+				String msPcId = "";
+				String msPcName = "";
+				Map<String, Object> classAndBmbMap = new HashMap<String, Object>();
+				try{
+					classAndBmbMap = sqlQuery.queryForMap(appinsSQL,new Object[] { m_curOPRID,siteId,orgId  });
+					if(classAndBmbMap != null){
+						TZ_APP_INS_ID = Long.parseLong(String.valueOf(classAndBmbMap.get("TZ_APP_INS_ID")));
+						classId = String.valueOf(classAndBmbMap.get("TZ_CLASS_ID"));
+						msPcId = String.valueOf(classAndBmbMap.get("TZ_BATCH_ID"));
+						if(classId != null && !"".equals(classId) && msPcId != null && !"".equals(msPcId)){
+							msPcName = sqlQuery.queryForObject("select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID=? and TZ_BATCH_ID=?", new Object[]{classId,msPcId},"String");
+							if(msPcName == null){
+								msPcName = "";
+							}
 						}
 					}
+				}catch(NullPointerException nullException){
+					TZ_APP_INS_ID = 0;
+					classId = "";
 				}
-			}catch(NullPointerException nullException){
-				TZ_APP_INS_ID = 0;
-				classId = "";
-			}
-			if(classId == null){
-				classId = "";
-			}
-	
-			//已经报名
-			if(TZ_APP_INS_ID > 0 && !"".equals(classId)){
-				//班级名称；
-				String className = sqlQuery.queryForObject("select TZ_CLASS_NAME from PS_TZ_CLASS_INF_T where TZ_CLASS_ID =?",new Object[]{classId},"String");
-				
-				// 报名流程模型实例是否存在;
-				int bmlcTotalNum = sqlQuery.queryForObject(
-						"select count(1) from PS_TZ_CLS_BMLC_T where TZ_CLASS_ID=?", new Object[] { classId },
-						"Integer");
-				String stepHtml = "";
-				
-				if(bmlcTotalNum > 0){
-
-					String bmlcSql = "select a.TZ_APPPRO_ID,a.TZ_APPPRO_NAME,b.TZ_APPPRO_HF_BH,b.TZ_APPPRO_RST from PS_TZ_CLS_BMLC_T a left join (select * from PS_TZ_APPPRO_RST_T where TZ_APP_INS_ID=? and TZ_CLASS_ID=?) b on a.TZ_APPPRO_ID=b.TZ_APPPRO_ID where a.TZ_CLASS_ID=? order by a.TZ_SORT_NUM asc";
-					List<Map<String, Object>> bmlcList = sqlQuery.queryForList(bmlcSql,
-							new Object[] { TZ_APP_INS_ID, classId, classId });
-					int step = 0;
+				if(classId == null){
+					classId = "";
+				}
+		
+				//已经报名
+				if(TZ_APP_INS_ID > 0 && !"".equals(classId)){
+					//班级名称；
+					String className = sqlQuery.queryForObject("select TZ_CLASS_NAME from PS_TZ_CLASS_INF_T where TZ_CLASS_ID =?",new Object[]{classId},"String");
 					
-					//未发布的一个流程紫色，后面的灰色;
-					boolean lcZsBl = false;
-					//上个流程是不是发布了;
-					boolean sgIsFb = false;
-					if (bmlcList != null && bmlcList.size() > 0) {
-						for (int j = 0; j < bmlcList.size(); j++) {
-							step = step + 1;
-							//是否发布;
-							String isFb = "";
-							
-							String TZ_APPPRO_ID = (String) bmlcList.get(j).get("TZ_APPPRO_ID");
-							String TZ_APPPRO_NAME = (String) bmlcList.get(j).get("TZ_APPPRO_NAME");
-							String TZ_APPPRO_HF_BH = (String) bmlcList.get(j).get("TZ_APPPRO_HF_BH");
-							String TZ_APPPRO_RST = (String) bmlcList.get(j).get("TZ_APPPRO_RST");
-							if(TZ_APPPRO_NAME == null){
-								TZ_APPPRO_NAME = "";
-							}
-							if(TZ_APPPRO_HF_BH == null){
-								TZ_APPPRO_HF_BH = "";
-							}
-							if(TZ_APPPRO_RST == null){
-								TZ_APPPRO_RST = "";
-							}
-							
-							//没有发布回复短语则统一取默认的
-							if (TZ_APPPRO_HF_BH == null || "".equals(TZ_APPPRO_HF_BH)) {
-								TZ_APPPRO_RST = sqlQuery.queryForObject(
-										"select TZ_APPPRO_CONTENT from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=? and TZ_WFB_DEFALT_BZ='on'",
-										new Object[] { classId, TZ_APPPRO_ID }, "String");
+					// 报名流程模型实例是否存在;
+					int bmlcTotalNum = sqlQuery.queryForObject(
+							"select count(1) from PS_TZ_CLS_BMLC_T where TZ_CLASS_ID=?", new Object[] { classId },
+							"Integer");
+					String stepHtml = "";
+					//报名表Url;
+					String applyFromUrl = ctxPath + "/dispatcher?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + siteId;
+					
+					if(bmlcTotalNum > 0){
+
+						String bmlcSql = "select a.TZ_APPPRO_ID,a.TZ_APPPRO_NAME,b.TZ_APPPRO_HF_BH,b.TZ_APPPRO_RST from PS_TZ_CLS_BMLC_T a left join (select * from PS_TZ_APPPRO_RST_T where TZ_APP_INS_ID=? and TZ_CLASS_ID=?) b on a.TZ_APPPRO_ID=b.TZ_APPPRO_ID where a.TZ_CLASS_ID=? order by a.TZ_SORT_NUM asc";
+						List<Map<String, Object>> bmlcList = sqlQuery.queryForList(bmlcSql,
+								new Object[] { TZ_APP_INS_ID, classId, classId });
+						int step = 0;
+						
+						//未发布的一个流程紫色，后面的灰色;
+						boolean lcZsBl = false;
+						//上个流程是不是发布了;
+						boolean sgIsFb = false;
+						if (bmlcList != null && bmlcList.size() > 0) {
+							for (int j = 0; j < bmlcList.size(); j++) {
+								step = step + 1;
+								//是否发布;
+								String isFb = "";
+								
+								String TZ_APPPRO_ID = (String) bmlcList.get(j).get("TZ_APPPRO_ID");
+								String TZ_APPPRO_NAME = (String) bmlcList.get(j).get("TZ_APPPRO_NAME");
+								String TZ_APPPRO_HF_BH = (String) bmlcList.get(j).get("TZ_APPPRO_HF_BH");
+								String TZ_APPPRO_RST = (String) bmlcList.get(j).get("TZ_APPPRO_RST");
+								if(TZ_APPPRO_NAME == null){
+									TZ_APPPRO_NAME = "";
+								}
+								if(TZ_APPPRO_HF_BH == null){
+									TZ_APPPRO_HF_BH = "";
+								}
 								if(TZ_APPPRO_RST == null){
 									TZ_APPPRO_RST = "";
 								}
-							}
+								
+								//没有发布回复短语则统一取默认的
+								if (TZ_APPPRO_HF_BH == null || "".equals(TZ_APPPRO_HF_BH)) {
+									TZ_APPPRO_RST = sqlQuery.queryForObject(
+											"select TZ_APPPRO_CONTENT from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=? and TZ_WFB_DEFALT_BZ='on'",
+											new Object[] { classId, TZ_APPPRO_ID }, "String");
+									if(TZ_APPPRO_RST == null){
+										TZ_APPPRO_RST = "";
+									}
+								}
+								
 							
-						
-							if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
-								String type = "A";
-								//解析系统变量;
-								String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , ctxPath, TZ_APPPRO_RST,"Y",siteId);
+								if(TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)){
+									String type = "A";
+									//解析系统变量;
+									String[] result =  analysisLcResult.analysisLc(type,String.valueOf(TZ_APP_INS_ID) , ctxPath, TZ_APPPRO_RST,"Y",siteId);
 
-								isFb = result[0];
-								TZ_APPPRO_RST = result[1];
-							}
+									isFb = result[0];
+									TZ_APPPRO_RST = result[1];
+								}
 
-							String stepLi = "";
-							String styleClassName = "",stepNum = "";
-							String styleLine = "";
-							if("Y".equals(isFb)){
-								//流程打勾样式
-								styleClassName = " step_ed";
-								stepNum = "";
-							}else{
-								//未发布的一个流程紫色，或则前面的流程是发布的;
-								if(lcZsBl == false || sgIsFb == true){
-									styleClassName = " step_ing";
-									stepNum = String.valueOf(step);
-									lcZsBl = true;
+								String stepLi = "";
+								String styleClassName = "",stepNum = "";
+								String styleLine = "";
+								if("Y".equals(isFb)){
+									//流程打勾样式
+									styleClassName = " step_ed";
+									stepNum = "";
 								}else{
-									styleClassName = "";
-									stepNum = String.valueOf(step);
+									//未发布的一个流程紫色，或则前面的流程是发布的;
+									if(lcZsBl == false || sgIsFb == true){
+										styleClassName = " step_ing";
+										stepNum = String.valueOf(step);
+										lcZsBl = true;
+									}else{
+										styleClassName = "";
+										stepNum = String.valueOf(step);
+									}
+									
+								}
+								
+								if(sgIsFb == true){
+									styleLine = " step_lined";
+								}else{
+									styleLine = "";
+								}
+								
+								if(step == 1){
+									stepLi = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APPCENTER_LC_SETP1",styleClassName,stepNum,TZ_APPPRO_NAME);
+								}else{
+									stepLi = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APPCENTER_LC_SETP",styleClassName,stepNum,TZ_APPPRO_NAME,styleLine);
+								}
+								
+								stepHtml = stepHtml + stepLi;
+								
+								
+								if("Y".equals(isFb)){
+									sgIsFb = true;
+								}else{
+									sgIsFb = false;
 								}
 								
 							}
-							
-							if(sgIsFb == true){
-								styleLine = " step_lined";
-							}else{
-								styleLine = "";
-							}
-							
-							if(step == 1){
-								stepLi = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APPCENTER_LC_SETP1",styleClassName,stepNum,TZ_APPPRO_NAME);
-							}else{
-								stepLi = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_APPCENTER_LC_SETP",styleClassName,stepNum,TZ_APPPRO_NAME,styleLine);
-							}
-							
-							stepHtml = stepHtml + stepLi;
-							
-							
-							if("Y".equals(isFb)){
-								sgIsFb = true;
-							}else{
-								sgIsFb = false;
-							}
-							
 						}
+						
+						
 					}
-					
-					
+					xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className + msPcName,stepHtml,strViewBmbDesc,applyFromUrl,strAppHisLabel,viewAppHisUrl,viewJdUrl);
+				}else{
+					//不可报名；
+					xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_NO_ZSJD_HTML");
 				}
-				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_ZSJD_HTML",className + msPcName,stepHtml,strViewJdLabel,viewJdUrl,strAppHisLabel,viewAppHisUrl);
-			}else{
-				//有开通的班级；
-				xmjdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_NO_ZSJD_HTML");
 			}
+			
 
 			//招生活动,报考通知;
 			//取栏目id;
@@ -370,11 +435,11 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 							String hotAndNewImg = "";
 							int showImgNum = 0;
 							if(artTitleStyle!=null&&!"".equals(artTitleStyle)){
-								if(artTitleStyle.indexOf("HOT") > 0){
+								if(artTitleStyle.indexOf("HOT") > -1){
 									hotAndNewImg = "<img class=\"fr add_hot\" src=\"" + ctxPath + "/statics/css/website/m/images/hot.png\">";
 									showImgNum ++;
 								}
-								if(artTitleStyle.indexOf("NEW") > 0){
+								if(artTitleStyle.indexOf("NEW") > -1){
 									hotAndNewImg = hotAndNewImg + "<img class=\"fr add_hot\" src=\"" + ctxPath + "/statics/css/website/m/images/new.png\">";
 									showImgNum ++;
 								}
@@ -420,7 +485,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 					
 					
 				}
-				hdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_HD_HTML",hdheadLabel,hdTitle,siteId);
+				hdHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_HD_HTML",hdheadLabel,hdTitle,siteId);
 			}
 			
 			//快捷菜单;
@@ -446,9 +511,9 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 			
 			//展示内容
 			String content = topHtml + personHtml + xmjdHtml + hdHtml + kjcdHtml;
-			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_CONTENT_HTML",content);
+			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_CONTENT_HTML",content);
 			
-			indexHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content);
+			indexHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,"1",content,orgId);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			indexHtml = "";
@@ -456,5 +521,79 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 		}
 
 		return indexHtml;
+	}
+	
+	
+	public String tzOther(String operateType,String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		
+		try {
+			
+			String orgId = jacksonUtil.getString("orgId");
+			String siteId = jacksonUtil.getString("siteId");
+			
+			if("verify".equals(operateType)) {
+				String success = "", url = "";
+				
+				String ctxPath = request.getContextPath();
+				
+				String dlzhId = tzCookie.getStringCookieVal(request, "TZGD_TOKEN_DLZH");
+				String loginUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
+				
+				if(loginUrl == null || "".equals(loginUrl)){
+					loginUrl = ctxPath + "/user/login/" + orgId.toLowerCase() + "/" + siteId;
+				}
+				if(!"".equals(dlzhId)&&dlzhId!=null) {
+					ArrayList<String> aryErrorMsg = new ArrayList<String>();
+					String sql = "SELECT OPERPSWD FROM PSOPRDEFN WHERE OPRID=(SELECT OPRID FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?)";
+					String passwordJm = sqlQuery.queryForObject(sql, new Object[]{dlzhId},"String");
+					String password = DESUtil.decrypt(passwordJm, "TZGD_Tranzvision");
+					
+					boolean boolResult = tzWebsiteLoginServiceImpl.doLogin(request, response, orgId, siteId,
+							dlzhId, password, "", "ZHS", aryErrorMsg);
+					if (boolResult) {
+						success = "true";
+						url = ""; 
+					} else {
+						success = "false";
+						url = loginUrl;
+					}
+				} else {
+					success = "false";
+					url=loginUrl;
+				}
+				
+				mapRet.put("success", success);
+				mapRet.put("url", url);
+				strRet = jacksonUtil.Map2json(mapRet);
+			}else{
+				if("ZNXHDNUM".equals(operateType)){
+					//刷新报名数和站内信未读数量;
+					String m_curOPRID = tzLoginServiceImpl.getLoginedManagerOprid(request);
+					//未读站内信数量
+					int msgCount = 0;
+					String MsgSql = "select count(1) from PS_TZ_ZNX_REC_T where TZ_ZNX_RECID=? and TZ_ZNX_STATUS='N' and TZ_REC_DELSTATUS<>'Y'";
+					msgCount = sqlQuery.queryForObject(MsgSql, new Object[] { m_curOPRID}, "int");
+					
+					//我已报名但未过期的活动数量
+					int actCount = 0;
+					String actSql = "select count(1) from PS_TZ_ART_HD_TBL A,PS_TZ_NAUDLIST_T B  where A.TZ_ART_ID=B.TZ_ART_ID and B.TZ_NREG_STAT in ('1','4') and A.TZ_START_DT IS NOT NULL AND A.TZ_START_TM IS NOT NULL AND A.TZ_END_DT IS NOT NULL AND A.TZ_END_TM IS NOT NULL  AND str_to_date(concat(DATE_FORMAT(A.TZ_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now()  AND str_to_date(concat(DATE_FORMAT(A.TZ_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(A.TZ_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND B.OPRID=?";
+					actCount = sqlQuery.queryForObject(actSql, new Object[] { m_curOPRID}, "int");
+					mapRet.put("msgCount", msgCount);
+					mapRet.put("actCount", actCount);
+					strRet = jacksonUtil.Map2json(mapRet);
+					
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return strRet;
 	}
 }

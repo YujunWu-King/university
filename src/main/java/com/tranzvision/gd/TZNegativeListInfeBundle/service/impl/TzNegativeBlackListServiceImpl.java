@@ -39,7 +39,7 @@ public class TzNegativeBlackListServiceImpl extends TzNegativeListBundleServiceI
 		Date nowdate_time = new Date();
 		int have_one = 0;
 		int count = 0;
-		System.out.println("进入黑名单");
+		// System.out.println("进入黑名单");
 		try {
 			String hodecode = "SELECT TZ_HARDCODE_VAL FROM  PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_KSFMQDID_BLACK'";
 			String fmqdId = SqlQuery.queryForObject(hodecode, "String");
@@ -49,7 +49,8 @@ public class TzNegativeBlackListServiceImpl extends TzNegativeListBundleServiceI
 			if (opridlist != null && opridlist.size() > 0) {
 				for (int i = 0; i < opridlist.size(); i++) {
 
-					System.out.println("黑名单Id" + opridlist.get(i).get("OPRID").toString());
+					// System.out.println("黑名单Id" +
+					// opridlist.get(i).get("OPRID").toString());
 					oprid = opridlist.get(i).get("OPRID").toString();
 					String sqlhave = "SELECT COUNT(1) FROM PS_TZ_BLACK_LIST_V WHERE OPRID=?";
 					count = SqlQuery.queryForObject(sqlhave, new Object[] { oprid }, "Integer");
@@ -68,6 +69,7 @@ public class TzNegativeBlackListServiceImpl extends TzNegativeListBundleServiceI
 								"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
 								new Object[] { classId, batchId, Long.valueOf(appinsId), fmqdId }, "Integer");
 						if (have_one > 0) {
+							PsTzCsKsFmTMapper.updateByPrimaryKeySelective(PsTzCsKsFmT);
 
 						} else {
 							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);

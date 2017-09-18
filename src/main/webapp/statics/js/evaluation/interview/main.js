@@ -148,7 +148,9 @@ tzPageSlider.prototype =
 				
 				if(tmpHtmlObject != null && $(window)[0] != null && this.pageIndex == 1)
 				{
-					$(window)[0].scrollTo(tmpHtmlObject.offset().left,tmpHtmlObject.offset().top);
+					if(tmpHtmlObject.offset()!=undefined){
+						$(window)[0].scrollTo(tmpHtmlObject.offset().left,tmpHtmlObject.offset().top);
+					}
 				}
 				
 				this.autoScrollHtmlTagId = "";
@@ -347,6 +349,9 @@ function initializeEvaluateSystem(urlObject)
 	$("#tz_msps_dfym").width(width);
 	//$("#tz_msps_dfym").height(480);
 	
+	$("#tz_msps_pclb_a").height("40%");
+	$("#tz_msps_description").height("60%");
+	
 	if(Ext.isIE == true)
 	{
 		$("#tz_msps_container").height(480);
@@ -502,11 +507,11 @@ Ext.tzSubmit =  function(params,callback,msg,showMask)
                     var jsonText = response.responseText;
                     try
                     {
-                        var jsonObject = Ext.util.JSON.decode(jsonText);
-                        /*判断服务器是否返回了正确的信息*/
-                        if(jsonObject.state.errcode == 1){
-                        	Ext.Msg.alert("提示",jsonObject.state.errdesc);
-                        }else{
+                    	var jsonObject = Ext.util.JSON.decode(jsonText);
+    	                /*判断服务器是否返回了正确的信息*/
+    	                if(jsonObject.state.errcode == 1){
+    	                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+    	                }else{
                         	typeof callback == "function"&&callback();
                         	Ext.Msg.alert("提示",msg||"保存成功！");
                         }

@@ -1,4 +1,4 @@
-var refreshTaskMgr=new Ext.util.TaskRunner();
+﻿var refreshTaskMgr=new Ext.util.TaskRunner();
 Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
     extend: 'Ext.panel.Panel',
     requires: [
@@ -325,6 +325,12 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
 						handler:'copyHistoryData'
 					}]			
 				},{
+					xtype: 'component',
+					style:{
+						marginLeft: '123px'	
+					},
+					html: '<span style="color: #F00;">发送多个收件人时，邮箱使用半角逗号“,”隔开。</span>'	
+				},{
                     xtype: 'tagfield',
                     fieldLabel: Ext.tzGetResourse("TZ_EMLQ_COM.TZ_EMLQ_DET_STD.recever","收件人"),
                     reference: 'recever',
@@ -339,7 +345,7 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                     queryMode: 'local',
                     publishes: 'value',
                     listeners: {
-                        change:'receverChange'
+                        //change:'receverChange'
                     },
                     listConfig:{
                         maxHeight:200
@@ -518,19 +524,21 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                     var emlBkDetForm = t.findParentByType('form');
                                     if(emlBkDetForm.child('fieldset[reference=sendModelSet]').child('radio[reference=sendModelNor]').checked){
                                         if(newValue!=""){
-                                            emlBkDetForm.child('tagfield[reference=recever]').setEditable(false);
-                                            emlBkDetForm.child('tagfield[reference=recever]').disabled=true;
-                                            emlBkDetForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
+                                            //emlBkDetForm.child('tagfield[reference=recever]').setEditable(false);
+                                            //emlBkDetForm.child('tagfield[reference=recever]').disabled=true;
+                                            //emlBkDetForm.down('tagfield[reference=recever]').addCls('readOnly-tagfield-BackgroundColor');
                                             emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=true;
 											
 											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=true;
 											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').addCls('x-item-disabled x-btn-disabled');
 
-                                            emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=false;
-                                            emlBkDetForm.down('button[reference=setEmlTmpl]').removeCls('disabled-button-color');
+                                            //emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=false;
+                                            //emlBkDetForm.down('button[reference=setEmlTmpl]').removeCls('disabled-button-color');
                                             //加载邮件模版信息
                                             var form = emlBkDetForm.getForm();
-                                            var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlTmpInfo","comParams":{"emlTmpId":"'+newValue+'"}}';
+                                            //邮件群发id;
+                                            var emlQfId = form.findField("emlQfId").getValue();
+                                            var tzParams = '{"ComID":"TZ_EMLQ_COM","PageID":"TZ_EMLQ_DET_STD","OperateType":"getEmlTmpInfo","comParams":{"emlTmpId":"'+newValue+'","emlQfId":"'+emlQfId+'"}}';
                                             Ext.tzLoadAsync(tzParams,function(responseData){
                                                 var formData = responseData;
                                                 form.setValues(formData);
@@ -569,16 +577,16 @@ Ext.define('KitchenSink.view.bulkEmailAndSMS.emailBulk.emailBulkDet', {
                                                 }
                                             });
                                         }else{
-                                            emlBkDetForm.child('tagfield[reference=recever]').setEditable(true);
-                                            emlBkDetForm.child('tagfield[reference=recever]').disabled=false;
-                                            emlBkDetForm.down('tagfield[reference=recever]').removeCls('readOnly-tagfield-BackgroundColor');
+                                            //emlBkDetForm.child('tagfield[reference=recever]').setEditable(true);
+                                            //emlBkDetForm.child('tagfield[reference=recever]').disabled=false;
+                                            //emlBkDetForm.down('tagfield[reference=recever]').removeCls('readOnly-tagfield-BackgroundColor');
                                             emlBkDetForm.child('toolbar').child('button[reference=pasteFromExcelBtn]').disabled=false;
 											
 											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').disabled=false;
 											emlBkDetForm.child('toolbar').child('button[reference=selectStuBtn]').removeCls('x-item-disabled x-btn-disabled');
 
-                                            emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=true;
-											emlBkDetForm.down('button[reference=setEmlTmpl]').addCls('disabled-button-color');
+                                            //emlBkDetForm.down('button[reference=setEmlTmpl]').disabled=true;
+											//emlBkDetForm.down('button[reference=setEmlTmpl]').addCls('disabled-button-color');
 											
                                         }
                                     }

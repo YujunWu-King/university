@@ -84,6 +84,12 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				map.put("fltFldQzLx", psTzFilterFldT.getTzFltFldQzType());
 				map.put("translateValueFld", psTzFilterFldT.getTzZhzjhId());
 				map.put("fltFldNoUpperLower", psTzFilterFldT.getTzNoUporlow());
+				
+				//DeepQuery相关字段
+				map.put("deepQueryFlg", psTzFilterFldT.getTzDeepqueryFlg());
+				map.put("deepQueryView", psTzFilterFldT.getTzDeepqueryView());
+				map.put("deepQueryFld", psTzFilterFldT.getTzDeepqueryFld());
+				
 				returnJsonMap.replace("formData", map);
 			}
 
@@ -240,6 +246,10 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				String fltFldQzLx = (String) jsonObject.get("fltFldQzLx");
 				String translateValueFld = (String) jsonObject.get("translateValueFld");
 				String fltFldNoUpperLower = (String) jsonObject.get("fltFldNoUpperLower");
+				
+				String deepQueryFlg=(String) jsonObject.get("deepQueryFlg");
+				String deepQueryView=(String) jsonObject.get("deepQueryView");
+				String deepQueryFld=(String) jsonObject.get("deepQueryFld");
 
 				PsTzFilterFldT psTzFilterFldT = new PsTzFilterFldT();
 				psTzFilterFldT.setTzComId(str_com_id);
@@ -257,6 +267,12 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				psTzFilterFldT.setTzFltFldQzType(fltFldQzLx);
 				psTzFilterFldT.setTzZhzjhId(translateValueFld);
 				psTzFilterFldT.setTzNoUporlow(fltFldNoUpperLower);
+				
+				psTzFilterFldT.setTzDeepqueryFlg(deepQueryFlg);
+				psTzFilterFldT.setTzDeepqueryView(deepQueryView);
+				psTzFilterFldT.setTzDeepqueryFld(deepQueryFld);
+				
+				
 				psTzFilterFldTMapper.updateByPrimaryKeySelective(psTzFilterFldT);
 				
 				Map<String, Object> jObj = null;
@@ -264,6 +280,7 @@ public class FilterFldClassServiceImpl extends FrameworkImpl {
 				try {
 					
 					List<Map<String, Object>> jsonArray2 = (List<Map<String, Object>>) updateListJson.get("data1");
+					
 					if (jsonArray2 != null && jsonArray2.size() > 0) {
 						for (int i = 0; i < jsonArray2.size(); i++) {
 							jObj = jsonArray2.get(i);

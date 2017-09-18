@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 				String sOprID = "";
 				
 				if(bMultiType){
-					int sAppInsID = 0;
+					long sAppInsID;
 					//群发邮件添加听众;
 					@SuppressWarnings("unchecked")
 					List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("personList");
@@ -77,14 +78,14 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 						for(int num_1 = 0; num_1 < list.size(); num_1 ++){
 							Map<String, Object> map = list.get(num_1);
 				            sOprID = (String)map.get("oprID");
-				            sAppInsID = (int)map.get("appInsID");
+				            sAppInsID = Long.parseLong((String)map.get("appInsID"));
 				            if(sOprID != null && !"".equals(sOprID)
 				            		&& sAppInsID != 0){
 				            	/*为听众添加成员:姓名，称谓，报名人联系方式*/
 				                String strName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? limit 0,1",new Object[]{sOprID},"String");
 				 
 				                String mainMobilePhone = "", backupMobilePhone = "", mainEmail = "", backupEmail="",  wechat="";
-				                Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?", new Object[]{String.valueOf(sAppInsID)});
+				                Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?", new Object[]{sOprID});
 				                if(lxfsMap != null){
 				                	mainMobilePhone = (String)lxfsMap.get("TZ_ZY_SJ");
 				                	backupMobilePhone = (String)lxfsMap.get("TZ_CY_SJ");
@@ -113,7 +114,7 @@ public class TzGdBmglYjdxClsServiceImpl extends FrameworkImpl {
 		            String strName = jdbcTemplate.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=? limit 0,1",new Object[]{sOprID},"String");
 		 
 		            String mainMobilePhone = "", backupMobilePhone = "", mainEmail = "", backupEmail="",  wechat="";
-		            Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?", new Object[]{sAppInsID});
+		            Map<String, Object> lxfsMap = jdbcTemplate.queryForMap("SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?", new Object[]{sOprID});
 		            if(lxfsMap != null){
 		               mainMobilePhone = (String)lxfsMap.get("TZ_ZY_SJ");
 		               backupMobilePhone = (String)lxfsMap.get("TZ_CY_SJ");

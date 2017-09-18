@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="%bind(:1)/statics/js/lib/fancyBox/jquery.fancybox.css" type="text/css" />
 		<link rel="stylesheet" href="%bind(:1)/statics/js/lib/fancyBox/jquery.fancybox-thumbs.css" type="text/css" />
 		<link rel="stylesheet" href="%bind(:1)/statics/css/appeditor/registration-public.css" type="text/css"/>
-		<link rel="stylesheet" href="%bind(:1)/statics/css/appeditor/registration-page.css" type="text/css"/>
+		<link rel="stylesheet" href="%bind(:1)/statics/css/appeditor/registration-%bind(:21)page.css" type="text/css"/>
 
 		<script type="text/javascript">
 			var TzUniversityContextPath = "%bind(:1)";
@@ -169,8 +169,11 @@
 		</script>
 	</head>
 	<body>
-		<!--头部内容开始-->
-		<div class="reg-top">%bind(:11)</div>
+		<!--头部内容开始
+		<div class="reg-top">%bind(:11)</div>-->
+		<div id="headarea" class="top assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="H" area-type="YT" area-id=""> 
+    
+		</div> 
 		<!--头部内容结束-->
 		
 		<!--主体内容开始-->
@@ -191,12 +194,15 @@
 		</div>
 		<!--主体内容结束-->
 		
-		<!--底部开始-->
+		<!--底部开始
 		<div class="footer">
 			<div class="footer-main">
 				%bind(:12)
 			</div>
-		</div>
+		</div>-->
+		<div id="footarea" class="foot assdiv" area-add="false" area-edit="true" area-del="false" area-copy="false" area-moveup="false" area-movedown="false" area-postion="F" area-type="YW" area-id=""> 
+   
+   </div>
 		<!--底部结束-->
 		<div id="fancybox-main" style="display: none">
       			<ul></ul>
@@ -210,9 +216,9 @@
 		<script type="text/javascript">
     		 $(document).ready(function(){
 				
-				//LoadHeader("%bind(:8)","%bind(:7)");
+				LoadHeader("%bind(:8)","%bind(:7)");
 				LoadFooter("%bind(:8)","%bind(:7)");
-				LoadWelcome("%bind(:8)","%bind(:7)");
+				//LoadWelcome("%bind(:8)","%bind(:7)");
 			
 				//checkExplorer($("#lang").val());	
 

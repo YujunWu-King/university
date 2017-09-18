@@ -83,8 +83,8 @@ function getWqdList(){
 	cache:false,
 	url:'%bind(:5)',
 	success:function(data){
-			layer.closeAll('loading');
 			$("#wqd_list_id").html(data.comContent.bmrList);
+			layer.closeAll('loading');
 		}
 	});
 }
@@ -96,9 +96,9 @@ function getYqdList(){
 	async:false,
 	cache:false,
 	url:'%bind(:6)',
-	success:function(data){ 
-			layer.closeAll('loading'); 
+	success:function(data){  
 			$("#yqd_list_id").html(data.comContent.bmrList);
+			layer.closeAll('loading');
 		}
 	});
 }
@@ -133,7 +133,7 @@ function refresh(){
 }
  
 function confirmQd(url)	{
-		layer.load(2);
+		//layer.load(2);
 		$.ajax({
 			type:"get",
 			dataType:"json",
@@ -141,13 +141,15 @@ function confirmQd(url)	{
 			cache:false,
 			url:url,
 			success:function(data){
-				layer.closeAll('loading')
-				layer.alert(data.comContent.errMsg,{icon: 6});
-				if(data.comContent.result == "true"){
-					//刷新未签到
-					loadContent("wqd");
-					loadContent("yqd");	
-				}
+				//layer.closeAll('loading');
+				layer.alert(data.comContent.errMsg,{icon: 6,},function(index){
+					layer.close(index);
+					if(data.comContent.result == "true"){
+						//刷新未签到
+						loadContent("wqd");
+						loadContent("yqd");
+					}
+				});
 			}
 		});
 	}

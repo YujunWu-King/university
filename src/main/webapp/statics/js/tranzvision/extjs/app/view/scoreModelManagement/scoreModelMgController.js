@@ -383,7 +383,7 @@
 					if(actType=="Add"){
 						panel.actType = "Update";
 						//设置成绩模型ID只读
-						var modelIdField = form.getForm().findField("modelId");
+						var modelIdField = form.down("textfield[name=modelId]");
 						modelIdField.setReadOnly(true);
 						modelIdField.addCls("lanage_1");
 						//显示tabpanel

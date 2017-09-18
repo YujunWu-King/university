@@ -92,37 +92,47 @@ function loadEvaluateBatchData(callBackFunction)
 	Ext.Ajax.request({
 			url:window.getBatchListUrl,
 			method:'POST',
-			timeout:10000,
+			timeout:30000,
 			params:{LanguageCd:'ZHS',MaxRowCount:1000,StartRowNumber:1,MoreRowsFlag:'N'},
 			success:function(response)
 			{
+				//返回值内容
+                var jsonText = response.responseText;
+                
 				var jsonObject = null;
 				
 				try
 				{
-					jsonObject = Ext.JSON.decode(response.responseText).comContent;
+					var jsonObject = Ext.util.JSON.decode(jsonText);
+	                /*判断服务器是否返回了正确的信息*/
+	                if(jsonObject.state.errcode == 1){
+	                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+	                }else{
+	                	jsonObject = jsonObject.comContent;
+						
+						if(jsonObject.error_code != '0')
+						{
+							loadSuccess = false;
+							Ext.Msg.alert("提示",'当前面试评审批次数据加载失败：' + jsonObject.error_decription);
+						}
+						else
+						{
+							loadSuccess = true;
+							callBackFunction(jsonObject);
+						}
+	                }
 					
-					if(jsonObject.error_code != '0')
-					{
-						loadSuccess = false;
-						alert('当前面试评审批次数据加载失败：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-					}
-					else
-					{
-						loadSuccess = true;
-						callBackFunction(jsonObject);
-					}
 				}
 				catch(e1)
 				{
 					loadSuccess = false;
 					if(window.evaluateSystemDebugFlag == 'Y')
 					{
-						alert('当前面试评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+						Ext.Msg.alert("提示",'当前面试评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
 					}
 					else
 					{
-						alert('当前面试评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+						Ext.Msg.alert("提示",'当前面试评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 					}
 				}
 			},
@@ -131,11 +141,11 @@ function loadEvaluateBatchData(callBackFunction)
 				loadSuccess = false;
 				if(window.evaluateSystemDebugFlag == 'Y')
 				{
-					alert('当前面试评审批次数据加载失败，请与系统管理员联系：' + response.responseText);
+					Ext.Msg.alert("提示",'当前面试评审批次数据加载失败，请与系统管理员联系：' + response.responseText);
 				}
 				else
 				{
-					alert('当前面试评审批次数据加载失败，请与系统管理员联系。');
+					Ext.Msg.alert("提示",'当前面试评审批次数据加载失败，请与系统管理员联系。');
 				}
 			}
 		}
@@ -236,7 +246,7 @@ function loadBatchDataById(batchId,callBackFunction)
 			{
 				url:window.getBatchDataUrl,
 				method:'POST',
-				timeout:10000,
+				timeout:30000,
 				params: {
 					LanguageCd:'ZHS',
                     BaokaoClassID:classid,
@@ -248,55 +258,66 @@ function loadBatchDataById(batchId,callBackFunction)
 				},
 				success:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
 					var jsonObject = null;
 					
 					try
 					{
-						jsonObject = Ext.JSON.decode(response.responseText).comContent;
+						var jsonObject = Ext.util.JSON.decode(jsonText);
+		                /*判断服务器是否返回了正确的信息*/
+		                if(jsonObject.state.errcode == 1){
+		                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+		                }else{
+		                	jsonObject = jsonObject.comContent;
+							
+							if(jsonObject.error_code != '0')
+							{
+								loadSuccess = false;
+								Ext.Msg.alert("提示",'当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败' + jsonObject.error_decription);
+							}
+							else
+							{
+								loadSuccess = true;
+								/*将当前请求到的JSON数据缓存到本地*/
+								window.batchJSONArray[batchId] = jsonObject;
+								callBackFunction(batchId,jsonObject);
+							}
+		                }
 						
-						if(jsonObject.error_code != '0')
-						{
-							loadSuccess = false;
-                            alert('当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-							unmaskWindow();
-						}
-						else
-						{
-							loadSuccess = true;
-							/*将当前请求到的JSON数据缓存到本地*/
-							window.batchJSONArray[batchId] = jsonObject;
-							callBackFunction(batchId,jsonObject);
-						}
 					}
 					catch(e1)
 					{
-						console.log(e1);
+						console&&console.log(e1);
 						loadSuccess = false;
 						if(window.evaluateSystemDebugFlag == 'Y')
 						{
-                            alert('当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+							Ext.Msg.alert("提示",'当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
 						}
 						else
 						{
-                            alert('当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+							Ext.Msg.alert("提示",'当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 						}
-						unmaskWindow();
 					}
 				},
 				failure:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
 					loadSuccess = false;
 					if(window.evaluateSystemDebugFlag == 'Y')
 					{
-                        alert('当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系：' + response.responseText);
+						Ext.Msg.alert("提示",'当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系：' + response.responseText);
 					}
 					else
 					{
-                        alert('当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系。');
+						Ext.Msg.alert("提示",'当前面试评审班级['+classid+']批次[' + pcid + ']数据加载失败，请与系统管理员联系。');
 					}
-					
-					//unmask window
-					unmaskWindow();
 				}
 			}
 		);
@@ -394,7 +415,7 @@ function initializeEvaluatePiciGrid(jsonObject)
           },
           {
               text     : '进行评审',
-              width    : 106,
+              width    : 100,
               sortable : false,
               resizable: false,
               dataIndex: 'Evaluate',
@@ -407,7 +428,7 @@ function initializeEvaluatePiciGrid(jsonObject)
 				 		divTmp[0].id = Ext.id();
 				 		tmpBtn.render(divTmp[0]);
 				 		
-				 		divTmp.find('span').css({'vertical-align':'middle','margin-left':'6px','margin-right':'6px'});
+				 		divTmp.find('span').css({'vertical-align':'middle','margin-left':'1px','margin-right':'1px'});
 				 		
 				 		return divTmp[0].outerHTML;
 				 }
@@ -422,6 +443,21 @@ function initializeEvaluatePiciGrid(jsonObject)
       }
   });
   
+  //评审说明区域
+  var descPanel = Ext.create("Ext.panel.Panel",{
+	  title:'评审说明',
+	  header:false,
+	  height:'100%',
+	  renderTo: 'tz_msps_description',
+      contentEl : Ext.DomHelper.append(document.body, {
+          bodyBorder : false,
+          tag : 'iframe',
+          style : "border:0px none;scrollbar:true",
+          src : EvaluationDescriptionUrl,
+          height:'100%',
+          width : "100%"
+      })
+  });
   
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex)
 		{
@@ -444,7 +480,7 @@ function initializeEvaluatePiciGrid(jsonObject)
 				//装载指定批次数据
 				if(batchId == null || batchId == '' || batchId == 'undefined')
 				{
-                    alert('系统错误：无法获取指定评审班级批次的编号。');
+					Ext.Msg.alert("提示",'系统错误：无法获取指定评审班级批次的编号。');
 				}
 				else
 				{
@@ -457,16 +493,25 @@ function initializeEvaluatePiciGrid(jsonObject)
 						url		: checkPWAccStateURL,
 						params	: {"LanguageCd":"ZHS","BaokaoClassID":classId,"BaokaoPCID":batchId},
 						success	: function(response){
+							//返回值内容
+		                    var jsonText = response.responseText;
+		                    
 							try
 							{
-								var tmpJSON = Ext.decode(response.responseText).comContent;
-								if(tmpJSON.status!='B'){
-									loadBatchDataById(cls_batchId,loadBatchDataByIdandShowNextPage);
-								}else{
-									//unmask window
-									unmaskWindow();
-									Ext.Msg.alert("提示","您的账号已暂停使用，请与管理员联系。");
-								}
+								var jsonObject = Ext.util.JSON.decode(jsonText);
+				                /*判断服务器是否返回了正确的信息*/
+				                if(jsonObject.state.errcode == 1){
+				                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+				                }else{
+				                	var tmpJSON = jsonObject.comContent;
+									if(tmpJSON.status!='B'){
+										loadBatchDataById(cls_batchId,loadBatchDataByIdandShowNextPage);
+									}else{
+										//unmask window
+										unmaskWindow();
+										Ext.Msg.alert("提示","您的账号已暂停使用，请与管理员联系。");
+									}
+				                }
 								
 							}
 							catch(e1){
@@ -475,7 +520,7 @@ function initializeEvaluatePiciGrid(jsonObject)
 							
 						},
 						failure: function(response, opts) {
-							alert('读取评委状态时发生错误，请与系统管理员联系：错误的JSON数据[' + e1 + ']');
+							Ext.Msg.alert("提示",'读取评委状态时发生错误，请与系统管理员联系：'+response.responseText);
 							unmaskWindow();
 						}
 						
@@ -489,7 +534,7 @@ function initializeEvaluatePiciGrid(jsonObject)
 			{
 				if(batchId == null || batchId == '' || batchId == 'undefined')
 				{
-					alert('系统错误：无法获取指定评审批次的编号。');
+					Ext.Msg.alert("提示",'系统错误：无法获取指定评审批次的编号。');
 				}
 				else
 				{

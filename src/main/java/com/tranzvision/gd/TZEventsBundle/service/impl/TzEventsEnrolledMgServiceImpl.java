@@ -3,8 +3,10 @@
  */
 package com.tranzvision.gd.TZEventsBundle.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -17,16 +19,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.BatchProcessDetailsImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzHdBmrdcAetMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzLxfsinfoTblMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzLxfsinfoTbl;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
+import com.tranzvision.gd.batch.engine.base.BaseEngine;
+import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -51,6 +63,9 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private SqlQuery sqlQuery;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	@Autowired
 	private MySqlLockService mySqlLockService;
@@ -66,6 +81,18 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
+	
+	@Autowired
+	private PsTzHdBmrdcAetMapper psTzHdBmrdcAetMapper;
+	
+	@Autowired
+	private PsTzExcelDattTMapper psTzExcelDattTMapper;
+
+	@Autowired
+	private PsTzExcelDrxxTMapper psTzExcelDrxxTMapper;
+	
+	@Autowired
+	private BatchProcessDetailsImpl batchProcessDetailsImpl;
 
 	/**
 	 * 查询活动下的报名人信息
@@ -86,79 +113,120 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 		mapRet.put("root", "[]");
 
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-
+		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-			// 排序字段
-			String[][] orderByArr = new String[][] {{"TZ_REG_TIME","DESC"}};
+			jacksonUtil.json2Map(strParams);
+			if(jacksonUtil.containsKey("type") 
+					&& "expHistory".equals(jacksonUtil.getString("type"))){
+				// 排序字段
+				String[][] orderByArr = new String[][] {{"TZ_STARTTIME","DESC"}};
 
-			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_CYR_NAME", "TZ_ZY_SJ", "TZ_ZY_EMAIL", "TZ_NREG_STAT", "TZ_ZXBM_LY",
-					"TZ_BMCY_ZT", "TZ_BZSM", "TZ_GD_BOOLEAN", "TZ_REG_TIME_CHAR", "TZ_HD_QDM", "TZ_ZXBM_XXX_001",
-					"TZ_ZXBM_XXX_002", "TZ_ZXBM_XXX_003", "TZ_ZXBM_XXX_004", "TZ_ZXBM_XXX_005", "TZ_ZXBM_XXX_006",
-					"TZ_ZXBM_XXX_007", "TZ_ZXBM_XXX_008", "TZ_ZXBM_XXX_009", "TZ_ZXBM_XXX_010", "TZ_ZXBM_XXX_011",
-					"TZ_ZXBM_XXX_012", "TZ_ZXBM_XXX_013", "TZ_ZXBM_XXX_014", "TZ_ZXBM_XXX_015", "TZ_ZXBM_XXX_016",
-					"TZ_ZXBM_XXX_017", "TZ_ZXBM_XXX_018", "TZ_ZXBM_XXX_019", "TZ_ZXBM_XXX_020", "TZ_BMZT_DESC",
-					"TZ_BMQD_DESC", "TZ_QDZT_DESC", "TZ_ART_ID", "TZ_HD_BMR_ID" };
+				// json数据要的结果字段;
+				String[] resultFldArray = { "TZ_ART_ID", "TZ_DLZH_ID", "TZ_DR_TASK_DESC", "TZ_STARTTIME", "PROCESSINSTANCE",
+						"PROCESS_STATUS","TZ_REALNAME"};
 
-			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
+				// 可配置搜索通用函数;
+				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 
-			if (obj != null && obj.length > 0) {
+				if (obj != null && obj.length > 0) {
 
-				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+					ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 
-				for (int i = 0; i < list.size(); i++) {
-					String[] rowList = list.get(i);
+					for (int i = 0; i < list.size(); i++) {
+						String[] rowList = list.get(i);
 
-					Map<String, Object> mapList = new HashMap<String, Object>();
-					mapList.put("TZ_CYR_NAME", rowList[0]);
-					mapList.put("TZ_ZY_SJ", rowList[1]);
-					mapList.put("TZ_ZY_EMAIL", rowList[2]);
-					mapList.put("applyStatus", rowList[3]);
-					mapList.put("channel", rowList[4]);
-					mapList.put("signStatus", rowList[5]);
-					mapList.put("remark", rowList[6]);
-					mapList.put("isReg", rowList[7]);
-					mapList.put("applyTime", rowList[8]);
-					mapList.put("signCode", rowList[9]);
-					mapList.put("TZ_ZXBM_XXX_001", rowList[10]);
-					mapList.put("TZ_ZXBM_XXX_002", rowList[11]);
-					mapList.put("TZ_ZXBM_XXX_003", rowList[12]);
-					mapList.put("TZ_ZXBM_XXX_004", rowList[13]);
-					mapList.put("TZ_ZXBM_XXX_005", rowList[14]);
-					mapList.put("TZ_ZXBM_XXX_006", rowList[15]);
-					mapList.put("TZ_ZXBM_XXX_007", rowList[16]);
-					mapList.put("TZ_ZXBM_XXX_008", rowList[17]);
-					mapList.put("TZ_ZXBM_XXX_009", rowList[18]);
-					mapList.put("TZ_ZXBM_XXX_010", rowList[19]);
-					mapList.put("TZ_ZXBM_XXX_011", rowList[20]);
-					mapList.put("TZ_ZXBM_XXX_012", rowList[21]);
-					mapList.put("TZ_ZXBM_XXX_013", rowList[22]);
-					mapList.put("TZ_ZXBM_XXX_014", rowList[23]);
-					mapList.put("TZ_ZXBM_XXX_015", rowList[24]);
-					mapList.put("TZ_ZXBM_XXX_016", rowList[25]);
-					mapList.put("TZ_ZXBM_XXX_017", rowList[26]);
-					mapList.put("TZ_ZXBM_XXX_018", rowList[27]);
-					mapList.put("TZ_ZXBM_XXX_019", rowList[28]);
-					mapList.put("TZ_ZXBM_XXX_020", rowList[29]);
-					mapList.put("applyStatusDesc", rowList[30]);
-					mapList.put("channelDesc", rowList[31]);
-					mapList.put("signStatusDesc", rowList[32]);
-					mapList.put("activityId", rowList[33]);
-					mapList.put("applicantsId", rowList[34]);
+						Map<String, Object> mapList = new HashMap<String, Object>();
+						mapList.put("actId", rowList[0]);
+						mapList.put("loginId", rowList[1]);
+						mapList.put("fileName", rowList[2]);
+						mapList.put("bgTime", rowList[3]);
+						mapList.put("procInsId", rowList[4]);
+						mapList.put("procState", rowList[5]);
+						mapList.put("czPerName", rowList[6]);
+						
+						String stateDescr = batchProcessDetailsImpl.getBatchProcessStatusDescsr(rowList[5]);
+						mapList.put("procStaDescr", stateDescr);
+						
+						listData.add(mapList);
+					}
 
-					listData.add(mapList);
+					mapRet.replace("total", obj[0]);
+					mapRet.replace("root", listData);
+
 				}
+			}else{
+				// 排序字段
+				String[][] orderByArr = new String[][] {{"TZ_REG_TIME","DESC"}};
 
-				mapRet.replace("total", obj[0]);
-				mapRet.replace("root", listData);
+				// json数据要的结果字段;
+				String[] resultFldArray = { "TZ_CYR_NAME", "TZ_ZY_SJ", "TZ_ZY_EMAIL", "TZ_NREG_STAT", "TZ_ZXBM_LY",
+						"TZ_BMCY_ZT", "TZ_BZSM", "TZ_GD_BOOLEAN", "TZ_REG_TIME_CHAR", "TZ_HD_QDM", "TZ_ZXBM_XXX_001",
+						"TZ_ZXBM_XXX_002", "TZ_ZXBM_XXX_003", "TZ_ZXBM_XXX_004", "TZ_ZXBM_XXX_005", "TZ_ZXBM_XXX_006",
+						"TZ_ZXBM_XXX_007", "TZ_ZXBM_XXX_008", "TZ_ZXBM_XXX_009", "TZ_ZXBM_XXX_010", "TZ_ZXBM_XXX_011",
+						"TZ_ZXBM_XXX_012", "TZ_ZXBM_XXX_013", "TZ_ZXBM_XXX_014", "TZ_ZXBM_XXX_015", "TZ_ZXBM_XXX_016",
+						"TZ_ZXBM_XXX_017", "TZ_ZXBM_XXX_018", "TZ_ZXBM_XXX_019", "TZ_ZXBM_XXX_020", "TZ_BMZT_DESC",
+						"TZ_BMQD_DESC", "TZ_QDZT_DESC", "TZ_ART_ID", "TZ_HD_BMR_ID", "TZ_MSSQH" };
 
+				// 可配置搜索通用函数;
+				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
+
+				if (obj != null && obj.length > 0) {
+
+					ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+
+					for (int i = 0; i < list.size(); i++) {
+						String[] rowList = list.get(i);
+
+						Map<String, Object> mapList = new HashMap<String, Object>();
+						mapList.put("TZ_CYR_NAME", rowList[0]);
+						mapList.put("TZ_ZY_SJ", rowList[1]);
+						mapList.put("TZ_ZY_EMAIL", rowList[2]);
+						mapList.put("applyStatus", rowList[3]);
+						mapList.put("channel", rowList[4]);
+						mapList.put("signStatus", rowList[5]);
+						mapList.put("remark", rowList[6]);
+						mapList.put("isReg", rowList[7]);
+						mapList.put("applyTime", rowList[8]);
+						mapList.put("signCode", rowList[9]);
+						mapList.put("TZ_ZXBM_XXX_001", rowList[10]);
+						mapList.put("TZ_ZXBM_XXX_002", rowList[11]);
+						mapList.put("TZ_ZXBM_XXX_003", rowList[12]);
+						mapList.put("TZ_ZXBM_XXX_004", rowList[13]);
+						mapList.put("TZ_ZXBM_XXX_005", rowList[14]);
+						mapList.put("TZ_ZXBM_XXX_006", rowList[15]);
+						mapList.put("TZ_ZXBM_XXX_007", rowList[16]);
+						mapList.put("TZ_ZXBM_XXX_008", rowList[17]);
+						mapList.put("TZ_ZXBM_XXX_009", rowList[18]);
+						mapList.put("TZ_ZXBM_XXX_010", rowList[19]);
+						mapList.put("TZ_ZXBM_XXX_011", rowList[20]);
+						mapList.put("TZ_ZXBM_XXX_012", rowList[21]);
+						mapList.put("TZ_ZXBM_XXX_013", rowList[22]);
+						mapList.put("TZ_ZXBM_XXX_014", rowList[23]);
+						mapList.put("TZ_ZXBM_XXX_015", rowList[24]);
+						mapList.put("TZ_ZXBM_XXX_016", rowList[25]);
+						mapList.put("TZ_ZXBM_XXX_017", rowList[26]);
+						mapList.put("TZ_ZXBM_XXX_018", rowList[27]);
+						mapList.put("TZ_ZXBM_XXX_019", rowList[28]);
+						mapList.put("TZ_ZXBM_XXX_020", rowList[29]);
+						mapList.put("applyStatusDesc", rowList[30]);
+						mapList.put("channelDesc", rowList[31]);
+						mapList.put("signStatusDesc", rowList[32]);
+						mapList.put("activityId", rowList[33]);
+						mapList.put("applicantsId", rowList[34]);
+						mapList.put("msApplyNo", rowList[35]);
+
+						listData.add(mapList);
+					}
+
+					mapRet.replace("total", obj[0]);
+					mapRet.replace("root", listData);
+
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 
 	}
@@ -357,7 +425,10 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 
 			// 活动编号
-			String strActivityId = jacksonUtil.getString("activityId");
+			String strActivityId = "";
+			if(jacksonUtil.containsKey("activityId")){
+				strActivityId = jacksonUtil.getString("activityId");
+			}
 
 			String sql = "";
 
@@ -522,19 +593,74 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 
 				break;
 			case "EXPORT":
+				/*活动报名人信息导出改用批处理
 				// 导出报名人信息
-
-				List<?> listBmrIdsExport = jacksonUtil.getList("bmrIds");
+				List<?> listBmrIdsExport = new ArrayList<String>();
+				
+				//导出选中报名人
+				if(jacksonUtil.containsKey("bmrIds")){
+					listBmrIdsExport = jacksonUtil.getList("bmrIds");
+				}
+				//导出搜索结果报名人
+				if(jacksonUtil.containsKey("searchSql")){
+					String searchSql = jacksonUtil.getString("searchSql");
+					
+					List<Map<String,Object>> bmrList = sqlQuery.queryForList(searchSql);
+					
+					List<Object> bmrIdList = new ArrayList<Object>();
+					for(Map<String,Object> bmrMap: bmrList){
+						Object[] bmrIdArr = bmrMap.values().toArray();
+						if(bmrIdArr.length > 0){
+							bmrIdList.add(bmrIdArr[0]);
+						}
+					}
+					
+					listBmrIdsExport = bmrIdList;
+				}
 
 				String filepath = this.exportApplyInfo(strActivityId, listBmrIdsExport, errorMsg);
 
 				mapRet.put("fileUrl", filepath);
 
 				strRet = jacksonUtil.Map2json(mapRet);
-
+				*/
+				
+				strRet = this.exportBmrInfoBatch(strParams, errorMsg);
+				
+				break;
+				
+			case "getSearchSql":
+				/*可配置搜索查询语句*/
+				String[] resultFldArray = {"TZ_HD_BMR_ID"};
+				
+				String[][] orderByArr=null;
+				
+				String searchSql = fliterForm.getQuerySQL(resultFldArray,orderByArr,strParams,errorMsg);
+				
+				mapRet.put("SQL", searchSql);
+				strRet = jacksonUtil.Map2json(mapRet);
+				break;
+			case "DOWNLOAD":
+				//下载导出excel
+				String filePath = "";
+				String strProcInsId = jacksonUtil.getString("procInsId");
+				if(!"".equals(strProcInsId)){
+					int procInsId = Integer.parseInt(strProcInsId);
+					
+					PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(procInsId);
+					if(psTzExcelDattT != null){
+						filePath = psTzExcelDattT.getTzFwqFwlj();
+						if(!"".equals(filePath) && filePath != null){
+							filePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+							+ request.getContextPath() + filePath;
+						}
+					}
+				}
+				mapRet.put("filePath", filePath);
+				strRet = jacksonUtil.Map2json(mapRet);
+				
 				break;
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
@@ -552,6 +678,7 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 	 * @param errorMsg
 	 * @return 生成的excel文件路径
 	 */
+	@SuppressWarnings("unused")
 	private String exportApplyInfo(String strHdId, List<?> listBmrIds, String[] errorMsg) {
 		String strRet = "";
 
@@ -592,6 +719,7 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 
 			}
 
+			dataCellKeys.add(new String[] { "bmzt", "报名状态" });
 			dataCellKeys.add(new String[] { "bmqd", "报名渠道" });
 			dataCellKeys.add(new String[] { "qdzt", "签到状态" });
 
@@ -622,21 +750,26 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 				}
 
 				// 报名渠道、签到状态;
-				sql = "SELECT TZ_ZXBM_LY,TZ_BMCY_ZT FROM  PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
+				sql = "SELECT TZ_NREG_STAT,TZ_ZXBM_LY,TZ_BMCY_ZT FROM  PS_TZ_NAUDLIST_T WHERE TZ_ART_ID=? AND TZ_HD_BMR_ID=?";
 				Map<String, Object> mapqdzt = sqlQuery.queryForMap(sql, new Object[] { strHdId, bmrid });
 				String strBmqd = "";
 				String strQdzt = "";
+				String strBmzt = "";
 				if (mapqdzt != null) {
 					strBmqd = mapqdzt.get("TZ_ZXBM_LY") == null ? "" : String.valueOf(mapqdzt.get("TZ_ZXBM_LY"));
 					strQdzt = mapqdzt.get("TZ_BMCY_ZT") == null ? "" : String.valueOf(mapqdzt.get("TZ_BMCY_ZT"));
+					strBmzt = mapqdzt.get("TZ_NREG_STAT") == null ? "" : String.valueOf(mapqdzt.get("TZ_NREG_STAT"));
 
 					/* 报名渠道、签到状态取转换值配置 */
 					sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_BMR_APPLY_QD' AND TZ_ZHZ_ID=?";
 					strBmqd = sqlQuery.queryForObject(sql, new Object[] { strBmqd }, "String");
 					sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_MBRGL_CYZT' AND TZ_ZHZ_ID=?";
 					strQdzt = sqlQuery.queryForObject(sql, new Object[] { strQdzt }, "String");
+					sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_BMR_APPLY_STA' AND TZ_ZHZ_ID=?";
+					strBmzt = sqlQuery.queryForObject(sql, new Object[] { strBmzt }, "String");
 				}
 
+				mapData.put("bmzt", strBmzt);
 				mapData.put("bmqd", strBmqd);
 				mapData.put("qdzt", strQdzt);
 
@@ -671,5 +804,170 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 
 		return strRet;
 	}
+	
+	
+	private String exportBmrInfoBatch(String strParams, String[] errorMsg){
+		
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try{
+			jacksonUtil.json2Map(strParams);
+			
+			// 活动编号
+			String activityId = jacksonUtil.getString("activityId");
+			String fileName = jacksonUtil.getString("fileName");
+			
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			String downloadPath = getSysHardCodeVal.getDownloadPath();
+			
+			// 活动报名信息excel存储路径
+			String eventExcelPath = "/events/xlsx";
+			
+			// 完整的存储路径
+			String expDirPath = downloadPath + eventExcelPath + "/" + getDateNow();
+			String absexpDirPath = request.getServletContext().getRealPath(expDirPath);
+			
+			/*生成运行控制ID*/
+			SimpleDateFormat dateFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+		    String s_dt = dateFormate.format(new Date());
+			String runCntlId = "HDBMR" + s_dt + "_" + getSeqNum.getSeqNum("TZ_GD_BMRGL_COM", "BMR_EXPORT");
+			
+			
+			PsTzHdBmrdcAet psTzHdBmrdcAet = new PsTzHdBmrdcAet();
+			psTzHdBmrdcAet.setRunCntlId(runCntlId);
+			psTzHdBmrdcAet.setTzArtId(activityId);
+			psTzHdBmrdcAet.setTzRelUrl(expDirPath);
+			psTzHdBmrdcAet.setTzJdUrl(absexpDirPath);
+			psTzHdBmrdcAet.setTzParamsStr(strParams);
+			psTzHdBmrdcAetMapper.insert(psTzHdBmrdcAet);
+			
+			
+			String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+			String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
+			BaseEngine tmpEngine = tzGDObject.createEngineProcess(currentOrgId, "TZ_HDBMR_EXP_PROC");
+			//指定调度作业的相关参数
+			EngineParameters schdProcessParameters = new EngineParameters();
 
+			schdProcessParameters.setBatchServer("");
+			schdProcessParameters.setCycleExpression("");
+			schdProcessParameters.setLoginUserAccount(currentAccountId);
+			schdProcessParameters.setPlanExcuteDateTime(new Date());
+			schdProcessParameters.setRunControlId(runCntlId);
+			
+			//调度作业
+			tmpEngine.schedule(schdProcessParameters);
+			
+			// 进程实例id;
+			int processinstance = tmpEngine.getProcessInstanceID();
+			
+			if(processinstance>0){
+
+				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
+				psTzExcelDrxxT.setProcessinstance(processinstance);
+				psTzExcelDrxxT.setTzComId("TZ_GD_BMRGL_COM");
+				psTzExcelDrxxT.setTzPageId("TZ_GD_BMRGL_STD");
+				//存放活动ID
+				psTzExcelDrxxT.setTzDrLxbh(activityId);
+				psTzExcelDrxxT.setTzDrTaskDesc(fileName); 
+				psTzExcelDrxxT.setTzStartDtt(new Date());
+				psTzExcelDrxxT.setOprid(oprid);
+				psTzExcelDrxxT.setTzIsViewAtt("Y");
+				psTzExcelDrxxTMapper.insert(psTzExcelDrxxT);
+				
+				
+				// 生成本次导出的文件名
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+				Random random = new Random();
+				int max = 999999999;
+				int min = 100000000;
+				String sysFileName = simpleDateFormat.format(new Date()) + "_" + oprid.toUpperCase() + "_"
+						+ String.valueOf(random.nextInt(max) % (max - min + 1) + min) + ".xlsx";
+				
+				PsTzExcelDattT psTzExcelDattT = new PsTzExcelDattT();
+				psTzExcelDattT.setProcessinstance(processinstance);
+				psTzExcelDattT.setTzSysfileName(sysFileName);
+				psTzExcelDattT.setTzFileName(fileName);
+				psTzExcelDattT.setTzCfLj("A");
+				psTzExcelDattT.setTzFjRecName("");
+				psTzExcelDattT.setTzFwqFwlj(""); 
+				psTzExcelDattTMapper.insert(psTzExcelDattT);
+				
+				
+			}
+			
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "导出失败。" + e.getMessage();
+		}
+
+		return strRet;
+	}
+	
+	
+	/***
+	 * 删除导出历史记录
+	 */
+	@Override
+	public String tzDelete(String[] actData, String[] errMsg) {
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+
+			int dataLength = actData.length;
+			for (int num = 0; num < dataLength; num++) {
+
+				// 表单内容
+				String strForm = actData[num];
+				// 解析json
+				jacksonUtil.json2Map(strForm);
+
+				//进程实例ID
+				int procInsId = Integer.parseInt(jacksonUtil.getString("procInsId"));
+				
+				PsTzExcelDattT psTzExcelDattT = psTzExcelDattTMapper.selectByPrimaryKey(procInsId);
+				if(psTzExcelDattT != null){
+					String filePath = psTzExcelDattT.getTzFwqFwlj();
+					if(!"".equals(filePath) && filePath != null){
+						filePath = request.getServletContext().getRealPath(filePath);
+						
+						File file = new File(filePath);
+						if(file.exists() && file.isFile()){
+							file.delete();
+						}
+					}
+				}
+				
+				psTzExcelDrxxTMapper.deleteByPrimaryKey(procInsId);
+				psTzExcelDattTMapper.deleteByPrimaryKey(procInsId);
+			}
+
+			errMsg[0] = "0";
+			errMsg[1] = "保存成功。";
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = "保存失败。" + e.getMessage();
+		}
+
+		return strRet;
+	}
+	
+	
+	/**
+	 * 创建日期目录名
+	 * 
+	 * @return
+	 */
+	private String getDateNow() {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(1);
+		int month = cal.get(2) + 1;
+		int day = cal.get(5);
+		return (new StringBuilder()).append(year).append(month).append(day).toString();
+	}
 }

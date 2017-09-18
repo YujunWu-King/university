@@ -247,9 +247,22 @@ public class tzOnlineAppUtility {
 				//查询行数:
 				sql="SELECT TZ_XXX_LINE FROM PS_TZ_APP_DHHS_T WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 				int comNum=sqlQuery.queryForObject(sql, new Object[]{numAppInsId,strXxxBh}, "int");
+				//排除考试类型“无”:
 				boolean breakFlg=false;
 				for(int i=0;i<comNum;i++){
-					String opt="exam_upload";
+					Map<String, Object> valMap = new HashMap<String, Object>();// exam_score//exam_date
+					String opt = "exam_type";
+					if (i > 0) {
+						opt = opt + "_" + i;
+					}					
+					valMap = sqlQuery.queryForMap(getChildrenSql, new Object[] { numAppInsId, "%" + strXxxBh + opt });
+					if(valMap!=null){
+						strXxxValue = valMap.get("TZ_APP_S_TEXT") == null ? "": String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if(strXxxValue.equals("无")){
+							continue;
+						}
+					}
+					opt="exam_upload";
 					if(i>0){
 						opt=opt+"_"+i;
 					}
@@ -269,7 +282,7 @@ public class tzOnlineAppUtility {
 				}
 				for(int i=0;i<comNum;i++){
 					//日期控件处理1.2.3.4.13含有日期 需要验证日期
-					String hasDateOpt="GRE-GMAT-TOFEL-IELTS-TOEIC（990）";
+					String hasDateOpt="GRE-GMAT-TOEFL-IELTS-TOEIC（990）";
 					//考试类型 成绩 日期验证:
 					//1.验证成绩类型:
 					Map<String,Object>valMap=new HashMap<String,Object>();//exam_score//exam_date
@@ -280,6 +293,9 @@ public class tzOnlineAppUtility {
 					valMap=sqlQuery.queryForMap(getChildrenSql, new Object[]{numAppInsId,"%"+strXxxBh+opt});
 					if(valMap!=null){
 						strXxxValue=valMap.get("TZ_APP_S_TEXT")==null?"":String.valueOf(valMap.get("TZ_APP_S_TEXT"));
+						if(strXxxValue.equals("无")){
+							continue;
+						}
 						if("".equals(strXxxValue)||"-1".equals(strXxxValue)){
 							returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 							//returnMessage = this.getMsg(strXxxMc, "请选择考试类型");

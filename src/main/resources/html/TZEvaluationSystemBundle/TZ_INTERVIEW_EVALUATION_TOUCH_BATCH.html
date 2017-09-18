@@ -1,0 +1,274 @@
+
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<title>清华大学经济管理学院MBA面试评审系统</title> 
+<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-sem.css" />
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
+<script type="text/javascript" src="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-1.4.5.min.js"></script>
+
+<script src="%bind(:1)/statics/js/lib/highcharts/highcharts.js" type="text/javascript"></script>
+<script src="%bind(:1)/statics/js/lib/highcharts/themes/grid.js" type="text/javascript"></script>
+
+<script  type="text/javascript">
+	var ContextPath = "%bind(:1)";
+	var OrgCode = "%bind(:2)";
+	var ClassId = "%bind(:4)";
+	var BatchId = "%bind(:5)";
+</script>
+
+<script type="text/javascript" src="%bind(:1)/statics/js/evaluation/interview/touch/main-evaluation-touch.js"></script>
+
+<style type="text/css" >
+caption {
+	padding: 0 0 5px 0;
+	width: 700px;
+	font: italic 14px "trebuchet ms", verdana, arial, helvetica, sans-serif;
+	text-align: right;
+}
+th {
+	font: bold 13px "trebuchet ms", verdana, arial, helvetica, sans-serif;
+	color: #333;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 5px 5px 5px 10px;
+	background: #eee;
+	text-shadow:none;
+}
+
+.alt {
+	border-right: 1px solid #c1dad7;
+	border-bottom: 1px solid #c1dad7;
+	background: #fff;
+	font-size:13px;
+	padding: 6px 6px 6px 12px;
+	color: #333;
+}
+
+</style>
+
+</head> 
+
+<body> 
+
+<div data-role="page" data-theme="a">
+
+	<div data-role="header" data-theme="b">
+
+			<div style="text-align:center;float:left;margin-left:6px;" class="r-action">
+				<a href="javascript:void(0);" onclick="goMainpage()" id="favrecipelink" data-role="button" data-theme="a" data-inline="true" data-icon="back">返回</a>
+						&nbsp;欢迎%bind(:3)登录清华经管MBA面试评审系统&nbsp;%bind(:6) %bind(:7)
+			</div>		
+			<div style="text-align:right; " class="r-action">			
+				<a href="javascript:void(0);" onclick="goMainpage()" id="favrecipelink" data-role="button" data-theme="a" data-inline="true" data-icon="home">首页</a>		
+				<!-- a href="%bind(:8)" target="_blank" id="favrecipelink" data-role="button" data-theme="b" data-inline="true" data-icon="info">联系方式</a-->
+				<a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-inline="true" data-theme="a" data-icon="star" >修改密码</a>
+				<a href="../../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-theme="a" data-icon="delete">退出</a>
+			</div>
+			<div data-role="popup" id="modifyPswdPopup" data-position-to="window" data-dismissible="false" data-overlay-theme="b" style="min-width:350px;">
+				<a href="#" data-rel="back" id="closeModify" class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">关闭</a>
+				<form method="post" id="modifyForm" data-ajax="false">
+					<div>
+						<div data-role="header" role="banner" data-theme="b">
+							<h3>修改密码</h3>
+						</div>
+						<div class="ui-field-contain" style="margin:10px 15px">
+							<label for="oldPswd">原密码:</label>
+							<input type="password" name="oldPswd" id="oldPswd">
+							<label for="newPswd" style="margin-top:5px;">新密码:</label>
+							<input type="password" name="newPswd" id="newPswd">
+							<label for="confirmPswd" style="margin-top:5px;">确认新密码:</label>
+							<input type="password" name="confirmPswd" id="confirmPswd">
+						</div>
+						<div align="center">
+						<a href="javascript:void(0);" data-role="button" data-inline="true" id="ensureModify">&nbsp;&nbsp;确定&nbsp;&nbsp;</a> 
+						</div>					
+					</div>
+				</form>
+			</div>
+	</div><!-- /header -->
+
+	<div data-role="content" data-theme="a">	
+		<div data-role="collapsible" data-collapsed="false" style="background:#fff" data-theme="a" data-content-theme="a" class="con-tag smallerr">
+			<h3>搜索考生</h3>
+
+				<table style="border:0;">
+				<tr>
+					<td><input type="search" name="searchfor1" id="searchfor1" value=""  placeholder="请输入面试申请号" data-mini="true" data-inline="true" /></td>
+					<td>或<input type="hidden" id="tz_search_bmbid" name="tz_search_bmbid" value="" ></td>
+					<td><input type="search" name="searchfor2" id="searchfor2" value=""  placeholder="请输入考生姓名" data-mini="true" /></td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;<span id="searchnotice">请输入考生面试申请号或姓名进行查找</span></td>
+				</tr>
+				</table>
+
+				<a href="javascript:void(0);" id="favrecipelink" onclick="searchfor()"  data-role="button" data-inline="true" data-mini="true" data-theme="c" data-icon="search">查 找</a>
+				<a href="javascript:void(0);" id="favrecipelink" onclick="jxps()" data-role="button" data-inline="true" data-mini="true" data-theme="c" data-icon="arrow-r">进行评审</a>
+
+		</div>	
+
+		<div data-role="collapsible" data-theme="a" data-content-theme="a" class="con-tag smallerr" >
+			<h3>评审说明</h3>
+			<div  id="description"></div>
+		</div>	
+
+		<div data-role="collapsible" data-theme="a" data-content-theme="a" class="con-tag smallerr">
+			<h3>评审打分统计信息区</h3>
+			<div id="ypsinfo"></div>
+			<div data-role="collapsible" data-theme="a" data-content-theme="a" data-collapsed="false" id="pwkj_tjb1">
+				<h3>已评审考生得分统计</h3>
+
+				<div id="statistics1">
+			
+				</div>
+
+			</div>
+
+			<div data-role="collapsible" data-theme="a" data-content-theme="a" data-collapsed="false" id="pwkj_tjb2">
+				<h3>已评审考生得分分布统计</h3>
+
+					<div id="statistics2">
+
+					</div>
+
+
+
+		
+			</div>
+			<div data-role="collapsible" data-theme="a" data-content-theme="a" data-collapsed="false" id="columnGroup" >
+				<h3>各统计指标得分区间人数比率分布统计曲线图</h3>
+
+							<div id="container1_0" align="center"  ></div>  
+							<div id="container1_1" align="center"  ></div>  
+							<div id="container1_2" align="center"  ></div>  	
+					
+			
+			</div>
+
+			<div data-role="collapsible" data-theme="a" data-content-theme="a" data-collapsed="false" id="columnFbt"  >
+						<h3>指标统计柱状图</h3>
+							<div id="container2_0" align="center" ></div>
+							<div id="container2_1" align="center" ></div>
+							<div id="container2_2" align="center" ></div>
+							<div style="clear:both;"></div>
+			</div>
+				
+		</div>
+		<div data-role="collapsible" data-collapsed="false" data-theme="a" data-content-theme="a" class="con-tag smallerr">
+				<h3>当前已经归属我的评委考生列表</h3>
+						<div id="examerinfo" style="overflow-x:auto">
+
+
+						</div>
+						<div style="text-align:right; " class="r-action">
+
+							总体提交状态：【<span id="submtall_flag"></span>】&nbsp;&nbsp;
+
+							<a href="javascript:void(0);" id="favrecipelink" onclick="tosubmitall()"  data-role="button" data-inline="true" data-mini="true" data-icon="arrow-r">提交</a>
+						</div>
+
+		</div>
+
+		<div data-role="popup" id="popupDialog" data-overlay-theme="a" data-corners="false"  data-position-to="origin">
+
+				<div data-role="header" data-theme="b" role="banner" >
+					<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+					<h1  role="heading" aria-level="1">提示</h1>
+				</div>
+				<div data-role="content" data-theme="d" role="main" align="center">
+					<p>确定要移除考生【<span id="ks_name"></span>】吗？</p>
+					<a href="javascript:void(0);" data-role="button" data-inline="true" data-rel="back" >&nbsp;&nbsp;否&nbsp;&nbsp;</a>    
+					<a href="javascript:void(0);" data-role="button" data-inline="true" data-rel="back" onClick="ycks();" data-theme="a" data-transition="flow">&nbsp;&nbsp;是&nbsp;&nbsp;</a>  
+					<input type="hidden" id="tz_hide_ksname" name="tz_hide_ksname" value="">
+					<input type="hidden" id="tz_hide_bmbid" name="tz_hide_bmbid" value="">
+				</div>
+		</div>
+
+		<div data-role="popup" id="popupDialogSubmit" data-overlay-theme="a" data-corners="false"  data-position-to="origin">
+
+				<div data-role="header" data-theme="b" role="banner" >
+					<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" onClick="" class="ui-btn-right">Close</a>
+					<h1  role="heading" aria-level="1">提示</h1>
+				</div>
+				<div data-role="content" data-theme="a" role="main" align="center">
+					<P style="text-align:left">是否提交本次评议的全部考生信息？<BR/>提交后将无法对考生评议成绩进行修改，是否继续？</P>
+					<a href="javascript:void(0);" data-role="button" data-inline="true" data-rel="back" >&nbsp;&nbsp;否&nbsp;&nbsp;</a>    
+					<a href="javascript:void(0);" data-role="button" data-inline="true" data-rel="back" onclick="submitall();" data-theme="c" data-transition="flow">&nbsp;&nbsp;是&nbsp;&nbsp;</a>  
+				</div>
+		</div>
+	</div><!-- /content -->
+
+	
+	<div data-role="footer" data-theme="b" >
+		<h4>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</h4>
+	</div><!-- /footer -->
+	
+</div><!-- /page -->
+<script type="text/javascript">
+		//修改密码-确定
+		$("#ensureModify").click(function() {
+			//旧密码
+			var oldPassword = $("#oldPswd").val();
+			//新密码
+			var newPassword = $("#newPswd").val();
+			//确认新密码
+			var confirmPassword = $("#confirmPswd").val();
+
+			var bl = true;
+			if(oldPassword!="" && newPassword!="" && confirmPassword!="") {
+				//密码
+				if(newPassword != confirmPassword){
+					alert("两次密码输入不一致。");
+					bl =  false;
+				} else {
+					//新旧密码不能相同
+					if(oldPassword == newPassword) {
+						alert("新旧密码不能相同。");
+						bl =  false;
+					} else {
+						bl =  true;
+					}
+				}
+			} else {
+				alert("请填写所有信息项。");
+				bl =  false;
+			}
+
+
+			if(bl) {
+				var formParams= '{"oldPwd":"'+oldPassword+'","newPwd":"'+newPassword+'","comfirmPwd":"'+confirmPassword+'"}';
+				var tzParams = '{"ComID":"TZ_GD_XGPWD_COM","PageID":"TZ_GD_XGPWD_STD","OperateType":"U","comParams":{"update":['+formParams+']}}';
+				var modiftyUrl = ContextPath+"/dispatcher";
+				$.ajax({
+					type: 'POST',
+					dataType: "json",
+					url: modiftyUrl,
+					data: {"tzParams":tzParams},
+					success: function(data) {
+						var errcode = data.state.errcode;
+						if(errcode!="0"){
+							alert(data.state.errdesc);
+						} else {
+							$("#oldPswd").val("");
+							$("#newPswd").val("");
+							$("#confirmPswd").val("");
+
+							alert("密码修改成功！");
+
+							$("#closeModify").trigger("click");
+						}
+					}
+				});
+			}
+		});
+</script>
+</body>
+</html>

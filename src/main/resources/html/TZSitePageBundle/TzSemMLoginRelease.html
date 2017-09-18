@@ -7,11 +7,27 @@
 <title></title>
 <link href="%bind(:1)/statics/css/website/m/css/style.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">
+
+	//防止页面后退
+	history.pushState(null, null, document.URL);
+	window.addEventListener('popstate', function () {
+	    history.pushState(null, null, document.URL);
+	});
+	
 	var TzUniversityContextPath = "%bind(:1)";
 	var TZ_GD_LOGIN_SITEI_ORG_CODE = "%bind(:2)";
 	var TZ_GD_LOGIN_SITEI_ID = "%bind(:3)";
 	var TZ_GD_SITEI_ISD = "";
-</script>	
+</script>
+<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "https://hm.baidu.com/hm.js?cda1b7baee67b76ffc0ec47ced60e717";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+</script>
 <script type="text/javascript" src="%bind(:1)/statics/js/website/m/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/website/m/rem.js"></script>
 <script type="text/javascript" src="%bind(:1)/statics/js/website/m/common.js"></script>
@@ -51,10 +67,12 @@
             			<span>帮助中心</span>
             		</a>
             	</div>
+				<div style="font-size:0.54rem;color:#d81e06;padding:10px;margin-top:5px;">因系统升级，登录如遇密码错误，请通过“<a href="javascript:void(0)" onclick="forgetPwd()" style="display: inline;color:#8f5dbf;">重置密码</a>”按钮重置密码后登陆！</div>
             </div>
             <input id="pagetype" name="pagetype" value="loginpage" type="hidden">
             <input id="jgid" name="jgid" type="hidden" value="%bind(:2)">
             <input id="siteid" name="siteid" type="hidden" value="%bind(:3)">
+            <input id="openid" name="openid" type="hidden" value="%bind(:4)">
             <input id="lang" name="lang" type="hidden" value="ZHS">
             <input id="operator" name="operator" value="R" type="hidden"> 
             </form>

@@ -3,8 +3,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>%bind(:7)</title>
-		<link href="%bind(:12)/statics/js/onlineSurvey/css/public.css" rel="stylesheet" type="text/css" />
-		<link href="%bind(:12)/statics/js/onlineSurvey/css/index.css" rel="stylesheet" type="text/css" />
+		
+		<script type="text/javascript" src="%bind(:12)/statics/js/onlineSurvey/js/My97DatePicker/WdatePicker.js"></script>
+		<link href="%bind(:12)/statics/js/onlineSurvey/css/pc.css" rel="stylesheet" type="text/css" />
+		
+<!-- 		<link href="%bind(:12)/statics/js/onlineSurvey/css/public.css" rel="stylesheet" type="text/css" /> -->
+<!-- 		<link href="%bind(:12)/statics/js/onlineSurvey/css/index.css" rel="stylesheet" type="text/css" /> -->
 		<script type="text/javascript" src="%bind(:12)/statics/js/lib/jquery/jquery.min.js"></script>
 		<script type="text/javascript" src="%bind(:12)/statics/js/onlineSurvey/layer/layer.js"></script>
 		<script type="text/javascript" src="%bind(:12)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
@@ -68,25 +72,34 @@
 
 	<body>
 		<div class="container">
-			<div class="top">
-				%bind(:8)
-				<div class="clear"></div>
-			</div>
-
-			<div class="uploadlogo">
+			<div class="bg pos_re">
+		<!-- 	<div class="uploadlogo">
 				%bind(:1)
 			</div>
-
-			<div class="maincon" style="min-height:300px;">
-				%bind(:2)
-			</div>
-			<div style="float:right;"><a href="#" onclick="javascript:begin()"><div class="pagebtn1">%bind(:9) ></div></a></div>
-			<div class="fotter">
-				%bind(:3)
-			</div>
+ -->
+				<div class="qdy_top">
+					%bind(:2)
+				</div>
+			
+				<div class="main_body">
+					<a href="#" onclick="javascript:begin()" class="btn_tj">%bind(:9) ></a>
+<!-- 					<div class="fotter"> -->
+<!-- 						%bind(:3) -->
+<!-- 					</div> -->
+						<div class="footer1">
+			    			北京创景咨询提供技术支持
+			    		</div>
+	    		</div>
+	    	</div>
 		</div>
 	</body>
 	<script type="text/javascript">
+	
+	 var height=document.body.clientHeight; 
+
+// 	 $(".bg").css("height",height+"px");
+	$(".bg").css("height","676px");
+	
 		function getcookie(name){
 			var name=unescape(name);
 			var start = document.cookie.indexOf(name);

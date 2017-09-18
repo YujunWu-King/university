@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatBundle.dao.PsTzWxAppseTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_WX_APPID" property="tzWxAppid" jdbcType="VARCHAR" />
+    <result column="TZ_WX_SECRET" property="tzWxSecret" jdbcType="VARCHAR" />
+    <result column="TZ_WX_ORIID" property="tzWxOriid" jdbcType="VARCHAR" />
+    <result column="TZ_WX_NAME" property="tzWxName" jdbcType="VARCHAR" />
+    <result column="TZ_FROM_PVALUE" property="tzFromPvalue" jdbcType="VARCHAR" />
+    <result column="TZ_WX_STATE" property="tzWxState" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_WX_APPID, TZ_WX_SECRET, TZ_WX_ORIID, TZ_WX_NAME, TZ_FROM_PVALUE, TZ_WX_STATE, 
+    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_WX_APPSE_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTblKey" >
+    delete from PS_TZ_WX_APPSE_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTbl" >
+    insert into PS_TZ_WX_APPSE_TBL (TZ_JG_ID, TZ_WX_APPID, TZ_WX_SECRET, 
+      TZ_WX_ORIID, TZ_WX_NAME, TZ_FROM_PVALUE, 
+      TZ_WX_STATE, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
+      SYNCDTTM)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, #{tzWxSecret,jdbcType=VARCHAR}, 
+      #{tzWxOriid,jdbcType=VARCHAR}, #{tzWxName,jdbcType=VARCHAR}, #{tzFromPvalue,jdbcType=VARCHAR}, 
+      #{tzWxState,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
+      #{syncdttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTbl" >
+    insert into PS_TZ_WX_APPSE_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzWxAppid != null" >
+        TZ_WX_APPID,
+      </if>
+      <if test="tzWxSecret != null" >
+        TZ_WX_SECRET,
+      </if>
+      <if test="tzWxOriid != null" >
+        TZ_WX_ORIID,
+      </if>
+      <if test="tzWxName != null" >
+        TZ_WX_NAME,
+      </if>
+      <if test="tzFromPvalue != null" >
+        TZ_FROM_PVALUE,
+      </if>
+      <if test="tzWxState != null" >
+        TZ_WX_STATE,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxAppid != null" >
+        #{tzWxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxSecret != null" >
+        #{tzWxSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxOriid != null" >
+        #{tzWxOriid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxName != null" >
+        #{tzWxName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFromPvalue != null" >
+        #{tzFromPvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxState != null" >
+        #{tzWxState,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTbl" >
+    update PS_TZ_WX_APPSE_TBL
+    <set >
+      <if test="tzWxSecret != null" >
+        TZ_WX_SECRET = #{tzWxSecret,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxOriid != null" >
+        TZ_WX_ORIID = #{tzWxOriid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxName != null" >
+        TZ_WX_NAME = #{tzWxName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFromPvalue != null" >
+        TZ_FROM_PVALUE = #{tzFromPvalue,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxState != null" >
+        TZ_WX_STATE = #{tzWxState,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatBundle.model.PsTzWxAppseTbl" >
+    update PS_TZ_WX_APPSE_TBL
+    set TZ_WX_SECRET = #{tzWxSecret,jdbcType=VARCHAR},
+      TZ_WX_ORIID = #{tzWxOriid,jdbcType=VARCHAR},
+      TZ_WX_NAME = #{tzWxName,jdbcType=VARCHAR},
+      TZ_FROM_PVALUE = #{tzFromPvalue,jdbcType=VARCHAR},
+      TZ_WX_STATE = #{tzWxState,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZConfigurableSearchMgBundle.dao.PsTzFltDstConTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConT" >
+    <id column="TZ_COM_ID" property="tzComId" jdbcType="VARCHAR" />
+    <id column="TZ_PAGE_ID" property="tzPageId" jdbcType="VARCHAR" />
+    <id column="TZ_VIEW_NAME" property="tzViewName" jdbcType="VARCHAR" />
+    <id column="TZ_FLTDST_ORDER" property="tzFltdstOrder" jdbcType="INTEGER" />
+    <id column="TZ_FLTDST_C_ORDER" property="tzFltdstCOrder" jdbcType="INTEGER" />
+    <result column="TZ_FLTDST_AND_OR" property="tzFltdstAndOr" jdbcType="VARCHAR" />
+    <result column="TZ_FLTDST_L_PAREN" property="tzFltdstLParen" jdbcType="VARCHAR" />
+    <result column="TZ_FLTDST_CON_FLD" property="tzFltdstConFld" jdbcType="VARCHAR" />
+    <result column="TZ_FLTDST_OPERATOR" property="tzFltdstOperator" jdbcType="VARCHAR" />
+    <result column="TZ_FLTDST_FLD_V_T" property="tzFltdstFldVT" jdbcType="VARCHAR" />
+    <result column="TZ_FLTDST_FLD_VAL" property="tzFltdstFldVal" jdbcType="VARCHAR" />
+    <result column="TZ_FLTDST_R_PAREN" property="tzFltdstRParen" jdbcType="VARCHAR" />
+    <result column="TZ_NO_UPORLOW" property="tzNoUporlow" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, TZ_FLTDST_ORDER, TZ_FLTDST_C_ORDER, TZ_FLTDST_AND_OR, 
+    TZ_FLTDST_L_PAREN, TZ_FLTDST_CON_FLD, TZ_FLTDST_OPERATOR, TZ_FLTDST_FLD_V_T, TZ_FLTDST_FLD_VAL, 
+    TZ_FLTDST_R_PAREN, TZ_NO_UPORLOW
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_FLTDST_CON_T
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_FLTDST_ORDER = #{tzFltdstOrder,jdbcType=INTEGER}
+      and TZ_FLTDST_C_ORDER = #{tzFltdstCOrder,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConTKey" >
+    delete from PS_TZ_FLTDST_CON_T
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_FLTDST_ORDER = #{tzFltdstOrder,jdbcType=INTEGER}
+      and TZ_FLTDST_C_ORDER = #{tzFltdstCOrder,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConT" >
+    insert into PS_TZ_FLTDST_CON_T (TZ_COM_ID, TZ_PAGE_ID, TZ_VIEW_NAME, 
+      TZ_FLTDST_ORDER, TZ_FLTDST_C_ORDER, TZ_FLTDST_AND_OR, 
+      TZ_FLTDST_L_PAREN, TZ_FLTDST_CON_FLD, TZ_FLTDST_OPERATOR, 
+      TZ_FLTDST_FLD_V_T, TZ_FLTDST_FLD_VAL, TZ_FLTDST_R_PAREN, 
+      TZ_NO_UPORLOW)
+    values (#{tzComId,jdbcType=VARCHAR}, #{tzPageId,jdbcType=VARCHAR}, #{tzViewName,jdbcType=VARCHAR}, 
+      #{tzFltdstOrder,jdbcType=INTEGER}, #{tzFltdstCOrder,jdbcType=INTEGER}, #{tzFltdstAndOr,jdbcType=VARCHAR}, 
+      #{tzFltdstLParen,jdbcType=VARCHAR}, #{tzFltdstConFld,jdbcType=VARCHAR}, #{tzFltdstOperator,jdbcType=VARCHAR}, 
+      #{tzFltdstFldVT,jdbcType=VARCHAR}, #{tzFltdstFldVal,jdbcType=VARCHAR}, #{tzFltdstRParen,jdbcType=VARCHAR}, 
+      #{tzNoUporlow,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConT" >
+    insert into PS_TZ_FLTDST_CON_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzComId != null" >
+        TZ_COM_ID,
+      </if>
+      <if test="tzPageId != null" >
+        TZ_PAGE_ID,
+      </if>
+      <if test="tzViewName != null" >
+        TZ_VIEW_NAME,
+      </if>
+      <if test="tzFltdstOrder != null" >
+        TZ_FLTDST_ORDER,
+      </if>
+      <if test="tzFltdstCOrder != null" >
+        TZ_FLTDST_C_ORDER,
+      </if>
+      <if test="tzFltdstAndOr != null" >
+        TZ_FLTDST_AND_OR,
+      </if>
+      <if test="tzFltdstLParen != null" >
+        TZ_FLTDST_L_PAREN,
+      </if>
+      <if test="tzFltdstConFld != null" >
+        TZ_FLTDST_CON_FLD,
+      </if>
+      <if test="tzFltdstOperator != null" >
+        TZ_FLTDST_OPERATOR,
+      </if>
+      <if test="tzFltdstFldVT != null" >
+        TZ_FLTDST_FLD_V_T,
+      </if>
+      <if test="tzFltdstFldVal != null" >
+        TZ_FLTDST_FLD_VAL,
+      </if>
+      <if test="tzFltdstRParen != null" >
+        TZ_FLTDST_R_PAREN,
+      </if>
+      <if test="tzNoUporlow != null" >
+        TZ_NO_UPORLOW,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzComId != null" >
+        #{tzComId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPageId != null" >
+        #{tzPageId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzViewName != null" >
+        #{tzViewName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstOrder != null" >
+        #{tzFltdstOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzFltdstCOrder != null" >
+        #{tzFltdstCOrder,jdbcType=INTEGER},
+      </if>
+      <if test="tzFltdstAndOr != null" >
+        #{tzFltdstAndOr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstLParen != null" >
+        #{tzFltdstLParen,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstConFld != null" >
+        #{tzFltdstConFld,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstOperator != null" >
+        #{tzFltdstOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstFldVT != null" >
+        #{tzFltdstFldVT,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstFldVal != null" >
+        #{tzFltdstFldVal,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstRParen != null" >
+        #{tzFltdstRParen,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNoUporlow != null" >
+        #{tzNoUporlow,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConT" >
+    update PS_TZ_FLTDST_CON_T
+    <set >
+      <if test="tzFltdstAndOr != null" >
+        TZ_FLTDST_AND_OR = #{tzFltdstAndOr,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstLParen != null" >
+        TZ_FLTDST_L_PAREN = #{tzFltdstLParen,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstConFld != null" >
+        TZ_FLTDST_CON_FLD = #{tzFltdstConFld,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstOperator != null" >
+        TZ_FLTDST_OPERATOR = #{tzFltdstOperator,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstFldVT != null" >
+        TZ_FLTDST_FLD_V_T = #{tzFltdstFldVT,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstFldVal != null" >
+        TZ_FLTDST_FLD_VAL = #{tzFltdstFldVal,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFltdstRParen != null" >
+        TZ_FLTDST_R_PAREN = #{tzFltdstRParen,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNoUporlow != null" >
+        TZ_NO_UPORLOW = #{tzNoUporlow,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_FLTDST_ORDER = #{tzFltdstOrder,jdbcType=INTEGER}
+      and TZ_FLTDST_C_ORDER = #{tzFltdstCOrder,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFltDstConT" >
+    update PS_TZ_FLTDST_CON_T
+    set TZ_FLTDST_AND_OR = #{tzFltdstAndOr,jdbcType=VARCHAR},
+      TZ_FLTDST_L_PAREN = #{tzFltdstLParen,jdbcType=VARCHAR},
+      TZ_FLTDST_CON_FLD = #{tzFltdstConFld,jdbcType=VARCHAR},
+      TZ_FLTDST_OPERATOR = #{tzFltdstOperator,jdbcType=VARCHAR},
+      TZ_FLTDST_FLD_V_T = #{tzFltdstFldVT,jdbcType=VARCHAR},
+      TZ_FLTDST_FLD_VAL = #{tzFltdstFldVal,jdbcType=VARCHAR},
+      TZ_FLTDST_R_PAREN = #{tzFltdstRParen,jdbcType=VARCHAR},
+      TZ_NO_UPORLOW = #{tzNoUporlow,jdbcType=VARCHAR}
+    where TZ_COM_ID = #{tzComId,jdbcType=VARCHAR}
+      and TZ_PAGE_ID = #{tzPageId,jdbcType=VARCHAR}
+      and TZ_VIEW_NAME = #{tzViewName,jdbcType=VARCHAR}
+      and TZ_FLTDST_ORDER = #{tzFltdstOrder,jdbcType=INTEGER}
+      and TZ_FLTDST_C_ORDER = #{tzFltdstCOrder,jdbcType=INTEGER}
+  </update>
+</mapper>

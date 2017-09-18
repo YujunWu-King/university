@@ -1,8 +1,6 @@
 package com.tranzvision.gd.TZUnifiedBaseBundle.service.impl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,248 +8,458 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tranzvision.gd.TZAutomaticScreenBundle.dao.*;
-import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
+import com.itextpdf.text.log.SysoCounter;
+import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCjxTblMapper;
+import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblKey;
+import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs;
 import com.tranzvision.gd.util.sql.SqlQuery;
-
 
 @Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfWYServiceImpl")
 public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
-
 
 	@Autowired
 	private SqlQuery SqlQuery;
 	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
-	
-	//获取参数：成绩单ID、外语水平成绩项ID、报名表ID
-	@Override
-	public float AutoCalculate(String TZ_APP_ID,String TZ_SCORE_ID,String TZ_SCORE_ITEM) {
-				try {
-					
-					//报名表信息表定义
-					Map<String, String> ksMap = new HashMap<String, String>();
-					String ksMapkey = "";
-					String ksMapvalue = "";
-					
-					//查询报名表信息
-					String ks_valuesql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? ";
-					List<Map<String, Object>> listMap = SqlQuery.queryForList(ks_valuesql, new Object[] { TZ_APP_ID });
-					for (Map<String, Object> map : listMap) {
-						ksMapkey = map.get("TZ_XXX_BH").toString();
-						ksMapvalue = map.get("TZ_APP_S_TEXT").toString();
-						ksMap.put(ksMapkey, ksMapvalue);
-					}
-					
-					//声明float型字段“得分”，string型字段“打分记录”
-					float Score;
-					String MarkRecord = null;
-					
-			
-					
-					//根据报名表ID查询考生是否有其他语种的外语成绩
-					String QTYZ=ksMap.get("TZ_18othlang");
-							
-				//	String valuesql = "SELECT TZ_XXX_BH, TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE( TZ_APP_INS_ID = ? AND TZ_XXX_BH LIKE '%TZ_44exam_score%') OR ( TZ_APP_INS_ID = ? AND TZ_XXX_BH LIKE '%TZ_44exam_type%' )";
-					
-					String valuesql = "SELECT TZ_XXX_BH, TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE( TZ_APP_INS_ID = ? AND TZ_XXX_BH LIKE '%TZ_44exam_type%')";
-					List<Map<String, Object>> SqlCon2 = SqlQuery.queryForList(valuesql, new Object[] { TZ_APP_ID});
-					
-					//定义成绩list
-					List<Float> WYScore = new ArrayList<Float>();
-					
-					//根据报名表ID查询考生循环考生英语成绩，查询考生英语成绩类型
-					for (Map<String, Object> map2 : SqlCon2) {
-						String WYLXXXX = map2.get("TZ_XXX_BH").toString();		//外语类型信息项
-						String WYLX = map2.get("TZ_APP_S_TEXT").toString();		//外语类型
-						
-						String WYCJXXX=WYLXXXX.replace("type", "score");		//外语成绩信息项
-						String EngScoreSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE( TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?)";
-						String WYCJori = SqlQuery.queryForObject(EngScoreSql, new Object[] { TZ_APP_ID,WYCJXXX },"String");	//外语成绩
-						String WYCJ=WYCJori;
-						float FSCJF;
-						
-						switch(WYLX){
-						case "专业英语":
-							WYLX="ZYYY";
-						break;
-						case "高级口译":
-							WYLX="GJKY";
-						break;
-						case "中级口译":
-							WYLX="ZJKY";
-						break;
-						case "BEC":
-							WYLX="BEC";
-						break;
-						case "GRE":
-							WYLX="GRE";
-						break;
-						case "GMAT":
-							WYLX="GMAT";
-						break;
-						case "TOFEL":
-							WYLX="TOFEL";
-						break;
-						case "IELTS":
-							WYLX="IELTS";
-						break;
-						case "英语六级（710分制）":
-							WYLX="710E6";
-						break;
-						case "英语四级（710分制）":
-							WYLX="710E4";
-						break;
-						case "英语六级（100分制）":
-							WYLX="100E6";
-						break;
-						case "英语四级（100分制）":
-							WYLX="100E4";
-						break;
-						case "TOEIC（990）":
-							WYLX="TOEIC";
-						break;
-						}
-						
-						switch(WYCJ){
-						case "专业八级":
-							WYCJ="A";
-						break;
-						case "专业四级":
-							WYCJ="B";
-						break;
-						case "拿到资格证书":
-							WYCJ="A";
-						break;
-						case "拿到笔试证书":
-							WYCJ="B";
-						break;
-						case "高级":
-							WYCJ="A";
-						break;
-						case "中极":
-							WYCJ="B";
-						break;
-						case "初级":
-							WYCJ="C";
-						break;
-						
-						}
-						
-						if(WYLX.equals("GRE")||WYLX.equals("GMAT")||WYLX.equals("TOFEL")||WYLX.equals("IELTS")||WYLX.equals("710E6")||WYLX.equals("710E4")||WYLX.equals("100E6")||WYLX.equals("100E4")||WYLX.equals("TOEIC")){
-							String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK2>? AND TZ_CSMB_CK3<=?;";
-							String FSCJ = SqlQuery.queryForObject(sql, new Object[] {WYLX,WYCJ,WYCJ},"String");
-							FSCJF=Float.parseFloat(FSCJ);
-							WYScore.add(FSCJF);
-							
-						//证书类型，查询报名表中的证书等级字段
-						}else if(WYLX.equals("ZYYY")||WYLX.equals("GJKY")||WYLX.equals("ZJKY")||WYLX.equals("BEC")){
-							String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK1=?";
-							String FSCJ = SqlQuery.queryForObject(sql2,  new Object[] {WYLX,WYCJ},"String");
-							FSCJF=Float.parseFloat(FSCJ);
-							WYScore.add(FSCJF);
-						}
-						
-						//记录打分记录：英语成绩类型：GMAT>=750|其他语种：日语二级|100分
-						if(MarkRecord != null){
-							MarkRecord=MarkRecord+"英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
-						}else{
-							MarkRecord="英语成绩类型：".concat(map2.get("TZ_APP_S_TEXT").toString()).concat("=").concat(WYCJori)+"|";//.concat("|学位：").concat(XW);
-						}
-					}
-					
-					//其他语种成绩
-					if(QTYZ!=null && QTYZ.length() != 0){
-						WYScore.add((float)80);
-						
-						String ForScoreSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=?  and TZ_XXX_BH ='TZ_18othlang'";
-						String QTYZCJ = SqlQuery.queryForObject(ForScoreSql, new Object[] { TZ_APP_ID},"String");	//其他语种
-						
-						switch(QTYZCJ){
-						case "1":
-							QTYZCJ="日语";
-						break;	
-						case "2":
-							QTYZCJ="法语";
-						break;	
-						case "3":
-							QTYZCJ="韩语";
-						break;	
-						case "4":
-							QTYZCJ="俄语";
-						break;	
-						case "5":
-							QTYZCJ="西班牙语";
-						break;	
-						case "6":
-							QTYZCJ="其他语言";
-						break;	
-						}
-						MarkRecord=MarkRecord+"其他语种：".concat(QTYZCJ);
-					}
-					
-					//根据报名表ID查询考生是否有海外院校学位，获取考生学位
-					if("Y".equals("海外院校")&&"Y".equals("学士")){
-						WYScore.add((float)100);
-					}else if("Y".equals("海外院校")&&"Y".equals("硕士")){
-						WYScore.add((float)90);
-					}
-					
-					String uniScholContry = ksMap.get("TZ_11luniversitycountry");
-					String Contry1 = ksMap.get("TZ_10hdegreeunicountry");
-					String Contry2 = ksMap.get("TZ_12ouniversitycountry");
-					String Contry3 = ksMap.get("TZ_13ouniver3country");
-					String XW = ksMap.get("TZ_10hxuewei");
 
-					
-					// 判断 是否有海外学历
-					if (ksMap.get("TZ_11luniversitycountry") == null ? true
-							: uniScholContry.equals("中国") && ksMap.get("TZ_10hdegreeunicountry") == null ? true
-									: Contry1.equals("中国") && ksMap.get("TZ_12ouniversitycountry") == null ? true
-											: Contry2.equals("中国") && ksMap.get("TZ_13ouniver3country") == null ? true
-													: Contry3.equals("中国")) {
+	// 获取参数：成绩单ID、外语水平成绩项ID、报名表ID
+	@Override
+	public float AutoCalculate(String TZ_APP_ID, String TZ_SCORE_ID, String TZ_SCORE_ITEM) {
+		try {
+
+			// 报名表信息表定义
+			Map<String, String> ksMap = new HashMap<String, String>();
+			String ksMapkey = "";
+			String ksMapvalue = "";
+
+			// 查询报名表信息
+			String ks_valuesql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? ";
+			List<Map<String, Object>> listMap = SqlQuery.queryForList(ks_valuesql, new Object[] { TZ_APP_ID });
+			for (Map<String, Object> map : listMap) {
+				ksMapkey = map.get("TZ_XXX_BH").toString();
+				ksMapvalue = map.get("TZ_APP_S_TEXT").toString();
+				ksMap.put(ksMapkey, ksMapvalue);
+
+			}
+
+			// 声明float型字段“得分”，string型字段“打分记录”,float最高分
+			float Score;
+			float Highest = 0;
+
+			String MarkRecord = null;
+
+			boolean bl = false;
+			String valuesql = "SELECT TZ_XXX_BH, TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE( TZ_APP_INS_ID = ? AND TZ_XXX_BH LIKE '%TZ_44exam_type%')";
+			List<Map<String, Object>> SqlCon2 = SqlQuery.queryForList(valuesql, new Object[] { TZ_APP_ID });
+
+			// 定义成绩list
+			// List<Float> WYScore = new ArrayList<Float>();
+
+			// 根据报名表ID查询考生循环考生英语成绩，查询考生英语成绩类型
+			for (Map<String, Object> map2 : SqlCon2) {
+				String WYLXXXX = map2.get("TZ_XXX_BH").toString(); // 外语类型信息项
+				String WYLX = map2.get("TZ_APP_S_TEXT").toString(); // 外语类型
+				String LX = null;
+
+				String WYCJXXX = WYLXXXX.replace("type", "score"); // 外语成绩信息项
+				String EngScoreSql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE( TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?)";
+				String WYCJori = SqlQuery.queryForObject(EngScoreSql, new Object[] { TZ_APP_ID, WYCJXXX }, "String"); // 外语成绩
+				String WYCJ = WYCJori;
+				float FSCJF = 0;
+
+				switch (WYLX) {
+				case "专业英语":
+					WYLX = "ZYYY";
+					LX = "专业英语";
+					break;
+				case "高级口译":
+					WYLX = "GJKY";
+					LX = "高级口译";
+					break;
+				case "中级口译":
+					WYLX = "ZJKY";
+					LX = "中级口译";
+					break;
+				case "BEC":
+					WYLX = "BEC";
+					LX = "BEC";
+					break;
+				case "GRE":
+					WYLX = "GRE";
+					LX = "GRE";
+					break;
+				case "GMAT":
+					WYLX = "GMAT";
+					LX = "GMAT";
+					break;
+				case "TOEFL":
+					WYLX = "TOFEL";
+					LX = "TOEFL";
+					break;
+				case "IELTS":
+					WYLX = "IELTS";
+					LX = "IELTS";
+					break;
+				case "英语六级（710分制）":
+					WYLX = "710E6";
+					LX = "英语六级（710分制）";
+					break;
+				case "英语四级（710分制）":
+					WYLX = "710E4";
+					LX = "英语四级（710分制）";
+					break;
+				case "英语六级（100分制）":
+					WYLX = "100E6";
+					LX = "英语六级（100分制）";
+					break;
+				case "英语四级（100分制）":
+					WYLX = "100E4";
+					LX = "英语四级（100分制）";
+					break;
+				case "TOEIC（990）":
+					WYLX = "TOEIC";
+					LX = "TOEIC（990）";
+					break;
+				case "无":
+					WYLX = "";
+					LX = "";
+					break;
+
+				}
+
+				if (WYCJ != null && !WYCJ.equals("")) {
+					switch (WYCJ) {
+					case "专业八级":
+						WYCJ = "A";
+						break;
+					case "专业四级":
+						WYCJ = "B";
+						break;
+					case "拿到资格证书":
+						WYCJ = "A";
+						break;
+					case "拿到笔试证书":
+						WYCJ = "B";
+						break;
+					case "高级":
+						WYCJ = "A";
+						break;
+					case "中级":
+						WYCJ = "B";
+						break;
+					case "初级":
+						WYCJ = "C";
+						break;
+					case "通过":
+						WYCJ = "A";
+						break;
+					case "未通过":
+						WYCJ = "B";
+						break;
+
+					}
+				}
+
+				if (WYLX.equals("GRE") || WYLX.equals("GMAT") || WYLX.equals("TOFEL") || WYLX.equals("IELTS")
+						|| WYLX.equals("710E6") || WYLX.equals("710E4") || WYLX.equals("TOEIC") || WYLX.equals("100E4")
+						|| WYLX.equals("100E6")) {
+					// System.out.println("是这个报名表：" + TZ_APP_ID + "成绩");
+
+					if (WYCJ == null || WYCJ.equals("") || WYLX == null || WYLX.equals("")) {
 					} else {
-						if(XW.equals("1")||XW.equals("2")){
-							WYScore.add((float)90);
-						}else{
-						WYScore.add((float)100);
+
+						if (WYCJ.equals("合格")) {
+							if (WYLX.equals("710E6") || WYLX.equals("710E4")) {
+								WYCJ = "430";
+							} else if (WYLX.equals("100E6") || WYLX.equals("100E4")) {
+								WYCJ = "61";
+							}
+						}
+
+						String cc4 = "";
+						for (int i = 0; i < WYCJ.length(); i++) {
+							if ((WYCJ.charAt(i) >= 48 && WYCJ.charAt(i) <= 57)||(WYCJ.charAt(i)==46)) {
+								cc4 += WYCJ.charAt(i);
+							}
+						}
+
+						if(cc4.equals("")){
+							System.out.println("——————————：" + TZ_APP_ID);
+							continue;
+						}
+						float CJ = Float.parseFloat(cc4);
+						
+						String sql = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK2>=? AND TZ_CSMB_CK3<=?";
+						String FSCJ = SqlQuery.queryForObject(sql, new Object[] { WYLX, CJ, CJ }, "String");
+						if (FSCJ != null && !FSCJ.equals("")) {
+							FSCJF = Float.parseFloat(FSCJ);
+							if (FSCJF > Highest) {
+								Highest = FSCJF;
+							}
+						}
+						if (TZ_APP_ID.equals("400377") && WYLX.equals("IELTS")) {
+							System.out.println("雅思得分" + FSCJF);
+						}
+
+					}
+
+					// 证书类型，查询报名表中的证书等级字段
+				} else if (WYLX.equals("ZYYY") || WYLX.equals("GJKY") || WYLX.equals("ZJKY") || WYLX.equals("BEC")) {
+					if (WYCJ == null || WYCJ.equals("") || WYLX == null || WYLX.equals("")) {
+					} else {
+						String sql2 = "SELECT TZ_CSMB_SCOR FROM PS_TZ_CSMB_WY_T where TZ_CSMB_DESC =? and TZ_CSMB_CK1=?";
+						String FSCJ = SqlQuery.queryForObject(sql2, new Object[] { WYLX, WYCJ }, "String");
+						FSCJF = Float.parseFloat(FSCJ);
+						if (FSCJF > Highest) {
+							Highest = FSCJF;
+						}
+						if (TZ_APP_ID.equals("400377")) {
+							System.out.printf("证书得分%d", FSCJF);
 						}
 					}
-					
-					//对比考生的英语成绩得分、外语成绩得分，海外院校得分，取得分最大的外语成绩
-					Score=Collections.max(WYScore);
-					
-					MarkRecord=MarkRecord+"|"+String.valueOf(Score).concat("分");
-						//插入表TZ_CJX_TBL
-						PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs=new PsTzCjxTblWithBLOBs();
-							//成绩单ID
-							Long tzScoreInsId=Long.parseLong(TZ_SCORE_ID);
-							psTzCjxTblWithBLOBs.setTzScoreInsId(tzScoreInsId);
-							//成绩项ID
-							psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM);
-							//分值
-							BigDecimal BigDeScore = new BigDecimal(Float.toString(Score));
-							psTzCjxTblWithBLOBs.setTzScoreNum(BigDeScore);
-							//打分记录
-							psTzCjxTblWithBLOBs.setTzScoreDfgc(MarkRecord);
-						
-						//删除已有数据	
-						PsTzCjxTblKey psTzCjxTblKey=new PsTzCjxTblKey();
-						
-						psTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
-						psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM);
-						
-						psTzCjxTblMapper.deleteByPrimaryKey(psTzCjxTblKey);
-					
-						//插入	
-						psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
-						
-						return Score;
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					return 0;
+				} else {
+					continue;
+				}
+
+				// 记录打分记录：英语成绩类型：GMAT>=750|其他语种：日语二级|100分
+				if (MarkRecord != null) {
+					MarkRecord = MarkRecord + "英语成绩类型：".concat(LX).concat("=").concat(WYCJori) + "|";// .concat("|学位：").concat(XW);
+				} else {
+					MarkRecord = "英语成绩类型：".concat(LX).concat("=").concat(WYCJori) + "|";// .concat("|学位：").concat(XW);
 				}
 			}
-			
+
+			String QTYZsql = "SELECT TZ_XXX_BH, TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE( TZ_APP_INS_ID = ? AND TZ_XXX_BH LIKE '%TZ_18othlang%')";
+			List<Map<String, Object>> QTYZMap = SqlQuery.queryForList(QTYZsql, new Object[] { TZ_APP_ID });
+			for (Map<String, Object> QTmap2 : QTYZMap) {
+				String QTYZ = QTmap2.get("TZ_XXX_BH").toString(); // 其他语种信息项
+				String QTYZLX = QTmap2.get("TZ_APP_S_TEXT").toString();
+
+				// 其他语种成绩
+				if (QTYZ != null && !QTYZ.equals("")) {
+					if (QTYZLX != null && !QTYZLX.equals("")) {
+
+						if (80 > Highest) {
+							Highest = 80;
+						}
+
+						switch (QTYZLX) {
+						case "1":
+							QTYZLX = "日语";
+							break;
+						case "2":
+							QTYZLX = "法语";
+							break;
+						case "3":
+							QTYZLX = "韩语";
+							break;
+						case "4":
+							QTYZLX = "俄语";
+							break;
+						case "5":
+							QTYZLX = "西班牙语";
+							break;
+						case "6":
+							QTYZLX = "其他语言";
+							break;
+						}
+
+						MarkRecord = MarkRecord + "其他语种：".concat(QTYZLX) + "|";
+
+					}
+				}
+
+			}
+
+			if (MarkRecord != null && !MarkRecord.equals("")) {
+				MarkRecord = MarkRecord.substring(0, MarkRecord.length() - 1);
+			}
+			String ScholContry1 = ksMap.get("TZ_11luniversitycountry");
+			String ScholContry2 = ksMap.get("TZ_12ouniversitycountry");
+			String ScholContry3 = ksMap.get("TZ_13ouniver3country");
+
+			String XX = ksMap.get("TZ_11luniversitysch"); // 最后的本科院校
+			String XX2 = ksMap.get("TZ_12ouniversitysch"); // 学校2
+			String XX3 = ksMap.get("TZ_13ouniver3sch"); // 学校3
+
+			String Contry1 = ksMap.get("TZ_10hdegreeunicountry");
+			String Xw = ksMap.get("TZ_11TZ_TZ_11_4");
+			String XW2 = ksMap.get("TZ_12xw2"); // 学位2
+			String XW3 = ksMap.get("TZ_13xuewei3"); // 学位3
+			String ZGXW = ksMap.get("TZ_10hxuewei");
+
+			int mark = 0;
+			// 判断 是否有海外学历
+			if (ScholContry1 == null || ScholContry1.equals("")) {
+				if (XX != null && !XX.equals("")) {
+					String sql = "SELECT COUNTRY FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
+					String coun1 = SqlQuery.queryForObject(sql, new Object[] { XX }, "String");
+					if (coun1 != null && !coun1.equals("")) {
+						if (coun1.equals("CHN")) {
+						} else {
+							if ("1".equals(Xw)) {
+								Highest = 100;
+								mark = 2;
+								if (TZ_APP_ID.equals("400377")) {
+									System.out.println("学校1处打了100分");
+								}
+
+							}
+						}
+					}
+				}
+			}
+			if (ScholContry2 == null || ScholContry2.equals("")) {
+				if (XX2 != null && !XX2.equals("")) {
+					String sql = "SELECT COUNTRY FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
+					String coun1 = SqlQuery.queryForObject(sql, new Object[] { XX2 }, "String");
+					if (coun1 != null && !coun1.equals("")) {
+						if (coun1.equals("CHN")) {
+						} else {
+							if ("1".equals(Xw)) {
+								Highest = 100;
+								mark = 2;
+								if (TZ_APP_ID.equals("400377")) {
+									System.out.println("学校2处打了100分");
+								}
+							}
+						}
+					}
+				}
+			}
+			if (ScholContry3 == null || ScholContry3.equals("")) {
+				if (XX3 != null && !XX3.equals("")) {
+					String sql = "SELECT COUNTRY FROM PS_TZ_SCH_LIB_TBL where TZ_SCHOOL_NAME=?";
+					String coun1 = SqlQuery.queryForObject(sql, new Object[] { XX3 }, "String");
+					if (coun1 != null && !coun1.equals("")) {
+						if (coun1.equals("CHN")) {
+						} else {
+							if ("1".equals(Xw)) {
+								Highest = 100;
+								mark = 2;
+								if (TZ_APP_ID.equals("400377")) {
+									System.out.println("学校3处打了100分");
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if (ScholContry1 != null && !ScholContry1.equals("")) {
+				if ("中国大陆".equals(ScholContry1) || "中国".equals(ScholContry1)) { // 中国本科
+					if ("中国大陆".equals(Contry1) || "中国".equals(Contry1)) {
+					} else { // 中国本科外国硕士 90分
+						if ("1".equals(ZGXW) || "2".equals(ZGXW)) {
+							if (90 > Highest) {
+								Highest = 90;
+								mark = 1;
+							}
+						}
+					}
+				} else { // 外国本科 100分
+					if ("1".equals(Xw)) {
+						Highest = 100;
+						mark = 2;
+
+						if (TZ_APP_ID.equals("400377")) {
+							System.out.println("没填情况学校1处打了100分");
+						}
+					}
+				}
+			}
+
+			if (ScholContry2 != null && !ScholContry2.equals("")) {
+				if ("中国大陆".equals(ScholContry2) || "中国".equals(ScholContry2)) { // 中国本科
+					if ("中国大陆".equals(Contry1) || "中国".equals(Contry1)) {
+					} else { // 中国本科外国硕士 90分
+						if ("1".equals(ZGXW) || "2".equals(ZGXW)) {
+							if (90 > Highest) {
+								Highest = 90;
+								if (mark == 2) {
+								} else {
+									mark = 1;
+								}
+							}
+						}
+					}
+				} else { // 外国本科 100分
+					if ("1".equals(XW2)) {
+						Highest = 100;
+						mark = 2;
+
+						if (TZ_APP_ID.equals("400377")) {
+							System.out.println("没填情况学校2处打了100分");
+						}
+					}
+				}
+			}
+
+			if (ScholContry3 != null && !ScholContry3.equals("")) {
+				if ("中国大陆".equals(ScholContry3) || "中国".equals(ScholContry3)) { // 中国本科
+					if ("中国大陆".equals(Contry1) || "中国".equals(Contry1)) {
+					} else { // 中国本科外国硕士 90分
+						if ("1".equals(ZGXW) || "2".equals(ZGXW)) {
+							if (90 > Highest) {
+								Highest = 90;
+								if (mark == 2) {
+								} else {
+									mark = 1;
+								}
+							}
+						}
+					}
+				} else { // 外国本科 100分
+					if ("1".equals(XW3)) {
+						Highest = 100;
+						mark = 2;
+						if (TZ_APP_ID.equals("400377")) {
+							System.out.println("没填情况学校3处打了100分");
+						}
+					}
+				}
+			}
+
+			if (mark == 1) {
+				MarkRecord = MarkRecord + "|海外硕士";
+			} else if (mark == 2) {
+				MarkRecord = MarkRecord + "|海外本科";
+			}
+
+			// 对比考生的英语成绩得分、外语成绩得分，海外院校得分，取得分最大的外语成绩
+			// Score=Collections.max(WYScore);
+			Score = Highest;
+			MarkRecord = MarkRecord + "|" + String.valueOf(Score).concat("分");
+			// 插入表TZ_CJX_TBL
+			PsTzCjxTblWithBLOBs psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
+			// 成绩单ID
+			Long tzScoreInsId = Long.parseLong(TZ_SCORE_ID);
+			psTzCjxTblWithBLOBs.setTzScoreInsId(tzScoreInsId);
+			// 成绩项ID
+			psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM);
+			// 分值
+			BigDecimal BigDeScore = new BigDecimal(Float.toString(Score));
+			psTzCjxTblWithBLOBs.setTzScoreNum(BigDeScore);
+			// 打分记录
+			psTzCjxTblWithBLOBs.setTzScoreDfgc(MarkRecord);
+
+			// 删除已有数据
+			PsTzCjxTblKey psTzCjxTblKey = new PsTzCjxTblKey();
+
+			psTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
+			psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM);
+
+			psTzCjxTblMapper.deleteByPrimaryKey(psTzCjxTblKey);
+
+			// 插入
+			psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
+
+			return Score;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
 }

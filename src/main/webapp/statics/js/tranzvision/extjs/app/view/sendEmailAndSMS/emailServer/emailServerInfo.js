@@ -27,7 +27,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emailServer.emailServerInfo', {
 		
         fieldDefaults: {
             msgTarget: 'side',
-            labelWidth: 100,
+            labelWidth: 120,
             labelStyle: 'font-weight:bold'
         },
 		
@@ -95,7 +95,7 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emailServer.emailServerInfo', {
 			name:'isdefault',
 			inputValue:'Y',
 			uncheckedValue:'N',
-			style:'margin-left:104px'
+			style:'margin-left:124px'
 		},{
 			xtype: 'textfield',
 			fieldLabel: Ext.tzGetResourse('TZ_EMLSER_MG_COM.TZ_EMLSER_SET_STD.chnsname','中文简称'),
@@ -104,6 +104,10 @@ Ext.define('KitchenSink.view.sendEmailAndSMS.emailServer.emailServerInfo', {
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse('TZ_EMLSER_MG_COM.TZ_EMLSER_SET_STD.smtpaddr','SMTP服务器'),
 			name: 'smtpaddr'
+        }, {
+            xtype: 'textfield',
+            fieldLabel: Ext.tzGetResourse('TZ_EMLSER_MG_COM.TZ_EMLSER_SET_STD.popImapAddr','POP3/IMAP服务器'),
+			name: 'popImapAddr'
         }, {
             xtype: 'textfield',
             fieldLabel: Ext.tzGetResourse('TZ_EMLSER_MG_COM.TZ_EMLSER_SET_STD.emlalias','邮箱别名'),

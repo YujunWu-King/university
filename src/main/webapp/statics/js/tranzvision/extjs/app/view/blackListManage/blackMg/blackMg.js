@@ -47,16 +47,21 @@
                 dataIndex: 'OPRID',
 				width: 20,
 				hidden:true
-            },{
+            },/*{
                 text: '编号',
                 sortable: true,
                 dataIndex: 'OPRID',
                 width: 105
+            },*/{
+                text: '面试申请号',
+                sortable: true,
+                dataIndex: 'msSqh',
+                width: 210,
             },{
                 text: '姓名',
                 sortable: true,
                 dataIndex: 'userName',
-                width: 90
+                width: 100
             },{
                 text: '性别',
                 sortable: true,
@@ -72,7 +77,7 @@
                 text: '电子邮箱',
                 sortable: true,
                 dataIndex: 'userEmail',
-                width: 230
+                width: 250
             },{
                 text:Ext.tzGetResourse("TZ_BLACK_LIST_COM.TZ_BLACK_LIST_STD.acctLock","锁定"),
                 sortable: true,
@@ -113,11 +118,6 @@
                 minWidth: 110,
 				flex:1,
 				hidden:true
-            },{
-                text: '面试申请号',
-                sortable: true,
-                dataIndex: 'msSqh',
-                width: 250,
             },{
                 text: '备注',
                 sortable: true,

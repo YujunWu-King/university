@@ -18,35 +18,60 @@ SurveyBuild.extend("DigitalTextBox", "baseComponent", {
 	_getHtml: function(data, previewmode) {
 		var c = "";
 		if (previewmode) {
-			if (SurveyBuild._readonly) {
-				//只读模式
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left">' + data.value + '</div>';
-				c += '  <div class="input-list-suffix left"></div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-			} else {
-				//填写模式
-				SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-				var regular = "^(-?\\d+)(\\.\\d+)?$";
-
-				c += '<div class="input-list">';
-				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-				c += '  <div class="input-list-text left"><input type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '" style="width:' + data.boxWidth + 'px;"/></div>';
-				c += '  <div class="input-list-suffix left">' + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-				c += '  <div class="clear"></div>';
-				c += '</div>';
-				if ($.trim(data.onShowMessage) != "") {
-					c += '<div class="input-list-blank" id="' + data.itemId + 'Tip">';
-					c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
-					c += '	<div class="input-list-wz left"><span class="blue">请填写住宅地址信息</span></div>';
-					c += '	<div class="input-list-suffix-blank left"></div>';
-					c += '	<div class="clear"></div>';
+			if (SurveyBuild.accessType == "M") {
+				if (SurveyBuild._readonly) {
+					//只读模式
+					c += '<div class="item">';
+					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '	<div class="text-box"><input type="text" class="text1" ' + (data.isReadOnly == "Y" ? 'readonly="true"': '') + 'id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '" /></div>';
+					c += '  <p style="color:#666;font-size:0.56rem;"></p>';
+					c += '</div>';
+				} else {
+					//填写模式
+					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+					var regular = "^(-?\\d+)(\\.\\d+)?$";
+					c += '<div class="item">';
+					c += '	<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+					c += '	<div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+					c += '	<div class="text-box">';
+					c += '		<input type="text" class="text1" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '" />';
+					c += '  </div>';
+					c += '<p class="mSuffix" style="color:#666;font-size:0.56rem;">' + (data["suffix"] ? data.suffix:" ") + '</p>';
+					if ($.trim(data.onShowMessage) != "") {
+						c += '  <p style="color:#666;font-size:0.56rem;">'+data.onShowMessage+'</p>';
+					}
 					c += '</div>';
 				}
-			}
+			}else{
+				if (SurveyBuild._readonly) {
+					//只读模式
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '  <div class="input-list-text left">' + data.value + '</div>';
+					c += '  <div class="input-list-suffix left"></div>';
+					c += '  <div class="clear"></div>';
+					c += '</div>';
+				} else {
+					//填写模式
+					SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
+					var regular = "^(-?\\d+)(\\.\\d+)?$";
 
+					c += '<div class="input-list">';
+					c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+					c += '  <div class="input-list-text left"><input type="text" class="inpu-list-text-enter" id="' + data.itemId + '" name="' + data.itemId + '" value="' + data.value + '" title="' + data.itemName + '" data-regular="' + regular + '" style="width:' + data.boxWidth + 'px;"/></div>';
+					c += '  <div class="input-list-suffix left">' + (data["suffix"] ? data.suffix + '<span class="input-list-suffix-span">&nbsp;</span>': "")  + '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+					c += '  <div class="clear"></div>';
+					c += '</div>';
+					if ($.trim(data.onShowMessage) != "") {
+						c += '<div class="input-list-blank" id="' + data.itemId + 'Tip">';
+						c += '	<div class="input-list-info-blank left"><span class="red-star"></div>';
+						c += '	<div class="input-list-wz left"><span class="blue">'+data.onShowMessage+'</span></div>';
+						c += '	<div class="input-list-suffix-blank left"></div>';
+						c += '	<div class="clear"></div>';
+						c += '</div>';
+					}
+				}
+			}
 		} else {
 			c += '<div class="question-answer">';
 			c += '	<div class="format">';

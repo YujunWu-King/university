@@ -191,15 +191,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			"accessPath":"",
 			"viewFileName":""
 		},
-		/*"recommend_9": {
-            "instanceId": "rec_attach",
-            "itemId": "r_attach",
-            "itemName": "上传附件",
-			"classname":"SingleTextBox",
-            "orderby": 9,
-			"useby": "",
-            "value": ""
-        },*/
 		"recommend_10": {
             "instanceId": "rec_by1",
             "itemId": "r_by1",
@@ -366,9 +357,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
     _getHtml: function (data, previewmode) {
 		
         var c = "", children = data.children,len = children.length;
+        
         if (previewmode) {
-            //title
-
+          
 			var showLines;
 			var len = data.children.length;
 			if(len>=data.defaultLines)
@@ -377,31 +368,58 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			}else{
 				showLines = data.defaultLines;
 			}
-			
-			for(var i=1;i<=showLines;i++){
+			console.log("MshowLines----"+showLines);
+			if(SurveyBuild.accessType == "M"){
+				console.log("showLines-----"+showLines);
+				for(var i=1;i<=showLines;i++){
+					
+					var tempHtmlP = this._getHtmlTwo(data,i,'QUERY');
+					c += tempHtmlP;
+					if(i>1){
+						data["linesNo"].shift(); 
+					}
+				}
+
+				//非只读模式、添加下一条
+                if(!SurveyBuild._readonly){
+
+                	if(len<data.maxLines){
+
+                		c += '<div class="clear"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')">' + MsgSet["ADD_ONE"] + '</div></div>';
+                	}else{
+
+                		c += '<div class="clear" style="display: none"><div class="add_next" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\')>' + MsgSet["ADD_ONE"] + '</div></div>';
+                	}
+
+                }
+
+			}else{
 				
-				var works = this._getHtmlOne(data,i,'QUERY');
-				c += works;
-				if(i>1){
-					data["linesNo"].shift(); 
+				for(var i=1;i<=showLines;i++){
+					
+					works = this._getHtmlOne(data,i,'QUERY');
+					c += works;
+					if(i>1){
+						data["linesNo"].shift(); 
+					}
 				}
-			}
-			
-			/*添加 (添加下一条) 按钮*/
-			if(SurveyBuild._readonly!=true){
-				len = data.children.length;
-				c += '<div class="input-list-blank addNext">';
-				if(len<data.maxLines){
-					c += '<div class="input-list-suffix-blank right input-btn">'
-					c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
-					c += '</div>';
-				}else{
-					c += '<div class="input-list-suffix-blank right input-btn" style="padding-right:15px;">'
-					c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
-					c += '</div>';
-				}
-				c +='<div class="clear"></div>';
-				c += '</div>';
+
+                /*添加 (添加下一条) 按钮*/
+                if(SurveyBuild._readonly != true){
+                    len = data.children.length;
+                    c += '<div class="input-list-blank addNext">';
+                    if(len<data.maxLines){
+                        c += '<div class="input-list-suffix-blank right input-btn">'
+                        c += '<div style="display: inherit;float:right;padding-right:30px;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"></span></div>';
+                        c += '</div>';
+                    }else{
+                        c += '<div class="input-list-suffix-blank right input-btn" style="padding-right:15px;">'
+                        c += '<div style="display: none;float:right;" class="input-addbtn" id="save_and_add0" onclick="SurveyBuild.addTjx(this,\'' + data.instanceId + '\');">' + MsgSet["ADD_RE"] + '&nbsp;&nbsp;<span class="input-btn-icon"><img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/add-jia.png" /></span></div>';
+                        c += '</div>';
+                    }
+                    c +='<div class="clear"></div>';
+                    c += '</div>';
+                }
 			}
 			
         } else {
@@ -893,6 +911,29 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		var _refAppTplId = "";
 		var _refFileName = "";
 		var _refFileUrl = "";
+		var _ref_recommend_1 = "";
+		var _ref_recommend_2 = "";
+		var _ref_recommend_3 = "";
+		var _ref_recommend_4 = "";
+		var _ref_recommend_5 = "";
+		var _ref_recommend_6 = "";
+		var _ref_recommend_7 = "";
+		var _ref_recommend_8 = "";
+		var _ref_recommend_9 = "";
+		var _ref_recommend_10 = "";
+		var _ref_recommend_11 = "";
+		var _ref_recommend_12 = "";
+		var _ref_recommend_13 = "";
+		var _ref_recommend_14 = "";
+		var _ref_recommend_15 = "";
+		var _ref_recommend_16= "";
+		var _ref_recommend_17 = "";
+		var _ref_recommend_18 = "";
+		var _ref_recommend_19 = "";
+		var _ref_recommend_20 = "";
+		var _ref_recommend_21 = "";
+		var _ref_recommend_22 = "";
+		var _ref_recommend_23 = "";
 		var params = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"EJSON","comParams":{"APP_INS_ID":"'+tz_app_ins_id+'","rownum":"'+_tjrXh+'","class_id":"'+_class_id+'","TZ_APP_TPL_ID":"'+tz_app_tpl_id+'"}}';
 		$.ajax({
 			type: "get",
@@ -912,6 +953,26 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_refAppTplId = f.comContent.refAppTplId;
 					_refFileName = f.comContent.refFileName;
 					_refFileUrl = f.comContent.refFileUrl;
+					_ref_recommend_18 = f.comContent.recommend_18;
+					_ref_recommend_1 = f.comContent.recommend_1;
+					_ref_recommend_17 = f.comContent.recommend_17;
+					_ref_recommend_2 = f.comContent.recommend_2;
+					_ref_recommend_3 = f.comContent.recommend_3;
+					_ref_recommend_15 = f.comContent.recommend_15;
+					_ref_recommend_16 = f.comContent.recommend_16;
+					_ref_recommend_4 = f.comContent.recommend_4;
+					_ref_recommend_5 = f.comContent.recommend_5;
+					_ref_recommend_6 = f.comContent.recommend_6;
+					_ref_recommend_10 = f.comContent.recommend_10;
+					_ref_recommend_11 = f.comContent.recommend_11;
+					_ref_recommend_12 = f.comContent.recommend_12;
+					_ref_recommend_13 = f.comContent.recommend_13;
+					_ref_recommend_14 = f.comContent.recommend_14;
+					_ref_recommend_19 = f.comContent.recommend_19;
+					_ref_recommend_20 = f.comContent.recommend_20;
+					_ref_recommend_21 = f.comContent.recommend_21;
+					_ref_recommend_22 = f.comContent.recommend_22;
+					_ref_recommend_23 = f.comContent.recommend_23;
 				}
 			}
 		});
@@ -949,7 +1010,78 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			_zd="N";
 		}
 		//SurveyBuild._readonly = true;
-		
+		/*推荐信信息从推荐人表中获取*/
+		/*称呼*/
+		if(_ref_recommend_18!=""){
+			child[i].recommend_18.value = _ref_recommend_18;
+		}
+		/*name*/
+		if(_ref_recommend_1!=""){
+			child[i].recommend_1.value = _ref_recommend_1;
+		}
+		/*gname*/
+		if(_ref_recommend_17!=""){
+			child[i].recommend_17.value = _ref_recommend_17;
+		}
+		/*公司*/
+		if(_ref_recommend_2!=""){
+			child[i].recommend_2.value = _ref_recommend_2;
+		}
+		/*职务*/
+		if(_ref_recommend_3!=""){
+			child[i].recommend_3.value = _ref_recommend_3;
+		}
+		/*性别*/
+		if(_ref_recommend_15!=""){
+			child[i].recommend_15.value = _ref_recommend_15;
+		}
+		/*区号*/
+		if(_ref_recommend_16!=""){
+			child[i].recommend_16.value = _ref_recommend_16;
+		}
+		/*手机*/
+		if(_ref_recommend_4!=""){
+			child[i].recommend_4.value = _ref_recommend_4;
+		}
+		/*邮箱*/
+		if(_ref_recommend_5!=""){
+			child[i].recommend_5.value = _ref_recommend_5;
+		}
+		/*关系*/
+		if(_ref_recommend_6!=""){
+			child[i].recommend_6.value = _ref_recommend_6;
+		}
+		/*备用*/
+		if(_ref_recommend_10!=""){
+			child[i].recommend_10.value = _ref_recommend_10;
+		}
+		if(_ref_recommend_11!=""){
+			child[i].recommend_11.value = _ref_recommend_11;
+		}
+		if(_ref_recommend_12!=""){
+			child[i].recommend_12.value = _ref_recommend_12;
+		}
+		if(_ref_recommend_13!=""){
+			child[i].recommend_13.value = _ref_recommend_13;
+		}
+		if(_ref_recommend_14!=""){
+			child[i].recommend_14.value = _ref_recommend_14;
+		}
+		if(_ref_recommend_19!=""){
+			child[i].recommend_19.value = _ref_recommend_19;
+		}
+		if(_ref_recommend_20!=""){
+			child[i].recommend_20.value = _ref_recommend_20;
+		}
+		if(_ref_recommend_21!=""){
+			child[i].recommend_21.value = _ref_recommend_21;
+		}
+		if(_ref_recommend_22!=""){
+			child[i].recommend_22.value = _ref_recommend_22;
+		}
+		if(_ref_recommend_23!=""){
+			child[i].recommend_23.value = _ref_recommend_23;
+		}
 		works += '<div id="main_inner_content_para'+i+'" class="main_inner_content_para">';
 		
 		works += '<div class="mainright-title">';
@@ -978,9 +1110,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		if(SurveyBuild._readonly||_zd=="Y"||_zd=="Z"){
 			_readOnlyRadio = "Y";
 		}
+	
+		/*任何情况下都可以修改推荐信*/	
+		var tjxEditMode = false;
 		
 		//称呼-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             var desc = "";
             for (var i101 in child[i].recommend_18.option) {
@@ -1052,7 +1187,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//称呼-结束
 
 		//姓氏-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_1["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_1["itemName"] +'：</div>';
@@ -1076,7 +1211,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//姓氏-结束
 		
 		//名字-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_17["itemName"] +'：</div>';
@@ -1100,7 +1235,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//姓名-结束
 		
 		//单位-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             works += '<div class="input-list" '+(child[i].recommend_2["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_2["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_2["value"] + '</div>';
@@ -1122,7 +1257,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//单位-结束
 
 		//职务-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             works += '<div class="input-list" '+(child[i].recommend_3["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_3["itemName"] +'：</div>';
             works += '	<div class="input-list-wz-readonly left">' + child[i].recommend_3["value"] +  '</div>';
@@ -1144,7 +1279,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//职务-结束
 
 		//手机-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_4["itemName"] +'：</div>';
@@ -1179,7 +1314,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//手机-结束
 
 		//邮箱-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_5["itemName"] +'：</div>';
@@ -1232,7 +1367,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//性别-结束
 
 		//申请人关系-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_6["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_6["itemName"] +'：</div>';
@@ -1257,7 +1392,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//申请人关系-结束
 
 		//备用字段一-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_10["itemName"] +'：</div>';
@@ -1282,7 +1417,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段一-结束
 
 		//备用字段二-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_11["itemName"] +'：</div>';
@@ -1307,7 +1442,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段二-结束
 
 		//备用字段三-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_12["itemName"] +'：</div>';
@@ -1332,7 +1467,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段三-结束
 
 		//备用字段四-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_13["itemName"] +'：</div>';
@@ -1357,7 +1492,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段四-结束
 
 		//备用字段五-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_14["itemName"] +'：</div>';
@@ -1382,7 +1517,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段五结束
         
         //备用字段六-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_19["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_19["itemName"] +'：</div>';
@@ -1407,7 +1542,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段六结束
         
         //备用字段七-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_20["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_20["itemName"] +'：</div>';
@@ -1432,7 +1567,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段七结束
         
         //备用字段八-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_21["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_21["itemName"] +'：</div>';
@@ -1457,7 +1592,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段八结束
 
         //备用字段九-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_22["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_22["itemName"] +'：</div>';
@@ -1482,7 +1617,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//备用字段九结束
         
         //备用字段十-开始
-        if(SurveyBuild._readonly){
+        if(tjxEditMode){
             //只读模式
             works += '<div class="input-list" '+(child[i].recommend_23["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
             works += '	<div class="input-list-info-readonly left">'+ '<span class="red">*</span>'+ child[i].recommend_23["itemName"] +'：</div>';
@@ -1509,7 +1644,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		//推荐信语言-开始
 		if (_qy_zhs=="Y"&&_qy_eng=="Y")
 		{
-			//console.log(child[i].recommend_7);
 			var tjx_language = "";
 			if(child[i].recommend_7["option"]["ZHS"]["checked"]=="Y")
 			{
@@ -1556,7 +1690,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '<div class="input-list" style="display:none">';
 			works += '<div class="input-list-info left">'+ child[i].recommend_7["itemName"] +'：</div>';
 			works += '<div class="input-list-text left">';
-			//works += '<div>'+MsgSet["LANGUAGE_C"]+'</div>';
 			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="C">';
 			works += '</div>';
 			works += '</div>';
@@ -1567,7 +1700,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '<div class="input-list" style="display:none">';
 			works += '<div class="input-list-info left">'+ child[i].recommend_7["itemName"] +'：</div>';
 			works += '<div class="input-list-text left">';
-			//works += '<div>'+MsgSet["LANGUAGE_E"]+'</div>';
 			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="E">';
 			works += '</div>';
 			works += '</div>';
@@ -1606,11 +1738,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '	<li>'; 
 			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
 			works += '<i><input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S"></i>';
-			//works += '<label for="' + data.itemId + child[i].recommend_8["itemId"] + '_S" style="margin:0 0;"></label>';
 			works += '</div><span style="margin-left:3px;">' + MsgSet["Send_mail"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
 			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U">';
 			works += '<i><input ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" ></i>';
-			//works += '<label for="' + data.itemId + child[i].recommend_8["itemId"] + '_U" style="margin:0 0;"></label>';
 			works += '</div><span style="margin-left:3px;">' + MsgSet["Upload"] + '</sapn>';
 			works += '	</li>';
 			works += '<div class="clear"></div></ul>';
@@ -1655,11 +1785,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			}
 
 			works += '<div class="input-list-suffix left">';
-			/*
-			works += '		<div id="'+data.itemId+child[i].recommend_9["itemId"]+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;">';
-			works += '					<div class="onCorrect">&nbsp;</div>';
-			works += '		</div>';
-			*/
 			works += '</div>';
 
 			/*附件显示 开始*/
@@ -1675,8 +1800,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					works += '	<div class="input-list-uploadcon-listl left">';
 					works += '			<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
 					works += '	</div>';
-					
-					//works += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')>' + MsgSet["DEL"] + '</button></div>';
 					
 					works += '	<div class="input-list-uploadcon-listr left" style="display: block;line-height:46px;" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
 					
@@ -1712,11 +1835,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '	<div class="input-list-text left">';
 			}
 			works += '<div class="input-list-suffix left">';
-			/*
-			works += '		<div id="'+data.itemId+child[i].recommend_9["itemId"]+'Tip" class="onShow" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;">';
-			works += '					<div class="onCorrect">&nbsp;</div>';
-			works += '		</div>';
-			*/
 			works += '</div>';
 
 			/*附件显示 开始*/
@@ -1728,15 +1846,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			if (child[i].recommend_9["viewFileName"]!="")
 			{
 				if(SurveyBuild._readonly!=true){
+
 					works += '<div class="input-list-uploadcon-list">';
 					works += '	<div class="input-list-uploadcon-listl left">';
 					works += '		<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
 					works += '	</div>';
-					
-					//works += '	<div class="input-list-uploadcon-listr left"><button class="upload-del" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')>' + MsgSet["DEL"] + '</button></div>';
-					
 					works += '	<div class="input-list-uploadcon-listr left" style="display: block;line-height:46px;" onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')><img src="' + TzUniversityContextPath + '/statics/images/appeditor/del.png" title="' + MsgSet["DEL"] + '"/>&nbsp;</div>';
-					
 					works += '</div>';
 				}else{
 					works += '<div class="input-list-uploadcon-list">';
@@ -1760,8 +1875,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		
 		//发送邮件 -开始
 		if ((data.itemLx=="L"&&child[i].recommend_8["value"]!="U")||data.itemLx=="F"){
-			if(SurveyBuild._readonly!=true){
-				works += '<div class="input-list-blank" style="margin: 0 auto;'+((_zd=="Z" || _zd=="N")?"display:none":"")+'" id="Tjx_SendEmail_'+i+'">';
+			if(SurveyBuild.appManager != "Y"){
+
+				//如果不是管理员，一直显示
+				works += '<div class="input-list-blank" style="margin: 0 auto;" id="Tjx_SendEmail_'+i+'">';
 				works += '<div class="input-list-info left"></div>';
 				works += '<div class="input-list-texttemplate" style="width:100%">';
 				//发送邮件  如果已经发送，那么不显示
@@ -1769,9 +1886,19 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
+				//灰色的发送邮件
+				works += '<div id="sendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Send"]+'</div>';
+				works += '</div>';
+				
 				//重新发送  ，如果没有发送，那么显示
 				works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
 				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				
+				//灰色的重新发送邮件
+				works += '<div id="reSendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Resend"]+'</div>';
 				works += '</div>';
 				
 				//发送给自己
@@ -1779,14 +1906,33 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div id="sendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
+				//灰色的发送给自己
+				works += '<div id="sendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["SendToMe"]+'</div>';
+				works += '</div>';
+				
 				//重新发送给自己
 				works += '<div id="reSendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
 				works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
-				//更换推荐人
-				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y")?"display:none":"")+'">';
+				//灰色的重新发送给自己
+				works += '<div id="reSendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["ResendToMe"]+'</div>';
+				works += '</div>';
+				
+				/*更换推荐人一直显示*/
+				if(SurveyBuild._readonly){
+					works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
+				}else{
+					works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
+				}
+				
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				
+				works += '<div id="changeRecH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["RepRecom"]+'</div>';
 				works += '</div>';
 			
 				works += '<div class="input-list-suffix left"></div>';
@@ -1798,6 +1944,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 
 			works += '<div class="input-list-blank" style="padding-left:6px;" id="Tjxzt_'+i+'">';
 			works += '<div class="input-list-info left"></div>';
+			works += '<div><input type="hidden" id="tjxzt_info_'+i+'" value="'+_zd+'"></div>';
 			works += '<div class="input-list-wz left" id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="blue">'+_tjx_zt+'</span>';
 			/*推荐信链接*/
 			if(SurveyBuild.appManager == "Y"){
@@ -1827,7 +1974,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			works += '</div>';		
 		}else{
 			if(SurveyBuild._readonly!=true){
-				works += '<div class="input-list-blank" style="margin: 0 auto;display:none" id="Tjx_SendEmail_'+i+'">';
+				works += '<div class="input-list-blank" style="margin: 0 auto;display:none" id="-'+i+'">';
 				works += '<div class="input-list-info left" style="padding-left:6px;"></div>';
 				works += '<div class="input-list-texttemplate" style="width:100%">';
 			
@@ -1835,14 +1982,26 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div id="sendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
 				works += '<div id="sendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
+				//灰色的发送邮件
+				works += '<div id="sendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Send"]+'</div>';
+				works += '</div>';
 				//重新发送
 				works += '<div id="reSendEmailS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
 				works += '<div id="reSendEmail_'+i+'" class="template-btn" style="width:150px">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				//灰色的重新发送邮件
+				works += '<div id="reSendEmailH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["Resend"]+'</div>';
 				works += '</div>';
 				
 				//发送给自己
 				works += '<div id="sendEmailToMeS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd=="Y"||_zd=="Z")?"display:none":"")+'">';
 				works += '<div id="sendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				//灰色的发送给自己
+				works += '<div id="sendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["SendToMe"]+'</div>';
 				works += '</div>';
 				
 				//重新发送给自己
@@ -1850,9 +2009,27 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				works += '<div id="reSendEmailToMe_'+i+'" class="template-btn" style="width:150px">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
 				works += '</div>';
 				
+				//灰色的重新发送给自己
+				works += '<div id="reSendEmailToMeH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["ResendToMe"]+'</div>';
+				works += '</div>';
+				
 				//更换推荐人
+				/*
 				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+'">';
 				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				*/
+				
+				/*更换推荐人一直显示*/
+				
+				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+((_zd!="Y"&&_zd!="Z") ?"display:none":"")+'">';
+				works += '<div id="changeRec_'+i+'" class="template-btn" style="width:150px">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+				works += '</div>';
+				
+				//灰色的更换推荐人
+				works += '<div id="changeRecH_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;display:none"">';
+				works += '<div  class="template-btn" style="width:150px;background:#999">'+MsgSet["RepRecom"]+'</div>';
 				works += '</div>';
 			
 				works += '</div>';
@@ -1863,7 +2040,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			//推荐信状态
 			works += '<div class="input-list-blank" id="Tjxzt_'+i+'" style="padding-left:6px;display:none">';
 			works += '<div class="input-list-info left"></div>';
+			works += '<div><input type="hidden" id="tjxzt_info_'+i+'" value="'+_zd+'"></div>';
 			works += '<div class="input-list-wz left" id="tjxzt_desc_'+i+'">'+MsgSet["ReLeSt"]+': <span class="blue">'+_tjx_zt+'</span>';
+			
 			//推荐信链接
 			if(SurveyBuild.appManager == "Y"){
 				if(refLetterUrl!=""){
@@ -1893,7 +2072,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		}
 		//发送邮件 -结束
 		
-		
 		/*保存推荐信信息*/
 		works += '<div style="display:none">';
 		works += '<div id="saveRec_'+i+'" class="bt_blue" style="width:125px">保存</div><a href="#" class="alpha"></a>';
@@ -1902,15 +2080,838 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 		works += '<div><input type="hidden" id="yincang_tx" value="'+data.toSendE+'"></div>';
 		works += '<div><input type="hidden" id="max_tjx_ts" value="'+data.maxLines+'"></div>';
 		
-		/*		
-		//footer
-		//works += '<div class="main_inner_content_foot"></div>';
-		*/
 		works += '</div>';
 		works += '</div>';
 		
 		
         return works; 
+    },
+    
+    //手机
+    _getHtmlTwo: function(data,rownum,showtype){
+    	
+		if (SurveyBuild.appInsId=="0"&&data.children.length<data.defaultLines){
+			SurveyBuild.showTjx(this,data.instanceId);
+			
+		}else if (data.children.length<data.defaultLines){
+			SurveyBuild.showTjx(this,data.instanceId);
+		}
+		
+		/*已填写的数据的行数*/
+		var len = data.children.length;
+		var works = "",child = [];
+		//console.log("data:"+data);
+		child = data.children;
+	   //	console.log(child);
+		var i=rownum-1;
+		
+		
+		//加载推荐信称呼(AppFormListClsServiceImpl)
+		var tjxTitleParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_OTHER_STD","OperateType":"EJSON","comParams":{"OType":"TZ_APP_REF_TITLE","LANG":"'+SurveyBuild.BMB_LANG+'"}}';
+            $.ajax({
+                type: "get",
+                dataType: "JSON",
+                data:{
+                    tzParams:tjxTitleParams
+                },
+                async:false,
+                url:SurveyBuild.tzGeneralURL,
+                success: function(f) {
+                    if(f.state.errcode == "0"){
+                        child[i].recommend_18.option = f.comContent;
+                    }
+                }
+            });
+            
+    	/*推荐信序号*/
+    	var _tjrXh;
+    	_tjrXh = child[i].recommend_99["value"];
+    	if(_tjrXh == ""){	
+    		if(showtype=='QUERY'){
+    			
+    			_tjrXh = rownum;
+    			child[i].recommend_99["value"] = rownum;
+    			data.tjxMaxLinesXh = child[len-1].recommend_99["value"];
+    		}else{
+    			child[i].recommend_99["value"] = parseInt(data.tjxMaxLinesXh) + 1;
+    			data.tjxMaxLinesXh = child[i].recommend_99["value"];
+    			_tjrXh = data.tjxMaxLinesXh;
+    		}
+    		
+    	}else{
+    		
+    		data.tjxMaxLinesXh = child[len-1].recommend_99["value"];
+    	}
+    	
+    	
+    	//集中定义推荐信请求字段
+		var deleteFlag = true;
+		var tz_app_ins_id=SurveyBuild.appInsId;
+		var _class_id=SurveyBuild.classId;
+		var tz_app_tpl_id = SurveyBuild.appTplId;
+		var _tjx_zt="";
+		var _qy_zhs="";
+		var _qy_eng="";
+		var _refAppInsId = "";
+		var _refLetterId = "";  
+		var _refAppTplId = "";
+		var _refFileName = "";
+		var _refFileUrl = "";
+		var _ref_recommend_1 = "";
+		var _ref_recommend_2 = "";
+		var _ref_recommend_3 = "";
+		var _ref_recommend_4 = "";
+		var _ref_recommend_5 = "";
+		var _ref_recommend_6 = "";
+		var _ref_recommend_7 = "";
+		var _ref_recommend_8 = "";
+		var _ref_recommend_9 = "";
+		var _ref_recommend_10 = "";
+		var _ref_recommend_11 = "";
+		var _ref_recommend_12 = "";
+		var _ref_recommend_13 = "";
+		var _ref_recommend_14 = "";
+		var _ref_recommend_15 = "";
+		var _ref_recommend_16= "";
+		var _ref_recommend_17 = "";
+		var _ref_recommend_18 = "";
+		var _ref_recommend_19 = "";
+		var _ref_recommend_20 = "";
+		var _ref_recommend_21 = "";
+		var _ref_recommend_22 = "";
+		var _ref_recommend_23 = "";
+		
+		//请求推荐信息(TzIscriptClsServiceImpl)
+		var params = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"EJSON","comParams":{"APP_INS_ID":"'+tz_app_ins_id+'","rownum":"'+_tjrXh+'","class_id":"'+_class_id+'","TZ_APP_TPL_ID":"'+tz_app_tpl_id+'"}}';
+		$.ajax({
+			type: "get",
+			dataType: "JSON",
+			data:{
+				tzParams:params
+			},
+			async:false,
+			url:SurveyBuild.tzGeneralURL,
+			success: function(f) {
+				if(f.state.errcode == "0"){
+					_tjx_zt = f.comContent.TJX_ZT;
+					_qy_zhs = f.comContent.zhs_qy;
+					_qy_eng = f.comContent.eng_qy;
+					_refAppInsId = f.comContent.tjxAppInsID;
+					_refLetterId = f.comContent.refLetterId;
+					_refAppTplId = f.comContent.refAppTplId;
+					_refFileName = f.comContent.refFileName;
+					_refFileUrl = f.comContent.refFileUrl;
+					_ref_recommend_18 = f.comContent.recommend_18;
+					_ref_recommend_1 = f.comContent.recommend_1;
+					_ref_recommend_17 = f.comContent.recommend_17;
+					_ref_recommend_2 = f.comContent.recommend_2;
+					_ref_recommend_3 = f.comContent.recommend_3;
+					_ref_recommend_15 = f.comContent.recommend_15;
+					_ref_recommend_16 = f.comContent.recommend_16;
+					_ref_recommend_4 = f.comContent.recommend_4;
+					_ref_recommend_5 = f.comContent.recommend_5;
+					_ref_recommend_6 = f.comContent.recommend_6;
+					_ref_recommend_10 = f.comContent.recommend_10;
+					_ref_recommend_11 = f.comContent.recommend_11;
+					_ref_recommend_12 = f.comContent.recommend_12;
+					_ref_recommend_13 = f.comContent.recommend_13;
+					_ref_recommend_14 = f.comContent.recommend_14;
+					_ref_recommend_19 = f.comContent.recommend_19;
+					_ref_recommend_20 = f.comContent.recommend_20;
+					_ref_recommend_21 = f.comContent.recommend_21;
+					_ref_recommend_22 = f.comContent.recommend_22;
+					_ref_recommend_23 = f.comContent.recommend_23;
+				}
+			}
+		});
+		
+		var refLetterUrl = "";
+		if(SurveyBuild.appManager == "Y")
+		{
+			if(_refAppInsId!="0"&&_refAppInsId!=""&&_refLetterId!="0"&&_refLetterId!=""){
+				refLetterUrl = SurveyBuild.tzGeneralURL + "?classid=appId&TZ_APP_INS_ID="+_refAppInsId+"&TZ_REF_LETTER_ID="+_refLetterId+"&TZ_APP_TPL_ID="+_refAppTplId+"&TZ_MANAGER=Y";
+			}
+		}
+		if (child[i].recommend_8["value"]=="U")
+		{
+			_tjx_zt="未发送";
+		}
+		if(_refFileUrl!="")
+		{
+			//_tjx_zt="已完成";
+		}
+		var _zd="";
+		if (_tjx_zt=="已完成"){
+			_tjx_zt=MsgSet["Completed"];
+			_zd="Z";
+			deleteFlag = false;
+		}
+		if (_tjx_zt=="已发送"){
+			_tjx_zt=MsgSet["SendEmail"];
+			_zd="Y";
+			deleteFlag = false;
+		}
+		if (_tjx_zt=="未发送"){
+			_tjx_zt=MsgSet["Unsent"];
+		}
+		if(isEdit == "Y"){
+			_zd="N";
+		}
+		
+		/*推荐信信息从推荐人表中获取*/
+		/*称呼*/
+		if(_ref_recommend_18!=""){
+			child[i].recommend_18.value = _ref_recommend_18;
+		}
+		//name
+		if(_ref_recommend_1!=""){
+			child[i].recommend_1.value = _ref_recommend_1;
+			
+		}
+		//gname
+		if(_ref_recommend_17!=""){
+			child[i].recommend_17.value = _ref_recommend_17;
+		}
+		//公司
+		if(_ref_recommend_2!=""){
+			child[i].recommend_2.value = _ref_recommend_2;
+		}
+		//职务
+		if(_ref_recommend_3!=""){
+			child[i].recommend_3.value = _ref_recommend_3;
+		}
+		//性别
+		if(_ref_recommend_15!=""){
+			child[i].recommend_15.value = _ref_recommend_15;
+		}
+		//区号
+		if(_ref_recommend_16!=""){
+			child[i].recommend_16.value = _ref_recommend_16;
+		}
+		//手机
+		if(_ref_recommend_4!=""){
+			child[i].recommend_4.value = _ref_recommend_4;
+		}
+		//邮箱
+		if(_ref_recommend_5!=""){
+			child[i].recommend_5.value = _ref_recommend_5;
+		}
+		//关系
+		if(_ref_recommend_6!=""){
+			child[i].recommend_6.value = _ref_recommend_6;
+		}
+		//备用
+		if(_ref_recommend_10!=""){
+			child[i].recommend_10.value = _ref_recommend_10;
+		}
+		//备用
+		if(_ref_recommend_11!=""){
+			child[i].recommend_11.value = _ref_recommend_11;
+		}
+		//备用
+		if(_ref_recommend_12!=""){
+			child[i].recommend_12.value = _ref_recommend_12;
+		}
+		//备用
+		if(_ref_recommend_13!=""){
+			child[i].recommend_13.value = _ref_recommend_13;
+		}
+		//备用
+		if(_ref_recommend_14!=""){
+			child[i].recommend_14.value = _ref_recommend_14;
+		}
+		//备用
+		if(_ref_recommend_19!=""){
+			child[i].recommend_19.value = _ref_recommend_19;
+		}
+		//备用
+		if(_ref_recommend_20!=""){
+			child[i].recommend_20.value = _ref_recommend_20;
+		}
+		//备用
+		if(_ref_recommend_21!=""){
+			child[i].recommend_21.value = _ref_recommend_21;
+		}
+		//备用
+		if(_ref_recommend_22!=""){
+			child[i].recommend_22.value = _ref_recommend_22;
+		}
+		//备用
+		if(_ref_recommend_23!=""){
+			child[i].recommend_23.value = _ref_recommend_23;
+		}
+		
+		works += '<div id="main_inner_content_para' + i + '" class="next_record">';
+		
+		//非只读模式
+		console.log("SurveyBuild._readonly"+SurveyBuild._readonly);
+		if(SurveyBuild._readonly != true){
+			if(rownum > data.defaultLines){
+				
+				if(deleteFlag == true){
+					
+					works += '<div onclick="SurveyBuild.deleteTjx(this);" class="btn_delete" id="tjx_delete_' + i + '">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
+				}else{
+					
+					works += '<div onclick="SurveyBuild.deleteTjx(this);" class="btn_delete" id="tjx_delete_' + i + '" style="display:none">' + MsgSet["DEL"] + '<img src="' + TzUniversityContextPath + '/statics/images/appeditor/m/de.png"></div>';
+
+				}
+			}
+		}
+		works += '<div class="se_tit1">' + MsgSet["REFFER"] + ' ' +rownum+ ' :' + data.title + '</div>';
+		var _readOnlyRadio = "N";
+		if(SurveyBuild._readonly||_zd=="Y"||_zd=="Z"){
+			_readOnlyRadio = "Y";
+		}
+		
+		/*任何情况下都可以修改推荐信*/	
+		var tjxEditMode = false;
+		
+		//称呼
+        //works += '<div class="w_96">';
+		works += '<div class="index_body" style="margin-top: 25px;">';
+		works += '<div class="mainright-box pos-rela">';
+		
+        works += '<div class="item" '+(child[i].recommend_18["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_18["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<select name="' + data.itemId + child[i].recommend_18["itemId"] + '" class="select1" id="' + data.itemId + child[i].recommend_18["itemId"] + '" title="' + child[i].recommend_18["title"] + '">';
+        works += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+        for (var i101 in child[i].recommend_18.option) {
+
+        	if (child[i].recommend_18.value == "Ms.") {
+        		child[i].recommend_18.value = "MS";
+        	} else if (child[i].recommend_18.value == "Mr.") {
+                    child[i].recommend_18.value = "MR";
+                } else if (child[i].recommend_18.value == "Professor") {
+                    child[i].recommend_18.value = "PF";
+                } else if (child[i].recommend_18.value == "Director") {
+                    child[i].recommend_18.value = "DT";
+                } else if (child[i].recommend_18.value == "None-blank") {
+                    child[i].recommend_18.value = "NB";
+                }
+
+                works += '<option ' + (child[i].recommend_18.value == child[i].recommend_18["option"][i101]["code"] ? "selected='selected'" : "") + 'value="' + child[i].recommend_18["option"][i101]["code"] + '">' + child[i].recommend_18["option"][i101]["txt"] + '</option>';
+            }
+        works += '</select>';
+        works += '</div>';
+        works += '</div>';
+			
+        if(child[i].recommend_18["useby"] == "Y"){
+			works += '<div style="color: #0070c6;margin-bottom: 20px;margin-top: 10px;font-size:0.56rem;">';
+			works += MsgSet["None-blank"];
+			works += '</div>';
+		}
+		
+		//姓氏
+        works += '<div class="item">';
+        works += '<p>' + child[i].recommend_1["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_1["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_1["itemId"]+'" value="'+child[i].recommend_1["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+        //名字
+        works += '<div class="item" '+(child[i].recommend_17["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_17["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_17["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_17["itemId"]+'" value="'+child[i].recommend_17["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+        //单位
+        works += '<div class="item">';
+        works += '<p>' + child[i].recommend_2["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_2["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+'  id="' + data.itemId + child[i].recommend_2["itemId"]+'" value="'+child[i].recommend_2["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+		//职务
+        works += '<div class="item">';
+        works += '<p>' + child[i].recommend_3["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_3["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';	
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_3["itemId"]+'" value="'+child[i].recommend_3["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+        //手机
+        works += '<div class="item"  '+(child[i].recommend_4["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_4["itemName"] + '<span>*</span></p>';
+        works += '<div id="' + data.itemId + child[i].recommend_4["itemId"] + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_4["itemId"]+'" value="'+child[i].recommend_4["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+		//邮箱
+        works += '<div class="item" '+(child[i].recommend_5["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_5["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_5["itemId"]+'" value="'+child[i].recommend_5["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+		//性别
+        works += '<div class="item" '+(child[i].recommend_15["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_15["itemName"] + '<span>*</span></p>';
+        works += '<ul class="sex">';
+        works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_15["itemId"] + '_M">';
+
+        works += '<li>';
+        works += '<input type="radio" name="' + data.itemId + child[i].recommend_15["itemId"] +'" '+(child[i].recommend_15["option"]["MAN"]["checked"] == "Y" ? "checked='checked'": "")+' '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' class="radio" value="M">';
+        works += '<label for="MAN">' + MsgSet["SEX_M"] + '</label>';
+        works += '</li>';
+        works += '</div>';
+        
+        works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_15["itemId"] + '_F">';
+        works += '<li style="margin-left:0;">';
+        works += '<input type="radio" name="' + data.itemId + child[i].recommend_15["itemId"] +'" '+(child[i].recommend_15["option"]["WOMAN"]["checked"] == "Y" ? "checked='checked'": "")+' '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' class="radio" value="F">';
+        works += '<label for="WOMAN">' + MsgSet["SEX_F"] + '</label>';
+        works += '</li>';
+        works += '</div>';
+        works += '</ul>';
+        works += '</div>';
+		
+		//申请人关系
+        works += '<div class="item" '+(child[i].recommend_6["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_6["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_6["itemId"]+'" value="'+child[i].recommend_6["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+		//备用字段一
+        works += '<div class="item" '+(child[i].recommend_10["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_10["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_10["itemId"]+'" value="'+child[i].recommend_10["value"]+'" class="text1">';
+        works += '</div></div>';
+
+		//备用字段二
+        works += '<div class="item" '+(child[i].recommend_11["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_11["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_11["itemId"]+'" value="'+child[i].recommend_11["value"]+'" class="text1">';
+        works += '</div></div>';
+
+		//备用字段三
+        works += '<div class="item" '+(child[i].recommend_12["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_12["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_12["itemId"]+'" value="'+child[i].recommend_12["value"]+'" class="text1">';
+        works += '</div></div>';
+
+		//备用字段四
+        works += '<div class="item" '+(child[i].recommend_13["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_13["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_13["itemId"]+'" value="'+child[i].recommend_13["value"]+'" class="text1">';
+
+        works += '</div></div>';
+
+		//备用字段五
+        works += '<div class="item" '+(child[i].recommend_14["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_14["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_14["itemId"]+'" value="'+child[i].recommend_14["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+        //备用字段六
+        works += '<div class="item" '+(child[i].recommend_19["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_19["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+'  id="' + data.itemId + child[i].recommend_19["itemId"]+'" value="'+child[i].recommend_19["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+        //备用字段七
+        works += '<div class="item" '+(child[i].recommend_20["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_20["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_20["itemId"]+'" value="'+child[i].recommend_20["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+        //备用字段八
+        works += '<div class="item" '+(child[i].recommend_21["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_21["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_21["itemId"]+'" value="'+child[i].recommend_21["value"]+'" class="text1">';
+        works += '</div></div>';
+
+        //备用字段九
+        works += '<div class="item" '+(child[i].recommend_22["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_22["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_22["itemId"]+'" value="'+child[i].recommend_22["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+        //备用字段十
+        works += '<div class="item" '+(child[i].recommend_23["useby"] == "Y" ? "style='display:block'" : "style='display:none'")+'>';
+        works += '<p>' + child[i].recommend_23["itemName"] + '<span>*</span></p>';
+        works += '<div class="text-box">';
+        works += '<input  type="text" '+((_zd=="Y"||_zd=="Z")?"readonly=true" : "")+' id="' + data.itemId + child[i].recommend_23["itemId"]+'" value="'+child[i].recommend_23["value"]+'" class="text1">';
+        works += '</div></div>';
+        
+		//推荐信语言
+        console.log("_qy_zhs:"+_qy_zhs+"_qy_eng:"+_qy_eng);
+		if (_qy_zhs=="Y"&&_qy_eng=="Y")
+		{
+			var tjx_language = "";
+			if(child[i].recommend_7["option"]["ZHS"]["checked"]=="Y")
+			{
+				tjx_language = "C";
+			}else if(child[i].recommend_7["option"]["ENG"]["checked"]=="Y")
+			{
+				tjx_language = "E";
+			}else
+			{
+				tjx_language = "C";
+				child[i].recommend_7["option"]["ZHS"]["checked"]="Y";
+				child[i].recommend_7["option"]["ENG"]["checked"]="N"
+			}
+	        works += '<div class="item">';
+	        works += '<p>' + child[i].recommend_7["itemName"] + '<span>*</span></p>';
+	        works += '<ul class="sex">';
+	        works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_7["itemId"] + '_C">';
+	        works += '<li>';
+	        works += '<input type="radio"  name="' + data.itemId + child[i].recommend_7["itemId"] +'" '+ (child[i].recommend_7["option"]["ZHS"]["checked"] == "Y" ? "checked='checked'": "")+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' class="radio" value="C">';
+	        works += '<label for="FILL">' + MsgSet["LANGUAGE_C"] + '</label>';
+	        works += '</li>';
+	        works += '</div>';
+	        works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_7["itemId"] + '_E">';
+	        works += '<li style="margin-left:0;">';
+	        works += '<input type="radio"  name="' + data.itemId + child[i].recommend_7["itemId"] +'" '+ (child[i].recommend_7["option"]["ENG"]["checked"] == "Y" ? "checked='checked'": "")+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' class="radio" value="E">';
+	        works += '<label for="radio-3">' + MsgSet["LANGUAGE_E"] + '</label>';
+	        works += '</li>';
+	        works += '</div>';
+	        works += '</ul>';
+	        works += '</div>';
+	        
+		}else if (_qy_zhs=="Y"&&_qy_eng!="Y")
+		{
+			child[i].recommend_7["option"]["ZHS"]["checked"] = "Y";
+			child[i].recommend_7["option"]["ENG"]["checked"] = "N";
+			works += '<div class="input-list" style="display:none">';
+			works += '<div class="input-list-info left">'+ child[i].recommend_7["itemName"] +'：</div>';
+			works += '<div class="input-list-text left">';
+			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="C">';
+			works += '</div>';
+			works += '</div>';
+		}else if (_qy_zhs!="Y"&&_qy_eng=="Y")
+		{
+			child[i].recommend_7["option"]["ZHS"]["checked"] = "N";
+			child[i].recommend_7["option"]["ENG"]["checked"] = "Y";
+			works += '<div class="input-list" style="display:none">';
+			works += '<div class="input-list-info left">'+ child[i].recommend_7["itemName"] +'：</div>';
+			works += '<div class="input-list-text left">';
+			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_7["itemId"] + '" value="E">';
+			works += '</div>';
+			works += '</div>';
+		}
+		
+		//推荐信类型
+		// itemLx=L  2个都可以
+		
+		if (data.itemLx=="L"){
+			
+	        works += '<div class="item">';
+	        works += '<p>' + child[i].recommend_8["itemName"] + '<span>*</span></p>';
+			
+			//如果发送邮件被选择了  recommend_8.value =S 
+			if(child[i].recommend_8["option"]["SEND"]["checked"] == "Y"){
+				child[i].recommend_8["option"]["SEND"]["checked"] = "Y";
+				child[i].recommend_8["option"]["UPLOAD"]["checked"] = "N";
+				child[i].recommend_8["value"] = "S";
+			}
+			//如果 上传附件被选择了   recommend_8.value =U
+			else if(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y")
+			{
+				child[i].recommend_8["option"]["SEND"]["checked"] = "N";
+				child[i].recommend_8["option"]["UPLOAD"]["checked"] = "Y";
+				child[i].recommend_8["value"] = "U";
+			}
+			//默认 发送邮件
+			else{
+				child[i].recommend_8["option"]["SEND"]["checked"] = "Y";
+				child[i].recommend_8["option"]["UPLOAD"]["checked"] = "N";
+				child[i].recommend_8["value"] = "S";
+			}
+			
+	        works += '<ul class="tjx">'; 
+	        works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '"  id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
+
+	        works += '<li>';
+	        works +='<input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S">';
+	        /*works += '<input type="radio" name="square-radio" class="radio"   >';*/
+	        works += '<label for="FILL">' + MsgSet["Send_mail"] + '</label>';
+	        works += '</li>';
+	        works += '</div>';
+	        works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U"  >';
+
+	        works += '<li>';
+	        works +='<input  ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" >';
+	        /*works += '<input type="radio" name="square-radio" class="radio" >';*/
+	        works += '<label for="UPLOAD">' + MsgSet["Upload"] + '</label>';
+	        works += '</li>';
+	        works +='</div>';
+	        works += '</ul>';
+			works += '</div>';
+			
+			
+/*			works += '	<ul class="tjx">'; 
+			works += '	<li>'; 
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_S">';
+			works += '<i><input ' + (child[i].recommend_8["option"]["SEND"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="S"></i>';
+			works += '</div><span style="margin-left:3px;">' + MsgSet["Send_mail"]+'</span>&nbsp;&nbsp;&nbsp;&nbsp;';
+			works += '<div readonlyflag="'+ ((_readOnlyRadio=="Y") ? "Y" : "N") + '" class="radio-btn '+(child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checkedRadio" : "")+'" onclick="SurveyBuild.clickOnRadio(this);" id="' + data.itemId + child[i].recommend_8["itemId"] + '_U">';
+			works += '<i><input ' + (child[i].recommend_8["option"]["UPLOAD"]["checked"] == "Y" ? "checked='checked'": "") + ' type="radio" align="'+i+'" '+((_zd=="Y"||_zd=="Z")?"disabled=true" : "")+' title="'+ child[i].recommend_8["title"] +'" name="' + data.itemId + child[i].recommend_8["itemId"] +'" value="U" ></i>';
+			works += '</div><span style="margin-left:3px;">' + MsgSet["Upload"] + '</sapn>';
+			works += '	</li>';
+			works += '<div class="clear"></div></ul>';
+			works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="' + child[i].recommend_8["value"] + '">';
+			works += '</div>';
+			works += '<div class="input-list-suffix left">';
+			works += '	<div id="' + data.itemId + child[i].recommend_8["itemId"] + 'Tip" style="margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent;" class="onShow">';
+			works += '		<div class="onShow">&nbsp;</div>';
+			works += '	</div>';
+			works += '</div>';
+			works += '<div class="clear"></div>';
+			works += '</div>';*/
+			
+		}
+		// 如果 设置 itemLx=F  发送邮件
+		else if(data.itemLx == "F"){
+			child[i].recommend_8["option"]["SEND"]["checked"] = "Y";
+			child[i].recommend_8["option"]["UPLOAD"]["checked"] = "N";
+            works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="S">';
+        }
+		// 如果 itemLx=S  上传附件
+		else{
+			child[i].recommend_8["option"]["SEND"]["checked"] = "N";
+			child[i].recommend_8["option"]["UPLOAD"]["checked"] = "Y";
+            works += '<input type="hidden" id="' + data.itemId + child[i].recommend_8["itemId"] + '" value="U">';
+        }
+		
+		//上传附件
+		
+		 if ((data.itemLx == "L" && child[i].recommend_8["value"] == "U") || data.itemLx == "S"){
+			 
+        
+		 	works += '<div class="item" id="Tjxfj_show_'+i+'">';
+		 	if(SurveyBuild._readonly != true){
+		
+		 		works += '<p>'+ child[i].recommend_9["itemName"] + '<span>*</span></p>';
+		 		works += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
+		 		works += '<div class="handle">';
+		 		works += '<div class="ncsc-upload-btn">';
+		 		works += '<a href="#" class="ncsc-upload-btn-a">';
+		 		works += '<span class="ncsc-upload-btn-span">';
+		 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+')></span>';
+		 		works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
+		 		works += '</a>';
+		 		works += '</div>';
+		 		works += '</div>';
+		 		works += '</div>';
+		 	}else{
+		 		
+		 	}
+        
+		 	works += '</div>';
+        
+		 	/*附件显示 开始*/
+		 	if(SurveyBuild._readonly != true){
+		
+	 		works += ' <div class="upload_list"  id="'+data.itemId+i+'_AttList">';
+			 	}else{
+	
+	 		works += '<div id="'+data.itemId+i+'_AttList">';
+		 	}
+		 	if (child[i].recommend_9["viewFileName"]!="")
+		 	{
+		 		if(SurveyBuild._readonly!=true){
+		
+		 			works += '<div class="upload_list">';
+	 			works += '<li class="fileLi"><span>';
+		 			works += '<a onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a></span>';
+		 			works += '<i onclick="onclick=SurveyBuild.Tjxdelete(this,"recommend_9",'+i+')" style="background:url(/statics/images/appeditor/m/de.png) no-repeat center center"></i></li>';
+ 	 			works += '</div>';
+		
+		 		}else{
+		 			works += '<div class="input-list-uploadcon-list">';
+		 			works += '	<div class="input-list-uploadcon-listl left">';
+		 			works += '	<a class="input-list-uploadcon-list-a" onclick=SurveyBuild.TjxdownLoad(this,"recommend_9",'+i+') file-index="'+i+'">'+child[i].recommend_9["viewFileName"]+'</a>';
+		 			works += '</div>';
+		 			works += '</div>';
+		 		}
+		 	}
+		 	works += '</div>';
+		
+		 	/*附件显示 结束*/
+		 	works += '	</div>';
+		 	works += '	<input id="'+data.itemId+child[i].recommend_9["itemId"]+'" type="hidden" name="'+data.itemId+child[i].recommend_9["itemId"]+'" value="'+child[i].recommend_9["value"]+'">';
+		 	works += '	<div class="clear"></div>';
+		 	works += '</div>';
+		 	
+		 }else{
+			 
+			 works += '<div class="item" style="display:none" id="Tjxfj_show_'+i+'">';
+			 	if(SurveyBuild._readonly != true){
+			
+			 		works += '<p>'+ child[i].recommend_9["itemName"] + '<span>*</span></p>';
+			 		works += '<div class="text-box" style="border:none;display:' + (SurveyBuild._readonly?'none':'block') +' " >';
+			 		works += '<div class="handle">';
+			 		works += '<div class="ncsc-upload-btn">';
+			 		works += '<a href="#" class="ncsc-upload-btn-a">';
+			 		works += '<span class="ncsc-upload-btn-span">';
+			 		works += '<input type="file" hidefocus="true" size="1" class="input-file" name="goods_image" onchange=SurveyBuild.TjxUpload(this,"recommend_9",'+i+') ></span>';
+			 		works += '<div class="ncsc-upload-btn-p">'+ MsgSet["UPLOAD_BTN_MSG"] +'<img src="' + TzUniversityContextPath + '/statics/images/appeditor/new/upload.png'+'"></div>';
+			 		works += '</a>';
+			 		works += '</div>';
+			 		works += '</div>';
+			 		works += '</div>';
+			 	}else{
+			 		
+			 	}
+	        
+			 	works += '</div>';
+        
+		 }
+		//上传附件-结束
+
+		//发送邮件 -开始
+			if ((data.itemLx=="L"&&child[i].recommend_8["value"]!="U")||data.itemLx=="F"){
+
+				/*更换推荐人一直显示*/
+				if(SurveyBuild._readonly){
+					works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
+					works += '</div>';
+				}else{
+					
+					
+		
+						//发送
+						works += '<div id="sendEmailS_'+i+'"  style="'+((_zd!="Y"&&_zd!="Z")?"":"display:none")+';width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="sendEmail_'+i+'">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+						//灰色的发送邮件
+						works += '<div id="sendEmailH_'+i+'" style="display:none;width: 45%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div >'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+						//发送给自己
+						works += '<div id="sendEmailToMeS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"":"display:none")+';width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+						//发送给自己灰色
+						works += '<div id="sendEmailToMeH_'+i+'" style="display:none;width: 45%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div >'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+					
+						
+						//重新发送  ，如果没有发送，那么显示
+						works += '<div id="reSendEmailS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+';width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="reSendEmail_'+i+'">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						//重新发送灰色
+						works += '<div id="reSendEmailH_'+i+'" style="display:none;width:30%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div >'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+						//重新发送给自己
+						works += '<div id="reSendEmailToMeS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+';width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						//重新发送给自己灰色
+						works += '<div id="reSendEmailToMeH_'+i+'" style="display:none;width:30%;margin-left:5%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+						works += '<div >'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						
+						
+						
+						works += '<div id="changeRecS_'+i+'" style="'+((_zd!="Y"&&_zd!="Z")?"display:none":"")+';width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div id="changeRec_'+i+'">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';
+						//更换推荐人灰色
+					/*	works += '<div id="changeRecH_'+i+'" style="display:none;width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+						works += '<div >'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+						works += '</div>';*/
+					
+				}
+				
+				works += '<div class="clear"></div>';
+			//推荐信状态
+		  works += '<p class="finish" style="margin-top: 15px" id="tjxzt_desc_'+i+'">' + MsgSet["ReLeSt"] + '：<span>' + _tjx_zt + '</span></p>';
+			
+			
+		}else{
+			/*更换推荐人一直显示*/
+			if(SurveyBuild._readonly){
+				works += '<div id="changeRecS_'+i+'" style="cursor:pointer;padding-left:15px;padding-top:5px;float:left;'+'">';
+				works += '</div>';
+			}else{
+				
+				
+					
+					//发送
+					works += '<div id="sendEmailS_'+i+'" style="display:none;width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="sendEmail_'+i+'">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					//发送灰色
+					works += '<div id="sendEmailH_'+i+'" style=" display:none ;width: 45%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="sendEmail_'+i+'">'+MsgSet["Send"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					
+					
+					//发送给自己
+					works += '<div id="sendEmailToMeS_'+i+'" style="display:none; width: 45%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+					works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					//发送给自己灰色
+					works += '<div id="sendEmailToMeH_'+i+'" style="display:none; width: 45%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+					works += '<div id="sendEmailToMe_'+i+'">'+MsgSet["SendToMe"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					
+
+					//重新发送  ，如果没有发送，那么显示
+					works += '<div id="reSendEmailS_'+i+'" style="display:none;width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="reSendEmail_'+i+'">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					//重新发送  ，如果没有发送，那么显示灰色
+					works += '<div id="reSendEmailH_'+i+'" style=" display:none;width:30%;padding: 10px 0;background-color: #999;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="reSendEmail_'+i+'">'+MsgSet["Resend"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					
+					//重新发送给自己
+					works += '<div id="reSendEmailToMeS_'+i+'" style="display:none;width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					//重新发送给自己灰色
+					works += '<div id="reSendEmailToMeS_'+i+'" style="display:none;width:30%;margin-left:5%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:left;">';
+					works += '<div id="reSendEmailToMe_'+i+'">'+MsgSet["ResendToMe"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					
+					works += '<div id="changeRecS_'+i+'" style="display:none;width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+					works += '<div id="changeRec_'+i+'">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+					works += '<div id="changeRecH_'+i+'" style="display:none; width:30%;padding: 10px 0;background-color: #ff7b05;color: #fff;text-align: center;border-radius: 5px;float:right;">';
+					works += '<div id="changeRec_'+i+'">'+MsgSet["RepRecom"]+'</div><a href="#" class="alpha"></a>';
+					works += '</div>';
+				
+			}
+			
+			works += '<div class="clear"></div>';
+		//推荐信状态
+
+		works += '<p class="finish" style="margin-top: 15px" id="tjxzt_desc_'+i+'">' + MsgSet["ReLeSt"] + '：<span>' + _tjx_zt + '</span></p>';
+			
+			
+		}
+		
+        works += '</div>';
+        works += '</div>';
+        
+        works += '</div>';
+        return works;
     },
     _eventbind: function(data) {
 		
@@ -1925,18 +2926,25 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			$("#sendEmail_"+(Number(num)-1)).unbind("click");  
 			$("#sendEmailToMe_"+(Number(num)-1)).unbind("click"); 
 			
+			
 			$.each([$("#sendEmail_"+(Number(num)-1)),$("#sendEmailToMe_"+(Number(num)-1))],function(i,el){
 				el.click(function(e) {
-			//$("#sendEmail_"+(Number(num)-1)).click(function(){
-				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-				
+				var lineno = "";
+		    	//修改判断判断是否是手机版
+		    	if(SurveyBuild.accessType=='M'){
+		    		lineno=parseInt($(this).closest(".next_record").index());
+		    		
+		    	}else{
+		    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
+		    		
+		    	}
 				var m=Number(lineno)+1;
 				var mm = this.id.split("_")[1];
 				var mm=Number(mm)+1;
 				//错误代码
 				var _yz="";
 				var _desc="";
-				
+				//console.log("Number(num)-1):");
 				var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
 				if (children[m-1].recommend_18["useby"]=="Y"&&rec_title==""){
 					_yz="1";
@@ -1985,33 +2993,13 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				} else{
 					rec_phone_area="";
 				}
-				
-				if (rec_phone_area !="" && _yz=="") {
-					var _result_area = /^[\d-+]+$/.test(rec_phone_area);
-					if(!_result_area){
-						_yz="2";
-						_desc =   children[m-1].recommend_16["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
-						$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).focus();
-						$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).blur();
-					}
-				}
-				
-				
+
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
 				if (children[m-1].recommend_4["useby"]=="Y"&&rec_phone_no==""){
 					_yz="1";
 					_desc =   children[m-1].recommend_4["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).blur();
-				}
-				if (rec_phone_no !="" && _yz=="") {
-					var _result = /^1\d{10}$/.test(rec_phone_no);
-					if(!_result){
-						_yz="2";
-						_desc =   children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
-						$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).focus();
-						$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).blur();
-					}
 				}
 				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
 				if (children[m-1].recommend_5["useby"]=="Y"&&rec_email==""){
@@ -2021,10 +3009,17 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).blur();
 				}
 				
-				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
-				
+				//页面性别数据				
+				var rec_sex
+				if(SurveyBuild.accessType=='M'){
+					
+					rec_sex = $('input[name="'+data["itemId"] + children[m-1].recommend_15["itemId"]+'"]:checked').val();
+				}else{
+					rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
+				}
+				//var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
 				//console.log("rec_sex:"+rec_sex);
-				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
+				
 				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex==""){
 					_yz="1";
 					_desc =  children[m-1].recommend_15["itemName"]+ MsgSet["REQUIRE"];
@@ -2041,15 +3036,23 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).blur();
 				}
-				var rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
-				//var rec_language = $("input[name="+data["itemId"]+children[0].recommend_7["itemId"]+"]:checked").val();
+				
+				//页面语言数据				
+				var rec_language
+				if(SurveyBuild.accessType=='M'){
+					
+					rec_language = $('input[name="'+data["itemId"] + children[m-1].recommend_7["itemId"]+'"]:checked').val();
+				}else{
+					rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
+				}
+								
+				//console.log("rec_language:"+rec_language);
 				if (children[m-1].recommend_7["useby"]=="Y"&&rec_language==""){
 					_yz="1";
 					_desc =   children[m-1].recommend_7["itemName"]+ MsgSet["REQUIRE"];
 					$("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).focus();
 					$("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).blur();
 				}
-				//var rec_num= m;
 				var rec_num = children[m-1].recommend_99["value"];
 				var rec_by1 = $("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).val();
 				if (children[m-1].recommend_10["useby"]=="Y"&&rec_by1==""){
@@ -2164,9 +3167,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						_email_tx = SurveyBuild.specialCharReplace(_email_tx);
 				
 						var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
-						/*
-						var param = "{'ComID':'TZ_GD_TJX_COM','PageID':'TZ_SEND_REF_STD','OperateType':'SEND','comParams':{'rec_app_ins_id':'"+_tz_app_ins_id+"','TZ_APP_INS_VERSION':'"+_tz_app_version_id+"','rec_num':'"+rec_num+"','rec_title':'"+rec_title+"','rec_gname':'"+rec_gname+"','rec_name':'"+rec_name+"','rec_company':'"+rec_company+"','rec_post':'"+rec_post+"','rec_phone_area':'"+rec_phone_area+"','rec_phone_no':'"+rec_phone_no+"','rec_email':'"+rec_email+"','rec_sex':'"+rec_sex+"','rec_relation':'"+rec_relation+"','rec_language':'"+rec_language+"','email_tx':'"+_email_tx+"','rec_by1':'"+rec_by1+"','rec_by2':'"+rec_by2+"','rec_by3':'"+rec_by3+"','rec_by4':'"+rec_by4+"','rec_by5':'"+rec_by5+"'}}";*/
-						
+
 						//区分发送给自己 还是发送给 推荐人
 						var sendFlag ="";
 						
@@ -2179,87 +3180,86 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						} else {
 							sendFlag= "N";  //发送给自己
 						}
-						//if ($(this).attr("id")=="sendEmail_"+(Number(num)-1)) {
-						//	sendFlag= "Y";  //发送给推荐人
-						//} else {
-						//	sendFlag= "N";  //发送给自己
-						//}
-						
-						//console.log($(this).attr("id"));
-						//console.log(sendFlag);
-						
-						//console.log($(this).attr("id"));
-						//console.log("rec_sexID:"+ data["itemId"] + children[m-1].recommend_15["itemId"]);
-						console.log("rec_sex:"+rec_sex);
-						
-						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+						$("#sendEmailH_"+(Number(mm)-1)).css("display","block");
+						$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
+						$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","block");
+						$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
 
-						$.ajax({
-							type: "post",
-							url: _Url + encodeURIComponent(param),
-							dataType: "json",
-							success: function(result){
-								if (result.comContent=="SUCCESS"){
-									$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
-									$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
-									$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
-									$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
-									
-									$("#changeRecS_"+(Number(mm)-1)).css("display","block");
-									alert(MsgSet["SEND_SC"]);
-									$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["SendEmail"]+"</span>");
-									$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).prop("readonly", true);
-									$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").prop("disabled", true);
-									$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").prop("disabled", true);
-									$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").prop("disabled", true);
-									$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).prop("readonly", true);
-									$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).prop("readonly", true);
-									
-									$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).prop("readonly", true);
-									//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).prop("disabled", true);
-									//console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).closest(".main_inner_content_para").find(".chosen-container").html());
-									$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).next(".chosen-container").unbind();
-									
-									//console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).html());
-									//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"] + "_chosen").find(".chosen-results").hide();
-									//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
-									$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","Y");
-									$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","Y");
-									$("#tjx_delete_"+(Number(mm)-1)).hide();
-									$("#app_save").click();
-								}else {
-									alert(result.comContent);
+						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+						if(_tz_app_ins_id == "0"){
+							/*提示先保存报名表*/
+							alert(MsgSet["SAVEBMBFIRST"]); 
+						}else{
+							$.ajax({
+								type: "post",
+								url: _Url + encodeURIComponent(param),
+								dataType: "json",
+								success: function(result){
+									if (result.comContent=="SUCCESS"){
+										$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										
+										$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+										
+										$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+										alert(MsgSet["SEND_SC"]);
+										$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["SendEmail"]+"</span>");
+										$("#tjxzt_info_"+(Number(mm)-1)).val("Y");
+										$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).prop("readonly", true);
+										$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").prop("disabled", true);
+										$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").prop("disabled", true);
+										$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").prop("disabled", true);
+										$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).prop("readonly", true);
+										$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).prop("readonly", true);
+										
+										$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).prop("readonly", true);
+										//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).prop("disabled", true);
+										//console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).closest(".main_inner_content_para").find(".chosen-container").html());
+										$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).next(".chosen-container").unbind();
+										
+										//console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).html());
+										//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"] + "_chosen").find(".chosen-results").hide();
+										//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
+										$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","Y");
+										$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","Y");
+										$("#tjx_delete_"+(Number(mm)-1)).hide();
+										$("#app_save").click();
+									}else {
+										$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										alert(result.comContent);
+									}
 								}
-							}
-						});
+							});
+						}
 					}
 				}else if (_yz="2")
 				{
 					alert(_desc);
-					//alert(MsgSet["REC_ERR"]);
-					//$("#app_save").click();
 				}else{
 					alert(_desc);
-					//alert(MsgSet["REC_ERR"]);
-					//$("#app_save").click();
-					//alert(MsgSet["TJX_NO_COMPLETE"]);
 				}
 				});
 			});
@@ -2272,10 +3272,19 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			$.each([$("#reSendEmail_"+(Number(num)-1)),$("#reSendEmailToMe_"+(Number(num)-1))],function(i,el){
 				el.click(function(e) {
 			
-			//$("#reSendEmail_"+(Number(num)-1)).click(function(){
-				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-				//var m = this.id.split("_")[1];
+				var lineno ="";
+				
+		    	//修改判断判断是否是手机版
+		    	if(SurveyBuild.accessType=='M'){
+		    		lineno=parseInt($(this).closest(".next_record").index());
+		    		
+		    	}else{
+		    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
+		    		
+		    	}
 				var m=Number(lineno)+1;
+				var mm = this.id.split("_")[1];
+				var mm=Number(mm)+1;
 				var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
 				var rec_gname = $("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).val();
 				var rec_name = $("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).val();
@@ -2288,18 +3297,28 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
 				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
-				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
-				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
-				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
-				//console.log("rec_sex:"+rec_sex);
+				
+				//修改 手机版取值方式不一样
+				var rec_sex="",rec_language="";
+				if(SurveyBuild.accessType=='M'){
+					rec_sex = $('input[name="'+data["itemId"] + children[m-1].recommend_15["itemId"]+'"]:checked').val();
+					rec_language=rec_sex = $('input[name="'+data["itemId"] + children[m-1].recommend_7["itemId"]+'"]:checked').val();
+				}else{
+					//性别
+				    rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
+					
+					//语言
+					 rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
+					
+				}
+				
 				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex!=""){
 				}else{
 					rec_sex="";
 				}
+				
 				var rec_relation = $("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).val();
-				//var rec_language = $("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]:checked").val();
-				var rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
-				//var rec_num= m;
+				
 				var rec_num = children[m-1].recommend_99["value"];
 				var rec_by1 = $("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).val();
 				var rec_by2 = $("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).val();
@@ -2354,16 +3373,13 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				} else {
 					sendFlag= "N";  //发送给自己
 				}
-				//if ($(this).attr("id")=="reSendEmail_"+(Number(num)-1)) {
-				//	sendFlag= "Y";  //发送给推荐人
-				//} else {
-				//	sendFlag= "N";  //发送给自己
-				//}
-				
-				//console.log($(this).attr("id"));
-				//console.log("rec_sexID:"+ data["itemId"] + children[m-1].recommend_15["itemId"]);
-				console.log("rec_sex:"+rec_sex);
-				
+				$("#reSendEmailH_"+(Number(mm)-1)).css("display","block");
+				$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
+				$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","block");
+				$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+				$("#changeRecH_"+(Number(mm)-1)).css("display","block");
+				$("#changeRecS_"+(Number(mm)-1)).css("display","none");
+
 				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 				
 				$.ajax({
@@ -2372,9 +3388,21 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					dataType: "json",
 					success: function(result){
 						if (result.comContent=="SUCCESS"){
+							$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+							$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+							$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 							alert(MsgSet["SEND_SC"]);
 							$("#app_save").click();
 						}else {
+							$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+							$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+							$("#changeRecS_"+(Number(mm)-1)).css("display","block");
 							alert(result.comContent);
 						}
 					}
@@ -2387,13 +3415,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			$("#saveRec_"+(Number(num)-1)).unbind("click"); 
 			$("#saveRec_"+(Number(num)-1)).click(function(){
 				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-				//var m = this.id.split("_")[1];
 				var m;
 				m=Number(lineno)+1;
 
 				var _yz="";
 				var _desc="";
-				
+				var _name_yz = "";
 				
 				var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
 				if (children[m-1].recommend_18["useby"]=="Y"&&rec_title==""){
@@ -2409,6 +3436,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				if (children[m-1].recommend_1["useby"]=="Y"&&rec_name==""){
 					_desc =  children[m-1].recommend_1["itemName"]+ MsgSet["REQUIRE"];
 					_yz="1";
+					_name_yz = "1";
 				}
 				var rec_company = $("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).val();
 				if (children[m-1].recommend_2["useby"]=="Y"&&rec_company==""){
@@ -2425,13 +3453,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_yz="1";
 					_desc =   children[m-1].recommend_16["itemName"]+ MsgSet["REQUIRE"];
 					
-				}
-				if (_yz=="" && rec_phone_area!="") {
-					var _result_phone_area = /^[\d-+]+$/.test(rec_phone_area);
-					if(!_result_phone_area){
-						_yz="1";
-						_desc = children[m-1].recommend_16["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
-					}
+				}else{
+					rec_phone_area = "";
 				}
 				
 				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
@@ -2439,20 +3462,12 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					_yz="1";
 					_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["REQUIRE"];
 				}
-				if (_yz=="" && rec_phone_no!="") {
-					var _result = /^1\\d{10}$/.test(rec_phone_no);
-					if(!_result){
-						_yz="1";
-						_desc =  children[m-1].recommend_4["itemName"]+ MsgSet["FORMAT_ERROR_MSG"];
-					}	
-				}
 				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
 				if (children[m-1].recommend_5["useby"]=="Y"&&rec_email==""){
 					_yz="1";
 					_desc =   children[m-1].recommend_5["itemName"]+ MsgSet["REQUIRE"];
 				}
 				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
-				//var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
 				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex==""){
 					_yz="1";
 					_desc =   children[m-1].recommend_15["itemName"]+ MsgSet["REQUIRE"];
@@ -2460,13 +3475,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				{
 					rec_sex="";
 				}
-				/*
-				var rec_sex = $("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]:checked").val();
-				if (children[m-1].recommend_15["useby"]=="Y"&&rec_sex==""){
-					_yz="1";
-				}else{
-					rec_sex="";
-				}*/
 				var rec_relation = $("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).val();
 				if (children[m-1].recommend_6["useby"]=="Y"&&rec_relation==""){
 					_desc =  children[m-1].recommend_6["itemName"]+ MsgSet["REQUIRE"];
@@ -2537,9 +3545,10 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}
 				
 				/*使用新增的行序号*/
-				//var rec_num= m;
 				var rec_num = children[m-1].recommend_99["value"];
 				var rec_type = $("#" + data["itemId"] + children[m-1].recommend_8["itemId"]).val();
+				
+				rec_type = "";
 				
 				var _file=children[m-1].recommend_9["filename"];
 				var _sysfile=children[m-1].recommend_9["sysFileName"];
@@ -2568,7 +3577,8 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				_sysfile = SurveyBuild.specialCharReplace(_sysfile);
 				_accessPath = SurveyBuild.specialCharReplace(_accessPath);
 				
-				if (rec_type=="U")
+				/*任何情况都可以保存推荐信*/
+				if (rec_type=="U" || true)
 				{
 					console.log("_file"+_file);
 					console.log("_sysfile"+_sysfile);
@@ -2577,16 +3587,16 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					
 					rec_language = "";
 					var _tz_tjx_valid = "N";
-					if(_yz==""){
+					if(_yz=="" || _name_yz == ""){
 						_tz_tjx_valid = "Y";
 					}
+					
 					var _tz_app_ins_id=SurveyBuild.appInsId;
 					var _tz_app_version_id=SurveyBuild.appInsVersion;
 					var _email_tx = $("#yincang_tx").val();
 					var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
 					var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SAVE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","tjx_valid":"'+_tz_tjx_valid+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+ '","rec_type":"'+rec_type+ '","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 					
-					//$("#"+data.itemId+child[cins].itemId+"Attch").text(obj.msg.fileName);
 					$.ajax({
 						type: "post",
 						url: _Url + encodeURIComponent(param),
@@ -2596,7 +3606,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 							if (result.comContent=="SUCCESS"){
 								
 							}else {
-								//alert(result.comContent);
 							}
 						}
 					});
@@ -2605,134 +3614,208 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			//更换推荐人
 			$("#changeRec_"+(Number(num)-1)).unbind("click");
 			$("#changeRec_"+(Number(num)-1)).click(function(){
-				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+			
+				var lineno ="";
 				
+		    	//修改判断判断是否是手机版
+		    	if(SurveyBuild.accessType=='M'){
+		    		lineno=parseInt($(this).closest(".next_record").index());
+		    		
+		    	}else{
+		    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
+		    		
+		    	}
 				var m=Number(lineno)+1;
 				var mm = this.id.split("_")[1];
 				var mm=Number(mm)+1;
-				var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
-				var rec_gname = $("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).val();
-				var rec_name = $("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).val();
-				var rec_company = $("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).val();
-				var rec_post = $("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).val();
-				var rec_phone_area = $("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).val();
-				var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
-				var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
-				var rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
-				var rec_relation = $("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).val();
-				//var rec_language = $("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]:checked").val();
-				var rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
-				//var rec_num= m;
-				var rec_num = children[m-1].recommend_99["value"];
-				var rec_by1 = $("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).val();
-				var rec_by2 = $("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).val();
-				var rec_by3 = $("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).val();
-				var rec_by4 = $("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).val();
-				var rec_by5 = $("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).val();
-				var rec_by6 = $("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).val();
-				var rec_by7 = $("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).val();
-				var rec_by8 = $("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).val();
-				var rec_by9 = $("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).val();
-				var rec_by10 = $("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).val();
-
 				
-				rec_title = SurveyBuild.specialCharReplace(rec_title);
-				rec_gname = SurveyBuild.specialCharReplace(rec_gname);
-				rec_name = SurveyBuild.specialCharReplace(rec_name);
-				rec_company = SurveyBuild.specialCharReplace(rec_company);
-				rec_post = SurveyBuild.specialCharReplace(rec_post);
-				rec_phone_area = SurveyBuild.specialCharReplace(rec_phone_area);
-				rec_phone_no = SurveyBuild.specialCharReplace(rec_phone_no);
-				rec_email = SurveyBuild.specialCharReplace(rec_email);
-				rec_relation = SurveyBuild.specialCharReplace(rec_relation);
-				rec_by1 = SurveyBuild.specialCharReplace(rec_by1);
-				rec_by2 = SurveyBuild.specialCharReplace(rec_by2);
-				rec_by3 = SurveyBuild.specialCharReplace(rec_by3);
-				rec_by4 = SurveyBuild.specialCharReplace(rec_by4);
-				rec_by5 = SurveyBuild.specialCharReplace(rec_by5);
-				rec_by6 = SurveyBuild.specialCharReplace(rec_by6);
-				rec_by7 = SurveyBuild.specialCharReplace(rec_by7);
-				rec_by8 = SurveyBuild.specialCharReplace(rec_by8);
-				rec_by9 = SurveyBuild.specialCharReplace(rec_by9);
-				rec_by10 = SurveyBuild.specialCharReplace(rec_by10);
-				
-				var _tz_app_ins_id=SurveyBuild.appInsId;
-				var _tz_app_version_id=SurveyBuild.appInsVersion;
-				var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
-				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"CHANGE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'"}}';
-				var _email_tx = $("#yincang_tx").val();
-				//console.log(encodeURIComponent(param));
-				
-				$.ajax({
-					type: "post",
-					url: _Url + encodeURIComponent(param),
-					dataType: "json",
-					success: function(result){
-						if (result.comContent=="SUCCESS"){
-							$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
-							$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
-							
-							$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
-							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
-							
-							$("#changeRecS_"+(Number(mm)-1)).css("display","none");
-							$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
-							//$("#tjxzt_desc_"+(Number(rec_num)-1)).html("推荐信状态：未发送");
-							$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).removeAttr("readonly");
-							$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").removeAttr("disabled");
-							$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").removeAttr("disabled");
-							$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").removeAttr("disabled");
-							$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).removeAttr("readonly");
-							
-							$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).removeAttr("readonly");
-							$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).removeAttr("readonly");
-							
-							console.log($("#" + data["itemId"] + children[m-1].recommend_18["itemId"]));
-							//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).trigger("liszt:updated");
-							//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).find(".chosen-results").show();
-							//$("#" + data["itemId"] + children[m-1].recommend_18["itemId"] + "_chosen").find(".chosen-results").show();
-							$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
-							$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen();
-							
-							$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","N");
-							$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","N");
-							
-							$("#tjx_delete_"+(Number(mm)-1)).show();
-							$("#app_save").click();
-						}else {
-							alert(result.comContent);
-						}
+				var _tjx_zt_info = $("#tjxzt_info_"+(Number(mm)-1)).val();
+				var confirmValue;
+				if(_tjx_zt_info=="Z"||_tjx_zt_info=="Y"){
+					confirmValue = confirm(MsgSet["CHANGE_TJX_CONFIRM_MSG"]);
+				}else{
+					confirmValue=true;
+				}
+				if(confirmValue==true){
+					
+					var rec_title = $("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).val();
+					var rec_gname = $("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).val();
+					var rec_name = $("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).val();
+					var rec_company = $("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).val();
+					var rec_post = $("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).val();
+					var rec_phone_area = $("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).val();
+					var rec_phone_no = $("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).val();
+					var rec_email = $("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).val();
+					
+					var rec_relation = $("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).val();
+					//修改 手机版取值方式不一样
+					var rec_sex="",rec_language="";
+					if(SurveyBuild.accessType=='M'){
+						rec_sex = $('input[name="'+data["itemId"] + children[m-1].recommend_15["itemId"]+'"]:checked').val();
+						rec_language=rec_sex = $('input[name="'+data["itemId"] + children[m-1].recommend_7["itemId"]+'"]:checked').val();
+					}else{
+						//性别
+					    rec_sex = $("#" + data["itemId"] + children[m-1].recommend_15["itemId"]).val();
+						
+						//语言
+						 rec_language = $("#" + data["itemId"] + children[m-1].recommend_7["itemId"]).val();
+						
 					}
-				});
+				
+					var rec_num = children[m-1].recommend_99["value"];
+					var rec_by1 = $("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).val();
+					var rec_by2 = $("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).val();
+					var rec_by3 = $("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).val();
+					var rec_by4 = $("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).val();
+					var rec_by5 = $("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).val();
+					var rec_by6 = $("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).val();
+					var rec_by7 = $("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).val();
+					var rec_by8 = $("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).val();
+					var rec_by9 = $("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).val();
+					var rec_by10 = $("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).val();
+
+					
+					rec_title = SurveyBuild.specialCharReplace(rec_title);
+					rec_gname = SurveyBuild.specialCharReplace(rec_gname);
+					rec_name = SurveyBuild.specialCharReplace(rec_name);
+					rec_company = SurveyBuild.specialCharReplace(rec_company);
+					rec_post = SurveyBuild.specialCharReplace(rec_post);
+					rec_phone_area = SurveyBuild.specialCharReplace(rec_phone_area);
+					rec_phone_no = SurveyBuild.specialCharReplace(rec_phone_no);
+					rec_email = SurveyBuild.specialCharReplace(rec_email);
+					rec_relation = SurveyBuild.specialCharReplace(rec_relation);
+					rec_by1 = SurveyBuild.specialCharReplace(rec_by1);
+					rec_by2 = SurveyBuild.specialCharReplace(rec_by2);
+					rec_by3 = SurveyBuild.specialCharReplace(rec_by3);
+					rec_by4 = SurveyBuild.specialCharReplace(rec_by4);
+					rec_by5 = SurveyBuild.specialCharReplace(rec_by5);
+					rec_by6 = SurveyBuild.specialCharReplace(rec_by6);
+					rec_by7 = SurveyBuild.specialCharReplace(rec_by7);
+					rec_by8 = SurveyBuild.specialCharReplace(rec_by8);
+					rec_by9 = SurveyBuild.specialCharReplace(rec_by9);
+					rec_by10 = SurveyBuild.specialCharReplace(rec_by10);
+					
+					var _tz_app_ins_id=SurveyBuild.appInsId;
+					var _tz_app_version_id=SurveyBuild.appInsVersion;
+					var _Url = SurveyBuild.tzGeneralURL + "?tzParams=";
+					var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"CHANGE","comParams":{"rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'"}}';
+					var _email_tx = $("#yincang_tx").val();
+					
+					$("#reSendEmailH_"+(Number(mm)-1)).css("display","block");
+					$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
+					$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","block");
+					$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+					$("#changeRecH_"+(Number(mm)-1)).css("display","block");
+					$("#changeRecS_"+(Number(mm)-1)).css("display","none");
+
+					$.ajax({
+						type: "post",
+						url: _Url + encodeURIComponent(param),
+						dataType: "json",
+						success: function(result){
+							if (result.comContent=="SUCCESS"){
+								$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
+								$("#reSendEmailS_"+(Number(mm)-1)).css("display","none");
+								$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+								
+								$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+								$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+								$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+								
+								$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+								$("#changeRecS_"+(Number(mm)-1)).css("display","none");
+								$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["Unsent"]+"</span>");
+								$("#tjxzt_info_"+(Number(mm)-1)).val("");
+								$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_16["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).removeAttr("disabled");
+								$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").removeAttr("disabled");
+								$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").removeAttr("disabled");
+								$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").removeAttr("disabled");
+								$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").removeAttr("readonlyflag");
+								$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").removeAttr("readonlyflag");
+								$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").removeAttr("readonlyflag");
+								$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).removeAttr("readonly");
+								
+								$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).removeAttr("readonly");
+								$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).removeAttr("readonly");
+								
+								$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).removeAttr("disabled");
+								
+								$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).removeAttr("disabled");
+								$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).removeAttr("disabled");
+								
+								$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen("destroy");
+								$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).chosen();
+								
+								$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","N");
+								$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","N");
+								
+								$("#tjx_delete_"+(Number(mm)-1)).show();
+								$("#app_save").click();
+							}else {
+								//$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+								//$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+								//$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+								//$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+								$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+								$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+								alert(result.comContent);
+							}
+						}
+					});
+				}
 			});
 			$("#"+data.itemId + children[num-1].recommend_15["itemId"]+"_M").click(function(){
 				var readOnly = $(this).attr("readonlyflag");
 			    if(readOnly!="Y"){
-					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+			    	var lineno = "";
+					//判断是否是手机版
+					if(SurveyBuild.accessType=='M'){
+			    		lineno=parseInt($(this).closest(".next_record").index());
+			    		
+			    	}else{
+			    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
+			    		
+			    	}
 					children[lineno].recommend_15["option"]["MAN"]["checked"] = "Y";
 					children[lineno].recommend_15["option"]["WOMAN"]["checked"] = "N";
 
 					var child_M = $(this).find('input:radio');
 					var m = child_M.attr("name");
 					var value=child_M.val();
+					
 					$("#"+m).val(value);
 					
 					$("#"+m).focus();
@@ -2743,13 +3826,22 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			$("#"+data.itemId + children[num-1].recommend_15["itemId"]+"_F").click(function(){
 				var readOnly = $(this).attr("readonlyflag");
 			    if(readOnly!="Y"){
-					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+					var lineno = "";
+					//判断是否是手机版
+					if(SurveyBuild.accessType=='M'){
+			    		lineno=parseInt($(this).closest(".next_record").index());
+			    		
+			    	}else{
+			    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
+			    		
+			    	}
 					children[lineno].recommend_15["option"]["MAN"]["checked"] = "N";
 					children[lineno].recommend_15["option"]["WOMAN"]["checked"] = "Y";
 					var child_f = $(this).find('input:radio');
 
 					var m = child_f.attr("name");
 					var value=child_f.val();
+					
 					$("#"+m).val(value);
 					$("#"+m).focus();
 					$("#"+m).blur();
@@ -2758,7 +3850,19 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			$("#"+data.itemId + children[num-1].recommend_8["itemId"]+"_U").click(function(){
 				var readOnly = $(this).attr("readonlyflag");
 			    if(readOnly!="Y"){
-					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+			    	var lineno = "";
+			    	//修改判断判断是否是手机版
+			    	if(SurveyBuild.accessType=='M'){
+			    		lineno=parseInt($(this).closest(".next_record").index());
+			    		
+			    	}else{
+			    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
+			    		
+			    	}
+					
+					
+					//console.log("lineno"+lineno);
+					
 					children[lineno].recommend_8["option"]["SEND"]["checked"] = "N";
 					children[lineno].recommend_8["option"]["UPLOAD"]["checked"] = "Y";
 					var child_U = $(this).find('input:radio');
@@ -2767,16 +3871,31 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					$("#"+m).val(value);
 					$("#"+m).val(value);
 					var n = child_U.attr("align");
-
+					//手机版推荐信按钮
+					$("#sendEmailS_"+n).css("display","none");
+					$("#sendEmailToMeS_"+n).css("display","none");
+					
 					$("#Tjx_SendEmail_"+n).css("display","none");
 					$("#Tjxzt_"+n).css("display","none");
 					$("#Tjxfj_show_"+n).css("display","block");
 				}
 			});
+
 			$("#"+data.itemId + children[num-1].recommend_8["itemId"]+"_S").click(function(){
 				var readOnly = $(this).attr("readonlyflag");
 			    if(readOnly!="Y"){
-					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+			    	var lineno = "";
+			    	//修改判断判断是否是手机版
+			    	if(SurveyBuild.accessType=='M'){
+			    		lineno=parseInt($(this).closest(".next_record").index());
+			    		
+			    	}else{
+			    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
+			    		
+			    	}
+			    	
+					
+					//console.log("lineno"+lineno);
 					children[lineno].recommend_8["option"]["SEND"]["checked"] = "Y";
 					children[lineno].recommend_8["option"]["UPLOAD"]["checked"] = "N";
 					var child_S = $(this).find('input:radio');
@@ -2795,7 +3914,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					children[lineno]["recommend_9"].orderby = "";
 					children[lineno]["recommend_9"].viewFileName = "";
 					$("#"+data.itemId+n+"_AttList").html("");
-					
+					//手机版推荐信按钮
+					$("#sendEmailS_"+n).css("display","block");
+					$("#sendEmailToMeS_"+n).css("display","block");
 					//SurveyBuild.Tjxdelete(this,\"'+cins+'\",'+index+')
 					console.log("下标"+n);
 					$("#Tjx_SendEmail_"+n).css("display","block");
@@ -2803,27 +3924,49 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 					$("#Tjxfj_show_"+n).css("display","none");
 				}
 			});
+
 			$("#"+data.itemId + children[num-1].recommend_7["itemId"]+"_C").click(function(){
-			
-				var lineno = parseInt($(this).closest(".main_inner_content_para").index());
-                children[lineno].recommend_7["option"]["ZHS"]["checked"] = "Y";
-                children[lineno].recommend_7["option"]["ENG"]["checked"] = "N";
 				
-				var child_C = $(this).find('input:radio');
-				var m = child_C.attr("name");
-				var value=child_C.val();
-				$("#"+m).val(value);
+					var lineno = "";
+					//判断是否是手机版
+					if(SurveyBuild.accessType=='M'){
+			    		lineno=parseInt($(this).closest(".next_record").index());
+			    		
+			    	}else{
+			    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
+			    		
+			    	}
+	                children[lineno].recommend_7["option"]["ZHS"]["checked"] = "Y";
+	                children[lineno].recommend_7["option"]["ENG"]["checked"] = "N";
+					
+					var child_C = $(this).find('input:radio');
+					var m = child_C.attr("name");
+					var value=child_C.val();
+					
+					$("#"+m).val(value);
+				
+					
+			
 			});
 			$("#"+data.itemId + children[num-1].recommend_7["itemId"]+"_E").click(function(){
 				var readOnly = $(this).attr("readonlyflag");
 			    if(readOnly!="Y"){
-					var lineno = parseInt($(this).closest(".main_inner_content_para").index());
+			    	var lineno = "";
+					//判断是否是手机版
+					if(SurveyBuild.accessType=='M'){
+			    		lineno=parseInt($(this).closest(".next_record").index());
+			    		
+			    	}else{
+			    		lineno=parseInt($(this).closest(".main_inner_content_para").index());
+			    		
+			    	}
 					children[lineno].recommend_7["option"]["ZHS"]["checked"] = "N";
 					children[lineno].recommend_7["option"]["ENG"]["checked"] = "Y";
 					
 					var child_E = $(this).find('input:radio');
 					var m = child_E.attr("name");
 					var value=child_E.val();
+					
 					$("#"+m).val(value);
 				}
 			});
@@ -2879,15 +4022,9 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				}  else {
 					//正则表达式判断
 					if (Regular == 'phone_area') {
-						var _result = /^[\d-+]+$/.test(val);
-						if(!_result){
-							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
-						}
+
 					} else if (Regular == 'phone_no') {
-						var _result = /^1\d{10}$/.test(val);
-						if(!_result){
-							return elem.title+MsgSet["FORMAT_ERROR_MSG"];
-						}
+
 					} else if (Regular == 'email') {
 						var std=/^([\w\-\.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
 						if (!std.test(val)){
@@ -2904,59 +4041,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					/*var _title=val;
-					
-					//姓氏
-					var _name_id=elem.id.replace("r_title","r_name");
-					var _name=$("#"+_name_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_title","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					
-					//公司
-					var _company_id=elem.id.replace("r_title","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_title","r_post");
-					var _post=$("#"+_post_id).val();
-					
-					//区号
-					var _phone_area_id=elem.id.replace("r_title","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_title","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_title","r_email");
-					var _email=$("#"+_email_id).val();
-					
-					//性别
-					var _sex_id=elem.id.replace("r_title","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					
-					//关系
-					var _relation_id=elem.id.replace("r_title","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_title","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_title","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_title","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_title","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_title","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_name!=""||_gname!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!="")&&_title=="")
-					{
-						return MsgSet["REQUIRE"];
-					}*/
 				}
 			});
 			
@@ -2966,59 +4050,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					/*var _name=val;
-					
-					//称呼
-					var _title_id=elem.id.replace("r_name","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_name","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					
-					//公司
-					var _company_id=elem.id.replace("r_name","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_name","r_post");
-					var _post=$("#"+_post_id).val();
-					
-					//区号
-					var _phone_area_id=elem.id.replace("r_name","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_name","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_name","r_email");
-					var _email=$("#"+_email_id).val();
-					
-					//性别
-					var _sex_id=elem.id.replace("r_name","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					
-					//关系
-					var _relation_id=elem.id.replace("r_name","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_name","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_name","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_name","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_name","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_name","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_gname!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!="")&&_name=="")
-					{
-						return MsgSet["REQUIRE"];
-					}*/
 				}
 			});
 			
@@ -3028,59 +4059,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					/*var _gname=val;
-					
-					//称呼
-					var _title_id=elem.id.replace("r_gname","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//姓氏
-					var _name_id=elem.id.replace("r_gname","r_name");
-					var _name=$("#"+_name_id).val();
-					
-					//公司
-					var _company_id=elem.id.replace("r_gname","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_gname","r_post");
-					var _post=$("#"+_post_id).val();
-					
-					//区号
-					var _phone_area_id=elem.id.replace("r_gname","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_gname","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_gname","r_email");
-					var _email=$("#"+_email_id).val();
-					
-					//性别
-					var _sex_id=elem.id.replace("r_gname","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					
-					//关系
-					var _relation_id=elem.id.replace("r_gname","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_gname","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_gname","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_gname","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_gname","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_gname","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_name!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!="")&&_gname=="")
-					{
-						return MsgSet["REQUIRE"];
-					} */
 				}
 			});
 			//公司
@@ -3089,57 +4067,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					/*var _company=val;
-					
-					//称呼
-					var _title_id=elem.id.replace("r_company","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_company","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					
-					//姓名
-					var _name_id=elem.id.replace("r_company","r_name");
-					var _name=$("#"+_name_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_company","r_post");
-					var _post=$("#"+_post_id).val();
-					
-					//区号
-					var _phone_area_id=elem.id.replace("r_company","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_company","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_company","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_company","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_company","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_company","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_company","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_company","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_company","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_company","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_gname!=""||_name!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!="")&&_company=="")
-					{
-						return MsgSet["REQUIRE"];
-					} */
 				}
 			});
 			//职务
@@ -3148,54 +4075,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					/*var _post=val;
-					//称呼
-					var _title_id=elem.id.replace("r_post","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_post","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_post","r_name");
-					var _name=$("#"+_name_id).val();
-					//公司
-					var _company_id=elem.id.replace("r_post","r_company");
-					var _company=$("#"+_company_id).val();
-					//区号
-					var _phone_area_id=elem.id.replace("r_post","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_post","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_post","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_post","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_post","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_post","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_post","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_post","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_post","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_post","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!="")&&_post=="")
-					{
-						return MsgSet["REQUIRE"];
-					}*/
 				}
 			});
 			
@@ -3205,61 +4084,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return this._checkHtml(val,elem,"phone_area");
-					/*
-					var _phone_area = val;
-					//称呼
-					var _title_id=elem.id.replace("r_phone_area","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_phone_area","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//手机
-					var _phone_no_id= elem.id.replace("r_phone_area","r_phone_no");
-					var _phone_no = $("#"+_phone_no_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_phone_area","r_name");
-					var _name=$("#"+_name_id).val();
-					//公司
-					var _company_id=elem.id.replace("r_phone_area","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_phone_area","r_post");
-					var _post=$("#"+_post_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_phone_area","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_phone_area","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_phone_area","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_phone_area","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_phone_area","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_phone_area","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_phone_area","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_phone_area","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!=""||_phone_no!="")&&_phone_area=="")
-					{
-						return MsgSet["REQUIRE"];
-					}else{
-						var _result = /^[\d-+]+$/.test(_phone_area);
-						if(!_result&&_phone_area!=""){
-							return MsgSet["FORMATERROR"];
-						}
-					} */
 				}
 			});
 			
@@ -3268,60 +4092,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 			$tjr_phone_no.functionValidator({
 				fun:function(val,elem){
 					return _checkHtml(val,elem,"phone_no");
-					/*
-					var _phone_no=val;
-					//称呼
-					var _title_id=elem.id.replace("r_phone_no","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_phone_no","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//区号
-					var _phone_area_id=elem.id.replace("r_phone_no","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_phone_no","r_name");
-					var _name=$("#"+_name_id).val();
-					//公司
-					var _company_id=elem.id.replace("r_phone_no","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_phone_no","r_post");
-					var _post=$("#"+_post_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_phone_no","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_phone_no","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_phone_no","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_phone_no","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_phone_no","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_phone_no","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_phone_no","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_phone_no","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!=""||_phone_area!="")&&_phone_no=="")
-					{
-						return MsgSet["REQUIRE"];
-					}else{
-						var _result = /^[\d-+]+$/.test(_phone_no);
-						if(!_result&&_phone_no!=""){
-							return MsgSet["FORMATERROR"];
-						}
-					} */
 				}
 			});
 			//邮箱
@@ -3331,70 +4101,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"email");
-					/*
-					var _email=val;
-					//称呼
-					var _title_id=elem.id.replace("r_email","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_email","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_email","r_name");
-					var _name=$("#"+_name_id).val();
-					
-					//公司
-					var _company_id=elem.id.replace("r_email","r_company");
-					var _company=$("#"+_company_id).val();
-					
-					//职务
-					var _post_id=elem.id.replace("r_email","r_post");
-					var _post=$("#"+_post_id).val();
-					
-					//区号
-					var _phone_area_id=elem.id.replace("r_email","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-				
-					//手机
-					var _phone_no_id=elem.id.replace("r_email","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					
-					//性别
-					var _sex_id=elem.id.replace("r_email","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					
-					//关系
-					var _relation_id=elem.id.replace("r_email","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					
-					//备用字段一
-					var _by1_id=elem.id.replace("r_email","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					
-					//备用字段二
-					var _by2_id=elem.id.replace("r_email","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_email","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_email","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_email","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					
-					var std=/^([\w\-\.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\w\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$/;
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!="")&&_email=="")
-					{
-						return MsgSet["REQUIRE"];
-					}else{
-						if (!std.test(_email)&&_email!="")
-						{
-							return MsgSet["FORMATERROR"];
-						}
-					} */
 				}
 			});
 			
@@ -3405,121 +4111,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					/*
-					var _sex=val;
-					//称呼
-					var _title_id=elem.id.replace("r_sex","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_sex","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_sex","r_name");
-					var _name=$("#"+_name_id).val();
-					
-					//公司
-					var _company_id=elem.id.replace("r_sex","r_company");
-					var _company=$("#"+_company_id).val();
-					
-					//职务
-					var _post_id=elem.id.replace("r_sex","r_post");
-					var _post=$("#"+_post_id).val();
-					
-					//区号
-					var _phone_area_id=elem.id.replace("r_sex","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-				
-					//手机
-					var _phone_no_id=elem.id.replace("r_sex","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_sex","r_email");
-					var _email=$("#"+_email_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_sex","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					
-					//备用字段一
-					var _by1_id=elem.id.replace("r_sex","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					
-					//备用字段二
-					var _by2_id=elem.id.replace("r_sex","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_sex","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_sex","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_sex","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!="")&&_sex=="")
-					{
-						return MsgSet["REQUIRE"];
-					}*/
 				}
 			});
-			//$tjr_email.regexValidator({regExp:"^([\\w-.]+)@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.)|(([\\w-]+.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(]?)$",onError:(children[0].recommend_5["itemName"]+MsgSet["FORMATERROR"])});
 			//与申请人关系
 			$tjr_relation.formValidator({tipID:data["itemId"] + children[i - 1].recommend_6["itemId"] + 'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
 			$tjr_relation.functionValidator({
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					
-					/*
-					var _relation=val;
-					//称呼
-					var _title_id=elem.id.replace("r_relation","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_relation","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_relation","r_name");
-					var _name=$("#"+_name_id).val();
-					//公司
-					var _company_id=elem.id.replace("r_relation","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_relation","r_post");
-					var _post=$("#"+_post_id).val();
-					//区号
-					var _phone_area_id=elem.id.replace("r_relation","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_relation","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_relation","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_relation","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_relation","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_relation","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_relation","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_relation","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_relation","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_by1!=""||_by2!=""||_by3!=""||_by4!=""||_by5!="")&&_relation=="")
-					{
-						return MsgSet["REQUIRE"];
-					} */
 				}
 			});
 			//备用字段一
@@ -3528,56 +4127,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					
-					/*
-					var _by1=val;
-					//称呼
-					var _title_id=elem.id.replace("r_by1","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_by1","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_by1","r_name");
-					var _name=$("#"+_name_id).val();
-					//公司
-					var _company_id=elem.id.replace("r_by1","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_by1","r_post");
-					var _post=$("#"+_post_id).val();
-					//区号
-					var _phone_area_id=elem.id.replace("r_by1","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_by1","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_by1","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_by1","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_by1","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_by1","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_by1","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_by1","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_by1","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by2!=""||_by3!=""||_by4!=""||_by5!="")&&_by1=="")
-					{
-						return MsgSet["REQUIRE"];
-					} */
 				}
 			});
 			//备用字段二
@@ -3586,56 +4135,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					
-					/*
-					var _by2=val;
-					//称呼
-					var _title_id=elem.id.replace("r_by2","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_by2","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_by2","r_name");
-					var _name=$("#"+_name_id).val();
-					//公司
-					var _company_id=elem.id.replace("r_by2","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_by2","r_post");
-					var _post=$("#"+_post_id).val();
-					//区号
-					var _phone_area_id=elem.id.replace("r_by2","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_by2","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_by2","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_by2","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_by2","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_by2","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_by2","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_by2","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_by2","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by3!=""||_by4!=""||_by5!="")&&_by2=="")
-					{
-						return MsgSet["REQUIRE"];
-					} */
 				}
 			});
 			//备用字段三
@@ -3644,55 +4143,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					/*
-					var _by3=val;
-					//称呼
-					var _title_id=elem.id.replace("r_by3","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_by3","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_by3","r_name");
-					var _name=$("#"+_name_id).val();
-					//公司
-					var _company_id=elem.id.replace("r_by3","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_by3","r_post");
-					var _post=$("#"+_post_id).val();
-					//区号
-					var _phone_area_id=elem.id.replace("r_by3","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_by3","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_by3","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_by3","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_by3","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_by3","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_by3","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_by3","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_by3","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by4!=""||_by5!="")&&_by3=="")
-					{
-						return MsgSet["REQUIRE"];
-					} */
 				}
 			});
 			//备用字段四
@@ -3701,56 +4151,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					
-					/*
-					var _by4=val;
-					//称呼
-					var _title_id=elem.id.replace("r_by4","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_by4","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_by4","r_name");
-					var _name=$("#"+_name_id).val();
-					//公司
-					var _company_id=elem.id.replace("r_by4","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_by4","r_post");
-					var _post=$("#"+_post_id).val();
-					//区号
-					var _phone_area_id=elem.id.replace("r_by4","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_by4","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_by4","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_by4","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_by4","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_by4","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_by4","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_by4","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段五
-					var _by5_id=elem.id.replace("r_by4","r_by5");
-					var _by5=$("#"+_by5_id).val();
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by5!="")&&_by4=="")
-					{
-						return MsgSet["REQUIRE"];
-					} */
 				}
 			});
 			//备用字段五
@@ -3759,56 +4159,6 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				fun:function(val,elem){
 					
 					return _checkHtml(val,elem,"none");
-					
-					/*
-					var _by5=val;
-					//称呼
-					var _title_id=elem.id.replace("r_by5","r_title");
-					var _title=$("#"+_title_id).val();
-					
-					//名字
-					var _gname_id=elem.id.replace("r_by5","r_gname");
-					var _gname=$("#"+_gname_id).val();
-					//姓名
-					var _name_id=elem.id.replace("r_by5","r_name");
-					var _name=$("#"+_name_id).val();
-					//公司
-					var _company_id=elem.id.replace("r_by5","r_company");
-					var _company=$("#"+_company_id).val();
-					//职务
-					var _post_id=elem.id.replace("r_by5","r_post");
-					var _post=$("#"+_post_id).val();
-					//区号
-					var _phone_area_id=elem.id.replace("r_by5","r_phone_area");
-					var _phone_area=$("#"+_phone_area_id).val();
-					//手机
-					var _phone_no_id=elem.id.replace("r_by5","r_phone_no");
-					var _phone_no=$("#"+_phone_no_id).val();
-					//邮箱
-					var _email_id=elem.id.replace("r_by5","r_email");
-					var _email=$("#"+_email_id).val();
-					//性别
-					var _sex_id=elem.id.replace("r_by5","r_sex");
-					var _sex=$("#"+_sex_id).val();
-					//关系
-					var _relation_id=elem.id.replace("r_by5","r_relation");
-					var _relation=$("#"+_relation_id).val();
-					//备用字段一
-					var _by1_id=elem.id.replace("r_by5","r_by1");
-					var _by1=$("#"+_by1_id).val();
-					//备用字段二
-					var _by2_id=elem.id.replace("r_by5","r_by2");
-					var _by2=$("#"+_by2_id).val();
-					//备用字段三
-					var _by3_id=elem.id.replace("r_by5","r_by3");
-					var _by3=$("#"+_by3_id).val();
-					//备用字段四
-					var _by4_id=elem.id.replace("r_by5","r_by4");
-					var _by4=$("#"+_by4_id).val();
-					if ((_title!=""||_gname!=""||_name!=""||_company!=""||_post!=""||_phone_area!=""||_phone_no!=""||_email!=""||_sex!=""||_relation!=""||_by1!=""||_by2!=""||_by3!=""||_by4!="")&&_by5=="")
-					{
-						return MsgSet["REQUIRE"];
-					} */
 				}
 			});
 			

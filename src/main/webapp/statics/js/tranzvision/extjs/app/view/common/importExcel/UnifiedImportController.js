@@ -109,6 +109,8 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	                            return false;
 	                        }
 	                        
+	                        var outOfRangeFlag = false;
+	                        
 	                        dataWithColumns = responseData;
 	                        var firstLineTitle_1 = me.down('checkboxfield[name=firstLineTitle_1]').getValue();
 	                        for(var i = 0;i<dataWithColumns.length;i++){
@@ -120,7 +122,10 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
                             	});
                             	dataWithColumns[i] = dataTmp;
                             	
-	                            if(dataArray.length==1000)break;/*超过1000行的数据不展示*/
+	                            if(dataArray.length==1500){
+	                            	outOfRangeFlag = true;
+	                            	break;/*超过1500行的数据不展示*/
+	                            }
 	                            columnsLength = (columnsLength==undefined?dataWithColumns[i].length:((columnsLength<dataWithColumns[i].length)?dataWithColumns[i].length:columnsLength));
 	
 	                            if(i==0&&firstLineTitle_1/*首行为标题行*/){
@@ -150,6 +155,15 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	                        displayRowCount.setText(Ext.String.format(displayRowCount.defaultTextMsg, firstLineTitle_1&&dataWithColumns.length==1?0:1,dataArray.length,firstLineTitle_1?dataWithColumns.length-1:dataWithColumns.length));
 	
 	                        Ext.MessageBox.hide();
+	                        
+	                        if(outOfRangeFlag){
+	                        	Ext.Msg.show({
+	                        		title:'提示',
+	                        		msg: '您导入的数据超过了1500条，为了不影响页面展示和数据保存的效率，<br/>超过的部分不予显示和导入。',
+	                        		buttons: Ext.Msg.OK,
+	                        		icon: Ext.Msg.INFO
+	                        	});
+                        	}
 	                    });
 	
 	                },
@@ -183,7 +197,7 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	        var firstLineTitle_2 = me.down('checkboxfield[name=firstLineTitle_2]').getValue(),
 	            columnsData = excelText.split("\n");//获取每行数据
 	
-	        var displayCount,allCount;
+	        var displayCount,allCount,outOfRangeFlag = false;
 	        for(var i = 0;i<columnsData.length;i++){
 	            if(columnsData[i].replace(/(^\s*)|(\s*$)/g, "")=="") continue;
 	
@@ -197,7 +211,7 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	            }else{
 	                dataArray.push(columnData);
 	
-	                if(dataArray.length<=1000){
+	                if(dataArray.length<=1500){
 	                    var jsonData = ""
 	                    for(var j=0;j<columnData.length;j++){
 	                        var encodeColumnData = Ext.JSON.encode(columnData[j].replace(/</g,'&lt').replace(/>/g,'&gt'));
@@ -208,9 +222,21 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
 	                        }
 	                    }
 	                    data.push(Ext.JSON.decode("{"+jsonData+"}"));
+	                }else{
+	                	outOfRangeFlag = true;
+	                	break;
 	                }
 	            }
 	        }
+	        
+	        if(outOfRangeFlag){
+	        	Ext.Msg.show({
+            		title:'提示',
+            		msg: '您导入的数据超过了1500条，为了不影响页面展示和数据保存的效率，<br/>超过的部分不予显示和导入。',
+            		buttons: Ext.Msg.OK,
+            		icon: Ext.Msg.INFO
+            	});
+        	}
 	        
 	        me.dataArray=dataArray;
 	        me.columnsLength = columnsLength;
@@ -379,8 +405,9 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
         	});
     	});
     	
-        //提交的数据
-        var savedData = [];
+        //校验和提交的数据
+    	var ultimateData,
+    		savedData = [];
         Ext.each(me.dataArray,function(dataItem,index){
         	var savedDataItem = {};
         	Ext.Object.each(columnFieldMap, function(columnIndex, field) {
@@ -390,24 +417,100 @@ Ext.define('KitchenSink.view.common.importExcel.UnifiedImportController', {
         	savedData.push(savedDataItem);
     	});
        
+        ultimateData = {
+    			tplId:me.tplId,
+    			enableAdjustMapping:me.enableAdjustMapping,
+    			fields:savedFields,
+    			data:savedData
+    	}
         
-        var tzParams = Ext.encode({
+        var tzValidationParams = Ext.encode({
         	ComID:"TZ_UNIFIED_IMP_COM",
         	PageID:"TZ_UNIFIED_IMP_STD",
-        	OperateType:"U",
-        	comParams:{
-        		update:[{
-        			tplId:me.tplId,
-        			enableAdjustMapping:me.enableAdjustMapping,
-        			fields:savedFields,
-        			data:savedData
-        		}]
-        	}
+        	OperateType:"tzValidate",
+        	comParams:ultimateData
+        });
+        
+        var tzSavingParams = Ext.encode({
+        	ComID:"TZ_UNIFIED_IMP_COM",
+        	PageID:"TZ_UNIFIED_IMP_STD",
+        	OperateType:"tzSave",
+        	comParams:ultimateData
         });
 
-		Ext.tzSubmit(tzParams,function(){
-			me.up('window').close();
-		},"",true,this);
+        //保存数据
+        var tzSubmit = function(){
+        	Ext.MessageBox.show({
+                msg: '保存数据中，请稍候...',
+                progress: true,
+                progressText:'保存数据中...',
+                width: 300,
+                wait: {
+                    interval: 50
+                }
+            });
+        	Ext.defer(
+	          function(){
+	        	  Ext.tzSubmit(tzSavingParams,function(){
+	          		Ext.MessageBox.hide();
+	      			me.up('window').close();
+	      		},"",false,null,function(){
+	      			Ext.MessageBox.hide();
+	      		});
+	          },10,this,[tzSavingParams]);
+        	
+        }
+        
+        //校验数据
+        Ext.MessageBox.show({
+            msg: '校验数据中，请稍候...',
+            progress: true,
+            progressText:'校验数据中...',
+            width: 300,
+            wait: {
+                interval: 50
+            }
+        });
+        
+        Ext.defer(
+          function(){
+        	  Ext.tzSubmit(tzValidationParams,function(response){
+              	Ext.MessageBox.hide();
+              	//校验通过
+              	if(response!=undefined&&response.result==true){
+              		//如果有校验提示信息，则弹出提示，让用户自行选择是否保存
+              		if(response.resultMsg!=undefined&&_this.trim(response.resultMsg)!=""){
+              			Ext.Msg.confirm("确认",response.resultMsg+"<br/>是否继续导入？",function(btn){
+              				if(btn=="yes"){
+              					tzSubmit();
+              				}
+              			});
+              		}else{
+              			tzSubmit();
+              		}
+              	}else{
+              		//校验不通过则弹出提示，不允许进行保存
+              		if(response!=undefined&&response.resultMsg!=undefined&&_this.trim(response.resultMsg)!=""){
+              			Ext.Msg.show({
+              				title:"提示",
+              				icon:Ext.MessageBox.ERROR,
+              				msg:"数据校验未通过！<br/>"+response.resultMsg
+              			});
+              			
+              		}else{
+              			Ext.Msg.show({
+              				title:"提示",
+              				icon:Ext.MessageBox.ERROR,
+              				msg:"数据校验未通过，请检查导入数据，如果修改数据重试之后仍不成功请联系管理员。"
+              			});
+              		}
+              	}
+              	
+      		},false,false,null,function(){
+      			Ext.MessageBox.hide();
+      		});
+          },10,this,[tzValidationParams]);
+        
     },
     
     trim:function(str){ 

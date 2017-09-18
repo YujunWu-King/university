@@ -24,7 +24,7 @@ function noteing(str,t)
 		"left":$(window).width()/2-$(".noteing").width()/2
 	}).fadeIn("1000",function(){
 //		setTimeout(function(){
-			$(".noteing").fadeOut(1000,function(){$(this).remove();});
+			$(".noteing").fadeOut(3000);
 //		},2000);
 	}).on("click",function(){
 		$(this).remove();

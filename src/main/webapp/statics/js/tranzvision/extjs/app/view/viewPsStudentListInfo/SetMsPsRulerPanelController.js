@@ -117,7 +117,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 			win = new ViewClass();
 			//操作类型设置为新增
 			win.actType = "add";
-			console.log(win.actType);
+			//console.log(win.actType);
 			me.getView().add(win);
 			win.on('afterrender', function(window) {
 				var splitbut = window.down('splitbutton[reference=batchsetsplit]');
@@ -127,8 +127,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 					var formData = responseData.judggroup;
 					var groupid = formData.substring(0, formData.indexOf("|"));
 					var groupname = formData.substring(formData.indexOf("|") + 1, formData.length + 1);
-					console.log(groupid);
-					console.log(groupname);
+					//console.log(groupid);
+					//console.log(groupname);
 					var groupidarray = groupid.split(",");
 					var groupnamearray = groupname.split(",");
 					for (i = 0; i < groupnamearray.length; i++) {
@@ -156,7 +156,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 					window.down('grid').columns[2].editor.store = states;
 				}
 
-					console.log(menuItems);
+					//console.log(menuItems);
 					splitbut.setMenu(menuItems, true);
 
 				});
@@ -170,7 +170,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 	//添加评委menu动态方法。
 	Batchsetuppwteam: function(btn) {
 		var strvalue = btn.getValue();
-		console.log(strvalue);
+		//console.log(strvalue);
 		var attaList = "";
 		var m = 0;
 		var store = btn.findParentByType('grid').getStore();
@@ -195,8 +195,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 		var groupidarray = [];
 		var groupnamearray = [];
 
-		console.log("new:" + newTab.name);
-		console.log("old:" + oldTab.name);
+		//console.log("new:" + newTab.name);
+		//console.log("old:" + oldTab.name);
 		if (newTab.title == "面试评委") {
 			var gridstore = newTab.down('grid').getStore();
 			var form = tabs.findParentByType('setmspsruler').down('form').getForm();
@@ -266,8 +266,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 					data: selectdata
 				});
 				//判断是否为空,若为空 则不执行
-				if(newTab.down('grid').columns[2].editor!=null){
-					newTab.down('grid').columns[2].editor.store = states;
+				if(newTab.down('grid').columns[3].editor!=null){
+					newTab.down('grid').columns[3].editor.store = states;
 				}
 
 				
@@ -278,14 +278,14 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 				return false;
 			}
 		} else {
-			console.log("不是grid");
+			//console.log("不是grid");
 
 
 		}
 
 	},
 	readervalue: function(v) {
-		console.log(v);
+		//console.log(v);
 		var groupidarray = [];
 		var groupnamearray = [];
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"JUDGROUPALL","comParams":{}}';
@@ -393,26 +393,79 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 			}
 		}
 		var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"RESETPWD","comParams":{"export":[' + selksList + ']}}';
-		Ext.tzSubmit(tzParams, function(respDate) {
-
-
-		}, "设置成功!", true, this)
+		
+		Ext.MessageBox.confirm('确认', '您确定要重置所选评委密码吗?', function(btnId) {
+			if (btnId == 'yes') {
+		   Ext.tzSubmit(tzParams,function(responseData){
+            	      	            	
+          
+            },"设置成功",true,this);
+								
+			}
+		}, this);
+		
 		
 	},
-	   //确定按钮
+/*	   
     ensurepwinfromSave:function(btn){
     var form = this.getView().child("form").getForm();
+    
+    
 
         if (form.isValid()) {
+        	
             //获得表单信息
             var tzParams = this.getResSetInfoParams();
             var comView = this.getView();
+            
+            
             Ext.tzSubmit(tzParams,function(responseData){
+            	
+            	
+            	
 
                 comView.close();
             },"",true,this);
         }
-},
+},*/
+	//确定按钮
+ensurepwinfromSave:function(btn){
+		var form = this.getView().child("form").getForm();
+		var comView = this.getView();
+		
+        if (form.isValid()) {
+            //获得表单信息
+        	
+        	//保存评委数，和组数
+            var classId=form.findField('classId').getValue();
+            var batchId=form.findField('batchId').getValue();
+            var grid=btn.findParentByType('panel').down('grid');
+            var kspwnum=grid.down('numberfield[name=ksRevedpwnum]').getValue();
+            var pwTeamnum=grid.down('numberfield[name=countTeamnum]').getValue();
+            var tzParams = this.getResSetInfoParams();
+            var store = grid.getStore();
+            var editRecs = store.getModifiedRecords();
+             var comParamspw= '{"typeFlag":"PWTEAMNUM","data":{"classId":'+classId+',"batchId":'+batchId+',"kspwnum":'+kspwnum+',"pwTeamnum":'+pwTeamnum+'}}';
+
+            for(var i=0;i<editRecs.length;i++) {
+               comParamspw = comParamspw + ',' + '{"typeFlag":"JUDGE","classId":'+classId+',"batchId":'+batchId+',"data":' + Ext.JSON.encode(editRecs[i].data) + '}';
+            }
+            var tzParamspw = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"U","comParams":{"add":['+comParamspw+']}}';
+   
+            var num=btn.findParentByType('panel').down('grid');
+            var comView = this.getView();
+            Ext.tzSubmit(tzParams,function(responseData){
+            	
+            	Ext.tzLoad(tzParamspw,function(responseData){
+            	
+            	});
+            	
+                comView.actType = "update";
+                comView.close();
+            },"",true,this);
+        }
+		
+	},
 	 
 	onpwinfodescSave:function(btn){
 		var form = this.getView().child("form").getForm();
@@ -421,13 +474,20 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
             //获得表单信息
         	
         	//保存评委数，和组数
-        	 var classId=form.findField('classId').getValue();
+            var classId=form.findField('classId').getValue();
             var batchId=form.findField('batchId').getValue();
-            var kspwnum=btn.findParentByType('panel').down('grid').down('numberfield[name=ksRevedpwnum]').getValue();
-            var pwTeamnum=btn.findParentByType('panel').down('grid').down('numberfield[name=countTeamnum]').getValue();
+            var grid=btn.findParentByType('panel').down('grid');
+            var kspwnum=grid.down('numberfield[name=ksRevedpwnum]').getValue();
+            var pwTeamnum=grid.down('numberfield[name=countTeamnum]').getValue();
             var tzParams = this.getResSetInfoParams();
-            var comParamspw= '"add":[{"typeFlag":"PWTEAMNUM","data":{"classId":'+classId+',"batchId":'+batchId+',"kspwnum":'+kspwnum+',"pwTeamnum":'+pwTeamnum+'}}]';
-            var tzParamspw = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"U","comParams":{'+comParamspw+'}}';
+            var store = grid.getStore();
+            var editRecs = store.getModifiedRecords();
+             var comParamspw= '{"typeFlag":"PWTEAMNUM","data":{"classId":'+classId+',"batchId":'+batchId+',"kspwnum":'+kspwnum+',"pwTeamnum":'+pwTeamnum+'}}';
+
+            for(var i=0;i<editRecs.length;i++) {
+               comParamspw = comParamspw + ',' + '{"typeFlag":"JUDGE","classId":'+classId+',"batchId":'+batchId+',"data":' + Ext.JSON.encode(editRecs[i].data) + '}';
+            }
+            var tzParamspw = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"U","comParams":{"add":['+comParamspw+']}}';
    
             var num=btn.findParentByType('panel').down('grid');
             var comView = this.getView();
@@ -461,13 +521,42 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
        
         //提交参数
         var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        console.log(tzParams);
+        //console.log(tzParams);
         return tzParams;
     },
 	    onPwinfoClose:function(){
         this.getView().close();
 
-    }
+    },
+    
+    
+    //删除评委
+	deleteMsPw: function(view, rowIndex) {
+         var store = view.findParentByType("grid").store;
+		 var selRec = store.getAt(rowIndex);
+         //资源集合ID
+         var judgId = selRec.get("judgId");
+         var form=view.findParentByType("setmspsruler").child("form").getForm();
+		 var batchId= form.findField('batchId').getValue();
+		 var classId= form.findField('classId').getValue();
+		 
+		 var comparams = '{"classId":' + classId + '},{"batchId":' + batchId + '},{"judgId":'+Ext.JSON.encode(judgId)+'}';
+
+		 var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_JUDGES_STD","OperateType":"U","comParams":{"delete":[' + comparams + ']}}';
+			
+        
+		Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId) {
+			if (btnId == 'yes') {
+		   Ext.tzSubmit(tzParams,function(responseData){
+            	
+            	
+            	
+               store.removeAt(rowIndex);
+            },"",true,this);
+								
+			}
+		}, this);
+	}
 
 
 

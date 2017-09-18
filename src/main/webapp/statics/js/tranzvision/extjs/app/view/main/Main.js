@@ -91,24 +91,47 @@ Ext.define('KitchenSink.view.main.Main', {
                         break;
                 }
             }
+            
+            //只显示内容模式则隐藏主区域头
+            if(me.isContentIndex==true){
+            	me.down("contentPanel").getHeader().hide();
+            }
         }
     },
     layout: 'border',
     stateful: true,
     stateId: 'tranzvision-framework-kitchensink-viewport',
 
-    items: [{
-        region: 'north',
-        xtype: 'appHeader'
-    }, {
-        region: 'center',
-        xtype: 'contentPanel',
-        reference: 'contentPanel',
-        dockedItems: [{
-            xtype: 'navigation-breadcrumb',
-            reference: 'breadcrumb>'
-        }]
-    }],
+    initComponent: function() {
+    	var me = this;
+    	
+    	var items = [{
+            region: 'center',
+            xtype: 'contentPanel',
+            reference: 'contentPanel',
+            dockedItems: [{
+                xtype: 'navigation-breadcrumb',
+                reference: 'breadcrumb>'
+            }]
+        }];
+    		
+    	if(TranzvisionMeikecityAdvanced.Boot.getQueryString("model")=="content"){
+    		this.isContentIndex = true;
+    		items.push({
+                region: 'north',
+                xtype: 'appHeader',
+                hidden:true
+            });
+    	}else{
+    		items.push({
+                region: 'north',
+                xtype: 'appHeader'
+            });
+    	}
+    	
+    	this.items = items;
+    	this.callParent();
+    },
 
     applyState: function(state) {
         this.getController().applyState(state);

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcwjDcAetMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcwjDcAet" >
+    <id column="RUN_CNTL_ID" property="runCntlId" jdbcType="VARCHAR" />
+    <result column="TZ_DC_WJ_ID" property="tzDcWjId" jdbcType="VARCHAR" />
+    <result column="TZ_REL_URL" property="tzRelUrl" jdbcType="VARCHAR" />
+    <result column="TZ_JD_URL" property="tzJdUrl" jdbcType="VARCHAR" />
+    <result column="TZ_DC_TYPE" property="tzDcType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    RUN_CNTL_ID, TZ_DC_WJ_ID, TZ_REL_URL, TZ_JD_URL, TZ_DC_TYPE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_DCWJ_DC_AET
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_DCWJ_DC_AET
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcwjDcAet" >
+    insert into PS_TZ_DCWJ_DC_AET (RUN_CNTL_ID, TZ_DC_WJ_ID, TZ_REL_URL, 
+      TZ_JD_URL, TZ_DC_TYPE)
+    values (#{runCntlId,jdbcType=VARCHAR}, #{tzDcWjId,jdbcType=VARCHAR}, #{tzRelUrl,jdbcType=VARCHAR}, 
+      #{tzJdUrl,jdbcType=VARCHAR}, #{tzDcType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcwjDcAet" >
+    insert into PS_TZ_DCWJ_DC_AET
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="runCntlId != null" >
+        RUN_CNTL_ID,
+      </if>
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID,
+      </if>
+      <if test="tzRelUrl != null" >
+        TZ_REL_URL,
+      </if>
+      <if test="tzJdUrl != null" >
+        TZ_JD_URL,
+      </if>
+      <if test="tzDcType != null" >
+        TZ_DC_TYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="runCntlId != null" >
+        #{runCntlId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcWjId != null" >
+        #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRelUrl != null" >
+        #{tzRelUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJdUrl != null" >
+        #{tzJdUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcType != null" >
+        #{tzDcType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcwjDcAet" >
+    update PS_TZ_DCWJ_DC_AET
+    <set >
+      <if test="tzDcWjId != null" >
+        TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRelUrl != null" >
+        TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJdUrl != null" >
+        TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDcType != null" >
+        TZ_DC_TYPE = #{tzDcType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcwjDcAet" >
+    update PS_TZ_DCWJ_DC_AET
+    set TZ_DC_WJ_ID = #{tzDcWjId,jdbcType=VARCHAR},
+      TZ_REL_URL = #{tzRelUrl,jdbcType=VARCHAR},
+      TZ_JD_URL = #{tzJdUrl,jdbcType=VARCHAR},
+      TZ_DC_TYPE = #{tzDcType,jdbcType=VARCHAR}
+    where RUN_CNTL_ID = #{runCntlId,jdbcType=VARCHAR}
+  </update>
+</mapper>

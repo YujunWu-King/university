@@ -126,7 +126,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                             createNewOnBlur: false,
                             filterPickList: true,
                             queryMode: 'local',
-                            publishes: 'value',
+                            //publishes: 'value',
                             //minWidth:400,
                             //maxWidth:600,
                             width: 600,
@@ -139,19 +139,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                         tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.adddAud","添加听众"),
                         iconCls:"add",
                         handler:'adddAudience'
-                    },/*{
-                        text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarClearFilters","清除筛选条件"),
-                        tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarClearFiltersTip","清除筛选条件"),
-                        iconCls:"reset",
-                        reference:'msArrSetStuListClearFiltersBtn',
-                        handler:'onClearFilters',
-                        disabled:true
                     },{
-                        text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarAdd","新增"),
-                        tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarAddTip","新增"),
-                        iconCls:"add",
-                        handler:'addIntervieStus'
-                    },*/{
                         text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarRemove","删除"),
                         tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarRemoveTip","删除"),
                         iconCls:"remove",
@@ -221,25 +209,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     //    }
                     //    return record.get('msZGFlag');
                     //},
-                },/*{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.city","所在城市") ,
-                    filter: {
-                        type: 'string'
-                    },
-                    sortable: true,
-                    dataIndex: 'city',
-                    minWidth: 105,
-                    flex:1
                 },{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.country","所在国家") ,
-                    filter: {
-                        type: 'string'
-                    },
-                    sortable: true,
-                    dataIndex: 'country',
-                    minWidth: 105,
-                    flex:1
-                },*/{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.label","标签") ,
                     filter: {
                         type: 'string'
@@ -251,7 +221,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                 }],
                 bbar: {
                     xtype: 'pagingtoolbar',
-                    pageSize: 10,
+                    pageSize: 500,
                     store: interviewArrangeSetStuListGridStore,
                     displayInfo: true,
                     plugins: new Ext.ux.ProgressBarPager()

@@ -4,7 +4,9 @@
         'Ext.data.*',
         'Ext.util.*',
         'KitchenSink.view.automaticScreen.autoScreenController',
-        'KitchenSink.view.automaticScreen.autoTagOrFmListStore',
+        'KitchenSink.view.automaticScreen.autoTagStore',
+        'KitchenSink.view.automaticScreen.fmqdListStore',
+        'KitchenSink.view.automaticScreen.sdbqListStore',
         'KitchenSink.view.automaticScreen.autoTagOrFmListModel'
     ],
     xtype: 'autoScreenDetails',
@@ -14,8 +16,10 @@
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
 	
 	constructor: function(config){
+		
 		this.tzConfig = config;
 		this.storeReload = config.storeReload;
+
 		this.callParent();	
 	},
 
@@ -23,38 +27,18 @@
         Ext.util.CSS.createStyleSheet(" .readOnly-tagfield-cls div {background:#eee;}","readOnly-tagfield-cls");
         
     	var config = this.tzConfig;
-    	
-    	var ksbqConfig = config;
-    	ksbqConfig.queryType = "KSBQ";
-    	
-    	var fmqdConfig = config;
-    	fmqdConfig.queryType = "FMQD";
-    	
-    	//考生自动标签store
-		var ksbqStore = new KitchenSink.view.automaticScreen.autoTagOrFmListStore(ksbqConfig);
-		//负面清单store
-		var fmqdStore = new KitchenSink.view.automaticScreen.autoTagOrFmListStore(fmqdConfig);
-		
-		//手工标签
-		var labelTagStore= new KitchenSink.view.common.store.comboxStore({
-            recname:'TZ_TAG_STORE_V',
-            condition:{
-                TZ_JG_ID:{
-                    value:Ext.tzOrgID,
-                    operator:'01',
-                    type:'01'
-                },
-                TZ_APP_INS_ID:{
-                    value: config.appId,
-                    operator:'01',
-                    type:'01'
-                }
-            },
-            result:'TZ_LABEL_ID,TZ_LABEL_NAME'
-        });
-		labelTagStore.load();
 
+    	//考生自动标签store
+		var ksbqStore = new KitchenSink.view.automaticScreen.autoTagStore(config);
+
+		//负面清单store
+		var fmqdStore = new KitchenSink.view.automaticScreen.fmqdListStore(config);
+		
+		//手工标签store
+		var labelTagStore = new KitchenSink.view.automaticScreen.sdbqListStore(config);
+		
     	//初筛结果Store
+		/*
 		var csStatusStore = Ext.create('Ext.data.Store', {
 			 fields: [{
 				 	name:'value'
@@ -69,7 +53,9 @@
              		descr: '淘汰'
              	}]
 		 });
-    	
+    	*/
+		var csStatusStore = new KitchenSink.view.common.store.appTransStore("TZ_ZDCS_JG");
+		
     	Ext.apply(this, {
     	   items: [{        
 		        xtype: 'form',
@@ -146,8 +132,10 @@
 		        	store: csStatusStore,
 		        	queryMode: 'local',
 		            editable:false,
-		            valueField: 'value',
-		    		displayField: 'descr'
+		            //valueField: 'value',
+		    		//displayField: 'descr'
+		            valueField: 'TValue',
+	            	displayField: 'TSDesc'
 		        },{
 		        	xtype: 'displayfield',
 		        	name: 'ranking',
@@ -159,6 +147,7 @@
 		        	displayField: 'desc',
                     valueField: 'id',
                     queryMode: 'local',
+                    store: fmqdStore,
                     readOnly: true
 		        },{
 		        	xtype: 'tagfield',
@@ -167,14 +156,17 @@
 		        	displayField: 'desc',
                     valueField: 'id',
                     queryMode: 'local',
+                    store: ksbqStore,
                     readOnly: true
 		        },{
 		        	xtype: 'tagfield',
 		        	name: 'manualLabel',
 		        	fieldLabel: '手工标签',
 		        	store:labelTagStore,
-                    valueField: 'TZ_LABEL_ID',
-                    displayField: 'TZ_LABEL_NAME',
+//                    valueField: 'TZ_LABEL_ID',
+//                    displayField: 'TZ_LABEL_NAME',
+		        	displayField: 'desc',
+                    valueField: 'id',
                     filterPickList:true,
                     createNewOnEnter: true,
                     createNewOnBlur: true,

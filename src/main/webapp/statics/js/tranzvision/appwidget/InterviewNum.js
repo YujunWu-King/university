@@ -23,7 +23,20 @@ SurveyBuild.extend("InterviewNum", "baseComponent", {
             	data.wzsm = data.value;      	
             }
         	
-        	
+            if(SurveyBuild.accessType == "M"){
+//          	  c += '<div class="item">';
+//                c += '    <p>'+data.title+'<span>*</span></p>';
+//                c += '    <div class="text-box"><input type="text" class="text1" id="' + data.itemId + '"  name="' + data.itemId + '" value = "' + data.value + '" /></div>';
+//                c += '</div>';
+                
+                c += '<div class="item">';
+                c += '    <p>'+data.title+'<span>*</span></p>';
+                c += '    <div class="text-box"><input readonly="true" type="text" class="text1" id="' + data.itemId + '"  name="' + data.itemId + '" value = "' + data.value + '" /></div>';
+                c += '</div>';
+                
+                
+                
+            }else{
             c += '<div class="input-list">';
             c += '	<div class="input-list-info left"><span class="red">*</span>' + data.title + '</div>';
             c += '	<div class="input-list-text left">' + data.value + '</div>';
@@ -40,7 +53,7 @@ SurveyBuild.extend("InterviewNum", "baseComponent", {
 				c += '	<div class="clear"></div>';
 				c += '</div>';
 			}
-            
+            }
         } else {
             c += '<div class="question-answer">';
             c +=         '<div class="format">';

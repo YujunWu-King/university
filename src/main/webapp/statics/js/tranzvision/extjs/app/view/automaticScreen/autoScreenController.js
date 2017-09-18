@@ -30,6 +30,13 @@
 				var store = btn.findParentByType("grid").store;
 				store.tzStoreParams = seachCfg;
 				store.load();
+				
+				
+				var tzParams = '{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"getSearchSql","comParams":'+seachCfg+'}';
+				Ext.tzLoad(tzParams,function(responseData){
+					var getedSQL = responseData.searchSql;
+					panel.getedSQL = getedSQL;
+				});
 			}
 		});
 	},
@@ -181,7 +188,7 @@
 			processIns = respData.processIns;
 		});
 		
-		if(processIns>0 && (status=="RUNNING" || status=="STARTED" || status=="QUENED")){
+		if(processIns>0 && (status=="RUNNING" || status=="STARTED" || status=="QUENED" || status=="SCHEDULED")){
 			Ext.tzBatchProcessDetails({
 				//进程实例ID
 				processIns: processIns,
@@ -193,17 +200,25 @@
 			Ext.MessageBox.confirm('提示', '开启自动初筛后，系统会清除当前项目下的所有初筛信息重新打分。自动初筛进程可能会持续一段时间。是否确定开启自动初筛进程？', 
 					function(btnId){
 				if(btnId == 'yes'){
-					comParamsObj.OperateType = "tzRunBatchProcess";
-					tzParams = Ext.JSON.encode(comParamsObj);
+					var comParamsObj2 = {
+							ComID: 'TZ_AUTO_SCREEN_COM',
+							PageID: 'TZ_AUTO_SCREEN_STD',
+							OperateType: 'runBatchProcess',
+							comParams:{
+								classId: classId,
+								batchId: batchId
+							}
+						};
+					console.log(comParamsObj2);
+					var tzParams2 = Ext.JSON.encode(comParamsObj2);
+					console.log(tzParams2);
 					
-					Ext.tzSubmit(tzParams,function(respData){
+					Ext.tzSubmit(tzParams2,function(respData){
 						var processIns = respData.processIns;
 						Ext.tzBatchProcessDetails({
 							//进程实例ID
 							processIns: processIns,
-							callBack:function(statusCode){
-								
-							}
+							callBack:function(statusCode){}
 						});
 					},"运行成功",true,this);
 				}
@@ -416,6 +431,39 @@
 			}
 			var tzParams = Ext.JSON.encode(comParamsObj);
 			
+			/*
+			//手工标签
+			var labelTagStore= new KitchenSink.view.common.store.comboxStore({
+	            recname:'TZ_TAG_STORE_V',
+	            condition:{
+	                TZ_JG_ID:{
+	                    value:Ext.tzOrgID,
+	                    operator:'01',
+	                    type:'01'
+	                },
+	                TZ_APP_INS_ID:{
+	                    value: appId,
+	                    operator:'01',
+	                    type:'01'
+	                }
+	            },
+	            result:'TZ_LABEL_ID,TZ_LABEL_NAME'
+	        });
+			labelTagStore.load({
+				callback: function(records, options, success){
+					
+					Ext.tzLoad(tzParams,function(respData){
+						var formData = respData;
+						form.setValues(formData);
+						
+						csDetailsform.down('tagfield[name=negativeList]').addCls('readOnly-tagfield-cls');
+						csDetailsform.down('tagfield[name=autoLabel]').addCls('readOnly-tagfield-cls');
+					});
+				}
+			});
+			csDetailsform.down('tagfield[name=manualLabel]').setStore(labelTagStore);
+			*/
+			
 			Ext.tzLoad(tzParams,function(respData){
 				var formData = respData;
 				form.setValues(formData);
@@ -564,6 +612,164 @@
             }]
         });
         win.show();
+	},
+	
+	
+	//将查询结果所有考生设置为淘汰
+	setSearchScreenNoPass: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		this.setSearchResultHandler(panel,"N");
+	},
+	
+	//将查询结果所有考生取消淘汰 
+	setSearchScreenPass: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		this.setSearchResultHandler(panel,"Y");
+	},
+	
+	setSearchResultHandler: function(panel,type){
+		var grid = panel.down('grid');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		
+		//构造搜索sql
+		if((typeof panel.getedSQL) == "undefined"){
+			searchSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_CS_STU_VW WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_BATCH_ID='"+ batchId +"'";
+		}else{
+			searchSql = panel.getedSQL;
+		}
+		
+		var comParamsObj = {
+			ComID: 'TZ_AUTO_SCREEN_COM',
+			PageID: 'TZ_AUTO_SCREEN_STD',
+			OperateType: 'setSearchPsjgStatus',
+			comParams:{
+				classId: classId,
+				batchId: batchId,
+				setType: type,
+				searchSql: searchSql
+			}
+		};
+		var tzParams = Ext.JSON.encode(comParamsObj);
+		
+		Ext.tzSubmit(tzParams,function(respDate){
+			grid.getStore().reload();
+		},"设置成功",true,this);
+	},
+	
+	
+	
+	
+	//导出选中考生的自动初筛结果
+	exportSelectedZdcsResult: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var grid = panel.down('grid');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		var itemColumns = panel.itemColumns;
+		
+		var selList = grid.getSelectionModel().getSelection();
+		//选中行长度
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择要导出的考生记录");
+			return;
+		}
+		
+		var appInsIds = [];
+	    for(var i=0;i<checkLen;i++){
+	    	appInsIds.push(selList[i].data.appId);
+		}
+	    var comParamsObj = {
+	    	ComID: "TZ_AUTO_SCREEN_COM",
+			PageID: "TZ_AUTO_SCREEN_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				itemColumns: itemColumns,
+				appInsIds: appInsIds
+			}
+	    };
+	   
+	    var className = 'KitchenSink.view.automaticScreen.export.exportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+       
+        win.show();
+	},
+	
+	//导出搜索结果考生的自动初筛结果
+	exportSearchZdcsResult: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		var itemColumns = panel.itemColumns;
+		
+		//构造搜索sql
+		if((typeof panel.getedSQL) == "undefined"){
+			searchSql = "SELECT TZ_APP_INS_ID FROM PS_TZ_CS_STU_VW WHERE TZ_CLASS_ID='"+ classId +"' AND TZ_BATCH_ID='"+ batchId +"'";
+		}else{
+			searchSql = panel.getedSQL;
+		}
+		
+		var comParamsObj = {
+			ComID: "TZ_AUTO_SCREEN_COM",
+			PageID: "TZ_AUTO_SCREEN_STD",
+			OperateType: "EXPORT",
+			comParams: {
+				classId: classId,
+				batchId: batchId,
+				itemColumns: itemColumns,
+				searchSql: searchSql
+			}
+		};
+		
+		
+		var className = 'KitchenSink.view.automaticScreen.export.exportExcelWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	exportObj: comParamsObj
+        });
+        
+        win.show();
+	},
+	
+	//查看并下载导出结果
+	downloadExportFile: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		
+		var className = 'KitchenSink.view.automaticScreen.export.exportExcelWindow';
+    	
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	classId: classId,
+			batchId: batchId,
+        	type: 'download'
+        });
+        
+        var tabPanel = win.lookupReference("packageTabPanel");
+        tabPanel.setActiveTab(1);
+        
+        win.show();
 	}
+	
 	
 });

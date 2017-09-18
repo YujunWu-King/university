@@ -64,6 +64,7 @@ public class BqDefnImpl extends FrameworkImpl {
 			String strbqName = jacksonUtil.getString("bqName");
 			String strDesc = jacksonUtil.getString("bqDesc");
 			String strJava = jacksonUtil.getString("java");
+			String csOut = jacksonUtil.getString("csOut");
 
 			PsTzBiaoqzBqT PsTzBiaoqzBqT = new PsTzBiaoqzBqT();
 			PsTzBiaoqzBqT.setTzBiaoqzId(strbqzID);
@@ -72,6 +73,7 @@ public class BqDefnImpl extends FrameworkImpl {
 			PsTzBiaoqzBqT.setTzBiaoqzName(strbqName);
 			PsTzBiaoqzBqT.setTzBiaoqzJava(strJava);
 			PsTzBiaoqzBqT.setTzDesc(strDesc);
+			PsTzBiaoqzBqT.setTzOutFlg(csOut);
 			int i = PsTzBiaoqzBqTMapper.insert(PsTzBiaoqzBqT);
 			if (i <= 0) {
 				errMsg[0] = "1";
@@ -110,6 +112,7 @@ public class BqDefnImpl extends FrameworkImpl {
 			String strbqName = jacksonUtil.getString("bqName");
 			String strDesc = jacksonUtil.getString("bqDesc");
 			String strJava = jacksonUtil.getString("java");
+			String csOut = jacksonUtil.getString("csOut");
 
 			PsTzBiaoqzBqT PsTzBiaoqzBqT = new PsTzBiaoqzBqT();
 			PsTzBiaoqzBqT.setTzBiaoqzId(strbqzID);
@@ -118,6 +121,7 @@ public class BqDefnImpl extends FrameworkImpl {
 			PsTzBiaoqzBqT.setTzBiaoqzName(strbqName);
 			PsTzBiaoqzBqT.setTzBiaoqzJava(strJava);
 			PsTzBiaoqzBqT.setTzDesc(strDesc);
+			PsTzBiaoqzBqT.setTzOutFlg(csOut);
 			int i = PsTzBiaoqzBqTMapper.updateByPrimaryKeySelective(PsTzBiaoqzBqT);
 			if (i <= 0) {
 				errMsg[0] = "1";
@@ -157,12 +161,13 @@ public class BqDefnImpl extends FrameworkImpl {
 				PsTzBiaoqzBqTKey.setTzJgId(orgid);
 				// 获取标签信息;
 				PsTzBiaoqzBqT PsTzBiaoqzBqT = PsTzBiaoqzBqTMapper.selectByPrimaryKey(PsTzBiaoqzBqTKey);
-
+				
 				returnJsonMap.put("bqzID", strbqzID);
 				returnJsonMap.put("bqID", strbqID);
 				returnJsonMap.put("bqName", PsTzBiaoqzBqT.getTzBiaoqzName());
 				returnJsonMap.put("bqDesc", PsTzBiaoqzBqT.getTzDesc());
 				returnJsonMap.put("java", PsTzBiaoqzBqT.getTzBiaoqzJava());
+				returnJsonMap.put("csOut", PsTzBiaoqzBqT.getTzOutFlg()==null?"":PsTzBiaoqzBqT.getTzOutFlg());
 			} else {
 				errMsg[0] = "1";
 				errMsg[1] = "无法获取页面信息";

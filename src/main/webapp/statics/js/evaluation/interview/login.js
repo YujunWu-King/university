@@ -12,6 +12,8 @@ $(function(){
 
 		var yzm = encodeURI($("#yzm").val());
 		
+		var device = encodeURI($("input[name='device']:checked").val());
+		
 		if($.trim(userName)==""){
 			$("#errormsg").children("span").html("请输入帐号！");
 			$("#errormsg").show();
@@ -30,6 +32,10 @@ $(function(){
 			return; 
 		}
 		
+		var index = layer.load(1, {
+			  shade: [0.5,'#999']
+			});
+		
 		$.ajax({
 			type:"POST",
 			url: ContextPath + "/evaluation/login",
@@ -38,11 +44,12 @@ $(function(){
 				userName:userName,
 				password:password,
 				yzm:yzm,
+				device:device,
 				type:'interview'
 			},
 			dataType:'json',
 			success:function(response){
-		
+				window.setTimeout("layer.close("+index+")",500);
 				if (response.success == "success") {  
 				   $("#errormsg").hide();
 	               	window.location.href=ContextPath+response.indexUrl;
@@ -74,9 +81,9 @@ $(function(){
 				}    
 			},
 		    failure: function () {
-
-				 $("#errormsg").children("span").innerHTML= "数据请求异常,请检查网络或联系管理员！";
-				 $("#errormsg").show();
+		    	window.setTimeout("layer.close("+index+")",500);
+				$("#errormsg").children("span").innerHTML= "数据请求异常,请检查网络或联系管理员！";
+				$("#errormsg").show();
 		    }    
 		});
 	}

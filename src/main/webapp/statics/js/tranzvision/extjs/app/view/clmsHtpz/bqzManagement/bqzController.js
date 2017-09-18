@@ -476,6 +476,10 @@
 		var transID = selRec.get("transID");
 		var language = this.getView().lanageType;
 		var tzParams = '{"ComID":"TZ_GD_TRANSLATE_COM","PageID":"TZ_GD_TRANSXX_STD","OperateType":"QF","comParams":{"transSetID":"'+transSetID+'","transID":"'+transID+'","language":"'+language+'"}}';*/
+
+		if(formParams.csOut != "Y"){
+			formParams.csOut = "N"
+		}
 		
 		//提交参数
 		var tzParams = '{"ComID":"TZ_BIAOQZ_COM","PageID":"TZ_BIAOQ_DEFN_STD","OperateType":"U","comParams":{"'+win.actType+'":['+Ext.JSON.encode(formParams)+']}}';

@@ -61,6 +61,7 @@ public class TzEventsSendEmailServiceImpl extends FrameworkImpl {
 				// 添加听众成员
 				for (Object obj : listBmrIds) {
 					String bmrId = String.valueOf(obj);
+					System.out.println("bmrId=="+bmrId);
 					String sql = "select TZ_CYR_NAME,OPRID from PS_TZ_NAUDLIST_T where TZ_ART_ID=? and TZ_HD_BMR_ID=?";
 					Map<String, Object> mapBmr = sqlQuery.queryForMap(sql, new Object[] { strActivityId, bmrId });
 
@@ -91,7 +92,7 @@ public class TzEventsSendEmailServiceImpl extends FrameworkImpl {
 					}
 
 					createTaskServiceImpl.addAudCy(crtAudi,strName, "", mainPhone, cyPhone, mainEmail, cyEmail, wxh, oprid, "",
-							strActivityId, "");
+							strActivityId, bmrId);
 				}
 
 				Map<String, Object> mapRet = new HashMap<String, Object>();

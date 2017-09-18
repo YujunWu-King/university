@@ -61,11 +61,18 @@ public class TzGkTdClsServiceImpl extends FrameworkImpl {
 			String strAudRyId = tdParams [1];
 			
 			Map<String, Object> map = jdbcTemplate.queryForMap("select TZ_LINK_TYPE,TZ_MLSM_QFPC_ID,TZ_REDT_URL,TZ_ADD_DTTM,TZ_EML_SMS_TASK_ID from PS_TZ_LINKPAR_TBL where TZ_LINKPRA_ID=?",new Object[]{strLinkId});
-			String strLinkType = String.valueOf(map.get("TZ_LINK_TYPE"));
-			String strDxYjId= String.valueOf(map.get("TZ_MLSM_QFPC_ID"));
-			String strLinkSite= String.valueOf(map.get("TZ_REDT_URL"));
-			//Date strAddTime= (Date) map.get("TZ_ADD_DTTM");
-			String strTaskId = String.valueOf(map.get("TZ_EML_SMS_TASK_ID"));
+			String strLinkType = "";
+			String strDxYjId= "";
+			String strLinkSite = "";
+			String strTaskId = "";
+			if(map != null){
+				strLinkType = map.get("TZ_LINK_TYPE") == null ? "":String.valueOf(map.get("TZ_LINK_TYPE"));
+				strDxYjId= map.get("TZ_MLSM_QFPC_ID") == null ?"":String.valueOf(map.get("TZ_MLSM_QFPC_ID"));
+				strLinkSite= map.get("TZ_REDT_URL")==null ?"":String.valueOf(map.get("TZ_REDT_URL"));
+				//Date strAddTime= (Date) map.get("TZ_ADD_DTTM");
+				strTaskId = map.get("TZ_EML_SMS_TASK_ID")==null ?"":String.valueOf(map.get("TZ_EML_SMS_TASK_ID"));
+			}
+			
 			
 			/*获得听众ID*/
 			String strAudId = jdbcTemplate.queryForObject("select TZ_AUDIENCE_ID from PS_TZ_DXYJFSRW_TBL where TZ_EML_SMS_TASK_ID=?", new Object[]{strTaskId},"String");
@@ -114,12 +121,23 @@ public class TzGkTdClsServiceImpl extends FrameworkImpl {
 					psTzYjqfdjjlTMapper.insert(psTzYjqfdjjlT);
 				}
 				
-				System.out.println("==========邮件群发点击记录表 ===========Start======================>");
-				System.out.println("=================com.tranzvision.gd.TZEmailSmsQFBundle.service.impl.TzGkTdClsServiceImpl==========================>");
-				System.out.println("=====================TODO======================>");
-				System.out.println("====================end=======================>");
-
-				//TODO
+				try {
+					/*
+					String root = request.getContextPath();
+					String hmch = jdbcTemplate.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_EDM_HMCH'", "String");
+					if(hmch == null){
+						hmch = "EDM";
+					}
+					strLinkSite = strLinkSite.replace("&", "%26");
+					strLinkSite = strLinkSite.replace("?", "%3F");
+					
+					strReturn = tzGDObject.getHTMLText("HTML.TZEmailSmsQFBundle.TZ_QF_REDIRECT_HTML",root + "/statics/clueSource/edmRedirect.html?hmch=" + hmch + "&hmpl=" + strDxYjId +  "&redirect=" + strLinkSite);
+					*/
+					strReturn = tzGDObject.getHTMLText("HTML.TZEmailSmsQFBundle.TZ_QF_REDIRECT_HTML",strLinkSite);
+				} catch (TzSystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				//String hmch = GetHardcodePointValue("TZ_EDM_HMCH");
 				//%Response.RedirectURL(EncodeURL("/clueSource/edmRedirect.html?hmch=" | &hmch | "&hmpl=" | &strDxYjId | "&redirect=" | &strLinkSite));
 			}
@@ -170,8 +188,8 @@ public class TzGkTdClsServiceImpl extends FrameworkImpl {
 		
 		fileUrl = jdbcTemplate.queryForObject("select TZ_FILE_PATH from PS_TZ_YJQFTXRZ_T where TZ_MLSM_QFPC_ID=? and PRCSINSTANCE=?", new Object[]{emailQfpcId,AEId},"String");
 		if(fileUrl != null && !"".equals(fileUrl)){
-			String RUNSTATUS = jdbcTemplate.queryForObject("SELECT PSQ.RUNSTATUS FROM PSPRCSRQST PSQ WHERE PSQ.PRCSINSTANCE=?", new Object[]{AEId},"String");
-			if("9".equals(RUNSTATUS)){
+			String RUNSTATUS = jdbcTemplate.queryForObject("SELECT TZ_JOB_YXZT FROM TZ_JC_SHLI_T WHERE TZ_JCSL_ID=?", new Object[]{AEId},"String");
+			if("SUCCEEDED".equals(RUNSTATUS)){
 				returnMap.put("fileUrl", fileUrl);
 			}else{
 				errMsg[0] = "1";

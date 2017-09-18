@@ -100,7 +100,21 @@ public class TzAutoScreenEngineServiceImpl {
 		// 成绩模型树根节点
 		String rootSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeRootNode");
 		Map<String, Object> rootMap = sqlQuery.queryForMap(rootSql, new Object[] { socreModelId, orgId });
-
+		
+		
+		/****************************自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----开始*****************************/
+		/**
+		 * 1.删除历史打分
+		 * 2、删除未参与本次初筛的历史初筛考生
+		 */
+		String delScoreItemSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzDelAutoScoreItems");
+		sqlQuery.update(delScoreItemSql, new Object[]{ classId, batchId });
+		
+		String delStuScoreInsSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzDelAutoScreenStudents");
+		sqlQuery.update(delStuScoreInsSql, new Object[]{ classId, batchId });
+		/****************************自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----结束*******************************/
+		
+		
 		// 班级批次下参与自动初筛的考生
 		String sql = "select TZ_APP_INS_ID from PS_TZ_CS_STU_VW where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
 		List<Map<String, Object>> appInsList = sqlQuery.queryForList(sql, new Object[] { classId, batchId });
@@ -135,6 +149,7 @@ public class TzAutoScreenEngineServiceImpl {
 			}
 
 			psTzCsKsTbl.setTzScoreInsId(scoreInsId);
+			psTzCsKsTbl.setTzKshCsjg("Y");
 			psTzCsKsTbl.setRowLastmantDttm(new Date());
 			psTzCsKsTbl.setRowLastmantOprid(oprId);
 
@@ -224,6 +239,7 @@ public class TzAutoScreenEngineServiceImpl {
 				tmp_score = scoreNum;
 			} else {
 				if (scoreNum != tmp_score) {
+					tmp_score = scoreNum;
 					sortNum = (short) (count + 1);
 				}
 			}
@@ -269,6 +285,9 @@ public class TzAutoScreenEngineServiceImpl {
 
 		/***************** 循环执行班级下负面清单标签组标签定义java类---开始 *****************/
 		if (!"".equals(fmqdGroup) && fmqdGroup != null) {
+			// 运行负面清单前根据班级id 和批次id 删除负面标签表;
+			String delNegaListsql = "DELETE FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+			sqlQuery.update(delNegaListsql, new Object[] { classId, batchId });
 			List<Map<String, Object>> fmqdList = sqlQuery.queryForList(autoLabelSql, new Object[] { orgId, fmqdGroup });
 			for (Map<String, Object> fmqdMap : fmqdList) {
 				String labelId = fmqdMap.get("TZ_BIAOQ_ID").toString();

@@ -15,6 +15,7 @@ import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldT;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterFldTKey;
 import com.tranzvision.gd.TZConfigurableSearchMgBundle.model.PsTzFilterYsfT;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -30,6 +31,9 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 	private PsTzFilterFldTMapper psTzFilterFldTMapper;
 	@Autowired
 	private PsTzFilterYsfTMapper psTzFilterYsfTMapper;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
 	
 	/* 查询可以添加的可配置搜索字段列表 */
 	@Override
@@ -50,16 +54,19 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 			String str_page_id = jacksonUtil.getString("PageID");
 			String str_view_name = jacksonUtil.getString("ViewMc");
 			String str_field_name = jacksonUtil.getString("FieldMc");
+			
+			String str_field_view = jacksonUtil.getString("FieldView");
+			
 			if(str_field_name != null){
 				str_field_name = str_field_name.trim().toUpperCase();
 			}
 			
 			int tableNameCount = 0;
-			String tableName = str_view_name;
+			String tableName = str_field_view;
 			String tableNameSql = "select COUNT(1) from TZ_SCHEMA_TABLES_VW where TABLE_NAME=?";
-			tableNameCount = jdbcTemplate.queryForObject(tableNameSql,new Object[]{str_view_name},"Integer");
+			tableNameCount = jdbcTemplate.queryForObject(tableNameSql,new Object[]{str_field_view},"Integer");
 			if(tableNameCount <= 0){
-				tableName =  "PS_" + str_view_name;
+				tableName =  "PS_" + str_field_view;
 			}
 			
 			int total = 0;
@@ -88,6 +95,8 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 						map.put("ViewMc", str_view_name);
 						map.put("FieldMc", str_field_mc);
 						map.put("fieldDesc", str_field_desc);
+						map.put("FieldView", str_field_view);
+						
 						listData.add(map);
 					}catch(Exception e){
 						e.printStackTrace();
@@ -122,12 +131,21 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 				String str_view_name = jacksonUtil.getString("ViewMc");
 				String str_field_name = jacksonUtil.getString("FieldMc");
 				
+				String str_field_view = jacksonUtil.getString("FieldView");
+				
+				String strDeepQueryFlg="";
+				if (str_field_view.equals(str_view_name)){
+					strDeepQueryFlg="N";
+				}else{
+					strDeepQueryFlg="Y";
+				}
+				
 				int tableNameCount = 0;
-				String tableName = str_view_name;
+				String tableName = str_field_view;
 				String tableNameSql = "select COUNT(1) from TZ_SCHEMA_TABLES_VW where TABLE_NAME=?";
-				tableNameCount = jdbcTemplate.queryForObject(tableNameSql,new Object[]{str_view_name},"Integer");
+				tableNameCount = jdbcTemplate.queryForObject(tableNameSql,new Object[]{str_field_view},"Integer");
 				if(tableNameCount <= 0){
-					tableName =  "PS_" + str_view_name;
+					tableName =  "PS_" + str_field_view;
 				}
 				
 				String str_fieldgl_desc = "";
@@ -149,56 +167,69 @@ public class SelectFilterFldServiceImpl extends FrameworkImpl {
 					}
 					String fieldNameSQL = "select DATA_TYPE,COLUMN_COMMENT from TZ_SCHEMA_COLUMNS_VW where TABLE_NAME=? AND COLUMN_NAME=?";
 					Map<String, Object> map = jdbcTemplate.queryForMap(fieldNameSQL,new Object[]{tableName,str_field_name});
-					str_fieldgl_desc = (String) map.get("COLUMN_COMMENT");
-					//String fieldType = (String) map.get("DATA_TYPE");
-					String fieldType =  map.get("DATA_TYPE").toString();
 					
-					psTzFilterFldT = new PsTzFilterFldT();
-					psTzFilterFldT.setTzComId(str_com_id);
-					psTzFilterFldT.setTzPageId(str_page_id);
-					psTzFilterFldT.setTzViewName(str_view_name);
-					psTzFilterFldT.setTzFilterFld(str_field_name);
-					psTzFilterFldT.setTzFilterFldDesc(str_fieldgl_desc);
-					psTzFilterFldT.setTzSortNum(numxh +1);
-					psTzFilterFldTMapper.insertSelective(psTzFilterFldT);
-
-					// 类型String值;
-					String intTypeString = "VARCHAR,CHAR,LONGTEXT,TEXT";
-					PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
-					psTzFilterYsfT.setTzComId(str_com_id);
-					psTzFilterYsfT.setTzPageId(str_page_id);
-					psTzFilterYsfT.setTzViewName(str_view_name);
-					psTzFilterYsfT.setTzFilterFld(str_field_name);
-					if(intTypeString.contains(fieldType.toUpperCase())){
-						psTzFilterYsfT.setTzFilterYsf("07");
-						psTzFilterYsfT.setTzFilterBdyQy("1");
-						psTzFilterYsfT.setTzIsDefOprt("1");
-						psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+					if (map!=null){
 						
-						psTzFilterYsfT.setTzFilterYsf("08");
-						psTzFilterYsfT.setTzIsDefOprt("0");
-						psTzFilterYsfTMapper.insert(psTzFilterYsfT);
-					}else{
-						psTzFilterYsfT.setTzFilterYsf("01");
-						psTzFilterYsfT.setTzFilterBdyQy("1");
-						psTzFilterYsfT.setTzIsDefOprt("1");
-						psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+						str_fieldgl_desc = (String) map.get("COLUMN_COMMENT");
+						//String fieldType = (String) map.get("DATA_TYPE");
+						String fieldType =  map.get("DATA_TYPE").toString();
 						
-						psTzFilterYsfT.setTzFilterYsf("02");
-						psTzFilterYsfT.setTzIsDefOprt("0");
-						psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+						psTzFilterFldT = new PsTzFilterFldT();
+						psTzFilterFldT.setTzComId(str_com_id);
+						psTzFilterFldT.setTzPageId(str_page_id);
+						psTzFilterFldT.setTzViewName(str_view_name);
+						psTzFilterFldT.setTzFilterFld(str_field_name);
+						psTzFilterFldT.setTzFilterFldDesc(str_fieldgl_desc);
+						psTzFilterFldT.setTzSortNum(numxh +1);
 						
-						psTzFilterYsfT.setTzFilterYsf("03");
-						psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+						//增加DeepQuery字段
+						psTzFilterFldT.setTzDeepqueryFlg(strDeepQueryFlg);
+						if("Y".equals(strDeepQueryFlg)){
+							psTzFilterFldT.setTzDeepqueryView(str_field_view);
+							//psTzFilterFldT.setTzDeepqueryFld("");
+						}
+						psTzFilterFldTMapper.insertSelective(psTzFilterFldT);
+	
+						// 类型String值;
+						String intTypeString = "VARCHAR,CHAR,LONGTEXT,TEXT";
+						PsTzFilterYsfT psTzFilterYsfT = new PsTzFilterYsfT();
+						psTzFilterYsfT.setTzComId(str_com_id);
+						psTzFilterYsfT.setTzPageId(str_page_id);
+						psTzFilterYsfT.setTzViewName(str_view_name);
+						psTzFilterYsfT.setTzFilterFld(str_field_name);
+						if(intTypeString.contains(fieldType.toUpperCase())){
+							psTzFilterYsfT.setTzFilterYsf("07");
+							psTzFilterYsfT.setTzFilterBdyQy("1");
+							psTzFilterYsfT.setTzIsDefOprt("1");
+							psTzFilterYsfTMapper.insert(psTzFilterYsfT);
 						
-						psTzFilterYsfT.setTzFilterYsf("04");
-						psTzFilterYsfTMapper.insert(psTzFilterYsfT);
-						
-						psTzFilterYsfT.setTzFilterYsf("05");
-						psTzFilterYsfTMapper.insert(psTzFilterYsfT);
-						
-						psTzFilterYsfT.setTzFilterYsf("06");
-						psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+							psTzFilterYsfT.setTzFilterYsf("08");
+							psTzFilterYsfT.setTzFilterBdyQy("1");
+							psTzFilterYsfT.setTzIsDefOprt("0");
+							psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+							
+						}else{
+							psTzFilterYsfT.setTzFilterYsf("01");
+							psTzFilterYsfT.setTzFilterBdyQy("1");
+							psTzFilterYsfT.setTzIsDefOprt("1");
+							psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+							
+							psTzFilterYsfT.setTzFilterYsf("02");
+							psTzFilterYsfT.setTzIsDefOprt("0");
+							psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+							
+							psTzFilterYsfT.setTzFilterYsf("03");
+							psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+							
+							psTzFilterYsfT.setTzFilterYsf("04");
+							psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+							
+							psTzFilterYsfT.setTzFilterYsf("05");
+							psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+							
+							psTzFilterYsfT.setTzFilterYsf("06");
+							psTzFilterYsfTMapper.insert(psTzFilterYsfT);
+						}
 					}
 
 				}else{

@@ -1,0 +1,169 @@
+<script>
+var tzGeneralURL = "%bind(:1)";
+</script>
+<script type="text/javascript">
+// 这里是修改某一元素某一属性的方法
+
+      
+		function setTab(n,_this){
+			$(_this).parents("ul").find("li").removeClass("chose_on");
+			$(_this).addClass("chose_on");
+			/* var menu=document.getElementById("chose").getElementsByTagName("a");  
+			for(i=0;i<menu.length;i++){
+		   		menu[i].className=i==n?"now2":""; 
+			} */
+			var $title = $(_this).attr("title");
+			var tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYSTATE","LANGUAGE":"' + $("#language").val() + '","search-text":"' + $title + '"}}';
+			
+			$.ajax({
+				'url':tzGeneralURL, //服务器的地址
+				'data':{tzParams:tzByStateParams}, //参数
+				'dataType':'json', //返回数据类型
+				'type':'POST', //请求类型
+				'success':function(f){
+					var data = [];
+					if(f.state.errcode == "0"){
+						data = f.comContent;
+					}
+					var $selectorList = $("#selectorList");
+					if(data.length){
+						$selectorList.empty();
+						$.each(data, function(index,term) {
+							//$('<div class="city_main_city2"><label for="radio" style="cursor:pointer;" onclick="setFanhui2(this);"><input type="radio" name="radio" ccode="'+term.country+'" value="'+ term.descr +'" onclick="setFanhui(this);" />'+term.descr+' ' +term.country+'</label></div>').appendTo($selectorList);							
+							$selectorList.append("<li ccode='" + term.country + "' title='" + term.descr + "' onclick='setFanhui2(this);'>" + term.descr+' ' +term.country + "</li>");
+						});
+					}else{
+						$selectorList.empty();
+					}
+			  	}
+			});
+		}
+		//新增加返回按钮
+		
+	
+         
+		function returnResi(){
+			//关闭窗口后一定要清空该项
+			$("#searchCountry").empty();
+			$("#searchCountry").fadeOut("slow");
+	       // $("#new_school").fadeOut("slow");
+	       $("#body").css("position","relative");
+           $("#MainDiv").fadeIn("slow");
+           
+		}
+	   /*  $("#pop_c").click(function(){
+	       $("#before").hide();
+	       $("#country").fadeIn("slow");
+            loaded ();
+         }); */
+      /*    $(".return_r").click(function(){
+	       
+         });
+          $("#pop_r").click(function(){
+	       $("#before").hide();
+	       $("#new_school").fadeIn("slow");
+           loaded1 ();
+         }); */
+	
+		function closePop(){
+			//$(".shade").hide();
+			//关闭窗口后一定要清空该项
+			$("#searchCountry").empty();
+			$("#body").css("position","relative");
+		}
+		function setFanhui2(obj){
+			$(obj).parents("ul").find("li").removeClass("chose_on");
+			$(obj).addClass("chose_on");
+			var countryCode = $(obj).attr("ccode");
+			var countryDesc = $(obj).attr("title");
+			$("#FanhuiValue").val(countryCode);	
+			//设置返回值
+			var clickId = $("#ParamCon").val();
+// 			console.log(clickId);
+			$("#TZ_SCH_COUNTRY").val(countryCode);
+			
+			$("#" + clickId).val(countryDesc);
+			$("#" + clickId).attr("ccode",countryCode);
+			$("#" + clickId).attr("value",countryDesc);
+			$("#" + clickId).html(countryDesc);
+// 			$("#TZ_SCH_CNAME_Country").val(countryDesc);
+// 			$("#TZ_SCH_CNAME_Country").css("color","#333");
+// 			$("#TZ_SCH_CNAME_Country").attr("ccode",countryCode);
+//			console.log("#TZ_SCH_CNAME_Country_1");
+//			console.log(countryDesc);
+			
+// 			$("#TZ_SCH_CNAME_Country_1").css("color","#333");
+			$("#" + clickId).html(countryDesc);
+// 			$("#" + clickId).css("color","#333");
+			
+			
+			//关闭窗口
+			returnResi();
+			//closePop();
+		}
+	
+		function findData(){
+			var tzByCountryParams='{"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"EJSON","comParams":{"OType":"BYCOUNTRY","LANGUAGE":"' + $("#language").val() + '","search-text":"' + $("#search-text").val() + '"}}';
+			$.ajax({
+				'url':tzGeneralURL, //服务器的地址
+				'data':{tzParams:tzByCountryParams}, //参数
+				'dataType':'json', //返回数据类型
+				'type':'POST', //请求类型
+				'success':function(f){
+					var data = [];
+					if(f.state.errcode == "0"){
+						data = f.comContent;
+					}
+					var $selectorList = $("#selectorList");
+					if(data.length){
+						$selectorList.empty();
+						$.each(data, function(index,term) {
+							//$("<div class='city_main_city2'><label for='radio' style='cursor:pointer;' onclick='setFanhui2(this);'><input type='radio' name='radio' ccode='"+term.country+"' value='"+term.descr+"' onclick='setFanhui(this);'  />"+term.descr+" " +term.country+"</label></div>").appendTo($selectorList);
+							$selectorList.append("<li ccode='" + term.country + "' title='" + term.descr + "' onclick='setFanhui2(this);'>" + term.descr+' ' +term.country + "</li>");
+						 });
+					}else{
+						$selectorList.empty();
+					}
+				}
+			});
+		}
+	</script>
+	<div class="bg1">
+	     <!-- 头部 -->
+	   	 <div class="topbar2" style="position: relative;width:100%;height:2.2rem;background:url(/statics/images/appeditor/m/top_bar.png)no-repeat 0 0;background-size:100%;font-size:0.6rem;line-height:2.2rem;text-align: center;color:#2d5c9f;">
+	   	 	   	 
+	   	    %bind(:6) <a  href="javascript:void(0)" class="return_r"    onclick="returnResi()"><i></i></a>
+	   	 </div>
+	<div class="school_pop" style="margin:3% auto;">
+
+		<div class="pop_tit" style="width:94%;height:auto;margin:2% auto;font-size:0.6rem;color:#8f5dbf;overflow:hidden;">
+			<span>%bind(:2)</span>
+			<!-- <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a> -->
+		</div>
+		<div class="pop_search">
+			<input type="text" name="search-text" id="search-text"
+				style="width: 88%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;float:left;">
+			<a href="javascript:void(0)" id="search" onclick="findData()"><i></i></a>
+		</div>
+		<div class="pop_chose">%bind(:3)</div>
+		<ul class="chose_list">
+			<li onclick="setTab(0,this);" title="非洲 Africa">非洲 Africa</li>
+			<li onclick="setTab(1,this);" title="亚洲 Asia">亚洲 Asia</li>
+			<li onclick="setTab(2,this);" title="欧洲 Europe">欧洲 Europe</li>
+			<li onclick="setTab(3,this);" title="北美洲 North America">北美洲 North America</li>
+			<li onclick="setTab(4,this);" title="大洋洲 Pacific">大洋洲 Pacific</li>
+			<li onclick="setTab(5,this);" title="南美洲 South America">南美洲 South America</li>
+
+		</ul>
+		<!-- <a href="javascript:void(0)" class="login_btn" onclick="returnResi()" style="width:94%;position:fixed;bottom:2%;left:50%;margin:0 0 0 -47%;">确认</a> -->
+		<div class="pop_chose">%bind(:4)</div>
+		<ul id="selectorList" class="country_list"></ul>
+		<input id="FanhuiValue2" type="hidden" /> <input id="language"
+			type="hidden" value="%bind(:5)" />
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		/* $("#search-text").focus(); */
+	})
+</script>

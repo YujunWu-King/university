@@ -114,6 +114,11 @@
                                         xtype: 'textfield',
                                         name: 'appInsID',
                                         hidden: true
+                                    },
+                                    {
+                                    	xtype: 'textfield',
+                                        name: 'packageType',
+                                        hidden: true
                                     }
                                 ]
                             },

@@ -119,7 +119,73 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 			// 获取数据失败，请联系管理员;
 			applicationCenterHtml = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "8",
 					language, "获取数据失败，请联系管理员", "获取数据失败，请联系管理员");
+			
+			//不可报名时的按钮title描述：暂时未开放申请，请耐心等待...;
+			String noApplyTitle = messageTextServiceImpl.getMessageTextWithLanguageCd("TZ_APPCENTER_MESSAGE", "100",language, "暂时未开放申请，请耐心等待...","暂时未开放申请，请耐心等待...");
+			
+			//添加逻辑：只有不在黑名单中且可以申请报名的,如果有没报名的班级则直接显示在线报名;
+			//1:是否允许报名,"N"表示不允许报名;
+			String isAllowedApp = "";
+			//需要查询考生允许报名表 ；
+			isAllowedApp = jdbcTemplate.queryForObject("select TZ_ALLOW_APPLY from PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
+			//黑名单
+			String isBlack = jdbcTemplate.queryForObject("select TZ_BLACK_NAME from PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
+			if(!"Y".equals(isBlack) && "Y".equals(isAllowedApp)){
+				//是否有没报名的班级;
+				String isNoBmClassSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND TZ_CLASS_ID NOT IN (select TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=?)";
+				int hasNoBmNum = jdbcTemplate.queryForObject(isNoBmClassSQL, new Object[] { strSiteId,str_jg_id,oprid }, "Integer");
+				if(hasNoBmNum > 0){
+					int hasBmTotal = jdbcTemplate.queryForObject("select count(1) from PS_TZ_FORM_WRK_T where OPRID=? and TZ_CLASS_ID in (SELECT TZ_CLASS_ID FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN  (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?)  AND TZ_JG_ID=?)",new Object[] { oprid,strSiteId,str_jg_id  },"Integer");
+					//有没有历史报名;
+					if(hasBmTotal > 0){
+						String hisUrl = rootPath + "/dispatcher?classid=applyHis&siteId="+strSiteId;
+						applicationCenterHtml = tzGDObject.getHTMLText(
+								"HTML.TZApplicationCenterBundle.TZ_APPCENTER_CAN_APPLY2", ApplicationCenter,
+								addNewSqBtDesc,hisUrl,viewHistoryDesc);
+					}else{
+						applicationCenterHtml = tzGDObject.getHTMLText(
+								"HTML.TZApplicationCenterBundle.TZ_CLASS_CAN_APPLY", ApplicationCenter,
+								addNewSqBtDesc);
+					}
+					
+					// 加载班级选择div;
+					String classDiv = "";
+					String classselect = "";
+					// 循坏允许报名的班级;
+					String classSQL = "SELECT TZ_CLASS_ID, TZ_CLASS_NAME FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now() AND TZ_CLASS_ID NOT IN (select TZ_CLASS_ID from PS_TZ_FORM_WRK_T where OPRID=?)";
+					List<Map<String, Object>> classList = jdbcTemplate.queryForList(classSQL,
+							new Object[] { strSiteId, str_jg_id,oprid });
+					if (classList != null && classList.size() > 0) {
+						for (int j = 0; j < classList.size(); j++) {
+							String TZ_CLASS_ID = (String) classList.get(j).get("TZ_CLASS_ID");
+							String TZ_CLASS_NAME = (String) classList.get(j).get("TZ_CLASS_NAME");
 
+							if (classselect != null && !"".equals(classselect)) {
+								classselect = classselect + tzGDObject.getHTMLText(
+										"HTML.TZApplicationCenterBundle.TZ_APPCENTER_CLASSS", TZ_CLASS_ID,
+										TZ_CLASS_NAME);
+							} else {
+								classselect = tzGDObject.getHTMLText(
+										"HTML.TZApplicationCenterBundle.TZ_APPCENTER_CLASSS", TZ_CLASS_ID,
+										TZ_CLASS_NAME);
+							}
+
+						}
+					}
+					classDiv = tzGDObject.getHTMLText(
+							"HTML.TZApplicationCenterBundle.TZ_APPCENTER_CLASSSELECT_HTML", selectBkfxDesc,
+							cancleDesc, okDesc, language, classselect);
+					applicationCenterHtml = applicationCenterHtml + classDiv;
+					
+					applicationCenterHtml = tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_CLASS2_SELECT_HTML",
+							request.getContextPath(), ZSGL_URL, strCssDir, applicationCenterHtml, str_jg_id, strSiteId);
+
+					applicationCenterHtml = siteRepCssServiceImpl.repTitle(applicationCenterHtml, strSiteId);
+					applicationCenterHtml = siteRepCssServiceImpl.repCss(applicationCenterHtml, strSiteId);
+					return applicationCenterHtml;
+				}
+			}
+			
 			// 是否开通了班级;
 			String totalSQL = "SELECT count(1) FROM  PS_TZ_CLASS_INF_T where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' and TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':59'),'%Y/%m/%d %H:%i:%s') >= now()";
 			int totalNum = jdbcTemplate.queryForObject(totalSQL, new Object[] { strSiteId, str_jg_id }, "Integer");
@@ -179,15 +245,8 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 					return applicationCenterHtml;
 				} else {
 					// 未报名的显示开始申请按钮;
-					// 1:是否允许报名,"N"表示不允许报名;
-					String isAllowedApp = "";
-					// 需要查询考生允许报名表 ；
-					isAllowedApp = jdbcTemplate.queryForObject(
-							"select TZ_ALLOW_APPLY from PS_TZ_REG_USER_T where OPRID=?", new Object[] { oprid },
-							"String");
-					//黑名单
-					String isBlack = jdbcTemplate.queryForObject("select TZ_BLACK_NAME from PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
-					if ("Y".equals(isBlack) || "N".equals(isAllowedApp)) {
+
+					if ("Y".equals(isBlack) || !"Y".equals(isAllowedApp)) {
 						///不允许报名，是否有以前的报名表，有则显示报名;
 						if(hasAppIns > 0){
 							//applicationCenterHtml = this.getBmlc(hasAppIns, hasClassId, strSiteId, language,hasMsPcName);
@@ -199,7 +258,7 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 						}else{
 							applicationCenterHtml = tzGDObject.getHTMLText(
 									"HTML.TZApplicationCenterBundle.TZ_CLASS_CANTNOT_APPLY", ApplicationCenter,
-									addNewSqBtDesc);
+									addNewSqBtDesc,noApplyTitle);
 						}
 						
 						
@@ -261,7 +320,7 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 					return applicationCenterHtml;
 				}else{
 					applicationCenterHtml = tzGDObject.getHTMLText(
-							"HTML.TZApplicationCenterBundle.TZ_CLASS_CANTNOT_APPLY", ApplicationCenter, addNewSqBtDesc);
+							"HTML.TZApplicationCenterBundle.TZ_CLASS_CANTNOT_APPLY", ApplicationCenter, addNewSqBtDesc,noApplyTitle);
 				}
 				
 				

@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.xmlbeans.impl.jam.mutable.MPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +21,11 @@ import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMappe
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTblKey;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzClpsGzTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzPwExtTMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsGzTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzClpsGzTblKey;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtT;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
@@ -50,6 +51,8 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 	private psTzClpsPwTblMapper psTzClpsPwTblMapper;
 	@Autowired
 	private PsTzClpsGzTblMapper psTzClpsGzTblMapper;
+	@Autowired
+	private PsTzPwExtTMapper psTzPwExtTMapper;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
@@ -102,6 +105,12 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				String bkksNum = mapBasic.get("TZ_BKKS_NUM") == null ? "" : String.valueOf(mapBasic.get("TZ_BKKS_NUM"));
 				String clpsksNum = mapBasic.get("TZ_CLPS_KS_NUM") == null ? "" : String.valueOf(mapBasic.get("TZ_CLPS_KS_NUM"));
 				String judgeNumSet = mapBasic.get("TZ_MSPY_NUM") == null ? "" : String.valueOf(mapBasic.get("TZ_MSPY_NUM"));
+				//每位考生要求被几个评委审批，如果没有，默认为2
+				if(!"".equals(judgeNumSet)) {
+					
+				} else {
+					judgeNumSet="2";
+				}
 				
 				String strStartDate = "";
 				if(null!=startDate) {
@@ -395,6 +404,14 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			if("tzExportJudge".equals(operateType)) {
 				strRet = exportJudge(strParams,errMsg);
 			}
+			//查询评委组
+			if("tzGetJudgeGroup".equals(operateType)) {
+				strRet = getJudgeGroup(strParams,errMsg);
+			}
+			//校验评委各组评议人数合是否等于考生人数
+			if("tzCheckNum".equals(operateType)) {
+				strRet = checkNum(strParams,errMsg);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
@@ -416,19 +433,40 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			
 			String dtFormat = getSysHardCodeVal.getDateFormat();
 			String tmFormat = getSysHardCodeVal.getTimeHMFormat();
-
 			SimpleDateFormat dateSimpleDateFormat = new SimpleDateFormat(dtFormat);
 			SimpleDateFormat timeSimpleDateFormat = new SimpleDateFormat(tmFormat);
 						
 			String classId = (String) mapParams.get("classId");
 			String batchId = (String) mapParams.get("batchId");
 			String dqpsStatus = (String) mapParams.get("dqpsStatus");
-			Date startDate = dateSimpleDateFormat.parse((String) mapParams.get("startDate"));
-			Date startTime = timeSimpleDateFormat.parse((String) mapParams.get("startTime"));
-			Date endDate = dateSimpleDateFormat.parse((String) mapParams.get("endDate"));
-			Date endTime = timeSimpleDateFormat.parse((String) mapParams.get("endTime"));
+			String strStartDate = mapParams.get("startDate") == null ? "" : String.valueOf(mapParams.get("startDate"));	
+			String strStartTime = mapParams.get("startTime") == null ? "" : String.valueOf(mapParams.get("startTime"));
+			String strEndDate = mapParams.get("endDate") == null ? "" : String.valueOf(mapParams.get("endDate"));
+			String strEndTime = mapParams.get("endTime") == null ? "" : String.valueOf(mapParams.get("endTime"));
 			String materialDesc = (String) mapParams.get("materialDesc");
-			Integer judgeNumSet = mapParams.get("judgeNumSet") == null ? 0 : Integer.valueOf((String) mapParams.get("judgeNumSet"));
+			String strJudgeNum = mapParams.get("judgeNumSet") == null ? "" : mapParams.get("judgeNumSet").toString();
+			Integer judgeNumSet = 0;
+			if(!"".equals(strJudgeNum)) {
+				judgeNumSet = Integer.valueOf(strJudgeNum);
+			}
+			
+			Date startDate = null;
+			if(!"".equals(strStartDate)) {
+				startDate = dateSimpleDateFormat.parse(strStartDate);
+			}
+			Date startTime = null;
+			if(!"".equals(strStartTime)) {
+				startTime = timeSimpleDateFormat.parse(strStartTime);
+			}
+			
+			Date endDate = null;
+			if(!"".equals(strEndDate)) {
+				endDate = dateSimpleDateFormat.parse(strEndDate);
+			}
+			Date endTime = null;
+			if(!"".equals(strEndTime)) {
+				endTime = timeSimpleDateFormat.parse(strEndTime);
+			}
 			
 			PsTzClpsGzTblKey psTzClpsGzTblKey = new PsTzClpsGzTblKey();
 			psTzClpsGzTblKey.setTzClassId(classId);
@@ -462,7 +500,8 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				psTzClpsGzTbl.setTzDqpyZt(dqpsStatus);
 				psTzClpsGzTbl.setRowLastmantDttm(new Date());
 				psTzClpsGzTbl.setRowLastmantOprid(currentOprid);
-				psTzClpsGzTblMapper.updateByPrimaryKeySelective(psTzClpsGzTbl);
+				//psTzClpsGzTblMapper.updateByPrimaryKey(psTzClpsGzTbl);
+				psTzClpsGzTblMapper.updateByPrimaryKeyWithBLOBs(psTzClpsGzTbl);
 			}
 			
 			
@@ -489,7 +528,11 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			String batchId = (String) mapParams.get("batchId");
 			String judgeOprid = (String) mapParams.get("judgeOprid");
 			String judgeGroup = (String) mapParams.get("judgeGroup");
-			Integer judgeExamineeNum = Integer.valueOf(mapParams.get("judgeExamineeNum") == null ? "0" : String.valueOf(mapParams.get("judgeExamineeNum")));
+			String strJudgeNum = mapParams.get("judgeExamineeNum") == null ? "" : mapParams.get("judgeExamineeNum").toString();
+			Integer judgeExamineeNum = 0;
+			if(!"".equals(strJudgeNum)) {
+				judgeExamineeNum = Integer.valueOf(strJudgeNum);
+			}
 			String judgeStatus = (String) mapParams.get("judgeStatus");
 			
 			psTzClpsPwTblKey psTzClpsPwTblKey = new psTzClpsPwTblKey();
@@ -519,7 +562,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				psTzClpsPwTbl.setTzPwzbh(judgeGroup);
 				psTzClpsPwTbl.setRowLastmantDttm(new Date());
 				psTzClpsPwTbl.setRowLastmantOprid(currentOprid);
-				psTzClpsPwTblMapper.updateByPrimaryKey(psTzClpsPwTbl);
+				psTzClpsPwTblMapper.updateByPrimaryKeySelective(psTzClpsPwTbl);
 			}
 
 		} catch (Exception e) {
@@ -554,31 +597,48 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				
 				if(!"".equals(mobile)) {
 					
-				} else {
-					mobile = getHardCodePoint.getHardCodePointVal("TZ_CLPS_PW_PSWD");
+					String password = DESUtil.encrypt(mobile, "TZGD_Tranzvision");
+		
+					Psoprdefn psoprdefn = new Psoprdefn();
+					psoprdefn = psoprdefnMapper.selectByPrimaryKey(String.valueOf(judgeId));
+				
+					if(psoprdefn==null) {
+						psoprdefn = new Psoprdefn();
+						psoprdefn.setOprid(String.valueOf(judgeId));
+						psoprdefn.setOperpswd(password);
+						psoprdefn.setAcctlock(Short.valueOf("0"));
+						psoprdefn.setLastupddttm(new Date());
+						psoprdefn.setLastupdoprid(currentOprid);
+						psoprdefnMapper.insert(psoprdefn);
+					} else {
+						psoprdefn.setOprid(String.valueOf(judgeId));
+						psoprdefn.setOperpswd(password);
+						psoprdefn.setLastupddttm(new Date());
+						psoprdefn.setLastupdoprid(currentOprid);
+						psoprdefnMapper.updateByPrimaryKeySelective(psoprdefn);	
+					}
+						
+		
+				
+					//评委初始密码表
+					PsTzPwExtTKey psTzPwExtTKey = new PsTzPwExtTKey();
+					psTzPwExtTKey.setTzJgId(currentOrgId);
+					psTzPwExtTKey.setOprid(String.valueOf(judgeId));
+					
+					PsTzPwExtT psTzPwExtT = psTzPwExtTMapper.selectByPrimaryKey(psTzPwExtTKey);
+					if(psTzPwExtT==null) {
+						psTzPwExtT = new PsTzPwExtT();
+						psTzPwExtT.setTzJgId(currentOrgId);
+						psTzPwExtT.setOprid(String.valueOf(judgeId));
+						psTzPwExtT.setTzCsPassword(mobile);
+						psTzPwExtTMapper.insert(psTzPwExtT);
+					} else {
+						psTzPwExtT.setTzJgId(currentOrgId);
+						psTzPwExtT.setOprid(String.valueOf(judgeId));
+						psTzPwExtT.setTzCsPassword(mobile);
+						psTzPwExtTMapper.updateByPrimaryKeySelective(psTzPwExtT);
+					}	
 				}
-				
-				String password = DESUtil.encrypt(mobile, "TZGD_Tranzvision");
-	
-				Psoprdefn psoprdefn = new Psoprdefn();
-				psoprdefn = psoprdefnMapper.selectByPrimaryKey(String.valueOf(judgeId));
-				
-				if(psoprdefn==null) {
-					psoprdefn = new Psoprdefn();
-					psoprdefn.setOprid(String.valueOf(judgeId));
-					psoprdefn.setOperpswd(password);
-					psoprdefn.setAcctlock(Short.valueOf("0"));
-					psoprdefn.setLastupddttm(new Date());
-					psoprdefn.setLastupdoprid(currentOprid);
-					psoprdefnMapper.insert(psoprdefn);
-				} else {
-					psoprdefn.setOprid(String.valueOf(judgeId));
-					psoprdefn.setOperpswd(password);
-					psoprdefn.setLastupddttm(new Date());
-					psoprdefn.setLastupdoprid(currentOprid);
-					psoprdefnMapper.updateByPrimaryKey(psoprdefn);	
-				}
-				
 			}
 			
 		} catch(Exception e) {
@@ -719,7 +779,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 			dataCellKeys.add(new String[] {"judgeName","评委姓名"});
 			dataCellKeys.add(new String[] {"judgeGroupDesc","评委组"});
 			dataCellKeys.add(new String[] {"judgeKsNum","需要评审考生人数"});
-			dataCellKeys.add(new String[] {"judgePassword","评委密码"});
+			dataCellKeys.add(new String[] {"judgeCsPassword","初始密码"});
 			
 			//生成数据
 			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
@@ -733,6 +793,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				String judgeGroupDesc = mapJudge.get("TZ_CLPS_GR_NAME") == null ? "" : mapJudge.get("TZ_CLPS_GR_NAME").toString();
 				String judgeKsNum = mapJudge.get("TZ_PYKS_XX") == null ? "" : mapJudge.get("TZ_PYKS_XX").toString();
 				String judgePasswordJm = mapJudge.get("OPERPSWD") == null ? "" : mapJudge.get("OPERPSWD").toString();
+			    String judgeCsPassword = mapJudge.get("TZ_CS_PASSWORD") == null ? "" : mapJudge.get("TZ_CS_PASSWORD").toString();
 				
 				String judgePassword = DESUtil.decrypt(judgePasswordJm, "TZGD_Tranzvision");
 				
@@ -741,7 +802,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				mapData.put("judgeName", judgeName);
 				mapData.put("judgeGroupDesc", judgeGroupDesc);
 				mapData.put("judgeKsNum", judgeKsNum);
-				mapData.put("judgePassword", judgePassword);
+				mapData.put("judgeCsPassword", judgeCsPassword);
 			
 				dataList.add(mapData);
 			}
@@ -766,6 +827,143 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				errMsg[1] = "导出失败";
 			}
 			
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		
+		return strRet;
+	}
+	
+	
+	//查询评委组
+	public String getJudgeGroup(String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String,Object> mapRet = new HashMap<String,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try {
+			
+			//当前机构
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
+			jacksonUtil.json2Map(strParams);
+			String classId = jacksonUtil.getString("classId");
+			String batchId = jacksonUtil.getString("batchId");
+			
+			String sql = "";
+			Integer judgeNumSet = 0;
+			String strJudgeNumSet = "";
+			if(jacksonUtil.containsKey("judgeNumSet")) {
+				strJudgeNumSet = jacksonUtil.getString("judgeNumSet");
+			} else {
+				//每位考生要求被几个评委审批
+				sql = "SELECT TZ_MSPY_NUM FROM PS_TZ_CLPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+				strJudgeNumSet= sqlQuery.queryForObject(sql, new Object[]{classId,batchId},"String");	
+			}
+			
+			if(!"".equals(strJudgeNumSet) && strJudgeNumSet!=null && !"0".equals(strJudgeNumSet)) {
+				judgeNumSet = Integer.valueOf(strJudgeNumSet);
+			} else {
+				judgeNumSet = 2;
+			}
+			
+			sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_CLPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY CAST(TZ_CLPS_GR_ID AS SIGNED INTEGER) LIMIT 0,?";
+			List<Map<String, Object>> listGroup = sqlQuery.queryForList(sql, new Object[]{orgId,judgeNumSet});
+			
+			List<Map<String, Object>> dataList = new ArrayList<Map<String,Object>>();
+			
+			for(Map<String, Object> mapGroup : listGroup) {
+				String groupId = mapGroup.get("TZ_CLPS_GR_ID") == null ? "" : mapGroup.get("TZ_CLPS_GR_ID").toString();
+				String groupName = mapGroup.get("TZ_CLPS_GR_NAME") == null ? "" : mapGroup.get("TZ_CLPS_GR_NAME").toString();
+				
+				Map<String, Object> mapData = new HashMap<String,Object>();
+				mapData.put("TZ_CLPS_GR_ID", groupId);
+				mapData.put("TZ_CLPS_GR_NAME", groupName);
+				
+				dataList.add(mapData);	
+			}
+			
+			mapRet.put("groupData", dataList);
+			
+			strRet = jacksonUtil.Map2json(mapRet);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		
+		return strRet;
+	}
+	
+	
+	//校验评委各组评议人数合是否等于考生人数
+	public String checkNum(String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String,Object> mapRet = new HashMap<String,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try {
+			
+			//当前机构
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			
+			jacksonUtil.json2Map(strParams);
+			Integer clpsksNum = Integer.valueOf(jacksonUtil.getString("clpsksNum"));
+			Integer judgeNumSet = Integer.valueOf(jacksonUtil.getString("judgeNumSet"));
+			List<?> pweiData = jacksonUtil.getList("data");
+			
+			Boolean success = true;
+			
+			if(pweiData!=null && !"".equals(pweiData)) {
+				
+				List<Map<String, Object>> groupNumList = new ArrayList<Map<String,Object>>();
+				String sql = "SELECT TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME FROM PS_TZ_CLPS_GR_TBL WHERE TZ_JG_ID=? ORDER BY CAST(TZ_CLPS_GR_ID AS SIGNED INTEGER) LIMIT 0,?";
+				List<Map<String, Object>> listGroup = sqlQuery.queryForList(sql, new Object[]{orgId,judgeNumSet});
+				
+				for(Map<String, Object> mapGroup : listGroup) {
+					Integer groupNum = 0;
+					String groupId = mapGroup.get("TZ_CLPS_GR_ID") == null ? "" : mapGroup.get("TZ_CLPS_GR_ID").toString();
+					for(Object pwei : pweiData) {
+						Map<String, Object> mapPwei = (Map<String, Object>) pwei;
+						String judgeGroup = mapPwei.get("judgeGroup") == null ? "" : mapPwei.get("judgeGroup").toString();
+					    String strJudgeNum = mapPwei.get("judgeExamineeNum") == null ? "" : mapPwei.get("judgeExamineeNum").toString();
+					    Integer judgeExamineeNum = 0;
+					    if(!"".equals(strJudgeNum)) {
+					    	judgeExamineeNum = Integer.valueOf(strJudgeNum);
+					    }
+					    if(groupId.equals(judgeGroup)) {
+							groupNum = groupNum + judgeExamineeNum;
+						}
+					}
+					Map<String, Object> mapGroupNum = new HashMap<String,Object>();
+					mapGroupNum.put("groupId", groupId);
+					mapGroupNum.put("groupNum", groupNum);
+					groupNumList.add(mapGroupNum);
+				}
+				
+				if(listGroup.size()!=groupNumList.size()) {
+					success = false;
+				} else {
+					for(Map<String, Object> mapNum : groupNumList) {
+						String strGroupNum = mapNum.get("groupNum") == null ? "" : mapNum.get("groupNum").toString(); 
+						Integer groupNum = 0;
+						if(!"".equals(strGroupNum)) {
+							groupNum = Integer.valueOf(strGroupNum);
+						}
+						if(!clpsksNum.equals(groupNum)) {
+							success = false;
+							break;
+						} 
+					}
+				}				
+			} 
+			
+			mapRet.put("success", success);
+			strRet = jacksonUtil.Map2json(mapRet);
+					
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";

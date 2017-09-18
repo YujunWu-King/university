@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
 
 /*
  调查问卷--新建问卷处理类
@@ -17,41 +15,24 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcDyTMapper;
-import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcMbGzgxTMapper;
-import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcMbLjgzTMapper;
-import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcMbLjxsTMapper;
-import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcMbYbgzTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjDyTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjGzgxTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjLjgzTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjLjxsTMapper;
 import com.tranzvision.gd.TZApplicationSurveyBundle.dao.PsTzDcWjYbgzTMapper;
-import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcDyTWithBLOBs;
-import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcMbGzgxT;
-import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcMbLjgzT;
-import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcMbLjxsTKey;
-import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcMbYbgzT;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjDyTWithBLOBs;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjGzgxT;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjLjgzT;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjLjxsTKey;
 import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzDcWjYbgzT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
-import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
-import com.tranzvision.gd.util.sql.TZGDObject;
-import com.tranzvision.gd.util.sql.type.TzRecord;
 
 @Service("com.tranzvision.gd.TZApplicationSurveyBundle.service.impl.QustionnaireMNGClsImpl")
 
@@ -487,11 +468,11 @@ public class QustionnaireMNGClsImpl extends FrameworkImpl{
 			
 			List<Map<String,Object>>resultList=new ArrayList<Map<String,Object>>();
 			if(numLimit==0&&numStart==0){
-				final String SQL1="select TZ_APP_INS_ID,TZ_DC_INS_IP,TZ_DC_WC_STA,date_format(ROW_ADDED_DTTM,'%Y-%m-%d %H:%i:%s') KSSJ,date_format(ROW_LASTMANT_DTTM,'%Y-%m-%d %H:%i:%s') JSSJ from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? order by ROW_ADDED_DTTM desc";
+				final String SQL1="select TZ_APP_INS_ID,TZ_DC_INS_IP,TZ_DC_WC_STA,date_format(ROW_ADDED_DTTM,'%Y-%m-%d %H:%i:%s') KSSJ,date_format(ROW_LASTMANT_DTTM,'%Y-%m-%d %H:%i:%s') JSSJ,(select TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=PERSON_ID limit 1) as TZ_MSSQH,(select TZ_REALNAME from PS_TZ_AQ_YHXX_TBL where OPRID=PERSON_ID limit 1) as TZ_REALNAME,OPEN_ID,TZ_NICK_NAME from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=? order by ROW_ADDED_DTTM desc";
 				resultList=jdbcTemplate.queryForList(SQL1);
 			}
 			else{
-				final String SQL2="SELECT TZ_APP_INS_ID,TZ_DC_INS_IP,TZ_DC_WC_STA, date_format(ROW_ADDED_DTTM,'%Y-%m-%d %H:%i:%s') KSSJ,date_format(ROW_LASTMANT_DTTM,'%Y-%m-%d %H:%i:%s') JSSJ FROM PS_TZ_DC_INS_T A WHERE A.TZ_DC_WJ_ID=? limit ?,?";
+				final String SQL2="SELECT TZ_APP_INS_ID,TZ_DC_INS_IP,TZ_DC_WC_STA, date_format(ROW_ADDED_DTTM,'%Y-%m-%d %H:%i:%s') KSSJ,date_format(ROW_LASTMANT_DTTM,'%Y-%m-%d %H:%i:%s') JSSJ,(select TZ_MSH_ID from PS_TZ_AQ_YHXX_TBL where OPRID=A.PERSON_ID limit 1) as TZ_MSSQH,(select TZ_REALNAME from PS_TZ_AQ_YHXX_TBL where OPRID=A.PERSON_ID limit 1) as TZ_REALNAME,OPEN_ID,TZ_NICK_NAME FROM PS_TZ_DC_INS_T A WHERE A.TZ_DC_WJ_ID=? limit ?,?";
 				resultList=jdbcTemplate.queryForList(SQL2, new Object[]{wjId,numStart, numLimit});
 			}
 			
@@ -512,7 +493,12 @@ public class QustionnaireMNGClsImpl extends FrameworkImpl{
 					String state=resultMap.get("TZ_DC_WC_STA")==null?null:resultMap.get("TZ_DC_WC_STA").toString();
 					String ksSj=resultMap.get("KSSJ")==null?null:resultMap.get("KSSJ").toString();
 					String jsSj=resultMap.get("JSSJ")==null?null:resultMap.get("JSSJ").toString();
-				
+					//面试申请号、姓名
+					String msSqh = resultMap.get("TZ_MSSQH")==null? "" :resultMap.get("TZ_MSSQH").toString();
+					String name = resultMap.get("TZ_REALNAME")==null? "" :resultMap.get("TZ_REALNAME").toString();
+				    //OPEN_Id,昵称
+					String openId=resultMap.get("OPEN_ID")==null? "" :resultMap.get("OPEN_ID").toString();
+					String tzNickName=resultMap.get("TZ_NICK_NAME")==null? "" :resultMap.get("TZ_NICK_NAME").toString();
 					infoMap.put("order",i+1);
 					infoMap.put("wjInsId",insId);
 					infoMap.put("wjId", wjId);
@@ -520,6 +506,12 @@ public class QustionnaireMNGClsImpl extends FrameworkImpl{
 					infoMap.put("state", state);
 					infoMap.put("ksSj", ksSj);
 					infoMap.put("jsSj", jsSj);
+					
+					infoMap.put("msSqh", msSqh);
+					infoMap.put("name", name);
+					
+					infoMap.put("openId", openId);
+					infoMap.put("nickName", tzNickName);
 					
 					infoList.add(infoMap);
 				}

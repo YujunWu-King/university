@@ -15,14 +15,6 @@ function createReturnMenu(parentObject, jsonObject)
   					pressed: true
   				},
 				'<b>'+jsonObject['ps_class_mc'] + " " + jsonObject['ps_baok_pc'] +'</b>'
-				/*
-				{
-  					xtype: "",
-					text: ,
-  					width: 200,
-  					pressed: false
-  				}
-				*/
   			);
 }
 
@@ -82,45 +74,49 @@ function loadEvaluateBatchData(callBackFunction)
 {
 	var loadSuccess = false;
 	
-	/*本地调试代码*/
-	//callBackFunction(jsonEvaluateBatchListDataObject1[0]);
-	//return true;
-	
 	/*服务器联调代码*/
 	Ext.Ajax.request({
 		url:window.getBatchListUrl,
 		method:'POST',
-		timeout:10000,
+		timeout:60000,
 		params:{LanguageCd:'ZHS',MaxRowCount:1000,StartRowNumber:1,MoreRowsFlag:'N'},
 		success:function(response)
 		{
 			var jsonObject = null;
 			
+			var jsonText = response.responseText;
+            
 			try
 			{
-				jsonObject = Ext.JSON.decode(response.responseText).comContent;
+				var jsonObject = Ext.util.JSON.decode(jsonText);
+                /*判断服务器是否返回了正确的信息*/
+                if(jsonObject.state.errcode == 1){
+                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+                }else{
+                	jsonObject = jsonObject.comContent;
 
-				if(jsonObject.error_code != '0')
-				{
-					loadSuccess = false;
-					alert('当前资料评审批次数据加载失败：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-				}
-				else
-				{
-					loadSuccess = true;
-					callBackFunction(jsonObject);
-				}
+    				if(jsonObject.error_code != '0')
+    				{
+    					loadSuccess = false;
+    					Ext.Msg.alert("提示",'当前材料评审批次数据加载失败：' + jsonObject.error_decription);
+    				}
+    				else
+    				{
+    					loadSuccess = true;
+    					callBackFunction(jsonObject);
+    				}
+                }
 			}
 			catch(e1)
 			{
 				loadSuccess = false;
 				if(window.evaluateSystemDebugFlag == 'Y')
 				{
-					alert('当前资料评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
+					Ext.Msg.alert("提示",'当前材料评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']' + response.responseText);
 				}
 				else
 				{
-					alert('当前资料评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+					Ext.Msg.alert("提示",'当前材料评审批次数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 				}
 			}
 		},
@@ -129,11 +125,11 @@ function loadEvaluateBatchData(callBackFunction)
 			loadSuccess = false;
 			if(window.evaluateSystemDebugFlag == 'Y')
 			{
-				alert('当前资料评审批次数据加载失败，请与系统管理员联系：' + response.responseText);
+				Ext.Msg.alert("提示",'当前材料评审批次数据加载失败，请与系统管理员联系：' + response.responseText);
 			}
 			else
 			{
-				alert('当前资料评审批次数据加载失败，请与系统管理员联系。');
+				Ext.Msg.alert("提示",'当前材料评审批次数据加载失败，请与系统管理员联系。');
 			}
 		}
 	}
@@ -142,43 +138,6 @@ function loadEvaluateBatchData(callBackFunction)
 	
 	return loadSuccess;
 }
-
-/*var jsonEvaluateBatchListDataObject1 = [];
-jsonEvaluateBatchListDataObject1[0] = 
-{
-	"pw_id":"pw01",
-	"pw_name":"黄飞鸿",
-	"MaxRowCount":"10",
-	"StartRowNumber":"1",
-	"MoreRowsFlag":"Y",
-	"TotalRowCount":"20",
-	"data":
-		[
-			{
-				"pc_id":"pc_f_01",
-				"pc_name":"2012年第01批F班", 
-				"pc_zt":"进行中"
-			},
-			{
-				"pc_id":"pc_f_02",
-				"pc_name":"2012年第01批P班", 
-				"pc_zt":"进行中"
-			},
-			{
-				"pc_id":"pc_f_03",
-				"pc_name":"2012年第02批F班", 
-				"pc_zt":"新建"
-			},
-			{
-				"pc_id":"pc_f_04",
-				"pc_name":"2012年第02批P班", 
-				"pc_zt":"已结束"
-			}
-		],
-	"error_code":"0",
-	"error_decription ":""
-}
-*/
 
 function getEvaluateBatchListData(JEBDObject)
 {
@@ -241,9 +200,6 @@ function initializeGridColumnHeaders()
 
 function loadBatchDataById(batchId,callBackFunction)
 {
-	/*本地调试代码*/
-	//callBackFunction(batchId,jsonEvaluateBatchDataObjectArray1[batchId]);
-	//return;
 	var arr = batchId.split("_");
 	var classid = arr[0];
 	var pcid = arr[1];
@@ -255,7 +211,7 @@ function loadBatchDataById(batchId,callBackFunction)
 		Ext.Ajax.request({
 				url:window.getBatchDataUrl,
 				method:'POST',
-				timeout:10000,
+				timeout:60000,
 				params: {
 									LanguageCd:'ZHS',
 									BaokaoClassID:classid,
@@ -267,26 +223,37 @@ function loadBatchDataById(batchId,callBackFunction)
 								},
 				success:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
 					var jsonObject = null;
 					
 					try
 					{
-						jsonObject = Ext.JSON.decode(response.responseText).comContent;
+						var jsonObject = Ext.util.JSON.decode(jsonText);
+		                /*判断服务器是否返回了正确的信息*/
+		                if(jsonObject.state.errcode == 1){
+		                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+		                }else{
+		                	jsonObject = jsonObject.comContent;
 
-						if(jsonObject.error_code != "0")
-						{
-							loadSuccess = false;
-							Ext.Msg.alert("提示",'当前资料评审[' + getBatchNameById(batchId) + ']数据加载失败：' + jsonObject.error_decription + '[错误码：' + jsonObject.error_code + ']。');
-							//unmask window
-							unmaskWindow();
-						}
-						else
-						{
-							loadSuccess = true;
-							/*将当前请求到的JSON数据缓存到本地*/
-							window.batchJSONArray[batchId] = jsonObject;
-							callBackFunction(batchId,jsonObject);
-						}
+							if(jsonObject.error_code != "0")
+							{
+								loadSuccess = false;
+								Ext.Msg.alert("提示",'当前材料评审[' + getBatchNameById(batchId) + ']数据加载失败：' + jsonObject.error_decription);
+							}
+							else
+							{
+								loadSuccess = true;
+								/*将当前请求到的JSON数据缓存到本地*/
+								window.batchJSONArray[batchId] = jsonObject;
+								callBackFunction(batchId,jsonObject);
+							}
+		                }
+						
 					}
 					catch(e1)
 					{
@@ -294,33 +261,28 @@ function loadBatchDataById(batchId,callBackFunction)
 						loadSuccess = false;
 						if(window.evaluateSystemDebugFlag == 'Y')
 						{
-							alert('当前资料评审[' + batchId + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.toString() + ']' + response.responseText);
+							Ext.Msg.alert("提示",'当前材料评审[' + batchId + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.toString() + ']' + response.responseText);
 						}
 						else
 						{
-							alert('当前资料评审[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
+							Ext.Msg.alert("提示",'当前材料评审[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系：错误的JSON数据[' + e1.description + ']。');
 						}
-						//var mytmpWindow = window.open("about:blank");
-						//mytmpWindow.document.body.innerHTML = response.responseText;
-						
-						//unmask window
-						unmaskWindow();
 					}
 				},
 				failure:function(response)
 				{
+					//unmask window
+					unmaskWindow();
+					
 					loadSuccess = false;
 					if(window.evaluateSystemDebugFlag == 'Y')
 					{
-						alert('当前资料评审批次[' + batchId + ']数据加载失败，请与系统管理员联系：' + response.responseText);
+						Ext.Msg.alert("提示",'当前材料评审批次[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系：' + response.responseText);
 					}
 					else
 					{
-						alert('当前资料评审批次[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系。');
+						Ext.Msg.alert("提示",'当前材料评审批次[' + getBatchNameById(batchId) + ']数据加载失败，请与系统管理员联系。');
 					}
-					
-					//unmask window
-					unmaskWindow();
 				}
 			}
 		);
@@ -358,37 +320,46 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
     		{
     			url:url,
     			method:'POST',
-    			timeout:10000,
+    			timeout:30000,
     			params: {
     				TZ_CLASS_ID:classId,
     				TZ_PC_ID:batchId
 				},
     			success:function(response)
     			{
+    				//unmask window
+					unmaskWindow();
+					
+					//返回值内容
+                    var jsonText = response.responseText;
+                    
     				var jsonObject = null;
     				
     				try
     				{
-    					jsonObject = Ext.JSON.decode(response.responseText).comContent;
+    					var jsonObject = Ext.util.JSON.decode(jsonText);
+		                /*判断服务器是否返回了正确的信息*/
+		                if(jsonObject.state.errcode == 1){
+		                	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
+		                }else{
+		                	jsonObject = jsonObject.comContent;
+	    					
+	    					if(jsonObject.errorCode&&jsonObject.errorCode == '1')
+	    					{
+	    						loadSuccess = false;
+	    						Ext.Msg.alert("提示","生成评审总表失败："+jsonObject.errorMsg);
+	    					}
+	    					else
+	    					{
+	    						url = jsonObject.url;
+	    						if(url){
+	    							window.open(url);
+	    						}else{
+	    							Ext.Msg.alert("提示","生成评审总表失败");
+	    						}
+	    					}
+		                }
     					
-    					if(jsonObject.errorCode&&jsonObject.errorCode == '1')
-    					{
-    						//unmask window
-    						unmaskWindow();
-    					
-    						loadSuccess = false;
-    						Ext.Msg.alert("提示","生成评审总表失败："+jsonObject.errorMsg);
-    					}
-    					else
-    					{
-    						url = jsonObject.url;
-    						if(url){
-    							window.open(url);
-    						}else{
-    							Ext.Msg.alert("提示","生成评审总表失败");
-    						}
-    						unmaskWindow();
-    					}
     				}
     				catch(e1)
     				{
@@ -397,6 +368,9 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
     			},
     			failure:function(response)
     			{
+    				//unmask window
+					unmaskWindow();
+					
     				loadSuccess = false;
     				if(window.evaluateSystemDebugFlag == 'Y')
     				{
@@ -409,40 +383,6 @@ function printStatisticsTotalTable(classId,batchId,className,batchName)
     			}
     		}
     	);
-	/*var printStatisticsTips = 	'请注意：打印评审总表时，为避免表格不同列字数不均引起的页数过多的问题，请评委在word中调整一下表格列宽度。<br />'
-								+'以Word2007为例，具体步骤如下：<br />'
-								+'1. 选中表格；<br />'
-								+'2. 点击右键；<br />'
-								+'3. 选择“自动调整->根据内容调整表格”，查看最终排版效果即可。<br />'
-								+'<a href="/tzlib/images/printStatisticsTips1.jpg" target="_blank" title="点击查看大图" style="color:blue;">请点击查看示意图</a><br />'
-								+'点击“是”生成评分总表，点击“否”取消生成。';
-	
-	Ext.Msg.confirm('提示', printStatisticsTips, function(button) {
-		if (button === 'yes') {
-		
-			var fileDownloadUrl = window.printStatisticsTableUrl + '?TZ_CLASS_ID='+ classId +'&TZ_PC_ID=' + batchId;
-
-			try
-			{
-				var iframeObject = $('<iframe></iframe>');
-				var parentObject = $('#mba_evaluate_system_file_downloader');
-				
-				
-				parentObject.empty();
-				parentObject.append(iframeObject);
-				//iframeObject[0].src = fileDownloadUrl;
-                window.open(fileDownloadUrl);
-			}
-			catch(e1)
-			{
-				alert(e1.description);
-			}
-			
-		} else {
-			//Ext.Msg.alert("","点击了取消");
-		}
-	});*/
-	
 }
 
 function initializeEvaluatePiciGrid(jsonObject)
@@ -464,10 +404,10 @@ function initializeEvaluatePiciGrid(jsonObject)
       multiSelect: false,
       columnLines: true,
       width:'100%',
-      minHeight:100,
+      height:'100%',
+      autoScroll: true,
       stateId: 'EvaluateBatchListGrid',
       style:'cursor:default;vertical:middle;',
-      //margin:'auto',
       columns: [
           {
               text     : '报考方向名称',
@@ -533,7 +473,33 @@ function initializeEvaluatePiciGrid(jsonObject)
           enableTextSelection: true
       }
   });
+
+  //评审说明区域
+  var descPanel = Ext.create("Ext.panel.Panel",{
+	  title:'评审说明',
+	  header:false,
+	  height:'100%',
+	  renderTo: 'tz_zlps_description',
+      contentEl : Ext.DomHelper.append(document.body, {
+          bodyBorder : false,
+          tag : 'iframe',
+          style : "border:0px none;scrollbar:true",
+          src : EvaluationDescriptionUrl,
+          height:'100%',
+          width : "100%"
+      })
+  });
   
+  //列表渲染完毕之后加载评委提醒信息
+  if(jsonObject.remindData!=undefined&&jsonObject.remindData.length>0){
+		 var remindHtml = "尊敬的评委：<br/><br/><span style='margin-left:20px;'>";
+		 remindHtml+=jsonObject.remindData.join("</span><br/><br/><span style='margin-left:20px;'>");
+		 remindHtml+="</span>";
+		 Ext.defer(function(remindHtml){
+			 openRemindWindow(remindHtml);
+		 },100,this,[remindHtml]);
+		 
+  }
   
   grid.on('cellClick', function(gridViewObject,cellHtml,colIndex,dataModel,rowHtml,rowIndex){
 
@@ -554,7 +520,7 @@ function initializeEvaluatePiciGrid(jsonObject)
 			//装载指定批次数据
 			if(batchId == null || batchId == '' || batchId == 'undefined')
 			{
-				alert('系统错误：无法获取指定评审批次的编号。');
+				Ext.Msg.alert("提示",'系统错误：无法获取指定评审批次的编号。');
 			}
 			else
 			{
@@ -571,7 +537,7 @@ function initializeEvaluatePiciGrid(jsonObject)
 		{
 			if(classId == null || classId == '' || classId == 'undefined' || batchId == null || batchId == '' || batchId == 'undefined')
 			{
-				alert('系统错误：无法获取指定评审批次的编号。');
+				Ext.Msg.alert("提示",'系统错误：无法获取指定评审批次的编号。');
 			}
 			else
 			{
@@ -593,4 +559,38 @@ function getBatchNameById(batchId)
 	}
 
 	return batchName;
+}
+
+/*登录之后批次列表也买呢显示评委未完成的任务提醒*/
+function openRemindWindow(html){
+	var win = new Ext.window.Window({
+        modal:true,
+        defaults: {
+            border:false
+        },
+        style:"overflow-y:auto",
+        layout:'fit',
+        buttonAlign:'center',
+        iframeLoad:function(iframe){
+            win.body.unmask();
+        },
+        items:[{
+            xtype:'component',
+            padding:10,
+            style:"font-size:13px;font-family:MicroSoft Yahei",
+            html:html,
+            minHeight : 160,
+            width : 650,
+        }],
+        buttons:[
+            {
+                text:"我知道了",
+                style:'background-color:#a9abd1;width:100px;height:30px;border-radius:6px;-webkit-border-radius:6px;line-height:30px;font-size:14px',
+                handler:function(btn){
+                    btn.findParentByType('window').close();
+                }
+            }
+        ]
+    });
+	win.show();
 }

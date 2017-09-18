@@ -44,8 +44,13 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.expMsArrToExce
             	
                 var tabPanel = win.lookupReference("exportExcelTabPanel");
                 Ext.tzSubmit(tzParams,function(responseData){
-                    tabPanel.setActiveTab(1);
-                    tabPanel.child("grid").store.reload();
+                	var result = responseData.result;
+                	if(result == "success"){
+                		tabPanel.setActiveTab(1);
+                        tabPanel.child("grid").store.reload();
+                	}else{
+                		Ext.MessageBox.alert(Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_EXP_STD.prompt","提示"), Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_EXP_STD.exportError","导出失败，请稍后再试"));
+                	}
                 },"",true,this);
             }else{
                 Ext.MessageBox.alert(Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_EXP_STD.prompt","提示"), Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_EXP_STD.noApplicantsSelected","没有选中记录，无法导出Excel"));

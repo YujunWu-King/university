@@ -34,48 +34,55 @@ SurveyBuild.extend("MultipleChoice", "baseComponent", {
         if (previewmode) {
             if(SurveyBuild.accessType == "P"){
                 for (var i in data.option) {
-                    e += '<li>';
-                    e += '  <div class="input-checkbox-btn '+ (data["option"][i]["checked"] == "Y" ? "checked" : "") +'">';
-                    e += '	    <input type="checkbox" onchange="SurveyBuild.handleInput(this);" ' + (data["option"][i]["checked"] == "Y" ? checked="checked" : "") + ' id="o' + data.itemId + data["option"][i]["code"] + '" instanceId="' + i + '"  name="' + data.itemId + '" value="' + data["option"][i]["code"] + '" />&nbsp;&nbsp;<label for="o' + data.itemId + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</label>';
-                    e += '  </div>';
-                    if (data["option"][i]["other"]=="Y"){
-                        e += '<input type="text" maxlength="40" class="input-text-comp" id="other' + data.itemId + '" style="display:' + (data["option"][i]["checked"]=="Y"?"inline-block":"none") + ';color: rgb(102, 102, 102); margin-left: 10px;" class="underline" value="' + data["option"][i]["othervalue"] + '">';
+                	e += '<li>';
+                	e += '<input type="checkbox" class="mgc mgc-primary" onchange="SurveyBuild.handleInput(this);" ' + (data["option"][i]["checked"] == "Y" ? checked="checked" : "") + ' id="o' + data.itemId + data["option"][i]["code"] + '" instanceId="' + i + '"  name="' + data.itemId + '" value="' + data["option"][i]["code"] + '">';
+                	e += '<label for="o' + data.itemId + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + ' </label>';
+                    if (data["option"][i]["other"] == "Y"){
+                        e += '<input type="text"  class="others" id="other' + data.itemId + '" style="display:' + (data["option"][i]["checked"]=="Y"?"inline-block":"none") + '" class="othertext" value="' + data["option"][i]["othervalue"] + '">';
                     }
+//                    e += '</li>';
+//                    e += '<li>';
+//                    e += '  <div class="input-checkbox-btn '+ (data["option"][i]["checked"] == "Y" ? "checked" : "") +'">';
+//                    e += '	    <input type="checkbox" onchange="SurveyBuild.handleInput(this);" ' + (data["option"][i]["checked"] == "Y" ? checked="checked" : "") + ' id="o' + data.itemId + data["option"][i]["code"] + '" instanceId="' + i + '"  name="' + data.itemId + '" value="' + data["option"][i]["code"] + '" />&nbsp;&nbsp;<label for="o' + data.itemId + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</label>';
+//                    e += '  </div>';
+//                    if (data["option"][i]["other"]=="Y"){
+//                        e += '<input type="text" maxlength="40" class="input-text-comp" id="other' + data.itemId + '" style="display:' + (data["option"][i]["checked"]=="Y"?"inline-block":"none") + ';color: rgb(102, 102, 102); margin-left: 10px;" class="underline" value="' + data["option"][i]["othervalue"] + '">';
+//                    }
                     e += '</li>';
                 }
                 c += '<div class="listcon">';
-                c += '	<div class="question">';
-                c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
-                c += '      <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '          <div class="onShow"></div>';
-                c += '      </div>';
+                c += '	<div class="list_q">';
+                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
                 c += '	</div>';
-                c += '	<div class="answer" id="' + data.itemId + '">';
-                c += '		<ul>' + e +  '</ul>';
+                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
+                c += '	</div>';
+                c += '	<div class="text_box1" id="' + data.itemId + '">';
+                c +=  e ;
                 c += '	</div>';
                 c += '</div>';
             }else{
                 for (var i in data.option) {
-                    e += '<li>';
-                    e += '  <div class="input-checkbox-btn '+ (data["option"][i]["checked"] == "Y" ? "checked" : "") +'">';
-                    e += '      <input type="checkbox" onchange="SurveyBuild.handleInput(this);" ' + (data["option"][i]["checked"] == "Y" ? checked="checked" : "") + ' id="o' + data.itemId + data["option"][i]["code"] + '" instanceId="' + i + '"  name="' + data.itemId + '" value="' + data["option"][i]["code"] + '" />&nbsp;&nbsp;';
-                    e += '      <label for="o' + data.itemId + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + '</label>';
-                    e += '  </div>';
+                	e += '<li>';
+                	e += '<input type="checkbox" class="mgc mgc-primary" onchange="SurveyBuild.handleInput(this);" ' + (data["option"][i]["checked"] == "Y" ? checked="checked" : "") + ' id="o' + data.itemId + data["option"][i]["code"] + '" instanceId="' + i + '"  name="' + data.itemId + '" value="' + data["option"][i]["code"] + '">';
+                	e += '<label for="o' + data.itemId + data["option"][i]["code"] + '">' + data["option"][i]["txt"] + ' </label>';
                     if (data["option"][i]["other"] == "Y"){
-                        e += '<input type="text" maxlength="40" class="input-text-comp" id="other' + data.itemId + '" style="display:' + (data["option"][i]["checked"]=="Y"?"inline-block":"none") + '" class="othertext" value="' + data["option"][i]["othervalue"] + '">';
+                        e += '<input type="text" class="others" id="other' + data.itemId + '" style="display:' + (data["option"][i]["checked"]=="Y"?"inline-block":"none") + '" class="othertext" value="' + data["option"][i]["othervalue"] + '">';
                     }
                     e += '</li>';
                 }
 
                 c += '<div class="listcon">';
-                c += '  <div id="' + data.itemId + 'Tip" class="onShow">';
-                c += '      <div class="onShow"></div>';
-                c += '  </div>';
-                c += '  <div class="question">';
-                c += '		<span class="fontblue-blod">' + data.qCode + '.</span>' + data.title;
+                c += '	<div class="list_q">';
+                c += '		<b>'+ data.qCode + '.</b>'+ data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span>';
                 c += '	</div>';
-                c += '  <div class="answer" id="' + data.itemId + '">';
-                c += '		<ul>' + e +  '</ul>';
+                c += '	<div id="' + data.itemId + 'Tip" class="tips">';
+                c += '		<img src="' + TzUniversityContextPath + '/statics/js/onlineSurvey/formvalidator/m/images/onError.gif">';
+                c += '		<span></span>';
+                c += '	</div>';
+                c += '  <div class="text_box1" id="' + data.itemId + '">';
+                c += e ;
                 c += '	</div>';
                 c += '</div>';
             }
@@ -244,7 +251,7 @@ SurveyBuild.extend("MultipleChoice", "baseComponent", {
                 }
             });
         }
-        $inputBox.formValidator({tipID:(data["itemId"] + 'Tip'), onShow:"&nbsp;", onFocus:"&nbsp;", onCorrect:"&nbsp;", empty:allowEmpty, onEmpty:ReqErrorMsg});
+        $inputBox.formValidator({tipID:(data["itemId"] + 'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;", empty:allowEmpty, onEmpty:ReqErrorMsg});
         if(!allowEmpty){
             $inputBox.inputValidator({min:1, onError:ReqErrorMsg});
         }

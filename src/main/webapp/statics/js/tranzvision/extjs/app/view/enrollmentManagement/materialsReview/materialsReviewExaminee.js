@@ -10,7 +10,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     	'Ext.toolbar.Paging', 
     	'Ext.ux.ProgressBarPager',
     	'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeStore',
-    	'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeController'
+    	'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewExamineeController',
+    	'KitchenSink.view.enrollmentManagement.materialsReview.export.exportExcelWindow'
     ],
 	title: Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.title","材料评审考生名单"),
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
@@ -124,10 +125,31 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 							text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_STD.more","更多操作"),
 							iconCls:'list',
 							glyph:61,
+							/*修改为批处理导出，张浪，20170516
 							menu:[{
+								text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.exportAllExcel","导出查询结果评议数据"),
+    							name:'excel',
+    							handler:'exportAllExcel'
+							},{
 								text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.exportExcel","导出选中考生评议数据"),
     							name:'excel',
     							handler:'exportExcel'
+							}]
+							*/
+							menu:[{
+								text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.exportExcel","导出考生评议数据"),
+    							iconCls: 'excel',
+    							menu:[{
+    								text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.exportSelectedExcel","导出选中考生评议数据"),
+        							handler:'exportSelectedExcel'
+    							},{
+    								text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.exportSearchExcel","导出查询结果考生评议数据"),
+        							handler:'exportSearchExcel'
+    							}]
+							},{
+								text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.download","查看历史导出并下载"),
+								iconCls:'download',
+    							handler:'downloadHisExcel'
 							}]
     					}]
     				}],
@@ -174,7 +196,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     				},{
     					text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.judgeTotal","评委总分"),
     					dataIndex:'judgeTotal',
-    					width:120
+    					width:120,
+						hidden:true
     				},{
     					text:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.reviewStatusDesc","评审状态"),
     					dataIndex:'reviewStatusDesc',
@@ -201,7 +224,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     						iconCls:'remove',tooltip:Ext.tzGetResourse("TZ_REVIEW_CL_COM.TZ_CLPS_STD.remove","删除"),handler:'removeExamineeOne'
     					}]
     				}],
-    				store:examineeStore
+    				store:examineeStore,
+					bbar: {
+						xtype: 'pagingtoolbar',
+						pageSize: 50,
+						store: examineeStore,
+						plugins: new Ext.ux.ProgressBarPager()
+					}
     			}]
     		}]
     	});

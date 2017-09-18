@@ -24,11 +24,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
         this.transValue = transValue;
         this.callParent();
     },
+    statisticsGrid:'',
     initComponent:function(){
         var classID =this.classID;
         var batchID = this.batchID;
         var statisticsGridDataModel;
         var transValue = this.transValue;
+        var interviewReviewScheduleAppsStore = new KitchenSink.view.enrollmentManagement.interviewReview.interviewReviewScheduleAppsStore();
         var interviewReviewScheduleChartStore=new Ext.data.JsonStore({
             fields:['name','data1'],
             data:[]
@@ -38,13 +40,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
             data:[]
         });
         var dockedItemBtn,columnsItems;
-        var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD",' +
-            '"OperateType":"IFS","comParams":{"type":"IFP","classID":"'+this.classID+'","batchID":"'+this.batchID+'"}}';
-        Ext.tzLoadAsync(tzParams,function(respData){
-            dockedItemBtn = {
+        
+        dockedItemBtn = {
                 xtype: "toolbar",
                 items: [
-                    {text: "计算标准差", tooltip: "计算标准差", handler: "calculate"}
+                    {text: "查询", tooltip: "查询", handler: "searchMsksList"},"-",
+                    {text: "计算所有考生标准差", tooltip: "计算所有考生标准差", handler: "calculate"}
                 ]
             };
             columnsItems = [
@@ -53,6 +54,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                     dataIndex: 'insID',
                     align:'center',
                     minWidth: 150
+                },
+                {
+                	text:"报名表模板ID",
+                	dataIndex:'clpsBmbTplId',
+                	hidden:true
                 },
                 {
                     header: "姓名",
@@ -83,6 +89,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                     }
                 },
                 {
+                    text: "面试申请号",
+                    dataIndex: 'mshID',
+                    align:'center',                    
+                    minWidth: 100
+                },
+                {
                     text: "面试资格",
                     dataIndex: 'viewQua',
                     align:'center',                    
@@ -109,6 +121,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                         } else {
                             return "";
                         }
+                    },
+                    listeners: {
+                        click: 'viewJudge'
                     }
                 },
                 {
@@ -143,7 +158,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                     }
                 }
            ]
-        });
+            
+	        /*var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD","OperateType":"IFS","comParams":{"type":"IFP","classID":"'+this.classID+'","batchID":"'+this.batchID+'"}}';
+	        Ext.tzLoadAsync(tzParams,function(respData){
+	            
+	        });*/
         
         //柱状图chart和曲线图chart
         var columnChart;
@@ -246,13 +265,23 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
             {
                 var colName = '00' + (i + 1);
                 colName = 'col' + colName.substr(colName.length - 2);
-
-                var tmpColumn = {
-                    text     : tmpArray[i][colName],
-                    sortable : false,
-                    dataIndex: colName,
-                    flex:1
-                };
+                var tmpColumn;
+                
+                if(i<5){
+                	tmpColumn = {
+                			text     : tmpArray[i][colName],
+                            sortable : false,
+                            dataIndex: colName,
+                            width:85
+                        };
+                }else{
+                	tmpColumn = {
+                			text     : tmpArray[i][colName],
+                            sortable : false,
+                            dataIndex: colName,
+                            flex:1
+                        };
+                }
 
                 statisticsGridDataModel['gridColumns'].push(tmpColumn);
                 statisticsGridDataModel['gridFields'].push({name:colName});
@@ -275,6 +304,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
 
         });
 
+        this.statisticsGrid = statisticsGridDataModel;
         Ext.apply(this,{
             items: [
                 {
@@ -360,7 +390,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                 items:[
                                     //使用layout form嵌套以避免IE中出现错位的BUG
                                     {
-                                        columnWidth:.2,
+                                        columnWidth:.25,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -369,7 +399,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                             readOnly:true
                                         }]
                                     }, {
-                                        columnWidth:.2,
+                                        columnWidth:.25,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -379,7 +409,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                         }]
                                     }, 
                                     {
-                                        columnWidth:.1,
+                                        columnWidth:.2,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -390,7 +420,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                         }]
                                     },
                                     {
-                                        columnWidth:.15,
+                                        columnWidth:.2,
                                         layout:'form',
                                         items:[{
                                             xtype: 'displayfield',
@@ -530,17 +560,19 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                                 {
                                                     xtype: "toolbar",
                                                     items: [
-                                                        {text: "暂停", tooltip: "暂停", handler: "pause"},
+                                                        {text: "暂停选中的评委账户", tooltip: "暂停选中的评委账户", handler: "pause"},
                                                         "-",
-                                                        {text: "设置评委状态为正常", tooltip: "设置评委状态为正常", handler: "setUsual"},
+                                                        {text: "启用选中的评委账户", tooltip: "启用选中的评委账户", handler: "setUsual"},
                                                         "-",
                                                         {text: "提交评委数据", tooltip: "提交评委数据",  handler: "submitData"},
                                                         "-",
                                                         {text: "设置提交状态为未提交", tooltip: "设置提交状态为未提交", handler: "setNoSubmit"},
                                                         "-",
-                                                        {text: "撤销面试数据", tooltip: "撤销面试数据", handler: "revokeData"},
+                                                        {text: "刷新", tooltip: "刷新", handler: "refreshPw"},
                                                         "-",
-                                                        {text: "打印评分总表",tooltip: "打印评分总表" , handler: "printChart"}
+                                                        {text: "打印评分总表",tooltip: "打印评分总表" , handler: "printPFZB"},
+                                                        "->",
+                                                        {text: "撤销面试数据", tooltip: "撤销面试数据", handler: "revokeData"},
 
                                                     ]
                                                 }
@@ -628,15 +660,19 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                     selModel: {
                                         type: 'checkboxmodel'
                                     },
-                                    store:{
+                                    /*store:{
                                         type:'interviewReviewScheduleAppsStore'
-                                    },
-                                    dockedItems: [dockedItemBtn]
-                                    ,
-                                    /*store: {
-                                     type: 'interviewReviewApplicants'
-                                     },*/
-                                    columns: columnsItems
+                                    },*/
+                                    dockedItems: [dockedItemBtn],
+                                    columns: columnsItems,
+                                    store:interviewReviewScheduleAppsStore,
+                                    bbar: {
+                                        xtype: 'pagingtoolbar',
+                                        pageSize: 10,
+                                        store: interviewReviewScheduleAppsStore,
+                                        plugins: new Ext.ux.ProgressBarPager()
+                                    }
+                                    
                                 },{
                                     xtype: 'form',
                                     title: '统计信息',
@@ -653,160 +689,36 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
                                              selModel: {
                                                  type: 'checkboxmodel'
                                              },
+                                            name:'statisticalGrid',
                                             columns: statisticsGridDataModel['gridColumns'],
+                                            listeners:{
+            	                            	beforeselect:function(_this,record,index,opts){
+            	                            		var data = record.getData();
+            	                            		var pwId = data["col01"];
+            	                            		if(pwId!=undefined&&pwId==''){
+            	                            			return false;
+            	                            		}
+            	                            	}
+            	                            },
                                             header: false,
                                             border:false,
                                              dockedItems:[{
                                                  xtype:"toolbar",
-                                                 dock: 'bottom',
+                                                 /*dock: 'bottom',*/
                                                  items:[
-                                                     {text:"刷新图表",tooltip:"刷新图表",iconCls: "refresh",handler:function(btn){
-                                                         var form = btn.findParentByType('interviewReviewSchedule').child('form').getForm();
-                                                         var classID = form.findField('classID').getValue();
-                                                         var batchID = form.findField('batchID').getValue();
-                                                         //评委登陆账号id用逗号分割
-                                                         var pw_ids = "";
-                                                         var selList = btn.findParentByType('grid').getSelectionModel().getSelection();
-                                                         for(var x=0;x<selList.length;x++) {
-                                                             if(pw_ids == ""){
-                                                                 pw_ids = selList[x].get("col01");
-                                                             }else{
-                                                                 pw_ids = pw_ids + "," + selList[x].get("col01");
-                                                             }
-                                                         }
-
-                                                         var tzParams='{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_SCHE_STD","OperateType":"QG",' +
-                                                             '"comParams":{"type":"chart","classID":"'+classID+'","batchID":"'+batchID+'","pw_ids":"'+pw_ids+'"}}';
-
-                                                         Ext.tzLoad(tzParams,function(respData) {
-
-                                                             //统计分布图表series
-                                                             var seriesArray = [];
-                                                             //统计图表fields定义
-                                                             chartfields = "'name'";
-                                                             var series1 ;
-                                                             tmpArray = respData.pw_dfqk_chart_field;
-                                                             var tips;
-                                                             for(var i=0;i<tmpArray.length;i++) {
-                                                                 chartfields = chartfields + ",'" + tmpArray[i].pw_field+"'";
-                                                                 tips = tmpArray[i].pw_field;
-                                                                 var fieldName = tmpArray[i].pw_field;
-
-                                                                 series1 = {
-                                                                     type: 'line',
-                                                                     highlight: {size: 7,radius: 7},
-                                                                     axis: 'left',
-                                                                     smooth: true,
-                                                                     xField: 'fbName',
-                                                                     yField: tips,
-                                                                     markerConfig: {type: 'circle',size: 4,radius: 4,'stroke-width': 0},
-                                                                     title: tmpArray[i].pw_name/*,
-                                                                      tips: {
-                                                                      trackMouse: true,
-                                                                      width: 180,
-                                                                      renderer: function(storeItem, item)
-                                                                      {
-                                                                      this.setTitle('分布区间[' + storeItem.get('fbName') + ']<br>分布比率: '+item.data+'-' + Ext.util.Format.number(storeItem.get(fieldName),'000.00'));
-                                                                      }
-                                                                      }*/
-                                                                 };
-                                                                 seriesArray.push(series1);
-                                                             }
-                                                             interviewReviewScheduleChartStore2.fields=[chartfields];
-
-                                                             interviewReviewScheduleChartStore.loadData(respData.columnChart);
-
-                                                             //计算最大值
-                                                             var arrData = respData.columnChart;
-                                                             for (i = 0; i < arrData.length; i++) {
-                                                                 if(columnMaxCount < arrData[i].data1){
-                                                                     columnMaxCount = arrData[i].data1;
-                                                                 }
-                                                             }
-                                                             // 统计分布图;
-                                                             interviewReviewScheduleChartStore2.loadData(respData.lineChart);
-
-                                                             columnChart = new Ext.chart.Chart({
-                                                                 width: 860,
-                                                                 height: 400,
-                                                                 animate: true,
-                                                                 store: interviewReviewScheduleChartStore,
-                                                                 shadow: true,
-                                                                 axes: [{
-                                                                     type: 'Numeric',
-                                                                     position: 'left',
-                                                                     fields: ['data1'],
-                                                                     minimum: columnMinCount,
-                                                                     maximum:columnMaxCount,
-                                                                     label:{renderer: function(value){return Ext.util.Format.number(value,'000.00');}},
-                                                                     title: '平均分',
-                                                                     grid: true,
-                                                                     minimum: 0
-                                                                 }, {
-                                                                     type: 'Category',
-                                                                     position: 'bottom',
-                                                                     fields: ['name'],
-                                                                     title: '评委列表'
-                                                                 }],
-                                                                 series: [{
-                                                                     type: 'column',
-                                                                     axis: 'bottom',
-                                                                     highlight: true,
-                                                                     xField: 'name',
-                                                                     yField: 'data1'
-                                                                 }]
-                                                             });
-
-                                                             lineChart = new Ext.chart.Chart({
-                                                                 xtype: 'chart',
-                                                                 width: 860,
-                                                                 height: 400,
-                                                                 style: 'background:#fff',
-                                                                 animate: true,
-                                                                 store: interviewReviewScheduleChartStore2,
-                                                                 shadow: true,
-                                                                 theme: 'Category1',
-                                                                 legend: {position: 'top'},
-                                                                 axes: [
-                                                                     {
-                                                                         type: 'Numeric',
-                                                                         position: 'left',
-                                                                         fields: [chartfields],
-                                                                         label:{renderer: function(value){return Ext.util.Format.number(value,'000.00');}},
-                                                                         title: '分布比率',
-                                                                         grid: true,
-                                                                         maximum:lineMaxCount,
-                                                                         minimum:lineMinCount
-                                                                     },
-                                                                     {
-                                                                         type: 'Category',
-                                                                         position: 'bottom',
-                                                                         fields: ['fbName'],
-                                                                         title: '分布区间',
-                                                                         label: {rotate: {degrees: 270}}
-                                                                     }
-                                                                 ],
-                                                                 series: seriesArray
-                                                             });
-                                                             mainPageFrame.removeAll();
-                                                             if(respData.display_pjf == 'Y'){
-                                                                 mainPageFrame.add(columnChart);
-                                                             }
-                                                             mainPageFrame.add(lineChart);
-                                                             mainPageFrame.expand(true);
-                                                             mainPageFrame.doLayout();
-
-                                                         });
-
-                                                         //this.doLayout();
-                                                     }}
+                                                	 {
+                 	                                    text: "计算选中评委的标准评分分布",
+                 	                                    tooltip: "计算选中评委的标准评分分布",
+                 	                                    handler:'calcuScoreDist'
+                 	                                }, "-",
+                                                     {text:"刷新图表",tooltip:"刷新图表",iconCls: "refresh",handler:'showMSTB'
+                 	                                }
                                                  ]
                                              }],
                                             viewConfig: {
                                                 enableTextSelection: true
                                             }
-                                        }),
-                                        mainPageFrame]
+                                        })/*,mainPageFrame*/]
                                 }]
                         }
                     ]
@@ -819,14 +731,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewReview.interviewRevie
     },
     buttons: [{
         text: '保存',
+        name:"save",
         iconCls:"save",
         handler: 'onScheduleSave'
     }, {
         text: '确定',
+        name:'ensure',
         iconCls:"ensure",
         handler: 'onScheduleEnsure'
     }, {
         text: '关闭',
+        name:'close',
         iconCls:"close",
         handler: 'onScheduleClose'
     }]

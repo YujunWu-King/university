@@ -11,6 +11,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     	{name:'sex'},
     	{name:'sexDesc'},
     	{name:'judgeList'},
-    	{name:'reviewStatusDesc'}
+    	{name:'reviewStatusDesc'},
+		{name:'negativeList'},
+		{name:'autoLabel'},
+		{name:'manualLabel'}
     ]
 });

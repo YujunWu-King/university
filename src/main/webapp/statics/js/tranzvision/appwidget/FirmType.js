@@ -25,7 +25,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			"itemName": MsgSet["POSITION_TYPE"],
 			//"itemName": "岗位类型",
 			"title": MsgSet["POSITION_TYPE"],
-			"title": "岗位类型",
+			//"title": "岗位类型",
 			"orderby": 2,
 			"value": "",
 			"StorageType": "S",
@@ -39,13 +39,21 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		var c = "",children = data.children,len = children.length;
 		var opt = "",x = "";
 		if (previewmode) {
-			var types = this._getContentHtml(data);
+			var types;
+			if(SurveyBuild.accessType == "M"){
 
-			c += '<div class="main_inner_content_top"></div>';
-			c += '<div class="main_inner_content">';
-			c += types;
-			c += '</div>';
-			c += '<div class="main_inner_content_foot"><div class="clear"></div></div>';
+				types = this._getContentHtmlP(data);
+				c += types;
+			}else{
+
+				types = this._getContentHtml(data);
+
+				c += '<div class="main_inner_content_top"></div>';
+				c += '<div class="main_inner_content">';
+				c += types;
+				c += '</div>';
+				c += '<div class="main_inner_content_foot"><div class="clear"></div></div>';
+			}
 
 		} else {
 			var typeLi = '';
@@ -185,7 +193,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				types += '	<div class="input-list-info left"> <span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.WorkExper1.itemName + ':</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
 				types += '		<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="chosen-select" style="width: 100%;" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
-				types += '			<option value="-1">' +MsgSet["PLEASE_SELECT"]+'</option>';
+				types += '			<option value="">' +MsgSet["PLEASE_SELECT"]+'</option>';
 				types += OPT_FIRM;
 				types += '		</select>';
 				//----------------------------
@@ -202,7 +210,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				//只读模式
 				var OPT_POSITION='';
 				var valDesc='';
-				if(FIRM_TYPE_DEF!=undefined&&FIRM_TYPE_DEF!=""&&FIRM_TYPE_DEF!=null&&FIRM_TYPE_DEF!="-1"){
+				if(FIRM_TYPE_DEF!=undefined&&FIRM_TYPE_DEF!=""&&FIRM_TYPE_DEF!=null){
 					if(FIRM_TYPE_DEF=='01'||FIRM_TYPE_DEF=='02'||FIRM_TYPE_DEF=='03'||FIRM_TYPE_DEF=='04'||FIRM_TYPE_DEF=='07'){
 						for(var k=0;k<POSITION_TYPE_GP1.length;k++){
 							if(POSITION_TYPE_DEL==("A"+parseInt(k+1))){
@@ -232,8 +240,9 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			} else {
 				//填写模式
 				//------------------根据“公司类型”设置“职位类型”选项
-				var OPT_POSITION='';
-				if(FIRM_TYPE_DEF!=undefined&&FIRM_TYPE_DEF!=""&&FIRM_TYPE_DEF!=null&&FIRM_TYPE_DEF!="-1"){
+				var OPT_POSITION='<option value="">' +MsgSet["PLEASE_SELECT"]+'</option>';
+				//console.log(FIRM_TYPE_DEF);
+				if(FIRM_TYPE_DEF!=undefined&&FIRM_TYPE_DEF!=""&&FIRM_TYPE_DEF!=null){
 					if(FIRM_TYPE_DEF=='01'||FIRM_TYPE_DEF=='02'||FIRM_TYPE_DEF=='03'||FIRM_TYPE_DEF=='04'||FIRM_TYPE_DEF=='07'){
 						for(var k=0;k<POSITION_TYPE_GP1.length;k++){
 							OPT_POSITION+='<option value="A'+parseInt(k+1)+'"'+(POSITION_TYPE_DEL==("A"+parseInt(k+1)) ? 'selected="selected"': '')+'>'+POSITION_TYPE_GP1[k]+'</option>'
@@ -266,6 +275,152 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			types+="</div>"
 		return types;
 	},
+
+	//手机版
+	_getContentHtmlP: function(data) {
+
+		var child=data["children"][0];
+		if (child == undefined) {
+			child=data["children"];
+		}
+		var types="";
+
+		//--公司类型初始值
+		var FIRM_TYPE_DEF=child.WorkExper1.value;
+
+		//--岗位类型初始值
+		var POSITION_TYPE_DEL=child.WorkExper2.value;
+
+		//-------------------------------------------------------设置下拉框选项值 01公司性质和岗位性质数据
+		var FIRM_TYPE_GRP=[
+			"外资/合资企业",//01
+			"自主创业",//02
+			"国有企业",//03
+			"民营企业",//04
+			"政府机构",//05
+			"事业单位",//06
+			"其他"//07
+		];
+		var POSITION_TYPE_GP1=[
+			"高层管理（总经理/副总经理以上级）",//01
+			"高级管理（总助/执行主任/执行总监级）",//02
+			"中级管理（总监/部门经理级）",//03
+			"初级管理（主管级/一般经理级）",//04
+			"高级专业人士",//05
+			"初级专业人士",//06
+			"管理培训生",//07
+			"其他"//08
+		];
+		var POSITION_TYPE_GP2=[
+			"处级及以上",//01
+			"副处级",//02
+			"正科级",//03
+			"副科级",//04
+			"一般科员",//05
+			"其他"//06
+		]
+
+		//------------------------------------------------------设置下拉框选项值 02填充select的option属性
+		//1.公司类型
+		if (SurveyBuild._readonly) {
+
+			//只读模式
+			var OPT_FIRM='';
+			var valDesc='';
+			for(var k=0;k<FIRM_TYPE_GRP.length;k++){
+				if(FIRM_TYPE_DEF=="0"+parseInt(k+1)){
+					valDesc=FIRM_TYPE_GRP[k];
+					break;
+				}
+			}
+
+			//放入已选择的公司类型
+			types += '<div class="item">';
+			types += '<p>'+ child.WorkExper1.itemName +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+			types += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + valDesc + '"/></div>';
+			types += '</div>';
+
+		}else{
+
+			//填写模式
+			var OPT_FIRM='';
+			for(var k=0;k<FIRM_TYPE_GRP.length;k++){
+				OPT_FIRM+='<option value="0'+parseInt(k+1)+'"'+(FIRM_TYPE_DEF=="0"+parseInt(k+1)?'selected="selected"': '')+'>'+FIRM_TYPE_GRP[k]+'</option>';
+			}
+
+			//--------------------------------将公司类型值放入下拉框
+			types += '<div class="item">';
+			types += '<p>'+ child.WorkExper1.itemName +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+			types += '<div id="' + data["itemId"] + child.WorkExper1.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+			types += '<div class="text-box">';
+			types += '<select id="' + data["itemId"] + child.WorkExper1.itemId + '" class="select1" data-regular="" title="' + child.WorkExper1.itemName + '" value="' + child.WorkExper1["value"] + '" name="' + data["itemId"] + child.WorkExper1.itemId + '">';
+			types += '<option value="">' +MsgSet["PLEASE_SELECT"]+'</option>';
+			types += OPT_FIRM;
+			types += '</select>';
+			types += '</div>';
+			types += '</div>';
+		}
+
+		//职位类型
+		if (SurveyBuild._readonly) {
+
+			//只读模式
+			var OPT_POSITION='';
+			var valDesc='';
+			if(FIRM_TYPE_DEF!=undefined&&FIRM_TYPE_DEF!=""&&FIRM_TYPE_DEF!=null){
+				if(FIRM_TYPE_DEF=='01'||FIRM_TYPE_DEF=='02'||FIRM_TYPE_DEF=='03'||FIRM_TYPE_DEF=='04'||FIRM_TYPE_DEF=='07'){
+					for(var k=0;k<POSITION_TYPE_GP1.length;k++){
+						if(POSITION_TYPE_DEL==("A"+parseInt(k+1))){
+							valDesc=POSITION_TYPE_GP1[k];
+							break;
+						}
+					}
+				}else if(FIRM_TYPE_DEF=='05'||FIRM_TYPE_DEF=='06'){
+					for(var k=0;k<POSITION_TYPE_GP2.length;k++){
+						if(POSITION_TYPE_DEL==("B"+parseInt(k+1))){
+							valDesc=POSITION_TYPE_GP2[k];
+							break;
+						}
+					}
+
+				}
+			}
+
+			types += '<div class="item">';
+			types += '<p>'+ child.WorkExper2.itemName +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+			types += '<div class="text-box"><input ' + ' type="text" class="text1" readonly="true" value="' + valDesc + '"/></div>';
+			types += '</div>';
+		}else{
+
+			//填写模式(根据公司类型选择职位类型下拉框)
+			var OPT_POSITION='<option value="">' +MsgSet["PLEASE_SELECT"]+'</option>';
+			if(FIRM_TYPE_DEF!=undefined&&FIRM_TYPE_DEF!=""&&FIRM_TYPE_DEF!=null){
+				if(FIRM_TYPE_DEF=='01'||FIRM_TYPE_DEF=='02'||FIRM_TYPE_DEF=='03'||FIRM_TYPE_DEF=='04'||FIRM_TYPE_DEF=='07'){
+					for(var k=0;k<POSITION_TYPE_GP1.length;k++){
+						OPT_POSITION+='<option value="A'+parseInt(k+1)+'"'+(POSITION_TYPE_DEL==("A"+parseInt(k+1)) ? 'selected="selected"': '')+'>'+POSITION_TYPE_GP1[k]+'</option>'
+					}
+				}else if(FIRM_TYPE_DEF=='05'||FIRM_TYPE_DEF=='06'){
+					for(var k=0;k<POSITION_TYPE_GP2.length;k++){
+						OPT_POSITION+='<option value="B'+parseInt(k+1)+'"'+(POSITION_TYPE_DEL==("B"+parseInt(k+1)) ? 'selected="selected"': '')+'>'+POSITION_TYPE_GP2[k]+'</option>'
+					}
+
+				}
+			}
+
+			//将值放入职位类型的下拉框
+			types += '<div class="item">';
+			types += '<p>'+ child.WorkExper2.itemName +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+			types += '<div id="' + data["itemId"] + child.WorkExper2.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+			types += '<div class="text-box">';
+			types += '<select id="' + data["itemId"] + child.WorkExper2.itemId + '" class="select1" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
+			types += OPT_POSITION;
+			types += '</select>';
+			types += '</div>';
+			types += '</div>';
+		}
+		return types;
+	},
+
 	_eventbind: function(data) {
 		//------------------------
 		var FIRM_TYPE_GRP=[
@@ -314,7 +469,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 			//console.log(child.WorkExper1.value);
 			var POSITION_TYPE_DEL=$position_select.val();
 			var FIRM_TYPE=$firm_select.val();
-			var OPT_POSITION='<option value="-1">'+MsgSet["PLEASE_SELECT"]+'</option>';
+			var OPT_POSITION='<option value="">'+MsgSet["PLEASE_SELECT"]+'</option>';
 			if(FIRM_TYPE=='01'||FIRM_TYPE=='03'||FIRM_TYPE=='04'||FIRM_TYPE=='07'){
 				for(var k=0;k<POSITION_TYPE_GP1.length;k++){
 					OPT_POSITION+='<option value="A'+parseInt(k+1)+'"'+(POSITION_TYPE_DEL==("A"+parseInt(k+1)) ? 'selected="selected"': '')+'>'+POSITION_TYPE_GP1[k]+'</option>';
@@ -341,23 +496,25 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 		});
 		 //所有select非空验证:WorkExper1 WorkExper2
 		if(data.isRequire == "Y"){
-			//console.log("必填校验");
+
 			var select_id_gp=["WorkExper1","WorkExper2"];
 			for(var j=0;j<select_id_gp.length;j++){
-				 var EngLevelOpt=""+select_id_gp[j];
-				   var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
-				   $selectEl.each(function(){
-					   $(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
-						$(this).functionValidator({
-							fun:function(val,el){
-								if(val==""||val=="-1"){
-									return "此项必选";
-								}else{
-									return true;
-								}
-							}	
-						}); 
-				   });
+				var EngLevelOpt=""+select_id_gp[j];
+				var $selectEl = $("#" + data.itemId +child[EngLevelOpt].itemId);
+				$selectEl.each(function(){
+
+					$(this).formValidator({tipID:($(this).attr("id")+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
+					$(this).functionValidator({
+						fun:function(val,el){
+
+							if(val==""){
+								return "此项必选";
+							}else{
+								return true;
+							}
+						}
+					});
+				});
 			}
 		}
 	

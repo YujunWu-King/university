@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.tranzvision.gd.util.base.GetSpringBeanUtil;
@@ -58,6 +59,14 @@ public class LcSysvarClass {
 			} else {
 				isPublish = "N";
 			}
+			//报名表提交状态;
+			String bmbTjStatusDesc = "";
+			if(appInsStatus != null && !"".equals(appInsStatus)){
+				bmbTjStatusDesc = jdbcTemplate.queryForObject("select TZ_ZHZ_DMS from  PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_APPFORM_STATE' AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?", new Object[]{appInsStatus},String.class);
+				if(bmbTjStatusDesc == null){
+					bmbTjStatusDesc = "";
+				}
+			}
 			
 			// 报名表链接;
 			String applyFromUrl = rootPath + "/dispatcher?classid=appId&TZ_CLASS_ID=" + classId + "&SITE_ID=" + siteId + "&TZ_PAGE_ID=" ;
@@ -91,19 +100,30 @@ public class LcSysvarClass {
 							} catch (Exception e1) {
 								isComplete = "";
 							}
-
-							span = "<span class=\"fl width_40\">" + TZ_XXX_MC + "</span>";
-							
-							
-							if ("Y".equals(isComplete)) {
-								/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
-										+ "/statics/css/website/m/images/reg_right.png\"></span>";*/
-								span = span + "<span class=\"fl\">已完成</span>";
-							} else {
-								/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
+							if(i ==  list.size() -1){
+								span = "<span class=\"fl width_40\">报名表提交状态</span><span class=\"fl\">"+bmbTjStatusDesc+"</span>";
+								
+							}else{
+								span = "<span class=\"fl width_40\">" + TZ_XXX_MC + "</span>";
+								
+								//完成;
+								if ("Y".equals(isComplete)) {
+									/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
+											+ "/statics/css/website/m/images/reg_right.png\"></span>";*/
+									span = span + "<span class=\"fl\">已完成</span>";
+								} else {
+									//无
+									if("B".equals(isComplete)){
+										span = span + "<span class=\"fl\">无</span>";
+									}else{
+										/*span = span + "<span class=\"fl\"><img src=\"" + rootPath
 										+ "/statics/css/website/m/images/reg_warm.png\"></span>";*/
-								span = span + "<span class=\"fl\">未完成</span>";
+										span = span + "<span class=\"fl\">未完成</span>";
+									}
+									
+								}
 							}
+							
 							
 							content = content +  "<div class=\"overhidden\">" + span + "</div>";
 							
@@ -137,13 +157,33 @@ public class LcSysvarClass {
 							count = count + 1;
 							TZ_XXX_BH = (String) list.get(i).get("TZ_XXX_BH");
 							TZ_XXX_MC = (String) list.get(i).get("TZ_XXX_MC");
-							String isComplete = "";
-							try {
-								isComplete = jdbcTemplate.queryForObject(
-										"SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?",
-										String.class, new Object[] { appIns, TZ_XXX_BH });
-							} catch (Exception e1) {
-								isComplete = "";
+							String td1 = "";
+							if(count == totalnum){
+								//最后一列不显示报名表的正式提交列, 直接显示报名表的状态;
+								TZ_XXX_MC = "报名表提交状态";
+								// 已经提交;
+								td1 = "<td>" + bmbTjStatusDesc + "</td>";
+							}else{
+								String isComplete = "";
+								try {
+									isComplete = jdbcTemplate.queryForObject(
+											"SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?",
+											String.class, new Object[] { appIns, TZ_XXX_BH });
+								} catch (Exception e1) {
+									isComplete = "";
+								}
+								
+	
+								//每页对应额链接;
+								String everyApplyFromUrl = applyFromUrl + TZ_XXX_BH;
+								if ("Y".equals(isComplete)) {
+									td1 = "<td><img src=\"" + rootPath
+											+ "/statics/css/website/images/table_check.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">已完成</a></td>";
+								} else if("B".equals(isComplete)){
+									td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">无</a></td>";
+								}else {
+									td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">未完成</a></td>";
+								}
 							}
 							if ("".equals(th)) {
 								if(i < TABLE_COLUM_NUM){
@@ -159,16 +199,6 @@ public class LcSysvarClass {
 									th = th + "<td>" + TZ_XXX_MC + "</td>";
 								}
 								
-							}
-
-							String td1 = "";
-							//每页对应额链接;
-							String everyApplyFromUrl = applyFromUrl + TZ_XXX_BH;
-							if ("Y".equals(isComplete)) {
-								td1 = "<td><img src=\"" + rootPath
-										+ "/statics/css/website/images/table_check.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">已完成</a></td>";
-							} else {
-								td1 = "<td><img src=\"" + rootPath + "/statics/css/website/images/alert.png\"><a href=\""+everyApplyFromUrl+"\" style=\"text-decoration:underline;\">未完成</a></td>";
 							}
 							if ("".equals(td)) {
 								td = td1;
@@ -237,6 +267,7 @@ public class LcSysvarClass {
 			         }
 					
 					tjrqkxx = "<td colspan=\"3\">" + tjrqkxx + "</td>";
+					
 					//打印报名表;
 					String applyFormPrint = rootPath + "/PrintPdfServlet?instanceID=" + appIns;
 					//未提交也可以打印;
@@ -321,11 +352,26 @@ public class LcSysvarClass {
 				}catch(Exception e){
 					tzLuquSta = "";
 				}
+
 				if ("LQ".equals(tzLuquSta)){
 					if("Y".equals(isMobile)){
-						QrcodeHtml = "<div class=\"overhidden\" onclick='openRqQrcode(\""+appIns+"\")'><i class=\"add_icon\"></i><span class=\"fl\" style=\"color:#666;\">查看电子版条件录取通知书</span></div>";
+						Map<String, Object> jgOpridMap = null;
+						try{
+							jgOpridMap = jdbcTemplate.queryForMap("select A.OPRID,B.TZ_JG_ID from PS_TZ_FORM_WRK_T A,PS_TZ_CLASS_INF_T B WHERE A.TZ_APP_INS_ID=? AND A.TZ_CLASS_ID=B.TZ_CLASS_ID", new Object[]{appIns});
+						}catch(DataAccessException dae){
+							jgOpridMap = null;
+						}
+						
+//						QrcodeHtml = "<div class=\"overhidden\" onclick='openRqQrcode(\""+appIns+"\")'><i class=\"add_icon\"></i><span class=\"fl\" style=\"color:#666;\">查看电子版条件录取通知书</span></div>";
+						String jgId = "",oprid = "";
+						if(jgOpridMap != null){
+							oprid = jgOpridMap.get("OPRID") == null ? "" : String.valueOf(jgOpridMap.get("OPRID"));
+							jgId = jgOpridMap.get("TZ_JG_ID") == null ? "" : String.valueOf(jgOpridMap.get("TZ_JG_ID"));
+						}
+						String lqUrl = rootPath + "/admission/" +jgId+"/" + siteId + "/" + oprid + "/" + appIns;
+						QrcodeHtml = "<div class=\"overhidden\"><a href=\""+lqUrl+"\" target=\"_blank\"><i class=\"add_icon\"></i><span class=\"fl\" style=\"color:#666;\">查看电子版条件录取通知书</span></a></div>";
 					}else{
-						QrcodeHtml = "<div class=\"overhidden\"><a onclick='openRqQrcode(\""+appIns+"\")' href=\"javascript:void(0);\"><img class=\"fl table_ck\" src=\"" + rootPath + "/statics/css/website/images/table_search.png\"></a><p>查看电子版条件录取通知书</p></div>";
+						QrcodeHtml = "<div class=\"overhidden\"><a onclick='openRqQrcode(\""+appIns+"\")' href=\"javascript:void(0);\"><img class=\"fl table_ck\" src=\"" + rootPath + "/statics/css/website/images/table_search.png\" />查看电子版条件录取通知书</a></div>";
 					}
 					
 				}
@@ -473,20 +519,29 @@ public class LcSysvarClass {
 							String xxxId = fieldIdList.get(i);
 							String xxxmc = fieldNameList.get(i);
 							String xxxValue = "";
+							
 							if (valueMap != null) {
-								isPublish = "Y";
 								xxxValue = valueMap.get(xxxId) == null ? "" : String.valueOf(valueMap.get(xxxId));
 							}
 							if (xxxValue == null) {
 								xxxValue = "";
+							}
+							
+							//至少要有一个有值才表示已经发布并显示;
+							xxxValue = xxxValue.trim();
+							if(!"".equals(xxxValue)){
+								isPublish = "Y";
 							}
 
 							content = content +  "<div class=\"overhidden\"><span class=\"fl width_40\">" + xxxmc + "</span><span class=\"fl\">" + xxxValue + "</span></div>";
 
 						}
 					}
-					result[0] = isPublish;
-					result[1] = content;
+					if("Y".equals(isPublish)){
+						result[0] = isPublish;
+						result[1] = content;
+					}
+					
 				}
 			}else{
 				if (totalnum > 0) {
@@ -570,12 +625,14 @@ public class LcSysvarClass {
 							String xxxmc = fieldNameList.get(i);
 							String xxxValue = "";
 							if (valueMap != null) {
-								isPublish = "Y";
 								xxxValue = valueMap.get(xxxId) == null ? "" : String.valueOf(valueMap.get(xxxId));
 							}
 							if (xxxValue == null) {
 								xxxValue = "";
 							}
+							
+							xxxValue = xxxValue.trim();
+							
 
 							if ("".equals(th)) {
 								if(i < TABLE_COLUM_NUM){
@@ -604,11 +661,16 @@ public class LcSysvarClass {
 							
 							//如果是材料评审且面试的资格为："有"则显示
 							String msRsl = "";
-							if(i == 0 && "TZ_LCPS".equals(lcName)){
+							if("TZ_RESULT".equals(xxxId) && "TZ_LCPS".equals(lcName)){
 								msRsl = jdbcTemplate.queryForObject("select TZ_RESULT_CODE from TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns},String.class);
 								if("有".equals(msRsl)){
 									xxxValue = xxxValue + "，面试预约请<a href=\"" + rootPath + "/dispatcher?classid=Interview&siteId="+siteId+"\">点击此处</a>";
 								}
+							}
+							
+							//至少要有一个有值才表示已经发布并显示;
+							if(!"".equals(xxxValue)){
+								isPublish = "Y";
 							}
 							
 							if ("".equals(td)) {
@@ -654,8 +716,11 @@ public class LcSysvarClass {
 					String tableHtmlEnd = "</table>";
 
 					content = tableHtmlStart + tableHtml + tableHtmlEnd;
-					result[0] = isPublish;
-					result[1] = content;
+					if("Y".equals(isPublish)){
+						result[0] = isPublish;
+						result[1] = content;
+					}
+					
 				}
 			}
 

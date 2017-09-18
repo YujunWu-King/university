@@ -149,6 +149,8 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 	/* 指定评委 */
 	public String setJudge(String strParams,String[] errMsg) {
 		String strRet = "{}";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		ArrayList<Map<String, Object>> pweiListJson = new ArrayList<Map<String,Object>>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
 		try {
@@ -216,7 +218,7 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 						} else {
 							psTzCpPwKsTbl.setRowLastmantDttm(new Date());
 							psTzCpPwKsTbl.setRowLastmantOprid(oprid);
-							psTzCpPwKsTblMapper.updateByPrimaryKey(psTzCpPwKsTbl);
+							psTzCpPwKsTblMapper.updateByPrimaryKeySelective(psTzCpPwKsTbl);
 						}
 						
 						
@@ -246,56 +248,73 @@ public class TzClpsSetJudgeServiceImpl extends FrameworkImpl {
 							psTzKsclpslsTbl.setTzSubmitYn("U");
 							psTzKsclpslsTbl.setRowLastmantDttm(new Date());
 							psTzKsclpslsTbl.setRowLastmantOprid(oprid);
-							psTzKsclpslsTblMapper.updateByPrimaryKey(psTzKsclpslsTbl);	
-						}
-						
-						String pweiOpridDesc = "";
-						sql = "SELECT TZ_PWEI_OPRID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
-						List<Map<String, Object>> ksPwList = sqlQuery.queryForList(sql,new Object[]{classId,batchId,appinsId});
-						if(ksPwList==null) {
-							
-						} else {
-							for(Map<String,Object> ksPwMap : ksPwList) {
-								String pweiOprid = (String) ksPwMap.get("TZ_PWEI_OPRID");
-								if(!"".equals(pweiOpridDesc)) {
-									pweiOpridDesc += "," + pweiOprid;
-								} else {
-									pweiOpridDesc = pweiOprid;
-								}
-							}
-						}
-						
-						PsTzClpskspwTblKey psTzClpskspwTblKey = new PsTzClpskspwTblKey();
-						psTzClpskspwTblKey.setTzClassId(classId);
-						psTzClpskspwTblKey.setTzApplyPcId(batchId);
-						psTzClpskspwTblKey.setTzAppInsId(Long.valueOf(String.valueOf(appinsId)));
-						psTzClpskspwTblKey.setTzClpsLunc(dqpsLunc);
-						
-						PsTzClpskspwTbl psTzClpskspwTbl = psTzClpskspwTblMapper.selectByPrimaryKey(psTzClpskspwTblKey);
-						
-						if(psTzClpskspwTbl==null) {
-							psTzClpskspwTbl = new PsTzClpskspwTbl();
-							psTzClpskspwTbl.setTzClassId(classId);
-							psTzClpskspwTbl.setTzApplyPcId(batchId);
-							psTzClpskspwTbl.setTzAppInsId(Long.valueOf(String.valueOf(appinsId)));
-							psTzClpskspwTbl.setTzClpsLunc(dqpsLunc);
-							psTzClpskspwTbl.setTzClpwList(pweiOpridDesc);
-							psTzClpskspwTbl.setRowAddedDttm(new Date());
-							psTzClpskspwTbl.setRowAddedOprid(oprid);
-							psTzClpskspwTbl.setRowLastmantDttm(new Date());
-							psTzClpskspwTbl.setRowLastmantOprid(oprid);
-							psTzClpskspwTblMapper.insertSelective(psTzClpskspwTbl);
-						} else {
-							psTzClpskspwTbl.setTzClpwList(pweiOpridDesc);
-							psTzClpskspwTbl.setRowLastmantDttm(new Date());
-							psTzClpskspwTbl.setRowLastmantOprid(oprid);
-							psTzClpskspwTblMapper.updateByPrimaryKey(psTzClpskspwTbl);
+							psTzKsclpslsTblMapper.updateByPrimaryKeySelective(psTzKsclpslsTbl);	
 						}
 						
 					}
 					
 				}
+				
+				String pweiDlzhDesc = "";
+				String pweiOpridDesc = "";
+				sql = "SELECT A.TZ_PWEI_OPRID,B.TZ_DLZH_ID FROM PS_TZ_CP_PW_KS_TBL A ,PS_TZ_AQ_YHXX_TBL B WHERE A.TZ_PWEI_OPRID=B.OPRID AND A.TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
+				List<Map<String, Object>> ksPwList = sqlQuery.queryForList(sql,new Object[]{classId,batchId,appinsId});
+				if(ksPwList==null) {
+					
+				} else {
+					for(Map<String,Object> ksPwMap : ksPwList) {
+						String pweiOprid = (String) ksPwMap.get("TZ_PWEI_OPRID");
+						if(!"".equals(pweiOpridDesc)) {
+							pweiOpridDesc += "," + pweiOprid;
+						} else {
+							pweiOpridDesc = pweiOprid;
+						}
+						
+						String pweiDlzh = (String) ksPwMap.get("TZ_DLZH_ID");
+						if(!"".equals(pweiDlzhDesc)) {
+							pweiDlzhDesc += "," + pweiDlzh;
+						} else {
+							pweiDlzhDesc = pweiDlzh;
+						}
+					}
+				}
+				
+				PsTzClpskspwTblKey psTzClpskspwTblKey = new PsTzClpskspwTblKey();
+				psTzClpskspwTblKey.setTzClassId(classId);
+				psTzClpskspwTblKey.setTzApplyPcId(batchId);
+				psTzClpskspwTblKey.setTzAppInsId(Long.valueOf(String.valueOf(appinsId)));
+				psTzClpskspwTblKey.setTzClpsLunc(dqpsLunc);
+				
+				PsTzClpskspwTbl psTzClpskspwTbl = psTzClpskspwTblMapper.selectByPrimaryKey(psTzClpskspwTblKey);
+				
+				if(psTzClpskspwTbl==null) {
+					psTzClpskspwTbl = new PsTzClpskspwTbl();
+					psTzClpskspwTbl.setTzClassId(classId);
+					psTzClpskspwTbl.setTzApplyPcId(batchId);
+					psTzClpskspwTbl.setTzAppInsId(Long.valueOf(String.valueOf(appinsId)));
+					psTzClpskspwTbl.setTzClpsLunc(dqpsLunc);
+					psTzClpskspwTbl.setTzClpwList(pweiOpridDesc);
+					psTzClpskspwTbl.setRowAddedDttm(new Date());
+					psTzClpskspwTbl.setRowAddedOprid(oprid);
+					psTzClpskspwTbl.setRowLastmantDttm(new Date());
+					psTzClpskspwTbl.setRowLastmantOprid(oprid);
+					psTzClpskspwTblMapper.insertSelective(psTzClpskspwTbl);
+				} else {
+					psTzClpskspwTbl.setTzClpwList(pweiOpridDesc);
+					psTzClpskspwTbl.setRowLastmantDttm(new Date());
+					psTzClpskspwTbl.setRowLastmantOprid(oprid);
+					psTzClpskspwTblMapper.updateByPrimaryKeySelective(psTzClpskspwTbl);
+				}
+				
+				Map<String, Object> mapPwei = new HashMap<String,Object>();
+				mapPwei.put("appinsId", appinsId);
+				mapPwei.put("pweiDlzhDesc", pweiDlzhDesc);
+				
+				pweiListJson.add(mapPwei);
+				
 			}
+			mapRet.put("pweiList", pweiListJson);
+			strRet = jacksonUtil.Map2json(mapRet);
 				
 		} catch (Exception e) {
 			e.printStackTrace();

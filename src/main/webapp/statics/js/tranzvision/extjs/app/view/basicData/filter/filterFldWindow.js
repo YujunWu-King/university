@@ -31,16 +31,21 @@
 		},
 		items: [{
 			xtype: 'hiddenfield',
-			fieldLabel: '组件编号',
+			fieldLabel: '可配置搜索组件编号',
 			name: 'ComID'
 		}, {
 			xtype: 'hiddenfield',
-			fieldLabel: '页面编号',
+			fieldLabel: '可配置搜索页面编号',
 			name: 'PageID'
 		}, {
 			xtype: 'hiddenfield',
-			fieldLabel: '视图名称',
+			fieldLabel: '可配置搜索视图名称',
 			name: 'ViewMc'
+		},{
+			xtype: 'hiddenfield',
+			fieldLabel: '视图名称',
+			name: 'FieldView',
+			padding:10
 		},{
 			xtype: 'textfield',
 			fieldLabel: '字段名称',
@@ -64,9 +69,10 @@
 			   	 	var PageID = formParams['PageID'];
 			   	 	var ViewMc = formParams['ViewMc'];
 			   	 	var FieldMc = formParams['FieldMc'];
+			   	 	var FieldView= formParams['FieldView'];
 			   	 	
 			   	 	var grid = form.child("grid");
-			   	 	var tzStoreParams = '{"ComID":"' + ComID + '","PageID":"' + PageID + '","ViewMc":"' + ViewMc + '","FieldMc":"' + FieldMc + '"}';
+			   	 	var tzStoreParams = '{"ComID":"' + ComID + '","PageID":"' + PageID + '","ViewMc":"' + ViewMc +'","FieldView":"' + FieldView + '","FieldMc":"' + FieldMc + '"}';
 			        grid.store.tzStoreParams = tzStoreParams;
 			        grid.store.loadPage(1);
 			    }

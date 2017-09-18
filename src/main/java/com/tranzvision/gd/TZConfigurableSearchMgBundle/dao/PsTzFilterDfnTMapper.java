@@ -14,5 +14,7 @@ public interface PsTzFilterDfnTMapper {
 
     int updateByPrimaryKeySelective(PsTzFilterDfnT record);
 
+    int updateByPrimaryKeyWithBLOBs(PsTzFilterDfnT record);
+
     int updateByPrimaryKey(PsTzFilterDfnT record);
 }

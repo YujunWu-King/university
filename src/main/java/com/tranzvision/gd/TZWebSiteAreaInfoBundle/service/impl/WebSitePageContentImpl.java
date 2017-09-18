@@ -36,7 +36,7 @@ public class WebSitePageContentImpl extends FrameworkImpl {
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		JacksonUtil jacksonUtil = new JacksonUtil();
-//		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		// String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			jacksonUtil.json2Map(strParams);
 			String strSiteId = "";
@@ -64,10 +64,10 @@ public class WebSitePageContentImpl extends FrameworkImpl {
 				strColumnId = request.getParameter("columnId");
 			}
 			// 项目跟目录;
-//			String rootPath = request.getContextPath();
+			// String rootPath = request.getContextPath();
 			// 通用链接;
 			String ZSGL_URL = request.getContextPath() + "/dispatcher";
-			
+
 			// 根据siteid得到机构id;
 			String str_jg_id = "";
 			// language;
@@ -90,38 +90,46 @@ public class WebSitePageContentImpl extends FrameworkImpl {
 							+ "/" + skinstor + "/" + "style_" + str_jg_id.toLowerCase() + ".css?v=" + strRandom;
 				}
 			}
-			
-			if (language == null || "".equals(language)) {   
+
+			if (language == null || "".equals(language)) {
 				language = "ZHS";
 			}
-//			//获取栏目编号;
-//			String columnSQL = "SELECT TZ_COLU_ID FROM PS_TZ_SITEI_AREA_T WHERE TZ_SITEI_ID=? AND TZ_AREA_ID=?";
-//			String columnId = jdbcTemplate.queryForObject(columnSQL, new Object[] { strSiteId,strAreaId }, "String");
-//			String registerCalListHtml = "";
-//			String registerCalContentHtml = "";
-//			if(columnId!=null&&!"".equals(columnId)){
-//				String[] columns = columnId.split(",");
-//			for(int i=0;i<columns.length;i++){
-//				String currentColumnId = columns[i];
-//			
-//			//获取栏目名称;
-//			String columnNameSQL = "SELECT TZ_COLU_NAME FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? and TZ_COLU_ID=?";
-//			String columnName = jdbcTemplate.queryForObject(columnNameSQL, new Object[] { strSiteId,currentColumnId }, "String");
-//			// 招生网站单页列表;
-//			registerCalListHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_LI_HTML",true,columnName);
-//			}
-//			}
-			//获取栏目名称;
+			// //获取栏目编号;
+			// String columnSQL = "SELECT TZ_COLU_ID FROM PS_TZ_SITEI_AREA_T
+			// WHERE TZ_SITEI_ID=? AND TZ_AREA_ID=?";
+			// String columnId = jdbcTemplate.queryForObject(columnSQL, new
+			// Object[] { strSiteId,strAreaId }, "String");
+			// String registerCalListHtml = "";
+			// String registerCalContentHtml = "";
+			// if(columnId!=null&&!"".equals(columnId)){
+			// String[] columns = columnId.split(",");
+			// for(int i=0;i<columns.length;i++){
+			// String currentColumnId = columns[i];
+			//
+			// //获取栏目名称;
+			// String columnNameSQL = "SELECT TZ_COLU_NAME FROM
+			// PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? and TZ_COLU_ID=?";
+			// String columnName = jdbcTemplate.queryForObject(columnNameSQL,
+			// new Object[] { strSiteId,currentColumnId }, "String");
+			// // 招生网站单页列表;
+			// registerCalListHtml =
+			// tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_LI_HTML",true,columnName);
+			// }
+			// }
+			// 获取栏目名称;
 			String columnNameSQL = "SELECT TZ_COLU_NAME FROM PS_TZ_SITEI_COLU_T WHERE TZ_SITEI_ID=? and TZ_COLU_ID=?";
-			String columnName = jdbcTemplate.queryForObject(columnNameSQL, new Object[] { strSiteId,strColumnId }, "String");
+			String columnName = jdbcTemplate.queryForObject(columnNameSQL, new Object[] { strSiteId, strColumnId },
+					"String");
 			String registerCalListHtml = "";
 			String registerCalContentHtml = "";
 
-			registerCalListHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_LI_HTML",columnName);
+			registerCalListHtml = tzGDObject
+					.getHTMLTextForDollar("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_LI_HTML", columnName);
 			// 展示页面;
-			registerCalContentHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_HTML",
-					request.getContextPath(), ZSGL_URL, strCssDir, registerCalListHtml, str_jg_id, strSiteId);
-			
+			registerCalContentHtml = tzGDObject.getHTMLTextForDollar(
+					"HTML.TZWebSiteAreaInfoBundle.TZ_SITE_MORE_BKRL_HTML", request.getContextPath(), ZSGL_URL,
+					strCssDir, registerCalListHtml, str_jg_id, strSiteId);
+
 			registerCalContentHtml = siteRepCssServiceImpl.repTitle(registerCalContentHtml, strSiteId);
 			registerCalContentHtml = siteRepCssServiceImpl.repCss(registerCalContentHtml, strSiteId);
 			return registerCalContentHtml;

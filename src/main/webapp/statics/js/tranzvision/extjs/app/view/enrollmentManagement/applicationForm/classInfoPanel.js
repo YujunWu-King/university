@@ -126,10 +126,20 @@
 						    iconCls:"query",
 						    handler:"queryStudents"
 						},'-',   
-                        {
+                        /*{
                             text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.package","将选中人员材料批量打包"),
                             iconCls:"zip",
                             handler:"packageAndDownload"
+                        },'-',*/
+						{
+                            text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.packageAllLetter","将搜索结果考生推荐信批量打包"),
+                            iconCls:"zip",
+                            handler:"packageLetAndDownload"
+                        },'-',
+                        {
+                            text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.packageAll","将搜索结果考生材料批量打包"),
+                            iconCls:"zip",
+                            handler:"packageAllAndDownload"
                         },'-',
                         {
                             text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.downloadPackages","查看打包结果并下载"),
@@ -146,6 +156,11 @@
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportExcel","导出Excel"),
                                 glyph:'xf1c3@FontAwesome',
                                 menu:[{
+                                    text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportSearchResults","导出搜索结果人员信息到Excel"),
+                                    glyph:'xf1c3@FontAwesome',
+                                    name:'exportSearch',
+                                    handler:'exportExcelOrDownload'
+                                },{
                                     text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.exportApplicantsInfo","导出选中人员信息到Excel"),
                                     glyph:'xf1c3@FontAwesome',
                                     name:'exportExcel',

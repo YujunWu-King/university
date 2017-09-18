@@ -43,6 +43,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzKsTjxTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.MessageTextServiceImpl;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.encrypt.Sha3DesMD5;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -90,6 +91,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 	private PsTzAppCcTMapper psTzAppCcTMapper;
 	@Autowired
 	private PsTzAppDhccTMapper psTzAppDhccTMapper;
+	
 
 	/* 获取报名人信息 */
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -212,8 +214,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						new Object[] { strAppInsID }, "String");
 
 				if (oprid != null && !"".equals(oprid)) {
-					String lxfsSQL = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
-					Map<String, Object> lxfsMap = jdbcTemplate.queryForMap(lxfsSQL, new Object[] { strAppInsID });
+					String lxfsSQL = "SELECT TZ_ZY_SJ,TZ_CY_SJ,TZ_ZY_DH,TZ_CY_DH,TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_TXDZ,TZ_CY_TXDZ,TZ_WEIXIN,TZ_SKYPE FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?";
+					Map<String, Object> lxfsMap = jdbcTemplate.queryForMap(lxfsSQL, new Object[] { oprid });
 					if (lxfsMap != null) {
 						mainMobilePhone = (String) lxfsMap.get("TZ_ZY_SJ");
 						backupMobilePhone = (String) lxfsMap.get("TZ_CY_SJ");
@@ -906,6 +908,32 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			} catch (Exception e) {
 				errorMsg[0] = "1";
 				errorMsg[1] = e.toString();
+			}
+		}else {
+			if ("PWD".equals(oprType)) {
+				try {
+					jacksonUtil.json2Map(strParams);
+					// 报名表实例编号
+					Long numAppInsId = 0L;
+					// 报名表编号;
+					String strAppTjxInsID = jacksonUtil.getString("appInsID");
+					String strAppTjxPwd = jacksonUtil.getString("password");
+					
+					numAppInsId = Long.parseLong(strAppTjxInsID);
+					//System.out.println("numAppInsId" + numAppInsId);
+					//System.out.println("password" + strAppTjxPwd);
+					// 密码用MD5加密存储
+					if (strAppTjxPwd != null && !strAppTjxPwd.equals("")) {
+						strAppTjxPwd = Sha3DesMD5.md5(strAppTjxPwd);
+						PsTzAppInsT psTzAppInsT = new PsTzAppInsT();
+						psTzAppInsT.setTzAppInsId(numAppInsId);
+						psTzAppInsT.setTzPwd(strAppTjxPwd);
+						psTzAppInsTMapper.updateByPrimaryKeySelective(psTzAppInsT);
+					}
+				}catch (Exception e) {
+					errorMsg[0] = "1";
+					errorMsg[1] = "修改密码失败" + e.toString();
+				}
 			}
 		}
 
@@ -1671,12 +1699,12 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						new Object[] { strAppInsID }, "String");
 				if (oprid != null && !"".equals(oprid)) {
 					PsTzLxfsInfoTblKey psTzLxfsInfoTblKey = new PsTzLxfsInfoTblKey();
-					psTzLxfsInfoTblKey.setTzLxfsLy("ZSBM");
-					psTzLxfsInfoTblKey.setTzLydxId(strAppInsID);
+					psTzLxfsInfoTblKey.setTzLxfsLy("ZCYH");
+					psTzLxfsInfoTblKey.setTzLydxId(oprid);
 					PsTzLxfsInfoTbl psTzLxfsInfoTbl = psTzLxfsInfoTblMapper.selectByPrimaryKey(psTzLxfsInfoTblKey);
 					if (psTzLxfsInfoTbl != null) {
-						psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
-						psTzLxfsInfoTbl.setTzLydxId(strAppInsID);
+						psTzLxfsInfoTbl.setTzLxfsLy("ZCYH");
+						psTzLxfsInfoTbl.setTzLydxId(oprid);
 						psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
 						psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
 						psTzLxfsInfoTbl.setTzZyDh(mainPhone);
@@ -1690,8 +1718,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 						psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
 					} else {
 						psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
-						psTzLxfsInfoTbl.setTzLxfsLy("ZSBM");
-						psTzLxfsInfoTbl.setTzLydxId(strAppInsID);
+						psTzLxfsInfoTbl.setTzLxfsLy("ZCYH");
+						psTzLxfsInfoTbl.setTzLydxId(oprid);
 						psTzLxfsInfoTbl.setTzZySj(mainMobilePhone);
 						psTzLxfsInfoTbl.setTzCySj(backupMobilePhone);
 						psTzLxfsInfoTbl.setTzZyDh(mainPhone);

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.PsTzQttjBzhTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjBzhTbl" >
+    <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
+    <id column="TZ_APPLY_PC_ID" property="tzApplyPcId" jdbcType="VARCHAR" />
+    <id column="TZ_SCORE_MODAL_ID" property="tzScoreModalId" jdbcType="VARCHAR" />
+    <id column="TZ_SCORE_ITEM_ID" property="tzScoreItemId" jdbcType="VARCHAR" />
+    <id column="TZ_TJGN_ID" property="tzTjgnId" jdbcType="VARCHAR" />
+    <result column="TZ_TJBZ_ZT" property="tzTjbzZt" jdbcType="VARCHAR" />
+    <result column="TZ_TJL_BZH" property="tzTjlBzh" jdbcType="DECIMAL" />
+    <result column="TZ_TJL_WCZ" property="tzTjlWcz" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_SCORE_MODAL_ID, TZ_SCORE_ITEM_ID, TZ_TJGN_ID, TZ_TJBZ_ZT, 
+    TZ_TJL_BZH, TZ_TJL_WCZ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjBzhTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_QTTJ_BZH_TBL
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+      and TZ_TJGN_ID = #{tzTjgnId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjBzhTblKey" >
+    delete from PS_TZ_QTTJ_BZH_TBL
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+      and TZ_TJGN_ID = #{tzTjgnId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjBzhTbl" >
+    insert into PS_TZ_QTTJ_BZH_TBL (TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_SCORE_MODAL_ID, 
+      TZ_SCORE_ITEM_ID, TZ_TJGN_ID, TZ_TJBZ_ZT, 
+      TZ_TJL_BZH, TZ_TJL_WCZ)
+    values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzScoreModalId,jdbcType=VARCHAR}, 
+      #{tzScoreItemId,jdbcType=VARCHAR}, #{tzTjgnId,jdbcType=VARCHAR}, #{tzTjbzZt,jdbcType=VARCHAR}, 
+      #{tzTjlBzh,jdbcType=DECIMAL}, #{tzTjlWcz,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjBzhTbl" >
+    insert into PS_TZ_QTTJ_BZH_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        TZ_CLASS_ID,
+      </if>
+      <if test="tzApplyPcId != null" >
+        TZ_APPLY_PC_ID,
+      </if>
+      <if test="tzScoreModalId != null" >
+        TZ_SCORE_MODAL_ID,
+      </if>
+      <if test="tzScoreItemId != null" >
+        TZ_SCORE_ITEM_ID,
+      </if>
+      <if test="tzTjgnId != null" >
+        TZ_TJGN_ID,
+      </if>
+      <if test="tzTjbzZt != null" >
+        TZ_TJBZ_ZT,
+      </if>
+      <if test="tzTjlBzh != null" >
+        TZ_TJL_BZH,
+      </if>
+      <if test="tzTjlWcz != null" >
+        TZ_TJL_WCZ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzClassId != null" >
+        #{tzClassId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzApplyPcId != null" >
+        #{tzApplyPcId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreModalId != null" >
+        #{tzScoreModalId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScoreItemId != null" >
+        #{tzScoreItemId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjgnId != null" >
+        #{tzTjgnId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjbzZt != null" >
+        #{tzTjbzZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjlBzh != null" >
+        #{tzTjlBzh,jdbcType=DECIMAL},
+      </if>
+      <if test="tzTjlWcz != null" >
+        #{tzTjlWcz,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjBzhTbl" >
+    update PS_TZ_QTTJ_BZH_TBL
+    <set >
+      <if test="tzTjbzZt != null" >
+        TZ_TJBZ_ZT = #{tzTjbzZt,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTjlBzh != null" >
+        TZ_TJL_BZH = #{tzTjlBzh,jdbcType=DECIMAL},
+      </if>
+      <if test="tzTjlWcz != null" >
+        TZ_TJL_WCZ = #{tzTjlWcz,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+      and TZ_TJGN_ID = #{tzTjgnId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.PsTzQttjBzhTbl" >
+    update PS_TZ_QTTJ_BZH_TBL
+    set TZ_TJBZ_ZT = #{tzTjbzZt,jdbcType=VARCHAR},
+      TZ_TJL_BZH = #{tzTjlBzh,jdbcType=DECIMAL},
+      TZ_TJL_WCZ = #{tzTjlWcz,jdbcType=DECIMAL}
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_SCORE_MODAL_ID = #{tzScoreModalId,jdbcType=VARCHAR}
+      and TZ_SCORE_ITEM_ID = #{tzScoreItemId,jdbcType=VARCHAR}
+      and TZ_TJGN_ID = #{tzTjgnId,jdbcType=VARCHAR}
+  </update>
+</mapper>

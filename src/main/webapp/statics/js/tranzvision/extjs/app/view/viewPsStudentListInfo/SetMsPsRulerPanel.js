@@ -4,7 +4,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 	controller: 'setrulercontroller',
 	actType: 'add',
 	requires: ['Ext.data.*', 'Ext.grid.*', 'Ext.util.*', 'Ext.toolbar.Paging', 'Ext.ux.ProgressBarPager', 'KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController', 'Ext.selection.CellModel', 'KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelStore', 'KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelModel'],
-	autoScroll: false,
+	/*autoScroll: false,*/
 	actType: 'add',
 	bodyStyle: 'overflow-y:auto;overflow-x:hidden',
 	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.MSPSKSMD", "设置面试规则"),
@@ -130,8 +130,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.startDate", "开始日期"),
 							format: 'Y-m-d',
 							name: 'StartDate',
-							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false
+							//afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
+							//allowBlank: false
 
 
 						}]
@@ -142,8 +142,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.startTime", "时间"),
 							format: 'H:i',
 							name: 'StartTime',
-							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false,
+							//afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
+							//allowBlank: false,
 							value: "08:30"
 
 
@@ -161,8 +161,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.end Date", "结束日期"),
 							format: 'Y-m-d',
 							name: 'EndDate',
-							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false
+							//afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
+							//allowBlank: false
 
 
 						}]
@@ -173,8 +173,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.end Time", "时间"),
 							format: 'H:i',
 							name: 'EndTime',
-							afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
-							allowBlank: false,
+							//afterLabelTextTpl: ['<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'],
+							//allowBlank: false,
 							value: "08:30"
 
 
@@ -194,9 +194,6 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 					activeTab: 0,
 					plain: false,
 					resizeTabs: true,
-					defaults: {
-						autoScroll: false
-					},
 					listeners: {
 						beforetabchange: 'beforeOnTabchange'
 					},
@@ -223,11 +220,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 						title: "面试评委",
 						xtype: 'form',
 						name: 'pwlbgrid',
-						layout: {
-							type: 'vbox',
-							align: 'stretch'
-						},
-						height: 285,
+				        minHeight: 285,
+				        autoHeight:true,
 						style: 'border:0',
 						items: [{
 							xtype: 'grid',
@@ -235,7 +229,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 							style: "margin:8px",
 							name: 'adprjgrid',
 							layout: 'fit',
-							minHeight: 275,
+							minHeight: 200,
+							autoHeight:true,
 							plugins: {
 								ptype: 'cellediting'
 							},
@@ -285,13 +280,13 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 									tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.adddata", "新增评委"),
 									iconCls: "add",
 									handler: 'addpwInfom'
-								}, "-",
-								{
+								}, "->",
+								/*{
 									text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.edit1", "编辑"),
 									tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.editdata", "编辑"),
 									iconCls: "edit",
 									handler: 'importScore'
-								}, "->",
+								}, "->",*/
 								{
 									xtype: 'splitbutton',
 									text: '更多操作',
@@ -327,7 +322,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgGroupId", "所属评委组"),
 								dataIndex: 'judgGroupId',
 								name: 'judgGroup',
-								width: 150,
+								width: 130,
 								editor: {
 									xtype: 'combobox',
 									valueField: 'TZ_CLPS_GR_ID',
@@ -335,24 +330,44 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 									store: ''
 								},
 								flex: 1,
-
+								
 								//动态renderer
 								renderer: 'readervalue'
+								
+								
 
-							}],
-							store: store,
-							bbar: {
-								xtype: 'pagingtoolbar',
-								pageSize: 10,
-								store: store,
-								displayInfo: true,
-								displayMsg: "显示{0}-{1}条，共{2}条",
-								beforePageText: "第",
-								afterPageText: "页/共{0}页",
-								emptyMsg: "没有数据显示",
-								plugins: new Ext.ux.ProgressBarPager()
-							}
-
+							},{
+								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgState", "评委状态"),
+								dataIndex: 'judgState',
+								width: 200,
+								editor: {
+						        xtype: 'combobox',
+						        valueField: 'TValue',
+                                displayField: 'TSDesc',
+                                store: new KitchenSink.view.common.store.appTransStore("TZ_MSPS_PWZT")
+					            },
+					            renderer: function(v) {
+						           if (v == 'A') {
+							       return "正常";
+						          }  else {
+						            	return "暂停";
+						          }
+					          }
+							},{
+					            text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.handle", "操作"),
+					            menuDisabled: true,
+					            sortable: false,
+					            width: 110,
+					            align: 'center',
+					            xtype: 'actioncolumn',
+					            flex: 1,
+					            items: [{
+						          iconCls: 'remove',
+						          tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.delete", "删除"),
+						          handler: 'deleteMsPw'
+					            }]
+				             }],
+							store: store,		
 						}]
 					}]
 				}]

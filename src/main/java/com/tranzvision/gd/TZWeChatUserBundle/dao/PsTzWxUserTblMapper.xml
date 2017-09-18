@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatUserBundle.dao.PsTzWxUserTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_WX_APPID" property="tzWxAppid" jdbcType="VARCHAR" />
+    <id column="TZ_OPEN_ID" property="tzOpenId" jdbcType="VARCHAR" />
+    <result column="TZ_SUBSCRIBE" property="tzSubscribe" jdbcType="VARCHAR" />
+    <result column="TZ_NICKNAME" property="tzNickname" jdbcType="VARCHAR" />
+    <result column="TZ_SEX" property="tzSex" jdbcType="VARCHAR" />
+    <result column="TZ_LANGUAGE" property="tzLanguage" jdbcType="VARCHAR" />
+    <result column="TZ_CITY" property="tzCity" jdbcType="VARCHAR" />
+    <result column="TZ_PROVINCE" property="tzProvince" jdbcType="VARCHAR" />
+    <result column="TZ_COUNTRY" property="tzCountry" jdbcType="VARCHAR" />
+    <result column="TZ_IMAGE_URL" property="tzImageUrl" jdbcType="VARCHAR" />
+    <result column="TZ_SUBSRIBE_DT" property="tzSubsribeDt" jdbcType="TIMESTAMP" />
+    <result column="TZ_REMARK" property="tzRemark" jdbcType="VARCHAR" />
+    <result column="TZ_GL_CONTID" property="tzGlContid" jdbcType="VARCHAR" />
+    <result column="TZ_GL_CONTNAME" property="tzGlContname" jdbcType="VARCHAR" />
+    <result column="TZ_SALESLEAD_ID" property="tzSalesleadId" jdbcType="VARCHAR" />
+    <result column="TZ_SALESLEAD_NAME" property="tzSalesleadName" jdbcType="VARCHAR" />
+    <result column="TZ_GJ_FLAG" property="tzGjFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_WX_APPID, TZ_OPEN_ID, TZ_SUBSCRIBE, TZ_NICKNAME, TZ_SEX, TZ_LANGUAGE, 
+    TZ_CITY, TZ_PROVINCE, TZ_COUNTRY, TZ_IMAGE_URL, TZ_SUBSRIBE_DT, TZ_REMARK, TZ_GL_CONTID, 
+    TZ_GL_CONTNAME, TZ_SALESLEAD_ID, TZ_SALESLEAD_NAME, TZ_GJ_FLAG
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_WX_USER_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_OPEN_ID = #{tzOpenId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTblKey" >
+    delete from PS_TZ_WX_USER_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_OPEN_ID = #{tzOpenId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl" >
+    insert into PS_TZ_WX_USER_TBL (TZ_JG_ID, TZ_WX_APPID, TZ_OPEN_ID, 
+      TZ_SUBSCRIBE, TZ_NICKNAME, TZ_SEX, 
+      TZ_LANGUAGE, TZ_CITY, TZ_PROVINCE, 
+      TZ_COUNTRY, TZ_IMAGE_URL, TZ_SUBSRIBE_DT, 
+      TZ_REMARK, TZ_GL_CONTID, TZ_GL_CONTNAME, 
+      TZ_SALESLEAD_ID, TZ_SALESLEAD_NAME, TZ_GJ_FLAG
+      )
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, #{tzOpenId,jdbcType=VARCHAR}, 
+      #{tzSubscribe,jdbcType=VARCHAR}, #{tzNickname,jdbcType=VARCHAR}, #{tzSex,jdbcType=VARCHAR}, 
+      #{tzLanguage,jdbcType=VARCHAR}, #{tzCity,jdbcType=VARCHAR}, #{tzProvince,jdbcType=VARCHAR}, 
+      #{tzCountry,jdbcType=VARCHAR}, #{tzImageUrl,jdbcType=VARCHAR}, #{tzSubsribeDt,jdbcType=TIMESTAMP}, 
+      #{tzRemark,jdbcType=VARCHAR}, #{tzGlContid,jdbcType=VARCHAR}, #{tzGlContname,jdbcType=VARCHAR}, 
+      #{tzSalesleadId,jdbcType=VARCHAR}, #{tzSalesleadName,jdbcType=VARCHAR}, #{tzGjFlag,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl" >
+    insert into PS_TZ_WX_USER_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzWxAppid != null" >
+        TZ_WX_APPID,
+      </if>
+      <if test="tzOpenId != null" >
+        TZ_OPEN_ID,
+      </if>
+      <if test="tzSubscribe != null" >
+        TZ_SUBSCRIBE,
+      </if>
+      <if test="tzNickname != null" >
+        TZ_NICKNAME,
+      </if>
+      <if test="tzSex != null" >
+        TZ_SEX,
+      </if>
+      <if test="tzLanguage != null" >
+        TZ_LANGUAGE,
+      </if>
+      <if test="tzCity != null" >
+        TZ_CITY,
+      </if>
+      <if test="tzProvince != null" >
+        TZ_PROVINCE,
+      </if>
+      <if test="tzCountry != null" >
+        TZ_COUNTRY,
+      </if>
+      <if test="tzImageUrl != null" >
+        TZ_IMAGE_URL,
+      </if>
+      <if test="tzSubsribeDt != null" >
+        TZ_SUBSRIBE_DT,
+      </if>
+      <if test="tzRemark != null" >
+        TZ_REMARK,
+      </if>
+      <if test="tzGlContid != null" >
+        TZ_GL_CONTID,
+      </if>
+      <if test="tzGlContname != null" >
+        TZ_GL_CONTNAME,
+      </if>
+      <if test="tzSalesleadId != null" >
+        TZ_SALESLEAD_ID,
+      </if>
+      <if test="tzSalesleadName != null" >
+        TZ_SALESLEAD_NAME,
+      </if>
+      <if test="tzGjFlag != null" >
+        TZ_GJ_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxAppid != null" >
+        #{tzWxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOpenId != null" >
+        #{tzOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSubscribe != null" >
+        #{tzSubscribe,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNickname != null" >
+        #{tzNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSex != null" >
+        #{tzSex,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLanguage != null" >
+        #{tzLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCity != null" >
+        #{tzCity,jdbcType=VARCHAR},
+      </if>
+      <if test="tzProvince != null" >
+        #{tzProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCountry != null" >
+        #{tzCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImageUrl != null" >
+        #{tzImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSubsribeDt != null" >
+        #{tzSubsribeDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzRemark != null" >
+        #{tzRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGlContid != null" >
+        #{tzGlContid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGlContname != null" >
+        #{tzGlContname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSalesleadId != null" >
+        #{tzSalesleadId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSalesleadName != null" >
+        #{tzSalesleadName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGjFlag != null" >
+        #{tzGjFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl" >
+    update PS_TZ_WX_USER_TBL
+    <set >
+      <if test="tzSubscribe != null" >
+        TZ_SUBSCRIBE = #{tzSubscribe,jdbcType=VARCHAR},
+      </if>
+      <if test="tzNickname != null" >
+        TZ_NICKNAME = #{tzNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSex != null" >
+        TZ_SEX = #{tzSex,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLanguage != null" >
+        TZ_LANGUAGE = #{tzLanguage,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCity != null" >
+        TZ_CITY = #{tzCity,jdbcType=VARCHAR},
+      </if>
+      <if test="tzProvince != null" >
+        TZ_PROVINCE = #{tzProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCountry != null" >
+        TZ_COUNTRY = #{tzCountry,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImageUrl != null" >
+        TZ_IMAGE_URL = #{tzImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSubsribeDt != null" >
+        TZ_SUBSRIBE_DT = #{tzSubsribeDt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzRemark != null" >
+        TZ_REMARK = #{tzRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGlContid != null" >
+        TZ_GL_CONTID = #{tzGlContid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGlContname != null" >
+        TZ_GL_CONTNAME = #{tzGlContname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSalesleadId != null" >
+        TZ_SALESLEAD_ID = #{tzSalesleadId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSalesleadName != null" >
+        TZ_SALESLEAD_NAME = #{tzSalesleadName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGjFlag != null" >
+        TZ_GJ_FLAG = #{tzGjFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_OPEN_ID = #{tzOpenId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl" >
+    update PS_TZ_WX_USER_TBL
+    set TZ_SUBSCRIBE = #{tzSubscribe,jdbcType=VARCHAR},
+      TZ_NICKNAME = #{tzNickname,jdbcType=VARCHAR},
+      TZ_SEX = #{tzSex,jdbcType=VARCHAR},
+      TZ_LANGUAGE = #{tzLanguage,jdbcType=VARCHAR},
+      TZ_CITY = #{tzCity,jdbcType=VARCHAR},
+      TZ_PROVINCE = #{tzProvince,jdbcType=VARCHAR},
+      TZ_COUNTRY = #{tzCountry,jdbcType=VARCHAR},
+      TZ_IMAGE_URL = #{tzImageUrl,jdbcType=VARCHAR},
+      TZ_SUBSRIBE_DT = #{tzSubsribeDt,jdbcType=TIMESTAMP},
+      TZ_REMARK = #{tzRemark,jdbcType=VARCHAR},
+      TZ_GL_CONTID = #{tzGlContid,jdbcType=VARCHAR},
+      TZ_GL_CONTNAME = #{tzGlContname,jdbcType=VARCHAR},
+      TZ_SALESLEAD_ID = #{tzSalesleadId,jdbcType=VARCHAR},
+      TZ_SALESLEAD_NAME = #{tzSalesleadName,jdbcType=VARCHAR},
+      TZ_GJ_FLAG = #{tzGjFlag,jdbcType=VARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_OPEN_ID = #{tzOpenId,jdbcType=VARCHAR}
+  </update>
+</mapper>

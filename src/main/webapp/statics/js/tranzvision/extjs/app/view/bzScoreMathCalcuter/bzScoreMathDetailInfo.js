@@ -1,6 +1,6 @@
 
 Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
-    extend: 'Ext.window.Window',
+    extend: 'Ext.panel.Panel',
     xtype: 'bzscoreDelinfo',
     controller: 'zsbfjgMgController',
     actType:'add',
@@ -11,27 +11,39 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'Ext.selection.CellModel',
+        'Ext.grid.plugin.BufferedRenderer', 
         'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathController',
-        'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailStore'
+        'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailStore',
+        'Ext.grid.plugin.CellEditing'
     ],
+    ignoreChangesFlag: true,//让框架程序不要提示用户保存的属性设置
     reference:"bzscoreDelinfo",
-    autoScroll:false,
+    //autoScroll:false,
     actType:'add',
-    id:'bzscoreDelinfo_Delinfo',
+    reference:'bzscoreDelinfo_Delinfo',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
     title:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.ScoreMath","标准成绩计算器"),
     frame:true,
-    height:500,
+    height:600,
     width:1000,
     //初始化传值
+ /*   listeners:{
+        resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
+            var buttonHeight = 42;button height plus panel body padding
+            var formHeight = 30;  
+            var formPadding = 60;
+            var grid = panel.child('grid[name=afterBzscoreGrid]');
+            grid.setHeight( height- formHeight -buttonHeight-formPadding);
+        }
+    },*/
     constructor: function (config) {
         this.coulumdt = config.coulumdt;
         this.callParent();
     },
     initComponent:function(){
-    	this.cellEditing = new Ext.grid.plugin.CellEditing({
+    	/*this.cellEditing = new Ext.grid.plugin.CellEditing({
             clicksToEdit: 1
-        });
+        });*/
     	var store=new KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailStore();
     	var coulumdt=this.coulumdt;
     	var coulum_num=[];
@@ -112,11 +124,19 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                                         renderer: Ext.util.Format.numberRenderer('0.0000')
                                     },{
                                         text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.judge_sunrank"+i, "评委标准分数和组内排名"),
-                                        dataIndex: 'judge_sunrank',
+                                        dataIndex: 'judge_teamsunrank',
                                         editor: {
                                            allowBlank: false
                                         },                                        
                                         width: 180
+                                    },{
+                                        text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.judge_sunrank"+i, "评委标准分数和组内排名"),
+                                        dataIndex: 'judge_sunrank',
+                                        editor: {
+                                           allowBlank: false
+                                        },                                        
+                                        width: 180,
+                                        hidden:true
                                     },{
                                         text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.handle", "操作"),
                                         menuDisabled: true,
@@ -140,6 +160,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                                    
                                     
         Ext.apply(this,{
+        	
 
                 items: [
                     {
@@ -187,11 +208,23 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                                 selModel: {
                                     type: 'checkboxmodel'
                                 },
-                                plugins: [this.cellEditing],
-                                layout: 'fit',
-                                minHeight: 340,
+                                plugins: [                                          
+                                        	     {
+                                        	        ptype: 'cellediting',
+                                        	        clicksToEdit: 1
+                                        	    },{
+                                                    ptype:'bufferedrenderer'
+                                                }
+                                         
+                                ],
+                           
+                                          
+                               // layout: 'fit',
+                                height: 450,
                                 frame: true,
+                                name:'afterBzscoreGrid',
                                 reference:'afterBzscoreGrid',
+                                
                                 dockedItems: [{
                                     xtype: "toolbar",
                                     items: [
@@ -210,11 +243,23 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                                             tooltip: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.checkpersonid", "检查人员识别编号时候合法"),
                                             handler: 'checkPerson'
                                         }, "-",
+                                        
                                         {
-                                            text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo", "查看考生面试信息"),
-                                            tooltip: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo", "查看考生面试信息"),
-                                            handler: 'exportStudentInform'
-                                        }
+                							text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo", "查看考生面试信息"),
+                    						
+                    						menu:[{
+                    							   text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo1", "查看考生面试信息"),
+                    							   tooltip: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.viewStudenInfo1", "查看考生面试信息"),
+                                                   handler: 'exportStudentInform',
+                                                   iconCls: 'excel',
+                    							},{
+                    								text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.download","查看历史导出并下载"),
+                    								tooltip:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.download","查看历史导出并下载"),
+                    								iconCls:'download',
+                        							handler:'downloadHisExcel'
+                        								                   					
+                    							}]
+                							}
 
                                     ]
                                 }],
@@ -235,7 +280,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                     }],
                     
             buttons:[
-            {
+            /*{
                 text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.save","保存"),
                 handler:'DelinfoSave',
                 iconCls:'save'
@@ -243,7 +288,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathDetailInfo', {
                 text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.sure","确定"),
                 handler:'ensureonDelinfoSave',
                 iconCls:'ensure'
-            },{
+            },*/{
                 text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_JIS_STD.close","关闭"),
                 iconCls:'close',
                 handler:'DelinfoClose'

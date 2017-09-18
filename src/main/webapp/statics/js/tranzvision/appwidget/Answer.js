@@ -451,14 +451,17 @@ var SurveyBuild = {
 
 
             //控件绑定事件(固定多行容器存在问题)
+           
             var _eventbind = data._eventbind;
             if (_eventbind && typeof _eventbind == "function") {
+            	//console.log("2222");
                 _eventbind(data);
             }
             if (data["isDoubleLine"] == "Y" && data.children && data.children.length > 0) {
                 $.each(data.children,function (i, child) {
                     $.each(child,function (instanceId, obj) {
                         if (obj._eventbind && typeof obj._eventbind == "function") {
+                        	//console.log("1111");
                             obj._eventbind(obj);
                         }
                         if(data["fixedContainer"] != "Y" && obj.classname == "CheckBox" && obj.hasOwnProperty("rules")){
@@ -487,7 +490,7 @@ var SurveyBuild = {
                 $(_c).find(".addnextbtn").hide();
             }
         };
-
+        //console.log("2222");
         /*加载信息项对应的JavaScript文件以及事件绑定 Begin*/
         $.each(this._items, function (c) {
             ++me._count;
@@ -505,6 +508,15 @@ var SurveyBuild = {
             }
             me.loadScript(item["classname"], callback, [item["classname"], item]);
         });
+        
+        //清华特有的改动
+        var ProjectId = $("#ProjectId").val(); 
+//		console.log(ProjectId);
+		if (ProjectId =="PRJ_57") {		
+		} else {
+			$("#TZ_TZ_3_4").hide(); 
+			$("#TZ_TZ_3_3").parent().parent().hide(); 
+		}
     },
     _initAssociatedShowHide: function(b) {
         var a = "",
@@ -824,8 +836,8 @@ var SurveyBuild = {
 		var $newRow = $(btnEl).parents(".addNext").prev(".mainright-box");
 		$("html,body").animate({scrollTop: $newRow.offset().top}, 1000);
 
-        //行数等于最大行数时，隐藏“Add One +”按钮
-        if (_children.length == maxLines) {
+        //行数大于等于最大行数时，隐藏“Add One +”按钮
+        if (_children.length >= maxLines) {
             $(btnEl).hide();
         }
 
@@ -1623,7 +1635,17 @@ var SurveyBuild = {
 		var appInsId = SurveyBuild.appInsId;
 		/***当删除行之后，num值就不正确了，需要动态的回去当前行数***/
 		var index = num;
-		var indexJson = parseInt($(el).closest(".main_inner_content_para").index());
+		var indexJson ="";
+		//修改判断判断是否是手机版
+    	if(SurveyBuild.accessType=='M'){
+    		indexJson=parseInt($(el).closest(".next_record").index());
+    		
+    	}else{
+    		indexJson=parseInt($(el).closest(".main_inner_content_para").index());
+    		
+    	}
+			
+			
 		//console.log(num2+"--"+num)
 		var child = data.children[indexJson];
 		//生成日期
@@ -1688,7 +1710,7 @@ var SurveyBuild = {
 							var maxOrderBy = 0;
 							$.ajax({
 								type: "post",
-								url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+data.itemId+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":""}}',
+								url: encodeURI(SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+data.itemId+'","filename":"'+obj.msg.filename+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":""}}'),
 								dataType: "json",
 								async: false,
 								success: function(rst){
@@ -1772,7 +1794,17 @@ var SurveyBuild = {
 	Tjxdelete: function(el,cins,num){
 		var appInsId = SurveyBuild.appInsId;//报名表实例ID
 		var instanceId = $(el).closest(".dhcontainer").attr("data-instancid");
-		var indexJson = parseInt($(el).closest(".main_inner_content_para").index());
+		var indexJson ="";
+	
+		//修改判断判断是否是手机版
+    	if(SurveyBuild.accessType=='M'){
+    		indexJson=parseInt($(el).closest(".next_record").index());
+    		
+    	}else{
+    		indexJson=parseInt($(el).closest(".main_inner_content_para").index());
+    		
+    	}
+		
 		var data = SurveyBuild._items[instanceId];
 		var index = num;
 		var child = data.children[indexJson];
@@ -2220,14 +2252,32 @@ var SurveyBuild = {
         var index = $(el).parents(".input-list-uploadcon-list").index();
 
         var imgHtmls = "";
-        for (var i = 0; i < _children.length; i++) {
-            imgHtmls += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _children[i].sysFileName + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
+        var type = "";
+        var sysFileName = _children[index].sysFileName;
+        var accessPath = _children[index].accessPath;
+        var picType = ['JPG', 'JPEG', 'PNG'];
+        var fileSuffix = (sysFileName.substring(sysFileName.lastIndexOf(".") + 1)).toUpperCase();
+        if (picType.toString().indexOf(fileSuffix) != -1) {
+        	type = "IMG"; //图片
+            for (var i = 0; i < _children.length; i++) {
+                imgHtmls += "<li><a class='fancybox-thumbs' data-fancybox-group='thumb' href='" + TzUniversityContextPath + _children[i].accessPath + _children[i].sysFileName + "' title='" + SurveyBuild.specialCharReplace(_children[i].fileName) + "'>" + SurveyBuild.specialCharReplace(_children[i].fileName) + "</a></li>";
+            }
+        }else{
+        	type = "PDF"; //PDF
+        	attHtml = TzUniversityContextPath + accessPath + sysFileName;
+        }
+        if (type == "PDF") {
+        	
+        	window.open(attHtml);
+        }else{
+        	
+        	 var $ul = $("#fancybox-main").children("ul");
+             $ul.html(imgHtmls);
+             var $li = $($ul.children("li")[index]);
+             $li.children("a").click();
         }
 
-        var $ul = $("#fancybox-main").children("ul");
-        $ul.html(imgHtmls);
-        var $li = $($ul.children("li")[index]);
-        $li.children("a").click();
-    },
+       
+    }
 };
 var MsgSet = {};

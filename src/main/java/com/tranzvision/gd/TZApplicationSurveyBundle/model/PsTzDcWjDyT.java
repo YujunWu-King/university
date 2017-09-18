@@ -69,6 +69,8 @@ public class PsTzDcWjDyT {
 
     private String setid;
 
+    private String tzDcWjWx;
+
     public String getTzDcWjId() {
         return tzDcWjId;
     }
@@ -331,5 +333,13 @@ public class PsTzDcWjDyT {
 
     public void setSetid(String setid) {
         this.setid = setid == null ? null : setid.trim();
+    }
+
+    public String getTzDcWjWx() {
+        return tzDcWjWx;
+    }
+
+    public void setTzDcWjWx(String tzDcWjWx) {
+        this.tzDcWjWx = tzDcWjWx == null ? null : tzDcWjWx.trim();
     }
 }

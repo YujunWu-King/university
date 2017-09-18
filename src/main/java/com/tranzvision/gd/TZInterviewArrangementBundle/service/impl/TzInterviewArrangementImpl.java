@@ -1,7 +1,9 @@
 package com.tranzvision.gd.TZInterviewArrangementBundle.service.impl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClassInfTMapper;
 import com.tranzvision.gd.TZClassSetBundle.dao.PsTzClsBatchTMapper;
@@ -26,6 +29,9 @@ import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.poi.excel.ExcelHandle;
+import com.tranzvision.gd.util.poi.excel.ExcelHandle2;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -46,7 +52,13 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 	private TZGDObject tzGDObject;
 	
 	@Autowired
+	private GetSeqNum getSeqNum;
+	
+	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
+	
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 
 	@Autowired
 	private PsTzClsBatchTMapper psTzClsBatchTMapper;
@@ -221,6 +233,12 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 				break;
 			case "getModalId":
 				strRet = this.tzGetModalId(strParams, errorMsg);
+				break;
+			case "exportMsPlan":
+				strRet = this.tzExportMsPlan(strParams, errorMsg);
+				break;
+			case "importMsPlan":
+				strRet = this.tzImportMsPlan(strParams, errorMsg);
 				break;
 			}
 		} catch (Exception e) {
@@ -594,6 +612,308 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 		}
 		strRet = jacksonUtil.Map2json(rtnMap);
 		return strRet;
+	}
+	
+	
+	/**
+	 * 导出面试安排
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private String tzExportMsPlan(String strParams, String[] errorMsg){
+		String strRet = "";
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		rtnMap.put("fileUrl", "");
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			String classID = jacksonUtil.getString("classID");
+			String batchID = jacksonUtil.getString("batchID");
+			
+			if(jacksonUtil.containsKey("exportData")){
+				String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				
+				String downloadPath = getSysHardCodeVal.getDownloadPath();
+				String expDirPath = downloadPath + "/" + orgid + "/" + getDateNow() + "/" + "interviewExpExcel";
+				String absexpDirPath = request.getServletContext().getRealPath(expDirPath);
+
+				List<Map<String,Object>> exportList = (List<Map<String, Object>>) jacksonUtil.getList("exportData");
+				
+				// 表头
+				List<String[]> dataCellKeys = new ArrayList<String[]>();
+				dataCellKeys.add(new String[]{ "interview-data", "面试日期" });
+				dataCellKeys.add(new String[]{ "interview-start-time", "开始时间" });
+				dataCellKeys.add(new String[]{ "interview-end-time", "结束时间" });
+				dataCellKeys.add(new String[]{ "interview-limit", "最多预约人数" });
+				
+				if(exportList != null && exportList.size() > 0){
+					dataCellKeys.add(new String[]{ "interview-yy-count", "已预约人数" });
+				}
+				dataCellKeys.add(new String[]{ "interview-location", "面试地点" });
+				dataCellKeys.add(new String[]{ "interview-notes", "备注" });
+
+				// 数据
+				List<Map<String, Object>> dataList = new ArrayList<Map<String, Object>>();
+				
+				if(exportList != null && exportList.size() > 0){
+					for(Map<String,Object> expMap: exportList){
+						Map<String, Object> mapData = new HashMap<String, Object>();
+						String msJxNo = expMap.get("msJxNo").toString();
+						
+						String sql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsPlanInfo");
+						Map<String,Object> msPlanMap = jdbcTemplate.queryForMap(sql, new Object[]{ classID, batchID, msJxNo });
+						if(msPlanMap != null){
+							mapData.put("interview-data", msPlanMap.get("TZ_MS_DATE"));
+							mapData.put("interview-start-time", msPlanMap.get("TZ_START_TM"));
+							mapData.put("interview-end-time", msPlanMap.get("TZ_END_TM"));
+							mapData.put("interview-limit", Integer.parseInt(msPlanMap.get("TZ_MSYY_COUNT").toString()));
+							mapData.put("interview-yy-count", Integer.parseInt(msPlanMap.get("TZ_YY_COUNT").toString()));
+							mapData.put("interview-location", msPlanMap.get("TZ_MS_LOCATION"));
+							mapData.put("interview-notes", msPlanMap.get("TZ_MS_ARR_DEMO"));
+							
+							dataList.add(mapData);
+						}
+					}
+				}else{
+					Map<String, Object> mapData = new HashMap<String, Object>();
+					mapData.put("interview-data", "");
+					mapData.put("interview-start-time", "");
+					mapData.put("interview-end-time", "");
+					mapData.put("interview-limit", "");
+					mapData.put("interview-location", "");
+					mapData.put("interview-notes", "");
+					
+					dataList.add(mapData);
+				}
+				
+				/* 将文件上传之前，先重命名该文件 */
+				Date dt = new Date();
+				SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyyMMddHHmmss");
+				String sDttm = datetimeFormate.format(dt);
+				String strUseFileName = "MSPLAN_"+sDttm + "_" + classID + batchID + "." + "xlsx"; 
+				
+				ExcelHandle2 excelHandle = new ExcelHandle2(expDirPath, absexpDirPath);
+				boolean rst = excelHandle.export2Excel(strUseFileName, dataCellKeys, dataList);
+				if (rst) {
+					String urlExcel = request.getContextPath() + excelHandle.getExportExcelPath();
+					rtnMap.replace("fileUrl", urlExcel);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "操作异常。"+e.getMessage();
+		}
+		strRet = jacksonUtil.Map2json(rtnMap);
+		return strRet;
+	}
+	
+	/**
+	 * 导入面试安排
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String tzImportMsPlan(String strParams, String[] errorMsg){
+		String strRet = "";
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		rtnMap.put("result", "");
+		rtnMap.put("message", "");
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		Date dateNow = new Date();
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		try {
+			String message = "";
+			jacksonUtil.json2Map(strParams);
+			String dateFormatStr = getSysHardCodeVal.getDateFormat();
+			String timeFormatStr = getSysHardCodeVal.getTimeHMFormat();
+			SimpleDateFormat DateFormat = new SimpleDateFormat(dateFormatStr);
+			SimpleDateFormat TimeFormat = new SimpleDateFormat(timeFormatStr);
+			
+			String classID = jacksonUtil.getString("classID");
+			String batchID = jacksonUtil.getString("batchID");
+			String strPath = jacksonUtil.getString("path");
+			String strFileName = jacksonUtil.getString("sysFileName");
+			
+			
+			String dataFilePath = strPath + strFileName;
+			List<String> dataListCellKeys = new ArrayList<String>();
+
+			ExcelHandle excelHandle = new ExcelHandle(request);
+			excelHandle.readExcel(dataFilePath, dataListCellKeys, false);
+			ArrayList<Map<String, Object>> listData = excelHandle.getExcelListData();
+
+			int count = 0;
+			Map<String, String> titleMap = new HashMap<String, String>();
+			if(listData != null && listData.size() > 0){
+				for(Map<String, Object> lineMap: listData){
+					count++;
+					if(count==1){
+						//标题行
+						for (String key : lineMap.keySet()) {  
+							String titleValue = (String) lineMap.get(key);
+							
+							switch (titleValue) {
+							case "面试日期":
+								titleMap.put(key, "TZ_MS_DATE");
+								break;
+							case "开始时间":
+								titleMap.put(key, "TZ_START_TM");
+								break;
+							case "结束时间":
+								titleMap.put(key, "TZ_END_TM");
+								break;
+							case "最多预约人数":
+								titleMap.put(key, "TZ_MSYY_COUNT");
+								break;
+							case "面试地点":
+								titleMap.put(key, "TZ_MS_LOCATION");
+								break;
+							case "备注":
+								titleMap.put(key, "TZ_MS_ARR_DEMO");
+								break;
+							default:
+								break;
+							}
+						}  
+					}else{
+						if(count==2 && titleMap.keySet().size() < 6){
+							message += "没有解析到有效标题行，请按导入模板重新导入。";
+							errorMsg[0] = "1";
+							errorMsg[1] = message;
+							break;
+						}
+						//解析excel数据行
+						String interviewDate = "";
+						String startTime = "";
+						String endTime = "";
+						String msLocation = "";
+						String maxPerson = "0";
+						String notes = "";
+						
+						Date msDate=null,
+						 msStartTime=null,
+						 msEndTime=null;
+						
+						for (String key : titleMap.keySet()) {  
+							String tableColumn = titleMap.get(key);
+							String value = lineMap.get(key) == null ? "" : lineMap.get(key).toString();
+							
+							switch (tableColumn) {
+							case "TZ_MS_DATE":
+								if(lineMap.get(key) instanceof Date){
+									msDate = (Date) lineMap.get(key);
+								}
+								//如果导入的日期为yyyy/MM/dd格式改为yyyy-mm-dd
+								interviewDate = value.replaceAll("/", "-");
+								break;
+							case "TZ_START_TM":
+								if(lineMap.get(key) instanceof Date){
+									msStartTime = (Date) lineMap.get(key);
+								}
+								startTime = value;
+								break;
+							case "TZ_END_TM":
+								if(lineMap.get(key) instanceof Date){
+									msEndTime = (Date) lineMap.get(key);
+								}
+								endTime = value;
+								break;
+							case "TZ_MSYY_COUNT":
+								maxPerson = value;
+								break;
+							case "TZ_MS_LOCATION":
+								msLocation = value;
+								break;
+							case "TZ_MS_ARR_DEMO":
+								notes = value;
+								break;
+							default:
+								break;
+							}
+						}
+						
+						if(!"".equals(interviewDate) && !"".equals(startTime) 
+								&& !"".equals(endTime) && !"".equals(maxPerson)){
+							short maxYyCount = 0;
+							try {
+								if(msDate == null) msDate = DateFormat.parse(interviewDate);
+								if(msStartTime == null) msStartTime = TimeFormat.parse(startTime);
+								if(msEndTime == null) msEndTime = TimeFormat.parse(endTime);
+								maxYyCount = Short.parseShort(maxPerson);
+							} catch (Exception e) {
+								//e.printStackTrace();
+								message += "第"+count+"行数据不正确导入失败。";
+								continue;
+							}
+							
+							String msJxNo = String.valueOf(getSeqNum.getSeqNum("TZ_MSSJ_ARR_TBL", "TZ_MS_PLAN_SEQ"));
+							PsTzMssjArrTbl psTzMssjArrTbl = new PsTzMssjArrTbl();
+							psTzMssjArrTbl.setTzClassId(classID);
+							psTzMssjArrTbl.setTzBatchId(batchID);
+							psTzMssjArrTbl.setTzMsPlanSeq(msJxNo);
+							
+							psTzMssjArrTbl.setTzMsDate(msDate);
+							psTzMssjArrTbl.setTzStartTm(msStartTime);
+							psTzMssjArrTbl.setTzEndTm(msEndTime);
+							
+							psTzMssjArrTbl.setTzMsLocation(msLocation);
+							psTzMssjArrTbl.setTzMsyyCount(maxYyCount);
+							psTzMssjArrTbl.setTzMsArrDemo(notes);
+							psTzMssjArrTbl.setTzMsOpenSta("Y");//默认开启
+							psTzMssjArrTbl.setTzMsPubSta("N");//默认未发布
+							
+							psTzMssjArrTbl.setRowAddedOprid(oprid);
+							psTzMssjArrTbl.setRowAddedDttm(dateNow);
+							psTzMssjArrTbl.setRowLastmantOprid(oprid);
+							psTzMssjArrTbl.setRowLastmantDttm(dateNow);
+							
+							int rst =psTzMssjArrTblMapper.insert(psTzMssjArrTbl);
+							if(rst > 0){
+							}else{
+								message += "第"+count+"行数据导入失败。";
+							}
+						}else{
+							message += "第"+count+"行数据不正确导入失败。";
+							continue;
+						}
+					}
+				}
+				rtnMap.replace("result", "success");
+				rtnMap.replace("message", message);
+			}
+
+			//删除临时文件
+			File file = new File(dataFilePath);  
+		    if (file.isFile() && file.exists()) {  
+		        file.delete();
+		    } 
+		}catch(Exception e){
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "系统错误："+e.getMessage();
+		}
+		strRet = jacksonUtil.Map2json(rtnMap);
+		return strRet;
+	}
+	
+	
+	
+	/**
+	 * 创建日期目录名
+	 * 
+	 * @return
+	 */
+	private String getDateNow() {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(1);
+		int month = cal.get(2) + 1;
+		int day = cal.get(5);
+		return (new StringBuilder()).append(year).append(month).append(day).toString();
 	}
 }
 

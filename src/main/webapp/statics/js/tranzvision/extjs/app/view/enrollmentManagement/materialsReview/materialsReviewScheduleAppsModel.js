@@ -11,7 +11,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         {name: 'viewQUA'},
         {name: 'aveScore'},
         {name: 'judgeInfo'},
-        {name: 'judgeStatus'}
-
+        {name: 'judgeStatus'},
+        {name: 'clpsBmbTplId'}
     ]
 });

@@ -1,0 +1,296 @@
+
+<script>
+var wid=$(window).width()*0.9
+// alert(wid);
+var obUrl = ''
+
+//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+$("#clipArea").photoClip({
+	width:wid,
+	height:wid*1.25,
+	file: "#file",
+	view: "#view",
+	ok: "#clipBtn",
+	loadStart: function() {
+		//console.log("照片读取中");
+	},
+	loadComplete: function() {
+		//console.log("照片读取完成");
+	},
+	clipFinish: function(dataURL) {
+		//console.log(dataURL);
+	}
+});
+
+
+
+$(function(){
+	$("#clipBtn").click(function(){
+		     var imaPath="",path="",sysFileName="",filename="",imaPath1="";
+			//$("#photox").empty();
+			//$('#photox').append('<img src="' + imgsource + '" align="absmiddle" >');
+			
+			
+			var obj_file = document.getElementById("file");
+			
+			
+			//1.先保存原始上传的图片到服务器
+			//2.再根据插件截图后的图片流替换服务器上原有的图片
+			//3.再保存截取后的图片如今名称到数据库
+			
+			//1.先保存原始上传的图片到服务器
+			$("#myupload").ajaxSubmit({
+				dataType:  "json",
+				success: function(msg) {
+					
+					layer.load('正在处理...');
+					imaPath=msg.msg.accessPath+msg.msg.sysFileName;
+					imaPath1=msg.msg.accessPath;
+					sysFileName=msg.msg.sysFileName;
+					filename=msg.msg.filename;
+					
+				    var filedate=imgsource;
+					 filedate=filedate.split(',');
+					
+			        
+			        
+			 
+				    var fileStrJson = { "imageDate": filedate[1], "imaPath": imaPath};
+				  
+				    var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_MUP_PHOTO_STD","OperateType":"QF","comParams":' + JSON.stringify( fileStrJson ) + '}';
+				  
+				   //2.再根据插件截图后的图片流替换服务器上原有的图片
+				$.ajax({
+				    type:"POST",
+				    url:TzUniversityContextPath + "/dispatcher",
+					dataType:"json",
+				    data: {"tzParams" : tzParams },	
+				    success:function(html){
+				    	
+				    	var fileStrJson = {"sysFileName": sysFileName , "filename": filename, "imaPath": imaPath1, "path": path};
+				    	console.log("imaPath1:"+imaPath1+"/"+sysFileName);
+			  			var tzParams = '{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_UP_PHOTO_STD","OperateType":"PHOTO","comParams":' + JSON.stringify( fileStrJson ) + '}';
+			  		//3.再保存截取后的图片如今名称到数据库
+		                $.ajax({
+		                    type:"POST",
+		                    url:TzUniversityContextPath + "/dispatcher?",
+							dataType:"json",
+		                    data: {"tzParams" : tzParams },	
+		                    success:function(html){
+		                    	//imaPath1='/university'+imaPath1;
+		                    	$("#searchCountry").html('');
+		                    	
+		                    	$("#photox").attr('src',imaPath1+sysFileName);
+		                    	var _iItem = $("#photox",window.top.document).parent().siblings("input");
+		                    	_iItem.val(imaPath1+sysFileName);
+		                    	$('#view').attr('src',"");
+		                    	//保存报名表
+								console.log("SAVA BMB");
+								window.parent.$("#app_save").click();
+		                    	layer.closeAll();
+		                    	$(".htmleaf-container").hide();
+		                    	}
+		                    })
+				    	
+				        }
+				    })
+			       }
+		      })
+	      })
+
+	});
+
+
+$(function(){
+	jQuery.divselect = function(divselectid,inputselectid) {
+		var inputselect = $(inputselectid);
+		$(divselectid+" small").click(function(){
+			$("#divselect ul").toggle();
+			$(".mask").show();
+		});
+		$(divselectid+" ul li a").click(function(){
+			var txt = $(this).text();
+			$(divselectid+" small").html(txt);
+			var value = $(this).attr("selectid");
+			inputselect.val(value);
+			$(divselectid+" ul").hide();
+			$(".mask").hide();
+			$("#divselect small").css("color","#333")
+		});
+	};
+	$.divselect("#divselect","#inputselect");
+});
+
+
+$(function(){
+	jQuery.divselectx = function(divselectxid,inputselectxid) {
+		var inputselectx = $(inputselectxid);
+		$(divselectxid+" small").click(function(){
+			$("#divselectx ul").toggle();
+			$(".mask").show();
+		});
+		$(divselectxid+" ul li a").click(function(){
+			var txt = $(this).text();
+			$(divselectxid+" small").html(txt);
+			var value = $(this).attr("selectidx");
+			inputselectx.val(value);
+			$(divselectxid+" ul").hide();
+			$(".mask").hide();
+			$("#divselectx small").css("color","#333")
+		});
+	};
+	$.divselectx("#divselectx","#inputselectx");
+});
+
+
+$(function(){
+	jQuery.divselecty = function(divselectyid,inputselectyid) {
+		var inputselecty = $(inputselectyid);
+		$(divselectyid+" small").click(function(){
+			$("#divselecty ul").toggle();
+			$(".mask").show();
+		});
+		$(divselectyid+" ul li a").click(function(){
+			var txt = $(this).text();
+			$(divselectyid+" small").html(txt);
+			var value = $(this).attr("selectyid");
+			inputselecty.val(value);
+			$(divselectyid+" ul").hide();
+			$(".mask").hide();
+			$("#divselecty small").css("color","#333")
+		});
+	};
+	$.divselecty("#divselecty","#inputselecty");
+});
+
+
+$(function(){
+   $(".mask").click(function(){
+	   $(".mask").hide();
+	   $(".all").hide();
+   })
+	$(".right input").blur(function () {
+		if ($.trim($(this).val()) == '') {
+			$(this).addClass("place").html();
+		}
+		else {
+			$(this).removeClass("place");
+		}
+	})
+});
+
+
+$("#file0").change(function(){
+	var objUrl = getObjectURL(this.files[0]) ;
+	 obUrl = objUrl;
+	console.log("objUrl = "+objUrl) ;
+	if (objUrl) {
+		$("#img0").attr("src", objUrl).show();
+	}
+	else{
+		$("#img0").hide();
+	}
+}) ;
+function qd(){
+   var objUrl = getObjectURL(this.files[0]) ;
+   obUrl = objUrl;
+   console.log("objUrl = "+objUrl) ;
+   if (objUrl) {
+	   $("#img0").attr("src", objUrl).show();
+   }
+   else{
+	   $("#img0").hide();
+   }
+}
+function getObjectURL(file) {
+	var url = null ;
+	if (window.createObjectURL!=undefined) { // basic
+		url = window.createObjectURL(file) ;
+	} else if (window.URL!=undefined) { // mozilla(firefox)
+		url = window.URL.createObjectURL(file) ;
+	} else if (window.webkitURL!=undefined) { // webkit or chrome
+		url = window.webkitURL.createObjectURL(file) ;
+	}
+	return url ;
+}
+
+
+var subUrl = "";
+$(function (){
+	$(".file-3").bind('change',function(){
+		subUrl = $(this).val()
+		$(".yulan").show();
+		$(".file-3").val("");
+	});
+
+	$(".file-3").each(function(){
+		if($(this).val()==""){
+			$(this).parents(".uploader").find(".filename").val("营业执照");
+		}
+	});
+$(".btn-3").click(function(){
+$("#img-1").attr("src", obUrl);
+$(".yulan").hide();
+$(".file-3").parents(".uploader").find(".filename").val(subUrl);
+})
+	$(".btn-2").click(function(){
+		$(".yulan").hide();
+	})
+
+});
+//返回
+function PhoneBack(obj){
+	$("#searchCountry").html('');
+	$("#searchCountry").hide();
+}
+</script>
+
+
+<style type="text/css"> 
+#phonecutImage img{
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 15%;
+    height: auto;
+    width: 100%;
+}
+#phonecutImage li{
+    vertical-align: middle;
+    font-size: 0.66rem;
+    margin: -1px 1% 0 1.75%;
+    padding: 6px 0;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+}
+</style> 
+
+	<article class="htmleaf-container" style="display: block;">
+		  <div id="clipArea" style="user-select: none; overflow: hidden; position: relative;">
+		  <div style="position: absolute;top: 10px;left: 10px;z-index: 100000;color: #fff;font-size: 0.6rem;" onclick="PhoneBack(this)"><img style="display: inline-block;vertical-align: middle;max-width: 15%;height: auto;width: 100%;" src="/statics/images/appeditor/new/phoneback.png">返回报名表</div></div>
+		  <div style="position: absolute;bottom: 15%;left: 25%;right:25%;z-index: 100000;color: #fff;font-size: 0.56rem;">支持手势旋转缩放裁图</div></div>
+			<div id="phonecutImage" style="width: 100%;height: auto;margin: 10px auto 0;overflow: hidden;background-color: #fff;padding: 11px 0;">
+				<div class="uploader1 blue" >
+				<li style="width: 80%;float: left;background-color: #8f5dbf;" >
+	            <img src="/statics/images/appeditor/new/phoneselect.png">选择图片<li>
+					<!-- <input type="button" name="file" class="button" value="打开"/>
+					<img id="tempimg" dynsrc="" style="display:none" /> -->
+					<!-- 用 Servlet提交表单-->
+					<form id="myupload"
+						action="UpdWebServlet?filePath=zhglPhoto" method="post"
+						enctype="multipart/form-data">
+				
+					<input id="file" name="websitefile" type="file"   style="width: 80%;float: left;background-color: #8f5dbf;"  />
+					</form>
+				</div>
+
+<li  id="clipBtn"  style=";width: 40%;float: right;background-color: #ff7b05;" >
+	<img src="/statics/images/appeditor/new/cutback.png">截取并返回<li>			
+	
+	<!--  <button id="clipBtn">截取</button>-->
+				
+			</div>
+            
+			<div id="view" style="background-color: rgb(102, 102, 102); background-repeat: no-repeat; background-position: center center; background-size: contain;"></div>
+			
+	    </article>

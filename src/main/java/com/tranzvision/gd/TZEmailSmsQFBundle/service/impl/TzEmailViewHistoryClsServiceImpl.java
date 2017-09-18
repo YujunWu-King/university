@@ -16,7 +16,9 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzDxyjfsrwTblMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzEmlTaskAetMapper;
+import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjfsrwTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzEmlTaskAet;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
@@ -59,6 +61,9 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 	
 	@Autowired
 	private AyalysisMbSysVar ayalysisMbSysVar;
+	
+	@Autowired
+	private PsTzDxyjfsrwTblMapper psTzDxyjfsrwTblMapper;
 
 	
 	//邮件历史查看
@@ -94,7 +99,8 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 	        	for(int i = 0; i < list.size(); i++){
 	        		taskID = (String)list.get(i).get("TZ_EML_SMS_TASK_ID");
 	        		
-	        		String sql1 = "select TZ_TMPL_ID,TZ_RWZX_ZT,TZ_RWZX_ZT_DESC,TZ_SEND_COUNT,TZ_SEND_SUC_COUNT,TZ_SEND_FAIL_COUNT,TZ_SEND_RPT_COUNT,TZ_RWZX_DT_STR,TZ_REALNAME from PS_TZ_EML_HIS_TJ_V where TZ_EML_SMS_TASK_ID=? and TZ_JG_ID=?";
+	        		//String sql1 = "select TZ_TMPL_ID,TZ_RWZX_ZT,TZ_RWZX_ZT_DESC,TZ_SEND_COUNT,TZ_SEND_SUC_COUNT,TZ_SEND_FAIL_COUNT,TZ_SEND_RPT_COUNT,TZ_RWZX_DT_STR,TZ_REALNAME from PS_TZ_EML_HIS_TJ_V where TZ_EML_SMS_TASK_ID=? and TZ_JG_ID=?";
+	        		String sql1 = " select `A`.`TZ_EML_SMS_TASK_ID` AS `TZ_EML_SMS_TASK_ID`,`A`.`TZ_JG_ID` AS `TZ_JG_ID`,`A`.`TZ_TMPL_ID` AS `TZ_TMPL_ID`,`A`.`TZ_RWZX_ZT` AS `TZ_RWZX_ZT`,(select `PS_TZ_PT_ZHZXX_TBL`.`TZ_ZHZ_DMS` from `PS_TZ_PT_ZHZXX_TBL` where ((`PS_TZ_PT_ZHZXX_TBL`.`TZ_ZHZJH_ID` = 'TZ_RWZX_ZT') and (`PS_TZ_PT_ZHZXX_TBL`.`TZ_ZHZ_ID` = `A`.`TZ_RWZX_ZT`) and(`PS_TZ_PT_ZHZXX_TBL`.`TZ_EFF_STATUS` = 'A'))) AS `TZ_RWZX_ZT_DESC`,(select count(1) from `PS_TZ_AUDCYUAN_T` where (`PS_TZ_AUDCYUAN_T`.`TZ_AUDIENCE_ID` = `A`.`TZ_AUDIENCE_ID`)) AS `TZ_SEND_COUNT`,(select count(1) from `PS_TZ_YJFSLSHI_TBL` where ((`PS_TZ_YJFSLSHI_TBL`.`TZ_EML_SMS_TASK_ID` = `A`.`TZ_EML_SMS_TASK_ID`) and (`PS_TZ_YJFSLSHI_TBL`.`TZ_FS_ZT` = 'SUC'))) AS `TZ_SEND_SUC_COUNT`,(select count(1) from `PS_TZ_YJFSLSHI_TBL` where ((`PS_TZ_YJFSLSHI_TBL`.`TZ_EML_SMS_TASK_ID` = `A`.`TZ_EML_SMS_TASK_ID`) and (`PS_TZ_YJFSLSHI_TBL`.`TZ_FS_ZT` = 'FAIL'))) AS `TZ_SEND_FAIL_COUNT`,(select count(1) from `PS_TZ_YJFSLSHI_TBL` where ((`PS_TZ_YJFSLSHI_TBL`.`TZ_EML_SMS_TASK_ID` = `A`.`TZ_EML_SMS_TASK_ID`) and (`PS_TZ_YJFSLSHI_TBL`.`TZ_FS_ZT` = 'RPT'))) AS `TZ_SEND_RPT_COUNT`, date_format(`A`.`TZ_RWTJ_DT`,'%Y-%m-%d %H:%i:%s') AS `TZ_RWZX_DT_STR`,`B`.`TZ_REALNAME` AS `TZ_REALNAME` from (`PS_TZ_DXYJFSRW_TBL` `A` left join `PS_TZ_AQ_YHXX_TBL` `B` on((`A`.`ROW_ADDED_OPRID` = `B`.`OPRID`))) WHERE  A.TZ_EML_SMS_TASK_ID=? AND A.TZ_JG_ID=?";
 	        		Map<String, Object> map1 = jdbcTemplate.queryForMap(sql1,new Object[]{taskID, orgID});
 	        		if(map1 != null){
 	        			num_total = num_total + 1;
@@ -251,9 +257,9 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 				"SELECT TZ_SEND_MODEL,TZ_TMPL_ID,TZ_MAL_CONTENT FROM PS_TZ_DXYJQF_DY_T WHERE TZ_MLSM_QFPC_ID=?",
 				new Object[] { sendPcId });
 		if (map3 != null) {
-			sendModel = map3.get("TZ_AUDIENCE_ID") == null ? "" : (String) map3.get("TZ_SEND_MODEL");
-			tmplId = map3.get("TZ_MLSM_QFPC_ID") == null ? "" : (String) map3.get("TZ_TMPL_ID");
-			content = map3.get("TZ_JG_ID") == null ? "" : (String) map3.get("TZ_MAL_CONTENT");
+			sendModel = map3.get("TZ_SEND_MODEL") == null ? "" : (String) map3.get("TZ_SEND_MODEL");
+			tmplId = map3.get("TZ_TMPL_ID") == null ? "" : (String) map3.get("TZ_TMPL_ID");
+			content = map3.get("TZ_MAL_CONTENT") == null ? "" : (String) map3.get("TZ_MAL_CONTENT");
 		}
 
 		ArrayList<String[]> arrayList = new ArrayList<>();
@@ -276,7 +282,7 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 				String[] str = arrayList.get(i);
 				String name = str[0];
 				String value = str[1];
-				content = content.replaceAll(name, value);
+				content = content.replace(name, value);
 			}
 		}
 		/*
@@ -312,15 +318,20 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					
-					String itemName = (String)list.get(i).get("TZ_XXX_NAME");
-					String StoreFieldName = (String)list.get(i).get("TZ_FIELD_NAME");
+					String itemName = list.get(i).get("TZ_XXX_NAME") == null ? "" : (String)list.get(i).get("TZ_XXX_NAME");
+					String StoreFieldName = list.get(i).get("TZ_FIELD_NAME") == null ? "" : (String)list.get(i).get("TZ_FIELD_NAME");
 					
-					String selectSql = "SELECT " + StoreFieldName + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
-					String fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[]{strPicId,audCyId},"String");
-
-					String name = "\\[" + itemName + "\\]";
-					String[] returnString = { name, fieldValue };
-					arrayList.add(returnString);
+					if(itemName != null && !"".equals(itemName) && StoreFieldName != null && !"".equals(StoreFieldName)){
+						String selectSql = "SELECT " + StoreFieldName + " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_AUDCY_ID=?";
+						String fieldValue = jdbcTemplate.queryForObject(selectSql, new Object[]{strPicId,audCyId},"String");
+						if(fieldValue == null){
+							fieldValue = "";
+						}
+						
+						String name = "[" + itemName + "]";
+						String[] returnString = { name, fieldValue };
+						arrayList.add(returnString);
+					}
 				}
 			}
 			return arrayList;
@@ -341,6 +352,9 @@ public class TzEmailViewHistoryClsServiceImpl  extends FrameworkImpl{
 				// 重新发送任务ID;
 		        String taskId = jacksonUtil.getString("taskId");
 		        //String emlQfId = jacksonUtil.getString("emlQfId");
+		        PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = psTzDxyjfsrwTblMapper.selectByPrimaryKey(taskId);
+		        psTzDxyjfsrwTbl.setTzRwzxZt("A");
+		        psTzDxyjfsrwTblMapper.updateByPrimaryKey(psTzDxyjfsrwTbl);
 		         
 				int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 				// 当前用户;

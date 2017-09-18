@@ -11,8 +11,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjInitServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdObjectServiceImpl;
@@ -20,9 +23,6 @@ import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.OperateType;
 import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.sql.SqlQuery;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/")
@@ -48,12 +48,13 @@ public class Index {
 	private TzCookie tzCookie;
 	@Autowired
 	private GdObjectServiceImpl gdObjectServiceImpl;
+	@Autowired
+	private TzWebsiteLoginServiceImpl tzWebsiteLoginServiceImpl;
 	
 	Logger logger = Logger.getLogger(this.getClass());
 
-	@RequestMapping(value = "index")
+	@RequestMapping(value = {"index"})
 	public String index(HttpServletRequest request, HttpServletResponse response) {
-		
 		// 获取当前提交的主题编号;
 		String tmpSubmitThemeID = request.getParameter("theme");
 		// 获取当前提交语言环境代码;
@@ -99,7 +100,7 @@ public class Index {
 					gdKjComService.getUserGxhLanguage(request, response));
 
 			request.setAttribute("tz_gdcp_loginStyle_20150612184830", gdKjComService.getLogoStyle(request, response));
-
+			
 			return "index";
 		} else {
 			String tmpLoginURL = "";
@@ -160,7 +161,8 @@ public class Index {
 
 	@RequestMapping(value = "dispatcher", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String dispatcher(HttpServletRequest request, HttpServletResponse response) {
+	public String dispatcher(HttpServletRequest request, HttpServletResponse response)
+	{
 		/*
 		 * String[] errMsg = {"0",""}; String content =
 		 * registeServiceImpl.handleEnrollPage("5");
@@ -228,6 +230,11 @@ public class Index {
 		
 		//logger.info("strParams:"+strParams);
 
+
+		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 begin*/
+		tzWebsiteLoginServiceImpl.autoLoginByCookie(request, response);
+		/*MBA报考服务系统手机版首页免登陆 卢艳添加，2017-4-15 end*/
+		
 		// 操作类型;
 		String strOprType = "";
 
@@ -377,7 +384,6 @@ public class Index {
 			// 错误码;
 			errorCode = "1";
 		}
-		
 		if ("HTML".equals(strOprType)) {
 			if ("0".equals(errorCode)) {
 				strRetContent = strComContent;

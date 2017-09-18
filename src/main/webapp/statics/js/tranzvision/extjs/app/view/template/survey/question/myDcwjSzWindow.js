@@ -1,15 +1,19 @@
-﻿Ext.define('KitchenSink.view.template.survey.question.myDcwjSzWindow', {
+﻿﻿Ext.define('KitchenSink.view.template.survey.question.myDcwjSzWindow', {
     extend: 'Ext.panel.Panel',
     xtype: 'myDcwjSzWindow',
     reference: 'myDcwjSzWindow',
     controller: 'wjdcController',
+    requires: [
+               'KitchenSink.view.template.survey.question.wjdcAppclsStore',
+               'KitchenSink.view.template.survey.question.wjdcAppclsModel'
+       ],
     title: '调查问卷设置',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    actType: 'add',
+    actType: 'update',
     parentGridStore:"",
 
      initComponent:function(){
-     	
+
      	var tagStore1 = new Ext.data.Store({
             fields:['tagName','tagId'],
             data:[]
@@ -285,7 +289,8 @@
                      defaults: {
                          anchor: '100%'
                      },
-                     items:[{
+                     items:[
+                     /*{
                          xtype: 'radiogroup',
                          fieldLabel: '答题规则',
                          msgTarget: 'side',
@@ -316,6 +321,19 @@
                              inputValue: '2',
                              columnWidth: 1
                          }]
+                     }*/{				
+                         xtype: 'checkboxfield',
+                         fieldLabel: '答题规则',
+                         name: 'TZ_DC_WJ_DTGZ',
+                         boxLabel:'只要还在调查期间内，就可以修改已提交调查问卷的答案',
+                         hideLabel:false,
+							inputValue:'2',
+                         uncheckedValue:'0',
+                         ignoreChangesFlag:true,
+							allowBlank:false,
+                         afterLabelTextTpl: [
+                             '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                         ]
                      },{  xtype: 'radiogroup',
                          fieldLabel: '采集规则',
                          allowBlank: false,
@@ -403,7 +421,7 @@
                              name: 'TZ_DC_WJ_NEEDPWD',
                              boxLabel:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_NEEDPWD", "启用调查密码"),
                              hideLabel:true,
-			     ignoreChangesFlag:true,
+			                ignoreChangesFlag:true,
                              handler:'needPwdFun'
                          },{
                              xtype:'textfield',
@@ -459,6 +477,132 @@
                              name:'TZ_DC_WJ_TLSJ',
                              value:0
                          }
+                     ]
+                 },{
+                     xtype: 'fieldset',
+                     //title: '前导页/结果页设置',
+                     defaults: {
+                         anchor: '100%'
+                     },
+                     items: [
+                         {
+                             xtype:'checkboxfield',
+                             fieldLabel: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_WX", "获取微信授权"),
+                             name: 'TZ_DC_WJ_WX',
+                             inputValue:'Y',
+                             uncheckedValue:'N',
+                             boxLabel:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.TZ_DC_WJ_WX", "获取微信授权"),
+                             hideLabel:true
+                         },{
+                             xtype: 'grid',
+                             height: 330,
+                             title: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.tzAppClsSz","问卷事件配置"),
+                             reference:'wjdcAppclsGrid',
+                             frame: true,
+                             columnLines: true,
+                             style:"margin:10px",
+                             tzAppClsTypeStore:'',
+                            /* selModel: {
+                                 type: 'checkboxmodel'
+                             },*/
+                             plugins: {
+                                 ptype: 'cellediting',
+                                 pluginId: 'dropBoxSetCellediting',
+                                 clicksToEdit:1
+                             },
+                             columns: [{
+                            	 text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.xuhao", "序号"),
+                            	 dataIndex:'tzSeqNum',
+                            	 hidden:true
+                             },{
+                            	 text: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.wjId", "问卷ID"),
+                                 dataIndex: 'wjId',
+                                 hidden:true
+                             },{
+                                 text: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.tzAppclsID", "应用程序类ID"),
+                                 dataIndex: 'tzAppclsID',
+                                 width: 200,
+                                 editor: {
+             						xtype:'textfield',
+             						maxLength:50,
+             						 triggers: {
+             		                        search: {
+             		                            cls: 'x-form-search-trigger',
+             		                            handler: "chooseAppCls"
+             		                        }
+             		                    }
+             					}
+                             },{
+                                 text: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.tzAppclsName", "应用程序类名称"),
+                                 dataIndex: 'tzAppclsName',
+                                 width: 250
+                             },{
+       						  text:'',
+    						  width:10,   
+    						  dataIndex:'tzAppclsTypeDesc',   
+    						  hidden:true
+    					    },{
+                                 text: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.tzAppclsType", "事件类型"),
+                                 dataIndex: 'tzAppclsType',
+                                 width: 150,
+                                 editor:{
+                                	 xtype: 'combobox',
+                                     editable: false,
+                                     queryMode: 'local',
+                                     name: 'tzAppclsType',
+                                     hiddenName:'tzAppclsType',
+                                     valueField: 'TValue',
+                                     displayField: 'TSDesc',
+                                     store: new KitchenSink.view.common.store.appTransStore("TZ_APP_CLS_TYPE"),
+                                    
+                                 },
+                                 renderer: function(value,metadata,record){ 
+     								var index = this.tzAppClsTypeStore.find('TValue',value);   
+     								if(index!=-1){   
+     									   return this.tzAppClsTypeStore.getAt(index).data.TSDesc;   
+     								}   
+     								return record.get("tzAppclsTypeDesc");   
+     						    }
+                             },{
+                                 text: Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.tzIfUse", "是否启用"),
+                                 xtype:'checkcolumn',
+                                 dataIndex: 'tzIfUse',
+                                 width: 100
+                                 
+                             },{
+                                 menuDisabled: true,
+                                 sortable: false,
+                                 align: 'center',
+                                 width:100,
+                                 xtype: 'actioncolumn',
+                                 items:[
+                                     {iconCls: 'remove',tooltip:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.delete","删除"),handler:'delCurRowWjAppcls'}
+                                 ]
+                             }],
+                             store: {
+                                 type: 'wjdcAppclsStore'
+                             },
+                             dockedItems:[{
+                                 xtype:"toolbar",
+                                 items:[
+                                     {text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.add","新增"),iconCls:"add",handler:'addWjdcAppcls'}/*,
+                                     {text:Ext.tzGetResourse("TZ_ZXDC_WJGL_COM.TZ_ZXDC_WJGL_STD.remove","删除"),iconCls:'remove',handler:'deleteWjdcAppcls'},
+                                     '->'*/
+                                 ]
+                             }],
+                             bbar: {
+                                 xtype: 'pagingtoolbar',
+                                 pageSize: 5,
+                                 listeners:{
+                                     afterrender: function(pbar){
+                                         var grid = pbar.findParentByType("grid");
+                                         pbar.setStore(grid.store);
+                                     }
+                                 },
+                                 plugins: new Ext.ux.ProgressBarPager()
+                             }
+                         }
+                         
                      ]
                  }]
              }],

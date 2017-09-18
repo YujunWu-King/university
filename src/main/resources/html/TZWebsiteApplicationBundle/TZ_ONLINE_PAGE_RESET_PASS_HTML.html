@@ -1,0 +1,107 @@
+<html>
+<head>
+<link href="page_stylecss" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript"
+		src="%bind(:11)/statics/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#submitPass").on("click",function(){
+			//alert("重置密码");
+			var letterId="%bind(:13)";
+			var password=$("#newPassword").val();
+			var rePassword=$("#reNewPassword").val();
+			if(password==""){
+				alert("%bind(:4)");
+				return false;
+			}
+			if(password!=rePassword){
+				alert("%bind(:5)");
+				return false;
+			}
+			var tzParam='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_RESET_PASS_STD","OperateType":"U","comParams":{"update":[{"letterId":"'+letterId+'","password":"'+password+'"}]}}';
+			$.ajax({
+				type: "POST",
+				url: "%bind(:12)",
+				data: {
+					tzParams: tzParam
+				},
+				dataType: "JSON",
+				success: function(f) {
+					window.location.href="%bind(:12)?classid=appId&TZ_APP_INS_ID=%bind(:14)&TZ_REF_LETTER_ID="+letterId;
+				}
+			});
+		});
+	});
+</script>	
+</head>
+<body style="text-align:center">
+<!-- <div>
+	<p>%bind(:1):<input id="newPassword" type="password" /></p>
+	<p>%bind(:2):<input id="reNewPassword" type="password" /></p>
+	<p><input type="button" id="submitPass" value="%bind(:3)"/></p>
+</div>-->
+<div >
+<form action="" method="post" enctype="multipart/form-data" name="updatePassWord">
+<div class="padding_div_40px2"></div>
+<div class="padding_div_40px2"></div>
+
+<div class="main_full_top"></div>
+<div class="main_full">
+  <div class="main_full_line">
+    <div class="main_full_line_title_font_left">%bind(:1) </div> 
+    <div class="main_full_full_right"></div>
+  </div>
+  <div class="main_full_lines_720px"></div>
+  <div class="main_full_line">
+    <div class="main_full_line_left"><span class="reg_title_star">*</span>%bind(:2)</div>
+  
+    <div class="main_full_line_right">
+      <input name="newPassword" type="password" class="input_251px" id="newPassword" onblur="check_password()"/>
+	  <input id="status_PASSWORD" type="hidden" name="status_PASSWORD" value="1">
+		<div class="pw-tip" id="J_PwdTip" style="display:none;position:absolute;">
+		<i class="pw-tip-arr"></i>
+		<div class="pw-tip-bd">
+			<div class="pw-strength"><span data-phase-id="r_ui_pwd_strength">%bind(:7)</span>
+				<div class="pw-strength-bar" style="left:120px">
+					<span class="pw-strength-1"></span>
+					<span class="pw-strength-2"></span>
+					<span class="pw-strength-3"></span>
+					<em></em>
+				</div>
+			</div>
+			<div>
+				<div class="pw-rule-item pw-rule-length"><i class="iconfont">О</i><span data-phase-id="r_ui_pwdLengthTip">%bind(:11)</span></div>
+				<div class="pw-rule-item pw-rule-legal"><i class="iconfont">О</i><span data-phase-id="r_ui_pwdCharacterTip">%bind(:9)</span></div>
+				<div class="pw-rule-item pw-rule-multi"><i class="iconfont">О</i><span data-phase-id="u_ui_pwdStengthTip">%bind(:10)</span></div>
+			</div>
+		</div>
+	</div>
+    </div>
+  </div>
+  
+  <div class="main_full_line">
+    <div class="main_full_line_left"><span class="reg_title_star">*</span>%bind(:3)</div>
+  
+    <div class="main_full_line_right">
+      <input name="reNewPassword" type="password" class="input_251px" id="reNewPassword" onblur="check_password()"/>
+      <span id="reNewPassword" class="alert_display_none"><img src="%bind(:11)/alert.png" width="16" height="16" class="alert_img"  /><label id="repassword_status"></label></span>
+    </div>
+  </div>
+  
+  <div class="main_full_lines_400px"></div>
+  <div class="main_full_line">  <div class="bt_blue" id="submitPass" style="width:111px;float:none;margin:0 auto;text-align:center">
+  <span style="color:#FFFFFF">%bind(:6)</span></div> </div>
+  
+</div>
+
+
+
+<div class="main_full_foot"></div>
+<div class="padding_div_50px"></div>
+<div class="padding_div_50px"></div>
+<div style="clear:both;"></div>
+</form>
+</div>
+</body>
+</html>

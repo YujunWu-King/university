@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatMaterialBundle.dao.PsTzWxMediaTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxMediaTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_WX_APPID" property="tzWxAppid" jdbcType="VARCHAR" />
+    <id column="TZ_XH" property="tzXh" jdbcType="VARCHAR" />
+    <result column="TZ_SC_NAME" property="tzScName" jdbcType="VARCHAR" />
+    <result column="TZ_SC_REMARK" property="tzScRemark" jdbcType="VARCHAR" />
+    <result column="TZ_PUB_STATE" property="tzPubState" jdbcType="VARCHAR" />
+    <result column="TZ_MEDIA_ID" property="tzMediaId" jdbcType="VARCHAR" />
+    <result column="TZ_IMAGE_PATH" property="tzImagePath" jdbcType="VARCHAR" />
+    <result column="TZ_MEDIA_TYPE" property="tzMediaType" jdbcType="VARCHAR" />
+    <result column="TZ_SYNC_DTIME" property="tzSyncDtime" jdbcType="TIMESTAMP" />
+    <result column="TZ_MEDIA_URL" property="tzMediaUrl" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_WX_APPID, TZ_XH, TZ_SC_NAME, TZ_SC_REMARK, TZ_PUB_STATE, TZ_MEDIA_ID, 
+    TZ_IMAGE_PATH, TZ_MEDIA_TYPE, TZ_SYNC_DTIME, TZ_MEDIA_URL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxMediaTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_WX_MEDIA_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxMediaTblKey" >
+    delete from PS_TZ_WX_MEDIA_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxMediaTbl" >
+    insert into PS_TZ_WX_MEDIA_TBL (TZ_JG_ID, TZ_WX_APPID, TZ_XH, 
+      TZ_SC_NAME, TZ_SC_REMARK, TZ_PUB_STATE, 
+      TZ_MEDIA_ID, TZ_IMAGE_PATH, TZ_MEDIA_TYPE, 
+      TZ_SYNC_DTIME, TZ_MEDIA_URL, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, #{tzXh,jdbcType=VARCHAR}, 
+      #{tzScName,jdbcType=VARCHAR}, #{tzScRemark,jdbcType=VARCHAR}, #{tzPubState,jdbcType=VARCHAR}, 
+      #{tzMediaId,jdbcType=VARCHAR}, #{tzImagePath,jdbcType=VARCHAR}, #{tzMediaType,jdbcType=VARCHAR}, 
+      #{tzSyncDtime,jdbcType=TIMESTAMP}, #{tzMediaUrl,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxMediaTbl" >
+    insert into PS_TZ_WX_MEDIA_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzWxAppid != null" >
+        TZ_WX_APPID,
+      </if>
+      <if test="tzXh != null" >
+        TZ_XH,
+      </if>
+      <if test="tzScName != null" >
+        TZ_SC_NAME,
+      </if>
+      <if test="tzScRemark != null" >
+        TZ_SC_REMARK,
+      </if>
+      <if test="tzPubState != null" >
+        TZ_PUB_STATE,
+      </if>
+      <if test="tzMediaId != null" >
+        TZ_MEDIA_ID,
+      </if>
+      <if test="tzImagePath != null" >
+        TZ_IMAGE_PATH,
+      </if>
+      <if test="tzMediaType != null" >
+        TZ_MEDIA_TYPE,
+      </if>
+      <if test="tzSyncDtime != null" >
+        TZ_SYNC_DTIME,
+      </if>
+      <if test="tzMediaUrl != null" >
+        TZ_MEDIA_URL,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWxAppid != null" >
+        #{tzWxAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXh != null" >
+        #{tzXh,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScName != null" >
+        #{tzScName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScRemark != null" >
+        #{tzScRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPubState != null" >
+        #{tzPubState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMediaId != null" >
+        #{tzMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImagePath != null" >
+        #{tzImagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMediaType != null" >
+        #{tzMediaType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncDtime != null" >
+        #{tzSyncDtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzMediaUrl != null" >
+        #{tzMediaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxMediaTbl" >
+    update PS_TZ_WX_MEDIA_TBL
+    <set >
+      <if test="tzScName != null" >
+        TZ_SC_NAME = #{tzScName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScRemark != null" >
+        TZ_SC_REMARK = #{tzScRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPubState != null" >
+        TZ_PUB_STATE = #{tzPubState,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMediaId != null" >
+        TZ_MEDIA_ID = #{tzMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzImagePath != null" >
+        TZ_IMAGE_PATH = #{tzImagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMediaType != null" >
+        TZ_MEDIA_TYPE = #{tzMediaType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSyncDtime != null" >
+        TZ_SYNC_DTIME = #{tzSyncDtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzMediaUrl != null" >
+        TZ_MEDIA_URL = #{tzMediaUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatMaterialBundle.model.PsTzWxMediaTbl" >
+    update PS_TZ_WX_MEDIA_TBL
+    set TZ_SC_NAME = #{tzScName,jdbcType=VARCHAR},
+      TZ_SC_REMARK = #{tzScRemark,jdbcType=VARCHAR},
+      TZ_PUB_STATE = #{tzPubState,jdbcType=VARCHAR},
+      TZ_MEDIA_ID = #{tzMediaId,jdbcType=VARCHAR},
+      TZ_IMAGE_PATH = #{tzImagePath,jdbcType=VARCHAR},
+      TZ_MEDIA_TYPE = #{tzMediaType,jdbcType=VARCHAR},
+      TZ_SYNC_DTIME = #{tzSyncDtime,jdbcType=TIMESTAMP},
+      TZ_MEDIA_URL = #{tzMediaUrl,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
+      and TZ_XH = #{tzXh,jdbcType=VARCHAR}
+  </update>
+</mapper>

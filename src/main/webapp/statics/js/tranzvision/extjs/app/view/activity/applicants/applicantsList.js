@@ -54,11 +54,21 @@
 				iconCls:  'list',
 				glyph: 61,
 				menu:[{
-					text:'发送函件',handler:'showSendWindow'
+					text:'发送函件',
+					handler:'showSendWindow'
 				},{
-					text:'活动报名人导出',handler:'exportApplyInfo'
+					text:'发送电子门票',handler:'showSendTicketsWindow'
 				},{
 					text:'批量更改参与状态',handler:"showSetStatusWindow"
+				},{
+					text: '导出活动报名人信息',
+					menu:[{
+						text:'导出选中活动报名人信息',handler:'exportApplyInfo',
+					},{
+						text:'导出搜索结果中报名人信息',handler:'exportSearchApplyInfo'
+					}]
+				},{
+					text:'下载导出结果',handler:'downloadExportFile'
 				}]
 			}
 		]},{
@@ -131,7 +141,7 @@
 			} 
 			
 		},{
-			text: Ext.tzGetResourse("TZ_GD_BMRGL_COM.TZ_BMRGL_STD.applyStatusDesc",""),
+			text: '报名状态',
 			dataIndex: 'applyStatusDesc',
 			hidden:true
 		},{
@@ -167,7 +177,7 @@
 				valueField: 'TValue',
             	displayField: 'TSDesc',
 				typeAhead: true,
-				mode:"remote",
+				mode:"local",
 				//store: new KitchenSink.view.common.store.appTransStore("TZ_BMR_APPLY_QD"),
 				store: bmqdStore,
 				//allowBlank: false
@@ -185,7 +195,7 @@
 				return record.get('channelDesc');  
 			}
 		},{
-			text: Ext.tzGetResourse("TZ_GD_BMRGL_COM.TZ_BMRGL_STD.channelDesc",""),
+			text: '报名渠道',
 			dataIndex: 'channelDesc',
 			hidden:true
 		},{
@@ -197,7 +207,7 @@
 				forceSelection: true,
 				valueField: 'TZ_ZHZ_ID',
             	displayField: 'TZ_ZHZ_CMS',
-				mode:"remote",
+				mode:"local",
 				store: cyztStore,
 				tpl:'<tpl for=".">' +   
 					'<div class="x-boundlist-item" style="height:30px;">' +   
@@ -217,7 +227,7 @@
 				 
 			}
 		},{
-			text: Ext.tzGetResourse("TZ_GD_BMRGL_COM.TZ_BMRGL_STD.signStatusDesc",""),
+			text: '签到状态',
 			dataIndex: 'signStatusDesc',
 			hidden:true
 		},{
@@ -266,29 +276,29 @@
 			 {text: '查看',iconCls: 'view',tooltip: '查看'}
 		   ]
 		}];
-	
+
 		for (var i=0; i<gdColumn.length; i++){
 			columns.push(gdColumn[i]);	
 		}
 
+		//添加面试申请编号
+		columns.unshift({
+			text: Ext.tzGetResourse("TZ_GD_BMRGL_COM.TZ_BMRGL_STD.msApplyNo","面试申请号"),
+			dataIndex: 'msApplyNo',
+			width: 100
+		});
+		
        Ext.apply(this, {
 			columns:columns,
 			bbar: {
 				xtype: 'pagingtoolbar',
-				pageSize: 10,
+				pageSize: 500,
 				listeners:{
 					afterrender: function(pbar){
 						var grid = pbar.findParentByType("grid");
 						pbar.setStore(grid.store);
 					}
 				},
-				/*
-				displayInfo: true,
-				displayMsg: '显示{0}-{1}条，共{2}条',
-				beforePageText: '第',
-				afterPageText: '页/共{0}页',
-				emptyMsg: '没有数据显示',
-				*/
 				plugins: new Ext.ux.ProgressBarPager()
 			}	   
 		});

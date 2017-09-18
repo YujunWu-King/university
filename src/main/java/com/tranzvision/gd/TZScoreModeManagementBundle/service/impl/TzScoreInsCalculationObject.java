@@ -111,10 +111,14 @@ public class TzScoreInsCalculationObject {
 		String errorMsg = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
+			
 			//当前机构
 			orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			//
 			oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+			
+			System.out.println("调用保存成绩项的方法Begin");
+			System.out.println("当前机构："+orgId+"-->当前登录人："+oprId);
 			
 			if(!"".equals(classId) && classId != null 
 					&& !"".equals(batchId) && batchId != null){
@@ -129,9 +133,11 @@ public class TzScoreInsCalculationObject {
 				
 				String pwkshSql = "";//查询成绩单ID
 				if("CL".equals(type)){
+					System.out.println("材料评审评委进行打分");
 					scoreModeId = scoreMdMap.get("TZ_ZLPS_SCOR_MD_ID").toString();
 					pwkshSql = "SELECT TZ_SCORE_INS_ID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
 				}else if("MS".equals(type)){
+					System.out.println("面试评审评委进行打分");
 					scoreModeId = scoreMdMap.get("TZ_MSCJ_SCOR_MD_ID").toString();
 					pwkshSql = "SELECT TZ_SCORE_INS_ID FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
 				}
@@ -172,8 +178,11 @@ public class TzScoreInsCalculationObject {
 					if(!"".equals(scoreInsId) && scoreInsId != null){
 						tzScoreInsId = Long.valueOf(scoreInsId);
 					} else {
+						tzScoreInsId = Long.valueOf(0);
 						updateFlag = "Y";
 					}
+					
+					System.out.println("成绩单实例ID："+tzScoreInsId+"-->更新标志："+updateFlag);
 					
 					//保存打分
 					String rtn = SaveScore();
@@ -181,6 +190,7 @@ public class TzScoreInsCalculationObject {
 					
 					if("0".equals(rtn)){
 						//保存成功
+						System.out.println("保存打分成功后，更新标志："+updateFlag);
 						
 						if("Y".equals(updateFlag)) {
 							//更新材料评审评委考生关系表，卢艳添加，2017-4-11
@@ -188,12 +198,14 @@ public class TzScoreInsCalculationObject {
 								sqlQuery.update("UPDATE PS_TZ_CP_PW_KS_TBL SET TZ_SCORE_INS_ID=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?",
 										new Object[]{tzScoreInsId,classId,batchId,bmbId,oprId});
 								sqlQuery.execute("commit");
+								System.out.println("更新材料评审评委考生关系表。成绩单实例ID："+tzScoreInsId+"-->班级编号："+classId+"-->批次编号："+batchId+"-->报名表实例编号："+bmbId+"-->评委OPRID："+oprId);
 							} else {
 								if("MS".equals(type)){
 									//更新面试评审评委考生关系表，卢艳添加，2017-4-14
 									sqlQuery.update("UPDATE PS_TZ_MP_PW_KS_TBL SET TZ_SCORE_INS_ID=? WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?",
 											new Object[]{tzScoreInsId,classId,batchId,bmbId,oprId});
 									sqlQuery.execute("commit");
+									System.out.println("更新面试评审评委考生关系表。成绩单实例ID："+tzScoreInsId+"-->班级编号："+classId+"-->批次编号："+batchId+"-->报名表实例编号："+bmbId+"-->评委OPRID："+oprId);
 								}
 							}
 						}
@@ -209,6 +221,10 @@ public class TzScoreInsCalculationObject {
 				errorCode = "-1";
 				errorMsg = "参数错误";
 			}
+			
+			System.out.println("调用保存成绩项的方法返回数据errorCode："+errorCode+"-->errorMsg："+errorMsg);
+			System.out.println("调用保存成绩项的方法End");
+			
 		}catch(Exception e){
 			errorCode = "-1";
 			errorMsg = e.getMessage();
@@ -234,6 +250,8 @@ public class TzScoreInsCalculationObject {
 		int treeNodeNum;
 		String treeNode;
 		try{
+			System.out.println("保存打分Begin");
+			
 			String sql = "SELECT TREE_NODE_NUM,TREE_NODE FROM PSTREENODE WHERE TREE_NAME=? AND PARENT_NODE_NUM=0";
 			Map<String,Object> rootMap = sqlQuery.queryForMap(sql, new Object[]{ treeName });
 			
@@ -242,12 +260,15 @@ public class TzScoreInsCalculationObject {
 				treeNode = rootMap.get("TREE_NODE").toString();
 				//初始化
 				itemsScoreValListTmp = new ArrayList<Map<String,Object>>();
+				//调用方法前，把错误信息清空，否则一旦有错误信息，将会一直存在，卢艳添加，2017-7-7
+				errorMsg = "";
 				//遍历成绩模型树
 				Float rootScoreAmount = this.TraverseTree(treeNodeNum, treeNode);
 				
 				if(!"".equals(errorMsg) && errorMsg != null){
 					//有错误信息，保存失败
 					errorCode = "-1";
+					System.out.println("保存打分错误信息："+errorMsg);
 				} else {
 					/**
 					 * 保存打分数据到成绩项实例表PS_TZ_CJX_TBL，数据存放在itemsScoreValListTmp
@@ -261,6 +282,8 @@ public class TzScoreInsCalculationObject {
 					}
 				}
 			}
+			System.out.println("保存打分返回errorCode："+errorCode);
+			System.out.println("保存打分End");
 		}catch(Exception e){
 			errorCode = "-1";
 			e.printStackTrace();
@@ -342,7 +365,7 @@ public class TzScoreInsCalculationObject {
 							if(boolVaild){
 								itemScoreMapTmp.put("pyVal", itemVal);
 							}else{
-								errorMsg = errorMsg + "【"+itemDesc+"】评语超出指定字数，请重新填写！";
+								errorMsg = errorMsg + "【"+itemDesc+"】评语字数范围不正确，请重新填写！";
 							}
 							break;
 						case "D":	//下拉框
@@ -401,8 +424,13 @@ public class TzScoreInsCalculationObject {
 		String dtFormat = getSysHardCodeVal.getDateFormat();
 		SimpleDateFormat format = new SimpleDateFormat(dtFormat);
 		try{
+			System.out.println("保存打分数据到数据库表Begin");
+			System.out.println("成绩单实例ID："+tzScoreInsId);
+			
 			if(tzScoreInsId == 0){
 				tzScoreInsId = this.creatNewScoreInstanceId();
+				
+				System.out.println("新增-成绩单实例ID："+tzScoreInsId);
 				
 				//psTzSrmbaInsTblMapper
 				
@@ -422,42 +450,48 @@ public class TzScoreInsCalculationObject {
 				
 			}
 			
-			
-			for(Map<String,Object> itemScoreMap: itemsScoreValListTmp){
-				String itemId = itemScoreMap.get("itemId").toString();
+			if(tzScoreInsId == 0){
 				
-				sqlQuery.update("DELETE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID= ?", new Object[]{ tzScoreInsId,itemId });
-				sqlQuery.execute("commit");
+			} else  {
+				for(Map<String,Object> itemScoreMap: itemsScoreValListTmp){
+					String itemId = itemScoreMap.get("itemId").toString();
+					
+					sqlQuery.update("DELETE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID= ?", new Object[]{ tzScoreInsId,itemId });
+					sqlQuery.execute("commit");
+					
+					PsTzCjxTblKey PsTzCjxTblKey = new PsTzCjxTblKey();
+					PsTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
+					PsTzCjxTblKey.setTzScoreItemId(itemId);
+					PsTzCjxTblWithBLOBs psTzCjxTbl = psTzCjxTblMapper.selectByPrimaryKey(PsTzCjxTblKey);
+					if(psTzCjxTbl == null){
+						psTzCjxTbl = new PsTzCjxTblWithBLOBs();
+						psTzCjxTbl.setTzScoreInsId(tzScoreInsId);
+						psTzCjxTbl.setTzScoreItemId(itemId);
+					}
 				
-				PsTzCjxTblKey PsTzCjxTblKey = new PsTzCjxTblKey();
-				PsTzCjxTblKey.setTzScoreInsId(tzScoreInsId);
-				PsTzCjxTblKey.setTzScoreItemId(itemId);
-				PsTzCjxTblWithBLOBs psTzCjxTbl = psTzCjxTblMapper.selectByPrimaryKey(PsTzCjxTblKey);
-				if(psTzCjxTbl == null){
-					psTzCjxTbl = new PsTzCjxTblWithBLOBs();
-					psTzCjxTbl.setTzScoreInsId(tzScoreInsId);
-					psTzCjxTbl.setTzScoreItemId(itemId);
-				}
+					//分值
+					if(itemScoreMap.containsKey("ScoreVal")){
+						BigDecimal ScoreVal = itemScoreMap.get("ScoreVal") == null? new BigDecimal(0) 
+								: BigDecimal.valueOf(Double.valueOf(itemScoreMap.get("ScoreVal").toString()));
+						psTzCjxTbl.setTzScoreNum(ScoreVal);
+					}
+					//评语值
+					if(itemScoreMap.containsKey("pyVal")){
+						String pyVal = itemScoreMap.get("pyVal").toString();
+						psTzCjxTbl.setTzScorePyValue(pyVal);
+					}
+					//选项编号
+					if(itemScoreMap.containsKey("optId")){
+						String optId = itemScoreMap.get("optId").toString();
+						psTzCjxTbl.setTzCjxXlkXxbh(optId);
+					}
 				
-				//分值
-				if(itemScoreMap.containsKey("ScoreVal")){
-					BigDecimal ScoreVal = itemScoreMap.get("ScoreVal") == null? new BigDecimal(0) 
-							: BigDecimal.valueOf(Double.valueOf(itemScoreMap.get("ScoreVal").toString()));
-					psTzCjxTbl.setTzScoreNum(ScoreVal);
+					psTzCjxTblMapper.insert(psTzCjxTbl);
 				}
-				//评语值
-				if(itemScoreMap.containsKey("pyVal")){
-					String pyVal = itemScoreMap.get("pyVal").toString();
-					psTzCjxTbl.setTzScorePyValue(pyVal);
-				}
-				//选项编号
-				if(itemScoreMap.containsKey("optId")){
-					String optId = itemScoreMap.get("optId").toString();
-					psTzCjxTbl.setTzCjxXlkXxbh(optId);
-				}
-				
-				psTzCjxTblMapper.insert(psTzCjxTbl);
 			}
+			
+			System.out.println("保存打分数据到数据库表End");
+			
 		}catch(Exception e){
 			boolSave = false;
 			e.printStackTrace();

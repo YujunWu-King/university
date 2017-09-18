@@ -198,7 +198,7 @@ public class TzSmsQfDefClsServiceImpl extends FrameworkImpl {
 						new Object[] { strsmsQfId }, "String");
 				if (strExcEmlField != null && !"".equals(strExcEmlField)) {
 					String strSql = "SELECT " + strExcEmlField
-							+ " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=? limit 0,20";
+							+ " FROM PS_TZ_MLSM_DRNR_T WHERE TZ_MLSM_QFPC_ID=?";
 					List<Map<String, Object>> excList = jdbcTemplate.queryForList(strSql, new Object[] { strsmsQfId });
 					if (excList != null && excList.size() > 0) {
 						for (int i = 0; i < excList.size(); i++) {
@@ -426,18 +426,30 @@ public class TzSmsQfDefClsServiceImpl extends FrameworkImpl {
 	private String getSmsTmpInfo(String comParams, String[] errorMsg) {
 		// 返回值;
 		Map<String, Object> map = new HashMap<>();
-		map.put("smsCont", "");
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
-		if (jacksonUtil.containsKey("SmsTmpId")) {
+		if (jacksonUtil.containsKey("SmsTmpId") && jacksonUtil.containsKey("smsQfId")) {
 			String tmpId = jacksonUtil.getString("SmsTmpId");
+			String smsQfId = jacksonUtil.getString("smsQfId");
+			//如果没变则不返回数据;
+			if(smsQfId != null && !"".equals(smsQfId) && tmpId != null && !"".equals(tmpId)){
+				int existNum = jdbcTemplate.queryForObject("select COUNT(1) from PS_TZ_DXYJQF_DY_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_TMPL_ID=?", new Object[]{smsQfId,tmpId},"Integer");
+				if(existNum > 0){
+					return jacksonUtil.Map2json(map);
+				}
+			}
+			
+			map.put("smsCont", "");
 			String strOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
 			String smsContent = jdbcTemplate.queryForObject(
 					" SELECT TZ_SMS_CONTENT FROM PS_TZ_SMSTMPL_TBL WHERE TZ_JG_ID=? AND TZ_TMPL_ID=?",
 					new Object[] { strOrgId, tmpId }, "String");
-			map.replace("smsCont", smsContent);
+			if(smsContent!=null && !"".equals(smsContent)){
+				map.replace("smsCont", smsContent);
+			}
+			
 		}
 		return jacksonUtil.Map2json(map);
 	}
@@ -858,7 +870,7 @@ public class TzSmsQfDefClsServiceImpl extends FrameworkImpl {
 				ArrayList<String> audPersonidArr = new ArrayList<>();
 				for(int i = 0; i < audList.size(); i++){
 					String audiendeId = (String)audList.get(i).get("TZ_AUDIENCE_ID");
-					String sql = "select a.OPRID,b.TZ_ZY_SJ,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
+					String sql = "select a.OPRID,b.TZ_ZY_SJ,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
 					List<Map<String, Object>> oprList = jdbcTemplate.queryForList(sql,new Object[]{audiendeId});
 								
 					if(oprList != null && oprList.size()>0){
@@ -1240,6 +1252,9 @@ public class TzSmsQfDefClsServiceImpl extends FrameworkImpl {
 		String strSmsQfId = ""; /* 群发任务id */
 		if (jacksonUtil.containsKey("smsQfId")) {
 			strSmsQfId = jacksonUtil.getString("smsQfId");
+			if(strSmsQfId == null || "".equals(strSmsQfId)){
+				return jacksonUtil.Map2json(mapRet);
+			}
 		} else {
 			return jacksonUtil.Map2json(mapRet);
 		}

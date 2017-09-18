@@ -49,7 +49,7 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 			if (opridlist != null && opridlist.size() > 0) {
 				for (int i = 0; i < opridlist.size(); i++) {
 					oprid = opridlist.get(i).get("OPRID").toString();
-					System.out.println("学位学历的opird" + oprid);
+					// System.out.println("学位学历的opird" + oprid);
 
 					sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? AND TZ_CLASS_ID=? ";
 					appinsId = SqlQuery.queryForObject(sql, new Object[] { oprid, classId }, "Integer");
@@ -58,11 +58,12 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 					degree = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_13TZ_TZ_13_6" }, "String");
 					degree1 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_12fl2" }, "String");
 					degree2 = SqlQuery.queryForObject(sql1, new Object[] { appinsId, "TZ_11fl" }, "String");
-					System.out.println("degree:" + degree + "degree1:" + degree1 + "degree2:" + degree2);
+					// System.out.println("degree:" + degree + "degree1:" +
+					// degree1 + "degree2:" + degree2);
 					boolean isture = (degree != null && !degree.equals("1") && !degree.equals(""))
 							|| (degree1 != null && !degree1.equals("1") && !degree1.equals(""))
 							|| (degree2 != null && !degree2.equals("1") && !degree2.equals(""));
-					System.out.println("isture:" + isture);
+					// System.out.println("isture:" + isture);
 					if ((degree != null && !degree.equals("1") && !degree.equals(""))
 							|| (degree1 != null && !degree1.equals("1") && !degree1.equals(""))
 							|| (degree2 != null && !degree2.equals("1") && !degree2.equals(""))) {
@@ -79,7 +80,7 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 								"SELECT COUNT(1) FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_FMQD_ID=?",
 								new Object[] { classId, batchId, Long.valueOf(appinsId), fmqdId }, "Integer");
 						if (have_one > 0) {
-
+							PsTzCsKsFmTMapper.updateByPrimaryKeySelective(PsTzCsKsFmT);
 						} else {
 							PsTzCsKsFmTMapper.insert(PsTzCsKsFmT);
 						}
@@ -92,6 +93,7 @@ public class TzNegativeDegreeServiceImpl extends TzNegativeListBundleServiceImpl
 						// PsTzCsKsTBL.setTzJgId(OrgID);
 						PsTzCsKsTBL.setRowLastmantDttm(nowdate_time);
 						PsTzCsKsTBL.setTzKshCsjg("N");
+						System.out.println("batchId:" + batchId);
 						PsTzCsKsTBLMapper.updateByPrimaryKeySelective(PsTzCsKsTBL);
 
 					}

@@ -12,27 +12,30 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
         'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathController',
         'Ext.selection.CellModel',
         'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageStore',
-        'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageModel'
+        'KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageModel',
+        'Ext.grid.plugin.CellEditing',
+        'Ext.grid.plugin.BufferedRenderer'
     ],
     autoScroll:false,
+    ignoreChangesFlag: true,//让框架程序不要提示用户保存的属性设置
     actType:'add',
-    id:'bzScoreMathCalcuter_bzscoreBapage',
+    reference:'bzScoreMathCalcuter_bzscoreBapage',
     bodyStyle: 'overflow-y:auto;overflow-x:hidden',
     title:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.ScoreMath","标准成绩计算器"),
     frame:true,
-    listeners:{
+   /* listeners:{
         resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
-            var buttonHeight = 42;/*button height plus panel body padding*/
+            var buttonHeight = 42;button height plus panel body padding
             var formHeight = 30;
             var formPadding = 20;
             var grid = panel.child('grid[name=appFormApplicants]');
             grid.setHeight( height- formHeight -buttonHeight-formPadding);
         }
-    },
+    },*/
     initComponent:function(){
-    	this.cellEditing = new Ext.grid.plugin.CellEditing({
+    	/*this.cellEditing = new Ext.grid.plugin.CellEditing({
             clicksToEdit: 1
-        });
+        });*/
         var store= new KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageStore();
         
     	
@@ -73,7 +76,15 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
                   viewConfig : {
                     enableTextSelection:true
                   },
-                  plugins: [this.cellEditing],
+                  plugins: [                                          
+                   	     {
+                   	        ptype: 'cellediting',
+                   	        clicksToEdit: 1
+                   	    },{
+                               ptype:'bufferedrenderer'
+                           }
+                    
+                    ],
                   header:false,
                   
                  // layout:'fit',
@@ -135,9 +146,12 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
                              	text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.judgescore","当前评委下考生成绩排名") ,
                                 dataIndex: 'judgescore',
                                 width: 170,
+                                hidden:true,
                                 editor: {
                                    allowBlank: false
-                                }
+                                },
+                           
+                             
                              },
                               {
                               text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.handle","操作") ,
@@ -168,7 +182,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
 
                 buttons:[
 
-                    {
+                   /* {
                         text: Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.save","保存"),
                         handler:'onschoolSave',
                         iconCls:'save'
@@ -176,7 +190,7 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
                         text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.sure","确定"),
                         handler:'ensureonschoolSave',
                         iconCls:'ensure'
-                    },{
+                    },*/{
                         text:Ext.tzGetResourse("TZ_BZCJ_SRC_COM.TZ_BZCJ_YSF_STD.close","关闭"),
                         iconCls:'close',
                         handler:'onSchoolClose'
@@ -188,11 +202,11 @@ Ext.define('KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePage', {
         onAddClick: function(btn){
         // Create a model instance
         var rec = new KitchenSink.view.bzScoreMathCalcuter.bzScoreMathBasePageModel({
-            xmid: '2',
-            xmName: '张三',
+            xmid: '',
+            xmName: '',
             teamID: 0,
-            judgeUser: '22',
-            rawscore: '55',
+            judgeUser: '',
+            rawscore: '',
             judgescore:''
         });
         

@@ -2264,6 +2264,9 @@
         var datas = form.getForm().getValues(),
             isGuiFan=datas.strWaring;
 
+        var judgeGrid = form.child("tabpanel").child("form[name=judgeInfoForm]").child("grid");
+        var store = judgeGrid.getStore();
+        
         if (isGuiFan=="N")
         {
            // alert("评审考生上限小于下限，请重新设置");
@@ -2303,8 +2306,10 @@
                     reStartReviewButton.setDisabled(true);
                     reStartReviewButton.setType = 0;
                     reStartReviewButton.flagType = 'negative';
+                    store.reload();
                 }
-            }  )    }
+            })    
+        }
     },
     closeReview:function(btn){
         var form = btn.findParentByType('form'),
@@ -2736,6 +2741,9 @@
                 datas.studentInfo.push(thisdata);
             }
         }
+        //增加评议标准修改信息		
+    	this.saveEvaStandard2(btn);
+    	
         var result = {update:[datas]},
             comParams = Ext.JSON.encode(result),
             tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"U","comParams":'+comParams+'}';
@@ -2791,6 +2799,9 @@
                 datas.studentInfo.push(thisdata);
             }
         }
+        //增加评议标准修改信息		
+    	this.saveEvaStandard2(btn);
+    	
         var result = {update:[datas]},
             comParams = Ext.JSON.encode(result);
         tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"U","comParams":'+comParams+'}';
@@ -2827,27 +2838,47 @@
         this.judgeInfoController(btn,[{name:'accountStatus',value:'A'}]);
     },
     submitData : function(btn){
-        var selection = btn.findParentByType('grid').getSelectionModel().getSelection();
+    	var judgeGrid = btn.findParentByType("grid");
+        var selection = judgeGrid.getSelectionModel().getSelection();
         if(selection.length == 0){
             Ext.Msg.alert("提示","请选择要操作的记录");
             return;
         }
-        // data[0].value = str.replace(/\/\d+$/,'/'+str.match(/^(\d+)\//)[1]);
+        var view = this.getView();
+        var datas = view.child('form[name=materialsProgressForm]').getValues();
+        var classID = datas.classID;
+        var batchID = datas.batchID;       
+    
+        var judgeOprIdList = "";
         for(var x = selection.length-1;x>=0;x--) {
-            var select = btn.findParentByType("grid").getSelection(),
-                index = btn.findParentByType("grid").getStore().indexOf(select[x]),
-                record = btn.findParentByType("grid").getStore().getAt(index);
-            var  str = selection[x].data.hasSubmited,
+            var select = judgeGrid.getSelection(),
+                index = judgeGrid.getStore().indexOf(select[x]),
+                record = judgeGrid.getStore().getAt(index);
+            judgeOprIdList = judgeOprIdList + record.data.judgeOprId + ";";
+            /*var  str = selection[x].data.hasSubmited,
                 totalApp=selection[x].data.lower;
             if (str.match(/^\d+\//)[0].replace(/\//, '') == str.match(/\/\d+$/)[0].replace(/\//, '') && !str.match(/^0\//)&&str.match(/^\d+\//)[0].replace(/\//, '') ==totalApp) {
                 //抽取数量与已提交的数量相同同时抽取数量不为空=>当前评委抽取的所有考生都已评审
                 //btn.findParentByType('grid').getSelectionModel().getSelection()[0].data.isChange = 'submit';
                 record.set('submitYN','Y');
             }else{
-                Ext.Msg.alert("提示","在您选择提交数据的评委中，存在未完成所有考生评审的评委");
+                Ext.Msg.alert("提示","在您选择提交数据的评委中，发现有未提交考生数据。");
                 //  record.set('submitYN','N');
-            }
+            }*/
         }
+        tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":{"type":"submitPweiData","classID":"' + classID + '","batchID":"' + batchID + '","pwOpridList":"' + judgeOprIdList + '"}}';
+        Ext.tzLoad(tzParams, function (respData) {
+        	if(respData=="success"){
+        		for(var x = selection.length-1;x>=0;x--) {
+                    var select = btn.findParentByType("grid").getSelection(),
+                        index = btn.findParentByType("grid").getStore().indexOf(select[x]),
+                        record = btn.findParentByType("grid").getStore().getAt(index);
+                    record.set('submitYN','Y');
+                }
+        	}else{
+        		Ext.Msg.alert("提示","在您选择提交数据的评委中，发现有未提交考生数据。");
+        	}        	
+        });
 
     },
     setNoSubmit : function(btn){
@@ -2868,12 +2899,12 @@
 		
 		var classID = record.get("classID");
 		var oprID = record.get("oprID");
-		var appInsID = record.get("insID");	
+		var appInsID = record.get("insID");
+		var clpsBmbTplId = record.get("clpsBmbTplId");
         
 		if (appInsID != "") {
-			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"' + appInsID + '","OPRID":"' + oprID + '"}}';
-			var viewUrl = Ext.tzGetGeneralURL() + "?tzParams="
-					+ encodeURIComponent(tzParams);
+			var tzParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"' + appInsID + '","OPRID":"' + oprID + '","TZ_APP_TPL_ID":"' + clpsBmbTplId + '","isReview":"Y"}}';
+			var viewUrl = Ext.tzGetGeneralURL() + "?tzParams="	+ encodeURIComponent(tzParams);
 			var mask;
 			var win = new Ext.Window(
 					{
@@ -2921,16 +2952,7 @@
 					})
 			win.show();
 		} else {
-			Ext.MessageBox
-					.alert(
-							Ext
-									.tzGetResourse(
-											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt",
-											"提示"),
-							Ext
-									.tzGetResourse(
-											"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm",
-											"找不到该报名人的报名表"));
+			Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.cantFindAppForm","找不到该报名人的报名表"));
 		}
 	},
     revokeData : function(btn){
@@ -3019,7 +3041,7 @@
         }
     },
     calDeviation : function(btn){
-        var select = btn.findParentByType("grid").getSelection(),
+        /*var select = btn.findParentByType("grid").getSelection(),
             classID = btn.findParentByType("grid").findParentByType("form").getValues().classID,
             batchID = btn.findParentByType("grid").findParentByType("form").getValues().batchID,
             datas={};
@@ -3046,7 +3068,19 @@
                     }
                 }
             });
-        }
+        }*/
+    	var classID = btn.findParentByType("grid").findParentByType("form").getValues().classID,
+        	batchID = btn.findParentByType("grid").findParentByType("form").getValues().batchID,
+        	datas={};
+    	datas.type = 'calculate';
+        datas.classID = classID;
+        datas.batchID = batchID;
+        
+        var store = btn.findParentByType("grid").getStore();
+        var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"CA","comParams":' + Ext.JSON.encode(datas) + '}';
+        Ext.tzLoad(tzParams, function (responseData) {
+        	store.load();
+        });
     },
     stuListActive : function(grid){
         var stuListStore = grid.getStore(),
@@ -3128,17 +3162,17 @@
                 batchID=selList[0].data.batchID,
                 DQLC=form.findField("delibCount").getValue();
             if (selList.length==1){
-                var JudgeJson= '"' + selList[0].data.judgeID + '"';
+                var JudgeJson= '"' + selList[0].data.judgeOprId + '"';
             }
             else{
                 for (var i=0;i<selList.length-1;i++)
                 {
                     if(JudgeJson=="")
                     {
-                        JudgeJson= '"' + selList[i].data.judgeID;}
-                    else{JudgeJson=JudgeJson+'='+selList[i].data.judgeID}
+                        JudgeJson= '"' + selList[i].data.judgeOprId;}
+                    else{JudgeJson=JudgeJson+'='+selList[i].data.judgeOprId}
                 }
-                JudgeJson=JudgeJson+'='+selList[selList.length-1].data.judgeID+'"';
+                JudgeJson=JudgeJson+'='+selList[selList.length-1].data.judgeOprId+'"';
             }
             
             
@@ -3230,22 +3264,13 @@
                 var gridData = statisticsGridDataModel['gridData'];
                 var gridStore = btn.findParentByType("grid").getStore();
                 gridStore.setData(gridData);
-                //btn.findParentByType("grid").getSelectionModel().selectRows(selectedIndex);
-                
-                console.log(selectedIndex);
-                console.log(selectedRecords);
+
                 var getSle = btn.findParentByType("grid").getSelectionModel();
-                /*getSle.select(selectedIndex);
-                getSle.select(selectedRecords);*/
                 
-                /*for(var m=0;m<selectedIndex.length;m++){
+                for(var m=0;m<selectedIndex.length;m++){
                 	var selIndex = selectedIndex[m];
-                	btn.findParentByType("grid").getSelectionModel().selectRows(selIndex);
-                }*/
-                
-                //btn.findParentByType("grid").getSelectionModel().select(selectedRecords,true,true);
-                
-                win.ignoreChanges = false;
+                	getSle.select(selIndex,true);
+                }
             });
         }
     },
@@ -3261,23 +3286,60 @@
     			var form = btn.findParentByType("grid").findParentByType("form");    		
     	    	var eGrid = form.child("grid[name=evaluationStandardGrid]");
     	    	var eStore = eGrid.getStore();
-    	    	//只对第一行比率赋值
+    	    	//对第一行比率赋值
     	    	var record = eStore.getAt(0);
+    	    	//对误差设置默认值
+    			var recordWc = eStore.getAt(1);
     			//动态属性部分赋值
     	    	var j = 1;
-    			for(var i=6;i<len;i++){
+    			for(var i=5;i<len;i++){
     				var colName = '00' + i;
                     colName = 'col' + colName.substr(colName.length - 2);
                     var sValue = lastData[colName];
-                    sValue = sValue.substr(0,sValue.indexOf("（"));
+                    var tValue = 0.30;
+                    if(i!=5){
+                    	sValue = sValue.substr(sValue.indexOf("（"),sValue.indexOf("）"));
+                    	sValue = sValue.replace("（","");
+                    	sValue = sValue.replace("）","");
+                    	sValue = sValue.replace("%","");
+                    	tValue = 1;
+                    }
+                    
                     var mxId = Object.getOwnPropertyNames(record.data)[j];
                     record.set(mxId,sValue);
-                    
+                    recordWc.set(mxId,tValue);     
                     j = j + 1;
-    			}
+    			}    			    		
     		}
     	}
     	    	
+    },
+    saveEvaStandard2:function(btn){
+    	var view = this.getView();
+        var datas = view.child('form[name=materialsProgressForm]').getValues();
+        
+    	var evaStandGrid = btn.findParentByType('panel').down("grid[name=evaluationStandardGrid]");    	
+    	var evaStandStore = evaStandGrid.getStore();
+    	var evaStandModified = evaStandStore.getModifiedRecords();
+            	
+    	var data = {};
+    	data.type = "savePyData";
+        data.classID = datas.classID;
+        data.batchID = datas.batchID;
+        
+    	if(evaStandModified.length !== 0){
+    		data.pyInfoUpdate = [];
+            for(var x =evaStandModified.length-1;x>=0;x--){
+                var thisdata = evaStandModified[x].data;                
+                data.pyInfoUpdate.push(thisdata);
+            }
+            var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":'  + Ext.JSON.encode(data) + '}';
+        	Ext.tzLoadAsync(tzParams,function(responseData){
+        		if(responseData!="success"){
+        			evaStandStore.setData(responseData);
+        		}    		
+        	},"",true,this);
+        }    	
     },
     saveEvaStandard: function(btn){
     	var view = this.getView();
@@ -3300,21 +3362,48 @@
                 data.pyInfoUpdate.push(thisdata);
             }
         }
-    	var win = btn.findParentByType("materialsReviewSchedule");
+    	
     	var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":'  + Ext.JSON.encode(data) + '}';
     	Ext.tzSubmit(tzParams,function(responseData){
     		if(responseData!="success"){
     			store.setData(responseData);
     		}    		
-    	});
-    	win.ignoreChanges = true;
-    	/*Ext.tzLoad(tzParams, function (responseData) {
-    		
-    		if(responseData!="success"){
-    			store.setData(responseData);
-    		}
-    		win.ignoreChanges = false;
-        });*/
-    	
+    	},"",true,this);
+    },
+    queryStudent: function(btn){
+    	var form = btn.findParentByType("form").getForm();
+        var classId = form.findField("classID").getValue();
+        var batchId = form.findField("batchID").getValue();
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW',
+            condition:{
+                TZ_CLASS_ID:classId,
+                TZ_APPLY_PC_ID:batchId
+            },
+            callback: function(seachCfg){
+                var store = btn.findParentByType("grid").store;
+                btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
+                var tzParamsObj = {};
+                tzParamsObj.classID = classId;
+                tzParamsObj.batchID = batchId;
+                tzParamsObj.type = "stuList";
+                				
+                var getedSQL="";
+                var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_FILTER_SQL_STD","OperateType":"getQuerySQL","comParams":'+seachCfg+'}';
+				Ext.tzLoadAsync(tzParams,function(responseData){
+					getedSQL = responseData.SQL;	
+				});
+				tzParamsObj.searchSQL = getedSQL; 				
+				
+				store.tzStoreParams = JSON.stringify(tzParamsObj);
+                //store.load();              
+                store.load({params: {start:0,limit:50,page:1}});
+            }
+        });
+    },
+    tmpImportData:function(btn){
+    	//临时方法，导入评审数据
+    	var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD","OperateType":"BUTTON","comParams":{"type":"tmpImportData"}}';
+        Ext.tzLoad(tzParams, function (respData) {});
     }
 });

@@ -52,14 +52,14 @@
 					data.view.store.beginUpdate();
 					var items = data.view.store.data.items;
 					for(var i = 0;i< items.length;i++){
-						items[i].set('order',i+1);
+						items[i].set('TZ_ORDER',i+1);
 					}
 					data.view.store.endUpdate();
 				}
 			}
 		},
 	
-        columns: [{
+        columns: [/*{
             text: "序号",
             dataIndex: 'TZ_ORDER',
             hidden: true
@@ -67,7 +67,7 @@
 		    text: "名称",
 			dataIndex: 'TZ_XXXKXZ_MC',
             hidden:true
-		},{ 
+		},*/{ 
 		    text: "信息项描述",
 			dataIndex: 'TZ_XXXKXZ_MS',
 			minWidth: 150,

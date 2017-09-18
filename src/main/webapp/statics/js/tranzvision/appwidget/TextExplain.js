@@ -12,7 +12,13 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 	_getHtml: function(data, previewmode) {
 		var c = '';
 		if (previewmode) {
-			c += '<div id="' + data.itemId + '">' + data.title + '</div>';
+			if(SurveyBuild.accessType == "M"){
+				c += '<div class="item">';
+				c += '	<p class="emergency">'+ data.title +'</p>';
+				c += '</div>';	
+			}else{
+				c += '<div id="' + data.itemId + '">' + data.title + '</div>';
+			}
 		} else {
 			c += '<div class="question-answer"></div>';
 		}
@@ -28,5 +34,5 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 		e += '</div>';
 
 		return e;
-	},
+	}
 })

@@ -26,11 +26,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
              win.doLayout();
         }
     },
+    constructor: function(obj) {
+        this.judgeGroupData = obj.judgeGroupData;
+        this.callParent();
+    },
     initComponent:function() {
         var me = this;
 
         //评委组
-        var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
+        /*var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
             recname:'TZ_CLPS_GR_TBL',
             condition:{
                 TZ_JG_ID:{
@@ -40,6 +44,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 }
             },
             result:'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME'
+        });*/
+
+        var judgeGroupStore = Ext.create("Ext.data.Store", {
+            fields: ["TZ_CLPS_GR_ID", "TZ_CLPS_GR_NAME"],
+            data: this.judgeGroupData
         });
 
         var store = new KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewAddJudgeWindowStore();
@@ -62,13 +71,22 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 items: [{
                     layout: 'column',
                     items: [{
-                        xtype: 'displayfield',
-                        labelWidth: 150,
+                        xtype: 'combobox',
+                        labelWidth: 80,
                         width: 200,
                         labelSeparator: '',
                         fieldLabel: '评委账号',
-                        value: '包含',
-                        name: 'judgeId-desc'
+                        store:{
+                            fields: [{name:'transId'},{name:'transDesc'}],
+                            data: [
+                                ["07","包含"],
+                                ["10","在......之内"]
+                            ]
+                        },
+                        displayField: 'transDesc',
+                        valueField: 'transId',
+                        value:"07",
+                        name: 'judgeId-operator'
                     }, {
                         xtype: 'textfield',
                         columnWidth: 1,
@@ -85,13 +103,22 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 }, {
                     layout: 'column',
                     items: [{
-                        xtype: 'displayfield',
-                        labelWidth: 150,
+                        xtype: 'combobox',
+                        labelWidth: 80,
                         width: 200,
                         labelSeparator: '',
                         fieldLabel: '评委姓名',
-                        value: '包含',
-                        name: 'judgeName-desc'
+                        store:{
+                            fields: [{name:'transId'},{name:'transDesc'}],
+                            data: [
+                                ["07","包含"],
+                                ["10","在......之内"]
+                            ]
+                        },
+                        displayField: 'transDesc',
+                        valueField: 'transId',
+                        value:"07",
+                        name: 'judgeName-operator'
                     }, {
                         xtype: 'textfield',
                         columnWidth: 1,
@@ -151,17 +178,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             labelWidth: 120,
                             hideLabel: true,
                             name: 'judgeGroupSet',
-                            store: new KitchenSink.view.common.store.comboxStore({
-                                recname: 'TZ_CLPS_GR_TBL',
-                                condition: {
-                                    TZ_JG_ID: {
-                                        value: Ext.tzOrgID,
-                                        operator: '01',
-                                        type: '01'
-                                    }
-                                },
-                                result: 'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME'
-                            }),
+                            store: judgeGroupStore,
                             displayField: "TZ_CLPS_GR_NAME",
                             valueField: "TZ_CLPS_GR_ID",
                             editable: false,
@@ -218,7 +235,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     store: store,
                     bbar: {
                         xtype: 'pagingtoolbar',
-                        pageSize: 10,
+                        pageSize: 500,
                         listeners: {
                             afterrender: function (pbar) {
                                 var grid = pbar.findParentByType("grid");
@@ -317,11 +334,13 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
         //搜索结果数据源
         var store = grid.getStore();
         //搜索条件
-        var judgeIdSrh = form.findField("judgeId-value").getValue();
-        var judgeNameSrh = form.findField("judgeName-value").getValue();
+        var judgeIdOperator = form.findField("judgeId-operator").getValue();
+        var judgeIdValue = form.findField("judgeId-value").getValue();
+        var judgeNameOperator = form.findField("judgeName-operator").getValue();
+        var judgeNameValue = form.findField("judgeName-value").getValue();
 
         //交互参数
-        store.tzStoreParams = '{"judgeIdSrh":"'+judgeIdSrh+'","judgeNameSrh":"'+judgeNameSrh+'"}';
+        store.tzStoreParams = '{"judgeIdOperator":"'+judgeIdOperator+'","judgeIdValue":"'+judgeIdValue+'","judgeNameOperator":"'+judgeNameOperator+'","judgeNameValue":"'+judgeNameValue+'"}';
         store.load();
     }
 });

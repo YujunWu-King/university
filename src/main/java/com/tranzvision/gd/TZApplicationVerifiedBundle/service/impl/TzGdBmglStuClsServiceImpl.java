@@ -346,6 +346,10 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		if("tzGetEmail".equals(oprType)){
 			reString = this.tzGetEmail(strParams, errorMsg);
 		}
+		//将搜索结果批量打包，此处只返回报名表编号
+		if("tzExportAll".equals(oprType)){
+			reString = this.tzGetAppList(strParams, errorMsg);
+		}
 		
 		return reString;
 	}
@@ -659,6 +663,52 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			strEmail = "";
 		}
 		returnMap.put("email", strEmail);
+		return jacksonUtil.Map2json(returnMap);
+	}
+	
+	private String tzGetAppList(String comParams,String[] errorMsg){
+		// 返回值;
+		Map<String, Object> returnMap = new HashMap<>();
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+	
+		String strAppInsList = "";
+		try{
+			jacksonUtil.json2Map(comParams);
+		
+			String tzStoreParams = jacksonUtil.getString("tzStoreParams");
+			String totalCount = jacksonUtil.getString("totalCount");
+
+			int numStart = 0;
+			int numLimit = Integer.valueOf(totalCount);
+	
+			// 排序字段
+			String[][] orderByArr = new String[][] {};
+	
+			// json数据要的结果字段
+			String[] resultFldArray = { "TZ_APP_INS_ID"};
+	
+			// 可配置搜索通用函数
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, tzStoreParams, numLimit, numStart, errorMsg);
+	
+			if (obj != null && obj.length > 0) {
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+				for (int i = 0; i < list.size(); i++) {
+					String[] rowList = list.get(i);
+					
+					if("".equals(strAppInsList)){
+						strAppInsList =  rowList[0];
+					}else{
+						strAppInsList = strAppInsList + ";" + rowList[0];
+					}					
+				}
+			}
+		}catch(Exception e){
+			errorMsg[0] = "1";
+			errorMsg[1] = e.toString();
+			e.printStackTrace();
+		}
+		returnMap.put("result", strAppInsList);
 		return jacksonUtil.Map2json(returnMap);
 	}
 }

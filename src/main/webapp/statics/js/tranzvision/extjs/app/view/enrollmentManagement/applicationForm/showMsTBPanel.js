@@ -14,14 +14,23 @@
         'Ext.grid.filters.Filters'
     ],
     bodyPadding:10,
+    scrollable: true,
     constructor: function (obj){
-				var canshu = obj.canshu;
-				console.log(canshu);
-				// this.classID=obj.classID;
+    			this.coluObj = obj.coluObj;
+    			this.lineObj = obj.lineObj;
+				//console.log(this.coluObj);
+				//console.log(this.lineObj);
+				//this.classID=obj.classID;
 				this.callParent();
     },
     initComponent:function(){
-
+ 
+				var coluObj = this.coluObj;
+				var lineObj = this.lineObj;
+				
+				console.log("000000");
+				console.log(coluObj);
+    			/*
     			// 曲线图参数
 				var lineObj = [ 
 				                {'pw' : 'zhangsan',	'n1' :10,'n2' : 20,'n3' : 30,'n4' : 40,'n5' : 40,'n6' : 40}, 
@@ -36,7 +45,8 @@
 				               {'pw' : 'wangwu',   'pj' : 40}, 
 				               {'pw' : '平均',     'pj' : 22} 
 				               ];
-
+				*/
+    	
 				// 评委数组
 				// var pwArr = [ 'data1', 'data2', 'data3' ];
 				var pwArr = [];
@@ -89,11 +99,14 @@
 
 				// 保持柱状图和线状图宽度一致
 				if (columnWidth > lineWidth) {
-					lineWidth = columnWidth;
+					//lineWidth = columnWidth;
 				} else {
-					columnWidth = lineWidth;
+					//columnWidth = lineWidth;
 				}
-
+				// 对曲线图增加点宽度;
+				lineWidth = lineWidth + (pwNum + 1) * 66; 
+				
+				
 				// ------------------------------------柱状图开始---------------------------
 				// 1、生产柱状图数据
 				for (var i = 0; i < pwArr.length; i++) {
@@ -126,7 +139,8 @@
 					xtype : 'chart',
 					id : 'columnChart' + id1,
 					width : columnWidth,
-					height : columnHeight,
+					//height : columnHeight,
+					height : 230,
 					animate : true,// 使用动画
 					store : graphDataStore,
 					shadow : true,// 使用阴影
@@ -146,7 +160,15 @@
 					series : [ {
 						type : 'column',
 						axis : 'bottom',
-						style: { width: 100 },
+                        label: {
+                            display: 'insideEnd',
+                            'text-anchor': 'middle',
+                              field: 'graphData',
+                              renderer: Ext.util.Format.numberRenderer('0.00'),
+                              //orientation: 'vertical',控制数字横着还是竖着
+                              color: '#333'
+                        },
+						style: { width: 50 },
 						xField : 'graphName',
 						yField : 'graphData',// x与y轴的数据声明
 					} ]
@@ -191,7 +213,7 @@
 						},
 						tips : {
 							trackMouse : true,
-							width : 300,
+							width : 430,
 							height : 28,
 							renderer : function(storeItem, item) {
 								this.setTitle('评委：' + item.series.yField
@@ -233,7 +255,8 @@
 				var lineChart = Ext.create('Ext.chart.Chart', {
 					xtype : 'chart',
 					style : 'background:#fff',
-					height : lineHeigth,
+					//height : lineHeigth,
+					height : 440,
 					// id: 'linechart',
 					id : 'lineChart' + id2,
 					width : lineWidth,

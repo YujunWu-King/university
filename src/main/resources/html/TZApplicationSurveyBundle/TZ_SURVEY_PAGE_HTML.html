@@ -3,17 +3,24 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>%bind(:13)</title> 
+		
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/js/jquery-1.8.3.min.js"></script>
+		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/js/My97DatePicker/WdatePicker.js"></script>
+
+		<link href="%bind(:21)/statics/js/onlineSurvey/css/pc.css" rel="stylesheet" type="text/css" />
+	
+		
+		
 		<link href="%bind(:21)/statics/js/onlineSurvey/css/public.css" rel="stylesheet" type="text/css" />
 		<link href="%bind(:21)/statics/js/onlineSurvey/css/index.css" rel="stylesheet" type="text/css" />
 		<link rel="stylesheet" href="%bind(:21)/statics/js/onlineSurvey/formvalidator/themes/Default/style/style.css" />
-		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.css" type="text/css">
-		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox-thumbs.css" type="text/css">
-        <link href="%bind(:21)/statics/js/survey/assets/libs/jqueryui/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.css" type="text/css"/>
+		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox-thumbs.css" type="text/css"/>
+        <link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/jqueryui/css/jquery-ui-1.10.4.min.css"/>
 		<script type="text/javascript">
 			var TzUniversityContextPath = "%bind(:21)";
 		</script>
-		
-		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/jquery.min.js"></script>
+<!-- 		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/jquery.min.js"></script> -->
 		<script type="text/javascript" src="%bind(:21)/statics/js/lib/jquery/browser.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/js/common.js"></script>
@@ -31,7 +38,6 @@
 		<script type="text/javascript" src="%bind(:21)/statics/js/onlineSurvey/layer/extend/layer.ext.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox.pack.js"></script>
 		<script type="text/javascript" src="%bind(:21)/statics/js/survey/assets/libs/fancyBox/jquery.fancybox-thumbs.js"></script>
-
 		<style>
 			.noteing{font-weight:700;text-align:center;font-size:14px;font-weight:700;position:fixed;display:none;z-index:10000;cursor:pointer;}
 			.noteing .alert{padding:8px 20px;}
@@ -50,7 +56,6 @@
 			.alert-block p+p{margin-top:5px;}
 			.alert-danger,.alert-error{border-color: #d59595;color: #b94a48;}
 			.alert-success,.alert-danger,.alert-error,.alert-info{text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);}
-
 		</style>
 		<script type="text/javascript">
 			SurveyBuild.tzGeneralURL = "%bind(:3)";		//统一接口
@@ -71,6 +76,7 @@
 			SurveyBuild._logic = %bind(:11);			//控制逻辑
 			MsgSet = %bind(:12);						//双语化消息集合
 			SurveyBuild.subState = "%bind(:19)";		//问卷提交状态
+			SurveyBuild.readonly = "%bind(:22)";		//问卷实例是否只读
 			$.datepicker.setDefaults($.datepicker.regional['%bind(:16)']);	//日期双语化
 	    	$.datepicker._gotoToday = function (id) {
                 $(id).datepicker('setDate', new Date()).datepicker('hide').blur();
@@ -135,33 +141,41 @@
 				}
 			}
 		</script>
+		
 	</head>
 
 	<body>
 		<div class="container">
-			<div class="top">
-				%bind(:14)
-				<div class="clear"></div>
-			</div>
-
-			<div class="uploadlogo">%bind(:1)</div>
-
-			<div class="maincon">
-				<form method="post" name="main_list" id="main_list"></form>
-				<div class="maincon-page">
-					<a href="#" onclick="javascript:prePage()"><div class="pagebtn1" style="display:none;">< %bind(:17)</div></a>
-					<a href="#" onclick="javascript:nextPage()"><div class="pagebtn2" style="display:none;">%bind(:18) ></div></a>
-					<div class="clear"></div>
-				</div>
-				<div id="fancybox-main" style="display: none"><ul></ul></div>
-				<div class="submit" style="display:none;" id="app_submit">
-					%bind(:15)&nbsp;&nbsp;
-					<span class="sendbtn"><img src="%bind(:21)/statics/js/onlineSurvey/images/m/gou.png" /></span>
-				</div>
-			</div>
-			<div class="fotter">%bind(:2)</div>
+			<div class="bg">
+				<div class="title">%bind(:13)</div>
+					<div class="main_body">
+								<!-- 卷头 -->
+								<div class="top_inner">%bind(:1)</div>
+					
+								<div class="question">
+									<form method="post" name="main_list" id="main_list"></form>
+									<div class="maincon-page">
+										<a href="#" onclick="javascript:prePage()"><div class="pagebtn1" style="display:none;">< %bind(:17)</div></a>
+										<a href="#" onclick="javascript:nextPage()"><div class="pagebtn2" style="display:none;">%bind(:18) ></div></a>
+										<div class="clear"></div>
+									</div>
+									<p class="submitdesc" style="display:none;" id="desc_submit">%bind(:23)</p>
+									<div class="submit" style="display:none;" id="app_submit">
+										%bind(:15)&nbsp;&nbsp;
+										<span class="sendbtn"><img src="%bind(:21)/statics/js/onlineSurvey/images/m/gou.png" /></span>
+									</div>
+									<div id="fancybox-main" style="display: none"><ul></ul></div>
+								</div>
+								<!-- 卷尾 -->
+								<div class="fotter">%bind(:2)</div>
+								<div class="footer">
+					    			北京创景咨询提供技术支持
+					    		</div>
+				 </div>
+			 </div>
 		</div>
-		<input type="hidden" id="unique" name="unique" value="%bind(:20)">
+		<input type="hidden" id="unique" name="unique" value="%bind(:20)"/>
+		%bind(:24)
 		<div id="flowtips" style="padding:5px;border-radius:3px;position:absolute;display:none;word-break:break-all;max-width:150px;background-color:#FF893A;border:1px solid;border-color:#FF0000;"></div>
 	</body>
 	<script type="text/javascript">
@@ -175,7 +189,7 @@
 				onError:function(msg,obj,errorlist){
 					$("#errorlist").empty();
 					$.map(errorlist,function(msg){	
-						$("#errorlist").append("<li>" + msg + "</li>")
+						$("#errorlist").append("<li>" + msg + "</li>")	
 					});
 				},
 				submitAfterAjaxPrompt : '有数据正在异步验证，请稍等...'	
@@ -233,6 +247,10 @@
 		SurveyBuild.is_edit_moda = false;
 	</script>
 	<script type="text/javascript">
+		function processing(){								
+			var loadi = layer.load("加载中...");
+			//layer.area(loadi,"top:200px");
+		}
 		//获取参与者答题内容
 		function getData(){
 			var _a = SurveyBuild["_items"];
@@ -258,16 +276,17 @@
 		//提交
 		$("#app_submit").click(function(){
 			var isValid = $.formValidator.pageIsValid();
-		    //processing();
 			if(isValid){
-				 SaveSurvey("SUBMIT");
+				SaveSurvey("SUBMIT");
 			}else{
 				scrollTop();
 			}
 		});
 		/*保存在线调查*/
 		function SaveSurvey(cType){
-			if(SurveyBuild.subState == 'S'){
+			processing();
+			/*if(SurveyBuild.subState == 'S'){*/
+			if(SurveyBuild.readonly == 'Y'){
 				if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
 					$(".pagebtn1").hide();
 				}else{
@@ -286,8 +305,14 @@
 
 			var _a = getData();
 			var _unique = $("#unique").val();
-			var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"' + cType + '","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"'+ appInsId + '","PAGE_ID":"2","unique":"'+ _unique +'","data":' + $.toJSON(_a) + '}]}}';
-            $.ajax({
+			
+			var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"' + cType + '","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"'+ appInsId + '","pageNo":"' + SurveyBuild.curPageNo + '","unique":"'+ _unique +'"';
+			if($("#OPENID").length > 0){
+				tzSaveParams = tzSaveParams + ',"openid":"' + $("#OPENID").val() + '"';
+			}
+			tzSaveParams = tzSaveParams + ',"data":' + $.toJSON(_a) + '}]}}';
+			//var tzSaveParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"' + cType + '","SURVEY_WJ_ID":' + templId + ',"SURVEY_INS_ID":"'+ appInsId + '","pageNo":"2","unique":"'+ _unique +'","data":' + $.toJSON(_a) + '}]}}';
+			$.ajax({
                 type: "POST",
 				url:SurveyBuild.tzGeneralURL,
                 data: {
@@ -298,12 +323,13 @@
 					if (f.state.errcode == "0") {
 						SurveyBuild.appInsId = f.comContent.insid;
 						SurveyBuild.subState = f.comContent.subState;
+						SurveyBuild.readonly = f.comContent.readonly;
 						if (f.comContent.code == "0") {
-							 if (cType == "SUBMIT"){
+							if (cType == "SUBMIT"){
 								noteing(MsgSet.SAVE_SUCCEED);
 								var tzSuccessParams = '?tzParams={"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_SUCC_STD","OperateType":"HTML","comParams":{"AC":"P","SURVEY_WJ_ID":' + templId + '}}';
 								window.location.href = SurveyBuild.tzGeneralURL + tzSuccessParams;
-							 }else{
+							}else{
 								/*处理翻页数据加载*/
 								if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
 									$(".pagebtn1").hide();
@@ -317,13 +343,17 @@
 									$(".pagebtn2").show();
 								}
 								SurveyBuild._load();
-							 }
-							 noteing(MsgSet.SAVE_SUCCEED);
+								layer.closeAll();
+							}
+							layer.closeAll();
+							noteing(MsgSet.SAVE_SUCCEED);
 						}else{
+							layer.closeAll();
 							noteing(f.comContent.msg);
 						}
 					}else{
-						 noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc);
+						layer.closeAll();
+						noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc);
 					}
                 }
             });
@@ -340,48 +370,36 @@
 		//上一页
 		function prePage(){
 			if(SurveyBuild.curPageNo > 1){
-				pageTo(SurveyBuild.curPageNo - 1);
+				pageTo(SurveyBuild.curPageNo - 1,"PRE");
 			}
 		}
 		//下一页
 		function nextPage(){
 			if(SurveyBuild.curPageNo < SurveyBuild.maxPage){
-				pageTo(SurveyBuild.curPageNo + 1);
+				pageTo(SurveyBuild.curPageNo + 1,"NEXT");
 			}
 		}
 		//页面跳转
-		function pageTo(pageno){
+		function pageTo(pageno,cType){
 			if(SurveyBuild.maxPage == 1){
 				//只有一页，禁止跳转
 				return false;
 			}
-			var isValid = true;
 			if(SurveyBuild.subState != 'S'){
+				//未提交进行验证
 				var isValid = $.formValidator.pageIsValid();
-			}
-			if(isValid){
-				SurveyBuild.curPageNo = pageno;
-				SaveSurvey("SAVE");
-			/*张浪注释，该部分放在保存成功之后执行，SurveyBuild._load()中需要查询保存后的数据	
-				SaveSurvey("SAVE");
-				SurveyBuild.curPageNo = pageno;
-				if(SurveyBuild.curPageNo == 1 || SurveyBuild.maxPage < 2){
-					$(".pagebtn1").hide();
+				if(isValid){
+					SurveyBuild.curPageNo = pageno;
+					SaveSurvey(cType);
+					setTimeout(function(){refreshTip();}, 2000);
 				}else{
-					$(".pagebtn1").show();
+					scrollTop();
 				}
-
-				if(SurveyBuild.curPageNo == SurveyBuild.maxPage){
-					$(".pagebtn2").hide();
-				}else{
-					$(".pagebtn2").show();
-				}
-
-				SurveyBuild._load();
-			*/
-				refreshTip();
 			}else{
-				scrollTop();
+				//已提交页面跳转
+				SurveyBuild.curPageNo = pageno;
+				SurveyBuild._load();
+				setTimeout(function(){refreshTip();}, 2000);
 			}
 		}
 		//是否密码安全
@@ -390,7 +408,7 @@
 			var targetVal = SurveyBuild.appInsId + "_" + templId + "_Y";
 			if(is_password && is_password === targetVal){
 				SurveyBuild._load();
-				refreshTip();
+				setTimeout(function(){refreshTip();}, 2000);
 			}else{
 				layer.prompt(
 					{
@@ -412,7 +430,7 @@
 									if(f.comContent.code && f.comContent.code == "0"){
 										layer.closeAll();
 										SurveyBuild._load();
-										refreshTip();
+										setTimeout(function(){refreshTip();}, 2000);
 									}else{
 										alert(f.comContent.msg);
 									}
@@ -426,8 +444,12 @@
 				);
 			}
 		}else{
+			processing();
 			SurveyBuild._load();
-			refreshTip();
+			setTimeout(function(){refreshTip();}, 2000);
+			setTimeout(function(){
+				  layer.closeAll('loading');
+				}, 2000);
 		}
 		
 		//处理formvalidator的tips
@@ -448,6 +470,7 @@
 			//提交按钮是否每页都显示
 			//if(commitRule == "0"){
 				SurveyBuild.curPageNo == SurveyBuild.maxPage ? $(".submit").show():$(".submit").hide();
+				SurveyBuild.curPageNo == SurveyBuild.maxPage && SurveyBuild.subState == "S" ? $(".submitdesc").show():$(".submitdesc").hide();
 			//}else{
 			//	$(".submit").show();
 			//}
@@ -468,7 +491,8 @@
 				$(".pagebtn2").hide();
 			}
 			/*已提交只读*/
-			if(SurveyBuild.subState == "S"){
+			/*if(SurveyBuild.subState == "S"){*/
+			if(SurveyBuild.readonly == "Y"){
 				$("form input").prop("readonly", "readonly");
 				$("form select").prop("readonly", "readonly");
 				$("form textarea").prop("readonly", "readonly");
@@ -539,5 +563,23 @@
 				$boxWrap.css('top',top)
 			}
 		}
+		
+		 $(".img_list li img").click(function(){
+	          var Len=$(".img_list li").size();
+	          if (Len>1) {
+	            $(this).parent().remove();
+	          } else {
+	            $(this).parents(".img_list").remove();
+	          }
+	     });
+	    //文件上传删除
+	    $(".finder_list li img").click(function(){
+	          var Len=$(".finder_list li").size();
+	          if (Len>1) {
+	            $(this).parent().remove();
+	          } else {
+	            $(this).parents(".finder_list").remove();
+	          }
+	     });
 	</script>
 </html>

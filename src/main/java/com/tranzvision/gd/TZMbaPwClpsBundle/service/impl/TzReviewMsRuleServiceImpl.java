@@ -17,15 +17,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsoprdefnMapper;
+import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsGzTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsPwTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzPwExtTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsGzTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsPwTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzPwExtTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.poi.excel.ExcelHandle;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -56,6 +61,10 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 	private PsTzMsPsGzTblMapper psTzMsPsGzTblMapper;
 	@Autowired
 	private TZGDObject tzSQLObject;
+	@Autowired
+	private PsTzMsPsPwTblMapper psTzMsPsPwTblMapper;
+	@Autowired
+	private PsoprdefnMapper PsoprdefnMapper;
 
 	@Override
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -330,11 +339,11 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 		try {
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] { { "TZ_CLASS_ID", "ASC" } };
+			String[][] orderByArr = new String[][] { { "CAST(TZ_PWEI_GRPID AS UNSIGNED INTEGER)", "ASC" },{"TZ_DLZH_ID", "ASC"} };
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_PWEI_OPRID", "TZ_PWEI_GRPID",
-					"TZ_REALNAME", "TZ_DLZH_ID" };
+					"TZ_REALNAME", "TZ_DLZH_ID", "TZ_PWEI_ZHZT" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -351,6 +360,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					mapList.put("judgGroupId", rowList[3]);
 					mapList.put("judgName", rowList[4]);
 					mapList.put("judzhxx", rowList[5]);
+					mapList.put("judgState", rowList[6]);
 
 					listData.add(mapList);
 				}
@@ -375,6 +385,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		String judgId = "";
 		String judgGroupId = "";
 		String judgName = "";
+		String judzhxx = "";
 		String pwgroup = "";
 		String pwpwd = "";
 		String pwgroupsql = "SELECT TZ_CLPS_GR_NAME FROM  PS_TZ_MSPS_GR_TBL WHERE TZ_CLPS_GR_ID=?";
@@ -424,6 +435,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				Map<String, Object> mapData = new HashMap<String, Object>();
 				strForm = actData[i];
 				jacksonUtil.json2Map(strForm);
+				judzhxx = jacksonUtil.getString("judzhxx");
 				judgId = jacksonUtil.getString("judgId");
 				judgName = jacksonUtil.getString("judgName");
 				judgGroupId = jacksonUtil.getString("judgGroupId");
@@ -432,7 +444,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 				pwpwd = sqlQuery.queryForObject(pwpwdsql, new Object[] { judgId, orgid }, "String");
 
-				mapData.put("pwoprid", judgId);
+				mapData.put("pwoprid", judzhxx);
 				mapData.put("pwname", judgName);
 				mapData.put("pwgroup", pwgroup);
 				mapData.put("pwpassword", pwpwd);
@@ -475,14 +487,17 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		String strForm = "";
 		String judgId = "";
 		int count = 0;
+		int count1 = 0;
 		int max = 9999;
 		int min = 1000;
 		String newpawd = "";
+		Date nowtime = new Date();
 
 		String oldpwdisY = "SELECT COUNT(1) FROM PS_TZ_PW_EXT_T WHERE TZ_JG_ID=? AND OPRID=?";
 		try {
 			Random random = new Random();
 			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			List<Map<String, Object>> jsonArray = null;
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			String[] actData = null;
@@ -511,6 +526,24 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				psTzPwExtTbl.setOprid(judgId);
 				psTzPwExtTbl.setTzCsPassword(newpawd);
 
+				Psoprdefn Psoprdefn = new Psoprdefn();
+				Psoprdefn.setOprid(judgId);
+				Psoprdefn.setOperpswd(DESUtil.encrypt(newpawd, "TZGD_Tranzvision"));
+				Psoprdefn.setLastupddttm(nowtime);
+				Psoprdefn.setLastupdoprid(oprid);
+				Psoprdefn.setAcctlock(Short.valueOf("0"));
+				// PsoprdefnMapper
+
+				count1 = sqlQuery.queryForObject("SELECT COUNT(1) FROM PSOPRDEFN WHERE OPRID=?",
+						new Object[] { judgId }, "Integer");
+				if (count1 > 0) {
+
+					PsoprdefnMapper.updateByPrimaryKey(Psoprdefn);
+
+				} else {
+					PsoprdefnMapper.insertSelective(Psoprdefn);
+
+				}
 				count = sqlQuery.queryForObject(oldpwdisY, new Object[] { orgid, judgId }, "Integer");
 				if (count > 0) {
 
@@ -544,12 +577,13 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 		String strRet = "{}";
 		String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		Date nowdate = new Date();
 		if (StringUtils.isBlank(orgId)) {
 			errMsg[0] = "1";
 			errMsg[1] = "您不属于任何机构，不能修改附加字段定义！";
 			return strRet;
 		}
-		System.out.println(actData);
+		//System.out.println(actData);
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -622,6 +656,57 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 						;
 					}
 				}
+				/** 保存评委信息 ***/
+				if (StringUtils.equals("JUDGE", strFlag)) {
+
+					// 信息内容
+					Map<String, Object> infoData = jacksonUtil.getMap("data");
+
+					String classId = jacksonUtil.getString("classId");
+
+					// .get("classId") == null ? "" :
+					// String.valueOf(infoData.get("classId"));
+					// System.out.println("classID:" + classId);
+					String batchId = jacksonUtil.getString("batchId");
+
+					// infoData.get("batchId") == null ? "" :
+					// String.valueOf(infoData.get("batchId"));
+
+					String judgId = infoData.get("judgId") == null ? "" : String.valueOf(infoData.get("judgId"));
+
+					String judgGroupId = infoData.get("judgGroupId") == null ? ""
+							: String.valueOf(infoData.get("judgGroupId"));
+
+					String judgName = infoData.get("judzhxx") == null ? "" : String.valueOf(infoData.get("judzhxx"));
+
+					String judgState = infoData.get("judgState") == null ? ""
+							: String.valueOf(infoData.get("judgState"));
+
+					System.out.println("classId：" + classId + "judgState:" + judgState);
+					String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
+					int count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
+					if (count > 0) {
+						PsTzMsPsPwTbl psTzMsPsPwTbl = new PsTzMsPsPwTbl();
+						psTzMsPsPwTbl.setTzClassId(classId);
+						psTzMsPsPwTbl.setTzApplyPcId(batchId);
+						psTzMsPsPwTbl.setTzPweiOprid(judgId);
+						psTzMsPsPwTbl.setTzPweiGrpid(judgGroupId);
+						psTzMsPsPwTbl.setTzPweiZhzt(judgState);
+						psTzMsPsPwTbl.setRowLastmantDttm(nowdate);
+						psTzMsPsPwTbl.setRowLastmantOprid(oprId);
+						psTzMsPsPwTblMapper.updateByPrimaryKeySelective(psTzMsPsPwTbl);
+
+						sqlQuery.update(
+								"UPDATE  PS_TZ_MP_PW_KS_TBL SET  TZ_PSHEN_ZT=? WHERE TZ_APPLY_PC_ID=? AND TZ_CLASS_ID=? AND TZ_PWEI_OPRID=?",
+								new Object[] { judgState, batchId, classId, judgId });
+
+					} else {
+						errMsg[0] = "1";
+						errMsg[1] = "评委:" + judgName + "不存在，无法修改！";
+
+					}
+
+				}
 				/* 每组评委数，组数 */
 				if (StringUtils.equals("PWTEAMNUM", strFlag)) {
 
@@ -655,6 +740,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 						psTzMsPsGzTblMapper.insertSelective(psTzMsPsGzTbl);
 						;
 					}
+
 					/*
 					 * rem 将字符串转换成json; Local JavaObject &judgeJson =
 					 * &jsonUtil.getJson(&infoData);

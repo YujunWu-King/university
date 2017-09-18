@@ -3,33 +3,36 @@
  */
 package com.tranzvision.gd.batch.server;
 
-import org.springframework.transaction.TransactionStatus;
-
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
-import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.Scheduler;
-import org.quartz.SimpleTrigger;
-import org.quartz.JobExecutionException;
-import org.quartz.DateBuilder;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-
-import com.tranzvision.gd.util.sql.SqlParams;
-import com.tranzvision.gd.util.sql.type.TzRecord;
-import com.tranzvision.gd.util.sql.type.TzSQLObject;
-import com.tranzvision.gd.util.sql.type.TzField;
-import com.tranzvision.gd.util.base.TzException;
-import com.tranzvision.gd.util.sql.type.TzString;
-import com.tranzvision.gd.batch.engine.base.BaseEngine;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.UUID;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
+import java.util.concurrent.Semaphore;
+
+import org.quartz.DateBuilder;
+import org.quartz.JobDetail;
+import org.quartz.JobExecutionException;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SimpleTrigger;
+import org.quartz.impl.StdSchedulerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import com.tranzvision.gd.batch.engine.base.BaseEngine;
+import com.tranzvision.gd.util.base.TzException;
+import com.tranzvision.gd.util.sql.SqlParams;
+import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.sql.type.TzField;
+import com.tranzvision.gd.util.sql.type.TzRecord;
+import com.tranzvision.gd.util.sql.type.TzSQLObject;
+import com.tranzvision.gd.util.sql.type.TzString;
 
 /**
  * @author LiGang
@@ -53,7 +56,8 @@ public class BatchServer extends BaseJob
 	private static final String ENGINE_JOB_PROCESS_INSTANCE_ID = "EngineJobProcessInstanceID";
 	
 	//批处理服务器任务循环间隔时间
-	private int taskScanTime = 10;
+//	private int taskScanTime = 10;
+	private int taskScanTime = 30;
 	//最大并行任务数
 	private int parallelTaskCount = 20;
 	//批处理服务器运行状态
@@ -168,11 +172,14 @@ public class BatchServer extends BaseJob
 			try
 			{
 				int tmpIntValue1 = (int)batchServerCfg.getTzLong("TZ_RWXH_JG").getValue();
-				taskScanTime = tmpIntValue1 <= 0 ? 10 : tmpIntValue1;
+				//taskScanTime = tmpIntValue1 <= 0 ? 10 : tmpIntValue1;
+				//循环间隔时间最小15s,最大5分钟
+				taskScanTime = tmpIntValue1 <= 0 ? 30 : (tmpIntValue1 < 15 ? 15 : (tmpIntValue1 > 300 ? 300 : tmpIntValue1));
 			}
 			catch(Exception e)
 			{
-				taskScanTime = 10;
+				//taskScanTime = 10;
+				taskScanTime = 30;
 				warn("can't get the task scan cycle interval and the default value(10 seconds) will be used.\n" + e.toString());
 			}
 			
@@ -204,13 +211,27 @@ public class BatchServer extends BaseJob
 	private void start() throws Exception
 	{
 		//开始事务
-		TransactionStatus status = getTransaction();
-		
+//		TransactionStatus status = getTransaction();
+		Semaphore tmpSemaphore = null;
 		try
 		{
 			//锁定当前批处理服务器
-			sqlExec("UPDATE TZ_JC_FWQDX_T SET TZ_JG_ID=TZ_JG_ID WHERE TZ_JG_ID=? AND TZ_JCFWQ_MC=?",new SqlParams(organizationID,getBatchServerName()));
+//			sqlExec("UPDATE TZ_JC_FWQDX_T SET TZ_JG_ID=TZ_JG_ID WHERE TZ_JG_ID=? AND TZ_JCFWQ_MC=?",new SqlParams(organizationID,getBatchServerName()));
 			
+			/****************************************张浪添加，20170714，开始*******************************************/
+			TZGDObject tzGDObject = this.getTZGDObject();
+			//获取当前Batch Server对应的信号灯
+			Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore(organizationID + "-" + getBatchServerName());
+			if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
+			{
+				//如果返回的信号灯为空
+				throw new TzException("the batch server [" + organizationID + "." + getBatchServerName() + "] is scheduling failure. ");
+			}else{
+				tmpSemaphore = tmpSemaphoreObject.getValue();
+				//通过获取的信号灯将每个预约时间段间并行执行，预约时间段内串行执行
+				tmpSemaphore.acquireUninterruptibly();
+			}
+			/****************************************张浪添加，20170714，结束*******************************************/
 			//读取配置信息
 			readConfiguration();
 			
@@ -233,7 +254,8 @@ public class BatchServer extends BaseJob
 			if("X".equals(canStartFlag.getValue()) == true)
 			{
 				//更新Batch Server的运行状态为RUNNING
-				updateStatus("RUNNING");
+//				updateStatus("RUNNING");
+				updateBatchServerStatus("RUNNING");
 			}
 			else
 			{
@@ -241,19 +263,23 @@ public class BatchServer extends BaseJob
 			}
 			
 			//提交事务
-			commit(status);
+//			commit(status);
 		}
 		catch(TzException e)
 		{
 			//回滚事务
-			rollback(status);
+//			rollback(status);
 			throw (Exception)e;
 		}
 		catch(Exception e)
 		{
 			//回滚事务
-			rollback(status);
+//			rollback(status);
 			throw new Exception("a fatal error occurred during the batch server [" + organizationID + "." + getBatchServerName() + "] was running.\n" + e.toString());
+		}finally{
+			if(tmpSemaphore != null){
+				tmpSemaphore.release();
+			}
 		}
 	}
 	
@@ -291,6 +317,41 @@ public class BatchServer extends BaseJob
 			batchServerCfg.update();
 		}
 	}
+	
+	/**
+	 * 更新Batch Server的状态的方法，张浪添加，20170714
+	 * @param runStatus
+	 * @throws Exception 
+	 * @throws  
+	 */
+	final private void updateBatchServerStatus(String runStatus) throws Exception
+	{
+		if("RUNNING".equals(runStatus) == true)
+		{
+			try 
+			{
+				JdbcTemplate jdbcTemplate = this.getTZGDObject().getJdbcTemplate();
+				String sqlText = getSQLText("SQL.TZBatchServer.TzUpdateBatchServerStatus");
+				
+				int updateFlag = 0;
+				updateFlag = jdbcTemplate.update(sqlText, new Object[]{ runStatus, bsInstanceID, getOSType(), organizationID,getBatchServerName(),batchServerIP });
+				
+				if(updateFlag >=1)
+				{
+					batchServerStatus = runStatus;
+				}
+				else
+				{
+					throw new Exception("update the batch server [" + organizationID + "." + getBatchServerName() + "] status failed.");
+				}
+			} 
+			catch (Exception e) 
+			{
+				throw e;
+			}
+		}
+	}
+	
 	
 	/**
 	 * 更新Batch Server心跳时间的方法
@@ -394,8 +455,31 @@ public class BatchServer extends BaseJob
 		//将两个小时内都没有心跳的Job进程的状态更新为"DEAD";
 		try
 		{
+			/*张浪注释，2017-07-12，为防止死锁，改用根据主键逐条更新
 			String sqlText = getSQLText("SQL.TZBatchServer.TzUpdateDeadJobStatus");
 			sqlExec(sqlText,new SqlParams(organizationID));
+			*/
+			JdbcTemplate jdbcTemplate = this.getTZGDObject().getJdbcTemplate();
+			List<Map<String,Object>> deadJobList = jdbcTemplate.queryForList(getSQLText("SQL.TZBatchServer.TzGetAllDeadJobs"), new Object[]{ organizationID });
+			
+			if(deadJobList != null && deadJobList.size() > 0){
+				for(Map<String,Object> deadJobMap : deadJobList){
+					long jicInsID = 0;
+					int updateFlag = 0;
+					try{
+						jicInsID = (long) deadJobMap.get("TZ_JCSL_ID");
+						
+						String sqlText = getSQLText("SQL.TZBatchServer.TzUpdateDeadJobStatus");
+						updateFlag = jdbcTemplate.update(sqlText, new Object[]{ organizationID, jicInsID });
+						
+						if((updateFlag >= 1) == false){
+							throw new TzException("update failed");
+						}
+					}catch(Exception e){
+						warn("failed to update the status of the dead job processes["+jicInsID+"] from \"STARTED\",\"RUNNING\" or \"STOPPING\" to \"DEAD\".\n" + e.toString());
+					}
+				}
+			}
 		}
 		catch(Exception e)
 		{
@@ -460,7 +544,7 @@ public class BatchServer extends BaseJob
 			//将当前TZGDObject对应的Bean实例传递给调度任务对象
 			jobDetail.getJobDataMap().put(TZGDOBJECT_BEAN_KEY, getTZGDObject());
 			info("the batch server has succeeded in setting the TZGDObject object for the job process[" + orgId + "." + procInstanceId + "].");
-			
+
 			//为Job上下文设置当前组织机构ID
 			jobDetail.getJobDataMap().put(ENGINE_JOB_ORGANIZATION_ID, orgId);
 			
@@ -530,7 +614,7 @@ public class BatchServer extends BaseJob
 						if(tmpOrgId != null && tmpOrgId.trim().equals("") == false && tmpInstanceId > 0)
 						{
 							//开始事务
-							TransactionStatus status = getTransaction();
+//							TransactionStatus status = getTransaction();
 							
 							try
 							{
@@ -539,23 +623,40 @@ public class BatchServer extends BaseJob
 								info("try to schedule the job process[" + tmpOrgId + "." + tmpInstanceId + "] ...");
 								
 								//先锁定当前Job进程记录
-								String sqlText = "UPDATE TZ_JC_SHLI_T SET TZ_JOB_YXZT=TZ_JOB_YXZT WHERE TZ_JG_ID=? AND TZ_JCSL_ID=?";
-								sqlExec(sqlText,new SqlParams(tmpOrgId,tmpInstanceId));
+//								String sqlText = "UPDATE TZ_JC_SHLI_T SET TZ_JOB_YXZT=TZ_JOB_YXZT WHERE TZ_JG_ID=? AND TZ_JCSL_ID=?";
+//								sqlExec(sqlText,new SqlParams(tmpOrgId,tmpInstanceId));
 								
 								//读取当前Job进程的运行状态
 								TzString jobProcessStatus = new TzString();
-								sqlText = "SELECT TZ_JOB_YXZT FROM TZ_JC_SHLI_T WHERE TZ_JG_ID=? AND TZ_JCSL_ID=?";
+								String sqlText = "SELECT TZ_JOB_YXZT FROM TZ_JC_SHLI_T WHERE TZ_JG_ID=? AND TZ_JCSL_ID=?";
 								sqlExec(sqlText,new SqlParams(tmpOrgId,tmpInstanceId),jobProcessStatus);
 								if("QUENED".equals(jobProcessStatus.getValue()) == true)
 								{
 									//如果成功锁定当前Job进程，则此时读取出来的Job进程状态应该为“QUENED”，此时更新Job进程状态为“”，同时更新心跳时间
-									sqlText = "UPDATE TZ_JC_SHLI_T SET TZ_JOB_YXZT=?,TZ_ZJXTSJ=NOW() WHERE TZ_JG_ID=? AND TZ_JCSL_ID=?";
-									sqlExec(sqlText,new SqlParams("SCHEDULED",tmpOrgId,tmpInstanceId));
+//									sqlText = "UPDATE TZ_JC_SHLI_T SET TZ_JOB_YXZT=?,TZ_ZJXTSJ=NOW() WHERE TZ_JG_ID=? AND TZ_JCSL_ID=?";
+//									sqlExec(sqlText,new SqlParams("SCHEDULED",tmpOrgId,tmpInstanceId));
 									
-									info("succeeded in scheduling the job process[" + tmpOrgId + "." + tmpInstanceId + "].");
+//									info("succeeded in scheduling the job process[" + tmpOrgId + "." + tmpInstanceId + "].");
+//									
+//									//成功锁定并更新当前Job进程的状态为“SCHEDULED”
+//									tmpJob = startJob(tmpOrgId.trim(),tmpInstanceId,tmpJobClass.trim(),tmpProcName);
 									
-									//成功锁定并更新当前Job进程的状态为“SCHEDULED”
-									tmpJob = startJob(tmpOrgId.trim(),tmpInstanceId,tmpJobClass.trim(),tmpProcName);
+									/***************************************张浪添加，20170713，开始*******************************************/
+									JdbcTemplate jdbcTemplate = this.getTZGDObject().getJdbcTemplate();
+									sqlText = "UPDATE TZ_JC_SHLI_T SET TZ_JOB_YXZT=?,TZ_ZJXTSJ=NOW() WHERE TZ_JG_ID=? AND TZ_JCSL_ID=? AND TZ_JOB_YXZT='QUENED'";
+									
+									int updateflag = jdbcTemplate.update(sqlText, new Object[]{ "SCHEDULED",tmpOrgId,tmpInstanceId });
+									if(updateflag >= 1){
+										info("succeeded in scheduling the job process[" + tmpOrgId + "." + tmpInstanceId + "].");
+										
+										//成功锁定并更新当前Job进程的状态为“SCHEDULED”
+										tmpJob = startJob(tmpOrgId.trim(),tmpInstanceId,tmpJobClass.trim(),tmpProcName);
+									}
+									else
+									{
+										info("failed to scheduling the job process[" + tmpOrgId + "." + tmpInstanceId + "] and it might have been scheduled by the other batch server.");
+									}
+									/***************************************张浪添加，20170713，结束*******************************************/
 								}
 								else
 								{
@@ -569,7 +670,7 @@ public class BatchServer extends BaseJob
 								}
 								
 								//提交事务
-								commit(status);
+//								commit(status);
 								
 								//随机睡眠0～500毫秒
 								sleep((int)(500 * Math.random()));
@@ -577,7 +678,7 @@ public class BatchServer extends BaseJob
 							catch(Exception e)
 							{
 								//发生异常，回滚事务
-								this.rollback(status);
+//								this.rollback(status);
 								//记录日志
 								error("an error occurred when tried to schedule the job process[" + tmpOrgId + "." + tmpInstanceId + "].\n" + e.toString());
 							}

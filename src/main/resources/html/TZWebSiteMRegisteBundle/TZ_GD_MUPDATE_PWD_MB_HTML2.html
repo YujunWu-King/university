@@ -1,0 +1,282 @@
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0" />
+<title></title>
+<link href="%bind(:7)/statics/css/website/m/css/style.css"	rel="stylesheet" type="text/css" />
+<script type="text/javascript"
+	src="%bind(:7)/statics/js/website/m/jquery-1.8.3.min.js"></script>
+<script type="text/javascript"
+	src="%bind(:7)/statics/js/website/m/rem.js"></script>	
+<script type="text/javascript"
+	src="%bind(:7)/statics/js/lib/layer/mobile/layer.js"></script>
+<!-- 注意、手机找回和邮箱找回，均使用了该Html -->	
+<script type="text/javascript">
+function layerMsg(content){
+	layer.open({
+	    content: content,
+	    skin: 'msg',
+	    time: 2 //2秒后自动关闭
+	});	
+}
+$(document).ready(function(){ 
+	create_yzm();//获取验证码
+	$("#reNewPassword").val("");
+	$("#reNewPassword").val("");
+	$("#yzm").val("");	
+	$("#status_password").val("");
+	$("#status_yzm").val("");	
+}).on("click", "#submitPassword", function () {
+	var pwd=$("#NewPassword").val();
+	var repwd=$("#reNewPassword").val();
+	pwd=encodeURI(pwd);
+	repwd=encodeURI(repwd);
+	var strYZM=$("#yzm").val();
+	var passwordFlg=$("#status_password").val();
+	var yzmFlg=$("#status_yzm").val();
+	if(passwordFlg =='0' && yzmFlg=='0'){
+	    var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"pwd":"'+pwd+'","repwd":"'+repwd+'","checkCode":"'+strYZM+'","tokensign":"%bind(:2)","lang":"%bind(:3)","orgid":"%bind(:4)","siteid":"%bind(:10)","sen":"4"}}';
+	    var tzParams2 = {};
+	    tzParams2.ComID = "TZ_SITE_UTIL_COM";
+	    tzParams2.PageID = "TZ_SITE_ENROLL_STD";
+	    tzParams2.OperateType = "QF";
+	    tzParams2.comParams = {};
+	    tzParams2.comParams.pwd = pwd;
+	    tzParams2.comParams.repwd = repwd;
+	    tzParams2.comParams.checkCode = strYZM;
+	    tzParams2.comParams.tokensign = "%bind(:2)";
+	    tzParams2.comParams.lang = "%bind(:3)";
+	    tzParams2.comParams.sen = "4";
+	    tzParams2.comParams.orgid = "%bind(:4)";
+	    tzParams2.comParams.siteid = "%bind(:10)";
+	    var tzParams = "";
+        if(JSON && JSON.stringify)
+        {
+          tzParams = JSON.stringify(tzParams2);
+        }
+        else
+        {
+          tzParams = tzParams1;
+        }
+
+        $.ajax({
+			type: "post",
+			async :false,
+			data:{
+				tzParams:tzParams
+			},
+			url:"%bind(:1)",
+			dataType: "json",
+			success: function(result){
+				if(result.comContent.result =="success"){
+					layerMsg("密码修改成功！");
+					window.location.href=result.comContent.jumpurl;
+				}else{
+					layerMsg(result.state.errdesc);
+					create_yzm();//重新获取验证码
+					}
+			}
+		})
+	}else{
+		check_password();
+	}
+	document.getElementById("updatePassWord").reset(); 
+	$("#status_password").val('');
+    $("#status_yzm").val('');
+});
+//获取URL传递的参数 
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+	return null;
+}
+//判断输入的验证码是否一致
+function check_yzm(val){
+	if(val !=''){
+        var tzParams1 = '{"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"QF","comParams":{"checkCode":"'+val+'","sen":"3"}}';
+        var tzParams2 = {};
+        tzParams2.ComID = "TZ_SITE_UTIL_COM";
+        tzParams2.PageID = "TZ_SITE_ENROLL_STD";
+        tzParams2.OperateType = "QF";
+        tzParams2.comParams = {};
+        tzParams2.comParams.checkCode = val;
+        tzParams2.comParams.lang = "%bind(:3)";
+        tzParams2.comParams.sen = "3";
+
+        var tzParams = "";
+        if(JSON && JSON.stringify)
+        {
+          tzParams = JSON.stringify(tzParams2);
+        }
+        else
+        {
+          tzParams = tzParams1;
+        }
+
+
+		$.ajax({
+			type: "get",
+			async :false,
+			data:{
+				tzParams:tzParams
+			},
+			url:"%bind(:1)",
+			dataType: "json",
+			success: function(result){
+			   	if(result.comContent =="success"){
+			   		$('#tips_styles').html("");
+					$('#status_yzm').attr("value", 0); 
+					$("#tips_styles").hide();					
+				}else{
+					$('#tips_styles').html("<span>"+result.state.errdesc+"</span>");
+					$('#status_yzm').attr("value", 1);
+					$("#tips_styles").show();
+				}
+			}
+		});			
+		
+	}else{
+		$('#tips_styles').html("<span>验证码不能为空</span>");
+   		$('#status_yzm').attr("value", 1);
+		$("#tips_styles").show();
+	}
+}
+//判断输入的密码是否一致
+function check_password(){
+	var password =$("#NewPassword").val();
+	var repassword=$("#reNewPassword").val();
+	if(password !=''){
+		//判断是否符合格式要求
+		var patrn;
+		var num = 0;
+		var num1 = 0;
+		var num2 = 0;
+		var num3 = 0;
+		var num4 = 0;
+		var num5=0;
+		var num6=0;
+		var str1 = 0;
+		var str2 = 0;
+		var cr;
+		for (var i=0;i<password.length ;i++ )
+		{
+			 cr = password.charAt(i);
+									
+			 patrn= /\w/;
+			 if (patrn.test(cr)){
+				num = num + 1;
+			 }else{
+				num5=1;
+			 }
+			
+		 }
+		
+		 patrn= /[A-Z]/;
+		 if (patrn.test(password)){
+		 	num6 = num6+1;
+		 }
+		 patrn= /[a-z]/;
+		 if (patrn.test(password)){
+		 	num6 = num6+1;
+		 }
+		 patrn= /[0-9]/;
+		 if (patrn.test(password)){
+		 	num6 = num6+1;
+		 }
+		 patrn= /[_]/;
+		 if (patrn.test(password)){
+		 	num6 = num6+1;
+		 }
+
+		 if(password.length >= 6 && password.length <= 32){
+			num1 = 1;
+		}else{
+			num1 = 0;
+		}
+		
+		if(num > 0 && num5==0){
+			num2 = 1;
+		}else{			
+			num2 = 0;
+		}
+		
+		if(num5==0 && num6>1){
+			num3 = 1;
+		}else{
+			num3 = 0;
+		}
+		
+		num4 = num1 + num2 + num3;		
+
+		if(num4 >= 3){
+			if(repassword ==''){			
+				$('#tips_styles').html("确认密码不能为空");
+		     	$('#status_password').attr("value", 1); 
+				$("#tips_styles").show();
+						
+			}else if(repassword==password){			
+	        	$('#status_password').attr("value", 0); 
+				$("#tips_styles").hide();
+			}else if(repassword !=password){
+				$('#tips_styles').html("输入的密码不一致"); 
+				$('#status_password').attr("value", 1);
+				$("#tips_styles").show();
+			}
+		}else{			
+			$('#tips_styles').html("密码格式6-32个字符，只能包含字母、数字及下划线，字母、数字和下划线至少包含两种！");
+			$('#status_PASSWORD').attr("value", 1);
+			$("#tips_styles").show();
+		}		
+
+	}else {
+		$('#tips_styles').html("密码不能为空！");
+		$('#status_password').attr("value", 1); 
+		$("#tips_styles").show();
+		
+	}
+	
+}
+
+//重新加载验证码
+function create_yzm(){
+	var _captchaURL =  "%bind(:7)/captcha";
+	$('#yzmImg').attr('src',_captchaURL + "?" + Math.random());	
+}
+</script>	
+</head>
+<body id="body">
+<!-- content start -->
+<div id="main" class="viewport-adaptive">
+<form action="" method="post" enctype="multipart/form-data" name="updatePassWord" id="updatePassWord">
+	<div class="bg" id="body_login">
+         <img class="img-responsive book_logo" id="" src="%bind(:7)/statics/css/website/m/images/login_logo.png">
+            <div class="login_ab">
+            	<div class="login_account">
+            		<!-- <div class="login_mm"></div> -->
+            		<input class="psw_update" type="password" name="NewPassword" id="NewPassword" placeholder="新密码" onblur="check_password()">
+            		<input id="status_PASSWORD" type="hidden" name="status_PASSWORD" value="1">
+            	</div>
+            	<div class="login_account" style="border-top-left-radius:0px;border-top-right-radius:0px;">
+            		<!-- <div class="login_mm"></div> -->
+            		<input class="psw_update" type="password" name="reNewPassword" id="reNewPassword" placeholder="确认密码"  onblur="check_password()">            		
+            	</div>
+            	<div class="login_email">
+            		<input class="psw_update" type="text" name="yzm" id="yzm" placeholder="验证码"  onblur="check_yzm(this.value)" style="width:60% !important;">
+            		<img id="yzmImg" class="reg_code" style="max-width:30%;margin-top:0px;" onclick="create_yzm();">            		
+            	</div>
+            	<p class="login_tips" id="tips_styles"></p>
+            	<div class="clear"></div>
+            	<a id="submitPassword" href="javascript:void(0)" class="login_btn">提交</a>            	
+            </div>
+         </div>	
+</form>
+</div>
+ <input id="status_password" type="hidden" name="status_password" />
+ <input id="status_yzm" type="hidden" name="status_yzm" />
+<!-- content end -->
+</body>
+</html>

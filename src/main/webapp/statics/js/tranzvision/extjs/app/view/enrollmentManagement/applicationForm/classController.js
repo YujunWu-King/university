@@ -634,7 +634,7 @@
         var appInsID=record.get("appInsID");
         
         if(appInsID!=""){
-            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'"}}';
+            var tzParams='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+appInsID+'","isEdit":"Y"}}';
             var viewUrl =Ext.tzGetGeneralURL()+"?tzParams="+encodeURIComponent(tzParams);
             var mask ;
             var win = new Ext.Window({
@@ -647,8 +647,6 @@
                 appInsID : appInsID,
                 gridRecord:record,
                 width : Ext.getBody().width,
-                height : Ext.getBody().height,
-                autoScroll : true,
                 border:false,
                 bodyBorder : false,
                 isTopContainer : true,
@@ -730,6 +728,110 @@
         win.show();
 
     },
+    /*将搜索结果考生材料批量打包*/
+    packageLetAndDownload:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var data = store.getData();
+        var dataLen = data.length;
+
+        if(dataLen.length<1) {
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing","您没有选中任何记录"));
+            return;
+        }else{
+            var strAppId;
+            var totalCount = store.totalCount;
+            
+            var classId = this.getView().classID;
+            var batchId = this.getView().batchID;
+            
+            var tzStoreParams = store.tzStoreParams;
+            var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"tzExportAll","comParams":{"classId":"' + classId + '","batchId":"' + batchId + '","tzStoreParams":' + Ext.JSON.encode(tzStoreParams) + ',"totalCount":"' + totalCount + '"}}';
+			Ext.tzLoadAsync(tzParams,function(responseData){
+				strAppId = responseData.result;
+			});
+        }
+        // Ext.MessageBox.alert('测试',strAppId);
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_DBDL_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+        var win = this.lookupReference('cldbForm');
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+
+        //操作类型设置为新增
+        win.actType = "add";
+        var form = win.child("form").getForm();
+        form.reset();
+        form.setValues({appInsID:"'"+strAppId+"'",packageType:"B"});
+        win.show();
+    },
+    /*将搜索结果考生材料批量打包*/
+    packageAllAndDownload:function(btn){
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var data = store.getData();
+        var dataLen = data.length;
+
+        if(dataLen.length<1) {
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing","您没有选中任何记录"));
+            return;
+        }else{
+            var strAppId;
+            var totalCount = store.totalCount;
+            
+            var classId = this.getView().classID;
+            var batchId = this.getView().batchID;
+            
+            var tzStoreParams = store.tzStoreParams;
+            var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"tzExportAll","comParams":{"classId":"' + classId + '","batchId":"' + batchId + '","tzStoreParams":' + Ext.JSON.encode(tzStoreParams) + ',"totalCount":"' + totalCount + '"}}';
+			Ext.tzLoadAsync(tzParams,function(responseData){
+				strAppId = responseData.result;
+			});
+        }
+        // Ext.MessageBox.alert('测试',strAppId);
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_DBDL_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+        var win = this.lookupReference('cldbForm');
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+
+        //操作类型设置为新增
+        win.actType = "add";
+        var form = win.child("form").getForm();
+        form.reset();
+        form.setValues({appInsID:"'"+strAppId+"'",packageType:"A"});
+        win.show();
+    },
     viewAndDownload:function(btn){
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_BMGL_DBDL_STD"];
@@ -762,14 +864,40 @@
     /*导出到Excel or 下载导出结果*/
     exportExcelOrDownload:function(btn){
         var btnName = btn.name;
-        var selList = btn.findParentByType("grid").getSelectionModel().getSelection();
+		var selList = [];
+		
+		//导出选中的人员信息到Excel
         if(btnName=='exportExcel'){
-            if(selList.length<1) {
+			var selection = btn.findParentByType("grid").getSelectionModel().getSelection();
+            if(selection.length<1) {
                 Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing","您没有选中任何记录"));
                 return;
-            };
+            }else{
+				Ext.each(selection,function(item,index){
+					selList.push(item.get("appInsID"));
+				})
+			};
         }
-
+		
+		//导出搜索的人员信息到Excel
+        if(btnName=='exportSearch'){
+			var store = btn.findParentByType("grid").getStore();
+            if(store.totalCount<1) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.noRecordsNeedsExport","没有需要导出的数据！"));
+                return;
+            }else{				
+				var classId = this.getView().classID;
+				var batchId = this.getView().batchID;
+				
+				var tzStoreParams = store.tzStoreParams;
+				var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"tzExportAll","comParams":{"classId":"' + classId + '","batchId":"' + batchId + '","tzStoreParams":' + Ext.JSON.encode(tzStoreParams) + ',"totalCount":"' + store.totalCount + '"}}';
+				Ext.tzLoadAsync(tzParams,function(responseData){
+					selList = responseData.result&&responseData.result.split(";");
+				});
+			};
+        }
+		
+		
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_EXP_EXCEL_STD"];
         if( pageResSet == "" || pageResSet == undefined){
@@ -786,7 +914,7 @@
 
         var win = this.lookupReference('exportExcelForm');
         if (!win) {
-            Ext.syncRequire(className);
+            Ext.syncRequire(className); 
             ViewClass = Ext.ClassManager.get(className);
             //新建类
             var modalID =btn.findParentByType('auditClassInfo').child('form').getForm().findField('modalID').getValue();
@@ -795,6 +923,7 @@
         };
         win.selList=selList;
 
+		//
         if(btnName=='downloadExcel'){
             var tabPanel = win.lookupReference("exportExcelTabPanel");
             tabPanel.setActiveTab(1);
@@ -1120,8 +1249,74 @@
         var batchName = record.data.batchName;
         var applicantsNumber = record.data.applicantsNumber;
 
-        var judgeGroupData = [];
+        var judgeGroupParams =  '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
+            '"OperateType":"tzGetJudgeGroup","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
+        Ext.tzLoad(judgeGroupParams,function(responseData){
+            var judgeGroupData = responseData.groupData;
 
+            cmp = new ViewClass({
+                classId:classId,
+                batchId:batchId,
+                judgeGroupData:judgeGroupData
+            });
+
+            cmp.on('afterrender',function(panel){
+
+                panel.judgeGroupData=judgeGroupData;
+
+                var form = panel.child('form').getForm();
+                var statisticsNumForm = panel.down("form[name=statisticsNumForm]").getForm();
+
+                var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_RULE_STD",' +
+                    '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
+
+                Ext.tzLoad(tzParams,function(respData){
+                    var formData = respData.formData;
+                    if(formData!="" && formData!=undefined) {
+                        panel.actType="update";
+                        form.setValues(formData);
+
+                        if(formData.dqpsStatus=="A") {
+                            form.findField("judgeNumSet").setDisabled(true);
+                        }
+
+                        statisticsNumForm.findField("clpsksNum").setValue(formData.clpsksNum);
+                        //要求评审人次更新
+                        statisticsNumForm.findField("reviewNumSet").setValue(parseInt(formData.clpsksNum)*(formData.judgeNumSet));
+                    } else {
+                        panel.actType="add";
+                        form.findField("classId").setValue(classId);
+                        form.findField("className").setValue(className);
+                        form.findField("batchId").setValue(batchId);
+                        form.findField("batchName").setValue(batchName);
+                        form.findField("bkksNum").setValue(applicantsNumber);
+                        form.findField("clpsksNum").setValue(0);
+                        form.findField("dqpsStatus").setValue("N");
+                        form.findField("dqpsStatusDesc").setValue("未开始");
+                        form.findField("judgeNumSet").setValue(2);
+
+                        var statisticsForm = panel.down("form[name=statisticsNumForm]").getForm();
+                        statisticsForm.findField("clpsksNum").setValue(0);
+                        statisticsForm.findField("reviewNumSet").setValue(0);
+                    }
+
+                });
+            });
+
+            tab = contentPanel.add(cmp);
+
+            contentPanel.setActiveTab(tab);
+
+            Ext.resumeLayouts(true);
+
+            if (cmp.floating) {
+                cmp.show();
+            }
+        });
+
+
+        /*
+        var judgeGroupData = [];
         var judgeGroupStore = new KitchenSink.view.common.store.comboxStore({
             recname:'TZ_CLPS_GR_TBL',
             condition:{
@@ -1193,6 +1388,7 @@
                 }
             }
         });
+        */
     },
     /*材料评审--材料评审考生名单*/
     viewMaterialStuApplicants:function(grid,rowIndex){
@@ -1258,16 +1454,16 @@
             var tzParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_KS_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
 
             Ext.tzLoad(tzParams,function(respData){
+                var examineeGrid = panel.down('grid');
+                var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+                examineeGrid.store.tzStoreParams = tzStoreParams;
+
                 var formData = respData.formData;
                 if(formData!="" && formData!=undefined) {
                     panel.actType="update";
                     formData.className = record.data.className;
                     formData.batchName = record.data.batchName;
                     form.setValues(formData);
-
-                    var examineeGrid = panel.down('grid');
-                    var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
-                    examineeGrid.store.tzStoreParams = tzStoreParams;
                     examineeGrid.store.load();
                 } else {
                     panel.actType="add";
@@ -1340,7 +1536,6 @@
         var classID = record.get('classID');
         var batchID = record.get('batchID');
         cmp = new ViewClass(classID,batchID,transValue);
-//console.log("1");
         cmp.on('afterrender',function(panel){            
                 var judgeStore =panel.down('tabpanel').child("form[name=judgeFormInfo]").child('grid[name=interviewJudgeGrid]').store,
                     judgeParams = '{"type":"judgeInfo","classID":"'+classID+'","batchID":"'+batchID+'"}',
@@ -1512,10 +1707,14 @@
 		var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
         var batchID = record.data.batchID;
+        var batchName = record.data.batchName;
+        var className = record.data.className;
 
 		cmp = new ViewClass({
 			classId: classID,
-			batchId: batchID
+			batchId: batchID,
+			className:className,
+			batchName: batchName
 		});
 		
 		cmp.on('afterrender',function(gridPanel){});
@@ -1587,10 +1786,11 @@
             classId:classId,
             batchId:batchId
         });
-        console.log(classId+":"+batchId);
-
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
+            
+            
+            var pwgridform = panel.down("form[name=pwlbgrid]").getForm();
              var kspwnum=panel.down('grid').down('numberfield[name=ksRevedpwnum]');
              var pwTeamnum=panel.down('grid').down('numberfield[name=countTeamnum]');
              
@@ -1605,8 +1805,11 @@
                 if(formData!="" && formData!=undefined) {
                     panel.actType="update";
                     form.setValues(formData);
-                    kspwnum.setValue(formData.kspwnum);
-                    pwTeamnum.setValue(formData.pwTeamnum);
+                    
+                    
+                   // pwgridform.findField("ksRevedpwnum").
+                  //  kspwnum.setValue(formData.kspwnum);
+                  //  pwTeamnum.setValue(formData.pwTeamnum);
                     
                     
 
@@ -1637,6 +1840,8 @@
 
             });
         });
+        
+        
 
         tab = contentPanel.add(cmp);
 
@@ -1648,7 +1853,7 @@
             cmp.show();
         }
     },
-    /*材料评审--材料评审考生名单*/
+    /*面试评审--面试评审考生名单*/
     viewInterviewStuApplicants:function(grid,rowIndex){
         Ext.tzSetCompResourses("TZ_REVIEW_MS_COM");
         //是否有访问权限
@@ -1660,7 +1865,7 @@
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_CLPS_KS_STD，请检查配置。');
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MSPS_KS_STD，请检查配置。');
             return;
         }
         var contentPanel, cmp, ViewClass, clsProto;
@@ -1710,30 +1915,24 @@
         cmp.on('afterrender',function(panel){
             var form = panel.child('form').getForm();
             var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSPS_RULE_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
-
+                    var examineeGrid = panel.down('grid');
+                    
+                    var tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';                
+                    examineeGrid.store.tzStoreParams = tzStoreParams;
+                    
             Ext.tzLoad(tzParams,function(respData){
                 var formData = respData.formData;
                 if(formData!="" && formData!=undefined) {
                     panel.actType="update";
-                    formData.className = record.data.className;
-                    formData.batchName = record.data.batchName;
+                    formData.className = className;
+                    formData.batchName = batchName;
                     form.setValues(formData);
-
-                    var examineeGrid = panel.down('grid');
-                    
-                    var tzStoreParams = '{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
-                   // var tzStoreParams = '{"cfgSrhId": "TZ_REVIEW_CL_COM.TZ_CLPS_KS_STD.TZ_CLPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-vlue": "' + batchId + '"}}';
-                    examineeGrid.store.tzStoreParams = tzStoreParams;
                     examineeGrid.store.load();
+                 
                 } else {
                     panel.actType="add";
-                    form.findField("classId").setValue(classId);
-                    form.findField("className").setValue(className);
-                    form.findField("batchId").setValue(batchId);
-                    form.findField("batchName").setValue(batchName);
-                    form.findField("ksNum").setValue(applicantsNumber);
-                    form.findField("reviewClpsKsNum").setValue(0);
-                    form.findField("reviewKsNum").setValue(0);
+                    
+                    form.setValues({classId:classId,className:className,batchId:batchId,batchName:batchName,ksNum:applicantsNumber,reviewClpsKsNum:0,reviewKsNum:0});
                 }
             });
         });

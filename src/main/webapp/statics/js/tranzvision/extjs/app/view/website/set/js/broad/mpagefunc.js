@@ -437,6 +437,15 @@ function Login(){
 	//var yzm = encodeURI($("#yzm").val());
 	
 	var siteid = encodeURI($("#siteid").val());
+	
+	var openid = $("#openid").val();
+
+	//if 
+	var classid = getQueryString("classid");
+	
+	if (classid == undefined) {
+		classid = "";
+	}
 
 	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","yzmCode":"'+yzm+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'"}}';
 	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'","isMobile":"Y"}}';
@@ -445,13 +454,16 @@ function Login(){
 		url: TzUniversityContextPath + "/user/login/dologin",
 		data:{
 			tzParams:tzParams,
-			language:$("#lang").val()
+			language:$("#lang").val(),
+			classIdParams : classid,
+			OPENID: openid
 		},
 		dataType:'json',
 		success:function(response){			
 			if (response.success == "true") {  
 			   $("#errormsg").hide();
-               	window.location.href=response.url;
+			   var _url = response.url + "&from=m";
+               window.location.href = _url;
 				
             }else{
 			   if (response.errorCode=="1")
@@ -970,3 +982,58 @@ function tz_onmousemove(){
 function tz_onmouseout(){
     $("#tz_edituser").css("display","none");
 }
+
+
+//免登录，卢艳添加，2017-4-15
+/*function avoidLogin() {
+	var siteid = encodeURI($("#siteid").val());
+	
+	//var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","typeflg":"login","userName":"'+userName+'","passWord":"'+password+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'","isMobile":"Y"}}';
+	var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_STU_LOGIN_STD","OperateType":"QF","comParams":{"orgid":"'+$("#jgid").val()+'","siteid":"'+siteid+'","lang":"'+$("#lang").val()+'","isMobile":"Y"}}';
+	$.ajax({
+		type:"POST",
+		url: TzUniversityContextPath + "/user/login/avoidlogin",
+		data:{
+			tzParams:tzParams
+		},
+		dataType:'json',
+		success:function(response){			
+			if (response.success == "true") {  
+			   $("#errormsg").hide();
+               	window.location.href=response.url;
+				
+            }else{
+			   if (response.errorCode=="1")
+			   {
+				    $("#errormsg").html(response.errorDesc);
+					$("#errormsg").show();
+					$("#resetbnt").show();
+					
+			   }else
+			   {
+				   if (response.errorCode=="2")
+				   {
+						$("#password").val("");
+						//$("#yzm").val("");
+						//SetImgCode();
+				   }
+				   if (response.errorCode=="3")
+				   {
+					    //$("#yzm").val("");
+						//SetImgCode();
+				   }
+
+					 $("#errormsg").html(response.errorDesc);
+					 $("#errormsg").show();
+			   }
+			  
+			}    
+		},
+	    failure: function () {
+
+			 $("#errormsg").children("span").innerHTML= "数据请求异常,请检查网络或联系管理员！";
+			 $("#errormsg").show();
+	    }    
+	});
+}
+*/

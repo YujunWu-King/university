@@ -1,0 +1,46 @@
+<script>
+	var lenField = "%bind(:2)";
+	function returnResi(){
+		//关闭窗口后一定要清空该项
+		$("#searchCountry").empty();
+		$("#searchCountry").fadeOut("slow");
+       // $("#new_school").fadeOut("slow");
+       $("#body").css("position","relative");
+       $("#MainDiv").fadeIn("slow");
+	}
+	function selectProvince(province){
+		
+		
+		var clickId = $("#ParamCon").val();
+	
+		
+		$("#" + clickId).val(province);
+		$("#" + clickId).html(province);
+// 		$("#" + clickId).css("color","#333");
+		
+		returnResi();
+		//清华MBA
+		if((typeof changeImg)=="function"){
+			var successFlg = "F";		
+			if(province!=null&&province!=""){
+				successFlg = "S";
+			}
+			changeImg(lenField,successFlg);
+		}
+	}
+	
+	
+</script>
+ <div class="bg1">
+	     <!-- 头部 -->
+	     <div class="topbar_prov">
+	   	    省份选择 <a  href="javascript:void(0)" class="return_r" onclick="returnResi()"><i></i></a>
+	   	 </div>
+	   	 <div class="country_pop">
+<div class="pop_tit">
+	<span>选择省份</span> <!-- <a href="javascript:void(0)" class="pop_close" onclick="closePop()">X</a> -->
+</div>
+
+<ul id="selectorList" class="chose_list">%bind(:1)</ul>
+</div>
+</div>

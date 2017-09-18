@@ -16,14 +16,12 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMsyyKsTblMapper;
-import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMsyySetTblMapper;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTbl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyyKsTblKey;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTbl;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMsyySetTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -64,9 +62,6 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 	
 	@Autowired
 	private PsTzMsyyKsTblMapper psTzMsyyKsTblMapper;
-	
-	@Autowired
-	private PsTzMsyySetTblMapper psTzMsyySetTblMapper;
 	
 	
 	
@@ -139,16 +134,12 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			Date currDate = new Date();//当前时间
+			String tmpPwdKey = "TZGD_@_!_*_Interview_20170818_Tranzvision";
 			
 			String msPlanListHtml = "";
 			String contextPath = request.getContextPath();
 			
-			String dtFormat = getSysHardCodeVal.getDateFormat();
-			String tmFormat = getSysHardCodeVal.getTimeHMFormat();
 			String dttmFormat = getSysHardCodeVal.getDateTimeHMFormat();
-			
-			SimpleDateFormat dtSimpleDateFormat = new SimpleDateFormat(dtFormat);
-			SimpleDateFormat tmSimpleDateFormat = new SimpleDateFormat(tmFormat);
 			SimpleDateFormat dttmSimpleDateFormat = new SimpleDateFormat(dttmFormat);
 			
 			String sql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPlan");
@@ -157,11 +148,12 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			String tmpClassID = "",tmpBatchID = "";
 			//面试批次设置
 			String showFront = "";
-			String inDateTime = "N";
-			String afterCloseDate = "N";
+			String timeValid = "N";
 			int planCount = 0;
 			String msExplainInfo = "";
 			for(Map<String,Object> msPlanMap : msPlanList){
+				String submitType = "Y"; //按钮提交事件，Y：预约，N：撤销预约
+				
 				String classID = msPlanMap.get("TZ_CLASS_ID") == null? "" : String.valueOf(msPlanMap.get("TZ_CLASS_ID"));
 				String batchID = msPlanMap.get("TZ_BATCH_ID") == null? "" : String.valueOf(msPlanMap.get("TZ_BATCH_ID"));
 				String msPlanSeq = msPlanMap.get("TZ_MS_PLAN_SEQ") == null? "" : String.valueOf(msPlanMap.get("TZ_MS_PLAN_SEQ"));
@@ -176,49 +168,26 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 				
 				//面试批次设置参数
 				if(!tmpClassID.equals(classID) || !tmpBatchID.equals(batchID)){
-					PsTzMsyySetTblKey psTzMsyySetTblKey =  new PsTzMsyySetTblKey();
-					psTzMsyySetTblKey.setTzClassId(classID);
-					psTzMsyySetTblKey.setTzBatchId(batchID);
-					PsTzMsyySetTbl psTzMsyySetTbl = psTzMsyySetTblMapper.selectByPrimaryKey(psTzMsyySetTblKey);
-					if(psTzMsyySetTbl != null){
-						Date openDate = psTzMsyySetTbl.getTzOpenDt();
-						Date openTime = psTzMsyySetTbl.getTzOpenTm();
-						Date closeDate = psTzMsyySetTbl.getTzCloseDt();
-						Date closeTime = psTzMsyySetTbl.getTzCloseTm();
-						showFront = psTzMsyySetTbl.getTzShowFront();
-						msExplainInfo = psTzMsyySetTbl.getTzDescr();
-						
-						String oDate = dtSimpleDateFormat.format(openDate);
-						String cDate = dtSimpleDateFormat.format(closeDate);
-						String oTime = tmSimpleDateFormat.format(openTime);
-						String cTime = tmSimpleDateFormat.format(closeTime);
-						
-						Date openDatetime = dttmSimpleDateFormat.parse(oDate+" "+oTime);
-						Date closeDatetime = dttmSimpleDateFormat.parse(cDate+" "+cTime);
-						
-						if(currDate.after(openDatetime) && currDate.before(closeDatetime) || currDate.equals(openDatetime) || currDate.equals(closeDatetime)){
-							inDateTime = "Y";
-						}else if(currDate.after(closeDatetime)){
-							afterCloseDate = "Y";
-						}
+					
+					String setSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointSet");
+					Map<String,Object> msyySetMap = jdbcTemplate.queryForMap(setSql, new Object[]{ currDate, currDate, currDate, classID, batchID });
+					
+					if(msyySetMap != null){
+						//时间限制，Y-预约时间内，B-预约时间前，A-预约时间后，N-为设置预约
+						timeValid = msyySetMap.get("TZ_TIME_VALID").toString();
+						showFront = msyySetMap.get("TZ_SHOW_FRONT") == null ? "N" : msyySetMap.get("TZ_SHOW_FRONT").toString();
+						msExplainInfo = msyySetMap.get("TZ_DESCR") == null ? "" : msyySetMap.get("TZ_DESCR").toString();
 					}
 				}
 				
-				//预约时间结束后，仍显示在学生前台
-				if("Y".equals(showFront)){
-					if("Y".equals(inDateTime) || "Y".equals(afterCloseDate)){
-					}else{
-						continue;
-					}
-				}else{
-					//只有在有效日期下显示
-					if(!"Y".equals(inDateTime)){
-						continue;
-					}
+				//预约时间结束后，不再前台显示
+				if(("A".equals(timeValid) && !"Y".equals(showFront)) || "N".equals(timeValid)){
+					continue;
 				}
 				
-			    
+				String buttonLabel = "立即预约";
 			    String listType = "1";/*1-可预约,2-已预约,3-不可预约*/
+			    
 			    String isAppoFlag; /*当前批次下是否已经预约*/
 			    sql = "SELECT 'Y' FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND OPRID=?";
 			    isAppoFlag = jdbcTemplate.queryForObject(sql, new Object[]{ classID, batchID, oprid }, "String");
@@ -229,15 +198,10 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			    
 			    Date startDatetime = dttmSimpleDateFormat.parse(msDate+" "+msStartTime);
 			    if(currDate.after(startDatetime) || currDate.equals(startDatetime)){
-			    	//报道时间已过，不可预约
+			    	//报到时间已过，不可预约
 			    	listType = "3";
 			    }
-			    
-			    if(appoCount>=maxPerson){
-			    	//预约人数已满，不可预约
-			    	listType = "3";
-			    }
-			    
+
 			    if("Y".equals(isAppoFlag)){
 			    	//当前学生已预约该面试批次，不可预约
 			    	listType = "3";
@@ -247,6 +211,8 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			    	//当前学生已预约当前预约计划
 			    	if("Y".equals(inCurrPlan)){
 			    		listType = "2";
+			    		buttonLabel = "已预约／撤销预约";
+			    		submitType = "N";
 			    	}
 			    }else{
 			    	//当前学生尚未预约
@@ -256,14 +222,23 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 				    }
 			    }
 			    
+			    if("B".equals(timeValid)){
+			    	listType = "3";
+			    	buttonLabel = "预约未开始";
+			    }else if("A".equals(timeValid)){
+			    	listType = "3";
+			    	buttonLabel = "预约已结束";
+			    }
+			    
 			    tmpClassID = classID;
 			    tmpBatchID = batchID;
 			    
 			    planCount++;
 			    msStartTime = dttmSimpleDateFormat.format(startDatetime);
 			    String countSta = String.valueOf(appoCount)+"/"+String.valueOf(maxPerson);
+			    String msKey = DESUtil.encrypt(classID + "==" + batchID + "==" + msPlanSeq +"==" + submitType, tmpPwdKey);
 			    
-			    msPlanListHtml = msPlanListHtml + tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_LIST_HTML"+listType,contextPath,msStartTime,location,descr,countSta,classID, batchID, msPlanSeq);
+			    msPlanListHtml = msPlanListHtml + tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_LIST_HTML"+listType,contextPath,msStartTime,location,descr,countSta,msKey,buttonLabel);
 			}
 			
 			//没有面试预约显示
@@ -282,7 +257,12 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 	}
 	
 	
-	
+	/**
+	 * 该方法弃用，改用PC版确认面试预约方法
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
 	private String tzConfirmAppointment(String strParams, String[] errorMsg){
 		String strRet = "";
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
@@ -307,8 +287,6 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 				String isInAppoPlan = jdbcTemplate.queryForObject(sql, new Object[]{classId,pcId,appInsId}, "String");
 				
 				if("Y".equals(isInAppoPlan)){
-					mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");
-					
 					PsTzMsyyKsTblKey psTzMsyyKsTblKey = new PsTzMsyyKsTblKey();
 					psTzMsyyKsTblKey.setTzClassId(classId);
 					psTzMsyyKsTblKey.setTzBatchId(pcId);
@@ -349,50 +327,82 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 							errorMsg[1] = "撤销预约失败";
 						}
 					}else{
-						psTzMsyyKsTbl = new PsTzMsyyKsTbl();
-						psTzMsyyKsTbl.setTzClassId(classId);
-						psTzMsyyKsTbl.setTzBatchId(pcId);
-						psTzMsyyKsTbl.setTzMsPlanSeq(planId);
-						psTzMsyyKsTbl.setOprid(oprid);
-						psTzMsyyKsTbl.setRowAddedOprid(oprid);
-						psTzMsyyKsTbl.setRowAddedDttm(new Date());
-						psTzMsyyKsTbl.setRowLastmantOprid(oprid);
-						psTzMsyyKsTbl.setRowLastmantDttm(new Date());
-						int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
-						if(rtn > 0){
-							errorMsg[0] = "0";
-							errorMsg[1] = "预约成功";
-							
-							//预约成功后发送站内信
-							try{
-								sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
-								String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
-								//面试预约成功站内信模板
-								String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CG_ZNX_TMP");
-								//当前机构
-								String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-								
-								//创建邮件任务实例
-								String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
-								// 创建邮件发送听众
-								String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约成功站内信通知", "JSRW");
-								//添加听众成员
-								boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", pcId, oprid, classId, planId, "");
-								if(bl){
-									sendSmsOrMalServiceImpl.send(taskId, "");
-								}
-							}catch(NullPointerException nullEx){
-								//没有配置邮件模板
-								nullEx.printStackTrace();
-							}
+						String otherSql = "select 'Y' from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and OPRID=? limit 1";
+						String existsOther = jdbcTemplate.queryForObject(otherSql, new Object[]{ classId, pcId, oprid }, "String");
+						if("Y".equals(existsOther)){
+							errorMsg[0] = "2";
+							errorMsg[1] = "预约失败,你已预约其他报到时间的面试";
 						}else{
-							errorMsg[0] = "1";
-							errorMsg[1] = "预约失败";
+							//锁表
+							mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");
+							try{
+								String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
+								Map<String,Object> numMap = jdbcTemplate.queryForMap(numSql, new Object[]{ classId, pcId, planId });
+								if(numMap != null){
+									int msYyLimit = Integer.parseInt(numMap.get("TZ_MSYY_COUNT").toString());
+									int msYyCount = Integer.parseInt(numMap.get("TZ_YY_COUNT").toString());
+									
+									if(msYyLimit > msYyCount){
+										psTzMsyyKsTbl = new PsTzMsyyKsTbl();
+										psTzMsyyKsTbl.setTzClassId(classId);
+										psTzMsyyKsTbl.setTzBatchId(pcId);
+										psTzMsyyKsTbl.setTzMsPlanSeq(planId);
+										psTzMsyyKsTbl.setOprid(oprid);
+										psTzMsyyKsTbl.setRowAddedOprid(oprid);
+										psTzMsyyKsTbl.setRowAddedDttm(new Date());
+										psTzMsyyKsTbl.setRowLastmantOprid(oprid);
+										psTzMsyyKsTbl.setRowLastmantDttm(new Date());
+										int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
+										if(rtn > 0){
+											errorMsg[0] = "0";
+											errorMsg[1] = "预约成功";
+										}else{
+											errorMsg[0] = "1";
+											errorMsg[1] = "预约失败";
+										}
+									}else{
+										errorMsg[0] = "2";
+										errorMsg[1] = "预约失败，该报到时间预约人数已满，请预约其他报到时间";
+									}
+								}
+								// 解锁
+								mySqlLockService.unlockRow(jdbcTemplate);
+							}catch(Exception ee){
+								ee.printStackTrace();
+								errorMsg[0] = "1";
+								errorMsg[1] = "预约失败，失败原因："+ee.getMessage();
+								//回滚
+								mySqlLockService.rollback(jdbcTemplate);
+							}
+							
+							//面试预约成功，发送成功通知站内信
+							if("0".equals(errorMsg[0])){
+								//预约成功后发送站内信
+								try{
+									sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+									String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
+									//面试预约成功站内信模板
+									String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CG_ZNX_TMP");
+									//当前机构
+									String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+									
+									//创建邮件任务实例
+									String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
+									// 创建邮件发送听众
+									String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约成功站内信通知", "JSRW");
+									//添加听众成员
+									boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", pcId, oprid, classId, planId, "");
+									if(bl){
+										sendSmsOrMalServiceImpl.send(taskId, "");
+									}
+								}catch(NullPointerException nullEx){
+									//没有配置邮件模板
+									nullEx.printStackTrace();
+								}
+							}
 						}
 					}
-					// 解锁
-					mySqlLockService.unlockRow(jdbcTemplate);
-					
+
 					Map<String,Object> appoMap = this.tzGetAppointmentHtml();
 					//在线预约list
 					String appoHtml = appoMap.get("appoHtml").toString();

@@ -96,28 +96,28 @@ public class RegisterCalendarImpl extends FrameworkImpl {
 						String actRelSql = "SELECT TZ_NACT_ADDR,month(TZ_START_DT) AS TZ_ART_MONTH,day(TZ_START_DT) AS TZ_ART_DAY FROM TZ_GD_HDCFG_VW WHERE TZ_ART_ID = ?";
 						Map<String, Object> actMap = jdbcTemplate.queryForMap(actRelSql, new Object[] {artId});
 						if (actMap != null) {
-							artAddr = (String) actMap.get("TZ_NACT_ADDR");
-							artMonth = (String) actMap.get("TZ_ART_MONTH").toString();
-							artDay = (String) actMap.get("TZ_ART_DAY").toString();
+							artAddr  = (String) actMap.get("TZ_NACT_ADDR");
+							artMonth =  actMap.get("TZ_ART_MONTH") == null ? "" : String.valueOf(actMap.get("TZ_ART_MONTH"));
+							artDay   = 	actMap.get("TZ_ART_DAY") == null ? "" : String.valueOf(actMap.get("TZ_ART_DAY"));
 						}
 					}
 					StringBuffer sbArtUrl = new StringBuffer(contextPath).append("/dispatcher?classid=art_view&operatetype=HTML&siteId=")
 							.append(strSiteId).append("&columnId=").append(columnId).append("&artId=").append(artId);
 					if(registerCalendarLisHtml==null){
-						registerCalendarLisHtml = new StringBuffer("<ul>").append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
+						registerCalendarLisHtml = new StringBuffer("<ul>").append(tzGDObject.getHTMLTextForDollar("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
 								artDay,artMonth,artTitle,artAddr));
 					}else{
 						if(i==2){
 							registerCalendarLisHtml.append("</ul><ul>");
 						}
-						registerCalendarLisHtml.append(tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
+						registerCalendarLisHtml.append(tzGDObject.getHTMLTextForDollar("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_LI_HTML", sbArtUrl.toString(),
 										artDay,artMonth,artTitle,artAddr));
 					}
 				}
 				registerCalendarLisHtml.append("</ul>");
 			}
 			
-			registerCalendarHtml = tzGDObject.getHTMLText("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_HTML", registerCalendar,
+			registerCalendarHtml = tzGDObject.getHTMLTextForDollar("HTML.TZWebSiteAreaInfoBundle.TZ_SITE_AREA_BKRL_HTML", registerCalendar,
 					more,registerCalendarLisHtml==null?"":registerCalendarLisHtml.toString(),strColumnId); 
 			
 			return registerCalendarHtml;

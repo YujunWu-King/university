@@ -17,7 +17,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
     	'KitchenSink.view.enrollmentManagement.materialsReview.materialsReviewScheduleAppsStore'
     ],
     title: '材料评审进度管理',
-    bodyStyle: 'overflow-y:auto;overflow-x:hidden',
+    scrollable: true,
+    //bodyStyle: 'overflow-y:auto;overflow-x:hidden',
+    bodyStyle: 'overflow-y:auto;overflow-x:auto',
     constructor: function(classID, batchID) {
         this.classID = classID;
         this.batchID = batchID;
@@ -123,6 +125,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             title: '图表区',
             collapsible: true,
             collapsed: true,
+            scrollable: true,
             plugins: {
                 ptype: 'maximize'
             },
@@ -155,14 +158,22 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             for (var i = 0; i < tmpArray.length; i++) {
                 var colName = '00' + (i + 1);
                 colName = 'col' + colName.substr(colName.length - 2);
-
+                
                 var tmpColumn = {
                     text: tmpArray[i][colName],
                     sortable: false,
-                    dataIndex: colName,
-                    flex: 1
+                    dataIndex: colName
                 };
 
+                if(i<=4){
+                	if(i==1){
+                		tmpColumn.width = 100;
+                	}else{
+                		tmpColumn.width = 80;
+                	}                	
+                }else{
+                	tmpColumn.flex = 1;
+                }
                 statisticsGridDataModel['gridColumns'].push(tmpColumn);
                 statisticsGridDataModel['gridFields'].push({
                     name: colName
@@ -208,18 +219,27 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 	}
                 }
                 var dataIndex;
-                if(i>0){
+                var tmpColumn = {};
+                if(i>1){
                 	dataIndex = tmpArray2[i][colName];
                 }else{
-                	dataIndex = 'col01';
+                	if(i==0){
+                		mxName = "指标名称";
+                	}else if(i==1){
+                		mxName = "平均分";
+                	}
+                	dataIndex = 'col0' + i;
                 }
-                var tmpColumn = {
+                //console.log(dataIndex);
+                tmpColumn = {
                     text: mxName,
                     sortable: false,
                     dataIndex: dataIndex,
                     editor: {
                         xtype: 'numberfield',
                         allowBlank: false,
+                        allowDecimals:true,
+                        decimalPrecision:2,
                         emptyText:"不允许为空！"
                     },
                     flex: 1
@@ -246,7 +266,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     var colName = '00' + (j + 1);
                     
                     colName = 'col' + colName.substr(colName.length - 2);
-                    if(j==0){
+                    if(j<=1){
                     	dataRow.push(tmpdataArray[j][colName]);
                     }else{
                     	for(var u=1;u<tmpArray2.length;u++){
@@ -265,6 +285,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                 }
                 statisticsGoalGridDataModel['gridData'].push(dataRow);
             }
+            
             /*tmpArray2 = respData.pw_fbzb_grid_data;
             for (i = 0; i < tmpArray2.length; i++) {
                 var tmpdataArray = tmpArray2[i].field_value;
@@ -301,6 +322,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             dataIndex: 'insID',
             align: 'center',
             minWidth: 100
+        },
+        {
+        	text:"报名表模板ID",
+        	dataIndex:'clpsBmbTplId',
+        	hidden:true
         },
         {
             text: "姓名",
@@ -362,44 +388,51 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             align: 'center',
             width: 200
         }];
+        
         var dockedItems;
-
-        var tzAppColsParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' + '"OperateType":"isJiSuanFenZhi","comParams":{"type":"isJiSuanFenZhi","classID":"' + classID + '","batchID":"' + batchID + '"}}';
+        applicantsColumns.push({
+            text: "评委间偏差",
+            dataIndex: 'judgePC',
+            align: 'center',
+            width: 130,
+            flex: 1
+        });
+        applicantsColumns.push({
+            text: "平均分",
+            dataIndex: 'aveScore',
+            align: 'center',
+            width: 100,
+            flex: 1
+        });
+        dockedItems = [{
+            xtype: "toolbar",
+            items: [{
+                text: "查询",
+                tooltip: "查询",
+                handler: "queryStudent"
+            },'-',
+            {
+                text: "计算所有考生评委偏差",
+                tooltip: "计算所有考生评委偏差",
+                handler: "calDeviation"
+            },'-',
+            {
+                xtype: 'checkboxfield',
+                fieldLabel: '实时计算评委偏差',                        
+                name: 'calPwPanC',
+                inputValue:'Y',
+                labelWidth: 120,
+                labelAlign: 'right'
+            }]
+        }]
+        
+        /*var tzAppColsParams = '{"ComID":"TZ_REVIEW_CL_COM","PageID":"TZ_CLPS_SCHE_STD",' + '"OperateType":"isJiSuanFenZhi","comParams":{"type":"isJiSuanFenZhi","classID":"' + classID + '","batchID":"' + batchID + '"}}';
         Ext.tzLoadAsync(tzAppColsParams,function(respData) {
             var transScoreValue = respData.ZFZ;
             if (transScoreValue == 'Y') {
-                applicantsColumns.push({
-                    text: "评委间偏差",
-                    dataIndex: 'judgePC',
-                    align: 'center',
-                    width: 130,
-                    flex: 1
-                });
-                applicantsColumns.push({
-                    text: "平均分",
-                    dataIndex: 'aveScore',
-                    align: 'center',
-                    width: 100,
-                    flex: 1
-                });
-                dockedItems = [{
-                    xtype: "toolbar",
-                    items: [{
-                        text: "计算偏差",
-                        tooltip: "计算偏差",
-                        handler: "calDeviation"
-                    },'-',
-                    {
-                        xtype: 'checkboxfield',
-                        fieldLabel: '实时计算评委偏差',                        
-                        name: 'calPwPanC',
-                        inputValue:'Y',
-                        labelWidth: 120,
-                        labelAlign: 'right'
-                    }]
-                }]
+                
             }
-        });
+        });*/
         Ext.apply(this, {
             items: [{
                 xtype: 'form',
@@ -555,7 +588,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             style: 'display:inline-block',
                             readOnly: true,
                             hideLabel: true,
-                            width: '40px'
+                            width: '60px'
                         },
                         {
                             margin: '8px',
@@ -602,6 +635,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             handler: 'reStartReview',
                             width: 150
                         },
+                        /*{
+                            style: 'margin-left:10px',
+                            xtype: 'button',
+                            text: '临时导入批次数据',
+                            defaultColor: '',
+                            name: 'tmpImportData',
+                            flagType: 'positive',
+                            setType: 0,
+                            handler: 'tmpImportData',
+                            width: 150
+                        },*/
                         {
                             xtype: 'checkboxfield',
                             fieldLabel: '评委可见统计表',
@@ -620,15 +664,16 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                     xtype: 'tabpanel',
                     frame: true,
                     activeTab: 0,
+                    scrollable: true,
                     plain: false,
                     resizeTabs: true,
                     defaults: {
-                        autoScroll: false
+                        autoScroll: true
                     },
                     listeners: {
                         tabchange: function(tabPanel, newCard, oldCard) {
                             if (newCard.name == "materialsStudentGrid") {
-                                var form = tabPanel.findParentByType('materialsReviewSchedule').child('form').getForm();
+                                /*var form = tabPanel.findParentByType('materialsReviewSchedule').child('form').getForm();
                                 var store = newCard.store;
                                 var classID = form.findField('classID').getValue();
                                 var batchID = form.findField('batchID').getValue();
@@ -639,7 +684,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                                         // store.loadData(respData.root);
                                     });
                                     this.doLayout();
-                                }
+                                }*/
                             };
                             if (newCard.name == "judgeInfoForm") {
                                 var form = tabPanel.findParentByType('materialsReviewSchedule').child('form').getForm();
@@ -740,7 +785,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                                 xtype: 'displayfield',
                                 margin: '0px 8px',
                                 readOnly: true,
-                                name: 'reviewCount',
+                                name: 'currentReviewCount',
                                 value: "0",
                                 style: 'display:inline-block'
                             },
@@ -850,7 +895,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             // width:130
                             // }
                             , {
-                                text: "抽取数量/已评审数量",
+                                text: "抽取数量/已提交数量",
                                 dataIndex: 'hasSubmited',
                                 align: 'center',
                                 minWidth: 100,
@@ -912,9 +957,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                         listeners: {
                             activate: 'stuListActive'
                         },
-                        store: {
+                        /*store: {
                             type: 'materialsReviewScheduleAppsStore'
-                        },
+                        },*/
                         plugins: [{
                             ptype: 'cellediting',
                             pluginId: 'judgeCellEditing',
@@ -928,7 +973,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                             }
                         }],
                         dockedItems: dockedItems,
-                        columns: applicantsColumns
+                        columns: applicantsColumns,
+                        store:materialsReviewScheduleAppsStore,
+                        bbar: {
+                            xtype: 'pagingtoolbar',
+                            pageSize: 10,
+                            store: materialsReviewScheduleAppsStore,
+                            plugins: new Ext.ux.ProgressBarPager()
+                        }
                     },                    
                     {
                         xtype: 'form',
@@ -950,6 +1002,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            columns: statisticsGridDataModel['gridColumns'],
 	                            header: false,
 	                            border: false,
+	                            listeners:{
+	                            	beforeselect:function(_this,record,index,opts){
+	                            		var data = record.getData();
+	                            		var pwId = data["col01"];
+	                            		if(pwId!=undefined&&pwId==''){
+	                            			return false;
+	                            		}
+	                            	}
+	                            },
 	                            dockedItems: [{
 	                                xtype: "toolbar",
 	                                items: [{
@@ -960,11 +1021,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    text: "使用计算结果设置分布标准",
 	                                    tooltip: "使用计算结果设置分布标准",
 	                                    handler:'userCalcuScoreDist'
-	                                }, "-", {
+	                                }/*, "-", {
 	                                    text: "保存评议标准",
 	                                    tooltip: "保存评议标准",
 	                                    handler:'saveEvaStandard'
-	                                }, "-", {
+	                                }*/, "-", {
 	                                    text: "刷新图表",
 	                                    name:"toolbarShowTB",
 	                                    tooltip: "刷新图表",
@@ -1010,11 +1071,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 			                                            		 for (var k=5;k<statisticsGridDataModel.gridData[j].length;k++){
 			                                            			 //取得区间名称
 			                                            			 var colname = statisticsGridDataModel.gridColumns[k].text;
-			                                            			 //处理非数字的情况
-			                                            			 if(isNaN(statisticsGridDataModel.gridData[j][k])){
+			                                            			 //处理非数字的情况(取百分比数据)
+			                                            			 var tmpobj = statisticsGridDataModel.gridData[j][k];
+			                                            			 var tmppwpyqjdata = tmpobj.split('（')[1].replace('）','').replace('%','');
+			                                            			 
+			                                            			 if(isNaN(tmppwpyqjdata)){
 			                                            				 linetmpobj[colname] = 0;
 			                                            			 }else{
-			                                            				 linetmpobj[colname] = parseFloat(statisticsGridDataModel.gridData[j][k]);
+			                                            				 linetmpobj[colname] = parseFloat(tmppwpyqjdata);
 			                                            			 }
 			                                            		 }
 			                                            		 lineObj.push(linetmpobj);
@@ -1032,25 +1096,39 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                    	//取页面数据
 	                                    	var evaluationStandardGrid = Ext.ComponentQuery.query('grid[name=evaluationStandardGrid]')[0];
                                        
-	                                        for(var i=1;i<statisticsGoalGridDataModel.gridData[0].length;i++){
-	                                        	
+	                                        for(var i=1;i<statisticsGoalGridDataModel.gridData[0].length;i++){	
 	                                        	//从页面取值
-	                                        	var colname = statisticsGoalGridDataModel.gridColumns[i-1].text;
-	                                        	var colid = statisticsGoalGridDataModel.gridColumns[i-1].dataIndex;
+	                                        	var colname = statisticsGoalGridDataModel.gridColumns[i].text;
+	                                        	var colid = statisticsGoalGridDataModel.gridColumns[i].dataIndex;
 	                                        	var colvalue =evaluationStandardGrid.store.data.items[0].data[colid];
-	                                        	//处理值为非数字的情况
-	                                        	if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
-	                                        		bzline[colname] = colvalue;
-	                                        	}else{
-	                                        		bzline[colname] = 0;
-	                                        	}
-	                                        	if(i==statisticsGoalGridDataModel.gridData[0].length-1){
+	                                        	
+	                                        	if(i==1){
+
+	                                        		//柱状图的平均值（grid列表的第二项默认为平均值）
 	                                        		//处理非数字的情况
 	                                        		if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
 	                                        			bzcoln["pj"] = colvalue;
 		                                        	}else{
 		                                        		bzcoln["pj"] = 0;
 		                                        	}
+	                                        		
+		                                        	//处理值为非数字的情况
+	                                        		/*
+		                                        	if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
+		                                        		bzline[colname] = parseFloat(colvalue);	                                        		
+		                                        	}else{
+		                                        		bzline[colname] = 0;
+		                                        	}*/
+	                                        		
+	                                        	}else{
+
+		                                        	//处理值为非数字的情况
+		                                        	if (colvalue !== null && colvalue !== undefined && colvalue !== '' && isNaN(colvalue)==false) {
+		                                        		bzline[colname] = parseFloat(colvalue);
+		                                        	}else{
+		                                        		bzline[colname] = 0;
+		                                        	}
+	                                        		
 	                                        	}
 
 	                                        	/* 从后台取数据
@@ -1073,6 +1151,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                        }
 	                                        lineObj.push(bzline);
 	                                        coluObj.push(bzcoln);
+
 	                                        //以上为参数处理
 	                                        //以下为处理图标部分-开始
 	                                		// 曲线图参数
@@ -1135,10 +1214,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                		lineHeigth = (pwNum + 1) * 20 + 400;
 	                                		// 保持柱状图和线状图宽度一致
 	                                		if (columnWidth > lineWidth) {
-	                                			lineWidth = columnWidth;
+	                                			//lineWidth = columnWidth;
 	                                		} else {
-	                                			columnWidth = lineWidth;
+	                                			//columnWidth = lineWidth;
 	                                		}
+	                                		// 对曲线图增加点宽度;
+	                                		lineWidth = lineWidth + (pwNum + 1) * 66; 
+	                                		
+	                                		
 	                                		// ------------------------------------柱状图开始---------------------------
 	                                		// 1、生产柱状图数据
 	                                		for (var i = 0; i < pwArr.length; i++) {
@@ -1169,7 +1252,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                			xtype : 'chart',
 	                                			id : 'columnChart' + id1,
 	                                			width : columnWidth,
-	                                			height : columnHeight,
+	                                			//height : columnHeight,
+	                                			height : 230,
 	                                			animate : true,// 使用动画
 	                                			store : graphDataStore,
 	                                			shadow : true,// 使用阴影
@@ -1197,11 +1281,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                                      //orientation: 'vertical',控制数字横着还是竖着
 	                                                      color: '#333'
 	                                                },
-	                                				style: { width: 200 },
+	                                				style: { width: 50 },
 	                                				xField : 'graphName',
 	                                				yField : 'graphData'// x与y轴的数据声明
 	                                			} ]
 	                                		});
+	                                		
 	                                		// ------------------------------------柱状图结束---------------------------
 	                                		// ------------------------------------曲线图开始---------------------------
 	                                		// 处理曲线图的数据-开始
@@ -1270,13 +1355,17 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                                			fields : arrayLines,
 	                                			data : arrayDatas
 	                                		});
+	                                		
+	                                		
+	                                		
 	                                		// 2、动态定义曲线图的id
 	                                		var id2 = "" + Math.ceil(Math.random() * 100);
 	                                		// 3、生成曲线图
 	                                		var lineChart = Ext.create('Ext.chart.Chart', {
 	                                			xtype : 'chart',
 	                                			style : 'background:#fff',
-	                                			height : lineHeigth,
+	                                			//height : lineHeigth,
+	                                			height : 440,
 	                                			// id: 'linechart',
 	                                			id : 'lineChart' + id2,
 	                                			width : lineWidth,
@@ -1360,22 +1449,38 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
 	                            },	       
 	                            plugins: [{
 	                                ptype: 'cellediting',
+	                                listeners:{
+	                                	beforeedit:function(editor,context,eOpts){
+	                                		var record = context.record;
+	                                		var data = record.data;
+	                                		var colMx = data.col00;
+	                                		var colMx1 = data.col01;
+	                                		var column;
+	                                		column = context.column;
+	                                		if(column.dataIndex=="col00"){
+	                                			return;
+	                                		}
+	                                		if(colMx=="误差"&&column.dataIndex!="col01"){
+	                                			column.setEditor({
+	                                                xtype: 'numberfield',
+	                                                allowBlank: false,
+	                                                allowDecimals:false,
+	                                                decimalPrecision:0,
+	                                                emptyText:"不允许为空！"
+	                                            })
+	                                		}else{
+	                                			column.setEditor({
+	                                                xtype: 'numberfield',
+	                                                allowBlank: false,
+	                                                allowDecimals:true,
+	                                                decimalPrecision:2,
+	                                                emptyText:"不允许为空！"
+	                                            })
+	                                		}
+	                                	}
+	                                }
 	                            }],
 	                            columns:statisticsGoalGridDataModel['gridColumns'],
-	                            /*columns:[
-	                            	{
-	                                    text:'指标名称',	                                    
-	                                    dataIndex:'col01',
-	                                    width:'10%'                                    
-	                                },
-	                                {
-	                                    text:'总分',
-	                                    lockable   : false,
-	                                    menuDisabled: true,
-	                                    columns:statisticsGoalGridDataModel['gridColumns']
-	                                }
-	                            ],*/
-	                            //columns: statisticsGoalGridDataModel['gridColumns'],
 	                            header: false,
 	                            border: false,
 		                        viewConfig: {

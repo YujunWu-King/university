@@ -220,6 +220,8 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                                     record.data.isShowWzsy = false;
                                     record.data.isPerfectInfo = false;
                                     record.data.isRequired = false;
+                                    record.data.isReg = false;
+                                    record.data.isZhgl = false;
                                    // record.set('isShowWzsy',false);
                                 }
                                 if(regId == "TZ_REALNAME"){

@@ -126,9 +126,12 @@
 				},*/{
                     xtype: 'textfield',
                     fieldLabel: "手机",
-                    name: 'judgePhoneNumber'
+                    name: 'judgePhoneNumber',
+                    regex: /^[1]\d{10}$/,
+                    // allowBlank: false                    
                 },{
                     xtype: 'textfield',
+                    vtype:'email',
                     fieldLabel: "邮箱",
                     name: 'judgeEmail'
                 },/*{
@@ -148,6 +151,7 @@
             			// maxLength: 170,
             			name: 'roleName',
             			editable: false,
+            			value:'TZ_MSPW',
                         triggers: {
                             search: {
                                 cls: 'x-form-search-trigger',
@@ -160,6 +164,7 @@
                         hideLabel: true,
                         // fieldLabel: "角色描述",
                         name: 'roleNameDesc',
+                        value:'面试评委'
                         //readOnly:true,
                         //fieldStyle:'background:#F4F4F4'
                     }]

@@ -36,7 +36,7 @@ public class TzGdBmglClassServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_BATCH_ID", "TZ_BATCH_NAME", "TZ_APPLY_STATUS","TZ_RX_DT", "TZ_NUM_APPLICANTS", "TZ_NUM_NOAUDIT", "TZ_NUM_EXPECTED"};
+			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_CLASS_NAME", "TZ_BATCH_ID", "TZ_BATCH_NAME", "TZ_APPLY_STATUS","TZ_RX_DT", "TZ_NUM_APPLICANTS","TZ_NUM_EXPECTED","TZ_NUM_SUBMITTED"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -53,8 +53,8 @@ public class TzGdBmglClassServiceImpl extends FrameworkImpl {
 					mapList.put("applyStatus", rowList[4]);
 					mapList.put("admissionDate", rowList[5]);
 					mapList.put("applicantsNumber", rowList[6]);
-					mapList.put("noauditNumber", rowList[7]);
-					mapList.put("expectedNumber", rowList[8]);
+					mapList.put("expectedNumber", rowList[7]);
+					mapList.put("submittedNumber", rowList[8]);
 					listData.add(mapList);
 				}
 				mapRet.replace("total", obj[0]);

@@ -16,7 +16,9 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsprcsrqstMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.Psprcsrqst;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzDxyjfsrwTblMapper;
 import com.tranzvision.gd.TZEmailSmsSendBundle.dao.PsTzEmlTaskAetMapper;
+import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzDxyjfsrwTbl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.model.PsTzEmlTaskAet;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
@@ -54,6 +56,9 @@ public class TzSmsViewHistoryClsServiceImpl extends FrameworkImpl{
 	@Autowired
 	private TZGDObject tZGDObject;
 	
+	@Autowired
+	private PsTzDxyjfsrwTblMapper psTzDxyjfsrwTblMapper;
+	
 	//获取短信发送历史grid列表
 	@Override
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -87,7 +92,8 @@ public class TzSmsViewHistoryClsServiceImpl extends FrameworkImpl{
 	        	for(int i = 0; i < list.size(); i++){
 	        		taskID = (String)list.get(i).get("TZ_EML_SMS_TASK_ID");
 	        		
-	        		String sql1 = "select TZ_TMPL_ID,TZ_RWZX_ZT,TZ_RWZX_ZT_DESC,TZ_SEND_COUNT,TZ_SEND_SUC_COUNT,TZ_SEND_FAIL_COUNT,TZ_SEND_RPT_COUNT,TZ_RWZX_DT_STR,TZ_REALNAME from PS_TZ_SMS_HIS_TJ_V where TZ_EML_SMS_TASK_ID=? and TZ_JG_ID=?";
+	        		//String sql1 = "select TZ_TMPL_ID,TZ_RWZX_ZT,TZ_RWZX_ZT_DESC,TZ_SEND_COUNT,TZ_SEND_SUC_COUNT,TZ_SEND_FAIL_COUNT,TZ_SEND_RPT_COUNT,TZ_RWZX_DT_STR,TZ_REALNAME from PS_TZ_SMS_HIS_TJ_V where TZ_EML_SMS_TASK_ID=? and TZ_JG_ID=?";
+	        		String sql1 = "select `A`.`TZ_EML_SMS_TASK_ID` AS `TZ_EML_SMS_TASK_ID`,`A`.`TZ_JG_ID` AS `TZ_JG_ID`,`A`.`TZ_TMPL_ID` AS `TZ_TMPL_ID`,`A`.`TZ_RWZX_ZT` AS `TZ_RWZX_ZT`,(select `PS_TZ_PT_ZHZXX_TBL`.`TZ_ZHZ_DMS` from `PS_TZ_PT_ZHZXX_TBL` where ((`PS_TZ_PT_ZHZXX_TBL`.`TZ_ZHZJH_ID` = 'TZ_RWZX_ZT') and (`PS_TZ_PT_ZHZXX_TBL`.`TZ_ZHZ_ID` = `A`.`TZ_RWZX_ZT`) and (`PS_TZ_PT_ZHZXX_TBL`.`TZ_EFF_STATUS` = 'A'))) AS `TZ_RWZX_ZT_DESC`,(select count(1) from `PS_TZ_AUDCYUAN_T` where (`PS_TZ_AUDCYUAN_T`.`TZ_AUDIENCE_ID` = `A`.`TZ_AUDIENCE_ID`)) AS `TZ_SEND_COUNT`,(select count(1) from `PS_TZ_DXFSLSHI_TBL` where ((`PS_TZ_DXFSLSHI_TBL`.`TZ_EML_SMS_TASK_ID` = `A`.`TZ_EML_SMS_TASK_ID`) and (`PS_TZ_DXFSLSHI_TBL`.`TZ_FS_ZT` = 'SUC'))) AS `TZ_SEND_SUC_COUNT`,(select count(1) from `PS_TZ_DXFSLSHI_TBL` where ((`PS_TZ_DXFSLSHI_TBL`.`TZ_EML_SMS_TASK_ID` = `A`.`TZ_EML_SMS_TASK_ID`) and (`PS_TZ_DXFSLSHI_TBL`.`TZ_FS_ZT` = 'FAIL'))) AS `TZ_SEND_FAIL_COUNT`,(select count(1) from `PS_TZ_DXFSLSHI_TBL` where ((`PS_TZ_DXFSLSHI_TBL`.`TZ_EML_SMS_TASK_ID` = `A`.`TZ_EML_SMS_TASK_ID`) and (`PS_TZ_DXFSLSHI_TBL`.`TZ_FS_ZT` = 'RPT'))) AS `TZ_SEND_RPT_COUNT`,date_format(`A`.`TZ_RWZX_DT`,'%Y-%m-%d %H:%i:%s') AS `TZ_RWZX_DT_STR`,`B`.`TZ_REALNAME` AS `TZ_REALNAME` from (`PS_TZ_DXYJFSRW_TBL` `A` left join `PS_TZ_AQ_YHXX_TBL` `B` on((`A`.`ROW_ADDED_OPRID` = `B`.`OPRID`))) WHERE A.TZ_EML_SMS_TASK_ID=? and A.TZ_JG_ID=?";
 	        		Map<String, Object> map1 = jdbcTemplate.queryForMap(sql1,new Object[]{taskID, orgID});
 	        		if(map1 != null){
 	        			num_total = num_total + 1;
@@ -245,6 +251,9 @@ public class TzSmsViewHistoryClsServiceImpl extends FrameworkImpl{
 			// 重新发送任务ID;
 	        String taskId = jacksonUtil.getString("taskId");
 	        //String smsQfID = jacksonUtil.getString("smsQfID");
+	        PsTzDxyjfsrwTbl psTzDxyjfsrwTbl = psTzDxyjfsrwTblMapper.selectByPrimaryKey(taskId);
+	        psTzDxyjfsrwTbl.setTzRwzxZt("A");
+	        psTzDxyjfsrwTblMapper.updateByPrimaryKey(psTzDxyjfsrwTbl);
 	         
 			int processInstance = getSeqNum.getSeqNum("PSPRCSRQST", "PROCESSINSTANCE");
 			// 当前用户;

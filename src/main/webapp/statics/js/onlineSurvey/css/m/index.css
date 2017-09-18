@@ -1,6 +1,7 @@
 
 .container{
-	max-width: 640px;
+	/*max-width: 640px;*/
+	width:98%;
 	margin:0 auto;
 	#background:#f7f7f7;
 	background:white;
@@ -71,11 +72,12 @@
 	color:#fff;
 }
 .uploadlogo{
-	padding:10px;
-	margin: 10px 0;
+	/*padding:10px;*/
+	/*margin: 10px 0;*/
+	padding:0px 2px;
 }
 .maincon{
-	padding:0 10px;
+	padding:0 2px;
 }
 .listcon{
 	margin-bottom:30px;
@@ -163,7 +165,7 @@
 }
 .maincon-page{
 	text-align:center;
-	padding-bottom:40px;
+	padding-bottom:20px;
 }
 .pagebtn1, .pagebtn2{
 	float:left;
@@ -197,7 +199,8 @@
 }
 .fotter{
 	text-align: center;
-	padding:40px 10px 10px 10px;
+	/*padding:40px 10px 10px 10px;*/
+	padding:40px 2px 0px 2px;
 	color:#555;
 }
 .submit{
@@ -361,4 +364,9 @@
 	max-height:280px;
 	overflow-y:auto;
 	overflow-x:hidden;
+}
+.submitdesc{
+	text-align: center;
+    margin: 5px auto;
+    color: #ff0000;
 }

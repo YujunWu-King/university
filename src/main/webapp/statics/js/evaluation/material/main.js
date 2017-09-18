@@ -253,7 +253,9 @@ tzPageSlider.prototype =
 				
 				if(tmpHtmlObject != null && $(window)[0] != null && this.pageIndex == 1)
 				{
-					$(window)[0].scrollTo(tmpHtmlObject.offset().left,tmpHtmlObject.offset().top);
+					if(tmpHtmlObject.offset()!=undefined){
+						$(window)[0].scrollTo(tmpHtmlObject.offset().left,tmpHtmlObject.offset().top);
+					}
 				}
 				
 				this.autoScrollHtmlTagId = "";
@@ -342,14 +344,14 @@ function initializeExtObjects(jsonObject)
 		initializeGridColumnHeaders();
 		Ext.QuickTips.init();
 		initializeEvaluatePiciGrid(jsonObject);
-	
+
 		$("#tz_zlps_loading").fadeOut(2000);
 	
 		window.setTimeout(initializeTzPageSlider,10);
 	}
 	catch(e1)
 	{
-		alert('资料评审初始化错误，请与系统管理员联系：[' + e1 + ']');
+		Ext.Msg.alert("提示",'资料评审初始化错误，请与系统管理员联系：[' + e1 + ']');
 	}
 }
 
@@ -431,25 +433,13 @@ function initializeEvaluateSystem(urlObject)
 	var width = Ext.getBody().getWidth();
 	
 	$("#tz_zlps_pclb").width(width);
-	//$("#tz_zlps_pclb").height(480);
 	
 	$("#tz_zlps_zym").width(width);
-	//$("#tz_zlps_zym").height(480);
 	
 	$("#tz_zlps_dfym").width(width);
-	//$("#tz_zlps_dfym").height(480);
 	
-	if(Ext.isIE == true)
-	{
-		$("#tz_zlps_container").height(480);
-		$("#tz_zlps_pclb").height(480);
-		$("#tz_zlps_zym").height(480);
-		$("#tz_zlps_dfym").height(480);
-	}
-	
-	
-	//$("#tz_zlps_loading").width($("#tz_zlps_pclb").width());
-	//$("#tz_zlps_loading").height($("#tz_zlps_pclb").height());
+	$("#tz_zlps_pclb_a").height("40%");
+	$("#tz_zlps_description").height("60%");
 	
 	//加载当前登录评委的评审批次数据
 	window.setTimeout (function(){loadEvaluateBatchData(initializeExtObjects);},100);
@@ -459,10 +449,8 @@ function initializeEvaluateSystem(urlObject)
 //显示、隐藏窗体的蒙板层
 function maskWindow(msg){
 	var maskMsg = msg!=undefined&&msg!=""?msg:"数据加载中，请稍候...";
-	
 	Ext.getBody().mask(maskMsg);
 }
-
 
 function unmaskWindow(){
 	Ext.getBody().unmask();
@@ -594,7 +582,7 @@ Ext.tzSubmit =  function(params,callback,msg,showMask)
                         var jsonObject = Ext.util.JSON.decode(jsonText);
                         /*判断服务器是否返回了正确的信息*/
                         if(jsonObject.state.errcode == 1){
-                        	Ext.Msg.alert("提示",jsonObject.state.errdesc);
+                        	Ext.Msg.alert("提示",jsonObject.state.timeout==true?"您当前登录已超时或者已经退出，请重新登录！":jsonObject.state.errdesc);
                         }else{
                         	typeof callback == "function"&&callback();
                         	Ext.Msg.alert("提示",msg||"保存成功！");
@@ -621,4 +609,11 @@ Ext.tzSubmit =  function(params,callback,msg,showMask)
     	Ext.Msg.alert("提示","保存失败：请与系统管理员联系。");
     	unmaskWindow();
     }
-} 
+}
+
+
+//报名表加载完成后去掉mask窗口
+function bmbLoaded(bmbId) {
+	unmaskWindow();
+	console.log(bmbId + " bmb area loaded.");
+}

@@ -8,6 +8,7 @@
     <result column="TZ_IS_DEFAULT" property="tzIsDefault" jdbcType="VARCHAR" />
     <result column="TZ_CHS_SNAME" property="tzChsSname" jdbcType="VARCHAR" />
     <result column="TZ_SMTP_ADDR" property="tzSmtpAddr" jdbcType="VARCHAR" />
+    <result column="TZ_POP_IMAP_ADDR" property="tzPopImapAddr" jdbcType="VARCHAR" />
     <result column="TZ_EML_ALIAS" property="tzEmlAlias" jdbcType="VARCHAR" />
     <result column="TZ_USR_NAME" property="tzUsrName" jdbcType="VARCHAR" />
     <result column="TZ_USR_PWD" property="tzUsrPwd" jdbcType="VARCHAR" />
@@ -21,8 +22,8 @@
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_EMLSERV_ID, TZ_JG_ID, TZ_EML_ADDR100, TZ_IS_DEFAULT, TZ_CHS_SNAME, TZ_SMTP_ADDR, 
-    TZ_EML_ALIAS, TZ_USR_NAME, TZ_USR_PWD, TZ_DESCR254, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    TZ_POP_IMAP_ADDR, TZ_EML_ALIAS, TZ_USR_NAME, TZ_USR_PWD, TZ_DESCR254, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -37,16 +38,16 @@
   <insert id="insert" parameterType="com.tranzvision.gd.TZEmailParameterBundle.model.PsTzEmlsDefTbl" >
     insert into PS_TZ_EMLS_DEF_TBL (TZ_EMLSERV_ID, TZ_JG_ID, TZ_EML_ADDR100, 
       TZ_IS_DEFAULT, TZ_CHS_SNAME, TZ_SMTP_ADDR, 
-      TZ_EML_ALIAS, TZ_USR_NAME, TZ_USR_PWD, 
-      TZ_DESCR254, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
-      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
-      SYNCDTTM)
+      TZ_POP_IMAP_ADDR, TZ_EML_ALIAS, TZ_USR_NAME, 
+      TZ_USR_PWD, TZ_DESCR254, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+      SYNCID, SYNCDTTM)
     values (#{tzEmlservId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzEmlAddr100,jdbcType=VARCHAR}, 
       #{tzIsDefault,jdbcType=VARCHAR}, #{tzChsSname,jdbcType=VARCHAR}, #{tzSmtpAddr,jdbcType=VARCHAR}, 
-      #{tzEmlAlias,jdbcType=VARCHAR}, #{tzUsrName,jdbcType=VARCHAR}, #{tzUsrPwd,jdbcType=VARCHAR}, 
-      #{tzDescr254,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
-      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
-      #{syncdttm,jdbcType=TIMESTAMP})
+      #{tzPopImapAddr,jdbcType=VARCHAR}, #{tzEmlAlias,jdbcType=VARCHAR}, #{tzUsrName,jdbcType=VARCHAR}, 
+      #{tzUsrPwd,jdbcType=VARCHAR}, #{tzDescr254,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEmailParameterBundle.model.PsTzEmlsDefTbl" >
     insert into PS_TZ_EMLS_DEF_TBL
@@ -68,6 +69,9 @@
       </if>
       <if test="tzSmtpAddr != null" >
         TZ_SMTP_ADDR,
+      </if>
+      <if test="tzPopImapAddr != null" >
+        TZ_POP_IMAP_ADDR,
       </if>
       <if test="tzEmlAlias != null" >
         TZ_EML_ALIAS,
@@ -119,6 +123,9 @@
       <if test="tzSmtpAddr != null" >
         #{tzSmtpAddr,jdbcType=VARCHAR},
       </if>
+      <if test="tzPopImapAddr != null" >
+        #{tzPopImapAddr,jdbcType=VARCHAR},
+      </if>
       <if test="tzEmlAlias != null" >
         #{tzEmlAlias,jdbcType=VARCHAR},
       </if>
@@ -169,6 +176,9 @@
       <if test="tzSmtpAddr != null" >
         TZ_SMTP_ADDR = #{tzSmtpAddr,jdbcType=VARCHAR},
       </if>
+      <if test="tzPopImapAddr != null" >
+        TZ_POP_IMAP_ADDR = #{tzPopImapAddr,jdbcType=VARCHAR},
+      </if>
       <if test="tzEmlAlias != null" >
         TZ_EML_ALIAS = #{tzEmlAlias,jdbcType=VARCHAR},
       </if>
@@ -209,6 +219,7 @@
       TZ_IS_DEFAULT = #{tzIsDefault,jdbcType=VARCHAR},
       TZ_CHS_SNAME = #{tzChsSname,jdbcType=VARCHAR},
       TZ_SMTP_ADDR = #{tzSmtpAddr,jdbcType=VARCHAR},
+      TZ_POP_IMAP_ADDR = #{tzPopImapAddr,jdbcType=VARCHAR},
       TZ_EML_ALIAS = #{tzEmlAlias,jdbcType=VARCHAR},
       TZ_USR_NAME = #{tzUsrName,jdbcType=VARCHAR},
       TZ_USR_PWD = #{tzUsrPwd,jdbcType=VARCHAR},

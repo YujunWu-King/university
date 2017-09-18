@@ -51,11 +51,13 @@
 		timePlanStore.load();
 		
 		//添加学生store
-		
 		var addStuStore = new KitchenSink.view.interviewManagement.interviewArrange.interviewStuViewAddStore({
 			classID: classID,
 			batchID: batchID
 		});
+		
+		//初筛结果
+		var csResultStore = new KitchenSink.view.common.store.appTransStore("TZ_ZDCS_JG");
 		
         Ext.apply(this,{
 		    items: [{
@@ -124,13 +126,18 @@
 	                },{
 	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.appId","报名表编号") ,
 	                    dataIndex: 'appId',
-	                    minWidth:125,
-	                    flex:1
+	                    minWidth:100,
+	                    width:110,
+	                    hidden: true
+	                },{
+	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.msApplyID","面试申请号") ,
+	                    dataIndex: 'msApplyID',
+	                    minWidth:100,
+	                    width:110
 	                },{
 	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.stuName","姓名") ,
 	                    dataIndex: 'stuName',
 	                    minWidth: 100,
-	                    flex:1
 	                },{
 	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.email","邮箱") ,
 	                    dataIndex: 'email',
@@ -141,102 +148,21 @@
 	                    dataIndex: 'mobile',
 	                    minWidth: 100,
 	                    flex:1
-	                },/*{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.msCLPSPC","材料评审批次") ,
-	                    dataIndex: 'msCLPSPC',
-	                    minWidth: 125,
-	                    flex:1
 	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.msZGFlag","初筛结果"),
-	                    dataIndex: 'msZGFlag',
+	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.csResult","初筛结果"),
+	                    dataIndex: 'csResult',
+	                    width:100,
 	                    renderer : function(value, metadata, record) {
-	                        var index = mszgFlagStore.find('TValue',value);
+	                        var index = csResultStore.find('TValue',value);
 	                        if(index!=-1){
-	                            return mszgFlagStore.getAt(index).data.TSDesc;
+	                            return csResultStore.getAt(index).data.TSDesc;
 	                        }
-	                        return record.get('msZGFlag');
-	                    },
-	                    minWidth:120,
-	                    flex:1
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.city","所在城市") ,
-	                    sortable: true,
-	                    dataIndex: 'city',
-	                    minWidth: 105,
-	                    flex:1
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.country","所在国家") ,
-	                    sortable: true,
-	                    dataIndex: 'country',
-	                    minWidth: 105,
-	                    flex:1
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.timezone","所属时区") ,
-	                    filter: {
-	                        type: 'string'
-	                    },
-	                    sortable: true,
-	                    dataIndex: 'timezone',
-	                    minWidth: 107,
-	                    flex:1
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.timezomeDiff","时差（同北京）") ,
-	                    filter: {
-	                        type: 'string'
-	                    },
-	                    sortable: true,
-	                    dataIndex: 'timezomeDiff',
-	                    minWidth: 125,
-	                    flex:1
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.bjTime","北京时间") ,
-	                    sortable: true,
-	                    dataIndex: 'bjTime',
-	                    minWidth: 110,
-	                    flex:1
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.localStartDate","当地开始日期") ,
-	                    xtype:'datecolumn',
-	                    format:'Y-m-d',
-	                    filter: {
-	                        type: 'date',
-	                        dateFormat: 'Y-m-d'
-	                    },
-	                    sortable: true,
-	                    dataIndex: 'localStartDate',
-	                    minWidth: 125,
-	                    flex:1
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.localStartTime","当地开始时间") ,
-	                    sortable: true,
-	                    dataIndex: 'localStartTime',
-	                    minWidth: 125,
-	                    flex:1
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.localFinishDate","当地结束日期") ,
-	                    xtype:'datecolumn',
-	                    format:'Y-m-d',
-	                    filter: {
-	                        type: 'date',
-	                        dateFormat: 'Y-m-d'
-	                    },
-	                    sortable: true,
-	                    dataIndex: 'localFinishDate',
-	                    minWidth: 125,
-	                    flex:1
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.localFinishTime","当地结束时间") ,
-	                    filter: {
-	                        type: 'string'
-	                    },
-	                    sortable: true,
-	                    dataIndex: 'localFinishTime',
-	                    minWidth: 125,
-	                    flex:1
-	                }*/],
+	                        return "";
+	                    }
+	                }],
 					bbar: {
 						xtype: 'pagingtoolbar',
-						pageSize: 20,
+						pageSize: 50,
 						listeners:{
 							afterrender: function(pbar){
 								var grid = pbar.findParentByType("grid");

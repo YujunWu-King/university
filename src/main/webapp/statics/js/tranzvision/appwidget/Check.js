@@ -32,34 +32,58 @@ SurveyBuild.extend("Check", "baseComponent", {
 		
 		if (previewmode) {
 			SurveyBuild.appInsId == "0" && this._getDefaultVal(data);
-			for (var i in data.option) {
-				e += '<li>';
-				e += '	<div class="check-box ' + (data["option"][i]["checked"] == "Y" ? "checkedBox": "") + '"><i><input type="checkbox" name="' + data.itemId + '" class="' + (data["option"][i]["other"] == "Y" ? "sur_other_box" : "") + '" instanceId="' + i + '" id="o' + data.itemId + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"]+'"/></i></div>';
-				e += data["option"][i]["txt"];
-			    if (data["option"][i]["other"] == "Y"){
-			        if(SurveyBuild._readonly){
-			            //只读模式
-			            e += '<input type="text" readonly="readonly" class="inputother" value="' + data.othervalue + '">';
-			        }else{
-			            //编辑模式
-			            e += '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="inputother" style="display:' + (data["option"][i]["checked"] == "Y" ? "inline": "none") + '" value="' + data.othervalue + '">';
-			        }
-			    }
-				e += '</li>';
-			}
+			if(SurveyBuild.accessType == "M"){
+				for (var i in data.option) {
+					e += '<li class="check-box">';
+					e += '<input type="checkbox" class="checkbox ' + (data["option"][i]["other"] == "Y" ? "sur_other_box" : "") + '"  name="' + data.itemId + '"  instanceId="' + i + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"]+'" id="checkbox'+data["option"][i]["code"] +'" >';
+					e += '<label for="checkbox'+data["option"][i]["code"] +'">'+data["option"][i]["txt"]+'</label>' ;
+					 if (data["option"][i]["other"] == "Y"){
+				        if(SurveyBuild._readonly){
+				        	e += '<input type="text" class="others" readonly="readonly" value="' + data.othervalue + '" >';
+				        }else{
+				        	e += '<input type="text" class="others" style="display:'+(data["option"][i]["checked"] == "Y" ? "inline": "none")+'" value="' + data.othervalue + '" id="other' + data.itemId + '"  name="other' + data.itemId + '">';
+				        }
+					}
+					e += '</li>';
+				}
+				c += '<div class="item" data-instancid="' + data.instanceId + '">';
+				c += '<p>'+data.title+'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+				c += '  <div id="' + data.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+				c += '	<div class="check-box">';
+				c += '		<ul>' + e +'</ul>';
+				c += '	</div>';
+				c += '</div>';
+			}else{
+				for (var i in data.option) {
+					e += '<li>';
+					e += '	<div class="check-box ' + (data["option"][i]["checked"] == "Y" ? "checkedBox": "") + '"><i><input type="checkbox" name="' + data.itemId + '" class="' + (data["option"][i]["other"] == "Y" ? "sur_other_box" : "") + '" instanceId="' + i + '" id="o' + data.itemId + data["option"][i]["code"] + '" ' + (data["option"][i]["checked"] == "Y" ? "checked='checked'": "") + ' value="' + data["option"][i]["code"]+'"/></i></div>';
+					e += data["option"][i]["txt"];
+				    if (data["option"][i]["other"] == "Y"){
+				        if(SurveyBuild._readonly){
+				            //只读模式
+				            e += '<input type="text" readonly="readonly" class="inputother" value="' + data.othervalue + '">';
+				        }else{
+				            //编辑模式
+				            e += '<input type="text" id="other' + data.itemId + '" name="other' + data.itemId + '" class="inputother" style="display:' + (data["option"][i]["checked"] == "Y" ? "inline": "none") + '" value="' + data.othervalue + '">';
+				        }
+				    }
+					e += '</li>';
+				}
 
-			c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
-			c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
-			c += '    <div class="margart15 input-list-textwrap left">';
-			c += '    	 <ul>' + e + '<div class="clear"></div></ul>';
-			c += '    </div>';
-			c += '    <div class="input-list-suffix left">';
-			if(!SurveyBuild._readonly){
-				c += '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div>';
+				c += '<div class="input-list input-radiobox" data-instancid="' + data.instanceId + '">';
+				c += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + data.title + '</div>';
+				c += '    <div class="margart15 input-list-textwrap left">';
+				c += '    	 <ul>' + e + '<div class="clear"></div></ul>';
+				c += '    </div>';
+				c += '    <div class="input-list-suffix left">';
+				if(!SurveyBuild._readonly){
+					c += '<div id="' + data.itemId + 'Tip" class="onShow"><div class="onShow"></div></div>';
+				}
+				c += '    </div>';
+				c += '    <div class="clear"></div>';
+				c += '</div>';
 			}
-			c += '    </div>';
-			c += '    <div class="clear"></div>';
-			c += '</div>';
+			
 		} else {
 			for (var i in data.option) {
 				e += '<li class="read-check" id="o' + i + '">';
@@ -165,16 +189,19 @@ SurveyBuild.extend("Check", "baseComponent", {
 	},
 	_eventbind: function(data) {
 		var $inputBox = $(":checkbox[name='" + data.itemId + "']");
+		
 		$.fn.toggleCheckbox = function () {
 			this.prop('checked', !this.prop('checked'));
 		}
+		
 		$inputBox.parents(".check-box").on('click', function () {
-		    $(this).find(':checkbox').toggleCheckbox();
-		    $(this).toggleClass('checkedBox');
-		    
+			if(SurveyBuild.accessType == "P"){
+				$(this).find(':checkbox').toggleCheckbox();
+			    $(this).toggleClass('checkedBox');
+			}
 		    var meid = $(this).find(':checkbox').attr("instanceId");
 		    var scheck = $(this).find(':checkbox').prop("checked");
-
+		    
 			if (scheck) {
 				data["option"][meid]["checked"] = "Y";
 				if (data["option"][meid]["other"] == "Y") {
@@ -187,7 +214,7 @@ SurveyBuild.extend("Check", "baseComponent", {
 				}
 			}
 		});
-
+		
 		$("#other" + data.itemId).keyup(function() {
 			data.othervalue = $(this).val();
 		});

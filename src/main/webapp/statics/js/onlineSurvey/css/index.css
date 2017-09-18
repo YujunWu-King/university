@@ -75,7 +75,8 @@
 }
 /*下拉页面结束*/
 .uploadlogo{
-	padding:20px;
+	/*padding:20px;*/
+	padding:0 2px;
 }
 .maincon{
 	padding:0 20px;
@@ -139,7 +140,7 @@
 }
 .maincon-page{
 	text-align:center;
-	padding-bottom:60px;
+	padding-bottom:20px;
 }
 .pagebtn1, .pagebtn2{
 	float:left;
@@ -172,7 +173,8 @@
 	display:inline-block
 }
 .fotter{
-	padding:40px 20px 20px 20px;
+	/*padding:40px 20px 20px 20px;*/
+	padding:40px 2px 0px 2px;
 	color:#555;
 }
 .submit{
@@ -361,4 +363,9 @@ table.MultiTextBox td.Label{
 	max-height:280px;
 	overflow-y:auto;
 	overflow-x:hidden;
+}
+.submitdesc{
+	text-align: center;
+    margin: 5px auto;
+    color: #ff0000;
 }

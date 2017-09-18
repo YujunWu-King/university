@@ -85,10 +85,10 @@ public class CreateQfTaskServiceImpl {
 				if(strTmpId != null && !"".equals(strTmpId)){
 					Map<String, Object> tmpMap= jdbcTemplate.queryForMap("select a.TZ_DYNAMIC_FLAG, a.TZ_WEBMAL_FLAG , a.TZ_EMLSERV_ID, a.TZ_EML_IF_PRT from PS_TZ_EMALTMPL_TBL a, PS_TZ_TMP_DEFN_TBL b where a.TZ_YMB_ID=b.TZ_YMB_ID and a.TZ_JG_ID=? and a.TZ_TMPL_ID=?",new Object[]{strJgId, strTmpId});
 					if(tmpMap != null && !"".equals(strTmpId)){
-						dynimicFlg = (String)map1.get("TZ_DYNAMIC_FLAG");
-						webmalFlg = (String)map1.get("TZ_WEBMAL_FLAG");
-						emlServId = (String)map1.get("TZ_EMLSERV_ID"); 
-						TZ_EML_IF_PRT = (String)map1.get("TZ_EML_IF_PRT");
+						dynimicFlg = (String)tmpMap.get("TZ_DYNAMIC_FLAG");
+						webmalFlg = (String)tmpMap.get("TZ_WEBMAL_FLAG");
+						emlServId = (String)tmpMap.get("TZ_EMLSERV_ID"); 
+						TZ_EML_IF_PRT = (String)tmpMap.get("TZ_EML_IF_PRT");
 					}
 					psTzDxyjfsrwTbl.setTzDynamicFlag(dynimicFlg);
 					psTzDxyjfsrwTbl.setTzEmlIfPrt(TZ_EML_IF_PRT);
@@ -114,7 +114,13 @@ public class CreateQfTaskServiceImpl {
 				}
 
 		        mailContent = mailContentHandlerServiceImpl.emailConPreprocess(strPicId, taskId);
-		        
+		        if(mailContent == null){
+		        	mailContent = "";
+		        }
+		        String serverHost = request.getScheme() + "://" + request.getServerName() + ":"
+						+ request.getServerPort();
+		        mailContent = mailContent.replace("<img src=\"/", "<img src=\"" + serverHost + "/");
+				
 		        psTzDxyjfsrwTbl.setTzMalContent(mailContent);
 			}else{
 				if("SMS".equals(taskType)){

@@ -97,7 +97,7 @@ public class ActivityReservationServiceImpl extends FrameworkImpl {
 			actContentTabsHtml = tzGDObject.getHTMLText("HTML.TZActivityEnrollmentBundle.TZ_ACT_BOOKING_HTML",
 					true,strActReservation,strActNotice,strActRegistered,strToReview);
 			// 展示页面;
-			actContentHtml = tzGDObject.getHTMLText("HTML.TZActivityEnrollmentBundle.TZ_ACT_CENTENT_HTML",
+			actContentHtml = tzGDObject.getHTMLTextForDollar("HTML.TZActivityEnrollmentBundle.TZ_ACT_CENTENT_HTML",
 					true,request.getContextPath(), ZSGL_URL, strCssDir, actContentTabsHtml, str_jg_id, strSiteId);
 			
 			actContentHtml = siteRepCssServiceImpl.repTitle(actContentHtml, strSiteId);

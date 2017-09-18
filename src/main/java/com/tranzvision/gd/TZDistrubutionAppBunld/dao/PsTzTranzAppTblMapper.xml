@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZDistrubutionAppBunld.dao.PsTzTranzAppTblMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZDistrubutionAppBunld.model.PsTzTranzAppTbl" >
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <id column="TZ_TRANZ_APPID" property="tzTranzAppid" jdbcType="VARCHAR" />
+    <result column="TZ_TRANZ_APPNAME" property="tzTranzAppname" jdbcType="VARCHAR" />
+    <result column="TZ_TRANZ_APPSECRET" property="tzTranzAppsecret" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZDistrubutionAppBunld.model.PsTzTranzAppTbl" extends="BaseResultMap" >
+    <result column="TZ_DESCR" property="tzDescr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_JG_ID, TZ_TRANZ_APPID, TZ_TRANZ_APPNAME, TZ_TRANZ_APPSECRET
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_DESCR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZDistrubutionAppBunld.model.PsTzTranzAppTblKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_TRANZ_APP_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TRANZ_APPID = #{tzTranzAppid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZDistrubutionAppBunld.model.PsTzTranzAppTblKey" >
+    delete from PS_TZ_TRANZ_APP_TBL
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TRANZ_APPID = #{tzTranzAppid,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZDistrubutionAppBunld.model.PsTzTranzAppTbl" >
+    insert into PS_TZ_TRANZ_APP_TBL (TZ_JG_ID, TZ_TRANZ_APPID, TZ_TRANZ_APPNAME, 
+      TZ_TRANZ_APPSECRET, TZ_DESCR)
+    values (#{tzJgId,jdbcType=VARCHAR}, #{tzTranzAppid,jdbcType=VARCHAR}, #{tzTranzAppname,jdbcType=VARCHAR}, 
+      #{tzTranzAppsecret,jdbcType=VARCHAR}, #{tzDescr,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZDistrubutionAppBunld.model.PsTzTranzAppTbl" >
+    insert into PS_TZ_TRANZ_APP_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzTranzAppid != null" >
+        TZ_TRANZ_APPID,
+      </if>
+      <if test="tzTranzAppname != null" >
+        TZ_TRANZ_APPNAME,
+      </if>
+      <if test="tzTranzAppsecret != null" >
+        TZ_TRANZ_APPSECRET,
+      </if>
+      <if test="tzDescr != null" >
+        TZ_DESCR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTranzAppid != null" >
+        #{tzTranzAppid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTranzAppname != null" >
+        #{tzTranzAppname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTranzAppsecret != null" >
+        #{tzTranzAppsecret,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr != null" >
+        #{tzDescr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZDistrubutionAppBunld.model.PsTzTranzAppTbl" >
+    update PS_TZ_TRANZ_APP_TBL
+    <set >
+      <if test="tzTranzAppname != null" >
+        TZ_TRANZ_APPNAME = #{tzTranzAppname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTranzAppsecret != null" >
+        TZ_TRANZ_APPSECRET = #{tzTranzAppsecret,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDescr != null" >
+        TZ_DESCR = #{tzDescr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TRANZ_APPID = #{tzTranzAppid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZDistrubutionAppBunld.model.PsTzTranzAppTbl" >
+    update PS_TZ_TRANZ_APP_TBL
+    set TZ_TRANZ_APPNAME = #{tzTranzAppname,jdbcType=VARCHAR},
+      TZ_TRANZ_APPSECRET = #{tzTranzAppsecret,jdbcType=VARCHAR},
+      TZ_DESCR = #{tzDescr,jdbcType=LONGVARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TRANZ_APPID = #{tzTranzAppid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZDistrubutionAppBunld.model.PsTzTranzAppTbl" >
+    update PS_TZ_TRANZ_APP_TBL
+    set TZ_TRANZ_APPNAME = #{tzTranzAppname,jdbcType=VARCHAR},
+      TZ_TRANZ_APPSECRET = #{tzTranzAppsecret,jdbcType=VARCHAR}
+    where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+      and TZ_TRANZ_APPID = #{tzTranzAppid,jdbcType=VARCHAR}
+  </update>
+</mapper>

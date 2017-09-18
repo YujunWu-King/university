@@ -9,6 +9,11 @@ var tzGeneralURL = "%bind(:1)";
 			    time: 2 //2秒后自动关闭
 			});	
 		}
+		
+		$("#More").click(function(){
+	         $(this).next(".others").toggle();
+
+	     });
 		function setTab(n,_this){
 			$(_this).parents("ul").find("li").removeClass("chose_on");
 			$(_this).addClass("chose_on");
@@ -16,37 +21,57 @@ var tzGeneralURL = "%bind(:1)";
 			for(i=0;i<menu.length;i++){
 		   		menu[i].className=i==n?"now2":""; 
 			} */
+			var countryCode=$("#TZ_SCH_COUNTRY",window.parent.document).val();
 			var $CountryCode = $("#TZ_SCH_CNAME_Country",window.parent.document).attr("ccode");
 			var title = $("#TZ_SCH_CNAME_Country",window.parent.document).val();
 			if($CountryCode==undefined||$CountryCode==null){
 				$CountryCode = ""; 
 			}
-			tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + $CountryCode + '"}}';
-						
-			$.ajax({
-				'url':tzGeneralURL, //服务器的地址
-				'data':{tzParams:tzByStateParams}, //参数
-				'dataType':'json', //返回数据类型
-				'type':'POST', //请求类型
-				'success':function(f){
-					var data = [];
-					if(f.state.errcode == "0"){
-						data = f.comContent;
-					}
-					console.log(data,data.length);
-					var $selectorList = $("#selectorList");
-					$selectorList.empty();
-					if(data.length>0){
-						$.each(data, function(index,term) {
-							//$('<div class="city_main_city2"><label for="radio" style="cursor:pointer;" onclick="setFanhui2(this);"><input type="radio" name="radio" ccode="'+term.country+'" value="'+ term.descr +'" onclick="setFanhui(this);" />'+term.descr+' ' +term.country+'</label></div>').appendTo($selectorList);							
-							$selectorList.append("<li school='" + term.schoolName + "' onclick='setFanhui2(this);'>" + term.schoolName + "</li>");
-						});
-					}else{
-						//console.log("不管用")
-						$selectorList.append("<li>当前国家下暂无学校列表</li>");
-					}
-			  	}
-			});
+ 			if($CountryCode=="CHN"||countryCode=="CHN"){
+				$("#provice_show").css("display","block");
+				var province=$(_this).html();
+				console.log(province);
+				if(n==1){
+					tzByStateParams='{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYPROVINCE","search-text":"' + $CountryCode + '","province":"北京"}}';				
+				}else{
+					
+					tzByStateParams='{"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYPROVINCE","search-text":"' + $CountryCode + '","province":"' + province + '"}}';
+				}
+				
+				
+			}
+			else{
+				tzByStateParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_SCHOOL_STD","OperateType":"EJSON","comParams":{"OType":"BYSCHOOL","search-text":"' + $CountryCode + '"}}';
+				
+			} 
+			
+				$.ajax({
+					'url':tzGeneralURL, //服务器的地址
+					'data':{tzParams:tzByStateParams}, //参数
+					'dataType':'json', //返回数据类型
+					'type':'POST', //请求类型
+					'success':function(f){
+						console.log(f);
+						var data = [];
+						if(f.state.errcode == "0"){
+							data = f.comContent;
+						}
+						console.log(data,data.length);
+						var $selectorList = $("#selectorList");
+						$selectorList.empty();
+						if(data.length>0){
+							$.each(data, function(index,term) {
+								//$('<div class="city_main_city2"><label for="radio" style="cursor:pointer;" onclick="setFanhui2(this);"><input type="radio" name="radio" ccode="'+term.country+'" value="'+ term.descr +'" onclick="setFanhui(this);" />'+term.descr+' ' +term.country+'</label></div>').appendTo($selectorList);							
+								$selectorList.append("<li school='" + term.schoolName + "' onclick='setFanhui2(this);'>" + term.schoolName + "</li>");
+							});
+						}else{
+							//console.log("不管用")
+							$selectorList.append("<li>当前国家下暂无学校列表</li>");
+						}
+				  	}
+				});				
+			
+			
 		}
 		//新增加返回按钮
 		
@@ -100,8 +125,11 @@ var tzGeneralURL = "%bind(:1)";
 			//设置返回值
 			var clickId = $("#ParamCon").val();
 			$("#" + clickId).val(school);
-			$("#TZ_SCH_CNAME_1").html(school);
-			$("#TZ_SCH_CNAME_1").css("color","#333");
+			console.log(clickId);
+			
+			
+			$("#TZ_SCH_CNAME").val(school);
+			$("#TZ_SCH_CNAME").css("color","#333");
 			console.log(school);
 			$("#" + clickId).html(school);
 			$("#" + clickId).css("color","#333");
@@ -167,6 +195,43 @@ var tzGeneralURL = "%bind(:1)";
 		style="width: 88%; border: 1px solid #ddd; border-radius: 5px; text-indent: 8px;">
 	<a href="javascript:void(0)" id="search" onclick="findData()"><i></i></a>
 </div>
+<div class="provice_show" id="provice_show" style="display:none;" ><ul class="chose_list" >
+			<li href="javascript:;" onclick="setTab(0,this);" >北京</li>
+			<li href="javascript:;" onclick="setTab(0,this);">江苏</li>
+			<li href="javascript:;" onclick="setTab(0,this);">天津</li>
+			<li href="javascript:;" onclick="setTab(0,this);">河北</li>
+		    <li href="javascript:;" onclick="setTab(0,this);">山西</li>
+		    <li href="javascript:;" onclick="setTab(0,this);">江西</li>
+            <li href="javascript:;" onclick="setTab(0,this);">福建</li>
+            <li href="javascript:;" onclick="setTab(0,this);">湖北</li>
+            <li href="javascript:;" onclick="setTab(0,this);">辽宁</li>
+            <li href="javascript:;" onclick="setTab(0,this);">吉林</li>           
+            <li href="javascript:;" onclick="setTab(0,this);">安徽</li>
+            <li href="javascript:;" onclick="setTab(0,this);">山东</li>
+            <li href="javascript:;" onclick="setTab(0,this);">上海</li>
+            <li href="javascript:;" onclick="setTab(0,this);">浙江</li>
+			<li id="More">更多</li>
+			<div class="others" style="display:none;">				 		            
+             <li href="javascript:;" onclick="setTab(0,this);">河南</li>          
+             <li href="javascript:;" onclick="setTab(0,this);">湖南</li>
+             <li href="javascript:;" onclick="setTab(0,this);">广东</li>
+             <li href="javascript:;" onclick="setTab(0,this);">广西</li>
+             <li href="javascript:;" onclick="setTab(0,this);">海南</li>
+             <li href="javascript:;" onclick="setTab(0,this);">重庆</li>
+             <li href="javascript:;" onclick="setTab(0,this);">四川</li>           
+             <li href="javascript:;" onclick="setTab(0,this);">贵州</li>
+             <li href="javascript:;" onclick="setTab(0,this);">云南</li>
+             <li href="javascript:;" onclick="setTab(0,this);">西藏</li>
+             <li href="javascript:;" onclick="setTab(0,this);">陕西</li>
+             <li href="javascript:;" onclick="setTab(0,this);">甘肃</li>
+             <li href="javascript:;" onclick="setTab(0,this);">宁夏</li>
+             <li href="javascript:;" onclick="setTab(0,this);">青海</li>
+             <li href="javascript:;" onclick="setTab(0,this);">新疆</li>
+             <li href="javascript:;" onclick="setTab(0,this);">黑龙江</li>
+             <li href="javascript:;" onclick="setTab(0,this);">内蒙古</li>
+			</div>   
+		</ul>
+		</div>
 <div class="pop_chose">全部地区</div>
 <ul id="selectorList" class="country_list"></ul>
 <div class="pop_chose">其他学校</div>
@@ -183,7 +248,7 @@ var tzGeneralURL = "%bind(:1)";
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		setTab(1);
+		setTab(1,this);
 		/* $("#search-text").focus(); */
 	})
 </script>

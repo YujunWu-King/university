@@ -263,8 +263,21 @@
 				
 				//grid.store.load();						
 			});
-			var tzStoreParams = '{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
-			grid.store.tzStoreParams = tzStoreParams;
+			
+			var queryID;
+			queryID = "1";
+			var grid1 = panel.down('grid[name=filterGrid]');
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			grid1.store.tzStoreParams = tzStoreParams1;
+			//grid1.store.load();
+			
+			queryID = "2";
+			var grid2 = panel.down('grid[name=dataSetGrid]');
+			var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			grid2.store.tzStoreParams = tzStoreParams2;
+			
+			//var tzStoreParams = '{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			//grid.store.tzStoreParams = tzStoreParams;
 		});
 		tab = contentPanel.add(cmp);     
 		
@@ -374,13 +387,25 @@
 				var formData = responseData.formData;
 				form.setValues(formData);
 				//页面注册信息列表数据
-				var roleList = responseData.listData;	
-
-				
-				//grid.store.load();						
+				var roleList = responseData.listData;		
 			});
+			var queryID;
+
+			queryID = "1";
+			var grid1 = panel.down('grid[name=filterGrid]');
+			var tzStoreParams1 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			grid1.store.tzStoreParams = tzStoreParams1;
+			//grid1.store.load();
+			
+			queryID = "2";
+			var grid2 = panel.down('grid[name=dataSetGrid]');
+			var tzStoreParams2 = '{"queryID":"' + queryID + '","ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
+			grid2.store.tzStoreParams = tzStoreParams2;
+			//grid2.store.load();	
+			/*
 			var tzStoreParams = '{"ComID":"'+ComID+'","PageID":"'+PageID+'","ViewMc":"'+ViewMc+'"}';
 			grid.store.tzStoreParams = tzStoreParams;
+			*/
 		});
 		
 		tab = contentPanel.add(cmp);     

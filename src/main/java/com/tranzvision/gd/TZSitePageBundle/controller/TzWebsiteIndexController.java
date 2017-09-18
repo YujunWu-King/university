@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZSitePageBundle.service.impl.TzWebsiteServiceImpl;
+import com.tranzvision.gd.TZMobileWebsiteIndexBundle.service.impl.MobileWebsiteIndexServiceImpl;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 
 /**
  * 网站首页展示
@@ -36,6 +38,9 @@ public class TzWebsiteIndexController {
 	@Autowired
 	private TZGDObject tzGDObject;
 
+	@Autowired
+	private MobileWebsiteIndexServiceImpl mobileWebsiteIndexServiceImpl;
+	
 	@RequestMapping(value = { "/{orgid}/{siteid}" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String websiteIndex(HttpServletRequest request, HttpServletResponse response,
@@ -43,27 +48,37 @@ public class TzWebsiteIndexController {
 
 		orgid = orgid.toLowerCase();
 		String strRet = "";
-
-		if (!tzWebsiteLoginServiceImpl.checkUserLogin(request, response)) {
-			String redirectUrl = request.getContextPath() + "/user/login/" + orgid + "/" + siteid;
-			try {
-				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzDoLoginRedirectScript", redirectUrl);
-			} catch (TzSystemException e) {
-				e.printStackTrace();
+		
+		if(CommonUtils.isMobile(request)){
+			String strParams = "{\"siteId\":\""+siteid+"\"}";
+			strRet = mobileWebsiteIndexServiceImpl.tzGetHtmlContent(strParams);
+		}else{
+			if(tzWebsiteLoginServiceImpl.checkUserLogin(request, response) == false)
+			{
+				tzWebsiteLoginServiceImpl.autoLoginByCookie(request, response);
 			}
-			return strRet;
-		}
 
-		strRet = tzWebsiteServiceImpl.getIndexPublishCode(request, orgid, siteid);
-
-		if ("errororg".equals(strRet)) {
-			String redirectUrl = request.getContextPath() + "/user/login/" + orgid + "/" + siteid;
-			try {
-				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzDoLoginRedirectScript", redirectUrl);
-			} catch (TzSystemException e) {
-				e.printStackTrace();
+			if(!tzWebsiteLoginServiceImpl.checkUserLogin(request, response)) {
+				String redirectUrl = request.getContextPath() + "/user/login/" + orgid + "/" + siteid;
+				try {
+					strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzDoLoginRedirectScript", redirectUrl);
+				} catch (TzSystemException e) {
+					e.printStackTrace();
+				}
+				return strRet;
 			}
-			return strRet;
+
+			strRet = tzWebsiteServiceImpl.getIndexPublishCode(request, orgid, siteid);
+
+			if ("errororg".equals(strRet)) {
+				String redirectUrl = request.getContextPath() + "/user/login/" + orgid + "/" + siteid;
+				try {
+					strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzDoLoginRedirectScript", redirectUrl);
+				} catch (TzSystemException e) {
+					e.printStackTrace();
+				}
+				return strRet;
+			}
 		}
 
 		return strRet;

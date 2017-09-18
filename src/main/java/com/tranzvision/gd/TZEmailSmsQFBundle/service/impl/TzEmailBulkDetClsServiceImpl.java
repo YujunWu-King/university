@@ -446,11 +446,13 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 		String strEmlQfId = ""; /* 群发任务id */
 		if (jacksonUtil.containsKey("emlQfId")) {
 			strEmlQfId = jacksonUtil.getString("emlQfId");
+			if(strEmlQfId == null || "".equals(strEmlQfId)){
+				return jacksonUtil.Map2json(mapRet);
+			}
 		} else {
 			return jacksonUtil.Map2json(mapRet);
 		}
-		
-		
+
 		// 邮件群发听众;
 		String strSql = "select A.TZ_AUDIENCE_ID,B.TZ_AUD_NAM from PS_TZ_DXYJQAUD_T A,PS_TZ_AUD_DEFN_T B WHERE A.TZ_AUDIENCE_ID=B.TZ_AUD_ID AND A.TZ_MLSM_QFPC_ID=?";
 		List<Map<String, Object>> audlist = jdbcTemplate.queryForList(strSql, new Object[] { strEmlQfId });
@@ -646,14 +648,24 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 	private String getEmlTmplInfo(String comParams, String[] errorMsg) {
 		// 返回值;
 		Map<String, Object> map = new HashMap<>();
-		map.put("emlSubj", "");
-		map.put("emlCont", "");
-		map.put("sender", "");
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		jacksonUtil.json2Map(comParams);
-		if (jacksonUtil.containsKey("emlTmpId")) {
+		if (jacksonUtil.containsKey("emlTmpId") && jacksonUtil.containsKey("emlQfId")) {
 			String tmpId = jacksonUtil.getString("emlTmpId");
+			String emlQfId = jacksonUtil.getString("emlQfId");
+			//如果没变则不返回数据;
+			if(emlQfId != null && !"".equals(emlQfId) && tmpId != null && !"".equals(tmpId)){
+				int existNum = jdbcTemplate.queryForObject("select COUNT(1) from PS_TZ_DXYJQF_DY_T WHERE TZ_MLSM_QFPC_ID=? AND TZ_TMPL_ID=?", new Object[]{emlQfId,tmpId},"Integer");
+				if(existNum > 0){
+					return jacksonUtil.Map2json(map);
+				}
+			}
+			
+			map.put("emlSubj", "");
+			map.put("emlCont", "");
+			map.put("sender", "");
+			
 			String strOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			Map<String, Object> emailMap = jdbcTemplate.queryForMap(
 					"SELECT B.TZ_EML_ADDR100, A.TZ_MAL_SUBJUECT,A.TZ_MAL_CONTENT FROM (SELECT * FROM PS_TZ_EMALTMPL_TBL  WHERE TZ_JG_ID=? AND TZ_TMPL_ID=?) A LEFT JOIN PS_TZ_EMLS_DEF_TBL B ON A.TZ_EMLSERV_ID=B.TZ_EMLSERV_ID",
@@ -1162,7 +1174,7 @@ public class TzEmailBulkDetClsServiceImpl extends FrameworkImpl {
 				ArrayList<String> audPersonidArr = new ArrayList<>();
 				for(int i = 0; i < audList.size(); i++){
 					String audiendeId = (String)audList.get(i).get("TZ_AUDIENCE_ID");
-					String sql = "select a.OPRID,b.TZ_ZY_EMAIL,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LKYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
+					String sql = "select a.OPRID,b.TZ_ZY_EMAIL,c.TZ_REALNAME FROM PS_TZ_AUD_LIST_T a, PS_TZ_LXFSINFO_TBL b,PS_TZ_AQ_YHXX_TBL c where a.TZ_LXFS_LY=b.TZ_LXFS_LY and a.TZ_LYDX_ID=b.TZ_LYDX_ID and a.OPRID=c.OPRID and a.TZ_AUD_ID=? and a.TZ_DXZT<>'N'";
 					List<Map<String, Object>> oprList = jdbcTemplate.queryForList(sql,new Object[]{audiendeId});
 					
 					if(oprList != null && oprList.size()>0){
