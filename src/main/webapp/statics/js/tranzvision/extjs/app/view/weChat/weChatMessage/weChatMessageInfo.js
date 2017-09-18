@@ -246,7 +246,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                     style:{
             							background: 'white',
             							boxShadow:'none',
-            							top:'170px'
+            							top:'165px'
             						},
                                     listeners:{ 
                                         click:function(bt, value, eOpts){ 
