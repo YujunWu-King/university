@@ -26,10 +26,14 @@ public class TzEventActCodeServiceImpl {
 		String strRet = "";
 
 		String xh = String.valueOf(getSeqNum.getSeqNum("TZ_NAUDLIST_T", "TZ_HD_QDM"));
+		//获取序号失败，直接返回“0”
+		if("0".equals(xh)){
+			return "0";
+		}
 
 		int telLength = tel.length();
 		if (telLength > 3) {
-			tel = tel.substring(telLength - 3, telLength - 1);
+			tel = tel.substring(telLength - 3, telLength);
 		}
 
 		strRet = xh + tel;
