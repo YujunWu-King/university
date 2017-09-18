@@ -215,7 +215,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 xtype: 'button',
                                 text: '<br><font color="#c0c0c0" size="8">+<br><span style="font-size:18px;">从素材库中选择</span></font>',
                                 name:'chooseScBtn',
-                                style:'background-color:white;border:2px dotted #d9dadc;height:200px;',
+                                style:'background-color:white;background-image: none !important;border:2px dotted #d9dadc;height:200px;',
                                 /*listeners:{
                                     click:function(bt, value, eOpts){
                                         ChoosePic(bt, value, eOpts);
@@ -286,7 +286,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMessageInfo', {
                                 xtype: 'button',
                                 text: '<br><font color="#c0c0c0" size="8">+<br><span style="font-size:18px;">从素材库中选择</span></font>',
                                 name:'chooseTwBtn',
-                                style:'background-color:white;border:2px dotted #d9dadc;height:200px;',
+                                style:'background-color:white;background-image: none !important;border:2px dotted #d9dadc;height:200px;',
                                 handler:'ChooseTw'
                                 /*listeners:{
                                     click:function(bt, value, eOpts){
