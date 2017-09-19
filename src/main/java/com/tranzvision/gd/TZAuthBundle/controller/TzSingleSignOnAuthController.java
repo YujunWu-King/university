@@ -103,7 +103,7 @@ public class TzSingleSignOnAuthController {
 			
 			//加密验证
 			String strSource = strApplicationId+strAppSecret+strUserName+strTicket;
-			String strEncryption = TzSingleSignOnAuthServiceImpl.encrypt("SHA256", strSource);
+			String strEncryption = TzSingleSignOnAuthServiceImpl.encrypt("SHA-256", strSource);
 			if(!strEncryption.equals(strAccessToken)){
 				request.setAttribute(strSsoAuthCode,TZ_AUTH_FAILURE);
 				return strErrorForward;
@@ -126,7 +126,7 @@ public class TzSingleSignOnAuthController {
 			return strErrorForward;
 		}
 		
-		return "redirect:/index";
+		return "redirect:/index?mode=no-inquire&model=content";
 	}
 
 
