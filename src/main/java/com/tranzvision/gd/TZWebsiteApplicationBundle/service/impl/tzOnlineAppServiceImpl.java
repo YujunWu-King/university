@@ -1198,6 +1198,10 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		// 新的班级编号
 		String strNewClassId = "";
 
+		
+		// 客户端是否移动设备访问
+		boolean isMobile = CommonUtils.isMobile(request);
+					
 		boolean chageClass = false;
 		// 报名表实例编号
 		String strAppInsId = "";
@@ -1678,7 +1682,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					time2 = System.currentTimeMillis();
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							strOtype, isPwd, strRefLetterId);
+							strOtype, isPwd, strRefLetterId,isMobile);
 					if ("".equals(strMsg)) {
 						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "submit",
 								strTplType);
@@ -1752,7 +1756,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 先保存数据
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							"SAVE", isPwd, strRefLetterId);
+							"SAVE", isPwd, strRefLetterId,isMobile);
 					// 模版级事件 JAVA 版本目前没有 注销掉
 					// String sqlGetModalEvents = "SELECT
 					// CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM
@@ -1825,7 +1829,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 先保存数据
 					strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId, strData,
 							strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId, strClassId, strPwd,
-							strOtype, isPwd, strRefLetterId);
+							strOtype, isPwd, strRefLetterId,isMobile);
 					// 模版级事件 JAVA 版本目前没有 注销掉
 					// String sqlGetModalEvents = "SELECT
 					// CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD FROM
