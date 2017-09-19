@@ -808,7 +808,7 @@ public class tzOnlineAppEngineImpl {
 	@SuppressWarnings("unchecked")
 	public String saveAppForm(String strTplId, Long numAppInsId, String strClassId, String strAppOprId,
 			String strJsonData, String strTplType, String strIsGuest, String strAppInsVersion, String strAppInsState,
-			String strBathId, String newClassId, String pwd, String strOtype, String isPwd, String strTjxId) {
+			String strBathId, String newClassId, String pwd, String strOtype, String isPwd, String strTjxId,Boolean isMobile) {
 
 		String returnMsg = "";
 
@@ -821,6 +821,12 @@ public class tzOnlineAppEngineImpl {
 			String INS_ID = null;
 			boolean chageClass = false;
 
+			String clientType="";
+			if(isMobile){
+				clientType="M";
+			}else{
+				clientType="P";
+			}
 			if (newClassId != null && !newClassId.equals(strClassId)) {
 				chageClass = true;
 			}
@@ -863,7 +869,7 @@ public class tzOnlineAppEngineImpl {
 				psTzAppInsT.setTzAppinsJsonStr(strJsonData);
 				psTzAppInsT.setRowLastmantOprid(oprid);
 				psTzAppInsT.setRowLastmantDttm(new Date());
-
+				psTzAppInsT.setTzAppSubMed(clientType);
 				if (isPwd != null && isPwd.equals("Y")) {
 					psTzAppInsT.setTzPwd(pwd);
 				}
@@ -886,6 +892,7 @@ public class tzOnlineAppEngineImpl {
 				if (isPwd != null && isPwd.equals("Y")) {
 					psTzAppInsT.setTzPwd(pwd);
 				}
+				psTzAppInsT.setTzAppCreMed(clientType);
 				psTzAppInsTMapper.insert(psTzAppInsT);
 			}
 

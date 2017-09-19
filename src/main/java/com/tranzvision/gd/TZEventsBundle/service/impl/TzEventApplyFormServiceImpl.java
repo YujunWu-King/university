@@ -391,122 +391,124 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 					}
 					
 					if(isInAud){
-						String mobileRept = "";
-						String emailRept = "";
-						if ("".equals(oprid)) {
-							// 未登录
-							// 判断是否重复报名
-							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckNotLoginBmrEmail");
-							isRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email }, "String");
-							if ("Y".equals(isRept)) {
-								reptDesc = emailError;
-							} else if (null != str_bmr_phone && !"".equals(str_bmr_phone)) {
-								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckNotLoginBmrMobile");
-								mobileRept = sqlQuery.queryForObject(sql,
-										new Object[] { strApplyId, str_bmr_phone, str_bmr_email }, "String");
-							}
-		
-						} else {
-							// 已登录
-							// 判断是否重复报名
-							sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrOprid");
-							isRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, oprid }, "String");
-		
-							if ("Y".equals(isRept)) {
-								reptDesc = applyError;
-							} else {
-		
-								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrEmailByOprid");
-								emailRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email, oprid },
-										"String");
-		
-								if (null != str_bmr_phone && !"".equals(str_bmr_phone)) {
-									sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrMobileByOprid");
-									mobileRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_phone, oprid },
-											"String");
-								}
-		
-							}
-		
+						
+						/* 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数 */
+						//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
+						if(registrationLockCounter.getQueueLength() >= 10 || registrationLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+						{
+							throw new Exception("系统忙，请稍候再试。");
 						}
-		
-						if ("Y".equals(isRept)) {
-							// 重复报名
-							strResult = "1";
-							strResultMsg = reptDesc;
-						} else if ("Y".equals(emailRept)) {
-							// 邮箱重复
-							strResult = "1";
-							strResultMsg = emailError;
-						} else if ("Y".equals(mobileRept)) {
-							// 手机重复
-							strResult = "1";
-							strResultMsg = mobileError;
-						} else {
-							sql = "select TZ_XWS from PS_TZ_ART_HD_TBL where TZ_ART_ID=?";
-							int num_seats = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
-		
-							// 当前报名人是否曾经报名过，但被撤销报名
-							int createOrupdate = 1;
-							if ("".equals(oprid)) {
-								// 未登录
-								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventNotLoginBmrId");
-								strBmrId = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email }, "String");
-							} else {
-								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventLoginBmrId");
-								strBmrId = sqlQuery.queryForObject(sql, new Object[] { strApplyId, oprid }, "String");
-							}
-		
-							if ("".equals(strBmrId) || null == strBmrId) {
-								strBmrId = String.valueOf(getSeqNum.getSeqNum("TZ_LXFSINFO_TBL", "TZ_LYDX_ID"));
-								createOrupdate = 0;
-							}
-		
-							/* 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数 */
-							//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
-							if(registrationLockCounter.getQueueLength() >= 10 || registrationLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+						
+						Semaphore tmpSemaphore = null;
+						boolean isLocked = false;
+						boolean hasTmpSemaphore = false;
+						try{
+							//获取当前活动对应的信号灯
+							Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore("com.tranzvision.gd.TZEventsBundle.service.impl.TzEventApplyFormServiceImpl-20170717", strApplyId);
+							
+							if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
 							{
+								//如果返回的信号灯为空，报系统忙，请稍后再试
 								throw new Exception("系统忙，请稍候再试。");
+							}else{
+								tmpSemaphore = tmpSemaphoreObject.getValue();
+								
+								//获取的信号灯
+								tmpSemaphore.acquire();
+								
+								hasTmpSemaphore = true;
 							}
 							
-							Semaphore tmpSemaphore = null;
-							boolean isLocked = false;
-							boolean hasTmpSemaphore = false;
-							try{
-								//获取当前面试时间段对应的信号灯
-								Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGDObject.getSemaphore("com.tranzvision.gd.TZEventsBundle.service.impl.TzEventApplyFormServiceImpl-20170717", strApplyId);
+							//利用主键冲突异常来控制同一时刻只能有一个人活动报名
+							try
+							{
+								TzRecord lockRecord = tzGDObject.createRecord("PS_TZ_HDBM_LOCK_TBL");
+								lockRecord.setColumnValue("TZ_HD_ID", strApplyId);
+								lockRecord.setColumnValue("OPRID", oprid);
 								
-								if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
-								{
-									//如果返回的信号灯为空，报系统忙，请稍后再试
-									throw new Exception("系统忙，请稍候再试。");
+								if(lockRecord.insert() == false){
+									throw new TzException("系统忙，请稍候再试。");
 								}else{
-									tmpSemaphore = tmpSemaphoreObject.getValue();
-									
-									//获取的信号灯
-									tmpSemaphore.acquire();
-									
-									hasTmpSemaphore = true;
+									isLocked = true;
 								}
-								
-								//利用主键冲突异常来控制同一时刻只能有一个人来预约某个时间段
-								try
-								{
-									TzRecord lockRecord = tzGDObject.createRecord("PS_TZ_HDBM_LOCK_TBL");
-									lockRecord.setColumnValue("TZ_HD_ID", strApplyId);
-									lockRecord.setColumnValue("OPRID", oprid);
-									
-									if(lockRecord.insert() == false){
-										throw new TzException("系统忙，请稍候再试。");
-									}else{
-										isLocked = true;
+							}
+							catch(Exception e)
+							{
+								 throw new TzException("系统忙，请稍候再试。");
+							}
+						
+							
+							String mobileRept = "";
+							String emailRept = "";
+							if ("".equals(oprid)) {
+								// 未登录
+								// 判断是否重复报名
+								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckNotLoginBmrEmail");
+								isRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email }, "String");
+								if ("Y".equals(isRept)) {
+									reptDesc = emailError;
+								} else if (null != str_bmr_phone && !"".equals(str_bmr_phone)) {
+									sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckNotLoginBmrMobile");
+									mobileRept = sqlQuery.queryForObject(sql,new Object[] { strApplyId, str_bmr_phone, str_bmr_email }, "String");
+								}
+			
+							} else {
+								// 已登录
+								// 判断是否重复报名
+								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrOprid");
+								isRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, oprid }, "String");
+			
+								if ("Y".equals(isRept)) {
+									reptDesc = applyError;
+								} else {
+									sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrEmailByOprid");
+									emailRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email, oprid },"String");
+			
+									if (null != str_bmr_phone && !"".equals(str_bmr_phone)) {
+										sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzCheckBmrMobileByOprid");
+										mobileRept = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_phone, oprid },"String");
 									}
 								}
-								catch(Exception e)
-								{
-									 throw new TzException("系统忙，请稍候再试。");
+							}
+			
+							if ("Y".equals(isRept)) {
+								// 重复报名
+								strResult = "1";
+								strResultMsg = reptDesc;
+							} else if ("Y".equals(emailRept)) {
+								// 邮箱重复
+								strResult = "1";
+								strResultMsg = emailError;
+							} else if ("Y".equals(mobileRept)) {
+								// 手机重复
+								strResult = "1";
+								strResultMsg = mobileError;
+							} else {
+								sql = "select TZ_XWS from PS_TZ_ART_HD_TBL where TZ_ART_ID=?";
+								int num_seats = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
+			
+								// 当前报名人是否曾经报名过，但被撤销报名
+								int createOrupdate = 1;
+								if ("".equals(oprid)) {
+									// 未登录
+									sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventNotLoginBmrId");
+									strBmrId = sqlQuery.queryForObject(sql, new Object[] { strApplyId, str_bmr_email }, "String");
+								} else {
+									sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventLoginBmrId");
+									strBmrId = sqlQuery.queryForObject(sql, new Object[] { strApplyId, oprid }, "String");
 								}
-								
+			
+								if ("".equals(strBmrId) || null == strBmrId) {
+									strBmrId = String.valueOf(getSeqNum.getSeqNum("TZ_LXFSINFO_TBL", "TZ_LYDX_ID"));
+									
+									//如果strBmrId=0,获取报名人编号失败
+									if("0".equals(strBmrId)){
+										throw new Exception("系统忙，请稍候再试。");
+									}
+									createOrupdate = 0;
+								}
+		
+							
 								// 已报名数
 								sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAppliedNum");
 								int num_apply = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
@@ -613,6 +615,10 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 			
 								// 生成活动签到码
 								String act_qd_id = tzEventActCodeServiceImpl.generateActCode(strApplyId,psTzLxfsinfoTbl.getTzZySj());
+								if("0".equals(act_qd_id)){
+									//生成签到码失败
+									throw new Exception("系统忙，请稍候再试。");
+								}
 								psTzNaudlistT.setTzHdQdm(act_qd_id);
 			
 								/* 席位数为0表示不限制人数 */
@@ -635,21 +641,21 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 									psTzNaudlistTMapper.updateByPrimaryKeySelective(psTzNaudlistT);
 									psTzLxfsinfoTblMapper.updateByPrimaryKeySelective(psTzLxfsinfoTbl);
 								}
-							}catch(Exception e){
-								strResult = "1";
-								strResultMsg = "系统忙，请稍候再试。";
-							}finally {
-								if(isLocked){
-									//报名完成后删除插入PS_TZ_HDBM_LOCK_TBL中的数据
-									sqlQuery.update("delete from PS_TZ_HDBM_LOCK_TBL where TZ_HD_ID=?", new Object[]{ strApplyId });
-								}
-								
-								if(hasTmpSemaphore){
-									tmpSemaphore.release();
-								}
-								
-								registrationLockCounter.release();
 							}
+						}catch(Exception e){
+							strResult = "1";
+							strResultMsg = "系统忙，请稍候再试。";
+						}finally {
+							if(isLocked){
+								//报名完成后删除插入PS_TZ_HDBM_LOCK_TBL中的数据
+								sqlQuery.update("delete from PS_TZ_HDBM_LOCK_TBL where TZ_HD_ID=?", new Object[]{ strApplyId });
+							}
+							
+							if(hasTmpSemaphore){
+								tmpSemaphore.release();
+							}
+							
+							registrationLockCounter.release();
 						}
 						
 						//报名成功发送站内信

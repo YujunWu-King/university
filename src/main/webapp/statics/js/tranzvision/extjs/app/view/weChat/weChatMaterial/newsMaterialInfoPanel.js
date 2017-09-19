@@ -204,7 +204,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
                             text: '<font color="#c0c0c0" size="8" style="display: block;">+</font>',
                             name:'addArticesBtn',
                             height: 50,
-                            style:'background-color:white;border: 1px dotted #d9dadc;margin-top:6px;',
+                            style:'background-color:white;background-image: none !important;border: 1px dotted #d9dadc;margin-top:6px;',
                             handler: function(btn){
                             	var articesView = btn.findParentByType('panel').child('dataview');
                             	var articesViewStore = articesView.getStore();
@@ -334,7 +334,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
 	                		xtype: 'button',
                             text: '<span style="font-size:14px;">选择封面图片</span>',
                             name:'chooseScBtn',
-                            style:'background-color:green;height:40px;',
+                            style:'background-color:green;background-image: none !important;height:40px;',
                             width: 160,
                             handler:'chooseCoverPic'
 	                	},{
