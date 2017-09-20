@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by WangDi on 2017/4/7.
@@ -142,50 +145,70 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
     @Override
 	/* 删除进程实例 */
     public String tzDelete(String[] actData, String[] errMsg) {
+    	
         String strRet = "";
         JacksonUtil jacksonUtil = new JacksonUtil();
+        List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
+        Set<Boolean> set = new HashSet<Boolean>();
         boolean flag = true;
+        set.add(flag);
 
-            int num = 0;
-
-            for(num = 0; num < actData.length; num++) {
-            	String strForm = actData[num];
-            	jacksonUtil.json2Map(strForm);
-            	String orgId = jacksonUtil.getString("orgId");
-            	String sqlStatus = "";
-            	String processInstance = jacksonUtil.getString("processInstance");
-            	String processInstanceSql = "SELECT TZ_JOB_YXZT FROM TZ_JC_SHLI_T WHERE TZ_JG_ID = ? AND TZ_JCSL_ID = ?";
-            	Map<String,Object> processInstanceMap = jdbcTemplate.queryForMap(processInstanceSql, new String[] {orgId,processInstance});
-            	if(processInstanceMap != null) {
-            		
-            		sqlStatus = String.valueOf(processInstanceMap.get("TZ_JOB_YXZT"));
-            	}
+        for(int i = 0; i < actData.length; i++) {
             	
-            	if("STARTED".equals(sqlStatus)||"RUNNING".equals(sqlStatus)||"STOPPING".equals(sqlStatus)) {
-            		flag = false;
-            		break;
-            	}
-            }
+        	Map<String,Object> map = new HashMap<String,Object>();
+        	String strForm = actData[i];
+        	jacksonUtil.json2Map(strForm);
+        	
+        	String orgId = jacksonUtil.getString("orgId");
+        	String sqlStatus = "";
+        	String processInstance = jacksonUtil.getString("processInstance");
+        	String processInstanceSql = "SELECT TZ_JOB_YXZT FROM TZ_JC_SHLI_T WHERE TZ_JG_ID = ? AND TZ_JCSL_ID = ?";
+            Map<String,Object> processInstanceMap = jdbcTemplate.queryForMap(processInstanceSql, new String[] {orgId,processInstance});
             
-            if(flag) {
-                for (num = 0; num < actData.length; num++) {
-                    // 表单内容;
-                    String strForm = actData[num];
-                    // 将字符串转换成json;
-                    jacksonUtil.json2Map(strForm);
-
-                    // 信息内容;
-                    String orgId = jacksonUtil.getString("orgId");
-                    String processInstance = jacksonUtil.getString("processInstance");
-                    TzProcessInstanceKey tzProcessInstanceKey  = new TzProcessInstanceKey ();
-                    tzProcessInstanceKey.setTzJgId(orgId);
-                    tzProcessInstanceKey.setTzJcslId(Integer.parseInt(processInstance));
-                    tzProcessInstanceMapper.deleteByPrimaryKey(tzProcessInstanceKey);
+            if(processInstanceMap != null) {
+            		
+            	sqlStatus = String.valueOf(processInstanceMap.get("TZ_JOB_YXZT"));
+            		
+                if("STARTED".equals(sqlStatus)||"RUNNING".equals(sqlStatus)||"STOPPING".equals(sqlStatus)) {
+                	flag = false;
+                	set.add(flag);
+                }else {
+                		
+                	map.put("orgId", orgId);
+                	map.put("processInstance", processInstance);
+                	resultList.add(map);
                 }
-                return strRet;
             }else {
             	
+            	map.put("orgId", orgId);
+            	map.put("processInstance", processInstance);
+            	resultList.add(map);
+            }
+            	
+
+        }
+            
+            for (int j = 0; j < resultList.size(); j++) {
+
+                //删除可以删除的实例
+            	String orgId = resultList.get(j).get("orgId").toString();
+            	String processInstance = resultList.get(j).get("processInstance").toString();
+                TzProcessInstanceKey tzProcessInstanceKey  = new TzProcessInstanceKey ();
+                tzProcessInstanceKey.setTzJgId(orgId);
+                tzProcessInstanceKey.setTzJcslId(Integer.parseInt(processInstance));
+                tzProcessInstanceMapper.deleteByPrimaryKey(tzProcessInstanceKey);
+            }
+            
+
+            /*全部删除和部分删除返回状态*/
+
+            if(set.contains(false)) {
+
             	return "{\"status\":\"failed\"}";
+            }else {
+            	
+            	
+            	return strRet;
             }
 
         
@@ -223,6 +246,9 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
                     tzProcessInstance.setTzJobYxzt("QUENED");
                     tzProcessInstanceMapper.updateByPrimaryKeySelective(tzProcessInstance);
                 	
+            	}else if("QUENED".equals(sqlStatus)){
+            		
+            		return "{\"status\":\"open\"}";
             	}else {
             		
             		return "{\"status\":\"startfailed\"}";
@@ -240,14 +266,18 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
             
         } else{
         	
-        		if("STARTED".equals(sqlStatus)||"RUNNING".equals(sqlStatus)) {
+        		if("STARTED".equals(sqlStatus)||"RUNNING".equals(sqlStatus)||"TERMINATED".equals(sqlStatus)) {
+        			
                     jacksonUtil.json2Map(comParams);
                     TzProcessInstance tzProcessInstance = new TzProcessInstance();
                     tzProcessInstance.setTzJgId(orgId);
                     tzProcessInstance.setTzJcslId(Integer.parseInt(processInstance));
                     tzProcessInstance.setTzJobYxzt("TERMINATED");
                     tzProcessInstanceMapper.updateByPrimaryKeySelective(tzProcessInstance);
-        		}else {
+        		}else if("TERMINATED".equals(sqlStatus)){
+        			
+        			return "{\"status\":\"close\"}";
+        		}else{
         			return "{\"status\":\"failed\"}";
         		}
 

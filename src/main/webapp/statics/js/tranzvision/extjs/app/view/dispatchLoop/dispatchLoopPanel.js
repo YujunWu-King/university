@@ -472,7 +472,26 @@
                             { Name: 9, Value: 9  },
                             { Name: 10, Value: 10  },
                             { Name: 11, Value: 11  },
-                            { Name: 12, Value: 12  }
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13 },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25  },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 27  },
+                            { Name: 28, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  }
                         ]
                     })
                 },{
@@ -501,7 +520,26 @@
                             { Name: 9, Value: 9  },
                             { Name: 10, Value: 10  },
                             { Name: 11, Value: 11  },
-                            { Name: 12, Value: 12  }
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13 },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25  },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 27  },
+                            { Name: 28, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  }
                         ]
                     })
                 }]
@@ -588,7 +626,26 @@
                             { Name: 9, Value: 9  },
                             { Name: 10, Value: 10  },
                             { Name: 11, Value: 11  },
-                            { Name: 12, Value: 12  }
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13 },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25  },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 27  },
+                            { Name: 28, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  }
                         ]
                     })
                 }]
@@ -630,13 +687,14 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '周一', Value: 1 },
-                            { Name: '周二', Value: 2  },
-                            { Name: '周三', Value: 3  },
-                            { Name: '周四', Value: 4  },
-                            { Name: '周五', Value: 5  },
-                            { Name: '周六', Value: 6  },
-                            { Name: '周日', Value: 7  }
+                        	{ Name: '周日', Value: 1  },
+                            { Name: '周一', Value: 2  },
+                            { Name: '周二', Value: 3  },
+                            { Name: '周三', Value: 4  },
+                            { Name: '周四', Value: 5  },
+                            { Name: '周五', Value: 6  },
+                            { Name: '周六', Value: 7  },
+                            
                         ]
                     })
                 },{
@@ -654,13 +712,14 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '周一', Value: 1 },
-                            { Name: '周二', Value: 2  },
-                            { Name: '周三', Value: 3  },
-                            { Name: '周四', Value: 4  },
-                            { Name: '周五', Value: 5  },
-                            { Name: '周六', Value: 6  },
-                            { Name: '周日', Value: 7  }
+                        	{ Name: '周日', Value: 1  },
+                            { Name: '周一', Value: 2  },
+                            { Name: '周二', Value: 3  },
+                            { Name: '周三', Value: 4  },
+                            { Name: '周四', Value: 5  },
+                            { Name: '周五', Value: 6  },
+                            { Name: '周六', Value: 7  }
+                            
                         ]
                     })
                 }]
@@ -711,7 +770,7 @@
                 inputValue: '13',
                 id:'weekSix',
                 style:'margin-top:10px;margin-left:50px',
-                boxLabel: "每周最后一个周几"
+                boxLabel: "每月最后一个周几"
             },{
                 style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
@@ -730,13 +789,14 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '周一', Value: 1 },
-                            { Name: '周二', Value: 2  },
-                            { Name: '周三', Value: 3  },
-                            { Name: '周四', Value: 4  },
-                            { Name: '周五', Value: 5  },
-                            { Name: '周六', Value: 6  },
-                            { Name: '周日', Value: 7  }
+                        	{ Name: '周日', Value: 1  },
+                            { Name: '周一', Value: 2  },
+                            { Name: '周二', Value: 3  },
+                            { Name: '周三', Value: 4  },
+                            { Name: '周四', Value: 5  },
+                            { Name: '周五', Value: 6  },
+                            { Name: '周六', Value: 7  }
+                            
                         ]
                     })
                 }]
@@ -765,7 +825,7 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '第一周', Value: 1 },
+                            { Name: '第一周', Value: 1  },
                             { Name: '第二周', Value: 2  },
                             { Name: '第三周', Value: 3  },
                             { Name: '第四周', Value: 4  }
@@ -786,13 +846,14 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '周一', Value: 1 },
-                            { Name: '周二', Value: 2  },
-                            { Name: '周三', Value: 3  },
-                            { Name: '周四', Value: 4  },
-                            { Name: '周五', Value: 5  },
-                            { Name: '周六', Value: 6  },
-                            { Name: '周日', Value: 7  }
+                        	{ Name: '周日', Value: 1  },
+                            { Name: '周一', Value: 2 },
+                            { Name: '周二', Value: 3  },
+                            { Name: '周三', Value: 4 },
+                            { Name: '周四', Value: 5  },
+                            { Name: '周五', Value: 6  },
+                            { Name: '周六', Value: 7  },
+                            
                         ]
                     })
                 }]
@@ -860,6 +921,7 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
+                        	{ Name: 0, Value: 0 },
                             { Name: 1, Value: 1 },
                             { Name: 2, Value: 2  },
                             { Name: 3, Value: 3  },
@@ -882,8 +944,7 @@
                             { Name: 20, Value: 20  },
                             { Name: 21, Value: 21  },
                             { Name: 22, Value: 22  },
-                            { Name: 23, Value: 23  },
-                            { Name: 24, Value: 24  }
+                            { Name: 23, Value: 23  }
                         ]
                     })
                 },{
@@ -901,6 +962,7 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
+                        	{ Name: 0, Value: 0 },
                             { Name: 1, Value: 1 },
                             { Name: 2, Value: 2  },
                             { Name: 3, Value: 3  },
@@ -923,8 +985,7 @@
                             { Name: 20, Value: 20  },
                             { Name: 21, Value: 21  },
                             { Name: 22, Value: 22  },
-                            { Name: 23, Value: 23  },
-                            { Name: 24, Value: 24  }
+                            { Name: 23, Value: 23  }
                         ]
                     })
                 }]
@@ -1180,7 +1241,7 @@
                 items:[{
                     xtype: 'textfield',
                     columnWidth:.45,
-                    name:'listMinute',
+                    name:'minuteList',
                     emptyText: "格式：N1,N2,…  取值范围：0-59  例如：0,1,2,3"
                 }]
             },{
