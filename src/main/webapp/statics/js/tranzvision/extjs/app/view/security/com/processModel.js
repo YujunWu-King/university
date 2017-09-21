@@ -4,6 +4,7 @@ Ext.define('KitchenSink.view.security.com.processModel', {
         {name: 'orgId'},
         {name: 'processName'},
         {name: 'processDesc'},
-        {name: 'platformType'}
+        {name: 'platformType'},
+        {name: 'isDispatch',type:'boolean'}
 	]
 });
