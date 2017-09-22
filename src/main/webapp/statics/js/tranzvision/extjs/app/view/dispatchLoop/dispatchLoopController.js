@@ -632,6 +632,7 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			params.weekFlag = '? '
 		}else if(params.day1Check == '2'){
 			
+			this.getView().down('tabpanel').down('form[name=dayForm]').getForm().findField("day1List").setValue('');
 			this.getView().down('tabpanel').down('form[name=dayForm]').getForm().findField("day1LoopInterval").setValue('');
 			this.getView().down('tabpanel').down('form[name=dayForm]').getForm().findField("beginDate1").setValue('');
 			this.getView().down('tabpanel').down('form[name=dayForm]').getForm().findField("beginDay2").setValue('');
@@ -932,26 +933,6 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		params.loopName = formParams["loopName"];
 		params.loopDesc = formParams["loopDesc"];
 		params.status = formParams["status"];
-		
-		//周、日
-		params.beginDay1 = dayForm["beginDay1"];
-		params.endDay1 = dayForm["endDay1"];
-		params.day1List = dayForm["day1List"];
-		params.day1LoopInterval = dayForm["day1LoopInterval"];
-		params.beginDate1 = dayForm["beginDate1"];
-		params.beginDay2 = dayForm["beginDay2"];
-		params.endDay2 = dayForm["endDay2"];
-		params.day2List = dayForm["day2List"];
-		params.day2LoopInterval = dayForm["day2LoopInterval"];
-		params.appointedDate1 = dayForm["appointedDate1"];
-		params.appointedWeek = dayForm["appointedWeek"];
-		params.appointedDate2 = dayForm["appointedDate2"];
-		
-		//时
-		params.beginHour = hourForm["beginHour"];
-		params.endHour = hourForm["endHour"];
-		params.hourList = hourForm["hourList"];
-		params.hourLoopInterval = hourForm["hourLoopInterval"];
 		
 		//自定义
 		params.customSecond = customForm["customSecond"];
