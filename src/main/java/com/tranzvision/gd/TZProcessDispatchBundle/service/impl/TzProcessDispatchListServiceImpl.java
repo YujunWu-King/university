@@ -133,53 +133,11 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 jacksonUtil.json2Map(strForm);
                 // 信息内容;
                 String orgId = jacksonUtil.getString("orgId");
-                String user = jacksonUtil.getString("user");
                 String jcName = jacksonUtil.getString("jcName");
-                String processName = jacksonUtil.getString("processName");
                 String runCntlId = jacksonUtil.getString("runCntlId") == null?"":jacksonUtil.getString("runCntlId");
-                String cycleExpression = jacksonUtil.getString("cycleExpression") == null?"":jacksonUtil.getString("cycleExpression");
-                
-                TzProcessInstance tzProcessInstance = new TzProcessInstance();
-                tzProcessInstance.setTzJgId(orgId);
-                tzProcessInstance.setTzDlzhId(user);
-                tzProcessInstance.setTzJcslId(new Random().nextInt(899999999));
-                tzProcessInstance.setTzYunxKzid(runCntlId);
-                tzProcessInstance.setTzJcMc(jcName);
-                tzProcessInstance.setTzJcfwqMc(processName);
-                tzProcessInstance.setTzXhQzbds(cycleExpression);
-                
-                //日期类型处理
-                Date runStartDate = new Date();
-                String dateTime = "";
-                SimpleDateFormat datetimeFormate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
-                
-                if(jacksonUtil.getString("requestDate") != null && jacksonUtil.getString("requestTime") != null){
-                	dateTime = jacksonUtil.getString("requestDate") + jacksonUtil.getString("requestTime");
-                    runStartDate = datetimeFormate.parse(dateTime);
-                    tzProcessInstance.setTzQqcjDttm(runStartDate);
-                }
-                
-                if(jacksonUtil.getString("runDate") != null && jacksonUtil.getString("runTime") != null){
-                    dateTime = jacksonUtil.getString("runDate") + jacksonUtil.getString("runTime");
-                    runStartDate = datetimeFormate.parse(dateTime);
-                    tzProcessInstance.setTzJhzxDttm(runStartDate);
-                }
-                	
-                if(jacksonUtil.getString("processStartDate") != null && jacksonUtil.getString("processStartTime") != null){
-                    dateTime = jacksonUtil.getString("processStartDate") + jacksonUtil.getString("processStartTime");
-                    runStartDate = datetimeFormate.parse(dateTime);
-                    tzProcessInstance.setTzJcksDttm(runStartDate);
-                }
-                
-                if(jacksonUtil.getString("processEndDate") != null && jacksonUtil.getString("processEndTime") != null){
-                    dateTime = jacksonUtil.getString("processEndDate") + jacksonUtil.getString("processEndTime");
-                    runStartDate = datetimeFormate.parse(dateTime);
-                    tzProcessInstance.setTzJcjsDttm(runStartDate);;
-                }
-                
-                tzProcessInstanceMapper.insertSelective(tzProcessInstance);
         		String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-				BaseEngine tmpEngine = tzSQLObject.createEngineProcess(orgId, "TZGD_DR_POST_AE");
+        		
+				BaseEngine tmpEngine = tzSQLObject.createEngineProcess(orgId, jcName);
 		    	EngineParameters schdProcessParameters = new EngineParameters();
 		    	schdProcessParameters.setBatchServer("");
 		    	schdProcessParameters.setCycleExpression("");

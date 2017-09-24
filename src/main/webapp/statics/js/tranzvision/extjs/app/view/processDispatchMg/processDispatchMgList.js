@@ -67,7 +67,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchMgList', {
                 flex: 1,
                 xtype: 'actioncolumn',
                 items: [
-                    {icon: 'statics/images/tranzvision/start.png', tooltip: '打开进程调度', handler: 'openProcessBL'}
+                    {icon: 'statics/images/tranzvision/start.png', tooltip: '开启进程实例', handler: 'openProcessBL'}
                 ]
             }],
             store: store,

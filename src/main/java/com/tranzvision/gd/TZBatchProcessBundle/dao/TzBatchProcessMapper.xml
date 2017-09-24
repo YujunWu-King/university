@@ -13,10 +13,11 @@
     <result column="TZ_TJSJ" property="tzTjsj" jdbcType="TIMESTAMP" />
     <result column="TZ_ZHXGR" property="tzZhxgr" jdbcType="VARCHAR" />
     <result column="TZ_ZHXGSJ" property="tzZhxgsj" jdbcType="TIMESTAMP" />
+    <result column="TZ_IS_DISPATCH" property="tzIsDispatch" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_JG_ID, TZ_JC_MC, TZ_JC_MS, TZ_YXPT_LX, TZ_BEIZHU, TZ_ZCZJ_ID, TZ_JAVA_CLASS, TZ_TJR, 
-    TZ_TJSJ, TZ_ZHXGR, TZ_ZHXGSJ
+    TZ_TJSJ, TZ_ZHXGR, TZ_ZHXGSJ, TZ_IS_DISPATCH
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZBatchProcessBundle.model.TzBatchProcessKey" >
     select 
@@ -34,11 +35,13 @@
     insert into TZ_JINC_DY_T (TZ_JG_ID, TZ_JC_MC, TZ_JC_MS, 
       TZ_YXPT_LX, TZ_BEIZHU, TZ_ZCZJ_ID, 
       TZ_JAVA_CLASS, TZ_TJR, TZ_TJSJ, 
-      TZ_ZHXGR, TZ_ZHXGSJ)
+      TZ_ZHXGR, TZ_ZHXGSJ, TZ_IS_DISPATCH
+      )
     values (#{tzJgId,jdbcType=VARCHAR}, #{tzJcMc,jdbcType=VARCHAR}, #{tzJcMs,jdbcType=VARCHAR}, 
       #{tzYxptLx,jdbcType=VARCHAR}, #{tzBeizhu,jdbcType=VARCHAR}, #{tzZczjId,jdbcType=VARCHAR}, 
       #{tzJavaClass,jdbcType=VARCHAR}, #{tzTjr,jdbcType=VARCHAR}, #{tzTjsj,jdbcType=TIMESTAMP}, 
-      #{tzZhxgr,jdbcType=VARCHAR}, #{tzZhxgsj,jdbcType=TIMESTAMP})
+      #{tzZhxgr,jdbcType=VARCHAR}, #{tzZhxgsj,jdbcType=TIMESTAMP}, #{tzIsDispatch,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZBatchProcessBundle.model.TzBatchProcess" >
     insert into TZ_JINC_DY_T
@@ -76,6 +79,9 @@
       <if test="tzZhxgsj != null" >
         TZ_ZHXGSJ,
       </if>
+      <if test="tzIsDispatch != null" >
+        TZ_IS_DISPATCH,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzJgId != null" >
@@ -111,6 +117,9 @@
       <if test="tzZhxgsj != null" >
         #{tzZhxgsj,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzIsDispatch != null" >
+        #{tzIsDispatch,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZBatchProcessBundle.model.TzBatchProcess" >
@@ -143,6 +152,9 @@
       <if test="tzZhxgsj != null" >
         TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzIsDispatch != null" >
+        TZ_IS_DISPATCH = #{tzIsDispatch,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_JC_MC = #{tzJcMc,jdbcType=VARCHAR}
@@ -157,7 +169,8 @@
       TZ_TJR = #{tzTjr,jdbcType=VARCHAR},
       TZ_TJSJ = #{tzTjsj,jdbcType=TIMESTAMP},
       TZ_ZHXGR = #{tzZhxgr,jdbcType=VARCHAR},
-      TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP}
+      TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP},
+      TZ_IS_DISPATCH = #{tzIsDispatch,jdbcType=VARCHAR}
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_JC_MC = #{tzJcMc,jdbcType=VARCHAR}
   </update>
