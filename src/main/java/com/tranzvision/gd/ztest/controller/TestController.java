@@ -172,5 +172,10 @@ public class TestController {
 		}
 	}
 	
+	@RequestMapping("testseq")
+	public void testseqUtil(HttpServletRequest request, HttpServletResponse response) {
+		
+	}
+	
 
 }
