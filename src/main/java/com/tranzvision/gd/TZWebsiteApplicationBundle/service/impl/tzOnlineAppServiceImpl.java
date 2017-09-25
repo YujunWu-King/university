@@ -1685,7 +1685,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							strOtype, isPwd, strRefLetterId,isMobile);
 					if ("".equals(strMsg)) {
 						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "submit",
-								strTplType);
+								strTplType, strClassId, strBatchId, strLanguage, strIsAdmin);
 						/* 当前页面是否完成 */
 						String sqlCurrentPageCompleteState = "SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
 						String strPageCompleteState1 = sqlQuery.queryForObject(sqlCurrentPageCompleteState,
@@ -1801,7 +1801,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 					if ("".equals(strMsg)) {
 						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "pre",
-								strTplType);
+								strTplType, strClassId, strBatchId, strLanguage, strIsAdmin);
 
 					}
 
@@ -1872,7 +1872,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 提交数据
 					// String strMsgAlter = "";
 					if ("".equals(strMsg)) {
-						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, "", "submit", strTplType);
+						strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, "", "submit", strTplType,
+								strClassId, strBatchId, strLanguage, strIsAdmin);
 					}
 					if ("".equals(strMsg)) {
 						if (StringUtils.equals("Y", strIsAdmin) && StringUtils.equals("Y", strIsEdit)) {
