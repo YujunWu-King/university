@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
+import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppServiceImpl;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
@@ -33,6 +34,8 @@ public class MemoryStart implements ApplicationListener<ContextRefreshedEvent> {
 		// 当spring容器初始化完成后,启动MemoryStart管理进程
 		if (event.getApplicationContext().getParent() == null) {
 			startMemoryLoad();
+			//初始化在线报名信号量
+			initAppOnlineSemaphoreCount();
 		}
 	}
 
@@ -95,4 +98,23 @@ public class MemoryStart implements ApplicationListener<ContextRefreshedEvent> {
 
 	}
 
+	
+	/**
+	 * 初始化在线报名信号量
+	 */
+	private void initAppOnlineSemaphoreCount() {
+		Integer semaphoreCount;
+		String sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT='TZ_APPONL_XHL_COUNT'";
+		try {
+			semaphoreCount = sqlQuery.queryForObject(sql, "Integer");
+		} catch (Exception e) {
+			semaphoreCount = null;
+		}
+
+		if(semaphoreCount != null){
+			tzOnlineAppServiceImpl.setOnlineAppLockCounter(semaphoreCount);
+		}
+		
+		System.out.println("Load onlineAppSemaphoreCount: " + semaphoreCount);
+	}
 }
