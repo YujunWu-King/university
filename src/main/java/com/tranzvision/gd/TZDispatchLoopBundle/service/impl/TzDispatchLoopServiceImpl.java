@@ -2,7 +2,6 @@ package com.tranzvision.gd.TZDispatchLoopBundle.service.impl;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZBatchProcessBundle.model.TzProcessServer;
 import com.tranzvision.gd.TZDispatchLoopBundle.dao.TzDispatchLoopMapper;
 import com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoop;
 import com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoopKey;
@@ -100,7 +99,7 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                     //分
                     map.put("beginMinute", tzDispatchLoop.getTzM2Qsfz());
                     map.put("endMinute", tzDispatchLoop.getTzM2Jzfz());
-                    map.put("listMinute", tzDispatchLoop.getTzM2Lbqz());
+                    map.put("minuteList", tzDispatchLoop.getTzM2Lbqz());
                     map.put("minuteLoopInterval", tzDispatchLoop.getTzM2Xhqz());
                     
                     //秒
@@ -198,6 +197,7 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
 
         String strRet = "{}";
         JacksonUtil jacksonUtil = new JacksonUtil();
+        StringBuilder  stringBuilder = new StringBuilder();
         int dataLength = actData.length;
         try{
             for(int num = 0; num < dataLength; num++){
@@ -249,9 +249,9 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                 
                 //分tabpanel
                 Integer tzM2Qsfz = infoData.get("beginMinute") == ""?0:Integer.valueOf(infoData.get("beginMinute").toString());
-                Integer tzM2Jzfz = infoData.get("endHour") == ""?0:Integer.valueOf(infoData.get("endHour").toString());
-                String tzM2Lbqz = infoData.get("hourList") == null?"":String.valueOf(infoData.get("hourList"));
-                String tzM2Xhqz = infoData.get("hourLoopInterval") == null?"":String.valueOf(infoData.get("hourLoopInterval"));
+                Integer tzM2Jzfz = infoData.get("endMinute") == ""?0:Integer.valueOf(infoData.get("endMinute").toString());
+                String tzM2Lbqz = infoData.get("minuteList") == null?"":String.valueOf(infoData.get("minuteList"));
+                String tzM2Xhqz = infoData.get("minuteLoopInterval") == null?"":String.valueOf(infoData.get("minuteLoopInterval"));
                 
                 //秒tabpanel
                 Integer tzSQsm = infoData.get("beginSecond") == ""?0:Integer.valueOf(infoData.get("beginSecond").toString());
@@ -282,27 +282,39 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                     tzDispatchLoop.setTzXhMc(loopName);
                     tzDispatchLoop.setTzXhMs(loopDesc);
                     tzDispatchLoop.setTzEeBz(status);
+             
+                    //每个tabpanel的flag
+                    String secondFlag = infoData.get("secondFlag").toString();
+                    String minuteFlag = infoData.get("minuteFlag").toString();
+                    String hourFlag = infoData.get("hourFlag").toString();
+                    String dayFlag = infoData.get("dayFlag").toString();
+                    String monthFlag = infoData.get("monthFlag").toString();
+                    String weekFlag = infoData.get("weekFlag").toString();
+                    String yearFlag = infoData.get("yearFlag").toString();
                     
-                    //插入年
-                    if(tzYQsnf != 0) {
-                    	tzDispatchLoop.setTzYQsnf(tzYQsnf);
-                    }
-                    if(tzYJznf != 0) {
-                    	tzDispatchLoop.setTzYJznf(tzYJznf);
-                    }
-                    tzDispatchLoop.setTzYLbqz(tzYLbqz);
-                    tzDispatchLoop.setTzYXhqz(tzYXhqz);
+                    stringBuilder.append(secondFlag).append(minuteFlag).append(hourFlag).
+                    append(dayFlag).append(monthFlag).append(weekFlag).append(yearFlag);
                     
-                    //插入月
-                    if(tzM1Qsyf != 0) {
-                    	tzDispatchLoop.setTzM1Qsyf(tzM1Qsyf);
-                    }
-                    if(tzM1Jzyf != 0) {
-                    	tzDispatchLoop.setTzM1Jzyf(tzM1Jzyf);
-                    }
+                    //插入循环表达式
+                    tzDispatchLoop.setTzXhQzbds(stringBuilder.toString().trim());
                     
-                    tzDispatchLoop.setTzM1Lbqz(tzM1Lbqz);
-                    tzDispatchLoop.setTzM1Xhqz(tzM1Xhqz);
+                    //秒
+                    tzDispatchLoop.setTzSQsm(tzSQsm);
+                    tzDispatchLoop.setTzSJzm(tzSJzm);
+                    tzDispatchLoop.setTzSLbqz(tzSLbqz);
+                    tzDispatchLoop.setTzSXhqz(tzSXhqz);
+                    
+                    //分
+                    tzDispatchLoop.setTzM2Qsfz(tzM2Qsfz);
+                    tzDispatchLoop.setTzM2Jzfz(tzM2Jzfz);
+                    tzDispatchLoop.setTzM2Lbqz(tzM2Lbqz);
+                    tzDispatchLoop.setTzM2Xhqz(tzM2Xhqz);
+                    
+                    //时
+                    tzDispatchLoop.setTzHQsxs(tzHQsxs);
+                    tzDispatchLoop.setTzHJzxs(tzHJzxs);
+                    tzDispatchLoop.setTzHLbqz(tzHLbqz);
+                    tzDispatchLoop.setTzHXhqz(tzHXhqz);
                     
                     //插入周、日
                     tzDispatchLoop.setTzDQsrq(tzDQsrq);
@@ -318,24 +330,18 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                     tzDispatchLoop.setTzWZdzc(tzWZdzc);
                     tzDispatchLoop.setTzWZdrq2(tzWZdrq2);
                     
-                    //时
-                    tzDispatchLoop.setTzHQsxs(tzHQsxs);
-                    tzDispatchLoop.setTzHJzxs(tzHJzxs);
-                    tzDispatchLoop.setTzHLbqz(tzHLbqz);
-                    tzDispatchLoop.setTzHXhqz(tzHXhqz);
+                    //插入月
+                    tzDispatchLoop.setTzM1Qsyf(tzM1Qsyf);
+                    tzDispatchLoop.setTzM1Jzyf(tzM1Jzyf);
+                    tzDispatchLoop.setTzM1Lbqz(tzM1Lbqz);
+                    tzDispatchLoop.setTzM1Xhqz(tzM1Xhqz);
                     
-                    //分
-                    tzDispatchLoop.setTzM2Qsfz(tzM2Qsfz);
-                    tzDispatchLoop.setTzM2Jzfz(tzM2Jzfz);
-                    tzDispatchLoop.setTzM2Lbqz(tzM2Lbqz);
-                    tzDispatchLoop.setTzM2Xhqz(tzM2Xhqz);
-                    
-                    //秒
-                    tzDispatchLoop.setTzSQsm(tzSQsm);
-                    tzDispatchLoop.setTzSJzm(tzSJzm);
-                    tzDispatchLoop.setTzSLbqz(tzSLbqz);
-                    tzDispatchLoop.setTzSXhqz(tzSXhqz);
-                    
+                    //插入年
+                    tzDispatchLoop.setTzYQsnf(tzYQsnf);
+                    tzDispatchLoop.setTzYJznf(tzYJznf);
+                    tzDispatchLoop.setTzYLbqz(tzYLbqz);
+                    tzDispatchLoop.setTzYXhqz(tzYXhqz);
+
                     //自定义
                     tzDispatchLoop.setTzXhzdY(tzXhzdY);
                     tzDispatchLoop.setTzXhzdM1(tzXhzdM1);
@@ -373,8 +379,10 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
     public String tzUpdate(String[] actData, String[] errMsg) {
 
         String strRet = "{}";
+        StringBuilder  stringBuilder = new StringBuilder();
         JacksonUtil jacksonUtil = new JacksonUtil();
         int dataLength = actData.length;
+        
         try{
             for(int num = 0; num < dataLength; num++){
 
@@ -424,9 +432,9 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                 
                 //分tabpanel
                 Integer tzM2Qsfz = infoData.get("beginMinute") == ""?0:Integer.valueOf(infoData.get("beginMinute").toString());
-                Integer tzM2Jzfz = infoData.get("endHour") == ""?0:Integer.valueOf(infoData.get("endHour").toString());
-                String tzM2Lbqz = infoData.get("hourList") == null?"":String.valueOf(infoData.get("hourList"));
-                String tzM2Xhqz = infoData.get("hourLoopInterval") == null?"":String.valueOf(infoData.get("hourLoopInterval"));
+                Integer tzM2Jzfz = infoData.get("endMinute") == ""?0:Integer.valueOf(infoData.get("endMinute").toString());
+                String tzM2Lbqz = infoData.get("minuteList") == null?"":String.valueOf(infoData.get("minuteList"));
+                String tzM2Xhqz = infoData.get("minuteLoopInterval") == null?"":String.valueOf(infoData.get("minuteLoopInterval"));
                 
                 //秒tabpanel
                 Integer tzSQsm = infoData.get("beginSecond") == ""?0:Integer.valueOf(infoData.get("beginSecond").toString());
@@ -442,8 +450,23 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                 String tzXhzdH = infoData.get("customHour") == null?"":String.valueOf(infoData.get("customHour"));
                 String tzXhzdM2 = infoData.get("customMinute") == null?"":String.valueOf(infoData.get("customMinute"));
                 String tzXhzdS = infoData.get("customSecond") == null?"":String.valueOf(infoData.get("customSecond"));
+                
+                //每个tabpanel的flag
+                String secondFlag = infoData.get("secondFlag").toString();
+                String minuteFlag = infoData.get("minuteFlag").toString();
+                String hourFlag = infoData.get("hourFlag").toString();
+                String dayFlag = infoData.get("dayFlag").toString();
+                String monthFlag = infoData.get("monthFlag").toString();
+                String weekFlag = infoData.get("weekFlag").toString();
+                String yearFlag = infoData.get("yearFlag").toString();
 
                 TzDispatchLoop tzDispatchLoop = new TzDispatchLoop();
+                
+                stringBuilder.append(secondFlag).append(minuteFlag).append(hourFlag).
+                append(dayFlag).append(monthFlag).append(weekFlag).append(yearFlag);
+                
+                //插入循环表达式
+                tzDispatchLoop.setTzXhQzbds(stringBuilder.toString().trim());
                 
                 //主动form
                 tzDispatchLoop.setTzJgId(orgId);
@@ -451,17 +474,23 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                 tzDispatchLoop.setTzXhMs(loopDesc);
                 tzDispatchLoop.setTzEeBz(status);
                 
-                //插入年
-                tzDispatchLoop.setTzYQsnf(tzYQsnf);
-                tzDispatchLoop.setTzYJznf(tzYJznf);
-                tzDispatchLoop.setTzYLbqz(tzYLbqz);
-                tzDispatchLoop.setTzYXhqz(tzYXhqz);
+                //秒
+                tzDispatchLoop.setTzSQsm(tzSQsm);
+                tzDispatchLoop.setTzSJzm(tzSJzm);
+                tzDispatchLoop.setTzSLbqz(tzSLbqz);
+                tzDispatchLoop.setTzSXhqz(tzSXhqz);
                 
-                //插入月
-                tzDispatchLoop.setTzM1Qsyf(tzM1Qsyf);
-                tzDispatchLoop.setTzM1Jzyf(tzM1Jzyf);
-                tzDispatchLoop.setTzM1Lbqz(tzM1Lbqz);
-                tzDispatchLoop.setTzM1Xhqz(tzM1Xhqz);
+                //分
+                tzDispatchLoop.setTzM2Qsfz(tzM2Qsfz);
+                tzDispatchLoop.setTzM2Jzfz(tzM2Jzfz);
+                tzDispatchLoop.setTzM2Lbqz(tzM2Lbqz);
+                tzDispatchLoop.setTzM2Xhqz(tzM2Xhqz);
+                
+                //时
+                tzDispatchLoop.setTzHQsxs(tzHQsxs);
+                tzDispatchLoop.setTzHJzxs(tzHJzxs);
+                tzDispatchLoop.setTzHLbqz(tzHLbqz);
+                tzDispatchLoop.setTzHXhqz(tzHXhqz);
                 
                 //插入周、日
                 tzDispatchLoop.setTzDQsrq(tzDQsrq);
@@ -477,24 +506,18 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                 tzDispatchLoop.setTzWZdzc(tzWZdzc);
                 tzDispatchLoop.setTzWZdrq2(tzWZdrq2);
                 
-                //时
-                tzDispatchLoop.setTzHQsxs(tzHQsxs);
-                tzDispatchLoop.setTzHJzxs(tzHJzxs);
-                tzDispatchLoop.setTzHLbqz(tzHLbqz);
-                tzDispatchLoop.setTzHXhqz(tzHXhqz);
+                //插入月
+                tzDispatchLoop.setTzM1Qsyf(tzM1Qsyf);
+                tzDispatchLoop.setTzM1Jzyf(tzM1Jzyf);
+                tzDispatchLoop.setTzM1Lbqz(tzM1Lbqz);
+                tzDispatchLoop.setTzM1Xhqz(tzM1Xhqz);
                 
-                //分
-                tzDispatchLoop.setTzM2Qsfz(tzM2Qsfz);
-                tzDispatchLoop.setTzM2Jzfz(tzM2Jzfz);
-                tzDispatchLoop.setTzM2Lbqz(tzM2Lbqz);
-                tzDispatchLoop.setTzM2Xhqz(tzM2Xhqz);
-                
-                //秒
-                tzDispatchLoop.setTzSQsm(tzSQsm);
-                tzDispatchLoop.setTzSJzm(tzSJzm);
-                tzDispatchLoop.setTzSLbqz(tzSLbqz);
-                tzDispatchLoop.setTzSXhqz(tzSXhqz);
-                
+                //插入年
+                tzDispatchLoop.setTzYQsnf(tzYQsnf);
+                tzDispatchLoop.setTzYJznf(tzYJznf);
+                tzDispatchLoop.setTzYLbqz(tzYLbqz);
+                tzDispatchLoop.setTzYXhqz(tzYXhqz);
+
                 //自定义
                 tzDispatchLoop.setTzXhzdY(tzXhzdY);
                 tzDispatchLoop.setTzXhzdM1(tzXhzdM1);

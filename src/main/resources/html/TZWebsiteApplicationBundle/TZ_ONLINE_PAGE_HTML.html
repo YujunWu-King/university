@@ -167,6 +167,11 @@
 					var pwdDivId = $("#%bind(:46)");
 					var pwdDiv2Id = $("#%bind(:47)");
 					
+					$("#app_saveH").hide();
+					$("#app_submitH").hide();
+					$("#app_prevH").hide();
+					$("#app_nextH").hide();
+					
 					if(pagelen==0){
 						$("#app_save").show();
 						$("#app_submit").show();
@@ -335,6 +340,11 @@
 				var pwdTitleId = $("#%bind(:45)");
 				var pwdDivId = $("#%bind(:46)");
 				var pwdDiv2Id = $("#%bind(:47)");
+				
+				$("#app_saveH").hide();
+				$("#app_submitH").hide();
+				$("#app_prevH").hide();
+				$("#app_nextH").hide();
 				
 				if(pagelen==0){
 					$("#app_save").show();
@@ -762,6 +772,40 @@
 					isPwd="Y";
 				}
 				
+				var isNext=0;
+				var isprev=0;
+				var isSubmit = 0;
+				
+				if ($("#app_next").css("display") =="none") {
+					isNext = 1;
+				}
+				if ($("#app_submit").css("display") =="none") {
+					isSubmit = 1;
+				}
+				if ($("#app_prev").css("display") =="none") {
+					isprev = 1;
+				}
+				
+				//提交之前把按钮都灰掉
+				$("#app_save").hide();
+				$("#app_prev").hide();
+				$("#app_next").hide();
+				$("#app_submit").hide();
+				
+				$("#app_saveH").show();
+				
+				if (isNext ==0) {
+					$("#app_nextH").show();
+				}
+				
+				if (isSubmit ==0) {
+					$("#app_submitH").show();
+				}
+				if (isprev ==0) {
+					$("#app_prevH").show();
+				}
+				
+				
 				var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 				$.ajax({
 					type: "POST",
@@ -795,6 +839,24 @@
 						} else {
 							layer.closeAll();
 							noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+						}
+						
+						$("#app_save").show();
+						$("#app_saveH").hide();
+				
+						if (isNext ==0) {
+							$("#app_nextH").hide();
+							$("#app_next").show();
+						}
+				
+						if (isSubmit ==0) {
+							$("#app_submitH").hide();
+							$("#app_submit").show();
+						}
+						
+						if (isprev ==0) {
+							$("#app_prevH").hide();
+							$("#app_prev").show();
 						}
 						//设置页面完成状态
 						//setPageComplete(f.comContent.pageCompleteState);
@@ -866,6 +928,34 @@
 						isPwd="Y";
 					}
 					
+					var isNext=0;
+					//var isSubmit = 0;
+					
+					if ($("#app_next").css("display") =="none") {
+						isNext = 1;
+					}
+					//if ($("#app_submit").css("display") =="none") {
+					//	isSubmit = 1;
+					//}
+					
+					//提交之前把按钮都灰掉
+					$("#app_save").hide();
+					$("#app_prev").hide();
+					$("#app_next").hide();
+					$("#app_submit").hide();
+					
+					$("#app_saveH").show();
+					$("#app_prevH").show();
+					
+					if (isNext ==0) {
+						$("#app_nextH").show();
+					}
+					
+					//if (isSubmit ==0) {
+					//	$("#app_submitH").show();
+					//}
+					
+					
 					var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 					$.ajax({
 						type: "POST",
@@ -897,9 +987,25 @@
 							} else {
 								layer.closeAll();
 								noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+								$("#app_save").show();
+								$("#app_prev").show();
+								$("#app_saveH").hide();
+								$("#app_prevH").hide();
+						
+								if (isNext ==0) {
+									$("#app_nextH").hide();
+									$("#app_next").show();
+								}
 							}
 							//设置页面完成状态
 							//setPageComplete(f.comContent.pageCompleteState);
+							
+					
+							//if (isSubmit ==0) {
+							//	$("#app_submitH").hide();
+							//	$("#app_submit").show();
+							//}
+							
 						}
 					});
 				}
@@ -963,6 +1069,34 @@
 					} else {
 						isPwd="Y";
 					}
+					
+					//按钮都灰掉
+					var isprev=0;
+					var isSubmit = 0;
+					
+					if ($("#app_prev").css("display") =="none") {
+						isprev = 1;
+					}
+					if ($("#app_submit").css("display") =="none") {
+						isSubmit = 1;
+					}
+					
+					//提交之前把按钮都灰掉
+					$("#app_save").hide();
+					$("#app_prev").hide();
+					$("#app_next").hide();
+					$("#app_submit").hide();
+					
+					$("#app_saveH").show();
+					$("#app_nextH").show();
+					
+					if (isprev ==0) {
+						$("#app_prevH").show();
+					}
+					
+					if (isSubmit ==0) {
+						$("#app_submitH").show();
+					}
 
 					var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID": ' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 					$.ajax({
@@ -995,9 +1129,25 @@
 							} else {
 								layer.closeAll();
 								noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+								$("#app_save").show();
+								$("#app_prev").show();
+								$("#app_saveH").hide();
+								$("#app_prevH").hide();
+						
+								if (isprev ==0) {
+									$("#app_prevH").hide();
+									$("#app_prev").show();
+								}
+						
+								if (isSubmit ==0) {
+									$("#app_submitH").hide();
+									$("#app_submit").show();
+								}
 							}
 							//设置页面完成状态
 							//setPageComplete(f.comContent.pageCompleteState);
+							
+							
 						}
 					});
 				}
@@ -1048,6 +1198,31 @@
 				}
 				
 				var _a = getData();
+				
+				//按钮都灰掉
+				var isprev=0;
+				var isSubmit = 0;
+				
+				if ($("#app_prev").css("display") =="none") {
+					isprev = 1;
+				}
+
+				
+				//提交之前把按钮都灰掉
+				$("#app_save").hide();
+				$("#app_prev").hide();
+				$("#app_next").hide();
+				$("#app_submit").hide();
+				
+				$("#app_saveH").show();
+				$("#app_submitH").show();
+				
+				if (isprev ==0) {
+					$("#app_prevH").show();
+				}
+				
+				
+				
 				var tzSubmitParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SUBMIT","isEdit":"%bind(:39)","TZ_REF_LETTER_ID":"%bind(:6)","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"%bind(:15)","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
 				$.ajax({
 					type: "POST",
@@ -1107,6 +1282,17 @@
 							layer.closeAll();
 							noteing(MsgSet.SUBMIT_FAILD + "," + f.state.errdesc, 2);
 						}
+						
+						$("#app_save").show();
+						$("#app_submit").show();
+						$("#app_saveH").hide();
+						$("#app_submitH").hide();
+				
+						if (isprev ==0) {
+							$("#app_prevH").hide();
+							$("#app_prev").show();
+						}
+				
 					}
 				});
 			});
@@ -1539,6 +1725,13 @@
 						<img src="%bind(:32)/statics/images/appeditor/new/btn-prev.png" /></span>&nbsp;&nbsp;%bind(:30)
 					</div>
 				</a> 
+				<!-- 灰掉的上一页按钮 -->
+				<a href="#" id="app_prevH" style="display: none">
+				<div class="btn-action" style="background: #999">
+						<span class="operation-btn-icon">
+						<img src="%bind(:32)/statics/images/appeditor/new/btn-prev.png" /></span>&nbsp;&nbsp;%bind(:30)
+					</div>
+				</a>
 				<a href="#" id="app_save">
 					<div class="btn-save">
 						%bind(:16)&nbsp;&nbsp;
@@ -1546,6 +1739,14 @@
 						<img src="%bind(:32)/statics/images/appeditor/new/btn-save.png" /></span>
 					</div>
 				</a> 
+				<!-- 灰掉的保存按钮 -->
+				<a href="#" id="app_saveH" style="display: none">
+				<div class="btn-save" style="background: #999">
+						%bind(:16)&nbsp;&nbsp;
+						<span class="operation-btn-icon">
+						<img src="%bind(:32)/statics/images/appeditor/new/btn-save.png" /></span>
+					</div>
+				</a>
 				<a href="#" id="app_next" style="display: none">
 					<div class="btn-action">
 						%bind(:17)&nbsp;&nbsp;
@@ -1553,6 +1754,15 @@
 						<img src="%bind(:32)/statics/images/appeditor/new/btn-next.png" /></span>
 					</div>
 				</a> 
+				<!-- 灰掉的下一页按钮 -->
+				<a href="#" id="app_nextH" style="display: none">
+				<div class="btn-action" style="background: #999">
+						%bind(:17)&nbsp;&nbsp;
+						<span class="operation-btn-icon">
+						<img src="%bind(:32)/statics/images/appeditor/new/btn-next.png" /></span>
+					</div>
+				</a>
+				
 				<a href="javascript:void(0);" id="app_submit">
 					<div class="btn-action" id="app_submit_div">
 						%bind(:18)&nbsp;&nbsp;
@@ -1560,6 +1770,15 @@
 						<img src="%bind(:32)/statics/images/appeditor/new/btn-save.png"></span>
 					</div>
 				</a>
+				<!-- 灰掉的提交按钮 -->
+				<a href="#" id="app_submitH" style="display: none">
+				<div class="btn-action" style="background: #999">
+						%bind(:18)&nbsp;&nbsp;
+						<span class="operation-btn-icon">
+						<img src="%bind(:32)/statics/images/appeditor/new/btn-save.png"></span>
+					</div>
+				</a>
+				
 				<script type="text/javascript"></script>
 				<a href="#" id="app_download">
 					<div class="btn-action" style="width:160px;">

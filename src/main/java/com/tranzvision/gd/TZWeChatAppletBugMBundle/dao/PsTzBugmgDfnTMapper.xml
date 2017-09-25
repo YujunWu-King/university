@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZWeChatAppletBugMBundle.dao.PsTzBugmgDfnTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZWeChatAppletBugMBundle.model.PsTzBugmgDfnT" >
+    <id column="TZ_BUG_ID" property="tzBugId" jdbcType="VARCHAR" />
+    <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_BUG_STA" property="tzBugSta" jdbcType="VARCHAR" />
+    <result column="TZ_BUG_PRIORITY" property="tzBugPriority" jdbcType="VARCHAR" />
+    <result column="TZ_BUG_PERCENT" property="tzBugPercent" jdbcType="VARCHAR" />
+    <result column="TZ_DLZH_ID1" property="tzDlzhId1" jdbcType="VARCHAR" />
+    <result column="TZ_DLZH_ID2" property="tzDlzhId2" jdbcType="VARCHAR" />
+    <result column="TZ_LR_DATE" property="tzLrDate" jdbcType="DATE" />
+    <result column="TZ_EXP_DATE" property="tzExpDate" jdbcType="DATE" />
+    <result column="TZ_ESTFIN_DATE" property="tzEstfinDate" jdbcType="DATE" />
+    <result column="TZ_BUG_TYPE" property="tzBugType" jdbcType="VARCHAR" />
+    <result column="TZ_BUG_MIGRATION" property="tzBugMigration" jdbcType="VARCHAR" />
+    <result column="TZ_BUG_GNMK" property="tzBugGnmk" jdbcType="VARCHAR" />
+    <result column="TZ_BUG_ADD_DTTM" property="tzBugAddDttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_BUG_JDGX_RQ" property="tzBugJdgxRq" jdbcType="DATE" />
+    <result column="TZ_BUG_JDGX_SJ" property="tzBugJdgxSj" jdbcType="TIME" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
+    <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWeChatAppletBugMBundle.model.PsTzBugmgDfnTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_BUG_SM" property="tzBugSm" jdbcType="LONGVARCHAR" />
+    <result column="TZ_BUG_DESC" property="tzBugDesc" jdbcType="LONGVARCHAR" />
+    <result column="TZ_BUG_BZ" property="tzBugBz" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_BUG_ID, TZ_JG_ID, TZ_BUG_STA, TZ_BUG_PRIORITY, TZ_BUG_PERCENT, TZ_DLZH_ID1, TZ_DLZH_ID2, 
+    TZ_LR_DATE, TZ_EXP_DATE, TZ_ESTFIN_DATE, TZ_BUG_TYPE, TZ_BUG_MIGRATION, TZ_BUG_GNMK, 
+    TZ_BUG_ADD_DTTM, TZ_BUG_JDGX_RQ, TZ_BUG_JDGX_SJ, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+    ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_BUG_SM, TZ_BUG_DESC, TZ_BUG_BZ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZWeChatAppletBugMBundle.model.PsTzBugmgDfnTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_BUGMG_DFN_T
+    where TZ_BUG_ID = #{tzBugId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatAppletBugMBundle.model.PsTzBugmgDfnTKey" >
+    delete from PS_TZ_BUGMG_DFN_T
+    where TZ_BUG_ID = #{tzBugId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZWeChatAppletBugMBundle.model.PsTzBugmgDfnTWithBLOBs" >
+    insert into PS_TZ_BUGMG_DFN_T (TZ_BUG_ID, TZ_JG_ID, TZ_BUG_STA, 
+      TZ_BUG_PRIORITY, TZ_BUG_PERCENT, TZ_DLZH_ID1, 
+      TZ_DLZH_ID2, TZ_LR_DATE, TZ_EXP_DATE, 
+      TZ_ESTFIN_DATE, TZ_BUG_TYPE, TZ_BUG_MIGRATION, 
+      TZ_BUG_GNMK, TZ_BUG_ADD_DTTM, TZ_BUG_JDGX_RQ, 
+      TZ_BUG_JDGX_SJ, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
+      ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
+      SYNCDTTM, TZ_BUG_SM, TZ_BUG_DESC, 
+      TZ_BUG_BZ)
+    values (#{tzBugId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzBugSta,jdbcType=VARCHAR}, 
+      #{tzBugPriority,jdbcType=VARCHAR}, #{tzBugPercent,jdbcType=VARCHAR}, #{tzDlzhId1,jdbcType=VARCHAR}, 
+      #{tzDlzhId2,jdbcType=VARCHAR}, #{tzLrDate,jdbcType=DATE}, #{tzExpDate,jdbcType=DATE}, 
+      #{tzEstfinDate,jdbcType=DATE}, #{tzBugType,jdbcType=VARCHAR}, #{tzBugMigration,jdbcType=VARCHAR}, 
+      #{tzBugGnmk,jdbcType=VARCHAR}, #{tzBugAddDttm,jdbcType=TIMESTAMP}, #{tzBugJdgxRq,jdbcType=DATE}, 
+      #{tzBugJdgxSj,jdbcType=TIME}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
+      #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
+      #{syncdttm,jdbcType=TIMESTAMP}, #{tzBugSm,jdbcType=LONGVARCHAR}, #{tzBugDesc,jdbcType=LONGVARCHAR}, 
+      #{tzBugBz,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatAppletBugMBundle.model.PsTzBugmgDfnTWithBLOBs" >
+    insert into PS_TZ_BUGMG_DFN_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzBugId != null" >
+        TZ_BUG_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzBugSta != null" >
+        TZ_BUG_STA,
+      </if>
+      <if test="tzBugPriority != null" >
+        TZ_BUG_PRIORITY,
+      </if>
+      <if test="tzBugPercent != null" >
+        TZ_BUG_PERCENT,
+      </if>
+      <if test="tzDlzhId1 != null" >
+        TZ_DLZH_ID1,
+      </if>
+      <if test="tzDlzhId2 != null" >
+        TZ_DLZH_ID2,
+      </if>
+      <if test="tzLrDate != null" >
+        TZ_LR_DATE,
+      </if>
+      <if test="tzExpDate != null" >
+        TZ_EXP_DATE,
+      </if>
+      <if test="tzEstfinDate != null" >
+        TZ_ESTFIN_DATE,
+      </if>
+      <if test="tzBugType != null" >
+        TZ_BUG_TYPE,
+      </if>
+      <if test="tzBugMigration != null" >
+        TZ_BUG_MIGRATION,
+      </if>
+      <if test="tzBugGnmk != null" >
+        TZ_BUG_GNMK,
+      </if>
+      <if test="tzBugAddDttm != null" >
+        TZ_BUG_ADD_DTTM,
+      </if>
+      <if test="tzBugJdgxRq != null" >
+        TZ_BUG_JDGX_RQ,
+      </if>
+      <if test="tzBugJdgxSj != null" >
+        TZ_BUG_JDGX_SJ,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="syncid != null" >
+        SYNCID,
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM,
+      </if>
+      <if test="tzBugSm != null" >
+        TZ_BUG_SM,
+      </if>
+      <if test="tzBugDesc != null" >
+        TZ_BUG_DESC,
+      </if>
+      <if test="tzBugBz != null" >
+        TZ_BUG_BZ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzBugId != null" >
+        #{tzBugId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugSta != null" >
+        #{tzBugSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugPriority != null" >
+        #{tzBugPriority,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugPercent != null" >
+        #{tzBugPercent,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId1 != null" >
+        #{tzDlzhId1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId2 != null" >
+        #{tzDlzhId2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLrDate != null" >
+        #{tzLrDate,jdbcType=DATE},
+      </if>
+      <if test="tzExpDate != null" >
+        #{tzExpDate,jdbcType=DATE},
+      </if>
+      <if test="tzEstfinDate != null" >
+        #{tzEstfinDate,jdbcType=DATE},
+      </if>
+      <if test="tzBugType != null" >
+        #{tzBugType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugMigration != null" >
+        #{tzBugMigration,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugGnmk != null" >
+        #{tzBugGnmk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugAddDttm != null" >
+        #{tzBugAddDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzBugJdgxRq != null" >
+        #{tzBugJdgxRq,jdbcType=DATE},
+      </if>
+      <if test="tzBugJdgxSj != null" >
+        #{tzBugJdgxSj,jdbcType=TIME},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzBugSm != null" >
+        #{tzBugSm,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzBugDesc != null" >
+        #{tzBugDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzBugBz != null" >
+        #{tzBugBz,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatAppletBugMBundle.model.PsTzBugmgDfnTWithBLOBs" >
+    update PS_TZ_BUGMG_DFN_T
+    <set >
+      <if test="tzBugSta != null" >
+        TZ_BUG_STA = #{tzBugSta,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugPriority != null" >
+        TZ_BUG_PRIORITY = #{tzBugPriority,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugPercent != null" >
+        TZ_BUG_PERCENT = #{tzBugPercent,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId1 != null" >
+        TZ_DLZH_ID1 = #{tzDlzhId1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDlzhId2 != null" >
+        TZ_DLZH_ID2 = #{tzDlzhId2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLrDate != null" >
+        TZ_LR_DATE = #{tzLrDate,jdbcType=DATE},
+      </if>
+      <if test="tzExpDate != null" >
+        TZ_EXP_DATE = #{tzExpDate,jdbcType=DATE},
+      </if>
+      <if test="tzEstfinDate != null" >
+        TZ_ESTFIN_DATE = #{tzEstfinDate,jdbcType=DATE},
+      </if>
+      <if test="tzBugType != null" >
+        TZ_BUG_TYPE = #{tzBugType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugMigration != null" >
+        TZ_BUG_MIGRATION = #{tzBugMigration,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugGnmk != null" >
+        TZ_BUG_GNMK = #{tzBugGnmk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzBugAddDttm != null" >
+        TZ_BUG_ADD_DTTM = #{tzBugAddDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzBugJdgxRq != null" >
+        TZ_BUG_JDGX_RQ = #{tzBugJdgxRq,jdbcType=DATE},
+      </if>
+      <if test="tzBugJdgxSj != null" >
+        TZ_BUG_JDGX_SJ = #{tzBugJdgxSj,jdbcType=TIME},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="syncid != null" >
+        SYNCID = #{syncid,jdbcType=INTEGER},
+      </if>
+      <if test="syncdttm != null" >
+        SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="tzBugSm != null" >
+        TZ_BUG_SM = #{tzBugSm,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzBugDesc != null" >
+        TZ_BUG_DESC = #{tzBugDesc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzBugBz != null" >
+        TZ_BUG_BZ = #{tzBugBz,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_BUG_ID = #{tzBugId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZWeChatAppletBugMBundle.model.PsTzBugmgDfnTWithBLOBs" >
+    update PS_TZ_BUGMG_DFN_T
+    set TZ_BUG_STA = #{tzBugSta,jdbcType=VARCHAR},
+      TZ_BUG_PRIORITY = #{tzBugPriority,jdbcType=VARCHAR},
+      TZ_BUG_PERCENT = #{tzBugPercent,jdbcType=VARCHAR},
+      TZ_DLZH_ID1 = #{tzDlzhId1,jdbcType=VARCHAR},
+      TZ_DLZH_ID2 = #{tzDlzhId2,jdbcType=VARCHAR},
+      TZ_LR_DATE = #{tzLrDate,jdbcType=DATE},
+      TZ_EXP_DATE = #{tzExpDate,jdbcType=DATE},
+      TZ_ESTFIN_DATE = #{tzEstfinDate,jdbcType=DATE},
+      TZ_BUG_TYPE = #{tzBugType,jdbcType=VARCHAR},
+      TZ_BUG_MIGRATION = #{tzBugMigration,jdbcType=VARCHAR},
+      TZ_BUG_GNMK = #{tzBugGnmk,jdbcType=VARCHAR},
+      TZ_BUG_ADD_DTTM = #{tzBugAddDttm,jdbcType=TIMESTAMP},
+      TZ_BUG_JDGX_RQ = #{tzBugJdgxRq,jdbcType=DATE},
+      TZ_BUG_JDGX_SJ = #{tzBugJdgxSj,jdbcType=TIME},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_BUG_SM = #{tzBugSm,jdbcType=LONGVARCHAR},
+      TZ_BUG_DESC = #{tzBugDesc,jdbcType=LONGVARCHAR},
+      TZ_BUG_BZ = #{tzBugBz,jdbcType=LONGVARCHAR}
+    where TZ_BUG_ID = #{tzBugId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZWeChatAppletBugMBundle.model.PsTzBugmgDfnT" >
+    update PS_TZ_BUGMG_DFN_T
+    set TZ_BUG_STA = #{tzBugSta,jdbcType=VARCHAR},
+      TZ_BUG_PRIORITY = #{tzBugPriority,jdbcType=VARCHAR},
+      TZ_BUG_PERCENT = #{tzBugPercent,jdbcType=VARCHAR},
+      TZ_DLZH_ID1 = #{tzDlzhId1,jdbcType=VARCHAR},
+      TZ_DLZH_ID2 = #{tzDlzhId2,jdbcType=VARCHAR},
+      TZ_LR_DATE = #{tzLrDate,jdbcType=DATE},
+      TZ_EXP_DATE = #{tzExpDate,jdbcType=DATE},
+      TZ_ESTFIN_DATE = #{tzEstfinDate,jdbcType=DATE},
+      TZ_BUG_TYPE = #{tzBugType,jdbcType=VARCHAR},
+      TZ_BUG_MIGRATION = #{tzBugMigration,jdbcType=VARCHAR},
+      TZ_BUG_GNMK = #{tzBugGnmk,jdbcType=VARCHAR},
+      TZ_BUG_ADD_DTTM = #{tzBugAddDttm,jdbcType=TIMESTAMP},
+      TZ_BUG_JDGX_RQ = #{tzBugJdgxRq,jdbcType=DATE},
+      TZ_BUG_JDGX_SJ = #{tzBugJdgxSj,jdbcType=TIME},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+    where TZ_BUG_ID = #{tzBugId,jdbcType=VARCHAR}
+      and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
+  </update>
+</mapper>

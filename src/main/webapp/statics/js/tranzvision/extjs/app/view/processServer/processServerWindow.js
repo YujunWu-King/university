@@ -13,7 +13,7 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
     title: '进程服务器定义',
     reference: 'processServerWindow',
     width: 700,
-    height: 400,
+    height: 450,
     minWidth: 200,
     minHeight: 100,
     layout: 'fit',
@@ -107,27 +107,28 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
                 allowBlank:false
-            },{
-                xtype: 'fieldcontainer',
-                layout:'hbox',
-                items:[
-                	{
-                		xtype: 'datefield',
-                        fieldLabel: '最近心跳日期',
-                        format : 'Y-m-d',
-                        name: 'palpitationDate'
-                	},
-                	{
-                		xtype: 'timefield',
-                        fieldLabel: '最近心跳时间',
-                        style:'margin-left:60px',
-                        labelWidth: 100,
-                        format : 'H:i:s',
-                        name: 'palpitationTime'
-                	}
-                ]
-
-            },{
+            },            {
+        		xtype: 'datefield',
+                fieldLabel: '最近心跳日期',
+                editable:false,
+                format : 'Y-m-d',
+                name: 'palpitationDate',
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
+        	},                	
+        	{
+        		xtype: 'timefield',
+                fieldLabel: '最近心跳时间',
+                editable:false,
+                format : 'H:i:s',
+                name: 'palpitationTime',
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
+        	},{
                 xtype: 'textarea',
                 fieldLabel: '备注信息',
                 name: 'remark'

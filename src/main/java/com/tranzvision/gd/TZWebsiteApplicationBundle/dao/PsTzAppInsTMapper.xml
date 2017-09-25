@@ -15,6 +15,8 @@
     <result column="TZ_APP_INS_VERSION" property="tzAppInsVersion" jdbcType="VARCHAR" />
     <result column="TZ_PWD" property="tzPwd" jdbcType="VARCHAR" />
     <result column="TZ_APP_PRE_STA" property="tzAppPreSta" jdbcType="VARCHAR" />
+    <result column="TZ_APP_SUB_MED" property="tzAppSubMed" jdbcType="VARCHAR" />
+    <result column="TZ_APP_CRE_MED" property="tzAppCreMed" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT" extends="BaseResultMap" >
     <result column="TZ_APPINS_JSON_STR" property="tzAppinsJsonStr" jdbcType="LONGVARCHAR" />
@@ -22,7 +24,7 @@
   <sql id="Base_Column_List" >
     TZ_APP_INS_ID, TZ_APP_FORM_STA, TZ_APP_SUB_DTTM, TZ_APP_TPL_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
     ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_APP_INS_VERSION, TZ_PWD, 
-    TZ_APP_PRE_STA
+    TZ_APP_PRE_STA, TZ_APP_SUB_MED, TZ_APP_CRE_MED
   </sql>
   <sql id="Blob_Column_List" >
     TZ_APPINS_JSON_STR
@@ -44,12 +46,14 @@
       TZ_APP_TPL_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
       ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
       SYNCDTTM, TZ_APP_INS_VERSION, TZ_PWD, 
-      TZ_APP_PRE_STA, TZ_APPINS_JSON_STR)
+      TZ_APP_PRE_STA, TZ_APP_SUB_MED, TZ_APP_CRE_MED, 
+      TZ_APPINS_JSON_STR)
     values (#{tzAppInsId,jdbcType=BIGINT}, #{tzAppFormSta,jdbcType=VARCHAR}, #{tzAppSubDttm,jdbcType=TIMESTAMP}, 
       #{tzAppTplId,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
       #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
       #{syncdttm,jdbcType=TIMESTAMP}, #{tzAppInsVersion,jdbcType=VARCHAR}, #{tzPwd,jdbcType=VARCHAR}, 
-      #{tzAppPreSta,jdbcType=VARCHAR}, #{tzAppinsJsonStr,jdbcType=LONGVARCHAR})
+      #{tzAppPreSta,jdbcType=VARCHAR}, #{tzAppSubMed,jdbcType=VARCHAR}, #{tzAppCreMed,jdbcType=VARCHAR}, 
+      #{tzAppinsJsonStr,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT" >
     insert into PS_TZ_APP_INS_T
@@ -92,6 +96,12 @@
       </if>
       <if test="tzAppPreSta != null" >
         TZ_APP_PRE_STA,
+      </if>
+      <if test="tzAppSubMed != null" >
+        TZ_APP_SUB_MED,
+      </if>
+      <if test="tzAppCreMed != null" >
+        TZ_APP_CRE_MED,
       </if>
       <if test="tzAppinsJsonStr != null" >
         TZ_APPINS_JSON_STR,
@@ -137,6 +147,12 @@
       <if test="tzAppPreSta != null" >
         #{tzAppPreSta,jdbcType=VARCHAR},
       </if>
+      <if test="tzAppSubMed != null" >
+        #{tzAppSubMed,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppCreMed != null" >
+        #{tzAppCreMed,jdbcType=VARCHAR},
+      </if>
       <if test="tzAppinsJsonStr != null" >
         #{tzAppinsJsonStr,jdbcType=LONGVARCHAR},
       </if>
@@ -181,6 +197,12 @@
       <if test="tzAppPreSta != null" >
         TZ_APP_PRE_STA = #{tzAppPreSta,jdbcType=VARCHAR},
       </if>
+      <if test="tzAppSubMed != null" >
+        TZ_APP_SUB_MED = #{tzAppSubMed,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppCreMed != null" >
+        TZ_APP_CRE_MED = #{tzAppCreMed,jdbcType=VARCHAR},
+      </if>
       <if test="tzAppinsJsonStr != null" >
         TZ_APPINS_JSON_STR = #{tzAppinsJsonStr,jdbcType=LONGVARCHAR},
       </if>
@@ -201,6 +223,8 @@
       TZ_APP_INS_VERSION = #{tzAppInsVersion,jdbcType=VARCHAR},
       TZ_PWD = #{tzPwd,jdbcType=VARCHAR},
       TZ_APP_PRE_STA = #{tzAppPreSta,jdbcType=VARCHAR},
+      TZ_APP_SUB_MED = #{tzAppSubMed,jdbcType=VARCHAR},
+      TZ_APP_CRE_MED = #{tzAppCreMed,jdbcType=VARCHAR},
       TZ_APPINS_JSON_STR = #{tzAppinsJsonStr,jdbcType=LONGVARCHAR}
     where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
   </update>
@@ -217,7 +241,9 @@
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       TZ_APP_INS_VERSION = #{tzAppInsVersion,jdbcType=VARCHAR},
       TZ_PWD = #{tzPwd,jdbcType=VARCHAR},
-      TZ_APP_PRE_STA = #{tzAppPreSta,jdbcType=VARCHAR}
+      TZ_APP_PRE_STA = #{tzAppPreSta,jdbcType=VARCHAR},
+      TZ_APP_SUB_MED = #{tzAppSubMed,jdbcType=VARCHAR},
+      TZ_APP_CRE_MED = #{tzAppCreMed,jdbcType=VARCHAR}
     where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
   </update>
 </mapper>
