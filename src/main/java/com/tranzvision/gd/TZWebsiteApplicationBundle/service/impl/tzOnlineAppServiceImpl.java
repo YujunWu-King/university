@@ -1755,7 +1755,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 								strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,
 								strClassId, strPwd, strOtype, isPwd, strRefLetterId, isMobile);
 						if ("".equals(strMsg)) {
-							strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "save",
+							strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "submit",
 									strTplType, strClassId, strBatchId, strLanguage, strIsAdmin);
 							/* 当前页面是否完成 */
 							String sqlCurrentPageCompleteState = "SELECT TZ_HAS_COMPLETE FROM PS_TZ_APP_COMP_TBL WHERE TZ_APP_INS_ID = ? AND TZ_XXX_BH = ?";
