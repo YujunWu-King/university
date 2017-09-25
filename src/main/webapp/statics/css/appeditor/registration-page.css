@@ -182,6 +182,18 @@
 	border-radius:5px;
 	background:#8f5dc0;
 }
+
+.btn-HS{
+	float:left;
+	text-align:center;
+	width:108px;
+	height:46px;
+	color:#fff;
+	line-height:46px;
+	margin-right:10px;
+	border-radius:5px;
+	background:#999;
+}
 .btn-pre{
 	text-align:center;
 	width:108px;
