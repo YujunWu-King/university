@@ -50,7 +50,6 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzFormPhotoTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzAppInsT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.model.PsTzFormPhotoT;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.base.Memoryparameter;
 import com.tranzvision.gd.util.base.TzException;
 import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.encrypt.DESUtil;
@@ -589,6 +588,34 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						"PARAERROR", "参数错误", "Parameter error");
 			}
 		}
+		
+		
+		/*********************************************************************************************
+		 * 当前人员报名表信号量如果存在，说明有请求正在处理中，防止此时频发刷新
+		 * 张浪添加，20170925
+		 * 【修改开始】
+		 *********************************************************************************************/
+		if ("".equals(strMessageError)){
+			Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGdObject.getSemaphore("com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppServiceImpl-20170925",strClassId + "-" + oprid +"-" + numAppInsId);
+		    if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null){
+		    	//没有正在保存或提交的数据
+		    }else{
+		    	Semaphore tmpSemaphore = tmpSemaphoreObject.getValue();
+		        
+		        //先判断当前报名表对应信号量大于等于1
+		        if(tmpSemaphore.getQueueLength() >= 1)
+				{
+		        	strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
+							"REFRESH_FAST", "您的请求正在处理中，请勿频发刷新，稍后再试。", "Your request is in process, do not frequent refresh, try again later.");
+				}
+		    }
+		}
+		/*********************************************************************************************
+		 * 当前人员报名表信号量如果存在，说明有请求正在处理中，防止此时频发刷新
+		 * 张浪添加，20170925
+		 * 【修改結束】
+		 *********************************************************************************************/
+		
 
 		System.out.println("报名表展现数据预处理End,Time=" + (System.currentTimeMillis() - time));
 
@@ -1587,7 +1614,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						hasGetOnlineAppLock = true;
 						
 					    //获取当前报名表对应的信号灯，每个报名表只能允许一次保存、提交操作，防止同一个报名表保存提交多次请求
-					    Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGdObject.getSemaphore(tempClassId + "-" + numAppInsId);
+					    Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGdObject.getSemaphore("com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppServiceImpl-20170925",tempClassId + "-" + oprid +"-" + numAppInsId);
 					    if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null)
 					    {
 					    	//如果返回的信号灯为空，报系统忙，请稍后再试
