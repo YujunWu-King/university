@@ -15,7 +15,6 @@ import java.util.Map;
 
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzException;
-import com.tranzvision.gd.util.httpclient.HttpClientService;
 
 /**
  * 微信素材相关操作API
@@ -161,9 +160,8 @@ public class TzWxMaterialUtil {
 	 * @throws TzException 
 	 * 
 	 */
-	public static Map<String,Object> addOtherMaterial(String accessToken,File file, String type, String title,String introduction) throws TzException {
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		Map<String,Object> returnMap = new HashMap<String,Object>();
+	public static String addOtherMaterial(String accessToken,File file, String type, String title,String introduction) throws TzException {
+		String returnStr = "";
 		try {
 			if(!file.exists()){
 				throw new TzException("素材文件不存在");
@@ -183,16 +181,12 @@ public class TzWxMaterialUtil {
 
 			// 拼装请求地址
 			String uploadMediaUrl = tz_addMaterial_url+"?access_token="+accessToken+"&type="+type;
-
-			String result = TzWxMaterialUtil.connectHttpsByPostForm(uploadMediaUrl, file, videoDescrMap);
-			jacksonUtil.json2Map(result);
-			
-			returnMap = jacksonUtil.getMap();
+			returnStr = TzWxMaterialUtil.connectHttpsByPostForm(uploadMediaUrl, file, videoDescrMap);
 		} catch (Exception e) {
 			throw new TzException(e.getMessage());
 		}
 		
-		return returnMap;
+		return returnStr;
 	}
 	
 	
@@ -203,9 +197,8 @@ public class TzWxMaterialUtil {
 	 * @param file
 	 * @throws TzException 
 	 */
-	public static Map<String,Object> uploadMaterialContentImages(String accessToken,File file) throws TzException{
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		Map<String,Object> returnMap = new HashMap<String,Object>();
+	public static String uploadMaterialContentImages(String accessToken,File file) throws TzException{
+		String returnStr = "";
 		try{
 			if(!file.exists()){
 				throw new TzException("图片文件不存在");
@@ -218,16 +211,12 @@ public class TzWxMaterialUtil {
             
 			//上传图片素材      
 	        String uploadImgUrl = tz_uploadimg_url+"?access_token="+accessToken;  
-	        
-	        String result = TzWxMaterialUtil.connectHttpsByPostForm(uploadImgUrl, file, null);
-	        jacksonUtil.json2Map(result);
-			
-			returnMap = jacksonUtil.getMap();
+	        returnStr = TzWxMaterialUtil.connectHttpsByPostForm(uploadImgUrl, file, null);
 		} catch (Exception e) {
 			throw new TzException(e.getMessage());
 		}
 		
-		return returnMap;
+		return returnStr;
 	}
 	
 	
@@ -265,8 +254,10 @@ public class TzWxMaterialUtil {
 			
 			String materialAddNewsUrl = tz_materialAddNews_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(materialAddNewsUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(materialAddNewsUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(materialAddNewsUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -278,8 +269,8 @@ public class TzWxMaterialUtil {
 	/**
 	 * 修改永久图文素材
 	 * @param access_token
-	 * @param media_id								//要修改的图文消息的id
-	 * @param index									//要更新的文章在图文消息中的位置（多图文消息时，此字段才有意义），第一篇为0
+	 * @param media_id			要修改的图文消息的id
+	 * @param index				要更新的文章在图文消息中的位置（多图文消息时，此字段才有意义），第一篇为0
 	 * @param articlesMap
 	 * {
 	      "title": TITLE,							//标题
@@ -310,8 +301,10 @@ public class TzWxMaterialUtil {
 			
 			String materialUpdateNewsUrl = tz_materialUpdateNews_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(materialUpdateNewsUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(materialUpdateNewsUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(materialUpdateNewsUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -342,8 +335,10 @@ public class TzWxMaterialUtil {
 			
 			String deleteMaterialUrl = tz_deleteMaterial_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(deleteMaterialUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(deleteMaterialUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(deleteMaterialUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -413,8 +408,10 @@ public class TzWxMaterialUtil {
 			
 			String batchGetMaterialUrl = tz_batchGetMaterial_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(batchGetMaterialUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(batchGetMaterialUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(batchGetMaterialUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -465,8 +462,10 @@ public class TzWxMaterialUtil {
 			
 			String getMaterialUrl = tz_getMaterial_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(getMaterialUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(getMaterialUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(getMaterialUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}

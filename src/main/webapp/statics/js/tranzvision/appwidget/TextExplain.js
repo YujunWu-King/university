@@ -34,5 +34,5 @@ SurveyBuild.extend("TextExplain", "baseComponent", {
 		e += '</div>';
 
 		return e;
-	},
+	}
 })

@@ -68,8 +68,10 @@ public class TzWxMessageMassSendUtil {
 			
 			String uploadnewsUrl = tz_uploadnews_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(uploadnewsUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(uploadnewsUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(uploadnewsUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -156,8 +158,10 @@ public class TzWxMessageMassSendUtil {
 
 			String msssSendByTagUrl = tz_msssSendByTag_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(msssSendByTagUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(msssSendByTagUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(msssSendByTagUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -238,8 +242,10 @@ public class TzWxMessageMassSendUtil {
 
 			String msssSendByOpenidUrl = tz_msssSendByOpenid_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(msssSendByOpenidUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(msssSendByOpenidUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(msssSendByOpenidUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}
@@ -268,8 +274,10 @@ public class TzWxMessageMassSendUtil {
 			
 			String getSendStatusUrl = tz_getSendStatus_url + "?access_token=" + access_token;
 			//http请求
-			HttpClientService HttpClientService = new HttpClientService(getSendStatusUrl,"POST",paramsMap,"UTF-8");
-			returnStr = HttpClientService.sendRequest();
+//			HttpClientService HttpClientService = new HttpClientService(getSendStatusUrl,"POST",paramsMap,"UTF-8");
+//			returnStr = HttpClientService.sendRequest();
+			
+			returnStr = PostJsonDataUtil.postJsonData(getSendStatusUrl, paramsMap);
 		}catch(Exception e){
 			throw new TzException("https请求失败："+e.getMessage());
 		}

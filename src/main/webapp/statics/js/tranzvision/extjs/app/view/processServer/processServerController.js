@@ -285,7 +285,7 @@ Ext.define('KitchenSink.view.processServer.processServerController', {
 		var formValues = form.getValues();
 		var orgId = formValues['orgId'];
 		var processName = formValues['processName'];
-		form.findField("status").setValue("已启动");
+		form.findField("status").setValue("STARTING");
 
 		var processStore = new KitchenSink.view.processServer.processServerStore();
 
@@ -304,7 +304,7 @@ Ext.define('KitchenSink.view.processServer.processServerController', {
 		var orgId = formValues['orgId'];
 		var processName = formValues['processName'];
 		var processStore = new KitchenSink.view.processServer.processServerStore();
-		form.findField("status").setValue("已停止");
+		form.findField("status").setValue("STOPPING");
 
 		var tzParams = '{"ComID":"TZ_PROCESS_FW_COM","PageID":"TZ_PROCESS_FW_EDIT","OperateType":"stopProcess","comParams":{"orgId":"'+orgId+'","processName":"'+processName+'"}}';
 		Ext.tzLoad(tzParams,function(responseData){

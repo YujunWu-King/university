@@ -42,8 +42,8 @@
 		items:[
 		    {text:"查询",tooltip:"查询数据",iconCls: "query",handler:'query'},"-",
 			{text:"新增",tooltip:"新增数据",iconCls:"add",handler:'add'},"-",
-			{text:"编辑",tooltip:"编辑数据",iconCls:"edit",handler:'edit'},"-",
-			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteMul'}
+			{text:"编辑",tooltip:"编辑数据",iconCls:"edit",handler:'edit'}/*,"-",
+			{text:"删除",tooltip:"删除选中的数据",iconCls:"remove",handler:'deleteMul'}*/
 		]
 	}],
     initComponent: function () {  
@@ -78,12 +78,12 @@
 				dataIndex: 'wxParam',
                 minWidth: 100,
 				flex:1
-            },/*{
+            },{
                 text: '有效状态',
                 sortable: true,
 				dataIndex: 'wxState',
                 minWidth: 80
-            },*/{
+            },{
                 text: '添加人',
                 sortable: true,
 				dataIndex: 'wxAddOprid',
@@ -103,10 +103,12 @@
 			   width:60,
                xtype: 'actioncolumn',
 			   items:[
-                   {iconCls: 'edit',tooltip: '编辑',handler:'editSel'},
-			   	   {iconCls: 'remove',tooltip: '删除',handler:'deleteSel'},
-                   {iconCls: 'people',tooltip: '用户管理',handler:'userManage'},
-                   {iconCls: 'refresh',tooltip: '全量获取用户',handler:'getUserAll'}
+                   {iconCls: 'edit',tooltip: '编辑',handler:'editSel'}/*,
+			   	   {iconCls: 'remove',tooltip: '删除',handler:'deleteSel'}*/,
+			   	   {iconCls: 'view',tooltip: '素材管理',handler:'materialManage'},
+                   {iconCls: 'people',tooltip: '用户管理',handler:'userManage'}/*,
+                   {iconCls: 'refresh',tooltip: '全量获取用户',handler:'getUserAll'}*/,
+                   {iconCls: 'preview',tooltip: '查看发送日志',handler:'getLog'}
 			   ]
             }],
 			store:store,

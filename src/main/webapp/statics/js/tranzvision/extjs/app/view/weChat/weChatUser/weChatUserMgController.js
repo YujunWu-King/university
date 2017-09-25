@@ -17,6 +17,8 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                 var store = btn.findParentByType("grid").store;
                 btn.findParentByType('grid').getStore().clearFilter();//查询基于可配置搜索，清除预设的过滤条件
                 store.tzStoreParams = seachCfg;
+                store.load();
+                /*
                 store.load({
                     callback:function() {
                         //默认展开rowexpander
@@ -28,6 +30,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                         }
                     }
                 });
+                */
             }
         });
     },
@@ -51,7 +54,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSRIBE_DATE-operator":"01","TZ_SUBSRIBE_DATE-value":"'+nowDateStr+'"}}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.load({
+        userStore.currentPage=1;
+        userStore.load();
+        /*userStore.load({
             callback:function() {
                 //默认展开rowexpander
                 var expander = grid.getPlugin();
@@ -61,7 +66,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     expander.toggleRow(i,record);
                 }
             }
-        });
+        });*/
     },
     //预查询-已绑定用户
     queryBind:function(btn) {
@@ -75,7 +80,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_GL_CONTID-operator":"13","TZ_GL_CONTID-value":",NULL"}}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.load({
+        userStore.currentPage=1;
+        userStore.load();
+        /*userStore.load({
             callback:function() {
                 //默认展开rowexpander
                 var expander = grid.getPlugin();
@@ -85,7 +92,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     expander.toggleRow(i,record);
                 }
             }
-        });
+        });*/
     },
     //预查询-按类别标签
     queryForTag:function(btn) {
@@ -98,7 +105,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var userStore = grid.getStore();
         var tzStoreParams = '{"OperateType":"tzQueryByTag","jgId":"'+jgId+'","wxAppId":"'+wxAppId+'","tagId":"'+tagId+'"}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.load({
+        userStore.currentPage=1;
+        userStore.load();
+        /*userStore.load({
             callback:function() {
                 //默认展开rowexpander
                 var expander = grid.getPlugin();
@@ -108,7 +117,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     expander.toggleRow(i,record);
                 }
             }
-        });
+        });*/
     },
     //预查询-已取消关注
     queryUnfollow:function(btn) {
@@ -122,7 +131,9 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         var tzStoreParams = '{"cfgSrhId": "TZ_WX_USER_COM.TZ_WX_USER_STD.TZ_WX_USER_VW",' +
             '"condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+jgId+'","TZ_WX_APPID-operator":"01","TZ_WX_APPID-value":"'+wxAppId+'","TZ_SUBSCRIBE-operator":"01","TZ_SUBSCRIBE-value":"0"}}';
         userStore.tzStoreParams = tzStoreParams;
-        userStore.load({
+        userStore.currentPage=1;
+        userStore.load();
+        /*userStore.load({
             callback:function() {
                 //默认展开rowexpander
                 var expander = grid.getPlugin();
@@ -132,7 +143,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
                     expander.toggleRow(i,record);
                 }
             }
-        });
+        });*/
     },
     //设置标签
     setTag:function(btn) {
@@ -219,6 +230,20 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             cmp.show();
         }
     },
+    //全量获取用户
+    getAllUser:function(btn) {
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+
+        var jgId = grid.jgId;
+        var wxAppId = grid.wxAppId;
+
+        var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetUserAllByAe","comParams":{"jgId":"' + jgId + '","wxAppId":"' + wxAppId + '"}}';
+
+        Ext.tzSubmit(tzParams,function(responseData){
+
+        },"调用获取用户进程成功",true,this);
+    },
     //更多操作-给选中用户发送普通消息
     sendMessageForSelect:function(btn) {
         var me = this;
@@ -234,17 +259,29 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.noSelectTip","您没有选中任何记录"));
             return;
         } else {
-            var openIdList = "";
-            for(var i=0;i<checkLen;i++) {
-                var openIdTmp = selList[i].data.openId;
-                if(openIdList == "") {
-                    openIdList = openIdTmp;
-                } else {
-                    openIdList = openIdList + "," + openIdTmp;
-                }
-            }
+            if(checkLen==1) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip","至少需要选中两个用户"));
+                return;
+            } else {
+                var openIdList = "",nickNameList = "";
+                for (var i = 0; i < checkLen; i++) {
+                    var openIdTmp = selList[i].data.openId;
+                    if (openIdList == "") {
+                        openIdList = openIdTmp;
+                    } else {
+                        openIdList = openIdList + "," + openIdTmp;
+                    }
 
-            me.sendMessageForUser("A",openIdList,"",wxAppId);
+                    var nickNameTmp = selList[i].data.nickName;
+                    if (nickNameList == "") {
+                        nickNameList = nickNameTmp;
+                    } else {
+                        nickNameList = nickNameList + "," + nickNameTmp;
+                    }
+                }
+
+                me.sendMessageForUser("A", openIdList, nickNameList, "", wxAppId);
+            }
         }
     },
     //更多操作-按微信标签发送普通消息
@@ -259,7 +296,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         Ext.tzLoad(tzParams, function (responseData) {
             var tagIdList = responseData.tagIdList;
 
-            me.sendMessageForUser("B","",tagIdList,wxAppId);
+            me.sendMessageForUser("B","","",tagIdList,wxAppId);
         });
     },
     //更多操作-给所有用户发送普通消息
@@ -272,9 +309,16 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
 
         var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetAllUser",comParams:{"jgId":"'+jgId+'","wxAppId":"'+wxAppId+'"}}';
         Ext.tzLoad(tzParams,function(responseData){
-            var openIdList = responseData.openIdList;
+            var openIdNum = responseData.openIdNum;
+            if(openIdNum<2) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip2","至少需要两个用户"));
+                return;
+            } else {
+                var openIdList = responseData.openIdList;
+                var nickNameList = responseData.nickNameList;
+                me.sendMessageForUser("A", openIdList, nickNameList, "", wxAppId);
+            }
 
-            me.sendMessageForUser("A",openIdList,"",wxAppId);
         });
     },
     //更多操作-给选中用户发送模板消息
@@ -288,17 +332,29 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.noSelectTip","您没有选中任何记录"));
             return;
         } else {
-            var openIdList = "";
-            for(var i=0;i<checkLen;i++) {
-                var openIdTmp = selList[i].data.openId;
-                if(openIdList == "") {
-                    openIdList = openIdTmp;
-                } else {
-                    openIdList = openIdList + "," + openIdTmp;
-                }
-            }
+            if(checkLen==1) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip","至少需要选中两个用户"));
+                return;
+            } else {
+                var openIdList = "", nickNameList = "";
+                for (var i = 0; i < checkLen; i++) {
+                    var openIdTmp = selList[i].data.openId;
+                    if (openIdList == "") {
+                        openIdList = openIdTmp;
+                    } else {
+                        openIdList = openIdList + "," + openIdTmp;
+                    }
 
-            this.sendTplForUser(openIdList);
+                    var nickNameTmp = selList[i].data.nickName;
+                    if(nickNameList == "") {
+                        nickNameList = nickNameTmp;
+                    } else {
+                        nickNameList = nickNameList + "," + nickNameTmp;
+                    }
+                }
+
+                this.sendTplForUser(openIdList,nickNameList);
+            }
         }
     },
     //更多操作-给所有用户发送模板消息
@@ -310,9 +366,15 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
 
         var tzParams = '{"ComID":"TZ_WX_USER_COM","PageID":"TZ_WX_USER_STD","OperateType":"tzGetAllUser",comParams:{"jgId":"'+jgId+'","wxAppId":"'+wxAppId+'"}}';
         Ext.tzLoad(tzParams,function(responseData){
-            var openIdList = responseData.openIdList;
-
-            this.sendTplForUser(openIdList);
+            var openIdNum = responseData.openIdNum;
+            if(openIdNum<2) {
+                Ext.MessageBox.alert(Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.prompt","提示"),Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.oneSelectTip2","至少需要两个用户"));
+                return;
+            } else {
+                var openIdList = responseData.openIdList;
+                var nickNameList = responseData.nickNameList;
+                this.sendTplForUser(openIdList,nickNameList);
+            }
         });
     },
     //操作列-设置标签
@@ -388,27 +450,12 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
     viewClue:function() {
 
     },
-    //操作列-发送微信普通消息
-    sendMessageForOne:function(btn,rowIndex) {
-        var me = this,
-            view = me.getView();
-
-        var store = view.getStore();
-
-        var jgId = view.jgId;
-        var wxAppId = view.wxAppId;
-
-        var openId = store.getAt(rowIndex).data.openId;
-
-        me.sendMessageForUser("A",openId,"",wxAppId);
-
-    },
     //关闭
     closeUser:function() {
         this.getView().close();
     },
     //给用户发送普通消息
-    sendMessageForUser:function(sendMode,openIdList,tagIdList,wxAppId) {
+    sendMessageForUser:function(sendMode,openIdList,nickNameList,tagIdList,wxAppId) {
         Ext.tzSetCompResourses("TZ_GD_WXMSG_COM");
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_WXMSG_COM"]["TZ_GD_WXMSG_STD"];
         if (pageResSet == "" || pageResSet == undefined) {
@@ -457,28 +504,40 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         cmp = new ViewClass();
 
         cmp.on('afterrender', function (panel) {
+        	var form = panel.down("form").getForm();
             //发送模式-A按用户B按标签
             cmp.sendMode = sendMode;
             //用户列表
             cmp.openIds = openIdList;
+            //用户昵称
+            cmp.nickNames = nickNameList;
             //标签
             cmp.weChatTags = tagIdList;
             //应用ID
             cmp.weChatAppId = wxAppId;
-
-            var form = panel.down("form").getForm();
+            if(sendMode=='B'){
+            	//重新加载标签store
+            	var tagStore=form.findField("wechatTag").store;
+            	tagStore.tzStoreParams='{"wxAppId":"' + wxAppId + '"}';
+            	tagStore.load({
+            	   callback:function(r,options,success){
+            		   //form.findField("wechatTag").setValue(tagIdList);
+            	   }
+            	});
+            }
             form.findField("sendMode").setValue(sendMode);
             form.findField("openIds").setValue(openIdList);
-            form.findField("wechatTag").setValue(tagIdList);
+            form.findField("nickNames").setValue(nickNameList);
+           // form.findField("wechatTag").setValue(tagIdList);
             form.findField("appId").setValue(wxAppId);
 
             //如果为指定用户，按照标签字段隐藏；如果为按照标签，用户列表字段隐藏
             if(sendMode=='A'){
-                form.findField("openIds").setVisible(true);
+                form.findField("nickNames").setVisible(true);
                 form.findField("wechatTag").setVisible(false);
             }
             if(sendMode=='B'){
-                form.findField("openIds").setVisible(false);
+                form.findField("nickNames").setVisible(false);
                 form.findField("wechatTag").setVisible(true);
             }
         });
@@ -494,7 +553,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMgController',{
         }
     },
     //给用户发送普通消息
-    sendTplForUser:function(openIdList) {
+    sendTplForUser:function(openIdList,nickNameList) {
         /*****************************************************************/
         /*打开发送模板消息窗口页面*/
     }

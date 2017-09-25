@@ -55,7 +55,8 @@ public class PageRegImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] { new String[] { "TZ_JC_MC", "DESC" }};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_JG_ID","TZ_JC_MC","TZ_JC_MS","TZ_YXPT_LX"};
+			String[] resultFldArray = { "TZ_JG_ID","TZ_JC_MC","TZ_JC_MS","TZ_YXPT_LX",
+										"TZ_ZCZJ_ID","TZ_JAVA_CLASS","TZ_BEIZHU","TZ_IS_DISPATCH"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -69,6 +70,15 @@ public class PageRegImpl extends FrameworkImpl {
 					mapList.put("processName", resultArray[1]);
 					mapList.put("processDesc", resultArray[2]);
 					mapList.put("platformType", resultArray[3]);
+					mapList.put("ComID", resultArray[4]);
+					mapList.put("className", resultArray[5]);
+					mapList.put("remark", resultArray[6]);
+					if("1".equals(resultArray[7])) {
+						mapList.put("isDispatch", true);
+					}else {
+						mapList.put("isDispatch", false);
+					}
+					
 					listData.add(mapList);
 				});
 				mapRet.replace("total", obj[0]);

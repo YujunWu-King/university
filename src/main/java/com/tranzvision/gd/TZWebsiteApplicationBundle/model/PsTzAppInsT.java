@@ -29,6 +29,10 @@ public class PsTzAppInsT {
 
     private String tzAppPreSta;
 
+    private String tzAppSubMed;
+
+    private String tzAppCreMed;
+
     private String tzAppinsJsonStr;
 
     public Long getTzAppInsId() {
@@ -133,6 +137,22 @@ public class PsTzAppInsT {
 
     public void setTzAppPreSta(String tzAppPreSta) {
         this.tzAppPreSta = tzAppPreSta == null ? null : tzAppPreSta.trim();
+    }
+
+    public String getTzAppSubMed() {
+        return tzAppSubMed;
+    }
+
+    public void setTzAppSubMed(String tzAppSubMed) {
+        this.tzAppSubMed = tzAppSubMed == null ? null : tzAppSubMed.trim();
+    }
+
+    public String getTzAppCreMed() {
+        return tzAppCreMed;
+    }
+
+    public void setTzAppCreMed(String tzAppCreMed) {
+        this.tzAppCreMed = tzAppCreMed == null ? null : tzAppCreMed.trim();
     }
 
     public String getTzAppinsJsonStr() {

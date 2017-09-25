@@ -24,7 +24,10 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchController', {
             maxRow:20,
             condition:{
                 presetFields:{
-
+                	TZ_JG_ID:{
+                        value: Ext.tzOrgID,
+                        type: '01'
+                    }
                 },
                 srhConFields:{
                     TZ_XH_MC:{

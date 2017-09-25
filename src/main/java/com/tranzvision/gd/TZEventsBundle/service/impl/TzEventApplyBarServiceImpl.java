@@ -654,6 +654,9 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					errorCode = "1";
 					errorMsg = cancelFailed;
 				}
+			}else{
+				errorCode = "1";
+				errorMsg = "您已撤销报名";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

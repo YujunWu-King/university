@@ -60,7 +60,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
                 }
             });
         },
-        viewready:function(g){
+        /*viewready:function(g){
             //默认展开rowexpander
             var expander = g.getPlugin();
             var storeData = g.getStore().data;
@@ -68,7 +68,7 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
                 var record = storeData.items[i];
                 expander.toggleRow(i,record);
             }
-        }
+        }*/
     },
     viewConfig:{
         enableTextSelection:true
@@ -134,6 +134,11 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
                     tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.edit","设置标签"),
                     iconCls:'edit',
                     handler:'setTag'
+                },"-",{
+                    text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.refresh","全量获取用户"),
+                    tooltip:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.refresh","全量获取用户"),
+                    iconCls:'refresh',
+                    handler:'getAllUser'
                 },"->",{
                     xtype:'splitbutton',
                     text:Ext.tzGetResourse("TZ_WX_USER_COM.TZ_WX_USER_STD.more","更多操作"),
@@ -232,11 +237,6 @@ Ext.define('KitchenSink.view.weChat.weChatUser.weChatUserMg',{
                     iconCls: 'view',
                     sortable:false,
                     handler: 'viewClue'
-                },{
-                    tooltip: Ext.tzGetResourse("TZ_HDBM_GL_COM.TZ_HDBM_GL_STD.sms", "发送微信普通消息"),
-                    iconCls: 'sms',
-                    sortable:false,
-                    handler: 'sendMessageForOne'
                 }]
             }],
             store:userMgStore,

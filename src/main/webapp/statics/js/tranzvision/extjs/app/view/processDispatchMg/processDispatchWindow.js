@@ -15,8 +15,8 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
     title: '进程调度',
     reference: 'processDispatchWindow',
     id:'runDispatchWin',
-    width: 600,
-    height: 400,
+    width: 700,
+    height: 300,
     minWidth: 200,
     minHeight: 100,
     layout: 'fit',
@@ -54,7 +54,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
             {
                 xtype: 'fieldcontainer',
                 layout: 'column',
-                style: 'margin-left:50px',
+                style: 'margin-left:20px',
                 items: [
                     {
                         xtype: 'textfield',
@@ -62,7 +62,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                         width : 100,
                         readOnly:true,
                         name: 'user',
-                        labelWidth: 70,
+                        labelWidth: 100,
                         fieldLabel: "用户"
                     },
                     {
@@ -79,9 +79,9 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
             {
                 xtype: 'combobox',
                 editable:false,
-                style: 'margin-top:20px;margin-left:50px',
+                style: 'margin-top:20px;margin-left:20px',
                 fieldLabel: '服务器名称',
-                labelWidth: 70,
+                labelWidth: 100,
                 forceSelection: true,
                 valueField: 'processName',
                 displayField: 'processName',
@@ -89,96 +89,36 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                 queryMode: 'local',
                 name: 'processName',
                 emptyText:'任意',
-                allowBlank:true
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
             },{
                 xtype: 'fieldcontainer',
                 layout: 'column',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:10px;margin-left:20px',
                 items:[{
                     xtype: 'datefield',
-                    fieldLabel: '请求创建日期',
-                    columnWidth:.5,
-                    name:'requestDate',
-                    format: 'Y-m-d',
-                    labelWidth: 80,
-                    editable: false
-                },{
-                    xtype: 'timefield',
-                    fieldLabel: '请求创建时间',
-                    columnWidth:.5,
-                    name:'requestTime',
-                    format: 'H:i:s',
-                    labelWidth: 80,
-                    editable: false
-                }]
-            },{
-                xtype: 'fieldcontainer',
-                layout: 'column',
-                style:'margin-top:10px;margin-left:50px',
-                items:[{
-                    xtype: 'datefield',
-                    fieldLabel: '运行开始日期',
+                    fieldLabel: '计划开始日期',
                     columnWidth:.5,
                     name:'runDate',
                     format: 'Y-m-d',
-                    labelWidth: 80,
+                    labelWidth: 100,
                     editable: false
                 },{
                     xtype: 'timefield',
-                    fieldLabel: '运行开始时间',
+                    fieldLabel: '计划开始时间',
                     columnWidth:.5,
                     name:'runTime',
                     format: 'H:i:s',
-                    labelWidth: 80,
-                    editable: false
-                }]
-            },{
-                xtype: 'fieldcontainer',
-                layout: 'column',
-                style:'margin-top:10px;margin-left:50px',
-                items:[{
-                    xtype: 'datefield',
-                    fieldLabel: '进程开始日期',
-                    columnWidth:.5,
-                    name:'processStartDate',
-                    format: 'Y-m-d',
-                    labelWidth: 80,
-                    editable: false
-                },{
-                    xtype: 'timefield',
-                    fieldLabel: '进程开始时间',
-                    columnWidth:.5,
-                    name:'processStartTime',
-                    format: 'H:i:s',
-                    labelWidth: 80,
-                    editable: false
-                }]
-            },{
-                xtype: 'fieldcontainer',
-                layout: 'column',
-                style:'margin-top:10px;margin-left:50px',
-                items:[{
-                    xtype: 'datefield',
-                    fieldLabel: '进程结束日期',
-                    columnWidth:.5,
-                    name:'processEndDate',
-                    format: 'Y-m-d',
-                    labelWidth: 80,
-                    editable: false
-                },{
-                    xtype: 'timefield',
-                    fieldLabel: '进程结束时间',
-                    columnWidth:.5,
-                    name:'processEndTime',
-                    format: 'H:i:s',
-                    labelWidth: 80,
+                    labelWidth: 100,
                     editable: false
                 }]
             },{
                 bodyStyle:'padding:0 0 10px 0',
                 xtype: 'textfield',
                 fieldLabel: '循环',
-                labelWidth: 40,
+                labelWidth: 100,
                 name: 'cycleExpression',
                 editable: false,
                 triggers: {
@@ -187,7 +127,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                         handler: "pmtSearchCycleTmp"
                     }
                 },
-                style:'margin-top:10px;margin-left:50px'
+                style:'margin-top:10px;margin-left:20px'
             }
         ],
     }],

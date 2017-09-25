@@ -38,20 +38,29 @@ public class TZWeChatMsgMaterialServiceImpl extends FrameworkImpl {
 		String strWxAppId=jacksonUtil.getString("wxAppId");
 		//素材类型 TP:图片 TW:图文
 		String strMediaType=jacksonUtil.getString("mediaType");
-		if(strWxAppId==null||strWxAppId.equals("")){
+		if(strWxAppId==null||"".equals(strWxAppId)){
 			return null;
 		}
 		//选择图片素材
 		if("TP".equals(strMediaType)){
-			int countPic=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_TYPE='A'", new Object[]{strOrgId,strWxAppId}, "Integer");
-		    List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_SC_NAME,TZ_MEDIA_ID,TZ_IMAGE_PATH FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? AND TZ_MEDIA_TYPE='A' LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
+			int countPic=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_TYPE='A' and TZ_PUB_STATE='Y'", new Object[]{strOrgId,strWxAppId}, "Integer");
+		    List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_SC_NAME,TZ_MEDIA_ID,TZ_IMAGE_PATH,TZ_MEDIA_URL FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? AND TZ_MEDIA_TYPE='A' and TZ_PUB_STATE='Y' LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
 			if(list!=null &&list.size()>0){
 				for(int i=0;i<list.size();i++){
 					Map<String,Object> map=new HashMap<String,Object>();
+					String mediaId="";
+					String strMediaUrl="";
+					if(list.get(i).get("TZ_MEDIA_ID")!=null){
+						mediaId=list.get(i).get("TZ_MEDIA_ID").toString();
+					}
+					if(list.get(i).get("TZ_MEDIA_URL")!=null){
+						strMediaUrl=list.get(i).get("TZ_MEDIA_URL").toString();
+					}
 					map.put("index", Integer.valueOf(list.get(i).get("TZ_XH").toString()));
-					map.put("mediaId", list.get(i).get("TZ_MEDIA_ID").toString());
+					map.put("mediaId", mediaId);
 					map.put("src", list.get(i).get("TZ_IMAGE_PATH").toString());
 					map.put("caption", list.get(i).get("TZ_SC_NAME").toString());
+					map.put("mediaUrl", strMediaUrl);
 					listData.add(map);
 				}
 				mapRet.replace("total", countPic);
@@ -61,19 +70,29 @@ public class TZWeChatMsgMaterialServiceImpl extends FrameworkImpl {
 		}
 		//选择图文素材
 		if("TW".equals(strMediaType)){
-			int countTw=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_TYPE='B'", new Object[]{strOrgId,strWxAppId}, "Integer");
-		    List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_MEDIA_ID FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? AND TZ_MEDIA_TYPE='B' LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
+			int countTw=sqlQuery.queryForObject("select count(*) from PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_TYPE='B' and  TZ_PUB_STATE='Y'", new Object[]{strOrgId,strWxAppId}, "Integer");
+		    List<Map<String,Object>> list=sqlQuery.queryForList("select TZ_XH,TZ_MEDIA_ID,TZ_MEDIA_URL FROM PS_TZ_WX_MEDIA_TBL where TZ_JG_ID=? and TZ_WX_APPID=? AND TZ_MEDIA_TYPE='B' and TZ_PUB_STATE='Y' LIMIT ?,?", new Object[]{strOrgId,strWxAppId,numStart,numLimit});
 			if(list!=null &&list.size()>0){
 				for(int i=0;i<list.size();i++){
 					Map<String,Object> map=new HashMap<String,Object>();
 					String strXh=list.get(i).get("TZ_XH").toString();
-					String strMediaId=list.get(i).get("TZ_MEDIA_ID").toString();
-					String imageUrl=sqlQuery.queryForObject("select TZ_HEAD_IMAGE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_XH=? and TZ_SHCPIC_FLG='Y'", new Object[]{strOrgId,strWxAppId,strXh}, "String");
+					String strMediaId="";
+					String strMediaUrl="";
+					if(list.get(i).get("TZ_MEDIA_ID")!=null){
+						strMediaId=list.get(i).get("TZ_MEDIA_ID").toString();
+					}
+					/*if(list.get(i).get("TZ_MEDIA_URL")!=null){
+						strMediaUrl=list.get(i).get("TZ_MEDIA_URL").toString();
+					}*/
+					String strHeadImage=sqlQuery.queryForObject("select TZ_HEAD_IMAGE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_XH=? and TZ_SHCPIC_FLG='Y'", new Object[]{strOrgId,strWxAppId,strXh}, "String");
+					String imageUrl=sqlQuery.queryForObject("select TZ_IMAGE_PATH from PS_TZ_WX_MEDIA_TBL  where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_ID=?", new Object[]{strOrgId,strWxAppId,strHeadImage}, "String");
+				     strMediaUrl=sqlQuery.queryForObject("select TZ_MEDIA_URL from PS_TZ_WX_MEDIA_TBL  where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_MEDIA_ID=?", new Object[]{strOrgId,strWxAppId,strHeadImage}, "String");
 					String caption= sqlQuery.queryForObject("select TZ_TW_TITLE from PS_TZ_WX_TWL_TBL where TZ_JG_ID=? and TZ_WX_APPID=? and TZ_XH=? and TZ_SHCPIC_FLG='Y'", new Object[]{strOrgId,strWxAppId,strXh}, "String");
 					map.put("index",Integer.valueOf(strXh));
 					map.put("mediaId", strMediaId);
 					map.put("src",imageUrl);
 					map.put("caption",caption);
+					map.put("mediaUrl",strMediaUrl);
 					listData.add(map);
 				}
 				mapRet.replace("total", countTw);

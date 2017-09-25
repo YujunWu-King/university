@@ -13,7 +13,7 @@ Ext.define('KitchenSink.view.processServer.processServerEditWindow', {
     title: '进程服务器编辑',
     reference: 'processServerEditWindow',
     width: 700,
-    height: 450,
+    height: 500,
     minWidth: 200,
     minHeight: 100,
     layout: 'fit',
@@ -109,18 +109,36 @@ Ext.define('KitchenSink.view.processServer.processServerEditWindow', {
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
                 allowBlank:false
-            },{
+            },                	
+            {
+        		xtype: 'datefield',
+                fieldLabel: '最近心跳日期',
+                editable:false,
+                format : 'Y-m-d',
+                name: 'palpitationDate',
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
+        	},                	
+        	{
+        		xtype: 'timefield',
+                fieldLabel: '最近心跳时间',
+                editable:false,
+                format : 'H:i:s',
+                name: 'palpitationTime',
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
+        	},{
                 xtype: 'textarea',
                 fieldLabel: '备注信息',
                 name: 'remark'
             },
-            // {
-            //     xtype:"displayfield" ,
-            //     fieldLabel:"运行状态" ,
-            //     name:'status'
-            // }
             {
                xtype:'fieldcontainer',
+               style:'margin-top:20px',
                layout:'hbox',
                 items:[
                     {

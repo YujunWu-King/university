@@ -260,9 +260,9 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			ArrayList<Map<String, Object>> examineeJson = new ArrayList<Map<String,Object>>();
 			Integer count = 0;
 			
-			String examineeSql = "SELECT A.TZ_APP_INS_ID,B.OPRID,C.TZ_REALNAME,C.TZ_MSSQH,A.TZ_KSH_PSPM,A.TZ_SCORE_INS_ID,D.TZ_JG_ID,D.TZ_MSPS_SCOR_MD_ID";
-			examineeSql = examineeSql + " FROM PS_TZ_REG_USER_T C,PS_TZ_FORM_WRK_T B,PS_TZ_MP_PW_KS_TBL A,PS_TZ_CLASS_INF_T D";
-			examineeSql = examineeSql + " WHERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.OPRID = C.OPRID AND A.TZ_CLASS_ID=D.TZ_CLASS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=? AND A.TZ_DELETE_ZT='N'"; 
+			String examineeSql = "SELECT A.TZ_APP_INS_ID,B.OPRID,IFNULL(E.TZ_REALNAME,C.TZ_REALNAME) TZ_REALNAME,C.TZ_MSH_ID,A.TZ_KSH_PSPM,A.TZ_SCORE_INS_ID,D.TZ_JG_ID,D.TZ_MSPS_SCOR_MD_ID";
+			examineeSql = examineeSql + " FROM PS_TZ_AQ_YHXX_TBL C,PS_TZ_FORM_WRK_T B,PS_TZ_MP_PW_KS_TBL A,PS_TZ_CLASS_INF_T D,PS_TZ_REG_USER_T E";
+			examineeSql = examineeSql + " WHERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND B.OPRID = C.OPRID AND A.TZ_CLASS_ID=D.TZ_CLASS_ID AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=? AND A.TZ_DELETE_ZT='N' AND C.OPRID = E.OPRID"; 
 			examineeSql = examineeSql + " ORDER BY A.TZ_KSH_PSPM ASC";
 			
 			List<Map<String, Object>> examineeList = sqlQuery.queryForList(examineeSql,new Object[]{classId,applyBatchId,oprid});
@@ -276,7 +276,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				String examineeName = mapExaminee.get("TZ_REALNAME") == null ? "" : String.valueOf(mapExaminee.get("TZ_REALNAME"));
 				String examineeRank = mapExaminee.get("TZ_KSH_PSPM") == null ? "" : String.valueOf(mapExaminee.get("TZ_KSH_PSPM"));
 				String examineeTotalScore;
-				String examineeInterviewId = mapExaminee.get("TZ_MSSQH") == null ? "" : String.valueOf(mapExaminee.get("TZ_MSSQH"));
+				String examineeInterviewId = mapExaminee.get("TZ_MSH_ID") == null ? "" : String.valueOf(mapExaminee.get("TZ_MSH_ID"));
 				String scoreInsId = mapExaminee.get("TZ_SCORE_INS_ID") == null ? "" : String.valueOf(mapExaminee.get("TZ_SCORE_INS_ID"));
 				String jgId = mapExaminee.get("TZ_JG_ID") == null ? "" : String.valueOf(mapExaminee.get("TZ_JG_ID"));
 				String scoreModelId = mapExaminee.get("TZ_MSPS_SCOR_MD_ID") == null ? "" : String.valueOf(mapExaminee.get("TZ_MSPS_SCOR_MD_ID"));
@@ -348,11 +348,11 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			
 			
 			/*当前考生基本信息*/
-			String sqlBasic = "SELECT A.TZ_CLASS_NAME,YEAR(A.TZ_START_DT) TZ_START_YEAR,A.TZ_JG_ID,A.TZ_PS_APP_MODAL_ID,A.TZ_ZLPS_SCOR_MD_ID,A.TZ_MSCJ_SCOR_MD_ID,A.TZ_APP_MODAL_ID,C.TZ_APP_FORM_STA,B.OPRID,D.TZ_REALNAME,D.TZ_MSH_ID,F.TZ_BATCH_NAME";
+			String sqlBasic = "SELECT A.TZ_CLASS_NAME,YEAR(A.TZ_START_DT) TZ_START_YEAR,A.TZ_JG_ID,A.TZ_PS_APP_MODAL_ID,A.TZ_ZLPS_SCOR_MD_ID,A.TZ_MSCJ_SCOR_MD_ID,A.TZ_APP_MODAL_ID,C.TZ_APP_FORM_STA,B.OPRID,H.TZ_REALNAME,D.TZ_MSH_ID,F.TZ_BATCH_NAME";
 			sqlBasic = sqlBasic + ",(SELECT G.TREE_NAME FROM PS_TZ_RS_MODAL_TBL G WHERE G.TZ_JG_ID=A.TZ_JG_ID AND G.TZ_SCORE_MODAL_ID=A.TZ_ZLPS_SCOR_MD_ID) TREE_NAME_MATERIAL";
 			sqlBasic = sqlBasic + ",(SELECT G.TREE_NAME FROM PS_TZ_RS_MODAL_TBL G WHERE G.TZ_JG_ID=A.TZ_JG_ID AND G.TZ_SCORE_MODAL_ID=A.TZ_MSCJ_SCOR_MD_ID) TREE_NAME,G.TZ_PRJ_NAME";
-			sqlBasic = sqlBasic + " FROM PS_TZ_AQ_YHXX_TBL D,PS_TZ_APP_INS_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CLS_BATCH_T F,PS_TZ_CLASS_INF_T A,PS_TZ_PRJ_INF_T G";
-			sqlBasic = sqlBasic + " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND B.OPRID=D.OPRID AND A.TZ_PRJ_ID = G.TZ_PRJ_ID AND A.TZ_CLASS_ID=? AND A.TZ_CLASS_ID = F.TZ_CLASS_ID AND F.TZ_BATCH_ID=? AND B.TZ_APP_INS_ID=?";
+			sqlBasic = sqlBasic + " FROM PS_TZ_AQ_YHXX_TBL D,PS_TZ_APP_INS_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CLS_BATCH_T F,PS_TZ_CLASS_INF_T A,PS_TZ_PRJ_INF_T G,PS_TZ_REG_USER_T H";
+			sqlBasic = sqlBasic + " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND B.OPRID=D.OPRID AND D.OPRID=H.OPRID AND A.TZ_PRJ_ID = G.TZ_PRJ_ID AND A.TZ_CLASS_ID=? AND A.TZ_CLASS_ID = F.TZ_CLASS_ID AND F.TZ_BATCH_ID=? AND B.TZ_APP_INS_ID=?";
 
 			Map<String, Object> mapRootBasic = sqlQuery.queryForMap(sqlBasic,new Object[] { classId, applyBatchId, bmbId});
 			
@@ -668,11 +668,11 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			} else {
 				List<Map<String, Object>> searchList = new ArrayList<>();
 				Integer count = 0;
-				String sql = "SELECT A.OPRID,A.TZ_APP_INS_ID,C.TZ_MSH_ID,C.TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL C,PS_TZ_FORM_WRK_T A,PS_TZ_MSPS_KSH_TBL B";
-				sql = sql + " WHERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.OPRID=C.OPRID AND B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=?";
+				String sql = "SELECT A.OPRID,A.TZ_APP_INS_ID,C.TZ_MSH_ID,D.TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL C,PS_TZ_FORM_WRK_T A,PS_TZ_MSPS_KSH_TBL B,PS_TZ_REG_USER_T D";
+				sql = sql + " WHERE A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.OPRID=C.OPRID AND C.OPRID=D.OPRID AND B.TZ_CLASS_ID=? AND B.TZ_APPLY_PC_ID=?";
 				
 				if(!"".equals(searchMsid) && !"".equals(searchName)){
-					sql = sql + " AND C.TZ_MSH_ID=? AND C.TZ_REALNAME=?";
+					sql = sql + " AND C.TZ_MSH_ID=? AND D.TZ_REALNAME=?";
 					searchList = sqlQuery.queryForList(sql, new Object[]{classId,applyBatchId,searchMsid,searchName});
 				} else {
 					if(!"".equals(searchMsid)) {
@@ -680,7 +680,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 						searchList = sqlQuery.queryForList(sql, new Object[]{classId,applyBatchId,searchMsid});
 					} else {
 						if(!"".equals(searchName)) {
-							sql = sql + " AND C.TZ_REALNAME=?";
+							sql = sql + " AND D.TZ_REALNAME=?";
 							searchList = sqlQuery.queryForList(sql, new Object[]{classId,applyBatchId,searchName});
 						}
 					}

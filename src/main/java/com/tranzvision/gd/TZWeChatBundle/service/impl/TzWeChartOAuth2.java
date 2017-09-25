@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl;
 import com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzException;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.httpclient.HttpClientService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -66,10 +68,16 @@ public class TzWeChartOAuth2 {
 	private HttpServletRequest request;
 	
 	@Autowired
+	private GetHardCodePoint getHardCodePoint;
+	
+	@Autowired
 	private PsTzWxUserTblMapper psTzWxUserTblMapper;
 	
 	@Autowired
 	private PsTzDcInsTMapper psTzDcInsTMapper;
+	
+	//用于存放微信授权code对应授权access_token
+	private static HashMap<String,String[]> OAuthAccessToken = new HashMap<String, String[]>();
 	
 	
     /**
@@ -121,17 +129,25 @@ public class TzWeChartOAuth2 {
 			/*通过微信接口获取token信息和有效时间*/
 			HttpClientService HttpClientService = new HttpClientService(url,"GET",paramsMap,"UTF-8");
 			String strHttpResult = HttpClientService.sendRequest();
+			System.out.println("通过code换取token返回========>>>>>"+strHttpResult);
 			jacksonUtil.json2Map(strHttpResult);
 			
 			if(jacksonUtil.containsKey("errcode")){
-				tokenData.replace("errcode", "1");
+				tokenData.replace("errcode", jacksonUtil.getString("errcode"));
 				tokenData.replace("errmsg", jacksonUtil.getString("errmsg"));
 			}else{
-				tokenData.put("access_token", jacksonUtil.getString("access_token"));
+				String access_token = jacksonUtil.getString("access_token");
+				String openid = jacksonUtil.getString("openid");
+				String refresh_token = jacksonUtil.getString("refresh_token");
+				
+				tokenData.put("access_token", access_token);
 				tokenData.put("expires_in", jacksonUtil.getString("expires_in"));
-				tokenData.put("refresh_token", jacksonUtil.getString("refresh_token"));
-				tokenData.put("openid", jacksonUtil.getString("openid"));
+				tokenData.put("refresh_token", refresh_token);
+				tokenData.put("openid", openid);
 				tokenData.put("scope", jacksonUtil.getString("scope"));
+				
+				//将code与access_token、openid存放在Map中
+				OAuthAccessToken.put(code, new String[]{ openid, access_token ,refresh_token });
 			}
     	}catch (Exception e) {
     		tokenData.replace("errcode", "1");
@@ -219,65 +235,6 @@ public class TzWeChartOAuth2 {
 	}
 	
 	
-	
-//	 public static String postJsonData(String url,Map<String,Object> jsonMap, String access_token){
-//		 String returnValue = "";
-//		 CloseableHttpClient httpClient = null;  
-//	     //ResponseHandler<String> responseHandler = new BasicResponseHandler();  
-//	     JacksonUtil jacksonUtil = new JacksonUtil();
-//	     try{
-//	    	 //第一步：创建HttpClient对象  
-//	    	 httpClient = HttpClients.createDefault();
-//			 //第二步：创建httpPost对象 
-//			 HttpPost httpPost = new HttpPost(url);
-//	    	 
-//			 
-//			 String json = jacksonUtil.Map2json(jsonMap);
-//			 System.out.println("---->  "+json);
-//			 //第三步：给httpPost设置JSON格式的参数  
-//	         StringEntity requestEntity = new StringEntity(json,"utf-8");  
-//	         requestEntity.setContentEncoding("UTF-8");
-//	         requestEntity.setContentType("application/json");
-//	         
-//	         httpPost.setHeader("User-Agent", USER_AGENT);
-//	         httpPost.setHeader("cache-control", "no-cache");
-//	         httpPost.setHeader("Content-Type", "application/json");  
-//	         httpPost.setHeader("Authorization", "Bearer "+access_token);
-//	         httpPost.setEntity(requestEntity);  
-//	         
-//	         System.out.println(httpPost.toString());
-//	         
-//	         //创建响应处理器处理服务器响应内容  
-//	         ResponseHandler<String> responseHandler = new ResponseHandler<String>(){
-//                 public String handleResponse(final HttpResponse response) throws ClientProtocolException,IOException{
-//                     int status = response.getStatusLine().getStatusCode();
-//                     System.out.println(status);
-//                     if (status >= 200 && status < 300){
-//                         HttpEntity entity = response.getEntity();
-//                         return entity !=null ? EntityUtils.toString(entity) : null;
-//                     }else{
-//                         throw new ClientProtocolException("Unexpected response status: " + status);
-//                     }
-//                 }
-//             };
-//
-//	         //第四步：发送HttpPost请求，获取返回值  
-//	         returnValue = httpClient.execute(httpPost,responseHandler); 
-//	     }catch(Exception e){
-//	    	 e.printStackTrace();
-//	     }finally {  
-//	           try {  
-//	               httpClient.close();  
-//	           } catch (IOException e) {  
-//	               e.printStackTrace();  
-//	           }  
-//	     }
-//	     
-//	     return returnValue;  
-//	 }
-	
-	
-	
 
 	
 	@SuppressWarnings({ "resource" })
@@ -294,7 +251,6 @@ public class TzWeChartOAuth2 {
          JacksonUtil jacksonUtil = new JacksonUtil();
          try {
         	 String json = jacksonUtil.Map2json(jsonMap);
-        	 System.out.println(json);
         	 
              StringEntity s = new StringEntity(json, "utf-8");
              s.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,"application/json"));
@@ -316,12 +272,11 @@ public class TzWeChartOAuth2 {
              System.out.println(result);
              
              if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                 System.out.println("请求服务器成功，做相应处理");
+                 System.out.println("请求服务器成功");
              } else {
-                 System.out.println("请求服务端失败");
+            	 throw new TzException("请求服务端失败");
              }
          } catch (Exception e) {
-             //System.out.println("请求异常");
              throw new TzException("请求异常："+e.getMessage());
          }
  
@@ -344,16 +299,24 @@ public class TzWeChartOAuth2 {
 			if(orgId == null || "".equals(orgId)){
 				orgId = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_DC_WJ_DY_T where TZ_DC_WJ_ID=?", new Object[]{ surveyID }, "String");
 			}
-			String sql = "select TZ_WX_APPID,TZ_WX_SECRET from PS_TZ_WX_APPSE_TBL where TZ_JG_ID=? and TZ_WX_STATE='Y' limit 1";
-			Map<String,Object> wxMap = sqlQuery.queryForMap(sql, new Object[]{ orgId });
-			if(wxMap != null){
-				appid = wxMap.get("TZ_WX_APPID") == null ? "" : wxMap.get("TZ_WX_APPID").toString();
-				appsecret = wxMap.get("TZ_WX_SECRET") == null ? "" : wxMap.get("TZ_WX_SECRET").toString();
+//			String sql = "select TZ_WX_APPID,TZ_WX_SECRET from PS_TZ_WX_APPSE_TBL where TZ_JG_ID=? and TZ_WX_STATE='Y' limit 1";
+//			Map<String,Object> wxMap = sqlQuery.queryForMap(sql, new Object[]{ orgId });
+//			if(wxMap != null){
+//				appid = wxMap.get("TZ_WX_APPID") == null ? "" : wxMap.get("TZ_WX_APPID").toString();
+//				appsecret = wxMap.get("TZ_WX_SECRET") == null ? "" : wxMap.get("TZ_WX_SECRET").toString();
+//			}
+
+			try {
+				appid = getHardCodePoint.getHardCodePointVal("TZ_SF_WX_APPID");
+				appsecret = getHardCodePoint.getHardCodePointVal("TZ_SF_WX_APPSECRET");
+			} catch (NullPointerException e) {
+				throw e;
 			}
-			System.out.println("appid:"+appid+",  appsecret:"+appsecret);
+			
+			//System.out.println("appid:"+appid+",  appsecret:"+appsecret);
 			if(!"".equals(appid) && !"".equals(appsecret)){
 				String code = request.getParameter("code");
-				System.out.println("CODE---------"+code);
+				//System.out.println("CODE---------"+code);
 				if(code == null || "".equals(code)){
 					String url = request.getRequestURL().toString();
 					String queryString = request.getQueryString();
@@ -369,47 +332,92 @@ public class TzWeChartOAuth2 {
 						e.printStackTrace();
 					}
 				}else{
-					Map<String,String> accessTokenMap = this.getOAuthAccessTokenByCode(appid, appsecret, code);
-					if(accessTokenMap != null){
-						String errcode = accessTokenMap.get("errcode");
-						if("0".equals(errcode)){
-							String openid = accessTokenMap.get("openid");
-							String accessToken = accessTokenMap.get("access_token");
-							
-							sql = "select 'Y' from PS_TZ_WX_USER_TBL where TZ_JG_ID=? and TZ_OPEN_ID=? limit 1";
-							String userExistsFlg = sqlQuery.queryForObject(sql, new Object[]{ orgId, openid },"String");
-							
-							if("Y".equals(userExistsFlg)){
-							}else{
-								Map<String, String> userInfoMap = this.getUserInfo(accessToken, openid);
-								errcode = userInfoMap.get("errcode");
-								if("0".equals(errcode)){
-									String nickname = userInfoMap.get("nickname");
-									String headimgurl = userInfoMap.get("headimgurl");
-									
-									PsTzWxUserTblKey psTzWxUserTblKey = new PsTzWxUserTblKey();
-									psTzWxUserTblKey.setTzJgId(orgId);
-									psTzWxUserTblKey.setTzWxAppid(appid);
-									psTzWxUserTblKey.setTzOpenId(openid);
-									PsTzWxUserTbl  psTzWxUserTbl = psTzWxUserTblMapper.selectByPrimaryKey(psTzWxUserTblKey);
-									if(psTzWxUserTbl != null){
-										psTzWxUserTbl.setTzNickname(nickname);
-										psTzWxUserTbl.setTzImageUrl(headimgurl);
-										psTzWxUserTblMapper.updateByPrimaryKey(psTzWxUserTbl);
-									}else{
-										psTzWxUserTbl = new PsTzWxUserTbl();
-										psTzWxUserTbl.setTzJgId(orgId);
-										psTzWxUserTbl.setTzWxAppid(appid);
-										psTzWxUserTbl.setTzOpenId(openid);
-										psTzWxUserTbl.setTzNickname(nickname);
-										psTzWxUserTbl.setTzImageUrl(headimgurl);
-										psTzWxUserTblMapper.insert(psTzWxUserTbl);
-									}
+					String openid = "";
+					String accessToken = "";
+					boolean boolHttpCode = true;
+					if(OAuthAccessToken.containsKey(code)){
+						openid = OAuthAccessToken.get(code)[0];
+						accessToken = OAuthAccessToken.get(code)[1];
+						//验证access_token有效性
+						if(this.authToken(accessToken, openid)){
+							boolHttpCode = false;
+						}
+					}
+					
+					if(boolHttpCode){
+						Map<String,String> accessTokenMap = this.getOAuthAccessTokenByCode(appid, appsecret, code);
+						if(accessTokenMap != null){
+							String errcode = accessTokenMap.get("errcode");
+							if("0".equals(errcode)){
+								openid = accessTokenMap.get("openid");
+								accessToken = accessTokenMap.get("access_token");
+							}else 
+								if(Integer.parseInt(errcode) > 1){
+								String queryString = "";
+								String url = request.getRequestURL().toString();
+								
+								Enumeration<String> em = request.getParameterNames();
+								while (em.hasMoreElements()) {
+								    String name = (String) em.nextElement();
+								    String value = request.getParameter(name);
+								    
+								    if(!"code".equals(name) && !"state".equals(name)){
+								    	if("".equals(queryString)){
+								    		queryString = name + "=" + value;
+								    	}else{
+								    		queryString = queryString + "&" + name + "=" + value;
+								    	}
+								    }
+								}
+
+							    if (!"".equals(queryString)) {
+							    	url += "?"+ queryString;
+							    }
+							    //System.out.println("URL==============>  "+url);
+							    String OAuthUrl = this.getOAuthCodeUrl(appid, url, "OAuth");
+							    try {
+									response.sendRedirect(OAuthUrl);
+								} catch (IOException e) {
+									e.printStackTrace();
 								}
 							}
-							
-							openidHtml = tzGDObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_WX_OPENID_INPUT_HTML", openid);
 						}
+					}
+					
+					
+					if(openid != null && !"".equals(openid)){
+						String sql = "select 'Y' from PS_TZ_WX_USER_TBL where TZ_JG_ID=? and TZ_OPEN_ID=? limit 1";
+						String userExistsFlg = sqlQuery.queryForObject(sql, new Object[]{ orgId, openid },"String");
+						
+						if("Y".equals(userExistsFlg)){
+						}else if(!"".equals(accessToken)){
+							Map<String, String> userInfoMap = this.getUserInfo(accessToken, openid);
+							String errcode = userInfoMap.get("errcode");
+							if("0".equals(errcode)){
+								String nickname = userInfoMap.get("nickname");
+								String headimgurl = userInfoMap.get("headimgurl");
+								
+								PsTzWxUserTblKey psTzWxUserTblKey = new PsTzWxUserTblKey();
+								psTzWxUserTblKey.setTzJgId(orgId);
+								psTzWxUserTblKey.setTzWxAppid(appid);
+								psTzWxUserTblKey.setTzOpenId(openid);
+								PsTzWxUserTbl  psTzWxUserTbl = psTzWxUserTblMapper.selectByPrimaryKey(psTzWxUserTblKey);
+								if(psTzWxUserTbl != null){
+									psTzWxUserTbl.setTzNickname(nickname);
+									psTzWxUserTbl.setTzImageUrl(headimgurl);
+									psTzWxUserTblMapper.updateByPrimaryKey(psTzWxUserTbl);
+								}else{
+									psTzWxUserTbl = new PsTzWxUserTbl();
+									psTzWxUserTbl.setTzJgId(orgId);
+									psTzWxUserTbl.setTzWxAppid(appid);
+									psTzWxUserTbl.setTzOpenId(openid);
+									psTzWxUserTbl.setTzNickname(nickname);
+									psTzWxUserTbl.setTzImageUrl(headimgurl);
+									psTzWxUserTblMapper.insert(psTzWxUserTbl);
+								}
+							}
+						}
+						openidHtml = tzGDObject.getHTMLText("HTML.TZApplicationSurveyBundle.TZ_WX_OPENID_INPUT_HTML", openid);
 					}
 				}
 			}
@@ -443,9 +451,18 @@ public class TzWeChartOAuth2 {
 		try{
 			JacksonUtil jacksonUtil = new JacksonUtil();
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			if(orgId == null || "".equals(orgId)){
+				String jgSql = "select TZ_JG_ID from PS_TZ_DC_WJ_DY_T A where exists(select 'X' from PS_TZ_DC_INS_T where TZ_DC_WJ_ID=A.TZ_DC_WJ_ID and TZ_APP_INS_ID=?)";
+				orgId = sqlQuery.queryForObject(jgSql, new Object[]{ strAppInsId }, "String");
+			}
+			
 			Long appInsId = Long.parseLong(strAppInsId);
-			if(appInsId != null && appInsId > 0){
-				
+			if(appInsId != null && appInsId > 0 
+					&& openId != null && !"".equals(openId)){
+				String nickname = "";
+				String headImgUrl = "";
+				String appid = "";
+				String subflg = "";
 				if(!"".equals(openId)){
 					submitMap.replace("openid", openId);
 					
@@ -453,10 +470,10 @@ public class TzWeChartOAuth2 {
 					Map<String,Object> wxMap = sqlQuery.queryForMap(sql, new Object[]{ orgId, openId });
 					
 					if(wxMap != null){
-						String nickname = wxMap.get("TZ_NICKNAME") == null ? "" : wxMap.get("TZ_NICKNAME").toString();
-						String headImgUrl = wxMap.get("TZ_IMAGE_URL") == null ? "" : wxMap.get("TZ_IMAGE_URL").toString();
-						String appid = wxMap.get("TZ_WX_APPID") == null ? "" : wxMap.get("TZ_WX_APPID").toString();
-						String subflg = wxMap.get("TZ_SUBSCRIBE") == null ? "" : wxMap.get("TZ_SUBSCRIBE").toString();
+						nickname = wxMap.get("TZ_NICKNAME") == null ? "" : wxMap.get("TZ_NICKNAME").toString();
+						headImgUrl = wxMap.get("TZ_IMAGE_URL") == null ? "" : wxMap.get("TZ_IMAGE_URL").toString();
+						appid = wxMap.get("TZ_WX_APPID") == null ? "" : wxMap.get("TZ_WX_APPID").toString();
+						subflg = wxMap.get("TZ_SUBSCRIBE") == null ? "" : wxMap.get("TZ_SUBSCRIBE").toString();
 						
 						submitMap.replace("nickname", nickname);
 						submitMap.replace("headimgurl", headImgUrl);
@@ -542,6 +559,18 @@ public class TzWeChartOAuth2 {
 						resultArr[1] = message;
 						if("success".equals(responseType)){
 							resultArr[0] = "0";
+							
+							//设置购机标识为“已购机”
+							PsTzWxUserTblKey psTzWxUserTblKey =  new PsTzWxUserTblKey();
+							psTzWxUserTblKey.setTzJgId(orgId);
+							psTzWxUserTblKey.setTzOpenId(openId);
+							psTzWxUserTblKey.setTzWxAppid(appid);
+							
+							PsTzWxUserTbl psTzWxUserTbl = psTzWxUserTblMapper.selectByPrimaryKey(psTzWxUserTblKey);
+							if(psTzWxUserTbl != null){
+								psTzWxUserTbl.setTzGjFlag("Y");
+								psTzWxUserTblMapper.updateByPrimaryKey(psTzWxUserTbl);
+							}
 						}else{
 							resultArr[0] = "1";
 						}

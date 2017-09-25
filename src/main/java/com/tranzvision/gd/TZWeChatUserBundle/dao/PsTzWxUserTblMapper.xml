@@ -19,11 +19,12 @@
     <result column="TZ_GL_CONTNAME" property="tzGlContname" jdbcType="VARCHAR" />
     <result column="TZ_SALESLEAD_ID" property="tzSalesleadId" jdbcType="VARCHAR" />
     <result column="TZ_SALESLEAD_NAME" property="tzSalesleadName" jdbcType="VARCHAR" />
+    <result column="TZ_GJ_FLAG" property="tzGjFlag" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_JG_ID, TZ_WX_APPID, TZ_OPEN_ID, TZ_SUBSCRIBE, TZ_NICKNAME, TZ_SEX, TZ_LANGUAGE, 
     TZ_CITY, TZ_PROVINCE, TZ_COUNTRY, TZ_IMAGE_URL, TZ_SUBSRIBE_DT, TZ_REMARK, TZ_GL_CONTID, 
-    TZ_GL_CONTNAME, TZ_SALESLEAD_ID, TZ_SALESLEAD_NAME
+    TZ_GL_CONTNAME, TZ_SALESLEAD_ID, TZ_SALESLEAD_NAME, TZ_GJ_FLAG
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTblKey" >
     select 
@@ -45,13 +46,15 @@
       TZ_LANGUAGE, TZ_CITY, TZ_PROVINCE, 
       TZ_COUNTRY, TZ_IMAGE_URL, TZ_SUBSRIBE_DT, 
       TZ_REMARK, TZ_GL_CONTID, TZ_GL_CONTNAME, 
-      TZ_SALESLEAD_ID, TZ_SALESLEAD_NAME)
+      TZ_SALESLEAD_ID, TZ_SALESLEAD_NAME, TZ_GJ_FLAG
+      )
     values (#{tzJgId,jdbcType=VARCHAR}, #{tzWxAppid,jdbcType=VARCHAR}, #{tzOpenId,jdbcType=VARCHAR}, 
       #{tzSubscribe,jdbcType=VARCHAR}, #{tzNickname,jdbcType=VARCHAR}, #{tzSex,jdbcType=VARCHAR}, 
       #{tzLanguage,jdbcType=VARCHAR}, #{tzCity,jdbcType=VARCHAR}, #{tzProvince,jdbcType=VARCHAR}, 
       #{tzCountry,jdbcType=VARCHAR}, #{tzImageUrl,jdbcType=VARCHAR}, #{tzSubsribeDt,jdbcType=TIMESTAMP}, 
       #{tzRemark,jdbcType=VARCHAR}, #{tzGlContid,jdbcType=VARCHAR}, #{tzGlContname,jdbcType=VARCHAR}, 
-      #{tzSalesleadId,jdbcType=VARCHAR}, #{tzSalesleadName,jdbcType=VARCHAR})
+      #{tzSalesleadId,jdbcType=VARCHAR}, #{tzSalesleadName,jdbcType=VARCHAR}, #{tzGjFlag,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl" >
     insert into PS_TZ_WX_USER_TBL
@@ -107,6 +110,9 @@
       <if test="tzSalesleadName != null" >
         TZ_SALESLEAD_NAME,
       </if>
+      <if test="tzGjFlag != null" >
+        TZ_GJ_FLAG,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzJgId != null" >
@@ -160,6 +166,9 @@
       <if test="tzSalesleadName != null" >
         #{tzSalesleadName,jdbcType=VARCHAR},
       </if>
+      <if test="tzGjFlag != null" >
+        #{tzGjFlag,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZWeChatUserBundle.model.PsTzWxUserTbl" >
@@ -207,6 +216,9 @@
       <if test="tzSalesleadName != null" >
         TZ_SALESLEAD_NAME = #{tzSalesleadName,jdbcType=VARCHAR},
       </if>
+      <if test="tzGjFlag != null" >
+        TZ_GJ_FLAG = #{tzGjFlag,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
@@ -227,7 +239,8 @@
       TZ_GL_CONTID = #{tzGlContid,jdbcType=VARCHAR},
       TZ_GL_CONTNAME = #{tzGlContname,jdbcType=VARCHAR},
       TZ_SALESLEAD_ID = #{tzSalesleadId,jdbcType=VARCHAR},
-      TZ_SALESLEAD_NAME = #{tzSalesleadName,jdbcType=VARCHAR}
+      TZ_SALESLEAD_NAME = #{tzSalesleadName,jdbcType=VARCHAR},
+      TZ_GJ_FLAG = #{tzGjFlag,jdbcType=VARCHAR}
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_WX_APPID = #{tzWxAppid,jdbcType=VARCHAR}
       and TZ_OPEN_ID = #{tzOpenId,jdbcType=VARCHAR}

@@ -107,6 +107,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 					map.put("wxSecret", psTzWxAppseTbl.getTzWxSecret());
 					map.put("wxParam", psTzWxAppseTbl.getTzFromPvalue());
 					map.put("wxState", psTzWxAppseTbl.getTzWxState());
+					map.put("wxOriId", psTzWxAppseTbl.getTzWxOriid());
 					returnJsonMap.replace("formData", map);
 				} else {
 					errMsg[0] = "1";
@@ -148,6 +149,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 				String weChatSecret = (String) infoData.get("wxSecret");
 				String weChatParam = (String) infoData.get("wxParam");
 				String weChatState = (String) infoData.get("wxState");
+				String weChatwxOriId = (String) infoData.get("wxOriId");
 
 				String sql = "select COUNT(1) from PS_TZ_WX_APPSE_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { orgid, weChatId }, "Integer");
@@ -163,6 +165,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 					psTzWxAppseTbl.setTzWxName(weChatName);
 					psTzWxAppseTbl.setTzFromPvalue(weChatParam);
 					psTzWxAppseTbl.setTzWxState(weChatState);
+					psTzWxAppseTbl.setTzWxOriid(weChatwxOriId);
 					
 					psTzWxAppseTbl.setRowAddedDttm(new Date());
 					psTzWxAppseTbl.setRowAddedOprid(oprid);
@@ -203,6 +206,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 				String weChatSecret = (String) infoData.get("wxSecret");
 				String weChatParam = (String) infoData.get("wxParam");
 				String weChatState = (String) infoData.get("wxState");
+				String weChatwxOriId = (String) infoData.get("wxOriId");
 
 				String sql = "select COUNT(1) from PS_TZ_WX_APPSE_TBL WHERE TZ_JG_ID=? AND TZ_WX_APPID=?";
 				int count = jdbcTemplate.queryForObject(sql, new Object[] { orgid, weChatId }, "Integer");
@@ -214,6 +218,7 @@ public class TzWeChatServiceImpl extends FrameworkImpl {
 					psTzWxAppseTbl.setTzWxName(weChatName);
 					psTzWxAppseTbl.setTzFromPvalue(weChatParam);
 					psTzWxAppseTbl.setTzWxState(weChatState);
+					psTzWxAppseTbl.setTzWxOriid(weChatwxOriId);
 					
 					psTzWxAppseTbl.setRowLastmantDttm(new Date());
 					psTzWxAppseTbl.setRowLastmantOprid(oprid);

@@ -4,6 +4,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.mediaPicModel', {
         { name:'index',type:'number'},
         { name:'mediaId', type:'string' },
         { name:'src', type:'string' },
-        { name:'caption', type:'string' }
+        { name:'caption', type:'string' },
+        { name:'mediaUrl',type:'string'}
     ]
 });

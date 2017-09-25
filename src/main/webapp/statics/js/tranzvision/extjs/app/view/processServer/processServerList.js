@@ -64,17 +64,15 @@ Ext.define('KitchenSink.view.processServer.processServerList', {
                 dataIndex: 'processDesc',
                 flex: 1
             },{
+                text: '最近心跳时间',
+                sortable: true,
+                dataIndex: 'palpitationDateTime',
+                flex: 1
+            },{
                 text: '运行状态',
                 sortable: true,
                 dataIndex: 'runningStatus',
-                flex: 1,
-                renderer: function(value,metadata,record){
-                    var index = statusStore.find('TValue',value);
-                    if(index!=-1){
-                        return statusStore.getAt(index).data.TSDesc;
-                    }
-                    return "";
-                }
+                flex: 1
             },{
                 menuDisabled: true,
                 sortable: false,

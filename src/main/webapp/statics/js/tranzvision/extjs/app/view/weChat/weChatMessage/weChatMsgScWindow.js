@@ -14,14 +14,25 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
     title: '素材管理',
     //height:400,
     minHeight:250,
-    width: 824,
-    materialType:'',
-    wxAppId:'',
-    tabpanel:{},
+    width: 1100,
+    x:10,
+    y:10,
     modal:true,
-    bodyStyle:'overflow-y:auto;overflow-x:hidden',
+    resizable: true,
+    listeners:{
+        resize: function(win){
+            win.doLayout();
+        }
+    },
+    bodyStyle:'overflow-y:auto;overflow-x:hidden;padding-top:3px',
     initComponent: function() {
-    	var mediaPicStore = new KitchenSink.view.weChat.weChatMessage.mediaPicStore();
+    	var materialType = this.materialType;
+        var wxAppId = this.wxAppId;
+        
+    	var mediaPicStore = new KitchenSink.view.weChat.weChatMessage.mediaPicStore({
+    		materialType: materialType,
+    		wxAppId: wxAppId
+    	});
         me = this;
         this.items = [
             {
@@ -34,36 +45,41 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgScWindow', {
                     store: mediaPicStore,
                     tpl:[
                         '<tpl for=".">',
-                        '<div class="thumb-wrap" style="width:144px;"id="{index}">',
-                            '<div style="width:130px;height:130px;background:url('+ TzUniversityContextPath +'{src});background-size:100%">',
-                        '</div>',
-                        '<tpl if="caption.length &gt; 20"><marquee scrollamount=3 width: 100%">{caption}</marquee></tpl>',
-                        '<tpl if="caption.length <= 20"><span>{caption}</span></tpl>',
+                        '<div class="thumb-wrap pic" id="{index}">',
+                            '<div style="width:100%;height:100%;background:url('+ TzUniversityContextPath +'{src});background-size: 150%;background-position: center center;background-repeat: no-repeat;position: relative;">',
+                               '<div class="thumb-wrap-title">',
+              		              '<tpl ><span>{caption}</span></tpl>',
+              	              '</div>',
+                            '</div>',
                         '</div>',
                         '</tpl>',
                         '<div class="x-clear"></div>'
                     ],
                     itemSelector: 'div.thumb-wrap',
+                    selectedItemCls:'current-item',
                     emptyText: 'No images available',
                     style:{
-                        background:'white'
+                         background:'white'
                         //border:'1px solid #000000',
                         //padding:'0 15px 25px 0'
                     }
+                   
                 }],
                 bbar: {
                     xtype: 'pagingtoolbar',
                     pageSize: 10,
-                    store: mediaPicStore/*,
-                     plugins: new Ext.ux.ProgressBarPager()*/
+                    store: mediaPicStore
                 }
             }
 
         ];
         this.callParent();
     },
-    constructor:function(tabpanel){
-        this.tabpanel=tabpanel;
+    constructor:function(config){
+        this.materialType = config.materialType;
+        this.wxAppId = config.wxAppId;
+        this.callbackFun = config.callback;
+        
         this.callParent();
     },
     buttons: [{

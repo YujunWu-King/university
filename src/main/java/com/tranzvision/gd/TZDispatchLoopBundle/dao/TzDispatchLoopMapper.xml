@@ -66,6 +66,13 @@
     <result column="TZ_TJSJ" property="tzTjsj" jdbcType="TIMESTAMP" />
     <result column="TZ_ZHXGR" property="tzZhxgr" jdbcType="VARCHAR" />
     <result column="TZ_ZHXGSJ" property="tzZhxgsj" jdbcType="TIMESTAMP" />
+    <result column="TZ_YEAR_CHECK" property="tzYearCheck" jdbcType="VARCHAR" />
+    <result column="TZ_MONTH_CHECK" property="tzMonthCheck" jdbcType="VARCHAR" />
+    <result column="TZ_DAY1_CHECK" property="tzDay1Check" jdbcType="VARCHAR" />
+    <result column="TZ_DAY2_CHECK" property="tzDay2Check" jdbcType="VARCHAR" />
+    <result column="TZ_HOUR_CHECK" property="tzHourCheck" jdbcType="VARCHAR" />
+    <result column="TZ_MINUTE_CHECK" property="tzMinuteCheck" jdbcType="VARCHAR" />
+    <result column="TZ_SECOND_CHECK" property="tzSecondCheck" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_JG_ID, TZ_XH_MC, TZ_XH_MS, TZ_EE_BZ, TZ_XH_QZBDS, TZ_ZDYXH_BZ, TZ_XHZD_Y, TZ_XHZD_W, 
@@ -76,7 +83,8 @@
     TZ_W_ZDRQ1, TZ_W_ZDZC, TZ_W_ZDRQ2, TZ_W_QZBDS, TZ_H_QZGZ, TZ_H_QSXS, TZ_H_JZXS, TZ_H_LBQZ, 
     TZ_H_XHQZ, TZ_H_QZBDS, TZ_M2_QZGZ, TZ_M2_QSFZ, TZ_M2_JZFZ, TZ_M2_LBQZ, TZ_M2_XHQZ, 
     TZ_M2_QZBDS, TZ_S_QZGZ, TZ_S_QSM, TZ_S_JZM, TZ_S_LBQZ, TZ_S_XHQZ, TZ_S_QZBDS, TZ_TJR, 
-    TZ_TJSJ, TZ_ZHXGR, TZ_ZHXGSJ
+    TZ_TJSJ, TZ_ZHXGR, TZ_ZHXGSJ, TZ_YEAR_CHECK, TZ_MONTH_CHECK, TZ_DAY1_CHECK, TZ_DAY2_CHECK, 
+    TZ_HOUR_CHECK, TZ_MINUTE_CHECK, TZ_SECOND_CHECK
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoopKey" >
     select 
@@ -112,7 +120,9 @@
       TZ_S_QZGZ, TZ_S_QSM, TZ_S_JZM, 
       TZ_S_LBQZ, TZ_S_XHQZ, TZ_S_QZBDS, 
       TZ_TJR, TZ_TJSJ, TZ_ZHXGR, 
-      TZ_ZHXGSJ)
+      TZ_ZHXGSJ, TZ_YEAR_CHECK, TZ_MONTH_CHECK, 
+      TZ_DAY1_CHECK, TZ_DAY2_CHECK, TZ_HOUR_CHECK, 
+      TZ_MINUTE_CHECK, TZ_SECOND_CHECK)
     values (#{tzJgId,jdbcType=VARCHAR}, #{tzXhMc,jdbcType=VARCHAR}, #{tzXhMs,jdbcType=VARCHAR}, 
       #{tzEeBz,jdbcType=VARCHAR}, #{tzXhQzbds,jdbcType=VARCHAR}, #{tzZdyxhBz,jdbcType=VARCHAR}, 
       #{tzXhzdY,jdbcType=VARCHAR}, #{tzXhzdW,jdbcType=VARCHAR}, #{tzXhzdM1,jdbcType=VARCHAR}, 
@@ -134,7 +144,9 @@
       #{tzSQzgz,jdbcType=VARCHAR}, #{tzSQsm,jdbcType=INTEGER}, #{tzSJzm,jdbcType=INTEGER}, 
       #{tzSLbqz,jdbcType=VARCHAR}, #{tzSXhqz,jdbcType=VARCHAR}, #{tzSQzbds,jdbcType=VARCHAR}, 
       #{tzTjr,jdbcType=VARCHAR}, #{tzTjsj,jdbcType=TIMESTAMP}, #{tzZhxgr,jdbcType=VARCHAR}, 
-      #{tzZhxgsj,jdbcType=TIMESTAMP})
+      #{tzZhxgsj,jdbcType=TIMESTAMP}, #{tzYearCheck,jdbcType=VARCHAR}, #{tzMonthCheck,jdbcType=VARCHAR}, 
+      #{tzDay1Check,jdbcType=VARCHAR}, #{tzDay2Check,jdbcType=VARCHAR}, #{tzHourCheck,jdbcType=VARCHAR}, 
+      #{tzMinuteCheck,jdbcType=VARCHAR}, #{tzSecondCheck,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoop" >
     insert into TZ_XUNH_DEFN_T
@@ -331,6 +343,27 @@
       <if test="tzZhxgsj != null" >
         TZ_ZHXGSJ,
       </if>
+      <if test="tzYearCheck != null" >
+        TZ_YEAR_CHECK,
+      </if>
+      <if test="tzMonthCheck != null" >
+        TZ_MONTH_CHECK,
+      </if>
+      <if test="tzDay1Check != null" >
+        TZ_DAY1_CHECK,
+      </if>
+      <if test="tzDay2Check != null" >
+        TZ_DAY2_CHECK,
+      </if>
+      <if test="tzHourCheck != null" >
+        TZ_HOUR_CHECK,
+      </if>
+      <if test="tzMinuteCheck != null" >
+        TZ_MINUTE_CHECK,
+      </if>
+      <if test="tzSecondCheck != null" >
+        TZ_SECOND_CHECK,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzJgId != null" >
@@ -525,6 +558,27 @@
       <if test="tzZhxgsj != null" >
         #{tzZhxgsj,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzYearCheck != null" >
+        #{tzYearCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMonthCheck != null" >
+        #{tzMonthCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDay1Check != null" >
+        #{tzDay1Check,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDay2Check != null" >
+        #{tzDay2Check,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHourCheck != null" >
+        #{tzHourCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMinuteCheck != null" >
+        #{tzMinuteCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSecondCheck != null" >
+        #{tzSecondCheck,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZDispatchLoopBundle.model.TzDispatchLoop" >
@@ -716,6 +770,27 @@
       <if test="tzZhxgsj != null" >
         TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzYearCheck != null" >
+        TZ_YEAR_CHECK = #{tzYearCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMonthCheck != null" >
+        TZ_MONTH_CHECK = #{tzMonthCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDay1Check != null" >
+        TZ_DAY1_CHECK = #{tzDay1Check,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDay2Check != null" >
+        TZ_DAY2_CHECK = #{tzDay2Check,jdbcType=VARCHAR},
+      </if>
+      <if test="tzHourCheck != null" >
+        TZ_HOUR_CHECK = #{tzHourCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMinuteCheck != null" >
+        TZ_MINUTE_CHECK = #{tzMinuteCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSecondCheck != null" >
+        TZ_SECOND_CHECK = #{tzSecondCheck,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_XH_MC = #{tzXhMc,jdbcType=VARCHAR}
@@ -783,7 +858,14 @@
       TZ_TJR = #{tzTjr,jdbcType=VARCHAR},
       TZ_TJSJ = #{tzTjsj,jdbcType=TIMESTAMP},
       TZ_ZHXGR = #{tzZhxgr,jdbcType=VARCHAR},
-      TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP}
+      TZ_ZHXGSJ = #{tzZhxgsj,jdbcType=TIMESTAMP},
+      TZ_YEAR_CHECK = #{tzYearCheck,jdbcType=VARCHAR},
+      TZ_MONTH_CHECK = #{tzMonthCheck,jdbcType=VARCHAR},
+      TZ_DAY1_CHECK = #{tzDay1Check,jdbcType=VARCHAR},
+      TZ_DAY2_CHECK = #{tzDay2Check,jdbcType=VARCHAR},
+      TZ_HOUR_CHECK = #{tzHourCheck,jdbcType=VARCHAR},
+      TZ_MINUTE_CHECK = #{tzMinuteCheck,jdbcType=VARCHAR},
+      TZ_SECOND_CHECK = #{tzSecondCheck,jdbcType=VARCHAR}
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_XH_MC = #{tzXhMc,jdbcType=VARCHAR}
   </update>
