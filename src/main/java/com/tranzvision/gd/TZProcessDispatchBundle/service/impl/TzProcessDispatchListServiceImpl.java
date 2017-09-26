@@ -134,13 +134,15 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 // 信息内容;
                 String orgId = jacksonUtil.getString("orgId");
                 String jcName = jacksonUtil.getString("jcName");
+                String fwqName = jacksonUtil.getString("processName");
+                String cycleExpersion = jacksonUtil.getString("cycleExpression");
                 String runCntlId = jacksonUtil.getString("runCntlId") == null?"":jacksonUtil.getString("runCntlId");
         		String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
         		
 				BaseEngine tmpEngine = tzSQLObject.createEngineProcess(orgId, jcName);
 		    	EngineParameters schdProcessParameters = new EngineParameters();
-		    	schdProcessParameters.setBatchServer("");
-		    	schdProcessParameters.setCycleExpression("");
+		    	schdProcessParameters.setBatchServer(fwqName);
+		    	schdProcessParameters.setCycleExpression(cycleExpersion);
 		    	schdProcessParameters.setLoginUserAccount(currentAccountId);		
 		    	Date currentDT = new Date();
 		    	schdProcessParameters.setPlanExcuteDateTime(currentDT);

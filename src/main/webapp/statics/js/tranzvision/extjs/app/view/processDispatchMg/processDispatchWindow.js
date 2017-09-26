@@ -104,7 +104,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                     name:'runDate',
                     format: 'Y-m-d',
                     labelWidth: 100,
-                    editable: false
+                    editable: false,
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
+                    allowBlank:false
                 },{
                     xtype: 'timefield',
                     fieldLabel: '计划开始时间',
@@ -112,7 +116,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                     name:'runTime',
                     format: 'H:i:s',
                     labelWidth: 100,
-                    editable: false
+                    editable: false,
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
+                    allowBlank:false
                 }]
             },{
                 bodyStyle:'padding:0 0 10px 0',
@@ -127,7 +135,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                         handler: "pmtSearchCycleTmp"
                     }
                 },
-                style:'margin-top:10px;margin-left:20px'
+                style:'margin-top:10px;margin-left:20px',
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
             }
         ],
     }],
@@ -139,8 +151,12 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
             var win = btn.findParentByType("window");
             //页面注册信息表单
             var form = win.child("form").getForm();
-            win.doSave(win);
-            win.close()
+            if (form.isValid()) {
+            	win.doSave(win);
+            	win.close()
+            }
+            
+            
         }
     }, {
         text: '关闭',
