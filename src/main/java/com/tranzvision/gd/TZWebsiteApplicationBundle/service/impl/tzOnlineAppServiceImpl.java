@@ -126,12 +126,14 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 
 	// 张浪添加，2017-09-25
 	// 用于控制每台服务器访问量的信号变量，避免考生同时保存、提交操作过量对服务器造成过大压力,每台服务器允许5(默认5，hardcode[TZ_APPONL_XHL_COUNT]定义)个人进行排队执行保存、提交操作，其他人阻塞等待
-	private static Semaphore onlineAppLockCounter = new Semaphore(5, true);
+	private static Semaphore onlineAppViewLockCounter = new Semaphore(5, true);
+	private static Semaphore onlineAppSaveLockCounter = new Semaphore(5, true);
 	private static int semaphoreCount = 5;
 
 	public static void setOnlineAppLockCounter(int count) {
 		tzOnlineAppServiceImpl.semaphoreCount = count;
-		tzOnlineAppServiceImpl.onlineAppLockCounter = new Semaphore(count, true);
+		tzOnlineAppServiceImpl.onlineAppViewLockCounter = new Semaphore(count, true);
+		tzOnlineAppServiceImpl.onlineAppSaveLockCounter = new Semaphore(count, true);
 	}
 
 	/* 报名表展示 */
@@ -208,6 +210,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		String strTJXPwd = "";
 		//显示错误信息页面
 		String strErrorPage = "N";
+		//错误页面显示返回首页
+		String backIndexPage = "N";
 
 		// 错误提示信息
 		String strMessageError = "";
@@ -331,10 +335,24 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		 *********************************************************************************************/
 		//频繁刷新提示
 		String strRefreshFast = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
-				"REFRESH_FAST", "您的请求正在处理中，请勿频繁刷新或重复访问。", "Your request is in process, do not frequent refresh, try again later.");
+				"REFRESH_FAST", "您的请求正在处理中，请勿频繁刷新或反复操作，请稍后刷新重试。", "Your request is in process, do not frequent refresh, try again later.");
+		String strSystemBusy = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
+				"VIEW_SYSTEM_BUSY", strLanguage, "系统繁忙，请点击返回首页或刷新重试。", "The system is busy, please try again later.");
+		
 		Semaphore sessionSemaphore = null;
 		boolean hasGetSessionSemaphore = false;
+		boolean hasGetViewOnlineAppSemaphore = false;
 		try{
+			//限制每台服务器上只能5人同时访问报名表
+			if (onlineAppViewLockCounter.getQueueLength() >= tzOnlineAppServiceImpl.semaphoreCount
+					|| onlineAppViewLockCounter.tryAcquire(500, TimeUnit.MILLISECONDS) == false) {
+				//同时进入报名表的人数过多，直接返回首页
+				strErrorPage = "Y";
+				backIndexPage = "Y";
+				throw new TzException(strSystemBusy);
+			}
+			hasGetViewOnlineAppSemaphore = true;
+			
 			//当前会话sessionid
 			String sessionId = request.getSession().getId();
 			Map.Entry<String,Semaphore> sessionSemaphoreObject = tzGdObject.getSemaphore(sessionId);
@@ -1321,13 +1339,23 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			if(hasGetSessionSemaphore){
 				sessionSemaphore.release();
 			}
+			
+			if(hasGetViewOnlineAppSemaphore){
+				onlineAppViewLockCounter.release();
+			}
 		}
 		
 		//显示错误信息页面
 		if("Y".equals(strErrorPage)){
 			try {
-				str_appform_main_html = tzGdObject.getHTMLTextForDollar(
-						"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_ERROR_PAGE_HTML", true, contextUrl,strMessageError);
+				String hiddenCls = "hidden";
+				if("Y".equals(backIndexPage)){
+					str_appform_main_html = tzGdObject.getHTMLTextForDollar(
+							"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_ERROR_PAGE_HTML", true, contextUrl,strMessageError,hiddenCls,"");
+				}else{
+					str_appform_main_html = tzGdObject.getHTMLTextForDollar(
+							"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_ERROR_PAGE_HTML", true, contextUrl,strMessageError,"",hiddenCls);
+				}
 			} catch (TzSystemException e) {
 				e.printStackTrace();
 			}
@@ -1719,15 +1747,15 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				 * 用信号量来控制同一台服务器上只能允许5个考生进行排队执行保存、提交请求，并控制同一个报名表不能同时提交多次保存、
 				 * 提交操作请求 张浪添加，20170925 【修改开始】
 				 *********************************************************************************************/
-				System.out.println("可用信号量总数：" + onlineAppLockCounter.availablePermits());
+				System.out.println("可用信号量总数：" + onlineAppSaveLockCounter.availablePermits());
 				Semaphore tmpSemaphore = null;
 				boolean hasGetOnlineAppLock = false;
 				boolean hasGetSemaphore = false;
 				try {
 					// 同一个应用服务内只允许5个考生同时进入保存、提交报名表操作排队，否则报系统忙，请稍候再试。
 					try {
-						if (onlineAppLockCounter.getQueueLength() >= tzOnlineAppServiceImpl.semaphoreCount
-								|| onlineAppLockCounter.tryAcquire(500, TimeUnit.MILLISECONDS) == false) {
+						if (onlineAppSaveLockCounter.getQueueLength() >= tzOnlineAppServiceImpl.semaphoreCount
+								|| onlineAppSaveLockCounter.tryAcquire(500, TimeUnit.MILLISECONDS) == false) {
 							throw new TzException(strSystemBusy);
 						}
 						hasGetOnlineAppLock = true;
@@ -2185,7 +2213,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					}
 					// 释放信号量
 					if (hasGetOnlineAppLock) {
-						onlineAppLockCounter.release();
+						onlineAppSaveLockCounter.release();
 					}
 				}
 				/*********************************************************************************************
