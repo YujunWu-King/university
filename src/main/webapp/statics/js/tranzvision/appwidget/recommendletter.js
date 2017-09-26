@@ -3190,12 +3190,15 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 							/*提示先保存报名表*/
 							alert(MsgSet["SAVEBMBFIRST"]); 
 						}else{
+							//发送等待弹窗
+							layer.load('推荐信发送中，请不要刷新或者关闭页面！');
 							$.ajax({
 								type: "post",
 								url: _Url + encodeURIComponent(param),
 								dataType: "json",
 								success: function(result){
 									if (result.comContent=="SUCCESS"){
+										layer.closeAll();
 										$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
 										$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
 										$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
@@ -3245,6 +3248,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 										$("#tjx_delete_"+(Number(mm)-1)).hide();
 										$("#app_save").click();
 									}else {
+										layer.closeAll();
 										$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
 										$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
 										$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
@@ -3381,13 +3385,14 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				$("#changeRecS_"+(Number(mm)-1)).css("display","none");
 
 				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
-				
+				layer.load('推荐信发送中，请不要刷新或者关闭页面！');
 				$.ajax({
 					type: "post",
 					url: _Url + encodeURIComponent(param),
 					dataType: "json",
 					success: function(result){
 						if (result.comContent=="SUCCESS"){
+							layer.closeAll();
 							$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
 							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
 							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
@@ -3397,6 +3402,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 							alert(MsgSet["SEND_SC"]);
 							$("#app_save").click();
 						}else {
+							layer.closeAll();
 							$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
 							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
 							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
