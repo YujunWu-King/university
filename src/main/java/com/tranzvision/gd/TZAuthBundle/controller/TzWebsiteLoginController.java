@@ -110,7 +110,8 @@ public class TzWebsiteLoginController {
 			strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
 					"Can not visit the site.Please check the url.");
 		}
-
+		//销毁session
+		tzWebsiteLoginServiceImpl.doLogout(request, response);
 		return strRet;
 
 	}
@@ -154,7 +155,8 @@ public class TzWebsiteLoginController {
 			strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
 					"Can not visit the site.Please check the url.");
 		}
-
+		//销毁session
+		tzWebsiteLoginServiceImpl.doLogout(request, response);
 		return strRet;
 
 	}
