@@ -345,7 +345,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		try{
 			//限制每台服务器上只能5人同时访问报名表
 			if (onlineAppViewLockCounter.getQueueLength() >= tzOnlineAppServiceImpl.semaphoreCount
-					|| onlineAppViewLockCounter.tryAcquire(500, TimeUnit.MILLISECONDS) == false) {
+					|| onlineAppViewLockCounter.tryAcquire(5000, TimeUnit.MILLISECONDS) == false) {
 				//同时进入报名表的人数过多，直接返回首页
 				strErrorPage = "Y";
 				backIndexPage = "Y";
@@ -1755,7 +1755,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 同一个应用服务内只允许5个考生同时进入保存、提交报名表操作排队，否则报系统忙，请稍候再试。
 					try {
 						if (onlineAppSaveLockCounter.getQueueLength() >= tzOnlineAppServiceImpl.semaphoreCount
-								|| onlineAppSaveLockCounter.tryAcquire(500, TimeUnit.MILLISECONDS) == false) {
+								|| onlineAppSaveLockCounter.tryAcquire(5000, TimeUnit.MILLISECONDS) == false) {
 							throw new TzException(strSystemBusy);
 						}
 						hasGetOnlineAppLock = true;
