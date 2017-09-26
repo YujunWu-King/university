@@ -204,6 +204,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		String strTJXIsPwd = "N";
 		// 推荐信密码
 		String strTJXPwd = "";
+		//显示错误信息页面
+		String strErrorPage = "N";
 
 		// 错误提示信息
 		String strMessageError = "";
@@ -606,7 +608,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		        if(tmpSemaphore.availablePermits() < 1)
 				{
 		        	strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
-							"REFRESH_FAST", "您的请求正在处理中，请勿频发刷新，稍后再试。", "Your request is in process, do not frequent refresh, try again later.");
+							"REFRESH_FAST", "您的请求正在处理中，请勿频繁刷新，稍后再试。", "Your request is in process, do not frequent refresh, try again later.");
 				}
 		    }
 		}
@@ -623,7 +625,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		        if(tmpSemaphore.availablePermits() < 1)
 				{
 		        	strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
-							"REFRESH_FAST", "您的请求正在处理中，请勿频发刷新，稍后再试。", "Your request is in process, do not frequent refresh, try again later.");
+							"REFRESH_FAST", "您的请求正在处理中，请勿频繁刷新，稍后再试。", "Your request is in process, do not frequent refresh, try again later.");
 				}
 		    }
 		}
@@ -658,7 +660,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					// 先判断当前报名表对应信号量大于等于1，说明当前报名表有请求尚在执行，否则获取信号灯
 					if (refreshSemaphore.getQueueLength() >= 1 || refreshSemaphore.tryAcquire() == false) {
 						strMessageError = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
-								"REFRESH_FAST", "您的请求正在处理中，请勿频发刷新，稍后再试。", "Your request is in process, do not frequent refresh, try again later.");
+								"REFRESH_FAST", "您的请求正在处理中，请勿频繁刷新，稍后再试。", "Your request is in process, do not frequent refresh, try again later.");
 						throw new TzException(strMessageError);
 					}
 
@@ -1265,7 +1267,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			}
 			catch(Exception e){
 				e.printStackTrace();
-				str_appform_main_html = strMessageError;
+				strErrorPage = "Y";
 			}
 			finally {
 				//释放信号量
@@ -1278,7 +1280,17 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			 * 张浪添加，20170925【修改结束】
 			 *********************************************************************************************/
 		} else {
-			str_appform_main_html = strMessageError;
+			strErrorPage = "Y";
+			//str_appform_main_html = strMessageError;
+		}
+		//显示错误信息页面
+		if("Y".equals(strErrorPage)){
+			try {
+				str_appform_main_html = tzGdObject.getHTMLTextForDollar(
+						"HTML.TZWebsiteApplicationBundle.TZ_ONLINE_ERROR_PAGE_HTML", true, contextUrl,strMessageError);
+			} catch (TzSystemException e) {
+				e.printStackTrace();
+			}
 		}
 
 		return str_appform_main_html;
