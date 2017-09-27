@@ -335,9 +335,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		 *********************************************************************************************/
 		//频繁刷新提示
 		String strRefreshFast = gdKjComServiceImpl.getMessageText(request, response, "TZGD_APPONLINE_MSGSET",
-				"REFRESH_FAST", "您的请求正在处理中，请勿频繁刷新或反复操作，请稍后刷新重试。", "Your request is in process, do not frequent refresh, try again later.");
+				"REFRESH_FAST", "您的请求正在处理中，请勿频繁刷新或反复操作，请稍后刷新重试。", "Your request is being processed, do not frequently refresh or repeated operation, please refresh the retry later.");
 		String strSystemBusy = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
-				"VIEW_SYSTEM_BUSY", strLanguage, "系统繁忙，请点击返回首页或刷新重试。", "The system is busy, please try again later.");
+				"VIEW_SYSTEM_BUSY", strLanguage, "系统繁忙，请点击返回首页或刷新重试。", "The system is busy, please click to return to the home page or refresh the retry.");
 		
 		Semaphore sessionSemaphore = null;
 		boolean hasGetSessionSemaphore = false;
