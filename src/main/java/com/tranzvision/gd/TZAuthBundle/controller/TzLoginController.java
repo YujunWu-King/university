@@ -105,6 +105,8 @@ public class TzLoginController {
 		}
 
 		ModelAndView mv = new ModelAndView("login/managerLogin");
+		//登录前先销毁session
+		tzLoginServiceImpl.doLogout(request, response);
 		return mv;
 	}
 
@@ -154,6 +156,8 @@ public class TzLoginController {
 		}
 
 		ModelAndView mv = new ModelAndView("login/managerLogin");
+		//登录前先销毁session
+		tzLoginServiceImpl.doLogout(request, response);
 		return mv;
 
 	}

@@ -134,16 +134,20 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 // 信息内容;
                 String orgId = jacksonUtil.getString("orgId");
                 String jcName = jacksonUtil.getString("jcName");
+                String fwqName = jacksonUtil.getString("processName");
+                String cycleExpersion = jacksonUtil.getString("cycleExpression");
+                String planDate = jacksonUtil.getString("runDate");
+                String planTime = jacksonUtil.getString("runTime");
                 String runCntlId = jacksonUtil.getString("runCntlId") == null?"":jacksonUtil.getString("runCntlId");
         		String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
         		
+        		SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
 				BaseEngine tmpEngine = tzSQLObject.createEngineProcess(orgId, jcName);
 		    	EngineParameters schdProcessParameters = new EngineParameters();
-		    	schdProcessParameters.setBatchServer("");
-		    	schdProcessParameters.setCycleExpression("");
+		    	schdProcessParameters.setBatchServer(fwqName);
+		    	schdProcessParameters.setCycleExpression(cycleExpersion);
 		    	schdProcessParameters.setLoginUserAccount(currentAccountId);		
-		    	Date currentDT = new Date();
-		    	schdProcessParameters.setPlanExcuteDateTime(currentDT);
+		    	schdProcessParameters.setPlanExcuteDateTime(simple.parse(planDate + planTime));
 		    	schdProcessParameters.setRunControlId(runCntlId);
 		    	//调度作业
 		    	tmpEngine.schedule(schdProcessParameters);

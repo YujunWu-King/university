@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>报名表出错了</title>
+<style type="text/css">
+.errorMsg{
+	text-align: center;
+	margin: 50px 20px 0px 20px;
+}
+.error-icon{
+	width: 50px;
+	height: 45px;
+	background: url(%bind(:1)/statics/images/tranzvision/warning.png);
+	background-repeat: no-repeat;
+	display: inline-block;
+}
+.message-text{
+	padding-top: 10px;
+	color: #333;
+	font-size: 18px;
+	line-height: 30px;
+}
+.message-text.hidden{
+	display: none;
+}
+</style>
+</head>
+<body>
+	<div class="errorMsg">
+		<div class="error-icon"></div>
+		<div class="message-text %bind(:3)">%bind(:2)</div>
+		<div class="message-text %bind(:4)">系统繁忙，请点击<a href="javascript:history.back();">返回首页</a>或<a href="javascript:location.reload(true);">刷新</a>重试。</div>
+	</div>
+</body>
+</html>

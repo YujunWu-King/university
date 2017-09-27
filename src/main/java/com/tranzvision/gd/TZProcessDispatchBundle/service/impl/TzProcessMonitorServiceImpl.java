@@ -236,7 +236,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
 
         if ("startProcess".equals(OperateType)) {
 
-            if(processMap != null && "STARTING".equals(String.valueOf(processMap.get("TZ_YXZT")))) {
+            if(processMap != null && ("STARTING".equals(String.valueOf(processMap.get("TZ_YXZT")))||"RUNNING".equals(String.valueOf(processMap.get("TZ_YXZT"))))) {
             	
             	if("SUCCEEDED".equals(sqlStatus)||"ERROR".equals(sqlStatus)||"FATAL".equals(sqlStatus)||"TERMINATED".equals(sqlStatus)) {
             		
@@ -253,8 +253,6 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
             		
             		return "{\"status\":\"startfailed\"}";
             	}
-
-
 		    	
                 return strRet;
             }else {
