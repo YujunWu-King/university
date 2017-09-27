@@ -1880,18 +1880,15 @@ public class tzOnlineAppEngineImpl {
 							StringBuffer sb = new StringBuffer();
 							sb.append("SELECT count(B.TZ_BATCH_ID) as mun ");
 							sb.append("FROM PS_TZ_CLASS_INF_T C, PS_TZ_CLS_BATCH_T B WHERE ");
-							sb.append("(C.TZ_CLASS_ID = B.TZ_CLASS_ID ");
+							sb.append("C.TZ_CLASS_ID = B.TZ_CLASS_ID ");
 							sb.append("AND B.TZ_APP_PUB_STATUS = 'Y' ");
 							sb.append("AND C.TZ_CLASS_ID = ? ");
 							sb.append("AND B.TZ_BATCH_ID=? ");
-							sb.append("AND B.TZ_APP_END_DT >= curdate()) ");
-							sb.append("OR (C.TZ_CLASS_ID = B.TZ_CLASS_ID ");
-							sb.append("AND C.TZ_CLASS_ID = ?  ");
-							sb.append("AND B.TZ_BATCH_ID=? ");
-							sb.append("AND B.TZ_APP_PUB_STATUS != 'Y' )");
+							sb.append("AND B.TZ_APP_END_DT >= curdate() ");
+
 
 							int mun = sqlQuery.queryForObject(sb.toString(),
-									new Object[] { classId, batchID, classId, batchID }, "Integer");
+									new Object[] { classId, batchID }, "Integer");
 							if (mun <= 0) {
 								String batchError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
 										"TZGD_APPONLINE_MSGSET", "BATCHError", LAN, "该批次报名表提交时间已经截止，请重新选择其他批次。",

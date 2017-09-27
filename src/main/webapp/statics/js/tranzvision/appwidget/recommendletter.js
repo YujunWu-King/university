@@ -3184,14 +3184,145 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 						$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
 						$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","block");
 						$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
-
-						var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+						
+						
 						if(_tz_app_ins_id == "0"){
 							/*提示先保存报名表*/
 							alert(MsgSet["SAVEBMBFIRST"]); 
 						}else{
+							
+							//modity by caoy 修改逻辑 先保存推荐信 然后在发送邮件 然后掉调用 保存推荐信
+							processing();
+							var appInsId = SurveyBuild.appInsId;
+							var appInsVersionId = SurveyBuild.appInsVersion;
+							var _a = getData();
+							var classId = $("#ClassId").val();
+							var batchId = $("#BatchId").val();
+							var pwd="";
+							var isPwd="N";
+							console.log("appInsId:"+appInsId);
+							console.log("appInsVersionId:"+appInsVersionId);
+							console.log("currentPageId:"+currentPageId);
+							
+							var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"","TZ_REF_LETTER_ID":"","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"ZHS","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+							$.ajax({
+								type: "POST",
+								url: SurveyBuild.tzGeneralURL,
+								data: {
+									tzParams: tzSaveParams
+								},
+								dataType: "JSON",
+								success: function(f) {
+									console.log(f.state.errcode);
+									if (f.state.errcode == "0") {
+										SurveyBuild.appInsId = f.comContent.insid;
+										SurveyBuild.appInsVersion = f.comContent.appInsVersionId;
+										SurveyBuild.classId = classId;
+										
+										/*设置样式*/
+										/*设置页面完成状态*/
+										if (f.comContent.code == "0") { 
+									 	/*当前页签设置为完成*/
+											$("#" + currentPageId).find(".menu-gou.right img").attr("src",TzUniversityContextPath + "/statics/images/appeditor/new/check-white.png");
+											$("#" + currentPageId).find(".menu-gou.right img").show();
+										}else{
+											/*当前页签设置为未完成*/
+											$("#" + currentPageId).find(".menu-gou.right img").attr("src","");
+											$("#" + currentPageId).find(".menu-gou.right img").hide();
+										}
+										layer.closeAll();
+										noteing(MsgSet.SAVE_SUCCEED);
+										
+										
+										var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+SurveyBuild.appInsId+'","TZ_APP_INS_VERSION":"'+SurveyBuild.appInsVersion+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+										
+										//报名报保存成功，发送邮件
+										layer.load('推荐信发送中，请不要刷新或者关闭页面！');
+										
+										
+										
+										
+										
+										$.ajax({
+											type: "post",
+											url: _Url + encodeURIComponent(param),
+											dataType: "json",
+											success: function(result){
+												if (result.comContent=="SUCCESS"){
+													layer.closeAll();
+													$("#sendEmailS_"+(Number(mm)-1)).css("display","none");
+													$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","none");
+													$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+													$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+													
+													$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+													$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+													
+													$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+													alert(MsgSet["SEND_SC"]);
+													$("#tjxzt_desc_"+(Number(mm)-1)).html(MsgSet["ReLeSt"]+"：<span class='blue'>"+MsgSet["SendEmail"]+"</span>");
+													$("#tjxzt_info_"+(Number(mm)-1)).val("Y");
+													$("#" + data["itemId"] + children[m-1].recommend_1["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_2["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_3["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_4["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_5["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_6["itemId"]).prop("readonly", true);
+													$("input[name="+data["itemId"]+children[m-1].recommend_15["itemId"]+"]").prop("disabled", true);
+													$("input[name="+data["itemId"]+children[m-1].recommend_7["itemId"]+"]").prop("disabled", true);
+													$("input[name="+data["itemId"]+children[m-1].recommend_8["itemId"]+"]").prop("disabled", true);
+													$("#" + data["itemId"] + children[m-1].recommend_10["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_11["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_12["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_13["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_14["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_19["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_20["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_21["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_22["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_23["itemId"]).prop("readonly", true);
+													
+													$("#" + data["itemId"] + children[m-1].recommend_17["itemId"]).prop("readonly", true);
+													$("#" + data["itemId"] + children[m-1].recommend_18["itemId"]).next(".chosen-container").unbind();
+											
+													$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_E").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_7["itemId"]+"_C").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_U").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_8["itemId"]+"_S").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_M").attr("readonlyflag","Y");
+													$("#"+data.itemId + children[m-1].recommend_15["itemId"]+"_F").attr("readonlyflag","Y");
+													$("#tjx_delete_"+(Number(mm)-1)).hide();
+													SurveyBuild.saveTjx_fj();
+												}else {
+													layer.closeAll();
+													$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+													$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
+													$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+													$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+													alert(result.comContent);
+												}
+											}
+										});
+										
+				
+									} else {
+										$("#sendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#sendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+										$("#sendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										layer.closeAll();
+										noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+									}
+								}
+							});
+							
 							//发送等待弹窗
-							layer.load('推荐信发送中，请不要刷新或者关闭页面！');
+							/*layer.load('推荐信发送中，请不要刷新或者关闭页面！');
+							
+							
+							
+							
+							
 							$.ajax({
 								type: "post",
 								url: _Url + encodeURIComponent(param),
@@ -3256,7 +3387,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 										alert(result.comContent);
 									}
 								}
-							});
+							}); */
 						}
 					}
 				}else if (_yz="2")
@@ -3383,8 +3514,94 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 				$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","none");
 				$("#changeRecH_"+(Number(mm)-1)).css("display","block");
 				$("#changeRecS_"+(Number(mm)-1)).css("display","none");
+				
+				//modity by caoy 修改逻辑 先保存推荐信 然后在发送邮件 然后掉调用 保存推荐信
+				processing();
+				var appInsId = SurveyBuild.appInsId;
+				var appInsVersionId = SurveyBuild.appInsVersion;
+				var _a = getData();
+				var classId = $("#ClassId").val();
+				var batchId = $("#BatchId").val();
+				var pwd="";
+				var isPwd="N";
+				console.log("appInsId:"+appInsId);
+				console.log("appInsVersionId:"+appInsVersionId);
+				console.log("currentPageId:"+currentPageId);
+				
+				var tzSaveParams = '{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"U","comParams":{"update":[{"TZ_APP_C_TYPE":"SAVE","isEdit":"","TZ_REF_LETTER_ID":"","PASSWORD":"'+pwd+'","ISPWD":"'+isPwd+'","TZ_APP_INS_ID":' + appInsId + ',"TZ_APP_INS_VERSION":"' + appInsVersionId + '","TZ_PAGE_ID":"' + currentPageId + '","TZ_LANGUAGE":"ZHS","TZ_CLASS_ID":"'+SurveyBuild.classId+'","TZ_BATCH_ID":"'+batchId+'","TZ_NEW_CLASS_ID":"'+classId+'","data":' + $.toJSON(_a) + '}]}}';
+				$.ajax({
+					type: "POST",
+					url: SurveyBuild.tzGeneralURL,
+					data: {
+						tzParams: tzSaveParams
+					},
+					dataType: "JSON",
+					success: function(f) {
+						if (f.state.errcode == "0") {
+							SurveyBuild.appInsId = f.comContent.insid;
+							SurveyBuild.appInsVersion = f.comContent.appInsVersionId;
+							SurveyBuild.classId = classId;
+							
+							/*设置样式*/
+							/*设置页面完成状态*/
+							if (f.comContent.code == "0") { 
+						 	/*当前页签设置为完成*/
+								$("#" + currentPageId).find(".menu-gou.right img").attr("src",TzUniversityContextPath + "/statics/images/appeditor/new/check-white.png");
+								$("#" + currentPageId).find(".menu-gou.right img").show();
+							}else{
+								/*当前页签设置为未完成*/
+								$("#" + currentPageId).find(".menu-gou.right img").attr("src","");
+								$("#" + currentPageId).find(".menu-gou.right img").hide();
+							}
+							layer.closeAll();
+							noteing(MsgSet.SAVE_SUCCEED);
+							
+							//报名报保存成功，发送邮件
+							var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+SurveyBuild.appInsId+'","TZ_APP_INS_VERSION":"'+SurveyBuild.appInsVersion+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+							layer.load('推荐信发送中，请不要刷新或者关闭页面！');
+							$.ajax({
+								type: "post",
+								url: _Url + encodeURIComponent(param),
+								dataType: "json",
+								success: function(result){
+									if (result.comContent=="SUCCESS"){
+										layer.closeAll();
+										$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+										$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+										alert(MsgSet["SEND_SC"]);
+										SurveyBuild.saveTjx_fj();
+									}else {
+										layer.closeAll();
+										$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+										$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+										$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+										$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+										$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+										alert(result.comContent);
+									}
+								}
+							});
+							
+	
+						} else {
+							$("#reSendEmailH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailS_"+(Number(mm)-1)).css("display","block");
+							$("#reSendEmailToMeH_"+(Number(mm)-1)).css("display","none");
+							$("#reSendEmailToMeS_"+(Number(mm)-1)).css("display","block");
+							$("#changeRecH_"+(Number(mm)-1)).css("display","none");
+							$("#changeRecS_"+(Number(mm)-1)).css("display","block");
+							layer.closeAll();
+							noteing(MsgSet.SAVE_FAILD + "," + f.state.errdesc, 2);
+						}
+					}
+				});
 
-				var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
+				/*var param = '{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_SEND_REF_STD","OperateType":"SEND","comParams":{"send_falg":"'+sendFlag+'","rec_app_ins_id":"'+_tz_app_ins_id+'","TZ_APP_INS_VERSION":"'+_tz_app_version_id+'","rec_num":"'+rec_num+'","rec_title":"'+rec_title+'","rec_gname":"'+rec_gname+'","rec_name":"'+rec_name+'","rec_company":"'+rec_company+'","rec_post":"'+rec_post+'","rec_phone_area":"'+rec_phone_area+'","rec_phone_no":"'+rec_phone_no+'","rec_email":"'+rec_email+'","rec_sex":"'+rec_sex+'","rec_relation":"'+rec_relation+'","rec_language":"'+rec_language+'","email_tx":"'+_email_tx+'","rec_by1":"'+rec_by1+'","rec_by2":"'+rec_by2+'","rec_by3":"'+rec_by3+'","rec_by4":"'+rec_by4+'","rec_by5":"'+rec_by5+'","rec_by6":"'+rec_by6+'","rec_by7":"'+rec_by7+'","rec_by8":"'+rec_by8+'","rec_by9":"'+rec_by9+'","rec_by10":"'+rec_by10+'","accessPath":"'+_accessPath+'","filename":"'+_file+'","sysfilename":"'+_sysfile+'"}}';
 				layer.load('推荐信发送中，请不要刷新或者关闭页面！');
 				$.ajax({
 					type: "post",
@@ -3412,7 +3629,7 @@ SurveyBuild.extend("recommendletter", "baseComponent", {
 							alert(result.comContent);
 						}
 					}
-				});
+				}); */
 				});
 			});
 				
