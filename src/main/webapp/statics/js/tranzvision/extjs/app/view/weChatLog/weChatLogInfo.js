@@ -16,7 +16,7 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
     bodyStyle:'overflow-y:auto;overflow-x:hidden;padding-top:10px',
     actType: 'update',
     width: 650,
-//    y:10,
+    y:-10,
 //    autoScroll：true,
     minWidth: 650,
     minHeight: 300,
@@ -145,6 +145,18 @@ Ext.define('KitchenSink.view.weChatLog.weChatLogInfo', {
             name: 'mediaId',
             readOnly:true,
             colspan: 2,
+            hidden:true
+//        },{
+//        	xtype: 'textfield',
+//            fieldLabel: '图片路径',
+//            name: 'filePath',
+//            hidden:true
+//        },{
+//            xtype: "image",
+//            src: ""	,
+//            name: "titileImage",
+//            height: 86, 
+//            style:'margin-left:105px;'
         }
         ]
     },
