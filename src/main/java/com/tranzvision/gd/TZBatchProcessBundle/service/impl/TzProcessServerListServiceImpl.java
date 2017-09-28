@@ -71,8 +71,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     hMap.put("runPlatType", platFormType);
                     hMap.put("serverIP", serverIP);
                     hMap.put("intervalTime", intervalTime);
-                    hMap.put("palpitationDate", dateTime.substring(0, 10));
-                    hMap.put("palpitationTime", dateTime.substring(10));
+                    hMap.put("palpitationDate", dateTime);
                     hMap.put("parallelNum", parallelNum);
                     hMap.put("status", status);
                     hMap.put("remark", remark);

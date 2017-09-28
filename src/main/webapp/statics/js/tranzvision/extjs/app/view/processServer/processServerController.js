@@ -269,7 +269,7 @@ Ext.define('KitchenSink.view.processServer.processServerController', {
 
 		win.show();
 	},
-	deleteProcessServerBL:function () {
+	deleteProcessServerBL:function (view, rowIndex) {
 		Ext.MessageBox.confirm("确认", "您确定要删除所选记录吗?", function(btnId){
 			if(btnId == 'yes'){
 				var store = view.findParentByType("grid").store;

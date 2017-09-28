@@ -129,6 +129,7 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
             for(int num = 0; num < dataLength; num++){
                 // 表单内容;
                 String strForm = actData[num];
+                SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
                 // 将字符串转换成json;
                 jacksonUtil.json2Map(strForm);
                 // 信息内容;
@@ -141,16 +142,27 @@ public class TzProcessDispatchListServiceImpl extends FrameworkImpl{
                 String runCntlId = jacksonUtil.getString("runCntlId") == null?"":jacksonUtil.getString("runCntlId");
         		String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
         		
-        		SimpleDateFormat simple = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
-				BaseEngine tmpEngine = tzSQLObject.createEngineProcess(orgId, jcName);
-		    	EngineParameters schdProcessParameters = new EngineParameters();
-		    	schdProcessParameters.setBatchServer(fwqName);
-		    	schdProcessParameters.setCycleExpression(cycleExpersion);
-		    	schdProcessParameters.setLoginUserAccount(currentAccountId);		
-		    	schdProcessParameters.setPlanExcuteDateTime(simple.parse(planDate + planTime));
-		    	schdProcessParameters.setRunControlId(runCntlId);
-		    	//调度作业
-		    	tmpEngine.schedule(schdProcessParameters);
+        		//创建基础引擎
+        		BaseEngine tmpEngine = tzSQLObject.createEngineProcess(orgId, jcName);
+        		
+        		//获取sql
+        		String sqlQuery = tmpEngine.getSQLText("SQL.TZBatchServer.TzCanExecuteJob");
+        		String ddFlag = jdbcTemplate.queryForObject(sqlQuery, new String[] {orgId,jcName,currentAccountId}, "String");
+        		
+        		if("X".equals(ddFlag)) {
+    		    	EngineParameters schdProcessParameters = new EngineParameters();
+    		    	schdProcessParameters.setBatchServer(fwqName);
+    		    	schdProcessParameters.setCycleExpression(cycleExpersion);
+    		    	schdProcessParameters.setLoginUserAccount(currentAccountId);		
+    		    	schdProcessParameters.setPlanExcuteDateTime(simple.parse(planDate + planTime));
+    		    	schdProcessParameters.setRunControlId(runCntlId);
+    		    	//调度作业
+    		    	tmpEngine.schedule(schdProcessParameters);
+        		}else {
+        			
+        			return "{\"status\":\"failed\"}";
+        		}
+
             }
         }catch(Exception e){
             e.printStackTrace();

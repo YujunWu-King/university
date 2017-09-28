@@ -76,6 +76,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitor', {
                 dataIndex: 'status',
                 flex: 1
             }, {
+                text: '计划运行时间',
+                sortable: true,
+                dataIndex: 'status',
+                flex: 1
+            }, {
                 menuDisabled: true,
                 sortable: false,
                 flex: 1,

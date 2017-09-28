@@ -144,11 +144,11 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: new Date().getFullYear(), Value: 1 },
-                            { Name: new Date().getFullYear() + 1, Value: 2  },
-                            { Name: new Date().getFullYear() + 2, Value: 3  },
-                            { Name: new Date().getFullYear() + 3, Value: 4  },
-                            { Name: new Date().getFullYear() + 4, Value: 5 }
+                        	 { Name: new Date().getFullYear(), Value: new Date().getFullYear() },
+                             { Name: new Date().getFullYear() + 1, Value: new Date().getFullYear() + 1  },
+                             { Name: new Date().getFullYear() + 2, Value: new Date().getFullYear() + 2  },
+                             { Name: new Date().getFullYear() + 3, Value: new Date().getFullYear() + 3 },
+                             { Name: new Date().getFullYear() + 4, Value: new Date().getFullYear() + 4 }
                         ]
                     })
                 },{
@@ -165,11 +165,11 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: new Date().getFullYear(), Value: 1 },
-                            { Name: new Date().getFullYear() + 1, Value: 2  },
-                            { Name: new Date().getFullYear() + 2, Value: 3  },
-                            { Name: new Date().getFullYear() + 3, Value: 4  },
-                            { Name: new Date().getFullYear() + 4, Value: 5 }
+                            { Name: new Date().getFullYear(), Value: new Date().getFullYear() },
+                            { Name: new Date().getFullYear() + 1, Value: new Date().getFullYear() + 1  },
+                            { Name: new Date().getFullYear() + 2, Value: new Date().getFullYear() + 2  },
+                            { Name: new Date().getFullYear() + 3, Value: new Date().getFullYear() + 3 },
+                            { Name: new Date().getFullYear() + 4, Value: new Date().getFullYear() + 4 }
                         ]
                     })
                 }]
@@ -194,6 +194,7 @@
                 xtype: 'radio',
                 name:'loopYear',
                 inputValue: '4',
+                id:'yearFour',
                 style:'margin-top:10px;margin-left:50px',
                 boxLabel: "指定年份循环间隔"
             },{
