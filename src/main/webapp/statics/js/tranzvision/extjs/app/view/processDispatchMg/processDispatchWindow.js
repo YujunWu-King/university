@@ -135,11 +135,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                         handler: "pmtSearchCycleTmp"
                     }
                 },
-                style:'margin-top:10px;margin-left:20px',
-                afterLabelTextTpl: [
-                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-                ],
-                allowBlank:false
+                style:'margin-top:10px;margin-left:20px'
             }
         ],
     }],
@@ -152,10 +148,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
             //页面注册信息表单
             var form = win.child("form").getForm();
             if (form.isValid()) {
-            	win.doSave(win);
-            	win.close()
+            	var result = win.doSave(win)
+            	console.log(result)
+            	
             }
-            
+            win.close()
             
         }
     }, {
@@ -173,12 +170,17 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
         if(!form.isValid()){
             return false;
         }
+       
         var formParams = form.getValues();
         var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_DISPATCH_INFO","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
         Ext.tzSubmit(tzParams,function(response){
-            var attrValue=response.attrValue;
-            form.setValues({"attrValue":attrValue});
-        },"",true,this);
+        	
+        	if(response.status){
+        		Ext.MessageBox.alert('提示', '创建进程实例失败！请先开启权限！');
+        	}else{
+        		Ext.MessageBox.alert('提示', '创建进程实例成功！');
+        	}
+        },"处理完成",true,this);
 
     }
 });

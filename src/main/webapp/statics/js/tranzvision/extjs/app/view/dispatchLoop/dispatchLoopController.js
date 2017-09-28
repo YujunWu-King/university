@@ -837,7 +837,7 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			params.appointedWeek = dayForm["appointedWeek"];
 			params.appointedDate2 = dayForm["appointedDate2"];
 			params.dayFlag = '? ';
-			params.weekFlag = params.appointedWeek + '#' + params.appointedDate2 + ' '
+			params.weekFlag = params.appointedDate2 + '#' + params.appointedWeek + ' '
 		}else{
 			
 			this.getView().down('tabpanel').down('form[name=dayForm]').getForm().findField("beginDay1").setValue('');
@@ -864,8 +864,8 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			params.monthFlag = '* '
 		}else if(params.monthCheck == '2'){
 			
-			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("hourList").setValue('');
-			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("hourLoopInterval").setValue('');
+			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("monthList").setValue('');
+			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("monthLoopInterval").setValue('');
 			params.beginMonth = monthForm["beginMonth"];
 			params.endMonth = monthForm["endMonth"];
 			params.monthFlag = params.beginMonth + '-' + params.endMonth + ' '

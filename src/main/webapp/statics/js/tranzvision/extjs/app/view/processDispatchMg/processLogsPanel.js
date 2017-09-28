@@ -65,7 +65,8 @@ Ext.define('KitchenSink.view.processDispatchMg.processLogsPanel', {
         text: '关闭',
         iconCls: "close",
         handler: function (btn) {
-            this.getView().close();
+        	var panel = btn.findParentByType("panel");
+        	panel.close();
         }
     }],
 });
