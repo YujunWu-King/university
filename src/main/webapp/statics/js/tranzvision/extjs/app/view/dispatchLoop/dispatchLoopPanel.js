@@ -34,20 +34,11 @@
 
         items: [
             {
-            xtype: 'combobox',
-            editable:false,
-            fieldLabel: '归属机构',
-            forceSelection: true,
-            valueField: 'orgId',
-            displayField: 'orgName',
-            store: new KitchenSink.view.orgmgmt.orgListStore(),
-            queryMode: 'local',
-            name: 'orgId',
-            emptyText:'请选择机构',
-            afterLabelTextTpl: [
-                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-            ],
-            allowBlank:false
+                xtype: 'textfield',
+                fieldLabel: '所属机构',
+                value:Ext.tzOrgID,
+                name: 'orgId',
+                editable:false
         },{
             xtype: 'textfield',
             fieldLabel: '循环名称',

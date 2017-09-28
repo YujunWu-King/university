@@ -50,7 +50,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
 
                 String processName = "",processDesc = "", platFormType = "",runConId = "",loop = "",runServer = "",status = "",requestTime = "",runStartTime = "",processStartTime = "",processEndTime = "";
 
-                String sql = "SELECT A.TZ_JC_MC,A.TZ_YUNX_KZID,A.TZ_JCFWQ_MC,A.TZ_XH_QZBDS,A.TZ_JOB_YXZT,A.TZ_QQCJ_DTTM,A.TZ_JHZX_DTTM,A.TZ_JCKS_DTTM," +
+                String sql = "SELECT A.TZ_JC_MC,A.TZ_YUNX_KZID,A.TZ_JCFWQ_MC,A.TZ_XH_QZBDS,A.TZ_JOB_YXZT,A.TZ_QQCJ_DTTM,A.TZ_JHZX_DTTM,A.TZ_JCKS_DTTM, " +
                         "A.TZ_JCJS_DTTM,(SELECT B.TZ_JC_MS FROM TZ_JINC_DY_T B WHERE B.TZ_JC_MC = A.TZ_JC_MC AND B.TZ_JG_ID=?) AS TZ_JC_MS, " +
                 		"(SELECT B.TZ_YXPT_LX FROM TZ_JINC_DY_T B WHERE B.TZ_JC_MC = A.TZ_JC_MC AND B.TZ_JG_ID=?) AS TZ_YXPT_LX "+
                         "FROM TZ_JC_SHLI_T A WHERE A.TZ_JCSL_ID =?";
@@ -68,7 +68,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
                     processStartTime = map.get("TZ_JCKS_DTTM") == null?"":map.get("TZ_JCKS_DTTM").toString().substring(0, map.get("TZ_JCKS_DTTM").toString().length()-2);
                     processEndTime = map.get("TZ_JCJS_DTTM") == null?"":map.get("TZ_JCJS_DTTM").toString().substring(0, map.get("TZ_JCJS_DTTM").toString().length()-2);
                     Map<String, Object> hMap = new HashMap<String,Object>();
-
+                    
                     hMap.put("processInstanceId", processInstance);
                     hMap.put("processInstance", processInstance);
                     hMap.put("runPlatType", platFormType);
@@ -112,7 +112,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
             String[][] orderByArr = new String[][] { new String[] { "TZ_JCSL_ID", "DESC"  }};
 
             // json数据要的结果字段;
-            String[] resultFldArray = { "TZ_JCSL_ID","TZ_JC_MC","TZ_DLZH_ID","TZ_JCFWQ_MC","TZ_JOB_YXZT","TZ_JG_ID"};
+            String[] resultFldArray = { "TZ_JCSL_ID","TZ_JC_MC","TZ_DLZH_ID","TZ_JCFWQ_MC","TZ_JOB_YXZT","TZ_JG_ID","TZ_JHZX_DTTM"};
 
             // 可配置搜索通用函数;
             Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -128,6 +128,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
                     mapList.put("processServerName", resultArray[3]);
                     mapList.put("status", resultArray[4]);
                     mapList.put("orgId", resultArray[5]);
+                    mapList.put("planExecuteTime", resultArray[6]);
                     listData.add(mapList);
                 });
                 mapRet.replace("total", obj[0]);
