@@ -26,7 +26,7 @@ public class EventDispatcher {
 	         * 关注推送事件
 	         */
 	        if (map.get("Event").equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) { //关注事件
-	            //System.out.println("==============这是关注事件！");
+	            System.out.println("==============这是关注事件！");
 	            SubscribeEventHandler subscribeEventHandler = new SubscribeEventHandler();
 	            String respXml = subscribeEventHandler.execute(map);
 	            return respXml;
@@ -37,7 +37,7 @@ public class EventDispatcher {
 	         * 取消关注推送事件
 	         */
 	        if (map.get("Event").equals(MessageUtil.EVENT_TYPE_UNSUBSCRIBE)) { //取消关注事件
-	            //System.out.println("==============这是取消关注事件！");
+	            System.out.println("==============这是取消关注事件！");
 	            UnSubscribeEventHandler unSubscribeEventHandler = new UnSubscribeEventHandler();
 	            String respXml = unSubscribeEventHandler.execute(map);
 	            return respXml;
@@ -48,7 +48,7 @@ public class EventDispatcher {
 	         * 群发消息发送完成推送事件
 	         */
 	        if (map.get("Event").equals(MessageUtil.EVENT_TYPE_MASSSENDJOBFINISH)) { //群发消息发送完成
-	            //System.out.println("==============群发消息发送任务完成！");
+	            System.out.println("==============群发消息发送任务完成！");
 	            MassSendMessageEventHandler massSendMessageEventHandler = new MassSendMessageEventHandler();
 	            String respXml = massSendMessageEventHandler.execute(map);
 	            return respXml;
@@ -59,7 +59,7 @@ public class EventDispatcher {
 	         * 模板消息发送完成推送事件
 	         */
 	        if (map.get("Event").equals(MessageUtil.EVENT_TYPE_TEMPLATESENDJOBFINISH)) { //模板消息发送完成
-	            //System.out.println("==============模板消息发送任务完成！");
+	            System.out.println("==============模板消息发送任务完成！");
 	        	TmplSendMessageEventHandler tmplSendMessageEventHandler = new TmplSendMessageEventHandler();
 	            String respXml = tmplSendMessageEventHandler.execute(map);
 	            return respXml;
