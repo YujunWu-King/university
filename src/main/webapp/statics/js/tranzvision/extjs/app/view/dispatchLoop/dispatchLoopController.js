@@ -331,14 +331,16 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		var form = this.getView().child("form").getForm();
 		var tzParams = this.getDispatchLoopInfoParams();
 		var comView = this.getView();
+		if (form.isValid()) {
+			Ext.tzSubmit(tzParams,function(responseData){
+				
+				comView.actType = "update";
+				var contentPanel;
+				contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+				contentPanel.child("dispatchLoopCon").store.reload();
+			},"",true,this);
+		}
 
-		Ext.tzSubmit(tzParams,function(responseData){
-			
-			comView.actType = "update";
-			var contentPanel;
-			contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-			contentPanel.child("dispatchLoopCon").store.reload();
-		},"",true,this);
 	},
 	//新增窗口确定方法
 	onDispatchLoopInfoEnsure:function (btn) {
