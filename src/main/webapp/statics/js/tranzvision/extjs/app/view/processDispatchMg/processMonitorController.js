@@ -85,7 +85,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitorController', {
 
             this.getView().add(win);
         }
-        var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_INSTANCE_INFO","OperateType":"QF","comParams":{"processInstance":"' + processInstance + '"}}';
+        var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_INSTANCE_INFO","OperateType":"QF","comParams":{"orgId":"'+ Ext.tzOrgID + '","processInstance":"' + processInstance + '"}}';
         // 加载数据
         Ext.tzLoad(tzParams, function (responseData) {
             var formData = responseData.formData;

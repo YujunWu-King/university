@@ -71,7 +71,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
                     
                     hMap.put("processInstanceId", processInstance);
                     hMap.put("processInstance", processInstance);
-                    hMap.put("runPlatType", platFormType);
+                    hMap.put("runPlatType", getRunType(platFormType));
                     hMap.put("processName", processName);
                     hMap.put("processDesc", processDesc);
                     hMap.put("runConId", runConId);
@@ -96,6 +96,24 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
         }
         return jacksonUtil.Map2json(returnJsonMap);
     }
+    
+    private String getRunType(String str) {
+		
+    	String platType;
+    	switch (str) {
+    	
+		case "1":
+			platType = "Windows";
+			break;
+		case "2":
+			platType = "Unix";
+			break;
+		default:
+			platType = "其他";
+			break;
+		}
+    	return platType;
+	}
     @SuppressWarnings("unchecked")
     @Override
     public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
