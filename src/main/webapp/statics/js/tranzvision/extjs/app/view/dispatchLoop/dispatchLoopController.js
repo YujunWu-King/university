@@ -403,15 +403,6 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		var minuteCheck;
 		var secondCheck;
 		
-		if(Ext.getCmp("customCheck").checked){
-			
-			params.day2Check = '1';
-		}else{
-			
-			params.day2Check = '0';
-		}
-		
-		
 		//分别获取每个check的input值
 		var yearType = Ext.getCmp('loopYear').items;
 		var yearValue =  this.getView().down('tabpanel').down('form[name=yearForm]').getForm().findField("loopYear").getGroupValue(); 
@@ -427,7 +418,7 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 				
 			  }
 		}
-
+		
 		var monthType = Ext.getCmp('loopMonth').items;
 		var monthValue =  this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("loopMonth").getGroupValue(); 
 		for (var i=0; i<monthType.length;i++){
@@ -942,6 +933,41 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 		params.customWeek = customForm["customWeek"];
 		params.customMonth = customForm["customMonth"];
 		params.customYear = customForm["customYear"];
+		
+		var blankParams = {"orgId":"","loopName":"","loopDesc":"","status":""
+			,"beginYear":"","endYear":"","yearList":"","yearLoopInterval":""
+			,"beginMonth":"","endMonth":"","monthList":"","monthLoopInterval":""
+			,"beginDay1":"","endDay1":"","day1List":"","day1LoopInterval":"","beginDate1":""
+			,"beginDay2":"","endDay2":"","day2List":"","day2LoopInterval":"","appointedDate1":"","appointedWeek":"","appointedDate2":""
+			,"beginHour":"","endHour":"","hourList":"","hourLoopInterval":""
+			,"beginMinute":"","endMinute":"","minuteList":"","minuteLoopInterval":""
+			,"beginSecond":"","endSecond":"","secondList":"","secondLoopInterval":""
+			,"customYear":"","customMonth":"","customWeek":"","customDay":"","customHour":"","customMinute":"","customSecond":""
+			,"yearCheck":"","monthCheck":"","day1Check":"","day2Check":"","hourCheck":"","minuteCheck":"","secondCheck":""
+			,"secondFlag":"","minuteFlag":"","hourFlag":"","dayFlag":"","monthFlag":"","weekFlag":"","yearFlag":""}
+		
+		//选取状态为自定义，清空之前radio选取和数据
+		if(Ext.getCmp("customCheck").checked){
+			
+			this.getView().down('tabpanel').down('form[name=yearForm]').getForm().setValues(blankParams);
+			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().setValues(blankParams);
+			this.getView().down('tabpanel').down('form[name=dayForm]').getForm().setValues(blankParams);
+			this.getView().down('tabpanel').down('form[name=hourForm]').getForm().setValues(blankParams);
+			this.getView().down('tabpanel').down('form[name=minuteForm]').getForm().setValues(blankParams);
+			this.getView().down('tabpanel').down('form[name=secondForm]').getForm().setValues(blankParams);
+			params.yearCheck = "";
+			params.monthCheck = "";
+			params.day1Check = "";
+			params.hourCheck = "";
+			params.minuteCheck = "";
+			params.secondCheck = "";
+			
+			params.day2Check = '1';
+		}else{
+			
+			this.getView().down('tabpanel').down('form[name=customForm]').getForm().setValues(blankParams);
+			params.day2Check = '0';
+		}
 		
 		//更新操作参数
 		var comParams = "";

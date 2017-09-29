@@ -30,6 +30,8 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
 
     @Autowired
     private SqlQuery jdbcTemplate;
+    
+    private static final String ONE_SPACE = " ";
     /* 获取主题定义信息 */
     @Override
     public String tzQuery(String strParams, String[] errMsg) {
@@ -59,7 +61,7 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                     map.put("loopName", loopName);
                     map.put("loopDesc", tzDispatchLoop.getTzXhMs());
                     map.put("status", tzDispatchLoop.getTzEeBz());
-                    
+                    map.put("cycleExpression", tzDispatchLoop.getTzXhQzbds());
                     
                     
                     //-----------------------------tabpanel分割线------------------
@@ -291,10 +293,18 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                     String monthFlag = infoData.get("monthFlag").toString();
                     String weekFlag = infoData.get("weekFlag").toString();
                     String yearFlag = infoData.get("yearFlag").toString();
+                    String isCkecked = infoData.get("day2Check").toString();
                     
-                    stringBuilder.append(secondFlag).append(minuteFlag).append(hourFlag).
-                    append(dayFlag).append(monthFlag).append(weekFlag).append(yearFlag);
-                    
+                    //是否自定义
+                    if("0".equals(isCkecked)) {
+                    	
+                    	  stringBuilder.append(secondFlag).append(minuteFlag).append(hourFlag).
+                          append(dayFlag).append(monthFlag).append(weekFlag).append(yearFlag);
+                    }else {
+                    	stringBuilder.append(tzXhzdS).append(ONE_SPACE).append(tzXhzdM2).append(ONE_SPACE).
+                    	append(tzXhzdH).append(ONE_SPACE).append(tzXhzdD).append(ONE_SPACE).append(tzXhzdW).
+                    	append(ONE_SPACE).append(tzXhzdM1).append(ONE_SPACE).append(tzXhzdY);
+                    }
                     //插入循环表达式
                     tzDispatchLoop.setTzXhQzbds(stringBuilder.toString().trim());
                     
@@ -462,8 +472,18 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
 
                 TzDispatchLoop tzDispatchLoop = new TzDispatchLoop();
                 
-                stringBuilder.append(secondFlag).append(minuteFlag).append(hourFlag).
-                append(dayFlag).append(monthFlag).append(weekFlag).append(yearFlag);
+                String isCkecked = infoData.get("day2Check").toString();
+                
+                //是否自定义
+                if("0".equals(isCkecked)) {
+                	
+                	  stringBuilder.append(secondFlag).append(minuteFlag).append(hourFlag).
+                      append(dayFlag).append(monthFlag).append(weekFlag).append(yearFlag);
+                }else {
+                	stringBuilder.append(tzXhzdS).append(ONE_SPACE).append(tzXhzdM2).append(ONE_SPACE).
+                	append(tzXhzdH).append(ONE_SPACE).append(tzXhzdD).append(ONE_SPACE).append(tzXhzdM1).
+                	append(ONE_SPACE).append(tzXhzdW).append(ONE_SPACE).append(tzXhzdY);
+                }
                 
                 //插入循环表达式
                 tzDispatchLoop.setTzXhQzbds(stringBuilder.toString().trim());
