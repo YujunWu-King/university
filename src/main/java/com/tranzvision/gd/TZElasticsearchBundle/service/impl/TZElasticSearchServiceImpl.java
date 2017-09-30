@@ -1,20 +1,26 @@
 package com.tranzvision.gd.TZElasticsearchBundle.service.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thoughtworks.xstream.core.util.Base64Encoder;
 import com.thoughtworks.xstream.mapper.Mapper.Null;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.elasticSearch.ElasticManager;
 import com.tranzvision.gd.util.httpclient.HttpClientService;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.wechart.PostJsonDataUtil;
 
@@ -23,15 +29,25 @@ public class TZElasticSearchServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private SqlQuery sqlQuery;
+	@Autowired
+	private GetSeqNum getSeqNum;
+	@Autowired
+	private HttpServletRequest request;
+	
 	
 	
 	public String tzOther(String operateType,String strParams,String[] errMsg) {
 		String strRet="";
 
 		try {
-			//创建索引
+			//创建索引-表
 			if("tzCreateIndex".equals(operateType)) {
 				strRet = createIndex(strParams,errMsg);
+			}
+			
+			//创建索引-文件
+			if("tzCreateFileIndex".equals(operateType)) {
+				strRet = createFileIndex(strParams, errMsg);
 			}
 			
 			//查询数据
@@ -83,7 +99,7 @@ public class TZElasticSearchServiceImpl extends FrameworkImpl {
 				String TZ_ART_ID = mapData.get("TZ_ART_ID") == null ? "" : mapData.get("TZ_ART_ID").toString();
 				String TZ_ART_TITLE = mapData.get("TZ_ART_TITLE") == null ? "" : mapData.get("TZ_ART_TITLE").toString();
 				String TZ_ART_CONENT = mapData.get("TZ_ART_CONENT") == null ? "" : mapData.get("TZ_ART_CONENT").toString();
-				String TZ_START_DATE = mapData.get("TZ_START_DATE") == null ? "2017-09-22" : mapData.get("TZ_START_DATE").toString();
+				String TZ_START_DATE = mapData.get("TZ_START_DATE") == null ? "2017-09-30" : mapData.get("TZ_START_DATE").toString();
 				String TZ_START_TIME = mapData.get("TZ_START_TIME") == null ? "09:00" : mapData.get("TZ_START_TIME").toString();
 				String TZ_ART_URL = mapData.get("TZ_ART_URL") == null ? "" : mapData.get("TZ_ART_URL").toString();
 				
@@ -96,7 +112,7 @@ public class TZElasticSearchServiceImpl extends FrameworkImpl {
 					mapParams.put("TZ_START_TIME", TZ_START_TIME);
 					mapParams.put("TZ_ART_URL", TZ_ART_URL);
 					
-					String url = "http://202.120.24.114:9200/cms/mba/" + TZ_ART_ID;
+					String url = "http://222.29.90.23:8888/cms/mba/" + TZ_ART_ID;
 					
 					String strCreate = ElasticManager.createIndex(url, mapParams);
 					
@@ -116,6 +132,131 @@ public class TZElasticSearchServiceImpl extends FrameworkImpl {
 		return strRet;
 	}
 	
+	
+	public String createFileIndex(String strParams,String[] errMsg) {
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try {
+			
+			String path = "/statics/elasticsearch";
+		    path = request.getServletContext().getRealPath(path);
+			
+			String allFile = getAllFile(path);
+			
+			jacksonUtil.json2Map(allFile);
+			List<Map<String, Object>> listFile = (List<Map<String, Object>>) jacksonUtil.getList("listFile");
+			
+			for(Map<String, Object> mapFile : listFile) {
+				String fileName = mapFile.get("fileName") == null ? "" : mapFile.get("fileName").toString();
+				String filePath = mapFile.get("filePath") == null ? "" : mapFile.get("filePath").toString();
+				String fileAbsolutePath = mapFile.get("fileAbsolutePath") == null ? "" : mapFile.get("fileAbsolutePath").toString();
+				//String base64Content = encodeBase64File(filePath);
+				String base64Content = "e1xydGYxXGFuc2kNCkxvcmVtIGlwc3VtIGRvbG9yIHNpdCBhbWV0DQpccGFyIH0=";
+				
+				String id = String.valueOf(getSeqNum.getSeqNum("TZ_ELSRH_FILE", "TZ_FILE_ID"));
+				
+				Map<String,Object> mapParams = new HashMap<String,Object>();
+				mapParams.put("id", id);
+				mapParams.put("fileName", fileName);
+				mapParams.put("filePath", filePath);
+				mapParams.put("fileAbsolutePath", fileAbsolutePath);
+				mapParams.put("data", base64Content);
+				
+				String url = "http://222.29.90.23:8888/files/file/" + id + "?pipeline=attachment";
+				
+				String strCreate = ElasticManager.createIndex(url, mapParams);
+				
+				mapRet.put(id, strCreate);
+			}
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
+		}
+		
+		return strRet;
+	}
+	
+	
+	public String getAllFile(String path) {
+		String strRet = "";
+		Map<String, Object> mapRet = new HashMap<String,Object>();
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		try {
+			
+			ArrayList<Map<String, Object>> listData = new ArrayList<>();
+			Map<String, Object> mapFile = null;
+			
+			String fileName = "",filePath = "",fileAbsolutePath = "",base64Content = "";
+			
+			File file = new File(path);
+			if(!file.isDirectory()) {
+				//文件
+				fileName = file.getName();
+				filePath = file.getPath();
+				fileAbsolutePath = file.getAbsolutePath();
+				
+				mapFile = new HashMap<String,Object>();
+				mapFile.put("fileName",fileName);
+				mapFile.put("filePath",filePath);
+				mapFile.put("fileAbsolutePath",fileAbsolutePath);
+				
+				listData.add(mapFile);
+				
+			} else {
+				//文件夹
+				String[] filelist = file.list();
+				for(int i=0;i<filelist.length;i++) {
+					File readfile = new File(path + "\\" + filelist[i]);
+					if(!readfile.isDirectory()) {
+						fileName = readfile.getName();
+						filePath = readfile.getPath();
+						fileAbsolutePath = readfile.getAbsolutePath();
+						
+						mapFile = new HashMap<String,Object>();
+						mapFile.put("fileName",fileName);
+						mapFile.put("filePath",filePath);
+						mapFile.put("fileAbsolutePath",fileAbsolutePath);
+						
+						listData.add(mapFile);
+					} else {
+						getAllFile(path+"\\"+filelist[i]);
+					}
+				}
+			}
+			
+			mapRet.put("listFile", listData);		
+			strRet = jacksonUtil.Map2json(mapRet);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return strRet;
+	}
+	
+	
+	public String encodeBase64File(String path) {
+		String strRet = "";
+		
+		try {
+			File file = new File(path);
+			FileInputStream inputFile = new FileInputStream(file);
+			byte[] buffer = new byte[(int) file.length()];
+			inputFile.read(buffer);
+			inputFile.close();
+			strRet = new Base64Encoder().encode(buffer);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return strRet;
+		
+	}
 	
 	public String queryArticle(String strParams,String[] errMsg) {
 		String strRet = "";

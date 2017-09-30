@@ -92,7 +92,7 @@ public class ElasticManager {
 	public static String queryArticle(String searchText) {
 		String strRet = "";
 		try {
-			String queryUrl = "http://202.120.24.114:9200/cms/_search";
+			String queryUrl = "http://222.29.90.23:8888/cms/_search";
 			Map<String, Object> queryMap = new HashMap<String, Object>();
 			queryMap.put("query", searchText);
 			Map<String, Object> queryStringMap = new HashMap<String, Object>();
