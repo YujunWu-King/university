@@ -23,12 +23,18 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
 	
 	listeners: {
 		beforerender: function(panel) {
-			//渲染前加载样式
-			var el = document.createElement('link');
-			el.setAttribute('rel', 'stylesheet');
-			el.setAttribute('type', 'text/css');
-			el.setAttribute('href', TzUniversityContextPath+'/statics/css/website/news-material.css');
-			TranzvisionMeikecityAdvanced.Boot.doc.head.appendChild(el);
+			//渲染前加载样式、
+			var materialStyle = document.getElementById('tz-news-material-style');
+			if(materialStyle){
+				//do nothing 样式文件已引入
+			}else{
+				var el = document.createElement('link');
+				el.setAttribute('rel', 'stylesheet');
+				el.setAttribute('type', 'text/css');
+				el.setAttribute('id', 'tz-news-material-style');
+				el.setAttribute('href', TzUniversityContextPath+'/statics/css/website/news-material.css');
+				TranzvisionMeikecityAdvanced.Boot.doc.head.appendChild(el);
+			}
 		},
 		afterrender: function(panel){
 			var actType = panel.actType;
@@ -131,12 +137,14 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
 		            xtype: 'textfield',
 		            fieldLabel: "素材名称", 
 					name: 'name',
-		            allowBlank: false
+		            allowBlank: false,
+		            afterLabelTextTpl: [
+		                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+		            ]
 		        },{
-		            xtype: 'textfield',
+		            xtype: 'textareafield',
 					fieldLabel: "备注信息",
-					name: 'bzInfo',
-					allowBlank: false
+					name: 'bzInfo'
 		        },{
 		        	xtype: 'panel',
 		        	style: 'margin-top: 10px',
@@ -146,7 +154,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
 		            },
 		        	items:[{
 		        		xtype: 'panel',
-		        		width: 240,
+		        		width: 220,
 		        		border: false,
 		        		style: 'margin-right:10px',
 		        		layout: {
@@ -209,6 +217,10 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
                             	var articesView = btn.findParentByType('panel').child('dataview');
                             	var articesViewStore = articesView.getStore();
                             	var count = articesViewStore.getCount();
+                            	if(count >= 8){
+                            		Ext.Msg.alert("提示","您最多只可以加入8条图文消息");
+                            		return;
+                            	}
                 				var r = Ext.create('KitchenSink.view.weChat.weChatMaterial.newsArticlesModel', {
                 			        title : "",
                 			        thumb_media_id : "",
@@ -228,69 +240,100 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
 		        		}]
 		        	},{
 		        		flex: 1,
-	                	xtype: 'ueditor',
-	                	name: 'content',
-	                	model: 'newsMaterial',
-	                	minWidth: 400,
-	                	height: 500,
-	                	zIndex: 999,
-	                	panelXtype: 'newsMaterialInfoPanel', 
-	                	//自定义按钮-插入素材图片执行方法
-	                	insertMaterialImg: function(editor){
-	                		var wxAppId = me.wxAppId;
-	                		Ext.tzSetCompResourses("TZ_GD_WXMSG_COM");
-	                        //是否有访问权限
-	                        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_WXMSG_COM"]["TZ_GD_SCGL_STD"];
-	                        if( pageResSet == "" || pageResSet == undefined){
-	                            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-	                            return;
-	                        }
-	                        //该功能对应的JS类
-	                        var className = pageResSet["jsClassName"];
-	                        if(className == "" || className == undefined){
-	                            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_SCGL_STD，请检查配置。');
-	                            return;
-	                        }
+		        		layout: {
+		        		    type: 'vbox',
+		        		    align : 'stretch',
+		        		    pack  : 'start',
+		        		},
+		        		minWidth: 570,
+		        		items:[{
+		        			xtype: 'ueditor',
+		                	name: 'content',
+		                	model: 'newsMaterial',
+		                	height: 550,
+		                	zIndex: 99,
+		                	panelXtype: 'newsMaterialInfoPanel', 
+		                	//自定义按钮-插入素材图片执行方法
+		                	insertMaterialImg: function(editor){
+		                		var wxAppId = me.wxAppId;
+		                		Ext.tzSetCompResourses("TZ_GD_WXMSG_COM");
+		                        //是否有访问权限
+		                        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_GD_WXMSG_COM"]["TZ_GD_SCGL_STD"];
+		                        if( pageResSet == "" || pageResSet == undefined){
+		                            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+		                            return;
+		                        }
+		                        //该功能对应的JS类
+		                        var className = pageResSet["jsClassName"];
+		                        if(className == "" || className == undefined){
+		                            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_GD_SCGL_STD，请检查配置。');
+		                            return;
+		                        }
 
-	                        var contentPanel,cmp, className, ViewClass, clsProto;
-	                        var themeName = Ext.themeName;
+		                        var contentPanel,cmp, className, ViewClass, clsProto;
+		                        var themeName = Ext.themeName;
 
-	                        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-	                        contentPanel.body.addCls('kitchensink-example');
-	                        if(!Ext.ClassManager.isCreated(className)){
-	                            Ext.syncRequire(className);
-	                        }
-	                        ViewClass = Ext.ClassManager.get(className);
-	                        clsProto = ViewClass.prototype;
+		                        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+		                        contentPanel.body.addCls('kitchensink-example');
+		                        if(!Ext.ClassManager.isCreated(className)){
+		                            Ext.syncRequire(className);
+		                        }
+		                        ViewClass = Ext.ClassManager.get(className);
+		                        clsProto = ViewClass.prototype;
 
-	                        Ext.syncRequire(className);
-	                        ViewClass = Ext.ClassManager.get(className);
-	                        
-	                        var win = new ViewClass({
-	                        	materialType: 'TP',
-	                        	wxAppId: wxAppId,
-	                        	callback: function(rec){
-	                        		var mediaId = rec.get("mediaId");
-	                        		var src = rec.get("src");
-	                        		var mediaUrl = rec.get("mediaUrl");
+		                        Ext.syncRequire(className);
+		                        ViewClass = Ext.ClassManager.get(className);
+		                        
+		                        var win = new ViewClass({
+		                        	materialType: 'TP',
+		                        	wxAppId: wxAppId,
+		                        	callback: function(rec){
+		                        		var mediaId = rec.get("mediaId");
+		                        		var src = rec.get("src");
+		                        		var mediaUrl = rec.get("mediaUrl");
 
-	                        		var imgHtml = '<img src="'+ mediaUrl +'">';
-	                        		editor.execCommand('insertHtml', imgHtml);
-	                        	}
-	                        });
+		                        		var imgHtml = '<img src="'+ mediaUrl +'">';
+		                        		editor.execCommand('insertHtml', imgHtml);
+		                        	}
+		                        });
 
-	                       win.show(); 
-	                	},
-	                	listeners:{
-                			change: function(field){
-                				var newVal = field.getValue();
-                				var currentRecord = me.currentRecord;
-                				currentRecord.set("content", newVal);
-                			}
-                		}
+		                       win.show(); 
+		                	},
+		                	listeners:{
+	                			change: function(field){
+	                				var newVal = field.getValue();
+	                				var currentRecord = me.currentRecord;
+	                				currentRecord.set("content", newVal);
+	                			}
+	                		}
+		        		},{	                			
+		        			xtype: 'combo',
+		                    labelWidth: 100,
+		                    editable: false,
+		                    fieldLabel: '发布状态',
+		                    name: 'publishSta',
+		                    mode: "remote",
+		                    ignoreChangesFlag:true,
+		                    preSubTpl: [
+		                       '<div id="{cmpId}-triggerWrap" data-ref="triggerWrap" style="border:0" class="{triggerWrapCls} {triggerWrapCls}-{ui}">',
+		                           '<div id={cmpId}-inputWrap data-ref="inputWrap" class="{inputWrapCls} {inputWrapCls}-{ui}">'
+		                    ],
+		                    readOnly:true,
+		                    valueField: 'status',
+		                    displayField: 'statusDesc',
+		                    store: {
+		                        fields: ["status", "statusDesc"],
+		                        data: [
+		                            {status: "Y", statusDesc: "已发布"},
+		                            {status: "N", statusDesc: "未发布"}
+		                        ]
+		                    },
+		                    value:'N',
+		                    style: 'background:none; border-right: 0px solid;border-top: 0px solid;border-left: 0px solid;border-bottom: #000000 0px solid;margin-top: -40px;'
+		            	}]
 	                },{
 	                	type: 'form',
-	                	width: 300,
+	                	width: 250,
 	                	style: 'margin-left: 10px',
 	                	layout: {
 	    		            type: 'vbox',
@@ -351,31 +394,7 @@ Ext.define('KitchenSink.view.weChat.weChatMaterial.newsMaterialInfoPanel', {
 	                				currentRecord.set("content_source_url", newVal);
 	                			}
 	                		}
-	                	},*/{	                			
-                			xtype: 'combo',
-                            labelWidth: 100,
-                            editable: false,
-                            fieldLabel: '发布状态',
-                            name: 'publishSta',
-                            mode: "remote",
-                            ignoreChangesFlag:true,
-                            preSubTpl: [
-                               '<div id="{cmpId}-triggerWrap" data-ref="triggerWrap" style="border:0" class="{triggerWrapCls} {triggerWrapCls}-{ui}">',
-                                   '<div id={cmpId}-inputWrap data-ref="inputWrap" class="{inputWrapCls} {inputWrapCls}-{ui}">'
-                            ],
-                            readOnly:true,
-                            valueField: 'status',
-                            displayField: 'statusDesc',
-                            store: {
-                                fields: ["status", "statusDesc"],
-                                data: [
-                                    {status: "Y", statusDesc: "已发布"},
-                                    {status: "N", statusDesc: "未发布"}
-                                ]
-                            },
-                            value:'N',
-                            style: 'background:none; border-right: 0px solid;border-top: 0px solid;border-left: 0px solid;border-bottom: #000000 0px solid;'
-	                	}]
+	                	},*/]
 		        	}]
 		        }]
 		    }]

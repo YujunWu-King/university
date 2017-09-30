@@ -51,7 +51,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
     	        	tabpanel.down('image[name=titileImage]').setSrc(TzUniversityContextPath + src);
             	}
             });
-            this.getView().add(win);
+            //this.getView().add(win);
         }
 
        win.show(); 
@@ -107,7 +107,7 @@ Ext.define('KitchenSink.view.weChat.weChatMessage.weChatMsgController', {
 		            tabpanel.down('image[name=twImage]').setSrc(TzUniversityContextPath +src);
             	}
             });
-            this.getView().add(win);
+            //this.getView().add(win);
         }
 
         win.show();

@@ -63,7 +63,11 @@ Ext.define('KitchenSink.view.batchProcess.processDefineWindow', {
             },{
                 xtype: 'textfield',
                 fieldLabel: '进程描述',
-                name: 'processDesc'
+                name: 'processDesc',
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
             },{
                 xtype: 'combobox',
                 editable:false,
@@ -74,7 +78,11 @@ Ext.define('KitchenSink.view.batchProcess.processDefineWindow', {
                 store: new KitchenSink.view.common.store.appTransStore("TZ_PLAT_TYPE"),
                 queryMode: 'remote',
                 name: 'runPlatType',
-                emptyText:'Windows/Unix/其他'
+                emptyText:'Windows/Unix/其他',
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
             },{
                 bodyStyle:'padding:0 0 10px 0',
                 xtype: 'textfield',
@@ -86,11 +94,20 @@ Ext.define('KitchenSink.view.batchProcess.processDefineWindow', {
                         cls: 'x-form-search-trigger',
                         handler: "pmtSearchComIDTmp"
                     }
-                }
+                },
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
+                
             }, {
                 xtype: 'textfield',
                 fieldLabel: 'JavaClass类路径',
-                name: 'className'
+                name: 'className',
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
             },{
                 xtype: 'textarea',
                 fieldLabel: '备注信息',

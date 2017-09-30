@@ -34,20 +34,11 @@
 
         items: [
             {
-            xtype: 'combobox',
-            editable:false,
-            fieldLabel: '归属机构',
-            forceSelection: true,
-            valueField: 'orgId',
-            displayField: 'orgName',
-            store: new KitchenSink.view.orgmgmt.orgListStore(),
-            queryMode: 'local',
-            name: 'orgId',
-            emptyText:'请选择机构',
-            afterLabelTextTpl: [
-                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-            ],
-            allowBlank:false
+                xtype: 'textfield',
+                fieldLabel: '所属机构',
+                value:Ext.tzOrgID,
+                name: 'orgId',
+                editable:false
         },{
             xtype: 'textfield',
             fieldLabel: '循环名称',
@@ -77,9 +68,15 @@
             emptyText:'生效/失效',
             afterLabelTextTpl: [
             '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-        ],
+            ],
             allowBlank:false
-    }]
+        },{
+        	xtype: 'textfield',
+        	name: 'cycleExpression',
+        	fieldLabel: '循环表达式',
+        	editable:false
+        	
+        }]
     },{
         xtype: 'tabpanel',
         items:[{
@@ -119,7 +116,7 @@
                 name:'loopYear',
                 inputValue: '1',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意年份"
+                boxLabel: "每年"
             },{
             	xtype: 'radio',
                 name:'loopYear',
@@ -144,11 +141,11 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: new Date().getFullYear(), Value: 1 },
-                            { Name: new Date().getFullYear() + 1, Value: 2  },
-                            { Name: new Date().getFullYear() + 2, Value: 3  },
-                            { Name: new Date().getFullYear() + 3, Value: 4  },
-                            { Name: new Date().getFullYear() + 4, Value: 5 }
+                        	 { Name: new Date().getFullYear(), Value: new Date().getFullYear() },
+                             { Name: new Date().getFullYear() + 1, Value: new Date().getFullYear() + 1  },
+                             { Name: new Date().getFullYear() + 2, Value: new Date().getFullYear() + 2  },
+                             { Name: new Date().getFullYear() + 3, Value: new Date().getFullYear() + 3 },
+                             { Name: new Date().getFullYear() + 4, Value: new Date().getFullYear() + 4 }
                         ]
                     })
                 },{
@@ -165,11 +162,11 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: new Date().getFullYear(), Value: 1 },
-                            { Name: new Date().getFullYear() + 1, Value: 2  },
-                            { Name: new Date().getFullYear() + 2, Value: 3  },
-                            { Name: new Date().getFullYear() + 3, Value: 4  },
-                            { Name: new Date().getFullYear() + 4, Value: 5 }
+                            { Name: new Date().getFullYear(), Value: new Date().getFullYear() },
+                            { Name: new Date().getFullYear() + 1, Value: new Date().getFullYear() + 1  },
+                            { Name: new Date().getFullYear() + 2, Value: new Date().getFullYear() + 2  },
+                            { Name: new Date().getFullYear() + 3, Value: new Date().getFullYear() + 3 },
+                            { Name: new Date().getFullYear() + 4, Value: new Date().getFullYear() + 4 }
                         ]
                     })
                 }]
@@ -194,6 +191,7 @@
                 xtype: 'radio',
                 name:'loopYear',
                 inputValue: '4',
+                id:'yearFour',
                 style:'margin-top:10px;margin-left:50px',
                 boxLabel: "指定年份循环间隔"
             },{
@@ -244,7 +242,7 @@
                 inputValue: '1',
                 id:'monthOne',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意月份"
+                boxLabel: "每月"
             },{
                 xtype: 'radio',
                 name:'loopMonth',
@@ -895,13 +893,13 @@
                 inputValue: '1',
                 id:'hourOne',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意小时"
+                boxLabel: "每小时"
             },{
                 xtype: 'radio',
                 name:'loopHour',
                 inputValue: '2',
                 id:'hourTwo',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:20px;margin-left:50px',
                 boxLabel: "指定小时范围"
             },{
                 xtype: 'fieldcontainer',
@@ -1061,7 +1059,7 @@
                 inputValue: '1',
                 id:'minuteOne',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意分钟"
+                boxLabel: "每分"
             },{
                 xtype: 'radio',
                 name:'loopMin',
@@ -1299,7 +1297,7 @@
                 inputValue: '1',
                 id:'secondOne',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意秒"
+                boxLabel: "每秒"
             },{
                 xtype: 'radio',
                 name:'loopSecond',
@@ -1544,17 +1542,17 @@
                         columnWidth:.25,
                         style:'margin-left:20px',
                         labelWidth:20,
-                        name:'customMonth',
-                        fieldLabel: '月',
-                        emptyText: "1-12或者JAN-DEC  通配符：,-*/"
+                        name:'customWeek',
+                        fieldLabel: '周',
+                        emptyText: "1-7或者SUN-SAT  通配符：,-*?/L#"
                     },{
                         xtype: 'textfield',
                         columnWidth:.25,
                         style:'margin-left:20px',
                         labelWidth:20,
-                        name:'customWeek',
-                        fieldLabel: '周',
-                        emptyText: "1-7或者SUN-SAT  通配符：,-*?/L#"
+                        name:'customMonth',
+                        fieldLabel: '月',
+                        emptyText: "1-12或者JAN-DEC  通配符：,-*/"
                     }]
                 },{
                     style:'margin-top:10px;margin-left:100px',
