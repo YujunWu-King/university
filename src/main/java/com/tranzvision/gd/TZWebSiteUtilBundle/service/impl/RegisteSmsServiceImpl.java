@@ -109,6 +109,14 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 		String strResponse = "获取数据失败，请联系管理员";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try{
+			
+			/*对lang参数做限制，只能是ZHS或ENG，不单从URL中获取，卢艳添加，2017-10-9*/
+			if("ZHS".equals(strLang.toUpperCase()) || "ENG".equals(strLang.toUpperCase())) {
+				
+			} else {
+				strLang = "ZHS";
+			}
+			
 			if(classid != null && !"".equals(classid)){
 				strParams = "{\"siteid\":\"" + strSiteid + "\",\"orgid\":\"" + strOrgid + "\",\"lang\":\"" + strLang + "\",\"yzm\":\"" + strYzm + "\",\"phone\":\"" + strPhone + "\",\"sen\":\"" + strSen + "\",\"isMobile\":\"" + isMobile + "\"}";
 			}else{
