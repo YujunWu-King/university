@@ -194,7 +194,7 @@ public class GdObjectServiceImpl implements GdObjectService {
 		}
 
 		if (tmpMsgText == null || "".equals(tmpMsgText)) {
-			if (!"ZHS".equals(jgId)) {
+			if (!"ZHS".equals(loginLanguage)) {
 				tmpMsgText = defaultENMsg;
 			} else {
 				tmpMsgText = defaultCNMsg;

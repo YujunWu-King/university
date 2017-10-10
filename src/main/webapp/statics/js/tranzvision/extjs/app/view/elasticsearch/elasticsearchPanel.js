@@ -16,8 +16,10 @@ Ext.define('KitchenSink.view.elasticsearch.elasticsearchPanel',{
     dockedItems:[{
         xtype:'toolbar',
         items:[{
-            text:'创建索引',iconCls:'add',handler:'addIndex'
-        }]
+            text:'创建索引（表）',iconCls:'add',handler:'addIndex'
+        }/*,{
+            text:'创建索引（文件）',iconCls:'add',handler:'addFileIndex'
+        }*/]
     }],
     initComponent: function () {
 

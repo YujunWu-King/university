@@ -104,7 +104,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                     name:'runDate',
                     format: 'Y-m-d',
                     labelWidth: 100,
-                    editable: false
+                    editable: false,
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
+                    allowBlank:false
                 },{
                     xtype: 'timefield',
                     fieldLabel: '计划开始时间',
@@ -112,7 +116,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
                     name:'runTime',
                     format: 'H:i:s',
                     labelWidth: 100,
-                    editable: false
+                    editable: false,
+                    afterLabelTextTpl: [
+                        '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                    ],
+                    allowBlank:false
                 }]
             },{
                 bodyStyle:'padding:0 0 10px 0',
@@ -139,8 +147,13 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
             var win = btn.findParentByType("window");
             //页面注册信息表单
             var form = win.child("form").getForm();
-            win.doSave(win);
+            if (form.isValid()) {
+            	var result = win.doSave(win)
+            	console.log(result)
+            	
+            }
             win.close()
+            
         }
     }, {
         text: '关闭',
@@ -157,12 +170,17 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchWindow', {
         if(!form.isValid()){
             return false;
         }
+       
         var formParams = form.getValues();
         var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_DISPATCH_INFO","OperateType":"U","comParams":{"update":['+Ext.JSON.encode(formParams)+']}}';
         Ext.tzSubmit(tzParams,function(response){
-            var attrValue=response.attrValue;
-            form.setValues({"attrValue":attrValue});
-        },"",true,this);
+        	
+        	if(response.status){
+        		Ext.MessageBox.alert('提示', '创建进程实例失败！请先开启权限！');
+        	}else{
+        		Ext.MessageBox.alert('提示', '创建进程实例成功！');
+        	}
+        },"处理完成",true,this);
 
     }
 });

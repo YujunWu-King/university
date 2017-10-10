@@ -16,5 +16,5 @@ public class Memoryparameter {
 	 * value:map(key:TZ_MSG_ID@TZ_LANGUAGE_ID,value:TZ_MSG_TEXT)
 	 */
 	public static Map<String, Map<String, String>> messageText = new HashMap<String, Map<String, String>>();
-
+	
 }

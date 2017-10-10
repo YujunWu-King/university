@@ -196,16 +196,19 @@ public class TzBatchProcessListServiceImpl extends FrameworkImpl {
     public String tzUpdate(String[] actData, String[] errMsg) {
 
         String strRet = "{}";
+        String CLASSID = "";
         JacksonUtil jacksonUtil = new JacksonUtil();
         int dataLength = actData.length;
         try{
             for(int num = 0; num < dataLength; num++){
+            	
                 // 表单内容;
                 String strForm = actData[num];
                 // 将字符串转换成json;
                 jacksonUtil.json2Map(strForm);
                 String temp = "";
                 // 信息内容;
+
                 String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
                 String orgId = jacksonUtil.getString("orgId");
                 String platType = jacksonUtil.getString("runPlatType");
@@ -216,6 +219,12 @@ public class TzBatchProcessListServiceImpl extends FrameworkImpl {
                 String remark = jacksonUtil.getString("remark") == null?"":jacksonUtil.getString("remark");
                 String isDispatch = jacksonUtil.getString("isDispatch") == null?"":jacksonUtil.getString("isDispatch");
                 
+            	
+//            	获取许可权编号
+            	if(num == 0) {
+            		
+            		CLASSID = jacksonUtil.getString("classId");
+            	}
                 //过滤非许可权下的操作
                 if(!"".equals(isDispatch)) {
                 	
@@ -225,7 +234,7 @@ public class TzBatchProcessListServiceImpl extends FrameworkImpl {
                 	}else {
                 		temp = "0";
                 	}
-                	insertData2Permission(comID,new String[] {orgId,processName,temp,currentAccountId});
+                	insertData2Permission(CLASSID,comID,new String[] {orgId,processName,temp,currentAccountId});
                 }
                 
                 
@@ -249,37 +258,29 @@ public class TzBatchProcessListServiceImpl extends FrameworkImpl {
     }
     
     //获取开启进程实例权限
-    private void insertData2Permission(String comId,String[] args) {
+    private void insertData2Permission(String CLASSID,String comId,String[] args) {
     	
-    	String CLASSID = "";
     	String isExist = "";
-    	String classIdSql = "SELECT CLASSID FROM PS_TZ_AQ_COMSQ_V WHERE TZ_COM_ID = ?";
     	String existSql = "SELECT 'Y' FROM TZ_AQ_JCDD_T WHERE CLASSID = ? AND TZ_COM_ID = ? AND TZ_JG_ID = ? AND TZ_JC_MC = ?";
-    	Map<String,Object> map = jdbcTemplate.queryForMap(classIdSql, new String[] {comId});
     	
-    	
-    	if(map != null && map.get("CLASSID") != null) {
-    		
-    		CLASSID = map.get("CLASSID").toString();
-    		TzAqJcddT tzAqJcddT = new TzAqJcddT();
-    		tzAqJcddT.setClassid(CLASSID);
-    		tzAqJcddT.setTzComId(comId);
-    		tzAqJcddT.setTzJgId(args[0]);
-    		tzAqJcddT.setTzJcMc(args[1]);
-    		tzAqJcddT.setTzDdFlg(args[2]);
-    		tzAqJcddT.setTzTjr(args[3]);
-    		tzAqJcddT.setTzZhxgr(args[3]);
-    		tzAqJcddT.setTzTjsj(Calendar.getInstance().getTime());
-    		tzAqJcddT.setTzZhxgsj(Calendar.getInstance().getTime());
-    		isExist = jdbcTemplate.queryForObject(existSql, new String[] {CLASSID,comId,args[0],args[1]}, "String");
+    	TzAqJcddT tzAqJcddT = new TzAqJcddT();
+    	tzAqJcddT.setClassid(CLASSID);
+    	tzAqJcddT.setTzComId(comId);
+    	tzAqJcddT.setTzJgId(args[0]);
+    	tzAqJcddT.setTzJcMc(args[1]);
+    	tzAqJcddT.setTzDdFlg(args[2]);
+    	tzAqJcddT.setTzTjr(args[3]);
+    	tzAqJcddT.setTzZhxgr(args[3]);
+    	tzAqJcddT.setTzTjsj(Calendar.getInstance().getTime());
+    	tzAqJcddT.setTzZhxgsj(Calendar.getInstance().getTime());
+    	isExist = jdbcTemplate.queryForObject(existSql, new String[] {CLASSID,comId,args[0],args[1]}, "String");
 
-    		if("Y".equals(isExist)) {
-    			tzAqJcddTMapper.updateByPrimaryKeySelective(tzAqJcddT);
-    		}else {
-    			tzAqJcddTMapper.insertSelective(tzAqJcddT);
-    		}
-    		
+    	if("Y".equals(isExist)) {
+    		tzAqJcddTMapper.updateByPrimaryKeySelective(tzAqJcddT);
+    	}else {
+    		tzAqJcddTMapper.insertSelective(tzAqJcddT);
     	}
+    		
     }
 
     @Override

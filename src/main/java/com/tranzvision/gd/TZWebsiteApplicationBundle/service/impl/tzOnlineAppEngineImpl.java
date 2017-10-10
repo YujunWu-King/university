@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
@@ -112,6 +113,9 @@ public class tzOnlineAppEngineImpl {
 
 	@Autowired
 	private PsTzAppKsInExtTblMapper psTzAppKsInExtTblMapper;
+	
+	@Autowired
+	private GdKjComServiceImpl gdKjComServiceImpl;
 
 	@SuppressWarnings("unchecked")
 	public String checkAppViewQx(String strTplId, String oprid, String orgid, String strClassId) {
@@ -1548,7 +1552,7 @@ public class tzOnlineAppEngineImpl {
 	 * @return
 	 */
 	public String checkFiledValid(Long numAppInsId, String strTplId, String strPageId, String strOtype,
-			String strTplType) {
+			String strTplType,String classId, String batchID, String LAN, String isAdmin) {
 		String returnMsg = "";
 
 		/* 信息项编号 */
@@ -1859,6 +1863,44 @@ public class tzOnlineAppEngineImpl {
 			}
 
 			if ("submit".equals(strOtype)) {
+				
+				// modity by caoy 校验报名表提交是否超期
+				// modity by caoy 管理员不需要校验这个
+				System.out.println("isAdmin:" + isAdmin);
+				if (isAdmin != null && isAdmin.equals("Y")) {
+
+				} else {
+					sql = "select TZ_IS_SUB_BATCH from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?";
+					String TZ_IS_SUB_BATCH = sqlQuery.queryForObject(sql, new Object[] { classId }, "String");
+					// 校验逻辑
+					System.out.println("batchID:" + batchID);
+					System.out.println("classId:" + classId);
+					if (TZ_IS_SUB_BATCH != null && TZ_IS_SUB_BATCH.equals("Y")) {
+						if (batchID != null && !batchID.equals("")) {
+							StringBuffer sb = new StringBuffer();
+							sb.append("SELECT count(B.TZ_BATCH_ID) as mun ");
+							sb.append("FROM PS_TZ_CLASS_INF_T C, PS_TZ_CLS_BATCH_T B WHERE ");
+							sb.append("C.TZ_CLASS_ID = B.TZ_CLASS_ID ");
+							sb.append("AND B.TZ_APP_PUB_STATUS = 'Y' ");
+							sb.append("AND C.TZ_CLASS_ID = ? ");
+							sb.append("AND B.TZ_BATCH_ID=? ");
+							sb.append("AND B.TZ_APP_END_DT >= curdate() ");
+
+
+							int mun = sqlQuery.queryForObject(sb.toString(),
+									new Object[] { classId, batchID }, "Integer");
+							if (mun <= 0) {
+								String batchError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+										"TZGD_APPONLINE_MSGSET", "BATCHError", LAN, "该批次报名表提交时间已经截止，请重新选择其他批次。",
+										"The batch submission deadline has been closed, please re-select the other batches.");
+								returnMsg = returnMsg + batchError + "<br/>";
+
+							}
+						} 
+
+					}
+				}
+				
 				// 推荐信校验,特殊的例子
 				if (strTplType.equals("TJX")) {
 					System.out.println("推荐信推荐人信息校验开始");
@@ -1947,8 +1989,8 @@ public class tzOnlineAppEngineImpl {
 						}
 						if (!Listcheck) {
 							// System.out.println("推荐信推荐人信息校验失败");
-							sql = "select TZ_APP_TPL_LAN from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?";
-							String LAN = sqlQuery.queryForObject(sql, new Object[] { strTplId }, "String");
+							//sql = "select TZ_APP_TPL_LAN from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?";
+							//LAN = sqlQuery.queryForObject(sql, new Object[] { strTplId }, "String");
 
 							if (LAN.equals("ENG")) {
 								returnMsg = returnMsg + "Reference information is incomplete" + "<br/>";

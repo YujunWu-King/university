@@ -71,8 +71,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     hMap.put("runPlatType", platFormType);
                     hMap.put("serverIP", serverIP);
                     hMap.put("intervalTime", intervalTime);
-                    hMap.put("palpitationDate", dateTime.substring(0, 10));
-                    hMap.put("palpitationTime", dateTime.substring(10));
+                    hMap.put("palpitationDate", dateTime);
                     hMap.put("parallelNum", parallelNum);
                     hMap.put("status", status);
                     hMap.put("remark", remark);
@@ -105,7 +104,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
             String[][] orderByArr = new String[][] { new String[] { "TZ_JCFWQ_MC", "DESC" }};
 
             // json数据要的结果字段;
-            String[] resultFldArray = {"TZ_JG_ID", "TZ_JCFWQ_MC","TZ_JCFWQ_MS","TZ_YXZT","TZ_CZXT_LX","TZ_ZJXTSJ"};
+            String[] resultFldArray = {"TZ_JG_ID", "TZ_JCFWQ_MC","TZ_JCFWQ_MS","TZ_YXZT","TZ_CZXT_LX","TZ_ZJXTSJ","TZ_NOW_TIME"};
 
             // 可配置搜索通用函数;
             Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -120,6 +119,8 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     mapList.put("processDesc", resultArray[2]);
                     mapList.put("runningStatus", resultArray[3]);
                     mapList.put("palpitationDateTime", resultArray[5]);
+                    mapList.put("traisentTime", resultArray[6]);
+                    System.out.println(resultArray[6]);
                     listData.add(mapList);
                 });
                 mapRet.replace("total", obj[0]);

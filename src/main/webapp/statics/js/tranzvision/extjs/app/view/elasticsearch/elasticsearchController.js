@@ -1,9 +1,16 @@
 Ext.define('KitchenSink.view.elasticsearch.elasticsearchController',{
     extend: 'Ext.app.ViewController',
     alias: 'controller.elasticsearchController',
-    //创建索引
+    //创建索引-表数据
     addIndex:function(btn) {
         var tzParams='{"ComID":"TZ_ELASTIC_SRH_COM","PageID":"TZ_ELASTIC_SRH_STD","OperateType":"tzCreateIndex",comParams:{}}';
+        Ext.tzSubmit(tzParams,function(responseData) {
+            console.log(responseData);
+        },"创建索引成功。",true,this);
+    },
+    //创建索引-文件
+    addFileIndex:function(btn) {
+        var tzParams='{"ComID":"TZ_ELASTIC_SRH_COM","PageID":"TZ_ELASTIC_SRH_STD","OperateType":"tzCreateFileIndex",comParams:{}}';
         Ext.tzSubmit(tzParams,function(responseData) {
             console.log(responseData);
         },"创建索引成功。",true,this);

@@ -239,7 +239,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl{
 							if(scoreMap != null){
 								scoreNum = scoreMap.get("TZ_SCORE_NUM") == null? "0.00" : scoreMap.get("TZ_SCORE_NUM").toString();
 								//打分过程
-								scoreGc = scoreMap.get("TZ_SCORE_DFGC").toString();
+								scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? "" : scoreMap.get("TZ_SCORE_DFGC").toString();
 							}
 	
 							mapList.put(itemId, scoreNum);

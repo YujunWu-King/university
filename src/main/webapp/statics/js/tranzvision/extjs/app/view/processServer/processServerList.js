@@ -64,6 +64,11 @@ Ext.define('KitchenSink.view.processServer.processServerList', {
                 dataIndex: 'processDesc',
                 flex: 1
             },{
+            	text: '服务器时间',
+            	dataIndex: 'traisentTime',
+            	sortable: true,
+            	flex: 1
+            },{
                 text: '最近心跳时间',
                 sortable: true,
                 dataIndex: 'palpitationDateTime',

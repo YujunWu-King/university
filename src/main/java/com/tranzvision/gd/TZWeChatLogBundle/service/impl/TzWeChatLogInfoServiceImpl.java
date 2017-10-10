@@ -62,10 +62,10 @@ public class TzWeChatLogInfoServiceImpl extends FrameworkImpl{
 					}
 					
 					List<Map<String,Object>> listMediaId=sqlQuery.queryForList(" SELECT TZ_MEDIA_ID,TZ_IMAGE_PATH,TZ_MEDIA_URL FROM PS_TZ_WX_MEDIA_TBL WHERE TZ_JG_ID =? AND TZ_WX_APPID=? AND TZ_XH=? AND TZ_MEDIA_ID=? ", new Object[]{strJgID,strAppID,strXH,psTzWxmsgLogT.getTzMediaId()});
-					String sendMediaId = "";
+					String sendMediaPath = "";
 					if(listMediaId!=null &&listMediaId.size()>0){
-						sendMediaId=listMediaId.get(0).get("TZ_MEDIA_URL").toString();
-						System.out.println(sendMediaId);
+						sendMediaPath=listMediaId.get(0).get("TZ_IMAGE_PATH").toString();
+						System.out.println(sendMediaPath);
 					}
 					
 					Map<String, Object> jsonMap = new HashMap<>();
@@ -82,7 +82,8 @@ public class TzWeChatLogInfoServiceImpl extends FrameworkImpl{
 					jsonMap.put("s_suceuss", psTzWxmsgLogT.getTzSSucess());
 					jsonMap.put("s_fail", psTzWxmsgLogT.getTzSFail());
 					jsonMap.put("content", psTzWxmsgLogT.getTzContent());
-					jsonMap.put("mediaId", sendMediaId);
+//					jsonMap.put("mediaId", sendMediaPath);
+					jsonMap.put("mediaId", psTzWxmsgLogT.getTzMediaId());
 					returnJsonMap.replace("formData", jsonMap);
 				} else {
 					errMsg[0] = "1";

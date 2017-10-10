@@ -554,6 +554,8 @@
     savePlstComInfo: function(win){
         //资源信息表单
         var form = win.child("form").getForm();
+        var classId = win.up('plstInfo').child("form").getForm().findField("permID").getValue();
+        
         //表单数据
         var formParams = form.getValues();
         //组件信息标志
@@ -574,6 +576,7 @@
         for(var i=0;i<processRecs.length;i++){
             if(processEditJson == ""){
             	processEditJson = Ext.JSON.encode(processRecs[i].data);
+            	processEditJson = processEditJson.substring(0,processEditJson.length -1) + ',classId:"' + classId + '"}'
             }else{
             	processEditJson = processEditJson + ',' + Ext.JSON.encode(processRecs[i].data);
             }
