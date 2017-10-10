@@ -1670,10 +1670,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		try {
 			
 			/*对lang参数做限制，只能是ZHS或ENG，不单从URL中获取，卢艳添加，2017-10-9*/
-			if("ZHS".equals(strLang.toUpperCase()) || "ENG".equals(strLang.toUpperCase())) {
-				
-			} else {
-				strLang = "ZHS";
+			if(strLang!=null && !"".equals(strLang)) {
+				if("ZHS".equals(strLang.toUpperCase()) || "ENG".equals(strLang.toUpperCase())) {
+					strLang = strLang.toUpperCase();
+				} else {
+					strLang = "ZHS";
+				}
 			}
 			
 			if (classid != null && !"".equals(classid)) {
