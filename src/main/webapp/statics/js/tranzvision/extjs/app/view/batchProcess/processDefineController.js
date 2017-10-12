@@ -9,6 +9,7 @@ Ext.define('KitchenSink.view.batchProcess.processDefineController', {
 			cfgSrhId: 'TZ_PROCESS_DF_COM.TZ_PROCESS_LIST.TZ_PROCESS_DF_VW',
 			condition:
 			{
+				"TZ_JG_ID": Ext.tzOrgID
 			},
 			callback: function(seachCfg){
 				var store = btn.findParentByType("grid").store;

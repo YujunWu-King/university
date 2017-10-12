@@ -55,7 +55,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { orgId,processName });
                 if (map != null) {
                 	
-                	SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+                	SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 	dateTime= simpleDate.format((Date) map.get("TZ_ZJXTSJ"));
                     processDesc = (String) map.get("TZ_JCFWQ_MS");
                     platFormType = (String) map.get("TZ_CZXT_LX");

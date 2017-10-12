@@ -302,10 +302,11 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                           append(dayFlag).append(monthFlag).append(weekFlag).append(yearFlag);
                     }else {
                     	stringBuilder.append(tzXhzdS).append(ONE_SPACE).append(tzXhzdM2).append(ONE_SPACE).
-                    	append(tzXhzdH).append(ONE_SPACE).append(tzXhzdD).append(ONE_SPACE).append(tzXhzdW).
-                    	append(ONE_SPACE).append(tzXhzdM1).append(ONE_SPACE).append(tzXhzdY);
+                    	append(tzXhzdH).append(ONE_SPACE).append(tzXhzdD).append(ONE_SPACE).append(tzXhzdM1).
+                    	append(ONE_SPACE).append(tzXhzdW).append(ONE_SPACE).append(tzXhzdY);
                     }
                     //插入循环表达式
+                    System.out.println(stringBuilder.toString());
                     tzDispatchLoop.setTzXhQzbds(stringBuilder.toString().trim());
                     
                     //秒
@@ -484,7 +485,7 @@ public class TzDispatchLoopServiceImpl extends FrameworkImpl{
                 	append(tzXhzdH).append(ONE_SPACE).append(tzXhzdD).append(ONE_SPACE).append(tzXhzdM1).
                 	append(ONE_SPACE).append(tzXhzdW).append(ONE_SPACE).append(tzXhzdY);
                 }
-                
+                System.out.println(stringBuilder.toString());
                 //插入循环表达式
                 tzDispatchLoop.setTzXhQzbds(stringBuilder.toString().trim());
                 

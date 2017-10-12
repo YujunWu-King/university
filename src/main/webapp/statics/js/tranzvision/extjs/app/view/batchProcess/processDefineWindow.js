@@ -47,6 +47,8 @@ Ext.define('KitchenSink.view.batchProcess.processDefineWindow', {
                 store: new KitchenSink.view.orgmgmt.orgListStore(),
                 queryMode: 'local',
                 name: 'orgId',
+                readOnly:true,
+                value:Ext.tzOrgID,
                 emptyText:'请选择机构',
                 afterLabelTextTpl: [
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
