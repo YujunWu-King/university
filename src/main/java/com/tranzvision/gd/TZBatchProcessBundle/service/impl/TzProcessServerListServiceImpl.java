@@ -120,7 +120,6 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     mapList.put("runningStatus", resultArray[3]);
                     mapList.put("palpitationDateTime", resultArray[5]);
                     mapList.put("traisentTime", resultArray[6]);
-                    System.out.println(resultArray[6]);
                     listData.add(mapList);
                 });
                 mapRet.replace("total", obj[0]);
