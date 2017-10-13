@@ -9,6 +9,7 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			cfgSrhId: 'TZ_DD_LOOP_COM.TZ_DD_LOOP_LIST.TZ_DD_LOOP_VW',
 			condition:
 			{
+				"TZ_JG_ID": Ext.tzOrgID
 			},
 			callback: function(seachCfg){
 				var store = btn.findParentByType("grid").store;
@@ -867,8 +868,8 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("beginMonth").setValue('');
 			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("endMonth").setValue('');
 			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("monthLoopInterval").setValue('');
-			params.hourList = monthForm["hourList"];
-			params.monthFlag = params.hourList + ' '
+			params.monthList = monthForm["monthList"];
+			params.monthFlag = params.monthList + ' '
 		}else if(params.monthCheck == '4'){
 			
 			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("beginMonth").setValue('');
@@ -883,7 +884,7 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("monthList").setValue('');
 			this.getView().down('tabpanel').down('form[name=monthForm]').getForm().findField("monthLoopInterval").setValue('')
 		}
-		
+
 		//年
 		if(params.yearCheck == '1'){ 
 			
@@ -944,11 +945,12 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			,"beginHour":"","endHour":"","hourList":"","hourLoopInterval":""
 			,"beginMinute":"","endMinute":"","minuteList":"","minuteLoopInterval":""
 			,"beginSecond":"","endSecond":"","secondList":"","secondLoopInterval":""
-			,"customYear":"","customMonth":"","customWeek":"","customDay":"","customHour":"","customMinute":"","customSecond":""
+			,"customYear":"","customWeek":"","customMonth":"","customDay":"","customHour":"","customMinute":"","customSecond":""
 			,"yearCheck":"","monthCheck":"","day1Check":"","day2Check":"","hourCheck":"","minuteCheck":"","secondCheck":""
 			,"secondFlag":"","minuteFlag":"","hourFlag":"","dayFlag":"","monthFlag":"","weekFlag":"","yearFlag":""}
 		
 		//选取状态为自定义，清空之前radio选取和数据
+		var tempCycleExpression = "";
 		if(Ext.getCmp("customCheck").checked){
 			
 			this.getView().down('tabpanel').down('form[name=yearForm]').getForm().setValues(blankParams);
@@ -965,11 +967,20 @@ Ext.define('KitchenSink.view.dispatchLoop.dispatchLoopController', {
 			params.secondCheck = "";
 			
 			params.day2Check = '1';
+			tempCycleExpression = params.customSecond + " " + params.customMinute + " " + params.customHour + " " + params.customDay 
+									+ params.customMonth + " " + params.customWeek + " " + params.customYear
 		}else{
-			
+			console.log(params.monthFlag)
+			console.log(params.weekFlag)
+			console.log(params.yearFlag)
 			this.getView().down('tabpanel').down('form[name=customForm]').getForm().setValues(blankParams);
 			params.day2Check = '0';
+			tempCycleExpression = params.secondFlag + params.minuteFlag + params.hourFlag + params.dayFlag +
+									params.monthFlag + params.weekFlag + params.yearFlag
 		}
+		
+		this.getView().down('form').getForm().findField("cycleExpression").setValue(tempCycleExpression);
+		
 		
 		//更新操作参数
 		var comParams = "";

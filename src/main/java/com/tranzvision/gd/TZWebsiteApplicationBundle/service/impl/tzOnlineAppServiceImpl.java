@@ -339,37 +339,47 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		String strSystemBusy = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 				"VIEW_SYSTEM_BUSY", strLanguage, "系统繁忙，请点击返回首页或刷新重试。", "The system is busy, please click to return to the home page or refresh the retry.");
 		
+		/*只有为学生查看报名表时才进行访问信号量控制*/
+		boolean isStudent = false;
+		String isStu = sqlQuery.queryForObject("select 'Y' from PS_TZ_REG_USER_T where OPRID=?", new Object[]{ oprid }, "String");
+		if(isStu != null && "Y".equals(isStu)){
+			isStudent = true;
+		}
+		
 		Semaphore sessionSemaphore = null;
 		boolean hasGetSessionSemaphore = false;
 		boolean hasGetViewOnlineAppSemaphore = false;
+
 		try{
-			//限制每台服务器上只能5人同时访问报名表
-			if (onlineAppViewLockCounter.getQueueLength() >= tzOnlineAppServiceImpl.semaphoreCount
-					|| onlineAppViewLockCounter.tryAcquire(5000, TimeUnit.MILLISECONDS) == false) {
-				//同时进入报名表的人数过多，直接返回首页
-				strErrorPage = "Y";
-				backIndexPage = "Y";
-				throw new TzException(strSystemBusy);
-			}
-			hasGetViewOnlineAppSemaphore = true;
-			
-			//当前会话sessionid
-			String sessionId = request.getSession().getId();
-			Map.Entry<String,Semaphore> sessionSemaphoreObject = tzGdObject.getSemaphore(sessionId);
-		    if(sessionSemaphoreObject == null || sessionSemaphoreObject.getKey() == null || sessionSemaphoreObject.getValue() == null){
-		    	//未获取到当前信号量map
-		    }else{
-		    	sessionSemaphore = sessionSemaphoreObject.getValue();
-		        // 先判断当前报名表对应信号量大于等于1，说明当前报名表有请求尚在执行，否则获取信号灯
-				if (sessionSemaphore.getQueueLength() >= 1 || sessionSemaphore.tryAcquire() == false) {
-					strMessageError = strRefreshFast;
+			if(isStudent){
+				//限制每台服务器上只能5人同时访问报名表
+				if (onlineAppViewLockCounter.getQueueLength() >= tzOnlineAppServiceImpl.semaphoreCount
+						|| onlineAppViewLockCounter.tryAcquire(5000, TimeUnit.MILLISECONDS) == false) {
+					//同时进入报名表的人数过多，直接返回首页
 					strErrorPage = "Y";
-					throw new TzException(strRefreshFast);
+					backIndexPage = "Y";
+					throw new TzException(strSystemBusy);
 				}
-	
-				// 已获取信号灯，执行请求完成后需要释放
-				hasGetSessionSemaphore = true;
-		    }
+				hasGetViewOnlineAppSemaphore = true;
+				
+				//当前会话sessionid
+				String sessionId = request.getSession().getId();
+				Map.Entry<String,Semaphore> sessionSemaphoreObject = tzGdObject.getSemaphore(sessionId);
+			    if(sessionSemaphoreObject == null || sessionSemaphoreObject.getKey() == null || sessionSemaphoreObject.getValue() == null){
+			    	//未获取到当前信号量map
+			    }else{
+			    	sessionSemaphore = sessionSemaphoreObject.getValue();
+			        // 先判断当前报名表对应信号量大于等于1，说明当前报名表有请求尚在执行，否则获取信号灯
+					if (sessionSemaphore.getQueueLength() >= 1 || sessionSemaphore.tryAcquire() == false) {
+						strMessageError = strRefreshFast;
+						strErrorPage = "Y";
+						throw new TzException(strRefreshFast);
+					}
+		
+					// 已获取信号灯，执行请求完成后需要释放
+					hasGetSessionSemaphore = true;
+			    }
+			}
 		    /*********************************************************************************************
 			 * 根据当前session获取信号量，防止此时频发刷新
 			 * 张浪添加，20170926【修改结束】
@@ -650,36 +660,38 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 			 * 当前人员报名表信号量如果存在，说明有保存、提交请求正在处理中，防止此时频发刷新
 			 * 张浪添加，20170925【修改开始】
 			 *********************************************************************************************/
-			if ("".equals(strMessageError)){
-				//判断是否有保存、提交报名表请求正在执行
-				Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGdObject.getSemaphore("com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppServiceImpl-20170925",strClassId + "-" + oprid +"-" + numAppInsId);
+			if(isStudent){
+				if ("".equals(strMessageError)){
+					//判断是否有保存、提交报名表请求正在执行
+					Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGdObject.getSemaphore("com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppServiceImpl-20170925",strClassId + "-" + oprid +"-" + numAppInsId);
+					
+				    if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null){
+				    	//没有正在保存或提交的数据
+				    }else{
+				    	Semaphore tmpSemaphore = tmpSemaphoreObject.getValue();
+				        //信号量中当前可用的许可数<1，表示有正在处理中的保存、提交请求
+				        if(tmpSemaphore.availablePermits() < 1)
+						{
+				        	strMessageError = strRefreshFast;
+						}
+				    }
+				}
 				
-			    if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null){
-			    	//没有正在保存或提交的数据
-			    }else{
-			    	Semaphore tmpSemaphore = tmpSemaphoreObject.getValue();
-			        //信号量中当前可用的许可数<1，表示有正在处理中的保存、提交请求
-			        if(tmpSemaphore.availablePermits() < 1)
-					{
-			        	strMessageError = strRefreshFast;
-					}
-			    }
-			}
-			
-			if("".equals(strMessageError)){
-				//判断是否有正在刷新的报名表
-				Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGdObject.getSemaphore(strClassId + "-" + oprid +"-" + numAppInsId);
-				
-			    if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null){
-			    	//没有正刷新的数据
-			    }else{
-			    	Semaphore tmpSemaphore = tmpSemaphoreObject.getValue();
-			    	//信号量中当前可用的许可数<1，表示有正在刷新的报名表
-			        if(tmpSemaphore.availablePermits() < 1)
-					{
-			        	strMessageError = strRefreshFast;
-					}
-			    }
+				if("".equals(strMessageError)){
+					//判断是否有正在刷新的报名表
+					Map.Entry<String,Semaphore> tmpSemaphoreObject = tzGdObject.getSemaphore(strClassId + "-" + oprid +"-" + numAppInsId);
+					
+				    if(tmpSemaphoreObject == null || tmpSemaphoreObject.getKey() == null || tmpSemaphoreObject.getValue() == null){
+				    	//没有正刷新的数据
+				    }else{
+				    	Semaphore tmpSemaphore = tmpSemaphoreObject.getValue();
+				    	//信号量中当前可用的许可数<1，表示有正在刷新的报名表
+				        if(tmpSemaphore.availablePermits() < 1)
+						{
+				        	strMessageError = strRefreshFast;
+						}
+				    }
+				}
 			}
 			/*********************************************************************************************
 			 * 当前人员报名表信号量如果存在，说明有请求正在处理中，防止此时频发刷新
@@ -701,23 +713,25 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 				Semaphore refreshSemaphore = null;
 				boolean hasGetSemaphore = false;
 				try{
-					//每次打开报名表时获取报名表信号灯，如果信号灯未释放，提示刷新过快
-				    Map.Entry<String,Semaphore> refreshSemaphoreObject = tzGdObject.getSemaphore(strClassId + "-" + oprid +"-" + numAppInsId);
-				    if(refreshSemaphoreObject == null || refreshSemaphoreObject.getKey() == null || refreshSemaphoreObject.getValue() == null)
-				    {
-				    	//如果返回的信号灯为空，继续执行
-				    }else{
-				    	refreshSemaphore = refreshSemaphoreObject.getValue();
-				        
-						// 先判断当前报名表对应信号量大于等于1，说明当前报名表有请求尚在执行，否则获取信号灯
-						if (refreshSemaphore.getQueueLength() >= 1 || refreshSemaphore.tryAcquire() == false) {
-							strMessageError = strRefreshFast;
-							strErrorPage = "Y";
-							throw new TzException(strMessageError);
+					if(isStudent){
+						//每次打开报名表时获取报名表信号灯，如果信号灯未释放，提示刷新过快
+					    Map.Entry<String,Semaphore> refreshSemaphoreObject = tzGdObject.getSemaphore(strClassId + "-" + oprid +"-" + numAppInsId);
+					    if(refreshSemaphoreObject == null || refreshSemaphoreObject.getKey() == null || refreshSemaphoreObject.getValue() == null)
+					    {
+					    	//如果返回的信号灯为空，继续执行
+					    }else{
+					    	refreshSemaphore = refreshSemaphoreObject.getValue();
+					        
+							// 先判断当前报名表对应信号量大于等于1，说明当前报名表有请求尚在执行，否则获取信号灯
+							if (refreshSemaphore.getQueueLength() >= 1 || refreshSemaphore.tryAcquire() == false) {
+								strMessageError = strRefreshFast;
+								strErrorPage = "Y";
+								throw new TzException(strMessageError);
+							}
+		
+							// 已获取信号灯，执行请求完成后需要释放
+							hasGetSemaphore = true;
 						}
-	
-						// 已获取信号灯，执行请求完成后需要释放
-						hasGetSemaphore = true;
 					}
 			    /*********************************************************************************************
 				 * 当前人员报名表信号量如果存在，说明有请求正在处理中，防止此时频发刷新

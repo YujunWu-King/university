@@ -7,7 +7,10 @@ Ext.define('KitchenSink.view.processDispatchMg.processDispatchController', {
     cfgSearchAct: function (btn) {
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_JC_DISPATCH_COM.TZ_DISPATCH_MG.TZ_PROCESS_DF_VW',
-            condition: {},
+            condition: 
+            {
+            	"TZ_JG_ID": Ext.tzOrgID
+            },
             callback: function (seachCfg) {
                 var store = btn.findParentByType("grid").store;
                 store.tzStoreParams = seachCfg;
