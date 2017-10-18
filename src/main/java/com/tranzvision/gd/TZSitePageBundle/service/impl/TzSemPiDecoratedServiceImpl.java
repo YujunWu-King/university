@@ -3,11 +3,11 @@
  */
 package com.tranzvision.gd.TZSitePageBundle.service.impl;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -185,11 +185,11 @@ public class TzSemPiDecoratedServiceImpl extends FrameworkImpl {
 			sql = "select TZ_IS_SHOW_PHOTO from PS_TZ_USERREG_MB_T where TZ_SITEI_ID=?";
 			String isShowPhoto = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
 			if ("Y".equals(isShowPhoto)) {
-				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCard",strName,strModifyLabel,siteId,personInfoMenuId,
-						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,strPhoto,znxUrl.toString(),myActUrl.toString());
+				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCard",StringEscapeUtils.escapeHtml(strName),strModifyLabel,siteId,personInfoMenuId,
+						strMshXhLabel,strApplicationNum,strRegEmailLabel,StringEscapeUtils.escapeHtml(strRegEmail),strCityLabel,StringEscapeUtils.escapeHtml(strCity),strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,strPhoto,znxUrl.toString(),myActUrl.toString());
 			} else {
-				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCardNoHeadImg", strName,strModifyLabel,siteId,personInfoMenuId,
-						strMshXhLabel,strApplicationNum,strRegEmailLabel,strRegEmail,strCityLabel,strCity,strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,znxUrl.toString(),myActUrl.toString());
+				strRet = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemPerInfoCardNoHeadImg", StringEscapeUtils.escapeHtml(strName),strModifyLabel,siteId,personInfoMenuId,
+						strMshXhLabel,strApplicationNum,strRegEmailLabel,StringEscapeUtils.escapeHtml(strRegEmail),strCityLabel,StringEscapeUtils.escapeHtml(strCity),strMsgCount,strSiteMsgLabel,strActCount,strMyActLabel,MsgDisplay,ActDisplay,znxUrl.toString(),myActUrl.toString());
 			}
 
 			strRet = strRet.replace((char) (10), ' ');

@@ -4,7 +4,6 @@
 package com.tranzvision.gd.TZSitePageBundle.service.impl;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,11 +99,11 @@ public class TzStuLoginedIndexServiceImpl extends FrameworkImpl {
 					
 					if("ENG".equals(strLang)){
 						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-						strWelcome = "Welcome " + strUserRealName + ", " + dateFormat.format(new Date());
+						strWelcome = "Welcome " + StringEscapeUtils.escapeHtml(strUserRealName) + ", " + dateFormat.format(new Date());
 						strWelcome = strWelcome + "&nbsp;&nbsp;&nbsp;&nbsp;<a onclick='Logout()' href='javascript:void(0)'>Logout</a>";
 					}else{
 						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
-						strWelcome = "欢迎 " + strUserRealName + "，今天是:" + dateFormat.format(new Date());
+						strWelcome = "欢迎 " + StringEscapeUtils.escapeHtml(strUserRealName) + "，今天是:" + dateFormat.format(new Date());
 						strWelcome = strWelcome + "&nbsp;&nbsp;&nbsp;&nbsp;<a onclick='Logout()' href='javascript:void(0)'>安全退出</a>";
 					}
 					

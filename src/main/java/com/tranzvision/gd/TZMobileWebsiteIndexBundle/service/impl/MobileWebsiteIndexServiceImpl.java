@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -196,7 +197,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl  {
 				strActCount = "<div id=\"actCount\" class=\"circle\" style=\"display:none\"><span class=\"circle_span\" id=\"actCountNum\">" + actCount + "</span></div>";
 			}
 			
-			String personHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_GRXX_INFO_HTML",strModifyLabel,strRegEmailLabel,strMshXhLabel,strCityLabel,strSiteMsgLabel,strMyActLabel,strPhoto,strName,strRegEmail,strApplicationNum,strCity,strMsgCount,strActCount,accountMngUrl,znxListUrl,myActivityYetUrl);
+			String personHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_GRXX_INFO_HTML",strModifyLabel,strRegEmailLabel,strMshXhLabel,strCityLabel,strSiteMsgLabel,strMyActLabel,strPhoto,StringEscapeUtils.escapeHtml(strName),StringEscapeUtils.escapeHtml(strRegEmail),strApplicationNum,StringEscapeUtils.escapeHtml(strCity),strMsgCount,strActCount,accountMngUrl,znxListUrl,myActivityYetUrl);
 			
 			
 			/*招生进度*/
