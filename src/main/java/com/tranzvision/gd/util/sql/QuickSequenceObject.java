@@ -5,11 +5,13 @@ public class QuickSequenceObject
 	private Integer m_CurrentSequenceNumber = 0;
 	private Integer m_CurrentQueneLength = 0;
 	private int m_SleepMilliseconds = 0;
+	private int m_Step = 1;
 	
-	public QuickSequenceObject()
+	public QuickSequenceObject(int step)
 	{
 		m_CurrentSequenceNumber = 0;
 		m_CurrentQueneLength = 0;
+		m_Step = step;
 	}
 	
 	public void set(int seqNumber,int queneLen)
@@ -47,7 +49,7 @@ public class QuickSequenceObject
 		
 		if(m_CurrentQueneLength >= 1)
 		{
-			m_CurrentSequenceNumber ++;
+			m_CurrentSequenceNumber = m_CurrentSequenceNumber + m_Step;
 			m_CurrentQueneLength --;
 			
 			result = m_CurrentSequenceNumber;

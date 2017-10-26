@@ -1,13 +1,13 @@
 package com.tranzvision.gd.util.sql;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class GetSeqNum
@@ -21,14 +21,19 @@ public class GetSeqNum
 	//记录当前服务获取序列状态对象的映射集合变量
 	private static HashMap<String,QuickSequenceObject> currentQueneLengthMap = new HashMap<String,QuickSequenceObject>();
 	
-	//public int getSeqNum(String tableName, String colName) throws Exception
+	/**
+	 * 获取指定表名和字段名的增量为1的下一个自增序号
+	 * @param tableName 表名
+	 * @param colName	字段名
+	 * @return
+	 */
 	public int getSeqNum(String tableName, String colName)
 	{
 		int index = 0;
 		
 		
 		//获取序列号
-		index = this.pGetSeqNum1(tableName,colName);
+		index = this.pGetSeqNum1(tableName,colName, 1, 0);
 		if(index <= 0)
 		{
 			//throw new Exception("failed to acquire the next sequence number for [" + tableName + "." + colName + "].");
@@ -39,7 +44,7 @@ public class GetSeqNum
 	}
 	
 	
-	private int pGetSeqNum1(String tableName, String colName)
+	private int pGetSeqNum1(String tableName, String colName, int Step, int begin)
 	{
 		int index = 0;
 		
@@ -60,11 +65,10 @@ public class GetSeqNum
 			//通过获取的信号灯将获取下一个序列值的并行访问串行化执行
 			tmpSemaphore.acquireUninterruptibly();
 			
-			
 			//生成记录上次序列状态的对象
 			if(currentQueneLengthMap.containsKey(tmpSemaphoreName) == false)
 			{
-				currentQueneLengthMap.put(tmpSemaphoreName,new QuickSequenceObject());
+				currentQueneLengthMap.put(tmpSemaphoreName,new QuickSequenceObject(Step));
 			}
 			
 			QuickSequenceObject tmpQuickSequenceObject = currentQueneLengthMap.get(tmpSemaphoreName);
@@ -81,7 +85,7 @@ public class GetSeqNum
 					while(index <= 0)
 					{
 						//获取下一个序列号值，并计数
-						index = this.pGetSeqNum2(tableName, colName, tmpQuickSequenceObject, tmpSemaphore.getQueueLength());
+						index = this.pGetSeqNum2(tableName, colName, tmpQuickSequenceObject, tmpSemaphore.getQueueLength(), Step, begin);
 						counter ++;
 						
 						//每成功抢到一次就睡眠10毫秒
@@ -125,7 +129,7 @@ public class GetSeqNum
 	}
 
 
-	private int pGetSeqNum2(String tableName, String colName, QuickSequenceObject quickSequenceObject, int queneLength)
+	private int pGetSeqNum2(String tableName, String colName, QuickSequenceObject quickSequenceObject, int queneLength, int Step, int begin)
 	{
 		int index = 0;
 
@@ -140,8 +144,8 @@ public class GetSeqNum
 			tmpStr = jdbcTemplate.queryForObject(sql,new Object[] { tableName, colName },"String");
 			if("X".equals(tmpStr) == false)
 			{
-				sql = "insert into PS_TZ_SEQNUM_T (TZ_TABLE_NAME, TZ_COL_NAME, TZ_SEQNUM) values (?,?,0)";
-				jdbcTemplate.update(sql, new Object[] { tableName, colName });
+				sql = "insert into PS_TZ_SEQNUM_T (TZ_TABLE_NAME, TZ_COL_NAME, TZ_SEQNUM) values (?,?,?)";
+				jdbcTemplate.update(sql, new Object[] { tableName, colName, begin });
 			}
 		}
 		catch (Exception e)
@@ -158,24 +162,42 @@ public class GetSeqNum
 			sql = "SELECT TZ_SEQNUM FROM PS_TZ_SEQNUM_T WHERE TZ_TABLE_NAME = ? AND TZ_COL_NAME = ?";
 			tmpIndex = jdbcTemplate.queryForObject(sql, new Object[] { tableName, colName }, "int");
 			
-			
-			//更新当前序列的值，queneLength记录了当前正在排队请求获取当前指定序列序列值的队列长度，如果队列长度大于等于1，则直接将数据库中对应的序列对象的当前序列值更新为TZ_SEQNUM+1+queneLength
-			//这样后续队列中的queneLength个请求直接通过后续记录的序列值和队列长度计算获得，以减少对数据库序列对象的争用，减少数据库死锁发生的概率
-			int updateFlag = 0;
-			sql = "UPDATE PS_TZ_SEQNUM_T SET TZ_SEQNUM=TZ_SEQNUM+1+? WHERE TZ_TABLE_NAME = ? AND TZ_COL_NAME = ? AND TZ_SEQNUM <= ?";
-			updateFlag = jdbcTemplate.update(sql, new Object[] { queneLength, tableName, colName, tmpIndex});
-			
-			
-			//此处利用jdbcTemplate.update方法返回更新记录行数来判断是否更新成功
-			if(updateFlag >= 1)
-			{
-				//如果更新成功，则返回下一个序列值
-				index = tmpIndex + 1;
+			if(tmpIndex >= begin){
+				//更新当前序列的值，queneLength记录了当前正在排队请求获取当前指定序列序列值的队列长度，如果队列长度大于等于1，则直接将数据库中对应的序列对象的当前序列值更新为TZ_SEQNUM+1+queneLength
+				//这样后续队列中的queneLength个请求直接通过后续记录的序列值和队列长度计算获得，以减少对数据库序列对象的争用，减少数据库死锁发生的概率
+				int updateFlag = 0;
+				sql = "UPDATE PS_TZ_SEQNUM_T SET TZ_SEQNUM=TZ_SEQNUM+? WHERE TZ_TABLE_NAME = ? AND TZ_COL_NAME = ? AND TZ_SEQNUM <= ?";
+				updateFlag = jdbcTemplate.update(sql, new Object[] { (1+queneLength)*Step, tableName, colName, tmpIndex});
 				
-				//记录当前序列的排队参数，如果排队队列长度大于等于1，则记录当前的已获取的序列值和序列长度，以便后续请求中可以使用这两个排队参数直接获取下一个序列值
-				if(queneLength >= 1)
+				
+				//此处利用jdbcTemplate.update方法返回更新记录行数来判断是否更新成功
+				if(updateFlag >= 1)
 				{
-					quickSequenceObject.set(index, queneLength);
+					//如果更新成功，则返回下一个序列值
+					index = tmpIndex + Step;
+					
+					//记录当前序列的排队参数，如果排队队列长度大于等于1，则记录当前的已获取的序列值和序列长度，以便后续请求中可以使用这两个排队参数直接获取下一个序列值
+					if(queneLength >= 1)
+					{
+						quickSequenceObject.set(index, queneLength);
+					}
+				}
+			}else{
+				//小于开始值，将序列号设置为开始值
+				int updateFlag = 0;
+				sql = "UPDATE PS_TZ_SEQNUM_T SET TZ_SEQNUM=? WHERE TZ_TABLE_NAME = ? AND TZ_COL_NAME = ? AND TZ_SEQNUM < ?";
+				updateFlag = jdbcTemplate.update(sql, new Object[] { (begin+queneLength*Step), tableName, colName, begin});
+				
+				//此处利用jdbcTemplate.update方法返回更新记录行数来判断是否更新成功
+				if(updateFlag >= 1)
+				{
+					//如果更新成功，则返回开始值
+					index = begin;
+					
+					if(queneLength >= 1)
+					{
+						quickSequenceObject.set(index, queneLength);
+					}
 				}
 			}
 		}
@@ -189,34 +211,30 @@ public class GetSeqNum
 		
 		return index;
 	}
-
-
-//	/**** 自动编号 *****/
-//	public int getSeqNumOracle(String tableName, String colName)
-//	{
-//		int index = 0;
-//		try {
-//			String lockSQL = "update PS_TZ_SEQNUM_T set tz_seqnum = tz_seqnum + 1 where tz_table_name = ? and tz_col_name = ?";
-//			jdbcTemplate.update(lockSQL, new Object[] { tableName, colName });
-//
-//			String selectSql = "select tz_seqnum from PS_TZ_SEQNUM_T where tz_table_name = ? and tz_col_name = ?";
-//			try {
-//				index = jdbcTemplate.queryForObject(selectSql, new Object[] { tableName, colName }, "Integer");
-//			} catch (Exception e) {
-//				index = 0;
-//			}
-//
-//			if (index == 0) {
-//				String insertSQL = "insert into PS_TZ_SEQNUM_T (tz_table_name, tz_col_name, tz_seqnum) values (?, ?, 1)";
-//				int i = jdbcTemplate.update(insertSQL, new Object[] { tableName, colName });
-//				if (i > 0) {
-//					index = 1;
-//				}
-//			}
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return index;
-//	}
+	
+	
+	
+	
+	/**
+	 * 获取指定表名和字段名起始值为begin，增量为Step的下一个自增序号
+	 * 注意：调用该方法时，同一个序列号需要设置相同的Step
+	 * @param tableName	表名
+	 * @param colName	字段名
+	 * @param Step	自增步长，正整数
+	 * @param begin	起始值，0和正整数
+	 * @return
+	 */
+	public int getSeqNum(String tableName, String colName, int Step, int begin){
+		int index = 0;
+		
+		//获取序列号
+		index = this.pGetSeqNum1(tableName,colName, Step, begin);
+		if(index <= 0)
+		{
+			//throw new Exception("failed to acquire the next sequence number for [" + tableName + "." + colName + "].");
+		}
+		
+		
+		return index;
+	}
 }
