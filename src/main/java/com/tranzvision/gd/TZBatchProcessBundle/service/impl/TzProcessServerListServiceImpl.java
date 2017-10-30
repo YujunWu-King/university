@@ -152,7 +152,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 // 将字符串转换成json;
                 jacksonUtil.json2Map(strForm);
                 // 信息内容;
-                SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+                SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 
                 String palpitationDate = jacksonUtil.getString("palpitationDate") == null?"":jacksonUtil.getString("palpitationDate");
                 String palpitationTime = jacksonUtil.getString("palpitationTime") == null?"":jacksonUtil.getString("palpitationTime");
@@ -179,7 +179,11 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     tzProcessServer.setTzJcfwqMs(processDec);
                     tzProcessServer.setTzRwxhJg(intervalTime);
                     tzProcessServer.setTzZdbxRws(parallelNum);
-                    tzProcessServer.setTzZjxtsj(simpleDate.parse(palpitationDate + palpitationTime));
+                    if("".equals(palpitationDate + palpitationTime)){
+                    	//tzProcessServer.setTzZjxtsj(simpleDate.parse(palpitationDate + palpitationTime));
+                    }else{
+                    	tzProcessServer.setTzZjxtsj(simpleDate.parse(palpitationDate + palpitationTime));
+                    }
                     tzProcessServer.setTzYxzt("STOPPING");
                     tzProcessServer.setTzBeizhu(remark);
 

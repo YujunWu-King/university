@@ -69,7 +69,9 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                 afterLabelTextTpl: [
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
-                allowBlank:false
+                allowBlank:false,
+                regex:/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+                regexText:'请输入正确的IP地址'
             },{
                 xtype: 'textfield',
                 fieldLabel: '进程服务器描述',
@@ -77,7 +79,8 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                 afterLabelTextTpl: [
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
-                allowBlank:false
+                allowBlank:false,
+                maxLength:20
             },{
                 xtype: 'combobox',
                 editable:false,
@@ -100,7 +103,9 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                 afterLabelTextTpl: [
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
-                allowBlank:false
+                allowBlank:false,
+                regex:/^[1-9]\d*|0$/,
+                regexText:'请输入正确的整数'
             }, {
                 xtype: 'textfield',
                 fieldLabel: '最大并行任务数',
