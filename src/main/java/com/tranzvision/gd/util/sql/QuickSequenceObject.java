@@ -34,7 +34,7 @@ public class QuickSequenceObject
 		Integer result = 0;
 		
 		
-		if(m_SleepMilliseconds >= 1)
+		/*if(m_SleepMilliseconds >= 1)
 		{
 			try
 			{
@@ -44,12 +44,12 @@ public class QuickSequenceObject
 			{
 				//do nothing
 			}
-		}
+		}*/
 		
 		
 		if(m_CurrentQueneLength >= 1)
 		{
-			m_CurrentSequenceNumber = m_CurrentSequenceNumber + m_Step;
+			m_CurrentSequenceNumber += m_Step;
 			m_CurrentQueneLength --;
 			
 			result = m_CurrentSequenceNumber;
