@@ -314,6 +314,7 @@ public class GetSeqNum
 			}
 			catch (Exception e)
 			{
+				e.printStackTrace();
 				//如果新增相关序列失败，则直接返回，表示获取下一个序列号失败
 				return;
 			}
