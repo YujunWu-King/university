@@ -203,6 +203,7 @@ public class TestController {
 		}  
 		
 		public void getSeqTest(){
+			System.out.println("自增1："+ getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST1"));
 			System.out.println("自增5："+ getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST5", 5, 10));
 		}
 	}  
