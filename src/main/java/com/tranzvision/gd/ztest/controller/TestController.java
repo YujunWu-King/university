@@ -1,7 +1,6 @@
 package com.tranzvision.gd.ztest.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +17,7 @@ import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.poi.excel.Test;
 import com.tranzvision.gd.util.security.RegExpValidatorUtils;
 import com.tranzvision.gd.util.session.TzSession;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.tsinghua.sms.SendSmsService;
 import com.tranzvision.gd.ztest.model.Admin;
 import com.tranzvision.gd.ztest.service.AdminService;
@@ -33,6 +33,9 @@ public class TestController {
 	private SendSmsService sendSmsService;
 	
 	private Patchca patchaService;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	String message = "Admin!";
 
@@ -177,5 +180,31 @@ public class TestController {
 		
 	}
 	
-
+	@RequestMapping("seqNum")
+	public void testGetSeqNum(HttpServletRequest request, HttpServletResponse response) {
+		try {
+			//System.out.println("自增1："+ getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST1"));
+			//System.out.println("自增5："+ getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST5", 5, 10));
+			int i;
+			for(i=0;i<200;i++){
+				MyThread myThread = new MyThread();  
+				Thread thread = new Thread(myThread);  
+				thread.start();  
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private class MyThread implements Runnable {
+		@Override
+		public void run() {
+			getSeqTest();
+		}  
+		
+		public void getSeqTest(){
+			System.out.println("自增5："+ getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST5", 5, 10));
+		}
+	}  
+	
 }
