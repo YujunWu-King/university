@@ -8,8 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tranzvision.gd.util.base.Arith;
@@ -180,14 +182,21 @@ public class TestController {
 		
 	}
 	
-	@RequestMapping("seqNum")
-	public void testGetSeqNum(HttpServletRequest request, HttpServletResponse response) {
+
+	@RequestMapping(value = { "/seqNum/{steptype}" })
+	@ResponseBody
+	public void testGetSeqNum(HttpServletRequest request, HttpServletResponse response, 
+			@PathVariable(value = "steptype") String steptype) {
 		try {
-			//System.out.println("自增1："+ getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST1"));
-			//System.out.println("自增5："+ getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST5", 5, 10));
 			int i;
 			for(i=0;i<200;i++){
-				MyThread myThread = new MyThread();  
+				MyThread myThread = null;
+				if("M".equals(steptype)){
+					myThread = new MyThread("M");  
+				}else{
+					myThread = new MyThread("S");  
+				}
+				
 				Thread thread = new Thread(myThread);  
 				thread.start();  
 			}
@@ -197,14 +206,26 @@ public class TestController {
 	}
 	
 	private class MyThread implements Runnable {
+		private String t_stype_type = "S";
+		
+		public MyThread(String steptype){
+			t_stype_type = steptype;
+		}
+		
 		@Override
 		public void run() {
-			getSeqTest();
+			getSeqTest(t_stype_type);
 		}  
 		
-		public void getSeqTest(){
-			System.out.println("自增1："+ getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST1"));
-			System.out.println("自增5："+ getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST5", 5, 10));
+		public void getSeqTest(String type){
+			int index = 0;
+			if("M".equals(type)){
+				index = getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST5", 5, 10);
+				System.out.println("自增5："+ index);
+			}else{
+				index = getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST1");
+				System.out.println("自增1："+ index);
+			}
 		}
 	}  
 	
