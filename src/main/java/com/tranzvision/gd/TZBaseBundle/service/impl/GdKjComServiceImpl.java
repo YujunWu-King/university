@@ -642,6 +642,19 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			String value = "";
 			// 搜索字段类型：01-字符串，02-数字，03-日期，04-时间，05-日期时间;
 			String type;
+			
+			/*判断表名、结果字段是否存在空格或换行符
+			 * 条件是否存在多个空格或者一个换行符
+			 * 可能为sql注入 卢艳添加，2017-11-3*/
+			String[] arrCondition = condition.split(" ");
+			if(recname.indexOf(" ")!=-1 || recname.indexOf("\n")!=-1 
+					|| result.indexOf(" ")!=-1 || result.indexOf("\n")!=-1 
+					|| arrCondition.length>1 || condition.indexOf("\n")!=-1) {
+				errMsgArr[0] = "1";
+				errMsgArr[1] = "参数错误";
+				return strRet;
+			}
+			
 			// 将搜索字段内容转成json;
 			// JSONObject fieldJson;
 			// 结果字段按逗号分隔;
@@ -1125,6 +1138,19 @@ public class GdKjComServiceImpl extends GdObjectServiceImpl implements GdKjComSe
 			String value = "";
 			// 搜索字段类型：01-字符串，02-数字，03-日期，04-时间，05-日期时间;
 			String type = "";
+			
+			/*判断表名、结果字段是否存在空格或换行符
+			 * 条件是否存在多个空格或者一个换行符
+			 * 可能为sql注入 卢艳添加，2017-11-3*/
+			String[] arrCondition = condition.split(" ");
+			if(recname.indexOf(" ")!=-1 || recname.indexOf("\n")!=-1 
+					|| result.indexOf(" ")!=-1 || result.indexOf("\n")!=-1 
+					|| arrCondition.length>1 || condition.indexOf("\n")!=-1) {
+				errMsgArr[0] = "1";
+				errMsgArr[1] = "参数错误";
+				return jacksonUtil.Map2json(retMap);
+			}
+			
 			// 结果字段按逗号分隔;
 			String[] aryResult = result.split(",");
 			int resultSelectFldsLen = aryResult.length;
