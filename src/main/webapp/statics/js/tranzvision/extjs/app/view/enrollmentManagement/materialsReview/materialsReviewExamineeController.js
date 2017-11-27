@@ -221,8 +221,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             Ext.Msg.alert("提示","请选择要删除的记录");
             return;
         }else{
-            Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+            Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?如果考生存在评议数据会同时删除，是否继续?', function(btnId){
                 if(btnId == 'yes'){
+                    /*
                     for ( var i=0;i<checkLen;i++)
                     {
                         if (selList[i].data.judgeList!="")
@@ -237,6 +238,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
                         Ext.Msg.alert('提示','选中考生中存在已被指定评委的考生，不可删除');
 
                     }
+                    */
                     resSetStore.remove(selList);
                 }
 
@@ -546,7 +548,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.materialsReview.materialsRevie
             Ext.Msg.alert('提示','当前评审状态为进行中，不可移除考生');
             return ;
         }
-        Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?', function(btnId){
+        Ext.MessageBox.confirm('确认', '您确定要删除所选记录吗?如果考生存在评议数据会同时删除，是否继续?', function(btnId){
             if(btnId == 'yes'){
                 var store = view.findParentByType("grid").store;
                 store.removeAt(rowIndex);
