@@ -104,7 +104,8 @@
             $searchInput.on('blur', function () {
                 if (!this.value.length)
                     cancelSearch();
-            }).on('input', function () {
+            }).on('input',
+                function () {
                     if (this.value.length) {
                         $searchResult.show();
                         var text = this.value;
@@ -141,27 +142,26 @@
             $('#showPicker').on('click', function () {
                 weui.picker([{
                     label: '飞机票',
-                    value: '飞机票'
+                    value: 0
                 }, {
                     label: '火车票',
-                    value: '火车票'
+                    value: 1
                 }, {
                     label: '的士票',
-                    value: '的士票'
+                    value: 2
                 }, {
                     label: '公交票 (disabled)',
                     disabled: true,
-                    value: '公交票 (disabled)'
+                    value: 3
                 }, {
                     label: '其他',
-                    value: '其他'
+                    value: 4
                 }], {
                     onChange: function (result) {
                         console.log(result);
                     },
                     onConfirm: function (result) {
                         console.log(result);
-                        $('#showPickerText').val("	"+result[0])
                     }
                 });
             });
@@ -170,290 +170,375 @@
                     start: 1990,
                     end: new Date().getFullYear(),
                     onChange: function (result) {
-                        console.log(result);                        
+                        console.log(result);
                     },
                     onConfirm: function (result) {
                         console.log(result);
-                        $('#showDatePickerText').val("	"+result[0]+"年"+result[1]+"月"+result[2]+"日");
                     }
                 });
             });
         });
     </script>
+
 </head>
 <body>
 <div class="page">
     <div class="page">
         <div class="page__hd">
             <h1 class="page__title">问卷调查</h1>
-            <p class="page__desc">详情</p>
+            <p class="page__desc">为了收集XX信息，所以。。。。。</p>
         </div>
         <div class="page__bd">
-            <div class="weui-cells__title">问题1------自动补全</div>
-            <div class="weui-cells">
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" id="searchInput"
-                               placeholder="请输入文本"> </input>
-                    </div>
-                </div>
-            </div>
-            <div class="weui-cells searchbar-result" id="searchResult">
-                <div class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd weui-cell_primary">
-                        <p>是</p>
-                    </div>
-                </div>
-                <div class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd weui-cell_primary">
-                        <p>否</p>
-                    </div>
-                </div>
-                <div class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd weui-cell_primary">
-                        <p>111111</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="page__bd">
-            <div class="weui-cells__title">问题------单选列表项</div>
-            <div class="weui-cells weui-cells_radio">
-                <label class="weui-cell weui-check__label" for="x11">
-                    <div class="weui-cell__bd">
-                        <p>cell standard</p>
-                    </div>
-                    <div class="weui-cell__ft">
-                        <input type="radio" class="weui-check" name="radio1" id="x11"/>
-                        <span class="weui-icon-checked"></span>
-                    </div>
-                </label> <label class="weui-cell weui-check__label" for="x12">
-
-                <div class="weui-cell__bd">
-                    <p>cell standard</p>
-                </div>
-                <div class="weui-cell__ft">
-                    <input type="radio" name="radio1" class="weui-check" id="x12"
-                           checked="checked"/> <span class="weui-icon-checked"></span>
-                </div>
-            </label>
-            </div>
-            <div class="weui-cells__title">问题------复选列表项</div>
-            <div class="weui-cells weui-cells_checkbox">
-                <label class="weui-cell weui-check__label" for="s11">
-                    <div class="weui-cell__hd">
-                        <input type="checkbox" class="weui-check" name="checkbox1"
-                               id="s11" checked="checked"/> <i class="weui-icon-checked"></i>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <p>standard is dealt for u.</p>
-                    </div>
-                </label> <label class="weui-cell weui-check__label" for="s12">
-                <div class="weui-cell__hd">
-                    <input type="checkbox" name="checkbox1" class="weui-check"
-                           id="s12"/> <i class="weui-icon-checked"></i>
-                </div>
-                <div class="weui-cell__bd">
-                    <p>standard is dealicient for u.</p>
-                </div>
-            </label>
-            </div>
-            <div class="weui-cells__title">问题------表单</div>
-            <div class="weui-cells weui-cells_form">
-                <div class="weui-cell">
-                    <div class="weui-cell__hd">
-                        <label class="weui-label">qq</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" pattern="[0-9]*"
-                               placeholder="请输入qq号"/>
-                    </div>
-                </div>
-            </div>
-
-            <div class="weui-cells__title">问题------表单报错</div>
-            <div class="weui-cells weui-cells_form">
-                <div id="cardIdCell" class="weui-cell weui-cell_warn">
-                    <div class="weui-cell__hd">
-                        <label for="" class="weui-label">卡号</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input id="cardId" class="weui-input" type="number"
-                               pattern="[0-9]*" value="" placeholder="请输入卡号"/>
-                    </div>
-                    <div id="cardId_warn" class="weui-cell__ft">
-                        <i class="weui-icon-warn"></i>
-                    </div>
-                </div>
-                <div id="cardIdCell2" class="weui-cell weui-cell_warn">
-                    <div class="weui-cell__bd">
-                        <input id="cardId2" class="weui-input" type="number"
-                               pattern="[0-9]*" value="" placeholder="请输入"/>
-                    </div>
-                    <div id="cardId_warn2" class="weui-cell__ft">
-                        <i class="weui-icon-warn"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="weui-cells__title">问题------日期</div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label for="" class="weui-label">日期</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="date" value=""/>
-                </div>
-            </div>
-            <div class="weui-cell">
-                <div class="weui-cell__hd">
-                    <label for="" class="weui-label">时间</label>
-                </div>
-                <div class="weui-cell__bd">
-                    <input class="weui-input" type="datetime-local" value=""
-                           placeholder=""/>
-                </div>
-            </div>
-            <div class="page__bd page__bd_spacing">
-                <div id="showDatePicker" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__hd">
-                        <span style="vertical-align: middle">日期选择器</span>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input id="showDatePickerText" class="weui-input" type="text" />
-                    </div>
-                    <div class="weui-cell__ft" id="showDatePicker"></div>
-                </div>
-            </div>
-
-
-            <div class="weui-cells__title">问题------文本框</div>
-            <div class="weui-cells">
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="text" placeholder="请输入文本"/>
-                    </div>
-                </div>
-            </div>
-
-            <div class="weui-cells__title">问题------文本域</div>
-            <div class="weui-cells weui-cells_form">
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-							<textarea id="textarea" class="weui-textarea" placeholder="请输入文本"
-                                      rows="3"></textarea>
-                        <div class="weui-textarea-counter">
-                            <span id="textarea_counter_span">0</span>/200
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题1------自动补全</h2>
+                    <div class="weui-cells">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="text" id="searchInput"
+                                       placeholder="请输入文本"> </input>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="page__bd page__bd_spacing">
-                <div id="showPicker" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__hd">
-                        <span style="vertical-align: middle">选择器</span>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input id="showPickerText" class="weui-input" type="text" />
-                    </div>
-                    <div class="weui-cell__ft" id="showDatePicker"></div>
-                </div>
-            </div>
-            <div class="weui-cells__title">问题------选择</div>
-            <div class="weui-cells">
-                <div class="weui-cell weui-cell_select weui-cell_select-before">
-                    <div class="weui-cell__hd">
-                        <select class="weui-select" name="select2">
-                            <option value="1">+86</option>
-                            <option value="2">+80</option>
-                            <option value="3">+84</option>
-                            <option value="4">+87</option>
-                        </select>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" pattern="[0-9]*"
-                               placeholder="请输入号码"/>
-                    </div>
-                </div>
-            </div>
-            <div class="weui-cells__title">问题------选择</div>
-            <div class="weui-cells">
-                <div class="weui-cell weui-cell_select">
-                    <div class="weui-cell__bd">
-                        <select class="weui-select" name="select1">
-                            <option selected="" value="1">微信号</option>
-                            <option value="2">QQ号</option>
-                            <option value="3">Email</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="weui-cell weui-cell_select weui-cell_select-after">
-                    <div class="weui-cell__hd">
-                        <label for="" class="weui-label">国家/地区</label>
-                    </div>
-                    <div class="weui-cell__bd">
-                        <select class="weui-select" name="select2">
-                            <option value="1">中国</option>
-                            <option value="2">美国</option>
-                            <option value="3">英国</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="weui-gallery" id="gallery">
-                <span class="weui-gallery__img" id="galleryImg"></span>
-                <div class="weui-gallery__opr">
-                    <a href="javascript:" class="weui-gallery__del"> <i
-                            class="weui-icon-delete weui-icon_gallery-delete"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="weui-cells weui-cells_form">
-                <div class="weui-cells__title">问题------图片上传</div>
-                <div class="weui-cell">
-                    <div class="weui-cell__bd">
-                        <div class="weui-uploader">
-                            <div class="weui-uploader__hd">
-                                <p class="weui-uploader__title">图片上传</p>
-                                <div class="weui-uploader__info">0/2</div>
+                    <div class="weui-cells searchbar-result" id="searchResult">
+                        <div class="weui-cell weui-cell_access">
+                            <div class="weui-cell__bd weui-cell_primary">
+                                <p>是</p>
                             </div>
-                            <div class="weui-uploader__bd">
-                                <ul class="weui-uploader__files" id="uploaderFiles">
-                                    <li class="weui-uploader__file"
-                                        style="background-image: url(./images/pic_160.png)"></li>
-                                    <li class="weui-uploader__file weui-uploader__file_status"
-                                        style="background-image: url(./images/pic_160.png)">
-                                        <div class="weui-uploader__file-content">
-                                            <i class="weui-icon-warn"></i>
-                                        </div>
-                                    </li>
-                                    <li class="weui-uploader__file weui-uploader__file_status"
-                                        style="background-image: url(./images/pic_160.png)">
-                                        <div class="weui-uploader__file-content">50%</div>
-                                    </li>
-                                </ul>
-                                <div class="weui-uploader__input-box">
-                                    <input id="uploaderInput" class="weui-uploader__input"
-                                           type="file" accept="image/*" multiple/>
+                        </div>
+                        <div class="weui-cell weui-cell_access">
+                            <div class="weui-cell__bd weui-cell_primary">
+                                <p>否</p>
+                            </div>
+                        </div>
+                        <div class="weui-cell weui-cell_access">
+                            <div class="weui-cell__bd weui-cell_primary">
+                                <p>111111</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------单选列表项</h2>
+                    <div class="weui-cells weui-cells_radio">
+                        <label class="weui-cell weui-check__label" for="x11">
+                            <div class="weui-cell__bd">
+                                <p>cell standard</p>
+                            </div>
+                            <div class="weui-cell__ft">
+                                <input type="radio" class="weui-check" name="radio1" id="x11"/>
+                                <span class="weui-icon-checked"></span>
+                            </div>
+                        </label> <label class="weui-cell weui-check__label" for="x12">
+
+                        <div class="weui-cell__bd">
+                            <p>cell standard</p>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <input type="radio" name="radio1" class="weui-check" id="x12"
+                                   checked="checked"/> <span class="weui-icon-checked"></span>
+                        </div>
+                    </label>
+                    </div>
+                </section>
+            </article>
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------复选列表项</h2>
+                    <div class="weui-cells weui-cells_checkbox">
+                        <label class="weui-cell weui-check__label" for="s11">
+                            <div class="weui-cell__hd">
+                                <input type="checkbox" class="weui-check" name="checkbox1"
+                                       id="s11" checked="checked"/> <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p>standard is dealt for u.</p>
+                            </div>
+                        </label> <label class="weui-cell weui-check__label" for="s12">
+                        <div class="weui-cell__hd">
+                            <input type="checkbox" name="checkbox1" class="weui-check"
+                                   id="s12"/> <i class="weui-icon-checked"></i>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p>standard is dealicient for u.</p>
+                        </div>
+                    </label>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------数字填空</h2>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <label class="weui-label">qq</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="number" pattern="[0-9]*"
+                                   placeholder="请输入qq号"/>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------表单报错</h2>
+                    <div class="weui-cells weui-cells_form">
+                        <div id="cardIdCell" class="weui-cell weui-cell_warn">
+                            <div class="weui-cell__hd">
+                                <label for="" class="weui-label">卡号</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input id="cardId" class="weui-input" type="number"
+                                       pattern="[0-9]*" value="" placeholder="请输入卡号"/>
+                            </div>
+                            <div id="cardId_warn" class="weui-cell__ft">
+                                <i class="weui-icon-warn"></i>
+                            </div>
+                        </div>
+                        <div id="cardIdCell2" class="weui-cell weui-cell_warn">
+                            <div class="weui-cell__bd">
+                                <input id="cardId2" class="weui-input" type="number"
+                                       pattern="[0-9]*" value="" placeholder="请输入"/>
+                            </div>
+                            <div id="cardId_warn2" class="weui-cell__ft">
+                                <i class="weui-icon-warn"></i>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------日期</h2>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <label for="" class="weui-label">日期</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="date" value=""/>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------时间</h2>
+                    <div class="weui-cell">
+                        <div class="weui-cell__hd">
+                            <label for="" class="weui-label">时间</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <input class="weui-input" type="datetime-local" value=""
+                                   placeholder=""/>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------日期选择器</h2>
+                    <div class="page__bd page__bd_spacing">
+                        <div id="showDatePicker" class="weui-cell weui-cell_access">
+                            <div class="weui-cell__hd">
+                                <span style="vertical-align: middle">日期选择器</span>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="text" readonly="readonly"/>
+                            </div>
+                            <div class="weui-cell__ft" id=""></div>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------文本框</h2>
+                    <div class="weui-cells">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="text" placeholder="请输入文本"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------多行文本框</h2>
+                    <div class="weui-cells">
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd">
+                                <label for="" class="weui-label">第一天</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="text" placeholder="请输入文本"/>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd">
+                                <label for="" class="weui-label">第二天</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="text" placeholder="请输入文本"/>
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd">
+                                <label for="" class="weui-label">第三天</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="text" placeholder="请输入文本"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------文本域</h2>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+							<textarea id="textarea" class="weui-textarea" placeholder="请输入文本"
+                                      rows="3"></textarea>
+                                <div class="weui-textarea-counter">
+                                    <span id="textarea_counter_span">0</span>/200
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------选择</h2>
+                    <div class="weui-cells">
+                        <div class="weui-cell weui-cell_select weui-cell_select-before">
+                            <div class="weui-cell__hd">
+                                <select class="weui-select" name="select2">
+                                    <option value="1">+86</option>
+                                    <option value="2">+80</option>
+                                    <option value="3">+84</option>
+                                    <option value="4">+87</option>
+                                </select>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="number" pattern="[0-9]*"
+                                       placeholder="请输入号码"/>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------选择</h2>
+                    <div class="weui-cell weui-cell_select">
+                        <div class="weui-cell__bd">
+                            <select class="weui-select" name="select1">
+                                <option selected="" value="1">微信号</option>
+                                <option value="2">QQ号</option>
+                                <option value="3">Email</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------选择</h2>
+                    <div class="weui-cell weui-cell_select weui-cell_select-after">
+                        <div class="weui-cell__hd">
+                            <label for="" class="weui-label">国家/地区</label>
+                        </div>
+                        <div class="weui-cell__bd">
+                            <select class="weui-select" name="select2">
+                                <option value="1">中国</option>
+                                <option value="2">美国</option>
+                                <option value="3">英国</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------图片上传</h2>
+                    <div class="weui-gallery" id="gallery">
+                        <span class="weui-gallery__img" id="galleryImg"></span>
+                        <div class="weui-gallery__opr">
+                            <a href="javascript:" class="weui-gallery__del"> <i
+                                    class="weui-icon-delete weui-icon_gallery-delete"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <div class="weui-uploader">
+                                    <div class="weui-uploader__hd">
+                                        <p class="weui-uploader__title">图片上传</p>
+                                        <div class="weui-uploader__info">0/2</div>
+                                    </div>
+                                    <div class="weui-uploader__bd">
+                                        <ul class="weui-uploader__files" id="uploaderFiles">
+                                            <li class="weui-uploader__file"
+                                                style="background-image: url(./images/pic_160.png)"></li>
+                                            <li class="weui-uploader__file weui-uploader__file_status"
+                                                style="background-image: url(./images/pic_160.png)">
+                                                <div class="weui-uploader__file-content">
+                                                    <i class="weui-icon-warn"></i>
+                                                </div>
+                                            </li>
+                                            <li class="weui-uploader__file weui-uploader__file_status"
+                                                style="background-image: url(./images/pic_160.png)">
+                                                <div class="weui-uploader__file-content">50%</div>
+                                            </li>
+                                        </ul>
+                                        <div class="weui-uploader__input-box">
+                                            <input id="uploaderInput" class="weui-uploader__input"
+                                                   type="file" accept="image/*" multiple/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </article>
+
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:"
+                   id="showTooltips">提交问卷</a>
             </div>
+
         </div>
-        <div class="weui-btn-area">
-            <a class="weui-btn weui-btn_primary" href="javascript:"
-               id="showTooltips">提交问卷</a>
+        <div style="height: 40px"></div>
+        <div class="weui-footer weui-footer_fixed-bottom">
+            <p class="weui-footer__links">
+                <a href="javascript:home();" class="weui-footer__link"></a>
+            </p>
+            <p class="weui-footer__text">Copyright &copy; 2008-2018 XX学院</p>
         </div>
-    </div>
-    <div style="height: 40px"></div>
-    <div class="weui-footer weui-footer_fixed-bottom">
-        <p class="weui-footer__links">
-            <a href="javascript:home();" class="weui-footer__link"></a>
-        </p>
-        <p class="weui-footer__text">Copyright &copy; 2008-2018 XX学院</p>
     </div>
 </div>
-
 </body>
 </html>
