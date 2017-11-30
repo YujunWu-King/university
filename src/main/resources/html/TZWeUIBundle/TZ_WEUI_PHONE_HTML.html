@@ -2,183 +2,194 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <meta name="viewport"
-          content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-    <!--禁止页面放大-->
-    <meta name="format-detection" content="telephone=no"/>
-    <!--使设备浏览网页时对数字不启用电话功能-->
-    <script src="%bind(:1)/statics/js/lib/weUI/jquery/jquery-2.1.4.js"
-            type="text/javascript"></script>
-    <script src="%bind(:1)/statics/js/lib/weUI/jquery/zepto.js"
-            type="text/javascript"></script>
-    <link href="%bind(:1)/statics/js/lib/weUI/jquery/weui.min.css"
-          rel="stylesheet" type="text/css">
-    <script type="text/javascript"
-            src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-    <script src="https://res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"></script>
-    <title>WeUI问卷调查</title>
-    <script type="text/javascript">
-        $(function () {
-            var $tooltips = $('.js_tooltips');
-            $('#showTooltips').on('click', function () {
-                if ($tooltips.css('display') != 'none')
+        <meta name="viewport"
+              content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+        <!--禁止页面放大-->
+        <meta name="format-detection" content="telephone=no"/>
+        <!--使设备浏览网页时对数字不启用电话功能-->
+        <script src="%bind(:1)/statics/js/lib/weUI/jquery/jquery-2.1.4.js"
+                type="text/javascript"></script>
+        <script src="%bind(:1)/statics/js/lib/weUI/jquery/zepto.js"
+                type="text/javascript"></script>
+        <link href="%bind(:1)/statics/js/lib/weUI/jquery/weui.min.css"
+              rel="stylesheet" type="text/css">
+            <link href="%bind(:1)/statics/js/lib/weUI/jquery/example.css"
+                  rel="stylesheet" type="text/css">
+                <script type="text/javascript"
+                        src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+                <script src="https://res.wx.qq.com/open/libs/weuijs/1.0.0/weui.min.js"></script>
+                <title>WeUI问卷调查</title>
+                <script type="text/javascript">
+                    $(function () {
+                    var $tooltips = $('.js_tooltips');
+                    $('#showTooltips').on('click', function () {
+                    if ($tooltips.css('display') != 'none')
                     return;
-                // toptips的fixed, 如果有`animation`, `position: fixed`不生效
-                $('.page.cell').removeClass('slideIn');
-                $tooltips.css('display', 'block');
-                setTimeout(function () {
+                    // toptips的fixed, 如果有`animation`, `position: fixed`不生效
+                    $('.page.cell').removeClass('slideIn');
+                    $tooltips.css('display', 'block');
+                    setTimeout(function () {
                     $tooltips.css('display', 'none');
                 }, 2000);
-            });
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            var $cardIdCell = $("#cardIdCell");
-            var $cardId = $("#cardId");
-            var $cardIdWarn = $("#cardId_warn");
-            $cardId.on("change", function () {
-                if ($cardId.val() != "" && $cardId.val() != null) {
+                });
+                })
+                ;
+                </script>
+                <script type="text/javascript">
+                    $(function () {
+                    var $cardIdCell = $("#cardIdCell");
+                    var $cardId = $("#cardId");
+                    var $cardIdWarn = $("#cardId_warn");
+                    $cardId.on("change", function () {
+                    if ($cardId.val() != "" && $cardId.val() != null) {
                     $cardIdWarn.hide();
                     $cardIdCell.removeClass("weui-cell_warn");
                 } else {
                     $cardIdWarn.show();
                     $cardIdCell.addClass("weui-cell_warn");
                 }
-            });
-            var $textarea = $("#textarea");
-            var $textarea_counter_span = $("#textarea_counter_span");
-            $textarea.on("change", function () {
-                $textarea_counter_span.html($textarea.val().length);
-            });
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
-                $gallery = $("#gallery"), $galleryImg = $("#galleryImg"), $uploaderInput = $("#uploaderInput"),
-                $uploaderFiles = $("#uploaderFiles");
-            $uploaderInput.on("change",
-                function (e) {
+                });
+                    var $textarea = $("#textarea");
+                    var $textarea_counter_span = $("#textarea_counter_span");
+                    $textarea.on("change", function () {
+                    $textarea_counter_span.html($textarea.val().length);
+                });
+                })
+                ;
+                </script>
+                <script type="text/javascript">
+                    $(function () {
+                    var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                    $gallery = $("#gallery"), $galleryImg = $("#galleryImg"), $uploaderInput = $("#uploaderInput"),
+                    $uploaderFiles = $("#uploaderFiles");
+                    $uploaderInput.on("change",
+                    function (e) {
                     var src, url = window.URL || window.webkitURL
-                        || window.mozURL, files = e.target.files;
+                    || window.mozURL, files = e.target.files;
                     for (var i = 0, len = files.length; i < len; ++i) {
-                        var file = files[i];
-                        if (url) {
-                            src = url.createObjectURL(file);
-                        } else {
-                            src = e.target.result;
-                        }
-                        $uploaderFiles.append($(tmpl.replace('#url#', src)));
-                    }
+                    var file = files[i];
+                    if (url) {
+                    src = url.createObjectURL(file);
+                } else {
+                    src = e.target.result;
+                }
+                    $uploaderFiles.append($(tmpl.replace('#url#', src)));
+                }
                 });
-            $uploaderFiles.on("click", "li", function () {
-                $galleryImg.attr("style", this.getAttribute("style"));
-                $gallery.fadeIn(100);
-            });
-            $gallery.on("click", function () {
-                $gallery.fadeOut(100);
-            });
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            var $searchBar = $('#searchBar'), $searchResult = $('#searchResult'), $searchText = $('#searchText'),
-                $searchInput = $('#searchInput'), $searchClear = $('#searchClear'), $searchCancel = $('#searchCancel');
-            hideSearchResult();
+                    $uploaderFiles.on("click", "li", function () {
+                    $galleryImg.attr("style", this.getAttribute("style"));
+                    $gallery.fadeIn(100);
+                });
+                    $gallery.on("click", function () {
+                    $gallery.fadeOut(100);
+                });
+                })
+                ;
+                </script>
+                <script type="text/javascript">
+                    $(function () {
+                    var $searchBar = $('#searchBar'), $searchResult = $('#searchResult'), $searchText = $('#searchText'),
+                    $searchInput = $('#searchInput'), $searchClear = $('#searchClear'), $searchCancel = $('#searchCancel');
+                    hideSearchResult();
 
-            function hideSearchResult() {
-                $searchResult.hide();
-            }
+                    function hideSearchResult() {
+                    $searchResult.hide();
+                }
 
-            function cancelSearch() {
-                hideSearchResult();
-                $searchBar.removeClass('weui-search-bar_focusing');
-                $searchText.show();
-            }
+                    function cancelSearch() {
+                    hideSearchResult();
+                    $searchBar.removeClass('weui-search-bar_focusing');
+                    $searchText.show();
+                }
 
-            $searchText.on('click', function () {
-                $searchBar.addClass('weui-search-bar_focusing');
-                $searchInput.focus();
-            });
-            $searchInput.on('blur', function () {
-                if (!this.value.length)
+                    $searchText.on('click', function () {
+                    $searchBar.addClass('weui-search-bar_focusing');
+                    $searchInput.focus();
+                });
+                    $searchInput.on('blur', function () {
+                    if (!this.value.length)
                     cancelSearch();
-            }).on('input',
-                function () {
+                }).on('input',
+                    function () {
                     if (this.value.length) {
-                        $searchResult.show();
-                        var text = this.value;
-                        $searchResult.children("div").children("div").children(
-                            "p").each(function () {
-                            if ($(this).html().indexOf(text) > -1) {
-                                $(this).parent().parent().show();
-                            } else {
-                                $(this).parent().parent().hide();
-                            }
-                        });
-                    } else {
-                        $searchResult.hide();
-                    }
+                    $searchResult.show();
+                    var text = this.value;
+                    $searchResult.children("div").children("div").children(
+                    "p").each(function () {
+                    if ($(this).html().indexOf(text) > -1) {
+                    $(this).parent().parent().show();
+                } else {
+                    $(this).parent().parent().hide();
+                }
                 });
-            $searchResult.children("div").children("div").children("p").on('click',
-                function () {
+                } else {
+                    $searchResult.hide();
+                }
+                });
+                    $searchResult.children("div").children("div").children("p").on('click',
+                    function () {
                     hideSearchResult();
                     $searchInput.val($(this).html());
                 });
-            $searchClear.on('click', function () {
-                hideSearchResult();
-                $searchInput.focus();
-            });
-            $searchCancel.on('click', function () {
-                cancelSearch();
-                $searchInput.blur();
-            });
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            console.log("test")
-            $('#showPicker').on('click', function () {
-                weui.picker([{
+                    $searchClear.on('click', function () {
+                    hideSearchResult();
+                    $searchInput.focus();
+                });
+                    $searchCancel.on('click', function () {
+                    cancelSearch();
+                    $searchInput.blur();
+                });
+                })
+                ;
+                </script>
+                <script type="text/javascript">
+                    $(function () {
+                    console.log("test")
+                    $('#showPicker').on('click', function () {
+                    weui.picker([{
                     label: '飞机票',
-                    value: 0
+                    value: '飞机票'
                 }, {
                     label: '火车票',
-                    value: 1
+                    value: '火车票'
                 }, {
                     label: '的士票',
-                    value: 2
+                    value: '的士票'
                 }, {
                     label: '公交票 (disabled)',
                     disabled: true,
-                    value: 3
+                    value: '公交票'
                 }, {
                     label: '其他',
-                    value: 4
+                    value: '其他'
                 }], {
                     onChange: function (result) {
-                        console.log(result);
-                    },
+                    $('#showPicker_text').val("	" + result[0]);
+                    console.log(result);
+                },
                     onConfirm: function (result) {
-                        console.log(result);
-                    }
+                    $('#showPicker_text').val("	" + result[0]);
+                    console.log(result);
+                }
                 });
-            });
-            $('#showDatePicker').on('click', function () {
-                weui.datePicker({
-                    start: 1990,
+                });
+                    $('#showDatePicker').on('click', function () {
+                    weui.datePicker({
+                    start: 2017,
                     end: new Date().getFullYear(),
                     onChange: function (result) {
-                        console.log(result);
-                    },
+                    $('#showDatePickers_text').val("	" + result[0] + "年" + result[1] + "月" + result[2] + "日");
+                    console.log(result);
+                },
                     onConfirm: function (result) {
-                        console.log(result);
-                    }
+                    $('#showDatePickers_text').val("	" + result[0] + "年" + result[1] + "月" + result[2] + "日");
+                    console.log(result);
+                }
                 });
-            });
-        });
-    </script>
+                });
+                })
+                ;
+                </script>
 
 </head>
 <body>
@@ -219,7 +230,6 @@
                     </div>
                 </section>
             </article>
-
             <article class="weui-article">
                 <section>
                     <h2 class="title">问题------单选列表项</h2>
@@ -273,13 +283,15 @@
             <article class="weui-article">
                 <section>
                     <h2 class="title">问题------数字填空</h2>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd">
-                            <label class="weui-label">qq</label>
-                        </div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="number" pattern="[0-9]*"
-                                   placeholder="请输入qq号"/>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd">
+                                <label class="weui-label">qq</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="number" pattern="[0-9]*"
+                                       placeholder="请输入qq号"/>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -317,12 +329,14 @@
             <article class="weui-article">
                 <section>
                     <h2 class="title">问题------日期</h2>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd">
-                            <label for="" class="weui-label">日期</label>
-                        </div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="date" value=""/>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd">
+                                <label for="" class="weui-label">日期</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="date" value=""/>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -331,13 +345,15 @@
             <article class="weui-article">
                 <section>
                     <h2 class="title">问题------时间</h2>
-                    <div class="weui-cell">
-                        <div class="weui-cell__hd">
-                            <label for="" class="weui-label">时间</label>
-                        </div>
-                        <div class="weui-cell__bd">
-                            <input class="weui-input" type="datetime-local" value=""
-                                   placeholder=""/>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd">
+                                <label for="" class="weui-label">时间</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <input class="weui-input" type="datetime-local" value=""
+                                       placeholder=""/>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -346,15 +362,18 @@
             <article class="weui-article">
                 <section>
                     <h2 class="title">问题------日期选择器</h2>
-                    <div class="page__bd page__bd_spacing">
-                        <div id="showDatePicker" class="weui-cell weui-cell_access">
-                            <div class="weui-cell__hd">
-                                <span style="vertical-align: middle">日期选择器</span>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="page__bd page__bd_spacing">
+                            <div id="showDatePicker" class="weui-cell weui-cell_access">
+                                <div class="weui-cell__hd">
+                                    <span style="vertical-align: middle">日期选择器</span>
+                                </div>
+                                <div class="weui-cell__bd">
+                                    <input id="showDatePickers_text" class="weui-input" type="text"
+                                           readonly="readonly"/>
+                                </div>
+                                <div class="weui-cell__ft"></div>
                             </div>
-                            <div class="weui-cell__bd">
-                                <input class="weui-input" type="text" readonly="readonly"/>
-                            </div>
-                            <div class="weui-cell__ft" id=""></div>
                         </div>
                     </div>
                 </section>
@@ -363,7 +382,7 @@
             <article class="weui-article">
                 <section>
                     <h2 class="title">问题------文本框</h2>
-                    <div class="weui-cells">
+                    <div class="weui-cells weui-cells_form">
                         <div class="weui-cell">
                             <div class="weui-cell__bd">
                                 <input class="weui-input" type="text" placeholder="请输入文本"/>
@@ -448,13 +467,15 @@
             <article class="weui-article">
                 <section>
                     <h2 class="title">问题------选择</h2>
-                    <div class="weui-cell weui-cell_select">
-                        <div class="weui-cell__bd">
-                            <select class="weui-select" name="select1">
-                                <option selected="" value="1">微信号</option>
-                                <option value="2">QQ号</option>
-                                <option value="3">Email</option>
-                            </select>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell weui-cell_select">
+                            <div class="weui-cell__bd">
+                                <select class="weui-select" name="select1">
+                                    <option selected="" value="1">微信号</option>
+                                    <option value="2">QQ号</option>
+                                    <option value="3">Email</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -463,16 +484,37 @@
             <article class="weui-article">
                 <section>
                     <h2 class="title">问题------选择</h2>
-                    <div class="weui-cell weui-cell_select weui-cell_select-after">
-                        <div class="weui-cell__hd">
-                            <label for="" class="weui-label">国家/地区</label>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell weui-cell_select weui-cell_select-after">
+                            <div class="weui-cell__hd">
+                                <label for="" class="weui-label">国家/地区</label>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <select class="weui-select" name="select2">
+                                    <option value="1">中国</option>
+                                    <option value="2">美国</option>
+                                    <option value="3">英国</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="weui-cell__bd">
-                            <select class="weui-select" name="select2">
-                                <option value="1">中国</option>
-                                <option value="2">美国</option>
-                                <option value="3">英国</option>
-                            </select>
+                    </div>
+                </section>
+            </article>
+
+            <article class="weui-article">
+                <section>
+                    <h2 class="title">问题------单列选择器</h2>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="page__bd page__bd_spacing">
+                            <div id="showPicker" class="weui-cell weui-cell_access">
+                                <div class="weui-cell__hd">
+                                    <span style="vertical-align: middle">单列选择器</span>
+                                </div>
+                                <div class="weui-cell__bd">
+                                    <input id="showPicker_text" class="weui-input" type="text" readonly="readonly"/>
+                                </div>
+                                <div class="weui-cell__ft" id=""></div>
+                            </div>
                         </div>
                     </div>
 
@@ -486,7 +528,7 @@
                         <span class="weui-gallery__img" id="galleryImg"></span>
                         <div class="weui-gallery__opr">
                             <a href="javascript:" class="weui-gallery__del"> <i
-                                    class="weui-icon-delete weui-icon_gallery-delete"></i>
+                                class="weui-icon-delete weui-icon_gallery-delete"></i>
                             </a>
                         </div>
                     </div>
