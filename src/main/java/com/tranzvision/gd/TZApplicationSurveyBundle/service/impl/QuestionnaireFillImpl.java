@@ -550,16 +550,22 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 		logger.info("---3.根据听众列表判断是否可以参与调查 ---");
 		boolean boolAud = false;
 		if (successFlag.equals("0")) {
-			//查询在线调查是否设置了听众
-			String haveAudFlag = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_SURVEY_AUD_T WHERE TZ_DC_WJ_ID=? LIMIT 0,1", new Object[]{surveyID},"String");
-			if("Y".equals(haveAudFlag)) {
-				//查询当前登录人是否在听众列表中
-				String audCyFlag = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_SURVEY_AUD_T A,PS_TZ_AUD_LIST_T B WHERE A.TZ_AUD_ID=B.TZ_AUD_ID AND B.TZ_DXZT='A' AND B.OPRID=? AND A.TZ_DC_WJ_ID=? LIMIT 0,1", new Object[]{strPersonId,surveyID},"String");
-				boolAud = surveryRulesImpl.checkSurveryAudience(psTzDcWjDyTWithBLOBs, language, audCyFlag);
-				if (!boolAud) {
-					successFlag = "1";
-					strMsg = surveryRulesImpl.msg;
-				}      
+			//查询是否可匿名访问
+			String dcwjDlzt = psTzDcWjDyTWithBLOBs.getTzDcWjDlzt();
+			if(!"Y".equals(dcwjDlzt)) {
+				//不可匿名访问
+			
+				//查询是否设置了听众
+				String haveAudFlag = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_SURVEY_AUD_T WHERE TZ_DC_WJ_ID=? LIMIT 0,1", new Object[]{surveyID},"String");
+				if("Y".equals(haveAudFlag)) {
+					//查询当前登录人是否在听众列表中
+					String audCyFlag = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_SURVEY_AUD_T A,PS_TZ_AUD_LIST_T B WHERE A.TZ_AUD_ID=B.TZ_AUD_ID AND B.TZ_DXZT='A' AND B.OPRID=? AND A.TZ_DC_WJ_ID=? LIMIT 0,1", new Object[]{strPersonId,surveyID},"String");
+					boolAud = surveryRulesImpl.checkSurveryAudience(psTzDcWjDyTWithBLOBs, language, audCyFlag);
+					if (!boolAud) {
+						successFlag = "1";
+						strMsg = surveryRulesImpl.msg;
+					}   
+				}
 			}
 		}
 
