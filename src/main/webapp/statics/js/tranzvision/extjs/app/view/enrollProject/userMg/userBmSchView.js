@@ -272,7 +272,8 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '联考报名时学历校验状态',
-							maxLength:30,
+							//maxLength:30,
+							maxLength:254,
 							name : 'lkbmsXlJyZt'
 						}, {
 							xtype : 'textfield',
@@ -282,12 +283,14 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '政治英语听力考试时间',
-							maxLength:60,
+							//maxLength:60,
+							maxLength:100,
 							name : 'zzYyTlKsSj'
 						}, {
 							xtype : 'textfield',
 							fieldLabel : '政治英语听力考试地点',
-							maxLength:60,
+							//maxLength:60,
+							maxLength:100,
 							name : 'zzYyTlKsDd'
 						}, {
 							xtype : 'textfield',
