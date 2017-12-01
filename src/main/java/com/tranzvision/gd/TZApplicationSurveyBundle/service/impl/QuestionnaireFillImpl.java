@@ -545,6 +545,23 @@ public class QuestionnaireFillImpl extends FrameworkImpl {
 				strMsg = surveryRulesImpl.msg;
 			}
 		}
+		
+		/* 3.2 根据听众列表判断是否可以参与调查  卢艳添加，2017-12-1*/
+		logger.info("---3.根据听众列表判断是否可以参与调查 ---");
+		boolean boolAud = false;
+		if (successFlag.equals("0")) {
+			//查询在线调查是否设置了听众
+			String haveAudFlag = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_SURVEY_AUD_T WHERE TZ_DC_WJ_ID=? LIMIT 0,1", new Object[]{surveyID},"String");
+			if("Y".equals(haveAudFlag)) {
+				//查询当前登录人是否在听众列表中
+				String audCyFlag = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_SURVEY_AUD_T A,PS_TZ_AUD_LIST_T B WHERE A.TZ_AUD_ID=B.TZ_AUD_ID AND B.TZ_DXZT='A' AND B.OPRID=? AND A.TZ_DC_WJ_ID=? LIMIT 0,1", new Object[]{strPersonId,surveyID},"String");
+				boolAud = surveryRulesImpl.checkSurveryAudience(psTzDcWjDyTWithBLOBs, language, audCyFlag);
+				if (!boolAud) {
+					successFlag = "1";
+					strMsg = surveryRulesImpl.msg;
+				}      
+			}
+		}
 
 		/* 4.实例编号、实例唯一随机数是否为null */
 		logger.info("---4.实例编号、实例唯一随机数是否为null ---");

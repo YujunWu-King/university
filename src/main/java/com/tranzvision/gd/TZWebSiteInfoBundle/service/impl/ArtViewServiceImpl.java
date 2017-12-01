@@ -71,9 +71,10 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 		if (siteId != null && !"".equals(siteId) && columnId != null && !"".equals(columnId) && artId != null
 				&& !"".equals(artId)) {
 
-			// 检查是否有听众控制Mabc2019.02.09
+			// 检查是否有听众控制Mabc2017.02.09
 			String AudError = "N";
-			String sqlAud = "select C.TZ_PROJECT_LIMIT,'Y' AUDFLG from PS_TZ_ART_AUDIENCE_T A,PS_TZ_AUD_LIST_T B,PS_TZ_ART_REC_TBL C WHERE B.TZ_DXZT='A' AND A.TZ_AUD_ID=B.TZ_AUD_ID AND A.TZ_ART_ID=C.TZ_ART_ID AND B.OPRID=? AND A.TZ_ART_ID=? LIMIT 1";
+			//查询语句修改，卢艳，2017-12-1
+			String sqlAud = "SELECT C.TZ_PROJECT_LIMIT,(SELECT 'Y' FROM PS_TZ_ART_AUDIENCE_T A,PS_TZ_AUD_LIST_T B WHERE A.TZ_ART_ID=C.TZ_ART_ID AND A.TZ_AUD_ID=B.TZ_AUD_ID AND B.TZ_DXZT='A' AND B.OPRID=? LIMIT 0,1) AUDFLG FROM PS_TZ_ART_REC_TBL C WHERE C.TZ_ART_ID=?";
 			Map<String, Object> mapAud = jdbcTemplate.queryForMap(sqlAud, new Object[] { oprid, artId });
 			if (mapAud != null) {
 
@@ -82,7 +83,7 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 				// 是否当前人存在于该听众
 				String audFlg = (String) mapAud.get("AUDFLG");
 
-				if (pubFlg == "B" && audFlg != "Y") {
+				if ("B".equals(pubFlg) && !"Y".equals(audFlg)) {
 					// 如果设置发布对象为听众，不在听众中，不能访问
 					strRet = " 您无权限查看";
 					AudError = "Y";
@@ -95,7 +96,7 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 				AudError = "N";
 			}
 
-			if (AudError == "N") {
+			if ("N".equals(AudError)) {
 
 				// 查看是否是外部链接;
 				String sql = "SELECT TZ_ART_TYPE1,TZ_OUT_ART_URL FROM PS_TZ_ART_REC_TBL WHERE TZ_ART_ID = ?";
