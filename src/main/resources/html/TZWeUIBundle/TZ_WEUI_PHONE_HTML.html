@@ -40,12 +40,15 @@
                     var $cardIdCell = $("#cardIdCell");
                     var $cardId = $("#cardId");
                     var $cardIdWarn = $("#cardId_warn");
+                    var $cardIdTips = $("#cardIdTips");
                     $cardId.on("change", function () {
                     if ($cardId.val() != "" && $cardId.val() != null) {
                     $cardIdWarn.hide();
+                    $cardIdTips.hide();
                     $cardIdCell.removeClass("weui-cell_warn");
                 } else {
                     $cardIdWarn.show();
+                    $cardIdTips.show();
                     $cardIdCell.addClass("weui-cell_warn");
                 }
                 });
@@ -229,8 +232,7 @@
                     </div>
                 </div>
             </section>
-        </article>
-        <article class="weui-article">
+
             <section>
                 <h2 class="title">问题------单选列表项</h2>
                 <div class="weui-cells weui-cells_radio">
@@ -254,8 +256,7 @@
                 </label>
                 </div>
             </section>
-        </article>
-        <article class="weui-article">
+
             <section>
                 <h2 class="title">问题------复选列表项</h2>
                 <div class="weui-cells weui-cells_checkbox">
@@ -278,9 +279,7 @@
                 </label>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------数字填空</h2>
                 <div class="weui-cells weui-cells_form">
@@ -295,9 +294,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------表单报错</h2>
                 <div class="weui-cells weui-cells_form">
@@ -313,6 +310,7 @@
                             <i class="weui-icon-warn"></i>
                         </div>
                     </div>
+                    <div class="weui-cells__tips" id="cardIdTips" style='color: #00ff00;'>请输入数字</div>
                     <div id="cardIdCell2" class="weui-cell weui-cell_warn">
                         <div class="weui-cell__bd">
                             <input id="cardId2" class="weui-input" type="number"
@@ -322,11 +320,10 @@
                             <i class="weui-icon-warn"></i>
                         </div>
                     </div>
+                    <div class="weui-cells__tips" style='color: #00ff00;'>请输入内容XXX</div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------日期</h2>
                 <div class="weui-cells weui-cells_form">
@@ -340,9 +337,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------时间</h2>
                 <div class="weui-cells weui-cells_form">
@@ -357,9 +352,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------日期选择器</h2>
                 <div class="weui-cells weui-cells_form">
@@ -377,9 +370,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------文本框</h2>
                 <div class="weui-cells weui-cells_form">
@@ -390,9 +381,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------多行文本框</h2>
                 <div class="weui-cells">
@@ -422,9 +411,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------文本域</h2>
                 <div class="weui-cells weui-cells_form">
@@ -439,9 +426,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------选择</h2>
                 <div class="weui-cells">
@@ -461,10 +446,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------选择</h2>
                 <div class="weui-cells weui-cells_form">
@@ -479,9 +461,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------选择</h2>
                 <div class="weui-cells weui-cells_form">
@@ -499,9 +479,7 @@
                     </div>
                 </div>
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------单列选择器</h2>
                 <div class="weui-cells weui-cells_form">
@@ -519,9 +497,7 @@
                 </div>
 
             </section>
-        </article>
 
-        <article class="weui-article">
             <section>
                 <h2 class="title">问题------图片上传</h2>
                 <div class="weui-gallery" id="gallery">
