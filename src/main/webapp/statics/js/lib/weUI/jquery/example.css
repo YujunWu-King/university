@@ -34,7 +34,6 @@ ul {
 .page {
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
-	opacity: 0;
 }
 
 .page.js_show {
