@@ -66,9 +66,11 @@ ul {
 }
 
 .page__title {
-	text-align: left;
-	font-size: 20px;
-	font-weight: 400
+	color: transparent;
+	background-color: black;
+	text-shadow: rgba(255, 255, 255, 0.5) 0 5px 6px,
+		rgba(255, 255, 255, 0.2) 1px 3px 3px;
+	-webkit-background-clip: text;
 }
 
 .page__desc {
@@ -519,7 +521,7 @@ to {
 }
 
 @
-supports (constant (safe-area-inset-top)){ .
+supports (constant (safe-area-inset-top )){ .
 	page {padding: constant(safe-area-inset-top)
 		constant(safe-area-inset-right) constant(safe-area-inset-bottom)
 		constant(safe-area-inset-left)
