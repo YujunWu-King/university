@@ -299,7 +299,9 @@ public class SurveryRulesImpl {
 					language, "问卷信息不存在", "The questionnaire information does not exist!");
 			return false;
 		}
-		if (!"Y".equals(audCyFlag)) {
+		//不可匿名访问，设置了听众，当前登录人不在听众列表中
+		if (!"Y".equals(psTzDcWjDyTWithBLOBs.getTzDcWjDlzt())
+				&& !"Y".equals(audCyFlag)) {
 			this.msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "ANSWER_NO_PERMISSION",
 					language, "您无权限查看", "You do not have permission to view!");
 			return false;
