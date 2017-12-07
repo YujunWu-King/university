@@ -6,12 +6,5 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplFieldStore', {
 	pageSize: 0,
 	comID: 'TZ_DYMB_COM',
 	pageID: 'TZ_DYMB_INF_STD',
-	proxy: Ext.tzListProxy(),
-	listeners:{
-		load:function(store, records){
-			Ext.each(records,function(record){
-				//record.formatCheckbox();
-			})
-		}
-	}
+	proxy: Ext.tzListProxy()
 });

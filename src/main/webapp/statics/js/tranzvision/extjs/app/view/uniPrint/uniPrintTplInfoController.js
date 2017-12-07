@@ -192,6 +192,7 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfoController', {
             return;
         }
 
+
         if(impTplId=="" ||impTplId.length<1) {
             Ext.MessageBox.alert('提示', '您没有配置数据导入模板，无法新增模板字段。');
             return;
@@ -349,13 +350,16 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfoController', {
                 for(var i=0;i<count;i++) {
                     var jgId = store.getAt(i).get("TZ_JG_ID");
                     var dymbId = store.getAt(i).get("TZ_DYMB_ID");
+                    var fieldId = store.getAt(i).get("TZ_DYMB_FIELD_ID");
 
                     for (var j=0;j<fieldList.length;j++) {
                         var jgId_return = fieldList[j].jgId;
                         var dymbId_return = fieldList[j].dymbId;
+                        var fieldId_return = fieldList[j].fieldID;
+                        var fieldPdf_return = fieldList[j].fieldPdf;
 
-                        if(jgId==jgId_return && dymbId==dymbId_return) {
-                            store.getAt(i).set("TZ_DYMB_FIELD_PDF",fieldList[j].fieldPdf);
+                        if(jgId==jgId_return && dymbId==dymbId_return&&fieldId==fieldId_return) {
+                            store.getAt(i).set("TZ_DYMB_FIELD_PDF",fieldPdf_return);
                         }
                     }
                 }
