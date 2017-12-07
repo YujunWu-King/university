@@ -5,6 +5,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
     width: 500,
     minWidth: 650,
     minHeight: 250,
+    maxHeight: 600,
     resizable: true,
     modal: true,
     closeAction: 'destroy',
@@ -236,7 +237,8 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                         typeField = {
                             xtype: 'combobox',
                             hideEmptyLabel: true,
-                            width: 357,
+                            //width: 357,
+                            columnWidth: 1,
                             //autoSelect: false,
                             store: new KitchenSink.view.common.store.comboxStore({
                                 recname: promptTable,
@@ -492,7 +494,7 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                 border: false,
                 bodyPadding: 10,
                 ignoreLabelWidth: true,
-                bodyStyle:'overflow-y:auto;overflow-x:hidden',
+                //bodyStyle:'overflow-y:auto;overflow-x:hidden',
                 fieldDefaults: {
                     msgTarget: 'side',
                     labelStyle: 'font-weight:bold'

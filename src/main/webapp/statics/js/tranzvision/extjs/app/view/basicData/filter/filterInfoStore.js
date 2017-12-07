@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.basicData.filter.filterInfoStore', {
     alias: 'store.filterInfoStore',
     model: 'KitchenSink.view.basicData.filter.filterInfoModel',
     autoLoad: true,
-    pageSize: 10,
+    pageSize: 100,
     comID: 'TZ_GD_FILTER_COM',
     pageID: 'TZ_FILTER_DEFN_STD',
     tzStoreParams: '',
