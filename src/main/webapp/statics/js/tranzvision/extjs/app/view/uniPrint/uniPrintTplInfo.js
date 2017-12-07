@@ -168,6 +168,9 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfo', {
 						text: '字段ID',
 						dataIndex: 'TZ_DYMB_FIELD_ID',
 						width: 200,
+						editor:{
+							xtype:'textfield'
+						},
 						sortable:false
 					},{
 						text: '字段名称',

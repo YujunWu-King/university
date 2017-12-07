@@ -197,6 +197,29 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfoController', {
             return;
         }
 
+        var r = new KitchenSink.view.uniPrint.uniPrintTplFieldModel(
+            {
+                TZ_JG_ID : jgId,
+                TZ_DYMB_ID : dymbId,
+                TZ_DYMB_FIELD_ID : "",
+                TZ_DYMB_FIELD_SM : "",
+                TZ_DYMB_FIELD_QY : '1',
+                TZ_DYMB_FIELD_PDF : ''
+            });
+
+
+        var grid = btn.findParentByType("grid");
+        var store = grid.store;
+        var rowCount = store.getCount();
+        var gridCellEditing = grid.getPlugin();
+        store.insert(rowCount,r);
+        gridCellEditing.startEditByPosition({
+            row: rowCount,
+            column: 1
+        });
+
+
+        /*
         Ext.tzShowPromptSearch({
             recname : 'TZ_IMP_TPL_FLD_VW',
             searchDesc : '新增模板字段',
@@ -248,6 +271,7 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfoController', {
                 };
             }
         })
+        */
     },
     //grid-删除
     removeField:function(btn) {
