@@ -361,7 +361,8 @@ Ext.define('KitchenSink.view.common.cfgSearchWindow', {
                 });
                 var fieldItem = {
                     layout:'column',
-                    bodyPadding: 5,
+                    //bodyPadding: 5,
+                    bodyPadding: fldHidden == true ? 0 : 5,
                     items:[{
                         xtype: 'combobox',
                         labelWidth: 120,
