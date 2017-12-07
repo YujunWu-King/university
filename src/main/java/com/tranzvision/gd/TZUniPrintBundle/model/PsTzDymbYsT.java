@@ -1,6 +1,6 @@
 package com.tranzvision.gd.TZUniPrintBundle.model;
 
-public class TzDymbYsTbl extends TzDymbYsTblKey {
+public class PsTzDymbYsT extends PsTzDymbYsTKey {
     private String tzDymbFieldSm;
 
     private String tzDymbFieldQy;

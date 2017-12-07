@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tranzvision.gd.TZUniPrintBundle.dao.TzDymbYsTblMapper" >
-  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbYsTbl" >
+<mapper namespace="com.tranzvision.gd.TZUniPrintBundle.dao.PsTzDymbYsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbYsT" >
     <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <id column="TZ_DYMB_ID" property="tzDymbId" jdbcType="VARCHAR" />
     <id column="TZ_DYMB_FIELD_ID" property="tzDymbFieldId" jdbcType="VARCHAR" />
@@ -12,30 +12,30 @@
   <sql id="Base_Column_List" >
     TZ_JG_ID, TZ_DYMB_ID, TZ_DYMB_FIELD_ID, TZ_DYMB_FIELD_SM, TZ_DYMB_FIELD_QY, TZ_DYMB_FIELD_PDF
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbYsTblKey" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbYsTKey" >
     select 
     <include refid="Base_Column_List" />
-    from TZ_DYMB_YS_TBL
+    from PS_TZ_DYMB_YS_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_DYMB_ID = #{tzDymbId,jdbcType=VARCHAR}
       and TZ_DYMB_FIELD_ID = #{tzDymbFieldId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbYsTblKey" >
-    delete from TZ_DYMB_YS_TBL
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbYsTKey" >
+    delete from PS_TZ_DYMB_YS_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_DYMB_ID = #{tzDymbId,jdbcType=VARCHAR}
       and TZ_DYMB_FIELD_ID = #{tzDymbFieldId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbYsTbl" >
-    insert into TZ_DYMB_YS_TBL (TZ_JG_ID, TZ_DYMB_ID, TZ_DYMB_FIELD_ID, 
+  <insert id="insert" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbYsT" >
+    insert into PS_TZ_DYMB_YS_T (TZ_JG_ID, TZ_DYMB_ID, TZ_DYMB_FIELD_ID, 
       TZ_DYMB_FIELD_SM, TZ_DYMB_FIELD_QY, TZ_DYMB_FIELD_PDF
       )
     values (#{tzJgId,jdbcType=VARCHAR}, #{tzDymbId,jdbcType=VARCHAR}, #{tzDymbFieldId,jdbcType=VARCHAR}, 
       #{tzDymbFieldSm,jdbcType=VARCHAR}, #{tzDymbFieldQy,jdbcType=VARCHAR}, #{tzDymbFieldPdf,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbYsTbl" >
-    insert into TZ_DYMB_YS_TBL
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbYsT" >
+    insert into PS_TZ_DYMB_YS_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzJgId != null" >
         TZ_JG_ID,
@@ -77,8 +77,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbYsTbl" >
-    update TZ_DYMB_YS_TBL
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbYsT" >
+    update PS_TZ_DYMB_YS_T
     <set >
       <if test="tzDymbFieldSm != null" >
         TZ_DYMB_FIELD_SM = #{tzDymbFieldSm,jdbcType=VARCHAR},
@@ -94,8 +94,8 @@
       and TZ_DYMB_ID = #{tzDymbId,jdbcType=VARCHAR}
       and TZ_DYMB_FIELD_ID = #{tzDymbFieldId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbYsTbl" >
-    update TZ_DYMB_YS_TBL
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbYsT" >
+    update PS_TZ_DYMB_YS_T
     set TZ_DYMB_FIELD_SM = #{tzDymbFieldSm,jdbcType=VARCHAR},
       TZ_DYMB_FIELD_QY = #{tzDymbFieldQy,jdbcType=VARCHAR},
       TZ_DYMB_FIELD_PDF = #{tzDymbFieldPdf,jdbcType=VARCHAR}

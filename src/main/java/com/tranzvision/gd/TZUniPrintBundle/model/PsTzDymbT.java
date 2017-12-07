@@ -1,6 +1,6 @@
 package com.tranzvision.gd.TZUniPrintBundle.model;
 
-public class TzDymbTbl extends TzDymbTblKey {
+public class PsTzDymbT extends PsTzDymbTKey {
     private String tzDymbName;
 
     private String tzDymbZt;
@@ -8,6 +8,8 @@ public class TzDymbTbl extends TzDymbTblKey {
     private String tzDymbDrmbId;
 
     private String tzDymbMeno;
+
+    private String tzDymbPdfName;
 
     private String tzDymbPdfUrl;
 
@@ -41,6 +43,14 @@ public class TzDymbTbl extends TzDymbTblKey {
 
     public void setTzDymbMeno(String tzDymbMeno) {
         this.tzDymbMeno = tzDymbMeno == null ? null : tzDymbMeno.trim();
+    }
+
+    public String getTzDymbPdfName() {
+        return tzDymbPdfName;
+    }
+
+    public void setTzDymbPdfName(String tzDymbPdfName) {
+        this.tzDymbPdfName = tzDymbPdfName == null ? null : tzDymbPdfName.trim();
     }
 
     public String getTzDymbPdfUrl() {

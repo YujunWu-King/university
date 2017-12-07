@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.tranzvision.gd.TZUniPrintBundle.dao.TzDymbTblMapper" >
-  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbTbl" >
+<mapper namespace="com.tranzvision.gd.TZUniPrintBundle.dao.PsTzDymbTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbT" >
     <id column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
     <id column="TZ_DYMB_ID" property="tzDymbId" jdbcType="VARCHAR" />
     <result column="TZ_DYMB_NAME" property="tzDymbName" jdbcType="VARCHAR" />
     <result column="TZ_DYMB_ZT" property="tzDymbZt" jdbcType="VARCHAR" />
     <result column="TZ_DYMB_DRMB_ID" property="tzDymbDrmbId" jdbcType="VARCHAR" />
     <result column="TZ_DYMB_MENO" property="tzDymbMeno" jdbcType="VARCHAR" />
+    <result column="TZ_DYMB_PDF_NAME" property="tzDymbPdfName" jdbcType="VARCHAR" />
     <result column="TZ_DYMB_PDF_URL" property="tzDymbPdfUrl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_JG_ID, TZ_DYMB_ID, TZ_DYMB_NAME, TZ_DYMB_ZT, TZ_DYMB_DRMB_ID, TZ_DYMB_MENO, TZ_DYMB_PDF_URL
+    TZ_JG_ID, TZ_DYMB_ID, TZ_DYMB_NAME, TZ_DYMB_ZT, TZ_DYMB_DRMB_ID, TZ_DYMB_MENO, TZ_DYMB_PDF_NAME, 
+    TZ_DYMB_PDF_URL
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbTblKey" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbTKey" >
     select 
     <include refid="Base_Column_List" />
-    from TZ_DYMB_TBL
+    from PS_TZ_DYMB_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_DYMB_ID = #{tzDymbId,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbTblKey" >
-    delete from TZ_DYMB_TBL
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbTKey" >
+    delete from PS_TZ_DYMB_T
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_DYMB_ID = #{tzDymbId,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbTbl" >
-    insert into TZ_DYMB_TBL (TZ_JG_ID, TZ_DYMB_ID, TZ_DYMB_NAME, 
+  <insert id="insert" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbT" >
+    insert into PS_TZ_DYMB_T (TZ_JG_ID, TZ_DYMB_ID, TZ_DYMB_NAME, 
       TZ_DYMB_ZT, TZ_DYMB_DRMB_ID, TZ_DYMB_MENO, 
-      TZ_DYMB_PDF_URL)
+      TZ_DYMB_PDF_NAME, TZ_DYMB_PDF_URL)
     values (#{tzJgId,jdbcType=VARCHAR}, #{tzDymbId,jdbcType=VARCHAR}, #{tzDymbName,jdbcType=VARCHAR}, 
       #{tzDymbZt,jdbcType=VARCHAR}, #{tzDymbDrmbId,jdbcType=VARCHAR}, #{tzDymbMeno,jdbcType=VARCHAR}, 
-      #{tzDymbPdfUrl,jdbcType=VARCHAR})
+      #{tzDymbPdfName,jdbcType=VARCHAR}, #{tzDymbPdfUrl,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbTbl" >
-    insert into TZ_DYMB_TBL
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbT" >
+    insert into PS_TZ_DYMB_T
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="tzJgId != null" >
         TZ_JG_ID,
@@ -53,6 +55,9 @@
       </if>
       <if test="tzDymbMeno != null" >
         TZ_DYMB_MENO,
+      </if>
+      <if test="tzDymbPdfName != null" >
+        TZ_DYMB_PDF_NAME,
       </if>
       <if test="tzDymbPdfUrl != null" >
         TZ_DYMB_PDF_URL,
@@ -77,13 +82,16 @@
       <if test="tzDymbMeno != null" >
         #{tzDymbMeno,jdbcType=VARCHAR},
       </if>
+      <if test="tzDymbPdfName != null" >
+        #{tzDymbPdfName,jdbcType=VARCHAR},
+      </if>
       <if test="tzDymbPdfUrl != null" >
         #{tzDymbPdfUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbTbl" >
-    update TZ_DYMB_TBL
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbT" >
+    update PS_TZ_DYMB_T
     <set >
       <if test="tzDymbName != null" >
         TZ_DYMB_NAME = #{tzDymbName,jdbcType=VARCHAR},
@@ -97,6 +105,9 @@
       <if test="tzDymbMeno != null" >
         TZ_DYMB_MENO = #{tzDymbMeno,jdbcType=VARCHAR},
       </if>
+      <if test="tzDymbPdfName != null" >
+        TZ_DYMB_PDF_NAME = #{tzDymbPdfName,jdbcType=VARCHAR},
+      </if>
       <if test="tzDymbPdfUrl != null" >
         TZ_DYMB_PDF_URL = #{tzDymbPdfUrl,jdbcType=VARCHAR},
       </if>
@@ -104,12 +115,13 @@
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_DYMB_ID = #{tzDymbId,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.TzDymbTbl" >
-    update TZ_DYMB_TBL
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZUniPrintBundle.model.PsTzDymbT" >
+    update PS_TZ_DYMB_T
     set TZ_DYMB_NAME = #{tzDymbName,jdbcType=VARCHAR},
       TZ_DYMB_ZT = #{tzDymbZt,jdbcType=VARCHAR},
       TZ_DYMB_DRMB_ID = #{tzDymbDrmbId,jdbcType=VARCHAR},
       TZ_DYMB_MENO = #{tzDymbMeno,jdbcType=VARCHAR},
+      TZ_DYMB_PDF_NAME = #{tzDymbPdfName,jdbcType=VARCHAR},
       TZ_DYMB_PDF_URL = #{tzDymbPdfUrl,jdbcType=VARCHAR}
     where TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
       and TZ_DYMB_ID = #{tzDymbId,jdbcType=VARCHAR}

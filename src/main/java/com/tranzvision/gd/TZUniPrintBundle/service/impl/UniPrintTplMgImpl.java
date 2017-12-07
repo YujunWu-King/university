@@ -5,10 +5,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZUniPrintBundle.dao.TzDymbTblMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 /*
@@ -18,9 +16,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZUniPrintBundle.service.impl.UniPrintTplMgImpl")
 public class UniPrintTplMgImpl  extends FrameworkImpl {
 	@Autowired
-	private TzDymbTblMapper TzDymbTblMapper;
-	@Autowired
-	private SqlQuery jdbcTemplate;
+	private SqlQuery sqlQuery;
 	@Autowired
 	private FliterForm fliterForm;
 	
@@ -79,31 +75,32 @@ public class UniPrintTplMgImpl  extends FrameworkImpl {
 			return strRet;
 		}
 
-			try {
-				int num = 0;
-				for (num = 0; num < actData.length; num++) {
-					//提交信息
-					String strForm = actData[num];
-					jacksonUtil.json2Map(strForm);
+		try {
+			int num = 0;
+			for (num = 0; num < actData.length; num++) {
+				//提交信息
+				String strForm = actData[num];
+				jacksonUtil.json2Map(strForm);
 
-					String jgId = jacksonUtil.getString("TZ_JG_ID");
-					String tplId = jacksonUtil.getString("TZ_DYMB_ID");
+				String jgId = jacksonUtil.getString("TZ_JG_ID");
+				String tplId = jacksonUtil.getString("TZ_DYMB_ID");
 					
-					if (jgId != null && !"".equals(jgId) && tplId != null && !"".equals(tplId)) {
-						//TzDymbTblMapper.deleteByPrimaryKey(jgId,tplId);
-						/*模板字段表*/
-						String TzDyMbFldTSql = "DELETE FROM TZ_DYMB_TBL WHERE TZ_JG_ID=? and TZ_DYMB_ID = ?";
-						jdbcTemplate.update(TzDyMbFldTSql, new Object[]{jgId,tplId});
-					}
+				if (jgId != null && !"".equals(jgId) && tplId != null && !"".equals(tplId)) {
+					/*模板字段表*/
+					String sql = "DELETE FROM PS_TZ_DYMB_T WHERE TZ_JG_ID=? and TZ_DYMB_ID = ?";
+					sqlQuery.update(sql, new Object[]{jgId,tplId});
+					String sql_field = "DELETE FROM PS_TZ_DYMB_YS_T WHERE TZ_JG_ID=? AND TZ_DYMB_ID=?";
+					sqlQuery.update(sql_field, new Object[]{jgId,tplId});
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				errMsg[0] = "1";
-				errMsg[1] = e.toString();
-				return strRet;
 			}
-
+		} catch (Exception e) {
+			e.printStackTrace();
+			errMsg[0] = "1";
+			errMsg[1] = e.toString();
 			return strRet;
 		}
+
+		return strRet;
+	}
 
 }

@@ -1,33 +1,23 @@
 Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfo', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.uniPrintTplInfo', 
-	controller: 'uniPrintTplController',
+	controller: 'uniPrintTplInfoController',
 	actType:'',
 	requires: [
 	    'Ext.data.*',
         'Ext.grid.*',
         'Ext.util.*',
         'Ext.toolbar.Paging',
-        'KitchenSink.view.uniPrint.uniPrintTplFieldStore'
+        'KitchenSink.view.uniPrint.uniPrintTplFieldStore',
+        'KitchenSink.view.uniPrint.uniPrintTplInfoController'
 	],
     title: '打印模板信息', 
 	bodyStyle:'overflow-y:auto;overflow-x:hidden',
-	listeners:{
-        resize:function( panel, width, height, oldWidth, oldHeight, eOpts ){
-            var buttonHeight = 36,/*button height plus panel body padding*/
-            	formHeight = panel.lookupReference('uniPrintTplInfo').getHeight(),
-            	formPadding = 10,
-            	tab = panel.child('tabpanel');
-            
-            tab.setMinHeight( height- formHeight -buttonHeight-formPadding);
-           
-        }
-    },
     initComponent:function(){
-    	var fieldStore = new KitchenSink.view.uniPrint.uniPrintTplFieldStore();
-    	this.fieldStore = fieldStore;
 
-    	
+    	var fieldStore = new KitchenSink.view.uniPrint.uniPrintTplFieldStore();
+		var ifEffectiveStore = new KitchenSink.view.common.store.appTransStore("TZ_IF_EFFECTIVE");
+
     	Ext.apply(this,{
     		items: [{
     	        xtype: 'form',
@@ -39,29 +29,25 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfo', {
     	        border: false,
     	        bodyPadding: 10,
     			bodyStyle:'overflow-y:auto;overflow-x:hidden',
-    			
     	        fieldDefaults: {
     	            msgTarget: 'side',
     	            labelWidth: 140,
     	            labelStyle: 'font-weight:bold'
     	        },
-    			
     	        items: [{
     	            xtype: 'textfield',
     	            fieldLabel: "机构编号",
     	            name: 'TZ_JG_ID',
-    	            afterLabelTextTpl: [
-    	                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-    	            ],
-    	            allowBlank: false
+					value:Ext.tzOrgID,
+					fieldStyle:'background:#F4F4F4',
+					readOnly:true
     	        }, {
     	            xtype: 'textfield',
     	            fieldLabel: "打印模板编号",
     	            name: 'TZ_DYMB_ID',
-    	            afterLabelTextTpl: [
-    	                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-    	            ],
-    	            allowBlank: false
+					value:'NEXT',
+					fieldStyle:'background:#F4F4F4',
+					readOnly:true
     	        }, {
     	            xtype: 'textfield',
     				fieldLabel: "打印模板名称",
@@ -76,18 +62,9 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfo', {
                     allowBlank:false,
                     queryMode:"local",
                     editable:false,
-                    store:{
-                        fields:[
-                            {name:'statusCode'},
-                            {name:'statusDesc'}
-                        ],
-                        data:[
-                            {statusCode:'Y',statusDesc:'生效'},
-                            {statusCode:'N',statusDesc:'失效'}
-                        ]
-                    },
-                    valueField:'statusCode',
-                    displayField:'statusDesc',
+                    store:ifEffectiveStore,
+                    valueField:'TValue',
+                    displayField:'TSDesc',
                     allowBlank:false,
                     value:'Y',/*默认有效*/
                     name: 'TZ_DYMB_ZT',
@@ -102,7 +79,7 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfo', {
     	            triggers:{
     			        search: {
     			            cls: 'x-form-search-trigger',
-    			            handler: 'searchTbl'
+    			            handler: 'searchImpTpl'
     			        }
     		    	}
     	        }, {
@@ -110,101 +87,124 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfo', {
     				fieldLabel: "备注信息",
     				name: 'TZ_DYMB_MENO'
     	        },{
-    	        	layout:{
-    	        		type:'column'
-    	        	},
-    	        	width:'100%',
-    	        	items:[
-    					{
-    					    xtype: 'textfield',
-    						fieldLabel: "上传PDF模板",
-    						dataIndex: 'TZ_DYMB_PDF_URL',
-    					    columnWidth:.95,
-    					    editable:false,
-    						triggers:{
-    					        clear: {
-    					            cls: 'x-form-clear-trigger',
-    					            handler: function(field){
-    					                field.setValue("");
-    					            }
-    					        }
-    					    }
-    					},
-    					{
-    						xtype: 'form',
-    						layout: 'hbox',
-    						maxWidth:60,
-    						columnWidth:.05,
-    						defaults:{
-    							margin:'0 0 0 5px',
-    						},
-    						items:[{
-    					        xtype: 'fileuploadfield',
-    					        name: 'orguploadfile',
-    					        buttonText: '上传',
-    					        buttonOnly:true,
-    							listeners:{
-    								change:'uploadExcelTpl'
-    							}
-    						}]
-    					}]
-    	        }]
-    	    },{
-    	    	xtype:'tabpanel',
-    	    	frame: true,
-    	        plain:false,
-    	        resizeTabs:true,
-    	        defaults :{
-    	            autoScroll: false
-    	        },
-    	    	margin:'0 8',
-    	    	header:false,
-    	    	items:[{
-    	    		xtype:'grid',
-    	    		title:'数据映射关系列表',
-    	    		//height:280,
-    	    		store:fieldStore,
-    	    		plugins:[{
-    	    			ptype:'cellediting',
-    	    			clicksToEdit:1
-    	    		}],
-    	    		columns:[{
-    	                text: '机构编号',
-    	                dataIndex: 'TZ_JG_ID',
-    	                width: 100,
-    	                sortable:false
-    	            },{
-    	                text: '模板编号',
-    	                dataIndex: 'TZ_DYMB_ID',
-    	                width: 100,
-    	                sortable:false
-    	            },{
-    	                text: '字段ID',
-    	                dataIndex: 'TZ_DYMB_FIELD_ID',
-    	                width: 200,
-    	                sortable:false
-    	            },{
-    	                text: '字段名称',
-    	                dataIndex: 'TZ_DYMB_FIELD_SM',
-    	                width: 200,
-    	                editor:{
-    	                	xtype:'textfield'
-    	                },
-    	                sortable:false
-    	            },{
-    	                text: '是否启用',
-    	                xtype:'checkcolumn',
-    	                dataIndex: 'TZ_DYMB_FIELD_QY',
-    	                width: 100,
-    	                sortable:false
-    	            },{
-    	                text: 'PDF模板对应字段',
-    	                dataIndex: 'TZ_DYMB_FIELD_PDF',
-    	                //width: 200,
-    	                flex:1,
-    	                sortable:false
-    	            }]
-    	    	}]
+					xtype:'hidden',
+					fieldLabel:"上传PDF文件名",
+					name:"TZ_DYMB_PDF_NAME"
+				},{
+					xtype:'hidden',
+					fieldLabel:"PDF文件路径",
+					name:"TZ_DYMB_PDF_URL"
+				},{
+					layout:{
+						type:'column'
+					},
+					bodyStyle:'padding:0 0 10 0',
+					items:[{
+						xtype: 'displayfield',
+						fieldLabel: "PDF打印模板",
+						name:"downfileName"
+					},{
+						xtype:'fileuploadfield',
+						name: 'pdfuploadfile',
+						buttonText: '上传',
+						hideLabel:true,
+						buttonOnly:true,
+						listeners:{
+							change: 'uploadPDF'
+						}
+					}, {
+						style: 'margin-left:8px',
+						xtype: 'button',
+						text: '删除PDF模板',
+						name: 'pdfDeleteBtn',
+						listeners: {
+							click: 'deletePDF'
+						}
+					}]
+				}, /*{
+					layout: {
+						type: 'column'
+					},
+					bodyStyle: 'padding:0 0 10 0',
+					items:[{
+						xtype: 'displayfield',
+						hidden:true
+					},{
+						xtype:'button',
+						text:'解析PDF模板字段',
+						handler:'analysisPDF'
+					}]
+				},*/{
+					xtype:"grid",
+					title:"数据映射关系列表",
+					minHeight:260,
+					name:'fieldGrid',
+					columnLines:true,
+					autoHeight:true,
+					frame:true,
+					selModel:{
+						selType:'checkboxmodel'
+					},
+					dockedItems:[{
+						xtype: 'toolbar',
+						items: [{text: "新增", tooltip: "新增", iconCls:"add", handler:"addField"}, "-",
+							{text:"删除",tooltip:"删除",iconCls:"remove",handler:"removeField"},"-",
+							{text:"加载PDF模板字段",tooltip:"加载PDF模板字段",iconCls:"edit",handler:"autoMatchField"}
+						]
+					}],
+					plugins:[{
+						ptype:'cellediting',
+						clicksToEdit:1
+					}],
+					columns:[{
+						text: '机构编号',
+						dataIndex: 'TZ_JG_ID',
+						hidden:true
+					},{
+						text: '模板编号',
+						dataIndex: 'TZ_DYMB_ID',
+						hidden:true
+					},{
+						text: '字段ID',
+						dataIndex: 'TZ_DYMB_FIELD_ID',
+						width: 200,
+						sortable:false
+					},{
+						text: '字段名称',
+						dataIndex: 'TZ_DYMB_FIELD_SM',
+						width: 200,
+						editor:{
+							xtype:'textfield'
+						},
+						sortable:false
+					},{
+						text: '是否启用',
+						xtype:'checkcolumn',
+						dataIndex: 'TZ_DYMB_FIELD_QY',
+						width: 100,
+						sortable:false
+					},{
+						text: 'PDF模板对应字段',
+						dataIndex: 'TZ_DYMB_FIELD_PDF',
+						flex:1,
+						sortable:false,
+						editor:{
+							xtype:'textfield',
+							editable:false,
+							triggers:{
+								clear: {
+									cls: 'x-form-clear-trigger',
+									handler: 'clearField'
+								},
+								search:{
+									cls:'x-form-search-trigger',
+									handler:'searchPdfField'
+								}
+							}
+						}
+					}],
+					store:fieldStore
+				}]
     	    }]
     	});
     	this.callParent();
@@ -213,17 +213,15 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplInfo', {
 		text: '保存',
 		iconCls:"save",
 		name:"save",
-		handler: 'infoSave'
+		handler: 'saveTplInfo'
 	}, {
 		text: '确定',
 		iconCls:"ensure",
 		name:"ensure",
-		handler: 'infoSave'
+		handler: 'saveTplInfo'
 	}, {
 		text: '关闭',
 		iconCls:"close",
-		handler: function(btn){
-			btn.findParentByType("uniPrintTplInfo").close();
-		}
+		handler: "closeTplInfo"
 	}]
 });

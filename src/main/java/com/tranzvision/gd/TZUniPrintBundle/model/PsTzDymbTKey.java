@@ -1,6 +1,6 @@
 package com.tranzvision.gd.TZUniPrintBundle.model;
 
-public class TzDymbTblKey {
+public class PsTzDymbTKey {
     private String tzJgId;
 
     private String tzDymbId;
