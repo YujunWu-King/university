@@ -120,10 +120,10 @@ public class ZkzPrintWord {
 			// 获取模板字段需要的数据
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 			getDatas(dataMap, classID, batchID, instanceID, pdfmbID);
-			System.out.println(dataMap);
+			// System.out.println(dataMap);
 			for (String key : dataMap.keySet()) {
 				String value = (String) dataMap.get(key);
-				System.out.println("key= " + key + " value=" + value);
+				// System.out.println("key= " + key + " value=" + value);
 				// 给模板字段赋值
 				form.setField(key, value);
 			}
