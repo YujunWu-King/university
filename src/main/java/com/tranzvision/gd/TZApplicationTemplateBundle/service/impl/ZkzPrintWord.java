@@ -65,7 +65,6 @@ public class ZkzPrintWord {
 		String pdfmbID = jdbcTemplate.queryForObject(sqlZkzTempID, new Object[] { "TZ_ZKZTEMP_ID_URL" }, "String");
 		// 通过模板ID获取模板路径/print/singlepdf/sem/2017127/template/5/2017127.pdf
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		orgid = "SEM";
 		String sqlSelectTplURL = "SELECT TZ_DYMB_PDF_URL FROM PS_TZ_DYMB_T WHERE TZ_JG_ID=? AND TZ_DYMB_ID=?";
 		Map<String, Object> mapDataMbURL = jdbcTemplate.queryForMap(sqlSelectTplURL, new Object[] { orgid, pdfmbID });
 		String zkzTempUrl = mapDataMbURL.get("TZ_DYMB_PDF_URL") == null ? "" : mapDataMbURL.get("TZ_DYMB_PDF_URL").toString();
@@ -196,7 +195,6 @@ public class ZkzPrintWord {
 		// -------- 动态获取数据-------------
 		// 通过打印模板ID得到导入数据模板ID
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		orgid = "SEM";
 		String sqlSelectTplID = "SELECT TZ_DYMB_DRMB_ID FROM PS_TZ_DYMB_T WHERE TZ_JG_ID=? AND TZ_DYMB_ID=?";
 		Map<String, Object> mapDataSjmbID = jdbcTemplate.queryForMap(sqlSelectTplID, new Object[] { orgid, pdfmbID });
 		String strtTplID = mapDataSjmbID.get("TZ_DYMB_DRMB_ID") == null ? "" : mapDataSjmbID.get("TZ_DYMB_DRMB_ID").toString();
