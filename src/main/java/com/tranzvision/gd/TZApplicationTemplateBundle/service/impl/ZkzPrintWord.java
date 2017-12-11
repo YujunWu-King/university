@@ -153,7 +153,7 @@ public class ZkzPrintWord {
 						titleImageUrl = request.getServletContext().getRealPath(titleImageUrl);
 						image = Image.getInstance(titleImageUrl);
 					} catch (FileNotFoundException e) {
-						titleImageUrl = "/statics/css/website/m/images/defaultPhone.png";
+						titleImageUrl = "/statics/css/website/m/images/defaultPhoneZkz.png";
 						titleImageUrl = request.getServletContext().getRealPath(titleImageUrl);
 						image = Image.getInstance(titleImageUrl);
 					}
