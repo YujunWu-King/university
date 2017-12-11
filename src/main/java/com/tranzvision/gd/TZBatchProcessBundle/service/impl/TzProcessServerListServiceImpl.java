@@ -55,7 +55,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { orgId,processName });
                 if (map != null) {
                 	
-                	SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+                	SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 	dateTime= simpleDate.format((Date) map.get("TZ_ZJXTSJ"));
                     processDesc = (String) map.get("TZ_JCFWQ_MS");
                     platFormType = (String) map.get("TZ_CZXT_LX");
@@ -71,8 +71,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     hMap.put("runPlatType", platFormType);
                     hMap.put("serverIP", serverIP);
                     hMap.put("intervalTime", intervalTime);
-                    hMap.put("palpitationDate", dateTime.substring(0, 10));
-                    hMap.put("palpitationTime", dateTime.substring(10));
+                    hMap.put("palpitationDate", dateTime);
                     hMap.put("parallelNum", parallelNum);
                     hMap.put("status", status);
                     hMap.put("remark", remark);
@@ -105,7 +104,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
             String[][] orderByArr = new String[][] { new String[] { "TZ_JCFWQ_MC", "DESC" }};
 
             // json数据要的结果字段;
-            String[] resultFldArray = {"TZ_JG_ID", "TZ_JCFWQ_MC","TZ_JCFWQ_MS","TZ_YXZT","TZ_CZXT_LX","TZ_ZJXTSJ"};
+            String[] resultFldArray = {"TZ_JG_ID", "TZ_JCFWQ_MC","TZ_JCFWQ_MS","TZ_YXZT","TZ_CZXT_LX","TZ_ZJXTSJ","TZ_NOW_TIME"};
 
             // 可配置搜索通用函数;
             Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -120,6 +119,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     mapList.put("processDesc", resultArray[2]);
                     mapList.put("runningStatus", resultArray[3]);
                     mapList.put("palpitationDateTime", resultArray[5]);
+                    mapList.put("traisentTime", resultArray[6]);
                     listData.add(mapList);
                 });
                 mapRet.replace("total", obj[0]);
@@ -152,7 +152,7 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                 // 将字符串转换成json;
                 jacksonUtil.json2Map(strForm);
                 // 信息内容;
-                SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+                SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 
                 String palpitationDate = jacksonUtil.getString("palpitationDate") == null?"":jacksonUtil.getString("palpitationDate");
                 String palpitationTime = jacksonUtil.getString("palpitationTime") == null?"":jacksonUtil.getString("palpitationTime");
@@ -179,7 +179,11 @@ public class TzProcessServerListServiceImpl extends FrameworkImpl {
                     tzProcessServer.setTzJcfwqMs(processDec);
                     tzProcessServer.setTzRwxhJg(intervalTime);
                     tzProcessServer.setTzZdbxRws(parallelNum);
-                    tzProcessServer.setTzZjxtsj(simpleDate.parse(palpitationDate + palpitationTime));
+                    if("".equals(palpitationDate + palpitationTime)){
+                    	//tzProcessServer.setTzZjxtsj(simpleDate.parse(palpitationDate + palpitationTime));
+                    }else{
+                    	tzProcessServer.setTzZjxtsj(simpleDate.parse(palpitationDate + palpitationTime));
+                    }
                     tzProcessServer.setTzYxzt("STOPPING");
                     tzProcessServer.setTzBeizhu(remark);
 

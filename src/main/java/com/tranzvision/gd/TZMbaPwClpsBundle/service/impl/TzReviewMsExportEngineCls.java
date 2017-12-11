@@ -273,7 +273,7 @@ public class TzReviewMsExportEngineCls extends BaseEngine {
 				rank = mapJudge.get("TZ_KSH_PSPM") == null ? "" : mapJudge.get("TZ_KSH_PSPM").toString();
 				// 评委审批人数
 				if (!jugeId.equals("")) {
-					sql = "SELECT COUNT(1) FROM PS_TZ_MP_PW_KS_TBL  WHERE TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=?";
+					sql = "SELECT COUNT(1) FROM PS_TZ_MP_PW_KS_TBL  WHERE TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=?  AND TZ_DELETE_ZT <>'Y'";
 					judgeNum = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, jugeId }, "String");
 
 				}

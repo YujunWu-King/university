@@ -37,7 +37,7 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
             labelStyle: 'font-weight:bold'
         },
         items: [
-            {
+        	{
                 xtype: 'combobox',
                 editable:false,
                 fieldLabel: '归属机构',
@@ -47,6 +47,8 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                 store: new KitchenSink.view.orgmgmt.orgListStore(),
                 queryMode: 'local',
                 name: 'orgId',
+                readOnly:true,
+                value:Ext.tzOrgID,
                 emptyText:'请选择机构',
                 afterLabelTextTpl: [
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
@@ -67,7 +69,9 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                 afterLabelTextTpl: [
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
-                allowBlank:false
+                allowBlank:false,
+                regex:/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+                regexText:'请输入正确的IP地址'
             },{
                 xtype: 'textfield',
                 fieldLabel: '进程服务器描述',
@@ -75,7 +79,8 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                 afterLabelTextTpl: [
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
-                allowBlank:false
+                allowBlank:false,
+                maxLength:20
             },{
                 xtype: 'combobox',
                 editable:false,
@@ -98,7 +103,9 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                 afterLabelTextTpl: [
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
-                allowBlank:false
+                allowBlank:false,
+                regex:/^[1-9]\d*|0$/,
+                regexText:'请输入正确的整数'
             }, {
                 xtype: 'textfield',
                 fieldLabel: '最大并行任务数',
@@ -107,26 +114,6 @@ Ext.define('KitchenSink.view.processServer.processServerWindow', {
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
                 allowBlank:false
-            },{
-                xtype: 'fieldcontainer',
-                layout:'hbox',
-                items:[
-                	{
-                		xtype: 'datefield',
-                        fieldLabel: '最近心跳日期',
-                        format : 'Y-m-d',
-                        name: 'palpitationDate'
-                	},
-                	{
-                		xtype: 'timefield',
-                        fieldLabel: '最近心跳时间',
-                        style:'margin-left:60px',
-                        labelWidth: 100,
-                        format : 'H:i:s',
-                        name: 'palpitationTime'
-                	}
-                ]
-
             },{
                 xtype: 'textarea',
                 fieldLabel: '备注信息',

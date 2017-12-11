@@ -510,6 +510,7 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 					String batchId = jacksonUtil.getString("batchId");
 					String appinsId = jacksonUtil.getString("appinsId");
 
+					/*删除材料评审考生表*/
 					PsTzClpsKshTblKey psTzClpsKshTblKey = new PsTzClpsKshTblKey();
 					psTzClpsKshTblKey.setTzClassId(classId);
 					psTzClpsKshTblKey.setTzApplyPcId(batchId);
@@ -517,8 +518,17 @@ public class TzClpsExamineeServiceImpl extends FrameworkImpl {
 
 					psTzClpsKshTblMapper.deleteByPrimaryKey(psTzClpsKshTblKey);
 
+					/*删除材料评审评委考生关系表*/
 					String sql = "DELETE FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
 					sqlQuery.update(sql, new Object[] { classId, batchId, appinsId });
+					
+					/*删除材料评审考生评委信息表，卢艳添加，2017-11-27*/
+					String sql_kspw = "DELETE FROM PS_TZ_CLPSKSPW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
+					sqlQuery.update(sql_kspw, new Object[] { classId, batchId, appinsId });
+					
+					/*删除材料评审考生评审得分历史表，卢艳添加，2017-11-27*/
+					String sql_ksls = "DELETE FROM PS_TZ_KSCLPSLS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
+					sqlQuery.update(sql_ksls, new Object[] { classId, batchId, appinsId });
 				}
 			}
 

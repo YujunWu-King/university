@@ -21,6 +21,8 @@ public class TzBatchProcess extends TzBatchProcessKey {
 
     private Date tzZhxgsj;
 
+    private String tzIsDispatch;
+
     public String getTzJcMs() {
         return tzJcMs;
     }
@@ -91,5 +93,13 @@ public class TzBatchProcess extends TzBatchProcessKey {
 
     public void setTzZhxgsj(Date tzZhxgsj) {
         this.tzZhxgsj = tzZhxgsj;
+    }
+
+    public String getTzIsDispatch() {
+        return tzIsDispatch;
+    }
+
+    public void setTzIsDispatch(String tzIsDispatch) {
+        this.tzIsDispatch = tzIsDispatch == null ? null : tzIsDispatch.trim();
     }
 }

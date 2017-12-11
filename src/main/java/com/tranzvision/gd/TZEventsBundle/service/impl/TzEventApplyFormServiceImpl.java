@@ -394,7 +394,7 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 						
 						/* 查询报名人数前就要锁表，不然同时报名的话，就可能超过允许报名的人数 */
 						//同一个应用服务内只允许10个考生同时进入面试预约排队，否则报系统忙，请稍候再试。
-						if(registrationLockCounter.getQueueLength() >= 10 || registrationLockCounter.tryAcquire(500,TimeUnit.MILLISECONDS) == false)
+						if(registrationLockCounter.getQueueLength() >= 10 || registrationLockCounter.tryAcquire(3000,TimeUnit.MILLISECONDS) == false)
 						{
 							throw new Exception("系统忙，请稍候再试。");
 						}

@@ -442,7 +442,7 @@
 
         var form = win.child("form").getForm();
         var pageGrid = Ext.getCmp('pageGrid');
-        var processGrid = Ext.getCmp('processGrid');
+        var processGrid = Ext.getCmp('processListGrid');
 
         form.setValues(
             [
@@ -554,17 +554,46 @@
     savePlstComInfo: function(win){
         //资源信息表单
         var form = win.child("form").getForm();
+        var classId = win.up('plstInfo').child("form").getForm().findField("permID").getValue();
+        
         //表单数据
         var formParams = form.getValues();
         //组件信息标志
         var actType = this.getView().actType;
         //更新操作参数
         var comParams = "";
-
+        var processComParams = "";
         //授权组件页面列表
         var grid = Ext.getCmp('pageGrid');
         //授权组件页面数据
         var store = grid.getStore();
+        
+        //添加调度权限功能
+        var processGridStore = Ext.getCmp('processListGrid').getStore();
+        var processEditJson = "",processRecs;
+        processRecs = processGridStore.getModifiedRecords();
+        
+        for(var i=0;i<processRecs.length;i++){
+            if(processEditJson == ""){
+            	processEditJson = Ext.JSON.encode(processRecs[i].data);
+            	processEditJson = processEditJson.substring(0,processEditJson.length -1) + ',classId:"' + classId + '"}'
+            }else{
+            	processEditJson = processEditJson + ',' + Ext.JSON.encode(processRecs[i].data);
+            }
+        }
+        if(processEditJson != ""){
+        	processComParams = '"update":[' + processEditJson + "]"
+        }
+        var processTzParams = '{"ComID":"TZ_PROCESS_DF_COM","PageID":"TZ_PROCESS_EDIT","OperateType":"U","comParams":{'+ processComParams +'}}';
+        
+        if(processEditJson != ""){
+
+            Ext.tzSubmit(processTzParams,function(){
+            	processGridStore.load();
+            },"",true,this);
+        }
+
+        
         //授权组件页面新增或者修改记录
         var gridEditJson = "";
         var mfRecs;
@@ -614,6 +643,7 @@
        }else{
             return false;
         }
+        
     },
     queryPermission:function(btn){
         Ext.tzShowCFGSearch({

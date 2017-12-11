@@ -1,7 +1,6 @@
 package com.tranzvision.gd.ztest.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,8 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.tranzvision.gd.util.base.Arith;
@@ -18,6 +19,7 @@ import com.tranzvision.gd.util.captcha.Patchca;
 import com.tranzvision.gd.util.poi.excel.Test;
 import com.tranzvision.gd.util.security.RegExpValidatorUtils;
 import com.tranzvision.gd.util.session.TzSession;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.tsinghua.sms.SendSmsService;
 import com.tranzvision.gd.ztest.model.Admin;
 import com.tranzvision.gd.ztest.service.AdminService;
@@ -33,6 +35,9 @@ public class TestController {
 	private SendSmsService sendSmsService;
 	
 	private Patchca patchaService;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	String message = "Admin!";
 
@@ -172,5 +177,56 @@ public class TestController {
 		}
 	}
 	
+	@RequestMapping("testseq")
+	public void testseqUtil(HttpServletRequest request, HttpServletResponse response) {
+		
+	}
+	
 
+	@RequestMapping(value = { "/seqNum/{steptype}" })
+	@ResponseBody
+	public void testGetSeqNum(HttpServletRequest request, HttpServletResponse response, 
+			@PathVariable(value = "steptype") String steptype) {
+		try {
+			int i;
+			for(i=0;i<200;i++){
+				MyThread myThread = null;
+				if("M".equals(steptype)){
+					myThread = new MyThread("M");  
+				}else{
+					myThread = new MyThread("S");  
+				}
+				
+				Thread thread = new Thread(myThread);  
+				thread.start();  
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private class MyThread implements Runnable {
+		private String t_stype_type = "S";
+		
+		public MyThread(String steptype){
+			t_stype_type = steptype;
+		}
+		
+		@Override
+		public void run() {
+			getSeqTest(t_stype_type);
+		}  
+		
+		public void getSeqTest(String type){
+			int index = 0;
+			if("M".equals(type)){
+				index = getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST5", 5, 10);
+				System.out.println("自增5："+ index);
+			}else{
+				index = getSeqNum.getSeqNum("TEST_SEQ_NUM", "TEST1");
+				System.out.println("自增1："+ index);
+			}
+		}
+	}  
+	
 }

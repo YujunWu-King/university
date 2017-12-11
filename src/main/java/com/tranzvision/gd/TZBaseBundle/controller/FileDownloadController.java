@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.DataBean;
 import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.PdfPrintbyModel;
+import com.tranzvision.gd.TZUniPrintBundle.service.impl.PdfTemplateInfo;
 import com.tranzvision.gd.util.base.JacksonUtil;
 
 /**
@@ -159,5 +160,82 @@ public class FileDownloadController {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(mapRet);
 		// return retJson;
+	}
+	
+	
+	/**
+	 * 下载统一打印模板中上传的PDF模板文件
+	 * luyan 2017-12-6
+	 * 
+	 * @param request
+	 * @param response
+	 * @param allRequestParams
+	 * @return
+	 */
+	@RequestMapping(value = "DownPdfPServlet", produces = "text/html;charset=UTF-8")
+	public @ResponseBody String orgDownloadPdfPHandler(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> allRequestParams) {
+		
+		String templateID = String.valueOf(allRequestParams.get("templateID"));
+
+		PdfTemplateInfo pti = new PdfTemplateInfo();
+		DataBean bean = pti.getPdfTemplateURL(templateID);
+		String fileName = "";
+		if (bean.getRs() == 0) {
+			try {
+				String userAgent = request.getHeader("User-Agent").toUpperCase();
+				if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0)) {
+					fileName = URLEncoder.encode(bean.getDownloadFileName(), "UTF-8");
+					if (fileName.length() > 150) {
+						// 根据request的locale 得出可能的编码， 中文操作系统通常是gb2312
+						String guessCharset = "gb2312";
+						fileName = new String(bean.getDownloadFileName().getBytes(guessCharset), "ISO8859-1");
+					}
+				} else {
+					fileName = new String(bean.getDownloadFileName().getBytes("UTF-8"), "ISO8859-1");
+				}
+
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			ServletOutputStream out;
+			try {
+
+				byte[] buffer = pti.downLoadPdfTemplate(bean.getTemplateFileName());
+
+				if (buffer == null || buffer.length <=0) {
+					Map<String, Object> mapRet = new HashMap<String, Object>();
+					mapRet.put("success", false);
+					mapRet.put("msg", "模板文件不存在");
+					JacksonUtil jacksonUtil = new JacksonUtil();
+					return jacksonUtil.Map2json(mapRet);
+				} else {
+
+					response.setContentType("multipart/form-data");
+					// 2.设置文件头：最后一个参数是设置下载文件名
+					response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+					// response.reset();
+					// 3.通过response获取ServletOutputStream对象(out)
+					out = response.getOutputStream();
+					out.write(buffer);// 输出文件
+					out.close();
+					out.flush();
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// System.out.println("msg：" + bean.getMsg());
+
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("success", bean.getRs() == 0 ? true : false);
+		mapRet.put("msg", bean.getMsg());
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		return jacksonUtil.Map2json(mapRet);
+
 	}
 }

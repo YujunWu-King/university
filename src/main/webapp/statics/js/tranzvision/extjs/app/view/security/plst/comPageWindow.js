@@ -138,7 +138,7 @@ Ext.define('KitchenSink.view.security.plst.comPageWindow', {
         },{
             xtype: 'grid',
             title: '进程授权列表',
-            id:'processGrid',
+            id:'processListGrid',
             frame: true,
             columnLines: true,
             autoHeight:true,
@@ -172,17 +172,17 @@ Ext.define('KitchenSink.view.security.plst.comPageWindow', {
             },{
                 xtype: 'checkcolumn',
                 text: "调度",
-                dataIndex: 'dispatch',
-                listeners:{
-                    checkchange:function(item, rowIndex, checked, eOpts ){
-                        var store = item.findParentByType("grid").store;
-                        var record = store.getAt(rowIndex);
-
-                        // if(checked){
-                        //     record.set('modify',false);
-                        // }
-                    }
-                },
+                dataIndex: 'isDispatch',
+//                listeners:{
+//                    checkchange:function(item, rowIndex, checked, eOpts ){
+//                        var store = item.findParentByType("grid").store;
+//                        var record = store.getAt(rowIndex);
+//
+//                         if(checked){
+//                             record.set('modify',false);
+//                         }
+//                    }
+//                },
                 sortable:false,
                 width: 70
             }

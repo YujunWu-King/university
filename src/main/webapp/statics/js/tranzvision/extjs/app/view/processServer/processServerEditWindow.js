@@ -13,7 +13,7 @@ Ext.define('KitchenSink.view.processServer.processServerEditWindow', {
     title: '进程服务器编辑',
     reference: 'processServerEditWindow',
     width: 700,
-    height: 450,
+    height: 500,
     minWidth: 200,
     minHeight: 100,
     layout: 'fit',
@@ -42,8 +42,8 @@ Ext.define('KitchenSink.view.processServer.processServerEditWindow', {
                 editable:false,
                 fieldLabel: '归属机构',
                 forceSelection: true,
-                valueField: 'orgId',
                 readOnly:true,
+                valueField: 'orgId',
                 displayField: 'orgName',
                 store: new KitchenSink.view.orgmgmt.orgListStore(),
                 queryMode: 'local',
@@ -62,6 +62,11 @@ Ext.define('KitchenSink.view.processServer.processServerEditWindow', {
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
                 allowBlank:false
+            },{
+            	xtype: 'textfield',
+                fieldLabel: '最近心跳时间',
+                name: 'palpitationDate',
+                editable:false
             },{
                 xtype: 'textfield',
                 fieldLabel: '服务器IP地址',
@@ -109,35 +114,14 @@ Ext.define('KitchenSink.view.processServer.processServerEditWindow', {
                     '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
                 ],
                 allowBlank:false
-            },                	
-            {
-        		xtype: 'datefield',
-                fieldLabel: '最近心跳日期',
-                editable:false,
-                format : 'Y-m-d',
-                name: 'palpitationDate',
-                afterLabelTextTpl: [
-                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-                ],
-                allowBlank:false
-        	},                	
-        	{
-        		xtype: 'timefield',
-                fieldLabel: '最近心跳时间',
-                editable:false,
-                format : 'H:i:s',
-                name: 'palpitationTime',
-                afterLabelTextTpl: [
-                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-                ],
-                allowBlank:false
-        	},{
+            },{
                 xtype: 'textarea',
                 fieldLabel: '备注信息',
                 name: 'remark'
             },
             {
                xtype:'fieldcontainer',
+               style:'margin-top:20px',
                layout:'hbox',
                 items:[
                     {

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -170,7 +171,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 					String str_phone = sqlQuery.queryForObject(sql, new Object[] { m_curOPRID }, "String");
 
 					str_phone = str_phone == null ? "" : str_phone;
-
+					str_phone = StringEscapeUtils.escapeHtml(str_phone);
 					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 							str_TZ_REG_FIELD_NAME, str_phone, String.valueOf(td_long));
 
@@ -186,7 +187,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 					String str_Email = sqlQuery.queryForObject(sql, new Object[] { m_curOPRID }, "String");
 
 					str_Email = str_Email == null ? "" : str_Email;
-
+					str_Email = StringEscapeUtils.escapeHtml(str_Email);
 					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 							str_TZ_REG_FIELD_NAME, str_Email, String.valueOf(td_long));
 
@@ -202,7 +203,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 					String str_Skype = sqlQuery.queryForObject(sql, new Object[] { m_curOPRID }, "String");
 
 					str_Skype = str_Skype == null ? "" : str_Skype;
-
+					str_Skype = StringEscapeUtils.escapeHtml(str_Skype);
 					strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 							str_TZ_REG_FIELD_NAME, str_Skype, String.valueOf(td_long));
 
@@ -250,7 +251,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 							}
 						}
 						// 双语化下拉框代码 - 结束
-
+						str_TZ_REG_FIELD_ID_opt = StringEscapeUtils.escapeHtml(str_TZ_REG_FIELD_ID_opt);
 						strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 								str_TZ_REG_FIELD_NAME, str_TZ_REG_FIELD_ID_opt, String.valueOf(td_long));
 
@@ -265,7 +266,7 @@ public class TzPiDecoratedServiceImpl extends FrameworkImpl {
 								"String");
 
 						str_TZ_REG_FIELD_ID_value = str_TZ_REG_FIELD_ID_value == null ? "" : str_TZ_REG_FIELD_ID_value;
-
+						str_TZ_REG_FIELD_ID_value = StringEscapeUtils.escapeHtml(str_TZ_REG_FIELD_ID_value);
 						strResult_fld = strResult_fld + tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzPerInfoFld",
 								str_TZ_REG_FIELD_NAME, str_TZ_REG_FIELD_ID_value, String.valueOf(td_long));
 

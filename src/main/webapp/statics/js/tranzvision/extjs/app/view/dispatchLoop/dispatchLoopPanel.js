@@ -34,20 +34,22 @@
 
         items: [
             {
-            xtype: 'combobox',
-            editable:false,
-            fieldLabel: '归属机构',
-            forceSelection: true,
-            valueField: 'orgId',
-            displayField: 'orgName',
-            store: new KitchenSink.view.orgmgmt.orgListStore(),
-            queryMode: 'local',
-            name: 'orgId',
-            emptyText:'请选择机构',
-            afterLabelTextTpl: [
-                '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-            ],
-            allowBlank:false
+                xtype: 'combobox',
+                editable:false,
+                fieldLabel: '归属机构',
+                forceSelection: true,
+                valueField: 'orgId',
+                displayField: 'orgName',
+                store: new KitchenSink.view.orgmgmt.orgListStore(),
+                queryMode: 'local',
+                name: 'orgId',
+                readOnly:true,
+                value:Ext.tzOrgID,
+                emptyText:'请选择机构',
+                afterLabelTextTpl: [
+                    '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
+                ],
+                allowBlank:false
         },{
             xtype: 'textfield',
             fieldLabel: '循环名称',
@@ -77,9 +79,15 @@
             emptyText:'生效/失效',
             afterLabelTextTpl: [
             '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
-        ],
+            ],
             allowBlank:false
-    }]
+        },{
+        	xtype: 'textfield',
+        	name: 'cycleExpression',
+        	fieldLabel: '循环表达式',
+        	editable:false
+        	
+        }]
     },{
         xtype: 'tabpanel',
         items:[{
@@ -119,7 +127,7 @@
                 name:'loopYear',
                 inputValue: '1',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意年份"
+                boxLabel: "每年"
             },{
             	xtype: 'radio',
                 name:'loopYear',
@@ -144,11 +152,11 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: new Date().getFullYear(), Value: 1 },
-                            { Name: new Date().getFullYear() + 1, Value: 2  },
-                            { Name: new Date().getFullYear() + 2, Value: 3  },
-                            { Name: new Date().getFullYear() + 3, Value: 4  },
-                            { Name: new Date().getFullYear() + 4, Value: 5 }
+                        	 { Name: new Date().getFullYear(), Value: new Date().getFullYear() },
+                             { Name: new Date().getFullYear() + 1, Value: new Date().getFullYear() + 1  },
+                             { Name: new Date().getFullYear() + 2, Value: new Date().getFullYear() + 2  },
+                             { Name: new Date().getFullYear() + 3, Value: new Date().getFullYear() + 3 },
+                             { Name: new Date().getFullYear() + 4, Value: new Date().getFullYear() + 4 }
                         ]
                     })
                 },{
@@ -165,11 +173,11 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: new Date().getFullYear(), Value: 1 },
-                            { Name: new Date().getFullYear() + 1, Value: 2  },
-                            { Name: new Date().getFullYear() + 2, Value: 3  },
-                            { Name: new Date().getFullYear() + 3, Value: 4  },
-                            { Name: new Date().getFullYear() + 4, Value: 5 }
+                            { Name: new Date().getFullYear(), Value: new Date().getFullYear() },
+                            { Name: new Date().getFullYear() + 1, Value: new Date().getFullYear() + 1  },
+                            { Name: new Date().getFullYear() + 2, Value: new Date().getFullYear() + 2  },
+                            { Name: new Date().getFullYear() + 3, Value: new Date().getFullYear() + 3 },
+                            { Name: new Date().getFullYear() + 4, Value: new Date().getFullYear() + 4 }
                         ]
                     })
                 }]
@@ -194,6 +202,7 @@
                 xtype: 'radio',
                 name:'loopYear',
                 inputValue: '4',
+                id:'yearFour',
                 style:'margin-top:10px;margin-left:50px',
                 boxLabel: "指定年份循环间隔"
             },{
@@ -244,7 +253,7 @@
                 inputValue: '1',
                 id:'monthOne',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意月份"
+                boxLabel: "每月"
             },{
                 xtype: 'radio',
                 name:'loopMonth',
@@ -472,7 +481,26 @@
                             { Name: 9, Value: 9  },
                             { Name: 10, Value: 10  },
                             { Name: 11, Value: 11  },
-                            { Name: 12, Value: 12  }
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13 },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25  },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 27  },
+                            { Name: 28, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  }
                         ]
                     })
                 },{
@@ -501,7 +529,26 @@
                             { Name: 9, Value: 9  },
                             { Name: 10, Value: 10  },
                             { Name: 11, Value: 11  },
-                            { Name: 12, Value: 12  }
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13 },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25  },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 27  },
+                            { Name: 28, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  }
                         ]
                     })
                 }]
@@ -588,7 +635,26 @@
                             { Name: 9, Value: 9  },
                             { Name: 10, Value: 10  },
                             { Name: 11, Value: 11  },
-                            { Name: 12, Value: 12  }
+                            { Name: 12, Value: 12  },
+                            { Name: 13, Value: 13 },
+                            { Name: 14, Value: 14  },
+                            { Name: 15, Value: 15  },
+                            { Name: 16, Value: 16  },
+                            { Name: 17, Value: 17  },
+                            { Name: 18, Value: 18  },
+                            { Name: 19, Value: 19  },
+                            { Name: 20, Value: 20  },
+                            { Name: 21, Value: 21  },
+                            { Name: 22, Value: 22  },
+                            { Name: 23, Value: 23  },
+                            { Name: 24, Value: 24  },
+                            { Name: 25, Value: 25  },
+                            { Name: 26, Value: 26  },
+                            { Name: 27, Value: 27  },
+                            { Name: 28, Value: 28  },
+                            { Name: 29, Value: 29  },
+                            { Name: 30, Value: 30  },
+                            { Name: 31, Value: 31  }
                         ]
                     })
                 }]
@@ -630,13 +696,14 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '周一', Value: 1 },
-                            { Name: '周二', Value: 2  },
-                            { Name: '周三', Value: 3  },
-                            { Name: '周四', Value: 4  },
-                            { Name: '周五', Value: 5  },
-                            { Name: '周六', Value: 6  },
-                            { Name: '周日', Value: 7  }
+                        	{ Name: '周日', Value: 1  },
+                            { Name: '周一', Value: 2  },
+                            { Name: '周二', Value: 3  },
+                            { Name: '周三', Value: 4  },
+                            { Name: '周四', Value: 5  },
+                            { Name: '周五', Value: 6  },
+                            { Name: '周六', Value: 7  },
+                            
                         ]
                     })
                 },{
@@ -654,13 +721,14 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '周一', Value: 1 },
-                            { Name: '周二', Value: 2  },
-                            { Name: '周三', Value: 3  },
-                            { Name: '周四', Value: 4  },
-                            { Name: '周五', Value: 5  },
-                            { Name: '周六', Value: 6  },
-                            { Name: '周日', Value: 7  }
+                        	{ Name: '周日', Value: 1  },
+                            { Name: '周一', Value: 2  },
+                            { Name: '周二', Value: 3  },
+                            { Name: '周三', Value: 4  },
+                            { Name: '周四', Value: 5  },
+                            { Name: '周五', Value: 6  },
+                            { Name: '周六', Value: 7  }
+                            
                         ]
                     })
                 }]
@@ -711,7 +779,7 @@
                 inputValue: '13',
                 id:'weekSix',
                 style:'margin-top:10px;margin-left:50px',
-                boxLabel: "每周最后一个周几"
+                boxLabel: "每月最后一个周几"
             },{
                 style:'margin-top:10px;margin-left:100px',
                 xtype: 'fieldcontainer',
@@ -730,13 +798,14 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '周一', Value: 1 },
-                            { Name: '周二', Value: 2  },
-                            { Name: '周三', Value: 3  },
-                            { Name: '周四', Value: 4  },
-                            { Name: '周五', Value: 5  },
-                            { Name: '周六', Value: 6  },
-                            { Name: '周日', Value: 7  }
+                        	{ Name: '周日', Value: 1  },
+                            { Name: '周一', Value: 2  },
+                            { Name: '周二', Value: 3  },
+                            { Name: '周三', Value: 4  },
+                            { Name: '周四', Value: 5  },
+                            { Name: '周五', Value: 6  },
+                            { Name: '周六', Value: 7  }
+                            
                         ]
                     })
                 }]
@@ -765,7 +834,7 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '第一周', Value: 1 },
+                            { Name: '第一周', Value: 1  },
                             { Name: '第二周', Value: 2  },
                             { Name: '第三周', Value: 3  },
                             { Name: '第四周', Value: 4  }
@@ -786,13 +855,14 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
-                            { Name: '周一', Value: 1 },
-                            { Name: '周二', Value: 2  },
-                            { Name: '周三', Value: 3  },
-                            { Name: '周四', Value: 4  },
-                            { Name: '周五', Value: 5  },
-                            { Name: '周六', Value: 6  },
-                            { Name: '周日', Value: 7  }
+                        	{ Name: '周日', Value: 1  },
+                            { Name: '周一', Value: 2 },
+                            { Name: '周二', Value: 3  },
+                            { Name: '周三', Value: 4 },
+                            { Name: '周四', Value: 5  },
+                            { Name: '周五', Value: 6  },
+                            { Name: '周六', Value: 7  },
+                            
                         ]
                     })
                 }]
@@ -834,13 +904,13 @@
                 inputValue: '1',
                 id:'hourOne',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意小时"
+                boxLabel: "每小时"
             },{
                 xtype: 'radio',
                 name:'loopHour',
                 inputValue: '2',
                 id:'hourTwo',
-                style:'margin-top:10px;margin-left:50px',
+                style:'margin-top:20px;margin-left:50px',
                 boxLabel: "指定小时范围"
             },{
                 xtype: 'fieldcontainer',
@@ -860,6 +930,7 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
+                        	{ Name: 0, Value: 0 },
                             { Name: 1, Value: 1 },
                             { Name: 2, Value: 2  },
                             { Name: 3, Value: 3  },
@@ -882,8 +953,7 @@
                             { Name: 20, Value: 20  },
                             { Name: 21, Value: 21  },
                             { Name: 22, Value: 22  },
-                            { Name: 23, Value: 23  },
-                            { Name: 24, Value: 24  }
+                            { Name: 23, Value: 23  }
                         ]
                     })
                 },{
@@ -901,6 +971,7 @@
                     store:Ext.create("Ext.data.Store", {
                         fields: ["Name", "Value"],
                         data: [
+                        	{ Name: 0, Value: 0 },
                             { Name: 1, Value: 1 },
                             { Name: 2, Value: 2  },
                             { Name: 3, Value: 3  },
@@ -923,8 +994,7 @@
                             { Name: 20, Value: 20  },
                             { Name: 21, Value: 21  },
                             { Name: 22, Value: 22  },
-                            { Name: 23, Value: 23  },
-                            { Name: 24, Value: 24  }
+                            { Name: 23, Value: 23  }
                         ]
                     })
                 }]
@@ -1000,7 +1070,7 @@
                 inputValue: '1',
                 id:'minuteOne',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意分钟"
+                boxLabel: "每分"
             },{
                 xtype: 'radio',
                 name:'loopMin',
@@ -1180,7 +1250,7 @@
                 items:[{
                     xtype: 'textfield',
                     columnWidth:.45,
-                    name:'listMinute',
+                    name:'minuteList',
                     emptyText: "格式：N1,N2,…  取值范围：0-59  例如：0,1,2,3"
                 }]
             },{
@@ -1238,7 +1308,7 @@
                 inputValue: '1',
                 id:'secondOne',
                 style:'margin-left:50px',
-                boxLabel: "不限定，任意秒"
+                boxLabel: "每秒"
             },{
                 xtype: 'radio',
                 name:'loopSecond',
@@ -1483,17 +1553,17 @@
                         columnWidth:.25,
                         style:'margin-left:20px',
                         labelWidth:20,
-                        name:'customMonth',
-                        fieldLabel: '月',
-                        emptyText: "1-12或者JAN-DEC  通配符：,-*/"
+                        name:'customWeek',
+                        fieldLabel: '周',
+                        emptyText: "1-7或者SUN-SAT  通配符：,-*?/L#"
                     },{
                         xtype: 'textfield',
                         columnWidth:.25,
                         style:'margin-left:20px',
                         labelWidth:20,
-                        name:'customWeek',
-                        fieldLabel: '周',
-                        emptyText: "1-7或者SUN-SAT  通配符：,-*?/L#"
+                        name:'customMonth',
+                        fieldLabel: '月',
+                        emptyText: "1-12或者JAN-DEC  通配符：,-*/"
                     }]
                 },{
                     style:'margin-top:10px;margin-left:100px',

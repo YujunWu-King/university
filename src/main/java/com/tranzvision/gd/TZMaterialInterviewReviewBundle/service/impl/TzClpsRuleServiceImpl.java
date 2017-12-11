@@ -595,7 +595,7 @@ public class TzClpsRuleServiceImpl extends FrameworkImpl {
 				String sql = "SELECT TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=? AND OPRID=?";
 				String mobile = sqlQuery.queryForObject(sql, new Object[] {currentOrgId,judgeId},"String");
 				
-				if(!"".equals(mobile)) {
+				if(mobile!=null && !"".equals(mobile)) {
 					
 					String password = DESUtil.encrypt(mobile, "TZGD_Tranzvision");
 		

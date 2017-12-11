@@ -403,7 +403,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			mapRet.put("examineeTag", examineeTag);
 			
 
-			//材料评审成绩参考
+			//材料评审成绩参考			
 			String ckcjxIdNum = getHardCodePoint.getHardCodePointVal("TZ_MSPS_CLPS_CKCJX_ID_NUM");
 			String ckcjxIdNumTmp = ","+ckcjxIdNum+",";
 			String ckcjxIdTxt = getHardCodePoint.getHardCodePointVal("TZ_MSPS_CLPS_CKCJX_ID_TXT");
@@ -417,95 +417,109 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			String sqlClps = "";
 			String ckcjxNumInfo = "",ckcjxTxtInfo = "",ckcjxNumInfoPad = "";
 			
-			//数字成绩录入项
-			sqlClps = "SELECT M.TZ_SCORE_ITEM_ID,M.AVG_NUM,N.DESCR";
-			sqlClps += " FROM";
-			sqlClps += " (SELECT B.TZ_SCORE_ITEM_ID,AVG(B.TZ_SCORE_NUM) AVG_NUM FROM PS_TZ_CJX_TBL B";
-			sqlClps += " WHERE EXISTS (SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL C WHERE B.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID AND C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=?)";
-			sqlClps += " AND EXISTS (SELECT 'Y' FROM PS_TZ_MODAL_DT_TBL D WHERE D.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND D.TREE_NAME=? AND D.TZ_SCORE_ITEM_TYPE='B')";
-			sqlClps += " GROUP BY B.TZ_SCORE_ITEM_ID) M,";
-			sqlClps += " (SELECT A.TZ_SCORE_ITEM_ID,A.DESCR FROM PS_TZ_MODAL_DT_TBL A WHERE A.TREE_NAME=?) N";
-			sqlClps += " WHERE M.TZ_SCORE_ITEM_ID=N.TZ_SCORE_ITEM_ID";
-
-			List<Map<String, Object>> listClpsNum = sqlQuery.queryForList(sqlClps, new Object[] {classId,applyBatchId,bmbId,scoreTreeMaterial,scoreTreeMaterial});
-			
-			for(Map<String, Object> mapClpsNum : listClpsNum) {
-				String scoreItemIdClps = mapClpsNum.get("TZ_SCORE_ITEM_ID") == null ? "" : mapClpsNum.get("TZ_SCORE_ITEM_ID").toString();
-				String scoreItemNameClps = mapClpsNum.get("DESCR") == null ? "" : mapClpsNum.get("DESCR").toString();
-				Double scoreAvgNum = mapClpsNum.get("AVG_NUM") == null ? 0.0 : Double.valueOf(mapClpsNum.get("AVG_NUM").toString());
-				
-				Integer findFlag = ckcjxIdNumTmp.indexOf(","+scoreItemIdClps+",");
-				if("-1".equals(String.valueOf(findFlag))) {
-					//未找到
-				} else {	
-					ckcjxNumInfo = ckcjxNumInfo + scoreItemNameClps+"【"+scoreAvgNum+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-				}
+			/*存在面试评审批次和材料评审批次不一致的情况，卢艳添加，2017-11-20 */
+			/*先查询当前批次是否有材料评审记录，如果有则显示当前批次，否则查询最新的材料评审批次*/
+			String clpsck_batch_id = "";
+			Integer currentClpsck = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?", new Object[]{classId,applyBatchId,bmbId},"Integer");
+			if(currentClpsck>0) {
+				clpsck_batch_id = applyBatchId;
+			} else {
+				clpsck_batch_id = sqlQuery.queryForObject("SELECT DISTINCT TZ_APPLY_PC_ID FROM PS_TZ_CP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APP_INS_ID=? ORDER BY  CAST(TZ_APPLY_PC_ID AS SIGNED) DESC LIMIT 0,1", new Object[]{classId,bmbId},"String");
 			}
+						
+			if(clpsck_batch_id!=null && !"".equals(clpsck_batch_id)) {
 			
-			if(!"".equals(ckcjxNumInfo)) {
-				materialReviewDesc += "<tr height='25'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>" + ckcjxNumInfo + "</td></tr>";
-				materialReviewDescPad +="<tr><td width='155px;'>材料评审成绩参考：</td><td>" + ckcjxNumInfo + "</td></tr>";
-			}
-			
-			//评语类型
-			int i=0;
-			for(i=0;i<ckcjxIdTxtArr.length;i++) {
-				String scoreItemIdClps = ckcjxIdTxtArr[i];
-				
-				sqlClps = "SELECT M.TZ_SCORE_PY_VALUE,N.DESCR";
+				//数字成绩录入项
+				sqlClps = "SELECT M.TZ_SCORE_ITEM_ID,M.AVG_NUM,N.DESCR";
 				sqlClps += " FROM";
-				sqlClps += " (SELECT B.TZ_SCORE_ITEM_ID,B.TZ_SCORE_INS_ID,B.TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL B";
-				sqlClps += " WHERE EXISTS (SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL C WHERE B.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID AND C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=?";
-				sqlClps += " AND B.TZ_SCORE_ITEM_ID=?)) M,";
+				sqlClps += " (SELECT B.TZ_SCORE_ITEM_ID,AVG(B.TZ_SCORE_NUM) AVG_NUM FROM PS_TZ_CJX_TBL B";
+				sqlClps += " WHERE EXISTS (SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL C WHERE B.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID AND C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=?)";
+				sqlClps += " AND EXISTS (SELECT 'Y' FROM PS_TZ_MODAL_DT_TBL D WHERE D.TZ_SCORE_ITEM_ID=B.TZ_SCORE_ITEM_ID AND D.TREE_NAME=? AND D.TZ_SCORE_ITEM_TYPE='B')";
+				sqlClps += " GROUP BY B.TZ_SCORE_ITEM_ID) M,";
 				sqlClps += " (SELECT A.TZ_SCORE_ITEM_ID,A.DESCR FROM PS_TZ_MODAL_DT_TBL A WHERE A.TREE_NAME=?) N";
 				sqlClps += " WHERE M.TZ_SCORE_ITEM_ID=N.TZ_SCORE_ITEM_ID";
+	
+				List<Map<String, Object>> listClpsNum = sqlQuery.queryForList(sqlClps, new Object[] {classId,clpsck_batch_id,bmbId,scoreTreeMaterial,scoreTreeMaterial});
 				
-				List<Map<String, Object>> listClpsTxt = sqlQuery.queryForList(sqlClps, new Object[] {classId,applyBatchId,bmbId,scoreItemIdClps,scoreTreeMaterial});
-				
-				int num = 0;
-				String ckcjxTxtInfoTmp = "";
-				
-				for(Map<String, Object> mapClpsTxt : listClpsTxt) {
-					String scoreItemNameClps = mapClpsTxt.get("DESCR") == null ? "" : mapClpsTxt.get("DESCR").toString();
-					String scoreValue = mapClpsTxt.get("TZ_SCORE_PY_VALUE") == null ? "": mapClpsTxt.get("TZ_SCORE_PY_VALUE").toString();
+				for(Map<String, Object> mapClpsNum : listClpsNum) {
+					String scoreItemIdClps = mapClpsNum.get("TZ_SCORE_ITEM_ID") == null ? "" : mapClpsNum.get("TZ_SCORE_ITEM_ID").toString();
+					String scoreItemNameClps = mapClpsNum.get("DESCR") == null ? "" : mapClpsNum.get("DESCR").toString();
+					Double scoreAvgNum = mapClpsNum.get("AVG_NUM") == null ? 0.0 : Double.valueOf(mapClpsNum.get("AVG_NUM").toString());
 					
-					if(!"".equals(scoreValue)) {
-						num++;
-						
-						if(scoreItemIdClps.equals(pyCjxId)) {
-							//评语
-							if(num==1) {
-								ckcjxTxtInfoTmp = "评委"+String.valueOf(num)+"评语："+scoreValue;
-							} else {
-								ckcjxTxtInfoTmp +="</br>评委"+String.valueOf(num)+"评语："+scoreValue;
-							}
-						} else {
-							if(num==1) {
-								ckcjxTxtInfoTmp = "<div style='float:left;width:90px;'>" + scoreItemNameClps+"：</div><div style='float:left;'>"+scoreValue+"</div><br />";
-							} else {
-								//ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
-								ckcjxTxtInfoTmp += "<div>" + scoreValue + "</div>";
-							}
-						}	
+					Integer findFlag = ckcjxIdNumTmp.indexOf(","+scoreItemIdClps+",");
+					if("-1".equals(String.valueOf(findFlag))) {
+						//未找到
+					} else {	
+						ckcjxNumInfo = ckcjxNumInfo + scoreItemNameClps+"【"+scoreAvgNum+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 					}
 				}
-				
-				String trHeight = String.valueOf(num*25);
-				
-				if(!"".equals(ckcjxTxtInfoTmp)) {
-					if(!"".equals(ckcjxNumInfo)) {
-						ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4' style='word-wrap:break-word;word-break:break-all;'>"+ ckcjxTxtInfoTmp +"</td></tr>";
-						ckcjxNumInfoPad += "<tr><td></td><td>" + ckcjxTxtInfoTmp + "</td></tr>";
-					} else {
-						ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
-						ckcjxNumInfoPad +="<tr><td width='155px;'>材料评审成绩参考：</td><td>" + ckcjxTxtInfoTmp + "</td></tr>";
-					}
-				}
-
-			}
 			
-			materialReviewDesc += ckcjxTxtInfo;
-			materialReviewDescPad += ckcjxNumInfoPad + "</tbody></table>";
+				if(!"".equals(ckcjxNumInfo)) {
+					materialReviewDesc += "<tr height='25'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>" + ckcjxNumInfo + "</td></tr>";
+					materialReviewDescPad +="<tr><td width='155px;'>材料评审成绩参考：</td><td>" + ckcjxNumInfo + "</td></tr>";
+				}
+			
+				//评语类型
+				int i=0;
+				for(i=0;i<ckcjxIdTxtArr.length;i++) {
+					String scoreItemIdClps = ckcjxIdTxtArr[i];
+				
+					sqlClps = "SELECT M.TZ_SCORE_PY_VALUE,N.DESCR";
+					sqlClps += " FROM";
+					sqlClps += " (SELECT B.TZ_SCORE_ITEM_ID,B.TZ_SCORE_INS_ID,B.TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL B";
+					sqlClps += " WHERE EXISTS (SELECT 'Y' FROM PS_TZ_CP_PW_KS_TBL C WHERE B.TZ_SCORE_INS_ID=C.TZ_SCORE_INS_ID AND C.TZ_CLASS_ID=? AND C.TZ_APPLY_PC_ID=? AND C.TZ_APP_INS_ID=?";
+					sqlClps += " AND B.TZ_SCORE_ITEM_ID=?)) M,";
+					sqlClps += " (SELECT A.TZ_SCORE_ITEM_ID,A.DESCR FROM PS_TZ_MODAL_DT_TBL A WHERE A.TREE_NAME=?) N";
+					sqlClps += " WHERE M.TZ_SCORE_ITEM_ID=N.TZ_SCORE_ITEM_ID";
+					
+					List<Map<String, Object>> listClpsTxt = sqlQuery.queryForList(sqlClps, new Object[] {classId,clpsck_batch_id,bmbId,scoreItemIdClps,scoreTreeMaterial});
+					
+					int num = 0;
+					String ckcjxTxtInfoTmp = "";
+					
+					for(Map<String, Object> mapClpsTxt : listClpsTxt) {
+						String scoreItemNameClps = mapClpsTxt.get("DESCR") == null ? "" : mapClpsTxt.get("DESCR").toString();
+						String scoreValue = mapClpsTxt.get("TZ_SCORE_PY_VALUE") == null ? "": mapClpsTxt.get("TZ_SCORE_PY_VALUE").toString();
+						
+						if(!"".equals(scoreValue)) {
+							num++;
+							
+							if(scoreItemIdClps.equals(pyCjxId)) {
+								//评语
+								if(num==1) {
+									ckcjxTxtInfoTmp = "评委"+String.valueOf(num)+"评语："+scoreValue;
+								} else {
+									ckcjxTxtInfoTmp +="</br>评委"+String.valueOf(num)+"评语："+scoreValue;
+								}
+							} else {
+								if(num==1) {
+									ckcjxTxtInfoTmp = "<div style='float:left;width:90px;'>" + scoreItemNameClps+"：</div><div style='float:left;'>"+scoreValue+"</div><br />";
+								} else {
+									//ckcjxTxtInfoTmp += "<div style='padding-left:90px;'>" + scoreValue + "</div>";
+									ckcjxTxtInfoTmp += "<div>" + scoreValue + "</div>";
+								}
+							}	
+						}
+					}
+				
+					String trHeight = String.valueOf(num*25);
+					
+					if(!"".equals(ckcjxTxtInfoTmp)) {
+						if(!"".equals(ckcjxNumInfo)) {
+							ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'></td><td colspan='4' style='word-wrap:break-word;word-break:break-all;'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+							ckcjxNumInfoPad += "<tr><td></td><td>" + ckcjxTxtInfoTmp + "</td></tr>";
+						} else {
+							ckcjxTxtInfo += "<tr height='"+trHeight+"'><td style='font-weight:bold;' width='127px'>材料评审成绩参考：</td><td colspan='4'>"+ ckcjxTxtInfoTmp +"</td></tr>";
+							ckcjxNumInfoPad +="<tr><td width='155px;'>材料评审成绩参考：</td><td>" + ckcjxTxtInfoTmp + "</td></tr>";
+						}
+					}
+	
+				}	
+			
+				materialReviewDesc += ckcjxTxtInfo;
+				materialReviewDescPad += ckcjxNumInfoPad + "</tbody></table>";
+			
+			}
 			
 			mapRet.put("materialReviewDesc", materialReviewDesc);
 			mapRet.put("materialReviewDescPad", materialReviewDescPad);

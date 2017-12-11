@@ -61,6 +61,11 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitor', {
                 dataIndex: 'processName',
                 flex: 1
             }, {
+                text: '计划运行时间',
+                sortable: true,
+                dataIndex: 'planExecuteTime',
+                flex: 1
+            }, {
                 text: '服务器名称',
                 sortable: true,
                 dataIndex: 'processServerName',
@@ -74,14 +79,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitor', {
                 text: '运行状态',
                 sortable: true,
                 dataIndex: 'status',
-                flex: 1,
-                renderer: function(value,metadata,record){
-                    var index = statusStore.find('TValue',value);
-                    if(index!=-1){
-                        return statusStore.getAt(index).data.TSDesc;
-                    }
-                    return record.get('attrTypeDesc');
-                }
+                flex: 1
             }, {
                 menuDisabled: true,
                 sortable: false,
@@ -89,8 +87,8 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitor', {
                 xtype: 'actioncolumn',
                 items: [
                     {iconCls: 'view', tooltip: '查看', handler: 'viewMonitor'},
-                    {icon: 'statics/images/tranzvision/start.png', tooltip: '开始', handler: 'startInstanceBL'},
-                    {icon: 'statics/images/tranzvision/stop.png', tooltip: '停止', handler: 'stopInstanceBL'},
+                    {icon: 'statics/images/tranzvision/start.png', tooltip: '开启', handler: 'startInstanceBL'},
+                    {icon: 'statics/images/tranzvision/stop.png', tooltip: '关闭', handler: 'stopInstanceBL'},
                     {iconCls: 'delete', tooltip: '删除', handler: 'deleteInstanceBL'}
                 ]
             }],

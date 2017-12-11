@@ -7,7 +7,10 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitorController', {
     cfgSearchAct: function (btn) {
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_JC_DISPATCH_COM.TZ_MONITOR_LIST.TZ_JC_MONITOR_VW',
-            condition: {},
+            condition: 
+            {
+            	"TZ_JG_ID": Ext.tzOrgID
+            },
             callback: function (seachCfg) {
                 var store = btn.findParentByType("grid").store;
                 store.tzStoreParams = seachCfg;
@@ -85,7 +88,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitorController', {
 
             this.getView().add(win);
         }
-        var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_INSTANCE_INFO","OperateType":"QF","comParams":{"processInstance":"' + processInstance + '"}}';
+        var tzParams = '{"ComID":"TZ_JC_DISPATCH_COM","PageID":"TZ_INSTANCE_INFO","OperateType":"QF","comParams":{"orgId":"'+ Ext.tzOrgID + '","processInstance":"' + processInstance + '"}}';
         // 加载数据
         Ext.tzLoad(tzParams, function (responseData) {
             var formData = responseData.formData;
@@ -165,6 +168,10 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitorController', {
         		
         		store.reload();
         		Ext.MessageBox.alert("提示", "启动失败，进程状态不处于可启动状态！");
+        	}else if(responseData.status == "open"){
+        		
+        		store.reload();
+        		Ext.MessageBox.alert("提示", "进程状态已处于启动状态,请不要重复开启！");
         	}else{
         		
         		store.reload();
@@ -186,11 +193,15 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitorController', {
         	if(responseData.status == "failed"){
         		
         		store.reload();
-                Ext.MessageBox.alert("提示", "停止失败，进程状态不处于可停止状态！")
+                Ext.MessageBox.alert("提示", "关闭失败，进程状态不处于可关闭状态！")
+        	}else if(responseData.status == "close"){
+        		
+        		store.reload();
+                Ext.MessageBox.alert("提示", "进程状态已处于关闭状态,请不要重复关闭！")
         	}else{
         		
                 store.reload();
-                Ext.MessageBox.alert("提示", "进程实例已停止！")
+                Ext.MessageBox.alert("提示", "进程实例已关闭！")
         	}
 
         });
@@ -228,7 +239,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processMonitorController', {
             if(responseData.status == "failed"){
             	
             	store.reload();
-            	Ext.MessageBox.alert("提示", "存在不可删除的实例！")
+            	Ext.MessageBox.alert("提示", "STARTED、RUNNING、STOPPING三个状态不可以删除！")
             	
             }else{
             	

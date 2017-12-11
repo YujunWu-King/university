@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by WangDi on 2017/4/7.
@@ -47,7 +50,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
 
                 String processName = "",processDesc = "", platFormType = "",runConId = "",loop = "",runServer = "",status = "",requestTime = "",runStartTime = "",processStartTime = "",processEndTime = "";
 
-                String sql = "SELECT A.TZ_JC_MC,A.TZ_YUNX_KZID,A.TZ_JCFWQ_MC,A.TZ_XH_QZBDS,A.TZ_JOB_YXZT,A.TZ_QQCJ_DTTM,A.TZ_JHZX_DTTM,A.TZ_JCKS_DTTM," +
+                String sql = "SELECT A.TZ_JC_MC,A.TZ_YUNX_KZID,A.TZ_JCFWQ_MC,A.TZ_XH_QZBDS,A.TZ_JOB_YXZT,A.TZ_QQCJ_DTTM,A.TZ_JHZX_DTTM,A.TZ_JCKS_DTTM, " +
                         "A.TZ_JCJS_DTTM,(SELECT B.TZ_JC_MS FROM TZ_JINC_DY_T B WHERE B.TZ_JC_MC = A.TZ_JC_MC AND B.TZ_JG_ID=?) AS TZ_JC_MS, " +
                 		"(SELECT B.TZ_YXPT_LX FROM TZ_JINC_DY_T B WHERE B.TZ_JC_MC = A.TZ_JC_MC AND B.TZ_JG_ID=?) AS TZ_YXPT_LX "+
                         "FROM TZ_JC_SHLI_T A WHERE A.TZ_JCSL_ID =?";
@@ -65,10 +68,10 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
                     processStartTime = map.get("TZ_JCKS_DTTM") == null?"":map.get("TZ_JCKS_DTTM").toString().substring(0, map.get("TZ_JCKS_DTTM").toString().length()-2);
                     processEndTime = map.get("TZ_JCJS_DTTM") == null?"":map.get("TZ_JCJS_DTTM").toString().substring(0, map.get("TZ_JCJS_DTTM").toString().length()-2);
                     Map<String, Object> hMap = new HashMap<String,Object>();
-
+                    
                     hMap.put("processInstanceId", processInstance);
                     hMap.put("processInstance", processInstance);
-                    hMap.put("runPlatType", platFormType);
+                    hMap.put("runPlatType", getRunType(platFormType));
                     hMap.put("processName", processName);
                     hMap.put("processDesc", processDesc);
                     hMap.put("runConId", runConId);
@@ -93,6 +96,24 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
         }
         return jacksonUtil.Map2json(returnJsonMap);
     }
+    
+    private String getRunType(String str) {
+		
+    	String platType;
+    	switch (str) {
+    	
+		case "1":
+			platType = "Windows";
+			break;
+		case "2":
+			platType = "Unix";
+			break;
+		default:
+			platType = "其他";
+			break;
+		}
+    	return platType;
+	}
     @SuppressWarnings("unchecked")
     @Override
     public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
@@ -109,7 +130,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
             String[][] orderByArr = new String[][] { new String[] { "TZ_JCSL_ID", "DESC"  }};
 
             // json数据要的结果字段;
-            String[] resultFldArray = { "TZ_JCSL_ID","TZ_JC_MC","TZ_DLZH_ID","TZ_JCFWQ_MC","TZ_JOB_YXZT","TZ_JG_ID"};
+            String[] resultFldArray = { "TZ_JCSL_ID","TZ_JC_MC","TZ_DLZH_ID","TZ_JCFWQ_MC","TZ_JOB_YXZT","TZ_JG_ID","TZ_JHZX_DTTM"};
 
             // 可配置搜索通用函数;
             Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -125,6 +146,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
                     mapList.put("processServerName", resultArray[3]);
                     mapList.put("status", resultArray[4]);
                     mapList.put("orgId", resultArray[5]);
+                    mapList.put("planExecuteTime", resultArray[6]);
                     listData.add(mapList);
                 });
                 mapRet.replace("total", obj[0]);
@@ -142,50 +164,70 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
     @Override
 	/* 删除进程实例 */
     public String tzDelete(String[] actData, String[] errMsg) {
+    	
         String strRet = "";
         JacksonUtil jacksonUtil = new JacksonUtil();
+        List<Map<String,Object>> resultList = new ArrayList<Map<String,Object>>();
+        Set<Boolean> set = new HashSet<Boolean>();
         boolean flag = true;
+        set.add(flag);
 
-            int num = 0;
-
-            for(num = 0; num < actData.length; num++) {
-            	String strForm = actData[num];
-            	jacksonUtil.json2Map(strForm);
-            	String orgId = jacksonUtil.getString("orgId");
-            	String sqlStatus = "";
-            	String processInstance = jacksonUtil.getString("processInstance");
-            	String processInstanceSql = "SELECT TZ_JOB_YXZT FROM TZ_JC_SHLI_T WHERE TZ_JG_ID = ? AND TZ_JCSL_ID = ?";
-            	Map<String,Object> processInstanceMap = jdbcTemplate.queryForMap(processInstanceSql, new String[] {orgId,processInstance});
-            	if(processInstanceMap != null) {
-            		
-            		sqlStatus = String.valueOf(processInstanceMap.get("TZ_JOB_YXZT"));
-            	}
+        for(int i = 0; i < actData.length; i++) {
             	
-            	if("STARTED".equals(sqlStatus)||"RUNNING".equals(sqlStatus)||"STOPPING".equals(sqlStatus)) {
-            		flag = false;
-            		break;
-            	}
-            }
+        	Map<String,Object> map = new HashMap<String,Object>();
+        	String strForm = actData[i];
+        	jacksonUtil.json2Map(strForm);
+        	
+        	String orgId = jacksonUtil.getString("orgId");
+        	String sqlStatus = "";
+        	String processInstance = jacksonUtil.getString("processInstance");
+        	String processInstanceSql = "SELECT TZ_JOB_YXZT FROM TZ_JC_SHLI_T WHERE TZ_JG_ID = ? AND TZ_JCSL_ID = ?";
+            Map<String,Object> processInstanceMap = jdbcTemplate.queryForMap(processInstanceSql, new String[] {orgId,processInstance});
             
-            if(flag) {
-                for (num = 0; num < actData.length; num++) {
-                    // 表单内容;
-                    String strForm = actData[num];
-                    // 将字符串转换成json;
-                    jacksonUtil.json2Map(strForm);
-
-                    // 信息内容;
-                    String orgId = jacksonUtil.getString("orgId");
-                    String processInstance = jacksonUtil.getString("processInstance");
-                    TzProcessInstanceKey tzProcessInstanceKey  = new TzProcessInstanceKey ();
-                    tzProcessInstanceKey.setTzJgId(orgId);
-                    tzProcessInstanceKey.setTzJcslId(Integer.parseInt(processInstance));
-                    tzProcessInstanceMapper.deleteByPrimaryKey(tzProcessInstanceKey);
+            if(processInstanceMap != null) {
+            		
+            	sqlStatus = String.valueOf(processInstanceMap.get("TZ_JOB_YXZT"));
+            		
+                if("STARTED".equals(sqlStatus)||"RUNNING".equals(sqlStatus)||"STOPPING".equals(sqlStatus)) {
+                	flag = false;
+                	set.add(flag);
+                }else {
+                		
+                	map.put("orgId", orgId);
+                	map.put("processInstance", processInstance);
+                	resultList.add(map);
                 }
-                return strRet;
             }else {
             	
+            	map.put("orgId", orgId);
+            	map.put("processInstance", processInstance);
+            	resultList.add(map);
+            }
+            	
+
+        }
+            
+            for (int j = 0; j < resultList.size(); j++) {
+
+                //删除可以删除的实例
+            	String orgId = resultList.get(j).get("orgId").toString();
+            	String processInstance = resultList.get(j).get("processInstance").toString();
+                TzProcessInstanceKey tzProcessInstanceKey  = new TzProcessInstanceKey ();
+                tzProcessInstanceKey.setTzJgId(orgId);
+                tzProcessInstanceKey.setTzJcslId(Integer.parseInt(processInstance));
+                tzProcessInstanceMapper.deleteByPrimaryKey(tzProcessInstanceKey);
+            }
+            
+
+            /*全部删除和部分删除返回状态*/
+
+            if(set.contains(false)) {
+
             	return "{\"status\":\"failed\"}";
+            }else {
+            	
+            	
+            	return strRet;
             }
 
         
@@ -213,7 +255,7 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
 
         if ("startProcess".equals(OperateType)) {
 
-            if(processMap != null && "STARTING".equals(String.valueOf(processMap.get("TZ_YXZT")))) {
+            if(processMap != null && ("STARTING".equals(String.valueOf(processMap.get("TZ_YXZT")))||"RUNNING".equals(String.valueOf(processMap.get("TZ_YXZT"))))) {
             	
             	if("SUCCEEDED".equals(sqlStatus)||"ERROR".equals(sqlStatus)||"FATAL".equals(sqlStatus)||"TERMINATED".equals(sqlStatus)) {
             		
@@ -223,12 +265,13 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
                     tzProcessInstance.setTzJobYxzt("QUENED");
                     tzProcessInstanceMapper.updateByPrimaryKeySelective(tzProcessInstance);
                 	
+            	}else if("QUENED".equals(sqlStatus)){
+            		
+            		return "{\"status\":\"open\"}";
             	}else {
             		
             		return "{\"status\":\"startfailed\"}";
             	}
-
-
 		    	
                 return strRet;
             }else {
@@ -240,14 +283,18 @@ public class TzProcessMonitorServiceImpl extends FrameworkImpl{
             
         } else{
         	
-        		if("STARTED".equals(sqlStatus)||"RUNNING".equals(sqlStatus)) {
+        		if("STARTED".equals(sqlStatus)||"RUNNING".equals(sqlStatus)||"TERMINATED".equals(sqlStatus)) {
+        			
                     jacksonUtil.json2Map(comParams);
                     TzProcessInstance tzProcessInstance = new TzProcessInstance();
                     tzProcessInstance.setTzJgId(orgId);
                     tzProcessInstance.setTzJcslId(Integer.parseInt(processInstance));
                     tzProcessInstance.setTzJobYxzt("TERMINATED");
                     tzProcessInstanceMapper.updateByPrimaryKeySelective(tzProcessInstance);
-        		}else {
+        		}else if("TERMINATED".equals(sqlStatus)){
+        			
+        			return "{\"status\":\"close\"}";
+        		}else{
         			return "{\"status\":\"failed\"}";
         		}
 

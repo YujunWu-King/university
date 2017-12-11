@@ -9,6 +9,7 @@ Ext.define('KitchenSink.view.processServer.processServerController', {
 			cfgSrhId: 'TZ_PROCESS_FW_COM.TZ_PROCESS_FW_LIST.TZ_JC_SERVER_VW',
 			condition:
 			{
+				"TZ_JG_ID": Ext.tzOrgID
 			},
 			callback: function(seachCfg){
 				var store = btn.findParentByType("grid").store;
@@ -269,7 +270,7 @@ Ext.define('KitchenSink.view.processServer.processServerController', {
 
 		win.show();
 	},
-	deleteProcessServerBL:function () {
+	deleteProcessServerBL:function (view, rowIndex) {
 		Ext.MessageBox.confirm("确认", "您确定要删除所选记录吗?", function(btnId){
 			if(btnId == 'yes'){
 				var store = view.findParentByType("grid").store;

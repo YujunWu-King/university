@@ -11,6 +11,15 @@ Ext.define('KitchenSink.view.processDispatchMg.processLogsPanel', {
     ],
     title: '进程运行日志',
     bodyStyle:'overflow-y:auto;overflow-x:hidden',
+    listeners: {
+        resize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
+        var buttonHeight = 42; //button height plus panel body padding
+        var formHeight = 30;
+        var formPadding = 20;
+        var grid = panel.child('grid[name=loggrid]');
+        grid.setHeight(height - formHeight - buttonHeight - formPadding);
+        }
+        },
     items:[{
         xtype: 'grid',
         frame: true,
@@ -19,6 +28,7 @@ Ext.define('KitchenSink.view.processDispatchMg.processLogsPanel', {
         selModel: {
             type: 'checkboxmodel'
         },
+        name:'loggrid',
         multiSelect: true,
         style:"margin:10px",
         store: {
@@ -65,7 +75,8 @@ Ext.define('KitchenSink.view.processDispatchMg.processLogsPanel', {
         text: '关闭',
         iconCls: "close",
         handler: function (btn) {
-            this.getView().close();
+        	var panel = btn.findParentByType("panel");
+        	panel.close();
         }
     }],
 });

@@ -266,7 +266,7 @@
 				}],
 				bbar: {
 					xtype: 'pagingtoolbar',
-					pageSize: 5,
+					pageSize: 100,
 					listeners:{
 						afterrender: function(pbar){
 							var grid = pbar.findParentByType("grid");
