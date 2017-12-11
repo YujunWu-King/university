@@ -533,6 +533,11 @@ public class LcSysvarClass {
 								isPublish = "Y";
 							}
 
+							//联考报名，隐藏“是否需要打印准考证”
+							if("TZ_IS_PRINT".equals(xxxId) && "TZ_LKBM".equals(lcName)){
+								continue;
+							}
+							
 							content = content +  "<div class=\"overhidden\"><span class=\"fl width_40\">" + xxxmc + "</span><span class=\"fl\">" + xxxValue + "</span></div>";
 
 						}
@@ -634,6 +639,33 @@ public class LcSysvarClass {
 							xxxValue = xxxValue.trim();
 							
 
+							//联考报名，如果“是否需要打印准考证”为是则添加“政治听力准考证下载打印”
+							if("TZ_IS_PRINT".equals(xxxId) && "TZ_LKBM".equals(lcName)){
+								String strPrintLsnAdmCard = "";
+								try{
+									strPrintLsnAdmCard = jdbcTemplate.queryForObject("SELECT 'Y' FROM TZ_IMP_LKBM_TBL WHERE TZ_APP_INS_ID=? AND TRIM(TZ_IS_PRINT)='是'",
+											new Object[]{appIns},String.class);
+								}catch(Exception e){
+									
+								}
+								
+								if("Y".equals(strPrintLsnAdmCard)){
+									String strClassId = "", strBatchId = "";
+									Map<String,Object> mapFormWrk = jdbcTemplate.queryForMap("SELECT TZ_CLASS_ID,TZ_BATCH_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=? LIMIT 1",
+											new Object[]{appIns});
+									if(mapFormWrk!=null){
+										strClassId = (String)mapFormWrk.get("TZ_CLASS_ID");
+										strBatchId = (String)mapFormWrk.get("TZ_BATCH_ID");
+									}
+									
+									xxxmc = "政治听力准考证下载打印";
+									xxxValue = String.format("<a href=\"%s/PrintZkzServlet?classID=%s&batchID=%s&instanceID=%s\" target=\"_blank\">打印准考证</a>", rootPath,strClassId,strBatchId,appIns);
+								}else{
+									xxxmc = "";
+									xxxValue = "";
+								}
+							}
+							
 							if ("".equals(th)) {
 								if(i < TABLE_COLUM_NUM){
 									th = "<td width=\"" + width + "%\">" + xxxmc + "</td>";
