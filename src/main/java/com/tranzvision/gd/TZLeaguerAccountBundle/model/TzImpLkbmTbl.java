@@ -27,13 +27,21 @@ public class TzImpLkbmTbl {
 
     private String tzStuNumLast4;
 
+    private String tzScholarshipSta;
+
     private String tzPolEngTime;
 
     private String tzPolEngAddr;
 
-    private String tzScholarshipSta;
-
     private String tzPollsnDesc;
+
+    private String tzIsPrint;
+
+    private String tzKsmc;
+
+    private String tzKch;
+
+    private String tzZwh;
 
     public Long getTzAppInsId() {
         return tzAppInsId;
@@ -139,6 +147,14 @@ public class TzImpLkbmTbl {
         this.tzStuNumLast4 = tzStuNumLast4 == null ? null : tzStuNumLast4.trim();
     }
 
+    public String getTzScholarshipSta() {
+        return tzScholarshipSta;
+    }
+
+    public void setTzScholarshipSta(String tzScholarshipSta) {
+        this.tzScholarshipSta = tzScholarshipSta == null ? null : tzScholarshipSta.trim();
+    }
+
     public String getTzPolEngTime() {
         return tzPolEngTime;
     }
@@ -155,19 +171,43 @@ public class TzImpLkbmTbl {
         this.tzPolEngAddr = tzPolEngAddr == null ? null : tzPolEngAddr.trim();
     }
 
-    public String getTzScholarshipSta() {
-        return tzScholarshipSta;
-    }
-
-    public void setTzScholarshipSta(String tzScholarshipSta) {
-        this.tzScholarshipSta = tzScholarshipSta == null ? null : tzScholarshipSta.trim();
-    }
-
     public String getTzPollsnDesc() {
         return tzPollsnDesc;
     }
 
     public void setTzPollsnDesc(String tzPollsnDesc) {
         this.tzPollsnDesc = tzPollsnDesc == null ? null : tzPollsnDesc.trim();
+    }
+
+    public String getTzIsPrint() {
+        return tzIsPrint;
+    }
+
+    public void setTzIsPrint(String tzIsPrint) {
+        this.tzIsPrint = tzIsPrint == null ? null : tzIsPrint.trim();
+    }
+
+    public String getTzKsmc() {
+        return tzKsmc;
+    }
+
+    public void setTzKsmc(String tzKsmc) {
+        this.tzKsmc = tzKsmc == null ? null : tzKsmc.trim();
+    }
+
+    public String getTzKch() {
+        return tzKch;
+    }
+
+    public void setTzKch(String tzKch) {
+        this.tzKch = tzKch == null ? null : tzKch.trim();
+    }
+
+    public String getTzZwh() {
+        return tzZwh;
+    }
+
+    public void setTzZwh(String tzZwh) {
+        this.tzZwh = tzZwh == null ? null : tzZwh.trim();
     }
 }

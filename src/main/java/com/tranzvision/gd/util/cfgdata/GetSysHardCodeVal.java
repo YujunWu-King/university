@@ -132,6 +132,12 @@ public class GetSysHardCodeVal {
 	 * 存储批量打包报名表RAR文件的路径
 	 */
 	private String bmbPackRarDir;
+	
+	/**
+	 * 存储打印模板的PDF路径
+	 */
+	private String printSinglePdfDir;
+
 
 	/**
 	 * 构造函数，系统固定参数配置
@@ -189,6 +195,8 @@ public class GetSysHardCodeVal {
 			bmbSinglePdfDir = sysHardCodeValProps.getProperty("BmbSinglePdfDir");
 
 			bmbPackRarDir = sysHardCodeValProps.getProperty("BmbPackRarDir");
+			
+			printSinglePdfDir = sysHardCodeValProps.getProperty("PrintSinglePdfDir");
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -294,6 +302,10 @@ public class GetSysHardCodeVal {
 
 	public String getBmbPackRarDir() {
 		return bmbPackRarDir;
+	}
+	
+	public String getPrintSinglePdfDir() {
+		return printSinglePdfDir;
 	}
 
 }

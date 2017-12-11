@@ -280,4 +280,33 @@ public class SurveryRulesImpl {
 		}
 		return checkResult;
 	}
+	
+	/**
+	 * 根据听众列表判断是否能访问，卢艳添加，2017-12-1
+	 * @param psTzDcWjDyTWithBLOBs
+	 * @param language
+	 * @param pwd
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean checkSurveryAudience(PsTzDcWjDyTWithBLOBs psTzDcWjDyTWithBLOBs, String language, String audCyFlag) {
+		Boolean checkResult = true;
+		this.msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "ANSWER", language, "可答卷",
+				"You can answer");
+
+		if (psTzDcWjDyTWithBLOBs == null) {
+			this.msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "SURVEY_NO_EXIST",
+					language, "问卷信息不存在", "The questionnaire information does not exist!");
+			return false;
+		}
+		//不可匿名访问，设置了听众，当前登录人不在听众列表中
+		if (!"Y".equals(psTzDcWjDyTWithBLOBs.getTzDcWjDlzt())
+				&& !"Y".equals(audCyFlag)) {
+			this.msg = messageTextServiceImpl.getMessageTextWithLanguageCd("TZGD_SURVEY_MSGSET", "ANSWER_NO_PERMISSION",
+					language, "您无权限查看", "You do not have permission to view!");
+			return false;
+		}
+
+		return checkResult;
+	}
 }

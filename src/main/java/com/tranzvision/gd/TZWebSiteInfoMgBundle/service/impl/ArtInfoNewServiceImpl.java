@@ -1066,7 +1066,13 @@ public class ArtInfoNewServiceImpl extends FrameworkImpl {
 						//文章标题样式;
 						String artTtileStyle = (String) dataMap.get("titleStyleView");
 						
-						//活动听众表
+						//活动听众表 
+						
+						/*先删除再重新插入，卢艳添加，2017-12-1 begin*/
+						jdbcTemplate.update("DELETE FROM PS_TZ_ART_AUDIENCE_T WHERE TZ_ART_ID=?",new Object[]{artId});
+						jdbcTemplate.update("COMMIT");
+						/*先删除再重新插入，卢艳添加，2017-12-1 end*/
+						
 						if(dataMap.containsKey("AudList")&& dataMap.get("AudList")!=null && !dataMap.get("AudList").toString().equals("")){
 							ArrayList<String> strListenersId=new ArrayList<String>();
 							strListenersId=(ArrayList<String>) dataMap.get("AudList");

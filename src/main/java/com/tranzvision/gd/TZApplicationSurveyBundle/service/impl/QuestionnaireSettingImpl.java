@@ -566,6 +566,10 @@ public class QuestionnaireSettingImpl extends FrameworkImpl{
 		}
 		//听众列表 将听众ID分离成为一个字符串数组
 		
+		/*先删除再重新插入，卢艳添加，2017-12-1 begin*/
+		jdbcTemplate.update("DELETE FROM PS_TZ_SURVEY_AUD_T WHERE TZ_DC_WJ_ID=?",new Object[]{TZ_DC_WJ_ID});
+		jdbcTemplate.update("COMMIT");
+		/*先删除再重新插入，卢艳添加，2017-12-1 end*/
 		
 		if(dataMap.containsKey("AudList")&& dataMap.get("AudList")!=null && !dataMap.get("AudList").toString().equals("")){
 			ArrayList<String> strListenersId=new ArrayList<String>();
