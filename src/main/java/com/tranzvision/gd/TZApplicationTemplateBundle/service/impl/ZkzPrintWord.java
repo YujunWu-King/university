@@ -154,9 +154,9 @@ public class ZkzPrintWord {
 						image = Image.getInstance(titleImageUrl);
 					} catch (FileNotFoundException e) {
 						titleImageUrl = "/statics/css/website/m/images/defaultPhone.png";
+						titleImageUrl = request.getServletContext().getRealPath(titleImageUrl);
+						image = Image.getInstance(titleImageUrl);
 					}
-					titleImageUrl = request.getServletContext().getRealPath(titleImageUrl);
-					image = Image.getInstance(titleImageUrl);
 					// image.scaleToFit(93, 120);
 					image.scaleAbsolute(75, 92);
 					PdfContentByte content = null;
