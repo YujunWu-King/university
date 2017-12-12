@@ -47,8 +47,24 @@ public class ZkzDownloadController {
 			fileName = "zkz_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".pdf";
 		}
 		// 中文解码
-		try {
+		/*try {
 			fileName = URLEncoder.encode(fileName,"UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}*/
+		// 判断浏览器
+		try {
+			String userAgent = request.getHeader("User-Agent").toUpperCase();
+			if (userAgent != null && (userAgent.indexOf("MSIE") > 0 || userAgent.indexOf("LIKE GECKO")>0)) {
+				fileName = URLEncoder.encode(fileName, "UTF-8");
+				if (fileName.length() > 150) {
+					// 根据request的locale 得出可能的编码， 中文操作系统通常是gb2312
+					String guessCharset = "gb2312";
+					fileName = new String(fileName.getBytes(guessCharset), "ISO8859-1");
+				}
+			} else {
+				fileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+			}
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
