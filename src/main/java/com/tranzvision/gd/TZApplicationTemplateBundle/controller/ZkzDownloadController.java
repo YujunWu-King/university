@@ -5,25 +5,53 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 @Controller
 @RequestMapping(value = "/")
 public class ZkzDownloadController {
-
+	@Autowired
+	private SqlQuery jdbcTemplate;
 	// 下载准考证doc;
-	public  void zkzDownloadFile(HttpServletRequest request, HttpServletResponse response, String url) {
+	public  void zkzDownloadFile(HttpServletRequest request, HttpServletResponse response, String url, String instanceID) {
 		String filePath = request.getServletContext().getRealPath(url);
-		// 下载的文件名
-		String fileName = "zkz_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".pdf";
+		// 获取面试申请号和姓名2017-12-12 
+		String fileName = "";
+		String sqlSelectOprid = "SELECT ROW_ADDED_OPRID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+		Map<String, Object> mapDataOprid = jdbcTemplate.queryForMap(sqlSelectOprid, new Object[] { instanceID });
+		String strOPRID = mapDataOprid.get("ROW_ADDED_OPRID") == null ? "" : mapDataOprid.get("ROW_ADDED_OPRID").toString();
+
+		String sqlSelectName = "SELECT TZ_REALNAME,TZ_MSSQH FROM PS_TZ_REG_USER_T A WHERE OPRID=?";
+		Map<String, Object> mapDataName = jdbcTemplate.queryForMap(sqlSelectName, new Object[] { strOPRID });
+		if (mapDataName != null) {
+			String strName = mapDataName.get("TZ_REALNAME") == null ? "" : mapDataName.get("TZ_REALNAME").toString();
+			String strMssqh = mapDataName.get("TZ_MSSQH") == null ? "" : mapDataName.get("TZ_MSSQH").toString();
+			// 下载的文件名：面试申请号_姓名
+			fileName = strMssqh + "_" + strName + ".pdf";
+		}else{
+			// 下载的文件名
+			fileName = "zkz_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".pdf";
+		}
+		// 中文解码
+		try {
+			fileName = URLEncoder.encode(fileName,"UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
 		//File file = new File("E:\\zkz_20170907_164110.pdf");// 测试使用
 		File file = new File(filePath);
 		if (file.exists()) {

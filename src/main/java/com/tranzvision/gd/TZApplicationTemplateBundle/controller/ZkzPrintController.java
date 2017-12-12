@@ -73,7 +73,7 @@ public class ZkzPrintController {
 			}
 			if (b_flag) {
 				url = zkzPrintWord.createPdf(classID, batchID, instanceID);
-				zkzDownload.zkzDownloadFile(request, response, url);
+				zkzDownload.zkzDownloadFile(request, response, url, instanceID);
 			} else {
 				return "您没有权限访问。";
 			}

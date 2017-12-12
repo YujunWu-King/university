@@ -152,17 +152,19 @@ public class ZkzPrintWord {
 						titleImageUrl = request.getServletContext().getRealPath(titleImageUrl);
 						image = Image.getInstance(titleImageUrl);
 					} catch (FileNotFoundException e) {
-						titleImageUrl = "/statics/css/website/m/images/defaultPhoneZkz.png";
+						titleImageUrl = "/statics/css/website/m/images/defaultPhone.png";
 						titleImageUrl = request.getServletContext().getRealPath(titleImageUrl);
 						image = Image.getInstance(titleImageUrl);
 					}
 					// image.scaleToFit(93, 120);
-					image.scaleAbsolute(75, 92);
+					// image.scaleAbsolute(75, 92);
+					image.scaleAbsolute(71, 81);
 					PdfContentByte content = null;
 					int pageCount = reader.getNumberOfPages();// 获取PDF页数
 					System.out.println("pageCount=" + pageCount);
 					content = stamper.getOverContent(pageCount);
-					image.setAbsolutePosition(335, 380);
+					// image.setAbsolutePosition(335, 380);
+					image.setAbsolutePosition(339, 385);
 					content.addImage(image);
 					// 添加图片end
 				}
