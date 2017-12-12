@@ -36,7 +36,7 @@ public class UniPrintTplMgImpl  extends FrameworkImpl {
 		String[][] orderByArr = new String[][] { { "TZ_DYMB_ID", "ASC" } };
 
 		// json数据要的结果字段;
-		String[] resultFldArray = { "TZ_JG_ID", "TZ_DYMB_ID", "TZ_DYMB_NAME", "TZ_DYMB_ZT", "TZ_TPL_NAME", "TZ_DYMB_MENO","TZ_DYMB_PDF_URL"};
+		String[] resultFldArray = { "TZ_JG_ID", "TZ_DYMB_ID", "TZ_DYMB_NAME", "TZ_DYMB_ZT", "TZ_DYMB_ZT_DESC","TZ_TPL_NAME", "TZ_DYMB_MENO","TZ_DYMB_PDF_URL"};
 
 		// 可配置搜索通用函数;
 		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams,
@@ -51,9 +51,10 @@ public class UniPrintTplMgImpl  extends FrameworkImpl {
 				mapList.put("TZ_DYMB_ID", rowList[1]);
 				mapList.put("TZ_DYMB_NAME", rowList[2]);
 				mapList.put("TZ_DYMB_ZT", rowList[3]);
-				mapList.put("TZ_TPL_NAME", rowList[4]);
-				mapList.put("TZ_DYMB_MENO", rowList[5]);
-				mapList.put("TZ_DYMB_PDF_URL", rowList[6]);
+				mapList.put("TZ_DYMB_ZT_DESC", rowList[4]);
+				mapList.put("TZ_TPL_NAME", rowList[5]);
+				mapList.put("TZ_DYMB_MENO", rowList[6]);
+				mapList.put("TZ_DYMB_PDF_URL", rowList[7]);
 				listData.add(mapList);
 			}
 			mapRet.replace("total", obj[0]);

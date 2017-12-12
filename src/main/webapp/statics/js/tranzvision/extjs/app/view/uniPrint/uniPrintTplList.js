@@ -43,8 +43,7 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplList', {
     }],
     initComponent: function(){
         var store = new KitchenSink.view.uniPrint.uniPrintTplStore();
-        //是否有效取值
-        var ifEffectiveStore = new KitchenSink.view.common.store.appTransStore("TZ_IF_EFFECTIVE");
+
         Ext.apply(this, {
             columns: [{
                 text: '机构编号',
@@ -67,17 +66,8 @@ Ext.define('KitchenSink.view.uniPrint.uniPrintTplList', {
                 flex: 1
             },{
                 text: '状态',
-                dataIndex: 'TZ_DYMB_ZT',
-                width: 200,
-                renderer:function(v){
-                	if(v){
-                		var index = ifEffectiveStore.find('TValue',v,0,false,true,true);
-                		if(index>-1){
-                			return ifEffectiveStore.getAt(index).get("TSDesc");
-                		}
-                		return "";
-                	}
-                }
+                dataIndex: 'TZ_DYMB_ZT_DESC',
+                width: 200
             },{
                 menuDisabled: true,
                 sortable: false,
