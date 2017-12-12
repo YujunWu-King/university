@@ -670,10 +670,19 @@ public class LcSysvarClass {
 								if(i < TABLE_COLUM_NUM){
 									th = "<td width=\"" + width + "%\">" + xxxmc + "</td>";
 								}else{
-									if(colspanBl == true && i >= colspanStartNum){
-										th = "<td colspan=\"" + colspanNum + "\">" + xxxmc + "</td>";
+									//清华mba为了排版美观，要求倒数第二例直接写死合并2列;
+									if("TZ_LKBM".equals(lcName)){
+										if( count ==  totalnum - 1){
+											th = "<td colspan=\"2\">" + xxxmc + "</td>";
+										}else{
+											th = "<td >" + xxxmc + "</td>";
+										}
 									}else{
-										th = "<td >" + xxxmc + "</td>";
+										if(colspanBl == true && i >= colspanStartNum){
+											th = "<td colspan=\"" + colspanNum + "\">" + xxxmc + "</td>";
+										}else{
+											th = "<td >" + xxxmc + "</td>";
+										}
 									}
 									
 								}
@@ -681,10 +690,19 @@ public class LcSysvarClass {
 								if(i < TABLE_COLUM_NUM){
 									th = th + "<td width=\"" + width + "%\">" + xxxmc + "</td>";
 								}else{
-									if(colspanBl == true && i >= colspanStartNum){
-										th =  th + "<td colspan=\"" + colspanNum + "\">" + xxxmc + "</td>";
+									//清华mba为了排版美观，要求倒数第二例直接写死合并2列;
+									if("TZ_LKBM".equals(lcName)){
+										if( count ==  totalnum - 1){
+											th = th +"<td colspan=\"2\">" + xxxmc + "</td>";
+										}else{
+											th = th +"<td >" + xxxmc + "</td>";
+										}
 									}else{
-										th = th + "<td>" + xxxmc + "</td>";
+										if(colspanBl == true && i >= colspanStartNum){
+											th =  th + "<td colspan=\"" + colspanNum + "\">" + xxxmc + "</td>";
+										}else{
+											th = th + "<td>" + xxxmc + "</td>";
+										}
 									}
 									
 								}
@@ -706,17 +724,35 @@ public class LcSysvarClass {
 							}
 							
 							if ("".equals(td)) {
-								if(colspanBl == true && i >= colspanStartNum){
-									td = "<td style=\"word-break:break-all;\" colspan=\"" + colspanNum + "\">" + xxxValue + "</td>";
+								//清华mba为了排版美观，要求倒数第二例直接写死合并2列;
+								if("TZ_LKBM".equals(lcName)){
+									if( count ==  totalnum - 1){
+										td = "<td style=\"word-break:break-all;\" colspan=\"2\">" + xxxValue + "</td>";
+									}else{
+										td = "<td style=\"word-break:break-all;\">" + xxxValue + "</td>";
+									}
 								}else{
-									td = "<td style=\"word-break:break-all;\">" + xxxValue + "</td>";
+									if(colspanBl == true && i >= colspanStartNum){
+										td = "<td style=\"word-break:break-all;\" colspan=\"" + colspanNum + "\">" + xxxValue + "</td>";
+									}else{
+										td = "<td style=\"word-break:break-all;\">" + xxxValue + "</td>";
+									}
 								}
 								
+								
 							} else {
-								if(colspanBl == true && i >= colspanStartNum){
-									td = td + "<td style=\"word-break:break-all;\" colspan=\"" + colspanNum + "\">" + xxxValue + "</td>";
+								if("TZ_LKBM".equals(lcName)){
+									if( count ==  totalnum - 1){
+										td = td + "<td style=\"word-break:break-all;\" colspan=\"2\">" + xxxValue + "</td>";
+									}else{
+										td = td + "<td style=\"word-break:break-all;\">" + xxxValue + "</td>";
+									}
 								}else{
-									td = td + "<td style=\"word-break:break-all;\">" + xxxValue + "</td>";
+									if(colspanBl == true && i >= colspanStartNum){
+										td = td + "<td style=\"word-break:break-all;\" colspan=\"" + colspanNum + "\">" + xxxValue + "</td>";
+									}else{
+										td = td + "<td style=\"word-break:break-all;\">" + xxxValue + "</td>";
+									}
 								}
 								
 							}
