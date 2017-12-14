@@ -2553,15 +2553,19 @@ var SurveyBuild = {
 	            
 	            if (e !="Page") {
 	            	noPage = true;
+					topPage = false;
+					Page = false;
 	            } else {
+					noPage=false;
 	            	var variable2 = SurveyBuild._items[h]["fPageId"] || '';
 	            	if (variable2 !='') {
-	            		Page = true;
-	            	} else {
 	            		topPage = true;
+	            	} else {
+	            		Page = true;
 	            	}
 	            }
 	            // 顶级的页，不算pageno，固定写死为0
+				
 	            if (topPage) {
 	            	SurveyBuild._items[h]["pageno"] = 0;
 	            } else {
@@ -2573,6 +2577,12 @@ var SurveyBuild = {
 	            	c =c +1;
 	            }
 	            
+				console.log("noPage"+noPage);
+				console.log("topPage"+topPage);
+				console.log("Page"+Page);
+				console.log("c"+c);
+				console.log("pageno"+pageno);
+				
 	            // modity by caoy 顶级的页，不需要做这个判断
 	            if (Page && c == 0) {
 	    			SurveyBuild.fail($(this), "第" + pageno + "页不能没有问题", "top");
@@ -2596,7 +2606,7 @@ var SurveyBuild = {
 	                }
 	                a[h] = SurveyBuild._items[h]
 	            }
-
+				
 	        });
 		}
 

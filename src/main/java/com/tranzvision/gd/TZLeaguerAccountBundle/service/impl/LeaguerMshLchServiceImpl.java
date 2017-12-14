@@ -275,8 +275,8 @@ public class LeaguerMshLchServiceImpl extends FrameworkImpl{
 						ksdrMap.put("msJgBz",str4);
 					}
 					
-					//联考报名
-					Map< String, Object> lkMap = jdbcTemplate.queryForMap("select TZ_YEAR,TZ_SCORE,TZ_ENGLISH,TZ_COMPREHENSIVE,TZ_OVERLINE,TZ_POLITICS,TZ_ENG_LISTENING,TZ_POLLSN_OVERLINE,TZ_PRE_ADMISSION,TZ_STU_NUM,TZ_DEGREE_CHECK,TZ_STU_NUM_LAST4,TZ_POL_ENG_TIME,TZ_POL_ENG_ADDR,TZ_SCHOLARSHIP_STA,TZ_POLLSN_DESC from TZ_IMP_LKBM_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+					//联考报名// 2017-12-11 xzx 添加（是否需要打印准考证、考试名称、考场号、座位号）
+					Map< String, Object> lkMap = jdbcTemplate.queryForMap("select TZ_YEAR,TZ_SCORE,TZ_ENGLISH,TZ_COMPREHENSIVE,TZ_OVERLINE,TZ_POLITICS,TZ_ENG_LISTENING,TZ_POLLSN_OVERLINE,TZ_PRE_ADMISSION,TZ_STU_NUM,TZ_DEGREE_CHECK,TZ_STU_NUM_LAST4,TZ_POL_ENG_TIME,TZ_POL_ENG_ADDR,TZ_SCHOLARSHIP_STA,TZ_POLLSN_DESC,TZ_IS_PRINT,TZ_KSMC,TZ_KCH,TZ_ZWH from TZ_IMP_LKBM_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
 					if(lkMap != null){
 						String str2 = lkMap.get("TZ_YEAR")==null?"":String.valueOf(lkMap.get("TZ_YEAR"));
 						String str3 = lkMap.get("TZ_SCORE")==null?"":String.valueOf(lkMap.get("TZ_SCORE"));
@@ -295,6 +295,11 @@ public class LeaguerMshLchServiceImpl extends FrameworkImpl{
 						String str16 = lkMap.get("TZ_SCHOLARSHIP_STA")==null?"":String.valueOf(lkMap.get("TZ_SCHOLARSHIP_STA"));
 						String str17 = lkMap.get("TZ_POLLSN_DESC")==null?"":String.valueOf(lkMap.get("TZ_POLLSN_DESC"));
 						
+						String str18 = lkMap.get("TZ_IS_PRINT")==null?"":String.valueOf(lkMap.get("TZ_IS_PRINT"));
+						String str19 = lkMap.get("TZ_KSMC")==null?"":String.valueOf(lkMap.get("TZ_KSMC"));
+						String str20 = lkMap.get("TZ_KCH")==null?"":String.valueOf(lkMap.get("TZ_KCH"));
+						String str21 = lkMap.get("TZ_ZWH")==null?"":String.valueOf(lkMap.get("TZ_ZWH"));
+						
 						ksdrMap.put("lkNf", str2);
 						ksdrMap.put("lkZf", str3);
 						ksdrMap.put("lkYy", str4);
@@ -311,6 +316,10 @@ public class LeaguerMshLchServiceImpl extends FrameworkImpl{
 						ksdrMap.put("zzYyTlKsDd", str15);
 						ksdrMap.put("ssJxjSqZt", str16);
 						ksdrMap.put("zzTlKsBz", str17);
+						ksdrMap.put("printZkz", str18);
+						ksdrMap.put("ksmc", str19);
+						ksdrMap.put("kskch", str20);
+						ksdrMap.put("kszwh", str21);
 					}
 					
 					//预录取
@@ -459,6 +468,11 @@ public class LeaguerMshLchServiceImpl extends FrameworkImpl{
 				    String str_zzYyTlKsDd = map.get("zzYyTlKsDd")==null?"":String.valueOf(map.get("zzYyTlKsDd"));
 				    String str_ssJxjSqZt = map.get("ssJxjSqZt")==null?"":String.valueOf(map.get("ssJxjSqZt"));
 				    String str_zzTlKsBz = map.get("zzTlKsBz")==null?"":String.valueOf(map.get("zzTlKsBz"));
+				    // 2017-12-11 xzx 添加（是否需要打印准考证、考试名称、考场号、座位号）
+				    String str_printZkz = map.get("printZkz")==null?"":String.valueOf(map.get("printZkz"));
+				    String str_ksmc = map.get("ksmc")==null?"":String.valueOf(map.get("ksmc"));
+				    String str_kskch = map.get("kskch")==null?"":String.valueOf(map.get("kskch"));
+				    String str_kszwh = map.get("kszwh")==null?"":String.valueOf(map.get("kszwh"));
 				    
 				    
 				    TzImpLkbmTbl tzImpLkbmTbl = new TzImpLkbmTbl();
@@ -479,6 +493,11 @@ public class LeaguerMshLchServiceImpl extends FrameworkImpl{
 				    tzImpLkbmTbl.setTzPolEngAddr(str_zzYyTlKsDd);
 				    tzImpLkbmTbl.setTzScholarshipSta(str_ssJxjSqZt);
 				    tzImpLkbmTbl.setTzPollsnDesc(str_zzTlKsBz);				    
+				    
+				    tzImpLkbmTbl.setTzIsPrint(str_printZkz);
+				    tzImpLkbmTbl.setTzKsmc(str_ksmc);
+				    tzImpLkbmTbl.setTzKch(str_kskch);
+				    tzImpLkbmTbl.setTzZwh(str_kszwh);				    
 
 				    if("Y".equals(strExistsFlg)){
 					TzImpLkbmTblMapper.updateByPrimaryKeySelective(tzImpLkbmTbl);

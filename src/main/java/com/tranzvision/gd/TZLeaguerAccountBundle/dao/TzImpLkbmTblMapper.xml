@@ -15,15 +15,20 @@
     <result column="TZ_STU_NUM" property="tzStuNum" jdbcType="VARCHAR" />
     <result column="TZ_DEGREE_CHECK" property="tzDegreeCheck" jdbcType="VARCHAR" />
     <result column="TZ_STU_NUM_LAST4" property="tzStuNumLast4" jdbcType="VARCHAR" />
+    <result column="TZ_SCHOLARSHIP_STA" property="tzScholarshipSta" jdbcType="VARCHAR" />
     <result column="TZ_POL_ENG_TIME" property="tzPolEngTime" jdbcType="VARCHAR" />
     <result column="TZ_POL_ENG_ADDR" property="tzPolEngAddr" jdbcType="VARCHAR" />
-    <result column="TZ_SCHOLARSHIP_STA" property="tzScholarshipSta" jdbcType="VARCHAR" />
     <result column="TZ_POLLSN_DESC" property="tzPollsnDesc" jdbcType="VARCHAR" />
+    <result column="TZ_IS_PRINT" property="tzIsPrint" jdbcType="VARCHAR" />
+    <result column="TZ_KSMC" property="tzKsmc" jdbcType="VARCHAR" />
+    <result column="TZ_KCH" property="tzKch" jdbcType="VARCHAR" />
+    <result column="TZ_ZWH" property="tzZwh" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_APP_INS_ID, TZ_YEAR, TZ_SCORE, TZ_ENGLISH, TZ_COMPREHENSIVE, TZ_OVERLINE, TZ_POLITICS, 
     TZ_ENG_LISTENING, TZ_POLLSN_OVERLINE, TZ_PRE_ADMISSION, TZ_STU_NUM, TZ_DEGREE_CHECK, 
-    TZ_STU_NUM_LAST4, TZ_POL_ENG_TIME, TZ_POL_ENG_ADDR, TZ_SCHOLARSHIP_STA, TZ_POLLSN_DESC
+    TZ_STU_NUM_LAST4, TZ_SCHOLARSHIP_STA, TZ_POL_ENG_TIME, TZ_POL_ENG_ADDR, TZ_POLLSN_DESC, 
+    TZ_IS_PRINT, TZ_KSMC, TZ_KCH, TZ_ZWH
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -40,14 +45,18 @@
       TZ_ENGLISH, TZ_COMPREHENSIVE, TZ_OVERLINE, 
       TZ_POLITICS, TZ_ENG_LISTENING, TZ_POLLSN_OVERLINE, 
       TZ_PRE_ADMISSION, TZ_STU_NUM, TZ_DEGREE_CHECK, 
-      TZ_STU_NUM_LAST4, TZ_POL_ENG_TIME, TZ_POL_ENG_ADDR, 
-      TZ_SCHOLARSHIP_STA, TZ_POLLSN_DESC)
+      TZ_STU_NUM_LAST4, TZ_SCHOLARSHIP_STA, TZ_POL_ENG_TIME, 
+      TZ_POL_ENG_ADDR, TZ_POLLSN_DESC, TZ_IS_PRINT, 
+      TZ_KSMC, TZ_KCH, TZ_ZWH
+      )
     values (#{tzAppInsId,jdbcType=BIGINT}, #{tzYear,jdbcType=VARCHAR}, #{tzScore,jdbcType=VARCHAR}, 
       #{tzEnglish,jdbcType=VARCHAR}, #{tzComprehensive,jdbcType=VARCHAR}, #{tzOverline,jdbcType=VARCHAR}, 
       #{tzPolitics,jdbcType=VARCHAR}, #{tzEngListening,jdbcType=VARCHAR}, #{tzPollsnOverline,jdbcType=VARCHAR}, 
       #{tzPreAdmission,jdbcType=VARCHAR}, #{tzStuNum,jdbcType=VARCHAR}, #{tzDegreeCheck,jdbcType=VARCHAR}, 
-      #{tzStuNumLast4,jdbcType=VARCHAR}, #{tzPolEngTime,jdbcType=VARCHAR}, #{tzPolEngAddr,jdbcType=VARCHAR}, 
-      #{tzScholarshipSta,jdbcType=VARCHAR}, #{tzPollsnDesc,jdbcType=VARCHAR})
+      #{tzStuNumLast4,jdbcType=VARCHAR}, #{tzScholarshipSta,jdbcType=VARCHAR}, #{tzPolEngTime,jdbcType=VARCHAR}, 
+      #{tzPolEngAddr,jdbcType=VARCHAR}, #{tzPollsnDesc,jdbcType=VARCHAR}, #{tzIsPrint,jdbcType=VARCHAR}, 
+      #{tzKsmc,jdbcType=VARCHAR}, #{tzKch,jdbcType=VARCHAR}, #{tzZwh,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.TzImpLkbmTbl" >
     insert into TZ_IMP_LKBM_TBL
@@ -91,17 +100,29 @@
       <if test="tzStuNumLast4 != null" >
         TZ_STU_NUM_LAST4,
       </if>
+      <if test="tzScholarshipSta != null" >
+        TZ_SCHOLARSHIP_STA,
+      </if>
       <if test="tzPolEngTime != null" >
         TZ_POL_ENG_TIME,
       </if>
       <if test="tzPolEngAddr != null" >
         TZ_POL_ENG_ADDR,
       </if>
-      <if test="tzScholarshipSta != null" >
-        TZ_SCHOLARSHIP_STA,
-      </if>
       <if test="tzPollsnDesc != null" >
         TZ_POLLSN_DESC,
+      </if>
+      <if test="tzIsPrint != null" >
+        TZ_IS_PRINT,
+      </if>
+      <if test="tzKsmc != null" >
+        TZ_KSMC,
+      </if>
+      <if test="tzKch != null" >
+        TZ_KCH,
+      </if>
+      <if test="tzZwh != null" >
+        TZ_ZWH,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -144,17 +165,29 @@
       <if test="tzStuNumLast4 != null" >
         #{tzStuNumLast4,jdbcType=VARCHAR},
       </if>
+      <if test="tzScholarshipSta != null" >
+        #{tzScholarshipSta,jdbcType=VARCHAR},
+      </if>
       <if test="tzPolEngTime != null" >
         #{tzPolEngTime,jdbcType=VARCHAR},
       </if>
       <if test="tzPolEngAddr != null" >
         #{tzPolEngAddr,jdbcType=VARCHAR},
       </if>
-      <if test="tzScholarshipSta != null" >
-        #{tzScholarshipSta,jdbcType=VARCHAR},
-      </if>
       <if test="tzPollsnDesc != null" >
         #{tzPollsnDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsPrint != null" >
+        #{tzIsPrint,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKsmc != null" >
+        #{tzKsmc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKch != null" >
+        #{tzKch,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZwh != null" >
+        #{tzZwh,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -197,17 +230,29 @@
       <if test="tzStuNumLast4 != null" >
         TZ_STU_NUM_LAST4 = #{tzStuNumLast4,jdbcType=VARCHAR},
       </if>
+      <if test="tzScholarshipSta != null" >
+        TZ_SCHOLARSHIP_STA = #{tzScholarshipSta,jdbcType=VARCHAR},
+      </if>
       <if test="tzPolEngTime != null" >
         TZ_POL_ENG_TIME = #{tzPolEngTime,jdbcType=VARCHAR},
       </if>
       <if test="tzPolEngAddr != null" >
         TZ_POL_ENG_ADDR = #{tzPolEngAddr,jdbcType=VARCHAR},
       </if>
-      <if test="tzScholarshipSta != null" >
-        TZ_SCHOLARSHIP_STA = #{tzScholarshipSta,jdbcType=VARCHAR},
-      </if>
       <if test="tzPollsnDesc != null" >
         TZ_POLLSN_DESC = #{tzPollsnDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsPrint != null" >
+        TZ_IS_PRINT = #{tzIsPrint,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKsmc != null" >
+        TZ_KSMC = #{tzKsmc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKch != null" >
+        TZ_KCH = #{tzKch,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZwh != null" >
+        TZ_ZWH = #{tzZwh,jdbcType=VARCHAR},
       </if>
     </set>
     where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
@@ -226,10 +271,14 @@
       TZ_STU_NUM = #{tzStuNum,jdbcType=VARCHAR},
       TZ_DEGREE_CHECK = #{tzDegreeCheck,jdbcType=VARCHAR},
       TZ_STU_NUM_LAST4 = #{tzStuNumLast4,jdbcType=VARCHAR},
+      TZ_SCHOLARSHIP_STA = #{tzScholarshipSta,jdbcType=VARCHAR},
       TZ_POL_ENG_TIME = #{tzPolEngTime,jdbcType=VARCHAR},
       TZ_POL_ENG_ADDR = #{tzPolEngAddr,jdbcType=VARCHAR},
-      TZ_SCHOLARSHIP_STA = #{tzScholarshipSta,jdbcType=VARCHAR},
-      TZ_POLLSN_DESC = #{tzPollsnDesc,jdbcType=VARCHAR}
+      TZ_POLLSN_DESC = #{tzPollsnDesc,jdbcType=VARCHAR},
+      TZ_IS_PRINT = #{tzIsPrint,jdbcType=VARCHAR},
+      TZ_KSMC = #{tzKsmc,jdbcType=VARCHAR},
+      TZ_KCH = #{tzKch,jdbcType=VARCHAR},
+      TZ_ZWH = #{tzZwh,jdbcType=VARCHAR}
     where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
   </update>
 </mapper>

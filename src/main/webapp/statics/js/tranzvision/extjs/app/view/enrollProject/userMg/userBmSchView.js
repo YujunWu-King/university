@@ -282,6 +282,16 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 							name : 'ksbhHsw'
 						}, {
 							xtype : 'textfield',
+							fieldLabel : '新生奖学金申请状态',
+							maxLength:100,
+							name : 'ssJxjSqZt'
+						}, {
+							xtype : 'textfield',							
+							fieldLabel : '是否需要打印准考证（是/否）',
+							maxLength:30,
+							name : 'printZkz'							
+						}, {
+							xtype : 'textfield',
 							fieldLabel : '政治英语听力考试时间',
 							//maxLength:60,
 							maxLength:100,
@@ -294,14 +304,24 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
 							name : 'zzYyTlKsDd'
 						}, {
 							xtype : 'textfield',
-							fieldLabel : '新生奖学金申请状态',
-							maxLength:100,
-							name : 'ssJxjSqZt'
-						}, {
-							xtype : 'textfield',
 							fieldLabel : '政治听力考试备注',
 							maxLength:254,
 							name : 'zzTlKsBz'
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '考试名称',
+							maxLength:100,
+							name : 'ksmc'
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '考场号',
+							maxLength:30,
+							name : 'kskch'
+						}, {
+							xtype : 'textfield',
+							fieldLabel : '座位号',
+							maxLength:10,
+							name : 'kszwh'
 						} ]
 					}, {
 						xtype : 'fieldset',

@@ -243,9 +243,9 @@ public class FliterForm extends FrameworkImpl {
 						
 						if("Y".equals(strDqFlg)){
 							//DeepQuery字段
-							String strDeepQueryFldTypeSql="SELECT  DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=?";
+							String strDeepQueryFldTypeSql="SELECT DATA_TYPE from information_schema.COLUMNS WHERE TABLE_NAME=? and COLUMN_NAME=? limit 1";
 							String strDeepQueryFlgType = jdbcTemplate.queryForObject(strDeepQueryFldTypeSql, new Object[] {strDqView,fieldName }, "String");
-							if(!"".equals(strDeepQueryFlgType) ){
+							if(!"".equals(strDeepQueryFlgType)){
 								
 								if (intTypeString.contains(strDeepQueryFlgType)) {
 									// 数字;

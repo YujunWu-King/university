@@ -68,6 +68,15 @@ public class TzSingleSignOnAuthServiceImpl {
 	 */
 	public final String cookieContextLoginType = "TZGD_CONTEXT_LOGIN_TYPE";
 	
+	/*
+	 * 加密类型：
+	 * MD2
+	 * MD5
+	 * SHA-1
+	 * SHA-256
+	 * SHA-384
+	 * SHA-512
+	 * */
 	public static String encrypt(String encryptName,String srcString){
         MessageDigest messageDigest;
         String encodeStr = "";

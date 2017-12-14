@@ -25,6 +25,7 @@ import com.tranzvision.gd.TZApplicationTemplateBundle.service.impl.PdfPrintbyMod
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzWebsiteLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
+import com.tranzvision.gd.TZUniPrintBundle.service.impl.PdfTemplateInfo;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
@@ -81,6 +82,7 @@ public class FileUploadController {
 		return retJson;
 	}
 
+	
 	/**
 	 * Upload single file using Spring Controller 存储在 bmb目录
 	 * 
@@ -550,4 +552,182 @@ public class FileUploadController {
 		}
 		return retJson;
 	}
+	
+	
+	/**
+	 * Upload single file using Spring Controller 存储在 打印模板目录
+	 * luyan 2017-12-6
+	 * 
+	 * @param request
+	 * @param response
+	 * @param allRequestParams
+	 * @param file
+	 * @return
+	 */
+	@RequestMapping(value = "UpPdfPServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	public @ResponseBody String printUploadFileHandler(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam Map<String, Object> allRequestParams, @RequestParam("pdfuploadfile") MultipartFile file) {
+
+		// String limitSize = allRequestParams.get("limitSize");
+		String language = String.valueOf(allRequestParams.get("language"));
+		String tplid = String.valueOf(allRequestParams.get("tplid"));
+		String istmpfile = String.valueOf(allRequestParams.get("tmp"));
+		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		String rootPath = getSysHardCodeVal.getPrintSinglePdfDir();
+		// 最终生成文件路径/print/singlepdf/" + orgid + "/时间/" + Template+"/"+tplid + 里面
+
+		String retJson = this.doSaveFilePrint(orgid, rootPath, tplid, language, istmpfile, file);
+
+		return retJson;
+	}
+	
+	
+	/**
+	 * 上传打印 PDF模板 存储在/print/singlepdf/" + orgid + "/时间/" + Template+/+tplid + "里面
+	 * luyan 2017-12-6
+	 * 
+	 * 
+	 * @param orgid
+	 * @param rootPath
+	 *            根目录 从配置文件读取 是 /print/singlepdf/
+	 * @param tplid
+	 *            模板ID
+	 * @param language
+	 * @param istmpfile
+	 * @param file
+	 * @return
+	 */
+	private String doSaveFilePrint(String orgid, String rootPath, String tplid, String language, String istmpfile,
+			MultipartFile file) {
+
+		String templateID = tplid;
+
+		// 过滤功能目录名称中的特殊字符
+		if (null != tplid && !"".equals(tplid) && !"null".equals(tplid)) {
+			tplid = "/template/" + tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(tplid);
+		} else {
+			tplid = "";
+		}
+
+		if (null == orgid || "".equals(orgid)) {
+			orgid = "orgidnull";
+		}
+		orgid = orgid.toLowerCase();
+
+		// 是否临时文件的标记
+		if (null == istmpfile || !"null".equals(tplid)) {
+			istmpfile = "0";
+		}
+
+		boolean success = false;
+		Object messages = null;
+		String filename = "";
+		try {
+			filename = file.getOriginalFilename();
+		} catch (Exception e) {
+
+		}
+
+		if (!file.isEmpty()) {
+			try {
+				long fileSize = 0L;
+				String suffix = filename.substring(filename.lastIndexOf(".") + 1);
+				success = this.checkFormat(suffix);
+				if (!success) {
+					if ("ENG".equals(language)) {
+						messages = "Invalid file format.";
+					} else {
+						messages = "上传的文件格式错误";
+					}
+				} else {
+					fileSize = file.getSize();
+					// System.out.println(fileSize);
+					success = this.checkSize(fileSize);
+					if (!success) {
+						if ("ENG".equals(language)) {
+							messages = "The file is too large. Please re-upload.";
+						} else {
+							messages = "上传的文件太大";
+						}
+					}
+				}
+
+				if (success) {
+
+					byte[] bytes = file.getBytes();
+
+					// Creating the directory to store file
+					String tmpFilePath = getSysHardCodeVal.getTmpFileUploadPath();
+					String parentPath = "";
+
+					if ("1".equals(istmpfile)) {
+						// 若是临时文件，则存储在临时文件目录
+						parentPath = tmpFilePath + "/" + orgid + "/" + this.getDateNow() + tplid;
+					} else {
+						// /print/singlepdf/" + orgid + "/时间/" + Template+/+tplid
+						// + "
+						parentPath = rootPath + "/" + orgid + "/" + this.getDateNow() + tplid;
+					}
+					String accessPath = parentPath + "/";
+
+					boolean createResult = false;
+					int createTimes = 5;
+					String sysFileName = "";
+					while (!createResult && createTimes > 0) {
+						// Create the file on server
+						sysFileName = (new StringBuilder(String.valueOf(getNowTime()))).append(".").append(suffix)
+								.toString();
+						if (sysFileName.indexOf('/') != -1)
+							sysFileName = sysFileName.substring(sysFileName.lastIndexOf('/') + 1);
+
+						createResult = fileManageServiceImpl.CreateFile(parentPath, sysFileName, bytes);
+
+						createTimes--;
+					}
+					if (createResult) {
+						PdfTemplateInfo pti = new PdfTemplateInfo();
+
+						pti.addFile(templateID, accessPath + sysFileName, filename);
+
+						Map<String, Object> mapFile = new HashMap<String, Object>();
+						mapFile.put("filename", filename);
+						mapFile.put("sysFileName", sysFileName);
+						mapFile.put("size", String.valueOf(fileSize / 1024L) + "k");
+						// mapFile.put("path", parentPath);
+						mapFile.put("accessPath", accessPath);
+						messages = mapFile;
+					} else {
+						if ("ENG".equals(language)) {
+							messages = "Upload failed. Please re-try.";
+						} else {
+							messages = "上传失败，请重试。";
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				success = false;
+				if ("ENG".equals(language)) {
+					messages = "Server Exception.";
+				} else {
+					messages = "服务器发生异常";
+				}
+			}
+		} else {
+			if ("ENG".equals(language)) {
+				messages = "You failed to upload [" + filename + "] because the file was empty.";
+			} else {
+				messages = "上传失败，文件 [" + filename + "] 是一个空文件。";
+			}
+		}
+
+		Map<String, Object> mapRet = new HashMap<String, Object>();
+		mapRet.put("success", success);
+		mapRet.put("msg", messages == null ? "" : messages);
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		return jacksonUtil.Map2json(mapRet);
+
+	}
+	
+	
 }
