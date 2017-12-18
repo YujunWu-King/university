@@ -31,9 +31,9 @@ public class ZkzDownloadController {
 		String filePath = request.getServletContext().getRealPath(url);
 		// 获取面试申请号和姓名2017-12-12 
 		String fileName = "";
-		String sqlSelectOprid = "SELECT ROW_ADDED_OPRID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+		String sqlSelectOprid = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=?";
 		Map<String, Object> mapDataOprid = jdbcTemplate.queryForMap(sqlSelectOprid, new Object[] { instanceID });
-		String strOPRID = mapDataOprid.get("ROW_ADDED_OPRID") == null ? "" : mapDataOprid.get("ROW_ADDED_OPRID").toString();
+		String strOPRID = mapDataOprid.get("OPRID") == null ? "" : mapDataOprid.get("OPRID").toString();
 
 		String sqlSelectName = "SELECT TZ_REALNAME,TZ_MSSQH FROM PS_TZ_REG_USER_T A WHERE OPRID=?";
 		Map<String, Object> mapDataName = jdbcTemplate.queryForMap(sqlSelectName, new Object[] { strOPRID });
