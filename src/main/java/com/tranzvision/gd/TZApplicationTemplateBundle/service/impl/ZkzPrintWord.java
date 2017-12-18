@@ -134,7 +134,7 @@ public class ZkzPrintWord {
 			// 2017-12-18 OPRID
 			String sqlSelectOprid = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=?";
 			Map<String, Object> mapDataOprid = jdbcTemplate.queryForMap(sqlSelectOprid, new Object[] { instanceID });
-			String strOPRID = mapDataOprid.get("ROW_ADDED_OPRID") == null ? "" : mapDataOprid.get("ROW_ADDED_OPRID").toString();
+			String strOPRID = mapDataOprid.get("OPRID") == null ? "" : mapDataOprid.get("OPRID").toString();
 			// 照片
 			String sqlSelectImageUrl = "SELECT B.TZ_ATT_A_URL,A.TZ_ATTACHSYSFILENA FROM PS_TZ_OPR_PHT_GL_T A , PS_TZ_OPR_PHOTO_T B WHERE A.OPRID=? AND A.TZ_ATTACHSYSFILENA = B.TZ_ATTACHSYSFILENA";
 			Map<String, Object> imgMap = jdbcTemplate.queryForMap(sqlSelectImageUrl, new Object[] { strOPRID });
