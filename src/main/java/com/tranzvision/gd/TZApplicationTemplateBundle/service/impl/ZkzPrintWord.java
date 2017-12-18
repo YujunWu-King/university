@@ -130,7 +130,9 @@ public class ZkzPrintWord {
 			stamper.setFormFlattening(true);
 			// 添加图片start
 			// Image image = Image.getInstance("E:\\tmp.jpg");
-			String sqlSelectOprid = "SELECT ROW_ADDED_OPRID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+			// String sqlSelectOprid = "SELECT ROW_ADDED_OPRID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?";
+			// 2017-12-18 OPRID
+			String sqlSelectOprid = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=?";
 			Map<String, Object> mapDataOprid = jdbcTemplate.queryForMap(sqlSelectOprid, new Object[] { instanceID });
 			String strOPRID = mapDataOprid.get("ROW_ADDED_OPRID") == null ? "" : mapDataOprid.get("ROW_ADDED_OPRID").toString();
 			// 照片
