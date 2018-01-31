@@ -552,7 +552,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 
         	//var url="%bind(:11)&BaokaoFXID="+TZ_APPLY_PC_ID+"&KSH_BMBID="+KSH_BMBID;
         	var tzParams = '{"ComID":"TZ_EVA_INTERVIEW_COM","PageID":"TZ_MSPS_DF_STD","OperateType":"QF","comParams":{"classId":"'+TZ_CLASS_ID+'","applyBatchId":"'+TZ_APPLY_PC_ID+'","bmbId":"'+KSH_BMBID+'"}}';
-        	var url = scoreUrl + "?tzParams="+tzParams;
+        	var url = scoreUrl + "?tzParams="+encodeURIComponent(tzParams);
         
         	//使用getJSON方法取得JSON数据 
        		$.getJSON(　　　　
