@@ -624,7 +624,7 @@ function Logout(){
 
 /*跳转到注册页*/
 function goToRegister(){
-	var url = urlBegin+'?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","sen":"8"}}';
+	var url = encodeURI(urlBegin+'?tzParams={"ComID":"TZ_SITE_UTIL_COM","PageID":"TZ_SITE_ENROLL_STD","OperateType":"HTML","comParams": {"siteid":"'+$("#siteid").val()+'","sen":"8"}}');
 	
 	$.ajax({
 		type:"POST",
@@ -726,13 +726,13 @@ function getApplicationCenter(){
 /*活动报名*/
 function hdbm(artId,ele){
 
-	var url = urlBegin+'?tzParams={"ComID":"TZ_APPONL_COM","PageID":"TZ_APPREG_STD","OperateType":"HTML","comParams":{"APPLYID":"'+artId+'"}}';
+	var url = encodeURI(urlBegin+'?tzParams={"ComID":"TZ_APPONL_COM","PageID":"TZ_APPREG_STD","OperateType":"HTML","comParams":{"APPLYID":"'+artId+'"}}');
 
 	tz_apply_click_to_signin_action2(url);
 }
 /*活动撤销*/
 function hdcx(artId,bmrId,ele){
-	var url = urlBegin+'?tzParams={"ComID":"TZ_APPONL_COM","PageID":"TZ_APPBAR_VIEW_STD","OperateType":"EJSON","comParams":{"APPLYID":"'+ artId +'","BMRID":"'+ bmrId+'"}}';
+	var url = encodeURI(urlBegin+'?tzParams={"ComID":"TZ_APPONL_COM","PageID":"TZ_APPBAR_VIEW_STD","OperateType":"EJSON","comParams":{"APPLYID":"'+ artId +'","BMRID":"'+ bmrId+'"}}');
 
 	tz_apply_click_to_cancel_reg(url);
 }
