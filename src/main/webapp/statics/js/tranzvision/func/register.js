@@ -651,7 +651,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['50%',''],
 				area: ['830px','610px'],
-				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
+				iframe: {src: TzUniversityContextPath + encodeURI('/dispatcher?tzParams={"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"HTML","comParams":{"siteId":"'+$("#siteid").val()+'"}}')}
 			});
 		});
 	});
@@ -673,7 +673,7 @@ $(document).ready(function(){
 			border : [3 , 0.3 , '#000', true],
 			offset: ['30%',''],
 			area: ['830px','610px'],
-			iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_COUNTRY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22}}'}
+			iframe: {src: TzUniversityContextPath + encodeURI('/dispatcher?tzParams={"ComID":"TZ_COMMON_COM","PageID":"TZ_COUNTRY_STD","OperateType":"HTML","comParams":{"siteId":"'+$("#siteid").val()+'"}}')}
 		});
 	});
 	//默认国家为中国
@@ -693,7 +693,7 @@ $(document).ready(function(){
 				offset: ['50%',''],
 				area: ['830px','720px'],
 				//iframe: {src: '/tranzvision/colselector_liu.html'}
-				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_SCHOOL_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22siteId%22:%22'+$("#siteid").val()+'%22,%22Type%22:%22A%22}}'}
+				iframe: {src: TzUniversityContextPath + encodeURI('/dispatcher?tzParams={"ComID":"TZ_COMMON_COM","PageID":"TZ_SCHOOL_STD","OperateType":"HTML","comParams":{"siteId":"'+$("#siteid").val()+'","Type":"A"}}')}
 			});
 		});
     });
@@ -716,7 +716,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['100px',''],
 				area: ['588px','300px'],
-				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_PROVINCE_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22:{%22TZ_PROV_ID%22:%22'+_prov_id+'%22,%22siteId%22:%22'+$("#siteid").val()+'%22}}'},
+				iframe: {src: TzUniversityContextPath + encodeURI('/dispatcher?tzParams={"ComID":"TZ_COMMON_COM","PageID":"TZ_PROVINCE_STD","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'+_prov_id+'","siteId":"'+$("#siteid").val()+'"}}')},
 			});
 		});
     });
@@ -739,7 +739,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['100px',''],
 				area: ['588px','400px'],
-				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_CITY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22%3A%7B%22OType%22%3A%22CITY%22%2C%22TZ_CITY_ID%22%3A%22'+_city_id+'%22,%22siteId%22:%22'+$("#siteid").val()+'%22%7D%7D'},
+				iframe: {src: TzUniversityContextPath + encodeURI('/dispatcher?tzParams={"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TZ_CITY_ID":"'+_city_id+'","siteId":"'+$("#siteid").val()+'"}}')},
 			});
 		});
     });
