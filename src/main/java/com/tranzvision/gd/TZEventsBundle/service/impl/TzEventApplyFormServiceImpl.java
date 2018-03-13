@@ -372,8 +372,13 @@ public class TzEventApplyFormServiceImpl extends FrameworkImpl {
 				strResultMsg = authCodeError;
 			} else {
 				String oprid = tzWebsiteLoginServiceImpl.getLoginedUserOprid(request);
+				
+				//活动发布对象，A-无限制，B-听众
+				sql = "select TZ_PROJECT_LIMIT from PS_TZ_ART_REC_TBL where TZ_ART_ID=?";
+				String artLimitType = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "String");
 
-				if(oprid == null || "".equals(oprid)){
+				if("B".equals(artLimitType) 
+						&& (oprid == null || "".equals(oprid))){
 					//未登录
 					strResult = "1";
 					strResultMsg = "报名失败，您尚未登录或登录超时，请重新登录。";

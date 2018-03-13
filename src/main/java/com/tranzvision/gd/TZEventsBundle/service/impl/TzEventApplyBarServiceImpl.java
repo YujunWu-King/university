@@ -102,15 +102,15 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 					chnlId = jacksonUtil.getString("chnlId");
 				}
 				
+				//活动发布对象，A-无限制，B-听众
+				String sql = "select TZ_PROJECT_LIMIT from PS_TZ_ART_REC_TBL where TZ_ART_ID=?";
+				String artLimitType = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "String");
+				
 				if(!"".equals(siteId) && !"".equals(chnlId)){
 					// 根据siteId得到机构ID
-					String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+					sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 					String jgid = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
-					
-					//活动发布对象，A-无限制，B-听众
-					sql = "select TZ_PROJECT_LIMIT from PS_TZ_ART_REC_TBL where TZ_ART_ID=?";
-					String artLimitType = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "String");
-					
+
 					// 如果用户未登录 直接 跳到登录页面
 					if ("B".equals(artLimitType) 
 							&& (oprid == null || oprid.equals(""))) {
@@ -133,7 +133,7 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 
 				
 				// 已报名人数
-				String sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAppliedNum");
+				sql = tzGDObject.getSQLText("SQL.TZEventsBundle.TzGetEventAppliedNum");
 				int numYBM = sqlQuery.queryForObject(sql, new Object[] { strApplyId }, "int");
 
 				// 等待人数
@@ -230,9 +230,12 @@ public class TzEventApplyBarServiceImpl extends FrameworkImpl {
 						 clickEnable = false;
 						 btnDisabledClass = "click-disabled";
 					 }
-
-					sql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID,TZ_NREG_STAT FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
-					Map<String, Object> mapBM = sqlQuery.queryForMap(sql, new Object[] { oprid, strApplyId });
+					 
+					Map<String, Object> mapBM = null;
+					if(oprid != null && !"".equals(oprid)){
+						sql = "select 'Y' REG_FLAG,TZ_HD_BMR_ID,TZ_NREG_STAT FROM PS_TZ_NAUDLIST_T where OPRID=? and TZ_ART_ID=? and TZ_NREG_STAT IN('1','4')";
+						mapBM = sqlQuery.queryForMap(sql, new Object[] { oprid, strApplyId });
+					}
 
 					// 是否已注册报名标识
 					String regFlag = "";
