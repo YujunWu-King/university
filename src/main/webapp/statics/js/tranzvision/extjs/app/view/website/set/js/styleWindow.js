@@ -105,7 +105,7 @@ Ext.define('KitchenSink.view.website.set.js.styleWindow',{
 							{
 								nowWin.close();
 								//location="javascript:location.reload()";
-								newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams={"ComID":"TZ_HOME_SETED_COM","PageID":"TZ_HOME_SETED_STD","OperateType":"HTML","comParams":{"siteId":"'+obj.comContent.siteId+'","oprate":"D"}}';
+								newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+encodeURIComponent('{"ComID":"TZ_HOME_SETED_COM","PageID":"TZ_HOME_SETED_STD","OperateType":"HTML","comParams":{"siteId":"'+obj.comContent.siteId+'","oprate":"D"}}');
 							}else{
 								Ext.Msg.show({
 											title: '提示信息',

@@ -181,10 +181,10 @@ Ext.define('KitchenSink.view.website.set.js.siteSetView', {
 						
 							break;
 						case "sitelogin":
-							window.open(Ext.tzGetGeneralURL()+'?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SET_LOGINP_STD","OperateType":"HTML","comParams":{"siteId":"'+record.data.siteId+'","oprate":"D"}}');
+							window.open(Ext.tzGetGeneralURL()+'?tzParams='+encodeURIComponent('{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SET_LOGINP_STD","OperateType":"HTML","comParams":{"siteId":"'+record.data.siteId+'","oprate":"D"}}'));
 							break;
 						case "siteenroll":
-							window.open(Ext.tzGetGeneralURL()+'?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SET_ENROLLP_STD","OperateType":"HTML","comParams":{"siteId":"'+record.data.siteId+'","oprate":"D"}}');
+							window.open(Ext.tzGetGeneralURL()+'?tzParams='+encodeURIComponent('{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_SET_ENROLLP_STD","OperateType":"HTML","comParams":{"siteId":"'+record.data.siteId+'","oprate":"D"}}'));
 							break;
 						case "sitecontent" :
 						Ext.tzSetCompResourses("TZ_CONTENT_MG_COM");

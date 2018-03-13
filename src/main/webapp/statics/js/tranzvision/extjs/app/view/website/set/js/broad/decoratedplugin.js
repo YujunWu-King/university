@@ -371,7 +371,7 @@ var tzParams = '{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_SETED_STD","Oper
 var menuStore = Ext.create('Ext.data.TreeStore', {
 		proxy: {
 			type: 'ajax',
-			url: urlBegin + '?tzParams='+tzParams,
+			url: urlBegin + '?tzParams='+encodeURIComponent(tzParams),
 			reader: {
 				root: 'comContent.root.children'
 			}
@@ -398,7 +398,7 @@ var coluDataStore = new Ext.create('Ext.data.Store', {
 				}),
 				proxy: {
 					type: 'ajax',
-					url: urlBegin + '?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"","type":"all"}}',
+					url: urlBegin + '?tzParams='+encodeURIComponent('{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"","type":"all"}}'),
 					reader: {
 						type: 'json',
 						root: 'comContent'
@@ -752,7 +752,7 @@ var BeforNode;
 				}),
 				proxy: {
 					type: 'ajax',
-					url: urlBegin + '?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'"}}',
+					url: urlBegin + '?tzParams='+encodeURIComponent('{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_MENU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'"}}'),
 					reader: {
 						type: 'json',
 						root: 'comContent'
@@ -878,7 +878,7 @@ var BeforNode;
 							}),
 					     proxy: {
 						 type: 'ajax',
-						 url: urlBegin + '?tzParams={"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuId+'","type":"some"}}',
+						 url: urlBegin + '?tzParams='+encodeURIComponent('{"ComID":"TZ_SITEI_SETED_COM","PageID":"TZ_COLU_JSON_STD","OperateType":"QF","comParams":{"siteId":"'+siteid+'","menuId":"'+menuId+'","type":"some"}}'),
 						reader: {
 							type: 'json',
 							root: 'comContent'
@@ -1771,7 +1771,7 @@ var store = Ext.create('Ext.data.Store', {
 	proxy: {
 		type: 'ajax',
 		//url: '/tranzvision/kitchensink/app/view/website/set/json/areaData.json',
-		url: urlBegin + '?tzParams='+tzParams,
+		url: urlBegin + '?tzParams='+encodeURIComponent(tzParams),
 		reader: {
 			//root: 'topics',
 			root: 'comContent.topics'

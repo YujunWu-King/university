@@ -918,7 +918,7 @@ var SurveyBuild = {
 	if(!SurveyBuild._DynamicBindHtml){
 		 $.ajax({
 			type: "post",
-			url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QG","comParams":{}}',
+			url: SurveyBuild.tzGeneralURL+'?tzParams='+encodeURIComponent('{"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QG","comParams":{}}'),
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1058,7 +1058,7 @@ var SurveyBuild = {
 		var ruleSetPage = "";
 		$.ajax({
 			type: "post",
-			url: _url+"?tzParams={'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'QF','comParams':{'tz_app_id':'"+tz_app_id+"','tz_language':'C'}}",
+			url: _url+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'QF','comParams':{'tz_app_id':'"+tz_app_id+"','tz_language':'C'}}"),
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1108,7 +1108,7 @@ var SurveyBuild = {
 		var _url=SurveyBuild.tzGeneralURL;
 		$.ajax({
 			type: "post",
-			url: _url+"?tzParams={'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'U','comParams':{'update':[{'tz_app_id':'"+id+"','tz_language':'C','bmb_id':'"+_bmb_id+"','email_desc':'"+_email_desc+"','tjx_qy':'"+_zhs_qy+"'}]}}",
+			url: _url+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'U','comParams':{'update':[{'tz_app_id':'"+id+"','tz_language':'C','bmb_id':'"+_bmb_id+"','email_desc':'"+_email_desc+"','tjx_qy':'"+_zhs_qy+"'}]}}"),
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1130,7 +1130,7 @@ var SurveyBuild = {
 		var ruleSetPage = "";
 		$.ajax({
 			type: "post",
-			url: _url+"?tzParams={'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'QF','comParams':{'tz_app_id':'"+tz_app_id+"','tz_language':'E'}}",
+			url: _url+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'QF','comParams':{'tz_app_id':'"+tz_app_id+"','tz_language':'E'}}"),
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1181,7 +1181,7 @@ var SurveyBuild = {
 		var _url=SurveyBuild.tzGeneralURL;
 		$.ajax({
 			type: "post",
-			url: _url+"?tzParams={'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'U','comParams':{'update':[{'tz_app_id':'"+id+"','tz_language':'E','bmb_id':'"+_bmb_id+"','email_desc':'"+_email_desc+"','tjx_qy':'"+_eng_qy+"'}]}}",
+			url: _url+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_TJX_COM','PageID':'TZ_GD_TJX_PZ_STD','OperateType':'U','comParams':{'update':[{'tz_app_id':'"+id+"','tz_language':'E','bmb_id':'"+_bmb_id+"','email_desc':'"+_email_desc+"','tjx_qy':'"+_eng_qy+"'}]}}"),
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -2533,7 +2533,7 @@ var SurveyBuild = {
                         SurveyBuild.is_edit = false;
                         var e = $("#question-box>li.active").index() - 1;
                         if (isPreview) {
-                            var tzParams = '?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"' + SurveyBuild._tid + '"}}'
+                            var tzParams = '?tzParams='+encodeURIComponent('{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"' + SurveyBuild._tid + '"}}')
                             var url = SurveyBuild.tzGeneralURL + tzParams;
                             window.open(url, '_blank');
                         }
@@ -3833,7 +3833,7 @@ var SurveyBuild = {
 							//上传成功后将文件存储到数据库
 								$.ajax({
 									type: "post",
-                                    url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+SurveyBuild.specialCharReplace(obj.msg.filename)+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":"'+maxOrderBy+'"}}',
+                                   url: SurveyBuild.tzGeneralURL+'?tzParams='+encodeURIComponent('{"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+SurveyBuild.specialCharReplace(obj.msg.filename)+'","sysFileName":"'+obj.msg.sysFileName+'","path":"'+obj.msg.path+'","maxOrderBy":"'+maxOrderBy+'"}}'),
 									dataType: "json",
 									async: false,
 									success: function(rst){
@@ -3964,7 +3964,7 @@ var SurveyBuild = {
 							//上传成功后将文件存储到数据库
 								$.ajax({
 									type: "post",
-									url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','itemName':'"+SurveyBuild.specialCharReplace(itemName)+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':'"+maxOrderBy+"'}}",
+									url: SurveyBuild.tzGeneralURL+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','itemName':'"+SurveyBuild.specialCharReplace(itemName)+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':'"+maxOrderBy+"'}}"),
 									dataType: "json",
 									async: false,
 									success: function(rst){
@@ -4042,7 +4042,7 @@ var SurveyBuild = {
 		var index = $(el).parent("li").index();
 		$.ajax({
 			type: "post",
-			url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+_children[index].sysFileName+"'}}}",
+			url: SurveyBuild.tzGeneralURL+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+_children[index].sysFileName+"'}}}"),
 			dataType: "json",
 			async: false,
 			success: function(rst){
@@ -4083,7 +4083,7 @@ var SurveyBuild = {
 		}
 		$.ajax({
 			type: "post",
-			url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','fileDate':["+fileDate+"]}}",
+			url: SurveyBuild.tzGeneralURL+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','fileDate':["+fileDate+"]}}"),
 			dataType: "html",
 			success: function(imgLiHtml){
 				var $ul = $("#fancybox-main").children("ul");
@@ -4244,7 +4244,7 @@ var SurveyBuild = {
 							var maxOrderBy = 0;
 							$.ajax({
 								type: "post",
-								url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+data.itemId+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':''}}",
+								url: SurveyBuild.tzGeneralURL+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+data.itemId+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':''}}"),
 								dataType: "json",
 								async: false,
 								success: function(rst){
@@ -4300,7 +4300,7 @@ var SurveyBuild = {
 		var sysFileName=child[cins].sysFileName;
 		$.ajax({
 			type: "post",
-			url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}",
+			url: SurveyBuild.tzGeneralURL+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}"),
 			dataType: "json",
 			async: false,
 			success: function(rst){

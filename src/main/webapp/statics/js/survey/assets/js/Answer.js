@@ -2771,7 +2771,7 @@ var SurveyBuild = {
 								//上传成功后将文件存储到数据库
 								$.ajax({
 									type: "post",
-									url:SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+SurveyBuild.specialCharReplace(obj.msg.filename)+'","path":"'+obj.msg.path+'","sysFileName":"'+obj.msg.sysFileName+'","maxOrderBy":"'+maxOrderBy+'","dhIndex":"'+index+'","refLetterId":"'+refLetterId+'"}}',
+									url:SurveyBuild.tzGeneralURL+'?tzParams='+encodeURIComponent('{"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_GD_FILEUPD_STD","OperateType":"EJSON","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","itemName":"'+SurveyBuild.specialCharReplace(itemName)+'","filename":"'+SurveyBuild.specialCharReplace(obj.msg.filename)+'","path":"'+obj.msg.path+'","sysFileName":"'+obj.msg.sysFileName+'","maxOrderBy":"'+maxOrderBy+'","dhIndex":"'+index+'","refLetterId":"'+refLetterId+'"}}'),
 									dataType: "json",
 									async: false,
 									success: function(rst){
@@ -2892,10 +2892,10 @@ var SurveyBuild = {
 			if (imgDate != ""){
 				imgDate = 	imgDate.substring(0,imgDate.length-1);
 			}
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}}";
+			tzParams = "?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}}");
 		}else{
 			type="ATTACHMENT";//附件
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}";
+			tzParams = "?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}");
 		}
 		/*********************判断图片***END****************************/
         $.ajax({
@@ -2949,10 +2949,10 @@ var SurveyBuild = {
                 if (imgDate != "") {
                 imgDate = imgDate.substring(0, imgDate.length - 1);
             }
-            tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILELOAD_STD','OperateType':'EJSON','comParams':{'imgDate':["+imgDate+"]}}";
+            tzParams = "?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILELOAD_STD','OperateType':'EJSON','comParams':{'imgDate':["+imgDate+"]}}");
         }else{
             type="ATTACHMENT";//附件
-            tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILELOAD_STD','OperateType':'EJSON','comParams':{'fileDate':'fileDate','sysFileName':'"+sysFileName+"'}}";
+            tzParams = "?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILELOAD_STD','OperateType':'EJSON','comParams':{'fileDate':'fileDate','sysFileName':'"+sysFileName+"'}}");
         }
         /*********************判断图片***END****************************/
         $.ajax({
@@ -3064,7 +3064,7 @@ var SurveyBuild = {
         }
         $.ajax({
             type: "post",
-            url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','fileDate':["+fileDate+"]}}",
+            url: SurveyBuild.tzGeneralURL+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'HTML','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','fileDate':["+fileDate+"]}}"),
             dataType: "html",
             success: function(imgLiHtml){
                 var $ul = $("#fancybox-main").children("ul");
@@ -3234,7 +3234,7 @@ var SurveyBuild = {
 							var maxOrderBy = 0;
 							$.ajax({
 								type: "post",
-								url: SurveyBuild.tzGeneralURL+"?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+data.itemId+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':''}}",
+								url: SurveyBuild.tzGeneralURL+"?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_FILEUPD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+data.itemId+"','filename':'"+obj.msg.filename+"','sysFileName':'"+obj.msg.sysFileName+"','path':'"+obj.msg.path+"','maxOrderBy':''}}"),
 								dataType: "json",
 								async: false,
 								success: function(rst){
@@ -3298,10 +3298,10 @@ var SurveyBuild = {
 			type="IMG";//图片
 			imgDate = "{'fileName':'"+SurveyBuild.specialCharReplace(child[cins].filename)+"','sysFileName':'"+sysFileName+"'}"
 			
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}}";
+			tzParams = "?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','imgDate':["+imgDate+"]}})";
 		}else{
 			type="ATTACHMENT";//附件
-			tzParams = "?tzParams={'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}}";	
+			tzParams = "?tzParams="+encodeURIComponent("{'ComID':'TZ_GD_FILEUPD_COM','PageID':'TZ_GD_DOWNLOAD_STD','OperateType':'EJSON','comParams':{'tz_app_ins_id':'"+appInsId+"','itemId':'"+itemId+"','orderby':'"+orderby+"','fileDate':{'sysFileName':'"+sysFileName+"'}}})";	
 		}
 		/*********************判断图片***END****************************/
 		$.ajax({

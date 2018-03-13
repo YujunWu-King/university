@@ -764,7 +764,7 @@ var SurveyBuild = {
 			winHeight = winHeight - 5;
 		}
 		var pdfReaderUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-		var params = '{"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_S_PDFVIEW_STD","OperateType":"HTML","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","winWidth":"'+winWidth+'","winHeight":"'+winHeight+'","fileDate":{"sysFileName":"'+sysFileName+'","accessPath":"' + accessPath + '"}}}';
+		var params = encodeURIComponent('{"ComID":"TZ_GD_FILEUPD_COM","PageID":"TZ_S_PDFVIEW_STD","OperateType":"HTML","comParams":{"tz_app_ins_id":"'+appInsId+'","itemId":"'+itemId+'","orderby":"'+orderby+'","winWidth":"'+winWidth+'","winHeight":"'+winHeight+'","fileDate":{"sysFileName":"'+sysFileName+'","accessPath":"' + accessPath + '"}}}');
 		pdfReaderUrl = pdfReaderUrl + window.escape(params);
 
 		$.layer({

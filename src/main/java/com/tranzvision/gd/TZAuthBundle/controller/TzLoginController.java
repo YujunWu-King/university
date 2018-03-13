@@ -105,7 +105,7 @@ public class TzLoginController {
 		}
 
 		ModelAndView mv = new ModelAndView("login/managerLogin");
-		//登录前先销毁session
+		// 登录前先销毁session
 		tzLoginServiceImpl.doLogout(request, response);
 		return mv;
 	}
@@ -115,6 +115,11 @@ public class TzLoginController {
 			@PathVariable(value = "orgid") String orgid) {
 
 		orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
+
+		// modity by caoy @2018-3-13 JGID由传过来的ecust变成sem
+		if (orgid.equals("ecust".toUpperCase())) {
+			orgid = "SEM";
+		}
 
 		try {
 			String sql = tzGDObject.getSQLText("SQL.TZAuthBundle.TzGetOrgInfo");
@@ -156,7 +161,7 @@ public class TzLoginController {
 		}
 
 		ModelAndView mv = new ModelAndView("login/managerLogin");
-		//登录前先销毁session
+		// 登录前先销毁session
 		tzLoginServiceImpl.doLogout(request, response);
 		return mv;
 
@@ -229,7 +234,7 @@ public class TzLoginController {
 		Map<String, Object> formData = jacksonUtil.getMap("comParams");
 
 		String orgid = (String) formData.get("orgId");
-		String userName = formData.get("userName")==null?"":String.valueOf(formData.get("userName")).trim();
+		String userName = formData.get("userName") == null ? "" : String.valueOf(formData.get("userName")).trim();
 		String userPwd = (String) formData.get("password");
 		String code = (String) formData.get("yzm");
 
@@ -266,7 +271,13 @@ public class TzLoginController {
 			orgid = orgid.toLowerCase();
 		}
 
-		String redirect = "redirect:" + "/login/" + orgid+(request.getQueryString()!=null?("?"+request.getQueryString()):"");
+		// modity by caoy @2018-3-13 页面路径由sem变成ecust
+		if (orgid.equals("SEM".toLowerCase())) {
+			orgid = "ecust";
+		}
+
+		String redirect = "redirect:" + "/login/" + orgid
+				+ (request.getQueryString() != null ? ("?" + request.getQueryString()) : "");
 
 		return redirect;
 	}
