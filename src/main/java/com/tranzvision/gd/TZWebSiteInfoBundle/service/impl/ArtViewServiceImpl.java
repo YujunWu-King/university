@@ -39,25 +39,28 @@ public class ArtViewServiceImpl extends FrameworkImpl {
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 		// 校验 用户是否已经登录，如果未登录 则 跳到登录页面，用户登录完成以后在跳转回来 by caoy 2017-3-3
-
+		//只有设置了听众的活动才需要登录，否则允许匿名查看和报名， zhanglang修改， 2018-03-13
 		if (siteId != null && !siteId.equals("")) {
+			
+			//活动发布对象，A-无限制，B-听众
+			String sql = "select TZ_PROJECT_LIMIT from PS_TZ_ART_REC_TBL where TZ_ART_ID=?";
+			String artLimitType = jdbcTemplate.queryForObject(sql, new Object[] { artId }, "String");
+			
 			// 如果用户未登录 直接 跳到登录页面
-			if (oprid == null || oprid.equals("")) {
+			if ("B".equals(artLimitType) 
+					&& (oprid == null || oprid.equals(""))) {
 				// 根据siteId得到机构ID
-				String sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+				sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
 				String jgid = jdbcTemplate.queryForObject(sql, new Object[] { siteId }, "String");
 
 				String contextUrl = request.getContextPath();
-				/// user/login/sem/72
 				String fg = "/";
 				if (!contextUrl.endsWith(fg)) {
 					contextUrl = contextUrl + fg;
 				}
 				contextUrl = contextUrl + "user/login/" + jgid + fg + siteId;
-				// classid=art_view&operatetype=HTML&siteId=72&columnId=417&artId=518
 				String code = "classid=art_view___" + columnId + "___" + artId;
 
-				
 				contextUrl = contextUrl + "?" + code;
 				StringBuffer html = new StringBuffer();
 				html.append("<html><head><title></title></head>");
