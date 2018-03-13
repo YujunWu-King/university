@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ import com.tranzvision.gd.util.security.RegExpValidatorUtils;
  * @author yuds复制原有UserManagementServiceImpl
  */
 @Service("com.tranzvision.gd.TZWebSiteRegisteBundle.service.impl.SemUserManagementServiceImpl")
-public class SemUserManagementServiceImpl extends FrameworkImpl { 
+public class SemUserManagementServiceImpl extends FrameworkImpl {
 	@Autowired
 	private TZGDObject tzGdObject;
 	@Autowired
@@ -52,7 +53,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;
 	@Autowired
-	private CreateQRCode createQRCode;	
+	private CreateQRCode createQRCode;
 
 	// 个人信息管理;
 	public String userInformation(String siteId) {
@@ -113,13 +114,13 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 
 				String strEmail = validateUtil.getMessageTextWithLanguageCd(jgId, language, "TZ_SITE_MESSAGE", "20",
 						"邮箱", "Email");
-				
+
 				String strWeChat = validateUtil.getMessageTextWithLanguageCd(jgId, language, "TZ_SITE_MESSAGE", "221",
 						"微信", "WeChat");
 
-				String strWeChatBind = validateUtil.getMessageTextWithLanguageCd(jgId, language, "TZ_SITE_MESSAGE", "222",
-						"扫二维码，绑定微信账号", "Scan the QR code,bind your wechat account.");
-				
+				String strWeChatBind = validateUtil.getMessageTextWithLanguageCd(jgId, language, "TZ_SITE_MESSAGE",
+						"222", "扫二维码，绑定微信账号", "Scan the QR code,bind your wechat account.");
+
 				String strPassSucTips = validateUtil.getMessageTextWithLanguageCd(jgId, language, "TZ_SITE_MESSAGE",
 						"29", "修改成功", "The modification is successful");
 
@@ -133,26 +134,30 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				String updpassword = this.userFixPasswordHTML(imgPath, jgId, language);
 
 				// 通知设置;
-				String msgmail_html = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_MM_HTML", 
+				String msgmail_html = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_MM_HTML",
 						strEmailRemind, strSMSRemind, strTurnOn, strTurnOff, strSaveBtn);
 				// 保存修改;
 				String saveActivate_url = commonUrl;
 				// 国家选择器链接;
-				String countryUrl = commonUrl
-						+ "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_COUNTRY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
-						+ siteId + "\"}}";
+				String countryUrl = commonUrl + "?tzParams="
+						+ URLEncoder
+								.encode("{\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_COUNTRY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
+										+ siteId + "\"}}", "UTF-8");
 				// 上传并处理照片;
-				String phoUrl = commonUrl
-						+ "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_SEM_UPPHOTO_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
-						+ siteId + "\"}}";
+				String phoUrl = commonUrl + "?tzParams="
+						+ URLEncoder
+								.encode("{\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_SEM_UPPHOTO_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
+										+ siteId + "\"}}", "UTF-8");
 				// 修改手机;
-				String str_mobile = commonUrl
-						+ "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_CHANGE_MOBILE\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
-						+ siteId + "\"}}";
+				String str_mobile = commonUrl + "?tzParams="
+						+ URLEncoder
+								.encode("{\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_CHANGE_MOBILE\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
+										+ siteId + "\"}}", "UTF-8");
 				// 获取基本信息;
-				String str_userInfo = commonUrl
-						+ "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_SEM_USERMNG_STD\",\"OperateType\":\"USERINFO\",\"comParams\":{\"siteId\":\""
-						+ siteId + "\"}}";
+				String str_userInfo = commonUrl + "?tzParams="
+						+ URLEncoder
+								.encode("{\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_SEM_USERMNG_STD\",\"OperateType\":\"USERINFO\",\"comParams\":{\"siteId\":\""
+										+ siteId + "\"}}", "UTF-8");
 				// 保存提醒设置;
 				String SaveRemind = commonUrl;
 
@@ -214,46 +219,58 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 					isShowBindEmail = "none";
 					isShowBindPhone = "none";
 				}
-				/*去除微信绑定功能*/
+				/* 去除微信绑定功能 */
 				/*
-				String bindHtml = "";
-				//增加微信绑定
-				String qrcodeFileUrl = "";
-				String bdWeChatSQL = "SELECT 'Y' FROM PS_TZ_OPRD_WX_T WHERE OPRID=? AND TZ_BIND_FLAG='Y'";
-				String strBindWeChat = jdbcTemplate.queryForObject(bdWeChatSQL, new Object[] { oprid }, "String");
-				if(!"Y".equals(strBindWeChat)){
-					String ctxPath = request.getContextPath();
-					
-					String qrcodeFileName = "TZ_PER_WECHAT_" + siteId + "_" + oprid + ".png";
-					//String qrcodeUrl =  request.getScheme() + "://" + request.getServerName() + ":"	+ String.valueOf(request.getServerPort()) + ctxPath + "/person/wechat/" + siteId + "/" + oprid;
-					String qrcodeUrl = "https://www.baidu.com";
-					String qrcodeFilePath = createQRCode.encodeQRCode(jgId, qrcodeUrl, qrcodeFileName, 150, 150);
-					qrcodeFileUrl = ctxPath + qrcodeFilePath;					
-				}else{
-					strWeChatBind = "绑定的微信账号";		
-				}
-												
-				String zhbd = "";
-				if(!"Y".equals(strBindWeChat)){
-					zhbd = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_ZHBD_HTML2",  strBindPhone,
-						strBindPhoneFlg, strBindPhoneEvent, strBindEmail, strBindEmailFlg, strBindEmailEvent,
-						strChangePhoneShow, strChangeEmailShow, strChange, strPhone, strEmail, isShowBindEmail,
-						isShowBindPhone,strWeChat,strWeChatBind,qrcodeFileUrl);
-				}else{
-					zhbd = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_ZHBD_HTML3",  strBindPhone,
-							strBindPhoneFlg, strBindPhoneEvent, strBindEmail, strBindEmailFlg, strBindEmailEvent,
-							strChangePhoneShow, strChangeEmailShow, strChange, strPhone, strEmail, isShowBindEmail,
-							isShowBindPhone,strWeChat,strWeChatBind,strRelease);
-				}
-				*/
-				String zhbd = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_ZHBD_HTML1",  strBindPhone,
+				 * String bindHtml = ""; //增加微信绑定 String qrcodeFileUrl = "";
+				 * String bdWeChatSQL =
+				 * "SELECT 'Y' FROM PS_TZ_OPRD_WX_T WHERE OPRID=? AND TZ_BIND_FLAG='Y'"
+				 * ; String strBindWeChat =
+				 * jdbcTemplate.queryForObject(bdWeChatSQL, new Object[] { oprid
+				 * }, "String"); if(!"Y".equals(strBindWeChat)){ String ctxPath
+				 * = request.getContextPath();
+				 * 
+				 * String qrcodeFileName = "TZ_PER_WECHAT_" + siteId + "_" +
+				 * oprid + ".png"; //String qrcodeUrl = request.getScheme() +
+				 * "://" + request.getServerName() + ":" +
+				 * String.valueOf(request.getServerPort()) + ctxPath +
+				 * "/person/wechat/" + siteId + "/" + oprid; String qrcodeUrl =
+				 * "https://www.baidu.com"; String qrcodeFilePath =
+				 * createQRCode.encodeQRCode(jgId, qrcodeUrl, qrcodeFileName,
+				 * 150, 150); qrcodeFileUrl = ctxPath + qrcodeFilePath; }else{
+				 * strWeChatBind = "绑定的微信账号"; }
+				 * 
+				 * String zhbd = ""; if(!"Y".equals(strBindWeChat)){ zhbd =
+				 * tzGdObject.getHTMLText(
+				 * "HTML.TZWebSiteRegisteBundle.TZ_GD_ZHBD_HTML2", strBindPhone,
+				 * strBindPhoneFlg, strBindPhoneEvent, strBindEmail,
+				 * strBindEmailFlg, strBindEmailEvent, strChangePhoneShow,
+				 * strChangeEmailShow, strChange, strPhone, strEmail,
+				 * isShowBindEmail,
+				 * isShowBindPhone,strWeChat,strWeChatBind,qrcodeFileUrl);
+				 * }else{ zhbd = tzGdObject.getHTMLText(
+				 * "HTML.TZWebSiteRegisteBundle.TZ_GD_ZHBD_HTML3", strBindPhone,
+				 * strBindPhoneFlg, strBindPhoneEvent, strBindEmail,
+				 * strBindEmailFlg, strBindEmailEvent, strChangePhoneShow,
+				 * strChangeEmailShow, strChange, strPhone, strEmail,
+				 * isShowBindEmail,
+				 * isShowBindPhone,strWeChat,strWeChatBind,strRelease); }
+				 */
+				String zhbd = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_ZHBD_HTML1", strBindPhone,
 						strBindPhoneFlg, strBindPhoneEvent, strBindEmail, strBindEmailFlg, strBindEmailEvent,
 						strChangePhoneShow, strChangeEmailShow, strChange, strPhone, strEmail, isShowBindEmail,
 						isShowBindPhone);
 				// 获取要显示的字段;
 				String fields = "";
-				//面试申请号和项目是不需要显示修改的;
-				//String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
+				// 面试申请号和项目是不需要显示修改的;
+				// String sql = "SELECT
+				// TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT
+				// TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE
+				// TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID
+				// AND LANGUAGE_CD=?)
+				// TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL
+				// FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=?
+				// AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY
+				// TZ_ORDER ASC";
 				String sql = "SELECT TZ_REG_FIELD_ID,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME,TZ_IS_REQUIRED,TZ_SYSFIELD_FLAG,TZ_FIELD_TYPE,TZ_DEF_VAL FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_IS_ZHGL='Y' AND TZ_SITEI_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
 				List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { language, siteId });
 				if (list != null && list.size() > 0) {
@@ -276,15 +293,15 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 							}
 						}
 
-						//是否必填;
-					    String isRequired = (String)map.get("TZ_IS_REQUIRED"); 
-					    String isRequiredLabel="";
-					    if("Y".equals(isRequired)){
-					    	isRequiredLabel = "*";
-					    }else{
-					    	isRequiredLabel = "";
-					    }
-					    
+						// 是否必填;
+						String isRequired = (String) map.get("TZ_IS_REQUIRED");
+						String isRequiredLabel = "";
+						if ("Y".equals(isRequired)) {
+							isRequiredLabel = "*";
+						} else {
+							isRequiredLabel = "";
+						}
+
 						String regFieldId = (String) map.get("TZ_REG_FIELD_ID");
 						String regDefValue = (String) map.get("TZ_DEF_VAL");
 						if (regDefValue == null) {
@@ -302,62 +319,72 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						fieldsArr.add("TZ_SCH_CNAME");
 						fieldsArr.add("TZ_LEN_PROID");
 						fieldsArr.add("TZ_LEN_CITY");
-						//清华特例-毕业时间、最高学历毕业时间
+						// 清华特例-毕业时间、最高学历毕业时间
 						fieldsArr.add("TZ_COMMENT1");
 						fieldsArr.add("TZ_COMMENT3");
 						ArrayList<String> doNotShowFieldsArr = new ArrayList<>();
 						doNotShowFieldsArr.add("TZ_PASSWORD");
 						doNotShowFieldsArr.add("TZ_REPASSWORD");
-						if(doNotShowFieldsArr.contains(regFieldId)){
+						if (doNotShowFieldsArr.contains(regFieldId)) {
 							continue;
 						}
-						
+
 						String fieldTip = "";
-						fieldTip = fieldTip + "<span id='" + regFieldId + "Style' class='alert_display_none semUserTip'>" ;
-						fieldTip = fieldTip + "	<img src='" + imgPath + "/alert.png' width='16' height='16' class='alert_img'>"; 
+						fieldTip = fieldTip + "<span id='" + regFieldId
+								+ "Style' class='alert_display_none semUserTip'>";
+						fieldTip = fieldTip + "	<img src='" + imgPath
+								+ "/alert.png' width='16' height='16' class='alert_img'>";
 						fieldTip = fieldTip + "	<label id='" + regFieldId + "_status'></label>";
 						fieldTip = fieldTip + "</span>";
 						if (fieldsArr.contains(regFieldId)) {
 							// 性别;
 							if ("TZ_GENDER".equals(regFieldId)) {
 								if ("ENG".equals(language)) {
-									fields = fields + tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_SEX_FILD_EN_HTML", regFldYsmc,
-											regFieldId,isRequiredLabel);
+									fields = fields + tzGdObject.getHTMLText(
+											"HTML.TZWebSiteRegisteBundle.TZ_SEMGD_SEX_FILD_EN_HTML", regFldYsmc,
+											regFieldId, isRequiredLabel);
 								} else {
-									fields = fields	+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_SEX_FILD_HTML",
-													regFldYsmc, regFieldId,isRequiredLabel);		
+									fields = fields + tzGdObject.getHTMLText(
+											"HTML.TZWebSiteRegisteBundle.TZ_SEMGD_SEX_FILD_HTML", regFldYsmc,
+											regFieldId, isRequiredLabel);
 								}
 							}
 
 							// TZ_EMAIL;
 							if ("TZ_EMAIL".equals(regFieldId)) {
 								fieldTip = "";
-								fieldTip = fieldTip + "<span id='userEmailStyle' class='alert_display_none semUserTip'>" ;
-								fieldTip = fieldTip + "	<img src='" + imgPath + "/alert.png' width='16' height='16' class='alert_img'>"; 
+								fieldTip = fieldTip
+										+ "<span id='userEmailStyle' class='alert_display_none semUserTip'>";
+								fieldTip = fieldTip + "	<img src='" + imgPath
+										+ "/alert.png' width='16' height='16' class='alert_img'>";
 								fieldTip = fieldTip + "	<label id='userEmail_status'></label>";
 								fieldTip = fieldTip + "</span>";
-								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
-												regFldYsmc, "userEmail", "", "",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");								
+								fields = fields + tzGdObject.getHTMLText(
+										"HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML", regFldYsmc, "userEmail",
+										"", "", isRequiredLabel, fieldTip, "required=\"" + isRequired + "\"");
 							}
 
 							// TZ_MOBILE;
 							if ("TZ_MOBILE".equals(regFieldId)) {
 								fieldTip = "";
-								fieldTip = fieldTip + "<span id='userMoblieStyle' class='alert_display_none semUserTip'>" ;
-								fieldTip = fieldTip + "	<img src='" + imgPath + "/alert.png' width='16' height='16' class='alert_img'>"; 
+								fieldTip = fieldTip
+										+ "<span id='userMoblieStyle' class='alert_display_none semUserTip'>";
+								fieldTip = fieldTip + "	<img src='" + imgPath
+										+ "/alert.png' width='16' height='16' class='alert_img'>";
 								fieldTip = fieldTip + "	<label id='userMobliestatus'></label>";
 								fieldTip = fieldTip + "</span>";
-								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
-												regFldYsmc, "userMoblie", "", "",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
+								fields = fields + tzGdObject.getHTMLText(
+										"HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML", regFldYsmc, "userMoblie",
+										"", "", isRequiredLabel, fieldTip, "required=\"" + isRequired + "\"");
 							}
 
-							// BIRTHDATE 清华特例，TZ_COMMENT1，TZ_COMMENT3也为日期格式;													    
-							if ("BIRTHDATE".equals(regFieldId)||"TZ_COMMENT1".equals(regFieldId)||"TZ_COMMENT3".equals(regFieldId)) {							    	
+							// BIRTHDATE 清华特例，TZ_COMMENT1，TZ_COMMENT3也为日期格式;
+							if ("BIRTHDATE".equals(regFieldId) || "TZ_COMMENT1".equals(regFieldId)
+									|| "TZ_COMMENT3".equals(regFieldId)) {
 								fields = fields
 										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
-												regFldYsmc, regFieldId,"" , "readonly=\"true\"",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
+												regFldYsmc, regFieldId, "", "readonly=\"true\"", isRequiredLabel,
+												fieldTip, "required=\"" + isRequired + "\"");
 							}
 
 							// TZ_COUNTRY;
@@ -366,14 +393,19 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 										+ "/chazhao.png\" class=\"serch-ico\" id=\"TZ_COUNTRY_click\"/>";
 								fields = fields
 										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, img, "readonly=\"true\"",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
+												regFldYsmc, regFieldId, img, "readonly=\"true\"", isRequiredLabel,
+												fieldTip, "required=\"" + isRequired + "\"");
 							}
 
 							// TZ_SCH_CNAME;
 							if ("TZ_SCH_CNAME".equals(regFieldId)) {
-								img = "<img src=\"" + imgPath + "/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/ style=\"top:0px;left:-35px;\">";
-								fields = fields	+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML2",regFldYsmc, regFieldId, img, "readonly=\"true\"",regFieldId + "_Country",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");							
-					    		
+								img = "<img src=\"" + imgPath
+										+ "/chazhao.png\" class=\"serch-ico\" id=\"TZ_SCH_CNAME_click\"/ style=\"top:0px;left:-35px;\">";
+								fields = fields + tzGdObject.getHTMLText(
+										"HTML.TZWebSiteRegisteBundle.TZ_GD_USERFIELD_HTML2", regFldYsmc, regFieldId,
+										img, "readonly=\"true\"", regFieldId + "_Country", isRequiredLabel, fieldTip,
+										"required=\"" + isRequired + "\"");
+
 							}
 
 							// TZ_LEN_PROID;
@@ -382,7 +414,8 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 										+ "/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_PROID_click\" style=\"top:0px;left:-42px;\"/>";
 								fields = fields
 										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, img, "readonly=\"true\"",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
+												regFldYsmc, regFieldId, img, "readonly=\"true\"", isRequiredLabel,
+												fieldTip, "required=\"" + isRequired + "\"");
 							}
 
 							// TZ_LEN_CITY;
@@ -391,13 +424,22 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 										+ "/chazhao.png\" class=\"serch-ico\" id=\"TZ_LEN_CITY_click\"/>";
 								fields = fields
 										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, img, "readonly=\"true\"",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
+												regFldYsmc, regFieldId, img, "readonly=\"true\"", isRequiredLabel,
+												fieldTip, "required=\"" + isRequired + "\"");
 							}
 						} else {
 							// 是否下拉框;
 							String fieldType = (String) map.get("TZ_FIELD_TYPE");
 							if ("DROP".equals(fieldType)) {
-								//String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
+								// String dropSQL = "SELECT
+								// TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE
+								// FROM PS_TZ_YHZC_XXZ_ENG WHERE
+								// TZ_JG_ID=PT.TZ_JG_ID AND
+								// TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND
+								// TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? )
+								// TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM
+								// PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_JG_ID=? AND
+								// TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
 								String dropSQL = "SELECT TZ_OPT_ID,TZ_OPT_VALUE,(SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND TZ_OPT_ID=PT.TZ_OPT_ID AND LANGUAGE_CD=? ) TZ_OPT_EN_VALUE ,TZ_SELECT_FLG FROM PS_TZ_YHZC_XXZ_TBL PT WHERE TZ_SITEI_ID=? AND TZ_REG_FIELD_ID=? ORDER BY TZ_ORDER ASC";
 								List<Map<String, Object>> dropList = jdbcTemplate.queryForList(dropSQL,
 										new Object[] { language, siteId, regFieldId });
@@ -418,13 +460,13 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 										combox = combox + "<option value =\"" + optId + "\">" + optValue + "</option>";
 									}
 								}
-								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_COMBOX_HTML", 
-												regFldYsmc, regFieldId, combox,fieldTip,isRequiredLabel,"required=\"" + isRequired + "\"");
+								fields = fields + tzGdObject.getHTMLText(
+										"HTML.TZWebSiteRegisteBundle.TZ_SEMGD_COMBOX_HTML", regFldYsmc, regFieldId,
+										combox, fieldTip, isRequiredLabel, "required=\"" + isRequired + "\"");
 							} else {
-								fields = fields
-										+ tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML",
-												regFldYsmc, regFieldId, "", "",isRequiredLabel,fieldTip,"required=\"" + isRequired + "\"");
+								fields = fields + tzGdObject.getHTMLText(
+										"HTML.TZWebSiteRegisteBundle.TZ_SEMGD_USERFIELD_HTML", regFldYsmc, regFieldId,
+										"", "", isRequiredLabel, fieldTip, "required=\"" + isRequired + "\"");
 							}
 						}
 					}
@@ -433,12 +475,16 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 
 				// 选择省份;
 				String Province = commonUrl;
-				Province = Province
-						+ "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_PROVINCE_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"TZ_PROV_ID\":\"TZ_LEN_PROID\",\"siteId\":\"" + siteId + "\"}}";
+				Province = Province + "?tzParams="
+						+ URLEncoder
+								.encode("{\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_PROVINCE_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"TZ_PROV_ID\":\"TZ_LEN_PROID\",\"siteId\":\""
+										+ siteId + "\"}}", "UTF-8");
 				// 选择城市;
 				String City1 = commonUrl;
-				City1 = City1
-						+ "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_CITY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"OType\":\"CITY\",\"TZ_CITY_ID\":\"TZ_LEN_CITY\",\"siteId\":\"" + siteId + "\"}}";
+				City1 = City1 + "?tzParams="
+						+ URLEncoder
+								.encode("{\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_CITY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"OType\":\"CITY\",\"TZ_CITY_ID\":\"TZ_LEN_CITY\",\"siteId\":\""
+										+ siteId + "\"}}", "UTF-8");
 
 				// 头像;
 				String TZ_ATT_A_URL = "", TZ_ATTACHSYSFILENA = "";
@@ -469,18 +515,19 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 					strImgC = imgPath + "/edituser-pic.png";
 				}
 
-				
-				String returnHtml="";
+				String returnHtml = "";
 				// 判断是否需要显示头像，如果为Y则显示，否则不显示;
-				//String strIsShowPhotoSQL = "SELECT TZ_IS_SHOW_PHOTO_2 FROM PS_TZ_USERREG_MB_T WHERE TZ_JG_ID =?";
+				// String strIsShowPhotoSQL = "SELECT TZ_IS_SHOW_PHOTO_2 FROM
+				// PS_TZ_USERREG_MB_T WHERE TZ_JG_ID =?";
 				String strIsShowPhotoSQL = "SELECT TZ_IS_SHOW_PHOTO_2 FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID =?";
-				String strIsShowPhoto = jdbcTemplate.queryForObject(strIsShowPhotoSQL, new Object[] { siteId }, "String");
+				String strIsShowPhoto = jdbcTemplate.queryForObject(strIsShowPhotoSQL, new Object[] { siteId },
+						"String");
 				if ("Y".equals(strIsShowPhoto)) {
-					returnHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_HTML2", saveActivate_url,
-							phoUrl, updpassword, commonUrl, str_mobile, msgmail_html, zhbd, str_userInfo, SaveRemind,
-							fields, Province, City1, strColuTitle, strTab1, strTab2, strTab3, strTab4, strPhoto,
-							strSaveBtn, strBind, strRelease, strAbsence, strPassSucTips, countryUrl, strImgC, userPhoto,
-							contextPath);
+					returnHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_HTML2",
+							saveActivate_url, phoUrl, updpassword, commonUrl, str_mobile, msgmail_html, zhbd,
+							str_userInfo, SaveRemind, fields, Province, City1, strColuTitle, strTab1, strTab2, strTab3,
+							strTab4, strPhoto, strSaveBtn, strBind, strRelease, strAbsence, strPassSucTips, countryUrl,
+							strImgC, userPhoto, contextPath);
 				} else {
 					returnHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_WDZH_NOT_PHOTO_HTML",
 							saveActivate_url, phoUrl, updpassword, commonUrl, str_mobile, msgmail_html, zhbd,
@@ -488,7 +535,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 							strTab4, strPhoto, strSaveBtn, strBind, strRelease, strAbsence, strPassSucTips, countryUrl,
 							contextPath);
 				}
-				
+
 				return returnHtml;
 			} else {
 				return "站点不存在";
@@ -533,8 +580,11 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				"只能包含字母、数字以及下划线", "Can only contain letters, numbers, and underscores.");
 		String strPassTips3 = validateUtil.getMessageTextWithLanguageCd(jgId, strLang, "TZ_SITE_MESSAGE", "36",
 				"字母、数字和下划线至少包含2种", "Letters, numbers and underscores at least two .");
-		/*String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(jgId, strLang, "TZ_SITE_MESSAGE", "122",
-				"密码强度不够", "Stronger password needed.");*/
+		/*
+		 * String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(jgId,
+		 * strLang, "TZ_SITE_MESSAGE", "122", "密码强度不够",
+		 * "Stronger password needed.");
+		 */
 		String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(jgId, strLang, "TZ_SITE_MESSAGE", "134",
 				"密码格式不符合要求", "Wrong password format.");
 
@@ -603,15 +653,15 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 		String strResultConten = "";
 		if ("USERINFO".equals(oprType)) {
 			strResultConten = this.getUserInfo(comParams, errorMsg);
-		}else if ("SAVEUSERINFO".equals(oprType)) {
+		} else if ("SAVEUSERINFO".equals(oprType)) {
 			strResultConten = this.saveUserInfo(comParams, errorMsg);
-		}else if ("PWD".equals(oprType)) {
+		} else if ("PWD".equals(oprType)) {
 			strResultConten = this.savePassword(comParams, errorMsg);
-		}else if ("NOTICE".equals(oprType)) {
+		} else if ("NOTICE".equals(oprType)) {
 			strResultConten = this.saveNotice(comParams, errorMsg);
-		}else if ("EMAIL".equals(oprType)) {
+		} else if ("EMAIL".equals(oprType)) {
 			strResultConten = this.bindOrUnbindEmail(comParams, errorMsg);
-		}else if ("MOBILE".equals(oprType)) {
+		} else if ("MOBILE".equals(oprType)) {
 			strResultConten = this.bindOrUnbindMobile(comParams, errorMsg);
 		}
 		return strResultConten;
@@ -627,14 +677,14 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			// 站点ID;
 			String siteId = jacksonUtil.getString("siteId");
 			// 获取机构id;
-			//String strJgid = "";
+			// String strJgid = "";
 			String skinId = "";
 
 			PsTzSiteiDefnT psTzSiteiDefnT = psTzSiteiDefnTMapper.selectByPrimaryKey(siteId);
 			if (psTzSiteiDefnT == null) {
 				return "";
 			}
-			//strJgid = psTzSiteiDefnT.getTzJgId();
+			// strJgid = psTzSiteiDefnT.getTzJgId();
 			skinId = psTzSiteiDefnT.getTzSkinId();
 			// 通用链接;
 			String contextPath = request.getContextPath();
@@ -642,7 +692,9 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 			imgPath = contextPath + imgPath + "/" + skinId;
 
-			//String sql = "SELECT TZ_REG_FIELD_ID,TZ_FIELD_TYPE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY TZ_ORDER ASC";
+			// String sql = "SELECT TZ_REG_FIELD_ID,TZ_FIELD_TYPE FROM
+			// PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? ORDER BY
+			// TZ_ORDER ASC";
 			String sql = "SELECT TZ_REG_FIELD_ID,TZ_FIELD_TYPE FROM PS_TZ_REG_FIELD_T WHERE TZ_ENABLE='Y' AND TZ_SITEI_ID=? ORDER BY TZ_ORDER ASC";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { siteId });
 
@@ -650,8 +702,8 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
 					String regFieldId = (String) list.get(i).get("TZ_REG_FIELD_ID");
-					//面试申请号和项目不需要显示;
-					if("TZ_MSSQH".equals(regFieldId) || "TZ_PROJECT".equals(regFieldId)){
+					// 面试申请号和项目不需要显示;
+					if ("TZ_MSSQH".equals(regFieldId) || "TZ_PROJECT".equals(regFieldId)) {
 						continue;
 					}
 					if (regFieldId != null && !"".equals(regFieldId) && !"TZ_EMAIL".equals(regFieldId)
@@ -662,10 +714,10 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						} else {
 							fields = fields + "," + regFieldId;
 						}
-						//毕业院校增加国家选择，yuds
-                        if("TZ_SCH_CNAME".equals(regFieldId)){
-                        	fields = fields + "," + "TZ_SCH_COUNTRY";
-                        }
+						// 毕业院校增加国家选择，yuds
+						if ("TZ_SCH_CNAME".equals(regFieldId)) {
+							fields = fields + "," + "TZ_SCH_COUNTRY";
+						}
 						arryField.add(regFieldId);
 					}
 				}
@@ -677,12 +729,13 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				String fieldsValueSQL = "SELECT " + fields + " FROM PS_TZ_REG_USER_T WHERE OPRID=?";
 				returnMap = jdbcTemplate.queryForMap(fieldsValueSQL, new Object[] { oprid });
 			}
-			//院校数据中增加国家描述
-            if(fields.lastIndexOf("TZ_SCH_COUNTRY")>=0&&returnMap.get("TZ_SCH_COUNTRY")!=null){
-            	String sqlCountryDesc = "SELECT descrshort FROM PS_COUNTRY_TBL WHERE country=?";                
-                String countryDesc = jdbcTemplate.queryForObject(sqlCountryDesc, new Object[] { returnMap.get("TZ_SCH_COUNTRY") }, "String");
-                returnMap.put("TZ_SCH_CNAME_Country", countryDesc);
-            }
+			// 院校数据中增加国家描述
+			if (fields.lastIndexOf("TZ_SCH_COUNTRY") >= 0 && returnMap.get("TZ_SCH_COUNTRY") != null) {
+				String sqlCountryDesc = "SELECT descrshort FROM PS_COUNTRY_TBL WHERE country=?";
+				String countryDesc = jdbcTemplate.queryForObject(sqlCountryDesc,
+						new Object[] { returnMap.get("TZ_SCH_COUNTRY") }, "String");
+				returnMap.put("TZ_SCH_CNAME_Country", countryDesc);
+			}
 			if (returnMap == null) {
 				returnMap = new HashMap<>();
 			}
@@ -755,7 +808,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			String strJgid = "";
 			String strLang = "";
 			String siteId = "";
-			
+
 			if (jacksonUtil.containsKey("userEmail")) {
 				strUserEmail = jacksonUtil.getString("userEmail");
 			}
@@ -763,7 +816,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("userMoblie")) {
 				strUserMoblie = jacksonUtil.getString("userMoblie");
 			}
-			
+
 			if (jacksonUtil.containsKey("TZ_SKYPE")) {
 				strUserSkype = jacksonUtil.getString("TZ_SKYPE");
 			}
@@ -775,39 +828,44 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			if (jacksonUtil.containsKey("lang")) {
 				strLang = jacksonUtil.getString("lang");
 			}
-				
+
 			if (jacksonUtil.containsKey("siteId")) {
-			    siteId = jacksonUtil.getString("siteId");
+				siteId = jacksonUtil.getString("siteId");
 			}
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			//得到用户注册的siteid;
-			
-			if(siteId == null || "".equals(siteId)){
-			    siteId = jdbcTemplate.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T where OPRID=?", new Object[]{oprid},"String");
-			    if(siteId==null||"".equals(siteId)){
-				return "当前登录人员没有对应的注册站点id";
-			    }				
+			// 得到用户注册的siteid;
+
+			if (siteId == null || "".equals(siteId)) {
+				siteId = jdbcTemplate.queryForObject("SELECT TZ_SITEI_ID FROM PS_TZ_REG_USER_T where OPRID=?",
+						new Object[] { oprid }, "String");
+				if (siteId == null || "".equals(siteId)) {
+					return "当前登录人员没有对应的注册站点id";
+				}
 			}
-			
+
 			// 页面文字双语化
 			String strBlankTips = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "26",
 					"不能为空", "cannot be blank");
 
-			//必须为整数
+			// 必须为整数
 			String strIntTips = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "61",
 					"必须为整数", "must be an integer. ");
-			//邮箱长度
-			String strEmailLength = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "52", "邮箱长度需满足6-70个字符", "Email length required to meet 6-70 characters");
-			//邮箱格式
-			String strEmailFormat = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "53", "邮箱格式不正确", "Mailbox format is not correct.");
-			//邮箱已经被占用
-			String strEmailZy = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "48", "邮箱已注册，建议取回密码", "It has been occupied!");
-			//手机号码
-			String strPhone = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "47","手机号码不正确", "The mobile phone is incorrect .");
-			//手机被占用
-			String strPhoneZy = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang,"TZ_SITE_MESSAGE", "49",
-      				"手机已注册，建议取回密码", "The mobile phone has been registered, proposed to retrieve Password");
-			
+			// 邮箱长度
+			String strEmailLength = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "52",
+					"邮箱长度需满足6-70个字符", "Email length required to meet 6-70 characters");
+			// 邮箱格式
+			String strEmailFormat = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "53",
+					"邮箱格式不正确", "Mailbox format is not correct.");
+			// 邮箱已经被占用
+			String strEmailZy = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "48",
+					"邮箱已注册，建议取回密码", "It has been occupied!");
+			// 手机号码
+			String strPhone = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "47",
+					"手机号码不正确", "The mobile phone is incorrect .");
+			// 手机被占用
+			String strPhoneZy = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "49",
+					"手机已注册，建议取回密码", "The mobile phone has been registered, proposed to retrieve Password");
+
 			String strFirstName = "";
 			String strLastName = "";
 			String tzRealName = "";
@@ -815,7 +873,13 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			ArrayList<String> updateList = new ArrayList<>();
 			String updateRegSql = "";
 			// 注册字段;
-			//String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
+			// String sql = "SELECT
+			// TZ_REG_FIELD_ID,TZ_IS_REQUIRED,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT
+			// TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE
+			// TZ_JG_ID=PT.TZ_JG_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND
+			// LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME FROM PS_TZ_REG_FIELD_T PT
+			// WHERE TZ_ENABLE='Y' AND TZ_JG_ID=? AND TZ_REG_FIELD_ID NOT IN
+			// ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
 			String sql = "SELECT TZ_REG_FIELD_ID,TZ_IS_REQUIRED,TZ_RED_FLD_YSMC,TZ_REG_FIELD_NAME,(SELECT TZ_REG_FIELD_NAME FROM PS_TZ_REGFIELD_ENG WHERE TZ_SITEI_ID=PT.TZ_SITEI_ID AND TZ_REG_FIELD_ID=PT.TZ_REG_FIELD_ID AND LANGUAGE_CD=?) TZ_REG_FIELD_ENG_NAME FROM PS_TZ_REG_FIELD_T PT WHERE TZ_ENABLE='Y' AND TZ_IS_ZHGL='Y' AND TZ_SITEI_ID=? AND TZ_REG_FIELD_ID NOT IN ('TZ_MSSQH','TZ_PROJECT') ORDER BY TZ_ORDER ASC";
 			List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { strLang, siteId });
 			if (list != null && list.size() > 0) {
@@ -852,7 +916,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 							strLastName = field;
 						}
 						if ("Y".equals(required) && (field == null || "".equals(field))) {
-							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
 									regFieldYsmc + " " + strBlankTips);
 						}
 
@@ -861,15 +925,15 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 						} else {
 							updateRegSql = updateRegSql + "," + regFieldId + " = ?";
 						}
-						
+
 						updateList.add(field);
-						//院校选择中增加国家
-						if("TZ_SCH_CNAME".equals(regFieldId)){
-						    	String schCountry = jacksonUtil.getString("TZ_SCH_CNAME_Country");
-						    	if("Y".equals(required)&&(schCountry==null||"".equals(schCountry))){
-						    	    return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
-								"院校所属国家" + " " + strBlankTips);
-						    	}
+						// 院校选择中增加国家
+						if ("TZ_SCH_CNAME".equals(regFieldId)) {
+							String schCountry = jacksonUtil.getString("TZ_SCH_CNAME_Country");
+							if ("Y".equals(required) && (schCountry == null || "".equals(schCountry))) {
+								return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
+										"院校所属国家" + " " + strBlankTips);
+							}
 							String schCountryField = "TZ_SCH_COUNTRY";
 							updateRegSql = updateRegSql + "," + schCountryField + " = ?";
 							String schCountryValue = jacksonUtil.getString(schCountryField);
@@ -878,58 +942,58 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 					}
 
 					if ("TZ_EMAIL".equals(regFieldId)) {
-						if(strUserEmail == null || "".equals(strUserEmail)){
-							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+						if (strUserEmail == null || "".equals(strUserEmail)) {
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
 									regFieldYsmc + " " + strBlankTips);
-						}else{
-							//校验邮箱格式及唯一性
-							//校验邮箱长度;
-        					      	if("".equals(strUserEmail) || strUserEmail.length()<6 || strUserEmail.length()>70 ){
-        					      		return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
-        										regFieldYsmc + " " + strEmailLength);
-        					      	}
-        					      	//校验邮箱格式;
-        					      	ValidateUtil validateUtil = new ValidateUtil();
-        					      	boolean  bl = validateUtil.validateEmail(strUserEmail);
-        					      	if(bl == false){
-        					      		return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
-        										regFieldYsmc + " " + strEmailFormat);
-        					      	}					      	
-						}						
+						} else {
+							// 校验邮箱格式及唯一性
+							// 校验邮箱长度;
+							if ("".equals(strUserEmail) || strUserEmail.length() < 6 || strUserEmail.length() > 70) {
+								return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
+										regFieldYsmc + " " + strEmailLength);
+							}
+							// 校验邮箱格式;
+							ValidateUtil validateUtil = new ValidateUtil();
+							boolean bl = validateUtil.validateEmail(strUserEmail);
+							if (bl == false) {
+								return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
+										regFieldYsmc + " " + strEmailFormat);
+							}
+						}
 					}
 
 					if ("TZ_MOBILE".equals(regFieldId)) {
-						if(strUserMoblie == null || "".equals(strUserMoblie)){
-							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+						if (strUserMoblie == null || "".equals(strUserMoblie)) {
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
 									regFieldYsmc + " " + strBlankTips);
-						}else{
-							//校验手机格式及唯一性
-							boolean  bl = RegExpValidatorUtils.isMobile(strUserMoblie);
-							if(bl==false){
-								return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+						} else {
+							// 校验手机格式及唯一性
+							boolean bl = RegExpValidatorUtils.isMobile(strUserMoblie);
+							if (bl == false) {
+								return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
 										regFieldYsmc + " " + strPhone);
-							}	
+							}
 						}
-						
+
 					}
-					//清华特例-以下为整数
-					if("TZ_COMMENT12".equals(regFieldId)||"TZ_COMMENT13".equals(regFieldId)||"TZ_COMMENT14".equals(regFieldId)){
-						//清华特例-判断为整数
-						String strTZ_COMMENT="";
-						if(jacksonUtil.containsKey(regFieldId)){
+					// 清华特例-以下为整数
+					if ("TZ_COMMENT12".equals(regFieldId) || "TZ_COMMENT13".equals(regFieldId)
+							|| "TZ_COMMENT14".equals(regFieldId)) {
+						// 清华特例-判断为整数
+						String strTZ_COMMENT = "";
+						if (jacksonUtil.containsKey(regFieldId)) {
 							strTZ_COMMENT = jacksonUtil.getString(regFieldId);
 						}
-						Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$"); 
+						Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
 						Boolean booleanInt = pattern.matcher(strTZ_COMMENT).matches();
-						if(!booleanInt){
-							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+						if (!booleanInt) {
+							return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
 									regFieldYsmc + " " + strIntTips);
-						}			
+						}
 					}
 				}
 			}
 
-			
 			if (!"".equals(updateRegSql)) {
 				updateRegSql = updateRegSql + " where OPRID = ?";
 				Object[] obj = new Object[updateList.size() + 1];
@@ -946,7 +1010,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			}
 			String updateYhxxSQL = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_REALNAME=? WHERE OPRID=?";
 			jdbcTemplate.update(updateYhxxSQL, new Object[] { tzRealName, oprid });
-			
+
 			if (strUserEmail != null && !"".equals(strUserEmail)) {
 				String updateLxfsSQL = "update PS_TZ_LXFSINFO_TBL set TZ_ZY_EMAIL=? where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
 				jdbcTemplate.update(updateLxfsSQL, new Object[] { strUserEmail, oprid });
@@ -956,20 +1020,19 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				String updateLxfsSQL = "update PS_TZ_LXFSINFO_TBL set TZ_ZY_SJ=? where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
 				jdbcTemplate.update(updateLxfsSQL, new Object[] { strUserMoblie, oprid });
 			}
-			
+
 			if (strUserSkype != null && !"".equals(strUserSkype)) {
 				String updateLxfsSQL = "update PS_TZ_LXFSINFO_TBL set TZ_SKYPE=? where TZ_LXFS_LY='ZCYH' and TZ_LYDX_ID=?";
 				jdbcTemplate.update(updateLxfsSQL, new Object[] { strUserSkype, oprid });
 			}
-			
 
 			String strPassSucTips = validateUtil.getMessageTextWithLanguageCd(strJgid, strLang, "TZ_SITE_MESSAGE", "29",
 					"修改成功", "The modification is successful");
-			return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",  strPassSucTips);
+			return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", strPassSucTips);
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",  e.toString());
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", e.toString());
 			} catch (TzSystemException e1) {
 				e1.printStackTrace();
 				return e1.toString();
@@ -999,7 +1062,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			if ("TZ_GUEST".equals(oprid)) {
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",  strPassLoginTips);
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", strPassLoginTips);
 			}
 
 			// 获得系统中旧密码;
@@ -1007,14 +1070,14 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			String strOldHashPass = jdbcTemplate.queryForObject(strOldHashPassSQL, new Object[] { oprid }, "String");
 
 			if (strOldPass == null || "".equals(strOldPass.trim())) {
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
 						strOldPassMsg + " " + strErrorTips);
 			}
 			strOldPass = DESUtil.encrypt(strOldPass.trim(), "TZGD_Tranzvision");
 
 			// 如果用户提交的旧密码hash加密后和系统原有的旧密码不同，则返回false终止程序;
 			if (!strOldPass.equals(strOldHashPass)) {
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", 
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",
 						strOldPassMsg + " " + strErrorTips);
 			}
 
@@ -1024,11 +1087,11 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			// 存储新密码到数据库;
 			String updatePassword = "UPDATE PSOPRDEFN SET OPERPSWD=? WHERE OPRID=?";
 			jdbcTemplate.update(updatePassword, new Object[] { strNewHashPass, oprid });
-			return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",  strPassSucTips);
+			return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", strPassSucTips);
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",  e.toString());
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", e.toString());
 			} catch (TzSystemException e1) {
 				e1.printStackTrace();
 				return e1.toString();
@@ -1062,11 +1125,11 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			String sql = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_BJS_EML=?,TZ_BJS_SMS=? WHERE OPRID=?";
 			jdbcTemplate.update(sql, new Object[] { isEmail, isMoblie, oprid });
-			return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",  strSuccessTips);
+			return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", strSuccessTips);
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON",  e.toString());
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_USERMG_JSON", e.toString());
 			} catch (TzSystemException e1) {
 				e1.printStackTrace();
 				return e1.toString();
@@ -1118,8 +1181,8 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			if (bindEmailFlg <= 0) {
 				// 未录入邮箱;
 				if (strEmail == null || "".equals(strEmail)) {
-					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON",  "N",
-							bindEmail, is_Bind, strBingTips2, strEmail);
+					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON", "N", bindEmail,
+							is_Bind, strBingTips2, strEmail);
 				} else {
 					// 是否已经被绑定;
 					int rept = 0;
@@ -1127,36 +1190,36 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 					rept = jdbcTemplate.queryForObject(reptSQL, new Object[] { strOrgid, strUser, strEmail },
 							"Integer");
 					if (rept > 0) {
-						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON",  "N",
-								bindEmail, is_Bind, strBingTips3, strEmail);
+						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON", "N", bindEmail,
+								is_Bind, strBingTips3, strEmail);
 					} else {
 						// 更新;
 						String updateSQL = "update PS_TZ_AQ_YHXX_TBL set TZ_EMAIL= ? ,TZ_YXBD_BZ='Y',ROW_LASTMANT_DTTM =current_timestamp(),ROW_LASTMANT_OPRID=? where TZ_JG_ID=? and OPRID=? and TZ_RYLX='ZCYH'";
 						jdbcTemplate.update(updateSQL, new Object[] { strEmail, strUser, strOrgid, strUser });
-						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON",  "Y",
-								bindEmail, "Y", "", strEmail);
+						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON", "Y", bindEmail,
+								"Y", "", strEmail);
 					}
 				}
 			} else {
 				// 已绑定邮箱，进行解绑;
 				if (bindPhoneFlg <= 0) {
 					// 判断是否绑定了手机，如果未绑定手机，则禁止解绑邮箱;
-					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON",  "N",
-							bindEmail, is_Bind, strBingTips1, strEmail);
+					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON", "N", bindEmail,
+							is_Bind, strBingTips1, strEmail);
 				} else {
 					// 如果已绑定手机，则可以解绑邮箱;
 					// 更新;
 					String updateSQL = "update PS_TZ_AQ_YHXX_TBL set TZ_EMAIL='',TZ_YXBD_BZ='N',ROW_LASTMANT_DTTM=current_timestamp(),ROW_LASTMANT_OPRID=? where TZ_JG_ID=? and OPRID=? and TZ_RYLX='ZCYH'";
 					jdbcTemplate.update(updateSQL, new Object[] { strUser, strOrgid, strUser });
-					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON",  "Y",
-							bindEmail, "N", "", strEmail);
+					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON", "Y", bindEmail, "N",
+							"", strEmail);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON",  "N", bindEmail,
-						is_Bind, e.toString(), strEmail);
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_EMAIL_JSON", "N", bindEmail, is_Bind,
+						e.toString(), strEmail);
 			} catch (TzSystemException e1) {
 				e1.printStackTrace();
 				return e1.toString();
@@ -1209,7 +1272,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 			if (bindPhoneFlg <= 0) {
 				// 未录入手机;
 				if (strPhone == null || "".equals(strPhone)) {
-					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON",  "N", "N",
+					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON", "N", "N",
 							bindMobile, is_Bind, strBingTips1);
 				} else {
 					// 是否已经被绑定;
@@ -1218,13 +1281,13 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 					rept = jdbcTemplate.queryForObject(reptSQL, new Object[] { strOrgid, strUser, strPhone },
 							"Integer");
 					if (rept > 0) {
-						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON",  "N",
+						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON", "N",
 								bindMobile, is_Bind, strBingTips2);
 					} else {
 						// 更新;
 						String updateSQL = "update PS_TZ_AQ_YHXX_TBL set TZ_MOBILE=?,TZ_SJBD_BZ='Y',ROW_LASTMANT_DTTM=current_timestamp(),ROW_LASTMANT_OPRID=? where TZ_JG_ID=? and OPRID=? and TZ_RYLX='ZCYH'";
 						jdbcTemplate.update(updateSQL, new Object[] { strPhone, strUser, strOrgid, strUser });
-						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON",  "Y",
+						return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON", "Y",
 								bindMobile, "Y", "");
 					}
 				}
@@ -1232,21 +1295,21 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				// 已绑定邮箱，进行解绑;
 				if (bindEmailFlg <= 0) {
 					// 判断是否绑定了邮箱，如果未绑定邮箱，则禁止解绑手机;
-					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON",  "N",
-							bindMobile, is_Bind, strBingTips1);
+					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON", "N", bindMobile,
+							is_Bind, strBingTips1);
 				} else {
 					// 如果已绑定邮箱，则可以解绑手机;
 					// 更新;
 					String updateSQL = "update PS_TZ_AQ_YHXX_TBL set TZ_MOBILE='',TZ_SJBD_BZ='N',ROW_LASTMANT_DTTM=current_timestamp(),ROW_LASTMANT_OPRID=? where TZ_JG_ID=? and OPRID=? and TZ_RYLX='ZCYH'";
 					jdbcTemplate.update(updateSQL, new Object[] { strUser, strOrgid, strUser });
-					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON",  "Y",
-							bindMobile, "N", "");
+					return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON", "Y", bindMobile,
+							"N", "");
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON",  "N", bindMobile,
+				return tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_BIND_MOBILE_JSON", "N", bindMobile,
 						is_Bind, e.toString());
 			} catch (TzSystemException e1) {
 				e1.printStackTrace();

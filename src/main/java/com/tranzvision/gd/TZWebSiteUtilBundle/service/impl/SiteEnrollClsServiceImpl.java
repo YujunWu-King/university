@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZWebSiteUtilBundle.service.impl;
 
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -821,13 +822,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strJumUrl = request.getContextPath() + "/dispatcher";
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {
-						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
 							+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-							+ "\",\"sen\":\"13\"}}";
+							+ "\",\"sen\":\"13\"}}","UTF-8");
 					}else{
-						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
 								+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"12\"}}";
+								+ "\",\"sen\":\"12\"}}","UTF-8");
 					}
 					strJumUrl = strJumUrl + strJumPar;
 					
@@ -843,13 +844,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strJumUrl = request.getContextPath() + "/dispatcher";
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {
-						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
 								+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"11\"}}";
+								+ "\",\"sen\":\"11\"}}","UTF-8");
 					} else {
-						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
 								+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"1\"}}";
+								+ "\",\"sen\":\"1\"}}","UTF-8");
 					}
 					strJumUrl = strJumUrl + strJumPar;
 				}
@@ -1452,13 +1453,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strJumUrl = request.getContextPath() + "/dispatcher";
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {
-						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
 							+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-							+ "\",\"sen\":\"13\"}}";
+							+ "\",\"sen\":\"13\"}}","UTF-8");
 					}else{
-						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
 								+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"12\"}}";
+								+ "\",\"sen\":\"12\"}}","UTF-8");
 					}
 					strJumUrl = strJumUrl + strJumPar;
 				} else {
@@ -1474,13 +1475,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {
 
-						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
 								+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"11\"}}";
+								+ "\",\"sen\":\"11\"}}","UTF-8");
 					} else {
-						strJumPar = "?tzParams={\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
 								+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"1\"}}";
+								+ "\",\"sen\":\"1\"}}","UTF-8");
 					}
 					strJumUrl = strJumUrl + strJumPar;
 				}

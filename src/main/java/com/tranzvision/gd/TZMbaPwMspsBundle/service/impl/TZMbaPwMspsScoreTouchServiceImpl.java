@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZMbaPwMspsBundle.service.impl;
 
+import java.net.URLEncoder;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +58,8 @@ public class TZMbaPwMspsScoreTouchServiceImpl extends FrameworkImpl{
 				String iframeDivId = "div_"+iframeId;
 				
 				String bmbUrl = commonUrl
-						+ "?tzParams={\"ComID\":\"TZ_ONLINE_REG_COM\",\"PageID\":\"TZ_ONLINE_APP_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"TZ_APP_INS_ID\":\""
-						+ bmbId + "\"}}";
+						+ "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_ONLINE_REG_COM\",\"PageID\":\"TZ_ONLINE_APP_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"TZ_APP_INS_ID\":\""
+						+ bmbId + "\"}}","UTF-8");
 				
 				strRet = tzGdObject.getHTMLText("HTML.TZInterviewReviewTouchBundle.TZ_MS_DF_TC_HTML", contextPath,commonUrl,backToKspsUrl,backToHomeUrl,logoutUrl,modifyPswdUrl
 						,examineeSqh,examineeName,examineeBmbId,strClassId,strBatchId,iframeId,iframeDivId,bmbUrl);
