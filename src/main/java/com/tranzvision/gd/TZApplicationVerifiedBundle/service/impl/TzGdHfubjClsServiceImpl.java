@@ -40,8 +40,10 @@ public class TzGdHfubjClsServiceImpl extends FrameworkImpl {
 			String str_bmlc_id = jacksonUtil.getString("bmlc_id");
 			String str_hfy_id = jacksonUtil.getString("hfy_id");
 
-			String str_color = "", str_lc_name = "", str_xs_name = "", str_mrfb = "";
-			String sql = "SELECT TZ_APPPRO_COLOR,TZ_CLS_RESULT,TZ_APPPRO_CONTENT,TZ_WFB_DEFALT_BZ FROM PS_TZ_CLS_BMLCHF_T WHERE TZ_CLASS_ID=? AND TZ_APPPRO_ID=? AND TZ_APPPRO_HF_BH=?";
+			
+			String str_color = "", str_lc_name = "", str_xs_name = "", str_mrfb = "",str_sysvar = "";
+			String sql = "SELECT TZ_APPPRO_COLOR,TZ_CLS_RESULT,TZ_APPPRO_CONTENT,TZ_SYSVAR,TZ_WFB_DEFALT_BZ FROM PS_TZ_CLS_BMLCHF_T WHERE TZ_CLASS_ID=? AND TZ_APPPRO_ID=? AND TZ_APPPRO_HF_BH=?";
+			
 			Map<String, Object> map = jdbcTemplate.queryForMap(sql,
 					new Object[] { str_bj_id, str_bmlc_id, str_hfy_id });
 			if (map != null) {
@@ -49,6 +51,7 @@ public class TzGdHfubjClsServiceImpl extends FrameworkImpl {
 				str_lc_name = (String) map.get("TZ_CLS_RESULT");
 				str_xs_name = (String) map.get("TZ_APPPRO_CONTENT");
 				str_mrfb = (String) map.get("TZ_WFB_DEFALT_BZ");
+				str_sysvar = (String) map.get("TZ_SYSVAR");
 			}
 
 			str_xs_name = str_xs_name.replace("<p>", "");
@@ -66,6 +69,7 @@ public class TzGdHfubjClsServiceImpl extends FrameworkImpl {
 			jsonMap.put("colorCode", str_color);
 			jsonMap.put("hf_jg", str_lc_name);
 			jsonMap.put("ms_zg", str_xs_name);
+			jsonMap.put("sysvar", str_sysvar);
 			jsonMap.put("hf_mrz", str_mrfb);
 			returnJsonMap.replace("formData", jsonMap);
 		} catch (Exception e) {
@@ -105,6 +109,7 @@ public class TzGdHfubjClsServiceImpl extends FrameworkImpl {
 				String colorCode = jacksonUtil.getString("colorCode");
 				String hf_jg = jacksonUtil.getString("hf_jg");
 				String ms_zg = jacksonUtil.getString("ms_zg");
+				String sysvar = jacksonUtil.getString("sysvar");
 				if ("on".equals(str_hf_mrz)) {
 					jdbcTemplate.update(
 							"UPDATE PS_TZ_CLS_BMLCHF_T SET TZ_WFB_DEFALT_BZ='N' WHERE TZ_CLASS_ID=? AND TZ_APPPRO_ID=?",
@@ -120,7 +125,7 @@ public class TzGdHfubjClsServiceImpl extends FrameworkImpl {
 				psTzClsBmlchfT.setTzAppproColor(colorCode);
 				psTzClsBmlchfT.setTzClsResult(hf_jg);
 				psTzClsBmlchfT.setTzAppproContent(ms_zg);
-
+				psTzClsBmlchfT.setTzSysvar(sysvar);
 				psTzClsBmlchfT.setTzWfbDefaltBz(str_hf_mrz);
 				psTzClsBmlchfTMapper.insert(psTzClsBmlchfT);
 				jsonmap.replace("dybh_id", templateId);
@@ -163,6 +168,7 @@ public class TzGdHfubjClsServiceImpl extends FrameworkImpl {
 				String colorCode = jacksonUtil.getString("colorCode");
 				String hf_jg = jacksonUtil.getString("hf_jg");
 				String ms_zg = jacksonUtil.getString("ms_zg");
+				String sysvar = jacksonUtil.getString("sysvar");
 				if ("on".equals(str_hf_mrz)) {
 					jdbcTemplate.update(
 							"UPDATE PS_TZ_CLS_BMLCHF_T SET TZ_WFB_DEFALT_BZ='N' WHERE TZ_CLASS_ID=? AND TZ_APPPRO_ID=?",
@@ -179,6 +185,7 @@ public class TzGdHfubjClsServiceImpl extends FrameworkImpl {
 					psTzClsBmlchfT.setTzClsResult(hf_jg);
 					psTzClsBmlchfT.setTzAppproContent(ms_zg);
 					psTzClsBmlchfT.setTzWfbDefaltBz(str_hf_mrz);
+					psTzClsBmlchfT.setTzSysvar(sysvar);
 					psTzClsBmlchfTMapper.updateByPrimaryKeySelective(psTzClsBmlchfT);
 				} else {
 					errMsg[0] = "1";

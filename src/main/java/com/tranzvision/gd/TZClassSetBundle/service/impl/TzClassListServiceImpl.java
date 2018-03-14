@@ -441,6 +441,8 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 										: String.valueOf(mapBmlcbzhf.get("TZ_CLS_RESULT"));
 								String tzAppproContent = mapBmlcbzhf.get("TZ_APPPRO_CONTENT") == null ? ""
 										: String.valueOf(mapBmlcbzhf.get("TZ_APPPRO_CONTENT"));
+								String tzSysvar = mapBmlcbzhf.get("TZ_SYSVAR") == null ? ""
+										: String.valueOf(mapBmlcbzhf.get("TZ_SYSVAR"));
 								String tzWfbDefaltBz = mapBmlcbzhf.get("TZ_WFB_DEFALT_BZ") == null ? ""
 										: String.valueOf(mapBmlcbzhf.get("TZ_WFB_DEFALT_BZ"));
 
@@ -451,6 +453,7 @@ public class TzClassListServiceImpl extends FrameworkImpl {
 								psTzClsBmlchfT.setTzAppproColor(tzAppproColor);
 								psTzClsBmlchfT.setTzClsResult(tzClsResult);
 								psTzClsBmlchfT.setTzAppproContent(tzAppproContent);
+								psTzClsBmlchfT.setTzSysvar(tzSysvar);
 								psTzClsBmlchfT.setTzWfbDefaltBz(tzWfbDefaltBz);
 
 								sql = "select 'Y' from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=? and TZ_APPPRO_HF_BH=?";

@@ -1075,7 +1075,7 @@ var SurveyBuild = {
 		if(!SurveyBuild._DynamicBindHtml){
 			$.ajax({
 				type: "post",
-				url: SurveyBuild.tzGeneralURL+'?tzParams={"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QG","comParams":{"siteId":"'+siteId+'"}}',
+				url: SurveyBuild.tzGeneralURL+'?tzParams='+encodeURIComponent('{"ComID":"TZ_USER_REG_COM","PageID":"TZ_REGGL_STD","OperateType":"QG","comParams":{"siteId":"'+siteId+'"}}'),
 				dataType: "json",
 				async: false,
 				success: function(result){
@@ -1215,7 +1215,7 @@ var SurveyBuild = {
 		var ruleSetPage = "";
 		$.ajax({
 			type: "post",
-			url: _url+'?tzParams={"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"QF","comParams":{"tz_app_id":"'+tz_app_id+'","tz_language":"C"}}',
+			url: _url+'?tzParams='+encodeURIComponent('{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"QF","comParams":{"tz_app_id":"'+tz_app_id+'","tz_language":"C"}}'),
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1265,7 +1265,7 @@ var SurveyBuild = {
 		var _url=SurveyBuild.tzGeneralURL;
 		$.ajax({
 			type: "post",
-			url: _url+'?tzParams={"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"U","comParams":{"update":[{"tz_app_id":"'+id+'","tz_language":"C","bmb_id":"'+_bmb_id+'","email_desc":"'+_email_desc+'","tjx_qy":"'+_zhs_qy+'"}]}}',
+			url: _url+'?tzParams='+encodeURIComponent('{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"U","comParams":{"update":[{"tz_app_id":"'+id+'","tz_language":"C","bmb_id":"'+_bmb_id+'","email_desc":"'+_email_desc+'","tjx_qy":"'+_zhs_qy+'"}]}}'),
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1287,7 +1287,7 @@ var SurveyBuild = {
 		var ruleSetPage = "";
 		$.ajax({
 			type: "post",
-			url: _url+'?tzParams={"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"QF","comParams":{"tz_app_id":"'+tz_app_id+'","tz_language":"E"}}',
+			url: _url+'?tzParams='+encodeURIComponent('{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"QF","comParams":{"tz_app_id":"'+tz_app_id+'","tz_language":"E"}}'),
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -1338,7 +1338,7 @@ var SurveyBuild = {
 		var _url=SurveyBuild.tzGeneralURL;
 		$.ajax({
 			type: "post",
-			url: _url+'?tzParams={"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"U","comParams":{"update":[{"tz_app_id":"'+id+'","tz_language":"E","bmb_id":"'+_bmb_id+'","email_desc":"'+_email_desc+'","tjx_qy":"'+_eng_qy+'"}]}}',
+			url: _url+'?tzParams='+encodeURIComponent('{"ComID":"TZ_GD_TJX_COM","PageID":"TZ_GD_TJX_PZ_STD","OperateType":"U","comParams":{"update":[{"tz_app_id":"'+id+'","tz_language":"E","bmb_id":"'+_bmb_id+'","email_desc":"'+_email_desc+'","tjx_qy":"'+_eng_qy+'"}]}}'),
 			dataType: "json",
 			async: false,
 			success: function(result){
@@ -2543,14 +2543,28 @@ var SurveyBuild = {
 	        });
 		}else{
 			/*纵向报名表*/
+	        
 	        // 标记 顶层页 真正的页 不是页
 	        var topPage=false,Page=false,noPage=false;
+	        // 校验是否是多层菜单
+	        var isMultilayerMenu = false;
+	        $("#question-box>li").each(function(f) {
+	        	var hhhhhh = $(this).attr("data_id")
+	        	var variable2 = SurveyBuild._items[hhhhhh]["fPageId"] || '';
+	        	if (variable2 !='') {
+	        		isMultilayerMenu = true;
+	        		return false;
+	        	}
+	        });
 	        
 	        $("#question-box>li").each(function(f) {
 	        	topPage=false,Page=false,noPage=false;
 	        	
 	            var g = $(this),h = g.attr("data_id"),e = SurveyBuild._items[h]["classname"];
-	            
+	            //console.log(h);
+	            //console.log(e);
+	            //console.log(SurveyBuild._items[h]["itemName"]);
+	            //console.log(SurveyBuild._items[h]["fPageId"]);
 	            if (e !="Page") {
 	            	noPage = true;
 					topPage = false;
@@ -2558,18 +2572,33 @@ var SurveyBuild = {
 	            } else {
 					noPage=false;
 	            	var variable2 = SurveyBuild._items[h]["fPageId"] || '';
+	            	console.log(variable2);
 	            	if (variable2 !='') {
-	            		topPage = true;
-	            	} else {
 	            		Page = true;
+	            		topPage = false;
+	            	} else {
+	            		topPage = true;
+	            		Page = false;
 	            	}
 	            }
 	            // 顶级的页，不算pageno，固定写死为0
 				
-	            if (topPage) {
-	            	SurveyBuild._items[h]["pageno"] = 0;
+	         // 顶级的页，不算pageno，固定写死为0
+	            if (isMultilayerMenu) {
+	            	if (topPage) {
+	            		SurveyBuild._items[h]["pageno"] = 0;
+	            	} else {
+	            		SurveyBuild._items[h]["pageno"] = pageno;
+	            	}
 	            } else {
 	            	SurveyBuild._items[h]["pageno"] = pageno;
+	            	 if (e =="Page") {
+	            		 Page = true;
+	            		 noPage = false;
+	            	 } else {
+	            		 noPage = true;
+	            		 Page= false;
+	            	 }
 	            }
 	            
 	            // 遇到不是分页，c累加1，c的作用是 某一页内 控件的统计

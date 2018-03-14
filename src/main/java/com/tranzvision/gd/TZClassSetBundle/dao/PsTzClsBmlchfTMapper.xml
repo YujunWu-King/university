@@ -5,6 +5,7 @@
     <id column="TZ_CLASS_ID" property="tzClassId" jdbcType="VARCHAR" />
     <id column="TZ_APPPRO_ID" property="tzAppproId" jdbcType="VARCHAR" />
     <id column="TZ_APPPRO_HF_BH" property="tzAppproHfBh" jdbcType="VARCHAR" />
+    <result column="TZ_SYSVAR" property="tzSysvar" jdbcType="VARCHAR" />
     <result column="TZ_APPPRO_COLOR" property="tzAppproColor" jdbcType="VARCHAR" />
     <result column="TZ_CLS_RESULT" property="tzClsResult" jdbcType="VARCHAR" />
     <result column="TZ_WFB_DEFALT_BZ" property="tzWfbDefaltBz" jdbcType="VARCHAR" />
@@ -13,7 +14,8 @@
     <result column="TZ_APPPRO_CONTENT" property="tzAppproContent" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    TZ_CLASS_ID, TZ_APPPRO_ID, TZ_APPPRO_HF_BH, TZ_APPPRO_COLOR, TZ_CLS_RESULT, TZ_WFB_DEFALT_BZ
+    TZ_CLASS_ID, TZ_APPPRO_ID, TZ_APPPRO_HF_BH, TZ_SYSVAR, TZ_APPPRO_COLOR, TZ_CLS_RESULT, 
+    TZ_WFB_DEFALT_BZ
   </sql>
   <sql id="Blob_Column_List" >
     TZ_APPPRO_CONTENT
@@ -36,11 +38,11 @@
   </delete>
   <insert id="insert" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBmlchfT" >
     insert into PS_TZ_CLS_BMLCHF_T (TZ_CLASS_ID, TZ_APPPRO_ID, TZ_APPPRO_HF_BH, 
-      TZ_APPPRO_COLOR, TZ_CLS_RESULT, TZ_WFB_DEFALT_BZ, 
-      TZ_APPPRO_CONTENT)
+      TZ_SYSVAR, TZ_APPPRO_COLOR, TZ_CLS_RESULT, 
+      TZ_WFB_DEFALT_BZ, TZ_APPPRO_CONTENT)
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzAppproId,jdbcType=VARCHAR}, #{tzAppproHfBh,jdbcType=VARCHAR}, 
-      #{tzAppproColor,jdbcType=VARCHAR}, #{tzClsResult,jdbcType=VARCHAR}, #{tzWfbDefaltBz,jdbcType=VARCHAR}, 
-      #{tzAppproContent,jdbcType=LONGVARCHAR})
+      #{tzSysvar,jdbcType=VARCHAR}, #{tzAppproColor,jdbcType=VARCHAR}, #{tzClsResult,jdbcType=VARCHAR}, 
+      #{tzWfbDefaltBz,jdbcType=VARCHAR}, #{tzAppproContent,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBmlchfT" >
     insert into PS_TZ_CLS_BMLCHF_T
@@ -53,6 +55,9 @@
       </if>
       <if test="tzAppproHfBh != null" >
         TZ_APPPRO_HF_BH,
+      </if>
+      <if test="tzSysvar != null" >
+        TZ_SYSVAR,
       </if>
       <if test="tzAppproColor != null" >
         TZ_APPPRO_COLOR,
@@ -77,6 +82,9 @@
       <if test="tzAppproHfBh != null" >
         #{tzAppproHfBh,jdbcType=VARCHAR},
       </if>
+      <if test="tzSysvar != null" >
+        #{tzSysvar,jdbcType=VARCHAR},
+      </if>
       <if test="tzAppproColor != null" >
         #{tzAppproColor,jdbcType=VARCHAR},
       </if>
@@ -94,6 +102,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBmlchfT" >
     update PS_TZ_CLS_BMLCHF_T
     <set >
+      <if test="tzSysvar != null" >
+        TZ_SYSVAR = #{tzSysvar,jdbcType=VARCHAR},
+      </if>
       <if test="tzAppproColor != null" >
         TZ_APPPRO_COLOR = #{tzAppproColor,jdbcType=VARCHAR},
       </if>
@@ -113,7 +124,8 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBmlchfT" >
     update PS_TZ_CLS_BMLCHF_T
-    set TZ_APPPRO_COLOR = #{tzAppproColor,jdbcType=VARCHAR},
+    set TZ_SYSVAR = #{tzSysvar,jdbcType=VARCHAR},
+      TZ_APPPRO_COLOR = #{tzAppproColor,jdbcType=VARCHAR},
       TZ_CLS_RESULT = #{tzClsResult,jdbcType=VARCHAR},
       TZ_WFB_DEFALT_BZ = #{tzWfbDefaltBz,jdbcType=VARCHAR},
       TZ_APPPRO_CONTENT = #{tzAppproContent,jdbcType=LONGVARCHAR}
@@ -123,7 +135,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZClassSetBundle.model.PsTzClsBmlchfT" >
     update PS_TZ_CLS_BMLCHF_T
-    set TZ_APPPRO_COLOR = #{tzAppproColor,jdbcType=VARCHAR},
+    set TZ_SYSVAR = #{tzSysvar,jdbcType=VARCHAR},
+      TZ_APPPRO_COLOR = #{tzAppproColor,jdbcType=VARCHAR},
       TZ_CLS_RESULT = #{tzClsResult,jdbcType=VARCHAR},
       TZ_WFB_DEFALT_BZ = #{tzWfbDefaltBz,jdbcType=VARCHAR}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}

@@ -131,6 +131,7 @@ public class LcSysvarClass {
 					}
 				}
 			}else{
+				//PC版本 
 				if (totalnum > 0) {
 					List<Map<String, Object>> list = jdbcTemplate.queryForList(
 							"SELECT TZ_XXX_BH,TZ_XXX_MC FROM PS_TZ_APP_XXXPZ_T WHERE TZ_COM_LMC = 'Page' AND TZ_APP_TPL_ID = ? and TZ_PAGE_NO > 0 ORDER BY TZ_ORDER ASC",
@@ -228,10 +229,12 @@ public class LcSysvarClass {
 						}
 					}
 					
-					tableHtml = tableHtml + "<thead><tr><td colspan=\"3\">推荐人提交推荐信情况</td><td colspan=\"3\">打印PDF报名表</td></tr></thead>";
+					//tableHtml = tableHtml + "<thead><tr><td colspan=\"3\">推荐人提交推荐信情况</td><td colspan=\"3\">打印PDF报名表</td></tr></thead>";
+					//modity by caoy 2018-3-14 华东理工没有 推荐信
+					tableHtml = tableHtml + "<thead><tr><td colspan=\"6\">打印PDF报名表</td></tr></thead>";
 					
 					String tjrqkxx = "";
-					String tjxSql = "select TZ_REFERRER_NAME,TZ_TJX_APP_INS_ID,TZ_REF_LETTER_ID,TZ_REFLETTERTYPE from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and TZ_MBA_TJX_YX='Y' order by TZ_TJR_ID asc";
+					/*String tjxSql = "select TZ_REFERRER_NAME,TZ_TJX_APP_INS_ID,TZ_REF_LETTER_ID,TZ_REFLETTERTYPE from PS_TZ_KS_TJX_TBL where TZ_APP_INS_ID=? and TZ_MBA_TJX_YX='Y' order by TZ_TJR_ID asc";
 					List<Map<String, Object>> tjxList = jdbcTemplate.queryForList(tjxSql,new Object[]{appIns});
 					if(tjxList != null && tjxList.size() > 0){
 			        	for(int i = 0 ; i < tjxList.size(); i++){
@@ -267,11 +270,12 @@ public class LcSysvarClass {
 			         }
 					
 					tjrqkxx = "<td colspan=\"3\">" + tjrqkxx + "</td>";
+					*/
 					
 					//打印报名表;
 					String applyFormPrint = rootPath + "/PrintPdfServlet?instanceID=" + appIns;
 					//未提交也可以打印;
-					tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
+					tjrqkxx = tjrqkxx + "<td colspan=\"6\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";
 					/*
 					if ("U".equals(appInsStatus)) {
 						tjrqkxx = tjrqkxx + "<td colspan=\"3\">" + "<a target='_blank' href='"+applyFormPrint+"'>打印报名表</a>" + "</td>";

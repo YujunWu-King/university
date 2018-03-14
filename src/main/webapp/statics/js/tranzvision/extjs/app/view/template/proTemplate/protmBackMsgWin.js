@@ -66,6 +66,30 @@ Ext.define('KitchenSink.view.template.proTemplate.protmBackMsgWin', {
 				name: 'TZ_DEF_CONTENT',
 				model:'simple'
 			},{
+				layout: {
+					type: 'column'
+				},
+				bodyStyle:'padding:0 0 10px 0',
+				items:[{
+					columnWidth:.6,
+					xtype: 'textfield',
+					fieldLabel: Ext.tzGetResourse("TZ_RES_TMPL_MG_COM.TZ_RESTPL_PARA_STD.systvar","动态结果显示"),
+					name: 'TZ_SYSVAR',
+					editable: false,
+					triggers: {
+						search: {
+							cls: 'x-form-search-trigger',
+							handler: "searchSysVar"
+						}
+	                }			
+				},{
+					columnWidth:.4,
+					xtype: 'displayfield',
+					hideLabel: true,
+					name: 'TZ_SYSVAR_NAME',
+					style:'margin-left:8px'
+				}]
+			},{
 				xtype: 'checkbox',
 				boxLabel:Ext.tzGetResourse("TZ_PM_BMLCMBGL_COM.TZ_PM_BMLCMB_STD.wfbsdmrz","未发布时的默认值") ,
 				name: 'TZ_WFB_DEFALT_BZ'

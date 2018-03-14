@@ -344,6 +344,7 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 	private String getBmlc(long TZ_APP_INS_ID,String classId,String strSiteId,String language,String msPcName){
 		String applicationCenterHtml = "";
 		AnalysisLcResult analysisLcResult = new AnalysisLcResult();
+		Map<String, Object> map = null;
 		//项目跟目录;
 		String rootPath = request.getContextPath();
 		
@@ -401,25 +402,34 @@ public class ClassApplication2ServiceImpl extends FrameworkImpl {
 						if (TZ_APPPRO_RST == null) {
 							TZ_APPPRO_RST = "";
 						}
-	
+						String TZ_SYSVAR = "";
+						
 						// 没有发布回复短语则统一取默认的
+						// update by caoy @2018-3-14 回复短语如果有配置系统变量
+						// 就显示内容，有系统变量就显示 系统变量获取的东西
 						if (TZ_APPPRO_HF_BH == null || "".equals(TZ_APPPRO_HF_BH)) {
-							TZ_APPPRO_RST = jdbcTemplate.queryForObject(
-									"select TZ_APPPRO_CONTENT from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=? and TZ_WFB_DEFALT_BZ='on'",
-									new Object[] { classId, TZ_APPPRO_ID }, "String");
-							if (TZ_APPPRO_RST == null) {
-								TZ_APPPRO_RST = "";
+							map = jdbcTemplate.queryForMap(
+									"select TZ_APPPRO_CONTENT,TZ_SYSVAR from PS_TZ_CLS_BMLCHF_T where TZ_CLASS_ID=? and TZ_APPPRO_ID=? and TZ_WFB_DEFALT_BZ='on'",
+									new Object[] { classId, TZ_APPPRO_ID });
+							if (map != null) {
+								TZ_APPPRO_RST = map.get("TZ_APPPRO_CONTENT") == null ? ""
+										: map.get("TZ_APPPRO_CONTENT").toString();
+								TZ_SYSVAR = map.get("TZ_SYSVAR") == null ? ""
+										: map.get("TZ_SYSVAR").toString();
 							}
 						}
 	
-						if (TZ_APPPRO_RST != null && !"".equals(TZ_APPPRO_RST)) {
+						//有系统变量 优先显示系统变量，如果没有，显示内容
+						if (TZ_SYSVAR != null && !"".equals(TZ_SYSVAR)) {
 							String type = "A";
 							// 解析邮件里的系统变量;
-							String[] result = analysisLcResult.analysisLc(type, String.valueOf(TZ_APP_INS_ID),
-									rootPath, TZ_APPPRO_RST,"N",strSiteId);
+							String[] result = analysisLcResult.analysisLcNOZWF(type, String.valueOf(TZ_APP_INS_ID),
+									rootPath, TZ_SYSVAR,"N",strSiteId);
 	
 							isFb = result[0];
-							TZ_APPPRO_RST = result[1];
+							if(result[1] != null && !"".equals(result[1])){
+								TZ_APPPRO_RST = result[1];
+							}
 						}
 	
 						// 流程发布内容;

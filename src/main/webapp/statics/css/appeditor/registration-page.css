@@ -77,11 +77,11 @@
 	padding-left: 15px;
 }
 .regmain-menu ul li a{
-	color:#8f5dc0;
+	color:#078445;
 }
 /* 第一层菜单*/
 .regmain-menu ul li.menu-active-top{
-	background:#8f5dc0;
+	background:#078445;
 	color:#fff;
 	border-radius: 5px;
 	padding-left: 15px;
@@ -90,7 +90,7 @@
 	color:#fff;
 }
 .regmain-menu ul li.menu-active-top:hover{
-	background:#8f5dc0;
+	background:#078445;
 }
 /* 第二层默认菜单*/
 .regmain-menu ul li.menu-active{
@@ -180,19 +180,7 @@
 	line-height:46px;
 	margin-right:10px;
 	border-radius:5px;
-	background:#8f5dc0;
-}
-
-.btn-HS{
-	float:left;
-	text-align:center;
-	width:108px;
-	height:46px;
-	color:#fff;
-	line-height:46px;
-	margin-right:10px;
-	border-radius:5px;
-	background:#999;
+	background:#078445;
 }
 .btn-pre{
 	text-align:center;
@@ -216,7 +204,7 @@
     vertical-align: middle;
 }
 .btn-action:hover{
-	background:#8f5dc0;
+	background:#078445;
 }
 .btn-save:hover{
 	background:#d96600;
@@ -1145,7 +1133,7 @@ url("chrome://browser/content/history/history-panel.xul")
 .sideslip{
 	width:80px;
 	height:44px;
-	background:#0070c6;
+	background:#078445;
 	position:fixed;
     right:30px;
     bottom: 30px;

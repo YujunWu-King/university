@@ -65,11 +65,13 @@ public class proReplyInfoServiceImpl extends FrameworkImpl{
 				String strMsgName = "";
 				String strMsgColor = "";
 				String strMsgContent = "";
+				String strSysvar = "";
 				String strDefaultFlag = "";
 				strMsgId = jacksonUtil.getString("TZ_APPPRO_HF_BH");
 				strMsgName = jacksonUtil.getString("TZ_CLS_RESULT");
 				strMsgColor = jacksonUtil.getString("TZ_APPPRO_COLOR");
 				strMsgContent = jacksonUtil.getString("TZ_DEF_CONTENT");
+				strSysvar = jacksonUtil.getString("TZ_SYSVAR")==null?"":jacksonUtil.getString("TZ_SYSVAR");
 				strDefaultFlag = jacksonUtil.getString("TZ_WFB_DEFALT_BZ");
 	
 				if("".equals(strAppProcessTmpId)||"NEXT".equals(strAppProcessTmpId.toUpperCase())||"".equals(strAppProcessId)||"NEXT".equals(strAppProcessId.toUpperCase())){
@@ -87,6 +89,7 @@ public class proReplyInfoServiceImpl extends FrameworkImpl{
 						psTzAppProHfT.setTzClsResult(strMsgName);
 						psTzAppProHfT.setTzAppproColor(strMsgColor);
 						psTzAppProHfT.setTzAppproContent(strMsgContent);
+						psTzAppProHfT.setTzSysvar(strSysvar);
 						psTzAppProHfT.setTzWfbDefaltBz(strDefaultFlag);
 						PsTzAppProHfTMapper.insert(psTzAppProHfT);
 						
@@ -145,11 +148,13 @@ public class proReplyInfoServiceImpl extends FrameworkImpl{
 				String strMsgName = "";
 				String strMsgColor = "";
 				String strMsgContent = "";
+				String strSysvar = "";
 				String strDefaultFlag = "";
 				strMsgId = jacksonUtil.getString("TZ_APPPRO_HF_BH");
 				strMsgName = jacksonUtil.getString("TZ_CLS_RESULT");
 				strMsgColor = jacksonUtil.getString("TZ_APPPRO_COLOR");
 				strMsgContent = jacksonUtil.getString("TZ_DEF_CONTENT");
+				strSysvar = jacksonUtil.getString("TZ_SYSVAR");
 				strDefaultFlag = jacksonUtil.getString("TZ_WFB_DEFALT_BZ");
 	
 				if("".equals(strAppProcessTmpId) || "NEXT".equals(strAppProcessTmpId.toUpperCase()) || "".equals(strAppProcessId) || "NEXT".equals(strAppProcessId.toUpperCase()) || "".equals(strMsgId) ||  "NEXT".equals(strMsgId.toUpperCase())){
@@ -166,6 +171,7 @@ public class proReplyInfoServiceImpl extends FrameworkImpl{
 						psTzAppProHfT.setTzClsResult(strMsgName);
 						psTzAppProHfT.setTzAppproColor(strMsgColor);
 						psTzAppProHfT.setTzAppproContent(strMsgContent);
+						psTzAppProHfT.setTzSysvar(strSysvar);
 						psTzAppProHfT.setTzWfbDefaltBz(strDefaultFlag);
 						PsTzAppProHfTMapper.updateByPrimaryKeyWithBLOBs(psTzAppProHfT);
 						if("on".equals(strDefaultFlag)){
@@ -226,6 +232,7 @@ public class proReplyInfoServiceImpl extends FrameworkImpl{
 					retMap.put("TZ_APPPRO_COLOR", String.valueOf(psTzAppProHfT.getTzAppproColor()));
 					retMap.put("TZ_CLS_RESULT", String.valueOf(psTzAppProHfT.getTzClsResult()));
 					retMap.put("TZ_DEF_CONTENT", String.valueOf(psTzAppProHfT.getTzAppproContent()));
+					retMap.put("TZ_SYSVAR", String.valueOf(psTzAppProHfT.getTzSysvar())=="null"?"":String.valueOf(psTzAppProHfT.getTzSysvar()));
 					retMap.put("TZ_WFB_DEFALT_BZ", String.valueOf(psTzAppProHfT.getTzWfbDefaltBz()));
 					returnMap.replace("formData", retMap);
 					 

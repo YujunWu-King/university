@@ -60,6 +60,30 @@
 				name: 'ms_zg',
 				model:'simple'
 			},{
+				layout: {
+					type: 'column'
+				},
+				bodyStyle:'padding:0 0 10px 0',
+				items:[{
+					columnWidth:.6,
+					xtype: 'textfield',
+					fieldLabel: Ext.tzGetResourse("TZ_RES_TMPL_MG_COM.TZ_RESTPL_PARA_STD.systvar","动态结果显示"),
+					name: 'sysvar',
+					editable: false,
+					triggers: {
+						search: {
+							cls: 'x-form-search-trigger',
+							handler: "searchSysVar"
+						}
+	                }			
+				},{
+					columnWidth:.4,
+					xtype: 'displayfield',
+					hideLabel: true,
+					name: 'sysvarname',
+					style:'margin-left:8px'
+				}]
+			},{
 				xtype: 'checkbox',
 				boxLabel: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.wfbsdmrz","未发布时的默认值"),
 				name: 'hf_mrz'

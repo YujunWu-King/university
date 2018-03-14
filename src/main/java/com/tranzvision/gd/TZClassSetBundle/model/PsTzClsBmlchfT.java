@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZClassSetBundle.model;
 
 public class PsTzClsBmlchfT extends PsTzClsBmlchfTKey {
+    private String tzSysvar;
+
     private String tzAppproColor;
 
     private String tzClsResult;
@@ -8,6 +10,14 @@ public class PsTzClsBmlchfT extends PsTzClsBmlchfTKey {
     private String tzWfbDefaltBz;
 
     private String tzAppproContent;
+
+    public String getTzSysvar() {
+        return tzSysvar;
+    }
+
+    public void setTzSysvar(String tzSysvar) {
+        this.tzSysvar = tzSysvar == null ? null : tzSysvar.trim();
+    }
 
     public String getTzAppproColor() {
         return tzAppproColor;

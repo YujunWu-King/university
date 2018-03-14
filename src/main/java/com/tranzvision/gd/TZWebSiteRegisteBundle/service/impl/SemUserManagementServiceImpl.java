@@ -139,7 +139,7 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				// 保存修改;
 				String saveActivate_url = commonUrl;
 				// 国家选择器链接;
-				String countryUrl = commonUrl + "?tzParams="
+				/* String countryUrl = commonUrl + "?tzParams="
 						+ URLEncoder
 								.encode("{\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_COUNTRY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
 										+ siteId + "\"}}", "UTF-8");
@@ -157,7 +157,20 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				String str_userInfo = commonUrl + "?tzParams="
 						+ URLEncoder
 								.encode("{\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_SEM_USERMNG_STD\",\"OperateType\":\"USERINFO\",\"comParams\":{\"siteId\":\""
-										+ siteId + "\"}}", "UTF-8");
+										+ siteId + "\"}}", "UTF-8"); */
+				
+				String countryUrl = commonUrl + "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_COUNTRY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
+										+ siteId + "\"}}";
+				// 上传并处理照片;
+				String phoUrl = commonUrl + "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_SEM_UPPHOTO_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
+										+ siteId + "\"}}";
+				// 修改手机;
+				String str_mobile = commonUrl + "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_CHANGE_MOBILE\",\"OperateType\":\"HTML\",\"comParams\":{\"siteId\":\""
+										+ siteId + "\"}}";
+				// 获取基本信息;
+				String str_userInfo = commonUrl + "?tzParams={\"ComID\":\"TZ_GD_ZS_USERMNG\",\"PageID\":\"TZ_SEM_USERMNG_STD\",\"OperateType\":\"USERINFO\",\"comParams\":{\"siteId\":\""
+										+ siteId + "\"}}"; 
+				
 				// 保存提醒设置;
 				String SaveRemind = commonUrl;
 
@@ -475,16 +488,21 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 
 				// 选择省份;
 				String Province = commonUrl;
-				Province = Province + "?tzParams="
+				
+				Province = Province + "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_PROVINCE_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"TZ_PROV_ID\":\"TZ_LEN_PROID\",\"siteId\":\""
+										+ siteId + "\"}}";
+				/*Province = Province + "?tzParams="
 						+ URLEncoder
 								.encode("{\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_PROVINCE_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"TZ_PROV_ID\":\"TZ_LEN_PROID\",\"siteId\":\""
-										+ siteId + "\"}}", "UTF-8");
+										+ siteId + "\"}}", "UTF-8"); */
 				// 选择城市;
 				String City1 = commonUrl;
-				City1 = City1 + "?tzParams="
+				City1 = City1 + "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_CITY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"OType\":\"CITY\",\"TZ_CITY_ID\":\"TZ_LEN_CITY\",\"siteId\":\""
+										+ siteId + "\"}}";
+				/*City1 = City1 + "?tzParams="
 						+ URLEncoder
 								.encode("{\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_CITY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"OType\":\"CITY\",\"TZ_CITY_ID\":\"TZ_LEN_CITY\",\"siteId\":\""
-										+ siteId + "\"}}", "UTF-8");
+										+ siteId + "\"}}", "UTF-8"); */
 
 				// 头像;
 				String TZ_ATT_A_URL = "", TZ_ATTACHSYSFILENA = "";

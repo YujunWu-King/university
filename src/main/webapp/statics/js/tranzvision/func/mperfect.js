@@ -350,7 +350,7 @@ $(document).ready(function(){
 				border : [3 , 0.3 , '#000', true],
 				offset: ['100px',''],
 				area: ['588px','400px'],
-				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams={%22ComID%22:%22TZ_COMMON_COM%22,%22PageID%22:%22TZ_CITY_STD%22,%22OperateType%22:%22HTML%22,%22comParams%22%3A%7B%22OType%22%3A%22CITY%22%2C%22TZ_CITY_ID%22%3A%22'+_city_id+'%22,%22siteId%22:%22'+$("#siteid").val()+'%22%7D%7D'},
+				iframe: {src: TzUniversityContextPath + '/dispatcher?tzParams='+encodeURIComponent('{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TZ_CITY_ID":"'+_city_id+'","siteId":"'+$("#siteid").val()+'"}}')},
 			});
 		});
     });

@@ -991,6 +991,45 @@
         win.show();
 
     },
+    searchSysVar:function(btn){
+		var form = btn.findParentByType('form').getForm();
+		Ext.tzShowPromptSearch({
+			recname: 'TZ_SYSVAR_T',
+			searchDesc: '搜索模版参数',
+			maxRow:20,
+			condition:{
+				presetFields:{
+					TZ_EFFFLG:{
+						//value: Ext.tzOrgID,
+						value:"Y",
+						type: '01'	
+					}	
+				},
+				srhConFields:{
+					TZ_SYSVARID:{
+						desc:'系统变量编号',
+						operator:'01',
+						type:'01'
+					},	
+					TZ_SYSVARNAME:{
+						desc:'系统变量名称',
+						operator:'07',
+						type:'01'
+					}
+				}	
+			},
+			srhresult:{
+				TZ_SYSVARID: '参数编号',
+				TZ_SYSVARNAME:'参数名称'
+			},
+			multiselect: false,
+			callback: function(selection){
+				form.findField("TZ_SYSVAR").setValue(selection[0].data.TZ_SYSVARID);
+				form.findField("TZ_SYSVAR_NAME").setValue(selection[0].data.TZ_SYSVARNAME);
+				
+			}
+		});	
+    },
     onProBackMsgSave: function(btn){
         //获取窗口
         // var win= this.lookupReference('protmBackMsgWin');
