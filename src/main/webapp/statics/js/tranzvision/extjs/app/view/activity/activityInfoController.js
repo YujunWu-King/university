@@ -914,5 +914,24 @@
                 btn.findParentByType("form").getForm().findField("AudList").setValue(oprIdArray);
             }
         })
+    },
+    
+    viewEventQrcode:  function(view, rowIndex){
+		var store = view.findParentByType("grid").store;
+		var recData = store.getAt(rowIndex).data;
+
+		var className = 'KitchenSink.view.activity.activityQrcodeWindow';
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        var ViewClass = Ext.ClassManager.get(className);
+        var win = new ViewClass({
+        	artId: recData.artId,
+        	siteId: recData.siteId,
+        	coluId: recData.coluId
+        });
+        
+        //this.getView().add(win);
+        win.show();
     }
 });

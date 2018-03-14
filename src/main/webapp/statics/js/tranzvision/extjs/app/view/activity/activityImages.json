@@ -1,5 +1,4 @@
-﻿{
-"root":[
+﻿{"root":[
     {
     		imageId: 'tz_image_0001',
     		imagePriority: 1,
@@ -90,7 +89,6 @@
         imageTrsTitle: '图片11.jpg',
         sysImageName: '232132.jpg'
     }
-]
-}
+]}
 
 

@@ -39,6 +39,7 @@
 .skype{background: url(images/icons/toolbar/skype.png) no-repeat center center}
 .details{background: url(images/icons/toolbar/details.png) no-repeat center center}
 .export{background: url(images/icons/toolbar/export.png) no-repeat center center}
+.qrcode{background:url(images/icons/toolbar/qrcode.png) no-repeat center center}
 
 /*tabbar menu*/
 .tab_close{background: url(images/icons/toolbar/tab_close.png) no-repeat center center}
