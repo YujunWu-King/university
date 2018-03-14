@@ -15,15 +15,12 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
         'Ext.ux.Ueditor',
 	    'KitchenSink.view.activity.activityInfoController',
         'KitchenSink.view.activity.attachmentStore',
-        'KitchenSink.view.activity.viewArtModel',
         'KitchenSink.view.activity.viewArtStore',
         'KitchenSink.view.activity.applyItemStore',
         'KitchenSink.view.activity.activityImageStore',
         'KitchenSink.view.activity.applyItemOptionsStore',
         'KitchenSink.view.activity.picStore',
-        'KitchenSink.view.activity.SiteModel',
         'KitchenSink.view.activity.SiteStore',
-        'KitchenSink.view.activity.ColuModel',
         'KitchenSink.view.activity.ColuStore'
 	],
   title: '活动信息', 
@@ -1045,9 +1042,53 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 				sortable: false,
 			 	width:60,
 			 	xtype: 'actioncolumn',
-			 	items:[
-			 	       {iconCls: 'view',tooltip: '预览', handler: 'viewArtContent'}
-				]
+			 	items:[{
+			 		iconCls: 'view',
+			 		tooltip: '预览', 
+			 		handler: 'viewArtContent',
+			 		isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
+						var pubSta = record.get('pubSta');
+						if(pubSta == "Y"){
+							return false;
+						}else{
+							return true;
+						}
+					},
+					getClass: function(v, metadata , r,rowIndex ,colIndex ,store ){
+						var pubSta = store.getAt(rowIndex).get("pubSta");
+						if(pubSta == "Y"){
+							return 'view';
+						}else{
+							return ' view';
+						}
+					}
+			 	},{
+			 		iconCls: 'qrcode',
+			 		tooltip: '显示二维码', 
+			 		handler: 'viewEventQrcode',
+			 		isDisabled:function(view ,rowIndex ,colIndex ,item,record ){
+						var pubType = record.get('pubType');
+						var pubSta = record.get('pubSta');
+						if(pubType == "M" && pubSta == "Y"){
+							return false;
+						}else{
+							return true;
+						}
+					},
+					getClass: function(v, metadata , r,rowIndex ,colIndex ,store ){
+						var pubType = store.getAt(rowIndex).get("pubType");
+						var pubSta = store.getAt(rowIndex).get("pubSta");
+						if(pubType == "M"){
+							if(pubSta == "Y"){
+								return 'qrcode';
+							}else{
+								return ' qrcode';
+							}
+						}else{
+							return '';
+						}
+					}
+			 	}]
 			}]
 				
         },{

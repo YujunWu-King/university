@@ -13,18 +13,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.poi.ss.formula.functions.Replace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tranzvision.gd.TZApplicationSurveyBundle.model.PsTzSureyAudT;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtAudienceTMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtHdTblMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxETMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzZxbmXxxTMapper;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzArtAudienceTKey;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzArtHdTbl;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxET;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzZxbmXxxT;
@@ -51,14 +51,12 @@ import com.tranzvision.gd.TZWebSiteInfoMgBundle.model.PsTzLmNrGlTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.ResizeImageUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.qrcode.CreateQRCode;
 import com.tranzvision.gd.util.session.TzGetSetSessionValue;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.MySqlLockService;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-
-import com.tranzvision.gd.TZEventsBundle.dao.PsTzArtAudienceTMapper;
-import com.tranzvision.gd.TZEventsBundle.model.PsTzArtAudienceTKey;
 
 /**
  * 活动基本信息，原PS：TZ_GD_HDGL:ActivityInfo
@@ -140,6 +138,9 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsTzArtAudienceTMapper PsTzArtAudienceTMapper;
+	
+	@Autowired
+	private CreateQRCode createQRCode;
 
 	// private String sessSiteId = "siteId";
 
@@ -1717,10 +1718,13 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 					mapJson.put("artId", artId);
 					mapJson.put("coluName", coluName);
 					mapJson.put("artPubType", "电脑");
+					mapJson.put("pubType", "P");
 					if ("Y".equals(publicState)) {
 						mapJson.put("publicState", "已发布");
+						mapJson.put("pubSta", "Y");
 					} else {
 						mapJson.put("publicState", "未发布");
+						mapJson.put("pubSta", "N");
 					}
 
 					mapJson.put("previewUrl", previewUrl);
@@ -1742,10 +1746,13 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 						mapJson.put("artId", artId);
 						mapJson.put("coluName", coluName);
 						mapJson.put("artPubType", "手机");
+						mapJson.put("pubType", "M");
 						if ("Y".equals(publicState)) {
 							mapJson.put("publicState", "已发布");
+							mapJson.put("pubSta", "Y");
 						} else {
 							mapJson.put("publicState", "未发布");
+							mapJson.put("pubSta", "N");
 						}
 						mapJson.put("previewUrl", previewUrl);
 						mapJson.put("publicUrl", publicUrlSj);
@@ -1762,6 +1769,68 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 
 				strRet = jacksonUtil.Map2json(mapRet);
 
+				break;
+			case "QRCODE":
+				//查看二维码
+				String siteId = jacksonUtil.getString("siteId");
+				String coluId = jacksonUtil.getString("coluId");
+				String ctxPath = request.getContextPath();
+				total = 0;
+
+				String lmSql = "select TZ_ART_PUB_STATE,TZ_ART_URL from PS_TZ_LM_NR_GL_T where TZ_ART_ID=? and TZ_SITE_ID=? and TZ_COLU_ID=?";
+				Map<String,Object> pubMap = sqlQuery.queryForMap(lmSql, new Object[]{ activityId, siteId, coluId });
+				
+				if(pubMap != null){
+					String pubSta = pubMap.get("TZ_ART_PUB_STATE") == null ? "" : pubMap.get("TZ_ART_PUB_STATE").toString();
+					String artMUrl = pubMap.get("TZ_ART_URL") == null ? "" : pubMap.get("TZ_ART_URL").toString();
+					
+					//只有发布的活动才显示二维码
+					if("Y".equals(pubSta)){						
+						// 根据siteId得到机构ID
+						sql = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+						String orgid = sqlQuery.queryForObject(sql, new Object[] { siteId }, "String");
+						
+						String detailQrcode = "TZ_M_EVENTS_DETAIL_" + siteId + "_" + coluId + "_" + activityId + ".png";
+						String applyQrcode = "TZ_M_EVENTS_APPLY_" + siteId + "_" + coluId + "_" + activityId + ".png";
+						
+						//生成手机活动报名二维码
+						String detailQrcodeFilePath = createQRCode.encodeQRCode(orgid, artMUrl, detailQrcode, 150, 150);
+						total++;
+						
+						Map<String, Object> mapJson = new HashMap<String, Object>();
+						mapJson.put("index", total);
+						mapJson.put("qrcodeTitle", "手机活动二维码");
+						mapJson.put("qrcodeImg", ctxPath+detailQrcodeFilePath);
+						mapJson.put("qrcodeContent", artMUrl);
+						listJson.add(mapJson);
+						
+						//查看活动是否启用报名，启用报名才显示报名二维码
+						String hdSql = "select TZ_QY_ZXBM from PS_TZ_ART_HD_TBL where TZ_ART_ID=?";
+						String applyEnabled = sqlQuery.queryForObject(hdSql, new Object[]{ activityId }, "String");
+						if("Y".equals(applyEnabled)){
+							String port = request.getServerPort() == 80 ? "" : (":" + request.getServerPort());
+							String applyUrl =  request.getScheme() + "://" + request.getServerName() + port + ctxPath 
+									+ "mEvents/apply/"+activityId;
+							
+							//生成手机活动报名二维码
+							String applyQrcodeFilePath = createQRCode.encodeQRCode(orgid, applyUrl, applyQrcode,  150, 150);
+							total++;
+							
+							mapJson = new HashMap<String, Object>();
+							mapJson.put("index", total);
+							mapJson.put("qrcodeTitle", "手机报名二维码");
+							mapJson.put("qrcodeImg", ctxPath+applyQrcodeFilePath);
+							mapJson.put("qrcodeContent", applyUrl);
+							listJson.add(mapJson);
+						}
+					}
+				}
+				
+				mapRet.replace("total", total);
+				mapRet.replace("root", listJson);
+
+				strRet = jacksonUtil.Map2json(mapRet);
+				
 				break;
 			}
 
