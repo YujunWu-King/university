@@ -1810,7 +1810,7 @@ public class TzEventsInfoServiceImpl extends FrameworkImpl {
 						if("Y".equals(applyEnabled)){
 							String port = request.getServerPort() == 80 ? "" : (":" + request.getServerPort());
 							String applyUrl =  request.getScheme() + "://" + request.getServerName() + port + ctxPath 
-									+ "mEvents/apply/"+activityId;
+									+ "/mEvents/apply/"+activityId;
 							
 							//生成手机活动报名二维码
 							String applyQrcodeFilePath = createQRCode.encodeQRCode(orgid, applyUrl, applyQrcode,  150, 150);
