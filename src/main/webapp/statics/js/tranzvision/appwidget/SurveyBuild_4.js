@@ -1024,7 +1024,7 @@ var SurveyBuild = {
 			// console.log(tz_app_id);
 			$.ajax({
 				type: "post",
-				url: SurveyBuild.tzGeneralURL +'?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tplId":"'+tz_app_id+'"}}',
+				url: SurveyBuild.tzGeneralURL +'?tzParams='+encodeURIComponent('{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tplId":"'+tz_app_id+'"}}'),
 				dataType: "json",
 				async: false,
 				success: function(result){
@@ -2492,7 +2492,7 @@ var SurveyBuild = {
 	    SurveyBuild.saveBuild(true);
     },
 	preiewAppForm: function(siteId){
-	    var tzParams = '?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"' + SurveyBuild._tid + '","SiteID":"' +siteId+ '"}}'
+	    var tzParams = '?tzParams='+encodeURIComponent('{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"' + SurveyBuild._tid + '","SiteID":"' +siteId+ '"}}')
         var url = SurveyBuild.tzGeneralURL + tzParams;
         window.open(url, '_blank');
     },
@@ -2637,11 +2637,14 @@ var SurveyBuild = {
 							var tz_app_id=SurveyBuild._tid;
 							$.ajax({
 								type: "post",
-								url: SurveyBuild.tzGeneralURL +'?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tplId":"'+tz_app_id+'"}}',
+								url: SurveyBuild.tzGeneralURL +'?tzParams='+encodeURIComponent('{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONREG_SITE_STD","OperateType":"QG","comParams":{"tplId":"'+tz_app_id+'"}}'),
 								dataType: "json",
 								async: false,
 								success: function(result){
+									//console.log(result);
 									var siteArr = result.comContent.root;
+									//console.log(result.comContent.total);
+									//console.log(siteArr);
 									if(result.comContent.total == "1"){
 										var siteObj = siteArr[0];
 										var siteId = siteObj.siteId;

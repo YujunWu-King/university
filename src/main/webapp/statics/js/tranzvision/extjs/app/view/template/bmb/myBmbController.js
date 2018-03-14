@@ -193,8 +193,8 @@ Ext.define('KitchenSink.view.template.bmb.myBmbController', {
 			Ext.MessageBox.alert('提示', '您没有预览报名表模板的权限');
 			return;
 		}
-		var tzParams = '?tzParams={"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"'
-				+ tplId + '","SiteID":"'+siteId+'"}}'
+		var tzParams = '?tzParams='+encodeURIComponent('{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_FORM_STD","OperateType":"HTML","comParams":{"mode":"Y","TZ_APP_TPL_ID":"'
+				+ tplId + '","SiteID":"'+siteId+'"}}')
 		var url = Ext.tzGetGeneralURL() + tzParams;
 		window.open(url, '_blank');
 	},
