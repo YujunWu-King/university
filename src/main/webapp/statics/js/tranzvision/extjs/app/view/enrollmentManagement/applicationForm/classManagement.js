@@ -80,16 +80,16 @@
                 dataIndex: 'admissionDate',
                 width:110
             },{
-                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applicantsNumber","总申请人数"),
-                dataIndex: 'applicantsNumber',
-                width:110
-            },{
-                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.expectedNumber","预报名人数"),
-                dataIndex: 'expectedNumber',
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.applicantingNumber","已报名人数"),
+                dataIndex: 'applicantingNumber',
                 width:110
             },{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.submittedNumber","已提交人数"),
                 dataIndex: 'submittedNumber',
+                width:110
+            },{
+                text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.passNumber","初审通过人数"),
+                dataIndex: 'passNumber',
                 width:110
             }/*,{
                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.firstChoiceNumber","第一志愿申请人数"),
