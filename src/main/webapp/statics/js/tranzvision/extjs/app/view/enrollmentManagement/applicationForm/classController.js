@@ -4,7 +4,7 @@
     alias: 'controller.appFormClass',
     queryClass:function(btn){
         Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.TZ_BMBSH_MGR_VW',
+            cfgSrhId: 'TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.TZ_BMBSH_ECUST_VW',
             condition:{
                 TZ_DLZH_ID:TranzvisionMeikecityAdvanced.Boot.loginUserId,
                 TZ_JG_ID:Ext.tzOrgID
