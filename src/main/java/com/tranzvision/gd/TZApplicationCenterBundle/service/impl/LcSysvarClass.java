@@ -27,7 +27,12 @@ public class LcSysvarClass {
 	private TZGDObject tzGDObject;
 	@Autowired
 	private TzAppAdGenQrcodeServiceImpl TzAppAdGenQrcodeServiceImpl;
+	
 */
+	
+	//private final String defalutString = "<span>未发布</span>";
+	private final String defalutString = "";
+	
 	// 报名表提交状态;
 	public String[] getAppSubmitSatus(String[] para) {
 		String type = para[0];
@@ -302,8 +307,8 @@ public class LcSysvarClass {
 		return result;
 	}
 
-	// 解析材料评审
-	public String[] getLcpsStatus(String[] para) {
+	//面试资格
+	public String[] getMszgStatus(String[] para) {
 		String type = para[0];
 		long appIns = Long.parseLong(para[1]);
 		String rootPath = para[2];
@@ -313,11 +318,10 @@ public class LcSysvarClass {
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 		
-		String defalutString = "<span>未发布</span>";
 		String[] result = {"",defalutString};
 		String sql ="select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try{
-			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[]{"TZ_LCPS"});
+			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[]{"TZ_MSZG"});
 			if(lcName != null && !"".equals(lcName)){
 				result = this.analyLcDrInfo(siteId,lcName, type, appIns, rootPath,isMobile, defalutString);
 			}
@@ -338,7 +342,7 @@ public class LcSysvarClass {
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 		
-		String defalutString = "<span>未发布</span>";
+		//String defalutString = "<span>未发布</span>";
 		String[] result = {"",defalutString};
 		String sql ="select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try{
@@ -347,7 +351,7 @@ public class LcSysvarClass {
 				
 				result = this.analyLcDrInfo(siteId,lcName, type, appIns, rootPath, isMobile,defalutString); 
 				
-				String QrcodeHtml="";
+				/* String QrcodeHtml="";
 				//录取状态
 				String tzLuquStaSql="SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
 				String tzLuquSta="";
@@ -381,20 +385,8 @@ public class LcSysvarClass {
 				}
 				
 				result[1] = QrcodeHtml + result[1];
-				//录取状态
-				/*
-				   
-					String tzLuquStaSql="SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
-					String tzLuquSta= sqlQuery.queryForObject(tzLuquStaSql, new Object[] {appIns}, "String");
-					if (tzLuquSta=="A"){
-						//录取通知书二维码地址
-						String Qrcodefilepath=TzAppAdGenQrcodeServiceImpl.genQrcode(appIns);
-						//查看录取通知书按钮html
-						QrcodeHtml=tzGDObject.getHTMLText("HTML.TZApplicationCenterBundle.TZ_GD_GENQRCODE_HTML",Qrcodefilepath);
-						//将查看录取通知书按钮的html放在拼接面试结果html的开头
-						result[1] = QrcodeHtml+result[1];
-					};
-					*/						
+				*/
+					
 			}
 		}catch(Exception e){
 			
@@ -413,7 +405,7 @@ public class LcSysvarClass {
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 		
-		String defalutString = "<span>未发布</span>";
+		//String defalutString = "<span>未发布</span>";
 		String[] result = {"",defalutString};
 		String sql ="select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try{
@@ -427,8 +419,8 @@ public class LcSysvarClass {
 		return result;
 	}
 
-	// 解析预录取
-	public String[] getYlqStatus(String[] para) {
+	// 复试
+	public String[] getFSStatus(String[] para) {
 		String type = para[0];
 		long appIns = Long.parseLong(para[1]);
 		String rootPath = para[2];
@@ -438,11 +430,36 @@ public class LcSysvarClass {
 		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
 		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 		
-		String defalutString = "<span>未发布</span>";
+		//String defalutString = "<span>未发布</span>";
 		String[] result = {"",defalutString};
 		String sql ="select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		try{
-			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[]{"TZ_YLQ"});
+			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[]{"TZ_FS"});
+			if(lcName != null && !"".equals(lcName)){
+				result = this.analyLcDrInfo(siteId,lcName, type, appIns, rootPath,isMobile, defalutString);
+			}
+		}catch(Exception e){
+			
+		}
+		return result;
+	}
+	
+	// 其他数据
+	public String[] getOtherStatus(String[] para) {
+		String type = para[0];
+		long appIns = Long.parseLong(para[1]);
+		String rootPath = para[2];
+		String isMobile = para[3];
+		String siteId = para[4];
+
+		GetSpringBeanUtil getSpringBeanUtil = new GetSpringBeanUtil();
+		JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
+		
+		//String defalutString = "<span>未发布</span>";
+		String[] result = {"",defalutString};
+		String sql ="select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+		try{
+			String lcName = jdbcTemplate.queryForObject(sql, String.class, new Object[]{"TZ_QT"});
 			if(lcName != null && !"".equals(lcName)){
 				result = this.analyLcDrInfo(siteId,lcName, type, appIns, rootPath,isMobile, defalutString);
 			}
@@ -553,6 +570,7 @@ public class LcSysvarClass {
 					
 				}
 			}else{
+				//PC版本
 				if (totalnum > 0) {
 					// 字段id;
 					ArrayList<String> fieldIdList = new ArrayList<>();

@@ -22,7 +22,7 @@ public class ImportUnionExamApplyingImpl implements UnifiedImportBase {
 	private UnifiedImportImpl unifiedImportImpl;
 	
 	/**
-	 * 保存导入的数据
+	 * 联考报名导入的数据
 	 */
 	public String tzSave(List<Map<String, Object>> data,List<String> fields,String targetTbl,int[] result, String[] errMsg) {
 		
