@@ -1943,6 +1943,94 @@
         if (cmp.floating) {
             cmp.show();
         }
-    }
+    },
+    //查看申请人详情
+    viewSqrInfo:function(btn){
+        //选中行
+        var selList = this.getView().getSelectionModel().getSelection();
+        //选中行长度
+        var checkLen = selList.length;
+        if(checkLen == 0){
+            Ext.Msg.alert("提示","请选择一条要查看的记录");
+            return;
+        }else if(checkLen >1){
+            Ext.Msg.alert("提示","只能选择一条要查看的记录");
+            return;
+        }
+        var OPRID = selList[0].get("OPRID");
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_USERINFO_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_UM_USERINFO_STD，请检查配置。');
+            return;
+        }
+
+        var win = this.lookupReference('userMgInfoPanel');
+
+        if (!win) {
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+
+        //操作类型设置为更新
+        win.actType = "update";
+        var form = win.child('form').getForm();
+        form.findField("OPRID").setReadOnly(true);
+        //页面注册信息列表
+        //var grid = win.child('grid');
+        var grid = win.down('form[name=userInfoForm]');
+        //参数
+        var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
+        //加载数据
+        Ext.tzLoad(tzParams,function(responseData){
+            //组件注册信息数据
+            var formData = responseData.formData;
+            form.setValues(formData);
+
+            var userInfoItems = [];
+            var userInfoForm = grid;
+            var fields = formData.column;
+            //var fields = '[{"qq":"123","desc":"asdfsdf"}]';
+            //fields = eval('(' + fields + ')');
+            var size = fields.length;
+            typeField = {};
+            for(var i = 0;i < size;i++){
+                var field = fields[i];
+                var fieldLabel,name,value;
+                for(var fieldName in field){
+                    if(fieldName == "desc"){
+                        fieldLabel = field["desc"];
+                    }else{
+                        name = fieldName;
+                        value = field[fieldName];
+                    }
+                }
+                typeField = {
+                    xtype: 'textfield',
+                    fieldLabel: fieldLabel,
+                    readOnly:true,
+                    name: name,
+                    value: value
+                }
+                userInfoForm.add(typeField);
+            }
+            if(win.down('hiddenfield[name=titleImageUrl]').getValue()){
+                win.down('image[name=titileImage]').setSrc(TzUniversityContextPath + win.down('hiddenfield[name=titleImageUrl]').getValue());
+            }else{
+                win.down('image[name=titileImage]').setSrc(TzUniversityContextPath + "/statics/images/tranzvision/mrtx02.jpg");
+            }
+        });
+        win.show();
+    },
+
 });
 
