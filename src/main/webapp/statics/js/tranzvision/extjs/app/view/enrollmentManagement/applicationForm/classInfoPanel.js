@@ -247,7 +247,10 @@
                         menuDisabled: true,
                         columns:[
                             {
-                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.name","姓名"),
+                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.OPRID","OPRID"),
+                                dataIndex: 'OPRID',
+                                hidden:true
+                            },{    text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.name","姓名"),
                                 dataIndex: 'stuName',
                                 width:100,
                                 lockable   : false,
