@@ -287,8 +287,12 @@
                                         var index = submitStateStore.find('TValue',v,0,false,true,true);
                                         if(index>-1){
                                             return submitStateStore.getAt(index).get("TSDesc");
-                                        }
-                                        
+                                        }else{
+                                        	index = submitStateStore.find('TSDesc',v,0,false,true,true);
+                                        	if(index>-1){
+                                                return submitStateStore.getAt(index).get("TSDesc");
+                                        	}
+                                        }                                        
                                         return "";
                                     }
                                 }
@@ -318,8 +322,12 @@
                                         var index = auditStateStore.find('TValue',v,0,false,true,true);
                                         if(index>-1){
                                             return auditStateStore.getAt(index).get("TSDesc");
-                                        }
-                                        
+                                        }else{
+                                        	index = auditStateStore.find('TSDesc',v,0,false,true,true);
+                                        	 if(index>-1){
+                                        		 return auditStateStore.getAt(index).get("TSDesc");
+                                        	 }
+                                        }                                        
                                         return "";
                                     }
                                 }
@@ -337,8 +345,12 @@
                                         var index = interviewResultStore.find('TValue',v,0,false,true,true);
                                         if(index>-1){
                                             return interviewResultStore.getAt(index).get("TSDesc");
-                                        }
-                                        
+                                        }else{
+                                        	 index = interviewResultStore.find('TSDesc',v,0,false,true,true);
+                                        	if(index>-1){
+                                        		return interviewResultStore.getAt(index).get("TSDesc");
+                                        	}
+                                        }                                        
                                         return "";
                                     }
                                 }
