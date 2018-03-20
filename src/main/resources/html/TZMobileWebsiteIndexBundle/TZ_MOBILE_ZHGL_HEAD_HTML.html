@@ -30,7 +30,7 @@
 
 <script type="text/javascript">		
 	var tzGdWdzhSaveActivateUrl = tzDispatcherUrl;
-	var tzGdWdzhGetUserInfo = tzDispatcherUrl + '?tzParams={"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_USERMNG_STD","OperateType":"USERINFO","comParams":{"siteId":"%bind(:4)"}}';
+	var tzGdWdzhGetUserInfo = tzDispatcherUrl + '?tzParams='+encodeURIComponent('{"ComID":"TZ_GD_ZS_USERMNG","PageID":"TZ_SEM_USERMNG_STD","OperateType":"USERINFO","comParams":{"siteId":"%bind(:4)"}}');
 </script>
 <script type="text/javascript" src="%bind(:1)/statics/js/website/account/semwdzhm.js"></script>
 <style>

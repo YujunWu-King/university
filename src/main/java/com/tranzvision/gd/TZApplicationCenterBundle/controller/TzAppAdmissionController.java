@@ -102,10 +102,10 @@ public class TzAppAdmissionController {
 			}
 
 			// 【0】查询录取状态
-			String tzLuquStaSql = "SELECT TZ_LUQU_ZT FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_APP_INS_ID=?";
+			String tzLuquStaSql = "SELECT TZ_RESULT_CODE FROM TZ_IMP_FS_TBL WHERE TZ_APP_INS_ID=?";
 			String tzLuquSta = sqlQuery1.queryForObject(tzLuquStaSql, new Object[] { tzAppInsID }, "String");
 
-			if ("LQ".equals(tzLuquSta)) {// 条件录取
+			if ("录取".equals(tzLuquSta)) {// 条件录取
 
 				// 判断静态文件是否已存在
 				File file = new File(filePath);
