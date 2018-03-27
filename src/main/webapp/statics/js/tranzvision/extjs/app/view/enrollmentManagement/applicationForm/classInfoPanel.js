@@ -335,6 +335,7 @@
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.interviewResult","面试结果"),
                                 dataIndex: 'interviewResult',
                                 lockable   : false,
+                                hidden:true,
                                 width: 95,
                                 filter: {
                                     type: 'list',
@@ -422,6 +423,14 @@
                                             return Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.pleaseSelect","请选择...");
                                         }
                                     }
+                                }
+                            },{
+                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.fillProportion","填写比例"),
+                                dataIndex: 'fillProportion',
+                                width:110,
+                                lockable   : false,
+                                filter: {
+                                    type: 'string'
                                 }
                             }
                         ]

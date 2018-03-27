@@ -58,7 +58,7 @@
                 //text: '机构',
 				text:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHGL_STD.jgId","机构"),
                 dataIndex: 'orgId',
-				width: 85
+                width: 85
             },{ 
                 //text: '登录账号',
 				text:Ext.tzGetResourse("TZ_AQ_NB_YHZHGL_COM.TZ_NB_YHZHGL_STD.usAccNum","登录账号"),

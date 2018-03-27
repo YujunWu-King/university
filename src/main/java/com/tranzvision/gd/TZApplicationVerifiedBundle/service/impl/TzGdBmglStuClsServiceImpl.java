@@ -31,6 +31,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private FliterForm fliterForm;
+
 	// 获取班级信息
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
@@ -40,22 +41,22 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		try {
 			jacksonUtil.json2Map(strParams);
 
-			if (jacksonUtil.containsKey("classID")&&jacksonUtil.containsKey("batchID")) {
+			if (jacksonUtil.containsKey("classID") && jacksonUtil.containsKey("batchID")) {
 				// 班级编号;
 				String strClassID = jacksonUtil.getString("classID");
 				// 批次编号;
 				String strBatchID = jacksonUtil.getString("batchID");
 				// 班级名称，报名表模板编号，批次名称;
-				String strClassName = "", strAppModalID = "",strBatchName = "";
+				String strClassName = "", strAppModalID = "", strBatchName = "";
 
 				// 获取班级名称，报名表模板ID，批次名称;
 				String sql = "SELECT A.TZ_CLASS_NAME,A.TZ_APP_MODAL_ID,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T A INNER JOIN PS_TZ_CLS_BATCH_T B ON(A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_BATCH_ID=?) WHERE A.TZ_CLASS_ID=?";
-				Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strBatchID,strClassID });
+				Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strBatchID, strClassID });
 				if (map != null) {
 					strClassName = (String) map.get("TZ_CLASS_NAME");
 					strAppModalID = (String) map.get("TZ_APP_MODAL_ID");
 					strBatchName = (String) map.get("TZ_BATCH_NAME");
-					
+
 					Map<String, Object> hMap = new HashMap<>();
 					hMap.put("classID", strClassID);
 					hMap.put("className", strClassName);
@@ -87,11 +88,11 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		
+
 		try {
 			// 当前机构id;
 			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			
+
 			jacksonUtil.json2Map(comParams);
 			// 班级编号;
 			String strClassID = jacksonUtil.getString("classID");
@@ -108,7 +109,24 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			String appFormInfoView = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { "TZ_FORM_VAL_REC" },
 					"String");
 
-			
+			int leng = 0;
+			if (!strBmbTpl.equals("")) {
+				// 报名表总页数
+				// 情况1：双层报名表
+				viewNameSQL = "select count(1) from PS_TZ_APP_XXXPZ_T where  TZ_APP_TPL_ID=? and TZ_COM_LMC=? and TZ_FPAGE_BH !=?";
+				leng = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { strBmbTpl, "Page", "" }, "Integer");
+				// 情况2：单层报名表
+				if (leng == 0) {
+					viewNameSQL = "select count(1) from PS_TZ_APP_XXXPZ_T where  TZ_APP_TPL_ID=? and TZ_COM_LMC=?";
+					leng = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { strBmbTpl, "Page" }, "Integer");
+				}
+			}
+			// 最后一页不算
+			if (leng > 1) {
+				leng = leng - 1;
+			}
+			System.out.println("leng:" + leng);
+
 			// 报名表审批学生列表模板;
 			String strAuditGridTplIDSQL = "SELECT B.TZ_EXPORT_TMP_ID FROM PS_TZ_CLASS_INF_T A,PS_TZ_EXPORT_TMP_T B WHERE A.TZ_APP_MODAL_ID=B.TZ_APP_MODAL_ID AND A.TZ_JG_ID = B.TZ_JG_ID AND A.TZ_CLASS_ID=? AND A.TZ_JG_ID=? AND B.TZ_EXP_TMP_STATUS='A' AND B.TZ_EXPORT_TMP_TYPE='1'";
 			String strAuditGridTplID = jdbcTemplate.queryForObject(strAuditGridTplIDSQL,
@@ -116,32 +134,34 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			if (strAuditGridTplID == null) {
 				strAuditGridTplID = "";
 			}
-			
+
 			// 多行存储;
 			String sqlAppFormDataMulti = " SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='D' AND TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
-			List<Map<String, Object>> appFormDataMultiList =null;
-			if(!"".equals(strAuditGridTplID)){
+			List<Map<String, Object>> appFormDataMultiList = null;
+			if (!"".equals(strAuditGridTplID)) {
 				appFormDataMultiList = jdbcTemplate.queryForList(sqlAppFormDataMulti,
 						new Object[] { strBmbTpl, strAuditGridTplID });
 			}
-			
-			//表存储
+
+			// 表存储
 			String sqlAppFormDataView = "SELECT TZ_XXX_BH FROM PS_TZ_FORM_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='R' AND TZ_XXX_BH IN( SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
 			List<Map<String, Object>> appFormDataViewList = null;
-			if(!"".equals(strAuditGridTplID)){
-				appFormDataViewList = jdbcTemplate.queryForList(sqlAppFormDataView, new Object[] { strBmbTpl, strAuditGridTplID });
+			if (!"".equals(strAuditGridTplID)) {
+				appFormDataViewList = jdbcTemplate.queryForList(sqlAppFormDataView,
+						new Object[] { strBmbTpl, strAuditGridTplID });
 			}
-			
-			/*开始执行可配置搜索*/
-			
+
+			/* 开始执行可配置搜索 */
+
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] {{"TZ_APP_INS_ID","DESC"}};
+			String[][] orderByArr = new String[][] { { "TZ_APP_INS_ID", "DESC" } };
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "OPRID" ,"TZ_REALNAME" ,"TZ_APP_INS_ID" ,"TZ_MSH_ID" ,"NATIONAL_ID" ,"TZ_AUDIT_STATE" ,"TZ_COLOR_SORT_ID" ,"TZ_SUBMIT_STATE" ,"TZ_SUBMIT_DT_STR" ,"TZ_MS_RESULT"};
+			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_APP_INS_ID", "TZ_MSH_ID", "NATIONAL_ID",
+					"TZ_AUDIT_STATE", "TZ_COLOR_SORT_ID", "TZ_SUBMIT_STATE", "TZ_SUBMIT_DT_STR", "TZ_MS_RESULT" };
 
 			// 可配置搜索通用函数;
-			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
 
 			if (obj != null) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
@@ -149,7 +169,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("classID", strClassID);
-					mapList.put("oprID", rowList[0]);
+					mapList.put("OPRID", rowList[0]);
 					mapList.put("stuName", rowList[1]);
 					mapList.put("appInsID", rowList[2]);
 					mapList.put("interviewApplicationID", rowList[3]);
@@ -157,19 +177,21 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					mapList.put("auditState", rowList[5]);
 					mapList.put("colorType", rowList[6]);
 					mapList.put("submitState", rowList[7]);
-					mapList.put("submitDate", rowList[8]);					
+					mapList.put("submitDate", rowList[8]);
 					mapList.put("interviewResult", rowList[9]);
-					
-					/*根据模板配置显示报名表信息*/
+
+					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
-					
+
+					mapList.put("fillProportion", getBMBFillProportion(appInsID, leng));
+
 					if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
-						// 将模板中需要显示的数据全部查出存入数组 
-						String strInfoID = "", strInfoValue = "", /*strInfoDesc = "",*/ strComClassName = "",
-								strInfoSelectID = "";
+						// 将模板中需要显示的数据全部查出存入数组
+						String strInfoID = "", strInfoValue = "",
+								/* strInfoDesc = "", */ strComClassName = "", strInfoSelectID = "";
 						// 控件类名称，下拉存储描述信息项编号;
 						ArrayList<String[]> arrAppFormInfoData = new ArrayList<>();
-						
+
 						// 单行存储;
 						String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,IF(TZ_APP_L_TEXT='',TZ_APP_S_TEXT,IF(TZ_APP_L_TEXT IS NULL,TZ_APP_S_TEXT,TZ_APP_L_TEXT)) TZ_APP_TEXT,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
 						List<Map<String, Object>> appFormDataSingleList = jdbcTemplate.queryForList(
@@ -178,25 +200,26 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 							for (int j = 0; j < appFormDataSingleList.size(); j++) {
 								strInfoID = (String) appFormDataSingleList.get(j).get("TZ_XXX_BH");
 								strInfoValue = (String) appFormDataSingleList.get(j).get("TZ_APP_TEXT");
-								//strInfoDesc = (String) appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
+								// strInfoDesc = (String)
+								// appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
 								strComClassName = (String) appFormDataSingleList.get(j).get("TZ_COM_LMC");
 								strInfoSelectID = (String) appFormDataSingleList.get(j).get("TZ_XXX_NO");
 								if ("Select".equals(strComClassName) || "bmrBatch".equals(strComClassName)
 										|| "bmrMajor".equals(strComClassName) || "CompanyNature".equals(strComClassName)
 										|| "Degree".equals(strComClassName) || "Diploma".equals(strComClassName)) {
 									String msSQL = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?";
-									String strInfoValueTmp  = jdbcTemplate.queryForObject(msSQL,
+									String strInfoValueTmp = jdbcTemplate.queryForObject(msSQL,
 											new Object[] { strBmbTpl, strInfoSelectID, strInfoValue }, "String");
-									
-									if(strInfoValueTmp!=null&&!"".equals(strInfoValueTmp)){
+
+									if (strInfoValueTmp != null && !"".equals(strInfoValueTmp)) {
 										strInfoValue = strInfoValueTmp;
 									}
 								}
-								
+
 								arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
 							}
 						}
-			
+
 						// 多行存储;
 						if (appFormDataMultiList != null) {
 							for (int j = 0; j < appFormDataMultiList.size(); j++) {
@@ -219,7 +242,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 								arrAppFormInfoData.add(new String[] { strInfoID, strInfoValueAll });
 							}
 						}
-				
+
 						// Hardcode定义视图取值;
 						if (appFormInfoView != null && !"".equals(appFormInfoView)) {
 							if (appFormDataViewList != null) {
@@ -234,7 +257,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 							}
 						}
 
-						// 查询grid需要显示的报名表字段并拼装模板数据 
+						// 查询grid需要显示的报名表字段并拼装模板数据
 						String strColumnID = "", strColumnSpe = "", strColumnFieldID = "", strColumnFieldCodeTable = "";
 						String sqlGridColumn = "SELECT TZ_DC_FIELD_ID ,TZ_DC_FIELD_NAME ,if(TZ_DC_FIELD_FGF='',',',if(TZ_DC_FIELD_FGF is null,',',TZ_DC_FIELD_FGF)) TZ_DC_FIELD_FGF FROM PS_TZ_EXP_FRMFLD_T WHERE TZ_EXPORT_TMP_ID=? ORDER BY TZ_SORT_NUM ASC";
 						List<Map<String, Object>> gridColumnList = jdbcTemplate.queryForList(sqlGridColumn,
@@ -244,8 +267,8 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 								strColumnID = (String) gridColumnList.get(j).get("TZ_DC_FIELD_ID");
 
 								strColumnSpe = (String) gridColumnList.get(j).get("TZ_DC_FIELD_FGF");
-								// 当前考生对应当前列的值 
-								String strColumnValue = ""; 
+								// 当前考生对应当前列的值
+								String strColumnValue = "";
 								String sqlGridColumnField = "SELECT TZ_FORM_FLD_ID,TZ_CODE_TABLE_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=? AND TZ_DC_FIELD_ID=? ORDER BY TZ_SORT_NUM ASC";
 								List<Map<String, Object>> gridColumnFieldList = jdbcTemplate.queryForList(
 										sqlGridColumnField, new Object[] { strAuditGridTplID, strColumnID });
@@ -284,7 +307,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 								mapList.put(strColumnID, strColumnValue);
 							}
 						}
-						
+
 					}
 
 					listData.add(mapList);
@@ -333,24 +356,24 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		}
 		return jacksonUtil.Map2json(returnJsonMap);
 	}
-	
+
 	@Override
 	public String tzOther(String oprType, String strParams, String[] errorMsg) {
 		String reString = "";
-		if("tzLoadGridColumns".equals(oprType)){
+		if ("tzLoadGridColumns".equals(oprType)) {
 			reString = this.tzLoadGridColumns(strParams, errorMsg);
 		}
-		if("tzLoadExpandData".equals(oprType)){
+		if ("tzLoadExpandData".equals(oprType)) {
 			reString = this.tzLoadExpandData(strParams, errorMsg);
 		}
-		if("tzGetEmail".equals(oprType)){
+		if ("tzGetEmail".equals(oprType)) {
 			reString = this.tzGetEmail(strParams, errorMsg);
 		}
-		//将搜索结果批量打包，此处只返回报名表编号
-		if("tzExportAll".equals(oprType)){
+		// 将搜索结果批量打包，此处只返回报名表编号
+		if ("tzExportAll".equals(oprType)) {
 			reString = this.tzGetAppList(strParams, errorMsg);
 		}
-		
+
 		return reString;
 	}
 
@@ -438,17 +461,17 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 		}
-		
+
 		if (listData == null || listData.isEmpty()) {
 			String text = "";
-			if("ENG".equals(tzLoginServiceImpl.getSysLanaguageCD(request))){
+			if ("ENG".equals(tzLoginServiceImpl.getSysLanaguageCD(request))) {
 				text = "<span style=font-weight:normal>Please configure the template</span>";
-			}else{
+			} else {
 				text = "<span style=font-weight:normal>请配置模板</span>";
 			}
 			Map<String, Object> dynamicColumnsMap = new HashMap<>();
 			dynamicColumnsMap.put("dataIndex", "null");
-			dynamicColumnsMap.put("text",text );
+			dynamicColumnsMap.put("text", text);
 			dynamicColumnsMap.put("width", 600);
 			dynamicColumnsMap.put("filter", new HashMap<>());
 			dynamicColumnsMap.put("sortable", false);
@@ -458,9 +481,8 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 		return jacksonUtil.List2json(listData);
 	}
-	
-	
-	 /*加载扩展信息*/
+
+	/* 加载扩展信息 */
 	private String tzLoadExpandData(String comParams, String[] errorMsg) {
 		// 返回值;
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
@@ -473,50 +495,60 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			String strClassID = jacksonUtil.getString("classID");
 			// 报名表编号;
 			long strAppInsID = Long.parseLong(jacksonUtil.getString("appInsID"));
-		    
-		    // 报名表审批摘要模板;
-		    String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-		    String strAuditGridTplIDSQL = "SELECT B.TZ_EXPORT_TMP_ID FROM PS_TZ_CLASS_INF_T A,PS_TZ_EXPORT_TMP_T B WHERE A.TZ_APP_MODAL_ID=B.TZ_APP_MODAL_ID AND A.TZ_JG_ID = B.TZ_JG_ID AND A.TZ_CLASS_ID=? AND A.TZ_JG_ID=? AND B.TZ_EXP_TMP_STATUS='A' AND B.TZ_EXPORT_TMP_TYPE='2'";
-		    String strAuditGridTplID = jdbcTemplate.queryForObject(strAuditGridTplIDSQL, new Object[]{strClassID,orgId},"String");
 
-		    // 标签;
-		    String sqlTag = "SELECT TZ_LABEL_ID,(SELECT TZ_LABEL_NAME FROM PS_TZ_LABEL_DFN_T WHERE TZ_LABEL_ID=A.TZ_LABEL_ID ) TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A WHERE TZ_APP_INS_ID=?";
-		    String strTagName = "", strTagNameContent = "";
-		    List<Map<String, Object>> tagList = jdbcTemplate.queryForList(sqlTag,new Object[]{strAppInsID});
-		    if(tagList != null){
-		    	for(int i = 0; i < tagList.size(); i++){
-		    		//strTagId = (String)tagList.get(i).get("TZ_LABEL_ID");
-		    		strTagName = (String)tagList.get(i).get("TZ_LABEL_NAME");
-		    		//strTagNameContent = strTagNameContent + tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_GD_TAG_DISPLAY_HTML", true,strTagName);
-		    		strTagNameContent = strTagNameContent + "<li class=\"x-tagfield-item\"><div class=\"x-tagfield-item-text\" style=\"padding-right:4px;\">"+strTagName+"</div></li>";
-		    	}
-		    }
-		    Map<String, Object> strGridExpandDataMap = new HashMap<>();
-		    strGridExpandDataMap.put("itemName","标签");
-		    strGridExpandDataMap.put("itemValue", strTagNameContent);
-		    listData.add(strGridExpandDataMap);
-		    
-		    if(strAuditGridTplID != null && !"".equals(strAuditGridTplID)){
-		    	// Hardcode定义取值视图;
+			// 报名表审批摘要模板;
+			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+			String strAuditGridTplIDSQL = "SELECT B.TZ_EXPORT_TMP_ID FROM PS_TZ_CLASS_INF_T A,PS_TZ_EXPORT_TMP_T B WHERE A.TZ_APP_MODAL_ID=B.TZ_APP_MODAL_ID AND A.TZ_JG_ID = B.TZ_JG_ID AND A.TZ_CLASS_ID=? AND A.TZ_JG_ID=? AND B.TZ_EXP_TMP_STATUS='A' AND B.TZ_EXPORT_TMP_TYPE='2'";
+			String strAuditGridTplID = jdbcTemplate.queryForObject(strAuditGridTplIDSQL,
+					new Object[] { strClassID, orgId }, "String");
+
+			// 标签;
+			String sqlTag = "SELECT TZ_LABEL_ID,(SELECT TZ_LABEL_NAME FROM PS_TZ_LABEL_DFN_T WHERE TZ_LABEL_ID=A.TZ_LABEL_ID ) TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A WHERE TZ_APP_INS_ID=?";
+			String strTagName = "", strTagNameContent = "";
+			List<Map<String, Object>> tagList = jdbcTemplate.queryForList(sqlTag, new Object[] { strAppInsID });
+			if (tagList != null) {
+				for (int i = 0; i < tagList.size(); i++) {
+					// strTagId = (String)tagList.get(i).get("TZ_LABEL_ID");
+					strTagName = (String) tagList.get(i).get("TZ_LABEL_NAME");
+					// strTagNameContent = strTagNameContent +
+					// tzGdObject.getHTMLText("HTML.TZApplicationVerifiedBundle.TZ_GD_TAG_DISPLAY_HTML",
+					// true,strTagName);
+					strTagNameContent = strTagNameContent
+							+ "<li class=\"x-tagfield-item\"><div class=\"x-tagfield-item-text\" style=\"padding-right:4px;\">"
+							+ strTagName + "</div></li>";
+				}
+			}
+			Map<String, Object> strGridExpandDataMap = new HashMap<>();
+			strGridExpandDataMap.put("itemName", "标签");
+			strGridExpandDataMap.put("itemValue", strTagNameContent);
+			listData.add(strGridExpandDataMap);
+
+			if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
+				// Hardcode定义取值视图;
 				String viewNameSQL = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?";
 				String appFormInfoView = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { "TZ_FORM_VAL_REC" },
 						"String");
-				
-				/*将模板中需要显示的数据全部查出存入数组*/
-				String strBmbTpl = "", strInfoID = "", strInfoValue = "", /*strInfoDesc = "",*/ strComClassName = "", strInfoSelectID = ""; /*控件类名称，下拉存储描述信息项编号*/
-				strBmbTpl = jdbcTemplate.queryForObject("SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?", new Object[]{strAppInsID},"String");
-				
+
+				/* 将模板中需要显示的数据全部查出存入数组 */
+				String strBmbTpl = "", strInfoID = "", strInfoValue = "",
+						/* strInfoDesc = "", */ strComClassName = "",
+						strInfoSelectID = ""; /* 控件类名称，下拉存储描述信息项编号 */
+				strBmbTpl = jdbcTemplate.queryForObject(
+						"SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?", new Object[] { strAppInsID },
+						"String");
+
 				ArrayList<String[]> arrAppFormInfoData = new ArrayList<>();
 
 				// 单行存储;
 				String sqlAppFormDataSingle = "SELECT A.TZ_XXX_BH ,IF(TZ_APP_L_TEXT='',TZ_APP_S_TEXT,IF(TZ_APP_L_TEXT IS NULL,TZ_APP_S_TEXT,TZ_APP_L_TEXT)) TZ_APP_TEXT,A.TZ_APP_L_TEXT,B.TZ_COM_LMC,B.TZ_XXX_NO FROM PS_TZ_APP_CC_T A ,PS_TZ_TEMP_FIELD_V B WHERE B.TZ_APP_TPL_ID=? AND A.TZ_XXX_BH = B.TZ_XXX_BH AND A.TZ_APP_INS_ID =? AND B.TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
-				List<Map<String, Object>> appFormDataSingleList = jdbcTemplate.queryForList(
-						sqlAppFormDataSingle, new Object[] { strBmbTpl, strAppInsID, strAuditGridTplID });
+				List<Map<String, Object>> appFormDataSingleList = jdbcTemplate.queryForList(sqlAppFormDataSingle,
+						new Object[] { strBmbTpl, strAppInsID, strAuditGridTplID });
 				if (appFormDataSingleList != null) {
 					for (int j = 0; j < appFormDataSingleList.size(); j++) {
 						strInfoID = (String) appFormDataSingleList.get(j).get("TZ_XXX_BH");
 						strInfoValue = (String) appFormDataSingleList.get(j).get("TZ_APP_TEXT");
-						//strInfoDesc = (String) appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
+						// strInfoDesc = (String)
+						// appFormDataSingleList.get(j).get("TZ_APP_L_TEXT");
 						strComClassName = (String) appFormDataSingleList.get(j).get("TZ_COM_LMC");
 						strInfoSelectID = (String) appFormDataSingleList.get(j).get("TZ_XXX_NO");
 						if ("Select".equals(strComClassName) || "CompanyNature".equals(strComClassName)
@@ -524,16 +556,16 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 							String msSQL = "SELECT TZ_XXXKXZ_MS FROM PS_TZ_APPXXX_KXZ_T WHERE TZ_APP_TPL_ID = ? AND TZ_XXX_BH = ? AND TZ_XXXKXZ_MC = ?";
 							String strInfoValueTmp = jdbcTemplate.queryForObject(msSQL,
 									new Object[] { strBmbTpl, strInfoSelectID, strInfoValue }, "String");
-							
-							if(strInfoValueTmp!=null&&!"".equals(strInfoValueTmp)){
+
+							if (strInfoValueTmp != null && !"".equals(strInfoValueTmp)) {
 								strInfoValue = strInfoValueTmp;
 							}
 						}
-						
+
 						arrAppFormInfoData.add(new String[] { strInfoID, strInfoValue });
 					}
-				} 
-				
+				}
+
 				// 多行存储;
 				String sqlAppFormDataMulti = " SELECT TZ_XXX_BH FROM PS_TZ_TEMP_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='D' AND TZ_XXX_BH IN(SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
 				List<Map<String, Object>> appFormDataMultiList = jdbcTemplate.queryForList(sqlAppFormDataMulti,
@@ -563,13 +595,12 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				// Hardcode定义视图取值;
 				if (appFormInfoView != null && !"".equals(appFormInfoView)) {
 					String sqlAppFormDataView = "SELECT TZ_XXX_BH FROM PS_TZ_FORM_FIELD_V WHERE TZ_APP_TPL_ID=? AND TZ_XXX_CCLX='R' AND TZ_XXX_BH IN( SELECT TZ_FORM_FLD_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=?)";
-					List<Map<String, Object>> appFormDataViewList = jdbcTemplate
-							.queryForList(sqlAppFormDataView, new Object[] { strBmbTpl, strAuditGridTplID });
+					List<Map<String, Object>> appFormDataViewList = jdbcTemplate.queryForList(sqlAppFormDataView,
+							new Object[] { strBmbTpl, strAuditGridTplID });
 					if (appFormDataViewList != null) {
 						for (int j = 0; j < appFormDataViewList.size(); j++) {
 							strInfoID = (String) appFormDataViewList.get(j).get("TZ_XXX_BH");
-							String sql = "SELECT " + strInfoID + " FROM " + appFormInfoView
-									+ " WHERE TZ_APP_INS_ID=?";
+							String sql = "SELECT " + strInfoID + " FROM " + appFormInfoView + " WHERE TZ_APP_INS_ID=?";
 							String strInfoValueAll = jdbcTemplate.queryForObject(sql, new Object[] { strAppInsID },
 									"String");
 							arrAppFormInfoData.add(new String[] { strInfoID, strInfoValueAll });
@@ -585,18 +616,17 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				if (gridColumnList != null) {
 					for (int j = 0; j < gridColumnList.size(); j++) {
 						strColumnID = (String) gridColumnList.get(j).get("TZ_DC_FIELD_ID");
-						String strColumnName = (String)gridColumnList.get(j).get("TZ_DC_FIELD_NAME");
+						String strColumnName = (String) gridColumnList.get(j).get("TZ_DC_FIELD_NAME");
 						strColumnSpe = (String) gridColumnList.get(j).get("TZ_DC_FIELD_FGF");
 
 						String strColumnValue = ""; /* 当前考生对应当前列的值 */
 						String sqlGridColumnField = "SELECT TZ_FORM_FLD_ID,TZ_CODE_TABLE_ID FROM PS_TZ_FRMFLD_GL_T WHERE TZ_EXPORT_TMP_ID=? AND TZ_DC_FIELD_ID=? ORDER BY TZ_SORT_NUM ASC";
-						List<Map<String, Object>> gridColumnFieldList = jdbcTemplate.queryForList(
-								sqlGridColumnField, new Object[] { strAuditGridTplID, strColumnID });
+						List<Map<String, Object>> gridColumnFieldList = jdbcTemplate.queryForList(sqlGridColumnField,
+								new Object[] { strAuditGridTplID, strColumnID });
 						if (gridColumnFieldList != null) {
 							for (int k = 0; k < gridColumnFieldList.size(); k++) {
 								strColumnFieldID = (String) gridColumnFieldList.get(k).get("TZ_FORM_FLD_ID");
-								strColumnFieldCodeTable = (String) gridColumnFieldList.get(k)
-										.get("TZ_CODE_TABLE_ID");
+								strColumnFieldCodeTable = (String) gridColumnFieldList.get(k).get("TZ_CODE_TABLE_ID");
 
 								String strColumnFieldValue = "";
 								for (int i8 = 0; i8 < arrAppFormInfoData.size(); i8++) {
@@ -607,12 +637,10 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 								}
 
 								if (strColumnFieldValue != null && !"".equals(strColumnFieldValue)
-										&& strColumnFieldCodeTable != null
-										&& !"".equals(strColumnFieldCodeTable)) {
+										&& strColumnFieldCodeTable != null && !"".equals(strColumnFieldCodeTable)) {
 									String tzZhzDmsSQL = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_ZHZ_ID=? AND TZ_EFF_STATUS<>'I'";
 									strColumnFieldValue = jdbcTemplate.queryForObject(tzZhzDmsSQL,
-											new Object[] { strColumnFieldCodeTable, strColumnFieldValue },
-											"String");
+											new Object[] { strColumnFieldCodeTable, strColumnFieldValue }, "String");
 								}
 
 								if (strColumnValue == null || "".equals(strColumnValue)) {
@@ -625,22 +653,21 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 						}
 						strGridExpandDataMap = new HashMap<>();
 						strGridExpandDataMap.put("itemName", strColumnName);
-						strGridExpandDataMap.put("itemValue",strColumnValue);
+						strGridExpandDataMap.put("itemValue", strColumnValue);
 						listData.add(strGridExpandDataMap);
 					}
 				}
-				
-				
-		    }
-		      
-		}catch(Exception e){
+
+			}
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 		}
 		return jacksonUtil.List2json(listData);
 	}
-	
+
 	/* 加载配置的列表项 */
 	private String tzGetEmail(String comParams, String[] errorMsg) {
 		// 返回值;
@@ -653,11 +680,13 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 			// 班级编号;
 			String strAppInsID = jacksonUtil.getString("appInsID");
 			// 查询邮件地址;
-		   strEmail = jdbcTemplate.queryForObject("SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?", new Object[]{strAppInsID},"String");
-		   if(strEmail == null){
-		    	strEmail = "";
-		   }
-		}catch(Exception e){
+			strEmail = jdbcTemplate.queryForObject(
+					"SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?",
+					new Object[] { strAppInsID }, "String");
+			if (strEmail == null) {
+				strEmail = "";
+			}
+		} catch (Exception e) {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 			strEmail = "";
@@ -665,45 +694,66 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		returnMap.put("email", strEmail);
 		return jacksonUtil.Map2json(returnMap);
 	}
-	
-	private String tzGetAppList(String comParams,String[] errorMsg){
+
+	/**
+	 * 返回报名表填写比例
+	 * 
+	 * @param appInsID
+	 * @return
+	 */
+	private String getBMBFillProportion(String appInsID, int leng) {
+		String sql = "select count(1) from PS_TZ_APP_COMP_TBL where TZ_APP_INS_ID=? and TZ_HAS_COMPLETE=? ";
+		int fill = jdbcTemplate.queryForObject(sql, new Object[] { appInsID, "Y" }, "Integer");
+		System.out.println("fill:" + fill);
+		if (leng == 0) {
+			return "0.00%";
+		} else {
+			double f = fill / leng;
+			f = f * 100;
+			System.out.println("f:" + f);
+			return String.format("%.2f", f) + "%";
+		}
+	}
+
+	private String tzGetAppList(String comParams, String[] errorMsg) {
 		// 返回值;
 		Map<String, Object> returnMap = new HashMap<>();
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
-	
+
 		String strAppInsList = "";
-		try{
+		try {
 			jacksonUtil.json2Map(comParams);
-		
+
 			String tzStoreParams = jacksonUtil.getString("tzStoreParams");
 			String totalCount = jacksonUtil.getString("totalCount");
 
 			int numStart = 0;
 			int numLimit = Integer.valueOf(totalCount);
-	
+
 			// 排序字段
 			String[][] orderByArr = new String[][] {};
-	
+
 			// json数据要的结果字段
-			String[] resultFldArray = { "TZ_APP_INS_ID"};
-	
+			String[] resultFldArray = { "TZ_APP_INS_ID" };
+
 			// 可配置搜索通用函数
-			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, tzStoreParams, numLimit, numStart, errorMsg);
-	
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, tzStoreParams, numLimit, numStart,
+					errorMsg);
+
 			if (obj != null && obj.length > 0) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
-					
-					if("".equals(strAppInsList)){
-						strAppInsList =  rowList[0];
-					}else{
+
+					if ("".equals(strAppInsList)) {
+						strAppInsList = rowList[0];
+					} else {
 						strAppInsList = strAppInsList + ";" + rowList[0];
-					}					
+					}
 				}
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();
 			e.printStackTrace();
