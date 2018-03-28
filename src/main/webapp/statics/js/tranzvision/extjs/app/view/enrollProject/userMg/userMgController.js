@@ -237,7 +237,7 @@
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
 			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]').getForm();
-			var processInfoForm =this.lookupReference('userMgForm').down('form[name=processInfoForm]').getForm();
+			//var processInfoForm =this.lookupReference('userMgForm').down('form[name=processInfoForm]').getForm();
 			//var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
@@ -253,7 +253,7 @@
 			//考生个人信息
 			userInfoForm.setValues(formData.perInfo)
 			//录取流程
-			processInfoForm.setValues(formData.lqlcInfo);
+			//processInfoForm.setValues(formData.lqlcInfo);
 			/*var userInfoItems = [];
 		
 			var fields = formData.column;

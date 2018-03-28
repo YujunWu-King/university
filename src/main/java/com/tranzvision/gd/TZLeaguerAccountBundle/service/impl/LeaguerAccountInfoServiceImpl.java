@@ -338,18 +338,16 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				//str_lenProvince	
 				Map<String, Object> perInfoMap = new HashMap<>();
 				perInfoMap.put("lenProvince", str_lenProvince);
-				Map< String, Object> grxxMap = jdbcTemplate.queryForMap("SELECT A.OPRID,A.TZ_REALNAME,A.BIRTHDATE,A.NATIONAL_ID_TYPE,A.NATIONAL_ID,B.TZ_ZY_SJ,B.TZ_ZY_EMAIL,A.TZ_COMMENT4,A.TZ_COMMENT9,A.TZ_COMMENT10,A.TZ_COMMENT11 FROM PS_TZ_REG_USER_T A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID WHERE A.OPRID=?",new Object[]{str_oprid});
+				Map< String, Object> grxxMap = jdbcTemplate.queryForMap("SELECT A.OPRID,B.TZ_ZY_SJ,A.TZ_REALNAME,A.BIRTHDATE,A.TZ_SCH_CNAME,A.TZ_LEN_PROID,A.TZ_COMPANY_NAME,A.TZ_COMP_INDUSTRY FROM PS_TZ_REG_USER_T A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID WHERE A.OPRID=?",new Object[]{str_oprid});
 				if(grxxMap!=null){
+					perInfoMap.put("oprid", grxxMap.get("OPRID"));
 				    perInfoMap.put("birthdate", grxxMap.get("BIRTHDATE"));
-				    perInfoMap.put("zyPhone", grxxMap.get("TZ_ZY_SJ"));
-				    perInfoMap.put("zyEmail", grxxMap.get("TZ_ZY_EMAIL"));
-				    perInfoMap.put("nationType", grxxMap.get("NATIONAL_ID_TYPE"));
-				    perInfoMap.put("nationId", grxxMap.get("NATIONAL_ID"));
-				    perInfoMap.put("jjlxr", grxxMap.get("TZ_COMMENT9"));
-				    perInfoMap.put("jjlxrSex", grxxMap.get("TZ_COMMENT10"));
-				    perInfoMap.put("jjlxrPhone", grxxMap.get("TZ_COMMENT11"));
-				    perInfoMap.put("kshNo", ksdrMap.get("lkksBh"));
-				    perInfoMap.put("isHaiwXuel", grxxMap.get("TZ_COMMENT4"));
+				    perInfoMap.put("zyPhone", grxxMap.get("TZ_ZY_SJ"));				    
+				    perInfoMap.put("realname", grxxMap.get("TZ_REALNAME"));
+				    perInfoMap.put("shcoolcname", grxxMap.get("TZ_SCH_CNAME"));
+				    perInfoMap.put("lenProvince", grxxMap.get("TZ_LEN_PROID"));
+				    perInfoMap.put("companyname", grxxMap.get("TZ_COMPANY_NAME"));
+				    perInfoMap.put("copmindustry", grxxMap.get("TZ_COMP_INDUSTRY"));;
 				    
 				}
 				String appMajor = jdbcTemplate.queryForObject("SELECT TZ_APP_MAJOR_NAME FROM PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?", new Object[]{str_oprid}, "String");
