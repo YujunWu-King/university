@@ -708,7 +708,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		if (leng == 0) {
 			return "0.00%";
 		} else {
-			double f = fill / leng;
+			double f = (double)fill / leng;
 			f = f * 100;
 			System.out.println("f:" + f);
 			return String.format("%.2f", f) + "%";
