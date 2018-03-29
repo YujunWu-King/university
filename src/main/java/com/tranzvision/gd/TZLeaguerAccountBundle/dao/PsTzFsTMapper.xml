@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzFsTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzFsT" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_IS_FS" property="tzIsFs" jdbcType="VARCHAR" />
+    <result column="TZ_IS_FSMS" property="tzIsFsms" jdbcType="VARCHAR" />
+    <result column="TZ_MS_SJADD" property="tzMsSjadd" jdbcType="VARCHAR" />
+    <result column="TZ_POLITICS_SJADD" property="tzPoliticsSjadd" jdbcType="VARCHAR" />
+    <result column="TZ_REMARK" property="tzRemark" jdbcType="VARCHAR" />
+    <result column="TZ_FSMS_RESULT" property="tzFsmsResult" jdbcType="VARCHAR" />
+    <result column="TZ_POLITICS" property="tzPolitics" jdbcType="VARCHAR" />
+    <result column="TZ_IS_TJ" property="tzIsTj" jdbcType="VARCHAR" />
+    <result column="TZ_IS_ZS" property="tzIsZs" jdbcType="VARCHAR" />
+    <result column="TZ_RESULT_CODE" property="tzResultCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_IS_FS, TZ_IS_FSMS, TZ_MS_SJADD, TZ_POLITICS_SJADD, TZ_REMARK, TZ_FSMS_RESULT, 
+    TZ_POLITICS, TZ_IS_TJ, TZ_IS_ZS, TZ_RESULT_CODE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_IMP_FS_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TZ_IMP_FS_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzFsT" >
+    insert into TZ_IMP_FS_TBL (TZ_APP_INS_ID, TZ_IS_FS, TZ_IS_FSMS, 
+      TZ_MS_SJADD, TZ_POLITICS_SJADD, TZ_REMARK, 
+      TZ_FSMS_RESULT, TZ_POLITICS, TZ_IS_TJ, 
+      TZ_IS_ZS, TZ_RESULT_CODE)
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzIsFs,jdbcType=VARCHAR}, #{tzIsFsms,jdbcType=VARCHAR}, 
+      #{tzMsSjadd,jdbcType=VARCHAR}, #{tzPoliticsSjadd,jdbcType=VARCHAR}, #{tzRemark,jdbcType=VARCHAR}, 
+      #{tzFsmsResult,jdbcType=VARCHAR}, #{tzPolitics,jdbcType=VARCHAR}, #{tzIsTj,jdbcType=VARCHAR}, 
+      #{tzIsZs,jdbcType=VARCHAR}, #{tzResultCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzFsT" >
+    insert into TZ_IMP_FS_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzIsFs != null" >
+        TZ_IS_FS,
+      </if>
+      <if test="tzIsFsms != null" >
+        TZ_IS_FSMS,
+      </if>
+      <if test="tzMsSjadd != null" >
+        TZ_MS_SJADD,
+      </if>
+      <if test="tzPoliticsSjadd != null" >
+        TZ_POLITICS_SJADD,
+      </if>
+      <if test="tzRemark != null" >
+        TZ_REMARK,
+      </if>
+      <if test="tzFsmsResult != null" >
+        TZ_FSMS_RESULT,
+      </if>
+      <if test="tzPolitics != null" >
+        TZ_POLITICS,
+      </if>
+      <if test="tzIsTj != null" >
+        TZ_IS_TJ,
+      </if>
+      <if test="tzIsZs != null" >
+        TZ_IS_ZS,
+      </if>
+      <if test="tzResultCode != null" >
+        TZ_RESULT_CODE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzIsFs != null" >
+        #{tzIsFs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsFsms != null" >
+        #{tzIsFsms,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsSjadd != null" >
+        #{tzMsSjadd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPoliticsSjadd != null" >
+        #{tzPoliticsSjadd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRemark != null" >
+        #{tzRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFsmsResult != null" >
+        #{tzFsmsResult,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPolitics != null" >
+        #{tzPolitics,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsTj != null" >
+        #{tzIsTj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsZs != null" >
+        #{tzIsZs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResultCode != null" >
+        #{tzResultCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzFsT" >
+    update TZ_IMP_FS_TBL
+    <set >
+      <if test="tzIsFs != null" >
+        TZ_IS_FS = #{tzIsFs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsFsms != null" >
+        TZ_IS_FSMS = #{tzIsFsms,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsSjadd != null" >
+        TZ_MS_SJADD = #{tzMsSjadd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPoliticsSjadd != null" >
+        TZ_POLITICS_SJADD = #{tzPoliticsSjadd,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRemark != null" >
+        TZ_REMARK = #{tzRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="tzFsmsResult != null" >
+        TZ_FSMS_RESULT = #{tzFsmsResult,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPolitics != null" >
+        TZ_POLITICS = #{tzPolitics,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsTj != null" >
+        TZ_IS_TJ = #{tzIsTj,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsZs != null" >
+        TZ_IS_ZS = #{tzIsZs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzResultCode != null" >
+        TZ_RESULT_CODE = #{tzResultCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzFsT" >
+    update TZ_IMP_FS_TBL
+    set TZ_IS_FS = #{tzIsFs,jdbcType=VARCHAR},
+      TZ_IS_FSMS = #{tzIsFsms,jdbcType=VARCHAR},
+      TZ_MS_SJADD = #{tzMsSjadd,jdbcType=VARCHAR},
+      TZ_POLITICS_SJADD = #{tzPoliticsSjadd,jdbcType=VARCHAR},
+      TZ_REMARK = #{tzRemark,jdbcType=VARCHAR},
+      TZ_FSMS_RESULT = #{tzFsmsResult,jdbcType=VARCHAR},
+      TZ_POLITICS = #{tzPolitics,jdbcType=VARCHAR},
+      TZ_IS_TJ = #{tzIsTj,jdbcType=VARCHAR},
+      TZ_IS_ZS = #{tzIsZs,jdbcType=VARCHAR},
+      TZ_RESULT_CODE = #{tzResultCode,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>

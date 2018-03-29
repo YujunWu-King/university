@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzQtTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzQtT" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_IS_SUB" property="tzIsSub" jdbcType="VARCHAR" />
+    <result column="TZ_TUITION_REFERENCE" property="tzTuitionReference" jdbcType="VARCHAR" />
+    <result column="TZ_REFERENCE_LZ" property="tzReferenceLz" jdbcType="VARCHAR" />
+    <result column="TZ_REFERENCE_LK" property="tzReferenceLk" jdbcType="VARCHAR" />
+    <result column="TZ_REFERENCE_EMBA" property="tzReferenceEmba" jdbcType="VARCHAR" />
+    <result column="TZ_REFERENCE_YX" property="tzReferenceYx" jdbcType="VARCHAR" />
+    <result column="TZ_YD_MS" property="tzYdMs" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_F" property="tzPayF" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_DATE_F" property="tzPayDateF" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_S" property="tzPayS" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_DATE_S" property="tzPayDateS" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_T" property="tzPayT" jdbcType="VARCHAR" />
+    <result column="TZ_PAY_DATE_T" property="tzPayDateT" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_IS_SUB, TZ_TUITION_REFERENCE, TZ_REFERENCE_LZ, TZ_REFERENCE_LK, 
+    TZ_REFERENCE_EMBA, TZ_REFERENCE_YX, TZ_YD_MS, TZ_PAY_F, TZ_PAY_DATE_F, TZ_PAY_S, 
+    TZ_PAY_DATE_S, TZ_PAY_T, TZ_PAY_DATE_T
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_IMP_QT_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TZ_IMP_QT_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzQtT" >
+    insert into TZ_IMP_QT_TBL (TZ_APP_INS_ID, TZ_IS_SUB, TZ_TUITION_REFERENCE, 
+      TZ_REFERENCE_LZ, TZ_REFERENCE_LK, TZ_REFERENCE_EMBA, 
+      TZ_REFERENCE_YX, TZ_YD_MS, TZ_PAY_F, 
+      TZ_PAY_DATE_F, TZ_PAY_S, TZ_PAY_DATE_S, 
+      TZ_PAY_T, TZ_PAY_DATE_T)
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzIsSub,jdbcType=VARCHAR}, #{tzTuitionReference,jdbcType=VARCHAR}, 
+      #{tzReferenceLz,jdbcType=VARCHAR}, #{tzReferenceLk,jdbcType=VARCHAR}, #{tzReferenceEmba,jdbcType=VARCHAR}, 
+      #{tzReferenceYx,jdbcType=VARCHAR}, #{tzYdMs,jdbcType=VARCHAR}, #{tzPayF,jdbcType=VARCHAR}, 
+      #{tzPayDateF,jdbcType=VARCHAR}, #{tzPayS,jdbcType=VARCHAR}, #{tzPayDateS,jdbcType=VARCHAR}, 
+      #{tzPayT,jdbcType=VARCHAR}, #{tzPayDateT,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzQtT" >
+    insert into TZ_IMP_QT_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzIsSub != null" >
+        TZ_IS_SUB,
+      </if>
+      <if test="tzTuitionReference != null" >
+        TZ_TUITION_REFERENCE,
+      </if>
+      <if test="tzReferenceLz != null" >
+        TZ_REFERENCE_LZ,
+      </if>
+      <if test="tzReferenceLk != null" >
+        TZ_REFERENCE_LK,
+      </if>
+      <if test="tzReferenceEmba != null" >
+        TZ_REFERENCE_EMBA,
+      </if>
+      <if test="tzReferenceYx != null" >
+        TZ_REFERENCE_YX,
+      </if>
+      <if test="tzYdMs != null" >
+        TZ_YD_MS,
+      </if>
+      <if test="tzPayF != null" >
+        TZ_PAY_F,
+      </if>
+      <if test="tzPayDateF != null" >
+        TZ_PAY_DATE_F,
+      </if>
+      <if test="tzPayS != null" >
+        TZ_PAY_S,
+      </if>
+      <if test="tzPayDateS != null" >
+        TZ_PAY_DATE_S,
+      </if>
+      <if test="tzPayT != null" >
+        TZ_PAY_T,
+      </if>
+      <if test="tzPayDateT != null" >
+        TZ_PAY_DATE_T,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzIsSub != null" >
+        #{tzIsSub,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTuitionReference != null" >
+        #{tzTuitionReference,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferenceLz != null" >
+        #{tzReferenceLz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferenceLk != null" >
+        #{tzReferenceLk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferenceEmba != null" >
+        #{tzReferenceEmba,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferenceYx != null" >
+        #{tzReferenceYx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYdMs != null" >
+        #{tzYdMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayF != null" >
+        #{tzPayF,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayDateF != null" >
+        #{tzPayDateF,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayS != null" >
+        #{tzPayS,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayDateS != null" >
+        #{tzPayDateS,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayT != null" >
+        #{tzPayT,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayDateT != null" >
+        #{tzPayDateT,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzQtT" >
+    update TZ_IMP_QT_TBL
+    <set >
+      <if test="tzIsSub != null" >
+        TZ_IS_SUB = #{tzIsSub,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTuitionReference != null" >
+        TZ_TUITION_REFERENCE = #{tzTuitionReference,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferenceLz != null" >
+        TZ_REFERENCE_LZ = #{tzReferenceLz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferenceLk != null" >
+        TZ_REFERENCE_LK = #{tzReferenceLk,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferenceEmba != null" >
+        TZ_REFERENCE_EMBA = #{tzReferenceEmba,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferenceYx != null" >
+        TZ_REFERENCE_YX = #{tzReferenceYx,jdbcType=VARCHAR},
+      </if>
+      <if test="tzYdMs != null" >
+        TZ_YD_MS = #{tzYdMs,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayF != null" >
+        TZ_PAY_F = #{tzPayF,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayDateF != null" >
+        TZ_PAY_DATE_F = #{tzPayDateF,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayS != null" >
+        TZ_PAY_S = #{tzPayS,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayDateS != null" >
+        TZ_PAY_DATE_S = #{tzPayDateS,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayT != null" >
+        TZ_PAY_T = #{tzPayT,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPayDateT != null" >
+        TZ_PAY_DATE_T = #{tzPayDateT,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzQtT" >
+    update TZ_IMP_QT_TBL
+    set TZ_IS_SUB = #{tzIsSub,jdbcType=VARCHAR},
+      TZ_TUITION_REFERENCE = #{tzTuitionReference,jdbcType=VARCHAR},
+      TZ_REFERENCE_LZ = #{tzReferenceLz,jdbcType=VARCHAR},
+      TZ_REFERENCE_LK = #{tzReferenceLk,jdbcType=VARCHAR},
+      TZ_REFERENCE_EMBA = #{tzReferenceEmba,jdbcType=VARCHAR},
+      TZ_REFERENCE_YX = #{tzReferenceYx,jdbcType=VARCHAR},
+      TZ_YD_MS = #{tzYdMs,jdbcType=VARCHAR},
+      TZ_PAY_F = #{tzPayF,jdbcType=VARCHAR},
+      TZ_PAY_DATE_F = #{tzPayDateF,jdbcType=VARCHAR},
+      TZ_PAY_S = #{tzPayS,jdbcType=VARCHAR},
+      TZ_PAY_DATE_S = #{tzPayDateS,jdbcType=VARCHAR},
+      TZ_PAY_T = #{tzPayT,jdbcType=VARCHAR},
+      TZ_PAY_DATE_T = #{tzPayDateT,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>

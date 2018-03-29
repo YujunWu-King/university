@@ -24,8 +24,21 @@ import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
 import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
+
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
+
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzFsT;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLkbmT;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMsjgT;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzQtT;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzFsTMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLkbmTMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzMsjgTMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzMszgTMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzQtTMapper;
+
 
 /**
  * 申请用户信息；原：TZ_GD_USERGL_PKG:TZ_GD_USER_CLS
@@ -53,6 +66,18 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
 	@Autowired
 	private PsTzLxfsInfoTblMapper psTzLxfsInfoTblMapper;
+	@Autowired
+	private PsTzFsTMapper psTzFsTMapper;
+	@Autowired
+	private PsTzLkbmTMapper psTzLkbmTMapper;
+	@Autowired
+	private PsTzMsjgTMapper psTzMsjgTMapper;
+	@Autowired
+	private PsTzMszgTMapper psTzMszgTMapper;
+	@Autowired
+	private PsTzQtTMapper psTzQtTMapper;
+	
+	
 	
 	/* 查询表单信息 */
 	@Override
@@ -244,58 +269,58 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				Long appIns = jdbcTemplate.queryForObject(" select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T WHERE OPRID=? ORDER BY ROW_LASTMANT_DTTM LIMIT 0,1", new Object[]{str_oprid},"Long");
 				Map<String, Object> ksdrMap = new HashMap<>();
 				
-				if(appIns != null && appIns > 0){
-					//材料评审
-					Map< String, Object> clmsMap = jdbcTemplate.queryForMap("SELECT TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
-					if(clmsMap != null){
-						ksdrMap.put("clpsJg", clmsMap.get("TZ_RESULT"));
-						ksdrMap.put("sfmsZg", clmsMap.get("TZ_RESULT_CODE"));
-					}
-					
-					//面试
-					Map< String, Object> msMap = jdbcTemplate.queryForMap("select TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE from TZ_IMP_MSPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
-					if(msMap != null){
-						ksdrMap.put("msbdSj", msMap.get("TZ_TIME"));
-						ksdrMap.put("msbdDd", msMap.get("TZ_ADDRESS"));
-						ksdrMap.put("msJg", msMap.get("TZ_RESULT"));
-						ksdrMap.put("msJgBz", msMap.get("TZ_RESULT_CODE"));
-					}
-					
-					//联考报名
-					Map< String, Object> lkMap = jdbcTemplate.queryForMap("select TZ_YEAR,TZ_SCORE,TZ_ENGLISH,TZ_COMPREHENSIVE,TZ_OVERLINE,TZ_POLITICS,TZ_ENG_LISTENING,TZ_POLLSN_OVERLINE,TZ_PRE_ADMISSION,TZ_STU_NUM,TZ_DEGREE_CHECK,TZ_STU_NUM_LAST4,TZ_POL_ENG_TIME,TZ_POL_ENG_ADDR,TZ_SCHOLARSHIP_STA,TZ_POLLSN_DESC from TZ_IMP_LKBM_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
-					if(lkMap != null){
-						ksdrMap.put("lkNf", lkMap.get("TZ_YEAR"));
-						ksdrMap.put("lkZf", lkMap.get("TZ_SCORE"));
-						ksdrMap.put("lkYy", lkMap.get("TZ_ENGLISH"));
-						ksdrMap.put("lkZh", lkMap.get("TZ_COMPREHENSIVE"));
-						ksdrMap.put("lkSfgx", lkMap.get("TZ_OVERLINE"));
-						ksdrMap.put("Zz", lkMap.get("TZ_POLITICS"));
-						ksdrMap.put("yyTl", lkMap.get("TZ_ENG_LISTENING"));
-						ksdrMap.put("zzTlSfGx", lkMap.get("TZ_POLLSN_OVERLINE"));
-						ksdrMap.put("sfYlq", lkMap.get("TZ_PRE_ADMISSION"));
-						ksdrMap.put("lkksBh", lkMap.get("TZ_STU_NUM"));
-						ksdrMap.put("lkbmsXlJyZt", lkMap.get("TZ_DEGREE_CHECK"));
-						ksdrMap.put("ksbhHsw", lkMap.get("TZ_STU_NUM_LAST4"));
-						ksdrMap.put("zzYyTlKsSj", lkMap.get("TZ_POL_ENG_TIME"));
-						ksdrMap.put("zzYyTlKsDd", lkMap.get("TZ_POL_ENG_ADDR"));
-						ksdrMap.put("ssJxjSqZt", lkMap.get("TZ_SCHOLARSHIP_STA"));
-						ksdrMap.put("zzTlKsBz", lkMap.get("TZ_POLLSN_DESC"));
-					}
-					
-					//预录取
-					Map< String, Object> ylqMap = jdbcTemplate.queryForMap("select TZ_SCHOLARSHIP_RST,TZ_TUITION_REFERENCE,TZ_STU_ID,TZ_PYXY_ACCEPT,TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD from TZ_IMP_YLQ_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
-					if(ylqMap != null){
-						ksdrMap.put("ssJxjZzJg", ylqMap.get("TZ_SCHOLARSHIP_RST"));
-						ksdrMap.put("xfZeCk", ylqMap.get("TZ_TUITION_REFERENCE"));
-						ksdrMap.put("xh", ylqMap.get("TZ_STU_ID"));
-						ksdrMap.put("pyXyJs", ylqMap.get("TZ_PYXY_ACCEPT"));
-						ksdrMap.put("zzZmJs", ylqMap.get("TZ_GZZM_ACCEPT"));
-						ksdrMap.put("fbJg", ylqMap.get("TZ_CLASS_RST"));
-						ksdrMap.put("jgYx", ylqMap.get("TZ_EMAIL"));
-						ksdrMap.put("yxCsMm", ylqMap.get("TZ_INITIAL_PSWD"));
-					}
-					
-				}
+//				if(appIns != null && appIns > 0){
+//					//材料评审
+//					Map< String, Object> clmsMap = jdbcTemplate.queryForMap("SELECT TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+//					if(clmsMap != null){
+//						ksdrMap.put("clpsJg", clmsMap.get("TZ_RESULT"));
+//						ksdrMap.put("sfmsZg", clmsMap.get("TZ_RESULT_CODE"));
+//					}
+//					
+//					//面试
+//					Map< String, Object> msMap = jdbcTemplate.queryForMap("select TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE from TZ_IMP_MSPS_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+//					if(msMap != null){
+//						ksdrMap.put("msbdSj", msMap.get("TZ_TIME"));
+//						ksdrMap.put("msbdDd", msMap.get("TZ_ADDRESS"));
+//						ksdrMap.put("msJg", msMap.get("TZ_RESULT"));
+//						ksdrMap.put("msJgBz", msMap.get("TZ_RESULT_CODE"));
+//					}
+//					
+//					//联考报名
+//					Map< String, Object> lkMap = jdbcTemplate.queryForMap("select TZ_YEAR,TZ_SCORE,TZ_ENGLISH,TZ_COMPREHENSIVE,TZ_OVERLINE,TZ_POLITICS,TZ_ENG_LISTENING,TZ_POLLSN_OVERLINE,TZ_PRE_ADMISSION,TZ_STU_NUM,TZ_DEGREE_CHECK,TZ_STU_NUM_LAST4,TZ_POL_ENG_TIME,TZ_POL_ENG_ADDR,TZ_SCHOLARSHIP_STA,TZ_POLLSN_DESC from TZ_IMP_LKBM_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+//					if(lkMap != null){
+//						ksdrMap.put("lkNf", lkMap.get("TZ_YEAR"));
+//						ksdrMap.put("lkZf", lkMap.get("TZ_SCORE"));
+//						ksdrMap.put("lkYy", lkMap.get("TZ_ENGLISH"));
+//						ksdrMap.put("lkZh", lkMap.get("TZ_COMPREHENSIVE"));
+//						ksdrMap.put("lkSfgx", lkMap.get("TZ_OVERLINE"));
+//						ksdrMap.put("Zz", lkMap.get("TZ_POLITICS"));
+//						ksdrMap.put("yyTl", lkMap.get("TZ_ENG_LISTENING"));
+//						ksdrMap.put("zzTlSfGx", lkMap.get("TZ_POLLSN_OVERLINE"));
+//						ksdrMap.put("sfYlq", lkMap.get("TZ_PRE_ADMISSION"));
+//						ksdrMap.put("lkksBh", lkMap.get("TZ_STU_NUM"));
+//						ksdrMap.put("lkbmsXlJyZt", lkMap.get("TZ_DEGREE_CHECK"));
+//						ksdrMap.put("ksbhHsw", lkMap.get("TZ_STU_NUM_LAST4"));
+//						ksdrMap.put("zzYyTlKsSj", lkMap.get("TZ_POL_ENG_TIME"));
+//						ksdrMap.put("zzYyTlKsDd", lkMap.get("TZ_POL_ENG_ADDR"));
+//						ksdrMap.put("ssJxjSqZt", lkMap.get("TZ_SCHOLARSHIP_STA"));
+//						ksdrMap.put("zzTlKsBz", lkMap.get("TZ_POLLSN_DESC"));
+//					}
+//					
+//					//预录取
+//					Map< String, Object> ylqMap = jdbcTemplate.queryForMap("select TZ_SCHOLARSHIP_RST,TZ_TUITION_REFERENCE,TZ_STU_ID,TZ_PYXY_ACCEPT,TZ_GZZM_ACCEPT,TZ_CLASS_RST,TZ_EMAIL,TZ_INITIAL_PSWD from TZ_IMP_YLQ_TBL WHERE TZ_APP_INS_ID=?",new Object[]{appIns});
+//					if(ylqMap != null){
+//						ksdrMap.put("ssJxjZzJg", ylqMap.get("TZ_SCHOLARSHIP_RST"));
+//						ksdrMap.put("xfZeCk", ylqMap.get("TZ_TUITION_REFERENCE"));
+//						ksdrMap.put("xh", ylqMap.get("TZ_STU_ID"));
+//						ksdrMap.put("pyXyJs", ylqMap.get("TZ_PYXY_ACCEPT"));
+//						ksdrMap.put("zzZmJs", ylqMap.get("TZ_GZZM_ACCEPT"));
+//						ksdrMap.put("fbJg", ylqMap.get("TZ_CLASS_RST"));
+//						ksdrMap.put("jgYx", ylqMap.get("TZ_EMAIL"));
+//						ksdrMap.put("yxCsMm", ylqMap.get("TZ_INITIAL_PSWD"));
+//					}
+//					
+//				}
 				//tmt 修改 2017-4-7录取流程信息
 				Map<String, Object> lqlcInfoMap = new HashMap<>();
 				//lqlcInfoMap.put("lqlc", str_lenProvince);
@@ -445,27 +470,21 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    String strAllowApply = (String) map.get("allowApply");
 				    //备注
 				    String strBeiZhu = (String) map.get("beizhu");
+				    //联系电话
+				    String zyPhone = (String) map.get("zyPhone");
+				    //真是姓名
+				    String realname = (String) map.get("realname");
 				    //出生日期
 				    String strBirthdate = (String) map.get("birthdate");
-				    //主要手机
-				    String strZyPhone = (String) map.get("zyPhone");
-				    //主要邮箱
-				    String strZyEmail = (String) map.get("zyEmail");
-				    //证件号码
-				    String strNationId = (String) map.get("nationId");
+				    //本科院校
+				    String shcoolcname = (String) map.get("shcoolcname");
 				    //常驻州省
 				    String strLenProvince = (String) map.get("lenProvince");
-				    //是否有海外学历
-				    String strIsHaiwXuel = (String) map.get("isHaiwXuel");
-				    //报考意向
-				    String strAppMajor = (String) map.get("appMajor");
-				    //紧急联系人
-				    String strJjlxr = (String) map.get("jjlxr");
-				    //紧急联系人性别
-				    String strJjlxrSex = (String) map.get("jjlxrSex");
-				    //紧急联系人电话
-				    String strJjlxrPhone = (String) map.get("jjlxrPhone");
-				    
+				    //工作单位
+				    String companyname = (String) map.get("companyname");
+				    //行业类别
+				    String copmindustry = (String) map.get("copmindustry");
+
 				    //20170425,yuds,申请用户信息修改
 				    String bindEmailFlg = (String) map.get("bindEmailFlg");
 				    String bindPhoneFlg = (String) map.get("bindPhoneFlg");
@@ -546,37 +565,35 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    if(strUserSex!=null&&!"".equals(strUserSex)){
 				    	psTzRegUserT.setTzGender(strUserSex);
 				    }
-				    if(strBirthdate!=null){
-				    	SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
-				    	if("".equals(strBirthdate)){
-				    		psTzRegUserT.setBirthdate(null);
-				    	}else{
-				    		Date birthdate = dateFormate.parse(strBirthdate);
-					    	psTzRegUserT.setBirthdate(birthdate);
-				    	}				    	
+//				    if(strBirthdate!=null){
+//				    	SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
+//				    	if("".equals(strBirthdate)){
+//				    		psTzRegUserT.setBirthdate(null);
+//				    	}else{
+//				    		Date birthdate = dateFormate.parse(strBirthdate);
+//					    	psTzRegUserT.setBirthdate(birthdate);
+//				    	}				    	
+//				    }
+				    //联系电话
+				    if(zyPhone!=null){
+				    	psTzRegUserT.setNationalId(zyPhone);
 				    }
-				    if(strNationId!=null){
-				    	psTzRegUserT.setNationalId(strNationId);
+				    if(realname!=null){
+				    	psTzRegUserT.setTzRealname(realname);	    	
+				    }
+				    if(shcoolcname!=null){
+				    	psTzRegUserT.setTzSchCname(shcoolcname);			    	
 				    }
 				    if(strLenProvince!=null){
 				    	psTzRegUserT.setTzLenProid(strLenProvince);
 				    }
-				    //是否拥有海外学历
-				    if(strIsHaiwXuel!=null){
-				    	psTzRegUserT.setTzComment4(strIsHaiwXuel);				    	
+				    if(companyname!=null){
+				    	psTzRegUserT.setTzCompanyName(companyname);			    	
 				    }
-				    //紧急联系人
-				    if(strJjlxr!=null){
-				    	psTzRegUserT.setTzComment9(strJjlxr);				    	
+				    if(copmindustry!=null){
+				    	psTzRegUserT.setTzCompIndustry(copmindustry);				    	
 				    }
-				    //紧急联系人性别
-				    if(strJjlxrSex!=null){
-				    	psTzRegUserT.setTzComment10(strJjlxrSex);				    	
-				    }
-				    //紧急联系人电话
-				    if(strJjlxrPhone!=null){
-				    	psTzRegUserT.setTzComment11(strJjlxrPhone);				    	
-				    }				    
+				    
 				    psTzRegUserT.setRowLastmantDttm(new Date());
 				    psTzRegUserT.setRowLastmantOprid(strCurrentOprid);
 				    psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
@@ -588,101 +605,271 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    PsTzLxfsInfoTbl psTzLxfsInfoTbl = new PsTzLxfsInfoTbl();
 				    psTzLxfsInfoTbl.setTzLxfsLy(strLxfsLy);
 				    psTzLxfsInfoTbl.setTzLydxId(strOprId);
-				    if(strZyPhone!=null){
-				    	psTzLxfsInfoTbl.setTzZySj(strZyPhone);
-				    }
-				    if(strZyEmail!=null){
-				    	psTzLxfsInfoTbl.setTzZyEmail(strZyEmail);
-				    }
-				    psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
+//				    if(strZyPhone!=null){
+//				    	psTzLxfsInfoTbl.setTzZySj(strZyPhone);
+//				    }
+//				    if(strZyEmail!=null){
+//				    	psTzLxfsInfoTbl.setTzZyEmail(strZyEmail);
+//				    }
+//				    psTzLxfsInfoTblMapper.updateByPrimaryKeySelective(psTzLxfsInfoTbl);
 				    
 				    
 				    //扩展表
 				    String strExistsSql = "SELECT 'Y' FROM PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?";
 				    String strExistsFlg = jdbcTemplate.queryForObject(strExistsSql, new Object[]{strOprId}, "String");
 				    String strUpdateSql = "UPDATE PS_TZ_APP_KS_INFO_EXT_T SET TZ_APP_MAJOR_NAME=? WHERE TZ_OPRID=?";
-				    if("Y".equals(strExistsFlg)){
-				    	jdbcTemplate.update(strUpdateSql, new Object[]{strAppMajor,strOprId});
-				    }else{
-				    	strUpdateSql = "INSERT INTO PS_TZ_APP_KS_INFO_EXT_T(TZ_OPRID,TZ_APP_MAJOR_NAME) VALUES(?,?)";
-				    	jdbcTemplate.update(strUpdateSql, new Object[]{strOprId,strAppMajor});
-				    }
+//				    if("Y".equals(strExistsFlg)){
+//				    	jdbcTemplate.update(strUpdateSql, new Object[]{strAppMajor,strOprId});
+//				    }else{
+//				    	strUpdateSql = "INSERT INTO PS_TZ_APP_KS_INFO_EXT_T(TZ_OPRID,TZ_APP_MAJOR_NAME) VALUES(?,?)";
+//				    	jdbcTemplate.update(strUpdateSql, new Object[]{strOprId,strAppMajor});
+//				    }
 				    //tmt 修改
-				    //录取流程
-				    String mspsmc=(String) map.get("mspsmc");
-				    String mspspc=(String) map.get("mspspc");
-				    String tjlqzg=(String) map.get("tjlqzg");
-				    String tjlqzgxm=(String) map.get("tjlqzgxm");
-				    String msjgpc=(String) map.get("msjgpc");
-				    
-				    String lkbm=(String) map.get("lkbm");
-				    String lqlzqk=(String) map.get("lqlzqk");
-				    String tzyyNotes=(String) map.get("tzyyNotes");
-				    String lkqtjluzg=(String) map.get("lkqtjluzg");
-				    String lkqtjluzgxm=(String) map.get("lkqtjluzgxm");
-				    
-				    String lksk=(String) map.get("lksk");
-				    String yytlgx=(String) map.get("yytlgx");
-				    String zzgx=(String) map.get("zzgx");
-				    String lkgx=(String) map.get("lkgx");
-				    String ylqzzqk=(String) map.get("ylqzzqk");
-				    
-				    String tzyyNotes2=(String) map.get("tzyyNotes2");
-				    String ylqzg=(String) map.get("ylqzg");
-				    String ylqzgxm=(String) map.get("ylqzgxm");
-				    String zslqzzqk=(String) map.get("zslqzzqk");
-				    String tzyyNotes3=(String) map.get("tzyyNotes3");
-				    
-				    String zslqzg=(String) map.get("zslqzg");
-				    String zslqzgxm=(String) map.get("zslqzgxm");
-				    String rxqzzqk=(String) map.get("rxqzzqk");
-				    String tzyyNotes4=(String) map.get("tzyyNotes4");
-				    String rxqk=(String) map.get("rxqk");
-				    String rxxm=(String) map.get("rxxm");
-				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
-					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
-					//tmt 修改 录取流程信息 
-					PsTzKshLqlcTbl psTzKshLqlcTbl=new PsTzKshLqlcTbl();
-					psTzKshLqlcTbl.setOprid(strOprId);
-					psTzKshLqlcTbl.setTzMspsMc(mspsmc);
-					psTzKshLqlcTbl.setTzMspsPc(mspspc);
-					psTzKshLqlcTbl.setTzTjlqzg(tjlqzg);
-					psTzKshLqlcTbl.setTzTjlqzgXm(tjlqzgxm);
-					psTzKshLqlcTbl.setTzMsjgPc(msjgpc);	
-					
-					psTzKshLqlcTbl.setTzLkbm(lkbm);
-					psTzKshLqlcTbl.setTzLkqTzqk(lqlzqk);
-					psTzKshLqlcTbl.setTzTzyyNotes(tzyyNotes);
-					psTzKshLqlcTbl.setTzLkqTjlqzg(lkqtjluzg);
-					psTzKshLqlcTbl.setTzLkqTjlqzgXm(lkqtjluzgxm);
-					
-					
-					psTzKshLqlcTbl.setTzLksk(lksk);
-					psTzKshLqlcTbl.setTzLkyytlgx(yytlgx);
-					psTzKshLqlcTbl.setTzLkzzgx(zzgx);
-					psTzKshLqlcTbl.setTzLkgx(lkgx);
-					psTzKshLqlcTbl.setTzYlqTzqk(ylqzzqk);
-					
-					psTzKshLqlcTbl.setTzTzyyNotes2(tzyyNotes2);
-					psTzKshLqlcTbl.setTzYlqZg(ylqzg);
-					psTzKshLqlcTbl.setTzYlqZgXm(ylqzgxm);
-					psTzKshLqlcTbl.setTzZslqTzqk(zslqzzqk);
-					psTzKshLqlcTbl.setTzTzyyNotes3(tzyyNotes3);
-					
-					psTzKshLqlcTbl.setTzZslqZg(zslqzg);
-					psTzKshLqlcTbl.setTzZslqZgXm(zslqzgxm);
-					psTzKshLqlcTbl.setTzRxqTzqk(rxqzzqk);
-					psTzKshLqlcTbl.setTzTzyyNotes4(tzyyNotes4);
-					psTzKshLqlcTbl.setTzRxQk(rxqk);
-					psTzKshLqlcTbl.setTzRxXm(rxxm);
-					PsTzKshLqlcTbl info=psTzKshLqlcTblMapper.selectByPrimaryKey(strOprId);
-					if(info==null){
-						psTzKshLqlcTblMapper.insert(psTzKshLqlcTbl);
-					}else{
-						psTzKshLqlcTblMapper.updateByPrimaryKeySelective(psTzKshLqlcTbl);
-					}
+//				    //录取流程
+//				    String mspsmc=(String) map.get("mspsmc");
+//				    String mspspc=(String) map.get("mspspc");
+//				    String tjlqzg=(String) map.get("tjlqzg");
+//				    String tjlqzgxm=(String) map.get("tjlqzgxm");
+//				    String msjgpc=(String) map.get("msjgpc");
+//				    
+//				    String lkbm=(String) map.get("lkbm");
+//				    String lqlzqk=(String) map.get("lqlzqk");
+//				    String tzyyNotes=(String) map.get("tzyyNotes");
+//				    String lkqtjluzg=(String) map.get("lkqtjluzg");
+//				    String lkqtjluzgxm=(String) map.get("lkqtjluzgxm");
+//				    
+//				    String lksk=(String) map.get("lksk");
+//				    String yytlgx=(String) map.get("yytlgx");
+//				    String zzgx=(String) map.get("zzgx");
+//				    String lkgx=(String) map.get("lkgx");
+//				    String ylqzzqk=(String) map.get("ylqzzqk");
+//				    
+//				    String tzyyNotes2=(String) map.get("tzyyNotes2");
+//				    String ylqzg=(String) map.get("ylqzg");
+//				    String ylqzgxm=(String) map.get("ylqzgxm");
+//				    String zslqzzqk=(String) map.get("zslqzzqk");
+//				    String tzyyNotes3=(String) map.get("tzyyNotes3");
+//				    
+//				    String zslqzg=(String) map.get("zslqzg");
+//				    String zslqzgxm=(String) map.get("zslqzgxm");
+//				    String rxqzzqk=(String) map.get("rxqzzqk");
+//				    String tzyyNotes4=(String) map.get("tzyyNotes4");
+//				    String rxqk=(String) map.get("rxqk");
+//				    String rxxm=(String) map.get("rxxm");
+//				    String updatelSFSSql = "UPDATE PS_TZ_REG_USER_T SET TZ_BLACK_NAME=?,TZ_ALLOW_APPLY=?,TZ_BEIZHU=? WHERE OPRID=?";
+//					jdbcTemplate.update(updatelSFSSql, new Object[]{strBlackName,strAllowApply,strBeiZhu, strOprId});
+//					//tmt 修改 录取流程信息 
+//					PsTzKshLqlcTbl psTzKshLqlcTbl=new PsTzKshLqlcTbl();
+//					psTzKshLqlcTbl.setOprid(strOprId);
+//					psTzKshLqlcTbl.setTzMspsMc(mspsmc);
+//					psTzKshLqlcTbl.setTzMspsPc(mspspc);
+//					psTzKshLqlcTbl.setTzTjlqzg(tjlqzg);
+//					psTzKshLqlcTbl.setTzTjlqzgXm(tjlqzgxm);
+//					psTzKshLqlcTbl.setTzMsjgPc(msjgpc);	
+//					
+//					psTzKshLqlcTbl.setTzLkbm(lkbm);
+//					psTzKshLqlcTbl.setTzLkqTzqk(lqlzqk);
+//					psTzKshLqlcTbl.setTzTzyyNotes(tzyyNotes);
+//					psTzKshLqlcTbl.setTzLkqTjlqzg(lkqtjluzg);
+//					psTzKshLqlcTbl.setTzLkqTjlqzgXm(lkqtjluzgxm);
+//					
+//					
+//					psTzKshLqlcTbl.setTzLksk(lksk);
+//					psTzKshLqlcTbl.setTzLkyytlgx(yytlgx);
+//					psTzKshLqlcTbl.setTzLkzzgx(zzgx);
+//					psTzKshLqlcTbl.setTzLkgx(lkgx);
+//					psTzKshLqlcTbl.setTzYlqTzqk(ylqzzqk);
+//					
+//					psTzKshLqlcTbl.setTzTzyyNotes2(tzyyNotes2);
+//					psTzKshLqlcTbl.setTzYlqZg(ylqzg);
+//					psTzKshLqlcTbl.setTzYlqZgXm(ylqzgxm);
+//					psTzKshLqlcTbl.setTzZslqTzqk(zslqzzqk);
+//					psTzKshLqlcTbl.setTzTzyyNotes3(tzyyNotes3);
+//					
+//					psTzKshLqlcTbl.setTzZslqZg(zslqzg);
+//					psTzKshLqlcTbl.setTzZslqZgXm(zslqzgxm);
+//					psTzKshLqlcTbl.setTzRxqTzqk(rxqzzqk);
+//					psTzKshLqlcTbl.setTzTzyyNotes4(tzyyNotes4);
+//					psTzKshLqlcTbl.setTzRxQk(rxqk);
+//					psTzKshLqlcTbl.setTzRxXm(rxxm);
+//					PsTzKshLqlcTbl info=psTzKshLqlcTblMapper.selectByPrimaryKey(strOprId);
+//					if(info==null){
+//						psTzKshLqlcTblMapper.insert(psTzKshLqlcTbl);
+//					}else{
+//						psTzKshLqlcTblMapper.updateByPrimaryKeySelective(psTzKshLqlcTbl);
+//					}
 					//jdbcTemplate.update(updatelqlcSql, new Object[]{strOprId});
 					
+				    //20180328新流程
+				    System.out.print("===开始====");
+					String appInsId="";
+					String classid="";
+					String usersql = " SELECT TZ_CLASS_ID,TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? order by ROW_ADDED_DTTM desc LIMIT 1";
+
+					Map<String, Object> userMap = null;
+					userMap = jdbcTemplate.queryForMap(usersql, new Object[] { strOprId });
+					System.out.print("userMap====>" + userMap);
+					if (userMap != null) {
+						classid = String.valueOf(userMap.get("TZ_CLASS_ID"));
+						appInsId = String.valueOf(userMap.get("TZ_APP_INS_ID"));
+						System.out.println("appinsid" + appInsId);
+					}
+
+					if (appInsId!=""&&!appInsId.equals("")){	
+						Long tzAppInsId= Long.parseLong(appInsId);
+					    String tzFsmsResult=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_FSMS_RESULT");
+					    String tzIsFs=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_FS");
+					    String tzIsFsms=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_FSMS");
+					    String tzIsTj=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_TJ");
+					    String tzIsZs=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_ZS");
+					    String tzMsSjadd=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_MS_SJADD");
+					    String tzPolitics=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_POLITICS");
+					    String tzPoliticsSjadd=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_POLITICS_SJADD");
+					    String tzRemark=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_REMARK");
+					    String tzResultCode=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_RESULT_CODE");
+					    
+					    PsTzFsT psTzFsT = new PsTzFsT();
+					    psTzFsT.setTzAppInsId(tzAppInsId);
+					    psTzFsT.setTzFsmsResult(tzFsmsResult);
+					    psTzFsT.setTzIsFs(tzIsFs);
+					    psTzFsT.setTzIsFsms(tzIsFsms);
+					    psTzFsT.setTzIsTj(tzIsTj);
+					    psTzFsT.setTzIsZs(tzIsZs);
+					    psTzFsT.setTzMsSjadd(tzMsSjadd);
+					    psTzFsT.setTzPolitics(tzPolitics);
+					    psTzFsT.setTzPoliticsSjadd(tzPoliticsSjadd);
+					    psTzFsT.setTzRemark(tzRemark);
+					    psTzFsT.setTzResultCode(tzResultCode);
+					    PsTzFsT fsInfo=psTzFsTMapper.selectByPrimaryKey(tzAppInsId);
+					    if(fsInfo==null){
+					    	psTzFsTMapper.insert(psTzFsT);
+						}else{
+							psTzFsTMapper.updateByPrimaryKeySelective(psTzFsT);
+						}
+				    
+			    	
+					    String tzComprehensive=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_COMPREHENSIVE");
+					    String tzEnglish=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_ENGLISH");
+					    String tzIsCheck=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_CHECK");
+					    String tzIsConfirm=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_CONFIRM");
+					    String tzIsPay=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_PAY");
+					    String tzIsPrint=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_PRINT");
+					    String tzIsWangbao=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_WANGBAO");
+					    String tzOverline=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_OVERLINE");
+					    String tzScore=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_SCORE");
+					    String tzStuNum=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_STU_NUM");
+					    
+					    PsTzLkbmT psTzLkbmT = new PsTzLkbmT();
+					    psTzLkbmT.setTzAppInsId(tzAppInsId);
+					    psTzLkbmT.setTzComprehensive(tzComprehensive);
+					    psTzLkbmT.setTzEnglish(tzEnglish);
+					    psTzLkbmT.setTzIsCheck(tzIsCheck);
+					    psTzLkbmT.setTzIsConfirm(tzIsConfirm);
+					    psTzLkbmT.setTzIsPay(tzIsPay);
+					    psTzLkbmT.setTzIsPrint(tzIsPrint);
+					    psTzLkbmT.setTzIsWangbao(tzIsWangbao);
+					    psTzLkbmT.setTzOverline(tzOverline);
+					    psTzLkbmT.setTzScore(tzScore);
+					    psTzLkbmT.setTzStuNum(tzStuNum);
+					    PsTzLkbmT lkbmInfo=psTzLkbmTMapper.selectByPrimaryKey(tzAppInsId);
+					    if(lkbmInfo==null){
+					    	psTzLkbmTMapper.insert(psTzLkbmT);
+						}else{
+							psTzLkbmTMapper.updateByPrimaryKeySelective(psTzLkbmT);
+						}
+				    
+					    String tzResultCode_jg=(String) map.get("TZ_IMP_MSJG_TBL_tf_TZ_RESULT_CODE");
+	
+					    PsTzMsjgT psTzMsjgT =new PsTzMsjgT();
+					    psTzMsjgT.setTzAppInsId(tzAppInsId);
+					    psTzMsjgT.setTzResultCode(tzResultCode_jg);
+					    PsTzMsjgT msjgInfo=psTzMsjgTMapper.selectByPrimaryKey(tzAppInsId);
+					    if(msjgInfo==null){
+					    	psTzMsjgTMapper.insert(psTzMsjgT);
+						}else{
+							psTzMsjgTMapper.updateByPrimaryKeySelective(psTzMsjgT);
+						}
+					    
+				    
+				    
+
+					    String tzAddress=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_ADDRESS");
+					    String tzDate=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_DATE");
+					    String tzMaterial=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_MATERIAL");
+					    String tzMsBatch=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_MS_BATCH");
+					    String tzRemark_zg=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_REMARK");
+					    String tzResultCode_zg=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_RESULT_CODE");
+					    String tzTime=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_TIME");
+					    
+					    PsTzMszgT psTzMszgT = new PsTzMszgT();
+					    psTzMszgT.setTzAppInsId(tzAppInsId);
+					    psTzMszgT.setTzAddress(tzAddress);
+					    psTzMszgT.setTzDate(tzDate);
+					    psTzMszgT.setTzMaterial(tzMaterial);
+					    psTzMszgT.setTzMsBatch(tzMsBatch);
+					    psTzMszgT.setTzRemark(tzRemark_zg);
+					    psTzMszgT.setTzResultCode(tzResultCode_zg);
+					    psTzMszgT.setTzTime(tzTime);
+					    PsTzMszgT mszgInfo=psTzMszgTMapper.selectByPrimaryKey(tzAppInsId);
+					    if(mszgInfo==null){
+					    	psTzMszgTMapper.insert(psTzMszgT);
+						}else{
+							psTzMszgTMapper.updateByPrimaryKeySelective(psTzMszgT);
+						}
+
+				    	 String tzIsSub=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_IS_SUB");
+						    String tzPayDateF=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_DATE_F");
+						    String tzPayDateS=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_DATE_S");
+						    String tzPayDateT=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_DATE_T");
+						    String tzPayF=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_F");
+						    String tzPayS=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_S");
+						    String tzPayT=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_T");
+						    String tzReferenceEmba=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_EMBA");
+						    String tzReferenceLk=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_LK");
+						    String tzReferenceLz=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_LZ");
+						    String tzReferenceYx=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_YX");
+						    String tzTuitionReference=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_TUITION_REFERENCE");
+						    String tzYdMs=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_YD_MS");	    
+						    
+						    PsTzQtT psTzQtT =new PsTzQtT();
+						    psTzQtT.setTzAppInsId(tzAppInsId);
+						    psTzQtT.setTzIsSub(tzIsSub);
+//						    if(tzPayDateF!=null){
+//					    	SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
+//					    	if("".equals(tzPayDateF)){
+//					    		psTzRegUserT.setBirthdate(null);
+//					    	}else{
+//					    		Date date = dateFormate.parse(tzPayDateF);
+//						    	psTzQtT.setTzPayDateF(date);
+//					    	}				    	
+//					    	}
+						    psTzQtT.setTzPayDateF(tzPayDateF);
+						    psTzQtT.setTzPayDateS(tzPayDateS);
+						    psTzQtT.setTzPayDateT(tzPayDateT);
+						    psTzQtT.setTzPayF(tzPayF);
+						    psTzQtT.setTzPayS(tzPayS);
+						    psTzQtT.setTzPayT(tzPayT);
+						    psTzQtT.setTzReferenceEmba(tzReferenceEmba);
+						    psTzQtT.setTzReferenceLk(tzReferenceLk);
+						    psTzQtT.setTzReferenceLz(tzReferenceLz);
+						    psTzQtT.setTzReferenceYx(tzReferenceYx);
+						    psTzQtT.setTzTuitionReference(tzTuitionReference);
+						    psTzQtT.setTzYdMs(tzYdMs);
+						    PsTzQtT qtInfo=psTzQtTMapper.selectByPrimaryKey(tzAppInsId);
+						    if(qtInfo==null){
+						    	psTzQtTMapper.insert(psTzQtT);
+							}else{
+								psTzQtTMapper.updateByPrimaryKeySelective(psTzQtT);
+							}
+				    }
+				    		
+				    //20180328新流程结束
+				    
+				    
+				    
+				    
+				    
+				    
 					/*String updateJhuoZt = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_JIHUO_ZT=? WHERE OPRID=?";
 					jdbcTemplate.update(updateJhuoZt, new Object[]{strJihuoZt,strOprId});*/
 					Psoprdefn psoprdefn = new Psoprdefn();

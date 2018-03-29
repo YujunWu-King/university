@@ -58,12 +58,19 @@ public class LeagueBmlcServiceImpl extends FrameworkImpl {
 				JacksonUtil jacksonUtil = new JacksonUtil();
 				jacksonUtil.json2Map(strParams);
 				oprid = jacksonUtil.getString("oprid");
+				appinsid="";
+				classid="";
+				String usersql = " SELECT TZ_CLASS_ID,TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? order by ROW_ADDED_DTTM desc LIMIT 1";
 
-				String usersql = " SELECT TZ_CLASS_ID,TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=?";
-				Map<String, Object> userMap = jdbcTemplate.queryForMap(usersql, new Object[] { oprid });
-				classid = String.valueOf(userMap.get("TZ_CLASS_ID"));
-				appinsid = String.valueOf(userMap.get("TZ_APP_INS_ID"));
-				System.out.println("appinsid" + appinsid);
+				Map<String, Object> userMap = null;
+				userMap = jdbcTemplate.queryForMap(usersql, new Object[] { oprid });
+				System.out.print("userMap====>" + userMap);
+				if (userMap != null) {
+					classid = String.valueOf(userMap.get("TZ_CLASS_ID"));
+					appinsid = String.valueOf(userMap.get("TZ_APP_INS_ID"));
+					System.out.println("appinsid" + appinsid);
+				}
+
 				// layout的map
 				Map<String, Object> layoutmap = new HashMap<>();
 				// layout的map的list
@@ -72,13 +79,15 @@ public class LeagueBmlcServiceImpl extends FrameworkImpl {
 				layoutmap.put("align", "stretch");
 				layoutlist.add(layoutmap);
 
-//				String mshidsql = "SELECT TZ_MSH_ID FROM  PS_TZ_FORM_WRK_T  WHERE TZ_CLASS_ID=? AND OPRID=? AND TZ_APP_INS_ID=? ";
-//				mshId = jdbcTemplate.queryForObject(mshidsql, new Object[] { classid, oprid, appinsid }, "String");
-//
-//				System.out.println("mshId" + mshId);
+				// String mshidsql = "SELECT TZ_MSH_ID FROM PS_TZ_FORM_WRK_T
+				// WHERE TZ_CLASS_ID=? AND OPRID=? AND TZ_APP_INS_ID=? ";
+				// mshId = jdbcTemplate.queryForObject(mshidsql, new
+				// Object[] { classid, oprid, appinsid }, "String");
+				//
+				// System.out.println("mshId" + mshId);
 
 				// mshId="20170012";
-				String tabsql = "SELECT TZ_TPL_ID,TZ_TPL_NAME,TZ_TARGET_TBL FROM TZ_IMP_TPL_DFN_T ORDER BY TZ_TPL_NAME ASC";
+				String tabsql = "SELECT TZ_TPL_ID,TZ_TPL_NAME,TZ_TARGET_TBL FROM TZ_IMP_TPL_DFN_T WHERE TZ_TARGET_TBL IN ('TZ_IMP_MSZG_TBL','TZ_IMP_MSJG_TBL','TZ_IMP_LKBM_TBL','TZ_IMP_FS_TBL','TZ_IMP_QT_TBL' ) ORDER BY TZ_TPL_NAME DESC";
 				List<Map<String, Object>> tab_namelist = jdbcTemplate.queryForList(tabsql);
 				System.out.println("tab_namelist====>" + tab_namelist);
 				if (tab_namelist.size() > 0) {
@@ -99,7 +108,7 @@ public class LeagueBmlcServiceImpl extends FrameworkImpl {
 							// 查询的表字段;
 							String fieldSelectSQL = "";
 
-							String sql = "select TZ_FIELD,TZ_FIELD_NAME,TZ_REQUIRED,TZ_DISPLAY from TZ_IMP_TPL_FLD_T where TZ_TPL_ID=?  order by TZ_SEQ ASC";
+							String sql = "select TZ_FIELD,TZ_FIELD_NAME,TZ_REQUIRED,TZ_DISPLAY from TZ_IMP_TPL_FLD_T where TZ_TPL_ID=? AND TZ_FIELD<>'TZ_APP_INS_ID' order by TZ_SEQ ASC";
 							List<Map<String, Object>> list = jdbcTemplate.queryForList(sql, new Object[] { lcName });
 
 							for (int i = 0; i < list.size(); i++) {
@@ -115,23 +124,27 @@ public class LeagueBmlcServiceImpl extends FrameworkImpl {
 									fieldName = "";
 								}
 								// if ("Y".equals(backdisplay)) {
-								if ("".equals(fieldSelectSQL)) {
-									fieldSelectSQL = fieldId;
-								} else {
-									fieldSelectSQL = fieldSelectSQL + " , " + fieldId;
-								}
-								fieldIdList.add(fieldId);
-								fieldNameList.add(fieldName);
+									if ("".equals(fieldSelectSQL)) {
+										fieldSelectSQL = fieldId;
+									} else {
+										fieldSelectSQL = fieldSelectSQL + " , " + fieldId;
+									}
+									fieldIdList.add(fieldId);
+									fieldNameList.add(fieldName);
+//								}
 								// srkLxList.add(srkLx);
 								// }
 
 							}
 							Map<String, Object> valueMap = null;
 							try {
-								fieldSelectSQL = " select " + fieldSelectSQL + " from " + tableName
-										+ " where TZ_APP_INS_ID = ? ";
+								if (!appinsid.equals("") || appinsid != "") {
+									fieldSelectSQL = " select " + fieldSelectSQL + " from " + tableName
+											+ " where TZ_APP_INS_ID = ?";
 
-								valueMap = jdbcTemplate.queryForMap(fieldSelectSQL, new Object[] { appinsid });
+									valueMap = jdbcTemplate.queryForMap(fieldSelectSQL, new Object[] { appinsid });
+								} else
+									valueMap = null;
 							} catch (Exception e1) {
 								valueMap = null;
 							}
@@ -167,6 +180,7 @@ public class LeagueBmlcServiceImpl extends FrameworkImpl {
 					formDatamap.put("formData", returnlistData);
 					return jacksonUtil.Map2json(formDatamap);
 				}
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

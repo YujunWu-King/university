@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLkbmTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLkbmT" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_IS_WANGBAO" property="tzIsWangbao" jdbcType="VARCHAR" />
+    <result column="TZ_IS_CHECK" property="tzIsCheck" jdbcType="VARCHAR" />
+    <result column="TZ_IS_CONFIRM" property="tzIsConfirm" jdbcType="VARCHAR" />
+    <result column="TZ_IS_PAY" property="tzIsPay" jdbcType="VARCHAR" />
+    <result column="TZ_IS_PRINT" property="tzIsPrint" jdbcType="VARCHAR" />
+    <result column="TZ_STU_NUM" property="tzStuNum" jdbcType="VARCHAR" />
+    <result column="TZ_SCORE" property="tzScore" jdbcType="VARCHAR" />
+    <result column="TZ_ENGLISH" property="tzEnglish" jdbcType="VARCHAR" />
+    <result column="TZ_COMPREHENSIVE" property="tzComprehensive" jdbcType="VARCHAR" />
+    <result column="TZ_OVERLINE" property="tzOverline" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_IS_WANGBAO, TZ_IS_CHECK, TZ_IS_CONFIRM, TZ_IS_PAY, TZ_IS_PRINT, 
+    TZ_STU_NUM, TZ_SCORE, TZ_ENGLISH, TZ_COMPREHENSIVE, TZ_OVERLINE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_IMP_LKBM_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TZ_IMP_LKBM_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLkbmT" >
+    insert into TZ_IMP_LKBM_TBL (TZ_APP_INS_ID, TZ_IS_WANGBAO, TZ_IS_CHECK, 
+      TZ_IS_CONFIRM, TZ_IS_PAY, TZ_IS_PRINT, 
+      TZ_STU_NUM, TZ_SCORE, TZ_ENGLISH, 
+      TZ_COMPREHENSIVE, TZ_OVERLINE)
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzIsWangbao,jdbcType=VARCHAR}, #{tzIsCheck,jdbcType=VARCHAR}, 
+      #{tzIsConfirm,jdbcType=VARCHAR}, #{tzIsPay,jdbcType=VARCHAR}, #{tzIsPrint,jdbcType=VARCHAR}, 
+      #{tzStuNum,jdbcType=VARCHAR}, #{tzScore,jdbcType=VARCHAR}, #{tzEnglish,jdbcType=VARCHAR}, 
+      #{tzComprehensive,jdbcType=VARCHAR}, #{tzOverline,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLkbmT" >
+    insert into TZ_IMP_LKBM_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzIsWangbao != null" >
+        TZ_IS_WANGBAO,
+      </if>
+      <if test="tzIsCheck != null" >
+        TZ_IS_CHECK,
+      </if>
+      <if test="tzIsConfirm != null" >
+        TZ_IS_CONFIRM,
+      </if>
+      <if test="tzIsPay != null" >
+        TZ_IS_PAY,
+      </if>
+      <if test="tzIsPrint != null" >
+        TZ_IS_PRINT,
+      </if>
+      <if test="tzStuNum != null" >
+        TZ_STU_NUM,
+      </if>
+      <if test="tzScore != null" >
+        TZ_SCORE,
+      </if>
+      <if test="tzEnglish != null" >
+        TZ_ENGLISH,
+      </if>
+      <if test="tzComprehensive != null" >
+        TZ_COMPREHENSIVE,
+      </if>
+      <if test="tzOverline != null" >
+        TZ_OVERLINE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzIsWangbao != null" >
+        #{tzIsWangbao,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsCheck != null" >
+        #{tzIsCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsConfirm != null" >
+        #{tzIsConfirm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsPay != null" >
+        #{tzIsPay,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsPrint != null" >
+        #{tzIsPrint,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStuNum != null" >
+        #{tzStuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScore != null" >
+        #{tzScore,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEnglish != null" >
+        #{tzEnglish,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComprehensive != null" >
+        #{tzComprehensive,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOverline != null" >
+        #{tzOverline,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLkbmT" >
+    update TZ_IMP_LKBM_TBL
+    <set >
+      <if test="tzIsWangbao != null" >
+        TZ_IS_WANGBAO = #{tzIsWangbao,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsCheck != null" >
+        TZ_IS_CHECK = #{tzIsCheck,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsConfirm != null" >
+        TZ_IS_CONFIRM = #{tzIsConfirm,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsPay != null" >
+        TZ_IS_PAY = #{tzIsPay,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIsPrint != null" >
+        TZ_IS_PRINT = #{tzIsPrint,jdbcType=VARCHAR},
+      </if>
+      <if test="tzStuNum != null" >
+        TZ_STU_NUM = #{tzStuNum,jdbcType=VARCHAR},
+      </if>
+      <if test="tzScore != null" >
+        TZ_SCORE = #{tzScore,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEnglish != null" >
+        TZ_ENGLISH = #{tzEnglish,jdbcType=VARCHAR},
+      </if>
+      <if test="tzComprehensive != null" >
+        TZ_COMPREHENSIVE = #{tzComprehensive,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOverline != null" >
+        TZ_OVERLINE = #{tzOverline,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLkbmT" >
+    update TZ_IMP_LKBM_TBL
+    set TZ_IS_WANGBAO = #{tzIsWangbao,jdbcType=VARCHAR},
+      TZ_IS_CHECK = #{tzIsCheck,jdbcType=VARCHAR},
+      TZ_IS_CONFIRM = #{tzIsConfirm,jdbcType=VARCHAR},
+      TZ_IS_PAY = #{tzIsPay,jdbcType=VARCHAR},
+      TZ_IS_PRINT = #{tzIsPrint,jdbcType=VARCHAR},
+      TZ_STU_NUM = #{tzStuNum,jdbcType=VARCHAR},
+      TZ_SCORE = #{tzScore,jdbcType=VARCHAR},
+      TZ_ENGLISH = #{tzEnglish,jdbcType=VARCHAR},
+      TZ_COMPREHENSIVE = #{tzComprehensive,jdbcType=VARCHAR},
+      TZ_OVERLINE = #{tzOverline,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>

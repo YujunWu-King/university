@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzMszgTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT" >
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="TZ_RESULT_CODE" property="tzResultCode" jdbcType="VARCHAR" />
+    <result column="TZ_MS_BATCH" property="tzMsBatch" jdbcType="VARCHAR" />
+    <result column="TZ_DATE" property="tzDate" jdbcType="VARCHAR" />
+    <result column="TZ_TIME" property="tzTime" jdbcType="VARCHAR" />
+    <result column="TZ_ADDRESS" property="tzAddress" jdbcType="VARCHAR" />
+    <result column="TZ_MATERIAL" property="tzMaterial" jdbcType="VARCHAR" />
+    <result column="TZ_REMARK" property="tzRemark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_APP_INS_ID, TZ_RESULT_CODE, TZ_MS_BATCH, TZ_DATE, TZ_TIME, TZ_ADDRESS, TZ_MATERIAL, 
+    TZ_REMARK
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from TZ_IMP_MSZG_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from TZ_IMP_MSZG_TBL
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT" >
+    insert into TZ_IMP_MSZG_TBL (TZ_APP_INS_ID, TZ_RESULT_CODE, TZ_MS_BATCH, 
+      TZ_DATE, TZ_TIME, TZ_ADDRESS, 
+      TZ_MATERIAL, TZ_REMARK)
+    values (#{tzAppInsId,jdbcType=BIGINT}, #{tzResultCode,jdbcType=VARCHAR}, #{tzMsBatch,jdbcType=VARCHAR}, 
+      #{tzDate,jdbcType=VARCHAR}, #{tzTime,jdbcType=VARCHAR}, #{tzAddress,jdbcType=VARCHAR}, 
+      #{tzMaterial,jdbcType=VARCHAR}, #{tzRemark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT" >
+    insert into TZ_IMP_MSZG_TBL
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="tzResultCode != null" >
+        TZ_RESULT_CODE,
+      </if>
+      <if test="tzMsBatch != null" >
+        TZ_MS_BATCH,
+      </if>
+      <if test="tzDate != null" >
+        TZ_DATE,
+      </if>
+      <if test="tzTime != null" >
+        TZ_TIME,
+      </if>
+      <if test="tzAddress != null" >
+        TZ_ADDRESS,
+      </if>
+      <if test="tzMaterial != null" >
+        TZ_MATERIAL,
+      </if>
+      <if test="tzRemark != null" >
+        TZ_REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="tzResultCode != null" >
+        #{tzResultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsBatch != null" >
+        #{tzMsBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDate != null" >
+        #{tzDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTime != null" >
+        #{tzTime,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddress != null" >
+        #{tzAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMaterial != null" >
+        #{tzMaterial,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRemark != null" >
+        #{tzRemark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT" >
+    update TZ_IMP_MSZG_TBL
+    <set >
+      <if test="tzResultCode != null" >
+        TZ_RESULT_CODE = #{tzResultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMsBatch != null" >
+        TZ_MS_BATCH = #{tzMsBatch,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDate != null" >
+        TZ_DATE = #{tzDate,jdbcType=VARCHAR},
+      </if>
+      <if test="tzTime != null" >
+        TZ_TIME = #{tzTime,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddress != null" >
+        TZ_ADDRESS = #{tzAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMaterial != null" >
+        TZ_MATERIAL = #{tzMaterial,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRemark != null" >
+        TZ_REMARK = #{tzRemark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT" >
+    update TZ_IMP_MSZG_TBL
+    set TZ_RESULT_CODE = #{tzResultCode,jdbcType=VARCHAR},
+      TZ_MS_BATCH = #{tzMsBatch,jdbcType=VARCHAR},
+      TZ_DATE = #{tzDate,jdbcType=VARCHAR},
+      TZ_TIME = #{tzTime,jdbcType=VARCHAR},
+      TZ_ADDRESS = #{tzAddress,jdbcType=VARCHAR},
+      TZ_MATERIAL = #{tzMaterial,jdbcType=VARCHAR},
+      TZ_REMARK = #{tzRemark,jdbcType=VARCHAR}
+    where TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -332,14 +332,14 @@
                                         fieldLabel : '真实姓名',
                                         name : 'realname'
                                     },
-                                    {
-                                        xtype : 'datefield',
-                                        fieldLabel : '出生日期',
-                                        name : 'birthdate',
-                                        columnWidth: 1,
-                                        hideEmptyLabel: true,
-                                        format: 'Y-m-d'
-                                    },
+//                                    {
+//                                        xtype : 'datefield',
+//                                        fieldLabel : '出生日期',
+//                                        name : 'birthdate',
+//                                        columnWidth: 1,
+//                                        hideEmptyLabel: true,
+//                                        format: 'Y-m-d'
+//                                    },
                                     {
                                         xtype : 'textfield',
                                         fieldLabel : '本科院校',
@@ -371,10 +371,18 @@
                                         fieldLabel : '工作单位',
                                         name : 'companyname',
                                     },
-                                    {
-                                        xtype : 'textfield',
+                                    {           
                                         fieldLabel : '行业类别',
                                         name : 'copmindustry',
+                                        xtype : 'combo',
+                                        emptyText : '请选择',
+                                        //queryMode : 'remote',
+                                        editable : false,
+                                        valueField: 'TValue',
+                                        editable:false,
+                                        displayField: 'TLDesc',
+                                        store: new KitchenSink.view.common.store.appTransStore("TZ_MBA_ZS_HYLB"),
+                                        queryMode: 'local'
                                     }
                                 ]
                             },{
@@ -386,12 +394,6 @@
             						type : 'vbox',
             						align : 'stretch'
             					},
-            					dockedItems:[{
-                                    xtype:"toolbar",
-                                    items:['->',{
-                                            text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.sendLcbg","发送流程变更通知"),iconCls:"email",handler:'sendLcbg'  
-                                        }]
-                                }],
             					// frame: true,
             					border : false,
             					bodyPadding : 10,

@@ -620,7 +620,7 @@
 			editJson[i].appSubStatus = mfRecs[i].data.appSubStatus;			
 		}
 		formParams.updateStatus = editJson;		
-		
+		console.log(formParams);
 		win.actType = "update";
 
 		//提交参数
