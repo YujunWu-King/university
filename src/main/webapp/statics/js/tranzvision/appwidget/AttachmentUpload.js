@@ -233,6 +233,10 @@ SurveyBuild.extend("AttachmentUpload", "baseComponent", {
 		$fileInput.formValidator({tipID:(data["itemId"]+'Tip'), onShow:"", onFocus:"&nbsp;", onCorrect:"&nbsp;"});
 		$fileInput.functionValidator({
 			fun:function(val,el){
+				//console.log($fileInput);
+				//console.log(data.children.length);
+				//console.log(data.itemId);
+				//console.log(data.isRequire);
 				if (data.isRequire == "Y"){
 					if (data.children.length > 1){
 						return 	true;
