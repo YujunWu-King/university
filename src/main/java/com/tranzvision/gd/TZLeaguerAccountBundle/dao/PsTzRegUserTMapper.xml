@@ -274,7 +274,7 @@
       <if test="tzAllowApply != null" >
         TZ_ALLOW_APPLY,
       </if>
-      <if test="tzBeizhu != null">
+      <if test="tzBeizhu != null" >
         TZ_BEIZHU,
       </if>
     </trim>
@@ -435,7 +435,7 @@
       <if test="tzAllowApply != null" >
         #{tzAllowApply,jdbcType=VARCHAR},
       </if>
-      <if test="tzBeizhu != null">
+      <if test="tzBeizhu != null" >
         #{tzBeizhu,jdbcType=VARCHAR},
       </if>
     </trim>

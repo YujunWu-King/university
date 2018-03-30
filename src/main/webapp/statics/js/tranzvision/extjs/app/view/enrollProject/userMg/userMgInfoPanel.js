@@ -322,11 +322,11 @@
                                         fieldLabel : '考生编号',
                                         name : 'kshNo'
                                     },*/
-                                    {
-                                        xtype : 'textfield',
-                                        fieldLabel : '联系电话',
-                                        name : 'zyPhone'
-                                    },
+//                                    {
+//                                        xtype : 'textfield',
+//                                        fieldLabel : '联系电话',
+//                                        name : 'zyPhone'
+//                                    },
                                     {
                                         xtype : 'textfield',
                                         fieldLabel : '真实姓名',
@@ -381,7 +381,7 @@
                                         valueField: 'TValue',
                                         editable:false,
                                         displayField: 'TLDesc',
-                                        store: new KitchenSink.view.common.store.appTransStore("TZ_MBA_ZS_HYLB"),
+                                        store: new KitchenSink.view.common.store.appTransStore("TZ_MBA_ZS_HYLB2"),
                                         queryMode: 'local'
                                     }
                                 ]

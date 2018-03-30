@@ -574,10 +574,10 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 //					    	psTzRegUserT.setBirthdate(birthdate);
 //				    	}				    	
 //				    }
-				    //联系电话
-				    if(zyPhone!=null){
-				    	psTzRegUserT.setNationalId(zyPhone);
-				    }
+				    
+//				    if(zyPhone!=null){
+//				    	psTzRegUserT.set(zyPhone);
+//				    }
 				    if(realname!=null){
 				    	psTzRegUserT.setTzRealname(realname);	    	
 				    }
