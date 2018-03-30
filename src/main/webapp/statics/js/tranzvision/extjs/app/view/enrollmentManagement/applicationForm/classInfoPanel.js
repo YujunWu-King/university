@@ -248,7 +248,7 @@
                         columns:[
                             {
                                 text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.OPRID","OPRID"),
-                                dataIndex: 'OPRID',
+                                dataIndex: 'oprID',
                                 hidden:true
                             },{    text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.name","姓名"),
                                 dataIndex: 'stuName',

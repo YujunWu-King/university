@@ -58,6 +58,30 @@ public class QRCode {
 
 		MatrixToImageWriter.writeToPath(matrix, filePath.substring(filePath.lastIndexOf('.') + 1), pathToFile);
 	}
+	
+	
+	/**
+	 * 生成二维码
+	 * @param qrCodeData
+	 * @param filePath
+	 * @param charset
+	 * @param hintMap
+	 * @param qrCodeheight
+	 * @param qrCodewidth
+	 * @throws WriterException
+	 * @throws IOException
+	 */
+	public static void createQRCode2(String qrCodeData, String filePath, String charset,
+			Map<EncodeHintType, Object> hintMap, int qrCodeheight, int qrCodewidth)
+					throws WriterException, IOException {
+
+		BitMatrix matrix = new MultiFormatWriter().encode(new String(qrCodeData.getBytes(charset), charset),
+				BarcodeFormat.QR_CODE, qrCodewidth, qrCodeheight, hintMap);
+
+		Path pathToFile = FileSystems.getDefault().getPath(filePath);
+
+		MatrixToImageWriter.writeToPath(matrix, filePath.substring(filePath.lastIndexOf('.') + 1), pathToFile);
+	}
 
 	/**
 	 * 读取二维码图片

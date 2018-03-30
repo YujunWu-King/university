@@ -169,7 +169,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("classID", strClassID);
-					mapList.put("OPRID", rowList[0]);
+					mapList.put("oprID", rowList[0]);
 					mapList.put("stuName", rowList[1]);
 					mapList.put("appInsID", rowList[2]);
 					mapList.put("interviewApplicationID", rowList[3]);
