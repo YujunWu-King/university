@@ -122,11 +122,16 @@
     				if(value == null || value==""){
     					return "";	
     				}
-    				var index = sexStore.find('TValue',value);   
-    				if(index!=-1){   
-    					   return sexStore.getAt(index).data.TSDesc;   
-    				}   
-    				return value;     				 
+    				if (value =='M') {
+    					return "男";
+    				} else {
+    					return "女";
+    				}
+    				//var index = sexStore.find('TValue',value);   
+    				//if(index!=-1){   
+    				//	   return sexStore.getAt(index).data.TSDesc;   
+    				//}   
+    				//return value;     				 
     			}
             },{
                 text: '手机',
@@ -153,11 +158,16 @@
     				if(value == null || value==""){
     					return "";	
     				}
-    				var index = jihuoStore.find('TValue',value);   
-    				if(index!=-1){   
-    					   return jihuoStore.getAt(index).data.TSDesc;   
-    				}   
-    				return value;     				 
+    				if (value =='Y') {
+    					return "已激活";
+    				} else {
+    					return "未激活";
+    				}
+    				//var index = jihuoStore.find('TValue',value);   
+    				//if(index!=-1){   
+    				//	   return jihuoStore.getAt(index).data.TSDesc;   
+    				//}   
+    				//return value;     				 
     			}
             },{
                 text: '创建日期时间',
@@ -173,11 +183,16 @@
     				if(value == null || value==""){
     					return "";	
     				}
-    				var index = acctLockStore.find('TValue',value);   
-    				if(index!=-1){   
-    					   return acctLockStore.getAt(index).data.TSDesc;   
-    				}   
-    				return value;     				 
+    				if (value =='0') {
+    					return "未锁定";
+    				} else {
+    					return "已锁定";
+    				}
+    				//var index = acctLockStore.find('TValue',value);   
+    				//if(index!=-1){   
+    				//	   return acctLockStore.getAt(index).data.TSDesc;   
+    				//}   
+    				//return value;     				 
     			}
             },{
                 text: '黑名单',
@@ -188,11 +203,16 @@
     				if(value == null || value==""){
     					return "否";	
     				}
-    				var index = isYnStore.find('TValue',value);   
-    				if(index!=-1){   
-    					   return isYnStore.getAt(index).data.TSDesc;   
-    				}   
-    				return value;     				 
+    				if (value =='N') {
+    					return "否";
+    				} else {
+    					return "是";
+    				}
+    				//var index = isYnStore.find('TValue',value);   
+    				//if(index!=-1){   
+    				//	   return isYnStore.getAt(index).data.TSDesc;   
+    				//}   
+    				//return value;     				 
     			}
             },{
 			   xtype: 'actioncolumn',
