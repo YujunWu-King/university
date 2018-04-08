@@ -494,7 +494,7 @@ public class PdfPrintbyModel {
 	 * @return 机构ID
 	 */
 	private String getPdfFieldsValue(String templateID, Connection conn, Hashtable<String, String> ht, String fileName,
-			String bmbInsId) {
+			String bmbInsId, String pdfType) {
 		Statement stmt = null;
 		ResultSet rt = null;
 		String fieldsV = null;
@@ -608,6 +608,15 @@ public class PdfPrintbyModel {
 			}
 			rt.close();
 
+			// 新加入功能，PDF文件里面 添加面试申请号字段 by caoy 2018-4-8
+			String TZ_PDF_MSHID = null;
+			sql = "select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_PDF_MSHID'";
+			rt = stmt.executeQuery(sql);
+
+			if ((rt != null) && rt.next()) {
+				TZ_PDF_MSHID = rt.getString("TZ_HARDCODE_VAL");
+			}
+
 			// String year = "";
 
 			String[] fields = this.split(ttu.getPdfFileFields(fileName), ";");
@@ -617,6 +626,15 @@ public class PdfPrintbyModel {
 					tempfieldsV.append(TZ_PDF_ENYEAR);
 					tempfieldsV.append("∨∨");
 					tempfieldsV.append(this.getEnrollmentYear(bmbInsId, conn));
+					tempfieldsV.append("∧∧");
+				}
+				if (TZ_PDF_MSHID != null && !TZ_PDF_MSHID.equals("")
+						&& this.getTZ_XXX_BH(fields[i]).equals(TZ_PDF_MSHID)) {
+					tempfieldsV.append(TZ_PDF_MSHID);
+					tempfieldsV.append("∨∨");
+					tempfieldsV.append(this.getInterviewAppID(bmbInsId, conn, pdfType));
+					tempfieldsV.append("∨∨");
+					tempfieldsV.append("N");
 					tempfieldsV.append("∧∧");
 				}
 			}
@@ -634,6 +652,55 @@ public class PdfPrintbyModel {
 		}
 		return fieldsV;
 	}
+	
+	/****
+	 * 获取面试申请号
+	 * 
+	 * @param TZ_APP_INS_ID
+	 * @param conn
+	 * @param type
+	 *            类型("A":报名表， "B": 推荐信)
+	 * @return 面试申请号
+	 */
+	private String getInterviewAppID(String TZ_APP_INS_ID, Connection conn, String type) {
+		Statement stmt = null;
+		ResultSet rt = null;
+		String interAppID = null;
+
+		if (type.equals("B")) {
+			// 推荐信
+			try {
+				stmt = conn.createStatement();
+				String sql = "SELECT A.TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL A,PS_TZ_KS_TJX_TBL B WHERE A.OPRID=B.OPRID AND B.TZ_TJX_APP_INS_ID='"
+						+ TZ_APP_INS_ID + "'";
+				rt = stmt.executeQuery(sql);
+				if (rt != null && rt.next()) {
+					interAppID = rt.getString("TZ_MSH_ID");
+				}
+				rt.close();
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			// 报名表
+			try {
+				stmt = conn.createStatement();
+				String sql = "SELECT A.TZ_MSH_ID FROM PS_TZ_AQ_YHXX_TBL A,PS_TZ_FORM_WRK_T B WHERE A.OPRID=B.OPRID AND B.TZ_APP_INS_ID='" + TZ_APP_INS_ID + "'";
+				rt = stmt.executeQuery(sql);
+				if (rt != null && rt.next()) {
+					interAppID = rt.getString("TZ_MSH_ID");
+				}
+				rt.close();
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return interAppID;
+	}
+
 
 	private boolean haveTZ_XXX_BH(String str, String TZ_XXX_BH) {
 		String[] a = this.split(TZ_XXX_BH, ",");
@@ -824,7 +891,7 @@ public class PdfPrintbyModel {
 				bean.setRs(-9);
 				return bean;
 			}
-			fieldsV = this.getPdfFieldsValue(templateID, conn, ht, fieldName, bmbInsId);
+			fieldsV = this.getPdfFieldsValue(templateID, conn, ht, fieldName, bmbInsId,type);
 			if (fieldsV == null || fieldsV.equals("")) {
 				bean.setRs(-5);
 				return bean;

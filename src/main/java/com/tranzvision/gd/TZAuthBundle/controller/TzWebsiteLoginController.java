@@ -30,6 +30,7 @@ import com.tranzvision.gd.util.cookie.TzCookie;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
+import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -167,6 +168,75 @@ public class TzWebsiteLoginController {
 		}
 		// 销毁session
 		tzWebsiteLoginServiceImpl.doLogout(request, response);
+		return strRet;
+
+	}
+
+	@RequestMapping(value = { "/{orgid}/EMBA" }, produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String userLoginWebsiteByEMBA(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "orgid") String orgid) {
+
+		String strRet = "";
+
+		try {
+			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
+
+			// modity by caoy @2018-3-13 JGID由传过来的ecust变成sem
+			if (orgid.equals("ecust".toUpperCase())) {
+				orgid = "SEM";
+			}
+
+			String siteid = "72";
+			siteid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(siteid);
+
+			if (null != orgid && !"".equals(orgid) && null != siteid && !"".equals(siteid)) {
+
+				String loginHtml = "";
+				Boolean isMobile = CommonUtils.isMobile(request);
+				if (isMobile) {
+					String openid = request.getParameter("OPENID");
+					if (openid == null) {
+						openid = "";
+					}
+					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid, openid);
+					strRet = loginHtml;
+				} else {
+
+					loginHtml = tzWebsiteServiceImpl.getLoginPublishCode(request, orgid, siteid);
+					// 写死替换一个图片
+					// StringBuffer sb = new StringBuffer();
+					// sb.append("<script>");
+					// sb.append("window.onload = function() {
+					// $(\".main_body\").css(\"background\",\"background:
+					// rgba(0,0,0,0)
+					// url(../../../../../images/login/login_emba.png) no-repeat
+					// scroll center center;\") };");
+					// sb.append("</script>");
+					loginHtml = loginHtml.replaceAll("style_sem.css", "style_emba.css");
+					// loginHtml = loginHtml +sb.toString();
+					strRet = loginHtml;
+				}
+
+			} else {
+
+				strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+						"Can not visit the site.Please check the url.");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			strRet = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", "", "访问站点异常，请检查您访问的地址是否正确。",
+					"Can not visit the site.Please check the url.");
+		}
+		// 销毁session
+		tzWebsiteLoginServiceImpl.doLogout(request, response);
+
+		// 增加 EMBA的session，用于标记EMBA特征登录
+		TzSession tzSession = new TzSession(request);
+		tzSession.addSession("EMBA", "OK");
+		//System.out.println("EMBA:=" + tzSession.getSession("EMBA"));
+
 		return strRet;
 
 	}
@@ -373,6 +443,10 @@ public class TzWebsiteLoginController {
 		String orgid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebOrgId);
 		String siteid = tzCookie.getStringCookieVal(request, tzWebsiteLoginServiceImpl.cookieWebSiteId);
 
+		// modity by caoy @2018-4-8 EMBA需要特殊的处理
+		TzSession tzSession = new TzSession(request);
+		Object o = tzSession.getSession("EMBA");
+
 		tzWebsiteLoginServiceImpl.doLogout(request, response);
 
 		// String ctx = request.getContextPath();
@@ -385,7 +459,12 @@ public class TzWebsiteLoginController {
 		}
 
 		String redirect = "redirect:" + "/user/login/" + orgid + "/" + siteid;
-		System.out.println("redirect:" + redirect);
+		//System.out.println("redirect:" + redirect);
+
+		//System.out.println(o);
+		if (o != null && o.toString().equals("OK")) {
+			redirect = "redirect:" + "/user/login/" + orgid + "/EMBA";
+		}
 
 		return redirect;
 	}

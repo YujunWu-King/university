@@ -225,13 +225,15 @@ function onPreview(siteId,skinId){
 		var imgPanel=Ext.create('Ext.form.Panel', {  
 			bodyPadding: 5,  
 			closeAction:'destroy',
-			layout: 'fit', 
+			layout: 'hbox',
+			minHeight:800,
+			//slayout: 'fit', 
 			items: [{
 				name:'xl_pic',
 				xtype: 'box',
 				autoEl: {
 					tag: 'img',    //指定为img标签  
-					width: 800,
+					//width: 800,
 					//height: 500,
 					src: TzUniversityContextPath + imgArray[i]
 				}	
