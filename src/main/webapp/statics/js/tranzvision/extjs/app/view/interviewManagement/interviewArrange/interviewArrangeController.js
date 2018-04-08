@@ -207,12 +207,14 @@
 
 		cmp.on('afterrender',function(panel){
 			//听众store
+			/*
 			var audStore = new KitchenSink.view.interviewManagement.interviewArrange.interviewAudienceStore();
 			audStore.tzStoreParams = '{"TYPE":"AUD","classID":"'+classID+'","batchID":"'+batchID+'"}';
 			audStore.load();
 			
 			var audForm = panel.down('grid').down('form[reference=audienceForm]');
 			audForm.child('tagfield[name="audTag"]').setStore(audStore);
+			*/
 			
 			var setStuListForm = panel.child('form').getForm();
 			var setStuListGrid = panel.child('grid');
@@ -228,6 +230,7 @@
 			
 			
 			//听众
+			/*
 			var audParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_CAL_ARR_STD","OperateType":"queryAudIDsArr","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
 			Ext.tzLoad(audParams,function(respData){
 				if(respData.result == "success"){
@@ -237,7 +240,7 @@
 	                panel.commitChanges(panel);
 				}
 			});
-			
+			*/
 
 			Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
 			setStuListGrid.store.tzStoreParams = Params;
@@ -268,7 +271,7 @@
 			cmp.show();
 		}
 	},
-	//选择考生
+	//选择考生, 无效
 	selInterviwStu:function(grid, rowIndex, colIndex){
 		//是否有访问权限
 		var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MS_ARR_CSTU_STD"];
