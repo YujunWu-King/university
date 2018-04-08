@@ -113,7 +113,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                 },
                 dockedItems:[{
                     xtype:"toolbar",
-                    items:[{
+                    items:[/*{
                     	xtype: 'form',
                     	reference: 'audienceForm',
                     	style: 'padding-top:8px;',
@@ -138,7 +138,12 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     	text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.adddAud","添加听众"),
                         tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.adddAud","添加听众"),
                         iconCls:"add",
-                        handler:'adddAudience'
+                        handler:'addAudience'
+                    },*/{
+                    	text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.addStudent","添加考生"),
+                    	tooltip: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.addStudent","添加考生"),
+                        iconCls:"add",
+                        handler:'addStudents'
                     },{
                         text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarRemove","删除"),
                         tooltip:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.tbarRemoveTip","删除"),

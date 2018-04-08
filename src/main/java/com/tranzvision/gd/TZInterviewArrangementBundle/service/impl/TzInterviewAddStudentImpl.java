@@ -1,13 +1,18 @@
 package com.tranzvision.gd.TZInterviewArrangementBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
+import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMspsKshTblMapper;
 import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl;
@@ -19,16 +24,22 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 /**
  * 添加面试考生
  * @author zhang lang 
- * 原PS：TZ_GD_MS_ARR_PKG:TZ_GD_MS_ADDSTU_CLS
  */
 @Service("com.tranzvision.gd.TZInterviewArrangementBundle.service.impl.TzInterviewAddStudentImpl")
 public class TzInterviewAddStudentImpl extends FrameworkImpl{
 	@Autowired
-	private SqlQuery jdbcTemplate;
+	private SqlQuery sqlQuery;
+	@Autowired
+	private FliterForm fliterForm;
+	@Autowired
+	private HttpServletRequest request;
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private PsTzMspsKshTblMapper psTzMspsKshTblMapper;
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public String tzQueryList(String strParams, int numLimit, int numStart, String[] errorMsg) {
 		// 返回值;
@@ -37,82 +48,69 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 		mapRet.put("total", 0);
 		mapRet.put("root", new ArrayList<Map<String, Object>>());
 
+		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
+			// 排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][] {};
+			
 			jacksonUtil.json2Map(strParams);
-			String classID = jacksonUtil.getString("classID");
 
-			if(null != classID && !"".equals(classID)){
-				//查询面试安排总数
-				String sql = "SELECT COUNT(*) FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=?";
-				int total = jdbcTemplate.queryForObject(sql, new Object[]{classID}, "int");
+			// json数据要的结果字段;
+			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APP_INS_ID", "OPRID", "TZ_MSH_ID", "TZ_REALNAME", "TZ_LEN_PROID", "TZ_COMPANY_NAME","TZ_ZY_SJ","TZ_ZY_EMAIL"};
+			
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
 
-				ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
-				if (total > 0) {
-					sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=?";
-					List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql, new Object[]{classID});
+			if (obj != null && obj.length > 0) {
 
-					for(Map<String,Object> mapData : listData){
-						Map<String,Object> mapJson = new HashMap<String,Object>();
-						//报名表实例ID
-						String appIns = String.valueOf(mapData.get("TZ_APP_INS_ID"));
-						
-						//查询姓名
-						sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=(SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND TZ_APP_INS_ID=? limit 1)";
-						String name = jdbcTemplate.queryForObject(sql, new Object[]{classID, appIns}, "String");
-						
-						//考生类型
-						sql = "SELECT TZ_COLOR_SORT_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND TZ_APP_INS_ID=? ORDER BY CONVERT(TZ_APP_INS_ID,SIGNED) DESC";
-						String sort = jdbcTemplate.queryForObject(sql, new Object[]{classID, appIns}, "String");
-						
-						//材料评审批次、面试资格
-						sql = "SELECT B.TZ_BATCH_NAME,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID=A.TZ_MSHI_ZGFLG) TZ_MSHI_ZGFLG FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_CLS_BATCH_T B WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_BATCH_ID AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED)  DESC";
-						Map<String,Object> msgzMap = jdbcTemplate.queryForMap(sql, new Object[]{classID, appIns});
-						
-						String msClpsPc = "";
-						String msZgFlag = "";
-						if(msgzMap != null){
-							msClpsPc = msgzMap.get("TZ_BATCH_NAME") == null? "" : String.valueOf(msgzMap.get("TZ_BATCH_NAME"));
-							msZgFlag = msgzMap.get("TZ_MSHI_ZGFLG") == null? "" : String.valueOf(msgzMap.get("TZ_MSHI_ZGFLG"));
-						}
-						
-						if("".equals(msZgFlag)){
-							sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
-							msZgFlag = jdbcTemplate.queryForObject(sql, new Object[]{}, "String");
-						}
-						
-						//标签
-						String strLabel = "";
-						sql = "SELECT TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B WHERE A.TZ_LABEL_ID=B.TZ_LABEL_ID AND TZ_APP_INS_ID=?";
-						List<Map<String, Object>> labelList = jdbcTemplate.queryForList(sql, new Object[]{appIns});
-						for(Map<String, Object> mapLabel: labelList){
-							String label = String.valueOf(mapLabel.get("TZ_LABEL_NAME"));
-							if(!"".equals(label) && label != null){
-								strLabel = strLabel == ""? label : strLabel+ "； " +label;
-							}
-						}
-						
-						mapJson.put("classID", classID);
-						mapJson.put("appId", appIns);
-						mapJson.put("stuName", name);
-						mapJson.put("msCLPSPC", msClpsPc);
-						mapJson.put("msZGFlag", msZgFlag);
-						mapJson.put("lxEmail", "");//联系邮箱，取值待定
-						mapJson.put("sort", sort);//考生类型
-						mapJson.put("label", strLabel);
-						mapJson.put("isConfTimezone", "");
-						mapJson.put("university", "");
-						
-						listJson.add(mapJson);
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+
+				int num = list.size();
+				for (int i = 0; i < num; i++) {
+					String[] rowList = list.get(i);
+
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("classID", rowList[0]);
+					mapList.put("appId", rowList[1]);
+					mapList.put("oprid", rowList[2]);
+					mapList.put("mssqh", rowList[3]);
+					mapList.put("stuName", rowList[4]);
+					mapList.put("area", rowList[5]);
+					mapList.put("componey", rowList[6]);
+					mapList.put("mobile", rowList[7]);
+					mapList.put("email", rowList[8]);
+					/*
+					//面试资格
+					String sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
+					String msZgFlag = sqlQuery.queryForObject(sql, new Object[]{rowList[0], rowList[1]}, "String");
+					if("".equals(msZgFlag) || msZgFlag==null){
+						sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
+						msZgFlag = sqlQuery.queryForObject(sql, "String");
 					}
-					mapRet.replace("total", total);
-					mapRet.replace("root", listJson);
+					
+					//标签
+					String strLabel = "";
+					sql = "SELECT TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B WHERE A.TZ_LABEL_ID=B.TZ_LABEL_ID AND TZ_APP_INS_ID=?";
+					List<Map<String, Object>> labelList = sqlQuery.queryForList(sql, new Object[]{rowList[1]});
+					for(Map<String, Object> mapLabel: labelList){
+						String label = String.valueOf(mapLabel.get("TZ_LABEL_NAME"));
+						if(!"".equals(label) && label != null){
+							strLabel = strLabel == ""? label : strLabel+ "； " +label;
+						}
+					}
+					
+					mapList.put("msZGFlag", msZgFlag);
+					mapList.put("label", strLabel);
+					*/
+					listData.add(mapList);
 				}
+
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			errorMsg[0] = "1";
-			errorMsg[1] = "参数不正确！";
 		}
 		
 		strRet = jacksonUtil.Map2json(mapRet);
@@ -125,9 +123,9 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 		String strRet = "";
 		try {
 			switch (strType) {
-			case "addInterviewStuList":
+			case "tzAddStudents":
 				//保存批次面试预约安排 
-				strRet = this.addInterviewStuList(strParams,errorMsg);
+				strRet = this.tzAddStudents(strParams,errorMsg);
 				break;
 			}
 		} catch (Exception e) {
@@ -142,45 +140,55 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 	 * 添加参与本批次的面试考生
 	 */
 	@SuppressWarnings({ "unchecked"})
-	private String addInterviewStuList(String strParams, String[] errorMsg){
-		String strRet = "";
+	private String tzAddStudents(String strParams, String[] errorMsg){
+		String strRtn = "";
 		Map<String,Object> rtnMap = new HashMap<String,Object>();
-		rtnMap.put("success", "");
-		
+		rtnMap.put("result", "success");
+		rtnMap.put("message", "");
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			jacksonUtil.json2Map(strParams);
 			
 			String classID = jacksonUtil.getString("classID");
 			String batchID = jacksonUtil.getString("batchID");
+			List<Map<String,Object>> stuList = (List<Map<String,Object>>) jacksonUtil.getList("stuList");
 			
-			List<Map<String,Object>> addStuData = (List<Map<String, Object>>) jacksonUtil.getList("add");
-			for(Map<String,Object> stuDateMap: addStuData){
-				Long appId = Long.valueOf(String.valueOf(stuDateMap.get("appId")));
-				
-				PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
-				psTzMspsKshTblKey.setTzClassId(classID);
-				psTzMspsKshTblKey.setTzApplyPcId(batchID);
-				psTzMspsKshTblKey.setTzAppInsId(appId);
-				
-				PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
-				if(psTzMspsKshTbl == null){
-					psTzMspsKshTbl = new PsTzMspsKshTbl();
-					psTzMspsKshTbl.setTzClassId(classID);
-					psTzMspsKshTbl.setTzApplyPcId(batchID);
-					psTzMspsKshTbl.setTzAppInsId(appId);
+			if(stuList != null && stuList.size() > 0){
+				for(Map<String,Object> stuInfoMap : stuList){
 					
-					psTzMspsKshTblMapper.insert(psTzMspsKshTbl);
+					long appInsId = stuInfoMap.get("appId") == null ? 0 : Long.valueOf(stuInfoMap.get("appId").toString());
+					
+					if(appInsId>0){
+						PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
+						psTzMspsKshTblKey.setTzClassId(classID);
+						psTzMspsKshTblKey.setTzApplyPcId(batchID);
+						psTzMspsKshTblKey.setTzAppInsId(appInsId);
+						
+						PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
+						if(psTzMspsKshTbl==null){
+							psTzMspsKshTbl = new PsTzMspsKshTbl();
+							psTzMspsKshTbl.setTzClassId(classID);
+							psTzMspsKshTbl.setTzApplyPcId(batchID);
+							psTzMspsKshTbl.setTzAppInsId(appInsId);
+							psTzMspsKshTbl.setRowAddedOprid(oprid);
+							psTzMspsKshTbl.setRowAddedDttm(new Date());
+							psTzMspsKshTbl.setRowLastmantOprid(oprid);
+							psTzMspsKshTbl.setRowLastmantDttm(new Date());
+							
+							psTzMspsKshTblMapper.insert(psTzMspsKshTbl);
+						}
+					}
 				}
-			}
-			rtnMap.replace("success", "success");
-		}catch(Exception e){
+			}	
+		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[1] = "操作异常。"+e.getMessage();
-			rtnMap.replace("success", "fail");
+			errorMsg[1] = "操作异常。" + e.getMessage();
 		}
-		strRet = jacksonUtil.Map2json(rtnMap);
-		return strRet;
+		
+		strRtn = jacksonUtil.Map2json(rtnMap);
+		return strRtn;
 	}
 }

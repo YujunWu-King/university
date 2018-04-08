@@ -8,7 +8,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
     },
     
     //添加听众
-    adddAudience:function(btn){
+    addAudience:function(btn){
     	Ext.tzShowPromptSearch({
             recname: 'TZ_AUD_DEFN_T',
             searchDesc: '选择听众',
@@ -107,90 +107,100 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
     },
     
     
-    addIntervieStus:function(btn){
-        //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MS_ARR_ASTU_STD"];
-        if( pageResSet == "" || pageResSet == undefined){
-            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
-            return;
-        }
-        //该功能对应的JS类
-        var className = pageResSet["jsClassName"];
-        if(className == "" || className == undefined){
-            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MS_ARR_ASTU_STD，请检查配置。');
-            return;
-        }
-
-        var contentPanel, cmp, ViewClass, clsProto;
-
-        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
-        contentPanel.body.addCls('kitchensink-example');
-
-        if(!Ext.ClassManager.isCreated(className)){
-            Ext.syncRequire(className);
-        }
-        ViewClass = Ext.ClassManager.get(className);
-        clsProto = ViewClass.prototype;
-
-        if (clsProto.themes) {
-            clsProto.themeInfo = clsProto.themes[themeName];
-
-            if (themeName === 'gray') {
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
-            } else if (themeName !== 'neptune' && themeName !== 'classic') {
-                if (themeName === 'crisp-touch') {
-                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
-                }
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
-            }
-            // <debug warn>
-            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
-            if (!clsProto.themeInfo) {
-                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
-                    themeName + '\'. Is this intentional?');
-            }
-            // </debug>
-        }
-
-        cmp = new ViewClass();
-
-        var setStuListGrid = btn.up('grid');
-        var setStuListForm = setStuListGrid.up('panel').child('form');
+    //添加
+    addStudents:function(btn){
+    	var setStuListPanel = btn.up('interviewArrangeSetStuList');
+        var setStuListForm = setStuListPanel.down('form[reference=interviewArrangeSetStuListForm]');
+        var setStuListGrid = setStuListPanel.down('grid');
+        var setStuListGridStore = setStuListGrid.getStore();
+     
         var setStuListFormRec = setStuListForm.getForm().getFieldValues();
         var classID = setStuListFormRec["classID"];
         var batchID = setStuListFormRec["batchID"];
-        var className = setStuListFormRec["className"];
-
-        cmp.on('afterrender',function(panel){
-            var addStuListForm = panel.child('form').getForm();
-            var addStuListGrid = panel.child('grid');
-
-            var addStuListFormRec = {"setStuListFormData":{
-                "classID":classID,
-                "className":className,
-                "batchID":batchID
-            }};
-            addStuListForm.setValues(addStuListFormRec.setStuListFormData);
-
-            Params= '{"classID":"'+classID+'"}';
-            addStuListGrid.store.tzStoreParams = Params;
-            addStuListGrid.store.load();
-            addStuListGrid.store.filter([{property: 'msZGFlag', value: '有面试资格'}]);
-            //addStuListGrid.store.filterBy(function(record) {
-            //    return record.get('msZGFlag') == "Y";
-            //});
-        });
-
-        tab = contentPanel.add(cmp);
-
-        contentPanel.setActiveTab(tab);
-
-        Ext.resumeLayouts(true);
-
-        if (cmp.floating) {
-            cmp.show();
+        
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MS_ARR_MG_COM"]["TZ_MS_ARR_ASTU_STD"];
+		if( pageResSet == "" || pageResSet == undefined){
+			Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+			return;
+		}
+		var className = pageResSet["jsClassName"];
+		if(className == "" || className == undefined){
+			Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_MS_ARR_ASTU_STD，请检查配置。');
+			return;
+		}
+		
+    	var win = this.lookupReference('addStudentWin');
+        if (!win) {
+			Ext.syncRequire(className);
+			ViewClass = Ext.ClassManager.get(className);
+            win = new ViewClass({
+            	classID:classID,
+            	batchID:batchID,
+            	callback: function(stuInfoArr){
+            		//添加考生
+            		var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_ASTU_STD","OperateType":"tzAddStudents","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'","stuList":'+Ext.JSON.encode(stuInfoArr)+'}}';
+                    Ext.tzSubmit(tzParams,function(respData){
+                    	var result = respData.result;
+                    	if(result != "success"){
+                    		Ext.Msg.alert("提示",respData.message);
+                    	}
+                    	
+                    	setStuListGridStore.tzStoreParams = '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
+                		setStuListGridStore.reload();
+                    },"保存成功",true,this);
+            	}
+            });
+            //this.getView().add(win);
         }
+        win.show();
     },
+    
+  //搜索考生
+	searchStudents: function(btn){
+		var win = btn.findParentByType("window");
+		var grid = win.down("grid");
+		var classID = win.classID;
+		var batchID = win.batchID;
+		
+		var condition = {
+			TZ_CLASS_ID: classID	
+		};
+
+		Ext.tzShowCFGSearch({
+			cfgSrhId: 'TZ_MS_ARR_MG_COM.TZ_MS_ARR_ASTU_STD.TZ_MSSZ_STU_VW',
+            condition: condition,
+            callback: function(seachCfg){
+            	var seachCfgObj = Ext.JSON.decode(seachCfg);
+            	
+                var store = grid.store;
+                store.tzStoreParams = Ext.JSON.encode(seachCfgObj);
+                store.load();
+            }
+        });
+	},
+	
+	/**
+	 * 确认选择考生
+	 */
+	ensureAddStudent: function(btn){
+		var win = btn.findParentByType("window");
+        var grid = win.down("grid");
+        var selList =  grid.getSelectionModel().getSelection();
+        var checkLen = selList.length;
+        var stuInfoArr = [];
+        if(checkLen == 0){
+			Ext.Msg.alert("提示","请选择考生");
+            return;
+        }else{
+           for(var i=0;i<checkLen;i++){
+               //把所有的人员信息存放在一个数组里面
+        	   stuInfoArr.push(selList[i].data);
+            }
+        }
+		if(win.callback!=undefined) win.callback(stuInfoArr);
+        win.close();
+	},
+    
     delSelStus: function(btn){
         var stuListGrid = btn.up('grid');
         var stuListForm = stuListGrid.up('panel').child('form').getForm();
@@ -229,10 +239,10 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         var setStuListPanel = btn.up('panel');
         var setStuListForm = setStuListPanel.child('form[reference=interviewArrangeSetStuListForm]');
         var setStuListGrid = setStuListPanel.child('grid');
-        
+        /*
         var audFormRec = setStuListGrid.down("form[reference=audienceForm]").getForm().getValues();
         var audIDs = audFormRec["audTag"];
-
+         */
         var setStuListFormRec = setStuListForm.getForm().getFieldValues();
         var classID = setStuListFormRec["classID"];
         var batchID = setStuListFormRec["batchID"];
@@ -254,13 +264,14 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
             }
         }
 
-        var audIDsJson = "";
+        var audIDsJson = "[]";
+        /*
         if(audIDs.length>0){
         	audIDsJson = Ext.JSON.encode(audIDs);
         }else{
         	audIDsJson = '[]';
         }
-        
+        */
         if(removeJson != ""){
             comParams = '"delete":[' + removeJson + '],"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
         }else{
