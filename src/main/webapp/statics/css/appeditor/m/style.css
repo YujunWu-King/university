@@ -165,7 +165,7 @@ a, a:hover {
 	height: 2rem;
 	background: #fff;
 	border-bottom: 1px solid #ddd;
-	color: #8f5dbf;
+	color: #008043;
 	font-size: 0.64rem;
 	line-height: 2rem;
 	text-align: center;
@@ -218,7 +218,7 @@ a, a:hover {
 	height: 1.5rem;
 	background: url(/statics/images/appeditor/m/pop_se.png) no-repeat center
 		center;
-	background-color: #8f5dbf;
+	background-color: #008043;
 	border-radius: 5px;
 	background-size: 70%;
 }
@@ -254,7 +254,7 @@ a, a:hover {
 	height: auto;
 	margin: 2% auto;
 	font-size: 0.6rem;
-	color: #8f5dbf;
+	color: #008043;
 	overflow: hidden;
 }
 
@@ -298,7 +298,7 @@ a, a:hover {
 	margin: 4% auto;
 	width: 100%;
 	height: 2rem;
-	background-color: #8f5dbf;
+	background-color: #008043;
 	color: #fff;
 	font-size: 0.6rem;
 	line-height: 2rem;
@@ -329,9 +329,9 @@ a, a:hover {
 }
 
 .se_tit {
-	color: #8f5dbf;
+	color: #008043;
 	font-size: 0.64rem;
-	border-left: 2px solid #8f5dbf;
+	border-left: 2px solid #008043;
 	width: 94%;
 	margin: 2.6rem auto 0.6rem;
 	line-height: 0.6rem;
@@ -358,7 +358,7 @@ a, a:hover {
 }
 
 .shuom a {
-	color: #8f5dbf;
+	color: #008043;
 }
 
 .btn {
@@ -389,7 +389,7 @@ a, a:hover {
 	float: right;
 	font-size: 0.56rem;
 	margin-right: 2%;
-	background-color: #8f5dbf;
+	background-color: #008043;
 	padding: 8px 0;
 	text-align: center;
 	color: #fff;
@@ -417,7 +417,7 @@ a, a:hover {
 }
 
 .item span {
-	color: #8f5dbf;
+	color: #008043;
 	font-size: 0.6rem;
 }
 /*.photo{display:inline-block;}*/
@@ -503,7 +503,7 @@ input[type="text"], input[type="password"]:focus {
 
 .city .on {
 	color: #fff;
-	background-color: #8f5dbf;
+	background-color: #008043;
 }
 
 .pop_btn {
@@ -512,7 +512,7 @@ input[type="text"], input[type="password"]:focus {
 	text-align: center;
 	font-size: 0.6rem;
 	color: #fff;
-	background-color: #8f5dbf;
+	background-color: #008043;
 	border-radius: 5px;
 	margin: 5px auto;
 }
@@ -548,7 +548,7 @@ input[type="text"], input[type="password"]:focus {
 
 .country .on {
 	color: #fff;
-	background-color: #8f5dbf;
+	background-color: #008043;
 }
 
 .text-box i {
@@ -562,7 +562,7 @@ input[type="text"], input[type="password"]:focus {
 }
 
 .emergency {
-	color: #8f5dbf !important;
+	color: #008043 !important;
 }
 
 .btn1 {
@@ -588,7 +588,7 @@ input[type="text"], input[type="password"]:focus {
 	float: left;
 	font-size: 0.56rem;
 	margin: 0 0% 0 1.75%;
-	background-color: #8f5dbf;
+	background-color: #008043;
 	padding: 8px 0;
 	text-align: center;
 	color: #fff;
@@ -776,13 +776,13 @@ select {
 }
 
 .finish span {
-	color: #8f5dbf;
+	color: #008043;
 }
 
 .se_tit1 {
-	color: #8f5dbf;
+	color: #008043;
 	font-size: 0.64rem;
-	border-left: 2px solid #8f5dbf;
+	border-left: 2px solid #008043;
 	width: 94%;
 	margin: 10px auto;
 	line-height: 0.6rem;
@@ -1027,18 +1027,18 @@ select {
 }
 
 .swiper-slide a:hover {
-	color: #8f5dbf;
+	color: #008043;
 	display: inline-block;
 }
 
 .swiper-wrapper .active {
-	border-bottom: 2px solid #8f5dbf;
+	border-bottom: 2px solid #008043;
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 }
 
 .swiper-wrapper .active {
-	color: #8f5dbf;
+	color: #008043;
 }
 
 .top-nav ul li .hook {
@@ -1140,7 +1140,7 @@ form {
 }
 
 .chose_on {
-	color: #8f5dbf;
+	color: #008043;
 }
 
 .pop_others {
