@@ -2465,7 +2465,14 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 								imgPath);
 					} else {
 						if(isMobile){
-							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_HTML2",strBeginUrl, strTokenSign2, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
+							String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+							
+							if (JGID.equals("SEM")) {
+								JGID="";
+							} else {
+								JGID.toLowerCase();
+							}
+							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_HTML2",strBeginUrl, strTokenSign2, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId,JGID);
 						}else{
 							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML",
 								strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
