@@ -2797,8 +2797,15 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 			if ("ENG".equals(strLang)) {
 				if ("Y".equals(isMobile)) {
+					String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+					
+					if (JGID.equals("SEM")) {
+						JGID="";
+					} else {
+						JGID.toLowerCase();
+					}
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MJHYX_EP_ENG_HTML",
-							contextPath, strOrgid, strLang, strBeginUrl);
+							contextPath, strOrgid, strLang, strBeginUrl,JGID);
 				} else {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML",
 							strBeginUrl, strOrgid, strTip, strLang, contextPath, imgPath,
