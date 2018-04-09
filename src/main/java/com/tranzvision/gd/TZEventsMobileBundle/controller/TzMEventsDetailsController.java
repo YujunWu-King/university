@@ -349,8 +349,13 @@ public class TzMEventsDetailsController {
 
 			// 验证码
 			str_items_html = str_items_html + tzGDObject.getHTMLText("HTML.TZEventsMobileBundle.TZ_M_APPLY_REG_CODE_HTML");
-			
-			strRet = tzGDObject.getHTMLText("HTML.TZEventsMobileBundle.TZ_M_APPLY_REG_FORM_HTML", contextPath,str_items_html, ZSGL_URL,jacksonUtil.Map2json(itemsMap));
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from TZ_AQ_YHXX_TBL WHERE OPRID=?",new Object[]{oprid},"String");
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
+			strRet = tzGDObject.getHTMLText("HTML.TZEventsMobileBundle.TZ_M_APPLY_REG_FORM_HTML", contextPath,str_items_html, ZSGL_URL,jacksonUtil.Map2json(itemsMap),JGID);
 
 		} catch (Exception e) {
 			e.printStackTrace();
