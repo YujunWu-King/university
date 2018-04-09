@@ -58,6 +58,8 @@ public class MoblieWebsiteMenuServiceImpl extends FrameworkImpl{
 			menuNum = 1;
 		}
 		
+		String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
+		
 		//首页地址;
 		String indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId="+siteId;
 		//招生日历
@@ -66,7 +68,17 @@ public class MoblieWebsiteMenuServiceImpl extends FrameworkImpl{
 		//状态查询;
 		String statusUrl = ctxPath + "/dispatcher?classid=mAppstatus&siteId="+siteId;
 		//联系我们;
-		String lxUrl = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_LXWM_URL"},"String");
+		String lxUrl ="";
+		
+		if (JGID !=null) {
+			if (JGID.equals("SEM")) {
+				lxUrl = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_LXWM_URL"},"String");
+			}
+			if (JGID.equals("MEM")) {
+				lxUrl = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_LXWM_MEM_URL"},"String");
+			}
+		}
+		//String lxUrl = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_M_LXWM_URL"},"String");
 		//我的
 		String myUrl = ctxPath + "/dispatcher?classid=mMy&siteId="+siteId;
 		

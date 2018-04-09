@@ -337,14 +337,14 @@ public class SendSmsOrMalQfServiceImpl {
 							content = this.analysisEmlOrSmsContent(strPicID, strJgId, strYmbId, audId, audCyId, "SMS",
 									"", smsContent, "");
 							// 添加短信签名
-							content = content + "【清华经管】";
+							content = content + "【华东理工】";
 							bl = true;
 						}
 					} else {
 						content = this.analysisEmlOrSmsContent(strPicID, strJgId, strYmbId, audId, audCyId, "SMS", "",
 								smsContent, "");
 						// 添加短信签名
-						content = content + "【清华经管】";
+						content = content + "【华东理工】";
 					}
 					Map<String, String> mapRst = new HashMap<String, String>();
 					String errCode = "", errMsg = "";
