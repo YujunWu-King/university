@@ -2501,25 +2501,14 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 								strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
 								imgPath);
 					} else {
-<<<<<<< HEAD
+
 						if (isMobile) {
 							str_content = tzGdObject.getHTMLText(
 									"HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_HTML2", strBeginUrl,
 									strTokenSign2, strLang, strOrgid, strStrongMsg, strNotice, contextPath, imgPath,
 									loginUrl, strSiteId,JGID);
 						} else {
-=======
-						if(isMobile){
-							String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
-							
-							if (JGID.equals("SEM")) {
-								JGID="";
-							} else {
-								JGID.toLowerCase();
-							}
-							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_HTML2",strBeginUrl, strTokenSign2, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId,JGID);
-						}else{
->>>>>>> 97f6f914dc27e167c86ab7871213242c8ace8861
+
 							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML",
 									strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
 									imgPath);
