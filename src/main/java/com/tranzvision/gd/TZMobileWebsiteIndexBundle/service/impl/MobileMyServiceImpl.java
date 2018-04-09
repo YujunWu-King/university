@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
@@ -21,7 +22,8 @@ public class MobileMyServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private TZGDObject tzGDObject;
-
+	@Autowired
+	private SqlQuery sqlQuery;
 	/* 手机版招生网站首页 */
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -53,8 +55,15 @@ public class MobileMyServiceImpl extends FrameworkImpl {
 			String sqJxjUrlb = ctxPath + "/dispatcher?classid=schlrView&siteId=" + siteId + "&oprate=R";
 			// 账户管理;
 			String accountMngUrl = ctxPath + "/dispatcher?classid=phZhgl&siteId=" + siteId;
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
 			indexHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_HTML", title, ctxPath,
-					"", siteId, "5", myActivityYetUrl, znxListUrl, sqJxjUrlb, accountMngUrl, lsbmUrl, indexUrl);
+					"", siteId, "5", myActivityYetUrl, znxListUrl, sqJxjUrlb, accountMngUrl, lsbmUrl, indexUrl,JGID);
 		} catch (Exception e) {
 			e.printStackTrace();
 			indexHtml = "";

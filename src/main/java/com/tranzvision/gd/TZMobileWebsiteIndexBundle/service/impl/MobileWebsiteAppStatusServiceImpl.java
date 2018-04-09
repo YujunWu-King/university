@@ -211,9 +211,15 @@ public class MobileWebsiteAppStatusServiceImpl extends FrameworkImpl {
 				// 手机版暂不开通申请
 				content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_NO_APP_HTML", ctxPath);
 			}
-
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
 			html = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", title,
-					ctxPath, jsCss, siteId, "3", content);
+					ctxPath, jsCss, siteId, "3", content,JGID);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			html = "";

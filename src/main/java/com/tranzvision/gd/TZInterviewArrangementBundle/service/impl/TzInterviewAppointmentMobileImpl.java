@@ -63,6 +63,8 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 	@Autowired
 	private PsTzMsyyKsTblMapper psTzMsyyKsTblMapper;
 	
+	@Autowired
+	private SqlQuery sqlQuery;
 	
 	
 	@Override
@@ -90,12 +92,19 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			String appoHtml = appoMap.get("appoHtml").toString();
 			
 			String noneAppoHtml = appoMap.get("noneAppoHtml").toString();
-			
-			if(!"".equals(noneAppoHtml)){
-				interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_NONE_APPO_MAIN_HTML",contextPath,ZSGL_URL,siteId,"1",noneAppoHtml);
-			}else{
-				interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_MAIN_HTML",contextPath,appoDesc,appoHtml,ZSGL_URL,siteId,"1");
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
 			}
+			if(!"".equals(noneAppoHtml)){
+				interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_NONE_APPO_MAIN_HTML",contextPath,ZSGL_URL,siteId,"1",noneAppoHtml,JGID);
+			}else{
+				interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_MAIN_HTML",contextPath,appoDesc,appoHtml,ZSGL_URL,siteId,"1",JGID);
+			}
+			
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

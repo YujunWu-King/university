@@ -453,7 +453,14 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			return strRtn;
 		}
 		String ctxPath = request.getContextPath();
-		strRtn = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemMLoginRelease",ctxPath,orgid,siteid,openid);
+		String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteid},"String");
+		
+		if (JGID.equals("SEM")) {
+			JGID="";
+		} else {
+			JGID.toLowerCase();
+		}
+		strRtn = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemMLoginRelease",ctxPath,orgid,siteid,openid,JGID);
 
 	    } catch (Exception e) {
 		e.printStackTrace();

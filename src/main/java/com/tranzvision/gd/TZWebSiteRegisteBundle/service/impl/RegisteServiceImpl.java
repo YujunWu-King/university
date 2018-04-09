@@ -1233,7 +1233,14 @@ public class RegisteServiceImpl {
 	    if ("ENG".equals(strLang)) {
 		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MREG_EN_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl);
 	    } else {
-		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MREG_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl);
+String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
+		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MREG_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl,JGID);
 	    }
 
 	    // fields = tzGdObject.getHTMLText("HTML.test.test",
@@ -1666,7 +1673,14 @@ public class RegisteServiceImpl {
 	    if ("ENG".equals(strLang)) {
 		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MPERFECT_EN_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl);
 	    } else {
-		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MPERFECT_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl);
+String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
+		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MPERFECT_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl,JGID);
 	    }
 
 	    // fields = tzGdObject.getHTMLText("HTML.test.test",

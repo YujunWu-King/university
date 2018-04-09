@@ -132,9 +132,16 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 			}
 			*/
 			//css和js
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
 			jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LIST_JS_CSS",ctxPath,siteId,currentColumnId);
 			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LIST_HTML", columnName,"");
-			listHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",columnName,ctxPath,jsCss,siteId,menuId,listHtml);
+			listHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",columnName,ctxPath,jsCss,siteId,menuId,listHtml,JGID);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			listHtml = "";

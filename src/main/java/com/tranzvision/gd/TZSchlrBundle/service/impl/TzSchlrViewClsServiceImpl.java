@@ -94,9 +94,16 @@ public class TzSchlrViewClsServiceImpl extends FrameworkImpl {
 				if(isMobile){
 					String contextPath = request.getContextPath();
 					String commonUrl = contextPath + "/dispatcher";
+					String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+					
+					if (JGID.equals("SEM")) {
+						JGID="";
+					} else {
+						JGID.toLowerCase();
+					}
 					String strHeadHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_HEAD_MHTML",contextPath,commonUrl,jgId,strSiteId,language);
 					String strMainHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_MHTML",contextPath,schlrHtml,schlredHtml);
-					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "申请奖学金",contextPath, strHeadHtml,strSiteId,"5", strMainHtml);
+					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "申请奖学金",contextPath, strHeadHtml,strSiteId,"5", strMainHtml,JGID);
 				}else{
 					schlrViewHtml = tzGDObject.getHTMLText("HTML.TZSchlrBundle.TZ_GD_SCHLR_VIEW_MAIN_HTML",cssPath,request.getContextPath(), "申请奖学金", jgId, strSiteId,schlrHtml,schlredHtml);
 				}
