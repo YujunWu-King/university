@@ -27,7 +27,7 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 闈㈣瘯棰勭害鎵嬫満鐗�
+ * 面试预约手机版
  * @author zhanglang
  *
  */
@@ -67,7 +67,6 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 	private SqlQuery sqlQuery;
 	
 	
-	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 		String interviewAppointHtml = "";
@@ -83,34 +82,33 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			}
 			
 			String contextPath = request.getContextPath();
-			// 閫氱敤閾炬帴;
+			// 通用链接;
 			String ZSGL_URL = contextPath + "/dispatcher";
 
 			Map<String,Object> appoMap = this.tzGetAppointmentHtml();
-			//璇存槑淇℃伅
+			//说明信息
 			String appoDesc = appoMap.get("appoDesc").toString();
-			//鍦ㄧ嚎棰勭害list
+			//在线预约list
 			String appoHtml = appoMap.get("appoHtml").toString();
 			
 			String noneAppoHtml = appoMap.get("noneAppoHtml").toString();
-			//鏈烘瀯ID
 			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
-			
 			if (JGID.equals("SEM")) {
 				JGID="";
 			} else {
 				JGID.toLowerCase();
 			}
-			
 			if(!"".equals(noneAppoHtml)){
 				interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_NONE_APPO_MAIN_HTML",contextPath,ZSGL_URL,siteId,"1",noneAppoHtml,JGID);
 			}else{
 				interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_MAIN_HTML",contextPath,appoDesc,appoHtml,ZSGL_URL,siteId,"1",JGID);
 			}
 			
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "鏃犳硶鑾峰彇鐩稿叧鏁版嵁";
+			return "无法获取相关数据";
 		}
 		return interviewAppointHtml;
 	}
@@ -129,7 +127,7 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 		} catch (Exception e) {
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[1] = "鎿嶄綔寮傚父銆�" + e.getMessage();
+			errorMsg[1] = "操作异常。" + e.getMessage();
 		}
 		return strRet;
 	}
@@ -144,7 +142,7 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
-			Date currDate = new Date();//褰撳墠鏃堕棿
+			Date currDate = new Date();//当前时间
 			String tmpPwdKey = "TZGD_@_!_*_Interview_20170818_Tranzvision";
 			
 			String msPlanListHtml = "";
@@ -157,13 +155,13 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			List<Map<String,Object>> msPlanList = jdbcTemplate.queryForList(sql, new Object[]{oprid});
 			
 			String tmpClassID = "",tmpBatchID = "";
-			//闈㈣瘯鎵规璁剧疆
+			//面试批次设置
 			String showFront = "";
 			String timeValid = "N";
 			int planCount = 0;
 			String msExplainInfo = "";
 			for(Map<String,Object> msPlanMap : msPlanList){
-				String submitType = "Y"; //鎸夐挳鎻愪氦浜嬩欢锛孻锛氶绾︼紝N锛氭挙閿�棰勭害
+				String submitType = "Y"; //按钮提交事件，Y：预约，N：撤销预约
 				
 				String classID = msPlanMap.get("TZ_CLASS_ID") == null? "" : String.valueOf(msPlanMap.get("TZ_CLASS_ID"));
 				String batchID = msPlanMap.get("TZ_BATCH_ID") == null? "" : String.valueOf(msPlanMap.get("TZ_BATCH_ID"));
@@ -177,68 +175,68 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 				String location = msPlanMap.get("TZ_MS_LOCATION") == null? "" : String.valueOf(msPlanMap.get("TZ_MS_LOCATION"));
 				String descr = msPlanMap.get("TZ_MS_ARR_DEMO") == null? "" : String.valueOf(msPlanMap.get("TZ_MS_ARR_DEMO"));
 				
-				//闈㈣瘯鎵规璁剧疆鍙傛暟
+				//面试批次设置参数
 				if(!tmpClassID.equals(classID) || !tmpBatchID.equals(batchID)){
 					
 					String setSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointSet");
 					Map<String,Object> msyySetMap = jdbcTemplate.queryForMap(setSql, new Object[]{ currDate, currDate, currDate, classID, batchID });
 					
 					if(msyySetMap != null){
-						//鏃堕棿闄愬埗锛孻-棰勭害鏃堕棿鍐咃紝B-棰勭害鏃堕棿鍓嶏紝A-棰勭害鏃堕棿鍚庯紝N-涓鸿缃绾�
+						//时间限制，Y-预约时间内，B-预约时间前，A-预约时间后，N-为设置预约
 						timeValid = msyySetMap.get("TZ_TIME_VALID").toString();
 						showFront = msyySetMap.get("TZ_SHOW_FRONT") == null ? "N" : msyySetMap.get("TZ_SHOW_FRONT").toString();
 						msExplainInfo = msyySetMap.get("TZ_DESCR") == null ? "" : msyySetMap.get("TZ_DESCR").toString();
 					}
 				}
 				
-				//棰勭害鏃堕棿缁撴潫鍚庯紝涓嶅啀鍓嶅彴鏄剧ず
+				//预约时间结束后，不再前台显示
 				if(("A".equals(timeValid) && !"Y".equals(showFront)) || "N".equals(timeValid)){
 					continue;
 				}
 				
-				String buttonLabel = "绔嬪嵆棰勭害";
-			    String listType = "1";/*1-鍙绾�,2-宸查绾�,3-涓嶅彲棰勭害*/
+				String buttonLabel = "立即预约";
+			    String listType = "1";/*1-可预约,2-已预约,3-不可预约*/
 			    
-			    String isAppoFlag; /*褰撳墠鎵规涓嬫槸鍚﹀凡缁忛绾�*/
+			    String isAppoFlag; /*当前批次下是否已经预约*/
 			    sql = "SELECT 'Y' FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND OPRID=?";
 			    isAppoFlag = jdbcTemplate.queryForObject(sql, new Object[]{ classID, batchID, oprid }, "String");
 			    
-			    int appoCount;//宸查绾︿汉鏁�
+			    int appoCount;//已预约人数
 			    sql = "SELECT COUNT(1) FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_MS_PLAN_SEQ=?";
 			    appoCount = jdbcTemplate.queryForObject(sql, new Object[]{ classID, batchID, msPlanSeq }, "int");
 			    
 			    Date startDatetime = dttmSimpleDateFormat.parse(msDate+" "+msStartTime);
 			    if(currDate.after(startDatetime) || currDate.equals(startDatetime)){
-			    	//鎶ュ埌鏃堕棿宸茶繃锛屼笉鍙绾�
+			    	//报到时间已过，不可预约
 			    	listType = "3";
 			    }
 
 			    if("Y".equals(isAppoFlag)){
-			    	//褰撳墠瀛︾敓宸查绾﹁闈㈣瘯鎵规锛屼笉鍙绾�
+			    	//当前学生已预约该面试批次，不可预约
 			    	listType = "3";
 			    	
 			    	sql = "SELECT 'Y' FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_MS_PLAN_SEQ=? AND OPRID=?";
 			    	String inCurrPlan = jdbcTemplate.queryForObject(sql, new Object[]{ classID, batchID, msPlanSeq, oprid }, "String");
-			    	//褰撳墠瀛︾敓宸查绾﹀綋鍓嶉绾﹁鍒�
+			    	//当前学生已预约当前预约计划
 			    	if("Y".equals(inCurrPlan)){
 			    		listType = "2";
-			    		buttonLabel = "宸查绾︼紡鎾ら攢棰勭害";
+			    		buttonLabel = "已预约／撤销预约";
 			    		submitType = "N";
 			    	}
 			    }else{
-			    	//褰撳墠瀛︾敓灏氭湭棰勭害
+			    	//当前学生尚未预约
 			    	if(appoCount>=maxPerson){
-			    		//棰勭害浜烘暟宸叉弧锛屼笉鍙绾�
+			    		//预约人数已满，不可预约
 				    	listType = "3";
 				    }
 			    }
 			    
 			    if("B".equals(timeValid)){
 			    	listType = "3";
-			    	buttonLabel = "棰勭害鏈紑濮�";
+			    	buttonLabel = "预约未开始";
 			    }else if("A".equals(timeValid)){
 			    	listType = "3";
-			    	buttonLabel = "棰勭害宸茬粨鏉�";
+			    	buttonLabel = "预约已结束";
 			    }
 			    
 			    tmpClassID = classID;
@@ -252,7 +250,7 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			    msPlanListHtml = msPlanListHtml + tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_APPOINT_LIST_HTML"+listType,contextPath,msStartTime,location,descr,countSta,msKey,buttonLabel);
 			}
 			
-			//娌℃湁闈㈣瘯棰勭害鏄剧ず
+			//没有面试预约显示
 			String noAppointmentHtml = "";
 			if(planCount == 0){
 				noAppointmentHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_NONE_APPOINT_HTML",contextPath);
@@ -269,7 +267,7 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 	
 	
 	/**
-	 * 璇ユ柟娉曞純鐢紝鏀圭敤PC鐗堢‘璁ら潰璇曢绾︽柟娉�
+	 * 该方法弃用，改用PC版确认面试预约方法
 	 * @param strParams
 	 * @param errorMsg
 	 * @return
@@ -309,42 +307,42 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 						int del = psTzMsyyKsTblMapper.deleteByPrimaryKey(psTzMsyyKsTblKey);
 						if(del>0){
 							errorMsg[0] = "0";
-							errorMsg[1] = "鎾ら攢棰勭害鎴愬姛";
+							errorMsg[1] = "撤销预约成功";
 							
-							//鎾ら攢鎴愬姛鍚庡彂閫佺珯鍐呬俊
+							//撤销成功后发送站内信
 							try{
 								sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 								String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
-								//闈㈣瘯棰勭害鎴愬姛绔欏唴淇℃ā鏉�
+								//面试预约成功站内信模板
 								String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CX_ZNX_TMP");
-								//褰撳墠鏈烘瀯
+								//当前机构
 								String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 								
-								//鍒涘缓閭欢浠诲姟瀹炰緥
+								//创建邮件任务实例
 								String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
-								// 鍒涘缓閭欢鍙戦�佸惉浼�
-								String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"闈㈣瘯棰勭害鎴愬姛绔欏唴淇￠�氱煡", "JSRW");
-								//娣诲姞鍚紬鎴愬憳
+								// 创建邮件发送听众
+								String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约成功站内信通知", "JSRW");
+								//添加听众成员
 								boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", pcId, oprid, classId, planId, "");
 								if(bl){
 									sendSmsOrMalServiceImpl.send(taskId, "");
 								}
 							}catch(NullPointerException nullEx){
-								//娌℃湁閰嶇疆閭欢妯℃澘
+								//没有配置邮件模板
 								nullEx.printStackTrace();
 							}
 						}else{
 							errorMsg[0] = "1";
-							errorMsg[1] = "鎾ら攢棰勭害澶辫触";
+							errorMsg[1] = "撤销预约失败";
 						}
 					}else{
 						String otherSql = "select 'Y' from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and OPRID=? limit 1";
 						String existsOther = jdbcTemplate.queryForObject(otherSql, new Object[]{ classId, pcId, oprid }, "String");
 						if("Y".equals(existsOther)){
 							errorMsg[0] = "2";
-							errorMsg[1] = "棰勭害澶辫触,浣犲凡棰勭害鍏朵粬鎶ュ埌鏃堕棿鐨勯潰璇�";
+							errorMsg[1] = "预约失败,你已预约其他报到时间的面试";
 						}else{
-							//閿佽〃
+							//锁表
 							mySqlLockService.lockRow(jdbcTemplate, "TZ_MSYY_KS_TBL");
 							try{
 								String numSql = tzGDObject.getSQLText("SQL.TZInterviewAppointmentBundle.TzGdMsAppointPersonNumbers");
@@ -366,48 +364,48 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 										int rtn = psTzMsyyKsTblMapper.insert(psTzMsyyKsTbl);
 										if(rtn > 0){
 											errorMsg[0] = "0";
-											errorMsg[1] = "棰勭害鎴愬姛";
+											errorMsg[1] = "预约成功";
 										}else{
 											errorMsg[0] = "1";
-											errorMsg[1] = "棰勭害澶辫触";
+											errorMsg[1] = "预约失败";
 										}
 									}else{
 										errorMsg[0] = "2";
-										errorMsg[1] = "棰勭害澶辫触锛岃鎶ュ埌鏃堕棿棰勭害浜烘暟宸叉弧锛岃棰勭害鍏朵粬鎶ュ埌鏃堕棿";
+										errorMsg[1] = "预约失败，该报到时间预约人数已满，请预约其他报到时间";
 									}
 								}
-								// 瑙ｉ攣
+								// 解锁
 								mySqlLockService.unlockRow(jdbcTemplate);
 							}catch(Exception ee){
 								ee.printStackTrace();
 								errorMsg[0] = "1";
-								errorMsg[1] = "棰勭害澶辫触锛屽け璐ュ師鍥狅細"+ee.getMessage();
-								//鍥炴粴
+								errorMsg[1] = "预约失败，失败原因："+ee.getMessage();
+								//回滚
 								mySqlLockService.rollback(jdbcTemplate);
 							}
 							
-							//闈㈣瘯棰勭害鎴愬姛锛屽彂閫佹垚鍔熼�氱煡绔欏唴淇�
+							//面试预约成功，发送成功通知站内信
 							if("0".equals(errorMsg[0])){
-								//棰勭害鎴愬姛鍚庡彂閫佺珯鍐呬俊
+								//预约成功后发送站内信
 								try{
 									sql = "SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
 									String name = jdbcTemplate.queryForObject(sql, new Object[]{ oprid }, "String");
-									//闈㈣瘯棰勭害鎴愬姛绔欏唴淇℃ā鏉�
+									//面试预约成功站内信模板
 									String znxModel = getHardCodePoint.getHardCodePointVal("TZ_MSYY_CG_ZNX_TMP");
-									//褰撳墠鏈烘瀯
+									//当前机构
 									String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 									
-									//鍒涘缓閭欢浠诲姟瀹炰緥
+									//创建邮件任务实例
 									String taskId = createTaskServiceImpl.createTaskIns(jgid, znxModel, "ZNX", "A");
-									// 鍒涘缓閭欢鍙戦�佸惉浼�
-									String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"闈㈣瘯棰勭害鎴愬姛绔欏唴淇￠�氱煡", "JSRW");
-									//娣诲姞鍚紬鎴愬憳
+									// 创建邮件发送听众
+									String crtAudi = createTaskServiceImpl.createAudience(taskId,jgid,"面试预约成功站内信通知", "JSRW");
+									//添加听众成员
 									boolean bl = createTaskServiceImpl.addAudCy(crtAudi, name, "", "", "", "", "", pcId, oprid, classId, planId, "");
 									if(bl){
 										sendSmsOrMalServiceImpl.send(taskId, "");
 									}
 								}catch(NullPointerException nullEx){
-									//娌℃湁閰嶇疆閭欢妯℃澘
+									//没有配置邮件模板
 									nullEx.printStackTrace();
 								}
 							}
@@ -415,21 +413,21 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 					}
 
 					Map<String,Object> appoMap = this.tzGetAppointmentHtml();
-					//鍦ㄧ嚎棰勭害list
+					//在线预约list
 					String appoHtml = appoMap.get("appoHtml").toString();
 					rtnMap.replace("appoHtml", appoHtml);
 				}else{
 					errorMsg[0] = "1";
-					errorMsg[1] = "鎶辨瓑锛屾偍灏氭湭瀹夋帓鏈壒娆￠潰璇曪紝棰勭害澶辫触锛�";
+					errorMsg[1] = "抱歉，您尚未安排本批次面试，预约失败！";
 				}
 			}else{
 				errorMsg[0] = "1";
-				errorMsg[1] = "鎶辨瓑锛屾偍娌℃湁鍦ㄥ綋鍓嶇彮绾т腑鎶ュ悕锛屼笉鑳介绾︼紒";
+				errorMsg[1] = "抱歉，您没有在当前班级中报名，不能预约！";
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 			errorMsg[0] = "1";
-			errorMsg[1] = "鎿嶄綔寮傚父銆�"+e.getMessage();
+			errorMsg[1] = "操作异常。"+e.getMessage();
 		}
 		strRet = jacksonUtil.Map2json(rtnMap);
 		return strRet;
