@@ -56,7 +56,14 @@ public class SemPhUserManagementServiceImpl extends FrameworkImpl {
 					jgId = "ADMIN";
 				}
 			}
-			String strHeadHtml = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_ZHGL_HEAD_HTML",contextPath,commonUrl,jgId,strSiteId,language);
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
+			String strHeadHtml = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_ZHGL_HEAD_HTML",contextPath,commonUrl,jgId,strSiteId,language,JGID);
 			String indexUrl = commonUrl + "?classid=mIndex&siteId=" + strSiteId;
 			String strMainHtml = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_ZHGL_HTML",contextPath,indexUrl);
 
