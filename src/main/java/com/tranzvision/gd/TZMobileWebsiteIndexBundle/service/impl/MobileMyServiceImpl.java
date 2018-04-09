@@ -7,10 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
 /**
- * 清华mba招生手机版我的 classid: mMy
+ * 娓呭崕mba鎷涚敓鎵嬫満鐗堟垜鐨� classid: mMy
  * 
  * @author tang
  *
@@ -21,13 +22,14 @@ public class MobileMyServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private TZGDObject tzGDObject;
-
-	/* 手机版招生网站首页 */
+	@Autowired
+	private SqlQuery sqlQuery;
+	/* 鎵嬫満鐗堟嫑鐢熺綉绔欓椤� */
 	@Override
 	public String tzGetHtmlContent(String strParams) {
 
 		String indexHtml = "";
-		String title = "我的";
+		String title = "鎴戠殑";
 
 		String ctxPath = request.getContextPath();
 
@@ -41,20 +43,28 @@ public class MobileMyServiceImpl extends FrameworkImpl {
 		}
 
 		try {
-			// 首页
+			// 棣栭〉
 			String indexUrl = ctxPath + "/dispatcher?classid=mIndex&siteId=" + siteId;
-			// 已报名活动;
+			// 宸叉姤鍚嶆椿鍔�;
 			String myActivityYetUrl = ctxPath + "/dispatcher?classid=myActivity&siteId=" + siteId + "&lx=back";
-			// 系统站内信;
+			// 绯荤粺绔欏唴淇�;
 			String znxListUrl = ctxPath + "/dispatcher?classid=znxList&siteId=" + siteId + "&lx=back";
-			// 查看历史报名
+			// 鏌ョ湅鍘嗗彶鎶ュ悕
 			String lsbmUrl = ctxPath + "/dispatcher?classid=mAppHistory&siteId=" + siteId;
-			// 申请奖学金;
+			// 鐢宠濂栧閲�;
 			String sqJxjUrlb = ctxPath + "/dispatcher?classid=schlrView&siteId=" + siteId + "&oprate=R";
-			// 账户管理;
+			// 璐︽埛绠＄悊;
 			String accountMngUrl = ctxPath + "/dispatcher?classid=phZhgl&siteId=" + siteId;
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
+			
 			indexHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_HTML", title, ctxPath,
-					"", siteId, "5", myActivityYetUrl, znxListUrl, sqJxjUrlb, accountMngUrl, lsbmUrl, indexUrl);
+					"", siteId, "5", myActivityYetUrl, znxListUrl, sqJxjUrlb, accountMngUrl, lsbmUrl, indexUrl,JGID);
 		} catch (Exception e) {
 			e.printStackTrace();
 			indexHtml = "";
