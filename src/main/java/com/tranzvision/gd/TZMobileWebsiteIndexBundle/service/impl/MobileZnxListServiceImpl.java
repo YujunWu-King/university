@@ -79,8 +79,15 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 				indexUrl = "javascript:history.back(-1);";
 			}
 			//content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ZNX_LIST", title, indexUrl, "");
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
 			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZNX_LIST_HTML", title, ctxPath,
-					jsCss, siteId, menuId, title, indexUrl, content);
+					jsCss, siteId, menuId, title, indexUrl, content,JGID);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
