@@ -335,6 +335,7 @@ public class SendSmsOrMalServiceImpl {
 							content = this.analysisEmlOrSmsContent(strJgId, strYmbId, audId, audCyId, "SMS", "",
 									smsContent,"");
 							//添加短信签名
+							content = content.replaceAll("【清华经管】", "");
 							content = content + "【华东理工】";
 							bl = true;
 						}
@@ -342,6 +343,7 @@ public class SendSmsOrMalServiceImpl {
 						content = this.analysisEmlOrSmsContent(strJgId, strYmbId, audId, audCyId, "SMS", "",
 								smsContent,"");
 						//添加短信签名
+						content = content.replaceAll("【清华经管】", "");
 						content = content + "【华东理工】";
 					}
 					Map<String, String> mapRst = new HashMap<String, String>();
