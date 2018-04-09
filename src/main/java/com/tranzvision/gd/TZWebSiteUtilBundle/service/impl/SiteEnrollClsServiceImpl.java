@@ -1893,9 +1893,15 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 				imgPath = request.getContextPath() + imgPath + "/" + skinId;
-
+				String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+				
+				if (JGID.equals("SEM")) {
+					JGID="";
+				} else {
+					JGID.toLowerCase();
+				}
 				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MSUCCESSE_HTML", strContent,
-						request.getContextPath());
+						request.getContextPath(),JGID);
 				strResult = objRep.repTitle(strResult, strSiteId);
 				strResult = objRep.repCss(strResult, strSiteId);
 				return strResult;
