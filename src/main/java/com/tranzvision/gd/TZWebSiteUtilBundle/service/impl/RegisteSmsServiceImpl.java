@@ -791,7 +791,14 @@ public class RegisteSmsServiceImpl extends FrameworkImpl{
 				//有效；
 				if("ENG".equals(strLang)){
 				    if("Y".equals(isMobile)){
-					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_ENG_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
+				    	String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+						
+						if (JGID.equals("SEM")) {
+							JGID="";
+						} else {
+							JGID.toLowerCase();
+						}
+					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_ENG_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId,JGID );
 				    }else{
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_MB_ENG_HTML",strBeginUrl, strPhone, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
 				    }
