@@ -677,19 +677,19 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzEmail(strTZ_EMAIL);
 				psTzAqYhxxTbl.setTzMobile(strTZ_MOBILE);
 				psTzAqYhxxTbl.setTzRylx("ZCYH");
-				
+
 				if ("M".equals(strActivateType)) {
-					psTzAqYhxxTbl.setTzSjbdBz("Y"); 
-				} if("E".equals(strActivateType)) {
-					psTzAqYhxxTbl.setTzYxbdBz("Y"); 
+					psTzAqYhxxTbl.setTzSjbdBz("Y");
 				}
-				 
-				/*if (strTZ_EMAIL != null && !"".equals(strTZ_EMAIL)) {
+				if ("E".equals(strActivateType)) {
 					psTzAqYhxxTbl.setTzYxbdBz("Y");
 				}
-				if (strTZ_MOBILE != null && !"".equals(strTZ_MOBILE)) {
-					psTzAqYhxxTbl.setTzSjbdBz("Y");
-				}*/
+
+				/*
+				 * if (strTZ_EMAIL != null && !"".equals(strTZ_EMAIL)) {
+				 * psTzAqYhxxTbl.setTzYxbdBz("Y"); } if (strTZ_MOBILE != null &&
+				 * !"".equals(strTZ_MOBILE)) { psTzAqYhxxTbl.setTzSjbdBz("Y"); }
+				 */
 				psTzAqYhxxTbl.setTzJihuoZt(strActiveStatus);
 				psTzAqYhxxTbl.setTzJihuoFs(strActivateType);
 				psTzAqYhxxTbl.setTzZhceDt(new Date());
@@ -698,9 +698,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				// 注册产生的账号默认为完善
 				psTzAqYhxxTbl.setTzIsCmpl("Y");
 				// 产生面试申请号，流水号格式：yyyy+00001
-				//modity by caoy @2018-4-8 面试申请号 为当前年+1年
+				// modity by caoy @2018-4-8 面试申请号 为当前年+1年
 				Calendar date = Calendar.getInstance();
-				String currentYear = String.valueOf(date.get(Calendar.YEAR)+1);
+				String currentYear = String.valueOf(date.get(Calendar.YEAR) + 1);
 				String xuhao = "0000" + getSeqNum.getSeqNum(currentYear, "TZ_MSH_ID");
 				xuhao = xuhao.substring(xuhao.length() - 5);
 				String tzMshId = currentYear + xuhao;
@@ -818,21 +818,24 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					// TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE
 					// upper(TZ_JG_ID)=upper(?) AND TZ_SITEI_ENABLE='Y' LIMIT
 					// 0,1",new Object[] { strOrgId }, "String");
-					//20170420,手机激活成功后不进入登录页面，进入账户注册成功信息页面
-					//strJumUrl = request.getContextPath() + "/user/login/" + strOrgId.toLowerCase() + "/" + strSiteId;
+					// 20170420,手机激活成功后不进入登录页面，进入账户注册成功信息页面
+					// strJumUrl = request.getContextPath() + "/user/login/" +
+					// strOrgId.toLowerCase() + "/" + strSiteId;
 					strJumUrl = request.getContextPath() + "/dispatcher";
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {
-						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
-							+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-							+ "\",\"sen\":\"13\"}}","UTF-8");
-					}else{
-						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
-								+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"12\"}}","UTF-8");
+						strJumPar = "?tzParams=" + URLEncoder
+								.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+										+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+										+ "\",\"sen\":\"13\"}}", "UTF-8");
+					} else {
+						strJumPar = "?tzParams=" + URLEncoder
+								.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+										+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+										+ "\",\"sen\":\"12\"}}", "UTF-8");
 					}
 					strJumUrl = strJumUrl + strJumPar;
-					
+
 				} else {
 					String strEmailSendParas = "{\"email\":\"" + strTZ_EMAIL + "\",\"orgid\":\"" + strOrgId
 							+ "\",\"lang\":\"" + strLang + "\",\"siteid\":\"" + strSiteId + "\",\"dlzhid\":\"" + oprId
@@ -845,13 +848,15 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strJumUrl = request.getContextPath() + "/dispatcher";
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {
-						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
-								+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"11\"}}","UTF-8");
+						strJumPar = "?tzParams=" + URLEncoder
+								.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+										+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+										+ "\",\"sen\":\"11\"}}", "UTF-8");
 					} else {
-						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
-								+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"1\"}}","UTF-8");
+						strJumPar = "?tzParams=" + URLEncoder
+								.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+										+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+										+ "\",\"sen\":\"1\"}}", "UTF-8");
 					}
 					strJumUrl = strJumUrl + strJumPar;
 				}
@@ -1328,19 +1333,18 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzRealname(strTZ_REALNAME);
 				psTzAqYhxxTbl.setTzEmail(strTZ_EMAIL);
 				psTzAqYhxxTbl.setTzMobile(strTZ_MOBILE);
-				psTzAqYhxxTbl.setTzRylx("ZCYH");				
+				psTzAqYhxxTbl.setTzRylx("ZCYH");
 				if ("M".equals(strActivateType)) {
-					psTzAqYhxxTbl.setTzSjbdBz("Y"); 
-				} if("E".equals(strActivateType)) {
-					psTzAqYhxxTbl.setTzYxbdBz("Y"); 
+					psTzAqYhxxTbl.setTzSjbdBz("Y");
 				}
-				/*
-				if (strTZ_EMAIL != null && !"".equals(strTZ_EMAIL)) {
+				if ("E".equals(strActivateType)) {
 					psTzAqYhxxTbl.setTzYxbdBz("Y");
 				}
-				if (strTZ_MOBILE != null && !"".equals(strTZ_MOBILE)) {
-					psTzAqYhxxTbl.setTzSjbdBz("Y");
-				}*/
+				/*
+				 * if (strTZ_EMAIL != null && !"".equals(strTZ_EMAIL)) {
+				 * psTzAqYhxxTbl.setTzYxbdBz("Y"); } if (strTZ_MOBILE != null &&
+				 * !"".equals(strTZ_MOBILE)) { psTzAqYhxxTbl.setTzSjbdBz("Y"); }
+				 */
 				psTzAqYhxxTbl.setTzJihuoZt(strActiveStatus);
 				psTzAqYhxxTbl.setTzJihuoFs(strActivateType);
 				psTzAqYhxxTbl.setTzZhceDt(new Date());
@@ -1429,7 +1433,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzRegUserT.setTzBlackName("N");
 				psTzRegUserT.setTzAllowApply("Y");
 				// 始终产生面试申请号
-				psTzRegUserT.setTzMssqh(tzMshId);			
+				psTzRegUserT.setTzMssqh(tzMshId);
 
 				psTzRegUserTMapper.updateByPrimaryKeySelective(psTzRegUserT);
 
@@ -1449,18 +1453,21 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					// 0,1",new Object[] { strOrgId }, "String");
 					// strJumUrl = request.getContextPath() + "/site/index/" +
 					// strOrgId.toLowerCase() + "/" + strSiteId;
-					//20170420,手机激活成功后不进入登录页面，进入账户注册成功信息页面
-					//strJumUrl = request.getContextPath() + "/user/login/" + strOrgId.toLowerCase() + "/" + strSiteId;
+					// 20170420,手机激活成功后不进入登录页面，进入账户注册成功信息页面
+					// strJumUrl = request.getContextPath() + "/user/login/" +
+					// strOrgId.toLowerCase() + "/" + strSiteId;
 					strJumUrl = request.getContextPath() + "/dispatcher";
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {
-						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
-							+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-							+ "\",\"sen\":\"13\"}}","UTF-8");
-					}else{
-						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
-								+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"12\"}}","UTF-8");
+						strJumPar = "?tzParams=" + URLEncoder
+								.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+										+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+										+ "\",\"sen\":\"13\"}}", "UTF-8");
+					} else {
+						strJumPar = "?tzParams=" + URLEncoder
+								.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"phone\":\""
+										+ strTZ_MOBILE + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+										+ "\",\"sen\":\"12\"}}", "UTF-8");
 					}
 					strJumUrl = strJumUrl + strJumPar;
 				} else {
@@ -1476,13 +1483,15 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {
 
-						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
-								+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"11\"}}","UTF-8");
+						strJumPar = "?tzParams=" + URLEncoder
+								.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+										+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+										+ "\",\"sen\":\"11\"}}", "UTF-8");
 					} else {
-						strJumPar = "?tzParams="+URLEncoder.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
-								+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
-								+ "\",\"sen\":\"1\"}}","UTF-8");
+						strJumPar = "?tzParams=" + URLEncoder
+								.encode("{\"ComID\":\"TZ_SITE_UTIL_COM\",\"PageID\":\"TZ_SITE_ENROLL_STD\",\"OperateType\":\"HTML\",\"comParams\": {\"email\":\""
+										+ strTZ_EMAIL + "\",\"siteid\":\"" + strSiteId + "\",\"orgid\":\"" + strOrgId
+										+ "\",\"sen\":\"1\"}}", "UTF-8");
 					}
 					strJumUrl = strJumUrl + strJumPar;
 				}
@@ -1670,16 +1679,16 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strResponse = "获取数据失败，请联系管理员";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-			
-			/*对lang参数做限制，只能是ZHS或ENG，不单从URL中获取，卢艳添加，2017-10-9*/
-			if(strLang!=null && !"".equals(strLang)) {
-				if("ZHS".equals(strLang.toUpperCase()) || "ENG".equals(strLang.toUpperCase())) {
+
+			/* 对lang参数做限制，只能是ZHS或ENG，不单从URL中获取，卢艳添加，2017-10-9 */
+			if (strLang != null && !"".equals(strLang)) {
+				if ("ZHS".equals(strLang.toUpperCase()) || "ENG".equals(strLang.toUpperCase())) {
 					strLang = strLang.toUpperCase();
 				} else {
 					strLang = "ZHS";
 				}
 			}
-			
+
 			if (classid != null && !"".equals(classid)) {
 				strParams = "{\"siteid\":\"" + strSiteid + "\",\"orgid\":\"" + strOrgid + "\",\"lang\":\"" + strLang
 						+ "\",\"tokensign\":\"" + strTokenSign + "\",\"email\":\"" + strEmail + "\",\"sen\":\"" + strSen
@@ -1736,16 +1745,16 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			// 手机版注册成功后
 			if ("11".equals(strSen)) {
 				return this.createMPageForEmlLogin(strParams);
-			}			
+			}
 			// pc版手机注册完成信息页面
 			if ("12".equals(strSen)) {
 				return this.createPageForSmsLogin(strParams);
 			}
-			
+
 			// pc版手机注册完成信息页面
 			if ("13".equals(strSen)) {
 				return this.createMPageForSmsLogin(strParams);
-			}	
+			}
 			String strMessage = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "119",
 					"链接错误，请确认您输入的URL地址无误！", "Url is invalid, please makesure the url is valid!");
 			return strMessage;
@@ -1806,7 +1815,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		return strResult;
 	}
 
-	public String createPageForSmsLogin(String strParams){
+	public String createPageForSmsLogin(String strParams) {
 		String strPhone = "";
 		String strOrgid = "";
 		String strSiteId = "";
@@ -1831,7 +1840,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				String skinId = (String) map.get("TZ_SKIN_ID");
 				strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
 						"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
-				
+
 				String strContent = "";
 				if ("ENG".equals(strLang)) {
 					strContent = "Save success。<span id='timeSpan' style='color:red;'>3</span>&nbsp;seconds after entering the login page。";
@@ -1843,9 +1852,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				imgPath = request.getContextPath() + imgPath + "/" + skinId;
 
 				String strJumUrl = request.getContextPath() + "/user/login/" + strOrgid.toLowerCase() + "/" + strSiteId;
-				
+
 				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_TIME_SUCCESSE_HTML", strContent,
-						imgPath,strJumUrl);
+						imgPath, strJumUrl);
 				strResult = objRep.repTitle(strResult, strSiteId);
 				strResult = objRep.repCss(strResult, strSiteId);
 				return strResult;
@@ -1856,7 +1865,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		}
 		return strResult;
 	}
-	
+
 	public String createMPageForEmlLogin(String strParams) {
 		String strEmail = "";
 		String strOrgid = "";
@@ -1893,9 +1902,15 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 				imgPath = request.getContextPath() + imgPath + "/" + skinId;
-
+				String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+				
+				if (JGID.equals("SEM")) {
+					JGID="";
+				} else {
+					JGID.toLowerCase();
+				}
 				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MSUCCESSE_HTML", strContent,
-						request.getContextPath());
+						request.getContextPath(),JGID);
 				strResult = objRep.repTitle(strResult, strSiteId);
 				strResult = objRep.repCss(strResult, strSiteId);
 				return strResult;
@@ -1939,14 +1954,21 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strContent = "保存成功，<span id='timeSpan' style='color:red;'>3</span>&nbsp;秒后将跳转到登录页面。";
 				}
 
-
 				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 				imgPath = request.getContextPath() + imgPath + "/" + skinId;
 
 				String strJumUrl = request.getContextPath() + "/user/login/" + strOrgid.toLowerCase() + "/" + strSiteId;
-				
+				String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",
+						new Object[] { strSiteId }, "String");
+
+				if (JGID.equals("SEM")) {
+					JGID = "";
+				} else {
+					JGID.toLowerCase();
+				}
+
 				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_TIME_MSUCCESSE_HTML", strContent,
-						request.getContextPath(),strJumUrl);
+						request.getContextPath(), strJumUrl, JGID);
 				strResult = objRep.repTitle(strResult, strSiteId);
 				strResult = objRep.repCss(strResult, strSiteId);
 				return strResult;
@@ -1957,7 +1979,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		}
 		return strResult;
 	}
-	
+
 	public String activeEmailSuccess(String strParams) {
 		String strTokenSign = "";
 		String strOprid = "";
@@ -2370,27 +2392,36 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 			}
 			String str_content = "";
+
+			String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",
+					new Object[] { strSiteId }, "String");
+
+			if (JGID.equals("SEM")) {
+				JGID = "";
+			} else {
+				JGID.toLowerCase();
+			}
 			if (strTabType.contains("MOBILE") && strTabType.contains("EMAIL")) {
 				if ("ENG".equals(strLang)) {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MWJMM_EP_ENG_HTML",
-							contextPath, strOrgid, strLang, strBeginUrl, strSiteId);
+							contextPath, strOrgid, strLang, strBeginUrl, strSiteId, JGID);
 				} else {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MWJMM_EP_HTML",
-							contextPath, strOrgid, strLang, strBeginUrl, strSiteId);
+							contextPath, strOrgid, strLang, strBeginUrl, strSiteId, JGID);
 				}
 			} else {
 
 				if (strTabType.contains("EMAIL")) {
 					if ("ENG".equals(strLang)) {
 						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MWJMM_EP1_ENG_HTML",
-								contextPath, strOrgid, strLang, strBeginUrl, strSiteId);
+								contextPath, strOrgid, strLang, strBeginUrl, strSiteId, JGID);
 					} else {
 						str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MWJMM_EP1_HTML",
-								contextPath, strOrgid, strLang, strBeginUrl, strSiteId);
+								contextPath, strOrgid, strLang, strBeginUrl, strSiteId, JGID);
 					}
 				} else {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MWJMM_EP2_HTML",
-							contextPath, strOrgid, strLang, strBeginUrl, strSiteId);
+							contextPath, strOrgid, strLang, strBeginUrl, strSiteId, JGID);
 				}
 			}
 			str_content = objRep.repTitle(str_content, strSiteId);
@@ -2412,9 +2443,9 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 		String strResult = "获取数据失败，请联系管理员";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
-			//20170424,yuds
+			// 20170424,yuds
 			Boolean isMobile = CommonUtils.isMobile(request);
-			
+
 			jacksonUtil.json2Map(strParams);
 			strOrgid = jacksonUtil.getString("orgid");
 			strLang = jacksonUtil.getString("lang");
@@ -2423,10 +2454,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			strTokenSign2 = strTokenSign;
 			strResult = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "55",
 					"获取数据失败，请联系管理员", "Get the data failed, please contact the administrator");
-			/*String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "122",
-					"密码强度不够", "Stronger password needed.");*/
+			/*
+			 * String strStrongMsg =
+			 * validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,
+			 * "TZ_SITE_MESSAGE", "122", "密码强度不够", "Stronger password needed.");
+			 */
 			String strStrongMsg = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "134",
-					"密码格式不符合要求", "Wrong password format.");			
+					"密码格式不符合要求", "Wrong password format.");
 			String strNotice = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "123",
 					"请重置新密码", "Please Enter New Password.");
 
@@ -2448,6 +2482,15 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			String str_content = "";
 			String yzmSQL = "SELECT TZ_DLZH_ID,TZ_YZM_YXQ FROM PS_TZ_DZYX_YZM_TBL WHERE TZ_TOKEN_CODE=? AND TZ_JG_ID=? AND TZ_TOKEN_TYPE = 'EDIT' AND TZ_EFF_FLAG = 'Y' ORDER BY TZ_CNTLOG_ADDTIME DESC limit 0,1";
 			Map<String, Object> yzmMap = jdbcTemplate.queryForMap(yzmSQL, new Object[] { strTokenSign, strOrgid });
+
+			String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",
+					new Object[] { strSiteId }, "String");
+
+			if (JGID.equals("SEM")) {
+				JGID = "";
+			} else {
+				JGID.toLowerCase();
+			}
 			if (yzmMap != null) {
 				dtYxq = (Date) yzmMap.get("TZ_YZM_YXQ");
 				Date curDate = new Date();
@@ -2458,12 +2501,15 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 								strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
 								imgPath);
 					} else {
-						if(isMobile){
-							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_HTML2",strBeginUrl, strTokenSign2, strLang, strOrgid,strStrongMsg, strNotice,contextPath,imgPath,loginUrl,strSiteId );
-						}else{
+						if (isMobile) {
+							str_content = tzGdObject.getHTMLText(
+									"HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_HTML2", strBeginUrl,
+									strTokenSign2, strLang, strOrgid, strStrongMsg, strNotice, contextPath, imgPath,
+									loginUrl, strSiteId,JGID);
+						} else {
 							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML",
-								strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
-								imgPath);
+									strBeginUrl, strTokenSign2, strLang, loginUrl, strStrongMsg, strNotice, contextPath,
+									imgPath);
 						}
 					}
 
@@ -2472,12 +2518,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					return str_content;
 				} else {
 					// 增加手机验证；
-					if(isMobile){
+					if (isMobile) {
 						strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
 								+ "&lang=" + strLang + "&sen=10";
-					}else{
+					} else {
 						strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
-							+ "&lang=" + strLang + "&sen=4";
+								+ "&lang=" + strLang + "&sen=4";
 					}
 					String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE",
 							"58", "重置密码时间为30分钟，已超时，请重新发送忘记密码邮件！",
@@ -2488,12 +2534,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				}
 			} else {
 				// 增加手机验证；
-				if(isMobile){
+				if (isMobile) {
 					strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
 							+ "&lang=" + strLang + "&sen=10";
-				}else{
+				} else {
 					strBeginUrl = strBeginUrl + "?classid=enrollCls&siteid=" + strSiteId + "&orgid=" + strOrgid
-						+ "&lang=" + strLang + "&sen=4";
+							+ "&lang=" + strLang + "&sen=4";
 				}
 				String message = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang, "TZ_SITE_MESSAGE", "59",
 						"重置密码链接已失效，请重新发送忘记密码邮件！",
