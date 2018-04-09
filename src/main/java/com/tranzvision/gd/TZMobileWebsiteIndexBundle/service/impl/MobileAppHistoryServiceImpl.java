@@ -213,8 +213,16 @@ public class MobileAppHistoryServiceImpl extends FrameworkImpl {
 
 			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_HISTORY_APP_STATUS_HTML",
 					title, content);
+			
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
 			html = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", title,
-					ctxPath, jsCss, siteId, "1", content);
+					ctxPath, jsCss, siteId, "1", content,JGID);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			html = "";
