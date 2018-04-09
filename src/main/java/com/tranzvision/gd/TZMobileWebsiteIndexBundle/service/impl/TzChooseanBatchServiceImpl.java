@@ -121,8 +121,14 @@ public class TzChooseanBatchServiceImpl extends FrameworkImpl {
          cssPath+="<script type=\"text/javascript\" src=\""+request.getContextPath()+"/statics/js/website/m/rem.js\"></script>";
 		 cssPath+="<script type=\"text/javascript\" src=\""+request.getContextPath()+"/statics/js/website/m/common.js\"></script>";
 		 cssPath+="<script type=\"text/javascript\" src=\""+request.getContextPath()+"/statics/js/website/m/batchandmore.js\"></script>";
-		 
-		 strReturnHtml=tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML","报考方向选择",request.getContextPath(),cssPath,siteid,menuId,batchHtml);
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from TZ_AQ_YHXX_TBL WHERE OPRID=?",new Object[]{opriId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
+		 strReturnHtml=tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML","报考方向选择",request.getContextPath(),cssPath,siteid,menuId,batchHtml,JGID);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

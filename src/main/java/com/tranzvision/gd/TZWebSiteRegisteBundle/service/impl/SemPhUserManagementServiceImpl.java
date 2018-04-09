@@ -30,6 +30,8 @@ public class SemPhUserManagementServiceImpl extends FrameworkImpl {
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
+	private SqlQuery sqlQuery;
+	@Autowired
 	private PsTzSiteiDefnTMapper psTzSiteiDefnTMapper;		
 
 	@Override
@@ -69,8 +71,15 @@ public class SemPhUserManagementServiceImpl extends FrameworkImpl {
 				return "站点不存在";
 			}
 
-			try {				
-				strResultConten = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "",contextPath, strHeadHtml,strSiteId,"5", strMainHtml);
+			try {		
+				String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
+				
+				if (JGID.equals("SEM")) {
+					JGID="";
+				} else {
+					JGID.toLowerCase();
+				}
+				strResultConten = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "",contextPath, strHeadHtml,strSiteId,"5", strMainHtml,JGID);
 			} catch (TzSystemException e) {
 				e.printStackTrace();
 				return "【TZ_MOBILE_BASE_HTML】html对象未定义";

@@ -585,9 +585,15 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 			String content = topHtml + personHtml + xmjdHtml + hdHtml + kjcdHtml;
 			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_CONTENT_HTML",
 					content);
-
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
+			
+			if (JGID.equals("SEM")) {
+				JGID="";
+			} else {
+				JGID.toLowerCase();
+			}
 			indexHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", title,
-					ctxPath, jsCss, siteId, "1", content, orgId);
+					ctxPath, jsCss, siteId, "1", content, orgId,JGID);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			indexHtml = "";
