@@ -101,7 +101,7 @@ public class CityClsServiceImpl extends FrameworkImpl {
 					}
 				}
 				hotcity = hotcity
-						+ tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITYBYPRO3", "新加坡");
+						+ tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_ENROLL_CITYBYPRO3", "上海");
 
 				String contextUrl = request.getContextPath();
 				String tzGeneralURL = contextUrl + "/dispatcher";

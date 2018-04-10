@@ -263,6 +263,8 @@ public class RegisteServiceImpl {
 	    // 是否只是手机验证;
 	    boolean phoneBl = false;
 
+	    // 是否只是邮箱验证;
+	    boolean emailBl =false;
 	    String strActHtml = "";
 	    // String regMbSQL = "SELECT TZ_ACTIVATE_TYPE FROM
 	    // PS_TZ_USERREG_MB_T WHERE TZ_JG_ID=?";
@@ -270,17 +272,20 @@ public class RegisteServiceImpl {
 	    String strActType = jdbcTemplate.queryForObject(regMbSQL, new Object[] { strSiteId }, "String");
 	    if (strActType != null && !"".equals(strActType)) {
 		if (strActType.indexOf("MOBILE") >= 0 && strActType.indexOf("EMAIL") >= 0) {
-		    if ("ENG".equals(strLang)) {
-			strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='E'>Email</option><option value ='M'>Phone</option></select>";
+		   System.out.println("strActType"+strActType);
+			if ("ENG".equals(strLang)) {
+			strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='M'>Phone</option><option value ='E'>Email</option></select>";
 			strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ENG_HTML",
 				strActHtml, imgPath);
 		    } else {
+		    	System.out.println("注册页");
 			strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
 			strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML",
 				strActHtml, imgPath);
 		    }
 		} else {
 		    if (strActType.indexOf("EMAIL") >= 0) {
+		    	emailBl =true;
 			if ("ENG".equals(strLang)) {
 			    strActHtml = "<input name='yzfs1' type='hidden' class='input_351px' id='yzfs1' value='Email' readonly='readonly'><input name='yzfs' type='hidden' class='input_351px' id='yzfs' value='E'>";
 			} else {
@@ -303,9 +308,12 @@ public class RegisteServiceImpl {
 	    if (phoneBl) {
 		emialYzDisplay = "style=\"display:none\"";
 		phoneYzDisplay = "";
-	    } else {
-		emialYzDisplay = "";
-		phoneYzDisplay = "style=\"display:none\"";
+	    } else if(emailBl){
+			emialYzDisplay = "";
+			phoneYzDisplay = "style=\"display:none\"";
+	    }else{
+	    	emialYzDisplay = "style=\"display:none\"";
+			phoneYzDisplay = "";
 	    }
 
 	    // 登录页面链接;
