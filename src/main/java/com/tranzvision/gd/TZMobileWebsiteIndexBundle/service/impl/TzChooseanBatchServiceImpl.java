@@ -128,6 +128,7 @@ public class TzChooseanBatchServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 		 strReturnHtml=tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML","报考方向选择",request.getContextPath(),cssPath,siteid,menuId,batchHtml,JGID);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block

@@ -86,6 +86,7 @@ public class MobileZnxListServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_ZNX_LIST_HTML", title, ctxPath,
 					jsCss, siteId, menuId, title, indexUrl, content,JGID);
 		} catch (TzSystemException e) {

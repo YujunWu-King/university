@@ -120,6 +120,7 @@ public class MobileMyActivityListServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 			content = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_ACTIVITY_LIST",title,"",indexUrl);
 			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",title,ctxPath,jsCss,siteId,menuId,content,JGID);
 		} catch (TzSystemException e) {

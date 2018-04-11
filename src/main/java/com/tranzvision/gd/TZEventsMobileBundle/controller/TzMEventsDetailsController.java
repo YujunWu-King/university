@@ -356,6 +356,7 @@ public class TzMEventsDetailsController {
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 			strRet = tzGDObject.getHTMLText("HTML.TZEventsMobileBundle.TZ_M_APPLY_REG_FORM_HTML", contextPath,str_items_html, ZSGL_URL,jacksonUtil.Map2json(itemsMap),JGID);
 
 		} catch (Exception e) {

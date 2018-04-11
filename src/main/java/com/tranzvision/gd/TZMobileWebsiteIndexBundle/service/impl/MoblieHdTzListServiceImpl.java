@@ -139,6 +139,7 @@ public class MoblieHdTzListServiceImpl extends FrameworkImpl{
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 			jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LIST_JS_CSS",ctxPath,siteId,currentColumnId);
 			listHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_HD_TZ_LIST_HTML", columnName,"");
 			listHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML",columnName,ctxPath,jsCss,siteId,menuId,listHtml,JGID);

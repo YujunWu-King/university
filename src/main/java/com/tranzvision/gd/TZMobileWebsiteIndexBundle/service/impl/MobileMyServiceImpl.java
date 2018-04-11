@@ -62,6 +62,7 @@ public class MobileMyServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 			indexHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_MY_HTML", title, ctxPath,
 					"", siteId, "5", myActivityYetUrl, znxListUrl, sqJxjUrlb, accountMngUrl, lsbmUrl, indexUrl,JGID);
 		} catch (Exception e) {

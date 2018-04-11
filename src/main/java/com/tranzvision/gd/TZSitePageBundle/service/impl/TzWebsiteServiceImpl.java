@@ -166,10 +166,11 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			strIndexHtml = siteRepCssServiceImpl.repTitle(strIndexHtml, siteid);
 
 			String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsIndex", ctxPath);
-			String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndex", ctxPath);
-			strIndexHtml = siteRepCssServiceImpl.repJavascriptTags(strIndexHtml, strSelfJavascripts,strBroadStyleJavascripts, orgid, siteid,
-					"Y");
-			
+			String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsIndex",
+					ctxPath);
+			strIndexHtml = siteRepCssServiceImpl.repJavascriptTags(strIndexHtml, strSelfJavascripts,
+					strBroadStyleJavascripts, orgid, siteid, "Y");
+
 			strRtn = strIndexHtml;
 
 		} catch (Exception e) {
@@ -287,7 +288,7 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 	public String getLoginSaveCode(HttpServletRequest request, String orgid, String siteid) {
 		String strRtn = "";
 		try {
-			
+
 			orgid = orgid.toUpperCase();
 
 			Map<String, Object> mapRst = this.checkSiteIdAndGetLang(orgid, siteid);
@@ -329,9 +330,10 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 			strLoginHtml = siteRepCssServiceImpl.repCss(strLoginHtml, siteid);
 
 			String strSelfJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzScriptsLogin", ctxPath);
-			String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsLogin", ctxPath);
-			strLoginHtml = siteRepCssServiceImpl.repJavascriptTags(strLoginHtml, strSelfJavascripts,strBroadStyleJavascripts, orgid, siteid,
-					"Y");
+			String strBroadStyleJavascripts = tzGDObject.getHTMLText("HTML.TZSitePageBroadStyleBundle.TzScriptsLogin",
+					ctxPath);
+			strLoginHtml = siteRepCssServiceImpl.repJavascriptTags(strLoginHtml, strSelfJavascripts,
+					strBroadStyleJavascripts, orgid, siteid, "Y");
 
 			strRtn = strLoginHtml;
 
@@ -435,37 +437,41 @@ public class TzWebsiteServiceImpl implements TzWebsiteService {
 		return strRtn;
 	}
 
-	public String getMLoginPublishCode(HttpServletRequest request, String orgid, String siteid, String openid){
-	    String strRtn = "";
-	    try {
-		orgid = orgid.toUpperCase();
+	public String getMLoginPublishCode(HttpServletRequest request, String orgid, String siteid, String openid) {
+		String strRtn = "";
+		try {
+			orgid = orgid.toUpperCase();
 
-		Map<String, Object> mapRst = this.checkSiteIdAndGetLang(orgid, siteid);
-		String siteLang = String.valueOf(mapRst.get("siteLang"));
-		if (!(boolean) mapRst.get("checkResult")) {
-			strRtn = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", siteLang, "无效站点。",
-					"Invalid siteid.");
-			return strRtn;
-		}
-		if (!this.checkOrgId(orgid, "")) {
-			strRtn = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", siteLang, "无效机构。",
-					"Invalid orgid.");
-			return strRtn;
-		}
-		String ctxPath = request.getContextPath();
-		String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteid},"String");
-		
-		if (JGID.equals("SEM")) {
-			JGID="";
-		} else {
-			JGID.toLowerCase();
-		}
-		strRtn = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemMLoginRelease",ctxPath,orgid,siteid,openid,JGID);
+			Map<String, Object> mapRst = this.checkSiteIdAndGetLang(orgid, siteid);
+			String siteLang = String.valueOf(mapRst.get("siteLang"));
+			if (!(boolean) mapRst.get("checkResult")) {
+				strRtn = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", siteLang, "无效站点。",
+						"Invalid siteid.");
+				return strRtn;
+			}
+			if (!this.checkOrgId(orgid, "")) {
+				strRtn = gdObjectServiceImpl.getMessageTextWithLanguageCd(request, "", "", siteLang, "无效机构。",
+						"Invalid orgid.");
+				return strRtn;
+			}
+			String ctxPath = request.getContextPath();
+			// String JGID = sqlQuery.queryForObject("select TZ_JG_ID from
+			// PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new
+			// Object[]{siteid},"String");
+			String JGID = orgid;
+			if (JGID.equals("SEM")) {
+				JGID = "";
+			} else {
+				JGID.toLowerCase();
+			}
+			System.out.println("JGID:=" + JGID);
+			strRtn = tzGDObject.getHTMLText("HTML.TZSitePageBundle.TzSemMLoginRelease", ctxPath, orgid, siteid, openid,
+					JGID);
 
-	    } catch (Exception e) {
-		e.printStackTrace();
-		strRtn = "系统异常，请稍后再试。";
-	    }
-	    return strRtn;
+		} catch (Exception e) {
+			e.printStackTrace();
+			strRtn = "系统异常，请稍后再试。";
+		}
+		return strRtn;
 	}
 }

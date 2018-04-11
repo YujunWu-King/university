@@ -1248,6 +1248,7 @@ String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MREG_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl,JGID);
 	    }
 
@@ -1688,6 +1689,7 @@ String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 		fields = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MPERFECT_HTML", request.getContextPath(),fields,strActHtml,phoneYzDisplay,emialYzDisplay,loginUrl,JGID);
 	    }
 

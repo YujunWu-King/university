@@ -98,6 +98,7 @@ public class TzInterviewAppointmentMobileImpl extends FrameworkImpl{
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 			if(!"".equals(noneAppoHtml)){
 				interviewAppointHtml = tzGDObject.getHTMLText("HTML.TZInterviewAppointmentBundle.TZ_M_MS_NONE_APPO_MAIN_HTML",contextPath,ZSGL_URL,siteId,"1",noneAppoHtml,JGID);
 			}else{
