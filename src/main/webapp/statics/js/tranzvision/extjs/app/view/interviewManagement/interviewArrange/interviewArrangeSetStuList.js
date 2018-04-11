@@ -154,12 +154,17 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 							text:'更多操作',
 							iconCls:  'list',
 							glyph: 61,
-							menu:[
-								{
-									text:'选中考生发送面试预约邮件',
-									iconCls:"email",
-									handler:'sendEmailToSelStu'
-								}]
+							menu:[{
+								text:'给选中考生发送邮件',
+								iconCls:"email",
+								handler:'tzSendEmailSmsToStu',
+								sendType: "EML"
+							},{
+								text:'给选中考生发送短信',
+								iconCls:"sms",
+								handler:'tzSendEmailSmsToStu',
+								sendType: "SMS"
+							}]
 						}
 					]
                 }],

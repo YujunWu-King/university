@@ -310,8 +310,9 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
     onPanelClose: function(){
         this.getView().close();
     },
-	//给选中考生发送面试预约邮件
-	sendEmailToSelStu: function(btn){
+	//给选中考生发送面试预约邮件短信
+    tzSendEmailSmsToStu: function(btn){
+    	var sendType = btn.sendType;
 		var msStuGrid = btn.up('grid');
 		var msStuGridSelRecs=msStuGrid.getSelectionModel().getSelection();
 		//选中行长度
@@ -328,23 +329,32 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 					stuJson = stuJson + ','+Ext.JSON.encode(msStuGridSelRecs[i].data);
 				}
 			}
-			var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"tzSendEmailToSelStu","comParams":{"stuList":['+stuJson+']}}';
+			var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"tzSendEmailSmsToStu","comParams":{"sendType":"'+sendType+'","stuList":['+stuJson+']}}';
 			
 			Ext.tzLoad(tzParams,function(responseData){
-				var emailTmpName = responseData['EmailTmpName'];
-				var arrEMLTmpls = new Array();
-				arrEMLTmpls=emailTmpName.split(",");
+				var tmpName = responseData['tmpName'];
+				var arrTmpls = new Array();
+				arrTmpls=tmpName.split(",");
 	
 				var audienceId = responseData['audienceId'];
 	
-				Ext.tzSendEmail({
-					//发送的邮件模板;
-					"EmailTmpName":arrEMLTmpls,
-					//创建的需要发送的听众ID;
-					"audienceId": audienceId,
-					//是否可以发送附件: Y 表示可以发送附件,"N"表示无附件;
-					"file": "N"
-				});
+				if(sendType == "SMS"){
+					Ext.tzSendSms({
+						//发送的短信模板;
+						"SmsTmpName":arrTmpls,
+						//创建的需要发送的听众ID;
+						"audienceId": audienceId
+					});
+				}else{
+					Ext.tzSendEmail({
+						//发送的邮件模板;
+						"EmailTmpName":arrTmpls,
+						//创建的需要发送的听众ID;
+						"audienceId": audienceId,
+						//是否可以发送附件: Y 表示可以发送附件,"N"表示无附件;
+						"file": "N"
+					});
+				}
 			});	
 		}
 	}

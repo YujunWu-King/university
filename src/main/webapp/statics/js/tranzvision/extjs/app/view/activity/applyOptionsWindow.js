@@ -1,18 +1,18 @@
 ﻿Ext.define('KitchenSink.view.activity.applyOptionsWindow', {
-  extend: 'Ext.window.Window',
-  xtype: 'applyOptionsWindow', 
-  title: '报名项下拉值定义', 
+	extend: 'Ext.window.Window',
+	xtype: 'applyOptionsWindow', 
+	title: '报名项下拉值定义', 
 	reference: 'applyOptionsWindow',
-  width: 600,
-  height: 500,
-  minWidth: 300,
-  minHeight: 380,
-  layout: 'fit',
-  resizable: true,
-  modal: true,
-  closeAction: 'hide',
+	width: 600,
+	height: 400,
+	minWidth: 300,
+	minHeight: 300,
+	layout: 'fit',
+	resizable: true,
+	modal: true,
+	closeAction: 'hide',
 	actType: 'add',
-	
+		
 	items: [{
 		xtype: 'form',	
 		layout: {
@@ -21,7 +21,6 @@
 		},
 		border: false,
 		bodyPadding: 10,
-		//heigth: 600,
 	
 		fieldDefaults: {
 			msgTarget: 'side',
@@ -40,36 +39,36 @@
 			allowBlank: false
 		},{
 			xtype: 'grid',
-			height: 360, 
+			height: 300, 
 			frame: true,
 			//id: 'applyItemOptionsGrid',
 			name: 'applyItemOptionsGrid',
 			dockedItems: [{
         	xtype: 'toolbar',
-        	items: [
-        		{ iconCls: 'add',text: '新增', tooltip:"新增选项",handler: 'addApplyItemOption'},"-", 
-						{ iconCls: 'remove',text: '删除',tooltip:"删除选中的数据",handler: 'deleteApplyItemOptions'}
-          ]
-      }],
+	        	items: [
+	        		{ iconCls: 'add',text: '新增', tooltip:"新增选项",handler: 'addApplyItemOption'},"-", 
+					{ iconCls: 'remove',text: '删除',tooltip:"删除选中的数据",handler: 'deleteApplyItemOptions'}
+	            ]
+	        }],
 			columnLines: true,
 			selModel: {
-       		type: 'checkboxmodel'
-   		},
+	       		type: 'checkboxmodel'
+	   		},
 			reference: 'applyItemOptionsGrid',
-			style:"margin:10px",
+			//style:"margin:10px",
 			store: {
 				type: 'applyItemOptionsStore'
 			},
 			plugins: {
-        	ptype: 'cellediting',
-        	pluginId: 'applyItemOptionsCellediting',
-        		//	clicksToEdit: 1
-    	},
-    	viewConfig: {
-        	plugins: {
-           	ptype: 'gridviewdragdrop',
-            dragText: '拖拽进行选项的排序'
-        	},
+	        	ptype: 'cellediting',
+	        	pluginId: 'applyItemOptionsCellediting',
+	        	clicksToEdit: 1
+	    	},
+	    	viewConfig: {
+	        	plugins: {
+	           	ptype: 'gridviewdragdrop',
+	            dragText: '拖拽进行选项的排序'
+	        	},
 					listeners: {
 						drop: function(node, data, dropRec, dropPosition) {
 							data.view.store.beginUpdate();
@@ -80,46 +79,35 @@
 							data.view.store.endUpdate();
 						}
 					}
-    	},
-    	columns: [{ 
-						text: '选项ID',
-						sortable: false,
-						dataIndex: 'transId',	
-						hidden: true
-			},{ 
-						xtype: 'hiddenfield',
-						text: '排序',
-						sortable: false,
-						dataIndex: 'transPxXh',
-						hidden: true
+	    	},
+	    	columns: [{
+				text: '选项',
+				sortable: false,
+				dataIndex: 'transName',
+				sortable: false,
+				flex: 2,
+				editor: {
+				   xtype: 'textfield',
+				   allowBlank: false
+				}
 			},{
-						text: '选项',
-						sortable: false,
-						dataIndex: 'transName',
-						sortable: false,
-						flex: 2,
-						editor: {
-						   xtype: 'textfield',
-						   allowBlank: false
-						}
+				text: '选项英文',
+				sortable: false,
+				dataIndex: 'transNameEng',
+				sortable: false,
+				flex: 2,
+				editor: {
+				   xtype: 'textfield',
+				   allowBlank: false
+				}
 			},{
-						text: '选项英文',
-						sortable: false,
-						dataIndex: 'transNameEng',
-						sortable: false,
-						flex: 2,
-						editor: {
-						   xtype: 'textfield',
-						   allowBlank: false
-						}
-			},{
-					menuDisabled: true,
-	        sortable: false,
-				  width:60,
-	        xtype: 'actioncolumn',
-				 items:[
-						 {iconCls: 'remove',tooltip: '删除',handler: 'deleteApplyItemOption'}
-				  ]
+				menuDisabled: true,
+				sortable: false,
+				width:60,
+				xtype: 'actioncolumn',
+				items:[
+					 {iconCls: 'remove',tooltip: '删除',handler: 'deleteApplyItemOption'}
+				]
 			}]	
 		}]
   }],

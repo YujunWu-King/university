@@ -328,9 +328,9 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 		String strRet = "";
 		try {
 			switch (strType) {
-				case "tzSendEmailToSelStu":
+				case "tzSendEmailSmsToStu":
 					//保存批次面试预约安排 
-					strRet = this.tzSendEmailToSelStu(strParams,errorMsg);
+					strRet = this.tzSendEmailSmsToStu(strParams,errorMsg);
 					break;
 				case "tzAddAudience":
 					//保存批次面试预约安排 
@@ -439,18 +439,20 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private String tzSendEmailToSelStu(String strParams, String[] errorMsg){
+	private String tzSendEmailSmsToStu(String strParams, String[] errorMsg){
 		String strRtn = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			jacksonUtil.json2Map(strParams);
-
+			
+			String sendType = jacksonUtil.getString("sendType");
 			List<Map<String,Object>> selStuList = (List<Map<String, Object>>) jacksonUtil.getList("stuList");
 			
 			String jgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
+			String title = "面试预约通知" + ("SMS".equals(sendType) ? "短信" : "邮件");
 			// 创建邮件发送听众
-			String crtAudi = createTaskServiceImpl.createAudience("",jgid,"面试预约通知邮件", "JSRW");
+			String crtAudi = createTaskServiceImpl.createAudience("", jgid, title, "JSRW");
 
 			if (!"".equals(crtAudi)) {
 
@@ -469,36 +471,55 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl{
 					oprid = sqlQuery.queryForObject(sql,new Object[] { classId, appId },"String");
 
 					
-					sql = "SELECT TZ_ZY_EMAIL,TZ_CY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
+					sql = "SELECT TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_SJ,TZ_CY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
 					Map<String, Object> mapBmrInfo = sqlQuery.queryForMap(sql, new Object[] { appId });
 
 					String mainEmail = "";
 					String cyEmail = "";
+					String mainPhone = "";
+					String cyPhone = "";
 					if (null != mapBmrInfo) {
-						mainEmail = mapBmrInfo.get("TZ_ZY_EMAIL") == null ? ""
-								: String.valueOf(mapBmrInfo.get("TZ_ZY_EMAIL"));
-						cyEmail = mapBmrInfo.get("TZ_CY_EMAIL") == null ? ""
-								: String.valueOf(mapBmrInfo.get("TZ_CY_EMAIL"));
-					}
-					if("".equals(mainEmail) && !"".equals(oprid)){
-						sql = "SELECT TZ_EMAIL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
-						mainEmail = sqlQuery.queryForObject(sql,new Object[] { oprid },"String");
+						mainEmail = mapBmrInfo.get("TZ_ZY_EMAIL") == null ? "" : String.valueOf(mapBmrInfo.get("TZ_ZY_EMAIL"));
+						cyEmail = mapBmrInfo.get("TZ_CY_EMAIL") == null ? "" : String.valueOf(mapBmrInfo.get("TZ_CY_EMAIL"));
+						
+						mainPhone = mapBmrInfo.get("TZ_ZY_SJ") == null ? "" : String.valueOf(mapBmrInfo.get("TZ_ZY_SJ"));
+						cyPhone = mapBmrInfo.get("TZ_CY_SJ") == null ? "" : String.valueOf(mapBmrInfo.get("TZ_CY_SJ"));
 					}
 					
-					if(!"".equals(mainEmail) && !"".equals(oprid)){
-						createTaskServiceImpl.addAudCy(crtAudi,stuName, "", "", "", mainEmail, cyEmail, "", oprid, "","",appId);
+					if("".equals(mainEmail) && !"".equals(oprid)){
+						sql = "SELECT TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?";
+						mainEmail = sqlQuery.queryForObject(sql,new Object[] { oprid },"String");
+					}
+					if("".equals(mainPhone) && !"".equals(oprid)){
+						sql = "SELECT TZ_ZY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZCYH' AND TZ_LYDX_ID=?";
+						mainPhone = sqlQuery.queryForObject(sql,new Object[] { oprid },"String");
+					}
+					
+					if(("EML".equals(sendType) && !"".equals(mainEmail)) 
+						   || ("SMS".equals(sendType) && !"".equals(mainPhone))
+							&& !"".equals(oprid)){
+						createTaskServiceImpl.addAudCy(crtAudi,stuName, stuName, mainPhone, cyPhone, mainEmail, cyEmail, "", oprid, "","",appId);
 					}
 				}
 				
-				//邮件模板
-				String emailTmpName = getHardCodePoint.getHardCodePointVal("TZ_GD_MS_MSARRC_EMLTML");
+				//模板
+				String tmpName = "";
+				try{
+					if(sendType.equals("SMS")){
+						tmpName = getHardCodePoint.getHardCodePointVal("TZ_GD_MS_MSARRC_SMSTML");
+					}else{
+						tmpName = getHardCodePoint.getHardCodePointVal("TZ_GD_MS_MSARRC_EMLTML");
+					}
+				}catch (NullPointerException e) {
+					tmpName = "";
+				}
 				
-				if("".equals(emailTmpName) || emailTmpName == null){
+				if("".equals(tmpName) || tmpName == null){
 					errorMsg[0] = "1";
 					errorMsg[1] = "未配置邮件模板";
 				}else{
 					Map<String, Object> mapRet = new HashMap<String, Object>();
-					mapRet.put("EmailTmpName", emailTmpName);
+					mapRet.put("tmpName", tmpName);
 					mapRet.put("audienceId", crtAudi);
 					strRtn = jacksonUtil.Map2json(mapRet);
 				}
