@@ -35,7 +35,7 @@ $(document)
 									function(i, el) {
 										el
 												.click(function(e) {
-													var countryUrl = encodeURI(tzGdWdzhCountryUrl);
+													var countryUrl = tzGdWdzhCountryUrl;
 													$("#ParamCon").val(
 															"TZ_COUNTRY");
 													s = $.layer({
@@ -93,7 +93,7 @@ $(document)
 							function(i, el) {
 								el.click(function(e) {
 									var _prov_id = "TZ_LEN_PROID";
-									var provUrl = encodeURI(tzGdWdzhProvUrl);
+									var provUrl = tzGdWdzhProvUrl;
 									prov = $.layer({
 										type : 2,
 										title : false,
@@ -120,7 +120,7 @@ $(document)
 							function(i, el) {
 								el.click(function(e) {
 									var _city_id = "TZ_LEN_CITY";
-									var cityUrl = encodeURI(tzGdWdzhCityUrl);
+									var cityUrl = tzGdWdzhCityUrl;
 									i2 = $.layer({
 										type : 2,
 										title : false,
@@ -374,7 +374,7 @@ function changeBindMobile() {
 
 var up;
 function openUpload() {
-	var photoUrl = encodeURI(tzGdWdzhPhotoUrl);
+	var photoUrl = tzGdWdzhPhotoUrl;
 	up = $.layer({
 		type : 2,
 		title : false,
@@ -414,7 +414,7 @@ function changeEmail() {
 }
 
 function changeMobile() {
-	var changeMobileUrl = encodeURI(tzGdWdzhChangeMobileUrl);
+	var changeMobileUrl = tzGdWdzhChangeMobileUrl;
 	$.layer({
 		type : 2,
 		title : false,

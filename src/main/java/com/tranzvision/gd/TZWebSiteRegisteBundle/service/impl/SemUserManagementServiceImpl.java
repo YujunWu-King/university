@@ -489,20 +489,20 @@ public class SemUserManagementServiceImpl extends FrameworkImpl {
 				// 选择省份;
 				String Province = commonUrl;
 				
-				Province = Province + "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_PROVINCE_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"TZ_PROV_ID\":\"TZ_LEN_PROID\",\"siteId\":\""
-										+ siteId + "\"}}";
-				/*Province = Province + "?tzParams="
+				//Province = Province + "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_PROVINCE_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"TZ_PROV_ID\":\"TZ_LEN_PROID\",\"siteId\":\""
+				//						+ siteId + "\"}}";
+				Province = Province + "?tzParams="
 						+ URLEncoder
 								.encode("{\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_PROVINCE_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"TZ_PROV_ID\":\"TZ_LEN_PROID\",\"siteId\":\""
-										+ siteId + "\"}}", "UTF-8"); */
+										+ siteId + "\"}}", "UTF-8"); 
 				// 选择城市;
 				String City1 = commonUrl;
-				City1 = City1 + "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_CITY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"OType\":\"CITY\",\"TZ_CITY_ID\":\"TZ_LEN_CITY\",\"siteId\":\""
-										+ siteId + "\"}}";
-				/*City1 = City1 + "?tzParams="
+				//City1 = City1 + "?tzParams={\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_CITY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"OType\":\"CITY\",\"TZ_CITY_ID\":\"TZ_LEN_CITY\",\"siteId\":\""
+				//						+ siteId + "\"}}";
+				City1 = City1 + "?tzParams="
 						+ URLEncoder
 								.encode("{\"ComID\":\"TZ_COMMON_COM\",\"PageID\":\"TZ_CITY_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"OType\":\"CITY\",\"TZ_CITY_ID\":\"TZ_LEN_CITY\",\"siteId\":\""
-										+ siteId + "\"}}", "UTF-8"); */
+										+ siteId + "\"}}", "UTF-8"); 
 
 				// 头像;
 				String TZ_ATT_A_URL = "", TZ_ATTACHSYSFILENA = "";

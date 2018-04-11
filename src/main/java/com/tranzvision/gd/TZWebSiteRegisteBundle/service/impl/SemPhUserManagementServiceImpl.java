@@ -79,13 +79,6 @@ public class SemPhUserManagementServiceImpl extends FrameworkImpl {
 			}
 
 			try {		
-				String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
-				
-				if (JGID.equals("SEM")) {
-					JGID="";
-				} else {
-					JGID.toLowerCase();
-				}
 				strResultConten = tzGdObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", "",contextPath, strHeadHtml,strSiteId,"5", strMainHtml,JGID);
 			} catch (TzSystemException e) {
 				e.printStackTrace();

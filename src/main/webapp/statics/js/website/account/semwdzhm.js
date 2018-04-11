@@ -514,7 +514,7 @@ function changeBindMobile() {
 
 var up;
 function openUpload() {
-    var photoUrl = encodeURI(tzGdWdzhPhotoUrl);
+    var photoUrl = tzGdWdzhPhotoUrl;
     up = $.layer({
         type: 2,
         title: false,
@@ -550,7 +550,7 @@ function changeEmail() {
 }
 
 function changeMobile() {
-    var changeMobileUrl = encodeURI(tzGdWdzhChangeMobileUrl);
+    var changeMobileUrl = tzGdWdzhChangeMobileUrl;
 
     layer.open({
         type: 2,
