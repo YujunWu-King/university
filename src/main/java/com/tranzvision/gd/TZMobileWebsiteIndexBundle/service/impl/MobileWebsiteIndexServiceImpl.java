@@ -594,7 +594,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 			}
 			System.out.println(this.getClass().getName()+":"+JGID);
 			indexHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", title,
-					ctxPath, jsCss, siteId, "1", content, orgId,JGID);
+					ctxPath, jsCss, siteId, "1", content,JGID);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			indexHtml = "";
