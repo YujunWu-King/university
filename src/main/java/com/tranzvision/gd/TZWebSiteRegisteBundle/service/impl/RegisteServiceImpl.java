@@ -740,6 +740,7 @@ public class RegisteServiceImpl {
 	    // PS_TZ_USERREG_MB_T WHERE TZ_JG_ID=?";
 	    String regMbSQL = "SELECT TZ_ACTIVATE_TYPE FROM PS_TZ_USERREG_MB_T WHERE TZ_SITEI_ID=?";
 	    String strActType = jdbcTemplate.queryForObject(regMbSQL, new Object[] { strSiteId }, "String");
+//	    System.out.println("strActType"+strActType);
 	    if (strActType != null && !"".equals(strActType)) {
 		if (strActType.indexOf("MOBILE") >= 0 && strActType.indexOf("EMAIL") >= 0) {
 		    if ("ENG".equals(strLang)) {
@@ -770,7 +771,6 @@ public class RegisteServiceImpl {
 		    }
 		}
 	    }
-
 	    String emialYzDisplay = "", phoneYzDisplay = "";
 	    if (phoneBl) {
 		emialYzDisplay = "style=\"display:none\"";
