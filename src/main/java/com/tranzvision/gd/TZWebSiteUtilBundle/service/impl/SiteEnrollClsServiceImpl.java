@@ -1909,6 +1909,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				} else {
 					JGID.toLowerCase();
 				}
+				System.out.println(this.getClass().getName()+":"+JGID);
 				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MSUCCESSE_HTML", strContent,
 						request.getContextPath(),JGID);
 				strResult = objRep.repTitle(strResult, strSiteId);
@@ -1966,7 +1967,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				} else {
 					JGID.toLowerCase();
 				}
-
+				System.out.println(this.getClass().getName()+":"+JGID);
 				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_TIME_MSUCCESSE_HTML", strContent,
 						request.getContextPath(), strJumUrl, JGID);
 				strResult = objRep.repTitle(strResult, strSiteId);
@@ -2401,6 +2402,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 			if (strTabType.contains("MOBILE") && strTabType.contains("EMAIL")) {
 				if ("ENG".equals(strLang)) {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MWJMM_EP_ENG_HTML",
@@ -2491,6 +2493,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 			if (yzmMap != null) {
 				dtYxq = (Date) yzmMap.get("TZ_YZM_YXQ");
 				Date curDate = new Date();
@@ -2852,6 +2855,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					} else {
 						JGID.toLowerCase();
 					}
+					System.out.println(this.getClass().getName()+":"+JGID);
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MJHYX_EP_ENG_HTML",
 							contextPath, strOrgid, strLang, strBeginUrl,JGID);
 				} else {
@@ -2868,6 +2872,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					} else {
 						JGID.toLowerCase();
 					}
+					System.out.println(this.getClass().getName()+":"+JGID);
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MJHYX_EP_HTML",
 							contextPath, strOrgid, strLang, strBeginUrl,JGID);
 				} else {

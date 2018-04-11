@@ -221,6 +221,7 @@ public class MobileAppHistoryServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 			html = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", title,
 					ctxPath, jsCss, siteId, "1", content,JGID);
 		} catch (TzSystemException e) {

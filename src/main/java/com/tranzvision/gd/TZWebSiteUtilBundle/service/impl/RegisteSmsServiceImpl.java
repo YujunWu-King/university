@@ -824,6 +824,7 @@ public class RegisteSmsServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
+			System.out.println(this.getClass().getName()+":"+JGID);
 
 			if (count > 0) {
 				// 有效；
