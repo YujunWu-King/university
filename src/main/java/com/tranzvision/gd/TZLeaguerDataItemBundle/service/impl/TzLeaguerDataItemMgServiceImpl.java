@@ -425,7 +425,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 							mapData.get("TZ_IS_SHOWWZSY") == null ? "" : String.valueOf(mapData.get("TZ_IS_SHOWWZSY")));
 					psTzRegFieldT.setTzIsPrefect(
 							mapData.get("TZ_IS_PREFECT") == null ? "" : String.valueOf(mapData.get("TZ_IS_PREFECT")));
-					if("TZ_GENDER".equals(fieldId)||"TZ_EMAIL".equals(fieldId)||"TZ_PASSWORD".equals(fieldId)||"TZ_REPASSWORD".equals(fieldId)){
+					if("TZ_EMAIL".equals(fieldId)||"TZ_PASSWORD".equals(fieldId)||"TZ_REPASSWORD".equals(fieldId)){
 						psTzRegFieldT.setTzIsReg("Y");
 					}else{
 						psTzRegFieldT.setTzIsReg(
@@ -747,7 +747,7 @@ public class TzLeaguerDataItemMgServiceImpl extends FrameworkImpl {
 					ShowZhgl = true;
 				}
 				
-				if("TZ_GENDER".equals(regId)||"TZ_EMAIL".equals(regId)||"TZ_PASSWORD".equals(regId)||"TZ_REPASSWORD".equals(regId)){
+				if("TZ_EMAIL".equals(regId)||"TZ_PASSWORD".equals(regId)||"TZ_REPASSWORD".equals(regId)){
 					ShowReg = true;
 				}
 				
