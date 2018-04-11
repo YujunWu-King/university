@@ -615,9 +615,9 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    
 				    
 				    //扩展表
-				    String strExistsSql = "SELECT 'Y' FROM PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?";
-				    String strExistsFlg = jdbcTemplate.queryForObject(strExistsSql, new Object[]{strOprId}, "String");
-				    String strUpdateSql = "UPDATE PS_TZ_APP_KS_INFO_EXT_T SET TZ_APP_MAJOR_NAME=? WHERE TZ_OPRID=?";
+//				    String strExistsSql = "SELECT 'Y' FROM PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?";
+//				    String strExistsFlg = jdbcTemplate.queryForObject(strExistsSql, new Object[]{strOprId}, "String");
+//				    String strUpdateSql = "UPDATE PS_TZ_APP_KS_INFO_EXT_T SET TZ_APP_MAJOR_NAME=? WHERE TZ_OPRID=?";
 //				    if("Y".equals(strExistsFlg)){
 //				    	jdbcTemplate.update(strUpdateSql, new Object[]{strAppMajor,strOprId});
 //				    }else{
@@ -740,11 +740,18 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					    psTzFsT.setTzPoliticsSjadd(tzPoliticsSjadd);
 					    psTzFsT.setTzRemark(tzRemark);
 					    psTzFsT.setTzResultCode(tzResultCode);
+					    
+					    
 					    PsTzFsT fsInfo=psTzFsTMapper.selectByPrimaryKey(tzAppInsId);
 					    if(fsInfo==null){
 					    	psTzFsTMapper.insert(psTzFsT);
 						}else{
-							psTzFsTMapper.updateByPrimaryKeySelective(psTzFsT);
+							//初始进来 所有字段都是空的，会变成update T where id=?的 SQL 会报错，所以加异常处理，调用另外一种updat方法
+							try {
+								psTzFsTMapper.updateByPrimaryKeySelective(psTzFsT);
+							} catch(Exception e) {
+								psTzFsTMapper.updateByPrimaryKey(psTzFsT);
+							}
 						}
 				    
 			    	
@@ -775,7 +782,13 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					    if(lkbmInfo==null){
 					    	psTzLkbmTMapper.insert(psTzLkbmT);
 						}else{
-							psTzLkbmTMapper.updateByPrimaryKeySelective(psTzLkbmT);
+							//psTzLkbmTMapper.updateByPrimaryKey(psTzLkbmT);
+							
+							try {
+								psTzLkbmTMapper.updateByPrimaryKeySelective(psTzLkbmT);
+							} catch(Exception e) {
+								psTzLkbmTMapper.updateByPrimaryKey(psTzLkbmT);
+							}
 						}
 				    
 					    String tzResultCode_jg=(String) map.get("TZ_IMP_MSJG_TBL_tf_TZ_RESULT_CODE");
@@ -787,7 +800,13 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					    if(msjgInfo==null){
 					    	psTzMsjgTMapper.insert(psTzMsjgT);
 						}else{
-							psTzMsjgTMapper.updateByPrimaryKeySelective(psTzMsjgT);
+							//psTzMsjgTMapper.updateByPrimaryKey(psTzMsjgT);
+							
+							try {
+								psTzMsjgTMapper.updateByPrimaryKeySelective(psTzMsjgT);
+							} catch(Exception e) {
+								psTzMsjgTMapper.updateByPrimaryKey(psTzMsjgT);
+							}
 						}
 					    
 				    
@@ -814,7 +833,12 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					    if(mszgInfo==null){
 					    	psTzMszgTMapper.insert(psTzMszgT);
 						}else{
-							psTzMszgTMapper.updateByPrimaryKeySelective(psTzMszgT);
+							//psTzMszgTMapper.updateByPrimaryKey(psTzMszgT);
+							try {
+								psTzMszgTMapper.updateByPrimaryKeySelective(psTzMszgT);
+							} catch(Exception e) {
+								psTzMszgTMapper.updateByPrimaryKey(psTzMszgT);
+							}
 						}
 
 				    	 String tzIsSub=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_IS_SUB");
@@ -859,7 +883,12 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 						    if(qtInfo==null){
 						    	psTzQtTMapper.insert(psTzQtT);
 							}else{
-								psTzQtTMapper.updateByPrimaryKeySelective(psTzQtT);
+								//psTzQtTMapper.updateByPrimaryKey(psTzQtT);
+								try {
+									psTzQtTMapper.updateByPrimaryKeySelective(psTzQtT);
+								} catch(Exception e) {
+									psTzQtTMapper.updateByPrimaryKey(psTzQtT);
+								}
 							}
 				    }
 				    		
