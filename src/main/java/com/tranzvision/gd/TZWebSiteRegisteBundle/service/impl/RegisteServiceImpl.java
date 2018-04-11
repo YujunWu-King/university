@@ -279,7 +279,7 @@ public class RegisteServiceImpl {
 				strActHtml, imgPath);
 		    } else {
 		    	System.out.println("注册页");
-			strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
+			strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='M'>手机验证</option><option value ='E'>邮箱验证</option></select>";
 			strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML",
 				strActHtml, imgPath);
 		    }
@@ -747,7 +747,7 @@ public class RegisteServiceImpl {
 			strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ENG_HTML",
 				strActHtml, imgPath);
 		    } else {
-			strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='E'>邮箱验证</option><option value ='M'>手机验证</option></select>";
+			strActHtml = "<select name='yzfs' id='yzfs'  class='chosen-select combox_351px' style='width:351px;'><option value ='M'>手机验证</option><option value ='E'>邮箱验证</option></select>";
 			strActHtml = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHFS_ZHS_HTML",
 				strActHtml, imgPath);
 		    }

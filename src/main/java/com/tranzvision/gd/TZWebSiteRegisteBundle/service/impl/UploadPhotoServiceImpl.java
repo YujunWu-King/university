@@ -159,10 +159,16 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 				//默认图片;
 				tzAttaUrl = contextPath + "/statics/images/appeditor/bjphoto.jpg";
 			}
+			String savePhoto ="";
+			if("MEM".equals(jgId)){
+				savePhoto="save_photo_men.png";
+			}else{
+				savePhoto="save_photo_bt.png";
+			}
 			String TZ_ENROLL_UPLOADPHO = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_PHO_HTML", phoToData,
 					LOAD, xuanzhuang, pleaseupload, fileSize, in_M, TZ_FILE_PROCESSING, TZ_TAILORING, TZ_P_UPLOAD,
 					TZ_INSIZE_FILE, TZ_FORMAT_ERROR, TZ_SAVE_ERROR, TZ_UPLOAD_PHOTO, TZ_PHOTO_PROCESSING, TZ_LOAD_PHOTO,
-					TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto, contextPath, imgPath, tzAttaUrl);
+					TZ_FILE_FORMAT, TZ_SIZE_TITLE, UpPhoto, SavePhoto, contextPath, imgPath, tzAttaUrl,savePhoto);
 			TZ_ENROLL_UPLOADPHO = objRep.repTitle(TZ_ENROLL_UPLOADPHO, siteId);
 			TZ_ENROLL_UPLOADPHO = objRep.repCss(TZ_ENROLL_UPLOADPHO, siteId);
 			return TZ_ENROLL_UPLOADPHO;

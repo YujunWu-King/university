@@ -213,6 +213,9 @@ public class TzWebsiteLoginController {
 					// url(../../../../../images/login/login_emba.png) no-repeat
 					// scroll center center;\") };");
 					// sb.append("</script>");
+					if(loginHtml.indexOf("login_top.png")>0){
+						loginHtml=loginHtml.replaceAll("login_top.png", "login_top_emba.png");
+					}
 					loginHtml = loginHtml.replaceAll("style_sem.css", "style_emba.css");
 					// loginHtml = loginHtml +sb.toString();
 					strRet = loginHtml;

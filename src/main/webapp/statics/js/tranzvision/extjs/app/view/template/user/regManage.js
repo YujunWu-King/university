@@ -197,7 +197,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                             var store = col.findParentByType("grid").store;
                             var regId = store.getAt(rowIndex).data.regId;
 
-                            if(regId == "TZ_GENDER" || regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                            if( regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
                                 return false;
                             }
                             /*取消启用时，要求检查TZ_REALNAME、TZ_FIRST_NAME、TZ_LAST_NAME必选其一*/
@@ -233,7 +233,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                     },
                     renderer:function(value, cellmeta, record, rowIndex ,colIndex ,store, view){
                         var regId = record.get('regId');
-                        if (regId == "TZ_GENDER" || regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                        if (regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
                             //如何为当前TD添加disabled属性？
                             cellmeta.tdCls = "x-item-disabled";
                         }
@@ -319,7 +319,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                                 return false;
                             }
 
-                            if(regId == "TZ_GENDER" || regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                            if( regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
                                 return false;
                             }
                         }
@@ -327,7 +327,7 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                     renderer:function(value, cellmeta, record, rowIndex ,colIndex ,store, view){
 
                         var regId = record.get('regId');
-                        if (regId == "TZ_GENDER" || regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                        if ( regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
                             //如何为当前CheckColumn添加disabled属性？
                             cellmeta.tdCls = "x-item-disabled";
                         }else{
@@ -372,14 +372,14 @@ Ext.define('KitchenSink.view.template.user.regManage', {
                                 Ext.Msg.alert("提示","请先启用此项，再进行设置！");
                                 return false;
                             }
-                            if(regId == "TZ_GENDER" || regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                            if(regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
                                 return false;
                             }
                         }
                     },
                     renderer:function(value, cellmeta, record, rowIndex ,colIndex ,store, view){
                         var regId = record.get('regId');
-                        if (regId == "TZ_GENDER" || regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
+                        if (regId == "TZ_EMAIL" || regId == "TZ_PASSWORD" || regId == "TZ_REPASSWORD" ){
                             //如何为当前TD添加disabled属性？
                             cellmeta.tdCls = "x-item-disabled";
                         }
