@@ -24,7 +24,7 @@ import com.tranzvision.gd.util.sql.TZGDObject;
 
 import java.util.Date;
 import java.text.SimpleDateFormat;
-
+import com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl.TzGdBmglStuClsServiceImpl;
 /**
  * 申请用户管理；原：TZ_GD_USERGL_PKG:TZ_GD_USERGL_CLS
  * 
@@ -48,7 +48,10 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 	private PsTzRegUserTMapper PsTzRegUserTMapper;
 	@Autowired
 	private TZGDObject tzGdObject;
-	
+	@Autowired
+	private TzGdBmglStuClsServiceImpl TzGdBmglStuClsServiceImpl;
+	@Autowired
+	private SqlQuery jdbcTemplate;
 	//@Override
 	public String tzQueryList11(String strParams, int numLimit, int numStart, String[] errorMsg) {
 
@@ -188,7 +191,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {};
 			
 			// json数据要的结果字段;
-			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT", "TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME","NATIONAL_ID","TZ_MSH_ID","TZ_CLASS_NAME"};
+			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT", "TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME","NATIONAL_ID","TZ_MSH_ID","TZ_CLASS_NAME","TZ_CLASS_ID","TZ_APP_INS_ID"};
 			
 			//String admin = "\"TZ_JG_ID-operator\":\"01\",\"TZ_JG_ID-value\":\"ADMIN\",";
 			//strParams.replaceAll(admin, "");
@@ -215,7 +218,32 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("nationId", rowList[9]);
 					mapList.put("mshId", rowList[10]);
 					mapList.put("applyInfo", rowList[11]);
+					int leng = 0;
+					String viewNameSQL="";
+					String strBmbTplSQL = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
+					String strBmbTpl = jdbcTemplate.queryForObject(strBmbTplSQL, new Object[] { rowList[12] }, "String");
+					if (strBmbTpl == null) {
+						strBmbTpl = "";
+					}
+					if (!strBmbTpl.equals("")) {
+						// 报名表总页数
+						// 情况1：双层报名表
+						viewNameSQL = "select count(1) from PS_TZ_APP_XXXPZ_T where  TZ_APP_TPL_ID=? and TZ_COM_LMC=? and TZ_FPAGE_BH !=?";
+						leng = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { strBmbTpl, "Page", "" }, "Integer");
+						// 情况2：单层报名表
+						if (leng == 0) {
+							viewNameSQL = "select count(1) from PS_TZ_APP_XXXPZ_T where  TZ_APP_TPL_ID=? and TZ_COM_LMC=?";
+							leng = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { strBmbTpl, "Page" }, "Integer");
+						}
+					}
+					// 最后一页不算
+					if (leng > 1) {
+						leng = leng - 1;
+					}
+					
+					mapList.put("fillProportion", TzGdBmglStuClsServiceImpl.getBMBFillProportion(rowList[12], leng));
 					listData.add(mapList);
+					
 				}
 				
 				mapRet.replace("total", obj[0]);
