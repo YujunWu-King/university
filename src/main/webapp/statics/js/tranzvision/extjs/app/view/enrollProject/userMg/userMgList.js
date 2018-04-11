@@ -104,11 +104,6 @@
                 dataIndex: 'userName',
                 width: 75
             },{
-                text: '身份证号',
-                sortable: true,
-                dataIndex: 'nationId',
-                width: 150
-            },{
                 text: '面试申请号',
                 sortable: true,
                 dataIndex: 'mshId',
@@ -149,6 +144,11 @@
                 dataIndex: 'applyInfo',
                 flex:1,
                 width: 200
+            },{
+                text: '填写比例',
+                sortable: true,
+                dataIndex: 'fillProportion',
+                width: 100
             },{
                 text: '账号激活状态',
                 sortable: true,

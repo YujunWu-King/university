@@ -701,7 +701,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 	 * @param appInsID
 	 * @return
 	 */
-	private String getBMBFillProportion(String appInsID, int leng) {
+	public String getBMBFillProportion(String appInsID, int leng) {
 		String sql = "select count(1) from PS_TZ_APP_COMP_TBL where TZ_APP_INS_ID=? and TZ_HAS_COMPLETE=? ";
 		int fill = jdbcTemplate.queryForObject(sql, new Object[] { appInsID, "Y" }, "Integer");
 		System.out.println("fill:" + fill);
@@ -710,7 +710,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		} else {
 			double f = (double)fill / leng;
 			f = f * 100;
-			System.out.println("f:" + f);
+			
 			return String.format("%.2f", f) + "%";
 		}
 	}
