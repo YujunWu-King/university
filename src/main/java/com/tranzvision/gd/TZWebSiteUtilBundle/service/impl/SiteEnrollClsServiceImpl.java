@@ -697,12 +697,12 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				psTzAqYhxxTbl.setTzBjsSms("N");
 				// 注册产生的账号默认为完善
 				psTzAqYhxxTbl.setTzIsCmpl("Y");
-				// 产生面试申请号，流水号格式：yyyy+00001
+				// 产生面试申请号，流水号格式：yyyy+0001
 				// modity by caoy @2018-4-8 面试申请号 为当前年+1年
 				Calendar date = Calendar.getInstance();
 				String currentYear = String.valueOf(date.get(Calendar.YEAR) + 1);
-				String xuhao = "0000" + getSeqNum.getSeqNum(currentYear, "TZ_MSH_ID");
-				xuhao = xuhao.substring(xuhao.length() - 5);
+				String xuhao = "000" + getSeqNum.getSeqNum(currentYear, "TZ_MSH_ID");
+				xuhao = xuhao.substring(xuhao.length() - 4);
 				String tzMshId = currentYear + xuhao;
 				psTzAqYhxxTbl.setTzMshId(tzMshId);
 				psTzAqYhxxTbl.setRowAddedDttm(new Date());
