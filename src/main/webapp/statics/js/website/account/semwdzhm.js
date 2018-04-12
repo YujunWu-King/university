@@ -202,7 +202,7 @@ $(document).ready(function() {
         type: "post",
         dataType: "json",
         async: false,
-        url: tzGdWdzhGetUserInfo,
+        url: encodeURI(tzGdWdzhGetUserInfo),
         success: function(jsonData) {
             jsonValue = jsonData.comContent;
             var data = jsonData.comContent;
