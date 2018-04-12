@@ -354,4 +354,34 @@ public class SiteRepCssServiceImpl {
 
 		return strConent;
 	}
+
+	// 移动版替换css; PS类：TZ_SITE_REP_CSS.repCss;
+		public String repPhoneCss(String strConent, String strSiteId) {
+			if (strSiteId == null || "".equals(strSiteId) || strConent == null || "".equals(strConent)) {
+				return strConent;
+			}
+			String sql = "SELECT TZ_SKIN_STOR,TZ_JG_ID FROM PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?";
+			Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strSiteId });
+			if (map != null) {
+				String skinstor = map.get("TZ_SKIN_STOR") == null ? "" : String.valueOf(map.get("TZ_SKIN_STOR"));
+				String strJgId = (String) map.get("TZ_JG_ID");
+				String websitePath = getSysHardCodeVal.getWebsiteCssPath();
+				String strCssDir = request.getContextPath();
+				if ("".equals(skinstor) || skinstor == null) {
+					strCssDir = strCssDir + websitePath + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/";
+				} else {
+					strCssDir = strCssDir + websitePath + "/" + strJgId.toLowerCase() + "/" + strSiteId + "/" + skinstor
+							+ "/";
+				}
+
+				String strRandom = String.valueOf(10*Math.random());
+				if (strJgId != null && !"".equals(strJgId)) {
+					strConent = strConent.replace("mobilepage_stylecss",strCssDir + "mobileStyle_" + strJgId.toLowerCase() + ".css?v=" + strRandom);
+				} else {
+					strConent = strConent.replace("mobilepage_stylecss", strCssDir + "mobileStyle.css?v=" + strRandom);
+				}
+			}
+
+			return strConent;
+		}
 }

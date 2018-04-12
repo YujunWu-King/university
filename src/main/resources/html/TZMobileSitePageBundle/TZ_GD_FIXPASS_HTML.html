@@ -1,0 +1,45 @@
+<div class="school_no dis_none">
+	<div class="account">
+		<div class="register_body">
+			<p>%bind(:2)*</p>
+			<div class="overhidden">
+				<input id="oldpass" name="oldpass" type="password" placeholder="请输入密码">
+				<span id="oldpassTip" class="pwdTip"><img class="reg_right" src="%bind(:19)/statics/css/website/m/images/reg_wrong.png"></span>
+			</div>
+		</div>
+		<div class="register_body">
+			<p>%bind(:3)*</p>
+			<div class="overhidden">
+				<input id="newpass" type="password" name="newpass"	placeholder="请输入密码">
+				<span id="newpassTip" class="pwdTip"><img class="reg_right" src="%bind(:19)/statics/css/website/m/images/reg_wrong.png"></span>
+			</div>
+		</div>
+		<div class="register_body">
+			<p>%bind(:4)*</p>
+			<div class="overhidden">
+				<input id="cfpass" type="password" name="cfpass" placeholder="请输入密码">
+				<span id="cfpassTip" class="pwdTip"><img class="reg_right" src="%bind(:19)/statics/css/website/m/images/reg_wrong.png"></span>
+			</div>
+		</div>
+		<p class="login_tips"></p>
+		<a href="javascript:void(0)" id="btnpass" class="register_btn"	style="margin-top: 15%;">确认修改</a>
+	</div>
+</div>
+
+
+<!-- content end -->
+<script type="text/javascript">
+	var tzGdFixpwdUrl = '%bind(:1)';
+	var tzGdFixpwdOldPass = '%bind(:2)';
+	var tzGdFixpwdNewPass = '%bind(:3)';
+	var tzGdFixpwdConfPass = '%bind(:4)';
+	var tzGdFixpwdBlankTips = '%bind(:6)';
+	var tzGdFixpwdErrorTips = '%bind(:7)';
+	var tzGdFixpwdNotSameTips = '%bind(:8)';
+	var tzGdFixpwdPassSucTips = '%bind(:9)';
+	var tzGdFixpwdWeakTips = '%bind(:10)';
+	var tzGdFixpwdMiddleTips = '%bind(:11)';
+	var tzGdFixpwdStrongTips = '%bind(:12)';
+	var tzGdFixpwdStrongMsg = '%bind(:17)';
+	var tzGdFixpwdImgPath = '%bind(:18)';
+</script>
