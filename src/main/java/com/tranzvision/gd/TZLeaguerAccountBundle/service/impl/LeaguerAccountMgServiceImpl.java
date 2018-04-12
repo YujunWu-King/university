@@ -218,10 +218,12 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("nationId", rowList[9]);
 					mapList.put("mshId", rowList[10]);
 					mapList.put("applyInfo", rowList[11]);
+					System.out.println("名字"+rowList[1]);
 					int leng = 0;
 					String viewNameSQL="";
 					String strBmbTplSQL = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 					String strBmbTpl = jdbcTemplate.queryForObject(strBmbTplSQL, new Object[] { rowList[12] }, "String");
+					System.out.println("班级id"+rowList[12]);
 					if (strBmbTpl == null) {
 						strBmbTpl = "";
 					}
@@ -230,18 +232,22 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 						// 情况1：双层报名表
 						viewNameSQL = "select count(1) from PS_TZ_APP_XXXPZ_T where  TZ_APP_TPL_ID=? and TZ_COM_LMC=? and TZ_FPAGE_BH !=?";
 						leng = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { strBmbTpl, "Page", "" }, "Integer");
+						System.out.println("长度1"+leng);
 						// 情况2：单层报名表
 						if (leng == 0) {
+							System.out.println("长度"+leng);
 							viewNameSQL = "select count(1) from PS_TZ_APP_XXXPZ_T where  TZ_APP_TPL_ID=? and TZ_COM_LMC=?";
 							leng = jdbcTemplate.queryForObject(viewNameSQL, new Object[] { strBmbTpl, "Page" }, "Integer");
+							System.out.println("长度2"+leng);
 						}
 					}
 					// 最后一页不算
 					if (leng > 1) {
 						leng = leng - 1;
 					}
-					
-					mapList.put("fillProportion", TzGdBmglStuClsServiceImpl.getBMBFillProportion(rowList[12], leng));
+					System.out.println("实例id"+rowList[13]);
+					System.out.println("长度3"+leng);
+					mapList.put("fillProportion", TzGdBmglStuClsServiceImpl.getBMBFillProportion(rowList[13], leng));
 					listData.add(mapList);
 					
 				}

@@ -182,7 +182,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
-
+					System.out.println("classID"+strClassID);
 					mapList.put("fillProportion", getBMBFillProportion(appInsID, leng));
 
 					if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
