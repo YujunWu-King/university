@@ -579,7 +579,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 					"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
 					new Object[] { "TZ_M_CJWT_URL" }, "String");
 			String kjcdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_KJCD_HTML", ctxPath,
-					sqzd, bkzc, viewJdUrl, zxyy, zlzq, cjwt);
+					sqzd, siteId.trim(), viewJdUrl, zxyy, zlzq, cjwt);
 
 			// 展示内容
 			String content = topHtml + personHtml + xmjdHtml + hdHtml + kjcdHtml;
