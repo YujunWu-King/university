@@ -231,7 +231,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				//var OPT_POSITION='--请选择--';
 				//----------------------------职位类型OPT 请把"请选择"跟换成“MsgSet["PLEASE_SELECT"]”
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"> <span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.WorkExper2.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> <span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.WorkExper2.itemName + '：</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
 				types +=valDesc;
 				types += '	</div>';
@@ -257,7 +257,7 @@ SurveyBuild.extend("FirmType", "baseComponent", {
 				//var OPT_POSITION='--请选择--';
 				//----------------------------职位类型OPT 请把"请选择"跟换成“MsgSet["PLEASE_SELECT"]”
 				types += '<div class="input-list" style="display:block">';
-				types += '	<div class="input-list-info left"> <span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.WorkExper2.itemName + ':</div>';
+				types += '	<div class="input-list-info left"> <span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.WorkExper2.itemName + '：</div>';
 				types += '	<div class="input-list-text left input-edu-select">';
 				types += '		<select id="' + data["itemId"] + child.WorkExper2.itemId + '" class="chosen-select" style="width: 100%;" data-regular="" title="' + child.WorkExper2.itemName + '" value="' + child.WorkExper2["value"] + '" name="' + data["itemId"] + child.WorkExper2.itemId + '">';
 				//types += '			<option value="-1">' + '--'+MsgSet["PLEASE_SELECT"]+'--' + '</option>';
