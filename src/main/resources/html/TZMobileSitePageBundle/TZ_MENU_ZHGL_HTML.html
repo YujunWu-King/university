@@ -1,0 +1,56 @@
+<script>
+var tzGdWdzhSaveActivateUrl = '%bind(:1)';
+var tzGdWdzhPhotoUrl = '%bind(:2)';
+var tzGdWdzhChangeEmailUrl = '%bind(:3)';
+var tzGdWdzhChangeMobileUrl = '%bind(:4)';
+var tzGdWdzhGetUserInfo = '%bind(:5)';
+var tzGdWdzhSaveRemind = '%bind(:6)';
+var tzGdWdzhProvUrl = '%bind(:7)';
+var tzGdWdzhCityUrl = '%bind(:8)';
+var tzGdWdzhDoBind = "%bind(:9)";
+var tzGdWdzhReleaseBind = "%bind(:10)";
+var tzGdWdzhAbsence = "%bind(:11)";
+var tzGdWdzhPassSucTips = "%bind(:12)";
+var tzGdWdzhCountryUrl = '%bind(:13)';
+</script>
+<style>
+	.combox{
+		margin-right:0px !important;
+		width:258px !important;
+	}
+	/* .main_inner_right{
+		width:640px;
+	} */
+	.semUserTip{
+		font-size:14px;
+	}
+</style>
+<body style=" background-color:#fff;">
+	<div class="viewport-adaptive" id="before">
+	   <div class="bg">
+	     <!-- 头部 -->
+	   	 <div class="topbar">
+	   	  	 账户管理 <a  href="javascript:history.go(-1)"><i></i></a>
+	   	 </div>
+	   	 <div class="Tab_school">
+	   	 	<div class="tit_tab">
+		   		<li class="school_on">修改个人信息<img class="school_t" src="%bind(:16)/statics/css/website/m/images/on.png"></li>
+		   		<li>修改密码<img class="school_t " src="%bind(:16)/statics/css/website/m/images/on.png"></li>
+	   	    </div>
+            <div class="tabN_school">
+               <div class="schooled">
+	               	<div class="account">
+	               		%bind(:15)
+	               		<a href="javascript:void(0)" id="saveper"  class="register_btn" style="margin-top:15%;">保存</a>
+	               	</div>
+               </div>
+               %bind(:17)
+            </div>
+	   	 </div>
+	   </div>
+    </div>
+    <input type="hidden" id="ParamCon">
+    <div class="viewport-adaptive" id="searchCountry"></div>
+    <div class="viewport-adaptive" id="searchSchool"></div>
+    <div class="viewport-adaptive" id="searchState"></div>
+</body>	
