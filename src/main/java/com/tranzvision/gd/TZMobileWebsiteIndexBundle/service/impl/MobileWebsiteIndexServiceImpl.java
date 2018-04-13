@@ -433,8 +433,14 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 
 			// 招生活动,报考通知;
 			// 取栏目id;
-			String columnIds = sqlQuery.queryForObject(
+			String columnIds="";
+			if (orgId.toUpperCase().equals("SEM")) {
+				columnIds = sqlQuery.queryForObject(
 					"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_M_WEB_NOTICE'", "String");
+			} else if (orgId.toUpperCase().equals("MEM")) {
+				columnIds = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_M_WEB_NOTICE_MEM'", "String");
+			}
 			String hdHtml = "";
 			String hdheadLabel = "";
 			String hdTitle = "";

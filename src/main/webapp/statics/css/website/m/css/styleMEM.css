@@ -168,7 +168,7 @@ input.inp-radio{display:none;}
 input[type="button"]{ border:none;appearance: none; -webkit-appearance: none; border-radius: 0; background-image: none }
 .b-radio{color:#333;font-size:0.54rem;width:50%;text-align: center;}
 .b-radio b{background:url(../images/radioMEM.png)no-repeat;background-position:0.1rem 0;width:1rem;height:1rem;background-size:180%;display:inline-block;cursor:pointer;vertical-align:middle;margin-right:0.3rem;overflow:hidden;}
-.bon-radio b{background:url(../images/radio.png)no-repeat;display:inline-block;background-position:-0.9rem 0;width:1rem;height:1rem;background-size:180%;}
+.bon-radio b{background:url(../images/radioMEM.png)no-repeat;display:inline-block;background-position:-0.9rem 0;width:1rem;height:1rem;background-size:180%;}
 .select_pros{width:100%;margin-top:2%;font-size: 0.54rem;}
 .register_btn{width:94%;margin:2% auto 3%;height:1.5rem;background-color:#1e7fb8;color:#fff;font-size:0.6rem;line-height:1.5rem;text-align:center;border-radius:0.3rem;}
 .register_body #send_Verification{width:30%;padding:2%;margin-bottom:1%;background-color:#1e7fb8;color:#fff;text-align:center;border-radius:0.3rem;float:right;font-size:0.54rem;}
