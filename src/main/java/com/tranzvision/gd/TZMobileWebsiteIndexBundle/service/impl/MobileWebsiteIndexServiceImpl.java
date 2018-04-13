@@ -124,7 +124,7 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 			String strViewBmbDesc = validateUtil.getMessageTextWithLanguageCd(orgId, strLangID, "TZ_INDEXSITE_MESSAGE",
 					"ckbm", "查看报名表", "查看报名表");
 			// title;
-			String title = "清华MBA招生";
+			String title = "招生报考服务系统";
 			// css和js
 			String jsCss = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_JS_CSS", ctxPath);
 			// 头部 ;
@@ -365,8 +365,8 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 								if (TZ_SYSVAR != null && !"".equals(TZ_SYSVAR)) {
 									String type = "A";
 									// 解析系统变量;
-									String[] result = analysisLcResult.analysisLcNOZWF(type, String.valueOf(TZ_APP_INS_ID),
-											ctxPath, TZ_SYSVAR, "Y", siteId);
+									String[] result = analysisLcResult.analysisLcNOZWF(type,
+											String.valueOf(TZ_APP_INS_ID), ctxPath, TZ_SYSVAR, "Y", siteId);
 
 									isFb = result[0];
 									if (result[1] != null && !"".equals(result[1])) {
@@ -433,13 +433,15 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 
 			// 招生活动,报考通知;
 			// 取栏目id;
-			String columnIds="";
+			String columnIds = "";
 			if (orgId.toUpperCase().equals("SEM")) {
 				columnIds = sqlQuery.queryForObject(
-					"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_M_WEB_NOTICE'", "String");
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_M_WEB_NOTICE'",
+						"String");
 			} else if (orgId.toUpperCase().equals("MEM")) {
 				columnIds = sqlQuery.queryForObject(
-						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_M_WEB_NOTICE_MEM'", "String");
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT='TZ_M_WEB_NOTICE_MEM'",
+						"String");
 			}
 			String hdHtml = "";
 			String hdheadLabel = "";
@@ -591,16 +593,17 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 			String content = topHtml + personHtml + xmjdHtml + hdHtml + kjcdHtml;
 			content = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_CONTENT_HTML",
 					content);
-			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{siteId},"String");
-			
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",
+					new Object[] { siteId }, "String");
+
 			if (JGID.equals("SEM")) {
-				JGID="";
+				JGID = "";
 			} else {
 				JGID.toLowerCase();
 			}
-			System.out.println(this.getClass().getName()+":"+JGID);
+			System.out.println(this.getClass().getName() + ":" + JGID);
 			indexHtml = tzGDObject.getHTMLTextForDollar("HTML.TZMobileWebsiteIndexBundle.TZ_MOBILE_BASE_HTML", title,
-					ctxPath, jsCss, siteId, "1", content,JGID);
+					ctxPath, jsCss, siteId, "1", content, JGID);
 		} catch (TzSystemException e) {
 			// TODO Auto-generated catch block
 			indexHtml = "";
