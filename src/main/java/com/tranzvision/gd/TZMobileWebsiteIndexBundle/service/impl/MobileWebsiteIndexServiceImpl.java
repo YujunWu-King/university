@@ -559,33 +559,74 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 			// 快捷菜单;
 			// 申请指导;
 			// 对应的栏目id;
-			String sqzdColumnId = sqlQuery.queryForObject(
-					"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
-					new Object[] { "TZ_M_SQZD_COLUMN_ID" }, "String");
-			// 对应的文章id;
-			String sqzdArtid = sqlQuery.queryForObject(
-					"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
-					new Object[] { "TZ_M_SQZD_ART_ID" }, "String");
-			String sqzd = sqlQuery.queryForObject(
-					"SELECT case A.TZ_ART_TYPE1 when 'B' then A.TZ_OUT_ART_URL  else  B.TZ_ART_URL END TZ_ART_URL FROM PS_TZ_ART_REC_TBL A INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=? AND A.TZ_ART_ID=?)",
-					new Object[] { siteId, sqzdColumnId, sqzdArtid }, "String");
-			// 报考自测;
-			// String bkzc = ctxPath + "/exam/"+orgId.toLowerCase()+"/"+siteId;
-			// String bkzc = ctxPath +
-			// "/dispatcher?tzParams={\"ComID\":\"TZ_CAN_TSINGHUA_COM\",\"PageID\":\"TZ_CAN_TSING_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"isMobile\":\"Y\"}}";
-			String bkzc = ctxPath + "/dispatcher?classid=canInTsing&isMobile=Y";
-			// 在线预约;
-			String zxyy = ctxPath + "/dispatcher?classid=InterviewMobile&siteId=" + siteId;
-			// 资料专区;
-			// 对应的栏目id;
-			String zlzqColumnId = sqlQuery.queryForObject(
-					"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
-					new Object[] { "TZ_ZLZQ_COLUMN_ID" }, "String");
-			String zlzq = ctxPath + "/dispatcher?classid=mEventNotice&siteId=" + siteId + "&columnId=" + zlzqColumnId;
-			// 常见问题;
-			String cjwt = sqlQuery.queryForObject(
-					"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
-					new Object[] { "TZ_M_CJWT_URL" }, "String");
+			String sqzd = "";
+			String zxyy = "";
+			String zlzq = "";
+			String cjwt = "";
+
+			if (orgId.toUpperCase().equals("SEM")) {
+				String sqzdColumnId = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_SQZD_COLUMN_ID" }, "String");
+				// 对应的文章id;
+				String sqzdArtid = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_SQZD_ART_ID" }, "String");
+				sqzd = sqlQuery.queryForObject(
+						"SELECT case A.TZ_ART_TYPE1 when 'B' then A.TZ_OUT_ART_URL  else  B.TZ_ART_URL END TZ_ART_URL FROM PS_TZ_ART_REC_TBL A INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=? AND A.TZ_ART_ID=?)",
+						new Object[] { siteId, sqzdColumnId, sqzdArtid }, "String");
+				// 报考自测;
+				// String bkzc = ctxPath +
+				// "/exam/"+orgId.toLowerCase()+"/"+siteId;
+				// String bkzc = ctxPath +
+				// "/dispatcher?tzParams={\"ComID\":\"TZ_CAN_TSINGHUA_COM\",\"PageID\":\"TZ_CAN_TSING_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"isMobile\":\"Y\"}}";
+				String bkzc = ctxPath + "/dispatcher?classid=canInTsing&isMobile=Y";
+				// 在线预约;
+				zxyy = ctxPath + "/dispatcher?classid=InterviewMobile&siteId=" + siteId;
+				// 资料专区;
+				// 对应的栏目id;
+				String zlzqColumnId = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_ZLZQ_COLUMN_ID" }, "String");
+				zlzq = ctxPath + "/dispatcher?classid=mEventNotice&siteId=" + siteId + "&columnId="
+						+ zlzqColumnId;
+				// 常见问题;
+
+				cjwt = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_CJWT_URL" }, "String");
+
+			} else if (orgId.toUpperCase().equals("MEM")) {
+				String sqzdColumnId = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_SQZD_COLUMN_ID_MEM" }, "String");
+				// 对应的文章id;
+				String sqzdArtid = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_SQZD_ART_ID_MEM" }, "String");
+				sqzd = sqlQuery.queryForObject(
+						"SELECT case A.TZ_ART_TYPE1 when 'B' then A.TZ_OUT_ART_URL  else  B.TZ_ART_URL END TZ_ART_URL FROM PS_TZ_ART_REC_TBL A INNER JOIN PS_TZ_LM_NR_GL_T B ON(A.TZ_ART_ID=B.TZ_ART_ID AND B.TZ_SITE_ID=? AND B.TZ_ART_PUB_STATE='Y' AND B.TZ_COLU_ID=? AND A.TZ_ART_ID=?)",
+						new Object[] { siteId, sqzdColumnId, sqzdArtid }, "String");
+				// 报考自测;
+				// String bkzc = ctxPath +
+				// "/exam/"+orgId.toLowerCase()+"/"+siteId;
+				// String bkzc = ctxPath +
+				// "/dispatcher?tzParams={\"ComID\":\"TZ_CAN_TSINGHUA_COM\",\"PageID\":\"TZ_CAN_TSING_STD\",\"OperateType\":\"HTML\",\"comParams\":{\"isMobile\":\"Y\"}}";
+				String bkzc = ctxPath + "/dispatcher?classid=canInTsing&isMobile=Y";
+				// 在线预约;
+				zxyy = ctxPath + "/dispatcher?classid=InterviewMobile&siteId=" + siteId;
+				// 资料专区;
+				// 对应的栏目id;
+				String zlzqColumnId = sqlQuery.queryForObject(
+						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_ZLZQ_COLUMN_ID_MEM" }, "String");
+				zlzq = ctxPath + "/dispatcher?classid=mEventNotice&siteId=" + siteId + "&columnId="
+						+ zlzqColumnId;
+				// 常见问题;
+
+				cjwt = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
+						new Object[] { "TZ_M_CJWT_URL_MEM" }, "String");
+			}
+
 			String kjcdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_KJCD_HTML", ctxPath,
 					sqzd, siteId.trim(), viewJdUrl, zxyy, zlzq, cjwt);
 
