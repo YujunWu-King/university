@@ -336,7 +336,7 @@ public class SendSmsOrMalServiceImpl {
 									smsContent,"");
 							//添加短信签名
 							content = content.replaceAll("【清华经管】", "");
-							content = content + "【华东理工】";
+							content = content + "【华理商学院】";
 							bl = true;
 						}
 					} else {
@@ -344,7 +344,7 @@ public class SendSmsOrMalServiceImpl {
 								smsContent,"");
 						//添加短信签名
 						content = content.replaceAll("【清华经管】", "");
-						content = content + "【华东理工】";
+						content = content + "【华理商学院】";
 					}
 					Map<String, String> mapRst = new HashMap<String, String>();
 					String errCode = "", errMsg = "";
