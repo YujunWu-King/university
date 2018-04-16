@@ -109,8 +109,13 @@ SurveyBuild.extend("City", "baseComponent", {
 		              document.activeElement.blur();
 		           });
 		          
+
 					$("#ParamCon").val(el.attr("id"));
-					var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_PROVINCE_STD2","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'+data.itemId+'","siteId":"'+siteId+'"}}';
+					
+					console.log($("#ParamCon").val());
+					//var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_PROVINCE_STD2","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'+data.itemId+'","siteId":"'+siteId+'"}}';
+					var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY"}}';
+					
 					$.ajax({
 						type: "post",
 						async :false,
@@ -122,15 +127,14 @@ SurveyBuild.extend("City", "baseComponent", {
 						success: function(result){
 							$("#searchCountry").html("");
 							$("#searchCountry").html(result);
-							$("#searchCountry").focus(function(){
-		                     document.activeElement.blur();
-								});
+							//$("#searchCountry").focus(function(){
+		                    // document.activeElement.blur();
+							//	});
 						
-						
-						$("#body").css("position","fixed");
+						//$("#body").css("position","fixed");
 						$("#MainDiv").hide();
-						$("#searchCountry").fadeIn("slow");
-
+						$("#searchCountry").fadeIn("slow"); 
+						 loaded ();
 						}
 					});
 				});
@@ -165,34 +169,34 @@ SurveyBuild.extend("City", "baseComponent", {
 			
 			
 		}else{
-		var $inputBox = $("#" + data.itemId);
-		var $selectBtn = $("#" + data.itemId + "_Btn");
-		var siteId=$("#siteId").val();
-		/*文本框和图标选择*/
-		$.each([$inputBox,$selectBtn],function(i,el){
-			el.click(function(e) {
-				var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-				var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TPLID":"' + templId + '","TZ_CITY_ID":"' + data.itemId+ '","siteId":"' + siteId + '"}}';
-				provinceUrl = provinceUrl + window.escape(params);
+			var $inputBox = $("#" + data.itemId);
+			var $selectBtn = $("#" + data.itemId + "_Btn");
+			var siteId=$("#siteId").val();
+			/*文本框和图标选择*/
+			$.each([$inputBox,$selectBtn],function(i,el){
+				el.click(function(e) {
+					var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
+					var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CITY_STD","OperateType":"HTML","comParams":{"OType":"CITY","TPLID":"' + templId + '","TZ_CITY_ID":"' + data.itemId+ '","siteId":"' + siteId + '"}}';
+					provinceUrl = provinceUrl + window.escape(params);
+					
+					i2 = $.layer({
+						type: 2,
+						title: false,
+						fix: false,
+						closeBtn: false,
+						shadeClose: false,
+						shade : [0.3 , '#000' , true],
+						border : [3 , 0.3 , '#000', true],
+						offset: ['100px',''],
+						area: ['588px','400px'],
+						iframe: {src: provinceUrl}
+					});
 	
-				i2 = $.layer({
-					type: 2,
-					title: false,
-					fix: false,
-					closeBtn: false,
-					shadeClose: false,
-					shade : [0.3 , '#000' , true],
-					border : [3 , 0.3 , '#000', true],
-					offset: ['100px',''],
-					area: ['588px','400px'],
-					iframe: {src: provinceUrl}
-				});
-	
-			}); 
-		 });
+				}); 
+			});
 
-		$inputBox.formValidator({tipID:data["itemId"]+'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
-		$inputBox.functionValidator({
+			$inputBox.formValidator({tipID:data["itemId"]+'Tip',onShow:"",onFocus:"&nbsp;",onCorrect:"&nbsp;"});
+			$inputBox.functionValidator({
 				fun: function(val,elem) {
 					//执行高级设置中的自定义规则
 					/*********************************************\
