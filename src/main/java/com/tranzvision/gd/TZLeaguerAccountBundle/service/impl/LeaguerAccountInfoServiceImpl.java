@@ -500,8 +500,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    if(strUserEmail!=null){
 				    	//查重邮箱
 				    	if(!"".equals(strUserEmail)){
-				    		String strEmailCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_EMAIL=?";
-				    		String strCheckFlg = jdbcTemplate.queryForObject(strEmailCheckSQL, new Object[]{strOprId,strUserEmail}, "String");
+				    		String strEmailCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_EMAIL=? and TZ_JG_ID=?";
+				    		String strCheckFlg = jdbcTemplate.queryForObject(strEmailCheckSQL, new Object[]{strOprId,strUserEmail,strUserOrg}, "String");
 				    		if("Y".equals(strCheckFlg)){
 				    			returnJsonMap.replace("OPRID", strOprId);
 				    			strRet = jacksonUtil.Map2json(returnJsonMap);
@@ -520,8 +520,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    if(strUserPhone!=null){
 				    	//查重手机
 				    	if(!"".equals(strUserPhone)){
-				    		String strPhoneCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_MOBILE=?";
-				    		String strCheckFlg = jdbcTemplate.queryForObject(strPhoneCheckSQL, new Object[]{strOprId,strUserPhone}, "String");
+				    		String strPhoneCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_MOBILE=? and TZ_JG_ID=?";
+				    		String strCheckFlg = jdbcTemplate.queryForObject(strPhoneCheckSQL, new Object[]{strOprId,strUserPhone,strUserOrg}, "String");
 				    		if("Y".equals(strCheckFlg)){
 				    			returnJsonMap.replace("OPRID", strOprId);
 				    			strRet = jacksonUtil.Map2json(returnJsonMap);
