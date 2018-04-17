@@ -485,6 +485,15 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 				isAnonymous = true;
 			}
 		}
+		
+		String classId = request.getParameter("classid");
+		String siteId = request.getParameter("siteId");
+		String orgId = "";
+		if(!"".equals(siteId) && siteId != null){
+			String siteSQL = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
+			orgId = sqlQuery.queryForObject(siteSQL, new Object[]{ siteId }, "String");
+		}
+		
 		//用于控制是否将用户重定向到登录页的变量
 		Boolean logoutFlag = true;
 		
@@ -497,13 +506,6 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 				tmpOpenID = tzCookie.getStringCookieVal(request, "TZGD_WECHART_OPENID");
 				tmpOpenID = tmpOpenID == null ? "" : DESUtil.decrypt(tmpOpenID,tmpOpenIDKey);
 				
-				String classId = request.getParameter("classid");
-				String siteId = request.getParameter("siteId");
-				String orgId = "";
-				if(!"".equals(siteId) && siteId != null){
-					String siteSQL = "select TZ_JG_ID from PS_TZ_SITEI_DEFN_T where TZ_SITEI_ID=?";
-					orgId = sqlQuery.queryForObject(siteSQL, new Object[]{ siteId }, "String");
-				}
 				
 				if((tmpOpenID == null || "".equals(tmpOpenID)) 
 						&& "mIndex".equals(classId) && siteId != null && !"".equals(siteId)){
@@ -592,12 +594,15 @@ public class TzWebsiteLoginServiceImpl implements TzWebsiteLoginService {
 			
 			//得到登录地址;
 			String loginOutUrl = tzCookie.getStringCookieVal(request,"TZGD_LOGIN_URL");
+//			if(loginOutUrl == null || "".equals(loginOutUrl))
+//			{
+//				String tmpSQLText = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+//				String loginUrl = sqlQuery.queryForObject(tmpSQLText, new Object[]{"TZ_MBA_BKXT_MURL_LOGIN"},"String");												
+//				loginOutUrl = ctxPath + loginUrl;
+//			}
 			
-			if(loginOutUrl == null || "".equals(loginOutUrl))
-			{
-				String tmpSQLText = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-				String loginUrl = sqlQuery.queryForObject(tmpSQLText, new Object[]{"TZ_MBA_BKXT_MURL_LOGIN"},"String");												
-				loginOutUrl = ctxPath + loginUrl;
+			if (loginOutUrl == null || "".equals(loginOutUrl)) {
+				loginOutUrl = ctxPath + "/user/login/" + orgId.toLowerCase() + "/" + siteId;
 			}
 			
 			if(!"".equals(tmpOpenID)){
