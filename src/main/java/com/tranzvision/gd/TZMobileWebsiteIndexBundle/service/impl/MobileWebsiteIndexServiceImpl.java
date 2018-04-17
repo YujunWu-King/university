@@ -626,9 +626,16 @@ public class MobileWebsiteIndexServiceImpl extends FrameworkImpl {
 				cjwt = sqlQuery.queryForObject("select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?",
 						new Object[] { "TZ_M_CJWT_URL_MEM" }, "String");
 			}
+			
+			String chwtTitle="";
+			if (orgId.toUpperCase().equals("MEM")) {
+				chwtTitle="项目介绍";
+			}  else {
+				chwtTitle="常见问题";
+			}
 
 			String kjcdHtml = tzGDObject.getHTMLText("HTML.TZMobileWebsiteIndexBundle.TZ_M_INDEX_KJCD_HTML", ctxPath,
-					sqzd, siteId.trim(), viewJdUrl, zxyy, zlzq, cjwt);
+					sqzd, siteId.trim(), viewJdUrl, zxyy, zlzq, cjwt,chwtTitle);
 
 			// 展示内容
 			String content = topHtml + personHtml + xmjdHtml + hdHtml + kjcdHtml;
