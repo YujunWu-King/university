@@ -11,9 +11,9 @@ function hdtzMore(siteId){
 function hdtzMore2(siteId){
 	var columnId = 0;
 	$.each($(".zhaos .list li"),function(i,obj){
-		if ($(obj).html()=="报考通知") {
+		//if ($(obj).html()=="报考通知") {
 			 columnId = $(obj).attr("date-column");
-		}
+		//}
 	})
 	console.log(columnId);
 	location.href = TzUniversityContextPath + "/dispatcher?classid=mZsrl&siteId=" + siteId + "&columnId=" + columnId ;
