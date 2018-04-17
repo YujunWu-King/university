@@ -6,6 +6,19 @@ function hdtzMore(siteId){
 	location.href = TzUniversityContextPath + "/dispatcher?classid=mZsrl&siteId=" + siteId + "&columnId=" + columnId ;
 }
 
+
+//报考通知
+function hdtzMore2(siteId){
+	var columnId = 0;
+	$.each($(".zhaos .list li"),function(i,obj){
+		if ($(obj).html()=="报考通知") {
+			 columnId = $(obj).attr("date-column");
+		}
+	})
+	console.log(columnId);
+	location.href = TzUniversityContextPath + "/dispatcher?classid=mZsrl&siteId=" + siteId + "&columnId=" + columnId ;
+}
+
 //查看电子版条件录取通知书;
 function openRqQrcode(appIns){	
 	var rqQrcodeUrl = encodeURI(TzUniversityContextPath + '/dispatcher?tzParams={"ComID":"TZ_APPLY_CENTER_COM","PageID":"TZ_PRINT_RQTZ_STD","OperateType":"HTML","comParams":{"appIns":"'+appIns+'"}}');
