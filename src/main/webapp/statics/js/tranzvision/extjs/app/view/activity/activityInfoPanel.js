@@ -106,6 +106,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 						afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],
+            increment: 10,
             allowBlank: false,
             value: "08:30"
         },{
@@ -125,6 +126,7 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 						afterLabelTextTpl: [
                 '<span style="color:red;font-weight:bold" data-qtip="Required">*</span>'
             ],
+            increment: 10,
             allowBlank: false,
             value: "17:30"
         },{
@@ -679,7 +681,8 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 			           	xtype: 'timefield',
 			            fieldLabel: '报名开始时间',
 			            format: 'H:i',
-									name: 'applyStartTime',
+						name: 'applyStartTime',
+						increment: 10,
             			value: "08:30"
 		        },{
 		           	xtype: 'datefield',
@@ -690,7 +693,8 @@ Ext.define('KitchenSink.view.activity.activityInfoPanel', {
 		           	xtype: 'timefield',
 		            fieldLabel: '报名结束时间',
 		            format: 'H:i',
-								name: 'applyEndTime',
+					name: 'applyEndTime',
+					increment: 10,
             		value: "17:30"
 		        },{
 										xtype: 'numberfield',
