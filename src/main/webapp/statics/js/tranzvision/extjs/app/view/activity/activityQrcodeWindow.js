@@ -19,29 +19,7 @@
     initComponent: function(){
     	Ext.util.CSS.createStyleSheet("#qrCode2{margin-right: 0px !important;}");
     	
-    	var artId = this.artId;
-    	var siteId = this.siteId;
-    	var coluId = this.coluId;
-    	
-    	var tzParamsObj = {
-    		ComID: "TZ_HD_MANAGER_COM",
-    		PageID: "TZ_HD_INFO_STD",
-    		OperateType: "QG",
-    		comParams:{
-    			gridTyp: "QRCODE",
-    			activityId: artId,
-    			siteId: siteId,
-    			coluId: coluId
-    		}
-    	};
-    	var tzParams = Ext.JSON.encode(tzParamsObj);
-    	var store;
-		Ext.tzLoadAsync(tzParams,function(qrcodeData) {
-			store = Ext.create('Ext.data.Store', {
-                fields: ["index","qrcodeTitle","qrcodeImg","qrcodeContent"],    
-                data: qrcodeData.root
-            });
-		});
+    	var qrcodeStore = this.qrcodeStore;
     	
     	Ext.apply(this,{
 			items: [{
@@ -56,7 +34,7 @@
 					name: 'qrCodeView',
 					xtype:'dataview',
 					cls: 'tz_qrcode_view',
-					store: store,
+					store: qrcodeStore,
 					tpl:[
 						'<tpl for=".">',
 						'<div class="thumb-wrap tz-qrcode" style="padding:0px;width:280px;border:none;margin-left:0px;margin-right:30px;word-break: break-all;" id="qrCode{index}">',

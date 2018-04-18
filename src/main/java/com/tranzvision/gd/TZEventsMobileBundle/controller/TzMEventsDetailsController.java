@@ -349,9 +349,9 @@ public class TzMEventsDetailsController {
 
 			// 验证码
 			str_items_html = str_items_html + tzGDObject.getHTMLText("HTML.TZEventsMobileBundle.TZ_M_APPLY_REG_CODE_HTML");
-			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from TZ_AQ_YHXX_TBL WHERE OPRID=?",new Object[]{oprid},"String");
+			String JGID = sqlQuery.queryForObject("select TZ_JG_ID from PS_TZ_AQ_YHXX_TBL WHERE OPRID=?",new Object[]{oprid},"String");
 			
-			if (JGID.equals("SEM")) {
+			if (JGID == null || JGID.equals("SEM")) {
 				JGID="";
 			} else {
 				JGID.toLowerCase();

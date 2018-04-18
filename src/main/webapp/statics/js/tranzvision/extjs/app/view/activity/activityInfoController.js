@@ -919,19 +919,40 @@
     viewEventQrcode:  function(view, rowIndex){
 		var store = view.findParentByType("grid").store;
 		var recData = store.getAt(rowIndex).data;
-
-		var className = 'KitchenSink.view.activity.activityQrcodeWindow';
-        if(!Ext.ClassManager.isCreated(className)){
-            Ext.syncRequire(className);
-        }
-        var ViewClass = Ext.ClassManager.get(className);
-        var win = new ViewClass({
-        	artId: recData.artId,
-        	siteId: recData.siteId,
-        	coluId: recData.coluId
-        });
-        
-        //this.getView().add(win);
-        win.show();
+		
+		var artId = recData.artId;
+    	var siteId = recData.siteId;
+    	var coluId = recData.coluId;
+    	
+    	var tzParamsObj = {
+    		ComID: "TZ_HD_MANAGER_COM",
+    		PageID: "TZ_HD_INFO_STD",
+    		OperateType: "QG",
+    		comParams:{
+    			gridTyp: "QRCODE",
+    			activityId: artId,
+    			siteId: siteId,
+    			coluId: coluId
+    		}
+    	};
+    	var tzParams = Ext.JSON.encode(tzParamsObj);
+		Ext.tzLoad(tzParams,function(qrcodeData) {
+			var qrcodeStore = Ext.create('Ext.data.Store', {
+                fields: ["index","qrcodeTitle","qrcodeImg","qrcodeContent"],    
+                data: qrcodeData.root
+            });
+			
+			var className = 'KitchenSink.view.activity.activityQrcodeWindow';
+	        if(!Ext.ClassManager.isCreated(className)){
+	            Ext.syncRequire(className);
+	        }
+	        var ViewClass = Ext.ClassManager.get(className);
+	        var win = new ViewClass({
+	        	qrcodeStore: qrcodeStore
+	        });
+	        
+	        //this.getView().add(win);
+	        win.show();
+		});
     }
 });
