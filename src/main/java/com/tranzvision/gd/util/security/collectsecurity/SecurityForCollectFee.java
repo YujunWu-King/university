@@ -42,7 +42,7 @@ public class SecurityForCollectFee {
 			byte[] encryptStr = Base64
 					.encode(EncryptionForCollect.encrypt(tempcheck, key, EncryptionForString.ENCODING_RAW));
 			String checker = new String(encryptStr);
-			//System.out.println("checker=" + checker);
+			System.out.println("checker=" + checker);
 			//System.out.println("Authenticator=" + Authenticator);
 			if (!checker.equals(Authenticator)) {
 				rc = -1;
@@ -77,20 +77,22 @@ public class SecurityForCollectFee {
 	}
 
 	public static void main(String[] args) {
-		try {
-			java.security.Key key = Security.getKey("A0DFDF28AEAB2F131327FEDE5C2D8A6D399E4F568A2D4EFD");
-			String dev = "2014/8/26 15:33:3811000003110000030000000411009502566114.221.61.1790";
-			byte[] tempcheck = DigestForCollectFee.message(dev, null);
-			// System.out.println("tempcheck=" + new String(tempcheck));
-			byte[] encryptStr = EncryptionForCollect.encrypt(tempcheck, key, EncryptionForString.ENCODING_RAW);
-			byte[] aa = Base64.encode(encryptStr);
-			// String rtn = new String(encryptStr);
-			System.out.println("rtn=" + new String(tempcheck));
-			System.out.println("rtn=" + new String(encryptStr));
-			System.out.println("rtn=" + new String(aa));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		System.out.println(System.currentTimeMillis());
+		System.out.println(String.valueOf(null));
+//		try {
+//			java.security.Key key = Security.getKey("A0DFDF28AEAB2F131327FEDE5C2D8A6D399E4F568A2D4EFD");
+//			String dev = "2014/8/26 15:33:3811000003110000030000000411009502566114.221.61.1790";
+//			byte[] tempcheck = DigestForCollectFee.message(dev, null);
+//			// System.out.println("tempcheck=" + new String(tempcheck));
+//			byte[] encryptStr = EncryptionForCollect.encrypt(tempcheck, key, EncryptionForString.ENCODING_RAW);
+//			byte[] aa = Base64.encode(encryptStr);
+//			// String rtn = new String(encryptStr);
+//			System.out.println("rtn=" + new String(tempcheck));
+//			System.out.println("rtn=" + new String(encryptStr));
+//			System.out.println("rtn=" + new String(aa));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }

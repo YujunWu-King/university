@@ -144,6 +144,11 @@ public class GetSysHardCodeVal {
 	private String boxKey;
 
 	/**
+	 * 电话盒子语音文件存放根目录
+	 */
+	private String orgVoiceFileUploadPath;
+
+	/**
 	 * 构造函数，系统固定参数配置
 	 */
 	public GetSysHardCodeVal() {
@@ -204,11 +209,17 @@ public class GetSysHardCodeVal {
 
 			boxKey = sysHardCodeValProps.getProperty("BoxKey");
 
+			orgVoiceFileUploadPath = sysHardCodeValProps.getProperty("OrgVoiceFileUploadPath");
+
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getOrgVoiceFileUploadPath() {
+		return orgVoiceFileUploadPath;
 	}
 
 	private ArrayList<String> stringToArrayList(String str) {
