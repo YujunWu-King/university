@@ -18,7 +18,6 @@
     actType : '',
     title : '考生信息',
     bodyStyle : 'overflow-y:auto;overflow-x:hidden',
-
     items : [
         {
             xtype : 'form',
@@ -271,7 +270,9 @@
                                                             columnWidth: 1,
                                                             fieldLabel:fieldname1,
                                                             value:value,
-                                                            name: table+"_tf_"+field
+                                                            name: table+"_tf_"+field,
+                                                            readOnly:true,
+                                                            cls:'lanage_1'
                                                         };
                                                     }
                                                     conItems.push(typeField);

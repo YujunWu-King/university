@@ -1591,6 +1591,10 @@
             var form = this.lookupReference('userMgForm').getForm();
             //var ksdrInfoForm = this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
             var newCard = this.lookupReference('userMgForm').down('form[name=kslcInfoForm]');
+            //console.log(userMgInfoPanel);
+            //var btn=userMgInfoPanel.down('by[name=save]');
+           
+            console.log(this.lookupReference('userMgForm').down('form[name=kslcInfoForm]'));
             var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_MSHLCH_STD","OperateType":"QF","comParams":{"OPRID":"' + oprID + '","appInsID":"' + appInsID + '"}}';
             // 加载数据
             Ext.tzLoad(
@@ -1671,7 +1675,9 @@
                                            columnWidth: 1,
                                            fieldLabel:fieldname1,
                                            value:value,
-                                           name: table+"_tf_"+field
+                                           name: table+"_tf_"+field,
+                                           readOnly:true,
+                                           cls:'lanage_1'
                                        };
                                    }
                                    conItems.push(typeField);
