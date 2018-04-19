@@ -45,6 +45,7 @@
 		<poi.version>3.13</poi.version>
 		<poiooxml.version>3.13</poiooxml.version>
 		<httpclient.version>4.5.2</httpclient.version>
+		<bcprov.version>4.5.2</bcprov.version>
 	</properties>
 
 	<dependencies>
@@ -59,6 +60,12 @@
 			<artifactId>javax.servlet-api</artifactId>
 			<version>${servlet.version}</version>
 		</dependency>
+		
+		<!--  <dependency>
+    		<groupId>org.bouncycastle</groupId>
+    		<artifactId>bcprov-jdk16</artifactId>
+    		<version>${bcprov.version}</version>
+		</dependency>-->
 
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
