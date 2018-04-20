@@ -1,0 +1,30 @@
+Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueModel',{
+    extend:'Ext.data.Model',
+    fields:[
+        {name:'clueId'},
+        {name:'clueAbstract'},
+        {name:'cusName'},
+        {name:'comName'},
+        {name:'cusMobile'},
+        {name:'cusPos'},
+        {name:'cusEmail'},
+        {name:'cusPlace'},
+        {name:'createDate',type:'date',dateFormat:'Y-m-d H:i'},
+        {name:'createWayDesc'},
+        {name:'recommendPer'},
+        {name:'chargeOprid'},
+        {name:'zrPer'},
+        {name:'cusBz'},
+        {name:'consultingDemand'},
+        {name:'colorType'},
+		{name:'colorTypeDesc'},
+        {name:'clueImportance'},
+		{name:'clueImportanceDesc'},
+        {name:'clueState'},
+        {name:'clueStateDesc'},
+        {name:'bmState'},
+        {name:'bmStateDesc'},
+        {name:'orgId'},
+        {name:'gbyy'}
+    ]
+});

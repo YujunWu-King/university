@@ -78,6 +78,11 @@ Ext.define('KitchenSink.view.common.promptSearchWindow', {
             var operator = srhconditions[fieldName].operator;
             //字段类型
             var type = srhconditions[fieldName].type;
+            //是否可编辑
+            var editable = srhconditions[fieldName].editable;
+            if(editable==undefined) {
+                editable = true;
+            }
             //操作符描述
             var oprDesc = "";
             switch (operator)
@@ -136,6 +141,7 @@ Ext.define('KitchenSink.view.common.promptSearchWindow', {
                         hideEmptyLabel: true,
                         name: fieldName+'-value',
                         value:srhconditions[fieldName].value,
+                        editable:editable,
                         listeners: {
                             specialkey: function (textfield, e) {
                                 if (e.getKey() == Ext.EventObject.ENTER) {
@@ -152,6 +158,7 @@ Ext.define('KitchenSink.view.common.promptSearchWindow', {
                         hideEmptyLabel: true,
                         name: fieldName+'-value',
                         value:srhconditions[fieldName].value,
+                        editable:editable,
                         listeners: {
                             specialkey: function (textfield, e) {
                                 if (e.getKey() == Ext.EventObject.ENTER) {
@@ -168,6 +175,7 @@ Ext.define('KitchenSink.view.common.promptSearchWindow', {
                         hideEmptyLabel: true,
                         name: fieldName+'-value',
                         value:srhconditions[fieldName].value,
+                        editable:editable,
                         listeners: {
                             specialkey: function (textfield, e) {
                                 if (e.getKey() == Ext.EventObject.ENTER) {
@@ -185,6 +193,7 @@ Ext.define('KitchenSink.view.common.promptSearchWindow', {
                         hideEmptyLabel: true,
                         name: fieldName+'-value',
                         value:srhconditions[fieldName].value,
+                        editable:editable,
                         listeners: {
                             specialkey: function (textfield, e) {
                                 if (e.getKey() == Ext.EventObject.ENTER) {
@@ -204,6 +213,7 @@ Ext.define('KitchenSink.view.common.promptSearchWindow', {
                         displayField: 'TSDesc',
                         forceSelection: true,
                         value:srhconditions[fieldName].value,
+                        editable:editable,
                         store: new KitchenSink.view.common.store.appTransStore(appTransId),
                         queryMode:'local',
                         hideEmptyLabel: true,

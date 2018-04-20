@@ -1,0 +1,11 @@
+Ext.define('KitchenSink.view.clueManagement.clueManagement.personChooseWindowStore',{
+    extend:'Ext.data.Store',
+    alias:'store.personChooseWindowStore',
+    model:'KitchenSink.view.clueManagement.clueManagement.personChooseWindowModel',
+    autoLoad:true,
+    comID:'TZ_XSXS_INFO_COM',
+    pageID:'TZ_ZRR_XZ_STD',
+    tzStoreParams:'{"cfgSrhId":"TZ_XSXS_INFO_COM.TZ_ZRR_XZ_STD.TZ_XSXS_ZRR_VW","condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+Ext.tzOrgID+'"}}',
+    pageSize:20,
+    proxy:Ext.tzListProxy()
+});

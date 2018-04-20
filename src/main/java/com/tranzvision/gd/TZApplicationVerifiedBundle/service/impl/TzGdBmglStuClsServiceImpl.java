@@ -182,7 +182,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
-					System.out.println("classID"+strClassID);
+					//System.out.println("classID"+strClassID);
 					mapList.put("fillProportion", getBMBFillProportion(appInsID, leng));
 
 					if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
@@ -704,7 +704,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 	public String getBMBFillProportion(String appInsID, int leng) {
 		String sql = "select count(1) from PS_TZ_APP_COMP_TBL where TZ_APP_INS_ID=? and TZ_HAS_COMPLETE=? ";
 		int fill = jdbcTemplate.queryForObject(sql, new Object[] { appInsID, "Y" }, "Integer");
-		System.out.println("fill:" + fill);
+		//System.out.println("fill:" + fill);
 		if (leng == 0) {
 			return "0.00%";
 		} else {

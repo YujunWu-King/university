@@ -21,12 +21,15 @@ import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZEnrollmentClueBundle.service.impl.TzClueAutoAssign;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsShowPrjNewsTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsShowPrjNewsTKey;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.dao.PsTzDzyxYzmTblMapper;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -37,6 +40,7 @@ import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 
 /**
  * 
@@ -78,6 +82,13 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
 	private PsShowPrjNewsTMapper psShowPrjNewsTMapper;
+
+	@Autowired
+	private GetHardCodePoint GetHardCodePoint;
+	@Autowired
+	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
+	@Autowired
+	private TzClueAutoAssign tzClueAutoAssign;
 
 	// 原：WEBLIB_GD_USER.TZ_REG.FieldFormula.Iscript_GetNowField
 	@Override
@@ -341,10 +352,28 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					strTZ_COUNTRY = ((String) dataMap.get("TZ_COUNTRY")).trim();
 				}
 
+				// 常住国家及地区;
+				String strTZ_LEN_COUNTRY = "";
+				if (dataMap.containsKey("TZ_LEN_COUNTRY")) {
+					strTZ_LEN_COUNTRY = ((String) dataMap.get("TZ_LEN_COUNTRY")).trim();
+				}
+
 				// 常住省;
 				String strTZ_LEN_PROID = "";
 				if (dataMap.containsKey("TZ_LEN_PROID")) {
 					strTZ_LEN_PROID = ((String) dataMap.get("TZ_LEN_PROID")).trim();
+				}
+
+				/* 如果没有地区，有国家，则地区取国家描述信息，卢艳添加，2018-2-7 */
+				if (strTZ_LEN_PROID == null || "".equals(strTZ_LEN_PROID)) {
+					if (strTZ_LEN_COUNTRY != null && !"".equals(strTZ_LEN_COUNTRY)) {
+						String strTZ_LEN_COUNTRY_DESCR = jdbcTemplate.queryForObject(
+								"SELECT DESCR FROM PS_TZ_COUNTRY_V WHERE COUNTRY=?", new Object[] { strTZ_LEN_COUNTRY },
+								"String");
+						if (strTZ_LEN_COUNTRY_DESCR != null) {
+							strTZ_LEN_PROID = strTZ_LEN_COUNTRY_DESCR;
+						}
+					}
 				}
 
 				// 常驻城市;
@@ -811,6 +840,71 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 						psroleuser.setDynamicSw("N");
 						psroleuserMapper.insert(psroleuser);
 					}
+				}
+
+				// 20171222,yuds为微信端打开修改
+				boolean isWeChat = CommonUtils.isWeChartBrowser(request);
+
+				// 创建线索及分配
+				PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
+				String strLeadNum = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+				psTzXsxsInfoT.setTzLeadId(strLeadNum);
+				psTzXsxsInfoT.setTzJgId(strOrgId);
+				// 分配状态-未分配
+				String strDefaultStatus = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_STATUS");
+				psTzXsxsInfoT.setTzLeadStatus(strDefaultStatus);
+				// 线索创建方式-在线报名
+				String strDefaultCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_CREWAY");
+				// 线索创建方式-微信端
+				String strWeiChatCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_WX_CREWAY");
+				if (isWeChat) {
+					psTzXsxsInfoT.setTzRsfcreateWay(strWeiChatCreateWay);
+				} else {
+					psTzXsxsInfoT.setTzRsfcreateWay(strDefaultCreateWay);
+				}
+				psTzXsxsInfoT.setTzKhOprid(oprId);
+				psTzXsxsInfoT.setTzRealname(strTZ_REALNAME);
+				psTzXsxsInfoT.setTzSex(strTZ_GENDER);
+				psTzXsxsInfoT.setTzMobile(strTZ_MOBILE);
+				psTzXsxsInfoT.setTzCompCname(strTZ_COMPANY_NAME);
+				// 职务
+				psTzXsxsInfoT.setTzPosition(strTZ_COMMENT16);
+				// 地区
+				String strProIdCode = "";
+				/* 先根据常住地国家查询，如果是中国大陆再查询常住地地区，卢艳添加，2018-2-7 */
+				if (strTZ_LEN_COUNTRY != null && !"".equals(strTZ_LEN_COUNTRY)) {
+					if ("CHN".equals(strTZ_LEN_COUNTRY)) {
+						if (strTZ_LEN_PROID != null && !"".equals(strTZ_LEN_PROID)) {
+							strProIdCode = jdbcTemplate.queryForObject(
+									"SELECT TZ_LABEL_NAME FROM PS_TZ_XSXS_DQBQ_V WHERE TZ_LABEL_DESC=? AND TZ_JG_ID=?",
+									new Object[] { strTZ_LEN_PROID, strOrgId }, "String");
+						}
+					} else if ("HKG".equals(strTZ_LEN_COUNTRY)) {
+						strProIdCode = "HK";
+					} else if ("MAC".equals(strTZ_LEN_COUNTRY)) {
+						strProIdCode = "MAC";
+					} else if ("TWN".equals(strTZ_LEN_COUNTRY)) {
+						strProIdCode = "TW";
+					} else {
+						strProIdCode = "FORE";
+					}
+				}
+				if (strProIdCode != null && !"".equals(strProIdCode)) {
+					psTzXsxsInfoT.setTzXsquId(strProIdCode);
+				}
+
+				psTzXsxsInfoT.setRowAddedOprid(oprId);
+				psTzXsxsInfoT.setRowLastmantOprid(oprId);
+				psTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
+				psTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
+				psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
+
+				// 线索自动分配-根据控制标志判断是否自动分配
+				String strAutoAssignSQL = "SELECT TZ_ZDFP_FLG FROM PS_TZ_ZDFP_FLAG_T WHERE TZ_JG_ID=? limit 0,1";
+				String strAutoAssignFlg = jdbcTemplate.queryForObject(strAutoAssignSQL, new Object[] { strOrgId },
+						"String");
+				if ("Y".equals(strAutoAssignFlg)) {
+					tzClueAutoAssign.autoAssign(strOrgId, oprId, strLeadNum, strTZ_COMMENT1, strProIdCode, errMsg);
 				}
 
 				if ("M".equals(strActivateType)) {
@@ -1902,16 +1996,17 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 				String imgPath = getSysHardCodeVal.getWebsiteSkinsImgPath();
 				imgPath = request.getContextPath() + imgPath + "/" + skinId;
-				String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
-				
+				String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",
+						new Object[] { strSiteId }, "String");
+
 				if (JGID.equals("SEM")) {
-					JGID="";
+					JGID = "";
 				} else {
 					JGID.toLowerCase();
 				}
-				System.out.println(this.getClass().getName()+":"+JGID);
+				System.out.println(this.getClass().getName() + ":" + JGID);
 				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MSUCCESSE_HTML", strContent,
-						request.getContextPath(),JGID);
+						request.getContextPath(), JGID);
 				strResult = objRep.repTitle(strResult, strSiteId);
 				strResult = objRep.repCss(strResult, strSiteId);
 				return strResult;
@@ -1967,7 +2062,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				} else {
 					JGID.toLowerCase();
 				}
-				System.out.println(this.getClass().getName()+":"+JGID);
+				System.out.println(this.getClass().getName() + ":" + JGID);
 				strResult = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_TIME_MSUCCESSE_HTML", strContent,
 						request.getContextPath(), strJumUrl, JGID);
 				strResult = objRep.repTitle(strResult, strSiteId);
@@ -2402,7 +2497,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
-			System.out.println(this.getClass().getName()+":"+JGID);
+			System.out.println(this.getClass().getName() + ":" + JGID);
 			if (strTabType.contains("MOBILE") && strTabType.contains("EMAIL")) {
 				if ("ENG".equals(strLang)) {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MWJMM_EP_ENG_HTML",
@@ -2493,7 +2588,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 			} else {
 				JGID.toLowerCase();
 			}
-			System.out.println(this.getClass().getName()+":"+JGID);
+			System.out.println(this.getClass().getName() + ":" + JGID);
 			if (yzmMap != null) {
 				dtYxq = (Date) yzmMap.get("TZ_YZM_YXQ");
 				Date curDate = new Date();
@@ -2509,7 +2604,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 							str_content = tzGdObject.getHTMLText(
 									"HTML.TZWebSiteMRegisteBundle.TZ_GD_MUPDATE_PWD_MB_HTML2", strBeginUrl,
 									strTokenSign2, strLang, strOrgid, strStrongMsg, strNotice, contextPath, imgPath,
-									loginUrl, strSiteId,JGID);
+									loginUrl, strSiteId, JGID);
 						} else {
 
 							str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_UPDATE_PWD_HTML",
@@ -2848,16 +2943,18 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 
 			if ("ENG".equals(strLang)) {
 				if ("Y".equals(isMobile)) {
-					String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
-					
+					String JGID = jdbcTemplate.queryForObject(
+							"select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?", new Object[] { strSiteId },
+							"String");
+
 					if (JGID.equals("SEM")) {
-						JGID="";
+						JGID = "";
 					} else {
 						JGID.toLowerCase();
 					}
-					System.out.println(this.getClass().getName()+":"+JGID);
+					System.out.println(this.getClass().getName() + ":" + JGID);
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MJHYX_EP_ENG_HTML",
-							contextPath, strOrgid, strLang, strBeginUrl,JGID);
+							contextPath, strOrgid, strLang, strBeginUrl, JGID);
 				} else {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_ENG_HTML",
 							strBeginUrl, strOrgid, strTip, strLang, contextPath, imgPath,
@@ -2865,16 +2962,18 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 				}
 			} else {
 				if ("Y".equals(isMobile)) {
-					String JGID = jdbcTemplate.queryForObject("select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?",new Object[]{strSiteId},"String");
-					
+					String JGID = jdbcTemplate.queryForObject(
+							"select TZ_JG_ID from PS_TZ_SITEI_DEFN_T WHERE TZ_SITEI_ID=?", new Object[] { strSiteId },
+							"String");
+
 					if (JGID.equals("SEM")) {
-						JGID="";
+						JGID = "";
 					} else {
 						JGID.toLowerCase();
 					}
-					System.out.println(this.getClass().getName()+":"+JGID);
+					System.out.println(this.getClass().getName() + ":" + JGID);
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteMRegisteBundle.TZ_GD_MJHYX_EP_HTML",
-							contextPath, strOrgid, strLang, strBeginUrl,JGID);
+							contextPath, strOrgid, strLang, strBeginUrl, JGID);
 				} else {
 					str_content = tzGdObject.getHTMLText("HTML.TZWebSiteRegisteBundle.TZ_GD_JHYX_EP_HTML", strBeginUrl,
 							strOrgid, strTip, strLang, contextPath, imgPath, strOrgid.toLowerCase() + "/" + strSiteId);

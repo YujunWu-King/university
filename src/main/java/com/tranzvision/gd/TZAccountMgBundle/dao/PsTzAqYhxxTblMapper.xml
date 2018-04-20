@@ -26,12 +26,13 @@
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
     <result column="TZ_MSH_ID" property="tzMshId" jdbcType="VARCHAR" />
+    <result column="TZ_STAFF_TYPE" property="tzStaffType" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_DLZH_ID, TZ_JG_ID, OPRID, TZ_REALNAME, TZ_EMAIL, TZ_MOBILE, OPENID, TZ_RYLX, TZ_YXBD_BZ, 
     TZ_SJBD_BZ, TZ_WXBD_BZ, TZ_JIHUO_ZT, TZ_JIHUO_FS, TZ_ZHCE_DT, TZ_BJS_EML, TZ_BJS_SMS, 
     TZ_IS_CMPL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-    SYNCID, SYNCDTTM, TZ_MSH_ID
+    SYNCID, SYNCDTTM, TZ_MSH_ID, TZ_STAFF_TYPE
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey" >
     select 
@@ -53,8 +54,8 @@
       TZ_JIHUO_FS, TZ_ZHCE_DT, TZ_BJS_EML, 
       TZ_BJS_SMS, TZ_IS_CMPL, ROW_ADDED_DTTM, 
       ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM, TZ_MSH_ID
-      )
+      SYNCID, SYNCDTTM, TZ_MSH_ID, 
+      TZ_STAFF_TYPE)
     values (#{tzDlzhId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, 
       #{tzRealname,jdbcType=VARCHAR}, #{tzEmail,jdbcType=VARCHAR}, #{tzMobile,jdbcType=VARCHAR}, 
       #{openid,jdbcType=VARCHAR}, #{tzRylx,jdbcType=VARCHAR}, #{tzYxbdBz,jdbcType=VARCHAR}, 
@@ -62,8 +63,8 @@
       #{tzJihuoFs,jdbcType=VARCHAR}, #{tzZhceDt,jdbcType=TIMESTAMP}, #{tzBjsEml,jdbcType=VARCHAR}, 
       #{tzBjsSms,jdbcType=VARCHAR}, #{tzIsCmpl,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzMshId,jdbcType=VARCHAR}
-      )
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzMshId,jdbcType=VARCHAR}, 
+      #{tzStaffType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl" >
     insert into PS_TZ_AQ_YHXX_TBL
@@ -140,6 +141,9 @@
       <if test="tzMshId != null" >
         TZ_MSH_ID,
       </if>
+      <if test="tzStaffType != null" >
+        TZ_STAFF_TYPE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzDlzhId != null" >
@@ -214,6 +218,9 @@
       <if test="tzMshId != null" >
         #{tzMshId,jdbcType=VARCHAR},
       </if>
+      <if test="tzStaffType != null" >
+        #{tzStaffType,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl" >
@@ -285,6 +292,9 @@
       <if test="tzMshId != null" >
         TZ_MSH_ID = #{tzMshId,jdbcType=VARCHAR},
       </if>
+      <if test="tzStaffType != null" >
+        TZ_STAFF_TYPE = #{tzStaffType,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR}
       and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
@@ -312,7 +322,8 @@
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
       SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
-      TZ_MSH_ID = #{tzMshId,jdbcType=VARCHAR}
+      TZ_MSH_ID = #{tzMshId,jdbcType=VARCHAR},
+      TZ_STAFF_TYPE = #{tzStaffType,jdbcType=VARCHAR}
     where TZ_DLZH_ID = #{tzDlzhId,jdbcType=VARCHAR}
       and TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR}
   </update>

@@ -1793,7 +1793,8 @@
 
 
         var classID, oprID, appInsID, record;
-
+        
+        //console.log(this.getView().name);
         if (this.getView().name == "applicationFormWindow") {
             classID = this.getView().classID;
             oprID = this.getView().oprID;
@@ -1802,10 +1803,14 @@
             this.getView().close();
         } else {
             record = grid.store.getAt(rowIndex);
-            classID = record.data.classID;
+            classID = record.data.appClassId;
             oprID = record.data.oprID;
-            appInsID = record.data.appInsID;
+            appInsID = record.data.appInsId;
         }
+        //console.log(record);
+        //console.log(classID);
+        //console.log(oprID);
+        //console.log(appInsID);
 //        var store = grid.getStore();
 //        var record = store.getAt(rowIndex);
 //    	var classID = record.get("appClassId");

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsBmbTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbT" >
+    <id column="TZ_LEAD_ID" property="tzLeadId" jdbcType="VARCHAR" />
+    <id column="TZ_APP_INS_ID" property="tzAppInsId" jdbcType="BIGINT" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_LEAD_ID, TZ_APP_INS_ID, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_XSXS_BMB_T
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbTKey" >
+    delete from PS_TZ_XSXS_BMB_T
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbT" >
+    insert into PS_TZ_XSXS_BMB_T (TZ_LEAD_ID, TZ_APP_INS_ID, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+      )
+    values (#{tzLeadId,jdbcType=VARCHAR}, #{tzAppInsId,jdbcType=BIGINT}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbT" >
+    insert into PS_TZ_XSXS_BMB_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        TZ_LEAD_ID,
+      </if>
+      <if test="tzAppInsId != null" >
+        TZ_APP_INS_ID,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        #{tzLeadId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAppInsId != null" >
+        #{tzAppInsId,jdbcType=BIGINT},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbT" >
+    update PS_TZ_XSXS_BMB_T
+    <set >
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbT" >
+    update PS_TZ_XSXS_BMB_T
+    set ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </update>
+</mapper>

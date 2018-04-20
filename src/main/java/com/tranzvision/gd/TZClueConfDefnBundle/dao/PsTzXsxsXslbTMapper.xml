@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZClueConfDefnBundle.dao.PsTzXsxsXslbTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZClueConfDefnBundle.model.PsTzXsxsXslbT" >
+    <id column="TZ_COLOUR_SORT_ID" property="tzColourSortId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_COLOUR_NAME" property="tzColourName" jdbcType="VARCHAR" />
+    <result column="TZ_COLOUR_CODE" property="tzColourCode" jdbcType="VARCHAR" />
+    <result column="TZ_COLOR_STATUS" property="tzColorStatus" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_COLOUR_SORT_ID, TZ_JG_ID, TZ_COLOUR_NAME, TZ_COLOUR_CODE, TZ_COLOR_STATUS, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_XSXS_XSLB_T
+    where TZ_COLOUR_SORT_ID = #{tzColourSortId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_XSXS_XSLB_T
+    where TZ_COLOUR_SORT_ID = #{tzColourSortId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZClueConfDefnBundle.model.PsTzXsxsXslbT" >
+    insert into PS_TZ_XSXS_XSLB_T (TZ_COLOUR_SORT_ID, TZ_JG_ID, TZ_COLOUR_NAME, 
+      TZ_COLOUR_CODE, TZ_COLOR_STATUS, ROW_ADDED_DTTM, 
+      ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+      )
+    values (#{tzColourSortId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzColourName,jdbcType=VARCHAR}, 
+      #{tzColourCode,jdbcType=VARCHAR}, #{tzColorStatus,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
+      #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZClueConfDefnBundle.model.PsTzXsxsXslbT" >
+    insert into PS_TZ_XSXS_XSLB_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzColourSortId != null" >
+        TZ_COLOUR_SORT_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzColourName != null" >
+        TZ_COLOUR_NAME,
+      </if>
+      <if test="tzColourCode != null" >
+        TZ_COLOUR_CODE,
+      </if>
+      <if test="tzColorStatus != null" >
+        TZ_COLOR_STATUS,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzColourSortId != null" >
+        #{tzColourSortId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColourName != null" >
+        #{tzColourName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColourCode != null" >
+        #{tzColourCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColorStatus != null" >
+        #{tzColorStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZClueConfDefnBundle.model.PsTzXsxsXslbT" >
+    update PS_TZ_XSXS_XSLB_T
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColourName != null" >
+        TZ_COLOUR_NAME = #{tzColourName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColourCode != null" >
+        TZ_COLOUR_CODE = #{tzColourCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColorStatus != null" >
+        TZ_COLOR_STATUS = #{tzColorStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_COLOUR_SORT_ID = #{tzColourSortId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZClueConfDefnBundle.model.PsTzXsxsXslbT" >
+    update PS_TZ_XSXS_XSLB_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_COLOUR_NAME = #{tzColourName,jdbcType=VARCHAR},
+      TZ_COLOUR_CODE = #{tzColourCode,jdbcType=VARCHAR},
+      TZ_COLOR_STATUS = #{tzColorStatus,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_COLOUR_SORT_ID = #{tzColourSortId,jdbcType=VARCHAR}
+  </update>
+</mapper>
