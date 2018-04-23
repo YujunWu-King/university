@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,24 +50,31 @@ public class TzLoginForBoxController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "login", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	// @RequestMapping(value = "login", method = RequestMethod.POST, produces =
+	// "text/html;charset=UTF-8")
+	// @ResponseBody
+
+	@RequestMapping(value = { "/login/{orgid}" }, method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String doLogin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String doLogin(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "orgid") String orgid) throws Exception {
 		System.out.println("doLogin");
 		Map<String, Object> jsonMap = null;
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
+		System.out.println("orgid:"+orgid);
+		
 		String username = request.getParameter("username");
 		String pwd = request.getParameter("pwd");
 		String timestamp = request.getParameter("timestamp");
 		String authenticator = request.getParameter("authenticator");
-		String jgid = request.getParameter("jgid");
+		//String jgid = request.getParameter("jgid");
 		// username + pwd + timestamp
 		LinkedHashMap<String, String> tm = new LinkedHashMap<String, String>();
 		tm.put("username", username);
 		tm.put("pwd", pwd);
 		tm.put("timestamp", timestamp);
-		tm.put("jgid", jgid);
+		//tm.put("jgid", jgid);
 		tm.put("authenticator", authenticator);
 
 		// 校验传入参数
@@ -217,9 +225,9 @@ public class TzLoginForBoxController {
 			return jacksonUtil.Map2json(jsonMap);
 		}
 
-		 String rootPath = getSysHardCodeVal.getOrgVoiceFileUploadPath();
-		 //String rootPath = "/statics/uploadfiles/voice";
-		 System.out.println(rootPath);
+		String rootPath = getSysHardCodeVal.getOrgVoiceFileUploadPath();
+		// String rootPath = "/statics/uploadfiles/voice";
+		System.out.println(rootPath);
 
 		String retJson = this.doSaveFile(rootPath, "", "", "", file);
 
@@ -241,8 +249,8 @@ public class TzLoginForBoxController {
 		}
 
 		String success = "-0002";
-		
-		boolean flag= false;
+
+		boolean flag = false;
 		Object messages = null;
 		String filename = "";
 		try {
@@ -330,7 +338,7 @@ public class TzLoginForBoxController {
 						mapFile.put("imgWidth", imgWidth);
 						mapFile.put("imgHeight", imgHeight);
 
-						//messages = mapFile;
+						// messages = mapFile;
 
 					} else {
 						if ("ENG".equals(language)) {
@@ -360,8 +368,8 @@ public class TzLoginForBoxController {
 		}
 
 		if (flag) {
-			success="0";
-			messages="Success";
+			success = "0";
+			messages = "Success";
 		}
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("res_code", success);
