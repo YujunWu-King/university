@@ -333,10 +333,19 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 								
 								//动态renderer
 								renderer: 'readervalue'
-								
-								
-
 							},{
+								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.yypw", "英语评委"),
+								xtype:'checkcolumn',
+								dataIndex: 'judgType',
+								width: 100,
+								sortable:false
+							},{
+								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.groupLeader", "组长"),
+								xtype:'checkcolumn',
+								dataIndex: 'groupleader',
+								width: 100,
+								sortable:false
+							}, {								
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgState", "评委状态"),
 								dataIndex: 'judgState',
 								width: 200,

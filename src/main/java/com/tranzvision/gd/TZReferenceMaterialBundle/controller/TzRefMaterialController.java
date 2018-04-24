@@ -33,6 +33,7 @@ import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppEng
 import com.tranzvision.gd.TZWebsiteApplicationBundle.service.impl.tzOnlineAppHisServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.base.TzSystemException;
+import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -260,6 +261,8 @@ public class TzRefMaterialController {
 
 		// 取数据的list
 		List<Map<String, Object>> listData = null;
+		
+		Boolean isWeChart = CommonUtils.isWeChartBrowser(request);
 
 		// 如果报名表传过来了
 		if (numAppInsId > 0) {
@@ -544,7 +547,7 @@ public class TzRefMaterialController {
 
 			/*-----------最新历史报名表Begin------------- */
 			Map<String, String> m = tzOnlineAppEngineImpl.getHistoryOnlineApp(strAppInsId, strCopyFrom, strAppOprId,
-					strAppOrgId, strTplId, strAppOprId, strClassId, strRefLetterId, strInsData);
+					strAppOrgId, strTplId, strAppOprId, strClassId, strRefLetterId, strInsData,isWeChart);
 			;
 			strAppInsId = m.get("strAppInsId");
 			strInsData = m.get("strInsData");

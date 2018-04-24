@@ -339,11 +339,12 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 		try {
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] { { "CAST(TZ_PWEI_GRPID AS UNSIGNED INTEGER)", "ASC" },{"TZ_DLZH_ID", "ASC"} };
+			String[][] orderByArr = new String[][] { { "CAST(TZ_PWEI_GRPID AS UNSIGNED INTEGER)", "ASC" },
+					{ "TZ_DLZH_ID", "ASC" } };
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_PWEI_OPRID", "TZ_PWEI_GRPID",
-					"TZ_REALNAME", "TZ_DLZH_ID", "TZ_PWEI_ZHZT" };
+					"TZ_REALNAME", "TZ_DLZH_ID", "TZ_PWEI_ZHZT", "TZ_PWEI_TYPE", "TZ_GROUP_LEADER" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -361,6 +362,19 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					mapList.put("judgName", rowList[4]);
 					mapList.put("judzhxx", rowList[5]);
 					mapList.put("judgState", rowList[6]);
+
+					// 英语评委类型是A
+					if (rowList[7] != null && rowList[7].equals("A")) {
+						mapList.put("judgType", "Y");
+					} else {
+						mapList.put("judgType", "N");
+					}
+
+					if (rowList[8] != null) {
+						mapList.put("groupleader", rowList[8]);
+					} else {
+						mapList.put("groupleader", "N");
+					}
 
 					listData.add(mapList);
 				}
@@ -583,7 +597,7 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 			errMsg[1] = "您不属于任何机构，不能修改附加字段定义！";
 			return strRet;
 		}
-		//System.out.println(actData);
+		// System.out.println(actData);
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -682,6 +696,18 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 					String judgState = infoData.get("judgState") == null ? ""
 							: String.valueOf(infoData.get("judgState"));
 
+					String judgType = infoData.get("judgType") == null ? "" : String.valueOf(infoData.get("judgType"));
+
+					// 评委类型A是英语评委，B是其他评委
+					if (judgType.equals("Y")) {
+						judgType = "A";
+					} else {
+						judgType = "B";
+					}
+
+					String groupleader = infoData.get("groupleader") == null ? ""
+							: String.valueOf(infoData.get("groupleader"));
+
 					System.out.println("classId：" + classId + "judgState:" + judgState);
 					String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
 					int count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
@@ -694,6 +720,8 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 						psTzMsPsPwTbl.setTzPweiZhzt(judgState);
 						psTzMsPsPwTbl.setRowLastmantDttm(nowdate);
 						psTzMsPsPwTbl.setRowLastmantOprid(oprId);
+						psTzMsPsPwTbl.setTzPweiType(judgType);
+						psTzMsPsPwTbl.setTzGroupLeader(groupleader);
 						psTzMsPsPwTblMapper.updateByPrimaryKeySelective(psTzMsPsPwTbl);
 
 						sqlQuery.update(

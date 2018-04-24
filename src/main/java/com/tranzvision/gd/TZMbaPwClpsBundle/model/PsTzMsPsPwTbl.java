@@ -3,83 +3,103 @@ package com.tranzvision.gd.TZMbaPwClpsBundle.model;
 import java.util.Date;
 
 public class PsTzMsPsPwTbl extends PsTzMsPsPwTblKey {
-    private String tzPweiZhzt;
+	private String tzPweiZhzt;
 
-    private String tzPweiGrpid;
+	private String tzPweiGrpid;
 
-    private Date rowAddedDttm;
+	private Date rowAddedDttm;
 
-    private String rowAddedOprid;
+	private String rowAddedOprid;
 
-    private Date rowLastmantDttm;
+	private Date rowLastmantDttm;
 
-    private String rowLastmantOprid;
+	private String rowLastmantOprid;
 
-    private Integer syncid;
+	private Integer syncid;
 
-    private Date syncdttm;
+	private Date syncdttm;
 
-    public String getTzPweiZhzt() {
-        return tzPweiZhzt;
-    }
+	private String tzPweiType;
 
-    public void setTzPweiZhzt(String tzPweiZhzt) {
-        this.tzPweiZhzt = tzPweiZhzt == null ? null : tzPweiZhzt.trim();
-    }
+	private String tzGroupLeader;
 
-    public String getTzPweiGrpid() {
-        return tzPweiGrpid;
-    }
+	public String getTzPweiType() {
+		return tzPweiType;
+	}
 
-    public void setTzPweiGrpid(String tzPweiGrpid) {
-        this.tzPweiGrpid = tzPweiGrpid == null ? null : tzPweiGrpid.trim();
-    }
+	public void setTzPweiType(String tzPweiType) {
+		this.tzPweiType = tzPweiType == null ? null : tzPweiType.trim();
+	}
 
-    public Date getRowAddedDttm() {
-        return rowAddedDttm;
-    }
+	public String getTzGroupLeader() {
+		return tzGroupLeader;
+	}
 
-    public void setRowAddedDttm(Date rowAddedDttm) {
-        this.rowAddedDttm = rowAddedDttm;
-    }
+	public void setTzGroupLeader(String tzGroupLeader) {
+		this.tzGroupLeader = tzGroupLeader == null ? null : tzGroupLeader.trim();
+	}
 
-    public String getRowAddedOprid() {
-        return rowAddedOprid;
-    }
+	public String getTzPweiZhzt() {
+		return tzPweiZhzt;
+	}
 
-    public void setRowAddedOprid(String rowAddedOprid) {
-        this.rowAddedOprid = rowAddedOprid == null ? null : rowAddedOprid.trim();
-    }
+	public void setTzPweiZhzt(String tzPweiZhzt) {
+		this.tzPweiZhzt = tzPweiZhzt == null ? null : tzPweiZhzt.trim();
+	}
 
-    public Date getRowLastmantDttm() {
-        return rowLastmantDttm;
-    }
+	public String getTzPweiGrpid() {
+		return tzPweiGrpid;
+	}
 
-    public void setRowLastmantDttm(Date rowLastmantDttm) {
-        this.rowLastmantDttm = rowLastmantDttm;
-    }
+	public void setTzPweiGrpid(String tzPweiGrpid) {
+		this.tzPweiGrpid = tzPweiGrpid == null ? null : tzPweiGrpid.trim();
+	}
 
-    public String getRowLastmantOprid() {
-        return rowLastmantOprid;
-    }
+	public Date getRowAddedDttm() {
+		return rowAddedDttm;
+	}
 
-    public void setRowLastmantOprid(String rowLastmantOprid) {
-        this.rowLastmantOprid = rowLastmantOprid == null ? null : rowLastmantOprid.trim();
-    }
+	public void setRowAddedDttm(Date rowAddedDttm) {
+		this.rowAddedDttm = rowAddedDttm;
+	}
 
-    public Integer getSyncid() {
-        return syncid;
-    }
+	public String getRowAddedOprid() {
+		return rowAddedOprid;
+	}
 
-    public void setSyncid(Integer syncid) {
-        this.syncid = syncid;
-    }
+	public void setRowAddedOprid(String rowAddedOprid) {
+		this.rowAddedOprid = rowAddedOprid == null ? null : rowAddedOprid.trim();
+	}
 
-    public Date getSyncdttm() {
-        return syncdttm;
-    }
+	public Date getRowLastmantDttm() {
+		return rowLastmantDttm;
+	}
 
-    public void setSyncdttm(Date syncdttm) {
-        this.syncdttm = syncdttm;
-    }
+	public void setRowLastmantDttm(Date rowLastmantDttm) {
+		this.rowLastmantDttm = rowLastmantDttm;
+	}
+
+	public String getRowLastmantOprid() {
+		return rowLastmantOprid;
+	}
+
+	public void setRowLastmantOprid(String rowLastmantOprid) {
+		this.rowLastmantOprid = rowLastmantOprid == null ? null : rowLastmantOprid.trim();
+	}
+
+	public Integer getSyncid() {
+		return syncid;
+	}
+
+	public void setSyncid(Integer syncid) {
+		this.syncid = syncid;
+	}
+
+	public Date getSyncdttm() {
+		return syncdttm;
+	}
+
+	public void setSyncdttm(Date syncdttm) {
+		this.syncdttm = syncdttm;
+	}
 }
