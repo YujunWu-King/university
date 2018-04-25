@@ -119,7 +119,7 @@
                     },
                     handler: "publishResult"
                 }]
-            },*/{
+            },{
                 menuDisabled: true,
                 sortable: false,
                 width:150,
@@ -132,7 +132,7 @@
                     {iconCls: 'people',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsPeople","查看考生名单"),handler:'viewMaterialStuApplicants'},"-",
                     {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:'clReviewScheduleMg'}
                 ]
-            },{
+            },*/{
                 menuDisabled: true,
                 sortable: false,
                 width:150,
