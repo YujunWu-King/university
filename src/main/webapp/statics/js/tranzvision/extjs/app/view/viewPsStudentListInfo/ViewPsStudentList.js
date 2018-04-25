@@ -102,14 +102,14 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					fieldStyle:'background:#F4F4F4',
     				readOnly:true
 
-				}, {
+				/*}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.reviewClpsKsNum", "材料审批考生"),
 					labelWidth: 110,
 					name: 'reviewClpsKsNum',
 					allowBlank: false,
 					fieldStyle:'background:#F4F4F4',
-    				readOnly:true
+    				readOnly:true */
 
 				}, {
 					xtype: 'textfield',

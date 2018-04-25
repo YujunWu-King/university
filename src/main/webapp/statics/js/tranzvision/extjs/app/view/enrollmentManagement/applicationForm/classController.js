@@ -1823,7 +1823,7 @@
                     form.findField("batchId").setValue(batchId);
 
                     form.findField("ksNum").setValue(applicantsNumber);
-                    form.findField("reviewClpsKsNum").setValue(0);
+                    //form.findField("reviewClpsKsNum").setValue(0);
                     form.findField("reviewKsNum").setValue(0);
                     form.findField("batchName").setValue(batchName);
                     kspwnum.setValue(0);
@@ -1932,7 +1932,7 @@
                 } else {
                     panel.actType="add";
 
-                    form.setValues({classId:classId,className:className,batchId:batchId,batchName:batchName,ksNum:applicantsNumber,reviewClpsKsNum:0,reviewKsNum:0});
+                    form.setValues({classId:classId,className:className,batchId:batchId,batchName:batchName,ksNum:applicantsNumber,reviewKsNum:0});
                 }
             });
         });

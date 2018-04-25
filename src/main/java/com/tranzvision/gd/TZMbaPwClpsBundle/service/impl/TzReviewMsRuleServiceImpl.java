@@ -106,8 +106,6 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				String dqpsStatus = (String) mapBasic.get("TZ_DQPY_ZT");
 				String dqpsStatusDesc = (String) mapBasic.get("TZ_DQPY_ZT_DESC");
 				String bkksNum = mapBasic.get("TZ_BKKS_NUM") == null ? "" : String.valueOf(mapBasic.get("TZ_BKKS_NUM"));
-				String clpsksNum = mapBasic.get("TZ_CLPS_KS_NUM") == null ? ""
-						: String.valueOf(mapBasic.get("TZ_CLPS_KS_NUM"));
 				String mspsksNum = mapBasic.get("TZ_MSPS_KS_NUM") == null ? ""
 						: String.valueOf(mapBasic.get("TZ_MSPS_KS_NUM"));
 				String judgeNumSet = mapBasic.get("TZ_MSPY_NUM") == null ? ""
@@ -137,7 +135,6 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 				mapData.put("className", className);
 				mapData.put("batchName", batchName);
 				mapData.put("ksNum", bkksNum);
-				mapData.put("reviewClpsKsNum", clpsksNum);
 				mapData.put("reviewKsNum", mspsksNum);
 				mapData.put("dqpsStatus", dqpsStatus);
 				mapData.put("desc", dqpsStatusDesc);
