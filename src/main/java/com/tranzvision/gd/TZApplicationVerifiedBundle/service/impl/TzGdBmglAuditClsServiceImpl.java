@@ -25,8 +25,10 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImp
 import com.tranzvision.gd.TZLabelSetBundle.dao.PsTzLabelDfnTMapper;
 import com.tranzvision.gd.TZLabelSetBundle.model.PsTzLabelDfnT;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzMszgTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTblKey;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppCcTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhccTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
@@ -91,7 +93,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 	private PsTzAppCcTMapper psTzAppCcTMapper;
 	@Autowired
 	private PsTzAppDhccTMapper psTzAppDhccTMapper;
-	
+	@Autowired
+	private PsTzMszgTMapper pstzMszgTMapper;
 
 	/* 获取报名人信息 */
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -1166,6 +1169,36 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				psTzFormWrkT.setRowLastmantOprid(oprid);
 				psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
 			}
+			
+			
+			// 根据评审状态 修改/插入   表 TZ_IMP_MSZG_TBL中的TZ_RESULT_CODE字段
+			// 首先根据报名表编号查询PsTzMSZGINFO对象是否已经存在
+			PsTzMszgT p = pstzMszgTMapper.selectByPrimaryKey(strAppInsID);
+			//如果对象不存在，做一个插入操作
+			if(p == null) {	
+				p = new PsTzMszgT();
+				p.setTzAppInsId(strAppInsID);
+				if("A".equals(strAuditState)) {
+					p.setTzResultCode("是");
+				}else if("B".equals(strAuditState)) {
+					p.setTzResultCode("否");
+				}else if("N".equals(strAuditState)){
+					p.setTzResultCode("等待");
+				}
+				
+				pstzMszgTMapper.insert(p);
+			}else {	//如果对象存在，则做一个修改操作
+				if("A".equals(strAuditState)) {
+					p.setTzResultCode("是");
+				}else if("B".equals(strAuditState)) {
+					p.setTzResultCode("否");
+				}else if("N".equals(strAuditState)){
+					p.setTzResultCode("等待");
+				}
+				pstzMszgTMapper.updateByPrimaryKey(p);
+			}
+			
+			
 
 			// 报名实例表;
 			PsTzAppInsT psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(strAppInsID);
