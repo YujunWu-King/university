@@ -138,6 +138,12 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 					judgType = "B";
 				}
 				groupleader = jacksonUtil.getString("groupleader");
+				
+				if (groupleader!=null && groupleader.equals("true")) {
+					groupleader = "Y";
+				} else {
+					groupleader = "N";
+				}
 
 				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
 				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
@@ -233,12 +239,18 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 				judgType = jacksonUtil.getString("judgType");
 				
 				// 评委类型A是英语评委，B是其他评委
-				if (judgType != null && judgType.equals("Y")) {
+				if (judgType != null && judgType.equals("true")) {
 					judgType = "A";
 				} else {
 					judgType = "B";
 				}
 				groupleader = jacksonUtil.getString("groupleader");
+				
+				if (groupleader!=null && groupleader.equals("true")) {
+					groupleader = "Y";
+				} else {
+					groupleader = "N";
+				}
 
 				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
 				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");

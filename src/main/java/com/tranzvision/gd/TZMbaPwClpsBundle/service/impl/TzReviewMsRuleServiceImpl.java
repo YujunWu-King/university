@@ -365,15 +365,19 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 					// 英语评委类型是A
 					if (rowList[7] != null && rowList[7].equals("A")) {
-						mapList.put("judgType", "Y");
+						mapList.put("judgType", true);
 					} else {
-						mapList.put("judgType", "N");
+						mapList.put("judgType", false);
 					}
 
 					if (rowList[8] != null) {
-						mapList.put("groupleader", rowList[8]);
+						if (rowList[8].equals("Y")) {
+							mapList.put("groupleader", true);
+						} else {
+							mapList.put("groupleader", false);
+						}
 					} else {
-						mapList.put("groupleader", "N");
+						mapList.put("groupleader", false);
 					}
 
 					listData.add(mapList);
@@ -698,15 +702,24 @@ public class TzReviewMsRuleServiceImpl extends FrameworkImpl {
 
 					String judgType = infoData.get("judgType") == null ? "" : String.valueOf(infoData.get("judgType"));
 
+					
+					
 					// 评委类型A是英语评委，B是其他评委
-					if (judgType.equals("Y")) {
+					if (judgType.equals("true")) {
 						judgType = "A";
 					} else {
 						judgType = "B";
 					}
+					System.out.println("judgType:"+judgType);
 
 					String groupleader = infoData.get("groupleader") == null ? ""
 							: String.valueOf(infoData.get("groupleader"));
+					if (groupleader.equals("true")) {
+						groupleader = "Y";
+					} else {
+						groupleader = "N";
+					}
+					System.out.println("groupleader:"+groupleader);
 
 					System.out.println("classId：" + classId + "judgState:" + judgState);
 					String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
