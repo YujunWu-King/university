@@ -1174,26 +1174,40 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 			// 根据评审状态 修改/插入   表 TZ_IMP_MSZG_TBL中的TZ_RESULT_CODE字段
 			// 首先根据报名表编号查询PsTzMSZGINFO对象是否已经存在
 			PsTzMszgT p = pstzMszgTMapper.selectByPrimaryKey(strAppInsID);
+			String sql = "select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T A, PS_TZ_APP_CC_T B ,PS_TZ_FORM_WRK_T C\n" + 
+					"where A.TZ_BATCH_ID=B.TZ_APP_S_TEXT \n" + 
+					"AND A.TZ_CLASS_ID=C.TZ_CLASS_ID\n" + 
+					"AND B.TZ_APP_INS_ID=C.TZ_APP_INS_ID\n" + 
+					"AND B.TZ_XXX_BH='grxxTZ_grxx_26CC_Batch'\n" + 
+					"AND B.TZ_APP_INS_ID=?";
+			
+			String TZ_BATCH_NAME = jdbcTemplate.queryForObject(sql, new Object[] { strAppInsID }, "String");
 			//如果对象不存在，做一个插入操作
 			if(p == null) {	
 				p = new PsTzMszgT();
 				p.setTzAppInsId(strAppInsID);
 				if("A".equals(strAuditState)) {
 					p.setTzResultCode("是");
+					p.setTzMsBatch(TZ_BATCH_NAME);
 				}else if("B".equals(strAuditState)) {
 					p.setTzResultCode("否");
+					p.setTzMsBatch(null);
 				}else if("N".equals(strAuditState)){
 					p.setTzResultCode("等待");
+					p.setTzMsBatch(null);
 				}
 				
 				pstzMszgTMapper.insert(p);
 			}else {	//如果对象存在，则做一个修改操作
 				if("A".equals(strAuditState)) {
 					p.setTzResultCode("是");
+					p.setTzMsBatch(TZ_BATCH_NAME);
 				}else if("B".equals(strAuditState)) {
 					p.setTzResultCode("否");
+					p.setTzMsBatch(null);
 				}else if("N".equals(strAuditState)){
 					p.setTzResultCode("等待");
+					p.setTzMsBatch(null);
 				}
 				pstzMszgTMapper.updateByPrimaryKey(p);
 			}
