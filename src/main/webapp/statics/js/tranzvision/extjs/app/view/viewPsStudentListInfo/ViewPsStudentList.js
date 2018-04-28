@@ -53,6 +53,12 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 				style: 'border:0px',
 
 				items: [
+				        {
+				        	xtype: 'textfield',
+				        	name: 'jgid',
+				        	readOnly:true,
+				        	hidden:true
+				    },
 					{
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.classIdname", "报考班级"),

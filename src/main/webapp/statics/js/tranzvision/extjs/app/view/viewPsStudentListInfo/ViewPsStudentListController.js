@@ -400,15 +400,15 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 	searchksList: function(btn) {
 		//var panel = btn.findParentByType("viewmspsxsList");
 		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
-		var classId = form.findField('classId').getValue();
+		var jgid = form.findField('jgid').getValue();
 		var batchId = form.findField('batchId').getValue();
 		//var batchname="第一批次";
         //console.log("classId"+classId);
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW',
 			condition:{
-				"TZ_CLASS_ID":classId,
-				"TZ_APPLY_PC_ID":batchId
+				"TZ_JG_ID":jgid,
+				"TZ_IS_APP_OPEN":"Y"
 			},
 			callback: function(seachCfg) {
 				var seachCfgjson=Ext.JSON.decode(seachCfg)
