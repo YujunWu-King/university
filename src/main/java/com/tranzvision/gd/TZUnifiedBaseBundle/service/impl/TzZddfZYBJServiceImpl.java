@@ -74,6 +74,10 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			// 报名表字段 "外资/合资企业",//01 "自主创业",//02 "国有企业",//03 "民营企业",//04
 			// "政府机构",//05 "事业单位",//06 "其他"//07
 			// TZ_CSMB_TJ1 单位性质 政府机构/事业单位1 企业2
+			
+			if (firm_type ==null || firm_type.equals("")) {
+				firm_type="0";
+			}
 
 			switch (Integer.parseInt(firm_type)) {
 			case 1:
@@ -103,6 +107,10 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			case 7:
 				firm_type = "2";
 				firm_desc = "其他";
+				break;
+			default:
+				firm_type = "";
+				firm_desc = "无";
 				break;
 			}
 
@@ -174,6 +182,9 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 					position_desc = "其他";
 				}
 				position_type = "6";
+			} else {
+				position_type = "";
+				position_desc = "无";
 			}
 
 			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_ZY_T where TZ_CSMB_CK1=? and TZ_CSMB_TJ1=? and TZ_CSMB_TJ2=?";

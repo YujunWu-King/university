@@ -60,6 +60,9 @@ public class TzZddfZYZGServiceImpl extends TzZddfServiceImpl {
 			while (it.hasNext()) {
 				Map.Entry<String, String> entry = it.next();
 				value = entry.getValue();
+				if (value == null || value.equals("")) {
+					value = "0";
+				}
 				// 1国家级 2省部级 3地市级 4专业高级证书
 				switch (Integer.parseInt(value)) {
 				case 1:
@@ -73,6 +76,9 @@ public class TzZddfZYZGServiceImpl extends TzZddfServiceImpl {
 					break;
 				case 4:
 					desc = "专业高级证书";
+					break;
+				default:
+					desc = "";
 					break;
 				}
 				strScore = SqlQuery.queryForObject(SearchSql2, new Object[] { "C", value }, "String");

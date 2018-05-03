@@ -86,37 +86,39 @@ public class TzAutoScreenEngineServiceImpl {
 		String socreModelId = psTzClassInfT.getTzCsScorMdId();
 		String orgId = psTzClassInfT.getTzJgId();
 		// 考生标签组
-		String ksbqGroup = psTzClassInfT.getTzCsKsbqzId();
+		//String ksbqGroup = psTzClassInfT.getTzCsKsbqzId();
+
 		// 负面清单标签组
-		String fmqdGroup = psTzClassInfT.getTzCsFmbqzId();
+		// String fmqdGroup = psTzClassInfT.getTzCsFmbqzId();
 
 		// 存放考生总成绩，用于计算排名
-		List<Map<String, Object>> totalScoreList = new ArrayList<Map<String, Object>>();
+		//List<Map<String, Object>> totalScoreList = new ArrayList<Map<String, Object>>();
 
 		// 成绩项类型为“数字成绩录入项”的节点，查询节点对应的成绩项打分规则ID
 		String itemsSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeAutoScreenItems");
 		List<Map<String, Object>> itemsList = sqlQuery.queryForList(itemsSql, new Object[] { socreModelId, orgId });
 
 		// 成绩模型树根节点
-		String rootSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeRootNode");
-		Map<String, Object> rootMap = sqlQuery.queryForMap(rootSql, new Object[] { socreModelId, orgId });
-		
-		
-		/****************************自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----开始*****************************/
+		//String rootSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeRootNode");
+		//Map<String, Object> rootMap = sqlQuery.queryForMap(rootSql, new Object[] { socreModelId, orgId });
+
+		/****************************
+		 * 自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----开始
+		 *****************************/
 		/**
-		 * 1.删除历史打分
-		 * 2、删除未参与本次初筛的历史初筛考生
+		 * 1.删除历史打分 2、删除未参与本次初筛的历史初筛考生
 		 */
 		String delScoreItemSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzDelAutoScoreItems");
-		sqlQuery.update(delScoreItemSql, new Object[]{ classId, batchId });
-		
+		sqlQuery.update(delScoreItemSql, new Object[] { classId, batchId });
+
 		String delStuScoreInsSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzDelAutoScreenStudents");
-		sqlQuery.update(delStuScoreInsSql, new Object[]{ classId, batchId });
-		/****************************自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----结束*******************************/
-		
-		
+		sqlQuery.update(delStuScoreInsSql, new Object[] { classId, batchId });
+		/****************************
+		 * 自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----结束
+		 *******************************/
+
 		// 班级批次下参与自动初筛的考生
-		String sql = "select TZ_APP_INS_ID from PS_TZ_CS_STU_VW where TZ_CLASS_ID=? and TZ_BATCH_ID=?";
+		String sql = "select TZ_APP_INS_ID from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?";
 		List<Map<String, Object>> appInsList = sqlQuery.queryForList(sql, new Object[] { classId, batchId });
 		for (Map<String, Object> appInsMap : appInsList) {
 			long appInsId = Long.valueOf(appInsMap.get("TZ_APP_INS_ID").toString());
@@ -181,7 +183,7 @@ public class TzAutoScreenEngineServiceImpl {
 			}
 
 			// 计算总分,即根节点得分
-			float rootScoreAmount = 0;
+			/*float rootScoreAmount = 0;
 			if (rootMap != null) {
 				String treeName = rootMap.get("TREE_NAME").toString();
 				int rootNodeNum = Integer.valueOf(rootMap.get("TREE_NODE_NUM").toString());
@@ -209,12 +211,12 @@ public class TzAutoScreenEngineServiceImpl {
 				ksScoreMap.put("appInsId", appInsId);
 				ksScoreMap.put("scoreNum", rootScoreAmount);
 				totalScoreList.add(ksScoreMap);
-			}
+			} */
 		}
 
 		/*********************************** 计算排名开始 *************************************/
 		// 计算排名,根据总分倒序排序
-		Collections.sort(totalScoreList, new Comparator<Object>() {
+		/*Collections.sort(totalScoreList, new Comparator<Object>() {
 			@Override
 			public int compare(Object o1, Object o2) {
 				Map<String, Object> map1 = (Map<String, Object>) o1;
@@ -254,11 +256,12 @@ public class TzAutoScreenEngineServiceImpl {
 				psTzCsKsTbl.setTzKshPspm(sortNum);
 				psTzCsKsTblMapper.updateByPrimaryKey(psTzCsKsTbl);
 			}
-		}
+		}*/
 		/*********************************** 计算排名结束 *******************************************/
 
-		String autoLabelSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzKshAutoLabel");
+		
 		/***************** 循环执行班级下考生标签组标签定义java类---开始 *****************/
+		/*String autoLabelSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzKshAutoLabel");
 		if (!"".equals(ksbqGroup) && ksbqGroup != null) {
 			List<Map<String, Object>> labelList = sqlQuery.queryForList(autoLabelSql,
 					new Object[] { orgId, ksbqGroup });
@@ -280,11 +283,11 @@ public class TzAutoScreenEngineServiceImpl {
 					}
 				}
 			}
-		}
+		} */
 		/***************** 循环执行班级下考生标签组标签定义java类---结束 *****************/
 
 		/***************** 循环执行班级下负面清单标签组标签定义java类---开始 *****************/
-		if (!"".equals(fmqdGroup) && fmqdGroup != null) {
+		/*if (!"".equals(fmqdGroup) && fmqdGroup != null) {
 			// 运行负面清单前根据班级id 和批次id 删除负面标签表;
 			String delNegaListsql = "DELETE FROM PS_TZ_CS_KSFM_T WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
 			sqlQuery.update(delNegaListsql, new Object[] { classId, batchId });
@@ -301,7 +304,6 @@ public class TzAutoScreenEngineServiceImpl {
 						TzNegativeListBundleServiceImpl neGListObj = (TzNegativeListBundleServiceImpl) ctx
 								.getBean(javaClass);
 
-						/* TzNegativeListBundleServiceImpl neGListObj = new */
 						neGListObj.makeNegativeList(classId, batchId, labelId);
 					} catch (Exception e3) {
 						System.out.print("e3.toString:" + e3.getMessage());
@@ -312,7 +314,7 @@ public class TzAutoScreenEngineServiceImpl {
 					}
 				}
 			}
-		}
+		} */
 		/***************** 循环执行班级下负面清单标签组标签定义java类---结束 *****************/
 	}
 

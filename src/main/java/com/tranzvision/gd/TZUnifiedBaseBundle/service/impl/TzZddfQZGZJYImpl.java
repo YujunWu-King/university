@@ -9,8 +9,10 @@ import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzCjxTblMapper;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblKey;
 import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs;
 import com.tranzvision.gd.util.sql.SqlQuery;
+
 /**
  * 全职工作经验打分
+ * 
  * @author caoy
  *
  */
@@ -32,6 +34,15 @@ public class TzZddfQZGZJYImpl extends TzZddfServiceImpl {
 			String ks_valuesql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=?  AND TZ_XXX_BH = ?";
 			String year = SqlQuery.queryForObject(ks_valuesql, new Object[] { TZ_APP_ID, "workTZ_TZ_9_2" }, "String");
 
+			StringBuffer sb = new StringBuffer();
+			sb.append("报名表数据----报名表ID:");
+			sb.append(TZ_APP_ID);
+			sb.append(",");
+			sb.append("全职工作经验:");
+			sb.append(year);
+
+			System.out.println(sb.toString());
+
 			String sql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_ZY_T where TZ_CSMB_CK1=? and TZ_CSMB_CK2<=? and TZ_CSMB_CK3>=?";
 
 			String strScore = SqlQuery.queryForObject(sql, new Object[] { "D", year, year }, "String");
@@ -39,10 +50,15 @@ public class TzZddfQZGZJYImpl extends TzZddfServiceImpl {
 			if (strScore == null || strScore.equals("")) {
 				strScore = "0";
 			}
-			if (strScore.equals("N")) {
-				strScore = year;
-			}
+
 			Score = Float.parseFloat(strScore);
+			if (Score == -1) {
+				if (year==null || year.equals("")) {
+					Score=0;
+				} else {
+					Score = Float.parseFloat(year);
+				}
+			}
 			String MarkRecord = "全职工作经验：".concat(year) + "年|" + String.valueOf(Score).concat("分");
 			System.out.println(MarkRecord);
 

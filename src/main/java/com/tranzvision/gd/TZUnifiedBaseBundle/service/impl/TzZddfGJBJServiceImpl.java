@@ -119,7 +119,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			}
 
 			if (!type.equals("0")) {
-				strScore = SqlQuery.queryForObject(SearchSql2, new Object[] { "B", type }, "String");
+				strScore = SqlQuery.queryForObject(SearchSql2, new Object[] { "A", type }, "String");
 			}
 			if (strScore == null || strScore.equals("")) {
 				strScore = "0";
@@ -154,7 +154,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 				for (int i = 5; i <= 7; i++) {
 					strI = String.valueOf(i);
 					strScore = SqlQuery.queryForObject(SearchSql,
-							new Object[] { "B", strI, ksMap.get(map.get(strI)), ksMap.get(map.get(strI)) }, "String");
+							new Object[] { "A", strI, ksMap.get(map.get(strI)), ksMap.get(map.get(strI)) }, "String");
 					switch (i) {
 					case 5:
 						desc = "个人年收入";

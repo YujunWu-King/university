@@ -144,6 +144,16 @@
                     {iconCls: 'people',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsPeople","查看考生名单"),handler:'viewInterviewStuApplicants'},"-",
                     {iconCls: 'schedule',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSchedule","评审进度管理"),handler:'msReviewScheduleMg'}
                 ]
+            },{
+                menuDisabled: true,
+                sortable: false,
+                width:150,
+                text: "分数统计",
+                xtype: 'actioncolumn',
+                align:'center',
+                items:[
+                	{iconCls: 'import',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.autoScreen","自动初筛"),handler:'automaticScreen'}
+                ]
             }],
             store: store,
             bbar: {

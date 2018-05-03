@@ -257,7 +257,7 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 			System.out.println(sb.toString());
 
 			// 获取分数
-			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK2=?";
+			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_XLF_T where TZ_CSMB_CK3=? and  TZ_CSMB_CK2=? and TZ_CSMB_CK1=?";
 			String StrScore = SqlQuery.queryForObject(SearchSql, new Object[] { TZ_SCHOOL_TYPE, sl, sw }, "String");
 			if (StrScore == null || StrScore.equals("")) {
 				StrScore = "0";

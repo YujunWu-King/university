@@ -132,7 +132,7 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 				if (TZ_XXX_BH.startsWith("TZ_7TZ_TZ_7_2")) {
 					// 得到对应的考试类型
 					keyType = chage(TZ_XXX_BH);
-					// 报名表中的字段 1:GRE 2:GMAT 3:托福TOEFL 4:TOEFL 机考 5:TOEFL IBT(网考）
+					// 报名表中的字段 1:GRE 2:GMAT 3:托福TOFEL 4:TOEFL 机考 5:TOFEL IBT(网考）
 					// 6:雅思IELTS 7:专业八级（TEM8） 8:专业四级（TEM4） 9:剑桥商务英语（BEC高级）
 					// 10:剑桥商务英语（BEC中级） 11:CET-4 12:CET-6
 					// GRE GMAT TOFEL IELTS CET6 CET4 BEC高级 BEC中级 TEM8 TEM4
@@ -144,13 +144,13 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 						engType = "GMAT";
 						break;
 					case 3:
-						engType = "TOEFL";
+						engType = "TOFEL";
 						break;
 					case 4:
-						engType = "TOEFL";
+						engType = "TOFEL";
 						break;
 					case 5:
-						engType = "TOEFL";
+						engType = "TOFEL";
 						break;
 					case 6:
 						engType = "IELTS";
@@ -217,8 +217,7 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 				tempScore = Float.parseFloat(strTempScore);
 				if (tempScore > Score) {
 					Score = tempScore;
-					MarkRecord = "英语成绩类型：".concat(key).concat("=").concat(key) + "|"
-							+ String.valueOf(Score).concat("分");
+					MarkRecord = "英语成绩类型：".concat(key).concat("=").concat(strScore) + "|" + strTempScore.concat("分");
 				}
 			}
 
