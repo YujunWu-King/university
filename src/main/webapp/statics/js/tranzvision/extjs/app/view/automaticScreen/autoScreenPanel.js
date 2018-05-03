@@ -282,7 +282,9 @@
 	    				items:[
 	    					{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchAutoScreenStu"},"-",
 	    					{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set",handler:"runAutoScreenEngine"},"-",
-	    					{
+	    					{text:"计算总分",tooltip:"计算总分",iconCls:"set",handler:"runSumEngine"},"-",
+	    					
+	    					/*{
 	    						xtype:'button',
 	    						text:'设置淘汰状态',
 	    						iconCls:  'set',
@@ -298,7 +300,7 @@
 	    							text:'根据名次批量淘汰',handler:'setWeedOutByRank'
 	    						}]
 	    					},
-	    					'->',
+	    					'->', */
 	    					{
 	    						xtype:'splitbutton',
 	    						text:'更多操作',
