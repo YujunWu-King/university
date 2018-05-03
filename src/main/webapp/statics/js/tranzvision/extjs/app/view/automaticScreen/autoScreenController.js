@@ -234,7 +234,7 @@
 		
 		var comParamsObj = {
 			ComID: 'TZ_AUTO_SCREEN_COM',
-			PageID: 'TZ_AUTO_SCREEN_STD',
+			PageID: 'TZ_SUM_SCREEN_STD',
 			OperateType: 'RunSum',
 			comParams:{
 				classId: classId,
