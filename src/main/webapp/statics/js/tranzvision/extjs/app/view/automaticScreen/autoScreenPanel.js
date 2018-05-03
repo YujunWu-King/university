@@ -29,7 +29,8 @@
 	
 	constructor: function(config){
 		var className,
-			itemColumns = [];
+			itemColumns = [],
+			itemMsColumns = [];
 		this.paramsConfig = config;
 		this.classId = config.classId;
 		this.batchId = config.batchId;
@@ -41,9 +42,15 @@
 			className = respData.className;
 			itemColumns = respData.columns;
 		});
+		var tzParams ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreMsColumns","comParams":{"classId":"'+ config.classId +'"}}';
+		Ext.tzLoadAsync(tzParams,function(respData){
+			className = respData.className;
+			itemMsColumns = respData.columns;
+		});
 		
 		this.className = className;
 		this.itemColumns = itemColumns;
+		this.itemMsColumns = itemMsColumns;
 		
 		this.callParent();	
 	},
@@ -53,6 +60,7 @@
     	var me = this;
     	var config = me.paramsConfig;
     	config.itemColumns = me.itemColumns;
+    	config.itemMsColumns = me.itemMsColumns;
     	var store = new KitchenSink.view.automaticScreen.autoScreenStore(config);
     	
     	//定义grid的columns
@@ -106,6 +114,34 @@
 					},
 					handler: 'onClickNumber'
 				}]
+    		});
+    	}
+    	//面试成绩项分值列
+    	var itemMsColumns = this.itemMsColumns;
+    	for(var i=0; i<itemMsColumns.length; i++){
+    		var colWidth = 100;
+    		var descr = itemMsColumns[i].columnDescr;
+    		var strLen = descr.length;
+    		if(strLen > 0){
+    			colWidth = strLen*15 + 20;
+    			if(colWidth<90) colWidth = 90;
+    			if(colWidth>140) colWidth = 140;
+    		}
+    		
+    		columns.push({
+    			xtype: 'linkcolumn',
+    			text: descr,
+    			dataIndex: itemMsColumns[i].columnId,
+    			width:colWidth,
+    			menuDisabled: true,
+    			sortable: false,
+    			hideable:false,
+    			items:[{
+    				getText: function(v, meta, rec) {
+    					return v;
+    				},
+    				handler: 'onClickNumber'
+    			}]
     		});
     	}
     	
