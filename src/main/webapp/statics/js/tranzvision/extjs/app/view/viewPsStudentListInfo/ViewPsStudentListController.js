@@ -413,10 +413,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			callback: function(seachCfg) {
 				var seachCfgjson=Ext.JSON.decode(seachCfg)
 	
-				if (seachCfgjson.condition["TZ_APPLY_PC_ID-value"]==""){
+				//if (seachCfgjson.condition["TZ_APPLY_PC_ID-value"]==""){
 					
-				   seachCfgjson.condition["TZ_APPLY_PC_ID-value"]=batchId;
-				}
+				//   seachCfgjson.condition["TZ_APPLY_PC_ID-value"]=batchId;
+				//}
 				seachCfgjson=Ext.encode(seachCfgjson)
 				//console.log(seachCfgjson);
 				var store = btn.findParentByType("grid").store;

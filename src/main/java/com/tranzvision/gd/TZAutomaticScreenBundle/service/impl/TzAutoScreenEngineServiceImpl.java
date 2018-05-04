@@ -121,7 +121,7 @@ public class TzAutoScreenEngineServiceImpl {
 		 *******************************/
 
 		// 班级批次下参与自动初筛的考生 为该班级下 报名表提交并且审核通过的考生
-		String sql = "SELECT A.TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T A, PS_TZ_APP_INS_T B WHERE A.TZ_FORM_SP_STA = 'A' AND A.TZ_APP_INS_ID = B.TZ_APP_INS_ID AND B.TZ_APP_FORM_STA = 'U' AND A.TZ_CLASS_ID = ? AND A.TZ_BATCH_ID = ?";
+		String sql = "SELECT A.TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL A where A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ?";
 		List<Map<String, Object>> appInsList = sqlQuery.queryForList(sql, new Object[] { classId, batchId });
 		for (Map<String, Object> appInsMap : appInsList) {
 			long appInsId = Long.valueOf(appInsMap.get("TZ_APP_INS_ID").toString());
