@@ -13,15 +13,13 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzFormZlshTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzInteGroupMapper;
-import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzIntervieweeMapper;
-import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzStuMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshT;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshTKey;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInteGroup;
-import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInterviewee;
-import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzStuInfo;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMspsKshTblMapper;
+import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -37,15 +35,11 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzFormZlshTMapper psTzFormZlshTMapper;
 	@Autowired
-	private PsTzIntervieweeMapper pstzIntervieweeMapper;
-	@Autowired
 	private PsTzInteGroupMapper pstzInteGroupMapper;
 	@Autowired
-	private PsTzStuMapper pstStuMapper;
-	@Autowired
-	private PsTzStuMapper pstzStuMapper;
-	@Autowired
 	private FliterForm fliterForm;
+	@Autowired
+	private PsTzMspsKshTblMapper psTzMspsKshTblMapper;
 
 	// 获取评委组信息
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -58,20 +52,20 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 		jacksonUtil.json2Map(comParams);
 		
 		//查询所有的评委组
-		List<PsTzInterviewee> list =  pstzIntervieweeMapper.findAll();
+		//List<PsTzInterviewee> list =  pstzIntervieweeMapper.findAll();
 		
 		//
-		String classId = jacksonUtil.getString("classID");
-		System.out.println(classId);
-		for (int i = 0; i < list.size(); i++) {
-			PsTzInterviewee ps = list.get(i);	
-			Map<String, Object> mapList = new HashMap<>();
-			mapList.put("jugGroupId", ps.getJugGroupId());
-			mapList.put("jugGroupName", ps.getJugGroupName());
-			listData.add(mapList);
-		}
-		mapRet.replace("total", list.size());
-		mapRet.replace("root", listData);
+//		String classId = jacksonUtil.getString("classID");
+//		System.out.println(classId);
+//		for (int i = 0; i < list.size(); i++) {
+//			PsTzInterviewee ps = list.get(i);	
+//			Map<String, Object> mapList = new HashMap<>();
+//			mapList.put("jugGroupId", ps.getJugGroupId());
+//			mapList.put("jugGroupName", ps.getJugGroupName());
+//			listData.add(mapList);
+//		}
+//		mapRet.replace("total", list.size());
+//		mapRet.replace("root", listData);
 
 		// 可配置搜索通用函数;
 		//Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -187,19 +181,19 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 				String classID = jacksonUtil.getString("classID");
 				
 				//根据班级id和报名表编号查询学生
-				PsTzStuInfo psi = pstStuMapper.findById(classID, tz_app_ins_id);
+				//PsTzMspsKshTbl pmskt = psTzMspsKshTblMapper.findById(classID, tz_app_ins_id);
 				//设置面试组
-				psi.setGroup_id(tz_group_id);
+				//psi.setGroup_id(tz_group_id);
 				//设置更改时间
-				psi.setGroup_date(new Date());
+				//psi.setGroup_date(new Date());
 				//设置面试序号
 				//首先查询该组已经分配了多少个学生
-				List<PsTzStuInfo> list = pstStuMapper.findByGroupID(tz_group_id);
+				//List<PsTzStuInfo> list = pstStuMapper.findByGroupID(tz_group_id);
 				//根据list集合的大小给该考生分配序号
-				if(list != null)
-					psi.setOrder(list.size() + 1);
+				//if(list != null)
+					//psi.setOrder(list.size() + 1);
 				//更新
-				pstStuMapper.updateStu(psi);
+				//pstStuMapper.updateStu(psi);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
