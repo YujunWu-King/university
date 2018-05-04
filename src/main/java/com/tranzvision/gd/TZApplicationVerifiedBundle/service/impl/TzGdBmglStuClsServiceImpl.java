@@ -168,7 +168,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_APP_INS_ID", "TZ_MSH_ID", "NATIONAL_ID",
-					"TZ_AUDIT_STATE", "TZ_COLOR_SORT_ID", "TZ_SUBMIT_STATE", "TZ_SUBMIT_DT_STR", "TZ_MS_RESULT" ,"TZ_APPLY_PC_ID"};
+					"TZ_AUDIT_STATE", "TZ_COLOR_SORT_ID", "TZ_SUBMIT_STATE", "TZ_SUBMIT_DT_STR", "TZ_MS_RESULT"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -190,32 +190,33 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					mapList.put("submitDate", rowList[8]);
 					mapList.put("interviewResult", rowList[9]);
 					
-					String appInsID_ = rowList[2];
-					String applyID = rowList[10];
-					PsTzMsPskshTblKey pmktk = new PsTzMsPskshTblKey();
-					if(appInsID_ != null && !"".equals(appInsID_)) {
-						Long appInsID = Long.parseLong(appInsID_);
-						pmktk.setTzAppInsId(appInsID);
-					}
-					
+//					String appInsID_ = rowList[2];
+//					String applyID = rowList[10];
+//					PsTzMsPskshTblKey pmktk = new PsTzMsPskshTblKey();
+//					if(appInsID_ != null && !"".equals(appInsID_)) {
+//						Long appInsID = Long.parseLong(appInsID_);
+//						pmktk.setTzAppInsId(appInsID);
+//					}
+//					
 //					pmktk.setTzApplyPcId(applyID);
-//						PsTzMsPskshTbl ppk = psTzMsPskshTblMapper.selectByPrimaryKey(pmktk);
-//						PsTzInteGroup psg =  null;
-//						if(ppk != null) {
-//							psg = psTzInteGroupMapper.findByGid(pmk.get);
-//							SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
-//							Date date = psi.getGroup_date();
-//							String date1 = "";
-//							if(date != null) {
-//								date1 = sdf.format(date);
-//							}else {
-//								date1 = "暂无时间安排";
-//							}
-//							mapList.put("group_date", date1);
+//					pmktk.setTzClassId(strClassID);
+//					PsTzMsPskshTbl ppk = psTzMsPskshTblMapper.selectByPrimaryKey(pmktk);
+//					PsTzInteGroup psg =  null;
+//					if(ppk != null) {
+//						psg = psTzInteGroupMapper.findByGid(ppk.getTzGroupId());
+//						SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+//						Date date = ppk.getTzGroupDate();
+//						String date1 = "";
+//						if(date != null) {
+//							date1 = sdf.format(date);
+//						}else {
+//							date1 = "暂无时间安排";
 //						}
-//						if(psg != null) {
-//							mapList.put("group_name", psg.getTz_group_name());
-//						}
+//						mapList.put("group_date", date1);
+//					}
+//					if(psg != null) {
+//						mapList.put("group_name", psg.getTz_group_name());
+//					}
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
 					//System.out.println("classID"+strClassID);
