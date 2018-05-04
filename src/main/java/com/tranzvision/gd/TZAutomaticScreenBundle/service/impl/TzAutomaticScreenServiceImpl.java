@@ -294,6 +294,9 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 			case "queryScoreColumns": // 获取成绩项动态列
 				strRet = this.queryScoreColumns(strParams, errorMsg);
 				break;
+			case "queryScoreMsColumns": // 获取面试成绩项动态列
+				strRet = this.queryScoreMsColumns(strParams, errorMsg);
+				break;
 			case "queryWeedOutInfo": // 获取设置淘汰信息
 				strRet = this.queryWeedOutInfo(strParams, errorMsg);
 				break;
@@ -382,6 +385,64 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 			errorMsg[1] = "操作异常。" + e.getMessage();
 		}
 
+		strRet = jacksonUtil.Map2json(rtnMap);
+		return strRet;
+	}
+	/**
+	 * 获取面试成绩项动态列
+	 * 
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String queryScoreMsColumns(String strParams, String[] errorMsg) {
+		String strRet = "";
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+		ArrayList<Map<String, String>> columnsList = new ArrayList<Map<String, String>>();
+		rtnMap.put("className", "");
+		rtnMap.put("columns", columnsList);
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			// 班级ID
+			String classId = jacksonUtil.getString("classId");
+			String sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzClassAutoScreenInfoMs");
+			
+			Map<String, Object> classMap = sqlQuery.queryForMap(sql, new Object[] { classId });
+			if (classMap != null) {
+				String className = classMap.get("TZ_CLASS_NAME") == null ? ""
+						: classMap.get("TZ_CLASS_NAME").toString();
+				String orgId = classMap.get("TZ_JG_ID") == null ? "" : classMap.get("TZ_JG_ID").toString();
+				String csTreeName = classMap.get("TREE_NAME") == null ? "" : classMap.get("TREE_NAME").toString();
+				
+				if (!"".equals(csTreeName) && csTreeName != null) {
+					
+					// 查询初筛模型中成绩项类型为“数字成绩录入项”且启用自动初筛的成绩项
+					sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzAutoScreenScoreItemsMs");
+					List<Map<String, Object>> itemsList = sqlQuery.queryForList(sql,
+							new Object[] { orgId, csTreeName });
+					
+					for (Map<String, Object> itemMap : itemsList) {
+						String itemId = itemMap.get("TZ_SCORE_ITEM_ID").toString();
+						String itemName = itemMap.get("DESCR").toString();
+						
+						Map<String, String> colMap = new HashMap<String, String>();
+						colMap.put("columnId", itemId);
+						colMap.put("columnDescr", itemName);
+						
+						columnsList.add(colMap);
+					}
+					rtnMap.replace("columns", columnsList);
+				}
+				rtnMap.replace("className", className);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "操作异常。" + e.getMessage();
+		}
+		
 		strRet = jacksonUtil.Map2json(rtnMap);
 		return strRet;
 	}
