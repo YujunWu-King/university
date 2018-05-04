@@ -226,6 +226,29 @@
 		}
 	},
 	
+	//运行打总分
+	runSumEngine: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		
+		var comParamsObj = {
+			ComID: 'TZ_AUTO_SCREEN_COM',
+			PageID: 'TZ_SUM_SCREEN_STD',
+			OperateType: 'RunSum',
+			comParams:{
+				classId: classId,
+				batchId: batchId
+			}
+		}
+		var status,processIns;
+		var tzParams = Ext.JSON.encode(comParamsObj);
+		Ext.tzLoadAsync(tzParams,function(respData){
+			status = respData.status;
+			processIns = respData.processIns;
+		});
+	},
+	
 	//查看打分过程
 	onClickNumber: function(view,rowIndex,colIndex){
 		var rec = view.getStore().getAt(rowIndex);

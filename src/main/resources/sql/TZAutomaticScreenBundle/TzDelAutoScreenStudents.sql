@@ -9,8 +9,7 @@ WHERE
         PS_TZ_APP_INS_T B
     
     WHERE
-        (A.TZ_FORM_SP_STA <> 'B'
-        OR ISNULL(A.TZ_FORM_SP_STA))
+        A.TZ_FORM_SP_STA = 'A'
         AND A.TZ_APP_INS_ID = B.TZ_APP_INS_ID
         AND B.TZ_APP_FORM_STA = 'U'
         AND A.TZ_CLASS_ID = PS_TZ_CS_KS_TBL.TZ_CLASS_ID
