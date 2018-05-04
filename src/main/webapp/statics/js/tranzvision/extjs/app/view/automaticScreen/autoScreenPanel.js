@@ -153,11 +153,13 @@
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.ranking","排名"),
 			dataIndex: 'ranking',
+			hidden:true,
 			width:80,
 			hideable:false
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.negativeList","负面清单"),
 			dataIndex: 'negativeList',
+			hidden:true,
 			minWidth:200,
 			menuDisabled: true,
 			sortable: false,
@@ -183,6 +185,7 @@
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.autoLabel","自动标签"),
 			dataIndex: 'autoLabel',
+			hidden:true,
 			minWidth:200,
 			menuDisabled: true,
 			sortable: false,
@@ -208,6 +211,7 @@
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.manualLabel","手工标签"),
 			dataIndex: 'manualLabel',
+			hidden:true,
 			minWidth:200,
 			menuDisabled: true,
 			sortable: false,
@@ -234,6 +238,7 @@
     		xtype:'checkcolumn',
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.status","是否淘汰"),
 			dataIndex: 'status',
+			hidden:true,
 			menuDisabled: true,
 			sortable: false,
 			hideable:false,

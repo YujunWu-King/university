@@ -5,6 +5,7 @@ FROM
 WHERE
     TZ_JG_ID = ?
         AND TREE_NAME = ?
+        AND TZ_SCORE_ITEM_ID<>'Total'
         AND TZ_SCORE_ITEM_TYPE = 'A'
         AND EXISTS( SELECT 
             'Y'

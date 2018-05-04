@@ -170,9 +170,9 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						if ("ranking".equals(columnField)) {
 							orderList.add(new String[] { "TZ_KSH_PSPM", sortStr });
 						}
-						if ("total".equals(columnField)) {
+						/*if ("total".equals(columnField)) {
 							orderList.add(new String[] { "TZ_TOTAL_SCORE", sortStr });
-						}
+						}*/
 					}
 
 					orderByArr = new String[orderList.size()][2];
@@ -187,11 +187,12 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 				jacksonUtil.json2Map(strParams);
 				// 成绩项
 				List<String> itemsList = (List<String>) jacksonUtil.getList("items");
+				List<String> itemsMsList = (List<String>) jacksonUtil.getList("itemsMs");
 
 				// TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW
 				// json数据要的结果字段;
 				String[] resultFldArray = { "TZ_CLASS_ID", "TZ_BATCH_ID", "TZ_APP_INS_ID", "TZ_REALNAME", "TZ_MSH_ID",
-						"TZ_KSH_CSJG", "TZ_KSH_PSPM", "TZ_SCORE_INS_ID", "TZ_TOTAL_SCORE" };
+						"TZ_KSH_CSJG", "TZ_KSH_PSPM", "TZ_SCORE_INS_ID", "TZ_TOTAL_SCORE","TZ_SCOREMS_INS_ID" };
 
 				// 可配置搜索通用函数;
 				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart,
@@ -228,7 +229,8 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						mapList.put("scoreInsId", scoreInsId);
 						// 总分
 						mapList.put("total", rowList[8]);
-
+						// 面试成绩单ID
+						String scoreMsInsId = rowList[9];
 						/* 自动打分项 */
 						for (String itemId : itemsList) {
 							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
@@ -248,6 +250,26 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 
 							mapList.put(itemId, scoreNum);
 							mapList.put(itemId + "_label", scoreGc);
+						}
+						/* 面试打分项 */
+						for (String itemIdMs : itemsMsList) {
+							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
+							Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
+									new Object[] { scoreMsInsId, itemIdMs });
+							
+							String scoreNum = "0.00";
+							String scoreGc = "";
+							
+							if (scoreMap != null) {
+								scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
+										: scoreMap.get("TZ_SCORE_NUM").toString();
+								// 打分过程
+								scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
+										: scoreMap.get("TZ_SCORE_DFGC").toString();
+							}
+							
+							mapList.put(itemIdMs, scoreNum);
+							mapList.put(itemIdMs + "_label", scoreGc);
 						}
 
 						// 自动标签
