@@ -27,6 +27,7 @@ import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzZdcsDcAetMapper;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzZdcsDcAet;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
+import com.tranzvision.gd.TZJudgesTypeBundle.dao.PsTzClpsGrTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
 import com.tranzvision.gd.TZMbaPwMspsBundle.dao.PsTzMpPwKsTblMapper;
@@ -72,9 +73,9 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzMpPwKsTblMapper psTzMpPwKsTblMapper;
 	@Autowired
-	private PsTzStuMapper psTzStuMapper;
-	@Autowired
 	private PsTzInteGroupMapper psTzInteGroupMapper;
+	@Autowired
+	private PsTzClpsGrTblMapper psTzClpsGrTblMapper;
 	/***
 	 * 
 	 * @param comParams
@@ -138,21 +139,21 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("judgeGroupName", rowList[9]);
 					
 					String strClassID = rowList[0];
-					String appInsID_ = rowList[2];
-					if(appInsID_ != null && !"".equals(appInsID_)) {
-						Long appInsID = Long.parseLong(appInsID_);
-						PsTzStuInfo psi = psTzStuMapper.findById(strClassID, appInsID);
-						PsTzInteGroup psg =  null;
-						if(psi != null) {
-							psg = psTzInteGroupMapper.findByGid(psi.getGroup_id());
-							SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-							String date = sdf.format(psi.getGroup_date());
-							mapList.put("group_date", date);
-						}
-						if(psg != null) {
-							mapList.put("group_name", psg.getTz_group_name());
-						}
-					}
+//					String appInsID_ = rowList[2];
+//					if(appInsID_ != null && !"".equals(appInsID_)) {
+//						Long appInsID = Long.parseLong(appInsID_);
+//						PsTzStuInfo psi = psTzStuMapper.findById(strClassID, appInsID);
+//						PsTzInteGroup psg =  null;
+//						if(psi != null) {
+//							psg = psTzInteGroupMapper.findByGid(psi.getGroup_id());
+//							SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+//							String date = sdf.format(psi.getGroup_date());
+//							mapList.put("group_date", date);
+//						}
+//						if(psg != null) {
+//							mapList.put("group_name", psg.getTz_group_name());
+//						}
+//					}
 					
 					listData.add(mapList);
 				}
@@ -269,7 +270,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
 				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appinsId }, "Integer");
 				if (count > 0) {
-					PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
+					PsTzMsPskshTbl psTzMsPsksTbl = new PsTzMsPskshTbl();
 					psTzMsPsksTbl.setTzClassId(classId);
 					psTzMsPsksTbl.setTzApplyPcId(batchId);
 					psTzMsPsksTbl.setTzAppInsId(appinsId);

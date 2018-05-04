@@ -18,8 +18,10 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzFormZlshTKey;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInteGroup;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMspsKshTblMapper;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl;
+import com.tranzvision.gd.TZJudgesTypeBundle.dao.PsTzClpsGrTblMapper;
+import com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzClpsGrTbl;
+import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -39,7 +41,9 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 	@Autowired
 	private FliterForm fliterForm;
 	@Autowired
-	private PsTzMspsKshTblMapper psTzMspsKshTblMapper;
+	private PsTzMsPskshTblMapper psTzMsPskshTblMapper;
+	@Autowired
+	private PsTzClpsGrTblMapper psTzClpsGrTblMapper;
 
 	// 获取评委组信息
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -52,20 +56,18 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 		jacksonUtil.json2Map(comParams);
 		
 		//查询所有的评委组
-		//List<PsTzInterviewee> list =  pstzIntervieweeMapper.findAll();
+		List<PsTzClpsGrTbl> list = psTzClpsGrTblMapper.findAll();
 		
 		//
-//		String classId = jacksonUtil.getString("classID");
-//		System.out.println(classId);
-//		for (int i = 0; i < list.size(); i++) {
-//			PsTzInterviewee ps = list.get(i);	
-//			Map<String, Object> mapList = new HashMap<>();
-//			mapList.put("jugGroupId", ps.getJugGroupId());
-//			mapList.put("jugGroupName", ps.getJugGroupName());
-//			listData.add(mapList);
-//		}
-//		mapRet.replace("total", list.size());
-//		mapRet.replace("root", listData);
+		for (int i = 0; i < list.size(); i++) {
+			PsTzClpsGrTbl pcgt = list.get(i);	
+			Map<String, Object> mapList = new HashMap<>();
+			mapList.put("jugGroupId", pcgt.getTzClpsGrId());
+			mapList.put("jugGroupName", pcgt.getTzClpsGrName());
+			listData.add(mapList);
+		}
+		mapRet.replace("total", list.size());
+		mapRet.replace("root", listData);
 
 		// 可配置搜索通用函数;
 		//Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -86,52 +88,6 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 
 		return jacksonUtil.Map2json(mapRet);
 	}
-
-	// 获取评委组信息
-	public String tzQueryinterviewee(String strParams, String[] errMsg) {
-		// 返回值;
-		Map<String, Object> returnJsonMap = new HashMap<String, Object>();
-		returnJsonMap.put("formData", "");
-		JacksonUtil jacksonUtil = new JacksonUtil();
-		try {
-			jacksonUtil.json2Map(strParams);
-
-			if (jacksonUtil.containsKey("classID") && jacksonUtil.containsKey("batchID")) {
-				// 班级编号;
-				String strClassID = jacksonUtil.getString("classID");
-				// 批次编号;
-				String strBatchID = jacksonUtil.getString("batchID");
-				// 班级名称，报名表模板编号，批次名称;
-				String strClassName = "", strAppModalID = "", strBatchName = "";
-
-				// 获取班级名称，报名表模板ID，批次名称;
-				String sql = "SELECT A.TZ_CLASS_NAME,A.TZ_APP_MODAL_ID,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T A INNER JOIN PS_TZ_CLS_BATCH_T B ON(A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_BATCH_ID=?) WHERE A.TZ_CLASS_ID=?";
-				Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { strBatchID, strClassID });
-				if (map != null) {
-					strClassName = (String) map.get("TZ_CLASS_NAME");
-					strAppModalID = (String) map.get("TZ_APP_MODAL_ID");
-					strBatchName = (String) map.get("TZ_BATCH_NAME");
-
-					Map<String, Object> hMap = new HashMap<>();
-					hMap.put("classID", strClassID);
-					hMap.put("className", strClassName);
-					hMap.put("modalID", strAppModalID);
-					hMap.put("batchID", strBatchID);
-					hMap.put("batchName", strBatchName);
-					returnJsonMap.replace("formData", hMap);
-				}
-
-			} else {
-				errMsg[0] = "1";
-				errMsg[1] = "请选择报考方向和批次";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			errMsg[0] = "1";
-			errMsg[1] = e.toString();
-		}
-		return jacksonUtil.Map2json(returnJsonMap);
-	}
 	
 	//获取面试组信息 
 	public String tzOther(String oprType, String strParams, String[] errorMsg) {
@@ -145,12 +101,10 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 		
 		// TODO Auto-generated method stub
 		if(oprType.equals("queryGroups")) {
-			System.out.println("++++++++++++++++");
 			
 			// 根据评委组查询面试组信息
 			String jugGroupId = jacksonUtil.getString("jugGroupId");
 			List<PsTzInteGroup> list = pstzInteGroupMapper.findByPwId(jugGroupId);
-			// 
 			
 			for (int i = 0; i < list.size(); i++) {
 				PsTzInteGroup pg = list.get(i);

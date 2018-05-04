@@ -17,9 +17,9 @@ import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInteGroup;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMspsKshTblMapper;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTblKey;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -41,7 +41,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzInteGroupMapper psTzInteGroupMapper;
 	@Autowired
-	private PsTzMspsKshTblMapper psTzMspsKshTblMapper;
+	private PsTzMsPskshTblMapper psTzMsPskshTblMapper;
 	// 获取班级信息
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
@@ -168,7 +168,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_APP_INS_ID", "TZ_MSH_ID", "NATIONAL_ID",
-					"TZ_AUDIT_STATE", "TZ_COLOR_SORT_ID", "TZ_SUBMIT_STATE", "TZ_SUBMIT_DT_STR", "TZ_MS_RESULT" };
+					"TZ_AUDIT_STATE", "TZ_COLOR_SORT_ID", "TZ_SUBMIT_STATE", "TZ_SUBMIT_DT_STR", "TZ_MS_RESULT" ,"TZ_APPLY_PC_ID"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -190,14 +190,18 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					mapList.put("submitDate", rowList[8]);
 					mapList.put("interviewResult", rowList[9]);
 					
-//					String appInsID = rowList[2];
-//					String classID = 
-//					PsTzMspsKshTblKey pmktk = new PsTzMspsKshTblKey();
-//					if(appInsID_ != null && !"".equals(appInsID_)) {
-//						Long appInsID = Long.parseLong(appInsID_);
-//						PsTzMspsKshTbl pmk = psTzMspsKshTblMapper.selectByPrimaryKey(new PsTzMspsKshTblKey());
+					String appInsID_ = rowList[2];
+					String applyID = rowList[10];
+					PsTzMsPskshTblKey pmktk = new PsTzMsPskshTblKey();
+					if(appInsID_ != null && !"".equals(appInsID_)) {
+						Long appInsID = Long.parseLong(appInsID_);
+						pmktk.setTzAppInsId(appInsID);
+					}
+					
+//					pmktk.setTzApplyPcId(applyID);
+//						PsTzMsPskshTbl ppk = psTzMsPskshTblMapper.selectByPrimaryKey(pmktk);
 //						PsTzInteGroup psg =  null;
-//						if(pmk != null) {
+//						if(ppk != null) {
 //							psg = psTzInteGroupMapper.findByGid(pmk.get);
 //							SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
 //							Date date = psi.getGroup_date();
@@ -212,7 +216,6 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 //						if(psg != null) {
 //							mapList.put("group_name", psg.getTz_group_name());
 //						}
-//					}
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
 					//System.out.println("classID"+strClassID);

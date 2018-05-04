@@ -15,6 +15,12 @@
     from PS_TZ_MSPS_GR_TBL
     where TZ_CLPS_GR_ID = #{tzClpsGrId,jdbcType=VARCHAR}
   </select>
+  
+  <select id="findAll" resultMap="BaseResultMap" >
+    select *
+    from PS_TZ_MSPS_GR_TBL
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from PS_TZ_MSPS_GR_TBL
     where TZ_CLPS_GR_ID = #{tzClpsGrId,jdbcType=VARCHAR}

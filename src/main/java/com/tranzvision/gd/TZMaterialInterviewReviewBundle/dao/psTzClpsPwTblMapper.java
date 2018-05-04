@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao;
 
+import java.util.List;
+
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.model.psTzClpsPwTblKey;
 
@@ -15,4 +17,5 @@ public interface psTzClpsPwTblMapper {
     int updateByPrimaryKeySelective(psTzClpsPwTbl record);
 
     int updateByPrimaryKey(psTzClpsPwTbl record);
+
 }
