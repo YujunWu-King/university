@@ -1,8 +1,13 @@
-package com.tranzvision.gd.TZInterviewArrangementBundle.model;
+package com.tranzvision.gd.TZMbaPwClpsBundle.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class PsTzMspsKshTbl extends PsTzMspsKshTblKey {
+public class PsTzMsPskshTbl extends PsTzMsPskshTblKey {
+    private BigDecimal tzMspsPwjPc;
+
+    private String tzLuquZt;
+
     private String tzBeizhu;
 
     private Date rowAddedDttm;
@@ -16,6 +21,30 @@ public class PsTzMspsKshTbl extends PsTzMspsKshTblKey {
     private Integer syncid;
 
     private Date syncdttm;
+
+    private Integer tzGroupId;
+
+    private Date tzGroupDate;
+
+    private Integer tzOrder;
+
+    private Long tzScoreInsId;
+
+    public BigDecimal getTzMspsPwjPc() {
+        return tzMspsPwjPc;
+    }
+
+    public void setTzMspsPwjPc(BigDecimal tzMspsPwjPc) {
+        this.tzMspsPwjPc = tzMspsPwjPc;
+    }
+
+    public String getTzLuquZt() {
+        return tzLuquZt;
+    }
+
+    public void setTzLuquZt(String tzLuquZt) {
+        this.tzLuquZt = tzLuquZt == null ? null : tzLuquZt.trim();
+    }
 
     public String getTzBeizhu() {
         return tzBeizhu;
@@ -71,5 +100,37 @@ public class PsTzMspsKshTbl extends PsTzMspsKshTblKey {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public Integer getTzGroupId() {
+        return tzGroupId;
+    }
+
+    public void setTzGroupId(Integer tzGroupId) {
+        this.tzGroupId = tzGroupId;
+    }
+
+    public Date getTzGroupDate() {
+        return tzGroupDate;
+    }
+
+    public void setTzGroupDate(Date tzGroupDate) {
+        this.tzGroupDate = tzGroupDate;
+    }
+
+    public Integer getTzOrder() {
+        return tzOrder;
+    }
+
+    public void setTzOrder(Integer tzOrder) {
+        this.tzOrder = tzOrder;
+    }
+
+    public Long getTzScoreInsId() {
+        return tzScoreInsId;
+    }
+
+    public void setTzScoreInsId(Long tzScoreInsId) {
+        this.tzScoreInsId = tzScoreInsId;
     }
 }

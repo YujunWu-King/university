@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsksTblMapper;
-import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsksTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -34,7 +34,7 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery sqlQuery;
 	@Autowired
-	private PsTzMsPsksTblMapper psTzMsPsksTblMapper;
+	private PsTzMsPskshTblMapper psTzMsPsksTblMapper;
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
@@ -224,7 +224,7 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 								ksNameList = ksNameList + "第" + a[1] + "行的：" + ksName + ",";
 
 							} else {
-								PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
+								PsTzMsPskshTbl psTzMsPsksTbl = new PsTzMsPskshTbl();
 								psTzMsPsksTbl.setTzClassId(classId);
 								psTzMsPsksTbl.setTzApplyPcId(batchId);
 								psTzMsPsksTbl.setTzAppInsId(appinsId);

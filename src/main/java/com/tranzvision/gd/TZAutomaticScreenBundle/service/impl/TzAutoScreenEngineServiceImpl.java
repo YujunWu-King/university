@@ -100,10 +100,8 @@ public class TzAutoScreenEngineServiceImpl {
 		List<Map<String, Object>> itemsList = sqlQuery.queryForList(itemsSql, new Object[] { socreModelId, orgId });
 
 		// 成绩模型树根节点
-		// String rootSql =
-		// tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeRootNode");
-		// Map<String, Object> rootMap = sqlQuery.queryForMap(rootSql, new
-		// Object[] { socreModelId, orgId });
+		String rootSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeRootNode");
+		Map<String, Object> rootMap = sqlQuery.queryForMap(rootSql, new Object[] { socreModelId, orgId });
 
 		/****************************
 		 * 自动初筛前---先删除之前的初筛数据，以免产生垃圾数据----开始
@@ -123,16 +121,29 @@ public class TzAutoScreenEngineServiceImpl {
 		// 班级批次下参与自动初筛的考生 为该班级下 报名表提交并且审核通过的考生
 		String sql = "SELECT A.TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL A where A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ?";
 		List<Map<String, Object>> appInsList = sqlQuery.queryForList(sql, new Object[] { classId, batchId });
+		long appInsId = 0;
+		long scoreInsId = 0;
+		PsTzCsKsTblKey psTzCsKsTblKey = null;
+		PsTzCsKsTbl psTzCsKsTbl = null;
+		TzClmsZddfInterface zzdfObj = null;
+		String itemId = "";
+		String csDfgzId = "";
+		String csDfgzCls = "";
+		float rootScoreAmount = 0;
+		String treeName = "";
+		String rootNode = "";
+		PsTzCjxTblKey psTzCjxTblKey = null;
+		PsTzCjxTblWithBLOBs psTzCjxTbl = null;
 		for (Map<String, Object> appInsMap : appInsList) {
-			long appInsId = Long.valueOf(appInsMap.get("TZ_APP_INS_ID").toString());
+			appInsId = Long.valueOf(appInsMap.get("TZ_APP_INS_ID").toString());
 
-			PsTzCsKsTblKey psTzCsKsTblKey = new PsTzCsKsTblKey();
+			psTzCsKsTblKey = new PsTzCsKsTblKey();
 			psTzCsKsTblKey.setTzClassId(classId);
 			psTzCsKsTblKey.setTzApplyPcId(batchId);
 			psTzCsKsTblKey.setTzAppInsId(appInsId);
-			PsTzCsKsTbl psTzCsKsTbl = psTzCsKsTblMapper.selectByPrimaryKey(psTzCsKsTblKey);
+			psTzCsKsTbl = psTzCsKsTblMapper.selectByPrimaryKey(psTzCsKsTblKey);
 			// System.out.println("---------->"+classId+"---"+batchId+"---"+appInsId);
-			long scoreInsId = 0;
+			scoreInsId = 0;
 			boolean exists;
 			if (psTzCsKsTbl == null) {
 				exists = false;
@@ -166,14 +177,14 @@ public class TzAutoScreenEngineServiceImpl {
 
 			// 循环自动初筛成绩模型，获取所有成绩项类型为“数字成绩录入项”的节点，查询节点对应的成绩项打分规则ID
 			for (Map<String, Object> itemMap : itemsList) {
-				String itemId = itemMap.get("TZ_SCORE_ITEM_ID").toString();
-				String csDfgzId = itemMap.get("TZ_ZDCSGZ_ID") == null ? "" : itemMap.get("TZ_ZDCSGZ_ID").toString();
-				String csDfgzCls = itemMap.get("TZ_ZDCSGZ") == null ? "" : itemMap.get("TZ_ZDCSGZ").toString();
+				itemId = itemMap.get("TZ_SCORE_ITEM_ID").toString();
+				csDfgzId = itemMap.get("TZ_ZDCSGZ_ID") == null ? "" : itemMap.get("TZ_ZDCSGZ_ID").toString();
+				csDfgzCls = itemMap.get("TZ_ZDCSGZ") == null ? "" : itemMap.get("TZ_ZDCSGZ").toString();
 
 				if (!"".equals(csDfgzCls)) {
 					// 执行自动打分规则
 					try {
-						TzClmsZddfInterface zzdfObj = (TzClmsZddfInterface) ctx.getBean(csDfgzCls);
+						zzdfObj = (TzClmsZddfInterface) ctx.getBean(csDfgzCls);
 						zzdfObj.AutoCalculate(String.valueOf(appInsId), String.valueOf(scoreInsId), itemId);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -185,33 +196,38 @@ public class TzAutoScreenEngineServiceImpl {
 			}
 
 			// 计算总分,即根节点得分
-			/*
-			 * float rootScoreAmount = 0; if (rootMap != null) { String treeName
-			 * = rootMap.get("TREE_NAME").toString(); int rootNodeNum =
-			 * Integer.valueOf(rootMap.get("TREE_NODE_NUM").toString()); String
-			 * rootNode = rootMap.get("TREE_NODE").toString();
-			 * 
-			 * rootScoreAmount = calculateTreeNodeScore(scoreInsId, treeName,
-			 * orgId, rootNodeNum, rootNode); BigDecimal rootScore =
-			 * BigDecimal.valueOf(Double.valueOf(Float.toString(rootScoreAmount)
-			 * ));
-			 * 
-			 * PsTzCjxTblKey psTzCjxTblKey = new PsTzCjxTblKey();
-			 * psTzCjxTblKey.setTzScoreInsId(scoreInsId);
-			 * psTzCjxTblKey.setTzScoreItemId(rootNode); PsTzCjxTblWithBLOBs
-			 * psTzCjxTbl = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
-			 * if (psTzCjxTbl != null) { psTzCjxTbl.setTzScoreNum(rootScore);
-			 * psTzCjxTblMapper.updateByPrimaryKey(psTzCjxTbl); } else {
-			 * psTzCjxTbl = new PsTzCjxTblWithBLOBs();
-			 * psTzCjxTbl.setTzScoreInsId(scoreInsId);
-			 * psTzCjxTbl.setTzScoreItemId(rootNode);
-			 * psTzCjxTbl.setTzScoreNum(rootScore);
-			 * psTzCjxTblMapper.insert(psTzCjxTbl); }
-			 * 
-			 * Map<String, Object> ksScoreMap = new HashMap<String, Object>();
-			 * ksScoreMap.put("appInsId", appInsId); ksScoreMap.put("scoreNum",
-			 * rootScoreAmount); totalScoreList.add(ksScoreMap); }
-			 */
+
+			rootScoreAmount = 0;
+			if (rootMap != null) {
+				treeName = rootMap.get("TREE_NAME").toString();
+				int rootNodeNum = Integer.valueOf(rootMap.get("TREE_NODE_NUM").toString());
+				rootNode = rootMap.get("TREE_NODE").toString();
+
+				rootScoreAmount = calculateTreeNodeScore(scoreInsId, treeName, orgId, rootNodeNum, rootNode);
+				BigDecimal rootScore = BigDecimal.valueOf(Double.valueOf(Float.toString(rootScoreAmount)));
+
+				psTzCjxTblKey = new PsTzCjxTblKey();
+				psTzCjxTblKey.setTzScoreInsId(scoreInsId);
+				psTzCjxTblKey.setTzScoreItemId(rootNode);
+				psTzCjxTbl = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
+				if (psTzCjxTbl != null) {
+					psTzCjxTbl.setTzScoreNum(rootScore);
+					psTzCjxTblMapper.updateByPrimaryKey(psTzCjxTbl);
+				} else {
+					psTzCjxTbl = new PsTzCjxTblWithBLOBs();
+					psTzCjxTbl.setTzScoreInsId(scoreInsId);
+					psTzCjxTbl.setTzScoreItemId(rootNode);
+					psTzCjxTbl.setTzScoreNum(rootScore);
+					psTzCjxTblMapper.insert(psTzCjxTbl);
+				}
+
+				// Map<String, Object> ksScoreMap = new HashMap<String,
+				// Object>();
+				// ksScoreMap.put("appInsId", appInsId);
+				// ksScoreMap.put("scoreNum", rootScoreAmount);
+				// totalScoreList.add(ksScoreMap);
+			}
+
 		}
 
 		/*********************************** 计算排名开始 *************************************/

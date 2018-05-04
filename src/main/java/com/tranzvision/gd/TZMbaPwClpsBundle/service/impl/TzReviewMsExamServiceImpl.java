@@ -18,18 +18,17 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzInteGroupMapper;
-import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzStuMapper;
+
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInteGroup;
-import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzStuInfo;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzZdcsDcAetMapper;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzZdcsDcAet;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsksTblMapper;
-import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsksTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
 import com.tranzvision.gd.TZMbaPwMspsBundle.dao.PsTzMpPwKsTblMapper;
 import com.tranzvision.gd.TZMbaPwMspsBundle.model.PsTzMpPwKsTblKey;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
@@ -57,7 +56,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
-	private PsTzMsPsksTblMapper psTzMsPsksTblMapper;
+	private PsTzMsPskshTblMapper psTzMsPsksTblMapper;
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
@@ -203,7 +202,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					String sql = "SELECT COUNT(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
 					count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appinsId }, "Integer");
 					if (count > 0) {
-						PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
+						PsTzMsPskshTbl psTzMsPsksTbl = new PsTzMsPskshTbl();
 						psTzMsPsksTbl.setTzClassId(classId);
 						psTzMsPsksTbl.setTzApplyPcId(batchId);
 						psTzMsPsksTbl.setTzAppInsId(appinsId);
