@@ -17,8 +17,12 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDattTMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzExcelDrxxTMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzInteGroupMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzStuMapper;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDattT;
 import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzExcelDrxxT;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInteGroup;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzStuInfo;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZAutomaticScreenBundle.dao.PsTzZdcsDcAetMapper;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzZdcsDcAet;
@@ -68,7 +72,10 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	private PsTzExcelDattTMapper psTzExcelDattTMapper;
 	@Autowired
 	private PsTzMpPwKsTblMapper psTzMpPwKsTblMapper;
-
+	@Autowired
+	private PsTzStuMapper psTzStuMapper;
+	@Autowired
+	private PsTzInteGroupMapper psTzInteGroupMapper;
 	/***
 	 * 
 	 * @param comParams
@@ -96,6 +103,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 		// AND A.TZ_APP_INS_ID=? GROUP BY
 		// A.TZ_APPLY_PC_ID,A.TZ_CLASS_ID,A.TZ_APP_INS_ID";
 		try {
+			
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_APP_INS_ID", "ASC" } };
 
@@ -129,6 +137,24 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("gender", rowList[7]);
 					mapList.put("mshId", rowList[8]);
 					mapList.put("judgeGroupName", rowList[9]);
+					
+					String strClassID = rowList[0];
+					String appInsID_ = rowList[2];
+					if(appInsID_ != null && !"".equals(appInsID_)) {
+						Long appInsID = Long.parseLong(appInsID_);
+						PsTzStuInfo psi = psTzStuMapper.findById(strClassID, appInsID);
+						PsTzInteGroup psg =  null;
+						if(psi != null) {
+							psg = psTzInteGroupMapper.findByGid(psi.getGroup_id());
+							SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+							String date = sdf.format(psi.getGroup_date());
+							mapList.put("group_date", date);
+						}
+						if(psg != null) {
+							mapList.put("group_name", psg.getTz_group_name());
+						}
+					}
+					
 					listData.add(mapList);
 				}
 

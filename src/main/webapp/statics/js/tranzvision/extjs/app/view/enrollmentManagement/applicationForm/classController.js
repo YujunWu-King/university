@@ -123,6 +123,7 @@
             Ext.syncRequire(className);
         }
         ViewClass = Ext.ClassManager.get(className);
+        //alert(ViewClass)
         clsProto = ViewClass.prototype;
 
         if (clsProto.themes) {
@@ -842,7 +843,7 @@
         //该功能对应的JS类
         var className = pageResSet["jsClassName"];
         if(className == "" || className == undefined){
-            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_MSGL_MSFZ_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
             return;
         }
         var win = this.lookupReference('cldbForm');

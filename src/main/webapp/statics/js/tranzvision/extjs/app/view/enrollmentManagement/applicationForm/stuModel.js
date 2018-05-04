@@ -12,6 +12,8 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.stuModel', {
         {name: 'auditState'},
 		{name: 'interviewResult'},
         {name: 'colorType'},
-        {name: 'moreInfo'}
-    ]
+        {name: 'moreInfo'},
+        {name: 'group_name'},
+        {name: 'group_date'},
+        ]
 });

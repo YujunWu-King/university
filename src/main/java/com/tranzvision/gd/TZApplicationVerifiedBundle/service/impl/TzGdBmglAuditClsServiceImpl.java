@@ -129,7 +129,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					// strProjectID = (String) map.get("TZ_PRJ_ID");
 				}
 
-				// 报名人信息：报名表编号，审批状态，类别，姓名，出生日期，报名表提交状态，备注;
+				// 报名人信息：报名表编号，审批状态，类别，姓名，出生日期，报名表提交状态，备注，所属分组;
 				long strAppInsID = 0L;
 				String strSpState = "", strColorType = "", strStuName = "", strBirthDate = "", strSubmitState = "",
 						strRemark = "", strShortRemark = "";

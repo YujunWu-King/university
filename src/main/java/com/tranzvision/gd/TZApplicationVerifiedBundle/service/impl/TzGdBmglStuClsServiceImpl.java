@@ -1,6 +1,8 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzInteGroupMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzStuMapper;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInteGroup;
+import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzStuInfo;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
@@ -31,7 +37,10 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private FliterForm fliterForm;
-
+	@Autowired
+	private PsTzStuMapper psTzStuMapper;
+	@Autowired
+	private PsTzInteGroupMapper psTzInteGroupMapper;
 	// 获取班级信息
 	public String tzQuery(String strParams, String[] errMsg) {
 		// 返回值;
@@ -179,7 +188,28 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 					mapList.put("submitState", rowList[7]);
 					mapList.put("submitDate", rowList[8]);
 					mapList.put("interviewResult", rowList[9]);
-
+					
+					String appInsID_ = rowList[2];
+					if(appInsID_ != null && !"".equals(appInsID_)) {
+						Long appInsID = Long.parseLong(appInsID_);
+						PsTzStuInfo psi = psTzStuMapper.findById(strClassID, appInsID);
+						PsTzInteGroup psg =  null;
+						if(psi != null) {
+							psg = psTzInteGroupMapper.findByGid(psi.getGroup_id());
+							SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd hh:mm:ss");
+							Date date = psi.getGroup_date();
+							String date1 = "";
+							if(date != null) {
+								date1 = sdf.format(date);
+							}else {
+								date1 = "暂无时间安排";
+							}
+							mapList.put("group_date", date1);
+						}
+						if(psg != null) {
+							mapList.put("group_name", psg.getTz_group_name());
+						}
+					}
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
 					//System.out.println("classID"+strClassID);
