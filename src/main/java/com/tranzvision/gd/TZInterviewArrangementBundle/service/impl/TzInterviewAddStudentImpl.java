@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMspsKshTblMapper;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTblKey;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -36,7 +36,7 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
-	private PsTzMspsKshTblMapper psTzMspsKshTblMapper;
+	private PsTzMsPskshTblMapper psTzMspsKshTblMapper;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -161,14 +161,14 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 					long appInsId = stuInfoMap.get("appId") == null ? 0 : Long.valueOf(stuInfoMap.get("appId").toString());
 					
 					if(appInsId>0){
-						PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
+						PsTzMsPskshTblKey psTzMspsKshTblKey = new PsTzMsPskshTblKey();
 						psTzMspsKshTblKey.setTzClassId(classID);
 						psTzMspsKshTblKey.setTzApplyPcId(batchID);
 						psTzMspsKshTblKey.setTzAppInsId(appInsId);
 						
-						PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
+						PsTzMsPskshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
 						if(psTzMspsKshTbl==null){
-							psTzMspsKshTbl = new PsTzMspsKshTbl();
+							psTzMspsKshTbl = new PsTzMsPskshTbl();
 							psTzMspsKshTbl.setTzClassId(classID);
 							psTzMspsKshTbl.setTzApplyPcId(batchID);
 							psTzMspsKshTbl.setTzAppInsId(appInsId);

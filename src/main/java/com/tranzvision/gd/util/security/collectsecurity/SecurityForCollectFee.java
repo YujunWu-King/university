@@ -67,6 +67,9 @@ public class SecurityForCollectFee {
 		try {
 			java.security.Key key = Security.getKey(keyvalue);
 			byte[] tempcheck = DigestForCollectFee.message(dev, null);
+			pring(tempcheck);
+			
+			pring(EncryptionForCollect.encrypt(tempcheck, key, EncryptionForString.ENCODING_RAW));
 			byte[] encryptStr = Base64
 					.encode(EncryptionForCollect.encrypt(tempcheck, key, EncryptionForString.ENCODING_RAW));
 			rtn = new String(encryptStr);
@@ -76,12 +79,47 @@ public class SecurityForCollectFee {
 		return rtn;
 	}
 
+	private static void pring(byte[] tempcheck) {
+		System.out.println("===================");
+		for (int i=0;i<tempcheck.length;i++) {
+			System.out.println(toHexString1(tempcheck[i]));
+		}
+		System.out.println("===================");
+	}
+	
+	public static String toHexString1(byte[] b){
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < b.length; ++i){
+            buffer.append(toHexString1(b[i]));
+        }
+        return buffer.toString();
+    }
+	
+	public static String toHexString1(byte b){
+        String s = Integer.toHexString(b & 0xFF);
+        if (s.length() == 1){
+            return "0" + s;
+        }else{
+            return s;
+        }
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(System.currentTimeMillis());
-		System.out.println(String.valueOf(null));
+		//System.out.println(String.valueOf(null));
 //		try {
 //			java.security.Key key = Security.getKey("A0DFDF28AEAB2F131327FEDE5C2D8A6D399E4F568A2D4EFD");
-//			String dev = "2014/8/26 15:33:3811000003110000030000000411009502566114.221.61.1790";
+	String dev = "111222221525396905558";
+	String key="A0DFDF28AEAB2F131327FEDE5C2D8A6D399E4F568A2D4EFD";
+	System.out.println("key="+key);
+	System.out.println("dev="+dev);
+	try {
+		String a = SecurityForCollectFee.generalAuthenticator(key, dev);
+		System.out.println(a);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 //			byte[] tempcheck = DigestForCollectFee.message(dev, null);
 //			// System.out.println("tempcheck=" + new String(tempcheck));
 //			byte[] encryptStr = EncryptionForCollect.encrypt(tempcheck, key, EncryptionForString.ENCODING_RAW);

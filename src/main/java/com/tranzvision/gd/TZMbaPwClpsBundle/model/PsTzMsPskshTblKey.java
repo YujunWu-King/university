@@ -1,6 +1,6 @@
 package com.tranzvision.gd.TZMbaPwClpsBundle.model;
 
-public class PsTzMsPsksTblKey {
+public class PsTzMsPskshTblKey {
     private String tzClassId;
 
     private String tzApplyPcId;
