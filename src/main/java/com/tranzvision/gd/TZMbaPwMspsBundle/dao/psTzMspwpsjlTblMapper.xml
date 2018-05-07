@@ -13,13 +13,21 @@
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
   </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZMbaPwMspsBundle.model.psTzMspwpsjlTbl" extends="BaseResultMap" >
+    <result column="TZ_SIGNATURE" property="tzSignature" jdbcType="LONGVARCHAR" />
+  </resultMap>
   <sql id="Base_Column_List" >
     TZ_APPLY_PC_ID, TZ_CLASS_ID, TZ_PWEI_OPRID, TZ_SUBMIT_YN, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
     ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZMbaPwMspsBundle.model.psTzMspwpsjlTblKey" >
+  <sql id="Blob_Column_List" >
+    TZ_SIGNATURE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZMbaPwMspsBundle.model.psTzMspwpsjlTblKey" >
     select 
     <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
     from PS_TZ_MSPWPSJL_TBL
     where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
@@ -35,11 +43,11 @@
     insert into PS_TZ_MSPWPSJL_TBL (TZ_APPLY_PC_ID, TZ_CLASS_ID, TZ_PWEI_OPRID, 
       TZ_SUBMIT_YN, ROW_ADDED_DTTM, ROW_ADDED_OPRID, 
       ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, 
-      SYNCDTTM)
+      SYNCDTTM, TZ_SIGNATURE)
     values (#{tzApplyPcId,jdbcType=VARCHAR}, #{tzClassId,jdbcType=VARCHAR}, #{tzPweiOprid,jdbcType=VARCHAR}, 
       #{tzSubmitYn,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, 
       #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, #{syncid,jdbcType=INTEGER}, 
-      #{syncdttm,jdbcType=TIMESTAMP})
+      #{syncdttm,jdbcType=TIMESTAMP}, #{tzSignature,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMbaPwMspsBundle.model.psTzMspwpsjlTbl" >
     insert into PS_TZ_MSPWPSJL_TBL
@@ -74,6 +82,9 @@
       <if test="syncdttm != null" >
         SYNCDTTM,
       </if>
+      <if test="tzSignature != null" >
+        TZ_SIGNATURE,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzApplyPcId != null" >
@@ -106,6 +117,9 @@
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzSignature != null" >
+        #{tzSignature,jdbcType=LONGVARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMbaPwMspsBundle.model.psTzMspwpsjlTbl" >
@@ -132,7 +146,24 @@
       <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzSignature != null" >
+        TZ_SIGNATURE = #{tzSignature,jdbcType=LONGVARCHAR},
+      </if>
     </set>
+    where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
+      and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZMbaPwMspsBundle.model.psTzMspwpsjlTbl" >
+    update PS_TZ_MSPWPSJL_TBL
+    set TZ_SUBMIT_YN = #{tzSubmitYn,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      SYNCID = #{syncid,jdbcType=INTEGER},
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_SIGNATURE = #{tzSignature,jdbcType=LONGVARCHAR}
     where TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}

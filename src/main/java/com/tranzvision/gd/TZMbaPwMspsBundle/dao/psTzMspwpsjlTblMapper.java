@@ -14,5 +14,7 @@ public interface psTzMspwpsjlTblMapper {
 
     int updateByPrimaryKeySelective(psTzMspwpsjlTbl record);
 
+    int updateByPrimaryKeyWithBLOBs(psTzMspwpsjlTbl record);
+
     int updateByPrimaryKey(psTzMspwpsjlTbl record);
 }

@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 import com.tranzvision.gd.TZMbaPwMspsBundle.dao.PsTzMspskspwTblMapper;
@@ -124,7 +125,7 @@ public class InterviewEvaluationCls{
 			   error_decription = "报考批次不能为空！";
 		   }
 		   
-		   
+		   		   
 		   if(scoreItemId==null||"".equals(scoreItemId)){
 				//没有传值，取面试评审总分成绩项;
 				String TZ_SCORE_MODAL_ID = sqlQuery.queryForObject("select TZ_MSCJ_SCOR_MD_ID from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?", 
@@ -151,7 +152,6 @@ public class InterviewEvaluationCls{
 				   dgpw_all_num = Double.parseDouble(str_dgpw_all_num);
 			   }
 			   
-			   //完成数量
 			   String str_dgpw_wc_num = sqlQuery.queryForObject(
 				   		"select count(distinct TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? and TZ_PWEI_OPRID = ?  AND TZ_DELETE_ZT <> 'Y' and  TZ_PSHEN_ZT = 'Y'",
 				   		new Object[] { classId, batchId ,oprids[0] }, "String");		   
@@ -463,12 +463,13 @@ public class InterviewEvaluationCls{
 	}
 	
 	//添加考生和评委关系
-	protected Map<String,Object> addJudgeApplicant(String classId, String batchId, String appInsId, String oprId){
+	protected Map<String,Object> addJudgeApplicant(String classId, String batchId, String msGroupId, String oprId){
 		
 		Map<String,Object> rtn = new HashMap<String,Object>();
 		
 		Boolean result = true;
 		String msg = "";
+		String firstAppInsId = "";
 		
 		//判断是否已经整体提交，整体提交后不能添加
 		String if_TZ_SUBMIT_YN = sqlQuery.queryForObject("select TZ_SUBMIT_YN from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID= ? and TZ_PWEI_OPRID= ?", 
@@ -478,6 +479,7 @@ public class InterviewEvaluationCls{
 			msg = "评议数据已经提交，不允许新增考生评议数据。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
+			rtn.put("appInsId", "");
 			return rtn;
 		}
 		
@@ -489,6 +491,7 @@ public class InterviewEvaluationCls{
 			msg = "您的账号暂时无法评议该批次，请与管理员联系。";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
+			rtn.put("appInsId", "");
 			return rtn;
 		}
 		
@@ -500,107 +503,143 @@ public class InterviewEvaluationCls{
 			msg = "该批次的评审已关闭";
 			rtn.put("result", result);
 			rtn.put("msg", msg);
+			rtn.put("appInsId", "");
 			return rtn;
 		}
 		
-		//若考生评委关系已存在，且“移除”状态为“未移除”，则不再建立
-		int unum = sqlQuery.queryForObject("select count(TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_DELETE_ZT<>'Y' and TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_APP_INS_ID = ? and TZ_PWEI_OPRID = ?", 
-				new Object[]{classId,batchId,appInsId,oprId}, "Integer");
-		if(unum>0){
-			rtn.put("result", result);
-			return rtn;
-		}
+		//查询一个考生可以被几个评委评审
+		Integer numKSPWSX = sqlQuery.queryForObject("select TZ_MSPY_NUM from PS_TZ_MSPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ?", 
+				new Object[]{classId,batchId}, "Integer");
+		numKSPWSX = numKSPWSX==null?0:numKSPWSX;
 		
-		//判断当前考生是否达到评委上限，若已达到，则不能再被新评委评审;
-		Integer numKSPW = 0, numKSPWSX = 0;
-		numKSPW = sqlQuery.queryForObject("select count(TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_APP_INS_ID = ? and TZ_DELETE_ZT<>'Y'", 
-				new Object[]{classId,batchId,appInsId}, "Integer");
-
-		if(numKSPW>0){
-			numKSPWSX = sqlQuery.queryForObject("select TZ_MSPY_NUM from PS_TZ_MSPS_GZ_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ?", 
-					new Object[]{classId,batchId}, "Integer");
-			numKSPWSX = numKSPWSX==null?0:numKSPWSX;
+		//查询面试组下的考生信息，按面试序号排序
+		Boolean addFlag = true;
+		String addMsg = "";
+		int kshCount = 0;
+		List<Map<String, Object>> listKsh = sqlQuery.queryForList("SELECT TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_GROUP_ID=? ORDER BY TZ_ORDER ASC",new Object[]{classId,batchId,msGroupId});
+		for(Map<String, Object> mapKsh:listKsh) {
+			String appInsId = mapKsh.get("TZ_APP_INS_ID") == null ? "" : mapKsh.get("TZ_APP_INS_ID").toString();
+			addFlag = true;
 			
-			if(numKSPWSX>numKSPW){
-				//判断当前评委是否与评议该考生的其他评委在同一组;
-				String strIsOneGroup = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPS_PW_TBL where TZ_PWEI_GRPID in (select TZ_PWEI_GRPID from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID in (select TZ_PWEI_OPRID from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=? and TZ_DELETE_ZT<>'Y')) and TZ_PWEI_OPRID=? and TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?", 
-						new Object[]{classId,batchId,classId,batchId,appInsId,oprId,classId,batchId}, "String");
-				if(!"Y".equals(strIsOneGroup)){
-					result = false;
-					msg = "您与其他评委不在同一组，无法评议该考生！";
-					rtn.put("result", result);
-					rtn.put("msg", msg);
-					return rtn;
+			if(!"".equals(appInsId)) {
+				kshCount ++;
+				
+				//记录第一个考生报名表编号
+				if("1".equals(String.valueOf(kshCount))) {
+					firstAppInsId = appInsId;
 				}
-			}else{
-				result = false;
-				msg = "该考生已完成评审，无需再评审！";
-				rtn.put("result", result);
-				rtn.put("msg", msg);
-				return rtn;
-			}
-		}
-		
-		//开始添加评委考生数据
-		PsTzMpPwKsTbl psTzMpPwKsTbl  = new PsTzMpPwKsTbl();
-		psTzMpPwKsTbl.setTzClassId(classId);
-		psTzMpPwKsTbl.setTzApplyPcId(batchId);
-		psTzMpPwKsTbl.setTzAppInsId(Long.parseLong(appInsId));
-		psTzMpPwKsTbl.setTzPweiOprid(oprId);
-		psTzMpPwKsTbl.setTzDeleteZt("N");
-		psTzMpPwKsTbl.setTzMshiKssj(new Date());
-		psTzMpPwKsTbl.setRowLastmantDttm(new Date());
-		psTzMpPwKsTbl.setRowLastmantOprid(oprId);
-		
-		String mppwksExist = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?", 
-				new Object[]{classId,batchId,Long.parseLong(appInsId),oprId},"String");
-		if("Y".equals(mppwksExist)){			
-			psTzMpPwKsTblMapper.updateByPrimaryKeySelective(psTzMpPwKsTbl);
-		}else{
-			psTzMpPwKsTbl.setTzPshenZt("N");
-			psTzMpPwKsTbl.setRowAddedDttm(new Date());
-			psTzMpPwKsTbl.setRowAddedOprid(oprId);
-			psTzMpPwKsTblMapper.insertSelective(psTzMpPwKsTbl);
-		}
+				
+				//若考生评委关系已存在，且“移除”状态为“未移除”，则不再建立
+				int unum = sqlQuery.queryForObject("select count(TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_DELETE_ZT<>'Y' and TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_APP_INS_ID = ? and TZ_PWEI_OPRID = ?", 
+						new Object[]{classId,batchId,appInsId,oprId}, "Integer");
+				if(unum>0){
+					
+				} else {
+					
+					//判断当前考生是否达到评委上限，若已达到，则不能再被新评委评审;
+					Integer numKSPW = 0;
+					numKSPW = sqlQuery.queryForObject("select count(TZ_APP_INS_ID) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_APP_INS_ID = ? and TZ_DELETE_ZT<>'Y'", 
+							new Object[]{classId,batchId,appInsId}, "Integer");
+					
+					if(numKSPW>0){
+						
+						if(numKSPWSX>numKSPW){
+							//判断当前评委是否与评议该考生的其他评委在同一组;
+							String strIsOneGroup = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPS_PW_TBL where TZ_PWEI_GRPID in (select TZ_PWEI_GRPID from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID in (select TZ_PWEI_OPRID from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=? and TZ_DELETE_ZT<>'Y')) and TZ_PWEI_OPRID=? and TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=?", 
+									new Object[]{classId,batchId,classId,batchId,appInsId,oprId,classId,batchId}, "String");
+							if(!"Y".equals(strIsOneGroup)){
+								addFlag = false;
+								addMsg = "您与其他评委不在同一组，无法评议该考生！";
+							}
+						}else{
+							addFlag = false;
+							addMsg = "该考生已完成评审，无需再评审！";	
+						}
+					}
+					
+					if(addFlag) {
+						
+						//开始添加评委考生数据
+						PsTzMpPwKsTbl psTzMpPwKsTbl  = new PsTzMpPwKsTbl();
+						psTzMpPwKsTbl.setTzClassId(classId);
+						psTzMpPwKsTbl.setTzApplyPcId(batchId);
+						psTzMpPwKsTbl.setTzAppInsId(Long.parseLong(appInsId));
+						psTzMpPwKsTbl.setTzPweiOprid(oprId);
+						psTzMpPwKsTbl.setTzDeleteZt("N");
+						psTzMpPwKsTbl.setTzMshiKssj(new Date());
+						psTzMpPwKsTbl.setRowLastmantDttm(new Date());
+						psTzMpPwKsTbl.setRowLastmantOprid(oprId);
+					
+						String mppwksExist = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?", 
+								new Object[]{classId,batchId,Long.parseLong(appInsId),oprId},"String");
+						if("Y".equals(mppwksExist)){			
+							psTzMpPwKsTblMapper.updateByPrimaryKeySelective(psTzMpPwKsTbl);
+						}else{
+							psTzMpPwKsTbl.setTzPshenZt("N");
+							psTzMpPwKsTbl.setRowAddedDttm(new Date());
+							psTzMpPwKsTbl.setRowAddedOprid(oprId);
+							psTzMpPwKsTblMapper.insertSelective(psTzMpPwKsTbl);
+						}
 
-		//更新 TZ_MSPSKSPW_TBL 的 TZ_MSPW_LIST 字段;
-		String strJudgeList = "",strNewJudgeList;
-		Map<String, Object> map = sqlQuery.queryForMap("select TZ_MSPW_LIST from PS_TZ_MSPSKSPW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?", 
-				new Object[]{classId,batchId,appInsId});
-		if(map!=null){
-			strJudgeList = (String)map.get("TZ_MSPW_LIST");
-			if(strJudgeList!=null&&!"".equals(strJudgeList)){
-				if(strJudgeList.indexOf(oprId)>-1){
-					strNewJudgeList = strJudgeList;
-				}else{
-					strNewJudgeList = strJudgeList+","+oprId;
+						//更新 TZ_MSPSKSPW_TBL 的 TZ_MSPW_LIST 字段;
+						String strJudgeList = "",strNewJudgeList;
+						Map<String, Object> map = sqlQuery.queryForMap("select TZ_MSPW_LIST from PS_TZ_MSPSKSPW_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?", 
+								new Object[]{classId,batchId,appInsId});
+						if(map!=null){
+							strJudgeList = (String)map.get("TZ_MSPW_LIST");
+							if(strJudgeList!=null&&!"".equals(strJudgeList)){
+								if(strJudgeList.indexOf(oprId)>-1){
+									strNewJudgeList = strJudgeList;
+								}else{
+									strNewJudgeList = strJudgeList+","+oprId;
+								}
+							}else{
+								strNewJudgeList = oprId;
+							}
+						}else{
+							strNewJudgeList = oprId;
+						}
+					
+						PsTzMspskspwTbl psTzMspskspwTbl = new PsTzMspskspwTbl();
+						psTzMspskspwTbl.setTzClassId(classId);
+						psTzMspskspwTbl.setTzApplyPcId(batchId);
+						psTzMspskspwTbl.setTzAppInsId(Long.parseLong(appInsId));
+						psTzMspskspwTbl.setTzMspwList(strNewJudgeList);
+						psTzMspskspwTbl.setRowLastmantDttm(new Date());
+						psTzMspskspwTbl.setRowLastmantOprid(oprId);
+						if(map!=null){
+							psTzMspskspwTblMapper.updateByPrimaryKeySelective(psTzMspskspwTbl);
+						}else{
+							psTzMspskspwTbl.setRowAddedDttm(new Date());
+							psTzMspskspwTbl.setRowAddedOprid(oprId);
+							psTzMspskspwTblMapper.insertSelective(psTzMspskspwTbl);
+						}
+
+					}
+					
 				}
-			}else{
-				strNewJudgeList = oprId;
 			}
-		}else{
-			strNewJudgeList = oprId;
 		}
 		
-		PsTzMspskspwTbl psTzMspskspwTbl = new PsTzMspskspwTbl();
-		psTzMspskspwTbl.setTzClassId(classId);
-		psTzMspskspwTbl.setTzApplyPcId(batchId);
-		psTzMspskspwTbl.setTzAppInsId(Long.parseLong(appInsId));
-		psTzMspskspwTbl.setTzMspwList(strNewJudgeList);
-		psTzMspskspwTbl.setRowLastmantDttm(new Date());
-		psTzMspskspwTbl.setRowLastmantOprid(oprId);
-		if(map!=null){
-			psTzMspskspwTblMapper.updateByPrimaryKeySelective(psTzMspskspwTbl);
-		}else{
-			psTzMspskspwTbl.setRowAddedDttm(new Date());
-			psTzMspskspwTbl.setRowAddedOprid(oprId);
-			psTzMspskspwTblMapper.insertSelective(psTzMspskspwTbl);
+		if(kshCount>0) {
+
+		} else {
+			//没有考生
+			result = false;
+			msg = "该面试组下没有考生";
+			rtn.put("result", result);
+			rtn.put("msg", msg);
+			rtn.put("appInsId", "");
+			return rtn;
 		}
+		
 
 		//重新计算排名;
 		updateRanking(classId,batchId,oprId);
 		
 		rtn.put("result", result);
+		rtn.put("appInsId", firstAppInsId);
+		
 		return rtn;
 	}
 	

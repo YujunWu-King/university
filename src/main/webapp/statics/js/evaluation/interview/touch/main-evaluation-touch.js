@@ -1,14 +1,14 @@
 var baseUrl = ContextPath+"/dispatcher?classid=interview&OperateType=EJSON";
 
 $(document).ready(function() {
-	showLoader()
+	showLoader();
 	/****解析json数据***/
 	$.getJSON(baseUrl+'&type=data&BaokaoClassID='+ClassId+'&BaokaoPCID='+BatchId+'&RequestDataType=A&MaxRowCount=200',function (data) { 
 
 		$("#description").html(data.comContent.ps_description);
-		var jsonObject = data.comContent; 
+		var jsonObject = data.comContent;
 
-   		useJson(jsonObject);
+		useJson(jsonObject);
    		hideLoader();
 	});  
 
@@ -47,19 +47,18 @@ function useJson(varjsonData){
 	var data=varjsonData;
 	var jsonObject = varjsonData; 
 
-		var charts_arr0 = [];
-
-		var charts_arr = [];
+	var charts_arr0 = [];
+	var charts_arr = [];
 
 	var yAxisArr=[];
-		var yAxisArrName=[];
-		var varArr = [];
-		var legendArr = [];
-		var xAxisArr=[];
-		var series2Name="";
+	var yAxisArrName=[];
+	var varArr = [];
+	var legendArr = [];
+	var xAxisArr=[];
+	var series2Name="";
 
 
-	 $("#ypsinfo").html(data.ps_gaiy_info);
+	$("#ypsinfo").html(data.ps_gaiy_info);
 	if(data.ps_kslb_submtall=="Y"){
 		 $("#submtall_flag").html("已提交");
 	}
@@ -73,6 +72,16 @@ function useJson(varjsonData){
 	{
 		$("#submtall_flag").html("未提交");
 	}
+
+
+	//选择面试组
+	var msGroupHtml = "<select id='msGroup' name='msGroup' style='width: 150px;'>";
+	var msGroupArray = jsonObject['ps_ms_group'];
+	for(var m=0;m<msGroupArray.length;m++) {
+		msGroupHtml += "<option value='"+ msGroupArray[m]['msGroupId'] +"'>"+ msGroupArray[m]['msGroupName'] +"</option>"
+	}
+	msGroupHtml += "</select>";
+	$("#msGroupSpan").html(msGroupHtml);
 
 	
 	//考生列表
@@ -100,24 +109,105 @@ function useJson(varjsonData){
 			colName = 'col' + colName.substr(colName.length - 2);
 			concollist+="<td class='alt' >"+(ksbodyArray[i][colName]||"")+'</td>';
 	    }
-		
-		var btnps="<td class='alt' style='padding:0'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='"+"index?page=evaluation&classId="+ClassId+"&batchId="+BatchId+"&appInsId="+ksbodyArray[i]['ps_ksh_bmbid']+"' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>评审</span></span></a></td>";
-		var btnyc="<td class='alt' style='padding:0'><a data-icon='delete' data-mini='true' data-inline='true' data-role='button' id='favrecipelink' href='javascript:void(0);' onclick=toycks('"+ksbodyArray[i]['ps_ksh_xm']+"','"+ksbodyArray[i]['ps_ksh_bmbid']+"'); data-corners='true' data-shadow='true' data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-btn-up-c ui-shadow ui-icon-delete ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>移除</span></span></a></td>";
 
-		detallist+="<tr id='"+ksbodyArray[i]['ps_ksh_id']+"'><td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xh']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_msh_id']+"</td><td  class='alt'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>"+concollist+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_ppm']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_school']+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_company']+"</td>"+"<td  class='alt'>"+(ksbodyArray[i]['ps_ksh_zt']||"")+"</td>"+"<td  class='alt'>"+ksbodyArray[i]['ps_ksh_dt']+"</td>"+btnps+btnyc+"</tr>"
+		detallist+="<tr id='"+ksbodyArray[i]['ps_ksh_id']+"'>";
+		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xh']+"</td>";
+		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_bmbid']+"</td>";
+		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>";
+		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_sex']+"</td>";
+		detallist+="<td  class='alt'>"+ksbodyArray[i]['ps_msh_id']+"</td>";
+		detallist+=concollist;
+		detallist+="</td>"+"<td  class='alt'>"+(ksbodyArray[i]['ps_ksh_zt']||"")+"</td>";
+		detallist+="<td  class='alt'>"+ksbodyArray[i]['ps_ksh_dt']+"</td>";
+		if(GroupLeader=="Y") {
+			//组长，可看其他评委打分
+			var ksh_bmbid = ksbodyArray[i]['ps_ksh_bmbid'];
+			detallist+="<td class='alt' style='padding:0'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='javascript:void(0);' onclick='viewOtherJudge(" +ksh_bmbid+")' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>查看</span></span></a></td>";
+		}
 
 	}
 
-	
-	 var examerinfolist="<th scope='col'  style='text-align:center;'>"+"面试顺序"+"</th><th scope='col' style='text-align:center;'>"+"申请号"+"</th><th scope='col'  style='text-align:center;'>"+"姓名"+"</th>";
-  	 var headbutton="<th  scope='col'  style='text-align:center;'>"+"排名"+"</th><th  scope='col'  style='text-align:center;'>"+"本科院校"+"</th><th scope='col' style='text-align:center;width:80px'>"+"工作单位"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评议状态"+"</th>"+"<th  scope='col'  style='text-align:center;'>"+"评审时间"+"</th>"+"<th scope='col'  style='text-align:center;'>"+"评审"+"</th><th scope='col'  style='text-align:center;'>"+"移除"+"</th>";
-	 examerinfolist="<table  id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'><tr>"+examerinfolist+collist+headbutton+'</tr>'+detallist+'</table>';
+	 //列名
+	 var examerHeaderlist="<th scope='col'  style='text-align:center;'>序号</th>";
+	examerHeaderlist += "<th scope='col' style='text-align:center;'>报名表编号</th>";
+	examerHeaderlist += "<th scope='col'  style='text-align:center;'>姓名</th>";
+	examerHeaderlist += "<th scope='col'  style='text-align:center;'>性别</th>";
+	examerHeaderlist += "<th scope='col'  style='text-align:center;'>面试申请号</th>";
+
+  	 var headbutton="<th scope='col'  style='text-align:center;'>评审状态</th>";
+	 headbutton+="<th scope='col'  style='text-align:center;'>评审时间</th>";
+	 if(GroupLeader=="Y") {
+		 //组长，可看其他评委打分
+		 headbutton += "<th scope='col'  style='text-align:center;'>"+"其他评委打分"+"</th>";
+	 }
+	 var examerinfolist="<table  id='mytable' cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'>";
+	 examerinfolist += "<tr>"+examerHeaderlist+collist+headbutton+'</tr>'+detallist+'</table>';
 
 	 $("#examerinfo").html(examerinfolist);
 
 
-	//已评审考生得分统计
+	//其他评委打分
+	if(GroupLeader=="Y") {
 
+		var qtpwScoreHtml = "";
+
+		//列名
+		var qtpwColName = "<th scope='col'  style='text-align:center;'>评委账号</th>";
+		qtpwColName += "<th scope='col' style='text-align:center;'>评委姓名</th>";
+		qtpwColName += "<th scope='col' style='text-align:center;'>类型</th>";
+		qtpwColName += collist;
+
+		for (var i = 0; i < ksbodyArray.length; i++) {
+
+			var qtpwValue = "";
+			var qtpwArray = ksbodyArray[i]['ps_other_pw'];
+
+			for (var j = 0; j < qtpwArray.length; j++) {
+				qtpwValue += "<tr id='" + qtpwArray[j]['otherPwDlzhId'] + "'>";
+				qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + qtpwArray[j]['otherPwDlzhId'] + "</td>";
+				qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + qtpwArray[j]['otherPwName'] + "</td>";
+				qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + qtpwArray[j]['otherPwTypeDesc'] + "</td>";
+
+				var num = 0;
+				for (var k in ksheadObject) {
+					num++;
+					var colName = '00' + num;
+					colName = 'col' + colName.substr(colName.length - 2);
+					qtpwValue += "<td class='alt' >" + (qtpwArray[j][colName] || "") + '</td>';
+				}
+				qtpwValue += "</tr>";
+			}
+
+			var popupDivId = "popupDialog" + ksbodyArray[i]['ps_ksh_bmbid'];
+
+			var qtpwPopup = '<div style="display: none;" id="' + popupDivId + '-placeholder"><!-- placeholder for popupDialog409357 --></div>';
+			qtpwPopup += '<div class="ui-screen-hidden ui-popup-screen ui-overlay-b" id="'+ popupDivId +'-screen"></div>';
+			qtpwPopup += '<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="'+ popupDivId +'-popup">';
+			qtpwPopup += '<div data-role="popup" id="' + popupDivId + '" data-position-to="window" data-dismissible="false" data-overlay-theme="b" style="min-width:350px;">';
+			qtpwPopup += '<div data-role="header" data-theme="b" role="banner" >';
+			qtpwPopup += '<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" onClick="" class="ui-btn-right">Close</a>';
+			qtpwPopup += '<h1  role="heading" aria-level="1">评委打分情况查看</h1>';
+			qtpwPopup += '</div>';
+			qtpwPopup += '<div data-role="content" data-theme="a" role="main" align="center">';
+			qtpwPopup += '<div>学生姓名：' + ksbodyArray[i]['ps_ksh_xm'] + '</div>';
+			qtpwPopup += '<table cellspacing="0" width="100%" summary="the technical specifications of the apple powermac g5 series">';
+			qtpwPopup += '<tr>' + qtpwColName + '</tr>';
+			qtpwPopup += qtpwValue;
+			qtpwPopup += '</table>';
+			qtpwPopup += '</div>';
+			qtpwPopup += "</div>";
+			qtpwPopup += "</div>";
+
+
+			qtpwScoreHtml += qtpwPopup;
+		}
+
+		$("#otherJudgeScore").after(qtpwScoreHtml);
+	}
+
+
+	//已评审考生得分统计
+/*
 		var headline1="";
 		var headline2="";
 		var headall="";
@@ -184,10 +274,11 @@ function useJson(varjsonData){
 		
 		headall="<tr scope='col'  style='text-align:center;'>"+headline1+"</tr>"+"<tr scope='col'  style='text-align:center;'>"+headline2+"</tr>";
 		statable1="<table id='mytable'  cellspacing='0' width='100%' summary='the technical specifications of the apple powermac g5 series'> "+headall+bodyline+"</table>";
-		
+	*/
 	
 
 	// 已评审考生得分分布统计;
+	/*
 	var fszbArray=jsonObject['ps_data_fb'];
 	var dffbscroll="";
 	for(var i=0;i<fszbArray.length;i++){
@@ -207,9 +298,11 @@ function useJson(varjsonData){
 
 		dffbscroll+="<div style='width:100%'><div>"+"</div><div>"+dffbtable+"</div></div>";
 	}
+	*/
 	
 
 	//设置图表区是否显示;
+	/*
 	if(data.ps_pwkj_tjb!="Y"){
 		$("#pwkj_tjb1").css("display", "none");
 		$("#pwkj_tjb2").css("display", "none");
@@ -279,8 +372,10 @@ function useJson(varjsonData){
 				xAxisArr.push(tmpArray[i][colName]);
 			}
 		}
+		*/
 
 		/****曲线图****/
+	/*
 		var lineArray = jsonObject['ps_data_fb'];
 		for(var i=0;i< lineArray.length;i++){
 			var divId2="container1_"+i;
@@ -389,10 +484,11 @@ function useJson(varjsonData){
 			});
 			charts_arr0.push(linechar);
 		}
-			
+	*/
 
-		
+
 		/***柱状图****/
+	/*
 	   // var divWidth = $("#columnGroup").width();
 		//alert(xAxisArr.length+"--"+yAxisArr.length);
 		for(var chartNum = 0; chartNum < xAxisArr.length; chartNum++){
@@ -463,7 +559,7 @@ function useJson(varjsonData){
 					layout: 'vertical',
 					align: 'center',
 					verticalAlign: 'top',
-					y: 0,
+					y: 0
 				},
 
 				series: [{
@@ -477,7 +573,7 @@ function useJson(varjsonData){
 			charts_arr.push(char2); 
 
 		}
-
+*/
 
 }
 
@@ -551,45 +647,71 @@ function getForm2(){
 
 	}
 
-	//提示移除考生;
-	function toycks(sname,bmbid){
-
+//提示移除考生;
+function toycks(sname,bmbid){
 	$("#ks_name").html(sname);
 	document.getElementById("tz_hide_bmbid").value=bmbid;
 	document.getElementById("tz_hide_ksname").value=sname;
 
 	$("#popupDialog").popup('open');
-	}
-	//提示提交所有;
-	function tosubmitall(){
+}
 
+//提示提交所有;
+function tosubmitall(){
 	$("#popupDialogSubmit").popup('open');
+}
+
+//打开签名对话框
+function sign(){
+	setTimeout("loadSignatureDialog()",500);
+}
+
+//加载签名控件
+function loadSignatureDialog(){
+	$('#signatureDialog').popup('open');
+	if($.signatureLoaded==undefined){
+		$('#signature').jSignature({width:500,height:200});
+		$.signatureLoaded = true;
+	}else{
+		$('#signature').jSignature("reset");
 	}
-	//确定提交所有;
-	function submitall(){
-		
-		$.ajax({
-	  		type: 'POST',
-	  		url: baseUrl+"&type=submit",
-	  		data: {"BaokaoClassID":ClassId,"BaokaoPCID":BatchId},
-	  		success: function(response) {
-	  			var data = response.comContent;
-		 		if (data.error_code=="0"){
-					alert("提交成功");
-					refreshKslist();
-				}else{
-					alert(data.error_decription);
-					if(data.error_cfksid!=undefined){
-						for (var i =0 ;i<data.error_cfksid.length;i++){
-							$('#'+(data.error_cfksid)[i].ps_ksh_id).children('td').css({color:'red'})
-						};
+
+}
+
+//签名之后确定提交所有;
+function submitall(){
+	//输出签名图片
+	var $sigdiv = $("#signature");
+	var datapair = $sigdiv.jSignature("getData", "image");
+
+	if(datapair[1].length<400){
+		alert("请您先签名！");
+		return;
+	}
+
+	$.ajax({
+		type: 'POST',
+		url: baseUrl+"&type=submit",
+		data: {"BaokaoClassID":ClassId,"BaokaoPCID":BatchId,"Signature":"data:" + datapair[0] + "," + datapair[1]},
+		success: function(response) {
+			var data = response.comContent;
+			if (data.error_code=="0"){
+				alert("提交成功");
+				refreshKslist();
+			}else{
+				alert(data.error_decription);
+				if(data.error_cfksid!=undefined){
+					for (var i =0 ;i<data.error_cfksid.length;i++){
+						$('#'+(data.error_cfksid)[i].ps_ksh_id).children('td').css({color:'red'})
 					}
 				}
-	        },
-	  		dataType: "json"
-		});
+			}
+		},
+		dataType: "json"
+	});
 
-	}
+	$("#closeSignatureDialog").trigger("click");
+}
 	
 
 	//查找考生;
@@ -629,27 +751,34 @@ function getForm2(){
 	
 	//进行评审;
 	function jxps(){
-	var ksh_bmbid=document.getElementById("tz_search_bmbid").value;
+		var ms_group_id = $("#msGroup option:selected").val();
 
-	if (ksh_bmbid!=""){
-	var translink="index?page=evaluation&classId="+ClassId+"&batchId="+BatchId+"&appInsId="+ksh_bmbid;
+		if (ms_group_id!=""){
 			$.ajax({
-		  		type: 'POST',
-		  		url: baseUrl+"&type=add",
-		  		data: {"KSH_BMBID":ksh_bmbid,"BaokaoClassID":ClassId,"BaokaoPCID":BatchId},
-		  		success: function(response) {
-		  			var data = response.comContent;
-			 		if (data.error_code=="0"|| data.error_code =="2"||data.error_decription=="2"){
-	
-					 window.open(translink,'_self');
-							}
-						else{
-							alert(data.error_decription);
-							}
-			        },
-			        dataType: "json"
-			}); 
-
+				type: 'POST',
+				url: baseUrl+"&type=add",
+				data: {"MsGroupId":ms_group_id,"BaokaoClassID":ClassId,"BaokaoPCID":BatchId},
+				success: function(response) {
+					var data = response.comContent;
+					if (data.error_code=="0"|| data.error_code =="2"||data.error_decription=="2"){
+						var appInsId = data.appInsId;
+						var translink="index?page=evaluation&classId="+ClassId+"&batchId="+BatchId+"&msGroupId="+ms_group_id+"&appInsId="+appInsId;
+						window.open(translink,'_self');
+					} else{
+						alert(data.error_decription);
+					}
+				},
+				dataType: "json"
+			});
+		} else {
+			alert("请选择面试组!");
 		}
 	
 	}
+
+
+//查看其他评委打分
+function viewOtherJudge(bmbid) {
+	var popupId = "popupDialog"+bmbid;
+	$("#"+ popupId +"").popup('open');
+}

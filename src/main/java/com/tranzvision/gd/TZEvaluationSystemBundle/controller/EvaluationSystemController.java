@@ -137,41 +137,6 @@ public class EvaluationSystemController {
 	
 	@RequestMapping(value = { "/interview/index" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String interviewEvaluationIndex(HttpServletRequest request, HttpServletResponse response) {
-
-		String indexHtml = "";
-		try {
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[]{oprid}, "String");
-			String timeOut = "false";
-			
-			// 判断下用户有没有登录;
-			if (oprid == null || "".equals(oprid) || orgid == null || "".equals(orgid) || zhid == null
-					|| "".equals(zhid)) {
-				timeOut = "true";
-				
-				if(orgid==null||"".equals(orgid)){
-					orgid = tzCookie.getStringCookieVal(request, cookieOrgId);
-				}
-			}
-			
-			String contactUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_CONTACT_URL"}, "String");
-			String evaluationDescriptionUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_I_DESCRIPTION_URL"}, "String");
-			
-			indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_INDEX",request.getContextPath(),orgid,timeOut,userName,contactUrl,evaluationDescriptionUrl);
-			
-		} catch (TzSystemException e) {
-			e.printStackTrace();
-			indexHtml = e.toString();
-		}
-		return indexHtml;
-	}
-	
-	
-	@RequestMapping(value = { "/interview/t/index" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
 	public String interviewEvaluationTouchIndex(HttpServletRequest request, HttpServletResponse response) {
 
 		String indexHtml = "";
@@ -186,6 +151,7 @@ public class EvaluationSystemController {
 				String classId = request.getParameter("classId");
 				String batchId = request.getParameter("batchId");
 				String appInsId = request.getParameter("appInsId");
+				String msGroupId = request.getParameter("msGroupId");
 				
 				String appTplId = "",className = "",batchName="";
 				
@@ -197,7 +163,14 @@ public class EvaluationSystemController {
 					appTplId = (String)map.get("TZ_PS_APP_MODAL_ID");
 				}
 				
-				/* 当前考生的姓名和面试申请号，卢艳添加，2017-6-15 begin */
+				//评委是否组长
+				String pwzzFlag = sqlQuery.queryForObject("SELECT TZ_GROUP_LEADER FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?", new Object[]{classId,batchId,oprid},"String");
+				if(pwzzFlag==null) {
+					pwzzFlag = "";
+				}
+				
+				/* 当前考生的姓名和面试申请号 */
+				/*
 				String  mssqh = "", examineeName = "";
 				Map<String, Object> mapKs = sqlQuery.queryForMap("SELECT B.TZ_REALNAME,B.TZ_MSH_ID FROM PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B WHERE A.OPRID=B.OPRID AND A.TZ_APP_INS_ID=?", new Object[]{appInsId});
 				if(mapKs!=null) {
@@ -206,11 +179,11 @@ public class EvaluationSystemController {
 				}
 				
 				String ksIframeId = "bmb_iframe_" + classId + "_" + batchId + "_" + appInsId;
-				/* 当前考生的姓名和面试申请号，卢艳添加，2017-6-15 begin */
+*/
 				
 				indexHtml = "batch".equals(page)?
-						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl)
-						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId,mssqh,examineeName,ksIframeId);
+						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl,pwzzFlag)
+						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId,msGroupId,pwzzFlag);
 			}else{
 				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName,contactUrl);
 			}
@@ -256,12 +229,7 @@ public class EvaluationSystemController {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);
 		jsonMap.put("error", errorMsg);
-		if("interview".equals(type)&&"pad".equals(device)){
-			jsonMap.put("indexUrl", "/evaluation/interview/t/index");
-		}else{
-			jsonMap.put("indexUrl", "/evaluation/"+type+"/index");
-		}
-		
+		jsonMap.put("indexUrl", "/evaluation/interview/index");		
 
 		return jacksonUtil.Map2json(jsonMap);
 	}
