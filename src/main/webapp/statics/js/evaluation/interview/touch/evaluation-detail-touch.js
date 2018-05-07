@@ -116,7 +116,8 @@ function ks_list(){
 					detallist+="<td class='alt' style='padding:0'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='javascript:void(0)' onclick='tz_ks_dfq("+ksbodyArray[i]['appInsId']+")' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>进行评审</span></span></a></td>";
 					if(GroupLeader=="Y") {
 						//组长可以查看其他评委打分
-						detallist+="<td class='alt' style='padding:0'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='"+"index?page=evaluation&classId="+ClassId+"&batchId="+BatchId+"&appInsId="+ksbodyArray[i]['ps_ksh_bmbid']+"' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>查看</span></span></a></td>";
+						var ksh_bmbid = ksbodyArray[i]['appInsId'];
+						detallist+="<td class='alt' style='padding:0'><a data-icon='arrow-r' data-mini='true' data-inline='true' data-role='button' data-ajax='false' id='favrecipelink' href='javascript:void(0);' onclick='viewOtherScore(" +ksh_bmbid+")' data-corners='true' data-shadow='true'data-iconshadow='true' data-wrapperels='span' data-theme='a' class='ui-btn ui-shadow ui-icon-arrow-r ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-left ui-btn-up-c'><span class='ui-btn-inner ui-btn-corner-all ui-corner-top ui-corner-bottom'><span class='ui-btn-text'>查看</span></span></a></td>";
 					}
 					detallist+="</tr>";
 				}
@@ -141,6 +142,58 @@ function ks_list(){
 
 				$("#ks_list_head").html("");
 				$("#ks_list_head").append(examerinfolist);
+
+
+
+
+				//其他评委打分
+				if(GroupLeader=="Y") {
+
+					var qtpwScoreHtml = "";
+
+					//列名
+					var qtpwColName = "<th scope='col'  style='text-align:center;'>评委账号</th>";
+					qtpwColName += "<th scope='col' style='text-align:center;'>评委姓名</th>";
+					qtpwColName += "<th scope='col' style='text-align:center;'>类型</th>";
+					qtpwColName += collist;
+
+					for (var i = 0; i < ksbodyArray.length; i++) {
+
+						var qtpwValue = "";
+						var qtpwArray = ksbodyArray[i]['ps_other_pw'];
+
+						for (var j = 0; j < qtpwArray.length; j++) {
+							qtpwValue += "<tr id='" + qtpwArray[j]['otherPwDlzhId'] + "'>";
+							qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + qtpwArray[j]['otherPwDlzhId'] + "</td>";
+							qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + qtpwArray[j]['otherPwName'] + "</td>";
+							qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + qtpwArray[j]['otherPwTypeDesc'] + "</td>";
+
+							var num = 0;
+							for (var k in ksheadObject) {
+								num++;
+								var colName = '00' + num;
+								colName = 'col' + colName.substr(colName.length - 2);
+								qtpwValue += "<td class='alt' >" + (qtpwArray[j][colName] || "") + '</td>';
+							}
+							qtpwValue += "</tr>";
+						}
+
+						var otherScoreDivId = "score" + ksbodyArray[i]['appInsId'];
+
+						var qtpwScore ='<div id=' + otherScoreDivId + '>';
+						qtpwScore += '<div>学生姓名：' + ksbodyArray[i]['realname'] + '</div>';
+						qtpwScore += '<table cellspacing="0" width="100%" summary="the technical specifications of the apple powermac g5 series">';
+						qtpwScore += '<tr>' + qtpwColName + '</tr>';
+						qtpwScore += qtpwValue;
+						qtpwScore += '</table>';
+						qtpwScore += "</div>";
+
+						qtpwScoreHtml += qtpwScore;
+					}
+
+					$("#otherJudgeScore").append(qtpwScoreHtml);
+				}
+
 			}
 
 		}
@@ -1186,5 +1239,14 @@ function ks_esc(){
 //退出结束
 
 
+//查看其他评委打分开始
+function viewOtherScore(bmbid) {
+	var divId = "score" + bmbid;
+	var popupContent = $("#"+divId).html();
+
+	$("#otherDialog .ui-content").html(popupContent);
+	$("#otherDialog").popup('open');
+}
+//查看其他评委打分结束
 
 

@@ -288,6 +288,12 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				return strRet;
 			}
 			
+			/*评委类型：英语A或其他O*/
+			String pwType = sqlQuery.queryForObject("SELECT TZ_PWEI_TYPE FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?", new Object[] {classId,batchId,oprid},"String");
+			
+			//成绩模型中英语成绩项ID
+			String englishCjxId = getHardCodePoint.getHardCodePointVal("TZ_MSPS_YYNL_CJX_ID");
+			
 			
 			Map<String,Object> dyColThMap= new HashMap<String,Object>();
 			List<Map<String,Object>> dyRowValue= new ArrayList<Map<String,Object>>();
@@ -295,14 +301,32 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			//考生列表需要显示的成绩项列名称
 			int dyColNum2 = 0;
 			
-			String cjxNameSql = "SELECT TZ_SCORE_ITEM_ID,TZ_XS_MC FROM PS_TZ_CJ_BPH_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=? AND TZ_ITEM_S_TYPE='A' ORDER BY TZ_PX DESC";
-			List<Map<String, Object>> listHeader = sqlQuery.queryForList(cjxNameSql,new Object[]{TZ_MSPS_SCOR_MD_ID,orgId});
+			//String cjxNameSql = "SELECT TZ_SCORE_ITEM_ID,TZ_XS_MC FROM PS_TZ_CJ_BPH_TBL WHERE TZ_SCORE_MODAL_ID=? AND TZ_JG_ID=? AND TZ_ITEM_S_TYPE='A' ORDER BY TZ_PX DESC";
+			//List<Map<String, Object>> listHeader = sqlQuery.queryForList(cjxNameSql,new Object[]{TZ_MSPS_SCOR_MD_ID,orgId});
+			String cjxNameSql = "SELECT A.TREE_NODE, B.DESCR,B.TZ_SCORE_ITEM_TYPE";
+			cjxNameSql += " FROM PSTREENODE A,PS_TZ_MODAL_DT_TBL B";
+			cjxNameSql += " WHERE A.TREE_NAME=B.TREE_NAME AND A.TREE_NODE=B.TZ_SCORE_ITEM_ID AND A.TREE_NAME=? AND A.TREE_LEVEL_NUM=2";
+			cjxNameSql += "	ORDER BY A.TREE_NODE_NUM,A.TREE_NODE_NUM_END DESC" ;
+			List<Map<String, Object>> listHeader = sqlQuery.queryForList(cjxNameSql, new Object[] { TREE_NAME});
 			for(Map<String, Object> mapHeader : listHeader) {
-				String TZ_XS_MC = mapHeader.get("TZ_XS_MC") == null ? "" : mapHeader.get("TZ_XS_MC").toString();
+				String TREE_NODE = mapHeader.get("TREE_NODE") == null ? "" : mapHeader.get("TREE_NODE").toString();
+				String TZ_XS_MC = mapHeader.get("DESCR") == null ? "" : mapHeader.get("DESCR").toString();
 				
-				dyColNum2 = dyColNum2 + 1;
-				String strDyColNum2 = "0" + dyColNum2;
-				dyColThMap.put("col"+strDyColNum2.substring(strDyColNum2.length() - 2), TZ_XS_MC);
+				Boolean boolShow = true;
+				if(englishCjxId.equals(TREE_NODE)) {
+					//英语成绩项
+					if("A".equals(pwType)) {
+						
+					} else {
+						boolShow = false;
+					}
+				} 
+				
+				if(boolShow) {
+					dyColNum2 = dyColNum2 + 1;
+					String strDyColNum2 = "0" + dyColNum2;
+					dyColThMap.put("col"+strDyColNum2.substring(strDyColNum2.length() - 2), TZ_XS_MC);
+				}
 			}
 			
 			
@@ -331,7 +355,8 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				int dyColNum = 0;
 				if(listHeader!=null) {
 					for (int i = 0; i < listHeader.size(); i++) {
-						TZ_SCORE_ITEM_ID = (String) listHeader.get(i).get("TZ_SCORE_ITEM_ID");
+						//TZ_SCORE_ITEM_ID = (String) listHeader.get(i).get("TZ_SCORE_ITEM_ID");
+						TZ_SCORE_ITEM_ID = (String) listHeader.get(i).get("TREE_NODE");
 
 						String TZ_SCORE_ITEM_TYPE = "",TZ_SCR_TO_SCORE = "";
 						Map<String, Object> mapCjxType= sqlQuery.queryForMap(
@@ -342,45 +367,150 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 							TZ_SCR_TO_SCORE = (String) mapCjxType.get("TZ_SCR_TO_SCORE");
 						}
 						
-						dyColNum = dyColNum + 1;
-						
-						// 得到分值;
-						double TZ_SCORE_NUM = 0;
-						String TZ_SCORE_PY_VALUE = "",TZ_CJX_XLK_XXBH = "";
-						
-						Map<String,Object> mapCjxValue = sqlQuery.queryForMap("SELECT TZ_SCORE_NUM,TZ_SCORE_PY_VALUE,TZ_CJX_XLK_XXBH FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?",new Object[]{scoreInsId,TZ_SCORE_ITEM_ID});
-						if(mapCjxValue!=null) {
-							Object OBJ_TZ_SCORE_NUM = mapCjxValue.get("TZ_SCORE_NUM");
-							TZ_SCORE_NUM = OBJ_TZ_SCORE_NUM!=null?((BigDecimal)OBJ_TZ_SCORE_NUM).doubleValue():0;
-							TZ_SCORE_PY_VALUE = mapCjxValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapCjxValue.get("TZ_SCORE_PY_VALUE").toString();
-							TZ_CJX_XLK_XXBH = mapCjxValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapCjxValue.get("TZ_CJX_XLK_XXBH").toString();
-						}
-						
-						String strDyColNum = "0" + dyColNum;
-						strDyColNum = strDyColNum.substring(strDyColNum.length() - 2);
-						
-						/*成绩项类型：A-数字成绩汇总项,B-数字成绩录入项,C-评语,D-下拉框*/
-						if ("A".equals(TZ_SCORE_ITEM_TYPE) || "B".equals(TZ_SCORE_ITEM_TYPE)
-								||("D".equals(TZ_SCORE_ITEM_TYPE)&&"Y".equals(TZ_SCR_TO_SCORE))) {
-							
-							//成绩录入项、成绩汇总项、下拉框且转换为分值   取分数，否则取评语;
-					        dyRowValueItem.put("col"+strDyColNum,String.valueOf(TZ_SCORE_NUM));
-					        
-						} else {
-							if ("D".equals(TZ_SCORE_ITEM_TYPE)) {
-								// 如果是下拉框，需要取得下拉框名称，此处存的是下拉框编号;
-								String str_xlk_desc = sqlQuery.queryForObject(
-										"select TZ_CJX_XLK_XXMC from PS_TZ_ZJCJXXZX_T where TREE_NAME=? and TZ_SCORE_ITEM_ID=? and TZ_CJX_XLK_XXBH=?",
-										new Object[] { TREE_NAME, TZ_SCORE_ITEM_ID, TZ_CJX_XLK_XXBH },
-										"String");
-
-								TZ_SCORE_PY_VALUE = str_xlk_desc;
+						Boolean boolShowValue = true;
+						if(englishCjxId.equals(TZ_SCORE_ITEM_ID)) {
+							//英语成绩项
+							if("A".equals(pwType)) {
+								
+							} else {
+								boolShowValue = false;
 							}
-					        dyRowValueItem.put("col"+strDyColNum,TZ_SCORE_PY_VALUE);
+						} 
+						
+						if(boolShowValue) {
+						
+							dyColNum = dyColNum + 1;
+							
+							// 得到分值;
+							double TZ_SCORE_NUM = 0;
+							String TZ_SCORE_PY_VALUE = "",TZ_CJX_XLK_XXBH = "";
+							
+							Map<String,Object> mapCjxValue = sqlQuery.queryForMap("SELECT TZ_SCORE_NUM,TZ_SCORE_PY_VALUE,TZ_CJX_XLK_XXBH FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?",new Object[]{scoreInsId,TZ_SCORE_ITEM_ID});
+							if(mapCjxValue!=null) {
+								Object OBJ_TZ_SCORE_NUM = mapCjxValue.get("TZ_SCORE_NUM");
+								TZ_SCORE_NUM = OBJ_TZ_SCORE_NUM!=null?((BigDecimal)OBJ_TZ_SCORE_NUM).doubleValue():0;
+								TZ_SCORE_PY_VALUE = mapCjxValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapCjxValue.get("TZ_SCORE_PY_VALUE").toString();
+								TZ_CJX_XLK_XXBH = mapCjxValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapCjxValue.get("TZ_CJX_XLK_XXBH").toString();
+							}
+						
+							String strDyColNum = "0" + dyColNum;
+							strDyColNum = strDyColNum.substring(strDyColNum.length() - 2);
+						
+							/*成绩项类型：A-数字成绩汇总项,B-数字成绩录入项,C-评语,D-下拉框*/
+							if ("A".equals(TZ_SCORE_ITEM_TYPE) || "B".equals(TZ_SCORE_ITEM_TYPE)
+									||("D".equals(TZ_SCORE_ITEM_TYPE)&&"Y".equals(TZ_SCR_TO_SCORE))) {
+								
+								//成绩录入项、成绩汇总项、下拉框且转换为分值   取分数，否则取评语;
+						        dyRowValueItem.put("col"+strDyColNum,String.valueOf(TZ_SCORE_NUM));
+						        
+							} else {
+								if ("D".equals(TZ_SCORE_ITEM_TYPE)) {
+									// 如果是下拉框，需要取得下拉框名称，此处存的是下拉框编号;
+									String str_xlk_desc = sqlQuery.queryForObject(
+											"select TZ_CJX_XLK_XXMC from PS_TZ_ZJCJXXZX_T where TREE_NAME=? and TZ_SCORE_ITEM_ID=? and TZ_CJX_XLK_XXBH=?",
+											new Object[] { TREE_NAME, TZ_SCORE_ITEM_ID, TZ_CJX_XLK_XXBH },
+											"String");
+	
+									TZ_SCORE_PY_VALUE = str_xlk_desc;
+								}
+						        dyRowValueItem.put("col"+strDyColNum,TZ_SCORE_PY_VALUE);
+							}
 						}
 					}
-				}
+				}				
 				
+				
+				//其他评委打分情况
+				List<Map<String, Object>> otherPwList = new ArrayList<Map<String,Object>>();
+				
+		        String otherPwSql = "SELECT  A.TZ_PWEI_OPRID,B.TZ_DLZH_ID,B.TZ_REALNAME,A.TZ_SCORE_INS_ID,C.TZ_PWEI_TYPE";
+		        otherPwSql += " FROM PS_TZ_AQ_YHXX_TBL B,PS_TZ_MSPS_PW_TBL C,PS_TZ_MP_PW_KS_TBL A";
+		        otherPwSql += " WHERE A.TZ_PWEI_OPRID=B.OPRID AND A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_APPLY_PC_ID AND A.TZ_PWEI_OPRID=C.TZ_PWEI_OPRID";
+		        otherPwSql += " AND C.TZ_PWEI_ZHZT<>'B' AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID<>? AND A.TZ_DELETE_ZT<>'Y'";
+		        
+		        List<Map<String, Object>> listOtherPw = sqlQuery.queryForList(otherPwSql, new Object[]{classId,batchId,appInsId,oprid});
+		        for(Map<String, Object> mapOtherPw : listOtherPw) {
+		        	
+					Map<String, Object> otherPwItem = new HashMap<String,Object>();
+		        	
+		        	String otherPwOprid = mapOtherPw.get("TZ_PWEI_OPRID") == null ? "" : mapOtherPw.get("TZ_PWEI_OPRID").toString();
+		        	String otherPwDlzhId = mapOtherPw.get("TZ_DLZH_ID") == null ? "" : mapOtherPw.get("TZ_DLZH_ID").toString();
+		        	String otherPwName = mapOtherPw.get("TZ_REALNAME") == null ? "" : mapOtherPw.get("TZ_REALNAME").toString();
+		        	String otherPwScoreInsId = mapOtherPw.get("TZ_SCORE_INS_ID") == null ? "" : mapOtherPw.get("TZ_SCORE_INS_ID").toString();
+		        	String otherPwType = mapOtherPw.get("TZ_PWEI_TYPE") == null ? "" : mapOtherPw.get("TZ_PWEI_TYPE").toString();
+		        
+		        	String otherPwTypeDesc = "其他评委";
+		        	if("A".equals(otherPwType)) {
+		        		otherPwTypeDesc = "英语评委";
+		        	}
+		        	
+		        	otherPwItem.put("otherPwDlzhId", otherPwDlzhId);
+		        	otherPwItem.put("otherPwName", otherPwName);
+		        	otherPwItem.put("otherPwTypeDesc", otherPwTypeDesc);
+		        	
+		        	
+		        	int dyColNumOther = 0;
+		        	if(listHeader!=null) {
+						for (int i = 0; i < listHeader.size(); i++) {
+							String TZ_SCORE_ITEM_ID_OTH = (String) listHeader.get(i).get("TZ_SCORE_ITEM_ID");
+
+							// 判断成绩项的类型，下拉框转换为分值;
+							String TZ_SCORE_ITEM_TYPE_OTH = "",TZ_SCR_TO_SCORE_OTH = "";
+							Map<String, Object> mapOther= sqlQuery.queryForMap(
+									"select TZ_SCORE_ITEM_TYPE,TZ_SCR_TO_SCORE from PS_TZ_MODAL_DT_TBL where TREE_NAME=? and TZ_SCORE_ITEM_ID=?",
+									new Object[] { TREE_NAME, TZ_SCORE_ITEM_ID_OTH });
+							if(mapOther!=null){
+								TZ_SCORE_ITEM_TYPE_OTH = (String)mapOther.get("TZ_SCORE_ITEM_TYPE");
+								TZ_SCR_TO_SCORE_OTH = (String)mapOther.get("TZ_SCR_TO_SCORE");
+							}
+							
+							dyColNumOther = dyColNumOther + 1;
+
+							// 得到分值;
+							double TZ_SCORE_NUM_OTH = 0;
+							String TZ_SCORE_PY_VALUE_OTH = "";
+
+							Map<String, Object> mapOtherValue = sqlQuery.queryForMap(
+									"select TZ_SCORE_NUM,TZ_SCORE_PY_VALUE from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?",
+									new Object[] { otherPwScoreInsId, TZ_SCORE_ITEM_ID_OTH});
+							if (mapOtherValue != null) {
+								Object OBJ_TZ_SCORE_NUM_OTH = mapOtherValue.get("TZ_SCORE_NUM");
+								TZ_SCORE_NUM_OTH = OBJ_TZ_SCORE_NUM_OTH!=null?((BigDecimal)OBJ_TZ_SCORE_NUM_OTH).doubleValue():0;
+								TZ_SCORE_PY_VALUE_OTH = (String) mapOtherValue.get("TZ_SCORE_PY_VALUE");
+							}
+
+							String strDyColNumOther = "0" + dyColNumOther;
+							strDyColNumOther = strDyColNumOther.substring(strDyColNumOther.length() - 2);
+
+							/*动态列
+							 * 成绩项类型：A-数字成绩汇总项,B-数字成绩录入项,C-评语,D-下拉框
+							 */
+							if ("A".equals(TZ_SCORE_ITEM_TYPE_OTH) || "B".equals(TZ_SCORE_ITEM_TYPE_OTH)
+									||("D".equals(TZ_SCORE_ITEM_TYPE_OTH)&&"Y".equals(TZ_SCR_TO_SCORE_OTH))) {
+								//成绩录入项、成绩汇总项、下拉框且转换为分值   取分数，否则取评语;
+								otherPwItem.put("col"+strDyColNumOther,String.valueOf(TZ_SCORE_NUM_OTH));
+							} else {
+								if ("D".equals(TZ_SCORE_ITEM_TYPE_OTH)) {
+									// 如果是下拉框，需要取得下拉框名称，此处存的是下拉框编号;
+									String str_xlk_desc_other = sqlQuery.queryForObject(
+											"select TZ_CJX_XLK_XXMC from PS_TZ_ZJCJXXZX_T where TREE_NAME=? and TZ_SCORE_ITEM_ID=? and TZ_CJX_XLK_XXBH=?",
+											new Object[] { TREE_NAME, TZ_SCORE_ITEM_ID_OTH, TZ_SCORE_PY_VALUE_OTH },
+											"String");
+
+									TZ_SCORE_PY_VALUE_OTH = str_xlk_desc_other;
+
+								}
+								otherPwItem.put("col"+strDyColNumOther,TZ_SCORE_PY_VALUE_OTH);
+							}
+						}
+		        	}
+		        	
+		        	otherPwList.add(otherPwItem);
+		        }
+		        
+	        	dyRowValueItem.put("ps_other_pw", otherPwList);
+	        	
+	        	
 				dyRowValue.add(dyRowValueItem);
  			}
 			

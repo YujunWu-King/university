@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 import com.tranzvision.gd.TZMbaPwMspsBundle.dao.psTzMspwpsjlTblMapper;
@@ -43,6 +44,8 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 	InterviewEvaluationCls applicationCls;
 	@Autowired
 	TZGDObject tzGdObject;
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	
 	@Override
 	public String tzGetJsonData(String strParams) {
@@ -327,6 +330,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 		
 		try {
+						
 			// 班级名称、报名模板表编号
 			String str_class_name = "";
 			Map<String, Object> classInfoMap = sqlQuery.queryForMap(
@@ -388,6 +392,14 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				}
 			}
 			
+			
+			//成绩模型中英语成绩项ID
+			String englishCjxId = getHardCodePoint.getHardCodePointVal("TZ_MSPS_YYNL_CJX_ID");
+			
+			/*评委类型：英语A或其他O*/
+			String pwType = sqlQuery.queryForObject("SELECT TZ_PWEI_TYPE FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?", new Object[] {classId,batchId,oprid},"String");
+			
+			
 			/* 第1部分 面试组 */
 			List<Map<String,Object>> list_msgroup= new ArrayList<Map<String,Object>>();
 			
@@ -445,10 +457,23 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				if(!"".equals(pjfScoreItemId)) {
 					// 计算平均分
 					double pjf = 0;
+					Boolean boolCal = true;
 					
-					pjf = applicationCls.calculateAverage(classId, batchId, new String[]{oprid}, pjfScoreItemId, error_code, error_decription);
+					if(englishCjxId.equals(pjfScoreItemId)) {
+						//英语成绩项
+						if("A".equals(pwType)) {
+							
+						} else {
+							boolCal = false;
+						}
+					} 
+					
+					if(boolCal) {
+						pjf = applicationCls.calculateAverage(classId, batchId, new String[]{oprid}, pjfScoreItemId, error_code, error_decription);
 
-					ps_cjx_pjf_info  += pjfScoreItemName + "的平均分：" + pjf + "，";
+						ps_cjx_pjf_info  += pjfScoreItemName + "的平均分：" + pjf + "，";
+					}
+					
 				}
 			}
 			
@@ -460,7 +485,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			
 			
 			
-			
+			/*
 			List<Map<String,Object>> secondPwdfThList= new ArrayList<Map<String,Object>>();
 			Map<String, Object> secondPwdfTh1 = new HashMap<String, Object>();
 			secondPwdfTh1.put("col01", "指标名称");
@@ -521,11 +546,12 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			if("Y".equals(str_jsfs)){
 				 //ps_gaiy_info = ps_gaiy_info + "平均分：" + pjf;
 			}
-				   
+			*/	   
 			
 			/* 第4部分 当前评委打分分布统计信息 */
 			//int TOTALPWRS = tz_done_num;/*完成数量*/
 
+			/*
 			List<Map<String,Object>> evaluationDataList = applicationCls.getScoreItemEvaluationData(classId, batchId, oprid, TZ_SCORE_ITEM_ID, error_code, error_decription);
 
 			List<Map<String,Object>> fbsjrow = new ArrayList<Map<String,Object>>();
@@ -560,24 +586,43 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			thdFbMap.put("ps_cht_flds", ps_cht_flds);
 			thdFbMap.put("ps_fszb_fbsj", fbsjrow);
 			thdFbList.add(thdFbMap);
-			
+			*/
 			
 			/* 第5部分 当前评委已评审考生统计信息 */
 			Map<String,Object> dyColThMap= new HashMap<String,Object>();			
-			String TZ_XS_MC2 = "",SCORE_ITEM_TYPE = "";
+			String TREE_NODE = "",TZ_XS_MC2 = "",SCORE_ITEM_TYPE = "";
 			int dyColNum2 = 0;
 
-			String sql1 = "select A.TZ_SCORE_ITEM_ID,A.TZ_XS_MC,B.TZ_SCORE_ITEM_TYPE from PS_TZ_CJ_BPH_TBL A,PS_TZ_MODAL_DT_TBL B where A.TZ_SCORE_ITEM_ID = B.TZ_SCORE_ITEM_ID AND B.TREE_NAME=? AND A.TZ_SCORE_MODAL_ID=? AND A.TZ_JG_ID=? AND A.TZ_ITEM_S_TYPE = 'A' order by A.TZ_PX";
-			List<Map<String, Object>> scoreModalList = sqlQuery.queryForList(sql1, new Object[] { TREE_NAME,TZ_MSPS_SCOR_MD_ID ,orgid});
+			//String sql1 = "select A.TZ_SCORE_ITEM_ID,A.TZ_XS_MC,B.TZ_SCORE_ITEM_TYPE from PS_TZ_CJ_BPH_TBL A,PS_TZ_MODAL_DT_TBL B where A.TZ_SCORE_ITEM_ID = B.TZ_SCORE_ITEM_ID AND B.TREE_NAME=? AND A.TZ_SCORE_MODAL_ID=? AND A.TZ_JG_ID=? AND A.TZ_ITEM_S_TYPE = 'A' order by A.TZ_PX";
+			//List<Map<String, Object>> scoreModalList = sqlQuery.queryForList(sql1, new Object[] { TREE_NAME,TZ_MSPS_SCOR_MD_ID ,orgid});
+
+			String sql1 = "SELECT A.TREE_NODE, B.DESCR,B.TZ_SCORE_ITEM_TYPE";
+			sql1 += " FROM PSTREENODE A,PS_TZ_MODAL_DT_TBL B";
+			sql1 += " WHERE A.TREE_NAME=B.TREE_NAME AND A.TREE_NODE=B.TZ_SCORE_ITEM_ID AND A.TREE_NAME=? AND A.TREE_LEVEL_NUM=2";
+			sql1 += "	ORDER BY A.TREE_NODE_NUM,A.TREE_NODE_NUM_END DESC" ;
+			List<Map<String, Object>> scoreModalList = sqlQuery.queryForList(sql1, new Object[] { TREE_NAME});
 
 			if (scoreModalList != null) {
 				for (int i = 0; i < scoreModalList.size(); i++) {
-					TZ_XS_MC2 = (String) scoreModalList.get(i).get("TZ_XS_MC");
+					TREE_NODE = (String) scoreModalList.get(i).get("TREE_NODE");
+					TZ_XS_MC2 = (String) scoreModalList.get(i).get("DESCR");
 					SCORE_ITEM_TYPE = (String) scoreModalList.get(i).get("TZ_SCORE_ITEM_TYPE");
+						
+					Boolean boolShow = true;
+					if(englishCjxId.equals(TREE_NODE)) {
+						//英语成绩项
+						if("A".equals(pwType)) {
 							
-					dyColNum2 = dyColNum2 + 1;
-					String strDyColNum2 = "0" + dyColNum2;
-					dyColThMap.put("col"+strDyColNum2.substring(strDyColNum2.length() - 2), TZ_XS_MC2);
+						} else {
+							boolShow = false;
+						}
+					} 
+					
+					if(boolShow) {
+						dyColNum2 = dyColNum2 + 1;
+						String strDyColNum2 = "0" + dyColNum2;
+						dyColThMap.put("col"+strDyColNum2.substring(strDyColNum2.length() - 2), TZ_XS_MC2);
+					}
 				}
 			}
 			
@@ -650,69 +695,83 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						
 						if (scoreModalList != null) {
 							for (int j = 0; j < scoreModalList.size(); j++) {
-								TZ_SCORE_ITEM_ID3 = (String) scoreModalList.get(j).get("TZ_SCORE_ITEM_ID");
-
-								// 判断成绩项的类型，下拉框转换为分值;
-								String TZ_SCORE_ITEM_TYPE = "",TZ_SCR_TO_SCORE = "";
-								Map<String, Object> map5= sqlQuery.queryForMap(
-										"select TZ_SCORE_ITEM_TYPE,TZ_SCR_TO_SCORE from PS_TZ_MODAL_DT_TBL where TREE_NAME=? and TZ_SCORE_ITEM_ID=?",
-										new Object[] { TREE_NAME, TZ_SCORE_ITEM_ID3 });
-								if(map5!=null){
-									TZ_SCORE_ITEM_TYPE = (String)map5.get("TZ_SCORE_ITEM_TYPE");
-									TZ_SCR_TO_SCORE = (String)map5.get("TZ_SCR_TO_SCORE");
-								}
+								//TZ_SCORE_ITEM_ID3 = (String) scoreModalList.get(j).get("TZ_SCORE_ITEM_ID");
+								TZ_SCORE_ITEM_ID3 = (String) scoreModalList.get(j).get("TREE_NODE");
 								
-								dyColNum = dyColNum + 1;
+								Boolean boolShowValue = true;
+								if(englishCjxId.equals(TZ_SCORE_ITEM_ID3)) {
+									//英语成绩项
+									if("A".equals(pwType)) {
+										
+									} else {
+										boolShowValue = false;
+									}
+								} 
+								
+								if(boolShowValue) {
+								
+									// 判断成绩项的类型，下拉框转换为分值;
+									String TZ_SCORE_ITEM_TYPE = "",TZ_SCR_TO_SCORE = "";
+									Map<String, Object> map5= sqlQuery.queryForMap(
+											"select TZ_SCORE_ITEM_TYPE,TZ_SCR_TO_SCORE from PS_TZ_MODAL_DT_TBL where TREE_NAME=? and TZ_SCORE_ITEM_ID=?",
+											new Object[] { TREE_NAME, TZ_SCORE_ITEM_ID3 });
+									if(map5!=null){
+										TZ_SCORE_ITEM_TYPE = (String)map5.get("TZ_SCORE_ITEM_TYPE");
+										TZ_SCR_TO_SCORE = (String)map5.get("TZ_SCR_TO_SCORE");
+									}
+									
+									dyColNum = dyColNum + 1;
 
-								// 得到分值;
-								double TZ_SCORE_NUM = 0;
-								String TZ_SCORE_PY_VALUE = "";
+									// 得到分值;
+									double TZ_SCORE_NUM = 0;
+									String TZ_SCORE_PY_VALUE = "";
+	
+									Map<String, Object> map6 = sqlQuery.queryForMap(
+											"select TZ_SCORE_NUM,TZ_SCORE_PY_VALUE from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?",
+											new Object[] { cjdId, TZ_SCORE_ITEM_ID3});
+									if (map6 != null) {
+										Object OBJ_TZ_SCORE_NUM = map6.get("TZ_SCORE_NUM");
+										TZ_SCORE_NUM = OBJ_TZ_SCORE_NUM!=null?((BigDecimal)OBJ_TZ_SCORE_NUM).doubleValue():0;
+										TZ_SCORE_PY_VALUE = (String) map6.get("TZ_SCORE_PY_VALUE");
+									}
 
-								Map<String, Object> map6 = sqlQuery.queryForMap(
-										"select TZ_SCORE_NUM,TZ_SCORE_PY_VALUE from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?",
-										new Object[] { cjdId, TZ_SCORE_ITEM_ID3});
-								if (map6 != null) {
-									Object OBJ_TZ_SCORE_NUM = map6.get("TZ_SCORE_NUM");
-									TZ_SCORE_NUM = OBJ_TZ_SCORE_NUM!=null?((BigDecimal)OBJ_TZ_SCORE_NUM).doubleValue():0;
-									TZ_SCORE_PY_VALUE = (String) map6.get("TZ_SCORE_PY_VALUE");
-								}
+									String strDyColNum = "0" + dyColNum;
+									strDyColNum = strDyColNum.substring(strDyColNum.length() - 2);
 
-								String strDyColNum = "0" + dyColNum;
-								strDyColNum = strDyColNum.substring(strDyColNum.length() - 2);
-
-								/*动态列
-								 * 成绩项类型：A-数字成绩汇总项,B-数字成绩录入项,C-评语,D-下拉框
-								 * From KitchenSink.view.scoreModelManagement.scoreModelTreeNodeWin
-								 */
-								if ("A".equals(TZ_SCORE_ITEM_TYPE) || "B".equals(TZ_SCORE_ITEM_TYPE)
-										||("D".equals(TZ_SCORE_ITEM_TYPE)&&"Y".equals(TZ_SCR_TO_SCORE))) {
-									//成绩录入项、成绩汇总项、下拉框且转换为分值   取分数，否则取评语;
-							        dyRowValueItem.put("col"+strDyColNum,String.valueOf(TZ_SCORE_NUM));
+									/*动态列
+									 * 成绩项类型：A-数字成绩汇总项,B-数字成绩录入项,C-评语,D-下拉框
+									 * From KitchenSink.view.scoreModelManagement.scoreModelTreeNodeWin
+									 */
+									if ("A".equals(TZ_SCORE_ITEM_TYPE) || "B".equals(TZ_SCORE_ITEM_TYPE)
+											||("D".equals(TZ_SCORE_ITEM_TYPE)&&"Y".equals(TZ_SCR_TO_SCORE))) {
+										//成绩录入项、成绩汇总项、下拉框且转换为分值   取分数，否则取评语;
+								        dyRowValueItem.put("col"+strDyColNum,String.valueOf(TZ_SCORE_NUM));
 							        
-							        //成绩录入项、成绩汇总项计算与其它评委差异
-							        /*
-							        if("A".equals(TZ_SCORE_ITEM_TYPE)||"B".equals(TZ_SCORE_ITEM_TYPE)){
-										dyColNum = dyColNum + 1;
-										strDyColNum = "0" + dyColNum;
-										
-										double average = applicationCls.calculateGroupAverage(classId,batchId,oprid,TZ_SCORE_ITEM_ID3,TZ_APP_INS_ID,error_code,error_decription);
-										double difference =(double)Math.round((TZ_SCORE_NUM-average)*100)/100 ;
-										
-										dyRowValueItem.put("col"+strDyColNum.substring(strDyColNum.length() - 2), String.valueOf(difference));
+								        //成绩录入项、成绩汇总项计算与其它评委差异
+								        /*
+								        if("A".equals(TZ_SCORE_ITEM_TYPE)||"B".equals(TZ_SCORE_ITEM_TYPE)){
+											dyColNum = dyColNum + 1;
+											strDyColNum = "0" + dyColNum;
+											
+											double average = applicationCls.calculateGroupAverage(classId,batchId,oprid,TZ_SCORE_ITEM_ID3,TZ_APP_INS_ID,error_code,error_decription);
+											double difference =(double)Math.round((TZ_SCORE_NUM-average)*100)/100 ;
+											
+											dyRowValueItem.put("col"+strDyColNum.substring(strDyColNum.length() - 2), String.valueOf(difference));
+										}
+										*/
+									} else {
+										if ("D".equals(TZ_SCORE_ITEM_TYPE)) {
+											// 如果是下拉框，需要取得下拉框名称，此处存的是下拉框编号;
+											String str_xlk_desc = sqlQuery.queryForObject(
+													"select TZ_CJX_XLK_XXMC from PS_TZ_ZJCJXXZX_T where TREE_NAME=? and TZ_SCORE_ITEM_ID=? and TZ_CJX_XLK_XXBH=?",
+													new Object[] { TREE_NAME, TZ_SCORE_ITEM_ID3, TZ_SCORE_PY_VALUE },
+													"String");
+	
+											TZ_SCORE_PY_VALUE = str_xlk_desc;
+	
+										}
+								        dyRowValueItem.put("col"+strDyColNum,TZ_SCORE_PY_VALUE);
 									}
-									*/
-								} else {
-									if ("D".equals(TZ_SCORE_ITEM_TYPE)) {
-										// 如果是下拉框，需要取得下拉框名称，此处存的是下拉框编号;
-										String str_xlk_desc = sqlQuery.queryForObject(
-												"select TZ_CJX_XLK_XXMC from PS_TZ_ZJCJXXZX_T where TREE_NAME=? and TZ_SCORE_ITEM_ID=? and TZ_CJX_XLK_XXBH=?",
-												new Object[] { TREE_NAME, TZ_SCORE_ITEM_ID3, TZ_SCORE_PY_VALUE },
-												"String");
-
-										TZ_SCORE_PY_VALUE = str_xlk_desc;
-
-									}
-							        dyRowValueItem.put("col"+strDyColNum,TZ_SCORE_PY_VALUE);
 								}
 							}
 						}
@@ -885,8 +944,8 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				allDataMap.put("ps_pc_name",TZ_APPLY_PCH);
 				allDataMap.put("ps_description",ps_description);
 				allDataMap.put("ps_gaiy_info",ps_gaiy_info);
-				allDataMap.put("ps_data_cy",second_total_map);
-				allDataMap.put("ps_data_fb",thdFbList);
+				//allDataMap.put("ps_data_cy",second_total_map);
+				//allDataMap.put("ps_data_fb",thdFbList);
 				allDataMap.put("MaxRowCount",maxRowCount);
 				allDataMap.put("StartRowNumber",startRowNumber);
 				allDataMap.put("MoreRowsFlag",moreRowsFlag);
@@ -903,8 +962,8 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				/*返回局部动态刷新数据*/
 				allDataMap.put("ps_class_id",classId);
 				allDataMap.put("ps_gaiy_info",ps_gaiy_info);
-				allDataMap.put("ps_data_cy",second_total_map);
-				allDataMap.put("ps_data_fb",thdFbList);
+				//allDataMap.put("ps_data_cy",second_total_map);
+				//allDataMap.put("ps_data_fb",thdFbList);
 				allDataMap.put("ps_data_kslb",forthMap);
 				allDataMap.put("error_code",error_code);
 				allDataMap.put("error_decription",error_decription);

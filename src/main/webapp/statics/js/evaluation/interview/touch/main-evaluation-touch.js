@@ -178,31 +178,20 @@ function useJson(varjsonData){
 				qtpwValue += "</tr>";
 			}
 
-			var popupDivId = "popupDialog" + ksbodyArray[i]['ps_ksh_bmbid'];
+			var otherScoreDivId = "score" + ksbodyArray[i]['ps_ksh_bmbid'];
 
-			var qtpwPopup = '<div style="display: none;" id="' + popupDivId + '-placeholder"><!-- placeholder for popupDialog409357 --></div>';
-			qtpwPopup += '<div class="ui-screen-hidden ui-popup-screen ui-overlay-b" id="'+ popupDivId +'-screen"></div>';
-			qtpwPopup += '<div class="ui-popup-container ui-popup-hidden ui-popup-truncate" id="'+ popupDivId +'-popup">';
-			qtpwPopup += '<div data-role="popup" id="' + popupDivId + '" data-position-to="window" data-dismissible="false" data-overlay-theme="b" style="min-width:350px;">';
-			qtpwPopup += '<div data-role="header" data-theme="b" role="banner" >';
-			qtpwPopup += '<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" onClick="" class="ui-btn-right">Close</a>';
-			qtpwPopup += '<h1  role="heading" aria-level="1">评委打分情况查看</h1>';
-			qtpwPopup += '</div>';
-			qtpwPopup += '<div data-role="content" data-theme="a" role="main" align="center">';
-			qtpwPopup += '<div>学生姓名：' + ksbodyArray[i]['ps_ksh_xm'] + '</div>';
-			qtpwPopup += '<table cellspacing="0" width="100%" summary="the technical specifications of the apple powermac g5 series">';
-			qtpwPopup += '<tr>' + qtpwColName + '</tr>';
-			qtpwPopup += qtpwValue;
-			qtpwPopup += '</table>';
-			qtpwPopup += '</div>';
-			qtpwPopup += "</div>";
-			qtpwPopup += "</div>";
+			var qtpwScore ='<div id=' + otherScoreDivId + '>';
+			qtpwScore += '<div>学生姓名：' + ksbodyArray[i]['ps_ksh_xm'] + '</div>';
+			qtpwScore += '<table cellspacing="0" width="100%" summary="the technical specifications of the apple powermac g5 series">';
+			qtpwScore += '<tr>' + qtpwColName + '</tr>';
+			qtpwScore += qtpwValue;
+			qtpwScore += '</table>';
+			qtpwScore += "</div>";
 
-
-			qtpwScoreHtml += qtpwPopup;
+			qtpwScoreHtml += qtpwScore;
 		}
 
-		$("#otherJudgeScore").after(qtpwScoreHtml);
+		$("#otherJudgeScore").append(qtpwScoreHtml);
 	}
 
 
@@ -779,6 +768,9 @@ function submitall(){
 
 //查看其他评委打分
 function viewOtherJudge(bmbid) {
-	var popupId = "popupDialog"+bmbid;
-	$("#"+ popupId +"").popup('open');
+	var divId = "score" + bmbid;
+	var popupContent = $("#"+divId).html();
+
+	$("#otherDialog .ui-content").html(popupContent);
+	$("#otherDialog").popup('open');
 }
