@@ -355,7 +355,7 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 
 					psTzCjxTblKey = new PsTzCjxTblKey();
 					psTzCjxTblKey.setTzScoreInsId(new Long(scoreInsId));
-					psTzCjxTblKey.setTzScoreItemId("");
+					psTzCjxTblKey.setTzScoreItemId("SumTotal");
 					psTzCjxTblWithBLOBs = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
 					if (psTzCjxTblWithBLOBs != null) {
 						// 修改表
