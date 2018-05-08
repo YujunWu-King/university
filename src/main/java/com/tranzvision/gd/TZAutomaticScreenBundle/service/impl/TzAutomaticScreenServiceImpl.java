@@ -192,7 +192,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 				// TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW
 				// json数据要的结果字段;
 				String[] resultFldArray = { "TZ_CLASS_ID", "TZ_BATCH_ID", "TZ_APP_INS_ID", "TZ_REALNAME", "TZ_MSH_ID",
-						"TZ_KSH_CSJG", "TZ_KSH_PSPM", "TZ_SCORE_INS_ID", "TZ_TOTAL_SCORE","TZ_SCOREMS_INS_ID" };
+						"TZ_KSH_CSJG", "TZ_KSH_PSPM", "TZ_SCORE_INS_ID", "TZ_TOTAL_SCORE","TZ_SCOREMS_INS_ID","TZ_SCORE_BZ" };
 
 				// 可配置搜索通用函数;
 				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart,
@@ -231,6 +231,8 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						mapList.put("total", rowList[8]);
 						// 面试成绩单ID
 						String scoreMsInsId = rowList[9];
+						// 面试结果
+						mapList.put("MsResult", rowList[10]);
 						/* 自动打分项 */
 						for (String itemId : itemsList) {
 							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";

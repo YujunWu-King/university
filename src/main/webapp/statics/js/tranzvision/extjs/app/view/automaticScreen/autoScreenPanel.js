@@ -151,6 +151,11 @@
 			width:80,
 			hideable:false
     	},{
+    		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.msResult","面试结果"),
+			dataIndex: 'msResult',
+			width:100,
+			hideable:false
+    	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.ranking","排名"),
 			dataIndex: 'ranking',
 			hidden:true,
