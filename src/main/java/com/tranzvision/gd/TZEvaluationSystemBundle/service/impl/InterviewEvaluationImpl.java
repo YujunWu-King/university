@@ -627,12 +627,21 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			}
 			
 			Long TZ_APP_INS_ID;
+			String ksh_xh;
 			String forthSql;
+			/*
 			if(KS_MOREN_PX==null||"".equals(KS_MOREN_PX)){
 				forthSql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_DELETE_ZT <>'Y' order by cast(TZ_KSH_PSPM as SIGNED INTEGER) ASC";
 			}else{
 				forthSql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_DELETE_ZT <>'Y' order by ROW_ADDED_DTTM ASC";
 			}
+			*/
+			forthSql = "SELECT B.TZ_APP_INS_ID ,A.TZ_ORDER";
+			forthSql += " FROM PS_TZ_MP_PW_KS_TBL B ,PS_TZ_MSPS_KSH_TBL A";
+			forthSql += " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID";
+			forthSql += " AND B.TZ_CLASS_ID = ? AND B.TZ_APPLY_PC_ID=? AND B.TZ_PWEI_OPRID=? AND B.TZ_DELETE_ZT <>'Y'";
+			forthSql += " ORDER BY A.TZ_ORDER ASC";
+			
 			
 			List<Map<String, Object>> applicantsList = sqlQuery.queryForList(forthSql,
 					new Object[] { classId, batchId, oprid });
@@ -642,7 +651,8 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				int xh = 0;
 				for (int i = 0; i < applicantsList.size(); i++) {
 					TZ_APP_INS_ID = ((BigInteger) applicantsList.get(i).get("TZ_APP_INS_ID")).longValue();
-
+					ksh_xh = ((Integer) applicantsList.get(i).get("TZ_ORDER")).toString();
+					
 					xh = xh + 1;
 
 					if (xh >= Integer.parseInt(startRowNumber) + 1
@@ -683,10 +693,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 							
 						}
 						
-						//面试序号
-						String ksh_xh = sqlQuery.queryForObject("SELECT TZ_ORDER FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?", new Object[]{classId,batchId,TZ_APP_INS_ID},"String");
 						
-
 						/* 动态列的值 */
 						Map<String, Object> dyRowValueItem = new HashMap<String, Object>();
 						
@@ -879,9 +886,11 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				        dyRowValueItem.put("ps_ksh_dt",pssj);				      
 			        
 						//KS_MOREN_PX 为空时按排名排序，否则按面试顺序排序;
+				        /*
 						if(KS_MOREN_PX==null||"".equals(KS_MOREN_PX)){
 
-							int xh_an_pm = 0; /*面试顺序*/
+							//面试顺序
+							int xh_an_pm = 0; 
 
 							String str_xh_an_pm = sqlQuery.queryForObject("select C.num from (select TZ_APP_INS_ID,@rowno:=@rowno + 1 AS num from PS_TZ_MP_PW_KS_TBL A,(SELECT @rowno:=0) B where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_DELETE_ZT <>'Y' order by ROW_ADDED_DTTM ASC) C where C.TZ_APP_INS_ID = ?", 
 									new Object[]{classId, batchId, oprid, TZ_APP_INS_ID}, "String");							
@@ -903,6 +912,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						        dyRowValueItem.put("ps_ksh_ppm",TZ_KSH_PSPM2);
 							}
 						}
+						*/
 			        
 				        dyRowValue.add(dyRowValueItem);
 
@@ -1028,7 +1038,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				 }else{
 					   
 					   /*所有考生的提交状态都是“已提交”*/
-					   String submit_zt = sqlQuery.queryForObject("select 'Y' from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? and TZ_PSHEN_ZT<>'Y'and TZ_PSHEN_ZT<>'C' and TZ_DELETE_ZT<>'Y'", 
+					   String submit_zt = sqlQuery.queryForObject("select 'Y' from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID = ? and TZ_PWEI_OPRID = ? and TZ_PSHEN_ZT<>'Y'and TZ_PSHEN_ZT<>'C' and TZ_DELETE_ZT<>'Y' LIMIT 0,1", 
 								new Object[]{classId,batchId,oprid},"String");
 					   
 					   if("Y".equals(submit_zt)){
@@ -1036,12 +1046,14 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						   error_code = "SUBMTALL03";
 					   }else{
 						   /*检查是否有重复排名考生*/
+						   /*
 						   String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_MP_PW_KS_TBL a, PS_TZ_MP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID and a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and b.TZ_CLASS_ID=? and b.TZ_APPLY_PC_ID=? and b.TZ_PWEI_OPRID=? and b.TZ_DELETE_ZT<>'Y' and a.TZ_DELETE_ZT<>'Y' limit 0,1", 
 										new Object[]{classId,batchId,oprid},"String");
 						   if("Y".equals(have_equal)){
 							   error_decription = "发现排名重复考生，无法提交数据。";
 							   error_code = "SUBMTALL04";
 						   }else{
+						   */
 							   String mspwpsjlExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN<>'Y'", 
 							   			new Object[]{classId,batchId,oprid},"String");
 							   
@@ -1064,7 +1076,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 								
 								error_decription = "";;
 								error_code = "0";
-						   }
+						   /*}*/
 					   } 
 				 }
 				 

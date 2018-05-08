@@ -4573,8 +4573,8 @@ input[type="text"]:hover,input[type="password"]:hover{
 .tips{float: right;color: #999;font-size: 12px;width: 220px;display: block;margin:0 47px 20px 0;}
 .confirm_input{width: 130px;height:36px;border:1px solid #dedede;float: left;margin-left:4px;position:relative;}
 .confirm_img{position: absolute;right:94px;top:3px;width: 60px;height: 34px;}
-.update{display: block;color: #773fae;font-size: 12px;line-height: 36px;float:left;margin-left:10px;}
-.login_btn{display: block;font-size: 14px;color:#fff;line-height: 36px;text-align: center;border-radius: 5px;width:280px;height:40px;background-color: #8e60bc;margin:30px auto 20px;}
+.update{display: block;color: #256a48;font-size: 12px;line-height: 36px;float:left;margin-left:10px;}
+.login_btn{display: block;font-size: 14px;color:#fff;line-height: 36px;text-align: center;border-radius: 5px;width:280px;height:40px;background-color: #256a48;margin:30px auto 20px;}
 .login_btn:hover{color: #fff !important;}
 .btn_over{width:280px;height: auto;margin:10px auto;}
 .btn_left{display: block;font-size:14px;color: #773fae;float: left;}
