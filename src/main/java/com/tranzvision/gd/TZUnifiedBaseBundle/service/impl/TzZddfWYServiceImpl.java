@@ -136,46 +136,48 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 					// 6:雅思IELTS 7:专业八级（TEM8） 8:专业四级（TEM4） 9:剑桥商务英语（BEC高级）
 					// 10:剑桥商务英语（BEC中级） 11:CET-4 12:CET-6
 					// GRE GMAT TOFEL IELTS CET6 CET4 BEC高级 BEC中级 TEM8 TEM4
-					switch (Integer.parseInt(engMap.get(keyType))) {
-					case 1:
-						engType = "GRE";
-						break;
-					case 2:
-						engType = "GMAT";
-						break;
-					case 3:
-						engType = "TOFEL";
-						break;
-					case 4:
-						engType = "TOFEL";
-						break;
-					case 5:
-						engType = "TOFEL";
-						break;
-					case 6:
-						engType = "IELTS";
-						break;
-					case 7:
-						engType = "TEM8";
-						break;
-					case 8:
-						engType = "TEM4";
-						break;
-					case 9:
-						engType = "BEC高级";
-						break;
-					case 10:
-						engType = "BEC中级";
-						break;
-					case 11:
-						engType = "CET4";
-						break;
-					case 12:
-						engType = "CET6";
-						break;
-					default:
-						engType = "无";
-						break;
+					if (!engMap.get(keyType).equals("")) {
+						switch (Integer.parseInt(engMap.get(keyType))) {
+						case 1:
+							engType = "GRE";
+							break;
+						case 2:
+							engType = "GMAT";
+							break;
+						case 3:
+							engType = "TOFEL";
+							break;
+						case 4:
+							engType = "TOFEL";
+							break;
+						case 5:
+							engType = "TOFEL";
+							break;
+						case 6:
+							engType = "IELTS";
+							break;
+						case 7:
+							engType = "TEM8";
+							break;
+						case 8:
+							engType = "TEM4";
+							break;
+						case 9:
+							engType = "BEC高级";
+							break;
+						case 10:
+							engType = "BEC中级";
+							break;
+						case 11:
+							engType = "CET4";
+							break;
+						case 12:
+							engType = "CET6";
+							break;
+						default:
+							engType = "无";
+							break;
+						}
 					}
 					souseMap.put(engType, entry.getValue());
 					sb.append(",");
