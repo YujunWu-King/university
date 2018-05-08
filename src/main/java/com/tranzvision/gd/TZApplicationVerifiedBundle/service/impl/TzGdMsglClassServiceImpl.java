@@ -135,9 +135,15 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 				String inteGroup_id = jacksonUtil.getString("inteGroup_id");
 				//班级ID
 				String classID = jacksonUtil.getString("classID");
+				//批次id
+				String batchID = jacksonUtil.getString("batchID");
+				
+				
 				//根据面试组名称和面试评委组查询对象
 				PsTzInteGroup ptig = pstzInteGroupMapper.findByNameAndCid(tz_group_name, inteGroup_id);
 				//根据班级id和报名表编号查询学生
+				
+				
 				PsTzMsPskshTbl ptmpkt = psTzMsPskshTblMapper.selectByCidAndAid(classID, tz_app_ins_id);
 				if(ptmpkt != null){
 					Integer tz_group_id = null;

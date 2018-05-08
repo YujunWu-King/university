@@ -40,20 +40,21 @@
     },
     
     queryStudents:function(btn){
-        var store = btn.findParentByType("grid").store;
+    	var panel = btn.findParentByType("stuInfoPanel");
+		var form=btn.findParentByType('stuInfoPanel').down('form').getForm();
+		var classId = form.findField('classId').getValue();
+		var batchId = form.findField('batchId').getValue();
 
         Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_APP_LIST_VW',
+            cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_MSPS_KS_VW',
             condition:{
-                TZ_CLASS_ID:store.classID,
-                TZ_BATCH_ID:store.batchID
+                TZ_CLASS_ID:classId,
+                TZ_BATCH_ID:batchId
             },
             callback: function(seachCfg){
-                var tzStoreParams = Ext.decode(seachCfg);
-                tzStoreParams.classID = store.classID;
-                tzStoreParams.batchID = store.batchID;
-                store.tzStoreParams = Ext.encode(tzStoreParams);
-                store.load();
+            	var store = btn.findParentByType("grid").store;
+				store.tzStoreParams = seachCfg;				
+				store.load();
             }
         });
     },
@@ -332,8 +333,10 @@
 	   	var group_name = selRec.get("group_name");
 	   	var clpsGrName = selRec.get("clpsGrName");
 
-        var classID = this.getView().classID;
-        var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_MSFZ_STD","OperateType":"","comParams":{"classID":"' + classID + '","appInsID":"'+appInsID+'"}}';
+        var form = view.findParentByType("grid").previousSibling();
+	   	var batchID = form.getForm().findField("batchID").getValue();
+	   	var classID = form.getForm().findField("classID").getValue();
+	   	var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_MSFZ_STD","OperateType":"","comParams":{"classID":"' + classID + '","appInsID":"'+appInsID+'","batchID":"'+batchID+'"}}';
         Ext.tzLoadAsync(tzParams,function(responseData){
         });
         
