@@ -232,7 +232,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						// 面试成绩单ID
 						String scoreMsInsId = rowList[9];
 						// 面试结果
-						mapList.put("MsResult", rowList[10]);
+						mapList.put("msResult", rowList[10]);
 						/* 自动打分项 */
 						for (String itemId : itemsList) {
 							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
