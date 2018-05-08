@@ -65,9 +65,11 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 		try {
 			switch (strType) {
 			case "RunSum": // 计算总分
+				System.out.print("计算总分");
 				strRet = this.tzRunSumProcess(strParams, errorMsg);
 				break;
 			case "RunMSSum": // 计算面试总分
+				System.out.print("计算面试总分");
 				strRet = this.tzRunMSSumProcess(strParams, errorMsg);
 				break;
 			}

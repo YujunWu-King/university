@@ -285,7 +285,7 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 
 			MarkRecord = "本科学校类型：".concat(XXType2).concat("|学历：").concat(XLMS).concat("|学位：").concat(XWMS);
 
-			MarkRecord = MarkRecord + "|" + StrScore.concat("分");
+			MarkRecord = MarkRecord + "|" + String.valueOf(StrScore).concat("分");
 
 			System.out.println(MarkRecord);
 

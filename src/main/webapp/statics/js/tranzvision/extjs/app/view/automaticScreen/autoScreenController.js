@@ -249,7 +249,7 @@
 		});
 	},
 	//运行面试总分
-	runSumEngine: function(btn){
+	runMSEngine: function(btn){
 		var panel = btn.findParentByType('autoScreen');
 		var classId = panel.classId;
 		var batchId = panel.batchId;
