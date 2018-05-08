@@ -5,66 +5,58 @@
     
     update:function(btn){
     	
-    	var tz_group_id = this.getView().tz_group_id;
-    	var classID = this.getView().classID;
+    	var panel = this.getView();
+        var form = panel.child("form").getForm();
+        var classID = form.findField('classID').getValue();
+        var tz_app_ins_id = form.findField('tz_app_ins_id').getValue();
+        var inteGroup_id = form.findField('jugGroupName').getValue();
+        
+    	//选中行
+ 	    // var selList = this.getView().findParentByType("grid").getSelectionModel().getSelections();
+    	var grid = this.getView().child("grid");
+    	var clickone =grid.getSelection();//获取选取行的数组集合
     	
-    	//var tz_app_ins_id = this.getView().tz_app_ins_id;
-    	console.log(this.getView());
-    	console.log(tz_group_id + '---' + classID);
-    	var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSPS_KSMD_STD","OperateType":"updateStu","comParams":{"tz_group_id":"'+tz_group_id+'","classID":"'+classID+'","tz_app_ins_id":"'+tz_app_ins_id+'"}}';
+    	//判断是否选择评委组
+    	if(inteGroup_id == null){
+    		Ext.Msg.alert("提示","请选择评委组");   
+ 			return;
+    	}
+    	
+ 	    //判断是否有选中面试组
+ 	    if(clickone.length == 0){
+ 			Ext.Msg.alert("提示","请选择面试分组");   
+ 			return;
+ 	    }
+ 	    var tz_group_name = clickone[0].get('tz_group_name');
+    	var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSPS_KSMD_STD","OperateType":"updateStu","comParams":{"tz_group_name":"'+tz_group_name+'","classID":"'+classID+'","tz_app_ins_id":"'+tz_app_ins_id+'","inteGroup_id":"'+inteGroup_id+'"}}';
     	
     	var panel = this.getView();
         if(tzParams!=""){
             Ext.tzSubmit(tzParams,function(responseData){
-                //if(btn.name=='update'){
-                	//取消显示材料及流程结果
-//                        var fileCheckStore = tabpanel.down('grid[name=fileCheckGrid]').getStore();
-//                        if(fileCheckStore.isLoaded()){
-//                            fileCheckStore.reload();
-//                        };
-//                        var myGrid = tabpanel.down('grid[name=myGrid]').getStore();
-//                        if(myGrid.isLoaded()){
-//                        	myGrid.reload();
-//                        };
-                    
-//                    }
-
+            	
+            	panel.close();	
             },"",true,this);
         }
     },
-    getStuInfoParams:function(){
-    	alert(1);
-        //更新操作参数
-        var comParams = "";
-        //学生信息列表
-        var grid = this.getView().child("grid");
-        //学生信息数据
-        var store = grid.getStore();
-        //修改json字符串
-        var editJson = "";
-        var mfRecs = store.getModifiedRecords();
-        for(var i=0;i<mfRecs.length;i++){
-            if(editJson == ""){
-                editJson = '{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
-            }else{
-                editJson = editJson + ',{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
-            }
-        }
-        if(editJson != ""){
-            if(comParams == ""){
-                comParams = '"update":[' + editJson + "]";
-            }else{
-                comParams = comParams + ',"update":[' + editJson + "]";
-            }
-        }
-        //提交参数
-        var tzParams="";
-        if(comParams!=""){
-            tzParams= '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSPS_KSMD_STD","OperateType":"updateStu","comParams":{'+comParams+'}}';
-        }
-        return tzParams;
-    },
     
+    queryStudents:function(btn){
+        var store = btn.findParentByType("grid").store;
+
+        Ext.tzShowCFGSearch({
+            cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_APP_LIST_VW',
+            condition:{
+                TZ_CLASS_ID:store.classID,
+                TZ_BATCH_ID:store.batchID
+            },
+            callback: function(seachCfg){
+                var tzStoreParams = Ext.decode(seachCfg);
+                tzStoreParams.classID = store.classID;
+                tzStoreParams.batchID = store.batchID;
+                store.tzStoreParams = Ext.encode(tzStoreParams);
+                store.load();
+            }
+        });
+    },
     queryClass:function(btn){
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_CLASS_STD.TZ_BMBSH_ECUST_VW',
@@ -75,24 +67,6 @@
             callback: function(seachCfg){
                 var store = btn.findParentByType("grid").store;
                 store.tzStoreParams = seachCfg;
-                store.load();
-            }
-        });
-    },
-    queryStudents:function(btn){
-        var store = btn.findParentByType("grid").store;
-
-        Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_CLASS_STD.TZ_APP_LIST_VW',
-            condition:{
-                TZ_CLASS_ID:store.classID,
-                TZ_BATCH_ID:store.batchID
-            },
-            callback: function(seachCfg){
-                var tzStoreParams = Ext.decode(seachCfg);
-                tzStoreParams.classID = store.classID;
-                tzStoreParams.batchID = store.batchID;
-                store.tzStoreParams = Ext.encode(tzStoreParams);
                 store.load();
             }
         });
@@ -128,6 +102,11 @@
                 comView.close();
             }
         }
+    },
+    refresh: function(btn){
+    	var grid = this.getView().child("grid");
+    	console.log(grid)
+    	grid.store.reload();
     },
     getStuInfoParams: function(){
         //更新操作参数
@@ -345,17 +324,18 @@
     },
     
     //打开面试分组窗口
-    openInterviewGroupWindow:function(btn){
+    openInterviewGroupWindow:function(view, rowIndex){
     	
-    	/*var grid = btn.findParentByType("grid");
-        var store = grid.getStore();
+        var store = view.findParentByType("grid").store;
+		var selRec = store.getAt(rowIndex);
+	   	var appInsID = selRec.get("appInsID");
+	   	var group_name = selRec.get("group_name");
+	   	var clpsGrName = selRec.get("clpsGrName");
 
-        var totalCount = store.totalCount;
         var classID = this.getView().classID;
-        var appInsID = this.getView().appInsID;
-        var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_MSFZ_STD","OperateType":"","comParams":{"classID":"' + classID + '"}}';
+        var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_MSFZ_STD","OperateType":"","comParams":{"classID":"' + classID + '","appInsID":"'+appInsID+'"}}';
         Ext.tzLoadAsync(tzParams,function(responseData){
-        });*/
+        });
         
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MSXCFZ_COM"]["TZ_MSGL_MSFZ_STD"];
@@ -369,7 +349,7 @@
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
             return;
         }
-        var win = this.lookupReference('cldbForm');
+        var win = this.lookupReference('classForm');
         if (!win) {
         	Ext.syncRequire(className);
         	ViewClass = Ext.ClassManager.get(className);
@@ -380,9 +360,38 @@
 
         //操作类型设置为更新
         win.actType = "update";
+        win.on('afterrender',function(panel){
+			//组件注册表单信息;
+			var form = panel.child('form').getForm();
+			//form.setValues(responseData);
+			form.findField("tz_app_ins_id").setValue(appInsID);
+			form.findField("classID").setValue(classID);
+			form.findField("group_name").setValue(group_name);
+			
+			var combo = panel.child('form').child('combobox');
+	        //设置combobox默认值
+			combo.setValue(clpsGrName);  
+			
+			var grid = panel.child('grid');
+			var rowCount = grid.store.getCount();
+	    	//设置grid默认值
+	    	for(var i=0;i<rowCount;i++){
+	            if(grid.store.getAt(i).get("tz_group_name") == group_name) {   
+	                //选中默认行
+	            	grid.on('boxready', function(){
+	            		grid.getSelectionModel().select(i, true);
+	            	})
+	            	return;
+	            }
+	        }
+			
+		});
         //var comRegParams = this.getView().child("form").getForm().getValues();
         //var tabPanel = win.lookupReference("packageTabPanel");
         //tabPanel.setActiveTab(1);
+        //var form = win.child("form").getForm();
+        //form.reset();
+        //form.setValues({appInsID:"'"+classID+"'"});
         win.show();
     },
 

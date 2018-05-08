@@ -7,6 +7,7 @@
         'Ext.grid.*',
         'Ext.util.*',
         'Ext.grid.filters.Filters',
+        'Ext.ux.ProgressBarPager',
         'KitchenSink.view.enrollmentManagement.interviewGroup.stuStore',
         'KitchenSink.view.enrollmentManagement.applicationForm.dynamicInfo.dynamicColumn'
     ],
@@ -89,6 +90,7 @@
                 xtype: 'grid',
                 height:500,
                 header:false,
+                border:true,
                 name:'appFormApplicants',
                 frame: true,
                 viewConfig : {
@@ -114,17 +116,6 @@
 						    iconCls:"query",
 						    handler:"queryStudents"
 						},'-',   
-						{
-                            text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.add","新增"),
-                            iconCls:"add",
-                            handler:""
-                        },'-',
-                        {
-                            text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.delete","删除"),
-                            iconCls:"delete",
-                            handler:""
-                        }
-                       ,'->',
                     ]
                 },
                 plugins: [
@@ -138,25 +129,11 @@
                     },
                     
                 ],
-               selModel: {
-                    type: 'checkboxmodel',
-                    pruneRemoved: false
-                },
                 reference: 'stuGrid',
                 multiSelect: true,
-                store: appFormStuStore,
-                bbar: {
-                    xtype: 'pagingtoolbar',
-                    pageSize: 1000,
-                    store: appFormStuStore,
-                    plugins: new Ext.ux.ProgressBarPager()
-                },
+                
                 columns: [
-	                	/*{
-	                        xtype:'checkboxmodel',
-	                        minWidth:20,
-	                        maxWidth:80
-	                    },*/
+	                	
                     {
                         text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.OPRID","OPRID"),
                         dataIndex: 'oprID',
@@ -205,52 +182,70 @@
                         },
                         {
                             text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.submtatesd","面试序号"),
+                            dataIndex: 'order',
                             lockable   : false,
-                            value:'1-1',
                             width: 125,
                             filter: {
                                 type: 'list',
                                 options: submitStateFilterOptions
                                 }
                             },
-                            {
-                                text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.sssd","安排时间"),
-                                dataIndex: 'group_date',
-                                lockable   : false,
-                                width: 200,
-                                filter: {
-                                    type: 'list',
-                                    options: submitStateFilterOptions
-                                    }
-                                },
+                        {
+                            text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.sssd","安排时间"),
+                            dataIndex: 'group_date',
+                            lockable   : false,
+                            width: 200,
+                            filter: {
+                                type: 'list',
+                                options: submitStateFilterOptions
+                                }
+                            },
+                        {
+                        	text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.ssssd","ds"),
+                        	dataIndex: 'clpsGrName',
+                        	lockable   : false,
+                        	width: 200,
+                        	hidden:true
+                        },
                         {
                             menuDisabled: true,
                             sortable: false,
-                            width:150,
+                            width:50,
                             text: "操作",
                             xtype: 'actioncolumn',
                             align:'center',
                             items:[
-                                {iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSets","面试分组"),handler:'openInterviewGroupWindow'},"-",
-                                {iconCls: 'delete',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.delete","删除"),handler:''}
+                                {iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSets","面试分组"),handler:'openInterviewGroupWindow'}
                             ]
-                        }
-                       ]
+                        },
+                       ],
+                       store: appFormStuStore,
+                       bbar: {
+                           xtype: 'pagingtoolbar',
+                           pageSize: 5,
+                           listeners: {
+                               afterrender: function (pbar) {
+                                   var grid = pbar.findParentByType("grid");
+                                   pbar.setStore(grid.store);
+                               }
+                           },
+                           plugins: new Ext.ux.ProgressBarPager(),
+                           emptyMsg:'没有数据显示'
+                       },
+                       
                }]
         })
         this.callParent();
     },
     title: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.applicantsList","报考学生列表"),
     bodyStyle:'overflow-y:hidden;overflow-x:hidden',
-    buttons: [{
-        text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.save","保存"),
-        iconCls:"save",
-        handler: 'onStuInfoSave'
-    }, {
-        text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.ensure","确定"),
-        iconCls:"ensure",
-        handler: 'onStuInfoEnsure'
-    }, {
+    buttons: [
+    	{
+        	text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.closse","刷新"),
+        	iconCls:"refresh",
+        	handler: 'refresh'
+        },
+    	{
         text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.close","关闭"),
         iconCls:"close",
         handler: 'onStuInfoClose'

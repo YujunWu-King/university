@@ -61,68 +61,87 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupW
 				    data: data
 			});
 		 
-		 store.load();//要执行一次，以对数据初始化，很重要
-
 		 Ext.apply(this,{
         	
         	 items:[
         		 {
-                     xtype: 'textarea',
-                     fieldLabel: 'classID',
-                     labelSeparator: ':',
-                     value:'1',
-                     editable:false,
-                     hidden:true
-                 },
-                 {
-                     xtype: 'textarea',
-                     fieldLabel: 'tz_app_ins_id',
-                     labelSeparator: ':',
-                     value:'',
-                     editable:false,
-                     hidden:true
-                 },
-        		 {
-                     xtype: 'combobox',
-                     fieldLabel: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.auditStates","评委组"),
-                     name: 'jugGroupName',
-                     editable:false,
-                     emptyText:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.pleaseSelect","请选择..."),
-                     valueField: 'jugGroupId',
-                     displayField: 'jugGroupName',
-                     store: intervieweeGroupStore,
-                     queryMode: 'local',
-                     triggerAction: 'all',
-                     layout: 'column',
-                     listeners: {	// select监听函数  
-                         select : function(combo, record, index){
-	                        	var myCombo = this;
-	                        	var v = this.getValue();
-                        		var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_MSFZ_STD","OperateType":"queryGroups","comParams":{"jugGroupId":"'+v+'"}}';
-                        		// 加载数据
-                 				Ext.tzLoad(tzParams,function(responseData) {
-                 					//设置安排人数之前，先将所有安排的人数归零
-                 					for(var j = 0; j < store.getCount(); j++){
-                 						var rec = store.getAt(j);
-                 						rec.set('interviewers',0);
-                 					}
-                 					//设置安排的人数
-                 					for(var i=0;i<responseData.total;i++){
-                 						var rec = store.getAt(i);
-                 						var interviewers = responseData.root[i].interviewers;
-                 						rec.set('interviewers',interviewers);
-                 						//store.load();
-                 					}
-                 				});
-                        	 }   
-                     } 
-                 },
-                 
+                     xtype: 'form',
+                     bodyPadding:'10px 0 10px 0',
+                     id:'Myform1',
+                     reference: 'classForm',
+                     layout: {
+                         type: 'vbox',
+                         align: 'stretch'
+                     },
+                     border: false,
+                     bodyStyle:'overflow-y:auto;overflow-x:hidden',
+
+                     fieldDefaults: {
+                         msgTarget: 'side',
+                         labelWidth: 110,
+                         labelStyle: 'font-weight:bold'
+                     },
+                     items: [{
+                         xtype: 'textfield',
+                         name: 'tz_app_ins_id',
+                         hidden:true
+                     },{
+                         xtype: 'textfield',
+                         name: 'classID',
+                         cls:'lanage_1',
+                         hidden:true
+                     },{
+                         xtype: 'textfield',
+                         name: 'group_name',
+                         cls:'lanage_1',
+                         hidden:true
+                     },{
+                         xtype: 'combobox',
+                         fieldLabel: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.auditStates","评委组"),
+                         name: 'jugGroupName',
+                         editable:false,
+                         emptyText:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.pleaseSelect","请选择..."),
+                         valueField: 'jugGroupId',
+                         displayField: 'jugGroupName',
+                         store: intervieweeGroupStore,
+                         queryMode: 'local',
+                         triggerAction: 'all',
+                         layout: 'column',
+                        /* afterRender : function(combo) {
+                        	 this.value = Ext.getCmp('Myform1').getForm().findField("group_name").getValue();
+                        	 },*/
+                         listeners: {	// select监听函数  
+                             select : function(combo, record, index){
+    	                        	var v = this.getValue();
+                            		var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_MSFZ_STD","OperateType":"queryGroups","comParams":{"jugGroupId":"'+v+'"}}';
+                            		// 加载数据
+                     				Ext.tzLoad(tzParams,function(responseData) {
+                     					//设置安排人数之前，先将所有安排的人数归零
+                     					for(var j = 0; j < store.getCount(); j++){
+                     						var rec = store.getAt(j);
+                     						rec.set('interviewers',0);
+                     					}
+                     					//设置安排的人数
+                     					for(var i=0;i<responseData.total;i++){
+                     						var rec = store.getAt(i);
+                     						var interviewers = responseData.root[i].interviewers;
+                     						rec.set('interviewers',interviewers);
+                     						//store.load();
+                     					}
+                     				});
+                            	 }   
+                         } 
+                     }
+                     ]
+                 }
+        		 ,
                  {
                      xtype: 'grid',
                      autoHeight: false,
-                     //stripeRows : true, //是否有斑马线（好看）
+                     stripeRows : true, //是否有斑马线（好看）
                      border:true,
+                     id:'MyGrid',
+                     deferRowRender:false,
                      height:300,
                      bodyStyle: 'overflow-x:hidden; overflow-y:hidden',
                      multiSelect: true,
@@ -176,5 +195,28 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupW
                  ]
         });
         this.callParent();
+        
+    	var form = Ext.getCmp('Myform1');
+    	
+    	/*var combobox = form.child('combobox');
+    	//设置combobox默认值
+    	combobox.on('beforerender',function(){  
+            this.value='A';  
+        });
+    	var group_name = form.getForm().findField("group_name").getValue();
+    	console.log(group_name);*/
+    	//var grid = Ext.getCmp('MyGrid');
+    	/*var rowCount = store.getCount();
+    	//设置grid默认值
+    	for(var i=0;i<rowCount;i++){
+            if(store.getAt(i).get("tz_group_name") == "1组") {   
+                //选中默认行
+            	grid.on('boxready', function(){
+            		grid.getSelectionModel().select(i, true);
+            	})
+            	return;
+            }
+        }*/
+    	
     }
 });
