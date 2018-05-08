@@ -46,24 +46,24 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 
 			String school = ksMap.get("zgjyTZ__1sch"); // 最高院校
 			if (school == null) {
-				school="";
+				school = "";
 			}
 
 			String sw = ksMap.get("zgjyTZ_zgjy_4"); // 最高学位 1 博士 2 硕士 3 学士 4 无
 			if (sw == null) {
-				sw="";
+				sw = "";
 			}
 
 			String sl = ksMap.get("zgjyTZ_zgjy_3"); // 最高学历 1 博士研究生 2 硕士研究生 3 本科
 													// 4专科
 			if (sl == null) {
-				sl="";
+				sl = "";
 			}
 
 			String other = ksMap.get("zgjyTZ_zgjy_11"); // 本科类型 1 普通本科 2 自考本科 3
 														// 网络本科 4成教本科 5专升本
 			if (other == null) {
-				other="";
+				other = "";
 			}
 
 			StringBuffer sb = new StringBuffer();
@@ -88,7 +88,7 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 
 			String TZ_SCHOOL_TYPE = SqlQuery.queryForObject(sql, new Object[] { school }, "String");
 			if (TZ_SCHOOL_TYPE == null) {
-				TZ_SCHOOL_TYPE="";
+				TZ_SCHOOL_TYPE = "";
 			}
 
 			// 华东理工/985:1 211:2 普通:3 二本:4 海外院校一类:5 海外院校二类:6
@@ -219,7 +219,7 @@ public class TzZddfXLFServiceImpl extends TzZddfServiceImpl {
 				XLMS = "专科";
 			}
 
-			if (sl.equals("2")) {
+			if (sl.equals("2") && !other.equals("")) {
 
 				// 博士研究生1/硕士研究生1 本科2 自考本科3 成教本科/网络本科4 专升本5 专科6
 				// 本科类型 1 普通本科 2 自考本科 3 网络本科 4成教本科 5专升本
