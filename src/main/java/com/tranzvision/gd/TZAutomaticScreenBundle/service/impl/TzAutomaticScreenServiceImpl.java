@@ -184,7 +184,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 					orderByArr = new String[][] { new String[] { "TZ_KSH_PSPM", "ASC" } };
 				}
 
-				jacksonUtil.json2Map(strParams);
+				jacksonUtil.json2Map(strParams);		
 				// 成绩项
 				List<String> itemsList = (List<String>) jacksonUtil.getList("items");
 				List<String> itemsMsList = (List<String>) jacksonUtil.getList("itemsMs");
@@ -273,27 +273,27 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						}
 
 						// 自动标签
-						String zdbqVal = "";
+						/*String zdbqVal = "";
 
 						String zdbqSql = "select group_concat(TZ_BIAOQZ_NAME SEPARATOR '|') as TZ_ZDBQ from PS_TZ_CS_KSBQ_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
 						zdbqVal = sqlQuery.queryForObject(zdbqSql, new Object[] { classId, rowList[1], rowList[2] },
 								"String");
-						mapList.put("autoLabel", zdbqVal);
+						mapList.put("autoLabel", zdbqVal);*/
 
 						// 负面清单
-						String fmqdVal = "";
+						/*String fmqdVal = "";
 
 						String fmqdSql = "select group_concat(TZ_FMQD_NAME SEPARATOR '|') as TZ_FMQD from PS_TZ_CS_KSFM_T where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
 						fmqdVal = sqlQuery.queryForObject(fmqdSql, new Object[] { classId, rowList[1], rowList[2] },
 								"String");
-						mapList.put("negativeList", fmqdVal);
+						mapList.put("negativeList", fmqdVal);*/
 
 						// 手动标签
-						String sdbqVal = "";
+						/*String sdbqVal = "";
 
 						String sdbqSql = "select group_concat(TZ_LABEL_NAME SEPARATOR '|') as TZ_LABEL_NAME from PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B where A.TZ_LABEL_ID=B.TZ_LABEL_ID and TZ_APP_INS_ID=?";
 						sdbqVal = sqlQuery.queryForObject(sdbqSql, new Object[] { rowList[2] }, "String");
-						mapList.put("manualLabel", sdbqVal);
+						mapList.put("manualLabel", sdbqVal);*/
 
 						listData.add(mapList);
 					}

@@ -441,6 +441,7 @@
 		cmp.on('afterrender',function(panel){
 			var csDetailsform = panel.child('form');
 			var form = csDetailsform.getForm();
+			var scoreInfoForm =this.lookupReference('autoScreenDetailsForms');
 			
 			var comParamsObj = {
 				ComID: 'TZ_AUTO_SCREEN_COM',
@@ -491,8 +492,40 @@
 				var formData = respData;
 				form.setValues(formData);
 				
-				csDetailsform.down('tagfield[name=negativeList]').addCls('readOnly-tagfield-cls');
-				csDetailsform.down('tagfield[name=autoLabel]').addCls('readOnly-tagfield-cls');
+				var scoreInfoItems = [];
+				var fields = formData.column;
+                var size = fields.length;
+                typeField = {};
+                for(var i = 0;i < size;i++){
+                    var field = fields[i];
+                    var fieldLabel,name,value;
+                    for(var fieldName in field){
+                        if(fieldName == "columnDescr"){
+                            fieldLabel = field["columnDescr"];
+                        }else if(fieldName == "columnId"){
+                        	name=field["columnId"];
+                        }else{
+                            // name = fieldName;
+                            // value = field[fieldName];
+                        	value = field["columnValue"];
+                        }
+                    }
+                    typeField = {
+                        xtype: 'textfield',
+                        fieldLabel: fieldLabel,
+                        // readOnly:true,
+                        name: name,
+                        value: value
+                        // fieldStyle:'background:#F4F4F4',
+                        /*decimalPrecision:2,                
+                        allowDecimals:true,  
+                        nanText:'请输入有效小数',  
+                        allowNegative:false */
+                    }
+                    scoreInfoForm.add(typeField);
+                }
+				//csDetailsform.down('tagfield[name=negativeList]').addCls('readOnly-tagfield-cls');
+				//csDetailsform.down('tagfield[name=autoLabel]').addCls('readOnly-tagfield-cls');
 			});
 		});
 
