@@ -42,6 +42,9 @@ public class TzZddfQZGZJYImpl extends TzZddfServiceImpl {
 			sb.append(year);
 
 			System.out.println(sb.toString());
+			if (year == null) {
+				year = "";
+			}
 
 			String sql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_ZY_T where TZ_CSMB_CK1=? and TZ_CSMB_CK2<=? and TZ_CSMB_CK3>=?";
 
@@ -53,8 +56,8 @@ public class TzZddfQZGZJYImpl extends TzZddfServiceImpl {
 
 			Score = Float.parseFloat(strScore);
 			if (Score == -1) {
-				if (year==null || year.equals("")) {
-					Score=0;
+				if (year == null || year.equals("")) {
+					Score = 0;
 				} else {
 					Score = Float.parseFloat(year);
 				}
