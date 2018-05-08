@@ -231,7 +231,7 @@
 		var panel = btn.findParentByType('autoScreen');
 		var classId = panel.classId;
 		var batchId = panel.batchId;
-		
+		var judgeGrid = panel.child('grid');
 		var comParamsObj = {
 			ComID: 'TZ_AUTO_SCREEN_COM',
 			PageID: 'TZ_SUM_SCREEN_STD',
@@ -246,6 +246,7 @@
 		Ext.tzLoadAsync(tzParams,function(respData){
 			status = respData.status;
 			Ext.Msg.alert("提示",respData.msg);
+			judgeGrid.getStore().reload();
 		});
 	},
 	//运行面试总分
@@ -253,6 +254,7 @@
 		var panel = btn.findParentByType('autoScreen');
 		var classId = panel.classId;
 		var batchId = panel.batchId;
+		var judgeGrid = panel.child('grid');
 		
 		var comParamsObj = {
 			ComID: 'TZ_AUTO_SCREEN_COM',
@@ -268,6 +270,7 @@
 		Ext.tzLoadAsync(tzParams,function(respData){
 			status = respData.status;
 			Ext.Msg.alert("提示",respData.msg);
+			judgeGrid.getStore().reload();
 			
 		});
 	},
