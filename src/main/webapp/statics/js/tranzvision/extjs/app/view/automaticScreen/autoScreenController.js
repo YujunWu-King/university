@@ -245,7 +245,30 @@
 		var tzParams = Ext.JSON.encode(comParamsObj);
 		Ext.tzLoadAsync(tzParams,function(respData){
 			status = respData.status;
-			processIns = respData.processIns;
+			Ext.Msg.alert("提示",respData.msg);
+		});
+	},
+	//运行面试总分
+	runSumEngine: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		
+		var comParamsObj = {
+			ComID: 'TZ_AUTO_SCREEN_COM',
+			PageID: 'TZ_SUM_SCREEN_STD',
+			OperateType: 'RunMSSum',
+			comParams:{
+				classId: classId,
+				batchId: batchId
+			}
+		}
+		var status,processIns;
+		var tzParams = Ext.JSON.encode(comParamsObj);
+		Ext.tzLoadAsync(tzParams,function(respData){
+			status = respData.status;
+			Ext.Msg.alert("提示",respData.msg);
+			
 		});
 	},
 	

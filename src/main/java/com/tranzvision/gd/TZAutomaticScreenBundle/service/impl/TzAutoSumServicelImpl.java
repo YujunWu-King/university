@@ -204,6 +204,8 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			rtnMap.put("status", "-1");
+			rtnMap.put("msg", "操作异常");
 			errorMsg[0] = "1";
 			errorMsg[1] = "操作异常。" + e.getMessage();
 		}
@@ -223,7 +225,7 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 		String strRet = "";
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
 		rtnMap.put("status", "");
-		rtnMap.put("processIns", "");
+		rtnMap.put("msg", "");
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
@@ -387,6 +389,8 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			rtnMap.put("status", "-1");
+			rtnMap.put("msg", "操作异常");
 			errorMsg[0] = "1";
 			errorMsg[1] = "操作异常。" + e.getMessage();
 		}

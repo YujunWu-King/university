@@ -323,6 +323,7 @@
 	    				items:[
 	    					{text:"查询",tooltip:"查询数据",iconCls: "query",handler:"searchAutoScreenStu"},"-",
 	    					{text:"运行自动初筛",tooltip:"运行自动初筛",iconCls:"set",handler:"runAutoScreenEngine"},"-",
+	    					{text:"计算面试分数",tooltip:"计算面试分数",iconCls:"set",handler:"runMSEngine"},"-",
 	    					{text:"计算总分",tooltip:"计算总分",iconCls:"set",handler:"runSumEngine"},"-",
 	    					
 	    					/*{
