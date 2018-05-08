@@ -32,6 +32,19 @@
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
   </select>
+  <select id="selectByCidAndAid" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_MSPS_KSH_TBL
+    where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
+      and TZ_APP_INS_ID = #{tzAppInsId,jdbcType=BIGINT}
+  </select>
+  <select id="findByGroupID" parameterType="INTEGER" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_MSPS_KSH_TBL
+    where TZ_GROUP_ID=#{tz_group_id}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTblKey" >
     delete from PS_TZ_MSPS_KSH_TBL
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}

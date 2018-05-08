@@ -22,6 +22,7 @@ import com.tranzvision.gd.TZJudgesTypeBundle.dao.PsTzClpsGrTblMapper;
 import com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzClpsGrTbl;
 import com.tranzvision.gd.TZMaterialInterviewReviewBundle.dao.psTzClpsPwTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -44,6 +45,7 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 	private PsTzMsPskshTblMapper psTzMsPskshTblMapper;
 	@Autowired
 	private PsTzClpsGrTblMapper psTzClpsGrTblMapper;
+	
 
 	// 获取评委组信息
 	public String tzQueryList(String comParams, int numLimit, int numStart, String[] errorMsg) {
@@ -123,69 +125,56 @@ public class TzGdMsglClassServiceImpl extends FrameworkImpl {
 			mapRet.replace("total", list.size());
 			mapRet.replace("root", listData);
 		}else if("updateStu".equals(oprType)) {
-			System.out.println("----------");
 			
 			try {
 				// 当前面试组;
-				Integer tz_group_id = jacksonUtil.getInt("tz_group_id");
+				String tz_group_name = jacksonUtil.getString("tz_group_name");
 				// 报名表编号;
 				Long tz_app_ins_id = jacksonUtil.getLong("tz_app_ins_id");
-				
+				//评委组编号
+				String inteGroup_id = jacksonUtil.getString("inteGroup_id");
 				//班级ID
 				String classID = jacksonUtil.getString("classID");
-				
+				//根据面试组名称和面试评委组查询对象
+				PsTzInteGroup ptig = pstzInteGroupMapper.findByNameAndCid(tz_group_name, inteGroup_id);
 				//根据班级id和报名表编号查询学生
-				//PsTzMspsKshTbl pmskt = psTzMspsKshTblMapper.findById(classID, tz_app_ins_id);
-				//设置面试组
-				//psi.setGroup_id(tz_group_id);
-				//设置更改时间
-				//psi.setGroup_date(new Date());
-				//设置面试序号
-				//首先查询该组已经分配了多少个学生
-				//List<PsTzStuInfo> list = pstStuMapper.findByGroupID(tz_group_id);
-				//根据list集合的大小给该考生分配序号
-				//if(list != null)
-					//psi.setOrder(list.size() + 1);
-				//更新
-				//pstStuMapper.updateStu(psi);
+				PsTzMsPskshTbl ptmpkt = psTzMsPskshTblMapper.selectByCidAndAid(classID, tz_app_ins_id);
+				if(ptmpkt != null){
+					Integer tz_group_id = null;
+					if(ptig != null) {
+						tz_group_id = ptig.getTz_group_id();
+					}
+					//设置面试组
+					ptmpkt.setTzGroupId(tz_group_id);
+					//设置更改时间
+					ptmpkt.setTzGroupDate(new Date());
+					//设置面试序号
+					//首先查询该组已经分配了多少个学生
+					List<PsTzMsPskshTbl> list = psTzMsPskshTblMapper.findByGroupID(tz_group_id);
+					List<Long> list2 = new ArrayList<>();
+					for (PsTzMsPskshTbl psTzMsPskshTbl : list) {
+						list2.add(psTzMsPskshTbl.getTzAppInsId());
+					}
+					
+					//根据list集合的大小给该考生分配序号
+					if(list != null)
+						//这里需要判断当前对象是否在list中
+						if(list2.contains(ptmpkt.getTzAppInsId())) {
+							ptmpkt.setTzOrder(list.size());
+						}else {
+							ptmpkt.setTzOrder(list.size() + 1);
+						}
+					//更新
+					psTzMsPskshTblMapper.updateByPrimaryKey(ptmpkt);
+				}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			
 		}
 		String str = jacksonUtil.Map2json(mapRet);
 		return str;
 	}
 	
-	/* 将学生进行面试分组 */
-	public String tzUpdateStu(Map<String, Object> infoData, String[] errMsg) {
-		// 返回值;
-		String strRet = "{}";
-		System.out.println("-------------------------");
-		try {
-			// 班级编号;
-			Integer tz_group_id = (Integer) infoData.get("tz_group_id");
-			System.out.println(tz_group_id);
-			// tz_app_ins_id;
-			Long tz_app_ins_id = (Long) infoData.get("tz_app_ins_id");
-			System.out.println(tz_app_ins_id);
-			
-			//根据报名表编号查询报名表
-//			PsTzStuInfo psi = pstzStuMapper.findById(tz_app_ins_id);
-//			if(psi != null) {
-//				psi.setGroup_id(tz_group_id);
-//				psi.setGroup_date(new Date());
-//				pstzStuMapper.updateStu(psi);
-//			}
-			
-		} catch (Exception e) {
-			errMsg[0] = "1";
-			errMsg[1] = e.toString();
-		}
-
-		return strRet;
-	}
 
 }

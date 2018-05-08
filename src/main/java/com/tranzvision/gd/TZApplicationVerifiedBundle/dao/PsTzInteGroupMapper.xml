@@ -18,4 +18,8 @@
     <select id="findByGid" parameterType="INTEGER" resultType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInteGroup">  
         select * from  PS_TZ_INTEGROUP_T where TZ_GROUP_ID = #{group_id}
     </select>
+    <select id="findByNameAndCid" resultType="com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInteGroup">  
+        select * from  PS_TZ_INTEGROUP_T where TZ_GROUP_NAME = #{tz_group_name}
+        and TZ_CLPS_GR_ID = #{inteGroup_id}
+    </select>
 </mapper>

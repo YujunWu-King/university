@@ -75,7 +75,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzInteGroupMapper psTzInteGroupMapper;
 	@Autowired
-	private PsTzClpsGrTblMapper psTzClpsGrTblMapper;
+	private PsTzMsPskshTblMapper psTzMsPskshTblMapper;
 	/***
 	 * 
 	 * @param comParams
@@ -138,22 +138,31 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("mshId", rowList[8]);
 					mapList.put("judgeGroupName", rowList[9]);
 					
+					String appInsID = rowList[2];
 					String strClassID = rowList[0];
-//					String appInsID_ = rowList[2];
-//					if(appInsID_ != null && !"".equals(appInsID_)) {
-//						Long appInsID = Long.parseLong(appInsID_);
-//						PsTzStuInfo psi = psTzStuMapper.findById(strClassID, appInsID);
-//						PsTzInteGroup psg =  null;
-//						if(psi != null) {
-//							psg = psTzInteGroupMapper.findByGid(psi.getGroup_id());
-//							SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-//							String date = sdf.format(psi.getGroup_date());
-//							mapList.put("group_date", date);
-//						}
-//						if(psg != null) {
-//							mapList.put("group_name", psg.getTz_group_name());
-//						}
-//					}
+					Long appInsID_ = null;
+					if(appInsID != null && !"".equals(appInsID)) {
+						appInsID_ = Long.parseLong(appInsID);
+					}
+					PsTzMsPskshTbl ppk = psTzMsPskshTblMapper.selectByCidAndAid(strClassID, appInsID_);
+					PsTzInteGroup psg =  null;
+					if(ppk != null) {
+						psg = psTzInteGroupMapper.findByGid(ppk.getTzGroupId());
+						SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+						Date date = ppk.getTzGroupDate();
+						String date1 = "";
+						if(date != null) {
+							date1 = sdf.format(date);
+						}else {
+							date1 = "暂无时间安排";
+						}
+						mapList.put("group_date", date1);
+						mapList.put("order", ppk.getTzGroupId() + "-" + ppk.getTzOrder());
+						
+					}
+					if(psg != null) {
+						mapList.put("group_name", psg.getTz_group_name());
+					}
 					
 					listData.add(mapList);
 				}
