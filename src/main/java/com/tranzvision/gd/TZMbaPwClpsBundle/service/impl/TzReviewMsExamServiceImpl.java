@@ -61,7 +61,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
 	@Autowired
-	private TZGDObject TzGDObject;
+	private TZGDObject tzGDObject;
 	@Autowired
 	private GetSeqNum GetSeqNum;
 	@Autowired
@@ -76,6 +76,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 	private PsTzInteGroupMapper psTzInteGroupMapper;
 	@Autowired
 	private PsTzMsPskshTblMapper psTzMsPskshTblMapper;
+
 	/***
 	 * 
 	 * @param comParams
@@ -103,17 +104,23 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 		// AND A.TZ_APP_INS_ID=? GROUP BY
 		// A.TZ_APPLY_PC_ID,A.TZ_CLASS_ID,A.TZ_APP_INS_ID";
 		try {
-			
+
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] { { "TZ_APP_INS_ID", "ASC" } };
 
+			String sql = tzGDObject.getSQLText("SQL.TZMbaPwClps.TZ_GROUP");
+
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "TZ_MSPS_PWJ_PC",
-					"TZ_LUQU_ZT", "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_MSH_ID","TZ_CLPS_GR_NAME" };
+					"TZ_LUQU_ZT", "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_MSH_ID", "TZ_CLPS_GR_NAME" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
-
+			Map<String, Object> map = null;
+			String TZ_GROUP_ID = "";
+			String TZ_GROUP_DATE = "";
+			String TZ_ORDER = "";
+			String TZ_GROUP_NAME = "";
 			if (obj != null && obj.length > 0) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 
@@ -127,8 +134,12 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					 * judgeList = sqlQuery.queryForObject(pwsql, new Object[] {
 					 * rowList[0], rowList[1], rowList[2] }, "String");
 					 */
-				 /*	judgeGroupName = sqlQuery.queryForObject(TzGDObject.getSQLText("SQL.TZMbaPwClps.TZ_MSPS_KS_JUGROP"),
-							new Object[] { rowList[1], rowList[0], rowList[2] }, "String");*/
+					/*
+					 * judgeGroupName =
+					 * sqlQuery.queryForObject(TzGDObject.getSQLText(
+					 * "SQL.TZMbaPwClps.TZ_MSPS_KS_JUGROP"), new Object[] {
+					 * rowList[1], rowList[0], rowList[2] }, "String");
+					 */
 					mapList.put("judgeGroup", judgeList);
 					mapList.put("ksOprId", rowList[3]);
 					mapList.put("passState", rowList[4]);
@@ -137,33 +148,31 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					mapList.put("gender", rowList[7]);
 					mapList.put("mshId", rowList[8]);
 					mapList.put("judgeGroupName", rowList[9]);
-					
-					String appInsID = rowList[2];
-					String strClassID = rowList[0];
-					Long appInsID_ = null;
-					if(appInsID != null && !"".equals(appInsID)) {
-						appInsID_ = Long.parseLong(appInsID);
-					}
-					PsTzMsPskshTbl ppk = psTzMsPskshTblMapper.selectByCidAndAid(strClassID, appInsID_);
-					PsTzInteGroup psg =  null;
-					if(ppk != null) {
-						psg = psTzInteGroupMapper.findByGid(ppk.getTzGroupId());
-						SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-						Date date = ppk.getTzGroupDate();
-						String date1 = "";
-						if(date != null) {
-							date1 = sdf.format(date);
-						}else {
-							date1 = "暂无时间安排";
+
+					map = sqlQuery.queryForMap(sql, new Object[] { rowList[0], rowList[1], rowList[2] });
+
+					if (map != null) {
+						TZ_GROUP_ID = map.get("TZ_GROUP_ID") == null ? "" : map.get("TZ_GROUP_ID").toString();
+						TZ_GROUP_DATE = map.get("TZ_GROUP_DATE") == null ? "" : map.get("TZ_GROUP_DATE").toString();
+						TZ_ORDER = map.get("TZ_ORDER") == null ? "" : map.get("TZ_ORDER").toString();
+						TZ_GROUP_NAME = map.get("TZ_GROUP_NAME") == null ? "" : map.get("TZ_GROUP_NAME").toString();
+						if (TZ_GROUP_DATE != null) {
+						} else {
+							TZ_GROUP_DATE = "暂无时间安排";
 						}
-						mapList.put("group_date", date1);
-						mapList.put("order", ppk.getTzGroupId() + "-" + ppk.getTzOrder());
-						
+						mapList.put("group_date", TZ_GROUP_DATE);
+						if (!TZ_GROUP_NAME.equals("") && !TZ_ORDER.equals("")) {
+							mapList.put("order", TZ_GROUP_NAME + "-" + TZ_ORDER);
+						} else {
+							mapList.put("order", "");
+						}
+						mapList.put("group_name", TZ_GROUP_NAME);
+					} else {
+						mapList.put("group_date", "");
+						mapList.put("order", "");
+						mapList.put("group_name", "");
 					}
-					if(psg != null) {
-						mapList.put("group_name", psg.getTz_group_name());
-					}
-					
+
 					listData.add(mapList);
 				}
 
@@ -194,14 +203,14 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 			String classId = jacksonUtil.getString("classId");
 			jacksonUtil.json2Map(actData[1]);
 			String batchId = jacksonUtil.getString("batchId");
-			String sql3="SELECT  TZ_DQPY_ZT FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-			
-			String appState=sqlQuery.queryForObject(sql3, new Object[] { classId, batchId }, "String");
-			System.out.println("appState:"+appState);
+			String sql3 = "SELECT  TZ_DQPY_ZT FROM PS_TZ_MSPS_GZ_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+
+			String appState = sqlQuery.queryForObject(sql3, new Object[] { classId, batchId }, "String");
+			System.out.println("appState:" + appState);
 			if ("A".equals(appState)) {
 				errMsg[0] = "1";
-				errMsg[1] = "当前批次：评审进行中，不能删除考生!";		
-			}else{
+				errMsg[1] = "当前批次：评审进行中，不能删除考生!";
+			} else {
 				for (int i = 2; i < actData.length; i++) {
 					// 表单内容
 					String strForm = actData[i];
@@ -222,16 +231,16 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 					} else {
 
 					}
-					
+
 					String sql1 = "SELECT COUNT(1) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_APP_INS_ID=?";
 					int count1 = sqlQuery.queryForObject(sql1, new Object[] { classId, batchId, appinsId }, "Integer");
 					if (count1 > 0) {
-						
-						PsTzMpPwKsTblKey  PsTzMpPwKsTblKey=new PsTzMpPwKsTblKey();
+
+						PsTzMpPwKsTblKey PsTzMpPwKsTblKey = new PsTzMpPwKsTblKey();
 						PsTzMpPwKsTblKey.setTzAppInsId(appinsId);
 						PsTzMpPwKsTblKey.setTzClassId(classId);
 						PsTzMpPwKsTblKey.setTzApplyPcId(batchId);
-		
+
 						psTzMpPwKsTblMapper.deleteByPrimaryKey(PsTzMpPwKsTblKey);
 
 					} else {
@@ -240,7 +249,6 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 
 				}
 			}
-		
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -415,7 +423,7 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 			String currentAccountId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
 			String currentOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 
-			BaseEngine tmpEngine = TzGDObject.createEngineProcess(currentOrgId, "TZ_MSPSKS_EXP_PROC");
+			BaseEngine tmpEngine = tzGDObject.createEngineProcess(currentOrgId, "TZ_MSPSKS_EXP_PROC");
 			// 指定调度作业的相关参数
 			EngineParameters schdProcessParameters = new EngineParameters();
 
@@ -430,8 +438,8 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 
 			// 进程实例id;
 			int processinstance = tmpEngine.getProcessInstanceID();
-			if(processinstance>0){
-				
+			if (processinstance > 0) {
+
 				PsTzExcelDrxxT psTzExcelDrxxT = new PsTzExcelDrxxT();
 				psTzExcelDrxxT.setProcessinstance(processinstance);
 				psTzExcelDrxxT.setTzComId("TZ_REVIEW_MS_COM");
@@ -460,11 +468,8 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 				psTzExcelDattT.setTzFjRecName("");
 				psTzExcelDattT.setTzFwqFwlj("");
 				psTzExcelDattTMapper.insert(psTzExcelDattT);
-				
-				
+
 			}
-
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -529,7 +534,8 @@ public class TzReviewMsExamServiceImpl extends FrameworkImpl {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		try {
 			/* 可配置搜索查询语句 */
-			String[] resultFldArray = { "TZ_CLASS_ID","TZ_APPLY_PC_ID","TZ_APP_INS_ID","OPRID","TZ_REALNAME","TZ_CLPS_GR_NAME" };
+			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "OPRID", "TZ_REALNAME",
+					"TZ_CLPS_GR_NAME" };
 
 			String[][] orderByArr = null;
 

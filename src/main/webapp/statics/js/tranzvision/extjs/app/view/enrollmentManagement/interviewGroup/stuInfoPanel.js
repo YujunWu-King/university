@@ -9,7 +9,7 @@
 	           'Ext.toolbar.Paging',
 	           'Ext.ux.ProgressBarPager',
 	           'Ext.selection.CellModel',
-	           'KitchenSink.view.enrollmentManagement.interviewGroup.interviewModel', 
+	           'KitchenSink.view.enrollmentManagement.applicationForm.stuModel', 
 	           'KitchenSink.view.enrollmentManagement.interviewGroup.stuStore'
 	           ],
 	autoScroll: false,
@@ -98,14 +98,6 @@
     				//readOnly:true,
     				hidden:true
 
-				}, {
-					xtype: 'textfield',
-					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksNum", "报考考生数量"),
-					labelWidth: 110,
-					name: 'ksNum',
-					allowBlank: false,
-					fieldStyle:'background:#F4F4F4',
-    				readOnly:true
 				}]
 			}, {
 				xtype: 'grid',
@@ -138,30 +130,30 @@
 				}],
 				columns: [{
 					text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.OPRID","OPRID"),
-                    dataIndex: 'oprID',
+                    dataIndex: 'ksOprId',
                     hidden:true
 					
 				},
 				{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksNameg", "考生姓名"),
-					dataIndex: 'stuName',
+					dataIndex: 'ksName',
 					width: 120
 					
 				}, {
 
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.mshIdg", "面试申请号"),
-					dataIndex: 'interviewApplicationID',
+					dataIndex: 'mshId',
 					width: 120
 					//flex: 1
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.appInsIdg", "报名表编号"),
-					dataIndex: 'appInsID',
+					dataIndex: 'appInsId',
 					width: 120
 					
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.genderg", "性别"),
-					dataIndex: 'grxxTZ_grxx_5',
+					dataIndex: 'gender',
 					width: 100,
 					renderer: function(v) {
 						if (v == 'M') {

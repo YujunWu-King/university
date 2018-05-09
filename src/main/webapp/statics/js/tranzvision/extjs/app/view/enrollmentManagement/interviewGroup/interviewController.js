@@ -193,52 +193,35 @@
         var classID = record.data.classID;
         var batchID = record.data.batchID;
 
-        var render = function(initialData){
 
-            cmp = new ViewClass({
-                    initialData:initialData,
+        cmp = new ViewClass({
                     classID:classID,
                     batchID:batchID
                 }
-            );
+           );
             cmp.on('afterrender',function(panel){
-                var form = panel.child('form').getForm();
-                var panelGrid = panel.child('grid');
-                panelGrid.getView().on('expandbody', function (rowNode, record, expandRow, eOpts){
-                    if(!record.get('moreInfo')){
-                        var appInsID = record.get('appInsID');
-                        var tzExpandParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_STU_STD","OperateType":"tzLoadExpandData","comParams":{"classID":"'+classID+'","appInsID":"'+appInsID+'"}}';
-                        Ext.tzLoad(tzExpandParams,function(respData){
-                                if(panelGrid.getStore().getModifiedRecords().length>0){
-                                    record.set('moreInfo',respData);
-                                }else{
-                                    record.set('moreInfo',respData);
-                                    panelGrid.getStore().commitChanges( );
-                                }
-                            },panelGrid
-                        );
-                    }
-                });
-                var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_STU_STD","OperateType":"QF","comParams":{"classID":"'+classID+'","batchID":"'+batchID+'"}}';
+            	
+            	var form = panel.child('form').getForm();
+                var tzParams = '{"ComID":"TZ_REVIEW_MS_COM","PageID":"TZ_MSGL_STU_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classId+'","batchId":"'+batchId+'"}}';
+                var panelGrid = panel.down('grid');
+
+                var tzStoreParams = '{"cfgSrhId":"TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}';
+                panelGrid.store.tzStoreParams = tzStoreParams;
+
                 Ext.tzLoad(tzParams,function(respData){
                     var formData = respData.formData;
-                    form.setValues(formData);
+                    if(formData!="" && formData!=undefined) {
+                        panel.actType="update";
+                        formData.className = className;
+                        formData.batchName = batchName;
+                        form.setValues(formData);
+                        examineeGrid.store.load();
 
-                    var tzStoreParams = {
-                        "classID":classID,
-                        "batchID":batchID,
-                        "cfgSrhId": "TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_APP_LIST_VW",
-                        "condition":{
-                            "TZ_CLASS_ID-operator": "01",
-                            "TZ_CLASS_ID-value": classID,
-                            "TZ_BATCH_ID-operator": "01",
-                            "TZ_BATCH_ID-value": batchID
-                        }
-                    };
-                    panelGrid.store.classID=classID;
-                    panelGrid.store.batchID=batchID;
-                    panelGrid.store.tzStoreParams = Ext.encode(tzStoreParams);
-                    panelGrid.store.load();
+                    } else {
+                        panel.actType="add";
+
+                        form.setValues({classId:classId,className:className,batchId:batchId,batchName:batchName});
+                    }
                 });
             });
 
@@ -251,76 +234,6 @@
             if (cmp.floating) {
                 cmp.show();
             }
-        };
-
-
-        var submitStateStore = new KitchenSink.view.common.store.appTransStore("TZ_APPFORM_STATE"),
-            auditStateStore = new KitchenSink.view.common.store.appTransStore("TZ_AUDIT_STATE"),
-            interviewResultStore = new KitchenSink.view.common.store.appTransStore("TZ_MS_RESULT"),
-            orgColorSortStore = new KitchenSink.view.common.store.comboxStore({
-                recname:'TZ_ORG_COLOR_V',
-                condition:{
-                    TZ_JG_ID:{
-                        value:Ext.tzOrgID,
-                        operator:'01',
-                        type:'01'
-                    }},
-                result:'TZ_COLOR_SORT_ID,TZ_COLOR_NAME,TZ_COLOR_CODE'
-            });
-
-        //下拉项过滤器数据
-        var colorSortFilterOptions=[],
-            submitStateFilterOptions=[],
-            auditStateFilterOptions=[],
-            interviewResultFilterOptions=[];
-
-        //颜色类别初始化数据-学生颜色类别列渲染数据
-        var initialColorSortData=[];
-
-        //4个下拉控件Store加载完毕之后打开页面
-        var times = 4;
-        var beforeRender = function(){
-            times--;
-            if(times==0){
-                render({
-                    submitStateStore:submitStateStore,
-                    auditStateStore:auditStateStore,
-                    interviewResultStore:interviewResultStore,
-                    orgColorSortStore:orgColorSortStore,
-                    colorSortFilterOptions:colorSortFilterOptions,
-                    submitStateFilterOptions:submitStateFilterOptions,
-                    auditStateFilterOptions:auditStateFilterOptions,
-                    interviewResultFilterOptions:interviewResultFilterOptions,
-                    initialColorSortData:initialColorSortData
-                });
-            }
-        };
-
-        orgColorSortStore.on("load",function(store, records, successful, eOpts){
-            for(var i=0;i<records.length;i++){
-                initialColorSortData.push(records[i].data);
-                colorSortFilterOptions.push([records[i].data.TZ_COLOR_SORT_ID,records[i].data.TZ_COLOR_NAME]);
-            }
-            beforeRender();
-        });
-        submitStateStore.on("load",function(store, records, successful, eOpts){
-            for(var i=0;i<records.length;i++){
-                submitStateFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
-            }
-            beforeRender();
-        });
-        auditStateStore.on("load",function(store, records, successful, eOpts){
-            for(var i=0;i<records.length;i++){
-                auditStateFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
-            }
-            beforeRender();
-        });
-        interviewResultStore.on("load",function(store, records, successful, eOpts){
-            for(var i=0;i<records.length;i++){
-                interviewResultFilterOptions.push([records[i].data.TValue,records[i].data.TSDesc]);
-            }
-            beforeRender();
-        });
 
     },
     
