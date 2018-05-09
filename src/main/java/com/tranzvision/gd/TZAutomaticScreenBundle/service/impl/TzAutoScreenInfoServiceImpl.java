@@ -452,8 +452,17 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 							}
 							// 更新自动成绩+面试成绩总分（总分+现在-原来）
 							// 查询原自动成绩和面试的总分
-							String sqlSumTotal = "SELECT DISTINCT TZ_SCORE_NUM FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID='SumTotal'";
-							String SumTotal = jdbcTemplate.queryForObject(sqlSumTotal, new Object[] { strScoreId }, "String");
+							// 查询总分的成绩项ID
+							String sqlScoreItme = "SELECT TZ_SCORE_INS_ID FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?";
+							String scoreInsId = jdbcTemplate.queryForObject(sqlScoreItme, new Object[] { classId,batchId,appId }, "String");
+							
+							String SumTotal="",scoreDfgc="";
+							String sqlSumTotal = "SELECT TZ_SCORE_NUM,TZ_SCORE_DFGC FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID='SumTotal'";
+							Map<String , Object> map = jdbcTemplate.queryForMap(sqlSumTotal, new Object[] { scoreInsId });
+							if(map !=null){
+								SumTotal = map.get("TZ_SCORE_NUM")== null ? "" :map.get("TZ_SCORE_NUM").toString();
+								scoreDfgc = map.get("TZ_SCORE_DFGC")== null ? "" :map.get("TZ_SCORE_DFGC").toString();
+							}
 							BigDecimal numOldTotal = new BigDecimal(0.0),numSumTotal = new BigDecimal(0.0);
 							BigDecimal newTotal= new BigDecimal(0.0),newSumTotal= new BigDecimal(0.0);
 							if(!"".equals(oldTotal)&& oldTotal!=null){
@@ -462,17 +471,31 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 							if(!"".equals(SumTotal)&& SumTotal!=null){
 								numSumTotal=new BigDecimal(SumTotal);
 							}
+							
 							newTotal = BigDecimal.valueOf(total);
 							newSumTotal=numSumTotal.add(newTotal).subtract(numOldTotal);
+							// 评分标准
+							String bzId = jdbcTemplate.queryForObject(
+									"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+									new Object[] { "TZ_MBA_MS_RESULT" }, "String");
+							String bzsql = "select TZ_M_FBDZ_MX_SM from PS_TZ_FBDZ_MX_TBL where TZ_M_FBDZ_ID=? and TZ_M_FBDZ_MX_SX>=? and TZ_M_FBDZ_MX_XX<=? ";
+							// 计算档次
+							String bzDsc = jdbcTemplate.queryForObject(bzsql,
+									new Object[] { bzId, String.valueOf(newSumTotal), String.valueOf(newSumTotal) }, "String");
+							if(!"".equals(scoreDfgc)){
+								int j=scoreDfgc.lastIndexOf("|");
+								scoreDfgc= scoreDfgc.substring(j);
+								scoreDfgc="自动打分/管理员打分" + String.valueOf(newSumTotal) +scoreDfgc;
+							}
 							String isExist = "SELECT COUNT(1) FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID='SumTotal'";
-							int count = jdbcTemplate.queryForObject(isExist, new Object[] { strScoreId }, "Integer");
+							int count = jdbcTemplate.queryForObject(isExist, new Object[] { scoreInsId }, "Integer");
 							if (count > 0) {
 								String strUpdateSql = "UPDATE PS_TZ_CJX_TBL SET TZ_SCORE_NUM='" + newSumTotal
-										+ "' WHERE TZ_SCORE_INS_ID='" + strScoreId + "'AND TZ_SCORE_ITEM_ID='" + "'SumTotal'" + "'";
+										+ "',TZ_SCORE_BZ='"+bzDsc+"',TZ_SCORE_DFGC='"+scoreDfgc+"' WHERE TZ_SCORE_INS_ID='" + scoreInsId + "'AND TZ_SCORE_ITEM_ID='" + "SumTotal" + "'";
 								jdbcTemplate.update(strUpdateSql, new Object[] {});
 							}else{
-								String strInsertSql = "INSERT INTO PS_TZ_CJX_TBL(TZ_SCORE_INS_ID,TZ_SCORE_ITEM_ID,TZ_SCORE_NUM) VALUES(?,?,?)";
-								jdbcTemplate.update(strInsertSql, new Object[] { strScoreId, "SumTotal", newSumTotal });
+								String strInsertSql = "INSERT INTO PS_TZ_CJX_TBL(TZ_SCORE_INS_ID,TZ_SCORE_ITEM_ID,TZ_SCORE_NUM,TZ_SCORE_BZ,TZ_SCORE_DFGC) VALUES(?,?,?,?,?)";
+								jdbcTemplate.update(strInsertSql, new Object[] { scoreInsId, "SumTotal", newSumTotal,bzDsc,scoreDfgc });
 							}
 						}
 					}

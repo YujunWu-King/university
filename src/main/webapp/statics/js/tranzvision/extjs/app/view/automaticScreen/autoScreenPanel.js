@@ -146,9 +146,22 @@
     	}
     	
     	columns.push({
+    		xtype: 'linkcolumn',
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.total","总分"),
 			dataIndex: 'total',
 			width:80,
+			hideable:false,
+			items:[{
+				getText: function(v, meta, rec) {
+					return v;
+				},
+				handler: 'onClickNumber'
+			}]
+    	},{
+    		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.total","总分"),
+			dataIndex: 'total_label',
+			hidden:true,
+			width:100,
 			hideable:false
     	},{
     		text: Ext.tzGetResourse("TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.msResult","面试结果"),
