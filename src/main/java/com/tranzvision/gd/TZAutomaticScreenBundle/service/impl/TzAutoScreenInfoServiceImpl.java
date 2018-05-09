@@ -480,8 +480,10 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 									new Object[] { "TZ_MBA_MS_RESULT" }, "String");
 							String bzsql = "select TZ_M_FBDZ_MX_SM from PS_TZ_FBDZ_MX_TBL where TZ_M_FBDZ_ID=? and TZ_M_FBDZ_MX_SX>=? and TZ_M_FBDZ_MX_XX<=? ";
 							// 计算档次
-							String bzDsc = jdbcTemplate.queryForObject(bzsql,
-									new Object[] { bzId, String.valueOf(newSumTotal), String.valueOf(newSumTotal) }, "String");
+							String bzDsc = jdbcTemplate.queryForObject(bzsql, new Object[] { bzId, String.valueOf(newSumTotal), String.valueOf(newSumTotal) }, "String");
+							if(bzDsc==null){
+								bzDsc="";
+							}
 							if(!"".equals(scoreDfgc)){
 								int j=scoreDfgc.lastIndexOf("|");
 								scoreDfgc= scoreDfgc.substring(j);
