@@ -1,222 +1,165 @@
 Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupWindow', {
     extend: 'Ext.window.Window',
-    xtype: 'zldbWindow0',
-	controller: 'appFormInterview',
-	requires: [
-	    'Ext.data.*',
+    reference: 'interviewGroupWindow',
+    controller: 'appFormInterview',
+    requires: [
+        'Ext.data.*',
         'Ext.grid.*',
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-        'KitchenSink.view.enrollmentManagement.applicationForm.dynamicInfo.dynamicAttributeForm',
-        'KitchenSink.view.enrollmentManagement.interviewGroup.intervieweeGroupStore',
-        'KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupStore',
-        'KitchenSink.view.enrollmentManagement.interviewGroup.interviewController'
-	],
-	title:'评委组及面试组选择',
-    modal:true,//背景遮罩
-    header:'面试组',
-    autoWidth: true, 
-    width:300,
-    height:400,
-    autoHeight: false, 
-    autoscroll:true,
-    resizable:false,
-    bodyStyle:'1px 2px 3px 4px',
-    actType: 'update',//默认更新
-    x:400,
-    y:30,
-    
-    initComponent: function(){
-    	var me = this;
-		//评委组store
-		var intervieweeGroupStore = new KitchenSink.view.enrollmentManagement.interviewGroup.intervieweeGroupStore();
-		
-		var data=[
-				{"tz_group_id":1,"tz_group_name":"1组","interviewers":0},
-				{"tz_group_id":2,"tz_group_name":"2组","interviewers":0},
-				{"tz_group_id":3,"tz_group_name":"3组","interviewers":0},
-				{"tz_group_id":4,"tz_group_name":"4组","interviewers":0},
-				{"tz_group_id":5,"tz_group_name":"5组","interviewers":0},
-				{"tz_group_id":6,"tz_group_name":"6组","interviewers":0},
-				{"tz_group_id":7,"tz_group_name":"7组","interviewers":0},
-				{"tz_group_id":8,"tz_group_name":"8组","interviewers":0},
-				{"tz_group_id":9,"tz_group_name":"9组","interviewers":0},
-				{"tz_group_id":10,"tz_group_name":"10组","interviewers":0},
-				{"tz_group_id":11,"tz_group_name":"11组","interviewers":0},
-				{"tz_group_id":12,"tz_group_name":"12组","interviewers":0},
-				{"tz_group_id":13,"tz_group_name":"13组","interviewers":0},
-				{"tz_group_id":14,"tz_group_name":"14组","interviewers":0},
-				{"tz_group_id":15,"tz_group_name":"15组","interviewers":0},
-				{"tz_group_id":16,"tz_group_name":"16组","interviewers":0},
-				{"tz_group_id":17,"tz_group_name":"17组","interviewers":0},
-				{"tz_group_id":18,"tz_group_name":"18组","interviewers":0},
-				{"tz_group_id":19,"tz_group_name":"19组","interviewers":0},
-				{"tz_group_id":20,"tz_group_name":"20组","interviewers":0}
-		      ];                                                          
-		
-		 var store = Ext.create('Ext.data.Store', {
-				    storeId: 'store',
-				    fields:[ 'tz_group_id', 'tz_group_name', 'interviewers'],
-				    data: data
-			});
-		 
-		 Ext.apply(this,{
-        	
-        	 items:[
-        		 {
-                     xtype: 'form',
-                     bodyPadding:'10px 0 10px 0',
-                     id:'Myform1',
-                     reference: 'classForm',
-                     layout: {
-                         type: 'vbox',
-                         align: 'stretch'
-                     },
-                     border: false,
-                     bodyStyle:'overflow-y:auto;overflow-x:hidden',
+        'KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupModel',
+        'KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupStore'
+    ],
+    title: '面试分组',
+    bodyStyle:'overflow-y:hidden;overflow-x:hidden;padding-top:10px',
+    actType: 'update',
+    width: 650,
+    y:10,
+    minWidth: 400,
+    minHeight: 350,
+   // maxHeight: 460,
+    resizable: true,
+    modal:true,
+    listeners:{
+        resize: function(win){
+            win.doLayout();
+        }
+    },
+    viewConfig: {
+        enableTextSelection: true
+    },
+    items: [{
+        xtype: 'form',
+        reference: 'classForm',
+        layout: {
+            type: 'vbox',
+            align: 'stretch'
+        },
+        fieldDefaults: {
+            msgTarget: 'side',
+            labelStyle: 'font-weight:bold'
+        },
+        border: false,
+        bodyPadding: 10,
+        bodyStyle:'overflow-y:auto;overflow-x:hidden',
 
-                     fieldDefaults: {
-                         msgTarget: 'side',
-                         labelWidth: 110,
-                         labelStyle: 'font-weight:bold'
-                     },
-                     items: [{
-                         xtype: 'textfield',
-                         name: 'tz_app_ins_id',
-                         hidden:true
-                     },{
-                         xtype: 'textfield',
-                         name: 'classID',
-                         cls:'lanage_1',
-                         hidden:true
-                     },{
-                         xtype: 'textfield',
-                         name: 'group_name',
-                         cls:'lanage_1',
-                         hidden:true
-                     },{
-                         xtype: 'combobox',
-                         fieldLabel: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.auditStates","评委组"),
-                         name: 'jugGroupName',
-                         editable:false,
-                         emptyText:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.pleaseSelect","请选择..."),
-                         valueField: 'jugGroupId',
-                         displayField: 'jugGroupName',
-                         store: intervieweeGroupStore,
-                         queryMode: 'local',
-                         triggerAction: 'all',
-                         layout: 'column',
-                        /* afterRender : function(combo) {
-                        	 this.value = Ext.getCmp('Myform1').getForm().findField("group_name").getValue();
-                        	 },*/
-                         listeners: {	// select监听函数  
-                             select : function(combo, record, index){
-    	                        	var v = this.getValue();
-                            		var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_MSFZ_STD","OperateType":"queryGroups","comParams":{"jugGroupId":"'+v+'"}}';
-                            		// 加载数据
-                     				Ext.tzLoad(tzParams,function(responseData) {
-                     					//设置安排人数之前，先将所有安排的人数归零
-                     					for(var j = 0; j < store.getCount(); j++){
-                     						var rec = store.getAt(j);
-                     						rec.set('interviewers',0);
-                     					}
-                     					//设置安排的人数
-                     					for(var i=0;i<responseData.total;i++){
-                     						var rec = store.getAt(i);
-                     						var interviewers = responseData.root[i].interviewers;
-                     						rec.set('interviewers',interviewers);
-                     						//store.load();
-                     					}
-                     				});
-                            	 }   
-                         } 
-                     }
-                     ]
-                 }
-        		 ,
-                 {
-                     xtype: 'grid',
-                     autoHeight: false,
-                     stripeRows : true, //是否有斑马线（好看）
-                     border:true,
-                     id:'MyGrid',
-                     deferRowRender:false,
-                     height:300,
-                     bodyStyle: 'overflow-x:hidden; overflow-y:hidden',
-                     multiSelect: true,
-                     emptyMsg: '没有记录',
-                     store: store,
-                     selModel: {
-                         type: 'checkboxmodel',
-                         mode:"SINGLE"
-                     },
+        fieldDefaults: {
+            msgTarget: 'side',
+            labelWidth: 100,
+            labelStyle: 'font-weight:bold'
+        },
 
-                     columns: [
-	                         { 
-	                        	 dataIndex: 'tz_group_id', 
-	                        	 hidden:true
-	                         },{  
-	                             text : "面试组",  
-	                             dataIndex : 'tz_group_name',  
-	                             width : 120, 
-	                             flex:1,
-	                             align : 'center'  
-	                         },{  
-	                             text : "已安排人数",  
-	                             dataIndex : 'interviewers',  
-	                             width : 100,
-	                             flex:1,
-	                             align : 'center'  
-	                         }
-                     ],
-                     dockedItems: [
-                         {
-                         xtype:"toolbar",
-                         dock:"bottom",
-                         ui:"footer",
-                         items:['->',
-                             {minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.esure","确定"),name:'update',handler:'update'}
-                             ,{minWidth:80,text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.closes","取消"),handler:'onStuInfoClose'}]
-                     }],
-                     /*bbar: {
-                         xtype: 'pagingtoolbar',
-                         pageSize: 5,
-                         listeners: {
-                             afterrender: function (pbar) {
-                                 var grid = pbar.findParentByType("grid");
-                                 pbar.setStore(grid.store);
-                             }
-                         },
-                         plugins: new Ext.ux.ProgressBarPager(),
-                         emptyMsg:'没有数据显示'
-                     }*/
-                 },
-                 ]
-        });
-        this.callParent();
-        
-    	var form = Ext.getCmp('Myform1');
-    	
-    	/*var combobox = form.child('combobox');
-    	//设置combobox默认值
-    	combobox.on('beforerender',function(){  
-            this.value='A';  
-        });
-    	var group_name = form.getForm().findField("group_name").getValue();
-    	console.log(group_name);*/
-    	//var grid = Ext.getCmp('MyGrid');
-    	/*var rowCount = store.getCount();
-    	//设置grid默认值
-    	for(var i=0;i<rowCount;i++){
-            if(store.getAt(i).get("tz_group_name") == "1组") {   
-                //选中默认行
-            	grid.on('boxready', function(){
-            		grid.getSelectionModel().select(i, true);
-            	})
-            	return;
+        items: [{
+            xtype: 'textfield',
+            hidden:true,
+            name: 'appInsId'
+        }, {
+            xtype: 'textfield',
+            hidden:true,
+            name: 'classID'
+        }, {
+            xtype: 'textfield',
+            hidden:true,
+            name: 'batchID'
+           
+        }, {
+        	xtype: 'combobox',
+            fieldLabel: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_AUDIT_STD.auditStates","评委组"),
+            forceSelection: true,
+			editable: false,
+			store: new KitchenSink.view.common.store.comboxStore({
+				recname: 'TZ_MSPS_GR_TBL',
+				condition:{
+					TZ_JG_ID:{
+						value: Ext.tzOrgID,
+						operator:"01",
+						type:"01"
+					}
+				},
+				result:'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME'
+			}),
+			valueField: 'TZ_CLPS_GR_ID',
+			displayField: 'TZ_CLPS_GR_NAME',
+			queryMode: 'local',
+			name: 'jugGroupId',
+            listeners: {	// select监听函数  
+            	select: 'changeResTmpl'
             }
-        }*/
-    	
-    }
+            
+        }]
+    },{
+        xtype:'tabpanel',
+        items:[{
+            xtype: 'grid',
+            height: 'auto',
+            title: '面试组',
+            autoHeight:true,
+            minHeight:120,
+            id:'pageGrid',
+            columnLines: true,
+            reference: 'pageGrid',
+            //style:"margin:10px",
+            store: {
+                type: 'interviewGroupStore'
+            },
+            columns: [{
+                xtype: 'checkcolumn',
+                text: "选择",
+                dataIndex: 'check',
+                sortable:false,
+                width: 70
+            },{
+                text: '面试组ID',
+                dataIndex: 'groupID',
+                width: 150,
+                sortable:false
+            },{
+                text: '面试组名称',
+                dataIndex: 'groupName',
+                minWidth: 150,
+                sortable:false,
+                flex:1
+            },{
+                text: '已经安排人数',
+                dataIndex: 'suNum',
+                minWidth: 250,
+                sortable:false,
+                flex:1
+            }],
+            bbar: {
+                xtype: 'pagingtoolbar',
+                //pageSize: 10,
+                reference: 'rolePlstToolBar',
+                listeners:{
+                    afterrender: function(pbar){
+                        var grid = pbar.findParentByType("grid");
+                        pbar.bindStore(grid.store);
+                        pbar.pageSize=10;
+                        //pbar.setStore(grid.store);
+                    }
+                },
+                plugins: new Ext.ux.ProgressBarPager()
+            }
+        }]
+    }],
+    buttons: [{
+        text: '保存',
+        iconCls:"save",
+        handler: 'onGroupSave'
+    }, {
+        text: '确定',
+        iconCls:"ensure",
+        handler: 'onGroupEnsure'
+    },{
+        text: '关闭',
+        iconCls:"close",
+        handler: function(btn){
+            //获取窗口
+            var win = btn.findParentByType("window");
+            var form = win.child("form").getForm();
+            //关闭窗口
+            win.close();
+        }
+    }]
 });

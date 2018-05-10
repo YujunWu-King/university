@@ -5,18 +5,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.tranzvision.gd.TZApplicationVerifiedBundle.dao.PsTzInteGroupMapper;
-import com.tranzvision.gd.TZApplicationVerifiedBundle.model.PsTzInteGroup;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
-import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -31,12 +26,6 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private FliterForm fliterForm;
-
-	@Autowired
-	private PsTzMsPskshTblMapper psTzMsPskshTblMapper;
-
-	@Autowired
-	private PsTzInteGroupMapper psTzInteGroupMapper;
 
 	@Autowired
 	private GetSysHardCodeVal getSysHardCodeVal;
@@ -66,7 +55,7 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String judgeList = "";
-		String judgeGroupName = "";
+		
 
 		// String pwsql = "SELECT group_concat(B.TZ_DLZH_ID) AS TZ_DLZH_ID FROM
 		// PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE
@@ -91,6 +80,7 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 			String TZ_GROUP_DATE = "";
 			String TZ_ORDER = "";
 			String TZ_GROUP_NAME = "";
+			String judgeGroupName = "";
 			if (obj != null && obj.length > 0) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 
@@ -126,6 +116,8 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 						TZ_GROUP_DATE = map.get("TZ_GROUP_DATE") == null ? "" : map.get("TZ_GROUP_DATE").toString();
 						TZ_ORDER = map.get("TZ_ORDER") == null ? "" : map.get("TZ_ORDER").toString();
 						TZ_GROUP_NAME = map.get("TZ_GROUP_NAME") == null ? "" : map.get("TZ_GROUP_NAME").toString();
+						judgeGroupName = map.get("TZ_CLPS_GR_NAME") == null ? ""
+								: map.get("TZ_CLPS_GR_NAME").toString();
 						if (TZ_GROUP_DATE != null) {
 						} else {
 							TZ_GROUP_DATE = "暂无时间安排";
@@ -138,10 +130,12 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 							mapList.put("order", "");
 						}
 						mapList.put("group_name", TZ_GROUP_NAME);
+						mapList.put("pwgroup_name", judgeGroupName);
 					} else {
 						mapList.put("group_date", "");
 						mapList.put("order", "");
 						mapList.put("group_name", "");
+						mapList.put("pwgroup_name", "");
 					}
 
 					listData.add(mapList);
