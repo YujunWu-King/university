@@ -207,8 +207,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 						//计算排名
 						//this.updateExamineeRank(classId, applyBatchId, oprid, bmbId);
 						
-					System.out.println("评审时间-->" + new Date());
-					
+						
 						//更新考生评审得分历史表
 						PsTzMpPwKsTblKey psTzMpPwKsTblKey = new PsTzMpPwKsTblKey();
 						psTzMpPwKsTblKey.setTzClassId(classId);
