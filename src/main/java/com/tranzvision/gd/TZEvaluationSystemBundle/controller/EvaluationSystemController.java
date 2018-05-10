@@ -178,8 +178,9 @@ public class EvaluationSystemController {
 					examineeName = (String) mapKs.get("TZ_REALNAME");
 				}
 				
+				
 				String ksIframeId = "bmb_iframe_" + classId + "_" + batchId + "_" + appInsId;
-*/
+				*/
 				
 				indexHtml = "batch".equals(page)?
 						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl,pwzzFlag)
