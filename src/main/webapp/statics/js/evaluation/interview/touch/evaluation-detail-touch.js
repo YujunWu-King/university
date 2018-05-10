@@ -305,8 +305,8 @@ function tz_ks_bmb_menu(bmb_id){
 		bmb_url = scoreUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		var bmbArea = "";
-		bmbArea += '<div id="'+ div_tmp +'" style="width:auto; height:auto">';
-		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>';
+		bmbArea += '<div id="'+ div_tmp +'" style="width:auto; height:auto;-webkit-overflow-scrolling:touch; overflow: scroll;">';
+		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" style="width:100%;min-height:800px;border:0;" frameborder="0" src="'+ bmb_url +'"></iframe></div>';
 		
 		$("#div2").append(bmbArea);
 		

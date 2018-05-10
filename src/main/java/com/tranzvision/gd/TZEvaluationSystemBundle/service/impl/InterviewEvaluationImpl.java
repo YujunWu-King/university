@@ -407,10 +407,12 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			/* 第1部分 面试组 */
 			List<Map<String,Object>> list_msgroup= new ArrayList<Map<String,Object>>();
 			
-			String sqlMsGroup= "SELECT A.TZ_PWEI_GRPID,B.TZ_GROUP_ID,B.TZ_GROUP_NAME";
-			sqlMsGroup += " FROM PS_TZ_MSPS_PW_TBL A,PS_TZ_INTEGROUP_T B";
-			sqlMsGroup += " WHERE A.TZ_PWEI_GRPID=B.TZ_CLPS_GR_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID ";
+			String sqlMsGroup= "SELECT DISTINCT A.TZ_PWEI_GRPID,B.TZ_GROUP_ID,B.TZ_GROUP_NAME";
+			sqlMsGroup += " FROM PS_TZ_MSPS_KSH_TBL C,PS_TZ_MSPS_PW_TBL A,PS_TZ_INTEGROUP_T B";
+			sqlMsGroup += " WHERE A.TZ_PWEI_GRPID=B.TZ_CLPS_GR_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
+			sqlMsGroup += " AND B.TZ_GROUP_ID=C.TZ_GROUP_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
 			sqlMsGroup += " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=? AND A.TZ_PWEI_ZHZT<>'B'";
+			sqlMsGroup += " ORDER BY B.TZ_GROUP_ID";
 			
 			List<Map<String, Object>> listMsGroup = sqlQuery.queryForList(sqlMsGroup, new Object[]{classId,batchId,oprid});
 			for(Map<String, Object> mapMsGroup : listMsGroup) {
@@ -631,6 +633,9 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			}
 			
 			Long TZ_APP_INS_ID;
+			Integer TZ_ORDER;
+			Integer TZ_GROUP_ID;
+			String TZ_GROUP_NAME;
 			String ksh_xh;
 			String forthSql;
 			/*
@@ -640,12 +645,11 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				forthSql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_DELETE_ZT <>'Y' order by ROW_ADDED_DTTM ASC";
 			}
 			*/
-			forthSql = "SELECT B.TZ_APP_INS_ID ,A.TZ_ORDER";
-			forthSql += " FROM PS_TZ_MP_PW_KS_TBL B ,PS_TZ_MSPS_KSH_TBL A";
-			forthSql += " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID";
+			forthSql = "SELECT B.TZ_APP_INS_ID ,A.TZ_GROUP_ID,C.TZ_GROUP_NAME,A.TZ_ORDER";
+			forthSql += " FROM PS_TZ_MP_PW_KS_TBL B ,PS_TZ_MSPS_KSH_TBL A,PS_TZ_INTEGROUP_T C";
+			forthSql += " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_GROUP_ID=C.TZ_GROUP_ID";
 			forthSql += " AND B.TZ_CLASS_ID = ? AND B.TZ_APPLY_PC_ID=? AND B.TZ_PWEI_OPRID=? AND B.TZ_DELETE_ZT <>'Y'";
 			forthSql += " ORDER BY A.TZ_ORDER ASC";
-			
 			
 			List<Map<String, Object>> applicantsList = sqlQuery.queryForList(forthSql,
 					new Object[] { classId, batchId, oprid });
@@ -655,12 +659,11 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				int xh = 0;
 				for (int i = 0; i < applicantsList.size(); i++) {
 					TZ_APP_INS_ID = ((BigInteger) applicantsList.get(i).get("TZ_APP_INS_ID")).longValue();
-					Object ksh_xh_object = applicantsList.get(i).get("TZ_ORDER");
-					if(ksh_xh_object!=null && !"".equals(ksh_xh_object)) {
-						ksh_xh = ((Integer) ksh_xh_object).toString();
-					} else {
-						ksh_xh = "0";
-					}
+					TZ_GROUP_ID = (Integer) applicantsList.get(i).get("TZ_GROUP_ID");
+					TZ_GROUP_NAME = (String) applicantsList.get(i).get("TZ_GROUP_NAME");
+					TZ_ORDER = (Integer) applicantsList.get(i).get("TZ_ORDER");
+					
+					ksh_xh = TZ_GROUP_NAME + "-" + TZ_ORDER.toString();
 						
 					xh = xh + 1;
 
@@ -798,6 +801,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						
 						
 						//其他评委打分情况
+						/*
 						List<Map<String, Object>> otherPwList = new ArrayList<Map<String,Object>>();
 						
 				        String otherPwSql = "SELECT  A.TZ_PWEI_OPRID,B.TZ_DLZH_ID,B.TZ_REALNAME,A.TZ_SCORE_INS_ID,C.TZ_PWEI_TYPE";
@@ -860,9 +864,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 									String strDyColNumOther = "0" + dyColNumOther;
 									strDyColNumOther = strDyColNumOther.substring(strDyColNumOther.length() - 2);
 
-									/*动态列
-									 * 成绩项类型：A-数字成绩汇总项,B-数字成绩录入项,C-评语,D-下拉框
-									 */
+									//成绩项类型：A-数字成绩汇总项,B-数字成绩录入项,C-评语,D-下拉框 
 									if ("A".equals(TZ_SCORE_ITEM_TYPE_OTH) || "B".equals(TZ_SCORE_ITEM_TYPE_OTH)
 											||("D".equals(TZ_SCORE_ITEM_TYPE_OTH)&&"Y".equals(TZ_SCR_TO_SCORE_OTH))) {
 										//成绩录入项、成绩汇总项、下拉框且转换为分值   取分数，否则取评语;
@@ -887,6 +889,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				        }
 				        
 			        	dyRowValueItem.put("ps_other_pw", otherPwList);
+			        	*/
 						dyRowValueItem.put("ps_ksh_xh",ksh_xh);
 						dyRowValueItem.put("ps_msh_id",msh_id);
 				        dyRowValueItem.put("ps_ksh_bmbid",String.valueOf(TZ_APP_INS_ID));

@@ -72,6 +72,10 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 				System.out.println("计算面试总分");
 				strRet = this.tzRunMSSumProcess(strParams, errorMsg);
 				break;
+			case "runRleaseEngine": // 批量发布面试结果
+				System.out.print("批量发布面试结果");
+				strRet = this.tzRunReleaseProcess(strParams, errorMsg);
+				break;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -398,6 +402,57 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 				rtnMap.put("msg", "打分成功");
 
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnMap.put("status", "-1");
+			rtnMap.put("msg", "操作异常");
+			errorMsg[0] = "1";
+			errorMsg[1] = "操作异常。" + e.getMessage();
+		}
+
+		strRet = jacksonUtil.Map2json(rtnMap);
+		return strRet;
+	}
+	
+	/**
+	 * 批量发布面试结果
+	 * 
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String tzRunReleaseProcess(String strParams, String[] errorMsg) {
+		String strRet = "";
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+		rtnMap.put("status", "");
+		rtnMap.put("msg", "");
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			if (jacksonUtil.containsKey("attaList")) {
+				List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("attaList");
+				if (list != null && list.size() > 0) {
+					for (Map<String, Object> map : list) {
+						Long appId = Long.valueOf(map.get("appId") == null ? "" : map.get("appId").toString());
+						String msResult = map.get("msResult") == null ? "" : map.get("msResult").toString();
+						String sqlCount = "SELECT COUNT(1) FROM TZ_IMP_MSJG_TBL WHERE TZ_APP_INS_ID=?";
+						int total = sqlQuery.queryForObject(sqlCount, new Object[] { appId }, "Integer");
+						if (total > 0) {
+							String strUpdateSql = "UPDATE TZ_IMP_MSJG_TBL SET TZ_RESULT_CODE='" + msResult
+									+ "' WHERE TZ_APP_INS_ID='" + appId + "'";
+							sqlQuery.update(strUpdateSql, new Object[] {});
+						} else {
+							String strInsertSql = "INSERT INTO TZ_IMP_MSJG_TBL(TZ_APP_INS_ID,TZ_RESULT_CODE) VALUES(?,?)";
+							sqlQuery.update(strInsertSql, new Object[] { appId, msResult });
+						}
+
+					}
+					rtnMap.put("status", "0");
+					rtnMap.put("msg", "发布成功");
+				}
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			rtnMap.put("status", "-1");

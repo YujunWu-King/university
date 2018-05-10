@@ -139,13 +139,13 @@
 	                    dataIndex: 'stuName',
 	                    minWidth: 100,
 	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.email","邮箱") ,
-	                    dataIndex: 'email',
+	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.mobile","手机") ,
+	                    dataIndex: 'mobile',
 	                    minWidth: 100,
 	                    flex:1
 	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.mobile","手机") ,
-	                    dataIndex: 'mobile',
+	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.email","邮箱") ,
+	                    dataIndex: 'email',
 	                    minWidth: 100,
 	                    flex:1
 	                }],

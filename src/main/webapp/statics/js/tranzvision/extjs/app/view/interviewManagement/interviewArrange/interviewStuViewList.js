@@ -156,10 +156,6 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 						dataIndex: 'msPlanSeq',
 						groupable: true
 					},{
-						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.appInsID", '报名表编号'),
-						dataIndex: 'appInsID',
-						width: 120
-					},{
 						text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.interviewAppID", '面试申请号'),
 						dataIndex: 'interviewAppID',
 						width: 140
@@ -177,73 +173,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuVi
 						dataIndex: 'mobile',
 						width: 140,
 						flex:1
-					},/*{
-						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.skypeAcc", 'Skype账号'),
-						dataIndex: 'skypeAcc',
-						width: 120
 					},{
-						 menuDisabled: true,
-						 sortable: false,
-						 width:40,
-						 header:' ',
-						 xtype: 'actioncolumn',
-						 dataIndex: 'transferSkype',
-						 items:[
-							 {iconCls: 'skype',tooltip: 'Skype',handler:'transferSkype'}
-						 ]
-					},{
-						text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.sort", "类别") ,
-						sortable: true,
-						dataIndex: 'sort',
-						minWidth: 140,
-						flex:1,
-						renderer:function(v){
-							if(v){
-								var rec = orgColorSortStore.find('TZ_COLOR_SORT_ID',v,0,true,true,false);
-								if(rec>-1){
-									return "<div  class='x-colorpicker-field-swatch-inner' style='width:30px;height:50%;background-color: #"+orgColorSortStore.getAt(rec).get("TZ_COLOR_CODE")+"'></div><div style='margin-left:40px;'>"+orgColorSortStore.getAt(rec).get("TZ_COLOR_NAME")+"</div>";
-								}else{
-									return "";
-								}
-							}
-						},
-						editor: {
-							xtype: 'combo',
-							queryMode:'local',
-							valueField: 'TZ_COLOR_SORT_ID',
-							displayField: 'TZ_COLOR_NAME',
-							triggerAction: 'all',
-							editable : false,
-							triggers:{
-								clear: {
-									cls: 'x-form-clear-trigger',
-									handler: function(field){
-										field.setValue("");
-									}
-								}
-							},
-							store:orgColorSortStore,
-							tpl: Ext.create('Ext.XTemplate',
-								'<tpl for=".">',
-								'<div class="x-boundlist-item"><div class="x-colorpicker-field-swatch-inner" style="margin-top:6px;width:30px;height:50%;background-color: #{TZ_COLOR_CODE}"></div><div style="margin-left:40px;display: block;  overflow:  hidden; white-space: nowrap; -o-text-overflow: ellipsis; text-overflow:  ellipsis;"> {TZ_COLOR_NAME}</div></div>',
-								'</tpl>'
-							),
-							displayTpl: Ext.create('Ext.XTemplate',
-								'<tpl for=".">',
-								'{TZ_COLOR_NAME}',
-								'</tpl>'
-							),
-							listeners: {
-								focus: function (combo,event, eOpts) {
-									var selList = this.findParentByType("grid").getView().getSelectionModel().getSelection();
-									var colorSortID =selList[0].raw.sort;
-									if(colorSortID.length<=0){
-										combo.setValue("");
-									}
-								}
-							}
-						}
-					},*/{
 						menuDisabled: true,
 						sortable: false,
 						header:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.active", '操作'),

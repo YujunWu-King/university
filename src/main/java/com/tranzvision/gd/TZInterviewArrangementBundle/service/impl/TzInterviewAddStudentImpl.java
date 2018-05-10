@@ -80,29 +80,7 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 					
 					mapList.put("className", rowList[9]);
 					mapList.put("batchName", rowList[10]);
-					/*
-					//面试资格
-					String sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
-					String msZgFlag = sqlQuery.queryForObject(sql, new Object[]{rowList[0], rowList[1]}, "String");
-					if("".equals(msZgFlag) || msZgFlag==null){
-						sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
-						msZgFlag = sqlQuery.queryForObject(sql, "String");
-					}
-					
-					//标签
-					String strLabel = "";
-					sql = "SELECT TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B WHERE A.TZ_LABEL_ID=B.TZ_LABEL_ID AND TZ_APP_INS_ID=?";
-					List<Map<String, Object>> labelList = sqlQuery.queryForList(sql, new Object[]{rowList[1]});
-					for(Map<String, Object> mapLabel: labelList){
-						String label = String.valueOf(mapLabel.get("TZ_LABEL_NAME"));
-						if(!"".equals(label) && label != null){
-							strLabel = strLabel == ""? label : strLabel+ "； " +label;
-						}
-					}
-					
-					mapList.put("msZGFlag", msZgFlag);
-					mapList.put("label", strLabel);
-					*/
+
 					listData.add(mapList);
 				}
 
