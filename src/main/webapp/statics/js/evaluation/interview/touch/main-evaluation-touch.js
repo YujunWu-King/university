@@ -82,6 +82,19 @@ function useJson(varjsonData){
 	}
 	msGroupHtml += "</select>";
 	$("#msGroupSpan").html(msGroupHtml);
+	/*
+	var firstValue= "";
+	var msGroupOption = "";
+	var msGroupArray = jsonObject['ps_ms_group'];
+	for(var m=0;m<msGroupArray.length;m++) {
+		if(m==0) {
+			firstValue = msGroupArray[m]['msGroupId'];
+		}
+		msGroupOption += "<option value='"+ msGroupArray[m]['msGroupId'] +"'>"+ msGroupArray[m]['msGroupName'] +"</option>"
+	}
+	$("#msGroup").append(msGroupOption);
+	*/
+	//$("#msGroup option[value='"+ firstValue+"'] ").attr("selected",true);
 
 	
 	//考生列表
