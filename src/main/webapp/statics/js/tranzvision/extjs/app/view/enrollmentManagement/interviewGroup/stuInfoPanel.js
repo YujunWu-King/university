@@ -31,7 +31,7 @@
 		this.cellEditing = new Ext.grid.plugin.CellEditing({
 			clicksToEdit: 1
 		});
-		var store = new KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListStore();
+		var store = new KitchenSink.view.enrollmentManagement.interviewGroup.stuStore();
 
 
 		Ext.apply(this, {
@@ -82,7 +82,7 @@
 					xtype: 'textfield',
 					//fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
 					labelWidth: 110,
-					name: 'classID',
+					name: 'classId',
 					//allowBlank: false,
 					//fieldStyle:'background:#F4F4F4',
     				//readOnly:true,
@@ -92,7 +92,7 @@
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.batchId", "批次编号"),
 					labelWidth: 110,
-					name: 'batchID',
+					name: 'batchId',
 					//allowBlank: false,
 					//fieldStyle:'background:#F4F4F4',
     				//readOnly:true,
@@ -163,6 +163,11 @@
 						}
 					}
 					
+				},{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.pwGroup", "评委组"),
+					dataIndex: 'pwgroup_name',
+					width: 100
+				
 				}, {
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.judgeGroup", "面试组"),
 					dataIndex: 'group_name',

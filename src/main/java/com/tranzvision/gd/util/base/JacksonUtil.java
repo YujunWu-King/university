@@ -325,11 +325,12 @@ public class JacksonUtil {
 		List<Map<String, Object>> jsonArray = (List<Map<String, Object>>) jacksonUtil.getList("storDates");
 		System.out.println("jsonArray：" + jsonArray.size()); */
 		
-		String acc = "1122|||22|||33";
-		System.out.println(com.tranzvision.gd.util.base.Global.split(acc, "|||")[0]);
-		System.out.println(com.tranzvision.gd.util.base.Global.split(acc, "|||")[1]);
-		System.out.println(com.tranzvision.gd.util.base.Global.split(acc, "|||")[2]);
-		System.out.println(com.tranzvision.gd.util.base.Global.split(acc, "|||").length);
+		String acc = "{\"classId\":147,\"batchId\":108,\"data\":{\"groupName\":\"2组\",\"groupID\":\"2\",\"check\":true,\"suNum\":0,\"id\":\"KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupModel-2\"}}";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(acc);
+		Map<String, Object> data = jacksonUtil.getMap("data");
+		System.out.println(data.get("check"));
+
 		
 	}
 
