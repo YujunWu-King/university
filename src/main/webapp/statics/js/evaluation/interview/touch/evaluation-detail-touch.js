@@ -280,10 +280,10 @@ function tz_ks_bmb_menu(bmb_id){
 	} else {
 		
 		//iframe 的id 串
-		var iframe_tmp = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmb_id;
+		var iframe_tmp = "=bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmb_id;
 		var div_tmp = "div_" + iframe_tmp;
 
-		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + "=" + iframe_tmp);
+		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + iframe_tmp);
 
 		var bmb_url = "";
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmb_id+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
@@ -365,10 +365,10 @@ function tz_ks_bmb(bmbId){
 		}
 	} else {
 		//iframe 的id 串
-		var iframe_tmp = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmbId;
+		var iframe_tmp = "=bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmbId;
 		var div_tmp = "div_" + iframe_tmp;
 		
-		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + "=" + iframe_tmp);
+		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + iframe_tmp);
 		
 		var bmb_url = "";
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
