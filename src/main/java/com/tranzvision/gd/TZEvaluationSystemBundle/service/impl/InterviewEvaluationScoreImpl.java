@@ -456,7 +456,8 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 		        	int dyColNumOther = 0;
 		        	if(listHeader!=null) {
 						for (int i = 0; i < listHeader.size(); i++) {
-							String TZ_SCORE_ITEM_ID_OTH = (String) listHeader.get(i).get("TZ_SCORE_ITEM_ID");
+							//String TZ_SCORE_ITEM_ID_OTH = (String) listHeader.get(i).get("TZ_SCORE_ITEM_ID");
+							String TZ_SCORE_ITEM_ID_OTH = (String) listHeader.get(i).get("TREE_NODE");
 
 							// 判断成绩项的类型，下拉框转换为分值;
 							String TZ_SCORE_ITEM_TYPE_OTH = "",TZ_SCR_TO_SCORE_OTH = "";
@@ -1240,74 +1241,77 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				String scoreItemUpperOperate = mapScore.get("TZ_M_FBDZ_MX_SX_JX") == null ? "" : mapScore.get("TZ_M_FBDZ_MX_SX_JX").toString();
 				String scoreItemLowerOperate = mapScore.get("TZ_M_FBDZ_MX_XX_JX") == null ? "" : mapScore.get("TZ_M_FBDZ_MX_XX_JX").toString();
 				
-				String scoreItemValue = jacksonUtil.getString(scoreItemId);
-				String scoreValid1 = "";
-				String scoreValid2 = "";
-				Double scoreItemValueD;
+				if (jacksonUtil.containsKey(scoreItemId)) {
+					
+					String scoreItemValue = jacksonUtil.getString(scoreItemId);
+					String scoreValid1 = "";
+					String scoreValid2 = "";
+					Double scoreItemValueD;
 				
-				//判断成绩及评语有效性
-				if("B".equals(scoreItemType)) {
-					//数字成绩录入项
-					scoreItemValueD = scoreItemValue == null ? 0.0 : Double.valueOf(scoreItemValue);
-					if("<".equals(scoreItemUpperOperate)) {
-						if(">".equals(scoreItemLowerOperate)) {
-							if(scoreItemValueD>scoreItemValueLower && scoreItemValueD<scoreItemValueUpper) {
-								scoreValid1="Y";
-							}
-						} else {
-							if(">=".equals(scoreItemLowerOperate)) {
-								if(scoreItemValueD>=scoreItemValueLower && scoreItemValueD<scoreItemValueUpper) {
-									scoreValid1="Y";
-								}
-							}
-						}
-					} else {
-						if("<=".equals(scoreItemUpperOperate)) {
+					//判断成绩及评语有效性
+					if("B".equals(scoreItemType)) {
+						//数字成绩录入项
+						scoreItemValueD = scoreItemValue == null ? 0.0 : Double.valueOf(scoreItemValue);
+						if("<".equals(scoreItemUpperOperate)) {
 							if(">".equals(scoreItemLowerOperate)) {
-								if(scoreItemValueD>scoreItemValueLower && scoreItemValueD<=scoreItemValueUpper) {
+								if(scoreItemValueD>scoreItemValueLower && scoreItemValueD<scoreItemValueUpper) {
 									scoreValid1="Y";
 								}
 							} else {
 								if(">=".equals(scoreItemLowerOperate)) {
-									if(scoreItemValueD>=scoreItemValueLower && scoreItemValueD<=scoreItemValueUpper) {
+									if(scoreItemValueD>=scoreItemValueLower && scoreItemValueD<scoreItemValueUpper) {
 										scoreValid1="Y";
 									}
 								}
 							}
+						} else {
+							if("<=".equals(scoreItemUpperOperate)) {
+								if(">".equals(scoreItemLowerOperate)) {
+									if(scoreItemValueD>scoreItemValueLower && scoreItemValueD<=scoreItemValueUpper) {
+										scoreValid1="Y";
+									}
+								} else {
+									if(">=".equals(scoreItemLowerOperate)) {
+										if(scoreItemValueD>=scoreItemValueLower && scoreItemValueD<=scoreItemValueUpper) {
+											scoreValid1="Y";
+										}
+									}
+								}
+							}
 						}
-					}
 					
-				} else {
-					if("C".equals(scoreItemType)) {
-						//评语
-						if(scoreItemValue.length()>=scoreItemCommentLower && scoreItemValue.length()<=scoreItemCommentUpper) {
-							scoreValid2="Y";
+						} else {
+						if("C".equals(scoreItemType)) {
+							//评语
+							if(scoreItemValue.length()>=scoreItemCommentLower && scoreItemValue.length()<=scoreItemCommentUpper) {
+								scoreValid2="Y";
+							}
+							/*if(scoreItemValue.length()<=scoreItemCommentUpper) {
+								scoreValid2="Y";
+							} */
+						} 
+					}
+				
+					if("B".equals(scoreItemType)) {
+						if("Y".equals(scoreValid1)) {	
+							//成绩校验成功
+						} else {
+							//成绩校验失败
+							resultMsg = resultMsg + "【" + scoreItemName + "】分数填写错误，请重新填写！";
 						}
-						/*if(scoreItemValue.length()<=scoreItemCommentUpper) {
-							scoreValid2="Y";
-						} */
-					} 
-				}
-				
-				if("B".equals(scoreItemType)) {
-					if("Y".equals(scoreValid1)) {	
-						//成绩校验成功
-					} else {
-						//成绩校验失败
-						resultMsg = resultMsg + "【" + scoreItemName + "】分数填写错误，请重新填写！";
 					}
-				}
 				
-				if("C".equals(scoreItemType)) {
-					if("Y".equals(scoreValid2)) {
-						//评语校验成功
-					} else {
-						//评语校验失败
-						resultMsg = resultMsg + "【" + scoreItemName + "】评语字数范围不正确，请重新填写！";
+					if("C".equals(scoreItemType)) {
+						if("Y".equals(scoreValid2)) {
+							//评语校验成功
+						} else {
+							//评语校验失败
+							resultMsg = resultMsg + "【" + scoreItemName + "】评语字数范围不正确，请重新填写！";
+						}
 					}
-				}
 				
-				mapItemsScore.put(scoreItemId, scoreItemValue);
+					mapItemsScore.put(scoreItemId, scoreItemValue);
+				}
 			}
 			
 			if(resultMsg!="" && resultMsg!=null) {

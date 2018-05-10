@@ -185,13 +185,20 @@ th {
 			    </div>
 
 				<div id="div2" style="display:block;width:100%">
-
+<!--
+					<div id="div_bmb_iframe_%bind(:4)_%bind(:5)_%bind(:6)" style="width:auto; height:auto ;-webkit-overflow-scrolling:touch; overflow: scroll;" >
+						<iframe id="bmb_iframe_%bind(:4)_%bind(:5)_%bind(:6)" style="width:100%;min-height:800px;border:0;" src="" name="bmb_iframe_%bind(:4)_%bind(:5)_%bind(:6)">
+						</iframe>
+					</div>
+-->
  				<script type="text/javascript">
 					$(function(){
 						//默认显示考生列表
 						show1();
+
 						/*
-						showLoaderThis();
+						//showLoaderThis();
+						//给报名表页签的iframe的src赋值并加载
  						var iframe_tmp_id = "bmb_iframe_"+ClassId+"_"+BatchId+"_"+AppInsId;
 						var viewAppFormUrl = ContextPath+"/dispatcher?tzParams="+
 							encodeURI(JSON.stringify({
@@ -208,13 +215,8 @@ th {
 						*/
  					});
 				</script>
-					<div id="div_bmb_iframe_%bind(:4)_%bind(:5)_%bind(:6)" style="width:auto; height:auto ;-webkit-overflow-scrolling:touch; overflow: scroll;" >
-						<iframe id="bmb_iframe_%bind(:4)_%bind(:5)_%bind(:6)" style="width:100%;min-height:800px;border:0;" src="" name="bmb_iframe_%bind(:4)_%bind(:5)_%bind(:6)">
-						</iframe>
-					</div>
 
 		       </div>
-
 
 				<div>
 					<!-- 隐藏字段区域 -->
