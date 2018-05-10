@@ -172,7 +172,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.rowNum","序号"),
                     xtype: 'rownumberer',
                     width:50
-                },{
+                },/*{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.appId","报名表编号") ,
                     dataIndex: 'appId',
                     filter: {
@@ -181,7 +181,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     width: 100,
                     minWidth: 80,
                     hidden: true
-                },{
+                },*/{
                 	text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.interviewAppId","面试申请号") ,
                     dataIndex: 'interviewAppId',
                     filter: {
