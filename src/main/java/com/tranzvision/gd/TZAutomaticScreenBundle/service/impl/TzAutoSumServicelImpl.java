@@ -65,11 +65,11 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 		try {
 			switch (strType) {
 			case "RunSum": // 计算总分
-				System.out.print("计算总分");
+				System.out.println("计算总分");
 				strRet = this.tzRunSumProcess(strParams, errorMsg);
 				break;
 			case "RunMSSum": // 计算面试总分
-				System.out.print("计算面试总分");
+				System.out.println("计算面试总分");
 				strRet = this.tzRunMSSumProcess(strParams, errorMsg);
 				break;
 			}
@@ -155,34 +155,18 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 							exists = true;
 							scoreInsId = LscoreInsId.longValue();
 						}
+						
+						System.out.println("classId:"+classId);
+						System.out.println("batchId:"+batchId);
+						System.out.println("appInsId:"+appInsId);
+						System.out.println("scoreInsId:"+scoreInsId);
 						for (Map<String, Object> avgMap : scoreAvgList) {
-							TZ_SCORE_ITEM_ID = avgMap.get("TZ_APP_INS_ID").toString();
-							TZ_SCORE_NUM = avgMap.get("TZ_SCORE_NUM").toString();
-							if (!exists) {
-								// 插入表TZ_CJX_TBL
-								psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
-								// 成绩单ID
-								psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
-								// 成绩项ID
-								psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
-								// 分值
-								psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
-								// 插入
-								psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
-							} else {
-								psTzCjxTblKey = new PsTzCjxTblKey();
-								psTzCjxTblKey.setTzScoreInsId(new Long(scoreInsId));
-								psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM_ID);
-								psTzCjxTblWithBLOBs = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
-								if (psTzCjxTblWithBLOBs != null) {
-									// 修改表
-									psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
-									psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
-									// 成绩项ID
-									psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
-									psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
-									psTzCjxTblMapper.updateByPrimaryKeySelective(psTzCjxTblWithBLOBs);
-								} else {
+							if (avgMap.get("TZ_SCORE_ITEM_ID") != null) {
+								TZ_SCORE_ITEM_ID = avgMap.get("TZ_SCORE_ITEM_ID").toString();
+								TZ_SCORE_NUM = avgMap.get("TZ_SCORE_NUM").toString();
+								System.out.println("TZ_SCORE_ITEM_ID:"+TZ_SCORE_ITEM_ID);
+								System.out.println("TZ_SCORE_NUM:"+TZ_SCORE_NUM);
+								if (!exists) {
 									// 插入表TZ_CJX_TBL
 									psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
 									// 成绩单ID
@@ -193,6 +177,31 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 									psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
 									// 插入
 									psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
+								} else {
+									psTzCjxTblKey = new PsTzCjxTblKey();
+									psTzCjxTblKey.setTzScoreInsId(new Long(scoreInsId));
+									psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+									psTzCjxTblWithBLOBs = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
+									if (psTzCjxTblWithBLOBs != null) {
+										// 修改表
+										psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
+										psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
+										// 成绩项ID
+										psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+										psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
+										psTzCjxTblMapper.updateByPrimaryKeySelective(psTzCjxTblWithBLOBs);
+									} else {
+										// 插入表TZ_CJX_TBL
+										psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
+										// 成绩单ID
+										psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
+										// 成绩项ID
+										psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+										// 分值
+										psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
+										// 插入
+										psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
+									}
 								}
 							}
 						}
