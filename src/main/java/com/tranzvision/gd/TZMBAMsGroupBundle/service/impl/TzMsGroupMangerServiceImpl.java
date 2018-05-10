@@ -35,8 +35,9 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 		String batchId = "";
 		String groupid = "";
 		Map<String, Object> data = null;
-		
+
 		String strReturn = "";
+		String name = "";
 		String check = "";
 		String gropid = "";
 		int sum = 0;
@@ -44,36 +45,40 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 		String sql = "update PS_TZ_MSPS_KSH_TBL set TZ_GROUP_ID=?,TZ_GROUP_DATE=now(),TZ_ORDER=? where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
 		String totole = "select count(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?  and TZ_GROUP_ID=?";
 		String is = "select count(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=? and TZ_GROUP_ID=?";
+		String updatesql = "update PS_TZ_INTEGROUP_T set TZ_GROUP_NAME=? where TZ_GROUP_ID=?";
 		try {
 
 			for (int i = 0; i < actData.length; i++) {
 				// 表单内容
 				String strForm = actData[i];
-				System.out.println(strForm);
+				// System.out.println(strForm);
 				jacksonUtil.json2Map(strForm);
 				// 解析 json
 				classId = jacksonUtil.getString("classId");
 				batchId = jacksonUtil.getString("batchId");
 				appinsId = jacksonUtil.getString("appinsId");
-				System.out.println(classId);
-				System.out.println(batchId);
-				System.out.println(appinsId);
+
+				// System.out.println(classId);
+				// System.out.println(batchId);
+				// System.out.println(appinsId);
 				data = jacksonUtil.getMap("data");
-				
+
 				check = data.get("check") == null ? "" : data.get("check").toString();
+				name = data.get("groupName") == null ? "" : data.get("groupName").toString();
+				gropid = data.get("groupID").toString();
 				System.out.println(check);
+
+				sqlQuery.update(updatesql, new Object[] { name, gropid });
 				if (check.equals("true") || check.equals("Y")) {
-					gropid = data.get("groupID").toString();
-					System.out.println(gropid);
+
+					// System.out.println(gropid);
 					intis = sqlQuery.queryForObject(is, new Object[] { classId, batchId, appinsId, gropid }, "Integer");
-					System.out.println(intis);
+					// System.out.println(intis);
 					// 存在相同的数据 不修改
 					if (intis <= 0) {
 						sum = sqlQuery.queryForObject(totole, new Object[] { classId, batchId, gropid }, "Integer");
-						System.out.println(sum);
-						if (sum == 0) {
-							sum = 1;
-						}
+						// System.out.println(sum);
+						sum = sum + 1;
 						sqlQuery.update(sql, new Object[] { gropid, sum, classId, batchId, appinsId });
 					}
 				}

@@ -46,7 +46,7 @@ public class TzInterviewAppoStuAddImpl extends FrameworkImpl{
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL","TZ_MOBILE","TZ_MSH_ID","TZ_KSH_CSJG"};
+			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL","TZ_MOBILE","TZ_MSH_ID"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -68,7 +68,6 @@ public class TzInterviewAppoStuAddImpl extends FrameworkImpl{
 					mapList.put("email", rowList[5]);
 					mapList.put("mobile", rowList[6]);
 					mapList.put("msApplyID", rowList[7]);
-					mapList.put("csResult", rowList[8]);//初筛结果
 
 					listData.add(mapList);
 				}

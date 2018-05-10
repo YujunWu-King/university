@@ -103,6 +103,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupW
             store: {
                 type: 'interviewGroupStore'
             },
+            plugins : [{
+				ptype : 'cellediting',
+				clicksToEdit : 1
+			}],
             columns: [{
                 xtype: 'checkcolumn',
                 text: "选择",
@@ -119,6 +123,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupW
                 dataIndex: 'groupName',
                 minWidth: 150,
                 sortable:false,
+                editor:{xtype:'textfield',allowBlank:false},
                 flex:1
             },{
                 text: '已经安排人数',

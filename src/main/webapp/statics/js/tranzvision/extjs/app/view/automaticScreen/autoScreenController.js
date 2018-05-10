@@ -274,7 +274,35 @@
 			
 		});
 	},
-	
+	// 批量发布面试结果
+	runRleaseEngine: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var grid = panel.down('grid');
+		
+		var attaList="";
+		var selList = grid.getSelectionModel().getSelection();
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","您没有选中任何记录");
+			return;
+		}
+		for (var i = 0; i < selList.length; i++) {
+            if (attaList == "") {
+                attaList = Ext.JSON.encode(selList[i].data);
+            } else {
+                attaList = attaList + ',' + Ext.JSON.encode(selList[i].data);
+            }
+        }
+		var comParams = '"attaList":[' + attaList + ']';
+        comParams = '{'+comParams+'}';
+        var tzParams = '{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_SUM_SCREEN_STD","OperateType":"runRleaseEngine","comParams":'+comParams+'}';
+        var status,processIns;
+		Ext.tzLoadAsync(tzParams,function(respData){
+			status = respData.status;
+			Ext.Msg.alert("提示",respData.msg);
+			grid.getStore().reload();
+		});
+	},
 	//查看打分过程
 	onClickNumber: function(view,rowIndex,colIndex){
 		var rec = view.getStore().getAt(rowIndex);
