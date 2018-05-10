@@ -162,6 +162,7 @@ public class MsXmlToWord {
 	 */
 	public String getHtmlStr(String TZ_CLASS_ID, String TZ_APPLY_PC_ID, String TZ_PWEI_OPRIDS)
 			throws TzSystemException {
+		String dq_oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 		// 用于返回的字符串;
 		String html = "";
@@ -242,6 +243,11 @@ public class MsXmlToWord {
 			String html_pws = "";
 			// 用于拼装单个评委串;
 			String html_pw = "";
+			// 用于拼装评委签名图片的relationship
+			String html_relationship = "";
+			// 用户拼装评委签名图片的信息
+			String html_image = "";
+			String relationshipId = "", imageName = "";
 
 			// 评委grid 总的字符串;
 			String html_pwgrids = "";
@@ -278,7 +284,7 @@ public class MsXmlToWord {
 				}
 				
 				// 处理每个评委考生的面试序号;
-				String pw_ks_xh_sql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ?  order by ROW_ADDED_DTTM";
+				String pw_ks_xh_sql = "select TZ_APP_INS_ID from PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID = ? AND TZ_APPLY_PC_ID = ? AND TZ_PWEI_OPRID = ? AND TZ_DELETE_ZT <> 'Y' order by ROW_ADDED_DTTM";
 				List<Map<String, Object>> pw_ks_xh_list = jdbcTemplate.queryForList(pw_ks_xh_sql,new Object[] {TZ_CLASS_ID,TZ_APPLY_PC_ID,arr[i]});
 				Map<String, Object> pw_ks_xh_map =new HashMap();
 				
@@ -304,8 +310,24 @@ public class MsXmlToWord {
 					TZ_PW_ZH = TZ_PW_ZH_MAP.get("TZ_DLZH_ID") == null ? ""
 							: String.valueOf(TZ_PW_ZH_MAP.get("TZ_DLZH_ID"));
 				}
+				String html_pwei_sign = "";
+				String TZ_PW_SIGN = "" ;
+				String TZ_PW_SIGN_BASE64 = jdbcTemplate.queryForObject("SELECT TZ_SIGNATURE FROM PS_TZ_MSPWPSJL_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?", new Object[]{TZ_CLASS_ID,TZ_APPLY_PC_ID,arr[i]},"String");		
+				if(TZ_PW_SIGN_BASE64!=null && !"".equals(TZ_PW_SIGN_BASE64)) {		
+					TZ_PW_SIGN = TZ_PW_SIGN_BASE64.split(",")[1];
+					relationshipId = "rId" + String.valueOf((10+i));
+					imageName = "image" + String.valueOf((1+i)) + ".png";
+					if(i==0) { 
+						html_relationship = tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_RELATIONSHIP_HTML",relationshipId,imageName);
+						html_image = tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_IMG_PKG_HTML",imageName,TZ_PW_SIGN);
+					} else {
+						html_relationship +=  tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_RELATIONSHIP_HTML",relationshipId,imageName);
+						html_image += tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_IMG_PKG_HTML",imageName,TZ_PW_SIGN);
+					}
+					html_pwei_sign = tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PWQZ_HTML",relationshipId);
+				}
 				//String[] pcpwarr = { class_pc, DQDATE, TZ_CLPS_GR_NAME, arr[i] };
-				String[] pcpwarr = { class_pc, DQDATE, TZ_CLPS_GR_NAME, TZ_PW_ZH};
+				String[] pcpwarr = { class_pc,DQDATE, TZ_CLPS_GR_NAME, TZ_PW_ZH,html_pwei_sign};
 				
 				String pc_pw_html = tzGDObject
 						.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_PW_PCINFO_HTML", pcpwarr);
@@ -521,7 +543,7 @@ public class MsXmlToWord {
 			}
 
 			// 获取拼装的字符串
-			html = tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_HTML", html_pws);
+			html = tzGDObject.getHTMLTextForDollar("HTML.TZMaterialInterviewReviewBundle.TZ_GD_MS_PY_HTML", html_pws,html_relationship,html_image);
 		}
 
 		return html;
