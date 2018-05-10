@@ -51,7 +51,9 @@
 				Target="settings.xml" />
 			<Relationship Id="rId9"
 				Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme"
-				Target="theme/theme1.xml" /></Relationships>
+				Target="theme/theme1.xml" />
+			%bind(:2)
+			</Relationships>
 		</pkg:xmlData>
 	</pkg:part>
 	<pkg:part pkg:name="/word/document.xml"
@@ -87,6 +89,7 @@
 			</w:document>
 		</pkg:xmlData>
 	</pkg:part>
+	%bind(:3)
 	<pkg:part pkg:name="/word/footnotes.xml"
 		pkg:contentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml">
 		<pkg:xmlData>

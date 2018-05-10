@@ -18,7 +18,6 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.sql.SqlQuery;
 
 
 /**
@@ -27,8 +26,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
  */
 @Service("com.tranzvision.gd.TZInterviewArrangementBundle.service.impl.TzInterviewAddStudentImpl")
 public class TzInterviewAddStudentImpl extends FrameworkImpl{
-	@Autowired
-	private SqlQuery sqlQuery;
 	@Autowired
 	private FliterForm fliterForm;
 	@Autowired
@@ -57,7 +54,7 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 			jacksonUtil.json2Map(strParams);
 
 			// json数据要的结果字段;
-			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APP_INS_ID", "OPRID", "TZ_MSH_ID", "TZ_REALNAME", "TZ_LEN_PROID", "TZ_COMPANY_NAME","TZ_ZY_SJ","TZ_ZY_EMAIL"};
+			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APP_INS_ID", "OPRID", "TZ_MSH_ID", "TZ_REALNAME", "TZ_LEN_PROID", "TZ_COMPANY_NAME","TZ_ZY_SJ","TZ_ZY_EMAIL","TZ_CLASS_NAME","TZ_BATCH_NAME"};
 			
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -80,6 +77,9 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 					mapList.put("componey", rowList[6]);
 					mapList.put("mobile", rowList[7]);
 					mapList.put("email", rowList[8]);
+					
+					mapList.put("className", rowList[9]);
+					mapList.put("batchName", rowList[10]);
 					/*
 					//面试资格
 					String sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";

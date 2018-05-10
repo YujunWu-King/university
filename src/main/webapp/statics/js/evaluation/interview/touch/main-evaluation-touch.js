@@ -147,6 +147,7 @@ function useJson(varjsonData){
 
 
 	//其他评委打分
+	/*
 	if(GroupLeader=="Y") {
 
 		var qtpwScoreHtml = "";
@@ -193,6 +194,7 @@ function useJson(varjsonData){
 
 		$("#otherJudgeScore").append(qtpwScoreHtml);
 	}
+	*/
 
 
 	//已评审考生得分统计
@@ -768,9 +770,80 @@ function submitall(){
 
 //查看其他评委打分
 function viewOtherJudge(bmbid) {
-	var divId = "score" + bmbid;
-	var popupContent = $("#"+divId).html();
 
-	$("#otherDialog .ui-content").html(popupContent);
+	$.ajax({
+		type: 'POST',
+		url: baseUrl+"&type=other",
+		dataType: 'json',
+		data: {"BaokaoClassID":ClassId,"BaokaoPCID":BatchId,"appinsId":bmbid},
+		success: function(response) {
+			var jsonObject = response.comContent;
+
+			openOtherDialog(bmbid,jsonObject);
+
+		}
+	});
+
+}
+
+
+function openOtherDialog(bmbid,jsonObject) {
+	//列名
+	var qtpwColName = "<th scope='col'  style='text-align:center;'>评委账号</th>";
+	qtpwColName += "<th scope='col' style='text-align:center;'>评委姓名</th>";
+	qtpwColName += "<th scope='col' style='text-align:center;'>类型</th>";
+
+	var collist="";
+	var headObject = jsonObject['other_headers'];
+	var m = 0;
+	for(var i in headObject) {
+		m++;
+		var colName = '00' + m;
+		colName = 'col' + colName.substr(colName.length - 2);
+		collist+='<th>'+headObject[colName]+'</th>';
+	}
+
+	qtpwColName += collist;
+
+	//值
+	var qtpwValue = "";
+
+	var valueArray = jsonObject['other_contents'];
+	for (var i = 0; i < valueArray.length; i++) {
+
+		qtpwValue += "<tr id='" + valueArray[i]['otherPwDlzhId'] + "'>";
+		qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + valueArray[i]['otherPwDlzhId'] + "</td>";
+		qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + valueArray[i]['otherPwName'] + "</td>";
+		qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + valueArray[i]['otherPwTypeDesc'] + "</td>";
+
+		var num = 0;
+		for (var k in headObject) {
+			num++;
+			var colName = '00' + num;
+			colName = 'col' + colName.substr(colName.length - 2);
+			qtpwValue += "<td class='alt' >" + (valueArray[i][colName] || "") + '</td>';
+		}
+		qtpwValue += "</tr>";
+	}
+
+	var otherScoreDivId = "score" + bmbid;
+
+	if(document.getElementById(otherScoreDivId)!=undefined) {
+		$("#"+otherScoreDivId).remove();
+	}
+
+	var qtpwScore ='<div id=' + otherScoreDivId + '>';
+	qtpwScore += '<div>学生姓名：' + jsonObject['ksh_name'] + '</div>';
+	qtpwScore += '<table cellspacing="0" width="100%" summary="the technical specifications of the apple powermac g5 series">';
+	qtpwScore += '<tr>' + qtpwColName + '</tr>';
+	qtpwScore += qtpwValue;
+	qtpwScore += '</table>';
+	qtpwScore += "</div>";
+
+
+	var divId = "score" + bmbid;
+	//var popupContent = $("#"+divId).html();
+
+	$("#otherDialog .ui-content").html(qtpwScore);
 	$("#otherDialog").popup('open');
 }

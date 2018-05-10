@@ -163,7 +163,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 		var batchID = win.batchID;
 		
 		var condition = {
-			TZ_CLASS_ID: classID	
+//			TZ_CLASS_ID: classID	
 		};
 
 		Ext.tzShowCFGSearch({
