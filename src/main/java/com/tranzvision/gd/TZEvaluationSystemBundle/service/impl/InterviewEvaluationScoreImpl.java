@@ -164,13 +164,17 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					}
 				}
 				
+				String scoreModalId = "",treeName = "",bmrOprid = "";
+				
 				sql = "SELECT A.TZ_MSCJ_SCOR_MD_ID ,B.TREE_NAME,C.OPRID FROM PS_TZ_FORM_WRK_T C,PS_TZ_RS_MODAL_TBL B,PS_TZ_CLASS_INF_T A";
-				sql = sql + " WHERE A.TZ_MSCJ_SCOR_MD_ID = B.TZ_SCORE_MODAL_ID AND A.TZ_CLASS_ID=C.TZ_CLASS_ID AND B.TZ_JG_ID=? AND C.TZ_APP_INS_ID=? AND A.TZ_CLASS_ID=?";
+				sql = sql + " WHERE A.TZ_MSCJ_SCOR_MD_ID = B.TZ_SCORE_MODAL_ID AND B.TZ_JG_ID=? AND C.TZ_APP_INS_ID=? AND A.TZ_CLASS_ID=?";
 				 
 				Map<String, Object> mapData = sqlQuery.queryForMap(sql, new Object[] {orgId,bmbId,classId});
-				String scoreModalId = mapData.get("TZ_MSCJ_SCOR_MD_ID") == null ? "" : mapData.get("TZ_MSCJ_SCOR_MD_ID").toString();
-				String treeName = mapData.get("TREE_NAME") == null ? "" : mapData.get("TREE_NAME").toString();
-				String bmrOprid = mapData.get("OPRID") == null ? "" : mapData.get("OPRID").toString();
+				if(mapData!=null) {
+					scoreModalId = mapData.get("TZ_MSCJ_SCOR_MD_ID") == null ? "" : mapData.get("TZ_MSCJ_SCOR_MD_ID").toString();
+					treeName = mapData.get("TREE_NAME") == null ? "" : mapData.get("TREE_NAME").toString();
+					bmrOprid = mapData.get("OPRID") == null ? "" : mapData.get("OPRID").toString();
+				}
 				
 				if("".equals(scoreModalId)) {
 					messageCode = "1";
@@ -640,7 +644,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			sqlBasic = sqlBasic + ",(SELECT G.TREE_NAME FROM PS_TZ_RS_MODAL_TBL G WHERE G.TZ_JG_ID=A.TZ_JG_ID AND G.TZ_SCORE_MODAL_ID=A.TZ_CS_SCOR_MD_ID) TREE_NAME_ZDDF";
 			sqlBasic = sqlBasic + ",(SELECT G.TREE_NAME FROM PS_TZ_RS_MODAL_TBL G WHERE G.TZ_JG_ID=A.TZ_JG_ID AND G.TZ_SCORE_MODAL_ID=A.TZ_MSCJ_SCOR_MD_ID) TREE_NAME,G.TZ_PRJ_NAME";
 			sqlBasic = sqlBasic + " FROM PS_TZ_AQ_YHXX_TBL D,PS_TZ_APP_INS_T C,PS_TZ_FORM_WRK_T B,PS_TZ_CLS_BATCH_T F,PS_TZ_CLASS_INF_T A,PS_TZ_PRJ_INF_T G,PS_TZ_REG_USER_T H";
-			sqlBasic = sqlBasic + " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND B.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND B.OPRID=D.OPRID AND D.OPRID=H.OPRID AND A.TZ_PRJ_ID = G.TZ_PRJ_ID AND A.TZ_CLASS_ID=? AND A.TZ_CLASS_ID = F.TZ_CLASS_ID AND F.TZ_BATCH_ID=? AND B.TZ_APP_INS_ID=?";
+			sqlBasic = sqlBasic + " WHERE B.TZ_APP_INS_ID = C.TZ_APP_INS_ID AND B.OPRID=D.OPRID AND D.OPRID=H.OPRID AND A.TZ_PRJ_ID = G.TZ_PRJ_ID AND A.TZ_CLASS_ID=? AND A.TZ_CLASS_ID = F.TZ_CLASS_ID AND F.TZ_BATCH_ID=? AND B.TZ_APP_INS_ID=?";
 
 			Map<String, Object> mapRootBasic = sqlQuery.queryForMap(sqlBasic,new Object[] { classId, applyBatchId, bmbId});
 			
