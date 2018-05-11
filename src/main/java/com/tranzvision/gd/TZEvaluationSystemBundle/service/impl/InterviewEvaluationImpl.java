@@ -405,6 +405,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			
 			
 			/* 第1部分 面试组 */
+			/*
 			List<Map<String,Object>> list_msgroup= new ArrayList<Map<String,Object>>();
 			
 			String sqlMsGroup= "SELECT DISTINCT A.TZ_PWEI_GRPID,B.TZ_GROUP_ID,B.TZ_GROUP_NAME";
@@ -427,7 +428,8 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 					
 					list_msgroup.add(msGroupItem);
 				}
-			}		
+			}
+			*/		
 			
 
 			/* 第2部分 评委评审详细说明与通知信息 */
@@ -980,7 +982,6 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				allDataMap.put("error_code",error_code);
 				allDataMap.put("error_decription",error_decription);
 				allDataMap.put("ps_display_fs",str_jsfs);
-				allDataMap.put("ps_ms_group", list_msgroup);
 			}else{
 				/*返回局部动态刷新数据*/
 				allDataMap.put("ps_class_id",classId);
@@ -995,7 +996,6 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				allDataMap.put("ps_pwkj_fbt",strTZ_PWKJ_FBT);
 				allDataMap.put("ps_pc_id",batchId);
 				allDataMap.put("ps_display_fs",str_jsfs);
-				allDataMap.put("ps_ms_group", list_msgroup);
 			}
 
 			JacksonUtil jacksonUtil = new JacksonUtil();
@@ -1166,10 +1166,10 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 					new Object[] { TZ_MSPS_SCOR_MD_ID ,orgId},"String");
 			
 			//成绩模型中英语成绩项ID
-			String englishCjxId = getHardCodePoint.getHardCodePointVal("TZ_MSPS_YYNL_CJX_ID");
+			//String englishCjxId = getHardCodePoint.getHardCodePointVal("TZ_MSPS_YYNL_CJX_ID");
 			
 			/*评委类型：英语A或其他O*/
-			String pwType = sqlQuery.queryForObject("SELECT TZ_PWEI_TYPE FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?", new Object[] {classId,batchId,oprid},"String");
+			//String pwType = sqlQuery.queryForObject("SELECT TZ_PWEI_TYPE FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?", new Object[] {classId,batchId,oprid},"String");
 
 			
 			//需要显示的成绩项列名称
@@ -1186,6 +1186,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 				String TZ_XS_MC = mapHeader.get("DESCR") == null ? "" : mapHeader.get("DESCR").toString();
 				
 				Boolean boolShow = true;
+				/*
 				if(englishCjxId.equals(TREE_NODE)) {
 					//英语成绩项
 					if("A".equals(pwType)) {
@@ -1193,7 +1194,8 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 					} else {
 						boolShow = false;
 					}
-				} 
+				}
+				*/ 
 				
 				if(boolShow) {
 					dyColNum2 = dyColNum2 + 1;
@@ -1236,6 +1238,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						String TZ_SCORE_ITEM_ID_OTH = (String) listHeader.get(i).get("TREE_NODE");
 
 						Boolean boolValue = true;
+						/*
 						if(englishCjxId.equals(TZ_SCORE_ITEM_ID_OTH)) {
 							//英语成绩项
 							if("A".equals(pwType)) {
@@ -1243,7 +1246,8 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 							} else {
 								boolValue = false;
 							}
-						} 
+						}
+						*/ 
 						
 						if(boolValue) {
 							// 判断成绩项的类型，下拉框转换为分值;

@@ -71,7 +71,7 @@ th {
 			<div style="text-align:right; " class="r-action">			
 				<a href="javascript:void(0);" onclick="goMainpage()" id="favrecipelink" data-role="button" data-theme="a" data-inline="true" data-icon="home">首页</a>		
 				<!-- a href="%bind(:8)" target="_blank" id="favrecipelink" data-role="button" data-theme="b" data-inline="true" data-icon="info">联系方式</a-->
-				<a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-inline="true" data-theme="a" data-icon="star" >修改密码</a>
+				<!-- <a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-inline="true" data-theme="a" data-icon="star" >修改密码</a> -->
 				<a href="../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-theme="a" data-icon="delete">退出</a>
 			</div>
 			<div data-role="popup" id="modifyPswdPopup" data-position-to="window" data-dismissible="false" data-overlay-theme="b" style="min-width:350px;">
@@ -100,16 +100,19 @@ th {
 	<div data-role="content" data-theme="a">	
 		<div data-role="collapsible" data-collapsed="false" style="background:#fff" data-theme="a" data-content-theme="a" class="con-tag smallerr">
 			<h3>选择面试组</h3>
-			<!--
+
 			<div style="width: 200px;float:left;">
-				<select id="msGroup" name="msGroup" data-mini="true"></select>
+				<select id="msGroup" name="msGroup" data-mini="true">
+					%bind(:10)
+				</select>
 			</div>
 			<div>
 				<a href="javascript:void(0);" id="favrecipelink" onclick="jxps()" data-role="button" data-inline="true" data-mini="true" data-theme="c" data-icon="arrow-r">进行评审</a>
 			</div>
-			-->
+			<!--
 			<span id="msGroupSpan"></span>
 			<a href="javascript:void(0);" id="favrecipelink" onclick="jxps()" data-role="button" data-inline="true" data-mini="true" data-theme="c" data-icon="arrow-r">进行评审</a>
+		-->
 		</div>
 
 		<div data-role="collapsible" data-theme="a" data-content-theme="a" class="con-tag smallerr" >

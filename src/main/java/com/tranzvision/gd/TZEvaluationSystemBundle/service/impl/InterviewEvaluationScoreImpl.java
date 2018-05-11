@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.poifs.storage.BATBlock;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -704,11 +706,11 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			
 			/*自动打分成绩参考*/
 			String autoScoreDesc = "";
-			String zzdfCjxInfo = "";
+			List<String> listAutoScoreInfo = new ArrayList<String>();
 			
 			//自动打分成绩单编号
 			String scoreInsIdAuto = sqlQuery.queryForObject("SELECT TZ_SCORE_INS_ID FROM PS_TZ_CS_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?", new Object[]{classId,applyBatchId,bmbId},"String");
-			if(scoreInsId!=null && !"".equals(scoreInsIdAuto) && !"0".equals(scoreInsIdAuto)) {				 
+			if(scoreInsIdAuto!=null && !"".equals(scoreInsIdAuto) && !"0".equals(scoreInsIdAuto)) {				 
 				//自动打分成绩项
 				String zzdfCjxSql = "SELECT A.TREE_NODE,A.PARENT_NODE_NAME,B.DESCR,B.TZ_SCORE_ITEM_TYPE,B.TZ_SCR_TO_SCORE";
 				zzdfCjxSql += " FROM PSTREENODE A,PS_TZ_MODAL_DT_TBL B";
@@ -725,7 +727,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					//查询成绩项分值、评语值、下拉框值
 					String scoreItemXlkIdAuto = "",scoreItemValueAuto="",scoreItemCommentAuto="";
 					String sqlScoreValue = "SELECT TZ_CJX_XLK_XXBH,TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
-					Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemIdAuto});
+					Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsIdAuto,scoreItemIdAuto});
 					if(mapScoreValue==null) {
 						
 					} else {
@@ -733,10 +735,11 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 						scoreItemValueAuto = mapScoreValue.get("TZ_SCORE_NUM") == null ? "" : mapScoreValue.get("TZ_SCORE_NUM").toString();
 						scoreItemCommentAuto = mapScoreValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapScoreValue.get("TZ_SCORE_PY_VALUE").toString();
 						
+						String scoreInfo = "";
 						if("A".equals(scoreItemTypeAuto) || "B".equals(scoreItemTypeAuto) || ("D".equals(scoreItemTypeAuto)&&"Y".equals(scoreItemXlkToSAuto))) {
-							zzdfCjxInfo = zzdfCjxInfo + scoreItemNameAuto+"【"+scoreItemValueAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+							scoreInfo = scoreItemNameAuto+"【"+scoreItemValueAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 						} else if ("C".equals(scoreItemTypeAuto)) {
-							zzdfCjxInfo = zzdfCjxInfo + scoreItemNameAuto+"【"+scoreItemCommentAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+							scoreInfo = scoreItemNameAuto+"【"+scoreItemCommentAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 						} else if("D".equals(scoreItemTypeAuto)) {
 							// 如果是下拉框，需要取得下拉框名称，此处存的是下拉框编号;
 							String scoreItemXlkNameAuto = sqlQuery.queryForObject(
@@ -744,15 +747,49 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 									new Object[] { scoreTreeAuto, scoreItemIdAuto, scoreItemXlkIdAuto },
 									"String");
 							if(scoreItemXlkNameAuto!=null && !"".equals(scoreItemXlkNameAuto)) {
-								zzdfCjxInfo = zzdfCjxInfo + scoreItemNameAuto+"【"+scoreItemXlkNameAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+								scoreInfo = scoreItemNameAuto+"【"+scoreItemXlkNameAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 							}
+						}
+						
+						if(!"".equals(scoreInfo)) {
+							listAutoScoreInfo.add(scoreInfo);
 						}
 					}				
 				}
 				
-				if(zzdfCjxInfo!="") {
+				if(listAutoScoreInfo.size()>0) {
 					autoScoreDesc = "<table width='100%'><tbody>";
-					autoScoreDesc += "<tr><td width='155px;'>自动打分成绩参考：</td><td>" + zzdfCjxInfo + "</td></tr>"; 
+					
+					Integer allNum = listAutoScore.size();
+					//每行显示4个
+					Integer rowNum = allNum/4;
+					Integer modNum = allNum%4;
+					if(modNum==0) {
+						
+					} else {
+						rowNum=rowNum+1;
+					}
+					
+					for(int row=0;row<rowNum;row++) {
+						if(row==0) {
+							autoScoreDesc += "<tr><td width='155px;'>自动打分成绩参考：</td>";
+						} else {
+							autoScoreDesc += "<tr><td width='155px;'></td>";
+						}
+						
+						int start = row*4; 
+						int end = start+4;
+						if(row==(rowNum-1)) {
+							end = allNum;
+						}
+						 			
+						for(int i=start;i<end;i++) {
+							autoScoreDesc +="<td width='230px;'>"+listAutoScoreInfo.get(i)+"</td>";
+						}
+						
+						autoScoreDesc += "</tr>";
+					}
+					
 					autoScoreDesc += "</tbody></table>";
 				}
 				 
@@ -819,10 +856,12 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemId});
 				if(mapScoreValue==null) {
 					//没有成绩单时，分数取值默认中间值
+					/*
 					Double dbValueUpper = Double.valueOf(scoreItemValueUpper);
 					Double dbValueLower = Double.valueOf(scoreItemValueLower);
 					
 					scoreItemValue = df.format((dbValueUpper+dbValueLower)/2);
+					*/
 				} else {
 					scoreItemXlkId = mapScoreValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapScoreValue.get("TZ_CJX_XLK_XXBH").toString();
 					scoreItemValue = mapScoreValue.get("TZ_SCORE_NUM") == null ? "" : mapScoreValue.get("TZ_SCORE_NUM").toString();

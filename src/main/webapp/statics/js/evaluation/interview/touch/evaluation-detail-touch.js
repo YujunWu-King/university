@@ -982,6 +982,9 @@ function ks_save(btnId){
 			var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
 			var cjx_ids_tmp = document.getElementById("tz_cjx_ids").value;
 
+			//是否存在分数为0的成绩项
+			var existZero = "";
+
 			//参数准备
 			var tz_canshu_str = "";
 
@@ -989,12 +992,22 @@ function ks_save(btnId){
 			for (var i=0 ; i< arr.length ; i++){
 				var dange_cjx_id = arr[i];
 				var dange_arr = dange_cjx_id.split(",");
+
+				if($("#"+dange_arr[0]).val()==0) {
+					existZero = "Y";
+				}
+
 				if(tz_canshu_str!="") {
 					tz_canshu_str += ',"'+ dange_arr[0] +'":"'+ $("#"+dange_arr[0]).val() +'"';
 				} else {
 					tz_canshu_str = '"'+ dange_arr[0] +'":"'+ $("#"+dange_arr[0]).val() +'"';
 				}
 			}
+
+			if(existZero=="Y") {
+				alert("存在分数为0的成绩项");
+			}
+
 			var saveData = '{"ClassID":"'+TZ_CLASS_ID+'","BatchID":"'+TZ_APPLY_PC_ID+'","KSH_BMBID":"'+KSH_BMBID+'","OperationType":"SBM",'+ tz_canshu_str +'}';
 
 			var comParams = "";
