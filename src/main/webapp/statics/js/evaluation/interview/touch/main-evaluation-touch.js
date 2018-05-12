@@ -75,6 +75,7 @@ function useJson(varjsonData){
 
 
 	//选择面试组
+	/*
 	var msGroupHtml = "<select id='msGroup' name='msGroup' style='width: 150px;'>";
 	var msGroupArray = jsonObject['ps_ms_group'];
 	for(var m=0;m<msGroupArray.length;m++) {
@@ -82,7 +83,7 @@ function useJson(varjsonData){
 	}
 	msGroupHtml += "</select>";
 	$("#msGroupSpan").html(msGroupHtml);
-	/*
+
 	var firstValue= "";
 	var msGroupOption = "";
 	var msGroupArray = jsonObject['ps_ms_group'];
