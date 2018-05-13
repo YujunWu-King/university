@@ -330,7 +330,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 						if(notAllowStu == ""){
 							notAllowStu = stuName;
 						}else{
-							notAllowStu = "," + stuName;
+							notAllowStu = notAllowStu + "," + stuName;
 						}
 					}
 					count ++;
