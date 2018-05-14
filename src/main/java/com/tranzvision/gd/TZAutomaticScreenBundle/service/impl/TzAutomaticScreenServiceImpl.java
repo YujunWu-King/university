@@ -188,6 +188,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 				// 成绩项
 				List<String> itemsList = (List<String>) jacksonUtil.getList("items");
 				List<String> itemsMsList = (List<String>) jacksonUtil.getList("itemsMs");
+				List<String> itemsZjList = (List<String>) jacksonUtil.getList("itemsZj");
 
 				// TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW
 				// json数据要的结果字段;
@@ -274,6 +275,26 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 							mapList.put(itemIdMs, scoreNum);
 							mapList.put(itemIdMs + "_label", scoreGc);
 						}
+						/* 专家打分项 -和面试使用相同的成绩项ID*/
+						for (String itemIdZj : itemsZjList) {
+							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
+							Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
+									new Object[] { scoreMsInsId, itemIdZj });
+							
+							String scoreNum = "0.00";
+							String scoreGc = "";
+							
+							if (scoreMap != null) {
+								scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
+										: scoreMap.get("TZ_SCORE_NUM").toString();
+								// 打分过程
+								scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
+										: scoreMap.get("TZ_SCORE_DFGC").toString();
+							}
+							
+							mapList.put(itemIdZj, scoreNum);
+							mapList.put(itemIdZj + "_label", scoreGc);
+						}
 
 						// 自动标签
 						/*String zdbqVal = "";
@@ -321,6 +342,9 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 				break;
 			case "queryScoreMsColumns": // 获取面试成绩项动态列
 				strRet = this.queryScoreMsColumns(strParams, errorMsg);
+				break;
+			case "queryScoreZjColumns": // 获取专家打分项动态列
+				strRet = this.queryScoreZjColumns(strParams, errorMsg);
 				break;
 			case "queryWeedOutInfo": // 获取设置淘汰信息
 				strRet = this.queryWeedOutInfo(strParams, errorMsg);
@@ -445,6 +469,64 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 					
 					// 查询初筛模型中成绩项类型为“数字成绩录入项”且启用自动初筛的成绩项
 					sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzAutoScreenScoreItemsMs");
+					List<Map<String, Object>> itemsList = sqlQuery.queryForList(sql,
+							new Object[] { orgId, csTreeName });
+					
+					for (Map<String, Object> itemMap : itemsList) {
+						String itemId = itemMap.get("TZ_SCORE_ITEM_ID").toString();
+						String itemName = itemMap.get("DESCR").toString();
+						
+						Map<String, String> colMap = new HashMap<String, String>();
+						colMap.put("columnId", itemId);
+						colMap.put("columnDescr", itemName);
+						
+						columnsList.add(colMap);
+					}
+					rtnMap.replace("columns", columnsList);
+				}
+				rtnMap.replace("className", className);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			errorMsg[0] = "1";
+			errorMsg[1] = "操作异常。" + e.getMessage();
+		}
+		
+		strRet = jacksonUtil.Map2json(rtnMap);
+		return strRet;
+	}
+	/**
+	 * 获取专家打分项动态列
+	 * 
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String queryScoreZjColumns(String strParams, String[] errorMsg) {
+		String strRet = "";
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+		ArrayList<Map<String, String>> columnsList = new ArrayList<Map<String, String>>();
+		rtnMap.put("className", "");
+		rtnMap.put("columns", columnsList);
+		
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			// 班级ID
+			String classId = jacksonUtil.getString("classId");
+			String sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzClassAutoScreenInfoZj");
+			
+			Map<String, Object> classMap = sqlQuery.queryForMap(sql, new Object[] { classId });
+			if (classMap != null) {
+				String className = classMap.get("TZ_CLASS_NAME") == null ? ""
+						: classMap.get("TZ_CLASS_NAME").toString();
+				String orgId = classMap.get("TZ_JG_ID") == null ? "" : classMap.get("TZ_JG_ID").toString();
+				String csTreeName = classMap.get("TREE_NAME") == null ? "" : classMap.get("TREE_NAME").toString();
+				
+				if (!"".equals(csTreeName) && csTreeName != null) {
+					
+					// 查询初筛模型中成绩项类型为“数字成绩录入项”且启用自动初筛的成绩项
+					sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzAutoScreenScoreItemsZj");
 					List<Map<String, Object>> itemsList = sqlQuery.queryForList(sql,
 							new Object[] { orgId, csTreeName });
 					
