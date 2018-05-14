@@ -63,11 +63,17 @@
          
          var flag=0;
         for(var i=0;i<editRecs.length;i++) {
-        	console.log(editRecs[i].data);
+        	//console.log(editRecs[i].data);
            if (editRecs[i].data.check ==true || editRecs[i].data.check =='Y') {
         	   flag=flag+1;
-        	   comParamspw =  '{"classId":'+classId+',"batchId":'+batchId+',"appinsId":'+appInsId+',"data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
            }
+           if (comParamspw=='') {
+        	   comParamspw='{"classId":'+classId+',"batchId":'+batchId+',"appinsId":'+appInsId+',"data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
+           } else {
+        	   comParamspw = comParamspw + ',' +'{"classId":'+classId+',"batchId":'+batchId+',"appinsId":'+appInsId+',"data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
+               
+           }
+           
            if (flag>1) {
         	   Ext.MessageBox.alert(Ext.tzGetResourse("TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.prompt","提示"),"只能选择一个分组");
                return;
@@ -81,12 +87,12 @@
 
 
         //提交参数
-        var panel = win.findParentByType("panel");
-        var permForm = panel.child("form").getForm();
-        var pageGrid = Ext.getCmp('pageGrid');
+       // var panel = win.findParentByType("panel");
+        //var permForm = panel.child("form").getForm();
+        var panelGrid=win.findParentByType("stuInfoPanel").down("grid");
         if(tzParamspw!=""){
             Ext.tzSubmit(tzParamspw,function(){
-                 //pageGrid.store.load();
+                 //pageGrid.store.reload();
             },"",true,this);
             return true;
        }else{

@@ -139,26 +139,15 @@
 	                    dataIndex: 'stuName',
 	                    minWidth: 100,
 	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.email","邮箱") ,
-	                    dataIndex: 'email',
-	                    minWidth: 100,
-	                    flex:1
-	                },{
 	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.mobile","手机") ,
 	                    dataIndex: 'mobile',
 	                    minWidth: 100,
 	                    flex:1
 	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.csResult","初筛结果"),
-	                    dataIndex: 'csResult',
-	                    width:100,
-	                    renderer : function(value, metadata, record) {
-	                        var index = csResultStore.find('TValue',value);
-	                        if(index!=-1){
-	                            return csResultStore.getAt(index).data.TSDesc;
-	                        }
-	                        return "";
-	                    }
+	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.email","邮箱") ,
+	                    dataIndex: 'email',
+	                    minWidth: 100,
+	                    flex:1
 	                }],
 					bbar: {
 						xtype: 'pagingtoolbar',

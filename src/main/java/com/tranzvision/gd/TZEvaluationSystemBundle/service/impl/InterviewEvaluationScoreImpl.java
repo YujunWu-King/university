@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.poifs.storage.BATBlock;
+import org.bouncycastle.math.raw.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -205,12 +207,30 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					} else {
 						
 						//计算排名
-						this.updateExamineeRank(classId, applyBatchId, oprid, bmbId);
+						//this.updateExamineeRank(classId, applyBatchId, oprid, bmbId);
+						
 						
 						//更新考生评审得分历史表
-						sql = "UPDATE PS_TZ_MP_PW_KS_TBL SET TZ_PSHEN_ZT='Y'";
-						sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
-						sqlQuery.update(sql,new Object[]{classId,applyBatchId,bmbId,oprid});
+						PsTzMpPwKsTblKey psTzMpPwKsTblKey = new PsTzMpPwKsTblKey();
+						psTzMpPwKsTblKey.setTzClassId(classId);
+						psTzMpPwKsTblKey.setTzApplyPcId(applyBatchId);
+						psTzMpPwKsTblKey.setTzAppInsId(Long.valueOf(bmbId));
+						psTzMpPwKsTblKey.setTzPweiOprid(oprid);
+						
+						PsTzMpPwKsTbl psTzMpPwKsTbl = psTzMpPwKsTblMapper.selectByPrimaryKey(psTzMpPwKsTblKey);
+						if(psTzMpPwKsTbl==null) {
+							
+						} else {
+							psTzMpPwKsTbl.setTzPshenZt("Y");
+							psTzMpPwKsTbl.setRowLastmantDttm(new Date());
+							psTzMpPwKsTbl.setRowLastmantOprid(oprid);
+							psTzMpPwKsTblMapper.updateByPrimaryKeySelective(psTzMpPwKsTbl);
+						}
+						
+						//更新考生评审得分历史表
+						//sql = "UPDATE PS_TZ_MP_PW_KS_TBL SET TZ_PSHEN_ZT='Y',ROW_LASTMANT_DTTM=?,ROW_LASTMANT_OPRID=?";
+						//sql = sql + " WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=? AND TZ_PWEI_OPRID=?";
+						//sqlQuery.update(sql,new Object[]{oprid,new Date(),applyBatchId,bmbId,oprid});
 					}
 				}
 
@@ -342,10 +362,14 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				
 				String appInsId = mapValue.get("TZ_APP_INS_ID") == null ? "" : mapValue.get("TZ_APP_INS_ID").toString();
 				String scoreInsId = mapValue.get("TZ_SCORE_INS_ID") == null ? "" : mapValue.get("TZ_SCORE_INS_ID").toString();
-				String xuHao = mapValue.get("TZ_ORDER") == null ? "" : mapValue.get("TZ_ORDER").toString();
+				String groupId = mapValue.get("TZ_GROUP_ID") == null ? "" : mapValue.get("TZ_GROUP_ID").toString();
+				String groupName = mapValue.get("TZ_GROUP_NAME") == null ? "" : mapValue.get("TZ_GROUP_NAME").toString();
+				String order = mapValue.get("TZ_ORDER") == null ? "0" : mapValue.get("TZ_ORDER").toString();
 				String mssqh = mapValue.get("TZ_MSH_ID") == null ? "" : mapValue.get("TZ_MSH_ID").toString();
 				String realname = mapValue.get("TZ_REALNAME") == null ? "" : mapValue.get("TZ_REALNAME").toString();
 				String genderDesc = mapValue.get("TZ_GENDER_DESC") == null ? "" : mapValue.get("TZ_GENDER_DESC").toString();
+				
+				String xuHao = groupName + "-" + order;
 				
 				dyRowValueItem.put("appInsId", appInsId);
 				dyRowValueItem.put("scoreInsId", scoreInsId);
@@ -425,6 +449,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				
 				
 				//其他评委打分情况
+				/*
 				List<Map<String, Object>> otherPwList = new ArrayList<Map<String,Object>>();
 				
 		        String otherPwSql = "SELECT  A.TZ_PWEI_OPRID,B.TZ_DLZH_ID,B.TZ_REALNAME,A.TZ_SCORE_INS_ID,C.TZ_PWEI_TYPE";
@@ -456,7 +481,8 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 		        	int dyColNumOther = 0;
 		        	if(listHeader!=null) {
 						for (int i = 0; i < listHeader.size(); i++) {
-							String TZ_SCORE_ITEM_ID_OTH = (String) listHeader.get(i).get("TZ_SCORE_ITEM_ID");
+							//String TZ_SCORE_ITEM_ID_OTH = (String) listHeader.get(i).get("TZ_SCORE_ITEM_ID");
+							String TZ_SCORE_ITEM_ID_OTH = (String) listHeader.get(i).get("TREE_NODE");
 
 							// 判断成绩项的类型，下拉框转换为分值;
 							String TZ_SCORE_ITEM_TYPE_OTH = "",TZ_SCR_TO_SCORE_OTH = "";
@@ -486,9 +512,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 							String strDyColNumOther = "0" + dyColNumOther;
 							strDyColNumOther = strDyColNumOther.substring(strDyColNumOther.length() - 2);
 
-							/*动态列
-							 * 成绩项类型：A-数字成绩汇总项,B-数字成绩录入项,C-评语,D-下拉框
-							 */
+							// 成绩项类型：A-数字成绩汇总项,B-数字成绩录入项,C-评语,D-下拉框
 							if ("A".equals(TZ_SCORE_ITEM_TYPE_OTH) || "B".equals(TZ_SCORE_ITEM_TYPE_OTH)
 									||("D".equals(TZ_SCORE_ITEM_TYPE_OTH)&&"Y".equals(TZ_SCR_TO_SCORE_OTH))) {
 								//成绩录入项、成绩汇总项、下拉框且转换为分值   取分数，否则取评语;
@@ -513,7 +537,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 		        }
 		        
 	        	dyRowValueItem.put("ps_other_pw", otherPwList);
-	        	
+	        	*/
 	        	
 				dyRowValue.add(dyRowValueItem);
  			}
@@ -682,11 +706,11 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 			
 			/*自动打分成绩参考*/
 			String autoScoreDesc = "";
-			String zzdfCjxInfo = "";
+			List<String> listAutoScoreInfo = new ArrayList<String>();
 			
 			//自动打分成绩单编号
 			String scoreInsIdAuto = sqlQuery.queryForObject("SELECT TZ_SCORE_INS_ID FROM PS_TZ_CS_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APP_INS_ID=?", new Object[]{classId,applyBatchId,bmbId},"String");
-			if(scoreInsId!=null && !"".equals(scoreInsIdAuto) && !"0".equals(scoreInsIdAuto)) {				 
+			if(scoreInsIdAuto!=null && !"".equals(scoreInsIdAuto) && !"0".equals(scoreInsIdAuto)) {				 
 				//自动打分成绩项
 				String zzdfCjxSql = "SELECT A.TREE_NODE,A.PARENT_NODE_NAME,B.DESCR,B.TZ_SCORE_ITEM_TYPE,B.TZ_SCR_TO_SCORE";
 				zzdfCjxSql += " FROM PSTREENODE A,PS_TZ_MODAL_DT_TBL B";
@@ -703,18 +727,19 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 					//查询成绩项分值、评语值、下拉框值
 					String scoreItemXlkIdAuto = "",scoreItemValueAuto="",scoreItemCommentAuto="";
 					String sqlScoreValue = "SELECT TZ_CJX_XLK_XXBH,TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
-					Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemIdAuto});
+					Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsIdAuto,scoreItemIdAuto});
 					if(mapScoreValue==null) {
 						
 					} else {
 						scoreItemXlkIdAuto = mapScoreValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapScoreValue.get("TZ_CJX_XLK_XXBH").toString();
 						scoreItemValueAuto = mapScoreValue.get("TZ_SCORE_NUM") == null ? "" : mapScoreValue.get("TZ_SCORE_NUM").toString();
 						scoreItemCommentAuto = mapScoreValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapScoreValue.get("TZ_SCORE_PY_VALUE").toString();
-					
+						
+						String scoreInfo = "";
 						if("A".equals(scoreItemTypeAuto) || "B".equals(scoreItemTypeAuto) || ("D".equals(scoreItemTypeAuto)&&"Y".equals(scoreItemXlkToSAuto))) {
-							zzdfCjxInfo = zzdfCjxInfo + scoreItemNameAuto+"【"+scoreItemValueAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+							scoreInfo = scoreItemNameAuto+"【"+scoreItemValueAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 						} else if ("C".equals(scoreItemTypeAuto)) {
-							zzdfCjxInfo = zzdfCjxInfo + scoreItemNameAuto+"【"+scoreItemCommentAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+							scoreInfo = scoreItemNameAuto+"【"+scoreItemCommentAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 						} else if("D".equals(scoreItemTypeAuto)) {
 							// 如果是下拉框，需要取得下拉框名称，此处存的是下拉框编号;
 							String scoreItemXlkNameAuto = sqlQuery.queryForObject(
@@ -722,15 +747,49 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 									new Object[] { scoreTreeAuto, scoreItemIdAuto, scoreItemXlkIdAuto },
 									"String");
 							if(scoreItemXlkNameAuto!=null && !"".equals(scoreItemXlkNameAuto)) {
-								zzdfCjxInfo = zzdfCjxInfo + scoreItemNameAuto+"【"+scoreItemXlkNameAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+								scoreInfo = scoreItemNameAuto+"【"+scoreItemXlkNameAuto+"】&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 							}
+						}
+						
+						if(!"".equals(scoreInfo)) {
+							listAutoScoreInfo.add(scoreInfo);
 						}
 					}				
 				}
 				
-				if(zzdfCjxInfo!="") {
+				if(listAutoScoreInfo.size()>0) {
 					autoScoreDesc = "<table width='100%'><tbody>";
-					autoScoreDesc += "<tr><td width='155px;'>自动打分成绩参考：</td><td>" + zzdfCjxInfo + "</td></tr>"; 
+					
+					Integer allNum = listAutoScoreInfo.size();
+					//每行显示4个
+					Integer rowNum = allNum/4;
+					Integer modNum = allNum%4;
+					if(modNum==0) {
+						
+					} else {
+						rowNum=rowNum+1;
+					}
+					
+					for(int row=0;row<rowNum;row++) {
+						if(row==0) {
+							autoScoreDesc += "<tr><td width='155px;'>自动打分成绩参考：</td>";
+						} else {
+							autoScoreDesc += "<tr><td width='155px;'></td>";
+						}
+						
+						int start = row*4; 
+						int end = start+4;
+						if(row==(rowNum-1)) {
+							end = allNum;
+						}
+						 			
+						for(int i=start;i<end;i++) {
+							autoScoreDesc +="<td width='230px;'>"+listAutoScoreInfo.get(i)+"</td>";
+						}
+						
+						autoScoreDesc += "</tr>";
+					}
+					
 					autoScoreDesc += "</tbody></table>";
 				}
 				 
@@ -781,15 +840,28 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				String scoreItemMsff = mapScore.get("TZ_SCORE_ITEM_MSFF") == null ? "" : mapScore.get("TZ_SCORE_ITEM_MSFF").toString();
 				String scoreItemCkzl = mapScore.get("TZ_SCORE_CKZL") == null ? "" : mapScore.get("TZ_SCORE_CKZL").toString();//参考资料
 				
+				if(!"".equals(scoreItemValueUpper)) {
+					if(scoreItemValueUpper.indexOf(".")!=-1) {
+						scoreItemValueUpper = scoreItemValueUpper.substring(0, scoreItemValueUpper.indexOf("."));
+					}
+				}
+				if(!"".equals(scoreItemValueLower)) {
+					if(scoreItemValueLower.indexOf(".")!=-1) {
+						scoreItemValueLower = scoreItemValueLower.substring(0, scoreItemValueLower.indexOf("."));
+					}
+				}
+				
 				/*查询成绩项分值、评语值、下拉框值*/
 				String sqlScoreValue = "SELECT TZ_CJX_XLK_XXBH,TZ_SCORE_NUM, TZ_SCORE_PY_VALUE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?";
 				Map<String, Object> mapScoreValue = sqlQuery.queryForMap(sqlScoreValue,new Object[] {scoreInsId,scoreItemId});
 				if(mapScoreValue==null) {
 					//没有成绩单时，分数取值默认中间值
+					/*
 					Double dbValueUpper = Double.valueOf(scoreItemValueUpper);
 					Double dbValueLower = Double.valueOf(scoreItemValueLower);
 					
 					scoreItemValue = df.format((dbValueUpper+dbValueLower)/2);
+					*/
 				} else {
 					scoreItemXlkId = mapScoreValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapScoreValue.get("TZ_CJX_XLK_XXBH").toString();
 					scoreItemValue = mapScoreValue.get("TZ_SCORE_NUM") == null ? "" : mapScoreValue.get("TZ_SCORE_NUM").toString();
@@ -836,6 +908,14 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				
 				
 				if(scoreItemShow) {
+					
+					if(!"".equals(scoreItemValue)) {
+						if(scoreItemValue.indexOf(".")!=-1) {
+							scoreItemValue = scoreItemValue.substring(0, scoreItemValue.indexOf("."));
+						}
+					}
+					
+					
 					mapScoreJson.put("itemId", scoreItemId);
 					mapScoreJson.put("itemParentId", scoreItemParentId);
 					mapScoreJson.put("itemName", scoreItemName);
@@ -1240,74 +1320,77 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				String scoreItemUpperOperate = mapScore.get("TZ_M_FBDZ_MX_SX_JX") == null ? "" : mapScore.get("TZ_M_FBDZ_MX_SX_JX").toString();
 				String scoreItemLowerOperate = mapScore.get("TZ_M_FBDZ_MX_XX_JX") == null ? "" : mapScore.get("TZ_M_FBDZ_MX_XX_JX").toString();
 				
-				String scoreItemValue = jacksonUtil.getString(scoreItemId);
-				String scoreValid1 = "";
-				String scoreValid2 = "";
-				Double scoreItemValueD;
+				if (jacksonUtil.containsKey(scoreItemId)) {
+					
+					String scoreItemValue = jacksonUtil.getString(scoreItemId);
+					String scoreValid1 = "";
+					String scoreValid2 = "";
+					Double scoreItemValueD;
 				
-				//判断成绩及评语有效性
-				if("B".equals(scoreItemType)) {
-					//数字成绩录入项
-					scoreItemValueD = scoreItemValue == null ? 0.0 : Double.valueOf(scoreItemValue);
-					if("<".equals(scoreItemUpperOperate)) {
-						if(">".equals(scoreItemLowerOperate)) {
-							if(scoreItemValueD>scoreItemValueLower && scoreItemValueD<scoreItemValueUpper) {
-								scoreValid1="Y";
-							}
-						} else {
-							if(">=".equals(scoreItemLowerOperate)) {
-								if(scoreItemValueD>=scoreItemValueLower && scoreItemValueD<scoreItemValueUpper) {
-									scoreValid1="Y";
-								}
-							}
-						}
-					} else {
-						if("<=".equals(scoreItemUpperOperate)) {
+					//判断成绩及评语有效性
+					if("B".equals(scoreItemType)) {
+						//数字成绩录入项
+						scoreItemValueD = scoreItemValue == null ? 0.0 : Double.valueOf(scoreItemValue);
+						if("<".equals(scoreItemUpperOperate)) {
 							if(">".equals(scoreItemLowerOperate)) {
-								if(scoreItemValueD>scoreItemValueLower && scoreItemValueD<=scoreItemValueUpper) {
+								if(scoreItemValueD>scoreItemValueLower && scoreItemValueD<scoreItemValueUpper) {
 									scoreValid1="Y";
 								}
 							} else {
 								if(">=".equals(scoreItemLowerOperate)) {
-									if(scoreItemValueD>=scoreItemValueLower && scoreItemValueD<=scoreItemValueUpper) {
+									if(scoreItemValueD>=scoreItemValueLower && scoreItemValueD<scoreItemValueUpper) {
 										scoreValid1="Y";
 									}
 								}
 							}
+						} else {
+							if("<=".equals(scoreItemUpperOperate)) {
+								if(">".equals(scoreItemLowerOperate)) {
+									if(scoreItemValueD>scoreItemValueLower && scoreItemValueD<=scoreItemValueUpper) {
+										scoreValid1="Y";
+									}
+								} else {
+									if(">=".equals(scoreItemLowerOperate)) {
+										if(scoreItemValueD>=scoreItemValueLower && scoreItemValueD<=scoreItemValueUpper) {
+											scoreValid1="Y";
+										}
+									}
+								}
+							}
 						}
-					}
 					
-				} else {
-					if("C".equals(scoreItemType)) {
-						//评语
-						if(scoreItemValue.length()>=scoreItemCommentLower && scoreItemValue.length()<=scoreItemCommentUpper) {
-							scoreValid2="Y";
+						} else {
+						if("C".equals(scoreItemType)) {
+							//评语
+							if(scoreItemValue.length()>=scoreItemCommentLower && scoreItemValue.length()<=scoreItemCommentUpper) {
+								scoreValid2="Y";
+							}
+							/*if(scoreItemValue.length()<=scoreItemCommentUpper) {
+								scoreValid2="Y";
+							} */
+						} 
+					}
+				
+					if("B".equals(scoreItemType)) {
+						if("Y".equals(scoreValid1)) {	
+							//成绩校验成功
+						} else {
+							//成绩校验失败
+							resultMsg = resultMsg + "【" + scoreItemName + "】分数填写错误，请重新填写！";
 						}
-						/*if(scoreItemValue.length()<=scoreItemCommentUpper) {
-							scoreValid2="Y";
-						} */
-					} 
-				}
-				
-				if("B".equals(scoreItemType)) {
-					if("Y".equals(scoreValid1)) {	
-						//成绩校验成功
-					} else {
-						//成绩校验失败
-						resultMsg = resultMsg + "【" + scoreItemName + "】分数填写错误，请重新填写！";
 					}
-				}
 				
-				if("C".equals(scoreItemType)) {
-					if("Y".equals(scoreValid2)) {
-						//评语校验成功
-					} else {
-						//评语校验失败
-						resultMsg = resultMsg + "【" + scoreItemName + "】评语字数范围不正确，请重新填写！";
+					if("C".equals(scoreItemType)) {
+						if("Y".equals(scoreValid2)) {
+							//评语校验成功
+						} else {
+							//评语校验失败
+							resultMsg = resultMsg + "【" + scoreItemName + "】评语字数范围不正确，请重新填写！";
+						}
 					}
-				}
 				
-				mapItemsScore.put(scoreItemId, scoreItemValue);
+					mapItemsScore.put(scoreItemId, scoreItemValue);
+				}
 			}
 			
 			if(resultMsg!="" && resultMsg!=null) {

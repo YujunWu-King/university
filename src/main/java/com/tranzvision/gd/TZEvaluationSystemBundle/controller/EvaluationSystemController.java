@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZEvaluationSystemBundle.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -169,6 +170,30 @@ public class EvaluationSystemController {
 					pwzzFlag = "";
 				}
 				
+				//评委可评审的面试组
+				String mszOption = "";
+				if("batch".equals(page)) {
+					List<Map<String,Object>> list_msgroup= new ArrayList<Map<String,Object>>();
+				
+					String sqlMsGroup= "SELECT DISTINCT A.TZ_PWEI_GRPID,B.TZ_GROUP_ID,B.TZ_GROUP_NAME";
+					sqlMsGroup += " FROM PS_TZ_MSPS_KSH_TBL C,PS_TZ_MSPS_PW_TBL A,PS_TZ_INTEGROUP_T B";
+					sqlMsGroup += " WHERE A.TZ_PWEI_GRPID=B.TZ_CLPS_GR_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
+					sqlMsGroup += " AND B.TZ_GROUP_ID=C.TZ_GROUP_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
+					sqlMsGroup += " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=? AND A.TZ_PWEI_ZHZT<>'B'";
+					sqlMsGroup += " ORDER BY B.TZ_GROUP_ID";
+				
+					List<Map<String, Object>> listMsGroup = sqlQuery.queryForList(sqlMsGroup, new Object[]{classId,batchId,oprid});
+					for(Map<String, Object> mapMsGroup : listMsGroup) {
+						String pwGroupId = mapMsGroup.get("TZ_PWEI_GRPID") == null ? "" : mapMsGroup.get("TZ_PWEI_GRPID").toString();
+						String msGroupIdOne = mapMsGroup.get("TZ_GROUP_ID") == null ? "" : mapMsGroup.get("TZ_GROUP_ID").toString();
+						String msGroupName = mapMsGroup.get("TZ_GROUP_NAME") == null ? "" : mapMsGroup.get("TZ_GROUP_NAME").toString();
+					
+						if(!"".equals(msGroupIdOne) && !"".equals(msGroupName)) {
+							mszOption += "<option value='"+ msGroupIdOne + "'>"+ msGroupName + "</option>";
+						}
+					}
+				}
+				
 				/* 当前考生的姓名和面试申请号 */
 				/*
 				String  mssqh = "", examineeName = "";
@@ -178,11 +203,12 @@ public class EvaluationSystemController {
 					examineeName = (String) mapKs.get("TZ_REALNAME");
 				}
 				
+				
 				String ksIframeId = "bmb_iframe_" + classId + "_" + batchId + "_" + appInsId;
-*/
+				*/
 				
 				indexHtml = "batch".equals(page)?
-						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl,pwzzFlag)
+						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl,pwzzFlag,mszOption)
 						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId,msGroupId,pwzzFlag);
 			}else{
 				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName,contactUrl);

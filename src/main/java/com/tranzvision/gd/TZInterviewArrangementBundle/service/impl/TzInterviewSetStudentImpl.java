@@ -32,9 +32,6 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 public class TzInterviewSetStudentImpl extends FrameworkImpl {
 
 	@Autowired
-	private SqlQuery jdbcTemplate;
-
-	@Autowired
 	private SqlQuery sqlQuery;
 
 	@Autowired
@@ -79,13 +76,12 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 
 					// 查询面试安排总数
 					String sql = "SELECT COUNT(*) FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APPLY_PC_ID IN (SELECT TZ_BATCH_ID FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=?)";
-					int total = jdbcTemplate.queryForObject(sql, new Object[] { classID, batchID, classID }, "int");
+					int total = sqlQuery.queryForObject(sql, new Object[] { classID, batchID, classID }, "int");
 
 					ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
 					if (total > 0) {
 						sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_MSPS_KSH_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_APPLY_PC_ID IN (SELECT TZ_BATCH_ID FROM PS_TZ_CLS_BATCH_T WHERE TZ_CLASS_ID=?) order by TZ_APP_INS_ID LIMIT ? , ?";
-						List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql,
-								new Object[] { classID, batchID, classID, start, limit });
+						List<Map<String, Object>> listData = sqlQuery.queryForList(sql, new Object[] { classID, batchID, classID, start, limit });
 
 						for (Map<String, Object> mapData : listData) {
 							Map<String, Object> mapJson = new HashMap<String, Object>();
@@ -93,11 +89,9 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							String appIns = String.valueOf(mapData.get("TZ_APP_INS_ID"));
 
 							// 查询姓名
-							sql = "SELECT TZ_REALNAME,TZ_MSH_ID,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=(SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND TZ_APP_INS_ID=? limit 1)";
-							// String name = jdbcTemplate.queryForObject(sql,
-							// new Object[]{classID, appIns}, "String");
-							Map<String, Object> yhxxMap = jdbcTemplate.queryForMap(sql,
-									new Object[] { classID, appIns });
+							sql = "SELECT TZ_REALNAME,TZ_MSH_ID,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL A WHERE exists(SELECT 'X' FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=? and OPRID=A.OPRID)";
+							Map<String, Object> yhxxMap = sqlQuery.queryForMap(sql, new Object[] { appIns });
+							
 							String name = "";
 							String interviewAppId = "";
 							String mobile = "";
@@ -109,20 +103,30 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 								mobile = yhxxMap.get("TZ_MOBILE") == null ? "" : yhxxMap.get("TZ_MOBILE").toString();
 								email = yhxxMap.get("TZ_EMAIL") == null ? "" : yhxxMap.get("TZ_EMAIL").toString();
 							}
+							
+							
+							sql = "select TZ_CLASS_NAME,TZ_BATCH_NAME from PS_TZ_FORM_WRK_T A join PS_TZ_CLASS_INF_T B on(A.TZ_CLASS_ID=B.TZ_CLASS_ID) left join PS_TZ_CLS_BATCH_T C on(A.TZ_BATCH_ID=C.TZ_BATCH_ID) where A.TZ_APP_INS_ID=?";
+							Map<String, Object> clsMap = sqlQuery.queryForMap(sql, new Object[] { appIns });
+							String className = "";
+							String batchName = "";
+							if(clsMap != null){
+								className = clsMap.get("TZ_CLASS_NAME") == null ? "" : clsMap.get("TZ_CLASS_NAME").toString();
+								batchName = clsMap.get("TZ_BATCH_NAME") == null ? "" : clsMap.get("TZ_BATCH_NAME").toString();
+							}
 
 							// 面试资格
-							sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
-							String msZgFlag = jdbcTemplate.queryForObject(sql, new Object[] { classID, appIns },
-									"String");
-							if ("".equals(msZgFlag) || msZgFlag == null) {
-								sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
-								msZgFlag = jdbcTemplate.queryForObject(sql, "String");
-							}
+//							sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
+//							String msZgFlag = sqlQuery.queryForObject(sql, new Object[] { classID, appIns },
+//									"String");
+//							if ("".equals(msZgFlag) || msZgFlag == null) {
+//								sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
+//								msZgFlag = sqlQuery.queryForObject(sql, "String");
+//							}
 
 							// 标签
 							String strLabel = "";
 							sql = "SELECT TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B WHERE A.TZ_LABEL_ID=B.TZ_LABEL_ID AND TZ_APP_INS_ID=?";
-							List<Map<String, Object>> labelList = jdbcTemplate.queryForList(sql,
+							List<Map<String, Object>> labelList = sqlQuery.queryForList(sql,
 									new Object[] { appIns });
 							for (Map<String, Object> mapLabel : labelList) {
 								String label = String.valueOf(mapLabel.get("TZ_LABEL_NAME"));
@@ -135,7 +139,10 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							mapJson.put("batchID", batchID);
 							mapJson.put("appId", appIns);
 							mapJson.put("stuName", name);
-							mapJson.put("msZGFlag", msZgFlag);
+//							mapJson.put("msZGFlag", msZgFlag);
+							
+							mapJson.put("className", className);
+							mapJson.put("batchName", batchName);
 
 							mapJson.put("mobile", mobile);
 							mapJson.put("email", email);
@@ -152,12 +159,12 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 					// 面试听众store
 					if ("AUD".equals(type)) {
 						String sql = "SELECT COUNT(*) FROM PS_TZ_MSAP_AUD_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";
-						int total = jdbcTemplate.queryForObject(sql, new Object[] { classID, batchID }, "int");
+						int total = sqlQuery.queryForObject(sql, new Object[] { classID, batchID }, "int");
 
 						ArrayList<Map<String, Object>> listJson = new ArrayList<Map<String, Object>>();
 						if (total > 0) {
 							sql = "SELECT TZ_AUD_ID FROM PS_TZ_MSAP_AUD_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=?";
-							List<Map<String, Object>> listData = jdbcTemplate.queryForList(sql,
+							List<Map<String, Object>> listData = sqlQuery.queryForList(sql,
 									new Object[] { classID, batchID });
 
 							for (Map<String, Object> mapData : listData) {
@@ -167,7 +174,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 
 								// 查询姓名
 								sql = "SELECT TZ_AUD_NAM FROM PS_TZ_AUD_DEFN_T WHERE TZ_AUD_ID=?";
-								String audName = jdbcTemplate.queryForObject(sql, new Object[] { audID }, "String");
+								String audName = sqlQuery.queryForObject(sql, new Object[] { audID }, "String");
 
 								mapJson.put("id", audID);
 								mapJson.put("desc", audName);
@@ -228,21 +235,21 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							+ whereIn + ")";
 				}
 
-				List<Map<String, Object>> delAudIdList = jdbcTemplate.queryForList(sql,
+				List<Map<String, Object>> delAudIdList = sqlQuery.queryForList(sql,
 						new Object[] { classID, batchID });
 				for (Map<String, Object> delAudMap : delAudIdList) {
 					String delAudId = String.valueOf(delAudMap.get("TZ_AUD_ID"));
 
 					// 删除听众成员
 					sql = "SELECT OPRID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=?";
-					List<Map<String, Object>> audCyList = jdbcTemplate.queryForList(sql, new Object[] { delAudId });
+					List<Map<String, Object>> audCyList = sqlQuery.queryForList(sql, new Object[] { delAudId });
 
 					for (Map<String, Object> audCyMap : audCyList) {
 						Long appInsId;
 						String audOprid = audCyMap.get("OPRID") == null ? "" : audCyMap.get("OPRID").toString();
 
 						sql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where TZ_CLASS_ID=? and OPRID=?";
-						Map<String, Object> appMap = jdbcTemplate.queryForMap(sql, new Object[] { classID, audOprid });
+						Map<String, Object> appMap = sqlQuery.queryForMap(sql, new Object[] { classID, audOprid });
 						if (appMap != null) {
 							appInsId = appMap.get("TZ_APP_INS_ID") == null ? 0
 									: Long.valueOf(appMap.get("TZ_APP_INS_ID").toString());
@@ -261,7 +268,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 								if (!"".equals(whereIn)) {
 									sql = "SELECT 'Y' FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID IN(" + whereIn
 											+ ") and OPRID=? limit 1";
-									inOtherAud = jdbcTemplate.queryForObject(sql, new Object[] { audOprid }, "String");
+									inOtherAud = sqlQuery.queryForObject(sql, new Object[] { audOprid }, "String");
 								}
 
 								if (psTzMspsKshTbl != null && !"Y".equals(inOtherAud)) {
@@ -299,8 +306,11 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 		String strRtn = "";
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
 		rtnMap.put("success", "");
+		rtnMap.put("notAllow", "");
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		String notAllowStu = "";
+		int count = 0;
 		try {
 			for (int i = 0; i < actData.length; i++) {
 				String actForm = actData[i];
@@ -309,18 +319,38 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 				String classID = jacksonUtil.getString("classID");
 				String batchID = jacksonUtil.getString("batchID");
 				Long appId = Long.valueOf(jacksonUtil.getString("appId"));
+				
+				//如果考生被面试评委抽取，则不允许删除
+				String sql = "select count(1) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+				int pwCount = sqlQuery.queryForObject(sql, new Object[]{ classID, batchID, appId }, "int");
+				
+				if(pwCount > 0){
+					if(count < 10){
+						String stuName = jacksonUtil.getString("stuName");
+						if(notAllowStu == ""){
+							notAllowStu = stuName;
+						}else{
+							notAllowStu = notAllowStu + "," + stuName;
+						}
+					}
+					count ++;
+				}else{
+					PsTzMsPskshTblKey psTzMspsKshTblKey = new PsTzMsPskshTblKey();
+					psTzMspsKshTblKey.setTzClassId(classID);
+					psTzMspsKshTblKey.setTzApplyPcId(batchID);
+					psTzMspsKshTblKey.setTzAppInsId(appId);
 
-				PsTzMsPskshTblKey psTzMspsKshTblKey = new PsTzMsPskshTblKey();
-				psTzMspsKshTblKey.setTzClassId(classID);
-				psTzMspsKshTblKey.setTzApplyPcId(batchID);
-				psTzMspsKshTblKey.setTzAppInsId(appId);
-
-				PsTzMsPskshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
-				if (psTzMspsKshTbl != null) {
-					psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);
+					PsTzMsPskshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
+					if (psTzMspsKshTbl != null) {
+						psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);
+					}
 				}
 			}
+			if(count >= 10){
+				notAllowStu = notAllowStu + ",...";
+			}
 			rtnMap.replace("success", "success");
+			rtnMap.replace("notAllow", notAllowStu);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";
@@ -376,7 +406,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 			for (String audID : audIdList) {
 
 				String sql = "SELECT 'Y' FROM PS_TZ_MSAP_AUD_TBL WHERE TZ_CLASS_ID=? AND TZ_BATCH_ID=? AND TZ_AUD_ID=?";
-				String isExists = jdbcTemplate.queryForObject(sql, new Object[] { classID, batchID, audID }, "String");
+				String isExists = sqlQuery.queryForObject(sql, new Object[] { classID, batchID, audID }, "String");
 
 				if ("Y".equals(isExists)) {
 					// do nothing
@@ -390,7 +420,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 					if (rtn != 0) {
 						// 插入听成成员
 						sql = "SELECT OPRID FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? and TZ_DXZT='A'";
-						List<Map<String, Object>> audCyList = jdbcTemplate.queryForList(sql, new Object[] { audID });
+						List<Map<String, Object>> audCyList = sqlQuery.queryForList(sql, new Object[] { audID });
 
 						for (Map<String, Object> audCyMap : audCyList) {
 							long appInsId;
@@ -398,7 +428,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							String audOprid = audCyMap.get("OPRID") == null ? "" : audCyMap.get("OPRID").toString();
 
 							sql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where TZ_CLASS_ID=? and OPRID=?";
-							Map<String, Object> appMap = jdbcTemplate.queryForMap(sql,
+							Map<String, Object> appMap = sqlQuery.queryForMap(sql,
 									new Object[] { classID, audOprid });
 
 							if (appMap != null) {

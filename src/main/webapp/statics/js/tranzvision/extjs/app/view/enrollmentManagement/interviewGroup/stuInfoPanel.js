@@ -179,6 +179,11 @@
 					width: 80
 					
 				},{
+					text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.grouptime","分组时间"),
+					dataIndex: 'group_date',
+					width: 200
+					
+				},{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.handle", "操作"),
 					menuDisabled: true,
 					sortable: false,

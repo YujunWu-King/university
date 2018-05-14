@@ -65,12 +65,16 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 		try {
 			switch (strType) {
 			case "RunSum": // 计算总分
-				System.out.print("计算总分");
+				System.out.println("计算总分");
 				strRet = this.tzRunSumProcess(strParams, errorMsg);
 				break;
 			case "RunMSSum": // 计算面试总分
-				System.out.print("计算面试总分");
+				System.out.println("计算面试总分");
 				strRet = this.tzRunMSSumProcess(strParams, errorMsg);
+				break;
+			case "runRleaseEngine": // 批量发布面试结果
+				System.out.print("批量发布面试结果");
+				strRet = this.tzRunReleaseProcess(strParams, errorMsg);
 				break;
 			}
 		} catch (Exception e) {
@@ -155,34 +159,18 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 							exists = true;
 							scoreInsId = LscoreInsId.longValue();
 						}
+						
+						System.out.println("classId:"+classId);
+						System.out.println("batchId:"+batchId);
+						System.out.println("appInsId:"+appInsId);
+						System.out.println("scoreInsId:"+scoreInsId);
 						for (Map<String, Object> avgMap : scoreAvgList) {
-							TZ_SCORE_ITEM_ID = avgMap.get("TZ_APP_INS_ID").toString();
-							TZ_SCORE_NUM = avgMap.get("TZ_SCORE_NUM").toString();
-							if (!exists) {
-								// 插入表TZ_CJX_TBL
-								psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
-								// 成绩单ID
-								psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
-								// 成绩项ID
-								psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
-								// 分值
-								psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
-								// 插入
-								psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
-							} else {
-								psTzCjxTblKey = new PsTzCjxTblKey();
-								psTzCjxTblKey.setTzScoreInsId(new Long(scoreInsId));
-								psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM_ID);
-								psTzCjxTblWithBLOBs = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
-								if (psTzCjxTblWithBLOBs != null) {
-									// 修改表
-									psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
-									psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
-									// 成绩项ID
-									psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
-									psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
-									psTzCjxTblMapper.updateByPrimaryKeySelective(psTzCjxTblWithBLOBs);
-								} else {
+							if (avgMap.get("TZ_SCORE_ITEM_ID") != null) {
+								TZ_SCORE_ITEM_ID = avgMap.get("TZ_SCORE_ITEM_ID").toString();
+								TZ_SCORE_NUM = avgMap.get("TZ_SCORE_NUM").toString();
+								System.out.println("TZ_SCORE_ITEM_ID:"+TZ_SCORE_ITEM_ID);
+								System.out.println("TZ_SCORE_NUM:"+TZ_SCORE_NUM);
+								if (!exists) {
 									// 插入表TZ_CJX_TBL
 									psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
 									// 成绩单ID
@@ -193,6 +181,31 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 									psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
 									// 插入
 									psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
+								} else {
+									psTzCjxTblKey = new PsTzCjxTblKey();
+									psTzCjxTblKey.setTzScoreInsId(new Long(scoreInsId));
+									psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+									psTzCjxTblWithBLOBs = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
+									if (psTzCjxTblWithBLOBs != null) {
+										// 修改表
+										psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
+										psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
+										// 成绩项ID
+										psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+										psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
+										psTzCjxTblMapper.updateByPrimaryKeySelective(psTzCjxTblWithBLOBs);
+									} else {
+										// 插入表TZ_CJX_TBL
+										psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
+										// 成绩单ID
+										psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
+										// 成绩项ID
+										psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+										// 分值
+										psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
+										// 插入
+										psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
+									}
 								}
 							}
 						}
@@ -389,6 +402,57 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 				rtnMap.put("msg", "打分成功");
 
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnMap.put("status", "-1");
+			rtnMap.put("msg", "操作异常");
+			errorMsg[0] = "1";
+			errorMsg[1] = "操作异常。" + e.getMessage();
+		}
+
+		strRet = jacksonUtil.Map2json(rtnMap);
+		return strRet;
+	}
+	
+	/**
+	 * 批量发布面试结果
+	 * 
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	private String tzRunReleaseProcess(String strParams, String[] errorMsg) {
+		String strRet = "";
+		Map<String, Object> rtnMap = new HashMap<String, Object>();
+		rtnMap.put("status", "");
+		rtnMap.put("msg", "");
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		try {
+			jacksonUtil.json2Map(strParams);
+			if (jacksonUtil.containsKey("attaList")) {
+				List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("attaList");
+				if (list != null && list.size() > 0) {
+					for (Map<String, Object> map : list) {
+						Long appId = Long.valueOf(map.get("appId") == null ? "" : map.get("appId").toString());
+						String msResult = map.get("msResult") == null ? "" : map.get("msResult").toString();
+						String sqlCount = "SELECT COUNT(1) FROM TZ_IMP_MSJG_TBL WHERE TZ_APP_INS_ID=?";
+						int total = sqlQuery.queryForObject(sqlCount, new Object[] { appId }, "Integer");
+						if (total > 0) {
+							String strUpdateSql = "UPDATE TZ_IMP_MSJG_TBL SET TZ_RESULT_CODE='" + msResult
+									+ "' WHERE TZ_APP_INS_ID='" + appId + "'";
+							sqlQuery.update(strUpdateSql, new Object[] {});
+						} else {
+							String strInsertSql = "INSERT INTO TZ_IMP_MSJG_TBL(TZ_APP_INS_ID,TZ_RESULT_CODE) VALUES(?,?)";
+							sqlQuery.update(strInsertSql, new Object[] { appId, msResult });
+						}
+
+					}
+					rtnMap.put("status", "0");
+					rtnMap.put("msg", "发布成功");
+				}
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			rtnMap.put("status", "-1");

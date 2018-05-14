@@ -172,62 +172,83 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.rowNum","序号"),
                     xtype: 'rownumberer',
                     width:50
-                },{
+                },/*{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.appId","报名表编号") ,
                     dataIndex: 'appId',
                     filter: {
                         type: 'number'
                     },
-                    width:120,
-                },{
+                    width: 100,
+                    minWidth: 80,
+                    hidden: true
+                },*/{
                 	text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.interviewAppId","面试申请号") ,
                     dataIndex: 'interviewAppId',
                     filter: {
                         type: 'string'
                     },
-                    width:140
+                    width: 120,
+                    minWidth: 100
                 },{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.stuName","姓名") ,
                     dataIndex: 'stuName',
                     filter: {
                         type: 'string'
                     },
-                    width: 120
+                    width: 100,
+                    minWidth: 80
+                },{
+                	text: '报考班级',
+                	dataIndex: 'className',
+                	width: 140,
+                	minWidth: 120,
+                	flex: 1,
+                	filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    }
+                },{
+                	text: '申请面试批次',
+                	dataIndex: 'batchName',
+                	width: 130,
+                	minWidth: 100,
+                	filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    }
                 },{
 					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.emial", '邮箱'),
 					dataIndex: 'email',
-					width: 160,
-					flex:1
+					width: 140,
+                    minWidth: 120
 				},{
 					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.mobile", '手机'),
 					dataIndex: 'mobile',
-					width: 140,
-					flex:1
-				},{
+					width: 120,
+                    minWidth: 100
+				},/*{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.msZGFlag","面试资格"),
                     dataIndex: 'msZGFlag',
                     filter: {
                         type: 'list',
                         options: mszgFlagSortFilterOptions
                     },
-                    width:120
-                    //renderer : function(value, metadata, record) {
-                    //    //alert("render"+value);
-                    //    var index = mszgFlagStore.find('TValue',value);
-                    //    if(index!=-1){
-                    //        return mszgFlagStore.getAt(index).data.TSDesc;
-                    //    }
-                    //    return record.get('msZGFlag');
-                    //},
-                },{
+                    width: 100,
+                    minWidth: 80
+                },*/{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.label","标签") ,
                     filter: {
                         type: 'string'
                     },
                     sortable: true,
                     dataIndex: 'label',
-                    minWidth: 200,
-                    flex:1
+                    width: 140,
+                    minWidth: 120,
+                    flex: 1
                 }],
                 bbar: {
                     xtype: 'pagingtoolbar',

@@ -507,6 +507,13 @@ public class AppFormListClsServiceImpl extends FrameworkImpl {
 		if (StringUtils.equals(oType, "BATCH")) {
 			String classId = jacksonUtil.getString("CLASSID");
 			String sqlBatch = "SELECT B.TZ_BATCH_ID,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T C, PS_TZ_CLS_BATCH_T B WHERE C.TZ_CLASS_ID = B.TZ_CLASS_ID AND C.TZ_IS_SUB_BATCH = 'Y' AND B.TZ_APP_PUB_STATUS = 'Y' AND C.TZ_CLASS_ID = ? AND B.TZ_APP_END_DT >= current_date() ORDER BY B.TZ_APP_END_DT";
+			
+			/*如果当前不是考生，则显示所有的批次，包括外网未发布的*/
+			String isStu = sqlQuery.queryForObject("select 'Y' from PS_TZ_REG_USER_T where OPRID=?", new Object[]{ oprId }, "String");
+			if(!"Y".equals(isStu)){
+				sqlBatch = "SELECT B.TZ_BATCH_ID,B.TZ_BATCH_NAME FROM PS_TZ_CLASS_INF_T C, PS_TZ_CLS_BATCH_T B WHERE C.TZ_CLASS_ID = B.TZ_CLASS_ID AND C.TZ_IS_SUB_BATCH = 'Y' AND C.TZ_CLASS_ID = ? ORDER BY B.TZ_APP_END_DT";
+			}
+			
 			List<?> resultlist = sqlQuery.queryForList(sqlBatch, new Object[] { classId });
 
 			Map<String, Object> mapRet = new LinkedHashMap<String, Object>();

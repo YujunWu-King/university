@@ -94,16 +94,24 @@ function ks_list(){
 			} else {
 				var collist="";
 				var ksheadObject = jsonObject['ksh_list_headers'];
+				var m = 0;
 				for(var i in ksheadObject) {
-					collist+='<th>'+ksheadObject[i]+'</th>';
+					m++;
+					var colName = '00' + m;
+					colName = 'col' + colName.substr(colName.length - 2);
+					collist+='<th>'+ksheadObject[colName]+'</th>';
 				}
 
 				var detallist="";
 				var ksbodyArray=jsonObject['ksh_list_contents'];
 				for (var i=0;i<ksbodyArray.length;i++){
 					var concollist="";
+					var num = 0;
 					for(var j in ksheadObject) {
-						concollist+="<td class='alt' >"+(ksbodyArray[i][j]||"")+'</td>';
+						num++;
+						var colName = '00' + num;
+						colName = 'col' + colName.substr(colName.length - 2);
+						concollist += "<td class='alt' >" + (ksbodyArray[i][colName] || "") + '</td>';
 					}
 
 					detallist+="<tr>";
@@ -147,6 +155,7 @@ function ks_list(){
 
 
 				//其他评委打分
+				/*
 				if(GroupLeader=="Y") {
 
 					var qtpwScoreHtml = "";
@@ -193,6 +202,7 @@ function ks_list(){
 
 					$("#otherJudgeScore").append(qtpwScoreHtml);
 				}
+				*/
 
 			}
 
@@ -228,6 +238,9 @@ function tz_ks_dfq(bmb_id) {
 
 //非超链接路径显示报名表开始(点击页签)
 function tz_ks_bmb_menu(bmb_id){
+
+	showLoaderThis();
+
 	//每次点击考生的时候，把当前的考生报名表id给赋值 
 	document.getElementById("ks_search_tz_app_ins_id").value = bmb_id;
 	document.getElementById("ks_show_tz_app_ins_id").value = bmb_id;
@@ -277,23 +290,25 @@ function tz_ks_bmb_menu(bmb_id){
 				$("#div_"+ifr_tmp).hide();
 			}
 		}
+
+		hideLoaderThis();
 	} else {
 		
 		//iframe 的id 串
-		var iframe_tmp = "=bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmb_id;
+		var iframe_tmp = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmb_id;
 		var div_tmp = "div_" + iframe_tmp;
 
-		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + iframe_tmp);
+		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + "=" + iframe_tmp);
 
 		var bmb_url = "";
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmb_id+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
 		bmb_url = scoreUrl + "?tzParams=" + encodeURIComponent(tzParamsBmbUrl);
 		
 		var bmbArea = "";
-		bmbArea += '<div id="'+ div_tmp +'" style="width:auto; height:auto">';
-		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" width="100%" height="100%" frameborder="0" src="'+ bmb_url +'"></iframe></div>';
+		bmbArea += '<div id="'+ div_tmp +'" style="width:auto; height:auto;-webkit-overflow-scrolling:touch; overflow: scroll;">';
+		bmbArea += '<iframe id="'+ iframe_tmp +'" name="'+ iframe_tmp +'" style="width:100%;min-height:800px;border:0;" frameborder="0" src="'+ bmb_url +'"></iframe></div>';
 		
-		$("#div2").append(bmbArea); 
+		$("#div2").append(bmbArea);
 		
 		$("#ks_list").removeAttr("class");
 		$("#ks_list").attr({class:"ui-btn ui-btn-inline ui-btn-up-c"});
@@ -303,6 +318,11 @@ function tz_ks_bmb_menu(bmb_id){
 		$("#ks_dfq").attr({class:"ui-btn ui-btn-inline ui-btn-up-c"});
 
 	}
+
+	document.getElementById(iframe_tmp_id).onload=function(){
+		hideLoaderThis();
+	}
+
 }
 //非超链接路径显示报名表结束(点击页签)
 
@@ -365,10 +385,10 @@ function tz_ks_bmb(bmbId){
 		}
 	} else {
 		//iframe 的id 串
-		var iframe_tmp = "=bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmbId;
+		var iframe_tmp = "bmb_iframe_" +TZ_CLASS_ID+"_"+TZ_APPLY_PC_ID + "_" + bmbId;
 		var div_tmp = "div_" + iframe_tmp;
 		
-		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + iframe_tmp);
+		$("#ks_iframe_str_id").val($("#ks_iframe_str_id").val() + "=" + iframe_tmp);
 		
 		var bmb_url = "";
 		var tzParamsBmbUrl='{"ComID":"TZ_ONLINE_REG_COM","PageID":"TZ_ONLINE_APP_STD","OperateType":"HTML","comParams":{"TZ_APP_INS_ID":"'+bmbId+'","TZ_APP_TPL_ID":"'+AppTplId+'","isReview":"Y"}}';
@@ -693,7 +713,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 											valueTmp = v.itemLowerLimit;
 										}
 									}
-									cjx_lis += 	"<td width='360px'><input type='range' onchange='tz_parent_id_tmp(this);' style='width: 55px; height: 20px;' data-highlight='true' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + valueTmp  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "' step='0.5'/></td>";
+									cjx_lis += 	"<td width='360px'><input type='range' onchange='tz_parent_id_tmp(this);' style='width: 55px; height: 20px;' data-highlight='true' name='" +  v.itemId + "' id='" +  v.itemId + "' value='" + valueTmp  +  "' min='" + v.itemLowerLimit  +  "' max='" + v.itemUpperLimit  +  "'/></td>";
 								}else if (v.itemType =="C"){
 									//评语
 									//解决页面中换行出现反斜杠n 的情况
@@ -962,6 +982,9 @@ function ks_save(btnId){
 			var KSH_BMBID = document.getElementById("ks_search_tz_app_ins_id").value;
 			var cjx_ids_tmp = document.getElementById("tz_cjx_ids").value;
 
+			//是否存在分数为0的成绩项
+			var existZero = "";
+
 			//参数准备
 			var tz_canshu_str = "";
 
@@ -969,12 +992,22 @@ function ks_save(btnId){
 			for (var i=0 ; i< arr.length ; i++){
 				var dange_cjx_id = arr[i];
 				var dange_arr = dange_cjx_id.split(",");
+
+				if($("#"+dange_arr[0]).val()==0) {
+					existZero = "Y";
+				}
+
 				if(tz_canshu_str!="") {
 					tz_canshu_str += ',"'+ dange_arr[0] +'":"'+ $("#"+dange_arr[0]).val() +'"';
 				} else {
 					tz_canshu_str = '"'+ dange_arr[0] +'":"'+ $("#"+dange_arr[0]).val() +'"';
 				}
 			}
+
+			if(existZero=="Y") {
+				alert("存在分数为0的成绩项");
+			}
+
 			var saveData = '{"ClassID":"'+TZ_CLASS_ID+'","BatchID":"'+TZ_APPLY_PC_ID+'","KSH_BMBID":"'+KSH_BMBID+'","OperationType":"SBM",'+ tz_canshu_str +'}';
 
 			var comParams = "";
@@ -1241,12 +1274,81 @@ function ks_esc(){
 
 //查看其他评委打分开始
 function viewOtherScore(bmbid) {
-	var divId = "score" + bmbid;
-	var popupContent = $("#"+divId).html();
 
-	$("#otherDialog .ui-content").html(popupContent);
-	$("#otherDialog").popup('open');
+	$.ajax({
+		type: 'POST',
+		url: getNextUrl+"&type=other",
+		dataType: 'json',
+		data: {"BaokaoClassID":ClassId,"BaokaoPCID":BatchId,"appinsId":bmbid},
+		success: function(response) {
+			var jsonObject = response.comContent;
+
+			openOtherDialog(bmbid,jsonObject);
+
+		}
+	});
 }
 //查看其他评委打分结束
 
+
+function openOtherDialog(bmbid,jsonObject) {
+	//列名
+	var qtpwColName = "<th scope='col'  style='text-align:center;'>评委账号</th>";
+	qtpwColName += "<th scope='col' style='text-align:center;'>评委姓名</th>";
+	qtpwColName += "<th scope='col' style='text-align:center;'>类型</th>";
+
+	var collist = "";
+	var headObject = jsonObject['other_headers'];
+	var m = 0;
+	for (var i in headObject) {
+		m++;
+		var colName = '00' + m;
+		colName = 'col' + colName.substr(colName.length - 2);
+		collist += '<th>' + headObject[colName] + '</th>';
+	}
+
+	qtpwColName += collist;
+
+	//值
+	var qtpwValue = "";
+
+	var valueArray = jsonObject['other_contents'];
+	for (var i = 0; i < valueArray.length; i++) {
+
+		qtpwValue += "<tr id='" + valueArray[i]['otherPwDlzhId'] + "'>";
+		qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + valueArray[i]['otherPwDlzhId'] + "</td>";
+		qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + valueArray[i]['otherPwName'] + "</td>";
+		qtpwValue += "<td  class='alt' style='border-left: 1px solid #c1dad7;'>" + valueArray[i]['otherPwTypeDesc'] + "</td>";
+
+		var num = 0;
+		for (var k in headObject) {
+			num++;
+			var colName = '00' + num;
+			colName = 'col' + colName.substr(colName.length - 2);
+			qtpwValue += "<td class='alt' >" + (valueArray[i][colName] || "") + '</td>';
+		}
+		qtpwValue += "</tr>";
+	}
+
+	var otherScoreDivId = "score" + bmbid;
+
+	if (document.getElementById(otherScoreDivId) != undefined) {
+		$("#" + otherScoreDivId).remove();
+	}
+
+	var qtpwScore = '<div id=' + otherScoreDivId + '>';
+	qtpwScore += '<div>学生姓名：' + jsonObject['ksh_name'] + '</div>';
+	qtpwScore += '<table cellspacing="0" width="100%" summary="the technical specifications of the apple powermac g5 series">';
+	qtpwScore += '<tr>' + qtpwColName + '</tr>';
+	qtpwScore += qtpwValue;
+	qtpwScore += '</table>';
+	qtpwScore += "</div>";
+
+
+	var divId = "score" + bmbid;
+	//var popupContent = $("#"+divId).html();
+
+	$("#otherDialog .ui-content").html(qtpwScore);
+	$("#otherDialog").popup('open');
+}
 
