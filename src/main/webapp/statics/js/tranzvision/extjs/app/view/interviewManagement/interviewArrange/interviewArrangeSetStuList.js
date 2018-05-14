@@ -229,7 +229,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 					dataIndex: 'mobile',
 					width: 130,
                     minWidth: 120
-				},{
+				},/*{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.msZGFlag","面试资格"),
                     dataIndex: 'msZGFlag',
                     filter: {
@@ -238,15 +238,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     },
                     width: 100,
                     minWidth: 80
-                    //renderer : function(value, metadata, record) {
-                    //    //alert("render"+value);
-                    //    var index = mszgFlagStore.find('TValue',value);
-                    //    if(index!=-1){
-                    //        return mszgFlagStore.getAt(index).data.TSDesc;
-                    //    }
-                    //    return record.get('msZGFlag');
-                    //},
-                },{
+                },*/{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.label","标签") ,
                     filter: {
                         type: 'string'
