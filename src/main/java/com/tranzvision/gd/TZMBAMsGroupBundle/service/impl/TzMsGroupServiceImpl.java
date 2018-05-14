@@ -54,8 +54,7 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
-		String judgeList = "";
-		
+
 
 		// String pwsql = "SELECT group_concat(B.TZ_DLZH_ID) AS TZ_DLZH_ID FROM
 		// PS_TZ_MP_PW_KS_TBL A, PS_TZ_AQ_YHXX_TBL B WHERE
@@ -70,8 +69,8 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 			String sql = tzSQLObject.getSQLText("SQL.TZMbaPwClps.TZ_GROUP");
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "TZ_MSPS_PWJ_PC",
-					"TZ_LUQU_ZT", "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_MSH_ID", "TZ_CLPS_GR_NAME" };
+			String[] resultFldArray = { "OPRID", "TZ_APP_INS_ID", "TZ_CLASS_ID", "TZ_APPLY_PC_ID",
+					"TZ_REALNAME", "TZ_GENDER", "TZ_MSH_ID", "TZ_MS_PLAN_SEQ"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
@@ -87,29 +86,16 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
-					mapList.put("classId", rowList[0]);
-					mapList.put("batchId", rowList[1]);
-					mapList.put("appInsId", rowList[2]);
-					/*
-					 * judgeList = sqlQuery.queryForObject(pwsql, new Object[] {
-					 * rowList[0], rowList[1], rowList[2] }, "String");
-					 */
-					/*
-					 * judgeGroupName =
-					 * sqlQuery.queryForObject(TzGDObject.getSQLText(
-					 * "SQL.TZMbaPwClps.TZ_MSPS_KS_JUGROP"), new Object[] {
-					 * rowList[1], rowList[0], rowList[2] }, "String");
-					 */
-					mapList.put("judgeGroup", judgeList);
-					mapList.put("ksOprId", rowList[3]);
-					mapList.put("passState", rowList[4]);
-					mapList.put("ksOprId", rowList[5]);
-					mapList.put("ksName", rowList[6]);
-					mapList.put("gender", rowList[7]);
-					mapList.put("mshId", rowList[8]);
-					mapList.put("judgeGroupName", rowList[9]);
+					mapList.put("classId", rowList[2]);
+					mapList.put("batchId", rowList[3]);
+					mapList.put("appInsId", rowList[1]);
+					mapList.put("ksOprId", rowList[0]);
+					mapList.put("ksName", rowList[4]);
+					mapList.put("gender", rowList[5]);
+					mapList.put("mshId", rowList[6]);
+					mapList.put("msJxNo", rowList[7]);
 
-					map = sqlQuery.queryForMap(sql, new Object[] { rowList[0], rowList[1], rowList[2] });
+					map = sqlQuery.queryForMap(sql, new Object[] { rowList[2], rowList[3], rowList[1] });
 
 					if (map != null) {
 						TZ_GROUP_ID = map.get("TZ_GROUP_ID") == null ? "" : map.get("TZ_GROUP_ID").toString();

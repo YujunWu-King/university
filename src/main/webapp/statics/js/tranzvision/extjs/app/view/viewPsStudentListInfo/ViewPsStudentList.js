@@ -274,8 +274,10 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentList', {
 					renderer: function(v) {
 						if (v == 'M') {
 							return "男";
-						}  else {
+						}  else if (v == 'F'){
 							return "女";
+						} else {
+							return "";
 						}
 					}
 					

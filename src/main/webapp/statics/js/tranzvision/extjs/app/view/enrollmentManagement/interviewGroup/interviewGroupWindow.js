@@ -1,3 +1,4 @@
+//面试现场分组    评委组分组页面
 Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupWindow', {
     extend: 'Ext.window.Window',
     reference: 'interviewGroupWindow',
@@ -8,7 +9,6 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupW
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
-        'KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupModel',
         'KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupStore'
     ],
     title: '面试分组',

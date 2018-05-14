@@ -1,3 +1,4 @@
+//面试现场分组  默认首页 MODEL
 Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewModel', {
     extend: 'Ext.data.Model',
     fields: [

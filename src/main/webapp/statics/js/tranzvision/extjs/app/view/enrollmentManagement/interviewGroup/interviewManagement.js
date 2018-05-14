@@ -1,4 +1,5 @@
-﻿Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewManagement', {
+﻿//面试现场分组  默认首页
+Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewManagement', {
     extend: 'Ext.grid.Panel',
     requires: [
         'Ext.data.*',
@@ -88,7 +89,7 @@
                     getText:function(v, meta, rec) {
                         return this.text;
                     },
-                    handler: "viewApplicants"
+                    handler: "yyShow"
                 }],
                 width:130
             }],

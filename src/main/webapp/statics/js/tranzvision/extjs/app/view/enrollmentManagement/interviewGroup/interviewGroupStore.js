@@ -1,3 +1,4 @@
+//面试现场分组  评委组分组 Store
 Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupStore', {
     extend: 'Ext.data.Store',
     alias: 'store.interviewGroupStore',

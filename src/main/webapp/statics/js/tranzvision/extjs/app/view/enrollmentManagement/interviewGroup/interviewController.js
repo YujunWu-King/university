@@ -1,9 +1,37 @@
-﻿Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewController', {
+﻿//面试现场分组    控制层，所有的页面公用控制层
+Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewController', {
     extend: 'Ext.app.ViewController',
-    requires:['Ext.ux.IFrame'],
     alias: 'controller.appFormInterview',
     
-    //保存按钮
+    //关闭 默认首页
+    onComRegClose: function(btn){
+        //关闭窗口
+        this.getView().close();
+    },
+    
+    //关闭预约列表
+	closeviewList: function(btn) {
+		var comView = btn.findParentByType("yyInfoPanel");
+		comView.close();
+	},
+	
+	//关闭预考生表
+	closeviewListStu: function(btn) {
+		var comView = btn.findParentByType("viewmspsxsList_mspsview");
+		comView.close();
+	},
+	
+	//考生页面保存
+	onSaveKsFz: function(btn) {
+		
+	},
+	
+	//考生页面确定
+	ensureonKsFz: function(btn) {
+		
+	},
+    
+	//评委组分组保存
     onGroupSave:function(btn){
     	//获取窗口
         var win = btn.findParentByType("window");
@@ -15,7 +43,8 @@
             var ret=this.savePlstComInfo(win);
         }
     },
-    //确定按钮
+
+    //评委组分组确定
     onGroupEnsure: function(btn){
         //获取窗口
         var win = btn.findParentByType("window");
@@ -28,7 +57,10 @@
             win.close();
         }
     },
-    //保存动作
+    
+    
+    
+    //评委组分组 保存 实际操作
     savePlstComInfo: function(win){
         //资源信息表单
         var form = win.child("form").getForm();
@@ -101,7 +133,7 @@
         
     },
     
-    //变更评委组
+    //评委组分组页面，评委下拉菜单select 变更
 	changeResTmpl:function(combo,records,eOpts){
 		var form = this.getView().child("form").getForm();
 		var appInsId =form.findField("appInsId").getValue();
@@ -126,17 +158,20 @@
 		
 	},
     
+	//可配置查询 查询考生列表
     queryStudents:function(btn){
     	var panel = btn.findParentByType("stuInfoPanel");
 		var form=btn.findParentByType('stuInfoPanel').down('form').getForm();
 		var classId = form.findField('classId').getValue();
 		var batchId = form.findField('batchId').getValue();
+		var msJxNo = form.findField('msJxNo').getValue();
 
         Ext.tzShowCFGSearch({
-            cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_MSPS_KS_VW',
+            cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_MSYY_KS_VW',
             condition:{
                 TZ_CLASS_ID:classId,
-                TZ_BATCH_ID:batchId
+                TZ_BATCH_ID:batchId,
+                TZ_MS_PLAN_SEQ:msJxNo
             },
             callback: function(seachCfg){
             	var store = btn.findParentByType("grid").store;
@@ -145,6 +180,8 @@
             }
         });
     },
+    
+    // 默认页面可配置查询
     queryClass:function(btn){
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_CLASS_STD.TZ_BMBSH_ECUST_VW',
@@ -159,82 +196,102 @@
             }
         });
     },
-    onStuInfoSave: function(btn){
-        //学生信息列表
-        var grid = this.getView().child("grid");
-        //学生信息数据
-        var store = grid.getStore();
-        var form = this.getView().child("form").getForm();
-        if (form.isValid()) {
-            //获取学生列表参数
-            var tzParams = this.getStuInfoParams();
-            var comView = this.getView();
-            if(tzParams!=""){
-                Ext.tzSubmit(tzParams,function(responseData){
-                    store.commitChanges();
-                },"",true,this);
+
+
+    
+    //显示该班级批次下 的 预约面试列表
+    yyShow:function(grid, rowIndex, colIndex){
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MSXCFZ_COM"]["TZ_MSPS_KSMD_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+        var contentPanel, cmp, ViewClass, clsProto;
+
+        contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
+        contentPanel.body.addCls('kitchensink-example');
+
+        if(!Ext.ClassManager.isCreated(className)){
+            Ext.syncRequire(className);
+        }
+        //console.log(className);
+        ViewClass = Ext.ClassManager.get(className);
+        //console.log(ViewClass);
+        clsProto = ViewClass.prototype;
+
+        if (clsProto.themes) {
+            clsProto.themeInfo = clsProto.themes[themeName];
+
+            if (themeName === 'gray') {
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
+            } else if (themeName !== 'neptune' && themeName !== 'classic') {
+                if (themeName === 'crisp-touch') {
+                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
+                }
+                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
             }
-        }
-    },
-    onStuInfoEnsure: function(btn){
-        var form = this.getView().child("form").getForm();
-        if (form.isValid()) {
-            //获取学生列表参数
-            var tzParams = this.getStuInfoParams();
-            var comView = this.getView();
-            if(tzParams!=""){
-                Ext.tzSubmit(tzParams,function(responseData){
-                    comView.close();
-                },"",true,this);
-            }else{
-                comView.close();
+            // <debug warn>
+            // Sometimes we forget to include allowances for other themes, so issue a warning as a reminder.
+            if (!clsProto.themeInfo) {
+                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
+                    themeName + '\'. Is this intentional?');
             }
+            // </debug>
         }
-    },
-    refresh: function(btn){
-    	var grid = this.getView().child("grid");
-    	console.log(grid)
-    	grid.store.reload();
-    },
-    getStuInfoParams: function(){
-        //更新操作参数
-        var comParams = "";
-        //学生信息列表
-        var grid = this.getView().child("grid");
-        //学生信息数据
-        var store = grid.getStore();
-        //修改json字符串
-        var editJson = "";
-        var mfRecs = store.getModifiedRecords();
-        for(var i=0;i<mfRecs.length;i++){
-            if(editJson == ""){
-                editJson = '{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
-            }else{
-                editJson = editJson + ',{"data":'+Ext.JSON.encode(mfRecs[i].data)+'}';
+
+        var record = grid.store.getAt(rowIndex);
+        var classID = record.data.classID;
+        var batchID = record.data.batchID;
+
+
+        cmp = new ViewClass({
+                    classID:classID,
+                    batchID:batchID
+                }
+           );
+        //cmp = new ViewClass();
+            cmp.on('afterrender',function(panel){
+            	console.log("1111");
+            	var form = panel.child('form').getForm();
+                var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_STU_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classID+'","batchId":"'+batchID+'"}}';
+                var panelGrid = panel.down('grid');
+                
+                var tzStoreParams = '{"classID": "' + classID + '","batchID": "' + batchID + '"}';
+                panelGrid.store.tzStoreParams = tzStoreParams;
+
+                Ext.tzLoad(tzParams,function(respData){
+                    var formData = respData.formData;
+                    if(formData!="" && formData!=undefined) {
+                        form.setValues(formData);
+                        panelGrid.store.load();
+                    } 
+                });
+            });
+
+            tab = contentPanel.add(cmp);
+
+            contentPanel.setActiveTab(tab);
+
+            Ext.resumeLayouts(true);
+
+            if (cmp.floating) {
+                cmp.show();
             }
-        }
-        if(editJson != ""){
-            if(comParams == ""){
-                comParams = '"update":[' + editJson + "]";
-            }else{
-                comParams = comParams + ',"update":[' + editJson + "]";
-            }
-        }
-        //提交参数
-        var tzParams="";
-        if(comParams!=""){
-            tzParams= '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_STU_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        }
-        return tzParams;
-    },
-    onStuInfoClose: function(btn){
-        //关闭窗口
-        this.getView().close();
+
     },
     
-    //学生列表
-    viewApplicants:function(grid, rowIndex, colIndex){
-        //是否有访问权限
+    
+    //显示该班级批次预约下 的 考生列表
+    openStu:function(grid, rowIndex, colIndex){
+    	
+    	//是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MSXCFZ_COM"]["TZ_MSGL_STU_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert(Ext.tzGetResourse("TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.nmyqx","您没有权限"));
@@ -277,9 +334,12 @@
             // </debug>
         }
 
+        
+        
         var record = grid.store.getAt(rowIndex);
         var classID = record.data.classID;
         var batchID = record.data.batchID;
+        var msJxNo = record.data.msJxNo;
 
 
         cmp = new ViewClass({
@@ -293,14 +353,16 @@
                 var tzParams = '{"ComID":"TZ_MSXCFZ_COM","PageID":"TZ_MSGL_STU_STD",' + '"OperateType":"QF","comParams":{"classId":"'+classID+'","batchId":"'+batchID+'"}}';
                 var panelGrid = panel.down('grid');
 
-                var tzStoreParams = '{"cfgSrhId":"TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_MSPS_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classID + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchID + '"}}';
+                var tzStoreParams = '{"cfgSrhId":"TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_MSYY_KS_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classID + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchID + '","TZ_MS_PLAN_SEQ-operator": "01","TZ_MS_PLAN_SEQ-value": "' + msJxNo + '"}}';
                 panelGrid.store.tzStoreParams = tzStoreParams;
 
                 Ext.tzLoad(tzParams,function(respData){
                     var formData = respData.formData;
+                   // console.log(formData);
                     if(formData!="" && formData!=undefined) {
                         panel.actType="update";
                         form.setValues(formData);
+                        form.findField("msJxNo").setValue(msJxNo);
                         panelGrid.store.load();
                     } 
                 });
@@ -317,8 +379,8 @@
             }
 
     },
-    
-    //打开面试分组窗口
+        
+    //打开 某一报名表，评委组分组页面
     openInterviewGroupWindow:function(view, rowIndex){
     	
     	var panel = view.findParentByType("stuInfoPanel");
@@ -330,11 +392,6 @@
 	   	var batchID =form.findField("batchId").getValue();
 	   	var classID = form.findField("classId").getValue();
 
-	   	
-	   	//console.log("batchID:"+batchID);
-	   	//console.log("classID:"+classID);
-
-        
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MSXCFZ_COM"]["TZ_MSGL_MSFZ_STD"];
         if( pageResSet == "" || pageResSet == undefined){
@@ -394,7 +451,7 @@
 			
 		});
         win.show();
-    },
+    }
 
 });
 

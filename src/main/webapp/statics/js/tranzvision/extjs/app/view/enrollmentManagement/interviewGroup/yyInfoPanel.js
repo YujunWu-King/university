@@ -1,28 +1,29 @@
-﻿//面试现场分组  考生列表 
-Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', {
+//面试现场分组  预约列表 
+Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.yyInfoPanel', {
 	extend: 'Ext.panel.Panel',
-	xtype: 'stuInfoPanel',
+	xtype: 'yyInfoPanel',
 	controller: 'appFormInterview',
+	actType: 'add',
 	requires: ['Ext.data.*', 
 	           'Ext.grid.*', 
 	           'Ext.util.*',
 	           'Ext.toolbar.Paging',
 	           'Ext.ux.ProgressBarPager',
 	           'Ext.selection.CellModel',
-	           'KitchenSink.view.enrollmentManagement.interviewGroup.stuStore',
+	           'KitchenSink.view.enrollmentManagement.interviewGroup.yyStore',
 	           'KitchenSink.view.enrollmentManagement.interviewGroup.interviewController'
 	           ],
 	autoScroll: false,
-	reference:"viewmspsxsList_mspsview",
+	reference:"yyInfoPanel",
 	bodyStyle: 'overflow-y:auto;overflow-x:hidden',
-	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.MSPSKSMD", "面试评审考生名单"),
+	title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.YYFZ", "预约分组"),
 	frame: true,
 	listeners: {
 		resize: function(panel, width, height, oldWidth, oldHeight, eOpts) {
 			var buttonHeight = 42; /*button height plus panel body padding*/
 			var formHeight = 30;
 			var formPadding = 20;
-			var grid = panel.child('grid[name=appseastudentInfo]');
+			var grid = panel.child('grid[name=yyInfo]');
 			grid.setHeight(height - formHeight - buttonHeight - formPadding);
 		}
 	},
@@ -30,11 +31,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 		this.cellEditing = new Ext.grid.plugin.CellEditing({
 			clicksToEdit: 1
 		});
-		var store = new KitchenSink.view.enrollmentManagement.interviewGroup.stuStore();
-
-
+		var store = new KitchenSink.view.enrollmentManagement.interviewGroup.yyStore();
+		//console.log(store);
+		
 		Ext.apply(this, {
-
 			items: [{
 				xtype: 'form',
 				frame: true,
@@ -67,10 +67,6 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
     				readOnly:true
 
 
-				},{
-						xtype: 'textfield',
-						name: 'msJxNo',
-						hidden:true
 				}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.batchIdname", "批次"),
@@ -83,12 +79,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 
 				},{
 					xtype: 'textfield',
-					//fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
+					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
 					labelWidth: 110,
 					name: 'classId',
-					//allowBlank: false,
-					//fieldStyle:'background:#F4F4F4',
-    				//readOnly:true,
     				hidden:true
 
 				}, {
@@ -96,17 +89,14 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.batchId", "批次编号"),
 					labelWidth: 110,
 					name: 'batchId',
-					//allowBlank: false,
-					//fieldStyle:'background:#F4F4F4',
-    				//readOnly:true,
     				hidden:true
 
 				}]
 			}, {
 				xtype: 'grid',
-				title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksmgrid", "考生名单"),
+				title: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.yygrid", "预约列表"),
 				columnLines: true,
-				name: 'appseastudentInfo',
+				name: 'yyInfo',
 				style: "margin:0px",
 				selModel: {
 					type: 'checkboxmodel'
@@ -119,9 +109,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 
 				// layout:'fit',
 				height: 489,
-				reference: 'mspsksGrid',
+				reference: 'yyGrid',
 				frame: true,
-				dockedItems: [{
+				/*dockedItems: [{
 					xtype: "toolbar",
 					items: [
 						{
@@ -130,64 +120,71 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 						iconCls: "query",
 						handler: 'queryStudents'
 					}]
-				}],
+				}], */
 				columns: [{
-					text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.OPRID","OPRID"),
-                    dataIndex: 'ksOprId',
+					text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.TZ_MS_PLAN_SEQ","面试日程安排计划编号"),
+                    dataIndex: 'msJxNo',
                     hidden:true
 					
+				},{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.classId", "班级编号"),
+                    dataIndex: 'classID',
+                    hidden:true
+					
+				},{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.batchId", "批次编号"),
+                    dataIndex: 'batchID',
+                    hidden:true
+					
+				},{
+					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msDate", '面试日期'),
+					xtype:'datecolumn',
+					format:'Y-m-d',
+					sortable: true,
+					dataIndex: 'msDate',
+					width: 100
 				},
 				{
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.ksNameg", "考生姓名"),
-					dataIndex: 'ksName',
-					width: 120
+					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.maxPerson", '最多预约人数'),
+					sortable: true,
+					dataIndex: 'maxPerson',
+					width: 110,
+					align:'center'
 					
 				}, {
-
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.mshIdg", "面试申请号"),
-					dataIndex: 'mshId',
-					width: 120
-					//flex: 1
-					
-				}, {
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.appInsIdg", "报名表编号"),
-					dataIndex: 'appInsId',
-					width: 120
-					
-				}, {
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.genderg", "性别"),
-					dataIndex: 'gender',
+					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.appoPerson", '已预约人数'),
+					sortable: true,
+					dataIndex: 'appoPerson',
 					width: 100,
-					renderer: function(v) {
-						if (v == 'M') {
-							return "男";
-						}  else if (v == 'F') {
-							return "女";
-						} else {
-							return "";
-						}
-					}
+					align:'center'
+				}, {
+					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsStartTime",'开始时间'),
+					//xtype:'datecolumn',
+					//format:'H:i',
+					sortable: true,
+					dataIndex: 'bjMsStartTime',
+					width: 90
+				}, {
+					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.bjMsEndTime", '结束时间'),
+					sortable: true,
+					dataIndex: 'bjMsEndTime',
+					//xtype:'datecolumn',
+					//format:'H:i',
+					width: 90
 					
 				},{
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.pwGroup", "评委组"),
-					dataIndex: 'pwgroup_name',
-					width: 100
+					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msLocation", '面试地点'),
+					dataIndex: 'msLocation',
+					minWidth: 120,
+					width: 120,
+					flex: 1
 				
 				}, {
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.judgeGroup", "面试组"),
-					dataIndex: 'group_name',
-					width: 100
-				
-				}, {
-					text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.submtatesd","面试序号"),
-					dataIndex: 'order',
-					width: 80
-					
-				},{
-					text: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_COM.grouptime","分组时间"),
-					dataIndex: 'group_date',
-					width: 200
-					
+					text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msXxBz", '备注'),
+					dataIndex: 'msXxBz',
+					minWidth: 120,
+					width: 120,
+					flex: 1
 				},{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.handle", "操作"),
 					menuDisabled: true,
@@ -195,7 +192,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 					width: 50,
 					align: 'center',
 					xtype: 'actioncolumn',
-					items: [{iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.clmspsSets","面试分组"),handler:'openInterviewGroupWindow'}]
+					items: [{iconCls: 'set',tooltip: Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_CLASS_STD.LOOK","查看"),handler:'openStu'}]
 				}],
 				store: store,
                bbar: {
@@ -213,25 +210,12 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 			}],
 
 			buttons: [
-
-			{
-				text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.save", "保存"),
-				handler: 'onSaveKsFz',
-				iconCls: 'save'
-			}, {
-				text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.sure", "确定"),
-				handler: 'ensureonRemoveKs',
-				iconCls: 'ensure'
-			}, {
+			 {
 				text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.close", "关闭"),
 				iconCls: 'close',
-				handler: 'closeviewListStu'
+				handler: 'closeviewList'
 			}]
 		});
 		this.callParent();
-	},
-	
-	onRemoveClick: function(grid, rowIndex) {
-		grid.getStore().removeAt(rowIndex);
 	}
 });
