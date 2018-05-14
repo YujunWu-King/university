@@ -279,7 +279,8 @@ public class TranzvisionMail {
 				// 邮箱发送服务器端口,这里设置为465端口
 				this.props.setProperty("mail.smtp.port", "465");
 				this.props.setProperty("mail.smtp.socketFactory.port", "465");
-				this.mailSession = Session.getDefaultInstance(this.props, new MailAuthenticator(this.userName, this.userPwd));
+				//this.mailSession = Session.getDefaultInstance(this.props, new MailAuthenticator(this.userName, this.userPwd));
+				this.mailSession = Session.getInstance(this.props, new MailAuthenticator(this.userName, this.userPwd));
 			} else {
 				this.props.put("mail.smtp.host", this.mailHost);
 				this.mailSession = Session.getInstance(this.props, new MailAuthenticator(this.userName, this.userPwd));

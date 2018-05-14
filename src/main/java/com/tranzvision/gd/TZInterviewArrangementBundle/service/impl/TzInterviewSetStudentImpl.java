@@ -115,13 +115,13 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							}
 
 							// 面试资格
-							sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
-							String msZgFlag = sqlQuery.queryForObject(sql, new Object[] { classID, appIns },
-									"String");
-							if ("".equals(msZgFlag) || msZgFlag == null) {
-								sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
-								msZgFlag = sqlQuery.queryForObject(sql, "String");
-							}
+//							sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
+//							String msZgFlag = sqlQuery.queryForObject(sql, new Object[] { classID, appIns },
+//									"String");
+//							if ("".equals(msZgFlag) || msZgFlag == null) {
+//								sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
+//								msZgFlag = sqlQuery.queryForObject(sql, "String");
+//							}
 
 							// 标签
 							String strLabel = "";
@@ -139,7 +139,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							mapJson.put("batchID", batchID);
 							mapJson.put("appId", appIns);
 							mapJson.put("stuName", name);
-							mapJson.put("msZGFlag", msZgFlag);
+//							mapJson.put("msZGFlag", msZgFlag);
 							
 							mapJson.put("className", className);
 							mapJson.put("batchName", batchName);
@@ -306,8 +306,11 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 		String strRtn = "";
 		Map<String, Object> rtnMap = new HashMap<String, Object>();
 		rtnMap.put("success", "");
+		rtnMap.put("notAllow", "");
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		String notAllowStu = "";
+		int count = 0;
 		try {
 			for (int i = 0; i < actData.length; i++) {
 				String actForm = actData[i];
@@ -316,18 +319,38 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 				String classID = jacksonUtil.getString("classID");
 				String batchID = jacksonUtil.getString("batchID");
 				Long appId = Long.valueOf(jacksonUtil.getString("appId"));
+				
+				//如果考生被面试评委抽取，则不允许删除
+				String sql = "select count(1) from PS_TZ_MP_PW_KS_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+				int pwCount = sqlQuery.queryForObject(sql, new Object[]{ classID, batchID, appId }, "int");
+				
+				if(pwCount > 0){
+					if(count < 10){
+						String stuName = jacksonUtil.getString("stuName");
+						if(notAllowStu == ""){
+							notAllowStu = stuName;
+						}else{
+							notAllowStu = notAllowStu + "," + stuName;
+						}
+					}
+					count ++;
+				}else{
+					PsTzMsPskshTblKey psTzMspsKshTblKey = new PsTzMsPskshTblKey();
+					psTzMspsKshTblKey.setTzClassId(classID);
+					psTzMspsKshTblKey.setTzApplyPcId(batchID);
+					psTzMspsKshTblKey.setTzAppInsId(appId);
 
-				PsTzMsPskshTblKey psTzMspsKshTblKey = new PsTzMsPskshTblKey();
-				psTzMspsKshTblKey.setTzClassId(classID);
-				psTzMspsKshTblKey.setTzApplyPcId(batchID);
-				psTzMspsKshTblKey.setTzAppInsId(appId);
-
-				PsTzMsPskshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
-				if (psTzMspsKshTbl != null) {
-					psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);
+					PsTzMsPskshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
+					if (psTzMspsKshTbl != null) {
+						psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);
+					}
 				}
 			}
+			if(count >= 10){
+				notAllowStu = notAllowStu + ",...";
+			}
 			rtnMap.replace("success", "success");
+			rtnMap.replace("notAllow", notAllowStu);
 		} catch (Exception e) {
 			e.printStackTrace();
 			errMsg[0] = "1";

@@ -682,9 +682,9 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 								"select B.TZ_MSH_ID,IFNULL(C.TZ_REALNAME,B.TZ_REALNAME) TZ_REALNAME,C.TZ_GENDER, (SELECT X.TZ_ZHZ_CMS FROM PS_TZ_PT_ZHZXX_TBL X WHERE X.TZ_ZHZ_ID=C.TZ_GENDER AND X.TZ_ZHZJH_ID='TZ_GENDER') TZ_GENDER_DESC from PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B,PS_TZ_REG_USER_T C where A.OPRID = B.OPRID and A.OPRID=C.OPRID and A.TZ_APP_INS_ID=? AND B.TZ_RYLX='ZCYH' LIMIT 0,1",
 								new Object[] { TZ_APP_INS_ID });
 						if (map3 != null) {
-							first_name = (String) map3.get("TZ_REALNAME");
-							msh_id = (String) map3.get("TZ_MSH_ID");
-							ksh_sex = (String) map3.get("TZ_GENDER_DESC");
+							first_name = map3.get("TZ_REALNAME") == null ? "" : map3.get("TZ_REALNAME").toString();
+							msh_id =  map3.get("TZ_MSH_ID") == null ? "" : map3.get("TZ_MSH_ID").toString();
+							ksh_sex = map3.get("TZ_GENDER_DESC") == null ? "" : map3.get("TZ_GENDER_DESC").toString();
 						}
 						
 						//组内排名;

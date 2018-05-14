@@ -116,7 +116,7 @@ function ks_list(){
 
 					detallist+="<tr>";
 					detallist+="<td class='alt'>"+ksbodyArray[i]['xuHao']+"</td>";
-					detallist+="<td class='alt'>"+ksbodyArray[i]['appInsId']+"</td>";
+					//detallist+="<td class='alt'>"+ksbodyArray[i]['appInsId']+"</td>";
 					detallist+="<td class='alt'>"+ksbodyArray[i]['realname']+"</td>";
 					detallist+="<td class='alt'>"+ksbodyArray[i]['genderDesc']+"</td>";
 					detallist+="<td class='alt'>"+ksbodyArray[i]['mssqh']+"</td>";
@@ -132,7 +132,7 @@ function ks_list(){
 
 				var examerinfoHeader="";
 				examerinfoHeader+="<th scope='col' style='text-align:center;'>序号</th>";
-				examerinfoHeader+="<th scope='col' style='text-align:center;'>报名表编号</th>";
+				//examerinfoHeader+="<th scope='col' style='text-align:center;'>报名表编号</th>";
 				examerinfoHeader+="<th scope='col' style='text-align:center;'>姓名</th>";
 				examerinfoHeader+="<th scope='col' style='text-align:center;'>性别</th>";
 				examerinfoHeader+="<th scope='col' style='text-align:center;'>面试申请号</th>";

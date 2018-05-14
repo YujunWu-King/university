@@ -272,34 +272,42 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         	audIDsJson = '[]';
         }
         */
-        if(removeJson != ""){
-            comParams = '"delete":[' + removeJson + '],"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
-        }else{
-        	comParams = '"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
-        }
+//        if(removeJson != ""){
+//            comParams = '"delete":[' + removeJson + '],"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
+//        }else{
+//        	comParams = '"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
+//        }
         
-        //提交参数
-        var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        //保存数据
-        Ext.tzSubmit(tzParams,function(){
-            Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
-            setStuListGridStore.tzStoreParams = Params;
-            setStuListGridStore.load({
-                callback : function(records, operation, success) {
-                    if (success == success) {
-                        var setStuListGridStoreCount = setStuListGrid.store.getRange().length;
-                        var setStuListFormRec = {"itwArrInfFormData":{
-                            "classID":classID,
-                            "className":className,
-                            "batchID":batchID,
-                            "batchName":batchName,
-                            "stuCount":setStuListGridStoreCount
-                        }};
-                        setStuListForm.getForm().setValues(setStuListFormRec.itwArrInfFormData);
-                    }
-                }
-            });
-        },"",true,this);
+        if(removeJson != ""){
+        	comParams = '"delete":[' + removeJson + ']';
+	        //提交参数
+	        var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"U","comParams":{'+comParams+'}}';
+	        //保存数据
+	        Ext.tzSubmit(tzParams,function(respData){
+	        	var notAllow = respData.notAllow;
+	        	if(notAllow != ""){
+	        		Ext.Msg.alert("提示","删除考生"+ notAllow +"失败，已被面试评委抽取，无法删除");
+	        	}
+	        	
+	            Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
+	            setStuListGridStore.tzStoreParams = Params;
+	            setStuListGridStore.load({
+	                callback : function(records, operation, success) {
+	                    if (success == success) {
+	                        var setStuListGridStoreCount = setStuListGrid.store.getRange().length;
+	                        var setStuListFormRec = {"itwArrInfFormData":{
+	                            "classID":classID,
+	                            "className":className,
+	                            "batchID":batchID,
+	                            "batchName":batchName,
+	                            "stuCount":setStuListGridStoreCount
+	                        }};
+	                        setStuListForm.getForm().setValues(setStuListFormRec.itwArrInfFormData);
+	                    }
+	                }
+	            });
+	        },"",true,this);
+        }
     },
     //确定
     onPanelEnsure:function(btn){

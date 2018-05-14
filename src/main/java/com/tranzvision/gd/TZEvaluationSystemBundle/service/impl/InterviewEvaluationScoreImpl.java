@@ -760,7 +760,7 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 				if(listAutoScoreInfo.size()>0) {
 					autoScoreDesc = "<table width='100%'><tbody>";
 					
-					Integer allNum = listAutoScore.size();
+					Integer allNum = listAutoScoreInfo.size();
 					//每行显示4个
 					Integer rowNum = allNum/4;
 					Integer modNum = allNum%4;
