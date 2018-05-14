@@ -105,11 +105,12 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 		
 		if("Y".equals(isAdmin)){
 			userName = sqlQuery.queryForObject(
-					"SELECT C.TZ_REALNAME FROM 	PS_TZ_APP_INS_T A LEFT JOIN PS_TZ_FORM_WRK_T B ON (A.TZ_APP_INS_ID = B.TZ_APP_INS_ID)LEFT JOIN PS_TZ_AQ_YHXX_TBL C ON(B.OPRID = C.OPRID) WHERE A.TZ_APP_INS_ID = :1",
+					"SELECT IF(C.TZ_REALNAME='', D.TZ_REALNAME,C.TZ_REALNAME)FROM PS_TZ_FORM_WRK_T B  LEFT JOIN PS_TZ_REG_USER_T C ON (B.OPRID = C.OPRID) LEFT JOIN PS_TZ_AQ_YHXX_TBL D ON (B.OPRID = D.OPRID)WHERE B.TZ_APP_INS_ID = ?",
 					new Object[] { parAppInsId }, "String");
 		}
 		if (StringUtils.isBlank(userName)) {
 			userName = "GUEST";
+			
 			if (StringUtils.isNotBlank(parRefLetterId)) {
 				// 如果为推荐信上传附件，显示推荐人姓名
 				PsTzKsTjxTbl psTzKsTjxTbl = psTzKsTjxTblMapper.selectByPrimaryKey(parRefLetterId);
@@ -117,7 +118,6 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 						: String.valueOf(psTzKsTjxTbl.getTzTjxAppInsId());
 				String tjrName = psTzKsTjxTbl.getTzReferrerName();
 				String tjrGname = psTzKsTjxTbl.getTzReferrerGname();
-
 				String sql = "SELECT TZ_USE_TYPE FROM PS_TZ_APPTPL_DY_T A,PS_TZ_APP_INS_T B WHERE A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID AND B.TZ_APP_INS_ID = ?";
 				String userType = sqlQuery.queryForObject(sql, new Object[] { appIns }, "String");
 				if (StringUtils.equals("TJX", userType)) {
@@ -125,7 +125,6 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 				}
 			}
 		}
-
 		// 文件后缀
 		int index = StringUtils.lastIndexOf(parSysFileName, ".");
 		String fileSuffix = StringUtils.substring(parSysFileName, index + 1);
