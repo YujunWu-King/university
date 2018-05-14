@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import java.io.File;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -141,6 +143,7 @@ public class SendSmsOrMalQfServiceImpl {
 			String smtpAddr = psTzEmlsDefTbl.getTzSmtpAddr();
 			String userName = psTzEmlsDefTbl.getTzUsrName();
 			String password = psTzEmlsDefTbl.getTzUsrPwd();
+			
 			// 设置邮件服务器名称;
 			mailer.setMailHost(smtpAddr);
 			// 设置用户名;
@@ -855,6 +858,8 @@ public class SendSmsOrMalQfServiceImpl {
 				psTzRwzxshilTbl.setTzFailNum(totalSendNum - successNum);
 				psTzRwzxshilTbl.setTzJgId(strJgId);
 				psTzRwzxshilTblMapper.insert(psTzRwzxshilTbl);
+				
+				mailer.closeConnect();
 
 			} else {
 				// 错误日志
