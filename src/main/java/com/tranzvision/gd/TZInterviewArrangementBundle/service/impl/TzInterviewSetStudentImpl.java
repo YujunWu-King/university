@@ -115,13 +115,13 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							}
 
 							// 面试资格
-							sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
-							String msZgFlag = sqlQuery.queryForObject(sql, new Object[] { classID, appIns },
-									"String");
-							if ("".equals(msZgFlag) || msZgFlag == null) {
-								sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
-								msZgFlag = sqlQuery.queryForObject(sql, "String");
-							}
+//							sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
+//							String msZgFlag = sqlQuery.queryForObject(sql, new Object[] { classID, appIns },
+//									"String");
+//							if ("".equals(msZgFlag) || msZgFlag == null) {
+//								sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
+//								msZgFlag = sqlQuery.queryForObject(sql, "String");
+//							}
 
 							// 标签
 							String strLabel = "";
@@ -139,7 +139,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							mapJson.put("batchID", batchID);
 							mapJson.put("appId", appIns);
 							mapJson.put("stuName", name);
-							mapJson.put("msZGFlag", msZgFlag);
+//							mapJson.put("msZGFlag", msZgFlag);
 							
 							mapJson.put("className", className);
 							mapJson.put("batchName", batchName);
