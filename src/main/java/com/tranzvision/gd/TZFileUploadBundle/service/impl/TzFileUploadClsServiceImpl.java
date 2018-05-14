@@ -69,7 +69,11 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 
 		// 推荐信编号
 		String parRefLetterId = jacksonUtil.getString("refLetterId");
-
+		//是否是管理员查看
+		String isAdmin="";
+		if(jacksonUtil.containsKey("isAdmin")){
+			isAdmin=jacksonUtil.getString("isAdmin");
+		}
 		// 报名表模板
 		String appTplId = "";
 		// 信息项名称
@@ -98,7 +102,12 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 		if(psTzAqYhxxTbl != null){
 			userName = psTzAqYhxxTbl.getTzRealname();
 		}
-
+		
+		if("Y".equals(isAdmin)){
+			userName = sqlQuery.queryForObject(
+					"SELECT C.TZ_REALNAME FROM 	PS_TZ_APP_INS_T A LEFT JOIN PS_TZ_FORM_WRK_T B ON (A.TZ_APP_INS_ID = B.TZ_APP_INS_ID)LEFT JOIN PS_TZ_AQ_YHXX_TBL C ON(B.OPRID = C.OPRID) WHERE A.TZ_APP_INS_ID = :1",
+					new Object[] { parAppInsId }, "String");
+		}
 		if (StringUtils.isBlank(userName)) {
 			userName = "GUEST";
 			if (StringUtils.isNotBlank(parRefLetterId)) {
@@ -123,6 +132,7 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 		fileSuffix = StringUtils.lowerCase(fileSuffix);
 
 		int numMaxIndex;
+		
 		if (StringUtils.isBlank(parMaxOrder)) {
 			numMaxIndex = 1;
 		} else {
