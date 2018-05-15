@@ -163,7 +163,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 		var batchID = win.batchID;
 		
 		var condition = {
-//			TZ_CLASS_ID: classID	
+//			TZ_CLASS_ID: classID
+			TZ_JG_ID: Ext.tzOrgID
 		};
 
 		Ext.tzShowCFGSearch({
@@ -171,6 +172,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
             condition: condition,
             callback: function(seachCfg){
             	var seachCfgObj = Ext.JSON.decode(seachCfg);
+            	seachCfgObj.classID = classID;
+            	seachCfgObj.batchID = batchID;
             	
                 var store = grid.store;
                 store.tzStoreParams = Ext.JSON.encode(seachCfgObj);

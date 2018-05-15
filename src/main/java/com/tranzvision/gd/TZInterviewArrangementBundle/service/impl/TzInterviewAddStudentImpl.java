@@ -18,6 +18,7 @@ import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
 import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 
 /**
@@ -30,6 +31,8 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 	private FliterForm fliterForm;
 	@Autowired
 	private HttpServletRequest request;
+	@Autowired
+	private SqlQuery sqlQuery;
 	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
@@ -52,9 +55,12 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 			String[][] orderByArr = new String[][] {};
 			
 			jacksonUtil.json2Map(strParams);
+			
+			String classID = jacksonUtil.getString("classID");
+			String batchID = jacksonUtil.getString("batchID");
 
 			// json数据要的结果字段;
-			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APP_INS_ID", "OPRID", "TZ_MSH_ID", "TZ_REALNAME", "TZ_LEN_PROID", "TZ_COMPANY_NAME","TZ_ZY_SJ","TZ_ZY_EMAIL","TZ_CLASS_NAME","TZ_BATCH_NAME"};
+			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APP_INS_ID", "OPRID", "TZ_MSH_ID", "TZ_REALNAME", "TZ_ZY_SJ","TZ_ZY_EMAIL","TZ_CLASS_NAME","TZ_BATCH_NAME","TZ_SFCJ_MSZC"};
 			
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -73,14 +79,21 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 					mapList.put("oprid", rowList[2]);
 					mapList.put("mssqh", rowList[3]);
 					mapList.put("stuName", rowList[4]);
-					mapList.put("area", rowList[5]);
-					mapList.put("componey", rowList[6]);
-					mapList.put("mobile", rowList[7]);
-					mapList.put("email", rowList[8]);
+					mapList.put("mobile", rowList[5]);
+					mapList.put("email", rowList[6]);
 					
-					mapList.put("className", rowList[9]);
-					mapList.put("batchName", rowList[10]);
-
+					mapList.put("className", rowList[7]);
+					mapList.put("batchName", rowList[8]);
+					mapList.put("msZhuanC", rowList[9]);
+					
+					String sql = "select 'Y' from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+					String inThisBatch = sqlQuery.queryForObject(sql, new Object[]{ classID, batchID, rowList[1] }, "String");
+					String addStatus = "未添加";
+					if("Y".equals(inThisBatch)){
+						addStatus = "已添加";
+					}
+					mapList.put("addStatus", addStatus);
+					
 					listData.add(mapList);
 				}
 

@@ -95,32 +95,11 @@
                         itemDefaults: {
                             emptyText: 'Search for...'
                         }
-                    }
+                    },
+                    flex:1
                 },{
                 	text: '申请面试批次',
                 	dataIndex: 'batchName',
-                	width: 100,
-                	minWidth: 80,
-                	filter: {
-                        type: 'string',
-                        itemDefaults: {
-                            emptyText: 'Search for...'
-                        }
-                    }
-                },{
-                	text: '地区',
-                	dataIndex: 'area',
-                	width: 100,
-                	minWidth: 80,
-                	filter: {
-                        type: 'string',
-                        itemDefaults: {
-                            emptyText: 'Search for...'
-                        }
-                    }
-                },{
-                	text: '公司名称',
-                	dataIndex: 'componey',
                 	width: 120,
                 	minWidth: 100,
                 	filter: {
@@ -152,6 +131,33 @@
                         }
                     },
                     flex:1
+                },{
+                	text: '专场',
+                	dataIndex: 'msZhuanC',
+                	width: 120,
+                	minWidth: 100,
+                	filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    }
+                },{
+                	text: '添加状态',
+                	dataIndex: 'addStatus',
+                	width: 90,
+                	minWidth: 80,
+                	filter: {
+                        type: 'list'
+                    },
+                    renderer:function(value, metadata, record){
+                    	if (value=="已添加"){
+                    		metadata.style = "color:#ff0000";
+						}else{
+							metadata.style = "color:#66cc66";
+						}
+						return value;
+                    }
                 }],
                 bbar: {
                     xtype: 'pagingtoolbar',
