@@ -40,16 +40,16 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         });
         //gridStore添加filterchange监听
         var interviewArrangeSetStuListGridStore = new KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeSetStuListStore({
-            listeners:{
-                filterchange:function( store, filters, eOpts ){
-                    var clearFiltersBtn=me.lookupReference('msArrSetStuListClearFiltersBtn');
-                    if(filters.length>0){
-                        clearFiltersBtn.setDisabled( false );
-                    }else{
-                        clearFiltersBtn.setDisabled( true );
-                    }
-                }
-            }
+//            listeners:{
+//                filterchange:function( store, filters, eOpts ){
+//                    var clearFiltersBtn=me.lookupReference('msArrSetStuListClearFiltersBtn');
+//                    if(filters.length>0){
+//                        clearFiltersBtn.setDisabled( false );
+//                    }else{
+//                        clearFiltersBtn.setDisabled( true );
+//                    }
+//                }
+//            }
         });
 
         Ext.apply(this,{
@@ -224,17 +224,32 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.emial", '邮箱'),
 					dataIndex: 'email',
 					width: 140,
-                    minWidth: 120
+                    minWidth: 120,
+                    filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    }
 				},{
 					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.mobile", '手机'),
 					dataIndex: 'mobile',
 					width: 120,
-                    minWidth: 100
+                    minWidth: 100,
+                    filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    }
 				},{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.yyStatus","预约状态"),
                     dataIndex: 'yyStatus',
                     width: 90,
                     minWidth: 80,
+                    filter: {
+                        type: 'list'
+                    },
                     renderer:function(value, metadata, record){
                     	if (value=="已预约"){
                     		metadata.style = "color:#66cc66";
