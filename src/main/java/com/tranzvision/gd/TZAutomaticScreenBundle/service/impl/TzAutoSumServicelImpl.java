@@ -108,10 +108,16 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 			if (!"".equals(classId) && classId != null && !"".equals(batchId) && batchId != null) {
 				// 由于是非AE程序，为了效率 ，大部分数据库操作 全部放在循环外面执行
 				PsTzClassInfT psTzClassInfT = psTzClassInfTMapper.selectByPrimaryKey(classId);
+				String orgId = psTzClassInfT.getTzJgId();
 
 				// 面试自动模型ID
 				String socreModelId = psTzClassInfT.getTzMscjScorMdId();
 				String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
+
+				// 成绩模型树根节点
+				String rootSql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeRootNode");
+				Map<String, Object> rootMap = sqlQuery.queryForMap(rootSql, new Object[] { socreModelId, orgId });
+
 				long appInsId = 0;
 				Long LscoreInsId = null;
 				long scoreInsId = 0;
@@ -132,6 +138,10 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 
 				List<Map<String, Object>> appInsList = sqlQuery.queryForList(sql, new Object[] { classId, batchId });
 				boolean exists;
+				float rootScoreAmount = 0;
+				String treeName = "";
+				String rootNode = "";
+
 				for (Map<String, Object> appInsMap : appInsList) {
 					appInsId = Long.valueOf(appInsMap.get("TZ_APP_INS_ID").toString());
 
@@ -159,42 +169,21 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 							exists = true;
 							scoreInsId = LscoreInsId.longValue();
 						}
-						
-						System.out.println("classId:"+classId);
-						System.out.println("batchId:"+batchId);
-						System.out.println("appInsId:"+appInsId);
-						System.out.println("scoreInsId:"+scoreInsId);
+
+						System.out.println("classId:" + classId);
+						System.out.println("batchId:" + batchId);
+						System.out.println("appInsId:" + appInsId);
+						System.out.println("scoreInsId:" + scoreInsId);
 						for (Map<String, Object> avgMap : scoreAvgList) {
 							if (avgMap.get("TZ_SCORE_ITEM_ID") != null) {
+								// 总分不是累加
+
 								TZ_SCORE_ITEM_ID = avgMap.get("TZ_SCORE_ITEM_ID").toString();
-								TZ_SCORE_NUM = avgMap.get("TZ_SCORE_NUM").toString();
-								System.out.println("TZ_SCORE_ITEM_ID:"+TZ_SCORE_ITEM_ID);
-								System.out.println("TZ_SCORE_NUM:"+TZ_SCORE_NUM);
-								if (!exists) {
-									// 插入表TZ_CJX_TBL
-									psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
-									// 成绩单ID
-									psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
-									// 成绩项ID
-									psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
-									// 分值
-									psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
-									// 插入
-									psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
-								} else {
-									psTzCjxTblKey = new PsTzCjxTblKey();
-									psTzCjxTblKey.setTzScoreInsId(new Long(scoreInsId));
-									psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM_ID);
-									psTzCjxTblWithBLOBs = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
-									if (psTzCjxTblWithBLOBs != null) {
-										// 修改表
-										psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
-										psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
-										// 成绩项ID
-										psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
-										psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
-										psTzCjxTblMapper.updateByPrimaryKeySelective(psTzCjxTblWithBLOBs);
-									} else {
+								if (!TZ_SCORE_ITEM_ID.equals("Total")) {
+									TZ_SCORE_NUM = avgMap.get("TZ_SCORE_NUM").toString();
+									System.out.println("TZ_SCORE_ITEM_ID:" + TZ_SCORE_ITEM_ID);
+									System.out.println("TZ_SCORE_NUM:" + TZ_SCORE_NUM);
+									if (!exists) {
 										// 插入表TZ_CJX_TBL
 										psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
 										// 成绩单ID
@@ -205,10 +194,70 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 										psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
 										// 插入
 										psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
+									} else {
+										psTzCjxTblKey = new PsTzCjxTblKey();
+										psTzCjxTblKey.setTzScoreInsId(new Long(scoreInsId));
+										psTzCjxTblKey.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+										psTzCjxTblWithBLOBs = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
+										if (psTzCjxTblWithBLOBs != null) {
+											// 修改表
+											psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
+											psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
+											// 成绩项ID
+											psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+											psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
+											psTzCjxTblMapper.updateByPrimaryKeySelective(psTzCjxTblWithBLOBs);
+										} else {
+											// 插入表TZ_CJX_TBL
+											psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
+											// 成绩单ID
+											psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
+											// 成绩项ID
+											psTzCjxTblWithBLOBs.setTzScoreItemId(TZ_SCORE_ITEM_ID);
+											// 分值
+											psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(TZ_SCORE_NUM));
+											// 插入
+											psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
+										}
 									}
 								}
 							}
 						}
+						// 计算总额，不是总分的平均分，而是平均分的总分
+						if (rootMap != null) {
+							treeName = rootMap.get("TREE_NAME").toString();
+							int rootNodeNum = Integer.valueOf(rootMap.get("TREE_NODE_NUM").toString());
+							rootNode = rootMap.get("TREE_NODE").toString();
+
+							rootScoreAmount = tzAutoScreenEngineServiceImpl.calculateTreeNodeScore(scoreInsId, treeName,
+									orgId, rootNodeNum, rootNode);
+							BigDecimal rootScore = BigDecimal.valueOf(Double.valueOf(Float.toString(rootScoreAmount)));
+							psTzCjxTblKey = new PsTzCjxTblKey();
+							psTzCjxTblKey.setTzScoreInsId(new Long(scoreInsId));
+							psTzCjxTblKey.setTzScoreItemId("Total");
+							psTzCjxTblWithBLOBs = psTzCjxTblMapper.selectByPrimaryKey(psTzCjxTblKey);
+							if (psTzCjxTblWithBLOBs != null) {
+								// 修改表
+								psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
+								psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
+								// 成绩项ID
+								psTzCjxTblWithBLOBs.setTzScoreItemId("Total");
+								psTzCjxTblWithBLOBs.setTzScoreNum(rootScore);
+								psTzCjxTblMapper.updateByPrimaryKeySelective(psTzCjxTblWithBLOBs);
+							} else {
+								// 插入表TZ_CJX_TBL
+								psTzCjxTblWithBLOBs = new PsTzCjxTblWithBLOBs();
+								// 成绩单ID
+								psTzCjxTblWithBLOBs.setTzScoreInsId(new Long(scoreInsId));
+								// 成绩项ID
+								psTzCjxTblWithBLOBs.setTzScoreItemId("Total");
+								// 分值
+								psTzCjxTblWithBLOBs.setTzScoreNum(rootScore);
+								// 插入
+								psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
+							}
+						}
+
 					}
 				}
 				rtnMap.put("status", "0");
@@ -258,6 +307,9 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 				// 面试自动模型ID
 				String msModelId = psTzClassInfT.getTzMscjScorMdId();
 
+				// 管理员打分模型ID
+				String adminModelId = psTzClassInfT.getTzZlpsScorMdId();
+
 				String oprId = tzLoginServiceImpl.getLoginedManagerOprid(request);
 
 				String orgId = psTzClassInfT.getTzJgId();
@@ -266,6 +318,9 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 				String sql = tzSQLObject.getSQLText("SQL.TZAutomaticScreenBundle.TzModelTreeRootNode");
 				Map<String, Object> autoRootMap = sqlQuery.queryForMap(sql, new Object[] { socreModelId, orgId });
 				Map<String, Object> msRootMap = sqlQuery.queryForMap(sql, new Object[] { msModelId, orgId });
+
+				// Map<String, Object> adminRootMap = sqlQuery.queryForMap(sql,
+				// new Object[] { adminModelId, orgId });
 
 				// 自动初筛 报名表实例ID和总成绩
 				Map<String, String> autoCSKS = new HashMap<String, String>();
@@ -284,6 +339,19 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 						new Object[] { classId, batchId, msRootMap.get("TREE_NODE").toString() });
 				for (Map<String, Object> map : list) {
 					msCSKS.put(map.get("TZ_APP_INS_ID").toString(),
+							map.get("TZ_SCORE_NUM") == null ? "" : map.get("TZ_SCORE_NUM").toString());
+				}
+
+				// 专家打分自动去根节点下面第一个
+				sql = "SELECT A.TZ_SCORE_ITEM_ID FROM PS_TZ_MODAL_DT_TBL A,PS_TZ_RS_MODAL_TBL B WHERE  A.TZ_SCORE_ITEM_TYPE='B' AND A.TREE_NAME=B.TREE_NAME AND B.TZ_SCORE_MODAL_ID=?  LIMIT 1";
+				String itemName = sqlQuery.queryForObject(sql, new Object[] { adminModelId }, "String");
+
+				// 专家打分 报名表实例ID和成绩单ID对应表和总成绩
+				Map<String, String> adminCSKS = new HashMap<String, String>();
+				sql = "SELECT A.TZ_APP_INS_ID,B.TZ_SCORE_NUM FROM PS_TZ_MSPS_KSH_TBL A,PS_TZ_CJX_TBL B WHERE A.TZ_CLASS_ID =? AND A.TZ_APPLY_PC_ID =? AND A.TZ_SCORE_INS_ID = B.TZ_SCORE_INS_ID AND B.TZ_SCORE_ITEM_ID =?";
+				list = sqlQuery.queryForList(sql, new Object[] { classId, batchId, itemName });
+				for (Map<String, Object> map : list) {
+					adminCSKS.put(map.get("TZ_APP_INS_ID").toString(),
 							map.get("TZ_SCORE_NUM") == null ? "" : map.get("TZ_SCORE_NUM").toString());
 				}
 
@@ -311,6 +379,10 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 				// 面试总分
 				float msScore = 0;
 				String strMsScore = "";
+
+				// 管理员打分
+				float adminScore = 0;
+				String strAdminScore = "";
 
 				float sumScore = 0;
 
@@ -361,7 +433,18 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 						msScore = Float.parseFloat(strMsScore);
 					}
 
-					sumScore = autoScore + msScore;
+					if (adminCSKS.get(String.valueOf(appInsId)) == null) {
+						strAdminScore = "0";
+					} else {
+						strAdminScore = adminCSKS.get(String.valueOf(appInsId));
+					}
+					if (strAdminScore.equals("")) {
+						adminScore = 0;
+					} else {
+						adminScore = Float.parseFloat(strAdminScore);
+					}
+
+					sumScore = autoScore + msScore + adminScore;
 					// 计算档次
 					bzDsc = sqlQuery.queryForObject(bzsql,
 							new Object[] { bzId, String.valueOf(sumScore), String.valueOf(sumScore) }, "String");
@@ -378,8 +461,8 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 						psTzCjxTblWithBLOBs.setTzScoreItemId("SumTotal");
 						psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(sumScore));
 						psTzCjxTblWithBLOBs.setTzScoreBz(bzDsc);
-						psTzCjxTblWithBLOBs.setTzScoreDfgc(
-								"自动打分/管理员打分" + String.valueOf(autoScore) + "分|面试打分" + String.valueOf(msScore) + "分");
+						psTzCjxTblWithBLOBs.setTzScoreDfgc("自动打分" + String.valueOf(autoScore) + "分|面试打分"
+								+ String.valueOf(msScore) + "分|专家打分" + String.valueOf(adminScore) + "分");
 						psTzCjxTblMapper.updateByPrimaryKeySelective(psTzCjxTblWithBLOBs);
 					} else {
 						// 插入表TZ_CJX_TBL
@@ -413,7 +496,7 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 		strRet = jacksonUtil.Map2json(rtnMap);
 		return strRet;
 	}
-	
+
 	/**
 	 * 批量发布面试结果
 	 * 
