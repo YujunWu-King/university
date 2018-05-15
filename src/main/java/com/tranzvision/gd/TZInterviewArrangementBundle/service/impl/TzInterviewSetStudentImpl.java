@@ -498,31 +498,23 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 
 				// 添加听众成员
 				for (Map<String, Object> stuDataMap : selStuList) {
-
-					String classId = stuDataMap.get("classID") == null ? "" : String.valueOf(stuDataMap.get("classID"));
+//					String classId = stuDataMap.get("classID") == null ? "" : String.valueOf(stuDataMap.get("classID"));
 					String appId = stuDataMap.get("appId") == null ? "" : String.valueOf(stuDataMap.get("appId"));
 					String stuName = stuDataMap.get("stuName") == null ? "" : String.valueOf(stuDataMap.get("stuName"));
 
 					String oprid = "";
-					String sql = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND TZ_APP_INS_ID=?";
-					oprid = sqlQuery.queryForObject(sql, new Object[] { classId, appId }, "String");
+					String sql = "SELECT OPRID FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=? limit 1";
+					oprid = sqlQuery.queryForObject(sql, new Object[] { appId }, "String");
 
-					sql = "SELECT TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_SJ,TZ_CY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
-					Map<String, Object> mapBmrInfo = sqlQuery.queryForMap(sql, new Object[] { appId });
+//					sql = "SELECT TZ_ZY_EMAIL,TZ_CY_EMAIL,TZ_ZY_SJ,TZ_CY_SJ FROM PS_TZ_LXFSINFO_TBL WHERE TZ_LXFS_LY='ZSBM' AND TZ_LYDX_ID=?";
+					sql = "select TZ_EMAIL,TZ_MOBILE from PS_TZ_AQ_YHXX_TBL where OPRID=?";
+					Map<String, Object> mapBmrInfo = sqlQuery.queryForMap(sql, new Object[] { oprid });
 
 					String mainEmail = "";
-					String cyEmail = "";
 					String mainPhone = "";
-					String cyPhone = "";
 					if (null != mapBmrInfo) {
-						mainEmail = mapBmrInfo.get("TZ_ZY_EMAIL") == null ? ""
-								: String.valueOf(mapBmrInfo.get("TZ_ZY_EMAIL"));
-						cyEmail = mapBmrInfo.get("TZ_CY_EMAIL") == null ? ""
-								: String.valueOf(mapBmrInfo.get("TZ_CY_EMAIL"));
-
-						mainPhone = mapBmrInfo.get("TZ_ZY_SJ") == null ? ""
-								: String.valueOf(mapBmrInfo.get("TZ_ZY_SJ"));
-						cyPhone = mapBmrInfo.get("TZ_CY_SJ") == null ? "" : String.valueOf(mapBmrInfo.get("TZ_CY_SJ"));
+						mainEmail = mapBmrInfo.get("TZ_EMAIL") == null ? "" : String.valueOf(mapBmrInfo.get("TZ_EMAIL"));
+						mainPhone = mapBmrInfo.get("TZ_MOBILE") == null ? "" : String.valueOf(mapBmrInfo.get("TZ_MOBILE"));
 					}
 
 					if ("".equals(mainEmail) && !"".equals(oprid)) {
@@ -536,8 +528,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 
 					if (("EML".equals(sendType) && !"".equals(mainEmail))
 							|| ("SMS".equals(sendType) && !"".equals(mainPhone)) && !"".equals(oprid)) {
-						createTaskServiceImpl.addAudCy(crtAudi, stuName, stuName, mainPhone, cyPhone, mainEmail,
-								cyEmail, "", oprid, "", "", appId);
+						createTaskServiceImpl.addAudCy(crtAudi, stuName, stuName, mainPhone, "", mainEmail, "", "", oprid, "", "", appId);
 					}
 				}
 
