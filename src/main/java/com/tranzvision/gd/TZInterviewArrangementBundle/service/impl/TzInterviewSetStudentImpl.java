@@ -89,8 +89,8 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							String appIns = String.valueOf(mapData.get("TZ_APP_INS_ID"));
 
 							// 查询姓名
-							sql = "SELECT OPRID,TZ_REALNAME,TZ_MSH_ID,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL A WHERE exists(SELECT 'X' FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=? and OPRID=A.OPRID)";
-							Map<String, Object> yhxxMap = sqlQuery.queryForMap(sql, new Object[] { appIns });
+							sql = "SELECT OPRID,TZ_REALNAME,TZ_MSH_ID,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL A WHERE exists(SELECT 'X' FROM PS_TZ_FORM_WRK_T B,PS_TZ_MSPS_KSH_TBL C WHERE B.TZ_APP_INS_ID=C.TZ_APP_INS_ID and C.TZ_CLASS_ID=? and C.TZ_APPLY_PC_ID=? and B.TZ_APP_INS_ID=? and B.OPRID=A.OPRID)";
+							Map<String, Object> yhxxMap = sqlQuery.queryForMap(sql, new Object[] { classID, batchID, appIns });
 							
 							String oprid = "";
 							String name = "";
@@ -336,6 +336,9 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 					}
 					count ++;
 				}else{
+					sql = "select A.OPRID from PS_TZ_FORM_WRK_T A,PS_TZ_MSPS_KSH_TBL B where A.TZ_APP_INS_ID=B.TZ_APP_INS_ID and B.TZ_CLASS_ID=? and B.TZ_APPLY_PC_ID=? and A.TZ_APP_INS_ID=? limit 1";
+					String oprid = sqlQuery.queryForObject(sql, new Object[] { classID, batchID, appId }, "String");
+					
 					PsTzMsPskshTblKey psTzMspsKshTblKey = new PsTzMsPskshTblKey();
 					psTzMspsKshTblKey.setTzClassId(classID);
 					psTzMspsKshTblKey.setTzApplyPcId(batchID);
@@ -343,7 +346,12 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 
 					PsTzMsPskshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
 					if (psTzMspsKshTbl != null) {
-						psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);
+						int rtn = psTzMspsKshTblMapper.deleteByPrimaryKey(psTzMspsKshTblKey);
+						if(rtn > 0 && oprid != null && !"".equals(oprid)){
+							//如果该考生已预约，删除考生预约信息
+							sql = "delete from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and OPRID=?";
+							sqlQuery.update(sql, new Object[]{ classID, batchID, oprid });
+						}
 					}
 				}
 			}
