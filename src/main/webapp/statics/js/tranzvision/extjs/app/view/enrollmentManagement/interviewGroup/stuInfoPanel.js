@@ -129,6 +129,11 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 						tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.search", "查询"),
 						iconCls: "query",
 						handler: 'queryStudents'
+					},{
+						text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.PYFZ", "批量分组"),
+						tooltip: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.PYFZ", "批量分组"),
+						iconCls: "query",
+						handler: 'PYFZ'
 					}]
 				}],
 				columns: [{

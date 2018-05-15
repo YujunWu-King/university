@@ -41,13 +41,14 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 		String check = "";
 		String gropid = "";
 		int sum = 0;
+		String strnum;
 		int intis = 0;
 		String sql = "update PS_TZ_MSPS_KSH_TBL set TZ_GROUP_ID=?,TZ_GROUP_DATE=now(),TZ_ORDER=? where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
-		String totole = "select count(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?  and TZ_GROUP_ID=?";
+		String totole = "select max(TZ_ORDER) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=?  and TZ_GROUP_ID=?";
 		String is = "select count(1) from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=? and TZ_GROUP_ID=?";
 		String updatesql = "update PS_TZ_INTEGROUP_T set TZ_GROUP_NAME=? where TZ_GROUP_ID=?";
 		try {
-
+			String[] appinsIds = null;
 			for (int i = 0; i < actData.length; i++) {
 				// 表单内容
 				String strForm = actData[i];
@@ -58,9 +59,8 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 				batchId = jacksonUtil.getString("batchId");
 				appinsId = jacksonUtil.getString("appinsId");
 
-				// System.out.println(classId);
-				// System.out.println(batchId);
-				// System.out.println(appinsId);
+				System.out.println("appinsId:" + appinsId);
+
 				data = jacksonUtil.getMap("data");
 
 				check = data.get("check") == null ? "" : data.get("check").toString();
@@ -69,17 +69,54 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 				System.out.println(check);
 
 				sqlQuery.update(updatesql, new Object[] { name, gropid });
+
 				if (check.equals("true") || check.equals("Y")) {
 
-					// System.out.println(gropid);
-					intis = sqlQuery.queryForObject(is, new Object[] { classId, batchId, appinsId, gropid }, "Integer");
-					// System.out.println(intis);
-					// 存在相同的数据 不修改
-					if (intis <= 0) {
-						sum = sqlQuery.queryForObject(totole, new Object[] { classId, batchId, gropid }, "Integer");
-						// System.out.println(sum);
-						sum = sum + 1;
-						sqlQuery.update(sql, new Object[] { gropid, sum, classId, batchId, appinsId });
+					if (appinsId.indexOf(",") != -1) {
+						appinsIds = appinsId.split(",");
+						strnum = sqlQuery.queryForObject(totole, new Object[] { classId, batchId, gropid }, "String");
+						if (strnum == null || strnum.equals("")) {
+							sum = 0;
+						} else {
+							try {
+								sum = Integer.parseInt(strnum);
+							} catch (Exception e) {
+								sum = 0;
+							}
+						}
+						for (int x = 0; x < appinsIds.length; x++) {
+							intis = sqlQuery.queryForObject(is, new Object[] { classId, batchId, appinsIds[x], gropid },
+									"Integer");
+							// System.out.println(intis);
+							// 存在相同的数据 不修改
+							if (intis <= 0) {
+								// System.out.println(sum);
+								sum = sum + 1;
+								sqlQuery.update(sql, new Object[] { gropid, sum, classId, batchId, appinsIds[x] });
+							}
+						}
+					} else {
+						// System.out.println(gropid);
+						intis = sqlQuery.queryForObject(is, new Object[] { classId, batchId, appinsId, gropid },
+								"Integer");
+						// System.out.println(intis);
+						// 存在相同的数据 不修改
+						if (intis <= 0) {
+							strnum = sqlQuery.queryForObject(totole, new Object[] { classId, batchId, gropid },
+									"String");
+							if (strnum == null || strnum.equals("")) {
+								sum = 0;
+							} else {
+								try {
+									sum = Integer.parseInt(strnum);
+								} catch (Exception e) {
+									sum = 0;
+								}
+							}
+							// System.out.println(sum);
+							sum = sum + 1;
+							sqlQuery.update(sql, new Object[] { gropid, sum, classId, batchId, appinsId });
+						}
 					}
 				}
 			}
@@ -139,12 +176,17 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 			String classId = jacksonUtil.getString("classId");
 			String batchId = jacksonUtil.getString("batchId");
 			String appInsID = jacksonUtil.getString("appInsId");
-			String sql = "select B.TZ_CLPS_GR_ID from PS_TZ_INTEGROUP_T B,PS_TZ_MSPS_KSH_TBL A where A.TZ_GROUP_ID=B.TZ_GROUP_ID and A.TZ_CLASS_ID=? and A.TZ_APPLY_PC_ID=? and A.TZ_APP_INS_ID=?";
-			strRet = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appInsID }, "String");
-			if (strRet == null) {
-				strRet = "";
+			// 批量的情况
+			if (appInsID.indexOf(",") != -1) {
+				rtnMap.put("pwGroupId", "");
+			} else {
+				String sql = "select B.TZ_CLPS_GR_ID from PS_TZ_INTEGROUP_T B,PS_TZ_MSPS_KSH_TBL A where A.TZ_GROUP_ID=B.TZ_GROUP_ID and A.TZ_CLASS_ID=? and A.TZ_APPLY_PC_ID=? and A.TZ_APP_INS_ID=?";
+				strRet = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, appInsID }, "String");
+				if (strRet == null) {
+					strRet = "";
+				}
+				rtnMap.put("pwGroupId", strRet);
 			}
-			rtnMap.put("pwGroupId", strRet);
 
 		} catch (Exception e) {
 
@@ -181,7 +223,7 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 			String batchId = jacksonUtil.getString("batchId");
 			String appInsID = jacksonUtil.getString("appInsId");
 			String pwGroupId = jacksonUtil.getString("pwGroupId");
-
+			System.out.println("appInsID:" + appInsID);
 			if (pwGroupId != null && !pwGroupId.equals("")) {
 
 				Map<String, Object> mapList = null;
@@ -227,8 +269,12 @@ public class TzMsGroupMangerServiceImpl extends FrameworkImpl {
 						mapList = new HashMap<String, Object>();
 						mapList.put("groupID", TZ_GROUP_ID);
 						mapList.put("groupName", TZ_GROUP_NAME);
-						isCheck = sqlQuery.queryForObject(getCheck,
-								new Object[] { classId, batchId, appInsID, TZ_GROUP_ID }, "String");
+						if (appInsID.indexOf(",") != -1) {
+							isCheck = "";
+						} else {
+							isCheck = sqlQuery.queryForObject(getCheck,
+									new Object[] { classId, batchId, appInsID, TZ_GROUP_ID }, "String");
+						}
 						if (isCheck != null && isCheck.equals("Y")) {
 							mapList.put("check", "Y");
 						} else {

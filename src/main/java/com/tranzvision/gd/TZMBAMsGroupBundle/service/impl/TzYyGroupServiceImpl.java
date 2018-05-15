@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
 
@@ -21,6 +22,9 @@ public class TzYyGroupServiceImpl extends FrameworkImpl {
 
 	@Autowired
 	private TZGDObject tzGDObject;
+
+	@Autowired
+	private GetSeqNum getSeqNum;
 
 	/**
 	 * 获取预约面试列表
@@ -68,6 +72,8 @@ public class TzYyGroupServiceImpl extends FrameworkImpl {
 					mapRet.replace("total", total);
 					mapRet.replace("root", listJson);
 				}
+
+				cerateGroup(classID, batchID);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,6 +83,34 @@ public class TzYyGroupServiceImpl extends FrameworkImpl {
 
 		strRet = jacksonUtil.Map2json(mapRet);
 		return strRet;
+	}
+
+	/**
+	 * 生成默认的2个分组
+	 * 
+	 * @param classId
+	 * @param batchId
+	 */
+	public void cerateGroup(String classId, String batchId) {
+		String sql = "SELECT TZ_CLPS_GR_ID FROM PS_TZ_PWZ_VW WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+		List<Map<String, Object>> appInsList = jdbcTemplate.queryForList(sql, new Object[] { classId, batchId });
+		String TZ_CLPS_GR_ID = "";
+		int count = 0;
+		int id = 0;
+		for (Map<String, Object> appInsMap : appInsList) {
+			TZ_CLPS_GR_ID = appInsMap.get("TZ_CLPS_GR_ID").toString();
+			count = jdbcTemplate.queryForObject(
+					"select count(1) from PS_TZ_INTEGROUP_T where TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? and TZ_CLPS_GR_ID=?",
+					new Object[] { classId, batchId, TZ_CLPS_GR_ID }, "Integer");
+			// 一条都没有默认添加20个分组
+			if (count <= 0) {
+				sql = "INSERT INTO PS_TZ_INTEGROUP_T(TZ_GROUP_ID,TZ_GROUP_NAME,TZ_CLPS_GR_ID,TZ_CLASS_ID,TZ_APPLY_PC_ID) VALUES(?,?,?,?,?)";
+				for (int i = 1; i <= 20; i++) {
+					id = getSeqNum.getSeqNum("TZ_INTEGROUP_T", "TZ_GROUP_ID");
+					jdbcTemplate.update(sql, new Object[] { id, i + "组", TZ_CLPS_GR_ID, classId, batchId });
+				}
+			}
+		}
 	}
 
 }

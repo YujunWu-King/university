@@ -79,6 +79,7 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 			String TZ_GROUP_DATE = "";
 			String TZ_ORDER = "";
 			String TZ_GROUP_NAME = "";
+			String TZ_CLPS_GR_ID="";
 			String judgeGroupName = "";
 			if (obj != null && obj.length > 0) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
@@ -104,6 +105,8 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 						TZ_GROUP_NAME = map.get("TZ_GROUP_NAME") == null ? "" : map.get("TZ_GROUP_NAME").toString();
 						judgeGroupName = map.get("TZ_CLPS_GR_NAME") == null ? ""
 								: map.get("TZ_CLPS_GR_NAME").toString();
+						TZ_CLPS_GR_ID = map.get("TZ_CLPS_GR_ID") == null ? ""
+								: map.get("TZ_CLPS_GR_ID").toString();
 						if (TZ_GROUP_DATE != null) {
 						} else {
 							TZ_GROUP_DATE = "暂无时间安排";
@@ -116,12 +119,16 @@ public class TzMsGroupServiceImpl extends FrameworkImpl {
 							mapList.put("order", "");
 						}
 						mapList.put("group_name", TZ_GROUP_NAME);
+						mapList.put("group_id", TZ_GROUP_ID);
 						mapList.put("pwgroup_name", judgeGroupName);
+						mapList.put("pwgroup_id", TZ_CLPS_GR_ID);
 					} else {
 						mapList.put("group_date", "");
 						mapList.put("order", "");
 						mapList.put("group_name", "");
 						mapList.put("pwgroup_name", "");
+						mapList.put("group_id", "");
+						mapList.put("pwgroup_id", "");
 					}
 
 					listData.add(mapList);

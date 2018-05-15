@@ -100,9 +100,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
         	   flag=flag+1;
            }
            if (comParamspw=='') {
-        	   comParamspw='{"classId":'+classId+',"batchId":'+batchId+',"appinsId":'+appInsId+',"data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
+        	   comParamspw='{"classId":'+classId+',"batchId":'+batchId+',"appinsId":"'+appInsId+'","data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
            } else {
-        	   comParamspw = comParamspw + ',' +'{"classId":'+classId+',"batchId":'+batchId+',"appinsId":'+appInsId+',"data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
+        	   comParamspw = comParamspw + ',' +'{"classId":'+classId+',"batchId":'+batchId+',"appinsId":"'+appInsId+'","data":' + Ext.JSON.encode(editRecs[i].data) + '}'; 
                
            }
            
@@ -147,7 +147,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
 	   	var comParamsObj = {
      				classId: classID,
      				batchId: batchID,
-     				appInsID:appInsId,
+     				appInsId:appInsId,
      				pwGroupId:jugGroupId
      		}
 	   	var tzStoreParams = Ext.JSON.encode(comParamsObj);
@@ -155,6 +155,99 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
     	panelGrid.store.tzStoreParams = tzStoreParams;
 
         panelGrid.store.load();
+		
+	},
+	
+	//批量分组
+	PYFZ:function(btn){
+		var panel = btn.findParentByType("stuInfoPanel");
+		var form=panel.down('form').getForm();
+		var classID = form.findField('classId').getValue();
+		var batchID = form.findField('batchId').getValue();
+		
+		var grid = panel.down('grid');
+		var selList = grid.getSelectionModel().getSelection();
+		// 选中行长度
+		var checkLen = selList.length;
+		if (checkLen == 0) {
+			Ext.Msg.alert("提示", "请选择一条要分组的记录");
+			return;
+		} 
+		var appInsIds="";
+		for ( var i = 0; i <checkLen; i++){
+			if (appInsIds=="") {
+				appInsIds = selList[i].get("appInsId");
+			} else  {
+				appInsIds = appInsIds+","+selList[i].get("appInsId");
+			}
+		}
+		
+		 //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_MSXCFZ_COM"]["TZ_MSGL_MSFZ_STD"];
+        if( pageResSet == "" || pageResSet == undefined){
+        	Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"),Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.nmyqx","您没有权限"));
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+        if(className == "" || className == undefined){
+            Ext.MessageBox.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt","提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.wzdgjs","未找到该功能页面对应的JS类，请检查配置。"));
+            return;
+        }
+        //console.log(className);
+        var win = this.lookupReference('interviewGroupWindow');
+        if (!win) {
+        	Ext.syncRequire(className);
+        	ViewClass = Ext.ClassManager.get(className);
+        	//新建类
+        	//win = new ViewClass();
+        	win = new ViewClass({
+                classID:classID,
+                batchID:batchID
+            }
+            );
+        	this.getView().add(win);
+        }
+        
+
+        //操作类型设置为更新
+        win.on('afterrender',function(panel){
+        	var wform = panel.child('form').getForm();
+            var comParamsObj = {
+        			ComID: 'TZ_MSXCFZ_COM',
+        			PageID: 'TZ_MSGL_MSFZ_STD',
+        			OperateType: 'GETGROUP',
+        			comParams:{
+        				classId: classID,
+        				batchId: batchID,
+        				appInsId:appInsIds
+        			}
+        		}
+            var panelGrid = panel.down('grid');  
+            var tzParams = Ext.JSON.encode(comParamsObj);
+            Ext.tzLoad(tzParams,function(respData){
+                var pw = respData.pwGroupId;
+                if(pw!="" && pw!=undefined) {
+                	  comParamsObj = {
+                 				classId: classID,
+                 				batchId: batchID,
+                 				appInsId:appInsIds,
+                 				pwGroupId:pw
+                 		}
+                	 var tzStoreParams = Ext.JSON.encode(comParamsObj);
+                	  wform.setValues({appInsId:appInsIds,classID:classID,batchID:batchID,jugGroupId:pw});
+                	panelGrid.store.tzStoreParams = tzStoreParams;
+                    
+                    panelGrid.store.load();
+                } else {
+                	pw="";
+                	wform.setValues({appInsId:appInsIds,classID:classID,batchID:batchID,jugGroupId:pw});
+                }
+            });
+			
+		});
+        win.show();
+		
 		
 	},
     
@@ -170,7 +263,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
             cfgSrhId: 'TZ_MSXCFZ_COM.TZ_MSGL_STU_STD.TZ_MSYY_KS_VW',
             condition:{
                 TZ_CLASS_ID:classId,
-                TZ_BATCH_ID:batchId,
+                TZ_APPLY_PC_ID:batchId,
                 TZ_MS_PLAN_SEQ:msJxNo
             },
             callback: function(seachCfg){
@@ -410,9 +503,15 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
         	Ext.syncRequire(className);
         	ViewClass = Ext.ClassManager.get(className);
         	//新建类
-        	win = new ViewClass();
+        	//win = new ViewClass();
+        	win = new ViewClass({
+                classID:classID,
+                batchID:batchID
+            }
+            );
         	this.getView().add(win);
         }
+        
 
         //操作类型设置为更新
         win.on('afterrender',function(panel){
