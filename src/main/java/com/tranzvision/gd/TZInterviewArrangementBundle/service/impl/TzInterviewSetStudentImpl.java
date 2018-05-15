@@ -89,14 +89,16 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							String appIns = String.valueOf(mapData.get("TZ_APP_INS_ID"));
 
 							// 查询姓名
-							sql = "SELECT TZ_REALNAME,TZ_MSH_ID,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL A WHERE exists(SELECT 'X' FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=? and OPRID=A.OPRID)";
+							sql = "SELECT OPRID,TZ_REALNAME,TZ_MSH_ID,TZ_EMAIL,TZ_MOBILE FROM PS_TZ_AQ_YHXX_TBL A WHERE exists(SELECT 'X' FROM PS_TZ_FORM_WRK_T WHERE TZ_APP_INS_ID=? and OPRID=A.OPRID)";
 							Map<String, Object> yhxxMap = sqlQuery.queryForMap(sql, new Object[] { appIns });
 							
+							String oprid = "";
 							String name = "";
 							String interviewAppId = "";
 							String mobile = "";
 							String email = "";
 							if (yhxxMap != null) {
+								oprid = yhxxMap.get("OPRID") == null ? "" : yhxxMap.get("OPRID").toString();
 								name = yhxxMap.get("TZ_REALNAME") == null ? "" : yhxxMap.get("TZ_REALNAME").toString();
 								interviewAppId = yhxxMap.get("TZ_MSH_ID") == null ? ""
 										: yhxxMap.get("TZ_MSH_ID").toString();
@@ -114,15 +116,14 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 								batchName = clsMap.get("TZ_BATCH_NAME") == null ? "" : clsMap.get("TZ_BATCH_NAME").toString();
 							}
 
-							// 面试资格
-//							sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
-//							String msZgFlag = sqlQuery.queryForObject(sql, new Object[] { classID, appIns },
-//									"String");
-//							if ("".equals(msZgFlag) || msZgFlag == null) {
-//								sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
-//								msZgFlag = sqlQuery.queryForObject(sql, "String");
-//							}
-
+							//预约状态
+							sql = "select 'Y' from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and OPRID=? limit 1";
+							String yySta = sqlQuery.queryForObject(sql, new Object[]{ classID, batchID, oprid }, "String");
+							String yyStatus = "未预约";
+							if("Y".equals(yySta)){
+								yyStatus = "已预约";
+							}
+							
 							// 标签
 							String strLabel = "";
 							sql = "SELECT TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B WHERE A.TZ_LABEL_ID=B.TZ_LABEL_ID AND TZ_APP_INS_ID=?";
@@ -139,7 +140,7 @@ public class TzInterviewSetStudentImpl extends FrameworkImpl {
 							mapJson.put("batchID", batchID);
 							mapJson.put("appId", appIns);
 							mapJson.put("stuName", name);
-//							mapJson.put("msZGFlag", msZgFlag);
+							mapJson.put("yyStatus", yyStatus);
 							
 							mapJson.put("className", className);
 							mapJson.put("batchName", batchName);

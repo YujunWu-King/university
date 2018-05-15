@@ -230,16 +230,20 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 					dataIndex: 'mobile',
 					width: 120,
                     minWidth: 100
-				},/*{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.msZGFlag","面试资格"),
-                    dataIndex: 'msZGFlag',
-                    filter: {
-                        type: 'list',
-                        options: mszgFlagSortFilterOptions
-                    },
-                    width: 100,
-                    minWidth: 80
-                },*/{
+				},{
+                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.yyStatus","预约状态"),
+                    dataIndex: 'yyStatus',
+                    width: 90,
+                    minWidth: 80,
+                    renderer:function(value, metadata, record){
+                    	if (value=="已预约"){
+                    		metadata.style = "color:#66cc66";
+						}else{
+							metadata.style = "color:#ff0000";
+						}
+						return value;
+                    }
+                },{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.label","标签") ,
                     filter: {
                         type: 'string'
@@ -247,8 +251,7 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     sortable: true,
                     dataIndex: 'label',
                     width: 140,
-                    minWidth: 120,
-                    flex: 1
+                    minWidth: 120
                 }],
                 bbar: {
                     xtype: 'pagingtoolbar',
