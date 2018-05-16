@@ -651,7 +651,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			forthSql += " FROM PS_TZ_MP_PW_KS_TBL B ,PS_TZ_MSPS_KSH_TBL A,PS_TZ_INTEGROUP_T C";
 			forthSql += " WHERE A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID AND A.TZ_APP_INS_ID=B.TZ_APP_INS_ID AND A.TZ_GROUP_ID=C.TZ_GROUP_ID";
 			forthSql += " AND B.TZ_CLASS_ID = ? AND B.TZ_APPLY_PC_ID=? AND B.TZ_PWEI_OPRID=? AND B.TZ_DELETE_ZT <>'Y'";
-			forthSql += " ORDER BY A.TZ_ORDER ASC";
+			forthSql += " ORDER BY A.TZ_GROUP_ID ASC,A.TZ_ORDER ASC";
 			
 			List<Map<String, Object>> applicantsList = sqlQuery.queryForList(forthSql,
 					new Object[] { classId, batchId, oprid });
@@ -690,6 +690,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						//组内排名;
 						String TZ_KSH_PSPM2 = "";
 						// 评议状态;
+						String pyZtValue = "";
 						String pyZt = "";
 						// 评审时间;
 						String pssj = "";
@@ -697,14 +698,19 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						BigInteger cjdId = null;
 						
 						Map<String, Object> map4 = sqlQuery.queryForMap(
-								"select A.TZ_KSH_PSPM,date_format(A.ROW_LASTMANT_DTTM, '%Y-%m-%d %H:%i') ROW_LASTMANT_DTTM ,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_SUBMIT_YN' AND TZ_ZHZ_ID=A.TZ_PSHEN_ZT AND TZ_EFF_STATUS='A') AS TZ_PSHEN_ZT,TZ_SCORE_INS_ID from PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_CLASS_ID=? and A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?",
+								"select A.TZ_KSH_PSPM,date_format(A.ROW_LASTMANT_DTTM, '%Y-%m-%d %H:%i') ROW_LASTMANT_DTTM ,A.TZ_PSHEN_ZT ,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID='TZ_SUBMIT_YN' AND TZ_ZHZ_ID=A.TZ_PSHEN_ZT AND TZ_EFF_STATUS='A') AS TZ_PSHEN_ZT_DESC,TZ_SCORE_INS_ID from PS_TZ_MP_PW_KS_TBL A WHERE A.TZ_CLASS_ID=? and A.TZ_APPLY_PC_ID=? AND A.TZ_APP_INS_ID=? AND A.TZ_PWEI_OPRID=?",
 								new Object[] { classId, batchId, TZ_APP_INS_ID, oprid });
 						if (map4 != null) {
-							TZ_KSH_PSPM2 = (String) map4.get("TZ_KSH_PSPM");
-							pssj = (String) map4.get("ROW_LASTMANT_DTTM");
-							pyZt = (String) map4.get("TZ_PSHEN_ZT");
+							TZ_KSH_PSPM2 = map4.get("TZ_KSH_PSPM") == null ? "" : map4.get("TZ_KSH_PSPM").toString();
+							pssj = map4.get("ROW_LASTMANT_DTTM") == null ? "" : map4.get("ROW_LASTMANT_DTTM").toString();
+							pyZtValue = map4.get("TZ_PSHEN_ZT") == null ? "" : map4.get("TZ_PSHEN_ZT").toString();
+							pyZt = map4.get("TZ_PSHEN_ZT_DESC") == null ? "" : map4.get("TZ_PSHEN_ZT_DESC").toString();
 							cjdId = (BigInteger) map4.get("TZ_SCORE_INS_ID");
 							
+							//如果评议状态不等于已评审，不显示评审时间
+							if(!"Y".equals(pyZtValue)) {
+								pssj = "";
+							}
 						}
 						
 						
