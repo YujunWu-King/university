@@ -527,9 +527,13 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 								bzDsc="";
 							}
 							if(!"".equals(scoreDfgc)){
+								//int j=scoreDfgc.lastIndexOf("|");
+								//scoreDfgc= scoreDfgc.substring(j);
+								//scoreDfgc="自动打分/管理员打分" + String.valueOf(newTotal) +scoreDfgc;
+								int i=scoreDfgc.indexOf("|");
 								int j=scoreDfgc.lastIndexOf("|");
-								scoreDfgc= scoreDfgc.substring(j);
-								scoreDfgc="自动打分/管理员打分" + String.valueOf(newTotal) +scoreDfgc;
+								scoreDfgc= scoreDfgc.substring(i,j);
+								scoreDfgc="自动打分" + String.valueOf(newTotal)+"分" +scoreDfgc;
 							}
 							String isExist = "SELECT COUNT(1) FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID='SumTotal'";
 							int count = jdbcTemplate.queryForObject(isExist, new Object[] { scoreInsId }, "Integer");
@@ -551,7 +555,7 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 				// 更新专家打分
 				String sqlScoreIdMs = "select TZ_SCORE_INS_ID from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?;";
 				String strScoreIdMs = jdbcTemplate.queryForObject(sqlScoreIdMs, new Object[]{classId,batchId,appId},"String");
-				if(!"".equals(strScoreIdMs)){
+				if(!"".equals(strScoreIdMs)&& strScoreIdMs!=null){
 					// 查询原成绩
 					String sqlZyxx = "SELECT DISTINCT TZ_SCORE_NUM FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID='ZYXX'";
 					String oldTotal = jdbcTemplate.queryForObject(sqlZyxx, new Object[] { strScoreIdMs }, "String");
@@ -650,7 +654,8 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 							if(!"".equals(scoreDfgc)){
 								int j=scoreDfgc.lastIndexOf("|");
 								scoreDfgc= scoreDfgc.substring(j);
-								scoreDfgc="自动打分/管理员打分" + String.valueOf(newSumTotaldf) +scoreDfgc;
+								//scoreDfgc="自动打分/管理员打分" + String.valueOf(newSumTotaldf) +scoreDfgc;
+								scoreDfgc="自动打分" + String.valueOf(newTotal)+"分" +scoreDfgc+"|专家打分"+newTotalZj+"分";
 							}
 							String isExist = "SELECT COUNT(1) FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID='SumTotal'";
 							int count = jdbcTemplate.queryForObject(isExist, new Object[] { strScoreIdMs }, "Integer");
@@ -664,6 +669,9 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 							}
 						}
 					}
+				}else{
+					errMsg[0] = "1";
+					errMsg[1] = "请先计算总分";
 				}
 			}
 		} catch (Exception e) {

@@ -744,7 +744,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         var sureyId = selRec.get("TZ_DC_WJ_ID");
         var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + sureyId + '"}}';
         var newTab=window.open('about:blank');
-        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+encodeURIComponent(tzParams);
     },
     /*
     修改人：刘智宏 2015/11/20
@@ -1223,7 +1223,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
 
         var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + wjId +'","SURVEY_INS_ID":"'+wjInsId +'"}}';
         var newTab=window.open('about:blank');
-        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+encodeURIComponent(tzParams);
     },
   /*问卷设置关闭*/
     onFormClose:function(){
@@ -1371,7 +1371,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
 
         var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_ANS_STD","OperateType":"HTML","comParams":{"SURVEY_ID":"' + wjId +'"}}';
         var newTab=window.open('about:blank');
-        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+        newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+encodeURIComponent(tzParams);
     },
     generateWjdc:function(btn){
 
@@ -1530,7 +1530,7 @@ jiaoChaBB:function(grid,rowIndex,colIndex){
         if(wjInsId>0){
             var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_ZXDC_VIEW_STD","OperateType":"HTML","comParams":{"TYPE":"SURVEY","SURVEY_ID":"' + wjId +'","SURVEY_INS_ID":"'+wjInsId +'"}}';
             var newTab=window.open('about:blank');
-            newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+tzParams;
+            newTab.location.href=Ext.tzGetGeneralURL()+'?tzParams='+encodeURIComponent(tzParams);
         }else{
             Ext.Msg.alert("提示","该用户尚未参与调查！"); 
         }

@@ -4,6 +4,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 		<title>%bind(:13)</title>
+		<link href="/statics/js/onlineSurvey/css/m/public.css" rel="stylesheet" type="text/css" />
+		<link href="/statics/js/onlineSurvey/css/m/index.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" href="/statics/js/onlineSurvey/formvalidator/m/themes/Custom/style/style.css" />
+		
 		<link rel="stylesheet" href="%bind(:21)/statics/js/onlineSurvey/css/m/LCalendar.css"/>
 		<link href="%bind(:21)/statics/js/onlineSurvey/css/m/mobile.css" rel="stylesheet" type="text/css"/>
 		<link rel="stylesheet" href="%bind(:21)/statics/js/survey/assets/libs/unitegallery/css/unite-gallery.css" type="text/css"/>
@@ -344,7 +348,8 @@
 						if (f.comContent.code == "0") {
 							if (cType == "SUBMIT"){
 								noteing(MsgSet.SAVE_SUCCEED);
-								var tzSuccessParams = '?tzParams={"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_SUCC_STD","OperateType":"HTML","comParams":{"AC":"M","SURVEY_WJ_ID":' + templId + '}}';
+								 var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_SUCC_STD","OperateType":"HTML","comParams":{"AC":"M","SURVEY_WJ_ID":' + templId + '}}'
+								var tzSuccessParams = "?tzParams="+ encodeURIComponent(tzParams);
 								window.location.href = SurveyBuild.tzGeneralURL + tzSuccessParams;
 							}else{
 								/*处理翻页数据加载*/

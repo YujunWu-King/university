@@ -592,9 +592,9 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 							document.getElementById("ks_dfq_ms_id").innerHTML = dfq_gr_cjx_arr_tmp[1];
 						}else if(dfq_gr_cjx_arr_tmp[0] == "ks_dfq_ms_name"){
 							document.getElementById("ks_dfq_ms_name").innerHTML = dfq_gr_cjx_arr_tmp[1];
-						}else if(dfq_gr_cjx_arr_tmp[0] == "auto_score_ck"){
+						}/*else if(dfq_gr_cjx_arr_tmp[0] == "auto_score_ck"){
 							document.getElementById("auto_score_ck").innerHTML = dfq_gr_cjx_arr_tmp[1];
-						}else if(dfq_gr_cjx_arr_tmp[0] == "ks_new_w_bmb"){
+						}*/else if(dfq_gr_cjx_arr_tmp[0] == "ks_new_w_bmb"){
 							$("#ks_new_w_bmb").attr({href:dfq_gr_cjx_arr_tmp[1]});
 						}else {
 							sf_qk_fjd = "N";
@@ -640,7 +640,7 @@ function ks_show_df_info(TZ_CLASS_ID,TZ_APPLY_PC_ID,KSH_BMBID){
 							document.getElementById("ks_dfq_ms_id").innerHTML = interviewApplyId;
 							document.getElementById("ks_dfq_ms_name").innerHTML = name;
 
-							document.getElementById("auto_score_ck").innerHTML = autoScoreDesc;
+							//document.getElementById("auto_score_ck").innerHTML = autoScoreDesc;
 							
 							//用于cache数据
 							bmb_cache_id = "ks_search_tz_app_ins_id@@@" + KSH_BMBID + "###ks_new_w_bmb@@@" + bmb_url + "###ks_dfq_ms_id@@@" + interviewApplyId + "###ks_dfq_ms_name@@@" + name  + "###auto_score_ck@@@" + autoScoreDesc;
