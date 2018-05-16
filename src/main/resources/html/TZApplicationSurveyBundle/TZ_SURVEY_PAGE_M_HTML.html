@@ -348,7 +348,8 @@
 						if (f.comContent.code == "0") {
 							if (cType == "SUBMIT"){
 								noteing(MsgSet.SAVE_SUCCEED);
-								var tzSuccessParams = '?tzParams={"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_SUCC_STD","OperateType":"HTML","comParams":{"AC":"M","SURVEY_WJ_ID":' + templId + '}}';
+								 var tzParams = '{"ComID":"TZ_ZXDC_WJGL_COM","PageID":"TZ_SURVEY_SUCC_STD","OperateType":"HTML","comParams":{"AC":"M","SURVEY_WJ_ID":' + templId + '}}'
+								var tzSuccessParams = "?tzParams="+ encodeURIComponent(tzParams);
 								window.location.href = SurveyBuild.tzGeneralURL + tzSuccessParams;
 							}else{
 								/*处理翻页数据加载*/
