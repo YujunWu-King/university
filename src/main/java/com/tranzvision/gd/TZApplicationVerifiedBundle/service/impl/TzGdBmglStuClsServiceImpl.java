@@ -1,5 +1,6 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -122,9 +123,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				}
 			}
 			// 最后一页不算
-			if (leng > 1) {
-				leng = leng - 1;
-			}
+			// if (leng > 1) {
+			// leng = leng - 1;
+			// }
 			System.out.println("leng:" + leng);
 
 			// 报名表审批学生列表模板;
@@ -158,11 +159,12 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_APP_INS_ID", "TZ_MSH_ID", "NATIONAL_ID",
-					"TZ_AUDIT_STATE", "TZ_COLOR_SORT_ID", "TZ_SUBMIT_STATE", "TZ_SUBMIT_DT_STR", "TZ_MS_RESULT" };
+					"TZ_AUDIT_STATE", "TZ_COLOR_SORT_ID", "TZ_SUBMIT_STATE", "TZ_SUBMIT_DT_STR", "TZ_MS_RESULT",
+					"TZ_FILL_PROPORTION" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
-
+			String TZ_FILL_PROPORTION = "";
 			if (obj != null) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 				for (int i = 0; i < list.size(); i++) {
@@ -182,8 +184,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
-					//System.out.println("classID"+strClassID);
-					mapList.put("fillProportion", getBMBFillProportion(appInsID, leng));
+					TZ_FILL_PROPORTION = rowList[10];
+					// System.out.println("classID"+strClassID);
+					mapList.put("fillProportion", getBMBFillProportion(appInsID, leng, TZ_FILL_PROPORTION));
 
 					if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
 						// 将模板中需要显示的数据全部查出存入数组
@@ -701,17 +704,37 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 	 * @param appInsID
 	 * @return
 	 */
-	public String getBMBFillProportion(String appInsID, int leng) {
-		String sql = "select count(1) from PS_TZ_APP_COMP_TBL where TZ_APP_INS_ID=? and TZ_HAS_COMPLETE=? ";
-		int fill = jdbcTemplate.queryForObject(sql, new Object[] { appInsID, "Y" }, "Integer");
-		//System.out.println("fill:" + fill);
-		if (leng == 0) {
-			return "0.00%";
-		} else {
-			double f = (double)fill / leng;
-			f = f * 100;
-			
+	public String getBMBFillProportion(String appInsID, int leng, String TZ_FILL_PROPORTION) {
+		
+		//System.out.println("appInsID:"+appInsID);
+		//System.out.println("leng:"+leng);
+		//System.out.println("TZ_FILL_PROPORTION:"+TZ_FILL_PROPORTION);
+		if (TZ_FILL_PROPORTION == null || TZ_FILL_PROPORTION.equals("") || TZ_FILL_PROPORTION.equals("0.00")) {
+
+			String sql = "select count(1) from PS_TZ_APP_COMP_TBL where TZ_APP_INS_ID=? and (TZ_HAS_COMPLETE=? or TZ_HAS_COMPLETE=?) ";
+			int fill = jdbcTemplate.queryForObject(sql, new Object[] { appInsID, "Y", "B" }, "Integer");
+			// System.out.println("fill:" + fill);
+			double f = 0;
+			if (leng == 0) {
+				f = 0.00;
+			} else {
+				f = (double) fill / leng;
+				f = f * 100;
+			}
+			//System.out.println("f:"+f);
+			sql = "UPDATE PS_TZ_APP_INS_T SET TZ_FILL_PROPORTION=? WHERE TZ_APP_INS_ID=?";
+			jdbcTemplate.update(sql, new Object[] { new BigDecimal(f), appInsID });
+
 			return String.format("%.2f", f) + "%";
+		} else {
+			try {
+				double f = Double.parseDouble(TZ_FILL_PROPORTION);
+				//System.out.println("f:"+f);
+				return String.format("%.2f", f) + "%";
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "0.00%";
+			}
 		}
 	}
 
