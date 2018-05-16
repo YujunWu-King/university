@@ -527,9 +527,13 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 								bzDsc="";
 							}
 							if(!"".equals(scoreDfgc)){
+								//int j=scoreDfgc.lastIndexOf("|");
+								//scoreDfgc= scoreDfgc.substring(j);
+								//scoreDfgc="自动打分/管理员打分" + String.valueOf(newTotal) +scoreDfgc;
+								int i=scoreDfgc.indexOf("|");
 								int j=scoreDfgc.lastIndexOf("|");
-								scoreDfgc= scoreDfgc.substring(j);
-								scoreDfgc="自动打分/管理员打分" + String.valueOf(newTotal) +scoreDfgc;
+								scoreDfgc= scoreDfgc.substring(i,j);
+								scoreDfgc="自动打分" + String.valueOf(newTotal)+"分" +scoreDfgc;
 							}
 							String isExist = "SELECT COUNT(1) FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID='SumTotal'";
 							int count = jdbcTemplate.queryForObject(isExist, new Object[] { scoreInsId }, "Integer");
@@ -650,7 +654,8 @@ public class TzAutoScreenInfoServiceImpl extends FrameworkImpl{
 							if(!"".equals(scoreDfgc)){
 								int j=scoreDfgc.lastIndexOf("|");
 								scoreDfgc= scoreDfgc.substring(j);
-								scoreDfgc="自动打分/管理员打分" + String.valueOf(newSumTotaldf) +scoreDfgc;
+								//scoreDfgc="自动打分/管理员打分" + String.valueOf(newSumTotaldf) +scoreDfgc;
+								scoreDfgc="自动打分" + String.valueOf(newTotal)+"分" +scoreDfgc+"|专家打分"+newTotalZj+"分";
 							}
 							String isExist = "SELECT COUNT(1) FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID='SumTotal'";
 							int count = jdbcTemplate.queryForObject(isExist, new Object[] { strScoreIdMs }, "Integer");
