@@ -474,8 +474,8 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 						// 分值
 						psTzCjxTblWithBLOBs.setTzScoreNum(new BigDecimal(sumScore));
 						psTzCjxTblWithBLOBs.setTzScoreBz(bzDsc);
-						psTzCjxTblWithBLOBs.setTzScoreDfgc(
-								"自动打分/管理员打分" + String.valueOf(autoScore) + "分|面试打分" + String.valueOf(msScore) + "分");
+						psTzCjxTblWithBLOBs.setTzScoreDfgc("自动打分" + String.valueOf(autoScore) + "分|面试打分"
+								+ String.valueOf(msScore) + "分|专家打分" + String.valueOf(adminScore) + "分");
 						// 插入
 						psTzCjxTblMapper.insert(psTzCjxTblWithBLOBs);
 					}
