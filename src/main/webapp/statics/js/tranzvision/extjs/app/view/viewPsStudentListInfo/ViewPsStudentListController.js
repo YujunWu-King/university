@@ -196,7 +196,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 	win.on('afterrender', function(window) {
 								var attgrid = window.child('grid');
 								//attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}' ;
-								attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{}}' ;
+								attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+Ext.tzOrgID+'"}}' ;
 								
 								attgrid.getStore().load();
 							})
@@ -409,7 +409,7 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW',
 			condition:{
-				"TZ_JG_ID":jgid,
+				"TZ_JG_ID":Ext.tzOrgID,
 				"TZ_IS_APP_OPEN":"Y"
 			},
 			callback: function(seachCfg) {
