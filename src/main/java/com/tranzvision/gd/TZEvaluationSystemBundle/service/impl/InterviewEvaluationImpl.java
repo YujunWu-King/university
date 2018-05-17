@@ -1064,6 +1064,34 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						   error_decription = "存在未评审的考生，无法提交数据。";
 						   error_code = "SUBMTALL03";
 					   }else{
+						   /*检查考生的成绩单里有成绩为0的成绩项*/ 
+						   String name_zero_all = "";
+						   
+						   String zeroSql = "SELECT A.TZ_SCORE_INS_ID,A.TZ_APP_INS_ID,";
+						   zeroSql += " (SELECT IFNULL(F.TZ_REALNAME,E.TZ_REALNAME) FROM PS_TZ_FORM_WRK_T D,PS_TZ_AQ_YHXX_TBL E,PS_TZ_REG_USER_T F WHERE D.OPRID=E.OPRID AND D.OPRID=F.OPRID AND D.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND E.TZ_RYLX='ZCYH' LIMIT 0,1) TZ_REALNAME,";
+						   zeroSql += " (SELECT 'Y' FROM PS_TZ_CJX_TBL B WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND B.TZ_SCORE_NUM=0 LIMIT 0,1) TZ_FLAG";
+						   zeroSql += " FROM  PS_TZ_MP_PW_KS_TBL A";
+						   zeroSql += " WHERE A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND A.TZ_DELETE_ZT<>'Y' AND A.TZ_SCORE_INS_ID>0";
+						   List<Map<String, Object>> listZero = sqlQuery.queryForList(zeroSql,new Object[]{classId,batchId,oprid});  
+						  
+						   for(Map<String, Object> mapZero : listZero) {
+							   String name_zero = mapZero.get("TZ_REALNAME") == null ? "" : mapZero.get("TZ_REALNAME").toString();
+							   String flag_zero = mapZero.get("TZ_FLAG") == null ? "" : mapZero.get("TZ_FLAG").toString();
+							   
+							   if("Y".equals(flag_zero)) {
+								   if(!"".equals(name_zero_all)) {
+									   name_zero_all += "、" + name_zero;
+								   } else {
+									   name_zero_all = name_zero;
+								   }
+							   }
+						   }
+						   
+						   if(!"".equals(name_zero_all)) {
+							   error_decription = "发现存在成绩项分数为0的考生["+ name_zero_all +"]，无法提交数据。";
+							   error_code = "SUBMTALL05";
+						   } else  {
+						   
 						   /*检查是否有重复排名考生*/
 						   /*
 						   String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_MP_PW_KS_TBL a, PS_TZ_MP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID and a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and b.TZ_CLASS_ID=? and b.TZ_APPLY_PC_ID=? and b.TZ_PWEI_OPRID=? and b.TZ_DELETE_ZT<>'Y' and a.TZ_DELETE_ZT<>'Y' limit 0,1", 
@@ -1096,6 +1124,7 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 								error_decription = "";;
 								error_code = "0";
 						   /*}*/
+						   }
 					   } 
 				 }
 				 

@@ -20,6 +20,7 @@ import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCjxTblKey;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzCjxTblWithBLOBs;
 import com.tranzvision.gd.TZAutomaticScreenBundle.model.PsTzSrmbaInsTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
@@ -57,6 +58,9 @@ public class TzScoreInsCalculationObject {
 	
 	@Autowired
 	private PsTzSrmbaInsTblMapper psTzSrmbaInsTblMapper;
+	
+	@Autowired
+	private GetHardCodePoint getHardCodePoint;
 	
 	/*机构*/
 	private String orgId = "";
@@ -192,6 +196,20 @@ public class TzScoreInsCalculationObject {
 						//保存成功
 						System.out.println("保存打分成功后，更新标志："+updateFlag);
 						
+						/*评委类型：英语A或其他O*/
+						String pwType = sqlQuery.queryForObject("SELECT TZ_PWEI_TYPE FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?", new Object[] {classId,batchId,oprId},"String");
+											
+						if(!"A".equals(pwType)) {
+							//非英语评委，删除成绩单中英语成绩
+							
+							//成绩模型中英语成绩项ID
+							String englishCjxId = getHardCodePoint.getHardCodePointVal("TZ_MSPS_YYNL_CJX_ID");
+							
+							sqlQuery.update("DELETE FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?",
+									new Object[]{tzScoreInsId,englishCjxId});
+							sqlQuery.execute("commit");
+						}
+						
 						if("Y".equals(updateFlag)) {
 							//更新材料评审评委考生关系表，卢艳添加，2017-4-11
 							if("CL".equals(type)){
@@ -264,7 +282,7 @@ public class TzScoreInsCalculationObject {
 				errorMsg = "";
 				//遍历成绩模型树
 				Float rootScoreAmount = this.TraverseTree(treeNodeNum, treeNode);
-				
+
 				if(!"".equals(errorMsg) && errorMsg != null){
 					//有错误信息，保存失败
 					errorCode = "-1";
@@ -306,6 +324,7 @@ public class TzScoreInsCalculationObject {
 			List<Map<String,Object>> childNodeList = sqlQuery.queryForList(sql, new Object[]{ treeNodeNum, treeName, orgId });
 
 			for(Map<String,Object> childNodeMap: childNodeList){
+				
 				int childNodeNum =  Integer.valueOf(childNodeMap.get("TREE_NODE_NUM").toString());
 				String childNode = childNodeMap.get("TREE_NODE").toString();
 				//是否存在子节点
@@ -318,7 +337,6 @@ public class TzScoreInsCalculationObject {
 				}else{
 					
 					if(itemsScoreValMap.containsKey(childNode)){
-						
 						Boolean boolVaild = true;
 						String itemDesc = childNodeMap.get("DESCR").toString();
 						
@@ -407,7 +425,7 @@ public class TzScoreInsCalculationObject {
 			itemScoreMapTmp2.put("itemId", treeNode);
 			itemScoreMapTmp2.put("ScoreVal", nodeScoreAmount);
 			itemsScoreValListTmp.add(itemScoreMapTmp2);
-			
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
