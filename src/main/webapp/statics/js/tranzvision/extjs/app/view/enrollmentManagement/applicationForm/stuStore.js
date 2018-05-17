@@ -3,7 +3,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.applicationForm.stuStore', {
     alias: 'store.appFormStuStore',
     model: 'KitchenSink.view.enrollmentManagement.applicationForm.stuModel',
     autoLoad: false,
-    pageSize: 50,
+    pageSize: 500,
     comID: 'TZ_BMGL_BMBSH_COM',
     pageID: 'TZ_BMGL_STU_STD',
     tzStoreParams: '{}',
