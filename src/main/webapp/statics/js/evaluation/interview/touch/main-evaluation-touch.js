@@ -689,7 +689,7 @@ function submitall(){
 	var $sigdiv = $("#signature");
 	var datapair = $sigdiv.jSignature("getData", "image");
 
-	if(datapair[1].length<400){
+	if(datapair[1].length<4000){
 		alert("请您先签名！");
 		return;
 	}
