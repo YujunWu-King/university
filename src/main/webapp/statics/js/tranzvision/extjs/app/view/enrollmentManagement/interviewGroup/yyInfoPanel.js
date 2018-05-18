@@ -137,6 +137,10 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.yyInfoPanel', {
                     hidden:true
 					
 				},{
+					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.batchIdname", "批次"),
+					dataIndex: 'batchName',
+					width: 150
+				},{
 					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_CAL_ARR_STD.msDate", '面试日期'),
 					xtype:'datecolumn',
 					format:'Y-m-d',

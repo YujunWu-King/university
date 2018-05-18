@@ -206,10 +206,14 @@ public class TzZddfWYServiceImpl extends TzZddfServiceImpl {
 				Map.Entry<String, String> entry = it.next();
 				key = entry.getKey();
 				strScore = getScore(entry.getValue());
+
+				if (strScore == null || strScore.equals("")) {
+					strScore = "0";
+				}
 				if (key.equals("GRE") || key.equals("GMAT") || key.equals("TOFEL") || key.equals("IELTS")
 						|| key.equals("IELTS")) {
-					strTempScore = SqlQuery.queryForObject(SearchSql, new Object[] { key, strScore, strScore },
-							"String");
+					strTempScore = SqlQuery.queryForObject(SearchSql,
+							new Object[] { key, Float.parseFloat(strScore), Float.parseFloat(strScore) }, "String");
 				} else {
 					strTempScore = SqlQuery.queryForObject(SearchSql2, new Object[] { key }, "String");
 				}

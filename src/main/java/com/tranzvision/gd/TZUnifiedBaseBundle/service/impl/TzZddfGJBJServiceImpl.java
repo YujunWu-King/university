@@ -129,7 +129,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			map.put("6", "workTZ_TZ_9_12");
 			map.put("7", "workTZ_TZ_9_15");
 
-			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_ZY_T where TZ_CSMB_CK1=? and TZ_CSMB_CK2=? and TZ_CSMB_TJ2<=? and TZ_CSMB_TJ1>=?";
+			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_ZY_T where TZ_CSMB_CK1=? and TZ_CSMB_CK2=? and TZ_CSMB_TJ2>=? and TZ_CSMB_TJ1<=? limit 1";
 			String strI = "";
 
 			if (!isGo) {
@@ -138,11 +138,16 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 				// workTZ_TZ_9_12集团员工数
 				// 个人年收入
 				// 个人年收入:5 单位，集团人数:6 总资产:7
-
+				String temp = "";
 				for (int i = 5; i <= 7; i++) {
 					strI = String.valueOf(i);
+					if (ksMap.get(map.get(strI)) == null || ksMap.get(map.get(strI)).equals("")) {
+						temp = "0";
+					} else {
+						temp = ksMap.get(map.get(strI));
+					}
 					strScore = SqlQuery.queryForObject(SearchSql,
-							new Object[] { "A", strI, ksMap.get(map.get(strI)), ksMap.get(map.get(strI)) }, "String");
+							new Object[] { "A", strI, Float.parseFloat(temp), Float.parseFloat(temp) }, "String");
 					switch (i) {
 					case 5:
 						desc = "个人年收入";

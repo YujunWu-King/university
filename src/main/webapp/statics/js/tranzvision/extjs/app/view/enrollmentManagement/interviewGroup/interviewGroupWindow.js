@@ -54,6 +54,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupW
 			result:'TZ_CLPS_GR_ID,TZ_CLPS_GR_NAME'
 		});
     	
+    	pwstore.sort('TZ_CLPS_GR_NAME', 'ASC');
         Ext.apply(this, {
             items: [{
                 xtype: 'form',
@@ -99,6 +100,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewGroupW
         			displayField: 'TZ_CLPS_GR_NAME',
         			queryMode: 'local',
         			name: 'jugGroupId',
+        			//sort:true,
                     listeners: {	// select监听函数  
                     	select: 'changeResTmpl'
                     }

@@ -5,6 +5,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.yyModel', {
         {name: 'msJxNo'},
         {name: 'classID'},
 		{name: 'batchID'},
+		{name: 'batchName'},
 		{name: 'datecolumn'},
 		{name: 'maxPerson'},
 		{name: 'appoPerson'},

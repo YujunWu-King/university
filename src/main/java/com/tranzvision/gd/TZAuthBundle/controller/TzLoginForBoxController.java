@@ -168,7 +168,7 @@ public class TzLoginForBoxController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "bombScreen", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "bombScreen", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doBombScreen(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		System.out.println("bombScreen");
