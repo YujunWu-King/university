@@ -666,6 +666,30 @@ function tosubmitall(){
 	$("#popupDialogSubmit").popup('open');
 }
 
+//提交前校验
+function beforeSubmit() {
+	$.ajax({
+		type: 'POST',
+		url: baseUrl+"&type=before",
+		data: {"BaokaoClassID":ClassId,"BaokaoPCID":BatchId},
+		success: function(response) {
+			var data = response.comContent;
+			if (data.error_code=="0"){
+				//校验成功，打开签名页面
+				sign();
+			}else{
+				alert(data.error_decription);
+				if(data.error_cfksid!=undefined){
+					for (var i =0 ;i<data.error_cfksid.length;i++){
+						$('#'+(data.error_cfksid)[i].ps_ksh_id).children('td').css({color:'red'})
+					}
+				}
+			}
+		},
+		dataType: "json"
+	});
+}
+
 //打开签名对话框
 function sign(){
 	setTimeout("loadSignatureDialog()",500);
