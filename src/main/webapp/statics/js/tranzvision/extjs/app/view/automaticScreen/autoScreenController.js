@@ -6,12 +6,19 @@
 	searchAutoScreenStu: function(btn){
 		var panel = btn.findParentByType('autoScreen');
 		var itemColumns = panel.itemColumns;
+		var itemMsColumns = panel.itemMsColumns;
+		var itemZjColumns = panel.itemZjColumns;
 		var classId = panel.classId;
 		var batchId = panel.batchId;
-		
-		var items = [];
+		var items = [],itemsMs = [],itemsZj = [];
 		for(var i=0; i<itemColumns.length; i++){
 			items.push(itemColumns[i].columnId);
+		}
+		for(var i=0; i<itemMsColumns.length; i++){
+			itemsMs.push(itemMsColumns[i].columnId);
+		}
+		for(var i=0; i<itemZjColumns.length; i++){
+			itemsZj.push(itemZjColumns[i].columnId);
 		}
 		
 		Ext.tzShowCFGSearch({
@@ -24,7 +31,8 @@
 			callback: function(seachCfg){
 				var seachCfgJson = Ext.JSON.decode(seachCfg);
 				seachCfgJson.items = items;
-				
+				seachCfgJson.itemsMs = itemsMs;
+				seachCfgJson.itemsZj = itemsZj;
 				seachCfg = Ext.JSON.encode(seachCfgJson);
 
 				var store = btn.findParentByType("grid").store;
