@@ -785,6 +785,8 @@
 		var classId = panel.classId;
 		var batchId = panel.batchId;
 		var itemColumns = panel.itemColumns;
+		var itemMsColumns = panel.itemMsColumns;
+		var itemZjColumns = panel.itemZjColumns;
 		
 		var selList = grid.getSelectionModel().getSelection();
 		//选中行长度
@@ -806,6 +808,8 @@
 				classId: classId,
 				batchId: batchId,
 				itemColumns: itemColumns,
+				itemMsColumns: itemMsColumns,
+				itemZjColumns: itemZjColumns,
 				appInsIds: appInsIds
 			}
 	    };
@@ -830,6 +834,8 @@
 		var classId = panel.classId;
 		var batchId = panel.batchId;
 		var itemColumns = panel.itemColumns;
+		var itemMsColumns = panel.itemMsColumns;
+		var itemZjColumns = panel.itemZjColumns;
 		
 		//构造搜索sql
 		if((typeof panel.getedSQL) == "undefined"){
@@ -846,6 +852,8 @@
 				classId: classId,
 				batchId: batchId,
 				itemColumns: itemColumns,
+				itemMsColumns: itemMsColumns,
+				itemZjColumns: itemZjColumns,
 				searchSql: searchSql
 			}
 		};
