@@ -70,15 +70,15 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
-					if (rowList[0].equals("SEM")) {
+//					if (rowList[0].equals("SEM")) {
 						mapList.put("judgId", rowList[1]);
 						mapList.put("judzhxx", rowList[3]);
 						mapList.put("judgName", rowList[2]);
 						mapList.put("judgGroupId", "");
 
-					} else {
-
-					}
+//					} else {
+//
+//					}
 
 					listData.add(mapList);
 				}

@@ -42,13 +42,14 @@ public class TzZddfQZGZJYImpl extends TzZddfServiceImpl {
 			sb.append(year);
 
 			System.out.println(sb.toString());
-			if (year == null) {
-				year = "";
+			if (year == null || year.equals("")) {
+				year = "0";
 			}
 
 			String sql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_ZY_T where TZ_CSMB_CK1=? and TZ_CSMB_CK2<=? and TZ_CSMB_CK3>=?";
 
-			String strScore = SqlQuery.queryForObject(sql, new Object[] { "D", year, year }, "String");
+			String strScore = SqlQuery.queryForObject(sql,
+					new Object[] { "D", Float.parseFloat(year), Float.parseFloat(year) }, "String");
 
 			if (strScore == null || strScore.equals("")) {
 				strScore = "0";

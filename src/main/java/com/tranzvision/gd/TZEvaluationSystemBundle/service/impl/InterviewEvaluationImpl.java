@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,6 +78,10 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 			// 移除考生
 			if ("remove".equals(type)){
 				strReturn = removeApplicant(strParams);
+			}
+			// 提交前的校验
+			if ("before".equals(type)) {
+				strReturn = beforeSubmit(strParams);
 			}	
 			// 提交全部考生数据
 			if ("submit".equals(type)) {
@@ -1016,14 +1021,12 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 		}
 
 	}
-
 	
-	private String submitAllData(String strParams) {
-
+	
+	private String beforeSubmit(String strParams) {
 		String batchId = request.getParameter("BaokaoPCID"); /*请求报考批次编号*/
 		String classId =request.getParameter("BaokaoClassID"); /*字符串，请求班级编号*/
-		String Signature = request.getParameter("Signature"); /*字符串，签名SVG的base64编码字符串*/
-		
+
 		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		
 		String error_code = "", error_decription = "";
@@ -1064,44 +1067,66 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 						   error_decription = "存在未评审的考生，无法提交数据。";
 						   error_code = "SUBMTALL03";
 					   }else{
-						   /*检查是否有重复排名考生*/
-						   /*
-						   String have_equal = sqlQuery.queryForObject("select 'Y' from PS_TZ_MP_PW_KS_TBL a, PS_TZ_MP_PW_KS_TBL b where a.TZ_CLASS_ID=b.TZ_CLASS_ID and a.TZ_APPLY_PC_ID = b.TZ_APPLY_PC_ID and a.TZ_PWEI_OPRID=b.TZ_PWEI_OPRID and a.TZ_APP_INS_ID<>b.TZ_APP_INS_ID and a.TZ_KSH_PSPM=b.TZ_KSH_PSPM and b.TZ_CLASS_ID=? and b.TZ_APPLY_PC_ID=? and b.TZ_PWEI_OPRID=? and b.TZ_DELETE_ZT<>'Y' and a.TZ_DELETE_ZT<>'Y' limit 0,1", 
-										new Object[]{classId,batchId,oprid},"String");
-						   if("Y".equals(have_equal)){
-							   error_decription = "发现排名重复考生，无法提交数据。";
-							   error_code = "SUBMTALL04";
-						   }else{
-						   */
-							   String mspwpsjlExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN<>'Y'", 
-							   			new Object[]{classId,batchId,oprid},"String");
+						   /*检查考生的成绩单里有成绩为0的成绩项*/ 
+						   String name_zero_all = "";
+						   
+						   String zeroSql = "SELECT A.TZ_SCORE_INS_ID,A.TZ_APP_INS_ID,";
+						   zeroSql += " (SELECT IFNULL(F.TZ_REALNAME,E.TZ_REALNAME) FROM PS_TZ_FORM_WRK_T D,PS_TZ_AQ_YHXX_TBL E,PS_TZ_REG_USER_T F WHERE D.OPRID=E.OPRID AND D.OPRID=F.OPRID AND D.TZ_APP_INS_ID=A.TZ_APP_INS_ID AND E.TZ_RYLX='ZCYH' LIMIT 0,1) TZ_REALNAME,";
+						   zeroSql += " (SELECT 'Y' FROM PS_TZ_CJX_TBL B WHERE A.TZ_SCORE_INS_ID=B.TZ_SCORE_INS_ID AND B.TZ_SCORE_NUM=0 LIMIT 0,1) TZ_FLAG";
+						   zeroSql += " FROM  PS_TZ_MP_PW_KS_TBL A";
+						   zeroSql += " WHERE A.TZ_CLASS_ID = ? AND A.TZ_APPLY_PC_ID = ? AND A.TZ_PWEI_OPRID = ? AND A.TZ_DELETE_ZT<>'Y' AND A.TZ_SCORE_INS_ID>0";
+						   List<Map<String, Object>> listZero = sqlQuery.queryForList(zeroSql,new Object[]{classId,batchId,oprid});  
+						  
+						   for(Map<String, Object> mapZero : listZero) {
+							   String name_zero = mapZero.get("TZ_REALNAME") == null ? "" : mapZero.get("TZ_REALNAME").toString();
+							   String flag_zero = mapZero.get("TZ_FLAG") == null ? "" : mapZero.get("TZ_FLAG").toString();
 							   
-							   psTzMspwpsjlTbl psTzMspwpsjlTbl = new psTzMspwpsjlTbl();
-							   psTzMspwpsjlTbl.setTzClassId(classId);
-							   psTzMspwpsjlTbl.setTzApplyPcId(batchId);
-							   psTzMspwpsjlTbl.setTzPweiOprid(oprid);
-							   psTzMspwpsjlTbl.setTzSubmitYn("Y");
-							   psTzMspwpsjlTbl.setTzSignature(Signature);
-							   psTzMspwpsjlTbl.setRowLastmantOprid(oprid);
-							   psTzMspwpsjlTbl.setRowLastmantDttm(new Date());
-							    
-								if("Y".equals(mspwpsjlExist)){
-									psTzMspwpsjlTblMapper.updateByPrimaryKeySelective(psTzMspwpsjlTbl);
-								}else{
-									psTzMspwpsjlTbl.setRowAddedOprid(oprid);
-									psTzMspwpsjlTbl.setRowAddedDttm(new Date());
-									psTzMspwpsjlTblMapper.insertSelective(psTzMspwpsjlTbl);
-								}
-								
-								error_decription = "";;
-								error_code = "0";
-						   /*}*/
-					   } 
+							   if("Y".equals(flag_zero)) {
+								   if(!"".equals(name_zero_all)) {
+									   name_zero_all += "、" + name_zero;
+								   } else {
+									   name_zero_all = name_zero;
+								   }
+							   }
+						   }
+						   
+						   if(!"".equals(name_zero_all)) {
+							   error_decription = "发现存在成绩项分数为0的考生["+ name_zero_all +"]，无法提交数据。";
+							   error_code = "SUBMTALL05";
+						   } else  {
+							   
+							   /*检查是否给所有分组下的考生打分完成*/
+							   
+							   //目前评委与考生关系表的个数
+							   Integer alreadyNum = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_MP_PW_KS_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=? AND TZ_DELETE_ZT<>'Y'",
+									   					new Object[]{classId,batchId,oprid},"Integer");
+							   
+							   //评委需要评审面试组下所有考生的个数
+							   String needNumSql = "SELECT COUNT(1) FROM ";
+							   needNumSql += "(";
+							   needNumSql += " SELECT A.TZ_PWEI_GRPID,B.TZ_GROUP_ID,B.TZ_GROUP_NAME,C.TZ_APP_INS_ID";
+							   needNumSql += " FROM PS_TZ_MSPS_KSH_TBL C,PS_TZ_MSPS_PW_TBL A,PS_TZ_INTEGROUP_T B";
+							   needNumSql += " WHERE A.TZ_PWEI_GRPID=B.TZ_CLPS_GR_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
+							   needNumSql += " AND B.TZ_GROUP_ID=C.TZ_GROUP_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
+							   needNumSql += " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=? AND A.TZ_PWEI_ZHZT<>'B'";
+							   needNumSql += " ) TMP";
+							   
+							   Integer needNum = sqlQuery.queryForObject(needNumSql, new Object[]{classId,batchId,oprid},"Integer");
+							   
+							   if(!alreadyNum.equals(needNum)) {
+								   error_decription = "发现存在未评审的面试组考生，无法提交数据。";
+								   error_code = "SUBMTALL06";
+							   } else {
+								   error_decription = "";
+								   error_code = "0";
+							   }
+						   }	
+			
+					   }
 				 }
-				 
 			 }
 		}
-
+		
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("success", true);
 		retMap.put("ps_class_id", classId);
@@ -1113,6 +1138,53 @@ public class InterviewEvaluationImpl extends FrameworkImpl {
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		return jacksonUtil.Map2json(retMap);
+	}
+
+	
+	private String submitAllData(String strParams) {
+		
+		String strRet = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		String batchId = request.getParameter("BaokaoPCID"); /*请求报考批次编号*/
+		String classId =request.getParameter("BaokaoClassID"); /*字符串，请求班级编号*/
+		String Signature = request.getParameter("Signature"); /*字符串，签名SVG的base64编码字符串*/
+		
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		
+		String error_code = "", error_decription = "";
+		
+		//调用提交前的方法再次校验
+		strRet = beforeSubmit(strParams);
+		jacksonUtil.json2Map(strRet);
+		
+		error_code = jacksonUtil.getString("error_code");
+		error_decription = jacksonUtil.getString("error_decription");
+		
+		if("0".equals(error_code)) {
+			//校验成功
+			String mspwpsjlExist = sqlQuery.queryForObject("select 'Y' from PS_TZ_MSPWPSJL_TBL where TZ_CLASS_ID = ? and TZ_APPLY_PC_ID=? and TZ_PWEI_OPRID=? and TZ_SUBMIT_YN<>'Y'", 
+			   			new Object[]{classId,batchId,oprid},"String");
+			   
+			psTzMspwpsjlTbl psTzMspwpsjlTbl = new psTzMspwpsjlTbl();
+			psTzMspwpsjlTbl.setTzClassId(classId);
+			psTzMspwpsjlTbl.setTzApplyPcId(batchId);
+			psTzMspwpsjlTbl.setTzPweiOprid(oprid);
+			psTzMspwpsjlTbl.setTzSubmitYn("Y");
+			psTzMspwpsjlTbl.setTzSignature(Signature);
+			psTzMspwpsjlTbl.setRowLastmantOprid(oprid);
+			psTzMspwpsjlTbl.setRowLastmantDttm(new Date());
+		    
+			if("Y".equals(mspwpsjlExist)){
+				psTzMspwpsjlTblMapper.updateByPrimaryKeySelective(psTzMspwpsjlTbl);
+			}else{
+				psTzMspwpsjlTbl.setRowAddedOprid(oprid);
+				psTzMspwpsjlTbl.setRowAddedDttm(new Date());
+				psTzMspwpsjlTblMapper.insertSelective(psTzMspwpsjlTbl);
+			}
+		} 
+		
+		return strRet;
 	}
 	
 	

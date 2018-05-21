@@ -706,13 +706,33 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 	 * @return
 	 */
 	public String getBMBFillProportion(String appInsID, int leng, String TZ_FILL_PROPORTION) {
-		
-		//System.out.println("appInsID:"+appInsID);
-		//System.out.println("leng:"+leng);
-		//System.out.println("TZ_FILL_PROPORTION:"+TZ_FILL_PROPORTION);
-		if (TZ_FILL_PROPORTION == null || TZ_FILL_PROPORTION.equals("") || TZ_FILL_PROPORTION.equals("0.00")) {
 
-			String sql = "select count(1) from PS_TZ_APP_COMP_TBL where TZ_APP_INS_ID=? and (TZ_HAS_COMPLETE=? or TZ_HAS_COMPLETE=?) ";
+		// System.out.println("appInsID:"+appInsID);
+		// System.out.println("leng:"+leng);
+		// System.out.println("TZ_FILL_PROPORTION:"+TZ_FILL_PROPORTION);
+
+		String sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE  TZ_APP_INS_ID=?";
+		String status = jdbcTemplate.queryForObject(sql, new Object[] { appInsID }, "String");
+
+		// 提交不计算 直接返回100%
+		if (status != null && status.equals("U")) {
+			if (TZ_FILL_PROPORTION.equals("100.00")) {
+				double f = Double.parseDouble(TZ_FILL_PROPORTION);
+				return String.format("%.2f", f) + "%";
+			} else {
+				TZ_FILL_PROPORTION = "100.00";
+				sql = "UPDATE PS_TZ_APP_INS_T SET TZ_FILL_PROPORTION=? WHERE TZ_APP_INS_ID=?";
+				jdbcTemplate.update(sql, new Object[] { new BigDecimal(TZ_FILL_PROPORTION), appInsID });
+				double f = Double.parseDouble(TZ_FILL_PROPORTION);
+				return String.format("%.2f", f) + "%";
+			}
+		}
+
+		// 不是100的需要计算，用户可能修改过
+		if (TZ_FILL_PROPORTION == null || TZ_FILL_PROPORTION.equals("") || TZ_FILL_PROPORTION.equals("0.00")
+				|| !TZ_FILL_PROPORTION.equals("100.00")) {
+
+			sql = "select count(1) from PS_TZ_APP_COMP_TBL where TZ_APP_INS_ID=? and (TZ_HAS_COMPLETE=? or TZ_HAS_COMPLETE=?) ";
 			int fill = jdbcTemplate.queryForObject(sql, new Object[] { appInsID, "Y", "B" }, "Integer");
 			// System.out.println("fill:" + fill);
 			double f = 0;
@@ -722,7 +742,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				f = (double) fill / leng;
 				f = f * 100;
 			}
-			//System.out.println("f:"+f);
+			// System.out.println("f:"+f);
 			sql = "UPDATE PS_TZ_APP_INS_T SET TZ_FILL_PROPORTION=? WHERE TZ_APP_INS_ID=?";
 			jdbcTemplate.update(sql, new Object[] { new BigDecimal(f), appInsID });
 
@@ -730,7 +750,7 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		} else {
 			try {
 				double f = Double.parseDouble(TZ_FILL_PROPORTION);
-				//System.out.println("f:"+f);
+				// System.out.println("f:"+f);
 				return String.format("%.2f", f) + "%";
 			} catch (Exception e) {
 				e.printStackTrace();
