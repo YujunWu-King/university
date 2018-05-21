@@ -951,7 +951,7 @@
 
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_AUDDYN_STD"];
-
+        console.log("p"+pageResSet);
         if (pageResSet == "" || pageResSet == undefined) {
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -986,6 +986,7 @@
             win = new ViewClass();
             this.getView().add(win);
         }
+        console.log(win);
         win.actType = "update";
 
         var audId = AudID;
@@ -1002,7 +1003,10 @@
         var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"' + audId + '","audName":"' + audName + '","audStat":"' + audStat + '","audType":"' + audType + '","audMS":"' + audMS + '","audSQL":"' + audSQL + '"}}';
         //页面注册信息表单
         console.log(tzParams);
-        var form = win.child("form").getForm();
+        var form1 = win.child("form");
+        console.log(form1);
+        var form=form1.getForm();
+       // alert(form);
 
         var gridStore = win.child("form").child("grid").getStore();
         var tzStoreParams = '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "' + audId + '"}}';
