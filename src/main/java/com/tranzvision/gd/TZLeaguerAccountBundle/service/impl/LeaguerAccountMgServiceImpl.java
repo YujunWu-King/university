@@ -68,7 +68,7 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 
 			// 获取当前机构;
 			String strJgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-
+			System.out.println("s="+strJgid);
 			Integer userCount = 0;
 			String strUserCountSql = "SELECT COUNT(*) FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_JG_ID=?";
 			userCount = SqlQuery.queryForObject(strUserCountSql, new Object[] { strJgid }, "Integer");
@@ -195,24 +195,25 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 		Map<String, Object> mapRet = new HashMap<String, Object>();
 		mapRet.put("total", 0);
 		mapRet.put("root", "[]");
-
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
-
+		System.out.println("tzQuery");
 		try {
 			// 排序字段如果没有不要赋值
-			String[][] orderByArr = new String[][] {};
+			String[][] orderByArr = new String[][] {{ "TZ_FILL_PROPORTION", "ASC" }};
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_EMAIL", "TZ_MOBILE", "TZ_JIHUO_ZT",
 					"TZ_ZHCE_DT", "ACCTLOCK", "TZ_BLACK_NAME", "NATIONAL_ID", "TZ_MSH_ID", "TZ_CLASS_NAME",
-					"TZ_CLASS_ID", "TZ_APP_INS_ID","TZ_FILL_PROPORTION" };
-
-			// String admin =
-			// "\"TZ_JG_ID-operator\":\"01\",\"TZ_JG_ID-value\":\"ADMIN\",";
-			// strParams.replaceAll(admin, "");
+					"TZ_CLASS_ID", "TZ_APP_INS_ID","TZ_FILL_PROPORTION","TZ_BATCH_NAME" };
+			
+			
+			
+		
 			// 可配置搜索通用函数;
+		
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
+		//	System.out.println(obj[1]);
 			String TZ_FILL_PROPORTION = "";
 			String strBmbTplSQL = "SELECT TZ_APP_MODAL_ID FROM PS_TZ_CLASS_INF_T WHERE TZ_CLASS_ID=?";
 			String viewNameSQL = "";
@@ -220,10 +221,10 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 			if (obj != null && obj.length > 0) {
 
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
-
+			//	System.out.println(list.get(0));
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
-
+				//	System.out.println(rowList[0]);
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("OPRID", rowList[0]);
 					mapList.put("userName", rowList[1]);
@@ -237,14 +238,21 @@ public class LeaguerAccountMgServiceImpl extends FrameworkImpl {
 					mapList.put("nationId", rowList[9]);
 					mapList.put("mshId", rowList[10]);
 					mapList.put("applyInfo", rowList[11]);
+					mapList.put("bitch", rowList[15]);
+				//	mapList.put("zcTime", rowList[9]);
+				//	mapList.put("acctlock", rowList[10]);
+				//	mapList.put("hmdUser", rowList[11]);
+				//	mapList.put("hmdUser", rowList[12]);
 					TZ_FILL_PROPORTION =  rowList[14];
-					// System.out.println("名字"+rowList[1]);
 					int leng = 0;
+					
 					
 					
 					strBmbTpl = jdbcTemplate.queryForObject(strBmbTplSQL, new Object[] { rowList[12] },
 							"String");
-					// System.out.println("班级id"+rowList[12]);
+					
+					System.out.println("strBmbTpl="+strBmbTpl);
+				//	 System.out.println("班级id"+rowList[12]);
 					if (strBmbTpl == null) {
 						strBmbTpl = "";
 					}

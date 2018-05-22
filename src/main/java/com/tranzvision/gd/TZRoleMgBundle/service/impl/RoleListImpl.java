@@ -45,21 +45,21 @@ public class RoleListImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] { { "ROLENAME", "ASC" } };
 	
 			// json数据要的结果字段;
-			String[] resultFldArray = { "ROLENAME", "DESCR" };
+			String[] resultFldArray = {  "ROLENAME","DESCR"};
 	
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams,
 					numLimit, numStart, errorMsg);
-			
+		//	System.out.println(obj[1]);
 			if (obj != null && obj.length > 0) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
-	
+			//	System.out.println(list.get(0));
 				for (int i = 0; i < list.size(); i++) {
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					mapList.put("roleName", rowList[0]);
 					mapList.put("roleDesc", rowList[1]);
-					
+					//System.out.println(rowList[0]);
 					listData.add(mapList);
 				}
 	

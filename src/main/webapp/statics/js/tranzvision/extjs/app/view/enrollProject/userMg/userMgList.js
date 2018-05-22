@@ -7,7 +7,8 @@
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
         'KitchenSink.view.enrollProject.userMg.userMgController',
-        'KitchenSink.view.enrollProject.userMg.userMgStore'
+        'KitchenSink.view.enrollProject.userMg.userMgStore',
+        'KitchenSink.view.enrollProject.userMg.userMgModel'
     ],
     xtype: 'userMgGL',//不能变
     controller: 'userMgController',
@@ -85,6 +86,7 @@
     	var store = new KitchenSink.view.enrollProject.userMg.userMgStore();
     	//性别
     	var sexStore = new KitchenSink.view.common.store.appTransStore("TZ_GENDER");
+    	console.log(sexStore);
     	//账户激活状态
     	var jihuoStore = new KitchenSink.view.common.store.appTransStore("TZ_JIHUO_ZT");
     	//锁定状态
@@ -110,9 +112,10 @@
                 width: 95
             },{
                 text: '性别',
-                sortable: true,
+               sortable: true,
 				dataIndex: 'userSex',
                 width: 55,
+            	hidden:true,
                 renderer:function(value,metadata,record){
     				if(value == null || value==""){
     					return "";	
@@ -122,13 +125,15 @@
     				} else {
     					return "女";
     				}
+                }
+        }
     				//var index = sexStore.find('TValue',value);   
     				//if(index!=-1){   
     				//	   return sexStore.getAt(index).data.TSDesc;   
     				//}   
     				//return value;     				 
-    			}
-            },{
+    			
+            ,{
                 text: '手机',
                 sortable: true,
                 dataIndex: 'userPhone',
@@ -138,7 +143,14 @@
                 sortable: true,
                 dataIndex: 'userEmail',
                 width: 180
-            },{
+            },
+            {
+            	text:'批次名称',
+            	sortable: true,
+                dataIndex: 'bitch',
+                width: 180
+            },
+            {
                 text: '报考信息',
                 sortable: true,
                 dataIndex: 'applyInfo',
@@ -148,6 +160,7 @@
                 text: '填写比例',
                 sortable: true,
                 dataIndex: 'fillProportion',
+        //        dataIndex:'nationId',
                 width: 100
             },{
                 text: '账号激活状态',
@@ -179,10 +192,11 @@
                 sortable: true,
                 dataIndex: 'acctlock',
                 width: 80,
+            	hidden:true,
                 renderer:function(value,metadata,record){
-    				if(value == null || value==""){
-    					return "";	
-    				}
+    	   		if(value == null || value==""){
+    	   				return "";	
+    	   			}
     				if (value =='0') {
     					return "未锁定";
     				} else {
@@ -194,11 +208,13 @@
     				//}   
     				//return value;     				 
     			}
-            },{
+            }
+            ,{
                 text: '黑名单',
                 sortable: true,
                 dataIndex: 'hmdUser',
                 width: 60,
+            	hidden:true,
                 renderer:function(value,metadata,record){
     				if(value == null || value==""){
     					return "否";	
@@ -212,9 +228,10 @@
     				//if(index!=-1){   
     				//	   return isYnStore.getAt(index).data.TSDesc;   
     				//}   
-    				//return value;     				 
-    			}
-            },{
+    	//			//return value;     				 
+                }
+            },
+            {
 			   xtype: 'actioncolumn',
 			   text: '操作',	
                menuDisabled: true,
