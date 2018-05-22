@@ -377,7 +377,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		if ("tzExportAll".equals(oprType)) {
 			reString = this.tzGetAppList(strParams, errorMsg);
 		}
-
+		if ("tzGetAppIdAndOprID".equals(oprType)) {
+			reString = this.tzGetAppIdAndOprID(strParams, errorMsg);
+		}
 		return reString;
 	}
 
@@ -805,4 +807,85 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		returnMap.put("result", strAppInsList);
 		return jacksonUtil.Map2json(returnMap);
 	}
+	/* 获取AppID及OprID */
+	private String tzGetAppIdAndOprID(String comParams, String[] errorMsg) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String strAppID = "";
+
+		String OprID = "";
+		String AppID = "";
+		Map<String, Object> returnMap = new HashMap<>();
+
+		try {
+//			jacksonUtil.json2Map(comParams);
+//			String AppIdSQL = (String) jacksonUtil.getString("getAppIdSQL");
+			
+			jacksonUtil.json2Map(comParams);
+			String configSearchCondition = (String) comParams;
+			String strClassID = "";
+			String strBatchID = "";
+			if (jacksonUtil.containsKey("condition")) {
+				Map<String, Object> conditionJson = jacksonUtil.getMap("condition");
+				if (conditionJson != null) {
+					for (Map.Entry<String, Object> entry : conditionJson.entrySet()) {
+						String key = entry.getKey();
+						if (key.indexOf("TZ_CLASS_ID-value") >= 0) {
+							strClassID = (String) conditionJson.get(key);
+						}
+						if (key.indexOf("TZ_BATCH_ID-value") >= 0) {
+							strBatchID = (String) conditionJson.get(key);
+						}
+					}
+				}
+			}
+			String strRet = "";
+			String[] resultFldArray = { "OPRID" };
+			String[][] orderByArr = new String[][] {};
+			String[] errorMessage = { "0" };
+			String originalSql = fliterForm.getQuerySQL(resultFldArray, orderByArr, configSearchCondition,
+					errorMessage);
+			strRet = originalSql;
+
+			if (strClassID.length() > 0) {
+				strRet = "SELECT TZ_APP_INS_ID FROM PS_TZ_APP_LIST_VW WHERE OPRID = ANY(" + originalSql
+						+ ") AND TZ_CLASS_ID='" + strClassID + "'";
+			} else {
+				strRet = "SELECT TZ_APP_INS_ID FROM PS_TZ_APP_LIST_VW WHERE OPRID = ANY(" + originalSql + ")";
+			}
+
+			if (strBatchID.length() > 0) {
+				System.out.println("strBatchID exist");
+				strRet=strRet+" AND TZ_BATCH_ID='" + strBatchID + "'";
+			}
+			
+			String AppIdSQL = strRet.replaceAll("TZ_APP_INS_ID", "OPRID,TZ_APP_INS_ID");
+
+			System.out.println(AppIdSQL);
+			List<Map<String, Object>> SqlCon2 = jdbcTemplate.queryForList(AppIdSQL);
+
+			for (Map<String, Object> map2 : SqlCon2) {
+
+				AppID = map2.get("TZ_APP_INS_ID").toString();
+				OprID = map2.get("OPRID").toString();
+
+				if (strAppID.equals("")) {
+					strAppID = AppID + "+" + OprID;
+				} else {
+					strAppID = strAppID + ";" + AppID + "+" + OprID;
+
+				}
+
+			}
+
+		} catch (Exception e) {
+			errorMsg[0] = "1";
+			errorMsg[1] = e.toString();
+			strAppID = "";
+		}
+
+		returnMap.put("AppID", strAppID);
+		return jacksonUtil.Map2json(returnMap);
+
+	}
+
 }

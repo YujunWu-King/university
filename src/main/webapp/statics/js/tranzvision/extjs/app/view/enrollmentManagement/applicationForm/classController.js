@@ -2301,5 +2301,97 @@
 
         return cmp;
     },
+    /*给选中人发送短信*/
+    sendSmsSelPers:function(btn) {
+        var grid = btn.findParentByType("grid");
+        var store = grid.getStore();
+        var selList = grid.getSelectionModel().getSelection();
+
+        //选中行长度
+        var checkLen = selList.length;
+        if (checkLen == 0) {
+            Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt", "提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing", "您没有选中任何记录"));
+            return;
+        }
+
+        var personList = [];
+        for (var i = 0; i < checkLen; i++) {
+            var oprID = selList[i].get('oprID');
+            var appInsID = selList[i].get('appInsID');
+            personList.push({"oprID": oprID, "appInsID": appInsID});
+        };
+        var params = {
+            "ComID": "TZ_BMGL_BMBSH_COM",
+            "PageID": "TZ_BMGL_YJDX_STD",
+            "OperateType": "U",
+            "comParams": {"add": [
+                {"type": 'MULTI', "personList": personList}
+            ]}
+        };
+        Ext.tzLoad(Ext.JSON.encode(params), function (responseData) {
+            Ext.tzSendSms({
+                //发送的短信模板;
+                "SmsTmpName": ["TZ_SMS_N_002"],
+                //创建的需要发送的听众ID;
+                "audienceId": responseData,
+                //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                "file": "N"
+            });
+        });
+    },
+    /*给搜索结果发送短信*/
+    sendSmsSelPersOfAll:function(btn) {
+
+    	var strAppId;   
+    	var store = btn.findParentByType("grid").store;
+		var strConfSearCond=btn.findParentByType('classInfo').strConfSearCond;
+		if (strConfSearCond.length==0) {
+			strConfSearCond="{\"cfgSrhId\":\"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.TZ_APP_LIST_VW\",\"condition\": {\"TZ_CLASS_ID-operator\": \"01\", \"TZ_CLASS_ID-value\":\""+store.classID +"\"}}";
+			}
+		
+        //顾贤达 2017年6月26日 11:08:54 修改SQL提交逻辑
+		var tzParams = '{"ComID":"TZ_BMGL_BMBSH_COM","PageID":"TZ_BMGL_STU_STD","OperateType":"tzGetAppIdAndOprID","comParams":'+strConfSearCond+'}';
+
+		Ext.tzLoadAsync(tzParams,function(resp){
+			 if(resp.AppID!=undefined){
+					strAppId =resp.AppID;
+	            }
+	    },"",true,this);
+		console.log(strAppId);
+    	
+    	
+		var personList = [];
+		var strs= new Array(); 
+		strs=strAppId.split(";"); 
+		
+		for (i=0;i<strs.length ;i++ ){ 
+			var strs2= new Array();
+			strs2=strs[i].split("+");
+				var oprID = strs2[1];
+		        var appInsID = strs2[0];
+		        personList.push({"oprID": oprID, "appInsID": appInsID});
+		}  
+     
+        var params = {
+            "ComID": "TZ_BMGL_BMBSH_COM",
+            "PageID": "TZ_BMGL_YJDX_STD",
+            "OperateType": "U",
+            "comParams": {"add": [
+                {"type": 'MULTI', "personList": personList}
+            ]}
+        };
+        
+        Ext.tzLoad(Ext.JSON.encode(params), function (responseData) {
+        	 Ext.tzSendSms({
+                 //发送的短信模板;
+                 "SmsTmpName": ["TZ_SMS_N_002"],
+                //创建的需要发送的听众ID;
+                "audienceId": responseData,
+                //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                "file": "N"
+            });
+        });
+        
+    },
 });
 

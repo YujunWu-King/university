@@ -195,6 +195,16 @@
 								glyph:'xf1d8@FontAwesome',
 								handler:'sendEmlSelPers'
                             },{
+								text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendSnselectedPerson","给选中人发送短信"),
+								glyph:'xf003@FontAwesome',
+								handler:'sendSmsSelPers'
+                            },
+//                            {
+//								text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendEmailSelectedPerson","给搜索结果发送短信"),
+//								glyph:'xf1d8@FontAwesome',
+//								handler:'sendSmsSelPersOfAll'
+//                            },
+                            {
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.viewSqrInfo","查看申请人详情"),
                                 iconCls:"view",
                                 handler:'viewSqrInfo'
