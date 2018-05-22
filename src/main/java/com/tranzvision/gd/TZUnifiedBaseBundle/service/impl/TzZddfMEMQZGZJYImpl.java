@@ -11,13 +11,13 @@ import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
- * MBA全职工作经验打分
+ * MEM全职工作经验打分
  * 
  * @author caoy
  *
  */
-@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfQZGZJYImpl")
-public class TzZddfQZGZJYImpl extends TzZddfServiceImpl {
+@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfMEMQZGZJYImpl")
+public class TzZddfMEMQZGZJYImpl extends TzZddfServiceImpl {
 
 	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
@@ -32,7 +32,7 @@ public class TzZddfQZGZJYImpl extends TzZddfServiceImpl {
 			float Score = 0;
 
 			String ks_valuesql = "SELECT TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=?  AND TZ_XXX_BH = ?";
-			String year = SqlQuery.queryForObject(ks_valuesql, new Object[] { TZ_APP_ID, "workTZ_TZ_9_2" }, "String");
+			String year = SqlQuery.queryForObject(ks_valuesql, new Object[] { TZ_APP_ID, "TZ_20TZ_TZ_20_2" }, "String");
 
 			StringBuffer sb = new StringBuffer();
 			sb.append("报名表数据----报名表ID:");

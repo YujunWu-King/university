@@ -16,7 +16,7 @@ import com.tranzvision.gd.TZUnifiedBaseBundle.model.PsTzCjxTblWithBLOBs;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
- * 专业资格打分
+ * MBA/MEM专业资格打分
  * 
  * @author caoy
  *

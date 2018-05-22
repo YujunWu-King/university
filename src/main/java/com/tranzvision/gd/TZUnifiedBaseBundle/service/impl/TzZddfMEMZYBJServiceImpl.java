@@ -15,13 +15,13 @@ import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
- * MBA职业背景（职务打分）打分
+ * MEM职业背景（职务打分）打分
  * 
  * @author caoy
  *
  */
-@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfZYBJServiceImpl")
-public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
+@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfMEMZYBJServiceImpl")
+public class TzZddfMEMZYBJServiceImpl extends TzZddfServiceImpl {
 
 	@Autowired
 	private SqlQuery SqlQuery;
@@ -41,7 +41,7 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			// 查询报名表信息
 			String ks_valuesql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=? AND (TZ_XXX_BH =? or TZ_XXX_BH=?)";
 			List<Map<String, Object>> listMap = SqlQuery.queryForList(ks_valuesql,
-					new Object[] { TZ_APP_ID, "workTZ_work_185firm_type", "workTZ_work_185position_type" });
+					new Object[] { TZ_APP_ID, "TZ_20TZ_TZ_20_9firm_type", "TZ_20TZ_TZ_20_9position_type" });
 
 			String firm_type = "";
 			String firm_desc = "";
@@ -50,10 +50,10 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 
 			for (Map<String, Object> map : listMap) {
 				ksMapkey = map.get("TZ_XXX_BH").toString();
-				if (ksMapkey.equals("workTZ_work_185firm_type")) {
+				if (ksMapkey.equals("TZ_20TZ_TZ_20_9firm_type")) {
 					firm_type = map.get("TZ_APP_S_TEXT").toString();
 				}
-				if (ksMapkey.equals("workTZ_work_185position_type")) {
+				if (ksMapkey.equals("TZ_20TZ_TZ_20_9position_type")) {
 					position_type = map.get("TZ_APP_S_TEXT").toString();
 				}
 			}
@@ -74,9 +74,9 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			// 报名表字段 "外资/合资企业",//01 "自主创业",//02 "国有企业",//03 "民营企业",//04
 			// "政府机构",//05 "事业单位",//06 "其他"//07
 			// TZ_CSMB_TJ1 单位性质 政府机构/事业单位1 企业2
-			
-			if (firm_type ==null || firm_type.equals("")) {
-				firm_type="0";
+
+			if (firm_type == null || firm_type.equals("")) {
+				firm_type = "0";
 			}
 
 			switch (Integer.parseInt(firm_type)) {
@@ -201,7 +201,7 @@ public class TzZddfZYBJServiceImpl extends TzZddfServiceImpl {
 			String MarkRecord = "公司性质：".concat(firm_desc).concat("|职务性质：").concat(position_desc);
 
 			MarkRecord = MarkRecord + "|" + strScore.concat("分");
-			
+
 			System.out.println(MarkRecord);
 
 			// 插入表TZ_CJX_TBL

@@ -1,14 +1,9 @@
 package com.tranzvision.gd.TZUnifiedBaseBundle.service.impl;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,13 +12,13 @@ import com.tranzvision.gd.TZUnifiedBaseBundle.model.*;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
- * MBA公司背景打分
+ * MEM公司背景打分
  * 
  * @author feifei
  *
  */
-@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfGJBJServiceImpl")
-public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
+@Service("com.tranzvision.gd.TZUnifiedBaseBundle.service.impl.TzZddfMEMGJBJServiceImpl")
+public class TzZddfMEMGJBJServiceImpl extends TzZddfServiceImpl {
 	@Autowired
 	private PsTzCjxTblMapper psTzCjxTblMapper;
 
@@ -43,7 +38,7 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			// 查询报名表信息
 			String ks_valuesql = "SELECT TZ_XXX_BH,TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE  TZ_APP_INS_ID=?  AND (TZ_XXX_BH =? or TZ_XXX_BH=? or TZ_XXX_BH=?  or TZ_XXX_BH=? or TZ_XXX_BH=?)";
 			List<Map<String, Object>> listMap = SqlQuery.queryForList(ks_valuesql, new Object[] { TZ_APP_ID,
-					"workTZ_TZ_9_14", "workTZ_TZ_9_15", "workTZ_TZ_9_17", "workTZ_TZ_9_7", "workTZ_TZ_9_12" });
+					"TZ_20TZ_TZ_20_14", "TZ_20TZ_TZ_20_15", "TZ_20TZ_TZ_20_18", "TZ_20TZ_TZ_20_7", "TZ_20TZ_TZ_20_12" });
 
 			// 企业类型
 			String type = "";
@@ -67,19 +62,19 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			sb.append(TZ_APP_ID);
 			sb.append(",");
 			sb.append("是否500强企业:");
-			sb.append(ksMap.get("workTZ_TZ_9_7"));
+			sb.append(ksMap.get("TZ_20TZ_TZ_20_7"));
 			sb.append(",");
 			sb.append("是否上司公司:");
-			sb.append(ksMap.get("workTZ_TZ_9_14"));
+			sb.append(ksMap.get("TZ_20TZ_TZ_20_14"));
 			sb.append(",");
 			sb.append("个人年收入:");
-			sb.append(ksMap.get("workTZ_TZ_9_17"));
+			sb.append(ksMap.get("TZ_20TZ_TZ_20_18"));
 			sb.append(",");
 			sb.append("总资产:");
-			sb.append(ksMap.get("workTZ_TZ_9_15"));
+			sb.append(ksMap.get("TZ_20TZ_TZ_20_15"));
 			sb.append(",");
 			sb.append("集团人数:");
-			sb.append(ksMap.get("workTZ_TZ_9_12"));
+			sb.append(ksMap.get("TZ_20TZ_TZ_20_12"));
 
 			System.out.println(sb.toString());
 
@@ -91,15 +86,15 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 
 			String SearchSql2 = "select TZ_CSMB_SCOR from PS_TZ_CSMB_ZY_T where TZ_CSMB_CK1=? and TZ_CSMB_CK2=? ";
 
-			// workTZ_TZ_9_14是否是上市公司： workTZ_TZ_9_15资产 workTZ_TZ_9_17年薪
-			// workTZ_TZ_9_7是否是500强企业 workTZ_work_185firm_type企业性质
-			// workTZ_TZ_9_12集团员工数
+			// TZ_20TZ_TZ_20_14是否是上市公司： TZ_20TZ_TZ_20_15资产 TZ_20TZ_TZ_20_18年薪
+			// TZ_20TZ_TZ_20_7是否是500强企业 
+			// TZ_20TZ_TZ_20_12集团员工数
 
 			// 企业性质
-			if (ksMap.get("workTZ_TZ_9_7") != null && ksMap.get("workTZ_TZ_9_7").equals("Y")) {
+			if (ksMap.get("TZ_20TZ_TZ_20_7") != null && ksMap.get("TZ_20TZ_TZ_20_7").equals("Y")) {
 				type = "1";
 				desc = "500强企业";
-			} else if (ksMap.get("workTZ_TZ_9_14") != null && ksMap.get("workTZ_TZ_9_14").equals("Y")) {
+			} else if (ksMap.get("TZ_20TZ_TZ_20_14") != null && ksMap.get("TZ_20TZ_TZ_20_14").equals("Y")) {
 				type = "2";
 				desc = "上市公司";
 			} else {
@@ -125,17 +120,17 @@ public class TzZddfGJBJServiceImpl extends TzZddfServiceImpl {
 			MarkRecord = MarkRecord + "|" + strScore.concat("分");
 
 			Map<String, String> map = new HashMap<String, String>();
-			map.put("5", "workTZ_TZ_9_17");
-			map.put("6", "workTZ_TZ_9_12");
-			map.put("7", "workTZ_TZ_9_15");
+			map.put("5", "TZ_20TZ_TZ_20_18");
+			map.put("6", "TZ_20TZ_TZ_20_12");
+			map.put("7", "TZ_20TZ_TZ_20_15");
 
 			String SearchSql = "select TZ_CSMB_SCOR from PS_TZ_CSMB_ZY_T where TZ_CSMB_CK1=? and TZ_CSMB_CK2=? and TZ_CSMB_TJ2>=? and TZ_CSMB_TJ1<=? limit 1";
 			String strI = "";
 
 			if (!isGo) {
-				// workTZ_TZ_9_14是否是上市公司： workTZ_TZ_9_15资产 workTZ_TZ_9_17年薪
-				// workTZ_TZ_9_7是否是500强企业
-				// workTZ_TZ_9_12集团员工数
+				// TZ_20TZ_TZ_20_14是否是上市公司： TZ_20TZ_TZ_20_15资产 TZ_20TZ_TZ_20_18年薪
+				// TZ_20TZ_TZ_20_7是否是500强企业 
+				// TZ_20TZ_TZ_20_12集团员工数
 				// 个人年收入
 				// 个人年收入:5 单位，集团人数:6 总资产:7
 				String temp = "";

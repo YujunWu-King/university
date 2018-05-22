@@ -1,7 +1,7 @@
 package com.tranzvision.gd.TZUnifiedBaseBundle.service.impl;
 
 /**
- *  外语水平自动打分
+ *  MBA/MEM外语水平自动打分
  */
 import java.math.BigDecimal;
 import java.util.HashMap;
