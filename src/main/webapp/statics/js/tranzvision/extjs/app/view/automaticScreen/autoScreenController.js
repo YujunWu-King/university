@@ -303,13 +303,17 @@
         }
 		var comParams = '"attaList":[' + attaList + ']';
         comParams = '{'+comParams+'}';
-        var tzParams = '{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_SUM_SCREEN_STD","OperateType":"runRleaseEngine","comParams":'+comParams+'}';
-        var status,processIns;
-		Ext.tzLoadAsync(tzParams,function(respData){
-			status = respData.status;
-			Ext.Msg.alert("提示",respData.msg);
-			grid.getStore().reload();
-		});
+        Ext.MessageBox.confirm("提示","您一旦发布，考生页面会显示面试结果，确认发布么?" ,function(id){
+            if(id=='yes'){
+		        var tzParams = '{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_SUM_SCREEN_STD","OperateType":"runRleaseEngine","comParams":'+comParams+'}';
+		        var status,processIns;
+				Ext.tzLoadAsync(tzParams,function(respData){
+					status = respData.status;
+					Ext.Msg.alert("提示",respData.msg);
+					grid.getStore().reload();
+				});
+            }
+        },this);
 	},
 	//查看打分过程
 	onClickNumber: function(view,rowIndex,colIndex){
