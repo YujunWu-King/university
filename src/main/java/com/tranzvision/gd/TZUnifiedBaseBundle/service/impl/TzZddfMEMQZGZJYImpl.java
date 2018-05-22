@@ -25,7 +25,7 @@ public class TzZddfMEMQZGZJYImpl extends TzZddfServiceImpl {
 	@Autowired
 	private SqlQuery SqlQuery;
 
-	// 获取参数：成绩单ID、国际化背景成绩项ID、报名表ID
+	// 获取参数：成绩单ID、国际化背景成绩项ID、报名表ID 
 	@Override
 	public float AutoCalculate(String TZ_APP_ID, String TZ_SCORE_ID, String TZ_SCORE_ITEM) {
 		try {
