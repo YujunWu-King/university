@@ -219,15 +219,7 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.stuInfoPanel', 
 
 			buttons: [
 
-			{
-				text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.save", "保存"),
-				handler: 'onSaveKsFz',
-				iconCls: 'save'
-			}, {
-				text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.sure", "确定"),
-				handler: 'ensureonRemoveKs',
-				iconCls: 'ensure'
-			}, {
+			 {
 				text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_KS_STD.close", "关闭"),
 				iconCls: 'close',
 				handler: 'closeviewListStu'

@@ -17,8 +17,9 @@ Ext.define('KitchenSink.view.enrollmentManagement.interviewGroup.interviewContro
 	
 	//关闭预考生表
 	closeviewListStu: function(btn) {
-		var comView = btn.findParentByType("viewmspsxsList_mspsview");
-		comView.close();
+		//var comView = btn.findParentByType("viewmspsxsList_mspsview");
+		//comView.close();
+		this.getView().close();
 	},
 	
 	//考生页面保存
