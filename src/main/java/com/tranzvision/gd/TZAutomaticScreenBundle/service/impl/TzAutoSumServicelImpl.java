@@ -519,15 +519,17 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 					for (Map<String, Object> map : list) {
 						Long appId = Long.valueOf(map.get("appId") == null ? "" : map.get("appId").toString());
 						String msResult = map.get("msResult") == null ? "" : map.get("msResult").toString();
+						String YYNL = map.get("YYNL") == null ? "0.00" : map.get("YYNL").toString();
+						String strMsYy=msResult+"（英语："+YYNL+"分）";
 						String sqlCount = "SELECT COUNT(1) FROM TZ_IMP_MSJG_TBL WHERE TZ_APP_INS_ID=?";
 						int total = sqlQuery.queryForObject(sqlCount, new Object[] { appId }, "Integer");
 						if (total > 0) {
-							String strUpdateSql = "UPDATE TZ_IMP_MSJG_TBL SET TZ_RESULT_CODE='" + msResult
+							String strUpdateSql = "UPDATE TZ_IMP_MSJG_TBL SET TZ_RESULT_CODE='" + strMsYy
 									+ "' WHERE TZ_APP_INS_ID='" + appId + "'";
 							sqlQuery.update(strUpdateSql, new Object[] {});
 						} else {
 							String strInsertSql = "INSERT INTO TZ_IMP_MSJG_TBL(TZ_APP_INS_ID,TZ_RESULT_CODE) VALUES(?,?)";
-							sqlQuery.update(strInsertSql, new Object[] { appId, msResult });
+							sqlQuery.update(strInsertSql, new Object[] { appId, strMsYy });
 						}
 
 					}
