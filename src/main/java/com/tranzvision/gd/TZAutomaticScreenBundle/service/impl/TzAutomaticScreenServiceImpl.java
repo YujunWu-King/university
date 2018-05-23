@@ -167,12 +167,18 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						String columnField = sortMap.get("property");
 						String sortStr = sortMap.get("direction");
 
-						if ("ranking".equals(columnField)) {
+						/*if ("ranking".equals(columnField)) {
 							orderList.add(new String[] { "TZ_KSH_PSPM", sortStr });
 						}
-						/*if ("total".equals(columnField)) {
+						if ("total".equals(columnField)) {
 							orderList.add(new String[] { "TZ_TOTAL_SCORE", sortStr });
 						}*/
+						if ("total".equals(columnField)) {
+							orderList.add(new String[] { "TZ_TOTAL_SCORE", sortStr });
+						}
+						if ("msResult".equals(columnField)) {
+							orderList.add(new String[] { "TZ_SCORE_BZ", sortStr });
+						}
 					}
 
 					orderByArr = new String[orderList.size()][2];
@@ -181,7 +187,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 					}
 				} else {
 					// 默认按排名排序
-					orderByArr = new String[][] { new String[] { "TZ_KSH_PSPM", "ASC" } };
+					orderByArr = new String[][] { new String[] { "TZ_MSH_ID", "ASC" } };
 				}
 
 				jacksonUtil.json2Map(strParams);		
