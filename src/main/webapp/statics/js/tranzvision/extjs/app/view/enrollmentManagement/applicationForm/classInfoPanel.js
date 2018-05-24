@@ -199,6 +199,16 @@
 								glyph:'xf003@FontAwesome',
 								handler:'sendSmsSelPers'
                             },
+                            {
+								text:"给搜索结果发送邮件",
+								glyph:'xf1d8@FontAwesome',
+								handler:'sendEmlSelPersAll'
+                            },
+                            {
+								text:"给搜索结果发送短信",
+								glyph:'xf003@FontAwesome',
+								handler:'sendSmsSelPersAll'
+                            },
 //                            {
 //								text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.sendEmailSelectedPerson","给搜索结果发送短信"),
 //								glyph:'xf1d8@FontAwesome',

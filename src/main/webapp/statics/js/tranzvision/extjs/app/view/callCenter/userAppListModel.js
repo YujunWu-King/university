@@ -2,6 +2,7 @@ Ext.define('KitchenSink.view.callCenter.userAppListModel', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'appInsId'},
+        {name: 'callPhoneNum'},
         {name: 'oprid'},
         {name: 'classId'},
         {name: 'batchId'},

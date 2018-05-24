@@ -3,8 +3,10 @@ package com.tranzvision.gd.TZAuthBundle.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,11 +20,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
+import com.tranzvision.gd.TZCallCenterBundle.dao.PsTzPhJddTblMapper;
+import com.tranzvision.gd.TZCallCenterBundle.model.PsTzPhJddTbl;
+import com.tranzvision.gd.TZCallCenterBundle.service.impl.TZCallCenterServiceImpl;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetCookieSessionProps;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
+import com.tranzvision.gd.util.cookie.TzCookie;
+import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.security.MD5;
+import com.tranzvision.gd.util.security.Security;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.security.collectsecurity.SecurityForCollectFee;
+import com.tranzvision.gd.util.sql.GetSeqNum;
+import com.tranzvision.gd.util.sql.SqlQuery;
 
 /**
  * 电话盒子相关接口
@@ -31,7 +44,7 @@ import com.tranzvision.gd.util.security.collectsecurity.SecurityForCollectFee;
  *
  */
 @Controller
-@RequestMapping(value = "box")
+@RequestMapping(value = { "/box" })
 public class TzLoginForBoxController {
 
 	@Autowired
@@ -42,7 +55,27 @@ public class TzLoginForBoxController {
 
 	@Autowired
 	private FileManageServiceImpl fileManageServiceImpl;
+	
+	@Autowired
+	private SqlQuery SqlQuery;
+	
+	@Autowired
+	private GetCookieSessionProps getCookieProps;
+	
+	@Autowired
+	private TzCookie tzCookie;
 
+	@Autowired
+	private GetSeqNum getSeqNum;
+	
+	@Autowired
+	private TZCallCenterServiceImpl tzCallCenterServiceImpl;
+	
+	@Autowired
+	private TzLoginServiceImpl tzLoginServiceImpl;
+	
+	@Autowired
+	private PsTzPhJddTblMapper psTzPhJddTblMapper;
 	/**
 	 * 登录接口
 	 * 
@@ -54,20 +87,25 @@ public class TzLoginForBoxController {
 	// "text/html;charset=UTF-8")
 	// @ResponseBody
 
-	@RequestMapping(value = { "/login/{orgid}" }, method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/login/{orgid}" }, method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "orgid") String orgid) throws Exception {
 		System.out.println("doLogin");
 		Map<String, Object> jsonMap = null;
+		Map<String, Object> jsonMap1 = null;
 		JacksonUtil jacksonUtil = new JacksonUtil();
 
 		System.out.println("orgid:"+orgid);
-		
+		request.getSession().setAttribute("orgid", orgid);
 		String username = request.getParameter("username");
+	//	System.out.println("username="+username);
 		String pwd = request.getParameter("pwd");
+	//	System.out.println("pwd="+pwd);
 		String timestamp = request.getParameter("timestamp");
+	//	System.out.println("timestamp="+timestamp);
 		String authenticator = request.getParameter("authenticator");
+	//	System.out.println("authenticator="+authenticator);
 		//String jgid = request.getParameter("jgid");
 		// username + pwd + timestamp
 		LinkedHashMap<String, String> tm = new LinkedHashMap<String, String>();
@@ -76,17 +114,32 @@ public class TzLoginForBoxController {
 		tm.put("timestamp", timestamp);
 		//tm.put("jgid", jgid);
 		tm.put("authenticator", authenticator);
-
+		
+		jsonMap=this.checkUserAndPwd(tm, orgid);
+		if (jsonMap != null) {
+			return jacksonUtil.Map2json(jsonMap);
+		}
+		request.getSession().setAttribute("username", username);
 		// 校验传入参数
 		jsonMap = this.checkParameter(tm);
 		if (jsonMap != null) {
 			return jacksonUtil.Map2json(jsonMap);
 		}
-		// 登录处理 稍后更新
-
+		
+		String sql="select OPRID from PS_TZ_AQ_YHXX_TBL where TZ_DLZH_ID=? and TZ_JG_ID=?";
+		String op=SqlQuery.queryForObject(sql, new Object[]{username,orgid}, "String");
+		System.out.println("op="+op);
+		long time=System.currentTimeMillis();
 		// 生产返回的
-		String usertoken = "TEST";
-		String oprid = "TEST";
+		String For3DES =username+"$"+op+"$"+orgid+"$"+time;
+		System.out.println("For3DES="+For3DES);
+		String securitykey = getSysHardCodeVal.getBoxKey();
+		byte[] IV_SECURITY = { 1, 2, 3, 4, 5, 6, 7, 8 };
+		String linkString = "$";
+		String usertoken=Security.generalStringFor3DES(securitykey, For3DES, For3DES, IV_SECURITY, linkString);
+		request.getSession().setAttribute("token", usertoken);
+		String oprid = op;
+		request.getSession().setAttribute("oprid", oprid);
 		jsonMap = new HashMap<String, Object>();
 		jsonMap.put("res_code", "0");
 		jsonMap.put("res_message", "Success");
@@ -95,7 +148,44 @@ public class TzLoginForBoxController {
 
 		return jacksonUtil.Map2json(jsonMap);
 	}
-
+	
+	private Map<String, Object> checkUserAndPwd(LinkedHashMap<String, String> tm,String orgid){
+		String key="";
+		Integer userCount = 0;
+		Map<String, Object> jsonMap = null;
+		for (Map.Entry<String, String> entry : tm.entrySet()) {
+			key = entry.getKey();
+			System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+			if(key.equals("username")){
+				String user=entry.getValue().toString();
+				String sql="select count(*) from PS_TZ_AQ_YHXX_TBL where TZ_JG_ID=? and TZ_DLZH_ID=?";
+				userCount = SqlQuery.queryForObject(sql, new Object[] { orgid,user }, "Integer");
+				System.out.println("userCount="+userCount);
+				if(userCount<1){
+					jsonMap = new HashMap<String, Object>();
+					jsonMap.put("res_code", "-0001");
+					jsonMap.put("res_message", "用户名错误");
+					return jsonMap;
+				}
+			}
+			
+			if(key.equals("pwd")){
+				String pwd="";
+				String password=entry.getValue().toString();
+				String sql="select PSOPRDEFN.OPERPSWD from PS_TZ_AQ_YHXX_TBL,PSOPRDEFN where PS_TZ_AQ_YHXX_TBL.OPRID=PSOPRDEFN.OPRID and PS_TZ_AQ_YHXX_TBL.TZ_DLZH_ID=?";
+				pwd=SqlQuery.queryForObject(sql, new Object[]{tm.get("username")}, "String");
+				System.out.println(pwd);
+				if(!password.equals(pwd)){
+					jsonMap = new HashMap<String, Object>();
+					jsonMap.put("res_code", "-0004");
+					jsonMap.put("res_message", "密码错误");
+					return jsonMap;
+				}
+			}
+	}
+		return jsonMap;
+	}
+	
 	/**
 	 * 传入参数的校验
 	 * 
@@ -118,11 +208,16 @@ public class TzLoginForBoxController {
 				jsonMap.put("res_message", "传入参数" + key + "为空");
 				return jsonMap;
 			}
+	
+			
+
+			
 			// 是否超时
 			if (key.equals("timestamp")) {
 				try {
-					long timep = Long.parseLong(entry.getValue().toString());
+					long timep = Long.parseLong(entry.getValue().toString());	
 					long time = System.currentTimeMillis();
+					System.out.println(time);
 					if (time - timep > 2 * 60 * 1000) {
 						jsonMap = new HashMap<String, Object>();
 						jsonMap.put("res_code", "-0001");
@@ -160,6 +255,27 @@ public class TzLoginForBoxController {
 		}
 		return jsonMap;
 	}
+	
+	private Map<String, Object> checkUserToken(HttpServletRequest request,LinkedHashMap<String, String> tm){
+		String key="";
+		Map<String, Object> jsonMap = null;
+		for (Map.Entry<String, String> entry : tm.entrySet()) {
+			key = entry.getKey();
+			if(key.equals("usertoken")){
+				String usertoken=entry.getValue().toString();
+				System.out.println("uuuu="+usertoken);
+				String token=(String) request.getSession().getAttribute("token");
+				System.out.println("aaaaa="+token);
+				if(token==null || !token.equals(usertoken)){
+					jsonMap = new HashMap<String, Object>();
+					jsonMap.put("res_code", "-0001");
+					jsonMap.put("res_message", "usertoken不存在");
+					return jsonMap;
+				}
+			}
+		}
+		return jsonMap;
+	}
 
 	/**
 	 * 弹屏请求接口
@@ -168,39 +284,100 @@ public class TzLoginForBoxController {
 	 * @param response
 	 * @return
 	 */
-	@RequestMapping(value = "bombScreen", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "/bombScreen", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doBombScreen(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		System.out.println("bombScreen");
 		Map<String, Object> jsonMap = null;
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		String sql="";
 
 		String usertoken = request.getParameter("usertoken");
-		String tel = request.getParameter("tel");
+		System.out.println("usertoken="+usertoken);
+		String strTel = request.getParameter("tel");
+		System.out.println("tel="+strTel);
 		String callid = request.getParameter("callid");
+		System.out.println("callid="+callid);
 		String authenticator = request.getParameter("authenticator");
+		System.out.println("authenticator="+authenticator);
 		String timestamp = request.getParameter("timestamp");
+		System.out.println("timestamp="+timestamp);
 
 		// 校验传入参数
 		// usertoken+tel+callid+timestamp
 		LinkedHashMap<String, String> tm = new LinkedHashMap<String, String>();
 		tm.put("usertoken", usertoken);
-		tm.put("tel", tel);
+		tm.put("tel", strTel);
 		tm.put("callid", callid);
 		tm.put("timestamp", timestamp);
 		tm.put("authenticator", authenticator);
 
 		// 校验传入参数
+		jsonMap = this.checkUserToken(request, tm);
+		if (jsonMap != null) {
+			return jacksonUtil.Map2json(jsonMap);
+
+		}
 		jsonMap = this.checkParameter(tm);
 		if (jsonMap != null) {
 			return jacksonUtil.Map2json(jsonMap);
 
 		}
+		PsTzPhJddTbl psTzPhJddTbl = new PsTzPhJddTbl();
+		String strType = request.getParameter("type");		
+		if(strType==null||"".equals(strType)){
+			strType = "A";
+		}
+		psTzPhJddTbl.setTzCallType(strType);
+		String strSemNum = String.valueOf(getSeqNum.getSeqNum("TZ_PH_JDD_TBL", "TZ_XH"));
+		psTzPhJddTbl.setTzXh(strSemNum);
+		String orgid=(String) request.getSession().getAttribute("orgid");
+		psTzPhJddTbl.setTzDlzhId(orgid);
+		String strOprId=(String) request.getSession().getAttribute("oprid");
+		psTzPhJddTbl.setTzOprid(strOprId);
+		psTzPhJddTbl.setTzPhone(strTel);
+		psTzPhJddTbl.setTzCallDtime(new Date());
+		psTzPhJddTbl.setTzDealwithZt("A");
+		psTzPhJddTblMapper.insert(psTzPhJddTbl);
+//		sql="select * from PS_TZ_REG_USE2_V where TZ_JG_ID=? and TZ_BD_MOBILE=?";
+//	
+//		Map<String, Object> map = SqlQuery.queryForMap(sql, new Object[] { orgid,tel });
+//	
+//		jsonMap = new HashMap<String, Object>();
+//		if(map!=null){
+//			jsonMap.put("callPhoneNum",tel);
+//			jsonMap.put("bmrName",map.get("TZ_REALNAME"));
+//			jsonMap.put("bmrGender",map.get("TZ_GENDER"));
+//			jsonMap.put("bmrRegEmail",map.get("TZ_BD_EMAIL"));
+//			jsonMap.put("bmrRegDtime",map.get("TZ_ZHCE_DT"));
+//			jsonMap.put("bmrAccActiveStatus",map.get("TZ_JIHUO_ZT"));
+//			jsonMap.put("bmrBlackList",map.get("TZ_BLACK_NAME"));
+//			jsonMap.put("bmrMshId",map.get("TZ_MSH_ID"));
+//			jsonMap.put("bmrBkProject",map.get("TZ_CLASS_NAME"));
+//		}
+		String domain = getCookieProps.getCookieDomain();
+		System.out.println("domain="+domain);
+		String cookiePath = getCookieProps.getCookiePath();
+		System.out.println("cookiePath="+cookiePath);
+		tzCookie.addCookie(response, "callCenterXh", strSemNum,36000,domain,cookiePath,false,false);
+		tzCookie.addCookie(response, "callCenterPhone", strTel,36000,domain,cookiePath,false,false);
+		tzCookie.addCookie(response, "callCenterType", strType,36000,domain,cookiePath,false,false);
+		tzCookie.addCookie(response, "callCenterOprid", strOprId,36000,domain,cookiePath,false,false);
+		String strUrl = request.getContextPath() + "/index";
 
-		jsonMap = new HashMap<String, Object>();
-		return "The Page OK";
+//		//登录成功						
+		String strHardSQL = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
+		String mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_SEM_PHONE_USERMENU"},"String");
+		System.out.println("mobileUrlMenu="+mobileUrlMenu);
+		strUrl = strUrl + "#" + mobileUrlMenu;
+		response.sendRedirect(strUrl);
+
+		 return "";
 	}
 
+	
+	
+	
 	@RequestMapping(value = "UpVoidServlet", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	public @ResponseBody String orgUploadFileHandler(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam Map<String, Object> allRequestParams, @RequestParam("orguploadfile") MultipartFile file) {
