@@ -47,6 +47,9 @@
                 columnLines: true,
                 border: true,
 				minHeight: 400,
+				viewConfig: {
+	                enableTextSelection: true
+	            },
                 plugins: [{
                         ptype: 'gridfilters'
                 }],

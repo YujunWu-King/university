@@ -1,11 +1,12 @@
 ﻿Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuViewAddWin', {
     extend: 'Ext.window.Window',
     requires: [
-	    'Ext.data.*',
+    	'Ext.data.*',
+        'Ext.grid.*',
         'Ext.util.*',
-        'xt.grid.filters.Filters',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
+        'Ext.grid.filters.Filters',
         'KitchenSink.view.interviewManagement.interviewArrange.interviewStuViewAddStore',
 		'KitchenSink.view.interviewManagement.interviewArrange.interviewStuViewController'
 	],
@@ -59,9 +60,6 @@
 			batchID: batchID
 		});
 		
-		//初筛结果
-		var csResultStore = new KitchenSink.view.common.store.appTransStore("TZ_ZDCS_JG");
-		
         Ext.apply(this,{
 		    items: [{
 		        xtype: 'form',
@@ -111,11 +109,9 @@
 		            viewConfig: {
 		                enableTextSelection: true
 		            },
-		            plugins:[
-	                    {
-	                        ptype: 'gridfilters'
-	                    }
-	                ],
+		            plugins: [{
+                        ptype: 'gridfilters'
+		            }],
 		        	dockedItems:[{
 						xtype:"toolbar",
 						items:[
@@ -170,12 +166,7 @@
 					bbar: {
 						xtype: 'pagingtoolbar',
 						pageSize: 50,
-						listeners:{
-							afterrender: function(pbar){
-								var grid = pbar.findParentByType("grid");
-								pbar.setStore(grid.store);
-							}
-						},
+						store: addStuStore,
 						displayInfo: true,
 						plugins: new Ext.ux.ProgressBarPager()
 					}
