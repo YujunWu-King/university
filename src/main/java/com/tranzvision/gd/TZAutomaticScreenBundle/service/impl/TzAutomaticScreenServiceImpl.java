@@ -167,12 +167,19 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						String columnField = sortMap.get("property");
 						String sortStr = sortMap.get("direction");
 
-						if ("ranking".equals(columnField)) {
+						/*if ("ranking".equals(columnField)) {
 							orderList.add(new String[] { "TZ_KSH_PSPM", sortStr });
 						}
-						/*if ("total".equals(columnField)) {
+						if ("total".equals(columnField)) {
+							orderList.add(new String[] { "TZ_TOTAL_SCORE", sortStr });
+						}
+						if ("total".equals(columnField)) {
 							orderList.add(new String[] { "TZ_TOTAL_SCORE", sortStr });
 						}*/
+						if ("msResult".equals(columnField)) {
+							//orderList.add(new String[] { "TZ_SCORE_BZ", sortStr });
+							orderList.add(new String[] { "TZ_SCORE_BZXH", sortStr });
+						}
 					}
 
 					orderByArr = new String[orderList.size()][2];
@@ -181,7 +188,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 					}
 				} else {
 					// 默认按排名排序
-					orderByArr = new String[][] { new String[] { "TZ_KSH_PSPM", "ASC" } };
+					orderByArr = new String[][] { new String[] { "TZ_MSH_ID", "ASC" } };
 				}
 
 				jacksonUtil.json2Map(strParams);		
@@ -193,7 +200,7 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 				// TZ_AUTO_SCREEN_COM.TZ_AUTO_SCREEN_STD.TZ_CS_STU_VW
 				// json数据要的结果字段;
 				String[] resultFldArray = { "TZ_CLASS_ID", "TZ_BATCH_ID", "TZ_APP_INS_ID", "TZ_REALNAME", "TZ_MSH_ID",
-						"TZ_KSH_CSJG", "TZ_KSH_PSPM", "TZ_SCORE_INS_ID", "TZ_TOTAL_SCORE","TZ_SCOREMS_INS_ID","TZ_SCORE_BZ","TZ_SCORE_DFGC" };
+						"TZ_KSH_CSJG", "TZ_KSH_PSPM", "TZ_SCORE_INS_ID", "TZ_TOTAL_SCORE","TZ_SCOREMS_INS_ID","TZ_SCORE_BZ","TZ_SCORE_DFGC","TZ_SCORE_BZXH" };
 
 				// 可配置搜索通用函数;
 				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart,
