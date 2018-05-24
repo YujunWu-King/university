@@ -64,11 +64,6 @@
 				}],
 				store:store ,
                 columns: [{
-                	text: '报名表编号',
-                	dataIndex: 'appId',
-                	width: 100,
-                	hidden: true
-                },{
                 	text: "面试申请号",
                 	dataIndex: 'mssqh',
                 	width: 100,
@@ -109,9 +104,17 @@
                         }
                     }
                 },{
+                	text: '常驻省份',
+                	dataIndex: 'province',
+                	width: 90,
+                	minWidth: 80,
+                	filter: {
+                        type: 'list'
+                    }
+                },{
                 	text: '手机',
                 	dataIndex: 'mobile',
-                	width: 120,
+                	width: 110,
                 	minWidth: 100,
                 	filter: {
                         type: 'string',
