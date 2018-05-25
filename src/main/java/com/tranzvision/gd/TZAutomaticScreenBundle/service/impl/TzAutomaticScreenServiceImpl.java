@@ -179,6 +179,11 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						if ("msResult".equals(columnField)) {
 							//orderList.add(new String[] { "TZ_SCORE_BZ", sortStr });
 							orderList.add(new String[] { "TZ_SCORE_BZXH", sortStr });
+							if("ASC".equals(sortStr)){
+								orderList.add(new String[] { "TZ_TOTAL_SCORE", "DESC" });
+							}else{
+								orderList.add(new String[] { "TZ_TOTAL_SCORE", "ASC" });
+							}
 						}
 					}
 
@@ -242,41 +247,45 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						// 面试结果
 						mapList.put("msResult", rowList[10]);
 						mapList.put("total_label", rowList[11]);
+					
 						/* 自动打分项 */
 						for (String itemId : itemsList) {
-							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
-							Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
-									new Object[] { scoreInsId, itemId });
-
 							String scoreNum = "0.00";
 							String scoreGc = "";
-
-							if (scoreMap != null) {
-								scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
-										: scoreMap.get("TZ_SCORE_NUM").toString();
-								// 打分过程
-								scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
-										: scoreMap.get("TZ_SCORE_DFGC").toString();
+							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
+							if(!"".equals(scoreInsId)&& scoreInsId!=null  && !"0".equals(scoreInsId)){
+								Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
+										new Object[] { scoreInsId, itemId });
+	
+								if (scoreMap != null) {
+									scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
+											: scoreMap.get("TZ_SCORE_NUM").toString();
+									// 打分过程
+									scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
+											: scoreMap.get("TZ_SCORE_DFGC").toString();
+								}
 							}
 
 							mapList.put(itemId, scoreNum);
 							mapList.put(itemId + "_label", scoreGc);
 						}
+						
 						/* 面试打分项 */
 						for (String itemIdMs : itemsMsList) {
-							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
-							Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
-									new Object[] { scoreMsInsId, itemIdMs });
-							
 							String scoreNum = "0.00";
 							String scoreGc = "";
-							
-							if (scoreMap != null) {
-								scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
-										: scoreMap.get("TZ_SCORE_NUM").toString();
-								// 打分过程
-								scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
-										: scoreMap.get("TZ_SCORE_DFGC").toString();
+							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
+							if(!"".equals(scoreMsInsId)&& scoreMsInsId!=null && !"0".equals(scoreMsInsId)){
+								Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
+										new Object[] { scoreMsInsId, itemIdMs });
+								
+								if (scoreMap != null) {
+									scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
+											: scoreMap.get("TZ_SCORE_NUM").toString();
+									// 打分过程
+									scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
+											: scoreMap.get("TZ_SCORE_DFGC").toString();
+								}
 							}
 							
 							mapList.put(itemIdMs, scoreNum);
@@ -284,25 +293,26 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						}
 						/* 专家打分项 -和面试使用相同的成绩项ID*/
 						for (String itemIdZj : itemsZjList) {
-							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
-							Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
-									new Object[] { scoreMsInsId, itemIdZj });
-							
 							String scoreNum = "0.00";
 							String scoreGc = "";
-							
-							if (scoreMap != null) {
-								scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
-										: scoreMap.get("TZ_SCORE_NUM").toString();
-								// 打分过程
-								scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
-										: scoreMap.get("TZ_SCORE_DFGC").toString();
+							String sql = "select TZ_SCORE_NUM,TZ_SCORE_DFGC from PS_TZ_CJX_TBL where TZ_SCORE_INS_ID=? and TZ_SCORE_ITEM_ID=?";
+							if(!"".equals(scoreMsInsId)&& scoreMsInsId!=null && !"0".equals(scoreMsInsId)){
+								Map<String, Object> scoreMap = sqlQuery.queryForMap(sql,
+										new Object[] { scoreMsInsId, itemIdZj });
+								
+								if (scoreMap != null) {
+									scoreNum = scoreMap.get("TZ_SCORE_NUM") == null ? "0.00"
+											: scoreMap.get("TZ_SCORE_NUM").toString();
+									// 打分过程
+									scoreGc = scoreMap.get("TZ_SCORE_DFGC") == null ? ""
+											: scoreMap.get("TZ_SCORE_DFGC").toString();
+								}
 							}
 							
 							mapList.put(itemIdZj, scoreNum);
 							mapList.put(itemIdZj + "_label", scoreGc);
 						}
-
+						
 						// 自动标签
 						/*String zdbqVal = "";
 
