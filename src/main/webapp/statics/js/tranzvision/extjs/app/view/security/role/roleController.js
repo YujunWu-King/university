@@ -541,7 +541,9 @@
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_AQ_ROLE_COM.TZ_ROLE_LIST_STD.PSROLEDEFN_VW',
             callback: function(seachCfg){
+            	console.log(btn.findParentByType("grid"));
                 var store = btn.findParentByType("grid").store;
+                console.log(store);
                 store.tzStoreParams = seachCfg;
                 store.load();
             }

@@ -132,12 +132,21 @@ public class GetSysHardCodeVal {
 	 * 存储批量打包报名表RAR文件的路径
 	 */
 	private String bmbPackRarDir;
-	
+
 	/**
 	 * 存储打印模板的PDF路径
 	 */
 	private String printSinglePdfDir;
 
+	/**
+	 * 给电话盒子的KEY
+	 */
+	private String boxKey;
+
+	/**
+	 * 电话盒子语音文件存放根目录
+	 */
+	private String orgVoiceFileUploadPath;
 
 	/**
 	 * 构造函数，系统固定参数配置
@@ -195,14 +204,22 @@ public class GetSysHardCodeVal {
 			bmbSinglePdfDir = sysHardCodeValProps.getProperty("BmbSinglePdfDir");
 
 			bmbPackRarDir = sysHardCodeValProps.getProperty("BmbPackRarDir");
-			
+
 			printSinglePdfDir = sysHardCodeValProps.getProperty("PrintSinglePdfDir");
+
+			boxKey = sysHardCodeValProps.getProperty("BoxKey");
+
+			orgVoiceFileUploadPath = sysHardCodeValProps.getProperty("OrgVoiceFileUploadPath");
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getOrgVoiceFileUploadPath() {
+		return orgVoiceFileUploadPath;
 	}
 
 	private ArrayList<String> stringToArrayList(String str) {
@@ -303,9 +320,13 @@ public class GetSysHardCodeVal {
 	public String getBmbPackRarDir() {
 		return bmbPackRarDir;
 	}
-	
+
 	public String getPrintSinglePdfDir() {
 		return printSinglePdfDir;
+	}
+
+	public String getBoxKey() {
+		return boxKey;
 	}
 
 }

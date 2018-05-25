@@ -17,6 +17,8 @@ public class psTzMspwpsjlTbl extends psTzMspwpsjlTblKey {
 
     private Date syncdttm;
 
+    private String tzSignature;
+
     public String getTzSubmitYn() {
         return tzSubmitYn;
     }
@@ -71,5 +73,13 @@ public class psTzMspwpsjlTbl extends psTzMspwpsjlTblKey {
 
     public void setSyncdttm(Date syncdttm) {
         this.syncdttm = syncdttm;
+    }
+
+    public String getTzSignature() {
+        return tzSignature;
+    }
+
+    public void setTzSignature(String tzSignature) {
+        this.tzSignature = tzSignature == null ? null : tzSignature.trim();
     }
 }

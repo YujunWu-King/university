@@ -163,7 +163,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 		var batchID = win.batchID;
 		
 		var condition = {
-			TZ_CLASS_ID: classID	
+//			TZ_CLASS_ID: classID
+			TZ_JG_ID: Ext.tzOrgID
 		};
 
 		Ext.tzShowCFGSearch({
@@ -171,6 +172,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
             condition: condition,
             callback: function(seachCfg){
             	var seachCfgObj = Ext.JSON.decode(seachCfg);
+            	seachCfgObj.classID = classID;
+            	seachCfgObj.batchID = batchID;
             	
                 var store = grid.store;
                 store.tzStoreParams = Ext.JSON.encode(seachCfgObj);
@@ -272,34 +275,42 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         	audIDsJson = '[]';
         }
         */
-        if(removeJson != ""){
-            comParams = '"delete":[' + removeJson + '],"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
-        }else{
-        	comParams = '"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
-        }
+//        if(removeJson != ""){
+//            comParams = '"delete":[' + removeJson + '],"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
+//        }else{
+//        	comParams = '"update":[{"classID":"'+classID+'","batchID":"'+batchID+'","audIDs":'+ audIDsJson+'}]';
+//        }
         
-        //提交参数
-        var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"U","comParams":{'+comParams+'}}';
-        //保存数据
-        Ext.tzSubmit(tzParams,function(){
-            Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
-            setStuListGridStore.tzStoreParams = Params;
-            setStuListGridStore.load({
-                callback : function(records, operation, success) {
-                    if (success == success) {
-                        var setStuListGridStoreCount = setStuListGrid.store.getRange().length;
-                        var setStuListFormRec = {"itwArrInfFormData":{
-                            "classID":classID,
-                            "className":className,
-                            "batchID":batchID,
-                            "batchName":batchName,
-                            "stuCount":setStuListGridStoreCount
-                        }};
-                        setStuListForm.getForm().setValues(setStuListFormRec.itwArrInfFormData);
-                    }
-                }
-            });
-        },"",true,this);
+        if(removeJson != ""){
+        	comParams = '"delete":[' + removeJson + ']';
+	        //提交参数
+	        var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"U","comParams":{'+comParams+'}}';
+	        //保存数据
+	        Ext.tzSubmit(tzParams,function(respData){
+	        	var notAllow = respData.notAllow;
+	        	if(notAllow != ""){
+	        		Ext.Msg.alert("提示","删除考生"+ notAllow +"失败，已被面试评委抽取，无法删除");
+	        	}
+	        	
+	            Params= '{"TYPE":"STULIST","classID":"'+classID+'","batchID":"'+batchID+'"}';
+	            setStuListGridStore.tzStoreParams = Params;
+	            setStuListGridStore.load({
+	                callback : function(records, operation, success) {
+	                    if (success == success) {
+	                        var setStuListGridStoreCount = setStuListGrid.store.getRange().length;
+	                        var setStuListFormRec = {"itwArrInfFormData":{
+	                            "classID":classID,
+	                            "className":className,
+	                            "batchID":batchID,
+	                            "batchName":batchName,
+	                            "stuCount":setStuListGridStoreCount
+	                        }};
+	                        setStuListForm.getForm().setValues(setStuListFormRec.itwArrInfFormData);
+	                    }
+	                }
+	            });
+	        },"",true,this);
+        }
     },
     //确定
     onPanelEnsure:function(btn){
@@ -310,8 +321,9 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
     onPanelClose: function(){
         this.getView().close();
     },
-	//给选中考生发送面试预约邮件
-	sendEmailToSelStu: function(btn){
+	//给选中考生发送面试预约邮件短信
+    tzSendEmailSmsToStu: function(btn){
+    	var sendType = btn.sendType;
 		var msStuGrid = btn.up('grid');
 		var msStuGridSelRecs=msStuGrid.getSelectionModel().getSelection();
 		//选中行长度
@@ -328,23 +340,32 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 					stuJson = stuJson + ','+Ext.JSON.encode(msStuGridSelRecs[i].data);
 				}
 			}
-			var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"tzSendEmailToSelStu","comParams":{"stuList":['+stuJson+']}}';
+			var tzParams = '{"ComID":"TZ_MS_ARR_MG_COM","PageID":"TZ_MS_ARR_SSTU_STD","OperateType":"tzSendEmailSmsToStu","comParams":{"sendType":"'+sendType+'","stuList":['+stuJson+']}}';
 			
 			Ext.tzLoad(tzParams,function(responseData){
-				var emailTmpName = responseData['EmailTmpName'];
-				var arrEMLTmpls = new Array();
-				arrEMLTmpls=emailTmpName.split(",");
+				var tmpName = responseData['tmpName'];
+				var arrTmpls = new Array();
+				arrTmpls=tmpName.split(",");
 	
 				var audienceId = responseData['audienceId'];
 	
-				Ext.tzSendEmail({
-					//发送的邮件模板;
-					"EmailTmpName":arrEMLTmpls,
-					//创建的需要发送的听众ID;
-					"audienceId": audienceId,
-					//是否可以发送附件: Y 表示可以发送附件,"N"表示无附件;
-					"file": "N"
-				});
+				if(sendType == "SMS"){
+					Ext.tzSendSms({
+						//发送的短信模板;
+						"SmsTmpName":arrTmpls,
+						//创建的需要发送的听众ID;
+						"audienceId": audienceId
+					});
+				}else{
+					Ext.tzSendEmail({
+						//发送的邮件模板;
+						"EmailTmpName":arrTmpls,
+						//创建的需要发送的听众ID;
+						"audienceId": audienceId,
+						//是否可以发送附件: Y 表示可以发送附件,"N"表示无附件;
+						"file": "N"
+					});
+				}
 			});	
 		}
 	}

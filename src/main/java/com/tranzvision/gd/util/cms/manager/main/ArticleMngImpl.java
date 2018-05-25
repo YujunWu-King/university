@@ -208,7 +208,9 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 							art.setEndTime((Date) hdMap.get("TZ_END_TM"));
 							art.setHd_city((String) hdMap.get("TZ_HD_CS"));
 							art.setHd_address((String) hdMap.get("TZ_NACT_ADDR"));
-							art.setHd_totalNumber(((Long) hdMap.get("TZ_XWS")).intValue());
+							if (hdMap.get("TZ_XWS") !=null) {
+								art.setHd_totalNumber(((Long) hdMap.get("TZ_XWS")).intValue());
+							}
 							
 							
 							if (hdMap.get("TZ_QY_ZXBM") != null) {
@@ -591,8 +593,9 @@ public class ArticleMngImpl extends Manager implements ArticleMng {
 		System.out.println("last:" + last);
 
 		System.out.println("size:" + p.getPageSize());
-		
-		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(), new Object[] { first, p.getPageSize() });
+
+		List<Map<String, Object>> list = jdbcTemplate.queryForList(f.getOrigHql(),
+				new Object[] { first, p.getPageSize() });
 		Map<String, Object> map = null;
 		CmsContent art = null;
 		for (Object objData : list) {

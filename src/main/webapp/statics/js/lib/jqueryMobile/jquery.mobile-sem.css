@@ -978,14 +978,14 @@ html .ui-panel-page-container-a {
 html .ui-bar-a a,
 html .ui-body-a a,
 html body .ui-group-theme-a a {
-	color: #8e60bc /*{a-link-color}*/;
+	color: #256a48 /*{a-link-color}*/;
 	font-weight: bold;
 }
 .ui-page-theme-a a:visited,
 html .ui-bar-a a:visited,
 html .ui-body-a a:visited,
 html body .ui-group-theme-a a:visited {
-    color: #8e60bc /*{a-link-visited}*/;
+    color: #256a48 /*{a-link-visited}*/;
 }
 .ui-page-theme-a a:hover,
 html .ui-bar-a a:hover,
@@ -1062,8 +1062,8 @@ html .ui-bar-a .ui-slider-track .ui-btn-active,
 html .ui-body-a .ui-slider-track .ui-btn-active,
 html body .ui-group-theme-a .ui-slider-track .ui-btn-active,
 html body div.ui-slider-track.ui-body-a .ui-btn-active {
-	background-color: 		#8e60bc /*{a-active-background-color}*/;
-	border-color:	 		#8e60bc /*{a-active-border}*/;
+	background-color: 		#256a48 /*{a-active-background-color}*/;
+	border-color:	 		#256a48 /*{a-active-border}*/;
 	color: 					#fff /*{a-active-color}*/;
 	text-shadow: 0 /*{a-active-shadow-x}*/ 1px /*{a-active-shadow-y}*/ 0 /*{a-active-shadow-radius}*/ #005599 /*{a-active-shadow-color}*/;
 }
@@ -1073,7 +1073,7 @@ html .ui-bar-a .ui-radio-on:after,
 html .ui-body-a .ui-radio-on:after,
 html body .ui-group-theme-a .ui-radio-on:after,
 .ui-btn.ui-radio-on.ui-btn-a:after {
-	border-color:			#8e60bc /*{a-active-background-color}*/;
+	border-color:			#256a48 /*{a-active-background-color}*/;
 }
 /* Focus */
 .ui-page-theme-a .ui-btn:focus,
@@ -1100,8 +1100,8 @@ html head + body .ui-body-a.ui-focus {
 html .ui-bar-b .ui-bar-inherit,
 html .ui-body-b .ui-bar-inherit,
 html body .ui-group-theme-b .ui-bar-inherit {
-	background-color: 			#773fae /*{b-bar-background-color}*/;
-	border-color:	 		#773fae /*{b-bar-border}*/;
+	background-color: 		#256a48 /*{b-bar-background-color}*/;
+	border-color:	 		#256a48 /*{b-bar-border}*/;
 	color: 					#fff /*{b-bar-color}*/;
 	text-shadow: 0 /*{b-bar-shadow-x}*/ 1px /*{b-bar-shadow-y}*/ 0 /*{b-bar-shadow-radius}*/ 	#111 /*{b-bar-shadow-color}*/;
 	font-weight: bold;

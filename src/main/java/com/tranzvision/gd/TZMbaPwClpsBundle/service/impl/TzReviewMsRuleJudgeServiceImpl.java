@@ -70,15 +70,15 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 
 					String[] rowList = list.get(i);
 					Map<String, Object> mapList = new HashMap<String, Object>();
-					if (rowList[0].equals("SEM")) {
+//					if (rowList[0].equals("SEM")) {
 						mapList.put("judgId", rowList[1]);
 						mapList.put("judzhxx", rowList[3]);
 						mapList.put("judgName", rowList[2]);
 						mapList.put("judgGroupId", "");
 
-					} else {
-
-					}
+//					} else {
+//
+//					}
 
 					listData.add(mapList);
 				}
@@ -108,10 +108,13 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 
 		String ksName = "";
 		String jugeNameList = "";
-		
-		String sql1="";
+
+		String judgType = "";
+		String groupleader = "";
+
+		String sql1 = "";
 		int count = 0;
-		int count1=0;
+		int count1 = 0;
 		try {
 			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			jacksonUtil.json2Map(actData[0]);
@@ -126,6 +129,21 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 				judgId = jacksonUtil.getString("judgId");
 				judgGroupId = jacksonUtil.getString("judgGroupId");
 				judgName = jacksonUtil.getString("judgName");
+				judgType = jacksonUtil.getString("judgType");
+				
+				// 评委类型A是英语评委，B是其他评委
+				if (judgType != null && judgType.equals("Y")) {
+					judgType = "A";
+				} else {
+					judgType = "B";
+				}
+				groupleader = jacksonUtil.getString("groupleader");
+				
+				if (groupleader!=null && groupleader.equals("true")) {
+					groupleader = "Y";
+				} else {
+					groupleader = "N";
+				}
 
 				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
 				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
@@ -143,18 +161,18 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 					psTzMsPsPwTbl.setRowAddedOprid(Oprid);
 					psTzMsPsPwTbl.setRowLastmantDttm(nowdate);
 					psTzMsPsPwTbl.setRowLastmantOprid(Oprid);
+					psTzMsPsPwTbl.setTzPweiType(judgType);
+					psTzMsPsPwTbl.setTzGroupLeader(groupleader);
 					psTzMsPsPwTblMapper.insertSelective(psTzMsPsPwTbl);
 
 				}
-			  sql1="SELECT COUNT(1) FROM PS_TZ_MSPWPSJL_TBL WHERE TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
-			  count1 = sqlQuery.queryForObject(sql1, new Object[] { classId, batchId, judgId }, "Integer");
-			  
-			  
-			 
-			  if (count1 > 0) {
-				
+				sql1 = "SELECT COUNT(1) FROM PS_TZ_MSPWPSJL_TBL WHERE TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
+				count1 = sqlQuery.queryForObject(sql1, new Object[] { classId, batchId, judgId }, "Integer");
+
+				if (count1 > 0) {
+
 				} else {
-			
+
 					psTzMspwpsjlTbl psTzMspwpsjlTbl = new psTzMspwpsjlTbl();
 					psTzMspwpsjlTbl.setTzClassId(classId);
 					psTzMspwpsjlTbl.setTzApplyPcId(batchId);
@@ -167,7 +185,6 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 					psTzMspwpsjlTblMapper.insertSelective(psTzMspwpsjlTbl);
 
 				}
-			  
 
 			}
 			if (!"".equals(jugeNameList)) {
@@ -199,6 +216,9 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 		String judgName = "";
 		String judgState = "";
 		String ksName = "";
+		String judgType = "";
+		String groupleader = "";
+		
 		int count = 0;
 		try {
 			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
@@ -215,6 +235,22 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 				judgGroupId = jacksonUtil.getString("judgGroupId");
 				judgName = jacksonUtil.getString("judgName");
 				judgState = jacksonUtil.getString("judgState");
+				
+				judgType = jacksonUtil.getString("judgType");
+				
+				// 评委类型A是英语评委，B是其他评委
+				if (judgType != null && judgType.equals("true")) {
+					judgType = "A";
+				} else {
+					judgType = "B";
+				}
+				groupleader = jacksonUtil.getString("groupleader");
+				
+				if (groupleader!=null && groupleader.equals("true")) {
+					groupleader = "Y";
+				} else {
+					groupleader = "N";
+				}
 
 				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
 				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
@@ -227,6 +263,8 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 					psTzMsPsPwTbl.setTzPweiZhzt(judgState);
 					psTzMsPsPwTbl.setRowLastmantDttm(nowdate);
 					psTzMsPsPwTbl.setRowLastmantOprid(Oprid);
+					psTzMsPsPwTbl.setTzPweiType(judgType);
+					psTzMsPsPwTbl.setTzGroupLeader(groupleader);
 					psTzMsPsPwTblMapper.updateByPrimaryKeySelective(psTzMsPsPwTbl);
 
 					sqlQuery.update(
@@ -264,8 +302,8 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 		String judgState = "";
 		String ksName = "";
 		int count = 0;
-		String sql1="";
-		int count1=0;
+		String sql1 = "";
+		int count1 = 0;
 		try {
 			String Oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			jacksonUtil.json2Map(actData[0]);
@@ -282,7 +320,8 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 				judgName = jacksonUtil.getString("judgName");
 				judgState = jacksonUtil.getString("judgState");
 
-				//System.out.println("classId:" + classId + "batchId:" + batchId + "judgId:" + judgId);
+				// System.out.println("classId:" + classId + "batchId:" +
+				// batchId + "judgId:" + judgId);
 
 				String sql = "SELECT COUNT(1) from PS_TZ_MSPS_PW_TBL where TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
 				count = sqlQuery.queryForObject(sql, new Object[] { classId, batchId, judgId }, "Integer");
@@ -301,23 +340,19 @@ public class TzReviewMsRuleJudgeServiceImpl extends FrameworkImpl {
 					errMsg[1] = "评委:" + judgName + "不已存在，无法删除！";
 
 				}
-				
-				sql1="SELECT COUNT(1) FROM PS_TZ_MSPWPSJL_TBL WHERE TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
-				count1 = sqlQuery.queryForObject(sql1, new Object[] { classId, batchId, judgId }, "Integer");
-				 if (count1 > 0) {
-					 psTzMspwpsjlTbl psTzMspwpsjlTbl = new psTzMspwpsjlTbl();
-						psTzMspwpsjlTbl.setTzClassId(classId);
-						psTzMspwpsjlTbl.setTzApplyPcId(batchId);
-						psTzMspwpsjlTbl.setTzPweiOprid(judgId);
-						psTzMspwpsjlTblMapper.deleteByPrimaryKey(psTzMspwpsjlTbl);
-					
-					} else {
-						
 
-					}
-				
-				
-				
+				sql1 = "SELECT COUNT(1) FROM PS_TZ_MSPWPSJL_TBL WHERE TZ_CLASS_ID =? and TZ_APPLY_PC_ID =? and TZ_PWEI_OPRID=?";
+				count1 = sqlQuery.queryForObject(sql1, new Object[] { classId, batchId, judgId }, "Integer");
+				if (count1 > 0) {
+					psTzMspwpsjlTbl psTzMspwpsjlTbl = new psTzMspwpsjlTbl();
+					psTzMspwpsjlTbl.setTzClassId(classId);
+					psTzMspwpsjlTbl.setTzApplyPcId(batchId);
+					psTzMspwpsjlTbl.setTzPweiOprid(judgId);
+					psTzMspwpsjlTblMapper.deleteByPrimaryKey(psTzMspwpsjlTbl);
+
+				} else {
+
+				}
 
 			}
 

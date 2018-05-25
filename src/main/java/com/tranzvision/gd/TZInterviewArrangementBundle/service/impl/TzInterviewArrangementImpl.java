@@ -112,15 +112,18 @@ public class TzInterviewArrangementImpl extends FrameworkImpl{
 					map.put("className", psTzClassInfT.getTzClassName());
 					map.put("batchID", str_batchID);
 					map.put("batchName", psTzClsBatchT.getTzBatchName());
-					map.put("batchStartDate", dateSimpleDateFormat.format(psTzClsBatchT.getTzStartDt()));
-					map.put("batchEndDate", dateSimpleDateFormat.format(psTzClsBatchT.getTzEndDt()));
+					if(psTzClsBatchT.getTzStartDt() != null){
+						map.put("batchStartDate", dateSimpleDateFormat.format(psTzClsBatchT.getTzStartDt()));
+					}
+					if(psTzClsBatchT.getTzEndDt() != null){
+						map.put("batchEndDate", dateSimpleDateFormat.format(psTzClsBatchT.getTzEndDt()));
+					}
 					
-					PsTzMsyySetTbl psTzMsyySetTbl = new PsTzMsyySetTbl();
 					PsTzMsyySetTblKey psTzMsyySetTblKey = new PsTzMsyySetTblKey();
-					
 					psTzMsyySetTblKey.setTzClassId(str_classID);
 					psTzMsyySetTblKey.setTzBatchId(str_batchID);
-					psTzMsyySetTbl = psTzMsyySetTblMapper.selectByPrimaryKey(psTzMsyySetTblKey);
+					
+					PsTzMsyySetTbl psTzMsyySetTbl = psTzMsyySetTblMapper.selectByPrimaryKey(psTzMsyySetTblKey);
 					if(psTzMsyySetTbl != null){
 						map.put("openDate", dateSimpleDateFormat.format(psTzMsyySetTbl.getTzOpenDt()));
 						map.put("openTime", timeSimpleDateFormat.format(psTzMsyySetTbl.getTzOpenTm()));

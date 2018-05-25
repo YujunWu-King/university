@@ -101,6 +101,8 @@ Ext.define('KitchenSink.view.main.Main', {
     layout: 'border',
     stateful: true,
     stateId: 'tranzvision-framework-kitchensink-viewport',
+    
+   
 
     initComponent: function() {
     	var me = this;

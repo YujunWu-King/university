@@ -6,12 +6,19 @@
 	searchAutoScreenStu: function(btn){
 		var panel = btn.findParentByType('autoScreen');
 		var itemColumns = panel.itemColumns;
+		var itemMsColumns = panel.itemMsColumns;
+		var itemZjColumns = panel.itemZjColumns;
 		var classId = panel.classId;
 		var batchId = panel.batchId;
-		
-		var items = [];
+		var items = [],itemsMs = [],itemsZj = [];
 		for(var i=0; i<itemColumns.length; i++){
 			items.push(itemColumns[i].columnId);
+		}
+		for(var i=0; i<itemMsColumns.length; i++){
+			itemsMs.push(itemMsColumns[i].columnId);
+		}
+		for(var i=0; i<itemZjColumns.length; i++){
+			itemsZj.push(itemZjColumns[i].columnId);
 		}
 		
 		Ext.tzShowCFGSearch({
@@ -24,7 +31,8 @@
 			callback: function(seachCfg){
 				var seachCfgJson = Ext.JSON.decode(seachCfg);
 				seachCfgJson.items = items;
-				
+				seachCfgJson.itemsMs = itemsMs;
+				seachCfgJson.itemsZj = itemsZj;
 				seachCfg = Ext.JSON.encode(seachCfgJson);
 
 				var store = btn.findParentByType("grid").store;
@@ -226,6 +234,87 @@
 		}
 	},
 	
+	//运行打总分
+	runSumEngine: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		var grid = panel.down('grid');
+		var comParamsObj = {
+			ComID: 'TZ_AUTO_SCREEN_COM',
+			PageID: 'TZ_SUM_SCREEN_STD',
+			OperateType: 'RunSum',
+			comParams:{
+				classId: classId,
+				batchId: batchId
+			}
+		}
+		var status,processIns;
+		var tzParams = Ext.JSON.encode(comParamsObj);
+		Ext.tzLoadAsync(tzParams,function(respData){
+			status = respData.status;
+			Ext.Msg.alert("提示",respData.msg);
+			grid.getStore().reload();
+		});
+	},
+	//运行面试总分
+	runMSEngine: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var classId = panel.classId;
+		var batchId = panel.batchId;
+		var grid = panel.down('grid');
+		
+		var comParamsObj = {
+			ComID: 'TZ_AUTO_SCREEN_COM',
+			PageID: 'TZ_SUM_SCREEN_STD',
+			OperateType: 'RunMSSum',
+			comParams:{
+				classId: classId,
+				batchId: batchId
+			}
+		}
+		var status,processIns;
+		var tzParams = Ext.JSON.encode(comParamsObj);
+		Ext.tzLoadAsync(tzParams,function(respData){
+			status = respData.status;
+			Ext.Msg.alert("提示",respData.msg);
+			grid.getStore().reload();
+			
+		});
+	},
+	// 批量发布面试结果
+	runRleaseEngine: function(btn){
+		var panel = btn.findParentByType('autoScreen');
+		var grid = panel.down('grid');
+		
+		var attaList="";
+		var selList = grid.getSelectionModel().getSelection();
+		var checkLen = selList.length;
+		if(checkLen == 0){
+			Ext.Msg.alert("提示","您没有选中任何记录");
+			return;
+		}
+		for (var i = 0; i < selList.length; i++) {
+            if (attaList == "") {
+                attaList = Ext.JSON.encode(selList[i].data);
+            } else {
+                attaList = attaList + ',' + Ext.JSON.encode(selList[i].data);
+            }
+        }
+		var comParams = '"attaList":[' + attaList + ']';
+        comParams = '{'+comParams+'}';
+        Ext.MessageBox.confirm("提示","您一旦发布，考生页面会显示面试结果，确认发布么?" ,function(id){
+            if(id=='yes'){
+		        var tzParams = '{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_SUM_SCREEN_STD","OperateType":"runRleaseEngine","comParams":'+comParams+'}';
+		        var status,processIns;
+				Ext.tzLoadAsync(tzParams,function(respData){
+					status = respData.status;
+					Ext.Msg.alert("提示",respData.msg);
+					grid.getStore().reload();
+				});
+            }
+        },this);
+	},
 	//查看打分过程
 	onClickNumber: function(view,rowIndex,colIndex){
 		var rec = view.getStore().getAt(rowIndex);
@@ -418,6 +507,7 @@
 		cmp.on('afterrender',function(panel){
 			var csDetailsform = panel.child('form');
 			var form = csDetailsform.getForm();
+			var scoreInfoForm =this.lookupReference('autoScreenDetailsForms');
 			
 			var comParamsObj = {
 				ComID: 'TZ_AUTO_SCREEN_COM',
@@ -468,8 +558,40 @@
 				var formData = respData;
 				form.setValues(formData);
 				
-				csDetailsform.down('tagfield[name=negativeList]').addCls('readOnly-tagfield-cls');
-				csDetailsform.down('tagfield[name=autoLabel]').addCls('readOnly-tagfield-cls');
+				var scoreInfoItems = [];
+				var fields = formData.column;
+                var size = fields.length;
+                typeField = {};
+                for(var i = 0;i < size;i++){
+                    var field = fields[i];
+                    var fieldLabel,name,value;
+                    for(var fieldName in field){
+                        if(fieldName == "columnDescr"){
+                            fieldLabel = field["columnDescr"];
+                        }else if(fieldName == "columnId"){
+                        	name=field["columnId"];
+                        }else{
+                            // name = fieldName;
+                            // value = field[fieldName];
+                        	value = field["columnValue"];
+                        }
+                    }
+                    typeField = {
+                        xtype: 'textfield',
+                        fieldLabel: fieldLabel,
+                        // readOnly:true,
+                        name: name,
+                        value: value
+                        // fieldStyle:'background:#F4F4F4',
+                        /*decimalPrecision:2,                
+                        allowDecimals:true,  
+                        nanText:'请输入有效小数',  
+                        allowNegative:false */
+                    }
+                    scoreInfoForm.add(typeField);
+                }
+				//csDetailsform.down('tagfield[name=negativeList]').addCls('readOnly-tagfield-cls');
+				//csDetailsform.down('tagfield[name=autoLabel]').addCls('readOnly-tagfield-cls');
 			});
 		});
 
@@ -667,6 +789,8 @@
 		var classId = panel.classId;
 		var batchId = panel.batchId;
 		var itemColumns = panel.itemColumns;
+		var itemMsColumns = panel.itemMsColumns;
+		var itemZjColumns = panel.itemZjColumns;
 		
 		var selList = grid.getSelectionModel().getSelection();
 		//选中行长度
@@ -688,6 +812,8 @@
 				classId: classId,
 				batchId: batchId,
 				itemColumns: itemColumns,
+				itemMsColumns: itemMsColumns,
+				itemZjColumns: itemZjColumns,
 				appInsIds: appInsIds
 			}
 	    };
@@ -712,6 +838,8 @@
 		var classId = panel.classId;
 		var batchId = panel.batchId;
 		var itemColumns = panel.itemColumns;
+		var itemMsColumns = panel.itemMsColumns;
+		var itemZjColumns = panel.itemZjColumns;
 		
 		//构造搜索sql
 		if((typeof panel.getedSQL) == "undefined"){
@@ -728,6 +856,8 @@
 				classId: classId,
 				batchId: batchId,
 				itemColumns: itemColumns,
+				itemMsColumns: itemMsColumns,
+				itemZjColumns: itemZjColumns,
 				searchSql: searchSql
 			}
 		};

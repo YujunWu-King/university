@@ -500,8 +500,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    if(strUserEmail!=null){
 				    	//查重邮箱
 				    	if(!"".equals(strUserEmail)){
-				    		String strEmailCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_EMAIL=?";
-				    		String strCheckFlg = jdbcTemplate.queryForObject(strEmailCheckSQL, new Object[]{strOprId,strUserEmail}, "String");
+				    		String strEmailCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_EMAIL=? and TZ_JG_ID=?";
+				    		String strCheckFlg = jdbcTemplate.queryForObject(strEmailCheckSQL, new Object[]{strOprId,strUserEmail,strUserOrg}, "String");
 				    		if("Y".equals(strCheckFlg)){
 				    			returnJsonMap.replace("OPRID", strOprId);
 				    			strRet = jacksonUtil.Map2json(returnJsonMap);
@@ -520,8 +520,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    if(strUserPhone!=null){
 				    	//查重手机
 				    	if(!"".equals(strUserPhone)){
-				    		String strPhoneCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_MOBILE=?";
-				    		String strCheckFlg = jdbcTemplate.queryForObject(strPhoneCheckSQL, new Object[]{strOprId,strUserPhone}, "String");
+				    		String strPhoneCheckSQL="SELECT 'Y' FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID<>? AND TZ_MOBILE=? and TZ_JG_ID=?";
+				    		String strCheckFlg = jdbcTemplate.queryForObject(strPhoneCheckSQL, new Object[]{strOprId,strUserPhone,strUserOrg}, "String");
 				    		if("Y".equals(strCheckFlg)){
 				    			returnJsonMap.replace("OPRID", strOprId);
 				    			strRet = jacksonUtil.Map2json(returnJsonMap);
@@ -700,197 +700,197 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 //					}
 					//jdbcTemplate.update(updatelqlcSql, new Object[]{strOprId});
 					
-				    //20180328新流程
-				    System.out.print("===开始====");
-					String appInsId="";
-					String classid="";
-					String usersql = " SELECT TZ_CLASS_ID,TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? order by ROW_ADDED_DTTM desc LIMIT 1";
-
-					Map<String, Object> userMap = null;
-					userMap = jdbcTemplate.queryForMap(usersql, new Object[] { strOprId });
-					System.out.print("userMap====>" + userMap);
-					if (userMap != null) {
-						classid = String.valueOf(userMap.get("TZ_CLASS_ID"));
-						appInsId = String.valueOf(userMap.get("TZ_APP_INS_ID"));
-						System.out.println("appinsid" + appInsId);
-					}
-
-					if (appInsId!=""&&!appInsId.equals("")){	
-						Long tzAppInsId= Long.parseLong(appInsId);
-					    String tzFsmsResult=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_FSMS_RESULT");
-					    String tzIsFs=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_FS");
-					    String tzIsFsms=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_FSMS");
-					    String tzIsTj=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_TJ");
-					    String tzIsZs=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_ZS");
-					    String tzMsSjadd=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_MS_SJADD");
-					    String tzPolitics=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_POLITICS");
-					    String tzPoliticsSjadd=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_POLITICS_SJADD");
-					    String tzRemark=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_REMARK");
-					    String tzResultCode=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_RESULT_CODE");
-					    
-					    PsTzFsT psTzFsT = new PsTzFsT();
-					    psTzFsT.setTzAppInsId(tzAppInsId);
-					    psTzFsT.setTzFsmsResult(tzFsmsResult);
-					    psTzFsT.setTzIsFs(tzIsFs);
-					    psTzFsT.setTzIsFsms(tzIsFsms);
-					    psTzFsT.setTzIsTj(tzIsTj);
-					    psTzFsT.setTzIsZs(tzIsZs);
-					    psTzFsT.setTzMsSjadd(tzMsSjadd);
-					    psTzFsT.setTzPolitics(tzPolitics);
-					    psTzFsT.setTzPoliticsSjadd(tzPoliticsSjadd);
-					    psTzFsT.setTzRemark(tzRemark);
-					    psTzFsT.setTzResultCode(tzResultCode);
-					    
-					    
-					    PsTzFsT fsInfo=psTzFsTMapper.selectByPrimaryKey(tzAppInsId);
-					    if(fsInfo==null){
-					    	psTzFsTMapper.insert(psTzFsT);
-						}else{
-							//初始进来 所有字段都是空的，会变成update T where id=?的 SQL 会报错，所以加异常处理，调用另外一种updat方法
-							try {
-								psTzFsTMapper.updateByPrimaryKeySelective(psTzFsT);
-							} catch(Exception e) {
-								psTzFsTMapper.updateByPrimaryKey(psTzFsT);
-							}
-						}
-				    
-			    	
-					    String tzComprehensive=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_COMPREHENSIVE");
-					    String tzEnglish=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_ENGLISH");
-					    String tzIsCheck=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_CHECK");
-					    String tzIsConfirm=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_CONFIRM");
-					    String tzIsPay=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_PAY");
-					    String tzIsPrint=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_PRINT");
-					    String tzIsWangbao=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_WANGBAO");
-					    String tzOverline=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_OVERLINE");
-					    String tzScore=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_SCORE");
-					    String tzStuNum=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_STU_NUM");
-					    
-					    PsTzLkbmT psTzLkbmT = new PsTzLkbmT();
-					    psTzLkbmT.setTzAppInsId(tzAppInsId);
-					    psTzLkbmT.setTzComprehensive(tzComprehensive);
-					    psTzLkbmT.setTzEnglish(tzEnglish);
-					    psTzLkbmT.setTzIsCheck(tzIsCheck);
-					    psTzLkbmT.setTzIsConfirm(tzIsConfirm);
-					    psTzLkbmT.setTzIsPay(tzIsPay);
-					    psTzLkbmT.setTzIsPrint(tzIsPrint);
-					    psTzLkbmT.setTzIsWangbao(tzIsWangbao);
-					    psTzLkbmT.setTzOverline(tzOverline);
-					    psTzLkbmT.setTzScore(tzScore);
-					    psTzLkbmT.setTzStuNum(tzStuNum);
-					    PsTzLkbmT lkbmInfo=psTzLkbmTMapper.selectByPrimaryKey(tzAppInsId);
-					    if(lkbmInfo==null){
-					    	psTzLkbmTMapper.insert(psTzLkbmT);
-						}else{
-							//psTzLkbmTMapper.updateByPrimaryKey(psTzLkbmT);
-							
-							try {
-								psTzLkbmTMapper.updateByPrimaryKeySelective(psTzLkbmT);
-							} catch(Exception e) {
-								psTzLkbmTMapper.updateByPrimaryKey(psTzLkbmT);
-							}
-						}
-				    
-					    String tzResultCode_jg=(String) map.get("TZ_IMP_MSJG_TBL_tf_TZ_RESULT_CODE");
-	
-					    PsTzMsjgT psTzMsjgT =new PsTzMsjgT();
-					    psTzMsjgT.setTzAppInsId(tzAppInsId);
-					    psTzMsjgT.setTzResultCode(tzResultCode_jg);
-					    PsTzMsjgT msjgInfo=psTzMsjgTMapper.selectByPrimaryKey(tzAppInsId);
-					    if(msjgInfo==null){
-					    	psTzMsjgTMapper.insert(psTzMsjgT);
-						}else{
-							//psTzMsjgTMapper.updateByPrimaryKey(psTzMsjgT);
-							
-							try {
-								psTzMsjgTMapper.updateByPrimaryKeySelective(psTzMsjgT);
-							} catch(Exception e) {
-								psTzMsjgTMapper.updateByPrimaryKey(psTzMsjgT);
-							}
-						}
-					    
-				    
-				    
-
-					    String tzAddress=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_ADDRESS");
-					    String tzDate=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_DATE");
-					    String tzMaterial=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_MATERIAL");
-					    String tzMsBatch=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_MS_BATCH");
-					    String tzRemark_zg=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_REMARK");
-					    String tzResultCode_zg=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_RESULT_CODE");
-					    String tzTime=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_TIME");
-					    
-					    PsTzMszgT psTzMszgT = new PsTzMszgT();
-					    psTzMszgT.setTzAppInsId(tzAppInsId);
-					    psTzMszgT.setTzAddress(tzAddress);
-					    psTzMszgT.setTzDate(tzDate);
-					    psTzMszgT.setTzMaterial(tzMaterial);
-					    psTzMszgT.setTzMsBatch(tzMsBatch);
-					    psTzMszgT.setTzRemark(tzRemark_zg);
-					    psTzMszgT.setTzResultCode(tzResultCode_zg);
-					    psTzMszgT.setTzTime(tzTime);
-					    PsTzMszgT mszgInfo=psTzMszgTMapper.selectByPrimaryKey(tzAppInsId);
-					    if(mszgInfo==null){
-					    	psTzMszgTMapper.insert(psTzMszgT);
-						}else{
-							//psTzMszgTMapper.updateByPrimaryKey(psTzMszgT);
-							try {
-								psTzMszgTMapper.updateByPrimaryKeySelective(psTzMszgT);
-							} catch(Exception e) {
-								psTzMszgTMapper.updateByPrimaryKey(psTzMszgT);
-							}
-						}
-
-				    	 String tzIsSub=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_IS_SUB");
-						    String tzPayDateF=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_DATE_F");
-						    String tzPayDateS=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_DATE_S");
-						    String tzPayDateT=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_DATE_T");
-						    String tzPayF=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_F");
-						    String tzPayS=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_S");
-						    String tzPayT=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_T");
-						    String tzReferenceEmba=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_EMBA");
-						    String tzReferenceLk=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_LK");
-						    String tzReferenceLz=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_LZ");
-						    String tzReferenceYx=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_YX");
-						    String tzTuitionReference=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_TUITION_REFERENCE");
-						    String tzYdMs=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_YD_MS");	    
-						    
-						    PsTzQtT psTzQtT =new PsTzQtT();
-						    psTzQtT.setTzAppInsId(tzAppInsId);
-						    psTzQtT.setTzIsSub(tzIsSub);
-//						    if(tzPayDateF!=null){
-//					    	SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
-//					    	if("".equals(tzPayDateF)){
-//					    		psTzRegUserT.setBirthdate(null);
-//					    	}else{
-//					    		Date date = dateFormate.parse(tzPayDateF);
-//						    	psTzQtT.setTzPayDateF(date);
-//					    	}				    	
-//					    	}
-						    psTzQtT.setTzPayDateF(tzPayDateF);
-						    psTzQtT.setTzPayDateS(tzPayDateS);
-						    psTzQtT.setTzPayDateT(tzPayDateT);
-						    psTzQtT.setTzPayF(tzPayF);
-						    psTzQtT.setTzPayS(tzPayS);
-						    psTzQtT.setTzPayT(tzPayT);
-						    psTzQtT.setTzReferenceEmba(tzReferenceEmba);
-						    psTzQtT.setTzReferenceLk(tzReferenceLk);
-						    psTzQtT.setTzReferenceLz(tzReferenceLz);
-						    psTzQtT.setTzReferenceYx(tzReferenceYx);
-						    psTzQtT.setTzTuitionReference(tzTuitionReference);
-						    psTzQtT.setTzYdMs(tzYdMs);
-						    PsTzQtT qtInfo=psTzQtTMapper.selectByPrimaryKey(tzAppInsId);
-						    if(qtInfo==null){
-						    	psTzQtTMapper.insert(psTzQtT);
-							}else{
-								//psTzQtTMapper.updateByPrimaryKey(psTzQtT);
-								try {
-									psTzQtTMapper.updateByPrimaryKeySelective(psTzQtT);
-								} catch(Exception e) {
-									psTzQtTMapper.updateByPrimaryKey(psTzQtT);
-								}
-							}
-				    }
+				    //20180328新流程(ljb屏蔽代码)
+//				    System.out.print("===开始====");
+//					String appInsId="";
+//					String classid="";
+//					String usersql = " SELECT TZ_CLASS_ID,TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE OPRID=? order by ROW_ADDED_DTTM desc LIMIT 1";
+//
+//					Map<String, Object> userMap = null;
+//					userMap = jdbcTemplate.queryForMap(usersql, new Object[] { strOprId });
+//					System.out.print("userMap====>" + userMap);
+//					if (userMap != null) {
+//						classid = String.valueOf(userMap.get("TZ_CLASS_ID"));
+//						appInsId = String.valueOf(userMap.get("TZ_APP_INS_ID"));
+//						System.out.println("appinsid" + appInsId);
+//					}
+//
+//					if (appInsId!=""&&!appInsId.equals("")){	
+//						Long tzAppInsId= Long.parseLong(appInsId);
+//					    String tzFsmsResult=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_FSMS_RESULT");
+//					    String tzIsFs=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_FS");
+//					    String tzIsFsms=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_FSMS");
+//					    String tzIsTj=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_TJ");
+//					    String tzIsZs=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_IS_ZS");
+//					    String tzMsSjadd=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_MS_SJADD");
+//					    String tzPolitics=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_POLITICS");
+//					    String tzPoliticsSjadd=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_POLITICS_SJADD");
+//					    String tzRemark=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_REMARK");
+//					    String tzResultCode=(String) map.get("TZ_IMP_FS_TBL_tf_TZ_RESULT_CODE");
+//					    
+//					    PsTzFsT psTzFsT = new PsTzFsT();
+//					    psTzFsT.setTzAppInsId(tzAppInsId);
+//					    psTzFsT.setTzFsmsResult(tzFsmsResult);
+//					    psTzFsT.setTzIsFs(tzIsFs);
+//					    psTzFsT.setTzIsFsms(tzIsFsms);
+//					    psTzFsT.setTzIsTj(tzIsTj);
+//					    psTzFsT.setTzIsZs(tzIsZs);
+//					    psTzFsT.setTzMsSjadd(tzMsSjadd);
+//					    psTzFsT.setTzPolitics(tzPolitics);
+//					    psTzFsT.setTzPoliticsSjadd(tzPoliticsSjadd);
+//					    psTzFsT.setTzRemark(tzRemark);
+//					    psTzFsT.setTzResultCode(tzResultCode);
+//					    
+//					    
+//					    PsTzFsT fsInfo=psTzFsTMapper.selectByPrimaryKey(tzAppInsId);
+//					    if(fsInfo==null){
+//					    	psTzFsTMapper.insert(psTzFsT);
+//						}else{
+//							//初始进来 所有字段都是空的，会变成update T where id=?的 SQL 会报错，所以加异常处理，调用另外一种updat方法
+//							try {
+//								psTzFsTMapper.updateByPrimaryKeySelective(psTzFsT);
+//							} catch(Exception e) {
+//								psTzFsTMapper.updateByPrimaryKey(psTzFsT);
+//							}
+//						}
+//				    
+//			    	
+//					    String tzComprehensive=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_COMPREHENSIVE");
+//					    String tzEnglish=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_ENGLISH");
+//					    String tzIsCheck=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_CHECK");
+//					    String tzIsConfirm=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_CONFIRM");
+//					    String tzIsPay=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_PAY");
+//					    String tzIsPrint=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_PRINT");
+//					    String tzIsWangbao=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_IS_WANGBAO");
+//					    String tzOverline=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_OVERLINE");
+//					    String tzScore=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_SCORE");
+//					    String tzStuNum=(String) map.get("TZ_IMP_LKBM_TBL_tf_TZ_STU_NUM");
+//					    
+//					    PsTzLkbmT psTzLkbmT = new PsTzLkbmT();
+//					    psTzLkbmT.setTzAppInsId(tzAppInsId);
+//					    psTzLkbmT.setTzComprehensive(tzComprehensive);
+//					    psTzLkbmT.setTzEnglish(tzEnglish);
+//					    psTzLkbmT.setTzIsCheck(tzIsCheck);
+//					    psTzLkbmT.setTzIsConfirm(tzIsConfirm);
+//					    psTzLkbmT.setTzIsPay(tzIsPay);
+//					    psTzLkbmT.setTzIsPrint(tzIsPrint);
+//					    psTzLkbmT.setTzIsWangbao(tzIsWangbao);
+//					    psTzLkbmT.setTzOverline(tzOverline);
+//					    psTzLkbmT.setTzScore(tzScore);
+//					    psTzLkbmT.setTzStuNum(tzStuNum);
+//					    PsTzLkbmT lkbmInfo=psTzLkbmTMapper.selectByPrimaryKey(tzAppInsId);
+//					    if(lkbmInfo==null){
+//					    	psTzLkbmTMapper.insert(psTzLkbmT);
+//						}else{
+//							//psTzLkbmTMapper.updateByPrimaryKey(psTzLkbmT);
+//							
+//							try {
+//								psTzLkbmTMapper.updateByPrimaryKeySelective(psTzLkbmT);
+//							} catch(Exception e) {
+//								psTzLkbmTMapper.updateByPrimaryKey(psTzLkbmT);
+//							}
+//						}
+//				    
+//					    String tzResultCode_jg=(String) map.get("TZ_IMP_MSJG_TBL_tf_TZ_RESULT_CODE");
+//	
+//					    PsTzMsjgT psTzMsjgT =new PsTzMsjgT();
+//					    psTzMsjgT.setTzAppInsId(tzAppInsId);
+//					    psTzMsjgT.setTzResultCode(tzResultCode_jg);
+//					    PsTzMsjgT msjgInfo=psTzMsjgTMapper.selectByPrimaryKey(tzAppInsId);
+//					    if(msjgInfo==null){
+//					    	psTzMsjgTMapper.insert(psTzMsjgT);
+//						}else{
+//							//psTzMsjgTMapper.updateByPrimaryKey(psTzMsjgT);
+//							
+//							try {
+//								psTzMsjgTMapper.updateByPrimaryKeySelective(psTzMsjgT);
+//							} catch(Exception e) {
+//								psTzMsjgTMapper.updateByPrimaryKey(psTzMsjgT);
+//							}
+//						}
+//					    
+//				    
+//				    
+//
+//					    String tzAddress=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_ADDRESS");
+//					    String tzDate=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_DATE");
+//					    String tzMaterial=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_MATERIAL");
+//					    String tzMsBatch=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_MS_BATCH");
+//					    String tzRemark_zg=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_REMARK");
+//					    String tzResultCode_zg=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_RESULT_CODE");
+//					    String tzTime=(String) map.get("TZ_IMP_MSZG_TBL_tf_TZ_TIME");
+//					    
+//					    PsTzMszgT psTzMszgT = new PsTzMszgT();
+//					    psTzMszgT.setTzAppInsId(tzAppInsId);
+//					    psTzMszgT.setTzAddress(tzAddress);
+//					    psTzMszgT.setTzDate(tzDate);
+//					    psTzMszgT.setTzMaterial(tzMaterial);
+//					    psTzMszgT.setTzMsBatch(tzMsBatch);
+//					    psTzMszgT.setTzRemark(tzRemark_zg);
+//					    psTzMszgT.setTzResultCode(tzResultCode_zg);
+//					    psTzMszgT.setTzTime(tzTime);
+//					    PsTzMszgT mszgInfo=psTzMszgTMapper.selectByPrimaryKey(tzAppInsId);
+//					    if(mszgInfo==null){
+//					    	psTzMszgTMapper.insert(psTzMszgT);
+//						}else{
+//							//psTzMszgTMapper.updateByPrimaryKey(psTzMszgT);
+//							try {
+//								psTzMszgTMapper.updateByPrimaryKeySelective(psTzMszgT);
+//							} catch(Exception e) {
+//								psTzMszgTMapper.updateByPrimaryKey(psTzMszgT);
+//							}
+//						}
+//
+//				    	 String tzIsSub=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_IS_SUB");
+//						    String tzPayDateF=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_DATE_F");
+//						    String tzPayDateS=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_DATE_S");
+//						    String tzPayDateT=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_DATE_T");
+//						    String tzPayF=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_F");
+//						    String tzPayS=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_S");
+//						    String tzPayT=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_PAY_T");
+//						    String tzReferenceEmba=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_EMBA");
+//						    String tzReferenceLk=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_LK");
+//						    String tzReferenceLz=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_LZ");
+//						    String tzReferenceYx=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_REFERENCE_YX");
+//						    String tzTuitionReference=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_TUITION_REFERENCE");
+//						    String tzYdMs=(String) map.get("TZ_IMP_QT_TBL_tf_TZ_YD_MS");	    
+//						    
+//						    PsTzQtT psTzQtT =new PsTzQtT();
+//						    psTzQtT.setTzAppInsId(tzAppInsId);
+//						    psTzQtT.setTzIsSub(tzIsSub);
+////						    if(tzPayDateF!=null){
+////					    	SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
+////					    	if("".equals(tzPayDateF)){
+////					    		psTzRegUserT.setBirthdate(null);
+////					    	}else{
+////					    		Date date = dateFormate.parse(tzPayDateF);
+////						    	psTzQtT.setTzPayDateF(date);
+////					    	}				    	
+////					    	}
+//						    psTzQtT.setTzPayDateF(tzPayDateF);
+//						    psTzQtT.setTzPayDateS(tzPayDateS);
+//						    psTzQtT.setTzPayDateT(tzPayDateT);
+//						    psTzQtT.setTzPayF(tzPayF);
+//						    psTzQtT.setTzPayS(tzPayS);
+//						    psTzQtT.setTzPayT(tzPayT);
+//						    psTzQtT.setTzReferenceEmba(tzReferenceEmba);
+//						    psTzQtT.setTzReferenceLk(tzReferenceLk);
+//						    psTzQtT.setTzReferenceLz(tzReferenceLz);
+//						    psTzQtT.setTzReferenceYx(tzReferenceYx);
+//						    psTzQtT.setTzTuitionReference(tzTuitionReference);
+//						    psTzQtT.setTzYdMs(tzYdMs);
+//						    PsTzQtT qtInfo=psTzQtTMapper.selectByPrimaryKey(tzAppInsId);
+//						    if(qtInfo==null){
+//						    	psTzQtTMapper.insert(psTzQtT);
+//							}else{
+//								//psTzQtTMapper.updateByPrimaryKey(psTzQtT);
+//								try {
+//									psTzQtTMapper.updateByPrimaryKeySelective(psTzQtT);
+//								} catch(Exception e) {
+//									psTzQtTMapper.updateByPrimaryKey(psTzQtT);
+//								}
+//							}
+//				    }
 				    		
 				    //20180328新流程结束
 				    

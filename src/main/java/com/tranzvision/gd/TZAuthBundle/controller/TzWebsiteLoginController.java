@@ -200,6 +200,7 @@ public class TzWebsiteLoginController {
 						openid = "";
 					}
 					loginHtml = tzWebsiteServiceImpl.getMLoginPublishCode(request, orgid, siteid, openid);
+					loginHtml = loginHtml.replaceAll("style.css", "styleEMBA.css");
 					strRet = loginHtml;
 				} else {
 

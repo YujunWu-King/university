@@ -227,6 +227,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		// 是否评审
 		String strIsReview = "N";
 
+		// 微信浏览器下访问根据openid自动登录
+		Boolean isWeChart = CommonUtils.isWeChartBrowser(request);
+
 		if ("appId".equals(strReferenceId)) {
 			strClassId = request.getParameter("TZ_CLASS_ID");
 			strSiteId = request.getParameter("SITE_ID");
@@ -1100,7 +1103,8 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 					time2 = System.currentTimeMillis();
 					/*-----------最新历史报名表Begin------------- */
 					Map<String, String> m = tzOnlineAppEngineImpl.getHistoryOnlineApp(strAppInsId, strCopyFrom,
-							strAppOprId, strAppOrgId, strTplId, strAppOprId, strClassId, strRefLetterId, strInsData);
+							strAppOprId, strAppOrgId, strTplId, strAppOprId, strClassId, strRefLetterId, strInsData,
+							isWeChart);
 					;
 					strAppInsId = m.get("strAppInsId");
 					strInsData = m.get("strInsData");
@@ -1164,10 +1168,17 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 							"TZGD_APPONLINE_MSGSET", "LOADING", strLanguage, "上传中", "Loading");
 					String strProcessing = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
 							"TZGD_APPONLINE_MSGSET", "PROCESS", strLanguage, "正在处理", "Processing");
-					String strSubmitConfirmMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
-							"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage, "我已阅读声明，确认提交报名表。",
-							"I have read the statement to confirm the submission of the registration form.");
-
+					String strSubmitConfirmMsg = "";
+					if (!"MEM".equals(strAppOrgId)) {
+						strSubmitConfirmMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+								"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage,
+								"请您确认所有的信息都已经填写完整，一经提交本人将无法修改。若有任何疑问，可联络MBA（EMBA）项目部021-64252634。",
+								"I have read the statement to confirm the submission of the registration form.");
+					} else {
+						strSubmitConfirmMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+								"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage, "我已阅读声明，确认提交报名表",
+								"I have read the statement to confirm the submission of the registration form.");
+					}
 					String strDownLoadPDFMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
 							"TZGD_APPONLINE_MSGSET", "DOWN", strLanguage, "下载报名表", "Download");
 
@@ -1319,7 +1330,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						} else {
 
 							if (strDisplayType != null && !strDisplayType.equals("H")) {
-								//sem机构用默认的，其他用机构的css
+								// sem机构用默认的，其他用机构的css
 								if (!strAppOrgId.toLowerCase().equals("sem")) {
 									strDisplayType = strAppOrgId.toLowerCase();
 								}
@@ -1488,6 +1499,9 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 		String strPwd = "";
 		// 是否保存密码
 		String isPwd = "";
+
+		// 微信浏览器下访问根据openid自动登录
+		Boolean isWeChart = CommonUtils.isWeChartBrowser(request);
 
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		// 表单内容
@@ -1968,7 +1982,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						time2 = System.currentTimeMillis();
 						strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId,
 								strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,
-								strClassId, strPwd, strOtype, isPwd, strRefLetterId, isMobile);
+								strClassId, strPwd, strOtype, isPwd, strRefLetterId, isMobile, strAppOrgId, isWeChart);
 						if ("".equals(strMsg)) {
 							strMsg = tzOnlineAppEngineImpl.checkFiledValid(numAppInsId, strTplId, strPageId, "submit",
 									strTplType, strClassId, strBatchId, strLanguage, strIsAdmin);
@@ -2050,7 +2064,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						// 先保存数据
 						strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId,
 								strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,
-								strClassId, strPwd, "SAVE", isPwd, strRefLetterId, isMobile);
+								strClassId, strPwd, "SAVE", isPwd, strRefLetterId, isMobile, strAppOrgId, isWeChart);
 						// 模版级事件 JAVA 版本目前没有 注销掉
 						// String sqlGetModalEvents = "SELECT
 						// CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD
@@ -2131,7 +2145,7 @@ public class tzOnlineAppServiceImpl extends FrameworkImpl {
 						// 先保存数据
 						strMsg = tzOnlineAppEngineImpl.saveAppForm(strTplId, numAppInsId, tempClassId, strAppOprId,
 								strData, strTplType, strIsGuest, strAppInsVersionDb, strAppInsState, strBatchId,
-								strClassId, strPwd, strOtype, isPwd, strRefLetterId, isMobile);
+								strClassId, strPwd, strOtype, isPwd, strRefLetterId, isMobile, strAppOrgId, isWeChart);
 						// 模版级事件 JAVA 版本目前没有 注销掉
 						// String sqlGetModalEvents = "SELECT
 						// CMBC_APPCLS_PATH,CMBC_APPCLS_NAME,CMBC_APPCLS_METHOD

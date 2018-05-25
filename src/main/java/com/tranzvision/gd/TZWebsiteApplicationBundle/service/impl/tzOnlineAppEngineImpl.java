@@ -17,10 +17,13 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.GdKjComServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.SendSmsOrMalServiceImpl;
+import com.tranzvision.gd.TZEnrollmentClueBundle.service.impl.TzClueAutoAssign;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzRegUserT;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppCcTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppCompTblMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhccTMapper;
@@ -47,6 +50,7 @@ import com.tranzvision.gd.util.base.TzSystemException;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;;
 
 @Service
 public class tzOnlineAppEngineImpl {
@@ -113,9 +117,18 @@ public class tzOnlineAppEngineImpl {
 
 	@Autowired
 	private PsTzAppKsInExtTblMapper psTzAppKsInExtTblMapper;
-	
+
 	@Autowired
 	private GdKjComServiceImpl gdKjComServiceImpl;
+
+	@Autowired
+	private TzClueAutoAssign tzClueAutoAssign;
+
+	@Autowired
+	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
+
+	@Autowired
+	private GetHardCodePoint GetHardCodePoint;
 
 	@SuppressWarnings("unchecked")
 	public String checkAppViewQx(String strTplId, String oprid, String orgid, String strClassId) {
@@ -417,7 +430,7 @@ public class tzOnlineAppEngineImpl {
 
 	public Map<String, String> getHistoryOnlineApp(String strAppInsId, String strCopyFrom, String strAppOprId,
 			String strAppOrgId, String strTplId, String oprid, String strClassId, String strRefLetterId,
-			String strInsData) {
+			String strInsData, Boolean isWeChart) {
 		String strHisAppInsId = "";
 
 		Long numHisAppInsId = 0l;
@@ -459,6 +472,10 @@ public class tzOnlineAppEngineImpl {
 						psTzFormWrkT.setRowAddedDttm(new Date());
 						psTzFormWrkT.setRowLastmantDttm(new Date());
 						psTzFormWrkTMapper.insertSelective(psTzFormWrkT);
+						// 第一次保存报名表需要 进行销售线索关联
+						System.out.println("ADD XSXS");
+						this.addXSXS(strAppOprId, String.valueOf(tzAppInsId), strAppOrgId, isWeChart);
+
 						String sql = "update PS_TZ_REG_USER_T SET TZ_ALLOW_APPLY='N' where OPRID =?";
 						sqlQuery.update(sql, new Object[] { oprid });
 						// ////System.out.println("将班级和报名表关系数据 存入 ");
@@ -812,7 +829,8 @@ public class tzOnlineAppEngineImpl {
 	@SuppressWarnings("unchecked")
 	public String saveAppForm(String strTplId, Long numAppInsId, String strClassId, String strAppOprId,
 			String strJsonData, String strTplType, String strIsGuest, String strAppInsVersion, String strAppInsState,
-			String strBathId, String newClassId, String pwd, String strOtype, String isPwd, String strTjxId,Boolean isMobile) {
+			String strBathId, String newClassId, String pwd, String strOtype, String isPwd, String strTjxId,
+			Boolean isMobile, String jgID, boolean isWeChart) {
 
 		String returnMsg = "";
 
@@ -825,11 +843,11 @@ public class tzOnlineAppEngineImpl {
 			String INS_ID = null;
 			boolean chageClass = false;
 
-			String clientType="";
-			if(isMobile){
-				clientType="M";
-			}else{
-				clientType="P";
+			String clientType = "";
+			if (isMobile) {
+				clientType = "M";
+			} else {
+				clientType = "P";
 			}
 			if (newClassId != null && !newClassId.equals(strClassId)) {
 				chageClass = true;
@@ -898,6 +916,7 @@ public class tzOnlineAppEngineImpl {
 				}
 				psTzAppInsT.setTzAppCreMed(clientType);
 				psTzAppInsTMapper.insert(psTzAppInsT);
+
 			}
 
 			if ("BMB".equals(strTplType)) {
@@ -929,6 +948,9 @@ public class tzOnlineAppEngineImpl {
 						psTzFormWrkT.setRowLastmantDttm(new Date());
 						psTzFormWrkT.setTzBatchId(strBathId);
 						psTzFormWrkTMapper.insert(psTzFormWrkT);
+						// 第一次保存报名表需要 进行销售线索关联
+						System.out.println("ADD XSXS");
+						this.addXSXS(strAppOprId, String.valueOf(numAppInsId), jgID, isWeChart);
 					}
 				} else {
 					count = 0;
@@ -954,6 +976,9 @@ public class tzOnlineAppEngineImpl {
 						psTzFormWrkT.setRowLastmantDttm(new Date());
 						psTzFormWrkT.setTzBatchId(strBathId);
 						psTzFormWrkTMapper.insert(psTzFormWrkT);
+						System.out.println("ADD XSXS");
+						// 第一次保存报名表需要 进行销售线索关联
+						this.addXSXS(strAppOprId, String.valueOf(numAppInsId), jgID, isWeChart);
 					}
 				}
 			}
@@ -1175,6 +1200,223 @@ public class tzOnlineAppEngineImpl {
 			returnMsg = e.toString();
 		}
 		return returnMsg;
+	}
+
+	/**
+	 * 管理销售线索
+	 * 
+	 * @param strAppOprId
+	 * @param AppInsId
+	 * @param JGID
+	 */
+	private void addXSXS(String strAppOprId, String AppInsId, String JGID, Boolean isWeChart) {
+		System.out.println("JGID：" + JGID);
+		System.out.println("strAppOprId：" + strAppOprId);
+		System.out.println("AppInsId：" + AppInsId);
+		String sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY,TZ_XSQU_ID from PS_TZ_XSXS_INFO_T where TZ_KH_OPRID=? and (TZ_LEAD_STATUS is null or TZ_LEAD_STATUS <> ?)";
+
+		List<Map<String, Object>> list = sqlQuery.queryForList(sql, new Object[] { strAppOprId, "G" });
+		Map<String, Object> map = null;
+		String TZ_LEAD_ID = "";
+		String TZ_XSQU_ID = "";
+		String TZ_RSFCREATE_WAY = "";
+		boolean falge = false;
+		String isAutoAssign = "";
+
+		sql = "SELECT TZ_COMMENT1 FROM PS_TZ_REG_USER_T WHERE OPRID =?";
+		String country = sqlQuery.queryForObject(sql, new String[] { strAppOprId }, "String");
+
+		// 先按照OprId 检查，如果存在，并且未关联报名表,去关联报名表，创建方式为D(会员注册)的优先
+		for (Object object : list) {
+			map = (Map<String, Object>) object;
+			TZ_LEAD_ID = map.get("TZ_LEAD_ID") == null ? "" : String.valueOf(map.get("TZ_LEAD_ID"));
+			TZ_XSQU_ID = map.get("TZ_XSQU_ID") == null ? "" : String.valueOf(map.get("TZ_XSQU_ID"));
+			if (checkXSXS(TZ_LEAD_ID) != 0) {
+				continue;
+			} else {
+				falge = true;
+				TZ_RSFCREATE_WAY = map.get("TZ_RSFCREATE_WAY") == null ? ""
+						: String.valueOf(map.get("TZ_RSFCREATE_WAY"));
+				if (TZ_RSFCREATE_WAY.equals("D")) {
+					break;
+				}
+			}
+		}
+
+		System.out.println("按OprId查询结果：" + falge);
+
+		if (falge) {
+			// 按OprId找到符合条件的线索 绑定报名表
+			System.out.println("绑定报名表");
+			bangdBMB(TZ_LEAD_ID, AppInsId, strAppOprId);
+
+			isAutoAssign = this.getIsAutoAssign(JGID);
+
+			if (isAutoAssign.equals("Y")) {
+				// 分配线索
+				System.out.println("分配线索");
+				// String orgId：机构ID
+				// String oprid: 当前登录人OPRID
+				// String clueId: 线索编号
+				// String countryId：国籍值（非描述）
+				// String localId：常住地编号（非描述）
+				// String[] errorMsg：存放错误信息
+				tzClueAutoAssign.autoAssign(JGID, strAppOprId, TZ_LEAD_ID, country, TZ_XSQU_ID, null);
+			}
+		} else {
+			// 按手机判断
+			String phone = "";
+			String email = "";
+			String name = "";
+			String sex = "";
+			String company = "";
+			String zhiwu = "";
+			String city = "";
+			String department = "";
+
+			sql = "select A.TZ_REALNAME,A.TZ_GENDER,A.TZ_COMPANY_NAME,A.TZ_COMMENT16,B.TZ_LABEL_NAME,A.TZ_DEPTMENT,C.TZ_EMAIL,C.TZ_MOBILE ";
+			sql = sql
+					+ "from PS_TZ_REG_USER_T A,PS_TZ_XSXS_DQBQ_T B,PS_TZ_AQ_YHXX_TBL C where A.OPRID=? AND A.TZ_LEN_PROID=B.TZ_LABEL_DESC ";
+			sql = sql + "AND A.OPRID=C.OPRID";
+			map = sqlQuery.queryForMap(sql, new String[] { strAppOprId });
+			if (map != null) {
+				name = map.get("TZ_REALNAME") == null ? "" : String.valueOf(map.get("TZ_REALNAME"));
+
+				sex = map.get("TZ_GENDER") == null ? "" : String.valueOf(map.get("TZ_GENDER"));
+				company = map.get("TZ_COMPANY_NAME") == null ? "" : String.valueOf(map.get("TZ_COMPANY_NAME"));
+				zhiwu = map.get("TZ_COMMENT16") == null ? "" : String.valueOf(map.get("TZ_COMMENT16"));
+				city = map.get("TZ_LABEL_NAME") == null ? "" : String.valueOf(map.get("TZ_LABEL_NAME"));
+				department = map.get("TZ_DEPTMENT") == null ? "" : String.valueOf(map.get("TZ_DEPTMENT"));
+				email = map.get("TZ_EMAIL") == null ? "" : String.valueOf(map.get("TZ_EMAIL"));
+				phone = map.get("TZ_MOBILE") == null ? "" : String.valueOf(map.get("TZ_MOBILE"));
+			}
+
+			sql = "select TZ_LEAD_ID,TZ_RSFCREATE_WAY,TZ_KH_OPRID,TZ_XSQU_ID from PS_TZ_XSXS_INFO_T where TZ_MOBILE=? and (TZ_LEAD_STATUS is null or TZ_LEAD_STATUS <> ?)";
+			list = sqlQuery.queryForList(sql, new Object[] { phone, "G" });
+
+			String TZ_KH_OPRID = "";
+
+			// 按照手机来判断，如果存在，TZ_KH_OPRID为空
+			// 或和strAppOprId相等,并且未关联报名表,去关联报名表，创建方式为D(会员注册)的优先
+			for (Object object : list) {
+				map = (Map<String, Object>) object;
+				TZ_KH_OPRID = map.get("TZ_KH_OPRID") == null ? "" : String.valueOf(map.get("TZ_KH_OPRID"));
+				System.out.println("TZ_KH_OPRID：" + TZ_KH_OPRID);
+				if (!TZ_KH_OPRID.equals("") && !TZ_KH_OPRID.equals(strAppOprId)) {
+					continue;
+				} else {
+					TZ_LEAD_ID = map.get("TZ_LEAD_ID") == null ? "" : String.valueOf(map.get("TZ_LEAD_ID"));
+					TZ_XSQU_ID = map.get("TZ_XSQU_ID") == null ? "" : String.valueOf(map.get("TZ_XSQU_ID"));
+					if (checkXSXS(TZ_LEAD_ID) != 0) {
+						continue;
+					} else {
+						falge = true;
+						TZ_RSFCREATE_WAY = map.get("TZ_RSFCREATE_WAY") == null ? ""
+								: String.valueOf(map.get("TZ_RSFCREATE_WAY"));
+						if (TZ_RSFCREATE_WAY.equals("D")) {
+							break;
+						}
+					}
+				}
+			}
+
+			System.out.println("按手机查询结果：" + falge);
+
+			if (falge) {
+				// 按手机找到符合条件的线索 绑定报名表
+				System.out.println("绑定报名表");
+				bangdBMB(TZ_LEAD_ID, AppInsId, strAppOprId);
+				// 更新线索里面的TZ_KH_OPRID
+				sql = "UPDATE PS_TZ_XSXS_INFO_T SET TZ_KH_OPRID=? WHERE TZ_LEAD_ID=?";
+				sqlQuery.update(sql, new Object[] { strAppOprId, TZ_LEAD_ID });
+				// 分配线索
+				isAutoAssign = this.getIsAutoAssign(JGID);
+
+				if (isAutoAssign.equals("Y")) {
+					System.out.println("分配线索");
+					tzClueAutoAssign.autoAssign(JGID, strAppOprId, TZ_LEAD_ID, country, TZ_XSQU_ID, null);
+				}
+			} else {
+				// 新建线索
+				System.out.println("没有符合条件的，新建立线索");
+				TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+
+				System.out.println("name：" + name);
+				System.out.println("TZ_LEAD_ID：" + TZ_LEAD_ID);
+				System.out.println("city：" + city);
+
+				// sql = "INSERT INTO PS_TZ_XSXS_INFO_T
+				// (TZ_LEAD_ID,TZ_JG_ID,TZ_RSFCREATE_WAY,TZ_REALNAME,TZ_KH_OPRID,";
+				// sql = sql
+				// +
+				// "TZ_COMP_CNAME,TZ_SEX,TZ_DEPARTMENT,TZ_POSITION,TZ_EMAIL,TZ_MOBILE,ROW_ADDED_DTTM,
+				// ROW_ADDED_OPRID,";
+				// sql = sql + "ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID,
+				// TZ_XSQU_ID) VALUES ";
+				// sql = sql + "(?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW(),?,?)";
+
+				// 线索创建方式-在线报名
+				String strDefaultCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_CREWAY");
+				// 线索创建方式-微信端
+				String strWeiChatCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_WX_CREWAY");
+
+				// System.out.println("sql:" + sql);
+				// sqlQuery.update(sql, new Object[] { TZ_LEAD_ID, JGID, "B",
+				// name, strAppOprId, company, sex, department,
+				// zhiwu, email, phone, strAppOprId, strAppOprId, city });
+
+				PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
+				psTzXsxsInfoT.setTzLeadId(TZ_LEAD_ID);
+				psTzXsxsInfoT.setTzJgId(JGID);
+				if (isWeChart) {
+					psTzXsxsInfoT.setTzRsfcreateWay(strWeiChatCreateWay);
+				} else {
+					psTzXsxsInfoT.setTzRsfcreateWay(strDefaultCreateWay);
+				}
+				psTzXsxsInfoT.setTzRealname(name);
+				psTzXsxsInfoT.setTzKhOprid(strAppOprId);
+				psTzXsxsInfoT.setTzCompCname(company);
+				psTzXsxsInfoT.setTzSex(sex);
+				psTzXsxsInfoT.setTzDepartment(department);
+				psTzXsxsInfoT.setTzPosition(zhiwu);
+				psTzXsxsInfoT.setTzEmail(email);
+				psTzXsxsInfoT.setTzMobile(phone);
+				psTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
+				psTzXsxsInfoT.setRowAddedOprid(strAppOprId);
+				psTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
+				psTzXsxsInfoT.setRowLastmantOprid(strAppOprId);
+				psTzXsxsInfoT.setTzXsquId(city);
+				psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
+
+				// 绑定报名表
+				System.out.println("绑定报名表");
+				bangdBMB(TZ_LEAD_ID, AppInsId, strAppOprId);
+				// 分配线索
+				isAutoAssign = this.getIsAutoAssign(JGID);
+
+				if (isAutoAssign.equals("Y")) {
+					System.out.println("分配线索");
+					tzClueAutoAssign.autoAssign(JGID, strAppOprId, TZ_LEAD_ID, country, city, null);
+				}
+			}
+		}
+
+	}
+
+	private String getIsAutoAssign(String jgId) {
+		// 表PS_TZ_ZDFP_FLAG_T查询字段TZ_ZDFP_FLG的值，如果为Y，调用，否则不调用，报名表那里你改下吧
+		String sql = "select TZ_ZDFP_FLG from PS_TZ_ZDFP_FLAG_T where TZ_JG_ID=?";
+		return sqlQuery.queryForObject(sql, new Object[] { jgId }, "String");
+	}
+
+	private void bangdBMB(String TZ_LEAD_ID, String AppInsId, String strAppOprId) {
+		String sql = "INSERT INTO PS_TZ_XSXS_BMB_T VALUES (?,?,NOW(),?,NOW(),?)";
+		sqlQuery.update(sql, new Object[] { TZ_LEAD_ID, AppInsId, strAppOprId, strAppOprId });
+	}
+
+	private int checkXSXS(String TZ_LEAD_ID) {
+		String sql = "select count(TZ_APP_INS_ID) from PS_TZ_XSXS_BMB_T where TZ_LEAD_ID=?";
+		return sqlQuery.queryForObject(sql, new Object[] { TZ_LEAD_ID }, "Integer");
 	}
 
 	// 推荐信保存推荐人信息
@@ -1552,7 +1794,7 @@ public class tzOnlineAppEngineImpl {
 	 * @return
 	 */
 	public String checkFiledValid(Long numAppInsId, String strTplId, String strPageId, String strOtype,
-			String strTplType,String classId, String batchID, String LAN, String isAdmin) {
+			String strTplType, String classId, String batchID, String LAN, String isAdmin) {
 		String returnMsg = "";
 
 		/* 信息项编号 */
@@ -1863,7 +2105,7 @@ public class tzOnlineAppEngineImpl {
 			}
 
 			if ("submit".equals(strOtype)) {
-				
+
 				// modity by caoy 校验报名表提交是否超期
 				// modity by caoy 管理员不需要校验这个
 				System.out.println("isAdmin:" + isAdmin);
@@ -1886,9 +2128,8 @@ public class tzOnlineAppEngineImpl {
 							sb.append("AND B.TZ_BATCH_ID=? ");
 							sb.append("AND B.TZ_APP_END_DT >= curdate() ");
 
-
-							int mun = sqlQuery.queryForObject(sb.toString(),
-									new Object[] { classId, batchID }, "Integer");
+							int mun = sqlQuery.queryForObject(sb.toString(), new Object[] { classId, batchID },
+									"Integer");
 							if (mun <= 0) {
 								String batchError = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
 										"TZGD_APPONLINE_MSGSET", "BATCHError", LAN, "该批次报名表提交时间已经截止，请重新选择其他批次。",
@@ -1896,11 +2137,11 @@ public class tzOnlineAppEngineImpl {
 								returnMsg = returnMsg + batchError + "<br/>";
 
 							}
-						} 
+						}
 
 					}
 				}
-				
+
 				// 推荐信校验,特殊的例子
 				if (strTplType.equals("TJX")) {
 					System.out.println("推荐信推荐人信息校验开始");
@@ -1989,8 +2230,10 @@ public class tzOnlineAppEngineImpl {
 						}
 						if (!Listcheck) {
 							// System.out.println("推荐信推荐人信息校验失败");
-							//sql = "select TZ_APP_TPL_LAN from PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?";
-							//LAN = sqlQuery.queryForObject(sql, new Object[] { strTplId }, "String");
+							// sql = "select TZ_APP_TPL_LAN from
+							// PS_TZ_APPTPL_DY_T where TZ_APP_TPL_ID=?";
+							// LAN = sqlQuery.queryForObject(sql, new Object[] {
+							// strTplId }, "String");
 
 							if (LAN.equals("ENG")) {
 								returnMsg = returnMsg + "Reference information is incomplete" + "<br/>";
@@ -3113,11 +3356,11 @@ public class tzOnlineAppEngineImpl {
 			} else {
 				psTzAppKsInExtTblMapper.insertSelective(psTzAppKsInExtTbl);
 			}
-			
-			//同步注册信息表 PS_TZ_AQ_YHXX_TBL;
-			
-		String updateSql="UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_REALNAME=? WHERE OPRID=? AND TZ_JG_ID='SEM' AND TZ_DLZH_ID=?"; 
-			sqlQuery.update(updateSql,new Object[] { name,strAppOprId,strAppOprId });
+
+			// 同步注册信息表 PS_TZ_AQ_YHXX_TBL;
+
+			String updateSql = "UPDATE PS_TZ_AQ_YHXX_TBL SET TZ_REALNAME=? WHERE OPRID=? AND TZ_JG_ID='SEM' AND TZ_DLZH_ID=?";
+			sqlQuery.update(updateSql, new Object[] { name, strAppOprId, strAppOprId });
 
 		} catch (Exception e) {
 			e.printStackTrace();

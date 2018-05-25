@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZJudgesTypeBundle.dao;
 
+import java.util.List;
+
 import com.tranzvision.gd.TZJudgesTypeBundle.model.PsTzClpsGrTbl;
 
 public interface PsTzClpsGrTblMapper {
@@ -14,4 +16,6 @@ public interface PsTzClpsGrTblMapper {
     int updateByPrimaryKeySelective(PsTzClpsGrTbl record);
 
     int updateByPrimaryKey(PsTzClpsGrTbl record);
+
+	List<PsTzClpsGrTbl> findAll();
 }

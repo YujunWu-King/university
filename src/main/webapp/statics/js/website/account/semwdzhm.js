@@ -202,7 +202,7 @@ $(document).ready(function() {
         type: "post",
         dataType: "json",
         async: false,
-        url: tzGdWdzhGetUserInfo,
+        url: encodeURI(tzGdWdzhGetUserInfo),
         success: function(jsonData) {
             jsonValue = jsonData.comContent;
             var data = jsonData.comContent;
@@ -210,6 +210,8 @@ $(document).ready(function() {
             // 个人设置
             for (var key in data) {
                 if (key == "TZ_GENDER") {
+                	$("input[name='TZ_GENDER'][value!='" + data[key] + "']").removeAttr("checked");
+                    $("input[name='TZ_GENDER'][value!='" + data[key] + "']").next().removeClass("bon-radio");
                     $("input[name='TZ_GENDER'][value='" + data[key] + "']").attr("checked", "checked");
                     $("input[name='TZ_GENDER'][value='" + data[key] + "']").next().addClass("bon-radio");
                 }else if(key == "TZ_COMMENT2"||key == "TZ_HIGHEST_EDU"||key == "TZ_COMMENT4"||key == "TZ_COMMENT5"||key == "TZ_COMMENT15"||key == "TZ_COMMENT6"||key == "TZ_COMMENT10"||key=='TZ_COMP_INDUSTRY'){

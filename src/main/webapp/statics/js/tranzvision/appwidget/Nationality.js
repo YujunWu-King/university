@@ -125,35 +125,22 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 		
 		if(SurveyBuild.accessType == "M"){
 			//顾贤达    2017年6月12日 11:15:18 手机版TEST
-			
-//			var $inputBox = $("#m" + data.itemId);
-//			var $selectBtn = $("#m" + data.itemId + "_Btn");
-//			
+					
 			var $inputBox = $("#" + data.itemId);
 			var $selectBtn = $("#" + data.itemId + "_Btn");
 			var siteId=$("#siteId").val();
 			
 
-//			$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country"),$("#TZ_SCH_CNAME"),$("#TZ_LEN_PROID")],function(i,el){
 			$.each([$inputBox, $selectBtn],function(i, el) {
 				el.focus(function(){
 		        document.activeElement.blur();
 		       })
 		     });
-			/*var $inputBoxTEST=$("#TEST");
-			$.each([$inputBoxTEST],function(i, el) {
-				el.click(function(e) { 
-//					console.log("click");
-					console.log($("#m" + data.itemId).val());
-					
-		       })
-		     });*/
-//			$.each([$("#TZ_COUNTRY"),$("#TZ_COUNTRY_click"),$("#TZ_SCH_CNAME_Country")],function(i,el){	
+
 			$.each([$inputBox, $selectBtn],function(i, el) {
 				el.click(function(e) { 
 				
 					$("#ParamCon").val(el.attr("id"));
-//					var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD","OperateType":"HTML","comParams":{"orgid":"'+strJgid+'","siteId":"'+strSiteId+'","lang":"'+$("#lang").val()+'","sen":"2"}}';
 					var tzParams = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_COUNTRY_STD2","OperateType":"HTML","comParams":{"orgid":"SEM","siteId":"72","lang":"'+$("#lang").val()+'","sen":"2"}}';
 					
 					$.ajax({
@@ -167,10 +154,6 @@ SurveyBuild.extend("Nationality", "baseComponent", {
 						success: function(result){
 							$("#searchCountry").html("");
 							$("#searchCountry").html(result);
-							//$("#body").css("position","fixed");
-							//$(".shade").show();
-//							console.log(result);
-//							$("#before").hide();
 							$("#MainDiv").hide();
 						    $("#searchCountry").fadeIn("slow"); 
 		                     loaded ();

@@ -46,7 +46,7 @@ public class TzInterviewAppoStuAddImpl extends FrameworkImpl{
 			String[][] orderByArr = new String[][] {};
 
 			// json数据要的结果字段;
-			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL","TZ_MOBILE","TZ_MSH_ID","TZ_KSH_CSJG"};
+			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "OPRID", "TZ_REALNAME", "TZ_EMAIL","TZ_MOBILE","TZ_MSH_ID"};
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -68,7 +68,15 @@ public class TzInterviewAppoStuAddImpl extends FrameworkImpl{
 					mapList.put("email", rowList[5]);
 					mapList.put("mobile", rowList[6]);
 					mapList.put("msApplyID", rowList[7]);
-					mapList.put("csResult", rowList[8]);//初筛结果
+					
+					//预约状态
+					String sql = "select 'Y' from PS_TZ_MSYY_KS_TBL where TZ_CLASS_ID=? and TZ_BATCH_ID=? and OPRID=? limit 1";
+					String yySta = jdbcTemplate.queryForObject(sql, new Object[]{ rowList[0], rowList[1], rowList[3] }, "String");
+					String yyStatus = "未预约";
+					if("Y".equals(yySta)){
+						yyStatus = "已预约";
+					}
+					mapList.put("yyStatus", yyStatus);
 
 					listData.add(mapList);
 				}
@@ -157,7 +165,7 @@ public class TzInterviewAppoStuAddImpl extends FrameworkImpl{
 				int lastNum = (planTotalNum+stuCount)-2*inPlanCount;
 				if(lastNum > maxPerson){
 					errorMsg[0] = "1";
-					errorMsg[1] = "指定面试时间段最多可预约"+maxPerson+"人，您已超过最大值。";
+					errorMsg[1] = "指定面试时间段最多可预约"+maxPerson+"人，预约人数已满。";
 				}else{
 					//删除其他时间段的预约学生
 					sql = "DELETE FROM PS_TZ_MSYY_KS_TBL WHERE TZ_CLASS_ID='"+ classID +"' AND TZ_BATCH_ID='"+ batchID +"' AND TZ_MS_PLAN_SEQ<>'"+ timePlan +"' AND OPRID IN("+ whereIn +")";

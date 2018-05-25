@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzWtxsTmpTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzWtxsTmpT" >
+    <id column="TZ_LEAD_ID" property="tzLeadId" jdbcType="VARCHAR" />
+    <id column="OPRID" property="oprid" jdbcType="VARCHAR" />
+    <id column="TZ_WT_TYPE" property="tzWtType" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_JY_CZ" property="tzJyCz" jdbcType="VARCHAR" />
+    <result column="TZ_ORDER_NUM" property="tzOrderNum" jdbcType="INTEGER" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzWtxsTmpT" extends="BaseResultMap" >
+    <result column="TZ_LEAD_DESCR" property="tzLeadDescr" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_LEAD_ID, OPRID, TZ_WT_TYPE, TZ_JG_ID, TZ_JY_CZ, TZ_ORDER_NUM, ROW_ADDED_DTTM, 
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_LEAD_DESCR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzWtxsTmpTKey" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_WTXS_TMP_T
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+      and TZ_WT_TYPE = #{tzWtType,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzWtxsTmpTKey" >
+    delete from PS_TZ_WTXS_TMP_T
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+      and TZ_WT_TYPE = #{tzWtType,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzWtxsTmpT" >
+    insert into PS_TZ_WTXS_TMP_T (TZ_LEAD_ID, OPRID, TZ_WT_TYPE, 
+      TZ_JG_ID, TZ_JY_CZ, TZ_ORDER_NUM, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, TZ_LEAD_DESCR)
+    values (#{tzLeadId,jdbcType=VARCHAR}, #{oprid,jdbcType=VARCHAR}, #{tzWtType,jdbcType=VARCHAR}, 
+      #{tzJgId,jdbcType=VARCHAR}, #{tzJyCz,jdbcType=VARCHAR}, #{tzOrderNum,jdbcType=INTEGER}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{tzLeadDescr,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzWtxsTmpT" >
+    insert into PS_TZ_WTXS_TMP_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        TZ_LEAD_ID,
+      </if>
+      <if test="oprid != null" >
+        OPRID,
+      </if>
+      <if test="tzWtType != null" >
+        TZ_WT_TYPE,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzJyCz != null" >
+        TZ_JY_CZ,
+      </if>
+      <if test="tzOrderNum != null" >
+        TZ_ORDER_NUM,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="tzLeadDescr != null" >
+        TZ_LEAD_DESCR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        #{tzLeadId,jdbcType=VARCHAR},
+      </if>
+      <if test="oprid != null" >
+        #{oprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWtType != null" >
+        #{tzWtType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJyCz != null" >
+        #{tzJyCz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrderNum != null" >
+        #{tzOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadDescr != null" >
+        #{tzLeadDescr,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzWtxsTmpT" >
+    update PS_TZ_WTXS_TMP_T
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJyCz != null" >
+        TZ_JY_CZ = #{tzJyCz,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOrderNum != null" >
+        TZ_ORDER_NUM = #{tzOrderNum,jdbcType=INTEGER},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadDescr != null" >
+        TZ_LEAD_DESCR = #{tzLeadDescr,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+      and TZ_WT_TYPE = #{tzWtType,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzWtxsTmpT" >
+    update PS_TZ_WTXS_TMP_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_JY_CZ = #{tzJyCz,jdbcType=VARCHAR},
+      TZ_ORDER_NUM = #{tzOrderNum,jdbcType=INTEGER},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      TZ_LEAD_DESCR = #{tzLeadDescr,jdbcType=LONGVARCHAR}
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+      and TZ_WT_TYPE = #{tzWtType,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzWtxsTmpT" >
+    update PS_TZ_WTXS_TMP_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_JY_CZ = #{tzJyCz,jdbcType=VARCHAR},
+      TZ_ORDER_NUM = #{tzOrderNum,jdbcType=INTEGER},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and OPRID = #{oprid,jdbcType=VARCHAR}
+      and TZ_WT_TYPE = #{tzWtType,jdbcType=VARCHAR}
+  </update>
+</mapper>

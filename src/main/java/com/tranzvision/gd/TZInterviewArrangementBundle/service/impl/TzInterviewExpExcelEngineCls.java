@@ -131,10 +131,11 @@ public class TzInterviewExpExcelEngineCls extends BaseEngine{
 					mapData.put("interviewTime", strMsTime);
 					
 					//报名表
-					sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?";
+					//sql = "SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?";
+					sql = "select A.TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A,PS_TZ_MSPS_KSH_TBL B where A.TZ_APP_INS_ID=B.TZ_APP_INS_ID and B.TZ_CLASS_ID=? and B.TZ_APPLY_PC_ID=? and A.OPRID=? limit 1";
 					String appInsId="";
 					try{
-						appInsId = sqlQuery.queryForObject(sql, new Object[]{ classID,oprid }, "String");
+						appInsId = sqlQuery.queryForObject(sql, new Object[]{ classID,batchID,oprid }, "String");
 					}catch(Exception e){
 						e.printStackTrace();
 					}

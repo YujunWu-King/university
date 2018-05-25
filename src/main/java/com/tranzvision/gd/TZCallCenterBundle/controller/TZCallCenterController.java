@@ -85,12 +85,15 @@ public class TZCallCenterController {
 			Date beginDTime = c.getTime();
 			
 			String currentDlzhId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+		//	System.out.println("currentDlzhId="+currentDlzhId);
 			orgid = tzFilterIllegalCharacter.filterDirectoryIllegalCharacter(orgid).toUpperCase();
-
+		//	System.out.println("orgid="+orgid);
 			String strUPDRRECID = request.getParameter("UPDRRECID");
+		//	System.out.println("strUPDRRECID="+strUPDRRECID);
 			//不使用加密，使用base64位编码
 			//String tmpUserDlzh = DESUtil.decrypt(strUPDRRECID, "TZGDSSOFLG");
 			String tmpUserDlzh = new String(org.apache.commons.codec.binary.Base64.decodeBase64(strUPDRRECID));
+			System.out.println("tmpUserDlzh="+tmpUserDlzh);
 			//System.out.println("原数据：" + strUPDRRECID + "，解析数据为：" + tmpUserDlzh);
 			String strUserId = "";
 			Date loginEndDTime = null;
@@ -99,16 +102,19 @@ public class TZCallCenterController {
 			
 			try{
 				int pos = tmpUserDlzh.indexOf("|");
-				
+				System.out.println("pos="+pos);
 				if(pos>0){
 					strUserId = tmpUserDlzh.substring(0, pos);
+					System.out.println("strUserId="+strUserId);
 					pos = pos + 1;
 					String strTimeStap = tmpUserDlzh.substring(pos, tmpUserDlzh.length());
-					
+					System.out.println("strTimeStap="+strTimeStap);
 					int time = Integer.valueOf(strTimeStap);
+					System.out.println("time="+time);
 					//当前加密结果，在时间戳20分钟内有效
 					time = time + 20 * 60;
 					loginEndDTime = addSecond(beginDTime, time);
+					System.out.println("loginEndDTime="+loginEndDTime);
 				}
 			}catch(Exception e){
 				/**/
@@ -117,6 +123,7 @@ public class TZCallCenterController {
 //			System.out.println("用户名：" + strUserId);
 //			System.out.println("登录有效截止时间：" + sdf.format(loginEndDTime));
 			String strTel = request.getParameter("tel");
+			System.out.println("strTel="+strTel);
 			String strType = request.getParameter("type");		
 			if(strType==null||"".equals(strType)){
 				strType = "A";
@@ -124,6 +131,7 @@ public class TZCallCenterController {
 			//来电接听后，将基本信息写入接待单表中;
 			PsTzPhJddTbl psTzPhJddTbl = new PsTzPhJddTbl();
 			String strSemNum = String.valueOf(getSeqNum.getSeqNum("TZ_PH_JDD_TBL", "TZ_XH"));
+			System.out.println("strSemNum="+strSemNum);
 			String strExistFlg = sqlQuery.queryForObject("SELECT 'Y' FROM PS_TZ_PH_JDD_TBL WHERE TZ_XH=?", new Object[]{strSemNum}, "String");
 			while ("Y".equals(strExistFlg)){
 				strSemNum = String.valueOf(getSeqNum.getSeqNum("TZ_PH_JDD_TBL", "TZ_XH"));
@@ -134,6 +142,7 @@ public class TZCallCenterController {
 			psTzPhJddTbl.setTzPhone(strTel);
 			psTzPhJddTbl.setTzCallType(strType);
 			String strOprId = tzCallCenterServiceImpl.findOprID(strSemNum, strTel);
+			System.out.println("strOprId="+strOprId);
 			if(strOprId!=null&&!"".equals(strOprId)){
 				psTzPhJddTbl.setTzOprid(strOprId);
 			}
@@ -143,8 +152,9 @@ public class TZCallCenterController {
 			psTzPhJddTblMapper.insert(psTzPhJddTbl);
 			
 			String domain = getCookieProps.getCookieDomain();
+			System.out.println("domain="+domain);
 			String cookiePath = getCookieProps.getCookiePath();
-			
+			System.out.println("cookiePath="+cookiePath);
 			tzCookie.addCookie(response, "callCenterXh", strSemNum,36000,domain,cookiePath,false,false);
 			tzCookie.addCookie(response, "callCenterPhone", strTel,36000,domain,cookiePath,false,false);
 			tzCookie.addCookie(response, "callCenterType", strType,36000,domain,cookiePath,false,false);
@@ -155,7 +165,7 @@ public class TZCallCenterController {
 			//登录成功						
 			String strHardSQL = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 			String mobileUrlMenu = sqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_SEM_PHONE_USERMENU"},"String");
-			
+			System.out.println("mobileUrlMenu="+mobileUrlMenu);
 			strUrl = strUrl + "#" + mobileUrlMenu;
 			
 			boolean boolLogin = false;

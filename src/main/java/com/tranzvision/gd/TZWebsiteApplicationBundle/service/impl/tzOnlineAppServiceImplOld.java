@@ -943,9 +943,16 @@ public class tzOnlineAppServiceImplOld extends FrameworkImpl {
 					"LOADING", strLanguage, "上传中", "Loading");
 			String strProcessing = gdKjComServiceImpl.getMessageTextWithLanguageCd(request, "TZGD_APPONLINE_MSGSET",
 					"PROCESS", strLanguage, "正在处理", "Processing");
-			String strSubmitConfirmMsg = gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
-					"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage, "我已阅读声明，确认提交报名表。",
-					"I have read the statement to confirm the submission of the registration form.");
+			String strSubmitConfirmMsg ="";
+			if(!"MEM".equals(strAppOrgId)){
+				strSubmitConfirmMsg=gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+						"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage, "请您确认所有的信息都已经填写完整，一经提交本人将无法修改。若有任何疑问，可联络MBA（EMBA）项目部021-64252634。",
+						"I have read the statement to confirm the submission of the registration form.");
+			}else{
+				strSubmitConfirmMsg=gdKjComServiceImpl.getMessageTextWithLanguageCd(request,
+						"TZGD_APPONLINE_MSGSET", "SUBMITCONFIRMMSG", strLanguage, "我已阅读声明，确认提交报名表",
+						"I have read the statement to confirm the submission of the registration form.");
+			}
 
 			if ("N".equals(strIsGuest)) {
 				sql = "SELECT TZ_IS_GUEST FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID = ? AND OPRID = ?";

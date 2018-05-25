@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
-	<title>清华大学经济管理学院MBA面试评审系统</title>
+	<title>华东理工大学商学院优选面试评分系统</title>
 	<link rel="stylesheet" href="%bind(:1)/statics/js/lib/jqueryMobile/jquery.mobile-sem.css" />
 	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-1.11.1.min.js"></script>
 	<script type="text/javascript" src="%bind(:1)/statics/js/lib/jquery/jquery-migrate-1.2.1.js"></script>
@@ -30,8 +30,8 @@
 
 			<a href="#" id="favrecipelink" data-role="button" data-inline="true" data-icon="home" data-theme="a">首页</a>
 			<!--a href="%bind(:4)" target="_blank" id="favrecipelink" data-role="button" data-theme="b" data-inline="true" data-icon="info">联系方式</a-->
-			<a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-theme="a" data-inline="true" data-icon="star" >修改密码</a>
-			<a href="../../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-theme="a" data-icon="delete">退出</a>
+			<!-- <a href="#modifyPswdPopup"  id="modifyPswd" data-rel="popup" data-role="button" data-theme="a" data-inline="true" data-icon="star" >修改密码</a> -->
+			<a href="../logout?type=interview" target="_self"  data-role="button" data-inline="true" data-theme="a" data-icon="delete">退出</a>
 
 			<div data-role="popup" id="modifyPswdPopup" data-position-to="window" data-dismissible="false" data-theme="a" data-overlay-theme="a" style="min-width:350px;">
 				<a href="#" data-rel="back" id="closeModify" class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-right">关闭</a>
@@ -72,7 +72,7 @@
 	</div><!-- /content -->
 	
 	<div data-role="footer" data-theme="b">
-		<h4>地址:北京市海淀区清华大学　Copyright © 2017 Tsinghua Sem. All Rights Reserved</h4>
+		<h4>上海市梅陇路130号华东理工大学商学院   Copyright © 华东理工大学商学院   All Right Reserved</h4>
 	</div><!-- /footer -->
 	
 </div><!-- /page -->
@@ -109,7 +109,7 @@
 				  $("#list").html(lilist);
 		  	}
 		  
-		  $("#tz_welcome").html("&nbsp;&nbsp;欢迎%bind(:3)登录清华经管MBA面试评审系统");
+		  $("#tz_welcome").html("&nbsp;&nbsp;欢迎%bind(:3)登录华东理工大学商学院面试评审系统");
 
         });
 

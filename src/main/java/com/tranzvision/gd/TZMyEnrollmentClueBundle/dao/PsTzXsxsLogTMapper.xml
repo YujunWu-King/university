@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsLogTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLogT" >
+    <id column="TZ_OPERATE_ID" property="tzOperateId" jdbcType="INTEGER" />
+    <result column="TZ_LEAD_ID" property="tzLeadId" jdbcType="VARCHAR" />
+    <result column="TZ_LEAD_STATUS2" property="tzLeadStatus2" jdbcType="VARCHAR" />
+    <result column="TZ_LEAD_STATUS1" property="tzLeadStatus1" jdbcType="VARCHAR" />
+    <result column="TZ_OPERATE_DESC" property="tzOperateDesc" jdbcType="VARCHAR" />
+    <result column="TZ_DEMO" property="tzDemo" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_OPERATE_ID, TZ_LEAD_ID, TZ_LEAD_STATUS2, TZ_LEAD_STATUS1, TZ_OPERATE_DESC, TZ_DEMO, 
+    ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from PS_TZ_XSXS_LOG_T
+    where TZ_OPERATE_ID = #{tzOperateId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from PS_TZ_XSXS_LOG_T
+    where TZ_OPERATE_ID = #{tzOperateId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLogT" >
+    insert into PS_TZ_XSXS_LOG_T (TZ_OPERATE_ID, TZ_LEAD_ID, TZ_LEAD_STATUS2, 
+      TZ_LEAD_STATUS1, TZ_OPERATE_DESC, TZ_DEMO, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID)
+    values (#{tzOperateId,jdbcType=INTEGER}, #{tzLeadId,jdbcType=VARCHAR}, #{tzLeadStatus2,jdbcType=VARCHAR}, 
+      #{tzLeadStatus1,jdbcType=VARCHAR}, #{tzOperateDesc,jdbcType=VARCHAR}, #{tzDemo,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLogT" >
+    insert into PS_TZ_XSXS_LOG_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzOperateId != null" >
+        TZ_OPERATE_ID,
+      </if>
+      <if test="tzLeadId != null" >
+        TZ_LEAD_ID,
+      </if>
+      <if test="tzLeadStatus2 != null" >
+        TZ_LEAD_STATUS2,
+      </if>
+      <if test="tzLeadStatus1 != null" >
+        TZ_LEAD_STATUS1,
+      </if>
+      <if test="tzOperateDesc != null" >
+        TZ_OPERATE_DESC,
+      </if>
+      <if test="tzDemo != null" >
+        TZ_DEMO,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzOperateId != null" >
+        #{tzOperateId,jdbcType=INTEGER},
+      </if>
+      <if test="tzLeadId != null" >
+        #{tzLeadId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadStatus2 != null" >
+        #{tzLeadStatus2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadStatus1 != null" >
+        #{tzLeadStatus1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOperateDesc != null" >
+        #{tzOperateDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDemo != null" >
+        #{tzDemo,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLogT" >
+    update PS_TZ_XSXS_LOG_T
+    <set >
+      <if test="tzLeadId != null" >
+        TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadStatus2 != null" >
+        TZ_LEAD_STATUS2 = #{tzLeadStatus2,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadStatus1 != null" >
+        TZ_LEAD_STATUS1 = #{tzLeadStatus1,jdbcType=VARCHAR},
+      </if>
+      <if test="tzOperateDesc != null" >
+        TZ_OPERATE_DESC = #{tzOperateDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDemo != null" >
+        TZ_DEMO = #{tzDemo,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where TZ_OPERATE_ID = #{tzOperateId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLogT" >
+    update PS_TZ_XSXS_LOG_T
+    set TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR},
+      TZ_LEAD_STATUS2 = #{tzLeadStatus2,jdbcType=VARCHAR},
+      TZ_LEAD_STATUS1 = #{tzLeadStatus1,jdbcType=VARCHAR},
+      TZ_OPERATE_DESC = #{tzOperateDesc,jdbcType=VARCHAR},
+      TZ_DEMO = #{tzDemo,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR}
+    where TZ_OPERATE_ID = #{tzOperateId,jdbcType=INTEGER}
+  </update>
+</mapper>

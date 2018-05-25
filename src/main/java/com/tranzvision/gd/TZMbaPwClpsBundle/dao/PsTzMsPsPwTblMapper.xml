@@ -13,10 +13,12 @@
     <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
     <result column="SYNCID" property="syncid" jdbcType="INTEGER" />
     <result column="SYNCDTTM" property="syncdttm" jdbcType="TIMESTAMP" />
+    <result column="TZ_PWEI_TYPE" property="tzPweiType" jdbcType="VARCHAR" />
+    <result column="TZ_GROUP_LEADER" property="tzGroupLeader" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_PWEI_OPRID, TZ_PWEI_ZHZT, TZ_PWEI_GRPID, ROW_ADDED_DTTM, 
-    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM
+    ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, SYNCID, SYNCDTTM, TZ_PWEI_TYPE, TZ_GROUP_LEADER
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsPwTblKey" >
     select 
@@ -36,11 +38,11 @@
     insert into PS_TZ_MSPS_PW_TBL (TZ_CLASS_ID, TZ_APPLY_PC_ID, TZ_PWEI_OPRID, 
       TZ_PWEI_ZHZT, TZ_PWEI_GRPID, ROW_ADDED_DTTM, 
       ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
-      SYNCID, SYNCDTTM)
+      SYNCID, SYNCDTTM,TZ_PWEI_TYPE,TZ_GROUP_LEADER)
     values (#{tzClassId,jdbcType=VARCHAR}, #{tzApplyPcId,jdbcType=VARCHAR}, #{tzPweiOprid,jdbcType=VARCHAR}, 
       #{tzPweiZhzt,jdbcType=VARCHAR}, #{tzPweiGrpid,jdbcType=VARCHAR}, #{rowAddedDttm,jdbcType=TIMESTAMP}, 
       #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, #{rowLastmantOprid,jdbcType=VARCHAR}, 
-      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP})
+      #{syncid,jdbcType=INTEGER}, #{syncdttm,jdbcType=TIMESTAMP}, #{tzPweiType,jdbcType=VARCHAR}, #{tzGroupLeader,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsPwTbl" >
     insert into PS_TZ_MSPS_PW_TBL
@@ -78,6 +80,12 @@
       <if test="syncdttm != null" >
         SYNCDTTM,
       </if>
+      <if test="tzPweiType != null" >
+        TZ_PWEI_TYPE,
+      </if>
+      <if test="tzGroupLeader != null" >
+        TZ_GROUP_LEADER,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzClassId != null" >
@@ -113,6 +121,12 @@
       <if test="syncdttm != null" >
         #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzPweiType != null" >
+        #{tzPweiType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGroupLeader != null" >
+        #{tzGroupLeader,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsPwTbl" >
@@ -142,6 +156,12 @@
       <if test="syncdttm != null" >
         SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
       </if>
+      <if test="tzPweiType != null" >
+        TZ_PWEI_TYPE = #{tzPweiType,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGroupLeader != null" >
+        TZ_GROUP_LEADER = #{tzGroupLeader,jdbcType=VARCHAR},
+      </if>
     </set>
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
@@ -156,7 +176,9 @@
       ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
       ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
       SYNCID = #{syncid,jdbcType=INTEGER},
-      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP}
+      SYNCDTTM = #{syncdttm,jdbcType=TIMESTAMP},
+      TZ_PWEI_TYPE = #{tzPweiType,jdbcType=VARCHAR},
+      TZ_GROUP_LEADER = #{tzGroupLeader,jdbcType=VARCHAR}
     where TZ_CLASS_ID = #{tzClassId,jdbcType=VARCHAR}
       and TZ_APPLY_PC_ID = #{tzApplyPcId,jdbcType=VARCHAR}
       and TZ_PWEI_OPRID = #{tzPweiOprid,jdbcType=VARCHAR}

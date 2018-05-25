@@ -12,5 +12,6 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPsStudentPanelModel', {
         {name: 'batchName'},
         {name: 'judges'},
         {name: 'judgeStatus'}
+
       ]
 });

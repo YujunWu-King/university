@@ -25,8 +25,10 @@ import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImp
 import com.tranzvision.gd.TZLabelSetBundle.dao.PsTzLabelDfnTMapper;
 import com.tranzvision.gd.TZLabelSetBundle.model.PsTzLabelDfnT;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
+import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzMszgTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTbl;
 import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzLxfsInfoTblKey;
+import com.tranzvision.gd.TZLeaguerAccountBundle.model.PsTzMszgT;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppCcTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppDhccTMapper;
 import com.tranzvision.gd.TZWebsiteApplicationBundle.dao.PsTzAppInsTMapper;
@@ -91,7 +93,8 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 	private PsTzAppCcTMapper psTzAppCcTMapper;
 	@Autowired
 	private PsTzAppDhccTMapper psTzAppDhccTMapper;
-	
+	@Autowired
+	private PsTzMszgTMapper pstzMszgTMapper;
 
 	/* 获取报名人信息 */
 	public String tzQuery(String strParams, String[] errMsg) {
@@ -126,7 +129,7 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 					// strProjectID = (String) map.get("TZ_PRJ_ID");
 				}
 
-				// 报名人信息：报名表编号，审批状态，类别，姓名，出生日期，报名表提交状态，备注;
+				// 报名人信息：报名表编号，审批状态，类别，姓名，出生日期，报名表提交状态，备注，所属分组;
 				long strAppInsID = 0L;
 				String strSpState = "", strColorType = "", strStuName = "", strBirthDate = "", strSubmitState = "",
 						strRemark = "", strShortRemark = "";
@@ -1166,6 +1169,50 @@ public class TzGdBmglAuditClsServiceImpl extends FrameworkImpl {
 				psTzFormWrkT.setRowLastmantOprid(oprid);
 				psTzFormWrkTMapper.updateByPrimaryKeySelective(psTzFormWrkT);
 			}
+			
+			
+			// 根据评审状态 修改/插入   表 TZ_IMP_MSZG_TBL中的TZ_RESULT_CODE字段
+			// 首先根据报名表编号查询PsTzMSZGINFO对象是否已经存在
+			PsTzMszgT p = pstzMszgTMapper.selectByPrimaryKey(strAppInsID);
+			String sql = "select TZ_BATCH_NAME from PS_TZ_CLS_BATCH_T A, PS_TZ_APP_CC_T B ,PS_TZ_FORM_WRK_T C\n" + 
+					"where A.TZ_BATCH_ID=B.TZ_APP_S_TEXT \n" + 
+					"AND A.TZ_CLASS_ID=C.TZ_CLASS_ID\n" + 
+					"AND B.TZ_APP_INS_ID=C.TZ_APP_INS_ID\n" + 
+					"AND B.TZ_XXX_BH='grxxTZ_grxx_26CC_Batch'\n" + 
+					"AND B.TZ_APP_INS_ID=?";
+			
+			String TZ_BATCH_NAME = jdbcTemplate.queryForObject(sql, new Object[] { strAppInsID }, "String");
+			//如果对象不存在，做一个插入操作
+			if(p == null) {	
+				p = new PsTzMszgT();
+				p.setTzAppInsId(strAppInsID);
+				if("A".equals(strAuditState)) {
+					p.setTzResultCode("是");
+					p.setTzMsBatch(TZ_BATCH_NAME);
+				}else if("B".equals(strAuditState)) {
+					p.setTzResultCode("否");
+					p.setTzMsBatch(null);
+				}else if("N".equals(strAuditState)){
+					p.setTzResultCode("等待");
+					p.setTzMsBatch(null);
+				}
+				
+				pstzMszgTMapper.insert(p);
+			}else {	//如果对象存在，则做一个修改操作
+				if("A".equals(strAuditState)) {
+					p.setTzResultCode("是");
+					p.setTzMsBatch(TZ_BATCH_NAME);
+				}else if("B".equals(strAuditState)) {
+					p.setTzResultCode("否");
+					p.setTzMsBatch(null);
+				}else if("N".equals(strAuditState)){
+					p.setTzResultCode("等待");
+					p.setTzMsBatch(null);
+				}
+				pstzMszgTMapper.updateByPrimaryKey(p);
+			}
+			
+			
 
 			// 报名实例表;
 			PsTzAppInsT psTzAppInsT = psTzAppInsTMapper.selectByPrimaryKey(strAppInsID);

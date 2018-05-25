@@ -2,6 +2,7 @@ package com.tranzvision.gd.TZEvaluationSystemBundle.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -137,41 +138,6 @@ public class EvaluationSystemController {
 	
 	@RequestMapping(value = { "/interview/index" }, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String interviewEvaluationIndex(HttpServletRequest request, HttpServletResponse response) {
-
-		String indexHtml = "";
-		try {
-			String orgid = tzLoginServiceImpl.getLoginedManagerOrgid(request);
-			String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
-			String zhid = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-			String userName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[]{oprid}, "String");
-			String timeOut = "false";
-			
-			// 判断下用户有没有登录;
-			if (oprid == null || "".equals(oprid) || orgid == null || "".equals(orgid) || zhid == null
-					|| "".equals(zhid)) {
-				timeOut = "true";
-				
-				if(orgid==null||"".equals(orgid)){
-					orgid = tzCookie.getStringCookieVal(request, cookieOrgId);
-				}
-			}
-			
-			String contactUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_CONTACT_URL"}, "String");
-			String evaluationDescriptionUrl = sqlQuery.queryForObject("SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?", new Object[]{"TZ_EVALUATION_I_DESCRIPTION_URL"}, "String");
-			
-			indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_INDEX",request.getContextPath(),orgid,timeOut,userName,contactUrl,evaluationDescriptionUrl);
-			
-		} catch (TzSystemException e) {
-			e.printStackTrace();
-			indexHtml = e.toString();
-		}
-		return indexHtml;
-	}
-	
-	
-	@RequestMapping(value = { "/interview/t/index" }, produces = "text/html;charset=UTF-8")
-	@ResponseBody
 	public String interviewEvaluationTouchIndex(HttpServletRequest request, HttpServletResponse response) {
 
 		String indexHtml = "";
@@ -186,6 +152,7 @@ public class EvaluationSystemController {
 				String classId = request.getParameter("classId");
 				String batchId = request.getParameter("batchId");
 				String appInsId = request.getParameter("appInsId");
+				String msGroupId = request.getParameter("msGroupId");
 				
 				String appTplId = "",className = "",batchName="";
 				
@@ -197,7 +164,38 @@ public class EvaluationSystemController {
 					appTplId = (String)map.get("TZ_PS_APP_MODAL_ID");
 				}
 				
-				/* 当前考生的姓名和面试申请号，卢艳添加，2017-6-15 begin */
+				//评委是否组长
+				String pwzzFlag = sqlQuery.queryForObject("SELECT TZ_GROUP_LEADER FROM PS_TZ_MSPS_PW_TBL WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=? AND TZ_PWEI_OPRID=?", new Object[]{classId,batchId,oprid},"String");
+				if(pwzzFlag==null) {
+					pwzzFlag = "";
+				}
+				
+				//评委可评审的面试组
+				String mszOption = "";
+				if("batch".equals(page)) {
+					List<Map<String,Object>> list_msgroup= new ArrayList<Map<String,Object>>();
+				
+					String sqlMsGroup= "SELECT DISTINCT A.TZ_PWEI_GRPID,B.TZ_GROUP_ID,B.TZ_GROUP_NAME";
+					sqlMsGroup += " FROM PS_TZ_MSPS_KSH_TBL C,PS_TZ_MSPS_PW_TBL A,PS_TZ_INTEGROUP_T B";
+					sqlMsGroup += " WHERE A.TZ_PWEI_GRPID=B.TZ_CLPS_GR_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
+					sqlMsGroup += " AND B.TZ_GROUP_ID=C.TZ_GROUP_ID AND A.TZ_CLASS_ID=B.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=B.TZ_APPLY_PC_ID";
+					sqlMsGroup += " AND A.TZ_CLASS_ID=? AND A.TZ_APPLY_PC_ID=? AND A.TZ_PWEI_OPRID=? AND A.TZ_PWEI_ZHZT<>'B'";
+					sqlMsGroup += " ORDER BY B.TZ_GROUP_ID";
+				
+					List<Map<String, Object>> listMsGroup = sqlQuery.queryForList(sqlMsGroup, new Object[]{classId,batchId,oprid});
+					for(Map<String, Object> mapMsGroup : listMsGroup) {
+						String pwGroupId = mapMsGroup.get("TZ_PWEI_GRPID") == null ? "" : mapMsGroup.get("TZ_PWEI_GRPID").toString();
+						String msGroupIdOne = mapMsGroup.get("TZ_GROUP_ID") == null ? "" : mapMsGroup.get("TZ_GROUP_ID").toString();
+						String msGroupName = mapMsGroup.get("TZ_GROUP_NAME") == null ? "" : mapMsGroup.get("TZ_GROUP_NAME").toString();
+					
+						if(!"".equals(msGroupIdOne) && !"".equals(msGroupName)) {
+							mszOption += "<option value='"+ msGroupIdOne + "'>"+ msGroupName + "</option>";
+						}
+					}
+				}
+				
+				/* 当前考生的姓名和面试申请号 */
+				/*
 				String  mssqh = "", examineeName = "";
 				Map<String, Object> mapKs = sqlQuery.queryForMap("SELECT B.TZ_REALNAME,B.TZ_MSH_ID FROM PS_TZ_FORM_WRK_T A,PS_TZ_AQ_YHXX_TBL B WHERE A.OPRID=B.OPRID AND A.TZ_APP_INS_ID=?", new Object[]{appInsId});
 				if(mapKs!=null) {
@@ -205,12 +203,13 @@ public class EvaluationSystemController {
 					examineeName = (String) mapKs.get("TZ_REALNAME");
 				}
 				
+				
 				String ksIframeId = "bmb_iframe_" + classId + "_" + batchId + "_" + appInsId;
-				/* 当前考生的姓名和面试申请号，卢艳添加，2017-6-15 begin */
+				*/
 				
 				indexHtml = "batch".equals(page)?
-						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl)
-						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId,mssqh,examineeName,ksIframeId);
+						tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_BATCH",request.getContextPath(),orgid,userName,classId,batchId,className,batchName,contactUrl,pwzzFlag,mszOption)
+						:tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_GRADE",request.getContextPath(),orgid,userName,classId,batchId,appInsId,className,batchName,contactUrl,appTplId,msGroupId,pwzzFlag);
 			}else{
 				indexHtml = tzGdObject.getHTMLText("HTML.TZEvaluationSystemBundle.TZ_INTERVIEW_EVALUATION_TOUCH_INDEX",request.getContextPath(),orgid,userName,contactUrl);
 			}
@@ -256,12 +255,7 @@ public class EvaluationSystemController {
 		Map<String, Object> jsonMap = new HashMap<String, Object>();
 		jsonMap.put("success", loginStatus);
 		jsonMap.put("error", errorMsg);
-		if("interview".equals(type)&&"pad".equals(device)){
-			jsonMap.put("indexUrl", "/evaluation/interview/t/index");
-		}else{
-			jsonMap.put("indexUrl", "/evaluation/"+type+"/index");
-		}
-		
+		jsonMap.put("indexUrl", "/evaluation/interview/index");		
 
 		return jacksonUtil.Map2json(jsonMap);
 	}

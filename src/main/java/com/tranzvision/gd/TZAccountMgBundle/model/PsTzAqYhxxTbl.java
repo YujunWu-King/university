@@ -47,6 +47,8 @@ public class PsTzAqYhxxTbl extends PsTzAqYhxxTblKey {
 
     private String tzMshId;
 
+    private String tzStaffType;
+
     public String getOprid() {
         return oprid;
     }
@@ -221,5 +223,13 @@ public class PsTzAqYhxxTbl extends PsTzAqYhxxTblKey {
 
     public void setTzMshId(String tzMshId) {
         this.tzMshId = tzMshId == null ? null : tzMshId.trim();
+    }
+
+    public String getTzStaffType() {
+        return tzStaffType;
+    }
+
+    public void setTzStaffType(String tzStaffType) {
+        this.tzStaffType = tzStaffType == null ? null : tzStaffType.trim();
     }
 }

@@ -396,13 +396,13 @@ Ext.define('KitchenSink.view.interviewManagement.interviewReview.interviewReview
                             fieldStyle:'background:#F4F4F4',
                             readOnly:true
                         },
-                        {
-                            xtype: 'textfield',
-                            fieldLabel: "材料评审考生",
-                            name: 'materialStudents',
-                            fieldStyle:'background:#F4F4F4',
-                            readOnly:true
-                        },
+                        //{
+                        //    xtype: 'textfield',
+                        //    fieldLabel: "材料评审考生",
+                        //    name: 'materialStudents',
+                        //    fieldStyle:'background:#F4F4F4',
+                        //    readOnly:true
+                        //},
                         {
                             xtype: 'textfield',
                             fieldLabel: "面试评审考生",

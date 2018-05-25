@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoT" >
+    <id column="TZ_LEAD_ID" property="tzLeadId" jdbcType="VARCHAR" />
+    <result column="TZ_JG_ID" property="tzJgId" jdbcType="VARCHAR" />
+    <result column="TZ_LEAD_DESCR254" property="tzLeadDescr254" jdbcType="VARCHAR" />
+    <result column="TZ_RSFCREATE_WAY" property="tzRsfcreateWay" jdbcType="VARCHAR" />
+    <result column="TZ_LEAD_STATUS" property="tzLeadStatus" jdbcType="VARCHAR" />
+    <result column="TZ_JY_GJ_RQ" property="tzJyGjRq" jdbcType="DATE" />
+    <result column="TZ_THYY_ID" property="tzThyyId" jdbcType="VARCHAR" />
+    <result column="TZ_GBYY_ID" property="tzGbyyId" jdbcType="VARCHAR" />
+    <result column="TZ_LEAD_IMPORTANCE" property="tzLeadImportance" jdbcType="VARCHAR" />
+    <result column="TZ_COLOUR_SORT_ID" property="tzColourSortId" jdbcType="VARCHAR" />
+    <result column="TZ_ZR_OPRID" property="tzZrOprid" jdbcType="VARCHAR" />
+    <result column="TZ_REALNAME" property="tzRealname" jdbcType="VARCHAR" />
+    <result column="TZ_KH_OPRID" property="tzKhOprid" jdbcType="VARCHAR" />
+    <result column="TZ_COMP_CNAME" property="tzCompCname" jdbcType="VARCHAR" />
+    <result column="BO_ID_COMPANY" property="boIdCompany" jdbcType="INTEGER" />
+    <result column="TZ_SEX" property="tzSex" jdbcType="VARCHAR" />
+    <result column="TZ_DEPARTMENT" property="tzDepartment" jdbcType="VARCHAR" />
+    <result column="TZ_POSITION" property="tzPosition" jdbcType="VARCHAR" />
+    <result column="TZ_EMAIL" property="tzEmail" jdbcType="VARCHAR" />
+    <result column="TZ_MOBILE" property="tzMobile" jdbcType="VARCHAR" />
+    <result column="TZ_PHONE" property="tzPhone" jdbcType="VARCHAR" />
+    <result column="TZ_ADDRESS" property="tzAddress" jdbcType="VARCHAR" />
+    <result column="TZ_REFEREE_OPRID" property="tzRefereeOprid" jdbcType="VARCHAR" />
+    <result column="TZ_REFEREE_NAME" property="tzRefereeName" jdbcType="VARCHAR" />
+    <result column="TZ_REFEREE_MOBILE" property="tzRefereeMobile" jdbcType="VARCHAR" />
+    <result column="TZ_ZXLB_ID" property="tzZxlbId" jdbcType="VARCHAR" />
+    <result column="TZ_CREATE_MEDIA" property="tzCreateMedia" jdbcType="VARCHAR" />
+    <result column="TZ_CHANNEL_ID" property="tzChannelId" jdbcType="VARCHAR" />
+    <result column="TZ_SOURCE_ID" property="tzSourceId" jdbcType="VARCHAR" />
+    <result column="TZ_KEY_ID" property="tzKeyId" jdbcType="VARCHAR" />
+    <result column="TZ_IDEA_ID" property="tzIdeaId" jdbcType="VARCHAR" />
+    <result column="TZ_PLAN_ID" property="tzPlanId" jdbcType="VARCHAR" />
+    <result column="TZ_REFER_URL" property="tzReferUrl" jdbcType="VARCHAR" />
+    <result column="ROW_ADDED_DTTM" property="rowAddedDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_ADDED_OPRID" property="rowAddedOprid" jdbcType="VARCHAR" />
+    <result column="ROW_LASTMANT_DTTM" property="rowLastmantDttm" jdbcType="TIMESTAMP" />
+    <result column="ROW_LASTMANT_OPRID" property="rowLastmantOprid" jdbcType="VARCHAR" />
+    <result column="TZ_XSQU_ID" property="tzXsquId" jdbcType="VARCHAR" />
+    <result column="TZ_WTXS_GBYY" property="tzWtxsGbyy" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs" extends="BaseResultMap" >
+    <result column="TZ_CATA_LONG" property="tzCataLong" jdbcType="LONGVARCHAR" />
+    <result column="TZ_BZ" property="tzBz" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    TZ_LEAD_ID, TZ_JG_ID, TZ_LEAD_DESCR254, TZ_RSFCREATE_WAY, TZ_LEAD_STATUS, TZ_JY_GJ_RQ, 
+    TZ_THYY_ID, TZ_GBYY_ID, TZ_LEAD_IMPORTANCE, TZ_COLOUR_SORT_ID, TZ_ZR_OPRID, TZ_REALNAME, 
+    TZ_KH_OPRID, TZ_COMP_CNAME, BO_ID_COMPANY, TZ_SEX, TZ_DEPARTMENT, TZ_POSITION, TZ_EMAIL, 
+    TZ_MOBILE, TZ_PHONE, TZ_ADDRESS, TZ_REFEREE_OPRID, TZ_REFEREE_NAME, TZ_REFEREE_MOBILE, 
+    TZ_ZXLB_ID, TZ_CREATE_MEDIA, TZ_CHANNEL_ID, TZ_SOURCE_ID, TZ_KEY_ID, TZ_IDEA_ID, 
+    TZ_PLAN_ID, TZ_REFER_URL, ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, ROW_LASTMANT_OPRID, 
+    TZ_XSQU_ID, TZ_WTXS_GBYY
+  </sql>
+  <sql id="Blob_Column_List" >
+    TZ_CATA_LONG, TZ_BZ
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PS_TZ_XSXS_INFO_T
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PS_TZ_XSXS_INFO_T
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs" >
+    insert into PS_TZ_XSXS_INFO_T (TZ_LEAD_ID, TZ_JG_ID, TZ_LEAD_DESCR254, 
+      TZ_RSFCREATE_WAY, TZ_LEAD_STATUS, TZ_JY_GJ_RQ, 
+      TZ_THYY_ID, TZ_GBYY_ID, TZ_LEAD_IMPORTANCE, 
+      TZ_COLOUR_SORT_ID, TZ_ZR_OPRID, TZ_REALNAME, 
+      TZ_KH_OPRID, TZ_COMP_CNAME, BO_ID_COMPANY, 
+      TZ_SEX, TZ_DEPARTMENT, TZ_POSITION, 
+      TZ_EMAIL, TZ_MOBILE, TZ_PHONE, 
+      TZ_ADDRESS, TZ_REFEREE_OPRID, TZ_REFEREE_NAME, 
+      TZ_REFEREE_MOBILE, TZ_ZXLB_ID, TZ_CREATE_MEDIA, 
+      TZ_CHANNEL_ID, TZ_SOURCE_ID, TZ_KEY_ID, 
+      TZ_IDEA_ID, TZ_PLAN_ID, TZ_REFER_URL, 
+      ROW_ADDED_DTTM, ROW_ADDED_OPRID, ROW_LASTMANT_DTTM, 
+      ROW_LASTMANT_OPRID, TZ_XSQU_ID, TZ_WTXS_GBYY, 
+      TZ_CATA_LONG, TZ_BZ)
+    values (#{tzLeadId,jdbcType=VARCHAR}, #{tzJgId,jdbcType=VARCHAR}, #{tzLeadDescr254,jdbcType=VARCHAR}, 
+      #{tzRsfcreateWay,jdbcType=VARCHAR}, #{tzLeadStatus,jdbcType=VARCHAR}, #{tzJyGjRq,jdbcType=DATE}, 
+      #{tzThyyId,jdbcType=VARCHAR}, #{tzGbyyId,jdbcType=VARCHAR}, #{tzLeadImportance,jdbcType=VARCHAR}, 
+      #{tzColourSortId,jdbcType=VARCHAR}, #{tzZrOprid,jdbcType=VARCHAR}, #{tzRealname,jdbcType=VARCHAR}, 
+      #{tzKhOprid,jdbcType=VARCHAR}, #{tzCompCname,jdbcType=VARCHAR}, #{boIdCompany,jdbcType=INTEGER}, 
+      #{tzSex,jdbcType=VARCHAR}, #{tzDepartment,jdbcType=VARCHAR}, #{tzPosition,jdbcType=VARCHAR}, 
+      #{tzEmail,jdbcType=VARCHAR}, #{tzMobile,jdbcType=VARCHAR}, #{tzPhone,jdbcType=VARCHAR}, 
+      #{tzAddress,jdbcType=VARCHAR}, #{tzRefereeOprid,jdbcType=VARCHAR}, #{tzRefereeName,jdbcType=VARCHAR}, 
+      #{tzRefereeMobile,jdbcType=VARCHAR}, #{tzZxlbId,jdbcType=VARCHAR}, #{tzCreateMedia,jdbcType=VARCHAR}, 
+      #{tzChannelId,jdbcType=VARCHAR}, #{tzSourceId,jdbcType=VARCHAR}, #{tzKeyId,jdbcType=VARCHAR}, 
+      #{tzIdeaId,jdbcType=VARCHAR}, #{tzPlanId,jdbcType=VARCHAR}, #{tzReferUrl,jdbcType=VARCHAR}, 
+      #{rowAddedDttm,jdbcType=TIMESTAMP}, #{rowAddedOprid,jdbcType=VARCHAR}, #{rowLastmantDttm,jdbcType=TIMESTAMP}, 
+      #{rowLastmantOprid,jdbcType=VARCHAR}, #{tzXsquId,jdbcType=VARCHAR}, #{tzWtxsGbyy,jdbcType=VARCHAR}, 
+      #{tzCataLong,jdbcType=LONGVARCHAR}, #{tzBz,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs" >
+    insert into PS_TZ_XSXS_INFO_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        TZ_LEAD_ID,
+      </if>
+      <if test="tzJgId != null" >
+        TZ_JG_ID,
+      </if>
+      <if test="tzLeadDescr254 != null" >
+        TZ_LEAD_DESCR254,
+      </if>
+      <if test="tzRsfcreateWay != null" >
+        TZ_RSFCREATE_WAY,
+      </if>
+      <if test="tzLeadStatus != null" >
+        TZ_LEAD_STATUS,
+      </if>
+      <if test="tzJyGjRq != null" >
+        TZ_JY_GJ_RQ,
+      </if>
+      <if test="tzThyyId != null" >
+        TZ_THYY_ID,
+      </if>
+      <if test="tzGbyyId != null" >
+        TZ_GBYY_ID,
+      </if>
+      <if test="tzLeadImportance != null" >
+        TZ_LEAD_IMPORTANCE,
+      </if>
+      <if test="tzColourSortId != null" >
+        TZ_COLOUR_SORT_ID,
+      </if>
+      <if test="tzZrOprid != null" >
+        TZ_ZR_OPRID,
+      </if>
+      <if test="tzRealname != null" >
+        TZ_REALNAME,
+      </if>
+      <if test="tzKhOprid != null" >
+        TZ_KH_OPRID,
+      </if>
+      <if test="tzCompCname != null" >
+        TZ_COMP_CNAME,
+      </if>
+      <if test="boIdCompany != null" >
+        BO_ID_COMPANY,
+      </if>
+      <if test="tzSex != null" >
+        TZ_SEX,
+      </if>
+      <if test="tzDepartment != null" >
+        TZ_DEPARTMENT,
+      </if>
+      <if test="tzPosition != null" >
+        TZ_POSITION,
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL,
+      </if>
+      <if test="tzMobile != null" >
+        TZ_MOBILE,
+      </if>
+      <if test="tzPhone != null" >
+        TZ_PHONE,
+      </if>
+      <if test="tzAddress != null" >
+        TZ_ADDRESS,
+      </if>
+      <if test="tzRefereeOprid != null" >
+        TZ_REFEREE_OPRID,
+      </if>
+      <if test="tzRefereeName != null" >
+        TZ_REFEREE_NAME,
+      </if>
+      <if test="tzRefereeMobile != null" >
+        TZ_REFEREE_MOBILE,
+      </if>
+      <if test="tzZxlbId != null" >
+        TZ_ZXLB_ID,
+      </if>
+      <if test="tzCreateMedia != null" >
+        TZ_CREATE_MEDIA,
+      </if>
+      <if test="tzChannelId != null" >
+        TZ_CHANNEL_ID,
+      </if>
+      <if test="tzSourceId != null" >
+        TZ_SOURCE_ID,
+      </if>
+      <if test="tzKeyId != null" >
+        TZ_KEY_ID,
+      </if>
+      <if test="tzIdeaId != null" >
+        TZ_IDEA_ID,
+      </if>
+      <if test="tzPlanId != null" >
+        TZ_PLAN_ID,
+      </if>
+      <if test="tzReferUrl != null" >
+        TZ_REFER_URL,
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM,
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID,
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM,
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID,
+      </if>
+      <if test="tzXsquId != null" >
+        TZ_XSQU_ID,
+      </if>
+      <if test="tzWtxsGbyy != null" >
+        TZ_WTXS_GBYY,
+      </if>
+      <if test="tzCataLong != null" >
+        TZ_CATA_LONG,
+      </if>
+      <if test="tzBz != null" >
+        TZ_BZ,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        #{tzLeadId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJgId != null" >
+        #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadDescr254 != null" >
+        #{tzLeadDescr254,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRsfcreateWay != null" >
+        #{tzRsfcreateWay,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadStatus != null" >
+        #{tzLeadStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJyGjRq != null" >
+        #{tzJyGjRq,jdbcType=DATE},
+      </if>
+      <if test="tzThyyId != null" >
+        #{tzThyyId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGbyyId != null" >
+        #{tzGbyyId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadImportance != null" >
+        #{tzLeadImportance,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColourSortId != null" >
+        #{tzColourSortId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZrOprid != null" >
+        #{tzZrOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRealname != null" >
+        #{tzRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKhOprid != null" >
+        #{tzKhOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCompCname != null" >
+        #{tzCompCname,jdbcType=VARCHAR},
+      </if>
+      <if test="boIdCompany != null" >
+        #{boIdCompany,jdbcType=INTEGER},
+      </if>
+      <if test="tzSex != null" >
+        #{tzSex,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDepartment != null" >
+        #{tzDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPosition != null" >
+        #{tzPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMobile != null" >
+        #{tzMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhone != null" >
+        #{tzPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddress != null" >
+        #{tzAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRefereeOprid != null" >
+        #{tzRefereeOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRefereeName != null" >
+        #{tzRefereeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRefereeMobile != null" >
+        #{tzRefereeMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxlbId != null" >
+        #{tzZxlbId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCreateMedia != null" >
+        #{tzCreateMedia,jdbcType=VARCHAR},
+      </if>
+      <if test="tzChannelId != null" >
+        #{tzChannelId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSourceId != null" >
+        #{tzSourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKeyId != null" >
+        #{tzKeyId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIdeaId != null" >
+        #{tzIdeaId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPlanId != null" >
+        #{tzPlanId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferUrl != null" >
+        #{tzReferUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXsquId != null" >
+        #{tzXsquId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWtxsGbyy != null" >
+        #{tzWtxsGbyy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCataLong != null" >
+        #{tzCataLong,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzBz != null" >
+        #{tzBz,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs" >
+    update PS_TZ_XSXS_INFO_T
+    <set >
+      <if test="tzJgId != null" >
+        TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadDescr254 != null" >
+        TZ_LEAD_DESCR254 = #{tzLeadDescr254,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRsfcreateWay != null" >
+        TZ_RSFCREATE_WAY = #{tzRsfcreateWay,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadStatus != null" >
+        TZ_LEAD_STATUS = #{tzLeadStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tzJyGjRq != null" >
+        TZ_JY_GJ_RQ = #{tzJyGjRq,jdbcType=DATE},
+      </if>
+      <if test="tzThyyId != null" >
+        TZ_THYY_ID = #{tzThyyId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzGbyyId != null" >
+        TZ_GBYY_ID = #{tzGbyyId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzLeadImportance != null" >
+        TZ_LEAD_IMPORTANCE = #{tzLeadImportance,jdbcType=VARCHAR},
+      </if>
+      <if test="tzColourSortId != null" >
+        TZ_COLOUR_SORT_ID = #{tzColourSortId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZrOprid != null" >
+        TZ_ZR_OPRID = #{tzZrOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRealname != null" >
+        TZ_REALNAME = #{tzRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKhOprid != null" >
+        TZ_KH_OPRID = #{tzKhOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCompCname != null" >
+        TZ_COMP_CNAME = #{tzCompCname,jdbcType=VARCHAR},
+      </if>
+      <if test="boIdCompany != null" >
+        BO_ID_COMPANY = #{boIdCompany,jdbcType=INTEGER},
+      </if>
+      <if test="tzSex != null" >
+        TZ_SEX = #{tzSex,jdbcType=VARCHAR},
+      </if>
+      <if test="tzDepartment != null" >
+        TZ_DEPARTMENT = #{tzDepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPosition != null" >
+        TZ_POSITION = #{tzPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="tzEmail != null" >
+        TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="tzMobile != null" >
+        TZ_MOBILE = #{tzMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPhone != null" >
+        TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="tzAddress != null" >
+        TZ_ADDRESS = #{tzAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRefereeOprid != null" >
+        TZ_REFEREE_OPRID = #{tzRefereeOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRefereeName != null" >
+        TZ_REFEREE_NAME = #{tzRefereeName,jdbcType=VARCHAR},
+      </if>
+      <if test="tzRefereeMobile != null" >
+        TZ_REFEREE_MOBILE = #{tzRefereeMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="tzZxlbId != null" >
+        TZ_ZXLB_ID = #{tzZxlbId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCreateMedia != null" >
+        TZ_CREATE_MEDIA = #{tzCreateMedia,jdbcType=VARCHAR},
+      </if>
+      <if test="tzChannelId != null" >
+        TZ_CHANNEL_ID = #{tzChannelId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzSourceId != null" >
+        TZ_SOURCE_ID = #{tzSourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzKeyId != null" >
+        TZ_KEY_ID = #{tzKeyId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzIdeaId != null" >
+        TZ_IDEA_ID = #{tzIdeaId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzPlanId != null" >
+        TZ_PLAN_ID = #{tzPlanId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzReferUrl != null" >
+        TZ_REFER_URL = #{tzReferUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="rowAddedDttm != null" >
+        ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowAddedOprid != null" >
+        ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="rowLastmantDttm != null" >
+        ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rowLastmantOprid != null" >
+        ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      </if>
+      <if test="tzXsquId != null" >
+        TZ_XSQU_ID = #{tzXsquId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzWtxsGbyy != null" >
+        TZ_WTXS_GBYY = #{tzWtxsGbyy,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCataLong != null" >
+        TZ_CATA_LONG = #{tzCataLong,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="tzBz != null" >
+        TZ_BZ = #{tzBz,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs" >
+    update PS_TZ_XSXS_INFO_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_LEAD_DESCR254 = #{tzLeadDescr254,jdbcType=VARCHAR},
+      TZ_RSFCREATE_WAY = #{tzRsfcreateWay,jdbcType=VARCHAR},
+      TZ_LEAD_STATUS = #{tzLeadStatus,jdbcType=VARCHAR},
+      TZ_JY_GJ_RQ = #{tzJyGjRq,jdbcType=DATE},
+      TZ_THYY_ID = #{tzThyyId,jdbcType=VARCHAR},
+      TZ_GBYY_ID = #{tzGbyyId,jdbcType=VARCHAR},
+      TZ_LEAD_IMPORTANCE = #{tzLeadImportance,jdbcType=VARCHAR},
+      TZ_COLOUR_SORT_ID = #{tzColourSortId,jdbcType=VARCHAR},
+      TZ_ZR_OPRID = #{tzZrOprid,jdbcType=VARCHAR},
+      TZ_REALNAME = #{tzRealname,jdbcType=VARCHAR},
+      TZ_KH_OPRID = #{tzKhOprid,jdbcType=VARCHAR},
+      TZ_COMP_CNAME = #{tzCompCname,jdbcType=VARCHAR},
+      BO_ID_COMPANY = #{boIdCompany,jdbcType=INTEGER},
+      TZ_SEX = #{tzSex,jdbcType=VARCHAR},
+      TZ_DEPARTMENT = #{tzDepartment,jdbcType=VARCHAR},
+      TZ_POSITION = #{tzPosition,jdbcType=VARCHAR},
+      TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      TZ_MOBILE = #{tzMobile,jdbcType=VARCHAR},
+      TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
+      TZ_ADDRESS = #{tzAddress,jdbcType=VARCHAR},
+      TZ_REFEREE_OPRID = #{tzRefereeOprid,jdbcType=VARCHAR},
+      TZ_REFEREE_NAME = #{tzRefereeName,jdbcType=VARCHAR},
+      TZ_REFEREE_MOBILE = #{tzRefereeMobile,jdbcType=VARCHAR},
+      TZ_ZXLB_ID = #{tzZxlbId,jdbcType=VARCHAR},
+      TZ_CREATE_MEDIA = #{tzCreateMedia,jdbcType=VARCHAR},
+      TZ_CHANNEL_ID = #{tzChannelId,jdbcType=VARCHAR},
+      TZ_SOURCE_ID = #{tzSourceId,jdbcType=VARCHAR},
+      TZ_KEY_ID = #{tzKeyId,jdbcType=VARCHAR},
+      TZ_IDEA_ID = #{tzIdeaId,jdbcType=VARCHAR},
+      TZ_PLAN_ID = #{tzPlanId,jdbcType=VARCHAR},
+      TZ_REFER_URL = #{tzReferUrl,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      TZ_XSQU_ID = #{tzXsquId,jdbcType=VARCHAR},
+      TZ_WTXS_GBYY = #{tzWtxsGbyy,jdbcType=VARCHAR},
+      TZ_CATA_LONG = #{tzCataLong,jdbcType=LONGVARCHAR},
+      TZ_BZ = #{tzBz,jdbcType=LONGVARCHAR}
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoT" >
+    update PS_TZ_XSXS_INFO_T
+    set TZ_JG_ID = #{tzJgId,jdbcType=VARCHAR},
+      TZ_LEAD_DESCR254 = #{tzLeadDescr254,jdbcType=VARCHAR},
+      TZ_RSFCREATE_WAY = #{tzRsfcreateWay,jdbcType=VARCHAR},
+      TZ_LEAD_STATUS = #{tzLeadStatus,jdbcType=VARCHAR},
+      TZ_JY_GJ_RQ = #{tzJyGjRq,jdbcType=DATE},
+      TZ_THYY_ID = #{tzThyyId,jdbcType=VARCHAR},
+      TZ_GBYY_ID = #{tzGbyyId,jdbcType=VARCHAR},
+      TZ_LEAD_IMPORTANCE = #{tzLeadImportance,jdbcType=VARCHAR},
+      TZ_COLOUR_SORT_ID = #{tzColourSortId,jdbcType=VARCHAR},
+      TZ_ZR_OPRID = #{tzZrOprid,jdbcType=VARCHAR},
+      TZ_REALNAME = #{tzRealname,jdbcType=VARCHAR},
+      TZ_KH_OPRID = #{tzKhOprid,jdbcType=VARCHAR},
+      TZ_COMP_CNAME = #{tzCompCname,jdbcType=VARCHAR},
+      BO_ID_COMPANY = #{boIdCompany,jdbcType=INTEGER},
+      TZ_SEX = #{tzSex,jdbcType=VARCHAR},
+      TZ_DEPARTMENT = #{tzDepartment,jdbcType=VARCHAR},
+      TZ_POSITION = #{tzPosition,jdbcType=VARCHAR},
+      TZ_EMAIL = #{tzEmail,jdbcType=VARCHAR},
+      TZ_MOBILE = #{tzMobile,jdbcType=VARCHAR},
+      TZ_PHONE = #{tzPhone,jdbcType=VARCHAR},
+      TZ_ADDRESS = #{tzAddress,jdbcType=VARCHAR},
+      TZ_REFEREE_OPRID = #{tzRefereeOprid,jdbcType=VARCHAR},
+      TZ_REFEREE_NAME = #{tzRefereeName,jdbcType=VARCHAR},
+      TZ_REFEREE_MOBILE = #{tzRefereeMobile,jdbcType=VARCHAR},
+      TZ_ZXLB_ID = #{tzZxlbId,jdbcType=VARCHAR},
+      TZ_CREATE_MEDIA = #{tzCreateMedia,jdbcType=VARCHAR},
+      TZ_CHANNEL_ID = #{tzChannelId,jdbcType=VARCHAR},
+      TZ_SOURCE_ID = #{tzSourceId,jdbcType=VARCHAR},
+      TZ_KEY_ID = #{tzKeyId,jdbcType=VARCHAR},
+      TZ_IDEA_ID = #{tzIdeaId,jdbcType=VARCHAR},
+      TZ_PLAN_ID = #{tzPlanId,jdbcType=VARCHAR},
+      TZ_REFER_URL = #{tzReferUrl,jdbcType=VARCHAR},
+      ROW_ADDED_DTTM = #{rowAddedDttm,jdbcType=TIMESTAMP},
+      ROW_ADDED_OPRID = #{rowAddedOprid,jdbcType=VARCHAR},
+      ROW_LASTMANT_DTTM = #{rowLastmantDttm,jdbcType=TIMESTAMP},
+      ROW_LASTMANT_OPRID = #{rowLastmantOprid,jdbcType=VARCHAR},
+      TZ_XSQU_ID = #{tzXsquId,jdbcType=VARCHAR},
+      TZ_WTXS_GBYY = #{tzWtxsGbyy,jdbcType=VARCHAR}
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+  </update>
+</mapper>

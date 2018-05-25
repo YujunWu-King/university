@@ -19,7 +19,15 @@
 		
 		this.tzConfig = config;
 		this.storeReload = config.storeReload;
-
+		// 自动初筛项
+		/*this.classId = config.classId;
+		var tzParams ='{"ComID":"TZ_AUTO_SCREEN_COM","PageID":"TZ_AUTO_SCREEN_STD","OperateType":"queryScoreColumns","comParams":{"classId":"'+ config.classId +'"}}';
+		Ext.tzLoadAsync(tzParams,function(respData){
+			itemColumns = respData.columns;
+			console.log(itemColumns)
+		});
+		
+		this.itemColumns = itemColumns;*/
 		this.callParent();	
 	},
 
@@ -27,15 +35,34 @@
         Ext.util.CSS.createStyleSheet(" .readOnly-tagfield-cls div {background:#eee;}","readOnly-tagfield-cls");
         
     	var config = this.tzConfig;
-
+    	/*config.itemColumns = this.itemColumns;
+    	var itemColumns = this.itemColumns;
+    	for(var i=0; i<itemColumns.length; i++){
+    		var formPanel = Ext.getCmp("formId");
+    		var colWidth = 100;
+    		var descr = itemColumns[i].columnDescr;
+    		var strLen = descr.length;
+    		if(strLen > 0){
+    			colWidth = strLen*15 + 20;
+    			if(colWidth<90) colWidth = 90;
+    			if(colWidth>140) colWidth = 140;
+    		}
+    		
+    		formPanel.add({
+    			xtype: 'textfield',
+				name: itemColumns[i].columnId,
+				fieldLabel: itemColumns[i].columnDescr
+				//value: config.name
+    		});
+    	}*/
     	//考生自动标签store
-		var ksbqStore = new KitchenSink.view.automaticScreen.autoTagStore(config);
+		//var ksbqStore = new KitchenSink.view.automaticScreen.autoTagStore(config);
 
 		//负面清单store
-		var fmqdStore = new KitchenSink.view.automaticScreen.fmqdListStore(config);
+		//var fmqdStore = new KitchenSink.view.automaticScreen.fmqdListStore(config);
 		
 		//手工标签store
-		var labelTagStore = new KitchenSink.view.automaticScreen.sdbqListStore(config);
+		//var labelTagStore = new KitchenSink.view.automaticScreen.sdbqListStore(config);
 		
     	//初筛结果Store
 		/*
@@ -125,7 +152,7 @@
 							}
 						}
 					}
-		        },{
+		        },/*,{
 		        	xtype:'combo',
 		        	name: 'status',
 		        	fieldLabel: '初筛结果',
@@ -171,6 +198,13 @@
                     createNewOnEnter: true,
                     createNewOnBlur: true,
                     queryMode: 'local'
+		        }*/,{
+			        reference: 'autoScreenDetailsForms',
+					layout: {
+						type: 'vbox',
+						align: 'stretch'
+			        },
+			        items: []
 		        },{
 		        	xtype: 'displayfield',
 		        	name: 'updateOpr',

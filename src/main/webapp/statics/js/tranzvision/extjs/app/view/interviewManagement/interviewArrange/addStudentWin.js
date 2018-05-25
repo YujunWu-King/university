@@ -14,9 +14,9 @@
     xtype: 'addStudentWin',
 	controller:'interviewArrangeSetStuListController',
 	
-	width: 900,
+	width: 1000,
 	height: 500,
-	minWidth: 600,
+	minWidth: 800,
 	minHeight: 450,
     title: '选择考生',
 	layout: 'fit',
@@ -47,6 +47,9 @@
                 columnLines: true,
                 border: true,
 				minHeight: 400,
+				viewConfig: {
+	                enableTextSelection: true
+	            },
                 plugins: [{
                         ptype: 'gridfilters'
                 }],
@@ -64,17 +67,15 @@
 				}],
 				store:store ,
                 columns: [{
-                	text: '报名表编号',
-                	dataIndex: 'appId',
-                	width: 100
-                },{
                 	text: "面试申请号",
                 	dataIndex: 'mssqh',
-                	width: 100
+                	width: 100,
+                	minWidth: 80
                 },{
                     text: '姓名',
                     sortable: true,
-					width: 100,
+                    width: 80,
+                	minWidth: 80,
                     dataIndex: 'stuName',
                     filter: {
                         type: 'string',
@@ -83,9 +84,22 @@
                         }
                     }
                 },{
-                	text: '地区',
-                	dataIndex: 'area',
-                	width: 100,
+                	text: '报考班级',
+                	dataIndex: 'className',
+                	width: 120,
+                	minWidth: 100,
+                	filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    },
+                    flex:1
+                },{
+                	text: '申请面试批次',
+                	dataIndex: 'batchName',
+                	width: 120,
+                	minWidth: 100,
                 	filter: {
                         type: 'string',
                         itemDefaults: {
@@ -93,19 +107,18 @@
                         }
                     }
                 },{
-                	text: '公司名称',
-                	dataIndex: 'componey',
-                	width: 140,
+                	text: '常驻省份',
+                	dataIndex: 'province',
+                	width: 90,
+                	minWidth: 80,
                 	filter: {
-                        type: 'string',
-                        itemDefaults: {
-                            emptyText: 'Search for...'
-                        }
+                        type: 'list'
                     }
                 },{
                 	text: '手机',
                 	dataIndex: 'mobile',
-                	width: 120,
+                	width: 110,
+                	minWidth: 100,
                 	filter: {
                         type: 'string',
                         itemDefaults: {
@@ -115,7 +128,8 @@
                 },{
                 	text: '邮箱',
                 	dataIndex: 'email',
-                	width: 140,
+                	width: 120,
+                	minWidth: 100,
                 	filter: {
                         type: 'string',
                         itemDefaults: {
@@ -123,20 +137,34 @@
                         }
                     },
                     flex:1
-                }/*,{
-                	text: '面试资格',
-                	sortable: true,
-					dataIndex: 'msZgFlag',
-					width: 120,
-					filter: {
-                        type: 'list'
+                },{
+                	text: '专场',
+                	dataIndex: 'msZhuanC',
+                	width: 120,
+                	minWidth: 100,
+                	filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
                     }
                 },{
-                	text: "标签",
-                	dataIndex: 'label',
-                	minWidth: 120,
-					flex:1
-                }*/],
+                	text: '添加状态',
+                	dataIndex: 'addStatus',
+                	width: 90,
+                	minWidth: 80,
+                	filter: {
+                        type: 'list'
+                    },
+                    renderer:function(value, metadata, record){
+                    	if (value=="已添加"){
+                    		metadata.style = "color:#ff0000";
+						}else{
+							metadata.style = "color:#66cc66";
+						}
+						return value;
+                    }
+                }],
                 bbar: {
                     xtype: 'pagingtoolbar',
                     pageSize: 200,

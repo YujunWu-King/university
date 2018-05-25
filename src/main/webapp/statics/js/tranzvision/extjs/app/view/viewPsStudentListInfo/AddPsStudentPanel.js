@@ -111,18 +111,19 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.AddPsStudentPanel', {
 					
 				},
 					
-					{
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.judgesList", "评委组"),
-					dataIndex: 'pwList',
-					width: 150
+					//{
+					//text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.judgesList", "评委组"),
+					//dataIndex: 'pwList',
+					//width: 150
 					
 					
-				},
-					{
-					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.MasreState", "评审状态"),
-					dataIndex: 'reviewStatusDesc',
-					flex: 1
-				},{
+				//},
+				//	{
+				//	text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.MasreState", "评审状态"),
+				//	dataIndex: 'reviewStatusDesc',
+				//	flex: 1
+				//},
+				{
 					text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.judges", "评委"),
 					dataIndex: 'judges',
 					width: 90,

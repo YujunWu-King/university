@@ -63,24 +63,34 @@
             xtype: 'timefield',
             fieldLabel: '开始时间',
 			increment:5,
-			editable:false,
+			//editable:false,
 			allowBlank: false,
 			format:'H:i',
-			labelSeparator:':',
-			name: 'startTime'
+			name: 'startTime',
+			minValue: '7:00 AM',
+	        maxValue: '19:00'
         },{
             xtype: 'timefield',
             fieldLabel: '结束时间',
 			increment:5,
-			editable:false,
+			//editable:false,
 			allowBlank: false,
-			format:'H:i',
-			labelSeparator:':',			
-			name: 'endTime'
+			format:'H:i',	
+			name: 'endTime',
+			minValue: '7:00 AM',
+	        maxValue: '19:00',
+	        validator: function(val){
+				var form = this.findParentByType('form').getForm();
+				if(val != ""){
+					var startTime = form.findField('startTime').getValue();
+					var endTime = form.findField('endTime').getValue();
+					if(endTime <= startTime) return '结束时间必须大于开始时间';
+				}
+				return true;	
+			}
         },{
         	xtype: 'textfield',
-        	fieldLabel: '面试地点',
-        	labelSeparator:':',			
+        	fieldLabel: '面试地点',	
 			name: 'msLocation'
         },{
             xtype: 'numberfield',
@@ -88,12 +98,10 @@
 			allowDecimals:false,
 			allowBlank: false,
 			minValue:1,
-			labelSeparator:':',
 			name: 'maxPerson'
         },{
         	xtype: 'textfield',
         	fieldLabel: '备注',
-        	labelSeparator:':',			
 			name: 'notes'
         }]
 	}],

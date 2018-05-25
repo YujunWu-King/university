@@ -235,7 +235,7 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
             } ]
         } ]
     } ],
-    buttons : [ {
+    buttons : [ /*{
         text : '保存',
         iconCls : "save",
         handler : 'onFormSave2'
@@ -243,7 +243,7 @@ Ext.define('KitchenSink.view.enrollProject.userMg.userBmSchView', {
         text : '确定',
         iconCls : "ensure",
         handler : 'onFormEnsure2'
-    }, {
+    },*/ {
         text : '关闭',
         iconCls : "close",
         handler : 'onFormClose'

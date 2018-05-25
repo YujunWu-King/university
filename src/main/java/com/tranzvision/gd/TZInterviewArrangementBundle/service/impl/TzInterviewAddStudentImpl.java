@@ -14,10 +14,11 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZInterviewArrangementBundle.dao.PsTzMspsKshTblMapper;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTbl;
-import com.tranzvision.gd.TZInterviewArrangementBundle.model.PsTzMspsKshTblKey;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTblKey;
 import com.tranzvision.gd.util.base.JacksonUtil;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 
@@ -28,15 +29,17 @@ import com.tranzvision.gd.util.sql.SqlQuery;
 @Service("com.tranzvision.gd.TZInterviewArrangementBundle.service.impl.TzInterviewAddStudentImpl")
 public class TzInterviewAddStudentImpl extends FrameworkImpl{
 	@Autowired
-	private SqlQuery sqlQuery;
-	@Autowired
 	private FliterForm fliterForm;
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
+	private SqlQuery sqlQuery;
+	@Autowired
 	private TzLoginServiceImpl tzLoginServiceImpl;
 	@Autowired
-	private PsTzMspsKshTblMapper psTzMspsKshTblMapper;
+	private GetHardCodePoint getHardCodePoint;
+	@Autowired
+	private PsTzMsPskshTblMapper psTzMspsKshTblMapper;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -50,14 +53,45 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 
 		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		
+		String oprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		try {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {};
 			
 			jacksonUtil.json2Map(strParams);
+			Map<String,Object> paramsMap = jacksonUtil.getMap();
+			
+			String classID = jacksonUtil.getString("classID");
+			String batchID = jacksonUtil.getString("batchID");
 
 			// json数据要的结果字段;
-			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APP_INS_ID", "OPRID", "TZ_MSH_ID", "TZ_REALNAME", "TZ_LEN_PROID", "TZ_COMPANY_NAME","TZ_ZY_SJ","TZ_ZY_EMAIL"};
+			String[] resultFldArray = {"TZ_CLASS_ID", "TZ_APP_INS_ID", "OPRID", "TZ_MSH_ID", "TZ_REALNAME", "TZ_ZY_SJ","TZ_ZY_EMAIL","TZ_CLASS_NAME","TZ_BATCH_NAME","TZ_SFCJ_MSZC", "TZ_LEN_PROID"};
+			
+			try{
+				//如果是江苏面试管理员，只能搜索到常住省份为江苏的考生，多个角色用英文逗号分隔
+				String jsRoleName = getHardCodePoint.getHardCodePointVal("TZ_JIANGSU_MSADM_ROLE");
+				if(jsRoleName != null 
+						&& !"".equals(jsRoleName)){
+					String [] roleNameArr = jsRoleName.split(",");
+					
+					String sql = "select 'Y' from PSROLEUSER where ROLEUSER=? and ROLENAME=?"; 
+					for(String roleName: roleNameArr){
+						String isJsAdm = sqlQuery.queryForObject(sql, new Object[]{ oprid, roleName }, "String");
+						if("Y".equals(isJsAdm)){
+							Map<String,Object> conditionMap = jacksonUtil.getMap("condition");
+							conditionMap.put("TZ_LEN_PROID-operator", "01");
+							conditionMap.put("TZ_LEN_PROID-value", "江苏");
+							
+							paramsMap.replace("condition", conditionMap);
+							strParams = jacksonUtil.Map2json(paramsMap);
+							break;
+						}
+					}
+				}
+			}catch (NullPointerException nEx) {
+				nEx.printStackTrace();
+			}
 			
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -76,33 +110,22 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 					mapList.put("oprid", rowList[2]);
 					mapList.put("mssqh", rowList[3]);
 					mapList.put("stuName", rowList[4]);
-					mapList.put("area", rowList[5]);
-					mapList.put("componey", rowList[6]);
-					mapList.put("mobile", rowList[7]);
-					mapList.put("email", rowList[8]);
-					/*
-					//面试资格
-					String sql = "SELECT B.TZ_ZHZ_DMS FROM PS_TZ_CLPS_KSH_TBL A,PS_TZ_PT_ZHZXX_TBL B,PS_TZ_CLS_BATCH_T C WHERE A.TZ_CLASS_ID=C.TZ_CLASS_ID AND A.TZ_APPLY_PC_ID=C.TZ_BATCH_ID AND A.TZ_MSHI_ZGFLG=B.TZ_ZHZ_ID AND B.TZ_EFF_STATUS ='A' AND B.TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND A.TZ_CLASS_ID=? AND A.TZ_APP_INS_ID=? ORDER BY CONVERT(A.TZ_APPLY_PC_ID,SIGNED) DESC";
-					String msZgFlag = sqlQuery.queryForObject(sql, new Object[]{rowList[0], rowList[1]}, "String");
-					if("".equals(msZgFlag) || msZgFlag==null){
-						sql = "SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_MSHI_ZGFLG' AND TZ_EFF_STATUS ='A' AND TZ_ZHZ_ID='W'";
-						msZgFlag = sqlQuery.queryForObject(sql, "String");
-					}
+					mapList.put("mobile", rowList[5]);
+					mapList.put("email", rowList[6]);
 					
-					//标签
-					String strLabel = "";
-					sql = "SELECT TZ_LABEL_NAME FROM PS_TZ_FORM_LABEL_T A,PS_TZ_LABEL_DFN_T B WHERE A.TZ_LABEL_ID=B.TZ_LABEL_ID AND TZ_APP_INS_ID=?";
-					List<Map<String, Object>> labelList = sqlQuery.queryForList(sql, new Object[]{rowList[1]});
-					for(Map<String, Object> mapLabel: labelList){
-						String label = String.valueOf(mapLabel.get("TZ_LABEL_NAME"));
-						if(!"".equals(label) && label != null){
-							strLabel = strLabel == ""? label : strLabel+ "； " +label;
-						}
-					}
+					mapList.put("className", rowList[7]);
+					mapList.put("batchName", rowList[8]);
+					mapList.put("msZhuanC", rowList[9]);
+					mapList.put("province", rowList[10]);
 					
-					mapList.put("msZGFlag", msZgFlag);
-					mapList.put("label", strLabel);
-					*/
+					String sql = "select 'Y' from PS_TZ_MSPS_KSH_TBL where TZ_CLASS_ID=? and TZ_APPLY_PC_ID=? and TZ_APP_INS_ID=?";
+					String inThisBatch = sqlQuery.queryForObject(sql, new Object[]{ classID, batchID, rowList[1] }, "String");
+					String addStatus = "未添加";
+					if("Y".equals(inThisBatch)){
+						addStatus = "已添加";
+					}
+					mapList.put("addStatus", addStatus);
+					
 					listData.add(mapList);
 				}
 
@@ -161,14 +184,14 @@ public class TzInterviewAddStudentImpl extends FrameworkImpl{
 					long appInsId = stuInfoMap.get("appId") == null ? 0 : Long.valueOf(stuInfoMap.get("appId").toString());
 					
 					if(appInsId>0){
-						PsTzMspsKshTblKey psTzMspsKshTblKey = new PsTzMspsKshTblKey();
+						PsTzMsPskshTblKey psTzMspsKshTblKey = new PsTzMsPskshTblKey();
 						psTzMspsKshTblKey.setTzClassId(classID);
 						psTzMspsKshTblKey.setTzApplyPcId(batchID);
 						psTzMspsKshTblKey.setTzAppInsId(appInsId);
 						
-						PsTzMspsKshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
+						PsTzMsPskshTbl psTzMspsKshTbl = psTzMspsKshTblMapper.selectByPrimaryKey(psTzMspsKshTblKey);
 						if(psTzMspsKshTbl==null){
-							psTzMspsKshTbl = new PsTzMspsKshTbl();
+							psTzMspsKshTbl = new PsTzMsPskshTbl();
 							psTzMspsKshTbl.setTzClassId(classID);
 							psTzMspsKshTbl.setTzApplyPcId(batchID);
 							psTzMspsKshTbl.setTzAppInsId(appInsId);

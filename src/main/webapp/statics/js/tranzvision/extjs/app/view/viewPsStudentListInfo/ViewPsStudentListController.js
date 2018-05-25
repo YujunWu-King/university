@@ -195,7 +195,9 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 			//console.log(win.actType);
 	win.on('afterrender', function(window) {
 								var attgrid = window.child('grid');
-								attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}' ;
+								//attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{"TZ_CLASS_ID-operator": "01","TZ_CLASS_ID-value": "' + classId + '","TZ_APPLY_PC_ID-operator": "01","TZ_APPLY_PC_ID-value": "' + batchId + '"}}' ;
+								attgrid.getStore().tzStoreParams ='{"cfgSrhId":"TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW","condition":{"TZ_JG_ID-operator":"01","TZ_JG_ID-value":"'+Ext.tzOrgID+'"}}' ;
+								
 								attgrid.getStore().load();
 							})
 			me.getView().add(win);
@@ -400,23 +402,23 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.ViewPsStudentListController',
 	searchksList: function(btn) {
 		//var panel = btn.findParentByType("viewmspsxsList");
 		var form=btn.findParentByType('viewmspsxsList').down('form').getForm();
-		var classId = form.findField('classId').getValue();
+		var jgid = form.findField('jgid').getValue();
 		var batchId = form.findField('batchId').getValue();
 		//var batchname="第一批次";
         //console.log("classId"+classId);
 		Ext.tzShowCFGSearch({
 			cfgSrhId: 'TZ_REVIEW_MS_COM.TZ_MSPS_ADDKS_STD.TZ_CLPS_KSH_VW',
 			condition:{
-				"TZ_CLASS_ID":classId,
-				"TZ_APPLY_PC_ID":batchId
+				"TZ_JG_ID":Ext.tzOrgID,
+				"TZ_IS_APP_OPEN":"Y"
 			},
 			callback: function(seachCfg) {
 				var seachCfgjson=Ext.JSON.decode(seachCfg)
 	
-				if (seachCfgjson.condition["TZ_APPLY_PC_ID-value"]==""){
+				//if (seachCfgjson.condition["TZ_APPLY_PC_ID-value"]==""){
 					
-				   seachCfgjson.condition["TZ_APPLY_PC_ID-value"]=batchId;
-				}
+				//   seachCfgjson.condition["TZ_APPLY_PC_ID-value"]=batchId;
+				//}
 				seachCfgjson=Ext.encode(seachCfgjson)
 				//console.log(seachCfgjson);
 				var store = btn.findParentByType("grid").store;

@@ -442,7 +442,7 @@ public class FliterForm extends FrameworkImpl {
 
 		// 返回多少个字段;
 		int resultFldNum = resultFldArray.length;
-
+	//	System.out.println("resultFldNum:"+resultFldNum);
 		// 列表内容;
 		// String strContent = "";
 		int numTotal = 0;

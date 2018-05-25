@@ -59,8 +59,8 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanelController',
 			form.findField("ksNum").addCls("lanage_1");
 
 			//form.findField('reviewClpsKsNum').setValue(reviewClpsKsNum);
-			form.findField("reviewClpsKsNum").setReadOnly(true);
-			form.findField("reviewClpsKsNum").addCls("lanage_1");
+			//form.findField("reviewClpsKsNum").setReadOnly(true);
+			//form.findField("reviewClpsKsNum").addCls("lanage_1");
 
 			//form.findField('reviewKsNum').setValue(reviewKsNum);
 			form.findField("reviewKsNum").setReadOnly(true);

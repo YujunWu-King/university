@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPsksTblMapper;
-import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPsksTbl;
+import com.tranzvision.gd.TZMbaPwClpsBundle.dao.PsTzMsPskshTblMapper;
+import com.tranzvision.gd.TZMbaPwClpsBundle.model.PsTzMsPskshTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -34,7 +34,7 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 	@Autowired
 	private SqlQuery sqlQuery;
 	@Autowired
-	private PsTzMsPsksTblMapper psTzMsPsksTblMapper;
+	private PsTzMsPskshTblMapper psTzMsPsksTblMapper;
 	@Autowired
 	private HttpServletRequest request;
 	@Autowired
@@ -61,8 +61,8 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] { { "TZ_APP_INS_ID", "ASC" } };
 
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID", "TZ_MSHI_ZGFLG",
-					"TZ_CLPS_PWJ_PC", "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_MSH_ID", "TZ_CLASS_NAME",
+			String[] resultFldArray = { "TZ_CLASS_ID", "TZ_APPLY_PC_ID", "TZ_APP_INS_ID",
+					 "OPRID", "TZ_REALNAME", "TZ_GENDER", "TZ_MSH_ID", "TZ_CLASS_NAME",
 					"TZ_BATCH_NAME" };
 
 			// 可配置搜索通用函数;
@@ -84,44 +84,41 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 					for (Map<String, Object> map : listMap) {
 						if (Strjudename.equals("")) {
 							Strjudename = map.get("TZ_REALNAME") == null ? "" : map.get("TZ_REALNAME").toString();
-							System.out.println("Strjudename:" + Strjudename);
+
 							revistus = map.get("TZ_PSHEN_ZT") == null ? "" : map.get("TZ_PSHEN_ZT").toString();
-							System.out.println("revistus:" + revistus);
 						} else {
 							Strjudename = Strjudename + "," + map.get("TZ_REALNAME") == null ? ""
 									: map.get("TZ_REALNAME").toString();
-
 						}
-
 					}
 					// 评委列表、评审状态
-					String pwList = "", reviewStatusDesc = "";
+					//String pwList = "" , reviewStatusDesc = "";
 					// 评委总分
-					Float pwTotal = 0.00f;
+					//Float pwTotal = 0.00f;
 					// 评委数
-					Integer pwNum = 0;
+					//Integer pwNum = 0;
 
-					String sql1 = "";
+					//String sql1 = "";
 					// 每生评审人数、当前评审轮次
-					sql1 = "SELECT TZ_MSPY_NUM,TZ_DQPY_LUNC FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
-					Map<String, Object> mapRule = sqlQuery.queryForMap(sql1, new Object[] { rowList[0], rowList[1] });
-					String strMspsNum = mapRule.get("TZ_MSPY_NUM") == null ? "" : mapRule.get("TZ_MSPY_NUM").toString();
-					Integer mspsNum = 2;
-					if (!"".equals(strMspsNum) && strMspsNum != null) {
-						mspsNum = Integer.valueOf(strMspsNum);
-					}
-					String strDqpyLunc = mapRule.get("TZ_DQPY_LUNC") == null ? ""
-							: mapRule.get("TZ_DQPY_LUNC").toString();
-					Integer dqpyLunc = 0;
-					if (!"".equals(strDqpyLunc) && strDqpyLunc != null) {
-						dqpyLunc = Integer.valueOf(strDqpyLunc);
-					}
+					//sql1 = "SELECT TZ_MSPY_NUM,TZ_DQPY_LUNC FROM PS_TZ_CLPS_GZ_TBL  WHERE TZ_CLASS_ID=? AND TZ_APPLY_PC_ID=?";
+					//Map<String, Object> mapRule = sqlQuery.queryForMap(sql1, new Object[] { rowList[0], rowList[1] });
+					//String strMspsNum = mapRule.get("TZ_MSPY_NUM") == null ? "" : mapRule.get("TZ_MSPY_NUM").toString();
+					//Integer mspsNum = 2;
+					//if (!"".equals(strMspsNum) && strMspsNum != null) {
+					//	mspsNum = Integer.valueOf(strMspsNum);
+					//}
+					//String strDqpyLunc = mapRule.get("TZ_DQPY_LUNC") == null ? ""
+					//		: mapRule.get("TZ_DQPY_LUNC").toString();
+					//Integer dqpyLunc = 0;
+					//if (!"".equals(strDqpyLunc) && strDqpyLunc != null) {
+					//	dqpyLunc = Integer.valueOf(strDqpyLunc);
+					//}
 
-					sql1 = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
-					List<Map<String, Object>> listPw = sqlQuery.queryForList(sql1,
-							new Object[] { rowList[0], rowList[1], rowList[2], dqpyLunc });
+					//sql1 = tzSQLObject.getSQLText("SQL.TZMaterialInterviewReviewBundle.material.TzGetMaterialKsPwInfo");
+					//List<Map<String, Object>> listPw = sqlQuery.queryForList(sql1,
+					//		new Object[] { rowList[0], rowList[1], rowList[2], dqpyLunc });
 
-					for (Map<String, Object> mapPw : listPw) {
+					/*for (Map<String, Object> mapPw : listPw) {
 
 						String pwOprid = mapPw.get("TZ_PWEI_OPRID") == null ? ""
 								: mapPw.get("TZ_PWEI_OPRID").toString();
@@ -144,25 +141,26 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 							pwList = pwDlzhId;
 						}
 						pwTotal += scoreNum;
-					}
+					} */
 
-					if (mspsNum.equals(pwNum)) {
-						reviewStatusDesc = "已完成";
-					} else {
-						reviewStatusDesc = "未完成（" + pwNum + "/" + mspsNum + "）";
-					}
-					mapList.put("pwList", pwList);
-					mapList.put("reviewStatusDesc", reviewStatusDesc);
+					//if (mspsNum.equals(pwNum)) {
+					//	reviewStatusDesc = "已完成";
+					//} else {
+					//	reviewStatusDesc = "未完成（" + pwNum + "/" + mspsNum + "）";
+					//}
+					
+
+					
+					//mapList.put("pwList", pwList);
+					//mapList.put("reviewStatusDesc", reviewStatusDesc);
 					mapList.put("judges", Strjudename);
 					mapList.put("judgeStatus", revistus);
-					// mapList.put("ksOprId", rowList[4]);
-					// mapList.put("jygzTsxx", rowList[4]);
-					mapList.put("ksOprId", rowList[5]);
-					mapList.put("ksName", rowList[6]);
-					mapList.put("gender", rowList[7]);
-					mapList.put("mshId", rowList[8]);
-					mapList.put("className", rowList[9]);
-					mapList.put("batchName", rowList[10]);
+					mapList.put("ksOprId", rowList[3]);
+					mapList.put("ksName", rowList[4]);
+					mapList.put("gender", rowList[5]);
+					mapList.put("mshId", rowList[6]);
+					mapList.put("className", rowList[7]);
+					mapList.put("batchName", rowList[8]);
 					listData.add(mapList);
 				}
 
@@ -226,7 +224,7 @@ public class TzReviewMsExamAddServiceImpl extends FrameworkImpl {
 								ksNameList = ksNameList + "第" + a[1] + "行的：" + ksName + ",";
 
 							} else {
-								PsTzMsPsksTbl psTzMsPsksTbl = new PsTzMsPsksTbl();
+								PsTzMsPskshTbl psTzMsPsksTbl = new PsTzMsPskshTbl();
 								psTzMsPsksTbl.setTzClassId(classId);
 								psTzMsPsksTbl.setTzApplyPcId(batchId);
 								psTzMsPsksTbl.setTzAppInsId(appinsId);

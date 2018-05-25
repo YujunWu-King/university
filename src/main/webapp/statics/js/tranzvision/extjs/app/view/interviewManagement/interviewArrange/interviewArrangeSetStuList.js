@@ -40,16 +40,16 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
         });
         //gridStore添加filterchange监听
         var interviewArrangeSetStuListGridStore = new KitchenSink.view.interviewManagement.interviewArrange.interviewArrangeSetStuListStore({
-            listeners:{
-                filterchange:function( store, filters, eOpts ){
-                    var clearFiltersBtn=me.lookupReference('msArrSetStuListClearFiltersBtn');
-                    if(filters.length>0){
-                        clearFiltersBtn.setDisabled( false );
-                    }else{
-                        clearFiltersBtn.setDisabled( true );
-                    }
-                }
-            }
+//            listeners:{
+//                filterchange:function( store, filters, eOpts ){
+//                    var clearFiltersBtn=me.lookupReference('msArrSetStuListClearFiltersBtn');
+//                    if(filters.length>0){
+//                        clearFiltersBtn.setDisabled( false );
+//                    }else{
+//                        clearFiltersBtn.setDisabled( true );
+//                    }
+//                }
+//            }
         });
 
         Ext.apply(this,{
@@ -154,12 +154,17 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
 							text:'更多操作',
 							iconCls:  'list',
 							glyph: 61,
-							menu:[
-								{
-									text:'选中考生发送面试预约邮件',
-									iconCls:"email",
-									handler:'sendEmailToSelStu'
-								}]
+							menu:[{
+								text:'给选中考生发送邮件',
+								iconCls:"email",
+								handler:'tzSendEmailSmsToStu',
+								sendType: "EML"
+							},{
+								text:'给选中考生发送短信',
+								iconCls:"sms",
+								handler:'tzSendEmailSmsToStu',
+								sendType: "SMS"
+							}]
 						}
 					]
                 }],
@@ -167,53 +172,92 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.rowNum","序号"),
                     xtype: 'rownumberer',
                     width:50
-                },{
+                },/*{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.appId","报名表编号") ,
                     dataIndex: 'appId',
                     filter: {
                         type: 'number'
                     },
-                    width:120,
-                },{
+                    width: 100,
+                    minWidth: 80,
+                    hidden: true
+                },*/{
                 	text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.interviewAppId","面试申请号") ,
                     dataIndex: 'interviewAppId',
                     filter: {
                         type: 'string'
                     },
-                    width:140
+                    width: 120,
+                    minWidth: 100
                 },{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.stuName","姓名") ,
                     dataIndex: 'stuName',
                     filter: {
                         type: 'string'
                     },
-                    width: 120
+                    width: 100,
+                    minWidth: 80
+                },{
+                	text: '报考班级',
+                	dataIndex: 'className',
+                	width: 140,
+                	minWidth: 120,
+                	flex: 1,
+                	filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    }
+                },{
+                	text: '申请面试批次',
+                	dataIndex: 'batchName',
+                	width: 130,
+                	minWidth: 100,
+                	filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    }
                 },{
 					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.emial", '邮箱'),
 					dataIndex: 'email',
-					width: 160,
-					flex:1
+					width: 140,
+                    minWidth: 120,
+                    filter: {
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    }
 				},{
 					text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.mobile", '手机'),
 					dataIndex: 'mobile',
-					width: 140,
-					flex:1
-				},{
-                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.msZGFlag","面试资格"),
-                    dataIndex: 'msZGFlag',
+					width: 120,
+                    minWidth: 100,
                     filter: {
-                        type: 'list',
-                        options: mszgFlagSortFilterOptions
+                        type: 'string',
+                        itemDefaults: {
+                            emptyText: 'Search for...'
+                        }
+                    }
+				},{
+                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.yyStatus","预约状态"),
+                    dataIndex: 'yyStatus',
+                    width: 90,
+                    minWidth: 80,
+                    filter: {
+                        type: 'list'
                     },
-                    width:120
-                    //renderer : function(value, metadata, record) {
-                    //    //alert("render"+value);
-                    //    var index = mszgFlagStore.find('TValue',value);
-                    //    if(index!=-1){
-                    //        return mszgFlagStore.getAt(index).data.TSDesc;
-                    //    }
-                    //    return record.get('msZGFlag');
-                    //},
+                    renderer:function(value, metadata, record){
+                    	if (value=="已预约"){
+                    		metadata.style = "color:#66cc66";
+						}else{
+							metadata.style = "color:#ff0000";
+						}
+						return value;
+                    }
                 },{
                     text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MS_ARR_SSTU_STD.label","标签") ,
                     filter: {
@@ -221,8 +265,8 @@ Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewArran
                     },
                     sortable: true,
                     dataIndex: 'label',
-                    minWidth: 200,
-                    flex:1
+                    width: 140,
+                    minWidth: 120
                 }],
                 bbar: {
                     xtype: 'pagingtoolbar',

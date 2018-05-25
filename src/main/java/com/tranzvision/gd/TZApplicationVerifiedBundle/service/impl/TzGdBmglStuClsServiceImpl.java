@@ -1,5 +1,7 @@
 package com.tranzvision.gd.TZApplicationVerifiedBundle.service.impl;
 
+import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -122,9 +124,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 				}
 			}
 			// 最后一页不算
-			if (leng > 1) {
-				leng = leng - 1;
-			}
+			// if (leng > 1) {
+			// leng = leng - 1;
+			// }
 			System.out.println("leng:" + leng);
 
 			// 报名表审批学生列表模板;
@@ -158,11 +160,12 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 			// json数据要的结果字段;
 			String[] resultFldArray = { "OPRID", "TZ_REALNAME", "TZ_APP_INS_ID", "TZ_MSH_ID", "NATIONAL_ID",
-					"TZ_AUDIT_STATE", "TZ_COLOR_SORT_ID", "TZ_SUBMIT_STATE", "TZ_SUBMIT_DT_STR", "TZ_MS_RESULT" };
+					"TZ_AUDIT_STATE", "TZ_COLOR_SORT_ID", "TZ_SUBMIT_STATE", "TZ_SUBMIT_DT_STR", "TZ_MS_RESULT",
+					"TZ_FILL_PROPORTION" };
 
 			// 可配置搜索通用函数;
 			Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, comParams, numLimit, numStart, errorMsg);
-
+			String TZ_FILL_PROPORTION = "";
 			if (obj != null) {
 				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
 				for (int i = 0; i < list.size(); i++) {
@@ -182,8 +185,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 
 					/* 根据模板配置显示报名表信息 */
 					String appInsID = rowList[2];
-
-					mapList.put("fillProportion", getBMBFillProportion(appInsID, leng));
+					TZ_FILL_PROPORTION = rowList[10];
+					// System.out.println("classID"+strClassID);
+					mapList.put("fillProportion", getBMBFillProportion(appInsID, leng, TZ_FILL_PROPORTION));
 
 					if (strAuditGridTplID != null && !"".equals(strAuditGridTplID)) {
 						// 将模板中需要显示的数据全部查出存入数组
@@ -373,7 +377,9 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		if ("tzExportAll".equals(oprType)) {
 			reString = this.tzGetAppList(strParams, errorMsg);
 		}
-
+		if ("tzGetAppIdAndOprID".equals(oprType)) {
+			reString = this.tzGetAppIdAndOprID(strParams, errorMsg);
+		}
 		return reString;
 	}
 
@@ -701,17 +707,57 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 	 * @param appInsID
 	 * @return
 	 */
-	private String getBMBFillProportion(String appInsID, int leng) {
-		String sql = "select count(1) from PS_TZ_APP_COMP_TBL where TZ_APP_INS_ID=? and TZ_HAS_COMPLETE=? ";
-		int fill = jdbcTemplate.queryForObject(sql, new Object[] { appInsID, "Y" }, "Integer");
-		System.out.println("fill:" + fill);
-		if (leng == 0) {
-			return "0.00%";
-		} else {
-			double f = (double)fill / leng;
-			f = f * 100;
-			System.out.println("f:" + f);
+	public String getBMBFillProportion(String appInsID, int leng, String TZ_FILL_PROPORTION) {
+
+		// System.out.println("appInsID:"+appInsID);
+		// System.out.println("leng:"+leng);
+		// System.out.println("TZ_FILL_PROPORTION:"+TZ_FILL_PROPORTION);
+
+		String sql = "SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE  TZ_APP_INS_ID=?";
+		String status = jdbcTemplate.queryForObject(sql, new Object[] { appInsID }, "String");
+
+		// 提交不计算 直接返回100%
+		if (status != null && status.equals("U")) {
+			if (TZ_FILL_PROPORTION.equals("100.00")) {
+				double f = Double.parseDouble(TZ_FILL_PROPORTION);
+				return String.format("%.2f", f) + "%";
+			} else {
+				TZ_FILL_PROPORTION = "100.00";
+				sql = "UPDATE PS_TZ_APP_INS_T SET TZ_FILL_PROPORTION=? WHERE TZ_APP_INS_ID=?";
+				jdbcTemplate.update(sql, new Object[] { new BigDecimal(TZ_FILL_PROPORTION), appInsID });
+				double f = Double.parseDouble(TZ_FILL_PROPORTION);
+				return String.format("%.2f", f) + "%";
+			}
+		}
+
+		// 不是100的需要计算，用户可能修改过
+		if (TZ_FILL_PROPORTION == null || TZ_FILL_PROPORTION.equals("") || TZ_FILL_PROPORTION.equals("0.00")
+				|| !TZ_FILL_PROPORTION.equals("100.00")) {
+
+			sql = "select count(1) from PS_TZ_APP_COMP_TBL where TZ_APP_INS_ID=? and (TZ_HAS_COMPLETE=? or TZ_HAS_COMPLETE=?) ";
+			int fill = jdbcTemplate.queryForObject(sql, new Object[] { appInsID, "Y", "B" }, "Integer");
+			// System.out.println("fill:" + fill);
+			double f = 0;
+			if (leng == 0) {
+				f = 0.00;
+			} else {
+				f = (double) fill / leng;
+				f = f * 100;
+			}
+			// System.out.println("f:"+f);
+			sql = "UPDATE PS_TZ_APP_INS_T SET TZ_FILL_PROPORTION=? WHERE TZ_APP_INS_ID=?";
+			jdbcTemplate.update(sql, new Object[] { new BigDecimal(f), appInsID });
+
 			return String.format("%.2f", f) + "%";
+		} else {
+			try {
+				double f = Double.parseDouble(TZ_FILL_PROPORTION);
+				// System.out.println("f:"+f);
+				return String.format("%.2f", f) + "%";
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "0.00%";
+			}
 		}
 	}
 
@@ -761,4 +807,85 @@ public class TzGdBmglStuClsServiceImpl extends FrameworkImpl {
 		returnMap.put("result", strAppInsList);
 		return jacksonUtil.Map2json(returnMap);
 	}
+	/* 获取AppID及OprID */
+	private String tzGetAppIdAndOprID(String comParams, String[] errorMsg) {
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		String strAppID = "";
+
+		String OprID = "";
+		String AppID = "";
+		Map<String, Object> returnMap = new HashMap<>();
+
+		try {
+//			jacksonUtil.json2Map(comParams);
+//			String AppIdSQL = (String) jacksonUtil.getString("getAppIdSQL");
+			
+			jacksonUtil.json2Map(comParams);
+			String configSearchCondition = (String) comParams;
+			String strClassID = "";
+			String strBatchID = "";
+			if (jacksonUtil.containsKey("condition")) {
+				Map<String, Object> conditionJson = jacksonUtil.getMap("condition");
+				if (conditionJson != null) {
+					for (Map.Entry<String, Object> entry : conditionJson.entrySet()) {
+						String key = entry.getKey();
+						if (key.indexOf("TZ_CLASS_ID-value") >= 0) {
+							strClassID = (String) conditionJson.get(key);
+						}
+						if (key.indexOf("TZ_BATCH_ID-value") >= 0) {
+							strBatchID = (String) conditionJson.get(key);
+						}
+					}
+				}
+			}
+			String strRet = "";
+			String[] resultFldArray = { "OPRID" };
+			String[][] orderByArr = new String[][] {};
+			String[] errorMessage = { "0" };
+			String originalSql = fliterForm.getQuerySQL(resultFldArray, orderByArr, configSearchCondition,
+					errorMessage);
+			strRet = originalSql;
+
+			if (strClassID.length() > 0) {
+				strRet = "SELECT TZ_APP_INS_ID FROM PS_TZ_APP_LIST_VW WHERE OPRID = ANY(" + originalSql
+						+ ") AND TZ_CLASS_ID='" + strClassID + "'";
+			} else {
+				strRet = "SELECT TZ_APP_INS_ID FROM PS_TZ_APP_LIST_VW WHERE OPRID = ANY(" + originalSql + ")";
+			}
+
+			if (strBatchID.length() > 0) {
+				System.out.println("strBatchID exist");
+				strRet=strRet+" AND TZ_BATCH_ID='" + strBatchID + "'";
+			}
+			
+			String AppIdSQL = strRet.replaceAll("TZ_APP_INS_ID", "OPRID,TZ_APP_INS_ID");
+
+			System.out.println(AppIdSQL);
+			List<Map<String, Object>> SqlCon2 = jdbcTemplate.queryForList(AppIdSQL);
+
+			for (Map<String, Object> map2 : SqlCon2) {
+
+				AppID = map2.get("TZ_APP_INS_ID").toString();
+				OprID = map2.get("OPRID").toString();
+
+				if (strAppID.equals("")) {
+					strAppID = AppID + "+" + OprID;
+				} else {
+					strAppID = strAppID + ";" + AppID + "+" + OprID;
+
+				}
+
+			}
+
+		} catch (Exception e) {
+			errorMsg[0] = "1";
+			errorMsg[1] = e.toString();
+			strAppID = "";
+		}
+
+		returnMap.put("AppID", strAppID);
+		return jacksonUtil.Map2json(returnMap);
+
+	}
+
 }

@@ -951,7 +951,7 @@
 
         //是否有访问权限
         var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_AUDDYN_STD"];
-
+        console.log("p"+pageResSet);
         if (pageResSet == "" || pageResSet == undefined) {
             Ext.MessageBox.alert('提示', '您没有修改数据的权限');
             return;
@@ -986,6 +986,7 @@
             win = new ViewClass();
             this.getView().add(win);
         }
+        console.log(win);
         win.actType = "update";
 
         var audId = AudID;
@@ -1002,7 +1003,10 @@
         var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"' + audId + '","audName":"' + audName + '","audStat":"' + audStat + '","audType":"' + audType + '","audMS":"' + audMS + '","audSQL":"' + audSQL + '"}}';
         //页面注册信息表单
         console.log(tzParams);
-        var form = win.child("form").getForm();
+        var form1 = win.child("form");
+        console.log(form1);
+        var form=form1.getForm();
+       // alert(form);
 
         var gridStore = win.child("form").child("grid").getStore();
         var tzStoreParams = '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "' + audId + '"}}';
@@ -1591,6 +1595,10 @@
             var form = this.lookupReference('userMgForm').getForm();
             //var ksdrInfoForm = this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
             var newCard = this.lookupReference('userMgForm').down('form[name=kslcInfoForm]');
+            //console.log(userMgInfoPanel);
+            //var btn=userMgInfoPanel.down('by[name=save]');
+           
+            console.log(this.lookupReference('userMgForm').down('form[name=kslcInfoForm]'));
             var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_MSHLCH_STD","OperateType":"QF","comParams":{"OPRID":"' + oprID + '","appInsID":"' + appInsID + '"}}';
             // 加载数据
             Ext.tzLoad(
@@ -1671,7 +1679,9 @@
                                            columnWidth: 1,
                                            fieldLabel:fieldname1,
                                            value:value,
-                                           name: table+"_tf_"+field
+                                           name: table+"_tf_"+field,
+                                           readOnly:true,
+                                           cls:'lanage_1'
                                        };
                                    }
                                    conItems.push(typeField);
@@ -1787,7 +1797,8 @@
 
 
         var classID, oprID, appInsID, record;
-
+        
+        //console.log(this.getView().name);
         if (this.getView().name == "applicationFormWindow") {
             classID = this.getView().classID;
             oprID = this.getView().oprID;
@@ -1796,10 +1807,14 @@
             this.getView().close();
         } else {
             record = grid.store.getAt(rowIndex);
-            classID = record.data.classID;
+            classID = record.data.appClassId;
             oprID = record.data.oprID;
-            appInsID = record.data.appInsID;
+            appInsID = record.data.appInsId;
         }
+        //console.log(record);
+        //console.log(classID);
+        //console.log(oprID);
+        //console.log(appInsID);
 //        var store = grid.getStore();
 //        var record = store.getAt(rowIndex);
 //    	var classID = record.get("appClassId");

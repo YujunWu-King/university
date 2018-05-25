@@ -86,14 +86,14 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 					fieldStyle:'background:#F4F4F4',
     				readOnly:true
 
-				}, {
+				/*}, {
 					xtype: 'textfield',
 					fieldLabel: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.reviewClpsKsNum", "材料审批考生"),
 					name: 'reviewClpsKsNum',
 					allowBlank: false,
 					fieldStyle:'background:#F4F4F4',
-    				readOnly:true
-
+    				readOnly:true */
+ 
 				}, {
 					layout: {
 						type: 'hbox'
@@ -333,10 +333,19 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 								
 								//动态renderer
 								renderer: 'readervalue'
-								
-								
-
 							},{
+								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.yypw", "英语评委"),
+								xtype:'checkcolumn',
+								dataIndex: 'judgType',
+								width: 100,
+								sortable:false
+							},{
+								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.groupLeader", "组长"),
+								xtype:'checkcolumn',
+								dataIndex: 'groupleader',
+								width: 100,
+								sortable:false
+							}, {								
 								text: Ext.tzGetResourse("TZ_REVIEW_MS_COM.TZ_MSPS_RULE_STD.judgState", "评委状态"),
 								dataIndex: 'judgState',
 								width: 200,
@@ -367,7 +376,18 @@ Ext.define('KitchenSink.view.viewPsStudentListInfo.SetMsPsRulerPanel', {
 						          handler: 'deleteMsPw'
 					            }]
 				             }],
-							store: store,		
+							store: store,	
+							bbar: {
+			                    xtype: 'pagingtoolbar',
+			                    pageSize: 100,
+			                    store: store,
+			                    displayInfo: true,
+			                    displayMsg:"显示{0}-{1}条，共{2}条",
+			                    beforePageText:"第",
+			                    afterPageText:"页/共{0}页",
+			                    emptyMsg: "没有数据显示",
+			                    plugins: new Ext.ux.ProgressBarPager()
+			                }
 						}]
 					}]
 				}]

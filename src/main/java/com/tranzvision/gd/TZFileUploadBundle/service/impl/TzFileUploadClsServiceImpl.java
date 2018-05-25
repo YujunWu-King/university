@@ -69,7 +69,11 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 
 		// 推荐信编号
 		String parRefLetterId = jacksonUtil.getString("refLetterId");
-
+		//是否是管理员查看
+		String isAdmin="";
+		if(jacksonUtil.containsKey("isAdmin")){
+			isAdmin=jacksonUtil.getString("isAdmin");
+		}
 		// 报名表模板
 		String appTplId = "";
 		// 信息项名称
@@ -98,9 +102,15 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 		if(psTzAqYhxxTbl != null){
 			userName = psTzAqYhxxTbl.getTzRealname();
 		}
-
+		
+		if("Y".equals(isAdmin)){
+			userName = sqlQuery.queryForObject(
+					"SELECT IF(C.TZ_REALNAME='', D.TZ_REALNAME,C.TZ_REALNAME)FROM PS_TZ_FORM_WRK_T B  LEFT JOIN PS_TZ_REG_USER_T C ON (B.OPRID = C.OPRID) LEFT JOIN PS_TZ_AQ_YHXX_TBL D ON (B.OPRID = D.OPRID)WHERE B.TZ_APP_INS_ID = ?",
+					new Object[] { parAppInsId }, "String");
+		}
 		if (StringUtils.isBlank(userName)) {
 			userName = "GUEST";
+			
 			if (StringUtils.isNotBlank(parRefLetterId)) {
 				// 如果为推荐信上传附件，显示推荐人姓名
 				PsTzKsTjxTbl psTzKsTjxTbl = psTzKsTjxTblMapper.selectByPrimaryKey(parRefLetterId);
@@ -108,7 +118,6 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 						: String.valueOf(psTzKsTjxTbl.getTzTjxAppInsId());
 				String tjrName = psTzKsTjxTbl.getTzReferrerName();
 				String tjrGname = psTzKsTjxTbl.getTzReferrerGname();
-
 				String sql = "SELECT TZ_USE_TYPE FROM PS_TZ_APPTPL_DY_T A,PS_TZ_APP_INS_T B WHERE A.TZ_APP_TPL_ID = B.TZ_APP_TPL_ID AND B.TZ_APP_INS_ID = ?";
 				String userType = sqlQuery.queryForObject(sql, new Object[] { appIns }, "String");
 				if (StringUtils.equals("TJX", userType)) {
@@ -116,13 +125,13 @@ public class TzFileUploadClsServiceImpl extends FrameworkImpl {
 				}
 			}
 		}
-
 		// 文件后缀
 		int index = StringUtils.lastIndexOf(parSysFileName, ".");
 		String fileSuffix = StringUtils.substring(parSysFileName, index + 1);
 		fileSuffix = StringUtils.lowerCase(fileSuffix);
 
 		int numMaxIndex;
+		
 		if (StringUtils.isBlank(parMaxOrder)) {
 			numMaxIndex = 1;
 		} else {
