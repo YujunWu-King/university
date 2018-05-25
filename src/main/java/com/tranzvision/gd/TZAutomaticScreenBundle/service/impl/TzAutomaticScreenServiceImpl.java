@@ -179,6 +179,11 @@ public class TzAutomaticScreenServiceImpl extends FrameworkImpl {
 						if ("msResult".equals(columnField)) {
 							//orderList.add(new String[] { "TZ_SCORE_BZ", sortStr });
 							orderList.add(new String[] { "TZ_SCORE_BZXH", sortStr });
+							if("ASC".equals(sortStr)){
+								orderList.add(new String[] { "TZ_TOTAL_SCORE", "DESC" });
+							}else{
+								orderList.add(new String[] { "TZ_TOTAL_SCORE", "ASC" });
+							}
 						}
 					}
 
