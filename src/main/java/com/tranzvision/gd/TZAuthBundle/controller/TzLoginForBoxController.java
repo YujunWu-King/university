@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZAuthBundle.controller;
 
 import java.io.File;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -171,7 +172,10 @@ public class TzLoginForBoxController {
 			
 			if(key.equals("pwd")){
 				String pwd="";
+				MD5 md5=new MD5();
 				String password=entry.getValue().toString();
+		//		password=md5.getMD5(password.getBytes());
+				System.out.println("pass="+password);
 				String sql="select PSOPRDEFN.OPERPSWD from PS_TZ_AQ_YHXX_TBL,PSOPRDEFN where PS_TZ_AQ_YHXX_TBL.OPRID=PSOPRDEFN.OPRID and PS_TZ_AQ_YHXX_TBL.TZ_DLZH_ID=?";
 				pwd=SqlQuery.queryForObject(sql, new Object[]{tm.get("username")}, "String");
 				System.out.println(pwd);
@@ -218,7 +222,7 @@ public class TzLoginForBoxController {
 					long timep = Long.parseLong(entry.getValue().toString());	
 					long time = System.currentTimeMillis();
 					System.out.println(time);
-					if (time - timep > 2 * 60 * 1000) {
+					if (time - timep > 24 * 60 * 1000) {
 						jsonMap = new HashMap<String, Object>();
 						jsonMap.put("res_code", "-0001");
 						jsonMap.put("res_message", "登录超时");
@@ -256,26 +260,26 @@ public class TzLoginForBoxController {
 		return jsonMap;
 	}
 	
-	private Map<String, Object> checkUserToken(HttpServletRequest request,LinkedHashMap<String, String> tm){
-		String key="";
-		Map<String, Object> jsonMap = null;
-		for (Map.Entry<String, String> entry : tm.entrySet()) {
-			key = entry.getKey();
-			if(key.equals("usertoken")){
-				String usertoken=entry.getValue().toString();
-				System.out.println("uuuu="+usertoken);
-				String token=(String) request.getSession().getAttribute("token");
-				System.out.println("aaaaa="+token);
-				if(token==null || !token.equals(usertoken)){
-					jsonMap = new HashMap<String, Object>();
-					jsonMap.put("res_code", "-0001");
-					jsonMap.put("res_message", "usertoken不存在");
-					return jsonMap;
-				}
-			}
-		}
-		return jsonMap;
-	}
+//	private Map<String, Object> checkUserToken(HttpServletRequest request,LinkedHashMap<String, String> tm){
+//		String key="";
+//		Map<String, Object> jsonMap = null;
+//		for (Map.Entry<String, String> entry : tm.entrySet()) {
+//			key = entry.getKey();
+//			if(key.equals("usertoken")){
+//				String usertoken=entry.getValue().toString();
+//				System.out.println("uuuu="+usertoken);
+//				String token=(String) request.getSession().getAttribute("token");
+//				System.out.println("aaaaa="+token);
+//				if(token==null || !token.equals(usertoken)){
+//					jsonMap = new HashMap<String, Object>();
+//					jsonMap.put("res_code", "-0001");
+//					jsonMap.put("res_message", "usertoken不存在");
+//					return jsonMap;
+//				}
+//			}
+//		}
+//		return jsonMap;
+//	}
 
 	/**
 	 * 弹屏请求接口
@@ -313,11 +317,11 @@ public class TzLoginForBoxController {
 		tm.put("authenticator", authenticator);
 
 		// 校验传入参数
-		jsonMap = this.checkUserToken(request, tm);
-		if (jsonMap != null) {
-			return jacksonUtil.Map2json(jsonMap);
-
-		}
+//		jsonMap = this.checkUserToken(request, tm);
+//		if (jsonMap != null) {
+//			return jacksonUtil.Map2json(jsonMap);
+//
+//		}
 		jsonMap = this.checkParameter(tm);
 		if (jsonMap != null) {
 			return jacksonUtil.Map2json(jsonMap);
