@@ -2037,7 +2037,8 @@
     },
     createUserInfoClass: function(){
         //是否有访问权限
-        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_USERINFO_STD"];
+    	 Ext.tzSetCompResourses("TZ_UM_USERMG_COM");// 设置组件
+    	var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_UM_USERMG_COM"]["TZ_UM_USERINFO_STD"];
         if( pageResSet == "" || pageResSet == undefined){
             Ext.MessageBox.alert('提示', '您没有访问或修改数据的权限');
             return;
