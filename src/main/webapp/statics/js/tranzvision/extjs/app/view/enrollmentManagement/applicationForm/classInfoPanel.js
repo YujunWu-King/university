@@ -187,6 +187,11 @@
                                  handler:'saveAsDynAud'
                             },
                             {
+                           	 	text:"选中申请人另存为听众",
+                                glyph:'xf067@FontAwesome',
+                                handler:'saveAsStaAud'
+                           },
+                            {
                                 text:Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.viewEmailSendHis","查看邮件发送历史"),
                                 glyph:'xf1da@FontAwesome',
                                 handler:'viewMailHistory'

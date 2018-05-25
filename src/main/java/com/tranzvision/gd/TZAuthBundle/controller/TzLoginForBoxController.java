@@ -179,6 +179,8 @@ public class TzLoginForBoxController {
 				String sql="select PSOPRDEFN.OPERPSWD from PS_TZ_AQ_YHXX_TBL,PSOPRDEFN where PS_TZ_AQ_YHXX_TBL.OPRID=PSOPRDEFN.OPRID and PS_TZ_AQ_YHXX_TBL.TZ_DLZH_ID=?";
 				pwd=SqlQuery.queryForObject(sql, new Object[]{tm.get("username")}, "String");
 				System.out.println(pwd);
+				password= DESUtil.encrypt(password, "TZGD_Tranzvision");
+			//	System.out.println(s);
 				if(!password.equals(pwd)){
 					jsonMap = new HashMap<String, Object>();
 					jsonMap.put("res_code", "-0004");

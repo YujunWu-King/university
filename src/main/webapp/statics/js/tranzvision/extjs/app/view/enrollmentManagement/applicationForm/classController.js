@@ -38,6 +38,7 @@
                     var getedSQL = responseData.SQL;
 
                     window.getedSQL2 = responseData.SQL;
+                    console.log(getedSQL2);
 
                
             });
@@ -1023,7 +1024,7 @@
         }
 
     },
-    /*选中申请人另存为听众*/
+    /*搜索结果另存为听众*/
     saveAsDynAud: function () {
 
 
@@ -1117,6 +1118,116 @@
     onPageRegClose: function (btn) {
         var win = btn.findParentByType("window");
         win.close();
+    },
+    onPageRegSave1: function (btn) {
+        //获取窗口
+        var win = btn.findParentByType("window");
+        //页面注册信息表单
+        var form = win.child("form").getForm();
+        if (form.isValid()) {
+            /*保存页面注册信息*/
+
+            this.savePageRegInfo1(win);
+        }
+    },
+    savePageRegInfo1: function (win, view) {
+
+        //信息表单
+        var form = win.child("form").getForm();
+
+        var formParams = form.getValues();
+        var audSQL = formParams["audSQL"];
+        var audID = formParams["audID"];
+
+
+        var gridStore = win.child("form").child("grid").getStore();
+        var selList = win.child("form").child("grid").getSelectionModel().getSelection();
+
+        var removeJson = "";
+        //删除记录
+        var removeRecs = gridStore.getRemovedRecords();
+
+        for (var i = 0; i < removeRecs.length; i++) {
+            if (removeJson == "") {
+                removeJson = Ext.JSON.encode(removeRecs[i].data);
+            } else {
+                removeJson = removeJson + ',' + Ext.JSON.encode(removeRecs[i].data);
+            }
+        }
+        ;
+
+        var comParams = "";
+        if (removeJson != "") {
+            comParams = '"delete":[' + removeJson + "]";
+        }
+
+        var tzParams2 = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{' + comParams + '}}';
+
+        //保存数据
+        if (comParams != "") {
+            Ext.tzSubmit(tzParams2, function () {
+
+            }, "", true, this);
+        }
+
+
+        //表单数据
+        var comParamsALL = '"update":[{"typeFlag":"FORM","data":' + Ext.JSON.encode(form.getValues()) + '}]';
+
+        var actType = win.actType;
+
+
+        //表格数据
+        var updateJson = "";
+        var updateRecs = gridStore.getUpdatedRecords();
+
+
+        for (var i = 0; i < updateRecs.length; i++) {
+            if (updateJson == "") {
+
+                updateJson = '{"typeFlag":"GRID","data":' + Ext.JSON.encode(updateRecs[i].data) + '}';
+
+            } else {
+
+                updateJson = updateJson + ',{"typeFlag":"GRID","data":' + Ext.JSON.encode(updateRecs[i].data) + '}';
+
+            }
+        }
+        ;
+
+        var comParams3 = "";
+        if (updateJson != "") {
+
+            comParamsALL = comParamsALL + ',"update":[' + updateJson + "]";
+
+        }
+
+
+        //提交参数
+
+        var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{' + comParamsALL + '}}';
+
+        var pageGrid = this.getView();
+
+        Ext.tzSubmit(tzParams, function (resp) {
+            win.actType = "update";
+
+        }, "", true, this);
+    },
+    
+    onPageRegEnsure1: function (btn) {
+        //获取窗口
+        var win = btn.findParentByType("window");
+        //页面注册信息表单
+        var form = win.child("form").getForm();
+        if (form.isValid()) {
+            /*保存页面注册信息*/
+            this.savePageRegInfo1(win);
+            //重置表单
+            form.reset();
+            //关闭窗口
+            win.close();
+        }
     },
 
     /*保存并关闭窗口*/
@@ -1312,16 +1423,29 @@
 
         var personList = [];
  
-        personList.push({"classID2": classID2, "batchID2": batchID2});
-        
-        var params = {
-            "ComID": "TZ_BMGL_BMBSH_COM",
-            "PageID": "TZ_BMGL_DXYJ_STD",
-            "OperateType": "U",
-            "comParams": {"add": [
-                {"type": 'MULTI', "personList": personList}
-            ]}
-        };
+      
+        if ((typeof getedSQL2) == "undefined") {
+        	  personList.push({"classID2": classID2, "batchID2": batchID2});
+        	  var params = {
+        	            "ComID": "TZ_BMGL_BMBSH_COM",
+        	            "PageID": "TZ_BMGL_DXYJ_STD",
+        	            "OperateType": "U",
+        	            "comParams": {"add": [
+        	                {"type": 'MULTI', "personList": personList}
+        	            ]}
+        	        };     
+        }else{
+          personList.push({"getedSQL2":getedSQL2});
+      	  var params = {
+      	            "ComID": "TZ_BMGL_BMBSH_COM",
+      	            "PageID": "TZ_BMGL_DXYJ_STD",
+      	            "OperateType": "U",
+      	            "comParams": {"add": [
+      	                {"type": 'MULT', "personList": personList}
+      	            ]}
+      	        }; 
+        }
+      
         Ext.tzLoad(Ext.JSON.encode(params), function (responseData) {
             Ext.tzSendEmail({
                 //发送的邮件模板;
@@ -2376,12 +2500,51 @@
             });
         });
     },
+    /*给选中人发送短信*/
+    sendSmsSelPersAll:function(btn) {
+       
+
+    	 var personList = [];
+    	 
+         
+         if ((typeof getedSQL2) == "undefined") {
+         	  personList.push({"classID2": classID2, "batchID2": batchID2});
+         	  var params = {
+         	            "ComID": "TZ_BMGL_BMBSH_COM",
+         	            "PageID": "TZ_BMGL_DXYJ_STD",
+         	            "OperateType": "U",
+         	            "comParams": {"add": [
+         	                {"type": 'MULTI', "personList": personList}
+         	            ]}
+         	        };     
+         }else{
+           personList.push({"getedSQL2":getedSQL2});
+       	  var params = {
+       	            "ComID": "TZ_BMGL_BMBSH_COM",
+       	            "PageID": "TZ_BMGL_DXYJ_STD",
+       	            "OperateType": "U",
+       	            "comParams": {"add": [
+       	                {"type": 'MULT', "personList": personList}
+       	            ]}
+       	        }; 
+         }
+        Ext.tzLoad(Ext.JSON.encode(params), function (responseData) {
+            Ext.tzSendSms({
+                //发送的短信模板;
+                "SmsTmpName": ["TZ_SMS_N_002"],
+                //创建的需要发送的听众ID;
+                "audienceId": responseData,
+                //是否有附件: Y 表示可以发送附件,"N"表示无附件;
+                "file": "N"
+            });
+        });
+    },
     /*给搜索结果发送短信*/
     sendSmsSelPersOfAll:function(btn) {
 
     	var strAppId;   
     	var store = btn.findParentByType("grid").store;
-		var strConfSearCond=btn.findParentByType('classInfo').strConfSearCond;
+		var strConfSearCond=btn.findParentByType('classInfo');
 		if (strConfSearCond.length==0) {
 			strConfSearCond="{\"cfgSrhId\":\"TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.TZ_APP_LIST_VW\",\"condition\": {\"TZ_CLASS_ID-operator\": \"01\", \"TZ_CLASS_ID-value\":\""+store.classID +"\"}}";
 			}
@@ -2430,5 +2593,111 @@
         });
         
     },
+    saveAsStaAud: function (btn) {
+
+    	 var grid = btn.findParentByType("grid");
+      //   var store = grid.getStore();
+         var selList = grid.getSelectionModel().getSelection();
+
+         //选中行长度
+         var checkLen = selList.length;
+         if (checkLen == 0) {
+             Ext.Msg.alert(Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.prompt", "提示"), Ext.tzGetResourse("TZ_BMGL_BMBSH_COM.TZ_BMGL_STU_STD.youSelectedNothing", "您没有选中任何记录"));
+             return;
+         }
+
+        var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"U","comParams":{"add":[{"audJG":"ADMIN","audID":"NEXT","audName":"","audStat":"1","audType":"2","audMS":"","audSQL":"","audLY":"ZCYH"}]}}';
+
+        //后台执行插入表操作
+        var AudID = "";
+        Ext.tzLoadAsync(tzParams, function (resp) {
+            AudID = resp;
+
+            var oprIDJson = "";
+            for (var i = 0; i < selList.length; i++) {
+                var OPRID = selList[i].get("oprID");
+
+                if (oprIDJson == "") {
+                    oprIDJson = '{"OPRID":"' + OPRID + '","AudID":"' + AudID + '"}';
+                } else {
+                    oprIDJson = oprIDJson + ',' + '{"OPRID":"' + OPRID + '","AudID":"' + AudID + '"}';
+                }
+            }
+            var comParamsOPRID = "";
+            if (oprIDJson != "") {
+                comParamsOPRID = '"add":[' + oprIDJson + "]";
+            }
+            var tzParams2 = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_LIST_STD","OperateType":"U","comParams":{' + comParamsOPRID + '}}';
+
+
+            Ext.tzSubmit(tzParams2, function (resp) {
+
+            }, "", true, this, AudID);
+
+
+        }, "", true, this);
+
+
+        //是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_BMGL_BMBSH_COM"]["TZ_UM_AUDNEW_STD"];
+
+        if (pageResSet == "" || pageResSet == undefined) {
+            Ext.MessageBox.alert('提示', '您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet["jsClassName"];
+
+
+        if (className == "" || className == undefined) {
+            Ext.MessageBox.alert('提示', '未找到该功能页面对应的JS类，页面ID为：TZ_UM_AUDNEW_STD，请检查配置。');
+            return;
+        }
+
+        var win = this.lookupReference('pageRegWindow');
+
+        if (!win) {
+
+            Ext.syncRequire(className);
+            ViewClass = Ext.ClassManager.get(className);
+            //新建类
+            win = new ViewClass();
+            this.getView().add(win);
+        }
+        win.actType = "update";
+
+        var audId = AudID;
+
+
+        var audName = "";
+        var audStat = "1";
+        var audType = "2";
+        var audMS = "";
+        var audSQL = "";
+
+
+        //参数
+        var tzParams = '{"ComID":"TZ_AUD_COM","PageID":"TZ_AUD_NEW_STD","OperateType":"QF","comParams":{"audId":"' + audId + '","audName":"' + audName + '","audStat":"' + audStat + '","audType":"' + audType + '","audMS":"' + audMS + '","audSQL":"' + audSQL + '"}}';
+        //页面注册信息表单
+
+        var form = win.child("form").getForm();
+
+        var gridStore = win.child("form").child("grid").getStore();
+        var tzStoreParams = '{"cfgSrhId":"TZ_AUD_COM.TZ_AUD_NEW_STD.PS_TZ_AUDCY_VW","condition":{"TZ_AUD_ID-operator": "01","TZ_AUD_ID-value": "' + audId + '"}}';
+
+        Ext.tzLoad(tzParams, function (responseData) {
+
+            form.setValues(responseData);
+            gridStore.tzStoreParams = tzStoreParams;
+            gridStore.reload();
+
+        });
+
+
+        win.show();
+
+
+    },
+    
 });
 
