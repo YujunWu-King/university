@@ -1056,8 +1056,9 @@
         var JGID = Ext.tzOrgID;
 
 
-        var OriSQL = "SELECT OPRID FROM PS_TZ_APP_LIST_VW where TZ_JG_ID='" + JGID + "'";
-
+   //     var OriSQL = "SELECT OPRID FROM PS_TZ_APP_LIST_VW where TZ_JG_ID='" + JGID + "'";
+        var OriSQL = "SELECT OPRID FROM PS_TZ_APP_LIST_VW where TZ_CLASS_ID='" + classID2 + "' and TZ_BATCH_ID='" +batchID2+ "'";
+        console.log(OriSQL);
         if ((typeof getedSQL2) == "undefined") {
 
             getedSQL2 = OriSQL;
@@ -1311,11 +1312,11 @@
 
         var personList = [];
  
-        personList.push({"oprID": classID2, "appInsID": batchID2});
+        personList.push({"classID2": classID2, "batchID2": batchID2});
         
         var params = {
             "ComID": "TZ_BMGL_BMBSH_COM",
-            "PageID": "TZ_BMGL_YJDX_STD",
+            "PageID": "TZ_BMGL_DXYJ_STD",
             "OperateType": "U",
             "comParams": {"add": [
                 {"type": 'MULTI', "personList": personList}
