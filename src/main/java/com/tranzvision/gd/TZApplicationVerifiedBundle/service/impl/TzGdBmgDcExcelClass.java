@@ -341,7 +341,7 @@ public class TzGdBmgDcExcelClass {
 											strAppFormFieldValues = strAppFormFieldValues + arrExcelTplField.get(j)[2]
 													+ strAppFormFieldValue;
 										} else {
-											strAppFormFieldValues = strAppFormFieldValues + "," + strAppFormFieldValue;
+											strAppFormFieldValues = strAppFormFieldValues + strAppFormFieldValue;
 										}
 									}
 								}

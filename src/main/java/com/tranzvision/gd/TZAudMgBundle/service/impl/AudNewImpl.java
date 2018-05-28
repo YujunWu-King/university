@@ -499,10 +499,11 @@ public class AudNewImpl extends FrameworkImpl {
 				JdbcTemplate jdbcTemplate = (JdbcTemplate) getSpringBeanUtil.getSpringBeanByID("jdbcTemplate");
 				String Searchsql = "select TZ_RYLX from PS_TZ_AQ_YHXX_TBL where OPRID=?";
 				String YHLX = jdbcTemplate.queryForObject(Searchsql, String.class, new Object[] { InsertID });
-
-				String comPageSql = "insert into PS_TZ_AUD_LIST_T values(?,?,?,'A',?)";
-				jdbcTemplate.update(comPageSql, new Object[] { SaudID, YHLX, InsertID, InsertID });
-
+				int count =  jdbcTemplate.queryForObject("SELECT COUNT(1) FROM PS_TZ_AUD_LIST_T WHERE TZ_AUD_ID=? AND TZ_LXFS_LY=? AND InsertID=?", Integer.class, new Object[] { SaudID, YHLX, InsertID });
+				if(count<=1){
+					String comPageSql = "insert into PS_TZ_AUD_LIST_T values(?,?,?,'A',?)";
+					jdbcTemplate.update(comPageSql, new Object[] { SaudID, YHLX, InsertID, InsertID });
+				}
 				/*
 				 * String[] rowList = new String[resultFldNum]; int j = 0; for
 				 * (Object value : resultMap.values()) {
