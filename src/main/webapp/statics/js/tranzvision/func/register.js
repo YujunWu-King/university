@@ -245,7 +245,7 @@ function BindEnter(obj)
 
 var jsonValue;
 $(document).ready(function(){
-	$('#TZ_EMAIL_status').html("<span>"+请勿使用hotmail或outlook邮箱+"</span>");
+	$('#TZ_EMAIL_status').html("<span>请勿使用hotmail或outlook邮箱</span>");
 	$("#TZ_EMAILStyle").removeClass("alert_display_none");
 	document.getElementById('signupForm').reset();
 	create_yzm();
