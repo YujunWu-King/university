@@ -162,6 +162,8 @@ public class UploadPhotoServiceImpl extends FrameworkImpl {
 			String savePhoto ="";
 			if("MEM".equals(jgId)){
 				savePhoto="save_photo_men.png";
+			}if("MPACC".equals(jgId)){
+				savePhoto="save_photo_btmpacc.png";
 			}else{
 				savePhoto="save_photo_bt.png";
 			}
