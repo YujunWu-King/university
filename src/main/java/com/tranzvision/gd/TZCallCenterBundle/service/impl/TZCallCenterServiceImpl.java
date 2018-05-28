@@ -147,8 +147,11 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 		try {
 			jacksonUtil.json2Map(strParams);
 			String strOprid = jacksonUtil.getString("OPRID");
+			System.out.println("1111="+strOprid);
 			String strPhone = jacksonUtil.getString("phone");
+			System.out.println("2222="+strPhone);
 			String strCallXh = jacksonUtil.getString("callXh");
+			System.out.println("3333="+strCallXh);
 			//接待单ID
 			returnMap.put("receiveId", strCallXh);
 			//人员OPRID

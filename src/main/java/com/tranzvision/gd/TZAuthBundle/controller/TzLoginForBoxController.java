@@ -140,7 +140,7 @@ public class TzLoginForBoxController {
 		String usertoken=Security.generalStringFor3DES(securitykey, For3DES, For3DES, IV_SECURITY, linkString);
 		request.getSession().setAttribute("token", usertoken);
 		String oprid = op;
-		request.getSession().setAttribute("oprid", oprid);
+	//	request.getSession().setAttribute("oprid", oprid);
 		jsonMap = new HashMap<String, Object>();
 		jsonMap.put("res_code", "0");
 		jsonMap.put("res_message", "Success");
@@ -308,7 +308,6 @@ public class TzLoginForBoxController {
 		System.out.println("authenticator="+authenticator);
 		String timestamp = request.getParameter("timestamp");
 		System.out.println("timestamp="+timestamp);
-
 		// 校验传入参数
 		// usertoken+tel+callid+timestamp
 		LinkedHashMap<String, String> tm = new LinkedHashMap<String, String>();
@@ -339,11 +338,14 @@ public class TzLoginForBoxController {
 		psTzPhJddTbl.setTzXh(strSemNum);
 		String orgid=(String) request.getSession().getAttribute("orgid");
 		psTzPhJddTbl.setTzDlzhId(orgid);
-		String strOprId=(String) request.getSession().getAttribute("oprid");
+		sql="select OPRID from PS_TZ_REG_USE2_V where TZ_JG_ID=? and TZ_BD_MOBILE=?";
+		String strOprId=SqlQuery.queryForObject(sql, new Object[] {orgid,strTel},"String");
+	//	String strOprId=(String) request.getSession().getAttribute("oprid");
 		psTzPhJddTbl.setTzOprid(strOprId);
 		psTzPhJddTbl.setTzPhone(strTel);
 		psTzPhJddTbl.setTzCallDtime(new Date());
 		psTzPhJddTbl.setTzDealwithZt("A");
+		psTzPhJddTbl.setTzDescr("111111");
 		psTzPhJddTblMapper.insert(psTzPhJddTbl);
 //		sql="select * from PS_TZ_REG_USE2_V where TZ_JG_ID=? and TZ_BD_MOBILE=?";
 //	
