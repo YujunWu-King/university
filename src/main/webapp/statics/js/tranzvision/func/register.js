@@ -90,6 +90,7 @@ function submitEnroll() {
 	var _pwdFlg=$("#status_PASSWORD").val();
 	var _yzmFlg=$("#status_yzm").val();
 	var _statusFlg="";
+	$('#TZ_EMAIL_status').html("<span>"+请勿使用hotmail或outlook邮箱+"</span>");
 	for (var key in jsonValue){
 		if(key=="TZ_REALNAME"){//姓名
 			if(jsonValue[key] == "Y"){
