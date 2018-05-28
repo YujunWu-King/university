@@ -126,7 +126,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				strEmail = jacksonUtil.getString("email").trim();
 		      	strOrgid = jacksonUtil.getString("orgid").trim();
 		      	strLang =  jacksonUtil.getString("lang").trim();
-		      	errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "300", "请勿使用hotmail或outlook邮箱", "Don't use hotmail or outlook.");
+		 //     	errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "300", "请勿使用hotmail或outlook邮箱", "Don't use hotmail or outlook.");
 		      	//校验邮箱长度;
 		      	if("".equals(strEmail) || strEmail.length()<6 || strEmail.length()>70 ){
 		      		errorMsg[0] = "1";
@@ -181,7 +181,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				strEmail = jacksonUtil.getString("email").trim();
 		      	strOrgid = jacksonUtil.getString("orgid").trim();
 		      	strLang =  jacksonUtil.getString("lang").trim();
-		    	errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "300", "请勿使用hotmail或outlook邮箱", "Don't use hotmail or outlook.");
+		  //  	errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "300", "请勿使用hotmail或outlook邮箱", "Don't use hotmail or outlook.");
 		      	//校验邮箱长度;
 		      	if("".equals(strEmail) || strEmail.length()<6 || strEmail.length()>70 ){
 		      		errorMsg[0] = "1";

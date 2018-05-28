@@ -91,7 +91,7 @@ function submitEnroll() {
 	var _yzmFlg=$("#status_yzm").val();
 	var _statusFlg="";
 	
-	$('#TZ_EMAIL_status').html("<span>"+请勿使用hotmail或outlook邮箱+"</span>");
+//	$('#TZ_EMAIL_status').html("<span>"+请勿使用hotmail或outlook邮箱+"</span>");
 	$("#TZ_EMAILStyle").removeClass("alert_display_none");
 	for (var key in jsonValue){
 		if(key=="TZ_REALNAME"){//姓名
