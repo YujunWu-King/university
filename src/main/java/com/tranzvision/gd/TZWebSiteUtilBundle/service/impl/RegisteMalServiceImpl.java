@@ -55,14 +55,14 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 		JacksonUtil jacksonUtil = new JacksonUtil();   
 		try{
 			jacksonUtil.json2Map(strParams);
-			if(jacksonUtil.containsKey("email") 
-					&& jacksonUtil.containsKey("orgid") 
-					&& jacksonUtil.containsKey("lang")){
-				strEmail = jacksonUtil.getString("email").trim();
-		      	strOrgid = jacksonUtil.getString("orgid").trim();
-		      	strLang =  jacksonUtil.getString("lang").trim();
-		      	errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "53", "请勿使用hotmail或outlook邮箱", "Don't use hotmail or outlook.");
-			}
+//			if(jacksonUtil.containsKey("email") 
+//					&& jacksonUtil.containsKey("orgid") 
+//					&& jacksonUtil.containsKey("lang")){
+//				strEmail = jacksonUtil.getString("email").trim();
+//		      	strOrgid = jacksonUtil.getString("orgid").trim();
+//		      	strLang =  jacksonUtil.getString("lang").trim();
+//		      	errMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "53", "请勿使用hotmail或outlook邮箱", "Don't use hotmail or outlook.");
+//			}
 		     if(jacksonUtil.containsKey("sen")){
 				strSen = jacksonUtil.getString("sen");
 				if("1".equals(strSen)){
@@ -126,7 +126,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				strEmail = jacksonUtil.getString("email").trim();
 		      	strOrgid = jacksonUtil.getString("orgid").trim();
 		      	strLang =  jacksonUtil.getString("lang").trim();
-		      	
+		      	errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "53", "请勿使用hotmail或outlook邮箱", "Don't use hotmail or outlook.");
 		      	//校验邮箱长度;
 		      	if("".equals(strEmail) || strEmail.length()<6 || strEmail.length()>70 ){
 		      		errorMsg[0] = "1";
@@ -181,7 +181,7 @@ public class RegisteMalServiceImpl extends FrameworkImpl{
 				strEmail = jacksonUtil.getString("email").trim();
 		      	strOrgid = jacksonUtil.getString("orgid").trim();
 		      	strLang =  jacksonUtil.getString("lang").trim();
-		      	
+		    	errorMsg[1] = validateUtil.getMessageTextWithLanguageCd(strOrgid, strLang,"TZ_SITE_MESSAGE", "53", "请勿使用hotmail或outlook邮箱", "Don't use hotmail or outlook.");
 		      	//校验邮箱长度;
 		      	if("".equals(strEmail) || strEmail.length()<6 || strEmail.length()>70 ){
 		      		errorMsg[0] = "1";
