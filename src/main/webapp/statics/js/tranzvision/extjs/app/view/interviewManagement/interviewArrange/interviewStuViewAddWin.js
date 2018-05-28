@@ -1,8 +1,12 @@
 ﻿Ext.define('KitchenSink.view.interviewManagement.interviewArrange.interviewStuViewAddWin', {
     extend: 'Ext.window.Window',
     requires: [
-	    'Ext.data.*',
+    	'Ext.data.*',
+        'Ext.grid.*',
         'Ext.util.*',
+        'Ext.toolbar.Paging',
+        'Ext.ux.ProgressBarPager',
+        'Ext.grid.filters.Filters',
         'KitchenSink.view.interviewManagement.interviewArrange.interviewStuViewAddStore',
 		'KitchenSink.view.interviewManagement.interviewArrange.interviewStuViewController'
 	],
@@ -56,9 +60,6 @@
 			batchID: batchID
 		});
 		
-		//初筛结果
-		var csResultStore = new KitchenSink.view.common.store.appTransStore("TZ_ZDCS_JG");
-		
         Ext.apply(this,{
 		    items: [{
 		        xtype: 'form',
@@ -108,6 +109,9 @@
 		            viewConfig: {
 		                enableTextSelection: true
 		            },
+		            plugins: [{
+                        ptype: 'gridfilters'
+		            }],
 		        	dockedItems:[{
 						xtype:"toolbar",
 						items:[
@@ -123,12 +127,6 @@
 	                    text: Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.rowNum","序号"),
 	                    xtype: 'rownumberer',
 	                    width:50
-	                },{
-	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.appId","报名表编号") ,
-	                    dataIndex: 'appId',
-	                    minWidth:100,
-	                    width:110,
-	                    hidden: true
 	                },{
 	                    text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.msApplyID","面试申请号") ,
 	                    dataIndex: 'msApplyID',
@@ -148,16 +146,27 @@
 	                    dataIndex: 'email',
 	                    minWidth: 100,
 	                    flex:1
+	                },{
+	                	text:Ext.tzGetResourse("TZ_MS_ARR_MG_COM.TZ_MSKS_VIEW_STD.yyStatus","预约状态"),
+	                    dataIndex: 'yyStatus',
+	                    width: 90,
+	                    minWidth: 80,
+	                    filter: {
+	                        type: 'list'
+	                    },
+	                    renderer:function(value, metadata, record){
+	                    	if (value=="已预约"){
+	                    		metadata.style = "color:#66cc66";
+							}else{
+								metadata.style = "color:#ff0000";
+							}
+							return value;
+	                    }
 	                }],
 					bbar: {
 						xtype: 'pagingtoolbar',
 						pageSize: 50,
-						listeners:{
-							afterrender: function(pbar){
-								var grid = pbar.findParentByType("grid");
-								pbar.setStore(grid.store);
-							}
-						},
+						store: addStuStore,
 						displayInfo: true,
 						plugins: new Ext.ux.ProgressBarPager()
 					}

@@ -657,7 +657,7 @@ body {
 																.findField(
 																		"password")
 																.getValue();
-
+													//	alert(password);
 														var yzm = form
 																.findField(
 																		"yzm")

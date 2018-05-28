@@ -3,6 +3,7 @@ package com.tranzvision.gd.util.security;
 
 
 import java.io.ByteArrayInputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -11,6 +12,8 @@ import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import org.bouncycastle.util.encoders.Hex;
 
 
 /**
@@ -97,7 +100,7 @@ public class Security {
 	 */
 	public static java.security.Key getKey(String keyValue) throws Exception {
 		java.security.Key key = null;
-		key = DesEdeKeyTool.byte2Key(org.bouncycastle.util.encoders.Hex.decode(keyValue));
+		key = DesEdeKeyTool.byte2Key(Hex.decode(keyValue));
 		return key;
 	}
 

@@ -23,7 +23,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 		var callXh = getCookie("callCenterXh");
 		var phone = getCookie("callCenterPhone");
 		var type = getCookie("callCenterType");	
-		
+		var OPRID = getCookie("callCenterOprid");
 		//为避免查询无关人员，如果无phone
 		if(phone==null||phone==undefined||phone==""){
 			phone = "999999999999999";

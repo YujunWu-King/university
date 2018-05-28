@@ -43,7 +43,7 @@ public class SecurityForCollectFee {
 					.encode(EncryptionForCollect.encrypt(tempcheck, key, EncryptionForString.ENCODING_RAW));
 			String checker = new String(encryptStr);
 			System.out.println("checker=" + checker);
-			//System.out.println("Authenticator=" + Authenticator);
+			System.out.println("Authenticator=" + Authenticator);
 			if (!checker.equals(Authenticator)) {
 				rc = -1;
 			}

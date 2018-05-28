@@ -412,12 +412,14 @@ public class InterviewEvaluationScoreImpl extends FrameworkImpl{
 							double TZ_SCORE_NUM = 0;
 							String TZ_SCORE_PY_VALUE = "",TZ_CJX_XLK_XXBH = "";
 							
-							Map<String,Object> mapCjxValue = sqlQuery.queryForMap("SELECT TZ_SCORE_NUM,TZ_SCORE_PY_VALUE,TZ_CJX_XLK_XXBH FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?",new Object[]{scoreInsId,TZ_SCORE_ITEM_ID});
-							if(mapCjxValue!=null) {
-								Object OBJ_TZ_SCORE_NUM = mapCjxValue.get("TZ_SCORE_NUM");
-								TZ_SCORE_NUM = OBJ_TZ_SCORE_NUM!=null?((BigDecimal)OBJ_TZ_SCORE_NUM).doubleValue():0;
-								TZ_SCORE_PY_VALUE = mapCjxValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapCjxValue.get("TZ_SCORE_PY_VALUE").toString();
-								TZ_CJX_XLK_XXBH = mapCjxValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapCjxValue.get("TZ_CJX_XLK_XXBH").toString();
+							if(!"".equals(scoreInsId)) {
+								Map<String,Object> mapCjxValue = sqlQuery.queryForMap("SELECT TZ_SCORE_NUM,TZ_SCORE_PY_VALUE,TZ_CJX_XLK_XXBH FROM PS_TZ_CJX_TBL WHERE TZ_SCORE_INS_ID=? AND TZ_SCORE_ITEM_ID=?",new Object[]{scoreInsId,TZ_SCORE_ITEM_ID});
+								if(mapCjxValue!=null) {
+									Object OBJ_TZ_SCORE_NUM = mapCjxValue.get("TZ_SCORE_NUM");
+									TZ_SCORE_NUM = OBJ_TZ_SCORE_NUM!=null?((BigDecimal)OBJ_TZ_SCORE_NUM).doubleValue():0;
+									TZ_SCORE_PY_VALUE = mapCjxValue.get("TZ_SCORE_PY_VALUE") == null ? "" : mapCjxValue.get("TZ_SCORE_PY_VALUE").toString();
+									TZ_CJX_XLK_XXBH = mapCjxValue.get("TZ_CJX_XLK_XXBH") == null ? "" : mapCjxValue.get("TZ_CJX_XLK_XXBH").toString();
+								}
 							}
 						
 							String strDyColNum = "0" + dyColNum;
