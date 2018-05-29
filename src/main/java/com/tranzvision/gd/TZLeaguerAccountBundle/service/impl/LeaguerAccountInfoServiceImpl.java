@@ -255,6 +255,7 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 					String str_comIndusDesc="";
 					String str_sqlIndus = "SELECT TZ_OPT_VALUE FROM PS_TZ_YHZC_XXZ_TBL WHERE TZ_REG_FIELD_ID='TZ_COMP_INDUSTRY' AND TZ_SITEI_ID = '' AND TZ_OPT_ID=?";
 					str_comIndusDesc = jdbcTemplate.queryForObject(str_sqlIndus, new Object[]{str_comIndus},"String");
+					System.out.println("str_c="+str_comIndusDesc);
 					jsonMap.put("TZ_COMP_INDUSTRY", str_comIndusDesc);
 					jsonMap.put("desc", "行业类别");
 					arraylist.add(jsonMap);
@@ -364,6 +365,8 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				Map<String, Object> perInfoMap = new HashMap<>();
 				perInfoMap.put("lenProvince", str_lenProvince);
 				Map< String, Object> grxxMap = jdbcTemplate.queryForMap("SELECT A.OPRID,B.TZ_ZY_SJ,A.TZ_REALNAME,A.BIRTHDATE,A.TZ_SCH_CNAME,A.TZ_LEN_PROID,A.TZ_COMPANY_NAME,A.TZ_COMP_INDUSTRY FROM PS_TZ_REG_USER_T A LEFT JOIN PS_TZ_LXFSINFO_TBL B ON A.OPRID=B.TZ_LYDX_ID WHERE A.OPRID=?",new Object[]{str_oprid});
+				String sql="select DISTINCT A.TZ_OPT_VALUE from PS_TZ_YHZC_XXZ_TBL A where A.TZ_OPT_ID=? and A.TZ_REG_FIELD_ID='TZ_COMP_INDUSTRY'";
+				String copmin=jdbcTemplate.queryForObject(sql, new Object[]{grxxMap.get("TZ_COMP_INDUSTRY")}, "String");
 				if(grxxMap!=null){
 					perInfoMap.put("oprid", grxxMap.get("OPRID"));
 				    perInfoMap.put("birthdate", grxxMap.get("BIRTHDATE"));
@@ -372,7 +375,11 @@ public class LeaguerAccountInfoServiceImpl extends FrameworkImpl{
 				    perInfoMap.put("shcoolcname", grxxMap.get("TZ_SCH_CNAME"));
 				    perInfoMap.put("lenProvince", grxxMap.get("TZ_LEN_PROID"));
 				    perInfoMap.put("companyname", grxxMap.get("TZ_COMPANY_NAME"));
-				    perInfoMap.put("copmindustry", grxxMap.get("TZ_COMP_INDUSTRY"));;
+				    if(copmin!=null){
+				    perInfoMap.put("copmindustry", grxxMap.get("TZ_COMP_INDUSTRY")+"-"+copmin);
+				    }else{
+				    	 perInfoMap.put("copmindustry","");
+				    }
 				    
 				}
 				String appMajor = jdbcTemplate.queryForObject("SELECT TZ_APP_MAJOR_NAME FROM PS_TZ_APP_KS_INFO_EXT_T WHERE TZ_OPRID=?", new Object[]{str_oprid}, "String");
