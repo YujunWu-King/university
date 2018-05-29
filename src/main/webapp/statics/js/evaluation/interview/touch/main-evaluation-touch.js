@@ -128,7 +128,7 @@ function useJson(varjsonData){
 		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xh']+"</td>";
 		//detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_bmbid']+"</td>";
 		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_xm']+"</td>";
-		detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_sex']+"</td>";
+		//detallist+="<td  class='alt' style='border-left: 1px solid #c1dad7;'>"+ksbodyArray[i]['ps_ksh_sex']+"</td>";
 		detallist+="<td  class='alt'>"+ksbodyArray[i]['ps_msh_id']+"</td>";
 		detallist+=concollist;
 		detallist+="</td>"+"<td  class='alt'>"+(ksbodyArray[i]['ps_ksh_zt']||"")+"</td>";
@@ -145,7 +145,7 @@ function useJson(varjsonData){
 	 var examerHeaderlist="<th scope='col'  style='text-align:center;'>序号</th>";
 	//examerHeaderlist += "<th scope='col' style='text-align:center;'>报名表编号</th>";
 	examerHeaderlist += "<th scope='col'  style='text-align:center;'>姓名</th>";
-	examerHeaderlist += "<th scope='col'  style='text-align:center;'>性别</th>";
+	//examerHeaderlist += "<th scope='col'  style='text-align:center;'>性别</th>";
 	examerHeaderlist += "<th scope='col'  style='text-align:center;'>面试申请号</th>";
 
   	 var headbutton="<th scope='col'  style='text-align:center;'>评审状态</th>";
