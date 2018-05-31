@@ -105,25 +105,25 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 				}
 				mapList.put("clpsBmbTplId", strTplId);
 				//第二个grid
-				String strSQl = "SELECT TZ_ENTER_CLPS,TZ_RESULT FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?";
-				Map<String, Object> SMAP = sqlQuery.queryForMap(strSQl, new Object[]{rowList[5]});
-				
-				if(SMAP!=null){
-					String strExistFlg = SMAP.get("TZ_ENTER_CLPS")==null?"":String.valueOf(SMAP.get("TZ_ENTER_CLPS"));
-					String strPshRel = SMAP.get("TZ_RESULT")==null?"":String.valueOf(SMAP.get("TZ_RESULT"));
-					mapList.put("isOnMaterials", strExistFlg);				
-					mapList.put("materialResult", strPshRel);
-				}
+//				String strSQl = "SELECT TZ_ENTER_CLPS,TZ_RESULT FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?";
+//				Map<String, Object> SMAP = sqlQuery.queryForMap(strSQl, new Object[]{rowList[5]});
+//				
+//				if(SMAP!=null){
+//					String strExistFlg = SMAP.get("TZ_ENTER_CLPS")==null?"":String.valueOf(SMAP.get("TZ_ENTER_CLPS"));
+//					String strPshRel = SMAP.get("TZ_RESULT")==null?"":String.valueOf(SMAP.get("TZ_RESULT"));
+//					mapList.put("isOnMaterials", strExistFlg);				
+//					mapList.put("materialResult", strPshRel);
+//				}
 				
 				//第三个grid
-				String strSQl2 = "SELECT TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_MSPS_TBL WHERE TZ_APP_INS_ID=?";
+				String strSQl2 = "SELECT TZ_TIME,TZ_ADDRESS,TZ_RESULT_CODE FROM TZ_IMP_MSZG_TBL WHERE TZ_APP_INS_ID=?";
+		//		String strSQl2 = "SELECT TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_MSPS_TBL WHERE TZ_APP_INS_ID=?";
 				Map<String, Object> SMAP2= sqlQuery.queryForMap(strSQl2, new Object[]{rowList[5]});
-				
+				String strSQL3="select TZ_RESULT_CODE from TZ_IMP_MSJG_TBL where TZ_APP_INS_ID=?";
+				String strPar3=sqlQuery.queryForObject(strSQL3, new Object[]{rowList[5]},"String");
 				if(SMAP2!=null){
 					String strPar1 = SMAP2.get("TZ_TIME")==null?"":String.valueOf(SMAP2.get("TZ_TIME"));
 					String strPar2 = SMAP2.get("TZ_ADDRESS")==null?"":String.valueOf(SMAP2.get("TZ_ADDRESS"));
-					String strPar3 = SMAP2.get("TZ_RESULT")==null?"":String.valueOf(SMAP2.get("TZ_RESULT"));
-					
 					mapList.put("interviewDtime", strPar1);				
 					mapList.put("interviewLocation", strPar2);
 					mapList.put("interviewResult", strPar3);
@@ -515,6 +515,8 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 				String strOrgId = jacksonUtil.getString("ORGID");
 				String strSmsSQL = "SELECT TZ_TMPL_ID,TZ_TMPL_NAME FROM PS_TZ_SMSTMPL_VW WHERE TZ_JG_ID=?";
 				List<Map<String,Object>> stMap = sqlQuery.queryForList(strSmsSQL, new Object[]{strOrgId});
+				System.out.println("stMap="+stMap);
+	
 				if(stMap!=null&&stMap.size()>0){
 					for(Object sObj:stMap){
 						Map<String,Object> sMap = (Map<String,Object>) sObj;
@@ -524,8 +526,11 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 						Map<String, Object> tMap = new HashMap<String, Object>();
 						tMap.put("smsId", strPar1);
 						tMap.put("smsName", strPar2);
+						
 						listData.add(tMap);
 					}
+				
+				
 				}
 				mapRet.replace("total", stMap.size());
 				mapRet.replace("root", listData);

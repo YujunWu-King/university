@@ -101,48 +101,48 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
         }];
 	
 		
-		var materialsColumns = [{
-	        text: "序号",
-	        xtype: 'rownumberer',
-	        width: 50,
-	        align: 'center'
-        },{
-	        text: "报名表编号",
-	        width:120,
-	        dataIndex: 'appInsId',
-	        xtype: 'linkcolumn',
-            handler: 'viewThisApplicationForm',
-            renderer: function(v) {
-                this.text = v;
-                return;
-            }
-	    },{
-            text: "班级编号",
-            dataIndex: 'classId',
-            hidden:true
-        },
-        {
-            text: "批次编号",
-            dataIndex: 'batchId',
-            hidden:true
-        },
-        {
-            text: "报考方向",
-            dataIndex: 'className',
-            flex:1
-        },{
-            text: "报考批次",
-            width:120,
-            dataIndex: 'batchName'
-        },{
-	        text: "是否进入材料评审",
-	        width:150,
-	        dataIndex: 'isOnMaterials'
-	    },{
-	        text: "材料评审结果",
-	        width:120,
-	        dataIndex: 'materialResult'
-	    }];
+//		var materialsColumns = [{
+//	        text: "序号",
+//	        xtype: 'rownumberer',
+//	        width: 50,
+//	        align: 'center'
+//        },{
+//	        text: "报名表编号",
+//	        width:120,
+//	        dataIndex: 'appInsId',
+//	        xtype: 'linkcolumn',
+//            handler: 'viewThisApplicationForm',
+//            renderer: function(v) {
+//                this.text = v;
+//                return;
+//            }
+//	    },{
+//            text: "班级编号",
+//            dataIndex: 'classId',
+//            hidden:true
+//        },
+//        {
+//            text: "批次编号",
+//            dataIndex: 'batchId',
+//            hidden:true
+//        },
+//        {
+//            text: "报考方向",
+//            dataIndex: 'className',
+//            flex:1
+//        },{
+//            text: "报考批次",
+//            width:120,
+//            dataIndex: 'batchName'
+//        },{
+//	        text: "是否进入材料评审",
+//	        width:150,
+//	        dataIndex: 'isOnMaterials'
+//	    },{
+//	        text: "材料评审结果",
+//	        width:120,
+//	        dataIndex: 'materialResult'
+//	    }];
 	   
 		var interviewResultColumns = [{
 	        text: "序号",
@@ -583,31 +583,33 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                     }],
                     columns: applicantColumns,
                     store:userAppListStore,                    
-                },{
-                    xtype: 'grid',
-                    title: '面试资格',
-                    scrollable:false,
-                    minHeight: 100,
-                    style:"margin-top:15px",
-                    name: 'materialsGrid',
-                    reference: 'materialsGrid',
-                    columnLines: true,
-                    autoHeight: true, 
-                    plugins: [{
-                        ptype: 'cellediting',
-                        pluginId: 'judgeCellEditing',
-                        clicksToEdit: 1,
-                        listeners: {
-                            beforeedit: function(editor, context, eOpts) {
-                                if (context.field == "judgeID" && context.value.length > 0 && !context.record.isModified('judgeID')) {
-                                    return false;
-                                }
-                            }
-                        }
-                    }],
-                    columns: materialsColumns,
-                    store:userAppListStore,                    
-                },{
+                },
+//                {
+//                    xtype: 'grid',
+//                    title: '面试资格',
+//                    scrollable:false,
+//                    minHeight: 100,
+//                    style:"margin-top:15px",
+//                    name: 'materialsGrid',
+//                    reference: 'materialsGrid',
+//                    columnLines: true,
+//                    autoHeight: true, 
+//                    plugins: [{
+//                        ptype: 'cellediting',
+//                        pluginId: 'judgeCellEditing',
+//                        clicksToEdit: 1,
+//                        listeners: {
+//                            beforeedit: function(editor, context, eOpts) {
+//                                if (context.field == "judgeID" && context.value.length > 0 && !context.record.isModified('judgeID')) {
+//                                    return false;
+//                                }
+//                            }
+//                        }
+//                    }],
+//                    columns: materialsColumns,
+//                    store:userAppListStore,                    
+//                }
+                {
                     xtype: 'grid',
                     title: '面试结果',
                     minHeight: 100,
