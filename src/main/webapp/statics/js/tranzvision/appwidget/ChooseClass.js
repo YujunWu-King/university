@@ -112,22 +112,26 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 					 });
 
 					 var opP='';
-					 opP += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
+					
 
 					 //排序
 					 for (var i in child.bmrBatch.option) {
 						 opP+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
 					 }
-					 e += '<div class="item">';
-					 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
-					 e += '<div id="' + data["itemId"]+child.bmrBatch.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
-					 e += '<div class="text-box">';
-					 e += '<select name="' + child.bmrBatch.itemId + '" class="select1" id="' + data["itemId"]+child.bmrBatch.itemId + '" title="' + child.bmrBatch.itemName + '">';
-					 e += opP;
-					 e += '</select>';
-					 e += '</div>';
-					 e += '<div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div>';
-					 e += '</div>';
+					 if(opP.length>0){
+						 opP = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>'+opP;
+						 e += '<div class="item">';
+						 e += '<p>'+ child.bmrBatch.title +'<span>'+(data.isRequire == "Y" ? "*": "")+'</span></p>';
+						 e += '<div id="' + data["itemId"]+child.bmrBatch.itemId + 'Tip" class="tips" style="display: none;"><i></i><span></span></div>';
+						 e += '<div class="text-box">';
+						 e += '<select name="' + child.bmrBatch.itemId + '" class="select1" id="' + data["itemId"]+child.bmrBatch.itemId + '" title="' + child.bmrBatch.itemName + '">';
+						 e += opP;
+						 e += '</select>';
+						 e += '</div>';
+						 e += '<div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div>';
+						 e += '</div>';
+					 }
+					
 				 }
 				 c += e;
 
@@ -172,24 +176,30 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 							 }
 						 }
 					 });
+					 console.log( child.bmrBatch.option );
+					 
+					 
 
-					 var op='';
-					 op += '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>';
-
+					var op='';
+					 
+				
 					 //排序
 					 for (var i in child.bmrBatch.option) {
 						 op+= '<option ' + (child.bmrBatch.value == child.bmrBatch["option"][i]["code"] ? "selected='selected'": "") + 'value="' + child.bmrBatch["option"][i]["code"] + '">' + child.bmrBatch["option"][i]["txt"] + '</option>';
 					 }
-					 e += '<div class="input-list">';
-					 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.bmrBatch.title + '</div>';
-					 e += '    <div class="input-list-text left input-edu-select">';
-					 e += '          <select name="' + child.bmrBatch.itemId + '" class="chosen-select" id="' + data["itemId"]+child.bmrBatch.itemId + '" style="width:100%;" title="' + child.bmrBatch.itemName + '">';
-					 e +=                    op;
-					 e += '          </select>';
-					 e += '    </div>';
-					 e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
-					 e += '    <div class="clear"></div>';
-					 e += '</div>';
+					 if(op.length>0){
+						 op = '<option value="">' + MsgSet["PLEASE_SELECT"] + '</option>'+op;
+						 e += '<div class="input-list">';
+						 e += '	<div class="input-list-info left"><span class="red-star">' + (data.isRequire == "Y" ? "*": "") + '</span>' + child.bmrBatch.title + '</div>';
+						 e += '    <div class="input-list-text left input-edu-select">';
+						 e += '          <select name="' + child.bmrBatch.itemId + '" class="chosen-select" id="' + data["itemId"]+child.bmrBatch.itemId + '" style="width:100%;" title="' + child.bmrBatch.itemName + '">';
+						 e +=                    op;
+						 e += '          </select>';
+						 e += '    </div>';
+						 e += '    <div class="input-list-suffix left"><div id="' +data["itemId"]+child.bmrBatch.itemId + 'Tip" class="onShow"><div class="onShow"></div></div></div>';
+						 e += '    <div class="clear"></div>';
+						 e += '</div>';
+					 }
 				 }
 
 				 c += '<div class="main_inner_content_top"></div>';
@@ -248,63 +258,93 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 		
 		var classId=$("#ClassId").val();
 		var prov;
+		var flag =false;
+		//判断是否存在其他项目
+		var paramsO = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CLASS_STD","OperateType":"otherClass","comParams":{"TZ_PROV_ID":"'
+            + data["itemId"]
+            + child.bmrClass.itemId + '","linkId":"'
+            + data["itemId"]
+            + child.bmrBatch.itemId + '","siteId":"'
+            + siteId + '","classId":"'
+            + classId+ '"}}';
+		$.ajax({
+			type: "post",
+			async :false,
+			data:{
+				tzParams:paramsO
+			},
+			url: TzUniversityContextPath + "/dispatcher",
+			dataType: "JSON",
+			success: function(result){
+				if(result.comContent>0){
+					flag=true;
+				}
+			}
+		
+		})
+		
+		if(flag==true){
+			$selectBtn.show();
+		}else{
+			$selectBtn.hide();
+		}
+			$selectBtn.on("click",function(){
+	            if(SurveyBuild.accessType == "M"){
 
-		$selectBtn.on("click",function(){
-            if(SurveyBuild.accessType == "M"){
+					var tzParam = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_CLASS_STD","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'
+						+ data["itemId"]
+						+ child.bmrClass.itemId + '","linkId":"'
+						+ data["itemId"]
+						+ child.bmrBatch.itemId + '","siteId":"'
+						+ siteId + '","classId":"'
+						+ classId+ '"}}';
 
-				var tzParam = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_M_CLASS_STD","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'
-					+ data["itemId"]
-					+ child.bmrClass.itemId + '","linkId":"'
-					+ data["itemId"]
-					+ child.bmrBatch.itemId + '","siteId":"'
-					+ siteId + '","classId":"'
-					+ classId+ '"}}';
+					$.ajax({
+						type: "post",
+						async :false,
+						data:{
+							tzParams:tzParam
+						},
+						url: TzUniversityContextPath + "/dispatcher",
+						dataType: "html",
+						success: function(result){
 
-				$.ajax({
-					type: "post",
-					async :false,
-					data:{
-						tzParams:tzParam
-					},
-					url: TzUniversityContextPath + "/dispatcher",
-					dataType: "html",
-					success: function(result){
+							$("#searchCountry").html("");
+							$("#searchCountry").html(result);
+							$("#MainDiv").hide();
+							$("#searchCountry").fadeIn("slow");
+							loaded ();
+						}
+					});
 
-						$("#searchCountry").html("");
-						$("#searchCountry").html(result);
-						$("#MainDiv").hide();
-						$("#searchCountry").fadeIn("slow");
-						loaded ();
-					}
-				});
+	            }else{
+	                var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
+	                var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CLASS_STD","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'
+	                    + data["itemId"]
+	                    + child.bmrClass.itemId + '","linkId":"'
+	                    + data["itemId"]
+	                    + child.bmrBatch.itemId + '","siteId":"'
+	                    + siteId + '","classId":"'
+	                    + classId+ '"}}';
+	                provinceUrl = provinceUrl + window.escape(params);
 
-            }else{
-                var provinceUrl = SurveyBuild.tzGeneralURL + '?tzParams=';
-                var params = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CLASS_STD","OperateType":"HTML","comParams":{"TZ_PROV_ID":"'
-                    + data["itemId"]
-                    + child.bmrClass.itemId + '","linkId":"'
-                    + data["itemId"]
-                    + child.bmrBatch.itemId + '","siteId":"'
-                    + siteId + '","classId":"'
-                    + classId+ '"}}';
-                provinceUrl = provinceUrl + window.escape(params);
+	                //PC端弹出页面
+	                prov = $.layer({
+	                    type: 2,
+	                    title: false,
+	                    fix: false,
+	                    closeBtn: false,
+	                    shadeClose: false,
+	                    shade : [0.3 , '#000' , true],
+	                    border : [3 , 0.3 , '#000', true],
+	                    offset: ['100px',''],
+	                    area: ['588px','300px'],
+	                    iframe: {src: provinceUrl}
+	                });
+	            }
 
-                //PC端弹出页面
-                prov = $.layer({
-                    type: 2,
-                    title: false,
-                    fix: false,
-                    closeBtn: false,
-                    shadeClose: false,
-                    shade : [0.3 , '#000' , true],
-                    border : [3 , 0.3 , '#000', true],
-                    offset: ['100px',''],
-                    area: ['588px','300px'],
-                    iframe: {src: provinceUrl}
-                });
-            }
-
-		});
+			});
+		
 
 		var $obj = $("#" + data["itemId"] +child.bmrBatch.itemId);
 		//console.log("$obj:"+$obj);

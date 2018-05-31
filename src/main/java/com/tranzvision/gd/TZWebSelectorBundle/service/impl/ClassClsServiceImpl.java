@@ -147,4 +147,59 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 			return "";
 		}
 	}
+	@Override
+	public String tzOther(String oprType, String strParams, String[] errorMsg) {
+		String reString="";
+		if ("otherClass".equals(oprType)) {
+			reString = this.tzOtherClass(strParams, errorMsg);
+		}
+		return reString;
+	}
+	
+	
+	private String tzOtherClass(String comParams, String[] errorMsg) {
+
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(comParams);
+		String language = "";
+		String classId = "";
+		String retStr="";
+		if (jacksonUtil.containsKey("siteId")) {
+			String siteId = jacksonUtil.getString("siteId");
+			if (jacksonUtil.containsKey("classId")) {
+				classId = jacksonUtil.getString("classId");
+
+				// 根据classId 找到 同一报名表模版下的 可以报名的班级
+				PsTzClassInfT psTzClassInfT = psTzClassInfTMapper.selectByPrimaryKey(classId);
+				if (psTzClassInfT != null) {
+
+					StringBuffer sb = new StringBuffer();
+					sb.append("SELECT count(1) FROM  PS_TZ_CLASS_INF_T ");
+					sb.append("where TZ_PRJ_ID IN (SELECT TZ_PRJ_ID FROM PS_TZ_PROJECT_SITE_T WHERE TZ_SITEI_ID=?) ");
+					sb.append(
+							"AND TZ_JG_ID=? and TZ_IS_APP_OPEN='Y' AND TZ_APP_START_DT IS NOT NULL AND TZ_APP_START_TM IS NOT NULL ");
+					sb.append(
+							"AND TZ_CLASS_ID<>? ");
+					sb.append("And TZ_APP_MODAL_ID=? AND TZ_APP_END_DT IS NOT NULL AND TZ_APP_END_TM IS NOT NULL ");
+					sb.append(
+							"AND str_to_date(concat(DATE_FORMAT(TZ_APP_START_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_START_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') <= now() ");
+					sb.append(
+							"AND str_to_date(concat(DATE_FORMAT(TZ_APP_END_DT,'%Y/%m/%d'),' ',  DATE_FORMAT(TZ_APP_END_TM,'%H:%i'),':00'),'%Y/%m/%d %H:%i:%s') >= now() ");
+
+					int count = jdbcTemplate.queryForObject(sb.toString(),
+							new Object[] { siteId, psTzClassInfT.getTzJgId(),classId, psTzClassInfT.getTzAppModalId() },"int");
+					
+					if (count > 0) {retStr=count+"";}
+				} else {
+					return "";
+				}
+
+			} else {
+				return "";
+			}
+		} else {
+			return "";
+		}
+	return retStr;
+	}
 }
