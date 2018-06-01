@@ -94,8 +94,7 @@ public class TzZddMPACCWYServiceImpl extends TzZddfServiceImpl{
 
 			String valuesql = "SELECT TZ_XXX_BH, TZ_APP_S_TEXT FROM PS_TZ_APP_CC_T WHERE TZ_APP_INS_ID = ? AND (TZ_XXX_BH like 'TZ_7TZ_TZ_7_2%' or TZ_XXX_BH like 'TZ_7TZ_TZ_7_1%')";
 			List<Map<String, Object>> SqlCon2 = SqlQuery.queryForList(valuesql, new Object[] { TZ_APP_ID });
-			
-			
+
 			// 定义成绩list
 			Map<String, String> engMap = new HashMap<String, String>();
 
@@ -112,11 +111,11 @@ public class TzZddMPACCWYServiceImpl extends TzZddfServiceImpl{
 				TZ_APP_S_TEXT = map2.get("TZ_APP_S_TEXT") == null ? "" : map2.get("TZ_APP_S_TEXT").toString(); // 分数
 				engMap.put(TZ_XXX_BH, TZ_APP_S_TEXT);
 			}
-			
+
 			StringBuffer sb = new StringBuffer();
 			sb.append("报名表数据----报名表ID:");
 			sb.append(TZ_APP_ID);
-			String value="";
+
 			String key = "";
 			String keyType = "";
 			Iterator<Entry<String, String>> it = engMap.entrySet().iterator();
@@ -125,9 +124,9 @@ public class TzZddMPACCWYServiceImpl extends TzZddfServiceImpl{
 				key = entry.getKey();
 
 				// 如果是值，那么找到他的类型
-				if (key.startsWith("TZ_7TZ_TZ_7_1")) {
+				if (TZ_XXX_BH.startsWith("TZ_7TZ_TZ_7_2")) {
 					// 得到对应的考试类型
-					keyType = chage(key);
+					keyType = chage(TZ_XXX_BH);
 					// 报名表中的字段 1:GRE 2:GMAT 3:托福TOFEL 4:TOEFL 机考 5:TOFEL IBT(网考）
 					// 6:雅思IELTS 7:专业八级（TEM8） 8:专业四级（TEM4） 9:剑桥商务英语（BEC高级）
 					// 10:剑桥商务英语（BEC中级） 11:CET-4 12:CET-6
@@ -175,21 +174,16 @@ public class TzZddMPACCWYServiceImpl extends TzZddfServiceImpl{
 							break;
 						}
 					}
-					
+					souseMap.put(engType, entry.getValue());
+					sb.append(",");
+					sb.append("英语考试类型:");
+					sb.append(engType);
+					sb.append(",");
+					sb.append("成绩:");
+					sb.append(entry.getValue());
 
 				}
-				if (key.startsWith("TZ_7TZ_TZ_7_2")){
-					keyType = chage(key);
-					value=engMap.get(keyType);
-				}
 			}
-			souseMap.put(engType, value);
-			sb.append(",");
-			sb.append("英语考试类型:");
-			sb.append(engType);
-			sb.append(",");
-			sb.append("成绩:");
-			sb.append(value);
 			System.out.println(sb.toString());
 
 			// 分数校验
@@ -262,4 +256,5 @@ public class TzZddMPACCWYServiceImpl extends TzZddfServiceImpl{
 			return 0;
 		}
 	}
+
 }
