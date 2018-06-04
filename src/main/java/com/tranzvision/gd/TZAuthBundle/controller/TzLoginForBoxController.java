@@ -347,8 +347,8 @@ public class TzLoginForBoxController {
 		psTzPhJddTbl.setTzXh(strSemNum);
 		String orgid=(String) request.getSession().getAttribute("orgid");
 		psTzPhJddTbl.setTzDlzhId(orgid);
-		String s=tzCookie.getStringCookieVal(request,"orgid1");
-		System.out.println("sss="+s);
+//		String s=tzCookie.getStringCookieVal(request,"orgid1");
+//		System.out.println("sss="+s);
 		sql="select OPRID from PS_TZ_REG_USE2_V where TZ_JG_ID=? and TZ_BD_MOBILE=?";
 		String strOprId=SqlQuery.queryForObject(sql, new Object[] {id,strTel},"String");
 		System.out.println("str="+strOprId);
@@ -379,17 +379,21 @@ public class TzLoginForBoxController {
 		System.out.println("domain="+domain);
 		String cookiePath = getCookieProps.getCookiePath();
 		System.out.println("cookiePath="+cookiePath);
-		tzCookie.addCookie(response, "callCenterXh", strSemNum,36000,domain,cookiePath,false,false);
-		tzCookie.addCookie(response, "callCenterPhone", strTel,36000,domain,cookiePath,false,false);
-		tzCookie.addCookie(response, "callCenterType", strType,36000,domain,cookiePath,false,false);
-		tzCookie.addCookie(response, "callCenterOprid", strOprId,36000,domain,cookiePath,false,false);
+//		tzCookie.addCookie(response, "callCenterXh", strSemNum,36000,domain,cookiePath,false,false);
+//		tzCookie.addCookie(response, "callCenterPhone", strTel,36000,domain,cookiePath,false,false);
+//		tzCookie.addCookie(response, "callCenterType", strType,36000,domain,cookiePath,false,false);
+//		tzCookie.addCookie(response, "callCenterOprid", strOprId,36000,domain,cookiePath,false,false);
+		tzCookie.addCookie(response, "callCenterXh", strSemNum, 3600);
+		tzCookie.addCookie(response, "callCenterPhone", strTel, 3600);
+		tzCookie.addCookie(response, "callCenterType", strType, 3600);
+		tzCookie.addCookie(response, "callCenterOprid", strOprId, 3600);
 		String strUrl = request.getContextPath() + "/index";
 
 //		//登录成功						
 		String strHardSQL = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		String mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_SEM_PHONE_USERMENU"},"String");
 		System.out.println("mobileUrlMenu="+mobileUrlMenu);
-		strUrl = strUrl + "#" + "SEM_249024788";
+		strUrl = strUrl + "#" + mobileUrlMenu;
 		response.sendRedirect(strUrl);
 
 		 return "";
