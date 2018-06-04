@@ -300,6 +300,7 @@ public class TzLoginForBoxController {
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String sql="";
 		String currentDlzhId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+		System.out.println("currentDlzhId="+currentDlzhId);
 		String usertoken = request.getParameter("usertoken");
 		System.out.println("usertoken="+usertoken);
 		String securitykey = getSysHardCodeVal.getBoxKey();
@@ -392,17 +393,17 @@ public class TzLoginForBoxController {
 //		//登录成功		
 		String mobileUrlMenu="";
 		String strHardSQL = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		if(strOprId.equals("SEM")){
+		if("SEM".equals(id)){
 		 mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_SEM_PHONE_USERMENU"},"String");
 		System.out.println("mobileUrlMenu="+mobileUrlMenu);
-		}else if(strOprId.equals("MEM")){
+		}else if("MEM".equals(id)){
 			 mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_MEM_PHONE_USERMENU"},"String");
 		}
 		else{
 			 mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_MPACC_PHONE_USERMENU"},"String");
 		}
 		strUrl = strUrl + "#" + mobileUrlMenu;
-		if("MEM".equals(currentDlzhId) || "MPACC".equals(currentDlzhId) || "MBA_Admin".equals(currentDlzhId)){
+		if("MEM".equals(currentDlzhId) || "MPACC".equals(currentDlzhId) || "MBA_Admin".equals(currentDlzhId) || "Admin".equals(currentDlzhId)){
 			response.sendRedirect(strUrl);
 		}
 		else{
