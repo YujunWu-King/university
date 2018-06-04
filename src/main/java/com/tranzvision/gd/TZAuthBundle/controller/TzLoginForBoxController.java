@@ -299,13 +299,16 @@ public class TzLoginForBoxController {
 		Map<String, Object> jsonMap = null;
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String sql="";
-		String currentDlzhId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
-		System.out.println("currentDlzhId="+currentDlzhId);
+		
+		//String currentDlzhId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
+		
 		String usertoken = request.getParameter("usertoken");
 		System.out.println("usertoken="+usertoken);
 		String securitykey = getSysHardCodeVal.getBoxKey();
 		byte[] IV_SECURITY = { 1, 2, 3, 4, 5, 6, 7, 8 };
 		String u=Security.Decrypt3DES2String(securitykey, usertoken, IV_SECURITY);
+		String currentDlzhId=u.substring(0,u.indexOf("$"));
+		System.out.println("currentDlzhId="+currentDlzhId);
 		String u1=u.substring(u.indexOf("$"),u.lastIndexOf("$"));
 		String u2=u1.substring(u1.indexOf("$"),u1.lastIndexOf("$"));
 		String id=u2.substring(u2.lastIndexOf("$")+1,u2.length());
@@ -403,7 +406,7 @@ public class TzLoginForBoxController {
 			 mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_MPACC_PHONE_USERMENU"},"String");
 		}
 		strUrl = strUrl + "#" + mobileUrlMenu;
-		if("MEM".equals(currentDlzhId) || "MPACC".equals(currentDlzhId) || "MBA_Admin".equals(currentDlzhId) || "Admin".equals(currentDlzhId)){
+		if("MEM".equals(currentDlzhId) || "MPACC".equals(currentDlzhId) || "MBA_Admin".equals(currentDlzhId)){
 			response.sendRedirect(strUrl);
 		}
 		else{
