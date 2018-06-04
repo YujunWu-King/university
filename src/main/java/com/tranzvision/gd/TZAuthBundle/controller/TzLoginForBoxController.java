@@ -88,7 +88,7 @@ public class TzLoginForBoxController {
 	// "text/html;charset=UTF-8")
 	// @ResponseBody
 
-	@RequestMapping(value = { "/login/{orgid}" }, method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = { "/login/{orgid}" }, method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String doLogin(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "orgid") String orgid) throws Exception {
