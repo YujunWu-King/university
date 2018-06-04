@@ -379,14 +379,14 @@ public class TzLoginForBoxController {
 		System.out.println("domain="+domain);
 		String cookiePath = getCookieProps.getCookiePath();
 		System.out.println("cookiePath="+cookiePath);
-//		tzCookie.addCookie(response, "callCenterXh", strSemNum,36000,domain,cookiePath,false,false);
-//		tzCookie.addCookie(response, "callCenterPhone", strTel,36000,domain,cookiePath,false,false);
-//		tzCookie.addCookie(response, "callCenterType", strType,36000,domain,cookiePath,false,false);
-//		tzCookie.addCookie(response, "callCenterOprid", strOprId,36000,domain,cookiePath,false,false);
-		tzCookie.addCookie(response, "callCenterXh", strSemNum, 3600);
-		tzCookie.addCookie(response, "callCenterPhone", strTel, 3600);
-		tzCookie.addCookie(response, "callCenterType", strType, 3600);
-		tzCookie.addCookie(response, "callCenterOprid", strOprId, 3600);
+		tzCookie.addCookie(response, "callCenterXh", strSemNum,36000,domain,cookiePath,false,false);
+		tzCookie.addCookie(response, "callCenterPhone", strTel,36000,domain,cookiePath,false,false);
+		tzCookie.addCookie(response, "callCenterType", strType,36000,domain,cookiePath,false,false);
+		tzCookie.addCookie(response, "callCenterOprid", strOprId,36000,domain,cookiePath,false,false);
+//		tzCookie.addCookie(response, "callCenterXh", strSemNum, 3600);
+//		tzCookie.addCookie(response, "callCenterPhone", strTel, 3600);
+//		tzCookie.addCookie(response, "callCenterType", strType, 3600);
+//		tzCookie.addCookie(response, "callCenterOprid", strOprId, 3600);
 		String strUrl = request.getContextPath() + "/index";
 
 //		//登录成功						
