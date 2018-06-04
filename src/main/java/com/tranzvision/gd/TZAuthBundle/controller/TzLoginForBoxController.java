@@ -389,7 +389,7 @@ public class TzLoginForBoxController {
 		String strHardSQL = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
 		String mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_SEM_PHONE_USERMENU"},"String");
 		System.out.println("mobileUrlMenu="+mobileUrlMenu);
-		strUrl = strUrl + "#" + mobileUrlMenu;
+		strUrl = strUrl + "#" + "SEM_A00000200";
 		response.sendRedirect(strUrl);
 
 		 return "";
