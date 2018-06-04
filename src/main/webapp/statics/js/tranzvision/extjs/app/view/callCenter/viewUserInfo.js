@@ -21,9 +21,11 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 	actType: 'update',//默认新增
 	initComponent:function(){	
 		var callXh = getCookie("callCenterXh");
+		console.log("000="+callXh);
 		var phone = getCookie("callCenterPhone");
 		var type = getCookie("callCenterType");	
-		var OPRID = getCookie("callCenterOprid");
+		var oprid11 = getCookie("callCenterOprid");
+	//	console.log("5555="+oprid11);
 		//为避免查询无关人员，如果无phone
 		if(phone==null||phone==undefined||phone==""){
 			phone = "999999999999999";
@@ -36,7 +38,9 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 		
 		Ext.tzLoadAsync(tzParams,function(response){
 			oprid = response.OPRID;
+			console.log("1111="+oprid);
 			historyCount = response.viewHistoryCall;
+			console.log("2222="+historyCount);
 			bmrBmActCount = response.bmrBmActCount;
 		});
 		var button = "";
@@ -72,7 +76,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 		
 		//短信模板
 		var smsVarData;
-	
+	//	var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"SMSMODEL","comParams":{"ORGID":"SEM"}}';
 		var tzParams = '{"ComID":"TZ_CALLCR_USER_COM","PageID":"TZ_CALLC_USER_STD","OperateType":"SMSMODEL","comParams":{"ORGID":"' + Ext.tzOrgID + '"}}';
 		Ext.tzLoadAsync(tzParams,function(response){
 			smsVarData = response.root;

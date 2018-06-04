@@ -99,6 +99,7 @@ public class TzLoginForBoxController {
 
 		System.out.println("orgid:"+orgid);
 		request.getSession().setAttribute("orgid", orgid);
+		tzCookie.addCookie(response, "orgid1", orgid, 3600);
 		String username = request.getParameter("username");
 	//	System.out.println("username="+username);
 		String pwd = request.getParameter("pwd");
@@ -135,6 +136,7 @@ public class TzLoginForBoxController {
 		String For3DES =username+"$"+op+"$"+orgid+"$"+time;
 		System.out.println("For3DES="+For3DES);
 		String securitykey = getSysHardCodeVal.getBoxKey();
+		System.out.println("sss="+securitykey);
 		byte[] IV_SECURITY = { 1, 2, 3, 4, 5, 6, 7, 8 };
 		String linkString = "$";
 		String usertoken=Security.generalStringFor3DES(securitykey, For3DES, For3DES, IV_SECURITY, linkString);
@@ -248,7 +250,7 @@ public class TzLoginForBoxController {
 
 		// 3 校验 加密是否正确
 		String securitykey = getSysHardCodeVal.getBoxKey();
-
+		
 		System.out.println("Authenticator:" + Authenticator);
 		System.out.println("securitykey:" + securitykey);
 		System.out.println("dev:" + sb.toString());
@@ -300,6 +302,13 @@ public class TzLoginForBoxController {
 
 		String usertoken = request.getParameter("usertoken");
 		System.out.println("usertoken="+usertoken);
+		String securitykey = getSysHardCodeVal.getBoxKey();
+		byte[] IV_SECURITY = { 1, 2, 3, 4, 5, 6, 7, 8 };
+		String u=Security.Decrypt3DES2String(securitykey, usertoken, IV_SECURITY);
+		String u1=u.substring(u.indexOf("$"),u.lastIndexOf("$"));
+		String u2=u1.substring(u1.indexOf("$"),u1.lastIndexOf("$"));
+		String id=u2.substring(u2.lastIndexOf("$")+1,u2.length());
+		System.out.println("id="+id);
 		String strTel = request.getParameter("tel");
 		System.out.println("tel="+strTel);
 		String callid = request.getParameter("callid");
@@ -338,8 +347,11 @@ public class TzLoginForBoxController {
 		psTzPhJddTbl.setTzXh(strSemNum);
 		String orgid=(String) request.getSession().getAttribute("orgid");
 		psTzPhJddTbl.setTzDlzhId(orgid);
+		String s=tzCookie.getStringCookieVal(request,"orgid1");
+		System.out.println("sss="+s);
 		sql="select OPRID from PS_TZ_REG_USE2_V where TZ_JG_ID=? and TZ_BD_MOBILE=?";
-		String strOprId=SqlQuery.queryForObject(sql, new Object[] {orgid,strTel},"String");
+		String strOprId=SqlQuery.queryForObject(sql, new Object[] {id,strTel},"String");
+		System.out.println("str="+strOprId);
 	//	String strOprId=(String) request.getSession().getAttribute("oprid");
 		psTzPhJddTbl.setTzOprid(strOprId);
 		psTzPhJddTbl.setTzPhone(strTel);
