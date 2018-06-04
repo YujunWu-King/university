@@ -299,7 +299,7 @@ public class TzLoginForBoxController {
 		Map<String, Object> jsonMap = null;
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		String sql="";
-
+		String currentDlzhId = tzLoginServiceImpl.getLoginedManagerDlzhid(request);
 		String usertoken = request.getParameter("usertoken");
 		System.out.println("usertoken="+usertoken);
 		String securitykey = getSysHardCodeVal.getBoxKey();
@@ -345,8 +345,8 @@ public class TzLoginForBoxController {
 		psTzPhJddTbl.setTzCallType(strType);
 		String strSemNum = String.valueOf(getSeqNum.getSeqNum("TZ_PH_JDD_TBL", "TZ_XH"));
 		psTzPhJddTbl.setTzXh(strSemNum);
-		String orgid=(String) request.getSession().getAttribute("orgid");
-		psTzPhJddTbl.setTzDlzhId(orgid);
+//		String orgid=(String) request.getSession().getAttribute("orgid");
+		psTzPhJddTbl.setTzDlzhId(id);
 //		String s=tzCookie.getStringCookieVal(request,"orgid1");
 //		System.out.println("sss="+s);
 		sql="select OPRID from PS_TZ_REG_USE2_V where TZ_JG_ID=? and TZ_BD_MOBILE=?";
@@ -389,12 +389,25 @@ public class TzLoginForBoxController {
 //		tzCookie.addCookie(response, "callCenterOprid", strOprId, 3600);
 		String strUrl = request.getContextPath() + "/index";
 
-//		//登录成功						
+//		//登录成功		
+		String mobileUrlMenu="";
 		String strHardSQL = "SELECT TZ_HARDCODE_VAL FROM PS_TZ_HARDCD_PNT WHERE TZ_HARDCODE_PNT=?";
-		String mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_SEM_PHONE_USERMENU"},"String");
+		if(strOprId.equals("SEM")){
+		 mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_SEM_PHONE_USERMENU"},"String");
 		System.out.println("mobileUrlMenu="+mobileUrlMenu);
+		}else if(strOprId.equals("MEM")){
+			 mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_MEM_PHONE_USERMENU"},"String");
+		}
+		else{
+			 mobileUrlMenu = SqlQuery.queryForObject(strHardSQL, new Object[]{"TZ_MPACC_PHONE_USERMENU"},"String");
+		}
 		strUrl = strUrl + "#" + mobileUrlMenu;
-		response.sendRedirect(strUrl);
+		if("MEM".equals(currentDlzhId) || "MPACC".equals(currentDlzhId) || "MBA_Admin".equals(currentDlzhId)){
+			response.sendRedirect(strUrl);
+		}
+		else{
+			strUrl =  request.getContextPath() + "/login/" + id.toLowerCase();
+		}
 
 		 return "";
 	}
