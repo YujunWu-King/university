@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tranzvision.gd.TZAccountMgBundle.dao.PsTzAqYhxxTblMapper;
+import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTbl;
+import com.tranzvision.gd.TZAccountMgBundle.model.PsTzAqYhxxTblKey;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FileManageServiceImpl;
 import com.tranzvision.gd.TZCallCenterBundle.dao.PsTzPhJddTblMapper;
@@ -35,6 +38,7 @@ import com.tranzvision.gd.util.security.MD5;
 import com.tranzvision.gd.util.security.Security;
 import com.tranzvision.gd.util.security.TzFilterIllegalCharacter;
 import com.tranzvision.gd.util.security.collectsecurity.SecurityForCollectFee;
+import com.tranzvision.gd.util.session.TzSession;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
@@ -77,6 +81,9 @@ public class TzLoginForBoxController {
 	
 	@Autowired
 	private PsTzPhJddTblMapper psTzPhJddTblMapper;
+	
+	@Autowired
+	private PsTzAqYhxxTblMapper psTzAqYhxxTblMapper;
 	/**
 	 * 登录接口
 	 * 
@@ -387,6 +394,30 @@ public class TzLoginForBoxController {
 		tzCookie.addCookie(response, "callCenterPhone", strTel,36000,domain,cookiePath,false,false);
 		tzCookie.addCookie(response, "callCenterType", strType,36000,domain,cookiePath,false,false);
 		tzCookie.addCookie(response, "callCenterOprid", strOprId,36000,domain,cookiePath,false,false);
+		
+		
+		// 读取用户信息
+					PsTzAqYhxxTblKey psTzAqYhxxTblKey = new PsTzAqYhxxTblKey();
+					psTzAqYhxxTblKey.setTzDlzhId(currentDlzhId);
+					psTzAqYhxxTblKey.setTzJgId(id);
+					PsTzAqYhxxTbl loginManager = psTzAqYhxxTblMapper.selectByPrimaryKey(psTzAqYhxxTblKey);
+		
+		// 设置Session
+			TzSession tzSession = new TzSession(request);
+			tzSession.addSession("loginManager", loginManager);
+
+					// 设置语言环境
+		tzSession.addSession("sysLanguage", "ZHS");
+
+			// 设置cookie变量
+		int cookieMaxAge = 3600 * 24 * 30; // cookie期限是30天
+			tzCookie.addCookie(response, "tzlang", "", cookieMaxAge);
+
+					// 设置cookie参数
+					tzCookie.addCookie(response, "tzmo", psTzAqYhxxTblKey.getTzJgId());
+					tzCookie.addCookie(response, "tzmu", psTzAqYhxxTblKey.getTzDlzhId());
+					tzCookie.addCookie(response, "TZGD_CONTEXT_LOGIN_TYPE", "GLY");
+		
 //		tzCookie.addCookie(response, "callCenterXh", strSemNum, 3600);
 //		tzCookie.addCookie(response, "callCenterPhone", strTel, 3600);
 //		tzCookie.addCookie(response, "callCenterType", strType, 3600);
