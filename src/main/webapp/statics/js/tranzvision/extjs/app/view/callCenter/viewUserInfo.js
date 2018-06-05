@@ -764,6 +764,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 
 function getCookie(name){
     var arrstr = document.cookie.split("; ");
+    console.log(document.cookie);
     for(var i = 0;i < arrstr.length;i ++){
         var temp = arrstr[i].split("=");
         if(temp[0] == name) return unescape(temp[1]);
