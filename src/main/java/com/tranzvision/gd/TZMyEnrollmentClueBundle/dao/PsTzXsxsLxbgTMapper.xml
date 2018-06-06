@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsLxbgTMapper" >
+  <resultMap id="BaseResultMap" type="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLxbgTKey" >
+    <id column="TZ_LEAD_ID" property="tzLeadId" jdbcType="VARCHAR" />
+    <id column="TZ_CALLREPORT_ID" property="tzCallreportId" jdbcType="BIGINT" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLxbgTKey" >
+    delete from PS_TZ_XSXS_LXBG_T
+    where TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      and TZ_CALLREPORT_ID = #{tzCallreportId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLxbgTKey" >
+    insert into PS_TZ_XSXS_LXBG_T (TZ_LEAD_ID, TZ_CALLREPORT_ID)
+    values (#{tzLeadId,jdbcType=VARCHAR}, #{tzCallreportId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLxbgTKey" >
+    insert into PS_TZ_XSXS_LXBG_T
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        TZ_LEAD_ID,
+      </if>
+      <if test="tzCallreportId != null" >
+        TZ_CALLREPORT_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="tzLeadId != null" >
+        #{tzLeadId,jdbcType=VARCHAR},
+      </if>
+      <if test="tzCallreportId != null" >
+        #{tzCallreportId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+</mapper>

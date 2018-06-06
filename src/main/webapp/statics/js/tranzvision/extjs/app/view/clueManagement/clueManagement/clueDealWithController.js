@@ -26,7 +26,23 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDealWithControlle
             Ext.syncRequire(className);
             var ViewClass = Ext.ClassManager.get(className);
 
-            win = new ViewClass(currentWin);
+            win = new ViewClass({
+            	selModel: 'S',
+            	callback: function(selRecord){
+            		var oprid = selRecord[0].data.oprid;
+            		var name = selRecord[0].data.name;
+            		//线索退回
+            		if(currentWin.reference == "clueBackWindow"){
+            			form.findField("backPersonOprid").setValue(oprid);
+                		form.findField("backPersonName").setValue(name);
+            		}
+            		//线索转交
+            		if(currentWin.reference == "clueAssignResponsibleWindow"){
+            			form.findField("chargeOprid").setValue(oprid);
+            			form.findField("chargeName").setValue(name);
+            		}
+            	}
+            });
 
             view.add(win);
             win.show();
@@ -56,56 +72,19 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDealWithControlle
     },
     //选择责任人-确定
     personChooseEnsure:function(btn) {
-        var panel = btn.findParentByType("panel");
-        var firstWin = panel.firstWin;
+        var win = btn.findParentByType("window");
 
-        if(firstWin.reference=="clueProblemPanel") {
-            //问题线索
-        } else {
-            if(firstWin.reference=="clueImportWindow") {
-                //招生线索管理导入线索，选择责任人
-                var firstGrid = firstWin.down("grid");
-            } else {
-                var firstForm = firstWin.child("form").getForm();
-            }
-        }
-
-        var grid = panel.child("grid");
+        var grid = win.child("grid");
         var selectRecords = grid.getSelectionModel().getSelection();
         var selectLength = selectRecords.length;
 
         if(selectLength==0) {
-            Ext.Msg.alert("提示","您没有选中任何记录");
-            return;
-        } else if(selectLength>1) {
-            Ext.Msg.alert("提示","只能选择一条记录");
+            Ext.Msg.alert("提示","请选择线索责任人");
             return;
         } else {
-            var oprid = selectRecords[0].data.oprid;
-            var name = selectRecords[0].data.name;
-
-            if(firstWin.reference == "clueBackWindow") {
-                firstForm.findField("backPersonOprid").setValue(oprid);
-                firstForm.findField("backPersonName").setValue(name);
-            }
-            if(firstWin.reference == "clueAssignResponsibleWindow") {
-                firstForm.findField("chargeOprid").setValue(oprid);
-                firstForm.findField("chargeName").setValue(name);
-            }
-            if(firstWin.reference=="clueImportWindow") {
-                //招生线索管理导入线索
-                var selList = firstGrid.getSelectionModel().getSelection();
-                selList[0].set('chargeOprid',oprid);
-                selList[0].set('chargeName',name);
-            }
-            if(firstWin.reference == "clueProblemPanel") {
-                //问题线索
-                var selList = firstWin.getSelectionModel().getSelection();
-                selList[0].set('chargeOprid',oprid);
-                selList[0].set('chargeName',name);
-            }
-
-            panel.close();
+            if(win.callback) win.callback(selectRecords);
+            
+            win.close();
         }
     },
     //线索退回-保存
@@ -435,7 +414,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDealWithControlle
                 var contentPanel = Ext.getCmp('tranzvision-framework-content-panel');
                 clueDetailPanel = contentPanel.child("clueDetailPanel");
                 if (clueDetailPanel != undefined && clueDetailPanel != null) {
-                    clueDetailPanel.child("grid").store.reload();
+                    clueDetailPanel.child('tabpanel').child("grid").store.reload();
                     var glBmbBut = clueDetailPanel.down("button[name=glBmbBut]");
                     glBmbBut.setVisible(false);
                     //更新页面报考状态

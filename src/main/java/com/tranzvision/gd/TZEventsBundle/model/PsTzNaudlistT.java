@@ -65,6 +65,8 @@ public class PsTzNaudlistT extends PsTzNaudlistTKey {
 
     private String oprid;
 
+    private String tzLeadId;
+
     public String getTzCyrName() {
         return tzCyrName;
     }
@@ -311,5 +313,13 @@ public class PsTzNaudlistT extends PsTzNaudlistTKey {
 
     public void setOprid(String oprid) {
         this.oprid = oprid == null ? null : oprid.trim();
+    }
+
+    public String getTzLeadId() {
+        return tzLeadId;
+    }
+
+    public void setTzLeadId(String tzLeadId) {
+        this.tzLeadId = tzLeadId == null ? null : tzLeadId.trim();
     }
 }

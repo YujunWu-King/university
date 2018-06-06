@@ -7,7 +7,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
         Ext.tzShowCFGSearch({
             cfgSrhId: 'TZ_XSXS_MYXS_COM.TZ_XSXS_MYXS_STD.TZ_XSXS_INFO_VW',
             condition:{
-                "TZ_JG_ID":Ext.tzOrgID,
+                "TZ_JG_ID": Ext.tzOrgID,
                 "TZ_LEAD_STATUS":"G"
             },
             callback: function(seachCfg){
@@ -49,22 +49,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
             Ext.syncRequire(className);
         }
         ViewClass = Ext.ClassManager.get(className);
-        clsProto = ViewClass.prototype;
-        if (clsProto.themes) {
-            clsProto.themeInfo = clsProto.themes[themeName];
-            if (themeName === 'gray') {
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
-            } else if (themeName !== 'neptune' && themeName !== 'classic') {
-                if (themeName === 'crisp-touch') {
-                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
-                }
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
-            }
-            if (!clsProto.themeInfo) {
-                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
-                    themeName + '\'. Is this intentional?');
-            }
-        }
 
         var myMask = new Ext.LoadMask(
             {
@@ -91,50 +75,87 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
                     for (m = 0; m < records.length; m++) {
                         colorSortData.push(records[m].data);
                     }
-
-                    myMask.hide();
-
-                    cmp = new ViewClass({
-                        fromType:"MYXS",
-                        colorSortData:colorSortData
+                    
+                   //标签
+                    var clueTagStore= new KitchenSink.view.common.store.comboxStore({
+                        recname:'TZ_LABEL_DFN_T',
+                        condition:{
+                        	TZ_JG_ID:{
+                                value: Ext.tzOrgID,
+                                operator:'01',
+                                type:'01'
+                            },
+                            TZ_LABEL_STATUS:{
+                                value: 'Y',
+                                operator:'01',
+                                type:'01'
+                            }
+                        },
+                        result:'TZ_LABEL_ID,TZ_LABEL_NAME'
                     });
+                    clueTagStore.load({
+                    	callback: function(){
+                    		
+                    		//其他责任人
+                    		var otherZrrStore= new KitchenSink.view.common.store.comboxStore({
+                                recname:'TZ_XS_QTZRR_V',
+                                condition:{
+                                	TZ_LEAD_ID:{
+                                        value: "NEXT",
+                                        operator:'01',
+                                        type:'01'
+                                    }
+                                },
+                                result:'TZ_ZRR_OPRID,TZ_REALNAME'
+                            });
+                    		
+                    		myMask.hide();
 
-                    //操作标志
-                    cmp.actType="add";
-
-                    cmp.on('afterrender',function(){
-                        //线索信息表单
-                        var form = cmp.child('form').getForm();
-                        var currentOprid,currentName,currentLocalId,currentLocalName;
-                        var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"tzGetCurrentName","comParams":{}}';
-                        Ext.tzLoad(tzParams,function(responseData){
-                            currentOprid=responseData.currentOprid;
-                            currentName=responseData.currentName;
-                            currentLocalId=responseData.currentLocalId;
-                            currentLocalName=responseData.currentLocalName;
-                            form.findField('chargeOprid').setValue(currentOprid);
-                            form.findField('chargeName').setValue(currentName);
-                            form.findField('localId').setValue(currentLocalId);
-                            form.findField('localAddress').setValue(currentLocalName);
-
-                            //隐藏退回原因、关闭原因、建议跟进日期
-                            form.findField("backReasonId").setHidden(true);
-                            form.findField("closeReasonId").setHidden(true);
-                            form.findField("contactDate").setHidden(true);
-                        });
+		                    cmp = new ViewClass({
+		                        fromType:"MYXS",
+		                        colorSortData:colorSortData,
+		                        clueTagStore: clueTagStore,
+                                otherZrrStore: otherZrrStore
+		                    });
+		
+		                    //操作标志
+		                    cmp.actType="add";
+		
+		                    cmp.on('afterrender',function(){
+		                        //线索信息表单
+		                        var form = cmp.child('form').getForm();
+		                        var currentOprid,currentName,currentLocalId,currentLocalName;
+		                        var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"tzGetCurrentName","comParams":{}}';
+		                        Ext.tzLoad(tzParams,function(responseData){
+		                        	
+		                            currentOprid=responseData.currentOprid;
+		                            currentName=responseData.currentName;
+		                            currentLocalId=responseData.currentLocalId;
+		                            currentLocalName=responseData.currentLocalName;
+		                            
+		                            form.findField('chargeOprid').setValue(currentOprid);
+		                            form.findField('chargeName').setValue(currentName);
+		
+		                            //隐藏退回原因、关闭原因、建议跟进日期
+		                            form.findField("backReasonId").setHidden(true);
+		                            form.findField("closeReasonId").setHidden(true);
+		                            form.findField("contactDate").setHidden(true);
+		                        });
+		                    });
+		
+		                    var tab = contentPanel.add(cmp);
+		
+		                    //设置tab页签的beforeactivate事件的监听方法
+		                    //tab.on(Ext.tzTabOn(tab,this.getView(),cmp));
+		                    contentPanel.setActiveTab(tab);
+		
+		                    Ext.resumeLayouts(true);
+		
+		                    if (cmp.floating) {
+		                        cmp.show();
+		                    }
+                    	}
                     });
-
-                    var tab = contentPanel.add(cmp);
-
-                    //设置tab页签的beforeactivate事件的监听方法
-                    //tab.on(Ext.tzTabOn(tab,this.getView(),cmp));
-                    contentPanel.setActiveTab(tab);
-
-                    Ext.resumeLayouts(true);
-
-                    if (cmp.floating) {
-                        cmp.show();
-                    }
                 }
             }
         });
@@ -171,24 +192,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
             Ext.syncRequire(className);
         }
         ViewClass = Ext.ClassManager.get(className);
-        clsProto = ViewClass.prototype;
-
-        if(clsProto.themes) {
-            clsProto.themeInfo = clsProto.themes[themeName];
-
-            if (themeName === 'gray') {
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.classic);
-            } else if (themeName !== 'neptune' && themeName !== 'classic') {
-                if (themeName === 'crisp-touch') {
-                    clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes['neptune-touch']);
-                }
-                clsProto.themeInfo = Ext.applyIf(clsProto.themeInfo || {}, clsProto.themes.neptune);
-            }
-            if (!clsProto.themeInfo) {
-                Ext.log.warn ( 'Example \'' + className + '\' lacks a theme specification for the selected theme: \'' +
-                    themeName + '\'. Is this intentional?');
-            }
-        }
+        
         //获取线索信息中的下拉框值
         var backReasonId,backReasonName,closeReasonId,closeReasonName,colorTypeId,colorTypeName,colorTypeCode,zxlbId,zxlbName;
         var backReasonFlag,closeReasonFlag,colorTypeFlag,zxlbFlag;
@@ -217,7 +221,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
 
             myMask.show();
 
-
             //退回原因
             var validBackReasonStore = new KitchenSink.view.common.store.comboxStore({
                 recname: 'TZ_XS_THYY_V',
@@ -244,7 +247,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
                                 TZ_LABEL_NAME:backReasonName
                             });
                         }
-
+                        
                         //关闭原因
                         var validCloseReasonStore = new KitchenSink.view.common.store.comboxStore({
                             recname: 'TZ_XS_GBYY_V',
@@ -302,121 +305,114 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
                                                     });
                                                 }
 
-
-                                                //姓名
-                                                /*
-                                                var customerNameStore = new KitchenSink.view.common.store.comboxStore({
-                                                    pageSize: 0,
-                                                    recname: 'TZ_XS_CUSNM_V',
-                                                    condition: {
-                                                        TZ_JG_ID: {
+                                              //线索标签
+                                                var clueTagStore= new KitchenSink.view.common.store.comboxStore({
+                                                    recname:'TZ_LABEL_DFN_T',
+                                                    condition:{
+                                                    	TZ_JG_ID:{
                                                             value: Ext.tzOrgID,
-                                                            operator: '01',
-                                                            type: '01'
+                                                            operator:'01',
+                                                            type:'01'
+                                                        },
+                                                        TZ_LABEL_STATUS:{
+                                                            value: 'Y',
+                                                            operator:'01',
+                                                            type:'01'
                                                         }
                                                     },
-                                                    result: 'TZ_KH_OPRID,TZ_REALNAME,TZ_DESCR_254',
-                                                    listeners: {
-                                                        load: function (store, records, successful, eOpts) {
-                                                            for (m = 0; m < records.length; m++) {
-                                                                customerNameData.push(records[m].data);
-                                                            }
-
-
-                                                            //公司
-                                                            var companyNameStore = new KitchenSink.view.common.store.comboxStore({
-                                                                pageSize: 0,
-                                                                recname: 'TZ_XS_COMNM_V',
-                                                                condition: {
-                                                                    TZ_JG_ID: {
-                                                                        value: Ext.tzOrgID,
-                                                                        operator: '01',
-                                                                        type: '01'
-                                                                    }
-                                                                },
-                                                                result: 'TZ_COMP_CNAME',
-                                                                listeners: {
-                                                                    load: function (store, records, successful, eOpts) {
-                                                                        for (n = 0; n < records.length; n++) {
-                                                                            companyNameData.push(records[n].data);
-                                                                        }
-                                                                        */
-
-                                                myMask.hide();
-
-                                                                        cmp = new ViewClass({
-                                                                            backReasonData: backReasonData,
-                                                                            closeReasonData: closeReasonData,
-                                                                            colorSortData: colorSortData,
-                                                                            customerNameData: customerNameData,
-                                                                            companyNameData: companyNameData
-                                                                        });
-
-
-                                                                        cmp.on('afterrender', function (panel) {
-                                                                            var form = panel.child('form').getForm();
-                                                                            var store = panel.child("grid").store;
-                                                                            var glBmbBut = panel.down("button[name=glBmbBut]");
-                                                                            //参数
-                                                                            var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"QF","comParams":{"clueId":"' + clueId + '"}}';
-                                                                            Ext.tzLoad(tzParams, function (respData) {
-                                                                                var formData = respData.formData;
-                                                                                form.setValues(formData);
-
-                                                                                //根据显示状态显示相应的其他字段
-                                                                                var clueState = form.findField('clueState').getValue();
-
-                                                                                form.findField('backReasonId').setVisible(false);
-                                                                                form.findField('closeReasonId').setVisible(false);
-                                                                                form.findField('contactDate').setVisible(false);
-                                                                                form.findField('backReasonId').allowBlank = true;
-                                                                                form.findField('closeReasonId').allowBlank = true;
-                                                                                form.findField('contactDate').allowBlank = true;
-
-                                                                                //退回原因
-                                                                                if (clueState == "F") {
-                                                                                    form.findField('backReasonId').setVisible(true);
-                                                                                    form.findField('backReasonId').allowBlank = false;
-                                                                                }
-                                                                                //关闭原因
-                                                                                if (clueState == "G") {
-                                                                                    form.findField('closeReasonId').setVisible(true);
-                                                                                    form.findField('closeReasonId').allowBlank = false;
-                                                                                }
-                                                                                //建议跟进日期
-                                                                                if (clueState == "D") {
-                                                                                    form.findField('contactDate').setVisible(true);
-                                                                                    form.findField('contactDate').allowBlank = false;
-                                                                                }
-
-
-                                                                                //线索状态为关闭或者报考状态不是未报名，关联报名表按钮隐藏
-                                                                                var bkStatus = form.findField("bkStatus").getValue();
-                                                                                if (clueState == "G" || bkStatus != "A") {
-                                                                                    glBmbBut.setVisible(false);
-                                                                                }
-
-                                                                                //加载报名表信息
-                                                                                var clueId = form.findField("clueId").getValue();
-                                                                                store.tzStoreParams = '{"clueId":"' + clueId + '"}';
-                                                                                store.load();
-                                                                            });
-                                                                        });
-
-                                                                        tab = contentPanel.add(cmp);
-                                                                        contentPanel.setActiveTab(tab);
-                                                                        Ext.resumeLayouts(true);
-                                                                        if (cmp.floating) {
-                                                                            cmp.show();
-                                                                        }
-/*
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-                                                    }
+                                                    result:'TZ_LABEL_ID,TZ_LABEL_NAME'
                                                 });
-*/
+                                                clueTagStore.load({
+                                                	callback: function(){
+                                                		
+                                                		var otherZrrStore= new KitchenSink.view.common.store.comboxStore({
+                                                            recname:'TZ_XS_QTZRR_V',
+                                                            condition:{
+                                                            	TZ_LEAD_ID:{
+                                                                    value: clueId,
+                                                                    operator:'01',
+                                                                    type:'01'
+                                                                }
+                                                            },
+                                                            result:'TZ_ZRR_OPRID,TZ_REALNAME'
+                                                        });
+                                                		otherZrrStore.load({
+                                                        	callback: function(){
+				                        						myMask.hide();
+				
+				                                                cmp = new ViewClass({
+				                                                	clueID: clueId,
+				                                                	backReasonData: backReasonData,
+				                                                    closeReasonData: closeReasonData,
+				                                                    colorSortData: colorSortData,
+				                                                    customerNameData: customerNameData,
+				                                                    companyNameData: companyNameData,
+				                                                    clueTagStore: clueTagStore,
+                                                                    otherZrrStore: otherZrrStore
+				                                                });
+				
+				
+				                                                cmp.on('afterrender', function (panel) {
+				                                                    var form = panel.child('form').getForm();
+				                                                    var store = panel.child('tabpanel').child("grid").store;
+				                                                    var glBmbBut = panel.down("button[name=glBmbBut]");
+				                                                    //参数
+				                                                    var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"QF","comParams":{"clueId":"' + clueId + '"}}';
+				                                                    Ext.tzLoad(tzParams, function (respData) {
+				                                                        var formData = respData.formData;
+				                                                        console.log(formData);
+				                                                        form.setValues(formData);
+				
+				                                                        //根据显示状态显示相应的其他字段
+				                                                        var clueState = form.findField('clueState').getValue();
+				
+				                                                        form.findField('backReasonId').setVisible(false);
+				                                                        form.findField('closeReasonId').setVisible(false);
+				                                                        form.findField('contactDate').setVisible(false);
+				                                                        form.findField('backReasonId').allowBlank = true;
+				                                                        form.findField('closeReasonId').allowBlank = true;
+				                                                        form.findField('contactDate').allowBlank = true;
+				
+				                                                        //退回原因
+				                                                        if (clueState == "F") {
+				                                                            form.findField('backReasonId').setVisible(true);
+				                                                            form.findField('backReasonId').allowBlank = false;
+				                                                        }
+				                                                        //关闭原因
+				                                                        if (clueState == "G") {
+				                                                            form.findField('closeReasonId').setVisible(true);
+				                                                            form.findField('closeReasonId').allowBlank = false;
+				                                                        }
+				                                                        //建议跟进日期
+				                                                        if (clueState == "D") {
+				                                                            form.findField('contactDate').setVisible(true);
+				                                                            form.findField('contactDate').allowBlank = false;
+				                                                        }
+				
+				
+				                                                        //线索状态为关闭或者报考状态不是未报名，关联报名表按钮隐藏
+				                                                        var bkStatus = form.findField("bkStatus").getValue();
+				                                                        if (clueState == "G" || bkStatus != "A") {
+				                                                            glBmbBut.setVisible(false);
+				                                                        }
+				
+				                                                        //加载报名表信息
+				                                                        var clueId = form.findField("clueId").getValue();
+				                                                        store.tzStoreParams = '{"clueId":"' + clueId + '"}';
+				                                                        store.load();
+				                                                    });
+				                                                });
+				
+				                                                tab = contentPanel.add(cmp);
+				                                                contentPanel.setActiveTab(tab);
+				                                                Ext.resumeLayouts(true);
+				                                                if (cmp.floating) {
+				                                                    cmp.show();
+				                                                }
+                                                        	}
+                                                		});
+                                                	}
+                                                });
                                             }
                                         }
                                     });

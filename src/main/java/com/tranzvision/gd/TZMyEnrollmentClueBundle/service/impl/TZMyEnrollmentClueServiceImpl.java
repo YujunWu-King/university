@@ -44,11 +44,13 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 			// 排序字段如果没有不要赋值
 			String[][] orderByArr = new String[][] {{ "ROW_ADDED_DTTM", "DESC" }};
 			// json数据要的结果字段;
-			String[] resultFldArray = { "TZ_LEAD_ID","TZ_JG_ID","TZ_REALNAME", "TZ_LEAD_STATUS","TZ_LEAD_STATUS_DESC", "TZ_COMP_CNAME", "TZ_MOBILE","TZ_POSITION","TZ_XSQU_ID","TZ_XSQU_DESC","TZ_BMR_STATUS_DESC","TZ_BZ","ROW_ADDED_DTTM","TZ_RSFCREATE_WAY_DESC","TZ_ZR_OPRID","TZ_ZRR_NAME","TZ_REFEREE_NAME","TZ_COLOUR_SORT_ID","TZ_LABEL_NAME"};
+			String[] resultFldArray = { "TZ_LEAD_ID","TZ_JG_ID","TZ_REALNAME", "TZ_LEAD_STATUS","TZ_LEAD_STATUS_DESC", "TZ_COMP_CNAME", 
+					"TZ_MOBILE","TZ_POSITION","TZ_BMR_STATUS_DESC","TZ_BZ","ROW_ADDED_DTTM","TZ_RSFCREATE_WAY_DESC","TZ_ZR_OPRID",
+					"TZ_ZRR_NAME","TZ_REFEREE_NAME","TZ_COLOUR_SORT_ID","TZ_LABEL_NAME", "TZ_EMAIL"};
 			// 可配置搜索通用函数;
 			//后台增加可配置搜索条件,责任人是"我"的销售线索
 			String subStr=strParams.substring(1, strParams.length()-2);
-			String condition=subStr+ ",\"TZ_ZR_OPRID-operator\":\"01\",\"TZ_ZR_OPRID-value\":\"" + oprid + "\"}";
+			String condition=subStr+ ",\"TZ_ZR_OPRID2-operator\":\"01\",\"TZ_ZR_OPRID2-value\":\"" + oprid + "\"}";
 			strParams="{"+condition+"}";
 			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, strParams, numLimit, numStart, errorMsg);
 
@@ -62,11 +64,11 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 					Map<String, Object> mapList = new HashMap<String, Object>();
 					
 					//邮箱取值：线索对应的报名表对应的OPRID的邮箱
-					String tzEmail = "";
-					String bmrOprid=sqlQuery.queryForObject("select B.OPRID from PS_TZ_XSXS_BMB_T A LEFT JOIN PS_TZ_FORM_WRK_T B on A.TZ_APP_INS_ID=B.TZ_APP_INS_ID where A.TZ_LEAD_ID=?", new Object[]{rowList[0]}, "String");
-					if(bmrOprid!=null && !"".equals(bmrOprid)) {
-						tzEmail=sqlQuery.queryForObject("SELECT A.TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL A,PS_TZ_AQ_YHXX_TBL B WHERE A.TZ_LXFS_LY=B.TZ_RYLX AND A.TZ_LYDX_ID=B.OPRID AND B.OPRID=?", new Object[]{bmrOprid}, "String");
-					}
+//					String tzEmail = "";
+//					String bmrOprid=sqlQuery.queryForObject("select B.OPRID from PS_TZ_XSXS_BMB_T A LEFT JOIN PS_TZ_FORM_WRK_T B on A.TZ_APP_INS_ID=B.TZ_APP_INS_ID where A.TZ_LEAD_ID=?", new Object[]{rowList[0]}, "String");
+//					if(bmrOprid!=null && !"".equals(bmrOprid)) {
+//						tzEmail=sqlQuery.queryForObject("SELECT A.TZ_ZY_EMAIL FROM PS_TZ_LXFSINFO_TBL A,PS_TZ_AQ_YHXX_TBL B WHERE A.TZ_LXFS_LY=B.TZ_RYLX AND A.TZ_LYDX_ID=B.OPRID AND B.OPRID=?", new Object[]{bmrOprid}, "String");
+//					}
 					
 					mapList.put("clueId", rowList[0]);
 					mapList.put("orgID", rowList[1]);
@@ -76,18 +78,16 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 					mapList.put("comName", rowList[5]);
 					mapList.put("cusMobile", rowList[6]);
 					mapList.put("cusPos", rowList[7]);
-					mapList.put("cusPlaceId", rowList[8]);
-					mapList.put("cusPlace", rowList[9]);
-					mapList.put("bmStateDesc", rowList[10]);
-					mapList.put("cusBz", rowList[11]);
-					mapList.put("createDate", rowList[12]);
-					mapList.put("createWayDesc", rowList[13]);
-					mapList.put("chargeOprid", rowList[14]);
-					mapList.put("zrPer", rowList[15]);
-					mapList.put("recommendPer", rowList[16]);
-					mapList.put("colorType", rowList[17]);
-					mapList.put("gbyy", rowList[18]);
-					mapList.put("cusEmail", tzEmail);
+					mapList.put("bmStateDesc", rowList[8]);
+					mapList.put("cusBz", rowList[9]);
+					mapList.put("createDate", rowList[10]);
+					mapList.put("createWayDesc", rowList[11]);
+					mapList.put("chargeOprid", rowList[12]);
+					mapList.put("zrPer", rowList[13]);
+					mapList.put("recommendPer", rowList[14]);
+					mapList.put("colorType", rowList[15]);
+					mapList.put("gbyy", rowList[16]);
+					mapList.put("cusEmail", rowList[17]);
 							
 					listData.add(mapList);
 				}

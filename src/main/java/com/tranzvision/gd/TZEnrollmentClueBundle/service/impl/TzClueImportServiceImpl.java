@@ -1,20 +1,17 @@
 package com.tranzvision.gd.TZEnrollmentClueBundle.service.impl;
 
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.commons.lang.ObjectUtils.Null;
-import org.apache.http.protocol.HTTP;
+import javax.servlet.http.HttpServletRequest;
+
 //import org.apache.jasper.el.JasperELResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +19,6 @@ import org.springframework.stereotype.Service;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
-import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoT;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.sql.GetSeqNum;
@@ -44,8 +40,6 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 	private HttpServletRequest request;
 	@Autowired
 	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
-	@Autowired
-	private TzClueAutoAssign tzClueAutoAssign;
 	@Autowired
 	private GetSeqNum getSeqNum;
 
@@ -275,18 +269,6 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 						psTzXsxsInfoT.setRowLastmantDttm(new Date());
 						psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
 						
-						if(existMobile>0 && "ZSXS".equals(importFrom)) {
-						
-						} else {
-							if(chargeOprid!=null && !"".equals(chargeOprid)) {
-								//责任人已存在
-							} else {
-								//如果有常住地，需要调用自动分配线索
-								if(localId!=null && !"".equals(localId)) {
-									tzClueAutoAssign.autoAssign(orgId,oprid,clueId, "",localId, errMsg);
-								}
-							}
-						}
 					/*}*/
 				}
 			}
