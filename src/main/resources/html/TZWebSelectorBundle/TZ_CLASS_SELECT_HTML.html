@@ -103,11 +103,13 @@ a{text-decoration: none;}
 	
 	<script type="text/javascript">
 	function changeProvince() {
-		var classid = $('input[name="%bind(:7)"]:checked').val();
-		if (classid == null) {
+		var classidS = $('input[name="%bind(:7)"]:checked').val();
+		
+		if (classidS == null) {
 			alert("%bind(:8)");
 			return;
 		} else {
+			var classid = classidS.split("--")[0];
 			var pageid = "%bind(:2)";
 			var linkId = "%bind(:9)";
 			$("#" + pageid, window.parent.document).val(classid);
