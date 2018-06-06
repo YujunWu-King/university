@@ -144,10 +144,11 @@ public class TzLoginForBoxController {
 		String For3DES = username + "$" + op + "$" + orgid + "$" + time;
 		System.out.println("For3DES=" + For3DES);
 		String securitykey = getSysHardCodeVal.getBoxKey();
-		System.out.println("sss=" + securitykey);
+		System.out.println("securitykey=" + securitykey);
 		byte[] IV_SECURITY = { 1, 2, 3, 4, 5, 6, 7, 8 };
 		String linkString = "$";
 		String usertoken = Security.generalStringFor3DES(securitykey, For3DES, For3DES, IV_SECURITY, linkString);
+		System.out.println("usertoken="+usertoken);
 		request.getSession().setAttribute("token", usertoken);
 		String oprid = op;
 		// request.getSession().setAttribute("oprid", oprid);
@@ -212,6 +213,7 @@ public class TzLoginForBoxController {
 		Map<String, Object> jsonMap = null;
 		String key = "";
 		int len = tm.size();
+		System.out.println("len="+len);
 		int i = 0;
 		StringBuffer sb = new StringBuffer();
 		String Authenticator = "";
@@ -231,7 +233,7 @@ public class TzLoginForBoxController {
 					long timep = Long.parseLong(entry.getValue().toString());
 					long time = System.currentTimeMillis();
 					System.out.println(time);
-					if (time - timep > 24 * 60 * 1000) {
+					if (time - timep > 24 * 60 * 60 * 1000) {
 						jsonMap = new HashMap<String, Object>();
 						jsonMap.put("res_code", "-0001");
 						jsonMap.put("res_message", "登录超时");
@@ -249,6 +251,8 @@ public class TzLoginForBoxController {
 			}
 			if (i == len - 1 && key.equals("authenticator")) {
 				Authenticator = entry.getValue().toString();
+				System.out.println("a="+Authenticator);
+				System.out.println("i="+i);
 			}
 			i++;
 		}
@@ -331,7 +335,7 @@ public class TzLoginForBoxController {
 		// 校验传入参数
 		// usertoken+tel+callid+timestamp
 		LinkedHashMap<String, String> tm = new LinkedHashMap<String, String>();
-		tm.put("usertoken", usertoken);
+		//tm.put("usertoken", usertoken);
 		tm.put("tel", strTel);
 		tm.put("callid", callid);
 		tm.put("timestamp", timestamp);
@@ -368,7 +372,7 @@ public class TzLoginForBoxController {
 		psTzPhJddTbl.setTzPhone(strTel);
 		psTzPhJddTbl.setTzCallDtime(new Date());
 		psTzPhJddTbl.setTzDealwithZt("A");
-		psTzPhJddTbl.setTzDescr("111111");
+//		psTzPhJddTbl.setTzDescr("111111");
 		psTzPhJddTblMapper.insert(psTzPhJddTbl);
 		// sql="select * from PS_TZ_REG_USE2_V where TZ_JG_ID=? and
 		// TZ_BD_MOBILE=?";
