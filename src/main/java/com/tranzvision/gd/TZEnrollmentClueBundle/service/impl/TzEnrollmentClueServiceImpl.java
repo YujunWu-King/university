@@ -55,7 +55,7 @@ public class TzEnrollmentClueServiceImpl extends FrameworkImpl {
 			String[][] orderByArr = new String[][] {{ "TZ_DATE_RANK", "DESC" }};
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_LEAD_ID","TZ_JG_ID","TZ_REALNAME", "TZ_MOBILE", "TZ_COMP_CNAME", "TZ_POSITION","TZ_BMR_STATUS_DESC",
-					"TZ_BZ","TZ_LEAD_STATUS","TZ_LEAD_STATUS_DESC","TZ_ZR_OPRID","TZ_ZRR_NAME","TZ_REFEREE_NAME","ROW_ADDED_DTTM",
+					"TZ_BZ","TZ_LEAD_STATUS","TZ_LEAD_STATUS_DESC","TZ_ZR_OPRID","TZ_ZRR_NAME","ROW_ADDED_DTTM",
 					"TZ_RSFCREATE_WAY_DESC","TZ_THYY_DESC","TZ_GBYY_DESC","TZ_REASON","TZ_EMAIL"};
 			// 默认显示当前机构下，责任人是当前登录人或没有责任人的线索	
 			jacksonUtil.json2Map(strParams);
@@ -92,11 +92,10 @@ public class TzEnrollmentClueServiceImpl extends FrameworkImpl {
 					mapList.put("clueStateDesc", rowList[9]);
 					mapList.put("chargeOprid", rowList[10]);
 					mapList.put("chargeName", rowList[11]);
-					mapList.put("recommendPer", rowList[12]);
-					mapList.put("createDttm", rowList[13]);
-					mapList.put("createWayDesc", rowList[14]);
-					mapList.put("reason", rowList[15]);
-					mapList.put("email", rowList[16]);
+					mapList.put("createDttm", rowList[12]);
+					mapList.put("createWayDesc", rowList[13]);
+					mapList.put("reason", rowList[16]);
+					mapList.put("email", rowList[17]);
 					
 					listData.add(mapList);
 				}

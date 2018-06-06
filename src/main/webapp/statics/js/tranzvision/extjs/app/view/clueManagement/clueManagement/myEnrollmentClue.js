@@ -218,6 +218,14 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                                 type:'string'
                             }
                         },{
+                            text:'邮箱',
+                            lockable: false,
+                            dataIndex:'email',
+                            width:120,
+                            filter:{
+                                type:'string'
+                            }
+                        },{
                             text:'公司',
                             lockable   : false,
                             dataIndex:'comName',

@@ -57,7 +57,7 @@ public class TzSupplierClueServiceImpl extends FrameworkImpl {
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_LEAD_ID","TZ_JG_ID","TZ_REALNAME", "TZ_LEAD_STATUS","TZ_LEAD_STATUS_DESC", "TZ_COMP_CNAME", 
 					"TZ_MOBILE","TZ_POSITION", "TZ_BMR_STATUS_DESC","TZ_BZ","ROW_ADDED_DTTM","TZ_RSFCREATE_WAY_DESC","TZ_ZR_OPRID",
-					"TZ_ZRR_NAME","TZ_REFEREE_NAME","TZ_COLOUR_SORT_ID","TZ_LABEL_NAME","TZ_EMAIL"};
+					"TZ_ZRR_NAME","TZ_COLOUR_SORT_ID","TZ_LABEL_NAME","TZ_EMAIL"};
 			// 可配置搜索通用函数;
 			//后台增加可配置搜索条件,责任人是"我"的销售线索
 			String subStr=strParams.substring(1, strParams.length()-2);
@@ -87,10 +87,9 @@ public class TzSupplierClueServiceImpl extends FrameworkImpl {
 					mapList.put("createWayDesc", rowList[11]);
 					mapList.put("chargeOprid", rowList[12]);
 					mapList.put("zrPer", rowList[13]);
-					mapList.put("recommendPer", rowList[14]);
-					mapList.put("colorType", rowList[15]);
-					mapList.put("gbyy", rowList[16]);
-					mapList.put("cusEmail", rowList[17]);
+					mapList.put("colorType", rowList[14]);
+					mapList.put("gbyy", rowList[15]);
+					mapList.put("email", rowList[16]);
 							
 					listData.add(mapList);
 				}

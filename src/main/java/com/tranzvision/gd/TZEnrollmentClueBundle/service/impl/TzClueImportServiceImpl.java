@@ -79,16 +79,10 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 				
 				String name = mapData.get("name") == null ? "" : mapData.get("name").toString().trim();
 				String mobile = mapData.get("mobile") == null ? "" : mapData.get("mobile").toString().trim();
+				String email = mapData.get("email") == null ? "" : mapData.get("email").toString().trim();
 				String companyName = mapData.get("companyName") == null ? "" : mapData.get("companyName").toString().trim();
 				String position = mapData.get("position") == null ? "" : mapData.get("position").toString().trim();
-				String localName = mapData.get("localName") == null ? "" : mapData.get("localName").toString().trim();
 				String memo = mapData.get("memo") == null ? "" : mapData.get("memo").toString().trim();
-				
-				//常住地
-				String localId = "";
-				if(!"".equals(localName)) {
-					localId = sqlQuery.queryForObject("SELECT TZ_LABEL_NAME FROM PS_TZ_XSXS_DQBQ_T WHERE TZ_JG_ID=? AND (TZ_LABEL_DESC=? OR TZ_LABEL_NAME=?) AND TZ_LABEL_STATUS='Y'", new Object[]{orgId,localName,localName},"String");
-				}
 			
 				
 				/*招生线索管理导入有责任人、创建方式、创建时间*/
@@ -208,8 +202,8 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 						psTzXsxsInfoT.setTzRealname(name);
 						psTzXsxsInfoT.setTzCompCname(companyName);
 						psTzXsxsInfoT.setTzMobile(mobile);
+						psTzXsxsInfoT.setTzEmail(email);
 						psTzXsxsInfoT.setTzPosition(position);
-						psTzXsxsInfoT.setTzXsquId(localId);
 						psTzXsxsInfoT.setTzBz(memo);
 						if("MYXS".equals(importFrom)) {
 							//我的招生线索导入，责任人为当前登录人
@@ -293,6 +287,7 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public String tzOther(String operateType, String strParams, String[] errMsg) {
 		String strRet = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
@@ -337,7 +332,7 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 		try {
 			
 			//当前机构
-			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+//			String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 			
 			int num = 0;
 			for(num=0;num<strData.length;num++) {
@@ -348,11 +343,10 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 				
 				String modelId = mapData.get("id") == null ? "" : mapData.get("id").toString();
 				String name = mapData.get("name") == null ? "" : mapData.get("name").toString();
-				String mobile = mapData.get("mobile") == null ? "" : mapData.get("mobile").toString();
-				String companyName = mapData.get("companyName") == null ? "" : mapData.get("companyName").toString();
-				String position = mapData.get("position") == null ? "" : mapData.get("position").toString();
-				String localName = mapData.get("localName") == null ? "" : mapData.get("localName").toString();
-				String memo = mapData.get("memo") == null ? "" : mapData.get("memo").toString();
+//				String mobile = mapData.get("mobile") == null ? "" : mapData.get("mobile").toString();
+//				String companyName = mapData.get("companyName") == null ? "" : mapData.get("companyName").toString();
+//				String position = mapData.get("position") == null ? "" : mapData.get("position").toString();
+//				String memo = mapData.get("memo") == null ? "" : mapData.get("memo").toString();
 				String createWay = mapData.get("createWay") == null ? "" : mapData.get("createWay").toString();
 				String createDttm = mapData.get("createDttm") == null ? "" : mapData.get("createDttm").toString();
 				
@@ -375,20 +369,6 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 				Boolean isMobile = (mobile==null || "".equals(mobile)) ? true : this.isMobile(mobile);
 				*/
 			
-				
-				//常住地有效性
-				//Boolean localRequire = false;
-				Boolean localValidate = true;
-				if(localName!=null && !"".equals(localName)) {
-					//localRequire = true;
-					//可能为描述信息或者值
-					String localId = sqlQuery.queryForObject("SELECT TZ_LABEL_NAME FROM PS_TZ_XSXS_DQBQ_T WHERE TZ_JG_ID=? AND (TZ_LABEL_DESC=? OR TZ_LABEL_NAME=?) AND TZ_LABEL_STATUS='Y'", new Object[]{orgId,localName,localName},"String");
-					if(localId!=null && !"".equals(localId)) {
-						localValidate = true;
-					} else {
-						localValidate = false;
-					}
-				} 
 				
 				//创建方式必填、有效性
 				Boolean createWayRequire = false;
@@ -428,7 +408,7 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 					createDttmValidate = true;
 				}
 				
-				Boolean validationResult = nameRequired  && localValidate && createWayRequire && createWayValidate && createDttmRequire && createDttmValidate ;
+				Boolean validationResult = nameRequired  &&  createWayRequire && createWayValidate && createDttmRequire && createDttmValidate ;
 				
 				ArrayList<String> validationMsgList = new ArrayList<String>();
 				
@@ -446,9 +426,6 @@ public class TzClueImportServiceImpl extends FrameworkImpl {
 					validationMsgList.add("常住地必填");
 				}
 				*/
-				if(!localValidate) {
-					validationMsgList.add("常住地找不到");
-				}
 				if(!createWayRequire) {
 					validationMsgList.add("线索来源必填");
 				}

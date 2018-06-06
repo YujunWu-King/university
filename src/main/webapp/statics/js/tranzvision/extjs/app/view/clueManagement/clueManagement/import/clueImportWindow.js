@@ -35,18 +35,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.import.clueImportWind
     },
     initComponent: function () {
         var clueImportStore = new KitchenSink.view.clueManagement.clueManagement.import.clueImportStore();
-
-        var localStore = new KitchenSink.view.common.store.comboxStore({
-            recname:'TZ_XSXS_YXDQ_VW',
-            condition:{
-                TZ_JG_ID:{
-                    value:Ext.tzOrgID,
-                    operator:'01',
-                    type:'01'
-                }
-            },
-            result:'TZ_LABEL_NAME,TZ_LABEL_DESC'
-        });
         var createWayStore = new KitchenSink.view.common.store.appTransStore("TZ_RSFCREATE_WAY");
 
 
@@ -96,7 +84,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.import.clueImportWind
             },{
                 text:'创建时间',
                 dataIndex:'createDttm',
-                width:150,
+                width:140,
                 renderer : Ext.util.Format.dateRenderer('Y-m-d H:i'),
                 editor:{
                     xtype:'datefield',
@@ -136,27 +124,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.import.clueImportWind
                         return "refuse";
                     }
                 },
-                /*
-                 text:'&nbsp;',
-                 getClass:function(v,metadata,r){
-                 var validationResult = r.get("validationResult");
-                 if(validationResult!=undefined&&validationResult==true){
-                 return "fa fa-check-circle";
-                 }else{
-                 return "fa fa-exclamation-circle";
-                 }
-                 },
-                 getStyle:function(v,metadata,r){
-                 var style = "font-size:16px;";
-                 var validationResult = r.get("validationResult");
-                 if(validationResult!=undefined&&validationResult==true){
-                 style=style+"color:#008B00";
-                 }else{
-                 style=style+"color:#EE0000";
-                 }
-                 return style;
-                 },
-                 */
+
                 getTip:function(v,metadata,r){
                     var validationMsg = r.get("validationMsg");
                     if(validationMsg!=undefined&&validationMsg.length>0){
@@ -186,6 +154,13 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.import.clueImportWind
                 xtype:'textfield'
             }
         },{
+        	text:'邮箱',
+            dataIndex:'email',
+            width:100,
+            editor:{
+                xtype:'textfield'
+            }
+        },{
             text:'公司',
             dataIndex:'companyName',
             width:150,
@@ -199,37 +174,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.import.clueImportWind
             width:100,
             editor:{
                 xtype:'textfield'
-            }
-        },{
-            text:'常住地',
-            dataIndex:'localName',
-            width:90,
-            editor:{
-                /*xtype:'textfield',
-                 editable:false,
-                 triggers: {
-                 clear: {
-                 cls: 'x-form-clear-trigger',
-                 handler: 'clearLocal'
-                 },
-                 search: {
-                 cls: 'x-form-search-trigger',
-                 handler: "searchLocal"
-                 }
-                 }*/
-                xtype: 'combobox',
-                editable:false,
-                valueField: 'TZ_LABEL_NAME',
-                displayField: 'TZ_LABEL_DESC',
-                store: localStore,
-                queryMode: 'local'
-            },
-            renderer : function(value, metadata, record) {
-                var index = localStore.find('TZ_LABEL_NAME',value);
-                if(index!=-1){
-                    return localStore.getAt(index).data.TZ_LABEL_DESC;
-                }
-                return record.get('localName');
             }
         },{
             text:'备注',

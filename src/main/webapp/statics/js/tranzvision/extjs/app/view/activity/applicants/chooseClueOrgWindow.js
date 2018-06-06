@@ -20,6 +20,8 @@
     constructor: function(config){
 		this.actId = config.actId;
 		this.bmrIds = config.bmrIds;
+		this.callback = config.callback;
+		
 		this.callParent();
 	},
     

@@ -488,6 +488,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
             /* businessHandler 预览导入的数据之后点击下一步执行的函数，根据页面的需求自由编写，columnArray为解析Excel后的标题行数组（如果未勾选首行是标题行columnArray=[]） */
             /* dataArray为解析后的Excel二维数组数据（勾选了首行是标题行则dataArray不包含首行数据）*/
             businessHandler:function(columnArray,dataArray) {
+            	console.log(columnArray);
+            	console.log(dataArray);
                 Ext.tzSetCompResourses("TZ_XSXS_DRDC_COM");
                 //是否有访问权限
                 var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_DRDC_COM"]["TZ_XSXS_IMP_STD"];
@@ -543,7 +545,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
             var personList = [];
             for (var i = 0; i < checkLen; i++) {
                 var cusName = selList[i].get('cusName');
-                var cusEmail = selList[i].get('cusEmail');
+                var cusEmail = selList[i].get('email');
                 var clueId=selList[i].get("clueId");
                 personList.push({"cusName": cusName, "cusEmail": cusEmail,"clueId":clueId});
 

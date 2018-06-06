@@ -665,7 +665,7 @@
 		var bmrIds = [];
 		var existClueFlag="";
 		for(var i=0;i<checkLen;i++){
-			if(selList[i].data.leadId=="" || selList[i].data.leadId==null || selList[i].data.leadId==" "){
+			if(selList[i].data.leadId != null && selList[i].data.leadId !=""){
 				existClueFlag = "Y";
 			}
 			bmrIds.push(selList[i].data.applicantsId);
@@ -688,7 +688,7 @@
 		
 		 var tzParams = Ext.JSON.encode(tzParamsObj);
          Ext.tzSubmit(tzParams,function(){
-             
+        	 gridStore.reload();
          },"创建线索成功",true,this);
 	},
 	
@@ -720,7 +720,7 @@
 		var bmrIds = [];
 		var existClueFlag="";
 		for(var i=0;i<checkLen;i++){
-			if(selList[i].data.leadId=="" || selList[i].data.leadId==null || selList[i].data.leadId==" "){
+			if(selList[i].data.leadId != null && selList[i].data.leadId !=""){
 				existClueFlag = "Y";
 			}
 			bmrIds.push(selList[i].data.applicantsId);
@@ -733,7 +733,10 @@
 		
         var win = new KitchenSink.view.activity.applicants.chooseClueOrgWindow({
         	actId: actId,
-        	bmrIds: bmrIds
+        	bmrIds: bmrIds,
+        	callback: function(){
+        		gridStore.reload();
+        	}
         });
         //this.getView().add(win);
         win.show();
@@ -762,6 +765,8 @@
 		
 		 var tzParams = Ext.JSON.encode(tzParamsObj);
          Ext.tzSubmit(tzParams,function(){
+        	 //刷新报名人列表
+        	 if(typeof(win.callback) == "function") win.callback();
         	 win.close();
          },"创建线索成功",true,this);
 	}
