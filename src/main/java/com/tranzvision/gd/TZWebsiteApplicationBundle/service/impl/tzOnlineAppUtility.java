@@ -177,13 +177,30 @@ public class tzOnlineAppUtility {
 				}
 				break;
 			case "ChooseClass": // 班级选择控件，校验批次是否选择了
-				// String strXxxBh2 = "";
-				//System.out.println("11111");
-				sql = "select TZ_APP_S_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID =? and TZ_XXX_BH like '%CC_Batch' ";
-				//System.out.println("sql:"+sql);
-				strXxxBh2 = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
-				//System.out.println("strXxxBh2:"+strXxxBh2);
-				if ("".equals(strXxxBh2) || strXxxBh2 == null) {
+				// 增加处理，如果班级没有批次，那么不需要填写
+				sql = "select TZ_APP_S_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID =? and TZ_XXX_BH like '%CC_Project' ";
+				String classId = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+
+				if (classId != null && !classId.equals("")) {
+					sql = "select TZ_IS_SUB_BATCH from PS_TZ_CLASS_INF_T where TZ_CLASS_ID=?";
+				String	TZ_IS_SUB_BATCH = sqlQuery.queryForObject(sql, new Object[] { classId }, "String");
+
+					if (TZ_IS_SUB_BATCH != null && TZ_IS_SUB_BATCH.equals("Y")) {
+						// 增加修改，看所有批次是否全部发布，如果全部 没有发布，不需要检查
+						sql = "SELECT count(TZ_BATCH_ID) as mun from PS_TZ_CLS_BATCH_T where TZ_CLASS_ID = ? and TZ_APP_PUB_STATUS = 'Y'  and TZ_APP_END_DT >= current_date() ";
+						int mun = sqlQuery.queryForObject(sql, new Object[] { classId }, "Integer");
+System.out.println("mun"+mun);
+						if (mun > 0) {
+							sql = "select TZ_APP_S_TEXT from PS_TZ_APP_CC_T where TZ_APP_INS_ID =? and TZ_XXX_BH like '%CC_Batch' ";
+							// System.out.println("sql:"+sql); 
+							strXxxBh2 = sqlQuery.queryForObject(sql, new Object[] { numAppInsId }, "String");
+							// System.out.println("strXxxBh2:"+strXxxBh2);
+							if ("".equals(strXxxBh2) || strXxxBh2 == null) {
+								returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
+							}
+						}
+					}
+				} else {
 					returnMessage = this.getMsg(strXxxMc, strJygzTsxx);
 				}
 				break;
