@@ -109,6 +109,9 @@ public class ClassClsServiceImpl extends FrameworkImpl {
 								classInfo = classInfo
 										+ tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_CLASS_A_HTML", "CLASS_RD",
 												classId+"--"+projectID, className, "CLASS_RD" + i);
+//								classInfo = classInfo
+//										+ tzGdObject.getHTMLText("HTML.TZWebSelectorBundle.TZ_CLASS_A_HTML", "CLASS_RD",
+//												classId, className, "CLASS_RD" + i);
 							} catch (TzSystemException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();

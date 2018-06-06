@@ -336,7 +336,8 @@ public class Security {
 			String aa = Security.generalStringFor3DES(key, For3DES, For3DES, IV_SECURITY, linkString);
 			System.out.println("3DES:"+aa);
 			System.out.println(aa.length());
-			
+//			String bb=Security.Decrypt3DES2String("A0DFDF28AEAB2F131327FEDE5C2D8A6D399E4F568A2D4EFD", "8XBuwicXEWfrijjaWPTaJSOCyuomYIZWoLnUEUmkQ0oK+1t3WG+Srap8MEQc6lPYtYPqSLxFr/9kr1F/YQ2OD69FH5YFnPaa", IV_SECURITY);
+//			System.out.println("bb="+bb);
 			MD5 md5 = new MD5();
 			aa = md5.getMD5(For3DES.getBytes());
 			System.out.println("MD5:"+aa);

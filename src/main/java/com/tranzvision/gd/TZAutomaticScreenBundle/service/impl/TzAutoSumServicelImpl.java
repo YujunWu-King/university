@@ -357,11 +357,18 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 
 				long appInsId = 0;
 				long scoreInsId = 0;
-
+				
 				// 评分标准
-				String bzId = sqlQuery.queryForObject(
-						"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
-						new Object[] { "TZ_MBA_MS_RESULT" }, "String");
+				String bzId = "";
+				if ("MEM".equals(orgId)){
+					bzId=sqlQuery.queryForObject(
+							"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+							new Object[] { "TZ_MEM_MS_RESULT" }, "String");
+				}else{
+					bzId=sqlQuery.queryForObject(
+							"select TZ_HARDCODE_VAL from PS_TZ_HARDCD_PNT where TZ_HARDCODE_PNT=?",
+							new Object[] { "TZ_MBA_MS_RESULT" }, "String");
+				}
 
 				String bzsql = "select TZ_M_FBDZ_MX_SM from PS_TZ_FBDZ_MX_TBL where TZ_M_FBDZ_ID=? and TZ_M_FBDZ_MX_SX>=? and TZ_M_FBDZ_MX_XX<=? ";
 
@@ -515,12 +522,19 @@ public class TzAutoSumServicelImpl extends FrameworkImpl {
 			jacksonUtil.json2Map(strParams);
 			if (jacksonUtil.containsKey("attaList")) {
 				List<Map<String, Object>> list = (List<Map<String, Object>>) jacksonUtil.getList("attaList");
+				String jgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
 				if (list != null && list.size() > 0) {
 					for (Map<String, Object> map : list) {
 						Long appId = Long.valueOf(map.get("appId") == null ? "" : map.get("appId").toString());
 						String msResult = map.get("msResult") == null ? "" : map.get("msResult").toString();
 						String YYNL = map.get("YYNL") == null ? "0.00" : map.get("YYNL").toString();
-						String strMsYy=msResult+"（英语："+YYNL+"分）";
+						String strMsYy="";
+						if("MEM".equals(jgId)){
+							strMsYy=msResult;
+						}else{
+							strMsYy=msResult+"（英语："+YYNL+"分）";
+						}
+						
 						String sqlCount = "SELECT COUNT(1) FROM TZ_IMP_MSJG_TBL WHERE TZ_APP_INS_ID=?";
 						int total = sqlQuery.queryForObject(sqlCount, new Object[] { appId }, "Integer");
 						if (total > 0) {
