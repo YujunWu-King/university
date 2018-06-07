@@ -1,6 +1,7 @@
 package com.tranzvision.gd.TZCallCenterBundle.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,13 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistTKey;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.encrypt.DESUtil;
+import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 
 /*
@@ -44,6 +50,14 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private HttpServletRequest request;
+	
+	@Autowired
+	private GetSeqNum getSeqNum;
+	
+	@Autowired
+	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
+	
+	
 	
 	@Override
 	public String tzGetHtmlContent(String strParams) {
@@ -189,7 +203,7 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 			String strTransSQL = "SELECT TZ_ZHZ_DMS  FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?";
 			
 			//来电时间和主叫号码
-			String strSQL1 = "SELECT TZ_CALL_TYPE,TZ_PHONE,date_format(TZ_CALL_DTIME,'%Y-%m-%d %H:%i') TZ_CALL_DTIME,TZ_DEALWITH_ZT,TZ_DESCR,TZ_DLZH_ID FROM PS_TZ_PH_JDD_TBL WHERE TZ_XH=?";
+			String strSQL1 = "SELECT TZ_CALL_TYPE,TZ_PHONE,date_format(TZ_CALL_DTIME,'%Y-%m-%d %H:%i') TZ_CALL_DTIME,TZ_DEALWITH_ZT,TZ_DESCR,TZ_DLZH_ID,TZ_LEAD_ID FROM PS_TZ_PH_JDD_TBL WHERE TZ_XH=?";
 			Map<String, Object> return1 = sqlQuery.queryForMap(strSQL1, new Object[]{strCallXh});
 			if(return1!=null&&return1.size()>0){
 				String strPar1 = return1.get("TZ_CALL_TYPE")==null?"":String.valueOf(return1.get("TZ_CALL_TYPE"));
@@ -198,6 +212,8 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 				String strPar4 = return1.get("TZ_DEALWITH_ZT")==null?"":String.valueOf(return1.get("TZ_DEALWITH_ZT"));
 				String strPar5 = return1.get("TZ_DESCR")==null?"":String.valueOf(return1.get("TZ_DESCR"));
 				String strPar6 = return1.get("TZ_DLZH_ID")==null?"":String.valueOf(return1.get("TZ_DLZH_ID"));
+				String leadId = return1.get("TZ_LEAD_ID")==null?"":String.valueOf(return1.get("TZ_LEAD_ID"));
+				
 				returnMap.put("phoneNum", strPar2);
 				//来电号码拼接归属地信息
 				String strAreaDesc = "";
@@ -229,6 +245,7 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 				returnMap.put("callDTime", strPar3);
 				returnMap.put("dealwithZT", strPar4);
 				returnMap.put("callDesc", strPar5);
+				returnMap.put("leadId", leadId);
 				String strStaffName = sqlQuery.queryForObject("SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE TZ_DLZH_ID=?", new Object[]{strPar6}, "String");
 				returnMap.put("staffName", strStaffName);
 			}
@@ -568,7 +585,77 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 					return jacksonUtil.Map2json(mapRet);
 				}
 			}
-			
+			//创建销售线索
+			if("CREATECLUE".equals(oprType)){
+				Map<String, Object> mapRet = new HashMap<String, Object>();
+				
+				strOprid = jacksonUtil.getString("OPRID");
+				String strCallXh = jacksonUtil.getString("callXh");
+				//当前机构
+				String currOrgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				String currOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+				
+				if(strOprid != null && !"".equals(strOprid) 
+						&& strCallXh != null && !"".equals(strCallXh)){
+					
+					String sql = "select TZ_PHONE,TZ_LEAD_ID from PS_TZ_PH_JDD_TBL where TZ_XH=?";
+					Map<String, Object> return1 = sqlQuery.queryForMap(sql, new Object[]{ strCallXh });
+					String mobile = "";
+					String leadId = "";
+					if(return1 != null){
+						mobile = return1.get("TZ_PHONE")==null?"":String.valueOf(return1.get("TZ_PHONE"));
+						leadId = return1.get("TZ_LEAD_ID")==null?"":String.valueOf(return1.get("TZ_LEAD_ID"));
+					}
+					
+					
+					if(leadId != null && !"".equals(leadId)){
+						errorMsg[0] = "1";
+						errorMsg[1] = "接待单已创建销售线索";
+					}else{
+						sql = "SELECT TZ_REALNAME,TZ_COMPANY_NAME FROM PS_TZ_REG_USER_T WHERE OPRID=?";
+						Map<String, Object> return2 = sqlQuery.queryForMap(sql, new Object[]{strOprid});
+						String name = "";
+						String company = "";
+						if(return2 != null){
+							name = return2.get("TZ_REALNAME")==null?"":String.valueOf(return2.get("TZ_REALNAME"));
+							company = return2.get("TZ_COMPANY_NAME")==null?"":String.valueOf(return2.get("TZ_COMPANY_NAME"));
+						}
+						
+						sql = "SELECT TZ_EMAIL FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?";
+						String email = sqlQuery.queryForObject(sql, new Object[]{ strOprid }, "String");
+						
+						
+						String TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+						
+						PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
+						psTzXsxsInfoT.setTzLeadId(TZ_LEAD_ID);
+						psTzXsxsInfoT.setTzJgId(currOrgId);
+
+						psTzXsxsInfoT.setTzRsfcreateWay("F"); /*接待单快速创建*/
+						psTzXsxsInfoT.setTzLeadStatus("A");
+						
+						psTzXsxsInfoT.setTzRealname(name);
+						psTzXsxsInfoT.setTzKhOprid(strOprid);
+						psTzXsxsInfoT.setTzEmail(email);
+						psTzXsxsInfoT.setTzMobile(mobile);
+						psTzXsxsInfoT.setTzCompCname(company);
+						
+						psTzXsxsInfoT.setRowAddedDttm(new Date());
+						psTzXsxsInfoT.setRowAddedOprid(currOprid);
+						psTzXsxsInfoT.setRowLastmantDttm(new Date());
+						psTzXsxsInfoT.setRowLastmantOprid(currOprid);
+						
+						int rtn = psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
+						if(rtn > 0){
+							sql = "UPDATE PS_TZ_PH_JDD_TBL SET TZ_LEAD_ID=? WHERE TZ_XH=?";
+							sqlQuery.update(sql, new Object[]{TZ_LEAD_ID, strCallXh});
+							
+							mapRet.put("leadId", TZ_LEAD_ID);
+						}
+					}
+				}
+				return jacksonUtil.Map2json(mapRet);
+			}
 		}catch(Exception e){
 			errorMsg[0] = "1";
 			errorMsg[1] = e.toString();

@@ -244,6 +244,34 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			 }
 		 });
 	 },
+	 //创建销售线索
+	 createClue: function(btn){
+		 var form = this.getView().lookupReference("userForm");		
+		 var formValues = form.getValues();
+		 var oprId = formValues.oprId;
+		 var callXh = formValues.receiveId;
+		 var leadId = formValues.leadId;
+		 
+		 if(leadId != null && leadId != ""){
+			 Ext.Msg.alert("提示","接待单已创建过线索");
+		 }else{
+			 var tzParamsObj = {
+				ComID: 'TZ_CALLCR_USER_COM',
+				PageID: 'TZ_CALLC_USER_STD',
+				OperateType: 'CREATECLUE',
+				comParams: {
+					OPRID: oprId,
+					callXh: callXh
+				}
+			 };
+			 
+			 var tzParams = Ext.JSON.encode(tzParamsObj);
+			 Ext.tzSubmit(tzParams,function(result){	
+				 console.log(result);
+				 form.getForm().setValues(result);
+			 }); 
+		 }
+	 },
 	 saveInfo:function(btn){
 		 var form = this.getView().lookupReference("userForm");		
 		 var formValues = form.getValues();
@@ -531,6 +559,7 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 		 form.down("button[name=updatePsw]").disabled=disalbed;		 
 		 form.down("button[name=invalidAccount]").disabled=disalbed;		 
 		 form.down("button[name=addBlackList]").disabled=disalbed;
+		 form.down("button[name=createClue]").disabled=disalbed;
 		 
 		 if(disalbed){
 			 form.down("button[name=viewUserBtn]").addCls('x-item-disabled x-btn-disabled');
@@ -538,12 +567,14 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			 form.down("button[name=updatePsw]").addCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=invalidAccount]").addCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=addBlackList]").addCls('x-item-disabled x-btn-disabled');
+			 form.down("button[name=createClue]").addCls('x-item-disabled x-btn-disabled');
 		 }else{
 			 form.down("button[name=viewUserBtn]").removeCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=activeAccount]").removeCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=updatePsw]").removeCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=invalidAccount]").removeCls('x-item-disabled x-btn-disabled');
 			 form.down("button[name=addBlackList]").removeCls('x-item-disabled x-btn-disabled');
+			 form.down("button[name=createClue]").removeCls('x-item-disabled x-btn-disabled');
 		 }
 	 },
 	 

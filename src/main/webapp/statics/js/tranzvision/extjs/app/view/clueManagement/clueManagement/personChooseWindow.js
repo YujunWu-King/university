@@ -18,13 +18,16 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.personChooseWindow',{
     layout:{
         type:'fit'
     },
-    firstWin:{},
-    constructor:function(win) {
-        this.firstWin = win;
+    constructor:function(config) {
+        this.selModel = config.selModel;
+        this.callback = config.callback;
         this.callParent();
     },
     initComponent:function(btn) {
-
+    	var me = this;
+    	var selMode = 'SINGLE';
+    	if(me.selModel == "M") selMode = 'MULTI';
+    	
         var store = new KitchenSink.view.clueManagement.clueManagement.personChooseWindowStore();
 
         Ext.apply(this,{
@@ -35,7 +38,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.personChooseWindow',{
                 frame:true,
                 style:'border:0',
                 selModel:{
-                    type:'checkboxmodel'
+                    type: 'checkboxmodel',
+					mode: selMode
                 },
                 store:store,
                 dockedItems:[{

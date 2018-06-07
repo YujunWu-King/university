@@ -21,7 +21,6 @@ import com.tranzvision.gd.TZAccountMgBundle.model.Psoprdefn;
 import com.tranzvision.gd.TZAccountMgBundle.model.Psroleuser;
 import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
-import com.tranzvision.gd.TZEnrollmentClueBundle.service.impl.TzClueAutoAssign;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsShowPrjNewsTMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzLxfsInfoTblMapper;
 import com.tranzvision.gd.TZLeaguerAccountBundle.dao.PsTzRegUserTMapper;
@@ -34,13 +33,13 @@ import com.tranzvision.gd.TZWebSiteRegisteBundle.dao.PsTzDzyxYzmTblMapper;
 import com.tranzvision.gd.TZWebSiteRegisteBundle.model.PsTzDzyxYzmTbl;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.captcha.Patchca;
+import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.cfgdata.GetSysHardCodeVal;
 import com.tranzvision.gd.util.encrypt.DESUtil;
 import com.tranzvision.gd.util.httpclient.CommonUtils;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
-import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 
 /**
  * 
@@ -87,8 +86,7 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 	private GetHardCodePoint GetHardCodePoint;
 	@Autowired
 	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
-	@Autowired
-	private TzClueAutoAssign tzClueAutoAssign;
+
 
 	// 原：WEBLIB_GD_USER.TZ_REG.FieldFormula.Iscript_GetNowField
 	@Override
@@ -842,79 +840,58 @@ public class SiteEnrollClsServiceImpl extends FrameworkImpl {
 					}
 				}
 
-				// 20171222,yuds为微信端打开修改
-				boolean isWeChat = CommonUtils.isWeChartBrowser(request);
-
-				// 创建线索及分配
-				PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
-				String strLeadNum = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
-				psTzXsxsInfoT.setTzLeadId(strLeadNum);
-				psTzXsxsInfoT.setTzJgId(strOrgId);
-				// 分配状态-未分配
-				String strDefaultStatus = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_STATUS");
-				psTzXsxsInfoT.setTzLeadStatus(strDefaultStatus);
-				// 线索创建方式-在线报名
-				String strDefaultCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_CREWAY");
-				// 线索创建方式-微信端
-				String strWeiChatCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_WX_CREWAY");
-				if (isWeChat) {
-					psTzXsxsInfoT.setTzRsfcreateWay(strWeiChatCreateWay);
-				} else {
-					psTzXsxsInfoT.setTzRsfcreateWay(strDefaultCreateWay);
-				}
-				psTzXsxsInfoT.setTzKhOprid(oprId);
-				psTzXsxsInfoT.setTzRealname(strTZ_REALNAME);
-				psTzXsxsInfoT.setTzSex(strTZ_GENDER);
-				psTzXsxsInfoT.setTzMobile(strTZ_MOBILE);
-				psTzXsxsInfoT.setTzCompCname(strTZ_COMPANY_NAME);
-				// 职务
-				psTzXsxsInfoT.setTzPosition(strTZ_COMMENT16);
-				// 地区
-				String strProIdCode = "";
-				/* 先根据常住地国家查询，如果是中国大陆再查询常住地地区，卢艳添加，2018-2-7 */
-				if (strTZ_LEN_COUNTRY != null && !"".equals(strTZ_LEN_COUNTRY)) {
-					if ("CHN".equals(strTZ_LEN_COUNTRY)) {
-						if (strTZ_LEN_PROID != null && !"".equals(strTZ_LEN_PROID)) {
-							strProIdCode = jdbcTemplate.queryForObject(
-									"SELECT TZ_LABEL_NAME FROM PS_TZ_XSXS_DQBQ_V WHERE TZ_LABEL_DESC=? AND TZ_JG_ID=?",
-									new Object[] { strTZ_LEN_PROID, strOrgId }, "String");
-						}
-					} else if ("HKG".equals(strTZ_LEN_COUNTRY)) {
-						strProIdCode = "HK";
-					} else if ("MAC".equals(strTZ_LEN_COUNTRY)) {
-						strProIdCode = "MAC";
-					} else if ("TWN".equals(strTZ_LEN_COUNTRY)) {
-						strProIdCode = "TW";
-					} else {
-						strProIdCode = "FORE";
+				
+				//根据手机和邮箱查询是否存在未关闭的线索，如果有则不用创建新线索
+				String sql = "select TZ_LEAD_ID from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and TZ_MOBILE=? and TZ_EMAIL=? and TZ_LEAD_STATUS<>'G' order by ROW_ADDED_DTTM desc limit 0,1";
+				String existsClueId = jdbcTemplate.queryForObject(sql, new Object[]{ strOrgId, strTZ_MOBILE, strTZ_EMAIL }, "String");
+				if(existsClueId != null){
+					PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = psTzXsxsInfoTMapper.selectByPrimaryKey(existsClueId);
+					psTzXsxsInfoT.setTzKhOprid(oprId);
+					
+					if(strTZ_REALNAME != null 
+							&& !"".equals(strTZ_REALNAME)
+							&& !strTZ_REALNAME.equals(psTzXsxsInfoT.getTzRealname())){
+							if(psTzXsxsInfoT.getTzRealname() != null
+									&& !"".equals(psTzXsxsInfoT.getTzRealname())){
+								psTzXsxsInfoT.setTzRealname(psTzXsxsInfoT.getTzRealname() + "，" + strTZ_REALNAME);
+							}else{
+								psTzXsxsInfoT.setTzRealname(strTZ_REALNAME);
+							}
 					}
-				}
-				if (strProIdCode != null && !"".equals(strProIdCode)) {
-					psTzXsxsInfoT.setTzXsquId(strProIdCode);
+					
+					psTzXsxsInfoT.setRowLastmantOprid(oprId);
+					psTzXsxsInfoT.setRowLastmantDttm(new Date());
+					psTzXsxsInfoTMapper.updateByPrimaryKeySelective(psTzXsxsInfoT);
+					
+				}else{
+					// 创建线索及分配
+					PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
+					String strLeadNum = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+					psTzXsxsInfoT.setTzLeadId(strLeadNum);
+					psTzXsxsInfoT.setTzJgId(strOrgId);
+					// 分配状态-未分配
+					String strDefaultStatus = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_STATUS");
+					psTzXsxsInfoT.setTzLeadStatus(strDefaultStatus);
+					// 线索创建方式-在线报名
+					String strDefaultCreateWay = GetHardCodePoint.getHardCodePointVal("TZ_LEAD_BM_CREWAY");
+					psTzXsxsInfoT.setTzRsfcreateWay(strDefaultCreateWay);
+
+					psTzXsxsInfoT.setTzKhOprid(oprId);
+					psTzXsxsInfoT.setTzRealname(strTZ_REALNAME);
+					psTzXsxsInfoT.setTzSex(strTZ_GENDER);
+					psTzXsxsInfoT.setTzMobile(strTZ_MOBILE);
+					psTzXsxsInfoT.setTzEmail(strTZ_EMAIL);
+					psTzXsxsInfoT.setTzCompCname(strTZ_COMPANY_NAME);
+
+					psTzXsxsInfoT.setRowAddedOprid(oprId);
+					psTzXsxsInfoT.setRowLastmantOprid(oprId);
+					psTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
+					psTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
+					psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
 				}
 
-				psTzXsxsInfoT.setRowAddedOprid(oprId);
-				psTzXsxsInfoT.setRowLastmantOprid(oprId);
-				psTzXsxsInfoT.setRowAddedDttm(new java.util.Date());
-				psTzXsxsInfoT.setRowLastmantDttm(new java.util.Date());
-				psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
-
-				// 线索自动分配-根据控制标志判断是否自动分配
-				String strAutoAssignSQL = "SELECT TZ_ZDFP_FLG FROM PS_TZ_ZDFP_FLAG_T WHERE TZ_JG_ID=? limit 0,1";
-				String strAutoAssignFlg = jdbcTemplate.queryForObject(strAutoAssignSQL, new Object[] { strOrgId },
-						"String");
-				if ("Y".equals(strAutoAssignFlg)) {
-					tzClueAutoAssign.autoAssign(strOrgId, oprId, strLeadNum, strTZ_COMMENT1, strProIdCode, errMsg);
-				}
 
 				if ("M".equals(strActivateType)) {
-					// String siteId = jdbcTemplate.queryForObject("select
-					// TZ_SITEI_ID from PS_TZ_SITEI_DEFN_T WHERE
-					// upper(TZ_JG_ID)=upper(?) AND TZ_SITEI_ENABLE='Y' LIMIT
-					// 0,1",new Object[] { strOrgId }, "String");
-					// 20170420,手机激活成功后不进入登录页面，进入账户注册成功信息页面
-					// strJumUrl = request.getContextPath() + "/user/login/" +
-					// strOrgId.toLowerCase() + "/" + strSiteId;
 					strJumUrl = request.getContextPath() + "/dispatcher";
 					String strJumPar = "";
 					if ("Y".equals(isMobile)) {

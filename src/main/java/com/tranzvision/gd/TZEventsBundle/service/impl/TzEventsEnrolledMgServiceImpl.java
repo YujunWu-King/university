@@ -33,6 +33,9 @@ import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzLxfsinfoTbl;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistTKey;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
 import com.tranzvision.gd.util.base.JacksonUtil;
@@ -93,6 +96,10 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private BatchProcessDetailsImpl batchProcessDetailsImpl;
+	
+	@Autowired
+	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
+	
 
 	/**
 	 * 查询活动下的报名人信息
@@ -165,7 +172,7 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 						"TZ_ZXBM_XXX_007", "TZ_ZXBM_XXX_008", "TZ_ZXBM_XXX_009", "TZ_ZXBM_XXX_010", "TZ_ZXBM_XXX_011",
 						"TZ_ZXBM_XXX_012", "TZ_ZXBM_XXX_013", "TZ_ZXBM_XXX_014", "TZ_ZXBM_XXX_015", "TZ_ZXBM_XXX_016",
 						"TZ_ZXBM_XXX_017", "TZ_ZXBM_XXX_018", "TZ_ZXBM_XXX_019", "TZ_ZXBM_XXX_020", "TZ_BMZT_DESC",
-						"TZ_BMQD_DESC", "TZ_QDZT_DESC", "TZ_ART_ID", "TZ_HD_BMR_ID", "TZ_MSSQH" };
+						"TZ_BMQD_DESC", "TZ_QDZT_DESC", "TZ_ART_ID", "TZ_HD_BMR_ID", "TZ_MSSQH", "TZ_LEAD_ID" };
 
 				// 可配置搜索通用函数;
 				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -214,6 +221,13 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 						mapList.put("activityId", rowList[33]);
 						mapList.put("applicantsId", rowList[34]);
 						mapList.put("msApplyNo", rowList[35]);
+						
+						mapList.put("leadId", rowList[36]);
+						if(rowList[36] != null && !"".equals(rowList[36])){
+							mapList.put("haveClue", '是');
+						}else{
+							mapList.put("haveClue", '否');
+						}
 
 						listData.add(mapList);
 					}
@@ -660,6 +674,9 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 				strRet = jacksonUtil.Map2json(mapRet);
 				
 				break;
+			case "tzCreateClue":
+				strRet = this.tzCreateClue(strParams, errorMsg);
+				break;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -969,5 +986,82 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 		int month = cal.get(2) + 1;
 		int day = cal.get(5);
 		return (new StringBuilder()).append(year).append(month).append(day).toString();
+	}
+	
+	
+	
+	/**
+	 * 创建线索
+	 * @param strParams
+	 * @param errorMsg
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private String tzCreateClue(String strParams, String[] errorMsg){
+		String strReturn = "";
+		JacksonUtil jacksonUtil = new JacksonUtil();
+		jacksonUtil.json2Map(strParams);
+		
+		String activityId = jacksonUtil.getString("activityId");
+		List<String> bmrIds = (List<String>) jacksonUtil.getList("bmrIds");
+		
+		String orgId = "";
+		if(jacksonUtil.containsKey("orgId")){
+			orgId = jacksonUtil.getString("orgId");
+		}else{
+			orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+		}
+		
+		String currOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
+		
+		if(bmrIds != null && bmrIds.size() > 0){
+			for(String bmrId: bmrIds){
+				String sql = "select A.TZ_CYR_NAME,A.OPRID,B.TZ_ZY_SJ,B.TZ_ZY_EMAIL,A.TZ_LEAD_ID from PS_TZ_NAUDLIST_T A left join PS_TZ_LXFSINFO_TBL B on(B.TZ_LXFS_LY='HDBM' and B.TZ_LYDX_ID=A.TZ_HD_BMR_ID) where TZ_ART_ID=? and TZ_HD_BMR_ID=?";
+				Map<String,Object> bmrMap = sqlQuery.queryForMap(sql, new Object[]{ activityId, bmrId });
+				
+				if(bmrMap != null){
+					String name = bmrMap.get("TZ_CYR_NAME") == null ? "" : bmrMap.get("TZ_CYR_NAME").toString();
+					String oprid = bmrMap.get("OPRID") == null ? "" : bmrMap.get("OPRID").toString();
+					String mobile = bmrMap.get("TZ_ZY_SJ") == null ? "" : bmrMap.get("TZ_ZY_SJ").toString();
+					String email = bmrMap.get("TZ_ZY_EMAIL") == null ? "" : bmrMap.get("TZ_ZY_EMAIL").toString();
+					String leadId = bmrMap.get("TZ_LEAD_ID") == null ? "" : bmrMap.get("TZ_LEAD_ID").toString();
+					
+					if(leadId != null && !"".equals(leadId)){
+					}else{
+						String TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
+						
+						PsTzXsxsInfoTWithBLOBs psTzXsxsInfoT = new PsTzXsxsInfoTWithBLOBs();
+						psTzXsxsInfoT.setTzLeadId(TZ_LEAD_ID);
+						psTzXsxsInfoT.setTzJgId(orgId);
+
+						psTzXsxsInfoT.setTzRsfcreateWay("E"); /*营销活动*/
+						psTzXsxsInfoT.setTzLeadStatus("A");
+						
+						psTzXsxsInfoT.setTzRealname(name);
+						psTzXsxsInfoT.setTzKhOprid(oprid);
+						psTzXsxsInfoT.setTzEmail(email);
+						psTzXsxsInfoT.setTzMobile(mobile);
+						psTzXsxsInfoT.setRowAddedDttm(new Date());
+						psTzXsxsInfoT.setRowAddedOprid(currOprid);
+						psTzXsxsInfoT.setRowLastmantDttm(new Date());
+						psTzXsxsInfoT.setRowLastmantOprid(currOprid);
+						
+						int rtn = psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
+						
+						if(rtn > 0){
+							PsTzNaudlistTKey psTzNaudlistTKey = new PsTzNaudlistTKey();
+							psTzNaudlistTKey.setTzArtId(activityId);
+							psTzNaudlistTKey.setTzHdBmrId(bmrId);
+							PsTzNaudlistT psTzNaudlistT = psTzNaudlistTMapper.selectByPrimaryKey(psTzNaudlistTKey);
+							if(psTzNaudlistT != null){
+								psTzNaudlistT.setTzLeadId(TZ_LEAD_ID);
+								psTzNaudlistTMapper.updateByPrimaryKey(psTzNaudlistT);
+							}
+						}
+					}
+				}
+			}
+		}
+		return strReturn;
 	}
 }

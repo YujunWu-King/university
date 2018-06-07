@@ -297,6 +297,10 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 					name:'phoneNum',
 					hidden:true
 				},{
+					xtype: 'textfield',
+					name:'leadId',
+					hidden:true
+				},{
 					xtype : 'fieldset',
 					title : '电话控制区',
 					layout : {
@@ -577,6 +581,17 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                             flagType: 'positive',
                             setType: 0,
                             handler: 'addBlackList',
+                            width: 100
+                        },{
+                        	style: 'margin-left:10px',
+                            xtype: 'button',
+                            text: '创建销售线索',
+                            defaultColor: '',
+                            name: 'createClue',
+                            disabled:buttonDisabled,
+                            flagType: 'positive',
+                            setType: 0,
+                            handler: 'createClue',
                             width: 100
                         }/*,
                         {

@@ -6,9 +6,11 @@
         'Ext.util.*',
         'Ext.toolbar.Paging',
         'Ext.ux.ProgressBarPager',
+        'Ext.grid.filters.Filters',
         'KitchenSink.view.activity.applicants.applicantsStore',	
 		'KitchenSink.view.activity.applicants.sendFormWin',
 		'KitchenSink.view.activity.applicants.setStatusBatWin',
+		'KitchenSink.view.activity.applicants.chooseClueOrgWindow',
 		'KitchenSink.view.activity.applicants.applicantsController'
     ],
     xtype: 'applicantsMg',
@@ -69,6 +71,13 @@
 					}]
 				},{
 					text:'下载导出结果',handler:'downloadExportFile'
+				},{
+					text: '创建线索',
+					menu: [{
+						text: '给选中报名人创建线索', handler: 'createClue'
+					},{
+						text: '给选中报名人创建其他机构线索', handler: 'createClueForOtherOrg'
+					}]
 				}]
 			}
 		]},{
@@ -85,11 +94,13 @@
 				}]
 			}
 	],
-	plugins: [
-		Ext.create('Ext.grid.plugin.CellEditing',{
-			clicksToEdit: 1
-		})
-	],
+	plugins: [{
+		ptype: 'cellediting',
+        clicksToEdit: 1	
+	},{
+		ptype: 'gridfilters',
+		controller: 'applicantsController'
+	}],
 	
     initComponent: function () {   
 		
@@ -138,8 +149,14 @@
                         }   
                         return record.get('applyStatusDesc');  
 				 
-			} 
-			
+			}, 
+			filter: {
+            	type: 'list',
+				store: bmztStore,
+				idField: 'TValue',
+				labelField: 'TSDesc',
+				dataIndex: 'applyStatus'
+			}
 		},{
 			text: '报名状态',
 			dataIndex: 'applyStatusDesc',
@@ -193,6 +210,13 @@
 					   return bmqdStore.getAt(index).data.TSDesc;   
 				}   
 				return record.get('channelDesc');  
+			},
+			filter: {
+            	type: 'list',
+				store: bmqdStore,
+				idField: 'TValue',
+				labelField: 'TSDesc',
+				dataIndex: 'channel'
 			}
 		},{
 			text: '报名渠道',
@@ -225,6 +249,13 @@
 				}   
 				return record.get('signStatusDesc'); 
 				 
+			},
+			filter: {
+            	type: 'list',
+				store: cyztStore,
+				idField: 'TZ_ZHZ_ID',
+				labelField: 'TZ_ZHZ_CMS',
+				dataIndex: 'signStatus'
 			}
 		},{
 			text: '签到状态',
@@ -237,6 +268,12 @@
 			flex: 1,
 			editor:{
 				xtype:'textfield'	
+			},
+			filter: {
+				type: 'string',
+				itemDefaults: {
+					emptyText: '搜索'+Ext.tzGetResourse("TZ_GD_BMRGL_COM.TZ_BMRGL_STD.remark","备注")
+				}
 			}	
 		},{
 			xtype: 'checkcolumn',
@@ -263,6 +300,15 @@
 			sortable: true,
 			dataIndex: 'signCode',
 			width: 120,
+		},{
+			text:"是否已生成线索",
+			sortable:true,
+			hideable:false,
+			dataIndex:'haveClue',
+			width:110,
+			filter: {
+				type: 'list'
+			}	
 		},{
 		   //menuDisabled: true,
 		   text:'二维码门票',

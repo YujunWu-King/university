@@ -57,21 +57,18 @@ public class TzClueBmbVerifyServiceImpl extends FrameworkImpl {
 					strClassName = (String) map.get("TZ_CLASS_NAME");
 				}
 
-				// 报名人信息：报名表编号，审批状态，类别，姓名，报名表提交状态，备注，学历检查，资料提交补充信息;
+				// 报名人信息：报名表编号，审批状态，姓名，报名表提交状态，备注;
 				long strAppInsID = 0L;
-				String strSpState = "", strCategory = "", strStuName = "", strSubmitState = "",
-						strRemark = "", strShortRemark = "",strDegreeCheck = "",strMaterialRemark = "";
+				String strSpState = "", strStuName = "", strSubmitState = "",
+						strRemark = "", strShortRemark = "";
 				Map<String, Object> bmrMap = jdbcTemplate.queryForMap(
-						"SELECT A.TZ_APP_INS_ID,A.TZ_FORM_SP_STA,A.TZ_COLOR_SORT_ID ,A.TZ_REMARK ,A.TZ_REMARK_SHORT ,B.TZ_KSLB,B.TZ_XL_CHECK,B.TZ_MATERIAL_REMARK FROM PS_TZ_FORM_WRK_T A LEFT JOIN PS_TZ_KSBM_EXT_TBL B ON(A.TZ_APP_INS_ID = B.TZ_APP_INS_ID) WHERE A.TZ_CLASS_ID=? AND A.OPRID=? limit 0,1",
+						"SELECT TZ_APP_INS_ID,TZ_FORM_SP_STA,TZ_COLOR_SORT_ID,TZ_REMARK,TZ_REMARK_SHORT FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?",
 						new Object[] { strClassID, strOprID });
 				if (bmrMap != null) {
 					strAppInsID = Long.valueOf(bmrMap.get("TZ_APP_INS_ID").toString());
 					strSpState = (String) bmrMap.get("TZ_FORM_SP_STA");
 					strRemark = (String) bmrMap.get("TZ_REMARK");
 					strShortRemark = (String) bmrMap.get("TZ_REMARK_SHORT");
-					strCategory = (String) bmrMap.get("TZ_KSLB");
-					strDegreeCheck = (String) bmrMap.get("TZ_XL_CHECK");
-					strMaterialRemark = (String) bmrMap.get("TZ_MATERIAL_REMARK");
 				}
 
 				Map<String, Object> nameMap = jdbcTemplate.queryForMap(
@@ -81,14 +78,12 @@ public class TzClueBmbVerifyServiceImpl extends FrameworkImpl {
 					strStuName = (String) nameMap.get("TZ_REALNAME");
 					if (strStuName == null || "".equals(strStuName)) {
 						strStuName = jdbcTemplate.queryForObject(
-								"SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[] { strOprID },
-								"String");
+								"SELECT TZ_REALNAME FROM PS_TZ_AQ_YHXX_TBL WHERE OPRID=?", new Object[] { strOprID },"String");
 					}
 				}
 
 				Map<String, Object> appMap = jdbcTemplate.queryForMap(
-						"SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?",
-						new Object[] { strAppInsID });
+						"SELECT TZ_APP_FORM_STA FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?", new Object[] { strAppInsID });
 				if (appMap != null) {
 					strSubmitState = (String) appMap.get("TZ_APP_FORM_STA");
 				}
@@ -96,8 +91,7 @@ public class TzClueBmbVerifyServiceImpl extends FrameworkImpl {
 				// 报名人标签;
 				String strTagID = "";
 				ArrayList<String> strTagList = new ArrayList<>();
-				List<Map<String, Object>> list = jdbcTemplate.queryForList(
-						"SELECT TZ_LABEL_ID FROM PS_TZ_FORM_LABEL_T WHERE TZ_APP_INS_ID=?",
+				List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT TZ_LABEL_ID FROM PS_TZ_FORM_LABEL_T WHERE TZ_APP_INS_ID=?",
 						new Object[] { strAppInsID });
 				if (list != null && list.size() > 0) {
 					for (int i = 0; i < list.size(); i++) {
@@ -134,10 +128,7 @@ public class TzClueBmbVerifyServiceImpl extends FrameworkImpl {
 				jsonMap.put("tag", strTagList);
 				jsonMap.put("remark", strRemark);
 				jsonMap.put("shortRemark", strShortRemark);
-				jsonMap.put("category", strCategory);
-				jsonMap.put("degreeCheck", strDegreeCheck);
 				jsonMap.put("photoUrl", strPhotoUrl);
-				jsonMap.put("materialRemark", strMaterialRemark);
 				
 				returnJsonMap.replace("formData", jsonMap);
 
@@ -178,10 +169,7 @@ public class TzClueBmbVerifyServiceImpl extends FrameworkImpl {
 				// 查询类型 ;
 				boolean bl = false;
 				String strQueryType = jacksonUtil.getString("queryType");
-				if ("FILE".equals(strQueryType)) {
-					returnString = this.tzQueryFileCheckList(strClassID, strOprID, numLimit, numStart, errorMsg);
-					bl = true;
-				}
+				
 				if ("REFLETTER".equals(strQueryType)) {
 					returnString = this.tzQueryRefLetterList(strClassID, strOprID, numLimit, numStart, errorMsg);
 					bl = true;
@@ -207,81 +195,7 @@ public class TzClueBmbVerifyServiceImpl extends FrameworkImpl {
 		}
 		return jacksonUtil.Map2json(mapRet);
 	}
-	
-	
-	/* 获取递交资料审核信息列表 */
-	public String tzQueryFileCheckList(String strClassID, String strOprID, int numLimit, int numStart,
-			String[] errorMsg) {
-		Map<String, Object> mapRet = new HashMap<String, Object>();
-		mapRet.put("total", 0);
-		ArrayList<Map<String, Object>> listData = new ArrayList<Map<String, Object>>();
-		mapRet.put("root", listData);
-		JacksonUtil jacksonUtil = new JacksonUtil();
 
-		try {
-			// 递交资料编号，内容简介，备注，审核状态，审核不通过原因，报名表编号;
-			String strFileID = "", strContentIntro = "", strRemark = "", strAuditState = "", strFailedReason = "";
-			long strAppInsID = 0L;
-			strAppInsID = jdbcTemplate.queryForObject(
-					"SELECT TZ_APP_INS_ID FROM PS_TZ_FORM_WRK_T WHERE TZ_CLASS_ID=? AND OPRID=?",
-					new Object[] { strClassID, strOprID }, "Long");
-			String sql = "";
-			List<Map<String, Object>> list;
-			if (numLimit > 0) {
-				sql = "SELECT TZ_SBMINF_ID,TZ_CONT_INTRO,TZ_REMARK FROM PS_TZ_CLS_DJZL_T WHERE TZ_CLASS_ID=? ORDER BY TZ_SORT_NUM limit ?,?";
-				list = jdbcTemplate.queryForList(sql, new Object[] { strClassID, numStart, numLimit });
-			} else {
-				sql = "SELECT TZ_SBMINF_ID,TZ_CONT_INTRO,TZ_REMARK FROM PS_TZ_CLS_DJZL_T WHERE TZ_CLASS_ID=? ORDER BY TZ_SORT_NUM";
-				list = jdbcTemplate.queryForList(sql, new Object[] { strClassID });
-			}
-			if (list != null && list.size() > 0) {
-				for (int i = 0; i < list.size(); i++) {
-					strAuditState = "";
-					strFailedReason = "";
-					strFileID = (String) list.get(i).get("TZ_SBMINF_ID");
-					strContentIntro = (String) list.get(i).get("TZ_CONT_INTRO");
-					strRemark = (String) list.get(i).get("TZ_REMARK");
-					Map<String, Object> zlshMap = jdbcTemplate.queryForMap(
-							"SELECT TZ_ZL_AUDIT_STATUS,TZ_AUDIT_NOPASS_RS FROM PS_TZ_FORM_ZLSH_T WHERE TZ_APP_INS_ID=? AND TZ_SBMINF_ID=?",
-							new Object[] { strAppInsID, strFileID });
-					if (zlshMap != null) {
-						strAuditState = (String) zlshMap.get("TZ_ZL_AUDIT_STATUS");
-						strFailedReason = (String) zlshMap.get("TZ_AUDIT_NOPASS_RS");
-					}
-					if (strAuditState == null) {
-						strAuditState = "";
-					}
-
-					if (strFailedReason == null) {
-						strFailedReason = "";
-					}
-
-					Map<String, Object> jsonmap = new HashMap<>();
-					jsonmap.put("classID", strClassID);
-					jsonmap.put("oprID", strOprID);
-					jsonmap.put("appInsID", strAppInsID);
-					jsonmap.put("fileID", strFileID);
-					jsonmap.put("intro", strContentIntro);
-					jsonmap.put("remark", strRemark);
-					jsonmap.put("auditState", strAuditState);
-					jsonmap.put("failedReason", strFailedReason);
-					listData.add(jsonmap);
-
-				}
-			}
-			// 获取总数;
-			int numTotal = jdbcTemplate.queryForObject("SELECT COUNT(1) FROM PS_TZ_CLS_DJZL_T WHERE TZ_CLASS_ID=?",
-					new Object[] { strClassID }, "Integer");
-			mapRet.replace("total", numTotal);
-			mapRet.replace("root", listData);
-		} catch (Exception e) {
-			e.printStackTrace();
-			errorMsg[0] = "1";
-			errorMsg[1] = e.toString();
-		}
-		return jacksonUtil.Map2json(mapRet);
-	}
-	
 	
 	/* 获取推荐信信息列表 */
 	public String tzQueryRefLetterList(String strClassID, String strOprID, int numLimit, int numStart,
