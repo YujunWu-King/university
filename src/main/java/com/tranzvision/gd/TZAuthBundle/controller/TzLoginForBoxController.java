@@ -400,6 +400,10 @@ public class TzLoginForBoxController {
 		tzCookie.addCookie(response, "callCenterPhone", strTel, 36000, "ecust.tranzvision.net", cookiePath, false, false);
 		tzCookie.addCookie(response, "callCenterType", strType, 36000, "ecust.tranzvision.net", cookiePath, false, false);
 		tzCookie.addCookie(response, "callCenterOprid", strOprId, 36000, "ecust.tranzvision.net", cookiePath, false, false);
+//		tzCookie.addCookie(response, "callCenterXh", strSemNum, 36000, domain, cookiePath, false, false);
+//		tzCookie.addCookie(response, "callCenterPhone", strTel, 36000, domain, cookiePath, false, false);
+//		tzCookie.addCookie(response, "callCenterType", strType, 36000, domain, cookiePath, false, false);
+//		tzCookie.addCookie(response, "callCenterOprid", strOprId, 36000, domain, cookiePath, false, false);
 
 		// 读取用户信息
 		PsTzAqYhxxTblKey psTzAqYhxxTblKey = new PsTzAqYhxxTblKey();

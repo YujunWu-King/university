@@ -71,8 +71,9 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			var msgForm = this.lookupReference('userMgForm');
 			var form = this.lookupReference('userMgForm').getForm();
 			var userInfoForm =this.lookupReference('userMgForm').down('form[name=userInfoForm]').getForm();
-			var processInfoForm =this.lookupReference('userMgForm').down('form[name=processInfoForm]').getForm();
-			//var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=ksdrInfoForm]').getForm();
+			console.log(userInfoForm);
+		//	var processInfoForm =this.lookupReference('userMgForm').down('form[name=processInfoForm]').getForm();
+		var ksdrInfoForm =this.lookupReference('userMgForm').down('form[name=kslcInfoForm]').getForm();
 
 			var tzParams = '{"ComID":"TZ_UM_USERMG_COM","PageID":"TZ_UM_USERINFO_STD","OperateType":"QF","comParams":{"OPRID":"'+OPRID+'"}}';
 			//加载数据
@@ -85,9 +86,9 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 			//考生导入信息;
 			//ksdrInfoForm.setValues(formData.ksdrInfo);
 			//考生个人信息
-			userInfoForm.setValues(formData.perInfo)
+			userInfoForm.setValues(formData.perInfo);
 			//录取流程
-			processInfoForm.setValues(formData.lqlcInfo);
+			ksdrInfoForm.setValues(formData.lqlcInfo);
 			
 			if(msgForm.down('hiddenfield[name=titleImageUrl]').getValue()){
 				msgForm.down('image[name=titileImage]').setSrc(TzUniversityContextPath + msgForm.down('hiddenfield[name=titleImageUrl]').getValue());	
