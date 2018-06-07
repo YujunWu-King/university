@@ -353,6 +353,13 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 
 						store.tzStoreParams = tzStoreParams;
 						store.load();
+						
+						//加载线索
+						var clueGrid = form.down("grid[name=ksClueList]");
+						var clueGridStore = clueGrid.getStore();
+						clueGridStore.tzStoreParams = '{"type": "CLUELIST", "oprid": "' + oprid + '"}';
+						clueGridStore.load();
+						
 						//将按钮恢复点击
 						me.disabledButton(form,false);
 					}else{
@@ -487,7 +494,14 @@ Ext.define('KitchenSink.view.callCenter.viewUserController', {
 					var tzStoreParams = '{"cfgSrhId":"TZ_CALLCR_USER_COM.TZ_CALLC_USER_STD.TZ_USER_CALL1_VW","condition":{"OPRID-operator": "01","OPRID-value": "'+ oprid+'"}}';
 
 					store.tzStoreParams = tzStoreParams;
-					store.load();									
+					store.load();
+					
+					
+					//加载线索
+					var clueGrid = _this.down("grid[name=ksClueList]");
+					var clueGridStore = clueGrid.getStore();
+					clueGridStore.tzStoreParams = '{"type": "CLUELIST", "oprid": "' + oprid + '"}';
+					clueGridStore.load();
 				}
 			});
 			

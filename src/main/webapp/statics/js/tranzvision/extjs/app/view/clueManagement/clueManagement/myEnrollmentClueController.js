@@ -360,7 +360,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
 				                                                    var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"QF","comParams":{"clueId":"' + clueId + '"}}';
 				                                                    Ext.tzLoad(tzParams, function (respData) {
 				                                                        var formData = respData.formData;
-				                                                        console.log(formData);
 				                                                        form.setValues(formData);
 				
 				                                                        //根据显示状态显示相应的其他字段
@@ -1005,6 +1004,22 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClueContr
 
             win.show();
         }
+    },
+  //添加联系报告
+    addContactReport: function(view,rowIndex) {
+        var store = view.findParentByType("grid").store;
+        var selRec = store.getAt(rowIndex);
+        var clueID = selRec.get("clueId");
+    	
+        var winClass = "KitchenSink.view.clueManagement.clueManagement.viewOrAddLxReportWindow";
+        Ext.syncRequire(winClass);
+        var ViewClass = Ext.ClassManager.get(winClass);
+        
+        var win = new ViewClass({
+        	clueID: clueID
+        });
+        
+        win.show();
     },
     //关闭
     closeMyEnrollmentClue:function() {

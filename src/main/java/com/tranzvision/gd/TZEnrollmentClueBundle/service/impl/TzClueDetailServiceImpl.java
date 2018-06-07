@@ -27,7 +27,6 @@ import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsQtzrrTblKey;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsLogT;
 import com.tranzvision.gd.util.base.JacksonUtil;
-import com.tranzvision.gd.util.cfgdata.GetHardCodePoint;
 import com.tranzvision.gd.util.sql.GetSeqNum;
 import com.tranzvision.gd.util.sql.SqlQuery;
 import com.tranzvision.gd.util.sql.TZGDObject;
@@ -60,8 +59,7 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 	private PsTzXsLabelTblMapper psTzXsLabelTblMapper;
 	@Autowired
 	private PsTzXsQtzrrTblMapper psTzXsQtzrrTblMapper;
-	@Autowired
-	private GetHardCodePoint getHardCodePoint;
+
 	
 	
 	/*获取线索信息*/
@@ -372,7 +370,20 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 				PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
 				PsTzXsxsInfoT.setTzLeadId(clueId);
 				PsTzXsxsInfoT.setTzJgId(jgId);
-				PsTzXsxsInfoT.setTzLeadStatus(clueState);
+//				PsTzXsxsInfoT.setTzLeadStatus(clueState);  保存的时候不要直接保存线索状态
+				
+				//如果是未分配，有责任人时要设置为"跟进中"，如果没有责任人，状态是否要设置为“未分配”
+				if((chargeOprid != null && !"".equals(chargeOprid)) 
+						|| (otherCharge != null && otherCharge.size() > 0)){
+					if("A".equals(clueState)){
+						PsTzXsxsInfoT.setTzLeadStatus("C");
+						clueState = "C";
+					}
+				}else{
+					PsTzXsxsInfoT.setTzLeadStatus("A");
+					clueState = "A";
+				}
+				
 				PsTzXsxsInfoT.setTzThyyId(backReasonId);
 				PsTzXsxsInfoT.setTzGbyyId(closeReasonId);
 				if(contactDate!=null && !"".equals(contactDate)) {
@@ -468,7 +479,7 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 
 							PsTzXsLabelTblKey psTzXsLabelTblKey = new PsTzXsLabelTblKey();
 							psTzXsLabelTblKey.setTzLeadId(clueId);;
-							psTzXsLabelTblKey.setTzLabelId(strTag);
+							psTzXsLabelTblKey.setTzLabelId(strLabelID);
 							psTzXsLabelTblMapper.insert(psTzXsLabelTblKey);
 						}
 					}

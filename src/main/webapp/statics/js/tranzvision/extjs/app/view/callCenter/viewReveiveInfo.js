@@ -13,6 +13,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
         'Ext.ux.DataView.LabelEditor',
         'tranzvision.extension.grid.column.Link', 
         'KitchenSink.view.callCenter.userAppListStore',
+        'KitchenSink.view.callCenter.userClueListStore',
         'KitchenSink.view.callCenter.viewUserController'
 	],
 	title: '用户接待单信息', 
@@ -34,6 +35,7 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
 		});
 		
 		var userAppListStore = new KitchenSink.view.callCenter.userAppListStore();
+		var userClueListStore = new KitchenSink.view.callCenter.userClueListStore();
 		
 		var applicantColumns = [{
             text: "序号",
@@ -574,6 +576,42 @@ Ext.define('KitchenSink.view.callCenter.viewReveiveInfo', {
                         handler: 'search',
                         columnWidth: .15
                     }]
+				},{
+					xtype: 'grid',
+                    title: '线索信息',
+                    minHeight: 100,
+                    name: 'ksClueList',
+                    reference: 'ksClueList',
+                    scrollable:false,
+                    columnLines: true,
+                    autoHeight: true,
+                    columns: [{
+                        text: "姓名",
+                        dataIndex: 'name',
+                        width: 100,
+                        flex:1
+                    },{
+                        text: "线索状态",
+                        dataIndex: 'clueStatus',
+                        width: 100,
+                        flex:1
+                    },{
+                        text: "责任人",
+                        dataIndex: 'zrrName',
+                        width: 120,
+                        flex:1
+                    },{
+                        text: "创建方式",
+                        dataIndex: 'createType',
+                        width: 100,
+                        flex:1
+                    },{
+                        text: "创建时间",
+                        dataIndex: 'addTime',
+                        minWidth: 120,
+                        flex: 1
+                    }],
+                    store:userClueListStore
 				},{
                     xtype: 'grid',
                     title: '报名信息',

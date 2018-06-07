@@ -106,7 +106,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                         queryMode: 'local',
                         fieldStyle:'background:#F4F4F4',
                         value: 'C',
-                        flex:1
+                        flex: 1
                     },{
                         width:120,
                         xtype:'button',
@@ -171,8 +171,38 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                     fieldLabel: '责任人',
                     name: 'chargeName',
                     editable:false,
-                    readOnly:true,
-                    fieldStyle:'background:#F4F4F4'
+                    readOnly: me.zrrEditFalg == 'Y' ? false : true,
+                    fieldStyle: me.zrrEditFalg == 'Y' ? '' : 'background:#F4F4F4',
+                    triggers: {
+                        clear: {
+                            cls: 'x-form-clear-trigger',
+                            hidden: true,
+                            handler: function(field){
+                            	field.setValue("");
+                            	field.findParentByType('form').getForm().findField('chargeOprid').setValue("");
+                                field.getTrigger('clear').hide();
+                            }
+                        },
+                        search: {
+                            cls: 'x-form-search-trigger',
+                            handler: "searchCharge"
+                        }
+                    },
+                    listeners: {
+						change: function(field,newValue,oldValue){
+							if(me.zrrEditFalg == 'Y'){
+								field.getTrigger('clear')[(newValue.length > 0) ? 'show' : 'hide']();
+								
+								//如果已有责任人，责任人不可编辑
+								if(newValue && newValue.length > 0){
+									field.getTrigger('clear').hide();
+									var chargeNameField = field.findParentByType('form').getForm().findField('chargeName')
+									chargeNameField.setReadOnly(true);
+									chargeNameField.setFieldStyle('background:#F4F4F4');
+								}
+							}
+						}
+					}
                 },{
                 	xtype: 'tagfield',
                     fieldLabel: "其他责任人",
@@ -489,7 +519,6 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
                     listeners:{
                         afterrender:function(panel){
 							var clueID = panel.findParentByType("tabpanel").findParentByType("panel").clueID;
-							console.log(clueID);
                             var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_INFO_COM"]["TZ_CONNECT_RPT_STD"];
                             if( pageResSet == "" || pageResSet == undefined){
                                 Ext.MessageBox.alert('提示', '您没有修改数据的权限');
@@ -546,6 +575,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailPanel',{
         this.otherZrrStore = config.otherZrrStore;
         this.fromType = config.fromType;
         this.clueID = config.clueID;
+        this.zrrEditFalg = config.zrrEditFalg;
+        
         this.callParent();
     }
 });

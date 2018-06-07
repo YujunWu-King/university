@@ -688,6 +688,11 @@
 		
 		 var tzParams = Ext.JSON.encode(tzParamsObj);
          Ext.tzSubmit(tzParams,function(){
+        	 var existsLead = result.existsLead;
+	    	 if(existsLead != ""){
+	    		 Ext.Msg.alert("提示",existsLead + "线索已存在，没有重复创建");
+	    	 }
+	    	 
         	 gridStore.reload();
          },"创建线索成功",true,this);
 	},
@@ -718,17 +723,8 @@
 		}
 		
 		var bmrIds = [];
-		var existClueFlag="";
 		for(var i=0;i<checkLen;i++){
-			if(selList[i].data.leadId != null && selList[i].data.leadId !=""){
-				existClueFlag = "Y";
-			}
 			bmrIds.push(selList[i].data.applicantsId);
-		}
-		
-		if(existClueFlag=="Y") {
-			Ext.Msg.alert("提示","选择的报名人记录中存在已创建线索的数据，请重新选择");
-			return;
 		}
 		
         var win = new KitchenSink.view.activity.applicants.chooseClueOrgWindow({
@@ -762,12 +758,17 @@
 				orgId: orgId
 			}
 		};
-		
+
 		 var tzParams = Ext.JSON.encode(tzParamsObj);
-         Ext.tzSubmit(tzParams,function(){
-        	 //刷新报名人列表
-        	 if(typeof(win.callback) == "function") win.callback();
-        	 win.close();
-         },"创建线索成功",true,this);
+	     Ext.tzSubmit(tzParams,function(result){
+	    	 var existsLead = result.existsLead;
+	    	 if(existsLead != ""){
+	    		 Ext.Msg.alert("提示",existsLead + "线索已存在，没有重复创建");
+	    	 }
+	    	 
+	    	 //刷新报名人列表
+	    	 if(typeof(win.callback) == "function") win.callback();
+	    	 win.close();
+	     },"创建线索成功",true,this);
 	}
 });

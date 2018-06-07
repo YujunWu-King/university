@@ -28,12 +28,13 @@ import com.tranzvision.gd.TZBaseBundle.service.impl.BatchProcessDetailsImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzHdBmrdcAetMapper;
+import com.tranzvision.gd.TZEventsBundle.dao.PsTzHdbmrClueTMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzLxfsinfoTblMapper;
 import com.tranzvision.gd.TZEventsBundle.dao.PsTzNaudlistTMapper;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet;
+import com.tranzvision.gd.TZEventsBundle.model.PsTzHdbmrClueTKey;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzLxfsinfoTbl;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
-import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistTKey;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
@@ -100,6 +101,9 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
 	
+	@Autowired
+	private PsTzHdbmrClueTMapper psTzHdbmrClueTMapper;
+	
 
 	/**
 	 * 查询活动下的报名人信息
@@ -162,6 +166,8 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 
 				}
 			}else{
+				String orgId = tzLoginServiceImpl.getLoginedManagerOrgid(request);
+				
 				// 排序字段
 				String[][] orderByArr = new String[][] {{"TZ_REG_TIME","DESC"}};
 
@@ -172,7 +178,7 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 						"TZ_ZXBM_XXX_007", "TZ_ZXBM_XXX_008", "TZ_ZXBM_XXX_009", "TZ_ZXBM_XXX_010", "TZ_ZXBM_XXX_011",
 						"TZ_ZXBM_XXX_012", "TZ_ZXBM_XXX_013", "TZ_ZXBM_XXX_014", "TZ_ZXBM_XXX_015", "TZ_ZXBM_XXX_016",
 						"TZ_ZXBM_XXX_017", "TZ_ZXBM_XXX_018", "TZ_ZXBM_XXX_019", "TZ_ZXBM_XXX_020", "TZ_BMZT_DESC",
-						"TZ_BMQD_DESC", "TZ_QDZT_DESC", "TZ_ART_ID", "TZ_HD_BMR_ID", "TZ_MSSQH", "TZ_LEAD_ID" };
+						"TZ_BMQD_DESC", "TZ_QDZT_DESC", "TZ_ART_ID", "TZ_HD_BMR_ID", "TZ_MSSQH" };
 
 				// 可配置搜索通用函数;
 				Object[] obj = fliterForm.searchFilter(resultFldArray, orderByArr, strParams, numLimit, numStart, errorMsg);
@@ -222,8 +228,16 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 						mapList.put("applicantsId", rowList[34]);
 						mapList.put("msApplyNo", rowList[35]);
 						
-						mapList.put("leadId", rowList[36]);
-						if(rowList[36] != null && !"".equals(rowList[36])){
+						
+						//活动线索
+						String sql = "select TZ_LEAD_ID from PS_TZ_HDBMR_CLUE_T A where TZ_HD_BMR_ID=? and exists(select 'Y' from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID=A.TZ_LEAD_ID and TZ_JG_ID=?) limit 0,1";
+						String leadId = sqlQuery.queryForObject(sql, new Object[]{ rowList[34], orgId }, "String");
+						if(leadId == null){
+							leadId = "";
+						}
+						
+						mapList.put("leadId", leadId);
+						if(!"".equals(leadId)){
 							mapList.put("haveClue", '是');
 						}else{
 							mapList.put("haveClue", '否');
@@ -998,14 +1012,17 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 	 */
 	@SuppressWarnings("unchecked")
 	private String tzCreateClue(String strParams, String[] errorMsg){
-		String strReturn = "";
 		JacksonUtil jacksonUtil = new JacksonUtil();
+		Map<String,Object> rtnMap = new HashMap<String,Object>();
+		rtnMap.put("existsLead", "");
+		
 		jacksonUtil.json2Map(strParams);
 		
 		String activityId = jacksonUtil.getString("activityId");
 		List<String> bmrIds = (List<String>) jacksonUtil.getList("bmrIds");
 		
 		String orgId = "";
+		int count = 0;
 		if(jacksonUtil.containsKey("orgId")){
 			orgId = jacksonUtil.getString("orgId");
 		}else{
@@ -1014,9 +1031,10 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 		
 		String currOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 		
+		String hasLeadName = "";
 		if(bmrIds != null && bmrIds.size() > 0){
 			for(String bmrId: bmrIds){
-				String sql = "select A.TZ_CYR_NAME,A.OPRID,B.TZ_ZY_SJ,B.TZ_ZY_EMAIL,A.TZ_LEAD_ID from PS_TZ_NAUDLIST_T A left join PS_TZ_LXFSINFO_TBL B on(B.TZ_LXFS_LY='HDBM' and B.TZ_LYDX_ID=A.TZ_HD_BMR_ID) where TZ_ART_ID=? and TZ_HD_BMR_ID=?";
+				String sql = "select A.TZ_CYR_NAME,A.OPRID,B.TZ_ZY_SJ,B.TZ_ZY_EMAIL from PS_TZ_NAUDLIST_T A left join PS_TZ_LXFSINFO_TBL B on(B.TZ_LXFS_LY='HDBM' and B.TZ_LYDX_ID=A.TZ_HD_BMR_ID) where TZ_ART_ID=? and TZ_HD_BMR_ID=?";
 				Map<String,Object> bmrMap = sqlQuery.queryForMap(sql, new Object[]{ activityId, bmrId });
 				
 				if(bmrMap != null){
@@ -1024,9 +1042,19 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 					String oprid = bmrMap.get("OPRID") == null ? "" : bmrMap.get("OPRID").toString();
 					String mobile = bmrMap.get("TZ_ZY_SJ") == null ? "" : bmrMap.get("TZ_ZY_SJ").toString();
 					String email = bmrMap.get("TZ_ZY_EMAIL") == null ? "" : bmrMap.get("TZ_ZY_EMAIL").toString();
-					String leadId = bmrMap.get("TZ_LEAD_ID") == null ? "" : bmrMap.get("TZ_LEAD_ID").toString();
+					
+					String leadSql = "select TZ_LEAD_ID from PS_TZ_HDBMR_CLUE_T A where TZ_HD_BMR_ID=? and exists(select 'Y' from PS_TZ_XSXS_INFO_T where TZ_LEAD_ID=A.TZ_LEAD_ID and TZ_JG_ID=?) limit 0,1";
+					String leadId = sqlQuery.queryForObject(leadSql, new Object[]{ bmrId, orgId }, "String");
 					
 					if(leadId != null && !"".equals(leadId)){
+						count ++;
+						if(count < 10){
+							if("".equals(hasLeadName)){
+								hasLeadName = name;
+							}else{
+								hasLeadName += "，" + name;
+							}
+						}
 					}else{
 						String TZ_LEAD_ID = String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
 						
@@ -1049,19 +1077,23 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 						int rtn = psTzXsxsInfoTMapper.insert(psTzXsxsInfoT);
 						
 						if(rtn > 0){
-							PsTzNaudlistTKey psTzNaudlistTKey = new PsTzNaudlistTKey();
-							psTzNaudlistTKey.setTzArtId(activityId);
-							psTzNaudlistTKey.setTzHdBmrId(bmrId);
-							PsTzNaudlistT psTzNaudlistT = psTzNaudlistTMapper.selectByPrimaryKey(psTzNaudlistTKey);
-							if(psTzNaudlistT != null){
-								psTzNaudlistT.setTzLeadId(TZ_LEAD_ID);
-								psTzNaudlistTMapper.updateByPrimaryKey(psTzNaudlistT);
-							}
+							PsTzHdbmrClueTKey psTzHdbmrClueTKey = new PsTzHdbmrClueTKey();
+							psTzHdbmrClueTKey.setTzHdBmrId(bmrId);
+							psTzHdbmrClueTKey.setTzLeadId(TZ_LEAD_ID);
+							
+							psTzHdbmrClueTMapper.insert(psTzHdbmrClueTKey);
 						}
 					}
 				}
 			}
+			
+			if(count >= 10){
+				hasLeadName += "等共" + count + "人";
+			}else{
+				hasLeadName += "共" + count + "人";
+			}
+			rtnMap.replace("existsLead", hasLeadName);
 		}
-		return strReturn;
+		return jacksonUtil.Map2json(rtnMap);
 	}
 }

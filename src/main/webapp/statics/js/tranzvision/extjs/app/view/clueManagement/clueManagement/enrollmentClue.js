@@ -209,6 +209,16 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClue',{
                                 filter:{
                                     type:'string'
                                 }
+                            },{
+                            	text:'联系报告',
+        	                    lockable   : false,
+        	                    menuDisabled:true,
+        	                    width:	80,
+        	                    xtype:'actioncolumn',
+        	                    align:'center',
+        	                    items:[
+        	                        {iconCls:'audit',tooltip:'查看和添加联系报告',handler:'addContactReport'}
+        	                    ]
                             }
                         ]
                     },{
@@ -268,6 +278,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClue',{
                                 text:'关闭/退回原因',
                                 lockable   : false,
                                 dataIndex:'reason',
+                                width: 130,
                                 flex:1,
                                 filter:{
                                     type:'string'

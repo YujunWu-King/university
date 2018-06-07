@@ -17,9 +17,9 @@ import com.tranzvision.gd.TZAuthBundle.service.impl.TzLoginServiceImpl;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FliterForm;
 import com.tranzvision.gd.TZBaseBundle.service.impl.FrameworkImpl;
 import com.tranzvision.gd.TZEmailSmsSendBundle.service.impl.CreateTaskServiceImpl;
-import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
-import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistTKey;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsBmbTMapper;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbT;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.util.base.JacksonUtil;
 import com.tranzvision.gd.util.encrypt.DESUtil;
@@ -57,6 +57,9 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 	@Autowired
 	private PsTzXsxsInfoTMapper psTzXsxsInfoTMapper;
 	
+	@Autowired
+	private PsTzXsxsBmbTMapper psTzXsxsBmbTMapper;
+	
 	
 	
 	@Override
@@ -86,70 +89,127 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 		mapRet.put("root", listData);
 		JacksonUtil jacksonUtil = new JacksonUtil();
 		
-		String strTransSQL = "SELECT TZ_ZHZ_DMS  FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?";
+		jacksonUtil.json2Map(comParams);
 		
-		// 排序字段如果没有不要赋值
-		String[][] orderByArr = new String[][] { { "TZ_CREATE_DTIME", "DESC" } };
-
-		// json数据要的结果字段;
-		String[] resultFldArray = { "OPRID", "TZ_CLASS_ID", "TZ_CLASS_NAME","TZ_BATCH_ID","TZ_BATCH_NAME","TZ_APP_INS_ID","TZ_CREATE_DTIME","TZ_APP_FORM_STA" };
-
-		// 可配置搜索通用函数;
-		Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
-
-		if (obj != null){
+		if(jacksonUtil.containsKey("type") 	//考生线索列表
+				&& "CLUELIST".equals(jacksonUtil.getString("type"))){
+			//考生oprid
+			String oprid = jacksonUtil.getString("oprid");
 			
-			ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
-			for (int i = 0; i < list.size(); i++) {
-				String[] rowList = list.get(i);
-				//第一个grid
-				Map<String, Object> mapList = new HashMap<String, Object>();
-				mapList.put("oprid", rowList[0]);
-				mapList.put("classId", rowList[1]);
-				mapList.put("className", rowList[2]);
-				mapList.put("batchId", rowList[3]);
-				mapList.put("batchName", rowList[4]);
-				mapList.put("appInsId", rowList[5]);
-				mapList.put("appCreateDtime", rowList[6]);
-				mapList.put("appBmStatus", rowList[7]);
+			if(oprid != null && !"".equals(oprid)){
+				String sql = "SELECT TZ_LEAD_ID,A.TZ_REALNAME,TZ_LEAD_STATUS,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_LEAD_STATUS' AND TZ_ZHZ_ID = A.TZ_LEAD_STATUS ";
+				sql += "AND TZ_EFF_STATUS = 'A') AS TZ_LEAD_STATUS_DESC,TZ_ZR_OPRID,B.TZ_REALNAME AS TZ_ZRR_NAME,date_format(A.ROW_ADDED_DTTM,'%Y-%m-%d %H:%i') as ROW_ADDED_DTTM,TZ_RSFCREATE_WAY,(SELECT TZ_ZHZ_DMS FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID = 'TZ_RSFCREATE_WAY' ";
+				sql += "AND TZ_ZHZ_ID = A.TZ_RSFCREATE_WAY AND TZ_EFF_STATUS = 'A') AS TZ_RSFCREATE_WAY_DESC FROM PS_TZ_XSXS_INFO_T A  LEFT JOIN PS_TZ_AQ_YHXX_TBL B ON(A.TZ_ZR_OPRID=B.OPRID) WHERE TZ_KH_OPRID = ?";
 				
-				String strTplId = sqlQuery.queryForObject("SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?", new Object[]{rowList[5]}, "String");
-				if(strTplId==null){
-					strTplId = "";
+				List<Map<String,Object>> clueList = sqlQuery.queryForList(sql, new Object[]{ oprid });
+				if(clueList != null && clueList.size() > 0){
+					for(Map<String,Object> clueMap : clueList){
+						Map<String,Object> ksxsMap = new HashMap<String,Object>();
+						
+						String clueId = clueMap.get("TZ_LEAD_ID") == null ? "" : clueMap.get("TZ_LEAD_ID").toString();
+						String name = clueMap.get("TZ_REALNAME") == null ? "" : clueMap.get("TZ_REALNAME").toString();
+						String clueStatus = clueMap.get("TZ_LEAD_STATUS_DESC") == null ? "" : clueMap.get("TZ_LEAD_STATUS_DESC").toString();
+						String zrrOprid = clueMap.get("TZ_ZR_OPRID") == null ? "" : clueMap.get("TZ_ZR_OPRID").toString();
+						String zrrName = clueMap.get("TZ_ZRR_NAME") == null ? "" : clueMap.get("TZ_ZRR_NAME").toString();
+						String createType = clueMap.get("TZ_RSFCREATE_WAY_DESC") == null ? "" : clueMap.get("TZ_RSFCREATE_WAY_DESC").toString();
+						String addTime = clueMap.get("ROW_ADDED_DTTM") == null ? "" : clueMap.get("ROW_ADDED_DTTM").toString();
+						
+						//其他责任人
+						String qtZrrSql = "select group_concat(TZ_REALNAME SEPARATOR '，') from TZ_XS_QTZRR_V A where TZ_LEAD_ID=? and TZ_ZRR_OPRID<>?";
+						String qtZrrName = sqlQuery.queryForObject(qtZrrSql, new Object[]{clueId, zrrOprid}, "String");
+						if(qtZrrName != null && !"".equals(qtZrrName)){
+							if(zrrName == null || "".equals(zrrName)){
+								zrrName = qtZrrName;
+							}else{
+								zrrName = zrrName + "，" +  qtZrrName;
+							}
+						}
+						
+						ksxsMap.put("clueId", clueId);
+						ksxsMap.put("name", name);
+						ksxsMap.put("clueStatus", clueStatus);
+						ksxsMap.put("zrrName", zrrName);
+						ksxsMap.put("createType", createType);
+						ksxsMap.put("addTime", addTime);
+						
+						listData.add(ksxsMap);
+					}
+					
+					//查询总数
+					sql = "select count(1) from PS_TZ_XSXS_INFO_T where TZ_KH_OPRID = ?";
+					int total = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "int");
+					
+					mapRet.put("total", total);
+					mapRet.put("root", listData);
 				}
-				mapList.put("clpsBmbTplId", strTplId);
-				//第二个grid
-//				String strSQl = "SELECT TZ_ENTER_CLPS,TZ_RESULT FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?";
-//				Map<String, Object> SMAP = sqlQuery.queryForMap(strSQl, new Object[]{rowList[5]});
-//				
-//				if(SMAP!=null){
-//					String strExistFlg = SMAP.get("TZ_ENTER_CLPS")==null?"":String.valueOf(SMAP.get("TZ_ENTER_CLPS"));
-//					String strPshRel = SMAP.get("TZ_RESULT")==null?"":String.valueOf(SMAP.get("TZ_RESULT"));
-//					mapList.put("isOnMaterials", strExistFlg);				
-//					mapList.put("materialResult", strPshRel);
-//				}
-				
-				//第三个grid
-				String strSQl2 = "SELECT TZ_TIME,TZ_ADDRESS,TZ_RESULT_CODE FROM TZ_IMP_MSZG_TBL WHERE TZ_APP_INS_ID=?";
-		//		String strSQl2 = "SELECT TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_MSPS_TBL WHERE TZ_APP_INS_ID=?";
-				Map<String, Object> SMAP2= sqlQuery.queryForMap(strSQl2, new Object[]{rowList[5]});
-				String strSQL3="select TZ_RESULT_CODE from TZ_IMP_MSJG_TBL where TZ_APP_INS_ID=?";
-				String strPar3=sqlQuery.queryForObject(strSQL3, new Object[]{rowList[5]},"String");
-				if(SMAP2!=null){
-					String strPar1 = SMAP2.get("TZ_TIME")==null?"":String.valueOf(SMAP2.get("TZ_TIME"));
-					String strPar2 = SMAP2.get("TZ_ADDRESS")==null?"":String.valueOf(SMAP2.get("TZ_ADDRESS"));
-					mapList.put("interviewDtime", strPar1);				
-					mapList.put("interviewLocation", strPar2);
-					mapList.put("interviewResult", strPar3);
-				}	
-				
-				listData.add(mapList);
 			}
 			
-			mapRet.replace("total", obj[0]);
-			mapRet.replace("root", listData);
-		}
+		}else{
+			String strTransSQL = "SELECT TZ_ZHZ_DMS  FROM PS_TZ_PT_ZHZXX_TBL WHERE TZ_ZHZJH_ID=? AND TZ_EFF_STATUS='A' AND TZ_ZHZ_ID=?";
+			
+			// 排序字段如果没有不要赋值
+			String[][] orderByArr = new String[][] { { "TZ_CREATE_DTIME", "DESC" } };
 
+			// json数据要的结果字段;
+			String[] resultFldArray = { "OPRID", "TZ_CLASS_ID", "TZ_CLASS_NAME","TZ_BATCH_ID","TZ_BATCH_NAME","TZ_APP_INS_ID","TZ_CREATE_DTIME","TZ_APP_FORM_STA" };
+
+			// 可配置搜索通用函数;
+			Object[] obj = fliterForm.searchFilter(resultFldArray,orderByArr, comParams, numLimit, numStart, errorMsg);
+
+			if (obj != null){
+				
+				ArrayList<String[]> list = (ArrayList<String[]>) obj[1];
+				for (int i = 0; i < list.size(); i++) {
+					String[] rowList = list.get(i);
+					//第一个grid
+					Map<String, Object> mapList = new HashMap<String, Object>();
+					mapList.put("oprid", rowList[0]);
+					mapList.put("classId", rowList[1]);
+					mapList.put("className", rowList[2]);
+					mapList.put("batchId", rowList[3]);
+					mapList.put("batchName", rowList[4]);
+					mapList.put("appInsId", rowList[5]);
+					mapList.put("appCreateDtime", rowList[6]);
+					mapList.put("appBmStatus", rowList[7]);
+					
+					String strTplId = sqlQuery.queryForObject("SELECT TZ_APP_TPL_ID FROM PS_TZ_APP_INS_T WHERE TZ_APP_INS_ID=?", new Object[]{rowList[5]}, "String");
+					if(strTplId==null){
+						strTplId = "";
+					}
+					mapList.put("clpsBmbTplId", strTplId);
+					//第二个grid
+//					String strSQl = "SELECT TZ_ENTER_CLPS,TZ_RESULT FROM TZ_IMP_CLPS_TBL WHERE TZ_APP_INS_ID=?";
+//					Map<String, Object> SMAP = sqlQuery.queryForMap(strSQl, new Object[]{rowList[5]});
+//					
+//					if(SMAP!=null){
+//						String strExistFlg = SMAP.get("TZ_ENTER_CLPS")==null?"":String.valueOf(SMAP.get("TZ_ENTER_CLPS"));
+//						String strPshRel = SMAP.get("TZ_RESULT")==null?"":String.valueOf(SMAP.get("TZ_RESULT"));
+//						mapList.put("isOnMaterials", strExistFlg);				
+//						mapList.put("materialResult", strPshRel);
+//					}
+					
+					//第三个grid
+					String strSQl2 = "SELECT TZ_TIME,TZ_ADDRESS,TZ_RESULT_CODE FROM TZ_IMP_MSZG_TBL WHERE TZ_APP_INS_ID=?";
+			//		String strSQl2 = "SELECT TZ_TIME,TZ_ADDRESS,TZ_RESULT,TZ_RESULT_CODE FROM TZ_IMP_MSPS_TBL WHERE TZ_APP_INS_ID=?";
+					Map<String, Object> SMAP2= sqlQuery.queryForMap(strSQl2, new Object[]{rowList[5]});
+					String strSQL3="select TZ_RESULT_CODE from TZ_IMP_MSJG_TBL where TZ_APP_INS_ID=?";
+					String strPar3=sqlQuery.queryForObject(strSQL3, new Object[]{rowList[5]},"String");
+					if(SMAP2!=null){
+						String strPar1 = SMAP2.get("TZ_TIME")==null?"":String.valueOf(SMAP2.get("TZ_TIME"));
+						String strPar2 = SMAP2.get("TZ_ADDRESS")==null?"":String.valueOf(SMAP2.get("TZ_ADDRESS"));
+						mapList.put("interviewDtime", strPar1);				
+						mapList.put("interviewLocation", strPar2);
+						mapList.put("interviewResult", strPar3);
+					}	
+					
+					listData.add(mapList);
+				}
+				
+				mapRet.replace("total", obj[0]);
+				mapRet.replace("root", listData);
+			}
+		}
+		
 		return jacksonUtil.Map2json(mapRet);
 	}
 	
@@ -651,6 +711,21 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 							sqlQuery.update(sql, new Object[]{TZ_LEAD_ID, strCallXh});
 							
 							mapRet.put("leadId", TZ_LEAD_ID);
+							
+							//考生是否有未关联的报名表，如果有关联线索
+							sql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A where OPRID=? and not exists(select 'Y' from PS_TZ_XSXS_BMB_T B join PS_TZ_XSXS_INFO_T C on(B.TZ_LEAD_ID=C.TZ_LEAD_ID) where B.TZ_APP_INS_ID=A.TZ_APP_INS_ID and C.TZ_LEAD_STATUS<>'G') limit 0,1";
+							Long appInsId = sqlQuery.queryForObject(sql, new Object[]{ TZ_LEAD_ID }, "Long");
+							if(appInsId != null && appInsId > 0){
+								PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT(); 
+								psTzXsxsBmbT.setTzLeadId(TZ_LEAD_ID);
+								psTzXsxsBmbT.setTzAppInsId(appInsId);
+								psTzXsxsBmbT.setRowAddedDttm(new Date());
+								psTzXsxsBmbT.setRowAddedOprid(currOprid);
+								psTzXsxsBmbT.setRowLastmantDttm(new Date());
+								psTzXsxsBmbT.setRowLastmantOprid(currOprid);
+								
+								psTzXsxsBmbTMapper.insert(psTzXsxsBmbT);
+							}
 						}
 					}
 				}

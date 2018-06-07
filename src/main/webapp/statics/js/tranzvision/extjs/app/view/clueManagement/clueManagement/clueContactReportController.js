@@ -40,7 +40,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueContactReportCont
                 }},
             result:'TZ_CYDY_ID,TZ_LABEL_NAME'
         });
-        cmp = new ViewClass(btn.findParentByType("panel").down("timeLine").TZ_LEAD_ID,store);
+        
+        cmp = new ViewClass(btn.findParentByType("panel").down("timeLine").TZ_LEAD_ID,store,btn.findParentByType("panel").down("timeLine"));
         cmp.on("afterrender",function(panel){
             var leadID = panel.down("form").getForm().findField("leadID").getValue();
             panel.down("form").getForm().findField("leadID").setValue(leadID);
@@ -56,7 +57,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueContactReportCont
             fileGrid = btn.findParentByType("window").down("form").down("grid"),
             mid = fileGrid.store.removedNode,
             removedNodes=[];
-        console.log(mid);
+        
         if(mid){
             for(var x =0;x<mid.length;x++){
                 delete mid[x].data.id;
@@ -103,8 +104,13 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueContactReportCont
             fileGrid.store.reload();
             
             //线索详情页面和线索详情查看页面操作时，刷新联系报告tabpanel的内容
-            if(activeTab.reference=="clueDetailPanel"||activeTab.reference=="clueDetailViewPanel") {
-                self.loadPoints(leadID, activeTab.down("timeLine"));
+//            if(activeTab.reference=="clueDetailPanel"||activeTab.reference=="clueDetailViewPanel") {
+//                self.loadPoints(leadID, activeTab.down("timeLine"));
+//            }
+            
+            var timeLineObj = btn.findParentByType("window").timeLineObj;
+            if(timeLineObj){
+            	self.loadPoints(leadID, timeLineObj);
             }
 
             if(btn.name=="reportEnsureBtn") {
@@ -202,7 +208,7 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueContactReportCont
                 }},
             result:'TZ_CYDY_ID,TZ_LABEL_NAME'
         });
-        cmp = new ViewClass(com.TZ_LEAD_ID,store);
+        cmp = new ViewClass(com.TZ_LEAD_ID,store,com);
 
         var form = this.findCmpParent(e.target).findParentByType("timePoint").down('form');
         cmp.on("afterrender",function(panel){

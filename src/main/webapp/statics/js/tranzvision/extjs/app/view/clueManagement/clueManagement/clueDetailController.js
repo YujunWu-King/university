@@ -2,6 +2,37 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
     extend:'Ext.app.ViewController',
     alias:'controller.clueDetailController',
     
+    //选择责任人
+    searchCharge: function(field){
+    	//是否有访问权限
+        var pageResSet = TranzvisionMeikecityAdvanced.Boot.comRegResourseSet["TZ_XSXS_INFO_COM"]["TZ_ZRR_XZ_STD"];
+        if(pageResSet==""||pageResSet==undefined) {
+            Ext.MessageBox.alert('提示','您没有修改数据的权限');
+            return;
+        }
+        //该功能对应的JS类
+        var className = pageResSet['jsClassName'];
+        if(className==""||className==undefined) {
+            Ext.MessageBox.alert('提示','未找到该功能页面对应的JS类，页面ID为：TZ_ZRR_XZ_STD，请检查配置。');
+            return;
+        }
+
+        Ext.syncRequire(className);
+        var ViewClass = Ext.ClassManager.get(className);
+
+        var win = new ViewClass({
+        	selModel: 'S',
+        	callback: function(selRecord){
+    			var oprid = selRecord[0].data.oprid;
+        		var name = selRecord[0].data.name;
+        		
+        		field.setValue(name);
+        		field.findParentByType('form').getForm().findField('chargeOprid').setValue(oprid);
+        	}
+        });
+
+        win.show();
+    },
     
     //选择其他责任人
     searchOtherCharge: function(field){
@@ -471,18 +502,18 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.clueDetailController'
         var tzParams = '{"ComID":"TZ_XSXS_INFO_COM","PageID":"TZ_XSXS_DETAIL_STD","OperateType":"U","comParams":{' + comParams + '}}';
 
         Ext.tzSubmit(tzParams, function (response) {
-
-            form.setValues({"clueId": response.clueId});
+        	var clueId = response.clueId;
             var bkStatus = response.bkStatus;
             var clueState = response.clueState;
             var existName = response.existName;
+            
             //线索状态为关闭，报考状态不是未报名，关联报名表按钮隐藏
             if (clueState == "G" || bkStatus != "A") {
                 glBmbBut.setVisible(false);
             } else {
                 glBmbBut.setVisible(true);
-                form.findField("bkStatus").setValue(bkStatus);
             }
+            form.setValues({"clueId": clueId, "clueState": clueState, "bkStatus": bkStatus});
 
             if(existName=="Y") {
                 Ext.MessageBox.alert("提示","已存在姓名相同的线索");

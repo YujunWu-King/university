@@ -35,7 +35,6 @@
     <result column="TZ_EWM_PATH" property="tzEwmPath" jdbcType="VARCHAR" />
     <result column="TZ_QD_TIME" property="tzQdTime" jdbcType="TIMESTAMP" />
     <result column="OPRID" property="oprid" jdbcType="VARCHAR" />
-    <result column="TZ_LEAD_ID" property="tzLeadId" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     TZ_ART_ID, TZ_HD_BMR_ID, TZ_CYR_NAME, TZ_ZXBM_XXX_001, TZ_ZXBM_XXX_002, TZ_ZXBM_XXX_003, 
@@ -43,7 +42,7 @@
     TZ_ZXBM_XXX_009, TZ_ZXBM_XXX_010, TZ_ZXBM_XXX_011, TZ_ZXBM_XXX_012, TZ_ZXBM_XXX_013, 
     TZ_ZXBM_XXX_014, TZ_ZXBM_XXX_015, TZ_ZXBM_XXX_016, TZ_ZXBM_XXX_017, TZ_ZXBM_XXX_018, 
     TZ_ZXBM_XXX_019, TZ_ZXBM_XXX_020, TZ_ZXBM_LY, TZ_NREG_STAT, TZ_BMCY_ZT, TZ_BZSM, 
-    TZ_REG_TIME, TZ_REG_CODE, TZ_HD_QDM, TZ_EWM_PATH, TZ_QD_TIME, OPRID, TZ_LEAD_ID
+    TZ_REG_TIME, TZ_REG_CODE, TZ_HD_QDM, TZ_EWM_PATH, TZ_QD_TIME, OPRID
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistTKey" >
     select 
@@ -68,8 +67,8 @@
       TZ_ZXBM_XXX_019, TZ_ZXBM_XXX_020, TZ_ZXBM_LY, 
       TZ_NREG_STAT, TZ_BMCY_ZT, TZ_BZSM, 
       TZ_REG_TIME, TZ_REG_CODE, TZ_HD_QDM, 
-      TZ_EWM_PATH, TZ_QD_TIME, OPRID, 
-      TZ_LEAD_ID)
+      TZ_EWM_PATH, TZ_QD_TIME, OPRID
+      )
     values (#{tzArtId,jdbcType=VARCHAR}, #{tzHdBmrId,jdbcType=VARCHAR}, #{tzCyrName,jdbcType=VARCHAR}, 
       #{tzZxbmXxx001,jdbcType=VARCHAR}, #{tzZxbmXxx002,jdbcType=VARCHAR}, #{tzZxbmXxx003,jdbcType=VARCHAR}, 
       #{tzZxbmXxx004,jdbcType=VARCHAR}, #{tzZxbmXxx005,jdbcType=VARCHAR}, #{tzZxbmXxx006,jdbcType=VARCHAR}, 
@@ -80,8 +79,8 @@
       #{tzZxbmXxx019,jdbcType=VARCHAR}, #{tzZxbmXxx020,jdbcType=VARCHAR}, #{tzZxbmLy,jdbcType=VARCHAR}, 
       #{tzNregStat,jdbcType=VARCHAR}, #{tzBmcyZt,jdbcType=VARCHAR}, #{tzBzsm,jdbcType=VARCHAR}, 
       #{tzRegTime,jdbcType=TIMESTAMP}, #{tzRegCode,jdbcType=BIGINT}, #{tzHdQdm,jdbcType=VARCHAR}, 
-      #{tzEwmPath,jdbcType=VARCHAR}, #{tzQdTime,jdbcType=TIMESTAMP}, #{oprid,jdbcType=VARCHAR}, 
-      #{tzLeadId,jdbcType=VARCHAR})
+      #{tzEwmPath,jdbcType=VARCHAR}, #{tzQdTime,jdbcType=TIMESTAMP}, #{oprid,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT" >
     insert into PS_TZ_NAUDLIST_T
@@ -185,9 +184,6 @@
       <if test="oprid != null" >
         OPRID,
       </if>
-      <if test="tzLeadId != null" >
-        TZ_LEAD_ID,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="tzArtId != null" >
@@ -289,9 +285,6 @@
       <if test="oprid != null" >
         #{oprid,jdbcType=VARCHAR},
       </if>
-      <if test="tzLeadId != null" >
-        #{tzLeadId,jdbcType=VARCHAR},
-      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT" >
@@ -390,9 +383,6 @@
       <if test="oprid != null" >
         OPRID = #{oprid,jdbcType=VARCHAR},
       </if>
-      <if test="tzLeadId != null" >
-        TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR},
-      </if>
     </set>
     where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
       and TZ_HD_BMR_ID = #{tzHdBmrId,jdbcType=VARCHAR}
@@ -429,8 +419,7 @@
       TZ_HD_QDM = #{tzHdQdm,jdbcType=VARCHAR},
       TZ_EWM_PATH = #{tzEwmPath,jdbcType=VARCHAR},
       TZ_QD_TIME = #{tzQdTime,jdbcType=TIMESTAMP},
-      OPRID = #{oprid,jdbcType=VARCHAR},
-      TZ_LEAD_ID = #{tzLeadId,jdbcType=VARCHAR}
+      OPRID = #{oprid,jdbcType=VARCHAR}
     where TZ_ART_ID = #{tzArtId,jdbcType=VARCHAR}
       and TZ_HD_BMR_ID = #{tzHdBmrId,jdbcType=VARCHAR}
   </update>

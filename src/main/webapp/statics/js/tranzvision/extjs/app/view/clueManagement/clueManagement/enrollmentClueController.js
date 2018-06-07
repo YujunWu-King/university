@@ -158,7 +158,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
                                                         customerNameData: customerNameData,
                                                         companyNameData: companyNameData,
                                                         clueTagStore: clueTagStore,
-                                                        otherZrrStore: otherZrrStore
+                                                        otherZrrStore: otherZrrStore,
+                                                        zrrEditFalg: 'Y'
                                                     });
 
                                                     //操作标志
@@ -436,7 +437,8 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
                                                                                             customerNameData: customerNameData,
                                                                                             companyNameData: companyNameData,
                                                                                             clueTagStore: clueTagStore,
-                                                                                            otherZrrStore: otherZrrStore
+                                                                                            otherZrrStore: otherZrrStore,
+                                                                                            zrrEditFalg: 'Y'
                                                                                         });
 
                                                                                         cmp.on('afterrender', function (panel) {
@@ -1155,6 +1157,22 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.enrollmentClueControl
 
             win.show();
         }
+    },
+    //添加联系报告
+    addContactReport: function(view,rowIndex) {
+        var store = view.findParentByType("grid").store;
+        var selRec = store.getAt(rowIndex);
+        var clueID = selRec.get("clueId");
+    	
+        var winClass = "KitchenSink.view.clueManagement.clueManagement.viewOrAddLxReportWindow";
+        Ext.syncRequire(winClass);
+        var ViewClass = Ext.ClassManager.get(winClass);
+        
+        var win = new ViewClass({
+        	clueID: clueID
+        });
+        
+        win.show();
     },
     
     //关闭

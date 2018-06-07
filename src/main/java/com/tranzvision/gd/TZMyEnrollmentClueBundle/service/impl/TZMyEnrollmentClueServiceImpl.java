@@ -46,7 +46,7 @@ public class TZMyEnrollmentClueServiceImpl extends FrameworkImpl {
 			// json数据要的结果字段;
 			String[] resultFldArray = { "TZ_LEAD_ID","TZ_JG_ID","TZ_REALNAME", "TZ_LEAD_STATUS","TZ_LEAD_STATUS_DESC", "TZ_COMP_CNAME", 
 					"TZ_MOBILE","TZ_POSITION","TZ_BMR_STATUS_DESC","TZ_BZ","ROW_ADDED_DTTM","TZ_RSFCREATE_WAY_DESC","TZ_ZR_OPRID",
-					"TZ_ZRR_NAME","TZ_COLOUR_SORT_ID","TZ_LABEL_NAME", "TZ_EMAIL"};
+					"TZ_ZRR_NAME","TZ_COLOUR_SORT_ID","TZ_REASON", "TZ_EMAIL"};
 			// 可配置搜索通用函数;
 			//后台增加可配置搜索条件,责任人是"我"的销售线索
 			String subStr=strParams.substring(1, strParams.length()-2);

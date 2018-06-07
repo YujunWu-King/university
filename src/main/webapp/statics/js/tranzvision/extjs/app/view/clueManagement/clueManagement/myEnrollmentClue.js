@@ -265,6 +265,16 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.myEnrollmentClue',{
                             filter:{
                                 type:'string'
                             }
+                        },{
+                        	text:'联系报告',
+    	                    lockable   : false,
+    	                    menuDisabled:true,
+    	                    width:	80,
+    	                    xtype:'actioncolumn',
+    	                    align:'center',
+    	                    items:[
+    	                        {iconCls:'audit',tooltip:'查看和添加联系报告',handler:'addContactReport'}
+    	                    ]
                         }
                     ]
                 },{

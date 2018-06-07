@@ -16,7 +16,10 @@ Ext.define('KitchenSink.view.clueManagement.clueManagement.addContactReportWindo
     layout: {
         type: 'fit'
     },
-    constructor:function(leadID,store){
+
+    constructor:function(leadID,store,timeLineObj){
+    	this.timeLineObj = timeLineObj;
+    	
         Ext.apply(this,{
             items:[{
                 xtype:'form',
