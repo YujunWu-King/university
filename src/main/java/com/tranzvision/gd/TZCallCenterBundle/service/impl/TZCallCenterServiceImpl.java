@@ -93,6 +93,8 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 		
 		if(jacksonUtil.containsKey("type") 	//考生线索列表
 				&& "CLUELIST".equals(jacksonUtil.getString("type"))){
+			//当前登录人
+			String currOprid = tzLoginServiceImpl.getLoginedManagerOprid(request);
 			//考生oprid
 			String oprid = jacksonUtil.getString("oprid");
 			
@@ -125,12 +127,23 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 							}
 						}
 						
+						//当前登录人是否为责任人
+						String isClueZrr = "N";
+						if(currOprid != null && currOprid.equals(zrrOprid)){
+							isClueZrr = "Y";
+						}else{
+							isClueZrr = sqlQuery.queryForObject("select 'Y' from PS_TZ_XS_QTZRR_TBL where TZ_LEAD_ID=? and TZ_ZRR_OPRID=?", 
+									new Object[]{ clueId, currOprid }, "String");
+							if(isClueZrr == null) isClueZrr = "N";
+						}
+						
 						ksxsMap.put("clueId", clueId);
 						ksxsMap.put("name", name);
 						ksxsMap.put("clueStatus", clueStatus);
 						ksxsMap.put("zrrName", zrrName);
 						ksxsMap.put("createType", createType);
 						ksxsMap.put("addTime", addTime);
+						ksxsMap.put("isClueZrr", isClueZrr);
 						
 						listData.add(ksxsMap);
 					}
@@ -712,9 +725,10 @@ public class TZCallCenterServiceImpl extends FrameworkImpl {
 							
 							mapRet.put("leadId", TZ_LEAD_ID);
 							
-							//考生是否有未关联的报名表，如果有关联线索
-							sql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A where OPRID=? and not exists(select 'Y' from PS_TZ_XSXS_BMB_T B join PS_TZ_XSXS_INFO_T C on(B.TZ_LEAD_ID=C.TZ_LEAD_ID) where B.TZ_APP_INS_ID=A.TZ_APP_INS_ID and C.TZ_LEAD_STATUS<>'G') limit 0,1";
-							Long appInsId = sqlQuery.queryForObject(sql, new Object[]{ TZ_LEAD_ID }, "Long");
+							//线索关联报名表
+//							sql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A where OPRID=? and not exists(select 'Y' from PS_TZ_XSXS_BMB_T B join PS_TZ_XSXS_INFO_T C on(B.TZ_LEAD_ID=C.TZ_LEAD_ID) where B.TZ_APP_INS_ID=A.TZ_APP_INS_ID and C.TZ_LEAD_STATUS<>'G') limit 0,1";
+							sql = "select max(TZ_APP_INS_ID) as TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where OPRID=?";
+							Long appInsId = sqlQuery.queryForObject(sql, new Object[]{ strOprid }, "Long");
 							if(appInsId != null && appInsId > 0){
 								PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT(); 
 								psTzXsxsBmbT.setTzLeadId(TZ_LEAD_ID);

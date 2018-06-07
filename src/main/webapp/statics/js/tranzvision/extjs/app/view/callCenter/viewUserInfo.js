@@ -21,6 +21,8 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
 	ignoreChangesFlag:true,
 	actType: 'update',//默认新增
 	initComponent:function(){	
+		Ext.util.CSS.createStyleSheet("a.grid-linkcolumn-with-no-click{color:#000; text-decoration:none;}","grid-linkcolumn-with-no-click");
+		
 		var callXh = getCookie("callCenterXh");
 		console.log("000="+callXh);
 		var phone = getCookie("callCenterPhone");
@@ -663,10 +665,35 @@ Ext.define('KitchenSink.view.callCenter.viewUserInfo', {
                     columnLines: true,
                     autoHeight: true,
                     columns: [{
-                        text: "姓名",
+                    	xtype:'linkcolumn',
+                    	text: "姓名",
                         dataIndex: 'name',
-                        width: 100,
-                        flex:1
+                        width: 120,
+                        items:[{
+							getText: function(v, meta, rec) {
+								return v;
+							},
+							isDisabled: function(grid, rowIdx, colIdx){
+								var store = grid.getStore();
+								var record = store.getAt(rowIdx);
+								
+								var isClueZrr = record.get("isClueZrr");
+								if(isClueZrr == "Y"){
+									return false;
+								}else{
+									return true;	
+								}
+							},
+							getClass: function(v, meta, rec){
+								var isClueZrr = rec.get("isClueZrr");
+								if(isClueZrr == "Y"){
+									return "";
+								}else{
+									return "grid-linkcolumn-with-no-click";	
+								}
+							},
+							handler: 'viewClueInfo'
+						}]
                     },{
                         text: "线索状态",
                         dataIndex: 'clueStatus',

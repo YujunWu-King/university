@@ -122,11 +122,26 @@ public class HandlerHisRegClueController {
 					
 					if(rtn > 0){
 						//关联报名表
-						String glSql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A where OPRID=? and not exists(select 'Y' from PS_TZ_XSXS_BMB_T where TZ_APP_INS_ID=A.TZ_APP_INS_ID) order by TZ_APP_INS_ID desc limit 0,1";
-						Long appInsId = sqlQuery.queryForObject(glSql, new Object[]{ oprid }, "Long");
+//						String glSql = "select TZ_APP_INS_ID from PS_TZ_FORM_WRK_T A where OPRID=? and not exists(select 'Y' from PS_TZ_XSXS_BMB_T where TZ_APP_INS_ID=A.TZ_APP_INS_ID) order by TZ_APP_INS_ID desc limit 0,1";
+//						Long appInsId = sqlQuery.queryForObject(glSql, new Object[]{ oprid }, "Long");
+//						
+//						if(appInsId != null && appInsId > 0){
+//							PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT();
+//							psTzXsxsBmbT.setTzLeadId(TZ_LEAD_ID);
+//							psTzXsxsBmbT.setTzAppInsId(appInsId);
+//							psTzXsxsBmbT.setRowAddedDttm(new Date());
+//							psTzXsxsBmbT.setRowAddedOprid(oprid);
+//							psTzXsxsBmbT.setRowLastmantDttm(new Date());
+//							psTzXsxsBmbT.setRowLastmantOprid(oprid);
+//							
+//							psTzXsxsBmbTMapper.insert(psTzXsxsBmbT);
+//						}
 						
+						//线索关联报名表
+						sql = "select max(TZ_APP_INS_ID) as TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where OPRID=?";
+						Long appInsId = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "Long");
 						if(appInsId != null && appInsId > 0){
-							PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT();
+							PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT(); 
 							psTzXsxsBmbT.setTzLeadId(TZ_LEAD_ID);
 							psTzXsxsBmbT.setTzAppInsId(appInsId);
 							psTzXsxsBmbT.setRowAddedDttm(new Date());

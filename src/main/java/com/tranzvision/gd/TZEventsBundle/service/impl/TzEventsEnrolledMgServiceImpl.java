@@ -35,7 +35,9 @@ import com.tranzvision.gd.TZEventsBundle.model.PsTzHdBmrdcAet;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzHdbmrClueTKey;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzLxfsinfoTbl;
 import com.tranzvision.gd.TZEventsBundle.model.PsTzNaudlistT;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsBmbTMapper;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.dao.PsTzXsxsInfoTMapper;
+import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsBmbT;
 import com.tranzvision.gd.TZMyEnrollmentClueBundle.model.PsTzXsxsInfoTWithBLOBs;
 import com.tranzvision.gd.batch.engine.base.BaseEngine;
 import com.tranzvision.gd.batch.engine.base.EngineParameters;
@@ -103,6 +105,9 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 	
 	@Autowired
 	private PsTzHdbmrClueTMapper psTzHdbmrClueTMapper;
+	
+	@Autowired
+	private PsTzXsxsBmbTMapper psTzXsxsBmbTMapper;
 	
 
 	/**
@@ -1082,6 +1087,21 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 							psTzHdbmrClueTKey.setTzLeadId(TZ_LEAD_ID);
 							
 							psTzHdbmrClueTMapper.insert(psTzHdbmrClueTKey);
+							
+							//线索关联报名表
+							sql = "select max(TZ_APP_INS_ID) as TZ_APP_INS_ID from PS_TZ_FORM_WRK_T where OPRID=?";
+							Long appInsId = sqlQuery.queryForObject(sql, new Object[]{ oprid }, "Long");
+							if(appInsId != null && appInsId > 0){
+								PsTzXsxsBmbT psTzXsxsBmbT = new PsTzXsxsBmbT(); 
+								psTzXsxsBmbT.setTzLeadId(TZ_LEAD_ID);
+								psTzXsxsBmbT.setTzAppInsId(appInsId);
+								psTzXsxsBmbT.setRowAddedDttm(new Date());
+								psTzXsxsBmbT.setRowAddedOprid(currOprid);
+								psTzXsxsBmbT.setRowLastmantDttm(new Date());
+								psTzXsxsBmbT.setRowLastmantOprid(currOprid);
+								
+								psTzXsxsBmbTMapper.insert(psTzXsxsBmbT);
+							}
 						}
 					}
 				}
@@ -1089,7 +1109,7 @@ public class TzEventsEnrolledMgServiceImpl extends FrameworkImpl {
 			
 			if(count >= 10){
 				hasLeadName += "等共" + count + "人";
-			}else{
+			}else if(count > 0){
 				hasLeadName += "共" + count + "人";
 			}
 			rtnMap.replace("existsLead", hasLeadName);
