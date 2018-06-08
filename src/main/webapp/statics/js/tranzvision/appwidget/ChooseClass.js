@@ -298,7 +298,34 @@ SurveyBuild.extend("ChooseClass", "baseComponent", {
 		
 		var classId=$("#ClassId").val();
 		var prov;
-		
+		var flag =false;
+		//判断是否存在其他项目
+		var paramsO = '{"ComID":"TZ_COMMON_COM","PageID":"TZ_CLASS_STD","OperateType":"otherClass","comParams":{"TZ_PROV_ID":"'
+            + data["itemId"]
+            + child.bmrClass.itemId + '","linkId":"'
+            + data["itemId"]
+            + child.bmrBatch.itemId + '","siteId":"'
+            + siteId + '","classId":"'
+            + classId+ '"}}';
+		$.ajax({
+			type: "post",
+			async :false,
+			data:{
+				tzParams:paramsO
+			},
+			url: TzUniversityContextPath + "/dispatcher",
+			dataType: "JSON",
+			success: function(result){
+				if(result.comContent>0){
+					flag=true;
+				}
+			}
+		})
+		if(flag==true){
+			$selectBtn.show();
+		}else{
+			$selectBtn.hide();
+		}
 		$selectBtn.on("click",function(){
 			if(SurveyBuild.accessType == "M"){
 
