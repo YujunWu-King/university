@@ -338,7 +338,7 @@ public class TzClueDetailServiceImpl extends FrameworkImpl {
 				int existsCount = sqlQuery.queryForObject(sql, new Object[]{ jgId,cusMobile,cusEmail }, "int");
 				if(existsCount > 0){
 					errMsg[0] = "1";
-					errMsg[1] = "保存失败，手机或邮箱已存在对应未关闭的线索";
+					errMsg[1] = "保存失败，手机或邮箱已存在对应线索";
 				}else{
 					clueId=String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
 					PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();

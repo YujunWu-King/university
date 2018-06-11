@@ -145,36 +145,43 @@ public class TzSupplierClueServiceImpl extends FrameworkImpl {
 			String memo = jacksonUtil.getString("memo");
 		
 			if("".equals(clueId)||clueId==null){
+				//根据手机或邮箱查询是否已存在线索	
+				String sql = "select count(*) from PS_TZ_XSXS_INFO_T where TZ_JG_ID=? and TZ_LEAD_STATUS<>'G' and ((TZ_MOBILE<>' ' and TZ_MOBILE=?) or (TZ_EMAIL<>' '  and TZ_EMAIL=?))";
+				int existsCount = sqlQuery.queryForObject(sql, new Object[]{ jgId,cusMobile,cusEmail }, "int");
+				if(existsCount > 0){
+					errorMsg[0] = "1";
+					errorMsg[1] = "保存失败，手机或邮箱已存在对应线索";
+				}else{
+					clueId=String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
 					
-				clueId=String.valueOf(getSeqNum.getSeqNum("TZ_XSXS_INFO_T", "TZ_LEAD_ID"));
-				
-				PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
-				PsTzXsxsInfoT.setTzLeadId(clueId);
-				PsTzXsxsInfoT.setTzJgId(jgId);
-				PsTzXsxsInfoT.setTzLeadStatus("A");
-				//线索创建方式
-				PsTzXsxsInfoT.setTzRsfcreateWay("G"); /*手工创建*/
-				PsTzXsxsInfoT.setTzRealname(cusName);
-				PsTzXsxsInfoT.setTzCompCname(companyName);
-				PsTzXsxsInfoT.setTzMobile(cusMobile);
-				PsTzXsxsInfoT.setTzPhone(phone);
-				PsTzXsxsInfoT.setTzEmail(cusEmail);
-				PsTzXsxsInfoT.setTzPosition(position);
-				PsTzXsxsInfoT.setTzBz(memo);
+					PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
+					PsTzXsxsInfoT.setTzLeadId(clueId);
+					PsTzXsxsInfoT.setTzJgId(jgId);
+					PsTzXsxsInfoT.setTzLeadStatus("A");
+					//线索创建方式
+					PsTzXsxsInfoT.setTzRsfcreateWay("G"); /*手工创建*/
+					PsTzXsxsInfoT.setTzRealname(cusName);
+					PsTzXsxsInfoT.setTzCompCname(companyName);
+					PsTzXsxsInfoT.setTzMobile(cusMobile);
+					PsTzXsxsInfoT.setTzPhone(phone);
+					PsTzXsxsInfoT.setTzEmail(cusEmail);
+					PsTzXsxsInfoT.setTzPosition(position);
+					PsTzXsxsInfoT.setTzBz(memo);
 
-				PsTzXsxsInfoT.setRowAddedOprid(oprid);
-				PsTzXsxsInfoT.setRowLastmantOprid(oprid);
-				PsTzXsxsInfoT.setRowAddedDttm(new Date());
-				PsTzXsxsInfoT.setRowLastmantDttm(new Date());
-				psTzXsxsInfoTMapper.insert(PsTzXsxsInfoT);
-				map.put("clueId", clueId);
-				
-				/*查询是否存在姓名相同未关闭的线索*/
-				Integer existName = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_LEAD_ID<>? AND TZ_LEAD_STATUS<>'G' AND TZ_REALNAME=?", new Object[]{clueId,cusName},"Integer");
-				if(existName>0) {
-					map.put("existName", "Y");
-				} else {
-					map.put("existName", "");
+					PsTzXsxsInfoT.setRowAddedOprid(oprid);
+					PsTzXsxsInfoT.setRowLastmantOprid(oprid);
+					PsTzXsxsInfoT.setRowAddedDttm(new Date());
+					PsTzXsxsInfoT.setRowLastmantDttm(new Date());
+					psTzXsxsInfoTMapper.insert(PsTzXsxsInfoT);
+					map.put("clueId", clueId);
+					
+					/*查询是否存在姓名相同未关闭的线索*/
+					Integer existName = sqlQuery.queryForObject("SELECT COUNT(1) FROM PS_TZ_XSXS_INFO_T WHERE TZ_LEAD_ID<>? AND TZ_LEAD_STATUS<>'G' AND TZ_REALNAME=?", new Object[]{clueId,cusName},"Integer");
+					if(existName>0) {
+						map.put("existName", "Y");
+					} else {
+						map.put("existName", "");
+					}
 				}
 			}else{
 				PsTzXsxsInfoTWithBLOBs PsTzXsxsInfoT=new PsTzXsxsInfoTWithBLOBs();
