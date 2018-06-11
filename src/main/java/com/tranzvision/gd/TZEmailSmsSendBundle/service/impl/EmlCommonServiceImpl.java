@@ -120,14 +120,23 @@ public class EmlCommonServiceImpl extends FrameworkImpl {
 					for (int i = 0; i < tmpNames.size(); i++) {
 						String tmpId = (String) tmpNames.get(i);
 						////System.out.println("tmpId=" + tmpId);
-						String sql = "select TZ_TMPL_ID,TZ_TMPL_NAME from PS_TZ_EMALTMPL_TBL where TZ_JG_ID=? AND TZ_TMPL_ID=? AND TZ_USE_FLAG='Y'";
-						Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { jgId, tmpId });
-						Map<String, Object> jsonMap = new HashMap<>();
-						if (map != null) {
-							jsonMap.put("tmpId", map.get("TZ_TMPL_ID"));
-							jsonMap.put("tmpName", map.get("TZ_TMPL_NAME"));
+						String sql = "select TZ_TMPL_ID,TZ_TMPL_NAME from PS_TZ_EMALTMPL_TBL where TZ_JG_ID=? AND TZ_TMPL_ID like '%"+tmpId+"%' AND TZ_USE_FLAG='Y'";
+						List<Map<String,Object>> list=jdbcTemplate.queryForList(sql, new Object[]{jgId});
+						if(list!=null){
+							for(int j=0;j<list.size();j++){
+								Map<String, Object> jsonMap = new HashMap<>();
+								jsonMap.put("tmpId",list.get(j).get("TZ_TMPL_ID"));
+								jsonMap.put("tmpName",list.get(j).get("TZ_TMPL_NAME"));
+								listData.add(jsonMap);
+							}
 						}
-						listData.add(jsonMap);
+					//	Map<String, Object> map = jdbcTemplate.queryForMap(sql, new Object[] { jgId });
+					
+					//	if (map != null) {
+					//		jsonMap.put("tmpId", map.get("TZ_TMPL_ID"));
+					//		jsonMap.put("tmpName", map.get("TZ_TMPL_NAME"));
+					//	}
+					//	listData.add(jsonMap);
 					}
 				}
 				tmpNamesMap.replace("tmpNames", listData);

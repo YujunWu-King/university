@@ -465,6 +465,7 @@ public class FliterForm extends FrameworkImpl {
 			String comId = comPageRecArr[0];
 			String pageId = comPageRecArr[1];
 			String recname = comPageRecArr[2];
+		//	System.out.println("recname="+recname);
 
 			// 得到总条数;
 			int tableNameCount = 0;

@@ -221,6 +221,7 @@
 						//信息表单
 						var form = win.child("form").getForm();
 						var tmpId = form.findField("emailTmp").getValue();
+						console.log("ttt="+tmpId);
 						var emailTheme = form.findField("emailTheme").getValue();
 						var emailContent = form.findField("emailContent").getValue();
 					
